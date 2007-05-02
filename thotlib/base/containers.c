@@ -194,14 +194,15 @@ ThotBool DLList_IsEmpty (DLList list)
  */
 DLListNode DLList_Append (DLList list, ContainerElement elem)
 {
-  DLListNode node = (DLListNode) TtaGetMemory (sizeof (sDLListNode));
-
-  memset (node, 0, sizeof(sDLListNode));
-  node->elem = elem;
+  DLListNode node;
   if (list)
     {
+      node = (DLListNode) TtaGetMemory (sizeof (sDLListNode));
+      memset (node, 0, sizeof(sDLListNode));
+      node->elem = elem;
+      
       node->prev = list->last;
-      if (list->first)
+      if (!list->first)
         list->first = (DLListNode) node;
       if (list->last)
         list->last->next = node;

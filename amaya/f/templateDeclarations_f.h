@@ -58,6 +58,8 @@ extern void AddUser ( XTigerTemplate t );
 extern void RemoveUser ( XTigerTemplate t );
 extern HashMap Template_ExpandUnion ( XTigerTemplate t,
                                       Declaration decl );
+extern HashMap Template_ExpandHashMapTypes ( XTigerTemplate t,
+                                             HashMap types );
 extern char* Template_ExpandTypes ( XTigerTemplate t,
                                     char* types );
 extern ThotBool Template_IsElementTypeAllowed ( ElementType type,
@@ -136,6 +138,8 @@ extern void AddUser ( XTigerTemplate t );
 extern void RemoveUser ( XTigerTemplate t );
 extern HashMap Template_ExpandUnion ( XTigerTemplate t,
                                         Declaration decl );
+extern HashMap Template_ExpandHashMapTypes ( XTigerTemplate t,
+                                               HashMap types );
 extern char* Template_ExpandTypes ( XTigerTemplate t,
                                       char* types );
 extern ThotBool Template_IsElementTypeAllowed ( ElementType type,

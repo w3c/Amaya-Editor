@@ -994,7 +994,6 @@ HashMap Template_ExpandUnion(XTigerTemplate t, Declaration decl)
 #ifdef TEMPLATES
   if (t)
   {
-    printf("Template_ExpandUnion %p %s\n", decl, decl->name);
     if (decl->unionType.expanded == NULL)
     {
       ForwardIterator iter;
@@ -1050,20 +1049,18 @@ HashMap Template_ExpandUnion(XTigerTemplate t, Declaration decl)
 }
 
 /*----------------------------------------------------------------------
-  Template_ExpandTypes
+  Template_ExpandHashMapTypes
   Expand a type list with resolving unions.
   anyElement and anySimple are not expanded.
   \param t Template
   \param types String in which look for types.
   \return The resolved type string.
   ----------------------------------------------------------------------*/
-char* Template_ExpandTypes (XTigerTemplate t, char* types)
+HashMap Template_ExpandHashMapTypes (XTigerTemplate t, HashMap types)
 {
 #ifdef TEMPLATES
   if (t)
   {
-    /* Map of types to expand. */
-    HashMap     basemap = KeywordHashMap_CreateFromList (NULL, -1, types);
     /* Map to store expanded types. */
     HashMap     map     = KeywordHashMap_Create (NULL, TRUE, -1);
     ForwardIterator iter;
@@ -1071,12 +1068,9 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types)
     ForwardIterator iterbase;
     HashMapNode     nodebase;
     Declaration decl;
-    int         pos = 0, cur = 0;
-    char*       result;
-    int         resLen;
 
     /* Fill map with expanded result from basemap.*/
-    iterbase = HashMap_GetForwardIterator (basemap);
+    iterbase = HashMap_GetForwardIterator (types);
     ITERATOR_FOREACH (iterbase, HashMapNode, nodebase)
       {
         decl = (Declaration) nodebase->elem;
@@ -1106,27 +1100,63 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types)
           }
       }
     TtaFreeMemory(iterbase);
+    return map;
+  }
+  else
+#endif /* TEMPLATES */
+    return NULL;
+}
+
+
+/*----------------------------------------------------------------------
+  Template_ExpandTypes
+  Expand a type list with resolving unions.
+  anyElement and anySimple are not expanded.
+  \param t Template
+  \param types String in which look for types.
+  \return The resolved type string.
+  ----------------------------------------------------------------------*/
+char* Template_ExpandTypes (XTigerTemplate t, char* types)
+{
+#ifdef TEMPLATES
+  if (t)
+  {
+    /* Map of types to expand. */
+    HashMap     basemap = KeywordHashMap_CreateFromList (NULL, -1, types);
+    /* Map to store expanded types. */
+    HashMap     map     = NULL;
+    ForwardIterator iter;
+    HashMapNode     node;
+    int         pos = 0;
+    char*       result;
+    int         resLen;
+
+    /* Fill map with expanded result from basemap.*/
+    map = Template_ExpandHashMapTypes(t, basemap);
 
     /* Fill a string with results.*/
-    resLen = 0;
-    iter = HashMap_GetForwardIterator(map);
-    ITERATOR_FOREACH(iter, HashMapNode, node)
+    if(map)
       {
-        resLen += strlen((char*)node->key) + 1;
-      }
+        resLen = 0;
+        iter = HashMap_GetForwardIterator(map);
+        ITERATOR_FOREACH(iter, HashMapNode, node)
+          {
+            resLen += strlen((char*)node->key) + 1;
+          }
+        
+        result = (char*) TtaGetMemory (resLen+1);
+        pos = 0;
+        ITERATOR_FOREACH (iter, HashMapNode, node)
+          {
+            strcpy (result + pos, (char*)node->key);
+            pos += strlen((char*) node->key);
+            result[pos] = ' ';
+            pos++;
+          }
     
-    result = (char*) TtaGetMemory (resLen+1);
-    pos = 0;
-    ITERATOR_FOREACH (iter, HashMapNode, node)
-      {
-        strcpy (result + pos, (char*)node->key);
-        pos += strlen((char*) node->key);
-        result[pos] = ' ';
-        pos++;
+        TtaFreeMemory (iter);
+        result[pos] = 0;
       }
-
-    TtaFreeMemory (iter);
-    result[pos] = 0;
     HashMap_Destroy (map);
     HashMap_Destroy (basemap);
     return result;

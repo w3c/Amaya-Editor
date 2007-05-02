@@ -109,6 +109,7 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
   Declaration dec = Template_GetDeclaration (t, name);
   if (dec == NULL)
     return;
+    
   if (dec->declaredIn->isPredefined)
   {
 //    DLList_Append(list, ElemListElement_CreateComponent(level, dec->name,
@@ -192,41 +193,6 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
 }
 
 /*----------------------------------------------------------------------
-  FillInsertableTemplateElementFromStringList
-  Fill an element list with all possible elements extracted from a stringlist.
-    ----------------------------------------------------------------------*/
-static void FillInsertableTemplateElementFromStringList(XTigerTemplate t,
-                                                        Element refelem,
-                                                        const char* strlist,
-                                                        DLList list, int level)
-{
-  int             pos = 0,
-                  offset = 0;
-  int size = strlen(strlist);
-  char* types = strdup(strlist);
-  while(pos<size)
-  {
-    if (isEOSorWhiteSpace(types[pos]))
-    {
-      if (pos>offset)
-      {
-        types[pos] = 0;
-        FillUnionResolvedPossibleElement(t, types+offset, refelem, NULL, list, level);
-      }
-      offset = pos+1;
-    }
-    pos++;
-  } 
-  if (pos>offset)
-  {
-    types[pos] = 0;
-    FillUnionResolvedPossibleElement(t, types+offset, refelem, NULL, list, level);
-  }
-  TtaFreeMemory(types);
-}
-
-
-/*----------------------------------------------------------------------
   FillInsertableElementFromElemAttribute
   Fill an element list with all possible elements from an attribute list.
   ----------------------------------------------------------------------*/
@@ -241,7 +207,20 @@ static void FillInsertableElementFromElemAttribute(XTigerTemplate t,
   char*           types = (char *) TtaGetMemory (size+1); 
 
   TtaGiveTextAttributeValue (att, types, &size);
-  FillInsertableTemplateElementFromStringList (t, refelem, types, list, level);
+
+  HashMap         basemap = KeywordHashMap_CreateFromList(NULL, -1, types);
+  HashMap         map     = Template_ExpandHashMapTypes(t, basemap);
+  ForwardIterator iter;
+  HashMapNode     node;
+   
+  iter = HashMap_GetForwardIterator(map);
+  ITERATOR_FOREACH(iter, HashMapNode, node)
+    {
+      FillUnionResolvedPossibleElement(t, (const char*)node->key, refelem, NULL, list, level);
+    }
+  HashMap_Destroy (map);
+  HashMap_Destroy (basemap);
+  
   TtaFreeMemory (types);
 }
 #endif/* TEMPLATES */

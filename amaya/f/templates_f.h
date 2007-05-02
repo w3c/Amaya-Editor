@@ -22,6 +22,7 @@ extern void CreateInstanceOfTemplate ( Document doc,
 extern void PreventReloadingTemplate ( char* template_url );
 extern void AllowReloadingTemplate ( char* template_url );
 extern ThotBool isEOSorWhiteSpace ( const char c );
+extern ThotBool isWhiteSpace ( const char c );
 extern void giveItems ( char *text,
                         int size,
                         struct menuType **items,
@@ -75,6 +76,7 @@ extern void CreateInstanceOfTemplate ( Document doc,
 extern void PreventReloadingTemplate ( char* template_url );
 extern void AllowReloadingTemplate ( char* template_url );
 extern ThotBool isEOSorWhiteSpace ( const char c );
+extern ThotBool isWhiteSpace ( const char c );
 extern void giveItems ( char *text,
                           int size,
                           struct menuType **items,
