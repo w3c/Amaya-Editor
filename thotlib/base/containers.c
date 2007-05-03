@@ -194,7 +194,7 @@ ThotBool DLList_IsEmpty (DLList list)
  */
 DLListNode DLList_Append (DLList list, ContainerElement elem)
 {
-  DLListNode node;
+  DLListNode node = NULL;
   if (list)
     {
       node = (DLListNode) TtaGetMemory (sizeof (sDLListNode));
