@@ -1499,8 +1499,8 @@ void PreferenceDlgWX::SetupDialog_Passwords( const Prop_Passwords & prop)
 {
   XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORDS", wxCheckBox)->SetValue( prop.S_Passwords );
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_PASSWORDS", wxListBox);
-  /** ici **/
-  /* construire la liste a partir de la table */
+  box->Clear();
+  /* Build the list of server/realm pair from the internal table */
   LoadPasswordsSiteList();
   Prop_Passwords_Site* site;
   site = GetFirtsPasswordsSite();
