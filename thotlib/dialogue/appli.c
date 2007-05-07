@@ -2673,20 +2673,6 @@ ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
                                int thot_mod_mask, int x, int y )
 {
 #ifdef _WX
-  /* if a button release, we save the selection in the clipboard */
-  /* drag is finished */
-  /* we stop the callback calling timer */
-  /*  Selecting = FALSE;
-      if (timer != None)
-      {
-      Document   document;
-      View       view;
-      gtk_timeout_remove (timer);
-      timer = None;
-      FrameToView (frame, &document, &view);
-      DoCopyToClipboard (document, view, FALSE);
-      }
-      else */
 #if !defined(_WINDOWS) && !defined(_MACOS)
   Document   document;
   View       view;

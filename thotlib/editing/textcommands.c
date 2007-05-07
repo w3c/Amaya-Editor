@@ -1695,7 +1695,11 @@ void DoCopyToClipboard (Document doc, View view, ThotBool force, ThotBool primar
 #ifdef _WX
   // Don't change the clipboard buffer when a single click is done
   wxTheClipboard->UsePrimarySelection(primary);
-  if ((!SelPosition || (FirstSelectedElement && !FirstSelectedElement->ElTerminal)) &&
+  if ((!SelPosition ||
+       (FirstSelectedElement &&
+        (FirstSelectedElement != LastSelectedElement ||
+        (!FirstSelectedElement->ElTerminal &&
+         FirstSelectedElement->ElVolume != 0)))) &&
       wxTheClipboard->Open())
     {
       unsigned char *  buffer = NULL;
