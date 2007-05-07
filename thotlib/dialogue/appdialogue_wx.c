@@ -547,8 +547,7 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
     return;
   else
     p_menu_bar = p_window->GetMenuBar();
-   p_menu_bar = p_window->GetMenuBar();
-  if(!p_menu_bar || doc_id <= 0)
+  if (!p_menu_bar || doc_id <= 0)
     return;
   
   /* check that the current menu correspond to the current document

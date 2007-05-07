@@ -2643,10 +2643,9 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
                     MenuActionList[action].ActionActive[frame] = FALSE;
                   i++;
                 }
+              // refresh that menu
+              TtaRefreshTopMenuStats (doc, m);
             }
-
-          // refresh that menu
-          TtaRefreshTopMenuStats (doc, m);
           ptrmenu = ptrmenu->NextMenu;
         }
 #else /*_WX */
