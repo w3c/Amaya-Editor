@@ -246,7 +246,7 @@ DAVLockDocument
 
 ######### BROWSING
 [browsing]
-+annot
++annot-module
 +views
 +print
 AmayaClose
@@ -298,7 +298,7 @@ TtcCopySelection
 TtcSearchText
 
 [browsing_WX]
-+annot
++annot-module
 +views_WX
 +print
 AmayaClose
@@ -762,7 +762,7 @@ HelpNumbering
 [makeid]
 &MakeIDMenu
 
-[annot]
+[annot-module]
 AnnotateSelection
 AnnotateDocument
 DeleteAnnotation

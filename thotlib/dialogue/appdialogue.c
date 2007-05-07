@@ -2586,17 +2586,71 @@ void selection_handle (GtkWidget        *widget,
   ----------------------------------------------------------------------*/
 void TtaUpdateMenus (Document doc, View view, ThotBool RO)
 {
-#ifndef _WX
-  Menu_Ctl           *ptrmenu;
-  int                 frame;
-  int                 ref, i;
+  Menu_Ctl           *ptrmenu, *ptrsmenu;
+  Item_Ctl           *ptr, *sptr;
+  int                 frame, profile, action;
+  int                 ref, i, j, m, state;
 
   if (doc)
     {
       frame = GetWindowNumber (doc, view);
       ref = frame + MAX_LocalMenu;
+      m = 0;
+#ifdef _WX
+      ptrmenu = DocumentMenuList;
+      profile = TtaGetDocumentProfile (doc);
+      while (ptrmenu)
+        {
+          m++;
+          /* skip menus that concern another view */
+          if (ptrmenu->MenuID != 0 /* skip menu File */ &&
+              !ptrmenu->MenuAttr &&
+              !ptrmenu->MenuSelect &&
+              !ptrmenu->MenuContext &&
+              !ptrmenu->MenuHelp &&
+              (ptrmenu->MenuView == 0 || ptrmenu->MenuView == view) &&
+              Prof_ShowMenu (ptrmenu))
+            {
+              ptr = ptrmenu->ItemsList;
+              i = 0;
+              while (i < ptrmenu->ItemsNb)
+                {
+                  action = ptr[i].ItemAction;
+                  if (action == -1)
+                    ;	/* separator */
+                  else if (ptr[i].ItemType == 'M')
+                    {
+                      j = 0;
+                      ptrsmenu = ptr[i].SubMenu;
+                      sptr = ptrsmenu->ItemsList;
+                      while (j < ptrsmenu->ItemsNb)
+                        {
+                          action = sptr[j].ItemAction;
+                          if (action == -1)
+                            ;	/* separator */
+                          else if (Prof_BelongDoctype (MenuActionList[action].ActionName,
+                                                       profile, RO))
+                            MenuActionList[action].ActionActive[frame] = TRUE;
+                          else
+                            MenuActionList[action].ActionActive[frame] = FALSE;
+                          j++;
+                        }
+                    }
+                  else if (Prof_BelongDoctype (MenuActionList[action].ActionName,
+                                               profile, RO))
+                    MenuActionList[action].ActionActive[frame] = TRUE;
+                  else
+                    MenuActionList[action].ActionActive[frame] = FALSE;
+                  i++;
+                }
+            }
+
+          // refresh that menu
+          TtaRefreshTopMenuStats (doc, m);
+          ptrmenu = ptrmenu->NextMenu;
+        }
+#else /*_WX */
       ptrmenu = FrameTable[frame].FrMenus;
-      i = 0;
       while (ptrmenu)
         {
           /* skip menus that concern another view */
@@ -2612,10 +2666,12 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
           ref += MAX_ITEM;
           i++;
         }
+#endif /*_WX */
     }
-#endif //#ifndef _WX
 }
 
+
+/***********************************************************************/
 #if defined(_GL) && defined(_GTK)
 static int          AttrList[] =
   {

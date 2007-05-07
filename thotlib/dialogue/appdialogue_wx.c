@@ -417,11 +417,10 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
         }
       
       if ( p_menu_item &&
-           item_icon[0] != '\0' &&
-           item_action != -1 &&
-           item_type != 'T' )
+           item_icon[0] != EOS && item_action != -1 && item_type != 'T' )
         {
-          wxBitmap menu_icon(TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16,item_icon), wxBITMAP_TYPE_PNG);
+          wxBitmap menu_icon(TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16,item_icon),
+                             wxBITMAP_TYPE_PNG);
           if (menu_icon.Ok())
             p_menu_item->SetBitmap( menu_icon );
         }
@@ -537,15 +536,19 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
 #ifdef _WX
   int           window_id  = TtaGetDocumentWindowId( doc_id, -1 );
   AmayaWindow * p_window   = TtaGetWindowFromId(window_id);
-  wxASSERT(p_window);
-  wxMenuBar *   p_menu_bar = p_window->GetMenuBar();
+  wxMenuBar *   p_menu_bar;
   PtrDocument   pDoc       = LoadedDocument[doc_id-1];
   wxMenu *      p_top_menu = NULL;
   int           top_menu_pos = 0, top_menu_count;
   
   /* do nothing if there is no menubar : it's the case of
    * AmayaSimpleWindow (log, show apply style ...)*/
-  if(!p_menu_bar || doc_id<=0)
+  if (p_window == NULL)
+    return;
+  else
+    p_menu_bar = p_window->GetMenuBar();
+   p_menu_bar = p_window->GetMenuBar();
+  if(!p_menu_bar || doc_id <= 0)
     return;
   
   /* check that the current menu correspond to the current document
@@ -563,7 +566,7 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
       p_top_menu = WindowTable[window_id].WdMenus[menu_id];
       if (p_top_menu)
         {
-          // find the corrsponding menu position in the Top Menubar
+          // find the corresponding menu position in the Top Menubar
           top_menu_pos = 0;
           while (top_menu_pos < top_menu_count &&
                  p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)

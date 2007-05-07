@@ -1,6 +1,6 @@
 /*
  *
- *  COPYRIGHT MIT and INRIA, 1996-2005
+ *  COPYRIGHT MIT and INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -55,7 +55,7 @@ typedef struct _Profile_Ctl
 
 /*--------------------------
   Static vars
----------------------------*/
+  ---------------------------*/
 /* Profiles table contains the name of all the available profiles */
 static PtrProCtl            ProfileTable = NULL;
 static int                  NbProfiles = 0;
@@ -94,7 +94,7 @@ static ThotBool             EnableEdit = TRUE;
 /*----------------------------------------------------------------------
   SkipAllBlanks:  Remove all the spaces, tabulations and return
   returns (CR) and "end of line" characters.
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void SkipAllBlanks (char *Astring)
 {
   int         c = 0;
@@ -102,8 +102,8 @@ static void SkipAllBlanks (char *Astring)
 
   /* locate the biginning of the string */
   while (Astring[c + nbsp] != EOS &&
-	 (Astring[c + nbsp] == SPACE || Astring[c + nbsp] == TAB ||
-	  Astring[c + nbsp] == __CR__))
+         (Astring[c + nbsp] == SPACE || Astring[c + nbsp] == TAB ||
+          Astring[c + nbsp] == __CR__))
     nbsp++;
   /* suppress blanks before */
   while (Astring[c] != EOS)
@@ -113,8 +113,8 @@ static void SkipAllBlanks (char *Astring)
     }
   /* suppress blanks after the string */
   while (c > 0 &&
-	 (Astring[c - 1] == SPACE || Astring[c - 1] == TAB ||
-	  Astring[c - 1] == __CR__ || Astring[c - 1] == EOL))
+         (Astring[c - 1] == SPACE || Astring[c - 1] == TAB ||
+          Astring[c - 1] == __CR__ || Astring[c - 1] == EOL))
     {
       c--;
       Astring[c] = EOS;
@@ -122,8 +122,8 @@ static void SkipAllBlanks (char *Astring)
   do
     {
       while (Astring[c + nbsp] == SPACE || Astring[c + nbsp] == TAB ||
-	     Astring[c + nbsp] == __CR__)
-	nbsp++;
+             Astring[c + nbsp] == __CR__)
+        nbsp++;
       Astring[c] = Astring[c + nbsp];
     }
   while (Astring[c++] != EOS);
@@ -140,10 +140,10 @@ static void SkipAllBlanks (char *Astring)
   The parameter number give the current number of entries in the table.
   The parameter ctxt points to the first ctxt of the table.
   Return the first context of the new module.
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static PtrProCtl AddInTable (char *name, ThotBool isModule, ThotBool edit,
-			      PtrProCtl subModule, int number,
-			      PtrProCtl ctxt)
+                             PtrProCtl subModule, int number,
+                             PtrProCtl ctxt)
 {
   PtrProCtl           current, prev, new_;
   int                 i;
@@ -172,20 +172,20 @@ static PtrProCtl AddInTable (char *name, ThotBool isModule, ThotBool edit,
   if (current && i < MAX_ENTRIES)
     {
       if (name)
-	{
-	  current->ProEntries[i].ProName = TtaStrdup (name);
-	  current->ProEntries[i].ProIsModule = isModule;
-	  current->ProEntries[i].ProEdit = edit;
-	  if (isModule && subModule == NULL)
-	    {
-	      /* allocate the context of the sub-module */
-	      new_ = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
-	      memset (new_, 0, sizeof (Profile_Ctl));
-	      current->ProEntries[i].ProSubModule = new_;
-	    }
-	  else
-	    current->ProEntries[i].ProSubModule = subModule;
-	}
+        {
+          current->ProEntries[i].ProName = TtaStrdup (name);
+          current->ProEntries[i].ProIsModule = isModule;
+          current->ProEntries[i].ProEdit = edit;
+          if (isModule && subModule == NULL)
+            {
+              /* allocate the context of the sub-module */
+              new_ = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
+              memset (new_, 0, sizeof (Profile_Ctl));
+              current->ProEntries[i].ProSubModule = new_;
+            }
+          else
+            current->ProEntries[i].ProSubModule = subModule;
+        }
     }
   return new_;
 }
@@ -193,7 +193,7 @@ static PtrProCtl AddInTable (char *name, ThotBool isModule, ThotBool edit,
 /*----------------------------------------------------------------------
   AddModule inserts a new module in the module table.
   Return the first context of the new module.
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static PtrProCtl AddModule (char *name)
 {
   PtrProCtl     new_ = NULL;
@@ -213,7 +213,7 @@ static PtrProCtl AddModule (char *name)
 /*----------------------------------------------------------------------
   AddProfile inserts a new profile in the profile table.
   Return the first context of the new profile.
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static PtrProCtl AddProfile (char *name)
 {
   PtrProCtl     new_ = NULL;
@@ -235,7 +235,7 @@ static PtrProCtl AddProfile (char *name)
 /*----------------------------------------------------------------------
   AddDoctype inserts a new doctype profile in the table.
   Return the first context of the new profile.
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static PtrProCtl AddDoctype (char *name)
 {
   PtrProCtl     new_ = NULL;
@@ -256,7 +256,7 @@ static PtrProCtl AddDoctype (char *name)
   DeleteTable frees all contexts allocated for the table.
   The parameter ctxt points to the first context of the table.
   The parameter recursive is TRUE if the referred context must be freed.
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void DeleteTable (PtrProCtl ctxt, ThotBool recursive)
 {
   PtrProCtl           next;
@@ -266,12 +266,12 @@ static void DeleteTable (PtrProCtl ctxt, ThotBool recursive)
     {
       i = 0;
       while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
-	{
-	  TtaFreeMemory (ctxt->ProEntries[i].ProName);
-	  if (recursive)
-	    DeleteTable (ctxt->ProEntries[i].ProSubModule, FALSE);
-	  i++;
-	}
+        {
+          TtaFreeMemory (ctxt->ProEntries[i].ProName);
+          if (recursive)
+            DeleteTable (ctxt->ProEntries[i].ProSubModule, FALSE);
+          i++;
+        }
       /* free the current context and manage the next one */
       next = ctxt->ProNext;
       TtaFreeMemory (ctxt);
@@ -300,11 +300,11 @@ static ProElement *SearchModule (char *name)
     {
       i = 0;
       while (i < MAX_ENTRIES && current->ProEntries[i].ProName &&
-	     strcmp (name, current->ProEntries[i].ProName))
-	i++;
+             strcmp (name, current->ProEntries[i].ProName))
+        i++;
       found = (i < MAX_ENTRIES && current->ProEntries[i].ProName);
       if (!found)
-	current = current->ProNext;
+        current = current->ProNext;
     }
   if (found)
     return &(current->ProEntries[i]);
@@ -331,7 +331,7 @@ static void ProcessDefinition (char *element)
        */
       i = 1;
       while (element[i] != PROFILE_END)
-	i++;
+        i++;
       element[i] = EOS;
       /* The new profile in progress */
       CurrentModule = AddProfile (&element[1]);
@@ -345,7 +345,7 @@ static void ProcessDefinition (char *element)
        */
       i = 1;
       while (element[i] != DOCTYPE_END)
-	i++;
+        i++;
       element[i] = EOS;
       /* The new profile in progress */
       CurrentModule = AddDoctype (&element[1]);
@@ -359,17 +359,17 @@ static void ProcessDefinition (char *element)
        */
       i = 1;
       while (element[i] != MODULE_END)
-	i++;
+        i++;
       element[i] = EOS;
 
       /* Is the module already declared? */
       pEntry = SearchModule (&element[1]);
       if (pEntry == NULL)
-	/* The new profile in progress */
-	CurrentModule = AddModule (&element[1]);
+        /* The new profile in progress */
+        CurrentModule = AddModule (&element[1]);
       else
-	/* The new profile in progress */
-	CurrentModule = pEntry->ProSubModule;
+        /* The new profile in progress */
+        CurrentModule = pEntry->ProSubModule;
       CurrentEntries = 0;
     }
   else if (*element == MODULE_REF)
@@ -381,12 +381,12 @@ static void ProcessDefinition (char *element)
        */
       pEntry = SearchModule (&element[1]);
       if (pEntry == NULL)
-	{
-	  /* the module is not already declared */
-	  ctxt = AddModule (&element[1]);
-	}
+        {
+          /* the module is not already declared */
+          ctxt = AddModule (&element[1]);
+        }
       else
-	ctxt = pEntry->ProSubModule;
+        ctxt = pEntry->ProSubModule;
       /* add the new entry in the current profile or module */
       AddInTable (&element[1], TRUE, FALSE, ctxt, CurrentEntries, CurrentModule);
       CurrentEntries++;
@@ -400,18 +400,18 @@ static void ProcessDefinition (char *element)
        */
 
       /* add the new entry in the current profile or module */
-       if (*element == EDITING_REF)
-	 AddInTable (&element[1], FALSE, TRUE, NULL, CurrentEntries, CurrentModule);
-       else
-	 AddInTable (element, FALSE, FALSE, NULL, CurrentEntries, CurrentModule);
+      if (*element == EDITING_REF)
+        AddInTable (&element[1], FALSE, TRUE, NULL, CurrentEntries, CurrentModule);
+      else
+        AddInTable (element, FALSE, FALSE, NULL, CurrentEntries, CurrentModule);
       CurrentEntries++;
     }
 }
 
 
 /*-----------------------------------------------------------------------
-   AddFunctions keep in the function table the list of functions
-   declared in the list of contexts.
+  AddFunctions keep in the function table the list of functions
+  declared in the list of contexts.
   ----------------------------------------------------------------------*/
 static void AddFunctions (PtrProCtl ctxt, PtrProCtl functionTable)
 {
@@ -421,20 +421,20 @@ static void AddFunctions (PtrProCtl ctxt, PtrProCtl functionTable)
     {
       i = 0;
       while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
-	{
-	  if (ctxt->ProEntries[i].ProIsModule)
-	    /* add functions of the sub-module */
-	    AddFunctions (ctxt->ProEntries[i].ProSubModule, functionTable);
-	  else
-	    {
-	      AddInTable (ctxt->ProEntries[i].ProName, FALSE,
-			  ctxt->ProEntries[i].ProEdit, NULL,
-			  NbFunctions, functionTable);
-	      NbFunctions++;
-	    }
-	  /* next entry */
-	  i++;
-	}
+        {
+          if (ctxt->ProEntries[i].ProIsModule)
+            /* add functions of the sub-module */
+            AddFunctions (ctxt->ProEntries[i].ProSubModule, functionTable);
+          else
+            {
+              AddInTable (ctxt->ProEntries[i].ProName, FALSE,
+                          ctxt->ProEntries[i].ProEdit, NULL,
+                          NbFunctions, functionTable);
+              NbFunctions++;
+            }
+          /* next entry */
+          i++;
+        }
       /* next context */
       ctxt = ctxt->ProNext;
     }
@@ -462,20 +462,20 @@ static void SortFunctionTable (PtrProCtl ctxt)
     {
       i = 0;
       while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
-	{
-	  if (ctxt->ProEntries[i].ProEdit)
-	    {
-	      /* there is almost one editing function */
-	      EnableEdit = TRUE;
-	      FunctionRO[index] = FALSE;
-	    }
-	  else
-	    FunctionRO[index] = TRUE;
-	  SortedFunctionTable[index] = TtaStrdup (ctxt->ProEntries[i].ProName);
-	  index++;
-	  /* next entry */
-	  i++;
-	}
+        {
+          if (ctxt->ProEntries[i].ProEdit)
+            {
+              /* there is almost one editing function */
+              EnableEdit = TRUE;
+              FunctionRO[index] = FALSE;
+            }
+          else
+            FunctionRO[index] = TRUE;
+          SortedFunctionTable[index] = TtaStrdup (ctxt->ProEntries[i].ProName);
+          index++;
+          /* next entry */
+          i++;
+        }
       /* next context */
       ctxt = ctxt->ProNext;
     }
@@ -486,7 +486,7 @@ static void SortFunctionTable (PtrProCtl ctxt)
       index = i;
       for (j = i+1; j < NbFunctions; j++)
         if (strcmp (SortedFunctionTable[j], SortedFunctionTable[index]) <= 0)
-	  index = j;
+          index = j;
       ptr = SortedFunctionTable[index];
       SortedFunctionTable[index] = SortedFunctionTable[i];
       SortedFunctionTable[i] = ptr;
@@ -498,8 +498,8 @@ static void SortFunctionTable (PtrProCtl ctxt)
 
 
 /*-----------------------------------------------------------------------
-   FunctionInProfile returns TRUE if the function is defined in the
-   document profile.
+  FunctionInProfile returns TRUE if the function is defined in the
+  document profile.
   ----------------------------------------------------------------------*/
 static ThotBool FunctionInProfile (char *name, PtrProCtl ctxt)
 {
@@ -509,21 +509,21 @@ static ThotBool FunctionInProfile (char *name, PtrProCtl ctxt)
     {
       i = 0;
       while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
-	{
-	  if (ctxt->ProEntries[i].ProIsModule)
-	    {
-	      if (FunctionInProfile (name, ctxt->ProEntries[i].ProSubModule))
-		/* stop if the function is founs this sub-module */
-		return TRUE;
-	    }
-	  else if (!strcmp (name, ctxt->ProEntries[i].ProName))
-	    {
-	      /* the function is declared in that document profile */
-	      return TRUE;
-	    }
-	  /* next entry */
-	  i++;
-	}
+        {
+          if (ctxt->ProEntries[i].ProIsModule)
+            {
+              if (FunctionInProfile (name, ctxt->ProEntries[i].ProSubModule))
+                /* stop if the function is founs this sub-module */
+                return TRUE;
+            }
+          else if (!strcmp (name, ctxt->ProEntries[i].ProName))
+            {
+              /* the function is declared in that document profile */
+              return TRUE;
+            }
+          /* next entry */
+          i++;
+        }
       /* next context */
       ctxt = ctxt->ProNext;
     }
@@ -552,11 +552,11 @@ ThotBool Prof_BelongTable (const char *name)
       middle = (right + left) / 2;
       i = strcmp (SortedFunctionTable[middle], name);
       if (i == 0)
-	found = TRUE;
+        found = TRUE;
       else if (i < 0)
-	left = middle + 1;
+        left = middle + 1;
       else
-	right = middle - 1;
+        right = middle - 1;
     }
   return found;
 }
@@ -580,41 +580,44 @@ int Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
   /* Dichotomic search */
   left = middle = 0;
   right = NbFunctions - 1;
- 
+  if (!strcmp (name, "CreateRuby") && docProfile == L_Strict)
+    /* refused */
+    return 0;
+
   while (left <= right)
     {
       middle = (right + left) / 2;
       i = strcmp (SortedFunctionTable[middle], name);
       if (i == 0)
-	{
-	  /* check the profile value */
-	  if (FunctionMask[middle] == 0)
-	    /* not defined */
-	    return -1;
-	  else if (FunctionMask[middle] & docProfile)
-	    {
-	      if (RO && !FunctionRO[middle])
-		/* refused */
-		return 0;
-	      else
-		/* accepted */
-		return 1;
-	    }
-	  else
-	    /* refused */
-	    return 0;
-	}
+        {
+          /* check the profile value */
+          if (FunctionMask[middle] == 0)
+            /* not defined */
+            return -1;
+          else if (FunctionMask[middle] & docProfile)
+            {
+              if (RO && !FunctionRO[middle])
+                /* refused */
+                return 0;
+              else
+                /* accepted */
+                return 1;
+            }
+          else
+            /* refused */
+            return 0;
+        }
       else if (i < 0)
-	left = middle + 1;
+        left = middle + 1;
       else
-	right = middle - 1;
+        right = middle - 1;
     }
   return -1;
 }
 
 
 /*-----------------------------------------------------------------------
-   Prof_InitTable: Seek the current profile file and init tables
+  Prof_InitTable: Seek the current profile file and init tables
   ----------------------------------------------------------------------*/
 void Prof_InitTable (char *profile)
 {
@@ -628,40 +631,40 @@ void Prof_InitTable (char *profile)
   if (ptr && *ptr)
     {
       if (SearchFile (ptr, 2, buffer))
-	{
-	  profFile = TtaReadOpen (buffer);
-	  /* if the caller didn't specify any profile, we use the one
-	     given in the registry */
-	  strcpy (UserProfile, "Editor");
-	  if (profile && *profile)
-	    {
-	      if (strstr (profile, "(editor)"))
-		/* avoid to use a dead profile */
-		strcpy (UserProfile, "Editor");
-	      else if (strstr (profile, "browser"))
-		/* avoid to use a dead profile */
-		strcpy (UserProfile, "Browser");
-	      else if (strstr (profile, "display"))
-		/* avoid to use a dead profile */
-		strcpy (UserProfile, "Display");
-	      else
-		strcpy (UserProfile, profile);
-	    }
+        {
+          profFile = TtaReadOpen (buffer);
+          /* if the caller didn't specify any profile, we use the one
+             given in the registry */
+          strcpy (UserProfile, "Editor");
+          if (profile && *profile)
+            {
+              if (strstr (profile, "(editor)"))
+                /* avoid to use a dead profile */
+                strcpy (UserProfile, "Editor");
+              else if (strstr (profile, "browser"))
+                /* avoid to use a dead profile */
+                strcpy (UserProfile, "Browser");
+              else if (strstr (profile, "display"))
+                /* avoid to use a dead profile */
+                strcpy (UserProfile, "Display");
+              else
+                strcpy (UserProfile, profile);
+            }
 #ifdef _WX
-	  strcat (UserProfile, "_WX");
+          strcat (UserProfile, "_WX");
 #endif /* _WX */
 
-	  /* Fill a profile and module tables */
-	  while (fgets (ProfileBuff, sizeof (ProfileBuff), profFile))
-	    {
-	      SkipAllBlanks (ProfileBuff);
-	      /* skip comments */
-	      if (strlen (ProfileBuff) >=2 && ProfileBuff[0] != '#')
-		ProcessDefinition (ProfileBuff);
-	    }
-	  TtaReadClose (profFile);
+          /* Fill a profile and module tables */
+          while (fgets (ProfileBuff, sizeof (ProfileBuff), profFile))
+            {
+              SkipAllBlanks (ProfileBuff);
+              /* skip comments */
+              if (strlen (ProfileBuff) >=2 && ProfileBuff[0] != '#')
+                ProcessDefinition (ProfileBuff);
+            }
+          TtaReadClose (profFile);
 
-	}
+        }
     }
 
   /* All functions are available when:
@@ -674,19 +677,19 @@ void Prof_InitTable (char *profile)
       CheckProfile = TRUE;
       /* Now build the list of current available functions */
       if (UserProfContext)
-	{
-	  FunctionTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
-	  memset (FunctionTable, 0, sizeof (Profile_Ctl));
-	  AddFunctions (UserProfContext, FunctionTable);
-	  /* generate a sorted list of available functions */
-	  SortFunctionTable (FunctionTable);
-	  /* delete the function table */
-	  if (FunctionTable)
-	    {
-	      DeleteTable (FunctionTable, FALSE);
-	      FunctionTable = NULL;
-	    }
-	}
+        {
+          FunctionTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
+          memset (FunctionTable, 0, sizeof (Profile_Ctl));
+          AddFunctions (UserProfContext, FunctionTable);
+          /* generate a sorted list of available functions */
+          SortFunctionTable (FunctionTable);
+          /* delete the function table */
+          if (FunctionTable)
+            {
+              DeleteTable (FunctionTable, FALSE);
+              FunctionTable = NULL;
+            }
+        }
     }
 
   /* associate a mask to each function in the table */
@@ -695,32 +698,32 @@ void Prof_InitTable (char *profile)
     {
       FunctionMask[i] = 0;
       for (j = 0; j < NbDoctypes; j++)
-	{
-	  if (FunctionInProfile (SortedFunctionTable[i],
-				 DoctypeTable->ProEntries[j].ProSubModule))
-	    {
-	      if (strstr (DoctypeTable->ProEntries[j].ProName, "Transitional"))
-		FunctionMask[i] = (FunctionMask[i] | L_TransitionalValue);
-	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "Strict"))
-		FunctionMask[i] = (FunctionMask[i] | L_StrictValue);
-	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "Basic"))
-		FunctionMask[i] = (FunctionMask[i] | L_BasicValue);
-	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "1.1"))
-		FunctionMask[i] = (FunctionMask[i] | L_StrictValue | L_RubyValue);
-	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "Ruby"))
-		FunctionMask[i] = (FunctionMask[i] | L_RubyValue);
-	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "MathML"))
-		FunctionMask[i] = (FunctionMask[i] | L_MathML);
-	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "SVG"))
-		FunctionMask[i] = (FunctionMask[i] | L_SVG);
-	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "Annot"))
-		FunctionMask[i] = (FunctionMask[i] | L_Annot);
-	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "Bookmarks"))
-		FunctionMask[i] = (FunctionMask[i] | L_Bookmarks);
-	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "CSS"))
-		FunctionMask[i] = (FunctionMask[i] | L_CSS);
-	    }
-	}
+        {
+          if (FunctionInProfile (SortedFunctionTable[i],
+                                 DoctypeTable->ProEntries[j].ProSubModule))
+            {
+              if (strstr (DoctypeTable->ProEntries[j].ProName, "Transitional"))
+                FunctionMask[i] = (FunctionMask[i] | L_TransitionalValue);
+              else if (strstr (DoctypeTable->ProEntries[j].ProName, "Strict"))
+                FunctionMask[i] = (FunctionMask[i] | L_StrictValue);
+              else if (strstr (DoctypeTable->ProEntries[j].ProName, "Basic"))
+                FunctionMask[i] = (FunctionMask[i] | L_BasicValue);
+              else if (strstr (DoctypeTable->ProEntries[j].ProName, "1.1"))
+                FunctionMask[i] = (FunctionMask[i] | L_StrictValue | L_RubyValue);
+              else if (strstr (DoctypeTable->ProEntries[j].ProName, "Ruby"))
+                FunctionMask[i] = (FunctionMask[i] | L_RubyValue);
+              else if (strstr (DoctypeTable->ProEntries[j].ProName, "MathML"))
+                FunctionMask[i] = (FunctionMask[i] | L_MathML);
+              else if (strstr (DoctypeTable->ProEntries[j].ProName, "SVG"))
+                FunctionMask[i] = (FunctionMask[i] | L_SVG);
+              else if (strstr (DoctypeTable->ProEntries[j].ProName, "Annot"))
+                FunctionMask[i] = (FunctionMask[i] | L_Annot);
+              else if (strstr (DoctypeTable->ProEntries[j].ProName, "Bookmarks"))
+                FunctionMask[i] = (FunctionMask[i] | L_Bookmarks);
+              else if (strstr (DoctypeTable->ProEntries[j].ProName, "CSS"))
+                FunctionMask[i] = (FunctionMask[i] | L_CSS);
+            }
+        }
     }
   /* delete the modules table */
   DeleteTable (ModuleTable, TRUE);
@@ -734,7 +737,7 @@ void Prof_InitTable (char *profile)
 
 
 /*-----------------------------------------------------------------------
-   Prof_FreeTable: Remove profile tables
+  Prof_FreeTable: Remove profile tables
   ----------------------------------------------------------------------*/
 void Prof_FreeTable ()
 {
@@ -766,8 +769,8 @@ ThotBool TtaCanEdit ()
 }
 
 /*----------------------------------------------------------------------
-   TtaGetProfileFileName:  Get the text for the profile file name.
-   name is a provided buffer of length characters to receive the name.
+  TtaGetProfileFileName:  Get the text for the profile file name.
+  name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
 void TtaGetProfileFileName (char *name, int length)
 {
@@ -780,14 +783,14 @@ void TtaGetProfileFileName (char *name, int length)
     {
       SearchFile (ptr, 2, buffer);
       if (strlen (buffer) < (size_t)length)
-	strcpy (name, buffer);
+        strcpy (name, buffer);
     }
 }
 
 /*----------------------------------------------------------------------
-   TtaGetProfilesItems:  Get the text for the profile menu items.
-   listEntries is a provided list of length pointers.
-   Returns the number of items
+  TtaGetProfilesItems:  Get the text for the profile menu items.
+  listEntries is a provided list of length pointers.
+  Returns the number of items
   ----------------------------------------------------------------------*/
 int TtaGetProfilesItems (char **listEntries, int length)
 {
@@ -800,11 +803,11 @@ int TtaGetProfilesItems (char **listEntries, int length)
     {
       i = 0;
       while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
-	{
-	  listEntries[nbelem] = ctxt->ProEntries[i].ProName;
-	  i++;
-	  nbelem++;
-	}
+        {
+          listEntries[nbelem] = ctxt->ProEntries[i].ProName;
+          i++;
+          nbelem++;
+        }
       ctxt = ctxt->ProNext;
     }
   return nbelem;
@@ -832,8 +835,8 @@ ThotBool Prof_ShowButton (char *FunctionName)
 
 
 /*----------------------------------------------------------------------
-    Prof_ShowSubMenu : Check if a submenu has to be displayed.
-    A submenu musn't be displayed if it contains no entry
+  Prof_ShowSubMenu : Check if a submenu has to be displayed.
+  A submenu musn't be displayed if it contains no entry
   ----------------------------------------------------------------------*/
 ThotBool Prof_ShowSubMenu (Menu_Ctl *ptrsubmenu)
 {
@@ -844,16 +847,16 @@ ThotBool Prof_ShowSubMenu (Menu_Ctl *ptrsubmenu)
   while (item < ptrsubmenu->ItemsNb)
     {
       if (ptrsubmenu->ItemsList[item].ItemType != 'S')
-	return TRUE;
+        return TRUE;
       item ++;
     }
   return FALSE;
 }
 
 /*----------------------------------------------------------------------
-    Prof_ShowMenu : Check if a menu has to be displayed. A menu mustn't be
-    displayed if it contains no entry.
- -----------------------------------------------------------------------*/
+  Prof_ShowMenu : Check if a menu has to be displayed. A menu mustn't be
+  displayed if it contains no entry.
+  -----------------------------------------------------------------------*/
 ThotBool Prof_ShowMenu (Menu_Ctl *ptrmenu)
 {
   int      item    = 0;
@@ -877,17 +880,17 @@ ThotBool Prof_ShowMenu (Menu_Ctl *ptrmenu)
   while (item < ptrmenu->ItemsNb)
     {
       if (ptrmenu->ItemsList[item].ItemType != 'S')
-	{
-	  if (ptrmenu->ItemsList[item].ItemType == 'M')
-	    {
-	      if (Prof_ShowSubMenu (ptrmenu->ItemsList[item].SubMenu)) 
-		/* there is at least a non empty sub menu */
-		return TRUE;
-	   } 
-	  else
-	    /* there is at least a standard item */
-	    return TRUE;
-	}
+        {
+          if (ptrmenu->ItemsList[item].ItemType == 'M')
+            {
+              if (Prof_ShowSubMenu (ptrmenu->ItemsList[item].SubMenu)) 
+                /* there is at least a non empty sub menu */
+                return TRUE;
+            } 
+          else
+            /* there is at least a standard item */
+            return TRUE;
+        }
       item ++;
     }
   return FALSE;

@@ -1068,10 +1068,21 @@ void UpdateEditorMenus (Document doc)
   isXhtml11 = (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat &&
                profile != L_Strict && profile != L_Basic);
 
-#ifndef _WX
   /* update specific menu entries */
-  TtaUpdateMenus (doc, 1, FALSE);
-#endif /* _WX */
+  if (DocumentTypes[doc] == docCSS)
+    {
+      TtaSetMenuOff (doc, 1, Types);
+      TtaSetMenuOff (doc, 1, XMLTypes);
+      TtaSetMenuOff (doc, 1, Links);
+      TtaSetMenuOff (doc, 1, XMLTypes);
+      TtaSetItemOff (doc, view, File, BSynchro);
+      TtaSetItemOff (doc, 1, Edit_, BTransform);
+    }
+  else if (DocumentTypes[doc] == docHTML)
+    {
+      TtaSetMenuOn (doc, 1, Types);
+      TtaUpdateMenus (doc, 1, FALSE);
+    }
 
   /* Update the doctype menu */
   UpdateDoctypeMenu (doc);
@@ -1129,6 +1140,7 @@ void UpdateEditorMenus (Document doc)
         {
           SwitchIconMath (doc, 1, TRUE);
           TtaSetMenuOn (doc, 1, XMLTypes);
+          TtaSetMenuOff (doc, 1, Types);
           TtaSetItemOn (doc, 1, Edit_, BTransform);
         }
       else
