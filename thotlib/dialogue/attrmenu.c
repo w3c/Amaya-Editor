@@ -553,11 +553,16 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
   isRequiredDlg is true if the function must build a popup dlg for
   mandatory attributs (WX version)
   ----------------------------------------------------------------------*/
-static void MenuValues (TtAttribute * pAttr, ThotBool required,
-                        PtrAttribute currAttr, PtrDocument pDoc, int view,
+static void MenuValues (TtAttribute *pAttr, ThotBool required,
+                        PtrAttribute currAttr, PtrElement pEl,
+                        PtrDocument pDoc, int view,
                         ThotBool isRequiredDlg)
 {
   Document          doc;
+#ifdef _WX
+  ElementType       elType;
+  char              full_title[MAX_TXT_LEN];
+#endif /* _WX */
   char             *tmp;
   char              bufMenu[MAX_TXT_LEN];
   char             *title = NULL;
@@ -593,7 +598,6 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
                TtaGetMessage (LIB, TMSG_ATTR), buttons, bufMenu, FALSE, 2,
                'L', D_DONE);
 #endif /* _GTK */
-
   title = (char *)TtaGetMemory (strlen (pAttr->AttrName) + 2);
   strcpy (title, pAttr->AttrName);
   switch (pAttr->AttrType)
@@ -654,10 +658,19 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
           }
         else
           {
+            full_title[0] = EOS;
+            if (pEl)
+              {
+                // display element type + attribute name
+                elType = TtaGetElementType(Element(pEl));
+                strcpy (full_title, TtaGetElementTypeName (elType));
+                strcat (full_title, " - ");
+              }
+            strcat (full_title, title);
             CreateNumDlgWX( NumMenuAttrRequired, NumMenuAttrNumNeeded,
                             TtaGetViewFrame(doc, view),
                             TtaGetMessage(LIB, TMSG_ATTR),
-                            title,
+                            full_title,
                             i);
           }
 #endif /* _WX */
@@ -694,11 +707,20 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
           }
         else
           {
+            full_title[0] = EOS;
+            if (pEl)
+              {
+                // display element type + attribute name
+                elType = TtaGetElementType(Element(pEl));
+                strcpy (full_title, TtaGetElementTypeName (elType));
+                strcat (full_title, " - ");
+              }
+            strcat (full_title, title);
             /* create a dialogue to ask the mandatory attribut value (text type) */
             CreateTextDlgWX ( NumMenuAttrRequired, NumMenuAttrTextNeeded, /* references */
                               TtaGetViewFrame (doc, view), /* parent */
                               TtaGetMessage(LIB, TMSG_ATTR), /* title */
-                              title, /* label : attribut name */
+                              full_title, /* label : attribut name */
                               TextAttrValue /* initial value */ );
           }
 #endif /* _WX */
@@ -784,10 +806,19 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
           }
         else
           {
+            full_title[0] = EOS;
+            if (pEl)
+              {
+                // display element type + attribute name
+                elType = TtaGetElementType(Element(pEl));
+                strcpy (full_title, TtaGetElementTypeName (elType));
+                strcat (full_title, " - ");
+              }
+            strcat (full_title, title);
             CreateEnumListDlgWX( NumMenuAttrRequired, NumMenuAttrEnumNeeded,
                                  TtaGetViewFrame(doc, view),
                                  TtaGetMessage(LIB, TMSG_ATTR),
-                                 title, val, bufMenu, i);
+                                 full_title, val, bufMenu, i);
           }
 #endif /* _WX */
 
@@ -889,7 +920,7 @@ void CallbackReqAttrMenu (int ref, int val, char *txt)
   builds the form for capturing the value of the required
   attribute as defined by the pRuleAttr rule.
   ----------------------------------------------------------------------*/
-void BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
+void BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc, PtrElement pEl)
 {
   PtrTtAttribute        pRuleAttr;
 
@@ -897,11 +928,11 @@ void BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
   PtrDocOfReqAttr = pDoc;
   pRuleAttr = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1];
   /* toujours lie a la vue 1 du document */
-  MenuValues (pRuleAttr, TRUE, NULL, pDoc, 1, TRUE);
+  MenuValues (pRuleAttr, TRUE, NULL, pEl, pDoc, 1, TRUE);
 #if defined(_GTK) || defined(_WX)
   TtaShowDialogue (NumMenuAttrRequired, FALSE);
   TtaWaitShowDialogue ();
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _GTK || _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1926,7 +1957,7 @@ void CallbackAttrMenu (int refmenu, int attMenu, int frame)
                 DocCurrentAttr = LoadedDocument[doc - 1];
                 /* register the current attribut */
                 CurrentAttr = att;
-                MenuValues (pAttr, mandatory, currAttr, pDoc, view, FALSE);
+                MenuValues (pAttr, mandatory, currAttr, firstSel, pDoc, view, FALSE);
 #else /* _WX */
                 if (currAttr == NULL)
                   /* le premier element selectionne' n'a pas cet */
@@ -1971,7 +2002,7 @@ void CallbackAttrMenu (int refmenu, int attMenu, int frame)
                 DocCurrentAttr = LoadedDocument[doc - 1];
                 /* register the current attribut */
                 CurrentAttr = att;
-                MenuValues (pAttr, mandatory, currAttr, pDoc, view, FALSE);
+                MenuValues (pAttr, mandatory, currAttr, firstSel, pDoc, view, FALSE);
                 /* restore the toggle state */
 #if defined(_GTK)
                 if (ActiveAttr[att] == 0)

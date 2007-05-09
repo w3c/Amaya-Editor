@@ -163,9 +163,10 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
                       else
                         {
                           if (ThotLocalActions[T_attrreq] != NULL)
-                            (*(Proc2)ThotLocalActions[T_attrreq]) (
+                            (*(Proc3)ThotLocalActions[T_attrreq]) (
                                                                    (void *)pAttr,
-                                                                   (void *)pDoc);
+                                                                   (void *)pDoc,
+                                                                   (void *)pEl);
                           else
                             switch (pAttr->AeAttrType)
                               {

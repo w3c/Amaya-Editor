@@ -395,10 +395,10 @@ void DLList_Sort(DLList list, Container_CompareFunction compare)
 {
   DLListNode node1, node2;
   node1 = list->first;
-  while(node1!=NULL)
+  while (node1!=NULL)
   {
     node2 = node1->next;
-    while(node2!=NULL)
+    while (node2!=NULL)
     {
       if (compare(node1->elem, node2->elem)>0)
         DLList_Swap(list, node1, node2);
@@ -421,7 +421,7 @@ DLList DLList_GetRefList(DLList srcList, Container_CompareFunction compare)
   DLListNode node = srcList->first;
   if (compare==NULL)
   {
-    while(node)
+    while (node)
     {
       DLList_Append(list, node->elem);
       node = node->next;
@@ -434,10 +434,10 @@ DLList DLList_GetRefList(DLList srcList, Container_CompareFunction compare)
       DLList_Append(list, node->elem);
       node = node->next;
     }
-    while(node)
+    while (node)
     {
       DLListNode test = list->first;
-      while(test && compare(test->elem, node->elem))
+      while (test && compare(test->elem, node->elem))
         test = test->next;
       if (test)
         DLList_InsertBefore(list, test, node->elem);
@@ -462,7 +462,7 @@ DLList DLList_GetRefListFromIterator(ForwardIterator iter, Container_CompareFunc
   ContainerNode node = ForwardIterator_GetFirst(iter);
   if (compare==NULL)
   {
-    while(node)
+    while (node)
     {
       DLList_Append(list, node->elem);
       node = ForwardIterator_GetNext(iter);
@@ -475,10 +475,10 @@ DLList DLList_GetRefListFromIterator(ForwardIterator iter, Container_CompareFunc
       DLList_Append(list, node->elem);
       node = ForwardIterator_GetNext(iter);
     }
-    while(node)
+    while (node)
     {
       DLListNode test = list->first;
-      while(test && compare(test->elem, node->elem))
+      while (test && compare(test->elem, node->elem))
         test = test->next;
       if (test)
         DLList_InsertBefore(list, test, node->elem);
@@ -521,8 +521,8 @@ static HashMapKeyNode HashMap_CreateHashMapKeyNode(HashMap map)
  
 /*----------------------------------------------------------------------
   Create a new hash map.
-  \nbNodes Number of hashing slot, 0 or negative to default node number.
-  \return Empty hash map. 
+  Nodes Number of hashing slot, 0 or negative to default node number.
+  return Empty hash map. 
   -----------------------------------------------------------------------*/
 HashMap HashMap_Create(Container_DestroyElementFunction destroy,
                        HashMap_HashFunction hash,
@@ -569,11 +569,11 @@ void HashMap_Empty(HashMap map)
  */
 void HashMap_Destroy(HashMap map)
 {
-  if(map!=NULL)
+  if (map)
   {
-    HashMap_Empty(map);
-    TtaFreeMemory(map->nodes);
-    TtaFreeMemory(map);
+    HashMap_Empty (map);
+    TtaFreeMemory (map->nodes);
+    TtaFreeMemory (map);
   }
 }
 
@@ -583,9 +583,9 @@ void HashMap_Destroy(HashMap map)
 ThotBool HashMap_IsEmpty(HashMap map)
 {
   int i;
-  for (i=0; i<map->nbNodes; i++)
+  for (i = 0; i<map->nbNodes; i++)
   {
-    if (map->nodes[i] !=NULL)
+    if (map->nodes[i] != NULL)
     {
       return FALSE;
     }
@@ -660,7 +660,7 @@ HashMapNode HashMap_Find(HashMap map, const HashMapKey key)
   if (keynode!=NULL)
   {
     HashMapNode node = (HashMapNode)keynode->first;
-    while(node!=NULL)
+    while (node!=NULL)
     {
       if (map->compare(key, node->key)==0)
         return node;
@@ -691,10 +691,10 @@ ContainerElement HashMap_Get(HashMap map, const HashMapKey key)
 ContainerElement HashMap_Remove(HashMap map, HashMapKey key)
 {
   HashMapKeyNode keynode = HashMap_GetHashMapKeyNode(map, key, FALSE);  
-  if (keynode!=NULL)
+  if (keynode != NULL)
   {
     HashMapNode node = (HashMapNode)keynode->first;
-    while(node!=NULL)
+    while (node != NULL)
     {
       if (map->compare(key, node->key)==0)
       {
@@ -718,7 +718,7 @@ void HashMap_DestroyElement(HashMap map, HashMapKey key)
   if (keynode!=NULL)
   {
     HashMapNode node = (HashMapNode)keynode->first;
-    while(node!=NULL)
+    while (node != NULL)
     {
       if (map->compare(key, node->key)==0)
       {
