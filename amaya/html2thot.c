@@ -322,7 +322,7 @@ static int          BlockLevelElement[] =
     HTML_EL_H1, HTML_EL_H2, HTML_EL_H3, HTML_EL_H4, HTML_EL_H5, HTML_EL_H6,
     HTML_EL_Paragraph, HTML_EL_Pseudo_paragraph, HTML_EL_Text_Area,
     HTML_EL_Term, HTML_EL_Address, HTML_EL_LEGEND, HTML_EL_CAPTION,
-    HTML_EL_INS, HTML_EL_DEL,
+    HTML_EL_INS, HTML_EL_DEL, HTML_EL_Division,
     0};
 
 /* start tags that imply the end of a current element */
@@ -1107,6 +1107,27 @@ ThotBool IsBlockElement (Element el)
          BlockLevelElement[i] != elType.ElTypeNum)
     i++;
   if (BlockLevelElement[i] == elType.ElTypeNum)
+    ret = TRUE;
+  return ret;
+}
+
+/*----------------------------------------------------------------------
+  IsBlockElementType  return TRUE if element type type is a block element.
+  Same as IsBlockElement but just with the element type.
+  ----------------------------------------------------------------------*/
+ThotBool IsBlockElementType (ElementType type)
+{
+  int           i;
+  ThotBool      ret;
+
+  ret = FALSE;
+  if (strcmp (TtaGetSSchemaName (type.ElSSchema), "HTML") != 0)
+    return ret;
+  i = 0;
+  while (BlockLevelElement[i] > 0 &&
+         BlockLevelElement[i] != type.ElTypeNum)
+    i++;
+  if (BlockLevelElement[i] == type.ElTypeNum)
     ret = TRUE;
   return ret;
 }

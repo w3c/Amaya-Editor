@@ -17,6 +17,8 @@ extern XTigerTemplate GetXTigerTemplate ( const char *templatePath );
 extern XTigerTemplate CreatePredefinedTypesLibrary ( void );
 extern Declaration Declaration_Clone ( Declaration dec );
 extern void Declaration_Destroy ( Declaration dec );
+extern void Declaration_CalcBlockLevel ( Declaration dec );
+extern void Template_CalcBlockLevel ( XTigerTemplate t );
 extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
                                                    const char *name,
                                                    SimpleTypeType xtype );
@@ -97,6 +99,8 @@ extern XTigerTemplate GetXTigerTemplate ( const char *templatePath );
 extern XTigerTemplate CreatePredefinedTypesLibrary ( void );
 extern Declaration Declaration_Clone ( Declaration dec );
 extern void Declaration_Destroy ( Declaration dec );
+extern void Declaration_CalcBlockLevel ( Declaration dec );
+extern void Template_CalcBlockLevel ( XTigerTemplate t );
 extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
                                                      const char *name,
                                                      SimpleTypeType xtype );

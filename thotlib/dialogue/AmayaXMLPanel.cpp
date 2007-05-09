@@ -192,7 +192,6 @@ void AmayaXMLPanel::OnApply( wxCommandEvent& event )
   {
     elem = (ElemListElement)m_pXMLList->GetClientData(m_pXMLList->GetSelection());
     if(elem){
-      printf("must insert : %s !\n", ElemListElement_GetName(elem));
       if(m_fnCallback)
         ((ElemListElement_DoInsertElementFunction)m_fnCallback)(elem);
     }

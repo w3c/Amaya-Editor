@@ -23,6 +23,7 @@ extern void HTMLParseError ( Document doc,
                              int lineNumber );
 extern ThotBool IsCharacterLevelElement ( Element el );
 extern ThotBool IsBlockElement ( Element el );
+extern ThotBool IsBlockElementType ( ElementType type );
 extern void BlockInCharLevelElem ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
@@ -100,6 +101,7 @@ extern void HTMLParseError ( Document doc,
                                int lineNumber );
 extern ThotBool IsCharacterLevelElement ( Element el );
 extern ThotBool IsBlockElement ( Element el );
+extern ThotBool IsBlockElementType ( ElementType type );
 extern void BlockInCharLevelElem ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                       Document doc,

@@ -75,6 +75,7 @@ struct _Declaration
 {
 	char          *name;
 	TypeNature     nature;
+  ThotBool       blockLevel; // TRUE if the element is a block (not inline)
 	XTigerTemplate declaredIn; // The template which declare the decl
   XTigerTemplate usedIn;     // The template which embed the decl
 	union

@@ -23,7 +23,8 @@
 #include "templateDeclarations_f.h"
 #include "templateUtils_f.h"
 #include "HTMLactions_f.h"
-
+#include "fetchHTMLname_f.h"
+#include "html2thot_f.h"
 
 #define UNION_ANY            "any"
 #define UNION_ANYCOMPONENT   "anyComponent"
@@ -202,6 +203,7 @@ static Declaration Declaration_Create(const XTigerTemplate t, const char *name,
   dec->usedIn     = t;
   dec->name = TtaStrdup (name);
   dec->nature = xtype;
+  dec->blockLevel = FALSE;
   return dec;
 #else
   return NULL;
@@ -297,6 +299,167 @@ void Declaration_Destroy (Declaration dec)
 }
 
 
+/*----------------------------------------------------------------------
+  Declaration_CalcBlockLevel
+  Calculate if the declaration's element is block level or inlined.
+  ----------------------------------------------------------------------*/
+void Declaration_CalcBlockLevel (Declaration dec)
+{
+#ifdef TEMPLATES
+  Element         elem;
+  ElementType     type;
+  HashMap         map;
+  Declaration     unionDecl;
+  ForwardIterator iter;
+  HashMapNode     node;
+
+  if(dec)
+    {
+      switch(dec->nature)
+        {
+        case SimpleTypeNat:
+          /* Simple types are always inline.*/
+          dec->blockLevel = FALSE;
+          break;
+        case XmlElementNat:
+          /* XmlElement : test with html2thot::IsBlockElement.*/
+          GIType (dec->name, &type, dec->usedIn->doc);
+          dec->blockLevel = IsBlockElementType(type);
+          break;
+        case ComponentNat:
+          dec->blockLevel = FALSE;
+          if(dec->componentType.content)
+            {
+              elem = TtaGetFirstChild(dec->componentType.content);                  
+              while (elem)
+                {
+                  if(IsBlockElementType(TtaGetElementType(elem)))
+                    {
+                      dec->blockLevel = TRUE;
+                      break;
+                    }
+                  TtaNextSibling(&elem);
+                }
+            }
+          break;
+        case UnionNat:
+          if (dec->name[0]=='a' && dec->name[1]=='n' && dec->name[2]=='y')
+            {
+              if (!strcmp(dec->name, UNION_ANY))
+                {
+                  dec->blockLevel = TRUE;
+                  break;
+                }
+              else if (!strcmp(dec->name, UNION_ANYSIMPLE))
+                {
+                  dec->blockLevel = FALSE;
+                  break;
+                }
+              else if (!strcmp(dec->name, UNION_ANYELEMENT))
+                {
+                  dec->blockLevel = TRUE;
+                  break;
+                }
+              else if (!strcmp(dec->name, UNION_ANYCOMPONENT))
+                {
+                  iter = HashMap_GetForwardIterator(dec->usedIn->components);
+                  ITERATOR_FOREACH(iter, HashMapNode, node)
+                    {
+                      unionDecl = (Declaration)node->elem;
+                      if (!unionDecl)
+                        unionDecl = Template_GetDeclaration(dec->usedIn, (char*)node->key);
+                      if (unionDecl)
+                        {
+                          Declaration_CalcBlockLevel(unionDecl);
+                          if(unionDecl->blockLevel)
+                            {
+                              dec->blockLevel = TRUE;
+                              break;
+                            }
+                        }
+                    }
+                  TtaFreeMemory(iter);
+                  break;
+                }
+            }
+          map = Template_ExpandUnion(dec->usedIn, dec);
+          iter = HashMap_GetForwardIterator(map);
+          ITERATOR_FOREACH(iter, HashMapNode, node)
+            {
+              unionDecl = (Declaration)node->elem;
+              if (!unionDecl)
+                unionDecl = Template_GetDeclaration(dec->usedIn, (char*)node->key);
+              if (unionDecl)
+                {
+                  Declaration_CalcBlockLevel(unionDecl);
+                  if(unionDecl->blockLevel)
+                    dec->blockLevel = TRUE;
+                }
+            }
+          TtaFreeMemory(iter);
+          break;
+        }
+    }
+#endif /* TEMPLATES */
+}
+
+
+/*----------------------------------------------------------------------
+ * Calculate block-level for all declaration of a template. 
+  ----------------------------------------------------------------------*/
+void Template_CalcBlockLevel (XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  ForwardIterator iter;
+  HashMapNode     node;
+  Declaration     decl;
+  ElementType     type;
+
+  // Simple types.
+  iter = HashMap_GetForwardIterator(t->simpleTypes);
+  ITERATOR_FOREACH(iter, HashMapNode, node)
+    {
+      decl = (Declaration) node->elem;
+      if(decl)
+        decl->blockLevel = FALSE; // Always inline;
+    }
+  TtaFreeMemory(iter);
+
+  // XML elements.
+  iter = HashMap_GetForwardIterator(t->elements);
+  ITERATOR_FOREACH(iter, HashMapNode, node)
+    {
+      decl = (Declaration) node->elem;
+      if(decl)
+        {
+          GIType (decl->name, &type, t->doc);
+          decl->blockLevel = IsBlockElementType(type);
+        }
+    }
+  TtaFreeMemory(iter);
+  
+  // Components
+  iter = HashMap_GetForwardIterator(t->components);
+  ITERATOR_FOREACH(iter, HashMapNode, node)
+    {
+      decl = (Declaration) node->elem;
+      if(decl)
+          Declaration_CalcBlockLevel(decl);
+    }
+  TtaFreeMemory(iter);
+
+  // Unions
+  iter = HashMap_GetForwardIterator(t->unions);
+  ITERATOR_FOREACH(iter, HashMapNode, node)
+    {
+      decl = (Declaration) node->elem;
+      if(decl)
+          Declaration_CalcBlockLevel(decl);
+    }
+  TtaFreeMemory(iter);
+  
+#endif
+}
 
 
 /*----------------------------------------------------------------------
@@ -714,11 +877,19 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
                 case XmlElementNat:
                 case ComponentNat:
                   fprintf (file, "\n%s+ %s ",indentation,aux->name);
+                  if (aux->blockLevel)
+                    fprintf (file, " block");
+                  else
+                    fprintf (file, " inline");
                   if (aux->declaredIn!=t)
                     fprintf (file, " (declared in %s)", aux->declaredIn->name);
                   break;
                 case UnionNat:
                   fprintf (file, "\n%s+ %s ",indentation,aux->name);
+                  if (aux->blockLevel)
+                    fprintf (file, " block");
+                  else
+                    fprintf (file, " inline");
                   if (aux->declaredIn!=t)
                     fprintf (file, " (declared in %s)", aux->declaredIn->name);
                   Template_PrintUnion (aux, indent+1, t, file);
@@ -749,11 +920,19 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
               case XmlElementNat:
               case ComponentNat:
                 fprintf (file, "\n%s+ %s ",indentation,aux->name);
+                if (aux->blockLevel)
+                  fprintf (file, " block");
+                else
+                  fprintf (file, " inline");
                 if (aux->declaredIn!=t)
                   fprintf (file, " (declared in %s)", aux->declaredIn->name);
                 break;
               case UnionNat:
                 fprintf (file, "\n%s+ %s ",indentation,aux->name);
+                if (aux->blockLevel)
+                  fprintf (file, " block");
+                else
+                  fprintf (file, " inline");
                 if (aux->declaredIn!=t)
                   fprintf (file, " (declared in %s)", aux->declaredIn->name);
                 Template_PrintUnion (aux, indent+1, t, file);
@@ -793,6 +972,10 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
         {
           dec = (Declaration) node->elem;
           fprintf (file, "\n(%p) %s ", dec, dec->name);
+          if (dec->blockLevel)
+            fprintf (file, " block");
+          else
+            fprintf (file, " inline");
           if (dec->declaredIn!=t)
             fprintf (file, " (declared in %s)", dec->declaredIn->name);
         }
@@ -809,6 +992,10 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
         {
           dec = (Declaration) node->elem;
           fprintf (file, "\n(%p) %s ", dec, dec->name);
+          if (dec->blockLevel)
+            fprintf (file, " block");
+          else
+            fprintf (file, " inline");
           if (dec->declaredIn!=t)
             fprintf (file, " (declared in %s)", dec->declaredIn->name);
         }
@@ -825,6 +1012,10 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
         {
           dec = (Declaration) node->elem;
           fprintf (file, "\n(%p) %s ", dec, dec->name);
+          if (dec->blockLevel)
+            fprintf (file, " block");
+          else
+            fprintf (file, " inline");
           if (dec->declaredIn!=t)
             fprintf (file, " (declared in %s)", dec->declaredIn->name);
         }
@@ -841,6 +1032,10 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
         {
           dec = (Declaration) node->elem;
           fprintf (file, "\n(%p) %s ", dec, dec->name);
+          if (dec->blockLevel)
+            fprintf (file, " block");
+          else
+            fprintf (file, " inline");
           if (dec->declaredIn!=t)
             fprintf (file, " (declared in %s)", dec->declaredIn->name);
           Template_PrintUnion (dec, 1, t, file);
@@ -1092,7 +1287,6 @@ HashMap Template_ExpandHashMapTypes (XTigerTemplate t, HashMap types)
                       }
                     TtaFreeMemory (iter);
                   }
-                HashMap_Destroy (unionDecl);
               }
             else
               /* Add it without expansion.*/

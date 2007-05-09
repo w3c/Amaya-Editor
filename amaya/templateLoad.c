@@ -317,6 +317,7 @@ void LoadTemplate (Document doc, char* templatename)
           Template_ParseDeclarations  (t, 0);
           Template_FillDeclarations (t);
           Template_PreInstantiateComponents (t);
+          Template_CalcBlockLevel (t);
           
           ctx->t->isLoaded = TRUE;
           
@@ -392,6 +393,7 @@ void Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
     Template_ParseDeclarations  (t, 0);
     Template_FillDeclarations (t);
     Template_PreInstantiateComponents (t);
+    Template_CalcBlockLevel (t);
     
     t->isLoaded = TRUE;
 #ifdef AMAYA_DEBUG  
