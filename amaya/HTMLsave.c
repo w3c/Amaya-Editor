@@ -4361,7 +4361,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
     {
       /* cancel the possible don't replace mark */
       DontReplaceOldDoc = FALSE;      
-      docModified = TtaIsDocumentModified (doc);
+      /* the suffix determines the output format */
+      SaveAsXML = DocumentMeta[doc]->xmlformat;
+     docModified = TtaIsDocumentModified (doc);
       /* name of local temporary files */
       oldLocal = GetLocalPath (doc, DocumentURLs[doc]);
       /* adjust the charset and MIME type */
@@ -4648,35 +4650,28 @@ ThotBool SaveTempCopy (Document doc, const char* dstdir)
   char* oldURL;
   
   oldURL = TtaStrdup(DocumentURLs[doc]);
-  
   if (Saving_lock)
     // there is a current saving operation
     return FALSE;
-    
 
   SavingDocument = doc;
-  
-  if(!TtaCheckMakeDirectory ((char*)dstdir, TRUE))
+  if (!TtaCheckMakeDirectory ((char*)dstdir, TRUE))
     return FALSE;
   
   SavePath = TtaStrdup(dstdir);
   SaveName = (char *)TtaGetMemory (MAX_LENGTH);
-  
   TtaExtractName (DocumentURLs[doc], buff, SaveName);
-  
-  if(SaveName[0]==0)
-  {
-    DefaultName = TtaGetEnvString ("DEFAULTNAME");
-    if (DefaultName == NULL || *DefaultName == EOS)
-      DefaultName = StdDefaultName;
-    strcpy(SaveName, DefaultName);
-  }
+  if (SaveName[0]==EOS)
+    {
+      DefaultName = TtaGetEnvString ("DEFAULTNAME");
+      if (DefaultName == NULL || *DefaultName == EOS)
+        DefaultName = StdDefaultName;
+      strcpy(SaveName, DefaultName);
+    }
   
   CopyImages = FALSE;
   CopyCss    = FALSE;
   UpdateURLs = TRUE; // just copy local resources
-  
   DoSaveAs(NULL, NULL, TRUE);
-
   return TRUE;
 }

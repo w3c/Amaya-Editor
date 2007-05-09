@@ -3792,6 +3792,12 @@ Document LoadDocument (Document doc, char *pathname,
           unknown = FALSE;
           if (IsRDFName (pathname))
             isRDF = TRUE;
+          else if (IsXMLStruct (pathname))
+            {
+              // only display the source of this document
+              docType = docText;
+              isXML = FALSE;
+            }
         }
       else if (IsRDFName (pathname))
         {
@@ -3839,8 +3845,14 @@ Document LoadDocument (Document doc, char *pathname,
       else if (IsXMLName (pathname))
         {
           docType = docXml;
-          docProfile = L_Other;
           isXML = TRUE;
+          if (IsXMLStruct (s))
+            {
+              // only display the source of this document
+              docType = docText;
+              isXML = FALSE;
+            }
+          docProfile = L_Other;
           unknown = FALSE;
         }
 #endif /* XML_GENERIC */
@@ -3956,12 +3968,18 @@ Document LoadDocument (Document doc, char *pathname,
                 {
 #ifdef XML_GENERIC      
                   docType = docXml;
+                  isXML = TRUE;
+                  if (IsXMLStruct (s))
+                    {
+                      // only display the source of this document
+                      docType = docText;
+                      isXML = FALSE;
+                    }
 #else /* XML_GENERIC */
                   docType = docText;
 #endif /* XML_GENERIC */
                   docProfile = L_Other;
                 }
-              isXML = TRUE;
               unknown = FALSE;
             }
           else if (contentText &&

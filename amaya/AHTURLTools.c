@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -678,6 +678,9 @@ ThotBool IsXMLName (const char *path)
       !strcmp (suffix, "xhtm") ||
       !strcmp (suffix, "xhtml") ||
       !strcmp (suffix, "smi") ||
+      !strcmp (suffix, "xsd") |
+      !strcmp (suffix, "xslt") |
+      !strcmp (suffix, "xsl") |
       !strcmp (suffix, "zsl"))
     ret = TRUE;
   else if (!strcmp (suffix, "gz"))
@@ -690,7 +693,49 @@ ThotBool IsXMLName (const char *path)
           !strcasecmp (suffix, "xtl") ||
           !strcmp (suffix, "xhtm") ||
           !strcmp (suffix, "xhtml") ||
-          !strcmp (suffix, "smi") |
+          !strcmp (suffix, "xsd") |
+          !strcmp (suffix, "xslt") |
+          !strcmp (suffix, "xsl") |
+          !strcmp (suffix, "smi"))
+        ret = TRUE;
+      else
+        ret = FALSE;
+    }
+  else
+    ret = FALSE;
+
+  TtaFreeMemory (temppath);
+  TtaFreeMemory (suffix);
+  return (ret);
+}
+
+/*----------------------------------------------------------------------
+           IsXMLStruct                                                
+  returns TRUE if path points to an XML transformation or schema.
+  ----------------------------------------------------------------------*/
+ThotBool IsXMLStruct (const char *path)
+{
+  char        *temppath;
+  char        *suffix;
+  ThotBool    ret;
+
+  if (!path)
+    return (FALSE);
+
+  temppath = TtaStrdup ((char *)path);
+  suffix = (char *)TtaGetMemory (strlen (path) + 1);
+  TtaExtractSuffix (temppath, suffix);
+
+  if (!strcmp (suffix, "xsd") |
+      !strcmp (suffix, "xslt") |
+      !strcmp (suffix, "xsl"))
+    ret = TRUE;
+  else if (!strcmp (suffix, "gz"))
+    {
+      /* take into account compressed files */
+      TtaExtractSuffix (temppath, suffix);       
+      if (!strcmp (suffix, "xsd") |
+          !strcmp (suffix, "xslt") |
           !strcmp (suffix, "xsl"))
         ret = TRUE;
       else
