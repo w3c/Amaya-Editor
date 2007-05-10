@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -11,6 +11,7 @@ THOT_EXPORT int         UserErrorCode;
 THOT_EXPORT char        DefaultDocumentName[MAX_PATH]; /* default document name */
 THOT_EXPORT PtrDocument LoadedDocument[MAX_DOCUMENTS]; /* loaded documents */
 THOT_EXPORT DisplayMode	documentDisplayMode[MAX_DOCUMENTS];
+THOT_EXPORT SelectionDescriptor NewDocSelection[MAX_DOCUMENTS];
 
 THOT_EXPORT CHARSET     DialogCharset;/* the charset of dialog string */
 THOT_EXPORT PtrDocument	DocAutoSave;  /* document to be saved autoimatically */

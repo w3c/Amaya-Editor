@@ -869,7 +869,7 @@ ThotBool BagButtonClicked (NotifyElement *event)
                 if (dispMode == DisplayImmediately)
                   /* don't set NoComputedDisplay
                      -> it breaks down views formatting when Enter generates new elements  */
-                  /*TtaSetDisplayMode (doc, DeferredDisplay)*/;
+                  TtaSetDisplayMode (doc, DeferredDisplay);
 
                 /* Prepare insertion.*/          
                 oldStructureChecking = TtaGetStructureChecking (doc);
@@ -982,7 +982,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
             if (dispMode == DisplayImmediately)
               /* don't set NoComputedDisplay
                  -> it breaks down views formatting when Enter generates new elements  */
-              /*TtaSetDisplayMode (doc, DeferredDisplay)*/;
+              TtaSetDisplayMode (doc, DeferredDisplay);
 
             /* Prepare insertion.*/          
             oldStructureChecking = TtaGetStructureChecking (doc);

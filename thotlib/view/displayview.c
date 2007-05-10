@@ -83,21 +83,7 @@
 #include "displaybox_f.h"
 #include "content.h"
 #endif /* _GL */
-
-/* descriptor of the selection to do after redosplaying */
-typedef struct _SelectionDescriptor
-{
-  Element             SDElemSel;
-  Element             SDElemExt;
-  Attribute           SDAttribute;
-  int                 SDFirstChar;
-  int                 SDLastChar;
-  int                 SDCharExt;
-  ThotBool            SDSelActive;
-}
-SelectionDescriptor;
  
-static SelectionDescriptor NewDocSelection[MAX_DOCUMENTS];
 
 /*----------------------------------------------------------------------
   FrameToView retourne, sous la forme qui convient a l'API Thot, 

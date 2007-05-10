@@ -3460,8 +3460,23 @@ void TtaInsertAnyElement (Document document, ThotBool before)
     /* Parameter document is ok */
     {
       pDoc = LoadedDocument[document - 1];
-      if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
-                                &lastChar))
+      if (documentDisplayMode[document - 1] == DeferredDisplay &&
+          NewDocSelection[document - 1].SDSelActive)
+        {
+          firstSel = (PtrElement) (NewDocSelection[document - 1].SDElemSel);
+          if (firstSel == NULL)
+            /* there is no selection */
+            return;
+          if (NewDocSelection[document - 1].SDElemExt)
+            lastSel = (PtrElement) (NewDocSelection[document - 1].SDElemExt);
+          else
+            lastSel = firstSel;
+          firstChar = NewDocSelection[document - 1].SDFirstChar;
+          lastChar = NewDocSelection[document - 1].SDLastChar;
+          pSelDoc = pDoc;
+        }
+      else if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
+                                     &lastChar))
         /* there is no selection */
         return;
       else if (pSelDoc != pDoc)
@@ -3474,157 +3489,155 @@ void TtaInsertAnyElement (Document document, ThotBool before)
       else if (firstSel && ElementIsReadOnly (firstSel->ElParent))
         /* the parent can not be modified */
         return;
+
+      if (before)
+        SRuleForSibling (pDoc, firstSel, TRUE, 1, &typeNum, &pSS, &isList,
+                         &optional);
+      else
+        SRuleForSibling (pDoc, lastSel, FALSE, 1, &typeNum, &pSS, &isList,
+                         &optional);
+      if (typeNum == 0 || pSS == NULL)
+        /* no sibling allowed */
+        return;
+      if (TypeHasException (ExcNoCreate, typeNum, pSS))
+        /* the user is not allowed to create this type of element */
+        return;
+      if (ExcludedType (firstSel->ElParent, typeNum, pSS))
+        /* the parent element excludes this type of element */
+        return;
+      /* send event ElemNew.Pre to the application */
+      notifyEl.event = TteElemNew;
+      notifyEl.document = document;
+      notifyEl.element = (Element) (firstSel->ElParent);
+      notifyEl.info = 0; /* not sent by undo */
+      notifyEl.elementType.ElTypeNum = typeNum;
+      notifyEl.elementType.ElSSchema = (SSchema) (pSS);
+      nSiblings = 0;
+      if (before)
+        pSibling = firstSel;
+      else
+        pSibling = lastSel;
+      while (pSibling->ElPrevious != NULL)
+        {
+          nSiblings++;
+          pSibling = pSibling->ElPrevious;
+        }
+      if (!before)
+        nSiblings++;
+      notifyEl.position = nSiblings;
+      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+        /* application does not accept element creation */
+        return;
+      OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
+                           lastChar);
+      TtaClearViewSelections ();
+
+      /* if the selection is in a TEXT leaf, split the leaf */
+      if (before && firstSel->ElTerminal &&
+          firstSel->ElLeafType == LtText && firstChar > 1 &&
+          firstChar <= firstSel->ElTextLength + 1)
+        {
+          if (firstChar == firstSel->ElTextLength + 1)
+            /* insertion before the caret, which is at the end of a TEXT
+               leaf. Insert after that text leaf */
+            {
+              before = FALSE;
+              lastSel = firstSel;
+            }
+          else
+            {
+              /* store the editing operation in the history */
+              AddEditOpInHistory (firstSel, pDoc, TRUE, FALSE);
+              pNextEl = firstSel->ElNext;
+              SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pSecond,
+                                FALSE);
+              AddEditOpInHistory (firstSel, pDoc, FALSE, TRUE);
+              AddEditOpInHistory (pSecond, pDoc, FALSE, TRUE);
+              BuildAbsBoxSpliText (firstSel, pSecond, pNextEl, pDoc);
+              firstSel = pSecond;
+            }
+        }
+      else if (!before && lastSel->ElTerminal &&
+               lastSel->ElLeafType == LtText &&
+               lastChar <= lastSel->ElTextLength)
+        {
+          if (lastChar == 0 && firstChar == 1 && firstSel == lastSel)
+            /* insertion after the caret which is at the beginning of a
+               TEXT leaf. Insert before that text leaf */
+            {
+              before = TRUE;
+              firstSel = lastSel;
+            }
+          else if (lastChar == lastSel->ElTextLength &&
+                   firstSel == lastSel && firstChar > lastChar)
+            /* a caret at the end of a TEXT leaf */
+            {
+              before = FALSE;
+            }
+          else if (lastChar <= lastSel->ElTextLength && lastChar > 0)
+            {
+              if (firstSel == lastSel && lastChar < firstChar)
+                /* it's just a caret */
+                lastChar = firstChar;
+              /* store the editing operation in the history */
+              AddEditOpInHistory (lastSel, pDoc, TRUE, FALSE);
+              pNextEl = lastSel->ElNext;
+              SplitTextElement (lastSel, lastChar, pDoc, TRUE, &pSecond,
+                                FALSE);
+              AddEditOpInHistory (lastSel, pDoc, FALSE, TRUE);
+              AddEditOpInHistory (pSecond, pDoc, FALSE, TRUE);
+              BuildAbsBoxSpliText (lastSel, pSecond, pNextEl, pDoc);
+            }
+        }
+
+      pNew = NewSubtree (typeNum, pSS, pDoc, TRUE, TRUE, TRUE, TRUE);
+      if (before)
+        {
+          pSibling = SiblingElement (firstSel, TRUE);
+          InsertElementBefore (firstSel, pNew);
+          AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
+          if (pSibling == NULL)
+            /* firstSel is no longer the first child of its parent */
+            ChangeFirstLast (firstSel, pDoc, TRUE, TRUE);
+        }
       else
         {
-          if (before)
-            SRuleForSibling (pDoc, firstSel, TRUE, 1, &typeNum, &pSS, &isList,
-                             &optional);
-          else
-            SRuleForSibling (pDoc, lastSel, FALSE, 1, &typeNum, &pSS, &isList,
-                             &optional);
-          if (typeNum == 0 || pSS == NULL)
-            /* no sibling allowed */
-            return;
-          if (TypeHasException (ExcNoCreate, typeNum, pSS))
-            /* the user is not allowed to create this type of element */
-            return;
-          if (ExcludedType (firstSel->ElParent, typeNum, pSS))
-            /* the parent element excludes this type of element */
-            return;
-          /* send event ElemNew.Pre to the application */
-          notifyEl.event = TteElemNew;
-          notifyEl.document = document;
-          notifyEl.element = (Element) (firstSel->ElParent);
-          notifyEl.info = 0; /* not sent by undo */
-          notifyEl.elementType.ElTypeNum = typeNum;
-          notifyEl.elementType.ElSSchema = (SSchema) (pSS);
-          nSiblings = 0;
-          if (before)
-            pSibling = firstSel;
-          else
-            pSibling = lastSel;
-          while (pSibling->ElPrevious != NULL)
-            {
-              nSiblings++;
-              pSibling = pSibling->ElPrevious;
-            }
-          if (!before)
-            nSiblings++;
-          notifyEl.position = nSiblings;
-          if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-            /* application does not accept element creation */
-            return;
-          OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
-                               lastChar);
-          TtaClearViewSelections ();
-
-          /* if the selection is in a TEXT leaf, split the leaf */
-          if (before && firstSel->ElTerminal &&
-              firstSel->ElLeafType == LtText && firstChar > 1 &&
-              firstChar <= firstSel->ElTextLength + 1)
-            {
-              if (firstChar == firstSel->ElTextLength + 1)
-                /* insertion before the caret, which is at the end of a TEXT
-                   leaf. Insert after that text leaf */
-                {
-                  before = FALSE;
-                  lastSel = firstSel;
-                }
-              else
-                {
-                  /* store the editing operation in the history */
-                  AddEditOpInHistory (firstSel, pDoc, TRUE, FALSE);
-                  pNextEl = firstSel->ElNext;
-                  SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pSecond,
-                                    FALSE);
-                  AddEditOpInHistory (firstSel, pDoc, FALSE, TRUE);
-                  AddEditOpInHistory (pSecond, pDoc, FALSE, TRUE);
-                  BuildAbsBoxSpliText (firstSel, pSecond, pNextEl, pDoc);
-                  firstSel = pSecond;
-                }
-            }
-          else if (!before && lastSel->ElTerminal &&
-                   lastSel->ElLeafType == LtText &&
-                   lastChar <= lastSel->ElTextLength)
-            {
-              if (lastChar == 0 && firstChar == 1 && firstSel == lastSel)
-                /* insertion after the caret which is at the beginning of a
-                   TEXT leaf. Insert before that text leaf */
-                {
-                  before = TRUE;
-                  firstSel = lastSel;
-                }
-              else if (lastChar == lastSel->ElTextLength &&
-                       firstSel == lastSel && firstChar > lastChar)
-                /* a caret at the end of a TEXT leaf */
-                {
-                  before = FALSE;
-                }
-              else if (lastChar <= lastSel->ElTextLength && lastChar > 0)
-                {
-                  if (firstSel == lastSel && lastChar < firstChar)
-                    /* it's just a caret */
-                    lastChar = firstChar;
-                  /* store the editing operation in the history */
-                  AddEditOpInHistory (lastSel, pDoc, TRUE, FALSE);
-                  pNextEl = lastSel->ElNext;
-                  SplitTextElement (lastSel, lastChar, pDoc, TRUE, &pSecond,
-                                    FALSE);
-                  AddEditOpInHistory (lastSel, pDoc, FALSE, TRUE);
-                  AddEditOpInHistory (pSecond, pDoc, FALSE, TRUE);
-                  BuildAbsBoxSpliText (lastSel, pSecond, pNextEl, pDoc);
-                }
-            }
-
-          pNew = NewSubtree (typeNum, pSS, pDoc, TRUE, TRUE, TRUE, TRUE);
-          if (before)
-            {
-              pSibling = SiblingElement (firstSel, TRUE);
-              InsertElementBefore (firstSel, pNew);
-              AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
-              if (pSibling == NULL)
-                /* firstSel is no longer the first child of its parent */
-                ChangeFirstLast (firstSel, pDoc, TRUE, TRUE);
-            }
-          else
-            {
-              pSibling = SiblingElement (lastSel, FALSE);
-              InsertElementAfter (lastSel, pNew);
-              AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
-              if (pSibling == NULL)
-                /* lastSel is no longer the last child of its parent */
-                ChangeFirstLast (lastSel, pDoc, FALSE, TRUE);	      
-            }
-          /* remove exclusions from the created element */
-          RemoveExcludedElem (&pNew, pDoc);
-          if (pDoc->DocCheckingMode & COMPLETE_CHECK_MASK)
-            /*if (FullStructureChecking)*/
-            AttachMandatoryAttributes (pNew, pDoc);
-          if (pDoc->DocSSchema != NULL)
-            /* the document has not been closed while waiting for mandatory
-               attributes */
-            {
-              CreationExceptions (pNew, pDoc);
-              /* send an event ElemNew.Post to application */
-              NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0, FALSE, FALSE);
-              CreateAllAbsBoxesOfEl (pNew, pDoc);
-              AbstractImageUpdated (pDoc);
-              RedisplayDocViews (pDoc);
-              RedisplayCopies (pNew, pDoc, TRUE);
-              UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
-              if (pNew && pNew->ElParent)
-                {
-                  SetDocumentModified (pDoc, TRUE, 30);
-                  /* set a new selection */
-                  pSel = FirstLeaf (pNew);
-                  if (pSel->ElTerminal && pSel->ElLeafType == LtText)
-                    SelectPositionWithEvent (pDoc, pSel, 1);
-                  else
-                    SelectElementWithEvent (pDoc, pSel, TRUE, TRUE);
-                }
-            }
-          CloseHistorySequence (pDoc);  
+          pSibling = SiblingElement (lastSel, FALSE);
+          InsertElementAfter (lastSel, pNew);
+          AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
+          if (pSibling == NULL)
+            /* lastSel is no longer the last child of its parent */
+            ChangeFirstLast (lastSel, pDoc, FALSE, TRUE);	      
         }
+      /* remove exclusions from the created element */
+      RemoveExcludedElem (&pNew, pDoc);
+      if (pDoc->DocCheckingMode & COMPLETE_CHECK_MASK)
+        /*if (FullStructureChecking)*/
+        AttachMandatoryAttributes (pNew, pDoc);
+      if (pDoc->DocSSchema != NULL)
+        /* the document has not been closed while waiting for mandatory
+           attributes */
+        {
+          CreationExceptions (pNew, pDoc);
+          /* send an event ElemNew.Post to application */
+          NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0, FALSE, FALSE);
+          CreateAllAbsBoxesOfEl (pNew, pDoc);
+          AbstractImageUpdated (pDoc);
+          RedisplayDocViews (pDoc);
+          RedisplayCopies (pNew, pDoc, TRUE);
+          UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
+          if (pNew && pNew->ElParent)
+            {
+              SetDocumentModified (pDoc, TRUE, 30);
+              /* set a new selection */
+              pSel = FirstLeaf (pNew);
+              if (pSel->ElTerminal && pSel->ElLeafType == LtText)
+                SelectPositionWithEvent (pDoc, pSel, 1);
+              else
+                SelectElementWithEvent (pDoc, pSel, TRUE, TRUE);
+            }
+        }
+      CloseHistorySequence (pDoc);  
     }
 }
 
