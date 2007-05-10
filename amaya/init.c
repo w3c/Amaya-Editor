@@ -9138,7 +9138,8 @@ void SendByMail (Document document, View view)
   char                *temppath = CreateTempDirectory ("sendmail/");
   char                *server = TtaGetEnvString ("EMAILS_SMTP_SERVER");
   char                *from   = TtaGetEnvString ("EMAILS_FROM_ADDRESS");
-  char                *docPath, *docType, *docChar;  
+  char                *docPath, *docType, *docChar;
+  char                *dstFileName;  
   int                  port;
   int                  error;
   ThotBool             retry = TRUE;
@@ -9153,7 +9154,7 @@ void SendByMail (Document document, View view)
   }
 
   Synchronize(document, view); 
-  SaveTempCopy(document, temppath);
+  SaveTempCopy(document, temppath, &dstFileName);
   if (DocumentTypes[document] == docHTML)
   {
     docEl = TtaGetMainRoot (document);
@@ -9182,6 +9183,8 @@ void SendByMail (Document document, View view)
                           from);
       if (mail)
       {
+        TtaSetMailer(mail, "Amaya (9.55)");
+        
         arr = dlg.GetRecipients();
         for (i = 0; i < (int)arr.GetCount(); i++)
         {
@@ -9193,7 +9196,7 @@ void SendByMail (Document document, View view)
         docPath = GetLocalPath (document, DocumentURLs[document]);
         docType = DocumentMeta[document]->content_type;
         docChar = DocumentMeta[document]->charset;
-  
+
         // Send document as attachment
         if (dlg.SendAsAttachment ())
           TtaAddEMailAttachmentFile (mail, docType, docPath);
@@ -9210,12 +9213,12 @@ void SendByMail (Document document, View view)
           for (i = 0; i < (int)files.GetCount(); i++)
           {
             wxFileName filename(files[i]);
-            if (filename.GetFullName() != msgName.GetFullName())
+            if (filename.GetFullName() != wxString(dstFileName, wxConvUTF8))
               TtaAddEMailAttachmentFile(mail, "",
                                         (const char*)filename.GetFullPath().mb_str(wxConvUTF8));
           }
         }
-        
+
         error = 0;
         if (TtaSendEMail (mail, server, port, &error))
           TtaSetStatus (document, view, TtaGetMessage (AMAYA, AM_EMAILS_SENT), NULL);

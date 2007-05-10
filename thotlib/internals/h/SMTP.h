@@ -230,6 +230,7 @@ protected:
     wxArrayString m_toArray;    // to: header
     wxArrayString m_ccArray;    // cc: header
     wxArrayString m_bccArray;   // bcc: header?
+    wxArrayString m_extraHeaders;
     wxMultipartMimeContainer m_attachements;
     wxMultipartMimeContainer m_alternatives;
 public:
@@ -290,6 +291,10 @@ public:
      */
     wxString GetRecipient(int index)const{return m_rcptArray[index];}
     
+    /**
+     * Add an email header.
+     */
+    void AddExtraHeader(const wxString& name, const wxString& value);
 
     /**
      * Write the message to a stream.
@@ -319,6 +324,8 @@ public:
     virtual ~wxSMTP(){}
     
     bool Connect(wxSockAddress& address, bool wait = true);
+
+    void SetMailer(const wxString& mailer);
 
     virtual bool Close();
 

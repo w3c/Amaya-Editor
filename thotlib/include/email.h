@@ -6,6 +6,8 @@ typedef void* EMail;
 EMail TtaNewEMail(const char* subject, const char* text, const char* from);
 void  TtaFreeMail(EMail mail);
 
+void TtaSetMailer(EMail mail, const char* mailer);
+
 void TtaAddEMailToRecipient(EMail mail, const char* address);
 void TtaAddEMailCopyRecipient(EMail mail, const char* address);
 

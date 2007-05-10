@@ -26,6 +26,14 @@ void  TtaFreeMail(EMail mail)
 #endif /* _WX */
 }
 
+void TtaSetMailer(EMail mail, const char* mailer)
+{
+#ifdef _WX
+  ((wxEmailMessage*)mail)->AddExtraHeader(wxT("X-Mailer"), wxString(mailer, wxConvUTF8));
+#endif /* _WX */
+}
+
+
 void TtaAddEMailToRecipient(EMail mail, const char* address)
 {
 #ifdef _WX  

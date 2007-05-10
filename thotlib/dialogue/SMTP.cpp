@@ -621,9 +621,15 @@ void wxEmailMessage::AddBcc(const wxString& address)
     m_rcptArray.Add(address);
 }
 
+void wxEmailMessage::AddExtraHeader(const wxString& name, const wxString& value)
+{
+    m_extraHeaders.Add(name + wxT(": ") + value);
+}
+
 bool wxEmailMessage::Write(wxOutputStream& out)
 {
     wxString msg;
+    int i;
     msg << wxT("From: ") << m_from << wxT("\r\n");
 
     if(m_toArray.GetCount() > 0) {
@@ -655,7 +661,14 @@ bool wxEmailMessage::Write(wxOutputStream& out)
     {
         msg << wxT("Subject: ") << m_subject << wxT("\r\n");
     }
+    
+    for(unsigned int i = 0; i < m_extraHeaders.GetCount() ; i++) {
+        msg << m_extraHeaders[i] << wxT("\r\n");
+    }
+    
     out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
+    
+    
 
 
     msg.Empty();
