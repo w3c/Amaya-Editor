@@ -29,6 +29,10 @@ ELEMENTS
       BEGIN
          ElemLClick.Pre -> RepeatButtonClicked;
       END;
+   bag :
+      BEGIN
+         ElemLClick.Pre -> BagButtonClicked;
+      END;
    option :
       BEGIN
          ElemLClick.Pre -> OptionButtonClicked;

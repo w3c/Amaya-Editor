@@ -5,10 +5,7 @@
 #include "amaya.h"
 #include "document.h"
 #include "containers.h"
-
 #include "MENUconf.h"
-
-#define TEMPLATE_SSHEMA_NAME  "Template"
 
 
 /* Structure of a template */

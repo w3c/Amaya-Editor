@@ -480,7 +480,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
           
 #ifdef TEMPLATES
           /* Verify if template allow this element.*/
-          templateSSchema = TtaGetSSchema (TEMPLATE_SSHEMA_NAME, doc);
+          templateSSchema = TtaGetSSchema ("Template", doc);
           if(templateSSchema)
           {
             parent = GetFirstTemplateParentElement(firstSel);

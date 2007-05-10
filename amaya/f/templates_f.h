@@ -43,6 +43,7 @@ extern Element Template_InsertRepeatChild ( Document doc,
 extern Element Template_InsertBagChild ( Document doc,
                                          Element el,
                                          Declaration decl );
+extern ThotBool BagButtonClicked ( NotifyElement *event );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
@@ -97,6 +98,7 @@ extern Element Template_InsertRepeatChild ( Document doc,
 extern Element Template_InsertBagChild ( Document doc,
                                            Element el,
                                            Declaration decl );
+extern ThotBool BagButtonClicked ( NotifyElement *event );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );

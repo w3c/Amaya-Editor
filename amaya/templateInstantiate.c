@@ -308,7 +308,7 @@ Element Template_GetNewSimpleTypeInstance(Document doc, Element parent, Declarat
   ElementType       elType;
   char             *empty = " ";
 
-  elType.ElSSchema = TtaGetSSchema(TEMPLATE_SSHEMA_NAME, doc);
+  elType.ElSSchema = TtaGetSSchema("Template", doc);
   elType.ElTypeNum = Template_EL_TEXT_UNIT;
   newEl = TtaNewElement (doc, elType);
   TtaSetTextContent (newEl, (unsigned char*) empty, 0, doc);

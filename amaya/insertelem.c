@@ -196,9 +196,9 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
   FillInsertableElementFromElemAttribute
   Fill an element list with all possible elements from an attribute list.
   ----------------------------------------------------------------------*/
-static void FillInsertableElementFromElemAttribute(XTigerTemplate t,
-                                                   Element elem, Element refelem,
-                                                   int attrib, DLList list, int level)
+static void FillInsertableElementFromElemAttribute (XTigerTemplate t,
+                                                    Element elem, Element refelem,
+                                                    int attrib, DLList list, int level)
 {
   ElementType     type = TtaGetElementType(elem);
   AttributeType   attributeType = {type.ElSSchema, attrib};
@@ -230,7 +230,7 @@ static void FillInsertableElementFromElemAttribute(XTigerTemplate t,
   Fill an element list with all insertable elements (base element or
   XTiger comonent).
   ----------------------------------------------------------------------*/
-static void FillInsertableElemList(Document doc, Element elem, DLList list)
+static void FillInsertableElemList (Document doc, Element elem, DLList list)
 {
   ElementType      type;
   Element          parent;
@@ -327,8 +327,9 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
   ----------------------------------------------------------------------*/
 DLList InsertableElement_GetList(Document doc)
 {
-  InsertableElementList list = (InsertableElementList) HashMap_Get(InsertableElementMap,
-                                                                   (void*)doc);
+  InsertableElementList list;
+
+  list = (InsertableElementList) HashMap_Get(InsertableElementMap, (void*)doc);
   if (list)
     return list->list;
   else
@@ -346,17 +347,18 @@ DLList InsertableElement_GetList(Document doc)
 DLList InsertableElement_Update(Document doc, Element el)
 {
   InsertableElementList list;
-  if (doc==0)
-    doc= TtaGetDocument(el);
-  list = (InsertableElementList) HashMap_Get(InsertableElementMap, (void*)doc);
-  if (list==NULL)
+
+  if (doc == 0)
+    doc= TtaGetDocument (el);
+  list = (InsertableElementList) HashMap_Get (InsertableElementMap, (void*)doc);
+  if (list == NULL)
   {
-    list = InsertableElementList_Create(0, DLList_Create());
-    HashMap_Set(InsertableElementMap, (void*)doc, list);
+    list = InsertableElementList_Create (0, DLList_Create());
+    HashMap_Set (InsertableElementMap, (void*)doc, list);
   }
   
-  DLList_Empty(list->list);
-  FillInsertableElemList(doc, el, list->list);
+  DLList_Empty (list->list);
+  FillInsertableElemList (doc, el, list->list);
   list->elem = el;
 
   return list->list;
@@ -367,35 +369,35 @@ DLList InsertableElement_Update(Document doc, Element el)
   Insert the specified element.
   @param el Element to insert (ElemListElement)
   ----------------------------------------------------------------------*/
-void InsertableElement_DoInsertElement(void* el)
+void InsertableElement_DoInsertElement (void* el)
 {
-  ElemListElement elem = (ElemListElement)el;
-  Element ref = elem->refElem;
-  ElementType refType = TtaGetElementType(ref);
-  Document doc = TtaGetDocument(ref);
-  Element   newEl = NULL;
-  SSchema   templateSSchema;
+  ElemListElement elem = (ElemListElement) el;
+  Element         ref = elem->refElem;
+  ElementType     refType = TtaGetElementType (ref);
+  Document        doc = TtaGetDocument (ref);
+  Element         newEl = NULL;
+  SSchema         templateSSchema;
 
 #ifdef AMAYA_DEBUG
   printf("insert %s into %s\n", ElemListElement_GetName(elem),
-         TtaGetElementTypeName(refType));
+         TtaGetElementTypeName (refType));
 #endif /* AMAYA_DEBUG */
 
 #ifdef TEMPLATES
-  templateSSchema = TtaGetSSchema("Template", doc);
-  if(templateSSchema && refType.ElSSchema==templateSSchema)
+  templateSSchema = TtaGetSSchema ("Template", doc);
+  if (templateSSchema && refType.ElSSchema == templateSSchema)
   {
     switch(refType.ElTypeNum)
     {
       case Template_EL_repeat:
         if (elem->typeClass==DefinedComponent)
-          newEl = Template_InsertRepeatChild(doc, ref,
-                                             (Declaration)elem->elem.component.declaration,
-                                             -1);
+          newEl = Template_InsertRepeatChild (doc, ref,
+                                              (Declaration)elem->elem.component.declaration,
+                                              -1);
         break;
       case Template_EL_bag:
-        newEl = Template_InsertBagChild(doc, ref,
-                                        (Declaration)elem->elem.component.declaration);
+        newEl = Template_InsertBagChild (doc, ref,
+                                         (Declaration)elem->elem.component.declaration);
         break;
       default:
         break;
@@ -404,5 +406,5 @@ void InsertableElement_DoInsertElement(void* el)
 #endif /* TEMPLATES */
 
   if (newEl)
-    TtaSelectElement(doc, newEl);
+    TtaSelectElement (doc, newEl);
 }

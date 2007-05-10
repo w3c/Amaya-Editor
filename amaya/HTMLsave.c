@@ -4360,10 +4360,10 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
   if (ok)
     {
       /* cancel the possible don't replace mark */
-      DontReplaceOldDoc = FALSE;      
+      DontReplaceOldDoc = FALSE;
       /* the suffix determines the output format */
       SaveAsXML = DocumentMeta[doc]->xmlformat;
-     docModified = TtaIsDocumentModified (doc);
+      docModified = TtaIsDocumentModified (doc);
       /* name of local temporary files */
       oldLocal = GetLocalPath (doc, DocumentURLs[doc]);
       /* adjust the charset and MIME type */
