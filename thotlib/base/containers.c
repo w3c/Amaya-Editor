@@ -419,7 +419,7 @@ DLList DLList_GetRefList(DLList srcList, Container_CompareFunction compare)
 {
   DLList list = DLList_Create();
   DLListNode node = srcList->first;
-  if (compare==NULL)
+  if (compare == NULL)
   {
     while (node)
     {
@@ -900,7 +900,10 @@ HashMap StringHashMap_Create (Container_DestroyElementFunction destroy,
  ----------------------------------------------------------------------------*/
 static int KeywordHashMap_HashFunction(char* key)
 {
-  return (int)key[0];
+  if (key)
+   return (int)key[0];
+  else
+    return 0;
 }
  
 HashMap KeywordHashMap_Create(Container_DestroyElementFunction destroy,
