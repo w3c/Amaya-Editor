@@ -106,48 +106,78 @@ void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
   int nb_el = (int)p.param1;
   m_fnCallback = (void*) p.param3;
   
-  if(nb_el==-1){
-    DLList list = (DLList) p.param2;
-    DLList reflist = DLList_GetRefList(list, (Container_CompareFunction)ElemListElement_Compare);
-    ForwardIterator iter = DLList_GetForwardIterator(reflist);
-    ContainerNode node;
-    ElemListElement elem;
-
-    m_pXMLList->Clear();    
-    node = ForwardIterator_GetFirst(iter);
-    while(node)
+  if (nb_el == -1)
     {
-      elem = (ElemListElement)node->elem;
+      ContainerNode node;
+      ElemListElement elem;
+
+      DLList list = (DLList) p.param2;
+      DLList reflist = DLList_GetRefList(list, (Container_CompareFunction)ElemListElement_Compare);
+      ForwardIterator iter = DLList_GetForwardIterator(reflist);
+
+      m_pXMLList->Clear();    
+      node = ForwardIterator_GetFirst(iter);
+      while(node)
+        {
+          elem = (ElemListElement)node->elem;
       
 // TODO removed code because not showing other than DefinedComponent
 //      wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
-//      if(elem->typeClass==LanguageElement)
-//      {
+//      if (elem->typeClass == LanguageElement)
 //        str.Prepend(TtaConvMessageToWX( TtaGetSSchemaName(elem->elem.element.type.ElSSchema)) + wxT(":"));
-//      }
 //      if(elem->comment)
-//      {
 //        str.append(wxT(" (") + TtaConvMessageToWX( elem->comment) + wxT(")"));
-//      }
 //      m_pXMLList->Append( str , (void*)elem);
 
-      if(elem && elem->typeClass==DefinedComponent)
-      {
-        wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
-        if(elem->comment)
-        {
-          str.append(wxT(" (") + TtaConvMessageToWX( elem->comment) + wxT(")"));
-        }
-        m_pXMLList->Append( str , (void*)elem);
-      }
+          if (elem && elem->typeClass==DefinedComponent)
+            {
+              wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
+              if (elem->comment)
+                str.append(wxT(" (") + TtaConvMessageToWX( elem->comment) + wxT(")"));
+              m_pXMLList->Append( str , (void*)elem);
+            }
 
-      node = ForwardIterator_GetNext(iter);
+          node = ForwardIterator_GetNext(iter);
+        }
+    
+      TtaFreeMemory(iter);
+      DLList_Destroy(reflist);
     }
-    
-    TtaFreeMemory(iter);
-    DLList_Destroy(reflist);
-    
-  }
+  else
+    {
+      const char  *listBuffer = (char *)p.param2;
+      const char  *currentEl = (char *)p.param3;
+      intptr_t     ref = (intptr_t)p.param4;
+  
+      m_XMLRef = ref;
+      /* fill the list */
+      m_pXMLList->Clear();
+      int i = 0;
+      int index = 0;
+      int sel = 0;
+      if (nb_el == 0)
+        return;
+      while (i < nb_el && listBuffer[index] != EOS)
+        {
+          m_pXMLList->Append( TtaConvMessageToWX( &listBuffer[index] ) );
+          if (!strcmp (&listBuffer[index], currentEl))
+            /* current selected item */
+            sel = i;
+          index += strlen (&listBuffer[index]) + 1; /* one entry length */
+          i++;
+        }
+      
+      /* select the wanted item */
+      m_pXMLList->SetSelection(sel);
+      if (currentEl[0] != EOS)
+        m_pXMLList->SetStringSelection(TtaConvMessageToWX(currentEl));
+      
+      /* recalculate layout */
+      GetParent()->GetParent()->Layout();
+      GetParent()->Layout();
+      Layout();
+      m_pPanelContentDetach->Layout();
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -187,14 +217,11 @@ void AmayaXMLPanel::OnApply( wxCommandEvent& event )
   ElemListElement elem = NULL;
   
   ThotCallback(m_XMLRef, INTEGER_DATA, (char*) 1);
-  
   if(m_pXMLList && m_pXMLList->GetSelection()!=wxNOT_FOUND)
   {
     elem = (ElemListElement)m_pXMLList->GetClientData(m_pXMLList->GetSelection());
-    if(elem){
-      if(m_fnCallback)
-        ((ElemListElement_DoInsertElementFunction)m_fnCallback)(elem);
-    }
+    if(elem && m_fnCallback)
+      ((ElemListElement_DoInsertElementFunction)m_fnCallback)(elem);
   }
 }
 
