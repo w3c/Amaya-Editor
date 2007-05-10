@@ -1481,6 +1481,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   max = maxLength + lg;
   /* Allocate a buffer with the right length */
   text = (CHAR_T *)TtaGetMemory (max * sizeof (CHAR_T));
+  text[0] = EOS;
   /* Copy the text into the buffer */
   i = 0;
   ind = firstChar - 1;

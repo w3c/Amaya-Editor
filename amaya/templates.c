@@ -740,13 +740,16 @@ Element Template_InsertBagChild (Document doc, Element el, Declaration decl)
       newElType.ElTypeNum = Template_EL_useEl;
     else
       newElType.ElTypeNum = Template_EL_useSimple;
-    if (decl->blockLevel && !IsTemplateElement (el))
+
+    selType = TtaGetElementType (sel);
+    if (decl->blockLevel && 
+        (TtaIsLeaf (selType) || !IsTemplateElement (sel)))
       {
         // force the insertion of a block level element at the right position
-        while (el && IsCharacterLevelElement (el))
-          el = TtaGetParent (el);
-        if (el)
-          TtaSelectElement (doc, el);
+        while (sel && IsCharacterLevelElement (sel))
+          sel = TtaGetParent (sel);
+        if (sel)
+          TtaSelectElement (doc, sel);
         TtaInsertAnyElement (doc, FALSE);
       }
     TtaInsertElement (newElType, doc);
