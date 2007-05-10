@@ -4616,19 +4616,27 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
             }
           /* restore the previous charset and mime type */
           if (user_charset && DocumentMeta[doc]->charset)
-            TtaFreeMemory (DocumentMeta[doc]->charset);
-          DocumentMeta[doc]->charset = old_charset;
-          charset = TtaGetCharset (old_charset);
-          TtaSetDocumentCharset (doc, charset, FALSE);
+            {
+              TtaFreeMemory (DocumentMeta[doc]->charset);
+              DocumentMeta[doc]->charset = old_charset;
+              charset = TtaGetCharset (old_charset);
+              TtaSetDocumentCharset (doc, charset, FALSE);
+            }
           if (user_mimetype && DocumentMeta[doc]->content_type)
-            TtaFreeMemory (DocumentMeta[doc]->content_type);
-          DocumentMeta[doc]->content_type = old_mimetype;
+            {
+              TtaFreeMemory (DocumentMeta[doc]->content_type);
+              DocumentMeta[doc]->content_type = old_mimetype;
+            }
           if (old_content_location && DocumentMeta[doc]->content_location)
-            TtaFreeMemory (DocumentMeta[doc]->content_location);
-          DocumentMeta[doc]->content_location = old_content_location;
+            {
+              TtaFreeMemory (DocumentMeta[doc]->content_location);
+              DocumentMeta[doc]->content_location = old_content_location;
+            }
           if (old_full_content_location && DocumentMeta[doc]->full_content_location)
-            TtaFreeMemory (DocumentMeta[doc]->full_content_location);
-          DocumentMeta[doc]->full_content_location = old_full_content_location;
+            {
+              TtaFreeMemory (DocumentMeta[doc]->full_content_location);
+              DocumentMeta[doc]->full_content_location = old_full_content_location;
+            }
           if (!ok)
             /* propose to save a second time */
             SaveDocumentAs(doc, 1);
@@ -4643,8 +4651,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
 /*----------------------------------------------------------------------
   SaveTempCopy saves a document to a local temporary directory.
   Saves images and stylesheets.
+  filename, if not NULL, will receive a copy of the filename.
   ----------------------------------------------------------------------*/
-ThotBool SaveTempCopy (Document doc, const char* dstdir)
+ThotBool SaveTempCopy (Document doc, const char* dstdir, char** filename)
 {
   char buff[MAX_LENGTH];
   char* oldURL;
@@ -4673,5 +4682,9 @@ ThotBool SaveTempCopy (Document doc, const char* dstdir)
   CopyCss    = FALSE;
   UpdateURLs = TRUE; // just copy local resources
   DoSaveAs(NULL, NULL, TRUE);
+  
+  if(filename)
+    *filename = TtaStrdup(SaveName);
+  
   return TRUE;
 }

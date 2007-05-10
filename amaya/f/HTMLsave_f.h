@@ -72,7 +72,8 @@ extern void DoSaveAs ( char *user_charset,
                        char *user_mimetype,
                        ThotBool fullCopy );
 extern ThotBool SaveTempCopy ( Document doc,
-                               const char* dstdir );
+                               const char* dstdir,
+                               char** filename );
 
 #else /* __STDC__ */
 
@@ -142,7 +143,8 @@ extern void DoSaveAs ( char *user_charset,
                          char *user_mimetype,
                          ThotBool fullCopy );
 extern ThotBool SaveTempCopy ( Document doc,
-                                 const char* dstdir );
+                                 const char* dstdir,
+                                 char** filename );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
