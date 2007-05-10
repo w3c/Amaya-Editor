@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20000303 Stylable//EN"   "http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" width="332" height="332">
-  <g id="audio">
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="170">
+  <g id="audio" transform="translate(-85,-105)">
     <path style="stroke:none;fill:#505050"
           d="M86.39,170.146c0,34.299,33.839,62.203,75.432,62.203c14.396,0,28.209-3.33,40.245-9.598c0.271,0.11,0.857,0.35,0.857,0.35c17.425,7.072,40.147,16.894,56.849,36.601l2.156-0.919c-4.387-37.987-16.784-56.18-28.878-68.156    c2.768-6.553,4.202-13.412,4.202-20.48c0-34.299-33.839-62.203-75.432-62.203S86.39,135.846,86.39,170.146z"/>
     <path style="fill:none;stroke:none;"
