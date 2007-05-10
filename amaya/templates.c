@@ -13,9 +13,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "document.h"
-
 #include "undo.h"
-
 #include "containers.h"
 #include "Elemlist.h"
 #include "templates.h"
@@ -24,9 +22,10 @@
 #ifdef TEMPLATES
 #include "Template.h"
 #include "templateDeclarations.h"
+
+#include "html2thot_f.h"
 #include "templates_f.h"
 #include "templateUtils_f.h"
-
 #include "templateLoad_f.h"
 #include "templateDeclarations_f.h"
 #include "templateInstantiate_f.h"
@@ -741,7 +740,15 @@ Element Template_InsertBagChild (Document doc, Element el, Declaration decl)
       newElType.ElTypeNum = Template_EL_useEl;
     else
       newElType.ElTypeNum = Template_EL_useSimple;
-    
+    if (decl->blockLevel && !IsTemplateElement (el))
+      {
+        // force the insertion of a block level element at the right position
+        while (el && IsCharacterLevelElement (el))
+          el = TtaGetParent (el);
+        if (el)
+          TtaSelectElement (doc, el);
+        TtaInsertAnyElement (doc, FALSE);
+      }
     TtaInsertElement (newElType, doc);
     TtaGiveFirstSelectedElement (doc, &sel, &start, &end);
     if (sel)
@@ -1337,7 +1344,7 @@ ThotBool ClosingInstance(NotifyDialog* dialog)
   IsTemplateElement
   Test if an element is a template element.
   ----------------------------------------------------------------------*/
-ThotBool IsTemplateElement(Element elem)
+ThotBool IsTemplateElement (Element elem)
 {
 #ifdef TEMPLATES
   ElementType     elType;
