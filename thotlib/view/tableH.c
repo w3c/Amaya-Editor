@@ -979,8 +979,9 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
         extra = (pixels + n / 2) / n;
       else
         extra = pixels;
-      // ignore extra pixels which will be added
-      delta -= pixels;
+      if (useMax)
+        // ignore extra pixels which will be added
+        delta -= pixels;
       for (cRef = 0; cRef < cNumber; cRef++)
         {
           box = colBox[cRef]->AbBox;
@@ -1008,7 +1009,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
               else if (colPercent[cRef] < 0)
                 /* colPercent[cRef] = - new min */
                 i = var - colPercent[cRef];
-              else if (box->BxMinWidth + var > box->BxMaxWidth)
+              else if (colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
+                       box->BxMinWidth + var > box->BxMaxWidth)
                 /* use the max instead of the min + delta */
                 i = box->BxMaxWidth;
               else
