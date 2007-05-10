@@ -210,7 +210,7 @@ void Template_PreParseDeclarations (XTigerTemplate t, Element el)
   if(!t)
     return;
 
-  if(el==NULL)
+  if(el == NULL)
     el = TtaGetMainRoot(t->doc);
 
   type = TtaGetElementType (el);  
@@ -255,7 +255,7 @@ static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
       // the template is now loaded
       if(!ctx->t)
         ctx->t = NewXTigerTemplate (ctx->templatePath, TRUE);
-      SetTemplateDocument(ctx->t, newdoc);
+      SetTemplateDocument (ctx->t, newdoc);
   
       ctx->isloaded = TRUE;
       ctx->newdoc   = newdoc;

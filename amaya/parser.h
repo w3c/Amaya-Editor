@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -25,7 +25,6 @@
 #define SVG_URI         "http://www.w3.org/2000/svg"
 #define XLink_URI       "http://www.w3.org/1999/xlink"
 #define XLink_PREFIX    "xlink"
-#define Template_URI    "http://wam.inrialpes.fr/xtiger"
 #define Template_PREFIX "t"
 
 #define NAMESPACE_URI   "http://www.w3.org/XML/1998/namespace"

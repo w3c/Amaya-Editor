@@ -278,7 +278,9 @@ static ThotBool ChangeXmlParserContextByUri (char *uriName)
 {
   currentParserCtxt = firstParserCtxt;
   while (currentParserCtxt != NULL &&
-         strcmp ((char *)uriName, currentParserCtxt->UriName))
+         strcmp ((char *)uriName, currentParserCtxt->UriName) &&
+         (strcmp ((char *)uriName, Template_URI_o) ||
+          strcmp (currentParserCtxt->UriName, Template_URI)))
     currentParserCtxt = currentParserCtxt->NextParserCtxt;
 
   /* Initialize the corresponding Thot schema */
@@ -4659,7 +4661,7 @@ static void Hndl_XmlDeclHandler (void  *userData,
   FreeXmlParser
   Frees all ressources associated with the XML parser.
   ----------------------------------------------------------------------*/
-void             FreeXmlParserContexts (void)
+void FreeXmlParserContexts (void)
 
 {
   PtrParserCtxt  ctxt, nextCtxt;

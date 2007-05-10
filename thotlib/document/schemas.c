@@ -14,6 +14,7 @@
 #include "typemedia.h"
 #include "libmsg.h"
 #include "message.h"
+#include "application.h"
 
 #ifndef NODISPLAY
 #include "fileaccess.h"
@@ -2772,6 +2773,9 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
     return;
   uriDecl = NULL;
   found = FALSE;
+  // a patch to replace the old xtiger path by the new one
+  if (!strcmp (NsUri, Template_URI_o))
+    NsUri = Template_URI;
   if (pDoc->DocNsUriDecl)
     {
       /* Search if this uri has been already declared */

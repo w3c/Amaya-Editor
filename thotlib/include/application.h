@@ -57,6 +57,8 @@
 #define ERR_invalid_reference		55
 #define ERR_too_many_languages 		100
 #define ERR_language_not_found 		101
+#define Template_URI_o  "http://wam.inrialpes.fr/xtiger"
+#define Template_URI    "http://ns.inria.org/xtiger"
 
 #ifndef __CEXTRACT__
 
