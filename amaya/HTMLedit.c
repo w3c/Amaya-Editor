@@ -2247,7 +2247,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt,
                          ThotBool withUndo)
 {
-  ElementType	    elType, foundType;
+  ElementType	    elType;
   AttributeType     attrType, attrIDType;
   Attribute         attr, attrID = NULL;
   Element	    image, elFound;
@@ -2353,30 +2353,13 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt,
               elFound = SearchNAMEattribute (doc, value, attr, el);
               while (elFound)
                 {
-                  /* skip form elements */
-                  foundType = TtaGetElementType (elFound);
-                  if (strcmp(TtaGetSSchemaName (foundType.ElSSchema), "HTML") ||
-                      (foundType.ElTypeNum != HTML_EL_Input &&
-                       foundType.ElTypeNum != HTML_EL_Text_Input &&
-                       foundType.ElTypeNum != HTML_EL_Password_Input &&
-                       foundType.ElTypeNum != HTML_EL_File_Input &&
-                       foundType.ElTypeNum != HTML_EL_Checkbox_Input &&
-                       foundType.ElTypeNum != HTML_EL_Radio_Input &&
-                       foundType.ElTypeNum != HTML_EL_Submit_Input &&
-                       foundType.ElTypeNum != HTML_EL_Reset_Input &&
-                       foundType.ElTypeNum != HTML_EL_Button_Input &&
-                       foundType.ElTypeNum != HTML_EL_Hidden_Input))
-                    {
-                      /* Not a form element, the NAME must be changed */
-                      change = TRUE;
-                      i++;
-                      sprintf (&value[length], "%d", i);
-                      result = TRUE;
-                      /* recheck the new value */
-                      elFound = SearchNAMEattribute (doc, value, attr, el);
-                    }
-                  else
-                    elFound = NULL;
+                  /* form element or not, the NAME must be changed */
+                  change = TRUE;
+                  i++;
+                  sprintf (&value[length], "%d", i);
+                  result = TRUE;
+                  /* recheck the new value */
+                  elFound = SearchNAMEattribute (doc, value, attr, el);
                 }
               
               if (change && doIt)
@@ -4095,8 +4078,8 @@ void GraphicsModified (NotifyAttribute * event)
   Element             el;
   ElementType         elType;
   AttributeType       attrType;
-  Attribute	       attr;
-  char		       buffer[15];
+  Attribute	          attr;
+  char		            buffer[15];
 
   el = event->element;
   elType = TtaGetElementType (el);

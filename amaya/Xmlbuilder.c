@@ -518,11 +518,21 @@ void XmlStyleSheetPasted (NotifyElement *event)
 void XmlElementPasted (NotifyElement * event)
 {
   ElementType         elType;
+  AttributeType       attrType;
+  Attribute	          attr;
 
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum == XML_EL_TEXT_UNIT)
     /* remove all attributes attached to the pasted XML_EL_TEXT_UNIT */
     RemoveTextAttributes (event->element, event->document);
+  else
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = XML_ATTR_xmlid;
+      attr = TtaGetAttribute (event->element, attrType);
+      if (attr)
+        MakeUniqueName (event->element, event->document, TRUE, TRUE);
+    }
 }
 
 
