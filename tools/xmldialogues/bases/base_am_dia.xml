@@ -202,7 +202,7 @@
 <message xml:lang="de">Neu</message>
 <message xml:lang="it">Nuovo</message>
 <message xml:lang="tr">Yeni</message>
-<message xml:lang="es">Nuevo</message>
+<message xml:lang="es">&amp;Nuevo</message>
 <message xml:lang="pt">Novo</message>
 <message xml:lang="fi">Uusi</message>
 <message xml:lang="ru">Новый</message>
@@ -352,7 +352,7 @@
 <message xml:lang="de">Öffnen(&amp;O)...</message>
 <message xml:lang="it">Apri documento...</message>
 <message xml:lang="tr">Belge aç(&amp;O)...</message>
-<message xml:lang="es">Abrir d&amp;ocumento...</message>
+<message xml:lang="es">A&amp;brir documento...</message>
 <message xml:lang="pt">Abrir d&amp;ocumento...</message>
 <message xml:lang="fi">Avaa d&amp;okumentti...</message>
 <message xml:lang="ru">Открыть документ(&amp;O)...</message>
@@ -382,7 +382,7 @@
 <message xml:lang="de">Aktualisie&amp;ren</message>
 <message xml:lang="it">&amp;Ricarica documento</message>
 <message xml:lang="tr">Belgeyi yeniden yükle(&amp;R)</message>
-<message xml:lang="es">Actualiza&amp;r</message>
+<message xml:lang="es">Actuali&amp;zar</message>
 <message xml:lang="pt">&amp;Recarregar documento</message>
 <message xml:lang="fi">Päivitä dokumentti(&amp;R)</message>
 <message xml:lang="ru">Перезагрузить документ(&amp;R)</message>
@@ -396,7 +396,7 @@
 <message xml:lang="fr">Lire comme</message>
 <message xml:lang="it">Forza una codifica carattere</message>
 <message xml:lang="de">Lies als</message>
-<message xml:lang="es">Leído como</message>
+<message xml:lang="es">&amp;Leído como</message>
 <message xml:lang="ru">Выбрать кодировку</message>
 <message xml:lang="hu">Kényszerített karakter &amp;kódolás</message>
 <message xml:lang="ka">კოდირების მითითება</message>
@@ -768,7 +768,7 @@
 <message xml:lang="fr">Précédent(&amp;B)</message>
 <message xml:lang="de">Zurück(&amp;B)</message>
 <message xml:lang="it">Precedente(&amp;B)</message>
-<message xml:lang="es">Atrás(&amp;B)</message>
+<message xml:lang="es">A&amp;trás</message>
 <message xml:lang="pt">Voltar(&amp;B)</message>
 <message xml:lang="fi">Takaisin(&amp;B)</message>
 <message xml:lang="tr">Geri(&amp;B)</message>
@@ -783,7 +783,7 @@
 <message xml:lang="fr">Suivant(&amp;F)</message>
 <message xml:lang="de">Vorwärts(&amp;F)</message>
 <message xml:lang="it">Successivo(&amp;F)</message>
-<message xml:lang="es">Adelante(&amp;F)</message>
+<message xml:lang="es">A&amp;delante</message>
 <message xml:lang="pt">Avançar(&amp;F)</message>
 <message xml:lang="fi">Eteenpäin(&amp;F)</message>
 <message xml:lang="tr">Ileri(&amp;F)</message>
@@ -798,7 +798,7 @@
 <message xml:lang="fr">Montrer les erreurs</message>
 <message xml:lang="de">Parserfehler anzeigen</message>
 <message xml:lang="it">Mostra le errore</message>
-<message xml:lang="es">Mostrar errores &amp;sintácticos</message>
+<message xml:lang="es">&amp;Mostrar errores sintácticos</message>
 <message xml:lang="pt">Exibir erros de gramática (parsing)</message>
 <message xml:lang="fi">Näytä käännösvirheet</message>
 <message xml:lang="tr">Pars hatalarını göster</message>
@@ -813,7 +813,7 @@
 <message xml:lang="fr">&amp;Info document</message>
 <message xml:lang="de">&amp;info</message>
 <message xml:lang="it">&amp;Info sul documento</message>
-<message xml:lang="es">Propiedades(&amp;I)</message>
+<message xml:lang="es">&amp;Propiedades del documento</message>
 <message xml:lang="pt">&amp;Info sobre documento</message>
 <message xml:lang="fi">T&amp;ietoja dokumentista</message>
 <message xml:lang="tr">Doküman b&amp;ilgisi</message>
@@ -829,7 +829,7 @@
 <message xml:lang="de">&amp;Speichern</message>
 <message xml:lang="it">&amp;Salva</message>
 <message xml:lang="tr">Kaydet(&amp;S)</message>
-<message xml:lang="es">Guardar(&amp;S)</message>
+<message xml:lang="es">&amp;Guardar</message>
 <message xml:lang="pt">&amp;Salvar</message>
 <message xml:lang="fi">Tallenna(&amp;S)</message>
 <message xml:lang="ru">Сохранить(&amp;S)</message>
@@ -844,7 +844,7 @@
 <message xml:lang="de">Speichern unter...</message>
 <message xml:lang="it">S&amp;alva con nome...</message>
 <message xml:lang="tr">Isimle k&amp;aydet...</message>
-<message xml:lang="es">Gu&amp;ardar como...</message>
+<message xml:lang="es">G&amp;uardar como...</message>
 <message xml:lang="pt">S&amp;alvar como...</message>
 <message xml:lang="fi">T&amp;allenna nimellä...</message>
 <message xml:lang="ru">Сохранить как(&amp;A)...</message>
@@ -858,7 +858,7 @@
 <message xml:lang="fr">S&amp;ynchroniser</message>
 <message xml:lang="de">S&amp;ynchronisieren</message>
 <message xml:lang="it">Sincronizza(&amp;Y)</message>
-<message xml:lang="es">Sincroni&amp;zar(&amp;Y)</message>
+<message xml:lang="es">Sinc&amp;ronizar</message>
 <message xml:lang="pt">Sincronizar(&amp;Y)</message>
 <message xml:lang="fi">Päivitä(&amp;Y)</message>
 <message xml:lang="tr">Eşlemek(&amp;Y)</message>
@@ -873,7 +873,7 @@
 <message xml:lang="fr">Changer le doctype</message>
 <message xml:lang="it">Cambia/Crea doctype</message>
 <message xml:lang="de">DTD ändern</message>
-<message xml:lang="es">Cambiar doctype</message>
+<message xml:lang="es">Cambiar doct&amp;ype</message>
 <message xml:lang="pt">Alterar Document Type</message>
 <message xml:lang="fi">Muuta tyyppi</message>
 <message xml:lang="tr">Doctype\'bı düzenle</message>
@@ -974,7 +974,7 @@
 <message xml:lang="fr">Changer pour HTML 4.01 Transitional</message>
 <message xml:lang="it">Cambia/Crea doctype HTML 4.01 Transitional</message>
 <message xml:lang="de">HTML 4.01 Transitional</message>
-<message xml:lang="es">Cambiar a HTML 4.01 ransitional</message>
+<message xml:lang="es">Cambiar a HTML 4.01 Transitional</message>
 <message xml:lang="pt">Alterar doctype para HTML 4.01 Transitional</message>
 <message xml:lang="fi">Aseta tyypiksi HTML 4.01 Transitional</message>
 <message xml:lang="tr">HTML 4.01 Transitional doctype</message>
@@ -1002,6 +1002,7 @@
 <label define="BSetUpandPrint">
 <message xml:lang="en">Send by mail ...</message>
 <message xml:lang="fr">Envoyer par courriel ...</message>
+<message xml:lang="es">&amp;Enviar por correo electrónico ...</message>
 <message xml:lang="sk">Odoslať mailom ...</message>
 </label>
 <label define="BSetUpandPrint">
@@ -1009,7 +1010,7 @@
 <message xml:lang="fr">Paramétrer et imprimer(&amp;U)...</message>
 <message xml:lang="de">Dr&amp;uckoptionen...</message>
 <message xml:lang="it">Imposta e stampa(&amp;U)...</message>
-<message xml:lang="es">Config&amp;urar e imprimir...</message>
+<message xml:lang="es">C&amp;onfigurar e imprimir...</message>
 <message xml:lang="pt">Config&amp;urar e imprimir...</message>
 <message xml:lang="fi">T&amp;ulostusasetukset...</message>
 <message xml:lang="tr">K&amp;ur ve yazdır</message>
@@ -1025,7 +1026,7 @@
 <message xml:lang="de">Drucken(&amp;P)</message>
 <message xml:lang="it">Stam&amp;pa</message>
 <message xml:lang="tr">Ya&amp;pılandır ve yazdır</message>
-<message xml:lang="es">Im&amp;primir</message>
+<message xml:lang="es">&amp;Imprimir</message>
 <message xml:lang="pt">Im&amp;primir</message>
 <message xml:lang="fi">Tulosta(&amp;P)</message>
 <message xml:lang="ru">Печать(&amp;P)</message>
@@ -1052,7 +1053,7 @@
 <message xml:lang="de">Schließen(&amp;W)</message>
 <message xml:lang="it">Chiudi(&amp;W)</message>
 <message xml:lang="tr">Belgeyi kapat(&amp;W)</message>
-<message xml:lang="es">Cerrar ventana(&amp;W)</message>
+<message xml:lang="es">Cerrar &amp;ventana</message>
 <message xml:lang="pt">Fechar janela(&amp;W)</message>
 <message xml:lang="fi">Sulje ikkuna(&amp;W)</message>
 <message xml:lang="ru">Закрыть окно(&amp;W)</message>
@@ -1067,7 +1068,7 @@
 <message xml:lang="de">Beenden(&amp;X)</message>
 <message xml:lang="it">Esci(&amp;X)</message>
 <message xml:lang="tr">Çıkış(&amp;X)</message>
-<message xml:lang="es">Salir de Amaya(&amp;X)</message>
+<message xml:lang="es">&amp;Salir de Amaya</message>
 <message xml:lang="pt">Sair de Amaya(&amp;X)</message>
 <message xml:lang="fi">Sulje Amaya(&amp;X)</message>
 <message xml:lang="ru">Выйти из Amaya(&amp;X)</message>

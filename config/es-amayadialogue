@@ -11,7 +11,7 @@
 9 A&notaciones
 10 &Cooperación
 11 A&yuda
-12 Nuevo
+12 &Nuevo
 13 Nuevo documento &XHTML...
 14 Nuevo documento X&HTML 1.1...
 15 Nuevo documento XHTML 1.0 &Transitional...
@@ -21,10 +21,10 @@
 19 Nuevo documento SV&G...
 20 Nueva hoja de es&tilo CSS...
 21 Desd&e plantilla
-22 Abrir d&ocumento...
+22 A&brir documento...
 23 Abrir en ventana nueva...
-24 Actualiza&r
-25 Leído como
+24 Actuali&zar
+25 &Leído como
 26 Unicode (UTF-8)
 27 Occidental (ISO-8859-1)
 28 Occidental (ISO-8859-15)
@@ -49,28 +49,28 @@
 47 Japonés (ISO-2022-JP)
 48 Japonés (EUC-JP)
 49 Japonés (Shift-JIS)
-50 Atrás(&B)
-51 Adelante(&F)
-52 Mostrar errores &sintácticos
-53 Propiedades(&I)
-54 Guardar(&S)
-55 Gu&ardar como...
-56 Sincroni&zar(&Y)
-57 Cambiar doctype
+50 A&trás
+51 A&delante
+52 &Mostrar errores sintácticos
+53 &Propiedades del documento
+54 &Guardar
+55 G&uardar como...
+56 Sinc&ronizar
+57 Cambiar doct&ype
 58 &Borrar doctype
 59 Añadir doctype
 60 Cambiar a XHTML 1.1
 61 Cambiar a XHTML 1.0 Transitional
 62 Cambiar a XHTML 1.0 &Strict
 63 Cambiar a XHTML 1.0 Basic
-64 Cambiar a HTML 4.01 ransitional
+64 Cambiar a HTML 4.01 Transitional
 65 Cambiar a HTML 4.01 Strict
-66 **Send by mail ...
-67 Config&urar e imprimir...
-68 Im&primir
+66 &Enviar por correo electrónico ...
+67 C&onfigurar e imprimir...
+68 &Imprimir
 69 &Cerrar pestaña
-70 Cerrar ventana(&W)
-71 Salir de Amaya(&X)
+70 Cerrar &ventana
+71 &Salir de Amaya
 72 Nueva pestaña
 73 Actualizar pestaña
 74 Actualizar todas las pestañas

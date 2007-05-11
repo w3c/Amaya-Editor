@@ -1658,16 +1658,17 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
               length = TtaGetTextAttributeLength (attr) + 1;
               if (length <= MAX_LENGTH)
                 {
-                  /* get a buffer for the attribute value */
-                  value = (char *)TtaGetMemory (length);
 #ifdef _WX
                   TtaGiveTextAttributeValue (attr, ImgAlt, &length);
 #else /* _WX */
-		  /* copy the ALT attribute into the buffer */
+                  /* get a buffer for the attribute value */
+                  value = (char *)TtaGetMemory (length);
+		              /* copy the ALT attribute into the buffer */
                   TtaGiveTextAttributeValue (attr, value, &length);
                   name = (char *)TtaConvertMbsToByte ((unsigned char *)value,
                                                       TtaGetDefaultCharset ());
                   strncpy (ImgAlt, name, MAX_LENGTH-1);
+                  TtaFreeMemory (value);
                   TtaFreeMemory (name);
 #endif /* _WX */
                 }
