@@ -2834,38 +2834,35 @@ void RemoveNamespaceDeclaration (PtrDocument pDoc, PtrElement element)
       /* Search if this uri has been already declared */
       while (uriDecl)
         {
-          if (uriDecl->NsUriSSchema == element->ElStructSchema)
+          // html element could declare several namespaces
+          // It's the uri of the element, check the list of elements
+          prefixDecl = uriDecl->NsPtrPrefix;
+          prevDecl = NULL;
+          while (prefixDecl)
             {
-              // It's the uri of the element, check the list of elements
-              prefixDecl = uriDecl->NsPtrPrefix;
-              prevDecl = NULL;
-              while (prefixDecl)
+              if (prefixDecl->NsPrefixElem == element)
                 {
-                  if (prefixDecl->NsPrefixElem == element)
+                  if (prevDecl)
+                    prevDecl->NsNextPrefixDecl = prefixDecl->NsNextPrefixDecl;
+                  else
                     {
-                      if (prevDecl)
-                        prevDecl->NsNextPrefixDecl = prefixDecl->NsNextPrefixDecl;
-                      else
+                      // it was the first entry for this uri
+                      uriDecl->NsPtrPrefix = prefixDecl->NsNextPrefixDecl;
+                      if (uriDecl->NsPtrPrefix == NULL)
                         {
-                          // it was the fist entry for this uri
-                          uriDecl->NsPtrPrefix = prefixDecl->NsNextPrefixDecl;
-                          if (uriDecl->NsPtrPrefix == NULL)
-                            {
-                              // no more entry for this uri, remove this declaration
-                              if (prevUri)
-                                prevUri->NsNextUriDecl = uriDecl->NsNextUriDecl;
-                              else
-                                pDoc->DocNsUriDecl = uriDecl->NsNextUriDecl;
-                              TtaFreeMemory (uriDecl);
-                            }
+                          // no more entry for this uri, remove this declaration
+                          if (prevUri)
+                            prevUri->NsNextUriDecl = uriDecl->NsNextUriDecl;
+                          else
+                            pDoc->DocNsUriDecl = uriDecl->NsNextUriDecl;
+                          TtaFreeMemory (uriDecl);
                         }
-                      TtaFreeMemory (prefixDecl);
-                      return;
                     }
-                  prevDecl = prefixDecl;
-                  prefixDecl = prefixDecl->NsNextPrefixDecl;
+                  TtaFreeMemory (prefixDecl);
+                  return;
                 }
-              return;
+              prevDecl = prefixDecl;
+              prefixDecl = prefixDecl->NsNextPrefixDecl;
             }
           // next uri declaration
           prevUri = uriDecl;
