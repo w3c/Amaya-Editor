@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type"
+  content="application/xhtml+xml; charset=iso-8859-1" />
+  <title>Utilisation des modèles XTiger dans Amaya</title>
+  <meta name="generator" content="amaya 9.53, see http://www.w3.org/Amaya/" />
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<div>
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+
+<p class="nav"><a href="HTML.html.fr" accesskey="p"><img alt="previous"
+src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
+<a href="Creating.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /></a></p>
+</div>
+
+<div class="toc">
+<ul>
+  <li><a href="#Templates">Les modèles dans Amaya</a>
+    <ul>
+      <li><a href="#What">Qu'est-ce qu'un modèle ?</a></li>
+      <li><a href="#Selecting">Sélectionner un modèle</a></li>
+      <li><a href="#Creating">Créer une instance de document</a></li>
+      <li><a href="#Visualizin">Visualisation des éléments du modèle</a></li>
+      <li><a href="#Editing">Editer un document instance</a>
+        <ul>
+          <li><a href="#Editing1">Edition dans un élément
+            <code>repeat</code></a></li>
+          <li><a href="#Editing2">Edition dans un élément
+            <code>option</code></a></li>
+          <li><a href="#Editing3">Edition dans un élément
+          <code>use</code></a></li>
+          <li><a href="#Editing4">Edition dans un élément
+          <code>bag</code></a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<div>
+<h2 id="Templates">Les modèles dans Amaya</h2>
+
+<h3 id="What">Qu'est-ce qu'un modèle ?</h3>
+
+<p>Les modèles sont utilisés pour produire plusieurs documents du même type.
+Un modèle est un squelette représentant ce type de document, exprimé dans le
+format du document final à produire (par exemple XHTML). Le format du
+document final est appelé le langage cible et doit être un langage XML.</p>
+
+<p>Dans un modèle, le squelette du document contient des déclarations,
+exprimées dans le langage XTiger (eXtensible Templates for Interactive Guided
+Editing of Resources), qui spécifient comment le document minimal peut
+évoluer et grossir, en respectant le type de document final désiré. Les
+documents produits à partir de ce squelette en suivant les déclarations
+XTiger sont appelés des <em>instances</em> du modèle. Quelques parties du
+modèle peuvent être figées, si elles doivent apparaître dans les instances
+telles quelles. Quelques parties peuvent être modifiées quand une instance de
+document est produite, quelques autres peuvent être ajoutés, librement ou
+sous certaines contraintes.</p>
+
+<p>Le fichier contenant le modèle doit avoir l'extension
+<code>.xtd</code>.</p>
+
+<p>Un modèle vient souvent avec un ensemble de ressources attachées (images,
+feuilles de style, scripts). Un modèle est une ressource web, qui peut être
+stockée dans le système de fichier local ou partagé sur un serveur web.</p>
+
+<h3 id="Selecting">Sélectionner un modèle</h3>
+
+<p>Vous pouvez créer vos propres modèles, en utilisant le langage XTiger.
+Cependant, dans la version courante d'Amaya, aucun support spécifique n'est
+fourni pour la création et le mise à jour des modèles. Vous pouvez aussi
+utiliser les modèles disponibles sur le site web d'Amaya <a
+href="http://www.w3.org/Amaya/Templates/">http://www.w3.org/Amaya/Templates/</a>.</p>
+
+<p>Vous êtes libre de stocker les modèles n'importe où, dans votre système de
+fichier local ou à distances.</p>
+
+<p>Pour faciliter la sélection parmi vos modèles favoris, il y a une section
+Modèles dans le dialogue des Préférences (<strong>Édition &gt;
+Préférences</strong>). Utilisez ces préférences pour enregistrer les modèles
+qu'Amaya proposera quand vous créerez un nouveau document. Quand vous voulez
+enregistrer un modèle local, vous pouvez appeler l'explorateur de fichiers
+avec le bouton pour localiser et sélectionner les modèles à ajouter. Vous
+pouvez aussi entrer l'URI des modèles distants dans la zone d'entrée en
+dessous de la liste. Utilisez les boutons situés sur le côté droit de la
+liste pour retirer le modèle sélectionné ou changer l'ordre dans la liste des
+modèles.</p>
+
+<p>L'enregistrement des modèles n'est pas obligatoire. Quand vous créez une
+nouvelle instance, vous pouvez aussi choisir un modèle qui n'est pas dans
+cette liste.</p>
+
+<h3 id="Creating">Créer une instance de document</h3>
+
+<p>Pour créer un nouveau document instance depuis un modèle, utilisez
+l'entrée <strong>Nouveau &gt; A partir d'un modèle</strong> du menu Fichier.
+Une boîte de dialogue va s'afficher dans laquelle vous pouvez
+sélectionner :</p>
+<ul>
+  <li>Le modèle, soit en sélectionnant dans la liste des modèles enregistrés
+    ou en tapant l'URI ou le nom du fichier du modèle qui n'est pas dans la
+    liste</li>
+  <li>L'URI ou le nom du fichier du document instance à créer</li>
+  <li>Où ouvrir le nouveau document (Remplacer le document, Dans un nouvel
+    onglet, Dans une nouvelle fenêtre)</li>
+  <li>Le titre du nouveau document (c'est obligatoire)</li>
+</ul>
+
+<h3 id="Visualizin">Visualisation des éléments du modèle</h3>
+
+<p>Quand une instance est affiché, Amaya montre les éléments XTiger sous la
+forme de cadres colorés qui englobent les éléments XHTML.</p>
+<ul>
+  <li>Un élément <code>use</code> est affiché comme une boîte bleue
+  hachurée</li>
+  <li>Un élément <code>bag</code> est affiché comme une boîte verte
+  hachurée</li>
+  <li>Un élément <code>repeat</code> est affiché comme une boîte pourpre
+    hachurée</li>
+  <li>Un élément <code>option</code> est affiché comme une boîte jaune
+    hachurée</li>
+  <li>les éléments attribute ne sont pas affichés dans la vue principale,
+    parce qu'ils n'ont d'effet que sur le menu des attributs.</li>
+</ul>
+
+<p>Les éléments XTiger peuvent aussi être vus dans la vue structure. Ouvrez
+cette vue avec l'entrée <strong>Montrer la structure</strong> dans le menu
+<strong>Vues</strong>. Dans la vue structure, les éléments XTiger sont
+affichés en vert, alors que les éléments XHTML sont affichés en bleu. Les
+éléments XTiger sont aussi montrés dans la vue source, mais sans couleur
+spéciale.</p>
+
+<p>Un autre moyen de comprendre la structure imbriquée des éléments XTiger
+avec les éléments XHTML est le chemin de la sélection affiché dans la barre
+de statut de la fenêtre (en bas de la fenêtre). Là vous pouvez voir tous les
+éléments de la structure du document depuis l'élément racine jusqu'à la
+sélection. Ce chemin est mis à jour chaque fois que la sélection change. Dans
+ce chemin, les éléments XTiger sont affichés en vert et les éléments XHTML
+sont affichés en noir. Pour les éléments XTiger, ce n'est pas le nom de
+l'élément qui est affiché ici (use, bag, repeat, option) mais le label
+attaché à ces éléments, comme déclaré dans le modèle.</p>
+
+<h3 id="Editing">Editer un document instance</h3>
+
+<p>L'édition n'est autorisée que dans les éléments repeat, option, use, et
+bag, c'est a dire dans les boîtes colorées hachurées. Le reste du document
+est la partie figée du modèle et ne peut pas être modifié.</p>
+
+<h4 id="Editing1">Edition dans un élément <code>repeat</code></h4>
+
+<p id="Editing11">Dans une boîte <code>repeat</code> (pourpre), vous pouvez
+créer une nouvelle instance de la structure répétée ou en détruire une. Ceci
+est contrôlé par le modèle, qui impose un nombre minimum et/ou maximum
+d'occurrences de la structure répétée. Quand la création de nouvelles
+occurrences de la structure répétée sont autorisées, cliquez sur l'icône '+'
+pour créer une nouvelle occurrence à cette position. Un menu vous donns donne
+la liste des éléments qui peuvent être créés à cette position. En
+sélectionnant une entrée de ce menu, vous créez une nouvelle occurrence du
+type correspondant. Dans certains cas, le modèle n'offre qu'u seul type. Le
+menu ne contient qu'une seule entrée, pour clairement informer de ce qui va
+être créé. Si vous cliquez en dehors du menu, rien ne sera créé.</p>
+
+<p>Une autre façon de créer des occurrences de la structure répétée est de
+sélectionner une occurrence existante, ou d'ajouter un point d'insertion à la
+fin d'une occurrence, et d'appuyer sur la touche t<kbd>Enter</kbd>. Une
+nouvelle instance de la structure répétée est ainsi créée, à condition que le
+nombre maximum d'occurrences de la structure répétée ne soit pas atteint. La
+nouvelle occurrence créée est alors du même type que l'occurrence
+sélectionnée quand on a appuyé sur la touche nter<kbd>Enter</kbd>.</p>
+
+<p>Quand une occurrence existante est vide ou complètement sélectionnée et
+que la touche Backspace ou Delete est pressée, l'élément est détruit, à
+condition que le nombre minimum d'occurrences de la structure répétée ne soit
+pas atteint.</p>
+
+<h4 id="Editing2">Edition dans un élément <code>option</code></h4>
+
+<p>Les boîtes <code>option</code> (jaune) affiche une icône 'v' dans le coin
+haut gauche. Si la boîte est vide, un clic sur l'icône crée la structure
+optionnelle. Si la structure optionnelle est présente, un clic sur l'icône la
+supprime.</p>
+
+<h4 id="Editing3">Edition dans un élément <code>use</code></h4>
+
+<p>Beaucoup d'éléments <code>use</code> (bleu) vous permettent juste
+d'insérer du texte libre ou de remplacer/éditer le texte existant. D'autres
+éléments use offrent le choix parmi différents types d'éléments qui peuvent
+être insérés à cette position. Dans ce cas, une icône 'triangle' est affiché
+dans le coin haut gauche de la boîte. En cliquant sur cette icône, vous
+pouvez choisir un de ces types dans le menu affiché. Quand le type est
+choisi, la structure correspondante est engendrée et vous pouvez librement
+éditer son contenu.</p>
+
+<h4 id="Editing4">Edition dans un élément <code>bag</code></h4>
+
+<p>Dans une boîte <code>bag</code> (verte), vous pouvez insérer n'importe
+quel nombre d'éléments des types spécifiés par le modèle. Quand vous voulez
+insérer un élément XHTML, faite le de façon habituelle à condition que le
+modèle autorise ce type d'élément. Il se peut que des éléments ne soient pas
+autorisés. Ces éléments sont alors grisés dans les menus (dans la version
+actuelle, cette fonctionnalité n'est pas implémentée, mais les éléments
+interdits ne sont pas créés).</p>
+
+<p>Les modèles introduisent de nouvelles structures (appelées composants)
+construites à partir d'éléments XHTML. L'outil <strong>Eléments XML</strong>
+liste ces composants et permet de les insérer dans les bags (boîtes vertes).
+Pour insérer un composant à la position courante, sélectionnez son nom dans
+l'outil et appuyez sur le bouton Appliquer. Vous pouvez aussi faire un
+double-clic sur le nom.</p>
+</div>
+</body>
+</html>

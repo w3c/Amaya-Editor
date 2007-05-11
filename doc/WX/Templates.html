@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <title>Amaya XTiger User Interface Specification</title>
+  <title>Using XTiger templates in Amaya</title>
   <meta name="generator" content="amaya 9.53, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -86,13 +86,13 @@ href="http://www.w3.org/Amaya/Templates/">http://www.w3.org/Amaya/Templates/</a>
 remotely.</p>
 
 <p>To ease selection among your favorite templates, there is a Templates
-section in the Preferences dialogue (Edit&gt;Preferences). Use it to register
-the templates that Amaya will propose when you create a new document. When
-registering a local template, you can call a file browser with the browse
-button to locate and select the files to be added to the list. You can also
-enter the URI of remote templates in the input area below the list. Use the
-buttons on the right side of the list to remove a template or to change the
-order of templates in the list.</p>
+section in the Preferences dialogue (<strong>Edit &gt; Preferences</strong>).
+Use it to register the templates that Amaya will propose when you create a
+new document. When registering a local template, you can call a file browser
+with the browse button to locate and select the files to be added to the
+list. You can also enter the URI of remote templates in the input area below
+the list. Use the buttons on the right side of the list to remove a template
+or to change the order of templates in the list.</p>
 
 <p>Registering templates in this list is not mandatory. When you create a new
 document instance, you can also choose a template that is not in that
@@ -100,15 +100,13 @@ list.</p>
 
 <h3 id="Creating">Creating a document instance</h3>
 
-<p>To create a new document instance from a template, use entry
-New&gt;From_template in the File menu. It displays a dialogue box where you
-can select:</p>
+<p>To create a new document instance from a template, use entry <strong>New
+&gt; From template</strong> in the File menu. It displays a dialogue box
+where you can select:</p>
 <ul>
-  <li>The directory where the template is located if it is a local file that
-    is not registered in the list of templates</li>
-  <li>The template itself, either by selecting in the list of registered
-    templates or by typing the URI or file name of a template that is not in
-    the list</li>
+  <li>The template, either by selecting in the list of registered templates
+    or by typing the URI or file name of a template that is not in the
+  list</li>
   <li>The URI or file name of the document instance you want to create</li>
   <li>Where to open the new document (Replace current, In new tab, In new
     window)</li>
@@ -129,18 +127,20 @@ under the form of colored frames that enclose XHTML elements.</p>
 </ul>
 
 <p>The XTiger elements can also be seen in the structure view. Open this view
-with the Show_structure entry of the View menu. In the structure view, XTiger
-elements are displayed in green, while the XHTML elements are in blue. XTiger
-elements are also shown in the Source view, but with no special color.</p>
+with the <strong>Show structure</strong> entry of the <strong>View</strong>
+menu. In the structure view, XTiger elements are displayed in green, while
+the XHTML elements are in blue. XTiger elements are also shown in the Source
+view, but with no special color.</p>
 
 <p>Another way to understand the nesting of XTiger elements with XHTML
-elements is the selection path displayed at the bottom of the document
-window. There, you can see the list of all elements in the structure of the
-document from the root element to the current selection. It is updated every
-time the selection is changed. In this path, XTiger elements are displayed in
-green and XHTML elements in black. For XTiger elements, it is not the name of
-the element that is displayed there (use, bag, repeat, option) but the label
-of these elements, as declared in the template.</p>
+elements is the selection path displayed in the status bar or the window (at
+the bottom of the document window). There, you can see the list of all
+elements in the structure of the document from the root element to the
+current selection. It is updated every time the selection is changed. In this
+path, XTiger elements are displayed in green and XHTML elements in black. For
+XTiger elements, it is not the name of the element that is displayed there
+(use, bag, repeat, option) but the label of these elements, as declared in
+the template.</p>
 
 <h3 id="Editing">Editing a document instance</h3>
 
@@ -164,14 +164,14 @@ created.</p>
 
 <p>Another way to create new occurrences of the repeated structure is to
 select an existing occurrence, or to put the caret at the end of an
-occurrence, and to press the Return key. A new occurrence of the repeated
-structure is then created, provided the maximum number of occurrences is not
-reached. The type of the new occurrence is then the same as the one that was
-selected when pressing the Return key.</p>
+occurrence, and to press the <kbd>Enter</kbd> key. A new occurrence of the
+repeated structure is then created, provided the maximum number of
+occurrences is not reached. The type of the new occurrence is then the same
+as the one that was selected when pressing the <kbd>Enter</kbd> key.</p>
 
-<p>When an existing occurrence is empty or fully selected and the Backspace
-or Delete key is pressed, the element is deleted, provided the minimum number
-of occurrences is not reached.</p>
+<p>When an existing occurrence is empty or fully selected and the
+<kbd>Backspace</kbd> or <kbd>Delete</kbd> key is pressed, the element is
+deleted, provided the minimum number of occurrences is not reached.</p>
 
 <h4 id="Editing2">Editing in an <code>option</code> element</h4>
 
@@ -193,16 +193,16 @@ structure is generated and you can freely edit its content.</p>
 
 <p>In a <code>bag</code> box (green), you can insert any number of elements
 of the types specified by the template. When you want to insert a XHTML
-element, do it the usual way. It may happen that some elements are not
-allowed by the template. These elements are greyed out in the menus (in the
-current version, this feature is not implemented, but prohibited elements are
-not created).</p>
+element, do it the usual way provided this type is allowed by the template.
+It may happen that some elements are not allowed by the template. These
+elements are greyed out in the menus (in the current version, this feature is
+not implemented, but prohibited elements are not created).</p>
 
 <p>Templates introduce new structures (called components) built from XHTML
-elements. The "XML element types" panel lists them and allows you to insert
-them in bags (green boxes). For inserting a component at the current
-position, select its name in the panel and click the Apply button at the
-bottom of the panel. You can also double-click its name.</p>
+elements. The <strong>XML elements</strong> panel lists them and allows you
+to insert them in bags (green boxes). For inserting a component at the
+current position, select its name in the panel and click the Apply button at
+the bottom of the panel. You can also double-click its name.</p>
 </div>
 </body>
 </html>
