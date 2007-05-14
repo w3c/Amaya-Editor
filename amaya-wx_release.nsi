@@ -204,6 +204,7 @@ Section "Amaya" SecAmaya
   File WindowsWX\bin\wxmsw*u_adv_vc_custom.dll
   File WindowsWX\bin\wxmsw*u_gl_vc_custom.dll
   File WindowsWX\bin\wxbase*u_vc_custom.dll
+  File WindowsWX\bin\wxbase*u_net_vc_custom.dll
   File WindowsWX\bin\wxbase*u_xml_vc_custom.dll
   File WindowsWX\bin\thotprinter.dll
 
