@@ -484,6 +484,7 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
   baseline = pLine->LiYOrg + pLine->LiHorizRef;
   /* take into account the writing direction */
   rtl = pParentBox->BxAbstractBox->AbDirection == 'R';
+  pBox = pLine->LiFirstBox;
   if (rtl)
     {
       /* right-to-left writing */
@@ -492,7 +493,19 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
         x = pLine->LiXOrg + pLine->LiRealLength;
       else
         {
-          if (pParentBox->BxAbstractBox->AbAdjust == AlignCenter)
+          if (pBox == pLine->LiLastBox && pBox->BxAbstractBox &&
+              pBox->BxAbstractBox->AbLeafType == LtCompound &&
+              pBox->BxAbstractBox->AbFloat == 'N' &&
+              !ExtraFlow (pBox, frame) &&
+              (pBox->BxAbstractBox->AbDisplay == 'B' ||
+               pBox->BxType == BoTable))
+            {
+              if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle)
+                delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
+              else if (pBox->BxAbstractBox->AbHorizPos.PosEdge == Left)
+                delta = pLine->LiXMax - pLine->LiRealLength;
+            }
+          else if (pParentBox->BxAbstractBox->AbAdjust == AlignCenter)
             delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
           else if (pParentBox->BxAbstractBox->AbAdjust == AlignLeft)
             delta = pLine->LiXMax - pLine->LiRealLength;
@@ -501,7 +514,19 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
     }
   else
     {
-      if (pParentBox->BxAbstractBox->AbAdjust == AlignCenter)
+      if (pBox == pLine->LiLastBox && pBox->BxAbstractBox &&
+          pBox->BxAbstractBox->AbLeafType == LtCompound &&
+          pBox->BxAbstractBox->AbFloat == 'N' &&
+          !ExtraFlow (pBox, frame) &&
+          (pBox->BxAbstractBox->AbDisplay == 'B' ||
+           pBox->BxType == BoTable))
+        {
+          if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle)
+            delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
+          else if (pBox->BxAbstractBox->AbHorizPos.PosEdge == Right)
+            delta = pLine->LiXMax - pLine->LiRealLength;
+        }
+      else if (pParentBox->BxAbstractBox->AbAdjust == AlignCenter)
         delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
       else if (pParentBox->BxAbstractBox->AbAdjust == AlignRight)
         delta = pLine->LiXMax - pLine->LiRealLength;
@@ -2625,6 +2650,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   /* only one compound box by line */
                   *full = TRUE;
                   still = FALSE;
+#ifdef IV
                   if (pBox->BxAbstractBox->AbLeafType == LtCompound)
                     {
                       if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
@@ -2635,6 +2661,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                           pBox->BxAbstractBox->AbHorizPos.PosRefEdge == Right)
                         pLine->LiXOrg += (pLine->LiXMax - pBox->BxWidth);
                     }
+#endif
                 }
             }
           else
@@ -4104,6 +4131,7 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 
   pLastBox = NULL;
   pLine->LiRealLength += x;
+  box = pLine->LiFirstBox;
   /* prepare the redisplay of the line */
   status = ReadyToDisplay;
   ReadyToDisplay = FALSE;
@@ -4113,24 +4141,13 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
   /* default clipping on the whole box */
   DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 
-  if (pAb->AbAdjust == AlignLeft || pAb->AbAdjust == AlignJustify ||
-      pAb->AbAdjust == AlignLeftDots ||
-      /* extended blocks are left aligned */
-      pBlock->BxContentWidth)
-    {
-      /* Redisplay the end of the line*/
-      if (pLine->LiLastPiece == NULL)
-        pLastBox = pLine->LiLastBox;
-      else
-        pLastBox = pLine->LiLastPiece;
-      if (pAb->AbAdjust == AlignLeftDots && pLine->LiNext == NULL)
-        /* dotted area */
-        pLastBox->BxEndOfBloc -= x;
-
-      /* extend the clipping to the last box */
-      UpdateBoxRegion (frame, pLastBox, x, 0, 0, 0);
-    }
-  else if (pAb->AbAdjust == AlignCenter)
+  if (pAb->AbAdjust == AlignCenter ||
+      (box == pLine->LiLastBox && box->BxAbstractBox &&
+       box->BxAbstractBox->AbLeafType == LtCompound &&
+       box->BxAbstractBox->AbFloat == 'N' &&
+       !ExtraFlow (box, frame) &&
+       (box->BxAbstractBox->AbDisplay == 'B' ||
+        box->BxType == BoTable)))
     {
       /* Redisplay the whole line */
       i = x;
@@ -4168,6 +4185,23 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
         }
       /* move next boxes */
       x = -x;
+    }
+  else if (pAb->AbAdjust == AlignLeft || pAb->AbAdjust == AlignJustify ||
+      pAb->AbAdjust == AlignLeftDots ||
+      /* extended blocks are left aligned */
+      pBlock->BxContentWidth)
+    {
+      /* Redisplay the end of the line*/
+      if (pLine->LiLastPiece == NULL)
+        pLastBox = pLine->LiLastBox;
+      else
+        pLastBox = pLine->LiLastPiece;
+      if (pAb->AbAdjust == AlignLeftDots && pLine->LiNext == NULL)
+        /* dotted area */
+        pLastBox->BxEndOfBloc -= x;
+
+      /* extend the clipping to the last box */
+      UpdateBoxRegion (frame, pLastBox, x, 0, 0, 0);
     }
   else if (pAb->AbAdjust == AlignRight)
     {
