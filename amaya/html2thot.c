@@ -1067,17 +1067,15 @@ static ThotBool IsEmptyElement (Element el)
 }
 
 /*----------------------------------------------------------------------
-  IsCharacterLevelElement return TRUE if element el is a
+  IsCharacterLevelType return TRUE if element type is a
   character level element, FALSE if not.
   ----------------------------------------------------------------------*/
-ThotBool IsCharacterLevelElement (Element el)
+ThotBool IsCharacterLevelType (ElementType elType)
 {
-  ElementType      elType;
   int              i;
   ThotBool         ret;
 
   ret = FALSE;
-  elType = TtaGetElementType (el);
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
     return ret;
   i = 0;
@@ -1090,16 +1088,27 @@ ThotBool IsCharacterLevelElement (Element el)
 }
 
 /*----------------------------------------------------------------------
-  IsBlockElement  return TRUE if element el is a block element.
+  IsCharacterLevelElement return TRUE if element el is a
+  character level element, FALSE if not.
   ----------------------------------------------------------------------*/
-ThotBool IsBlockElement (Element el)
+ThotBool IsCharacterLevelElement (Element el)
 {
-  ElementType   elType;
+  ElementType      elType;
+
+  elType = TtaGetElementType (el);
+  return IsCharacterLevelType (elType);
+}
+
+/*----------------------------------------------------------------------
+  IsBlockElementType  return TRUE if element type is a block element.
+  Same as IsBlockElement but just with the element type.
+  ----------------------------------------------------------------------*/
+ThotBool IsBlockElementType (ElementType elType)
+{
   int           i;
   ThotBool      ret;
 
   ret = FALSE;
-  elType = TtaGetElementType (el);
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
     return ret;
   i = 0;
@@ -1112,24 +1121,14 @@ ThotBool IsBlockElement (Element el)
 }
 
 /*----------------------------------------------------------------------
-  IsBlockElementType  return TRUE if element type type is a block element.
-  Same as IsBlockElement but just with the element type.
+  IsBlockElement  return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
-ThotBool IsBlockElementType (ElementType type)
+ThotBool IsBlockElement (Element el)
 {
-  int           i;
-  ThotBool      ret;
+  ElementType   elType;
 
-  ret = FALSE;
-  if (strcmp (TtaGetSSchemaName (type.ElSSchema), "HTML") != 0)
-    return ret;
-  i = 0;
-  while (BlockLevelElement[i] > 0 &&
-         BlockLevelElement[i] != type.ElTypeNum)
-    i++;
-  if (BlockLevelElement[i] == type.ElTypeNum)
-    ret = TRUE;
-  return ret;
+  elType = TtaGetElementType (el);
+  return IsBlockElementType (elType);
 }
 
  

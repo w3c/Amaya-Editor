@@ -21,9 +21,10 @@ extern void InitMapping ( void );
 extern void HTMLParseError ( Document doc,
                              char* msg,
                              int lineNumber );
+extern ThotBool IsCharacterLevelType ( ElementType elType );
 extern ThotBool IsCharacterLevelElement ( Element el );
+extern ThotBool IsBlockElementType ( ElementType elType );
 extern ThotBool IsBlockElement ( Element el );
-extern ThotBool IsBlockElementType ( ElementType type );
 extern void BlockInCharLevelElem ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
@@ -99,9 +100,10 @@ extern void InitMapping ( void );
 extern void HTMLParseError ( Document doc,
                                char* msg,
                                int lineNumber );
+extern ThotBool IsCharacterLevelType ( ElementType elType );
 extern ThotBool IsCharacterLevelElement ( Element el );
+extern ThotBool IsBlockElementType ( ElementType elType );
 extern ThotBool IsBlockElement ( Element el );
-extern ThotBool IsBlockElementType ( ElementType type );
 extern void BlockInCharLevelElem ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                       Document doc,
