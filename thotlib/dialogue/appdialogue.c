@@ -2650,6 +2650,7 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
         }
 #else /*_WX */
       ptrmenu = FrameTable[frame].FrMenus;
+      i = 0;
       while (ptrmenu)
         {
           /* skip menus that concern another view */
