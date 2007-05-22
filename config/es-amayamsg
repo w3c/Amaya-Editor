@@ -406,7 +406,7 @@
 404 Grado
 405 Grado de la variable %d
 406 Docucompuesto
-407 **Copy resources (styles and scripts)
+407 Copiar recursos (estilos y scripts)
 408 Ubicación de recursos
 409 Ubicación de imágenes
 410 Documento
@@ -435,8 +435,8 @@
 433 Texto del mensaje incorrecto
 434 Correo no enviado
 435 Correo enviado
-436 Passwords
-437 Do you want Amaya to remember this password?
-438 Remember passwords by default
-439 Sites
-440 Remove All
+436 Contraseñas
+437 ¿Desea que Amaya recuerde esta contraseña?
+438 Recordar contraseñas siempre
+439 Sitios
+440 Borrar todo

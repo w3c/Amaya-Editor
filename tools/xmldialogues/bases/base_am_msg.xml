@@ -5686,6 +5686,7 @@
 <label define="AM_BCOPY_CSS">
 <message xml:lang="en">Copy resources (styles and scripts)</message>
 <message xml:lang="fr">Copier les ressources (styles et scripts)</message>
+<message xml:lang="es">Copiar recursos (estilos y scripts)</message>
 <message xml:lang="sk">Skopírovať zdroje (štýly a skripty)</message>
 </label>
 <label define="AM_WHERE_RESOURCE">
@@ -5858,31 +5859,31 @@
 </label>
 <label define="AM_PASSWORDS">
 <message xml:lang="en">Passwords</message>
-<message xml:lang="es">Passwords</message>
+<message xml:lang="es">Contraseñas</message>
 <message xml:lang="fr">Mots de passe</message>
 <message xml:lang="sk">Heslá</message>
 </label>
 <label define="AM_PASSWORDS_SAVE">
 <message xml:lang="en">Do you want Amaya to remember this password?</message>
-<message xml:lang="es">Do you want Amaya to remember this password?</message>
+<message xml:lang="es">¿Desea que Amaya recuerde esta contraseña?</message>
 <message xml:lang="fr">Voulez-vous qu'Amaya se souvienne de ce mot de passe ?</message>
 <message xml:lang="sk">Chcete aby si program Amaya zapamätal toto heslo</message>
 </label>
 <label define="AM_PASSWORDS_SAVE_OPTION">
 <message xml:lang="en">Remember passwords by default</message>
-<message xml:lang="es">Remember passwords by default</message>
+<message xml:lang="es">Recordar contraseñas siempre</message>
 <message xml:lang="fr">Enregistrer les mots de passe par défaut</message>
 <message xml:lang="sk">Pamätať si všetky heslá</message>
 </label>
 <label define="AM_PASSWORDS_LIST">
 <message xml:lang="en">Sites</message>
-<message xml:lang="es">Sites</message>
+<message xml:lang="es">Sitios</message>
 <message xml:lang="fr">Sites</message>
 <message xml:lang="sk">Umiestnenia</message>
 </label>
 <label define="AM_PASSWORDS_EMPTY">
 <message xml:lang="en">Remove All</message>
-<message xml:lang="es">Remove All</message>
+<message xml:lang="es">Borrar todo</message>
 <message xml:lang="fr">Tout effacer</message>
 <message xml:lang="sk">Odstrániť všetky</message>
 </label>
