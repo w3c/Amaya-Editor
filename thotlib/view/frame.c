@@ -1267,9 +1267,8 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
   int                 plane;
   int                 nextplane;
   int                 winTop, winBottom;
-  int                 bt, bb;
-  int                 l, h;
-  int                 Clipx, Clipy, Clipw, Cliph; 
+  int                 bt, bb, l, h;
+  int                 clipx, clipy, clipw, cliph; 
   ThotBool            userSpec = FALSE;
   ThotBool            formatted;
 
@@ -1289,10 +1288,10 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
   plane = 65536;
   nextplane = plane - 1;
   topBox = NULL;
-  Clipx = -1;	  
-  Clipy = -1; 
-  Clipw = 0; 
-  Cliph = 0;  
+  clipx = -1;
+  clipy = -1;
+  clipw = 0;
+  cliph = 0;
   formatted = (FrameTable[frame].FrView == 1 &&
                pInitAb &&
                pInitAb->AbPSchema &&
@@ -1376,8 +1375,7 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
               else
                 {
                   /* look for the box displayed at the top of the window */
-                  if (pBox->BxType == BoMulScript ||
-                      pBox->BxType == BoSplit)
+                  if (pBox->BxType == BoMulScript || pBox->BxType == BoSplit)
                     {
                       /* the box itself doen't give right positions */
                       box = pBox->BxNexChild;
@@ -1447,27 +1445,25 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
               /* X and Y is the smallest of all enclosed boxes*/
               if (pBox->BxBoundinBoxComputed)
                 {
-                  if (Clipx == -1)
-                    Clipx = pBox->BxClipX;
-                  else 
-                    if (pBox->BxClipX < Clipx) 
-                      {
-                        Clipw += Clipx - pBox->BxClipX;
-                        Clipx = pBox->BxClipX;	  
-                      }
-                  if (Clipy == -1)
-                    Clipy = pBox->BxClipY;
-                  else 
-                    if (pBox->BxClipY < Clipy) 
-                      {
-                        Cliph += Clipy - pBox->BxClipY;
-                        Clipy = pBox->BxClipY; 
-                      }
+                  if (clipx == -1)
+                    clipx = pBox->BxClipX;
+                  else if (pBox->BxClipX < clipx) 
+                    {
+                      clipw += clipx - pBox->BxClipX;
+                      clipx = pBox->BxClipX;	  
+                    }
+                  if (clipy == -1)
+                    clipy = pBox->BxClipY;
+                  else if (pBox->BxClipY < clipy) 
+                    {
+                      cliph += clipy - pBox->BxClipY;
+                      clipy = pBox->BxClipY; 
+                    }
                   /* Make sure that Height and Width is correct...*/
-                  if ((pBox->BxClipW + pBox->BxClipX) > (Clipx + Clipw))
-                    Clipw = (pBox->BxClipW + pBox->BxClipX) - Clipx;		  
-                  if ((pBox->BxClipY + pBox->BxClipH) > (Clipy + Cliph))
-                    Cliph = (pBox->BxClipY + pBox->BxClipH) - Clipy;		  
+                  if ((pBox->BxClipW + pBox->BxClipX) > (clipx + clipw))
+                    clipw = (pBox->BxClipW + pBox->BxClipX) - clipx;		  
+                  if ((pBox->BxClipY + pBox->BxClipH) > (clipy + cliph))
+                    cliph = (pBox->BxClipY + pBox->BxClipH) - clipy;		  
                 }
             }
           else if (pAb->AbDepth < plane)
@@ -1483,12 +1479,12 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
         }
     }
   pBox = pInitAb->AbBox;
-  if (Clipx != -1)
-    pBox->BxClipX = Clipx;	  
-  if (Clipy != -1)
-    pBox->BxClipY = Clipy; 
-  pBox->BxClipW = Clipw; 
-  pBox->BxClipH = Cliph; 
+  if (clipx != -1)
+    pBox->BxClipX = clipx;	  
+  if (clipy != -1)
+    pBox->BxClipY = clipy; 
+  pBox->BxClipW = clipw; 
+  pBox->BxClipH = cliph; 
   if (pBox->BxClipW && pBox->BxClipH)
     pBox->BxBoundinBoxComputed = TRUE;
   else

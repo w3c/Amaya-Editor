@@ -3054,10 +3054,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
             pBox->BxWOutOfStruct = pPosAb->PosAbRef->AbBox->BxXOutOfStruct;
 	  
           /* Des boites voisines heritent de la relation hors-structure ? */
-          if (pParentAb != NULL)
+          if (pParentAb)
             {
               pChildAb = pParentAb->AbFirstEnclosed;
-              while (pChildAb != NULL)
+              while (pChildAb)
                 {
                   if (pChildAb != pAb && pChildAb->AbBox != NULL)
                     {
@@ -3102,7 +3102,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                 pPosAb->PosAbRef->AbBox = pRefBox;
             }
 
-          if (pRefBox != NULL)
+          if (pRefBox)
             {
               /* regarde si la position depend d'une boite invisible */
               if (pPosAb->PosAbRef->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
@@ -3120,15 +3120,23 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                           pAb, zoom);
                 }
               val = pRefBox->BxXOrg + delta;
+              if (pRefBox->BxAbstractBox == pParentAb)
+                val += pRefBox->BxLMargin + pRefBox->BxLBorder + pRefBox->BxLPadding;
               switch (pPosAb->PosRefEdge)
                 {
                 case Left:
                   break;
                 case Right:
-                  val += pRefBox->BxWidth;
+                  if (pRefBox->BxAbstractBox == pParentAb)
+                    val += pRefBox->BxW;
+                  else
+                    val += pRefBox->BxWidth;
                   break;
                 case VertMiddle:
-                  val += pRefBox->BxWidth / 2;
+                  if (pRefBox->BxAbstractBox == pParentAb)
+                    val += pRefBox->BxW / 2;
+                  else
+                    val += pRefBox->BxWidth / 2;
                   break;
                 case VertRef:
                   val += pRefBox->BxVertRef;
@@ -3137,7 +3145,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   break;
                 }
 
-              /* Calcule la largeur de la boite */
+              /* Compute the box width */
               val = val - pBox->BxXOrg - pBox->BxWidth;
               /* La boite n'a pas de point fixe */
               pBox->BxHorizEdge = NoEdge;
@@ -3218,13 +3226,21 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                           pAb, zoom);
                 }
               val = pRefBox->BxYOrg + delta;
+              if (pRefBox->BxAbstractBox == pParentAb)
+                val += pRefBox->BxTMargin + pRefBox->BxTBorder + pRefBox->BxTPadding;
               switch (pPosAb->PosRefEdge)
                 {
                 case Bottom:
-                  val += pRefBox->BxHeight;
+                  if (pRefBox->BxAbstractBox == pParentAb)
+                    val += pRefBox->BxH;
+                  else
+                    val += pRefBox->BxHeight;
                   break;
                 case HorizMiddle:
-                  val += pRefBox->BxHeight / 2;
+                  if (pRefBox->BxAbstractBox == pParentAb)
+                    val += pRefBox->BxH / 2;
+                  else
+                    val += pRefBox->BxHeight / 2;
                   break;
                 case HorizRef:
                   val += pRefBox->BxHorizRef;
@@ -3233,7 +3249,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   break;
                 }
 
-              /* Calcule la hauteur de la boite */
+              /* Compute the boxe height */
               val = val - pBox->BxYOrg - pBox->BxHeight;
               /* La boite n'a pas de point fixe */
               pBox->BxVertEdge = NoEdge;

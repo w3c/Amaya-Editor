@@ -6,9 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void GetSystemOrigins ( PtrAbstractBox pAb,
-                               int *x,
-                               int *y );
+extern ThotBool IsSystemOrigin ( PtrAbstractBox pAb,
+                                 int frame );
 extern void IsXYPosComplete ( PtrBox pBox,
                               ThotBool *horizRef,
                               ThotBool *vertRef );
@@ -108,9 +107,8 @@ extern void HeightPack ( PtrAbstractBox pAb,
 
 #else /* __STDC__ */
 
-extern void GetSystemOrigins ( PtrAbstractBox pAb,
-                                 int *x,
-                                 int *y );
+extern ThotBool IsSystemOrigin ( PtrAbstractBox pAb,
+                                   int frame );
 extern void IsXYPosComplete ( PtrBox pBox,
                                 ThotBool *horizRef,
                                 ThotBool *vertRef );
