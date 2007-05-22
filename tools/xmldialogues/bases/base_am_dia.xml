@@ -825,7 +825,7 @@
 <message xml:lang="sk">&amp;Vlastnosti...</message></label>
 <label define="BSave">
 <message xml:lang="en">&amp;Save</message>
-<message xml:lang="fr">&amp;Sauver</message>
+<message xml:lang="fr">&amp;Enregistrer</message>
 <message xml:lang="de">&amp;Speichern</message>
 <message xml:lang="it">&amp;Salva</message>
 <message xml:lang="tr">Kaydet(&amp;S)</message>
@@ -840,7 +840,7 @@
 <message xml:lang="sk">&amp;Uložiť</message></label>
 <label define="BSaveAs">
 <message xml:lang="en">Save &amp;as...</message>
-<message xml:lang="fr">S&amp;auver comme...</message>
+<message xml:lang="fr">E&amp;nregistrer sous...</message>
 <message xml:lang="de">Speichern unter...</message>
 <message xml:lang="it">S&amp;alva con nome...</message>
 <message xml:lang="tr">Isimle k&amp;aydet...</message>
@@ -4165,7 +4165,7 @@
 <message xml:lang="sk">Presunúť k výberu</message></label>
 <label define="BMemorizeXPtr">
 <message xml:lang="en">Store selection as &amp;XPointer</message>
-<message xml:lang="fr">Sauver la sélection comme &amp;XPointer</message>
+<message xml:lang="fr">Enregistrer la sélection comme &amp;XPointer</message>
 <message xml:lang="de">Als XPointer speichern</message>
 <message xml:lang="es">Guardar selección como &amp;XPointer</message>
 <message xml:lang="it">Salva la selezione come XPointer</message>

@@ -196,49 +196,49 @@
 194 Use palette
 195 Language Negotiation
 196 Annotations
-197 Annotation and bookmark user
-198 Annotation post server
-199 Annotation servers
-200 Autoload local annotations
-201 Autoload remote annotations
-202 Disable remote autoload at each startup (for off-line work)
-203 Selection color
-204 Selection background color
-205 Orientation
-206 Portrait
-207 Landscape
-208 Keep multiple spaces
-209 Error(s) in the source code
-210 Fatal error - Fix the source code to continue
-211 Try the 'File/Read as' entry
-212 Invalid characters
-213 Document profile:
-214 Errors detected - see File > Show parsing errors
-215 The encoding of this document is not supported by Amaya
-216 Editing and saving this document will change its type
-217 Not available
-218 Browse
-219 File Browser
-220 Selection
-221 Annotation Local Filter Menu
-222 Show errors
-223 Hide
-224 Show all
-225 Hide all
-226 * means hidden, - means partially hidden
-227 Filter options
-228 By author
-229 By type
-230 By server
-231 Access keys
-232 Ignore
-233 Style element
-234 Cannot create an XPointer
-235 Impossible to attach a start XPointer on an internal added element
-236 Impossible to attach an end XPointer on an internal added element
-237 Cannot find where to move the annotation
-238 Cannot move the annotation to a different document
-239 You cannot annotate a modified document. Please save it first.
+197 Link
+198 Annotation and bookmark user
+199 Annotation post server
+200 Annotation servers
+201 Autoload local annotations
+202 Autoload remote annotations
+203 Disable remote autoload at each startup (for off-line work)
+204 Selection color
+205 Selection background color
+206 Orientation
+207 Portrait
+208 Landscape
+209 Keep multiple spaces
+210 Error(s) in the source code
+211 Fatal error - Fix the source code to continue
+212 Try the 'File/Read as' entry
+213 Invalid characters
+214 Document profile:
+215 Errors detected - see File > Show parsing errors
+216 The encoding of this document is not supported by Amaya
+217 Editing and saving this document will change its type
+218 Not available
+219 Browse
+220 File Browser
+221 Selection
+222 Annotation Local Filter Menu
+223 Show errors
+224 Hide
+225 Show all
+226 Hide all
+227 * means hidden, - means partially hidden
+228 Filter options
+229 By author
+230 By type
+231 By server
+232 Access keys
+233 Ignore
+234 Style element
+235 Cannot create an XPointer
+236 Impossible to attach a start XPointer on an internal added element
+237 Impossible to attach an end XPointer on an internal added element
+238 Cannot find where to move the annotation
+239 Cannot move the annotation to a different document
 240 No annotation user declared. Please open the Annotations/Configure menu.
 241 Unable to build an XPointer for this annotation
 242 Make a new annotation

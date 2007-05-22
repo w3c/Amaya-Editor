@@ -61,8 +61,8 @@
 59 Renfoncement (pt)
 60 Interligne (pt)
 61 Interligne
-62 Sauver le document
-63 Fermer sans sauver
+62 Enregistrer le document
+63 Fermer sans enregistrer
 64 Style des caractères
 65 Couleurs
 66 XHTML
@@ -90,7 +90,7 @@
 88 Graphiques
 89 Alphabet latin
 90 Alphabet grec
-91 Sauver
+91 Enregistrer
 92 Texte
 93 Graphique
 94 Symbole
@@ -191,7 +191,7 @@
 189 Document précédent
 190 Document suivant
 191 Recharger
-192 Sauver
+192 Enregistrer
 193 Nouveau document XHTML
 194 Ouvrir
 195 Imprimer

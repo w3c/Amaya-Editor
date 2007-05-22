@@ -825,21 +825,6 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   /* only accept reply tos in annotations */
   if (DocumentTypes[doc] != docAnnot && isReplyTo)
     return;
-#ifdef IV
-  /* It's risky to annotate modified documents as we may end having instant
-     orphan or misleading annotations. If it's an annotation document, 
-     the document may be marked as not modified even if it has not yet been
-     saved, so we verify if the file exists. */
-  if (TtaIsDocumentModified (doc)
-     || (DocumentTypes[doc] == docAnnot
-	 && !IsW3Path (DocumentURLs[doc])
-	 && !TtaFileExist (DocumentURLs[doc])))
-    {
-      InitInfo (TtaGetMessage (AMAYA, AM_ERROR),
-		TtaGetMessage (AMAYA, AM_NO_ANNOT_MOD_DOC));
-      return;
-    }
-#endif
   if (!annotUser || *annotUser == EOS)
     {
       InitInfo (TtaGetMessage (AMAYA, AM_NEW_ANNOTATION),

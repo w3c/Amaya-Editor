@@ -25,10 +25,10 @@
 23 C'est fini !
 24 Sélectionner la destination
 25 Destination invalide
-26 Inserer l'URI ou butiner
+26 Inserer l'URI ou parcourir
 27 Titre
 28 Changer le titre
-29 Document modifié - Voulez-vous le sauver ?
+29 Document modifié - Voulez-vous l'enregistrer ?
 30 Recherche de %s
 31 Dépassement de la limite de redirections
 32 Création impossible du document %s
@@ -74,7 +74,7 @@
 72 Image de fond
 73 Image de fond interdite ici
 74 CSS
-75 La sauvegarde sauvera aussi les images suivantes?
+75 Enregistrer aussi les images suivantes?
 76 Erreur de sauvegarde de l'URL
 77 Sauvegarder sur le disque ?
 78 Copier les images
@@ -92,12 +92,12 @@
 90 Erreur interne : URL de longueur supérieure à %s caractères
 91 Seul le type par défaut est autorisé
 92 Mise à jour des liens : %s%% a été traité
-93 Rien à sauver
+93 Rien à enregistrer
 94 repeat-y
 95 Entrer le nom utilisateur :
 96 Il y a %d requêtes en cours
 97 Pas de fichier CSS possible
-98 Ne pas sauver
+98 Ne pas enregistrer
 99 no-repeat
 100 Le document n'a pas de nom. Sauvé en :
 101 Plugins
@@ -159,7 +159,7 @@
 157 Langue des dialogues
 158 Preserver les lignes dans le coller
 159 Produire des fichiers de sauvegarde
-160 Sauver la géométrie en quittant
+160 Enregistrer la géométrie en quittant
 161 Montrer les images de fond
 162 Montrer boutons
 163 Montrer adresse
@@ -173,7 +173,7 @@
 171 Vérifier chaque PUT avec un GET
 172 Nom par défaut pour les URLs finissant par un '/'
 173 Géométrie
-174 Sauver la géométrie courante
+174 Enregistrer la géométrie courante
 175 Restaurer la géométrie défaut
 176 Ces changements seront effectifs lors de l'ouverture d'une fenêtre
 177 Couleurs
@@ -196,49 +196,49 @@
 194 Par palette
 195 Négociation de langues
 196 Annotations
-197 Nom de l'utilisateur
-198 Serveur de publication
-199 Serveur d'annotations
-200 Charger automatiquement les annotations locales
-201 Charger automatiquement les annotations distantes
-202 Désactiver le chargement automatique des annotations distantes au démarrage
-203 Couleur de sélection
-204 Couleur de fond de sélection
-205 Orientation
-206 Portrait
-207 Paysage
-208 Garder les espaces multiples
-209 Erreur(s) dans le code source
-210 Erreur fatale - Corriger le code source pour continuer
-211 Essayer l'entrée "Fichier/Lire comme"
-212 Caractères invalides
-213 Profil du document :
-214 Erreurs détectées - voir Fichier > Montrer les erreurs
-215 Le codage de ce document n'est pas supporté par Amaya
-216 Editer et sauver ce document changera son type
-217 Non disponible
-218 Butiner
-219 Sélecteur de fichiers
-220 Sélection
-221 Filtre local des annotations
-222 Montrer les erreurs
-223 Cacher
-224 Montrer tout
-225 Cacher tout
-226 * signifie caché, - signifie partiellement caché
-227 Options de filtrage
-228 Par auteur
-229 Par type
-230 Par serveur
-231 Accés rapides
-232 Ignorer
-233 Elément Style
-234 Impossible de créer un XPointer
-235 Impossible de débuter un XPointer sur un élément ajouté par Amaya
-236 Impossible de terminer un XPointer sur un élément ajouté par Amaya
-237 Je ne peux pas déplacer l'annotation là
-238 Je ne peux pas bouger l'annotation vers un autre document
-239 Vous ne pouvez pas annoter un document modifié. Sauver le d'abord.
+197 Lien
+198 Nom de l'utilisateur
+199 Serveur de publication
+200 Serveur d'annotations
+201 Charger automatiquement les annotations locales
+202 Charger automatiquement les annotations distantes
+203 Désactiver le chargement automatique des annotations distantes au démarrage
+204 Couleur de sélection
+205 Couleur de fond de sélection
+206 Orientation
+207 Portrait
+208 Paysage
+209 Garder les espaces multiples
+210 Erreur(s) dans le code source
+211 Erreur fatale - Corriger le code source pour continuer
+212 Essayer l'entrée "Fichier/Lire comme"
+213 Caractères invalides
+214 Profil du document :
+215 Erreurs détectées - voir Fichier > Montrer les erreurs
+216 Le codage de ce document n'est pas supporté par Amaya
+217 Editer et enregistrer ce document changera son type
+218 Non disponible
+219 Parcourir
+220 Sélecteur de fichiers
+221 Sélection
+222 Filtre local des annotations
+223 Montrer les erreurs
+224 Cacher
+225 Montrer tout
+226 Cacher tout
+227 * signifie caché, - signifie partiellement caché
+228 Options de filtrage
+229 Par auteur
+230 Par type
+231 Par serveur
+232 Accés rapides
+233 Ignorer
+234 Elément Style
+235 Impossible de créer un XPointer
+236 Impossible de débuter un XPointer sur un élément ajouté par Amaya
+237 Impossible de terminer un XPointer sur un élément ajouté par Amaya
+238 Je ne peux pas déplacer l'annotation là
+239 Je ne peux pas bouger l'annotation vers un autre document
 240 Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.
 241 Impossible de construire un XPointer pour cette annotation
 242 Faire une nouvelle annotation
@@ -258,7 +258,7 @@
 256 Inconnu
 257 Styles ignorés - voir Fichier > Montrer les erreurs
 258 Ce document est déjà affiché dans une autre fenêtre.
-259 Sauver cette instance peut provoquer des problèmes de mise à jour.
+259 Enregistrer cette instance peut provoquer des problèmes de mise à jour.
 260 Ajouter ou modifier le doctype du document supprimera certains éléments ou attributs
 261 Confirmez-vous l'opération ?
 262 Utiliser le type MIME application/xhtml+xml pour les documents XHTML
@@ -311,7 +311,7 @@
 309 Titre de la librairie
 310 URL de la librairie
 311 Créer une librairie
-312 Butiner librairies
+312 Parcourir les librairies
 313 Créer ou chercher une librairie
 314 La sélection contient des éléments non SVG. Effectuer une autre sélection SVP
 315 Le titre de la librairie est obligatoire
@@ -378,7 +378,7 @@
 376 Element protégé
 377 La sélection ne peut pas traverser un élément de ce type
 378 Pas d'en-tête trouvé
-379 Sauver quand même
+379 Enregistrer quand même
 380 Serveur inconnu
 381 Document modifié (412)
 382 Conflit avec l'état de la ressource
@@ -407,8 +407,8 @@
 405 Degré de la variable numéro %d
 406 Document composé
 407 Copier les ressources (styles et scripts)
-408 Où sauver les ressources
-409 Où sauver les images
+408 Où enregistrer les ressources
+409 Où enregistrer les images
 410 Document
 411 Images, Styles et Scripts
 412 Courriel

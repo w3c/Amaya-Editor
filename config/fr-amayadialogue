@@ -53,8 +53,8 @@
 51 Suivant(&F)
 52 Montrer les erreurs
 53 &Info document
-54 &Sauver
-55 S&auver comme...
+54 &Enregistrer
+55 E&nregistrer sous...
 56 S&ynchroniser
 57 Changer le doctype
 58 Supprimer le doctype
@@ -289,7 +289,7 @@
 287 Annoter la sélection
 288 Annoter le document
 289 Déplacer sur la sélection
-290 Sauver la sélection comme &XPointer
+290 Enregistrer la sélection comme &XPointer
 291 Déplacer sur le XPointer enregistré
 292 Répondre à l'annotation
 293 Enregister sur le serveur

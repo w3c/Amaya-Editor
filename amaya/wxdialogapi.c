@@ -997,7 +997,7 @@ ThotBool CreateHRefDlgWX (int ref, ThotWindow parent,
                           Document doc, int doc_type)
 {
 #ifdef _WX
-  wxString wx_title      = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ATTRIBUTE) );
+  wxString wx_title      = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_LINK) );
   wxString wx_init_value = TtaConvMessageToWX( HRefValue );
   wxString wx_filter;
   if (doc_type == docCSS)

@@ -118,7 +118,7 @@ l'utilisateur :</p>
         cliquez sur le bouton <strong>Clic</strong> puis changez d'onglet et
         cliquez n'importe où dans la feuille CSS cible. Le lien est créé.</li>
       <li>Si la feuille CSS cible est locale vous pouvez utiliser le bouton
-        <strong>Butiner</strong> pour la sélectionner.</li>
+        <strong>Parcourir</strong> pour la sélectionner.</li>
       <li>Sinon entrez l'URI (comme http://www.w3.org/file.css) la feuille
         CSS cible et taper sur la touche <strong>Enter ou Return</strong>
         pour confirmer. Le lien est créé.</li>

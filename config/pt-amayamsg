@@ -196,49 +196,49 @@
 194 Usar paleta
 195 Negociação de idioma
 196 Anotações
-197 Usuário anotador
-198 Servidor de publicação de anotações
-199 Servidores de anotações
-200 Autocarregar anotações locais
-201 Autocarregar anotações remotas
-202 Desabilitar autocarga remota em cada partida (para trabalho off-line)
-203 Cor de seleção
-204 **Selection background color
-205 Orientação
-206 Vertical
-207 Horizontal
-208 **Keep multiple spaces
-209 **Error(s) in the source code
-210 **Fatal error - Fix the source code to continue
-211 **Try the 'File/Read as' entry
-212 Caracteres inválidos
-213 Perfil del documento:
-214 Erros - veja Arquivo > Exibir erros de gramática (parsing)
-215 A codificação deste documento não é suportada porAmaya
-216 Editar ou salvar este documento vai mudar seu tipo
-217 Indisponível
-218 Navegar
-219 Navegador de arquivos
-220 Seleção
-221 Menu filtro local de anotações
-222 Exibir
-223 Esconder
-224 Exibir tudo
-225 Esconder tudo
-226 * significa escondido, - significa parcialmente escondido
-227 Opções de filtragem
-228 Por autor
-229 Por tipo
-230 Por servidor
-231 Teclas de acesso
-232 Ignorar
-233 Elemento de estilo
-234 Não é possível criar um XPointer
-235 Impossível anexar um XPointer inicial a um elemento adicionado internamente
-236 Impossível anexar um XPointer final a um elemento adicionado internamente
-237 Não é possível achar para onde mover a anotação
-238 Não é possível mover a anotação para outro documento
-239 Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.
+197 Enlace
+198 Usuário anotador
+199 Servidor de publicação de anotações
+200 Servidores de anotações
+201 Autocarregar anotações locais
+202 Autocarregar anotações remotas
+203 Desabilitar autocarga remota em cada partida (para trabalho off-line)
+204 Cor de seleção
+205 **Selection background color
+206 Orientação
+207 Vertical
+208 Horizontal
+209 **Keep multiple spaces
+210 **Error(s) in the source code
+211 **Fatal error - Fix the source code to continue
+212 **Try the 'File/Read as' entry
+213 Caracteres inválidos
+214 Perfil del documento:
+215 Erros - veja Arquivo > Exibir erros de gramática (parsing)
+216 A codificação deste documento não é suportada porAmaya
+217 Editar ou salvar este documento vai mudar seu tipo
+218 Indisponível
+219 Navegar
+220 Navegador de arquivos
+221 Seleção
+222 Menu filtro local de anotações
+223 Exibir
+224 Esconder
+225 Exibir tudo
+226 Esconder tudo
+227 * significa escondido, - significa parcialmente escondido
+228 Opções de filtragem
+229 Por autor
+230 Por tipo
+231 Por servidor
+232 Teclas de acesso
+233 Ignorar
+234 Elemento de estilo
+235 Não é possível criar um XPointer
+236 Impossível anexar um XPointer inicial a um elemento adicionado internamente
+237 Impossível anexar um XPointer final a um elemento adicionado internamente
+238 Não é possível achar para onde mover a anotação
+239 Não é possível mover a anotação para outro documento
 240 Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar
 241 Incapaz de construir um XPointer para esta anotação
 242 Fazer uma nova anotação

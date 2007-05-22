@@ -196,49 +196,49 @@
 194 Palet (palette)
 195 Ülke dilleri
 196 Eklemeler
-197 Kullanıyıcı ismi
-198 Dağıtım servörü
-199 Not servörü
-200 Lokal notları otomatik olarak yükleyin
-201 Dıştan notları otomatik olarak yükleyin
-202 Amaya\'nın başlangıcında otomatik dıştan notları yüklemesini durdurun
-203 Renk seçimi
-204 **Selection background color
-205 Yön
-206 Portre
-207 Peysaj
-208 **Keep multiple spaces
-209 **Error(s) in the source code
-210 **Fatal error - Fix the source code to continue
-211 **Try the 'File/Read as' entry
-212 Yanlış karakter
-213 Belgenin profili:
-214 Hata - Dosya > Hataları göster bakın
-215 Bu belgenin kodlaması Amaya tarafından yapılamıyor
-216 Yazmak ve kaydetmek bu belgenin tipini değiştirir
-217 Kullanıma hazır değil
-218 Tarayıcı
-219 Tarayıcı dosyası
-220 Seçim
-221 Notların lokal filtresi
-222 Göster
-223 Gizle
-224 Hepsini göster
-225 Hepsini gizle
-226 * gizlemek anlamında, - süreli gizlemek anlamında
-227 Filtrage opsionları
-228 Sahip
-229 Tip
-230 Servör
-231 Hızlı giriş
-232 Geç
-233 Verilerin dizaynı
-234 XPointer yaratılamıyor
-235 Amaya tarafından eklenen XPointer başlanamıyor
-236 Amaya tarafından eklenen XPointer bitiremiyor
-237 Eklemeler yerinden oynatılamıyor
-238 Eklemeler başka bir belgeye konamıyor
-239 Değişlikler gören bir belgeye ekleme imkansıdır. Önce kayıt edin.
+197 Bağlantı
+198 Kullanıyıcı ismi
+199 Dağıtım servörü
+200 Not servörü
+201 Lokal notları otomatik olarak yükleyin
+202 Dıştan notları otomatik olarak yükleyin
+203 Amaya\'nın başlangıcında otomatik dıştan notları yüklemesini durdurun
+204 Renk seçimi
+205 **Selection background color
+206 Yön
+207 Portre
+208 Peysaj
+209 **Keep multiple spaces
+210 **Error(s) in the source code
+211 **Fatal error - Fix the source code to continue
+212 **Try the 'File/Read as' entry
+213 Yanlış karakter
+214 Belgenin profili:
+215 Hata - Dosya > Hataları göster bakın
+216 Bu belgenin kodlaması Amaya tarafından yapılamıyor
+217 Yazmak ve kaydetmek bu belgenin tipini değiştirir
+218 Kullanıma hazır değil
+219 Tarayıcı
+220 Tarayıcı dosyası
+221 Seçim
+222 Notların lokal filtresi
+223 Göster
+224 Gizle
+225 Hepsini göster
+226 Hepsini gizle
+227 * gizlemek anlamında, - süreli gizlemek anlamında
+228 Filtrage opsionları
+229 Sahip
+230 Tip
+231 Servör
+232 Hızlı giriş
+233 Geç
+234 Verilerin dizaynı
+235 XPointer yaratılamıyor
+236 Amaya tarafından eklenen XPointer başlanamıyor
+237 Amaya tarafından eklenen XPointer bitiremiyor
+238 Eklemeler yerinden oynatılamıyor
+239 Eklemeler başka bir belgeye konamıyor
 240 Kunlayıcı ismi verilmemiştir. Ekleme/Ayarlar menüsüne bakın
 241 Bu not için XPointer yaratmak imkansızdır
 242 Yeni not yap

@@ -196,49 +196,49 @@
 194 使用小面板
 195 語言協商
 196 注釋
-197 注釋和書簽作者
-198 注釋提交服務器
-199 注釋服務器
-200 自動加載本地注釋
-201 自動遠程本地注釋
-202 啟動時禁用遠程加載 (脫機工作時)
-203 選擇區域前景色
-204 選擇區域背景色
-205 Orientation
-206 Portrait
-207 Landscape
-208 **Keep multiple spaces
-209 Error(s) in the source code
-210 Fatal error - Fix the source code to continue
-211 Try the 'File/Read as' entry
-212 Invalid characters
-213 Document profile:
-214 Errors detected - see File > Show parsing errors
-215 The encoding of this document is not supported by Amaya
-216 Editing and saving this document will change its type
-217 Not available
-218 Browse
-219 File Browser
-220 Selection
-221 Annotation Local Filter Menu
-222 顯示錯誤
-223 隱藏
-224 顯示所有
-225 隱藏所有
-226 * 表示隱藏所有, - 表示部分隱藏
-227 過濾器選項
-228 By 作者
-229 By 類型
-230 By 服務器
-231 Access keys
-232 忽略
-233 Style 元素
-234 無法創建 XPointer
-235 Impossible to attach a start XPointer on an internal added element
-236 Impossible to attach an end XPointer on an internal added element
-237 未發現注釋移動的位置
-238 無法將注釋移到其他文檔
-239 注釋前請先保存該文檔
+197 Link
+198 注釋和書簽作者
+199 注釋提交服務器
+200 注釋服務器
+201 自動加載本地注釋
+202 自動遠程本地注釋
+203 啟動時禁用遠程加載 (脫機工作時)
+204 選擇區域前景色
+205 選擇區域背景色
+206 Orientation
+207 Portrait
+208 Landscape
+209 **Keep multiple spaces
+210 Error(s) in the source code
+211 Fatal error - Fix the source code to continue
+212 Try the 'File/Read as' entry
+213 Invalid characters
+214 Document profile:
+215 Errors detected - see File > Show parsing errors
+216 The encoding of this document is not supported by Amaya
+217 Editing and saving this document will change its type
+218 Not available
+219 Browse
+220 File Browser
+221 Selection
+222 Annotation Local Filter Menu
+223 顯示錯誤
+224 隱藏
+225 顯示所有
+226 隱藏所有
+227 * 表示隱藏所有, - 表示部分隱藏
+228 過濾器選項
+229 By 作者
+230 By 類型
+231 By 服務器
+232 Access keys
+233 忽略
+234 Style 元素
+235 無法創建 XPointer
+236 Impossible to attach a start XPointer on an internal added element
+237 Impossible to attach an end XPointer on an internal added element
+238 未發現注釋移動的位置
+239 無法將注釋移到其他文檔
 240 未聲明注釋用戶, 請打開 注釋/配置 菜單
 241 無法為該注釋創建 XPointer
 242 創建新的注釋

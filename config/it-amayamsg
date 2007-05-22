@@ -196,49 +196,49 @@
 194 Usa la palette
 195 Negoziazione della lingua
 196 Annotazioni
-197 Nome utente
-198 Server per la pubblicazione
-199 Server per le annotazioni
-200 Caricamento automatico delle annotazioni local
-201 Caricamento automatico delle annotazioni remote
-202 Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)
-203 Colore della selezione
-204 Selezione colore di sfondo
-205 Orientamento
-206 Ritratto
-207 Paesaggio
-208 **Keep multiple spaces
-209 Errori nel codice sorgente
-210 Errore fatale - Correggi il sorgente per continuare
-211 Prova la voce 'File/Forza codifica caratteri'
-212 Caratteri non validi
-213 Profilo di documento:
-214 Errore - vedi File > Mostra le errore
-215 La codifica per questo documento non e` supportata da Amaya
-216 Editando e salvando questo documento il suo tipo verrà cambiato
-217 Non disponibile
-218 Scorri
-219 File Browser
-220 Selezione
-221 Menu per i filtri locali - annotazioni
-222 Mostra
-223 Nascondi
-224 Mostra tutto
-225 Nascondi tutto
-226 * significa nascosto, - significa parzialmente nascosto
-227 Opzioni per i filtri
-228 Per autore
-229 Per tipo
-230 Per server
-231 Chiavi di accesso
-232 Ignora
-233 Elemento si stile
-234 No posso create un XPointer
-235 Impossibile attaccare uno start XPointer su un elemento aggiunto internamente
-236 Impossibile attaccare uno end XPointer su un elemento aggiunto internamente
-237 Non trovo dove muovere l'annotazione
-238 Non posso muovere l'annotazione su un diverso documento
-239 Non puoi annotare un documento modificato. Prima salvalo.
+197 Link
+198 Nome utente
+199 Server per la pubblicazione
+200 Server per le annotazioni
+201 Caricamento automatico delle annotazioni local
+202 Caricamento automatico delle annotazioni remote
+203 Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)
+204 Colore della selezione
+205 Selezione colore di sfondo
+206 Orientamento
+207 Ritratto
+208 Paesaggio
+209 **Keep multiple spaces
+210 Errori nel codice sorgente
+211 Errore fatale - Correggi il sorgente per continuare
+212 Prova la voce 'File/Forza codifica caratteri'
+213 Caratteri non validi
+214 Profilo di documento:
+215 Errore - vedi File > Mostra le errore
+216 La codifica per questo documento non e` supportata da Amaya
+217 Editando e salvando questo documento il suo tipo verrà cambiato
+218 Non disponibile
+219 Scorri
+220 File Browser
+221 Selezione
+222 Menu per i filtri locali - annotazioni
+223 Mostra
+224 Nascondi
+225 Mostra tutto
+226 Nascondi tutto
+227 * significa nascosto, - significa parzialmente nascosto
+228 Opzioni per i filtri
+229 Per autore
+230 Per tipo
+231 Per server
+232 Chiavi di accesso
+233 Ignora
+234 Elemento si stile
+235 No posso create un XPointer
+236 Impossibile attaccare uno start XPointer su un elemento aggiunto internamente
+237 Impossibile attaccare uno end XPointer su un elemento aggiunto internamente
+238 Non trovo dove muovere l'annotazione
+239 Non posso muovere l'annotazione su un diverso documento
 240 Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.
 241 Non posso creare un XPointer per questa annotazione
 242 Aggiungi una nuova annotazione

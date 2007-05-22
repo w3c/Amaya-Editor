@@ -95,11 +95,11 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td>Alt Right Arrow</td>
     </tr>
     <tr>
-      <td>Sauver</td>
+      <td>Enregistrer</td>
       <td>Cmd S</td>
     </tr>
     <tr>
-      <td>Sauver comme</td>
+      <td>Enregistrer sous</td>
       <td>Cmd Shift S</td>
     </tr>
     <tr>

@@ -143,7 +143,7 @@ Amaya n'a pas de support pour les langages de script.</p>
   <li>Ouvrir un document <img alt="(Ouvrir)"
     src="../../resources/icons/22x22/open.png" />: active le formulaire
     d'ouverture de document</li>
-  <li>Sauver <img alt="(Sauver)" src="../../resources/icons/22x22/save.png"
+  <li>Enregistrer <img alt="(Enregistrer)" src="../../resources/icons/22x22/save.png"
     /> : sauver les modifications</li>
   <li>Imprimer <img alt="(Imprimer)"
     src="../../resources/icons/22x22/print.png" /> : imprime le document</li>
@@ -366,27 +366,27 @@ afficher le formulaire de choix de la langue.</p>
 </div>
 
 <div>
-<h3 id="Sauver"><a id="L1104">Sauver des documents en HTML</a></h3>
+<h3 id="Sauver"><a id="L1104">Enregistrer des documents en HTML</a></h3>
 
 <p><b>Amaya</b> ne fournit aucune vue d'ensemble des pages installées sur le
-serveur. Cependant il est possible de sauver ou copier des fichiers sur un
+serveur. Cependant il est possible d'enregistrer ou copier des fichiers sur un
 serveur ou sur sur son disque local grâce aux commandes
-<strong>Sauver</strong> et <strong>Sauver comme</strong>. Pendant ces
+<strong>Enregistrer</strong> et <strong>Enregistrer sous</strong>. Pendant ces
 opérations, Amaya tient compte des images et des ressources liées au
 document.</p>
 
-<h4 id="commande"><a id="L1517">La commande Sauver</a></h4>
+<h4 id="commande"><a id="L1517">La commande Enregistrer</a></h4>
 
-<p>La commande sauver peut être invoquée soit en choisissant
-<strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (<kbd>Ctrl
+<p>La commande Enregistrer peut être invoquée soit en choisissant
+<strong>Enregistrer</strong> depuis le menu <strong>Fichier</strong> (<kbd>Ctrl
 s</kbd>) ou bien en cliquant sur le bouton <img alt="floppy"
 src="../../resources/icons/22x22/save.png" />.</p>
 
-<h4 id="commande1"><a id="L1518">La commande Sauver comme</a></h4>
+<h4 id="commande1"><a id="L1518">La commande Enregistrer sous</a></h4>
 
-<p>Le fait de sélectionner l'entrée <strong>Sauver comme</strong> dans le
-menu <strong>Fichier</strong> ouvre une boîte de dialogue qui permet de
-sauver le document courant à une adresse différente (sur un serveur Web ou
+<p>Le fait de sélectionner l'entrée <strong>Enregistrer sous</strong> dans le
+menu <strong>Fichier</strong> ouvre une boîte de dialogue qui permet
+d'enregistrer le document courant à une adresse différente (sur un serveur Web ou
 sur le disque local) ou de changer certains paramètres, comme le format du
 document et l'encodage.</p>
 
@@ -1188,7 +1188,7 @@ active le lien vers la vue source du document pour visualiser la position de
 l'erreur dans le source.</p>
 
 <p>Une fois les erreurs corrigées on synchronise pour voir si tout est
-correct, on peut alors sauver le document corrigé.</p>
+correct, on peut alors enregistrer le document corrigé.</p>
 
 <h4 id="peut1">On peut aussi modifier le type du document</h4>
 

@@ -196,49 +196,49 @@
 194 Dokkoló használata
 195 Language Negotiation
 196 Jegyzetek
-197 Annotation and bookmark user
-198 Annotation post server
-199 Annotation servers
-200 Helyi jegyzetek önműködő betöltése
-201 Távoli jegyzetek önműködő betöltése
-202 Minden indításkor a távoli jegyzetek önműködő betöltésének tiltása (szétkapcsolt munkához)
-203 Kijelölés színe
-204 Kijelölés háttérszíne
-205 Tájolása
-206 Álló
-207 Fekvő
-208 Többszörös szóköz megtartása
-209 Hiba a forráskódban
-210 Végzetes hiba - Javítsa ki a forráskódot
-211 Próbálja a 'Fájl/Kényszerített karakter kódolás' menüt
-212 Érvénytelen karakterek
-213 Dokumentum profile:
-214 Néhány elem/attribútum figyelmen kívül hagyva - see Fájl > Elemzési hibák mutatása
-215 Ezen dokumentum kódolását az Amaya nem támogatja
-216 Ezen dokumentum szerkesztése és mentés megváltoztatja a dokumentum típusát
-217 Nem elérhető
-218 Böngészés
-219 Fájl tallózás
-220 Kijelölés
-221 Jegyzet helyi szűrő menü
-222 Mutat
-223 Rejt
-224 Mindent mutat
-225 Mindent rejt
-226 *: rejtett, -: részben rejtett
-227 Szűrő beállításai
-228 Szerző szerint
-229 Típus szerint
-230 Kiszolgáló szerint
-231 Gyorsbillentyűk
-232 Kihagy
-233 Stíluselem
-234 XPointer nem hozható létre
-235 Belső hozzáadott elemhez nem társítható kezdő XPointer
-236 Belső hozzáadott elemhez nem társítható vég XPointer
-237 A jegyzet új helye nem található
-238 Másik dokumentumba nem helyezhető a jegyzet
-239 Módosított dokumentumhoz nem lehet jegyzetet adni. Kérjük, előbb mentse.
+197 Kapocs
+198 Annotation and bookmark user
+199 Annotation post server
+200 Annotation servers
+201 Helyi jegyzetek önműködő betöltése
+202 Távoli jegyzetek önműködő betöltése
+203 Minden indításkor a távoli jegyzetek önműködő betöltésének tiltása (szétkapcsolt munkához)
+204 Kijelölés színe
+205 Kijelölés háttérszíne
+206 Tájolása
+207 Álló
+208 Fekvő
+209 Többszörös szóköz megtartása
+210 Hiba a forráskódban
+211 Végzetes hiba - Javítsa ki a forráskódot
+212 Próbálja a 'Fájl/Kényszerített karakter kódolás' menüt
+213 Érvénytelen karakterek
+214 Dokumentum profile:
+215 Néhány elem/attribútum figyelmen kívül hagyva - see Fájl > Elemzési hibák mutatása
+216 Ezen dokumentum kódolását az Amaya nem támogatja
+217 Ezen dokumentum szerkesztése és mentés megváltoztatja a dokumentum típusát
+218 Nem elérhető
+219 Böngészés
+220 Fájl tallózás
+221 Kijelölés
+222 Jegyzet helyi szűrő menü
+223 Mutat
+224 Rejt
+225 Mindent mutat
+226 Mindent rejt
+227 *: rejtett, -: részben rejtett
+228 Szűrő beállításai
+229 Szerző szerint
+230 Típus szerint
+231 Kiszolgáló szerint
+232 Gyorsbillentyűk
+233 Kihagy
+234 Stíluselem
+235 XPointer nem hozható létre
+236 Belső hozzáadott elemhez nem társítható kezdő XPointer
+237 Belső hozzáadott elemhez nem társítható vég XPointer
+238 A jegyzet új helye nem található
+239 Másik dokumentumba nem helyezhető a jegyzet
 240 Nincs jegyzet felhasználó. Kérjük, nyissa meg a Jegyzet/Beállítások menüt.
 241 Ehhez a jegyzethez nem hozható létre XPointer
 242 Új jegyzet létrehozása

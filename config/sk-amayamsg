@@ -196,49 +196,49 @@
 194 Použiť paletu
 195 Rozlišovanie podľa jazyka
 196 Komenmtáre
-197 Používateľ komentýrov a pznámok
-198 Vzdialený server komentárov
-199 Servery komentárov
-200 Automaticky nahrať lokálne komentáre
-201 Automaticky nahrať vzdialené komentáre
-202 Zrušiť automatické nahrávanie vzdialených komentárov pri každom spustení (pre prácu offline)
-203 Farba vyznačeného textu
-204 Pozadie vyznačeného textu
-205 Orientácia
-206 Na výšku
-207 Na šírku
-208 Ponechať viacnásobné medzery
-209 Chyba(y) v zdrojovom kóde
-210 Kritická chyba - Opravte zdrojový kód aby bolo možné pokračovať
-211 Skúste zvoliť 'Súbor/Načítať s kódovaním'
-212 Neplatný znak
-213 Profil dokumentu:
-214 Nájdené chyby - pozri Súbor > Skontrolovať chyby
-215 Kódovanie tohto dokumentu nie je podporované programom Amaya
-216 Úpravou a uložením tohto dokumentu zmeníte jeho typ
-217 Nedostupné
-218 Nalistovať
-219 Prehliadač súborov
-220 Výber
-221 Menu filtra lokálnych komentárov
-222 Zobraziť chyby
-223 Skryť
-224 Zobraziť všetko
-225 Skryť všetko
-226 * znamená skryté, - znamená čiastočne skryté
-227 Možnosti filtra
-228 Podľa autora
-229 Podľa typu
-230 Podľa servera
-231 Klávesa pre prístup k menu
-232 Ignorovať
-233 Prvok štýl(style)
-234 Nedá sa vytvoriť XPointer
-235 Nie je možné napojiť začiatok XPointera na vnútorne pridaný prvok
-236 Nie je možné napojiť koniec XPointera na vnútorne pridaný prvok
-237 Nedokážem sa zistiť kam bol presunutý komentár
-238 Nedokážem presunúť komentár do iného dokumentu
-239 Nemôžete komentovať zmenený dokument. Najprv ho uložte.
+197 Vložiť prepojenie
+198 Používateľ komentýrov a pznámok
+199 Vzdialený server komentárov
+200 Servery komentárov
+201 Automaticky nahrať lokálne komentáre
+202 Automaticky nahrať vzdialené komentáre
+203 Zrušiť automatické nahrávanie vzdialených komentárov pri každom spustení (pre prácu offline)
+204 Farba vyznačeného textu
+205 Pozadie vyznačeného textu
+206 Orientácia
+207 Na výšku
+208 Na šírku
+209 Ponechať viacnásobné medzery
+210 Chyba(y) v zdrojovom kóde
+211 Kritická chyba - Opravte zdrojový kód aby bolo možné pokračovať
+212 Skúste zvoliť 'Súbor/Načítať s kódovaním'
+213 Neplatný znak
+214 Profil dokumentu:
+215 Nájdené chyby - pozri Súbor > Skontrolovať chyby
+216 Kódovanie tohto dokumentu nie je podporované programom Amaya
+217 Úpravou a uložením tohto dokumentu zmeníte jeho typ
+218 Nedostupné
+219 Nalistovať
+220 Prehliadač súborov
+221 Výber
+222 Menu filtra lokálnych komentárov
+223 Zobraziť chyby
+224 Skryť
+225 Zobraziť všetko
+226 Skryť všetko
+227 * znamená skryté, - znamená čiastočne skryté
+228 Možnosti filtra
+229 Podľa autora
+230 Podľa typu
+231 Podľa servera
+232 Klávesa pre prístup k menu
+233 Ignorovať
+234 Prvok štýl(style)
+235 Nedá sa vytvoriť XPointer
+236 Nie je možné napojiť začiatok XPointera na vnútorne pridaný prvok
+237 Nie je možné napojiť koniec XPointera na vnútorne pridaný prvok
+238 Nedokážem sa zistiť kam bol presunutý komentár
+239 Nedokážem presunúť komentár do iného dokumentu
 240 Nebol vytvorený žiadny uživateľský komentár. Otvorte Komentáre/Konfigurácia menu.
 241 Nedá sa vytvoriť Xpointer pre kometár
 242 Vytvoriť nový kometár

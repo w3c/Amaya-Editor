@@ -81,7 +81,7 @@ alt="annotation icon (= pencil)" /></p>
 
 <h3 id="Local">Annotations locales et distantes</h3>
 
-<p>Amaya peut sauver les annotations dans un fichier local (annotations
+<p>Amaya peut enregistrer les annotations dans un fichier local (annotations
 locales) ou sur le Web (annotations distantes). Les <strong>annotations
 distantes</strong> sont enregistrées sur des serveurs d'annotations et
 peuvent être chargées ou enregistrées par quiconque ayant les droits d'accès
@@ -167,8 +167,8 @@ supporte pas les images dans le corps des annotations et que certaines des
 fonctionnalités de celles-ci ne sont pas encore disponibles, comme la vue
 structure par exemple.</p>
 
-<p>Sauver une annotation revient à sauver n'importe quel autre document,
-l'utilisateur doit juste sélectionner l'entrée <strong>Sauver</strong> du
+<p>Enregistrer une annotation revient à enregistrer n'importe quel autre document,
+l'utilisateur doit juste sélectionner l'entrée <strong>Enregistrer</strong> du
 menu <strong>Fichier</strong> ou cliquer sur le bouton équivalent ou bien
 activer le raccourci-clavier correspondant. Les annotations locales sont
 sauvées sous le répertoire des annotations et les annotations distantes sont
@@ -240,7 +240,7 @@ ouvrir une fenêtre d'annotation et sélectionner une partie du document
 annoté. Puis, dans la fenêtre d'annotation, appeler le menu
 <strong>Annotations/Move to selection</strong>. Amaya déplace alors l'icône
 de l'annotation vers la partie sélectionnée et considère l'annotation comme
-modifiée. Pour rendre ce changement effectif, vous devrez la sauver. De la
+modifiée. Pour rendre ce changement effectif, vous devrez l'enregistrer. De la
 même manière que pour la création, vous pouvez déplacer une annotation vers
 la position courante du curseur sans avoir besoin de faire la sélection.</p>
 
@@ -248,11 +248,11 @@ la position courante du curseur sans avoir besoin de faire la sélection.</p>
 annotation, par exemple pour déplacer plusieurs annotations vers le même
 endroit ou pour se déplacer dans la fenêtre avant de faire la manipulation.
 Pour cela, faire la sélection (ou placer le curseur) à l'endroit désiré puis,
-utiliser le menu <strong>Annotations/Sauver la sélection comme
+utiliser le menu <strong>Annotations/Enregistrer la sélection comme
 XPointer</strong> pour créer un XPointer représentant cette sélection. Enfin,
 dans la fenêtre d'annotation, utiliser le menu <strong>Annotations/Déplacer
 sur le XPointer enregistré</strong> pour déplacer l'annotation à la nouvelle
-position. Comme précédemment, vous devrez sauver l'annotation pour rendre ce
+position. Comme précédemment, vous devrez enregistrer l'annotation pour rendre ce
 changement effectif.</p>
 
 <h3 id="Threads">Répondre aux annotations / fils de discussion</h3>
@@ -269,8 +269,8 @@ le même manière que ceux d'une fenêtre d'annotation (voir <a
 href="#Creating">Créer une annotation</a>).</p>
 
 <p>Quand la réponse est terminée, l'utilisateur peut la poster sur un serveur
-par à la commande <strong>Enregistrer sur le serveur</strong> ou la sauver
-localement par la commande <strong>Fichier/Sauver</strong>. La commande
+par à la commande <strong>Enregistrer sur le serveur</strong> ou l'enregistrer
+localement par la commande <strong>Fichier/Enregistrer</strong>. La commande
 <strong>Annotations/Détruire</strong> supprime la réponse.</p>
 
 <p>Les réponses peuvent également être annotées comme n'importe quel document

@@ -946,7 +946,7 @@
 <message xml:lang="sk">Riadkovanie</message></label>
 <label define="TMSG_SAVE_DOC">
 <message xml:lang="en">Save document</message>
-<message xml:lang="fr">Sauver le document</message>
+<message xml:lang="fr">Enregistrer le document</message>
 <message xml:lang="de">Speichern</message>
 <message xml:lang="it">Salva il documento</message>
 <message xml:lang="tr">Belge kaydet</message>
@@ -961,7 +961,7 @@
 <message xml:lang="sk">Uložiť dokument</message></label>
 <label define="TMSG_CLOSE_DON_T_SAVE">
 <message xml:lang="en">Close, don't save</message>
-<message xml:lang="fr">Fermer sans sauver</message>
+<message xml:lang="fr">Fermer sans enregistrer</message>
 <message xml:lang="de">Nicht Speichern</message>
 <message xml:lang="it">Chiudi, non salvare</message>
 <message xml:lang="tr">Kapat, kaydetme</message>
@@ -1381,7 +1381,7 @@
 <message xml:lang="sk">Grécka abeceda</message></label>
 <label define="TMSG_SAVE">
 <message xml:lang="en">Save</message>
-<message xml:lang="fr">Sauver</message>
+<message xml:lang="fr">Enregistrer</message>
 <message xml:lang="de">Speichern</message>
 <message xml:lang="it">Salva</message>
 <message xml:lang="tr">Kaydet</message>
@@ -2831,7 +2831,7 @@
 <message xml:lang="sk">Načítať najnovšiu verziu stránky</message></label>
 <label define="TMSG_BUTTON_SAVE">
 <message xml:lang="en">Save</message>
-<message xml:lang="fr">Sauver</message>
+<message xml:lang="fr">Enregistrer</message>
 <message xml:lang="de">Speichern</message>
 <message xml:lang="it">Salvare</message>
 <message xml:lang="tr">Kaydet</message>

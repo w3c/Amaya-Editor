@@ -196,49 +196,49 @@
 194 K‰yt‰ palettia
 195 Kieliasetukset
 196 Huomautuksien
-197 K‰ytt‰j‰n huomautukset
-198 Postipalvelimen huomautukset
-199 Palvelimien merkinn‰t
-200 Lataa paikalliset merkinn‰t automaattisesti
-201 Lataa et‰merkinn‰t automaattisesti
-202 Poista et‰lataus k‰ytˆst‰ k‰ynnistyksen yhteydess‰ (et‰tyˆt‰ varten)
-203 Valintav‰ri
-204 **Selection background color
-205 Suunta
-206 Pysty
-207 Vaaka
-208 **Keep multiple spaces
-209 **Error(s) in the source code
-210 **Fatal error - Fix the source code to continue
-211 **Try the 'File/Read as' entry
-212 Virheellisi‰ merkkej‰
-213 Dokumentin profiili:
-214 Virhe - katso Tiedosto > N‰yt‰ k‰‰nnˆsvirheet
-215 Amaya ei tue dokumentin tyyppi‰
-216 Muokkaus ja tallennus muuttavat dokumentin tyypin
-217 Ei saatavilla
-218 Selaa
-219 Selaa tiedostoja
-220 Valinta
-221 Merkint‰ paikallissuodatusvalikko
-222 N‰yt‰
-223 Piilota
-224 N‰yt‰ kaikki
-225 Piilota kaikki
-226 * tarkoittaa piilotettua, - tarkoittaa osittain piilotettua
-227 Suodatusvalinnat
-228 Tekij‰n mukaan
-229 Tyypin mukaan
-230 Palvelimen mukaan
-231 Access n‰pp‰imet
-232 Ohita
-233 Tyyli elementti
-234 Ei voi luoda XPointeria
-235 Mahdotonta liitt‰‰ aloittavaa XPointeria sis‰isesti lis‰ttyyn elementtiin
-236 Mahdotonta liitt‰‰ lopettavaa XPointeria sis‰isesti lis‰ttyyn elementtiin
-237 Merkinn‰n kohdepaikkaa ei lˆydy
-238 Merkint‰‰ ei voi siirt‰‰ toiseen dokumenttiin
-239 Et voi merkit‰ muutettua dokumenttia. Tallenna dokumentti ensin.
+197 Linkki
+198 K‰ytt‰j‰n huomautukset
+199 Postipalvelimen huomautukset
+200 Palvelimien merkinn‰t
+201 Lataa paikalliset merkinn‰t automaattisesti
+202 Lataa et‰merkinn‰t automaattisesti
+203 Poista et‰lataus k‰ytˆst‰ k‰ynnistyksen yhteydess‰ (et‰tyˆt‰ varten)
+204 Valintav‰ri
+205 **Selection background color
+206 Suunta
+207 Pysty
+208 Vaaka
+209 **Keep multiple spaces
+210 **Error(s) in the source code
+211 **Fatal error - Fix the source code to continue
+212 **Try the 'File/Read as' entry
+213 Virheellisi‰ merkkej‰
+214 Dokumentin profiili:
+215 Virhe - katso Tiedosto > N‰yt‰ k‰‰nnˆsvirheet
+216 Amaya ei tue dokumentin tyyppi‰
+217 Muokkaus ja tallennus muuttavat dokumentin tyypin
+218 Ei saatavilla
+219 Selaa
+220 Selaa tiedostoja
+221 Valinta
+222 Merkint‰ paikallissuodatusvalikko
+223 N‰yt‰
+224 Piilota
+225 N‰yt‰ kaikki
+226 Piilota kaikki
+227 * tarkoittaa piilotettua, - tarkoittaa osittain piilotettua
+228 Suodatusvalinnat
+229 Tekij‰n mukaan
+230 Tyypin mukaan
+231 Palvelimen mukaan
+232 Access n‰pp‰imet
+233 Ohita
+234 Tyyli elementti
+235 Ei voi luoda XPointeria
+236 Mahdotonta liitt‰‰ aloittavaa XPointeria sis‰isesti lis‰ttyyn elementtiin
+237 Mahdotonta liitt‰‰ lopettavaa XPointeria sis‰isesti lis‰ttyyn elementtiin
+238 Merkinn‰n kohdepaikkaa ei lˆydy
+239 Merkint‰‰ ei voi siirt‰‰ toiseen dokumenttiin
 240 Merkinn‰n k‰ytt‰j‰‰ ei valittu. Valitse k‰ytt‰j‰ Merkinn‰t/M‰‰rit‰ asetukset
 241 XPointerin luonti merkint‰‰ varten ep‰onnistui
 242 Uusi merkint‰

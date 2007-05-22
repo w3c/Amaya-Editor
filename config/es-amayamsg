@@ -196,49 +196,49 @@
 194 Usar paleta
 195 Negociación de idioma
 196 Anotaciones
-197 Usuario anotaciones/marcadores:
-198 Servidor de publicación:
-199 Servidores de anotaciones:
-200 Autocargar anotaciones locales
-201 Autocargar anotaciones remotas
-202 Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)
-203 Color del texto seleccionado:
-204 Color de fondo texto selecc.:
-205 Orientación
-206 Vertical
-207 Apaisado
-208 Mantener espaciado múltiple
-209 Error/es en el código fuente
-210 Error fatal - Corrija el código fuente para continuar
-211 Utiliza el menú 'Archivo > Forzar codificación de caracteres'
-212 Caracteres inválidos
-213 Perfil de este documento:
-214 Eerrores - vea Archivo > Mostrar errores sintácticos
-215 La codificación de este documento no está soportada por Amaya
-216 Al editar y guardar este documento se cambiará su tipo
-217 No disponible
-218 Buscar
-219 Buscador de archivos
-220 Selección
-221 Filtro local de anotaciones
-222 Mostrar
-223 Ocultar
-224 Mostrar todo
-225 Ocultar todo
-226 * significa oculto, - significa parcialmente oculto
-227 Opciones de filtrado
-228 Por autor
-229 Por tipo
-230 Por servidor
-231 Atajos de teclado
-232 Ignorar
-233 Elemento de estilo
-234 No puedo crear un XPointer
-235 Imposible adjuntar un XPointer inicial sobre un elemento interno agregado
-236 Imposible adjuntar un XPointer final sobre un elemento interno agregado
-237 No sé a dónde mover la anotación
-238 No puedo mover la anotación a otro documento
-239 No puede anotar un documento que está siendo modificado. Por favor, guárdelo primero.
+197 Enlace
+198 Usuario anotaciones/marcadores:
+199 Servidor de publicación:
+200 Servidores de anotaciones:
+201 Autocargar anotaciones locales
+202 Autocargar anotaciones remotas
+203 Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)
+204 Color del texto seleccionado:
+205 Color de fondo texto selecc.:
+206 Orientación
+207 Vertical
+208 Apaisado
+209 Mantener espaciado múltiple
+210 Error/es en el código fuente
+211 Error fatal - Corrija el código fuente para continuar
+212 Utiliza el menú 'Archivo > Forzar codificación de caracteres'
+213 Caracteres inválidos
+214 Perfil de este documento:
+215 Eerrores - vea Archivo > Mostrar errores sintácticos
+216 La codificación de este documento no está soportada por Amaya
+217 Al editar y guardar este documento se cambiará su tipo
+218 No disponible
+219 Buscar
+220 Buscador de archivos
+221 Selección
+222 Filtro local de anotaciones
+223 Mostrar
+224 Ocultar
+225 Mostrar todo
+226 Ocultar todo
+227 * significa oculto, - significa parcialmente oculto
+228 Opciones de filtrado
+229 Por autor
+230 Por tipo
+231 Por servidor
+232 Atajos de teclado
+233 Ignorar
+234 Elemento de estilo
+235 No puedo crear un XPointer
+236 Imposible adjuntar un XPointer inicial sobre un elemento interno agregado
+237 Imposible adjuntar un XPointer final sobre un elemento interno agregado
+238 No sé a dónde mover la anotación
+239 No puedo mover la anotación a otro documento
 240 No hay usuarios de anotaciones declarados. Por favor, abra el menú de configuración de Anotaciones
 241 No se puede crear un XPointer para esta anotación
 242 Crear una nueva anotación

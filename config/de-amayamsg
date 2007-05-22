@@ -196,49 +196,49 @@
 194 Palette benutzen
 195 Sprachen
 196 Anmerkungen
-197 Autor
-198 Veröffentlichen auf
-199 Laden von
-200 Lokale Anmerkungen automatisch laden
-201 Entfernte Anmerkungen automatisch laden
-202 Offline-Modus
-203 Markierung
-204 Hintergrundfarbe für Markierungen
-205 Ausrichtung
-206 Hochformat
-207 Querformat
-208 Mehrfache Leerzeichen erhalten
-209 Fehler im Quelltext
-210 Schwerer Fehler : Berichtigen Sie den Quelltext um fortzufahren
-211 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
-212 Ungültige Zeichen
-213 Dokumenttyp:
-214 Anzeigen - siehe Datei > Parserfehler anzeigen
-215 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
-216 Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp
-217 Nicht verfügbar
-218 Durchsuchen
+197 Verweis
+198 Autor
+199 Veröffentlichen auf
+200 Laden von
+201 Lokale Anmerkungen automatisch laden
+202 Entfernte Anmerkungen automatisch laden
+203 Offline-Modus
+204 Markierung
+205 Hintergrundfarbe für Markierungen
+206 Ausrichtung
+207 Hochformat
+208 Querformat
+209 Mehrfache Leerzeichen erhalten
+210 Fehler im Quelltext
+211 Schwerer Fehler : Berichtigen Sie den Quelltext um fortzufahren
+212 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
+213 Ungültige Zeichen
+214 Dokumenttyp:
+215 Anzeigen - siehe Datei > Parserfehler anzeigen
+216 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
+217 Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp
+218 Nicht verfügbar
 219 Durchsuchen
-220 Auswahl
-221 Anmerkungsfilter
-222 Zeigen
-223 Verbergen
-224 Alle
-225 Keine
-226 * = verborgen, - = teilweise verborgen
-227 Filtern nach
-228 Autor
-229 Typ
-230 Server
-231 Zugriffstasten
-232 Ignorieren
-233 Formatelement
-234 Kann XPointer nicht erzeugen
-235 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
-236 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
-237 Kein Ziel zum Verschieben der Anmerkung gefunden
-238 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
-239 Anmerkung an geändertes Dokument ist nicht möglich, bitte erst speichern
+220 Durchsuchen
+221 Auswahl
+222 Anmerkungsfilter
+223 Zeigen
+224 Verbergen
+225 Alle
+226 Keine
+227 * = verborgen, - = teilweise verborgen
+228 Filtern nach
+229 Autor
+230 Typ
+231 Server
+232 Zugriffstasten
+233 Ignorieren
+234 Formatelement
+235 Kann XPointer nicht erzeugen
+236 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
+237 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
+238 Kein Ziel zum Verschieben der Anmerkung gefunden
+239 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
 240 Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen
 241 Für diese Anmerkung kann kein XPointer erzeugt werden
 242 Neue Anmerkung erzeugen

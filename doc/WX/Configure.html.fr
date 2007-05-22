@@ -508,7 +508,7 @@ Elle est désactivé par défaut pour cette version d'Amaya car à l'heure
 actuelle, tous les serveurs ne gèrent pas ce type MIME. Cette option ne
 modifie pas le type MIME des anciens documents: le type MIME qui est reçu est
 celui qui sera utilisé pour publier le document, sauf si vous utilisez la
-commande <strong>Sauver comme</strong>. Il est à noter que cette option
+commande <strong>Enregistrer sous</strong>. Il est à noter que cette option
 nécessite aussi de modifier la configuration de votre serveur si celui-ci
 n'enregistre pas les méta-données associées à chaque document.</p>
 
@@ -694,12 +694,12 @@ effectif quand vous ouvrirez une nouvelle fenêtre de document.</p>
 
 <h4 id="rences1"><a name="HTML">Les préférences de géométrie</a></h4>
 
-<p><strong>Sauver la géométrie en quittant</strong>. La géométrie courante
+<p><strong>Enregistrer la géométrie en quittant</strong>. La géométrie courante
 des fenêtres sera automatiquement sauvegardée en quittant l'application.</p>
 
 <p>Deux boutons vous permettent</p>
 <ul>
-  <li>de sauver la taille et la position de la fenêtre courante,</li>
+  <li>d'enregistrer la taille et la position de la fenêtre courante,</li>
   <li>ou de restaurer les valeurs par défaut.</li>
 </ul>
 

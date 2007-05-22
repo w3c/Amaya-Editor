@@ -87,11 +87,11 @@ créer une table).</p>
       <td>Alt Right Arrow</td>
     </tr>
     <tr>
-      <td>Sauver</td>
+      <td>Enregistrer</td>
       <td>Ctrl S</td>
     </tr>
     <tr>
-      <td>Sauver comme</td>
+      <td>Enregistrer sous</td>
       <td>Ctrl Shift S</td>
     </tr>
     <tr>

@@ -24,43 +24,43 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
 
 <div class="toc">
 <ul>
-  <li><a href="#Sauver2">Sauver et Publier des documents</a> 
+  <li><a href="#Sauver2">Enregistrer et Publier des documents</a> 
     <ul>
-      <li><a href="#commande">La commande sauver</a></li>
-      <li><a href="#commande1">La commande Sauver comme</a></li>
-      <li><a href="#Saving1">Sauver et encodage de caractères
+      <li><a href="#commande">La commande Enregistrer</a></li>
+      <li><a href="#commande1">La commande Enregistrer sous</a></li>
+      <li><a href="#Saving1">Enregistrer et encodage de caractères
       (charset)</a></li>
-      <li><a href="#Sauver1">Sauver des documents en tant que textes</a></li>
+      <li><a href="#Sauver1">Sauver le texte du document</a></li>
     </ul>
   </li>
 </ul>
 </div>
 
 <div id="Saving">
-<h2 id="Sauver2"><a name="L1052">Sauver et Publier des documents</a></h2>
+<h2 id="Sauver2"><a name="L1052">Enregistrer et Publier des documents</a></h2>
 
-<p>Amaya permet de sauver les documents (X)HTML soit en format d'origine,
+<p>Amaya permet d'enregistrer les documents (X)HTML soit en format d'origine,
 soit en format texte. Les documents MathML et SVG sont sauvegardés dans leur
 format d'origine.</p>
 
 <p>Les sauvegardes distantes et locales peuvent être accéder de deux façons,
-grâce aux commandes <strong>Sauver</strong> et <strong>Sauver
-comme</strong>.</p>
+grâce aux commandes <strong>Enregistrer</strong> et <strong>Enregistrer
+sous</strong>.</p>
 
 <p>Cette section décrit les commandes du menu de publication. Il existe un
 nombre d'options de configuration que vous pouvez changer par l'intermédiaire
 du <a href="Configure.html.fr#Publishing">menu de configuration</a>.</p>
 
 <p><b>Amaya</b> ne fournit aucune vue d'ensemble de série de pages installées
-sur le serveur. Cependant il est possible de sauver des fichiers d'un serveur
-comme des fichiers locaux grâce aux commandes <strong>Sauver</strong> et
-<strong>Sauver comme</strong>. Pendant ces opérations, Amaya tient compte des
+sur le serveur. Cependant il est possible d'enregistrer des fichiers d'un serveur
+comme des fichiers locaux grâce aux commandes <strong>Enregistrer</strong> et
+<strong>Enregistrer sous</strong>. Pendant ces opérations, Amaya tient compte des
 images présentes dans le document.</p>
 
-<h3 id="commande"><a name="L1517">La commande sauver</a></h3>
+<h3 id="commande"><a name="L1517">La commande Enregistrer</a></h3>
 
-<p>La commande sauver peut être invoquée soit en choisissant
-<strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (<kbd>Ctrl
+<p>La commande Enregistrer peut être invoquée soit en choisissant
+<strong>Enregistrer</strong> depuis le menu <strong>Fichier</strong> (<kbd>Ctrl
 s</kbd>) ou bien en cliquant sur le bouton <img alt="floppy"
 src="../../resources/icons/22x22/save.png" />. Cette commande sauve le
 document courant à son adresse d'origine. Si la réponse du serveur inclut
@@ -86,20 +86,20 @@ propose d'utiliser un nom par défaut pour répondre à la demande. Notez que
 l'utilisation de l'en-tête<code>Content-Location</code> permet de
 s'affranchir de ce problème.</p>
 
-<p>Si quelqu'un a besoin de sauver des images nouvellement ajoutées dans un
-autre endroit, la commande <strong>Sauver comme</strong> devra être utilisée
+<p>Si quelqu'un a besoin d'enregistrer des images nouvellement ajoutées dans un
+autre endroit, la commande <strong>Enregistrer sous</strong> devra être utilisée
 à la place.</p>
 
-<h3 id="commande1"><a name="L1518">La commande Sauver comme</a></h3>
+<h3 id="commande1"><a name="L1518">La commande Enregistrer sous</a></h3>
 
-<p>Le fait de sélectionner l'entrée <strong>Sauver comme</strong> dans le
-menu <strong>Fichier</strong> ouvre une boîte de dialogue qui vous permet de
-sauver le document courant en changeant le format et à une adresse
+<p>Le fait de sélectionner l'entrée <strong>Enregistrer sous</strong> dans le
+menu <strong>Fichier</strong> ouvre une boîte de dialogue qui vous permet d'enregistrer
+le document courant en changeant le format et à une adresse
 différente.</p>
 
 <p>Vous pouvez :</p>
 <ul>
-  <li>sauver le document seulement ou avec ses ressources (images, objets,
+  <li>enregistrer le document seulement ou avec ses ressources (images, objets,
     style, scripts) sur un disque local ou un serveur distant;</li>
   <li>les images et les objets inclus peuvent être sauvés dans le répertoire
     du document ou à une adresse différente;</li>
@@ -111,7 +111,7 @@ différente.</p>
 
 <p>Les choix proposés dans la boîte de dialogue sont les suivants :</p>
 <ul>
-  <li>Le champ <strong>Où sauver</strong> indique l'adresse où le document
+  <li>Le champ <strong>Où enregistrer</strong> indique l'adresse où le document
     doit être sauvé. Ce peut être un fichier dans le système du fichier local
     (par exemple "/pub/html/welcome.html") ou le nom d'un URI distante (par
     exemple "http://www.w3.org/pub/Welcome.html"). 
@@ -193,11 +193,11 @@ différente.</p>
     sont proposés.</li>
 </ul>
 <ul>
-  <li>Le champ <strong>Où sauver les images</strong> vous permet de donner le
+  <li>Le champ <strong>Où enregistrer les images</strong> vous permet de donner le
     répertoire où les images et les objets doivent être sauvés. Quand
     <strong>Copier les Images</strong> est sélectionné, ce champ est
     initialisé avec le nom du répertoire du document sauvé.</li>
-  <li>Le champ <strong>Où sauver les ressources</strong> vous permet de
+  <li>Le champ <strong>Où enregistrer les ressources</strong> vous permet de
     donner le répertoire où les styles et scripts doivent être sauvés. Quand
     <strong>Copier les ressources (styles et scripts)</strong> est
     sélectionné, ce champ est initialisé avec le nom du répertoire du
@@ -206,21 +206,21 @@ différente.</p>
 
 <p>Ce dialogue inclut trois boutons :</p>
 <ul>
-  <li>Le fait de cliquer sur <strong>Sauver</strong> débute le processus de
+  <li>Le fait de cliquer sur <strong>Enregistrer</strong> débute le processus de
     transformation du document et un événement demande confirmation dans les
     deux cas suivants : 
-    <p class="Note">Pour sauver à distance, vérifiez que le proxy http n'est
+    <p class="Note">Pour enregistrer à distance, vérifiez que le proxy http n'est
     pas mis, ou que le serveur proxy et le <a
     href="http://www.w3.org/Amaya/User/Put.html">serveur cible sont
     configurés pour travailler avec la méthode PUT</a>.</p>
     <p></p>
   </li>
-  <li>Le bouton <strong>RAZ</strong> annule le contenu des champs "Où sauver
+  <li>Le bouton <strong>RAZ</strong> annule le contenu des champs "Où enregistrer
     ...".</li>
   <li>Le bouton <strong>Annuler</strong> arrête la commande.</li>
 </ul>
 
-<h3 id="Saving1">Sauver et encodage de caractères (charset)</h3>
+<h3 id="Saving1">Enregistrer et encodage de caractères (charset)</h3>
 
 <p>Trois encodages standard sont considérés :</p>
 <ul>
@@ -263,12 +263,12 @@ une DTD qui définit les noms utilisés.</p>
 travaille. Par défaut, Amaya préserve l'encodage initial du document, c'est
 l'encodage associé au document au chargement. Vous pouvez vérifier cet
 encodage avec la commande <strong>Fichier/Informations sur le
-document</strong> (champ Code de caractère). La commande Sauver sauve le
-document avec cet encodage, tandis que la commande <strong>Sauver
-comme</strong> vous permet de choisir un autre encodage (champ Charset).</p>
+document</strong> (champ Code de caractère). La commande Enregistrer sauve le
+document avec cet encodage, tandis que la commande <strong>Enregistrer
+sous</strong> vous permet de choisir un autre encodage (champ Charset).</p>
 
 <p>Quand un document est sauvé (commandes <strong>Sauve</strong>r ou
-<strong>Sauver comme</strong>) tous les caractères qui sont disponibles dans
+<strong>Enregistrer sous</strong>) tous les caractères qui sont disponibles dans
 le jeu de caractères de l'encodage sont juste écrits en utilisant cet
 encodage. Seulement les autres caractères sont écrits en utilisant les
 références caractère ou entité. Le choix entre ces deux options est fait en
@@ -282,12 +282,11 @@ document</strong> vous permet d'associer, de changer ou retirer le
 <code>doctype</code> à tout moment. Ceci vous permet d'engendrer soit des
 références caractère soit des références entité.</p>
 
-<h3 id="Sauver1"><a name="L1105">Sauver des documents en tant que
-textes</a></h3>
+<h3 id="Sauver1"><a name="L1105">Sauver le texte du documents</a></h3>
 
-<p>La commande <strong>Sauver comme</strong> du menu <strong>Fichier</strong>
+<p>La commande <strong>Enregistrer sous</strong> du menu <strong>Fichier</strong>
 visualise une boîte de dialogue permettant de sauver le document courant dans
-des formats différents.Le bouton <strong>Texte</strong> du menu
+des formats différents. Le bouton <strong>Texte</strong> du menu
 <strong>Format de document</strong> sauve le document sous forme de texte,
 dans un fichier local. Les balises HTML sont remplacées par des espaces,
 sauts de lignes, etc. La liste de toutes les URIs utilisées dans le document

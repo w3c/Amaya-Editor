@@ -403,7 +403,7 @@
 <message xml:lang="sk">Neplatný cieľ odkazu</message></label>
 <label define="AM_LOCATION">
 <message xml:lang="en">Insert the URI or browse</message>
-<message xml:lang="fr">Inserer l'URI ou butiner</message>
+<message xml:lang="fr">Inserer l'URI ou parcourir</message>
 <message xml:lang="de">URI</message>
 <message xml:lang="it">Indirizzo</message>
 <message xml:lang="tr">Adres</message>
@@ -448,7 +448,7 @@
 <message xml:lang="sk">Zmeniť názov</message></label>
 <label define="AM_DOC_MODIFIED">
 <message xml:lang="en">Document modified - Do you want to save it?</message>
-<message xml:lang="fr">Document modifié - Voulez-vous le sauver ?</message>
+<message xml:lang="fr">Document modifié - Voulez-vous l'enregistrer ?</message>
 <message xml:lang="it">Documento modificato - salvare?</message>
 <message xml:lang="de">Möchten Sie die Änderungen speichern?</message>
 <message xml:lang="es">Documento modificado. ¿Quiere guardarlo?</message>
@@ -1135,7 +1135,7 @@
 <message xml:lang="sk">CSS</message></label>
 <label define="AM_WARNING_SAVE_OVERWRITE">
 <message xml:lang="en">Saving will save following images too?</message>
-<message xml:lang="fr">La sauvegarde sauvera aussi les images suivantes?</message>
+<message xml:lang="fr">Enregistrer aussi les images suivantes?</message>
 <message xml:lang="it">Il salvataggio salverà anche le immagini successive?</message>
 <message xml:lang="es">¿Guardar también las imágenes siguientes al guardar?</message>
 <message xml:lang="de">Folgende Bilder ebenfalls speichern?</message>
@@ -1403,7 +1403,7 @@
 <message xml:lang="sk">Aktualizovanie prepojení: %s%% bolo ukončené</message></label>
 <label define="AM_NOTHING_TO_SAVE">
 <message xml:lang="en">Nothing new to be saved</message>
-<message xml:lang="fr">Rien à sauver</message>
+<message xml:lang="fr">Rien à enregistrer</message>
 <message xml:lang="de">Nichts zu speichern</message>
 <message xml:lang="it">Niente di nuovo da salvare</message>
 <message xml:lang="tr">Kaydedilecek bir şey yok</message>
@@ -1478,7 +1478,7 @@
 <message xml:lang="sk">Žiadny súbor pravidiel CSS nie je dostupný</message></label>
 <label define="AM_DONT_SAVE">
 <message xml:lang="en">Don't save</message>
-<message xml:lang="fr">Ne pas sauver</message>
+<message xml:lang="fr">Ne pas enregistrer</message>
 <message xml:lang="de">Nicht speichern</message>
 <message xml:lang="it">Non salvare</message>
 <message xml:lang="es">No guardar</message>
@@ -2399,7 +2399,7 @@
 <message xml:lang="sk">Vytvárať zálohu súborov</message></label>
 <label define="AM_SAVE_GEOMETRY_ON_EXIT">
 <message xml:lang="en">Save geometry on exit</message>
-<message xml:lang="fr">Sauver la géométrie en quittant</message>
+<message xml:lang="fr">Enregistrer la géométrie en quittant</message>
 <message xml:lang="it">Salvare la geometria all'uscita</message>
 <message xml:lang="de">Fenstereinstellungen beim Beenden speichern</message>
 <message xml:lang="es">Guardar geometría al salir</message>
@@ -2604,7 +2604,7 @@
 <message xml:lang="sk">Rozmery</message></label>
 <label define="AM_SAVE_GEOMETRY">
 <message xml:lang="en">Save current geometry</message>
-<message xml:lang="fr">Sauver la géométrie courante</message>
+<message xml:lang="fr">Enregistrer la géométrie courante</message>
 <message xml:lang="de">Aktuelle Geometrie speichern</message>
 <message xml:lang="it">Salva la geometria corrente</message>
 <message xml:lang="es">Guardar la geometría actual</message>
@@ -2947,6 +2947,22 @@
 <message xml:lang="cn">注释</message>
 <message xml:lang="tw">注釋</message>
 <message xml:lang="sk">Komenmtáre</message></label>
+<label define="AM_LINK">
+<message xml:lang="en">Link</message>
+<message xml:lang="fr">Lien</message>
+<message xml:lang="de">Verweis</message>
+<message xml:lang="it">Link</message>
+<message xml:lang="tr">Bağlantı</message>
+<message xml:lang="es">Enlace</message>
+<message xml:lang="pt">Enlace</message>
+<message xml:lang="fi">Linkki</message>
+<message xml:lang="ru">Привязка</message>
+<message xml:lang="hu">Kapocs</message>
+<message xml:lang="ka">ბმა</message>
+<message xml:lang="cn">Link</message>
+<message xml:lang="tw">Link</message>
+<message xml:lang="sk">Vložiť prepojenie</message>
+</label>
 <label define="AM_ANNOT_USER">
 <message xml:lang="en">Annotation and bookmark user</message>
 <message xml:lang="fr">Nom de l'utilisateur</message>
@@ -3210,7 +3226,7 @@
 <message xml:lang="sk">Kódovanie tohto dokumentu nie je podporované programom Amaya</message></label>
 <label define="AM_XML_MISMATCH_PROFILE">
 <message xml:lang="en">Editing and saving this document will change its type</message>
-<message xml:lang="fr">Editer et sauver ce document changera son type</message>
+<message xml:lang="fr">Editer et enregistrer ce document changera son type</message>
 <message xml:lang="it">Editando e salvando questo documento il suo tipo verrà cambiato</message>
 <message xml:lang="de">Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp</message>
 <message xml:lang="es">Al editar y guardar este documento se cambiará su tipo</message>
@@ -3240,7 +3256,7 @@
 <message xml:lang="sk">Nedostupné</message></label>
 <label define="AM_BROWSE">
 <message xml:lang="en">Browse</message>
-<message xml:lang="fr">Butiner</message>
+<message xml:lang="fr">Parcourir</message>
 <message xml:lang="it">Scorri</message>
 <message xml:lang="de">Durchsuchen</message>
 <message xml:lang="es">Buscar</message>
@@ -3553,21 +3569,6 @@
 <message xml:lang="cn">无法将注释移到其他文档</message>
 <message xml:lang="tw">無法將注釋移到其他文檔</message>
 <message xml:lang="sk">Nedokážem presunúť komentár do iného dokumentu</message></label>
-<label define="AM_NO_ANNOT_MOD_DOC">
-<message xml:lang="en">You cannot annotate a modified document. Please save it first.</message>
-<message xml:lang="fr">Vous ne pouvez pas annoter un document modifié. Sauver le d'abord.</message>
-<message xml:lang="it">Non puoi annotare un documento modificato. Prima salvalo.</message>
-<message xml:lang="de">Anmerkung an geändertes Dokument ist nicht möglich, bitte erst speichern</message>
-<message xml:lang="es">No puede anotar un documento que está siendo modificado. Por favor, guárdelo primero.</message>
-<message xml:lang="pt">Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.</message>
-<message xml:lang="fi">Et voi merkitä muutettua dokumenttia. Tallenna dokumentti ensin.</message>
-<message xml:lang="tr">Değişlikler gören bir belgeye ekleme imkansıdır. Önce kayıt edin.</message>
-<message xml:lang="ru">Вы не можете аннотировать изменённый документ. Сначала сохраните его.</message>
-<message xml:lang="hu">Módosított dokumentumhoz nem lehet jegyzetet adni. Kérjük, előbb mentse.</message>
-<message xml:lang="ka">შეცვლილი დოკუმენტის ანოტირება არ შეიძლება. ჯერ შეინახეთ.</message>
-<message xml:lang="cn">注释前请先保存该文档</message>
-<message xml:lang="tw">注釋前請先保存該文檔</message>
-<message xml:lang="sk">Nemôžete komentovať zmenený dokument. Najprv ho uložte.</message></label>
 <label define="AM_NO_ANNOT_USER">
 <message xml:lang="en">No annotation user declared. Please open the Annotations/Configure menu.</message>
 <message xml:lang="fr">Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.</message>
@@ -3855,7 +3856,7 @@
 <message xml:lang="sk">Tento dokument je už načítaný v inom okne</message></label>
 <label define="AM_UNSAVE">
 <message xml:lang="en">Saving that instance may cause a lost update problem</message>
-<message xml:lang="fr">Sauver cette instance peut provoquer des problèmes de mise à jour.</message>
+<message xml:lang="fr">Enregistrer cette instance peut provoquer des problèmes de mise à jour.</message>
 <message xml:lang="es">Guardar la copia puede originar un problema de pérdida de actualización</message>
 <message xml:lang="it">Salvare questa istanza può fare perdere degli aggiornamenti</message>
 <message xml:lang="de">Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)</message>
@@ -4631,7 +4632,7 @@
 <message xml:lang="sk">Vytvoriť knižnicu</message></label>
 <label define="AM_SVGLIB_ADD_NEW_CATALOGUE">
 <message xml:lang="en">Browse library</message>
-<message xml:lang="fr">Butiner librairies</message>
+<message xml:lang="fr">Parcourir les librairies</message>
 <message xml:lang="de">Bibliothek durchsuchen</message>
 <message xml:lang="fi">Selaa kirjastoa</message>
 <message xml:lang="it">Scorri la libreria</message>
@@ -5469,7 +5470,7 @@
 <message xml:lang="sk">Nebol nájdený nadpis</message></label>
 <label define="AM_SAVE_ANYWAY">
 <message xml:lang="en">Save anyway</message>
-<message xml:lang="fr">Sauver quand même</message>
+<message xml:lang="fr">Enregistrer quand même</message>
 <message xml:lang="es">Guardar de todas formas</message>
 <message xml:lang="de">Trotzdem sichern</message>
 <message xml:lang="it">Salva comunque</message>
@@ -5691,14 +5692,14 @@
 </label>
 <label define="AM_WHERE_RESOURCE">
 <message xml:lang="en">Where to save resources</message>
-<message xml:lang="fr">Où sauver les ressources</message>
+<message xml:lang="fr">Où enregistrer les ressources</message>
 <message xml:lang="es">Ubicación de recursos</message>
 <message xml:lang="sk">Umiestnenie zdrojov</message>
 </label>
 <label define="AM_WHERE_IMAGE">
 <message xml:lang="en">Where to save images</message>
 <message xml:lang="es">Ubicación de imágenes</message>
-<message xml:lang="fr">Où sauver les images</message>
+<message xml:lang="fr">Où enregistrer les images</message>
 <message xml:lang="sk">Umiestnenie obrázkov</message>
 </label>
 <label define="AM_QUICK_SAVE">
