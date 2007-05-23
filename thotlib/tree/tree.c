@@ -3100,6 +3100,14 @@ void DeleteElement (PtrElement *pEl, PtrDocument pDoc)
       if (pDoc)
         FreeAbEl (*pEl, pDoc);
       /* frees the memory */
+      if (FirstSelectedElement == *pEl)
+        {
+          SelectedDocument = NULL;
+          FirstSelectedElement = NULL;
+          LastSelectedElement = NULL;
+        }
+      else if (LastSelectedElement == *pEl)
+        LastSelectedElement = FirstSelectedElement;
       FreeElement (*pEl);
       *pEl = NULL;
     }

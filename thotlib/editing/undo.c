@@ -1205,36 +1205,39 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
           else
             SendEventSubTree (TteElemDelete, pDoc, pEl, TTE_STANDARD_DELETE_LAST_ITEM,
                               editOp->EoInfo, FALSE, FALSE);
-          /* prepare event TteElemDelete to be sent to the application */
-          notifyEl.event = TteElemDelete;
-          notifyEl.document = doc;
-          notifyEl.element = (Element) (pEl->ElParent);
-          if (editOp->EoInfo == 0)
-            notifyEl.info = 1; /* sent by undo */
-          else
-            notifyEl.info = editOp->EoInfo;
-          notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-          notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-          nSiblings = 0;
-          pSibling = pEl;
-          while (pSibling->ElPrevious != NULL)
+          if (pEl->ElStructSchema)
             {
-              nSiblings++;
-              pSibling = pSibling->ElPrevious;
-            }
-          notifyEl.position = nSiblings;
-          /* remove the element */
-          if (!reverse)
-            TtaDeleteTree ((Element)pEl, doc);
-          else
-            {
-              newPreviousSibling = pEl->ElPrevious;
-              newParent = pEl->ElParent;
-              newSavedElement = pEl;
-              TtaRemoveTree ((Element)pEl, doc);
-            }
+              /* prepare event TteElemDelete to be sent to the application */
+              notifyEl.event = TteElemDelete;
+              notifyEl.document = doc;
+              notifyEl.element = (Element) (pEl->ElParent);
+              if (editOp->EoInfo == 0)
+                notifyEl.info = 1; /* sent by undo */
+              else
+                notifyEl.info = editOp->EoInfo;
+              notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+              notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+              nSiblings = 0;
+              pSibling = pEl;
+              while (pSibling->ElPrevious != NULL)
+                {
+                  nSiblings++;
+                  pSibling = pSibling->ElPrevious;
+                }
+              notifyEl.position = nSiblings;
+              /* remove the element */
+              if (!reverse)
+                TtaDeleteTree ((Element)pEl, doc);
+              else
+                {
+                  newPreviousSibling = pEl->ElPrevious;
+                  newParent = pEl->ElParent;
+                  newSavedElement = pEl;
+                  TtaRemoveTree ((Element)pEl, doc);
+                }
           /* tell the application that an element has been removed */
           CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+            }
           editOp->EoCreatedElement = NULL;
         }
 

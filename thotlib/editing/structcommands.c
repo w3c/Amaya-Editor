@@ -512,11 +512,14 @@ ThotBool SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl,
       /* le document demande un evenement pour chaque element du sous-arbre */
       pChild = pEl->ElFirstChild;
       /* envoie recursivement un evenement a chaque fils de pEl */
-      while (pChild != NULL)
+      while (pChild)
         {
           ret = SendEventSubTree (AppEvent, pDoc, pChild, 0, info,
                                   inTable, inRow);
           cancel = cancel | ret;
+          if (cancel && pEl->ElStructSchema == NULL)
+            // the parent element could be deleted stop here
+            return (cancel);
           pChild = pChild->ElNext;
         }
     }

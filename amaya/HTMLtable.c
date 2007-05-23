@@ -2405,6 +2405,9 @@ ThotBool DeleteTBody (NotifyElement * event)
   ElementType         elType;
   Document            doc = event->document;
 
+  if (event->info == 1)
+    // do nothing when undo is performed
+    return FALSE;		/* let Thot perform normal operation */
   LastPastedEl = NULL;
   el = event->element;
   sibling = el;
