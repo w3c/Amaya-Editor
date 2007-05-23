@@ -131,7 +131,7 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
     if (resolvedPath!=NULL)
       len1 = strlen(resolvedPath);
     char* newPath = (char*)TtaGetMemory(len1+len2+2);
-    if (len1>0)
+    if (len1 > 0)
     {
       strcpy(newPath, resolvedPath);
       newPath[len1] = '/';
@@ -142,7 +142,7 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
       strcpy(newPath, dec->name);
     }
     
-    ITERATOR_FOREACH(iter, DLListNode, listnode)
+    ITERATOR_FOREACH(iter, HashMapNode, mapnode)
       {
         FillUnionResolvedPossibleElement(t, (char*)mapnode->key, elem, newPath, tempList, level);
       }
@@ -152,8 +152,7 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
     
     
     listnode = (DLListNode) ForwardIterator_GetFirst(iter);
-    for(listnode = (DLListNode) ForwardIterator_GetFirst(iter); listnode;
-          listnode = (DLListNode) ForwardIterator_GetNext(iter))
+	ITERATOR_FOREACH(iter, DLListNode, listnode)
       DLList_Append(list, listnode->elem);
     TtaFreeMemory(iter);
 
@@ -241,9 +240,10 @@ static void FillInsertableElemList (Document doc, Element elem, DLList list)
   ThotBool         haveAncestorBag = FALSE;
 #endif/* TEMPLATES */
   int level;
-  ThotBool cont;
+  ThotBool cont = TRUE;
 
-  if (elem){
+  if (elem)
+  {
     if (doc==0)
       doc = TtaGetDocument(elem);
 
@@ -251,15 +251,15 @@ static void FillInsertableElemList (Document doc, Element elem, DLList list)
     t = GetXTigerTemplate(DocumentMeta[doc]->template_url);
 
 
-    if(!IsTemplateElement(elem))
+    if (!IsTemplateElement(elem))
       elem = GetFirstTemplateParentElement(elem);
 
     // Search for first xt:bag ancestor.
     parent = elem;
-    while(parent!= NULL && cont)
+    while (parent!= NULL && cont)
       {
         type = TtaGetElementType(parent);
-        if(type.ElTypeNum==Template_EL_bag)
+        if (type.ElTypeNum == Template_EL_bag)
           {
             haveAncestorBag = TRUE;
             cont = FALSE;
@@ -271,7 +271,7 @@ static void FillInsertableElemList (Document doc, Element elem, DLList list)
     cont = TRUE;
 
     // Process for each ancestor.
-    while(elem!=NULL && cont)
+    while (elem!=NULL && cont)
     {
       type = TtaGetElementType(elem);
       switch(type.ElTypeNum)

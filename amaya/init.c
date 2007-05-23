@@ -1075,7 +1075,7 @@ void UpdateEditorMenus (Document doc)
       TtaSetMenuOff (doc, 1, XMLTypes);
       TtaSetMenuOff (doc, 1, Links);
       TtaSetMenuOff (doc, 1, XMLTypes);
-      TtaSetItemOff (doc, view, File, BSynchro);
+      TtaSetItemOff (doc, 1, File, BSynchro);
       TtaSetItemOff (doc, 1, Edit_, BTransform);
     }
   else if (DocumentTypes[doc] == docHTML)

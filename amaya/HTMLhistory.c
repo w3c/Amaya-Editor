@@ -1439,7 +1439,7 @@ int LoadPasswordsSiteList ()
 {
   Prop_Passwords_Site *element, *current = NULL;
   int             i;
-  int             nb;
+  int             nb = 0;
  char            site [MAX_LENGTH];
 
   /* Is the password table already loaded */
