@@ -137,7 +137,7 @@
 135 Objet (object)
 136 Paramètre (param)
 137 Table
-138 table
+138 Tableau (table)
 139 Légende (caption)
 140 colgroup
 141 Colonne (col)
@@ -253,8 +253,8 @@
 251 Coller l'adresse
 252 &Lier la cible créée
 253 &Créer/changer lien...
-254 Créer ci&ble
-255 &Détruire ancre
+254 Créer une ci&ble
+255 &Supprimer le lien ou la cible
 256 &Ajouter/Retirer des attributs ID...
 257 &Montrer outils
 258 &Plein écran
@@ -293,7 +293,7 @@
 291 Déplacer sur le XPointer enregistré
 292 Répondre à l'annotation
 293 Enregister sur le serveur
-294 Détruire
+294 Supprimer
 295 Charger annotations
 296 Personnaliser la requête...
 297 Filtrer local...
@@ -314,14 +314,14 @@
 312 Caractères
 313 Transformer
 314 Liens
-315 Tables
+315 Tableaux
 316 Zones actives
 317 Math
 318 Graphiques
 319 Support XML
 320 Feuilles de style
 321 Chercher
-322 Corriger
+322 Vérification orthographique
 323 Publier
 324 WebDAV
 325 Imprimer

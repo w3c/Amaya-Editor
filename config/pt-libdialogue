@@ -95,7 +95,7 @@
 93 Gráfico
 94 Símbolo
 95 Imagem
-96 Elemento XML
+96 XML/XTiger
 97 depois
 98 antes
 99 em torno de
@@ -197,9 +197,9 @@
 195 Imprimir
 196 Buscar
 197 Home
-198 Ênfase
-199 Forte
-200 Código (font)
+198 Ênfase On/Off
+199 Forte On/Off
+200 Código On/Off
 201 Inserir imagem
 202 Cabeçalho nível 1
 203 Cabeçalho nível 2
@@ -217,10 +217,10 @@
 215 **Boxes
 216 Divisão
 217 Destino
-218 Inserção
-219 Supressão
-220 Índice
-221 Expoente
+218 Inserção On/Off
+219 Supressão On/Off
+220 Índice On/Off
+221 Expoente On/Off
 222 Termo
 223 Definição
 224 Objeto

@@ -95,7 +95,7 @@
 93 Grafik
 94 Simge
 95 Görüntü
-96 XML
+96 XML/XTiger
 97 önce
 98 sonra
 99 civarında
@@ -197,9 +197,9 @@
 195 Yazdır
 196 Ara
 197 Özel sayfa
-198 Vurgu
-199 Kuvvetli
-200 Kod
+198 Vurgu On/Off
+199 Kuvvetli On/Off
+200 Kod On/Off
 201 Görüntü ekle
 202 Başlık 1
 203 Başlık 2
@@ -217,10 +217,10 @@
 215 **Boxes
 216 Bölme
 217 Yarat
-218 Araya Koy
-219 Sil
-220 Alt
-221 Üst
+218 Araya Koy On/Off
+219 Sil On/Off
+220 Alt On/Off
+221 Üst On/Off
 222 Terim
 223 Tanım
 224 Nesne

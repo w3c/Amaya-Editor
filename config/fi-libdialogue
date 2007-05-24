@@ -95,7 +95,7 @@
 93 Grafiikkaa
 94 Symboli
 95 Kuva
-96 XML Elementin
+96 XML/XTiger
 97 jälkeen
 98 ennen
 99 ympärillä
@@ -197,9 +197,9 @@
 195 Tulosta
 196 Etsi
 197 Aloitussivu
-198 Korosta
-199 Lihavoi
-200 Koodi
+198 Korosta On/Off
+199 Lihavoi On/Off
+200 Koodi On/Off
 201 Syötä kuva
 202 Otsikkokoko 1
 203 Otsikkokoko 2
@@ -217,10 +217,10 @@
 215 **Boxes
 216 Tyhjä rivi
 217 Kohde
-218 Lisäys
-219 Poisto
-220 Alaindeksi
-221 Yläindeksi
+218 Lisäys On/Off
+219 Poisto On/Off
+220 Alaindeksi On/Off
+221 Yläindeksi On/Off
 222 Lopetus
 223 Määrittely
 224 Objekti

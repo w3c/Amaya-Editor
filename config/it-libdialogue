@@ -95,7 +95,7 @@
 93 Grafica
 94 Simbolo
 95 Immagine
-96 Elemento XML
+96 XML/XTiger
 97 dopo
 98 prima
 99 intorno
@@ -197,9 +197,9 @@
 195 Stampa
 196 Cerca
 197 Home
-198 Enfasi
-199 Forte
-200 Codice
+198 Enfasi On/Off
+199 Forte On/Off
+200 Codice On/Off
 201 Inserisci immagine
 202 Intestazione di livello 1
 203 Intestazione di livello 2
@@ -217,10 +217,10 @@
 215 Box
 216 Divisione
 217 Obiettivo
-218 Inserzione
-219 Cancellazione
-220 Pedice
-221 Indice
+218 Inserzione On/Off
+219 Cancellazione On/Off
+220 Pedice On/Off
+221 Indice On/Off
 222 Termine
 223 Definizione
 224 Oggetto

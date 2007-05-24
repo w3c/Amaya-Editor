@@ -195,7 +195,7 @@
 <message xml:lang="sk">Otvoriť v novom okne</message></label>
 <label define="AM_CLEAR">
 <message xml:lang="en">Clear</message>
-<message xml:lang="fr">RAZ</message>
+<message xml:lang="fr">Effacer</message>
 <message xml:lang="de">Zurücksetzen</message>
 <message xml:lang="it">Cancella</message>
 <message xml:lang="tr">Temizle</message>

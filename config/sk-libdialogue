@@ -95,7 +95,7 @@
 93 Grafika
 94 Symbol
 95 Obrázok
-96 XML prvku
+96 XML/XTiger
 97 za
 98 pred
 99 okolo
@@ -197,9 +197,9 @@
 195 Tlačiť
 196 Hľadať
 197 Prejsť na domovskú stránku
-198 Zvýrazniť (em)
-199 Silno zvýrazniť (strong)
-200 Zdrojový kód (code)
+198 Zvýrazniť On/Off
+199 Silno zvýrazniť On/Off
+200 Zdrojový kód On/Off
 201 Obrázok (img)
 202 Nadpis úrovne 1 (h1)
 203 Nadpis úrovne 2 (h2)
@@ -217,10 +217,10 @@
 215 Kolónky
 216 Oddelenie, vrstva (div)
 217 Záložka
-218 Novovložený text (ins)
-219 Text na odstránenie (del)
-220 Dolný index
-221 Horný index
+218 Novovložený text On/Off
+219 Text na odstránenie On/Off
+220 Dolný index On/Off
+221 Horný index On/Off
 222 Termín (dt)
 223 Definícia termínu (dd)
 224 Objekt (object)

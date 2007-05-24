@@ -95,7 +95,7 @@
 93 Gráfico
 94 Símbolo
 95 Imagen
-96 Elemento XML
+96 XML/XTiger
 97 después
 98 antes
 99 alrededor
@@ -197,9 +197,9 @@
 195 Imprimir
 196 Buscar
 197 Inicio
-198 Énfasis (em)
-199 Enérgico (strong)
-200 Código (code)
+198 Énfasis On/Off
+199 Enérgico On/Off
+200 Código On/Off
 201 Imagen
 202 Cabecera nivel 1 (h1)
 203 Cabecera nivel 2 (h2)
@@ -217,10 +217,10 @@
 215 Cajas
 216 División
 217 Destino
-218 Inserción
-219 Borrado
-220 Subíndice
-221 Superíndice
+218 Inserción On/Off
+219 Borrado On/Off
+220 Subíndice On/Off
+221 Superíndice On/Off
 222 Término
 223 Definición
 224 Objeto

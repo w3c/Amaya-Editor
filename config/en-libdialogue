@@ -95,7 +95,7 @@
 93 Graphic
 94 Symbol
 95 Image
-96 XML Elements
+96 XML/XTiger
 97 after
 98 before
 99 around
@@ -197,10 +197,10 @@
 195 Print
 196 Search
 197 Home
-198 Emphasis
-199 Strong
-200 Code
-201 Insert image
+198 Emphasis On/Off
+199 Strong On/Off
+200 Code On/Off
+201 Insert/Replace image
 202 Heading level 1
 203 Heading level 2
 204 Heading level 3
@@ -217,10 +217,10 @@
 215 Boxes
 216 Division
 217 Target
-218 Insertion
-219 Deletion
-220 Subscript
-221 Superscript
+218 Insertion On/Off
+219 Deletion On/Off
+220 Subscript On/Off
+221 Superscript On/Off
 222 Term
 223 Definition
 224 Object

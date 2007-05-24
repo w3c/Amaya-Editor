@@ -95,7 +95,7 @@
 93 Graphique
 94 Symbole
 95 Image
-96 Eléments XML
+96 XML/XTiger
 97 après
 98 avant
 99 autour
@@ -150,7 +150,7 @@
 148 Remplacer (+ dic)
 149 Remplacer
 150 Autre langue
-151 Apprend
+151 Apprendre
 152 incluant les caractères :
 153 Corriger...
 154 en chiffres romains
@@ -197,10 +197,10 @@
 195 Imprimer
 196 Chercher
 197 Page personnelle
-198 Mise en évidence
-199 Important
-200 Code
-201 Ajout d'une image
+198 Mise en évidence On/Off
+199 Important On/Off
+200 Code On/Off
+201 Ajouter/Remplacer une image
 202 Titre niveau 1
 203 Titre niveau 2
 204 Titre niveau 3
@@ -208,7 +208,7 @@
 206 Liste numérotée
 207 Liste de définitions
 208 Lien
-209 Table
+209 Tableau
 210 Etes vous certain de vouloir fermer %d onglets?
 211 M'avertir quand je ferme plusieurs onglets
 212 Fermer les onglets
@@ -217,10 +217,10 @@
 215 Boîtes
 216 Division
 217 Cible
-218 Insertion
-219 Suppression
-220 Indice
-221 Exposant
+218 Insertion On/Off
+219 Suppression On/Off
+220 Indice On/Off
+221 Exposant On/Off
 222 Terme
 223 Définition
 224 Objet

@@ -95,7 +95,7 @@
 93 Grafika
 94 szimbólum
 95 Kép
-96 XML elem
+96 XML/XTiger
 97 után
 98 előtt
 99 körül
@@ -197,9 +197,9 @@
 195 Nyomtatás
 196 Keresés
 197 Kezdőlap
-198 Hangsúlyozott
-199 Vastag
-200 Kód
+198 Hangsúlyozott On/Off
+199 Vastag On/Off
+200 Kód On/Off
 201 Kép beillesztése
 202 1. szint
 203 2. szint
@@ -217,10 +217,10 @@
 215 Dobozok
 216 Felosztás
 217 Létrehozása
-218 &Beillesztés
-219 &Törlés
-220 &Alsó index
-221 &Felső index
+218 &Beillesztés On/Off
+219 &Törlés On/Off
+220 &Alsó index On/Off
+221 Felső index On/Off
 222 Szócikk
 223 Meghatározás
 224 Objektum

@@ -2017,7 +2017,7 @@
 <message xml:lang="sk">Tabuľka</message></label>
 <label define="BTable">
 <message xml:lang="en">table</message>
-<message xml:lang="fr">table</message>
+<message xml:lang="fr">Tableau (table)</message>
 <message xml:lang="de">Neue Tabelle (table)</message>
 <message xml:lang="it">Tabella (table)</message>
 <message xml:lang="tr">table</message>
@@ -3647,7 +3647,7 @@
 <message xml:lang="sk">&amp;Vytvoriť alebo zmeniť odkaz...</message></label>
 <label define="BCreateTarget">
 <message xml:lang="en">Create &amp;target</message>
-<message xml:lang="fr">Créer ci&amp;ble</message>
+<message xml:lang="fr">Créer une ci&amp;ble</message>
 <message xml:lang="de">Anker erzeugen</message>
 <message xml:lang="it">Crea obiettivo</message>
 <message xml:lang="tr">Hedef yarat</message>
@@ -3661,8 +3661,8 @@
 <message xml:lang="tw">創建目標(&amp;T)</message>
 <message xml:lang="sk">Vytvoriť &amp;záložku</message></label>
 <label define="BDeleteAnchor">
-<message xml:lang="en">&amp;Delete anchor</message>
-<message xml:lang="fr">&amp;Détruire ancre</message>
+<message xml:lang="en">&amp;Delete link or target</message>
+<message xml:lang="fr">&amp;Supprimer le lien ou la cible</message>
 <message xml:lang="de">Verweis/Anker löschen</message>
 <message xml:lang="it">Cancella ancora</message>
 <message xml:lang="tr">tanımı sil</message>
@@ -4225,7 +4225,7 @@
 <message xml:lang="sk">Odoslať na server</message></label>
 <label define="BDeleteAnnot">
 <message xml:lang="en">Delete</message>
-<message xml:lang="fr">Détruire</message>
+<message xml:lang="fr">Supprimer</message>
 <message xml:lang="it">Elimina</message>
 <message xml:lang="de">Löschen</message>
 <message xml:lang="es">&amp;Borrar</message>
@@ -4465,7 +4465,7 @@
 <message xml:lang="sk">Vytváranie dokumentu</message></label>
 <label define="BHelpCreating">
 <message xml:lang="en">Creating elements</message>
-<message xml:lang="fr">Création</message>
+<message xml:lang="fr">Création d'éléments</message>
 <message xml:lang="de">Elemente</message>
 <message xml:lang="it">Creazione elementi</message>
 <message xml:lang="tr">Yarat</message>
@@ -4540,7 +4540,7 @@
 <message xml:lang="sk">Prepojenia</message></label>
 <label define="BHelpTables">
 <message xml:lang="en">Tables</message>
-<message xml:lang="fr">Tables</message>
+<message xml:lang="fr">Tableaux</message>
 <message xml:lang="de">Tabellen</message>
 <message xml:lang="it">Tabelle</message>
 <message xml:lang="tr">Tablolar</message>
@@ -4645,7 +4645,7 @@
 <message xml:lang="sk">Vyhľadávanie</message></label>
 <label define="BHelpSpellChecking">
 <message xml:lang="en">Spell Checking</message>
-<message xml:lang="fr">Corriger</message>
+<message xml:lang="fr">Vérification orthographique</message>
 <message xml:lang="de">Rechtschreibprüfung</message>
 <message xml:lang="it">Controllo ortografico</message>
 <message xml:lang="tr">Yazı hataları düzeltmek</message>

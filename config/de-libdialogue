@@ -95,7 +95,7 @@
 93 Zeichnung
 94 Symbol
 95 Bild
-96 XML Elements
+96 XML/XTiger
 97 nach
 98 vor
 99 um
@@ -197,9 +197,9 @@
 195 Drucken
 196 Suchen/Ersetzen
 197 Startseite
-198 Betont
-199 Hervorgehoben
-200 Code
+198 Betont On/Off
+199 Hervorgehoben On/Off
+200 Code On/Off
 201 Bild
 202 Überschrift Ebene 1
 203 Überschrift Ebene 2
@@ -217,10 +217,10 @@
 215 Umrisse
 216 Ábschnitt
 217 Erzeugen
-218 Eingefügter Text
-219 Gelöschter Text
-220 Tiefgestellt
-221 Hochgestellt
+218 Eingefügter Text On/Off
+219 Gelöschter Text On/Off
+220 Tiefgestellt On/Off
+221 Hochgestellt On/Off
 222 Begriff
 223 Definition
 224 Objekt
