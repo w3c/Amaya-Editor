@@ -1027,6 +1027,7 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
   return (ok);
 }
 
+
 /*----------------------------------------------------------------------
   IsOnShape checks if the point x, y is on the drawing of pAb.
   If yes, returns the box address, NULL in other cases.
@@ -1038,13 +1039,14 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   PtrBox              pBox;
   int                 controlPoint;
   int                 arc, xm, xp;
-  double               value1, value2, value3;
+  double              value1, value2, value3;
   int                 width, height;
+
   /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
   x -= pBox->BxXOrg;
   y -= pBox->BxYOrg;
-  width = pBox->BxWidth;
+    width = pBox->BxWidth;
   height = pBox->BxHeight;
   *selpoint = 0;
   /* Keep in mind the selected caracteristic point       */

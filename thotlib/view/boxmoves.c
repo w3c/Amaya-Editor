@@ -2142,7 +2142,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                                 if (pRel->ReOp == OpHorizInc)
                                   {
                                     if (!pBox->BxHorizFlex)
-                                      XMove (pBox, NULL, val - orgTrans, frame);
+                                      XMove (pBox, NULL, -orgTrans, frame);
                                   }
                                 else if ((pRel->ReOp == OpHorizDep && pRel->ReBox->BxHorizFlex)
                                          || pRel->ReOp == OpWidth)
@@ -2713,7 +2713,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                 if (pRel->ReOp == OpVertInc)
                                   {
                                     if (!pBox->BxVertFlex)
-                                      YMove (pBox, NULL, val - orgTrans, frame);
+                                      YMove (pBox, NULL, -orgTrans, frame);
                                   }
                                 else if ((pRel->ReOp == OpVertDep && pRel->ReBox->BxVertFlex)
                                          || pRel->ReOp == OpHeight)
