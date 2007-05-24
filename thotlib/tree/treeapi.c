@@ -116,8 +116,10 @@ ThotBool TtaChangeTypeOfElement (Element elem, Document doc, int newTypeNum)
       else
         TtaInsertFirstChild (&elem, parent, doc);
 #ifndef NODISPLAY
+#ifndef _WX
       /* redisplay the selection message */
       BuildSelectionMessage ();
+#endif /* _WX */
 #endif
       SetDocumentModified (LoadedDocument[doc - 1], TRUE, 0);
       return TRUE;

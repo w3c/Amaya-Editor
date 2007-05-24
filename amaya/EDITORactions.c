@@ -2781,6 +2781,10 @@ static void ChangeCell (Document doc, View view, int typeCell)
         }
       if (open)
         TtaCloseUndoSequence (doc);
+      TtaSelectElement (doc, firstSel);
+      if (firstSel != lastSel)
+        TtaExtendSelection (doc, lastSel, 0);
+      TtaSetStatusSelectedElement(doc, view, firstSel);
     }
   else
     TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
