@@ -2420,6 +2420,8 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                         l = l + pNextBox->BxLMargin + pNextBox->BxLPadding;
                       else if (pLine->LiXOrg < shift + pNextBox->BxLMargin)
                         l = l + pNextBox->BxLMargin - pLine->LiXOrg - shift;
+                      else
+                        l = l + pNextBox->BxLMargin + pNextBox->BxLPadding;
                     }
                   if (pNextBox->BxRMargin + pNextBox->BxRPadding > 0)
                     {
@@ -2427,6 +2429,8 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                         l += pNextBox->BxRMargin + pNextBox->BxRPadding;
                       else if (pNextBox->BxRMargin > pBlock->BxW - val)
                         l = l + pNextBox->BxRMargin - pBlock->BxW + val;
+                      else
+                        l += pNextBox->BxRMargin + pNextBox->BxRPadding;
                    }
                   l = l + pNextBox->BxLBorder;
                   l = l + r + pNextBox->BxRBorder;
