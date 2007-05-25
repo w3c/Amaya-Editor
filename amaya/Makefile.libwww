@@ -50,7 +50,7 @@ AMAYA_LIBWWW_INCLUDES= -I../libwww \
 		-I$(THOTDIR)/../libwww/modules/expat/lib
 
 # this dependency calls the ../Makefile rule that compiles libwww
-AMAYA_LIBWWW_SRC= $(LIBZ) amaya_comp_libwww
+AMAYA_LIBWWW_SRC= amaya_comp_libwww
 
 amaya_comp_libwww : force
 		@(cd .. ; $(MAKE) libwww)

@@ -673,12 +673,13 @@ void NotFoundDoc (char *url, Document doc)
 #else /* _WINDOWS */
   sprintf (pathname, "%s/empty", TtaGetEnvString ("THOTDIR"));
 #endif /* _WINDOWS */
-  empty = !strcmp (pathname, url);
+  NormalizeFile (pathname, tempfile, AM_CONV_NONE);
+  empty = !strcmp (tempfile, url);
+
   NormalizeURL (url, 0, pathname, documentname, NULL);
   if (empty)
-    {
       strcpy (url, "empty");
-    }
+
   if (doc == 0 || DontReplaceOldDoc)
     {
       doc = InitDocAndView (doc,

@@ -2321,7 +2321,8 @@ void         SimplifyUrl (char **url)
 
 
 /*----------------------------------------------------------------------
-  NormalizeFile normalizes local names.                             
+  NormalizeFile normalizes local names.
+  convertion is AM_CONV_NONE or AM_CONV_ALL
   Return TRUE if target and src differ.                           
   ----------------------------------------------------------------------*/
 ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)

@@ -140,7 +140,6 @@ ${FREETYPE}
 
 tar czvfh $DEST/amaya-tmp-$AMAYAVERSION.tgz \
 ${AMAYADIR}/resources/icons/16x16/*.ico \
-${AMAYADIR}/resources/icons/22x22/*.ico \
 ${AMAYADIR}/resources/icons/misc/*.ico \
 ${AMAYADIR}/resources/icons/16x16/*.png \
 ${AMAYADIR}/resources/icons/22x22/*.png \
@@ -149,32 +148,6 @@ ${AMAYADIR}/resources/xrc/*.xrc \
 ${AMAYADIR}/resources/bundle/Info.plist.in \
 ${AMAYADIR}/resources/bundle/amaya.icns \
 ${AMAYADIR}/resources/bundle/logo.png \
-${AMAYADIR}/Windows/*.mak \
-${AMAYADIR}/Windows/*.dsp \
-${AMAYADIR}/Windows/*.dsw \
-${AMAYADIR}/Windows/amaya/*.mkf \
-${AMAYADIR}/Windows/annotlib/*.dsp \
-${AMAYADIR}/Windows/Compilers/*.mak \
-${AMAYADIR}/Windows/Compilers/*.dsp \
-${AMAYADIR}/Windows/Compilers/*.dsw \
-${AMAYADIR}/Windows/LibThotEditor/*.dsp \
-${AMAYADIR}/Windows/LibThotKernel/*.dsp \
-${AMAYADIR}/Windows/app/*.dsp \
-${AMAYADIR}/Windows/cpp/*.dsp \
-${AMAYADIR}/Windows/davlib/*.dsp \
-${AMAYADIR}/Windows/libjpeg/*.dsp \
-${AMAYADIR}/Windows/libpng/*.dsp \
-${AMAYADIR}/Windows/libwww/*.dsp \
-${AMAYADIR}/Windows/libwww/*.dev \
-${AMAYADIR}/Windows/printlib/*.dsp \
-${AMAYADIR}/Windows/libraptor/*.dsp \
-${AMAYADIR}/Windows/librdf/*.dsp \
-${AMAYADIR}/Windows/prs/*.dsp \
-${AMAYADIR}/Windows/str/*.dsp \
-${AMAYADIR}/Windows/thotprinter/*.dsp \
-${AMAYADIR}/Windows/tra/*.dsp \
-${AMAYADIR}/Windows/zlib/*.dsp \
-${AMAYADIR}/Windows/zlib/*.dev \
 ${AMAYADIR}/WindowsWX/*.dsp \
 ${AMAYADIR}/WindowsWX/*.dsw \
 ${AMAYADIR}/WindowsWX/amaya/*.mkf \
@@ -268,7 +241,6 @@ ${AMAYADIR}/Options.in \
 ${AMAYADIR}/batch/amaya.in \
 ${AMAYADIR}/batch/script_*.in \
 ${AMAYADIR}/batch/Makefile.in \
-${AMAYADIR}/batch/tarAmaya \
 ${AMAYADIR}/amaya/COPYRIGHT* \
 ${AMAYADIR}/amaya/Makefile.* \
 ${AMAYADIR}/amaya/AmayaPage.html* \
@@ -441,7 +413,7 @@ mkdir $TMP
 cd $TMP
 tar xzf $DEST/amaya-tmp-$AMAYAVERSION.tgz
 tar xzf $DEST/libs-tmp-$AMAYAVERSION.tgz
-\rm -r */CVS */*/CVS */*/*/CVS */*/*/*/CVS */*/*/*/*/CVS */*/*/*/*/*/CVS */*/*/*/*/*/*/CVS */*/*/*/*/*/*/*/CVS
+\rm -r */CVS */*/CVS */*/*/CVS */*/*/*/CVS */*/*/*/*/CVS */*/*/*/*/*/CVS
 
 echo "Generating the minimum source tar file from $AMAYADIR"
 AMAYADIR=Amaya
