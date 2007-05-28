@@ -75,10 +75,9 @@ public:
  */
 class wxBase64EncOutputStream : public wxFilterOutputStream{
 protected:
-    unsigned char m_in[3];
-    int m_len;
-    
- 
+    unsigned char m_in[3]; // Buffer for keeping bytes.
+    int m_len; /// number of keeping bytes in buffer.
+
     virtual size_t OnSysWrite(const void *buffer, size_t size);
     
 public:
@@ -110,7 +109,7 @@ protected:
   
   virtual size_t OnSysWrite(const void *buffer, size_t size);
 public:
-  wxEndOfLineOutputStream(wxOutputStream& stream, int linesize=72);
+  wxEndOfLineOutputStream(wxOutputStream& stream, int linesize=76);
   virtual ~wxEndOfLineOutputStream();
   bool Close();
 };

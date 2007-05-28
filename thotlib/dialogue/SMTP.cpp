@@ -256,7 +256,7 @@ bool wxMimeSlot::Write(wxOutputStream& out)const
                     wxBase64EncOutputStream base64(eol);
                     base64.Write((const char*)m_textContent.mb_str(wxConvLibc), m_textContent.Length());
                     base64.Close();
-                    
+                    eol.Close();
                     break;
                 }
                 default:
@@ -277,11 +277,16 @@ bool wxMimeSlot::Write(wxOutputStream& out)const
                 }
                 case wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64:
                 {
+//                    wxStringOutputStream out;
                     wxFileInputStream file(m_fileContent.filename.GetFullPath());
                     wxEndOfLineOutputStream eol(out);
                     wxBase64EncOutputStream base64(eol);
                     base64.Write(file);
                     base64.Close();
+                    eol.Close();
+//                    
+//                    printf(">> %s :\n%s\n-----\n", (const char*)m_fileContent.filename.GetFullPath().mb_str(wxConvLibc),
+//                                                  (const char*) out.GetString().mb_str(wxConvLibc));
                     break;
                 }
                 default:
@@ -299,6 +304,7 @@ bool wxMimeSlot::Write(wxOutputStream& out)const
                     wxBase64EncOutputStream base64(eol);
                     base64.Write(m_binaryContent.data, m_binaryContent.size);
                     base64.Close();
+                    eol.Close();
                     break;
                 }
                 default:

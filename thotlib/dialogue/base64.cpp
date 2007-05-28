@@ -38,15 +38,40 @@ static inline void encodeblock( unsigned char in[3], unsigned char out[4], int l
     out[3] = (unsigned char) (len > 2 ? cb64[ in[2] & 0x3f ] : '=');
 }
 
+static inline void encodeblock_full( unsigned char in[3], unsigned char out[4])
+{
+    out[0] = cb64[ in[0] >> 2 ];
+    out[1] = cb64[ ((in[0] & 0x03) << 4) | ((in[1] & 0xf0) >> 4) ];
+    out[2] = cb64[ ((in[1] & 0x0f) << 2) | ((in[2] & 0xc0) >> 6) ];
+    out[3] = cb64[ in[2] & 0x3f ];
+}
+
+static inline void encodeblock_end( unsigned char in[3], unsigned char out[4], int len)
+{
+    out[0] = cb64[ in[0] >> 2 ];
+    if(len==1)
+      {
+        out[1] = cb64[ ((in[0] & 0x03) << 4) ];
+        out[2] = '=';
+      }
+    else
+      {
+        out[1] = cb64[ ((in[0] & 0x03) << 4) | ((in[1] & 0xf0) >> 4) ];
+        out[2] = cb64[ ((in[1] & 0x0f) << 2) ];
+      }
+    out[3] = '=';
+}
+
 static inline void encodeblocks(unsigned char* in, unsigned char* out, int len )
 {
-    while(len>3){
-        encodeblock(in, out, 3);
+    while(len>=3){
+        encodeblock_full(in, out);
         in += 3;
         out += 4;
         len -= 3;
     }
-    encodeblock(in, out, len);
+    if(len>0)
+      encodeblock_end(in, out, len);
 }
 
 
@@ -370,29 +395,27 @@ m_len(0)
 }
 
 size_t wxBase64EncOutputStream::OnSysWrite(const void *buffer, size_t size){
-    int offset = 0;
-    unsigned char in[3];
+    int offset = 0, thisstep = 0;
     unsigned char out[4];
-    size_t count=0;
+
+    // if we step entry by 510 bytes, we need output buffer of 680 bytes.
+    const int     step = 510; 
+    unsigned char result[680];
     
-    if(m_len+size>=3){
+    if(m_len>0 && m_len+size>=3){
+        // Process keeping bytes.
         switch(m_len){
             case 1:
-                in[0] = m_in[2];
-                in[1] = ((unsigned char*)buffer)[0];
-                in[2] = ((unsigned char*)buffer)[1];
-                encodeblock(in, out, 3);
+                m_in[1] = ((unsigned char*)buffer)[0];
+                m_in[2] = ((unsigned char*)buffer)[1];
+                encodeblock(m_in, out, 3);
                 GetFilterOutputStream()->Write((void*)out, 4);
-                count+=3;
                 offset = 2;
                 break;
             case 2:
-                in[0] = m_in[1];
-                in[1] = m_in[2];
-                in[2] = ((unsigned char*)buffer)[0];
-                encodeblock(in, out, 3);
+                m_in[2] = ((unsigned char*)buffer)[0];
+                encodeblock(m_in, out, 3);
                 GetFilterOutputStream()->Write((void*)out, 4);
-                count+=3;
                 offset = 1;
                 break;
             default:
@@ -402,25 +425,25 @@ size_t wxBase64EncOutputStream::OnSysWrite(const void *buffer, size_t size){
     
     while(size-offset>=3){
         unsigned char* tab = ((unsigned char*)buffer)+offset;
-        encodeblock(tab, out, 3);
-        GetFilterOutputStream()->Write((void*)out, 4);
-        count+=4;
-        offset+=3;
+        if(offset+step<=(int)size)
+          thisstep = step;
+        else
+        {
+          thisstep = size-offset;
+          thisstep -= thisstep%3;
+        }
+        encodeblocks(tab, result, thisstep);
+        GetFilterOutputStream()->Write((void*)result, thisstep/3*4);
+        offset += thisstep;
     }
     
-    switch(size-offset){
-        case 0:
-            m_len = 0;
-            break;
-        case 1:
-            m_len = 1;
-            m_in[2] = ((unsigned char*)buffer)[size];
-            break;
-        case 2:
-            m_len = 2;
-            m_in[1] = ((unsigned char*)buffer)[size-2];
-            m_in[2] = ((unsigned char*)buffer)[size-1];
-            break;
+    m_len = size-offset;
+    if(m_len==1)
+        m_in[0] = ((unsigned char*)buffer)[size-1];
+    else if(m_len==2)
+    {
+        m_in[0] = ((unsigned char*)buffer)[size-2];
+        m_in[1] = ((unsigned char*)buffer)[size-1];
     }
     
     return size;
@@ -429,17 +452,10 @@ size_t wxBase64EncOutputStream::OnSysWrite(const void *buffer, size_t size){
 bool wxBase64EncOutputStream::Close(){
     unsigned char out[4];
 
-    switch(m_len){
-        case 1:
-            encodeblock(&m_in[2], out, 1);
-            GetFilterOutputStream()->Write((void*)out, 4);
-            break;
-        case 2:
-            encodeblock(&m_in[1], out, 2);
-            GetFilterOutputStream()->Write((void*)out, 4);
-            break;
-        default:
-            break;
+    if(m_len>0)
+    {
+      encodeblock(m_in, out, m_len);
+      GetFilterOutputStream()->Write((void*)out, 4);
     }
     m_len = 0;
     return wxFilterOutputStream::Close();
@@ -474,6 +490,7 @@ bool wxEndOfLineOutputStream::Close(){
   if(m_len>0)
   {
     GetFilterOutputStream()->Write(m_buffer, m_len);
+    m_len = 0;
   }
   return wxFilterOutputStream::Close();
 }
