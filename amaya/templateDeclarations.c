@@ -32,6 +32,31 @@
 #define UNION_ANYELEMENT     "anyElement"
 #define UNION_ANY_DEFINITION "anyComponent anySimple anyElement"
 
+#define UNION_APP_HTML       "appHTML"
+
+#define HTML_LIBRARY          "-HTML-" 
+
+char* XTigerHTMLUnions[] = 
+{
+  "appHTMLInfoTypes", "em strong cite dfn code var samp kbd abbr acronym ins del",
+  "appHTMLCharTypes", "i b tt u s big small sub sup q bdo",
+  "appHTMLForm", "input option optgroup select button label",
+  "appHTMLInlines", "appHTMLInfoTypes appHTMLCharTypes appHTMLForm a font span img br object",
+  "appHTMLBlocks", "p h1 h2 h3 h4 h5 h6 textarea ol ul li dd dl dt address fieldset legend caption ins del div",
+  UNION_APP_HTML , "appHTMLInlines appHTMLBlocks",
+  NULL, NULL
+};
+
+
+char* XTigerHTMLElements = "em strong cite dfn code var samp kbd abbr acronym ins del "
+                    "i b tt u s big small sub sup q bdo "
+                    "input option optgroup select button label "
+                    "a font span img br object "
+                    "p h1 h2 h3 h4 h5 h6 textarea ol ul li dd dl dt "
+                    "address fieldset legend caption ins del div";
+                    
+
+
 #define TYPE_NUMBER          "number"
 #define TYPE_STRING          "string"
 #define TYPE_BOOLEAN         "boolean"
@@ -55,7 +80,8 @@ void InitializeTemplateEnvironment ()
 #ifdef TEMPLATES
   Templates_Map = StringHashMap_Create((Container_DestroyElementFunction) 
                                                     Template_Destroy, TRUE, -1);
-  HashMap_Set (Templates_Map, (void*)PREDEFINED_LIB, CreatePredefinedTypesLibrary ());  
+  HashMap_Set (Templates_Map, (void*)PREDEFINED_LIB, CreatePredefinedTypesLibrary ());
+  HashMap_Set (Templates_Map, (void*)HTML_LIBRARY, CreateHTMLLibrary ());
 #endif /* TEMPLATES */
 }
 
@@ -75,7 +101,7 @@ void FreeTemplateEnvironment ()
 /*----------------------------------------------------------------------
   Creates a new template with its dictionaries
   ----------------------------------------------------------------------*/
-XTigerTemplate NewXTigerTemplate (const char *templatePath, const ThotBool addPredefined)
+XTigerTemplate NewXTigerTemplate (const char *templatePath)
 {	
 #ifdef TEMPLATES
 	XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof (_XTigerTemplate));
@@ -95,13 +121,7 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath, const ThotBool addPr
   t->users = 0;
   t->isPredefined = FALSE;
 
-// TODO Remove predefintion adding. 
-	if (addPredefined)
-		Template_AddLibraryDeclarations (t,(XTigerTemplate)HashMap_Get(Templates_Map,
-                                                      (void*)PREDEFINED_LIB));	
-
 	HashMap_Set (Templates_Map, t->name, t);
-
 	return t;
 #else
 	return NULL;
@@ -111,11 +131,11 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath, const ThotBool addPr
 /*----------------------------------------------------------------------
   Creates a new library with its dictionaries
   ----------------------------------------------------------------------*/
-XTigerTemplate NewXTigerLibrary (const char *templatePath, const ThotBool addPredefined)
+XTigerTemplate NewXTigerLibrary (const char *templatePath)
 {	
 #ifdef TEMPLATES
   XTigerTemplate t;
-	t = (XTigerTemplate)NewXTigerTemplate (templatePath, addPredefined);
+	t = (XTigerTemplate)NewXTigerTemplate (templatePath);
 	t->isLibrary = TRUE;
 	return t;
 #else
@@ -134,7 +154,7 @@ XTigerTemplate LookForXTigerLibrary (const char *templatePath)
   t = (XTigerTemplate) HashMap_Get(Templates_Map, (void*)templatePath);
   if (!t)
   {
-    t = NewXTigerLibrary(templatePath, FALSE);
+    t = NewXTigerLibrary(templatePath);
   }
   return t;
 #else
@@ -157,24 +177,86 @@ XTigerTemplate GetXTigerTemplate (const char *templatePath)
 #endif /* TEMPLATES */
 }
 
+
+/*----------------------------------------------------------------------
+  Template_AddStandardDependancies
+  Load dependant standard libraries for a template.
+  @param t Template.
+  ----------------------------------------------------------------------*/
+void Template_AddStandardDependancies(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  if(t && !t->isLibrary)
+  {
+      if(DocumentTypes[t->doc]==docHTML)
+      {
+        Template_AddLibraryDeclarations (t,(XTigerTemplate)HashMap_Get(Templates_Map,
+                                                          (void*)HTML_LIBRARY));  
+      }
+    Template_AddLibraryDeclarations (t,(XTigerTemplate)HashMap_Get(Templates_Map,
+                                                      (void*)PREDEFINED_LIB));  
+  }      
+
+#endif /* TEMPLATES */
+}
+
 /*----------------------------------------------------------------------
   Returns a library with the predefined types
   ----------------------------------------------------------------------*/
 XTigerTemplate CreatePredefinedTypesLibrary ()
 {
 #ifdef TEMPLATES
-  XTigerTemplate lib = NewXTigerLibrary (PREDEFINED_LIB, FALSE);
+  XTigerTemplate lib = NewXTigerLibrary (PREDEFINED_LIB);
   lib->isLibrary = true;
 
   Template_DeclareNewSimpleType (lib, TYPE_NUMBER,  XTNumber);
   Template_DeclareNewSimpleType (lib, TYPE_BOOLEAN, XTBoolean);
   Template_DeclareNewSimpleType (lib, TYPE_STRING,  XTString);
+  
   Template_DeclareNewUnion (lib, UNION_ANYCOMPONENT, NULL, NULL);
   Template_DeclareNewUnion (lib, UNION_ANYSIMPLE, NULL, NULL);
   Template_DeclareNewUnion (lib, UNION_ANYELEMENT, NULL, NULL);
   Template_DeclareNewUnion (lib, UNION_ANY, UNION_ANY_DEFINITION, NULL);
   
   lib->isPredefined = TRUE;
+  return lib;
+#else
+  return NULL;
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  Returns a library with HTML predefined types
+  ----------------------------------------------------------------------*/
+XTigerTemplate CreateHTMLLibrary ()
+{
+#ifdef TEMPLATES
+  int              i;
+  ForwardIterator  iter;
+  HashMapNode      node;
+  HashMap          map;
+  XTigerTemplate lib = NewXTigerLibrary (HTML_LIBRARY);
+
+  lib->isLibrary = true;
+  lib->isPredefined = TRUE;
+
+  // Add elements
+  map = KeywordHashMap_CreateFromList(NULL, -1, XTigerHTMLElements);
+  iter = HashMap_GetForwardIterator(map);
+  ITERATOR_FOREACH(iter, HashMapNode, node)
+    Template_DeclareNewElement(lib, (const char*) node->key);
+  TtaFreeMemory(iter);
+  HashMap_Destroy(map);
+  
+  // Add predefined unions
+  i=0;
+  while (XTigerHTMLUnions[i]!=NULL)
+    {
+      Template_DeclareNewUnion (lib, XTigerHTMLUnions[i], XTigerHTMLUnions[i+1], NULL);
+      
+      i+=2;
+    }
+  
   return lib;
 #else
   return NULL;
@@ -296,6 +378,37 @@ void Declaration_Destroy (Declaration dec)
   dec->name = NULL;
   TtaFreeMemory (dec);
 #endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  Declaration_GetElementType
+  Intend to return the element type of the declaration.
+  If dec is
+    - element   : return the element type.
+    - component : return the element type of the first top element.
+    - union     : return nothing revelant {0,0}.
+    - simple    : return nothing revelant {0,0}.
+  ----------------------------------------------------------------------*/
+ThotBool Declaration_GetElementType (Declaration dec, ElementType *type)
+{
+  type->ElSSchema = 0;
+  type->ElTypeNum = 0;
+#ifdef TEMPLATES
+  if (dec)
+    {
+      if(dec->nature==XmlElementNat)
+      {
+        GIType (dec->name, type, dec->usedIn->doc);
+        return TRUE;
+      }
+      else if(dec->nature==ComponentNat)
+      {
+        *type = TtaGetElementType(TtaGetFirstChild(dec->componentType.content));
+        return TRUE;
+      }
+    }
+#endif /* TEMPLATES */
+  return FALSE;
 }
 
 
@@ -790,6 +903,7 @@ void Template_FillDeclarations(XTigerTemplate t)
 #endif /* TEMPLATES */
 }
 
+
 /*----------------------------------------------------------------------
   Copy elements of src to dst.
   If elements are override, they are destroyed.
@@ -1187,53 +1301,66 @@ void RemoveUser (XTigerTemplate t)
 HashMap Template_ExpandUnion(XTigerTemplate t, Declaration decl)
 {
 #ifdef TEMPLATES
-  if (t)
+  Declaration child;
+  if (t && decl && decl->nature==UnionNat)
   {
     if (decl->unionType.expanded == NULL)
     {
       ForwardIterator iter;
       HashMapNode     node;
       HashMap         expanded = KeywordHashMap_Create(NULL, FALSE, -1);
-
-      iter = HashMap_GetForwardIterator(decl->unionType.include);
-      /* For each element in include map */
-      ITERATOR_FOREACH(iter, HashMapNode, node)
-        {
-          Declaration child = (Declaration) node->elem;
-          /* If element is union, expand it and add content in expanded map.*/
-          if (child->nature==UnionNat)
-          {
-            HashMap         children  = Template_ExpandUnion(t, child);
-            ForwardIterator childIter = HashMap_GetForwardIterator(children);
-            HashMapNode     childNode;
-            ITERATOR_FOREACH(childIter, HashMapNode, childNode)
-              {
-                Declaration granchild = (Declaration) childNode->elem;
-                if (!HashMap_Get(expanded, granchild->name))
-                  HashMap_Set(expanded, granchild->name, granchild);
-              }
-            TtaFreeMemory(childIter);
-          }
-          else
-          {
-            /* Add it to expanded map.*/
-            if (!HashMap_Get(expanded, child->name))
-              HashMap_Set(expanded, child->name, child);
-          }
-        }
-      TtaFreeMemory(iter);
       
-      /* Remove all excluded descendants. */
-      iter = HashMap_GetForwardIterator(decl->unionType.exclude);
-      /* For each element in exclude map */
-      ITERATOR_FOREACH(iter, HashMapNode, node)
+      if(!strcmp(decl->name, UNION_ANYELEMENT))
         {
-          Declaration child = (Declaration) node->elem;      
-          if (child)
-            HashMap_Remove(expanded, child->name);
+          iter = HashMap_GetForwardIterator(t->elements);
+          ITERATOR_FOREACH(iter, HashMapNode, node)
+            HashMap_Set (expanded, TtaStrdup((char*)node->key), node->elem);
+          TtaFreeMemory(iter);        
         }
-      TtaFreeMemory(iter);
-
+      else
+        {
+          iter = HashMap_GetForwardIterator(decl->unionType.include);
+          /* For each element in include map */
+          ITERATOR_FOREACH(iter, HashMapNode, node)
+            {
+              /* Fill the decl if not already done.*/
+              if (node->elem==NULL)
+                node->elem = Template_GetDeclaration(t, (const char*)node->key);
+              child = (Declaration) node->elem;
+              /* If element is union, expand it and add content in expanded map.*/
+              if (child->nature==UnionNat)
+              {
+                HashMap         children  = Template_ExpandUnion(t, child);
+                ForwardIterator childIter = HashMap_GetForwardIterator(children);
+                HashMapNode     childNode;
+                ITERATOR_FOREACH(childIter, HashMapNode, childNode)
+                  {
+                    Declaration granchild = (Declaration) childNode->elem;
+                    if (!HashMap_Get(expanded, granchild->name))
+                      HashMap_Set(expanded, granchild->name, granchild);
+                  }
+                TtaFreeMemory(childIter);
+              }
+              else
+              {
+                /* Add it to expanded map.*/
+                if (!HashMap_Get(expanded, child->name))
+                  HashMap_Set(expanded, child->name, child);
+              }
+            }
+          TtaFreeMemory(iter);
+          
+          /* Remove all excluded descendants. */
+          iter = HashMap_GetForwardIterator(decl->unionType.exclude);
+          /* For each element in exclude map */
+          ITERATOR_FOREACH(iter, HashMapNode, node)
+            {
+              child = (Declaration) node->elem;      
+              if (child)
+                HashMap_Remove(expanded, child->name);
+            }
+          TtaFreeMemory(iter);
+        }
       decl->unionType.expanded = expanded;
     }
     return decl->unionType.expanded;
@@ -1246,7 +1373,7 @@ HashMap Template_ExpandUnion(XTigerTemplate t, Declaration decl)
 /*----------------------------------------------------------------------
   Template_ExpandHashMapTypes
   Expand a type list with resolving unions.
-  anyElement and anySimple are not expanded.
+  anySimple is not expanded.
   \param t Template
   \param types String in which look for types.
   \return The resolved type string.
@@ -1301,47 +1428,130 @@ HashMap Template_ExpandHashMapTypes (XTigerTemplate t, HashMap types)
     return NULL;
 }
 
+/*----------------------------------------------------------------------
+  Template_FilterInsertableElement
+  Remove all elements which cannot be inserted at the specified place.
+  \param t Template
+  \param map Map of types to filter.  
+  \param refelem If not null, return only element which can
+           be inserted to the refelem
+  \param insertafter if true, test for insertion after the refelem else
+           test for insert it as first child.
+  \note The map parameter can be affected.
+  ----------------------------------------------------------------------*/
+void Template_FilterInsertableElement (XTigerTemplate t, HashMap map,
+                                          Element refelem, ThotBool insertafter)
+{
+#ifdef TEMPLATES
+  HashMap         newmap;
+  ElementType     type;
+  ForwardIterator iter;
+  HashMapNode     node;
+  Declaration     dec;
+  ThotBool        res;
+  
+  if (t && map && refelem)
+    {
+      newmap = KeywordHashMap_Create(NULL, TRUE, -1);
+      iter = HashMap_GetForwardIterator(map);
+      ITERATOR_FOREACH(iter, HashMapNode, node)
+        {
+          if (!node->elem)
+            node->elem = Template_GetDeclaration(t, (char*)node->key);
+          if (node->elem)
+            {
+              dec = (Declaration) node->elem;
+              if (Declaration_GetElementType(dec, &type))
+                {
+                  if (insertafter)
+                    res = TtaCanInsertSibling(type, refelem, FALSE, t->doc);
+                  else
+                    res = TtaCanInsertFirstChild(type, refelem, t->doc);
+                  if(res)
+                    HashMap_Set(newmap, TtaStrdup((char*)node->key), node->elem);
+                }
+            }
+        }
+      TtaFreeMemory (iter);    
+      HashMap_SwapContents(map, newmap);
+      HashMap_Destroy(newmap);   
+    }
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  Template_SortDeclarationMap
+  Sort a list of KeywordHashMap<Declaration> to be user friendly
+  First components and then XmlElements and sorted alphabeticaly.
+  ----------------------------------------------------------------------*/
+static int Template_SortDeclarationMap(HashMapNode elem1 ,HashMapNode elem2)
+{
+#ifdef TEMPLATES
+  Declaration dec1 = (Declaration)elem1->elem,
+              dec2 = (Declaration)elem2->elem;
+  if(dec1->nature == dec2->nature)
+    return strcmp((char*)dec1->name,(char*)dec2->name);
+  else
+    return ((int)dec1->nature) - ((int)dec2->nature);
+         
+#else  /* TEMPLATES */
+  return 0;
+#endif /* TEMPLATES */
+
+}
 
 /*----------------------------------------------------------------------
   Template_ExpandTypes
   Expand a type list with resolving unions.
-  anyElement and anySimple are not expanded.
+  anySimple is not expanded.
   \param t Template
   \param types String in which look for types.
+  \param refelem If not null, return only element which can
+           be inserted to the refelem
+  \param insertafter if true, test for insertion after the refelem else
+           test for insert it as first child.  
   \return The resolved type string.
   ----------------------------------------------------------------------*/
-char* Template_ExpandTypes (XTigerTemplate t, char* types)
+char* Template_ExpandTypes (XTigerTemplate t, char* types,
+                                          Element refelem, ThotBool insertafter)
 {
 #ifdef TEMPLATES
   if (t)
   {
     /* Map of types to expand. */
-    HashMap     basemap = KeywordHashMap_CreateFromList (NULL, -1, types);
+    HashMap         basemap = KeywordHashMap_CreateFromList (NULL, -1, types);
     /* Map to store expanded types. */
-    HashMap     map     = NULL;
+    HashMap         map     = NULL;
+    DLList          list    = NULL;
     ForwardIterator iter;
     HashMapNode     node;
-    int         pos = 0;
-    char*       result;
-    int         resLen;
+    DLListNode      listnode;
+    int             pos = 0;
+    char            result[MAX_LENGTH];
+    char           *key;
 
     /* Fill map with expanded result from basemap.*/
     map = Template_ExpandHashMapTypes(t, basemap);
-
+    
     /* Fill a string with results.*/
     if (map)
       {
-        resLen = 0;
+        if (refelem)
+          Template_FilterInsertableElement(t, map, refelem, insertafter);
+
+        list = DLList_Create(); // List to store HashMapNodes to sort them.
         iter = HashMap_GetForwardIterator(map);
         ITERATOR_FOREACH(iter, HashMapNode, node)
-          {
-            resLen += strlen((char*)node->key) + 1;
-          }
-        
-        result = (char*) TtaGetMemory (resLen+1);
+            DLList_Append(list, node);
+        TtaFreeMemory (iter);
+        // Sort the list.
+        DLList_Sort(list, (Container_CompareFunction)Template_SortDeclarationMap);
+
         pos = 0;
-        ITERATOR_FOREACH (iter, HashMapNode, node)
+        iter = DLList_GetForwardIterator(list);
+        ITERATOR_FOREACH (iter, DLListNode, listnode)
           {
+            node = (HashMapNode)listnode->elem;
             strcpy (result + pos, (char*)node->key);
             pos += strlen((char*) node->key);
             result[pos] = ' ';
@@ -1353,7 +1563,8 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types)
       }
     HashMap_Destroy (map);
     HashMap_Destroy (basemap);
-    return result;
+    DLList_Destroy  (list);
+    return TtaStrdup(result);
   }
   else
 #endif /* TEMPLATES */

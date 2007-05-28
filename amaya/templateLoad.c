@@ -254,7 +254,7 @@ static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
     {
       // the template is now loaded
       if(!ctx->t)
-        ctx->t = NewXTigerTemplate (ctx->templatePath, TRUE);
+        ctx->t = NewXTigerTemplate (ctx->templatePath);
       SetTemplateDocument (ctx->t, newdoc);
   
       ctx->isloaded = TRUE;
@@ -303,19 +303,27 @@ void LoadTemplate (Document doc, char* templatename)
         TtaHandlePendingEvents ();
       t = ctx->t;
 
-      Template_PreParseDeclarations(t, 0);
       if (t)
         {
+          Template_PreParseDeclarations(t, 0);
+      
           iter = HashMap_GetForwardIterator(t->libraries);
+          // Load dependancies
           ITERATOR_FOREACH(iter, HashMapNode, node)
-            {
-              Template_LoadXTigerTemplateLibrary((XTigerTemplate)node->elem);
-              Template_AddLibraryDeclarations(t, (XTigerTemplate)node->elem);
-            }
-          TtaFreeMemory(iter);
+            Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem);
+
+          // Add standard libraries.
+          Template_AddStandardDependancies(t);
           
+          // Propagate dependancy elements
+          ITERATOR_FOREACH(iter, HashMapNode, node)
+            Template_AddLibraryDeclarations (t, (XTigerTemplate)node->elem);
+      
+          TtaFreeMemory(iter);
+      
           Template_ParseDeclarations  (t, 0);
           Template_FillDeclarations (t);
+          
           Template_PreInstantiateComponents (t);
           Template_CalcBlockLevel (t);
           
@@ -334,16 +342,6 @@ void LoadTemplate (Document doc, char* templatename)
 #endif /* TEMPLATES */
 }
 
-/*----------------------------------------------------------------------
-  Template_LoadStandardDependancies
-  Load dependant standard libraries for a template.
-  @param t Template.
-  ----------------------------------------------------------------------*/
-void Template_LoadStandardDependancies(XTigerTemplate t)
-{
-#ifdef TEMPLATES
-#endif /* TEMPLATES */
-}
 
 /*----------------------------------------------------------------------
   Template_LoadXTigerTemplateLibrary
@@ -373,22 +371,20 @@ void Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
 
     Template_PreParseDeclarations(t, 0);
 
-
     iter = HashMap_GetForwardIterator(t->libraries);
     // Load dependancies
     ITERATOR_FOREACH(iter, HashMapNode, node)
-    {
       Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem);
-    }
-    // Load standard libraries.
-    Template_LoadStandardDependancies(t);
+
+    // Add standard libraries.
+    Template_AddStandardDependancies(t);      
+    
     // Propagate dependancy elements
-    for (node = (HashMapNode) ForwardIterator_GetFirst(iter); node;
-          node = (HashMapNode) ForwardIterator_GetNext(iter))
-    {
+    ITERATOR_FOREACH(iter, HashMapNode, node)
       Template_AddLibraryDeclarations (t, (XTigerTemplate)node->elem);
-    }
+
     TtaFreeMemory(iter);
+
 
     Template_ParseDeclarations  (t, 0);
     Template_FillDeclarations (t);

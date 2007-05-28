@@ -867,7 +867,7 @@ ThotBool BagButtonClicked (NotifyElement *event)
     types = GetAttributeStringValueFromNum (bagEl, Template_ATTR_types, NULL);
     if (types)
       {
-        listtypes = Template_ExpandTypes (t, types);
+        listtypes = Template_ExpandTypes (t, types, bagEl, FALSE);
         result = QueryStringFromMenu (doc, listtypes);
         TtaFreeMemory (listtypes);
         if (result)
@@ -980,7 +980,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
       types = GetAttributeStringValueFromNum (firstEl, Template_ATTR_types, NULL);
       if (types)
       {
-        listtypes = Template_ExpandTypes (t, types);
+        listtypes = Template_ExpandTypes (t, types, NULL, FALSE);
         result = QueryStringFromMenu (doc, listtypes);
         TtaFreeMemory (listtypes);
         if (result)
@@ -1083,7 +1083,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
     types = GetAttributeStringValueFromNum(el, Template_ATTR_types, NULL);
     if (types)
     {
-      listtypes = Template_ExpandTypes(t, types);
+      listtypes = Template_ExpandTypes(t, types, NULL, FALSE);
       result = QueryStringFromMenu(doc, listtypes);
       if (result)
       {

@@ -20,7 +20,6 @@ extern void Template_PreParseDeclarations ( XTigerTemplate t,
                                             Element el );
 extern void LoadTemplate ( Document doc,
                            char* templatename );
-extern void Template_LoadStandardDependancies ( XTigerTemplate t );
 extern void Template_LoadXTigerTemplateLibrary ( XTigerTemplate t );
 
 #else /* __STDC__ */
@@ -39,7 +38,6 @@ extern void Template_PreParseDeclarations ( XTigerTemplate t,
                                               Element el );
 extern void LoadTemplate ( Document doc,
                              char* templatename );
-extern void Template_LoadStandardDependancies ( XTigerTemplate t );
 extern void Template_LoadXTigerTemplateLibrary ( XTigerTemplate t );
 
 #endif /* __STDC__ */

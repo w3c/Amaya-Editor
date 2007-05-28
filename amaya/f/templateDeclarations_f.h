@@ -8,13 +8,13 @@
 
 extern void InitializeTemplateEnvironment ( void );
 extern void FreeTemplateEnvironment ( void );
-extern XTigerTemplate NewXTigerTemplate ( const char *templatePath,
-                                          const ThotBool addPredefined );
-extern XTigerTemplate NewXTigerLibrary ( const char *templatePath,
-                                         const ThotBool addPredefined );
+extern XTigerTemplate NewXTigerTemplate ( const char *templatePath );
+extern XTigerTemplate NewXTigerLibrary ( const char *templatePath );
 extern XTigerTemplate LookForXTigerLibrary ( const char *templatePath );
 extern XTigerTemplate GetXTigerTemplate ( const char *templatePath );
+extern void Template_AddStandardDependancies ( XTigerTemplate t );
 extern XTigerTemplate CreatePredefinedTypesLibrary ( void );
+extern XTigerTemplate CreateHTMLLibrary ( void );
 extern Declaration Declaration_Clone ( Declaration dec );
 extern void Declaration_Destroy ( Declaration dec );
 extern void Declaration_CalcBlockLevel ( Declaration dec );
@@ -63,7 +63,9 @@ extern HashMap Template_ExpandUnion ( XTigerTemplate t,
 extern HashMap Template_ExpandHashMapTypes ( XTigerTemplate t,
                                              HashMap types );
 extern char* Template_ExpandTypes ( XTigerTemplate t,
-                                    char* types );
+                                    char* types,
+                                    Element refelem,
+                                    ThotBool insertafter );
 extern ThotBool Template_IsElementTypeAllowed ( ElementType type,
                                                 Declaration decl );
 extern ThotBool Template_IsTypeAllowed ( const char* type,
@@ -90,13 +92,13 @@ extern ThotBool Template_CanInsertElementInUse ( Document doc,
 
 extern void InitializeTemplateEnvironment ( void );
 extern void FreeTemplateEnvironment ( void );
-extern XTigerTemplate NewXTigerTemplate ( const char *templatePath,
-                                            const ThotBool addPredefined );
-extern XTigerTemplate NewXTigerLibrary ( const char *templatePath,
-                                           const ThotBool addPredefined );
+extern XTigerTemplate NewXTigerTemplate ( const char *templatePath );
+extern XTigerTemplate NewXTigerLibrary ( const char *templatePath );
 extern XTigerTemplate LookForXTigerLibrary ( const char *templatePath );
 extern XTigerTemplate GetXTigerTemplate ( const char *templatePath );
+extern void Template_AddStandardDependancies ( XTigerTemplate t );
 extern XTigerTemplate CreatePredefinedTypesLibrary ( void );
+extern XTigerTemplate CreateHTMLLibrary ( void );
 extern Declaration Declaration_Clone ( Declaration dec );
 extern void Declaration_Destroy ( Declaration dec );
 extern void Declaration_CalcBlockLevel ( Declaration dec );
@@ -145,7 +147,9 @@ extern HashMap Template_ExpandUnion ( XTigerTemplate t,
 extern HashMap Template_ExpandHashMapTypes ( XTigerTemplate t,
                                                HashMap types );
 extern char* Template_ExpandTypes ( XTigerTemplate t,
-                                      char* types );
+                                      char* types,
+                                      Element refelem,
+                                      ThotBool insertafter );
 extern ThotBool Template_IsElementTypeAllowed ( ElementType type,
                                                   Declaration decl );
 extern ThotBool Template_IsTypeAllowed ( const char* type,

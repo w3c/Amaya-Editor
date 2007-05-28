@@ -175,8 +175,11 @@ void DLList_Empty(DLList list)
  */
 void DLList_Destroy (DLList list)
 {
-  DLList_Empty (list);
-  TtaFreeMemory( list);
+  if (list)
+    {
+      DLList_Empty (list);
+      TtaFreeMemory( list);
+    }
 }
 
 /**
@@ -363,32 +366,60 @@ ForwardIterator DLList_GetForwardIterator(DLList list)
 /**
  * Swap two nodes.
  */
-void DLList_Swap(DLList list, DLListNode node1, DLListNode node2)
+void DLList_SwapContent(DLList list, DLListNode node1, DLListNode node2)
 {
-  DLListNode prev1 = node1->prev,
-             prev2 = node2->prev, 
-             next1 = node1->next,
-             next2 = node2->next;
-  DLListNode node;
-  node1->next = next2;
-  node1->prev = prev2;
-  node2->next = next1;
-  node2->prev = prev1;
-  
-  if (prev1==NULL)
-    list->first = node2;
-  if (next2==NULL)
-    list->last = node1;
-    
-  node = node2;
-  node2 = node1;
-  node1 = node;
+  ContainerElement elem;
+  elem = node1->elem;
+  node1->elem = node2->elem;
+  node2->elem = elem;
 }
 
+/**
+ * Retrieve the size of the list.
+ * \note : o(n) function.
+ */
+int DLList_GetSize(DLList list)
+{
+  int        i = 0;
+  DLListNode node;
+  if(list && list->first!=0)
+    {
+      node = list->first;
+      while(node)
+        {
+          i++;
+          node = node->next;
+        }
+    }
+  return i;
+}
+
+/**
+ * Retrieve an element from its index.
+ * \note : o(n) function.
+ */
+DLListNode DLList_GetElement(DLList list, int index)
+{
+  int        i = 0;
+  DLListNode node = NULL;
+  if(list && list->first!=0)
+    {
+      node = list->first;
+      while(node)
+        {
+          if(i==index)
+            break;
+          i++;
+          node = node->next;
+        }
+    }
+  return node;  
+}
 
 /**
  * Sort a list content.
  * @note use a simple bubble sort algorithm (o(n^2)).
+ * @todo Implement another more efficient alorithm (in o(nlogn)) 
  * @param compare, comparaison function.
  */
 void DLList_Sort(DLList list, Container_CompareFunction compare)
@@ -401,7 +432,9 @@ void DLList_Sort(DLList list, Container_CompareFunction compare)
     while (node2!=NULL)
     {
       if (compare(node1->elem, node2->elem)>0)
-        DLList_Swap(list, node1, node2);
+      {
+        DLList_SwapContent(list, node1, node2);
+      }
       node2 = node2->next;
     }
     node1 = node1->next;    

@@ -34,8 +34,15 @@ struct _XTigerTemplate
 // All KeywordHashMap<Declaration> must embed their own copy of their keys
 // in order to prevent corruption.
 
-typedef enum _TypeNature {SimpleTypeNat, XmlElementNat, ComponentNat,
-                          UnionNat} TypeNature;
+// XTiger declaration nature
+// Note : the order is very important for user presentation.
+typedef enum _TypeNature
+{
+  SimpleTypeNat,
+  UnionNat,
+  ComponentNat,
+  XmlElementNat
+} TypeNature;
 
 // XTiger simple type
 typedef enum _SimpleTypeType {XTNumber, XTString, XTBoolean} SimpleTypeType;
