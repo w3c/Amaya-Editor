@@ -74,7 +74,7 @@ ThotBool TtaAddEMailAlternativeFile(EMail mail, const char* mimeType, const char
 ThotBool TtaAddEMailAttachmentFile(EMail mail, const char* mimeType, const char* filename)
 {
 #ifdef _WX  
-  return (((wxEmailMessage*)mail)->AddFile(wxString(filename, wxConvUTF8), wxString(mimeType, wxConvUTF8), true))!=NULL;
+  return (((wxEmailMessage*)mail)->AddFile(wxString(filename, wxConvUTF8), wxString(mimeType, wxConvUTF8), false))!=NULL;
 #endif /* _WX */  
 }
 
