@@ -88,11 +88,25 @@ AuthentDlgWX::AuthentDlgWX( int ref, wxWindow * parent, char *auth_realm,
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
   
-  // 'Save passwords' checkbox
-  XRCCTRL(*this, "wxID_CHECK_PWD",  wxCheckBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA ,AM_PASSWORDS_SAVE)));
   // init the save password check entry
   TtaGetEnvBoolean ("SAVE_PASSWORDS", &check);
-  XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox)->SetValue(check);
+  if (check)
+    {
+      // 'Save passwords' checkbox
+      XRCCTRL(*this, "wxID_CHECK_PWD",  wxCheckBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA ,AM_PASSWORDS_SAVE)));
+      if (name[0] != EOS && pwd[0] != EOS)
+        XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox)->SetValue(TRUE);
+      else
+        XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox)->SetValue(FALSE);
+    }
+  else
+    {
+      // hide save password check entry
+      wxWindow * p_obj;
+      XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox)->SetValue(FALSE);
+      p_obj = XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox);
+      p_obj->GetContainingSizer()->Show(p_obj, FALSE);
+    }
 
   // Set focus to ...
   //  XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetFocus();

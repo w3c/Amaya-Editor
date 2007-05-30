@@ -506,7 +506,7 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("EMAILS_LAST_RCPT", "", FALSE);
 
   /* Passwords */
-  TtaSetDefEnvString ("SAVE_PASSWORDS", FALSE, FALSE);
+  TtaSetEnvBoolean ("SAVE_PASSWORDS", TRUE, FALSE);
 
   /* appearance */
 }
@@ -4562,7 +4562,7 @@ void SetPasswordsConf (void)
 void GetDefaultPasswordsConf ()
 {
   /* read the default values */
-  GProp_Passwords.S_Passwords = FALSE;
+  GProp_Passwords.S_Passwords = TRUE;
   TtaSetEnvBoolean ("SAVE_PASSWORDS", GProp_Passwords.S_Passwords, TRUE);
 }
 
