@@ -5871,10 +5871,7 @@
 <message xml:lang="sk">Chcete aby si program Amaya zapamätal toto heslo</message>
 </label>
 <label define="AM_PASSWORDS_SAVE_OPTION">
-<message xml:lang="en">Remember passwords by default</message>
-<message xml:lang="es">Recordar contraseñas siempre</message>
-<message xml:lang="fr">Enregistrer les mots de passe par défaut</message>
-<message xml:lang="sk">Pamätať si všetky heslá</message>
+<message xml:lang="en">Remember passwords for sites</message>
 </label>
 <label define="AM_PASSWORDS_LIST">
 <message xml:lang="en">Sites</message>
@@ -5887,6 +5884,10 @@
 <message xml:lang="es">Borrar todo</message>
 <message xml:lang="fr">Tout effacer</message>
 <message xml:lang="sk">Odstrániť všetky</message>
+</label>
+<label define="AM_PASSWORDS_REMOVE">
+<message xml:lang="en">Remove All</message>
+<message xml:lang="fr">Supprimer</message>
 </label>
 <label define="AMAYA_MSG_MAX"></label>
 </messages>
