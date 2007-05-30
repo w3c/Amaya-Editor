@@ -17,6 +17,8 @@ extern XTigerTemplate CreatePredefinedTypesLibrary ( void );
 extern XTigerTemplate CreateHTMLLibrary ( void );
 extern Declaration Declaration_Clone ( Declaration dec );
 extern void Declaration_Destroy ( Declaration dec );
+extern ThotBool Declaration_GetElementType ( Declaration dec,
+                                             ElementType *type );
 extern void Declaration_CalcBlockLevel ( Declaration dec );
 extern void Template_CalcBlockLevel ( XTigerTemplate t );
 extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
@@ -47,6 +49,8 @@ extern void Template_PrintUnion ( Declaration dec,
                                   int indent,
                                   XTigerTemplate t,
                                   FILE *file );
+extern void PrintElement ( Element elem,
+                           int dec );
 extern void PrintDeclarations ( XTigerTemplate t,
                                 FILE *file );
 extern void DumpAllDeclarations ( void );
@@ -62,6 +66,10 @@ extern HashMap Template_ExpandUnion ( XTigerTemplate t,
                                       Declaration decl );
 extern HashMap Template_ExpandHashMapTypes ( XTigerTemplate t,
                                              HashMap types );
+extern void Template_FilterInsertableElement ( XTigerTemplate t,
+                                               HashMap map,
+                                               Element refelem,
+                                               ThotBool insertafter );
 extern char* Template_ExpandTypes ( XTigerTemplate t,
                                     char* types,
                                     Element refelem,
@@ -101,6 +109,8 @@ extern XTigerTemplate CreatePredefinedTypesLibrary ( void );
 extern XTigerTemplate CreateHTMLLibrary ( void );
 extern Declaration Declaration_Clone ( Declaration dec );
 extern void Declaration_Destroy ( Declaration dec );
+extern ThotBool Declaration_GetElementType ( Declaration dec,
+                                               ElementType *type );
 extern void Declaration_CalcBlockLevel ( Declaration dec );
 extern void Template_CalcBlockLevel ( XTigerTemplate t );
 extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
@@ -131,6 +141,8 @@ extern void Template_PrintUnion ( Declaration dec,
                                     int indent,
                                     XTigerTemplate t,
                                     FILE *file );
+extern void PrintElement ( Element elem,
+                             int dec );
 extern void PrintDeclarations ( XTigerTemplate t,
                                   FILE *file );
 extern void DumpAllDeclarations ( void );
@@ -146,6 +158,10 @@ extern HashMap Template_ExpandUnion ( XTigerTemplate t,
                                         Declaration decl );
 extern HashMap Template_ExpandHashMapTypes ( XTigerTemplate t,
                                                HashMap types );
+extern void Template_FilterInsertableElement ( XTigerTemplate t,
+                                                 HashMap map,
+                                                 Element refelem,
+                                                 ThotBool insertafter );
 extern char* Template_ExpandTypes ( XTigerTemplate t,
                                       char* types,
                                       Element refelem,

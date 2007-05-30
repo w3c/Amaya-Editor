@@ -77,7 +77,7 @@ void Template_AddLibraryToImport (XTigerTemplate t, Element el)
 
     lib = LookForXTigerLibrary(tempfile);
     
-    HashMap_Set(t->libraries, tempfile, lib);
+    HashMap_Set(t->libraries, TtaStrdup(tempfile), lib);
 
     TtaFreeMemory(src);
   }
@@ -160,7 +160,7 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
         case Template_EL_component:
           name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
           if(name)
-            Template_DeclareNewComponent (t, name, el); 
+            Template_DeclareNewComponent (t, name, el);
           TtaFreeMemory (name);
           break;
         case Template_EL_union:
@@ -170,7 +170,6 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
           
           if(name)
             Template_DeclareNewUnion (t, name, include, exclude);
-        
           TtaFreeMemory (name);
           TtaFreeMemory (include);
           TtaFreeMemory (exclude);
@@ -320,7 +319,7 @@ void LoadTemplate (Document doc, char* templatename)
             Template_AddLibraryDeclarations (t, (XTigerTemplate)node->elem);
       
           TtaFreeMemory(iter);
-      
+
           Template_ParseDeclarations  (t, 0);
           Template_FillDeclarations (t);
           
@@ -328,6 +327,9 @@ void LoadTemplate (Document doc, char* templatename)
           Template_CalcBlockLevel (t);
           
           ctx->t->isLoaded = TRUE;
+#ifdef AMAYA_DEBUG  
+    printf("XTiger template %s loaded.\n", t->name);
+#endif /* AMAYA_DEBUG */
           
           DoInstanceTemplate (ctx->templatePath);
           DocumentTypes[ctx->newdoc] = docTemplate;
@@ -385,7 +387,6 @@ void Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
 
     TtaFreeMemory(iter);
 
-
     Template_ParseDeclarations  (t, 0);
     Template_FillDeclarations (t);
     Template_PreInstantiateComponents (t);
@@ -395,6 +396,8 @@ void Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
 #ifdef AMAYA_DEBUG  
     printf("XTiger library %s loaded.\n", t->name);
 #endif /* AMAYA_DEBUG */
+
+    DocumentTypes[ctx->newdoc] = docTemplate;
 
     TtaFreeMemory(ctx->templatePath);
     TtaFreeMemory(ctx);

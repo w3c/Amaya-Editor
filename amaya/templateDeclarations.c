@@ -833,12 +833,12 @@ static void Template_FillDeclarationContent(XTigerTemplate t, Declaration decl)
       switch(decl->nature)
         {
         case ComponentNat:
-            otherDecl = Template_GetSimpleTypeDeclaration(decl->declaredIn, decl->name);
-            if (otherDecl)
+            otherDecl = Template_GetComponentDeclaration(decl->declaredIn, decl->name);
+            if (otherDecl && otherDecl->nature==ComponentNat)
               {
                 el =  otherDecl->componentType.content;
-                decl->componentType.content = TtaCopyTree (el, TtaGetDocument (el),
-                                              TtaGetDocument (el), el);
+                decl->componentType.content = TtaCopyTree (el, decl->declaredIn->doc,
+                                              decl->usedIn->doc, NULL);
               }
           break;
         case UnionNat:
@@ -1065,6 +1065,41 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+static void FPrintElement(FILE *file, Element elem, int dec)
+{
+  int i;
+  Element child;
+  for(i=0; i<dec; i++)
+    fprintf(file, "  ");
+  fprintf(file, "%s\n", TtaGetElementTypeName(TtaGetElementType(elem)));
+  child = TtaGetFirstChild(elem);
+  while(child)
+  {
+    FPrintElement(file, child, dec+1);
+    TtaNextSibling(&child);
+  }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PrintElement(Element elem, int dec)
+{
+  int i;
+  Element child;
+  for(i=0; i<dec; i++)
+    printf("  ");
+  printf("%s\n", TtaGetElementTypeName(TtaGetElementType(elem)));
+  child = TtaGetFirstChild(elem);
+  while(child)
+  {
+    PrintElement(child, dec+1);
+    TtaNextSibling(&child);
+  }
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void PrintDeclarations (XTigerTemplate t, FILE *file)
 {
 #ifdef TEMPLATES
@@ -1132,6 +1167,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
             fprintf (file, " inline");
           if (dec->declaredIn!=t)
             fprintf (file, " (declared in %s)", dec->declaredIn->name);
+          FPrintElement(file, dec->componentType.content, 1);
         }
       TtaFreeMemory(iter);  
     }
@@ -1410,14 +1446,14 @@ HashMap Template_ExpandHashMapTypes (XTigerTemplate t, HashMap types)
                     ITERATOR_FOREACH (iter, HashMapNode, node)
                       {
                         /* For each expanded element, add it to the final map.*/
-                        HashMap_Set(map, TtaStrdup((char*)node->key), NULL);
+                        HashMap_Set(map, TtaStrdup((char*)node->key), node->elem);
                       }
                     TtaFreeMemory (iter);
                   }
               }
             else
               /* Add it without expansion.*/
-              HashMap_Set (map, TtaStrdup(decl->name), NULL);
+              HashMap_Set (map, TtaStrdup(decl->name), decl);
           }
       }
     TtaFreeMemory(iterbase);
@@ -1528,7 +1564,6 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types,
     DLListNode      listnode;
     int             pos = 0;
     char            result[MAX_LENGTH];
-    char           *key;
 
     /* Fill map with expanded result from basemap.*/
     map = Template_ExpandHashMapTypes(t, basemap);
