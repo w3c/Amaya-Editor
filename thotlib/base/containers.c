@@ -862,13 +862,14 @@ void HashMap_Dump (HashMap map, ThotBool isKeyString)
               while (node!=NULL)
                 {
                   if(isKeyString)
-                    printf("      (%p>>) %p (>>%p) : %p %s - %p\n", node->prev, 
+                    printf("      (%p>>) %p (>>%p) : %p %s  (%d) - %p\n", node->prev, 
                                         node, node->next,
-                                        node->key, (char*)node->key, node->elem);
+                                        node->key, (char*)node->key, 
+                                        map->hash(node->key), node->elem);
                   else
-                    printf("      (%p>>) %p (>>%p) : %p - %p\n", node->prev, 
+                    printf("      (%p>>) %p (>>%p) : %p (%d) - %p\n", node->prev, 
                                         node, node->next,
-                                        node->key, node->elem);
+                                        node->key, map->hash(node->key), node->elem);
                   node = node->next;
                 }
             }

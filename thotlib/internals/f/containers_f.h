@@ -36,9 +36,12 @@ extern ContainerElement DLList_RemoveElement ( DLList list,
 extern void DLList_DestroyElement ( DLList list,
                                     DLListNode node );
 extern ForwardIterator DLList_GetForwardIterator ( DLList list );
-extern void DLList_Swap ( DLList list,
-                          DLListNode node1,
-                          DLListNode node2 );
+extern void DLList_SwapContent ( DLList list,
+                                 DLListNode node1,
+                                 DLListNode node2 );
+extern int DLList_GetSize ( DLList list );
+extern DLListNode DLList_GetElement ( DLList list,
+                                      int index );
 extern void DLList_Sort ( DLList list,
                           Container_CompareFunction compare );
 extern DLList DLList_GetRefList ( DLList srcList,
@@ -111,9 +114,12 @@ extern ContainerElement DLList_RemoveElement ( DLList list,
 extern void DLList_DestroyElement ( DLList list,
                                       DLListNode node );
 extern ForwardIterator DLList_GetForwardIterator ( DLList list );
-extern void DLList_Swap ( DLList list,
-                            DLListNode node1,
-                            DLListNode node2 );
+extern void DLList_SwapContent ( DLList list,
+                                   DLListNode node1,
+                                   DLListNode node2 );
+extern int DLList_GetSize ( DLList list );
+extern DLListNode DLList_GetElement ( DLList list,
+                                        int index );
 extern void DLList_Sort ( DLList list,
                             Container_CompareFunction compare );
 extern DLList DLList_GetRefList ( DLList srcList,
