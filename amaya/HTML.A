@@ -134,6 +134,8 @@ ELEMENTS
         BEGIN
         ElemNew.Post -> TableCreated;
         ElemPaste.Post -> TablePasted;
+        ElemDelete.Pre -> DeleteTable;
+        ElemDelete.Post -> TableDeleted;
         END;
 
    Table_body:
