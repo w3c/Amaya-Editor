@@ -819,13 +819,15 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case 4:
         case 5:
         case 6:
+        case 7:  /* VerticalSeparator */
+        case 11: /* VerticalBar */
           *width = BoxCharacterWidth (0xe6, font);
            break;
         case '<':
         case '>':
           *width = BoxCharacterWidth (0xf1, font) * 2;
           break;
-        case '|':       /* vertical bar */
+        case '|':       /* VerticalLine */
           *width = BoxCharacterWidth (0x7c, font);  /* | */
           break;
         case 'D':       /* double vertical bar */

@@ -1219,6 +1219,9 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                       case 7:
                         c = 0x2758; /* VerticalSeparator */
                         break;
+                      case 11:
+                        c = 0x2223; /* VerticalBar */
+                        break;
 
                       case '1':
                         c = 0x2231; /* Clockwise Integral */

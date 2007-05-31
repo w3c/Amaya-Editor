@@ -75,8 +75,9 @@ static ThotBool IsStretchyFence (CHAR_T character, char script)
   if (((character == '(' || character == ')' ||
         character == '[' || character == ']' ||
         character == '{' || character == '}' ||
-        character == '|'))  ||   /* strangely enough, appendix F.5 does not
-                                    consider this character as a fence */
+        character == '|' || character == 0x2223))  ||
+      /* strangely enough, appendix F.5 does not
+         consider this character as a fence */
       (
        (character == 0x2329 || /* LeftAngleBracket */
         character == 0x27E8 || /* MathematicalLeftAngleBracket */
@@ -1343,7 +1344,8 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                        text[i] == 0x2961 || /* LeftDownTeeVector */
                        text[i] == 0x296E || /* UpEquilibrium */
                        text[i] == 0x296F || /* ReverseUpEquilibrium */
-                       text[i] == 0x2758    /* VerticalSeparator */
+                       text[i] == 0x2758 || /* VerticalSeparator */
+                       text[i] == 0x2223    /* VerticalSeparator */
                        ))/* accept only symbols like simple integral, double or
                          triple integral, contour integral, etc. or vertical
                          arrows (add more arrows *****) */
@@ -1488,8 +1490,10 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                                 case 0x296F: /* ReverseUpEquilibrium */
                                   c = 213;
                                 break;
-                                case 0x2758: /* VerticalSeparator ; U02758 */
+                                case 0x2758: /* VerticalSeparator */
                                   c = 7;
+                                case 0x2223: /* VerticalBar */
+                                  c = 11;
                                 break;
 
                                 default:
@@ -2450,7 +2454,7 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
   elType = TtaGetElementType (fencedExpression);
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = MathML_ATTR_separators;
-  text[0] = ',';	/* default value is  sparators=","  */
+  text[0] = ',';	/* default value is  separators=","  */
   text[1] = EOS;
   length = 1;
   attr = TtaGetAttribute (mfenced, attrType);
@@ -2534,23 +2538,25 @@ static void  CreateOpeningOrClosingFence (Element fencedExpression,
       text[0] = '(';    /* default value of attribute 'open' */
       attrType.AttrTypeNum = MathML_ATTR_open;
       elType.ElTypeNum = MathML_EL_OpeningFence;
+      length = 1;
     }
   else
     {
       text[0] = ')';    /* default value of attribute 'close' */
       attrType.AttrTypeNum = MathML_ATTR_close;
       elType.ElTypeNum = MathML_EL_ClosingFence;
+      length = 1;
     }
   attr = TtaGetAttribute (el, attrType);
   if (attr != NULL)
     {
       length = 31;
       TtaGiveTextAttributeValue (attr, text, &length);
-      if (length != 1)
+      if (length == 0)
         /* content of attribute open or close should be a single character */
-        text[0] = '?';
+        text[0] = SPACE;
     }
-  text[1] = EOS;
+  text[length] = EOS;
   fence = TtaNewElement (doc, elType);
   TtaInsertSibling (fence, fencedExpression, open, doc);
   elType.ElTypeNum = MathML_EL_TEXT_UNIT;

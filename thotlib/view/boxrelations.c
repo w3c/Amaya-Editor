@@ -1043,7 +1043,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               pBox->BxXOutOfStruct = TRUE;
               //PropagateXOutOfStruct (pAb, frame, TRUE, FALSE);
             }
-         if (appl)
+          if (appl)
             {
               /* left positioning */
               if (appr &&

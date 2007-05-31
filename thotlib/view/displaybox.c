@@ -408,6 +408,8 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 
           switch (pBox->BxAbstractBox->AbShape)
             {
+            case 0:
+              break;
             /* Fences */
             case 1: /* LeftDoubleBracket ; U0301A */
               if (useStix)
@@ -493,8 +495,9 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               break;
 
            /* Lines and bars */
-            case '|': /* c = 124 */
-            case 7 : /* VerticalSeparator ; U02758 */
+            case '|': /* c= 124 verticalLine */
+            case 7 : /* VerticalSeparator */
+            case 11 : /* VerticalBar */
               DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox,
                                 0, 0);
               break;
