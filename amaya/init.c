@@ -9127,7 +9127,7 @@ char* CreateTempDirectory(const char* name)
 void SendByMail (Document document, View view)
 {
 #ifdef _WX
-  char                 buff[MAX_LENGTH];
+  char                 buff[MAX_LENGTH], *appname, *vers;
   ElementType          elType;
   Element              docEl, el, text;
   int                  len, i;
@@ -9139,14 +9139,14 @@ void SendByMail (Document document, View view)
   char                *server = TtaGetEnvString ("EMAILS_SMTP_SERVER");
   char                *from   = TtaGetEnvString ("EMAILS_FROM_ADDRESS");
   char                *docPath, *docType, *docChar;
-  char                *dstFileName;  
+  char                *dstFileName = NULL;  
   int                  port;
   int                  error;
   ThotBool             retry = TRUE;
 
   TtaGetEnvInt ("EMAILS_SMTP_PORT", &port);
   if (server == NULL || from == NULL ||
-      strlen(server) == 0 || strlen(from) == 0 || port == 0)
+      server[0] == EOS || from[0] == EOS || port == 0)
   {
     TtaDisplaySimpleMessage (INFO, AMAYA, AM_EMAILS_NO_SERVER);
     // TODO Show the properties dialog at the "emails" tab.
@@ -9167,14 +9167,18 @@ void SendByMail (Document document, View view)
     {
       len = MAX_LENGTH-1;
       TtaGiveTextContent(text, (unsigned char*)buff, &len, &lang);
-      buff[len] = 0;
+      buff[len] = EOS;
     }
     else
-      buff[0] = 0;
-    dlg.SetSubject(TtaConvMessageToWX(buff));
+      buff[0] = EOS;
+    dlg.SetSubject(TtaConvMessageToWX (buff));
   }
 
-  while(retry)
+  // generate the application name
+  vers = (char *) TtaGetAppVersion();
+  appname = (char *) TtaGetMemory (strlen (vers) + 10);
+  sprintf (appname, "Amaya (%s)", vers);
+  while (retry)
   {
     if (dlg.ShowModal() == wxID_OK)
     {
@@ -9183,7 +9187,7 @@ void SendByMail (Document document, View view)
                           from);
       if (mail)
       {
-        TtaSetMailer(mail, "Amaya (9.55)");
+        TtaSetMailer(mail, appname);
         
         arr = dlg.GetRecipients();
         for (i = 0; i < (int)arr.GetCount(); i++)
@@ -9252,7 +9256,7 @@ void SendByMail (Document document, View view)
     else
       break;
   }
-  
+  TtaFreeMemory (appname);
   // Remove temp dir content.
   wxArrayString files;
   wxDir::GetAllFiles(wxString(temppath, wxConvUTF8), &files, wxT(""), wxDIR_FILES);

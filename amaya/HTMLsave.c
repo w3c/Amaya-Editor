@@ -440,6 +440,11 @@ char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
   ThotBool            toSave = FALSE, isCSS = FALSE;
 
   newString = NULL;
+  if (!saveResources &&
+      (strstr (sString, ".htm") != NULL ||
+       strstr (sString, ".xhtm") != NULL || strstr (sString, ".xml") != NULL))
+    // don't consider a html document as a resource
+    return newString;
   // look for a javascript
   b = strstr (sString, ".js");
   if (b == NULL)
@@ -458,7 +463,8 @@ char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
         toSave = saveResources;
     }
   else
-    toSave = saveResources;
+      toSave = saveResources;
+
   if (b)
     {
       // look for the beginning and the end of the url
