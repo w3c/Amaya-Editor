@@ -4362,7 +4362,6 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
       /* cancel the possible don't replace mark */
       DontReplaceOldDoc = FALSE;
       /* the suffix determines the output format */
-      SaveAsXML = DocumentMeta[doc]->xmlformat;
       docModified = TtaIsDocumentModified (doc);
       /* name of local temporary files */
       oldLocal = GetLocalPath (doc, DocumentURLs[doc]);
@@ -4681,6 +4680,8 @@ ThotBool SaveTempCopy (Document doc, const char* dstdir, char** filename)
   CopyImages = FALSE;
   CopyCss    = FALSE;
   UpdateURLs = TRUE; // just copy local resources
+  SaveAsXML = DocumentMeta[doc]->xmlformat;
+  SaveAsText = FALSE;
   DoSaveAs(NULL, NULL, TRUE);
   
   if(filename)
