@@ -72,6 +72,7 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
   ,m_LockUpdateFlag(false)
   ,m_pLastUsedFilter(p_last_used_filter)
 {
+  char      buffer[MAX_LENGTH];
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("NewTemplateDocDlgWX"));
   Waiting = 1;
   MyRef = ref;
@@ -109,9 +110,27 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
   m_DirSep = wxString(dir_sep);
 
   // set the default instance path
-  wxString homedir = TtaGetHomeDir();
-  wxString filename = TtaConvMessageToWX("New.html");
+  wxString homedir = TtaGetHomeDir ();
+  wxString filename = TtaConvMessageToWX ("New.html");
   wxString   full_path = homedir + m_DirSep + filename;
+
+  // propose a new filename
+  strncpy( buffer, (const char*)full_path.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+  buffer[MAX_LENGTH - 1] = EOS;
+  if (TtaFileExist(buffer))
+    {
+      int        i = 1, len;
+      len = strlen (buffer);
+      while (buffer[len] != '.')
+        len--;
+      do
+        {
+          sprintf (&buffer[len], "%d.html", i);
+          i++;
+        }
+      while (TtaFileExist(buffer));
+      full_path = TtaConvMessageToWX (buffer);
+    }
   XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->SetValue(full_path);
   UpdateDirFromString (full_path);
 
