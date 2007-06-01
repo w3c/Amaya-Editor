@@ -3125,8 +3125,11 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             case '|':       /* VerticalLine */
             case 7:       /* VerticalSeparator ; U02758 */
             case 11:       /* VerticalBar ; U02223 */
+            case 12:       /* DoubleVerticalBar ; U02956 */
               if (i == 0)
                 i = BoxCharacterWidth (0x7c, font);  /* | */
+              if (pAb->AbShape == 12)
+                i *= 2;
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
             case 'D':       /* double vertical bar */

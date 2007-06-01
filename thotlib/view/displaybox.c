@@ -501,6 +501,10 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox,
                                 0, 0);
               break;
+            case 12 : /* DoubleVerticalBar */
+              DrawVerticalLine (frame, i, 6, xd, yd, width, height, 1, fg, pBox,
+                                0, 0);
+              break;
             case 8 : /* HorizontalLine ; U02500 */
             case 9 : /* UnderBar ; U00332 */
             case 10 : /* OverBar ; U000AF */

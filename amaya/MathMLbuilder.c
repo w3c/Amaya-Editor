@@ -75,7 +75,8 @@ static ThotBool IsStretchyFence (CHAR_T character, char script)
   if (((character == '(' || character == ')' ||
         character == '[' || character == ']' ||
         character == '{' || character == '}' ||
-        character == '|' || character == 0x2223))  ||
+        character == '|' || character == 0x2223  ||
+        character == 0x2956))  ||
       /* strangely enough, appendix F.5 does not
          consider this character as a fence */
       (
@@ -1495,6 +1496,9 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                                 case 0x2223: /* VerticalBar */
                                   c = 11;
                                 break;
+                                case 0x2956: /* DoubleVerticalBar */
+                                  c = 12;
+                                break;
 
                                 default:
                                   c = (unsigned char) text[i];
@@ -2528,8 +2532,9 @@ static void  CreateOpeningOrClosingFence (Element fencedExpression,
   Element       leaf, fence;
   AttributeType attrType;
   Attribute     attr;
-  int           length;
-  char          text[32];
+  int           length, value;
+  char          text[32], *s;
+  CHAR_T        val[2];
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -2555,6 +2560,23 @@ static void  CreateOpeningOrClosingFence (Element fencedExpression,
       if (length == 0)
         /* content of attribute open or close should be a single character */
         text[0] = SPACE;
+      else if (text[0] == START_ENTITY)
+        {
+          text[0] = '&';
+          text[length-1] = EOS;
+          if (MapXMLEntity (MATH_TYPE, &text[1], &value))
+            {
+              // convert the entity
+              val[0] = (CHAR_T) value;
+              val[1] = EOS;
+              s = (char *)TtaConvertWCToByte ((CHAR_T *)val, UTF_8);
+              strcpy (text, s);
+              TtaFreeMemory (s);
+              length = strlen (text);
+            }
+          else
+            text[length-1] = ';';
+        }
     }
   text[length] = EOS;
   fence = TtaNewElement (doc, elType);
