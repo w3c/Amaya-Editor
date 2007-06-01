@@ -457,7 +457,7 @@ HelpXml
 #&MenuAttribute
 &NewXHTML
 &NewMathML
-#&NewSVG
+&NewSVG
 &NewCss
 &RemoveDoctype
 &AddDoctype

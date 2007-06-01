@@ -1,0 +1,18 @@
+! file SVG.trans : structure transformation for SVG
+! see HTML.trans for a description of Trans language
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!surround a sequence of elements with group
+
+!surround a sequence of elements with a mrow
+surrounding group: *,*+;
+        {
+        * > g:*;
+        }
+
+
+! remove a group level
+remove group: g{*+};
+        {
+        * > :*;
+        }
