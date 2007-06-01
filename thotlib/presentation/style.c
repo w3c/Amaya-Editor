@@ -1442,6 +1442,29 @@ static void PresentationValueToPRule (PresentationValue val, int type,
           break;	   
         }
       break;
+    case PtVariant:
+      switch (value)
+        {
+        case VariantNormal:
+          rule->PrChrValue = 'N';
+          break;
+        case VariantSmallCaps:
+          rule->PrChrValue = 'C';
+          break;
+        case VariantDoubleStruck:
+          rule->PrChrValue = 'D';
+          break;
+        case VariantFraktur:
+          rule->PrChrValue = 'F';
+          break;
+        case VariantScript:
+          rule->PrChrValue = 'S';
+          break;
+        default:
+          rule->PrChrValue = 'N';
+          break;	   
+        }
+      break;
     case PtUnderline:
       switch (value)
         {
@@ -2154,6 +2177,30 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
         }
       break;
 
+    case PtVariant:
+      switch (rule->PrChrValue)
+        {
+        case 'N':
+          value = VariantNormal;
+          break;
+        case 'C':
+          value = VariantSmallCaps;
+          break;
+        case 'D':
+          value = VariantDoubleStruck;
+          break;
+        case 'F':
+          value = VariantFraktur;
+          break;
+        case 'S':
+          value = VariantScript;
+          break;
+        default:
+          value = VariantNormal;
+          break;
+        }
+      break;
+
     case PtUnderline:
       switch (rule->PrChrValue)
         {
@@ -2737,6 +2784,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRWeight:
       *intRule = PtWeight;
       break;
+    case PRVariant:
+      *intRule = PtVariant;
+      break;
     case PRFont:
       *intRule = PtFont;
       break;
@@ -3173,6 +3223,9 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
       break;
     case PtWeight:
       setting->type = PRWeight;
+      break;
+    case PtVariant:
+      setting->type = PRVariant;
       break;
     case PtUnderline:
       setting->type = PRUnderline;
@@ -3845,6 +3898,26 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
           break;
         case WeightNormal:
           strcpy (buffer, "font-weight: normal");
+          break;
+        }
+      break;
+    case PRVariant:
+      switch (settings->value.typed_data.value)
+        {
+        case VariantNormal:
+          strcpy (buffer, "font-variant: normal");
+          break;
+        case VariantSmallCaps:
+          strcpy (buffer, "font-variant: small-caps");
+          break;
+        case VariantDoubleStruck:
+          strcpy (buffer, "font-variant: double-struck");
+          break;
+        case VariantFraktur:
+          strcpy (buffer, "font-variant: fraktur");
+          break;
+        case VariantScript:
+          strcpy (buffer, "font-variant: script");
           break;
         }
       break;

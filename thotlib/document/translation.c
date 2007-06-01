@@ -1610,6 +1610,7 @@ static unsigned char PresRuleValue (PtrPRule pPRule)
     case PtFont:
     case PtStyle:
     case PtWeight:
+    case PtVariant:
     case PtUnderline:
     case PtThickness:
     case PtDirection:
@@ -3357,6 +3358,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
               case PtFont:
               case PtStyle:
               case PtWeight:
+              case PtVariant:
               case PtUnderline:
               case PtThickness:
               case PtDirection:

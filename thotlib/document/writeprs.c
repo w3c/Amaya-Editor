@@ -226,6 +226,9 @@ void                WritePRuleType (PRuleType ruleType)
     case PtWeight:
       TtaWriteByte (outfile, C_PR_WEIGHT);
       break;
+    case PtVariant:
+      TtaWriteByte (outfile, C_PR_VARIANT);
+      break;
     case PtFont:
       TtaWriteByte (outfile, C_PR_FONT);
       break;
@@ -1058,6 +1061,7 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
             case PtFont:
             case PtStyle:
             case PtWeight:
+            case PtVariant:
             case PtUnderline:
             case PtThickness:
             case PtDirection:

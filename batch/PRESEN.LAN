@@ -113,6 +113,7 @@ Rule2 =		  'LineBreak' ':' Boolean /
 		  'Thickness' ':' ThicknessInherit /
 		  'Style' ':' StyleInherit /
 		  'Weight' ':' WeightInherit /
+      'Variant' ':' VariantInherit /
 		  'Indent' ':' DistInherit /
 		  'Adjust' ':' AdjustInherit /
 		  'NoBreak1' ':' AbsDist /
@@ -310,6 +311,8 @@ StyleInherit =	  Link '=' / 'Roman' / 'Italics' / 'Oblique' /
 		  { the next three values are obsolete }
 		  'Bold' / 'BoldItalics' / 'BoldOblique' .
 WeightInherit =	  Link '=' / 'Normal' / 'Bold' .
+VariantInherit =  Link '=' / 'Normal' / 'SmallCaps' /
+                             'DoubleStruck' / 'Script' / 'Fraktur' .
 UnderLineInherit = Link '=' / 'NoUnderline' / 'Underlined' / 'Overlined' /
 		  'CrossedOut' .
 ThicknessInherit = Link '=' / 'Thick' / 'Thin' .

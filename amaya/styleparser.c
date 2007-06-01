@@ -3504,21 +3504,30 @@ static char *ParseACSSFontVariant (Element element, PSchema tsch,
   ptr = cssRule;
   if (!strncasecmp (cssRule, "small-caps", 10))
     {
-      /* Not supported yet */
+      style.typed_data.value = VariantSmallCaps;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "normal", 6))
     {
-      /* Not supported yet */
+      style.typed_data.value = VariantNormal;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
-      /* Not supported yet */
+      style.typed_data.unit = VALUE_INHERIT;
       cssRule = SkipWord (cssRule);
     }
-  if (cssRule != ptr && DoDialog)
-    DisplayStyleValue ("font-variant", ptr, cssRule);
+  else
+    /* invalid font-variant */
+    return (cssRule);
+
+  if (style.typed_data.value != 0 || style.typed_data.unit == VALUE_INHERIT)
+    {
+      if (DoDialog)
+        DisplayStyleValue ("font-variant", ptr, cssRule);
+      else if (DoApply)
+        TtaSetStylePresentation (PRVariant, element, tsch, context, style);
+    }
   return (cssRule);
 }
 

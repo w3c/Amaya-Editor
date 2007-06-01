@@ -143,6 +143,9 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
     case C_PR_WEIGHT:
       return PtWeight;
       break;
+    case C_PR_VARIANT:
+      return PtVariant;
+      break;
     case C_PR_FONT:
       return PtFont;
       break;
@@ -1218,6 +1221,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
                   case PtFont:
                   case PtStyle:
                   case PtWeight:
+                  case PtVariant:
                   case PtUnderline:
                   case PtThickness:
                   case PtDirection:

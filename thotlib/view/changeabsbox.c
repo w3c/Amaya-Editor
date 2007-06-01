@@ -3430,6 +3430,7 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
       || typeRule == PtSize
       || typeRule == PtStyle
       || typeRule == PtWeight
+      || typeRule == PtVariant
       || typeRule == PtFont
       || typeRule == PtUnderline
       || typeRule == PtThickness

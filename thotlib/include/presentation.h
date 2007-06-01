@@ -50,55 +50,56 @@ typedef int        *PRule;
 #define PRSize 33
 #define PRStyle 34
 #define PRWeight 35
-#define PRFont 36
-#define PRUnderline 37
-#define PRThickness 38
-#define PRIndent 39
-#define PRLineSpacing 40
-#define PRDepth 41
-#define PRAdjust 42
-#define PRDirection 43
-#define PRUnicodeBidi 44
-#define PRLineStyle 45
-#define PRLineWeight 46
-#define PRFillPattern 47
-#define PRBackground 48
-#define PRForeground 49
-#define PROpacity 50
-#define PRFillOpacity 51
-#define PRStrokeOpacity 52
-#define PRHyphenate 53
+#define PRVariant 36
+#define PRFont 37
+#define PRUnderline 38
+#define PRThickness 39
+#define PRIndent 40
+#define PRLineSpacing 41
+#define PRDepth 42
+#define PRAdjust 43
+#define PRDirection 44
+#define PRUnicodeBidi 45
+#define PRLineStyle 46
+#define PRLineWeight 47
+#define PRFillPattern 48
+#define PRBackground 49
+#define PRForeground 50
+#define PROpacity 51
+#define PRFillOpacity 52
+#define PRStrokeOpacity 53
+#define PRHyphenate 54
 /* PtPageBreak, PtLineBreak, PtGather */
-#define PRXRadius 57
-#define PRYRadius 58
-#define PRPosition 59
-#define PRTop 60
-#define PRRight 61
-#define PRBottom 62
-#define PRLeft 63
-#define PRFloat 64
-#define PRClear 65
-#define PRDisplay 66
-#define PRBackgroundHorizPos 67
-#define PRBackgroundVertPos 68
-#define PRVis 69 // CSS visibility
-#define PRNoBreak1 70
-#define PRNoBreak2 71
+#define PRXRadius 58
+#define PRYRadius 59
+#define PRPosition 60
+#define PRTop 61
+#define PRRight 62
+#define PRBottom 63
+#define PRLeft 64
+#define PRFloat 65
+#define PRClear 66
+#define PRDisplay 67
+#define PRBackgroundHorizPos 68
+#define PRBackgroundVertPos 69
+#define PRVis 70 // CSS visibility
+#define PRNoBreak1 71
+#define PRNoBreak2 72
 /* PtPictInfo */
-#define PRCreateEnclosing 72
-#define PRShowBox 73
-#define PRBackgroundPicture 74
-#define PRBackgroundRepeat 75
-#define PRNotInLine 76
-#define PRNone 77
-#define PRPageBefore 78
-#define PRPageAfter 79
-#define PRPageInside 80
-#define PRContent 81
-#define PRContentString 82
-#define PRContentURL 83
-#define PRContentAttr 84
-#define LAST_PRES_RULE_TYPE 85
+#define PRCreateEnclosing 73
+#define PRShowBox 74
+#define PRBackgroundPicture 75
+#define PRBackgroundRepeat 76
+#define PRNotInLine 77
+#define PRNone 78
+#define PRPageBefore 79
+#define PRPageAfter 80
+#define PRPageInside 81
+#define PRContent 82
+#define PRContentString 83
+#define PRContentURL 84
+#define PRContentAttr 85
+#define LAST_PRES_RULE_TYPE 86
 
 /*
  * A bunch of constants describing the most common values for presentation
@@ -168,6 +169,13 @@ typedef int        *PRule;
 /* values for rule PRWeight */
 #define WeightNormal 1
 #define WeightBold 2
+
+/* values for rule PRVariant */
+#define VariantNormal 1
+#define VariantSmallCaps 2
+#define VariantDoubleStruck 3
+#define VariantFraktur 4
+#define VariantScript 5
 
 /* values for rule PRFont */
 #define FontTimes 1

@@ -394,6 +394,28 @@ static void         wrfontstyle (PtrPRule pR)
             putchar (pR->PrChrValue);
             break;
           }
+      else if (pR->PrType == PtVariant)
+        switch (pR->PrChrValue)
+          {
+          case 'C':
+            printf ("SmallCaps");
+            break;
+          case 'D':
+            printf ("DoubleStruck");
+            break;
+          case 'F':
+            printf ("Fraktur");
+            break;
+          case 'N':
+            printf ("Normal");
+            break;
+          case 'S':
+            printf ("Script");
+            break;
+          default:
+            putchar (pR->PrChrValue);
+            break;
+          }
       else if (pR->PrType == PtUnderline)
         switch (pR->PrChrValue)
           {

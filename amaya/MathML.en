@@ -78,6 +78,8 @@ bold_: bold
 bold_italic: bold-italic
 double_struck: double-struck
 bold_fraktur: bold-fraktur
+fraktur_: fraktur
+script_: script
 bold_script: bold-script
 sans_serif: sans-serif
 bold_sans_serif: bold-sans-serif

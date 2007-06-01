@@ -49,6 +49,7 @@
 #define C_PR_RIGHT '8'
 #define C_PR_BOTTOM '9'
 #define C_PR_LEFT ':'
+#define C_PR_VARIANT ';'
 #define C_PR_BORDERLEFTSTYLE '<'
 #define C_PR_BORDERRIGHTSTYLE '>'
 #define C_PR_BACKGROUNDHORIZPOS '?'
@@ -113,7 +114,6 @@
 #define C_PR_CLEAR '|'
 #define C_PR_FLOAT '~'
 #define C_PR_VIS '*'
-#define C_PR_
 /* more presentation rule types are defined in constprs.h */
 
 /* picture presentation codes */

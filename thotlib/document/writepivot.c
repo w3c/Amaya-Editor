@@ -448,7 +448,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         rType == PtVisibility ||
         rType == PtVis ||
         rType == PtSize || rType == PtStyle ||
-        rType == PtWeight || rType == PtFont ||
+        rType == PtWeight || rType == PtVariant || rType == PtFont ||
         rType == PtUnderline || rType == PtThickness ||
         rType == PtIndent || rType == PtLineSpacing ||
         rType == PtDepth ||
@@ -526,6 +526,9 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
           break;
         case PtWeight:
           TtaWriteByte (pivFile, C_PR_WEIGHT);
+          break;
+        case PtVariant:
+          TtaWriteByte (pivFile, C_PR_VARIANT);
           break;
         case PtUnderline:
           TtaWriteByte (pivFile, C_PR_UNDERLINE);
@@ -821,6 +824,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         case PtFont:
         case PtStyle:
         case PtWeight:
+        case PtVariant:
         case PtUnderline:
         case PtThickness:
         case PtDirection:

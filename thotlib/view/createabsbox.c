@@ -97,7 +97,7 @@ typedef struct _RuleQueue
   AllRules*        rulesPseudo[MAX_QUEUE_LEN];
 } RuleQueue;
 
-static PresRule ListItemVisibility, ListItemListStyleType, ListItemListStyleImage, ListItemListStylePosition, ListItemVertPos, ListItemHorizPos, ListItemMarginRight, ListItemMarginLeft, ListItemSize, ListItemStyle, ListItemPtWeight, ListItemFont, ListItemOpacity, ListItemDirection, ListItemBackground, ListItemForeground;
+static PresRule ListItemVisibility, ListItemListStyleType, ListItemListStyleImage, ListItemListStylePosition, ListItemVertPos, ListItemHorizPos, ListItemMarginRight, ListItemMarginLeft, ListItemSize, ListItemStyle, ListItemPtWeight, ListItemVariant, ListItemFont, ListItemOpacity, ListItemDirection, ListItemBackground, ListItemForeground;
 
 /*----------------------------------------------------------------------
   SetAbsBoxAccessMode met a` jour le mode d'acces accessMode sur  
@@ -435,6 +435,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
   pAb->AbVisibility = Visib;
   pAb->AbFontStyle = 0;
   pAb->AbFontWeight = 0;
+  pAb->AbFontVariant = 1;
   pAb->AbSize = 1;
   pAb->AbLineWeight = 1;
   pAb->AbLineSpacing = 10;
@@ -1723,6 +1724,9 @@ PtrPRule SearchRuleListItemMarker (PRuleType ruleType, PtrElement pEl,
     case PtWeight:
       pRule = &ListItemPtWeight;
       break;
+    case PtVariant:
+      pRule = &ListItemVariant;
+      break;
     case PtFont:
       pRule = &ListItemFont;
       break;
@@ -1824,6 +1828,8 @@ PtrPRule SearchRuleListItemMarker (PRuleType ruleType, PtrElement pEl,
           /* Style: Creator = */
         case PtWeight:
           /* Weight: Creator = */
+        case PtVariant:
+          /* Variant: Creator = */
         case PtFont:
           /* Font: Creator = */
         case PtBackground:
@@ -2073,6 +2079,9 @@ ThotBool CreateListItemMarker (PtrAbstractBox pAb, PtrDocument pDoc,
       if (pRule)
         ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtWeight, pEl, pDoc);
+      if (pRule)
+        ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
+      pRule = SearchRuleListItemMarker (PtVariant, pEl, pDoc);
       if (pRule)
         ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtFont, pEl, pDoc);

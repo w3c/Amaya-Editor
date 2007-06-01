@@ -242,6 +242,7 @@ void ApplPage (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
    pAbbChild->AbSizeUnit = UnPoint;
    pAbbChild->AbFontStyle = 0;
    pAbbChild->AbFontWeight = 0;
+   pAbbChild->AbFontVariant = 1;
    pAbbChild->AbUnderline = 0;
    pAbbChild->AbThickness = 0;
    pAbbChild->AbLineWeight = 1;

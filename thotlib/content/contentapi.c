@@ -623,7 +623,7 @@ void TtaRemoveFinalSpaces (Element element, Document document,
                      // keep the last space
                      ((i > 0 &&
                        (pBuf->BuContent[i-1] == SPACE ||
-                        pBuf->BuContent[i-1] == __CR__ || pBuf->BuContent[i] == EOL)) ||
+                        pBuf->BuContent[i-1] == __CR__ || pBuf->BuContent[i-1] == EOL)) ||
                       (i == 0 && pPrev &&
                        (pPrev->BuContent[last] == SPACE ||
                         pPrev->BuContent[last] == __CR__ || pPrev->BuContent[last] == EOL))))

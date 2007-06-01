@@ -406,6 +406,20 @@ char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
                 else	/* default: N: Normal */
                   val = 'N';
                 break;
+              case PtVariant:
+                if (pAbb->AbFontVariant == 1)	/* Normal */
+                  val = 'N';
+                else if (pAbb->AbFontVariant == 2)	/* SmallCaps */
+                  val = 'C';
+                else if (pAbb->AbFontVariant == 3)	/* DoubleStruck */
+                  val = 'D';
+                else if (pAbb->AbFontVariant == 4)	/* Fraktur */
+                  val = 'F';
+                else if (pAbb->AbFontVariant == 5)	/* Script */
+                  val = 'S';
+                else	/* default: N: Normal */
+                  val = 'N';
+                break;
               case PtUnderline:
                 if (pAbb->AbUnderline == 1)
                   val = 'U';
@@ -3842,6 +3856,36 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                 break;
               }
           break;
+        case PtVariant:
+          c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
+          if (!appl && pEl->ElParent == NULL)
+            /* Pas de regle pour la racine, on met la valeur par defaut */
+            {
+              pAb->AbFontVariant = 1;
+              appl = TRUE;
+            }
+          else
+            switch (c)
+              {
+              case 'N':	/* Normal */
+                pAb->AbFontVariant = 1;
+                break;
+              case 'C':	/* SmallCaps */
+                pAb->AbFontVariant = 2;
+                break;
+              case 'D':	/* DoubleStruck */
+                pAb->AbFontVariant = 3;
+                break;
+              case 'F':	/* Fraktur */
+                pAb->AbFontVariant = 4;
+                break;
+              case 'S':	/* Script */
+                pAb->AbFontVariant = 5;
+                break;
+              default:	/* Normal */
+                pAb->AbFontVariant = 1;
+                break;
+              }
         case PtFont:
           c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
           if (!appl && pEl->ElParent == NULL)

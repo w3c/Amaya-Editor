@@ -493,6 +493,7 @@ typedef struct _AbstractBox
   int             AbFont;	   /* Font family: index in the family table */
   int             AbFontStyle;	   /* Font style: roman, italic, oblique */
   int             AbFontWeight;	   /* Font weight: normal, bold */
+  int             AbFontVariant;	 /* Font variant: normal, smallcaps, script.. */
   int             AbSize;	   /* Character logical/real size */
   int             AbLineWeight;    /* Line thickness */
   int             AbLineSpacing;   /* Linespacing */

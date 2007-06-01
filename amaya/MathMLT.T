@@ -821,7 +821,7 @@ ATTRIBUTES
 	create SAN;
 	create 'mathvariant="bold-script"';
 	end;
-  mathvariant = fraktur:
+  mathvariant = fraktur_:
 	begin
 	create SAN;
 	create 'mathvariant="fraktur"';

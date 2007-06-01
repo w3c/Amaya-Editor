@@ -543,6 +543,9 @@ int          NumTypePRuleAPI (PtrPRule pRule)
     case PtWeight:
       return PRWeight;
       break;
+    case PtVariant:
+      return PRVariant;
+      break;
     case PtFont:
       return PRFont;
       break;

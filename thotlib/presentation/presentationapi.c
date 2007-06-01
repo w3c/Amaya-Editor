@@ -1319,6 +1319,8 @@ void TtaAttachPRule (Element element, PRule pRule, Document document)
   PRFont: FontTimes, FontHelvetica, FontCourier.
   PRStyle: StyleRoman, StyleItalics, StyleOblique.
   PRWeight: WeightNormal, WeightBold.
+  PRVariant: VariantNormal, VariantSmallCaps, VariantDoubleStruck,
+             VariantFraktur, VariantScript.
   PRUnderline: NoUnderline, Underline, Overline, CrossOut.
   PRThickness: ThinUnderline, ThickUnderline.
   PRDirection: LeftToRight, RightToLeft.
@@ -1490,6 +1492,33 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
               break;
             case WeightBold:
               ((PtrPRule) pRule)->PrChrValue = 'B';
+              break;
+            default:
+#ifndef NODISPLAY
+              done = FALSE;
+#endif
+              TtaError (ERR_invalid_parameter);
+              break;
+            }
+          break;
+        case PtVariant:
+          ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+          switch (value)
+            {
+            case VariantNormal:
+              ((PtrPRule) pRule)->PrChrValue = 'N';
+              break;
+            case VariantSmallCaps:
+              ((PtrPRule) pRule)->PrChrValue = 'C';
+              break;
+            case VariantDoubleStruck:
+              ((PtrPRule) pRule)->PrChrValue = 'D';
+              break;
+            case VariantFraktur:
+              ((PtrPRule) pRule)->PrChrValue = 'F';
+              break;
+            case VariantScript:
+              ((PtrPRule) pRule)->PrChrValue = 'S';
               break;
             default:
 #ifndef NODISPLAY
@@ -2630,6 +2659,8 @@ int                 TtaGetPRuleType (PRule pRule)
   PRFont: FontTimes, FontHelvetica, FontCourier.
   PRStyle: StyleRoman, StyleItalics, StyleOblique.
   PRWeight: WeightNormal, WeightBold.
+  PRVariant: VariantNormal, VariantSmallCaps, VariantDoubleStruck,
+             VariantFraktur, VariantScript.
   PRUnderline: NoUnderline, Underline, Overline, CrossOut.
   PRThickness: ThinUnderline, ThickUnderline.
   PRDirection: LeftToRight, RightToLeft.
@@ -2749,6 +2780,29 @@ int TtaGetPRuleValue (PRule pRule)
             break;
           case 'B':
             value = WeightBold;
+            break;
+          default:
+            TtaError (ERR_invalid_parameter);
+            break;
+          }
+        break;
+      case PtVariant:
+        switch (((PtrPRule) pRule)->PrChrValue)
+          {
+          case 'N':
+            value = VariantNormal;
+            break;
+          case 'C':
+            value = VariantSmallCaps;
+            break;
+          case 'D':
+            value = VariantDoubleStruck;
+            break;
+          case 'F':
+            value = VariantFraktur;
+            break;
+          case 'S':
+            value = VariantScript;
             break;
           default:
             TtaError (ERR_invalid_parameter);
@@ -3247,6 +3301,7 @@ int                 TtaSamePRules (PRule pRule1, PRule pRule2)
                     case PtFont:
                     case PtStyle:
                     case PtWeight:
+                    case PtVariant:
                     case PtUnderline:
                     case PtThickness:
                     case PtDirection:

@@ -1235,6 +1235,9 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_WEIGHT:
       TypeRP = PtWeight;
       break;
+    case C_PR_VARIANT:
+      TypeRP = PtVariant;
+      break;
     case C_PR_UNDERLINE:
       TypeRP = PtUnderline;
       break;
@@ -1524,6 +1527,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtFont:
       case PtStyle:
       case PtWeight:
+      case PtVariant:
       case PtUnderline:
       case PtThickness:
       case PtDirection:
@@ -1765,6 +1769,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
           case PtFont:
           case PtStyle:
           case PtWeight:
+          case PtVariant:
           case PtUnderline:
           case PtThickness:
           case PtDirection:

@@ -223,7 +223,7 @@ typedef enum
   PtBorderTopWidth, PtBorderRightWidth, PtBorderBottomWidth, PtBorderLeftWidth,
   PtBorderTopColor, PtBorderRightColor, PtBorderBottomColor, PtBorderLeftColor,
   PtBorderTopStyle, PtBorderRightStyle, PtBorderBottomStyle, PtBorderLeftStyle,
-  PtSize, PtStyle, PtWeight, PtFont, PtUnderline, PtThickness,
+  PtSize, PtStyle, PtWeight, PtVariant, PtFont, PtUnderline, PtThickness,
   PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtDirection, PtUnicodeBidi,
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground, 
   PtOpacity, PtFillOpacity, PtStrokeOpacity,
