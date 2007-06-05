@@ -626,7 +626,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
         elType.ElTypeNum = MathML_EL_MTABLE;
       else
         elType.ElTypeNum = HTML_EL_Table_;
-      table = TtaGetExactTypedAncestor (lastcolhead, elType);
+      table = TtaGetTypedAncestor (lastcolhead, elType);
       if (generateEmptyCells)
         /* add empty cells to all other rows */
         {
@@ -793,7 +793,7 @@ ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
       attrType.AttrTypeNum = HTML_ATTR_colspan_;
     }
 
-  table = TtaGetExactTypedAncestor (colhead, elType);
+  table = TtaGetTypedAncestor (colhead, elType);
   elType.ElTypeNum = rowType;
   firstrow = TtaSearchTypedElement (elType, SearchInTree, table);
   if (colhead != NULL && firstrow != NULL)
@@ -1472,7 +1472,7 @@ void CheckTable (Element table, Document doc)
          attribute, create an attribute border=0 to avoid inheritance
          of the the border attribute from the enclosing table */
       elType = TtaGetElementType (table);
-      enclosingTable = TtaGetExactTypedAncestor (table, elType);
+      enclosingTable = TtaGetTypedAncestor (table, elType);
       if (!inMath && enclosingTable)
         /* there is an enclosing table */
         {
@@ -1831,7 +1831,7 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
       attrTypeRspan.AttrTypeNum = HTML_ATTR_rowspan_;
     }
   /* get the enclosing row element */
-  row = TtaGetExactTypedAncestor (cell, elType);
+  row = TtaGetTypedAncestor (cell, elType);
   /* locate the previous or the next column head */
   colhead = NULL;
   cell = GetSiblingCell (newcell, TRUE, inMath);
@@ -2170,7 +2170,7 @@ static void UpdateRowspanForRow (Element row, Document doc, ThotBool inMath,
     elType.ElTypeNum = MathML_EL_MTABLE;
   else
     elType.ElTypeNum = HTML_EL_Table_;
-  table = TtaGetExactTypedAncestor (row, elType);
+  table = TtaGetTypedAncestor (row, elType);
   /* get the first column */
   if (inMath)
     elType.ElTypeNum = MathML_EL_MColumn_head;
@@ -2314,7 +2314,7 @@ static void ClearColumn (Element colhead, Document doc)
   LastPastedEl = NULL;
   elType = TtaGetElementType (colhead);
   elType.ElTypeNum = HTML_EL_Table_;
-  table = TtaGetExactTypedAncestor (colhead, elType);
+  table = TtaGetTypedAncestor (colhead, elType);
   attrTypeC.AttrSSchema = elType.ElSSchema;
   attrTypeR.AttrSSchema = elType.ElSSchema;
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema("MathML",doc));
@@ -2465,7 +2465,7 @@ ThotBool DeleteTBody (NotifyElement * event)
   // remove the table instead of the tbody
   elType = TtaGetElementType (el);
   elType.ElTypeNum = HTML_EL_Table_;
-  el = TtaGetExactTypedAncestor (el, elType);
+  el = TtaGetTypedAncestor (el, elType);
   if (el && el != DeletedTable)
     {
       if (TtaPrepareUndo (doc))
@@ -2498,7 +2498,7 @@ void ColumnDeleted (NotifyElement *event)
   colhead = event->element;
   elType = TtaGetElementType (colhead);
   elType.ElTypeNum = MathML_EL_MTABLE;
-  table = TtaGetExactTypedAncestor (colhead, elType);
+  table = TtaGetTypedAncestor (colhead, elType);
   if (table)
     HandleColAndRowAlignAttributes (table, event->document);
 }
@@ -2525,7 +2525,7 @@ void ColumnPasted (NotifyElement * event)
       doc = event->document;
       elType = TtaGetElementType (CurrentColumn);
       elType.ElTypeNum = HTML_EL_Table_;
-      table = TtaGetExactTypedAncestor (CurrentColumn, elType);
+      table = TtaGetTypedAncestor (CurrentColumn, elType);
       inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema("MathML",doc));
       if (inMath)
         elType.ElTypeNum = MathML_EL_TableRow;
@@ -2682,7 +2682,7 @@ void CopyRow (Element copyRow, Element origRow, Document doc)
       attrType.AttrTypeNum = HTML_ATTR_colspan_;
     }
   /* get the table to which the original row belongs */
-  table = TtaGetExactTypedAncestor (origRow, elType);
+  table = TtaGetTypedAncestor (origRow, elType);
   /* get the first column head of this table */
   if (inMath)
     elType.ElTypeNum = MathML_EL_MColumn_head;
@@ -2939,7 +2939,7 @@ void NextCellInColumn (Element* cell, Element* row, Element colHead,
               elType.ElTypeNum = HTML_EL_Table_;
               rowType = HTML_EL_Table_row;
             }
-          table = TtaGetExactTypedAncestor (colHead, elType);
+          table = TtaGetTypedAncestor (colHead, elType);
           elType.ElTypeNum = rowType;
           *row = TtaSearchTypedElement (elType, SearchInTree, table);
         } 
@@ -3041,7 +3041,7 @@ void RowCreated (NotifyElement *event)
     }
   else
     elType.ElTypeNum = HTML_EL_Table_;
-  table = TtaGetExactTypedAncestor (row, elType);
+  table = TtaGetTypedAncestor (row, elType);
   /* remove the cell created by the editor */
   cell = GetFirstCellOfRow (row, inMath);
   if (cell)
@@ -3083,7 +3083,7 @@ void RowPasted (NotifyElement * event)
     elType.ElTypeNum = MathML_EL_MTABLE;
   else
     elType.ElTypeNum = HTML_EL_Table_;
-  table = TtaGetExactTypedAncestor (row, elType);
+  table = TtaGetTypedAncestor (row, elType);
 
   /* prepare some attribute and element types */
   colspanType.AttrSSchema = elType.ElSSchema;
@@ -3411,7 +3411,7 @@ void ChangeColspan (Element cell, int oldspan, int* newspan, Document doc)
       rowspanType.AttrTypeNum = HTML_ATTR_rowspan_;
       colspanType.AttrTypeNum = HTML_ATTR_colspan_;
     }
-  table = TtaGetExactTypedAncestor (cell, tableType);
+  table = TtaGetTypedAncestor (cell, tableType);
   row = TtaGetParent (cell);
 
   /* get the rowspan value of the cell */
@@ -3789,7 +3789,7 @@ void ChangeRowspan (Element cell, int oldspan, int* newspan, Document doc)
       colspanType.AttrTypeNum = HTML_ATTR_colspan_;
       rowspanType.AttrTypeNum = HTML_ATTR_rowspan_;
     }
-  table = TtaGetExactTypedAncestor (cell, tableType);
+  table = TtaGetTypedAncestor (cell, tableType);
   row = TtaGetParent (cell);
 
   /* get the colspan value of the cell */
