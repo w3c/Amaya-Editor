@@ -12,7 +12,7 @@
 #
 
 # default parameters
-AMAYAVERSION="9.52"
+AMAYAVERSION="9.55"
 DEST=$HOME
 
 # Check argument number on the command line
@@ -259,7 +259,6 @@ ${AMAYADIR}/amaya/*.en \
 ${AMAYADIR}/amaya/*.h \
 ${AMAYADIR}/amaya/*.trans* \
 ${AMAYADIR}/amaya/greek.sgml \
-${AMAYADIR}/amaya/*.bmp \
 ${AMAYADIR}/amaya/*.gif \
 ${AMAYADIR}/amaya/*.png \
 ${AMAYADIR}/amaya/*.rc \
@@ -342,9 +341,6 @@ ${AMAYADIR}/dicopar/*.dic \
 ${AMAYADIR}/dicopar/*.ptn \
 ${AMAYADIR}/dicopar/alphabet \
 ${AMAYADIR}/dicopar/clavier \
-${AMAYADIR}/doc/html/*.html* \
-${AMAYADIR}/doc/html/*/*.html* \
-${AMAYADIR}/doc/html/*.css \
 ${AMAYADIR}/doc/WX/*.html* \
 ${AMAYADIR}/doc/WX/*.css \
 ${AMAYADIR}/doc/WX/HTML-elements/*.html* \
@@ -415,7 +411,7 @@ tar xzf $DEST/amaya-tmp-$AMAYAVERSION.tgz
 tar xzf $DEST/libs-tmp-$AMAYAVERSION.tgz
 \rm -r */CVS */*/CVS */*/*/CVS */*/*/*/CVS */*/*/*/*/CVS */*/*/*/*/*/CVS
 
-echo "Generating the minimum source tar file from $AMAYADIR"
+echo "Generating amaya-src tar file from $AMAYADIR"
 AMAYADIR=Amaya
 $TAR $DEST/amaya-src-$AMAYAVERSION.tgz \
 ${AMAYADIR} 
@@ -428,7 +424,7 @@ ${WXWIDGETS} \
 ${MESA} \
 ${FREETYPE}
 
-echo "Generating only the externals librairies source tar file"
+echo "Generating fullsrc tar file"
 $TAR $DEST/amaya-fullsrc-$AMAYAVERSION.tgz \
 ${AMAYADIR} \
 ${LIBWWWDIR} \
@@ -437,7 +433,7 @@ ${WXWIDGETS} \
 ${MESA} \
 ${FREETYPE} 
 
-echo "Generating the complete source tar file"
+echo "Generating sources tar file"
 cd ..
 AMAYADIR=Amaya$AMAYAVERSION
 $TAR $DEST/amaya-sources-$AMAYAVERSION.tgz \

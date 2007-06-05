@@ -310,7 +310,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF EGREP ALLOCA LIBOBJS AMAYAOS AMAYAGUI GTKCONFIG_FOUND GTK_INCLUDES GTK_LIBRARIES GL_BUILDDIR GL_INCLUDES GL_LIBRARIES WXCONFIG WX_SRCDIR WX_BUILDDIR BUILDWXWIDGETS WX_INCLUDES WX_LIBRARIES WX_LINKDEPS LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GTK_GL_INCLUDES GTK_GL_LIBRARIES FREETYPE_INCLUDES FREETYPE_LIBRARIES XFT_INCLUDES XFT_LIBRARIES REDLAND_CONFIG BUILDREDLAND AMAYA_INSTALLDIR APP_MAJVER APP_MINVER APP_SUBVER APP_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_INCLUDES DAVDIR LIBDAV WITHDAV WWWDAV ANNOTLIB_COMPILE_BM AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF EGREP ALLOCA LIBOBJS AMAYAOS AMAYAGUI GTKCONFIG_FOUND GTK_INCLUDES GTK_LIBRARIES GL_BUILDDIR GL_INCLUDES GL_LIBRARIES WXCONFIG WX_SRCDIR WX_BUILDDIR BUILDWXWIDGETS WX_INCLUDES WX_LIBRARIES WX_LINKDEPS LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GTK_GL_INCLUDES GTK_GL_LIBRARIES FREETYPE_INCLUDES FREETYPE_LIBRARIES XFT_INCLUDES XFT_LIBRARIES REDLAND_CONFIG AMAYA_INSTALLDIR APP_MAJVER APP_MINVER APP_SUBVER APP_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_INCLUDES DAVDIR LIBDAV WITHDAV WWWDAV MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER MAKEREDLAND AMAYA_RAPTOR_SRC AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
 ac_subst_files='www_frag math_frag svg_frag annot_frag dav_frag templates_frag'
 
 # Initialize some variables set by options.
@@ -14697,36 +14697,13 @@ fi
 if test "$with_redland" = "yes" ; then
 	AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DAM_REDLAND"
 	if test "$with_system_redland" != "yes" ; then
+		AMAYA_RAPTOR_SRC="amaya_comp_redland"
 		AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor "
 		AMAYA_RAPTOR_LIBS="../redland/librdf/.libs/librdf.a ../redland/raptor/.libs/libraptor.a"
 		AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor"
-		BUILDREDLAND="redland"
-		CURRENTPATH="`pwd`"
-		mkdir $BUILDREDLAND
-		cd $BUILDREDLAND &&
-			CC="$CC" CXX="$CXX" \
-			CPPFLAGS="-I$CURRENTPATH/../../libwww/modules/expat/lib" \
-			LDFLAGS="-L$CURRENTPATH/libwww/modules/expat -L$CURRENTPATH/libwww/modules/expat/.libs" \
-			../../../redland/configure \
-			--build=$build_alias --host=$host_alias --target=$target_alias \
-			--disable-shared \
-			--without-bdb \
-	 		--enable-parsers=raptor \
-	 		--with-raptor=internal \
-			--with-xml-parser=expat \
-			--with-www=none \
-			--without-libwww \
-			--without-openssl-digests \
-			--without-mysql
-			$ECHO "redland is configured"
-			$ECHO "Patching the raptor_config.h file to avoid including glib2-0"
-			$CP raptor/raptor_config.h raptor/raptor_config.h.orig
-			$SED "s/\(\#define HAVE_G_UTF8_NORMALIZE 1\)/\/* \1 *\//" \
-				raptor/raptor_config.h.orig > raptor/raptor_config.h
-			$RM raptor/raptor_config.h.orig
-			$ECHO "Raptor is patched"
-		cd ..
 	else
+		MAKEREDLAND='#'
+		AMAYA_RAPTOR_SRC=
 		redland_includes=`$REDLAND_CONFIG --cflags`
 	  redland_libs=`$REDLAND_CONFIG --libs`
  		AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS"
@@ -14739,8 +14716,6 @@ else
 fi
 
 ANNOTLIB_COMPILE_BM='#'
-
-
 
 ###################End of Annotations Support####################
 
@@ -14962,6 +14937,8 @@ AMAYA_INSTALLDIR="Amaya"
 
 
 
+
+#AC_SUBST(ANNOTLIB_COMPILE_BM)
 
 
 
@@ -15741,7 +15718,6 @@ s,@FREETYPE_LIBRARIES@,$FREETYPE_LIBRARIES,;t t
 s,@XFT_INCLUDES@,$XFT_INCLUDES,;t t
 s,@XFT_LIBRARIES@,$XFT_LIBRARIES,;t t
 s,@REDLAND_CONFIG@,$REDLAND_CONFIG,;t t
-s,@BUILDREDLAND@,$BUILDREDLAND,;t t
 s,@AMAYA_INSTALLDIR@,$AMAYA_INSTALLDIR,;t t
 s,@APP_MAJVER@,$APP_MAJVER,;t t
 s,@APP_MINVER@,$APP_MINVER,;t t
@@ -15764,11 +15740,12 @@ s,@DAVDIR@,$DAVDIR,;t t
 s,@LIBDAV@,$LIBDAV,;t t
 s,@WITHDAV@,$WITHDAV,;t t
 s,@WWWDAV@,$WWWDAV,;t t
-s,@ANNOTLIB_COMPILE_BM@,$ANNOTLIB_COMPILE_BM,;t t
-s,@AMAYA_RAPTOR_LIBS@,$AMAYA_RAPTOR_LIBS,;t t
-s,@AMAYA_RAPTOR_INCLUDES@,$AMAYA_RAPTOR_INCLUDES,;t t
 s,@MAKE_LIBWWW_RDF_PARSER@,$MAKE_LIBWWW_RDF_PARSER,;t t
 s,@LIBWWW_RDF_PARSER@,$LIBWWW_RDF_PARSER,;t t
+s,@MAKEREDLAND@,$MAKEREDLAND,;t t
+s,@AMAYA_RAPTOR_SRC@,$AMAYA_RAPTOR_SRC,;t t
+s,@AMAYA_RAPTOR_LIBS@,$AMAYA_RAPTOR_LIBS,;t t
+s,@AMAYA_RAPTOR_INCLUDES@,$AMAYA_RAPTOR_INCLUDES,;t t
 s,@SUBDIRS@,$SUBDIRS,;t t
 s,@EXTRA_MAKEFILE_IN@,$EXTRA_MAKEFILE_IN,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
