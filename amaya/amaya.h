@@ -532,6 +532,8 @@ typedef struct _DocumentMetaDataElement
 				  docid */
 #endif /* ANNOTATIONS */
 
+  ThotBool  isTemplate;			 /* True if the document is a XTiger template or library,
+  									False if template instance or not using XTiger.*/
 #ifdef TEMPLATES
   char      *template_url;       /* the url of the original template (or null if not an instance) */
   char      *template_version;   /* if this document is derived from a template,

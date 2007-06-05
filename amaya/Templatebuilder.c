@@ -183,6 +183,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
     {
     case Template_EL_head:
       CheckMandatoryAttribute (el, doc, Template_ATTR_version);
+      DocumentMeta[doc]->isTemplate = TRUE;
       break;
 
     case Template_EL_component:
