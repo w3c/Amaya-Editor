@@ -5482,6 +5482,13 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
   pLine = NULL;
   if (pAb && frame >= 1 && frame <= MAX_FRAME)
     {
+      while (pAb->AbEnclosing && pAb->AbEnclosing->AbNew)
+	{
+#ifdef THOT_DEBUG
+          TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
+#endif /* THOT_DEBUG */
+	pAb = pAb->AbEnclosing;
+	}
       pFrame = &ViewFrameTable[frame - 1];
       if (pFrame->FrAbstractBox == NULL &&
           (pAb->AbEnclosing || pAb->AbPrevious || pAb->AbNext))
