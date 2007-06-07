@@ -963,7 +963,10 @@ int TtaMakeFrame( const char * schema_name,
   InitializeFrameParams (frame_id, visilibity, zoom);
 
   /* the document title will be used to name the frame's page */
-  p_AmayaFrame->SetFrameTitle( TtaConvMessageToWX( doc_name ) );
+  if (!strcmp (doc_name, "STYLE.LST"))
+    p_AmayaFrame->SetFrameTitle( TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_CSSStyle) ) );
+  else
+    p_AmayaFrame->SetFrameTitle( TtaConvMessageToWX( doc_name ) );
 #ifdef _GL
   FrameTable[frame_id].Scroll_enabled   = TRUE;
 #endif /* _GL */

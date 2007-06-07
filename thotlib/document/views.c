@@ -740,60 +740,6 @@ int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y,
    return ret;
 }
 
-#if 0 /* not used */
-/*----------------------------------------------------------------------
-   OpenViewByMenu ouvre effectivement une vue apres les retours	
-   des menus d'ouverture de Vues                           
-  ----------------------------------------------------------------------*/
-void OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree,
-                     DocViewNumber selectedView)
-{
-   NotifyDialog        notifyDoc;
-   int                 X, Y, width, height, theView, view;
-   ThotBool            viewHasBeenOpen;
-   int                 doc_id, schView, window_id, page_id, page_position;
-
-   viewHasBeenOpen = TRUE;
-
-   if (menuItem != -1)
-      /* une vue a ete choisie dans le menu */
-      {
-      notifyDoc.event = TteViewOpen;
-      notifyDoc.document = (Document) IdentDocument (pDoc);
-      notifyDoc.view = 0;
-      if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-	 {
-	 theView = ViewMenuItem[menuItem];
-
-	 /* cherche la geometrie de la vue dans le fichier .conf */
-	 ConfigGetViewGeometry (pDoc, AllViews[theView - 1].VdViewName,
-				&X, &Y, &width, &height);
-	 /* cree effectivement la vue */
-	 view = CreateAbstractImage (pDoc, AllViews[theView - 1].VdView,
-				     AllViews[theView - 1].VdSSchema,
-				     selectedView, FALSE, subTree);
-
-          /* look for the current windows, current page, and current page position (top/bottom)*/
-	  doc_id = IdentDocument(pDoc);
-	  schView = -1; /* pDoc->DocView[view - 1].DvPSchemaView;*/
-
-	  window_id = TtaGetDocumentWindowId( doc_id, schView );
-	  TtaGetDocumentPageId( doc_id, schView, &page_id, &page_position );
-	
-          OpenCreatedView (pDoc, view, X, Y, width, height, TRUE, TRUE,
-                           window_id, page_id, page_position);
-	 
-	 if (viewHasBeenOpen)
-	    {
-	    notifyDoc.event = TteViewOpen;
-	    notifyDoc.document = (Document) IdentDocument (pDoc);
-	    notifyDoc.view = view;
-	    CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	    }
-	 }
-      }
-}
-#endif /* 0 */
 
 /*----------------------------------------------------------------------
    BuildViewList construit le menu des vues qu'il est possible	
