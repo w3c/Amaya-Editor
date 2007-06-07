@@ -33,6 +33,15 @@ extern Element InsertWithNotify ( Element el,
 extern Element Template_InsertUseChildren ( Document doc,
                                             Element el,
                                             Declaration dec );
+extern void Template_SetAccessRight ( Element el,
+                                      AccessRight right,
+                                      Document doc,
+                                      ThotBool rec );
+extern void Template_PrintRights ( Element el );
+extern void Template_FixAccessRight ( XTigerTemplate t,
+                                      Element el,
+                                      Document doc,
+                                      ThotBool rec );
 extern Element InstantiateUse ( XTigerTemplate t,
                                 Element el,
                                 Document doc,
@@ -73,6 +82,15 @@ extern Element InsertWithNotify ( Element el,
 extern Element Template_InsertUseChildren ( Document doc,
                                               Element el,
                                               Declaration dec );
+extern void Template_SetAccessRight ( Element el,
+                                        AccessRight right,
+                                        Document doc,
+                                        ThotBool rec );
+extern void Template_PrintRights ( Element el );
+extern void Template_FixAccessRight ( XTigerTemplate t,
+                                        Element el,
+                                        Document doc,
+                                        ThotBool rec );
 extern Element InstantiateUse ( XTigerTemplate t,
                                   Element el,
                                   Document doc,

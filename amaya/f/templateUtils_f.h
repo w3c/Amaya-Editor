@@ -13,6 +13,10 @@ extern void SetAttributeStringValue ( Element el,
 extern void SetAttributeStringValueWithUndo ( Element el,
                                               int att,
                                               char* value );
+extern void GiveAttributeStringValueFromNum ( Element el,
+                                              int att,
+                                              char* buff,
+                                              int* sz );
 extern char *GetAttributeStringValueFromNum ( Element el,
                                               int att,
                                               int* sz );
@@ -30,6 +34,10 @@ extern void SetAttributeStringValue ( Element el,
 extern void SetAttributeStringValueWithUndo ( Element el,
                                                 int att,
                                                 char* value );
+extern void GiveAttributeStringValueFromNum ( Element el,
+                                                int att,
+                                                char* buff,
+                                                int* sz );
 extern char *GetAttributeStringValueFromNum ( Element el,
                                                 int att,
                                                 int* sz );

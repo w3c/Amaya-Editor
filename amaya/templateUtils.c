@@ -83,6 +83,29 @@ void SetAttributeStringValueWithUndo (Element el, int att, char* value)
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+Returns the value of a string attribute without copy it 
+----------------------------------------------------------------------*/
+void GiveAttributeStringValueFromNum (Element el, int att, char* buff, int* sz)
+{
+#ifdef TEMPLATES
+  AttributeType attType;
+  Attribute     attribute;
+  int           size;
+
+  attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+  attType.AttrTypeNum = att;
+  attribute = TtaGetAttribute(el, attType);
+  
+  size = TtaGetTextAttributeLength(attribute);
+  TtaGiveTextAttributeValue (attribute, buff, &size);
+  buff[size] = EOS;
+  if(sz)
+    *sz = size;
+#endif /* TEMPLATES */
+}
+
+
 
 /*----------------------------------------------------------------------
 Returns the value of a string attribute 

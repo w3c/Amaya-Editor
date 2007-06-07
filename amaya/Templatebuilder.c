@@ -208,14 +208,14 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
       CheckMandatoryAttribute (el, doc, Template_ATTR_types);
       CheckMandatoryAttribute (el, doc, Template_ATTR_title);
       // unlock children
-      TtaSetAccessRight (el, ReadWrite, doc);
+//      TtaSetAccessRight (el, ReadWrite, doc);
       break;
 
     case Template_EL_bag:
       CheckMandatoryAttribute (el, doc, Template_ATTR_types);
       CheckMandatoryAttribute (el, doc, Template_ATTR_title);
       // unlock children
-      TtaSetAccessRight (el, ReadWrite, doc);
+//      TtaSetAccessRight (el, ReadWrite, doc);
       break;
 
     case Template_EL_attribute:
@@ -231,18 +231,18 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
     case Template_EL_repeat :
       // children must be use elements
       CheckMandatoryAttribute (el, doc, Template_ATTR_title);
-      child = TtaGetFirstChild (el);
-      if (child)
-        {
-          childType = TtaGetElementType (child);
-          if (!strcmp (TtaGetSSchemaName (childType.ElSSchema),"Template"))
-            // the first child of element "repeat" is a XTiger element
-            // unlock children
-            TtaSetAccessRight (el, ReadWrite, doc);
-        }
-      else
-        // unlock children
-        TtaSetAccessRight (el, ReadWrite, doc);
+//      child = TtaGetFirstChild (el);
+//      if (child)
+//        {
+//          childType = TtaGetElementType (child);
+//          if (!strcmp (TtaGetSSchemaName (childType.ElSSchema),"Template"))
+//            // the first child of element "repeat" is a XTiger element
+//            // unlock children
+//            TtaSetAccessRight (el, ReadWrite, doc);
+//        }
+//      else
+//        // unlock children
+//        TtaSetAccessRight (el, ReadWrite, doc);
       break;
     default:
       break;

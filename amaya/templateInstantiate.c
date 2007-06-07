@@ -144,6 +144,17 @@ void  CreateInstance(char *templatePath, char *instancePath)
       // Reload on the existing view
       Reload (alreadyOnDoc, 0);
     }
+
+  
+  // Intend to fix access rights for templates.
+  Template_PrintRights(TtaGetMainRoot(doc));
+  
+  TtaSetDisplayMode (doc, NoComputedDisplay);
+  Template_FixAccessRight(t, TtaGetMainRoot(doc), doc, TRUE);
+  TtaSetDisplayMode (doc, DisplayImmediately);
+  
+  Template_PrintRights(TtaGetMainRoot(doc));
+
 #endif /* TEMPLATES */
 }
 
@@ -457,6 +468,188 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
   return newEl;
 }
 
+
+/*----------------------------------------------------------------------
+  Set access rights.
+  \param rec if true, set rights for all children
+  ----------------------------------------------------------------------*/
+void Template_SetAccessRight(Element el, AccessRight right, Document doc, ThotBool rec)
+{
+#ifdef TEMPLATES
+  Element     child;
+  
+  if (el && doc)
+    {
+      TtaSetAccessRight(el, right, doc);
+      if (rec)
+        {
+          child = TtaGetFirstChild(el);
+          while (child)
+            {
+              Template_SetAccessRight(child, right, doc, rec);
+              TtaNextSibling(&child);
+            }
+        }
+    }
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  Dump access rights.
+  \param rec if true, set rights for all children
+  ----------------------------------------------------------------------*/
+void Template_PrintRights(Element el)
+{
+#ifdef TEMPLATES
+#ifdef AMAYA_DEBUG
+  ElementType elType;
+  Element     child;
+  
+  static int  dec = 0; 
+  
+  elType = TtaGetElementType(el);
+  printf("PrintAccessRight ");
+  for(int i=0; i<dec; i++)
+    printf("  "); 
+  printf("%s:%d:%s : ", TtaGetSSchemaName(elType.ElSSchema), elType.ElTypeNum, TtaGetElementTypeName(elType));
+  
+  dec++;
+  
+  switch(TtaGetAccessRight(el))
+  {
+  case ReadOnly:
+    printf("ReadOnly\n");
+    break;
+  case ReadWrite:
+      printf("ReadWrite\n");
+      break;
+  case Hidden:
+      printf("Hidden\n");
+      break;
+  case Inherited:
+      printf("Inherited\n");
+      break;
+  default:
+      printf("other\n");
+      break;
+  }
+  child = TtaGetFirstChild(el);
+  while (child)
+    {
+	  Template_PrintRights(child);
+      TtaNextSibling(&child);
+    }
+  dec--;
+#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATES */	
+}
+
+/*----------------------------------------------------------------------
+  Fix access rights.
+  \param rec if true, set rights for all children
+  ----------------------------------------------------------------------*/
+void Template_FixAccessRight(XTigerTemplate t, Element el, Document doc, ThotBool rec)
+{
+#ifdef TEMPLATES
+  ElementType elType;
+  Element     child;
+  char        currentType[MAX_LENGTH];
+  Declaration decl;
+  
+  static int  dec = 0; 
+  
+  if (t && el && doc)
+    {
+      elType = TtaGetElementType(el);
+      
+#ifdef AMAYA_DEBUG
+      printf("FixAccessRight ");
+      for(int i=0; i<dec; i++)
+        printf("  "); 
+      printf("%s:%d:%s : ", TtaGetSSchemaName(elType.ElSSchema), elType.ElTypeNum, TtaGetElementTypeName(elType));
+
+      dec++;
+#endif /* AMAYA_DEBUG */
+      if (elType.ElSSchema == TtaGetSSchema("Template", doc))
+        {
+          switch(elType.ElTypeNum)
+            {
+            case Template_EL_TEXT_UNIT:
+              TtaSetAccessRight( el, ReadWrite, doc);
+#ifdef AMAYA_DEBUG
+              printf("ReadWrite");
+#endif /* AMAYA_DEBUG */
+              break;
+            case Template_EL_useEl:
+            case Template_EL_useSimple:
+              GiveAttributeStringValueFromNum(el, Template_ATTR_currentType,
+                                              (char*)currentType, NULL);
+              decl = Template_GetDeclaration(t, currentType);
+              if (decl)
+                {
+                  switch (decl->nature)
+                    {
+                      case SimpleTypeNat:
+                      case XmlElementNat:
+#ifdef AMAYA_DEBUG
+                    	printf("ReadWrite\n");
+#endif /* AMAYA_DEBUG */
+                        Template_SetAccessRight(el, ReadWrite, doc, TRUE);
+                        rec = FALSE;
+                        break;
+                      default:
+#ifdef AMAYA_DEBUG
+                        printf("ReadOnly\n");
+#endif /* AMAYA_DEBUG */
+                        TtaSetAccessRight(el, ReadOnly, doc);
+                        break;
+                    }
+                }
+#ifdef AMAYA_DEBUG
+              else
+            	  printf("no decl\n");
+#endif /* AMAYA_DEBUG */
+              break;
+            case Template_EL_bag:
+#ifdef AMAYA_DEBUG
+              printf("ReadWrite\n");
+#endif /* AMAYA_DEBUG */
+              TtaSetAccessRight(el, ReadWrite, doc);
+              break;
+            default:
+#ifdef AMAYA_DEBUG
+              printf("ReadOnly\n");
+#endif /* AMAYA_DEBUG */
+              TtaSetAccessRight(el, ReadOnly, doc);
+              break;
+            }
+        }
+//      else (elType.ElSSchema == TtaGetSSchema("HTML", doc))
+//      {
+//        
+//      }
+      else
+        {
+#ifdef AMAYA_DEBUG
+    	  printf("Inherited\n");
+#endif /* AMAYA_DEBUG */
+          TtaSetAccessRight(el, Inherited, doc);
+        }
+
+      if (rec)
+        {
+          child = TtaGetFirstChild(el);
+          while (child)
+            {
+              Template_FixAccessRight(t, child, doc, rec);
+              TtaNextSibling(&child);
+            }
+        }
+      dec--;
+    }
+#endif /* TEMPLATES */
+}
+
 /*----------------------------------------------------------------------
   InstantiateUse
   ----------------------------------------------------------------------*/
@@ -511,6 +704,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
     TtaFreeMemory(items[i].label);
   TtaFreeMemory(items);
   TtaSetStructureChecking (oldStructureChecking, doc);
+  
   return cont;
 #else /* TEMPLATES */
   return NULL;

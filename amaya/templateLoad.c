@@ -18,6 +18,7 @@
 #include "AHTURLTools_f.h"
 #include "HTMLactions_f.h"
 #include "init_f.h"
+#include "Xml2thot_f.h"
 
 #ifdef TEMPLATES
 #include "Template.h"
@@ -159,7 +160,7 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
         {
         case Template_EL_component:
           name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
-          if(name)
+          if(name && name[0])
             Template_DeclareNewComponent (t, name, el);
           TtaFreeMemory (name);
           break;
