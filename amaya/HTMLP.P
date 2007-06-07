@@ -4572,7 +4572,7 @@ RULES
         CreateWith(VerticalLine);
         if not RowExt and  immediately within Table_row
           CreateBefore(CellFrame);
-        VertPos : Top = Enclosing . Top;
+        VertPos : Top = Enclosing Table_row. Top;
         HorizPos: Left = Previous Table_cell . Right;
         Width: Enclosed . Width {20 px};
         Adjust: Enclosing =;

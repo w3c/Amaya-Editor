@@ -370,7 +370,7 @@ Element InsertWithNotify (Element el, Element child, Element parent, Document do
   if (isCell)
     {
       // a cell is created
-      //NewCell (el, doc, FALSE, FALSE, TRUE);
+      NewCell (el, doc, TRUE, TRUE, TRUE);
     }
   else if (isRow)
     {

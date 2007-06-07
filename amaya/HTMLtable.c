@@ -86,26 +86,114 @@ static Element GetSiblingCell (Element cell, ThotBool before, ThotBool inMath)
 {
   ElementType         elType;
   SSchema             cellSS;
+  Element             sibling, child, ancestor, prev;
 
-  if (cell)
+  sibling = cell;
+  if (sibling)
     {
       cellSS = TtaGetElementType(cell).ElSSchema;
       do
         {
           if (before)
-            TtaPreviousSibling (&cell);
+            TtaPreviousSibling (&sibling);
           else
-            TtaNextSibling (&cell);
-          elType = TtaGetElementType (cell);
-          if (elType.ElSSchema == cellSS &&
-              ((inMath && elType.ElTypeNum == MathML_EL_MTD) ||
-               (!inMath && (elType.ElTypeNum == HTML_EL_Data_cell ||
-                            elType.ElTypeNum == HTML_EL_Heading_cell))))
-            return cell;
+            TtaNextSibling (&sibling);
+          if (sibling)
+            {
+              elType = TtaGetElementType (sibling);
+              if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+                /* it's a Template element. Look for its first descendant that
+                   is not a Template element */
+                {
+                  child = sibling;
+                  do
+                    {
+                      child = TtaGetFirstChild (child);
+                      if (child)
+                        elType = TtaGetElementType (child);
+                    }
+                  while (child &&
+                   !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"));
+                  if (child)
+                    return child;
+                  else
+                    // ignore empty template elements
+                    return GetSiblingCell (sibling, before, inMath);
+                }
+              else
+                if (elType.ElSSchema == cellSS &&
+                    ((inMath && elType.ElTypeNum == MathML_EL_MTD) ||
+                     (!inMath && (elType.ElTypeNum == HTML_EL_Data_cell ||
+                                  elType.ElTypeNum == HTML_EL_Heading_cell))))
+                  return sibling;
+            }
+          else
+            /* no sibling. If the ancestor is a Template element, find the last
+               ancestor that is a Template element and take its next sibling */
+            {
+              ancestor = TtaGetParent (cell);
+              prev = NULL;
+              while (ancestor)
+                {
+                  elType = TtaGetElementType (ancestor);
+                  if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"Template"))
+                    /* this ancestor is not a Template element */
+                    {
+                      /* take the sibling of the previous ancestor */
+                      if (prev)
+                        {
+                          sibling = prev;
+                          if (before)
+                            TtaPreviousSibling (&sibling);
+                          else
+                            TtaNextSibling (&sibling);
+                        }
+                      else
+                        sibling = NULL;
+                      ancestor = NULL;
+                    }
+                  else
+                    {
+                      /* this ancestor is a Template element. Remember it and
+                         get the next ancestor */
+                      prev = ancestor;
+                      sibling = ancestor;
+                      if (before)
+                        TtaPreviousSibling (&sibling);
+                      else
+                        TtaNextSibling (&sibling);
+                      if (!sibling)
+                        ancestor = TtaGetParent (ancestor);
+                      else
+                        {
+                          elType = TtaGetElementType (sibling);
+                          if (strcmp (TtaGetSSchemaName (elType.ElSSchema),
+                                      "Template"))
+                            /* not a template element */
+                            ancestor = NULL;
+                          else
+                            /* it's a Template element. Look for its first
+                               descendant that is not a Template element */
+                            {
+                              child = sibling;
+                              do
+                                {
+                                  child = TtaGetFirstChild (child);
+                                  if (child)
+                                    elType = TtaGetElementType (child);
+                                }
+                              while (child &&
+                                     !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"));
+                              return child;
+                            } 
+                        }
+                    }
+                }
+            }
         } 
-      while (cell);
+      while (sibling);
     }
-  return cell;
+  return sibling;
 }
 
 /*----------------------------------------------------------------------
@@ -123,6 +211,14 @@ static Element GetFirstCellOfRow (Element row, ThotBool inMath)
     {
       rowType = TtaGetElementType (row);
       el = TtaGetFirstChild (row);
+      // skip template elements
+      elType = TtaGetElementType (el);
+      while (el && !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+        {
+          el = TtaGetFirstChild (el);
+          if (el)
+            elType = TtaGetElementType (el);
+        }
       while (!firstCell && el)
         {
           elType = TtaGetElementType (el);
@@ -968,7 +1064,7 @@ static Element NextRow (Element row)
         }
     }
   else
-    /* no sibling. If the ancestor is a Tepmlate element, find the last
+    /* no sibling. If the ancestor is a Template element, find the last
        ancestor that is a Template element and take its next sibling */
     {
       ancestor = TtaGetParent (row);
@@ -1143,7 +1239,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
               while (nextCell)
                 {
                   cell = nextCell;
-                  TtaNextSibling (&nextCell);
+                  nextCell = GetSiblingCell (nextCell, FALSE, inMath);
                   elType = TtaGetElementType (cell);
                   if (!inMath && elType.ElTypeNum == HTML_EL_Table_cell)
                     {
@@ -1433,6 +1529,10 @@ void CheckTable (Element table, Document doc)
   ThotBool            previousStructureChecking;
   ThotBool            before, inMath;
 
+  if (DocumentMeta[doc] && DocumentMeta[doc]->isTemplate)
+    /* do not check the structure of a table when loading a template.
+       Checking will be done when instanciating a template */
+    return;
   firstcolhead = NULL;
   previousStructureChecking = 0;
   if (table)
@@ -1789,7 +1889,7 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
               ThotBool generateEmptyCells, ThotBool check)
 {
   Element             newcell, row, colhead, lastColhead, chead, pcell,
-    spannedCell;
+                      spannedCell;
   ElementType         elType;
   AttributeType       attrTypeCspan, attrTypeRspan, attrTypeRefC;
   Attribute           attr;
