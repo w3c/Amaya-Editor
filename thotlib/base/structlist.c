@@ -4298,7 +4298,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
   if (rule->PrSpecificity == 1000)
     fprintf (fileDescriptor, "line %d, style attribute\n", rule->PrCSSLine);
   else if (rule->PrCSSURL)
-    fprintf (fileDescriptor, "line %d, file %s\n", rule->PrCSSLine,
+    fprintf (fileDescriptor, "line %d, %s\n", rule->PrCSSLine,
              rule->PrCSSURL);
   else
     fprintf (fileDescriptor, "line %d, style element\n", rule->PrCSSLine);
