@@ -2498,7 +2498,7 @@ static void ClearColumn (Element colhead, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  DeleteDeleteTable
+  DeleteTable
   A table will be deleted by the user.
   ----------------------------------------------------------------------*/
 ThotBool DeleteTable (NotifyElement * event)
@@ -2509,6 +2509,7 @@ ThotBool DeleteTable (NotifyElement * event)
       ParentDeletedTable = TtaGetParent (event->element);
       DeletedTable = event->element;
     }
+  return FALSE;		/* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
@@ -2526,7 +2527,7 @@ void TableDeleted (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  DeleteDeleteTBody
+  DeleteTBody
   A tbody will be deleted by the user.
   ----------------------------------------------------------------------*/
 ThotBool DeleteTBody (NotifyElement * event)
