@@ -3720,7 +3720,6 @@ Document LoadDocument (Document doc, char *pathname,
     s = tempfile;
   else
     s = pathname;
-
   CheckDocHeader (s, &xmlDec, &withDoctype, &isXML, &useMath, &isknown,
                   &docProfile, &charset, charsetname, &thotType);
   docType = thotType;
@@ -4064,6 +4063,8 @@ Document LoadDocument (Document doc, char *pathname,
       strcpy (SavingFile, tempfile);
       SavingDocument = 0;
       SavingObject = 0;
+      TtaFreeMemory (localdoc);
+      // generate the saving path
       localdoc = (char *)TtaGetMemory (MAX_LENGTH);
       TtaExtractName (pathname, tempfile, localdoc);
       /* reinitialize directories and document lists */
@@ -4115,7 +4116,7 @@ Document LoadDocument (Document doc, char *pathname,
                                          documentname, docType, 0, FALSE,
                                          docProfile, method);
             }
-          else if (method == CE_ABSOLUTE  || method == CE_HELP ||
+          else if (method == CE_ABSOLUTE  || method == CE_HELP || method == CE_INSTANCE  ||
                    method == CE_FORM_POST || method == CE_FORM_GET)
             /* replace the current document by a new one */
             newdoc = InitDocAndView (doc,
@@ -4180,48 +4181,48 @@ Document LoadDocument (Document doc, char *pathname,
             }
         }
 
+      localdoc = GetLocalPath (newdoc, pathname);
       /* what we have to do if doc and targetDocument are different */
-      if (tempfile[0] != EOS)
+      if (method == CE_INSTANCE)
+        // only the temporary file exists
+        CheckDocHeader (localdoc, &xmlDec, &withDoctype, &isXML, &useMath, &isknown,
+                        &docProfile, &charset, charsetname, &thotType);
+      else if (tempfile[0] != EOS)
         {
           /* It is a document loaded from the Web */
           if (!TtaFileExist (tempfile))
             {
               /* Nothing is loaded */
               ResetStop (doc);
+              TtaFreeMemory (localdoc);
               TtaFreeMemory (content_type);
               return (0);
             }
           /* we have to rename the temporary file */
-          /* allocate and initialize a teporary document */
-          localdoc = GetLocalPath (newdoc, pathname);
-          if (strcmp (tempfile, localdoc))
+          // the loaded file is different
+          TtaFileUnlink (localdoc);
+          if (doc != newdoc)
             {
-              // the loaded file is different
-              TtaFileUnlink (localdoc);
-              if (doc != newdoc)
-                {
-                  /* now we can rename the local name of a remote document */
-                  TtaFileCopy (tempfile, localdoc);
-                  TtaFileUnlink (tempfile);
-                  /* if it's an IMAGEfile, we copy it too to the new directory */
-                  if (DocumentTypes[newdoc] == docImage)
-                    MoveImageFile (doc, newdoc, documentname);
-                }
-              else if (DocumentTypes[newdoc] == docCSS)
-                TtaFileCopy (tempfile, localdoc);
               /* now we can rename the local name of a remote document */
-              else
-                /* now we can rename the local name of a remote document */
-                TtaFileRename (tempfile, localdoc);
+              TtaFileCopy (tempfile, localdoc);
+              TtaFileUnlink (tempfile);
+              /* if it's an IMAGEfile, we copy it too to the new directory */
+              if (DocumentTypes[newdoc] == docImage)
+                MoveImageFile (doc, newdoc, documentname);
             }
+          else if (DocumentTypes[newdoc] == docCSS)
+            TtaFileCopy (tempfile, localdoc);
+          /* now we can rename the local name of a remote document */
+          else
+            /* now we can rename the local name of a remote document */
+            TtaFileRename (tempfile, localdoc);
         }
       else
         {
           /* store a copy of the local document */
           /* allocate and initialize a teporary document */
-          localdoc = GetLocalPath (newdoc, pathname);
-	  
-          TtaFileCopy (pathname, localdoc);
+          if (method != CE_INSTANCE)
+            TtaFileCopy (pathname, localdoc);
         }
 
 #ifdef BOOKMARKS
@@ -5381,13 +5382,13 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
                 s = "";
               sprintf (tempdocument, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
               if (proxyName != NULL)
-		{
-		  strcpy (proxymsg, "Used proxy: ");
-		  strcat (proxymsg, proxyName);
-		  InitConfirm3L (newdoc, 1, tempdocument, s, proxymsg, FALSE);
-		}
-	      else
-		InitConfirm3L (newdoc, 1, tempdocument, s, NULL, FALSE);
+                {
+                  strcpy (proxymsg, "Used proxy: ");
+                  strcat (proxymsg, proxyName);
+                  InitConfirm3L (newdoc, 1, tempdocument, s, proxymsg, FALSE);
+                }
+              else
+                InitConfirm3L (newdoc, 1, tempdocument, s, NULL, FALSE);
             }
         }
 
@@ -5742,7 +5743,8 @@ Document GetAmayaDoc (char *urlname, char *form_data,
           else if (method == CE_MAKEBOOK || method == CE_TEMPLATE)
             mode = AMAYA_ASYNC;
 
-          if (IsW3Path (initial_url))
+          // for new created template instances, the temporary file is parsed
+          if (method != CE_INSTANCE && IsW3Path (initial_url))
             {
               css = SearchCSS (0, initial_url, NULL, &pInfo);
               if (method == CE_MAKEBOOK || method == CE_RELATIVE  || method == CE_TEMPLATE)
@@ -6106,26 +6108,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
                     }
                   else
                     {
-#ifdef IV
-                      if (IsMathMLName (tempfile))
-                        NewDocType = docMath;
-                      else if (IsSVGName (tempfile))
-                        NewDocType = docSVG;
-                      else if (IsCSSName (tempfile))
-                        NewDocType = docCSS;
-#ifdef XML_GENERIC
-                      else if (IsXMLName (tempfile))
-                        NewDocType = docXml;
-#endif /* XML_GENERIC */
-#ifdef _SVG
-                      else if (IsLibraryName (tempfile))
-                        NewDocType = docLibrary;
-#endif /* _SVG */
-                      else
-                        NewDocType = docHTML;
-                      InitializeNewDoc (tempfile, NewDocType, CurrentDocument,
-                                        NewDocProfile, NewXML);
-#endif /* IV */
                       NotFoundDoc (tempfile, CurrentDocument);
                     }
                 }

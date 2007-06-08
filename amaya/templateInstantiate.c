@@ -68,7 +68,7 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
     newdoc = TtaGetNextDocumentIndex ();
   else
     newdoc = basedoc;
-#ifdef IV
+#ifndef IV
   localFile = GetLocalPath (newdoc, instancePath);
 #else
   localFile = TtaStrdup (instancePath);
@@ -132,7 +132,6 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
             TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLTX");
           break;
         default:
-          localFile = GetLocalPath (newdoc, instancePath);
           TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL);
           break;
         }
@@ -142,7 +141,7 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
       TtaClearUndoHistory (doc);
       RemoveParsingErrors (doc);
 
-#ifdef IV
+#ifndef IV
       GetAmayaDoc (instancePath, NULL, basedoc, basedoc, CE_INSTANCE,
                    !DontReplaceOldDoc, NULL, NULL);
       TtaSetDocumentModified (newdoc);
