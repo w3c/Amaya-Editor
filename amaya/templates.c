@@ -29,6 +29,7 @@
 #include "templateLoad_f.h"
 #include "templateDeclarations_f.h"
 #include "templateInstantiate_f.h"
+#include "Templatebuilder_f.h"
 #include "appdialogue_wx.h"
 #include "init_f.h"
 #include "wxdialogapi_f.h"
@@ -1164,8 +1165,8 @@ ThotBool UseSimpleButtonClicked (NotifyElement *event)
 ThotBool OptionButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
-  Element         child, grandChild, next;
-  ElementType     elType, elType1;
+  Element         useEl, contentEl, next;
+  ElementType     useType, optType;
   Document        doc;
   XTigerTemplate  t;
   View            view;
@@ -1178,39 +1179,49 @@ ThotBool OptionButtonClicked (NotifyElement *event)
     return FALSE; /* let Thot perform normal operation */
 
   doc = event->document;
-  child = TtaGetFirstChild (event->element);
-  if (!child)
+  useEl = TtaGetFirstChild (event->element);
+  if (!useEl)
     return FALSE; /* let Thot perform normal operation */
-  elType = TtaGetElementType (child);
-  elType1 = TtaGetElementType (event->element);
-  if ((elType.ElTypeNum != Template_EL_useEl &&
-       elType.ElTypeNum != Template_EL_useSimple) ||
-      elType.ElSSchema != elType1.ElSSchema)
+  useType = TtaGetElementType (useEl);
+  optType = TtaGetElementType (event->element);
+  if ((useType.ElTypeNum != Template_EL_useEl &&
+		  useType.ElTypeNum != Template_EL_useSimple) ||
+		  useType.ElSSchema != optType.ElSSchema)
     return FALSE;
 
+  TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
+  
   TtaCancelSelection (doc);
-  grandChild = TtaGetFirstChild (child);
-  if (!grandChild)
+  
+  contentEl = TtaGetFirstChild (useEl);
+  if (!contentEl)
     /* the "use" element is empty. Instantiate it */
     {
       t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
       if (!t)
         return FALSE; // no template ?!?!
-      InstantiateUse (t, child, doc, TRUE);
+      InstantiateUse (t, useEl, doc, TRUE);
     }
   else
     /* remove the content of the "use" element */
     {
       do
         {
-          next = grandChild;
+          next = contentEl;
           TtaNextSibling (&next);
-          TtaDeleteTree (grandChild, doc);
-          grandChild = next;
+          TtaRegisterElementDelete(contentEl, doc);
+          TtaDeleteTree (contentEl, doc);
+          contentEl = next;
         }
       while (next);
+      if (NeedAMenu (useEl, doc))
+        {
+          TtaChangeTypeOfElement (useEl, doc, Template_EL_useEl);
+          TtaRegisterElementTypeChange(useEl, Template_EL_useSimple, doc);
+        }
     }
   TtaSelectElement (doc, event->element);
+  TtaCloseUndoSequence(doc);
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
   return TRUE;
