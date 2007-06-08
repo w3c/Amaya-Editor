@@ -462,6 +462,8 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
         //Impossible
         break;   
     }
+    Template_FixAccessRight (dec->usedIn, el, doc);
+    TtaUpdateAccessRightInViews (doc, el);    
   }  
 #endif /* TEMPLATES */
   return newEl;
@@ -582,6 +584,9 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
     TtaFreeMemory(items[i].label);
   TtaFreeMemory(items);
   TtaSetStructureChecking (oldStructureChecking, doc);
+  
+  Template_FixAccessRight (t, el, doc);
+  TtaUpdateAccessRightInViews (doc, el);
   
   return cont;
 #else /* TEMPLATES */
@@ -744,6 +749,9 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
       childrenCount++;
     }
     
+  Template_FixAccessRight (t, el, doc);
+  TtaUpdateAccessRightInViews (doc, el);
+  
   TtaFreeMemory (types);
   TtaFreeMemory (title);
 #endif /* TEMPLATES */
