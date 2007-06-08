@@ -39,7 +39,8 @@ DisplayMode;
   Return value:
   the view opened or 0 if the view cannot be opened.
    ----------------------------------------------------------------------*/
-extern View TtaOpenMainView (Document document, const char * doctypename, int x, int y, int w, int h,
+extern View TtaOpenMainView (Document document, const char * doctypename,
+                             int x, int y, int w, int h,
                              ThotBool withMenu, ThotBool withButton,
                              int window_id, int page_id, int page_position);
 
@@ -422,6 +423,16 @@ extern void TtaSetDisplayMode (Document document, DisplayMode newDisplayMode);
 extern DisplayMode  TtaGetDisplayMode (Document document);
 
 /*----------------------------------------------------------------------
+  TtaUpdateAccessRightInViews
+
+  Update ReadOnly status of the element and its children in all views
+  Parameter:
+  document: the document.
+  element: the root element of the updated tree
+  ----------------------------------------------------------------------*/
+extern void TtaUpdateAccessRightInViews (Document document, Element element);
+
+/*----------------------------------------------------------------------
   TtaLockTableFormatting suspends all tables formatting
   ----------------------------------------------------------------------*/
 extern void TtaLockTableFormatting ();
@@ -452,7 +463,6 @@ extern void TtaListView (Document document, View view, FILE *fileDescriptor);
    TtaListBoxes
 
    Produces in a file a human-readable form of the boxes.
-
    Parameters:
    document: the document.
    view: the view.

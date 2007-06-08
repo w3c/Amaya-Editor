@@ -344,13 +344,36 @@ void BuildAbstractBoxes (PtrElement pEl, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
+  TransmitAccessRight
+  Updates access rights to element abstract boxes and all children.
+  ----------------------------------------------------------------------*/
+static void TransmitAccessRight (PtrAbstractBox pAb, ThotBool ro)
+{
+  if (pAb == NULL)
+    return;
+  pAb->AbReadOnly = ro;
+  pAb = pAb->AbFirstEnclosed;
+  while (pAb)
+    {
+      if (pAb && !pAb->AbPresentationBox && pAb->AbElement)
+        {
+          if (pAb->AbElement->ElAccess == Inherited)
+            TransmitAccessRight (pAb, ro);
+          else
+            TransmitAccessRight (pAb, pAb->AbElement->ElAccess == ReadOnly);
+        }
+      pAb = pAb->AbNext;
+    }
+}
+
+/*----------------------------------------------------------------------
   RedisplayNewElement affiche un element qui vient d'etre ajoute'    
   dans un arbre abstrait.                                         
   ----------------------------------------------------------------------*/
-void   RedisplayNewElement (Document document,
-                            PtrElement newElement,
-                            PtrElement sibling, ThotBool first,
-                            ThotBool creation)
+void RedisplayNewElement (Document document,
+                          PtrElement newElement,
+                          PtrElement sibling, ThotBool first,
+                          ThotBool creation)
 {
   PtrDocument         pDoc;
 
@@ -982,7 +1005,7 @@ ThotBool IsSelectionRegistered (Document doc, ThotBool *abort)
   doc: the document.
   NewDisplayMode: new display mode for that document.
   ----------------------------------------------------------------------*/
-void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
+void TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
 {
   DisplayMode       oldDisplayMode;
   PtrDocument       pDoc;
@@ -1130,7 +1153,7 @@ void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
   Return value:
   current display mode for that document.
   ----------------------------------------------------------------------*/
-DisplayMode         TtaGetDisplayMode (Document document)
+DisplayMode TtaGetDisplayMode (Document document)
 {
   DisplayMode         result;
 
@@ -1145,4 +1168,40 @@ DisplayMode         TtaGetDisplayMode (Document document)
     /* parameter document is ok */
     result = documentDisplayMode[document - 1];
   return result;
+}
+
+/*----------------------------------------------------------------------
+  TtaUpdateAccessRightInViews
+
+  Update ReadOnly status of the element and its children in all views
+  Parameter:
+  document: the document.
+  element: the root element of the updated tree
+  ----------------------------------------------------------------------*/
+void TtaUpdateAccessRightInViews (Document document, Element element)
+{
+  PtrElement          pEl = (PtrElement) element;
+  int                 view;
+
+  UserErrorCode = 0;
+  /* Checks the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (documentDisplayMode[document - 1] == NoComputedDisplay)
+    return;
+  else
+    {
+      for (view = 0; view < MAX_VIEW_DOC; view++)
+        {
+          if (LoadedDocument[document - 1]->DocView[view].DvPSchemaView > 0 &&
+              pEl->ElAbstractBox[view])
+            /* transmit access rigth */
+            TransmitAccessRight (pEl->ElAbstractBox[view],
+                                 pEl->ElAccess == ReadOnly);
+        }
+    }
 }

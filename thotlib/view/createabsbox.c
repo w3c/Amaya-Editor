@@ -525,10 +525,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
     pAb->AbSensitive = TRUE;
   pAb->AbReadOnly = FALSE;
   if (ro || ElementIsReadOnly (pEl))
-    {
-      pAb->AbCanBeModified = FALSE;
-      pAb->AbReadOnly = TRUE;
-    }
+    pAb->AbReadOnly = TRUE;
   pAb->AbNew = TRUE;
   pAb->AbDead = FALSE;
   pAb->AbWidthChange = FALSE;

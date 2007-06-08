@@ -7,7 +7,8 @@
 #ifdef __STDC__
 
 extern void CreateInstance ( char *templatePath,
-                             char *instancePath );
+                             char *instancePath,
+                             int basedoc );
 extern void InstantiateTemplate_callback ( int newdoc,
                                            int status,
                                            char *urlName,
@@ -33,15 +34,9 @@ extern Element InsertWithNotify ( Element el,
 extern Element Template_InsertUseChildren ( Document doc,
                                             Element el,
                                             Declaration dec );
-extern void Template_SetAccessRight ( Element el,
-                                      AccessRight right,
-                                      Document doc,
-                                      ThotBool rec );
-extern void Template_PrintRights ( Element el );
 extern void Template_FixAccessRight ( XTigerTemplate t,
                                       Element el,
-                                      Document doc,
-                                      ThotBool rec );
+                                      Document doc );
 extern Element InstantiateUse ( XTigerTemplate t,
                                 Element el,
                                 Document doc,
@@ -56,7 +51,8 @@ extern void Template_PreInstantiateComponents ( XTigerTemplate t );
 #else /* __STDC__ */
 
 extern void CreateInstance ( char *templatePath,
-                               char *instancePath );
+                               char *instancePath,
+                               int basedoc );
 extern void InstantiateTemplate_callback ( int newdoc,
                                              int status,
                                              char *urlName,
@@ -82,15 +78,9 @@ extern Element InsertWithNotify ( Element el,
 extern Element Template_InsertUseChildren ( Document doc,
                                               Element el,
                                               Declaration dec );
-extern void Template_SetAccessRight ( Element el,
-                                        AccessRight right,
-                                        Document doc,
-                                        ThotBool rec );
-extern void Template_PrintRights ( Element el );
 extern void Template_FixAccessRight ( XTigerTemplate t,
                                         Element el,
-                                        Document doc,
-                                        ThotBool rec );
+                                        Document doc );
 extern Element InstantiateUse ( XTigerTemplate t,
                                   Element el,
                                   Document doc,

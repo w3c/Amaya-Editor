@@ -64,6 +64,8 @@ extern ThotBool IsSelectionRegistered ( Document doc,
 extern void TtaSetDisplayMode ( Document doc,
                                 DisplayMode newDisplayMode );
 extern DisplayMode TtaGetDisplayMode ( Document document );
+extern void TtaUpdateAccessRightInViews ( Document document,
+                                          Element element );
 
 #else /* __STDC__ */
 
@@ -125,6 +127,8 @@ extern ThotBool IsSelectionRegistered ( Document doc,
 extern void TtaSetDisplayMode ( Document doc,
                                   DisplayMode newDisplayMode );
 extern DisplayMode TtaGetDisplayMode ( Document document );
+extern void TtaUpdateAccessRightInViews ( Document document,
+                                            Element element );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

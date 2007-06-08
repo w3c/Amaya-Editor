@@ -272,39 +272,6 @@ extern int       menu_item;
 extern void InitMathML ();
 extern void InitTemplates ();
 
-/* the structure used for storing the context of the 
-   GetAmayaDoc_callback function */
-typedef struct _AmayaDoc_context
-{
-  Document   doc;
-  Document   baseDoc;
-  ThotBool   history;
-  ThotBool   local_link;
-  char      *target;
-  char      *documentname; /* the document name */
-  char      *initial_url;  /* initial loaded URL */
-  char      *form_data;
-  int        method;
-  ThotBool   inNewWindow;
-  TTcbf     *cbf;
-  void      *ctx_cbf;
-} AmayaDoc_context;
-
-/* the structure used for storing the context of the 
-   Reload_callback function */
-typedef struct _RELOAD_context
-{
-  Document   newdoc;
-  char      *documentname;
-  char      *form_data;
-  int        method;
-  int        position;	/* volume preceding the the first element to be shown */
-  int        distance; /* distance from the top of the window to the top of this
-                   element (% of the window height) */
-  int        visibility; /* register the current visibility */
-  ThotBool   maparea; /* register the current maparea */
-} RELOAD_context;
-
 typedef enum
   {
     OpenDocBrowser,
@@ -4227,22 +4194,26 @@ Document LoadDocument (Document doc, char *pathname,
           /* we have to rename the temporary file */
           /* allocate and initialize a teporary document */
           localdoc = GetLocalPath (newdoc, pathname);
-          TtaFileUnlink (localdoc);
-          if (doc != newdoc)
+          if (strcmp (tempfile, localdoc))
             {
+              // the loaded file is different
+              TtaFileUnlink (localdoc);
+              if (doc != newdoc)
+                {
+                  /* now we can rename the local name of a remote document */
+                  TtaFileCopy (tempfile, localdoc);
+                  TtaFileUnlink (tempfile);
+                  /* if it's an IMAGEfile, we copy it too to the new directory */
+                  if (DocumentTypes[newdoc] == docImage)
+                    MoveImageFile (doc, newdoc, documentname);
+                }
+              else if (DocumentTypes[newdoc] == docCSS)
+                TtaFileCopy (tempfile, localdoc);
               /* now we can rename the local name of a remote document */
-              TtaFileCopy (tempfile, localdoc);
-              TtaFileUnlink (tempfile);
-              /* if it's an IMAGEfile, we copy it too to the new directory */
-              if (DocumentTypes[newdoc] == docImage)
-                MoveImageFile (doc, newdoc, documentname);
+              else
+                /* now we can rename the local name of a remote document */
+                TtaFileRename (tempfile, localdoc);
             }
-          else if (DocumentTypes[newdoc] == docCSS)
-            TtaFileCopy (tempfile, localdoc);
-          /* now we can rename the local name of a remote document */
-          else
-            /* now we can rename the local name of a remote document */
-            TtaFileRename (tempfile, localdoc);
         }
       else
         {

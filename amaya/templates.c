@@ -166,6 +166,8 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
     /* The config file dont exist, create it. */
     file = TtaWriteOpen ((char *)path);
     fprintf (file, "http://www.w3.org/Amaya/Templates/cv.xtd\n");
+    fprintf (file, "http://www.w3.org/Amaya/Templates/slides.xtd\n");
+    fprintf (file, "http://www.w3.org/Amaya/Templates/ACM-Proc-Article.xtd\n");
     TtaWriteClose (file);
     /* Retry to open it.*/
     file = TtaReadOpen ((char *)path);
@@ -327,7 +329,7 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
 
   LoadTemplate (0, templatename);
   DontReplaceOldDoc = dontReplace;
-  CreateInstance (templatename, docname);
+  CreateInstance (templatename, docname, doc);
 #endif /* TEMPLATES */
 }
 
@@ -1221,13 +1223,27 @@ ThotBool OptionButtonClicked (NotifyElement *event)
 void CheckTemplate (Document doc)
 {
 #ifdef TEMPLATES
-  if (DocumentMeta[doc] && DocumentMeta[doc]->template_url &&
-      !GetXTigerTemplate (DocumentMeta[doc]->template_url))
+  Element    root;
+
+  if (DocumentMeta[doc] && DocumentMeta[doc]->template_url)
     {
-      // the template cannot be loaded
-      InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_BAD_TEMPLATE));
-      TtaSetAccessRight (TtaGetRootElement (doc), ReadOnly, doc);
-      TtaSetDocumentAccessMode (doc, 0); // document readonly
+      XTigerTemplate   t;
+
+      root = TtaGetRootElement (doc);
+      TtaSetAccessRight (root, ReadOnly, doc);
+      t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
+      if (t == NULL)
+        {
+          // the template cannot be loaded
+          InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_BAD_TEMPLATE));
+          TtaSetDocumentAccessMode (doc, 0); // document readonly
+        }
+      else
+        {
+          // fix all access rights in the instance
+          Template_FixAccessRight (t, root, doc);
+          TtaUpdateAccessRightInViews (doc, root);
+        }
     }
 #endif /* TEMPLATES */
 }

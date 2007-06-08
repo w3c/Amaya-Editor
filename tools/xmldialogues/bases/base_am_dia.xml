@@ -2988,8 +2988,8 @@
 <message xml:lang="tw">區域統計(&amp;S)</message>
 <message xml:lang="sk">&amp;Očíslovať podkapitoly</message></label>
 <label define="BMakeToc">
-<message xml:lang="en">&amp;Add Table of contents</message>
-<message xml:lang="fr">&amp;Ajouter table des matières</message>
+<message xml:lang="en">&amp;Add/Update Table of contents</message>
+<message xml:lang="fr">&amp;Ajouter/Actualiser la table des matières</message>
 <message xml:lang="es">&amp;Generar índice de materias</message>
 <message xml:lang="ru">Создать оглавление</message>
 <message xml:lang="de">Inhaltsverzeichnis erzeugen</message>
@@ -3001,7 +3001,7 @@
 <message xml:lang="sk">&amp;Vytvoriť obsah</message></label>
 <label define="BDate">
 <message xml:lang="en">Insert time stamp</message>
-<message xml:lang="fr">Insérer date de mise à jour</message>
+<message xml:lang="fr">Insérer la date de mise à jour</message>
 <message xml:lang="es">Insertar fecha y hora actual</message>
 <message xml:lang="de">Zeitstempel einfügen</message>
 <message xml:lang="it">Inserisci timestamp</message>
@@ -3617,7 +3617,7 @@
 <message xml:lang="sk">Prilepiť adresu odkazu</message></label>
 <label define="BLinkTarget">
 <message xml:lang="en">&amp;Link to previous target</message>
-<message xml:lang="fr">&amp;Lier la cible créée</message>
+<message xml:lang="fr">&amp;Lier à la cible créée</message>
 <message xml:lang="it">Collega al precedente obiettivo</message>
 <message xml:lang="de">Auf vorherigen Anker</message>
 <message xml:lang="es">Enlazar último destino &amp;creado</message>
@@ -3632,7 +3632,7 @@
 <message xml:lang="sk">&amp;Prepojiť s predošlou záložkou</message></label>
 <label define="BCreateLink">
 <message xml:lang="en">&amp;Create or change link...</message>
-<message xml:lang="fr">&amp;Créer/changer lien...</message>
+<message xml:lang="fr">&amp;Créer/changer un lien...</message>
 <message xml:lang="de">Erzeugen/Ändern...</message>
 <message xml:lang="it">Crea o cambia collegamento...</message>
 <message xml:lang="tr">Baglantı yarat...</message>

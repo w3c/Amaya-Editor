@@ -24,6 +24,15 @@ typedef int        *SSchema;
 
 #ifndef __CEXTRACT__
 
+
+/*----------------------------------------------------------------------
+  TtaGetNextDocumentIndex
+
+  Return value:
+  the document that will be created or 0 by the next TtaInitDocument.
+  ----------------------------------------------------------------------*/
+extern Document TtaGetNextDocumentIndex ();
+
 /*----------------------------------------------------------------------
    TtaInitDocument
 

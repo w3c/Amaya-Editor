@@ -28,6 +28,7 @@
 #include "view.h"
 #include "uconvert.h"
 #include "undo.h"
+
 /* Included headerfiles */
 #include "EDITOR.h"
 #include "HTML.h"
@@ -37,7 +38,6 @@
 #include "XML.h"
 #include "amayamsg.h"
 #include "parser.h"
-
 #define NAME_LENGTH     32
 
 #define URL_STR       "/"
@@ -57,18 +57,6 @@ typedef enum _ConvertionType
 }
 ConvertionType;
 
-/* the HTTP header name we want to make visible to the application */
-typedef enum _AHTHeaderName
-  {
-    AM_HTTP_CONTENT_TYPE = 0,
-    AM_HTTP_CHARSET = 1,
-    AM_HTTP_CONTENT_LENGTH = 2,
-    AM_HTTP_REASON = 3,
-    AM_HTTP_CONTENT_LOCATION = 4,
-    AM_HTTP_FULL_CONTENT_LOCATION = 5
-  } 
-AHTHeaderName;
-
 /* the structure used for exchanging HTTP header info between the net library
    and amaya */
 typedef struct _AHTHeaders
@@ -83,6 +71,18 @@ typedef struct _AHTHeaders
   }
 AHTHeaders;
 
+/* the HTTP header name we want to make visible to the application */
+typedef enum _AHTHeaderName
+  {
+    AM_HTTP_CONTENT_TYPE = 0,
+    AM_HTTP_CHARSET = 1,
+    AM_HTTP_CONTENT_LENGTH = 2,
+    AM_HTTP_REASON = 3,
+    AM_HTTP_CONTENT_LOCATION = 4,
+    AM_HTTP_FULL_CONTENT_LOCATION = 5
+  } 
+AHTHeaderName;
+
 /* The structures used for request callbacks */
 typedef void   TIcbf (Document doc, int status, char *urlName,
 		      char *outputfile, const AHTHeaders *http_headers,
@@ -93,6 +93,39 @@ typedef void  TTcbf (Document doc, int status, char *urlName,
                      char *outputfile, char *proxyName,
                      const AHTHeaders *http_headers, void *context);
 
+/* the structure used for storing the context of the 
+   GetAmayaDoc_callback function */
+typedef struct _AmayaDoc_context
+{
+  Document   doc;
+  Document   baseDoc;
+  ThotBool   history;
+  ThotBool   local_link;
+  char      *target;
+  char      *documentname; /* the document name */
+  char      *initial_url;  /* initial loaded URL */
+  char      *form_data;
+  int        method;
+  ThotBool   inNewWindow;
+  TTcbf     *cbf;
+  void      *ctx_cbf;
+} AmayaDoc_context;
+
+/* the structure used for storing the context of the 
+   Reload_callback function */
+typedef struct _RELOAD_context
+{
+  Document   newdoc;
+  char      *documentname;
+  char      *form_data;
+  int        method;
+  int        position;	/* volume preceding the the first element to be shown */
+  int        distance; /* distance from the top of the window to the top of this
+                   element (% of the window height) */
+  int        visibility; /* register the current visibility */
+  ThotBool   maparea; /* register the current maparea */
+} RELOAD_context;
+
 /* How are Network accesses provided ? */
 #include "libwww.h"
 
@@ -100,7 +133,7 @@ typedef void  TTcbf (Document doc, int status, char *urlName,
 typedef enum _ClickEvent {
   CE_ABSOLUTE, CE_RELATIVE, CE_FORM_POST, CE_FORM_GET,
   CE_HELP, CE_MAKEBOOK, CE_LOG , CE_TEMPLATE, CE_INIT,
-  CE_CSS, CE_ANNOT
+  CE_CSS, CE_ANNOT, CE_INSTANCE
 } ClickEvent;
 
 #define NO               0

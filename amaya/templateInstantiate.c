@@ -12,6 +12,7 @@
 
 #include "Elemlist.h"
 
+#include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLsave_f.h"
@@ -30,28 +31,28 @@
 
 typedef struct _InstantiateCtxt
 {
-	char *			templatePath;
-	char *			instancePath;
-	char *			schemaName;
+	char         *templatePath;
+	char         *instancePath;
+	char         *schemaName;
+  Document      doc;
 	DocumentType	docType;
-	ThotBool		dontReplace;
+	ThotBool		  dontReplace;
 } InstantiateCtxt;
 #endif /* TEMPLATES */
 
 
 /*----------------------------------------------------------------------
   CreateInstance
+  basedoc is the displayed doc that launchs the creation of instance
   ----------------------------------------------------------------------*/
-void  CreateInstance(char *templatePath, char *instancePath)
+void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
 {
 #ifdef TEMPLATES
-  Document     doc = 0;
-  DocumentType docType;
-  ElementType  elType;
-  Element      root, title, text;
-  char        *s;
-  int          alreadyOnDoc = 0;
-  ThotBool     alreadyViewing = FALSE;
+  Document          doc = 0, newdoc = 0;
+  DocumentType      docType;
+  ElementType       elType;
+  Element           root, title, text;
+  char             *localFile, *s;
 
   XTigerTemplate t = GetXTigerTemplate(templatePath);
   if (t == NULL)
@@ -60,15 +61,18 @@ void  CreateInstance(char *templatePath, char *instancePath)
       InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_BAD_TEMPLATE));
       return;
     }
-
+  // the template document
   doc = GetTemplateDocument (t);
-  while (alreadyOnDoc < DocumentTableLength-1 && !alreadyViewing)
-    {
-      alreadyOnDoc++;
-      if (DocumentURLs[alreadyOnDoc])
-        alreadyViewing = !strcmp (DocumentURLs[alreadyOnDoc],instancePath);
-    }
-
+  // localize the new created document
+  if (DontReplaceOldDoc)
+    newdoc = TtaGetNextDocumentIndex ();
+  else
+    newdoc = basedoc;
+#ifdef IV
+  localFile = GetLocalPath (newdoc, instancePath);
+#else
+  localFile = TtaStrdup (instancePath);
+#endif
   if (!TtaPrepareUndo (doc))
     {
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
@@ -86,14 +90,17 @@ void  CreateInstance(char *templatePath, char *instancePath)
         docType = docXml;
       // update all links
       SetRelativeURLs (doc, instancePath, "", FALSE, FALSE, FALSE);
-      
+
+      // prepare the new document view
+      TtaExtractName (instancePath, DirectoryName, DocumentName);
+      // save in the local path
       switch (docType)
         {
         case docSVG:
-          TtaExportDocumentWithNewLineNumbers (doc, instancePath, "SVGT");
+          TtaExportDocumentWithNewLineNumbers (doc, localFile, "SVGT");
           break;
         case docMath:
-          TtaExportDocumentWithNewLineNumbers (doc, instancePath, "MathMLT");
+          TtaExportDocumentWithNewLineNumbers (doc, localFile, "MathMLT");
           break;
         case docHTML:
           // Initialize the document title
@@ -118,56 +125,49 @@ void  CreateInstance(char *templatePath, char *instancePath)
                 // Look for the first text child
                 TtaNextSibling (&text);
             }
-          if (TtaGetDocumentProfile(doc)==L_Xhtml11 || TtaGetDocumentProfile(doc)==L_Basic)
-            TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLT11");
+          if (TtaGetDocumentProfile(doc) == L_Xhtml11 ||
+              TtaGetDocumentProfile(doc) == L_Basic)
+            TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLT11");
           else
-            TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLTX");
+            TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLTX");
           break;
         default:
-          TtaExportDocumentWithNewLineNumbers (doc, instancePath, NULL);
+          localFile = GetLocalPath (newdoc, instancePath);
+          TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL);
           break;
         }
       
       TtaCloseUndoSequence (doc);
       TtaUndoNoRedo (doc);
       TtaClearUndoHistory (doc);
-    }
+      RemoveParsingErrors (doc);
 
-  if (!alreadyViewing)
-    {
-      // Open the instance
-      TtaExtractName (instancePath, DirectoryName, DocumentName);
+#ifdef IV
+      GetAmayaDoc (instancePath, NULL, basedoc, basedoc, CE_INSTANCE,
+                   !DontReplaceOldDoc, NULL, NULL);
+      TtaSetDocumentModified (newdoc);
+#else
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+#endif
     }
-  else
-    {
-      // Reload on the existing view
-      Reload (alreadyOnDoc, 0);
-    }
-
-  
+  TtaFreeMemory (localFile);
   // Intend to fix access rights for templates.
-  Template_PrintRights(TtaGetMainRoot(doc));
-  
-  TtaSetDisplayMode (doc, NoComputedDisplay);
-  Template_FixAccessRight(t, TtaGetMainRoot(doc), doc, TRUE);
-  TtaSetDisplayMode (doc, DisplayImmediately);
-  
-  Template_PrintRights(TtaGetMainRoot(doc));
-
+  Template_FixAccessRight (t, TtaGetMainRoot(doc), doc);
 #endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void InstantiateTemplate_callback (int newdoc, int status,  char *urlName, char *outputfile,
-				   char *proxyName, AHTHeaders *http_headers, void * context)
+void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
+                                   char *outputfile,
+                                   char *proxyName, AHTHeaders *http_headers,
+                                   void * context)
 {
 #ifdef TEMPLATES
 	InstantiateCtxt *ctx = (InstantiateCtxt*)context;
 
 	DoInstanceTemplate (ctx->templatePath);
-  CreateInstance (ctx->templatePath, ctx->instancePath);
+  CreateInstance (ctx->templatePath, ctx->instancePath, ctx->doc);
   TtaFreeMemory (ctx->templatePath);
   TtaFreeMemory (ctx->instancePath);
   TtaFreeMemory (ctx);
@@ -187,16 +187,18 @@ void InstantiateTemplate (Document doc, char *templatename, char *docname,
       ctx->templatePath	= TtaStrdup (templatename);
       ctx->instancePath	= TtaStrdup (docname);
       ctx->schemaName = GetSchemaFromDocType(docType);
+      ctx->doc = doc;
       ctx->docType = docType;
 		
       GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
-                   (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) InstantiateTemplate_callback,
+                   (void (*)(int, int, char*, char*, char*,
+                             const AHTHeaders*, void*)) InstantiateTemplate_callback,
                    (void *) ctx);
     }
 	else
     {
       DoInstanceTemplate (templatename);
-      CreateInstance (templatename, docname);
+      CreateInstance (templatename, docname, doc);
     }  
 #endif /* TEMPLATES */
 }
@@ -470,85 +472,9 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
 
 
 /*----------------------------------------------------------------------
-  Set access rights.
-  \param rec if true, set rights for all children
-  ----------------------------------------------------------------------*/
-void Template_SetAccessRight(Element el, AccessRight right, Document doc, ThotBool rec)
-{
-#ifdef TEMPLATES
-  Element     child;
-  
-  if (el && doc)
-    {
-      TtaSetAccessRight(el, right, doc);
-      if (rec)
-        {
-          child = TtaGetFirstChild(el);
-          while (child)
-            {
-              Template_SetAccessRight(child, right, doc, rec);
-              TtaNextSibling(&child);
-            }
-        }
-    }
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
-  Dump access rights.
-  \param rec if true, set rights for all children
-  ----------------------------------------------------------------------*/
-void Template_PrintRights(Element el)
-{
-#ifdef TEMPLATES
-#ifdef AMAYA_DEBUG
-  ElementType elType;
-  Element     child;
-  
-  static int  dec = 0; 
-  
-  elType = TtaGetElementType(el);
-  printf("PrintAccessRight ");
-  for(int i=0; i<dec; i++)
-    printf("  "); 
-  printf("%s:%d:%s : ", TtaGetSSchemaName(elType.ElSSchema), elType.ElTypeNum, TtaGetElementTypeName(elType));
-  
-  dec++;
-  
-  switch(TtaGetAccessRight(el))
-  {
-  case ReadOnly:
-    printf("ReadOnly\n");
-    break;
-  case ReadWrite:
-      printf("ReadWrite\n");
-      break;
-  case Hidden:
-      printf("Hidden\n");
-      break;
-  case Inherited:
-      printf("Inherited\n");
-      break;
-  default:
-      printf("other\n");
-      break;
-  }
-  child = TtaGetFirstChild(el);
-  while (child)
-    {
-	  Template_PrintRights(child);
-      TtaNextSibling(&child);
-    }
-  dec--;
-#endif /* AMAYA_DEBUG */
-#endif /* TEMPLATES */	
-}
-
-/*----------------------------------------------------------------------
   Fix access rights.
-  \param rec if true, set rights for all children
   ----------------------------------------------------------------------*/
-void Template_FixAccessRight(XTigerTemplate t, Element el, Document doc, ThotBool rec)
+void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
 {
 #ifdef TEMPLATES
   ElementType elType;
@@ -556,30 +482,16 @@ void Template_FixAccessRight(XTigerTemplate t, Element el, Document doc, ThotBoo
   char        currentType[MAX_LENGTH];
   Declaration decl;
   
-  static int  dec = 0; 
-  
   if (t && el && doc)
     {
       elType = TtaGetElementType(el);
-      
-#ifdef AMAYA_DEBUG
-      printf("FixAccessRight ");
-      for(int i=0; i<dec; i++)
-        printf("  "); 
-      printf("%s:%d:%s : ", TtaGetSSchemaName(elType.ElSSchema), elType.ElTypeNum, TtaGetElementTypeName(elType));
-
-      dec++;
-#endif /* AMAYA_DEBUG */
-      if (elType.ElSSchema == TtaGetSSchema("Template", doc))
+      if (elType.ElSSchema == TtaGetSSchema ("Template", doc))
         {
-          switch(elType.ElTypeNum)
+          switch (elType.ElTypeNum)
             {
             case Template_EL_TEXT_UNIT:
-              TtaSetAccessRight( el, ReadWrite, doc);
-#ifdef AMAYA_DEBUG
-              printf("ReadWrite");
-#endif /* AMAYA_DEBUG */
-              break;
+              //TtaSetAccessRight( el, ReadWrite, doc);
+              return;
             case Template_EL_useEl:
             case Template_EL_useSimple:
               GiveAttributeStringValueFromNum(el, Template_ATTR_currentType,
@@ -591,61 +503,30 @@ void Template_FixAccessRight(XTigerTemplate t, Element el, Document doc, ThotBoo
                     {
                       case SimpleTypeNat:
                       case XmlElementNat:
-#ifdef AMAYA_DEBUG
-                    	printf("ReadWrite\n");
-#endif /* AMAYA_DEBUG */
-                        Template_SetAccessRight(el, ReadWrite, doc, TRUE);
-                        rec = FALSE;
-                        break;
+                        TtaSetAccessRight (el, ReadWrite, doc);
+                        return;
                       default:
-#ifdef AMAYA_DEBUG
-                        printf("ReadOnly\n");
-#endif /* AMAYA_DEBUG */
-                        TtaSetAccessRight(el, ReadOnly, doc);
-                        break;
+                        TtaSetAccessRight (el, ReadOnly, doc);
+                         break;
                     }
                 }
-#ifdef AMAYA_DEBUG
-              else
-            	  printf("no decl\n");
-#endif /* AMAYA_DEBUG */
               break;
             case Template_EL_bag:
-#ifdef AMAYA_DEBUG
-              printf("ReadWrite\n");
-#endif /* AMAYA_DEBUG */
               TtaSetAccessRight(el, ReadWrite, doc);
               break;
             default:
-#ifdef AMAYA_DEBUG
-              printf("ReadOnly\n");
-#endif /* AMAYA_DEBUG */
               TtaSetAccessRight(el, ReadOnly, doc);
               break;
             }
         }
-//      else (elType.ElSSchema == TtaGetSSchema("HTML", doc))
-//      {
-//        
-//      }
-      else
-        {
-#ifdef AMAYA_DEBUG
-    	  printf("Inherited\n");
-#endif /* AMAYA_DEBUG */
-          TtaSetAccessRight(el, Inherited, doc);
-        }
 
-      if (rec)
+      child = TtaGetFirstChild (el);
+      // fix access right to children
+      while (child)
         {
-          child = TtaGetFirstChild(el);
-          while (child)
-            {
-              Template_FixAccessRight(t, child, doc, rec);
-              TtaNextSibling(&child);
-            }
+          Template_FixAccessRight (t, child, doc);
+          TtaNextSibling (&child);
         }
-      dec--;
     }
 #endif /* TEMPLATES */
 }

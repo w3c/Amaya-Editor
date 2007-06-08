@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern Document TtaGetNextDocumentIndex ( void );
 extern Document TtaInitDocument ( char *structureSchema,
                                   char *documentName,
                                   Document document );
@@ -28,6 +29,7 @@ extern void BackupOnFatalErrorLoadResources ( void );
 
 #else /* __STDC__ */
 
+extern Document TtaGetNextDocumentIndex ( void );
 extern Document TtaInitDocument ( char *structureSchema,
                                     char *documentName,
                                     Document document );
