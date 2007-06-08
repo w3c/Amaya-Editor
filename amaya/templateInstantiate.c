@@ -151,8 +151,6 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
 #endif
     }
   TtaFreeMemory (localFile);
-  // Intend to fix access rights for templates.
-  Template_FixAccessRight (t, TtaGetMainRoot(doc), doc);
 #endif /* TEMPLATES */
 }
 
