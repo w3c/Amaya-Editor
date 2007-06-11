@@ -1426,7 +1426,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
             maxLength = 7;
         }
       else if (pFirstEl == pLastEl && pFirstEl->ElVolume == 0)
-        maxLength = 8;
+        maxLength = 9;
       else
         {
           if (pFirstEl->ElTerminal)
@@ -1484,6 +1484,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   text[0] = EOS;
   /* Copy the text into the buffer */
   i = 0;
+  pEl = pFirstEl;
   ind = firstChar - 1;
   if (clipboard)
     {
@@ -1524,16 +1525,19 @@ static int CopyXClipboard (unsigned char **buffer, View view)
           ustrcpy (&text[i], TEXT("<graph>"));
           i += 7;
         }
+      // no more copy
+      pEl = NULL;
     }
   else if (pFirstEl == pLastEl && pFirstEl->ElVolume == 0)
     {
       ustrcpy (&text[i], TEXT("<struct>"));
       i += 8;
+      // no more copy
+      pEl = NULL;
     }
  
   /* copy the text of following elements */
   pOldBlock = NULL;
-  pEl = pFirstEl;
   while (pEl)
     {
       pEl = FwdSearch5Types (pEl, CharString + 1,
