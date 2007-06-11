@@ -106,7 +106,10 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
 
   // set the default instance path
   wxString homedir = TtaGetHomeDir ();
-  wxString filename = TtaConvMessageToWX ("New.html");
+  // generate the default name
+  strcpy (buffer, TtaGetMessage (AMAYA, AM_NEW));
+  strcat (buffer, ".html");
+  wxString filename = TtaConvMessageToWX (buffer);
   wxString   full_path = homedir + m_DirSep + filename;
 
   // propose a new filename
@@ -155,7 +158,7 @@ NewTemplateDocDlgWX::~NewTemplateDocDlgWX()
 void NewTemplateDocDlgWX::OnInstanceFilenameButton( wxCommandEvent& event )
 {
   wxFileDialog  *p_dlg;
-  wxString       url;
+  wxString       url, file_value;
   int id = event.GetId();
   int temp_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_TEMPLATE"));
 
@@ -183,14 +186,16 @@ void NewTemplateDocDlgWX::OnInstanceFilenameButton( wxCommandEvent& event )
       url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
     p_dlg->SetDirectory(wxGetHomeDir());
   else
-    p_dlg->SetPath(url);
+    {
+      file_value = url.AfterLast (DIR_SEP);
+      p_dlg->SetPath (url);
+      p_dlg->SetFilename (file_value);
+    }
       
   if (p_dlg->ShowModal() == wxID_OK)
     {
       if (id == temp_id)
-        {
-            XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue( p_dlg->GetPath() );
-        }
+        XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue( p_dlg->GetPath() );
       else
         {
           *m_pLastUsedFilter = p_dlg->GetFilterIndex();
@@ -288,7 +293,7 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
       if (title.Len() == 0)
         {
           // get the donument name as default document title
-          int end_pos = value.Find(DIR_SEP, true);
+          end_pos = value.Find(DIR_SEP, true);
           if (end_pos)
             title = value.Mid(end_pos+1, value.Length());
           else
@@ -310,7 +315,7 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
             }
           else
             {
-              strncpy( buffer, (const char*)title.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+              strncpy( buffer, (const char*)name.mb_str(wxConvUTF8), MAX_LENGTH - 1);
               buffer[MAX_LENGTH - 1] = EOS;
               ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
             }

@@ -5889,6 +5889,22 @@
 <message xml:lang="en">Remove All</message>
 <message xml:lang="fr">Supprimer</message>
 </label>
+<label define="AM_NEW">
+<message xml:lang="en">New</message>
+<message xml:lang="fr">Nouveau</message>
+<message xml:lang="de">Neu</message>
+<message xml:lang="it">Nuovo</message>
+<message xml:lang="tr">Yeni</message>
+<message xml:lang="es">Nuevo</message>
+<message xml:lang="pt">Novo</message>
+<message xml:lang="fi">Uusi</message>
+<message xml:lang="ru">Новый</message>
+<message xml:lang="hu">Új</message>
+<message xml:lang="ka">ახალი</message>
+<message xml:lang="cn">新建</message>
+<message xml:lang="tw">新建</message>
+<message xml:lang="sk">Nový</message>
+</label>
 <label define="AMAYA_MSG_MAX"></label>
 </messages>
 </base>

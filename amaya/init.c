@@ -2390,6 +2390,11 @@ void OpenDocInNewWindow (Document document, View view)
   ----------------------------------------------------------------------*/
 void OpenNew (Document document, View view, int docType, int docProfile)
 {
+  char    name[100];
+#ifdef _WX
+  char   *s, *compound;
+#endif /* _WX */
+
   /* create a new document */
   DontReplaceOldDoc = TRUE;
   NewFile = TRUE;
@@ -2397,29 +2402,31 @@ void OpenNew (Document document, View view, int docType, int docProfile)
   NewDocProfile = docProfile;
   NewXML = TRUE;
   Answer_text[0] = EOS;
+  strcpy (name, TtaGetMessage (AMAYA, AM_NEW));
   if (NewDocType == docHTML)
     {
 #ifdef _WX
-      char *s = TtaGetEnvString ("XHTML_Profile");
-      char *compound = TtaGetMessage (AMAYA, AM_COMPOUND_DOCUMENT);
+      s = TtaGetEnvString ("XHTML_Profile");
+      compound = TtaGetMessage (AMAYA, AM_COMPOUND_DOCUMENT);
       if (s && compound && !strcmp (s, compound))
-        InitOpenDocForm (document, view, "New.xml",
-                         TtaGetMessage (LIB, TMSG_BUTTON_NEW), docHTML);
+        strcat (name,".xml");
       else
-        InitOpenDocForm (document, view, "New.html",
+        strcat (name,".html");
+        InitOpenDocForm (document, view, name,
                          TtaGetMessage (LIB, TMSG_BUTTON_NEW), docHTML);
 #else /* _WX */
+        strcat (name,".html");
       if (docProfile == L_Basic)
-        InitOpenDocForm (document, view, "New.html",
+        InitOpenDocForm (document, view, name,
                          TtaGetMessage (AMAYA, AM_NEW_HTML_BASIC), docHTML);
       else if (docProfile == L_Strict)
-        InitOpenDocForm (document, view, "New.html",
+        InitOpenDocForm (document, view, name,
                          TtaGetMessage (AMAYA, AM_NEW_HTML_STRICT), docHTML);
       else if (docProfile == L_Transitional)
-        InitOpenDocForm (document, view, "New.html",
+        InitOpenDocForm (document, view, name,
                          TtaGetMessage (AMAYA, AM_NEW_HTML_TRANSITIONAL), docHTML);
       else
-        InitOpenDocForm (document, view, "New.html",
+        InitOpenDocForm (document, view, name,
                          TtaGetMessage (AMAYA, AM_NEW_HTML11), docHTML);
 #endif /* _WX */
       /* will scan html documents */
@@ -2428,22 +2435,25 @@ void OpenNew (Document document, View view, int docType, int docProfile)
   else if (NewDocType == docMath)
     {
       /* will scan html documents */
+      strcat (name,".mml");
       strcpy (ScanFilter, "*.mml");
-      InitOpenDocForm (document, view, "New.mml",
+      InitOpenDocForm (document, view, name,
                        TtaGetMessage (AMAYA, AM_NEW_MATHML), docMath);
     }
   else if (NewDocType == docSVG)
     {
       /* will scan html documents */
+      strcat (name,".svg");
       strcpy (ScanFilter, "*.svg");
-      InitOpenDocForm (document, view, "New.svg",
+      InitOpenDocForm (document, view, name,
                        TtaGetMessage (AMAYA, AM_NEW_SVG), docSVG);
     }
   else
     {
       /* will scan html documents */
+      strcat (name,".css");
       strcpy (ScanFilter, "*.css");
-      InitOpenDocForm (document, view, "New.css",
+      InitOpenDocForm (document, view, name,
                        TtaGetMessage (AMAYA, AM_NEW_CSS), docCSS);
     }
 }

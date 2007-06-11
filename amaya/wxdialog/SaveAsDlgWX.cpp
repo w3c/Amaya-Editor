@@ -142,8 +142,8 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
       XRCCTRL(*this, "wxID_IMG_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_WHERE_IMAGE) ));
       if (saveImgs)
         {
-          int end_slash_pos = pathname.Find(DIR_SEP, true);
-          wxString dir_value = pathname.SubString(0, end_slash_pos);
+          int end_pos = pathname.Find(DIR_SEP, true);
+          wxString dir_value = pathname.SubString(0, end_pos);
           XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(dir_value);
           XRCCTRL(*this, "wxID_IMG_BROWSE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
         }
@@ -384,20 +384,28 @@ void SaveAsDlgWX::OnCancelButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnDirImgButton( wxCommandEvent& event )
 {
-  wxString path = XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->GetValue();
+  wxString        path;
+  wxDirDialog    *p_dlg;
+  char            buffer[MAX_LENGTH];
+  int             len;
+
+  path = XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->GetValue();
   if ((MysaveImgs || CopyImages) && !path.StartsWith(_T("http")))
     {
       // Create a generic filedialog
-      wxDirDialog * p_dlg = new wxDirDialog(this);
-      //p_dlg->SetStyle(p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
-      p_dlg->SetPath(XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->GetValue());
+      p_dlg = new wxDirDialog (this);
+      //p_dlg->SetStyle (p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
+      p_dlg->SetPath (path);
       if (p_dlg->ShowModal() == wxID_OK)
         {
-          XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue( p_dlg->GetPath() );
-          p_dlg->Destroy();
+          path = p_dlg->GetPath ();
+          strcpy (buffer, (const char*)path.mb_str(wxConvUTF8));
+          len = strlen (buffer);
+          if (buffer[len-1] != DIR_SEP)
+            strcat (buffer, DIR_STR);
+          XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX(buffer));
         }
-      else
-        p_dlg->Destroy();
+      p_dlg->Destroy();
     }
 }
 
@@ -408,20 +416,28 @@ void SaveAsDlgWX::OnDirImgButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnDirCssButton( wxCommandEvent& event )
 {
-  wxString path = XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->GetValue();
+  wxString        path;
+  wxDirDialog    *p_dlg;
+  char            buffer[MAX_LENGTH];
+  int             len;
+
+  path = XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->GetValue();
   if ((MysaveCss || CopyCss) && !path.StartsWith(_T("http")))
     {
       // Create a generic filedialog
-      wxDirDialog * p_dlg = new wxDirDialog(this);
-      //p_dlg->SetStyle(p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
-      p_dlg->SetPath(XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->GetValue());
+      p_dlg = new wxDirDialog (this);
+      //p_dlg->SetStyle (p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
+      p_dlg->SetPath (path);
       if (p_dlg->ShowModal() == wxID_OK)
         {
-          XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetValue( p_dlg->GetPath() );
-          p_dlg->Destroy();
+          path = p_dlg->GetPath ();
+          strcpy (buffer, (const char*)path.mb_str(wxConvUTF8));
+          len = strlen (buffer);
+          if (buffer[len-1] != DIR_SEP)
+            strcat (buffer, DIR_STR);
+          XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX(buffer));
         }
-      else
-        p_dlg->Destroy();
+      p_dlg->Destroy();
     }
 }
 
@@ -432,7 +448,7 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
 {
   wxString wx_filter;
   wxString path, dir_value, file_value;
-  int      end_slash_pos;
+  int      end_pos;
 
   wx_filter = APPFILENAMEFILTER;
   // Create a generic filedialog
@@ -448,23 +464,15 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
   
   // force the directory and file name, except for W3 docs on windows 
     path = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue();
-#ifdef _WINDOWS 
-  {
-     char buffer[MAX_LENGTH];
-     wxASSERT( path.Len() < MAX_LENGTH );
-     strcpy( buffer, (const char*)path.mb_str(wxConvUTF8) );
-	 if (!IsW3Path (buffer))
+  if (path.StartsWith(_T("http")) ||
+      path.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
+    p_dlg->SetDirectory(wxGetHomeDir());
+  else
 	 {
         file_value = path.AfterLast (DIR_SEP);
         p_dlg->SetPath(path);
         p_dlg->SetFilename(file_value);
 	 }
-  }
-#else /* _WINDOWS */
-  file_value = path.AfterLast (DIR_SEP);
-  p_dlg->SetPath(path);
-  p_dlg->SetFilename(file_value);
-#endif /* _WINDOWS */
   
   if (p_dlg->ShowModal() == wxID_OK)
     {
@@ -472,8 +480,8 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
       XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue( path);
       if (MysaveImgs || CopyImages || MysaveCss || CopyCss)
         {
-          end_slash_pos = path.Find(DIR_SEP, true);
-          dir_value = path.SubString(0, end_slash_pos);
+          end_pos = path.Find(DIR_SEP, true);
+          dir_value = path.SubString(0, end_pos);
         }
       if (MysaveImgs || CopyImages)
         // update the image path
@@ -546,8 +554,8 @@ void SaveAsDlgWX::OnImagesChkBox ( wxCommandEvent& event )
       // update the image path
       XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetEditable (true);
       wxString path = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue( );
-      int end_slash_pos = path.Find(DIR_SEP, true);
-      wxString dir_value = path.SubString(0, end_slash_pos);
+      int end_pos = path.Find(DIR_SEP, true);
+      wxString dir_value = path.SubString(0, end_pos);
       XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(dir_value);
       XRCCTRL(*this, "wxID_IMG_BROWSE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
     }
@@ -574,8 +582,8 @@ void SaveAsDlgWX::OnCssChkBox ( wxCommandEvent& event )
       // update the image path
       XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetEditable (true);
       wxString path = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue( );
-      int end_slash_pos = path.Find(DIR_SEP, true);
-      wxString dir_value = path.SubString(0, end_slash_pos);
+      int end_pos = path.Find(DIR_SEP, true);
+      wxString dir_value = path.SubString(0, end_pos);
       XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetValue(dir_value);
       XRCCTRL(*this, "wxID_CSS_BROWSE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
     }
@@ -608,8 +616,8 @@ void SaveAsDlgWX::OnDocLocation ( wxCommandEvent& event )
   if (CopyImages || CopyCss)
     {
       // Update other paths
-      int end_slash_pos = path.Find(DIR_SEP, true);
-      wxString dir_value = path.SubString(0, end_slash_pos);
+      int end_pos = path.Find(DIR_SEP, true);
+      wxString dir_value = path.SubString(0, end_pos);
       if (CopyImages)
         XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(dir_value);
       if (CopyCss)

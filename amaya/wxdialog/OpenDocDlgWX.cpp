@@ -183,6 +183,7 @@ void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
   else
     dir_value = url;
   p_dlg = new wxDirDialog(this);
+
   // set an initial path
   if (url.StartsWith(_T("http")) ||
       url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
@@ -212,6 +213,7 @@ void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
 {
+  wxString url, file_value;
 
   // Create a generic filedialog
   wxFileDialog * p_dlg = new wxFileDialog
@@ -223,12 +225,17 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
      wxOPEN | wxCHANGE_DIR /* remember last directory */);
 
   // get the combobox current url
-  wxString url = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
+  url = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
   if (url.StartsWith(_T("http")) ||
       url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
     p_dlg->SetDirectory(wxGetHomeDir());
   else
-    p_dlg->SetPath(url);
+    {
+      file_value = url.AfterLast (DIR_SEP);
+      p_dlg->SetPath (url);
+      p_dlg->SetFilename (file_value);
+    }
+
   p_dlg->SetFilterIndex(*m_pLastUsedFilter);
 
   if (p_dlg->ShowModal() == wxID_OK)
