@@ -205,7 +205,7 @@
 203 Citação (q)
 204 Sobrepor BiDi (bdo)
 205 Numeração de seção
-206 **&Add Table of contents
+206 **&Add/Update Table of contents
 207 **Insert time stamp
 208 Construir livro
 209 Nova fórmula (math)
@@ -313,7 +313,7 @@
 311 Atributos
 312 Caracteres
 313 Reestruturar
-314 Enlaces (links)
+314 Enlaces
 315 Tabelas
 316 Mapas de Imagem
 317 Matemática
@@ -323,11 +323,11 @@
 321 Achar...
 322 Verificar ortografia
 323 Publicar
-324 WebDAV
+324 Cooperação
 325 Imprimir
 326 Numberar
 327 Criar livros
 328 Anotações
-329 Configurar Amaya
+329 Configurar
 330 Atalhos
 331 Accessibilidade em Amaya

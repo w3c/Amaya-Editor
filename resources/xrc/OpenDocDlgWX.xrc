@@ -13,33 +13,9 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_LABEL_DIR">
-                  <label>*This Directory*</label>
-                </object>
-                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
-                <border>4</border>
-              </object>
-              <object class="sizeritem">
-                <object class="wxTextCtrl" name="wxID_DIR"/>
-                <option>1</option>
-                <flag>wxEXPAND</flag>
-              </object>
-              <object class="sizeritem">
-                <object class="wxBitmapButton" name="wxID_BUTTON_DIR">
-                  <bitmap stock_id="wxART_FOLDER"></bitmap>
-                </object>
-              </object>
-            </object>
-            <flag>wxBOTTOM|wxEXPAND</flag>
-            <border>4</border>
-          </object>
-          <object class="sizeritem">
-            <object class="wxBoxSizer">
-              <orient>wxHORIZONTAL</orient>
-              <object class="sizeritem">
                 <object class="wxComboBox" name="wxID_COMBOBOX">
                   <content/>
-                  <size>400,-1</size>
+                  <size>420,-1</size>
                   <style>wxCB_DROPDOWN</style>
                   <focused>1</focused>
                 </object>
@@ -47,11 +23,16 @@
                 <flag>wxEXPAND</flag>
               </object>
               <object class="spacer">
-                <size>10,10</size>
+                <size>5,10</size>
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BUTTON_FILENAME">
                   <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_DIR">
+                  <bitmap stock_id="wxART_FOLDER"></bitmap>
                 </object>
               </object>
             </object>

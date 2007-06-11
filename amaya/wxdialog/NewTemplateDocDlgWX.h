@@ -40,15 +40,10 @@ private:
   void OnInstanceFilenameButton( wxCommandEvent& event );
   void OnDirNameButton ( wxCommandEvent& event );
   void OnTemplatenameSelected ( wxCommandEvent& event );
-  void OnText_InstanceDirName( wxCommandEvent& event );
-  void OnText_InstanceFilename( wxCommandEvent& event );
-  void OnText_Combobox( wxCommandEvent& event );
 
  private:
   void UpdateTemplateList ();
-  void UpdateInstanceFromDir ();
   void UpdateInstanceFromString(const wxString & full_path);
-  void UpdateDirFromString( const wxString & full_path);
 
  private:
   wxString m_Filter;

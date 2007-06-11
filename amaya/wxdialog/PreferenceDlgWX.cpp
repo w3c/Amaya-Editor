@@ -1212,7 +1212,6 @@ void PreferenceDlgWX::SetupLabelDialog_Templates()
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATES)));
 
-  XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_SHOW_TEMPLATES)));
   XRCCTRL(*this, "wxID_BUTTON_CHOOSE_TEMPLATE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
   XRCCTRL(*this, "wxID_BUTTON_ADD_TEMPLATE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_APPLY_BUTTON)));
   wxStaticBoxSizer *sz = (wxStaticBoxSizer*)XRCCTRL(*this, "wxID_PAGE_TEMPLATES", wxPanel)->GetSizer()->GetItem((size_t)0)->GetSizer();
@@ -1226,7 +1225,6 @@ void PreferenceDlgWX::SetupLabelDialog_Templates()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Templates( const Prop_Templates & prop)
 {
-  XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->SetValue( prop.S_Templates );
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   Prop_Templates_Path* path = prop.FirstPath;
   while (path)
@@ -1268,8 +1266,6 @@ void PreferenceDlgWX::UpdateTemplateList()
 void PreferenceDlgWX::GetValueDialog_Templates()
 {
   Prop_Templates       prop = GetProp_Templates();
-
-  prop.S_Templates = XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->GetValue();
 }
 
 /*----------------------------------------------------------------------

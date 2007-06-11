@@ -205,7 +205,7 @@
 203 Quotation (q)
 204 BiDi override (bdo)
 205 &Section numbering
-206 &Add Table of contents
+206 &Add/Update Table of contents
 207 Insert time stamp
 208 &Make book
 209 New formula (math)
@@ -308,7 +308,7 @@
 306 Browsing
 307 Views
 308 Selecting
-309 Document
+309 Documents
 310 Creating elements
 311 Attributes
 312 Characters
@@ -323,11 +323,11 @@
 321 Searching
 322 Spell Checking
 323 Publishing
-324 WebDAV
+324 Cooperation
 325 Printing
 326 Numbering
 327 Making books
 328 Annotations
-329 Configuring Amaya
+329 Configuring
 330 ShortCuts
 331 Accessibility in Amaya

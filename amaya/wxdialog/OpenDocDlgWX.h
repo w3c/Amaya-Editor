@@ -42,14 +42,7 @@ private:
   void OnDirButton( wxCommandEvent& event );
   void OnFilenameButton( wxCommandEvent& event );
   void OnURLSelected( wxCommandEvent& event );
-  void OnText_Dir( wxCommandEvent& event );
-  void OnText_Combobox( wxCommandEvent& event );
   void OnProfileSelected( wxCommandEvent& event );
-
-
- private:
-  void UpdateComboboxFromDirAndFilename();
-  void UpdateDirFromString(const wxString & full_path);
 
  private:
   wxString m_Filter;

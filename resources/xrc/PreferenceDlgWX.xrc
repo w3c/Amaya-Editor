@@ -1256,21 +1256,6 @@
                   <flag>wxALL|wxEXPAND</flag>
                   <border>10</border>
                 </object>
-                <object class="sizeritem">
-                  <object class="wxBoxSizer">
-                    <orient>wxVERTICAL</orient>
-                    <object class="sizeritem">
-                      <object class="wxCheckBox" name="wxID_CHECK_SHOWTEMPLATES">
-                        <label>*Show template's presentation*</label>
-                      </object>
-                      <option>1</option>
-                      <flag>wxALL|wxEXPAND</flag>
-                    </object>
-                  </object>
-                  <option>1</option>
-                  <flag>wxALL|wxEXPAND</flag>
-                  <border>10</border>
-                </object>
               </object>
             </object>
           </object>

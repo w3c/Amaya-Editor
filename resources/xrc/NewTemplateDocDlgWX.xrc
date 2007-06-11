@@ -78,10 +78,10 @@
                     <size>5,0</size>
                   </object>
                   <object class="sizeritem">
-                    <object class="wxBitmapButton" name="wxID_BUTTON_INSTANCENAME">
-                      <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                    <object class="wxBitmapButton" name="wxID_BUTTON_INSTANCEDIR">
+                      <bitmap stock_id="wxART_FOLDER"></bitmap>
                       <style></style>
-                      <tooltip>Browse file</tooltip>
+                      <tooltip>Browse directory</tooltip>
                     </object>
                     <flag></flag>
                   </object>
@@ -100,9 +100,9 @@
                 <object class="wxRadioBox" name="wxID_RADIOBOX">
                   <label></label>
                   <content>
-                    <item>*In new tab*</item>
+                    <item>*In a new tabulation*</item>
                     <item>*Repleace current one*</item>
-                    <item>*In new window*</item>
+                    <item>*In a new window*</item>
                   </content>
                   <size>250,-1</size>
                   <style>wxRA_SPECIFY_COLS</style>
@@ -114,38 +114,6 @@
               <object class="sizeritem">
                 <object class="wxBoxSizer">
                   <orient>wxVERTICAL</orient>
-                  <object class="sizeritem">
-                    <object class="wxStaticText" name="wxID_LABEL_INSTANCEDIR">
-                      <label>*Instance directory*</label>
-                      <size>200,-1</size>
-                    </object>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxBoxSizer">
-                      <orient>wxHORIZONTAL</orient>
-                      <object class="sizeritem">
-                        <object class="wxTextCtrl" name="wxID_INSTANCEDIR">
-                          <size>200,-1</size>
-                        </object>
-                        <option>1</option>
-                        <flag>wxEXPAND</flag>
-                        <border>4</border>
-                      </object>
-                      <object class="spacer">
-                        <size>5,0</size>
-                      </object>
-                      <object class="sizeritem">
-                        <object class="wxBitmapButton" name="wxID_BUTTON_INSTANCEDIR">
-                          <bitmap stock_id="wxART_FOLDER"></bitmap>
-                          <style></style>
-                          <tooltip>Browse directory</tooltip>
-                        </object>
-                        <flag></flag>
-                      </object>
-                    </object>
-                    <flag>wxBOTTOM|wxEXPAND</flag>
-                    <border>4</border>
-                  </object>
                   <object class="spacer">
                     <size>0,10</size>
                   </object>

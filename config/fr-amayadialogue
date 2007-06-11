@@ -205,8 +205,8 @@
 203 Citation (q)
 204 BiDi (bdo)
 205 &Numéroter les sections
-206 &Ajouter table des matières
-207 Insérer date de mise à jour
+206 &Ajouter/Actualiser la table des matières
+207 Insérer la date de mise à jour
 208 &Construire un livre
 209 Nouvelle formule (math)
 210 &Eléments de base
@@ -251,8 +251,8 @@
 249 Éléments XML...
 250 Copier l'adresse
 251 Coller l'adresse
-252 &Lier la cible créée
-253 &Créer/changer lien...
+252 &Lier à la cible créée
+253 &Créer/changer un lien...
 254 Créer une ci&ble
 255 &Supprimer le lien ou la cible
 256 &Ajouter/Retirer des attributs ID...
@@ -308,11 +308,11 @@
 306 Navigation
 307 Vues
 308 Sélection
-309 Document
-310 Création
+309 Documents
+310 Création d'éléments
 311 Attributs
 312 Caractères
-313 Transformer
+313 Restructuration
 314 Liens
 315 Tableaux
 316 Zones actives
@@ -320,14 +320,14 @@
 318 Graphiques
 319 Support XML
 320 Feuilles de style
-321 Chercher
+321 Recherche
 322 Vérification orthographique
-323 Publier
-324 WebDAV
-325 Imprimer
-326 Numéroter
-327 Construire un livre
+323 Enregistrement
+324 Coopération
+325 Impression
+326 Numérotation
+327 Construction de livre
 328 Annotations
-329 Configurer Amaya
+329 Configuration
 330 Raccourcis clavier
 331 Accessibilité d'Amaya
