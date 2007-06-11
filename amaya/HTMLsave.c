@@ -4687,7 +4687,10 @@ ThotBool SaveTempCopy (Document doc, const char* dstdir, char** filename)
   CopyCss    = FALSE;
   UpdateURLs = TRUE; // just copy local resources
   SaveAsXML = DocumentMeta[doc]->xmlformat;
-  SaveAsText = FALSE;
+  SaveAsText = FALSE; // don'n generate text from HTML
+  TextFormat = (DocumentTypes[doc] == docText ||
+                DocumentTypes[doc] == docCSS ||
+                DocumentTypes[doc] == docSource);
   DoSaveAs(NULL, NULL, TRUE);
   
   if(filename)
