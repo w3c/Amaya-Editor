@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -777,6 +777,9 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
               else if (attrVal == NULL &&
                        attrs->ApString == NULL)
                 ppRule = &(attrs->ApTextFirstPRule);
+              else
+                /* this new rule is less specific and should be added before */
+                return (ppRule);
               break;
             case AtReferenceAttr:
               ppRule = &(attrs->ApRefFirstPRule);

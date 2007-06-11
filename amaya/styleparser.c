@@ -335,10 +335,6 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
            strncasecmp (deb, "font-strech", 11) &&
            strncasecmp (deb, "letter-spacing", 14) &&
            strncasecmp (deb, "marker-offset", 12) &&
-           strncasecmp (deb, "max-height", 10) &&
-           strncasecmp (deb, "max-width", 9) &&
-           strncasecmp (deb, "min-height", 10) &&
-           strncasecmp (deb, "min-width", 9) &&
            strncasecmp (deb, "orphans", 7) &&
            strncasecmp (deb, "outline-color", 13) &&
            strncasecmp (deb, "outline-style", 13) &&
@@ -3883,6 +3879,86 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
+  ParseCSSMaxHeight: parse a CSS height attribute
+  ----------------------------------------------------------------------*/
+static char *ParseCSSMaxHeight (Element element, PSchema tsch,
+                             PresentationContext context, char *cssRule,
+                             CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue   val;
+  char               *ptr;
+
+  val.typed_data.real = FALSE;
+  cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
+  /* first parse the attribute string */
+  if (!strncasecmp (cssRule, "auto", 4))
+    {
+      val.typed_data.unit = VALUE_AUTO;
+      val.typed_data.value = 0;
+      cssRule += 4;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid height value");
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &val);
+
+  if (val.typed_data.value != 0 &&
+      (val.typed_data.unit == UNIT_INVALID ||
+       val.typed_data.unit == UNIT_BOX))
+    {
+      CSSParseError ("height value", ptr, cssRule);
+      val.typed_data.unit = UNIT_PX;
+    }
+
+  if (DoDialog)
+    DisplayStyleValue ("max-height", ptr, cssRule);
+  else if (DoApply)
+    /* install the new presentation */
+    TtaSetStylePresentation (PRHeight, element, tsch, context, val);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseCSSMinHeight: parse a CSS height attribute
+  ----------------------------------------------------------------------*/
+static char *ParseCSSMinHeight (Element element, PSchema tsch,
+                             PresentationContext context, char *cssRule,
+                             CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue   val;
+  char               *ptr;
+
+  val.typed_data.real = FALSE;
+  cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
+  /* first parse the attribute string */
+  if (!strncasecmp (cssRule, "auto", 4))
+    {
+      val.typed_data.unit = VALUE_AUTO;
+      val.typed_data.value = 0;
+      cssRule += 4;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid height value");
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &val);
+
+  if (val.typed_data.value != 0 &&
+      (val.typed_data.unit == UNIT_INVALID ||
+       val.typed_data.unit == UNIT_BOX))
+    {
+      CSSParseError ("height value", ptr, cssRule);
+      val.typed_data.unit = UNIT_PX;
+    }
+
+  if (DoDialog)
+    DisplayStyleValue ("min-height", ptr, cssRule);
+  else if (DoApply)
+    /* install the new presentation */
+    TtaSetStylePresentation (PRHeight, element, tsch, context, val);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
   ParseCSSWidth: parse a CSS width attribute
   ----------------------------------------------------------------------*/
 static char *ParseCSSWidth (Element element, PSchema tsch,
@@ -3916,6 +3992,86 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
 
   if (DoDialog)
     DisplayStyleValue ("width", ptr, cssRule);
+  else if (DoApply)
+    /* install the new presentation */
+    TtaSetStylePresentation (PRWidth, element, tsch, context, val);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseCSSMaxWidth: parse a CSS width attribute
+  ----------------------------------------------------------------------*/
+static char *ParseCSSMaxWidth (Element element, PSchema tsch,
+                               PresentationContext context,
+                               char *cssRule, CSSInfoPtr css,
+                               ThotBool isHTML)
+{
+  PresentationValue   val;
+  char               *ptr;
+
+  val.typed_data.real = FALSE;
+  cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
+  /* first parse the attribute string */
+  if (!strncasecmp (cssRule, "auto", 4))
+    {
+      val.typed_data.unit = VALUE_AUTO;
+      val.typed_data.value = 0;
+      cssRule += 4;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid width value");
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &val);
+  if (val.typed_data.value != 0 &&
+      (val.typed_data.unit == UNIT_INVALID ||
+       val.typed_data.unit == UNIT_BOX))
+    {
+      CSSParseError ("Invalid width value", ptr, cssRule);
+      val.typed_data.unit = UNIT_PX;
+    }
+
+  if (DoDialog)
+    DisplayStyleValue ("max-width", ptr, cssRule);
+  else if (DoApply)
+    /* install the new presentation */
+    TtaSetStylePresentation (PRWidth, element, tsch, context, val);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseCSSMinWidth: parse a CSS width attribute
+  ----------------------------------------------------------------------*/
+static char *ParseCSSMinWidth (Element element, PSchema tsch,
+                               PresentationContext context,
+                               char *cssRule, CSSInfoPtr css,
+                               ThotBool isHTML)
+{
+  PresentationValue   val;
+  char               *ptr;
+
+  val.typed_data.real = FALSE;
+  cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
+  /* first parse the attribute string */
+  if (!strncasecmp (cssRule, "auto", 4))
+    {
+      val.typed_data.unit = VALUE_AUTO;
+      val.typed_data.value = 0;
+      cssRule += 4;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid width value");
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &val);
+  if (val.typed_data.value != 0 &&
+      (val.typed_data.unit == UNIT_INVALID ||
+       val.typed_data.unit == UNIT_BOX))
+    {
+      CSSParseError ("Invalid width value", ptr, cssRule);
+      val.typed_data.unit = UNIT_PX;
+    }
+
+  if (DoDialog)
+    DisplayStyleValue ("min-width", ptr, cssRule);
   else if (DoApply)
     /* install the new presentation */
     TtaSetStylePresentation (PRWidth, element, tsch, context, val);
@@ -5779,6 +5935,8 @@ static CSSProperty CSSProperties[] =
     {"font-size-adjust", ParseCSSFontSizeAdjust},
     {"font-size", ParseCSSFontSize},
     {"font", ParseCSSFont},
+    {"max-height", ParseCSSMaxHeight},
+    {"min-height", ParseCSSMinHeight},
     {"height", ParseCSSHeight},
     {"left", ParseCSSLeft},
     {"letter-spacing", ParseCSSLetterSpacing},
@@ -5811,6 +5969,8 @@ static CSSProperty CSSProperties[] =
     {"unicode-bidi", ParseCSSUnicodeBidi},
     {"vertical-align", ParseCSSVerticalAlign},
     {"white-space", ParseCSSWhiteSpace},
+    {"max-width", ParseCSSMaxWidth},
+    {"min-width", ParseCSSMinWidth},
     {"width", ParseCSSWidth},
     {"visibility", ParseCSSVisibility},
     {"word-spacing", ParseCSSWordSpacing},

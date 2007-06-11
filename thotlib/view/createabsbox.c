@@ -1370,9 +1370,11 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
                   /* on compte les ancetres ou freres successifs de ce type */
                   while (pAsc && !found)
                     {
-                      if (pRule->PrCSSURL &&
-                          TypeHasException (ExcHidden, pAsc->ElTypeNumber,
-                                            pAsc->ElStructSchema))
+                      if ((pRule->PrCSSURL || pRule->PrCSSLine != 0) &&
+                          (TypeHasException (ExcHidden, pAsc->ElTypeNumber,
+                                             pAsc->ElStructSchema)) ||
+                          (pAsc->ElStructSchema &&
+                           !strcmp (pAsc->ElStructSchema->SsName, "Template")))
                         /* this ancestor is hidden. Skip it */
                         if (pCond->CoCondition == PcWithin)
                           pAsc = pAsc->ElParent;
