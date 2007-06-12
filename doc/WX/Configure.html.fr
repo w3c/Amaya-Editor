@@ -75,6 +75,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
           <li><a href="#Vider">Vider le cache</a></li>
         </ul>
       </li>
+      <li><a href="#Password">Préférences des mots de passe</a></li>
       <li><a href="#L599">Préférences du proxy</a></li>
       <li><a href="#Proxy1">Proxy HTTP</a></li>
       <li><a href="#Liste">Liste du domaine proxy</a></li>
@@ -594,6 +595,31 @@ cache.</p>
 
 <p>Ce bouton vous permet de vider le cache courant.</p>
 
+<h4 id="L5991"><a name="Password" id="Password">Préférences des mots de
+passe</a></h4>
+
+<p>Amaya vous permet d'enregistrer les données saisies lors du dialogue
+d'authentification. Ces données sont le <strong>nom de l'utilisateur et le
+mot de passe</strong> associés à une paire <strong>nom de serveur/nom de
+domaine</strong>.</p>
+
+<h5 id="Vider1">Enregistrer les mots de passe</h5>
+
+<p>Ce bouton, s'il est activé, permet de demander à l'utilisateur s'il
+souhaite qu'Amaya enregistre les informations de connexion saisies lors du
+dialogue d'authentification. S'il est désactivé (option par défaut),
+l'utilisateur n'aura pas la possibilité d'enregistrer ces données.</p>
+
+<h5 id="Vider11">Tout effacer</h5>
+
+<p>Cette option vous permet d'effacer toutes les données d'authentification
+enregistrées dans Amaya.</p>
+
+<h5 id="Vider111">Sites</h5>
+
+<p>Cette liste permet d'effacer les données d'authentification correspondant
+à une paire <strong>nom de serveur/nom de domaine</strong>.</p>
+
 <h4 id="L599"><a name="Proxy">Préférences du proxy</a></h4>
 
 <p>Vous pouvez spécifier un proxy et une série de domaines où le proxy
@@ -694,8 +720,9 @@ effectif quand vous ouvrirez une nouvelle fenêtre de document.</p>
 
 <h4 id="rences1"><a name="HTML">Les préférences de géométrie</a></h4>
 
-<p><strong>Enregistrer la géométrie en quittant</strong>. La géométrie courante
-des fenêtres sera automatiquement sauvegardée en quittant l'application.</p>
+<p><strong>Enregistrer la géométrie en quittant</strong>. La géométrie
+courante des fenêtres sera automatiquement sauvegardée en quittant
+l'application.</p>
 
 <p>Deux boutons vous permettent</p>
 <ul>
