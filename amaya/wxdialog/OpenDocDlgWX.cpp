@@ -352,7 +352,6 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
 void OpenDocDlgWX::OnClearButton( wxCommandEvent& event )
 {
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue(_T(""));
-  XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Clear();
 }
 
 /*----------------------------------------------------------------------
