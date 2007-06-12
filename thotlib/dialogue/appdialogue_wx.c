@@ -2304,6 +2304,7 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
                            thot_keysym == WXK_ESCAPE   ||
                            thot_keysym == WXK_BACK     ||
                            thot_keysym == WXK_RETURN   ||
+                           thot_keysym == WXK_NUMPAD_ENTER ||
                            thot_keysym == WXK_TAB );
 
 #ifdef _MACOS

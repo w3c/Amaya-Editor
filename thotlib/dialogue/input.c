@@ -1089,6 +1089,9 @@ int ThotInput (int frame, unsigned int value, int command, int modifiers,
           case THOT_KEY_Up:
             index = MY_KEY_Up;
             break;
+#ifdef _WX
+          case WXK_NUMPAD_ENTER:
+#endif /* _WX */
           case THOT_KEY_Return:
             index = MY_KEY_Return;
             break;
