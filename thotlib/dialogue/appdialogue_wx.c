@@ -2156,10 +2156,10 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
   if (( p_text_ctrl || p_combo_box || p_spinctrl ) && event.CmdDown())
     {
-#ifndef _WINDOWS
-	  // Windows already intercepts the command
       if (p_combo_box)
         {
+#ifndef _WINDOWS
+	  // Windows already intercepts the command
           if (thot_keysym == 67) // Ctrl C
             p_combo_box->Copy();
           else if (thot_keysym == 86) // Ctrl V
@@ -2168,6 +2168,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
             p_combo_box->Cut();
           else if (thot_keysym == 90) // Ctrl Z
             p_combo_box->Undo();
+#endif /* _WINDOWS */
         }
       else if (p_text_ctrl)
         {
@@ -2180,7 +2181,6 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
           else if (thot_keysym == 90) // Ctrl Z
             p_text_ctrl->Undo();
         }
-#endif /* _WINDOWS */
       return true;
     }
 
@@ -2325,10 +2325,10 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
         TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("no focus"))
               
       /* do not allow special key outside the canvas */
-      if (!p_gl_canvas && !p_splitter && !p_notebook && !p_scrollbar && proceed_key )
+      if (!p_gl_canvas && !p_splitter && !p_notebook && !p_scrollbar && proceed_key)
 	  {
-          event.Skip();
-          return true;      
+        event.Skip();
+        return true;      
 	  }
       
       if ( proceed_key )
