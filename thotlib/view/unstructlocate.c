@@ -234,12 +234,19 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                       (pAb->AbEnclosing && pAb->AbEnclosing->AbBox &&
                        pAb->AbEnclosing->AbBox->BxType == BoColumn))
                     {
-#ifdef _GL  
+#ifdef _GL
                       if (bx <= x && bx + pBox->BxClipW >= x &&
                           by <= y && by + pBox->BxClipH >= y)
 #endif  /* _GL */
-                        graphicBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
-                                                             &pointIndex, pFlow);
+                        {
+                          if (pAb->AbLeafType == LtPicture &&
+                              pAb->AbElement && pAb->AbElement->ElStructSchema &&
+                              !strcmp (pAb->AbElement->ElStructSchema->SsName, "Template"))
+                            graphicBox = pBox;
+                          else
+                            graphicBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
+                                                                 &pointIndex, pFlow);
+                        }
                       if (graphicBox == NULL)
                         /* eliminate this box */
                         d = dist + 1;
