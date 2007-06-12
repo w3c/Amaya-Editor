@@ -4811,11 +4811,12 @@ void ZoomOut (Document document, View view)
   ----------------------------------------------------------------------*/
 void ShowSource (Document doc, View view)
 {
+  Element          root;
   CHARSET          charset;
   char            *localFile;
   char            *s;
-  char  	   documentname[MAX_LENGTH];
-  char  	   tempdir[MAX_LENGTH];
+  char  	         documentname[MAX_LENGTH];
+  char  	         tempdir[MAX_LENGTH];
   Document         sourceDoc;
   NotifyElement    event;
 
@@ -4933,6 +4934,13 @@ void ShowSource (Document doc, View view)
           event.element = NULL;
           UpdateEditorMenus (sourceDoc);
           SetCharsetMenuOff (sourceDoc, 1);
+
+          // lock source of template instances
+          if (DocumentMeta[doc] && DocumentMeta[doc]->template_url)
+            {
+              root = TtaGetRootElement (sourceDoc);
+              TtaSetAccessRight (root, ReadOnly, sourceDoc);
+            }
           /* update back/forward buttons */
           if (HasPreviousDoc (doc))
             SetArrowButton (DocumentSource[doc], TRUE, TRUE);
