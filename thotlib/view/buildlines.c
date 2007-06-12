@@ -4274,7 +4274,7 @@ static void CompressLine (PtrLine pLine, PtrAbstractBox pAb, int xDelta,
         spaceValue++;
       }
   else
-    while (remainder >= nSpaces)
+    while (nSpaces && remainder >= nSpaces)
       {
         remainder -= nSpaces;
         spaceValue--;
