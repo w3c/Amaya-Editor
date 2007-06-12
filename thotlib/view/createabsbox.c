@@ -1372,9 +1372,9 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
                     {
                       if ((pRule->PrCSSURL || pRule->PrCSSLine != 0) &&
                           (TypeHasException (ExcHidden, pAsc->ElTypeNumber,
-                                             pAsc->ElStructSchema)) ||
+                                             pAsc->ElStructSchema) ||
                           (pAsc->ElStructSchema &&
-                           !strcmp (pAsc->ElStructSchema->SsName, "Template")))
+                           !strcmp (pAsc->ElStructSchema->SsName, "Template"))))
                         /* this ancestor is hidden. Skip it */
                         if (pCond->CoCondition == PcWithin)
                           pAsc = pAsc->ElParent;
