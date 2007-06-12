@@ -298,6 +298,5 @@ xmlid: xml:id
 xml_space_default: default
 xml_space_preserve: preserve
 xml_space: xml:space
-External_Object: img
 Embed_: embed
 XMLPI: PI
