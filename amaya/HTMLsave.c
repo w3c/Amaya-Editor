@@ -47,6 +47,11 @@
 #include "HTMLhistory_f.h"
 #include "UIcss_f.h"
 
+#ifdef TEMPLATES
+#include "templates.h"
+#include "templates_f.h"
+#endif /* TEMPLATES */
+
 typedef struct _AttSearch
 {
   int   att;
@@ -2794,7 +2799,8 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
              be saved */
           if (modified)
             TtaSetDocumentModified (otherDoc);
-
+          // check if it's a template instance
+          CheckTemplate (otherDoc);
           /* restore original display mode */
           TtaSetDisplayMode (doc, dispMode);
           /* restore the current position in the document */
