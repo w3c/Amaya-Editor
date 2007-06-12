@@ -4146,7 +4146,9 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
   DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 
   if (pAb->AbAdjust == AlignCenter ||
-      (box == pLine->LiLastBox && box->BxAbstractBox &&
+      (pAb->AbHorizPos.PosEdge == VertMiddle &&
+       pAb->AbHorizPos.PosEdge == VertRef &&
+       box == pLine->LiLastBox && box->BxAbstractBox &&
        box->BxAbstractBox->AbLeafType == LtCompound &&
        box->BxAbstractBox->AbFloat == 'N' &&
        !ExtraFlow (box, frame) &&
