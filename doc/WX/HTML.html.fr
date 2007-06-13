@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html">
-  <title>HTML elements</title>
+  <title>Les &eacute;l&eacute;ments HTML</title>
   <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/">
   <link href="style.css" rel="stylesheet" type="text/css">
 </head>
@@ -17,17 +17,19 @@
         border="0" alt="Amaya" src="../../resources/icons/22x22/logo.png">
         </p>
       </td>
-      <td><p align="right"><a href="Manual.html"><img alt="top" border="0"
+      <td><p align="right"><a href="EditChar.html.fr"><img alt="previous"
+        src="../../resources/icons/misc/left.png"> </a><a
+        href="Manual.html"><img alt="top" border="0"
         src="../../resources/icons/misc/up.png"> </a> <a
-        href="HTML-elements/Templates.html.fr"><img alt="next" border="0"
+        href="Templates.html.fr"><img alt="next" border="0"
         src="../../resources/icons/misc/right.png"> </a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<div>
-<h1>HTML dans Amaya</h1>
+<div id="HTML">
+<h1>Les &eacute;l&eacute;ments HTML</h1>
 
 <p>Amaya reconna&icirc;t tous les &eacute;l&eacute;ments de HTML 4.0, mais ne
 produit que les &eacute;l&eacute;ments non d&eacute;pr&eacute;ci&eacute;s. La

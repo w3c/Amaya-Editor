@@ -12,10 +12,7 @@ body {background-color: #FFFFFF}</style>
 </head>
 
 <body xml:lang="fr" lang="fr">
-<h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
-
-<h4 style="text-align:center">Version 9.53<br />
-</h4>
+<h1>Manuel d'utilisation d'Amaya</h1>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
@@ -42,16 +39,17 @@ spécifique d'Amaya :</p>
 <ul>
   <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer avec
     Amaya</a></li>
-  <li><a rel="Chapter"
-  href="Selecting.html.fr#Selecting">Sélectionner</a></li>
+  <li><a rel="Chapter" href="Selecting.html.fr#Selecting">Sélection</a></li>
   <li><a rel="Chapter" href="Views.html.fr#Views">Afficher des vues</a></li>
   <li><a href="Document.html.fr#Changing">Éditer des documents</a></li>
   <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer de nouveaux
     éléments</a></li>
   <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Éditer des
     attributs</a></li>
-  <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Entrer des caractères
-    ISO-Latin-1</a></li>
+  <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Saisie de
+    caractères</a></li>
+  <li><a href="HTML.html.fr#HTML">Les élements HTML</a></li>
+  <li><a href="Templates.html.fr#modèles">Éditer avec des modèles</a></li>
   <li><a rel="Chapter" href="Changing.html.fr#Changing">Éditer la structure
     du document</a></li>
   <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et modifier des
@@ -120,7 +118,7 @@ et comment les utiliser.</a></p>
 </ul>
 <hr />
 
-<p class="policyfooter"><small>Copyright  ©  1994-2006 <a
+<p class="policyfooter"><small>Copyright  ©  1994-2007 <a
 href="http://www.inria.fr/">INRIA</a> and <a
 href="http://www.w3.org/">W3C</a><sup>®</sup> (<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a

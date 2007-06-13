@@ -372,6 +372,7 @@ MENUS
 	Help_ button:BHelpCreating -> HelpCreating;
 	Help_ button:BHelpAttributes -> HelpAttributes;
 	Help_ button:BHelpText -> HelpEditChar;
+	Help_ button:BHelpTemplates -> HelpTemplating;
 	Help_ button:BHelpChanging -> HelpChanging;
 	Help_ button:BHelpLinks -> HelpLinks;
 	Help_ button:BHelpTables -> HelpTables;

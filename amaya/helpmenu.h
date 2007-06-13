@@ -25,6 +25,7 @@ static char *Manual[] = {
 "Creating.html",
 "Attributes.html",
 "EditChar.html",
+"Templates.html",
 "Changing.html",
 "Links.html",
 "Tables.html",
@@ -55,25 +56,26 @@ static char *Manual[] = {
 #define CREATING       5
 #define ATTRIBUTES     6
 #define EDITCHAR       7
-#define CHANGING       8
-#define LINKS          9
-#define TABLES        10
-#define IMAGEMAPS     11
-#define MATH          12
-#define SVG           13
-#define XML           14
-#define CSS           15
-#define SEARCHING     16
-#define SPELLCHECKING 17
-#define PUBLISHING    18
-#define PRINTING      19
-#define NUMBERING     20
-#define MAKEBOOK      21
-#define ANNOTATE      22
-#define CONFIGURE     23
-#define SHORTCUTS     24
-#define ACCESS        25
-#define WEBDAV        26
+#define TEMPLATING     8
+#define CHANGING       9
+#define LINKS         10
+#define TABLES        11
+#define IMAGEMAPS     12
+#define MATH          13
+#define SVG           14
+#define XML           15
+#define CSS           16
+#define SEARCHING     17
+#define SPELLCHECKING 18
+#define PUBLISHING    19
+#define PRINTING      20
+#define NUMBERING     21
+#define MAKEBOOK      22
+#define ANNOTATE      23
+#define CONFIGURE     24
+#define SHORTCUTS     25
+#define ACCESS        26
+#define WEBDAV        27
 
 #endif /* AMAYA_HELP_H */
 

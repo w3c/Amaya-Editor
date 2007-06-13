@@ -4508,6 +4508,13 @@
 <message xml:lang="cn">Characters</message>
 <message xml:lang="tw">Characters</message>
 <message xml:lang="sk">Vkladanie znakov</message></label>
+<label define="BHelpTemplates">
+<message xml:lang="en">Templates</message>
+<message xml:lang="fr">Modèles</message>
+<message xml:lang="es">Modelos</message>
+<message xml:lang="de">Vorlagen</message>
+<message xml:lang="hu">Sablonok</message>
+<message xml:lang="sk">Šablóny</message></label>
 <label define="BHelpChanging">
 <message xml:lang="en">Restructuring</message>
 <message xml:lang="fr">Restructuration</message>

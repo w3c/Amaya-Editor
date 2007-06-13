@@ -1110,6 +1110,14 @@ void HelpEditChar (Document document, View view)
 
 /*----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
+void HelpTemplating (Document document, View view)
+{
+  DisplayHelp (document, TEMPLATING);
+}
+
+
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void HelpXml (Document document, View view)
 {
   DisplayHelp (document, XML);
