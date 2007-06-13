@@ -5872,6 +5872,7 @@
 </label>
 <label define="AM_PASSWORDS_SAVE_OPTION">
 <message xml:lang="en">Remember passwords for sites</message>
+<message xml:lang="fr">Enregistrer les mots de passe</message>
 </label>
 <label define="AM_PASSWORDS_LIST">
 <message xml:lang="en">Sites</message>
