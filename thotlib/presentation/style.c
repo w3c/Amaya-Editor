@@ -777,7 +777,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
               else if (attrVal == NULL &&
                        attrs->ApString == NULL)
                 ppRule = &(attrs->ApTextFirstPRule);
-              else
+              else if (attrVal == NULL)
                 /* this new rule is less specific and should be added before */
                 return (ppRule);
               break;
