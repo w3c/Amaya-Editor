@@ -135,7 +135,6 @@ void AmayaToolBar::GotoSelectedURL()
     {
       char buffer[2048];
       strcpy(buffer, (m_pComboBox->GetValue()).mb_str(wxConvUTF8));
-      printf ("%s\n",buffer);
 // patch to go-round a bug on Windows (TEXT_ENTER event called twice)
 #ifdef _WINDOWS 
 	  if (isBufUrl == FALSE)
