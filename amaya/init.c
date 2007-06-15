@@ -4518,6 +4518,8 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
       res = LoadDocument (newdoc, urlName, form_data, NULL, method,
                           tempfile, documentname, http_headers, FALSE,
                           &DontReplaceOldDoc, NULL);
+      // check if it's a template instance
+      CheckTemplate (doc);
       UpdateEditorMenus (doc);
       if (visibility == 4)
         {
