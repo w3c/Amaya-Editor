@@ -59,19 +59,21 @@ bool AmayaFileDropTarget::OnDropFiles( wxCoord x, wxCoord y, const wxArrayString
   int                 frame_id = 0;
   char                buffer[512];
 
+  if (filenames.IsEmpty())
+    return false;
   if (m_pOwner)
     frame_id = m_pOwner->GetFrameId();
   if (frame_id > 0 && frame_id <= MAX_FRAME)
   {
     FrameToView (frame_id, &doc, &view);
     PtrDocument pDoc = LoadedDocument[doc-1];
-    wxLogDebug(_T("AmayaFileDropTarget::OnDropFiles = ")+filenames[0]);
-    strcpy(buffer, (const char*)filenames[0].mb_str(wxConvUTF8));
+    //wxLogDebug(_T("AmayaFileDropTarget::OnDropFiles = ")+filenames[0]);
+    strcpy (buffer, (const char*)filenames[0].mb_str(wxConvUTF8));
     
     if (pDoc->Call_Text)
       (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
   }
-  return TRUE;
+  return true;
 }
 
 AmayaFileDropTarget::~AmayaFileDropTarget ()
