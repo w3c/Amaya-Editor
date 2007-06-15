@@ -3286,7 +3286,18 @@ static char *ParseACSSFontFamily (Element element, PSchema tsch,
       if (quoteChar != EOS)
         cssRule = SkipQuotedString (cssRule, quoteChar);
       else
-        cssRule = SkipWord (cssRule);
+        /* unquoted font name. The name may contain spaces */
+        {
+          cssRule = SkipWord (cssRule);
+          while (*cssRule == SPACE || *cssRule == BSPACE || *cssRule == EOL ||
+              *cssRule == TAB || *cssRule == __CR__)
+            {
+              cssRule = SkipBlanksAndComments (cssRule);
+              if (*cssRule != ','  && *cssRule != ';'  && *cssRule != '}' &&
+                  *cssRule != EOS)
+                cssRule = SkipWord (cssRule);
+            }
+        }
       while (p == cssRule &&
              *cssRule != ','  && *cssRule != ';'  && *cssRule != '}' && *cssRule != EOS)
         {
