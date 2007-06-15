@@ -11,6 +11,7 @@
 #include "fileaccess.h"
 
 #include <wx/filename.h>
+#include <wx/dde.h>
 static ThotBool A_multiple = FALSE;
 
 /*----------------------------------------------------------------------
@@ -80,8 +81,9 @@ bool AmayaAppInstance::IsAnotherAmayaRunning()
  * Description:  
   -----------------------------------------------------------------------*/
 bool AmayaAppInstance::SendURLToOtherAmayaInstance(const wxString & url)
-{
-  PathBuffer  execname;
+{ 
+  char       *buffer, *name;
+  int         len = 0;
   bool        res = false;
 
   if (IsAnotherAmayaRunning())
@@ -94,46 +96,32 @@ bool AmayaAppInstance::SendURLToOtherAmayaInstance(const wxString & url)
           wxLogMessage(_T("Failed to make connection to running Amaya instance."));
           return false;
         }
-      
-      char buffer[512];
+      buffer = (char *)TtaGetMemory (MAX_LENGTH);
+	  buffer[0] = EOS;
       strcpy(buffer, (const char*)url.mb_str(wxConvUTF8) );
-      if (buffer[0] == EOS)
-        {
-          char *s;
-          // Open the home page
-          s = TtaGetEnvString ("HOME_PAGE");
-          if (s)
-            strcpy (buffer, s);
-        }
       if (buffer[0] != EOS)
         {
           if (!TtaIsW3Path (buffer))
             {
               /* check if it is an absolute or a relative name */
-              //wxLogError(_T("AmayaAppInstance::SendURLToOtherAmayaInstance - url=")+url);
 #ifdef _WINDOWS
-              if (buffer[0] == DIR_SEP || buffer[1] == ':')
+              if (buffer[0] != DIR_SEP && buffer[1] != ':')
 #else /* _WINDOWS */
-              if (buffer[0] == DIR_SEP)
+              if (buffer[0] != DIR_SEP)
 #endif /* _WINDOWS */
                 {
-                  /* it is an absolute name */
-//                  p_connection->Poke(_T("URL"), (wxChar *)buffer, strlen(buffer)+1);
-                }
-              else
-                {
                   /* it is a relative name */
-                  getcwd (&execname[0], sizeof (execname) / sizeof (char));
-                  strcat (execname, DIR_STR);
-                  strcat (execname, buffer);
-//                  p_connection->Poke(_T("URL"), (wxChar *)execname, strlen(execname)+1);
+				  name = TtaStrdup (buffer);
+                  getcwd (buffer, sizeof (buffer) / sizeof (char));
+                  strcat (buffer, DIR_STR);
+                  strcat (buffer, name);
+				  TtaFreeMemory (name);
                 }
             }
-//          else
-//            p_connection->Poke(_T("URL"), (wxChar *)buffer, strlen(buffer)+1);
         }
-        
-        res = p_connection->Poke(_T("URL"), (wxChar *)buffer, -1);
+        len = strlen (buffer);
+        res = p_connection->Poke(_T("URL"), (wxChar *)buffer, len * 2);
+		TtaFreeMemory (buffer);
       delete p_client;
     }
     return res;
@@ -198,17 +186,17 @@ OpenURLCallback AmayaURLGrabberServer::GetOpenURLCallback()
   Method:  OnPoke
   Description:  Called when a new amaya instance throw an url to the existing one
   -----------------------------------------------------------------------*/
-bool AmayaURLGrabberConnection::OnPoke(const wxString& topic, const wxString& item,
+bool AmayaURLGrabberConnection::OnPoke(const wxString &topic, const wxString &item,
                                        wxChar *data, int size, wxIPCFormat format)
 {
   if (topic == m_Owner.m_AcceptedTopic && m_Owner.m_pURLOpenCallback)
     {
       /* copy the possible url argument */
-      char buffer[512];
-      strcpy(buffer, (char *)data);
-      
+	  char buffer[MAX_LENGTH];
+      strncpy( buffer, (const char*)data, MAX_LENGTH - 1);
+      buffer[MAX_LENGTH - 1] = EOS;
       /* call the open document callback */
-      (*m_Owner.m_pURLOpenCallback)( buffer );
+      (*m_Owner.m_pURLOpenCallback)(buffer);
       return true;
     }
   else
