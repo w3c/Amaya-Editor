@@ -2774,7 +2774,7 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
   uriDecl = NULL;
   found = FALSE;
   // a patch to replace the old xtiger path by the new one
-  if (!strcmp (NsUri, Template_URI_o))
+  if (NsUri && !strcmp (NsUri, Template_URI_o))
     NsUri = Template_URI;
   if (pDoc->DocNsUriDecl)
     {
