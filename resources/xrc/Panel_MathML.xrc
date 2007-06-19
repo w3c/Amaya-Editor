@@ -161,6 +161,22 @@
                                                         <flag>wxALL</flag>
                                                         <border>1</border>
                                                       </object>
+                                                      <object class="sizeritem">
+                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_FRAC">
+                                                          <bitmap>../icons/16x16/MATHML_frac.png</bitmap>
+                                                          <tooltip>mfrac</tooltip>
+                                                        </object>
+                                                        <flag>wxALL</flag>
+                                                        <border>1</border>
+                                                      </object>
+                                                      <object class="sizeritem">
+                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_SQRT">
+                                                          <bitmap>../icons/16x16/MATHML_sqrt.png</bitmap>
+                                                          <tooltip>msqrt</tooltip>
+                                                        </object>
+                                                        <flag>wxALL</flag>
+                                                        <border>1</border>
+                                                      </object>
                                                     </object>
                                                   </object>
                                                   <object class="sizeritem">

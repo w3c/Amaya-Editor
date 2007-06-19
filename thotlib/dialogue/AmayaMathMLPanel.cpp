@@ -96,1100 +96,453 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
   int id       = event.GetId();
   CloseTextInsertion ();
   if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_BMATH")) )
-    {
       TtaExecuteMenuAction ("CreateMath", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PARENTHESIS")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PARENTHESIS")) )
       TtaExecuteMenuAction ("CreateMPARENTHESIS", doc, view, FALSE);
-      return;
-    }  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MROW")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MROW")) )
       TtaExecuteMenuAction ("CreateMROW", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SQRT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SQRT")) )
       TtaExecuteMenuAction ("CreateMSQRT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ROOT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ROOT")) )
       TtaExecuteMenuAction ("CreateMROOT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FRAC")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FRAC")) )
       TtaExecuteMenuAction ("CreateMFRAC", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MTABLE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MTABLE")) )
       TtaExecuteMenuAction ("CreateMTABLE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNDER")) )
       TtaExecuteMenuAction ("CreateMUNDER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVER")) )
       TtaExecuteMenuAction ("CreateMOVER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERARROW")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERARROW")) )
       TtaExecuteMenuAction ("CreateMOVERARROW", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERBAR")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERBAR")) )
       TtaExecuteMenuAction ("CreateMOVERBAR", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERBREVE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERBREVE")) )
       TtaExecuteMenuAction ("CreateMOVERBREVE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERCHECK")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERCHECK")) )
       TtaExecuteMenuAction ("CreateMOVERCHECK", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERBRACE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERBRACE")) )
       TtaExecuteMenuAction ("CreateMOVERBRACE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNDERBRACE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNDERBRACE")) )
       TtaExecuteMenuAction ("CreateMUNDERBRACE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERDOT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERDOT")) )
       TtaExecuteMenuAction ("CreateMOVERDOT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERHAT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERHAT")) )
       TtaExecuteMenuAction ("CreateMOVERHAT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERTILDE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERTILDE")) )
       TtaExecuteMenuAction ("CreateMOVERTILDE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERUNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERUNDER")) )
       TtaExecuteMenuAction ("CreateMUNDEROVER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MSCRIPT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MSCRIPT")) )
       TtaExecuteMenuAction ("CreateMMULTISCRIPTS", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUB")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUB")) )
       TtaExecuteMenuAction ("CreateMSUB", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUP")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUP")) )
       TtaExecuteMenuAction ("CreateMSUP", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUBSUP")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUBSUP")) )
       TtaExecuteMenuAction ("CreateMSUBSUP", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTEGRAL")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTEGRAL")) )
       TtaExecuteMenuAction ("CreateMIntegral", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUM")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUM")) )
       TtaExecuteMenuAction ("CreateMSum", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MATRIX")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MATRIX")) )
       TtaExecuteMenuAction ("CreateMMATRIX", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ABS")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ABS")) )
       TtaExecuteMenuAction ("CreateMABS", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ALEPHSUB")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ALEPHSUB")) )
       TtaExecuteMenuAction ("CreateMALEPHSUB", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_AND")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_AND")) )
       TtaExecuteMenuAction ("CreateMAND", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ANDBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ANDBINARY")) )
       TtaExecuteMenuAction ("CreateMANDBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_APPROX")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_APPROX")) )
       TtaExecuteMenuAction ("CreateMAPPROX", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARG")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARG")) )
       TtaExecuteMenuAction ("CreateMARG", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARROW1")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARROW1")) )
       TtaExecuteMenuAction ("CreateMARROW1", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARROW2")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARROW2")) )
       TtaExecuteMenuAction ("CreateMARROW2", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CARD")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CARD")) )
       TtaExecuteMenuAction ("CreateMCARD", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CARD2")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CARD2")) )
       TtaExecuteMenuAction ("CreateMCARD2", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CARTESIANPRODUCT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CARTESIANPRODUCT")) )
       TtaExecuteMenuAction ("CreateMCARTESIANPRODUCT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CARTESIANPRODUCTBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CARTESIANPRODUCTBINARY")) )
       TtaExecuteMenuAction ("CreateMCARTESIANPRODUCTBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CEILING")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CEILING")) )
       TtaExecuteMenuAction ("CreateMCEILING", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CODOMAIN")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CODOMAIN")) )
       TtaExecuteMenuAction ("CreateMCODOMAIN", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMBINATION")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMBINATION")) )
       TtaExecuteMenuAction ("CreateMCOMBINATION", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEMENT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEMENT")) )
       TtaExecuteMenuAction ("CreateMCOMPLEMENT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEMENTSUB")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEMENTSUB")) )
       TtaExecuteMenuAction ("CreateMCOMPLEMENTSUB", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEXCARTESIAN")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEXCARTESIAN")) )
       TtaExecuteMenuAction ("CreateMCOMPLEXCARTESIAN", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEXCARTESIAN2")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEXCARTESIAN2")) )
       TtaExecuteMenuAction ("CreateMCOMPLEXCARTESIAN2", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEXES")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEXES")) )
       TtaExecuteMenuAction ("CreateMCOMPLEXES", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEXPOLAR")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPLEXPOLAR")) )
       TtaExecuteMenuAction ("CreateMCOMPLEXPOLAR", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPOSE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPOSE")) )
       TtaExecuteMenuAction ("CreateMCOMPOSE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPOSEBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COMPOSEBINARY")) )
       TtaExecuteMenuAction ("CreateMCOMPOSEBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CONGRU")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CONGRU")) )
       TtaExecuteMenuAction ("CreateMCONGRU", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CONJUGATE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CONJUGATE")) )
       TtaExecuteMenuAction ("CreateMCONJUGATE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COUPLE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COUPLE")) )
       TtaExecuteMenuAction ("CreateMCOUPLE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CURL")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CURL")) )
       TtaExecuteMenuAction ("CreateMCURL", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DETERMINANT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DETERMINANT")) )
       TtaExecuteMenuAction ("CreateMDETERMINANT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DETERMINANT2")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DETERMINANT2")) )
       TtaExecuteMenuAction ("CreateMDETERMINANT2", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DIAGONALINTERSECTION")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DIAGONALINTERSECTION")) )
       TtaExecuteMenuAction ("CreateMDIAGONALINTERSECTION", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DIFF")) )
-    {
-      TtaExecuteMenuAction ("CreateMDIFF", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DIFF2")) )
-    {
-      TtaExecuteMenuAction ("CreateMDIFF2", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DIFF3")) )
-    {
-      TtaExecuteMenuAction ("CreateMDIFF3", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DIRECTSUM")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DELSE IFF")) )
+      TtaExecuteMenuAction ("CreateMDELSE IFF", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DELSE IFF2")) )
+      TtaExecuteMenuAction ("CreateMDELSE IFF2", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DELSE IFF3")) )
+      TtaExecuteMenuAction ("CreateMDELSE IFF3", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DIRECTSUM")) )
       TtaExecuteMenuAction ("CreateMDIRECTSUM", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DIVERGENCE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DIVERGENCE")) )
       TtaExecuteMenuAction ("CreateMDIVERGENCE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DIVIDE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DIVIDE")) )
       TtaExecuteMenuAction ("CreateMDIVIDE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DOMAIN")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_DOMAIN")) )
       TtaExecuteMenuAction ("CreateMDOMAIN", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EMPTYSET")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EMPTYSET")) )
       TtaExecuteMenuAction ("CreateMEMPTYSET", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQ")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQ")) )
       TtaExecuteMenuAction ("CreateMEQ", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQUIVALENT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQUIVALENT")) )
       TtaExecuteMenuAction ("CreateMEQUIVALENT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQUIVALENT2")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQUIVALENT2")) )
       TtaExecuteMenuAction ("CreateMEQUIVALENT2", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQUIVALENT2BINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQUIVALENT2BINARY")) )
       TtaExecuteMenuAction ("CreateMEQUIVALENT2BINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQUIVALENTBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQUIVALENTBINARY")) )
       TtaExecuteMenuAction ("CreateMEQUIVALENTBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQUIVALENTUNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EQUIVALENTUNDER")) )
       TtaExecuteMenuAction ("CreateMEQUIVALENTUNDER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ENCLOSE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ENCLOSE")) )
       TtaExecuteMenuAction ("CreateMENCLOSE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ENCLOSE2")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ENCLOSE2")) )
       TtaExecuteMenuAction ("CreateMENCLOSE2", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MPHANTOM")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MPHANTOM")) )
       TtaExecuteMenuAction ("CreateMPHANTOM", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EULERGAMMA")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EULERGAMMA")) )
       TtaExecuteMenuAction ("CreateMEULERGAMMA", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EXISTS")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EXISTS")) )
       TtaExecuteMenuAction ("CreateMEXISTS", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EXISTS2")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EXISTS2")) )
       TtaExecuteMenuAction ("CreateMEXISTS2", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EXPONENTIALE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EXPONENTIALE")) )
       TtaExecuteMenuAction ("CreateMEXPONENTIALE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FACTORIAL")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FACTORIAL")) )
       TtaExecuteMenuAction ("CreateMFACTORIAL", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FACTOROF")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FACTOROF")) )
       TtaExecuteMenuAction ("CreateMFACTOROF", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FALSE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FALSE")) )
       TtaExecuteMenuAction ("CreateMFALSE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FENCE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FENCE")) )
       TtaExecuteMenuAction ("CreateMFENCE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FLOOR")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FLOOR")) )
       TtaExecuteMenuAction ("CreateMFLOOR", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FORALL")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FORALL")) )
       TtaExecuteMenuAction ("CreateMFORALL", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GCD")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GCD")) )
       TtaExecuteMenuAction ("CreateMGCD", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GEQ")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GEQ")) )
       TtaExecuteMenuAction ("CreateMGEQ", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GEQBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GEQBINARY")) )
       TtaExecuteMenuAction ("CreateMGEQBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GRAD")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GRAD")) )
       TtaExecuteMenuAction ("CreateMGRAD", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GT")) )
       TtaExecuteMenuAction ("CreateMGT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IDENT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IDENT")) )
       TtaExecuteMenuAction ("CreateMIDENT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IMAGE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IMAGE")) )
       TtaExecuteMenuAction ("CreateMIMAGE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IMAGINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IMAGINARY")) )
       TtaExecuteMenuAction ("CreateMIMAGINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IMAGINARYI")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IMAGINARYI")) )
       TtaExecuteMenuAction ("CreateMIMAGINARYI", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IMPLIES")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IMPLIES")) )
       TtaExecuteMenuAction ("CreateMIMPLIES", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IN")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_IN")) )
       TtaExecuteMenuAction ("CreateMIN", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INF")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INF")) )
       TtaExecuteMenuAction ("CreateMINF", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INFINITY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INFINITY")) )
       TtaExecuteMenuAction ("CreateMINFINITY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INFUNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INFUNDER")) )
       TtaExecuteMenuAction ("CreateMINFUNDER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INT2")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INT2")) )
       TtaExecuteMenuAction ("CreateMINT2", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTEGERS")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTEGERS")) )
       TtaExecuteMenuAction ("CreateMINTEGERS", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTERSECT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTERSECT")) )
       TtaExecuteMenuAction ("CreateMINTERSECT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTERSECTBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTERSECTBINARY")) )
       TtaExecuteMenuAction ("CreateMINTERSECTBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTERSECTUNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTERSECTUNDER")) )
       TtaExecuteMenuAction ("CreateMINTERSECTUNDER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTERVAL")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTERVAL")) )
       TtaExecuteMenuAction ("CreateMINTERVAL", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTUNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTUNDER")) )
       TtaExecuteMenuAction ("CreateMINTUNDER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INVERSE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INVERSE")) )
       TtaExecuteMenuAction ("CreateMINVERSE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ISOMORPHIC")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ISOMORPHIC")) )
       TtaExecuteMenuAction ("CreateMISOMORPHIC", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LAPLACIAN")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LAPLACIAN")) )
       TtaExecuteMenuAction ("CreateMLAPLACIAN", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LCM")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LCM")) )
       TtaExecuteMenuAction ("CreateMLCM", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LEQ")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LEQ")) )
       TtaExecuteMenuAction ("CreateMLEQ", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LEQBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LEQBINARY")) )
       TtaExecuteMenuAction ("CreateMLEQBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LISTEXTENSION")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LISTEXTENSION")) )
       TtaExecuteMenuAction ("CreateMLISTEXTENSION", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LISTSEPARATION")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LISTSEPARATION")) )
       TtaExecuteMenuAction ("CreateMLISTSEPARATION", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LAMBDA")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LAMBDA")) )
       TtaExecuteMenuAction ("CreateMLAMBDA", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LIM")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LIM")) )
       TtaExecuteMenuAction ("CreateMLIM", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LIMTENDSTO")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LIMTENDSTO")) )
       TtaExecuteMenuAction ("CreateMLIMTENDSTO", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LT")) )
       TtaExecuteMenuAction ("CreateMLT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MAP")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MAP")) )
       TtaExecuteMenuAction ("CreateMMAP", doc, view, FALSE);
-      return;
-    }
-
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MAX")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MAX")) )
       TtaExecuteMenuAction ("CreateMMAX", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MAXUNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MAXUNDER")) )
       TtaExecuteMenuAction ("CreateMMAXUNDER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MEAN")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MEAN")) )
       TtaExecuteMenuAction ("CreateMMEAN", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MEDIAN")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MEDIAN")) )
       TtaExecuteMenuAction ("CreateMMEDIAN", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MIN")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MIN")) )
       TtaExecuteMenuAction ("CreateMMIN", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MINUNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MINUNDER")) )
       TtaExecuteMenuAction ("CreateMMINUNDER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MINUSBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MINUSBINARY")) )
       TtaExecuteMenuAction ("CreateMMINUSBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MINUSUNARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MINUSUNARY")) )
       TtaExecuteMenuAction ("CreateMMINUSUNARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MODE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MODE")) )
       TtaExecuteMenuAction ("CreateMMODE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MOMENT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MOMENT")) )
       TtaExecuteMenuAction ("CreateMMOMENT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NATURALS")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NATURALS")) )
       TtaExecuteMenuAction ("CreateMNATURALS", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NEQ")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NEQ")) )
       TtaExecuteMenuAction ("CreateMNEQ", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NOT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NOT")) )
       TtaExecuteMenuAction ("CreateMNOT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NOTANUMBER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NOTANUMBER")) )
       TtaExecuteMenuAction ("CreateMNOTANUMBER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NOTIN")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NOTIN")) )
       TtaExecuteMenuAction ("CreateMNOTIN", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NOTPRSUBSET")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NOTPRSUBSET")) )
       TtaExecuteMenuAction ("CreateMNOTPRSUBSET", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NOTSUBSET")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NOTSUBSET")) )
       TtaExecuteMenuAction ("CreateMNOTSUBSET", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NUPLET")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NUPLET")) )
       TtaExecuteMenuAction ("CreateMNUPLET", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OMEGASUB")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OMEGASUB")) )
       TtaExecuteMenuAction ("CreateMOMEGASUB", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OR")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OR")) )
       TtaExecuteMenuAction ("CreateMOR", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ORBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ORBINARY")) )
       TtaExecuteMenuAction ("CreateMORBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ORTHOGONAL")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ORTHOGONAL")) )
       TtaExecuteMenuAction ("CreateMORTHOGONAL", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ORTHOGONALCOMPLEMENT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ORTHOGONALCOMPLEMENT")) )
       TtaExecuteMenuAction ("CreateMORTHOGONALCOMPLEMENT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OUTERPRODUCT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OUTERPRODUCT")) )
       TtaExecuteMenuAction ("CreateMOUTERPRODUCT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PARTIALDIFF")) )
-    {
-      TtaExecuteMenuAction ("CreateMPARTIALDIFF", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PARTIALDIFF2")) )
-    {
-      TtaExecuteMenuAction ("CreateMPARTIALDIFF2", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PI")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PARTIALDELSE IFF")) )
+      TtaExecuteMenuAction ("CreateMPARTIALDELSE IFF", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PARTIALDELSE IFF2")) )
+      TtaExecuteMenuAction ("CreateMPARTIALDELSE IFF2", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PI")) )
       TtaExecuteMenuAction ("CreateMPI", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PIECEWISE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PIECEWISE")) )
       TtaExecuteMenuAction ("CreateMPIECEWISE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_VERTICALBRACE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_VERTICALBRACE")) )
       TtaExecuteMenuAction ("CreateMVERTICALBRACE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PLUS")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PLUS")) )
       TtaExecuteMenuAction ("CreateMPLUS", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_POWER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_POWER")) )
       TtaExecuteMenuAction ("CreateMPOWER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_POWERSET")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_POWERSET")) )
       TtaExecuteMenuAction ("CreateMPOWERSET", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PRIMES")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PRIMES")) )
       TtaExecuteMenuAction ("CreateMPRIMES", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PRODUNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PRODUNDER")) )
       TtaExecuteMenuAction ("CreateMPRODUNDER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PRODUNDEROVER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PRODUNDEROVER")) )
       TtaExecuteMenuAction ("CreateMPRODUNDEROVER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PRSUBSET")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PRSUBSET")) )
       TtaExecuteMenuAction ("CreateMPRSUBSET", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PRSUBSETBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PRSUBSETBINARY")) )
       TtaExecuteMenuAction ("CreateMPRSUBSETBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_QUOTIENT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_QUOTIENT")) )
       TtaExecuteMenuAction ("CreateMQUOTIENT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_RATIONNALS")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_RATIONNALS")) )
       TtaExecuteMenuAction ("CreateMRATIONNALS", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_REAL")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_REAL")) )
       TtaExecuteMenuAction ("CreateMREAL", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_REALS")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_REALS")) )
       TtaExecuteMenuAction ("CreateMREALS", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_REM")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_REM")) )
       TtaExecuteMenuAction ("CreateMREM", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SCALARPRODUCT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SCALARPRODUCT")) )
       TtaExecuteMenuAction ("CreateMSCALARPRODUCT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SDEV")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SDEV")) )
       TtaExecuteMenuAction ("CreateMSDEV", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SELECTOR")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SELECTOR")) )
       TtaExecuteMenuAction ("CreateMSELECTOR", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SETDIFF")) )
-    {
-      TtaExecuteMenuAction ("CreateMSETDIFF", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SETEXTENSION")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SETDELSE IFF")) )
+      TtaExecuteMenuAction ("CreateMSETDELSE IFF", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SETEXTENSION")) )
       TtaExecuteMenuAction ("CreateMSETEXTENSION", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SETSEPARATION")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SETSEPARATION")) )
       TtaExecuteMenuAction ("CreateMSETSEPARATION", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SETSYMDIFF")) )
-    {
-      TtaExecuteMenuAction ("CreateMSETSYMDIFF", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUBSET")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SETSYMDELSE IFF")) )
+      TtaExecuteMenuAction ("CreateMSETSYMDELSE IFF", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUBSET")) )
       TtaExecuteMenuAction ("CreateMSUBSET", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUBSETBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUBSETBINARY")) )
       TtaExecuteMenuAction ("CreateMSUBSETBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUMUNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUMUNDER")) )
       TtaExecuteMenuAction ("CreateMSUMUNDER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUP2")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUP2")) )
       TtaExecuteMenuAction ("CreateMSUP2", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUPMINUS")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUPMINUS")) )
       TtaExecuteMenuAction ("CreateMSUPMINUS", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUPPLUS")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUPPLUS")) )
       TtaExecuteMenuAction ("CreateMSUPPLUS", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUPUNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUPUNDER")) )
       TtaExecuteMenuAction ("CreateMSUPUNDER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TENDSTO")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TENDSTO")) )
       TtaExecuteMenuAction ("CreateMTENDSTO", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TENDSTOTENDSTO")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TENDSTOTENDSTO")) )
       TtaExecuteMenuAction ("CreateMTENDSTOTENDSTO", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TIMES")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TIMES")) )
       TtaExecuteMenuAction ("CreateMTIMES", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TIMESBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TIMESBINARY")) )
       TtaExecuteMenuAction ("CreateMTIMESBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TRANSPOSE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TRANSPOSE")) )
       TtaExecuteMenuAction ("CreateMTRANSPOSE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TRUE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TRUE")) )
       TtaExecuteMenuAction ("CreateMTRUE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNION")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNION")) )
       TtaExecuteMenuAction ("CreateMUNION", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNIONUNARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNIONUNARY")) )
       TtaExecuteMenuAction ("CreateMUNIONUNARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNIONUNDER")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNIONUNDER")) )
       TtaExecuteMenuAction ("CreateMUNIONUNDER", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNIONBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNIONBINARY")) )
       TtaExecuteMenuAction ("CreateMUNIONBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_VARIANCE")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_VARIANCE")) )
       TtaExecuteMenuAction ("CreateMVARIANCE", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_VECTORPRODUCT")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_VECTORPRODUCT")) )
       TtaExecuteMenuAction ("CreateMVECTORPRODUCT", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_VECTORROW")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_VECTORROW")) )
       TtaExecuteMenuAction ("CreateMVECTORROW", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_VECTORCOLUMN")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_VECTORCOLUMN")) )
       TtaExecuteMenuAction ("CreateMVECTORCOLUMN", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_XOR")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_XOR")) )
       TtaExecuteMenuAction ("CreateMXOR", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_XORBINARY")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_XORBINARY")) )
       TtaExecuteMenuAction ("CreateMXORBINARY", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_QUATERNIONS")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_QUATERNIONS")) )
       TtaExecuteMenuAction ("CreateMQUATERNIONS", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERFROWN")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERFROWN")) )
       TtaExecuteMenuAction ("CreateMOVERFROWN", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PARALLEL")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_PARALLEL")) )
       TtaExecuteMenuAction ("CreateMPARALLEL", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SYMBOLO")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SYMBOLO")) )
       TtaExecuteMenuAction ("CreateMSYMBOLO", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SYMBOLOO")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SYMBOLOO")) )
       TtaExecuteMenuAction ("CreateMSYMBOLOO", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NORM")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_NORM")) )
       TtaExecuteMenuAction ("CreateMNORM", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GG")) )
-    {
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_GG")) )
       TtaExecuteMenuAction ("CreateMGG", doc, view, FALSE);
-      return;
-    }
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LL")) )
-    {
-      TtaExecuteMenuAction ("CreateMLL", doc, view, FALSE);
-      return;
-    }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCOS")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCCOS", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCOSH")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCCOSH", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCOT")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCCOT", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCOTH")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCCOTH", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCSC")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCCSC", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCSCH")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCCSCH", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCSEC")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCSEC", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCSECH")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCSECH", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCSIN")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCSIN", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCSINH")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCSINH", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCTAN")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCTAN", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCTANH")) )
-  {
-   TtaExecuteMenuAction ("CreateMARCTANH", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COS")) )
-  {
-   TtaExecuteMenuAction ("CreateMCOS", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COSH")) )
-  {
-   TtaExecuteMenuAction ("CreateMCOSH", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COT")) )
-  {
-   TtaExecuteMenuAction ("CreateMCOT", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COTH")) )
-  {
-   TtaExecuteMenuAction ("CreateMCOTH", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CSC")) )
-  {
-   TtaExecuteMenuAction ("CreateMCSC", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CSCH")) )
-  {
-   TtaExecuteMenuAction ("CreateMCSCH", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EXP")) )
-  {
-   TtaExecuteMenuAction ("CreateMEXP", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LN")) )
-  {
-   TtaExecuteMenuAction ("CreateMLN", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LOG")) )
-  {
-   TtaExecuteMenuAction ("CreateMLOG", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SEC")) )
-  {
-   TtaExecuteMenuAction ("CreateMSEC", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SECH")) )
-  {
-   TtaExecuteMenuAction ("CreateMSECH", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SIN")) )
-  {
-   TtaExecuteMenuAction ("CreateMSIN", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SINH")) )
-  {
-   TtaExecuteMenuAction ("CreateMSINH", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TAN")) )
-  {
-   TtaExecuteMenuAction ("CreateMTAN", doc, view, FALSE);
-  }
-if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TANH")) )
-  {
-   TtaExecuteMenuAction ("CreateMTANH", doc, view, FALSE);
-  }
-
-
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LL")) )
+    TtaExecuteMenuAction ("CreateMLL", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCOS")) )
+    TtaExecuteMenuAction ("CreateMARCCOS", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCOSH")) )
+    TtaExecuteMenuAction ("CreateMARCCOSH", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCOT")) )
+    TtaExecuteMenuAction ("CreateMARCCOT", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCOTH")) )
+    TtaExecuteMenuAction ("CreateMARCCOTH", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCSC")) )
+    TtaExecuteMenuAction ("CreateMARCCSC", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCCSCH")) )
+    TtaExecuteMenuAction ("CreateMARCCSCH", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCSEC")) )
+    TtaExecuteMenuAction ("CreateMARCSEC", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCSECH")) )
+    TtaExecuteMenuAction ("CreateMARCSECH", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCSIN")) )
+    TtaExecuteMenuAction ("CreateMARCSIN", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCSINH")) )
+    TtaExecuteMenuAction ("CreateMARCSINH", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCTAN")) )
+    TtaExecuteMenuAction ("CreateMARCTAN", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ARCTANH")) )
+    TtaExecuteMenuAction ("CreateMARCTANH", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COS")) )
+    TtaExecuteMenuAction ("CreateMCOS", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COSH")) )
+    TtaExecuteMenuAction ("CreateMCOSH", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COT")) )
+    TtaExecuteMenuAction ("CreateMCOT", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_COTH")) )
+    TtaExecuteMenuAction ("CreateMCOTH", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CSC")) )
+    TtaExecuteMenuAction ("CreateMCSC", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_CSCH")) )
+    TtaExecuteMenuAction ("CreateMCSCH", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EXP")) )
+    TtaExecuteMenuAction ("CreateMEXP", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LN")) )
+    TtaExecuteMenuAction ("CreateMLN", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_LOG")) )
+    TtaExecuteMenuAction ("CreateMLOG", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SEC")) )
+    TtaExecuteMenuAction ("CreateMSEC", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SECH")) )
+    TtaExecuteMenuAction ("CreateMSECH", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SIN")) )
+    TtaExecuteMenuAction ("CreateMSIN", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SINH")) )
+    TtaExecuteMenuAction ("CreateMSINH", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TAN")) )
+    TtaExecuteMenuAction ("CreateMTAN", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_TANH")) )
+    TtaExecuteMenuAction ("CreateMTANH", doc, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
