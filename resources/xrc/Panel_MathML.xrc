@@ -1768,189 +1768,189 @@
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCCOS">
                                                           <label>arccos</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arccos</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCCOSH">
                                                           <label>arccosh</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arccosh</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCCOT">
                                                           <label>arccot</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arccot</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCCOTH">
                                                           <label>arccoth</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arccoth</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCCSC">
                                                           <label>arccsc</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arccsc</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCCSCH">
                                                           <label>arccsch</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arccsch</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCSEC">
                                                           <label>arcsec</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arcsec</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCSECH">
                                                           <label>arcsech</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arcsech</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCSIN">
                                                           <label>arcsin</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arcsin</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCSINH">
                                                           <label>arcsinh</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arcsinh</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCTAN">
                                                           <label>arctan</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arctan</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_ARCTANH">
                                                           <label>arctanh</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>arctanh</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_COS">
                                                           <label>cos</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>cos</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_COSH">
                                                           <label>cosh</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>cosh</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_COT">
                                                           <label>cot</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>cot</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_COTH">
                                                           <label>coth</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>coth</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_CSC">
                                                           <label>csc</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>csc</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_CSCH">
                                                           <label>csch</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>csch</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_EXP">
                                                           <label>exp</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>exp</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_LN">
                                                           <label>ln</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>ln</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_LOG">
                                                           <label>log</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>log</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_SEC">
                                                           <label>sec</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>sec</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_SECH">
                                                           <label>sech</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>sech</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_SIN">
                                                           <label>sin</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>sin</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_SINH">
                                                           <label>sinh</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>sinh</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_TAN">
                                                           <label>tan</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>tan</tooltip>
                                                         </object>
                                                       </object>
                                                       <object class="sizeritem">
                                                         <object class="wxButton" name="wxID_PANEL_MATH_TANH">
                                                           <label>tanh</label>
-                                                          <size>50,21</size>
+                                                          <size>64,21</size>
                                                           <tooltip>tanh</tooltip>
                                                         </object>
                                                       </object>
