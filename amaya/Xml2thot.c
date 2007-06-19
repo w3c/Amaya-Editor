@@ -1479,7 +1479,7 @@ static void  NsStartProcessing (Element newElement, ThotBool declare)
   /* and remove the useless declarations */
   for (i = 0; i < CurNs_Level; i++)
     {
-      if (newElement != NULL && declare)
+      if (newElement != NULL && CurNs_Uri[i] != NULL && declare)
         TtaSetANamespaceDeclaration (XMLcontext.doc, newElement,
                                      CurNs_Prefix[i], CurNs_Uri[i]);
       if (CurNs_Prefix[i] != NULL)
