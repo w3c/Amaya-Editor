@@ -2541,28 +2541,36 @@ ThotBool DeleteTBody (NotifyElement * event)
     return FALSE;		/* let Thot perform normal operation */
   LastPastedEl = NULL;
   el = event->element;
+  // skip siblings that are not tbody elements
   sibling = el;
   TtaNextSibling (&sibling);
-  elType = TtaGetElementType (sibling);
-  // skip template elements
-  while (strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+  if (sibling)
+    elType = TtaGetElementType (sibling);
+  while (sibling && (elType.ElSSchema != event->elementType.ElSSchema ||
+                     elType.ElTypeNum != event->elementType.ElTypeNum))
     {
       TtaNextSibling (&sibling);
-      elType = TtaGetElementType (sibling);
+      if (sibling)
+        elType = TtaGetElementType (sibling);
     }
-  if (elType.ElTypeNum == HTML_EL_tbody)
+  if (sibling && elType.ElSSchema == event->elementType.ElSSchema &&
+      elType.ElTypeNum == event->elementType.ElTypeNum)
+    // there is a following sibling tbody
     return FALSE;		/* let Thot perform normal operation */
   sibling = el;
   TtaPreviousSibling (&sibling);
   elType = TtaGetElementType (sibling);
-  // skip template elements
-  while (strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+  while (sibling && (elType.ElSSchema != event->elementType.ElSSchema ||
+                     elType.ElTypeNum != event->elementType.ElTypeNum))
     {
       TtaPreviousSibling (&sibling);
       elType = TtaGetElementType (sibling);
     }
-  if (elType.ElTypeNum == HTML_EL_tbody)
+  if (sibling && elType.ElSSchema == event->elementType.ElSSchema &&
+      elType.ElTypeNum == event->elementType.ElTypeNum)
+    // there is a previous sibling tbody
     return FALSE;		/* let Thot perform normal operation */
+
   // remove the table instead of the tbody
   elType = TtaGetElementType (el);
   elType.ElTypeNum = HTML_EL_Table_;
@@ -2570,7 +2578,7 @@ ThotBool DeleteTBody (NotifyElement * event)
   if (el && el != DeletedTable)
     {
       if (TtaPrepareUndo (doc))
-      TtaRegisterElementDelete (el, doc);
+        TtaRegisterElementDelete (el, doc);
       TtaDeleteTree (el, doc);
       TtaSetDocumentModified (doc);
     }
