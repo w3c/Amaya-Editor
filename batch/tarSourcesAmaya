@@ -102,6 +102,9 @@ ${LIBWWWDIR}/modules/expat/Makefile.in \
 ${LIBWWWDIR}/modules/expat/configure.in \
 ${LIBWWWDIR}/modules/expat/lib/*.h \
 ${LIBWWWDIR}/modules/expat/lib/*.c \
+${LIBWWWDIR}/modules/idn/*.h \
+${LIBWWWDIR}/modules/idn/*.c \
+${LIBWWWDIR}/modules/idn/*.txt \
 ${LIBWWWDIR}/config/Makefile.am \
 ${LIBWWWDIR}/config/Makefile.in \
 ${LIBWWWDIR}/config/config.guess \
