@@ -2175,6 +2175,14 @@ static void         CheckDefaultRules ()
       CurRule->PrType = PtWeight;
       InheritRule (InheritParent);
     }
+  if (GetTypedRule (PtVariant, pPSchema->PsFirstDefaultPRule) == NULL)
+    /* pas de regle Variant par defaut, on en cree une : */
+    /* Variant: Enclosing =; */
+    {
+      CreateDefaultRule ();
+      CurRule->PrType = PtVariant;
+      InheritRule (InheritParent);
+    }
   if (GetTypedRule (PtFont, pPSchema->PsFirstDefaultPRule) == NULL)
     /* pas de regle Font par defaut, on en cree une : */
     /* Font: Enclosing =; */
