@@ -4703,7 +4703,8 @@ void Reload (Document doc, View view)
       /* load the document from the Web */
       toparse = GetObjectWWW (doc, 0, pathname, form_data, tempfile, 
                               mode,
-                              NULL, NULL, (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) Reload_callback, 
+                              NULL, NULL,
+                              (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) Reload_callback, 
                               (void *) ctx, YES, NULL);
     }
   else if (TtaFileExist (pathname))
@@ -8397,18 +8398,21 @@ void AmayaCloseTab (Document doc, View view)
   int page_position = 0;
   int window_id     = 0;
   
-  window_id = TtaGetDocumentWindowId( doc, view );
-  if (TtaUniqueTabInWindow (doc))
-    TtaCloseWindow( window_id );
-  else
+  if (CanReplaceCurrentDocument (doc, view))
     {
-      /* Get the window id and page id of current document and
-         close the corresponding page */
-      TtaGetDocumentPageId( doc, view, &page_id, &page_position );
-      TtaClosePage( window_id, page_id );
-
-      /* Close the windows if it contains no more page */
-      TtaCleanUpWindow( window_id );
+      window_id = TtaGetDocumentWindowId( doc, view );
+      if (TtaUniqueTabInWindow (doc))
+        TtaCloseWindow( window_id );
+      else
+        {
+          /* Get the window id and page id of current document and
+             close the corresponding page */
+          TtaGetDocumentPageId( doc, view, &page_id, &page_position );
+          TtaClosePage( window_id, page_id );
+          
+          /* Close the windows if it contains no more page */
+          TtaCleanUpWindow( window_id );
+        }
     }
 #endif /* _WX */
 }
