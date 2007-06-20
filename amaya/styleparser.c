@@ -3925,7 +3925,7 @@ static char *ParseCSSMaxHeight (Element element, PSchema tsch,
     DisplayStyleValue ("max-height", ptr, cssRule);
   else if (DoApply)
     /* install the new presentation */
-    TtaSetStylePresentation (PRHeight, element, tsch, context, val);
+    /*TtaSetStylePresentation (PRHeight, element, tsch, context, val)*/;
   return (cssRule);
 }
 
@@ -3965,7 +3965,7 @@ static char *ParseCSSMinHeight (Element element, PSchema tsch,
     DisplayStyleValue ("min-height", ptr, cssRule);
   else if (DoApply)
     /* install the new presentation */
-    TtaSetStylePresentation (PRHeight, element, tsch, context, val);
+    /*TtaSetStylePresentation (PRHeight, element, tsch, context, val)*/;
   return (cssRule);
 }
 
@@ -4045,7 +4045,7 @@ static char *ParseCSSMaxWidth (Element element, PSchema tsch,
     DisplayStyleValue ("max-width", ptr, cssRule);
   else if (DoApply)
     /* install the new presentation */
-    TtaSetStylePresentation (PRWidth, element, tsch, context, val);
+    /*TtaSetStylePresentation (PRWidth, element, tsch, context, val)*/;
   return (cssRule);
 }
 
@@ -4085,7 +4085,7 @@ static char *ParseCSSMinWidth (Element element, PSchema tsch,
     DisplayStyleValue ("min-width", ptr, cssRule);
   else if (DoApply)
     /* install the new presentation */
-    TtaSetStylePresentation (PRWidth, element, tsch, context, val);
+    /*TtaSetStylePresentation (PRWidth, element, tsch, context, val)*/;
   return (cssRule);
 }
 
