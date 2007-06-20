@@ -69,6 +69,8 @@ extern void HelpSVG ( Document document,
                       View view );
 extern void HelpEditChar ( Document document,
                            View view );
+extern void HelpTemplating ( Document document,
+                             View view );
 extern void HelpXml ( Document document,
                       View view );
 extern void HelpImageMaps ( Document document,
@@ -194,6 +196,8 @@ extern void HelpSVG ( Document document,
                         View view );
 extern void HelpEditChar ( Document document,
                              View view );
+extern void HelpTemplating ( Document document,
+                               View view );
 extern void HelpXml ( Document document,
                         View view );
 extern void HelpImageMaps ( Document document,

@@ -89,6 +89,79 @@ void InsertAfter (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  GetNoTemplateSibling
+  ----------------------------------------------------------------------*/
+Element GetNoTemplateSibling (Element el, ThotBool before)
+{
+  ElementType         elType;
+
+  if (el)
+    {
+      do
+        {
+          if (before)
+            TtaPreviousSibling (&el);
+          else
+            TtaNextSibling (&el);
+          elType = TtaGetElementType (el);
+        }
+      while (el && !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"));
+    }
+  return el;
+}
+
+/*----------------------------------------------------------------------
+  GetNoTemplateChild
+  ----------------------------------------------------------------------*/
+Element GetNoTemplateChild (Element el, ThotBool first)
+{
+  ElementType         elType;
+
+  if (el)
+    {
+      do
+        {
+          if (first)
+            el = TtaGetFirstChild (el);
+          else
+            el = TtaGetLastChild (el);
+          elType = TtaGetElementType (el);
+        }
+      while (el && !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"));
+    }
+  return el;
+}
+
+/*----------------------------------------------------------------------
+  GetNextNode
+  Return the next node in the tree, using a complete traversal algorithm.
+  ----------------------------------------------------------------------*/
+Element GetNextNode (Element curr)
+{
+  Element             el;
+  ElementType         elType;
+
+  if (!curr)
+    return NULL;
+
+  /* get the next child */
+  el = GetNoTemplateChild (curr, TRUE);
+  if (el == NULL)
+    {
+      el = curr;
+      do
+        {
+          /* get the next siblign, or parent
+             if there was no other sibling */
+          el = TtaGetSuccessor (el);
+          elType = TtaGetElementType (el);
+        }
+      while (el && !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"));
+    }
+  return el;
+}
+
+/*----------------------------------------------------------------------
   SetTargetContent
   Set the new value of Target.                  
   ----------------------------------------------------------------------*/
@@ -449,8 +522,8 @@ void AttributeChange (int aType, char * data)
 void GenerateInlineElement (int eType, int aType, char * data)
 {
   Element         el, firstSel, lastSel, next, in_line, sibling, child;
-  Element         last, parent;
-  ElementType	    elType, parentType, newType;
+  Element         last, parent, enclose, selected;
+  ElementType	    elType, parentType, newType, childType;
   Attribute       newAttr;
   AttributeType   attrType;
   Document        doc;
@@ -582,6 +655,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
               name = TtaGetSSchemaName (elType.ElSSchema);
               lg =  TtaGetElementVolume (lastSel);
               lastChanged = FALSE;
+              selected = firstSel;
               selpos = TtaIsSelectionEmpty ();
               isPict = elType.ElTypeNum == HTML_EL_PICTURE_UNIT;
               if ((selpos || firstSel == lastSel) && isPict)
@@ -625,10 +699,36 @@ void GenerateInlineElement (int eType, int aType, char * data)
                        !IsCharacterLevelElement (el))
                 {
                   // a block level is selected and a in-line element is required
-                  elType = TtaGetElementType (el);
+                  // normalize the selection
+                  childType = TtaGetElementType (firstSel);
+                  while (!strcmp(TtaGetSSchemaName (childType.ElSSchema), "HTML") &&
+                         !IsCharacterLevelElement (firstSel))
+                    {
+                      child = GetNoTemplateChild (firstSel, TRUE);
+                      childType = TtaGetElementType (child);
+                      if (child)
+                        {
+                          firstSel = child;
+                          parent = el;
+                          el = firstSel;
+                        }
+                    }
+                  elType = TtaGetElementType (lastSel);
+                  while (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+                         !IsCharacterLevelElement (lastSel))
+                    {
+                      child = GetNoTemplateChild (lastSel, FALSE);
+                      elType = TtaGetElementType (child);
+                      if (child)
+                        {
+                          lastSel = child;
+                          lastChanged = TRUE;
+                        }
+                    }
+
                   if (firstSel == lastSel &&
-                      (elType.ElTypeNum == HTML_EL_Paragraph ||
-                       elType.ElTypeNum == HTML_EL_Pseudo_paragraph))
+                      (childType.ElTypeNum == HTML_EL_Paragraph ||
+                       childType.ElTypeNum == HTML_EL_Pseudo_paragraph))
                     {
                       parent = el;
                       // select the block content
@@ -650,14 +750,6 @@ void GenerateInlineElement (int eType, int aType, char * data)
                           inside = TRUE;
                         }
                     }
-                  else if (firstSel != lastSel ||
-                           (elType.ElTypeNum != HTML_EL_Basic_Elem &&
-                            elType.ElTypeNum != HTML_EL_Block))
-                    {
-                      // cannot generate an in-line element here
-                      el = NULL;
-                      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_SELECTION);
-                    }
                 }
 
               if (el && firstSel != lastSel &&
@@ -665,13 +757,13 @@ void GenerateInlineElement (int eType, int aType, char * data)
                   (lastchar == 0 || lastchar > lg))
                 {
                   // the whole last element is included
-                  parent = TtaGetParent (lastSel);
+                  enclose = TtaGetParent (lastSel);
                   if (!strcmp (name, "HTML") &&
-                      IsCharacterLevelElement (parent) &&
-                      lastSel == TtaGetFirstChild (parent) &&
-                      lastSel == TtaGetLastChild (parent))
+                      IsCharacterLevelElement (enclose) &&
+                      lastSel == TtaGetFirstChild (enclose) &&
+                      lastSel == TtaGetLastChild (enclose))
                     {
-                      lastSel = parent;
+                      lastSel = enclose;
                       lastChanged = TRUE;
                     }
                 }
@@ -693,7 +785,30 @@ void GenerateInlineElement (int eType, int aType, char * data)
                   else
                     {
                       next = el;
-                      TtaGiveNextSelectedElement (doc, &next, &j, &lastchar);
+                      if (next != selected && TtaIsAncestor (next, selected))
+                        {
+                          // get next sibling
+                          child = next;
+                          TtaNextSibling (&next);
+                          while (selected && next == NULL)
+                            {
+                              next = TtaGetParent (child);
+                              child = next;
+                              if (next != selected)
+                                TtaNextSibling (&next);
+                              else
+                                {
+                                  TtaGiveNextSelectedElement (doc, &next, &j, &lastchar);
+                                  selected = next;
+                                }
+                            }
+                        }
+                      else
+                        {
+                          // next in the selection
+                          TtaGiveNextSelectedElement (doc, &next, &j, &lastchar);
+                          selected = next;
+                        }
                       if (lastChanged && TtaIsAncestor (next, lastSel))
                         next = lastSel;
                       // adjust the first selection
@@ -918,6 +1033,43 @@ void GenerateInlineElement (int eType, int aType, char * data)
                               TtaInsertFirstChild (&child, in_line, doc);
                               firstSel = child;
                               lastSel = child;
+                            }
+                          else if (el == parent)
+                            {
+                              // add children into the new in_line
+                              child = TtaGetFirstChild (parent);
+                              childType = TtaGetElementType (child);
+                              while (!strcmp(TtaGetSSchemaName (childType.ElSSchema), "HTML") &&
+                                     !IsCharacterLevelElement (child))
+                                {
+                                  // is there a sibling element of this child?
+                                  el = child;
+                                  TtaNextSibling (&el);
+                                  if (el)
+                                    next = el;
+                                  parent = child;
+                                  child = TtaGetFirstChild (parent);
+                                  childType = TtaGetElementType (child);
+                                }
+                              // is there a sibling element of this child?
+                              el = child;
+                              TtaNextSibling (&el);
+                              if (el)
+                                next = el;
+                              last = NULL; // last inserted child
+                              while (child)
+                                {
+                                  TtaRegisterElementDelete (child, doc);
+                                  TtaRemoveTree (child, doc);
+                                  if (last)
+                                    TtaInsertSibling (child, last, FALSE, doc);
+                                  else
+                                    TtaInsertFirstChild (&child, in_line, doc);
+                                  last = child;
+                                  child = el;
+                                }
+                              // restore the el value
+                              sibling = NULL;
                             }
                           else
                             {
@@ -1392,18 +1544,7 @@ void ChangeTitle (Document doc, View view)
     {
       elType.ElTypeNum = HTML_EL_TITLE;
       el = TtaSearchTypedElement (elType, SearchForward, el);
-      child = TtaGetFirstChild (el);
-#ifdef TEMPLATES
-      if (child)
-        {
-          elType = TtaGetElementType (child);
-          if ((elType.ElTypeNum == Template_EL_useEl ||
-               elType.ElTypeNum == Template_EL_useSimple) &&
-              !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
-            // Ignore the template use element
-            child = TtaGetFirstChild (child);
-        }
-#endif /* TEMPLATES */
+      child = GetNoTemplateChild (el, TRUE);
       if (child == NULL)
         {
           /* insert the text element */
@@ -1470,18 +1611,7 @@ void SetNewTitle (Document doc)
     {
       elType.ElTypeNum = HTML_EL_TITLE;
       el = TtaSearchTypedElement (elType, SearchForward, el);
-      child = TtaGetFirstChild (el);
-#ifdef TEMPLATES
-      if (child)
-        {
-          elType = TtaGetElementType (child);
-          if ((elType.ElTypeNum == Template_EL_useEl ||
-               elType.ElTypeNum == Template_EL_useSimple) &&
-              !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
-            // Ignore the template use element
-            child = TtaGetFirstChild (child);
-        }
-#endif /* TEMPLATES */
+      child = GetNoTemplateChild (el, TRUE);
       if (child)
         {
           TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
@@ -2446,28 +2576,6 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt,
         }
     }
   return result;
-}
-
-/*----------------------------------------------------------------------
-  GetNextNode
-  Return the next node in the tree, using a complete traversal algorithm.
-  ----------------------------------------------------------------------*/
-static Element    GetNextNode (Element curr)
-{
-  Element el;
-
-  if (!curr)
-    return NULL;
-
-  /* get the next child */
-  el = TtaGetFirstChild (curr);
-  if (!el)
-    {
-      /* get the next siblign, or parent
-         if there was no other sibling */
-      el = TtaGetSuccessor (curr);
-    }
-  return el;
 }
 
 /*----------------------------------------------------------------------

@@ -10,6 +10,11 @@ extern void InsertBefore ( Document doc,
                            View view );
 extern void InsertAfter ( Document doc,
                           View view );
+extern Element GetNoTemplateSibling ( Element el,
+                                      ThotBool before );
+extern Element GetNoTemplateChild ( Element el,
+                                    ThotBool first );
+extern Element GetNextNode ( Element curr );
 extern void SetTargetContent ( Document doc,
                                Attribute attrNAME );
 extern void LinkToPreviousTarget ( Document doc,
@@ -151,6 +156,11 @@ extern void InsertBefore ( Document doc,
                              View view );
 extern void InsertAfter ( Document doc,
                             View view );
+extern Element GetNoTemplateSibling ( Element el,
+                                        ThotBool before );
+extern Element GetNoTemplateChild ( Element el,
+                                      ThotBool first );
+extern Element GetNextNode ( Element curr );
 extern void SetTargetContent ( Document doc,
                                  Attribute attrNAME );
 extern void LinkToPreviousTarget ( Document doc,
