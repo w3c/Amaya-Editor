@@ -2278,6 +2278,7 @@ void SetIntAddSpaceAttr (Element el, Document doc)
                     (int)text[0] == 0x2209 || /* Not an element of */
                     (int)text[0] == 0x2220 || /* Angle */
                     (int)text[0] == 0x2207 || /* Nabla */
+                    (int)text[0] == 0x2223 || /* Vertical bar */
                     (int)text[0] == 0x2227 || /* and */
                     (int)text[0] == 0x2228 || /* or */
                     (int)text[0] == 0x2190 || /* left arrow */
