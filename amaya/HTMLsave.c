@@ -2800,7 +2800,9 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           if (modified)
             TtaSetDocumentModified (otherDoc);
           // check if it's a template instance
+#ifdef TEMPLATES
           CheckTemplate (otherDoc);
+#endif /* TEMPLATES */
           /* restore original display mode */
           TtaSetDisplayMode (doc, dispMode);
           /* restore the current position in the document */

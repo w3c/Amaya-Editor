@@ -4519,7 +4519,9 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
                           tempfile, documentname, http_headers, FALSE,
                           &DontReplaceOldDoc, NULL);
       // check if it's a template instance
+#ifdef TEMPLATES
       CheckTemplate (doc);
+#endif /* TEMPLATES */
       UpdateEditorMenus (doc);
       if (visibility == 4)
         {
@@ -4937,12 +4939,15 @@ void ShowSource (Document doc, View view)
           UpdateEditorMenus (sourceDoc);
           SetCharsetMenuOff (sourceDoc, 1);
 
+#ifdef TEMPLATES
           // lock source of template instances
           if (DocumentMeta[doc] && DocumentMeta[doc]->template_url)
             {
               root = TtaGetRootElement (sourceDoc);
               TtaSetAccessRight (root, ReadOnly, sourceDoc);
             }
+#endif /* TEMPLATES */
+
           /* update back/forward buttons */
           if (HasPreviousDoc (doc))
             SetArrowButton (DocumentSource[doc], TRUE, TRUE);
