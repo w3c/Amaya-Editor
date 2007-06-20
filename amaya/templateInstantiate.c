@@ -511,6 +511,7 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
                 }
               break;
             case Template_EL_bag:
+            case Template_EL_repeat:
               TtaSetAccessRight(el, ReadWrite, doc);
               break;
             default:
