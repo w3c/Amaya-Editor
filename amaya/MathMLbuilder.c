@@ -4299,6 +4299,7 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
             /* empty <mtext>. It will have to be parsed when the user enters
                some content */
             SetAttrParseMe (el, doc);
+          break;
         case MathML_EL_MI:
           if (TtaGetFirstChild (el) == NULL)
             /* empty <mi> Replace it by an empty Construct */
