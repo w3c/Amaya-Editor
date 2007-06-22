@@ -1480,7 +1480,7 @@ void PreferenceDlgWX::SetupLabelDialog_Passwords()
 
   XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORDS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PASSWORDS_SAVE_OPTION)));
   XRCCTRL(*this, "wxID_BUTTON_EMPTY_PASSWORDS", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PASSWORDS_EMPTY)));
-  XRCCTRL(*this, "wxID_BUTTON_DELETE_PASSWORD", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PASSWORDS_REMOVE)));
+  XRCCTRL(*this, "wxID_BUTTON_DELETE_PASSWORD", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_DEL)));
 
   wxStaticBoxSizer *sz = (wxStaticBoxSizer*)XRCCTRL(*this, "wxID_PAGE_PASSWORDS", wxPanel)->GetSizer()->GetItem((size_t)0)->GetSizer();
   sz->GetStaticBox()->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PASSWORDS_LIST)));
