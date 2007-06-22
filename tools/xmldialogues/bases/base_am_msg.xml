@@ -14,7 +14,9 @@
 <language encoding="utf8">ka</language>
 <language encoding="utf8">cn</language>
 <language encoding="utf8">tw</language>
-<language encoding="utf8">sk</language></control>
+<language encoding="utf8">sk</language>
+<language encoding="utf8">jp</language>
+</control>
 <messages>
 <label define="AM_FILES">
 <message xml:lang="en">Files</message>
@@ -5950,6 +5952,7 @@
 </label>
 <label define="AM_PASSWORDS_SAVE_OPTION">
 <message xml:lang="en">Remember passwords for sites</message>
+<message xml:lang="es">Recordar contraseñas de los sitios</message>
 <message xml:lang="fr">Enregistrer les mots de passe</message>
 <message xml:lang="it">Ricorda le password per i siti</message>
 </label>
@@ -5962,7 +5965,7 @@
 </label>
 <label define="AM_PASSWORDS_EMPTY">
 <message xml:lang="en">Remove All</message>
-<message xml:lang="es">Borrar todo</message>
+<message xml:lang="es">Eliminar todo</message>
 <message xml:lang="fr">Tout effacer</message>
 <message xml:lang="sk">Odstrániť všetky</message>
 <message xml:lang="it">Elimina tutti</message>

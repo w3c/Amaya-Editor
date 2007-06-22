@@ -15,7 +15,9 @@
 <language encoding="utf8">ka</language>
 <language encoding="utf8">cn</language>
 <language encoding="utf8">tw</language>
-<language encoding="utf8">sk</language></control>
+<language encoding="utf8">sk</language>
+<language encoding="utf8">jp</language>
+</control>
 <messages>
 <label define="TMSG_LIB_X11_ERR">
 <message xml:lang="en">X11 Error : %s\n</message>
