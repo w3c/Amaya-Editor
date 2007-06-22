@@ -5650,7 +5650,7 @@
 <message xml:lang="de">Attribute für die Grenzen</message>
 <message xml:lang="hu">Szögletes zárójel attribútumai</message>
 <message xml:lang="sk">Atribúty ohraničenia</message>
-<message xml:lang="it">Attributi del fence</message>
+<message xml:lang="it">Attributi dei delimitatori</message>
 </label>
 <label define="AM_SELECT_FENCE_LABEL">
 <message xml:lang="en">Select open, separator and close symbols</message>

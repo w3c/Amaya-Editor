@@ -251,6 +251,12 @@ ATTRIBUTES
       create type;
       create DoubleQuote;
     end;
+	
+  prompt :
+    begin
+      create SAN;
+      create 'prompt="prompt"';
+    end;
 
   useAt :
     begin

@@ -34,6 +34,7 @@ static AttributeMapping TemplateAttributeMappingTable[] =
    {"name", "attribute", 'A', Template_ATTR_ref_name, L_OtherValue},   
    {"name", "component", 'A', Template_ATTR_name, L_OtherValue},   
    {"name", "union", 'A', Template_ATTR_name, L_OtherValue},
+   {"prompt", "", 'A', Template_ATTR_prompt, L_OtherValue},
    {"src", "", 'A', Template_ATTR_src, L_OtherValue},
    {"templateVersion", "head", 'A', Template_ATTR_templateVersion, L_OtherValue},
    {"type", "", 'A', Template_ATTR_type, L_OtherValue},   
@@ -46,6 +47,7 @@ static AttributeMapping TemplateAttributeMappingTable[] =
 /* mapping table of attribute values */
 static AttrValueMapping TemplateAttrValueMappingTable[] =
 {
+   {Template_ATTR_prompt, "prompt", Template_ATTR_prompt_VAL_Yes_},
    {Template_ATTR_type, "integer", Template_ATTR_type_VAL_integerVal},
    {Template_ATTR_type, "decimal", Template_ATTR_type_VAL_decimal},
    {Template_ATTR_type, "string", Template_ATTR_type_VAL_string},

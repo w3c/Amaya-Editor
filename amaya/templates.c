@@ -70,6 +70,84 @@ ThotBool IsTemplateDocument(Document doc)
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+  CheckPromptIndicator checks if the element is a prompt text unit
+  ----------------------------------------------------------------------*/
+ThotBool CheckPromptIndicator (Element el, Document doc)
+{
+#ifdef TEMPLATES
+  ElementType     elType;
+  Element         parent;
+  AttributeType   attrType;
+  Attribute       att;
+  SSchema         templateSSchema;
+
+  elType = TtaGetElementType (el);
+  templateSSchema = TtaGetSSchema ("Template", doc);
+	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+    {
+      parent = TtaGetParent (el);
+      elType = TtaGetElementType (parent);
+      while (parent && elType.ElSSchema != templateSSchema)
+        {
+          parent = TtaGetParent (parent);
+          elType = TtaGetElementType (parent);
+        }
+      if (parent &&
+          (elType.ElTypeNum == Template_EL_useEl ||
+           elType.ElTypeNum == Template_EL_useSimple))
+        {
+          // there is a parent template use
+          attrType.AttrSSchema = elType.ElSSchema;
+          attrType.AttrTypeNum = Template_ATTR_prompt;
+          att = TtaGetAttribute (parent, attrType);
+          if (att)
+            TtaSelectElement (doc, el);
+          return TRUE;
+        }
+    }
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  RemovePromptIndicator removes the enclosing prompt indicator
+  ----------------------------------------------------------------------*/
+void RemovePromptIndicator (Element el, Document doc)
+{
+#ifdef TEMPLATES
+  ElementType     elType;
+  Element         parent;
+  AttributeType   attrType;
+  Attribute       att;
+  SSchema         templateSSchema;
+
+  elType = TtaGetElementType (el);
+  templateSSchema = TtaGetSSchema ("Template", doc);
+	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+    {
+      parent = TtaGetParent (el);
+      elType = TtaGetElementType (parent);
+      while (parent && elType.ElSSchema != templateSSchema)
+        {
+          parent = TtaGetParent (parent);
+          elType = TtaGetElementType (parent);
+        }
+      if (parent &&
+          (elType.ElTypeNum == Template_EL_useEl ||
+           elType.ElTypeNum == Template_EL_useSimple))
+        {
+          // there is a parent template use
+          attrType.AttrSSchema = elType.ElSSchema;
+          attrType.AttrTypeNum = Template_ATTR_prompt;
+          att = TtaGetAttribute (parent, attrType);
+          if (att)
+            TtaRemoveAttribute (parent, att, doc);
+        }
+    }
+#endif /* TEMPLATES */
+}
+
 
 /*----------------------------------------------------------------------
   AllocTemplateRepositoryListElement: allocates an element for the list

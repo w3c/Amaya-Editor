@@ -52,10 +52,10 @@ STRUCT
   option ( ATTR title )
   	= ANY - ( head, union, import, component );
   
-  useEl ( ATTR title; types = TEXT; currentType = TEXT )
+  useEl ( ATTR title; types = TEXT; currentType = TEXT;  prompt = Yes_ )
      = ANY - ( head, union, import, component );
 
-  useSimple ( ATTR title; types )
+  useSimple ( ATTR title; types; prompt)
      = ANY - ( head, union, import, component );
 
   bag ( ATTR title; types ) 
@@ -84,5 +84,6 @@ EXCEPT
   title:              GiveName;
   ref_name:		        GiveName;
   name:			          GiveName;
+  prompt:             Invisible;
 	
 END

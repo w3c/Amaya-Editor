@@ -1405,6 +1405,11 @@ ThotBool SimpleClick (NotifyElement *event)
 {
   ThotBool usedouble;
 
+#ifdef TEMPLATES
+  if (CheckPromptIndicator (event->element, event->document))
+    return FALSE;    
+#endif /* TEMPLATES */
+
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);
   if (usedouble)
     {
@@ -1451,7 +1456,7 @@ ThotBool SimpleLClick (NotifyElement *event)
         }
     }
 #endif /* _SVG */
-  /* don't let Thot perform normal operation if there is an activation */
+  /* let Thot perform normal operation */
   return FALSE;
 }
 

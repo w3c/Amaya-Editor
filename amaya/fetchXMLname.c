@@ -447,6 +447,10 @@ void MapXMLAttributeValue (int XMLtype, char *attVal, const AttributeType *attrT
     ptr = MathMLAttrValueMappingTable;
   else if (XMLtype == SVG_TYPE)
     ptr = SVGAttrValueMappingTable;
+#ifdef TEMPLATES
+  else if (XMLtype == Template_TYPE)
+    ptr = TemplateAttrValueMappingTable;
+#endif /* TEMPLATES */
   else
     ptr = NULL;
   

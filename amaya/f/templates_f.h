@@ -8,6 +8,10 @@
 
 extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern ThotBool IsTemplateDocument ( Document doc );
+extern ThotBool CheckPromptIndicator ( Element el,
+                                       Document doc );
+extern void RemovePromptIndicator ( Element el,
+                                    Document doc );
 extern void* AllocTemplateRepositoryListElement ( const char* path,
                                                   void* prevElement );
 extern void FreeTemplateRepositoryList ( void* list );
@@ -63,6 +67,10 @@ extern ThotBool TemplateAttrInMenu ( NotifyAttribute * event );
 
 extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern ThotBool IsTemplateDocument ( Document doc );
+extern ThotBool CheckPromptIndicator ( Element el,
+                                         Document doc );
+extern void RemovePromptIndicator ( Element el,
+                                      Document doc );
 extern void* AllocTemplateRepositoryListElement ( const char* path,
                                                     void* prevElement );
 extern void FreeTemplateRepositoryList ( void* list );

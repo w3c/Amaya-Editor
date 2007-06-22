@@ -4193,7 +4193,7 @@ Document LoadDocument (Document doc, char *pathname,
 
       localdoc = GetLocalPath (newdoc, pathname);
       /* what we have to do if doc and targetDocument are different */
-      if (method == CE_INSTANCE)
+      if (method == CE_INSTANCE && TtaFileExist (localdoc))
         // only the temporary file exists
         CheckDocHeader (localdoc, &xmlDec, &withDoctype, &isXML, &useMath, &isknown,
                         &docProfile, &charset, charsetname, &thotType);

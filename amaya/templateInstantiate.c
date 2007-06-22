@@ -532,6 +532,24 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  AddPromptIndicator
+  ----------------------------------------------------------------------*/
+void AddPromptIndicator (Element el, Document doc)
+{
+#ifdef TEMPLATES
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           att;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Template_ATTR_prompt;
+  att = TtaNewAttribute (attrType);
+  TtaAttachAttribute (el, att, doc);
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
   InstantiateUse
   ----------------------------------------------------------------------*/
 Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
@@ -552,6 +570,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   /* get the value of the "types" attribute */
   cont = NULL;
   elType = TtaGetElementType (el);
+  AddPromptIndicator (el, doc);
   types = GetAttributeStringValueFromNum (el, Template_ATTR_types, &size);
   if (!types || types[0] == EOS)
     {
@@ -569,7 +588,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
       dec = Template_GetDeclaration (t, items[0].label);
       if (dec)
       {
-        cont = Template_InsertUseChildren(doc, el, dec);
+        cont = Template_InsertUseChildren (doc, el, dec);
         if (cont)
         {
           TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
@@ -600,7 +619,8 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   Check for min and max param and validate xt:repeat element content.
   @param registerUndo True to register undo creation sequences.
   ----------------------------------------------------------------------*/
-void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool registerUndo)
+void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
+                        ThotBool registerUndo)
 {
 #ifdef TEMPLATES
   Element        child, newChild;
@@ -828,6 +848,10 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           /* if this use element is not empty, don't do anything: it is
              supposed to contain a valid instance. This should be
              checked, though */
+          if (DocumentMeta[doc] && DocumentMeta[doc]->isTemplate)
+            // add the initial indicator
+            AddPromptIndicator (el, doc);
+            
           if (!TtaGetFirstChild (el))
             InstantiateUse (t, el, doc, FALSE);
           break;
@@ -967,8 +991,8 @@ void DoInstanceTemplate (char *templatename)
 }
 
 /*----------------------------------------------------------------------
-  Template_PreInstantiateComponents: Instantiates all components in order to improve
-  editing.
+  Template_PreInstantiateComponents: Instantiates all components in 
+  order to improve editing.
   ----------------------------------------------------------------------*/
 void Template_PreInstantiateComponents (XTigerTemplate t)
 {

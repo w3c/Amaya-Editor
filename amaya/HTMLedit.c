@@ -3578,6 +3578,11 @@ void CheckNewLines (NotifyOnTarget *event)
   if (!event->target)
     return;
   doc = event->document;
+
+#ifdef TEMPLATES
+  RemovePromptIndicator (event->target, doc);
+#endif /* TEMPLATES */
+
   if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS ||
       DocumentTypes[doc] == docSource || DocumentTypes[doc] == docLog)
     pre = FALSE;

@@ -37,6 +37,8 @@ extern Element Template_InsertUseChildren ( Document doc,
 extern void Template_FixAccessRight ( XTigerTemplate t,
                                       Element el,
                                       Document doc );
+extern void AddPromptIndicator ( Element el,
+                                 Document doc );
 extern Element InstantiateUse ( XTigerTemplate t,
                                 Element el,
                                 Document doc,
@@ -81,6 +83,8 @@ extern Element Template_InsertUseChildren ( Document doc,
 extern void Template_FixAccessRight ( XTigerTemplate t,
                                         Element el,
                                         Document doc );
+extern void AddPromptIndicator ( Element el,
+                                   Document doc );
 extern Element InstantiateUse ( XTigerTemplate t,
                                   Element el,
                                   Document doc,

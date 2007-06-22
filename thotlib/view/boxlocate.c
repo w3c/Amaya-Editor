@@ -360,7 +360,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
                   if ((x >= xOrg && x <= xOrg + width &&
                        y >= yOrg && y <= yOrg + height) ||
                       GetParentWithException (ExcClickableSurface, pAb))
-                    {		      
+                    {
                       /* send event TteElemClick.Pre to the application */
                       el = pAb->AbElement;
                       if (NotifyClick (TteElemClick, TRUE, el, doc))
