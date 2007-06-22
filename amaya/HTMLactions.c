@@ -1405,11 +1405,6 @@ ThotBool SimpleClick (NotifyElement *event)
 {
   ThotBool usedouble;
 
-#ifdef TEMPLATES
-  if (CheckPromptIndicator (event->element, event->document))
-    return FALSE;    
-#endif /* TEMPLATES */
-
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);
   if (usedouble)
     {
@@ -3086,6 +3081,9 @@ void SelectionChanged (NotifyElement *event)
           // update the XML list
           UpdateXmlElementListTool (el, doc);
           TtaSetStatus (doc, 1, "  ", NULL);
+#ifdef TEMPLATES
+          CheckPromptIndicator (el, doc);
+#endif /* TEMPLATES */
         }
 #ifdef _WX
       else
