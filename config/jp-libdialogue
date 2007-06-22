@@ -1,0 +1,231 @@
+# encoding= 
+0 **X11 Error : %s\n
+1 **Confirm
+2 **No alphabet file
+3 **New view cannot replace the old one
+4 **Incompatible schemas. Recompile %s
+5 **Fatal Error: fonts not found
+6 **Memory exhausted
+7 **Fatal Error: Unable to connect to X
+8 **View is modified before creation
+9 **Rules table full.
+10 **Incorrect file: %s.STR
+11 **Incorrect file: %s.PRS
+12 **Document %s printed
+13 **Disposition
+14 **1 page/sheet
+15 **2 pages/sheet
+16 **4 pages/sheet
+17 **%s
+18 **Not enough memory
+19 ***** Amaya: Irrecoverable error ***
+20 **modified documents, if any, will be saved
+21 **Incorrect .TRA file: %s
+22 **%s is not a valid sibling for %s (%s)
+23 **%s is not a valid child for %s (%s)
+24 **%s, page %d
+25 **Language
+26 **Attributes
+27 **Standard presentation
+28 **Apply
+29 **Characters
+30 **Underline
+31 **Graphics
+32 **Format
+33 **Default
+34 **Align
+35 **Indent
+36 **Printing in progress
+37 **Print
+38 **Manual feed
+39 **Options
+40 **A4
+41 **US
+42 **Paper format
+43 **Close
+44 **Directories
+45 **The document %s already exists. Do you want to overwrite it?
+46 **Left button sets the text color
+47 **Middle or Right button sets the background color
+48 **Font family
+49 **Normal
+50 **Bold
+51 **Italic
+52 **Oblique
+53 **Normal
+54 **Boldness
+55 **Normal
+56 **Underline
+57 **Cross out
+58 **Body size (pt)
+59 **Indent (pt)
+60 **Line spacing (pt)
+61 **Line spacing
+62 **Save document
+63 **Close, don't save
+64 **Character style
+65 **Colors
+66 **XHTML
+67 **Delete
+68 **Output
+69 **PostScript file
+70 **Printer
+71 **Search for
+72 **Ignore case
+73 **Replace by
+74 **Replace
+75 **No replace
+76 **Replace on request
+77 **Automatic replace
+78 **Search where
+79 **Before selection
+80 **Within selection
+81 **After selection
+82 **In the whole document
+83 **Do not replace
+84 **Default colors
+85 **before closing it
+86 **Close a document
+87 **Math symbols
+88 **Graphics
+89 **Latin alphabet
+90 **Greek alphabet
+91 **Save
+92 **Text
+93 **Graphic
+94 **Symbol
+95 **Image
+96 **XML/XTiger
+97 **after
+98 **before
+99 **around
+100 **Include
+101 **Paste
+102 **to create
+103 **Insert
+104 **Page break
+105 **Language of element
+106 **Inherited language:
+107 **Not found
+108 **Search in
+109 **Search
+110 **Read only element
+111 **Nothing to replace
+112 **Standard characters
+113 **Standard graphics
+114 **Standard format
+115 **Standard geometry
+116 **pt
+117 **Line style
+118 **Line weight
+119 **Fill pattern
+120 **Split
+121 **Object type
+122 **Goto page number:
+123 **Any
+124 **Attribute to search
+125 **Type to search
+126 **Natures
+127 **Attribute value
+128 **Unknown attribute
+129 **Cancel
+130 **Error in PostScript translation
+131 **Command refused by the spooler "%s"
+132 **Cannot create "%s"
+133 **Overline
+134 **Document format
+135 **Events
+136 **Remove attribute
+137 **Left button sets the selection color
+138 **Middle or Right button sets the caret color
+139 **More ...
+140 **Get
+141 **Color
+142 **Background color
+143 **Foreground color
+144 **Switch colors
+145 **Select a generic XML structure
+146 **Checking
+147 **Search/Skip
+148 **Replace (+ dic)
+149 **Replace and next
+150 **Other language
+151 **Learn
+152 **words containing:
+153 **Spell checking ...
+154 **Roman numerals
+155 **Ignore
+156 **words that are all caps
+157 **words with digits
+158 **Parameter file error
+159 **No keyboard file
+160 **Cannot save the document dictionary
+161 **Incorrect word "%s" refused in this dictionary
+162 **Word "%s" added in the document dictionary
+163 **End of spell checking
+164 **Spell checking aborted
+165 **Please select a document
+166 **Document dictionary saved: %s
+167 **Not available in this version
+168 **Enable/Disable palette
+169 **Tools
+170 **Mandatory attribute, it can't be removed
+171 **Refresh
+172 **Left
+173 **Right
+174 **Center
+175 **Justify
+176 **Apply class
+177 **Select a class or a pseudo-class
+178 **Select
+179 **Discard
+180 **Maths
+181 **Misc
+182 **Binary relations
+183 **Binary relations of negation
+184 **Operators
+185 **Greek alphabet (capital)
+186 **Arrows
+187 **Special characters
+188 **Interrupt transfer
+189 **Previous document
+190 **Next document
+191 **Reload
+192 **Save
+193 **New XHTML document
+194 **Open document
+195 **Print
+196 **Search
+197 **Home
+198 **Emphasis On/Off
+199 **Strong On/Off
+200 **Code On/Off
+201 **Insert/Replace image
+202 **Heading level 1
+203 **Heading level 2
+204 **Heading level 3
+205 **Bulleted list
+206 **Numbered list
+207 **Definition list
+208 **Link
+209 **Table
+210 **You are about to close %d open tabs. Are you sure you want to continue?
+211 **Warn me when I attempt to close multiple tabs
+212 **Close tabs
+213 **No error detected
+214 **Show parsing errors
+215 **Boxes
+216 **Division
+217 **Target
+218 **Insertion On/Off
+219 **Deletion On/Off
+220 **Subscript On/Off
+221 **Superscript On/Off
+222 **Term
+223 **Definition
+224 **Object
+225 **CSS Style
+226 **Files
+227 **Horizontal split/unsplit
+228 **Vertical split/unsplit
+229 **Show/hide tools

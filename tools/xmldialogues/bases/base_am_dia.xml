@@ -1004,6 +1004,7 @@
 <message xml:lang="fr">Envoyer par courriel ...</message>
 <message xml:lang="es">&amp;Enviar por correo electrónico ...</message>
 <message xml:lang="sk">Odoslať mailom ...</message>
+<message xml:lang="it">Invia per email  ...</message>
 </label>
 <label define="BSetUpandPrint">
 <message xml:lang="en">Set&amp;up and Print...</message>
@@ -1046,7 +1047,8 @@
 <message xml:lang="ka">დაფის დახურვა(&amp;C)</message>
 <message xml:lang="cn">关闭标签(&amp;C)</message>
 <message xml:lang="tw">關閉標簽(&amp;C)</message>
-<message xml:lang="sk">&amp;Zavrieť kartu</message></label>
+<message xml:lang="sk">&amp;Zavrieť kartu</message>
+</label>
 <label define="BCloseWindow">
 <message xml:lang="en">Close &amp;window</message>
 <message xml:lang="fr">Fermer la fenêtre(&amp;W)</message>
@@ -1083,28 +1085,36 @@
 <message xml:lang="es">Nueva pestaña</message>
 <message xml:lang="de">Eine neue Registerkarte erstellen</message>
 <message xml:lang="hu">Új fül</message>
-<message xml:lang="sk">Nová karta</message></label>
+<message xml:lang="sk">Nová karta</message>
+<message xml:lang="it">Nuovo tab</message>
+</label>
 <label define="BRefreshTab">
 <message xml:lang="en">Refresh tab</message>
 <message xml:lang="fr">Recharger l'onglet</message>
 <message xml:lang="es">Actualizar pestaña</message>
 <message xml:lang="de">Registerkarte aktualisieren</message>
 <message xml:lang="hu">Fül frissítése</message>
-<message xml:lang="sk">Aktualizovať kartu</message></label>
+<message xml:lang="sk">Aktualizovať kartu</message>
+<message xml:lang="it">Ricarica il tab</message>
+</label>
 <label define="BRefreshAllTabs">
 <message xml:lang="en">Refresh all tabs</message>
 <message xml:lang="fr">Recharger tous les onglets</message>
 <message xml:lang="es">Actualizar todas las pestañas</message>
 <message xml:lang="de">Alle Registerkarten aktualisieren</message>
 <message xml:lang="hu">Minden fül frissítése</message>
-<message xml:lang="sk">Aktualizovať všetky karty</message></label>
+<message xml:lang="sk">Aktualizovať všetky karty</message>
+<message xml:lang="it">Ricarica tutti i tab</message>
+</label>
 <label define="BCloseOtherTabs">
 <message xml:lang="en">Close other tabs</message>
 <message xml:lang="fr">Fermer les autres onglets</message>
 <message xml:lang="es">Cerrar las otras pestañas</message>
 <message xml:lang="de">Alle übrigen Registerkarten schließen</message>
 <message xml:lang="hu">Többi fül bezárása</message>
-<message xml:lang="sk">Zatvoriť inú kartu</message></label>
+<message xml:lang="sk">Zatvoriť inú kartu</message>
+<message xml:lang="it">Chiudi gli altri tab</message>
+</label>
 <label define="BUndo">
 <message xml:lang="en">&amp;Undo</message>
 <message xml:lang="fr">&amp;Défaire</message>
@@ -4514,7 +4524,9 @@
 <message xml:lang="es">Modelos</message>
 <message xml:lang="de">Vorlagen</message>
 <message xml:lang="hu">Sablonok</message>
-<message xml:lang="sk">Šablóny</message></label>
+<message xml:lang="sk">Šablóny</message>
+<message xml:lang="it">Modelli</message>
+</label>
 <label define="BHelpChanging">
 <message xml:lang="en">Restructuring</message>
 <message xml:lang="fr">Restructuration</message>

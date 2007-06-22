@@ -65,16 +65,16 @@
 63 Cambia/Crea doctype XHTML 1.0 Basic
 64 Cambia/Crea doctype HTML 4.01 Transitional
 65 Cambia/Crea doctype HTML 4.01 Strict
-66 **Send by mail ...
+66 Invia per email  ...
 67 Imposta e stampa(&U)...
 68 Stam&pa
 69 &Chiudi tab
 70 Chiudi(&W)
 71 Esci(&X)
-72 **New tab
-73 **Refresh tab
-74 **Refresh all tabs
-75 **Close other tabs
+72 Nuovo tab
+73 Ricarica il tab
+74 Ricarica tutti i tab
+75 Chiudi gli altri tab
 76 Ritratta
 77 Rifai
 78 Taglia
@@ -312,7 +312,7 @@
 310 Creazione elementi
 311 Attributi
 312 Caratteri
-313 **Templates
+313 Modelli
 314 Ristrutturazione
 315 Collegamenti
 316 Tabelle

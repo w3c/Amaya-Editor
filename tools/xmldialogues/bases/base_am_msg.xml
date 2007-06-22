@@ -3131,7 +3131,9 @@
 <message xml:lang="es">Mantener espaciado múltiple</message>
 <message xml:lang="de">Mehrfache Leerzeichen erhalten</message>
 <message xml:lang="hu">Többszörös szóköz megtartása</message>
-<message xml:lang="sk">Ponechať viacnásobné medzery</message></label>
+<message xml:lang="sk">Ponechať viacnásobné medzery</message>
+<message xml:lang="it">Conserva gli spazi multipli</message>
+</label>
 <label define="AM_XML_RETRY">
 <message xml:lang="en">Error(s) in the source code</message>
 <message xml:lang="fr">Erreur(s) dans le code source</message>
@@ -5526,7 +5528,9 @@
 <message xml:lang="cn">未知元素</message>
 <message xml:lang="tw">未知元素</message>
 <message xml:lang="hu">Ismeretlen elem</message>
-<message xml:lang="sk">Neznámy prvok</message></label>
+<message xml:lang="sk">Neznámy prvok</message>
+<message xml:lang="it">Elemento sconosciuto</message>
+</label>
 <label define="AM_CHANGE_NUMBER">
 <message xml:lang="en">%d updated elements</message>
 <message xml:lang="fr">%d éléments changés</message>
@@ -5535,7 +5539,9 @@
 <message xml:lang="cn">%d 个已更新元素</message>
 <message xml:lang="tw">%d 个已更新元素</message>
 <message xml:lang="hu">%d frissített elem</message>
-<message xml:lang="sk">Počet aktualizovaných prvkov: %d </message></label>
+<message xml:lang="sk">Počet aktualizovaných prvkov: %d </message>
+<message xml:lang="it">%d elementi aggiornati</message>
+</label>
 <label define="AM_MISSING_TITLE">
 <message xml:lang="en">The title is mandatory</message>
 <message xml:lang="fr">Le titre est obligatoire</message>
@@ -5543,352 +5549,423 @@
 <message xml:lang="it">Il titolo è obbligatorio</message>
 <message xml:lang="es">El título es obligatorio</message>
 <message xml:lang="hu">A cím kötelező</message>
-<message xml:lang="sk">Je potrebné zadať názov</message></label>
+<message xml:lang="sk">Je potrebné zadať názov</message>
+</label>
 <label define="AM_TEMPLATES">
 <message xml:lang="en">Templates</message>
 <message xml:lang="fr">Modèles</message>
 <message xml:lang="es">Modelos</message>
 <message xml:lang="de">Vorlagen</message>
 <message xml:lang="hu">Sablonok</message>
-<message xml:lang="sk">Šablóny</message></label>
+<message xml:lang="sk">Šablóny</message>
+<message xml:lang="it">Modelli</message>
+</label>
 <label define="AM_NUMBER_OCCUR">
 <message xml:lang="en">Number of occurrences</message>
 <message xml:lang="fr">Nombre d'occurrences</message>
 <message xml:lang="es">Número de ocurrencias</message>
 <message xml:lang="de">Häufigkeit des Auftretens</message>
 <message xml:lang="hu">Előfordulások száma</message>
-<message xml:lang="sk">Počet výskytov</message></label>
+<message xml:lang="sk">Počet výskytov</message>
+<message xml:lang="it">Numero di occorrenze</message>
+</label>
 <label define="AM_NUMBER_OCCUR_HAVE_MAX">
 <message xml:lang="en">Maximum number of occurrences reached</message>
 <message xml:lang="fr">Nombre maximal d'occurrences atteint</message>
 <message xml:lang="es">Número máximo de ocurrencias alcanzado</message>
 <message xml:lang="de">Die maximal mögliche Zahl des Auftretens wurde erreicht</message>
 <message xml:lang="hu">Elértük az előfordulások legnagyobb számát</message>
-<message xml:lang="sk">Maximálny počet dosiahnutých výskytov</message></label>
+<message xml:lang="sk">Maximálny počet dosiahnutých výskytov</message>
+<message xml:lang="it">Raggiunto il massimo numero di occorrenze</message>
+</label>
 <label define="AM_NUMBER_OCCUR_HAVE_MIN">
 <message xml:lang="en">Minimum number of occurrences reached</message>
 <message xml:lang="fr">Nombre minimum d'occurrences atteint</message>
 <message xml:lang="es">Número mínimo de ocurrencias alcanzado</message>
 <message xml:lang="de">Die minimal mögliche Zahl des Auftretens wurde erreicht</message>
 <message xml:lang="hu">Elértük az előfordulások legkisebb számát</message>
-<message xml:lang="sk">Manimálny počet dosiahnutých výskytov</message></label>
+<message xml:lang="sk">Manimálny počet dosiahnutých výskytov</message>
+<message xml:lang="it">Raggiunto il minimo numero di occorrenze</message>
+</label>
 <label define="AM_WARNIDS">
 <message xml:lang="en">Check duplicated IDs</message>
 <message xml:lang="fr">Vérifier les IDs dupliqués</message>
 <message xml:lang="es">Verificar los IDs duplicados</message>
 <message xml:lang="de">Überprüfen doppelter IDs</message>
 <message xml:lang="hu">Többszörös azonosító ellenőrzése</message>
-<message xml:lang="sk">Kontrolovať duplicitné ID</message></label>
+<message xml:lang="sk">Kontrolovať duplicitné ID</message>
+<message xml:lang="it">Controllo ID duplicati</message>
+</label>
 <label define="AM_MATHPI">
 <message xml:lang="en">Add the xsl stylesheet for MathML elements</message>
 <message xml:lang="fr">Ajouter la feuille xsl pour les éléments MathML</message>
 <message xml:lang="es">Agregar la hoja xsl para los elementos MathML</message>
 <message xml:lang="de">Füge XSL-Form für MathML-Elemente hinzu</message>
 <message xml:lang="hu">Adja hozzá az xsl stíluslapot a MathML elemekhez</message>
-<message xml:lang="sk">Pridať XSL štýly pre prvky jazyka MathML</message></label>
+<message xml:lang="sk">Pridať XSL štýly pre prvky jazyka MathML</message>
+<message xml:lang="it">Aggiungi il foglio di stile xsl per gli elementi MathML</message>
+</label>
 <label define="AM_SELECT_OPERATOR_TITLE">
 <message xml:lang="en">Insert operator</message>
 <message xml:lang="fr">Insérer opérateur</message>
 <message xml:lang="es">Insertar operador</message>
 <message xml:lang="de">Einfügen eines Operators</message>
 <message xml:lang="hu">Műveleti jel beillesztése</message>
-<message xml:lang="sk">Vložiť operátor</message></label>
+<message xml:lang="sk">Vložiť operátor</message>
+<message xml:lang="it">Inserisci l'operatore</message>
+</label>
 <label define="AM_SELECT_OPERATOR_LABEL">
 <message xml:lang="en">Select the way the operator has to be displayed</message>
 <message xml:lang="fr">Choisir la façon dont l'opérateur doit être affiché</message>
 <message xml:lang="es">Seleccionar la manera cuya el operador debe ser visualizado</message>
 <message xml:lang="de">Wählen der Art der Operatordarstellung</message>
 <message xml:lang="hu">Válassza ki a műveleti jel megjelenítési módját</message>
-<message xml:lang="sk">Vyberte spôsob akým budú operátory zobrazené</message></label>
+<message xml:lang="sk">Vyberte spôsob akým budú operátory zobrazené</message>
+<message xml:lang="it">Scegli il modo in cui l'operatore viene visualizzato</message>
+</label>
 <label define="AM_SELECT_INTEGRAL_TITLE">
 <message xml:lang="en">Insert an integral</message>
 <message xml:lang="fr">Insérer une intégrale</message>
 <message xml:lang="es">Insertar una integral</message>
 <message xml:lang="de">Einfügen eines Integrals</message>
 <message xml:lang="hu">Integrál beillesztése</message>
-<message xml:lang="sk">Vložiť integrál</message></label>
+<message xml:lang="sk">Vložiť integrál</message>
+<message xml:lang="it">Inserisci un integrale</message>
+</label>
 <label define="AM_SELECT_INTEGRAL_LABEL">
 <message xml:lang="en">Select the type of integral</message>
 <message xml:lang="fr">Choisir le type d'intégrale</message>
 <message xml:lang="es">Seleccionar el tipo de integral</message>
 <message xml:lang="de">Auswählen des Integraltyps</message>
 <message xml:lang="hu">Válassza ki az integrál típusát</message>
-<message xml:lang="sk">Vyberte typ integrálu</message></label>
+<message xml:lang="sk">Vyberte typ integrálu</message>
+<message xml:lang="it">Scegli il tipo di integrale</message>
+</label>
 <label define="AM_SELECT_FENCE_TITLE">
 <message xml:lang="en">Attributes of the fence</message>
 <message xml:lang="fr">Attributs du fence</message>
 <message xml:lang="es">Atributos del fence</message>
 <message xml:lang="de">Attribute für die Grenzen</message>
 <message xml:lang="hu">Szögletes zárójel attribútumai</message>
-<message xml:lang="sk">Atribúty ohraničenia</message></label>
+<message xml:lang="sk">Atribúty ohraničenia</message>
+<message xml:lang="it">Attributi del fence</message>
+</label>
 <label define="AM_SELECT_FENCE_LABEL">
 <message xml:lang="en">Select open, separator and close symbols</message>
 <message xml:lang="fr">Choisir les symboles ouvrant, séparateur et fermant</message>
 <message xml:lang="es">Seleccionar los símbolos arbriendos, separadores y cerrandos</message>
 <message xml:lang="de">Wählen der Eröffungs-, Trennungs- und Schließungssymbole</message>
 <message xml:lang="hu">Válassza ki a nyitó, elválasztó és záró jeleket</message>
-<message xml:lang="sk">Vyberte otvoriť, oddelovače a ukončenie symbolov</message></label>
+<message xml:lang="sk">Vyberte otvoriť, oddelovače a ukončenie symbolov</message>
+<message xml:lang="it">Scegli simboli di apertura, separazione e chiusura</message>
+</label>
 <label define="AM_NUMBER_OPERATORS">
 <message xml:lang="en">Number of operator symbols</message>
 <message xml:lang="fr">Nombre de symboles opérateurs</message>
 <message xml:lang="es">Número de símbolos operadores</message>
 <message xml:lang="de">Anzahl der Operatorsymbole</message>
 <message xml:lang="hu">Műveleti jelek száma</message>
-<message xml:lang="sk">Počet sybolov operátorov</message></label>
+<message xml:lang="sk">Počet sybolov operátorov</message>
+<message xml:lang="it">Numero di simboli operatore</message>
+</label>
 <label define="AM_NUMBER_COORDONNATES">
 <message xml:lang="en">Number of coordinates</message>
 <message xml:lang="fr">Nombre de coordonnées</message>
 <message xml:lang="es">Número de coordenadas</message>
 <message xml:lang="de">Anzahl der Koordinaten</message>
 <message xml:lang="hu">Coordináták száma</message>
-<message xml:lang="sk">Počet koordinátov</message></label>
+<message xml:lang="sk">Počet koordinátov</message>
+<message xml:lang="it">Numero di coordinate</message>
+</label>
 <label define="AM_NUMBER_NUPLE">
 <message xml:lang="en">Length of the N-tuples</message>
 <message xml:lang="fr">Longueur du N-uplet</message>
 <message xml:lang="es">Largo del N-</message>
 <message xml:lang="de">Länge der n-Tupel</message>
 <message xml:lang="hu">N-esek hossza</message>
-<message xml:lang="sk">Dĺžka N-tuplov</message></label>
+<message xml:lang="sk">Dĺžka N-tuplov</message>
+<message xml:lang="it">Lunghezza delle N-uple</message>
+</label>
 <label define="AM_NUMBER_ELEMENTS">
 <message xml:lang="en">Number of elements</message>
 <message xml:lang="fr">Nombre d'éléments</message>
 <message xml:lang="es">Número de elementos</message>
 <message xml:lang="de">Anzahl der Elemente</message>
 <message xml:lang="hu">Elemek száma</message>
-<message xml:lang="sk">Počet prvkov</message></label>
+<message xml:lang="sk">Počet prvkov</message>
+<message xml:lang="it">Numero di elementi</message>
+</label>
 <label define="AM_NUMBER_VARIABLES">
 <message xml:lang="en">Number of variables</message>
 <message xml:lang="fr">Nombre de variables</message>
 <message xml:lang="es">Número de variables</message>
 <message xml:lang="de">Anzahl der Variablen</message>
 <message xml:lang="hu">Változók száma</message>
-<message xml:lang="sk">Počet premenných</message></label>
+<message xml:lang="sk">Počet premenných</message>
+<message xml:lang="it">Numbeo di variabili</message>
+</label>
 <label define="AM_DEGREE">
 <message xml:lang="en">Degree</message>
 <message xml:lang="fr">Degré</message>
 <message xml:lang="es">Grado</message>
 <message xml:lang="de">Grad</message>
 <message xml:lang="hu">Rend</message>
-<message xml:lang="sk">Stupeň voľnosti</message></label>
+<message xml:lang="sk">Stupeň voľnosti</message>
+<message xml:lang="it">Grado della variabile</message>
+</label>
 <label define="AM_DEGREE_VARIABLE">
 <message xml:lang="en">Degree of the variable number %d</message>
 <message xml:lang="fr">Degré de la variable numéro %d</message>
 <message xml:lang="es">Grado de la variable %d</message>
 <message xml:lang="de">Grad der Variable mit Nummer %d</message>
 <message xml:lang="hu">A változó rendje (%d)</message>
-<message xml:lang="sk">Počet stupňov voľnosti premenných %d</message></label>
+<message xml:lang="sk">Počet stupňov voľnosti premenných %d</message>
+<message xml:lang="it">Grado della  variable numero %d</message>
+</label>
 <label define="AM_COMPOUND_DOCUMENT">
 <message xml:lang="en">Compound document</message>
 <message xml:lang="fr">Document composé</message>
 <message xml:lang="es">Docucompuesto</message>
 <message xml:lang="de">Mischdokument</message>
 <message xml:lang="hu">Összetett dokumentum</message>
-<message xml:lang="sk">Zložený dokument</message></label>
+<message xml:lang="sk">Zložený dokument</message>
+<message xml:lang="it">Documento composto</message>
+</label>
 <label define="AM_BCOPY_CSS">
 <message xml:lang="en">Copy resources (styles and scripts)</message>
 <message xml:lang="fr">Copier les ressources (styles et scripts)</message>
 <message xml:lang="es">Copiar recursos (estilos y scripts)</message>
 <message xml:lang="sk">Skopírovať zdroje (štýly a skripty)</message>
+<message xml:lang="it">Copia le risorse (stili e script)</message>
 </label>
 <label define="AM_WHERE_RESOURCE">
 <message xml:lang="en">Where to save resources</message>
 <message xml:lang="fr">Où enregistrer les ressources</message>
 <message xml:lang="es">Ubicación de recursos</message>
 <message xml:lang="sk">Umiestnenie zdrojov</message>
+<message xml:lang="it">Dove salvare le risorse</message>
 </label>
 <label define="AM_WHERE_IMAGE">
 <message xml:lang="en">Where to save images</message>
 <message xml:lang="es">Ubicación de imágenes</message>
 <message xml:lang="fr">Où enregistrer les images</message>
 <message xml:lang="sk">Umiestnenie obrázkov</message>
+<message xml:lang="it">Dove salvare le immagini</message>
 </label>
 <label define="AM_QUICK_SAVE">
 <message xml:lang="en">Document</message>
 <message xml:lang="es">Documento</message>
 <message xml:lang="fr">Document</message>
 <message xml:lang="sk">Dokument</message>
+<message xml:lang="it">Documento</message>
 </label>
 <label define="AM_EXTENSION">
 <message xml:lang="en">Images, Styles and Scripts</message>
 <message xml:lang="es">Imágenes, estilos y scripts</message>
 <message xml:lang="fr">Images, Styles et Scripts</message>
 <message xml:lang="sk">Obrázky, štýly a skripty</message>
+<message xml:lang="it">Immagini, Stili e Script</message>
 </label>
 <label define="AM_EMAILS">
 <message xml:lang="en">Mail</message>
 <message xml:lang="es">Correo</message>
 <message xml:lang="fr">Courriel</message>
 <message xml:lang="sk">Mail</message>
+<message xml:lang="it">Email</message>
 </label>
 <label define="AM_EMAILS_PROPERTIES">
 <message xml:lang="en">Common parameters for sending mails:</message>
 <message xml:lang="es">Parámetros comunes envío correos:</message>
 <message xml:lang="fr">Paramètres pour l'envoi de courriels :</message>
 <message xml:lang="sk">Spoločné parametre pre odosielanie mailov:</message>
+<message xml:lang="it">Parametri comuni per inviare messaggi:</message>
 </label>
 <label define="AM_EMAILS_SERVER_ADDRESS">
 <message xml:lang="en">SMTP server address:</message>
 <message xml:lang="es">Dirección servidor SMTP:</message>
 <message xml:lang="fr">Adresse du serveur SMTP :</message>
 <message xml:lang="sk">Adresa SMTP servera:</message>
+<message xml:lang="it">Indirizzo del server SMTP:</message>
 </label>
 <label define="AM_EMAILS_SERVER_PORT">
 <message xml:lang="en">Server port:</message>
 <message xml:lang="es">Puerto servidor:</message>
 <message xml:lang="fr">Port :</message>
 <message xml:lang="sk">Port:</message>
+<message xml:lang="it">Porta del server:</message>
 </label>
 <label define="AM_EMAILS_SERVER_DEFPORT">
 <message xml:lang="en">(25 by default)</message>
 <message xml:lang="es">(25 predeterminado)</message>
 <message xml:lang="fr">(25 par défaut)</message>
 <message xml:lang="sk">(štandardný je 25)</message>
+<message xml:lang="it">(25 per default)</message>
 </label>
 <label define="AM_EMAILS_FROM_">
 <message xml:lang="en">Sending address (From field):</message>
 <message xml:lang="es">Remitente (campo De):</message>
 <message xml:lang="fr">Adresse d'envoi (champ Expéditeur) :</message>
 <message xml:lang="sk">Adresa odosielateľa (Od koho)</message>
+<message xml:lang="it">Indirizzo di invio (campo From):</message>
 </label>
 <label define="AM_EMAILS_TO_">
 <message xml:lang="en">To:</message>
 <message xml:lang="es">A:</message>
 <message xml:lang="fr">Destinataires :</message>
 <message xml:lang="sk">Komu:</message>
+<message xml:lang="it">A:</message>
 </label>
 <label define="AM_EMAILS_SEND_BY_MAIL">
 <message xml:lang="en">Send by mail</message>
 <message xml:lang="es">Enviar por correo</message>
 <message xml:lang="fr">Envoyer par courriel</message>
 <message xml:lang="sk">Odoslať mailom</message>
+<message xml:lang="it">Invia per email</message>
 </label>
 <label define="AM_EMAILS_SUBJECT_">
 <message xml:lang="en">Subject:</message>
 <message xml:lang="es">Asunto:</message>
 <message xml:lang="fr">Sujet :</message>
 <message xml:lang="sk">Predmet :</message>
+<message xml:lang="it">Titolo:</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_">
 <message xml:lang="en">Send as:</message>
 <message xml:lang="es">Enviar como:</message>
 <message xml:lang="fr">Envoyer en tant que :</message>
 <message xml:lang="sk">Odoslať ako:</message>
+<message xml:lang="it">Invia come:</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_MESSAGE">
 <message xml:lang="en">Message body</message>
 <message xml:lang="es">Mensaje</message>
 <message xml:lang="fr">Corps du message</message>
 <message xml:lang="sk">Text správy</message>
+<message xml:lang="it">Corpo del messaggio</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_ATTACHMENT">
 <message xml:lang="en">Attachment</message>
 <message xml:lang="es">Adjuntar</message>
 <message xml:lang="fr">Pièce jointe</message>
 <message xml:lang="sk">Príloha</message>
+<message xml:lang="it">Allegato</message>
 </label>
 <label define="AM_EMAILS_DONT_SEND">
 <message xml:lang="en">Don't send</message>
 <message xml:lang="es">No enviar</message>
 <message xml:lang="fr">Ne pas envoyer</message>
 <message xml:lang="sk">Neodosielať</message>
+<message xml:lang="it">Non inviare</message>
 </label>
 <label define="AM_EMAILS_SEND">
 <message xml:lang="en">Send</message>
 <message xml:lang="es">Enviar</message>
 <message xml:lang="fr">Envoyer</message>
 <message xml:lang="sk">Odoslať</message>
+<message xml:lang="it">Invia</message>
 </label>
 <label define="AM_EMAILS_NO_SERVER">
 <message xml:lang="en">The server address and port must be set in Preferences</message>
 <message xml:lang="es">Establecer dirección y puerto del servidor en menú Preferencias</message>
 <message xml:lang="fr">L'adresse et le port du serveur doivent être renseignés dans les Préférences</message>
 <message xml:lang="sk">Adresa servera a port musia byť nastavené v nastaveniach.</message>
+<message xml:lang="it">Indirizzo e porta del server devono essere settati nelle Preferenze</message>
 </label>
 <label define="AM_EMAILS_MESSAGE_BODY">
 <message xml:lang="en">Message:</message>
 <message xml:lang="es">Texto:</message>
 <message xml:lang="fr">Message :</message>
 <message xml:lang="sk">Správa:</message>
+<message xml:lang="it">Messaggio:</message>
 </label>
 <label define="AM_EMAILS_MESSAGE_ALTERN">
 <message xml:lang="en">Alternate textual  message:</message>
 <message xml:lang="es">Texto alternativo:</message>
 <message xml:lang="fr">Message textuel alternatif :</message>
 <message xml:lang="sk">Alternatívna textová správa:</message>
+<message xml:lang="it">Messaggio alternativo di testo:</message>
 </label>
 <label define="AM_EMAILS_ERR_SERVER_RESPOND">
 <message xml:lang="en">The server is unreachable or does not respond</message>
 <message xml:lang="es">Servidor no encontrado o no responde</message>
 <message xml:lang="fr">Le serveur est inaccessible ou ne répond pas</message>
 <message xml:lang="sk">Server je nedostupný alebo neodpovedá</message>
+<message xml:lang="it">Il server è irraggiungibile o non rispond</message>
 </label>
 <label define="AM_EMAILS_ERR_SERVER_REJECT">
 <message xml:lang="en">The server has reject you</message>
 <message xml:lang="es">El servidor ha rechazado la conexión</message>
 <message xml:lang="fr">Le serveur vous a rejeté</message>
 <message xml:lang="sk">Server prerušil spojenie</message>
+<message xml:lang="it">Il server ha rifiutato il messaggio</message>
 </label>
 <label define="AM_EMAILS_ERR_FROM_ADDR">
 <message xml:lang="en">The sender address is misformatted</message>
 <message xml:lang="es">Dirección del remitente incorrecta</message>
 <message xml:lang="fr">L'adresse de l'envoyeur est mal formatée</message>
 <message xml:lang="sk">Adredsa odosielateľa má nesprávny tvar</message>
+<message xml:lang="it">L'indirizzo del mittente è malformattato</message>
 </label>
 <label define="AM_EMAILS_ERR_RCPT_ADDR">
 <message xml:lang="en">A recipient address is misformatted</message>
 <message xml:lang="es">Dirección de destino incorrecta</message>
 <message xml:lang="fr">L'adresse d'un destinataire est mal formatée</message>
 <message xml:lang="sk">Adresa príjemcu má nesprávny tvar</message>
+<message xml:lang="it">L'indirizzo di un destinatario è malformattato</message>
 </label>
 <label define="AM_EMAILS_ERR_BAD_CONTENT">
 <message xml:lang="en">The mail content is misformatted</message>
 <message xml:lang="es">Texto del mensaje incorrecto</message>
 <message xml:lang="fr">Le contenu du courriel est mal formatée</message>
 <message xml:lang="sk">Obsah mail má nesprávny tvar</message>
+<message xml:lang="it">Il contenuto del messaggio è malformattato</message>
 </label>
 <label define="AM_EMAILS_ERR_UNKNOW">
 <message xml:lang="en">Mail not sent</message>
 <message xml:lang="es">Correo no enviado</message>
 <message xml:lang="fr">Courriel non envoyé</message>
 <message xml:lang="sk">Správa nebola odoslaná</message>
+<message xml:lang="it">Messaggio non inviato</message>
 </label>
 <label define="AM_EMAILS_SENT">
 <message xml:lang="en">Mail sent</message>
 <message xml:lang="es">Correo enviado</message>
 <message xml:lang="fr">Courriel envoyé</message>
 <message xml:lang="sk">Správa bola odoslaná</message>
+<message xml:lang="it">Messaggio inviato</message>
 </label>
 <label define="AM_PASSWORDS">
 <message xml:lang="en">Passwords</message>
 <message xml:lang="es">Contraseñas</message>
 <message xml:lang="fr">Mots de passe</message>
 <message xml:lang="sk">Heslá</message>
+<message xml:lang="it">Password</message>
 </label>
 <label define="AM_PASSWORDS_SAVE">
 <message xml:lang="en">Do you want Amaya to remember this password?</message>
 <message xml:lang="es">¿Desea que Amaya recuerde esta contraseña?</message>
 <message xml:lang="fr">Voulez-vous qu'Amaya se souvienne de ce mot de passe ?</message>
 <message xml:lang="sk">Chcete aby si program Amaya zapamätal toto heslo</message>
+<message xml:lang="it">Vuoi che Amaya ricordi questa password?</message>
 </label>
 <label define="AM_PASSWORDS_SAVE_OPTION">
 <message xml:lang="en">Remember passwords for sites</message>
 <message xml:lang="fr">Enregistrer les mots de passe</message>
+<message xml:lang="it">Ricorda le password per i siti</message>
 </label>
 <label define="AM_PASSWORDS_LIST">
 <message xml:lang="en">Sites</message>
 <message xml:lang="es">Sitios</message>
 <message xml:lang="fr">Sites</message>
 <message xml:lang="sk">Umiestnenia</message>
+<message xml:lang="it">Siti</message>
 </label>
 <label define="AM_PASSWORDS_EMPTY">
 <message xml:lang="en">Remove All</message>
 <message xml:lang="es">Borrar todo</message>
 <message xml:lang="fr">Tout effacer</message>
 <message xml:lang="sk">Odstrániť všetky</message>
-</label>
-<label define="AM_PASSWORDS_REMOVE">
-<message xml:lang="en">Remove All</message>
-<message xml:lang="fr">Supprimer</message>
+<message xml:lang="it">Elimina tutti</message>
 </label>
 <label define="AM_NEW">
 <message xml:lang="en">New</message>
