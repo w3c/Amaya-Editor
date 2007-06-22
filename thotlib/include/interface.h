@@ -111,6 +111,11 @@ extern void TtaRemoveAccessKey (Document doc, unsigned int key);
 extern void TtaUpdateAttrMenu (Document document);
 
 /*----------------------------------------------------------------------
+  TtaIsTextInserting returns the TextInserting status
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsTextInserting ();
+
+/*----------------------------------------------------------------------
   TtaExecuteMenuAction execute the corresponding menu action.
   ----------------------------------------------------------------------*/
 extern void TtaExecuteMenuAction (const char *actionName, Document doc, View view,

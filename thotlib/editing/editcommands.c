@@ -106,6 +106,15 @@ static ThotBool     NewInsert;
 #ifdef _GL
 #include "glwindowdisplay.h"
 #endif /*_GL*/
+
+/*----------------------------------------------------------------------
+  TtaIsTextInserting returns the TextInserting status
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsTextInserting ()
+{
+  return TextInserting;
+}
+
 /*----------------------------------------------------------------------
   CopyString computes the width of the source text and copies it into the
   target buffer if target parameter is not NULL.

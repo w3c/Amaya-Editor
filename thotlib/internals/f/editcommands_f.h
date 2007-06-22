@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool TtaIsTextInserting ( void );
 extern void TtcInsertGraph ( Document document,
                              View view,
                              unsigned char c );
@@ -46,6 +47,7 @@ extern void EditingLoadResources ( void );
 
 #else /* __STDC__ */
 
+extern ThotBool TtaIsTextInserting ( void );
 extern void TtcInsertGraph ( Document document,
                                View view,
                                unsigned char c );
