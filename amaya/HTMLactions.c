@@ -3082,7 +3082,9 @@ void SelectionChanged (NotifyElement *event)
           UpdateXmlElementListTool (el, doc);
           TtaSetStatus (doc, 1, "  ", NULL);
 #ifdef TEMPLATES
-          CheckPromptIndicator (el, doc);
+          if (!TtaIsTextInserting ())
+            // no current text insertion
+            CheckPromptIndicator (el, doc);
 #endif /* TEMPLATES */
         }
 #ifdef _WX
