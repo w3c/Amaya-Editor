@@ -191,9 +191,14 @@ bool AmayaURLGrabberConnection::OnPoke(const wxString &topic, const wxString &it
   if (topic == m_Owner.m_AcceptedTopic && m_Owner.m_pURLOpenCallback)
     {
       /* copy the possible url argument */
-	  char buffer[MAX_LENGTH];
-      strncpy( buffer, (const char*)data, MAX_LENGTH - 1);
-      buffer[MAX_LENGTH - 1] = EOS;
+	    char buffer[MAX_LENGTH];
+      if (data)
+        {
+          strncpy( buffer, (const char*)data, MAX_LENGTH - 1);
+          buffer[MAX_LENGTH - 1] = EOS;
+        }
+      else
+        buffer[0] = EOS;
       /* call the open document callback */
       (*m_Owner.m_pURLOpenCallback)(buffer);
       return true;
