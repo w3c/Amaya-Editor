@@ -29,6 +29,8 @@ public:
   void RegisterOpenURLCallback( OpenURLCallback callback );
   void CallOpenURLCallback( char * url );
   int FilterEvent(wxEvent& event);
+  short MacHandleAEODoc(const WXEVENTREF event, WXEVENTREF WXUNUSED(reply));
+  void OpenQueryDocs();
 
 #ifdef _GL
   static int * GetGL_AttrList();

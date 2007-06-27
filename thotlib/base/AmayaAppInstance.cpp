@@ -96,7 +96,7 @@ bool AmayaAppInstance::SendURLToOtherAmayaInstance(const wxString & url)
           return false;
         }
       buffer = (char *)TtaGetMemory (MAX_LENGTH);
-	  buffer[0] = EOS;
+      buffer[0] = EOS;
       strcpy(buffer, (const char*)url.mb_str(wxConvUTF8) );
       if (buffer[0] != EOS)
         {
@@ -110,11 +110,11 @@ bool AmayaAppInstance::SendURLToOtherAmayaInstance(const wxString & url)
 #endif /* _WINDOWS */
                 {
                   /* it is a relative name */
-				  name = TtaStrdup (buffer);
+		  name = TtaStrdup (buffer);
                   getcwd (buffer, sizeof (buffer) / sizeof (char));
                   strcat (buffer, DIR_STR);
                   strcat (buffer, name);
-				  TtaFreeMemory (name);
+		  TtaFreeMemory (name);
                 }
             }
         }
@@ -191,7 +191,7 @@ bool AmayaURLGrabberConnection::OnPoke(const wxString &topic, const wxString &it
   if (topic == m_Owner.m_AcceptedTopic && m_Owner.m_pURLOpenCallback)
     {
       /* copy the possible url argument */
-	    char buffer[MAX_LENGTH];
+      char buffer[MAX_LENGTH];
       if (data)
         {
           strncpy( buffer, (const char*)data, MAX_LENGTH - 1);

@@ -78,7 +78,6 @@ include .depends
 #########################################################################
 
 THOTK_OBJ = \
-	base/AmayaApp.o \
 	base/AmayaAppInstance.o \
 	base/AmayaLogDebug.o \
 	base/wxAmayaTimer.o \
@@ -111,6 +110,7 @@ THOTK_OBJ = \
 	unicode/ustring.o
 
 KERNEL_OBJ = \
+	base/AmayaApp.o \
 	base/batchmessage.o \
 	base/fileaccessND.o \
 	base/structlist.o \
@@ -182,6 +182,7 @@ DISPLAY_OBJ = \
 	view/spline.o
 
 EDITOR_OBJ = \
+	base/AmayaApp.o \
 	base/alloca.o \
 	base/config.o \
 	base/containers.o \
@@ -315,6 +316,7 @@ libThotEditor.a : $(THOTK_OBJ) $(DISPLAY_OBJ) $(EDITOR_OBJ)
 #
 
 PRINT_OBJ= \
+	base/AmayaAppPP.o \
 	dialogue/AmayaPrintNotify.o \
 	dialogue/nodialog.o \
 	tree/paginatePP.o \
@@ -323,6 +325,9 @@ PRINT_OBJ= \
 	view/printgl.o \
 	view/tableH.o \
 	editing/print.o
+
+base/AmayaAppPP.o : @srcdir@/base/AmayaApp.cpp @srcdir@/include/thot_sys.h
+	$(CXX) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -D_GLPRINT -c @srcdir@/base/AmayaApp.cpp -o $@
 
 tree/paginatePP.o : @srcdir@/tree/paginate.c @srcdir@/include/thot_sys.h
 	$(CXX) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -DPAGINEETIMPRIME -c @srcdir@/tree/paginate.c -o $@
