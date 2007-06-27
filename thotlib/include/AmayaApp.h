@@ -29,7 +29,9 @@ public:
   void RegisterOpenURLCallback( OpenURLCallback callback );
   void CallOpenURLCallback( char * url );
   int FilterEvent(wxEvent& event);
+#ifdef _MACOS
   short MacHandleAEODoc(const WXEVENTREF event, WXEVENTREF WXUNUSED(reply));
+#endif /* _MACOS */
   void OpenQueryDocs();
 
 #ifdef _GL
