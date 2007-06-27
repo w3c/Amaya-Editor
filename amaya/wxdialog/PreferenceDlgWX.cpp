@@ -1265,7 +1265,7 @@ void PreferenceDlgWX::UpdateTemplateList()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::GetValueDialog_Templates()
 {
-  Prop_Templates       prop = GetProp_Templates();
+  //Prop_Templates       prop = GetProp_Templates();
 }
 
 /*----------------------------------------------------------------------

@@ -2589,7 +2589,7 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
   Menu_Ctl           *ptrmenu, *ptrsmenu;
   Item_Ctl           *ptr, *sptr;
   int                 frame, profile, action;
-  int                 ref, i, j, m, state;
+  int                 ref, i, j, m;
 
   if (doc)
     {
