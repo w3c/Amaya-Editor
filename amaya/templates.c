@@ -1515,26 +1515,30 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
     return FALSE; // let Thot do the job
 
   // Fisrt, test if in a xt:bag or in a base-element xt:use
-  if(parentType.ElSSchema==templateSSchema)
+  if(parentType.ElSSchema == templateSSchema)
     ancestor = parent;
   else
-    ancestor = GetFirstTemplateParentElement(parent);
+    ancestor = GetFirstTemplateParentElement (parent);
 
-  if(ancestor)
+  if (ancestor)
   {
     ancestorType = TtaGetElementType(ancestor);
 
-    if(ancestorType.ElTypeNum==Template_EL_bag)
-    {
-      if(elType.ElSSchema==templateSSchema &&
-          (elType.ElTypeNum==Template_EL_useSimple || elType.ElTypeNum==Template_EL_useEl))
-        return FALSE;
-      return !Template_CanInsertElementInBagElement(event->document, elType, ancestor);      
-    }
-    else if(ancestorType.ElTypeNum==Template_EL_useSimple ||
-            ancestorType.ElTypeNum==Template_EL_useEl)
+    if (ancestorType.ElTypeNum == Template_EL_bag)
     {
       // only check the use child
+      if (ancestor != parent)
+        return  FALSE; // let Thot do the job
+      if (elType.ElSSchema == templateSSchema &&
+          (elType.ElTypeNum == Template_EL_useSimple ||
+           elType.ElTypeNum == Template_EL_useEl))
+        return FALSE;
+      return !Template_CanInsertElementInBagElement (event->document, elType, ancestor);      
+    }
+    else if(ancestorType.ElTypeNum == Template_EL_useSimple ||
+            ancestorType.ElTypeNum == Template_EL_useEl)
+    {
+      // only check the bag child @@@ will be check exclude/include later
       if (ancestor != parent)
         return  FALSE; // let Thot do the job
       types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_currentType, NULL);
@@ -1545,7 +1549,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
     }
   }
   
-  if(elType.ElSSchema==templateSSchema && elType.ElTypeNum==Template_EL_TEXT_UNIT)
+  if (elType.ElSSchema == templateSSchema && elType.ElTypeNum == Template_EL_TEXT_UNIT)
   {
     return FALSE;
   }
