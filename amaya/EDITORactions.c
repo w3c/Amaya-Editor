@@ -2165,6 +2165,8 @@ void DoTableCreation (Document doc)
   AttributeType       attrType;
   Attribute           attr;
   int                 firstChar, i;
+  char                stylebuff[50];
+  ThotBool            loadcss;
 
   /* get the new Table element */
   TtaSetDisplayMode (doc, SuspendDisplay);
@@ -2190,8 +2192,6 @@ void DoTableCreation (Document doc)
           if (attr != NULL)
             TtaRemoveAttribute (el, attr, doc);
 #ifdef IV
-          char stylebuff[50];
-          ThotBool loadcss;
           /* generate a border style */
           attrType.AttrTypeNum = HTML_ATTR_Style_;
           attr = TtaNewAttribute (attrType);
@@ -2251,6 +2251,17 @@ void DoTableCreation (Document doc)
         } 
       CheckAllRows (el, doc, FALSE, FALSE);
     }
+
+  /* generate a width style */
+  attrType.AttrTypeNum = HTML_ATTR_Style_;
+  attr = TtaNewAttribute (attrType);
+  strcpy (stylebuff, "width: 100%");
+  TtaSetAttributeText (attr, stylebuff, el, doc);	       
+  //TtaAttachAttribute (el, attr, doc);
+  /* check if we have to load CSS */
+  TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+  if (loadcss)
+    ParseHTMLSpecificStyle (el, stylebuff, doc, 1000, FALSE);
   TtaUnlockTableFormatting ();
   TtaSetDisplayMode (doc, DisplayImmediately);
   UpdateContextSensitiveMenus (doc, 1);

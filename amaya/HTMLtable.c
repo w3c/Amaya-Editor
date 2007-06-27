@@ -2535,6 +2535,8 @@ ThotBool DeleteTBody (NotifyElement * event)
   Element             el, sibling;
   ElementType         elType;
   Document            doc = event->document;
+  int                 end;
+  ThotBool            before;
 
   if (event->info == 1)
     // do nothing when undo is performed
@@ -2575,14 +2577,46 @@ ThotBool DeleteTBody (NotifyElement * event)
   elType = TtaGetElementType (el);
   elType.ElTypeNum = HTML_EL_Table_;
   el = TtaGetTypedAncestor (el, elType);
-  if (el && el != DeletedTable)
+  if (el &&
+      (el == DeletedTable || TtaIsAncestor (el, DeletedTable)))
+    return FALSE;		/* let Thot perform normal operation */
+  else
     {
       if (TtaPrepareUndo (doc))
         TtaRegisterElementDelete (el, doc);
+      // prepare the next selection
+      sibling = GetNoTemplateSibling (el, FALSE);
+      before = (sibling == NULL);
+      if (before)
+        sibling = GetNoTemplateSibling (el, TRUE);
       TtaDeleteTree (el, doc);
       TtaSetDocumentModified (doc);
+      elType = TtaGetElementType (sibling);
+      while (sibling)
+        {
+          elType = TtaGetElementType (sibling);
+          if (!TtaIsLeaf (elType))
+            el = GetNoTemplateChild (sibling, !before);
+          else
+            el = NULL;
+          if (el)
+            sibling = el;
+          else
+            {
+              if (elType.ElTypeNum != HTML_EL_TEXT_UNIT)
+                TtaSelectElement (doc, sibling);
+              else if (!before)
+                TtaSelectString (doc, sibling, 1, 0);
+              else
+                {
+                  end = TtaGetElementVolume (sibling);
+                  TtaSelectString (doc, sibling, end + 1, end);
+                }
+              sibling = NULL;
+            }
+        }
+      return TRUE;		/* don't let Thot perform normal operation */
     }
-  return TRUE;		/* don't let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------

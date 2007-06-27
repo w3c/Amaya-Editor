@@ -174,8 +174,7 @@ ThotBool NeedAMenu (Element el, Document doc)
 void TemplateElementComplete (ParserData *context, Element el, int *error)
 {
   Document		     doc;
-  ElementType	     elType, childType;
-  Element		     child;
+  ElementType	     elType;
 
   doc = context->doc;
   elType = TtaGetElementType (el);
