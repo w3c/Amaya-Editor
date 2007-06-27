@@ -1820,7 +1820,11 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
       /* Copy the current document into a second temporary file */
       sprintf (tempdoc2, "%s%c%d%c%s",
                TempFileDirectory, DIR_SEP, ext_doc, DIR_SEP, documentname);
-      TtaFileCopy (localFile, tempdoc2);
+      if (!DocumentMeta[doc]->xmlformat && xml_doctype)
+        //convert HTML into XHTML
+        TtaExportDocumentWithNewLineNumbers (doc, tempdoc2, "HTMLTX");
+      else
+        TtaFileCopy (localFile, tempdoc2);
     }
   
   /* Check if there is a doctype declaration */
