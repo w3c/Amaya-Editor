@@ -3258,11 +3258,18 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 
   if (pLine)
     {
+      if (pLine->LiPrevious && pLine->LiFirstBox == NULL)
+        {
+          // the floated box is alone in this line, free the current line
+          pLine = pLine->LiPrevious;
+          FreeLine (pLine->LiNext);
+          pLine->LiNext = NULL;
+        }
       y = orgY;
       y += pLine->LiYOrg;
-      if (pLine->LiRealLength > 0)
+      //if (pLine->LiRealLength > 0)
         /* it must be displayed under the current line */
-        y += pLine->LiHeight;
+      //  y += pLine->LiHeight;
       w = pBlock->BxW;
     }
   else
