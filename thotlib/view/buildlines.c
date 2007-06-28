@@ -3244,6 +3244,11 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     bw += box->BxLMargin;
   else if (box->BxAbstractBox->AbFloat == 'R' && box->BxRMargin < 0)
     bw += box->BxRMargin;
+  if (box->BxAbstractBox->AbFloat == 'L' && box->BxRMargin < 0)
+    bw += box->BxRMargin;
+  else if (box->BxAbstractBox->AbFloat == 'R' && box->BxLMargin < 0)
+    bw += box->BxLMargin;
+
   if (box->BxAbstractBox->AbFloat == 'L')
     /* left float */
     x = left + orgX;
