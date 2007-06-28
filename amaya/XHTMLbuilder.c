@@ -1483,63 +1483,74 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
   attrTypePercent.AttrSSchema = elType.ElSSchema;
   attrTypePxl.AttrTypeNum = HTML_ATTR_IntWidthPxl;
   attrTypePercent.AttrTypeNum = HTML_ATTR_IntWidthPercent;
-  /* is the last character a '%' ? */
-  if (buffer[length] == '%')
+  do
     {
-      /* remove IntWidthPxl */
-      attrOld = TtaGetAttribute (el, attrTypePxl);
-      /* update IntWidthPercent */
-      attrNew = TtaGetAttribute (el, attrTypePercent);
-      if (attrNew == NULL)
+      /* is the last character a '%' ? */
+      if (buffer[length] == '%')
         {
-          attrNew = TtaNewAttribute (attrTypePercent);
-          TtaAttachAttribute (el, attrNew, doc);
+          /* remove IntWidthPxl */
+          attrOld = TtaGetAttribute (el, attrTypePxl);
+          /* update IntWidthPercent */
+          attrNew = TtaGetAttribute (el, attrTypePercent);
+          if (attrNew == NULL)
+            {
+              attrNew = TtaNewAttribute (attrTypePercent);
+              TtaAttachAttribute (el, attrNew, doc);
+            }
+          else if (isImage && oldWidth == -1)
+            {
+              if (attrOld == NULL)
+                oldWidth = TtaGetAttributeValue (attrNew);
+              else
+                oldWidth = TtaGetAttributeValue (attrOld);
+            }
         }
-      else if (isImage && oldWidth == -1)
+      else
         {
-          if (attrOld == NULL)
-            oldWidth = TtaGetAttributeValue (attrNew);
-          else
-            oldWidth = TtaGetAttributeValue (attrOld);
+          /* remove IntWidthPercent */
+          attrOld = TtaGetAttribute (el, attrTypePercent);
+          /* update IntWidthPxl */
+          attrNew = TtaGetAttribute (el, attrTypePxl);
+          if (attrNew == NULL)
+            {
+              attrNew = TtaNewAttribute (attrTypePxl);
+              TtaAttachAttribute (el, attrNew, doc);
+            }
+          else if (isImage && oldWidth == -1)
+            {
+              TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
+              if (attrOld == NULL)
+                oldWidth = w * TtaGetAttributeValue (attrNew) / 100;
+              else
+                oldWidth = w * TtaGetAttributeValue (attrOld) / 100;	  
+            }
         }
-    }
-  else
-    {
-      /* remove IntWidthPercent */
-      attrOld = TtaGetAttribute (el, attrTypePercent);
-      /* update IntWidthPxl */
-      attrNew = TtaGetAttribute (el, attrTypePxl);
-      if (attrNew == NULL)
-        {
-          attrNew = TtaNewAttribute (attrTypePxl);
-          TtaAttachAttribute (el, attrNew, doc);
-        }
-      else if (isImage && oldWidth == -1)
-        {
-          TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
-          if (attrOld == NULL)
-            oldWidth = w * TtaGetAttributeValue (attrNew) / 100;
-          else
-            oldWidth = w * TtaGetAttributeValue (attrOld) / 100;	  
-        }
-    }
 
-  if (attrOld != NULL)
-    TtaRemoveAttribute (el, attrOld, doc);
-  if (sscanf (buffer, "%d", &val))
-    TtaSetAttributeValue (attrNew, val, el, doc);
-  else
-    /* its not a number. Delete attribute and send an error message */
-    {
-      TtaRemoveAttribute (el, attrNew, doc);
-      if (strlen (buffer) > MaxMsgLength - 30)
-        buffer[MaxMsgLength - 30] = EOS;
-      sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
-      HTMLParseError (doc, msgBuffer, 0);
+      if (attrOld)
+        TtaRemoveAttribute (el, attrOld, doc);
+      if (sscanf (buffer, "%d", &val))
+        TtaSetAttributeValue (attrNew, val, el, doc);
+      else
+        /* its not a number. Delete attribute and send an error message */
+        {
+          TtaRemoveAttribute (el, attrNew, doc);
+          if (strlen (buffer) > MaxMsgLength - 30)
+            buffer[MaxMsgLength - 30] = EOS;
+          sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
+          HTMLParseError (doc, msgBuffer, 0);
+        }
+
+      if (el != origEl)
+        // apply the attribute to the object itself
+        el = origEl;
+      else
+        el = NULL;
     }
+  while (el);
+
   if (isImage)
     UpdateImageMap (origEl, doc, oldWidth, -1);
-  else if (isSVG && oldWidth != -1)
+  if (isSVG && oldWidth != -1)
     {
       // force the redisplay of the SVG element
       el = TtaGetParent (child);
@@ -1615,63 +1626,74 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
   attrTypePercent.AttrSSchema = elType.ElSSchema;
   attrTypePxl.AttrTypeNum = HTML_ATTR_IntHeightPxl;
   attrTypePercent.AttrTypeNum = HTML_ATTR_IntHeightPercent;
-  /* is the last character a '%' ? */
-  if (buffer[length] == '%')
+  do
     {
-      /* remove IntHeightPxl */
-      attrOld = TtaGetAttribute (el, attrTypePxl);
-      /* update IntHeightPercent */
-      attrNew = TtaGetAttribute (el, attrTypePercent);
-      if (attrNew == NULL)
+      /* is the last character a '%' ? */
+      if (buffer[length] == '%')
         {
-          attrNew = TtaNewAttribute (attrTypePercent);
-          TtaAttachAttribute (el, attrNew, doc);
+          /* remove IntHeightPxl */
+          attrOld = TtaGetAttribute (el, attrTypePxl);
+          /* update IntHeightPercent */
+          attrNew = TtaGetAttribute (el, attrTypePercent);
+          if (attrNew == NULL)
+            {
+              attrNew = TtaNewAttribute (attrTypePercent);
+              TtaAttachAttribute (el, attrNew, doc);
+            }
+          else if (isImage && oldHeight == -1)
+            {
+              if (attrOld == NULL)
+                oldHeight = TtaGetAttributeValue (attrNew);
+              else
+                oldHeight = TtaGetAttributeValue (attrOld);
+            }
         }
-      else if (isImage && oldHeight == -1)
+      else
         {
-          if (attrOld == NULL)
-            oldHeight = TtaGetAttributeValue (attrNew);
-          else
-            oldHeight = TtaGetAttributeValue (attrOld);
+          /* remove IntHeightPercent */
+          attrOld = TtaGetAttribute (el, attrTypePercent);
+          /* update IntHeightPxl */
+          attrNew = TtaGetAttribute (el, attrTypePxl);
+          if (attrNew == NULL)
+            {
+              attrNew = TtaNewAttribute (attrTypePxl);
+              TtaAttachAttribute (el, attrNew, doc);
+            }
+          else if (isImage && oldHeight == -1)
+            {
+              TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
+              if (attrOld == NULL)
+                oldHeight = w * TtaGetAttributeValue (attrNew) / 100;
+              else
+                oldHeight = w * TtaGetAttributeValue (attrOld) / 100;	  
+            }
         }
-    }
-  else
-    {
-      /* remove IntHeightPercent */
-      attrOld = TtaGetAttribute (el, attrTypePercent);
-      /* update IntHeightPxl */
-      attrNew = TtaGetAttribute (el, attrTypePxl);
-      if (attrNew == NULL)
-        {
-          attrNew = TtaNewAttribute (attrTypePxl);
-          TtaAttachAttribute (el, attrNew, doc);
-        }
-      else if (isImage && oldHeight == -1)
-        {
-          TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
-          if (attrOld == NULL)
-            oldHeight = w * TtaGetAttributeValue (attrNew) / 100;
-          else
-            oldHeight = w * TtaGetAttributeValue (attrOld) / 100;	  
-        }
-    }
 
-  if (attrOld != NULL)
-    TtaRemoveAttribute (el, attrOld, doc);
-  if (sscanf (buffer, "%d", &val))
-    TtaSetAttributeValue (attrNew, val, el, doc);
-  else
-    /* its not a number. Delete attribute and send an error message */
-    {
-      TtaRemoveAttribute (el, attrNew, doc);
-      if (strlen (buffer) > MaxMsgLength - 30)
-        buffer[MaxMsgLength - 30] = EOS;
-      sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
-      HTMLParseError (doc, msgBuffer, 0);
+      if (attrOld)
+        TtaRemoveAttribute (el, attrOld, doc);
+      if (sscanf (buffer, "%d", &val))
+        TtaSetAttributeValue (attrNew, val, el, doc);
+      else
+        /* its not a number. Delete attribute and send an error message */
+        {
+          TtaRemoveAttribute (el, attrNew, doc);
+          if (strlen (buffer) > MaxMsgLength - 30)
+            buffer[MaxMsgLength - 30] = EOS;
+          sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
+          HTMLParseError (doc, msgBuffer, 0);
+        }
+
+      if (el != origEl)
+        // apply the attribute to the object itself
+        el = origEl;
+      else
+        el = NULL;
     }
+  while (el);
+
   if (isImage)
     UpdateImageMap (origEl, doc, oldHeight, -1);
-  else if (isSVG && oldHeight != -1)
+  if (isSVG && oldHeight != -1)
     {
       // force the redisplay of the SVG element
       el = TtaGetParent (child);

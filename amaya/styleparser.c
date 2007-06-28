@@ -6032,7 +6032,8 @@ void  ParseCSSRule (Element element, PSchema tsch, PresentationContext ctxt,
           (*cssRule > 0x5A && *cssRule < 0x61))
         {
           end = SkipProperty (cssRule, FALSE);
-          CSSParseError ("Invalid property", cssRule, end);
+          if (cssRule[0] != '-')
+            CSSParseError ("Invalid property", cssRule, end);
           cssRule = end; 
         }
       else if (*cssRule != EOS)
