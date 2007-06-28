@@ -72,8 +72,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
         + pBox->BxLPadding - pFrame->FrXOrg - halfThick;
       topY = t + pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder
         + pBox->BxTPadding - pFrame->FrYOrg - halfThick;
-      bottomY = topY + pBox->BxH + halfThick - 1;
-      rightX = leftX + pBox->BxW + halfThick - 1;
+      bottomY = topY + pBox->BxH - 1;
+      rightX = leftX + pBox->BxW - 1;
       middleX = leftX + (pBox->BxW / 2);
       middleY = topY + (pBox->BxH / 2);
       pEl = pAb->AbElement;
