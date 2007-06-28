@@ -5,6 +5,7 @@
 
 #include "wx/wx.h"
 #include "AmayaSubPanel.h"
+#include "wx/listctrl.h"
 
 #include "containers.h"
 
