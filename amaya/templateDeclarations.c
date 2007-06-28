@@ -102,29 +102,29 @@ void FreeTemplateEnvironment ()
   Creates a new template with its dictionaries
   ----------------------------------------------------------------------*/
 XTigerTemplate NewXTigerTemplate (const char *templatePath)
-{	
+{
 #ifdef TEMPLATES
-	XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof (_XTigerTemplate));
+  XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof (_XTigerTemplate));
 
-	memset (t, 0 ,sizeof (_XTigerTemplate));
+  memset (t, 0 ,sizeof (_XTigerTemplate));
   t->name = TtaStrdup(templatePath);
-	t->libraries   = StringHashMap_Create(NULL, FALSE, -1);
-	t->elements    = KeywordHashMap_Create((Container_DestroyElementFunction)
+  t->libraries   = StringHashMap_Create(NULL, FALSE, -1);
+  t->elements    = KeywordHashMap_Create((Container_DestroyElementFunction)
                                                 Declaration_Destroy, TRUE, -1);
-	t->simpleTypes = KeywordHashMap_Create((Container_DestroyElementFunction)
+  t->simpleTypes = KeywordHashMap_Create((Container_DestroyElementFunction)
                                                 Declaration_Destroy, TRUE, -1);
-	t->components  = KeywordHashMap_Create((Container_DestroyElementFunction)
+  t->components  = KeywordHashMap_Create((Container_DestroyElementFunction)
                                                 Declaration_Destroy, TRUE, -1);
-	t->unions      = KeywordHashMap_Create((Container_DestroyElementFunction)
+  t->unions      = KeywordHashMap_Create((Container_DestroyElementFunction)
                                                 Declaration_Destroy, TRUE, -1);
-	t->doc = -1;
+  t->doc = -1;
   t->users = 0;
   t->isPredefined = FALSE;
 
-	HashMap_Set (Templates_Map, t->name, t);
-	return t;
+  HashMap_Set (Templates_Map, t->name, t);
+  return t;
 #else
-	return NULL;
+  return NULL;
 #endif /* TEMPLATES */
 }
 
@@ -135,11 +135,11 @@ XTigerTemplate NewXTigerLibrary (const char *templatePath)
 {	
 #ifdef TEMPLATES
   XTigerTemplate t;
-	t = (XTigerTemplate)NewXTigerTemplate (templatePath);
-	t->isLibrary = TRUE;
-	return t;
+  t = (XTigerTemplate)NewXTigerTemplate (templatePath);
+  t->isLibrary = TRUE;
+  return t;
 #else
-	return NULL;
+  return NULL;
 #endif /* TEMPLATES */
 }
 
@@ -582,8 +582,8 @@ Declaration Template_DeclareNewSimpleType (XTigerTemplate t, const char *name,
                                                           SimpleTypeType xtype)
 {
 #ifdef TEMPLATES
-	Declaration dec = Declaration_Create (t, name, SimpleTypeNat);	
-	dec->simpleType.type = xtype;
+  Declaration dec = Declaration_Create (t, name, SimpleTypeNat);	
+  dec->simpleType.type = xtype;
   Template_AddDeclaration(t, dec);
   return dec;
 #else /* TEMPLATES */
@@ -668,8 +668,8 @@ void Template_AddDeclaration (XTigerTemplate t, Declaration dec)
   if (!t)
     return;
 
-	Declaration old = Template_GetDeclaration (t, dec->name);
-	if (old==NULL) //New type, not a redefinition
+  Declaration old = Template_GetDeclaration (t, dec->name);
+  if (old==NULL) //New type, not a redefinition
     {
       switch (dec->nature)
         {
@@ -691,7 +691,7 @@ void Template_AddDeclaration (XTigerTemplate t, Declaration dec)
         }
         dec->usedIn = t;
     }
-	else //A redefinition. Using the old memory zone to keep consistent pointers
+  else //A redefinition. Using the old memory zone to keep consistent pointers
     {
       TtaFreeMemory (dec);
     }
@@ -711,16 +711,16 @@ Declaration Template_GetDeclaration (const XTigerTemplate t, const char *name)
   if (!t)
     return NULL;
 
-	Declaration dec = (Declaration)HashMap_Get (t->simpleTypes, (void*)name);	
-	if (dec) return dec;
-	dec = (Declaration)HashMap_Get (t->components, (void*)name);
-	if (dec) return dec;
-	dec = (Declaration)HashMap_Get (t->elements, (void*)name);
-	if (dec) return dec;
-	dec = (Declaration)HashMap_Get (t->unions, (void*)name);
-	return dec;
+  Declaration dec = (Declaration)HashMap_Get (t->simpleTypes, (void*)name);	
+  if (dec) return dec;
+  dec = (Declaration)HashMap_Get (t->components, (void*)name);
+  if (dec) return dec;
+  dec = (Declaration)HashMap_Get (t->elements, (void*)name);
+  if (dec) return dec;
+  dec = (Declaration)HashMap_Get (t->unions, (void*)name);
+  return dec;
 #else
-	return NULL;
+  return NULL;
 #endif /* TEMPLATES */
 }
 
@@ -789,15 +789,15 @@ static void Template_Destroy (XTigerTemplate t)
   HashMap_Destroy(t->libraries);
   t->libraries = NULL;
 
-	//Cleaning the components
+  //Cleaning the components
   HashMap_Destroy(t->components);
   t->components = NULL;
 
-	//Cleaning the elements
+  //Cleaning the elements
   HashMap_Destroy(t->elements);
   t->elements = NULL;
 
-	//Cleaning the simple types
+  //Cleaning the simple types
   HashMap_Destroy(t->simpleTypes);
   t->simpleTypes = NULL;
 
@@ -812,7 +812,7 @@ static void Template_Destroy (XTigerTemplate t)
   TtaFreeMemory(t->version);
   TtaFreeMemory(t->templateVersion);
   TtaFreeMemory(t->name);
-	TtaFreeMemory (t);
+  TtaFreeMemory (t);
 #endif /* TEMPLATES */
 }
 
@@ -941,7 +941,7 @@ static void CopyDeclarationHashMapElements(HashMap src, HashMap dst, XTigerTempl
   Imports all declarations in a library lib to a template t
   ----------------------------------------------------------------------*/
 void Template_AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib)
-{	
+{
 #ifdef TEMPLATES
   if (!t || !lib)
     return;
@@ -961,22 +961,22 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
 #ifdef TEMPLATES
   ForwardIterator iter;
   HashMapNode     node;
-	Declaration     aux;
-	char*		   indentation;
-	int 		   i=0;
+  Declaration     aux;
+  char*           indentation;
+  int             i=0;
   
   if (!t || !dec || (dec && dec->nature!=UnionNat))
     return;
 
-	indentation = (char*) TtaGetMemory (indent*sizeof (char)+1);
-	for (i = 0; i < indent; i++)
-		indentation [i] = TAB;
-	indentation [indent] = EOS;
-	
-	if (!HashMap_IsEmpty (dec->unionType.include))
+  indentation = (char*) TtaGetMemory (indent*sizeof (char)+1);
+  for (i = 0; i < indent; i++)
+    indentation [i] = TAB;
+  indentation [indent] = EOS;
+
+  if (!HashMap_IsEmpty (dec->unionType.include))
     {
       fprintf (file, "\n%sINCLUDE",indentation);
-		
+
       iter = HashMap_GetForwardIterator (dec->unionType.include);
       ITERATOR_FOREACH (iter, HashMapNode, node)
         {
@@ -1015,7 +1015,7 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
         }
       TtaFreeMemory(iter);
     }
-	
+
   if (!HashMap_IsEmpty(dec->unionType.exclude))
     {
       fprintf (file, "\n%sEXCLUDE",indentation);
@@ -1058,8 +1058,8 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
         }
       TtaFreeMemory(iter);
     }
-      
-	TtaFreeMemory (indentation);
+
+  TtaFreeMemory (indentation);
 #endif /* TEMPLATES */
 }
 
@@ -1105,8 +1105,8 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
 #ifdef TEMPLATES
   ForwardIterator iter;
   HashMapNode     node;
-	Declaration     dec;
-	
+  Declaration     dec;
+
   if (!t)
     return;
   
@@ -1130,7 +1130,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
         }
       TtaFreeMemory(iter);  
     }
-    
+
   /* XML elements : */
   if (!HashMap_IsEmpty(t->elements))
     {
@@ -1171,7 +1171,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
         }
       TtaFreeMemory(iter);  
     }
-	
+
   /* Unions : */
   if (!HashMap_IsEmpty(t->unions))
     {
@@ -1237,8 +1237,8 @@ void DumpAllDeclarations()
 void DumpDeclarations (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-	char localname[MAX_LENGTH];
-	FILE *file;
+  char localname[MAX_LENGTH];
+  FILE *file;
 
   if (!t)
     return;
@@ -1247,10 +1247,10 @@ void DumpDeclarations (XTigerTemplate t)
   strcat (localname, DIR_STR);
   strcat (localname, "templateDecl.debug");
   file = TtaWriteOpen (localname);
-		
-	PrintDeclarations(t, file);
 
-	TtaWriteClose (file);
+  PrintDeclarations(t, file);
+
+  TtaWriteClose (file);
 #endif /* TEMPLATES */
 }
 
@@ -1485,7 +1485,7 @@ void Template_FilterInsertableElement (XTigerTemplate t, HashMap map,
   HashMapNode     node;
   Declaration     dec;
   ThotBool        res;
-  
+
   if (t && map && refelem)
     {
       newmap = KeywordHashMap_Create(NULL, TRUE, -1);
@@ -1533,7 +1533,6 @@ static int Template_SortDeclarationMap(HashMapNode elem1 ,HashMapNode elem2)
 #else  /* TEMPLATES */
   return 0;
 #endif /* TEMPLATES */
-
 }
 
 /*----------------------------------------------------------------------
@@ -1592,7 +1591,7 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types,
             result[pos] = ' ';
             pos++;
           }
-    
+
         TtaFreeMemory (iter);
         result[pos] = 0;
       }

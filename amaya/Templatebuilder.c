@@ -104,11 +104,11 @@ void TemplateEntityCreated (unsigned char *entityValue, Language lang,
 ThotBool NeedAMenu (Element el, Document doc)
 {
   ElementType	     elType;
-	Attribute        att;
-	AttributeType    attributeType;
+  Attribute        att;
+  AttributeType    attributeType;
   XTigerTemplate   t;
   Declaration      dec;
-	int              size;
+  int              size;
   char            *types, *ptr;
   ThotBool         res = FALSE;
   ForwardIterator  iter;

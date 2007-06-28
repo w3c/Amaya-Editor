@@ -266,7 +266,7 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
               element = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
               element->NextPath = NULL;
               strcpy (element->Path, path);
-        
+
               if (*list == NULL)
                 *list = element; 
               else
@@ -286,7 +286,7 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
           *(c+1) = EOS;
           strcpy (element->Path, path);
           element->NextPath = NULL;
-      
+
           if (*list == NULL)
             *list = element; 
           else
@@ -374,13 +374,11 @@ void NewTemplate (Document doc, View view)
   created = CreateNewTemplateDocDlgWX (BaseDialog + OpenTemplate,
                                       /*TtaGetViewFrame (doc, view)*/NULL, doc,
                                       TtaGetMessage (AMAYA, AM_NEW_TEMPLATE));
-  
   if (created)
     {
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseDialog + OpenTemplate, TRUE);
     }
-
 #endif /* TEMPLATES */
 }
 
@@ -467,15 +465,15 @@ ThotBool isWhiteSpace (const char c)
 void giveItems (char *text, int size, struct menuType **items, int *nbitems)
 {
 #ifdef TEMPLATES
-	ThotBool         inElement = TRUE;
+  ThotBool         inElement = TRUE;
   struct menuType *menu;
   char            *iter;
-	char             temp[128];
+  char             temp[128];
   int              i;
-	int              labelSize;
+  int              labelSize;
 
-	*nbitems = 1;
-	for (i = 0; i < size; i++)
+  *nbitems = 1;
+  for (i = 0; i < size; i++)
     {
       if (isEOSorWhiteSpace (text[i]))
         {
@@ -489,10 +487,10 @@ void giveItems (char *text, int size, struct menuType **items, int *nbitems)
         }
     }
 
-	menu = (struct menuType*) TtaGetMemory (sizeof (struct menuType)* *nbitems);
-	iter = text;
-	for (i = 0; i < *nbitems; i++)
-    {		
+  menu = (struct menuType*) TtaGetMemory (sizeof (struct menuType)* *nbitems);
+  iter = text;
+  for (i = 0; i < *nbitems; i++)
+    {
       labelSize = 0;
       while (isWhiteSpace (*iter))
         iter++;
@@ -519,23 +517,23 @@ void giveItems (char *text, int size, struct menuType **items, int *nbitems)
 static char *createMenuString (const struct menuType* items, const int nbItems)
 {
   char *result, *iter;
-	int   size = 0;
+  int   size = 0;
   int   i;
 
-	for (i=0; i < nbItems; i++)
-		size += 2 + strlen (items[i].label);
+  for (i=0; i < nbItems; i++)
+    size += 2 + strlen (items[i].label);
 
-	result = (char *) TtaGetMemory (size);
-	iter = result;
-	for (i=0; i < nbItems; i++)
+  result = (char *) TtaGetMemory (size);
+  iter = result;
+  for (i=0; i < nbItems; i++)
     {
       *iter = 'B';
       ++iter;
-		
+
       strcpy (iter, items[i].label);
       iter += strlen (items[i].label)+1;
     }
-	return result;
+  return result;
 }
 #endif /* TEMPLATES */
 
@@ -569,15 +567,15 @@ ThotBool UseToBeCreated (NotifyElement *event)
 void UseCreated (NotifyElement *event)
 {
 #ifdef TEMPLATES
-	Document        doc = event->document;
-	Element         el = event->element;
+  Document        doc = event->document;
+  Element         el = event->element;
   Element         parent;
   Element         first;
   ElementType     parentType;
   XTigerTemplate  t;
   SSchema         templateSSchema;
   char*           types, *text = NULL;
-  
+
   if (!TtaGetDocumentAccessMode(doc))
     return;
 
@@ -593,7 +591,7 @@ void UseCreated (NotifyElement *event)
   templateSSchema = TtaGetSSchema ("Template", doc);
   parent = TtaGetParent(el);
   parentType = TtaGetElementType(parent);
-  
+
   if (parentType.ElSSchema == templateSSchema &&
       parentType.ElTypeNum == Template_EL_repeat)
   {
@@ -630,7 +628,7 @@ void Template_IncrementRepeatOccurNumber(Element el)
   char* current;
   char  newVal[8];
   int curVal;
-  
+
   current = GetAttributeStringValueFromNum(el, Template_ATTR_currentOccurs, NULL);
   if (current)
   {
@@ -654,7 +652,7 @@ void Template_DecrementRepeatOccurNumber(Element el)
   char* current;
   char  newVal[8];
   int curVal;
-  
+
   current = GetAttributeStringValueFromNum(el, Template_ATTR_currentOccurs, NULL);
   if (current)
   {
@@ -681,7 +679,7 @@ ThotBool Template_CanInsertRepeatChild(Element el)
   char* current;
   int maxVal, curVal;
   Element child;
-  
+
   max = GetAttributeStringValueFromNum(el, Template_ATTR_maxOccurs, NULL);
   if (max)
   {
@@ -707,7 +705,7 @@ ThotBool Template_CanInsertRepeatChild(Element el)
         curVal++;
       }
     }
-  
+
     return curVal<maxVal;
   }
   else
@@ -734,7 +732,7 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
   Element     useFirst; /* First xt:use of the repeat.*/
   Element     use;      /* xt:use to insert.*/
   ElementType useType;  /* type of xt:use.*/
-  
+
   if (!TtaGetDocumentAccessMode (doc))
     return NULL;
 
@@ -773,7 +771,7 @@ Element Template_InsertRepeatChild (Document doc, Element el, Declaration decl, 
 #ifdef TEMPLATES
   if (!TtaGetDocumentAccessMode(doc) || !decl)
     return NULL;
-  
+
   if (pos == 0)
     return Template_InsertRepeatChildAfter (doc, el, decl, NULL);
   else if (pos == -1)
@@ -812,7 +810,7 @@ Element Template_InsertBagChild (Document doc, Element el, Declaration decl)
 
   if (!TtaGetDocumentAccessMode (doc) || !decl)
     return NULL;
-  
+
   TtaGiveFirstSelectedElement (doc, &sel, &start, &end);
   if (TtaIsAncestor (sel, el))
   {
@@ -868,7 +866,7 @@ static char* QueryStringFromMenu (Document doc, char* items)
   struct menuType *itemlist;
   char *menuString;
   char *result = NULL;
-  
+
   if (!TtaGetDocumentAccessMode (doc))
     return NULL;
   if (items == NULL)
@@ -885,7 +883,7 @@ static char* QueryStringFromMenu (Document doc, char* items)
   TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
   TtaWaitShowProcDialogue ();
   TtaDestroyDialogue (BaseDialog + OptionMenu);
-  
+
   if (ReturnOption!=-1)
   {
     result = TtaStrdup(itemlist[ReturnOption].label);
@@ -926,7 +924,7 @@ ThotBool BagButtonClicked (NotifyElement *event)
 
   if (!TtaGetDocumentAccessMode(doc))
     return TRUE;
-  
+
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
@@ -1037,13 +1035,13 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
 
   if (!TtaGetDocumentAccessMode(doc))
     return TRUE;
-  
+
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
 
   TtaCancelSelection(doc);
-  
+
   t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
   elType = TtaGetElementType(el);
   while (elType.ElTypeNum != Template_EL_repeat)
@@ -1146,7 +1144,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
-  
+
   TtaCancelSelection(doc);
   
   t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
@@ -1212,7 +1210,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
     TtaFreeMemory(listtypes);
     TtaFreeMemory(result);
   }
-  
+
   return TRUE;
 #endif /* TEMPLATES */
 	return TRUE;
@@ -1263,14 +1261,14 @@ ThotBool OptionButtonClicked (NotifyElement *event)
   useType = TtaGetElementType (useEl);
   optType = TtaGetElementType (event->element);
   if ((useType.ElTypeNum != Template_EL_useEl &&
-		  useType.ElTypeNum != Template_EL_useSimple) ||
-		  useType.ElSSchema != optType.ElSSchema)
+      useType.ElTypeNum != Template_EL_useSimple) ||
+      useType.ElSSchema != optType.ElSSchema)
     return FALSE;
 
   TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
-  
+
   TtaCancelSelection (doc);
-  
+
   contentEl = TtaGetFirstChild (useEl);
   if (!contentEl)
     /* the "use" element is empty. Instantiate it */

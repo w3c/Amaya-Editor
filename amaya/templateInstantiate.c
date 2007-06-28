@@ -31,12 +31,12 @@
 
 typedef struct _InstantiateCtxt
 {
-	char         *templatePath;
-	char         *instancePath;
-	char         *schemaName;
+  char         *templatePath;
+  char         *instancePath;
+  char         *schemaName;
   Document      doc;
-	DocumentType	docType;
-	ThotBool		  dontReplace;
+  DocumentType  docType;
+  ThotBool      dontReplace;
 } InstantiateCtxt;
 #endif /* TEMPLATES */
 
@@ -135,7 +135,7 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
           TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL);
           break;
         }
-      
+
       TtaCloseUndoSequence (doc);
       TtaUndoNoRedo (doc);
       TtaClearUndoHistory (doc);
@@ -161,9 +161,9 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
                                    void * context)
 {
 #ifdef TEMPLATES
-	InstantiateCtxt *ctx = (InstantiateCtxt*)context;
+  InstantiateCtxt *ctx = (InstantiateCtxt*)context;
 
-	DoInstanceTemplate (ctx->templatePath);
+  DoInstanceTemplate (ctx->templatePath);
   CreateInstance (ctx->templatePath, ctx->instancePath, ctx->doc);
   TtaFreeMemory (ctx->templatePath);
   TtaFreeMemory (ctx->instancePath);
@@ -177,7 +177,7 @@ void InstantiateTemplate (Document doc, char *templatename, char *docname,
                           DocumentType docType, ThotBool loaded)
 {
 #ifdef TEMPLATES
-	if (!loaded)
+  if (!loaded)
     {
       // Create the callback context
       InstantiateCtxt *ctx = (InstantiateCtxt *)TtaGetMemory (sizeof (InstantiateCtxt));
@@ -186,13 +186,13 @@ void InstantiateTemplate (Document doc, char *templatename, char *docname,
       ctx->schemaName = GetSchemaFromDocType(docType);
       ctx->doc = doc;
       ctx->docType = docType;
-		
+
       GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
                    (void (*)(int, int, char*, char*, char*,
                              const AHTHeaders*, void*)) InstantiateTemplate_callback,
                    (void *) ctx);
     }
-	else
+  else
     {
       DoInstanceTemplate (templatename);
       CreateInstance (templatename, docname, doc);
@@ -556,7 +556,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
                         ThotBool registerUndo)
 {
 #ifdef TEMPLATES
-	Element          cont = NULL;
+  Element          cont = NULL;
   ElementType      elType;
   Declaration      dec;
   int              size, nbitems, i;
@@ -785,17 +785,17 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
                            ThotBool loading)
 {
 #ifdef TEMPLATES
-	AttributeType attType;
-	Attribute     att;
-	Element       aux, child; //Needed when deleting trees
-	char         *name;
-	ElementType   elType = TtaGetElementType (el);
-	
+  AttributeType attType;
+  Attribute     att;
+  Element       aux, child; //Needed when deleting trees
+  char         *name;
+  ElementType   elType = TtaGetElementType (el);
+
   if (!t || !el)
     return;
   
   name = TtaGetSSchemaName (elType.ElSSchema);
-	if (!strcmp (name, "Template"))
+  if (!strcmp (name, "Template"))
     {
       switch(elType.ElTypeNum)
         {
@@ -866,9 +866,9 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           break;
         }
     }
-	
-	child = TtaGetFirstChild (el);
-	while (child)
+
+  child = TtaGetFirstChild (el);
+  while (child)
     {
       aux = child;
       TtaNextSibling (&aux);
@@ -883,21 +883,21 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 void DoInstanceTemplate (char *templatename)
 {
 #ifdef TEMPLATES
-	XTigerTemplate	t;
-	ElementType		  elType;
-	Element			    root, piElem, doctype, elFound, text;
-	char		        *s, *charsetname = NULL, buffer[MAX_LENGTH];
+  XTigerTemplate  t;
+  ElementType     elType;
+  Element         root, piElem, doctype, elFound, text;
+  char           *s, *charsetname = NULL, buffer[MAX_LENGTH];
   int             pi_type;
   Document        doc;
 
-	//Instantiate all elements
-	t = GetXTigerTemplate(templatename);
+  //Instantiate all elements
+  t = GetXTigerTemplate(templatename);
   if (!t)
     return;
-  
+
   doc = GetTemplateDocument (t);
-	root =	TtaGetMainRoot (doc);
-	ParseTemplate (t, root, doc, FALSE);
+  root =	TtaGetMainRoot (doc);
+  ParseTemplate (t, root, doc, FALSE);
 
   //Look for PIs
   /* check if the document has a DOCTYPE declaration */
@@ -976,7 +976,7 @@ void DoInstanceTemplate (char *templatename)
   TtaSetStructureChecking (TRUE, doc);
 
   // update the document title
-	if (!strcmp (s, "HTML"))
+  if (!strcmp (s, "HTML"))
     {
       elType.ElTypeNum = HTML_EL_TITLE;
       elFound = TtaSearchTypedElement (elType, SearchInTree, root);
@@ -1004,7 +1004,7 @@ void Template_PreInstantiateComponents (XTigerTemplate t)
   ForwardIterator iter = HashMap_GetForwardIterator(components);
   Declaration     comp;
   HashMapNode     node;
-  
+
   ITERATOR_FOREACH(iter, HashMapNode, node)
     {
       comp = (Declaration) node->elem;
