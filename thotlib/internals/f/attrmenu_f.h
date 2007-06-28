@@ -19,6 +19,10 @@ extern void TtaUpdateAttrMenu ( Document document );
 extern void CallbackValAttrMenu ( int ref,
                                   int valmenu,
                                   char *valtext );
+extern void CallbackEditRefAttribute ( PtrAttrListElem pAttrElem,
+                                       int frame );
+extern void CallbackEditAttribute ( PtrAttrListElem pAttrElem,
+                                    int frame );
 extern void CallbackAttrMenu ( int refmenu,
                                int attMenu,
                                int frame );
@@ -43,6 +47,10 @@ extern void TtaUpdateAttrMenu ( Document document );
 extern void CallbackValAttrMenu ( int ref,
                                     int valmenu,
                                     char *valtext );
+extern void CallbackEditRefAttribute ( PtrAttrListElem pAttrElem,
+                                         int frame );
+extern void CallbackEditAttribute ( PtrAttrListElem pAttrElem,
+                                      int frame );
 extern void CallbackAttrMenu ( int refmenu,
                                  int attMenu,
                                  int frame );
