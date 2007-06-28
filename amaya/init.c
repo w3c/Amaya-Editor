@@ -4944,8 +4944,11 @@ void ShowSource (Document doc, View view)
           // lock source of template instances
           if (DocumentMeta[doc] && DocumentMeta[doc]->template_url)
             {
+              ThotBool allow;
+              TtaGetEnvBoolean ("EDIT_SRC_TEMPLATE", &allow);
               root = TtaGetRootElement (sourceDoc);
-              TtaSetAccessRight (root, ReadOnly, sourceDoc);
+              if (!allow)
+                TtaSetAccessRight (root, ReadOnly, sourceDoc);
             }
 #endif /* TEMPLATES */
 
@@ -7737,6 +7740,7 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvBoolean ("SEND_REFERER", FALSE, FALSE);
   TtaSetEnvBoolean ("INSERT_NBSP", FALSE, FALSE);
   TtaSetEnvBoolean ("GENERATE_MATHPI", TRUE, FALSE);
+  TtaSetEnvBoolean ("EDIT_SRC_TEMPLATE", FALSE, FALSE);
 #ifdef _WX
   TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", TRUE, FALSE);
 #endif /* _WX */
