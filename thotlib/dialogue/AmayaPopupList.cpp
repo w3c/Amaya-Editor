@@ -19,7 +19,6 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-#include "attrmenu_f.h"
 #include "frame_tv.h"
 #include "views_f.h"
 

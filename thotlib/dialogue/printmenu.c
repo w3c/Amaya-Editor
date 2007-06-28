@@ -42,7 +42,6 @@
 #include "actions_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
-#include "attrmenu_f.h"
 #include "browser_f.h"
 #include "config_f.h"
 #include "creationmenu_f.h"

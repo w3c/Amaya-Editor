@@ -34,6 +34,7 @@
 #include "applicationapi_f.h"
 #include "attributes_f.h"
 #include "attrpresent_f.h"
+#include "attrmenu.h"
 #include "attrmenu_f.h"
 #include "boxselection_f.h"
 #include "buildboxes_f.h"

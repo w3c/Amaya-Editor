@@ -1921,6 +1921,12 @@
 <message xml:lang="cn">Natures</message>
 <message xml:lang="tw">Natures</message>
 <message xml:lang="sk">Prirodzený</message></label>
+<label define="TMSG_ATTRIBUTE_NAME">
+<message xml:lang="en">Attribute</message>
+<message xml:lang="fr">Attribut</message></label>
+<label define="TMSG_ATTRIBUTE_VALUE">
+<message xml:lang="en">Value</message>
+<message xml:lang="fr">Valeur</message></label>
 <label define="TMSG_VALUE_OF_ATTR">
 <message xml:lang="en">Attribute value</message>
 <message xml:lang="fr">Valeur de l'attribut</message>

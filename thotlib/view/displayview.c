@@ -40,6 +40,7 @@
 #include "appdialogue_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
+#include "attrmenu.h"
 #include "attrmenu_f.h"
 #include "attrpresent_f.h"
 #include "attributes_f.h"

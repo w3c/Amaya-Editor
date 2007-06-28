@@ -30,7 +30,6 @@
 
 #include "appli_f.h"
 #include "tree_f.h"
-#include "attrmenu_f.h"
 #include "search_f.h"
 #include "structcreation_f.h"
 #include "creationmenu_f.h"

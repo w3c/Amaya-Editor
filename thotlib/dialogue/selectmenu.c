@@ -37,7 +37,6 @@
 #include "appdialogue_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
-#include "attrmenu_f.h"
 #include "createabsbox_f.h"
 #include "input_f.h"
 #include "keyboards_f.h"

@@ -6,7 +6,11 @@
 #include "wx/wx.h"
 #include "AmayaSubPanel.h"
 
+#include "containers.h"
+
 class AmayaNormalWindow;
+typedef struct _ElementDescr *PtrElement;
+typedef struct AttrListElem* PtrAttrListElem;
 
 /*
  *  Description:  - AmayaAttributePanel is a specific sub-panel
@@ -21,7 +25,7 @@ public:
   DECLARE_DYNAMIC_CLASS(AmayaAttributePanel)
 
   AmayaAttributePanel( wxWindow * p_parent_window = NULL
-		       ,AmayaNormalWindow * p_parent_nwindow = NULL );
+             ,AmayaNormalWindow * p_parent_nwindow = NULL );
   virtual ~AmayaAttributePanel();
 
   virtual bool IsActive();
@@ -29,21 +33,21 @@ public:
 
   void ForceAttributeUpdate();
 
-  /*  void UpdateAttributeList( const char * p_attr_list, int nb_attr, const int * p_active_attr,
-      const char * p_attr_evt_list, int nb_attr_evt, const int * p_active_attr_evt  );*/
-
   bool IsFreezed();
-  void SelectAttribute( int position, bool force_checked = false );
+  void SelectAttribute( int position);
 
  protected:
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
-  void OnListSelectItem( wxCommandEvent& event );
-  void OnListCheckItem( wxCommandEvent& event );
+  
+  void OnListItemSelected(wxListEvent& event);
+  void OnListItemDeselected(wxListEvent& event);
+  
   void OnApply( wxCommandEvent& event );
   void OnCancel( wxCommandEvent& event );
   void OnAutoRefresh( wxCommandEvent& event );
   void OnDelAttr( wxCommandEvent& event );
+  void OnInsert( wxCommandEvent& event );
 
  protected:
   virtual void SendDataToPanel( AmayaParams& params );
@@ -51,6 +55,7 @@ public:
 
   void CreateCurrentAttribute();
   void RemoveCurrentAttribute();
+  void QueryRemoveCurrentAttribute();
 
  public:
   typedef enum
@@ -74,37 +79,52 @@ public:
 
  protected:
   void ShowAttributValue( wxATTR_TYPE type );
-  void SetupListValue( const char * p_attr_list, int nb_attr, const int * p_active_attr,
-		       const char * p_attr_evt_list, int nb_attr_evt, const int * p_active_attr_evt );
-  void SetupLangValue( const char * selected_lang, 
-		       const char * inherited_lang,
-		       const char * lang_list,
-		       int lang_list_nb,
-		       int default_lang_id );
+  
+  void SetupListValue(DLList attrList);
+
+  void SetupLangAttr(PtrAttrListElem elem);
+  
   void SetupTextValue( const char * text );
-  void SetupEnumValue( const char * enums, int nb_enum, int selected );
+  void SetupTextAttr(PtrAttrListElem elem);
+  
+  void SetupEnumValue( wxArrayString& enums, int selected );
+  void SetupEnumAttr(PtrAttrListElem elem);
+
   void SetupNumValue( int num, int begin, int end );
+  void SetupNumAttr(PtrAttrListElem elem);
 
-  void SetMandatoryState( bool is_mandatory );
+  bool IsMandatory()const;
 
- protected:
+  void DesactivatePanel(){m_disactiveCount++;}
+  void ActivePanel(){m_disactiveCount--;if(m_disactiveCount<0)m_disactiveCount=0;}
+  bool IsPanelActive()const{return m_disactiveCount==0;}
+
+  void OnUpdateDeleteButton(wxUpdateUIEvent& event);
+protected:
   wxPanel *           m_pVPanelParent;
   wxSizer *           m_pVPanelSizer;
-  wxCheckListBox *    m_pAttrList;
+  wxListCtrl *        m_pAttrList;
   wxCheckBox *        m_pAutoRefresh;
   wxPanel *           m_pPanel_ApplyArea;
   wxPanel *           m_pPanel_Lang;
   wxPanel *           m_pPanel_Num;
   wxPanel *           m_pPanel_Text;
   wxPanel *           m_pPanel_Enum;
-  wxRadioBox *        m_pRBEnum;
- 
- 
+  wxPanel *           m_pPanel_NewAttr;
+  wxChoice *          m_pChoiceEnum;
+  wxChoice *          m_pNewAttrChoice;
+  
+  DLList              m_attrList;
+  PtrAttrListElem     m_currentAttElem;
+  PtrElement          m_firstSel, m_lastSel;
+  int                 m_firstChar, m_lastChar;
+
   int m_NbAttr;
   int m_NbAttr_evt;
 
   wxATTR_TYPE m_CurrentAttType;
-  bool        m_CurrentAttMandatory;
+  
+  int        m_disactiveCount; // 0 to activate panel (handle events)
 };
 
 #endif // __AMAYAATTRIBUTEPANEL_H__
