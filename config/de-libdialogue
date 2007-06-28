@@ -126,106 +126,108 @@
 124 Attribut suchen
 125 Suche nach Typ
 126 Dokumenttyp
-127 Wert des Attributs
-128 Unbekanntes Attribut
-129 Abbrechen
-130 Fehler in der PostScript-Erkennung
-131 Auftrag vom Druckspooler "%s" zurückgewiesen
-132 Kann "%s" nicht erzeugen
-133 Überstrichen
-134 Format
-135 Ereignisse (Events)
-136 Löschen
-137 Linke Maustaste: Farbe für markierten Text
-138 Mittlere oder rechte Maustaste: Cursorfarbe
-139 Weiter ...
-140 Holen
-141 Farbe
-142 Hintergrundfarbe
-143 Vordergrundfarbe
-144 Farben wechseln
-145 Wählen Sie eine generische XML-Struktur
-146 Überprüfe
-147 Suchen
-148 Ersetzen (PW)
-149 Ersetzen
-150 Sprache
-151 Lernen
-152 Worte mit
-153 Rechtschreibprüfung
-154 Römische Zahlen
-155 Ignorieren
-156 Worte in Großbuchstaben
-157 Worte mit Ziffern
-158 Fehler in der Parameterdatei
-159 Tastaturdatei fehlt
-160 Kann das Dokumentwörterbuch nicht speichern
-161 Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen
-162 Wort "%s" zum Dokumentwörterbuch hinzugefügt
-163 Rechtschreibprüfung beendet
-164 Rechtschreibprüfung abgebrochen
-165 Bitte ein Dokument auswählen
-166 Dokumentwörterbuch unter %s gespeichert
-167 In dieser Version nicht verfügbar
-168 Palette aktivieren/deaktivieren
-169 Hilfsmittel
-170 Obligatorisches Attribut, kann nicht entfernt werden
-171 Erneuern
-172 Links
-173 Rechts
-174 Zentrieren
-175 Ausrichten
-176 Klasse übernehnem
-177 Klasse oder Pseudoklasse wählen
-178 Auswählen
-179 Verwerfen
-180 Formel
-181 Verschiedene
-182 Binäre Relationen
-183 Binäre negierte Relationen
-184 Operatoren
-185 Griechisches Alphabet (Großbuchstaben)
-186 Pfeile
-187 Sonderzeichen
-188 Stop
-189 Zurück
-190 Vorwärts
-191 Aktualisieren
-192 Speichern
-193 XHTML
-194 Öffnen
-195 Drucken
-196 Suchen/Ersetzen
-197 Startseite
-198 Betont On/Off
-199 Hervorgehoben On/Off
-200 Code On/Off
-201 Bild
-202 Überschrift Ebene 1
-203 Überschrift Ebene 2
-204 Überschrift Ebene 3
-205 Ungeordnete Liste
-206 Geordnete Liste
-207 Definitionsliste
-208 Verweis
-209 Tabelle
-210 Sie sind dabei, %d geöffnete Seiten zu schließen. Sind Sie sicher, dass Sie fortfahren möchten?
-211 Warnung anzeigen, wenn mehrere Seiten geschlossen werden sollen
-212 Seiten schließen
-213 Kein Fehler gefunden
-214 Parserfehler anzeigen
-215 Umrisse
-216 Ábschnitt
-217 Erzeugen
-218 Eingefügter Text On/Off
-219 Gelöschter Text On/Off
-220 Tiefgestellt On/Off
-221 Hochgestellt On/Off
-222 Begriff
-223 Definition
-224 Objekt
-225 CSS Stil
-226 Durchsuchen
-227 Ansicht horizontal teilen
-228 Ansicht vertikal teilen
-229 Hilfsmittel anzeigen
+127 **Attribute
+128 **Value
+129 Wert des Attributs
+130 Unbekanntes Attribut
+131 Abbrechen
+132 Fehler in der PostScript-Erkennung
+133 Auftrag vom Druckspooler "%s" zurückgewiesen
+134 Kann "%s" nicht erzeugen
+135 Überstrichen
+136 Format
+137 Ereignisse (Events)
+138 Löschen
+139 Linke Maustaste: Farbe für markierten Text
+140 Mittlere oder rechte Maustaste: Cursorfarbe
+141 Weiter ...
+142 Holen
+143 Farbe
+144 Hintergrundfarbe
+145 Vordergrundfarbe
+146 Farben wechseln
+147 Wählen Sie eine generische XML-Struktur
+148 Überprüfe
+149 Suchen
+150 Ersetzen (PW)
+151 Ersetzen
+152 Sprache
+153 Lernen
+154 Worte mit
+155 Rechtschreibprüfung
+156 Römische Zahlen
+157 Ignorieren
+158 Worte in Großbuchstaben
+159 Worte mit Ziffern
+160 Fehler in der Parameterdatei
+161 Tastaturdatei fehlt
+162 Kann das Dokumentwörterbuch nicht speichern
+163 Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen
+164 Wort "%s" zum Dokumentwörterbuch hinzugefügt
+165 Rechtschreibprüfung beendet
+166 Rechtschreibprüfung abgebrochen
+167 Bitte ein Dokument auswählen
+168 Dokumentwörterbuch unter %s gespeichert
+169 In dieser Version nicht verfügbar
+170 Palette aktivieren/deaktivieren
+171 Hilfsmittel
+172 Obligatorisches Attribut, kann nicht entfernt werden
+173 Erneuern
+174 Links
+175 Rechts
+176 Zentrieren
+177 Ausrichten
+178 Klasse übernehnem
+179 Klasse oder Pseudoklasse wählen
+180 Auswählen
+181 Verwerfen
+182 Formel
+183 Verschiedene
+184 Binäre Relationen
+185 Binäre negierte Relationen
+186 Operatoren
+187 Griechisches Alphabet (Großbuchstaben)
+188 Pfeile
+189 Sonderzeichen
+190 Stop
+191 Zurück
+192 Vorwärts
+193 Aktualisieren
+194 Speichern
+195 XHTML
+196 Öffnen
+197 Drucken
+198 Suchen/Ersetzen
+199 Startseite
+200 Betont On/Off
+201 Hervorgehoben On/Off
+202 Code On/Off
+203 Bild
+204 Überschrift Ebene 1
+205 Überschrift Ebene 2
+206 Überschrift Ebene 3
+207 Ungeordnete Liste
+208 Geordnete Liste
+209 Definitionsliste
+210 Verweis
+211 Tabelle
+212 Sie sind dabei, %d geöffnete Seiten zu schließen. Sind Sie sicher, dass Sie fortfahren möchten?
+213 Warnung anzeigen, wenn mehrere Seiten geschlossen werden sollen
+214 Seiten schließen
+215 Kein Fehler gefunden
+216 Parserfehler anzeigen
+217 Umrisse
+218 Ábschnitt
+219 Erzeugen
+220 Eingefügter Text On/Off
+221 Gelöschter Text On/Off
+222 Tiefgestellt On/Off
+223 Hochgestellt On/Off
+224 Begriff
+225 Definition
+226 Objekt
+227 CSS Stil
+228 Durchsuchen
+229 Ansicht horizontal teilen
+230 Ansicht vertikal teilen
+231 Hilfsmittel anzeigen

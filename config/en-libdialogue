@@ -126,106 +126,108 @@
 124 Attribute to search
 125 Type to search
 126 Natures
-127 Attribute value
-128 Unknown attribute
-129 Cancel
-130 Error in PostScript translation
-131 Command refused by the spooler "%s"
-132 Cannot create "%s"
-133 Overline
-134 Document format
-135 Events
-136 Remove attribute
-137 Left button sets the selection color
-138 Middle or Right button sets the caret color
-139 More ...
-140 Get
-141 Color
-142 Background color
-143 Foreground color
-144 Switch colors
-145 Select a generic XML structure
-146 Checking
-147 Search/Skip
-148 Replace (+ dic)
-149 Replace and next
-150 Other language
-151 Learn
-152 words containing:
-153 Spell checking ...
-154 Roman numerals
-155 Ignore
-156 words that are all caps
-157 words with digits
-158 Parameter file error
-159 No keyboard file
-160 Cannot save the document dictionary
-161 Incorrect word "%s" refused in this dictionary
-162 Word "%s" added in the document dictionary
-163 End of spell checking
-164 Spell checking aborted
-165 Please select a document
-166 Document dictionary saved: %s
-167 Not available in this version
-168 Enable/Disable palette
-169 Tools
-170 Mandatory attribute, it can't be removed
-171 Refresh
-172 Left
-173 Right
-174 Center
-175 Justify
-176 Apply class
-177 Select a class or a pseudo-class
-178 Select
-179 Discard
-180 Maths
-181 Misc
-182 Binary relations
-183 Binary relations of negation
-184 Operators
-185 Greek alphabet (capital)
-186 Arrows
-187 Special characters
-188 Interrupt transfer
-189 Previous document
-190 Next document
-191 Reload
-192 Save
-193 New XHTML document
-194 Open document
-195 Print
-196 Search
-197 Home
-198 Emphasis On/Off
-199 Strong On/Off
-200 Code On/Off
-201 Insert/Replace image
-202 Heading level 1
-203 Heading level 2
-204 Heading level 3
-205 Bulleted list
-206 Numbered list
-207 Definition list
-208 Link
-209 Table
-210 You are about to close %d open tabs. Are you sure you want to continue?
-211 Warn me when I attempt to close multiple tabs
-212 Close tabs
-213 No error detected
-214 Show parsing errors
-215 Boxes
-216 Division
-217 Target
-218 Insertion On/Off
-219 Deletion On/Off
-220 Subscript On/Off
-221 Superscript On/Off
-222 Term
-223 Definition
-224 Object
-225 CSS Style
-226 Files
-227 Horizontal split/unsplit
-228 Vertical split/unsplit
-229 Show/hide tools
+127 Attribute
+128 Value
+129 Attribute value
+130 Unknown attribute
+131 Cancel
+132 Error in PostScript translation
+133 Command refused by the spooler "%s"
+134 Cannot create "%s"
+135 Overline
+136 Document format
+137 Events
+138 Remove attribute
+139 Left button sets the selection color
+140 Middle or Right button sets the caret color
+141 More ...
+142 Get
+143 Color
+144 Background color
+145 Foreground color
+146 Switch colors
+147 Select a generic XML structure
+148 Checking
+149 Search/Skip
+150 Replace (+ dic)
+151 Replace and next
+152 Other language
+153 Learn
+154 words containing:
+155 Spell checking ...
+156 Roman numerals
+157 Ignore
+158 words that are all caps
+159 words with digits
+160 Parameter file error
+161 No keyboard file
+162 Cannot save the document dictionary
+163 Incorrect word "%s" refused in this dictionary
+164 Word "%s" added in the document dictionary
+165 End of spell checking
+166 Spell checking aborted
+167 Please select a document
+168 Document dictionary saved: %s
+169 Not available in this version
+170 Enable/Disable palette
+171 Tools
+172 Mandatory attribute, it can't be removed
+173 Refresh
+174 Left
+175 Right
+176 Center
+177 Justify
+178 Apply class
+179 Select a class or a pseudo-class
+180 Select
+181 Discard
+182 Maths
+183 Misc
+184 Binary relations
+185 Binary relations of negation
+186 Operators
+187 Greek alphabet (capital)
+188 Arrows
+189 Special characters
+190 Interrupt transfer
+191 Previous document
+192 Next document
+193 Reload
+194 Save
+195 New XHTML document
+196 Open document
+197 Print
+198 Search
+199 Home
+200 Emphasis On/Off
+201 Strong On/Off
+202 Code On/Off
+203 Insert/Replace image
+204 Heading level 1
+205 Heading level 2
+206 Heading level 3
+207 Bulleted list
+208 Numbered list
+209 Definition list
+210 Link
+211 Table
+212 You are about to close %d open tabs. Are you sure you want to continue?
+213 Warn me when I attempt to close multiple tabs
+214 Close tabs
+215 No error detected
+216 Show parsing errors
+217 Boxes
+218 Division
+219 Target
+220 Insertion On/Off
+221 Deletion On/Off
+222 Subscript On/Off
+223 Superscript On/Off
+224 Term
+225 Definition
+226 Object
+227 CSS Style
+228 Files
+229 Horizontal split/unsplit
+230 Vertical split/unsplit
+231 Show/hide tools

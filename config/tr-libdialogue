@@ -126,106 +126,108 @@
 124 Aranacak olan özellik
 125 Aranacak olan tip
 126 özellikler
-127 Özellik değeri
-128 Bilinmeyen özellik
-129 Vazgeç
-130 PostScript dönüşümünde hata
-131 Komut "%s" tarafından reddedildi.
-132 "%s" yaratılamadı
-133 Üstçizgi
-134 Dokümanın forması
-135 Olaylar
-136 Özeliği sil
-137 Sol düğme seçilin rengini değiştiriyor
-138 Orta ve sağ düğme kürsör\'ün rengini değiştiriyor
-139 Diğer...
-140 Yenilendir
-141 Renk
-142 **Background color
-143 **Foreground color
-144 **Switch colors
-145 **Select a generic XML structure
-146 Kontrol ediliyor
-147 Atla ve sonraki
-148 Değiştir (+ sözlük)
-149 Değiştir
-150 Başka dil
-151 Atla (+ sözlük)
-152 Karakterleri içeren:
-153 Yazım hataları düzelt...
-154 Roma rakamları
-155 Aldırma
-156 Hepsi büyük harf olan sözcükler
-157 Rakam içeren sözcükler
-158 Parametre dosya hatası
-159 Tuştakımı dosyası yok
-160 Belge sözlüğü kaydedilemiyor
-161 Yanlış sözcük "%s" bu sözlükte kabul edilmiyor
-162 "%s" sözcüğü belge sözlüğüne eklendi
-163 Yazım hataları arama sonu
-164 Yazım hatası araması iptal edildi
-165 Lütfen bir belge seçin
-166 Belge sözlüğü kaydedildi: %s
-167 **Not available in this version
-168 **Enable/Disable palette
-169 **Tools
-170 **Mandatory attribute, it can't be removed
-171 **Refresh
-172 **Left
-173 **Right
-174 **Center
-175 **Justify
-176 Sınıf uygula
-177 Sınıf seçimi
-178 Sınıf seçimi
-179 **Discard
-180 Matematik
-181 **Misc
-182 **Binary relations
-183 **Binary relations of negation
-184 **Operators
-185 **Greek alphabet (capital)
-186 **Arrows
-187 **Special characters
-188 Aktarımı kes
-189 Önceki belge
-190 Sonraki belge
-191 Yeniden yükle
-192 Kaydet
-193 Yeni XHTML dosyası
-194 Belge aç
-195 Yazdır
-196 Ara
-197 Özel sayfa
-198 Vurgu On/Off
-199 Kuvvetli On/Off
-200 Kod On/Off
-201 Görüntü ekle
-202 Başlık 1
-203 Başlık 2
-204 Başlık 3
-205 Liste
-206 Numaralı liste
-207 Tanım listesi
-208 Bağlantı
-209 Tablo
-210 **You are about to close %d open tabs. Are you sure you want to continue?
-211 **Warn me when I attempt to close multiple tabs
-212 **Close tabs
-213 **No error detected
-214 Pars hatalarını göster
-215 **Boxes
-216 Bölme
-217 Yarat
-218 Araya Koy On/Off
-219 Sil On/Off
-220 Alt On/Off
-221 Üst On/Off
-222 Terim
-223 Tanım
-224 Nesne
-225 **CSS Style
-226 Dosyası
-227 **Horizontal split/unsplit
-228 **Vertical split/unsplit
-229 **Show/hide tools
+127 **Attribute
+128 **Value
+129 Özellik değeri
+130 Bilinmeyen özellik
+131 Vazgeç
+132 PostScript dönüşümünde hata
+133 Komut "%s" tarafından reddedildi.
+134 "%s" yaratılamadı
+135 Üstçizgi
+136 Dokümanın forması
+137 Olaylar
+138 Özeliği sil
+139 Sol düğme seçilin rengini değiştiriyor
+140 Orta ve sağ düğme kürsör\'ün rengini değiştiriyor
+141 Diğer...
+142 Yenilendir
+143 Renk
+144 **Background color
+145 **Foreground color
+146 **Switch colors
+147 **Select a generic XML structure
+148 Kontrol ediliyor
+149 Atla ve sonraki
+150 Değiştir (+ sözlük)
+151 Değiştir
+152 Başka dil
+153 Atla (+ sözlük)
+154 Karakterleri içeren:
+155 Yazım hataları düzelt...
+156 Roma rakamları
+157 Aldırma
+158 Hepsi büyük harf olan sözcükler
+159 Rakam içeren sözcükler
+160 Parametre dosya hatası
+161 Tuştakımı dosyası yok
+162 Belge sözlüğü kaydedilemiyor
+163 Yanlış sözcük "%s" bu sözlükte kabul edilmiyor
+164 "%s" sözcüğü belge sözlüğüne eklendi
+165 Yazım hataları arama sonu
+166 Yazım hatası araması iptal edildi
+167 Lütfen bir belge seçin
+168 Belge sözlüğü kaydedildi: %s
+169 **Not available in this version
+170 **Enable/Disable palette
+171 **Tools
+172 **Mandatory attribute, it can't be removed
+173 **Refresh
+174 **Left
+175 **Right
+176 **Center
+177 **Justify
+178 Sınıf uygula
+179 Sınıf seçimi
+180 Sınıf seçimi
+181 **Discard
+182 Matematik
+183 **Misc
+184 **Binary relations
+185 **Binary relations of negation
+186 **Operators
+187 **Greek alphabet (capital)
+188 **Arrows
+189 **Special characters
+190 Aktarımı kes
+191 Önceki belge
+192 Sonraki belge
+193 Yeniden yükle
+194 Kaydet
+195 Yeni XHTML dosyası
+196 Belge aç
+197 Yazdır
+198 Ara
+199 Özel sayfa
+200 Vurgu On/Off
+201 Kuvvetli On/Off
+202 Kod On/Off
+203 Görüntü ekle
+204 Başlık 1
+205 Başlık 2
+206 Başlık 3
+207 Liste
+208 Numaralı liste
+209 Tanım listesi
+210 Bağlantı
+211 Tablo
+212 **You are about to close %d open tabs. Are you sure you want to continue?
+213 **Warn me when I attempt to close multiple tabs
+214 **Close tabs
+215 **No error detected
+216 Pars hatalarını göster
+217 **Boxes
+218 Bölme
+219 Yarat
+220 Araya Koy On/Off
+221 Sil On/Off
+222 Alt On/Off
+223 Üst On/Off
+224 Terim
+225 Tanım
+226 Nesne
+227 **CSS Style
+228 Dosyası
+229 **Horizontal split/unsplit
+230 **Vertical split/unsplit
+231 **Show/hide tools

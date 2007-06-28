@@ -126,106 +126,108 @@
 124 Atributo a buscar
 125 Tipo a buscar
 126 Naturezas
-127 Valor do atributo
-128 Atributo desconhecido
-129 Cancelar
-130 Erro em tradução PostScript
-131 Comando recusado pelo spooler "%s"
-132 Não é possível criar "%s"
-133 Sobrelinhado (Overline)
-134 Formato de documento
-135 Eventos
-136 Remover atributo
-137 Botão esquerdo fixa a cor da seleção
-138 Botão do meio ou da direita fixa a cor do cursor
-139 Mais ...
-140 Comece
-141 Cor
-142 **Background color
-143 **Foreground color
-144 **Switch colors
-145 **Select a generic XML structure
-146 Verificação
-147 Buscar/Pular
-148 Substituir (+ dic)
-149 Substituir e próximo
-150 Outro idioma
-151 Pular (+ dic)
-152 Palavras contendo:
-153 Verificar ortografia...
-154 Numerais romanos
-155 Ignorar
-156 palavras todas maíusculas
-157 palavras com dígitos
-158 Erro em arquivo de parâmetros
-159 Não há arquivo de teclado
-160 Não é possível salvar o dicionário do documento
-161 Palavra incorreta "%s" recusada neste dicionário
-162 Palavra "%s" adicionada ao dicionário do documento
-163 Fim da verificação ortográfica
-164 Abortada a verificação ortográfica
-165 Por favor selecione um documento
-166 Dicionário do documento salvo: %s
-167 **Not available in this version
-168 **Enable/Disable palette
-169 **Tools
-170 **Mandatory attribute, it can't be removed
-171 **Refresh
-172 **Left
-173 **Right
-174 **Center
-175 **Justify
-176 Applicar classe
-177 Selecionar uma classe ou pseudo-classe
-178 Selecionar
-179 **Discard
-180 Matemática
-181 **Misc
-182 **Binary relations
-183 **Binary relations of negation
-184 **Operators
-185 **Greek alphabet (capital)
-186 **Arrows
-187 **Special characters
-188 Interromper transferência
-189 Documento precedente
-190 Documento seguinte
-191 Recarregar
-192 Salvar
-193 Novo documento XHTML
-194 >Abrir documento
-195 Imprimir
-196 Buscar
-197 Home
-198 Ênfase On/Off
-199 Forte On/Off
-200 Código On/Off
-201 Inserir imagem
-202 Cabeçalho nível 1
-203 Cabeçalho nível 2
-204 Cabeçalho nível 3
-205 Lista com bolinhas
-206 Lista numerada
-207 Lista de definição
-208 Enlace
-209 Tabela
-210 **You are about to close %d open tabs. Are you sure you want to continue?
-211 **Warn me when I attempt to close multiple tabs
-212 **Close tabs
-213 **No error detected
-214 Exibir erros de gramática (parsing)
-215 **Boxes
-216 Divisão
-217 Destino
-218 Inserção On/Off
-219 Supressão On/Off
-220 Índice On/Off
-221 Expoente On/Off
-222 Termo
-223 Definição
-224 Objeto
-225 **CSS Style
-226 Arquivos
-227 **Horizontal split/unsplit
-228 **Vertical split/unsplit
-229 **Show/hide tools
+127 **Attribute
+128 **Value
+129 Valor do atributo
+130 Atributo desconhecido
+131 Cancelar
+132 Erro em tradução PostScript
+133 Comando recusado pelo spooler "%s"
+134 Não é possível criar "%s"
+135 Sobrelinhado (Overline)
+136 Formato de documento
+137 Eventos
+138 Remover atributo
+139 Botão esquerdo fixa a cor da seleção
+140 Botão do meio ou da direita fixa a cor do cursor
+141 Mais ...
+142 Comece
+143 Cor
+144 **Background color
+145 **Foreground color
+146 **Switch colors
+147 **Select a generic XML structure
+148 Verificação
+149 Buscar/Pular
+150 Substituir (+ dic)
+151 Substituir e próximo
+152 Outro idioma
+153 Pular (+ dic)
+154 Palavras contendo:
+155 Verificar ortografia...
+156 Numerais romanos
+157 Ignorar
+158 palavras todas maíusculas
+159 palavras com dígitos
+160 Erro em arquivo de parâmetros
+161 Não há arquivo de teclado
+162 Não é possível salvar o dicionário do documento
+163 Palavra incorreta "%s" recusada neste dicionário
+164 Palavra "%s" adicionada ao dicionário do documento
+165 Fim da verificação ortográfica
+166 Abortada a verificação ortográfica
+167 Por favor selecione um documento
+168 Dicionário do documento salvo: %s
+169 **Not available in this version
+170 **Enable/Disable palette
+171 **Tools
+172 **Mandatory attribute, it can't be removed
+173 **Refresh
+174 **Left
+175 **Right
+176 **Center
+177 **Justify
+178 Applicar classe
+179 Selecionar uma classe ou pseudo-classe
+180 Selecionar
+181 **Discard
+182 Matemática
+183 **Misc
+184 **Binary relations
+185 **Binary relations of negation
+186 **Operators
+187 **Greek alphabet (capital)
+188 **Arrows
+189 **Special characters
+190 Interromper transferência
+191 Documento precedente
+192 Documento seguinte
+193 Recarregar
+194 Salvar
+195 Novo documento XHTML
+196 >Abrir documento
+197 Imprimir
+198 Buscar
+199 Home
+200 Ênfase On/Off
+201 Forte On/Off
+202 Código On/Off
+203 Inserir imagem
+204 Cabeçalho nível 1
+205 Cabeçalho nível 2
+206 Cabeçalho nível 3
+207 Lista com bolinhas
+208 Lista numerada
+209 Lista de definição
+210 Enlace
+211 Tabela
+212 **You are about to close %d open tabs. Are you sure you want to continue?
+213 **Warn me when I attempt to close multiple tabs
+214 **Close tabs
+215 **No error detected
+216 Exibir erros de gramática (parsing)
+217 **Boxes
+218 Divisão
+219 Destino
+220 Inserção On/Off
+221 Supressão On/Off
+222 Índice On/Off
+223 Expoente On/Off
+224 Termo
+225 Definição
+226 Objeto
+227 **CSS Style
+228 Arquivos
+229 **Horizontal split/unsplit
+230 **Vertical split/unsplit
+231 **Show/hide tools

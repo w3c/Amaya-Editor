@@ -126,106 +126,108 @@
 124 Hľadať atribút
 125 Hľadať typ
 126 Prirodzený
-127 Hodnota atríbútu
-128 Neznámy atribút
-129 Zrušiť
-130 Chyba v PostScriptovom preklade
-131 Príkaz odmietnutý tlačiarňou "%s"
-132 Nedá sa vytvoriť "%s"
-133 Pruh nad
-134 Formát dokumentu
-135 Udalosti
-136 Odstániť atribút
-137 Ľavým tlačidlom nastavíte farbu výberu
-138 Stredným alebo pravým tlačidlom nastavíte farbu bez označenia
-139 Ďalej ...
-140 Získať
-141 Farba
-142 Farba pozadia
-143 Farba popredia
-144 Zmeniť farby
-145 Vybrať základnú štruktúru XML
-146 Kontrola
-147 Hľadať/Preskočiť
-148 Nahradiť (+ slovník)
-149 Nahradiť a nájsť ďalšie
-150 Iný jazyk
-151 Pridať do slovníka
-152 slová obsahujúce:
-153 Kontrola pravopisu ...
-154 Rímske čísla
-155 Ignorovať
-156 slová napísané VEĽKÝMI písmenami
-157 slová s číslami
-158 Chyba súboru s parametrami
-159 Neexistuje súbor klávesnice
-160 Slovník sa nedá uložiť
-161 Nesprávne slovo "%s" bolo zamietnuté v tomto slovníku
-162 Slovo "%s" bolo pridané do slovníka
-163 Koniec kontroly pravopisu
-164 Kontrola pravopisu prerušená
-165 Prosím vyberte dokument
-166 Slovník bol uložený
-167 Nie je prístupné v tejto verzii
-168 Vysunúť/zasunúť nástrojovú lištu
-169 Nástroje
-170 Toto je povinný atribút, ktorý nemôže byť odstránený
-171 Obnoviť
-172 Doľava
-173 Doprava
-174 Centrovať
-175 Do bloku
-176 Aplikovať triedu (class)
-177 Vyberte triedu alebo pseudotriedu
-178 Vybrať
-179 Skartovať
-180 Vzorce
-181 Rôzne
-182 Relačné operátory
-183 Negované relačné operátory
-184 Operátory
-185 Grácka abeceda (veľké)
-186 Šipky
-187 Špeciálne znaky
-188 Prerušiť prenos
-189 Predchádzajúci dokument
-190 Nasledujúci dokument
-191 Načítať najnovšiu verziu stránky
-192 Uložiť
-193 Nový XHTML dokument
-194 Otvoriť dokument
-195 Tlačiť
-196 Hľadať
-197 Prejsť na domovskú stránku
-198 Zvýrazniť On/Off
-199 Silno zvýrazniť On/Off
-200 Zdrojový kód On/Off
-201 Obrázok (img)
-202 Nadpis úrovne 1 (h1)
-203 Nadpis úrovne 2 (h2)
-204 Nadpis úrovne 3 (h3)
-205 Odrážky (ul)
-206 Číslovanie (ol)
-207 Zoznam definícií (dl)
-208 Hypertextový odkaz
-209 Tabuľka (table)
-210 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
-211 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
-212 Zatvoriť karty
-213 Žiadne chyby neboli nájdené
-214 Zobraziť nájdené chyby
-215 Kolónky
-216 Oddelenie, vrstva (div)
-217 Záložka
-218 Novovložený text On/Off
-219 Text na odstránenie On/Off
-220 Dolný index On/Off
-221 Horný index On/Off
-222 Termín (dt)
-223 Definícia termínu (dd)
-224 Objekt (object)
-225 CSS pravidlá
-226 Súbor
-227 Rozdeliť okno horizontálne
-228 Rozdeliť okno vertikálne
-229 Zobraziť/skryť nástroje
+127 **Attribute
+128 **Value
+129 Hodnota atríbútu
+130 Neznámy atribút
+131 Zrušiť
+132 Chyba v PostScriptovom preklade
+133 Príkaz odmietnutý tlačiarňou "%s"
+134 Nedá sa vytvoriť "%s"
+135 Pruh nad
+136 Formát dokumentu
+137 Udalosti
+138 Odstániť atribút
+139 Ľavým tlačidlom nastavíte farbu výberu
+140 Stredným alebo pravým tlačidlom nastavíte farbu bez označenia
+141 Ďalej ...
+142 Získať
+143 Farba
+144 Farba pozadia
+145 Farba popredia
+146 Zmeniť farby
+147 Vybrať základnú štruktúru XML
+148 Kontrola
+149 Hľadať/Preskočiť
+150 Nahradiť (+ slovník)
+151 Nahradiť a nájsť ďalšie
+152 Iný jazyk
+153 Pridať do slovníka
+154 slová obsahujúce:
+155 Kontrola pravopisu ...
+156 Rímske čísla
+157 Ignorovať
+158 slová napísané VEĽKÝMI písmenami
+159 slová s číslami
+160 Chyba súboru s parametrami
+161 Neexistuje súbor klávesnice
+162 Slovník sa nedá uložiť
+163 Nesprávne slovo "%s" bolo zamietnuté v tomto slovníku
+164 Slovo "%s" bolo pridané do slovníka
+165 Koniec kontroly pravopisu
+166 Kontrola pravopisu prerušená
+167 Prosím vyberte dokument
+168 Slovník bol uložený
+169 Nie je prístupné v tejto verzii
+170 Vysunúť/zasunúť nástrojovú lištu
+171 Nástroje
+172 Toto je povinný atribút, ktorý nemôže byť odstránený
+173 Obnoviť
+174 Doľava
+175 Doprava
+176 Centrovať
+177 Do bloku
+178 Aplikovať triedu (class)
+179 Vyberte triedu alebo pseudotriedu
+180 Vybrať
+181 Skartovať
+182 Vzorce
+183 Rôzne
+184 Relačné operátory
+185 Negované relačné operátory
+186 Operátory
+187 Grácka abeceda (veľké)
+188 Šipky
+189 Špeciálne znaky
+190 Prerušiť prenos
+191 Predchádzajúci dokument
+192 Nasledujúci dokument
+193 Načítať najnovšiu verziu stránky
+194 Uložiť
+195 Nový XHTML dokument
+196 Otvoriť dokument
+197 Tlačiť
+198 Hľadať
+199 Prejsť na domovskú stránku
+200 Zvýrazniť On/Off
+201 Silno zvýrazniť On/Off
+202 Zdrojový kód On/Off
+203 Obrázok (img)
+204 Nadpis úrovne 1 (h1)
+205 Nadpis úrovne 2 (h2)
+206 Nadpis úrovne 3 (h3)
+207 Odrážky (ul)
+208 Číslovanie (ol)
+209 Zoznam definícií (dl)
+210 Hypertextový odkaz
+211 Tabuľka (table)
+212 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
+213 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
+214 Zatvoriť karty
+215 Žiadne chyby neboli nájdené
+216 Zobraziť nájdené chyby
+217 Kolónky
+218 Oddelenie, vrstva (div)
+219 Záložka
+220 Novovložený text On/Off
+221 Text na odstránenie On/Off
+222 Dolný index On/Off
+223 Horný index On/Off
+224 Termín (dt)
+225 Definícia termínu (dd)
+226 Objekt (object)
+227 CSS pravidlá
+228 Súbor
+229 Rozdeliť okno horizontálne
+230 Rozdeliť okno vertikálne
+231 Zobraziť/skryť nástroje

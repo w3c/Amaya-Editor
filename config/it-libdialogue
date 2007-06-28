@@ -126,106 +126,108 @@
 124 Attributo da cercare
 125 Tipo da cercare
 126 Nature
-127 Valore dell\'attributo
-128 Attributo sconosciuto
-129 Annulla
-130 Errore nella traduzione in PostScript
-131 Comando rifiutato dallo spooler "%s"
-132 Impossibile creare "%s"
-133 Soprassegnato
-134 Formato del documento
-135 Eventi
-136 Rimuovi l\'attributo
-137 Il tasto di sinistra setta il colore della selezione
-138 l tasto centrale o di destra setta il colore del cursore
-139 Encora ...
-140 Usa colori
-141 Colore
-142 Colore di sfondo
-143 Colore per il testo
-144 Scambia colori
-145 Scegli una struttura XML generica
-146 Controlla
-147 Cerca
-148 Sostituisci (+ diz)
-149 Sostituisci e continua
-150 Altra lingua
-151 Aggiungi
-152 parole contenenti:
-153 Controllo ortografico...
-154 numerali romani
-155 Ignora
-156 parole tutte maiuscole
-157 parole contenenti cifre
-158 Errore nel file dei parametri
-159 Il file della tastiera non esiste
-160 Impossibile salvare il dizionario del documento
-161 Parola scorretta "%s" rifiutata in questo dizionario
-162 Parola "%s" aggiunta nel dizionario del documento
-163 Fine controllo ortografico
-164 Controllo ortografico interrotto
-165 Seleziona un documento
-166 Dizionario del documento salvato: %s
-167 Non disponibile in questa versione
-168 Abilita/Disabilita la paletta colori
-169 Strumenti
-170 Attributo obbligatorio, non si pu rimuovere
-171 Aggiorna
-172 Sinistra
-173 Destra
-174 Centro
-175 Giustifica
-176 Applica la classe
-177 Seleziona una classe o una pseudoclasse
-178 Seleziona
-179 Elimina
-180 Formule matematiche
-181 Varie
-182 Relazioni binarie
-183 Relazioni binarie di negazione
-184 Operatori
-185 Alfabeto greco (maiuscolo)
-186 Frecce
-187 Caratteri speciali
-188 Interrompi trasferimento
-189 Documento precedente
-190 Documento successivo
-191 Ricarica
-192 Salvare
-193 Nuovo documento XHTML
-194 Apri documento
-195 Stampa
-196 Cerca
-197 Home
-198 Enfasi On/Off
-199 Forte On/Off
-200 Codice On/Off
-201 Inserisci immagine
-202 Intestazione di livello 1
-203 Intestazione di livello 2
-204 Intestazione di livello 3
-205 Lista puntata
-206 Lista numerata
-207 Lista di definizioni
-208 Collegamento
-209 Tabella
-210 Stai per chiudere %d tab aperti. Vuoi proprio proseguire?
-211 Avvisami quando cerco di chiudere pi tab
-212 Chiudi tab
-213 Nessun errore trovato
-214 Mostra le errore
-215 Box
-216 Divisione
-217 Obiettivo
-218 Inserzione On/Off
-219 Cancellazione On/Off
-220 Pedice On/Off
-221 Indice On/Off
-222 Termine
-223 Definizione
-224 Oggetto
-225 CSS Style
-226 Files
-227 Dividi la vista in orizzontale
-228 Dividi la vista in verticale
-229 Mostra strumenti
+127 **Attribute
+128 **Value
+129 Valore dell\'attributo
+130 Attributo sconosciuto
+131 Annulla
+132 Errore nella traduzione in PostScript
+133 Comando rifiutato dallo spooler "%s"
+134 Impossibile creare "%s"
+135 Soprassegnato
+136 Formato del documento
+137 Eventi
+138 Rimuovi l\'attributo
+139 Il tasto di sinistra setta il colore della selezione
+140 l tasto centrale o di destra setta il colore del cursore
+141 Encora ...
+142 Usa colori
+143 Colore
+144 Colore di sfondo
+145 Colore per il testo
+146 Scambia colori
+147 Scegli una struttura XML generica
+148 Controlla
+149 Cerca
+150 Sostituisci (+ diz)
+151 Sostituisci e continua
+152 Altra lingua
+153 Aggiungi
+154 parole contenenti:
+155 Controllo ortografico...
+156 numerali romani
+157 Ignora
+158 parole tutte maiuscole
+159 parole contenenti cifre
+160 Errore nel file dei parametri
+161 Il file della tastiera non esiste
+162 Impossibile salvare il dizionario del documento
+163 Parola scorretta "%s" rifiutata in questo dizionario
+164 Parola "%s" aggiunta nel dizionario del documento
+165 Fine controllo ortografico
+166 Controllo ortografico interrotto
+167 Seleziona un documento
+168 Dizionario del documento salvato: %s
+169 Non disponibile in questa versione
+170 Abilita/Disabilita la paletta colori
+171 Strumenti
+172 Attributo obbligatorio, non si pu rimuovere
+173 Aggiorna
+174 Sinistra
+175 Destra
+176 Centro
+177 Giustifica
+178 Applica la classe
+179 Seleziona una classe o una pseudoclasse
+180 Seleziona
+181 Elimina
+182 Formule matematiche
+183 Varie
+184 Relazioni binarie
+185 Relazioni binarie di negazione
+186 Operatori
+187 Alfabeto greco (maiuscolo)
+188 Frecce
+189 Caratteri speciali
+190 Interrompi trasferimento
+191 Documento precedente
+192 Documento successivo
+193 Ricarica
+194 Salvare
+195 Nuovo documento XHTML
+196 Apri documento
+197 Stampa
+198 Cerca
+199 Home
+200 Enfasi On/Off
+201 Forte On/Off
+202 Codice On/Off
+203 Inserisci immagine
+204 Intestazione di livello 1
+205 Intestazione di livello 2
+206 Intestazione di livello 3
+207 Lista puntata
+208 Lista numerata
+209 Lista di definizioni
+210 Collegamento
+211 Tabella
+212 Stai per chiudere %d tab aperti. Vuoi proprio proseguire?
+213 Avvisami quando cerco di chiudere pi tab
+214 Chiudi tab
+215 Nessun errore trovato
+216 Mostra le errore
+217 Box
+218 Divisione
+219 Obiettivo
+220 Inserzione On/Off
+221 Cancellazione On/Off
+222 Pedice On/Off
+223 Indice On/Off
+224 Termine
+225 Definizione
+226 Oggetto
+227 CSS Style
+228 Files
+229 Dividi la vista in orizzontale
+230 Dividi la vista in verticale
+231 Mostra strumenti

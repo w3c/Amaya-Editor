@@ -126,106 +126,108 @@
 124 M‰‰re etsint‰‰n
 125 Tyyppi etsint‰‰n
 126 Luonteet
-127 M‰‰reen arvo
-128 Tuntematon m‰‰re
-129 Peruuta
-130 Virhe PostScript k‰‰nnˆksess‰
-131 Kirjoitinajuri hylk‰si komennon "%s"
-132 Ei voi luoda "%s"
-133 Yliviivaa
-134 Dokumentin muoto
-135 Tapahtumat
-136 Poista m‰‰ritys
-137 Hiiren vasen n‰pp‰in asettaa valintav‰rin
-138 Hiiren keskimm‰inen tai oikea n‰pp‰in asettaa caret v‰rin
-139 Lis‰‰ ...
-140 Hae
-141 V‰ri
-142 **Background color
-143 **Foreground color
-144 **Switch colors
-145 **Select a generic XML structure
-146 Tarkistetaan
-147 Etsi/Hylk‰‰
-148 Korvaa (+ dic)
-149 Korvaa ja seuraava
-150 Toinen kieli
-151 Hylk‰‰ (+ dic)
-152 sanat, joissa:
-153 Oikeinkirjoituksen tarkistus ...
-154 Roomalaiset numerot
-155 Ohita
-156 sanat, joissa kaikki isolla
-157 sanat, joissa numeroita
-158 Parametritiedosto virhe
-159 Ei n‰pp‰imistˆtiedostoa
-160 Dokumentin sanastoa ei voi tallentaa
-161 Kelpaamaton sana "%s", ei ole hyv‰ksytty t‰ss‰ sanastossa
-162 Sana "%s" lis‰tty dokumentin sanastoon
-163 Oikeinkirjoitustarkistus valmis!
-164 Oikeinkirjoitustarkistus keskeytetty!
-165 Valitse dokumentti
-166 Dokumentin sanasto tallennettu: %s
-167 **Not available in this version
-168 **Enable/Disable palette
-169 **Tools
-170 **Mandatory attribute, it can't be removed
-171 **Refresh
-172 **Left
-173 **Right
-174 **Center
-175 **Justify
-176 K‰yt‰ luokkaa
-177 Valitse luokka tai valeluokka
-178 Valitse
-179 **Discard
-180 Matematiikka
-181 **Misc
-182 **Binary relations
-183 **Binary relations of negation
-184 **Operators
-185 **Greek alphabet (capital)
-186 **Arrows
-187 **Special characters
-188 Keskeyt‰ tiedonsiirto
-189 Edellinen dokumentti
-190 Seuraava dokumentti
-191 P‰ivit‰
-192 Tallenna
-193 Uusi XHTML dokumentti
-194 Avaa dokumentti
-195 Tulosta
-196 Etsi
-197 Aloitussivu
-198 Korosta On/Off
-199 Lihavoi On/Off
-200 Koodi On/Off
-201 Syˆt‰ kuva
-202 Otsikkokoko 1
-203 Otsikkokoko 2
-204 Otsikkokoko 3
-205 Pisteellinen luettelo
-206 Numeroituluettelo
-207 M‰‰rittelyluettelo
-208 Linkki
-209 Taulukko
-210 **You are about to close %d open tabs. Are you sure you want to continue?
-211 **Warn me when I attempt to close multiple tabs
-212 **Close tabs
-213 **No error detected
-214 N‰yt‰ k‰‰nnˆsvirheet
-215 **Boxes
-216 Tyhj‰ rivi
-217 Kohde
-218 Lis‰ys On/Off
-219 Poisto On/Off
-220 Alaindeksi On/Off
-221 Yl‰indeksi On/Off
-222 Lopetus
-223 M‰‰rittely
-224 Objekti
-225 **CSS Style
-226 Tiedostoja
-227 **Horizontal split/unsplit
-228 **Vertical split/unsplit
-229 **Show/hide tools
+127 **Attribute
+128 **Value
+129 M‰‰reen arvo
+130 Tuntematon m‰‰re
+131 Peruuta
+132 Virhe PostScript k‰‰nnˆksess‰
+133 Kirjoitinajuri hylk‰si komennon "%s"
+134 Ei voi luoda "%s"
+135 Yliviivaa
+136 Dokumentin muoto
+137 Tapahtumat
+138 Poista m‰‰ritys
+139 Hiiren vasen n‰pp‰in asettaa valintav‰rin
+140 Hiiren keskimm‰inen tai oikea n‰pp‰in asettaa caret v‰rin
+141 Lis‰‰ ...
+142 Hae
+143 V‰ri
+144 **Background color
+145 **Foreground color
+146 **Switch colors
+147 **Select a generic XML structure
+148 Tarkistetaan
+149 Etsi/Hylk‰‰
+150 Korvaa (+ dic)
+151 Korvaa ja seuraava
+152 Toinen kieli
+153 Hylk‰‰ (+ dic)
+154 sanat, joissa:
+155 Oikeinkirjoituksen tarkistus ...
+156 Roomalaiset numerot
+157 Ohita
+158 sanat, joissa kaikki isolla
+159 sanat, joissa numeroita
+160 Parametritiedosto virhe
+161 Ei n‰pp‰imistˆtiedostoa
+162 Dokumentin sanastoa ei voi tallentaa
+163 Kelpaamaton sana "%s", ei ole hyv‰ksytty t‰ss‰ sanastossa
+164 Sana "%s" lis‰tty dokumentin sanastoon
+165 Oikeinkirjoitustarkistus valmis!
+166 Oikeinkirjoitustarkistus keskeytetty!
+167 Valitse dokumentti
+168 Dokumentin sanasto tallennettu: %s
+169 **Not available in this version
+170 **Enable/Disable palette
+171 **Tools
+172 **Mandatory attribute, it can't be removed
+173 **Refresh
+174 **Left
+175 **Right
+176 **Center
+177 **Justify
+178 K‰yt‰ luokkaa
+179 Valitse luokka tai valeluokka
+180 Valitse
+181 **Discard
+182 Matematiikka
+183 **Misc
+184 **Binary relations
+185 **Binary relations of negation
+186 **Operators
+187 **Greek alphabet (capital)
+188 **Arrows
+189 **Special characters
+190 Keskeyt‰ tiedonsiirto
+191 Edellinen dokumentti
+192 Seuraava dokumentti
+193 P‰ivit‰
+194 Tallenna
+195 Uusi XHTML dokumentti
+196 Avaa dokumentti
+197 Tulosta
+198 Etsi
+199 Aloitussivu
+200 Korosta On/Off
+201 Lihavoi On/Off
+202 Koodi On/Off
+203 Syˆt‰ kuva
+204 Otsikkokoko 1
+205 Otsikkokoko 2
+206 Otsikkokoko 3
+207 Pisteellinen luettelo
+208 Numeroituluettelo
+209 M‰‰rittelyluettelo
+210 Linkki
+211 Taulukko
+212 **You are about to close %d open tabs. Are you sure you want to continue?
+213 **Warn me when I attempt to close multiple tabs
+214 **Close tabs
+215 **No error detected
+216 N‰yt‰ k‰‰nnˆsvirheet
+217 **Boxes
+218 Tyhj‰ rivi
+219 Kohde
+220 Lis‰ys On/Off
+221 Poisto On/Off
+222 Alaindeksi On/Off
+223 Yl‰indeksi On/Off
+224 Lopetus
+225 M‰‰rittely
+226 Objekti
+227 **CSS Style
+228 Tiedostoja
+229 **Horizontal split/unsplit
+230 **Vertical split/unsplit
+231 **Show/hide tools

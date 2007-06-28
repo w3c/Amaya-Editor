@@ -126,106 +126,108 @@
 124 Attribut à chercher
 125 Type à chercher
 126 Natures
-127 Valeur de l'attribut
-128 Attribut inconnu
-129 Annuler
-130 Erreur dans la traduction en PostScript
-131 Commande refusée par le spooler "%s"
-132 Impossible de créer "%s"
-133 Surligné
-134 Format de document
-135 Événements
-136 Retirer l'attribut
-137 Bouton gauche change la couleur de sélection
-138 Bouton milieu ou droit change la couleur du curseur
-139 Autres ...
-140 Actualiser
-141 Couleur
-142 Couleur de l'arrière-plan
-143 Couleur du premier plan
-144 Echanger les couleurs
-145 Séléctionner une structure XML générique
-146 Où corriger
-147 Chercher/Suivant
-148 Remplacer (+ dic)
-149 Remplacer
-150 Autre langue
-151 Apprendre
-152 incluant les caractères :
-153 Corriger...
-154 en chiffres romains
-155 Ignorer les mots
-156 en lettres capitales
-157 incluant des chiffres
-158 Erreur dans le fichier des paramètres
-159 Absence de fichier clavier
-160 Impossible d\'enregistrer le dictionnaire du document
-161 Mot "%s" incorrect refusé dans ce dictionnaire
-162 Mot "%s" ajouté dans le dictionnaire du document
-163 Correction terminée
-164 Correction interrompue
-165 Sélectionnez un document
-166 Sauvegarde du dictionnaire "%s"
-167 Pas disponible dans cette version
-168 Activer/Desactiver palette
-169 Outils
-170 Cet attribut est obligatoire, il ne peut pas être supprimé
-171 Actualiser
-172 Gauche
-173 Droite
-174 Centré
-175 Justifié
-176 Appliquer classe
-177 Sélectionner une classe ou une pseudo-classe
-178 Sélectionner
-179 Abandonner
-180 Maths
-181 Divers
-182 Relations binaires
-183 Relations binaires de négation
-184 Opérateurs
-185 Alphabet grec (majuscules)
-186 Flèches
-187 Caractères spéciaux
-188 Interrompre le chargement
-189 Document précédent
-190 Document suivant
-191 Recharger
-192 Enregistrer
-193 Nouveau document XHTML
-194 Ouvrir
-195 Imprimer
-196 Chercher
-197 Page personnelle
-198 Mise en évidence On/Off
-199 Important On/Off
-200 Code On/Off
-201 Ajouter/Remplacer une image
-202 Titre niveau 1
-203 Titre niveau 2
-204 Titre niveau 3
-205 Liste
-206 Liste numérotée
-207 Liste de définitions
-208 Lien
-209 Tableau
-210 Etes vous certain de vouloir fermer %d onglets?
-211 M'avertir quand je ferme plusieurs onglets
-212 Fermer les onglets
-213 Aucune erreur détectée
-214 Montrer les erreurs
-215 Boîtes
-216 Division
-217 Cible
-218 Insertion On/Off
-219 Suppression On/Off
-220 Indice On/Off
-221 Exposant On/Off
-222 Terme
-223 Définition
-224 Objet
-225 Style CSS
-226 Fichiers
-227 Partager/étendre en horizontal
-228 Partager/étendre verticalement
-229 Montrer/cacher les outils
+127 Attribut
+128 Valeur
+129 Valeur de l'attribut
+130 Attribut inconnu
+131 Annuler
+132 Erreur dans la traduction en PostScript
+133 Commande refusée par le spooler "%s"
+134 Impossible de créer "%s"
+135 Surligné
+136 Format de document
+137 Événements
+138 Retirer l'attribut
+139 Bouton gauche change la couleur de sélection
+140 Bouton milieu ou droit change la couleur du curseur
+141 Autres ...
+142 Actualiser
+143 Couleur
+144 Couleur de l'arrière-plan
+145 Couleur du premier plan
+146 Echanger les couleurs
+147 Séléctionner une structure XML générique
+148 Où corriger
+149 Chercher/Suivant
+150 Remplacer (+ dic)
+151 Remplacer
+152 Autre langue
+153 Apprendre
+154 incluant les caractères :
+155 Corriger...
+156 en chiffres romains
+157 Ignorer les mots
+158 en lettres capitales
+159 incluant des chiffres
+160 Erreur dans le fichier des paramètres
+161 Absence de fichier clavier
+162 Impossible d\'enregistrer le dictionnaire du document
+163 Mot "%s" incorrect refusé dans ce dictionnaire
+164 Mot "%s" ajouté dans le dictionnaire du document
+165 Correction terminée
+166 Correction interrompue
+167 Sélectionnez un document
+168 Sauvegarde du dictionnaire "%s"
+169 Pas disponible dans cette version
+170 Activer/Desactiver palette
+171 Outils
+172 Cet attribut est obligatoire, il ne peut pas être supprimé
+173 Actualiser
+174 Gauche
+175 Droite
+176 Centré
+177 Justifié
+178 Appliquer classe
+179 Sélectionner une classe ou une pseudo-classe
+180 Sélectionner
+181 Abandonner
+182 Maths
+183 Divers
+184 Relations binaires
+185 Relations binaires de négation
+186 Opérateurs
+187 Alphabet grec (majuscules)
+188 Flèches
+189 Caractères spéciaux
+190 Interrompre le chargement
+191 Document précédent
+192 Document suivant
+193 Recharger
+194 Enregistrer
+195 Nouveau document XHTML
+196 Ouvrir
+197 Imprimer
+198 Chercher
+199 Page personnelle
+200 Mise en évidence On/Off
+201 Important On/Off
+202 Code On/Off
+203 Ajouter/Remplacer une image
+204 Titre niveau 1
+205 Titre niveau 2
+206 Titre niveau 3
+207 Liste
+208 Liste numérotée
+209 Liste de définitions
+210 Lien
+211 Tableau
+212 Etes vous certain de vouloir fermer %d onglets?
+213 M'avertir quand je ferme plusieurs onglets
+214 Fermer les onglets
+215 Aucune erreur détectée
+216 Montrer les erreurs
+217 Boîtes
+218 Division
+219 Cible
+220 Insertion On/Off
+221 Suppression On/Off
+222 Indice On/Off
+223 Exposant On/Off
+224 Terme
+225 Définition
+226 Objet
+227 Style CSS
+228 Fichiers
+229 Partager/étendre en horizontal
+230 Partager/étendre verticalement
+231 Montrer/cacher les outils

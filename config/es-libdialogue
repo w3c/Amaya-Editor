@@ -126,106 +126,108 @@
 124 Atributo a buscar
 125 Tipo a buscar
 126 Natures
-127 Valores de atributo
-128 Atributo desconocido
-129 Cancelar
-130 Error en traducción PostScript
-131 Orden rechazada por el spooler "%s"
-132 No puedo crear "%s"
-133 Suprarayado
-134 Formato de documento
-135 Eventos
-136 Eliminar atributo
-137 El botón izquierdo fija el color del texto de la selección
-138 El botón derecho o el central fijan el color del fondo de la selección
-139 Más ...
-140 Obtener
-141 Color
-142 Color del fondo
-143 Color del texto
-144 Intercambiar colores
-145 Seleccione una estructura genérica
-146 Comprobar
-147 Buscar/Saltar
-148 Reemplazar (+ dic)
-149 Reemplazar y siguiente
-150 Otro idioma
-151 Agregar
-152 Palabras que contengan:
-153 Revisar ortografía:
-154 Números romanos
-155 Ignorar
-156 Palabras en mayúsculas
-157 Palabras con dígitos
-158 Error en archivo de parámetro
-159 No hay archivo de teclado
-160 No puedo guardar el diccionario del documento
-161 Palabra incorrecta "%s" rechazada en este diccionario
-162 Palabra "%s" añadida al diccionario del documento
-163 Fin de la corrección ortográfica
-164 Corrección ortográfica abortada
-165 Por favor, seleccione un documento
-166 Diccionario del documento guardado: %s
-167 No disponible en esta versión
-168 Activar/Desactivar paleta
-169 Herramientas
-170 Atributo obligatorio, no puede eliminarse
-171 Actualizar
-172 Izquierda
-173 Derecha
-174 Centrado
-175 Justificado
-176 Aplicar clase
-177 Seleccionar una clase o seudo-clase
-178 Seleccionar
-179 Descartar
-180 MathML
-181 Miscelánea
-182 Relaciones binarias
-183 Relaciones de negación binarias
-184 Operadores
-185 Alfabeto griego (mayúsculas)
-186 Flechas
-187 Caracteres especiales
-188 Detener
-189 Atrás
-190 Adelante
-191 Actualizar
-192 Guardar
-193 Nuevo documento XHTML
-194 Abrir documento
-195 Imprimir
-196 Buscar
-197 Inicio
-198 Énfasis On/Off
-199 Enérgico On/Off
-200 Código On/Off
-201 Imagen
-202 Cabecera nivel 1 (h1)
-203 Cabecera nivel 2 (h2)
-204 Cabecera nivel 3 (h3)
-205 Lista no ordenada (ul)
-206 Lista ordenada (ol)
-207 Lista de definición (dl)
-208 Enlace
-209 Tabla
-210 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
-211 Avisarme cuando intente cerrar múltiples pestañas
-212 Cerrar pestañas
-213 Ningún error detectado
-214 Mostrar errores sintácticos
-215 Cajas
-216 División
-217 Destino
-218 Inserción On/Off
-219 Borrado On/Off
-220 Subíndice On/Off
-221 Superíndice On/Off
-222 Término
-223 Definición
-224 Objeto
-225 Estilo CSS
-226 Archivos
-227 Dividir horizontalmente
-228 Dividir vista verticalmente
-229 Ventana de herramientas
+127 **Attribute
+128 **Value
+129 Valores de atributo
+130 Atributo desconocido
+131 Cancelar
+132 Error en traducción PostScript
+133 Orden rechazada por el spooler "%s"
+134 No puedo crear "%s"
+135 Suprarayado
+136 Formato de documento
+137 Eventos
+138 Eliminar atributo
+139 El botón izquierdo fija el color del texto de la selección
+140 El botón derecho o el central fijan el color del fondo de la selección
+141 Más ...
+142 Obtener
+143 Color
+144 Color del fondo
+145 Color del texto
+146 Intercambiar colores
+147 Seleccione una estructura genérica
+148 Comprobar
+149 Buscar/Saltar
+150 Reemplazar (+ dic)
+151 Reemplazar y siguiente
+152 Otro idioma
+153 Agregar
+154 Palabras que contengan:
+155 Revisar ortografía:
+156 Números romanos
+157 Ignorar
+158 Palabras en mayúsculas
+159 Palabras con dígitos
+160 Error en archivo de parámetro
+161 No hay archivo de teclado
+162 No puedo guardar el diccionario del documento
+163 Palabra incorrecta "%s" rechazada en este diccionario
+164 Palabra "%s" añadida al diccionario del documento
+165 Fin de la corrección ortográfica
+166 Corrección ortográfica abortada
+167 Por favor, seleccione un documento
+168 Diccionario del documento guardado: %s
+169 No disponible en esta versión
+170 Activar/Desactivar paleta
+171 Herramientas
+172 Atributo obligatorio, no puede eliminarse
+173 Actualizar
+174 Izquierda
+175 Derecha
+176 Centrado
+177 Justificado
+178 Aplicar clase
+179 Seleccionar una clase o seudo-clase
+180 Seleccionar
+181 Descartar
+182 MathML
+183 Miscelánea
+184 Relaciones binarias
+185 Relaciones de negación binarias
+186 Operadores
+187 Alfabeto griego (mayúsculas)
+188 Flechas
+189 Caracteres especiales
+190 Detener
+191 Atrás
+192 Adelante
+193 Actualizar
+194 Guardar
+195 Nuevo documento XHTML
+196 Abrir documento
+197 Imprimir
+198 Buscar
+199 Inicio
+200 Énfasis On/Off
+201 Enérgico On/Off
+202 Código On/Off
+203 Imagen
+204 Cabecera nivel 1 (h1)
+205 Cabecera nivel 2 (h2)
+206 Cabecera nivel 3 (h3)
+207 Lista no ordenada (ul)
+208 Lista ordenada (ol)
+209 Lista de definición (dl)
+210 Enlace
+211 Tabla
+212 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
+213 Avisarme cuando intente cerrar múltiples pestañas
+214 Cerrar pestañas
+215 Ningún error detectado
+216 Mostrar errores sintácticos
+217 Cajas
+218 División
+219 Destino
+220 Inserción On/Off
+221 Borrado On/Off
+222 Subíndice On/Off
+223 Superíndice On/Off
+224 Término
+225 Definición
+226 Objeto
+227 Estilo CSS
+228 Archivos
+229 Dividir horizontalmente
+230 Dividir vista verticalmente
+231 Ventana de herramientas
