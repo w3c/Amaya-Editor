@@ -33,8 +33,9 @@ public:
 
   void ForceAttributeUpdate();
 
-  bool IsFreezed();
   void SelectAttribute( int position);
+  
+  wxString GetCurrentSelectedAttrName()const;
 
  protected:
   // Any class wishing to process wxWindows events must use this macro
@@ -45,17 +46,17 @@ public:
   
   void OnApply( wxCommandEvent& event );
   void OnCancel( wxCommandEvent& event );
-  void OnAutoRefresh( wxCommandEvent& event );
   void OnDelAttr( wxCommandEvent& event );
   void OnInsert( wxCommandEvent& event );
 
- protected:
   virtual void SendDataToPanel( AmayaParams& params );
   virtual void DoUpdate();
 
   void CreateCurrentAttribute();
   void RemoveCurrentAttribute();
   void QueryRemoveCurrentAttribute();
+  
+  void ModifyListAttrValue(const wxString& attrName, const wxString& attrVal);
 
  public:
   typedef enum
@@ -104,8 +105,6 @@ protected:
   wxPanel *           m_pVPanelParent;
   wxSizer *           m_pVPanelSizer;
   wxListCtrl *        m_pAttrList;
-  wxCheckBox *        m_pAutoRefresh;
-  wxPanel *           m_pPanel_ApplyArea;
   wxPanel *           m_pPanel_Lang;
   wxPanel *           m_pPanel_Num;
   wxPanel *           m_pPanel_Text;

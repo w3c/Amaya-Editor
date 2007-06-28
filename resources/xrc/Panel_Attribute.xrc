@@ -72,12 +72,43 @@
                                       <orient>wxVERTICAL</orient>
                                       <object class="sizeritem">
                                         <object class="wxPanel" name="wxID_ATTRIBUTE_LANG">
+                                          <style>wxTAB_TRAVERSAL|wxDOUBLE_BORDER</style>
                                           <object class="wxBoxSizer">
                                             <orient>wxVERTICAL</orient>
                                             <object class="sizeritem">
-                                              <object class="wxChoice" name="wxID_ATTR_COMBO_LANG_LIST">
-                                                <content/>
-                                                <style>wxCB_SORT</style>
+                                              <object class="wxBoxSizer">
+                                                <orient>wxHORIZONTAL</orient>
+                                                <object class="sizeritem">
+                                                  <object class="wxBitmapButton" name="wxID_BUTTON_DEL_ATTR">
+                                                    <bitmap>../icons/16x16/stop.png</bitmap>
+                                                    <style>wxBU_AUTODRAW</style>
+                                                    <tooltip>*Supprimer*</tooltip>
+                                                  </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                  <object class="wxStaticLine">
+                                                    <style>wxLI_VERTICAL</style>
+                                                  </object>
+                                                  <flag>wxALL|wxEXPAND</flag>
+                                                  <border>4</border>
+                                                </object>
+                                                <object class="sizeritem">
+                                                  <object class="wxChoice" name="wxID_ATTR_COMBO_LANG_LIST">
+                                                    <content/>
+                                                    <style>wxCB_SORT</style>
+                                                  </object>
+                                                  <option>1</option>
+                                                  <flag>wxEXPAND</flag>
+                                                </object>
+                                                <object class="sizeritem">
+                                                  <object class="wxBitmapButton" name="wxID_OK">
+                                                    <bitmap>../icons/16x16/ok.png</bitmap>
+                                                    <default></default>
+                                                  </object>
+                                                  <option>0</option>
+                                                  <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
+                                                  <border>2</border>
+                                                </object>
                                               </object>
                                               <flag>wxEXPAND</flag>
                                             </object>
@@ -88,7 +119,6 @@
                                               <flag>wxEXPAND</flag>
                                             </object>
                                           </object>
-                                          <style>wxTAB_TRAVERSAL|wxDOUBLE_BORDER</style>
                                         </object>
                                         <option>1</option>
                                         <flag>wxALL|wxEXPAND</flag>
@@ -97,13 +127,36 @@
                                       <object class="sizeritem">
                                         <object class="wxPanel" name="wxID_ATTRIBUTE_TEXT">
                                           <object class="wxBoxSizer">
-                                            <orient>wxVERTICAL</orient>
+                                            <orient>wxHORIZONTAL</orient>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_BUTTON_DEL_ATTR">
+                                                <bitmap>../icons/16x16/stop.png</bitmap>
+                                                <style>wxBU_AUTODRAW</style>
+                                                <tooltip>*Supprimer*</tooltip>
+                                              </object>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxStaticLine">
+                                                <style>wxLI_VERTICAL</style>
+                                              </object>
+                                              <flag>wxALL|wxEXPAND</flag>
+                                              <border>4</border>
+                                            </object>
                                             <object class="sizeritem">
                                               <object class="wxTextCtrl" name="wxID_ATTR_TEXT_VALUE">
                                                 <style>wxTE_PROCESS_ENTER</style>
                                               </object>
-                                              <option>0</option>
+                                              <option>1</option>
                                               <flag>wxEXPAND</flag>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_OK">
+                                                <bitmap>../icons/16x16/ok.png</bitmap>
+                                                <default></default>
+                                              </object>
+                                              <option>0</option>
+                                              <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
+                                              <border>2</border>
                                             </object>
                                           </object>
                                           <style>wxTAB_TRAVERSAL</style>
@@ -114,12 +167,36 @@
                                       <object class="sizeritem">
                                         <object class="wxPanel" name="wxID_ATTRIBUTE_ENUM">
                                           <object class="wxBoxSizer">
-                                            <orient>wxVERTICAL</orient>
+                                            <orient>wxHORIZONTAL</orient>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_BUTTON_DEL_ATTR">
+                                                <bitmap>../icons/16x16/stop.png</bitmap>
+                                                <style>wxBU_AUTODRAW</style>
+                                                <tooltip>*Supprimer*</tooltip>
+                                              </object>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxStaticLine">
+                                                <style>wxLI_VERTICAL</style>
+                                              </object>
+                                              <flag>wxALL|wxEXPAND</flag>
+                                              <border>4</border>
+                                            </object>
                                             <object class="sizeritem">
                                               <object class="wxChoice" name="wxID_ATTR_CHOICE_ENUM">
                                                 <content/>
                                               </object>
+                                              <option>1</option>
                                               <flag>wxEXPAND</flag>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_OK">
+                                                <bitmap>../icons/16x16/ok.png</bitmap>
+                                                <default></default>
+                                              </object>
+                                              <option>0</option>
+                                              <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
+                                              <border>2</border>
                                             </object>
                                           </object>
                                           <style>wxTAB_TRAVERSAL</style>
@@ -130,59 +207,39 @@
                                       <object class="sizeritem">
                                         <object class="wxPanel" name="wxID_ATTRIBUTE_NUM">
                                           <object class="wxBoxSizer">
-                                            <orient>wxVERTICAL</orient>
+                                            <orient>wxHORIZONTAL</orient>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_BUTTON_DEL_ATTR">
+                                                <bitmap>../icons/16x16/stop.png</bitmap>
+                                                <style>wxBU_AUTODRAW</style>
+                                                <tooltip>*Supprimer*</tooltip>
+                                              </object>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxStaticLine">
+                                                <style>wxLI_VERTICAL</style>
+                                              </object>
+                                              <flag>wxALL|wxEXPAND</flag>
+                                              <border>4</border>
+                                            </object>
                                             <object class="sizeritem">
                                               <object class="wxSpinCtrl" name="wxID_ATTR_NUM_VALUE">
                                                 <value></value>
                                               </object>
-                                              <option>0</option>
+                                              <option>1</option>
                                               <flag>wxEXPAND</flag>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_OK">
+                                                <bitmap>../icons/16x16/ok.png</bitmap>
+                                                <default></default>
+                                              </object>
+                                              <option>0</option>
+                                              <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
+                                              <border>2</border>
                                             </object>
                                           </object>
                                           <style>wxTAB_TRAVERSAL</style>
-                                        </object>
-                                        <flag>wxALL|wxEXPAND</flag>
-                                        <border>2</border>
-                                      </object>
-                                      <object class="sizeritem">
-                                        <object class="wxPanel" name="wxID_PANEL_APPLY_AREA">
-                                          <object class="wxBoxSizer">
-                                            <orient>wxVERTICAL</orient>
-                                            <object class="sizeritem">
-                                              <object class="wxBoxSizer">
-                                                <orient>wxHORIZONTAL</orient>
-                                                <object class="sizeritem">
-                                                  <object class="wxBitmapButton" name="wxID_OK">
-                                                    <bitmap>../icons/16x16/ok.png</bitmap>
-                                                    <default></default>
-                                                  </object>
-                                                  <option>0</option>
-                                                  <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
-                                                  <border>2</border>
-                                                </object>
-                                                <object class="sizeritem">
-                                                  <object class="wxBitmapButton" name="wxID_BUTTON_DEL_ATTR">
-                                                    <bitmap>../icons/16x16/trash.png</bitmap>
-                                                    <style>wxBU_AUTODRAW</style>
-                                                    <tooltip>*Supprimer*</tooltip>
-                                                  </object>
-                                                  <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
-                                                  <border>2</border>
-                                                </object>
-                                                <object class="spacer">
-                                                  <option>1</option>
-                                                </object>
-                                                <object class="sizeritem">
-                                                  <object class="wxCheckBox" name="wxID_CHECK_AUTOREF">
-                                                    <label>*Refresh*</label>
-                                                    <checked>1</checked>
-                                                  </object>
-                                                  <flag>wxEXPAND</flag>
-                                                </object>
-                                              </object>
-                                              <flag>wxEXPAND</flag>
-                                            </object>
-                                          </object>
                                         </object>
                                         <flag>wxALL|wxEXPAND</flag>
                                         <border>2</border>
@@ -194,7 +251,7 @@
                                             <object class="sizeritem">
                                               <object class="wxStaticLine"/>
                                               <flag>wxALL|wxEXPAND</flag>
-                                              <border>8</border>
+                                              <border>4</border>
                                             </object>
                                             <object class="sizeritem">
                                               <object class="wxBoxSizer">
