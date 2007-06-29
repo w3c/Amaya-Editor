@@ -82,16 +82,16 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
   m_pAttrList->InsertColumn(1, TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTRIBUTE_VALUE)));
   
   // setup labels
-  XRCCTRL(*m_pPanel_Lang, "wxID_OK", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
-  XRCCTRL(*m_pPanel_Text, "wxID_OK", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
-  XRCCTRL(*m_pPanel_Enum, "wxID_OK", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
-  XRCCTRL(*m_pPanel_Num, "wxID_OK", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+//  XRCCTRL(*m_pPanel_Lang, "wxID_OK", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+//  XRCCTRL(*m_pPanel_Text, "wxID_OK", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+//  XRCCTRL(*m_pPanel_Enum, "wxID_OK", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+//  XRCCTRL(*m_pPanel_Num, "wxID_OK", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
   XRCCTRL(*m_pPanel_Lang, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DEL)));
   XRCCTRL(*m_pPanel_Text, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DEL)));
   XRCCTRL(*m_pPanel_Enum, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DEL)));
   XRCCTRL(*m_pPanel_Num, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DEL)));
 
-  XRCCTRL(*m_pPanel_NewAttr, "wxID_BUTTON_NEW_ATTRIBUTE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_INSERT)));
+//  XRCCTRL(*m_pPanel_NewAttr, "wxID_BUTTON_NEW_ATTRIBUTE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_INSERT)));
   XRCCTRL(*m_pPanel_NewAttr, "wxID_ATTR_LABEL_NEW_ATTR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_INSERT)));
   
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTR)));
@@ -256,7 +256,7 @@ void AmayaAttributePanel::RemoveCurrentAttribute()
   if(m_CurrentAttType!=wxATTR_TYPE_NONE && m_firstSel
           && m_currentAttElem && m_currentAttElem->val)
     {
-      TtaSetDisplayMode(doc, NoComputedDisplay);
+      TtaSetDisplayMode(doc, DeferredDisplay);
       TtaOpenUndoSequence(doc, (Element)m_firstSel, (Element)m_lastSel,
                                                       m_firstChar, m_lastChar);
       TtaRegisterAttributeDelete((Attribute)m_currentAttElem->val,
@@ -301,7 +301,7 @@ void AmayaAttributePanel::CreateCurrentAttribute()
           attr = TtaNewAttribute(attType);
           if(attr)
             {
-              TtaSetDisplayMode(doc, NoComputedDisplay);
+              TtaSetDisplayMode(doc, DeferredDisplay);
               TtaOpenUndoSequence(doc, (Element)m_firstSel, (Element)m_lastSel,
                                                       m_firstChar, m_lastChar);
               TtaAttachAttribute((Element)m_firstSel, attr, doc);
@@ -706,7 +706,7 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
       doc = TtaGetDocument((Element)m_firstSel);
       
       mode = TtaGetDisplayMode(doc);
-      TtaSetDisplayMode(doc, NoComputedDisplay);
+      TtaSetDisplayMode(doc, DeferredDisplay);
       TtaOpenUndoSequence(doc, (Element)m_firstSel, (Element)m_lastSel,
                                                       m_firstChar, m_lastChar);
       TtaRegisterAttributeReplace((Attribute)m_currentAttElem->val,
@@ -845,13 +845,17 @@ BEGIN_EVENT_TABLE(AmayaAttributePanel, AmayaSubPanel)
   EVT_LIST_ITEM_SELECTED(XRCID("wxID_CLIST_ATTR"), AmayaAttributePanel::OnListItemSelected)
   EVT_LIST_ITEM_DESELECTED(XRCID("wxID_CLIST_ATTR"), AmayaAttributePanel::OnListItemDeselected)
   
-  EVT_TEXT_ENTER( XRCID("wxID_ATTR_COMBO_LANG_LIST"), AmayaAttributePanel::OnApply )
   EVT_TEXT_ENTER( XRCID("wxID_ATTR_TEXT_VALUE"),      AmayaAttributePanel::OnApply )
   EVT_TEXT_ENTER( XRCID("wxID_ATTR_NUM_VALUE"),       AmayaAttributePanel::OnApply )
+
+  EVT_CHOICE(XRCID("wxID_ATTR_COMBO_LANG_LIST"), AmayaAttributePanel::OnApply)
+  EVT_CHOICE(XRCID("wxID_ATTR_CHOICE_ENUM"), AmayaAttributePanel::OnApply)
+
   EVT_BUTTON(     XRCID("wxID_OK"),              AmayaAttributePanel::OnApply )
-  EVT_BUTTON(     XRCID("wxID_BUTTON_DEL_ATTR"), AmayaAttributePanel::OnDelAttr )
-  EVT_BUTTON(     XRCID("wxID_BUTTON_NEW_ATTRIBUTE"), AmayaAttributePanel::OnInsert )
   
+  EVT_BUTTON(     XRCID("wxID_BUTTON_DEL_ATTR"), AmayaAttributePanel::OnDelAttr )
+  EVT_CHOICE(XRCID("wxID_CHOOSE_NEW_ATTRIBUTE"), AmayaAttributePanel::OnInsert)
+
   EVT_UPDATE_UI(  XRCID("wxID_BUTTON_DEL_ATTR"), AmayaAttributePanel::OnUpdateDeleteButton)
 END_EVENT_TABLE()
 
