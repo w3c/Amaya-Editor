@@ -100,15 +100,6 @@
                                                   <option>1</option>
                                                   <flag>wxEXPAND</flag>
                                                 </object>
-                                                <object class="sizeritem">
-                                                  <object class="wxBitmapButton" name="wxID_OK">
-                                                    <bitmap>../icons/16x16/ok.png</bitmap>
-                                                    <default></default>
-                                                  </object>
-                                                  <option>0</option>
-                                                  <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
-                                                  <border>2</border>
-                                                </object>
                                               </object>
                                               <flag>wxEXPAND</flag>
                                             </object>
@@ -188,15 +179,6 @@
                                               </object>
                                               <option>1</option>
                                               <flag>wxEXPAND</flag>
-                                            </object>
-                                            <object class="sizeritem">
-                                              <object class="wxBitmapButton" name="wxID_OK">
-                                                <bitmap>../icons/16x16/ok.png</bitmap>
-                                                <default></default>
-                                              </object>
-                                              <option>0</option>
-                                              <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
-                                              <border>2</border>
                                             </object>
                                           </object>
                                           <style>wxTAB_TRAVERSAL</style>

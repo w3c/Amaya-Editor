@@ -59,6 +59,8 @@ public:
   
   void ModifyListAttrValue(const wxString& attrName, const wxString& attrVal);
 
+  void RedirectFocusToEditableControl();
+  void UpdateListColumnWidth();
  public:
   typedef enum
     {
@@ -123,6 +125,7 @@ protected:
   int m_NbAttr_evt;
 
   wxATTR_TYPE m_CurrentAttType;
+  wxWindow*   m_pCurrentlyEditedControl;
   
   int        m_disactiveCount; // 0 to activate panel (handle events)
 };
