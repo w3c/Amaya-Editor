@@ -5,9 +5,9 @@
 #include "wx/image.h"
 #include "wx/imaglist.h"
 #include "wx/snglinst.h"
-#ifndef _GLPRINT
-  #include "wx/xrc/xmlres.h"          // XRC XML resouces
-#endif /* _GLPRINT */
+//#ifndef _GLPRINT
+#include "wx/xrc/xmlres.h"          // XRC XML resouces
+//#endif /* _GLPRINT */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -41,12 +41,12 @@
 
 IMPLEMENT_APP(AmayaApp)
 
-#ifndef _GLPRINT
+//#ifndef _GLPRINT
 // defined into EDITORAPP.c or print.c
 extern int amaya_main (int argc, char** argv);
-#else /* _GLPRINT */
+//#else /* _GLPRINT */
 /* TODO */
-#endif /* #ifndef _GLPRINT */
+//#endif /* #ifndef _GLPRINT */
 
 #ifdef _GL
 /*
@@ -218,7 +218,6 @@ bool AmayaApp::OnInit()
   InitAmayaArgs();
   /* initialize the Registry */
   TtaInitializeAppRegistry(amaya_argv[0]);
-#ifndef _GLPRINT
 
   // Initialize all the XRC handlers. Always required (unless you feel like
   // going through and initializing a handler of each control type you will
@@ -234,8 +233,14 @@ bool AmayaApp::OnInit()
 
   // Now it's possible to load all the dialogs (need to be called after amaya_main or
   // TtaGetEnvString will return bad strings)
+#ifdef _WINDOWS
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "WinPrintDlgWX.xrc") );
+#else /* _WINDOWS */
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "PrintDlgWX.xrc") );
+#endif /* _WINDOWS */
 
-  // Attention: rajouter ici toutes les autres ressources a charger  
+#ifndef _GLPRINT
+  // You must add loaded resources there  
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "AuthentDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "CheckedListDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "ConfirmCloseTab.xrc") );
@@ -261,11 +266,6 @@ bool AmayaApp::OnInit()
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "Panel_Explorer.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "Panel_XML.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "PreferenceDlgWX.xrc") );
-#ifdef _WINDOWS
-  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "WinPrintDlgWX.xrc") );
-#else /* _WINDOWS */
-  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "PrintDlgWX.xrc") );
-#endif /* _WINDOWS */
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SaveAsDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SelectIntegralDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SelectOperatorDlgWX.xrc") );
@@ -431,10 +431,10 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
   if (!m_AmayaIsLaunched && m_AmayaIsInit)
     {
       m_AmayaIsLaunched = TRUE;
-#ifndef _GLPRINT
+//#ifndef _GLPRINT
       // just call amaya main from EDITORAPP.c or print.c
       amaya_main( amaya_argc, amaya_argv );
-#endif /* _GLPRINT */
+//#endif /* _GLPRINT */
 
       // now let wxWidgets exit Amaya when there is no opened windows
       SetExitOnFrameDelete(TRUE);
