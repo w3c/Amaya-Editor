@@ -1189,8 +1189,6 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                   /* next block */
                   pPosRel = pPosRel->PosRNext;
                 }
-if (!strcmp (pAb->AbElement->ElLabel, "L33") || !strcmp (pAb->AbElement->ElLabel, "L34"))
-  printf ("ShiftAll %s x=%d (%d)\n", pAb->AbElement->ElLabel, pBox->BxXOrg, delta);
 
               if (IsSystemOrigin (pAb, frame))
                 // don't transmit the moving
