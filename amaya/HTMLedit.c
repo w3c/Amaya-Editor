@@ -1053,12 +1053,12 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                 }
                               // is there a sibling element of this child?
                               el = child;
-                              TtaNextSibling (&el);
-                              if (el)
-                                next = el;
                               last = NULL; // last inserted child
                               while (child)
                                 {
+                              TtaNextSibling (&el);
+                              if (el)
+                                next = el;
                                   TtaRegisterElementDelete (child, doc);
                                   TtaRemoveTree (child, doc);
                                   if (last)
@@ -1066,6 +1066,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                   else
                                     TtaInsertFirstChild (&child, in_line, doc);
                                   last = child;
+                                  // get next sibling of moved 
                                   child = el;
                                 }
                               // restore the el value
