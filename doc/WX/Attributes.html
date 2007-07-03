@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -14,7 +14,7 @@
 <body xml:lang="en" lang="en">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Creating.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
@@ -25,7 +25,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <div class="toc">
 <ul>
-  <li><a href="#Editing">Editing Attributes</a>
+  <li><a href="#Editing">Editing Attributes</a> 
     <ul>
       <li><a href="#Editing1">Editing Attributes Through the Attributes
         Tool</a></li>
@@ -49,53 +49,57 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <h3 id="Editing1">Editing Attributes Through the Attributes Tool</h3>
 
-<p>The <strong>Attributes</strong> tool displays all attributes that can be
-associated with the selected element. It can be used to create an attribute,
-change the value of an existing attribute, or delete an attribute.</p>
+<p>The <strong>Attributes</strong> tool can be used to create an attribute,
+change the value of an existing attribute, or delete an attribute. It
+displays:</p>
+<ul>
+  <li>The list of attributes already applied to the first selected element
+    and their current value. mandatory attributes are displayed in red and
+    cannot be removed.</li>
+  <li>Below, all attributes that may apply.</li>
+</ul>
 
-<p class="ProcedureCaption">To create an attribute:</p>
+<p class="ProcedureCaption">To insert an attribute:</p>
 <ol>
   <li>Click within the element and press the <code>F2</code> key to select
     the whole element.</li>
-  <li>When the element is selected, you click on the [ ] before the name of
-    the attribute you want to add. This attribute is now activated [x].</li>
+  <li>When the element is selected, select the attribute name of the
+    attribute you want to add in the Insert list. This attribute is now
+    activated.</li>
   <li>For boolean attributes (such as <strong>ismap</strong> for an image),
     the command is finished.</li>
-  <li>For other attributes you have to edit the value, then confirm with the
-    apply button (<img alt="ok" src="../../resources/icons/16x16/ok.png"
-  />).</li>
+  <li>For attributes with a limited set of values (such as
+    <strong>lang</strong>), you have to select a value in the list of
+    possible values.</li>
+  <li>For other attributes you have to edit the value, then confirm either
+    with the <kbd>Enter</kbd> key or with the apply button (<img alt="ok"
+    src="../../resources/icons/16x16/ok.png" />).</li>
 </ol>
 
-<p class="ProcedureCaption">To edit an attribute:</p>
+<p class="ProcedureCaption">To change the value of an attribute:</p>
 <ol>
   <li>Click within the element and press the <code>F2</code> key to select
     the whole element.</li>
-  <li>Once the element is selected with this active attribute (the name is
-    preceded by a [x]), click on the entry name to display its current
-  value.</li>
+  <li>Once the element is selected with this active attribute, click on the
+    entry name to display the editing form of this attribute value.</li>
   <li>For attributes with a limited set of values (such as
-    <strong>align</strong> for a paragraph or a heading), Amaya displays:
+    <strong>lang</strong>), Amaya displays: 
     <ul>
-      <li>A set of radio buttons proposing the list of possible values. A
-        long list (such as <strong>lang</strong>) is presented with a combo
-        box.</li>
-      <li>An apply button (<img alt="ok"
-        src="../../resources/icons/16x16/ok.png" />) to confirm the selected
-        value.</li>
-      <li>A trash button (<img alt="trash"
-        src="../../resources/icons/16x16/trash.png" />) to remove the
+      <li>A combo box giving the list of possible values. </li>
+      <li>A delete button (<img alt="remove"
+        src="../../resources/icons/16x16/stop.png" />) to remove the
         attribute.</li>
     </ul>
   </li>
   <li>For attributes with a free value (such as <strong>href</strong> for an
-    anchor), Amaya displays: style=""
+    anchor), Amaya displays:
     <ul>
       <li>An input box to insert the value.</li>
       <li>An apply button (<img alt="ok"
         src="../../resources/icons/16x16/ok.png" />) to confirm the inserted
-        value.</li>
-      <li>A trash button (<img alt="trash"
-        src="../../resources/icons/16x16/trash.png" />) to remove the
+        value. The <kbd>Enter</kbd> key also confirms the inserted value.</li>
+      <li>A delete button (<img alt="remove"
+        src="../../resources/icons/16x16/stop.png" />) to remove the
         attribute.</li>
     </ul>
   </li>
@@ -105,10 +109,11 @@ change the value of an existing attribute, or delete an attribute.</p>
 <ol>
   <li>Click within the element and press the <code>F2</code> key to select
     the whole element.</li>
-  <li>When the element is selected, you click on the [x] before the entry to
-    remove the attribute.</li>
-  <li>You can also select the attribute and click on the trash button (<img
-    alt="trash" src="../../resources/icons/16x16/trash.png" />).</li>
+  <li>Once the element is selected with this active attribute, click on the
+    entry name to display the editing form of this attribute value.</li>
+  <li>Click on the delete button (<img alt="remove"
+    src="../../resources/icons/16x16/stop.png" />) to remove the
+  attribute.</li>
 </ol>
 
 <h3 id="Editing2">Editing Attributes in the Structure View</h3>
@@ -133,21 +138,8 @@ that only one of the correct values is chosen.</p>
 
 <p>An attribute is not the same thing as element and an attribute cannot be
 copied by the <strong>Copy</strong>/<strong>Paste</strong> options on the
-<strong>Edit</strong> menu.</p>
-
-<p>To copy an attribute, you must use the <strong>Attributes</strong>
-tool:</p>
-<ol>
-  <li>Select the element with the attribute you want to copy.</li>
-  <li>Select the appropriate attribute entry from the
-    <strong>Attributes</strong> tool.</li>
-  <li>The select the new element to which you want to associate the current
-    attribute.</li>
-  <li>Click the apply button (<img alt="ok"
-    src="../../resources/icons/16x16/ok.png" />).</li>
-</ol>
-
-<p></p>
+<strong>Edit</strong> menu. Only a textual attribute value can be
+copied/pasted.</p>
 
 <p></p>
 </div>
