@@ -3605,7 +3605,7 @@ static void CreateDoctypeElement (char *name, char *sysid, char *pubid)
   ParseCdataElement
   Parse the content of a CDATA element
   -------------------------------------- -------------------------------*/
-static void       ParseCdataElement (char *data, int length)
+static void ParseCdataElement (char *data, int length)
 
 {
   ElementType     elType;

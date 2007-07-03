@@ -776,12 +776,15 @@ static char *GetImageURL (Document document, View view,
   else
     RefFormImage = BaseImage + FormImage;
 #ifdef _WX
-  TtaExtractName (DocumentURLs[document], LastURLImage, s);
-  strcat (LastURLImage, DIR_STR);
-  if (isObject)
-    strcat (LastURLImage, "object");
-  else
-    strcat (LastURLImage, "img");
+  if (LastURLImage[0] == EOS)
+    {
+      TtaExtractName (DocumentURLs[document], LastURLImage, s);
+      strcat (LastURLImage, DIR_STR);
+      if (isObject)
+        strcat (LastURLImage, "object.svg");
+      else
+        strcat (LastURLImage, "img.png");
+    }
 #else /* _WX */
   if (LastURLImage[0] == EOS)
     {
@@ -1129,7 +1132,6 @@ void UpdateSRCattribute (NotifyOnTarget *event)
   else
     elSRC = el;
 
-  ImgAlt[0] = EOS;
   /* ask Thot to stop displaying changes made in the document */
   dispMode = TtaGetDisplayMode (doc);
   if (isObject)
@@ -1137,7 +1139,6 @@ void UpdateSRCattribute (NotifyOnTarget *event)
       /* get the current mime-type */
       attrType.AttrTypeNum = HTML_ATTR_Object_type;
       attr = TtaGetAttribute (elSRC, attrType);
-      UserMimeType[0] = EOS;
       if (attr)
         {
           length = TtaGetTextAttributeLength (attr);
@@ -1570,6 +1571,7 @@ void  CreateObject (Document doc, View view)
       /* Don't check mandatory attributes */
       TtaSetStructureChecking (FALSE, doc);
       ImgAlt[0] = EOS;
+      UserMimeType[0] = EOS;
       ImgDocument = doc;
       CreateNewImage = TRUE;
       elType.ElSSchema = TtaGetSSchema ("HTML", doc);
@@ -1602,7 +1604,6 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
   else
     /* some element is selected */
     {
-      ImgAlt[0] = EOS;
       ImgDocument = doc;
       TtaGiveLastSelectedElement (doc, &lastSelEl, &j, &cN);
       /* Get the type of the first selected element */
@@ -1640,12 +1641,14 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
                   NormalizeURL (value, doc, LastURLImage, name, NULL);
                   TtaFreeMemory (value);
                   TtaFreeMemory (name);
+#ifdef IV
                   if (!IsHTTPPath (LastURLImage))
                     {
                       /* extract directory and file names */
                       TtaExtractName (LastURLImage, DirectoryImage, ImageName);
                       LastURLImage[0] = EOS;
                     }
+#endif
                 }
             }
 
@@ -1795,6 +1798,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
   ----------------------------------------------------------------------*/
 void CreateImage (Document doc, View view)
 {
+  ImgAlt[0] = EOS;
   AddNewImage (doc, view, FALSE);
 }
 

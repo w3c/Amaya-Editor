@@ -4018,6 +4018,7 @@ void CreateImageInput (Document doc, View view)
           TtaInsertElement (elType, doc);
           TtaExtendUndoSequence (doc);
         }
+      ImgAlt[0] = EOS;
       AddNewImage (doc, view, TRUE);
       TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
       if (el)
