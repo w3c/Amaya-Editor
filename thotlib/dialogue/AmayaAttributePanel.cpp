@@ -324,10 +324,8 @@ void AmayaAttributePanel::RemoveCurrentAttribute()
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::CreateCurrentAttribute()
 {
-//  Document      doc = TtaGetDocument((Element)m_firstSel);
   wxString      name;
   long          index;
-//  char          buffer[1];
 
   if(m_pNewAttrChoice->GetSelection()!=wxNOT_FOUND)
     {
@@ -345,30 +343,6 @@ void AmayaAttributePanel::CreateCurrentAttribute()
                            wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
           m_pAttrList->EnsureVisible(index);
           SelectAttribute(index);
-//          switch(AttrListElem_GetType(elem))
-//            {
-//              case AtEnumAttr:
-//              case AtNumAttr:
-//                SetAttrValueToRange(elem, 0);
-//                break;
-//              case AtTextAttr:
-//                buffer[0] = EOS;
-//                SetAttrValueToRange(elem, buffer);
-//                break;
-//              default:
-//                break;
-//            }
-//              ForceAttributeUpdate();
-//              
-//              index = m_pAttrList->FindItem(wxID_ANY, name);
-//              if(index!=wxID_ANY)
-//                {
-//                  m_pAttrList->SetItemState(index,
-//                                   wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED,
-//                                   wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
-//                  SelectAttribute(index);
-//                }
-          
         }
     }
   RedirectFocusToEditableControl();
@@ -539,7 +513,7 @@ void AmayaAttributePanel::SetupLangAttr(PtrAttrListElem elem)
   wxChoice     *p_combo = XRCCTRL(*m_pPanel_Lang, "wxID_ATTR_COMBO_LANG_LIST", wxChoice);
   wxStaticText *p_stext = XRCCTRL(*m_pPanel_Lang, "wxID_ATTR_LABEL_LANG_INHER", wxStaticText);
 
-  if(elem && currAttr)
+  if(elem)
     {
       /* Initialize the language selector */
       languageCode[0] = EOS;
@@ -558,11 +532,13 @@ void AmayaAttributePanel::SetupLangAttr(PtrAttrListElem elem)
               CopyBuffer2MBs (pHeritAttr->AeAttrText, 0,
                               (unsigned char*)languageCode, MAX_TXT_LEN);
               language = TtaGetLanguageIdFromName (languageCode);
-              p_stext->SetLabel( TtaConvMessageToWX( TtaGetLanguageName(language)));
+              strcat (label, TtaGetLanguageName(language));
             }
         }
       else
         label[0] = EOS;
+
+      p_stext->SetLabel( TtaConvMessageToWX( label));
 
       ptr = GetListOfLanguages (lang_list, MAX_TXT_LEN, languageCode, &nbItem, &defItem);
 
@@ -601,9 +577,9 @@ void AmayaAttributePanel::SetupTextAttr(PtrAttrListElem elem)
   int               i = MAX_TXT_LEN-1;
   char             *tmp;
 
-  if(elem && currAttr)
+  if(elem)
     {
-      if(currAttr->AeAttrText)
+      if(currAttr && currAttr->AeAttrText)
         {
           i = CopyBuffer2MBs (currAttr->AeAttrText, 0, (unsigned char*)buffer, i);
           tmp = (char *)TtaConvertMbsToByte ((unsigned char *)buffer,
@@ -644,19 +620,17 @@ void AmayaAttributePanel::SetupEnumValue( wxArrayString& enums, int selected )
 void AmayaAttributePanel::SetupEnumAttr(PtrAttrListElem elem)
 {
   PtrAttribute      currAttr = elem->val;
-  int               i, val;
+  int               i=0, val;
   TtAttribute      *pAttr = AttrListElem_GetTtAttribute(elem);
 
   wxArrayString     arr;
-  
-  
-  if(elem && currAttr && pAttr)
+
+  if(elem)
     {
       for (val=0; val < pAttr->AttrNEnumValues; val++)
           arr.Add(wxString(pAttr->AttrEnumValue[val], wxConvUTF8));
       /* current value */
-      i = 0;
-      if (currAttr != NULL && currAttr->AeAttrValue > 0)
+      if (currAttr && currAttr->AeAttrValue > 0)
         i = currAttr->AeAttrValue - 1;
     }
   SetupEnumValue(arr, i);
@@ -679,29 +653,32 @@ void AmayaAttributePanel::SetupNumValue( int num, int begin, int end )
 void AmayaAttributePanel::SetupNumAttr(PtrAttrListElem elem)
 {
   PtrAttribute      currAttr = elem->val;
-  int               i, begin, end;
+  int               i=0, begin=0, end=1000;
   char*             title;
   TtAttribute      *pAttr = AttrListElem_GetTtAttribute(elem);
 
-  if(elem && currAttr && pAttr)
+  if(elem)
     {
-      i     = currAttr->AeAttrValue;
-      title = pAttr->AttrName;
-      if(!strcmp (elem->pSS->SsName, "HTML") &&
-          (!strcmp (title, "rowspan") ||
-           !strcmp (title, "colspan") ||
-           !strcmp (title, "rows") ||
-           !strcmp (title, "cols")))
+      if(currAttr && pAttr)
         {
-          if (i < 1)
-            i = 1;
-          begin = 1;
-          end = 1000;
-        }
-      else
-        {
-          begin = 0;
-          end = 1000;
+          i     = currAttr->AeAttrValue;
+          title = pAttr->AttrName;
+          if(!strcmp (elem->pSS->SsName, "HTML") &&
+              (!strcmp (title, "rowspan") ||
+               !strcmp (title, "colspan") ||
+               !strcmp (title, "rows") ||
+               !strcmp (title, "cols")))
+            {
+              if (i < 1)
+                i = 1;
+              begin = 1;
+              end = 1000;
+            }
+          else
+            {
+              begin = 0;
+              end = 1000;
+            }
         }
       SetupNumValue(i, begin, end);
     }
