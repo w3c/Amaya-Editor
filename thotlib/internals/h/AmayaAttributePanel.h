@@ -61,7 +61,7 @@ public:
 
   void RedirectFocusToEditableControl();
   void UpdateListColumnWidth();
- public:
+public:
   typedef enum
     {
       wxATTR_TYPE_NONE,
@@ -98,6 +98,7 @@ public:
   void SetupNumAttr(PtrAttrListElem elem);
 
   bool IsMandatory()const;
+  bool IsReadOnly()const;
 
   void DesactivatePanel(){m_disactiveCount++;}
   void ActivePanel(){m_disactiveCount--;if(m_disactiveCount<0)m_disactiveCount=0;}

@@ -44,6 +44,10 @@
 #include "AmayaFloatingPanel.h"
 #include "AmayaSubPanelManager.h"
 
+#define COLOR_MANDATORY   wxColour(128, 0, 0)
+#define COLOR_READONLY    wxColour(64, 64, 64)
+#define COLOR_NEW         wxColour(0, 128, 0)
+
 IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
 
   /*----------------------------------------------------------------------
@@ -171,7 +175,18 @@ void AmayaAttributePanel::UpdateListColumnWidth()
   ----------------------------------------------------------------------*/
 bool AmayaAttributePanel::IsMandatory()const
 {
-  return (!m_currentAttElem)||(m_currentAttElem&&m_currentAttElem->oblig);
+  return (!m_currentAttElem)||
+              (m_currentAttElem&&(AttrListElem_IsMandatory(m_currentAttElem)));
+}
+
+/*----------------------------------------------------------------------
+  Check if the current attribute (if any) is read-only
+  returns: true if read-only
+  ----------------------------------------------------------------------*/
+bool AmayaAttributePanel::IsReadOnly()const
+{
+  return (!m_currentAttElem)||
+              (m_currentAttElem&&(AttrListElem_IsReadOnly(m_currentAttElem)));
 }
 
 /*----------------------------------------------------------------------
@@ -309,12 +324,10 @@ void AmayaAttributePanel::RemoveCurrentAttribute()
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::CreateCurrentAttribute()
 {
-  AttributeType attType;
-  Attribute     attr;
-  Document      doc = TtaGetDocument((Element)m_firstSel);
-  DisplayMode   mode = TtaGetDisplayMode(doc);
+//  Document      doc = TtaGetDocument((Element)m_firstSel);
   wxString      name;
   long          index;
+//  char          buffer[1];
 
   if(m_pNewAttrChoice->GetSelection()!=wxNOT_FOUND)
     {
@@ -322,31 +335,40 @@ void AmayaAttributePanel::CreateCurrentAttribute()
             m_pNewAttrChoice->GetClientData(m_pNewAttrChoice->GetSelection());
       if(elem)
         {
-          name = wxString(AttrListElem_GetName(elem), wxConvUTF8);
-          attType.AttrSSchema = (SSchema)elem->pSS;
-          attType.AttrTypeNum = elem->num;
-          attr = TtaNewAttribute(attType);
-          if(attr)
-            {
-              TtaSetDisplayMode(doc, DeferredDisplay);
-              TtaOpenUndoSequence(doc, (Element)m_firstSel, (Element)m_lastSel,
-                                                      m_firstChar, m_lastChar);
-              TtaAttachAttribute((Element)m_firstSel, attr, doc);
-              TtaRegisterAttributeCreate(attr, (Element)m_firstSel, doc);
-              TtaCloseUndoSequence(doc);
-              TtaSetDisplayMode(doc, mode);
-              TtaSetDocumentModified(doc);
-              ForceAttributeUpdate();
-              
-              index = m_pAttrList->FindItem(wxID_ANY, name);
-              if(index!=wxID_ANY)
-                {
-                  m_pAttrList->SetItemState(index,
-                                   wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED,
-                                   wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
-                  SelectAttribute(index);
-                }
-            }
+          index = m_pAttrList->InsertItem(m_pAttrList->GetItemCount(),
+                      TtaConvMessageToWX(AttrListElem_GetName(elem)));
+          elem->flags |= attr_new;
+          m_pAttrList->SetItemData(index, (long)elem);
+          m_pAttrList->SetItemTextColour(index, COLOR_NEW);
+          m_pAttrList->SetItemState(index,
+                           wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED,
+                           wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
+          m_pAttrList->EnsureVisible(index);
+          SelectAttribute(index);
+//          switch(AttrListElem_GetType(elem))
+//            {
+//              case AtEnumAttr:
+//              case AtNumAttr:
+//                SetAttrValueToRange(elem, 0);
+//                break;
+//              case AtTextAttr:
+//                buffer[0] = EOS;
+//                SetAttrValueToRange(elem, buffer);
+//                break;
+//              default:
+//                break;
+//            }
+//              ForceAttributeUpdate();
+//              
+//              index = m_pAttrList->FindItem(wxID_ANY, name);
+//              if(index!=wxID_ANY)
+//                {
+//                  m_pAttrList->SetItemState(index,
+//                                   wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED,
+//                                   wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
+//                  SelectAttribute(index);
+//                }
+          
         }
     }
   RedirectFocusToEditableControl();
@@ -468,8 +490,12 @@ void AmayaAttributePanel::SetupListValue(DLList attrList)
                   default:
                     break;
                 }
-                if(elem->oblig)
-                  m_pAttrList->SetItemTextColour(index, wxColour(128, 0, 0));
+                if(AttrListElem_IsNew(elem))
+                  m_pAttrList->SetItemTextColour(index, COLOR_NEW);
+                else if(AttrListElem_IsReadOnly(elem))
+                  m_pAttrList->SetItemTextColour(index, COLOR_READONLY);
+                else if(AttrListElem_IsMandatory(elem))
+                  m_pAttrList->SetItemTextColour(index, COLOR_MANDATORY);
                 m_pAttrList->SetItemData(index, (long)elem);
               }
             else
@@ -577,7 +603,6 @@ void AmayaAttributePanel::SetupTextAttr(PtrAttrListElem elem)
 
   if(elem && currAttr)
     {
-      
       if(currAttr->AeAttrText)
         {
           i = CopyBuffer2MBs (currAttr->AeAttrText, 0, (unsigned char*)buffer, i);
@@ -726,22 +751,15 @@ wxString AmayaAttributePanel::GetCurrentSelectedAttrName()const
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::OnApply( wxCommandEvent& event )
 {
-  DisplayMode   mode;
+//  DisplayMode   mode;
   char          buffer[MAX_LENGTH];
   Document      doc;
   wxString      value;
 
-  if(m_currentAttElem && m_currentAttElem->val && m_firstSel)
+  if(m_currentAttElem && m_firstSel)
     {
       doc = TtaGetDocument((Element)m_firstSel);
       
-      mode = TtaGetDisplayMode(doc);
-      TtaSetDisplayMode(doc, DeferredDisplay);
-      TtaOpenUndoSequence(doc, (Element)m_firstSel, (Element)m_lastSel,
-                                                      m_firstChar, m_lastChar);
-      TtaRegisterAttributeReplace((Attribute)m_currentAttElem->val,
-                                                     (Element)m_firstSel, doc);
-
       switch (m_CurrentAttType)
         {
         case wxATTR_TYPE_TEXT:
@@ -750,42 +768,27 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
             wxTextCtrl * p_text_ctrl = XRCCTRL(*m_pPanel_Text, "wxID_ATTR_TEXT_VALUE", wxTextCtrl);
             value = p_text_ctrl->GetValue();
             strncpy(buffer, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH-1);
-            TtaSetAttributeText((Attribute)m_currentAttElem->val,
-                                buffer,
-                                (Element)m_firstSel, doc);
-            /* try to redirect focus to canvas */
+            SetAttrValueToRange(m_currentAttElem, (void*)buffer);
           }
           break;
         case wxATTR_TYPE_ENUM:
           {
-            TtaSetAttributeValue((Attribute)m_currentAttElem->val,
-                m_pChoiceEnum->GetSelection()+1,
-                (Element)m_firstSel, doc);
+            SetAttrValueToRange(m_currentAttElem, (void*)(m_pChoiceEnum->GetSelection()+1));
             value = m_pChoiceEnum->GetStringSelection();
-            /* try to redirect focus to canvas */
           }
           break;
         case wxATTR_TYPE_NUM:
           {
             wxSpinCtrl * p_spin_ctrl = XRCCTRL(*m_pPanel_Num, "wxID_ATTR_NUM_VALUE", wxSpinCtrl);
-            TtaSetAttributeValue((Attribute)m_currentAttElem->val,
-                p_spin_ctrl->GetValue(),
-                (Element)m_firstSel, doc);
+            SetAttrValueToRange(m_currentAttElem, (void*)p_spin_ctrl->GetValue());
             value.Printf(wxT("%d"), p_spin_ctrl->GetValue());
-            /* try to redirect focus to canvas */
           }
           break;
         case wxATTR_TYPE_LANG:
           {
             wxChoice * p_cb = XRCCTRL(*m_pPanel_Lang, "wxID_ATTR_COMBO_LANG_LIST", wxChoice);
             value = p_cb->GetStringSelection();
-            strcpy( buffer, (const char*)value.mb_str(wxConvUTF8) );
-            strcpy( buffer, TtaGetLanguageCodeFromName (buffer));
-            
-            TtaSetAttributeText((Attribute)m_currentAttElem->val,
-                                buffer,
-                                (Element)m_firstSel, doc);
-            /* try to redirect focus to canvas */
+            SetAttrValueToRange(m_currentAttElem, (void*)(const char*)value.mb_str(wxConvUTF8));
           }
           break;
         case wxATTR_TYPE_NONE:
@@ -794,9 +797,6 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
         }
 
       ModifyListAttrValue(GetCurrentSelectedAttrName(), value);
-      TtaSetDocumentModified(doc);
-      TtaCloseUndoSequence(doc);
-      TtaSetDisplayMode(doc, mode);
     }
   RedirectFocusToEditableControl();
 }

@@ -1029,7 +1029,7 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
                   attrElem = (PtrAttrListElem)TtaGetMemory(sizeof(AttrListElem));
                   attrElem->pSS   = pSS;
                   attrElem->num   = num;
-                  attrElem->oblig = FALSE;
+                  attrElem->flags = attr_normal;
                   if(AttrHasException (ExcEventAttr, num, pSS))
                     attrElem->categ = attr_event;
                   else
@@ -1067,7 +1067,9 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
                     attrElem = (PtrAttrListElem)TtaGetMemory(sizeof(AttrListElem));
                     attrElem->pSS   = pSS;
                     attrElem->num   = pRe1->SrLocalAttr->Num[num];
-                    attrElem->oblig = pRe1->SrRequiredAttr->Bln[num];
+                    attrElem->flags = attr_normal;
+                    if(pRe1->SrRequiredAttr->Bln[num])
+                      attrElem->flags |= attr_mandatory;
                     if(AttrHasException (ExcEventAttr, 
                         pRe1->SrLocalAttr->Num[num], pSS))
                       attrElem->categ = attr_event;
@@ -1123,7 +1125,7 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
               attrElem = (PtrAttrListElem)TtaGetMemory(sizeof(AttrListElem));
               attrElem->pSS   = pAttr->AeAttrSSchema;
               attrElem->num   = pAttr->AeAttrNum;
-              attrElem->oblig = FALSE;
+              attrElem->flags = attr_normal;
               if(AttrHasException (ExcEventAttr, 
                   pAttr->AeAttrNum, pAttr->AeAttrSSchema))
                 attrElem->categ = attr_event;
@@ -1461,6 +1463,8 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, PtrElement firstSel,
 
   return (nbOfEntries - *nbEvent);
 }
+
+
 
 /*----------------------------------------------------------------------
   UpdateAttrMenu                                                       
@@ -1923,7 +1927,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
             pAttrNew->AeAttrNum = NumCurrentAttr;
             pAttrNew->AeDefAttr = FALSE;
             pAttrNew->AeAttrType = SchCurrentAttr->SsAttribute->TtAttr[NumCurrentAttr - 1]->AttrType;
-	      
+
             switch (pAttrNew->AeAttrType)
               {
               case AtNumAttr:
@@ -1962,6 +1966,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
                     if (isID)
                       TtaIsValidID ((Attribute)pAttrNew, TRUE);
                   }
+
                 if (isSpan && firstSel != lastSel &&
                     AttributeChangeFunction)
                   {
@@ -1978,10 +1983,10 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
                   TtaExecuteMenuAction ("ApplyClass", doc, 1, TRUE);
 #endif /* _WX */
                 break;
-		  
-              case AtReferenceAttr:		    
+
+              case AtReferenceAttr:
                 break;
-		  
+
               case AtEnumAttr:
                 if (act == 2)
                   /* suppression de l'attribut */
@@ -1995,7 +2000,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
                 AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
                                    firstSel, pDoc, TRUE);
                 break;
-		  
+
               default:
                 break;
               }
@@ -2010,6 +2015,132 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
             DeleteAttribute (NULL, pAttrNew);
           }
       }
+    }
+}
+
+/*----------------------------------------------------------------------
+  SetAttrValueToRange
+  Set a new value for the specified attr for the currently selected range.
+  \param value char* is the attr is text and int if num or enum.
+  ----------------------------------------------------------------------*/
+void SetAttrValueToRange(AttrListElem* elem, void* value)
+{
+  PtrDocument         pDoc;
+  PtrElement          firstSel, lastSel;
+  PtrAttribute        pAttrNew;
+  DisplayMode         dispMode = DeferredDisplay;
+  Document            doc = 0;
+  char               *tmp;
+  int                 firstChar, lastChar;
+  ThotBool            lock = TRUE;
+  ThotBool            isID = FALSE, isACCESS = FALSE;
+  ThotBool            isCLASS = FALSE, isSpan = FALSE;
+
+  if(!elem || !elem->pSS)
+    return;
+
+  /* demande quelle est la selection courante */
+  if (!GetValidatedCurrentSelection (&pDoc, &firstSel, &lastSel,
+                                                        &firstChar, &lastChar))
+    {
+      /* no selection. quit */
+      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_NO_SELECT);
+      return;
+    }
+
+  tmp = AttrListElem_GetName(elem);
+  isACCESS = (!strcmp (tmp, "accesskey") &&
+              !strcmp (elem->pSS->SsName, "HTML"));
+  isID = (!strcmp (tmp, "id") ||
+          !strcmp (tmp, "xml:id") ||
+          (!strcmp (tmp, "name") &&
+           !strcmp (elem->pSS->SsName, "HTML")));
+  isCLASS = !strcmp (tmp, "class");
+  isSpan = ((isID || isCLASS ||
+             !strcmp (tmp, "style") || !strcmp (tmp, "lang")) &&
+              !strcmp (elem->pSS->SsName, "HTML"));
+
+  /* on ne fait rien si le document ou` se trouve la selection
+     n'utilise pas le schema de structure qui definit l'attribut */
+  if (GetSSchemaForDoc (elem->pSS->SsName, pDoc))
+    {
+      /* lock tables formatting */
+      TtaGiveTableFormattingLock (&lock);
+      if (!lock)
+        {
+          doc = IdentDocument (pDoc);
+          dispMode = TtaGetDisplayMode (doc);
+          if (dispMode == DisplayImmediately)
+            TtaSetDisplayMode (doc, DeferredDisplay);
+          /* table formatting is not locked, lock it now */
+          TtaLockTableFormatting ();
+        }
+
+      GetAttribute (&pAttrNew);
+      if (elem->num == 1)
+        pAttrNew->AeAttrSSchema = firstSel->ElStructSchema;
+      else
+        pAttrNew->AeAttrSSchema = elem->pSS;
+      pAttrNew->AeAttrNum = elem->num;
+      pAttrNew->AeDefAttr = FALSE;
+      pAttrNew->AeAttrType = elem->pSS->SsAttribute->TtAttr[elem->num - 1]->AttrType;
+
+      switch (pAttrNew->AeAttrType)
+        {
+        case AtEnumAttr:
+        case AtNumAttr:
+          pAttrNew->AeAttrValue = (int)value;
+          /* applique les attributs a la partie selectionnee */
+          AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
+                             firstSel, pDoc, TRUE);
+          break;
+  
+        case AtTextAttr:
+            /* la valeur saisie devient la valeur courante */
+            if (pAttrNew->AeAttrText == NULL)
+              GetTextBuffer (&(pAttrNew->AeAttrText));
+            else
+              ClearText (pAttrNew->AeAttrText);
+            /* special treatment for accesskey attributes */
+
+            tmp = (char *)TtaConvertByteToMbs ((unsigned char *)value, TtaGetDefaultCharset ());
+            CopyMBs2Buffer ((unsigned char *)tmp, pAttrNew->AeAttrText, 0, strlen (tmp));
+            TtaFreeMemory (tmp);
+            /* special treatments for id, name and accesskey attributes */
+            tmp = elem->pSS->SsAttribute->TtAttr[elem->num - 1]->AttrName;
+            if (isID)
+              TtaIsValidID ((Attribute)pAttrNew, TRUE);
+
+          if (isSpan && firstSel != lastSel &&
+              AttributeChangeFunction)
+            {
+              // should generate a span
+              (*(Proc2)AttributeChangeFunction) ((void *)pAttrNew->AeAttrNum,
+                                                 (void *)value);
+            }
+          else
+            /* apply the attribute to each sub-element */
+            AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
+                             firstSel, pDoc, TRUE);
+          if (isCLASS)
+            TtaExecuteMenuAction ("ApplyClass", doc, 1, TRUE);
+          break;
+
+        case AtReferenceAttr:
+          break;
+        default:
+          break;
+        }
+
+      if (!lock)
+        {
+          /* unlock table formatting */
+          TtaUnlockTableFormatting ();
+          if (dispMode == DisplayImmediately)
+            TtaSetDisplayMode (doc, DisplayImmediately);
+        }
+      UpdateAttrMenu (pDoc, FALSE);
+      DeleteAttribute (NULL, pAttrNew);
     }
 }
 
