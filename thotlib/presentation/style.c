@@ -941,7 +941,9 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
     /* the rule is associated to an attribute */
     {
       nbCtxtCond += ctxt->nbElem;
-      if (ctxt->name[0] > AnyType + 1)
+      if (ctxt->name[0] > AnyType + 1 ||
+          (firstCond->CoCondition == PcElemType &&
+           firstCond->CoTypeElem == ctxt->name[0]))
         nbCtxtCond++;
       /* count the number of conditions in the context */
       for (i = 1; i <= MAX_ANCESTORS && ctxt->attrType[i]; i++)
