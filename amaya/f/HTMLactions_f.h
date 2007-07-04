@@ -6,6 +6,20 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern int CharNum_IN_Line ( Document doc,
+                             int CharNum );
+extern Element GetElemWithChar ( Document doc,
+                                 char *nameVal );
+extern Element GetElemWithLine ( Document doc,
+                                 char *nameVal );
+extern Element GetElemWithLineRange ( Document doc,
+                                      char *nameVal );
+extern Element GetElemWithCharRange ( Document doc,
+                                      char *nameVal );
+extern Element GetElemWithMatch ( Document doc,
+                                  char *nameVal );
+extern Element SearchTextattribute ( Document doc,
+                                     char *nameVal );
 extern Element GetElemWithAttr ( Document doc,
                                  AttributeType attrType,
                                  char *nameVal,
@@ -78,6 +92,20 @@ extern void PasteLocation ( Document doc,
 
 #else /* __STDC__ */
 
+extern int CharNum_IN_Line ( Document doc,
+                               int CharNum );
+extern Element GetElemWithChar ( Document doc,
+                                   char *nameVal );
+extern Element GetElemWithLine ( Document doc,
+                                   char *nameVal );
+extern Element GetElemWithLineRange ( Document doc,
+                                        char *nameVal );
+extern Element GetElemWithCharRange ( Document doc,
+                                        char *nameVal );
+extern Element GetElemWithMatch ( Document doc,
+                                    char *nameVal );
+extern Element SearchTextattribute ( Document doc,
+                                       char *nameVal );
 extern Element GetElemWithAttr ( Document doc,
                                    AttributeType attrType,
                                    char *nameVal,

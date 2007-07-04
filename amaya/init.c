@@ -5441,8 +5441,12 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
       newdoc != 0 && method != CE_MAKEBOOK && method != CE_TEMPLATE)
     {
       /* attribute HREF contains the NAME of a target anchor */
-      elFound = SearchNAMEattribute (newdoc, target, NULL, NULL);
-      if (elFound != NULL)
+      if (DocumentTypes[newdoc] == docHTML)
+        elFound = SearchNAMEattribute (newdoc, target, NULL, NULL);
+       else if (DocumentTypes[newdoc] == docText)
+         elFound = SearchTextattribute (newdoc, target);
+
+      if (elFound)
         {
           /* show the target element in all views */
           for (i = 1; i < 4; i++)

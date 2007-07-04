@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 2000-2005
+ *  (c) COPYRIGHT INRIA and W3C, 2000-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -72,10 +72,10 @@ typedef enum _selType {
 } selType;
 
 static char * xptr_buffer; /* temporary buffer where the user may store
-			      an XPointer */
+                              an XPointer */
 
 static Element RootElement; /* the root of the tree we're parsing (so that
-			    we can stop the parsing */
+                               we can stop the parsing */
 
 /*----------------------------------------------------------------------
   StrACat
@@ -84,27 +84,27 @@ static Element RootElement; /* the root of the tree we're parsing (so that
   ----------------------------------------------------------------------*/
 static void StrACat (char ** dest, const char * src)
 {
- void *status;
+  void *status;
 
   if (src && *src) 
     {
-    if (*dest) 
-      {
-	int length = strlen (*dest);
-	status = TtaRealloc (*dest, length + strlen(src) + 1);
-        if (status != NULL)
-	  {
-            *dest = (char*)status;
-	    strcpy (*dest + length, src);
-          }
-      } 
-    else 
-      {
-	if ((*dest  = (char  *) TtaGetMemory (strlen(src) + 1)) == NULL)
-	  /* @@ what to do? */
-	  exit (0);
-	strcpy (*dest, src);
-      }
+      if (*dest) 
+        {
+          int length = strlen (*dest);
+          status = TtaRealloc (*dest, length + strlen(src) + 1);
+          if (status != NULL)
+            {
+              *dest = (char*)status;
+              strcpy (*dest + length, src);
+            }
+        } 
+      else 
+        {
+          if ((*dest  = (char  *) TtaGetMemory (strlen(src) + 1)) == NULL)
+            /* @@ what to do? */
+            exit (0);
+          strcpy (*dest, src);
+        }
     }
 }
 
@@ -128,7 +128,6 @@ static int CountInlineChars (Element *mark, int firstCh, selMode *mode)
     return 0;
 
   elType = TtaGetElementType (*mark);
-
   if (elType.ElTypeNum != THOT_TEXT_UNIT)
     return 0;
 
@@ -138,7 +137,7 @@ static int CountInlineChars (Element *mark, int firstCh, selMode *mode)
     {
       el = TtaSearchTypedElement (elType, SearchForward, el);
       if (el == *mark)
-	break;
+        break;
       count += TtaGetTextLength (el);
     }
 
@@ -146,24 +145,24 @@ static int CountInlineChars (Element *mark, int firstCh, selMode *mode)
     {
 
       /* if we were at an empty end text element, but there were some adjacent
-	 text sibling elements, adjust the selection mode flag */
+         text sibling elements, adjust the selection mode flag */
       if (firstCh == 0)
-	{
-	  *mode = (selMode)((int)*mode | SEL_STRING_RANGE);
-	  /* START or END point? */
-	  el = *mark;
-	  TtaNextSibling (&el);
-	  if (el)
-	    {
-	      elType = TtaGetElementType (el);
-	      if (elType.ElTypeNum == THOT_TEXT_UNIT)
-		*mode = (selMode)((int)*mode | SEL_START_POINT);
-	      else
-		*mode = (selMode)((int)*mode | SEL_END_POINT);
-	    }
-	  else
-	    *mode = (selMode)((int)*mode | SEL_END_POINT);
-	}
+        {
+          *mode = (selMode)((int)*mode | SEL_STRING_RANGE);
+          /* START or END point? */
+          el = *mark;
+          TtaNextSibling (&el);
+          if (el)
+            {
+              elType = TtaGetElementType (el);
+              if (elType.ElTypeNum == THOT_TEXT_UNIT)
+                *mode = (selMode)((int)*mode | SEL_START_POINT);
+              else
+                *mode = (selMode)((int)*mode | SEL_END_POINT);
+            }
+          else
+            *mode = (selMode)((int)*mode | SEL_END_POINT);
+        }
 
       /* now point to the parent */
       /* @@ JK: if count? */
@@ -244,54 +243,54 @@ static void AdjustSelMode (Element *el, int *start, int index, selMode *mode, se
     {
       tmp_el = *el;
       if (type == SEL_FIRST_EL)
-	{
-	  do
-	    {
-	      TtaNextSibling (&tmp_el);
-	    }
-	  while (tmp_el && ElIsXLink (tmp_el));
-	  if (tmp_el)
-	    {
-	      /* we use the first non XLink sibling. If it's of type
-	         text, we use 1 as the value of start */
-	      elType = TtaGetElementType (tmp_el);
-	      if (elType.ElTypeNum == THOT_TEXT_UNIT)
-		*start = 1;
-	    }
-	  else
-	    {
-	      /* we use the parent */
-	      tmp_el = TtaGetParent (*el);
-	      *start = 0;
-	    }
-	}
+        {
+          do
+            {
+              TtaNextSibling (&tmp_el);
+            }
+          while (tmp_el && ElIsXLink (tmp_el));
+          if (tmp_el)
+            {
+              /* we use the first non XLink sibling. If it's of type
+                 text, we use 1 as the value of start */
+              elType = TtaGetElementType (tmp_el);
+              if (elType.ElTypeNum == THOT_TEXT_UNIT)
+                *start = 1;
+            }
+          else
+            {
+              /* we use the parent */
+              tmp_el = TtaGetParent (*el);
+              *start = 0;
+            }
+        }
       else
-	{
-	  do 
-	    {
-	      TtaPreviousSibling (&tmp_el);
-	    } 
-	  while (tmp_el && ElIsXLink (tmp_el));
+        {
+          do 
+            {
+              TtaPreviousSibling (&tmp_el);
+            } 
+          while (tmp_el && ElIsXLink (tmp_el));
 
-	  if (tmp_el)
-	    {
-	      /* we use the precedent non-xlink sibling. If it's of
-		 type text, we give start the value of the last char
-		 of that sibling */
-	      elType = TtaGetElementType (tmp_el);
-	      if (elType.ElTypeNum == THOT_TEXT_UNIT)
-		{
-		  len = TtaGetTextLength (tmp_el);
-		  *start = len + 1;
-		}
-	    }
-	  else
-	    {
-	      /* we use the parent */
-	      tmp_el = TtaGetParent (*el);
-	      *start = 0;
-	    }
-	}
+          if (tmp_el)
+            {
+              /* we use the precedent non-xlink sibling. If it's of
+                 type text, we give start the value of the last char
+                 of that sibling */
+              elType = TtaGetElementType (tmp_el);
+              if (elType.ElTypeNum == THOT_TEXT_UNIT)
+                {
+                  len = TtaGetTextLength (tmp_el);
+                  *start = len + 1;
+                }
+            }
+          else
+            {
+              /* we use the parent */
+              tmp_el = TtaGetParent (*el);
+              *start = 0;
+            }
+        }
       *el = tmp_el;
     }
 	  
@@ -300,20 +299,20 @@ static void AdjustSelMode (Element *el, int *start, int index, selMode *mode, se
       len = TtaGetTextLength (*el);
       *mode = (selMode)((int)*mode | SEL_STRING_RANGE);
       if (*start > len)
-	{
-	  *mode = (selMode)((int)*mode | SEL_END_POINT);
-	  *start = len;
-	}
+        {
+          *mode = (selMode)((int)*mode | SEL_END_POINT);
+          *start = len;
+        }
       else if (*start > index)
-	{
-	  if (type == SEL_FIRST_EL)
-	    *mode = (selMode)((int)*mode | SEL_START_POINT);
-	  else
-	    {
-	      *mode = (selMode)((int)*mode | SEL_END_POINT);
-	      *start = *start - 1;
-	    }
-	}
+        {
+          if (type == SEL_FIRST_EL)
+            *mode = (selMode)((int)*mode | SEL_START_POINT);
+          else
+            {
+              *mode = (selMode)((int)*mode | SEL_END_POINT);
+              *start = *start - 1;
+            }
+        }
     }
 }
 
@@ -352,7 +351,7 @@ static char * GetIdValue (Element el)
 #ifdef XML_GENERIC
     attrType.AttrTypeNum = XML_ATTR_xmlid;
 #else /* XML_GENERIC */
-    attrType.AttrTypeNum = 0;
+  attrType.AttrTypeNum = 0;
 #endif /* XML_GENERIC */
 
   attr = TtaGetAttribute (el, attrType);
@@ -408,7 +407,7 @@ static ThotBool TestElName (Element el, char *name)
   printf ("testing element: %s\n", typeName);
 #endif
   if (typeName && !strcmp (name, typeName))
-      return TRUE;
+    return TRUE;
   else
     return FALSE;
 }
@@ -436,9 +435,9 @@ Element AGetRootElement (Document doc)
       elType = TtaGetElementType (el);
       elType.ElTypeNum = Annot_EL_Body;
       el = TtaSearchTypedElement (elType, SearchInTree, 
-				   el);
+                                  el);
       if (el)
-	el = TtaGetFirstChild (el);
+        el = TtaGetFirstChild (el);
     }
 #endif /* ANNOTATIONS */
   return el;
@@ -481,7 +480,7 @@ static Element AGetLastChild (Element el)
     {
       child = TtaGetLastChild (child);
       if (child && !ElIsHidden (child))
-	break;
+        break;
     }
 
   return child;
@@ -517,30 +516,30 @@ static void PreviousSibling (Element *el)
     {
       /* if the element is hidden, return the latest child */
       if (ElIsHidden (sibling))
-	{
-	  tmp_el = AGetLastChild (sibling);
-	  if (!tmp_el)
-	    {
-	      /* there was no child, let's try the next brother */
-	      PreviousSibling (&sibling);
-	    }
-	  else
-	    sibling = tmp_el;
-	}
+        {
+          tmp_el = AGetLastChild (sibling);
+          if (!tmp_el)
+            {
+              /* there was no child, let's try the next brother */
+              PreviousSibling (&sibling);
+            }
+          else
+            sibling = tmp_el;
+        }
       *el = sibling;
     }
   else
     {
       /* if there's no child, repeat the algorithm recursively 
-	 on each parent, element until we find a child or the
-	 the first non-hidden parent */
+         on each parent, element until we find a child or the
+         the first non-hidden parent */
       sibling = TtaGetParent (*el);
 
       /* we only continue searching if the parent is hidden */
       if (sibling && ElIsHidden (sibling))
-	  PreviousSibling (&sibling);
+        PreviousSibling (&sibling);
       else
-	sibling = NULL;
+        sibling = NULL;
       *el = sibling;
     }
   return;
@@ -564,19 +563,19 @@ Element SearchAttrId (Element root, char *val)
     {
       /* test the current root element */
       if (TestIdValue (root, val))
-	{
-	  result = root;
-	  break;
-	}
+        {
+          result = root;
+          break;
+        }
       
       /* recursive search all the children of root */
       el = TtaGetFirstChild (root);
       if (el)
-	{
-	  result = SearchAttrId (el, val);
-	  if (result)
-	    break;
-	}
+        {
+          result = SearchAttrId (el, val);
+          if (result)
+            break;
+        }
       /* try the same procedure on all the siblings of root */
       TtaNextSibling (&root);
     }
@@ -605,25 +604,25 @@ Element SearchSiblingIndex (Element root, char *el_name, int *index)
   while (sibling)
     {
       /* if the element is hidden, call the algorithm recursively from 
-	 this point */
+         this point */
       if (!TestElName (sibling, "Annotation")) /* ignore our XLink element */
-	{
-	  if (ElIsHidden (sibling))
-	    {
-	      child = TtaGetFirstChild (sibling);
-	      result = SearchSiblingIndex (child, el_name, index);
-	      if (result)
-		return result;
-	    }
-	  /* test the current node */
-	  else if (TestElName (sibling, el_name))
-	    {
-	      /* we found the element */
-	      if (*index == 1)
-		return sibling;
-	      (*index)--;
-	    }
-	}
+        {
+          if (ElIsHidden (sibling))
+            {
+              child = TtaGetFirstChild (sibling);
+              result = SearchSiblingIndex (child, el_name, index);
+              if (result)
+                return result;
+            }
+          /* test the current node */
+          else if (TestElName (sibling, el_name))
+            {
+              /* we found the element */
+              if (*index == 1)
+                return sibling;
+              (*index)--;
+            }
+        }
       /* go to the next sibling */
       TtaNextSibling (&sibling);
     }
@@ -659,12 +658,12 @@ ThotBool SearchTextPosition (Element *mark, int *firstCh)
   while (1)
     {
       if (!el)
-	break;
+        break;
       len = TtaGetTextLength (el);
       if (pos <= len)
-	break;
+        break;
       else
-	pos = pos - len;
+        pos = pos - len;
       el = TtaSearchTypedElementInTree (elType, SearchForward, root, el);
     }
 
@@ -682,7 +681,7 @@ ThotBool SearchTextPosition (Element *mark, int *firstCh)
   Returns NULL in case of error.
   ----------------------------------------------------------------------*/
 static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len,
-			     int mode, ThotBool firstF)
+                             int mode, ThotBool firstF)
 {
   XPathItem *xpath_item, *xpath_tmp;
   char      *buffer = NULL, *name;
@@ -693,44 +692,44 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len,
   if  (mode & SEL_STRING_RANGE)
     {
       if (mode & SEL_END_POINT)
-	StrACat (&xpath_expr, "end-point(string-range(");
+        StrACat (&xpath_expr, "end-point(string-range(");
       else if (mode & SEL_START_POINT)
-	{
-	  if (firstF)
-	    StrACat (&xpath_expr, "start-point(string-range(");
-	  else
-	    StrACat (&xpath_expr, "end-point(string-range(");
-	}
+        {
+          if (firstF)
+            StrACat (&xpath_expr, "start-point(string-range(");
+          else
+            StrACat (&xpath_expr, "end-point(string-range(");
+        }
       else
-	StrACat (&xpath_expr, "string-range(");
+        StrACat (&xpath_expr, "string-range(");
     }
 
   while (xpath_item)
     {
       /* @@ how can we detect this in a more generic way? */
       if (xpath_item->elType.ElTypeNum != THOT_TEXT_UNIT)
-	{
-	  if (xpath_item->id_value)
-	    {
-	      l = strlen (xpath_item->id_value) + 8;
-	      buffer = (char *)TtaGetMemory (l);
-	      strcpy (buffer, "id(\""); 
-	      strcat (buffer, xpath_item->id_value);
-	      strcat (buffer, "\")");
-	    }
-	  else
-	    {
-	      name = TtaGetElementTypeName (xpath_item->elType);
-	      l = strlen (name) + 14;
-	      buffer = (char *)TtaGetMemory (l);
-	      sprintf (buffer, "/%s[%d]", name, xpath_item->index);
-	    }
-	  StrACat (&xpath_expr, buffer);
-	  TtaFreeMemory (buffer);
-	  buffer = NULL;
-	}
+        {
+          if (xpath_item->id_value)
+            {
+              l = strlen (xpath_item->id_value) + 8;
+              buffer = (char *)TtaGetMemory (l);
+              strcpy (buffer, "id(\""); 
+              strcat (buffer, xpath_item->id_value);
+              strcat (buffer, "\")");
+            }
+          else
+            {
+              name = TtaGetElementTypeName (xpath_item->elType);
+              l = strlen (name) + 14;
+              buffer = (char *)TtaGetMemory (l);
+              sprintf (buffer, "/%s[%d]", name, xpath_item->index);
+            }
+          StrACat (&xpath_expr, buffer);
+          TtaFreeMemory (buffer);
+          buffer = NULL;
+        }
       if (xpath_item->id_value)
-	TtaFreeMemory (xpath_item->id_value);
+        TtaFreeMemory (xpath_item->id_value);
       xpath_tmp = xpath_item->next;
       TtaFreeMemory (xpath_item);
       xpath_item = xpath_tmp;
@@ -743,7 +742,7 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len,
       sprintf (buffer, ",\"\",%d,%d)", firstCh, len);
       StrACat (&xpath_expr, buffer);
       if (mode & SEL_START_POINT || mode & SEL_END_POINT)
-	StrACat (&xpath_expr, ")");
+        StrACat (&xpath_expr, ")");
     }
 
   return (xpath_expr);
@@ -761,7 +760,7 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len,
   Returns NULL in case of failure.
   ----------------------------------------------------------------------*/
 static char *XPointer_ThotEl2XPath (Element start, int firstCh, int len,
-				    selMode mode, ThotBool firstF)
+                                    selMode mode, ThotBool firstF)
 {
   Element     el, prev;
   ElementType elType, prevElType;
@@ -779,7 +778,7 @@ static char *XPointer_ThotEl2XPath (Element start, int firstCh, int len,
   elType = TtaGetElementType (el);
   /* if we chose a hidden element or a GRAPH UNIT (SVG), climb up */
   if (ElIsHidden (el) || elType.ElTypeNum == THOT_GRAPH_UNIT)
-      el = AGetParent (el);
+    el = AGetParent (el);
 
   /* browse the tree */
   while (el)
@@ -787,21 +786,21 @@ static char *XPointer_ThotEl2XPath (Element start, int firstCh, int len,
       /* stop browsing the tree if we found an id attribute */
       id_value = GetIdValue (el);
       if (id_value)
-	break;
+        break;
       /* sibling browse */
       child_count = 1;
       elType = TtaGetElementType (el);
       prev = el;
       for (PreviousSibling (&prev) ; prev; PreviousSibling (&prev))
-	{
-	  prevElType = TtaGetElementType (prev);
+        {
+          prevElType = TtaGetElementType (prev);
           if ((elType.ElTypeNum == prevElType.ElTypeNum)
-	      && (elType.ElSSchema == prevElType.ElSSchema))
-	    {
-	      child_count++;
-	      el = prev;
-	    }
-	}
+              && (elType.ElSSchema == prevElType.ElSSchema))
+            {
+              child_count++;
+              el = prev;
+            }
+        }
       /* add the info we found to the xpath list*/
       xpath_item = (XPathItem*)TtaGetMemory (sizeof (XPathItem));
       xpath_item->elType = elType;
@@ -826,6 +825,184 @@ static char *XPointer_ThotEl2XPath (Element start, int firstCh, int len,
      the string) */
   xpath_expr = XPathList2Str (&xpath_list, firstCh, len, mode, firstF);
   return (xpath_expr);
+}
+
+/*----------------------------------------------------------------------
+  make the fragment identifier (Char Scheme) based on the selected position
+  ----------------------------------------------------------------------*/
+char * TextPlainId_build ( Document doc, View view, ThotBool useDocRoot )
+{
+  Element     firstEl, el, child,el_ex, child_ex;
+  ElementType elType;
+  int         firstCh, i;  
+  char       *lastXpath = NULL; 
+  int         line, line2, len, len2, Char = 0, time = 0;
+  int         len_ex = 0, line_ex;
+  int         count_child = 1, len_of_line, length_child, k;
+  int        *len_part_of_child, *memory_of_child;
+  char       *txtfid_expr = NULL;
+
+  /* @@ debug */
+  TtaGiveFirstSelectedElement (doc, &firstEl, &firstCh, &i);  
+  line = TtaGetElementLineNumber(firstEl);
+  len = TtaGetElementVolume(firstEl);
+  
+  if (len == 0)
+	  line--;
+
+  el_ex = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (el_ex);
+  elType.ElTypeNum = TextFile_EL_Line_;
+  el_ex = TtaSearchTypedElement (elType, SearchForward, el_ex);
+  child_ex = TtaGetFirstChild (el_ex);
+
+  for (line_ex=1; line_ex < line; line_ex++)
+	  TtaNextSibling(&el_ex);
+
+  child_ex = TtaGetFirstChild(el_ex);    
+  len_ex = TtaGetElementVolume(child_ex);
+  count_child = 1;
+
+  // adjust firstCh from head of the line
+  while (child_ex != firstEl)
+    {
+      if (count_child % 3 != 2)
+        firstCh += len_ex;
+      count_child++;
+      TtaNextSibling(&child_ex);
+      len_ex = TtaGetElementVolume(child_ex);
+    }
+
+  el = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = TextFile_EL_Line_;
+  el = TtaSearchTypedElement (elType, SearchForward, el);
+  child = TtaGetFirstChild (el);
+  line2 = TtaGetElementLineNumber(child);
+  len = TtaGetElementVolume (el);
+  len2 = TtaGetElementVolume (child);
+
+  if (len2 == 0)
+    line2--;
+
+  len_of_line = len2;    
+  if (el)
+    {
+		  /* Consider "Annotation Icon" if Annotation Icon is on the line */
+		  if (len != len_of_line)
+	      {
+          count_child = 1;
+          // analysis the structure of the line including "Annotation Icon"
+          while (len != len_of_line)
+            {
+              TtaNextSibling(&child);
+              length_child = TtaGetElementVolume(child);
+              len_of_line += length_child;
+              count_child++; // count the number of child in the line
+            }
+
+          len_part_of_child = (int *)TtaGetMemory( (sizeof(int)) * (count_child + 1) );
+          memory_of_child = len_part_of_child;
+          child = TtaGetFirstChild(el);
+
+          // input the length of child one by one
+          for (k=0; k < count_child; k++)
+            {
+              length_child = TtaGetElementVolume(child);
+              len_part_of_child[k] = length_child;
+              TtaNextSibling(&child);
+            }
+
+          // adjust the length of line (subtract that of Annotation Icon)
+          for (k=1; k < count_child; k+=3)
+            len -= len_part_of_child[k];
+
+          child = TtaGetFirstChild(el);
+          if (line2 < line)
+            free(memory_of_child);
+        }
+		  
+		  // calculate the Char Scheme value
+		  while (child)
+        {
+          Char += len; 
+          if (line2 < line)
+            {
+              TtaNextSibling(&el);
+              child = TtaGetFirstChild(el);			  
+              line2++;
+              len = TtaGetElementVolume (el);
+              len2 = TtaGetElementVolume (child);
+              len_of_line = len2;			  
+              time++;
+              count_child=1;
+            }
+
+          if (line2 ==line && len == 0)
+            {
+              TtaNextSibling(&el);
+              child = TtaGetFirstChild(el);
+              line2 = TtaGetElementLineNumber(child);
+              len_of_line = TtaGetElementVolume (child);
+              Char += time;			 
+              break;
+            }
+
+          if (line2 == line && time==0)
+            {
+              Char = firstCh - 1;
+              break;
+            }
+
+          if (line2 ==line && firstCh > len && time != 0)
+            {
+              Char += firstCh - 1 + time;
+              break;
+            }
+          else if (line2 == line && firstCh <= len && time != 0)
+            {
+              Char += firstCh - 1 + time;
+              break;
+            }
+
+          /* Consider "Annotation Icon" if Annotation Icon is on the line */
+          if (len != len_of_line)
+            {		      
+              count_child = 1;
+              // analysis the structure of the line including "Annotation Icon"
+              while (len != len_of_line)
+                {
+                  TtaNextSibling (&child);
+                  length_child = TtaGetElementVolume (child);
+                  len_of_line += length_child;
+                  count_child++;
+                }
+
+              len_part_of_child = (int *)TtaGetMemory ((sizeof(int)) * (count_child + 1));
+              memory_of_child = len_part_of_child;
+              child = TtaGetFirstChild(el);
+              // input the length of child one by one
+              for (k=0; k < count_child; k++)
+                {
+                  length_child = TtaGetElementVolume (child);
+                  len_part_of_child[k] = length_child;
+                  TtaNextSibling (&child);
+                }
+
+              // adjust the length of line (subtract that of Annotation Icon)
+              for (k = 1; k < count_child; k += 3)
+                len -= len_part_of_child[k];
+
+              child = TtaGetFirstChild(el);
+              if (line2 < line)
+                free(memory_of_child);
+            } 
+        }
+	  }
+
+  txtfid_expr = (char *)TtaGetMemory (30);      
+  sprintf (txtfid_expr, "char=%d", Char); // make the fragment identifier sentence
+	return txtfid_expr;
 }
 
 /*----------------------------------------------------------------------
@@ -874,7 +1051,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
     {
       firstEl = AGetRootElement (doc);
       if (!firstEl)
-	return NULL; /* something went wrong */
+        return NULL; /* something went wrong */
       firstLen = 0;
       firstCh = 0;
       lastEl = NULL;
@@ -883,8 +1060,8 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
   else
     {
       if (!TtaIsDocumentSelected (doc))
-	/* nothing was selected */
-	return NULL;
+        /* nothing was selected */
+        return NULL;
   
       /* get the first selected element */
       TtaGiveFirstSelectedElement (doc, &firstEl, &firstCh, &i);
@@ -894,59 +1071,59 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
       AdjustSelMode (&firstEl, &firstCh, i, &firstMode, SEL_FIRST_EL);
       
       if (firstEl == NULL)
-	return NULL; /* ERROR, there is no selection */
+        return NULL; /* ERROR, there is no selection */
 
       if  (TtaGetElementLineNumber (firstEl) == 0)
-	{
-	  /* ERROR, don't annotate end elements that Amaya added
-	     internally, but that don't exist in the document */
-	  InitInfo ("XPointer", TtaGetMessage (AMAYA, AM_NO_SXPOINTER));
-	  return NULL;
-	}
+        {
+          /* ERROR, don't annotate end elements that Amaya added
+             internally, but that don't exist in the document */
+          InitInfo ("XPointer", TtaGetMessage (AMAYA, AM_NO_SXPOINTER));
+          return NULL;
+        }
 
       /* is it a caret or an extension selection? */
       if (TtaIsSelectionEmpty ())
-	lastEl = NULL;
+        lastEl = NULL;
       else
-	{
-	  TtaGiveLastSelectedElement (doc, &lastEl, &i, &lastCh);
+        {
+          TtaGiveLastSelectedElement (doc, &lastEl, &i, &lastCh);
 #ifdef DEBUG_XPOINTER
-	  printf ("last Ch is %d, i is %d\n", lastCh, i);
+          printf ("last Ch is %d, i is %d\n", lastCh, i);
 #endif 
-	  AdjustSelMode (&lastEl, &lastCh, i, &lastMode, SEL_LAST_EL);
+          AdjustSelMode (&lastEl, &lastCh, i, &lastMode, SEL_LAST_EL);
 
-	  if  (TtaGetElementLineNumber (lastEl) == 0)
-	    {
-	      /* ERROR, don't annotate end elements that Amaya added
-		 internally, but that don't exist in the document */
-	      InitInfo ("XPointer", TtaGetMessage (AMAYA, AM_NO_EXPOINTER));
-	      return NULL;
-	    }
+          if  (TtaGetElementLineNumber (lastEl) == 0)
+            {
+              /* ERROR, don't annotate end elements that Amaya added
+                 internally, but that don't exist in the document */
+              InitInfo ("XPointer", TtaGetMessage (AMAYA, AM_NO_EXPOINTER));
+              return NULL;
+            }
 
-	}
+        }
 
       /* if the selection is in the same element, adjust the first element's
-	 length */
+         length */
       if (firstEl == lastEl)
-	{
-	  /* if we have an empty selection, ignore the last element and its data */
-	  if (lastCh != firstCh)
-	    {
-	      firstLen = lastCh - firstCh + 1;
-	      firstMode  = (selMode)((int)firstMode & ~(SEL_START_POINT | SEL_END_POINT));
-	    }
-	  else  /* the selection is only a caret */
-	    {
-	      firstLen = 1;
-	    }
-	  lastEl = NULL;
-	}
+        {
+          /* if we have an empty selection, ignore the last element and its data */
+          if (lastCh != firstCh)
+            {
+              firstLen = lastCh - firstCh + 1;
+              firstMode  = (selMode)((int)firstMode & ~(SEL_START_POINT | SEL_END_POINT));
+            }
+          else  /* the selection is only a caret */
+            {
+              firstLen = 1;
+            }
+          lastEl = NULL;
+        }
       else
-	{
-	  firstLen = 1;
-	  firstMode = (selMode)((int)firstMode | SEL_RANGE_TO);
-	  lastMode = (selMode)((int)lastMode | SEL_RANGE_TO);
-	}
+        {
+          firstLen = 1;
+          firstMode = (selMode)((int)firstMode | SEL_RANGE_TO);
+          lastMode = (selMode)((int)lastMode | SEL_RANGE_TO);
+        }
     }
 
   /* @@ JK: We don't know yet how to handle annotations on symbols, so we just
@@ -958,7 +1135,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
     {
       elType = TtaGetElementType (lastEl);
       if (elType.ElTypeNum == THOT_SYMBOL_UNIT)
-	return NULL;
+        return NULL;
     }
 
   /* remember the root of the tree we are annotating, so that we can stop
@@ -979,7 +1156,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
   else 
     {
 #ifdef DEBUG_XPOINTER
-    fprintf (stderr, "\n");
+      fprintf (stderr, "\n");
 #endif  
     }
 
@@ -987,13 +1164,13 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
   if (firstXpath)
     {
       i = sizeof ("xpointer()/range-to()") + strlen (firstXpath) 
-	+ ((lastEl) ? strlen (lastXpath) : 0) + 1;
+        + ((lastEl) ? strlen (lastXpath) : 0) + 1;
       xptr_expr = (char *)TtaGetMemory (i);
       
       if (lastEl)
-	sprintf (xptr_expr, "xpointer(%s/range-to(%s))", firstXpath, lastXpath);
+        sprintf (xptr_expr, "xpointer(%s/range-to(%s))", firstXpath, lastXpath);
       else
-	sprintf (xptr_expr, "xpointer(%s)", firstXpath);
+        sprintf (xptr_expr, "xpointer(%s)", firstXpath);
     }
   
   TtaFreeMemory (firstXpath);

@@ -105,7 +105,7 @@ extern void TtaRemoveFinalSpaces (Element element, Document document,
   it. It return NULL if the string is not found.
   ----------------------------------------------------------------------*/
 extern Element TtaSearchText (Document document, Element element, ThotBool forward,
-			      char *text, CHARSET encoding);
+			      char *text, int *firstCh, int *lastCh, CHARSET encoding);
 
 /* ----------------------------------------------------------------------
    TtaInsertTextContent

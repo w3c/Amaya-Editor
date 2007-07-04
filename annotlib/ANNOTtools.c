@@ -2821,7 +2821,7 @@ ThotBool ANNOT_CanAnnotate (Document doc)
 
   switch (docType) 
     {
-    case docText:
+    //case docText:
     case docImage:
     case docSource:
     case docCSS:

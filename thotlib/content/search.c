@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1999-2005
+ *  (c) COPYRIGHT INRIA, 1999-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -730,7 +730,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
   it. It return NULL if the string is not found.
   ----------------------------------------------------------------------*/
 Element TtaSearchText (Document document, Element element, ThotBool forward,
-                       char *text, CHARSET encoding)
+                       char *text, int *firstCh, int *lastCh, CHARSET encoding)
 {
   PtrDocument         pDoc = NULL;
   PtrElement          elFound;
@@ -762,6 +762,8 @@ Element TtaSearchText (Document document, Element element, ThotBool forward,
       if (found)
         elFound = pfirstEl;
     }
+  *firstCh = firstChar;
+  *lastCh = lastChar;
   return ((Element) elFound);
 }
 

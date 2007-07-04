@@ -811,7 +811,7 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   Document           doc_annot;
   AnnotMeta         *annot;
   XPointerContextPtr ctx;
-  char              *xptr;
+  char              *xptr, *tfid;
   ThotBool           useDocRoot = (mode & ANNOT_useDocRoot) != 0;
   ThotBool           isReplyTo = (mode & ANNOT_isReplyTo) != 0;
 
@@ -832,17 +832,33 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   if (!useDocRoot && TtaGetSelectedDocument () != doc)
     return; /* Error: nothing selected in this document */
 
-  /* Annotation XPointer */
-  xptr = XPointer_build (doc, 1, useDocRoot);
-  /* if we can't compute the XPointer, we return (we could make a
-     popup message box stating what happened) */
-  if (!xptr)
+  /* if not docText file */
+  if (DocumentTypes[doc] != docText)
     {
-      TtaSetStatus (doc, 1,
-                    TtaGetMessage (AMAYA, AM_CANNOT_ANNOTATE),
-                    NULL);
-      return;
+      /* Annotation XPointer */
+      xptr = XPointer_build (doc, 1, useDocRoot);
+      /* if we can't compute the XPointer, we return (we could make a
+         popup message box stating what happened) */
+      if (!xptr)
+        {
+          TtaSetStatus (doc, 1,
+                        TtaGetMessage (AMAYA, AM_CANNOT_ANNOTATE),
+                        NULL);
+          return;
+        }
     }
+  else
+    {
+      tfid = TextPlainId_build (doc,view,useDocRoot);
+      if (!tfid)
+        {
+          TtaSetStatus (doc, 1,
+                        TtaGetMessage (AMAYA, AM_CANNOT_ANNOTATE),
+                        NULL);
+          return;
+        } 
+    }
+
   
   /* create the document that will store the annotation */
   if ((doc_annot = ANNOT_NewDocument (doc, mode)) == 0)
@@ -863,8 +879,13 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
     }
 
   annot = LINK_CreateMeta (doc, doc_annot, mode);
-  /* update the XPointer */
-  annot->xptr = xptr;
+  /* if not docText */
+  if (DocumentTypes[doc] != docText)
+    /* update the XPointer */
+    annot->xptr = xptr;
+  else
+    /* update the plain text identifier*/
+    annot->xptr = tfid;
 
   /* initialize everything */
   mode = (AnnotMode)(mode | ANNOT_initATitle | ANNOT_initBody);

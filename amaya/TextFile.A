@@ -2,26 +2,25 @@ APPLICATION TextFile;
 
 DEFAULT
    BEGIN
-	DocClose.Post -> DocumentClosed;
-	DocSave.Pre -> DocumentToSave;
-	PRuleCreate.Pre -> ChangePRule;
-	PRuleModify.Pre -> ChangePRule;
-	ElemSelect.Post -> CheckSynchronize;
-        ElemClick.Pre -> SimpleClickInText;
-	ElemActivate.Pre -> DoubleClickInText;
-        ElemRClick.Pre -> RightClickInText;
-	ElemSelect.Post -> SelectionChanged;
+   DocClose.Post -> DocumentClosed;
+   DocSave.Pre -> DocumentToSave;
+   PRuleCreate.Pre -> ChangePRule;
+   PRuleModify.Pre -> ChangePRule;
+   ElemSelect.Post -> CheckSynchronize;
+   ElemClick.Pre -> SimpleClickInText;
+   ElemActivate.Pre -> DoubleClickInText;
+   ElemRClick.Pre -> RightClickInText;
+   ElemSelect.Post -> SelectionChanged;
    END;
 
 ELEMENTS
-
    TEXT_UNIT:
-	ElemTextModify.Post -> CheckNewLines;
-ATTRIBUTES
+        ElemTextModify.Post -> CheckNewLines;
 
+ATTRIBUTES
    Language:
-	BEGIN
-	AttrMenu.Pre ->    GlobalAttrInMenu;
-	END;
+        BEGIN
+        AttrMenu.Pre ->    GlobalAttrInMenu;
+        END;
 
 END

@@ -14,6 +14,9 @@ extern Element SearchSiblingIndex ( Element root,
                                     int *index );
 extern ThotBool SearchTextPosition ( Element *mark,
                                      int *firstCh );
+extern char * TextPlainId_build ( Document doc,
+                                  View view,
+                                  ThotBool useDocRoot );
 extern char * XPointer_build ( Document doc,
                                View view,
                                ThotBool useDocRoot );
@@ -32,6 +35,9 @@ extern Element SearchSiblingIndex ( Element root,
                                       int *index );
 extern ThotBool SearchTextPosition ( Element *mark,
                                        int *firstCh );
+extern char * TextPlainId_build ( Document doc,
+                                    View view,
+                                    ThotBool useDocRoot );
 extern char * XPointer_build ( Document doc,
                                  View view,
                                  ThotBool useDocRoot );
