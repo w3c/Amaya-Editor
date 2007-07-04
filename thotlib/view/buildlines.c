@@ -2405,7 +2405,9 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
               pLine->LiLastBox = pLine->LiFirstBox;
               if (!extensibleBlock)
                 {
-                  int shift = pBlock->BxLMargin + pBlock->BxLPadding + pBlock->BxLBorder;
+                  int shift;
+
+                  shift = pBlock->BxLMargin + pBlock->BxLPadding + pBlock->BxLBorder;
                   setinline = (pNextBox->BxAbstractBox->AbFloat == 'N' &&
                                pNextBox->BxAbstractBox->AbClear != 'B' &&
                                !ExtraFlow (pNextBox, frame));
@@ -2416,21 +2418,20 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   GetExtraMargins (pNextBox, NULL, frame, &t, &b, &l, &r);
                   if (pNextBox->BxLMargin + pNextBox->BxLPadding > 0)
                     {
-                      if (pBlock->BxLeftFloat == NULL || !setinline)
-                        l += pNextBox->BxLMargin;
-                      else if (pLine->LiXOrg < shift + pNextBox->BxLMargin)
-                        l = l + pNextBox->BxLMargin - pLine->LiXOrg - shift;
-                      //else
-                      l += pNextBox->BxLPadding;
+                      if (pBlock->BxLeftFloat && setinline &&
+                          pLine->LiXOrg > pNextBox->BxLMargin)
+                        // shift the box position
+                            pLine->LiXOrg -= pNextBox->BxLMargin;
+                      l += pNextBox->BxLMargin + pNextBox->BxLPadding;
                     }
                   if (pNextBox->BxRMargin + pNextBox->BxRPadding > 0)
                     {
-                      if (pBlock->BxRightFloat == NULL || !setinline)
-                        l += pNextBox->BxRMargin;
-                      else if (pBlock->BxW - pLine->LiXOrg - pLine->LiXMax < pNextBox->BxRMargin)
-                        l = l + pNextBox->BxRMargin - pBlock->BxW + pLine->LiXOrg + pLine->LiXMax;
-                      //else
-                      l += pNextBox->BxRPadding;
+                      shift = pBlock->BxW - pLine->LiXOrg - pLine->LiXMax;
+                      if (pBlock->BxRightFloat && setinline &&
+                          shift > pNextBox->BxRMargin)
+                        // reduce the size of the box
+                        l += shift - pNextBox->BxRMargin;
+                      l += pNextBox->BxRMargin + pNextBox->BxRPadding;
                    }
                   l = l + pNextBox->BxLBorder;
                   l = l + r + pNextBox->BxRBorder;
@@ -2456,10 +2457,10 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     }
                   else
                     pNextBox->BxContentWidth = FALSE;
+                  val -= l;
                   if (pNextBox->BxShrink)
                     {
                       // new rule width
-                      val -= l;
                       w = pNextBox->BxMaxWidth - l;
                       if (w > 0 && w < val)
                         {
@@ -2473,7 +2474,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     }
                   else
                     ResizeWidth (pNextBox, pBlock, pBlock,
-                                 val - l - pNextBox->BxW, 0, 0, 0, frame, FALSE);
+                                 val - pNextBox->BxW, 0, 0, 0, frame, FALSE);
                 }
             }
           else if (pAbRef == NULL &&
