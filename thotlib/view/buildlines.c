@@ -2417,20 +2417,20 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   if (pNextBox->BxLMargin + pNextBox->BxLPadding > 0)
                     {
                       if (pBlock->BxLeftFloat == NULL || !setinline)
-                        l = l + pNextBox->BxLMargin + pNextBox->BxLPadding;
+                        l += pNextBox->BxLMargin;
                       else if (pLine->LiXOrg < shift + pNextBox->BxLMargin)
                         l = l + pNextBox->BxLMargin - pLine->LiXOrg - shift;
-                      else
-                        l = l + pNextBox->BxLMargin + pNextBox->BxLPadding;
+                      //else
+                      l += pNextBox->BxLPadding;
                     }
                   if (pNextBox->BxRMargin + pNextBox->BxRPadding > 0)
                     {
                       if (pBlock->BxRightFloat == NULL || !setinline)
-                        l += pNextBox->BxRMargin + pNextBox->BxRPadding;
-                      else if (pNextBox->BxRMargin > pBlock->BxW - val)
-                        l = l + pNextBox->BxRMargin - pBlock->BxW + val;
-                      else
-                        l += pNextBox->BxRMargin + pNextBox->BxRPadding;
+                        l += pNextBox->BxRMargin;
+                      else if (pBlock->BxW - pLine->LiXOrg - pLine->LiXMax < pNextBox->BxRMargin)
+                        l = l + pNextBox->BxRMargin - pBlock->BxW + pLine->LiXOrg + pLine->LiXMax;
+                      //else
+                      l += pNextBox->BxRPadding;
                    }
                   l = l + pNextBox->BxLBorder;
                   l = l + r + pNextBox->BxRBorder;
