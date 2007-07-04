@@ -2051,12 +2051,34 @@
 <label define="TMSG_ATTRIBUTE_NAME">
 	<message xml:lang="en">Attribute</message>
 	<message xml:lang="fr">Attribut</message>
-	<message xml:lang="ru">Aтрибута:</message>
+	<message xml:lang="de">Attribut</message>
+	<message xml:lang="it">Attributo</message>
+	<message xml:lang="tr">Özellik</message>
+	<message xml:lang="es">Atributo</message>
+	<message xml:lang="pt">Atributo</message>
+	<message xml:lang="fi">Määreen</message>
+	<message xml:lang="ru">Aтрибута</message>
+	<message xml:lang="hu">Attribútum</message>
+	<message xml:lang="ka">ატრიბუტი</message>
+	<message xml:lang="cn">属性</message>
+	<message xml:lang="tw">屬性</message>
+	<message xml:lang="sk">Atríbútu</message>
 </label>
 <label define="TMSG_ATTRIBUTE_VALUE">
 	<message xml:lang="en">Value</message>
 	<message xml:lang="fr">Valeur</message>
-	<message xml:lang="ru">Величина:</message>
+	<message xml:lang="de">Wert</message>
+	<message xml:lang="it">Valore</message>
+	<message xml:lang="tr">Değeri</message>
+	<message xml:lang="es">Valores</message>
+	<message xml:lang="pt">Valor</message>
+	<message xml:lang="fi">Arvo</message>
+	<message xml:lang="ru">Величина</message>
+	<message xml:lang="hu">Érték</message>
+	<message xml:lang="ka">მნიშვნელობა</message>
+	<message xml:lang="cn">值</message>
+	<message xml:lang="tw">值</message>
+	<message xml:lang="sk">Hodnota</message>
 </label>
 <label define="TMSG_VALUE_OF_ATTR">
 	<message xml:lang="en">Attribute value</message>
