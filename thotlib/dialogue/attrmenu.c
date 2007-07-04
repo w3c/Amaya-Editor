@@ -1464,8 +1464,6 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, PtrElement firstSel,
   return (nbOfEntries - *nbEvent);
 }
 
-
-
 /*----------------------------------------------------------------------
   UpdateAttrMenu                                                       
   Updates the Attributes menu of all open frames belonging to document
@@ -1487,6 +1485,7 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
   int                 view, menu, menuID;
   int                 frame, ref;
   int                 i, max;
+  char bufMenuAttr[512], bufEventAttr[512];
 #endif /* _WX */
 #ifdef _WINGUI
   int                 nbOldItems;
@@ -1546,7 +1545,6 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
               AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, params );
               return;
 #else /* _WX */
-              char bufMenuAttr[512], bufEventAttr[512];
               nbItemAttr = BuildAttrMenu (bufMenuAttr, pDoc, firstSel,
                                           &nbEvent, bufEventAttr);
               PrevDoc = pDoc;
@@ -1663,7 +1661,6 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
     }
 #endif /* !_WX */
 }
-
 
 /*----------------------------------------------------------------------
   SimpleUpdateAttrMenu                                                       
