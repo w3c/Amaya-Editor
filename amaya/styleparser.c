@@ -315,7 +315,8 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
     }
   /* print the skipped property */
   c = *ptr;
-  *ptr = EOS;
+  if (*ptr != EOS)
+    *ptr = EOS;
   if (DoDialog)
     DisplayStyleValue ("", deb, ptr);
   else if (reportError && *deb != EOS &&
@@ -360,7 +361,8 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
            strncasecmp (deb, "volume", 6) &&
            strncasecmp (deb, "widows", 6))
     CSSPrintError ("CSS property ignored:", deb);
-  *ptr = c;
+  if (c != EOS)
+    *ptr = c;
   return (ptr);
 }
 
