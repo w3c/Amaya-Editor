@@ -838,7 +838,7 @@ void AmayaAttributePanel::OnInsert( wxCommandEvent& WXUNUSED(event))
 
 void AmayaAttributePanel::OnUpdateDeleteButton(wxUpdateUIEvent& event)
 {
-  event.Enable(!IsMandatory());
+  event.Enable(IsPanelActive()&&!IsMandatory());
 }
 
 /*----------------------------------------------------------------------
