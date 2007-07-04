@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -88,7 +88,7 @@ static char         CSSOrigin[MAX_CSS];
 static int          TopMargin;
 static int          LeftMargin;
 static ThotBool     CleanTopOfPageElement; /* premiere page imprimee pour le
-					     pagination-impression */
+                                              pagination-impression */
 static DocViewNumber CurrentView;	/* numero de la vue traitee */
 static int           CurrentFrame;	/* No frame contenant la vue traitee */
 static char         *printer;
@@ -173,15 +173,15 @@ static HINSTANCE hCurrentInstance;
 static int       pg_counter;
 
 /*----------------------------------------------------------------------
-   WinErrorBox :  Pops-up a message box when an MS-Window error      
-   occured.                                                    
+  WinErrorBox :  Pops-up a message box when an MS-Window error      
+  occured.                                                    
   ----------------------------------------------------------------------*/
 void WinErrorBox (HWND hWnd, char *source)
 {
-   char                str[200];
+  char                str[200];
 
-   sprintf (str, "Error - Source: %s", source);
-   MessageBox (hWnd, str, "Amaya", MB_OK);
+  sprintf (str, "Error - Source: %s", source);
+  MessageBox (hWnd, str, "Amaya", MB_OK);
 }
 
 /* ----------------------------------------------------------------------
@@ -197,29 +197,29 @@ ThotBool WINAPI DllMain (HINSTANCE hInstance, DWORD fdwReason, LPVOID pvReserved
  * ---------------------------------------------------------------------- */
 LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-   switch (msg)
-     {
-     case WM_INITDIALOG:
-       GHwnAbort = hwnd;
-       /* show the little icon on the top left corner of the window */
-       EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED);
-       ShowWindow (hwnd, SW_NORMAL);
-       SetFocus (hwnd);
-       UpdateWindow (hwnd);
-       return TRUE;
-       break;
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      GHwnAbort = hwnd;
+      /* show the little icon on the top left corner of the window */
+      EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED);
+      ShowWindow (hwnd, SW_NORMAL);
+      SetFocus (hwnd);
+      UpdateWindow (hwnd);
+      return TRUE;
+      break;
 
-     case WM_COMMAND:
-       switch (LOWORD (wParam))
-	 {
-	 case IDCANCEL:
-	   DoAbort = TRUE;
-	   DestroyWindow (hwnd);
-	   return TRUE;
-	 }
-       break;
-     }
-   return FALSE;
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+        {
+        case IDCANCEL:
+          DoAbort = TRUE;
+          DestroyWindow (hwnd);
+          return TRUE;
+        }
+      break;
+    }
+  return FALSE;
 }
 
 /* ---------------------------------------------------------------------- *
@@ -228,18 +228,18 @@ LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
  * ---------------------------------------------------------------------- */
 BOOL CALLBACK AbortProc (HDC hdc, int error)
 {
-   MSG msg;
+  MSG msg;
 
-   while (!DoAbort && PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
-     if ( !IsDialogMessage (GHwnAbort, &msg) )
-       {
-	 TranslateMessage (&msg);
-	 DispatchMessage (&msg);
-       }
+  while (!DoAbort && PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
+    if ( !IsDialogMessage (GHwnAbort, &msg) )
+      {
+        TranslateMessage (&msg);
+        DispatchMessage (&msg);
+      }
 
-   /* the DoAbort function is TRUE (return is FALSE)
-      if the user has canceled the print operation */
-   return !DoAbort;
+  /* the DoAbort function is TRUE (return is FALSE)
+     if the user has canceled the print operation */
+  return !DoAbort;
 }
 
 /* ---------------------------------------------------------------------- *
@@ -257,8 +257,8 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
   DoAbort    = FALSE;     /* user hasn't aborted */
   pg_counter = 0;         /* number of pages we have printed */
   if (!(GHwnAbort = CreateDialog (hInst, "Printinprogress", WIN_Main_Wd,
-				  (DLGPROC) AbortDlgProc)))
-   /*MessageBox (WIN_Main_Wd, msg, "InitPrinting", MB_OK)*/;
+                                  (DLGPROC) AbortDlgProc)))
+    /*MessageBox (WIN_Main_Wd, msg, "InitPrinting", MB_OK)*/;
  
   SetAbortProc (TtPrinterDC, AbortProc);
   memset(&DocInfo, 0, sizeof(DOCINFO));
@@ -279,19 +279,19 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
   Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&rect, NULL);    
 
   if (StartDoc (hDC, &DocInfo) <= 0)
-      return FALSE;
+    return FALSE;
   
 #ifdef _GLPRINT
-   SetupPixelFormatPrintGL (TtPrinterDC, 1);
+  SetupPixelFormatPrintGL (TtPrinterDC, 1);
 #endif /* _GLPRINT */
- /* might want to call the abort proc here to allow the user to
+  /* might want to call the abort proc here to allow the user to
    * abort just before printing begins */
   return TRUE;
 }
 
 /*----------------------------------------------------------------------
-   WIN_GetDeviceContext :  select a Device Context for a given       
-   thot window.                                                
+  WIN_GetDeviceContext :  select a Device Context for a given       
+  thot window.                                                
   ----------------------------------------------------------------------*/
 void WIN_GetDeviceContext (int frame)
 {
@@ -299,7 +299,7 @@ void WIN_GetDeviceContext (int frame)
 }
 
 /*----------------------------------------------------------------------
-   WIN_ReleaseDeviceContext :  unselect the Device Context           
+  WIN_ReleaseDeviceContext :  unselect the Device Context           
   ----------------------------------------------------------------------*/
 void WIN_ReleaseDeviceContext (void)
 {
@@ -312,27 +312,28 @@ void WIN_ReleaseDeviceContext (void)
 #endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
-   psBoundingBox output the %%BoundingBox macro for Postscript.
+  psBoundingBox output the %%BoundingBox macro for Postscript.
   ----------------------------------------------------------------------*/
 static void psBoundingBox (int frame, int width, int height)
 {
-   FILE               *fout;
+  FILE               *fout;
 
-   fout = (FILE *) FrRef[frame];
-   /* Since the origin of Postscript coordinates is the lower-left    */
-   /* corner of the page, that an A4 page is 2970 mm (i.e 2970*72/254 */
-   /* = 841 pts) and that Thot adds a 50 pts margin on top and height */
-   /* of the output image, here is the correct values :               */
+  fout = (FILE *) FrRef[frame];
+  /* Since the origin of Postscript coordinates is the lower-left    */
+  /* corner of the page, that an A4 page is 2970 mm (i.e 2970*72/254 */
+  /* = 841 pts) and that Thot adds a 50 pts margin on top and height */
+  /* of the output image, here is the correct values :               */
 
-   fprintf (fout, "%%%%BoundingBox: %d %d %d %d\n",
-	    50, 791 - height, 50 + width, 791);
+  fprintf (fout, "%%%%BoundingBox: %d %d %d %d\n",
+           50, 791 - height, 50 + width, 791);
 }
 
 
 /*----------------------------------------------------------------------
-   PrintPageFooter
+  PrintPageFooter
   ----------------------------------------------------------------------*/
-static void PrintPageFooter (FILE *fout, int frame, PtrAbstractBox pPage)
+static void PrintPageFooter (FILE *fout, int frame, PtrAbstractBox pPage,
+                             ThotBool last)
 {
   PtrAbstractBox    pAb;
   PtrBox            pBox;
@@ -357,29 +358,32 @@ static void PrintPageFooter (FILE *fout, int frame, PtrAbstractBox pPage)
   FrameTable[frame].FrTopMargin = PixelValue (TopMargin, UnPoint, NULL, 0) + PageHeight + PageFooterHeight - h  + pPage->AbBox->BxYOrg;
 
   /*y = 0;
-  h = 32000; */
+    h = 32000; */
   /* set the clipping to the frame size before generating postscript (RedrawFrameBottom) */
   /* DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &y, &framexmax, &h, 1); */
 
   /* Look for the first terminal box of the current page */
   pAb = pPage->AbFirstEnclosed;
   while (pAb != NULL && pAb->AbFirstEnclosed != NULL)
-      pAb = pAb->AbFirstEnclosed;
-  pBox = pAb->AbBox;
+    pAb = pAb->AbFirstEnclosed;
 
   pBox = pAb->AbBox;
   /* print all boxes of the current page */
-  while (pBox != NULL && IsParentBox (pPage->AbBox, pBox))
+  while (pBox && IsParentBox (pPage->AbBox, pBox))
     {
-      if (pBox->BxYOrg < h)
-	DisplayBox (pBox, frame, 0, 32000, 0, h, NULL, FALSE);
+      if (last && pBox->BxNChars == 1 && pBox->BxBuffer &&
+          pBox->BxBuffer->BuContent[0] == '1')
+        // avoid to display the page number when only one page is printed
+        ;
+      else if (pBox->BxYOrg < h)
+        DisplayBox (pBox, frame, 0, 32000, 0, h, NULL, FALSE);
       pBox = pBox->BxNext;
     }
 }
 
 /*----------------------------------------------------------------------
-   PrintPageHeader displays the content of the page header and cleans
-   the page element contents except the break line.
+  PrintPageHeader displays the content of the page header and cleans
+  the page element contents except the break line.
   ----------------------------------------------------------------------*/
 static void PrintPageHeader (FILE *fout, int frame, PtrAbstractBox pPage, int org)
 {
@@ -404,11 +408,11 @@ static void PrintPageHeader (FILE *fout, int frame, PtrAbstractBox pPage, int or
   h = 32000;
   /* set the clipping to the frame size before generating postscript */
   DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin,
-		  &y, &framexmax, &h, 1);
+                  &y, &framexmax, &h, 1);
   /* Look for the first terminal box of the current page */
   pAb = pPage->AbFirstEnclosed;
   while (pAb && pAb->AbFirstEnclosed)
-      pAb = pAb->AbFirstEnclosed;
+    pAb = pAb->AbFirstEnclosed;
   pBox = pAb->AbBox;
   /* print all boxes of the current page*/
   while (pBox && IsParentBox (pPage->AbBox, pBox))
@@ -424,12 +428,12 @@ static void PrintPageHeader (FILE *fout, int frame, PtrAbstractBox pPage, int or
   while (pAb)
     {
       if (pAb->AbPresentationBox)
-	{
-	  /* Note: le filet n'est pas un pave de presentation, alors que */
-	  /* toutes les autres boites de bas de page sont des paves de */
-	  /* presentation */
-	  SetDeadAbsBox (pAb);
-	}
+        {
+          /* Note: le filet n'est pas un pave de presentation, alors que */
+          /* toutes les autres boites de bas de page sont des paves de */
+          /* presentation */
+          SetDeadAbsBox (pAb);
+        }
       pAb = pAb->AbNext;
     }
   /* signale les paves morts au Mediateur */
@@ -437,8 +441,8 @@ static void PrintPageHeader (FILE *fout, int frame, PtrAbstractBox pPage, int or
   ChangeConcreteImage (frame, &h, pPage);
 }
  
- /*----------------------------------------------------------------------
-   NotePageNumber produces a Postscript DSC page number comment.
+/*----------------------------------------------------------------------
+  NotePageNumber produces a Postscript DSC page number comment.
   ----------------------------------------------------------------------*/
 static void NotePageNumber (FILE *fout)
 {
@@ -470,7 +474,7 @@ static void DrawPage (FILE *fout, int pagenum, int width, int height)
 
 
 /*----------------------------------------------------------------------
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void usage (char *processName) 
 {
 #ifndef _WINDOWS
@@ -504,20 +508,20 @@ static void usage (char *processName)
 }
 
 /*----------------------------------------------------------------------
-   GetCurrentSelection                                             
+  GetCurrentSelection                                             
   ----------------------------------------------------------------------*/
 ThotBool GetCurrentSelection (PtrDocument *pDoc, PtrElement *firstEl,
-			      PtrElement *lastEl, int *firstChar, int *lastChar)
+                              PtrElement *lastEl, int *firstChar, int *lastChar)
 {
-   *pDoc = NULL;
-   return FALSE;
+  *pDoc = NULL;
+  return FALSE;
 }
 
 
 /*----------------------------------------------------------------------
-   Si l'entree existe :                                             
-   Ferme la fenetre, detruit le fichier et libere l'entree.      
-   Libere toutes les boites allouees a la fenetre.                   
+  Si l'entree existe :                                             
+  Ferme la fenetre, detruit le fichier et libere l'entree.      
+  Libere toutes les boites allouees a la fenetre.                   
   ----------------------------------------------------------------------*/
 void DestroyFrame (int frame)
 {
@@ -526,26 +530,26 @@ void DestroyFrame (int frame)
 }
 
 /*----------------------------------------------------------------------
-   FirstFrame cree et initialise la premiere frame.          	
+  FirstFrame cree et initialise la premiere frame.          	
   ----------------------------------------------------------------------*/
 static void FirstFrame (char *server)
 {
-   int                 i;
+  int                 i;
 
-   /* Initialisation de la table des frames */
-   for (i = 0; i <= MAX_FRAME; i++)
-	FrRef[i] = 0;
+  /* Initialisation de la table des frames */
+  for (i = 0; i <= MAX_FRAME; i++)
+    FrRef[i] = 0;
    
-   DefaultBColor = 0;
-   DefaultFColor = 1;
-   InitDocColors ("thot");
+  DefaultBColor = 0;
+  DefaultFColor = 1;
+  InitDocColors ("thot");
 #ifdef _GTK
-   TtDisplay = XOpenDisplay (server);
+  TtDisplay = XOpenDisplay (server);
 #ifndef _GL
-   /* initilize the imlib */
-   gdk_imlib_init();
-   gtk_widget_push_visual(gdk_imlib_get_visual());
-   gtk_widget_push_colormap(gdk_imlib_get_colormap());
+  /* initilize the imlib */
+  gdk_imlib_init();
+  gtk_widget_push_visual(gdk_imlib_get_visual());
+  gtk_widget_push_colormap(gdk_imlib_get_colormap());
 #endif /* _GL */
 #endif /* _GTK */
 }
@@ -556,44 +560,44 @@ static void FirstFrame (char *server)
   Dans le cas du print, c'est exactement la hauteur de page.
   ----------------------------------------------------------------------*/
 void DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
-		     int *xf, int *yf, int raz)
+                     int *xf, int *yf, int raz)
 {
-   FrameTable[frame].FrHeight = *yf;
+  FrameTable[frame].FrHeight = *yf;
 }
 
 /*----------------------------------------------------------------------
-   RemoveClipping annule le rectangle de clipping de la fenetre frame.  
+  RemoveClipping annule le rectangle de clipping de la fenetre frame.  
   ----------------------------------------------------------------------*/
 void RemoveClipping (int frame)
 {   
-   FrameTable[frame].FrWidth = 32000;
-   FrameTable[frame].FrHeight = PixelValue (1000, UnPixel, NULL, 0);
+  FrameTable[frame].FrWidth = 32000;
+  FrameTable[frame].FrHeight = PixelValue (1000, UnPixel, NULL, 0);
 }
 
 
 /*----------------------------------------------------------------------
-   GetSizesFrame retourne les dimensions de la fenetre d'indice frame.
+  GetSizesFrame retourne les dimensions de la fenetre d'indice frame.
   ----------------------------------------------------------------------*/
 void GetSizesFrame (int frame, int *width, int *height)
 {
-   *width = FrameTable[frame].FrWidth;
-   *height = FrameTable[frame].FrHeight;
+  *width = FrameTable[frame].FrWidth;
+  *height = FrameTable[frame].FrHeight;
 }
 
 
 /*----------------------------------------------------------------------
-   TtaGetThotWindow recupere le numero de la fenetre.              
+  TtaGetThotWindow recupere le numero de la fenetre.              
   ----------------------------------------------------------------------*/
 ThotWindow TtaGetThotWindow (int frame)
 {
-   return FrRef[frame];
+  return FrRef[frame];
 }
 
 /*----------------------------------------------------------------------
-   GetDocAndView    Retourne le pointeur sur le document (pDoc) et le    
-   numero de vue (view) dans ce document, correspondant a    
-   frame de numero frame.
-   Procedure differente de GetDocAndView de docvues.c          
+  GetDocAndView    Retourne le pointeur sur le document (pDoc) et le    
+  numero de vue (view) dans ce document, correspondant a    
+  frame de numero frame.
+  Procedure differente de GetDocAndView de docvues.c          
   ----------------------------------------------------------------------*/
 void GetDocAndView (int frame, PtrDocument *pDoc, int *view)
 {
@@ -626,7 +630,7 @@ static void InitTable (int i, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-   OpenPSFile opens the printing file and write the PS prologue.
+  OpenPSFile opens the printing file and write the PS prologue.
   ----------------------------------------------------------------------*/
 static int OpenPSFile (PtrDocument pDoc, int *volume)
 {
@@ -653,742 +657,742 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
       /* generate the full name directory/name.ps */
       FindCompleteName (pDoc->DocDName, "ps", tmp, fileName, &len);
       if ((PSfile = TtaWriteOpen (fileName)) == NULL)
-	TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_CANNOT_CREATE_PS), fileName);
+        TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_CANNOT_CREATE_PS), fileName);
       else
-	{
-	  fflush (PSfile);
-	  FrRef[i] = (ThotWindow) PSfile;
-	  fprintf (PSfile, "%%!PS-Adobe-3.0\n");
-	  fprintf (PSfile, "%%%%Creator: Thotlib\n");
-	  fprintf (PSfile, "%%%% Delete the last nwpage line command for an encapsulated PostScript\n");
-	  fprintf (PSfile, "%%%%Pages: (atend)\n");
-	  fprintf (PSfile, "%%%%EndComments\n\n");
+        {
+          fflush (PSfile);
+          FrRef[i] = (ThotWindow) PSfile;
+          fprintf (PSfile, "%%!PS-Adobe-3.0\n");
+          fprintf (PSfile, "%%%%Creator: Thotlib\n");
+          fprintf (PSfile, "%%%% Delete the last nwpage line command for an encapsulated PostScript\n");
+          fprintf (PSfile, "%%%%Pages: (atend)\n");
+          fprintf (PSfile, "%%%%EndComments\n\n");
 	  
-	  fprintf (PSfile, "%%%%BeginProlog\n");
-	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Fonctions generales%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
+          fprintf (PSfile, "%%%%BeginProlog\n");
+          fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Fonctions generales%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
 
-	  fprintf (PSfile, "/setpatterndict 18 dict def\n");
-	  fprintf (PSfile, "setpatterndict begin\n");
-	  fprintf (PSfile, "/bitison\n");
-	  fprintf (PSfile, "{ /ybit exch def\n");
-	  fprintf (PSfile, "  /xbit exch def\n");
-	  fprintf (PSfile, "  /bytevalue bstring ybit bwidth mul xbit 8 idiv add get def\n");
-	  fprintf (PSfile, "  /PicMask 1 7 xbit 8 mod sub bitshift def\n");
-	  fprintf (PSfile, "  bytevalue PicMask and 0 ne\n");
-	  fprintf (PSfile, "}def\n");
-	  fprintf (PSfile, "end\n");
-	  fprintf (PSfile, "/bpspotf\n");
-	  fprintf (PSfile, "{setpatterndict begin\n");
-	  fprintf (PSfile, "  /y exch def\n");
-	  fprintf (PSfile, "  /x exch def\n");
-	  fprintf (PSfile, "  /xind x 1 add 2 div bpside mul cvi def\n");
-	  fprintf (PSfile, "  /yind y 1 add 2 div bpside mul cvi def\n");
-	  fprintf (PSfile, "  xind yind bitison\n");
-	  fprintf (PSfile, "   {/onbits onbits 1 add def 1}\n");
-	  fprintf (PSfile, "   {/offbits offbits 1 add def 0}\n");
-	  fprintf (PSfile, "  ifelse\n");
-	  fprintf (PSfile, " end\n");
-	  fprintf (PSfile, "}def\n");
-	  fprintf (PSfile, "/setpattern\n");
-	  fprintf (PSfile, "{setpatterndict begin\n");
-	  fprintf (PSfile, "  /cellsz exch def\n");
-	  fprintf (PSfile, "  /bwidth exch def\n");
-	  fprintf (PSfile, "  /bpside exch def\n");
-	  fprintf (PSfile, "  /bstring exch def\n");
-	  fprintf (PSfile, "  /onbits 0 def\n");
-	  fprintf (PSfile, "  /offbits 0 def\n");
-	  fprintf (PSfile, "  cellsz 0 /bpspotf load setscreen\n");
-	  fprintf (PSfile, "  {} settransfer\n");
-	  fprintf (PSfile, "  offbits offbits onbits add div setgray\n");
-	  fprintf (PSfile, " end\n");
-	  fprintf (PSfile, "}def\n");
-	  fprintf (PSfile, "/setstyle %% style setstyle\n");
-	  fprintf (PSfile, "{ dup 4 le\n");
-	  fprintf (PSfile, "  { dup 3 eq\n");
-	  fprintf (PSfile, "    {pop [3] 0 setdash}\n");
-	  fprintf (PSfile, "    {pop [6 3] 0 setdash}\n");
-	  fprintf (PSfile, "    ifelse}\n");
-	  fprintf (PSfile, "  {pop [ ] 0 setdash}\n");
-	  fprintf (PSfile, "  ifelse\n");
-	  fprintf (PSfile, "}def\n");
-	  fprintf (PSfile, "/fillbox	%% (red green blue / pattern) code fillbox\n");
-	  fprintf (PSfile, "{ /code exch def\n");
-	  fprintf (PSfile, "  code 0 ge\n");
-	  fprintf (PSfile, "  {code 0 gt\n");
-	  fprintf (PSfile, "   {code 8 eq \n");
-	  fprintf (PSfile, "    {gsave 8 1 72 300 32 div div setpattern fill grestore} %%new pattern\n");
-	  fprintf (PSfile, "    {gsave 1 code 10 div sub setgray fill grestore} %%gray level\n");
-	  fprintf (PSfile, "    ifelse\n");
-	  fprintf (PSfile, "   }if\n");
-	  fprintf (PSfile, "  }\n");
-	  fprintf (PSfile, "  {gsave setrgbcolor fill grestore} %%lower\n");
-	  fprintf (PSfile, "  ifelse\n");
-	  fprintf (PSfile, "} bind def\n\n");
+          fprintf (PSfile, "/setpatterndict 18 dict def\n");
+          fprintf (PSfile, "setpatterndict begin\n");
+          fprintf (PSfile, "/bitison\n");
+          fprintf (PSfile, "{ /ybit exch def\n");
+          fprintf (PSfile, "  /xbit exch def\n");
+          fprintf (PSfile, "  /bytevalue bstring ybit bwidth mul xbit 8 idiv add get def\n");
+          fprintf (PSfile, "  /PicMask 1 7 xbit 8 mod sub bitshift def\n");
+          fprintf (PSfile, "  bytevalue PicMask and 0 ne\n");
+          fprintf (PSfile, "}def\n");
+          fprintf (PSfile, "end\n");
+          fprintf (PSfile, "/bpspotf\n");
+          fprintf (PSfile, "{setpatterndict begin\n");
+          fprintf (PSfile, "  /y exch def\n");
+          fprintf (PSfile, "  /x exch def\n");
+          fprintf (PSfile, "  /xind x 1 add 2 div bpside mul cvi def\n");
+          fprintf (PSfile, "  /yind y 1 add 2 div bpside mul cvi def\n");
+          fprintf (PSfile, "  xind yind bitison\n");
+          fprintf (PSfile, "   {/onbits onbits 1 add def 1}\n");
+          fprintf (PSfile, "   {/offbits offbits 1 add def 0}\n");
+          fprintf (PSfile, "  ifelse\n");
+          fprintf (PSfile, " end\n");
+          fprintf (PSfile, "}def\n");
+          fprintf (PSfile, "/setpattern\n");
+          fprintf (PSfile, "{setpatterndict begin\n");
+          fprintf (PSfile, "  /cellsz exch def\n");
+          fprintf (PSfile, "  /bwidth exch def\n");
+          fprintf (PSfile, "  /bpside exch def\n");
+          fprintf (PSfile, "  /bstring exch def\n");
+          fprintf (PSfile, "  /onbits 0 def\n");
+          fprintf (PSfile, "  /offbits 0 def\n");
+          fprintf (PSfile, "  cellsz 0 /bpspotf load setscreen\n");
+          fprintf (PSfile, "  {} settransfer\n");
+          fprintf (PSfile, "  offbits offbits onbits add div setgray\n");
+          fprintf (PSfile, " end\n");
+          fprintf (PSfile, "}def\n");
+          fprintf (PSfile, "/setstyle %% style setstyle\n");
+          fprintf (PSfile, "{ dup 4 le\n");
+          fprintf (PSfile, "  { dup 3 eq\n");
+          fprintf (PSfile, "    {pop [3] 0 setdash}\n");
+          fprintf (PSfile, "    {pop [6 3] 0 setdash}\n");
+          fprintf (PSfile, "    ifelse}\n");
+          fprintf (PSfile, "  {pop [ ] 0 setdash}\n");
+          fprintf (PSfile, "  ifelse\n");
+          fprintf (PSfile, "}def\n");
+          fprintf (PSfile, "/fillbox	%% (red green blue / pattern) code fillbox\n");
+          fprintf (PSfile, "{ /code exch def\n");
+          fprintf (PSfile, "  code 0 ge\n");
+          fprintf (PSfile, "  {code 0 gt\n");
+          fprintf (PSfile, "   {code 8 eq \n");
+          fprintf (PSfile, "    {gsave 8 1 72 300 32 div div setpattern fill grestore} %%new pattern\n");
+          fprintf (PSfile, "    {gsave 1 code 10 div sub setgray fill grestore} %%gray level\n");
+          fprintf (PSfile, "    ifelse\n");
+          fprintf (PSfile, "   }if\n");
+          fprintf (PSfile, "  }\n");
+          fprintf (PSfile, "  {gsave setrgbcolor fill grestore} %%lower\n");
+          fprintf (PSfile, "  ifelse\n");
+          fprintf (PSfile, "} bind def\n\n");
 	  
-	  fprintf (PSfile, "/sf	%% font val =->\n");
-	  fprintf (PSfile, " { exch cvn findfont exch dup 10 eq {pop 9.8} if scalefont setfont } bind def\n");
-	  fprintf (PSfile, "/s	%% string larg x y =->\n");
-	  fprintf (PSfile, " { moveto \n");
-	  fprintf (PSfile, "   1 index stringwidth pop sub\n");
-	  fprintf (PSfile, "   1 index length div 0 3 2 roll ashow } bind def\n");
-	  fprintf (PSfile, "/c	%% y x string =->\n");
-	  fprintf (PSfile, " { dup 4 1 roll stringwidth pop 2 div sub exch moveto show\n");
-	  fprintf (PSfile, " } bind def\n");
-	  fprintf (PSfile, "/j  %% string nbl larg x y =->\n");
-	  fprintf (PSfile, " { moveto\n");
-	  fprintf (PSfile, "   2 index\n");
-	  fprintf (PSfile, "   stringwidth pop sub dup\n");
-	  fprintf (PSfile, "   0 ge { exch div 0 32 4 3 roll widthshow }\n");
-	  fprintf (PSfile, "	{ 2 index length div exch pop\n");
-	  fprintf (PSfile, "	  0 3 2 roll ashow }\n");
-	  fprintf (PSfile, "	ifelse\n");
-	  fprintf (PSfile, " } bind def\n");
-	  fprintf (PSfile, "/r	%% Radical\n");
-	  fprintf (PSfile, " { gsave newpath moveto gsave -1 -1 rlineto 0.75 setlinewidth\n");
-	  fprintf (PSfile, "   stroke grestore\n");
-	  fprintf (PSfile, "   lineto 1.5 setlinewidth %%1 setlinecap\n");
-	  fprintf (PSfile, "   gsave stroke grestore\n");
-	  fprintf (PSfile, "   lineto lineto 0 setlinejoin 2 setmiterlimit\n");
-	  fprintf (PSfile, "   5 setstyle\n");
-	  fprintf (PSfile, "   0.75 setlinewidth stroke grestore\n");
-	  fprintf (PSfile, " } bind def\n");
-	  fprintf (PSfile, "/Seg	%% (x y)* dash width nb Segments\n");
-	  fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
-	  fprintf (PSfile, "   newpath\n");
-	  fprintf (PSfile, "   moveto\n");
-	  fprintf (PSfile, "   2 1 nb {pop lineto} for\n");
-	  fprintf (PSfile, "   ep 0 ne {0 setlinejoin 0 setlinecap\n");
-	  fprintf (PSfile, "   ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
-	  fprintf (PSfile, "   setlinewidth \n");
-	  fprintf (PSfile, "   style setstyle\n");
-	  fprintf (PSfile, "   stroke} if\n");
-	  fprintf (PSfile, "} bind def\n");
-	  fprintf (PSfile, "/Poly      %% rgb fill (x y)* dash width nb Polygone\n");
-	  fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
-	  fprintf (PSfile, "   newpath\n");
-	  fprintf (PSfile, "   moveto\n");
-	  fprintf (PSfile, "   2 1 nb {pop lineto} for\n");
-	  fprintf (PSfile, "   closepath\n");
-	  fprintf (PSfile, "   fillbox\n");
-	  fprintf (PSfile, "   ep 0 ne {0 setlinejoin 0 setlinecap\n");
-	  fprintf (PSfile, "   ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
-	  fprintf (PSfile, "   setlinewidth \n");
-	  fprintf (PSfile, "   style setstyle \n");
-	  fprintf (PSfile, "   stroke} if\n");
-	  fprintf (PSfile, "} bind def\n");
-	  fprintf (PSfile, "/Curv	%% (x y)* dash width nb Curves\n");
-	  fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
-	  fprintf (PSfile, "   newpath\n");
-	  fprintf (PSfile, "   moveto\n");
-	  fprintf (PSfile, "   2 1 nb {pop curveto} for\n");
-	  fprintf (PSfile, "   0 setlinejoin 0 setlinecap\n");
-	  fprintf (PSfile, "   ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
-	  fprintf (PSfile, "   setlinewidth \n");
-	  fprintf (PSfile, "   style setstyle\n");
-	  fprintf (PSfile, "   ep 0 gt {stroke} if\n");
-	  fprintf (PSfile, "} bind def\n");
-	  fprintf (PSfile, "/Splin	%% rgb fill (x y)* dash width nb Spline\n");
-	  fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
-	  fprintf (PSfile, "   newpath\n");
-	  fprintf (PSfile, "   moveto\n");
-	  fprintf (PSfile, "   2 1 nb {pop curveto} for\n");
-	  fprintf (PSfile, "   closepath\n");
-	  fprintf (PSfile, "   fillbox\n");
-	  fprintf (PSfile, "   0 setlinejoin 0 setlinecap\n");
-	  fprintf (PSfile, "   ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
-	  fprintf (PSfile, "   setlinewidth \n");
-	  fprintf (PSfile, "   style setstyle\n");
-	  fprintf (PSfile, "   ep 0 gt {stroke} if\n");
-	  fprintf (PSfile, "} bind def\n");
-	  fprintf (PSfile, "/s3	%% x yb yt h c1 c2 c3 =->\n");
-	  fprintf (PSfile, " { [/c3 /c2 /c1 /h /yt /yb /x] {exch def} forall\n");
-	  fprintf (PSfile, "   c1 stringwidth pop 2 div x exch sub /x exch def\n");
-	  fprintf (PSfile, "   x yt moveto c1 show\n");
-	  fprintf (PSfile, "   x yb moveto c3 show\n");
-	  fprintf (PSfile, "   { yt h sub /yt exch def\n");
-	  fprintf (PSfile, "     yt yb sub h gt\n");
-	  fprintf (PSfile, "     { yb h add /yb exch def\n");
-	  fprintf (PSfile, "       x yt moveto c2 show x yb moveto c2 show\n");
-	  fprintf (PSfile, "     }\n");
-	  fprintf (PSfile, "     { yt yb gt\n");
-	  fprintf (PSfile, "       { yt yb h 0.75 mul add le { yt h 4 div add /yt exch def } if\n");
-	  fprintf (PSfile, "         x yt moveto c2 show\n");
-	  fprintf (PSfile, "       } if\n");
-	  fprintf (PSfile, "       exit\n");
-	  fprintf (PSfile, "     } ifelse\n");
-	  fprintf (PSfile, "   } loop\n");
-	  fprintf (PSfile, " } bind def\n");
-	  fprintf (PSfile, "/s4	%% x yb yt h c1 c2 c3 c4 =->\n");
-	  fprintf (PSfile, " { 10 dict begin \n");
-	  fprintf (PSfile, "   [/c4 /c3 /c2 /c1 /h /yt /yb /x] {exch def} forall\n");
-	  fprintf (PSfile, "   c1 stringwidth pop 2 div x exch sub /x exch def\n");
-	  fprintf (PSfile, "   x yt moveto c1 show\n");
-	  fprintf (PSfile, "   x yb moveto c3 show\n");
-	  fprintf (PSfile, "   yt yt yb sub 2 div sub /ym exch def\n");
-	  fprintf (PSfile, " x ym moveto c2 show\n");
-	  fprintf (PSfile, "   /ymb ym def\n");
-	  fprintf (PSfile, "   { yt h sub /yt exch def\n");
-	  fprintf (PSfile, "     yt ym sub h gt\n");
-	  fprintf (PSfile, "     { ym h add /ym exch def\n");
-	  fprintf (PSfile, "       x yt moveto c4 show x ym moveto c4 show\n");
-	  fprintf (PSfile, "       ymb h sub /ymb exch def yb h add /yb exch def\n");
-	  fprintf (PSfile, "       x ymb moveto c4 show x yb moveto c4 show\n");
-	  fprintf (PSfile, "     }\n");
-	  fprintf (PSfile, "     { ymb h sub /ymb exch def\n");
-	  fprintf (PSfile, "       yt ym gt\n");
-	  fprintf (PSfile, "       { yt ym h 0.5 mul add le\n");
-	  fprintf (PSfile, "         { yt h 0.75 mul add /yt exch def\n");
-	  fprintf (PSfile, "           ymb h 0.25 mul add /ymb exch def\n");
-	  fprintf (PSfile, "         } if\n");
-	  fprintf (PSfile, "         x yt moveto c4 show x ymb moveto c4 show\n");
-	  fprintf (PSfile, "       } if\n");
-	  fprintf (PSfile, "       exit\n");
-	  fprintf (PSfile, "     } ifelse\n");
-	  fprintf (PSfile, "   } loop end\n");
-	  fprintf (PSfile, " } bind def\n");
-	  fprintf (PSfile, "/arr	%% xQueue yQueue xTail yTail th headth headlg Arrow\n");
-	  fprintf (PSfile, " { 16 dict begin\n");
-	  fprintf (PSfile, "   /mtrx matrix def\n");
-	  fprintf (PSfile, "   /hlg exch def\n");
-	  fprintf (PSfile, "   /hthick exch 3 div def\n");
-	  fprintf (PSfile, "   /thick exch def\n");
-	  fprintf (PSfile, "   /tipy exch def /tipx exch def\n");
-	  fprintf (PSfile, "   /taily exch def /tailx exch def\n");
-	  fprintf (PSfile, "   /dash exch def\n");
-	  fprintf (PSfile, "   /dx tipx tailx sub def\n");
-	  fprintf (PSfile, "   /dy tipy taily sub def\n");
-	  fprintf (PSfile, "   /arlg dx dx mul dy dy mul add sqrt def\n");
-	  fprintf (PSfile, "   dx 0 eq dy 0 eq and \n");
-	  fprintf (PSfile, "   { /angle 0 def }\n");
-	  fprintf (PSfile, "   { /angle dy dx atan def }\n");
-	  fprintf (PSfile, "   ifelse\n");
-	  fprintf (PSfile, "   /base arlg hlg sub def\n");
-	  fprintf (PSfile, "   /savem mtrx currentmatrix def\n");
-	  fprintf (PSfile, "   tailx taily translate\n");
-	  fprintf (PSfile, "   angle rotate\n");
-	  fprintf (PSfile, "   newpath\n");
-	  fprintf (PSfile, "   base hthick neg moveto\n");
-	  fprintf (PSfile, "   arlg 0 lineto base hthick lineto\n");
-	  fprintf (PSfile, "   closepath\n");
-	  fprintf (PSfile, "   fill\n");
-	  fprintf (PSfile, "   newpath\n");
-	  fprintf (PSfile, "   0 0 moveto base 0 moveto\n");
-	  fprintf (PSfile, "   thick 1 gt {thick 0.8 mul} {thick 0.4 mul} ifelse\n");
-	  fprintf (PSfile, "   setlinewidth \n");
-	  fprintf (PSfile, "   savem setmatrix\n");
-	  fprintf (PSfile, "   dash 0 setstyle\n");
-	  fprintf (PSfile, "   thick 0 gt {stroke} if\n");
-	  fprintf (PSfile, "   end\n");
-	  fprintf (PSfile, " } bind def\n");
-	  fprintf (PSfile, "/oval	%% oval fill style ep x1 y1 x2 y2 rx ry\n");
-	  fprintf (PSfile, "{\n");
-	  fprintf (PSfile, "  10 dict begin\n");
-	  fprintf (PSfile, "  /ry exch def\n");
-	  fprintf (PSfile, "  /rx exch def\n");
-	  fprintf (PSfile, "  ry rx div /scalef exch def\n");
-	  fprintf (PSfile, "  ry add scalef div /y2 exch def\n");
-	  fprintf (PSfile, "  rx sub /x2 exch def\n");
-	  fprintf (PSfile, "  ry sub scalef div /y1 exch def\n");
-	  fprintf (PSfile, "  rx add /x1 exch def\n");
-	  fprintf (PSfile, "  /ep exch def /dash exch def /fil exch def\n");
-	  fprintf (PSfile, "  gsave 1 scalef scale\n");
-	  fprintf (PSfile, "  x2 y1 moveto\n");
-	  fprintf (PSfile, "  currentpoint newpath rx 0 90 arc\n");
-	  fprintf (PSfile, "  x1 y1 rx 90 180 arc\n");
-	  fprintf (PSfile, "  x1 y2 rx 180 270 arc\n");
-	  fprintf (PSfile, "  x2 y2 rx 270 360 arc closepath\n");
-	  fprintf (PSfile, "  fil fillbox\n");
-	  fprintf (PSfile, "  ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
-	  fprintf (PSfile, "  setlinewidth\n");
-	  fprintf (PSfile, "  dash setstyle\n");
-	  fprintf (PSfile, "  ep 0 gt {stroke} if\n");
-	  fprintf (PSfile, "  grestore\n");
-	  fprintf (PSfile, "  end\n");
-	  fprintf (PSfile, " } bind def\n");
-	  fprintf (PSfile, "/ov	%% Ovale\n");
-	  fprintf (PSfile, "{\n");
-	  fprintf (PSfile, "  8 dict begin\n");
-	  fprintf (PSfile, "  /ray exch def\n");
-	  fprintf (PSfile, "  newpath moveto\n");
-	  fprintf (PSfile, "  /y1 exch def\n");
-	  fprintf (PSfile, "  /x1 exch def\n");
-	  fprintf (PSfile, "  4 {\n");
-	  fprintf (PSfile, "    /y2 exch def /x2 exch def\n");
-	  fprintf (PSfile, "    x1 y1 x2 y2 ray arcto pop pop pop pop\n");
-	  fprintf (PSfile, "    /y1 y2 def /x1 x2 def\n");
-	  fprintf (PSfile, "  } repeat closepath\n");
-	  fprintf (PSfile, "  /ep exch def /dash exch def\n");
-	  fprintf (PSfile, "  fillbox\n");
-	  fprintf (PSfile, "  ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
-	  fprintf (PSfile, "  setlinewidth \n");
-	  fprintf (PSfile, "  dash setstyle\n");
-	  fprintf (PSfile, "  ep 0 gt {stroke} if\n");
-	  fprintf (PSfile, "  end\n");
-	  fprintf (PSfile, " } bind def\n");
-	  fprintf (PSfile, "/cer  %% Cercle ep x y R\n");
-	  fprintf (PSfile, "{\n");
-	  fprintf (PSfile, "  2 index 2 index moveto \n");
-	  fprintf (PSfile, "  newpath 0 360 arc\n");
-	  fprintf (PSfile, "  /ep exch def /dash exch def\n");
-	  fprintf (PSfile, "  fillbox\n");
-	  fprintf (PSfile, "  ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
-	  fprintf (PSfile, "  setlinewidth \n");
-	  fprintf (PSfile, "  dash setstyle\n");
-	  fprintf (PSfile, "  ep 0 gt {stroke} if\n");
-	  fprintf (PSfile, "} bind def\n\n");
+          fprintf (PSfile, "/sf	%% font val =->\n");
+          fprintf (PSfile, " { exch cvn findfont exch dup 10 eq {pop 9.8} if scalefont setfont } bind def\n");
+          fprintf (PSfile, "/s	%% string larg x y =->\n");
+          fprintf (PSfile, " { moveto \n");
+          fprintf (PSfile, "   1 index stringwidth pop sub\n");
+          fprintf (PSfile, "   1 index length div 0 3 2 roll ashow } bind def\n");
+          fprintf (PSfile, "/c	%% y x string =->\n");
+          fprintf (PSfile, " { dup 4 1 roll stringwidth pop 2 div sub exch moveto show\n");
+          fprintf (PSfile, " } bind def\n");
+          fprintf (PSfile, "/j  %% string nbl larg x y =->\n");
+          fprintf (PSfile, " { moveto\n");
+          fprintf (PSfile, "   2 index\n");
+          fprintf (PSfile, "   stringwidth pop sub dup\n");
+          fprintf (PSfile, "   0 ge { exch div 0 32 4 3 roll widthshow }\n");
+          fprintf (PSfile, "	{ 2 index length div exch pop\n");
+          fprintf (PSfile, "	  0 3 2 roll ashow }\n");
+          fprintf (PSfile, "	ifelse\n");
+          fprintf (PSfile, " } bind def\n");
+          fprintf (PSfile, "/r	%% Radical\n");
+          fprintf (PSfile, " { gsave newpath moveto gsave -1 -1 rlineto 0.75 setlinewidth\n");
+          fprintf (PSfile, "   stroke grestore\n");
+          fprintf (PSfile, "   lineto 1.5 setlinewidth %%1 setlinecap\n");
+          fprintf (PSfile, "   gsave stroke grestore\n");
+          fprintf (PSfile, "   lineto lineto 0 setlinejoin 2 setmiterlimit\n");
+          fprintf (PSfile, "   5 setstyle\n");
+          fprintf (PSfile, "   0.75 setlinewidth stroke grestore\n");
+          fprintf (PSfile, " } bind def\n");
+          fprintf (PSfile, "/Seg	%% (x y)* dash width nb Segments\n");
+          fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
+          fprintf (PSfile, "   newpath\n");
+          fprintf (PSfile, "   moveto\n");
+          fprintf (PSfile, "   2 1 nb {pop lineto} for\n");
+          fprintf (PSfile, "   ep 0 ne {0 setlinejoin 0 setlinecap\n");
+          fprintf (PSfile, "   ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
+          fprintf (PSfile, "   setlinewidth \n");
+          fprintf (PSfile, "   style setstyle\n");
+          fprintf (PSfile, "   stroke} if\n");
+          fprintf (PSfile, "} bind def\n");
+          fprintf (PSfile, "/Poly      %% rgb fill (x y)* dash width nb Polygone\n");
+          fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
+          fprintf (PSfile, "   newpath\n");
+          fprintf (PSfile, "   moveto\n");
+          fprintf (PSfile, "   2 1 nb {pop lineto} for\n");
+          fprintf (PSfile, "   closepath\n");
+          fprintf (PSfile, "   fillbox\n");
+          fprintf (PSfile, "   ep 0 ne {0 setlinejoin 0 setlinecap\n");
+          fprintf (PSfile, "   ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
+          fprintf (PSfile, "   setlinewidth \n");
+          fprintf (PSfile, "   style setstyle \n");
+          fprintf (PSfile, "   stroke} if\n");
+          fprintf (PSfile, "} bind def\n");
+          fprintf (PSfile, "/Curv	%% (x y)* dash width nb Curves\n");
+          fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
+          fprintf (PSfile, "   newpath\n");
+          fprintf (PSfile, "   moveto\n");
+          fprintf (PSfile, "   2 1 nb {pop curveto} for\n");
+          fprintf (PSfile, "   0 setlinejoin 0 setlinecap\n");
+          fprintf (PSfile, "   ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
+          fprintf (PSfile, "   setlinewidth \n");
+          fprintf (PSfile, "   style setstyle\n");
+          fprintf (PSfile, "   ep 0 gt {stroke} if\n");
+          fprintf (PSfile, "} bind def\n");
+          fprintf (PSfile, "/Splin	%% rgb fill (x y)* dash width nb Spline\n");
+          fprintf (PSfile, "{ [/nb /ep /style] {exch def} forall\n");
+          fprintf (PSfile, "   newpath\n");
+          fprintf (PSfile, "   moveto\n");
+          fprintf (PSfile, "   2 1 nb {pop curveto} for\n");
+          fprintf (PSfile, "   closepath\n");
+          fprintf (PSfile, "   fillbox\n");
+          fprintf (PSfile, "   0 setlinejoin 0 setlinecap\n");
+          fprintf (PSfile, "   ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
+          fprintf (PSfile, "   setlinewidth \n");
+          fprintf (PSfile, "   style setstyle\n");
+          fprintf (PSfile, "   ep 0 gt {stroke} if\n");
+          fprintf (PSfile, "} bind def\n");
+          fprintf (PSfile, "/s3	%% x yb yt h c1 c2 c3 =->\n");
+          fprintf (PSfile, " { [/c3 /c2 /c1 /h /yt /yb /x] {exch def} forall\n");
+          fprintf (PSfile, "   c1 stringwidth pop 2 div x exch sub /x exch def\n");
+          fprintf (PSfile, "   x yt moveto c1 show\n");
+          fprintf (PSfile, "   x yb moveto c3 show\n");
+          fprintf (PSfile, "   { yt h sub /yt exch def\n");
+          fprintf (PSfile, "     yt yb sub h gt\n");
+          fprintf (PSfile, "     { yb h add /yb exch def\n");
+          fprintf (PSfile, "       x yt moveto c2 show x yb moveto c2 show\n");
+          fprintf (PSfile, "     }\n");
+          fprintf (PSfile, "     { yt yb gt\n");
+          fprintf (PSfile, "       { yt yb h 0.75 mul add le { yt h 4 div add /yt exch def } if\n");
+          fprintf (PSfile, "         x yt moveto c2 show\n");
+          fprintf (PSfile, "       } if\n");
+          fprintf (PSfile, "       exit\n");
+          fprintf (PSfile, "     } ifelse\n");
+          fprintf (PSfile, "   } loop\n");
+          fprintf (PSfile, " } bind def\n");
+          fprintf (PSfile, "/s4	%% x yb yt h c1 c2 c3 c4 =->\n");
+          fprintf (PSfile, " { 10 dict begin \n");
+          fprintf (PSfile, "   [/c4 /c3 /c2 /c1 /h /yt /yb /x] {exch def} forall\n");
+          fprintf (PSfile, "   c1 stringwidth pop 2 div x exch sub /x exch def\n");
+          fprintf (PSfile, "   x yt moveto c1 show\n");
+          fprintf (PSfile, "   x yb moveto c3 show\n");
+          fprintf (PSfile, "   yt yt yb sub 2 div sub /ym exch def\n");
+          fprintf (PSfile, " x ym moveto c2 show\n");
+          fprintf (PSfile, "   /ymb ym def\n");
+          fprintf (PSfile, "   { yt h sub /yt exch def\n");
+          fprintf (PSfile, "     yt ym sub h gt\n");
+          fprintf (PSfile, "     { ym h add /ym exch def\n");
+          fprintf (PSfile, "       x yt moveto c4 show x ym moveto c4 show\n");
+          fprintf (PSfile, "       ymb h sub /ymb exch def yb h add /yb exch def\n");
+          fprintf (PSfile, "       x ymb moveto c4 show x yb moveto c4 show\n");
+          fprintf (PSfile, "     }\n");
+          fprintf (PSfile, "     { ymb h sub /ymb exch def\n");
+          fprintf (PSfile, "       yt ym gt\n");
+          fprintf (PSfile, "       { yt ym h 0.5 mul add le\n");
+          fprintf (PSfile, "         { yt h 0.75 mul add /yt exch def\n");
+          fprintf (PSfile, "           ymb h 0.25 mul add /ymb exch def\n");
+          fprintf (PSfile, "         } if\n");
+          fprintf (PSfile, "         x yt moveto c4 show x ymb moveto c4 show\n");
+          fprintf (PSfile, "       } if\n");
+          fprintf (PSfile, "       exit\n");
+          fprintf (PSfile, "     } ifelse\n");
+          fprintf (PSfile, "   } loop end\n");
+          fprintf (PSfile, " } bind def\n");
+          fprintf (PSfile, "/arr	%% xQueue yQueue xTail yTail th headth headlg Arrow\n");
+          fprintf (PSfile, " { 16 dict begin\n");
+          fprintf (PSfile, "   /mtrx matrix def\n");
+          fprintf (PSfile, "   /hlg exch def\n");
+          fprintf (PSfile, "   /hthick exch 3 div def\n");
+          fprintf (PSfile, "   /thick exch def\n");
+          fprintf (PSfile, "   /tipy exch def /tipx exch def\n");
+          fprintf (PSfile, "   /taily exch def /tailx exch def\n");
+          fprintf (PSfile, "   /dash exch def\n");
+          fprintf (PSfile, "   /dx tipx tailx sub def\n");
+          fprintf (PSfile, "   /dy tipy taily sub def\n");
+          fprintf (PSfile, "   /arlg dx dx mul dy dy mul add sqrt def\n");
+          fprintf (PSfile, "   dx 0 eq dy 0 eq and \n");
+          fprintf (PSfile, "   { /angle 0 def }\n");
+          fprintf (PSfile, "   { /angle dy dx atan def }\n");
+          fprintf (PSfile, "   ifelse\n");
+          fprintf (PSfile, "   /base arlg hlg sub def\n");
+          fprintf (PSfile, "   /savem mtrx currentmatrix def\n");
+          fprintf (PSfile, "   tailx taily translate\n");
+          fprintf (PSfile, "   angle rotate\n");
+          fprintf (PSfile, "   newpath\n");
+          fprintf (PSfile, "   base hthick neg moveto\n");
+          fprintf (PSfile, "   arlg 0 lineto base hthick lineto\n");
+          fprintf (PSfile, "   closepath\n");
+          fprintf (PSfile, "   fill\n");
+          fprintf (PSfile, "   newpath\n");
+          fprintf (PSfile, "   0 0 moveto base 0 moveto\n");
+          fprintf (PSfile, "   thick 1 gt {thick 0.8 mul} {thick 0.4 mul} ifelse\n");
+          fprintf (PSfile, "   setlinewidth \n");
+          fprintf (PSfile, "   savem setmatrix\n");
+          fprintf (PSfile, "   dash 0 setstyle\n");
+          fprintf (PSfile, "   thick 0 gt {stroke} if\n");
+          fprintf (PSfile, "   end\n");
+          fprintf (PSfile, " } bind def\n");
+          fprintf (PSfile, "/oval	%% oval fill style ep x1 y1 x2 y2 rx ry\n");
+          fprintf (PSfile, "{\n");
+          fprintf (PSfile, "  10 dict begin\n");
+          fprintf (PSfile, "  /ry exch def\n");
+          fprintf (PSfile, "  /rx exch def\n");
+          fprintf (PSfile, "  ry rx div /scalef exch def\n");
+          fprintf (PSfile, "  ry add scalef div /y2 exch def\n");
+          fprintf (PSfile, "  rx sub /x2 exch def\n");
+          fprintf (PSfile, "  ry sub scalef div /y1 exch def\n");
+          fprintf (PSfile, "  rx add /x1 exch def\n");
+          fprintf (PSfile, "  /ep exch def /dash exch def /fil exch def\n");
+          fprintf (PSfile, "  gsave 1 scalef scale\n");
+          fprintf (PSfile, "  x2 y1 moveto\n");
+          fprintf (PSfile, "  currentpoint newpath rx 0 90 arc\n");
+          fprintf (PSfile, "  x1 y1 rx 90 180 arc\n");
+          fprintf (PSfile, "  x1 y2 rx 180 270 arc\n");
+          fprintf (PSfile, "  x2 y2 rx 270 360 arc closepath\n");
+          fprintf (PSfile, "  fil fillbox\n");
+          fprintf (PSfile, "  ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
+          fprintf (PSfile, "  setlinewidth\n");
+          fprintf (PSfile, "  dash setstyle\n");
+          fprintf (PSfile, "  ep 0 gt {stroke} if\n");
+          fprintf (PSfile, "  grestore\n");
+          fprintf (PSfile, "  end\n");
+          fprintf (PSfile, " } bind def\n");
+          fprintf (PSfile, "/ov	%% Ovale\n");
+          fprintf (PSfile, "{\n");
+          fprintf (PSfile, "  8 dict begin\n");
+          fprintf (PSfile, "  /ray exch def\n");
+          fprintf (PSfile, "  newpath moveto\n");
+          fprintf (PSfile, "  /y1 exch def\n");
+          fprintf (PSfile, "  /x1 exch def\n");
+          fprintf (PSfile, "  4 {\n");
+          fprintf (PSfile, "    /y2 exch def /x2 exch def\n");
+          fprintf (PSfile, "    x1 y1 x2 y2 ray arcto pop pop pop pop\n");
+          fprintf (PSfile, "    /y1 y2 def /x1 x2 def\n");
+          fprintf (PSfile, "  } repeat closepath\n");
+          fprintf (PSfile, "  /ep exch def /dash exch def\n");
+          fprintf (PSfile, "  fillbox\n");
+          fprintf (PSfile, "  ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
+          fprintf (PSfile, "  setlinewidth \n");
+          fprintf (PSfile, "  dash setstyle\n");
+          fprintf (PSfile, "  ep 0 gt {stroke} if\n");
+          fprintf (PSfile, "  end\n");
+          fprintf (PSfile, " } bind def\n");
+          fprintf (PSfile, "/cer  %% Cercle ep x y R\n");
+          fprintf (PSfile, "{\n");
+          fprintf (PSfile, "  2 index 2 index moveto \n");
+          fprintf (PSfile, "  newpath 0 360 arc\n");
+          fprintf (PSfile, "  /ep exch def /dash exch def\n");
+          fprintf (PSfile, "  fillbox\n");
+          fprintf (PSfile, "  ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
+          fprintf (PSfile, "  setlinewidth \n");
+          fprintf (PSfile, "  dash setstyle\n");
+          fprintf (PSfile, "  ep 0 gt {stroke} if\n");
+          fprintf (PSfile, "} bind def\n\n");
 
-	  fprintf (PSfile, "/ellipse { %% style ep x y A B\n");
-	  fprintf (PSfile, "  1 index div /scalef exch def /bigaxis exch def\n");
-	  fprintf (PSfile, "  moveto\n");
-	  fprintf (PSfile, "  gsave\n");
-	  fprintf (PSfile, "  1 scalef scale\n");
-	  fprintf (PSfile, "  currentpoint newpath bigaxis 0 360 arc closepath\n");
-	  fprintf (PSfile, "  /ep exch def /dash exch def\n");
-	  fprintf (PSfile, "  fillbox\n");
-	  fprintf (PSfile, "  ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
-	  fprintf (PSfile, "  setlinewidth \n");
-	  fprintf (PSfile, "  dash setstyle\n");
-	  fprintf (PSfile, "  ep 0 gt {stroke} if\n");
-	  fprintf (PSfile, "  grestore\n");
-	  fprintf (PSfile, "} bind def\n\n");
+          fprintf (PSfile, "/ellipse { %% style ep x y A B\n");
+          fprintf (PSfile, "  1 index div /scalef exch def /bigaxis exch def\n");
+          fprintf (PSfile, "  moveto\n");
+          fprintf (PSfile, "  gsave\n");
+          fprintf (PSfile, "  1 scalef scale\n");
+          fprintf (PSfile, "  currentpoint newpath bigaxis 0 360 arc closepath\n");
+          fprintf (PSfile, "  /ep exch def /dash exch def\n");
+          fprintf (PSfile, "  fillbox\n");
+          fprintf (PSfile, "  ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
+          fprintf (PSfile, "  setlinewidth \n");
+          fprintf (PSfile, "  dash setstyle\n");
+          fprintf (PSfile, "  ep 0 gt {stroke} if\n");
+          fprintf (PSfile, "  grestore\n");
+          fprintf (PSfile, "} bind def\n\n");
 
 #ifdef _GL
-	  fprintf (PSfile,
-		 /*   "/GL 64 dict def GL begin\n" */
-		   "1 setlinecap 1 setlinejoin\n"
-		   "/BD { bind def } bind def\n"
-		   "/C  { setrgbcolor } BD\n"
-		   "/G  { setgray } BD\n"
-		   "/W  { setlinewidth } BD\n"
-		   "/FC { findfont exch scalefont setfont } BD\n"
-		   "/S  { FC moveto show } BD\n"
-		   "/P  { newpath 0.0 360.0 arc closepath fill } BD\n"
-		   "/L  { newpath moveto lineto stroke } BD\n"
-		   "/SL { C moveto C lineto stroke } BD\n"
-		   "/T  { newpath moveto lineto lineto closepath fill } BD\n");
+          fprintf (PSfile,
+                   /*   "/GL 64 dict def GL begin\n" */
+                   "1 setlinecap 1 setlinejoin\n"
+                   "/BD { bind def } bind def\n"
+                   "/C  { setrgbcolor } BD\n"
+                   "/G  { setgray } BD\n"
+                   "/W  { setlinewidth } BD\n"
+                   "/FC { findfont exch scalefont setfont } BD\n"
+                   "/S  { FC moveto show } BD\n"
+                   "/P  { newpath 0.0 360.0 arc closepath fill } BD\n"
+                   "/L  { newpath moveto lineto stroke } BD\n"
+                   "/SL { C moveto C lineto stroke } BD\n"
+                   "/T  { newpath moveto lineto lineto closepath fill } BD\n");
 
-	  /* Flat-shaded triangle with middle color:
-	     x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 Tm 
-	  This is the postscript function that will reproduce the opengl rendering,
-	  triangle by triangle
-	  */
-	  fprintf (PSfile,
-		   /* stack : x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 */
-		   "/Tm { 3 -1 roll 8 -1 roll 13 -1 roll add add 3 div\n" /* r = (r1+r2+r3)/3 */
-		   /* stack : x3 y3 g3 b3 x2 y2 g2 b2 x1 y1 g1 b1 r */
-		   "      3 -1 roll 7 -1 roll 11 -1 roll add add 3 div\n" /* g = (g1+g2+g3)/3 */
-		   /* stack : x3 y3 b3 x2 y2 b2 x1 y1 b1 r g b */
-		   "      3 -1 roll 6 -1 roll 9 -1 roll add add 3 div" /* b = (b1+b2+b3)/3 */
-		   /* stack : x3 y3 x2 y2 x1 y1 r g b */
-		   " C T } BD\n");
+          /* Flat-shaded triangle with middle color:
+             x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 Tm 
+             This is the postscript function that will reproduce the opengl rendering,
+             triangle by triangle
+          */
+          fprintf (PSfile,
+                   /* stack : x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 */
+                   "/Tm { 3 -1 roll 8 -1 roll 13 -1 roll add add 3 div\n" /* r = (r1+r2+r3)/3 */
+                   /* stack : x3 y3 g3 b3 x2 y2 g2 b2 x1 y1 g1 b1 r */
+                   "      3 -1 roll 7 -1 roll 11 -1 roll add add 3 div\n" /* g = (g1+g2+g3)/3 */
+                   /* stack : x3 y3 b3 x2 y2 b2 x1 y1 b1 r g b */
+                   "      3 -1 roll 6 -1 roll 9 -1 roll add add 3 div" /* b = (b1+b2+b3)/3 */
+                   /* stack : x3 y3 x2 y2 x1 y1 r g b */
+                   " C T } BD\n");
 #endif /* _GL */
 
-	  fprintf (PSfile, "/DumpImage { %%%% Wim Him Wdr Hdr DumpImage\n");
-	  fprintf (PSfile, "       /Hdr exch def /Wdr exch def /Him exch def /Wim exch def\n");
-	  fprintf (PSfile, "       Wdr Hdr scale\n");
-	  fprintf (PSfile, "       /picstr  Wim 7 add 8 idiv  string def\n");
-	  fprintf (PSfile, "       Wim Him 1 [ Wim 0 0 Him neg 0 Him ]\n");
-	  fprintf (PSfile, "          { currentfile picstr readhexstring pop } image\n");
-	  fprintf (PSfile, " } bind def\n\n");
+          fprintf (PSfile, "/DumpImage { %%%% Wim Him Wdr Hdr DumpImage\n");
+          fprintf (PSfile, "       /Hdr exch def /Wdr exch def /Him exch def /Wim exch def\n");
+          fprintf (PSfile, "       Wdr Hdr scale\n");
+          fprintf (PSfile, "       /picstr  Wim 7 add 8 idiv  string def\n");
+          fprintf (PSfile, "       Wim Him 1 [ Wim 0 0 Him neg 0 Him ]\n");
+          fprintf (PSfile, "          { currentfile picstr readhexstring pop } image\n");
+          fprintf (PSfile, " } bind def\n\n");
 
-	  fprintf (PSfile, "/DumpImage2 { %%%% Wim Him Wdr Hdr DumpImage2\n");
-	  fprintf (PSfile, "       /Hdr exch def /Wdr exch def /Him exch def /Wim exch def\n");
-	  fprintf (PSfile, "       /picstr  Wim 3 mul string def\n");
-	  fprintf (PSfile, "     	Wdr Hdr scale\n");
-	  fprintf (PSfile, "        Wim Him 8 \n");
-	  fprintf (PSfile, "	[ Wim 0 0 Him neg 0 Him ]\n");
-	  fprintf (PSfile, "          { currentfile picstr readhexstring pop } \n");
-	  fprintf (PSfile, "	false 3\n");
-	  fprintf (PSfile, "	colorimage\n");
-	  fprintf (PSfile, " } bind def\n\n");
+          fprintf (PSfile, "/DumpImage2 { %%%% Wim Him Wdr Hdr DumpImage2\n");
+          fprintf (PSfile, "       /Hdr exch def /Wdr exch def /Him exch def /Wim exch def\n");
+          fprintf (PSfile, "       /picstr  Wim 3 mul string def\n");
+          fprintf (PSfile, "     	Wdr Hdr scale\n");
+          fprintf (PSfile, "        Wim Him 8 \n");
+          fprintf (PSfile, "	[ Wim 0 0 Him neg 0 Him ]\n");
+          fprintf (PSfile, "          { currentfile picstr readhexstring pop } \n");
+          fprintf (PSfile, "	false 3\n");
+          fprintf (PSfile, "	colorimage\n");
+          fprintf (PSfile, " } bind def\n\n");
 	  
-	  fprintf (PSfile, "%%%% define \'colorimage\' if it isn\'t defined\n");
-	  fprintf (PSfile, "%%%%   (\'colortogray\' and \'mergeprocs\' come from xwd2ps\n");
-	  fprintf (PSfile, "%%%%     via xgrab)\n");
-	  fprintf (PSfile, "/colorimage where   %%%% do we know about \'colorimage\'?\n");
-	  fprintf (PSfile, "  { pop }           %%%% yes: pop off the \'dict\' returned\n");
-	  fprintf (PSfile, "  {                 %%%% no:  define one\n");
-	  fprintf (PSfile, "    /colortogray {  %%%% define an RGB->I function\n");
-	  fprintf (PSfile, "      /rgbdata exch store    %%%% call input \'rgbdata\'\n");
-	  fprintf (PSfile, "      rgbdata length 3 idiv\n");
-	  fprintf (PSfile, "      /npixls exch store\n");
-	  fprintf (PSfile, "      /rgbindx 0 store\n");
-	  fprintf (PSfile, "      /grays npixls string store  %%%% str to hold the result\n");
-	  fprintf (PSfile, "      0 1 npixls 1 sub {\n");
-	  fprintf (PSfile, "        grays exch\n");
-	  fprintf (PSfile, "        rgbdata rgbindx       get 20 mul    %%%% Red\n");
-	  fprintf (PSfile, "        rgbdata rgbindx 1 add get 32 mul    %%%% Green\n");
-	  fprintf (PSfile, "        rgbdata rgbindx 2 add get 12 mul    %%%% Blue\n");
-	  fprintf (PSfile, "        add add 64 idiv      %%%% I = .5G + .31R + .18B\n");
-	  fprintf (PSfile, "        put\n");
-	  fprintf (PSfile, "        /rgbindx rgbindx 3 add store\n");
-	  fprintf (PSfile, "      } for\n");
-	  fprintf (PSfile, "      grays\n");
-	  fprintf (PSfile, "    } bind def\n\n");
+          fprintf (PSfile, "%%%% define \'colorimage\' if it isn\'t defined\n");
+          fprintf (PSfile, "%%%%   (\'colortogray\' and \'mergeprocs\' come from xwd2ps\n");
+          fprintf (PSfile, "%%%%     via xgrab)\n");
+          fprintf (PSfile, "/colorimage where   %%%% do we know about \'colorimage\'?\n");
+          fprintf (PSfile, "  { pop }           %%%% yes: pop off the \'dict\' returned\n");
+          fprintf (PSfile, "  {                 %%%% no:  define one\n");
+          fprintf (PSfile, "    /colortogray {  %%%% define an RGB->I function\n");
+          fprintf (PSfile, "      /rgbdata exch store    %%%% call input \'rgbdata\'\n");
+          fprintf (PSfile, "      rgbdata length 3 idiv\n");
+          fprintf (PSfile, "      /npixls exch store\n");
+          fprintf (PSfile, "      /rgbindx 0 store\n");
+          fprintf (PSfile, "      /grays npixls string store  %%%% str to hold the result\n");
+          fprintf (PSfile, "      0 1 npixls 1 sub {\n");
+          fprintf (PSfile, "        grays exch\n");
+          fprintf (PSfile, "        rgbdata rgbindx       get 20 mul    %%%% Red\n");
+          fprintf (PSfile, "        rgbdata rgbindx 1 add get 32 mul    %%%% Green\n");
+          fprintf (PSfile, "        rgbdata rgbindx 2 add get 12 mul    %%%% Blue\n");
+          fprintf (PSfile, "        add add 64 idiv      %%%% I = .5G + .31R + .18B\n");
+          fprintf (PSfile, "        put\n");
+          fprintf (PSfile, "        /rgbindx rgbindx 3 add store\n");
+          fprintf (PSfile, "      } for\n");
+          fprintf (PSfile, "      grays\n");
+          fprintf (PSfile, "    } bind def\n\n");
 	  
-	  fprintf (PSfile, "    %%%% Utility procedure for colorimage operator.\n");
-	  fprintf (PSfile, "    %%%% This procedure takes two procedures off the\n");
-	  fprintf (PSfile, "    %%%% stack and merges them into a single procedure.\n\n");
+          fprintf (PSfile, "    %%%% Utility procedure for colorimage operator.\n");
+          fprintf (PSfile, "    %%%% This procedure takes two procedures off the\n");
+          fprintf (PSfile, "    %%%% stack and merges them into a single procedure.\n\n");
 	  
-	  fprintf (PSfile, "    /mergeprocs { %%%% def\n");
-	  fprintf (PSfile, "      dup length\n");
-	  fprintf (PSfile, "      3 -1 roll\n");
-	  fprintf (PSfile, "      dup\n");
-	  fprintf (PSfile, "      length\n");
-	  fprintf (PSfile, "      dup\n");
-	  fprintf (PSfile, "      5 1 roll\n");
-	  fprintf (PSfile, "      3 -1 roll\n");
-	  fprintf (PSfile, "      add\n");
-	  fprintf (PSfile, "      array cvx\n");
-	  fprintf (PSfile, "      dup\n");
-	  fprintf (PSfile, "      3 -1 roll\n");
-	  fprintf (PSfile, "      0 exch\n");
-	  fprintf (PSfile, "      putinterval\n");
-	  fprintf (PSfile, "      dup\n");
-	  fprintf (PSfile, "      4 2 roll\n");
-	  fprintf (PSfile, "      putinterval\n");
-	  fprintf (PSfile, "    } bind def\n\n");
+          fprintf (PSfile, "    /mergeprocs { %%%% def\n");
+          fprintf (PSfile, "      dup length\n");
+          fprintf (PSfile, "      3 -1 roll\n");
+          fprintf (PSfile, "      dup\n");
+          fprintf (PSfile, "      length\n");
+          fprintf (PSfile, "      dup\n");
+          fprintf (PSfile, "      5 1 roll\n");
+          fprintf (PSfile, "      3 -1 roll\n");
+          fprintf (PSfile, "      add\n");
+          fprintf (PSfile, "      array cvx\n");
+          fprintf (PSfile, "      dup\n");
+          fprintf (PSfile, "      3 -1 roll\n");
+          fprintf (PSfile, "      0 exch\n");
+          fprintf (PSfile, "      putinterval\n");
+          fprintf (PSfile, "      dup\n");
+          fprintf (PSfile, "      4 2 roll\n");
+          fprintf (PSfile, "      putinterval\n");
+          fprintf (PSfile, "    } bind def\n\n");
 	  
-	  fprintf (PSfile, "    /colorimage { %%%% def\n");
-	  fprintf (PSfile, "      pop pop     %%%% remove \'false 3\' operands\n");
-	  fprintf (PSfile, "      {colortogray} mergeprocs\n");
-	  fprintf (PSfile, "      image\n");
-	  fprintf (PSfile, "    } bind def\n");
-	  fprintf (PSfile, "  } ifelse          %%%% end of \'false\' case\n\n");
+          fprintf (PSfile, "    /colorimage { %%%% def\n");
+          fprintf (PSfile, "      pop pop     %%%% remove \'false 3\' operands\n");
+          fprintf (PSfile, "      {colortogray} mergeprocs\n");
+          fprintf (PSfile, "      image\n");
+          fprintf (PSfile, "    } bind def\n");
+          fprintf (PSfile, "  } ifelse          %%%% end of \'false\' case\n\n");
 	  
-	  fprintf (PSfile, "/Pes	%% x y width =->\n");
-	  fprintf (PSfile, " { 5 dict begin\n");
-	  fprintf (PSfile, "   [/xf /y /x] {exch def} forall\n");
-	  fprintf (PSfile, "   /st (.) def\n");
-	  fprintf (PSfile, "   /lg st stringwidth pop 3 mul def\n");
-	  fprintf (PSfile, "   /xf xf x add def\n");
-	  fprintf (PSfile, "   { xf x gt\n");
-	  fprintf (PSfile, "     { xf y moveto\n");
-	  fprintf (PSfile, "       st show\n");
-	  fprintf (PSfile, "       /xf xf lg sub def\n");
-	  fprintf (PSfile, "     }\n");
-	  fprintf (PSfile, "     { exit }\n");
-	  fprintf (PSfile, "     ifelse\n");
-	  fprintf (PSfile, "   } loop end\n");
-	  fprintf (PSfile, " } bind def\n");
-	  fprintf (PSfile, "/gr	%%%% framework for graphics\n");
-	  fprintf (PSfile, " { newpath moveto lineto lineto lineto closepath\n");
-	  fprintf (PSfile, "   0.125 mul 1 exch sub setgray fill 0 setgray\n");
-	  fprintf (PSfile, " } bind def\n\n");
+          fprintf (PSfile, "/Pes	%% x y width =->\n");
+          fprintf (PSfile, " { 5 dict begin\n");
+          fprintf (PSfile, "   [/xf /y /x] {exch def} forall\n");
+          fprintf (PSfile, "   /st (.) def\n");
+          fprintf (PSfile, "   /lg st stringwidth pop 3 mul def\n");
+          fprintf (PSfile, "   /xf xf x add def\n");
+          fprintf (PSfile, "   { xf x gt\n");
+          fprintf (PSfile, "     { xf y moveto\n");
+          fprintf (PSfile, "       st show\n");
+          fprintf (PSfile, "       /xf xf lg sub def\n");
+          fprintf (PSfile, "     }\n");
+          fprintf (PSfile, "     { exit }\n");
+          fprintf (PSfile, "     ifelse\n");
+          fprintf (PSfile, "   } loop end\n");
+          fprintf (PSfile, " } bind def\n");
+          fprintf (PSfile, "/gr	%%%% framework for graphics\n");
+          fprintf (PSfile, " { newpath moveto lineto lineto lineto closepath\n");
+          fprintf (PSfile, "   0.125 mul 1 exch sub setgray fill 0 setgray\n");
+          fprintf (PSfile, " } bind def\n\n");
 	  
-	  fprintf (PSfile, "/trm    %%%% framework for empty boxes\n");
-	  fprintf (PSfile, "{ suptrame 0 eq {gr} {pop pop pop pop pop pop pop pop pop} ifelse\n");
-	  fprintf (PSfile, "} bind def\n\n");
+          fprintf (PSfile, "/trm    %%%% framework for empty boxes\n");
+          fprintf (PSfile, "{ suptrame 0 eq {gr} {pop pop pop pop pop pop pop pop pop} ifelse\n");
+          fprintf (PSfile, "} bind def\n\n");
 	  
-	  fprintf (PSfile, "/BEGINEPSFILE {%%def\n");
-	  fprintf (PSfile, "  /EPSFsave save def\n");
-	  fprintf (PSfile, "  0 setgray 0 setlinecap 1 setlinewidth 0 setlinejoin 10 setmiterlimit [] 0 setdash\n");
-	  fprintf (PSfile, "  newpath\n");
-	  fprintf (PSfile, "  /showpage {} def\n");
-	  fprintf (PSfile, "} bind def\n\n");
+          fprintf (PSfile, "/BEGINEPSFILE {%%def\n");
+          fprintf (PSfile, "  /EPSFsave save def\n");
+          fprintf (PSfile, "  0 setgray 0 setlinecap 1 setlinewidth 0 setlinejoin 10 setmiterlimit [] 0 setdash\n");
+          fprintf (PSfile, "  newpath\n");
+          fprintf (PSfile, "  /showpage {} def\n");
+          fprintf (PSfile, "} bind def\n\n");
 	  
-	  fprintf (PSfile, "/ENDEPSFILE {%%def\n");
-	  fprintf (PSfile, "  EPSFsave restore\n");
-	  fprintf (PSfile, "} bind def\n");
+          fprintf (PSfile, "/ENDEPSFILE {%%def\n");
+          fprintf (PSfile, "  EPSFsave restore\n");
+          fprintf (PSfile, "} bind def\n");
 	  
-	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%% Encoding of font dictionaries %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
+          fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%% Encoding of font dictionaries %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
 	  
-	  fprintf (PSfile, "/ISOLatin1Encoding where { pop } { /ISOLatin1Encoding\n");
-	  fprintf (PSfile, "[/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
-	  fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
-	  fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
-	  fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/space\n");
-	  fprintf (PSfile, "/exclam/quotedbl/numbersign/dollar/percent/ampersand/quoteright\n");
-	  fprintf (PSfile, "/parenleft/parenright/asterisk/plus/comma/minus/period/slash/zero/one\n");
-	  fprintf (PSfile, "/two/three/four/five/six/seven/eight/nine/colon/semicolon/less/equal\n");
-	  fprintf (PSfile, "/greater/question/at/A/B/C/D/E/F/G/H/I/J/K/L/M/N/O/P/Q/R/S\n");
-	  fprintf (PSfile, "/T/U/V/W/X/Y/Z/bracketleft/backslash/bracketright/asciicircum\n");
-	  fprintf (PSfile, "/underscore/quoteleft/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s\n");
-	  fprintf (PSfile, "/t/u/v/w/x/y/z/braceleft/bar/braceright/asciitilde/.notdef/epsilon\n");
-	  fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
-	  fprintf (PSfile, "/.notdef/oe/OE/.notdef/.notdef/.notdef/.notdef/dotlessi/grave\n");
-	  fprintf (PSfile, "/acute/circumflex/tilde/macron/breve/dotaccent/dieresis/.notdef/ring\n");
-	  fprintf (PSfile, "/cedilla/.notdef/hungarumlaut/ogonek/caron/space/exclamdown/cent\n");
-	  fprintf (PSfile, "/sterling/currency/yen/brokenbar/section/dieresis/copyright/ordfeminine\n");
-	  fprintf (PSfile, "/guillemotleft/logicalnot/hyphen/registered/macron/degree/plusminus\n");
-	  fprintf (PSfile, "/twosuperior/threesuperior/acute/mu/paragraph/periodcentered/cedilla\n");
-	  fprintf (PSfile, "/onesuperior/ordmasculine/guillemotright/onequarter/onehalf/threequarters\n");
-	  fprintf (PSfile, "/questiondown/Agrave/Aacute/Acircumflex/Atilde/Adieresis/Aring/AE\n");
-	  fprintf (PSfile, "/Ccedilla/Egrave/Eacute/Ecircumflex/Edieresis/Igrave/Iacute/Icircumflex\n");
-	  fprintf (PSfile, "/Idieresis/Eth/Ntilde/Ograve/Oacute/Ocircumflex/Otilde/Odieresis\n");
-	  fprintf (PSfile, "/multiply/Oslash/Ugrave/Uacute/Ucircumflex/Udieresis/Yacute/Thorn\n");
-	  fprintf (PSfile, "/germandbls/agrave/aacute/acircumflex/atilde/adieresis/aring/ae\n");
-	  fprintf (PSfile, "/ccedilla/egrave/eacute/ecircumflex/edieresis/igrave/iacute/icircumflex\n");
-	  fprintf (PSfile, "/idieresis/eth/ntilde/ograve/oacute/ocircumflex/otilde/odieresis/divide\n");
-	  fprintf (PSfile, "/oslash/ugrave/uacute/ucircumflex/udieresis/yacute/thorn/ydieresis]\n");
-	  fprintf (PSfile, "def %%ISOLatin1Encoding\n");
-	  fprintf (PSfile, "} ifelse\n\n");
+          fprintf (PSfile, "/ISOLatin1Encoding where { pop } { /ISOLatin1Encoding\n");
+          fprintf (PSfile, "[/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
+          fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
+          fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
+          fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/space\n");
+          fprintf (PSfile, "/exclam/quotedbl/numbersign/dollar/percent/ampersand/quoteright\n");
+          fprintf (PSfile, "/parenleft/parenright/asterisk/plus/comma/minus/period/slash/zero/one\n");
+          fprintf (PSfile, "/two/three/four/five/six/seven/eight/nine/colon/semicolon/less/equal\n");
+          fprintf (PSfile, "/greater/question/at/A/B/C/D/E/F/G/H/I/J/K/L/M/N/O/P/Q/R/S\n");
+          fprintf (PSfile, "/T/U/V/W/X/Y/Z/bracketleft/backslash/bracketright/asciicircum\n");
+          fprintf (PSfile, "/underscore/quoteleft/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s\n");
+          fprintf (PSfile, "/t/u/v/w/x/y/z/braceleft/bar/braceright/asciitilde/.notdef/epsilon\n");
+          fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
+          fprintf (PSfile, "/.notdef/oe/OE/.notdef/.notdef/.notdef/.notdef/dotlessi/grave\n");
+          fprintf (PSfile, "/acute/circumflex/tilde/macron/breve/dotaccent/dieresis/.notdef/ring\n");
+          fprintf (PSfile, "/cedilla/.notdef/hungarumlaut/ogonek/caron/space/exclamdown/cent\n");
+          fprintf (PSfile, "/sterling/currency/yen/brokenbar/section/dieresis/copyright/ordfeminine\n");
+          fprintf (PSfile, "/guillemotleft/logicalnot/hyphen/registered/macron/degree/plusminus\n");
+          fprintf (PSfile, "/twosuperior/threesuperior/acute/mu/paragraph/periodcentered/cedilla\n");
+          fprintf (PSfile, "/onesuperior/ordmasculine/guillemotright/onequarter/onehalf/threequarters\n");
+          fprintf (PSfile, "/questiondown/Agrave/Aacute/Acircumflex/Atilde/Adieresis/Aring/AE\n");
+          fprintf (PSfile, "/Ccedilla/Egrave/Eacute/Ecircumflex/Edieresis/Igrave/Iacute/Icircumflex\n");
+          fprintf (PSfile, "/Idieresis/Eth/Ntilde/Ograve/Oacute/Ocircumflex/Otilde/Odieresis\n");
+          fprintf (PSfile, "/multiply/Oslash/Ugrave/Uacute/Ucircumflex/Udieresis/Yacute/Thorn\n");
+          fprintf (PSfile, "/germandbls/agrave/aacute/acircumflex/atilde/adieresis/aring/ae\n");
+          fprintf (PSfile, "/ccedilla/egrave/eacute/ecircumflex/edieresis/igrave/iacute/icircumflex\n");
+          fprintf (PSfile, "/idieresis/eth/ntilde/ograve/oacute/ocircumflex/otilde/odieresis/divide\n");
+          fprintf (PSfile, "/oslash/ugrave/uacute/ucircumflex/udieresis/yacute/thorn/ydieresis]\n");
+          fprintf (PSfile, "def %%ISOLatin1Encoding\n");
+          fprintf (PSfile, "} ifelse\n\n");
 
-	  fprintf (PSfile, "/ReEncode	%% NewFont Font ReEncode\n");
-	  fprintf (PSfile, "  { findfont	%% load desired font\n");
-	  fprintf (PSfile, "    dup length dict /newfont exch def	%% allocate new fontdict\n");
-	  fprintf (PSfile, "    dup\n");
-	  fprintf (PSfile, "    { exch dup dup dup dup /FID ne exch /Encoding ne and exch /FontBBox ne and exch /FontMatrix ne and\n");
-	  fprintf (PSfile, "	{ exch newfont 3 1 roll put }\n");
-	  fprintf (PSfile, "	{ pop pop }\n");
-	  fprintf (PSfile, "	ifelse }\n");
-	  fprintf (PSfile, "    forall	%% copy fontdict\n\n");
+          fprintf (PSfile, "/ReEncode	%% NewFont Font ReEncode\n");
+          fprintf (PSfile, "  { findfont	%% load desired font\n");
+          fprintf (PSfile, "    dup length dict /newfont exch def	%% allocate new fontdict\n");
+          fprintf (PSfile, "    dup\n");
+          fprintf (PSfile, "    { exch dup dup dup dup /FID ne exch /Encoding ne and exch /FontBBox ne and exch /FontMatrix ne and\n");
+          fprintf (PSfile, "	{ exch newfont 3 1 roll put }\n");
+          fprintf (PSfile, "	{ pop pop }\n");
+          fprintf (PSfile, "	ifelse }\n");
+          fprintf (PSfile, "    forall	%% copy fontdict\n\n");
 	  
-	  fprintf (PSfile, "    dup /FontBBox get 4 array copy newfont /FontBBox 3 -1 roll put\n");
-	  fprintf (PSfile, "    /FontMatrix get 6 array copy newfont /FontMatrix 3 -1 roll put\n\n");
+          fprintf (PSfile, "    dup /FontBBox get 4 array copy newfont /FontBBox 3 -1 roll put\n");
+          fprintf (PSfile, "    /FontMatrix get 6 array copy newfont /FontMatrix 3 -1 roll put\n\n");
 	  
-	  fprintf (PSfile, "    newfont /Encoding ISOLatin1Encoding 256 array copy put	%%put new encoding vector\n");
+          fprintf (PSfile, "    newfont /Encoding ISOLatin1Encoding 256 array copy put	%%put new encoding vector\n");
 	  
-	  fprintf (PSfile, "    dup newfont /FontName 3 -1 roll put	%%put a new Fontname\n");
-	  fprintf (PSfile, "    newfont definefont pop	%%define a new font\n");
-	  fprintf (PSfile, "  } def\n\n");
+          fprintf (PSfile, "    dup newfont /FontName 3 -1 roll put	%%put a new Fontname\n");
+          fprintf (PSfile, "    newfont definefont pop	%%define a new font\n");
+          fprintf (PSfile, "  } def\n\n");
 	  
-	  fprintf (PSfile, "/ReEncodeOblique	%% NewFont Font ReEncodeOblique\n");
-	  fprintf (PSfile, "  { findfont	%% load desired font\n");
-	  fprintf (PSfile, "    dup length dict /newfont exch def	%% allocate new fontdict\n");
-	  fprintf (PSfile, "    dup\n");
-	  fprintf (PSfile, "    { exch dup dup dup dup /FID ne exch /Encoding ne and exch /FontBBox ne and exch /FontMatrix ne and\n");
-	  fprintf (PSfile, "	{ exch newfont 3 1 roll put }\n");
-	  fprintf (PSfile, "	{ pop pop }\n");
-	  fprintf (PSfile, "	ifelse }\n");
-	  fprintf (PSfile, "    forall	%% copy fontdict\n\n");
+          fprintf (PSfile, "/ReEncodeOblique	%% NewFont Font ReEncodeOblique\n");
+          fprintf (PSfile, "  { findfont	%% load desired font\n");
+          fprintf (PSfile, "    dup length dict /newfont exch def	%% allocate new fontdict\n");
+          fprintf (PSfile, "    dup\n");
+          fprintf (PSfile, "    { exch dup dup dup dup /FID ne exch /Encoding ne and exch /FontBBox ne and exch /FontMatrix ne and\n");
+          fprintf (PSfile, "	{ exch newfont 3 1 roll put }\n");
+          fprintf (PSfile, "	{ pop pop }\n");
+          fprintf (PSfile, "	ifelse }\n");
+          fprintf (PSfile, "    forall	%% copy fontdict\n\n");
 	  
-	  fprintf (PSfile, "    dup /FontBBox get 4 array copy newfont /FontBBox 3 -1 roll put\n");
-	  fprintf (PSfile, "    /FontMatrix get \n");
-	  fprintf (PSfile, "    [1 0 15 sin 1 0 0 ] exch 6 array concatmatrix\n");
-	  fprintf (PSfile, "    newfont /FontMatrix 3 -1 roll put\n\n");
+          fprintf (PSfile, "    dup /FontBBox get 4 array copy newfont /FontBBox 3 -1 roll put\n");
+          fprintf (PSfile, "    /FontMatrix get \n");
+          fprintf (PSfile, "    [1 0 15 sin 1 0 0 ] exch 6 array concatmatrix\n");
+          fprintf (PSfile, "    newfont /FontMatrix 3 -1 roll put\n\n");
 	  
-	  fprintf (PSfile, "    newfont /Encoding ISOLatin1Encoding 256 array copy put	%%put new encoding vector\n");
+          fprintf (PSfile, "    newfont /Encoding ISOLatin1Encoding 256 array copy put	%%put new encoding vector\n");
 	  
-	  fprintf (PSfile, "    dup newfont /FontName 3 -1 roll put	%%put a new Fontname\n");
-	  fprintf (PSfile, "    newfont definefont pop	%%define a new font\n");
-	  fprintf (PSfile, "  } def\n\n");
+          fprintf (PSfile, "    dup newfont /FontName 3 -1 roll put	%%put a new Fontname\n");
+          fprintf (PSfile, "    newfont definefont pop	%%define a new font\n");
+          fprintf (PSfile, "  } def\n\n");
 	  
-	  fprintf (PSfile, "/lhr /Helvetica 		ReEncode\n");
-	  fprintf (PSfile, "/lhb /Helvetica-Bold  	ReEncode\n");
-	  fprintf (PSfile, "/lho /Helvetica-Oblique  	ReEncode\n");
-	  fprintf (PSfile, "/lhq /Helvetica-BoldOblique ReEncode\n\n");
+          fprintf (PSfile, "/lhr /Helvetica 		ReEncode\n");
+          fprintf (PSfile, "/lhb /Helvetica-Bold  	ReEncode\n");
+          fprintf (PSfile, "/lho /Helvetica-Oblique  	ReEncode\n");
+          fprintf (PSfile, "/lhq /Helvetica-BoldOblique ReEncode\n\n");
 	  
-	  fprintf (PSfile, "/lhr (lhr) def\n");
-	  fprintf (PSfile, "/lhb (lhb) def\n");
-	  fprintf (PSfile, "/lhi (lho) def\n");
-	  fprintf (PSfile, "/lho (lho) def    %% lhi for helvetica italic ( = oblique )\n");
-	  fprintf (PSfile, "/lhq (lhq) def\n");
-	  fprintf (PSfile, "/lhg (lhq) def    %% lhg for helvetica bold italic ( = bold oblique )\n\n");
+          fprintf (PSfile, "/lhr (lhr) def\n");
+          fprintf (PSfile, "/lhb (lhb) def\n");
+          fprintf (PSfile, "/lhi (lho) def\n");
+          fprintf (PSfile, "/lho (lho) def    %% lhi for helvetica italic ( = oblique )\n");
+          fprintf (PSfile, "/lhq (lhq) def\n");
+          fprintf (PSfile, "/lhg (lhq) def    %% lhg for helvetica bold italic ( = bold oblique )\n\n");
 	  
-	  fprintf (PSfile, "/ltr /Times-Roman 		ReEncode\n");
-	  fprintf (PSfile, "/ltb /Times-Bold 		ReEncode\n");
-	  fprintf (PSfile, "/lti /Times-Italic 		ReEncode\n");
-	  fprintf (PSfile, "/ltg /Times-BoldItalic 	ReEncode\n");
-	  fprintf (PSfile, "/lto /Times-Roman 		ReEncodeOblique\n");
-	  fprintf (PSfile, "/ltq /Times-Bold 		ReEncodeOblique\n\n");
+          fprintf (PSfile, "/ltr /Times-Roman 		ReEncode\n");
+          fprintf (PSfile, "/ltb /Times-Bold 		ReEncode\n");
+          fprintf (PSfile, "/lti /Times-Italic 		ReEncode\n");
+          fprintf (PSfile, "/ltg /Times-BoldItalic 	ReEncode\n");
+          fprintf (PSfile, "/lto /Times-Roman 		ReEncodeOblique\n");
+          fprintf (PSfile, "/ltq /Times-Bold 		ReEncodeOblique\n\n");
 	  
-	  fprintf (PSfile, "/ltr (ltr) def\n");
-	  fprintf (PSfile, "/ltb (ltb) def\n");
-	  fprintf (PSfile, "/lti (lti) def\n");
-	  fprintf (PSfile, "/lto (lto) def\n");
-	  fprintf (PSfile, "/ltg (ltg) def\n");
-	  fprintf (PSfile, "/ltq (ltq) def\n\n");
+          fprintf (PSfile, "/ltr (ltr) def\n");
+          fprintf (PSfile, "/ltb (ltb) def\n");
+          fprintf (PSfile, "/lti (lti) def\n");
+          fprintf (PSfile, "/lto (lto) def\n");
+          fprintf (PSfile, "/ltg (ltg) def\n");
+          fprintf (PSfile, "/ltq (ltq) def\n\n");
 
-	  fprintf (PSfile, "/lcr /Courier 		ReEncode\n");
-	  fprintf (PSfile, "/lcb /Courier-Bold 		ReEncode\n");
-	  fprintf (PSfile, "/lco /Courier-Oblique	ReEncode\n");
-	  fprintf (PSfile, "/lcq /Courier-BoldOblique 	ReEncode\n\n");
+          fprintf (PSfile, "/lcr /Courier 		ReEncode\n");
+          fprintf (PSfile, "/lcb /Courier-Bold 		ReEncode\n");
+          fprintf (PSfile, "/lco /Courier-Oblique	ReEncode\n");
+          fprintf (PSfile, "/lcq /Courier-BoldOblique 	ReEncode\n\n");
 	  
-	  fprintf (PSfile, "/lcr (lcr) def\n");
-	  fprintf (PSfile, "/lcb (lcb) def\n");
-	  fprintf (PSfile, "/lco (lco) def\n");
-	  fprintf (PSfile, "/lci (lco) def    %% lci for courier italic ( = oblique )\n");
-	  fprintf (PSfile, "/lcq (lcq) def\n");
-	  fprintf (PSfile, "/lcg (lcq) def    %% lcq for courier bold italic ( = bold oblique )\n\n");
+          fprintf (PSfile, "/lcr (lcr) def\n");
+          fprintf (PSfile, "/lcb (lcb) def\n");
+          fprintf (PSfile, "/lco (lco) def\n");
+          fprintf (PSfile, "/lci (lco) def    %% lci for courier italic ( = oblique )\n");
+          fprintf (PSfile, "/lcq (lcq) def\n");
+          fprintf (PSfile, "/lcg (lcq) def    %% lcq for courier bold italic ( = bold oblique )\n\n");
 	  
-	  fprintf (PSfile, "/ggr (Symbol) def\n\n");
+          fprintf (PSfile, "/ggr (Symbol) def\n\n");
 	  
-	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%% Loading font commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
+          fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%% Loading font commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
 
-	  fprintf (PSfile, "/pagecounter 0 def\n\n");
+          fprintf (PSfile, "/pagecounter 0 def\n\n");
 	  
-	  fprintf (PSfile, "/pagenumberok 		%% int pagenumberok ThotBool\n");
-	  fprintf (PSfile, " { evenodd 0 eq 	%% evenodd = 0 -> all pages\n");
-	  fprintf (PSfile, "	{ pop true }\n");
-	  fprintf (PSfile, "	{ evenodd 1 eq 	%% evenodd = 1 -> odd pages\n");
-	  fprintf (PSfile, "		{ 2 mod 1 eq { true }	%% counter value is odd\n");
-	  fprintf (PSfile, "			     { false }\n");
-	  fprintf (PSfile, "			     ifelse }\n");
-	  fprintf (PSfile, "	 	{ 2 mod 0 eq { true }	%% evenodd = 2 -> even pages and the counter value is even\n");
-	  fprintf (PSfile, "			     { false }\n");
-	  fprintf (PSfile, "			     ifelse }\n");
-	  fprintf (PSfile, "		ifelse }\n");
-	  fprintf (PSfile, "	ifelse } bind def\n\n");
+          fprintf (PSfile, "/pagenumberok 		%% int pagenumberok ThotBool\n");
+          fprintf (PSfile, " { evenodd 0 eq 	%% evenodd = 0 -> all pages\n");
+          fprintf (PSfile, "	{ pop true }\n");
+          fprintf (PSfile, "	{ evenodd 1 eq 	%% evenodd = 1 -> odd pages\n");
+          fprintf (PSfile, "		{ 2 mod 1 eq { true }	%% counter value is odd\n");
+          fprintf (PSfile, "			     { false }\n");
+          fprintf (PSfile, "			     ifelse }\n");
+          fprintf (PSfile, "	 	{ 2 mod 0 eq { true }	%% evenodd = 2 -> even pages and the counter value is even\n");
+          fprintf (PSfile, "			     { false }\n");
+          fprintf (PSfile, "			     ifelse }\n");
+          fprintf (PSfile, "		ifelse }\n");
+          fprintf (PSfile, "	ifelse } bind def\n\n");
 	  
-	  fprintf (PSfile, "/pagesizeok\n");
-	  fprintf (PSfile, " { pop pop true } def\n\n");
+          fprintf (PSfile, "/pagesizeok\n");
+          fprintf (PSfile, " { pop pop true } def\n\n");
 
-	  fprintf (PSfile, "/nwpage		%% new page\n");
-	  fprintf (PSfile, " { /pagecounter pagecounter 1 add def\n");
-	  fprintf (PSfile, "   pagesizeok { pagenumberok { showpage }\n");
-	  fprintf (PSfile, "			         {erasepage } ifelse } \n");
-	  fprintf (PSfile, "	          { erasepage } ifelse\n");
-	  fprintf (PSfile, "   grestore\n");
-	  fprintf (PSfile, "   VectMatrice pagecounter 4 mod get setmatrix \n");
-	  fprintf (PSfile, "   gsave UserMatrice concat } def\n\n");
+          fprintf (PSfile, "/nwpage		%% new page\n");
+          fprintf (PSfile, " { /pagecounter pagecounter 1 add def\n");
+          fprintf (PSfile, "   pagesizeok { pagenumberok { showpage }\n");
+          fprintf (PSfile, "			         {erasepage } ifelse } \n");
+          fprintf (PSfile, "	          { erasepage } ifelse\n");
+          fprintf (PSfile, "   grestore\n");
+          fprintf (PSfile, "   VectMatrice pagecounter 4 mod get setmatrix \n");
+          fprintf (PSfile, "   gsave UserMatrice concat } def\n\n");
 	  
-	  fprintf (PSfile, "/ppf 1 def\n");
-	  fprintf (PSfile, "/showpage { pagecounter ppf mod 0 eq {systemdict /showpage get exec} if } bind def\n");
-	  fprintf (PSfile, "/ejectpage { pagecounter ppf mod 0 ne {systemdict /showpage get exec} if } bind def\n\n");
+          fprintf (PSfile, "/ppf 1 def\n");
+          fprintf (PSfile, "/showpage { pagecounter ppf mod 0 eq {systemdict /showpage get exec} if } bind def\n");
+          fprintf (PSfile, "/ejectpage { pagecounter ppf mod 0 ne {systemdict /showpage get exec} if } bind def\n\n");
 	  
-	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
+          fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
 
-	  fprintf (PSfile, "/MatriceDict 9 dict def\n");
-	  fprintf (PSfile, "MatriceDict begin\n\n");
-	  fprintf (PSfile, " /MatPortrait matrix def\n");
-	  fprintf (PSfile, " /MatLandscape [0 1 -1 0 0 0] def\n\n");
-	  fprintf (PSfile, " /defmat { \n");
-	  fprintf (PSfile, "    matrix concatmatrix matrix concatmatrix matrix currentmatrix matrix concatmatrix } bind def\n\n");
+          fprintf (PSfile, "/MatriceDict 9 dict def\n");
+          fprintf (PSfile, "MatriceDict begin\n\n");
+          fprintf (PSfile, " /MatPortrait matrix def\n");
+          fprintf (PSfile, " /MatLandscape [0 1 -1 0 0 0] def\n\n");
+          fprintf (PSfile, " /defmat { \n");
+          fprintf (PSfile, "    matrix concatmatrix matrix concatmatrix matrix currentmatrix matrix concatmatrix } bind def\n\n");
 
-	  fprintf (PSfile, "    /defdict_portrait {	%% dict defdict\n");
-	  fprintf (PSfile, "    /Portrait 3 dict def \n");
-	  fprintf (PSfile, "	Portrait begin\n");
-	  fprintf (PSfile, "	  /1ppf 2 dict def 1ppf begin\n");
-	  fprintf (PSfile, "	        /VectMatrice [\n");
-	  fprintf (PSfile, "	            MatPortrait MatScale1 [1 0 0 1 0 PHeight] defmat\n");
-	  fprintf (PSfile, "	        dup dup dup ] def\n");
-	  fprintf (PSfile, "	        /ppf 1 def\n");
-	  fprintf (PSfile, "	    end %% 1ppf dict\n");
-	  fprintf (PSfile, "	    /2ppf 2 dict def 2ppf begin\n");
-	  fprintf (PSfile, "		/VectMatrice [\n");
-	  fprintf (PSfile, "	    	    MatLandscape MatScale2 [1 0 0 1 0 0] defmat\n");
-	  fprintf (PSfile, "		    MatLandscape MatScale2 [1 0 0 1 0 PHeight 2 div] defmat\n");
-	  fprintf (PSfile, "	    	    2 copy ] def\n");
-	  fprintf (PSfile, "		/ppf 2 def\n");
-	  fprintf (PSfile, "	    end %% 2ppf dict\n");
-	  fprintf (PSfile, "	    /4ppf 2 dict def 4ppf begin\n");
-	  fprintf (PSfile, "		/VectMatrice [\n");
-	  fprintf (PSfile, "	    	    MatPortrait MatScale4 [1 0 0 1 0 PHeight] defmat\n");
-	  fprintf (PSfile, "		    MatPortrait MatScale4 [1 0 0 1 PWidth 2 div PHeight] defmat\n");
-	  fprintf (PSfile, "	    	    MatPortrait MatScale4 [1 0 0 1 0 PHeight 2 div] defmat\n");
-	  fprintf (PSfile, "		    MatPortrait MatScale4 [1 0 0 1 PWidth 2 div PHeight 2 div] defmat\n");
-	  fprintf (PSfile, "		    ] def\n");
-	  fprintf (PSfile, "		/ppf 4 def\n");
-	  fprintf (PSfile, "	    end %% 4ppf dict\n");
-	  fprintf (PSfile, "	end %% Portrait dict\n");
-	  fprintf (PSfile, "    } bind def %% end defdict_portrait\n\n");
+          fprintf (PSfile, "    /defdict_portrait {	%% dict defdict\n");
+          fprintf (PSfile, "    /Portrait 3 dict def \n");
+          fprintf (PSfile, "	Portrait begin\n");
+          fprintf (PSfile, "	  /1ppf 2 dict def 1ppf begin\n");
+          fprintf (PSfile, "	        /VectMatrice [\n");
+          fprintf (PSfile, "	            MatPortrait MatScale1 [1 0 0 1 0 PHeight] defmat\n");
+          fprintf (PSfile, "	        dup dup dup ] def\n");
+          fprintf (PSfile, "	        /ppf 1 def\n");
+          fprintf (PSfile, "	    end %% 1ppf dict\n");
+          fprintf (PSfile, "	    /2ppf 2 dict def 2ppf begin\n");
+          fprintf (PSfile, "		/VectMatrice [\n");
+          fprintf (PSfile, "	    	    MatLandscape MatScale2 [1 0 0 1 0 0] defmat\n");
+          fprintf (PSfile, "		    MatLandscape MatScale2 [1 0 0 1 0 PHeight 2 div] defmat\n");
+          fprintf (PSfile, "	    	    2 copy ] def\n");
+          fprintf (PSfile, "		/ppf 2 def\n");
+          fprintf (PSfile, "	    end %% 2ppf dict\n");
+          fprintf (PSfile, "	    /4ppf 2 dict def 4ppf begin\n");
+          fprintf (PSfile, "		/VectMatrice [\n");
+          fprintf (PSfile, "	    	    MatPortrait MatScale4 [1 0 0 1 0 PHeight] defmat\n");
+          fprintf (PSfile, "		    MatPortrait MatScale4 [1 0 0 1 PWidth 2 div PHeight] defmat\n");
+          fprintf (PSfile, "	    	    MatPortrait MatScale4 [1 0 0 1 0 PHeight 2 div] defmat\n");
+          fprintf (PSfile, "		    MatPortrait MatScale4 [1 0 0 1 PWidth 2 div PHeight 2 div] defmat\n");
+          fprintf (PSfile, "		    ] def\n");
+          fprintf (PSfile, "		/ppf 4 def\n");
+          fprintf (PSfile, "	    end %% 4ppf dict\n");
+          fprintf (PSfile, "	end %% Portrait dict\n");
+          fprintf (PSfile, "    } bind def %% end defdict_portrait\n\n");
 	  
-	  fprintf (PSfile, "    /defdict_paysage {	%% defdict\n");
-	  fprintf (PSfile, "	/Landscape 3 dict def\n");
-	  fprintf (PSfile, "	Landscape begin\n");
-	  fprintf (PSfile, "	    /1ppf 2 dict def 1ppf begin\n");
-	  fprintf (PSfile, "		/VectMatrice [\n");
-	  fprintf (PSfile, "	    	    MatLandscape MatScale1 [1 0 0 1 0 842 PHeight sub ] defmat\n");
-	  fprintf (PSfile, "		    dup dup dup ] def\n");
-	  fprintf (PSfile, "		/ppf 1 def\n");
-	  fprintf (PSfile, "	    end %% 1ppf dict\n");
-	  fprintf (PSfile, "	    /2ppf 2 dict def 2ppf begin\n");
-	  fprintf (PSfile, "		/VectMatrice [\n");
-	  fprintf (PSfile, "	    	    MatPortrait MatScale2 [1 0 0 1 0 PHeight] defmat\n");
-	  fprintf (PSfile, "		     MatPortrait MatScale2 [1 0 0 1 0 420] defmat\n");
-	  fprintf (PSfile, "	    	    2 copy ] def\n");
-	  fprintf (PSfile, "		/ppf 2 def\n");
-	  fprintf (PSfile, "	    end %% 2ppf dict\n");
-	  fprintf (PSfile, "	    /4ppf 2 dict def 4ppf begin\n");
-	  fprintf (PSfile, "		/VectMatrice [\n");
-	  fprintf (PSfile, "	    	    MatLandscape MatScale4 [1 0 0 1 0 0] defmat\n");
-	  fprintf (PSfile, "		    MatLandscape MatScale4 [1 0 0 1 0 PHeight 2 div] defmat\n");
-	  fprintf (PSfile, " 		    MatLandscape MatScale4 [1 0 0 1 PWidth 2 div 0] defmat\n");
-	  fprintf (PSfile, "		    MatLandscape MatScale4 [1 0 0 1 PWidth 2 div PHeight 2 div] defmat\n");
-	  fprintf (PSfile, "		    ] def\n");
-	  fprintf (PSfile, "		/ppf 4 def\n");
-	  fprintf (PSfile, "	    end %% 4ppf dict\n");
-	  fprintf (PSfile, "	end %% Landscape dict\n");
-	  fprintf (PSfile, "    } bind def %% end defdict_paysage\n\n");
+          fprintf (PSfile, "    /defdict_paysage {	%% defdict\n");
+          fprintf (PSfile, "	/Landscape 3 dict def\n");
+          fprintf (PSfile, "	Landscape begin\n");
+          fprintf (PSfile, "	    /1ppf 2 dict def 1ppf begin\n");
+          fprintf (PSfile, "		/VectMatrice [\n");
+          fprintf (PSfile, "	    	    MatLandscape MatScale1 [1 0 0 1 0 842 PHeight sub ] defmat\n");
+          fprintf (PSfile, "		    dup dup dup ] def\n");
+          fprintf (PSfile, "		/ppf 1 def\n");
+          fprintf (PSfile, "	    end %% 1ppf dict\n");
+          fprintf (PSfile, "	    /2ppf 2 dict def 2ppf begin\n");
+          fprintf (PSfile, "		/VectMatrice [\n");
+          fprintf (PSfile, "	    	    MatPortrait MatScale2 [1 0 0 1 0 PHeight] defmat\n");
+          fprintf (PSfile, "		     MatPortrait MatScale2 [1 0 0 1 0 420] defmat\n");
+          fprintf (PSfile, "	    	    2 copy ] def\n");
+          fprintf (PSfile, "		/ppf 2 def\n");
+          fprintf (PSfile, "	    end %% 2ppf dict\n");
+          fprintf (PSfile, "	    /4ppf 2 dict def 4ppf begin\n");
+          fprintf (PSfile, "		/VectMatrice [\n");
+          fprintf (PSfile, "	    	    MatLandscape MatScale4 [1 0 0 1 0 0] defmat\n");
+          fprintf (PSfile, "		    MatLandscape MatScale4 [1 0 0 1 0 PHeight 2 div] defmat\n");
+          fprintf (PSfile, " 		    MatLandscape MatScale4 [1 0 0 1 PWidth 2 div 0] defmat\n");
+          fprintf (PSfile, "		    MatLandscape MatScale4 [1 0 0 1 PWidth 2 div PHeight 2 div] defmat\n");
+          fprintf (PSfile, "		    ] def\n");
+          fprintf (PSfile, "		/ppf 4 def\n");
+          fprintf (PSfile, "	    end %% 4ppf dict\n");
+          fprintf (PSfile, "	end %% Landscape dict\n");
+          fprintf (PSfile, "    } bind def %% end defdict_paysage\n\n");
 	  
-	  fprintf (PSfile, "    /A4 8 dict def\n");
-	  fprintf (PSfile, "    A4 begin\n");
-	  fprintf (PSfile, "    	/MatScale1 matrix def\n");
-	  fprintf (PSfile, "    	/MatScale2 [1 2 sqrt div 0 0 2 index 0 0] def\n");
-	  fprintf (PSfile, "    	/MatScale4 [0.5 0 0 0.5 0 0] def\n");
-	  fprintf (PSfile, "	/PHeight 842 def\n");
-	  fprintf (PSfile, "	/PWidth 596 def\n");
-	  fprintf (PSfile, "	end\n\n");
+          fprintf (PSfile, "    /A4 8 dict def\n");
+          fprintf (PSfile, "    A4 begin\n");
+          fprintf (PSfile, "    	/MatScale1 matrix def\n");
+          fprintf (PSfile, "    	/MatScale2 [1 2 sqrt div 0 0 2 index 0 0] def\n");
+          fprintf (PSfile, "    	/MatScale4 [0.5 0 0 0.5 0 0] def\n");
+          fprintf (PSfile, "	/PHeight 842 def\n");
+          fprintf (PSfile, "	/PWidth 596 def\n");
+          fprintf (PSfile, "	end\n\n");
 	  
-	  fprintf (PSfile, "    /US 8 dict def\n");
-	  fprintf (PSfile, "    US begin\n");
-	  fprintf (PSfile, "    	/MatScale1 [1 0 0 1 0 -50.01] def\n");
-	  fprintf (PSfile, "    	/MatScale2 [1 3 sqrt div 0 0 2 index 0 0] def\n");
-	  fprintf (PSfile, "    	/MatScale4 [0.45 0 0 0.45 0 0] def\n");
-	  fprintf (PSfile, "	/PHeight 792 def\n");
-	  fprintf (PSfile, "	/PWidth 612 def\n");
-	  fprintf (PSfile, "	end\n\n");
+          fprintf (PSfile, "    /US 8 dict def\n");
+          fprintf (PSfile, "    US begin\n");
+          fprintf (PSfile, "    	/MatScale1 [1 0 0 1 0 -50.01] def\n");
+          fprintf (PSfile, "    	/MatScale2 [1 3 sqrt div 0 0 2 index 0 0] def\n");
+          fprintf (PSfile, "    	/MatScale4 [0.45 0 0 0.45 0 0] def\n");
+          fprintf (PSfile, "	/PHeight 792 def\n");
+          fprintf (PSfile, "	/PWidth 612 def\n");
+          fprintf (PSfile, "	end\n\n");
 	  
-	  fprintf (PSfile, "    /A3 8 dict def\n");
-	  fprintf (PSfile, "    A3 begin\n");
-	  fprintf (PSfile, "    	/MatScale1 matrix def\n");
-	  fprintf (PSfile, "    	/MatScale2 [1 2 sqrt div 0 0 2 index 0 0] def\n");
-	  fprintf (PSfile, "    	/MatScale4 [0.5 0 0 0.5 0 0] def\n");
-	  fprintf (PSfile, "	/PHeight 842 def\n");
-	  fprintf (PSfile, "	/PWidth 596 def\n");
-	  fprintf (PSfile, "	end\n\n");
+          fprintf (PSfile, "    /A3 8 dict def\n");
+          fprintf (PSfile, "    A3 begin\n");
+          fprintf (PSfile, "    	/MatScale1 matrix def\n");
+          fprintf (PSfile, "    	/MatScale2 [1 2 sqrt div 0 0 2 index 0 0] def\n");
+          fprintf (PSfile, "    	/MatScale4 [0.5 0 0 0.5 0 0] def\n");
+          fprintf (PSfile, "	/PHeight 842 def\n");
+          fprintf (PSfile, "	/PWidth 596 def\n");
+          fprintf (PSfile, "	end\n\n");
 	  
-	  fprintf (PSfile, "    /A5 8 dict def\n");
-	  fprintf (PSfile, "    A5 begin\n");
-	  fprintf (PSfile, "    	/MatScale1 matrix def\n");
-	  fprintf (PSfile, "    	/MatScale2 matrix def\n");
-	  fprintf (PSfile, "    	/MatScale4 [1 2 sqrt div 0 0 2 index 0 0] def\n");
-	  fprintf (PSfile, "	/PHeight 842 def\n");
-	  fprintf (PSfile, "	/PWidth 596 def\n");
-	  fprintf (PSfile, "	end\n\n");
+          fprintf (PSfile, "    /A5 8 dict def\n");
+          fprintf (PSfile, "    A5 begin\n");
+          fprintf (PSfile, "    	/MatScale1 matrix def\n");
+          fprintf (PSfile, "    	/MatScale2 matrix def\n");
+          fprintf (PSfile, "    	/MatScale4 [1 2 sqrt div 0 0 2 index 0 0] def\n");
+          fprintf (PSfile, "	/PHeight 842 def\n");
+          fprintf (PSfile, "	/PWidth 596 def\n");
+          fprintf (PSfile, "	end\n\n");
 
-	  fprintf (PSfile, "end %% Matrice dict\n\n");
+          fprintf (PSfile, "end %% Matrice dict\n\n");
 
-	  fprintf (PSfile, "%%%%EndProlog\n");
-	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%DEMARRAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
+          fprintf (PSfile, "%%%%EndProlog\n");
+          fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%DEMARRAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
 
 	  
-	  fprintf (PSfile, "/ThotDict 100 dict def\n");
-	  fprintf (PSfile, "ThotDict begin\n\n");
-	  fprintf (PSfile, "statusdict begin\n");
+          fprintf (PSfile, "/ThotDict 100 dict def\n");
+          fprintf (PSfile, "ThotDict begin\n\n");
+          fprintf (PSfile, "statusdict begin\n");
 
-	  if (manualFeed == 0)
-	    {
-	      if (!strcmp (PageSize, "A3"))
-		fprintf (PSfile, "a3tray\n");
-	    }
-	  else
-	    {
-	      fprintf (PSfile, "/manualfeed true def\n");
-	    }
-	  if (BlackAndWhite != 0)
-	    fprintf (PSfile, "1 setprocesscolors\n");
-	  fprintf (PSfile, "end\n");
-	  fprintf (PSfile, "/decalageH %d def /decalageV %d def\n", HorizShift, VertShift);
-	  fprintf (PSfile, "/reduction %d def\n", Zoom);
-	  fprintf (PSfile, "/page_size (%s) def\n", PageSize);
-	  fprintf (PSfile, "/orientation (%s) def\n", Orientation);
-	  fprintf (PSfile, "/nb_ppf (%dppf) def\n", NPagesPerSheet);
-	  fprintf (PSfile, "/suptrame %d def\n", NoEmpyBox);
-	  fprintf (PSfile, "/evenodd 0 def\n");
-	  fprintf (PSfile, "/HPrinterOff 0 def\n");
-	  fprintf (PSfile, "/VPrinterOff 0 def\n");
-	  fprintf (PSfile, "/user_orientation 0 def  \n");
-	  fprintf (PSfile, "/UserMatrice \n");
-	  fprintf (PSfile, "[reduction 100 div 0 0 2 index 0 0] \n");
-	  fprintf (PSfile, "[1 0 0 1 decalageH HPrinterOff add 72 mul 25.4 div decalageV VPrinterOff add 72 mul 25.4 div neg] matrix concatmatrix\n");
-	  fprintf (PSfile, "[1 0 0 1 0 0]\n");
-	  fprintf (PSfile, "matrix concatmatrix def\n");
-	  fprintf (PSfile, "MatriceDict begin\n");
-	  fprintf (PSfile, "page_size cvlit load	 		%% get the page_size dict\n");
-	  fprintf (PSfile, "begin defdict_portrait defdict_paysage	%% and init it\n");
-	  fprintf (PSfile, "currentdict orientation cvlit get		%% get the orientation dict\n");
-	  fprintf (PSfile, "nb_ppf cvlit get				%% get the nb_ppf dict\n");
-	  fprintf (PSfile, " begin \n");
-	  fprintf (PSfile, "  gsave VectMatrice 0 get setmatrix		%% init CTM\n");
-	  fprintf (PSfile, "  gsave UserMatrice concat\n");
-	  fprintf (PSfile, "  %%100 dict begin				%% working dict\n");
+          if (manualFeed == 0)
+            {
+              if (!strcmp (PageSize, "A3"))
+                fprintf (PSfile, "a3tray\n");
+            }
+          else
+            {
+              fprintf (PSfile, "/manualfeed true def\n");
+            }
+          if (BlackAndWhite != 0)
+            fprintf (PSfile, "1 setprocesscolors\n");
+          fprintf (PSfile, "end\n");
+          fprintf (PSfile, "/decalageH %d def /decalageV %d def\n", HorizShift, VertShift);
+          fprintf (PSfile, "/reduction %d def\n", Zoom);
+          fprintf (PSfile, "/page_size (%s) def\n", PageSize);
+          fprintf (PSfile, "/orientation (%s) def\n", Orientation);
+          fprintf (PSfile, "/nb_ppf (%dppf) def\n", NPagesPerSheet);
+          fprintf (PSfile, "/suptrame %d def\n", NoEmpyBox);
+          fprintf (PSfile, "/evenodd 0 def\n");
+          fprintf (PSfile, "/HPrinterOff 0 def\n");
+          fprintf (PSfile, "/VPrinterOff 0 def\n");
+          fprintf (PSfile, "/user_orientation 0 def  \n");
+          fprintf (PSfile, "/UserMatrice \n");
+          fprintf (PSfile, "[reduction 100 div 0 0 2 index 0 0] \n");
+          fprintf (PSfile, "[1 0 0 1 decalageH HPrinterOff add 72 mul 25.4 div decalageV VPrinterOff add 72 mul 25.4 div neg] matrix concatmatrix\n");
+          fprintf (PSfile, "[1 0 0 1 0 0]\n");
+          fprintf (PSfile, "matrix concatmatrix def\n");
+          fprintf (PSfile, "MatriceDict begin\n");
+          fprintf (PSfile, "page_size cvlit load	 		%% get the page_size dict\n");
+          fprintf (PSfile, "begin defdict_portrait defdict_paysage	%% and init it\n");
+          fprintf (PSfile, "currentdict orientation cvlit get		%% get the orientation dict\n");
+          fprintf (PSfile, "nb_ppf cvlit get				%% get the nb_ppf dict\n");
+          fprintf (PSfile, " begin \n");
+          fprintf (PSfile, "  gsave VectMatrice 0 get setmatrix		%% init CTM\n");
+          fprintf (PSfile, "  gsave UserMatrice concat\n");
+          fprintf (PSfile, "  %%100 dict begin				%% working dict\n");
 
 
-	  NumberOfPages = 0;
-	  fflush (PSfile);
-	}
+          NumberOfPages = 0;
+          fflush (PSfile);
+        }
     }
   else
     {
@@ -1403,7 +1407,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 }
 
 /*----------------------------------------------------------------------
-   ClosePSFile ferme le fichier PostScript.                        
+  ClosePSFile ferme le fichier PostScript.                        
   ----------------------------------------------------------------------*/
 static void ClosePSFile (int frame)
 {
@@ -1429,7 +1433,7 @@ static void ClosePSFile (int frame)
 
 
 /*----------------------------------------------------------------------
-   ClipOnPage defines the drawing limits.
+  ClipOnPage defines the drawing limits.
   ----------------------------------------------------------------------*/
 static void ClipOnPage (int frame, int org, int width, int height)
 {
@@ -1449,312 +1453,312 @@ static void ClipOnPage (int frame, int org, int width, int height)
       h = height;
       /* set the clipping to the frame size before generating postscript */
       DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin,
-		      &y, &framexmax, &h, 1);
+                      &y, &framexmax, &h, 1);
     }
 }
 
 /*----------------------------------------------------------------------
-   SetMargins met a jour PageHeight et PageFooterHeight ainsi que  
-   les marges du haut et du cote gauche, selon le type de page        
-   auquel appartient l'element Marque Page pointe par pPageEl.        
-   Cette procedure utilise PageHeaderFooter (commune a print et page)         
+  SetMargins met a jour PageHeight et PageFooterHeight ainsi que  
+  les marges du haut et du cote gauche, selon le type de page        
+  auquel appartient l'element Marque Page pointe par pPageEl.        
+  Cette procedure utilise PageHeaderFooter (commune a print et page)         
   ----------------------------------------------------------------------*/
 static void SetMargins (PtrElement pPageEl, PtrDocument pDoc,
-			PtrAbstractBox rootAbsBox)
+                        PtrAbstractBox rootAbsBox)
 {
-   PtrPRule            pPRule;
-   PtrPSchema          pPSchema;
-   AbDimension        *pDim;
-   AbPosition         *pPos;
-   int                 boxNum, pageHeight, schView, NewLeftMargin, NewTopMargin;
-   ThotBool            change;
+  PtrPRule            pPRule;
+  PtrPSchema          pPSchema;
+  AbDimension        *pDim;
+  AbPosition         *pPos;
+  int                 boxNum, pageHeight, schView, NewLeftMargin, NewTopMargin;
+  ThotBool            change;
 
-   /* a priori, les nouvelles marges sont les memes que les anciennes */
-   NewTopMargin = TopMargin;
-   change = FALSE;
-   NewLeftMargin = LeftMargin;
-   boxNum = 0;
-   if (pPageEl == NULL)
-      /* pas de page definie, on prend les marges et les dimensions */
-      /* par defaut */
-     {
-	PageFooterHeight = 0;
-	/****** NewLeftMargin = PixelValue (DEF_LEFT_MARGIN, UnPoint, NULL, 0);
-	NewTopMargin = PixelValue (DEF_TOP_MARGIN, UnPoint, NULL, 0); ******/
-	NewLeftMargin = DEF_LEFT_MARGIN;
-	NewTopMargin = DEF_TOP_MARGIN;
-	PageHeight = DEF_PAGE_HEIGHT;
-	if (rootAbsBox)
-	  {
-	    /* verifie que le pave racine a une largeur fixe */
-	    pDim = &rootAbsBox->AbWidth;
-	    if (pDim->DimIsPosition || pDim->DimValue < 0 ||
-		pDim->DimAbRef != NULL || pDim->DimUnit == UnPercent)
-	      /* ce n'est pas une largeur fixe, on impose la largeur par */
-	      /* defaut */
-	      {
-		pDim->DimIsPosition = FALSE;
-		pDim->DimValue = DEF_PAGE_WIDTH;
-		pDim->DimAbRef = NULL;
-		pDim->DimUnit = UnPoint;
-		rootAbsBox->AbWidthChange = TRUE;
-		change = TRUE;
-	      }
-	  }
-     }
+  /* a priori, les nouvelles marges sont les memes que les anciennes */
+  NewTopMargin = TopMargin;
+  change = FALSE;
+  NewLeftMargin = LeftMargin;
+  boxNum = 0;
+  if (pPageEl == NULL)
+    /* pas de page definie, on prend les marges et les dimensions */
+    /* par defaut */
+    {
+      PageFooterHeight = 0;
+      /****** NewLeftMargin = PixelValue (DEF_LEFT_MARGIN, UnPoint, NULL, 0);
+              NewTopMargin = PixelValue (DEF_TOP_MARGIN, UnPoint, NULL, 0); ******/
+      NewLeftMargin = DEF_LEFT_MARGIN;
+      NewTopMargin = DEF_TOP_MARGIN;
+      PageHeight = DEF_PAGE_HEIGHT;
+      if (rootAbsBox)
+        {
+          /* verifie que le pave racine a une largeur fixe */
+          pDim = &rootAbsBox->AbWidth;
+          if (pDim->DimIsPosition || pDim->DimValue < 0 ||
+              pDim->DimAbRef != NULL || pDim->DimUnit == UnPercent)
+            /* ce n'est pas une largeur fixe, on impose la largeur par */
+            /* defaut */
+            {
+              pDim->DimIsPosition = FALSE;
+              pDim->DimValue = DEF_PAGE_WIDTH;
+              pDim->DimAbRef = NULL;
+              pDim->DimUnit = UnPoint;
+              rootAbsBox->AbWidthChange = TRUE;
+              change = TRUE;
+            }
+        }
+    }
 
-   else if (pPageEl->ElPageType == PgBegin && pPageEl->ElParent != NULL)
-      /* Nouveau type de page, on determine la hauteur des pages */
-     {
-       schView = TheDoc->DocView[CurrentView - 1].DvPSchemaView;
-	if (Repaginate)
-	  {
-	    /* on recupere la boite page sans mettre a jour la hauteur */
-	    /* de page (car c'est fait par le paginateur) */
-	    /* l'element englobant porte-t-il une regle page ? */
-	    pPRule = GetPageRule (pPageEl->ElParent, pDoc, schView, &pPSchema);
-	    if (pPRule != NULL)	/* on a trouve la regle page */
-	      boxNum = pPRule->PrPresBox[0];
-	  }
-	else
-	  /* appel a PageHeaderFooter qui met a jour les variables PageHeight*/
-	  /* et PageFooterHeight */
-	  PageHeaderFooter (pPageEl, TheDoc, schView, &boxNum, &pPSchema);
-	/* mise a jour de NewTopMargin et NewLeftMargin */
-	if (boxNum != 0 && pPSchema != NULL)
-	  {
-	     /* cherche la regle de position verticale */
-	     pPRule = GetPRulePage (PtVertPos, boxNum, pPSchema);
-	     if (pPRule != NULL)
-		/* on a trouve' la regle de position verticale, elle donne */
-		/* la nouvelle marge de haut de page */
-		NewTopMargin = pPRule->PrPosRule.PoDistance;
-	     /* cherche la regle de position horizontale */
-	     pPRule = GetPRulePage (PtHorizPos, boxNum, pPSchema);
-	     if (pPRule != NULL)
-		/* on a trouve' la regle de position horizontale, elle */
-		/* donne la nouvelle marge de gauche de la page. */
-		NewLeftMargin = pPRule->PrPosRule.PoDistance;
-	  }
-     }
+  else if (pPageEl->ElPageType == PgBegin && pPageEl->ElParent != NULL)
+    /* Nouveau type de page, on determine la hauteur des pages */
+    {
+      schView = TheDoc->DocView[CurrentView - 1].DvPSchemaView;
+      if (Repaginate)
+        {
+          /* on recupere la boite page sans mettre a jour la hauteur */
+          /* de page (car c'est fait par le paginateur) */
+          /* l'element englobant porte-t-il une regle page ? */
+          pPRule = GetPageRule (pPageEl->ElParent, pDoc, schView, &pPSchema);
+          if (pPRule != NULL)	/* on a trouve la regle page */
+            boxNum = pPRule->PrPresBox[0];
+        }
+      else
+        /* appel a PageHeaderFooter qui met a jour les variables PageHeight*/
+        /* et PageFooterHeight */
+        PageHeaderFooter (pPageEl, TheDoc, schView, &boxNum, &pPSchema);
+      /* mise a jour de NewTopMargin et NewLeftMargin */
+      if (boxNum != 0 && pPSchema != NULL)
+        {
+          /* cherche la regle de position verticale */
+          pPRule = GetPRulePage (PtVertPos, boxNum, pPSchema);
+          if (pPRule != NULL)
+            /* on a trouve' la regle de position verticale, elle donne */
+            /* la nouvelle marge de haut de page */
+            NewTopMargin = pPRule->PrPosRule.PoDistance;
+          /* cherche la regle de position horizontale */
+          pPRule = GetPRulePage (PtHorizPos, boxNum, pPSchema);
+          if (pPRule != NULL)
+            /* on a trouve' la regle de position horizontale, elle */
+            /* donne la nouvelle marge de gauche de la page. */
+            NewLeftMargin = pPRule->PrPosRule.PoDistance;
+        }
+    }
 
-      /* le cadrage vertical dans la feuille de papier change */
-      /* on conserve la nouvelle marge */
-      /* Si on est en mode repagination, il faut repositionner le pave racine            en fonction de la marge */
-      /* il faut le faire aussi en mode non repagination (cf. UnSetTopMargin) */
-        TopMargin = NewTopMargin;
+  /* le cadrage vertical dans la feuille de papier change */
+  /* on conserve la nouvelle marge */
+  /* Si on est en mode repagination, il faut repositionner le pave racine            en fonction de la marge */
+  /* il faut le faire aussi en mode non repagination (cf. UnSetTopMargin) */
+  TopMargin = NewTopMargin;
 	/* on modifie la position verticale du pave racine */
 
-   if (NewLeftMargin != LeftMargin)
-      /* le cadrage horizontal dans la feuille de papier change */
-      /* on conserve la nouvelle marge */
-     {
-	LeftMargin = NewLeftMargin;
-	if (rootAbsBox)
-	  {
-	    /* on modifie la position horizontale du pave racine */
-	    pPos = &rootAbsBox->AbHorizPos;
-	    pPos->PosAbRef = NULL;
-	    pPos->PosDistance = LeftMargin;
-	    pPos->PosEdge = Left;
-	    pPos->PosRefEdge = Left;
-	    pPos->PosUnit = UnPoint;
-	    pPos->PosUserSpecified = FALSE;
-	    rootAbsBox->AbHorizPosChange = TRUE;
-	    change = TRUE;
-	  }
-     }
-   if (change)
-      /* on signale le changement de position ou de dimension du pave */
-      /* racine au Mediateur */
-     {
-	/* on ne s'occupe pas des hauteurs de page */
-	pageHeight = 0;
-	change = ChangeConcreteImage (CurrentFrame, &pageHeight, rootAbsBox);
-     }
+  if (NewLeftMargin != LeftMargin)
+    /* le cadrage horizontal dans la feuille de papier change */
+    /* on conserve la nouvelle marge */
+    {
+      LeftMargin = NewLeftMargin;
+      if (rootAbsBox)
+        {
+          /* on modifie la position horizontale du pave racine */
+          pPos = &rootAbsBox->AbHorizPos;
+          pPos->PosAbRef = NULL;
+          pPos->PosDistance = LeftMargin;
+          pPos->PosEdge = Left;
+          pPos->PosRefEdge = Left;
+          pPos->PosUnit = UnPoint;
+          pPos->PosUserSpecified = FALSE;
+          rootAbsBox->AbHorizPosChange = TRUE;
+          change = TRUE;
+        }
+    }
+  if (change)
+    /* on signale le changement de position ou de dimension du pave */
+    /* racine au Mediateur */
+    {
+      /* on ne s'occupe pas des hauteurs de page */
+      pageHeight = 0;
+      change = ChangeConcreteImage (CurrentFrame, &pageHeight, rootAbsBox);
+    }
 }
 
 /*----------------------------------------------------------------------
-   NextPage    On cherche dans l'image abstraite     		
-   le prochain pave d'une marque de page qui ne soit pas un        
-   rappel de page. pAb pointe sur le pave d'une marque de page.   	
-   Retourne un pointeur sur le pave trouve ou NULL si pas trouve    
+  NextPage    On cherche dans l'image abstraite     		
+  le prochain pave d'une marque de page qui ne soit pas un        
+  rappel de page. pAb pointe sur le pave d'une marque de page.   	
+  Retourne un pointeur sur le pave trouve ou NULL si pas trouve    
   ----------------------------------------------------------------------*/
 static PtrAbstractBox NextPage (PtrAbstractBox pAb)
 {
-   /* cherche la derniere feuille dans la marque de page du debut */
-   while (pAb->AbFirstEnclosed != NULL)
-     {
-	pAb = pAb->AbFirstEnclosed;
-	while (pAb->AbNext != NULL)
-	   pAb = pAb->AbNext;
-     }
-   /* cherche la marque de page suivante */
-   pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
-   return (pAb);
+  /* cherche la derniere feuille dans la marque de page du debut */
+  while (pAb->AbFirstEnclosed != NULL)
+    {
+      pAb = pAb->AbFirstEnclosed;
+      while (pAb->AbNext != NULL)
+        pAb = pAb->AbNext;
+    }
+  /* cherche la marque de page suivante */
+  pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
+  return (pAb);
 }
 
 /*----------------------------------------------------------------------
-   PrintView calcule l'image imprimable de la vue traitee.   
+  PrintView calcule l'image imprimable de la vue traitee.   
   ----------------------------------------------------------------------*/
 static void PrintView (PtrDocument pDoc)
 {
-   PtrElement          pEl;
-   PtrPSchema          pPS;
-   PtrAbstractBox      rootAbsBox;
-   PtrAbstractBox      pAb, pPageAb, pNextPageAb, pHeaderAb;
-   DocViewDescr       *pViewD;
-   PtrBox              pBox;
-   Name                viewName;
-   FILE               *PSfile;
-   int                 volume, prevVol, h, clipOrg;
-   ThotBool            full;
+  PtrElement          pEl;
+  PtrPSchema          pPS;
+  PtrAbstractBox      rootAbsBox;
+  PtrAbstractBox      pAb, pPageAb, pNextPageAb, pHeaderAb;
+  DocViewDescr       *pViewD;
+  PtrBox              pBox;
+  Name                viewName;
+  FILE               *PSfile;
+  int                 volume, prevVol, h, clipOrg;
+  ThotBool            full;
 
-   PageHeight = 0;
-   clipOrg = 0;
-   /* on ne construit pas les pages (on respecte les marques de page qui existent) */
-   pPageAb = NULL;
-   pNextPageAb = NULL;
-   pHeaderAb = NULL;
-   pBox = NULL;
-   /* cree le debut de l'image du document (le volume libre a ete
-      initialise' apres la creation de la fenetre) */
-   pEl = pDoc->DocDocElement;
-   pViewD = &pDoc->DocView[CurrentView - 1];
-   pPS = PresentationSchema (pViewD->DvSSchema, pDoc);
-   strncpy (viewName, pPS->PsView[pViewD->DvPSchemaView-1],
-	    MAX_NAME_LENGTH);
-   pDoc->DocViewRootAb[CurrentView - 1] = AbsBoxesCreate (pEl, pDoc,
-					      CurrentView, TRUE, TRUE, &full);
-   rootAbsBox = pEl->ElAbstractBox[CurrentView - 1];
-   /* les numeros de pages a imprimer ne sont significatifs que pour la
-      vue principale de l'arbre principal */
-   if (pViewD->DvPSchemaView != 1)
-     {
-       FirstPrinted = -9999;
-       LastPrinted = 9999;
-     }
+  PageHeight = 0;
+  clipOrg = 0;
+  /* on ne construit pas les pages (on respecte les marques de page qui existent) */
+  pPageAb = NULL;
+  pNextPageAb = NULL;
+  pHeaderAb = NULL;
+  pBox = NULL;
+  /* cree le debut de l'image du document (le volume libre a ete
+     initialise' apres la creation de la fenetre) */
+  pEl = pDoc->DocDocElement;
+  pViewD = &pDoc->DocView[CurrentView - 1];
+  pPS = PresentationSchema (pViewD->DvSSchema, pDoc);
+  strncpy (viewName, pPS->PsView[pViewD->DvPSchemaView-1],
+           MAX_NAME_LENGTH);
+  pDoc->DocViewRootAb[CurrentView - 1] = AbsBoxesCreate (pEl, pDoc,
+                                                         CurrentView, TRUE, TRUE, &full);
+  rootAbsBox = pEl->ElAbstractBox[CurrentView - 1];
+  /* les numeros de pages a imprimer ne sont significatifs que pour la
+     vue principale de l'arbre principal */
+  if (pViewD->DvPSchemaView != 1)
+    {
+      FirstPrinted = -9999;
+      LastPrinted = 9999;
+    }
 
-   /* demande le calcul de l'image */
-   h = 0;
-   ChangeConcreteImage (CurrentFrame, &h, rootAbsBox);
-   volume = rootAbsBox->AbVolume;
+  /* demande le calcul de l'image */
+  h = 0;
+  ChangeConcreteImage (CurrentFrame, &h, rootAbsBox);
+  volume = rootAbsBox->AbVolume;
    
-   /* cherche le premier element page ou la premiere feuille */
-   pAb = rootAbsBox;
-   while (pAb->AbFirstEnclosed != NULL && pAb->AbElement->ElTypeNumber != PageBreak + 1)
-     pAb = pAb->AbFirstEnclosed;
+  /* cherche le premier element page ou la premiere feuille */
+  pAb = rootAbsBox;
+  while (pAb->AbFirstEnclosed != NULL && pAb->AbElement->ElTypeNumber != PageBreak + 1)
+    pAb = pAb->AbFirstEnclosed;
    
-   if (pAb->AbElement->ElTypeNumber != PageBreak + 1)
-     /* le document ne commence pas par une marque de page, cherche la */
-     /* premiere marque de page qui suit */
-     pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
+  if (pAb->AbElement->ElTypeNumber != PageBreak + 1)
+    /* le document ne commence pas par une marque de page, cherche la */
+    /* premiere marque de page qui suit */
+    pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
    
-   if (pAb != NULL)
-     if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
-       /* on a trouve' une marque de page, on determine la hauteur de ce */
-       /* type de page */
-       {
-	 SetMargins (pAb->AbElement, pDoc, rootAbsBox);
-	 pPageAb = pAb;
-       }
+  if (pAb != NULL)
+    if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
+      /* on a trouve' une marque de page, on determine la hauteur de ce */
+      /* type de page */
+      {
+        SetMargins (pAb->AbElement, pDoc, rootAbsBox);
+        pPageAb = pAb;
+      }
    
-   if (pPageAb == NULL)
-     /* document non pagine */
-     {
-       /* generation de la bounding box d'un grand graphique */
-       if (pNextPageAb == NULL && rootAbsBox->AbBox != NULL)
-	 {
-	   pBox = rootAbsBox->AbBox;
-	   psBoundingBox (CurrentFrame, pBox->BxWidth + pBox->BxXOrg,
-			  pBox->BxHeight + pBox->BxYOrg);
-	 }
-       SetMargins (NULL, NULL, NULL);
-       /* Document sans marques de pages */
-       /* probablement un graphique: il ne faut pas clipper */
-       /* control the Abort printing button */
-       if (DoAbort)
-	 return;
+  if (pPageAb == NULL)
+    /* document non pagine */
+    {
+      /* generation de la bounding box d'un grand graphique */
+      if (pNextPageAb == NULL && rootAbsBox->AbBox != NULL)
+        {
+          pBox = rootAbsBox->AbBox;
+          psBoundingBox (CurrentFrame, pBox->BxWidth + pBox->BxXOrg,
+                         pBox->BxHeight + pBox->BxYOrg);
+        }
+      SetMargins (NULL, NULL, NULL);
+      /* Document sans marques de pages */
+      /* probablement un graphique: il ne faut pas clipper */
+      /* control the Abort printing button */
+      if (DoAbort)
+        return;
 #ifdef _WINGUI
-       if (TtPrinterDC)
-	 {
-	   if ((StartPage (TtPrinterDC)) <= 0)
-	     WinErrorBox (NULL, "PrintView (1)");
-	 }
-       else
+      if (TtPrinterDC)
+        {
+          if ((StartPage (TtPrinterDC)) <= 0)
+            WinErrorBox (NULL, "PrintView (1)");
+        }
+      else
 #endif /* _WINGUI */
-       PSfile = (FILE *) FrRef[CurrentFrame];
-       NotePageNumber (PSfile);
-       DisplayFrame (CurrentFrame);
-       DrawPage (PSfile, 1,
-		 pBox->BxWidth, PageHeight);
-     }
-   else
-     {
-       /* traite une page apres l'autre */
-       do
-	 {
+        PSfile = (FILE *) FrRef[CurrentFrame];
+      NotePageNumber (PSfile);
+      DisplayFrame (CurrentFrame);
+      DrawPage (PSfile, 1,
+                pBox->BxWidth, PageHeight);
+    }
+  else
+    {
+      /* traite une page apres l'autre */
+      do
+        {
 #ifdef _WINGUI
-	   /* control the Abort printing button */
-	   AbortProc (TtPrinterDC, 0);
+          /* control the Abort printing button */
+          AbortProc (TtPrinterDC, 0);
 #endif /* _WINGUI */
-	   if (DoAbort)
-	     return;
+          if (DoAbort)
+            return;
 
-	   /* cherche la premiere marque de la page suivante, en ignorant */
-	   /* les rappels de page. */
-	   pNextPageAb = NextPage (pPageAb);
-	   if (pNextPageAb == NULL)
-	     /* on n'a pas trouve' de marque de page suivante, on complete */
-	     /* l'image abstraite jusqu'a ce qu'elle contienne une marque de */
-	     /* page suivante ou qu'on soit arrive' a la fin de la vue ou que */
-	     /* le volume de l'image soit trop important */
-	     {
-	       while (pNextPageAb == NULL && rootAbsBox->AbTruncatedTail &&
-		      rootAbsBox->AbVolume < MAX_VOLUME)
-		 /* on ajoute au moins 100 caracteres a l'image */
-		 {
-		   if (volume < 100)
-		     volume = 100;
-		   /* indique le volume qui peut etre cree */
-		   do
-		     {
-		       pDoc->DocViewFreeVolume[CurrentView - 1] = volume;
-		       prevVol = rootAbsBox->AbVolume;
-		       /* demande la creation de paves supplementaires */
-		       AddAbsBoxes (rootAbsBox, pDoc, FALSE);
-		       if (rootAbsBox->AbVolume <= prevVol)
-			 /* rien n'a ete cree, augmente le volume de ce qui */
-			 /* peut etre cree' */
-			 volume = 2 * volume;
-		     }
-		   while (rootAbsBox->AbVolume <= prevVol && rootAbsBox->AbTruncatedTail);
-		   /* on a effectivement cree de nouveaux paves, on cherche */
-		   /* si on a cree' une marque de la page suivante */
-		   if (pPageAb != NULL)
-		     pNextPageAb = NextPage (pPageAb);
-		 }
+          /* cherche la premiere marque de la page suivante, en ignorant */
+          /* les rappels de page. */
+          pNextPageAb = NextPage (pPageAb);
+          if (pNextPageAb == NULL)
+            /* on n'a pas trouve' de marque de page suivante, on complete */
+            /* l'image abstraite jusqu'a ce qu'elle contienne une marque de */
+            /* page suivante ou qu'on soit arrive' a la fin de la vue ou que */
+            /* le volume de l'image soit trop important */
+            {
+              while (pNextPageAb == NULL && rootAbsBox->AbTruncatedTail &&
+                     rootAbsBox->AbVolume < MAX_VOLUME)
+                /* on ajoute au moins 100 caracteres a l'image */
+                {
+                  if (volume < 100)
+                    volume = 100;
+                  /* indique le volume qui peut etre cree */
+                  do
+                    {
+                      pDoc->DocViewFreeVolume[CurrentView - 1] = volume;
+                      prevVol = rootAbsBox->AbVolume;
+                      /* demande la creation de paves supplementaires */
+                      AddAbsBoxes (rootAbsBox, pDoc, FALSE);
+                      if (rootAbsBox->AbVolume <= prevVol)
+                        /* rien n'a ete cree, augmente le volume de ce qui */
+                        /* peut etre cree' */
+                        volume = 2 * volume;
+                    }
+                  while (rootAbsBox->AbVolume <= prevVol && rootAbsBox->AbTruncatedTail);
+                  /* on a effectivement cree de nouveaux paves, on cherche */
+                  /* si on a cree' une marque de la page suivante */
+                  if (pPageAb != NULL)
+                    pNextPageAb = NextPage (pPageAb);
+                }
 
-	       /* on demande le calcul de l'image */
-	       h = 0;
-	       ChangeConcreteImage (CurrentFrame, &h, rootAbsBox);
-	     }
+              /* on demande le calcul de l'image */
+              h = 0;
+              ChangeConcreteImage (CurrentFrame, &h, rootAbsBox);
+            }
 
-	   /* Clean up the top of each page */
-	   CleanTopOfPageElement = TRUE;
-	   if (PrintOnePage (pDoc, pPageAb, pNextPageAb, rootAbsBox, clipOrg))
-	     /* la nouvelle marque de page devient la page courante */
-	     pPageAb = pNextPageAb;
-	   else
-	     pPageAb = NULL;
-	 }
-       while (pPageAb != NULL);
-     }
+          /* Clean up the top of each page */
+          CleanTopOfPageElement = TRUE;
+          if (PrintOnePage (pDoc, pPageAb, pNextPageAb, rootAbsBox, clipOrg, FALSE))
+            /* la nouvelle marque de page devient la page courante */
+            pPageAb = pNextPageAb;
+          else
+            pPageAb = NULL;
+        }
+      while (pPageAb != NULL);
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   PrintDocument							
+  PrintDocument							
   ----------------------------------------------------------------------*/
 static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 {
@@ -1781,10 +1785,10 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   /* imprime l'une apres l'autre les vues a imprimer indiquees dans */
   /* les parametres d'appel du programme print */
   for (v = 0; v < viewsCounter; v++)
-   {
+    {
 #if defined(_GTK) || defined(_WX)
       if (DoAbort)
-	  return 1;
+        return 1;
 #endif /* _GTK || _WX */
       CurrentView = 0;
       withPages = FALSE;
@@ -1793,95 +1797,95 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
       pSS = pDoc->DocSSchema;
       /* on examine le schema principal du document et ses extensions */
       do
-	{
-	  pPSchema = PresentationSchema (pSS, pDoc);
-	  for (schView = 0; schView < pPSchema->PsNViews && !found;)
-	    if (!strcmp (PrintViewName[v], pPSchema->PsView[schView]))
-	      found = TRUE;
-	    else schView++ ;
-	  if (!found)
-	    pSS = pSS->SsNextExtens;
-	}
+        {
+          pPSchema = PresentationSchema (pSS, pDoc);
+          for (schView = 0; schView < pPSchema->PsNViews && !found;)
+            if (!strcmp (PrintViewName[v], pPSchema->PsView[schView]))
+              found = TRUE;
+            else schView++ ;
+          if (!found)
+            pSS = pSS->SsNextExtens;
+        }
       while (pSS != NULL && !found);
 
       if (found)
-	{
-	  /* on memorise le fait que c'est une vue avec ou sans pages */
-	  withPages = pPSchema->PsPaginatedView[schView];
-	  /* c'est une vue de l'arbre principal, on cherche un */
-	  /* descripteur de vue libre */
-	  for (docView = 0; docView < MAX_VIEW_DOC && CurrentView == 0;
-	       docView++)
-	    if (pDoc->DocView[docView].DvPSchemaView == 0)
-	      /* on prend ce descripteur libre */
-	      {
-		pDoc->DocView[docView].DvSSchema = pSS;
-		pDoc->DocView[docView].DvPSchemaView = schView + 1;
-		pDoc->DocView[docView].DvSync = FALSE;
-		pDoc->DocView[docView].DvFirstGuestView = NULL;
-		/* create the guest view list for that view */
-		CreateGuestViewList (pDoc, docView+1);
-		CurrentView = docView + 1;
-	      }
-	}
+        {
+          /* on memorise le fait que c'est une vue avec ou sans pages */
+          withPages = pPSchema->PsPaginatedView[schView];
+          /* c'est une vue de l'arbre principal, on cherche un */
+          /* descripteur de vue libre */
+          for (docView = 0; docView < MAX_VIEW_DOC && CurrentView == 0;
+               docView++)
+            if (pDoc->DocView[docView].DvPSchemaView == 0)
+              /* on prend ce descripteur libre */
+              {
+                pDoc->DocView[docView].DvSSchema = pSS;
+                pDoc->DocView[docView].DvPSchemaView = schView + 1;
+                pDoc->DocView[docView].DvSync = FALSE;
+                pDoc->DocView[docView].DvFirstGuestView = NULL;
+                /* create the guest view list for that view */
+                CreateGuestViewList (pDoc, docView+1);
+                CurrentView = docView + 1;
+              }
+        }
 
       /* on ne traite pas, pour l'instant, les vues des natures */
       if (CurrentView > 0)
-	/* il y a une vue a imprimer */
-	/* demande la creation d'une frame pour la vue a traiter */
-	{
-	  CurrentFrame = OpenPSFile (pDoc, &pDoc->DocViewVolume[CurrentView - 1]);
-	  if (CurrentFrame != 0)
-	    {
-	      /* creation frame reussie */
-	      /* si c'est la premiere frame, on garde son numero */
-	      if (firstFrame == 0)
-		firstFrame = CurrentFrame;
-	      /* initialise la fenetre, et notamment le volume de l'image abstraite a creer et le nombre de pages creees a 0 */
-	      pDoc->DocViewFrame[CurrentView - 1] = CurrentFrame;
-	      /* DocVueCreee[CurrentView]:= true; */
-	      pDoc->DocViewFreeVolume[CurrentView - 1] = 1000;
+        /* il y a une vue a imprimer */
+        /* demande la creation d'une frame pour la vue a traiter */
+        {
+          CurrentFrame = OpenPSFile (pDoc, &pDoc->DocViewVolume[CurrentView - 1]);
+          if (CurrentFrame != 0)
+            {
+              /* creation frame reussie */
+              /* si c'est la premiere frame, on garde son numero */
+              if (firstFrame == 0)
+                firstFrame = CurrentFrame;
+              /* initialise la fenetre, et notamment le volume de l'image abstraite a creer et le nombre de pages creees a 0 */
+              pDoc->DocViewFrame[CurrentView - 1] = CurrentFrame;
+              /* DocVueCreee[CurrentView]:= true; */
+              pDoc->DocViewFreeVolume[CurrentView - 1] = 1000;
 
-	      /* page dimensions and margings are unknown, set default values
-		 TopMargin = 57;
-		 LeftMargin = 57;
-	      */
-	      TopMargin = 0;
-	      LeftMargin = 0;
-	      PageHeight = 0;
-	      PageFooterHeight = 0;
-	      CleanTopOfPageElement = True;
-	      if (Repaginate && withPages)
-		{
-		  /* on pagine le document et on imprime au fur et */
-		  /* mesure les pages creees : PaginateView appelle la */
-		  /* procedure PrintOnePage definie ci-dessous */
-		  PaginateView (pDoc, CurrentView);
-		}
-	      else
-		/* imprime la vue */
-		PrintView (pDoc);
-	      /* on ferme la fenetre, sauf si c'est la premiere creee. */
-	      if (CurrentFrame != firstFrame)
-		ClosePSFile (CurrentFrame);
-	      CurrentFrame = 0;
-	    }
-	}
+              /* page dimensions and margings are unknown, set default values
+                 TopMargin = 57;
+                 LeftMargin = 57;
+              */
+              TopMargin = 0;
+              LeftMargin = 0;
+              PageHeight = 0;
+              PageFooterHeight = 0;
+              CleanTopOfPageElement = True;
+              if (Repaginate && withPages)
+                {
+                  /* on pagine le document et on imprime au fur et */
+                  /* mesure les pages creees : PaginateView appelle la */
+                  /* procedure PrintOnePage definie ci-dessous */
+                  PaginateView (pDoc, CurrentView);
+                }
+              else
+                /* imprime la vue */
+                PrintView (pDoc);
+              /* on ferme la fenetre, sauf si c'est la premiere creee. */
+              if (CurrentFrame != firstFrame)
+                ClosePSFile (CurrentFrame);
+              CurrentFrame = 0;
+            }
+        }
     }
 
 #ifdef _WINGUI
   if (TtPrinterDC)
     {
       if (DoAbort)
-	AbortDoc (TtPrinterDC);
+        AbortDoc (TtPrinterDC);
       else 
-	{
-	  /* remove the Abort window */
-	  DestroyWindow (GHwnAbort);
-	  /* end the document */
-	  if ((EndDoc (TtPrinterDC)) <= 0)
-	    WinErrorBox (NULL, "PrintDocument (2)");    
-	}
+        {
+          /* remove the Abort window */
+          DestroyWindow (GHwnAbort);
+          /* end the document */
+          if ((EndDoc (TtPrinterDC)) <= 0)
+            WinErrorBox (NULL, "PrintDocument (2)");    
+        }
       GHwnAbort = NULL;
       return 0;
     }
@@ -1893,9 +1897,9 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
       return (0); /** The .ps file was generated **/
     }
   else
-      return (-1); /** The .ps file was not generated for any raison **/
+    return (-1); /** The .ps file was not generated for any raison **/
 #endif /* _WINDOWS */
- return 0;
+  return 0;
 }
 
 #ifdef _WX
@@ -1939,8 +1943,8 @@ void wx_print_dialog ()
   BoTable.
   ----------------------------------------------------------------------*/
 ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
-		       PtrAbstractBox pNextPageAb, PtrAbstractBox rootAbsBox,
-		       int clipOrg)
+                       PtrAbstractBox pNextPageAb, PtrAbstractBox rootAbsBox,
+                       int clipOrg, ThotBool last)
 {
   PtrAbstractBox      pAb, pSpaceAb;
   PtrBox              box;
@@ -1983,15 +1987,15 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
       if ((StartPage (TtPrinterDC)) <= 0)
         WinErrorBox (NULL, "PrintOnePage (1)");
       /* control the Abort printing button */
-	  AbortProc (TtPrinterDC, 0);
+      AbortProc (TtPrinterDC, 0);
       if (DoAbort)
         return (FALSE);
       /* update and display the number of pages we have printed */
       {
-	char print_msg [20];
-	pg_counter++;
-	sprintf (print_msg, "Page: %d", pg_counter);
-	SetWindowText (GetDlgItem (GHwnAbort, IDC_PAGENO), print_msg);
+        char print_msg [20];
+        pg_counter++;
+        sprintf (print_msg, "Page: %d", pg_counter);
+        SetWindowText (GetDlgItem (GHwnAbort, IDC_PAGENO), print_msg);
       }
     }
   else
@@ -2003,19 +2007,19 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
       pPageAb->AbElement->ElPageNumber <= LastPrinted)
     {
       if (CleanTopOfPageElement)
-	/* cas ou on imprime la premiere page */
-	/* il faut rendre le premier filet invisible */
-	{
-	  if (pPageAb->AbFirstEnclosed != NULL &&
-	      !pPageAb->AbFirstEnclosed->AbPresentationBox)
-	    /* rend le filet invisible */
-	    {
-	      pPageAb->AbFirstEnclosed->AbShape = SPACE;
-	      pPageAb->AbFirstEnclosed->AbRealShape = SPACE;
-	    }
-	  KillAbsBoxBeforePage (pPageAb, CurrentFrame, pDoc, CurrentView, &clipOrg);
-	  CleanTopOfPageElement = False;
-	}
+        /* cas ou on imprime la premiere page */
+        /* il faut rendre le premier filet invisible */
+        {
+          if (pPageAb->AbFirstEnclosed != NULL &&
+              !pPageAb->AbFirstEnclosed->AbPresentationBox)
+            /* rend le filet invisible */
+            {
+              pPageAb->AbFirstEnclosed->AbShape = SPACE;
+              pPageAb->AbFirstEnclosed->AbRealShape = SPACE;
+            }
+          KillAbsBoxBeforePage (pPageAb, CurrentFrame, pDoc, CurrentView, &clipOrg);
+          CleanTopOfPageElement = False;
+        }
 
       /* met a jour les marges du haut et du cote gauche (mais pas PageHeight */
       /* car elle a ete calculee par la pagination */
@@ -2031,129 +2035,129 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
       pSpaceAb = NULL;
       
       if (pNextPageAb != NULL)
-	/* il y a une nouvelle marque de page */
-	/* cherche le pave du filet saut de page dans la marque de page */
-	{
-	  pAb = pNextPageAb->AbFirstEnclosed;
-	  stop = FALSE;
-	  do
-	    if (pAb == NULL)
-	      stop = TRUE;
-	    else if (!pAb->AbPresentationBox)
-	      /* Note: le filet n'est pas un pave de presentation, */
-	      /* alors que toutes les autres boites de bas de page sont */
-	      /* des paves de presentation */
-	      {
-		stop = TRUE;	/* rend le filet invisible */
-		pAb->AbShape = SPACE;
-		pAb->AbRealShape = SPACE;
-	      }
-	    else
-	      pAb = pAb->AbNext;
-	  while (!stop);
+        /* il y a une nouvelle marque de page */
+        /* cherche le pave du filet saut de page dans la marque de page */
+        {
+          pAb = pNextPageAb->AbFirstEnclosed;
+          stop = FALSE;
+          do
+            if (pAb == NULL)
+              stop = TRUE;
+            else if (!pAb->AbPresentationBox)
+              /* Note: le filet n'est pas un pave de presentation, */
+              /* alors que toutes les autres boites de bas de page sont */
+              /* des paves de presentation */
+              {
+                stop = TRUE;	/* rend le filet invisible */
+                pAb->AbShape = SPACE;
+                pAb->AbRealShape = SPACE;
+              }
+            else
+              pAb = pAb->AbNext;
+          while (!stop);
 
-	  if (pAb != NULL)
-	    /* demande au Mediateur la position du saut de page */
-	    {
-	      nextPageBreak = 0;
-	      SetPageHeight (pAb, &pageHeight, &nextPageBreak, &nChars);
-	    }
-	}
+          if (pAb != NULL)
+            /* demande au Mediateur la position du saut de page */
+            {
+              nextPageBreak = 0;
+              SetPageHeight (pAb, &pageHeight, &nextPageBreak, &nChars);
+            }
+        }
 
       /* reste-t-il autre chose a afficher qu'un filet de saut
-	 de page a la fin de la vue ? */
+         de page a la fin de la vue ? */
       emptyImage = FALSE;
       if (!rootAbsBox->AbTruncatedTail)
-	/* c'est la fin de la vue */
-	{
-	  /* cherche le premier pave feuille de l'image */
-	  pAb = AbsBoxFromElOrPres (rootAbsBox, FALSE, PageBreak + 1, NULL, NULL);
-	  if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
-	    /* le premier pave feuille est une marque de page. Est-il */
-	    /* suivi d'un autre pave ? */
-	    {
-	      while (pAb->AbNext == NULL && pAb->AbEnclosing != NULL)
-		pAb = pAb->AbEnclosing;
-	      /* l'image est vide si ni la marque de page ni aucun de ses */
-	      /* paves englobants n'a de successeur */
-	      emptyImage = pAb->AbNext == NULL;
-	      /* fait imprimer la page */
-	    }
-	}
+        /* c'est la fin de la vue */
+        {
+          /* cherche le premier pave feuille de l'image */
+          pAb = AbsBoxFromElOrPres (rootAbsBox, FALSE, PageBreak + 1, NULL, NULL);
+          if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
+            /* le premier pave feuille est une marque de page. Est-il */
+            /* suivi d'un autre pave ? */
+            {
+              while (pAb->AbNext == NULL && pAb->AbEnclosing != NULL)
+                pAb = pAb->AbEnclosing;
+              /* l'image est vide si ni la marque de page ni aucun de ses */
+              /* paves englobants n'a de successeur */
+              emptyImage = pAb->AbNext == NULL;
+              /* fait imprimer la page */
+            }
+        }
 
       if (!emptyImage)
-	/* indique au Mediateur la hauteur de la page, pour qu'il */
-	/* n'imprime pas ce qui se trouve au-dela de cette limite */
-	{
-	  NotePageNumber (PSfile);
-	  /* display the content of the page header and delete its contents
-	     except the break line */
-	  PrintPageHeader (PSfile, CurrentFrame, pPageAb, clipOrg);
-	  /* Register the translation between box positions in the Concrete
-	     Image and box positions in the paper page and the height of
-	     the page body to avoid text overlaping the page footer */
-	  if (pNextPageAb)
-	    {
-	      box = pNextPageAb->AbBox;
-	      ClipOnPage (CurrentFrame, clipOrg,
-			  FrameTable[CurrentFrame].FrWidth,
-			  box->BxYOrg - pPageAb->AbBox->BxYOrg - pPageAb->AbBox->BxHeight);
-	    }
-	  else
-	    ClipOnPage (CurrentFrame, clipOrg, 32000, PageHeight);
-	  DisplayFrame (CurrentFrame);
-	  if (pNextPageAb)
-	    PrintPageFooter (PSfile, CurrentFrame, pNextPageAb);
-	  DrawPage (PSfile, pPageAb->AbElement->ElPageNumber,
-		    pPageAb->AbBox->BxWidth, PageHeight);
-	}
+        /* indique au Mediateur la hauteur de la page, pour qu'il */
+        /* n'imprime pas ce qui se trouve au-dela de cette limite */
+        {
+          NotePageNumber (PSfile);
+          /* display the content of the page header and delete its contents
+             except the break line */
+          PrintPageHeader (PSfile, CurrentFrame, pPageAb, clipOrg);
+          /* Register the translation between box positions in the Concrete
+             Image and box positions in the paper page and the height of
+             the page body to avoid text overlaping the page footer */
+          if (pNextPageAb)
+            {
+              box = pNextPageAb->AbBox;
+              ClipOnPage (CurrentFrame, clipOrg,
+                          FrameTable[CurrentFrame].FrWidth,
+                          box->BxYOrg - pPageAb->AbBox->BxYOrg - pPageAb->AbBox->BxHeight);
+            }
+          else
+            ClipOnPage (CurrentFrame, clipOrg, 32000, PageHeight);
+          DisplayFrame (CurrentFrame);
+          if (pNextPageAb)
+            PrintPageFooter (PSfile, CurrentFrame, pNextPageAb, last);
+          DrawPage (PSfile, pPageAb->AbElement->ElPageNumber,
+                    pPageAb->AbBox->BxWidth, PageHeight);
+        }
 
       /* repositionne le pave racine en haut de l'image pour le calcul de la */
       /* page suivante dans le paginateur */
       /* le pave racine avait ete decale par SetMargins */
       pPos = &rootAbsBox->AbVertPos;
       if (pPos->PosAbRef != NULL && pPos->PosDistance != 0 &&
-	  pPos->PosEdge != Top && pPos->PosRefEdge != Top)
-	{
-	  pPos->PosAbRef = NULL;
-	  pPos->PosDistance = 0;
-	  pPos->PosEdge = Top;
-	  pPos->PosRefEdge = Top;
-	  pPos->PosUnit = UnPoint;
-	  pPos->PosUserSpecified = FALSE;
-	  rootAbsBox->AbVertPosChange = TRUE;
-	  /* annule le volume du pave espace insere' en bas de page */
-	  if (pSpaceAb != NULL)
-	    pSpaceAb->AbVolume = 0;
-	  /* on ne s'occupe pas des hauteurs de page */
-	  h = 0;
-	  ChangeConcreteImage (CurrentFrame, &h, rootAbsBox);
-	}
+          pPos->PosEdge != Top && pPos->PosRefEdge != Top)
+        {
+          pPos->PosAbRef = NULL;
+          pPos->PosDistance = 0;
+          pPos->PosEdge = Top;
+          pPos->PosRefEdge = Top;
+          pPos->PosUnit = UnPoint;
+          pPos->PosUserSpecified = FALSE;
+          rootAbsBox->AbVertPosChange = TRUE;
+          /* annule le volume du pave espace insere' en bas de page */
+          if (pSpaceAb != NULL)
+            pSpaceAb->AbVolume = 0;
+          /* on ne s'occupe pas des hauteurs de page */
+          h = 0;
+          ChangeConcreteImage (CurrentFrame, &h, rootAbsBox);
+        }
     }
   return (TRUE);
 }
 
 
 /*----------------------------------------------------------------------
-   DisplayConfirmMessage
-   displays the given message (text).
+  DisplayConfirmMessage
+  displays the given message (text).
   ----------------------------------------------------------------------*/
 void DisplayConfirmMessage (char *text)
 {
 #ifdef _GTK
-    gtk_window_set_title (GTK_WINDOW (window),text); 
-    button_quit = TRUE;
+  gtk_window_set_title (GTK_WINDOW (window),text); 
+  button_quit = TRUE;
 #endif /* _GTK */
 
 #ifdef _WX
-    g_p_print_dialog->SetMessage( text );
-    button_quit = TRUE;
+  g_p_print_dialog->SetMessage( text );
+  button_quit = TRUE;
 #endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
-   DisplayMessage
-   displays the given message (text).
+  DisplayMessage
+  displays the given message (text).
   ----------------------------------------------------------------------*/
 void DisplayMessage (char *text, int msgType)
 {
@@ -2170,10 +2174,10 @@ void DisplayMessage (char *text, int msgType)
       printf ("Remove directory \n");
       /* if the request comes from the Thotlib we have to remove the directory */
       if (removeDirectory)
-	{
-	  if ((unlink (tempDir)) == -1)
-	    fprintf (stderr, "Cannot remove directory %s\n", tempDir);
-	}
+        {
+          if ((unlink (tempDir)) == -1)
+            fprintf (stderr, "Cannot remove directory %s\n", tempDir);
+        }
 #ifdef _GTK 
       gtk_main_iteration_do (TRUE);
 #endif /* _GTK */
@@ -2187,7 +2191,7 @@ void DisplayMessage (char *text, int msgType)
   ----------------------------------------------------------------------*/
 void TtaError (int errorCode)
 {
-   UserErrorCode = errorCode;
+  UserErrorCode = errorCode;
 }
 
 
@@ -2216,38 +2220,38 @@ void gtk_print_dialog ()
   char title_label[50];
   
   /* create a new window */
-   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-   gtk_window_set_policy (GTK_WINDOW (window), TRUE, TRUE, TRUE);
-   gtk_window_set_default_size(GTK_WINDOW (window), 200, 60);
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_policy (GTK_WINDOW (window), TRUE, TRUE, TRUE);
+  gtk_window_set_default_size(GTK_WINDOW (window), 200, 60);
 
-   gtk_container_set_border_width (GTK_CONTAINER (window), 0);
-   sprintf(title_label, "%s [    ]", TtaGetMessage(LIB, TMSG_LIB_PRINT)); 
-   gtk_window_set_title (GTK_WINDOW (window), title_label);
+  gtk_container_set_border_width (GTK_CONTAINER (window), 0);
+  sprintf(title_label, "%s [    ]", TtaGetMessage(LIB, TMSG_LIB_PRINT)); 
+  gtk_window_set_title (GTK_WINDOW (window), title_label);
 
-   vbox = gtk_vbox_new (TRUE, 5);
-   gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
-   gtk_container_add (GTK_CONTAINER (window), vbox);
-   gtk_widget_show(vbox);
+  vbox = gtk_vbox_new (TRUE, 5);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
+  gtk_container_add (GTK_CONTAINER (window), vbox);
+  gtk_widget_show(vbox);
 
-    /* Creates a new button with the label "Printing". */
-    button = gtk_button_new_with_label (TtaGetMessage(LIB, TMSG_CANCEL));
-    /* This will cause the window to be destroyed by calling
-      gtk_widget_destroy(window) when "clicked".  The destroy
-      signal could come from here, or the window manager. */
-    gtk_signal_connect_object (GTK_OBJECT (button), 
-			"clicked",
-                        GTK_SIGNAL_FUNC (set_cancel), 
-			NULL);
-    /* This makes it so the button is the default. */
-    GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-    gtk_container_add (GTK_CONTAINER (vbox), button);
-    gtk_widget_show_now (button);
-    gtk_widget_show(vbox);
-    /* and the window */
-    gtk_widget_show (window);
-    /* Force display */
-    while (gtk_events_pending ())
-      gtk_main_iteration ();
+  /* Creates a new button with the label "Printing". */
+  button = gtk_button_new_with_label (TtaGetMessage(LIB, TMSG_CANCEL));
+  /* This will cause the window to be destroyed by calling
+     gtk_widget_destroy(window) when "clicked".  The destroy
+     signal could come from here, or the window manager. */
+  gtk_signal_connect_object (GTK_OBJECT (button), 
+                             "clicked",
+                             GTK_SIGNAL_FUNC (set_cancel), 
+                             NULL);
+  /* This makes it so the button is the default. */
+  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+  gtk_container_add (GTK_CONTAINER (vbox), button);
+  gtk_widget_show_now (button);
+  gtk_widget_show(vbox);
+  /* and the window */
+  gtk_widget_show (window);
+  /* Force display */
+  while (gtk_events_pending ())
+    gtk_main_iteration ();
 }
 #endif /* _GTK */	    
 
@@ -2273,7 +2277,7 @@ ThotBool GetPrinterDC (ThotBool reuse)
 
   /* Display the PRINT dialog box. */
   if (!LpInitialized)
-  {
+    {
       /* initialize the pinter context */
       memset(&Pdlg, 0, sizeof(PRINTDLG));
       Pdlg.lStructSize = sizeof(PRINTDLG);
@@ -2290,54 +2294,54 @@ ThotBool GetPrinterDC (ThotBool reuse)
       lpPortName = (LPSTR) lpDevNames + lpDevNames->wOutputOffset;
       GlobalUnlock (Pdlg.hDevNames);
       if (Pdlg.hDevMode)
-	{
-	  lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
-	  if (!lpDevMode)
-		  return FALSE;
-		  TtPrinterDC = CreateDC ((LPCSTR)lpDriverName, (LPCSTR)lpDeviceName, (LPCSTR)lpPortName, lpDevMode);
-	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
-	    /* landscape */
-	    Orientation = "Landscape";
-	  else
-	    /* portrait */
-	    Orientation = "Portrait";
-	  if (lpDevMode->dmPaperSize == DMPAPER_A4)
-	    /* A4 */
-	    strcpy (PageSize, "A4");
+        {
+          lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
+          if (!lpDevMode)
+            return FALSE;
+          TtPrinterDC = CreateDC ((LPCSTR)lpDriverName, (LPCSTR)lpDeviceName, (LPCSTR)lpPortName, lpDevMode);
+          if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
+            /* landscape */
+            Orientation = "Landscape";
+          else
+            /* portrait */
+            Orientation = "Portrait";
+          if (lpDevMode->dmPaperSize == DMPAPER_A4)
+            /* A4 */
+            strcpy (PageSize, "A4");
 
-	  else
-	    /* US */
-	    strcpy (PageSize, "US");
+          else
+            /* US */
+            strcpy (PageSize, "US");
 
-	  GlobalUnlock (Pdlg.hDevMode);
-	  return TRUE;
-	}
+          GlobalUnlock (Pdlg.hDevMode);
+          return TRUE;
+        }
     }
   Pdlg.hwndOwner   = FrRef[0];
   if (PrintDlg (&Pdlg))
     {
       if (Pdlg.hDevMode)
-	{
-	  lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
-	  if (!lpDevMode)
-		 return FALSE;
-	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
-	    /* landscape */
-	    Orientation = "Landscape";
-	  else
-	    /* portrait */
-	    Orientation = "Portrait";
+        {
+          lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
+          if (!lpDevMode)
+            return FALSE;
+          if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
+            /* landscape */
+            Orientation = "Landscape";
+          else
+            /* portrait */
+            Orientation = "Portrait";
 
-	  if (lpDevMode->dmPaperSize == DMPAPER_A4)
-	    /* A4 */
-	    strcpy (PageSize, "A4");
+          if (lpDevMode->dmPaperSize == DMPAPER_A4)
+            /* A4 */
+            strcpy (PageSize, "A4");
 
-	  else
-	    /* US */
-	    strcpy (PageSize, "US");
+          else
+            /* US */
+            strcpy (PageSize, "US");
 
-	  GlobalUnlock (Pdlg.hDevMode);
-	}
+          GlobalUnlock (Pdlg.hDevMode);
+        }
       TtPrinterDC = Pdlg.hDC;
       return TRUE;
     }
@@ -2374,41 +2378,41 @@ int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* cmdLine)
   for (nowAt = nowAt_start;;)
     {
       if (!*ptr) 
-	return (argc);
+        return (argc);
       if (lookFor)
-	{
-	  if (*ptr == lookFor)
-	    {
-	      nowAt = nowAt_start;
-	      lookFor = 0;
-	      *ptr = 0;   /* remove the quote */
-	    }
-	  else if (nowAt == nowAt_start)
-	    {
-	      argv[argc++] = ptr;
-	      nowAt = nowAt_text;
-	    }
-	  ptr++;
-	  continue;
+        {
+          if (*ptr == lookFor)
+            {
+              nowAt = nowAt_start;
+              lookFor = 0;
+              *ptr = 0;   /* remove the quote */
+            }
+          else if (nowAt == nowAt_start)
+            {
+              argv[argc++] = ptr;
+              nowAt = nowAt_text;
+            }
+          ptr++;
+          continue;
         }
       if (*ptr == SPACE || *ptr == TAB)
-	{
-	  *ptr = 0;
-	  ptr++;
-	  nowAt = nowAt_start;
-	  continue;
+        {
+          *ptr = 0;
+          ptr++;
+          nowAt = nowAt_start;
+          continue;
         }
       if ((*ptr == '\'' || *ptr == '\"' || *ptr == '`') && nowAt == nowAt_start)
-	{
-	  lookFor = *ptr;
-	  nowAt = nowAt_start;
-	  ptr++;
-	  continue;
+        {
+          lookFor = *ptr;
+          nowAt = nowAt_start;
+          ptr++;
+          continue;
         }
       if (nowAt == nowAt_start)
-	{
-	  argv[argc++] = ptr;
-	  nowAt = nowAt_text;
+        {
+          argv[argc++] = ptr;
+          nowAt = nowAt_text;
         }
       ptr++;
     }
@@ -2417,7 +2421,7 @@ int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* cmdLine)
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
-   DeleteAFile                                                         
+  DeleteAFile                                                         
   ----------------------------------------------------------------------*/
 static void DeleteAFile (char *fileName)
 {
@@ -2425,33 +2429,33 @@ static void DeleteAFile (char *fileName)
 #ifndef _WX
     DeleteFile (fileName);
 #else /* _WX */
-    return;/* TODO */
+  return;/* TODO */
 #endif /* _WX */
 }
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
-   Main program                                                           
+  Main program                                                           
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef _WX
 /* TODO: integrer ceci avec l appel de la dll dans printmenu.c */
 void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
-			 ThotBool isTrueColors, int depth, char *tmpDocName,
-			 char *tmpDir, HINSTANCE hInst, ThotBool specificPrinter)
+               ThotBool isTrueColors, int depth, char *tmpDocName,
+               char *tmpDir, HINSTANCE hInst, ThotBool specificPrinter)
 #else /* _WX */
-DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
+     DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
 
-			 ThotBool isTrueColors, int depth, char *tmpDocName,
+                              ThotBool isTrueColors, int depth, char *tmpDocName,
 
-			 char *tmpDir, HINSTANCE hInst, ThotBool specificPrinter)
+                              char *tmpDir, HINSTANCE hInst, ThotBool specificPrinter)
 
 #endif /* _WX */
 #else  /* _WINDOWS */
 #ifdef _WX
-int amaya_main (int argc, char **argv)
+     int amaya_main (int argc, char **argv)
 #else /* _WX */
-int main (int argc, char **argv)
+     int main (int argc, char **argv)
 #endif /* _WX */
 #endif /* _WINDOWS */
 {
@@ -2552,199 +2556,199 @@ int main (int argc, char **argv)
     {
       /* Parsing the command line */
       if (argv[argCounter][0] == '-')
-	{
-	  /* the argument is a parameter */
-	  if (!strcmp (argv[argCounter], "-display"))
-	    {
-	      /* The display is distant */
-	      argCounter++;
-	      server = (char *)TtaGetMemory (strlen (argv[argCounter]) + 1);
-	      strcpy (server, argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv[argCounter], "-name"))
-	    {
-	      realNameFound = TRUE;
-	      argCounter++;
-	      realName = (char *)TtaGetMemory (strlen (argv[argCounter]) + 1);
-	      strcpy (realName, argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv[argCounter], "-ps"))
-	    {
-	      /* The destination is postscript file */
-	      destination = "PSFILE";
-	      argCounter++;
-	      printer = (char *)TtaGetMemory (strlen (argv[argCounter]) + 1);
-	      strcpy (printer, argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv[argCounter], "-out"))
-	    {
-	      /* The destination is a printer */
-	      destination = "PRINTER";
-	      argCounter++;
-	      l = strlen (argv[argCounter]);
-	      if (argv[argCounter][0] == '"' &&
-		  argv[argCounter][l - 1] != '"')
-		{
-		  /* the printer name includes spaces */
-		  i = 0;
-		  length = -1; /* skip the first '"' */
-		  /* get the printer name length */
-		  while (argv[argCounter + i][l - 1] != '"')
-		    {
-		      i++;
-		      length = length + l + 1; /* +1 for the space */
-		      l = strlen (argv[argCounter + i]);
-		    }
-		  /* store the printer name */
-		  length += l;
-		  printer = (char *)TtaGetMemory (length + 1);
-		  strcpy (printer, &argv[argCounter++][1]);
-		  for (l = 1; l <= i; l++)
-		    {
-		      strcat (printer, " ");
-		      strcat (printer, argv[argCounter++]);
-		    }
-		  /* remove the last '"' */
-		  printer[length-1] = EOS;
-		}
-	      else
-		{
-		  printer = (char *)TtaGetMemory (l + 1);
-		  strcpy (printer, argv[argCounter++]);
-		}
-	    }
-	  else if (!strcmp (argv[argCounter], "-v"))
-	    {
-	      /* At least one view must be given in the command line */
-	      viewFound = TRUE;
-	      argCounter++;
-	      strcpy (PrintViewName [viewsCounter++], argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv[argCounter], "-cssa"))
-	    {
-	      /* CSS files given in the command line */
-	      argCounter++;
-	      CSSOrigin[cssCounter] = 'a';
-	      /* suppress quotes if necessary */
-	      l = strlen (argv[argCounter]);
-	      if (argv[argCounter][l - 1] == '"')
-		argv[argCounter][l - 1] = EOS;
-	      if (argv[argCounter][0] == '"')
-		CSSName[cssCounter] = TtaStrdup (&(argv[argCounter][1]));
-	      else
-		CSSName[cssCounter] = TtaStrdup (argv[argCounter]);
-	      argCounter++;
-	      cssCounter++;
-	    }
-	  else if (!strcmp (argv[argCounter], "-cssu"))
-	    {
-	      /* CSS files given in the command line */
-	      argCounter++;
-	      CSSOrigin[cssCounter] = 'u';
-	      /* suppress quotes if necessary */
-	      l = strlen (argv[argCounter]);
-	      if (argv[argCounter][l - 1] == '"')
-		argv[argCounter][l - 1] = EOS;
-	      if (argv[argCounter][0] == '"')
-		CSSName[cssCounter] = TtaStrdup (&(argv[argCounter][1]));
-	      else
-		CSSName[cssCounter] = TtaStrdup (argv[argCounter]);
-	      argCounter++;
-	      cssCounter++;
-	    }
-	  else if (!strcmp (argv[argCounter], "-npps"))
-	    {
-	      argCounter++;
-	      NPagesPerSheet = atoi (argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv[argCounter], "-bw"))
-	    {
-	      argCounter++;
-	      BlackAndWhite = 1;
-	    }
-	  else if (!strcmp (argv[argCounter], "-manualfeed"))
-	    {
-	      argCounter++;
-	      manualFeed = 1;
-	    }
-	  else if (!strcmp (argv[argCounter], "-emptybox"))
-	    {
-	      argCounter++;
-	      NoEmpyBox = 0;
-	    }
-	  else if (!strcmp (argv[argCounter], "-paginate"))
-	    {
-	      argCounter++;
-	      Repaginate = 1;
-	    }
-	  else if (!strcmp (argv[argCounter], "-landscape"))
-	    {
+        {
+          /* the argument is a parameter */
+          if (!strcmp (argv[argCounter], "-display"))
+            {
+              /* The display is distant */
+              argCounter++;
+              server = (char *)TtaGetMemory (strlen (argv[argCounter]) + 1);
+              strcpy (server, argv[argCounter++]);
+            }
+          else if (!strcmp (argv[argCounter], "-name"))
+            {
+              realNameFound = TRUE;
+              argCounter++;
+              realName = (char *)TtaGetMemory (strlen (argv[argCounter]) + 1);
+              strcpy (realName, argv[argCounter++]);
+            }
+          else if (!strcmp (argv[argCounter], "-ps"))
+            {
+              /* The destination is postscript file */
+              destination = "PSFILE";
+              argCounter++;
+              printer = (char *)TtaGetMemory (strlen (argv[argCounter]) + 1);
+              strcpy (printer, argv[argCounter++]);
+            }
+          else if (!strcmp (argv[argCounter], "-out"))
+            {
+              /* The destination is a printer */
+              destination = "PRINTER";
+              argCounter++;
+              l = strlen (argv[argCounter]);
+              if (argv[argCounter][0] == '"' &&
+                  argv[argCounter][l - 1] != '"')
+                {
+                  /* the printer name includes spaces */
+                  i = 0;
+                  length = -1; /* skip the first '"' */
+                  /* get the printer name length */
+                  while (argv[argCounter + i][l - 1] != '"')
+                    {
+                      i++;
+                      length = length + l + 1; /* +1 for the space */
+                      l = strlen (argv[argCounter + i]);
+                    }
+                  /* store the printer name */
+                  length += l;
+                  printer = (char *)TtaGetMemory (length + 1);
+                  strcpy (printer, &argv[argCounter++][1]);
+                  for (l = 1; l <= i; l++)
+                    {
+                      strcat (printer, " ");
+                      strcat (printer, argv[argCounter++]);
+                    }
+                  /* remove the last '"' */
+                  printer[length-1] = EOS;
+                }
+              else
+                {
+                  printer = (char *)TtaGetMemory (l + 1);
+                  strcpy (printer, argv[argCounter++]);
+                }
+            }
+          else if (!strcmp (argv[argCounter], "-v"))
+            {
+              /* At least one view must be given in the command line */
+              viewFound = TRUE;
+              argCounter++;
+              strcpy (PrintViewName [viewsCounter++], argv[argCounter++]);
+            }
+          else if (!strcmp (argv[argCounter], "-cssa"))
+            {
+              /* CSS files given in the command line */
+              argCounter++;
+              CSSOrigin[cssCounter] = 'a';
+              /* suppress quotes if necessary */
+              l = strlen (argv[argCounter]);
+              if (argv[argCounter][l - 1] == '"')
+                argv[argCounter][l - 1] = EOS;
+              if (argv[argCounter][0] == '"')
+                CSSName[cssCounter] = TtaStrdup (&(argv[argCounter][1]));
+              else
+                CSSName[cssCounter] = TtaStrdup (argv[argCounter]);
+              argCounter++;
+              cssCounter++;
+            }
+          else if (!strcmp (argv[argCounter], "-cssu"))
+            {
+              /* CSS files given in the command line */
+              argCounter++;
+              CSSOrigin[cssCounter] = 'u';
+              /* suppress quotes if necessary */
+              l = strlen (argv[argCounter]);
+              if (argv[argCounter][l - 1] == '"')
+                argv[argCounter][l - 1] = EOS;
+              if (argv[argCounter][0] == '"')
+                CSSName[cssCounter] = TtaStrdup (&(argv[argCounter][1]));
+              else
+                CSSName[cssCounter] = TtaStrdup (argv[argCounter]);
+              argCounter++;
+              cssCounter++;
+            }
+          else if (!strcmp (argv[argCounter], "-npps"))
+            {
+              argCounter++;
+              NPagesPerSheet = atoi (argv[argCounter++]);
+            }
+          else if (!strcmp (argv[argCounter], "-bw"))
+            {
+              argCounter++;
+              BlackAndWhite = 1;
+            }
+          else if (!strcmp (argv[argCounter], "-manualfeed"))
+            {
+              argCounter++;
+              manualFeed = 1;
+            }
+          else if (!strcmp (argv[argCounter], "-emptybox"))
+            {
+              argCounter++;
+              NoEmpyBox = 0;
+            }
+          else if (!strcmp (argv[argCounter], "-paginate"))
+            {
+              argCounter++;
+              Repaginate = 1;
+            }
+          else if (!strcmp (argv[argCounter], "-landscape"))
+            {
 #ifndef _WINGUI_WX
-	      Orientation = "Landscape";
+              Orientation = "Landscape";
 #endif /* _WINGUI_WX */
-	      argCounter++;
-	    }
-	  else if (!strcmp (argv[argCounter], "-removedir"))
-	    {
-	      removeDirectory = TRUE;
-	      argCounter++;
-	    }
-	  else if (!strcmp (argv[argCounter], "-portrait"))
-	    /* Orientation is already set to Portrait value */ 
-	    argCounter++;
-	  else if (!strcmp (argv[argCounter], "-sch"))
-	    {
-	      /* flag for schema directories */
-	      argCounter++;
-	      strcpy (SchemaPath, argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv[argCounter], "-doc"))
-	    {
-	      /* flag for document directories */
-	      argCounter++;
-	      strcpy (DocumentDir, argv[argCounter++]);
-	    }
-	  else
-	    {
-	      index = 0;
-	      pChar = &argv[argCounter][2];
-	      while ((option[index++] = *pChar++));
-	      option [index] = EOS;
+              argCounter++;
+            }
+          else if (!strcmp (argv[argCounter], "-removedir"))
+            {
+              removeDirectory = TRUE;
+              argCounter++;
+            }
+          else if (!strcmp (argv[argCounter], "-portrait"))
+            /* Orientation is already set to Portrait value */ 
+            argCounter++;
+          else if (!strcmp (argv[argCounter], "-sch"))
+            {
+              /* flag for schema directories */
+              argCounter++;
+              strcpy (SchemaPath, argv[argCounter++]);
+            }
+          else if (!strcmp (argv[argCounter], "-doc"))
+            {
+              /* flag for document directories */
+              argCounter++;
+              strcpy (DocumentDir, argv[argCounter++]);
+            }
+          else
+            {
+              index = 0;
+              pChar = &argv[argCounter][2];
+              while ((option[index++] = *pChar++));
+              option [index] = EOS;
 #ifndef _WINGUI_WX
-	      switch (argv[argCounter][1])
-		{
-		case 'F': FirstPrinted = atoi (option);
-		  break;
-		case 'L': LastPrinted = atoi (option);
-		  break;
-		case 'P': strcpy (PageSize, option);
-		  break;
-		case '#': NCopies = atoi (option);
-		  break;
-		case 'H': HorizShift = atoi (option);
-		  break;
-		case 'V': VertShift = atoi (option);
-		  break;
-		case '%': Zoom = atoi (option);
-		  break;
-		case 'w': thotWindow = (ThotWindow) atoi (option);
-		  break;
-		default:
-		  ;
+              switch (argv[argCounter][1])
+                {
+                case 'F': FirstPrinted = atoi (option);
+                  break;
+                case 'L': LastPrinted = atoi (option);
+                  break;
+                case 'P': strcpy (PageSize, option);
+                  break;
+                case '#': NCopies = atoi (option);
+                  break;
+                case 'H': HorizShift = atoi (option);
+                  break;
+                case 'V': VertShift = atoi (option);
+                  break;
+                case '%': Zoom = atoi (option);
+                  break;
+                case 'w': thotWindow = (ThotWindow) atoi (option);
+                  break;
+                default:
+                  ;
                 }
 #endif /* _WINGUI_WX */
-	      argCounter++;
-	    }
+              argCounter++;
+            }
         }
       else
-	{
-	  /* the argument is the filename */
-	  /* does it exist ?? */
-	  if (TtaFileExist (argv[argCounter]))
-	    /* Yes, it does, split the string into two parts: directory
-	       and filename */
-	      TtaExtractName (argv[argCounter], tempDir, name);
-	  argCounter++;
+        {
+          /* the argument is the filename */
+          /* does it exist ?? */
+          if (TtaFileExist (argv[argCounter]))
+            /* Yes, it does, split the string into two parts: directory
+               and filename */
+            TtaExtractName (argv[argCounter], tempDir, name);
+          argCounter++;
         }
     }
   
@@ -2764,15 +2768,15 @@ int main (int argc, char **argv)
 
   /* The following loop removes the suffix from the filename (name) */
   while ((index < length) && !done)
-     {
-       if (name[index] == '.')
-	 {
-	   name[index] = EOS;
-	   done = TRUE;
-	 }
-       else
-	 index++;
-     }
+    {
+      if (name[index] == '.')
+        {
+          name[index] = EOS;
+          done = TRUE;
+        }
+      else
+        index++;
+    }
 
   FirstFrame (server);
 #ifdef _WINDOWS
@@ -2791,12 +2795,12 @@ int main (int argc, char **argv)
   TtDisplay = NULL;
   PrinterDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
   if (!specificPrinter && TtPrinterDC == NULL)
-     DOT_PER_INCH = 72;
+    DOT_PER_INCH = 72;
   else 
-     DOT_PER_INCH = PrinterDPI;
+    DOT_PER_INCH = PrinterDPI;
   WIN_Main_Wd = hWnd;
 #else /* _WX */
-/* TODO: ecrire le code d impression avec WX */
+  /* TODO: ecrire le code d impression avec WX */
 #endif /* _WX */
 #else /* _WINDOWS */
 #ifndef _WX
@@ -2834,51 +2838,51 @@ int main (int argc, char **argv)
       /* add its directory into the DocumentPath */
       l = strlen (DocumentDir);
       if (l == 0)
-	strcpy (DocumentPath, tempDir);
+        strcpy (DocumentPath, tempDir);
       else
-	sprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
+        sprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
       
       if (!OpenDocument (name, TheDoc, FALSE))
-	TheDoc = NULL;
+        TheDoc = NULL;
     }
   if (TheDoc != NULL)
     {
       /* the document is loaded */
       /* load CSS files and apply CSS rules */
       for (i = 0; i < cssCounter; i++)
-	LoadStyleSheet (CSSName[i], 1, NULL, NULL, NULL, CSS_ALL,
-			CSSOrigin[i] == 'u');
+        LoadStyleSheet (CSSName[i], 1, NULL, NULL, NULL, CSS_ALL,
+                        CSSOrigin[i] == 'u');
       
       if (TypeHasException (ExcNoPaginate, TheDoc->DocSSchema->SsRootElem,
-			    TheDoc->DocSSchema))
-	/* Don't paginate a document with the exception NoPaginate */
-	Repaginate = 0;
+                            TheDoc->DocSSchema))
+        /* Don't paginate a document with the exception NoPaginate */
+        Repaginate = 0;
       
       /* Start the printing process */
       if (PrintDocument (TheDoc, viewsCounter) == 0)
-	{
-	  if (!strcmp (destination, "PSFILE"))
-	    {
+        {
+          if (!strcmp (destination, "PSFILE"))
+            {
 #ifdef _WINDOWS
 #ifndef _WX
-	      sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
-	      CopyFile (cmd, printer, FALSE);
+              sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
+              CopyFile (cmd, printer, FALSE);
 #else /* _WX */
-	      /* TODO */
+              /* TODO */
 #endif /* _WX */
 #else  /* _WINDOWS */
-	      sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
-	      system (cmd);
+              sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
+              system (cmd);
 #endif  /* _WINDOWS */         
-	    }
+            }
 #ifndef _WINDOWS
-	  else
-	    {
-	      sprintf (cmd, "%s %s/%s.ps", printer, tempDir, name);
-	      system (cmd);
-	    }
+          else
+            {
+              sprintf (cmd, "%s %s/%s.ps", printer, tempDir, name);
+              system (cmd);
+            }
 #endif  /* _WINDOWS */    
-	}
+        }
     }
    
   /* if the request comes from the Thotlib we have to remove the directory */
@@ -2886,55 +2890,55 @@ int main (int argc, char **argv)
     {
 #ifdef _WINDOWS
       if (!strcmp (destination, "PSFILE"))
-	DeleteAFile (cmd);
+        DeleteAFile (cmd);
       else
-	{
-	  sprintf (name, "%s\\%s.PIV", tmpDir, tmpDocName); 
-	  DeleteAFile (name);
-	  if (tmpDir)
-	    {
-	      length = strlen (tmpDir);
-	      /* remove CSS files from the temporary directory */
-	      for (i = 0; i < cssCounter; i++)
-		{
-		  if (CSSName[i] && TtaFileExist (CSSName[i]) &&
-		      strncasecmp(CSSName[i], tmpDir, length) == 0)
-		    DeleteAFile (CSSName[i]);
-		  TtaFreeMemory (CSSName[i]);
-		  CSSName[i] = NULL;
-		}
-	      /* remove the structure and presentation schemas from the
-		 temporary directory */
-	      for (i = 0; i < TheDoc->DocNNatures; i++)
-		{
-		  if (TheDoc->DocNatureName[i])
-		    {
-		      fileName = (char *)TtaGetMemory (length +
-                                       strlen(TheDoc->DocNatureName[i]) + 6);
-		      sprintf (fileName, "%s\\%s.STR", tmpDir, TheDoc->DocNatureName[i]);
-		      if (TtaFileExist (fileName))
-			DeleteAFile (fileName);
-		      TtaFreeMemory (fileName);
-		    } 
-		  if (TheDoc->DocNaturePresName[i])
-		    {
-		      fileName = (char *)TtaGetMemory (length +
-                                     strlen(TheDoc->DocNaturePresName[i]) + 6);
-		      sprintf (fileName, "%s\\%s.PRS", tmpDir, TheDoc->DocNaturePresName[i]);
-			DeleteAFile (fileName);
-		      TtaFreeMemory (fileName);
-		    } 
-		}
-	      if (rmdir (tempDir))
-		  {
+        {
+          sprintf (name, "%s\\%s.PIV", tmpDir, tmpDocName); 
+          DeleteAFile (name);
+          if (tmpDir)
+            {
+              length = strlen (tmpDir);
+              /* remove CSS files from the temporary directory */
+              for (i = 0; i < cssCounter; i++)
+                {
+                  if (CSSName[i] && TtaFileExist (CSSName[i]) &&
+                      strncasecmp(CSSName[i], tmpDir, length) == 0)
+                    DeleteAFile (CSSName[i]);
+                  TtaFreeMemory (CSSName[i]);
+                  CSSName[i] = NULL;
+                }
+              /* remove the structure and presentation schemas from the
+                 temporary directory */
+              for (i = 0; i < TheDoc->DocNNatures; i++)
+                {
+                  if (TheDoc->DocNatureName[i])
+                    {
+                      fileName = (char *)TtaGetMemory (length +
+                                                       strlen(TheDoc->DocNatureName[i]) + 6);
+                      sprintf (fileName, "%s\\%s.STR", tmpDir, TheDoc->DocNatureName[i]);
+                      if (TtaFileExist (fileName))
+                        DeleteAFile (fileName);
+                      TtaFreeMemory (fileName);
+                    } 
+                  if (TheDoc->DocNaturePresName[i])
+                    {
+                      fileName = (char *)TtaGetMemory (length +
+                                                       strlen(TheDoc->DocNaturePresName[i]) + 6);
+                      sprintf (fileName, "%s\\%s.PRS", tmpDir, TheDoc->DocNaturePresName[i]);
+                      DeleteAFile (fileName);
+                      TtaFreeMemory (fileName);
+                    } 
+                }
+              if (rmdir (tempDir))
+                {
 #ifndef _WX
-		    WinErrorBox (NULL, "PrintDoc (4)");
+                  WinErrorBox (NULL, "PrintDoc (4)");
 #else /* _WX */
-		    /* TODO: ... */
+                  /* TODO: ... */
 #endif /* _WX */
-		  }
-	    }
-	}
+                }
+            }
+        }
 #else  /* _WINDOWS */
       sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
       system (cmd);
@@ -2958,8 +2962,8 @@ int main (int argc, char **argv)
 #endif /* _WX */
 
 #ifdef _WINDOWS
-   return;
+  return;
 #else /* _WINDOWS */
-   return 0;
+  return 0;
 #endif /* _WINDOWS */
 }

@@ -318,8 +318,9 @@ int AmayaApp::OnExit()
   // flush the clipboard in order to keep current text for further use in other applications
   wxTheClipboard->Flush();
   // flush all pending events
-//  Yield();
+  //  Yield();
 
+#ifndef _GLPRINT
   // stop network loop
   m_SocketEventLoop->Stop();
   delete m_SocketEventLoop;
@@ -328,6 +329,7 @@ int AmayaApp::OnExit()
   // free documents icons
   delete m_pDocImageList;
   m_pDocImageList = NULL;
+#endif /* _GLPRINT */
 
   // free arguments
   ClearAmayaArgs();
