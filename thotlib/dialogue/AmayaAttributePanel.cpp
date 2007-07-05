@@ -324,25 +324,36 @@ void AmayaAttributePanel::RemoveCurrentAttribute()
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::CreateCurrentAttribute()
 {
-  wxString      name;
-  long          index;
+  wxString        name;
+  long            index;
+  PtrTtAttribute  pAttr;
+  PtrAttrListElem elem;
 
   if(m_pNewAttrChoice->GetSelection()!=wxNOT_FOUND)
     {
-      PtrAttrListElem elem = (PtrAttrListElem)
+      elem = (PtrAttrListElem)
             m_pNewAttrChoice->GetClientData(m_pNewAttrChoice->GetSelection());
       if(elem)
         {
-          index = m_pAttrList->InsertItem(m_pAttrList->GetItemCount(),
-                      TtaConvMessageToWX(AttrListElem_GetName(elem)));
-          elem->flags |= attr_new;
-          m_pAttrList->SetItemData(index, (long)elem);
-          m_pAttrList->SetItemTextColour(index, COLOR_NEW);
-          m_pAttrList->SetItemState(index,
-                           wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED,
-                           wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
-          m_pAttrList->EnsureVisible(index);
-          SelectAttribute(index);
+          pAttr = AttrListElem_GetTtAttribute(elem);
+          if (pAttr->AttrNEnumValues == 1)
+            {
+              SetAttrValueToRange (elem, (void*)1);
+              ForceAttributeUpdate();
+            }
+          else
+            {
+              index = m_pAttrList->InsertItem(m_pAttrList->GetItemCount(),
+                                              TtaConvMessageToWX(AttrListElem_GetName(elem)));
+              elem->flags |= attr_new;
+              m_pAttrList->SetItemData(index, (long)elem);
+              m_pAttrList->SetItemTextColour(index, COLOR_NEW);
+              m_pAttrList->SetItemState(index,
+                                        wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED,
+                                        wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
+              m_pAttrList->EnsureVisible(index);
+              SelectAttribute(index);
+            }
         }
     }
   RedirectFocusToEditableControl();
@@ -418,6 +429,7 @@ void AmayaAttributePanel::SetupListValue(DLList attrList)
   ForwardIterator iter = DLList_GetForwardIterator(attrList);
   DLListNode      node;
   PtrAttrListElem elem;
+  TtAttribute    *pAttr;
   long            index;
   char            buffer[MAX_TXT_LEN];
   int             size;
@@ -455,7 +467,15 @@ void AmayaAttributePanel::SetupListValue(DLList attrList)
                   case AtEnumAttr:
                     type.AttrSSchema = (int*) elem->pSS;
                     type.AttrTypeNum = elem->num;
-                    m_pAttrList->SetItem(index, 1, wxString(
+                    pAttr = AttrListElem_GetTtAttribute(elem);
+                    if (pAttr->AttrNEnumValues == 1 &&
+                        !strcasecmp (pAttr->AttrEnumValue[0], "yes"))
+                      // this is a boolean value
+                      m_pAttrList->SetItem(index, 1, wxString(
+                                                              pAttr->AttrName,
+                                                              wxConvUTF8));
+                     else
+                   m_pAttrList->SetItem(index, 1, wxString(
                             TtaGetAttributeValueName(type, 
                                 TtaGetAttributeValue((Attribute)elem->val)), 
                                 wxConvUTF8));
@@ -599,16 +619,7 @@ void AmayaAttributePanel::SetupTextAttr(PtrAttrListElem elem)
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::SetupEnumValue( wxArrayString& enums, int selected )
 {
-  /* test if the attribut type is boolean */
-  if (enums.GetCount() <= 1)
-    {
-      /* do not show any dialog for boolean type */
-      ShowAttributValue( wxATTR_TYPE_NONE );
-      return;
-    }
-
   wxChoice* choice = XRCCTRL(*m_pPanel_Enum, "wxID_ATTR_CHOICE_ENUM", wxChoice);
-
   if(choice)
     {
       choice->Clear();
@@ -617,17 +628,25 @@ void AmayaAttributePanel::SetupEnumValue( wxArrayString& enums, int selected )
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaAttributePanel::SetupEnumAttr(PtrAttrListElem elem)
 {
   PtrAttribute      currAttr = elem->val;
-  int               i=0, val;
   TtAttribute      *pAttr = AttrListElem_GetTtAttribute(elem);
-
   wxArrayString     arr;
+  int               i = 0, val;
 
-  if(elem)
+  if (elem)
     {
-      for (val=0; val < pAttr->AttrNEnumValues; val++)
+      if (pAttr->AttrNEnumValues == 1 &&
+          !strcasecmp (pAttr->AttrEnumValue[0], "yes"))
+        {
+          // this is a boolean value
+          arr.Add(wxString(pAttr->AttrName, wxConvUTF8));
+        }
+      else
+        for (val = 0; val < pAttr->AttrNEnumValues; val++)
           arr.Add(wxString(pAttr->AttrEnumValue[val], wxConvUTF8));
       /* current value */
       if (currAttr && currAttr->AeAttrValue > 0)
@@ -650,6 +669,8 @@ void AmayaAttributePanel::SetupNumValue( int num, int begin, int end )
   m_pPanel_Num->Refresh();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaAttributePanel::SetupNumAttr(PtrAttrListElem elem)
 {
   PtrAttribute      currAttr = elem->val;
@@ -733,7 +754,7 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
   Document      doc;
   wxString      value;
 
-  if(m_currentAttElem && m_firstSel)
+  if (m_currentAttElem && m_firstSel)
     {
       doc = TtaGetDocument((Element)m_firstSel);
       
@@ -816,7 +837,8 @@ bool AmayaAttributePanel::IsActive()
 }
 
 
-
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 void AmayaAttributePanel::OnListItemSelected(wxListEvent& event)
 {
   if(IsPanelActive())
@@ -824,6 +846,8 @@ void AmayaAttributePanel::OnListItemSelected(wxListEvent& event)
   event.Skip();
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 void AmayaAttributePanel::OnListItemDeselected(wxListEvent& event)
 {
   if(IsPanelActive())
@@ -831,11 +855,15 @@ void AmayaAttributePanel::OnListItemDeselected(wxListEvent& event)
   event.Skip();
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 void AmayaAttributePanel::OnInsert( wxCommandEvent& WXUNUSED(event))
 {
   CreateCurrentAttribute();
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 void AmayaAttributePanel::OnUpdateDeleteButton(wxUpdateUIEvent& event)
 {
   event.Enable(IsPanelActive()&&!IsMandatory());
