@@ -175,8 +175,8 @@ void AmayaAttributePanel::UpdateListColumnWidth()
   ----------------------------------------------------------------------*/
 bool AmayaAttributePanel::IsMandatory()const
 {
-  return (!m_currentAttElem)||
-              (m_currentAttElem&&(AttrListElem_IsMandatory(m_currentAttElem)));
+  return (!m_currentAttElem||
+          AttrListElem_IsMandatory(m_currentAttElem));
 }
 
 /*----------------------------------------------------------------------
@@ -185,8 +185,8 @@ bool AmayaAttributePanel::IsMandatory()const
   ----------------------------------------------------------------------*/
 bool AmayaAttributePanel::IsReadOnly()const
 {
-  return (!m_currentAttElem)||
-              (m_currentAttElem&&(AttrListElem_IsReadOnly(m_currentAttElem)));
+  return (!m_currentAttElem ||
+          AttrListElem_IsReadOnly (m_currentAttElem));
 }
 
 /*----------------------------------------------------------------------
@@ -271,16 +271,11 @@ void AmayaAttributePanel::SelectAttribute(int position)
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::QueryRemoveCurrentAttribute()
 {
-
-    if (!IsMandatory())
-      {
-        RemoveCurrentAttribute();
-      }
-    else
-      {
-        /* this attribut is mandatory, user is not allowed to remove it ! */
-        TtaDisplaySimpleMessage (INFO, LIB, TMSG_ATTR_MANDATORY);
-      }
+  if (!IsMandatory())
+    RemoveCurrentAttribute();
+  else
+    /* this attribut is mandatory, user is not allowed to remove it ! */
+    TtaDisplaySimpleMessage (INFO, LIB, TMSG_ATTR_MANDATORY);
 }
 
 /*----------------------------------------------------------------------
@@ -295,8 +290,8 @@ void AmayaAttributePanel::RemoveCurrentAttribute()
   
   DesactivatePanel();
 
-  if(m_CurrentAttType!=wxATTR_TYPE_NONE && m_firstSel
-          && m_currentAttElem && m_currentAttElem->val)
+  if (m_CurrentAttType != wxATTR_TYPE_NONE && m_firstSel &&
+      m_currentAttElem && m_currentAttElem->val)
     {
       TtaSetDisplayMode(doc, DeferredDisplay);
       TtaOpenUndoSequence(doc, (Element)m_firstSel, (Element)m_lastSel,
@@ -336,7 +331,8 @@ void AmayaAttributePanel::CreateCurrentAttribute()
       if(elem)
         {
           pAttr = AttrListElem_GetTtAttribute(elem);
-          if (pAttr->AttrNEnumValues == 1)
+          if (pAttr && pAttr->AttrType == AtEnumAttr &&
+              pAttr->AttrNEnumValues == 1)
             {
               SetAttrValueToRange (elem, (void*)1);
               ForceAttributeUpdate();
@@ -426,7 +422,7 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::SetupListValue(DLList attrList)
 {
-  ForwardIterator iter = DLList_GetForwardIterator(attrList);
+  ForwardIterator iter;
   DLListNode      node;
   PtrAttrListElem elem;
   TtAttribute    *pAttr;
@@ -443,6 +439,7 @@ void AmayaAttributePanel::SetupListValue(DLList attrList)
   m_attrList = attrList;
   if(attrList)
     {
+      iter = DLList_GetForwardIterator(attrList);
       ITERATOR_FOREACH(iter, DLListNode, node)
       {
         elem = (PtrAttrListElem)node->elem;
@@ -796,6 +793,7 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
 
       ModifyListAttrValue(GetCurrentSelectedAttrName(), value);
     }
+  m_currentAttElem = NULL;
   RedirectFocusToEditableControl();
 }
 
@@ -866,7 +864,8 @@ void AmayaAttributePanel::OnInsert( wxCommandEvent& WXUNUSED(event))
  -----------------------------------------------------------------------*/
 void AmayaAttributePanel::OnUpdateDeleteButton(wxUpdateUIEvent& event)
 {
-  event.Enable(IsPanelActive()&&!IsMandatory());
+  if (IsPanelActive() && m_currentAttElem)
+    event.Enable(!IsMandatory());
 }
 
 /*----------------------------------------------------------------------
