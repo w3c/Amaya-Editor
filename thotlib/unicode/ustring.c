@@ -442,17 +442,24 @@ CHARSET TtaGetLocaleCharset ()
 #endif /* _WX */
         {
           int  fd;
-          char buffer[256];
-          memset ( buffer, 0, 256 );
+          char buffer[256], cmd[256], filename[30];
+          memset ( buffer, 0, 256);
+          strcpy (cmd, "locale -ck LC_MESSAGES | grep messages-codeset | sed 's/.*=\"//' | sed 's/\"//'");
+          strcat (cmd," > ");
+          strcpy (filename, "/tmp/");
+          strcat (filename,"amaya_locale");
+          strcat (cmd, filename);
           /* ask the system using locale command */
-          system ("locale -ck LC_MESSAGES | grep messages-codeset | sed 's/.*=\"//' | sed 's/\"//' > /tmp/locale");
-          fd = open ("/tmp/locale", O_RDONLY);
+          system (cmd);
+          fd = open (filename, O_RDONLY);
           if (fd)
             {
               read (fd, buffer, 255);
               close (fd);
-              system ("rm -f /tmp/locale");
-              buffer[strlen(buffer)-1] = EOS;
+              strcpy (cmd, "rm -f ");
+              strcat (cmd, filename);
+              system (cmd);
+              buffer[255] = EOS;
               /* convert the string into thotlib index */
               LocaleSystemCharset = TtaGetCharset(buffer); 
             }
