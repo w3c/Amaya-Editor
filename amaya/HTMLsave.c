@@ -824,13 +824,11 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
               else if (orgString[0] != '#' &&
                        // Images and CSS links could be skipped
                        (!savedImages ||
-                        ((attrType.AttrTypeNum != HTML_ATTR_SRC ||
+                        (((attrType.AttrTypeNum != HTML_ATTR_SRC &&
+                           attrType.AttrTypeNum != HTML_ATTR_data) ||
                            attrType.AttrSSchema != XHTMLSSchema) &&
-                          (attrType.AttrTypeNum != HTML_ATTR_data ||
-                           attrType.AttrSSchema != XHTMLSSchema) &&
-                          (elType.ElTypeNum != SVG_EL_image  ||
-                           elType.ElSSchema != SVGSSchema) &&
-                          (elType.ElTypeNum != SVG_EL_PICTURE_UNIT  ||
+                          ((elType.ElTypeNum != SVG_EL_image &&
+                            elType.ElTypeNum != SVG_EL_PICTURE_UNIT)  ||
                            elType.ElSSchema != SVGSSchema))))
                 {
                   newString = UpdateDocResource (doc, oldpath, newpath, cssbase,
@@ -4436,7 +4434,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
         {
           TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
           /* Transform all URLs to absolute ones */
-          if (UpdateURLs)
+          if (UpdateURLs || CopyCss)
             {
               if (base)
                 /* URLs are still relative to the document base */
