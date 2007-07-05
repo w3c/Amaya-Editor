@@ -1985,9 +1985,9 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
         {
           /*  */
           TtaGiveThotRGB (fg, &red, &green, &blue);
-          if (red < sd) sd = red;
-          if (green < sd) sd = green;
-          if (blue < sd) sd = blue;
+          if (red && red < sd) sd = red;
+          if (green && green < sd) sd = green;
+          if (blue && blue < sd) sd = blue;
           dark = TtaGetThotColor (red - sd, green - sd, blue - sd);
           if (red + sl > 254) red = 255 - sl;
           if (green + sl > 254) green = 255 - sl;
@@ -2106,10 +2106,10 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
                   else
                     {
                       // bottom
-                      point[2].x = point[1].x + left;
-                      point[2].y = point[1].y - thick;
-                      point[3].x = point[0].x - right;
+                      point[3].x = point[0].x + left;
                       point[3].y = point[0].y - thick;
+                      point[2].x = point[1].x - right;
+                      point[2].y = point[1].y - thick;
                     }
                   GL_SetForeground (fg, TRUE);
                   GL_DrawPolygon (point, 4);
@@ -2141,9 +2141,9 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
         {
           /*  */
           TtaGiveThotRGB (fg, &red, &green, &blue);
-          if (red < sd) sd = red;
-          if (green < sd) sd = green;
-          if (blue < sd) sd = blue;
+          if (red && red < sd) sd = red;
+          if (green && green < sd) sd = green;
+          if (blue && blue < sd) sd = blue;
           dark = TtaGetThotColor (red - sd, green - sd, blue - sd);
           if (red + sl > 254) red = 255 - sl;
           if (green + sl > 254) green = 255 - sl;
