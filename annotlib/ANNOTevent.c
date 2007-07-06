@@ -811,7 +811,7 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   Document           doc_annot;
   AnnotMeta         *annot;
   XPointerContextPtr ctx;
-  char              *xptr, *tfid;
+  char              *xptr = NULL, *tfid = NULL;
   ThotBool           useDocRoot = (mode & ANNOT_useDocRoot) != 0;
   ThotBool           isReplyTo = (mode & ANNOT_isReplyTo) != 0;
 
