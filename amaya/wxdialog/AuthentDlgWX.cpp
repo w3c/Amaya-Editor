@@ -78,12 +78,6 @@ AuthentDlgWX::AuthentDlgWX( int ref, wxWindow * parent, char *auth_realm,
   XRCCTRL(*this, "wxID_LABEL_NAME", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NAME) ));
   XRCCTRL(*this, "wxID_LABEL_PASSWD", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PASSWORD) ));
 
-  wxString wx_name = TtaConvMessageToWX( name );
-  XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetValue(wx_name);
-  XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetSelection (0, -1);
-  wxString wx_password = TtaConvMessageToWX( pwd );
-  XRCCTRL(*this, "wxID_PASSWD", wxTextCtrl)->SetValue(wx_password);
-
   // buttons
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
@@ -92,6 +86,10 @@ AuthentDlgWX::AuthentDlgWX( int ref, wxWindow * parent, char *auth_realm,
   TtaGetEnvBoolean ("SAVE_PASSWORDS", &check);
   if (check)
     {
+      wxString wx_name = TtaConvMessageToWX( name );
+      XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetValue(wx_name);
+      wxString wx_password = TtaConvMessageToWX( pwd );
+      XRCCTRL(*this, "wxID_PASSWD", wxTextCtrl)->SetValue(wx_password);
       // 'Save passwords' checkbox
       XRCCTRL(*this, "wxID_CHECK_PWD",  wxCheckBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA ,AM_PASSWORDS_SAVE)));
       if (name[0] != EOS && pwd[0] != EOS)
@@ -107,6 +105,8 @@ AuthentDlgWX::AuthentDlgWX( int ref, wxWindow * parent, char *auth_realm,
       p_obj = XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox);
       p_obj->GetContainingSizer()->Show(p_obj, FALSE);
     }
+
+  XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetSelection (0, -1);
 
   // Set focus to ...
   //  XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetFocus();
