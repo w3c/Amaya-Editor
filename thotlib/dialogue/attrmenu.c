@@ -1565,6 +1565,17 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
       PrevStructSchema = NULL;
       PrevElTypeNumber = 0;
       PrevElAttr = FALSE;
+#ifdef _WX
+      params.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_LISTUPDATE;
+      params.param2 = NULL;
+      params.param5 = NULL;
+      params.param6 = NULL;
+      params.param7 = 0;
+      params.param8 = 0;
+              
+      AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, params );
+              return;
+#endif /* _WX */
     }
 
 #ifndef _WX

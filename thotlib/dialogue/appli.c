@@ -85,6 +85,7 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
 #include "thotcolor_tv.h"
+#include "attrmenu.h"
 
 #ifdef _WX
 #include "AmayaWindow.h"
@@ -103,6 +104,7 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 #include "absboxes_f.h"
 #include "appdialogue_f.h"
 #include "applicationapi_f.h"
+#include "attrmenu_f.h"
 #include "boxlocate_f.h"
 #include "boxparams_f.h"
 #include "boxselection_f.h"
@@ -3548,6 +3550,7 @@ void ChangeSelFrame (int frame)
       /* update the class list */
       TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
       TtaRefreshElementMenu (doc, 1);
+      UpdateAttrMenu (LoadedDocument[doc-1], TRUE);
 #endif /* _WX */
       /* the active frame changed so update the application focus */
       TtaRedirectFocus();
