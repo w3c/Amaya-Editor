@@ -182,7 +182,6 @@ void SendByMailDlgWX::SetCurrentToItemText()
 
 void SendByMailDlgWX::SuggestAddress()
 {
-  long from, to;
   long id = wxNOT_FOUND;
   wxString str = m_newto->GetValue();
   if(m_newto->GetInsertionPoint()==m_newto->GetLastPosition())

@@ -19,7 +19,7 @@ extern void TtaUpdateAttrMenu ( Document document );
 extern void CallbackValAttrMenu ( int ref,
                                   int valmenu,
                                   char *valtext );
-extern void SetAttrValueToRange ( AttrListElem* elem,
+extern void SetAttrValueToRange ( PtrAttrListElem elem,
                                   void* value );
 extern void CallbackEditRefAttribute ( PtrAttrListElem pAttrElem,
                                        int frame );

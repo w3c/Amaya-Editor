@@ -2020,7 +2020,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   Set a new value for the specified attr for the currently selected range.
   \param value char* is the attr is text and int if num or enum.
   ----------------------------------------------------------------------*/
-void SetAttrValueToRange(AttrListElem* elem, void* value)
+void SetAttrValueToRange(PtrAttrListElem elem, void* value)
 {
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel;
