@@ -622,7 +622,7 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
 #ifdef TEMPLATES
   SSchema             TemplateSSchema = TtaGetSSchema ("Template", doc);
 #endif /* TEMPLATES */
-  Element             el, root, content, next;
+  Element             el, root, content, next = NULL;
   ElementType         elType, contentType;
   ElementType         searchedType1, searchedType2;
   ElementType         searchedType3, searchedType4, searchedType5;
@@ -4391,6 +4391,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
           charset = TtaGetCharset (user_charset);
           TtaSetDocumentCharset (doc, charset, FALSE);
         }
+      else
+        charset = TtaGetDocumentCharset (doc);
+
       if (user_mimetype && *user_mimetype)
         {
           if (DocumentMeta[doc]->content_type)

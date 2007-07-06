@@ -112,7 +112,7 @@ int CharNum_IN_Line (Document doc, int CharNum)
   Element             el;
   Element             child, prev;
   ElementType         elType;
-  int                 i, len, time = 0 ;
+  int                 i = 0, len, time = 0 ;
   int                 Char;
   int                 *len_of_child, *memory_of_child;
   int                 len_of_line, count_child,length_child;
@@ -234,8 +234,8 @@ Element GetElemWithChar ( Document doc, char *nameVal)
   Element             child, prev;
   ElementType         elType;
   int                 i,line, len,len1,len_of_line,count_child=1;
-  int                 Char,time=0;
-  int                 *len_of_child,*memory_of_child;
+  int                 Char,time = 0;
+  int                 *len_of_child = NULL,*memory_of_child = NULL;
   int                 sum_length_child;
   ThotBool            selpos=FALSE;
   int                 length_child,j,k;
@@ -552,11 +552,11 @@ Element GetElemWithCharRange ( Document doc, char *nameVal)
   Element             child, prev, child2;
   ElementType         elType, elType2;
   int                 len_value;
-  int                 i, len, line1 = 1, line2 = 1,len1;
+  int                 i, len, line1 = 1, line2 = 1,len1 = 0;
   int                 char1, char2, time = 0;
-  int                 count_child,len_of_line;
-  int                 *len_of_child, *memory_of_child;
-  int                 *len_of_child2, *memory_of_child2;
+  int                 count_child = 0, len_of_line;
+  int                 *len_of_child = NULL, *memory_of_child = NULL;
+  int                 *len_of_child2 = NULL, *memory_of_child2 = NULL;
   int                 sum_length_child;
   int                 length_child;
   int                 j,k;
@@ -3987,7 +3987,7 @@ static void ResetFontOrPhrase (Document doc, Element elem)
   if (elem)
     {
       child = TtaGetFirstChild (elem);
-      first = NULL;
+      first = last = NULL;
       while (child)
         {
           // next element
