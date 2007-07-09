@@ -1283,8 +1283,6 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 #ifdef _GL
           pBox->VisibleModification = TRUE;
 #endif /* _GL */
-if (!strcmp (pAb->AbElement->ElLabel, "L208"))
-  printf ("YMoveAll L208 y=%d + %d\n", pBox->BxYOrg, delta);
           if (pBox->BxVertFlex &&
               /* stretched box not already handled */
               (pAb->AbLeafType != LtCompound ||
