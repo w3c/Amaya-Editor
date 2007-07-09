@@ -942,7 +942,7 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
     {
       nbCtxtCond += ctxt->nbElem;
       if (ctxt->name[0] > AnyType + 1 ||
-          (firstCond->CoCondition == PcElemType &&
+          (firstCond && firstCond->CoCondition == PcElemType &&
            firstCond->CoTypeElem == ctxt->name[0]))
         nbCtxtCond++;
       /* count the number of conditions in the context */

@@ -1197,11 +1197,13 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
   //#ifdef POSITIONING
   else if (pRefAb && !IsParentBox (pRefAb->AbBox, pBox))
     /* ignore previous absolute positioning */
-    while (pRefAb && pRefAb->AbPositioning &&
-           pRefAb->AbLeafType == LtCompound &&
-           (pRefAb->AbPositioning->PnAlgorithm == PnAbsolute ||
-            pRefAb->AbPositioning->PnAlgorithm == PnFixed))
-      {
+    while (pRefAb &&
+           (pRefAb->AbDead ||
+            (pRefAb->AbLeafType == LtCompound &&
+             pRefAb->AbPositioning &&
+             (pRefAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+              pRefAb->AbPositioning->PnAlgorithm == PnFixed))))
+{
         if (pRefAb->AbPrevious)
           /* refer the previous box instead */
           pRefAb = pRefAb->AbPrevious;
