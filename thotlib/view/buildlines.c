@@ -2419,19 +2419,21 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   if (pNextBox->BxLMargin + pNextBox->BxLPadding > 0)
                     {
                       if (pBlock->BxLeftFloat && setinline &&
-                          pLine->LiXOrg > pNextBox->BxLMargin)
+                          pLine->LiXOrg < shift + pNextBox->BxLMargin)
                         // shift the box position
-                            pLine->LiXOrg -= pNextBox->BxLMargin;
-                      l += pNextBox->BxLMargin + pNextBox->BxLPadding;
+                        l = l + pNextBox->BxLMargin - pLine->LiXOrg - shift;
+                      else
+                        l += pNextBox->BxLMargin + pNextBox->BxLPadding;
                     }
                   if (pNextBox->BxRMargin + pNextBox->BxRPadding > 0)
                     {
                       shift = pBlock->BxW - pLine->LiXOrg - pLine->LiXMax;
                       if (pBlock->BxRightFloat && setinline &&
-                          shift > pNextBox->BxRMargin)
+                          shift < pNextBox->BxRMargin)
                         // reduce the size of the box
-                        l += shift - pNextBox->BxRMargin;
-                      l += pNextBox->BxRMargin + pNextBox->BxRPadding;
+                        l = l + pNextBox->BxRMargin - shift;
+                      else
+                        l += pNextBox->BxRMargin + pNextBox->BxRPadding;
                    }
                   l = l + pNextBox->BxLBorder;
                   l = l + r + pNextBox->BxRBorder;
