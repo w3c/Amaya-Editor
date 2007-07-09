@@ -548,203 +548,317 @@ Element GetElemWithLineRange ( Document doc, char *nameVal)
 Element GetElemWithCharRange ( Document doc, char *nameVal)
 {
   Element             el, el2;
-  char                *name, *Char_first, *memory_Char;
-  Element             child, prev, child2;
-  ElementType         elType, elType2;
+  char                *name, *val_string;
+  Element             child, prev;
+  ElementType         elType;
   int                 len_value;
-  int                 i, len, line1 = 1, line2 = 1,len1 = 0;
-  int                 char1, char2, time = 0;
-  int                 count_child = 0, len_of_line;
-  int                 *len_of_child = NULL, *memory_of_child = NULL;
-  int                 *len_of_child2 = NULL, *memory_of_child2 = NULL;
-  int                 sum_length_child;
-  int                 length_child;
-  int                 j,k;
+  int                 i, len,len_of_text = 0;
+  int                 char1, char2;
 
-  if (!nameVal)
+  if (!nameVal && DocumentTypes[doc] != docText)
+    return NULL;
+  //Extract the firstchar and lastchar numbers
+  name = strstr (nameVal, "=");
+  if (name == NULL)
+    return NULL;
+  name++;
+  len_value = strlen (name);
+  if (len_value == 0)
     return NULL;
 
-  i = 0;
-  //Extract The firstchar and lastchar Number
-  name = strstr(nameVal,"=");
-  name++;
-  len_value = strlen(name);
-  Char_first = (char *)TtaGetMemory(len_value + 1);
-  memory_Char = Char_first;
-  while (*(name + i) != ',')
-	  i++;
-
-  strncpy (Char_first, name, i);
-  Char_first[i] = EOS;
-  char1 = atoi (Char_first);
-  name = strstr (name, ",");
-  name++;
-  char2 = atoi (name);
-  TtaFreeMemory (memory_Char);
   // define the first and second Element
   el = TtaGetMainRoot (doc);
+  len = TtaGetElementVolume(el);
+  val_string = (char *)TtaGetMemory(len_value + 1);
+  i = 0;
+  while (name[i] != ',' && name[i] != EOS)
+    {
+      val_string[i] = name[i];
+      i++;
+    }
+  val_string[i] = EOS;
+  char1 = atoi (val_string);
+  name = strstr (name, ",");
+  if (name == NULL)
+    char2 = len;
+  else
+    {
+      name++;
+      char2 = atoi (name);
+    }
+  TtaFreeMemory (val_string);
+  if (char1 > len)
+     char1 = len;
+  if (char2 > len)
+     char2 = len;
   elType = TtaGetElementType (el);
   elType.ElTypeNum = TextFile_EL_Line_;
   el = TtaSearchTypedElement (elType, SearchForward, el);
+  child = TtaGetFirstChild (el);
+  el2 = el;
+  if (el == NULL)
+    return NULL;
 
-  el2 = TtaGetMainRoot (doc);
-  elType2 = TtaGetElementType (el2);
-  elType2.ElTypeNum = TextFile_EL_Line_;
-  el2 = TtaSearchTypedElement (elType2, SearchForward, el2);
-
+#ifndef IV
   /* interpret char1 and calculate the position */
-  child = TtaGetFirstChild(el);
+  i = char1;
+  do
+    {
+      len = TtaGetElementVolume (el);
+      child = TtaGetFirstChild (el);
+      len_of_text = TtaGetElementVolume (child);
+      // get the next line
+      TtaNextSibling (&el);
+      if (len != len_of_text)
+        {
+          /* skip annotations in the line */
+          do
+            {
+              elType = TtaGetElementType (child);
+              prev = child;
+              // get the next child
+              TtaNextSibling (&child);
+              if (elType.ElTypeNum == TextFile_EL_TEXT_UNIT)
+                // a text
+                len_of_text = TtaGetElementVolume (prev);
+              else
+                len_of_text = 0;
+              if (child == NULL)
+                len_of_text++;
+              if (i < len_of_text)
+                {
+                  // select within this line
+                  TtaSelectString (doc, prev, i+1, i);
+                  child = NULL;
+                  el = NULL;
+                }
+              else
+                i -= len_of_text;
+            }
+          while (child);
+        }
+      else if ( i < len_of_text)
+        {
+          // select within this line
+          TtaSelectString (doc, child, i+1, i);
+          el = NULL;
+        }
+      else
+        i = i - len_of_text - 1;
+    }
+  while (el);
+
+  i = char2;
+  el = el2;
+  do
+    {
+      len = TtaGetElementVolume (el);
+      child = TtaGetFirstChild (el);
+      len_of_text = TtaGetElementVolume (child);
+      // get the next line
+      TtaNextSibling (&el);
+      if (len != len_of_text)
+        {
+          /* skip annotations in the line */
+          do
+            {
+              elType = TtaGetElementType (child);
+              prev = child;
+              // get the next chil
+              TtaNextSibling (&child);
+               if (elType.ElTypeNum == TextFile_EL_TEXT_UNIT)
+                // a text
+                len_of_text = TtaGetElementVolume (prev);
+              else
+                len_of_text = 0;
+              if (child == NULL)
+                len_of_text++;
+              if (i < len_of_text)
+                {
+                  // select within this line
+                  i++;
+                  TtaExtendSelection (doc, prev, i);
+                  child = NULL;
+                  el = NULL;
+                }
+              else
+                i -= len_of_text;
+            }
+          while (child && i > 0);
+        }
+      else if ( i <= len_of_text + 1)
+        {
+          // select within this line
+          i++;
+          TtaExtendSelection (doc, child, i);
+          el = NULL;
+        }
+      else
+        i = i - len_of_text - 1;
+    }
+  while (el);
+  return child;
+#else /* IV */
+  Element             child2;
+  int                 count_child = 0, len_of_line;
+  int                 *child_string = NULL;
+  int                 *child_string2 = NULL;
+  int                 sum_length_child;
+  int                 length_child;
+  int                 j, k, time = 0;
+
+  child2 = child;
+  /* interpret char1 and calculate the position */
   if (el)
     {
       i = char1;
-      len = TtaGetElementVolume(el);
-      len1 = TtaGetElementVolume(child);
-      len_of_line = len1;
+      len = TtaGetElementVolume (el);
+      len_of_text = TtaGetElementVolume (child);
+      len_of_line = len_of_text;
       count_child = 1;
-
       /* Consider "Annotation Icon" if Annotation Icon is on the line */
-      if (len != len1)
+      if (len != len_of_text)
         {
           //analysis the structure of the target line including "Annotation Icon"
           while (len != len_of_line)
             {
-              TtaNextSibling(&child);
-              length_child = TtaGetElementVolume(child);
+              TtaNextSibling (&child);
+              length_child = TtaGetElementVolume (child);
               len_of_line += length_child;
               count_child++; // count the number of child in the line
             }
 
-          len_of_child = (int *)TtaGetMemory( (sizeof(int)) * (count_child + 1) );
-          memory_of_child = len_of_child;
-          child = TtaGetFirstChild(el);
+          child_string = (int *)TtaGetMemory( (sizeof(int)) * (count_child + 1) );
+          child = TtaGetFirstChild (el);
 
           // input the length of child one by one
-          for (k=0; k < count_child; k++)
+          for (k = 0; k < count_child; k++)
             {
               length_child = TtaGetElementVolume(child);
-              len_of_child[k] = length_child;
+              child_string[k] = length_child;
               TtaNextSibling(&child);
             }
 
           //adjust the length of line (subtract that of Annotation Icon)
-          for (k=1; k < count_child; k+=3)
-            len -= len_of_child[k];
+          for (k = 1; k < count_child; k+=3)
+            len -= child_string[k];
 
-          child = TtaGetFirstChild(el);
-          if ( (len + time) < i )
-            TtaFreeMemory(memory_of_child);
+          child = TtaGetFirstChild (el);
+          if ( len < i )
+            {
+              TtaFreeMemory(child_string);
+              child_string = NULL;
+            }
         }
 
       // interpret Char Scheme value and calculate the element including the starting position
-      while (child && ((len < i && time ==0) || (len+time < i && time >=1)))
+      while (child && ((len < i && time == 0) || (len+time < i && time >= 1)))
         {
           i -= len;
           prev = child;
-          TtaNextSibling(&el);
-          child = TtaGetFirstChild(el);
+          TtaNextSibling (&el);
+          child = TtaGetFirstChild (el);
 
           if (child == NULL)
             {
               len = i;
               child = prev;			
             }
-          else if (child != NULL)
+          else
             {
-              len = TtaGetElementVolume(el);
-              len1 = TtaGetElementVolume(child);
+              len = TtaGetElementVolume (el);
+              len_of_text = TtaGetElementVolume (child);
               time++;
-              line1++;
-              len_of_line = len1;
+              len_of_line = len_of_text;
               count_child = 1;
 	    	
               /* Consider "Annotation Icon" if Annotation Icon is on the line */
-              if (len != len1)
+              if (len != len_of_text)
                 { 
                   // analysis the structure of the line including "Annotation Icon"
                   while (len != len_of_line)
                     {
-                      TtaNextSibling(&child);
+                      TtaNextSibling (&child);
                       length_child = TtaGetElementVolume(child);
                       len_of_line += length_child;
                       count_child++; // count the number of child in the line
                     }
 
-                  len_of_child = (int *)TtaGetMemory( (sizeof(int)) * (count_child + 1) );
-                  memory_of_child = len_of_child;
-                  child = TtaGetFirstChild(el);
+                  child_string = (int *)TtaGetMemory( (sizeof(int)) * (count_child + 1) );
+                  child = TtaGetFirstChild (el);
 
                   // input the length of child one by one
-                  for (k=0; k < count_child; k++)
+                  for (k = 0; k < count_child; k++)
                     {
                       length_child = TtaGetElementVolume(child);
-                      len_of_child[k] = length_child;
-                      TtaNextSibling(&child);
+                      child_string[k] = length_child;
+                      TtaNextSibling (&child);
                     }
 
                   // adjust the length of line (subtract that of Annotation Icon)
-                  for (k=1; k < count_child; k+=3)
-                    len -= len_of_child[k];
+                  for (k = 1; k < count_child; k += 3)
+                    len -= child_string[k];
 
                   child = TtaGetFirstChild(el);
                   if (len + time < i)
-                    TtaFreeMemory(memory_of_child);
+                    {
+                      TtaFreeMemory(child_string);
+                      child_string = NULL;
+                    }
                 }
             }
           if (len == 0 && (time) == i)
             break;
         }
-
     }
 
-  //if position is in the the part before Annotation Icon
-  if ( i-time <= len1)
-    TtaSelectString(doc,child,(i-time)+1,(i-time));
-
+  //if position is in the part before Annotation Icon
+  if ( i-time <= len_of_text)
+    TtaSelectString (doc, child, (i-time)+1, (i-time));
   //else if behind Icon
-
-  else if (i-time > len_of_child[0])
+  else if (child_string && i-time > child_string[0])
     {
-      sum_length_child = len_of_child[0];
+      sum_length_child = child_string[0];
       for (k=2; k < count_child; k += 3)
         {
-          if ((i-time) <= sum_length_child + len_of_child[k])
+          if ((i-time) <= sum_length_child + child_string[k])
             {
 							for (j=1; j <=k; j++)
                 TtaNextSibling(&child);
 							
 							TtaSelectString (doc, child,
                                (i-time+1) - sum_length_child,(i-time) - sum_length_child);
-              TtaFreeMemory(memory_of_child);
+              TtaFreeMemory(child_string);
 							break;
 						}
-          else if ((i-time > sum_length_child + len_of_child[k]) &&
-                   (i-time <= sum_length_child + len_of_child[k] + len_of_child[k+1]))
+          else if ((i-time > sum_length_child + child_string[k]) &&
+                   (i-time <= sum_length_child + child_string[k] + child_string[k+1]))
             {
 							for (j=1; j<=k+1; j++)
-                TtaNextSibling(&child);
+                TtaNextSibling (&child);
 
-							TtaSelectString(doc,child,(i-time+1) - sum_length_child - len_of_child[k],(i-time) - sum_length_child - len_of_child[k]);
+							TtaSelectString(doc,child,(i-time+1) - sum_length_child - child_string[k],(i-time) - sum_length_child - child_string[k]);
 
-							TtaFreeMemory(memory_of_child);
+							TtaFreeMemory(child_string);
+              child_string = NULL;
               break;
 						}
-          sum_length_child += len_of_child[k] + len_of_child[k+1];
+          sum_length_child += child_string[k] + child_string[k+1];
         }
     }
 
 	/* interpret char2 and calculate the position */
   time = 0;
-  child2 = TtaGetFirstChild(el2);
   if (el)
     {
       i = char2;
-      len = TtaGetElementVolume(el2);
-      len1 = TtaGetElementVolume(child2);
-      len_of_line = len1;
+      len = TtaGetElementVolume (el2);
+      len_of_text = TtaGetElementVolume (child2);
+      len_of_line = len_of_text;
       count_child = 1;
 
       /* Consider "Annotation Icon" if Annotation Icon is on the line */
-      if (len != len1)
+      if (len != len_of_text)
         {
           // analysis the structure of the line including "Annotation Icon"
           while (len != len_of_line)
@@ -755,122 +869,124 @@ Element GetElemWithCharRange ( Document doc, char *nameVal)
               count_child++; // count the number of child in the line			
             }
 
-          len_of_child2 = (int *)TtaGetMemory( (sizeof(int)) * (count_child + 1) );
-          memory_of_child2 = len_of_child2;
-          child2 = TtaGetFirstChild(el2);
+          child_string2 = (int *)TtaGetMemory( (sizeof(int)) * (count_child + 1) );
+          child2 = TtaGetFirstChild (el2);
 
           // input the length of child one by one
-          for (k=0; k < count_child; k++)
+          for (k = 0; k < count_child; k++)
             {
-              length_child = TtaGetElementVolume(child2);
-              len_of_child2[k] = length_child;
-              TtaNextSibling(&child2);
+              length_child = TtaGetElementVolume (child2);
+              child_string2[k] = length_child;
+              TtaNextSibling (&child2);
             }
 
           // adjust the length of line (subtract that of Annotation Icon)
-          for (k=1; k < count_child; k+=3)
-            len -= len_of_child2[k];
-
-          child2 = TtaGetFirstChild(el2);
-
-          if ( (len + time) < i )
-            TtaFreeMemory(memory_of_child2);
+          for (k = 1; k < count_child; k+=3)
+            len -= child_string2[k];
+          child2 = TtaGetFirstChild (el2);
+          if ((len + time) < i)
+            {
+            TtaFreeMemory (child_string2);
+            child_string2 = NULL;
+            }
         }
 
       // interpret Char Scheme value and calculate the element including the ending position
-      while (child2 && ((len < i && time ==0) || ((len+time) < i && time >=1 )))
+      while (child2 && ((len < i && time == 0) || ((len+time) < i && time >=1 )))
         {	
           i -= len;
           prev = child2;
-          TtaNextSibling(&el2);
-          child2 = TtaGetFirstChild(el2);
-
+          TtaNextSibling (&el2);
+          child2 = TtaGetFirstChild (el2);
           if (child2 == NULL)
             {
               len = i;
               child2 = prev;
             }
-          else if (child2 != NULL)
+          else
             {
-              len = TtaGetElementVolume(el2);
-              len1 = TtaGetElementVolume(child2);
+              len = TtaGetElementVolume (el2);
+              len_of_text = TtaGetElementVolume(child2);
               time++;
-              line2++;
-              len_of_line = len1;
+              len_of_line = len_of_text;
               count_child = 1;
 
               /* Consider "Annotation Icon" if Annotation Icon is on the line */
-              if (len != len1)
+              if (len != len_of_text)
                 {
                   // analysis the structure of the line including "Annotation Icon"
                   while (len != len_of_line)
                     {
                       TtaNextSibling(&child2);
-                      length_child = TtaGetElementVolume(child2);
+                      length_child = TtaGetElementVolume (child2);
                       len_of_line += length_child;
                       count_child++;
                     }
 
-                  len_of_child2 = (int *)TtaGetMemory ((sizeof(int)) * (count_child + 1));
-                  memory_of_child2 = len_of_child2;
+                  child_string2 = (int *)TtaGetMemory ((sizeof(int)) * (count_child + 1));
                   child2 = TtaGetFirstChild(el2);
 
                   // input the length of child one by one
                   for (k=0; k < count_child; k++)
                     {
                       length_child = TtaGetElementVolume(child2);
-                      len_of_child2[k] = length_child;
+                      child_string2[k] = length_child;
                       TtaNextSibling(&child2);
                     }
 
                   // adjust the length of line (subtract that of Annotation Icon)
                   for (k=1; k < count_child; k+=3)
-                    len -= len_of_child2[k];
-
+                    len -= child_string2[k];
                   child2 = TtaGetFirstChild(el2);
                   if ( (len + time) < i )
-                    TtaFreeMemory(memory_of_child2);
+                    {
+                      TtaFreeMemory(child_string2);
+                      child_string2 = NULL;
+                    }
                 }			
             }
-          if (len == 0 && (time) == i)
+          if (len == 0 && time == i)
             break;
         }
     }
 
   //extend the range from first position to second 
-  if (i-time <= len1)
+  if (i-time <= len_of_text)
     TtaExtendSelection(doc,child2,(i-time)+1);
-  else if (i-time > len_of_child2[0])
+  else if (child_string2 && i-time > child_string2[0])
     {
-      sum_length_child = len_of_child2[0];
+      sum_length_child = child_string2[0];
 
       for (k=2; k < count_child; k += 3)
         {
-          if (i-time <= sum_length_child + len_of_child2[k])
+          if (i-time <= sum_length_child + child_string2[k])
             {
 							for (j=1; j <=k; j++)
                 TtaNextSibling(&child2);
 							
               TtaExtendSelection(doc,child2,(i-time+1) - sum_length_child);
-							TtaFreeMemory(memory_of_child2);
+							TtaFreeMemory(child_string2);
+              child_string2 = NULL;
 							break;
 						}
-          else if ((i-time > sum_length_child + len_of_child2[k] ) &&
-                   (i-time <= sum_length_child + len_of_child2[k] + len_of_child2[k+1] ))
+          else if ((i-time > sum_length_child + child_string2[k] ) &&
+                   (i-time <= sum_length_child + child_string2[k] + child_string2[k+1] ))
             {
 							for (j=1; j<=k+1; j++)
                 TtaNextSibling(&child2);
 							TtaExtendSelection (doc, child2,
-                                  (i-time+1) - sum_length_child - len_of_child2[k]);
-							TtaFreeMemory(memory_of_child2);
+                                  (i-time+1) - sum_length_child - child_string2[k]);
+							TtaFreeMemory(child_string2);
+              child_string2 = NULL;
 							break;
 						}
 
-					sum_length_child += len_of_child2[k] + len_of_child2[k+1];
+					sum_length_child += child_string2[k] + child_string2[k+1];
         }
+      TtaFreeMemory(child_string2);
     }
-
   return child;
+#endif
 }
 
 /*----------------------------------------------------------------------
