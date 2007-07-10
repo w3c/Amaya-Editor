@@ -747,9 +747,10 @@ wxString AmayaAttributePanel::GetCurrentSelectedAttrName()const
 void AmayaAttributePanel::OnApply( wxCommandEvent& event )
 {
 //  DisplayMode   mode;
-  char          buffer[MAX_LENGTH];
-  Document      doc;
-  wxString      value;
+  char            buffer[MAX_LENGTH];
+  Document        doc;
+  Language        language;
+  wxString        value;
 
   if (m_currentAttElem && m_firstSel)
     {
@@ -762,7 +763,7 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
 
             wxTextCtrl * p_text_ctrl = XRCCTRL(*m_pPanel_Text, "wxID_ATTR_TEXT_VALUE", wxTextCtrl);
             value = p_text_ctrl->GetValue();
-            strncpy(buffer, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH-1);
+            strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH-1);
             SetAttrValueToRange(m_currentAttElem, (void*)buffer);
           }
           break;
@@ -783,7 +784,9 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
           {
             wxChoice * p_cb = XRCCTRL(*m_pPanel_Lang, "wxID_ATTR_COMBO_LANG_LIST", wxChoice);
             value = p_cb->GetStringSelection();
-            SetAttrValueToRange(m_currentAttElem, (void*)(const char*)value.mb_str(wxConvUTF8));
+            strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH-1);
+            language = TtaGetLanguageIdFromName (buffer);
+            SetAttrValueToRange(m_currentAttElem, (void*)TtaGetLanguageCode (language));
           }
           break;
         case wxATTR_TYPE_NONE:
