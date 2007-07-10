@@ -1842,7 +1842,9 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
     StartParser (ext_doc, localFile, documentname, tempdir, localFile, FALSE, TRUE);
   
   /* Check parsing errors */
-  if (ErrFile)
+  if (ErrFile &&
+      (XMLCharacterNotSupported || XMLInvalidToken || XMLNotWellFormed ||
+       XMLErrorsFoundInProfile || XMLErrorsFound))
     {
       CleanUpParsingErrors ();
       /* Show the parsing errors */
@@ -1864,8 +1866,11 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
       TtaFileUnlink (err_doc);
     }
   else
-    ok = TRUE;
-
+    {
+      if (ErrFile)
+        CleanUpParsingErrors ();
+      ok = TRUE;
+    }
   /* Update the original document */
   if (ok)
     {

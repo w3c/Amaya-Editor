@@ -835,7 +835,6 @@ char * TextPlainId_build ( Document doc, View view, ThotBool useDocRoot )
   Element     firstEl, el, child,el_ex, child_ex;
   ElementType elType;
   int         firstCh, i;  
-  char       *lastXpath = NULL; 
   int         line, line2, len, len2, Char = 0, time = 0;
   int         len_ex = 0, line_ex;
   int         count_child = 1, len_of_line, length_child, k;

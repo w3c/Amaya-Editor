@@ -232,6 +232,26 @@ ThotBool XhtmlCannotContainText (ElementType elType)
     }
   return ret;
 }
+/*----------------------------------------------------------------------
+  CheckNamespace
+  If attribute attrNum is not present on element el, generate a
+  parsing error message.
+  ----------------------------------------------------------------------*/
+static void CheckNamespace (Element el, Document doc)
+{
+  char           msgBuffer[MaxMsgLength];
+  int            lineNum;
+
+  if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat &&
+      TtaGiveNamespaceDeclaration (doc, el) == NULL)
+    {
+      sprintf (msgBuffer, "Mandatory namespace for %s will be added when saving",
+               TtaGetElementTypeName(TtaGetElementType(el)));
+      lineNum = TtaGetElementLineNumber(el);
+      XmlParseError (warningMessage, (unsigned char*)msgBuffer, lineNum);
+      TtaSetANamespaceDeclaration (doc, el, NULL, XHTML_URI);
+    }
+}
 
 /*----------------------------------------------------------------------
   CheckMandatoryAttribute
@@ -384,6 +404,10 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
   typenum = elType.ElTypeNum;
   switch (typenum)
     {
+    case HTML_EL_HTML:
+      CheckNamespace (el, doc);
+      break;
+
     case HTML_EL_PICTURE_UNIT:
       /* Check the mandatory SRC attribute */
       CheckMandatoryAttribute (el, doc, HTML_ATTR_SRC);
