@@ -77,7 +77,7 @@ int AmayaApp::AttrList[] =
   WX_GL_STENCIL_SIZE, 1,
   WX_GL_DOUBLEBUFFER,
 #ifdef _WINDOWS
-  WX_GL_NOT_ACCELERATED, /* don't change the position of this entry (12) */
+//  WX_GL_NOT_ACCELERATED, /* don't change the position of this entry (12) */
 #endif /* _WINDOWS */
   0
 };
@@ -490,7 +490,7 @@ int * AmayaApp::GetGL_AttrList()
   if (gl_accelerated)
     AttrList[12] = 0; /* ok enable opengl hardware acceleration */
   else
-    AttrList[12] = WX_GL_NOT_ACCELERATED; /* disable opengl hardware acceleration */
+    AttrList[12] = 0;//WX_GL_NOT_ACCELERATED; /* disable opengl hardware acceleration */
 #endif /* _WINDOWS */
   return AttrList;
 }

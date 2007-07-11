@@ -13,7 +13,7 @@
   #define MINIMUM_WINSOCK_VERSION 0x0101  /* ...but we'll take ver 1.1 :) */
 #endif /* _WINDOWS */
 
-IMPLEMENT_DYNAMIC_CLASS(wxAmayaSocketEventLoop, wxTimer)
+//IMPLEMENT_DYNAMIC_CLASS(wxAmayaSocketEventLoop, wxTimer)
 
 wxAmayaSocketEventLoop::wxAmayaSocketEventLoop( int polling_delay ) : wxTimer()
 {

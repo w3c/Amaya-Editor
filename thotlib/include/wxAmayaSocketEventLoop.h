@@ -7,7 +7,7 @@
 
 class wxAmayaSocketEventLoop : public wxTimer
 {
-  DECLARE_DYNAMIC_CLASS(wxAmayaSocketEventLoop)
+//  DECLARE_DYNAMIC_CLASS(wxAmayaSocketEventLoop)
     
  public:
   wxAmayaSocketEventLoop( int polling_delay = 100 );
