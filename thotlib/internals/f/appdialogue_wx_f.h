@@ -38,6 +38,10 @@ extern int TtaMakeFrame ( const char * schema_name,
                           int page_position );
 extern ThotBool TtaMakePage ( int window_id,
                               int page_id );
+extern int TtaGetIconIndex ( const char * filename );
+extern void TtaSetPageIcon ( Document doc,
+                             View view,
+                             char *iconpath );
 extern ThotBool TtaAttachFrame ( int frame_id,
                                  int window_id,
                                  int page_id,
@@ -126,6 +130,10 @@ extern int TtaMakeFrame ( const char * schema_name,
                             int page_position );
 extern ThotBool TtaMakePage ( int window_id,
                                 int page_id );
+extern int TtaGetIconIndex ( const char * filename );
+extern void TtaSetPageIcon ( Document doc,
+                               View view,
+                               char *iconpath );
 extern ThotBool TtaAttachFrame ( int frame_id,
                                    int window_id,
                                    int page_id,

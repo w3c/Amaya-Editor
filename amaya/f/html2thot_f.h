@@ -29,6 +29,9 @@ extern void BlockInCharLevelElem ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
                                     ThotBool parsing );
+extern void CheckIconLink ( Element el,
+                            Document doc,
+                            SSchema schema );
 extern void CheckCSSLink ( Element el,
                            Document doc,
                            SSchema schema );
@@ -108,6 +111,9 @@ extern void BlockInCharLevelElem ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                       Document doc,
                                       ThotBool parsing );
+extern void CheckIconLink ( Element el,
+                              Document doc,
+                              SSchema schema );
 extern void CheckCSSLink ( Element el,
                              Document doc,
                              SSchema schema );

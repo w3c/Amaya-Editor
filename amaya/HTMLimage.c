@@ -17,6 +17,9 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "SVG.h"
+#ifdef _WX
+#include "appdialogue_wx.h"
+#endif /* _WX */
 
 #include "init_f.h"
 #include "query_f.h"
@@ -838,7 +841,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
         TtaFreeMemory (base_url);
     }
 
-  if (doc == 0 ||DocumentURLs[doc])
+  if (doc == 0 || DocumentURLs[doc])
     {
       /* compute the tempfile name */
       if (desc->tempfile)
@@ -917,6 +920,12 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
               if (desc->status == IMAGE_LOADED)
                 ctxEl->callback (doc, ctxEl->currentElement, desc->tempfile,
                                  ctxEl->extra, TRUE);
+            }
+          else if (ctxEl->currentElement == DocumentMeta[doc]->link_icon)
+            {
+#ifdef _WX
+              TtaSetPageIcon (doc, 1, desc->tempfile);
+#endif /* _WX */
             }
           else
             {
@@ -1224,6 +1233,34 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
 }
 
 /*----------------------------------------------------------------------
+  FetchIcon
+  ----------------------------------------------------------------------*/
+static void FetchIcon (Document doc, int flags, Element el,
+                         char *currentURL, AttributeType attrType)
+{
+  Attribute           attr;
+  char               *imageURI, *utf8value;
+  int                 length = 0;
+
+  length = TtaGetTextAttributeLength (attr);
+  attr = TtaGetAttribute (el, attrType);
+  if (attr)
+    length = TtaGetTextAttributeLength (attr);
+  if (length > 0)
+    {
+      /* allocate some memory */
+      utf8value = (char *)TtaGetMemory (length + 7);
+      TtaGiveTextAttributeValue (attr, utf8value, &length);
+      imageURI = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
+                                              TtaGetDefaultCharset ());
+      TtaFreeMemory (utf8value);
+      FetchImage (doc, el, imageURI, flags, NULL, NULL);
+      TtaFreeMemory (imageURI);
+    }
+ }
+
+
+/*----------------------------------------------------------------------
   FetchImages fetches images linked by attrType1 or attrType2 attributes.  
   The flags may indicate extra transfer parameters, for example bypassing
   the cache.
@@ -1378,7 +1415,7 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
   Returns TRUE if the the transfer succeeds without being stopped;
   Otherwise, returns FALSE.
   ----------------------------------------------------------------------*/
- ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
+ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 {
   AttributeType       attrType, attrType1, attrType2;
   char               *currentURL;
@@ -1415,6 +1452,12 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
     /* there are some HTML elements in this documents. 
        Get all 'img' or 'object' or 'embed' elements */
     {
+      if (DocumentMeta[doc] && DocumentMeta[doc]->link_icon && loadImages)
+        {
+          attrType.AttrTypeNum = HTML_ATTR_HREF_;
+          FetchIcon (doc, flags, DocumentMeta[doc]->link_icon,
+                       currentURL, attrType);
+        }
       /* search all elements having an attribute SRC */
       attrType1.AttrSSchema = attrType.AttrSSchema;
       attrType2.AttrSSchema = attrType.AttrSSchema;

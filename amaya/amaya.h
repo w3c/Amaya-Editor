@@ -557,8 +557,9 @@ typedef struct _DocumentMetaDataElement
   char      *reason;           /* http_headers reason*/
 
   int        method;           /* method used to send this data */
+  Element    link_icon;        /* there is a link to an icon */
   ThotBool   xmlformat;        /* the document should be exported in xml format */
-  ThotBool   compound;        /* the document is a compound document */
+  ThotBool   compound;         /* the document is a compound document */
 #ifdef ANNOTATIONS
   Document   source_doc;       /* if the document is an annotation,
 				  this variable giveso the annoted document

@@ -83,6 +83,8 @@ extern void TtaSetANamespaceDeclaration ( Document document,
                                           Element element,
                                           char *NsPrefix,
                                           char *NsUri );
+extern char *TtaGiveNamespaceDeclaration ( Document document,
+                                           Element element );
 extern void TtaFreeElemNamespaceDeclarations ( Document document,
                                                Element element );
 extern void TtaFreeNamespaceDeclarations ( Document document );
@@ -191,6 +193,8 @@ extern void TtaSetANamespaceDeclaration ( Document document,
                                             Element element,
                                             char *NsPrefix,
                                             char *NsUri );
+extern char *TtaGiveNamespaceDeclaration ( Document document,
+                                             Element element );
 extern void TtaFreeElemNamespaceDeclarations ( Document document,
                                                  Element element );
 extern void TtaFreeNamespaceDeclarations ( Document document );

@@ -3,6 +3,7 @@
 #include "wx/bmpbuttn.h"
 #include "wx/spinctrl.h"
 #include "wx/socket.h"
+#include "wx/hashmap.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -78,6 +79,8 @@ static int g_logo_action_id = -1;
 
 static void TtaMakeWindowMenuBar( int window_id );
 static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu );
+WX_DECLARE_STRING_HASH_MAP( int, wxStringIntMap );
+wxStringIntMap g_iconSourceMap;
 #endif /* _WX */
 
 /* 
@@ -868,14 +871,9 @@ void TtaRefreshStatusBarStats( int changed_action_id, Document doc_id)
   + the frame id
   + 0 if too much created views 
   ----------------------------------------------------------------------*/
-int TtaMakeFrame( const char * schema_name,
-                  int schView,
-                  Document doc_id,
-                  const char * doc_name,
-                  int width,
-                  int height,
-                  int * volume,
-                  const char * viewName,
+int TtaMakeFrame( const char * schema_name, int schView,
+                  Document doc_id, const char * doc_name,
+                  int width, int height, int * volume, const char * viewName,
                   int window_id, int page_id, int page_position )
 {
 #ifdef _WX
@@ -979,7 +977,7 @@ int TtaMakeFrame( const char * schema_name,
   return frame_id;
 #else
   return 0;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1017,6 +1015,54 @@ ThotBool TtaMakePage( int window_id, int page_id )
     }
 #endif /* _WX */
   return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+int TtaGetIconIndex (const char * filename)
+{
+#ifdef _WX
+  wxString path = TtaConvMessageToWX(filename);
+  wxStringIntMap::iterator iter =  g_iconSourceMap.find(path);
+  if(iter!=g_iconSourceMap.end())
+    return iter->second;
+  else
+    {
+      wxImage img(TtaConvMessageToWX(filename), wxBITMAP_TYPE_ANY);
+      wxIcon icon;
+      icon.CopyFromBitmap(wxBitmap(img));
+      int index = ((AmayaApp *)wxTheApp)->GetDocumentIconList()->Add(icon);
+      g_iconSourceMap[path] = index;
+      return  index;
+    }
+#endif /* _WX*/
+  return 0;
+}
+
+/*----------------------------------------------------------------------
+  TtaSetPageIcon setup the page icon
+    returns:
+  ----------------------------------------------------------------------*/
+void TtaSetPageIcon( Document doc, View view, char *iconpath)
+{
+#ifdef _WX
+  int            frame;
+  AmayaWindow   *p_AmayaWindow;
+
+  wxIcon icon;
+
+  UserErrorCode = 0;
+  /* verifie le parametre document */
+  if (doc == 0 && view == 0)
+    TtaError (ERR_invalid_parameter);
+  else if (iconpath)
+    {
+      frame = GetWindowNumber (doc, view);
+      p_AmayaWindow = TtaGetWindowFromId( FrameTable[frame].FrWindowId );
+      if (p_AmayaWindow)
+        p_AmayaWindow->SetPageIcon (FrameTable[frame].FrPageId, iconpath);
+    }
+#endif /*_WX */	      
 }
 
 /*----------------------------------------------------------------------
@@ -1591,9 +1637,7 @@ ThotBool TtaFrameIsClosed( int frame_id )
   + procedure : the callback to activate when a url is selected
   returns:
   ----------------------------------------------------------------------*/
-void TtaSetURLBar( int frame_id,
-                   const char * listUrl,
-                   void (*      procedure)() )
+void TtaSetURLBar( int frame_id, const char * listUrl, void (* procedure)())
 {
 #ifdef _WX
   const    char *ptr, *ptr1;

@@ -39,44 +39,6 @@
 #endif /* _WX */
 
 /*----------------------------------------------------------------------
-   TtaCreateBitmap
-   create a bitmap from a file
-   const char * filename : the picture filename
-   int type   : the picture type (content.h)
-   xbm_type, eps_type, xpm_type, gif_type, png_type, jpeg_type
-  ----------------------------------------------------------------------*/
-ThotPixmap TtaCreateBitmap (const char * filename, int type)
-{
-#ifdef _WX
-  ThotPixmap pixmap = NULL;
-  
-  /* convert thot picture type to wxwindows picture type */
-  wxBitmapType wx_type = wxBITMAP_TYPE_INVALID;
-  switch ( type )
-    {
-    case xbm_type:	/* X11 BitmapFile format */
-      wx_type = wxBITMAP_TYPE_XBM;
-    case xpm_type:	/* Xpm XReadFileToPixmap format */
-      wx_type = wxBITMAP_TYPE_XPM;
-    case gif_type:	/* gif */
-      wx_type = wxBITMAP_TYPE_GIF;
-    case png_type:	/* Png */
-      wx_type = wxBITMAP_TYPE_PNG;
-    case jpeg_type:	/* Jpeg */
-      wx_type = wxBITMAP_TYPE_JPEG;
-    default :
-      return NULL;
-    }
-  
-  /* create the picture form file */
-  pixmap = new wxBitmap( TtaConvMessageToWX( filename ), wx_type );
-  return pixmap;
-#endif /* _WX */
-
-  return NULL;
-}
-
-/*----------------------------------------------------------------------
    TtaCreateBitmapLogo
 
    Creates a logo pixmap from a bitmap description: width, height and bit array.

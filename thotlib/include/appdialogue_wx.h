@@ -31,13 +31,10 @@ extern AmayaWindow * TtaGetActiveWindow();
 extern wxMenu *      TtaGetContextMenu( int window_id );
 
 extern int TtaMakeWindow(int x, int y, int w, int h, int kind, int parent_window_id );
-extern int TtaMakeFrame( const char * schema_name,
-			 int schView,
-			 Document doc_id,
-			 const char * doc_name,
-			 int width,
-			 int height,
-			 int * volume );
+extern int TtaMakeFrame( const char * schema_name, int schView,
+                         Document doc_id, const char * doc_name, int width,
+                         int height, int * volume );
+extern void TtaSetPageIcon( Document doc, View view, char *iconpath);
 extern void TtaShowWindow( int window_id, ThotBool show );
 extern int TtaGetFreePageId( int window_id );
 extern void TtaSwitchPanelButton( Document doc, View view,

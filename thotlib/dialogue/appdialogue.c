@@ -2264,7 +2264,6 @@ int TtaAddTextZone (Document doc, View view, char *label,
   return ret;
 }
 
-
 /*----------------------------------------------------------------------
   TtaSetTextZone
 
@@ -2278,13 +2277,13 @@ int TtaAddTextZone (Document doc, View view, char *label,
 void TtaSetTextZone (Document doc, View view, char *listUrl)
 {
   int            frame;
-#ifndef _WX /* WX doesn't use Text_Zone variable */
+#ifndef _WX
   ThotWidget     w;
-#endif //#ifndef _WX // TODO	      
 #ifdef _GTK
   GList         *combo1_items = NULL;
   ThotWidget     combo;
 #endif /* _GTK */
+#endif /* _WX */	      
 
   UserErrorCode = 0;
   /* verifie le parametre document */
@@ -2297,16 +2296,16 @@ void TtaSetTextZone (Document doc, View view, char *listUrl)
         TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame)
         {
-#ifndef _WX /* WX doesn't use Text_Zone variable */
+#ifdef _WX
+          TtaSetURLBar( frame, listUrl, NULL );
+#else /* _WX */
           w = FrameTable[frame].Text_Zone;
           if (w)
-#endif //#ifndef _WX // TODO	      
             {
 #ifdef _WINGUI
               /* Initialize listbox linked to combobox */
               InitWdComboBoxList (w, listUrl);
 #endif  /* _WINGUI */
-
 #ifdef _GTK
               /* list of URL OR Title OF librarIES */
               combo =  FrameTable[frame].Combo;
@@ -2318,12 +2317,8 @@ void TtaSetTextZone (Document doc, View view, char *listUrl)
               /* Free memory */
               g_list_free (combo1_items);
 #endif /* _GTK */
-
-#ifdef _WX
-              TtaSetURLBar( frame, listUrl, NULL );
-#endif /* _WX */
-
             }
+#endif /* _WX */	      
         }
     }
 }
@@ -2366,7 +2361,6 @@ void TtcSwitchCommands (Document doc, View view)
         TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame != 0)
         {
-
 #ifdef _GTK 
           row = GTK_WIDGET (FrameTable[frame].Row_Zone)->parent;
           if (row != 0)
@@ -2378,7 +2372,6 @@ void TtcSwitchCommands (Document doc, View view)
 
             }
 #endif /* _GTK */
-
 #ifdef _WINGUI
           if (FrameTable[frame].Text_Zone &&
               IsWindowVisible (FrameTable[frame].Text_Zone))
@@ -2404,8 +2397,7 @@ void TtcSwitchCommands (Document doc, View view)
             }
           GetClientRect (FrMainRef[frame], &r);
           PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
-#endif /* _WINGUI */
-	     
+#endif /* _WINGUI */	     
         }
     }
   /* force la mise a jour de la fenetre */
@@ -2746,23 +2738,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
                 int width, int height, int *volume, int doc,
                 ThotBool withMenu, ThotBool withButton)
 {
-#ifdef _WX
-  wxASSERT_MSG(FALSE, _T("Unused function"));
-#endif /* _WX */
-
 #if defined(_GTK) || defined(_WINGUI)
-#ifdef _WINGUI
-  ThotMenu            menu_bar, w=0;
-#endif /* _WINGUI */
-#if defined(_GTK)
+#ifdef _GTK
   ThotMenuBar         menu_bar;
   ThotWidget          w=0; /* menu button */
   ThotWidget          drawing_area; 
   ThotWidget          hbox1, hbox2;
   ThotWidget          vbox1;
   unsigned short      dx, dy;
-#endif /* #if defined(_GTK) */
-#ifdef _GTK
   ThotWidget          menu_item;
   ThotWidget          logo_pixmap;
   ThotWidget          table2;
@@ -2787,13 +2770,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #define MIN_HEIGHT 100
 #define MIN_WIDTH 200
 #ifdef _WINGUI
+  ThotMenu            menu_bar, w = 0;
+
   hwndClient = 0;
   ToolBar = 0;
   logoFrame = 0;
   StatusBar = 0;
   strcpy (wTitle, name);
 #endif /* _WINGUI */
-
   menu_bar = NULL;
   frame = 0;
   if (schema != NULL)
@@ -3406,10 +3390,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #endif /* _GL */ 
     }
   return (frame);
-#else /* #if defined(_GTK) || defined(_WINGUI) */
+#else /* _GTK || _WINGUI */
   /* this is for none gui compilation */
   return 0;
-#endif /* #if defined(_GTK) || defined(_WINGUI) */
+#endif /* _GTK || _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -3512,7 +3496,7 @@ void DestroyFrame (int frame)
       FrRef[frame] = 0;
       FrameTable[frame].WdStatus = NULL;
       FrameTable[frame].WdFrame = 0;
-#endif /* #ifndef _WX */
+#endif /* _WX */
 
       /* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
       ClearConcreteImage (frame);
@@ -3537,10 +3521,10 @@ void DestroyFrame (int frame)
   if (FrMainRef[frame])
     DestroyWindow (FrMainRef[frame]);
 #endif /* _WINGUI */
-#if defined(_GTK)
+#ifdef _GTK
   for (i = 0; i < MAX_BUTTON; i++)
     FrameTable[frame].Button[i] = 0;
-#endif /* #if defined(_GTK) */
+#endif /* _GTK */
 #ifdef _WX
   TtaHandlePendingEvents();
 #endif /* _WX */

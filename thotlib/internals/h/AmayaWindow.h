@@ -118,6 +118,7 @@ class AmayaWindow : public wxFrame
 
   virtual AmayaToolBar * GetAmayaToolBar();
   virtual AmayaStatusBar * GetAmayaStatusBar();
+  virtual void SetPageIcon(int page_id, char *iconpath);
 
   // url bar control
   virtual wxString GetURL();

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2005
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -310,15 +310,6 @@ extern void TtaClickElement (Document *document, Element *element);
   Returns the last clicked document and element.
   ----------------------------------------------------------------------*/
 extern void TtaGetClickedElement (Document *document, Element *element);
-  
-/*----------------------------------------------------------------------
-   TtaCreateBitmap
-   create a bitmap from a file
-   const char * filename : the picture filename
-   int type   : the picture type (content.h)
-   xbm_type, eps_type, xpm_type, gif_type, png_type, jpeg_type
-  ----------------------------------------------------------------------*/
-extern ThotPixmap TtaCreateBitmap( const char * filename, int type );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

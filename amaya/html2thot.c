@@ -1679,6 +1679,38 @@ static Element LastLeafInElement (Element el)
 }
 
 /*----------------------------------------------------------------------
+  CheckIconLink
+  The element is a HTML link.
+  Check element attributes and load the style sheet if needed.
+  ----------------------------------------------------------------------*/
+void CheckIconLink (Element el, Document doc, SSchema schema)
+{
+  Attribute           attr;
+  AttributeType       attrType;
+  char               *utf8path, *buff;
+  int                 length;
+
+  /* A LINK element is complete.
+     If it is a link to an icon, add the icon to the page
+  */
+  attrType.AttrSSchema = schema;
+  attrType.AttrTypeNum = HTML_ATTR_REL;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr)
+    {
+      /* get a buffer for the attribute value */
+      length = TtaGetTextAttributeLength (attr);
+      buff = (char*)TtaGetMemory (length + 1);
+      TtaGiveTextAttributeValue (attr, buff, &length);
+      //ptr = strstr (buff, "icon");
+      if (!strcmp (buff, "icon") &&
+          DocumentMeta[doc] && DocumentMeta[doc]->method != CE_MAKEBOOK)
+        DocumentMeta[doc]->link_icon = el;
+      TtaFreeMemory (buff);
+    }
+}
+
+/*----------------------------------------------------------------------
   CheckCSSLink
   The element is a HTML link.
   Check element attributes and load the style sheet if needed.
@@ -1694,11 +1726,11 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
   /* A LINK element is complete.
      If it is a link to a style sheet, load that style sheet.
   */
-  attrType.AttrSSchema = schema;
   if (IsCSSLink (el, doc))
     {
       /* it's a link to a style sheet */
       /* get the media specification */
+      attrType.AttrSSchema = schema;
       attrType.AttrTypeNum = HTML_ATTR_media;
       attr = TtaGetAttribute (el, attrType);
       if (attr)

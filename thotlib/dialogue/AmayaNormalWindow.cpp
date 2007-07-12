@@ -154,6 +154,18 @@ AmayaNormalWindow::~AmayaNormalWindow()
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
+ *      Method:  SetPageIcon
+ * Description:  
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::SetPageIcon(int page_id, char *iconpath)
+{
+  int index = TtaGetIconIndex (iconpath);
+  if (m_pNotebook && index > 0)
+    m_pNotebook->SetPageImage (page_id, index);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
  *      Method:  GetAmayaStatusBar
  * Description:  
  -----------------------------------------------------------------------*/

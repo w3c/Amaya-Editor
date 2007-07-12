@@ -322,6 +322,11 @@ void DocumentMetaClear (DocumentMetaDataElement *me)
   me->full_content_location = NULL;
   TtaFreeMemory (me->reason);
   me->reason = NULL;
+  me->link_icon = NULL;
+#ifdef TEMPLATES
+  TtaFreeMemory (me->template_url);
+  me->template_url = NULL;
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------

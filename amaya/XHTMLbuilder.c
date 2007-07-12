@@ -1095,6 +1095,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
        
     case HTML_EL_LINK:
       CheckCSSLink (el, doc, htmlSchema);
+      CheckIconLink (el, doc, htmlSchema);
       break;
        
     case HTML_EL_Data_cell:

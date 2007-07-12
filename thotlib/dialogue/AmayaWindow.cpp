@@ -120,6 +120,14 @@ AmayaPage * AmayaWindow::CreatePage( bool attach, int position )
 {
   return NULL;
 }
+/*----------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  SetPageIcon
+ * Description:  
+ -----------------------------------------------------------------------*/
+void AmayaWindow::SetPageIcon(int page_id, char *iconpath)
+{
+}
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
