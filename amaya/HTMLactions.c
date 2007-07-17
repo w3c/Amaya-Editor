@@ -1325,6 +1325,7 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
   View                view;
   FollowTheLink_context  *ctx = (FollowTheLink_context *) context;
   char               *sourceDocUrl, *utf8path;
+  char                newurl[MAX_LENGTH], newname[MAX_LENGTH];
 
   /* retrieve the context */
   if (ctx == NULL)
@@ -1376,38 +1377,41 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
         }
     }
 
-  if (utf8path[0] == '#' && targetDocument != 0)
+  NormalizeURL (utf8path, doc, newurl, newname, NULL);
+  
+  if ((utf8path[0] == '#' || !strcmp(newurl, DocumentURLs[doc]))
+          && targetDocument != 0)
     {
-      if (elFound)
+      if (!elFound)
+        elFound = TtaGetMainRoot(doc);
+        
+      elType = TtaGetElementType (elFound);
+      if (elType.ElTypeNum == HTML_EL_LINK &&
+          !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
         {
-          elType = TtaGetElementType (elFound);
-          if (elType.ElTypeNum == HTML_EL_LINK &&
-              !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+          /* the target is a HTML link element, follow this link */
+          attrType.AttrSSchema = elType.ElSSchema;
+          attrType.AttrTypeNum = HTML_ATTR_HREF_;
+          HrefAttr = TtaGetAttribute (elFound, attrType);
+          if (HrefAttr)
+            FollowTheLink (elFound, elSource, HrefAttr, doc);
+          return;
+        }
+      else
+        {
+          if (targetDocument == doc)
             {
-              /* the target is a HTML link element, follow this link */
-              attrType.AttrSSchema = elType.ElSSchema;
-              attrType.AttrTypeNum = HTML_ATTR_HREF_;
-              HrefAttr = TtaGetAttribute (elFound, attrType);
-              if (HrefAttr)
-                FollowTheLink (elFound, elSource, HrefAttr, doc);
-              return;
+              /* jump in the same document */
+              /* record current position in the history */
+              AddDocHistory (doc, DocumentURLs[doc], 
+                             DocumentMeta[doc]->initial_url, 
+                             DocumentMeta[doc]->form_data,
+                             DocumentMeta[doc]->method);
             }
-          else
-            {
-              if (targetDocument == doc)
-                {
-                  /* jump in the same document */
-                  /* record current position in the history */
-                  AddDocHistory (doc, DocumentURLs[doc], 
-                                 DocumentMeta[doc]->initial_url, 
-                                 DocumentMeta[doc]->form_data,
-                                 DocumentMeta[doc]->method);
-                }
-              /* show the target element in all views */
-              for (view = 1; view < 6; view++)
-                if (TtaIsViewOpen (targetDocument, view))
-                  TtaShowElement (targetDocument, view, elFound, 0);
-            }
+          /* show the target element in all views */
+          for (view = 1; view < 6; view++)
+            if (TtaIsViewOpen (targetDocument, view))
+              TtaShowElement (targetDocument, view, elFound, 0);
         }
     }
   TtaFreeMemory (utf8path);
@@ -1492,7 +1496,8 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
   int                    length;
   int                    method;
   FollowTheLink_context *ctx;
-  ThotBool		            isHTML, history, readonly = FALSE;
+  ThotBool		           isHTML, history, readonly = FALSE;
+  char                   newurl[MAX_LENGTH], newname[MAX_LENGTH];
 
   if (Follow_exclusive || Synchronizing)
     // there is already a current follow the link or a synchronizing
@@ -1501,7 +1506,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
     Follow_exclusive = TRUE;
   if (anchor == NULL || HrefAttr == NULL)
     return FALSE;
-   
+  
   info = pathname = NULL;
   elType = TtaGetElementType (anchor);
   attrType.AttrTypeNum = 0;
@@ -1545,7 +1550,10 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
       /* save the complete URL of the source document */
       ctx->sourceDocUrl = TtaStrdup (DocumentURLs[doc]);
       TtaSetSelectionMode (TRUE);
-      if (utf8path[0] == '#')
+      
+      NormalizeURL (utf8path, doc, newurl, newname, NULL);
+                         
+      if (utf8path[0] == '#' || !strcmp(newurl, DocumentURLs[doc]))
         {
           /* the target element is part of the same document */
           targetDocument = doc;
