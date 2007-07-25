@@ -3862,7 +3862,8 @@ static ThotBool ShowTextLine (Element el, Document doc)
           len = TtaGetTextLength (el);
           if (len > 0)
             {
-              utf8value = (char *)TtaGetMemory (len + 1);
+              len++; /* make room for the final null byte */
+              utf8value = (char *)TtaGetMemory (len);
               TtaGiveTextContent (el, (unsigned char *)utf8value, &len, &lang);
               /* extract the line number and the index within the line */
               ptr = strstr (utf8value, "line ");
