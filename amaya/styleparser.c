@@ -376,7 +376,7 @@ static char *SkipValue (char *msg, char *ptr)
   char        c;
 
   deb = ptr;
-  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '}' && *ptr != '\n')
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '\n')
     {
       if (*ptr == '"' || *ptr == '\'')
         ptr = SkipString (ptr);
@@ -413,8 +413,7 @@ char *ParseNumber (char *cssRule, PresentationValue *pval)
       cssRule++;
       cssRule = SkipBlanksAndComments (cssRule);
     }
-
-  if (*cssRule == '+')
+  else if (*cssRule == '+')
     {
       cssRule++;
       cssRule = SkipBlanksAndComments (cssRule);
@@ -495,6 +494,7 @@ char *ParseCSSUnit (char *cssRule, PresentationValue *pval)
   pval->typed_data.unit = UNIT_REL;
   cssRule = ParseNumber (cssRule, pval);
   if (pval->typed_data.unit == UNIT_INVALID)
+    /* it does not start with a valid number */
     cssRule = SkipWord (cssRule);
   else
     {
@@ -610,7 +610,8 @@ static char *ParseABorderValue (char *cssRule, PresentationValue *border)
   else if (isdigit (*cssRule) || *cssRule == '.')
     {
       cssRule = ParseCSSUnit (cssRule, border);
-      if (border->typed_data.value == 0)
+      if (border->typed_data.value == 0 &&
+          border->typed_data.unit != UNIT_INVALID)
         border->typed_data.unit = UNIT_PX;
       else if (border->typed_data.unit == UNIT_INVALID ||
                border->typed_data.unit == UNIT_BOX ||
@@ -2751,7 +2752,8 @@ static char *ParseCSSTextIndent (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   cssRule = ParseCSSUnit (cssRule, &pval);
-  if (pval.typed_data.value == 0)
+  if (pval.typed_data.value == 0 &&
+      pval.typed_data.unit != UNIT_INVALID)
     pval.typed_data.unit = UNIT_PX;
   else if (pval.typed_data.unit == UNIT_INVALID ||
            pval.typed_data.unit == UNIT_BOX)
@@ -2912,7 +2914,7 @@ static char *ParseCSSWhiteSpace (Element element, PSchema tsch,
   else
     cssRule = SkipValue ("Invalid white-space value", cssRule);
 
-  if (ptr  != cssRule &&DoDialog)
+  if (ptr != cssRule && DoDialog)
     DisplayStyleValue ("white-space", ptr, cssRule);
   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid white-space value");
   return (cssRule);
@@ -2966,7 +2968,7 @@ static char *ParseCSSLineHeight (Element element, PSchema tsch,
 
   if (pval.typed_data.unit == UNIT_INVALID)
     CSSParseError ("Invalid line-height value", ptr, cssRule);
-  if (DoDialog)
+  else if (DoDialog)
     DisplayStyleValue ("line-height", ptr, cssRule);
   else if (DoApply)
     {
@@ -3107,10 +3109,9 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
             /* we are working for an SVG element. No unit means pixels */
             pval.typed_data.unit = UNIT_PX;
         }
-      if (pval.typed_data.value != 0 &&
-          (pval.typed_data.unit == UNIT_INVALID ||
-           pval.typed_data.unit == UNIT_BOX ||
-           pval.typed_data.value < 0))
+      if (pval.typed_data.unit == UNIT_INVALID ||
+          (pval.typed_data.value != 0 && pval.typed_data.unit == UNIT_BOX) ||
+          pval.typed_data.value < 0)
         /* not a valid value */
         {
           if (!check)
@@ -3875,15 +3876,11 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
   else
     cssRule = ParseCSSUnit (cssRule, &val);
 
-  if (val.typed_data.value != 0 &&
-      (val.typed_data.unit == UNIT_INVALID ||
+  if (val.typed_data.unit == UNIT_INVALID ||
+      (val.typed_data.value != 0 &&
        val.typed_data.unit == UNIT_BOX))
-    {
-      CSSParseError ("height value", ptr, cssRule);
-      val.typed_data.unit = UNIT_PX;
-    }
-
-  if (DoDialog)
+    CSSParseError ("height value", ptr, cssRule);
+  else if (DoDialog)
     DisplayStyleValue ("height", ptr, cssRule);
   else if (DoApply)
     /* install the new presentation */
@@ -3915,15 +3912,11 @@ static char *ParseCSSMaxHeight (Element element, PSchema tsch,
   else
     cssRule = ParseCSSUnit (cssRule, &val);
 
-  if (val.typed_data.value != 0 &&
-      (val.typed_data.unit == UNIT_INVALID ||
+  if (val.typed_data.unit == UNIT_INVALID ||
+      (val.typed_data.value != 0 &&
        val.typed_data.unit == UNIT_BOX))
-    {
-      CSSParseError ("height value", ptr, cssRule);
-      val.typed_data.unit = UNIT_PX;
-    }
-
-  if (DoDialog)
+    CSSParseError ("height value", ptr, cssRule);
+  else if (DoDialog)
     DisplayStyleValue ("max-height", ptr, cssRule);
   else if (DoApply)
     /* install the new presentation */
@@ -3955,15 +3948,11 @@ static char *ParseCSSMinHeight (Element element, PSchema tsch,
   else
     cssRule = ParseCSSUnit (cssRule, &val);
 
-  if (val.typed_data.value != 0 &&
-      (val.typed_data.unit == UNIT_INVALID ||
+  if (val.typed_data.unit == UNIT_INVALID ||
+      (val.typed_data.value != 0 &&
        val.typed_data.unit == UNIT_BOX))
-    {
-      CSSParseError ("height value", ptr, cssRule);
-      val.typed_data.unit = UNIT_PX;
-    }
-
-  if (DoDialog)
+    CSSParseError ("height value", ptr, cssRule);
+  else if (DoDialog)
     DisplayStyleValue ("min-height", ptr, cssRule);
   else if (DoApply)
     /* install the new presentation */
@@ -3995,15 +3984,11 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
     }
   else
     cssRule = ParseCSSUnit (cssRule, &val);
-  if (val.typed_data.value != 0 &&
-      (val.typed_data.unit == UNIT_INVALID ||
+  if (val.typed_data.unit == UNIT_INVALID ||
+      (val.typed_data.value != 0 &&
        val.typed_data.unit == UNIT_BOX))
-    {
-      CSSParseError ("Invalid width value", ptr, cssRule);
-      val.typed_data.unit = UNIT_PX;
-    }
-
-  if (DoDialog)
+    CSSParseError ("Invalid width value", ptr, cssRule);
+  else if (DoDialog)
     DisplayStyleValue ("width", ptr, cssRule);
   else if (DoApply)
     /* install the new presentation */
@@ -4035,15 +4020,11 @@ static char *ParseCSSMaxWidth (Element element, PSchema tsch,
     }
   else
     cssRule = ParseCSSUnit (cssRule, &val);
-  if (val.typed_data.value != 0 &&
-      (val.typed_data.unit == UNIT_INVALID ||
+  if (val.typed_data.unit == UNIT_INVALID ||
+      (val.typed_data.value != 0 &&
        val.typed_data.unit == UNIT_BOX))
-    {
       CSSParseError ("Invalid width value", ptr, cssRule);
-      val.typed_data.unit = UNIT_PX;
-    }
-
-  if (DoDialog)
+  else if (DoDialog)
     DisplayStyleValue ("max-width", ptr, cssRule);
   else if (DoApply)
     /* install the new presentation */
@@ -4075,15 +4056,11 @@ static char *ParseCSSMinWidth (Element element, PSchema tsch,
     }
   else
     cssRule = ParseCSSUnit (cssRule, &val);
-  if (val.typed_data.value != 0 &&
-      (val.typed_data.unit == UNIT_INVALID ||
+  if (val.typed_data.unit == UNIT_INVALID ||
+      (val.typed_data.value != 0 &&
        val.typed_data.unit == UNIT_BOX))
-    {
-      CSSParseError ("Invalid width value", ptr, cssRule);
-      val.typed_data.unit = UNIT_PX;
-    }
-
-  if (DoDialog)
+    CSSParseError ("Invalid width value", ptr, cssRule);
+  else if (DoDialog)
     DisplayStyleValue ("min-width", ptr, cssRule);
   else if (DoApply)
     /* install the new presentation */
@@ -4115,8 +4092,8 @@ static char *ParseACSSMarginTop (Element element, PSchema tsch,
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
 
-  if (margin.typed_data.value != 0 &&
-      (margin.typed_data.unit == UNIT_INVALID ||
+  if (margin.typed_data.unit == UNIT_INVALID ||
+      (margin.typed_data.value != 0 &&
        margin.typed_data.unit == UNIT_BOX))
     CSSParseError ("Invalid margin-top value", ptr, cssRule);
   else if (DoDialog)
@@ -4170,8 +4147,8 @@ static char *ParseACSSMarginBottom (Element element, PSchema tsch,
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
 
-  if (margin.typed_data.value != 0 &&
-      (margin.typed_data.unit == UNIT_INVALID ||
+  if (margin.typed_data.unit == UNIT_INVALID ||
+      (margin.typed_data.value != 0 &&
        margin.typed_data.unit == UNIT_BOX))
     CSSParseError ("Invalid margin-bottom value", ptr, cssRule);
   else if (DoDialog)
@@ -4220,8 +4197,8 @@ static char *ParseACSSMarginLeft (Element element, PSchema tsch,
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
 
-  if (margin.typed_data.value != 0 &&
-      (margin.typed_data.unit == UNIT_INVALID ||
+  if (margin.typed_data.unit == UNIT_INVALID ||
+      (margin.typed_data.value != 0 &&
        margin.typed_data.unit == UNIT_BOX))
     CSSParseError ("Invalid margin-left value", ptr, cssRule);
   else if (DoDialog)
@@ -4271,8 +4248,8 @@ static char *ParseACSSMarginRight (Element element, PSchema tsch,
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
 
-  if (margin.typed_data.value != 0 &&
-      (margin.typed_data.unit == UNIT_INVALID ||
+  if (margin.typed_data.unit == UNIT_INVALID ||
+      (margin.typed_data.value != 0 &&
        margin.typed_data.unit == UNIT_BOX))
     CSSParseError ("Invalid margin-right value", ptr, cssRule);
   else if (DoDialog)
@@ -4387,13 +4364,10 @@ static char *ParseCSSPaddingTop (Element element, PSchema tsch,
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
 
-  if (padding.typed_data.value != 0 &&
-      (padding.typed_data.unit == UNIT_INVALID ||
+  if (padding.typed_data.unit == UNIT_INVALID ||
+      (padding.typed_data.value != 0 &&
        padding.typed_data.unit == UNIT_BOX))
-    {
-      CSSParseError ("Invalid padding-top value", ptr, cssRule);
-      padding.typed_data.value = 0;
-    }
+    CSSParseError ("Invalid padding-top value", ptr, cssRule);
   else if (DoDialog)
     {
       if (All_sides)
@@ -4422,16 +4396,13 @@ static char *ParseCSSPaddingBottom (Element element, PSchema tsch,
   ptr = cssRule;
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
-  if (padding.typed_data.value == 0)
+  if (padding.typed_data.value == 0 && padding.typed_data.unit != UNIT_INVALID)
     padding.typed_data.unit = UNIT_EM;
 
-  if (padding.typed_data.value != 0 &&
-      (padding.typed_data.unit == UNIT_INVALID ||
+  if (padding.typed_data.unit == UNIT_INVALID ||
+      (padding.typed_data.value != 0 &&
        padding.typed_data.unit == UNIT_BOX))
-    {
-      CSSParseError ("Invalid padding-bottom value", ptr, cssRule);
-      padding.typed_data.value = 0;
-    }
+    CSSParseError ("Invalid padding-bottom value", ptr, cssRule);
   else if (DoDialog)
     DisplayStyleValue ("padding-bottom", ptr, cssRule);
   else if (DoApply)
@@ -4455,11 +4426,11 @@ static char *ParseCSSPaddingLeft (Element element, PSchema tsch,
   ptr = cssRule;
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
-  if (padding.typed_data.value == 0)
+  if (padding.typed_data.value == 0 && padding.typed_data.unit != UNIT_INVALID)
     padding.typed_data.unit = UNIT_EM;
 
-  if (padding.typed_data.value != 0 &&
-      (padding.typed_data.unit == UNIT_INVALID ||
+  if (padding.typed_data.unit == UNIT_INVALID ||
+      (padding.typed_data.value != 0 &&
        padding.typed_data.unit == UNIT_BOX))
     {
       CSSParseError ("Invalid padding-left value", ptr, cssRule);
@@ -4488,16 +4459,13 @@ static char *ParseCSSPaddingRight (Element element, PSchema tsch,
   ptr = cssRule;
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
-  if (padding.typed_data.value == 0)
+  if (padding.typed_data.value == 0 && padding.typed_data.unit != UNIT_INVALID)
     padding.typed_data.unit = UNIT_EM;
 
-  if (padding.typed_data.value != 0 &&
-      (padding.typed_data.unit == UNIT_INVALID ||
+  if (padding.typed_data.unit == UNIT_INVALID ||
+      (padding.typed_data.value != 0 &&
        padding.typed_data.unit == UNIT_BOX))
-    {
-      CSSParseError ("Invalid padding-right value", ptr, cssRule);
-      padding.typed_data.value = 0;
-    }
+    CSSParseError ("Invalid padding-right value", ptr, cssRule);
   else if (DoDialog)
     DisplayStyleValue ("padding-right", ptr, cssRule);
   else if (DoApply)
@@ -5721,15 +5689,19 @@ static char *ParseCSSTop (Element element, PSchema tsch,
     }
   else
     cssRule = ParseCSSUnit (cssRule, &val);
-  if (val.typed_data.value != 0 &&
-      (val.typed_data.unit == UNIT_INVALID ||
+
+  if (val.typed_data.unit == UNIT_INVALID ||
+      (val.typed_data.value != 0 &&
        val.typed_data.unit == UNIT_BOX))
     {
-      cssRule = SkipValue ("top value", ptr);
-      val.typed_data.unit = UNIT_PX;
+      cssRule = SkipValue ("Invalid top value", ptr);
+      if (val.typed_data.unit == UNIT_BOX)
+        val.typed_data.unit = UNIT_PX;
+      else
+        return (cssRule);
     }
   if (DoDialog)
-        DisplayStyleValue ("top", ptr, cssRule);
+    DisplayStyleValue ("top", ptr, cssRule);
   else if (DoApply)
     TtaSetStylePresentation (PRTop, element, tsch, context, val);
   return (cssRule);
@@ -5762,12 +5734,16 @@ static char *ParseCSSRight (Element element, PSchema tsch,
     }
   else
     cssRule = ParseCSSUnit (cssRule, &val);
-  if (val.typed_data.value != 0 &&
-      (val.typed_data.unit == UNIT_INVALID ||
+
+  if (val.typed_data.unit == UNIT_INVALID ||
+      (val.typed_data.value != 0 &&
        val.typed_data.unit == UNIT_BOX))
     {
-      cssRule = SkipValue ("right value", ptr);
-      val.typed_data.unit = UNIT_PX;
+      cssRule = SkipValue ("Invalid right value", ptr);
+      if (val.typed_data.unit == UNIT_BOX)
+        val.typed_data.unit = UNIT_PX;
+      else
+        return (cssRule);
     }
   if (DoDialog)
         DisplayStyleValue ("right", ptr, cssRule);
@@ -5803,12 +5779,16 @@ static char *ParseCSSBottom (Element element, PSchema tsch,
     }
   else
     cssRule = ParseCSSUnit (cssRule, &val);
-  if (val.typed_data.value != 0 &&
-      (val.typed_data.unit == UNIT_INVALID ||
+
+  if (val.typed_data.unit == UNIT_INVALID ||
+      (val.typed_data.value != 0 &&
        val.typed_data.unit == UNIT_BOX))
     {
-      cssRule = SkipValue ("bottom value", ptr);
-      val.typed_data.unit = UNIT_PX;
+      cssRule = SkipValue ("Invalid bottom value", ptr);
+      if (val.typed_data.unit == UNIT_BOX)
+        val.typed_data.unit = UNIT_PX;
+      else
+        return (cssRule);
     }
   if (DoDialog)
         DisplayStyleValue ("bottom", ptr, cssRule);
@@ -5844,12 +5824,16 @@ static char *ParseCSSLeft (Element element, PSchema tsch,
     }
   else
     cssRule = ParseCSSUnit (cssRule, &val);
-  if (val.typed_data.value != 0 &&
-      (val.typed_data.unit == UNIT_INVALID ||
+
+  if (val.typed_data.unit == UNIT_INVALID ||
+      (val.typed_data.value != 0 &&
        val.typed_data.unit == UNIT_BOX))
     {
-      cssRule = SkipValue ("left value", ptr);
-      val.typed_data.unit = UNIT_PX;
+      cssRule = SkipValue ("Invalid left value", ptr);
+      if (val.typed_data.unit == UNIT_BOX)
+        val.typed_data.unit = UNIT_PX;
+      else
+        return (cssRule);
     }
   if (DoDialog)
         DisplayStyleValue ("left", ptr, cssRule);
@@ -5884,14 +5868,14 @@ static char *ParseCSSZIndex (Element element, PSchema tsch,
       cssRule = ParseCSSUnit (cssRule, &val);
       if (val.typed_data.unit != UNIT_BOX)
         {
-          cssRule = SkipValue ("z-index value", ptr);
-          val.typed_data.unit = UNIT_BOX;
+          cssRule = SkipValue ("Invalid z-index value", ptr);
+          return (cssRule);
         }
     }
   if (DoDialog)
         DisplayStyleValue ("z-index", ptr, cssRule);
   /***
-      if (DoApply)
+      else if (DoApply)
       TtaSetStylePresentation (PR, element, tsch, context, val);
   ***/
   return (cssRule);
