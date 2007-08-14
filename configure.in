@@ -452,12 +452,10 @@ if test "$with_wx" = "yes" ; then
   #   --disable-docview
   #   --disable-mdi
   #   --disable-mdidoc
-  #   --disable-protocols
-  #   --disable-ftp
-  #   --disable-http
   #   --disable-sound
+  #   --disable-richtext
   #   --disable-backtrace # to avoid the buggy popup when an assert occurs
-  WXCONFIGURE_TUNNING_OPTION="--disable-printarch --disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-sound --disable-backtrace"
+  WXCONFIGURE_TUNNING_OPTION="--disable-printarch --disable-htmlhelp --disable-html --disable-richtext --disable-docview --disable-mdi --disable-mdidoc --disable-sound --disable-backtrace"
   
   if test "$AMAYAOS" = "LINUX" ; then
     # LINUX
@@ -618,7 +616,7 @@ fi # with_wx = no
 
 # the wx version
 AMAYAWX_MAJVER=9
-AMAYAWX_MINVER=55
+AMAYAWX_MINVER=56
 AMAYAWX_SUBVER=0
 
 #the old version (to remove when switching on wx)
