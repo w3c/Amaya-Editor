@@ -128,6 +128,64 @@ class="fixed">displayed that way.</span></p>
       <td>C. de Wijs</td>
       <td></td>
     </tr>
+    <tr>
+      <td id="ED076">ED076</td>
+      <td>The classic "File save" keys shortcut sequence "ALT + f + s"
+        doesn't works well, instead of saving the current page it starts
+        "Send by mail" function.</td>
+      <td>2007-07-14</td>
+      <td>C. Guglielmetti</td>
+      <td></td>
+    </tr>
+    <tr class="fixed">
+      <td id="ED077">ED077</td>
+      <td>Areas that reference another page do click correctly, areas that
+        reference the current page should move to the top of page ---&gt;&gt;
+        there is no action at all in amaya</td>
+      <td>2007-07-16</td>
+      <td>J. Russell</td>
+      <td>2007-07-17</td>
+    </tr>
+    <tr>
+      <td id="ED078">ED078</td>
+      <td>Just noted that the dialog box that is opened when a 404 error
+        occurs, is modeless Should it not be made modal ie one must
+        confirm/close the window before entering a new address to look for
+        ....</td>
+      <td>2007-07-21</td>
+      <td>J. Russell</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="ED079">ED079</td>
+      <td>I found a small bug that is described in this scenario:
+
+        <p>1- Open an English document (with lang="en" attribute) 2- Open a
+        french document (with lang="fr" attribute) 3- Create a &lt;p&gt;
+        element which contains "here is a small tet" in the English document
+        4- Select the &lt;p&gt; element (with F2 key) then copy it (with
+        CTRL-C) 5- Paste the &lt;p&gt; in the french document 6- Put your
+        cursor at the &lt;p&gt; beginning and then activate the check
+        spelling function (F7)</p>
+
+        <p>The check speller will stop on "tet" word but it will still
+        consider that the text is in English. The expected behavior is :
+        either the lang="en" attribute is assigned automatically to the
+        pasted paragraph, or the paragraph language is automatically set to
+        French (internally).</p>
+      </td>
+      <td>2007-07-23</td>
+      <td>S. Gully</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="ED080">ED080</td>
+      <td>Display/content corrupts in a PRE, related to 99-char or 100-char
+        intervals boundaries.</td>
+      <td>2007-08-06</td>
+      <td>JB. Thiel</td>
+      <td></td>
+    </tr>
     <tr class="title">
       <td></td>
       <th class="summary">Parsing</th>
@@ -428,14 +486,32 @@ class="fixed">displayed that way.</span></p>
     </tr>
     <tr>
       <td id="MAC019">MAC019</td>
+      <td>The horizontal scroll bar (with its arrows) appears and disappears
+        intermittently. When it disappears (sometimes in the middle of
+        scrolling down a page), the down-arrow in the vertical scroll bar
+        changes to a right-arrow. This is particularly annoying if one is
+        currently using the down-arrow to scroll down and all of a sudden the
+        page scrolls right instead.</td>
+      <td>2007-07-19</td>
+      <td>L. DeWitt</td>
       <td></td>
-      <td></td>
-      <td></td>
+    </tr>
+    <tr>
+      <td id="MAC020">MAC020</td>
+      <td>Preserve Lines When Pasting" Pref does not work in OS X
+
+        <p>When pasting text from a variety of sources into the wysiwyg Amaya
+        view, the text all runs together into a single paragraph, and where
+        there were line or paragraph breaks in the source, there is no line
+        break, nor paragraph break, indeed no space at all in Amaya.</p>
+      </td>
+      <td>2007-07-15</td>
+      <td>JB Thiel</td>
       <td></td>
     </tr>
   </tbody>
 </table>
 <br />
-Date: <!--$date=-->2007-07-06<!--$-->
+Date: <!--$date=-->2007-08-14<!--$-->
  </body>
 </html>
