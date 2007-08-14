@@ -921,7 +921,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
                 ctxEl->callback (doc, ctxEl->currentElement, desc->tempfile,
                                  ctxEl->extra, TRUE);
             }
-          else if (ctxEl->currentElement == DocumentMeta[doc]->link_icon)
+          else if (DocumentMeta[doc] && ctxEl->currentElement == DocumentMeta[doc]->link_icon)
             {
 #ifdef _WX
               TtaSetPageIcon (doc, 1, desc->tempfile);

@@ -1687,7 +1687,7 @@ void CheckIconLink (Element el, Document doc, SSchema schema)
 {
   Attribute           attr;
   AttributeType       attrType;
-  char               *utf8path, *buff;
+  char               *utf8path, *buff, *ptr;
   int                 length;
 
   /* A LINK element is complete.
@@ -1702,9 +1702,10 @@ void CheckIconLink (Element el, Document doc, SSchema schema)
       length = TtaGetTextAttributeLength (attr);
       buff = (char*)TtaGetMemory (length + 1);
       TtaGiveTextAttributeValue (attr, buff, &length);
-      //ptr = strstr (buff, "icon");
-      if (!strcmp (buff, "icon") &&
-          DocumentMeta[doc] && DocumentMeta[doc]->method != CE_MAKEBOOK)
+      ptr = strstr (buff, "icon");
+      if (ptr &&
+          DocumentMeta[doc] && DocumentMeta[doc]->method != CE_MAKEBOOK &&
+          DocumentMeta[doc]->link_icon == NULL)
         DocumentMeta[doc]->link_icon = el;
       TtaFreeMemory (buff);
     }

@@ -2012,6 +2012,8 @@ void RestartParser (Document doc, char *localFile,
 
   /* Restore the Display Mode */
   TtaSetDisplayMode (doc, DisplayImmediately);
+  // set the default icon
+  TtaSetPageIcon (doc, 1, NULL);
 
   /* fetch and display all images referred by the document */
   ActiveTransfer (doc);

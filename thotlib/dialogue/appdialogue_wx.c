@@ -1011,7 +1011,7 @@ ThotBool TtaMakePage( int window_id, int page_id )
           /* and link it to the window */
           p_window->AttachPage(page_id, p_page);
           return TRUE;
-        }      
+        }
     }
 #endif /* _WX */
   return FALSE;
@@ -1024,7 +1024,7 @@ int TtaGetIconIndex (const char * filename)
 #ifdef _WX
   wxString path = TtaConvMessageToWX(filename);
   wxStringIntMap::iterator iter =  g_iconSourceMap.find(path);
-  if(iter!=g_iconSourceMap.end())
+  if (iter != g_iconSourceMap.end())
     return iter->second;
   else
     {
@@ -1055,12 +1055,19 @@ void TtaSetPageIcon( Document doc, View view, char *iconpath)
   /* verifie le parametre document */
   if (doc == 0 && view == 0)
     TtaError (ERR_invalid_parameter);
-  else if (iconpath)
+  frame = GetWindowNumber (doc, view);
+  if (iconpath)
     {
-      frame = GetWindowNumber (doc, view);
       p_AmayaWindow = TtaGetWindowFromId( FrameTable[frame].FrWindowId );
       if (p_AmayaWindow)
         p_AmayaWindow->SetPageIcon (FrameTable[frame].FrPageId, iconpath);
+    }
+  else
+    {
+      // display the default icon
+      AmayaFrame * p_frame = FrameTable[frame].WdFrame;
+      if (p_frame)
+        p_frame->UpdateFrameIcon();
     }
 #endif /*_WX */	      
 }

@@ -169,6 +169,8 @@ bool AmayaApp::OnInit()
   // Required for images
   wxImage::AddHandler(new wxGIFHandler);
   wxImage::AddHandler(new wxPNGHandler);
+  wxImage::AddHandler(new wxJPEGHandler);
+  wxImage::AddHandler(new wxICOHandler);
 
 #ifdef _MACOS
         myDocHandler = NewAEEventHandlerUPP(MyHandleODoc);

@@ -677,7 +677,7 @@ void AmayaFrame::SetActive( bool active )
 
   // update the window title and frame's icon
   SetFrameTitle( GetFrameTitle() );
-  UpdateFrameIcon();
+  //UpdateFrameIcon();
 
   // this frame is active update its page
   AmayaPage *p_page   = GetPageParent();

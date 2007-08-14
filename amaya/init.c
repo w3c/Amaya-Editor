@@ -4564,6 +4564,8 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
             ANNOT_AutoLoad (newdoc, 1);
 #endif /* ANNOTATIONS */
           TtaHandlePendingEvents ();
+          // set the default icon
+          TtaSetPageIcon (newdoc, 1, NULL);
           /* fetch and display all images referred by the document */
           stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_NOCACHE | AMAYA_LOAD_IMAGE, NULL);
           if (stopped_flag == FALSE) 
@@ -5352,6 +5354,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
                                                       NULL);
               else
                 {
+                  // set the default icon
+                  TtaSetPageIcon (newdoc, 1, NULL);
                   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
 #ifdef ANNOTATIONS
                   /* if it's an annotation, add the existing metadata */
@@ -7147,6 +7151,8 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
       TtaSetDocumentModified (newdoc);
       W3Loading = 0;		/* loading is complete now */
       DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
+      // set the default icon
+      TtaSetPageIcon (newdoc, 1, NULL);
       stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
       if (!stopped_flag)
         {
