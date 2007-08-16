@@ -2686,7 +2686,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           if (pBox == pMainBox)
             {
               /* Set the right document background */
-              if (pAb->AbFillBox)
+              if (pAb->AbFillBox || pAb->AbBackground == -1)
                 SetMainWindowBackgroundColor (frame, pAb->AbBackground);
               else
                 SetMainWindowBackgroundColor (frame, DefaultBColor);

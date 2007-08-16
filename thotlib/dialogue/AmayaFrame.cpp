@@ -80,6 +80,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
 
   // Create the drawing area
   m_pCanvas = CreateDrawingArea();
+  m_FrameUrl = TtaConvMessageToWX( "" );
 
   m_pScrollBarV = NULL; 
   m_pScrollBarH = NULL;
@@ -687,8 +688,8 @@ void AmayaFrame::SetActive( bool active )
 
       // setup the right frame url into the main window urlbar
       url = GetFrameURL();
-      if (url.Len() != 0 || FrameTable[frame_id].FrPagePos != 2)
-        p_window->SetURL( GetFrameURL() );
+      if (FrameTable[frame_id].FrPagePos != 2)
+        p_window->SetURL( url );
 
       // setup the enable/disable state of the toolbar buttons
       //      p_window->SetWindowEnableToolBarButtons(frame_id );

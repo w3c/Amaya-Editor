@@ -132,19 +132,21 @@ void SetMainWindowBackgroundColor (int frame, int color)
 
 #ifdef _GL
   /* to be sure that the frame is the current one when drawing its background */
-
   GL_prepare(frame);
 #endif /* _GL */
-
 #ifdef _GTK
   update_bg_colorGTK (frame, color);
 #endif /*_GTK*/
 
   GL_Background[frame] = color;
-  TtaGiveThotRGB (color, &red, &green, &blue);
-  /* the 0.0 for alpha is needed for group opacity */
-  glClearColor ((float)red/255., (float)green/255., (float)blue/255., 0.0);
-
+  if (color != -1)
+    {
+      TtaGiveThotRGB (color, &red, &green, &blue);
+      /* the 0.0 for alpha is needed for group opacity */
+      glClearColor ((float)red/255., (float)green/255., (float)blue/255., 0.0);
+    }
+  else
+    glClearColor (0.5, 0.5, 0.5, 0.0);
 #ifdef _GL_COLOR_DEBUG
   {
     float tmp[4];
@@ -163,23 +165,21 @@ void ResetMainWindowBackgroundColor (int frame)
   int color = GL_Background[frame];
 
 #ifdef _GL
-
   /* to be sure that the frame is the current one when drawing its background */
-
   GL_prepare(frame);
-
 #endif /* _GL */
-
-
-
 #ifdef _GTK
   update_bg_colorGTK (frame, color);
 #endif /*_GTK*/
 
-  GL_Background[frame] = color;
-  TtaGiveThotRGB (color, &red, &green, &blue);
-  /* the 0.0 for alpha is needed for group opacity */
-  glClearColor ((float)red/255., (float)green/255., (float)blue/255., 0.0);
+  if (color != -1)
+    {
+      TtaGiveThotRGB (color, &red, &green, &blue);
+      /* the 0.0 for alpha is needed for group opacity */
+      glClearColor ((float)red/255., (float)green/255., (float)blue/255., 0.0);
+    }
+  else
+    glClearColor (0.5, 0.5, 0.5, 0.0);
 
 #ifdef _GL_COLOR_DEBUG
   float tmp[4];

@@ -2279,7 +2279,14 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 
   CurrentDocument = doc;
   /* generate the right name and URI */
-  TtaExtractName (DocumentURLs[doc], s, DocumentName);
+  thotdir = TtaGetEnvString ("THOTDIR");
+  if (DocumentURLs[doc] && !strcmp (DocumentURLs[doc], "empty"))
+    {
+      strcpy (DocumentName, DocumentURLs[doc]);
+      strcpy (s, thotdir);
+    }
+  else
+    TtaExtractName (DocumentURLs[doc], s, DocumentName);
   remote = IsW3Path (DocumentURLs[doc]);
   if (remote)
     {
@@ -2306,12 +2313,11 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
       else
         {
           // Avoid to create new documents into Amaya space
-          thotdir = TtaGetEnvString ("THOTDIR");
           if (!strncmp (s, thotdir, strlen (thotdir)))
             {
 #ifdef _WX
               homedir = TtaGetHomeDir();
-              strcpy(s, (const char *)homedir.mb_str(wxConvUTF8));
+              strcpy (s, (const char *)homedir.mb_str(wxConvUTF8));
 #else /* _WX */
 #ifdef _WINDOWS
               d = getenv ("HOMEDRIVE");
@@ -2321,7 +2327,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 #else /* _WINDOWS */
               homedir = getenv ("HOME");
 			  if (homedir)
-                strcpy(s, homedir);
+          strcpy (s, homedir);
 #endif /* _WINDOWS */
 #endif /* _WX */
             }
@@ -3199,8 +3205,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   DocumentTypes[doc] = docType;
 #if _WX
   /* now be sure that the urlbar is setup */
-  TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-                   TRUE, (Proc)TextURL, URL_list );
+  if (DocumentURLs[doc] && strcmp (DocumentURLs[doc], "empty"))
+    TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+                     TRUE, (Proc)TextURL, URL_list );
 #endif /* _WX */
 
   if ((DocumentTypes[doc] == docHTML ||

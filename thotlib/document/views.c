@@ -618,6 +618,10 @@ void OpenCreatedView (PtrDocument pDoc, int view,
         }
       pDoc->DocViewFrame[view - 1] = frame;
       pDoc->DocViewVolume[view - 1] = volume;
+      // change the default background of an empty document
+      if (pDoc->DocDName && !strcmp (pDoc->DocDName, "empty") &&
+          pDoc->DocViewRootAb[view - 1])
+        pDoc->DocViewRootAb[view - 1]->AbBackground = -1;
       ChangeConcreteImage (frame, &h, pDoc->DocViewRootAb[view - 1]);
       DisplayFrame (frame);
       ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
