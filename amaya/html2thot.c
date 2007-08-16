@@ -1687,7 +1687,7 @@ void CheckIconLink (Element el, Document doc, SSchema schema)
 {
   Attribute           attr;
   AttributeType       attrType;
-  char               *utf8path, *buff, *ptr;
+  char               *buff, *ptr;
   int                 length;
 
   /* A LINK element is complete.

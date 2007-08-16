@@ -1242,7 +1242,6 @@ static void FetchIcon (Document doc, int flags, Element el,
   char               *imageURI, *utf8value;
   int                 length = 0;
 
-  length = TtaGetTextAttributeLength (attr);
   attr = TtaGetAttribute (el, attrType);
   if (attr)
     length = TtaGetTextAttributeLength (attr);
