@@ -2097,7 +2097,7 @@ void SetAttrValueToRange(PtrAttrListElem elem, void* value)
         {
         case AtEnumAttr:
         case AtNumAttr:
-          pAttrNew->AeAttrValue = (int)value;
+          pAttrNew->AeAttrValue = (intptr_t)value;
           /* applique les attributs a la partie selectionnee */
           AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
                              firstSel, pDoc, TRUE);

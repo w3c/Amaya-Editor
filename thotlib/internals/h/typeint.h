@@ -130,7 +130,7 @@ typedef struct _AttributeBlock
     {
       struct	  /* AeAttrType = AtNumAttr or AtEnumAttr */
       {
-	int		_AeAttrValue_;	   /* attribute value or value number*/
+	intptr_t		_AeAttrValue_;	   /* attribute value or value number*/
       } s0;
       struct	  /* AeAttrType = AtReferenceAttr */
       {
