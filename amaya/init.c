@@ -3205,9 +3205,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   DocumentTypes[doc] = docType;
 #if _WX
   /* now be sure that the urlbar is setup */
-  if (DocumentURLs[doc] && strcmp (DocumentURLs[doc], "empty"))
-    TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-                     TRUE, (Proc)TextURL, URL_list );
+  //if (DocumentURLs[doc] && strcmp (DocumentURLs[doc], "empty"))
+  TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+                   TRUE, (Proc)TextURL, URL_list );
 #endif /* _WX */
 
   if ((DocumentTypes[doc] == docHTML ||
