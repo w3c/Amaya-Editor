@@ -283,7 +283,7 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
   int page_id   = 0;
   wxPoint point = event.GetPosition();
   wxPoint origin = GetClientAreaOrigin();
-#ifdef _MACOS_2.6
+#ifdef _MACOS_26
   point = ScreenToClient(point);
   point.y += origin.y; 
   page_id   = HitTest(point, &flags);
@@ -297,7 +297,7 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
     {
       m_MContextFrameId = TtaGetFrameId ( window_id, page_id, 1 );
       wxMenu * p_menu = TtaGetContextMenu ( window_id );
-#ifdef _MACOS_2.6
+#ifdef _MACOS_26
       PopupMenu (p_menu, point);
 #else /* _MACOS */
       PopupMenu (p_menu, ScreenToClient(point));
