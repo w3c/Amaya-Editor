@@ -570,8 +570,8 @@ void AmayaFrame::SetFrameURL( const wxString & new_url )
   m_FrameUrl = new_url;
   
   // do not update window url if the url is empty
-  if ( m_FrameUrl.IsEmpty() && new_url.IsEmpty() )
-    return;
+  //if ( m_FrameUrl.IsEmpty() && new_url.IsEmpty() )
+  //  return;
 
   // update the window url if the frame is active
   if ( IsActive() && GetWindowParent() )
@@ -688,7 +688,7 @@ void AmayaFrame::SetActive( bool active )
 
       // setup the right frame url into the main window urlbar
       url = GetFrameURL();
-      if (FrameTable[frame_id].FrPagePos != 2)
+      //if (FrameTable[frame_id].FrPagePos != 2)
         p_window->SetURL( url );
 
       // setup the enable/disable state of the toolbar buttons

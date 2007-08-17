@@ -1681,11 +1681,13 @@ void TtaSetURLBar( int frame_id, const char * listUrl, void (* procedure)())
           ptr1 = ptr;
           while (*ptr1 != EOS)
             ptr1++;
-          if (!strcmp (ptr, "empty"))
-            urltoappend = TtaConvMessageToWX( "" );
-          else
-            urltoappend = TtaConvMessageToWX( ptr );
-          p_window->AppendURL( urltoappend );
+          if (strcmp (ptr, "empty"))
+            {
+            //  urltoappend = TtaConvMessageToWX( "" );
+            //else
+              urltoappend = TtaConvMessageToWX( ptr );
+              p_window->AppendURL( urltoappend );
+            }
           ptr = ptr1 + 1;
         }
     }
