@@ -146,7 +146,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
       glClearColor ((float)red/255., (float)green/255., (float)blue/255., 0.0);
     }
   else
-    glClearColor (0.5, 0.5, 0.5, 0.0);
+    glClearColor (0.85, 0.85, 0.85, 0.0);
 #ifdef _GL_COLOR_DEBUG
   {
     float tmp[4];
@@ -179,7 +179,7 @@ void ResetMainWindowBackgroundColor (int frame)
       glClearColor ((float)red/255., (float)green/255., (float)blue/255., 0.0);
     }
   else
-    glClearColor (0.5, 0.5, 0.5, 0.0);
+    glClearColor (0.85, 0.85, 0.85, 0.0);
 
 #ifdef _GL_COLOR_DEBUG
   float tmp[4];
