@@ -642,8 +642,10 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
   UpdateDoctypeMenu (doc);
   /* the document should be saved */
   TtaSetDocumentUnmodified (doc);
+#ifdef _WX
   // set the default icon
   TtaSetPageIcon (doc, 1, NULL);
+#endif /* _WX */
   UpdateEditorMenus (doc);
 }
 
