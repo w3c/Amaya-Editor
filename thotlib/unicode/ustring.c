@@ -11,6 +11,9 @@
  */
 
 #include <stdio.h>
+#ifndef _WINDOWS
+#include <langinfo.h>
+#endif /* _WINDOWS */
 #include <stdlib.h>
 #include "thot_sys.h"
 #include "fileaccess.h"
@@ -429,17 +432,18 @@ CHARSET TtaGetLocaleCharset ()
 	  LocaleSystemCharset = WINDOWS_1252;
 	}
    }
-#endif /* _WINDOWS */
-#ifdef _UNIX
+#else /* _WINDOWS */
 #ifndef _MACOS
   if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
     {
-      char * lang = getenv("LANG");
 #ifdef _WX
-      if (lang && TtaDirExists ("/tmp"))
+      char *buffer;
+      buffer = nl_langinfo(_NL_MESSAGES_CODESET);
+      if (buffer != NULL)
+        LocaleSystemCharset = TtaGetCharset(buffer);
 #else /* _WX */
+      char * lang = getenv("LANG");
       if (lang && ThotDirExists ("/tmp"))
-#endif /* _WX */
         {
           int  fd;
           char buffer[256], cmd[256], filename[30];
@@ -464,6 +468,7 @@ CHARSET TtaGetLocaleCharset ()
               LocaleSystemCharset = TtaGetCharset(buffer); 
             }
         }
+#endif /* _WX */
     }
 #endif /* _MACOS */
   if ((LocaleSystemCharset == UNSUPPORTED_CHARSET) ||
@@ -475,7 +480,7 @@ CHARSET TtaGetLocaleCharset ()
     /* default unix charset is iso-latin-1 */
     LocaleSystemCharset = ISO_8859_1;
 #endif /* _MACOSX */
-#endif /* _UNIX */
+#endif /* _WINDOWS */
   return LocaleSystemCharset;
 }
 
