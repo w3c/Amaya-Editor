@@ -1030,10 +1030,14 @@ int TtaGetIconIndex (const char * filename)
     {
       wxImage img(TtaConvMessageToWX(filename), wxBITMAP_TYPE_ANY);
       wxIcon icon;
-      icon.CopyFromBitmap(wxBitmap(img));
-      int index = ((AmayaApp *)wxTheApp)->GetDocumentIconList()->Add(icon);
-      g_iconSourceMap[path] = index;
-      return  index;
+      if(img.IsOk())
+        {
+          img.Rescale(16, 16, wxIMAGE_QUALITY_HIGH);
+          icon.CopyFromBitmap(wxBitmap(img));
+          int index = ((AmayaApp *)wxTheApp)->GetDocumentIconList()->Add(icon);
+          g_iconSourceMap[path] = index;
+          return  index;
+        }
     }
 #endif /* _WX*/
   return 0;
