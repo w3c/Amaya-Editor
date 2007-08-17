@@ -1703,6 +1703,8 @@ void CheckIconLink (Element el, Document doc, SSchema schema)
       buff = (char*)TtaGetMemory (length + 1);
       TtaGiveTextAttributeValue (attr, buff, &length);
       ptr = strstr (buff, "icon");
+      if (ptr == NULL)
+        ptr = strstr (buff, "ICON");
       if (ptr &&
           DocumentMeta[doc] && DocumentMeta[doc]->method != CE_MAKEBOOK &&
           DocumentMeta[doc]->link_icon == NULL)
