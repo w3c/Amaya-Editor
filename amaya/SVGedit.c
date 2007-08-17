@@ -52,6 +52,7 @@
 #include "Mathedit_f.h"
 #include "SVGedit_f.h"
 #include "UIcss_f.h"
+#include "templateUtils_f.h"
 
 static ThotIcon   iconGraph;
 static ThotIcon   iconGraphNo;
@@ -1195,13 +1196,13 @@ ThotBool GlobalSVGAttrInMenu (NotifyAttribute * event)
       event->attributeType.AttrTypeNum != SVG_ATTR_style_ &&
       event->attributeType.AttrTypeNum != SVG_ATTR_xml_space)
     /* it's not a global attribute. Accept it */
-    return FALSE;
+    return ValidateTemplateAttrInMenu(event);
 
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"SVG"))
     /* it's not a SVG element, don't put a SVG attribute in the menu */
     return TRUE;
 
-  return FALSE;
+  return ValidateTemplateAttrInMenu(event);
 }
 
 /*----------------------------------------------------------------------

@@ -30,9 +30,9 @@
 #ifdef TEMPLATES
 #include "Template.h"
 #include "templates.h"
-#include "templates_f.h"
 #include "templateDeclarations_f.h"
 #endif /* TEMPLATES */
+#include "templates_f.h"
 
 static char        *TargetDocumentURL = NULL;
 static int          OldWidth;
@@ -62,6 +62,7 @@ static int          OldHeight;
 #include "XLinkedit_f.h"
 #include "tree.h"
 #include "interface.h"
+#include "templateUtils_f.h"
 
 #ifdef _WINGUI
 #include "wininclude.h"
@@ -4618,7 +4619,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
       event->attributeType.AttrTypeNum != HTML_ATTR_onkeyup &&
       event->attributeType.AttrTypeNum != HTML_ATTR_xml_space)
     /* it's not a global attribute. Accept it */
-    return FALSE;
+    return ValidateTemplateAttrInMenu(event);
 
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"HTML"))
     /* it's not a HTML element */
@@ -4635,7 +4636,12 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
       /* BASEFONT and PARAM accept only ID */
       else if (elType.ElTypeNum == HTML_EL_BaseFont ||
                elType.ElTypeNum == HTML_EL_Parameter)
-        return (event->attributeType.AttrTypeNum != HTML_ATTR_ID);
+        {
+          if(event->attributeType.AttrTypeNum == HTML_ATTR_ID)
+            return ValidateTemplateAttrInMenu(event);
+          else
+            return TRUE;
+        }
 
       /* coreattrs */
       else if (event->attributeType.AttrTypeNum == HTML_ATTR_ID ||
@@ -4651,7 +4657,8 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
             /* HEAD, TITLE, META, STYLE and HTML don't accept coreattrs */
             return TRUE;
           else
-            return FALSE; /* let Thot perform normal operation */
+            /* let Thot perform normal operation */
+            return ValidateTemplateAttrInMenu(event);
         }
       /* i18n */
       else if (event->attributeType.AttrTypeNum == HTML_ATTR_dir ||
@@ -4665,7 +4672,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
               elType.ElTypeNum == HTML_EL_IFRAME)
             return TRUE;
           else
-            return FALSE;
+            return ValidateTemplateAttrInMenu(event);
         }
       /* events */
       else if (event->attributeType.AttrTypeNum == HTML_ATTR_onclick ||
@@ -4702,7 +4709,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
             || DocumentMeta[event->document]->xmlformat == FALSE)
           return TRUE;
         }
-      return FALSE;
+      return ValidateTemplateAttrInMenu(event);
     }
   return TRUE;	/* don't put an invalid attribute in the menu */
 }
@@ -4720,7 +4727,8 @@ ThotBool AttrNAMEinMenu (NotifyAttribute * event)
     /* No visivible attributes on a picture element */
     return TRUE;		/* not allowed on standard pictures */
   else
-    return FALSE;		/* let Thot perform normal operation */
+    /* let Thot perform normal operation */
+    return ValidateTemplateAttrInMenu(event);
 }
 
 /*----------------------------------------------------------------------
@@ -4735,7 +4743,8 @@ ThotBool  AttrScriptLanguageinMenu (NotifyAttribute * event)
   if (elType.ElTypeNum == HTML_EL_SCRIPT_)
     return TRUE;
   else
-    return FALSE;		/* let Thot perform normal operation */
+    /* let Thot perform normal operation */
+    return ValidateTemplateAttrInMenu(event);
 }
 
 /*----------------------------------------------------------------------

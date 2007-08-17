@@ -213,6 +213,7 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
   char           *text, *elementName;
   ThotBool       level;
   NotifyAttribute event;
+  int             val;
 
   parent = TtaGetParent (el);
   if (!parent)
@@ -224,15 +225,11 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
   if (useAttr)
     // there is a "use" attribute. Check its value
     {
-      text = GetAttributeStringValue (el, useAttr, NULL);
-      if (!text)
-        return;
-      if (strcmp (text, "optional") == 0)
+      val = TtaGetAttributeValue(useAttr);
+      if (val == Template_ATTR_useAt_VAL_optional)
       {
-        TtaFreeMemory(text);
         return;
       }
-      TtaFreeMemory(text);
     }
     
   // get the "name" and "default" attributes

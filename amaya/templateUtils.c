@@ -6,6 +6,8 @@
  */
 
 #include "templates.h"
+#include "Templatename.h"
+#include "templates_f.h"
 
 /*----------------------------------------------------------------------
 GetSchemaFromDocType: Returns the name of the schema corresponding to 
@@ -173,4 +175,155 @@ Element GetFirstEditableElement (Element el)
     res = el;
   
   return res;
+}
+
+/*----------------------------------------------------------------------
+  ValidateTemplateAttrInMenu
+  Validate the status of an attribute according to xt::atribute rules.
+  ----------------------------------------------------------------------*/
+ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
+{
+#ifdef TEMPLATES
+  Element       elem;
+  Element       parent;
+  ElementType   elType;
+  AttributeType attrType;
+  Attribute     attr;
+  char*         attrName;
+  char          buffer[MAX_LENGTH];
+  int           sz;
+  int           useAt, type;
+  
+  /* Prevent from showing attributes for template instance but not templates. */
+  if(IsTemplateInstanceDocument(event->document))
+    {
+      /* Prevent if attribute's element is not a descendant of xt:use */
+      parent = event->element;
+      elem = GetFirstTemplateParentElement(parent);
+      if(!elem)
+        return TRUE;
+      elType     = TtaGetElementType(elem);
+      if(elType.ElTypeNum!=Template_EL_useSimple)
+        return TRUE;
+
+      /* Search for the corresponding xt:attribute element*/
+      attrName = TtaGetAttributeName(event->attributeType);
+      attrType.AttrSSchema = TtaGetSSchema ("Template", event->document);
+      for(elem = TtaGetFirstChild(parent); elem; TtaNextSibling(&elem))
+        {
+          attrType.AttrTypeNum = Template_ATTR_ref_name;
+          elType = TtaGetElementType(elem);
+          if(elType.ElTypeNum==Template_EL_attribute &&
+                  elType.ElSSchema==TtaGetSSchema ("Template", event->document))
+            {
+               attr = TtaGetAttribute(elem, attrType);
+               if(attr)
+                 {
+                   sz = MAX_LENGTH;
+                   TtaGiveTextAttributeValue(attr, buffer, &sz);
+                   if(!strcmp(buffer, attrName))
+                     {
+                       /* Process the attribute filtering */
+                       /* Get 'useAt' attr value. */
+                       attrType.AttrTypeNum = Template_ATTR_useAt;
+                       attr = TtaGetAttribute(elem, attrType);
+                       if(attr)
+                         useAt = TtaGetAttributeValue(attr);
+                       else
+                         useAt = Template_ATTR_useAt_VAL_required;
+                       /* Get 'type' attr value. */                       
+                       attrType.AttrTypeNum = Template_ATTR_type;
+                       attr = TtaGetAttribute(elem, attrType);
+                       if(attr)
+                         type = TtaGetAttributeValue(attr);
+                       else
+                         type = Template_ATTR_type_VAL_string;
+
+/******************************************************************************/
+                       printf("Attribute : %s \n", attrName);
+                       switch(useAt)
+                       {
+                         case Template_ATTR_useAt_VAL_required:
+                           printf("    required");
+                           break;
+                         case Template_ATTR_useAt_VAL_optional:
+                           printf("    optional");
+                           break;
+                         case Template_ATTR_useAt_VAL_prohibited:
+                           printf("    prohibited");
+                           break;
+                         default:
+                           printf("    error");
+                           break;
+                       }
+                       switch(type)
+                       {
+                         case Template_ATTR_type_VAL_string:
+                           printf(" string\n");
+                           break;
+                         case Template_ATTR_type_VAL_number:
+                           printf(" number\n");
+                           break;
+                         case Template_ATTR_type_VAL_listVal:
+                           printf(" list\n");
+                           break;
+                         default:
+                           printf(" error\n");
+                           break;
+                       }
+/******************************************************************************/
+
+                       event->restr.RestrType = (RestrictionContentType)type;
+                       /* If attr is prohibited, dont show it.*/
+                       if(useAt==Template_ATTR_useAt_VAL_prohibited)
+                         return TRUE;
+                       if(useAt==Template_ATTR_useAt_VAL_required)
+                         {
+                           /* Force the usage of this attribute.*/
+                           event->restr.RestrFlags |= attr_mandatory;
+                         }
+
+                       /* Get 'fixed' attr value. */
+                       attrType.AttrTypeNum = Template_ATTR_fixed;
+                       attr = TtaGetAttribute(elem, attrType);
+                       if(attr)
+                         {
+                           sz = MAX_LENGTH;
+                           TtaGiveTextAttributeValue(attr, buffer, &sz);
+                           event->restr.RestrFlags |= attr_readonly;
+                           event->restr.RestrDefVal = TtaStrdup(buffer);
+                           return FALSE;
+                         }
+
+                       /* Get 'default' attr value.*/
+                       attrType.AttrTypeNum = Template_ATTR_defaultAt;
+                       attr = TtaGetAttribute(elem, attrType);
+                       if(attr)
+                         {
+                           sz = MAX_LENGTH;
+                           TtaGiveTextAttributeValue(attr, buffer, &sz);
+                           event->restr.RestrDefVal = TtaStrdup(buffer);
+                         }
+
+                       /* Get 'values' attr value.*/
+                       attrType.AttrTypeNum = Template_ATTR_values;
+                       attr = TtaGetAttribute(elem, attrType);
+                       if(attr)
+                         {
+                           sz = MAX_LENGTH;
+                           TtaGiveTextAttributeValue(attr, buffer, &sz);
+                           event->restr.RestrEnumVal = TtaStrdup(buffer);
+                           event->restr.RestrFlags |= attr_enum;
+                         }
+                       return FALSE;
+                     }
+                 }
+            }
+        }
+      
+      return FALSE;
+    }
+  else
+#endif /* TEMPLATES */
+    return FALSE;
 }

@@ -6,12 +6,16 @@
 #include "wx/wx.h"
 #include "AmayaSubPanel.h"
 #include "wx/listctrl.h"
+#include "wx/spinctrl.h"
 
 #include "containers.h"
 
 class AmayaNormalWindow;
+class AmayaAttributeSubpanel;
 typedef struct _ElementDescr *PtrElement;
 typedef struct AttrListElem* PtrAttrListElem;
+
+#define AmayaAttributeSubpanelNumber  4 
 
 /*
  *  Description:  - AmayaAttributePanel is a specific sub-panel
@@ -38,7 +42,7 @@ public:
   
   wxString GetCurrentSelectedAttrName()const;
 
- protected:
+protected:
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
   
@@ -64,13 +68,24 @@ public:
 public:
   typedef enum
     {
-      wxATTR_TYPE_NONE,
+      wxATTR_TYPE_NONE = -1,
+      wxATTR_TYPE_ENUM = 0,
       wxATTR_TYPE_TEXT,
-      wxATTR_TYPE_ENUM,
+      wxATTR_TYPE_NUM,
       wxATTR_TYPE_LANG,
-      wxATTR_TYPE_NUM
+      wxATTR_TYPE_MAX
     } wxATTR_TYPE;
 
+  typedef enum
+  {
+    wxATTR_INTTYPE_NUM,  /* = AtNumAttr */
+    wxATTR_INTTYPE_TEXT, /* = AtTextAttr */
+    wxATTR_INTTYPE_REF,  /* = AtReferenceAttr*/
+    wxATTR_INTTYPE_ENUM, /* = AtEnumAttr */
+    wxATTR_INTTYPE_LANG,
+    wxATTR_INTTYPE_MAX
+  }wxATTR_INTTYPE;
+    
   typedef enum
     {
       wxATTR_ACTION_UNKNOWN,
@@ -86,17 +101,8 @@ public:
   
   void SetupListValue(DLList attrList);
 
-  void SetupLangAttr(PtrAttrListElem elem);
+  void SetupAttr(PtrAttrListElem elem, wxATTR_TYPE);
   
-  void SetupTextValue( const char * text );
-  void SetupTextAttr(PtrAttrListElem elem);
-  
-  void SetupEnumValue( wxArrayString& enums, int selected );
-  void SetupEnumAttr(PtrAttrListElem elem);
-
-  void SetupNumValue( int num, int begin, int end );
-  void SetupNumAttr(PtrAttrListElem elem);
-
   bool IsMandatory()const;
   bool IsReadOnly()const;
 
@@ -128,7 +134,205 @@ protected:
   wxATTR_TYPE m_CurrentAttType;
   wxWindow*   m_pCurrentlyEditedControl;
   
+  wxSizer *               m_pSubpanelSizer;
+  AmayaAttributeSubpanel* m_subpanels[AmayaAttributeSubpanelNumber];
+  static wxString s_subpanelClassNames[AmayaAttributeSubpanelNumber];
+  
   int        m_disactiveCount; // 0 to activate panel (handle events)
+};
+
+/*
+ * AmayaAttributeSubpanel
+ * Base class for all attribute subpanel.
+ */
+class AmayaAttributeSubpanel : public wxPanel
+{
+  DECLARE_ABSTRACT_CLASS(AmayaAttributeSubpanel)
+  DECLARE_EVENT_TABLE()
+public:
+  AmayaAttributeSubpanel();
+  virtual ~AmayaAttributeSubpanel();
+  
+  virtual bool Create(wxWindow* parent, wxWindowID id){return true;}
+
+  /**
+   * Set the new attribute element description.
+   * Used to fill the panel before showing it.
+   */
+  virtual bool SetAttrListElem(PtrAttrListElem elem){return false;}
+  
+  /**
+   * Set the selection position.
+   */
+  bool SetSelectionPosition(PtrElement firstSel, PtrElement lastSel,
+                                    int firstChar, int lastChar);
+
+  
+  /**
+   * Get the string value entered by the user.
+   */
+  virtual wxString GetStringValue(){return wxT("");}
+  /**
+   * Get the int/enum value entered by the user.
+   */
+  virtual int GetIntValue(){return 0;}
+  /**
+   * Helper function to send OK button event to parent.
+   */
+  void SendApplyInfoToParent(wxCommandEvent& event);
+  /**
+   * Retrieve the address of the edition control.
+   */
+  virtual wxWindow* GetEditionControl(){return NULL;}
+  
+  
+  static wxString getAttributeStringValue(PtrAttrListElem elem);
+  static int      getAttributeNumericValue(PtrAttrListElem elem);
+  static void     getAttributeEnumValues(PtrAttrListElem elem, wxArrayString& arr);
+protected:
+  PtrElement          m_firstSel, m_lastSel;
+  int                 m_firstChar, m_lastChar;
+
+};
+
+
+/**
+ * AmayaEnumAttributeSubpanel
+ * Attribute subpanel for enum values.
+ */
+class AmayaEnumAttributeSubpanel : public AmayaAttributeSubpanel
+{
+  DECLARE_DYNAMIC_CLASS(AmayaEnumAttributeSubpanel)
+  DECLARE_EVENT_TABLE()
+public:
+  AmayaEnumAttributeSubpanel();
+  virtual ~AmayaEnumAttributeSubpanel();
+  virtual bool Create(wxWindow* parent, wxWindowID id);
+  
+  /**
+   * Set the new attribute element description.
+   * Used to fill the panel before showing it.
+   */
+  virtual bool SetAttrListElem(PtrAttrListElem elem);
+  
+  /**
+   * Get the string value entered by the user.
+   */
+  virtual wxString GetStringValue();
+  /**
+   * Get the int/enum value entered by the user.
+   */
+  virtual int GetIntValue();
+  
+  virtual wxWindow* GetEditionControl(){return m_pChoice;}  
+private:
+  wxChoice* m_pChoice;
+  AmayaAttributePanel::wxATTR_INTTYPE m_type;
+};
+
+
+/**
+ * AmayaStringAttributeSubpanel
+ * Attribute subpanel for string values.
+ * Can only use AtTextAttr non enumerated attributes.
+ */
+class AmayaStringAttributeSubpanel : public AmayaAttributeSubpanel
+{
+  DECLARE_DYNAMIC_CLASS(AmayaStringAttributeSubpanel)
+  DECLARE_EVENT_TABLE()
+public:
+  AmayaStringAttributeSubpanel();
+  virtual ~AmayaStringAttributeSubpanel();
+  virtual bool Create(wxWindow* parent, wxWindowID id);
+  
+  /**
+   * Set the new attribute element description.
+   * Used to fill the panel before showing it.
+   */
+  virtual bool SetAttrListElem(PtrAttrListElem elem);
+  
+  /**
+   * Get the string value entered by the user.
+   */
+  virtual wxString GetStringValue();
+  virtual wxWindow* GetEditionControl(){return m_pText;}  
+private:
+  wxTextCtrl* m_pText;
+};
+
+
+/**
+ * AmayaNumAttributeSubpanel
+ * Attribute subpanel for integer values.
+ * Can use AtTextAttr or AtNumAttr non enumerated attributes.
+ */
+class AmayaNumAttributeSubpanel : public AmayaAttributeSubpanel
+{
+  DECLARE_DYNAMIC_CLASS(AmayaNumAttributeSubpanel)
+  DECLARE_EVENT_TABLE()
+public:
+  AmayaNumAttributeSubpanel();
+  virtual ~AmayaNumAttributeSubpanel();
+  virtual bool Create(wxWindow* parent, wxWindowID id);
+  
+  /**
+   * Set the new attribute element description.
+   * Used to fill the panel before showing it.
+   */
+  virtual bool SetAttrListElem(PtrAttrListElem elem);
+  
+  /**
+   * Get the int/enum value entered by the user.
+   */
+  virtual int GetIntValue();
+  /**
+   * Get the string value entered by the user.
+   */
+  virtual wxString GetStringValue();
+  virtual wxWindow* GetEditionControl(){return m_pSpin;}  
+private:
+  wxSpinCtrl* m_pSpin;
+};
+
+
+/**
+ * AmayaLangAttributeSubpanel
+ * Attribute subpanel for language values.
+ */
+class AmayaLangAttributeSubpanel : public AmayaAttributeSubpanel
+{
+  DECLARE_DYNAMIC_CLASS(AmayaLangAttributeSubpanel)
+  DECLARE_EVENT_TABLE()
+public:
+  AmayaLangAttributeSubpanel();
+  virtual ~AmayaLangAttributeSubpanel();
+  virtual bool Create(wxWindow* parent, wxWindowID id);
+  
+  /**
+   * Set the new attribute element description.
+   * Used to fill the panel before showing it.
+   */
+  virtual bool SetAttrListElem(PtrAttrListElem elem);
+  
+  /**
+   * Get the string value entered by the user.
+   */
+  virtual wxString GetStringValue();
+  /**
+   * Get the int/enum value entered by the user.
+   */
+  virtual int GetIntValue();
+
+  virtual wxWindow* GetEditionControl(){return m_pCombo;}  
+private:
+  
+  static void Initialize();
+  
+  wxChoice     *m_pCombo;
+  wxStaticText *m_pText;
+  wxArrayString m_arrCodes;
+  
+  static wxArrayString s_arrLangs;
 };
 
 #endif // __AMAYAATTRIBUTEPANEL_H__

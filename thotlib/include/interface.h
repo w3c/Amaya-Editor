@@ -12,6 +12,39 @@
 #include "tree.h"
 #include "view.h"
 
+/** Flags to decorate attributes in the interface.*/
+typedef enum _RestrictionFlag
+{
+  attr_normal    = 0,
+  attr_mandatory = 1,
+  attr_readonly  = 2,
+  attr_enum      = 4, /* The type is restricted to enumerations .*/
+  attr_new       = 8, /* the attribute will be added but we
+                          dont have any value yet.*/
+}RestrictionFlag;
+
+/** Attribute content type. Use it to filter showed content.*/
+typedef enum _RestrictionContentType
+{
+  restr_content_no_restr = 0, /* no restriction. */
+  restr_content_number   = 1, /* == Template_ATTR_type_VAL_number. */
+  restr_content_string   = 2, /* == Template_ATTR_type_VAL_string. */
+  restr_content_list     = 3, /* == Template_ATTR_type_VAL_listVal. */
+  restr_content_lang     = 4, /* language */
+}RestrictionContentType;
+
+/**
+ * Descritpion of a restrictied data.
+ * Usefull to restrict attribute values with templates (or other).
+ */
+typedef struct _TypeRestriction
+{
+  int                    RestrFlags;  /** union of RestrictionFlag. */
+  RestrictionContentType RestrType;   /** restricted type. */
+  char*                  RestrDefVal; /** default value. */
+  char*                  RestrEnumVal;/** enum values. */
+}TypeRestriction;
+
 typedef void        (*Proc) ();
 typedef void        (*Proc1) (void * );
 typedef void        (*Proc2) (void *,void *);

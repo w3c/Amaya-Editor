@@ -1676,4 +1676,3 @@ ThotBool TemplateAttrInMenu (NotifyAttribute * event)
 #endif /* TEMPLATES */
     return FALSE;
 }
-

@@ -963,8 +963,53 @@ static ThotBool TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl,
   notifyAttr.info = 0; /* not sent by undo */
   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
   notifyAttr.attributeType.AttrTypeNum = att;
+  notifyAttr.restr.RestrFlags = attr_normal;
+  notifyAttr.restr.RestrType  = restr_content_no_restr;
+  notifyAttr.restr.RestrDefVal = NULL;
+  notifyAttr.restr.RestrEnumVal = NULL;
+  
   OK = !CallEventAttribute (&notifyAttr, TRUE);
   return OK;
+}
+
+/*----------------------------------------------------------------------
+  TteItemMenuAttrExtended
+  sends the AttrMenu.Pre message which indicates that the editor
+  is going to add to the Attributes menu an item for the creation
+  of an attribute of type (pSS, att) for the pEl element. It 
+  returns the answer from the application.
+  ----------------------------------------------------------------------*/
+static PtrAttrListElem TteItemMenuAttrExtended (PtrSSchema pSS, int att,
+                          PtrElement pEl, PtrDocument pDoc)
+{
+  NotifyAttribute     notifyAttr;
+  PtrAttrListElem     elem = NULL;
+
+  notifyAttr.event = TteAttrMenu;
+  notifyAttr.document = (Document) IdentDocument (pDoc);
+  notifyAttr.element = (Element) pEl;
+  notifyAttr.attribute = NULL;
+  notifyAttr.info = 0; /* not sent by undo */
+  notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
+  notifyAttr.attributeType.AttrTypeNum = att;
+  
+  notifyAttr.restr.RestrFlags = attr_normal;
+  notifyAttr.restr.RestrType  = restr_content_no_restr;
+  notifyAttr.restr.RestrDefVal = NULL;
+  notifyAttr.restr.RestrEnumVal = NULL;
+
+  if(!CallEventAttribute (&notifyAttr, TRUE))
+    {
+      elem = (PtrAttrListElem)TtaGetMemory(sizeof(AttrListElem));
+      elem->pSS      = pSS;
+      elem->num      = att;
+      elem->restr.RestrFlags   = notifyAttr.restr.RestrFlags;
+      elem->restr.RestrType    = notifyAttr.restr.RestrType;
+      elem->restr.RestrDefVal  = notifyAttr.restr.RestrDefVal;
+      elem->restr.RestrEnumVal = notifyAttr.restr.RestrEnumVal;
+    }
+
+  return elem;
 }
 
 
@@ -1022,23 +1067,22 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
               !AttrHasException (ExcInvisible, num, pSS))
             /* skip the attribute Language execpt the first time */
             if (nbOfEntries == 0 || num != 1)
-              if (TteItemMenuAttr (pSS, num, firstSel, pDoc))
-                {
-                  /* conserve le schema de structure et le numero */
-                  /* d'attribut de cette nouvelle entree du menu */
-                  attrElem = (PtrAttrListElem)TtaGetMemory(sizeof(AttrListElem));
-                  attrElem->pSS   = pSS;
-                  attrElem->num   = num;
-                  attrElem->flags = attr_normal;
-                  if(AttrHasException (ExcEventAttr, num, pSS))
-                    attrElem->categ = attr_event;
-                  else
-                    attrElem->categ = attr_global;
-                  type.AttrSSchema = (SSchema) pSS;
-                  type.AttrTypeNum = num;
-                  attrElem->val   = (PtrAttribute)TtaGetAttribute((Element)firstSel, type);
-                  DLList_Append(list, attrElem);
-                }
+              {
+                attrElem = TteItemMenuAttrExtended (pSS, num, firstSel, pDoc);
+                if (attrElem)
+                  {
+                    /* conserve le schema de structure et le numero */
+                    /* d'attribut de cette nouvelle entree du menu */
+                    if(AttrHasException (ExcEventAttr, num, pSS))
+                      attrElem->categ = attr_event;
+                    else
+                      attrElem->categ = attr_global;
+                    type.AttrSSchema = (SSchema) pSS;
+                    type.AttrTypeNum = num;
+                    attrElem->val   = (PtrAttribute)TtaGetAttribute((Element)firstSel, type);
+                    DLList_Append(list, attrElem);
+                  }
+              }
         }
       /* next extension schema */
       pSS = pSS->SsNextExtens;
@@ -1058,27 +1102,26 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
             for (num = 0; num < pRe1->SrNLocalAttrs; num++)
               if (!pSS->SsAttribute->TtAttr[pRe1->SrLocalAttr->Num[num] - 1]->AttrGlobal)
                 if (!AttrHasException (ExcInvisible,
-                                       pRe1->SrLocalAttr->Num[num], pSS) &&
-                    TteItemMenuAttr (pSS, pRe1->SrLocalAttr->Num[num],
-                                     firstSel, pDoc))
+                                       pRe1->SrLocalAttr->Num[num], pSS))
                   {
-                    /* conserve le schema de structure et le numero */
-                    /* d'attribut de cette nouvelle entree du menu */
-                    attrElem = (PtrAttrListElem)TtaGetMemory(sizeof(AttrListElem));
-                    attrElem->pSS   = pSS;
-                    attrElem->num   = pRe1->SrLocalAttr->Num[num];
-                    attrElem->flags = attr_normal;
-                    if(pRe1->SrRequiredAttr->Bln[num])
-                      attrElem->flags |= attr_mandatory;
-                    if(AttrHasException (ExcEventAttr, 
-                        pRe1->SrLocalAttr->Num[num], pSS))
-                      attrElem->categ = attr_event;
-                    else
-                      attrElem->categ = attr_local;
-                    type.AttrSSchema = (SSchema) pSS;
-                    type.AttrTypeNum = attrElem->num;
-                    attrElem->val   = (PtrAttribute)TtaGetAttribute((Element)firstSel, type);
-                    DLList_Append(list, attrElem);
+                    attrElem = TteItemMenuAttrExtended (pSS, pRe1->SrLocalAttr->Num[num],
+                                     firstSel, pDoc);
+                    if(attrElem)
+                      {
+                        /* conserve le schema de structure et le numero */
+                        /* d'attribut de cette nouvelle entree du menu */
+                        if(pRe1->SrRequiredAttr->Bln[num])
+                          attrElem->restr.RestrFlags |= attr_mandatory;
+                        if(AttrHasException (ExcEventAttr, 
+                            pRe1->SrLocalAttr->Num[num], pSS))
+                          attrElem->categ = attr_event;
+                        else
+                          attrElem->categ = attr_local;
+                        type.AttrSSchema = (SSchema) pSS;
+                        type.AttrTypeNum = attrElem->num;
+                        attrElem->val   = (PtrAttribute)TtaGetAttribute((Element)firstSel, type);
+                        DLList_Append(list, attrElem);
+                      }
                   }
           /* passe a l'extension suivante du schema du document */
           pSchExt = pSchExt->SsNextExtens;
@@ -1116,25 +1159,24 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
       if (isNew)
         {
           if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum,
-                                 pAttr->AeAttrSSchema) &&
-              TteItemMenuAttr (pAttr->AeAttrSSchema, pAttr->AeAttrNum,
-                               firstSel, pDoc))
+                                 pAttr->AeAttrSSchema))
             {
-              /* conserve le schema de structure et le numero */
-              /* d'attribut de cette nouvelle entree du menu */
-              attrElem = (PtrAttrListElem)TtaGetMemory(sizeof(AttrListElem));
-              attrElem->pSS   = pAttr->AeAttrSSchema;
-              attrElem->num   = pAttr->AeAttrNum;
-              attrElem->flags = attr_normal;
-              if(AttrHasException (ExcEventAttr, 
-                  pAttr->AeAttrNum, pAttr->AeAttrSSchema))
-                attrElem->categ = attr_event;
-              else
-                attrElem->categ = attr_other;
-              type.AttrSSchema = (SSchema) attrElem->pSS;
-              type.AttrTypeNum = attrElem->num;
-              attrElem->val   = (PtrAttribute)TtaGetAttribute((Element)firstSel, type);
-              DLList_Append(list, attrElem);
+              attrElem = TteItemMenuAttrExtended (pAttr->AeAttrSSchema, pAttr->AeAttrNum,
+                               firstSel, pDoc);
+              if(attrElem)
+                {
+                  /* conserve le schema de structure et le numero */
+                  /* d'attribut de cette nouvelle entree du menu */
+                  if(AttrHasException (ExcEventAttr, 
+                      pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+                    attrElem->categ = attr_event;
+                  else
+                    attrElem->categ = attr_other;
+                  type.AttrSSchema = (SSchema) attrElem->pSS;
+                  type.AttrTypeNum = attrElem->num;
+                  attrElem->val   = (PtrAttribute)TtaGetAttribute((Element)firstSel, type);
+                  DLList_Append(list, attrElem);
+                }
             }
         }
       pAttr = pAttr->AeNext;
@@ -2044,7 +2086,7 @@ void SetAttrValueToRange(PtrAttrListElem elem, void* value)
   ThotBool            isID = FALSE, isACCESS = FALSE;
   ThotBool            isCLASS = FALSE, isSpan = FALSE;
 
-  if(!elem || !elem->pSS)
+  if(!elem || !elem->pSS || elem->num<=0)
     return;
 
   /* demande quelle est la selection courante */
@@ -2067,7 +2109,7 @@ void SetAttrValueToRange(PtrAttrListElem elem, void* value)
   isSpan = ((isID || isCLASS ||
              !strcmp (tmp, "style") || !strcmp (tmp, "lang")) &&
               !strcmp (elem->pSS->SsName, "HTML"));
-
+  
   /* on ne fait rien si le document ou` se trouve la selection
      n'utilise pas le schema de structure qui definit l'attribut */
   if (GetSSchemaForDoc (elem->pSS->SsName, pDoc))

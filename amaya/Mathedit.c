@@ -99,6 +99,7 @@ static Document DocMathElementSelected = 0;
 #include <commctrl.h>
 #endif /* _WINDOWS */
 #include "XLinkedit_f.h"
+#include "templateUtils_f.h"
 
 #ifdef _GTK
 /* used for the close palette callback*/
@@ -5420,7 +5421,7 @@ ThotBool  GlobalMathAttrInMenu (NotifyAttribute *event)
       event->attributeType.AttrTypeNum != MathML_ATTR_other &&
       event->attributeType.AttrTypeNum != MathML_ATTR_xml_space)
     /* it's not a global attribute. Accept it */
-    return FALSE;
+    return ValidateTemplateAttrInMenu(event);
 
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML"))
     /* it's not a MathML element */
@@ -5436,7 +5437,7 @@ ThotBool  GlobalMathAttrInMenu (NotifyAttribute *event)
           elType.ElTypeNum == MathML_EL_MathMLCharacters)
         return TRUE;
     }
-  return FALSE;
+  return ValidateTemplateAttrInMenu(event);
 }
 
 /*----------------------------------------------------------------------

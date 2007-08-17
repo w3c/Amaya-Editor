@@ -63,8 +63,8 @@ STRUCT
 
   attribute ( ATTR 
     ref_name = TEXT; 
-    type = integerVal, decimal, string, listVal; 
-    useAt = TEXT; 
+    type = number, string, listVal; 
+    useAt = required, optional, prohibited;
     defaultAt = TEXT; 
     fixed = TEXT; 
     values = TEXT;

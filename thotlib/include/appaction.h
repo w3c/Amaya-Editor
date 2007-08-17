@@ -106,7 +106,9 @@ typedef struct
      Element             element;
      Attribute           attribute;
      AttributeType       attributeType;
-     int		 info; /* 1 if event sent by undo/redo */
+     int		             info; /* 1 if event sent by undo/redo */
+
+     TypeRestriction     restr;
   }
 NotifyAttribute;
 

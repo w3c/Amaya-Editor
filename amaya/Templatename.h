@@ -48,10 +48,12 @@ static AttributeMapping TemplateAttributeMappingTable[] =
 static AttrValueMapping TemplateAttrValueMappingTable[] =
 {
    {Template_ATTR_prompt, "prompt", Template_ATTR_prompt_VAL_Yes_},
-   {Template_ATTR_type, "integer", Template_ATTR_type_VAL_integerVal},
-   {Template_ATTR_type, "decimal", Template_ATTR_type_VAL_decimal},
+   {Template_ATTR_type, "number", Template_ATTR_type_VAL_number},
    {Template_ATTR_type, "string", Template_ATTR_type_VAL_string},
    {Template_ATTR_type, "list", Template_ATTR_type_VAL_listVal},
+   {Template_ATTR_useAt, "required", Template_ATTR_useAt_VAL_required},
+   {Template_ATTR_useAt, "optional", Template_ATTR_useAt_VAL_optional},
+   {Template_ATTR_useAt, "prohibited", Template_ATTR_useAt_VAL_prohibited},
    {0, "", 0}			/* Last entry. Mandatory */
 };
 #else /* TEMPLATES */
