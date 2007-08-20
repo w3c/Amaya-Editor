@@ -436,39 +436,10 @@ CHARSET TtaGetLocaleCharset ()
 #ifndef _MACOS
   if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
     {
-#ifdef _WX
       char *buffer;
       buffer = nl_langinfo(_NL_MESSAGES_CODESET);
       if (buffer != NULL)
         LocaleSystemCharset = TtaGetCharset(buffer);
-#else /* _WX */
-      char * lang = getenv("LANG");
-      if (lang && ThotDirExists ("/tmp"))
-        {
-          int  fd;
-          char buffer[256], cmd[256], filename[30];
-          memset ( buffer, 0, 256);
-          strcpy (cmd, "locale -ck LC_MESSAGES | grep messages-codeset | sed 's/.*=\"//' | sed 's/\"//'");
-          strcat (cmd," > ");
-          strcpy (filename, "/tmp/");
-          strcat (filename,"amaya_locale");
-          strcat (cmd, filename);
-          /* ask the system using locale command */
-          system (cmd);
-          fd = open (filename, O_RDONLY);
-          if (fd)
-            {
-              read (fd, buffer, 255);
-              close (fd);
-              strcpy (cmd, "rm -f ");
-              strcat (cmd, filename);
-              system (cmd);
-              buffer[255] = EOS;
-              /* convert the string into thotlib index */
-              LocaleSystemCharset = TtaGetCharset(buffer); 
-            }
-        }
-#endif /* _WX */
     }
 #endif /* _MACOS */
   if ((LocaleSystemCharset == UNSUPPORTED_CHARSET) ||
