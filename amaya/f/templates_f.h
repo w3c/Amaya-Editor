@@ -36,17 +36,6 @@ extern void UseCreated ( NotifyElement *event );
 extern void Template_IncrementRepeatOccurNumber ( Element el );
 extern void Template_DecrementRepeatOccurNumber ( Element el );
 extern ThotBool Template_CanInsertRepeatChild ( Element el );
-extern Element Template_InsertRepeatChildAfter ( Document doc,
-                                                 Element el,
-                                                 Declaration decl,
-                                                 Element elPrev );
-extern Element Template_InsertRepeatChild ( Document doc,
-                                            Element el,
-                                            Declaration decl,
-                                            int pos );
-extern Element Template_InsertBagChild ( Document doc,
-                                         Element el,
-                                         Declaration decl );
 extern ThotBool BagButtonClicked ( NotifyElement *event );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
@@ -95,17 +84,6 @@ extern void UseCreated ( NotifyElement *event );
 extern void Template_IncrementRepeatOccurNumber ( Element el );
 extern void Template_DecrementRepeatOccurNumber ( Element el );
 extern ThotBool Template_CanInsertRepeatChild ( Element el );
-extern Element Template_InsertRepeatChildAfter ( Document doc,
-                                                   Element el,
-                                                   Declaration decl,
-                                                   Element elPrev );
-extern Element Template_InsertRepeatChild ( Document doc,
-                                              Element el,
-                                              Declaration decl,
-                                              int pos );
-extern Element Template_InsertBagChild ( Document doc,
-                                           Element el,
-                                           Declaration decl );
 extern ThotBool BagButtonClicked ( NotifyElement *event );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );

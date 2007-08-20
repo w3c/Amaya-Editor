@@ -1196,13 +1196,21 @@ ThotBool GlobalSVGAttrInMenu (NotifyAttribute * event)
       event->attributeType.AttrTypeNum != SVG_ATTR_style_ &&
       event->attributeType.AttrTypeNum != SVG_ATTR_xml_space)
     /* it's not a global attribute. Accept it */
+#ifdef TEMPLATES
     return ValidateTemplateAttrInMenu(event);
+#else /* TEMPLATES */
+    return FALSE;
+#endif /* TEMPLATES */
 
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"SVG"))
     /* it's not a SVG element, don't put a SVG attribute in the menu */
     return TRUE;
 
+#ifdef TEMPLATES
   return ValidateTemplateAttrInMenu(event);
+#else /* TEMPLATES */
+  return FALSE;
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------

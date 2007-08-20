@@ -56,9 +56,10 @@ static AttrValueMapping TemplateAttrValueMappingTable[] =
    {Template_ATTR_useAt, "prohibited", Template_ATTR_useAt_VAL_prohibited},
    {0, "", 0}			/* Last entry. Mandatory */
 };
+
 #else /* TEMPLATES */
 /* there is no mapping table of Template elements */
 
 static ElemMapping *TemplateElemMappingTable = NULL;
-//static AttributeMapping* TemplateAttributeMappingTable = NULL;
+static AttributeMapping* TemplateAttributeMappingTable = NULL;
 #endif /* TEMPLATES */

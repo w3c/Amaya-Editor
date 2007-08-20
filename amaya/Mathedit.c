@@ -5421,7 +5421,11 @@ ThotBool  GlobalMathAttrInMenu (NotifyAttribute *event)
       event->attributeType.AttrTypeNum != MathML_ATTR_other &&
       event->attributeType.AttrTypeNum != MathML_ATTR_xml_space)
     /* it's not a global attribute. Accept it */
+#ifdef TEMPLATES
     return ValidateTemplateAttrInMenu(event);
+#else /* TEMPLATES */
+    return FALSE;
+#endif /* TEMPLATES */
 
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML"))
     /* it's not a MathML element */
@@ -5437,7 +5441,11 @@ ThotBool  GlobalMathAttrInMenu (NotifyAttribute *event)
           elType.ElTypeNum == MathML_EL_MathMLCharacters)
         return TRUE;
     }
+#ifdef TEMPLATES
   return ValidateTemplateAttrInMenu(event);
+#else /* TEMPLATES */
+  return FALSE;
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
