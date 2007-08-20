@@ -974,6 +974,7 @@ void CopyCommand ()
                       DeleteElement (&pE, pSelDoc);
                     }
                   SaveElement (pCopy, pEl->ElParent, doc, pEl);
+#ifdef IV
                   /* met l'attribut langue sur la copie s'il n'y
                      est pas deja */
                   if (GetTypedAttrForElem (pCopy, 1, NULL) == NULL)
@@ -991,6 +992,7 @@ void CopyCommand ()
                             pAttrLang->AeAttrSSchema = pCopy->ElStructSchema;
                         }
                     }
+#endif
                 }
 		  
               /* next selected element */
