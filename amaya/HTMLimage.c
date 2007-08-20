@@ -1182,7 +1182,7 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
                         callback (doc, el, &pathname[0], extra, TRUE);
                     }
                   else if (DocumentMeta[doc] &&
-                           ctxEl->currentElement == DocumentMeta[doc]->link_icon)
+                           el == DocumentMeta[doc]->link_icon)
                     {
 #ifdef _WX
                       TtaSetPageIcon (doc, 1, desc->tempfile);
