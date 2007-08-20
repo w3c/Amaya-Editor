@@ -215,6 +215,19 @@ bool AmayaAttributePanel::IsReadOnly()const
           AttrListElem_IsReadOnly (m_currentAttElem));
 }
 
+
+/*----------------------------------------------------------------------
+ * Show or hide the attribute bar, the bar where is shwon
+ *  the attribute subpanel if any.
+  ----------------------------------------------------------------------*/
+void AmayaAttributePanel::ShowAttributeBar(bool bShow)
+{
+  if(m_pVPanelSizer)
+    {
+      m_pVPanelSizer->Show((size_t)0, bShow);
+    }
+}
+
 /*----------------------------------------------------------------------
   SendDataToPanel refresh the attribute list or show the value panels
   params:
@@ -438,10 +451,12 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_PANEID type )
       m_pCurrentlyEditedControl = m_subpanels[type]->GetEditionControl();
       m_subpanels[type]->Refresh();
       m_pSubpanelSizer->Layout();
+      ShowAttributeBar(true);
     }
   else
     {
       m_pCurrentlyEditedControl = NULL;
+      ShowAttributeBar(false);
     }
   GetParent()->GetParent()->Layout();
   m_pVPanelSizer->Layout();

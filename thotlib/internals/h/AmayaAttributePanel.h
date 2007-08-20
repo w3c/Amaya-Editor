@@ -122,6 +122,7 @@ protected:
   void UpdateListColumnWidth();
 
   void ShowAttributValue( wxATTR_PANEID type );
+  void ShowAttributeBar(bool bShow);
   
   void SetupListValue(DLList attrList);
 
