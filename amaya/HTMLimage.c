@@ -100,12 +100,11 @@ ThotBool AddLoadedImage (char *name, char *pathname,
   pImage->elImage = NULL;
   pImage->imageType = unknown_type;
   *desc = pImage;
-  TtaFreeMemory (localname);
   if (sameImage)
     {
       /* the image file exists for a different document */
       pImage->status = IMAGE_LOADED;
-      pImage->tempfile = GetLocalPath (doc, sameImage->tempfile);
+      pImage->tempfile = localname;
       TtaFileCopy (sameImage->tempfile, pImage->tempfile);
       if (sameImage->content_type)
         pImage->content_type = TtaStrdup (sameImage->content_type);
@@ -117,6 +116,7 @@ ThotBool AddLoadedImage (char *name, char *pathname,
     {
       pImage->status = IMAGE_NOT_LOADED;
       pImage->content_type = NULL;
+      TtaFreeMemory (localname);
       return (TRUE);
     }
 }
@@ -925,6 +925,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
             {
 #ifdef _WX
               TtaSetPageIcon (doc, 1, desc->tempfile);
+              DocumentMeta[doc]->link_icon = NULL;
 #endif /* _WX */
             }
           else
@@ -1180,6 +1181,14 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
                       else
                         callback (doc, el, &pathname[0], extra, TRUE);
                     }
+                  else if (DocumentMeta[doc] &&
+                           ctxEl->currentElement == DocumentMeta[doc]->link_icon)
+                    {
+#ifdef _WX
+                      TtaSetPageIcon (doc, 1, desc->tempfile);
+                      DocumentMeta[doc]->link_icon = NULL;
+#endif /* _WX */
+                    }
                   else
                     DisplayImage (doc, el, NULL, pathname, NULL);
                 }
@@ -1189,6 +1198,14 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
                   if (callback)
                     {
                       callback (doc, el, desc->tempfile, extra, FALSE);
+                    }
+                  else if (DocumentMeta[doc] &&
+                           el == DocumentMeta[doc]->link_icon)
+                    {
+#ifdef _WX
+                      TtaSetPageIcon (doc, 1, desc->tempfile);
+                      DocumentMeta[doc]->link_icon = NULL;
+#endif /* _WX */
                     }
                   else
                     DisplayImage (doc, el, desc, NULL, desc->content_type);
@@ -1451,7 +1468,8 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
     /* there are some HTML elements in this documents. 
        Get all 'img' or 'object' or 'embed' elements */
     {
-      if (DocumentMeta[doc] && DocumentMeta[doc]->link_icon && loadImages)
+      if (DocumentMeta[doc] && DocumentMeta[doc]->link_icon &&
+          loadImages && elSubTree == NULL)
         {
           attrType.AttrTypeNum = HTML_ATTR_HREF_;
           FetchIcon (doc, flags, DocumentMeta[doc]->link_icon,

@@ -2118,7 +2118,6 @@ int TtaAddTextZone (Document doc, View view, char *label,
         else if (FrameTable[frame].WdFrame && !FrameTable[frame].Text_Zone)
 #endif /* _WX */
           {
-
 #ifdef _WX
             TtaSetURLBar( frame, listUrl, procedure );
 #endif /* _WX */
