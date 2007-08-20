@@ -49,19 +49,24 @@
 #define COLOR_READONLY    wxColour(64, 64, 64)
 #define COLOR_NEW         wxColour(0, 128, 0)
 
-wxString AmayaAttributePanel::s_subpanelClassNames[AmayaAttributeSubpanelNumber]=
+wxString AmayaAttributePanel::s_subpanelClassNames[wxATTR_PANEID_MAX]=
 {
-    wxT("AmayaEnumAttributeSubpanel"),
-    wxT("AmayaStringAttributeSubpanel"),
-    wxT("AmayaNumAttributeSubpanel"),
-    wxT("AmayaLangAttributeSubpanel")
+  wxT("AmayaEnumAttributeSubpanel"),      // wxATTR_PANEID_ENUM
+  wxT("AmayaStringAttributeSubpanel"),    // wxATTR_PANEID_TEXT
+  wxT("AmayaNumAttributeSubpanel"),       // wxATTR_PANEID_NUM
+  wxT("AmayaLangAttributeSubpanel")       // wxATTR_PANEID_LANG
 };
 
-/*bool AmayaAttributePanel::s_subpanelAssoc[][wxATTR_INTTYPE_MAX] = 
+AmayaAttributePanel::wxATTR_PANEID AmayaAttributePanel::s_subpanelAssoc[restr_content_max][wxATTR_INTTYPE_MAX] = 
 {
-    
+  // wxATTR_INTTYPE_NUM  wxATTR_INTTYPE_TEXT wxATTR_INTTYPE_REF  wxATTR_INTTYPE_ENUM wxATTR_INTTYPE_LANG
+    {wxATTR_PANEID_NUM,  wxATTR_PANEID_TEXT, wxATTR_PANEID_NONE, wxATTR_PANEID_ENUM, wxATTR_PANEID_LANG}, // restr_content_no_restr
+    {wxATTR_PANEID_NUM,  wxATTR_PANEID_NUM,  wxATTR_PANEID_NONE, wxATTR_PANEID_ENUM, wxATTR_PANEID_NONE}, // restr_content_number
+    {wxATTR_PANEID_NONE, wxATTR_PANEID_TEXT, wxATTR_PANEID_NONE, wxATTR_PANEID_ENUM, wxATTR_PANEID_LANG}, // restr_content_string
+    {wxATTR_PANEID_NONE, wxATTR_PANEID_NONE, wxATTR_PANEID_NONE, wxATTR_PANEID_NONE, wxATTR_PANEID_NONE}, // restr_content_list
+    {wxATTR_PANEID_NONE, wxATTR_PANEID_LANG, wxATTR_PANEID_NONE, wxATTR_PANEID_LANG, wxATTR_PANEID_LANG}  // restr_content_lang
 };
-*/
+
 IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
 
   /*----------------------------------------------------------------------
@@ -81,6 +86,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
     ,m_lastChar(0)
     ,m_NbAttr(0)
     ,m_NbAttr_evt(0)
+    ,m_currentPane(wxATTR_PANEID_NONE)
     ,m_pCurrentlyEditedControl(NULL)
     ,m_disactiveCount(0)
 {
@@ -109,7 +115,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
         {
           /* Init the array of embed subpanels */
           int i;
-          for(i=0; i<AmayaAttributeSubpanelNumber; i++)
+          for(i=0; i<wxATTR_PANEID_MAX; i++)
             {
               wxClassInfo* ci = wxClassInfo::FindClass(s_subpanelClassNames[i]);
               if(ci)
@@ -125,9 +131,6 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
         }
     }
   
-  // init value panels visibility
-  // ShowAttributValue( wxATTR_TYPE_NONE );
-
   // register myself to the manager, so I will be avertised that another panel is floating ...
   m_pManager->RegisterSubPanel( this );
   
@@ -228,13 +231,40 @@ void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
       m_lastSel   = (PtrElement)p.param6;
       m_firstChar = p.param7;
       m_lastChar  = p.param8;
-      ShowAttributValue( wxATTR_TYPE_NONE );
+      ShowAttributValue( wxATTR_PANEID_NONE );
       SetupListValue((DLList)p.param2);
       break;
     }
   ActivePanel();
 }
 
+/*----------------------------------------------------------------------
+  Analyse elem param to find correct internal type.
+  ----------------------------------------------------------------------*/
+AmayaAttributePanel::wxATTR_INTTYPE AmayaAttributePanel::GetInternalTypeFromAttrElem(PtrAttrListElem elem)
+{
+  PtrTtAttribute  pAttr = AttrListElem_GetTtAttribute(elem);
+  if(elem && pAttr)
+    {
+      switch(pAttr->AttrType)
+      {
+        case AtReferenceAttr:
+          return wxATTR_INTTYPE_REF;
+        case AtEnumAttr:
+          return wxATTR_INTTYPE_ENUM;
+        case AtNumAttr:
+          return wxATTR_INTTYPE_NUM;
+        case AtTextAttr:
+          if(elem->num == 1)
+            return wxATTR_INTTYPE_LANG;
+          else
+            return wxATTR_INTTYPE_TEXT;
+        default:
+          break;
+      }
+    }
+  return wxATTR_INTTYPE_NONE;
+}
 
 /*----------------------------------------------------------------------
   SelectAttribute
@@ -242,69 +272,57 @@ void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::SelectAttribute(int position)
 {
-  PtrTtAttribute  pAttr;
+  wxATTR_INTTYPE  inttype;
   if (position!=wxID_ANY)
     {
       m_currentAttElem = (PtrAttrListElem)m_pAttrList->GetItemData(position);
-      if (m_currentAttElem)
+      
+      inttype = GetInternalTypeFromAttrElem(m_currentAttElem);
+      
+      if(inttype==wxATTR_INTTYPE_REF)
         {
-          pAttr = AttrListElem_GetTtAttribute(m_currentAttElem);
-          if(pAttr && !AttrListElem_IsReadOnly(m_currentAttElem))
+          // Reference has a special behavior
+          CallbackEditRefAttribute(m_currentAttElem, TtaGiveActiveFrame());
+        }
+      else if(inttype==wxATTR_INTTYPE_LANG)
+        {
+          // Lang is always lang
+          SetupAttr(m_currentAttElem, wxATTR_PANEID_LANG);
+          return;
+        }
+      else if(inttype==wxATTR_INTTYPE_ENUM)
+        {
+          // Enum is always enum
+          SetupAttr(m_currentAttElem, wxATTR_PANEID_ENUM);
+          return;          
+        }
+      else if(inttype!=wxATTR_INTTYPE_NONE)
+        {
+          if(AttrListElem_IsEnum(m_currentAttElem))
+              /* all type restricted to enum. */
+              SetupAttr(m_currentAttElem, wxATTR_PANEID_ENUM);
+          else if(s_subpanelAssoc[m_currentAttElem->restr.RestrType][inttype]!=wxATTR_PANEID_NONE)
             {
-              if(pAttr->AttrType==AtReferenceAttr)
-                CallbackEditRefAttribute(m_currentAttElem, TtaGiveActiveFrame());
-              else if(m_currentAttElem->num == 1)
-                {
-                  /* Language is always language.*/
-                  SetupAttr(m_currentAttElem, wxATTR_TYPE_LANG);
-                  return;
-                }
-              else if(pAttr->AttrType==AtEnumAttr)
-                {
-                  /* enum is always enum.*/
-                  SetupAttr(m_currentAttElem, wxATTR_TYPE_ENUM);
-                  return;
-                }
-              else if(AttrListElem_IsEnum(m_currentAttElem))
-                {
-                  /* all type restricted to enum. */
-                  SetupAttr(m_currentAttElem, wxATTR_TYPE_ENUM);
-                  return;                  
-                }
-              else
-                {
-                  switch(pAttr->AttrType)
-                  {
-                    case AtTextAttr:
-                      SetupAttr(m_currentAttElem, wxATTR_TYPE_TEXT);
-                      return;
-                    case AtNumAttr:
-                      SetupAttr(m_currentAttElem, wxATTR_TYPE_NUM);
-                      return;
-                    case AtEnumAttr:
-                      // Cant be.
-                    default:
-                      break;
-                  }
-                }
+              SetupAttr(m_currentAttElem, s_subpanelAssoc[m_currentAttElem->restr.RestrType][inttype]);
+              return;          
             }
         }
     }
   m_currentAttElem = NULL;
-  ShowAttributValue( wxATTR_TYPE_NONE );
+  ShowAttributValue( wxATTR_PANEID_NONE );
 }
 
 /*----------------------------------------------------------------------
   SetupAttr
   Set the correct attribute type panel for an attribute
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::SetupAttr(PtrAttrListElem elem, wxATTR_TYPE type)
+void AmayaAttributePanel::SetupAttr(PtrAttrListElem elem, wxATTR_PANEID type)
 {
   ShowAttributValue(type);
   m_subpanels[type]->SetSelectionPosition(m_firstSel, m_lastSel, 
                                                   m_firstChar, m_lastChar);
   m_subpanels[type]->SetAttrListElem(elem);
-  m_CurrentAttType = type;
+  m_currentPane = type;
 }
 
 
@@ -334,7 +352,7 @@ void AmayaAttributePanel::RemoveCurrentAttribute()
   
   DesactivatePanel();
 
-  if (m_CurrentAttType != wxATTR_TYPE_NONE && m_firstSel &&
+  if (m_currentPane != wxATTR_PANEID_NONE && m_firstSel &&
       m_currentAttElem && m_currentAttElem->val)
     {
       TtaSetDisplayMode(doc, DeferredDisplay);
@@ -406,15 +424,15 @@ void AmayaAttributePanel::CreateCurrentAttribute()
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
+void AmayaAttributePanel::ShowAttributValue( wxATTR_PANEID type )
 {
-  m_CurrentAttType = type;
+  m_currentPane = type;
 
   int i;
-  for(i=0; i<AmayaAttributeSubpanelNumber; i++)
+  for(i=0; i<wxATTR_PANEID_MAX; i++)
     m_pSubpanelSizer->Show(m_subpanels[i], false );
   
-  if(type>=0 && type<wxATTR_TYPE_MAX)
+  if(type>=0 && type<wxATTR_PANEID_MAX)
     {
       m_pSubpanelSizer->Show( type, true );
       m_pCurrentlyEditedControl = m_subpanels[type]->GetEditionControl();
@@ -464,17 +482,6 @@ void AmayaAttributePanel::SetupListValue(DLList attrList)
         elem = (PtrAttrListElem)node->elem;
         if (elem)
           {
-#ifdef EK            
-            printf(">> %s\n", AttrListElem_GetName(elem));
-            if(elem->restr.RestrFlags!=0)
-              printf("    - flags  : %d\n", elem->restr.RestrFlags);            
-            if(elem->restr.RestrType!=restr_content_no_restr)
-              printf("    - type   : %d\n", elem->restr.RestrType);
-            if(elem->restr.RestrEnumVal)
-              printf("    - enum   : %s\n", elem->restr.RestrEnumVal);
-            if(elem->restr.RestrDefVal)
-              printf("    - defVal : %s\n", elem->restr.RestrDefVal);
-#endif /* EK */              
             if (elem->val)
               {
                 index = m_pAttrList->InsertItem(m_pAttrList->GetItemCount(),
@@ -489,7 +496,7 @@ void AmayaAttributePanel::SetupListValue(DLList attrList)
                   case AtTextAttr:
                     size = MAX_TXT_LEN;
                     TtaGiveTextAttributeValue((Attribute)elem->val, buffer, &size);
-                    m_pAttrList->SetItem(index, 1, wxString(buffer, wxConvUTF8));
+                    m_pAttrList->SetItem(index, 1, TtaConvMessageToWX(buffer));
                     break;
                   case AtEnumAttr:
                     type.AttrSSchema = (int*) elem->pSS;
@@ -498,14 +505,11 @@ void AmayaAttributePanel::SetupListValue(DLList attrList)
                     if (pAttr->AttrNEnumValues == 1 &&
                         !strcasecmp (pAttr->AttrEnumValue[0], "yes"))
                       // this is a boolean value
-                      m_pAttrList->SetItem(index, 1, wxString(
-                                                              pAttr->AttrName,
-                                                              wxConvUTF8));
+                      m_pAttrList->SetItem(index, 1, TtaConvMessageToWX(pAttr->AttrName));
                      else
-                   m_pAttrList->SetItem(index, 1, wxString(
+                     m_pAttrList->SetItem(index, 1, TtaConvMessageToWX(
                             TtaGetAttributeValueName(type, 
-                                TtaGetAttributeValue((Attribute)elem->val)), 
-                                wxConvUTF8));
+                                TtaGetAttributeValue((Attribute)elem->val))));
                     break;
                   case AtReferenceAttr:
                   default:
@@ -589,13 +593,13 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
       pAttr = AttrListElem_GetTtAttribute(m_currentAttElem);
       if(pAttr->AttrType==AtEnumAttr || pAttr->AttrType==AtNumAttr)
         {
-          int test = m_subpanels[m_CurrentAttType]->GetIntValue();
-          value = m_subpanels[m_CurrentAttType]->GetStringValue();
+          int test = m_subpanels[m_currentPane]->GetIntValue();
+          value = m_subpanels[m_currentPane]->GetStringValue();
           SetAttrValueToRange(m_currentAttElem, (void*)test);
         }
       else if(pAttr->AttrType==AtTextAttr)
         {
-          value = m_subpanels[m_CurrentAttType]->GetStringValue();
+          value = m_subpanels[m_currentPane]->GetStringValue();
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH-1);
           SetAttrValueToRange(m_currentAttElem, (void*)buffer);
         }

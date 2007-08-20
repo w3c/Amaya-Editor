@@ -31,6 +31,7 @@ typedef enum _RestrictionContentType
   restr_content_string   = 2, /* == Template_ATTR_type_VAL_string. */
   restr_content_list     = 3, /* == Template_ATTR_type_VAL_listVal. */
   restr_content_lang     = 4, /* language */
+  restr_content_max
 }RestrictionContentType;
 
 /**

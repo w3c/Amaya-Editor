@@ -9,13 +9,12 @@
 #include "wx/spinctrl.h"
 
 #include "containers.h"
+#include "interface.h"
 
 class AmayaNormalWindow;
 class AmayaAttributeSubpanel;
 typedef struct _ElementDescr *PtrElement;
 typedef struct AttrListElem* PtrAttrListElem;
-
-#define AmayaAttributeSubpanelNumber  4 
 
 /*
  *  Description:  - AmayaAttributePanel is a specific sub-panel
@@ -29,6 +28,57 @@ class AmayaAttributePanel : public AmayaSubPanel
 public:
   DECLARE_DYNAMIC_CLASS(AmayaAttributePanel)
 
+  /**
+   * Panel identificators.
+   */
+  typedef enum
+    {
+      wxATTR_TYPE_NONE = -1,
+      wxATTR_TYPE_ENUM = 0,
+      wxATTR_TYPE_TEXT,
+      wxATTR_TYPE_NUM,
+      wxATTR_TYPE_LANG,
+      wxATTR_TYPE_MAX
+    } wxATTR_TYPE;
+
+  /**
+   * Panel identificators.
+   */
+  typedef enum
+    {
+      wxATTR_PANEID_NONE    = wxID_ANY,
+      wxATTR_PANEID_ENUM    = 0,
+      wxATTR_PANEID_TEXT,
+      wxATTR_PANEID_NUM,
+      wxATTR_PANEID_LANG,
+      wxATTR_PANEID_MAX
+    }wxATTR_PANEID;
+
+  /**
+   * Internal type deducts from attribute type and attribute num.
+   */
+  typedef enum
+  {
+    wxATTR_INTTYPE_NONE = -1,
+    wxATTR_INTTYPE_NUM  = 0,  /* = AtNumAttr */
+    wxATTR_INTTYPE_TEXT, /* = AtTextAttr */
+    wxATTR_INTTYPE_REF,  /* = AtReferenceAttr*/
+    wxATTR_INTTYPE_ENUM, /* = AtEnumAttr */
+    wxATTR_INTTYPE_LANG, /* = AtTextAttr && num==1 */
+    wxATTR_INTTYPE_MAX
+  }wxATTR_INTTYPE;
+    
+  typedef enum
+    {
+      wxATTR_ACTION_UNKNOWN,
+      wxATTR_ACTION_LISTUPDATE,
+      wxATTR_ACTION_SETUPLANG,
+      wxATTR_ACTION_SETUPTEXT,
+      wxATTR_ACTION_SETUPENUM,
+      wxATTR_ACTION_SETUPNUM
+    } wxATTR_ACTION;
+
+  
   AmayaAttributePanel( wxWindow * p_parent_window = NULL
              ,AmayaNormalWindow * p_parent_nwindow = NULL );
   virtual ~AmayaAttributePanel();
@@ -45,6 +95,11 @@ public:
 protected:
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
+
+  /**
+   * Analyse elem param to find correct internal type.
+   */
+  static wxATTR_INTTYPE GetInternalTypeFromAttrElem(PtrAttrListElem elem);
   
   void OnListItemSelected(wxListEvent& event);
   void OnListItemDeselected(wxListEvent& event);
@@ -65,43 +120,12 @@ protected:
 
   void RedirectFocusToEditableControl();
   void UpdateListColumnWidth();
-public:
-  typedef enum
-    {
-      wxATTR_TYPE_NONE = -1,
-      wxATTR_TYPE_ENUM = 0,
-      wxATTR_TYPE_TEXT,
-      wxATTR_TYPE_NUM,
-      wxATTR_TYPE_LANG,
-      wxATTR_TYPE_MAX
-    } wxATTR_TYPE;
 
-  typedef enum
-  {
-    wxATTR_INTTYPE_NUM,  /* = AtNumAttr */
-    wxATTR_INTTYPE_TEXT, /* = AtTextAttr */
-    wxATTR_INTTYPE_REF,  /* = AtReferenceAttr*/
-    wxATTR_INTTYPE_ENUM, /* = AtEnumAttr */
-    wxATTR_INTTYPE_LANG,
-    wxATTR_INTTYPE_MAX
-  }wxATTR_INTTYPE;
-    
-  typedef enum
-    {
-      wxATTR_ACTION_UNKNOWN,
-      wxATTR_ACTION_LISTUPDATE,
-      wxATTR_ACTION_SETUPLANG,
-      wxATTR_ACTION_SETUPTEXT,
-      wxATTR_ACTION_SETUPENUM,
-      wxATTR_ACTION_SETUPNUM
-    } wxATTR_ACTION;
-
- protected:
-  void ShowAttributValue( wxATTR_TYPE type );
+  void ShowAttributValue( wxATTR_PANEID type );
   
   void SetupListValue(DLList attrList);
 
-  void SetupAttr(PtrAttrListElem elem, wxATTR_TYPE);
+  void SetupAttr(PtrAttrListElem elem, wxATTR_PANEID type);
   
   bool IsMandatory()const;
   bool IsReadOnly()const;
@@ -111,7 +135,7 @@ public:
   bool IsPanelActive()const{return m_disactiveCount==0;}
 
   void OnUpdateDeleteButton(wxUpdateUIEvent& event);
-protected:
+
   wxPanel *           m_pVPanelParent;
   wxSizer *           m_pVPanelSizer;
   wxListCtrl *        m_pAttrList;
@@ -131,12 +155,14 @@ protected:
   int m_NbAttr;
   int m_NbAttr_evt;
 
-  wxATTR_TYPE m_CurrentAttType;
+  wxATTR_PANEID  m_currentPane;
   wxWindow*   m_pCurrentlyEditedControl;
   
   wxSizer *               m_pSubpanelSizer;
-  AmayaAttributeSubpanel* m_subpanels[AmayaAttributeSubpanelNumber];
-  static wxString s_subpanelClassNames[AmayaAttributeSubpanelNumber];
+  AmayaAttributeSubpanel* m_subpanels[wxATTR_PANEID_MAX];
+  
+  static wxString      s_subpanelClassNames[wxATTR_PANEID_MAX];
+  static wxATTR_PANEID s_subpanelAssoc[restr_content_max][wxATTR_INTTYPE_MAX];
   
   int        m_disactiveCount; // 0 to activate panel (handle events)
 };
