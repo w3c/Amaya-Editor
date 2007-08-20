@@ -22,13 +22,13 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "edit_tv.h"
+#include "frame_tv.h"
+
 #include "displayview_f.h"
 #include "editcommands_f.h"
 #include "message_wx.h"
-
 #include "AmayaParams.h"
 #include "appdialogue_wx_f.h"
-
 #include "AmayaToolBar.h"
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
@@ -56,9 +56,13 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
   wxXmlResource::Get()->LoadPanel(this, p_parent, wxT("AmayaToolbar"));
 
   m_pAmayaWindowParent = p_amaya_window_parent;
-  m_pComboBox          = XRCCTRL(*this, "wxID_TOOL_URL", wxComboBox);
-
-
+  m_pComboBox = XRCCTRL(*this, "wxID_TOOL_URL", wxComboBox);
+  if (WindowBColor == -1)
+    {
+      // Initialize the window background colour
+      wxColour col = m_pAmayaWindowParent->GetBackgroundColour();
+      WindowBColor = TtaGetThotColor (col.Red(), col.Green(), col.Blue());
+    }
   /* set tooltips */
   XRCCTRL(*this, "wxID_TOOL_BACK", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_PREVIOUS)));
   XRCCTRL(*this, "wxID_TOOL_FORWARD", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_NEXT)));

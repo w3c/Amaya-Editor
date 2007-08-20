@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -48,6 +48,7 @@ THOT_EXPORT int       DefaultBColor;    /* default background color index */
 THOT_EXPORT int       DefaultFColor;    /* default foreground color index */
 THOT_EXPORT int       BgSelColor;       /* selection color                */
 THOT_EXPORT int       FgSelColor;       /* insert point color             */
+THOT_EXPORT int       WindowBColor;     /* window background color index */
 THOT_EXPORT ThotColor Black_Color;      /* writing color                  */
 THOT_EXPORT ThotColor White_Color;      /* background color               */
 THOT_EXPORT ThotColor Scroll_Color;     /* scroll color                   */

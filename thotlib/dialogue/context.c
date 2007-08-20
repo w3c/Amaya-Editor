@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -60,8 +60,8 @@ ThotColorStruct  cblack;
  * FindColor looks for the named color ressource.
  * The result is the closest color found the Thot color table.
  ----------------------------------------------------------------------*/
-static ThotBool FindColor (int disp, char *name, char *colorplace,
-			   char *defaultcolor, ThotColor *colorpixel)
+static ThotBool FindColor (char *colorplace,
+                           char *defaultcolor, ThotColor *colorpixel)
 {
    int                 col;
    char               *value;
@@ -73,7 +73,7 @@ static ThotBool FindColor (int disp, char *name, char *colorplace,
    /* do you need to take the default color? */
    if (value != NULL && value[0] != EOS)
      TtaGiveRGB (value, &red, &green, &blue);
-   else if (defaultcolor != NULL)
+   else if (defaultcolor)
      TtaGiveRGB (defaultcolor, &red, &green, &blue);
    else
      return (FALSE);
@@ -92,10 +92,9 @@ static ThotBool FindColor (int disp, char *name, char *colorplace,
    
 #ifdef _WINGUI 
    *colorpixel = col;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#else /* _WINGUI */
    *colorpixel = ColorPixel (col);
-#endif /* defined(_GTK) || defined(_WX) */
+#endif /* _WINGUI */
    return (TRUE);
 
 }
@@ -121,65 +120,64 @@ static void InitCurs ()
  ----------------------------------------------------------------------*/
 void TtaUpdateEditorColors (void)
 {
-  char   *name;
   ThotBool  found;
 
-  name = TtaGetEnvString ("appname");
   /* background color */
-  found = FindColor (0, name, "BackgroundColor", "LightGrey1", &White_Color);
+  found = FindColor ("BackgroundColor", "LightGrey1", &White_Color);
   /* drawing color */
-  found = FindColor (0, name, "ForegroundColor", "Black", &Black_Color);
+  found = FindColor ("ForegroundColor", "Black", &Black_Color);
   /* selection colors */
-  found = FindColor (0, name, "FgSelectColor", "White", &White_Color);
-  found = FindColor (0, name, "BgSelectColor", "#008BB2", &Black_Color);
+  found = FindColor ("FgSelectColor", "White", &White_Color);
+  found = FindColor ("BgSelectColor", "#008BB2", &Black_Color);
   /* The reference color */
-  found = FindColor (0, name, "ActiveBoxColor", "Red", &(Box_Color));
+  found = FindColor ("ActiveBoxColor", "Red", &(Box_Color));
   /* color for read-only sections */
-  found = FindColor (0, name, "ReadOnlyColor", "Black", &(RO_Color));
+  found = FindColor ("ReadOnlyColor", "Black", &(RO_Color));
   /* color for the menu background */
-  found = FindColor (0, name, "MenuBgColor", "Grey", &BgMenu_Color);
+  found = FindColor ("MenuBgColor", "Grey", &BgMenu_Color);
   /* color for the menu foregroundground */
-  found = FindColor (0, name, "MenuFgColor", "Black", &FgMenu_Color);
+  found = FindColor ("MenuFgColor", "Black", &FgMenu_Color);
   /* scrolls color */
   Scroll_Color = BgMenu_Color;
   /* color for the inactive entries */
-  found = FindColor (0, name, "InactiveItemColor", "LightGrey2", &InactiveB_Color);
+  found = FindColor ("InactiveItemColor", "LightGrey2", &InactiveB_Color);
+  WindowBColor = -1; /* color will be defined with the toolbar background */
 }
 
 /*----------------------------------------------------------------------
  *      InitColors initializes the Thot predefined X-Window colors.
  ----------------------------------------------------------------------*/
-static void InitColors (char* name)
+static void InitColors ()
 {
-   ThotBool            found;
+  ThotBool            found;
 #ifdef _GTK
-   GdkVisual          *vptr;
-   GdkVisualType       vinfo;
-   vptr = gdk_visual_get_best ();
-   vinfo = gdk_visual_get_best_type ();
-   if (vptr)
-     TtIsTrueColor = (vinfo == GDK_VISUAL_TRUE_COLOR || vinfo == GDK_VISUAL_DIRECT_COLOR );
-   else
-     TtIsTrueColor = FALSE;
-   /* Depending on the display Black and White order may be inverted */
+  GdkVisual          *vptr;
+  GdkVisualType       vinfo;
+  vptr = gdk_visual_get_best ();
+  vinfo = gdk_visual_get_best_type ();
+  if (vptr)
+    TtIsTrueColor = (vinfo == GDK_VISUAL_TRUE_COLOR || vinfo == GDK_VISUAL_DIRECT_COLOR );
+  else
+    TtIsTrueColor = FALSE;
+  /* Depending on the display Black and White order may be inverted */
   // if (XWhitePixel (TtDisplay, TtScreen) == 0)
   gdk_color_white (TtCmap, (GdkColor *)&cwhite);
   gdk_color_black (TtCmap, (GdkColor *)&cblack);
-   /* Initialize colors for the application */
-    Black_Color = 0x000000;
-    FgMenu_Color = 0x000000;
-    White_Color = 0xffffff;
-    Scroll_Color =  0xffffff;
+  /* Initialize colors for the application */
+  Black_Color = 0x000000;
+  FgMenu_Color = 0x000000;
+  White_Color = 0xffffff;
+  Scroll_Color =  0xffffff;
 #endif /* _GTK */
 
-   if (TtWDepth > 1)
-     TtaUpdateEditorColors ();
-   else
-     {
-     /* at least allocate the selection color */
-       found = FindColor (0, name, "FgSelectColor", "White", &White_Color);
-       found = FindColor (0, name, "BgSelectColor", "Black", &Black_Color);
-     }
+  if (TtWDepth > 1)
+    TtaUpdateEditorColors ();
+  else
+    {
+      /* at least allocate the selection color */
+      found = FindColor ("FgSelectColor", "White", &White_Color);
+      found = FindColor ("BgSelectColor", "Black", &Black_Color);
+    }
 }
 
 #if defined(_GTK) || defined(_WX)
@@ -308,7 +306,7 @@ void ThotInitDisplay (char* name, int dx, int dy)
    }
 
    InitDocColors (name);
-   InitColors (name);   
+   InitColors ();
    if (WIN_LastBitmap)
      DeleteObject (WIN_LastBitmap);
    WIN_LastBitmap = 0;
@@ -322,24 +320,17 @@ void ThotInitDisplay (char* name, int dx, int dy)
 #endif /* _WINGUI */
 
 #ifdef _WX
-
-//#ifndef _WINDOWS
    int display_width_px, display_height_px;
    int display_width_mm, display_height_mm;
    wxDisplaySize(&display_width_px, &display_height_px);
    wxDisplaySizeMM(&display_width_mm, &display_height_mm);
    DOT_PER_INCH = (int)((((float)display_width_px)*25.4) / ((float)display_width_mm));
    DOT_PER_INCH = ApproximateDotPerInch(DOT_PER_INCH);
-//#else /* _WINDOWS */
-//   ScreenHDC dc;
-//   DOT_PER_INCH = ::GetDeviceCaps(dc, LOGPIXELSY);
-//#endif /* _WINDOWS */
-
 #ifdef _GL
    TtWDepth = wxDisplayDepth(); 
 #endif /*_GL */
    InitDocColors (name);
-   InitColors (name);
+   InitColors ();
    InitGraphicContexts ();
    InitCurs ();
    InitDialogueFonts (name);
@@ -369,7 +360,7 @@ void ThotInitDisplay (char* name, int dx, int dy)
    TtCmap = gdk_colormap_new (gdk_rgb_get_visual (), TRUE);
 #endif /* _GL    */
    InitDocColors (name);
-   InitColors (name);
+   InitColors ();
    InitGraphicContexts ();
    InitCurs ();
    InitDialogueFonts (name);
