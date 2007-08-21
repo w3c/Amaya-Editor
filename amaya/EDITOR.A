@@ -46,9 +46,9 @@ MENUS
 	File.New1 button:BCss -> NewCss icon:document_css.png;
 	File.New1 button:BTemplate -> NewTemplate icon:document_default.png;
 
-	File button:BOpenDoc -> OpenDoc icon:open.png;
-	File button:BOpenInNewWindow -> OpenDocInNewWindow icon:open.png;
-	File button:BReload -> Reload icon:reload.png;
+	File button:BOpenDoc -> OpenDoc;
+	File button:BOpenInNewWindow -> OpenDocInNewWindow;
+	File button:BReload -> Reload;
 	File.Charset1 button:BUTF_8 -> ReadAsUTF_8;
 	File.Charset1 button:BISO_8859_1 -> ReadAsISO_8859_1;
 	File.Charset1 button:BISO_8859_15 -> ReadAsISO_8859_15;
@@ -73,14 +73,14 @@ MENUS
 	File.Charset1 button:BISO_2022_JP -> ReadAsISO_2022_JP;
 	File.Charset1 button:BEUC_JP -> ReadAsEUC_JP;
 	File.Charset1 button:BSHIFT_JIS -> ReadAsSHIFT_JIS;
-	File button:BBack -> GotoPreviousHTML icon:back.png;
-	File button:BForward -> GotoNextHTML icon:forward.png;
-	File button:BShowLogFile -> ShowLogFile icon:ledred.png;
-	File button:BDocInfo -> DocumentInfo icon:document_info.png;
+	File button:BBack -> GotoPreviousHTML;
+	File button:BForward -> GotoNextHTML;
+	File button:BShowLogFile -> ShowLogFile;
+	File button:BDocInfo -> DocumentInfo;
 	File Separator;
-	File button:BSave -> SaveDocument icon:save.png;
-	File button:BSaveAs -> SaveDocumentAs icon:saveas.png;
-	File button:BSynchro -> Synchronize icon:synchronize.png;
+	File button:BSave -> SaveDocument icon;
+	File button:BSaveAs -> SaveDocumentAs;
+	File button:BSynchro -> Synchronize;
 	File.Doctype1 button:BRemoveDoctype -> RemoveDoctype;
 	File.Doctype1 button:BAddDoctype -> AddDoctype;
 	File.Doctype1 Separator;
@@ -93,20 +93,20 @@ MENUS
 	File Separator;
 	File button:BSendByMail	-> SendByMail;
 	File Separator;
-	File button:BSetUpandPrint -> SetupAndPrint icon:setup_and_print.png;
-	File button:BPrint -> PrintAs icon:print.png;
+	File button:BSetUpandPrint -> SetupAndPrint;
+	File button:BPrint -> PrintAs;
 	File Separator;
-	File button:BCloseTab -> AmayaCloseTab icon:close_tab.png;
+	File button:BCloseTab -> AmayaCloseTab;
 	File button:BCloseWindow -> AmayaCloseWindow;
-	File button:BExit -> AmayaClose icon:exit.png;
+	File button:BExit -> AmayaClose;
 
-	Context_ button:BNewTab -> NewTab icon:open.png;
+	Context_ button:BNewTab -> NewTab;
 	Context_ Separator;
-	Context_ button:BRefreshTab -> RefreshTab icon:reload.png;
-	Context_ button:BRefreshAllTabs -> RefreshAllTabs icon:reload.png;
-	Context_ button:BCloseOtherTabs -> CloseOtherTabs icon:close_tab.png;
+	Context_ button:BRefreshTab -> RefreshTab;
+	Context_ button:BRefreshAllTabs -> RefreshAllTabs;
+	Context_ button:BCloseOtherTabs -> CloseOtherTabs;
 	Context_ Separator;
-	Context_ button:BCloseTab -> AmayaCloseTab icon:close_tab.png;
+	Context_ button:BCloseTab -> AmayaCloseTab;
 
 	Edit_ button:BUndo -> TtcUndo icon:undo.png;
 	Edit_ button:BRedo -> TtcRedo icon:redo.png;

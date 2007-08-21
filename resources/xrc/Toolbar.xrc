@@ -87,7 +87,7 @@
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_CSS">
-          <bitmap>../icons/22x22/colorize.png</bitmap>
+          <bitmap>../icons/22x22/css.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>

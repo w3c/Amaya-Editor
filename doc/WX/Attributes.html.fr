@@ -73,7 +73,7 @@ attribut :</p>
     <ul>
       <li>Une liste déroulante donnant la liste des valeurs possibles.</li>
       <li>Un bouton supprimer (<img alt="supprimer"
-        src="../../resources/icons/16x16/stop.png" ismap="ismap" />) pour
+        src="../../resources/icons/16x16/cancel.png" ismap="ismap" />) pour
         retirer l'attribut.</li>
     </ul>
   </li>
@@ -86,7 +86,7 @@ attribut :</p>
         saisie. La touche <kbd>Enter</kbd> confirme aussi la valeur
       saisie.</li>
       <li>Un bouton supprimer (<img alt="supprimer"
-        src="../../resources/icons/16x16/stop.png" />) pour supprimer
+        src="../../resources/icons/16x16/cancel.png" />) pour supprimer
         l'attribut.</li>
     </ul>
   </li>
@@ -101,7 +101,7 @@ attribut :</p>
     nom de l'attribut pour afficher le formulaire d'édition de la valeur
     courante.</li>
   <li>Cliquez sur le bouton supprimer (<img alt="supprimer"
-    src="../../resources/icons/16x16/stop.png" />) pour retirer
+    src="../../resources/icons/16x16/cancel.png" />) pour retirer
   l'attribut.</li>
 </ol>
 
