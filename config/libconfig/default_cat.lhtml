@@ -38,6 +38,12 @@
       <td class="commentaire" valign="middle"></td>
     </tr>
     <tr>
+      <td><a href="./amaya_logo.svg"><img class="image" src="./amaya_logo.png"
+        alt="A tamaya"/></a></td>
+      <td class="titre-graph" valign="middle">Logo of Amaya</td>
+      <td class="commentaire" valign="middle">A tamaya</td>
+    </tr>
+    <tr>
       <td><a href="./audio.svg"><img class="image" src="./audio.png"
         alt="audio" /></a></td>
       <td class="titre-graph" valign="middle">audio</td>

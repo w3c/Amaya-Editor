@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="250" height="150">
- <g id="Arrow1">
-  <polygon transform="translate(-50,-150)" points="202,150,270,201,202,252,202,221,61,221,61,180,202,180" />
- </g>
-  <desc>fleche de type 1</desc>
-  <text id="fle" x="100" y="125">Fleche de type 1</text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="150">
+ <g id="Arrow1">  <polygon transform="translate(-50,-150)" points="202,150,270,201,202,252,202,221,61,221,61,180,202,180" /> </g>
+  <desc>Arrow 1</desc>
+  <text id="fle" x="100" y="125" style="font-size:16pt">Arrow 1</text>
 </svg>
