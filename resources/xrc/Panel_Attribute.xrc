@@ -53,7 +53,7 @@
                           </object>
                           <object class="sizeritem">
                             <object class="wxPanel" name="wxID_PANEL_CONTENT_DETACH">
-                              <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
+                              <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
                               <object class="wxBoxSizer">
                                 <orient>wxVERTICAL</orient>
                                 <object class="sizeritem">
@@ -171,7 +171,7 @@
         <flag>wxEXPAND</flag>
       </object>
     </object>
-    <style>wxTAB_TRAVERSAL</style>
+    <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
   </object>
   <object class="wxPanel" name="wxID_SUBPANEL_ATTRIBUTE_ENUM">
     <object class="wxBoxSizer">

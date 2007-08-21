@@ -145,7 +145,7 @@
                                   <border>2</border>
                                 </object>
                               </object>
-                              <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
+                              <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
                             </object>
                             <option>1</option>
                             <flag>wxEXPAND</flag>

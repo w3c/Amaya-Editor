@@ -60,7 +60,6 @@
                                         <orient>wxVERTICAL</orient>
                                         <object class="sizeritem">
                                           <object class="wxNotebook" name="">
-                                            <usenotebooksizer>1</usenotebooksizer>
                                             <object class="notebookpage">
                                               <label>1</label>
                                               <object class="wxPanel" name="">
@@ -387,6 +386,7 @@
                                                     </object>
                                                   </object>
                                                 </object>
+                                                <style>wxNO_BORDER</style>
                                               </object>
                                               <selected>1</selected>
                                             </object>
@@ -710,6 +710,7 @@
                                                     </object>
                                                   </object>
                                                 </object>
+                                                <style>wxNO_BORDER</style>
                                               </object>
                                             </object>
                                             <object class="notebookpage">
@@ -1080,6 +1081,7 @@
                                                     </object>
                                                   </object>
                                                 </object>
+                                                <style>wxNO_BORDER</style>
                                               </object>
                                             </object>
                                             <object class="notebookpage">
@@ -1395,6 +1397,7 @@
                                                     </object>
                                                   </object>
                                                 </object>
+                                                <style>wxNO_BORDER</style>
                                               </object>
                                             </object>
                                             <object class="notebookpage">
@@ -1755,6 +1758,7 @@
                                                     </object>
                                                   </object>
                                                 </object>
+                                                <style>wxNO_BORDER</style>
                                               </object>
                                             </object>
                                             <object class="notebookpage">
@@ -1957,6 +1961,7 @@
                                                     </object>
                                                   </object>
                                                 </object>
+                                                <style>wxNO_BORDER</style>
                                                 <font>
                                                   <size>7</size>
                                                   <family>default</family>
@@ -1966,7 +1971,11 @@
                                                 </font>
                                               </object>
                                             </object>
+                                            <style>wxNO_BORDER</style>
                                           </object>
+                                          <option>1</option>
+                                          <flag>wxEXPAND</flag>
+                                          <minsize>194,200</minsize>
                                         </object>
                                       </object>
                                     </object>
@@ -1975,7 +1984,7 @@
                                   <border>1</border>
                                 </object>
                               </object>
-                              <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
+                              <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
                             </object>
                             <option>1</option>
                             <flag>wxEXPAND</flag>
@@ -1984,7 +1993,7 @@
                             <size>0,2</size>
                           </object>
                         </object>
-                        <style>wxTAB_TRAVERSAL</style>
+                        <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
                       </object>
                       <option>1</option>
                       <flag>wxEXPAND</flag>
