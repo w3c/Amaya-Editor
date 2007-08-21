@@ -3504,10 +3504,15 @@ void PasteXClipboard (unsigned char *src, int nbytes, CHARSET charset)
           if (b == 8 || b == 12 || b == 160)
             /* BS, FF, nbsp becomes a space */
             clipboard->BuContent[j++] = SPACE;
+          else if (b == __CR__)
+            {
+              clipboard->BuContent[j++] = EOL;
+            }
           else if (b == EOL)
             {
-              clipboard->BuContent[j++] = b;
-              /* should we generate a break-line ???? */
+              if (i > 0 && buffer[i-1] != __CR__)
+                clipboard->BuContent[j++] = b;
+                /* should we generate a break-line ???? */
             }
           else if (b >= 32)
             clipboard->BuContent[j++] = b;
