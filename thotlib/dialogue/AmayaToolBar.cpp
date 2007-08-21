@@ -3,6 +3,7 @@
 #include "wx/wx.h"
 #include "wx/string.h"
 #include "wx/xrc/xmlres.h"
+#include "wx/settings.h"
 
 // Thotlib includes
 #include "thot_gui.h"
@@ -60,7 +61,7 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
   if (WindowBColor == -1)
     {
       // Initialize the window background colour
-      wxColour col = m_pAmayaWindowParent->GetBackgroundColour();
+	  wxColour col = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
       WindowBColor = TtaGetThotColor (col.Red(), col.Green(), col.Blue());
     }
   /* set tooltips */
@@ -77,7 +78,7 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
   XRCCTRL(*this, "wxID_TOOL_CSS", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CSSStyle)));
   XRCCTRL(*this, "wxID_TOOL_LOGO", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetAppName())+_T(" ")+TtaConvMessageToWX(TtaGetAppVersion()));
 
-#ifdef _WINDOWS
+#ifdef _WINDOWS_26
   XRCCTRL(*this, "wxID_TOOL_BACK", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
   XRCCTRL(*this, "wxID_TOOL_FORWARD", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
   XRCCTRL(*this, "wxID_TOOL_RELOAD", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );

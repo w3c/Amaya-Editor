@@ -857,11 +857,10 @@ static void SaveElement (PtrElement pEl, PtrElement pParent, int doc,
   ----------------------------------------------------------------------*/
 void CopyCommand ()
 {
-  PtrElement          firstSel, lastSel, pEl, pCopy, pE, pElAttr, pSecond, row;
+  PtrElement          firstSel, lastSel, pEl, pCopy, pE, pSecond, row;
   PtrElement          enclosingCell;
   PtrPasteElem        pSave;
   PtrDocument         pSelDoc;
-  PtrAttribute        pAttrLang, pAttrHerit;
   int                 firstChar, lastChar, doc;
   ThotBool            fakeCell;
 
