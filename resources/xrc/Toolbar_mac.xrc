@@ -5,43 +5,38 @@
       <orient>wxHORIZONTAL</orient>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_BACK">
-          <bitmap>../icons/22x22/back.png</bitmap>
+          <bitmap>../icons/16x16/back.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_FORWARD">
-          <bitmap>../icons/22x22/forward.png</bitmap>
+          <bitmap>../icons/16x16/forward.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_RELOAD">
-          <bitmap>../icons/22x22/reload.png</bitmap>
+          <bitmap>../icons/16x16/reload.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_STOP">
-          <bitmap>../icons/22x22/stop.png</bitmap>
+          <bitmap>../icons/16x16/stop.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_HOME">
-          <bitmap>../icons/22x22/home.png</bitmap>
+          <bitmap>../icons/16x16/home.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxStaticLine">
@@ -51,35 +46,31 @@
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_NEW">
-          <bitmap>../icons/22x22/new.png</bitmap>
+          <bitmap>../icons/16x16/new.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_OPEN">
-          <bitmap>../icons/22x22/open.png</bitmap>
+          <bitmap>../icons/16x16/open.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_SAVE">
-          <bitmap>../icons/22x22/save.png</bitmap>
+          <bitmap>../icons/16x16/save.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_PRINT">
-          <bitmap>../icons/22x22/print.png</bitmap>
+          <bitmap>../icons/16x16/print.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxStaticLine">
@@ -89,19 +80,17 @@
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_FIND">
-          <bitmap>../icons/22x22/find.png</bitmap>
+          <bitmap>../icons/16x16/find.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_CSS">
-          <bitmap>../icons/22x22/colorize.png</bitmap>
+          <bitmap>../icons/16x16/css.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
         <object class="wxComboBox" name="wxID_TOOL_URL">
@@ -112,11 +101,10 @@
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_LOGO">
-          <bitmap>../icons/22x22/logo.png</bitmap>
+          <bitmap>../icons/16x16/logo.png</bitmap>
           <style>wxNO_BORDER</style>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
-        <border>2</border>
+        <flag>wxALIGN_CENTRE</flag>
       </object>
     </object>
   </object>
