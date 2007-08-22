@@ -5132,9 +5132,14 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
                                        char *cssRule, CSSInfoPtr css,
                                        ThotBool isHTML)
 {
+
+  char     *ptr;
+
+  ptr = cssRule;
   cssRule = ParseACSSBackgroundRepeat (element, tsch, ctxt,
                                        cssRule, css, isHTML);
-  if (cssRule)
+
+  if (ptr == cssRule)
     {
       cssRule = SkipValue ("Invalid background-repeat value", cssRule);
       /* check if it's an important rule */
