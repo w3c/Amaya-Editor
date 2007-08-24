@@ -58,7 +58,6 @@ END_EVENT_TABLE()
 AmayaToolPanelBar::AmayaToolPanelBar():
 wxPanel()
 {
-  delete new AmayaToolPanelHeader;
 }
 
 AmayaToolPanelBar::AmayaToolPanelBar(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
@@ -596,51 +595,5 @@ void AmayaToolPanel::SendDataToPanel( AmayaParams& p )
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaToolPanel::SendDataToPanel"));
 }
-
-//
-//
-// AmayaToolPanelHeader
-//
-//
-
-#include "wx/renderer.h"
-#include "wx/graphics.h"
-
-IMPLEMENT_DYNAMIC_CLASS(AmayaToolPanelHeader, wxPanel)
-BEGIN_EVENT_TABLE(AmayaToolPanelHeader, wxPanel)
-  EVT_PAINT(AmayaToolPanelHeader::OnPaint)
-END_EVENT_TABLE()
-
-AmayaToolPanelHeader::AmayaToolPanelHeader():
-wxPanel()
-{
-}
-
-AmayaToolPanelHeader::~AmayaToolPanelHeader()
-{
-}
-  
-bool AmayaToolPanelHeader::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
-            const wxSize& size, long style, const wxString& name)
-{
-  return wxPanel::Create(parent, id, pos, size, style, name);
-}
-
-void AmayaToolPanelHeader::OnPaint(wxPaintEvent& event)
-{
-#if wxUSE_GRAPHICS_CONTEXT
-  wxPaintDC dc(this);
-  wxRect r(0, 0, GetClientSize().x, GetClientSize().y);
-  wxGraphicsContext* gc = wxGraphicsContext::Create(dc);
-  
-  wxGraphicsBrush gbrush = gc->CreateLinearGradientBrush(0, r.height/2, r.width, r.height/2,
-      wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW),
-      wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWFRAME));
-  gc->SetBrush(gbrush);
-  gc->DrawRectangle(0, 0, r.width, r.height);
-  
-#endif /* wxUSE_GRAPHICS_CONTEXT */
-}
-
 
 #endif /* #ifdef _WX */

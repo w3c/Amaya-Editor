@@ -286,24 +286,6 @@ private:
   bool m_ShouldBeUpdated;
 };
 
-/**
- * Small panel class for tool panel header.
- */
-class AmayaToolPanelHeader : public wxPanel
-{
-  DECLARE_DYNAMIC_CLASS(AmayaToolPanelHeader)
-  DECLARE_EVENT_TABLE()
-public:
-  AmayaToolPanelHeader();
-  virtual ~AmayaToolPanelHeader();
-  
-  virtual bool Create(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, 
-            const wxSize& size = wxDefaultSize, long style = 0,
-            const wxString& name = wxT("AmayaToolPanelHeader"));
-private:
-  void OnPaint(wxPaintEvent& event);
-};
-
 #endif // __AMAYAPANEL_H__
 
 #endif /* #ifdef _WX */
