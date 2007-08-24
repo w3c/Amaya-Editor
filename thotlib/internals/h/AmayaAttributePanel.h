@@ -4,7 +4,7 @@
 #define __AMAYAATTRIBUTEPANEL_H__
 
 #include "wx/wx.h"
-#include "AmayaSubPanel.h"
+#include "AmayaPanel.h"
 #include "wx/listctrl.h"
 #include "wx/spinctrl.h"
 
@@ -22,25 +22,10 @@ typedef struct AttrListElem* PtrAttrListElem;
  *      Created:  13/09/2004 04:45:34 PM CET
  *     Revision:  none
 */
-
-class AmayaAttributePanel : public AmayaSubPanel
+class AmayaAttributeToolPanel : public AmayaToolPanel
 {
+  DECLARE_DYNAMIC_CLASS(AmayaAttributeToolPanel)
 public:
-  DECLARE_DYNAMIC_CLASS(AmayaAttributePanel)
-
-  /**
-   * Panel identificators.
-   */
-  typedef enum
-    {
-      wxATTR_TYPE_NONE = -1,
-      wxATTR_TYPE_ENUM = 0,
-      wxATTR_TYPE_TEXT,
-      wxATTR_TYPE_NUM,
-      wxATTR_TYPE_LANG,
-      wxATTR_TYPE_MAX
-    } wxATTR_TYPE;
-
   /**
    * Panel identificators.
    */
@@ -78,14 +63,18 @@ public:
       wxATTR_ACTION_SETUPNUM
     } wxATTR_ACTION;
 
+  AmayaAttributeToolPanel();
+  virtual ~AmayaAttributeToolPanel();
   
-  AmayaAttributePanel( wxWindow * p_parent_window = NULL
-             ,AmayaNormalWindow * p_parent_nwindow = NULL );
-  virtual ~AmayaAttributePanel();
+  virtual bool Create(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, 
+            const wxSize& size = wxDefaultSize, long style = 0,
+            const wxString& name = wxT("AmayaAttributeToolPanel"), wxObject* extra=NULL);
+  
+  virtual wxString GetToolPanelName()const;
+  virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_ATTRIBUTE;}
+  virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_ATTRIBUTE");}
 
-  virtual bool IsActive();
-  virtual int GetPanelType();
-
+  
   void ForceAttributeUpdate();
 
   void SelectAttribute( int position);
@@ -167,6 +156,8 @@ protected:
   
   int        m_disactiveCount; // 0 to activate panel (handle events)
 };
+
+
 
 /*
  * AmayaAttributeSubpanel
@@ -254,7 +245,7 @@ public:
   virtual wxWindow* GetEditionControl(){return m_pChoice;}  
 private:
   wxChoice* m_pChoice;
-  AmayaAttributePanel::wxATTR_INTTYPE m_type;
+  AmayaAttributeToolPanel::wxATTR_INTTYPE m_type;
 };
 
 

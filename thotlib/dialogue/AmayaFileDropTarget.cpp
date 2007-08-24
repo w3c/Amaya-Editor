@@ -45,9 +45,7 @@
 #include "AmayaToolBar.h"
 #include "AmayaNotebook.h"
 #include "AmayaPanel.h"
-#include "AmayaSubPanel.h"
 #include "AmayaXHTMLPanel.h"
-#include "AmayaSubPanelManager.h"
 
 #include "AmayaFileDropTarget.h"
 #include "AmayaFrame.h"

@@ -1,177 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxPanel" name="wxID_PANEL_ATTRIBUTE">
+  <object class="wxPanel" name="wxID_TOOLPANEL_ATTRIBUTE">
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
-        <object class="wxPanel" name="wxID_PANEL_TOP">
+        <object class="wxListCtrl" name="wxID_CLIST_ATTR">
+          <size>140,150</size>
+          <style>wxLC_REPORT|wxLC_ALIGN_LEFT|wxLC_SINGLE_SEL|wxRAISED_BORDER</style>
+          <focused>1</focused>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>2</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxPanel" name="wxID_PANEL_ATTRVALUE">
           <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
             <object class="sizeritem">
               <object class="wxBoxSizer">
-                <orient>wxVERTICAL</orient>
+                <orient>wxHORIZONTAL</orient>
                 <object class="sizeritem">
-                  <object class="wxPanel" name="wxID_PANEL_TITLE">
-                    <object class="wxBoxSizer">
-                      <orient>wxHORIZONTAL</orient>
-                      <object class="sizeritem">
-                        <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
-                          <bitmap>../icons/misc/expand_on.png</bitmap>
-                          <style platform="unix|win">wxNO_BORDER</style>
-                        </object>
-                        <flag>wxALIGN_CENTRE</flag>
-                      </object>
-                      <object class="sizeritem">
-                        <object class="wxStaticText" name="wxID_LABEL_TITLE">
-                          <label>*Attribute*</label>
-                          <style>wxALIGN_LEFT</style>
-                        </object>
-                        <option>1</option>
-                        <flag>wxALIGN_CENTRE</flag>
-                      </object>
-                      <object class="sizeritem">
-                        <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
-                          <bitmap>../icons/misc/detach.png</bitmap>
-                          <style platform="unix|win">wxNO_BORDER</style>
-                        </object>
-                        <flag>wxALIGN_CENTRE</flag>
-                      </object>
-                    </object>
-                    <style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
+                  <object class="wxBitmapButton" name="wxID_BUTTON_DEL_ATTR">
+                    <bitmap>../icons/16x16/cancel.png</bitmap>
+                    <style>wxBU_AUTODRAW</style>
+                    <tooltip>*Supprimer*</tooltip>
                   </object>
-                  <flag>wxEXPAND</flag>
+                  <flag>wxALIGN_CENTRE</flag>
                 </object>
                 <object class="sizeritem">
-                  <object class="wxBoxSizer">
-                    <orient>wxVERTICAL</orient>
-                    <object class="sizeritem">
-                      <object class="wxPanel" name="wxID_PANEL_CONTENT">
-                        <object class="wxBoxSizer">
-                          <orient>wxVERTICAL</orient>
-                          <object class="spacer">
-                            <size>0,5</size>
-                          </object>
-                          <object class="sizeritem">
-                            <object class="wxPanel" name="wxID_PANEL_CONTENT_DETACH">
-                              <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
-                              <object class="wxBoxSizer">
-                                <orient>wxVERTICAL</orient>
-                                <object class="sizeritem">
-                                  <object class="wxListCtrl" name="wxID_CLIST_ATTR">
-                                    <size>-1,150</size>
-                                    <style>wxLC_REPORT|wxLC_ALIGN_LEFT|wxLC_SINGLE_SEL</style>
-                                    <focused>1</focused>
-                                  </object>
-                                  <option>1</option>
-                                  <flag>wxALL|wxEXPAND</flag>
-                                  <border>2</border>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxPanel" name="wxID_PANEL_ATTRVALUE">
-                                    <object class="wxBoxSizer">
-                                      <orient>wxVERTICAL</orient>
-                                      <object class="sizeritem">
-                                        <object class="wxBoxSizer">
-                                          <orient>wxHORIZONTAL</orient>
-                                          <object class="sizeritem">
-                                            <object class="wxBitmapButton" name="wxID_BUTTON_DEL_ATTR">
-                                              <bitmap>../icons/16x16/cancel.png</bitmap>
-                                              <style>wxBU_AUTODRAW</style>
-                                              <tooltip>*Supprimer*</tooltip>
-                                            </object>
-                                            <flag>wxALIGN_CENTRE</flag>
-                                          </object>
-                                          <object class="sizeritem">
-                                            <object class="wxStaticLine">
-                                              <style>wxLI_VERTICAL</style>
-                                            </object>
-                                            <flag>wxALL|wxEXPAND</flag>
-                                            <border>4</border>
-                                          </object>
-                                          <object class="sizeritem">
-                                            <object class="wxPanel" name="wxID_PANEL_SUBPANELS">
-                                              <object class="wxBoxSizer">
-                                                <orient>wxHORIZONTAL</orient>
-                                              </object>
-                                            </object>
-                                            <option>1</option>
-                                            <flag>wxEXPAND</flag>
-                                          </object>
-                                        </object>
-                                        <flag>wxEXPAND</flag>
-                                      </object>
-                                      <object class="sizeritem">
-                                        <object class="wxPanel" name="wxID_PANEL_CHOOSE_NEW_ATTRIBUTE">
-                                          <object class="wxBoxSizer">
-                                            <orient>wxVERTICAL</orient>
-                                            <object class="sizeritem">
-                                              <object class="wxStaticLine"/>
-                                              <flag>wxALL|wxEXPAND</flag>
-                                              <border>4</border>
-                                            </object>
-                                            <object class="sizeritem">
-                                              <object class="wxBoxSizer">
-                                                <orient>wxHORIZONTAL</orient>
-                                                <object class="sizeritem">
-                                                  <object class="wxStaticText" name="wxID_ATTR_LABEL_NEW_ATTR">
-                                                    <label>*nouvel attribut :*</label>
-                                                  </object>
-                                                  <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
-                                                  <border>4</border>
-                                                </object>
-                                                <object class="sizeritem">
-                                                  <object class="wxChoice" name="wxID_CHOOSE_NEW_ATTRIBUTE">
-                                                    <content/>
-                                                    <style></style>
-                                                  </object>
-                                                  <option>1</option>
-                                                  <flag>wxEXPAND</flag>
-                                                </object>
-                                              </object>
-                                              <option>0</option>
-                                              <flag>wxEXPAND</flag>
-                                            </object>
-                                          </object>
-                                        </object>
-                                        <flag>wxALL|wxEXPAND</flag>
-                                        <border>2</border>
-                                      </object>
-                                    </object>
-                                    <style>wxTAB_TRAVERSAL</style>
-                                  </object>
-                                  <flag>wxALL|wxEXPAND</flag>
-                                  <border>2</border>
-                                </object>
-                              </object>
-                            </object>
-                            <option>1</option>
-                            <flag>wxEXPAND</flag>
-                          </object>
-                          <object class="spacer">
-                            <size>0,2</size>
-                          </object>
-                        </object>
-                        <style>wxTAB_TRAVERSAL</style>
-                      </object>
-                      <option>1</option>
-                      <flag>wxEXPAND</flag>
+                  <object class="wxStaticLine">
+                    <style>wxLI_VERTICAL</style>
+                  </object>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>4</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxPanel" name="wxID_PANEL_SUBPANELS">
+                    <object class="wxBoxSizer">
+                      <orient>wxHORIZONTAL</orient>
                     </object>
                   </object>
                   <option>1</option>
                   <flag>wxEXPAND</flag>
                 </object>
               </object>
-              <option>1</option>
+              <flag>wxEXPAND</flag>
+            </object>
+            <object class="sizeritem">
+              <object class="wxPanel" name="wxID_PANEL_CHOOSE_NEW_ATTRIBUTE">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxStaticLine"/>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>4</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                      <orient>wxHORIZONTAL</orient>
+                      <object class="sizeritem">
+                        <object class="wxStaticText" name="wxID_ATTR_LABEL_NEW_ATTR">
+                          <label>*nouvel attribut :*</label>
+                        </object>
+                        <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                        <border>4</border>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxChoice" name="wxID_CHOOSE_NEW_ATTRIBUTE">
+                          <content/>
+                          <style></style>
+                        </object>
+                        <option>1</option>
+                        <flag>wxEXPAND</flag>
+                      </object>
+                    </object>
+                    <option>0</option>
+                    <flag>wxEXPAND</flag>
+                  </object>
+                </object>
+              </object>
               <flag>wxALL|wxEXPAND</flag>
+              <border>2</border>
             </object>
           </object>
           <style>wxTAB_TRAVERSAL</style>
         </object>
-        <option>1</option>
-        <flag>wxEXPAND</flag>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>2</border>
       </object>
     </object>
-    <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
+    <size>140,-1</size>
+    <style>wxTAB_TRAVERSAL</style>
   </object>
   <object class="wxPanel" name="wxID_SUBPANEL_ATTRIBUTE_ENUM">
     <object class="wxBoxSizer">

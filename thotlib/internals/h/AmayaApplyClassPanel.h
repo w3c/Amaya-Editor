@@ -6,7 +6,7 @@
 #include "wx/wx.h"
 #include "wx/spinctrl.h"
 
-#include "AmayaSubPanel.h"
+#include "AmayaPanel.h"
 
 class AmayaNormalWindow;
 
@@ -16,34 +16,40 @@ class AmayaNormalWindow;
  *      Created:  13/09/2004 04:45:34 PM CET
  *     Revision:  none
  */
-class AmayaApplyClassPanel : public AmayaSubPanel
+
+class AmayaApplyClassToolPanel : public AmayaToolPanel
 {
- public:
-  DECLARE_DYNAMIC_CLASS(AmayaApplyClassPanel)
+  DECLARE_DYNAMIC_CLASS(AmayaApplyClassToolPanel)
+public:
+  AmayaApplyClassToolPanel();
+  virtual ~AmayaApplyClassToolPanel();
+  
+  virtual bool Create(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, 
+            const wxSize& size = wxDefaultSize, long style = 0,
+            const wxString& name = wxT("AmayaApplyClassToolPanel"), wxObject* extra=NULL);
+  
+  virtual wxString GetToolPanelName()const;
+  virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_APPLYCLASS;}
+  virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_APPLYCLASS");}
 
-  AmayaApplyClassPanel( wxWindow * p_parent_window = NULL
-			,AmayaNormalWindow * p_parent_nwindow = NULL );
-  virtual ~AmayaApplyClassPanel();
 
-  virtual bool IsActive();
-  virtual int GetPanelType();
-  virtual void RefreshToolTips();
+protected:
+ virtual void SendDataToPanel( AmayaParams& params );
+ virtual void DoUpdate();
+ void RefreshApplyClassPanel();
+  
+protected:
+ DECLARE_EVENT_TABLE()
+ void OnRefresh( wxCommandEvent& event );
+ void OnApply( wxCommandEvent& event );
+ void OnSelected( wxCommandEvent& event );
 
- protected:
-  virtual void SendDataToPanel( AmayaParams& params );
-  virtual void DoUpdate();
-  void RefreshApplyClassPanel();
-
- protected:
-  DECLARE_EVENT_TABLE()
-  void OnRefresh( wxCommandEvent& event );
-  void OnApply( wxCommandEvent& event );
-  void OnSelected( wxCommandEvent& event );
-
- protected:
-  wxListBox *    m_pClassList;
-  int m_ApplyClassRef;
+protected:
+ wxListBox *    m_pClassList;
+ int m_ApplyClassRef;
 };
+  
+  
 
 #endif // __AMAYAAPPLYCLASSPANEL_H__
 

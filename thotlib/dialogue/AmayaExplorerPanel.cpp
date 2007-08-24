@@ -30,131 +30,42 @@
 #include "frame_tv.h"
 #include "paneltypes_wx.h"
 
-#include "AmayaSubPanel.h"
+#include "AmayaPanel.h"
 #include "AmayaExplorerPanel.h"
 #include "AmayaNormalWindow.h"
-#include "AmayaFloatingPanel.h"
-#include "AmayaSubPanelManager.h"
 
 #include <wx/dirctrl.h>
 #include <wx/treectrl.h>
 
 void OpenNewDocFromArgv( char * url );
 
+//
+//
+// AmayaExplorerToolPanel
+//
+//
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaExplorerPanel, AmayaSubPanel)
+IMPLEMENT_DYNAMIC_CLASS(AmayaExplorerToolPanel, AmayaToolPanel)
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaExplorerPanel
- *      Method:  AmayaExplorerPanel
- * Description:  construct a panel (bookmarks, elements, attributes ...)
- *               TODO
-  -----------------------------------------------------------------------*/
-AmayaExplorerPanel::AmayaExplorerPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
-  : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_EXPLORER") )
-{
-  char    *s;
-  wxString path;
-
-  // setup labels
-  RefreshToolTips();
-  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_EXPLORE)));
-  
-  wxGenericDirCtrl* dirCtrl = XRCCTRL(*this, "wxID_DIRCTRL_EXPLORER", wxGenericDirCtrl);
-  
-  // Initial selection in the set of folders
-  s = TtaGetEnvString ("EXPLORER_PATH");
-  if (s)
-    path = TtaConvMessageToWX(s);
-  else
-    path = TtaGetHomeDir();
-  
-  dirCtrl->ExpandPath(path);
-  //dirCtrl->SetFilter(APPFILENAMEFILTER);
-  //dirCtrl->GetFilterListCtrl()->FillFilterList(APPFILENAMEFILTER, 0);
-  dirCtrl->DoResize();
-  
-  // register myself to the manager, so I will be avertised that another panel is floating ...
-  m_pManager->RegisterSubPanel( this );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaExplorerPanel
- *      Method:  ~AmayaExplorerPanel
- * Description:  destructor
- *               TODO
-  -----------------------------------------------------------------------*/
-AmayaExplorerPanel::~AmayaExplorerPanel()
-{
-  // unregister myself to the manager, so nothing should be asked to me in future
-  m_pManager->UnregisterSubPanel( this );  
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaExplorerPanel
- *      Method:  GetPanelType
- * Description:  
-  -----------------------------------------------------------------------*/
-int AmayaExplorerPanel::GetPanelType()
-{
-  return WXAMAYA_PANEL_EXPLORER;
-}
-
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaExplorerPanel
- *      Method:  SendDataToPanel
- * Description:  refresh the button widgets of the frame's panel
-  -----------------------------------------------------------------------*/
-void AmayaExplorerPanel::SendDataToPanel( AmayaParams& p )
+AmayaExplorerToolPanel::AmayaExplorerToolPanel():
+  AmayaToolPanel()
 {
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaExplorerPanel
- *      Method:  DoUpdate
- * Description:  force a refresh when the user expand or detach this panel
-  -----------------------------------------------------------------------*/
-void AmayaExplorerPanel::DoUpdate()
+AmayaExplorerToolPanel::~AmayaExplorerToolPanel()
 {
-  AmayaSubPanel::DoUpdate();
 }
 
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaExplorerPanel
- *      Method:  IsActive
- * Description:  
-  -----------------------------------------------------------------------*/
-bool AmayaExplorerPanel::IsActive()
+bool AmayaExplorerToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+          const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
-  return AmayaSubPanel::IsActive();
+  return wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_EXPLORER"));
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaExplorerPanel
- *      Method:  IsActive
- * Description:  
-  -----------------------------------------------------------------------*/
-void AmayaExplorerPanel::OnDirTreeItemActivate(wxTreeEvent& event)
+wxString AmayaExplorerToolPanel::GetToolPanelName()const
 {
-  wxGenericDirCtrl* dirCtrl = XRCCTRL(*this, "wxID_DIRCTRL_EXPLORER", wxGenericDirCtrl);
-  if(!dirCtrl->GetFilePath().IsEmpty())
-  {
-    char buffer[MAX_TXT_LEN];
-    strcpy(buffer, dirCtrl->GetFilePath().mb_str(wxConvUTF8));
-    TtaSetEnvString ("EXPLORER_PATH", buffer, TRUE);
-    OpenNewDocFromArgv(buffer);
-  }
+  return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_EXPLORE));
 }
 
-
-/*----------------------------------------------------------------------
- *  this is where the event table is declared
- *  the callbacks are assigned to an event type
- *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaExplorerPanel, AmayaSubPanel)
-  EVT_TREE_ITEM_ACTIVATED( wxID_ANY, AmayaExplorerPanel::OnDirTreeItemActivate)
-END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

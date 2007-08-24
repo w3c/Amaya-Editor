@@ -58,10 +58,8 @@
 #include "AmayaStatusBar.h"
 #include "AmayaNotebook.h"
 #include "AmayaPanel.h"
-#include "AmayaSubPanel.h"
 #include "AmayaExplorerPanel.h"
 #include "AmayaXHTMLPanel.h"
-#include "AmayaSubPanelManager.h"
 #include "AmayaStatsThread.h"
 #include "AmayaQuickSplitButton.h"
 
@@ -220,20 +218,18 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   WindowTable[window_id].FrHeight = p_window->GetSize().GetHeight();
   WindowTable[window_id].WdStatus = p_window->GetAmayaStatusBar();
 
+  /* do not create menus for a simple window */
+  if (kind != WXAMAYAWINDOW_SIMPLE)
+    TtaMakeWindowMenuBar( window_id );
+  
+  /* need to show the window now because if it's done later,
+     the opengl canvas can't be correctly realized */
+  TtaShowWindow( window_id, TRUE );
+
   // setup window panel
-  AmayaPanel * p_panel = p_window->GetAmayaPanel();
+  AmayaToolPanelBar * p_panel = p_window->GetToolPanelBar();
   if (p_panel)
     {
-      /* init default panel states */
-      TtaSetEnvBoolean("OPEN_PANEL", TRUE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_EXPLORER", TRUE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_XHTML", TRUE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", TRUE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_XML", FALSE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_MATHML", FALSE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", FALSE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", TRUE, FALSE);
-      
       /* open or close panels */
       if (kind == WXAMAYAWINDOW_NORMAL)
         TtaGetEnvBoolean ("OPEN_PANEL", &value);
@@ -243,52 +239,8 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
         p_window->OpenPanel();
       else
         p_window->ClosePanel();
-      TtaGetEnvBoolean ("OPEN_PANEL_EXPLORER", &value);
-      if (value)
-        p_panel->OpenSubPanel( WXAMAYA_PANEL_EXPLORER );
-      else
-        p_panel->CloseSubPanel( WXAMAYA_PANEL_EXPLORER );
-        
-      TtaGetEnvBoolean ("OPEN_PANEL_XHTML", &value);
-      if (value)
-        p_panel->OpenSubPanel( WXAMAYA_PANEL_XHTML );
-      else
-        p_panel->CloseSubPanel( WXAMAYA_PANEL_XHTML );
-      TtaGetEnvBoolean ("OPEN_PANEL_ATTRIBUTE", &value);
-      if (value)
-        p_panel->OpenSubPanel( WXAMAYA_PANEL_ATTRIBUTE );
-      else
-        p_panel->CloseSubPanel( WXAMAYA_PANEL_ATTRIBUTE );
-      TtaGetEnvBoolean ("OPEN_PANEL_XML", &value);
-      if (value)
-        p_panel->OpenSubPanel( WXAMAYA_PANEL_XML );
-      else
-        p_panel->CloseSubPanel( WXAMAYA_PANEL_XML );
-      TtaGetEnvBoolean ("OPEN_PANEL_MATHML", &value);
-      if (value)
-        p_panel->OpenSubPanel( WXAMAYA_PANEL_MATHML );
-      else
-        p_panel->CloseSubPanel( WXAMAYA_PANEL_MATHML );
-      TtaGetEnvBoolean ("OPEN_PANEL_APPLYCLASS", &value);
-      if (value)
-        p_panel->OpenSubPanel( WXAMAYA_PANEL_APPLYCLASS );
-      else
-        p_panel->CloseSubPanel( WXAMAYA_PANEL_APPLYCLASS );
-      TtaGetEnvBoolean ("OPEN_PANEL_SPECHAR", &value);
-      if (value)
-        p_panel->OpenSubPanel( WXAMAYA_PANEL_SPECHAR );
-      else
-        p_panel->CloseSubPanel( WXAMAYA_PANEL_SPECHAR );
     }
   
-  /* do not create menus for a simple window */
-  if (kind != WXAMAYAWINDOW_SIMPLE)
-    TtaMakeWindowMenuBar( window_id );
-  
-  /* need to show the window now because if it's done later,
-     the opengl canvas can't be correctly realized */
-  TtaShowWindow( window_id, TRUE );
-
   return window_id;
 #else
   return 0;
@@ -1732,30 +1684,29 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
           if ( !p_window )
             return;
           /* get the window's panel */
-          AmayaPanel * p_panel = p_window->GetAmayaPanel();
+          AmayaToolPanelBar * bar = p_window->GetToolPanelBar();
           /* it is possible to have no panel, for example with
              AmayaSimpleWindow (ShowAppliedStyle) */
-          if ( !p_panel )
+          if ( !bar )
             return;
           
           /* get the subpanel depending on panel_type */
-          AmayaSubPanel * p_subpanel = NULL;
+          AmayaToolPanel * toolpanel = NULL;
           bool * p_checked_array = NULL;
           switch (panel_type)
             {
             case WXAMAYA_PANEL_XHTML:
-              p_subpanel      = p_panel->GetXHTMLPanel();
+              toolpanel      = bar->GetToolPanel(WXAMAYA_PANEL_XHTML);
               p_checked_array = FrameTable[frame_id].CheckedButton_Panel_XHTML;
               break;
             }
-          wxASSERT( p_subpanel );
-          if (!p_subpanel)
+          if (!toolpanel)
             return;
           
           /* refresh the subpanel with button stats */
           AmayaParams p;
           p.param2 = (void*)p_checked_array;
-          AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_subpanel->GetPanelType(), p );
+          toolpanel->SendDataToPanel(p);
         }
     }
 #endif /* _WX */
@@ -2067,7 +2018,20 @@ void TtaRegisterOpenURLCallback( void (*callback) (void *) )
 #ifdef _WX
 void TtaSendDataToPanel( int panel_type, AmayaParams& params )
 {
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( panel_type, params );
+  AmayaWindow * activeWindow = TtaGetActiveWindow();
+  AmayaToolPanelBar* bar;
+  if(activeWindow)
+    {
+      bar = activeWindow->GetToolPanelBar();
+      if(bar)
+        {
+          AmayaToolPanel* panel = bar->GetToolPanel(panel_type);
+          if(panel)
+            {
+              panel->SendDataToPanel(params);
+            }
+        }
+    }
 }
 #endif /* _WX */
 

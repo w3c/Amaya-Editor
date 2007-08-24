@@ -6,7 +6,7 @@
 #include "wx/wx.h"
 #include "wx/spinctrl.h"
 
-#include "AmayaSubPanel.h"
+#include "AmayaPanel.h"
 
 class AmayaNormalWindow;
 
@@ -16,35 +16,36 @@ class AmayaNormalWindow;
  *      Created:  8 December 14:47:04 CET 2004
  *     Revision:  none
  */
-class AmayaXMLPanel : public AmayaSubPanel
+class AmayaXMLToolPanel : public AmayaToolPanel
 {
- public:
-  DECLARE_DYNAMIC_CLASS(AmayaXMLPanel)
+  DECLARE_DYNAMIC_CLASS(AmayaXMLToolPanel)
+public:
+  AmayaXMLToolPanel();
+  virtual ~AmayaXMLToolPanel();
+  
+  virtual bool Create(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, 
+            const wxSize& size = wxDefaultSize, long style = 0,
+            const wxString& name = wxT("AmayaXMLToolPanel"), wxObject* extra=NULL);
+  
+  virtual wxString GetToolPanelName()const;
+  virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_XML;}
+  virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_XML");}
 
-  AmayaXMLPanel( wxWindow * p_parent_window = NULL
-			,AmayaNormalWindow * p_parent_nwindow = NULL );
-  virtual ~AmayaXMLPanel();
 
-  virtual bool IsActive();
-  virtual int GetPanelType();
-  virtual void RefreshToolTips();
+protected:
+ virtual void SendDataToPanel( AmayaParams& params );
+ void RefreshXMLPanel();
 
- protected:
-  virtual void SendDataToPanel( AmayaParams& params );
-  virtual void DoUpdate();
-  void RefreshXMLPanel();
+ DECLARE_EVENT_TABLE()
+ void OnRefresh( wxCommandEvent& event );
+ void OnApply( wxCommandEvent& event );
+ void OnSelected( wxCommandEvent& event );
 
- protected:
-  DECLARE_EVENT_TABLE()
-  void OnRefresh( wxCommandEvent& event );
-  void OnApply( wxCommandEvent& event );
-  void OnSelected( wxCommandEvent& event );
-
- protected:
-  wxListBox *    m_pXMLList;
-  int m_XMLRef;
-  void* m_fnCallback;
+ wxListBox *    m_pXMLList;
+ int m_XMLRef;
+ void* m_fnCallback;
 };
+
 
 #endif // __AMAYAXMLPANEL_H__
 

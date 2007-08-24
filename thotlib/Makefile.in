@@ -206,9 +206,6 @@ EDITOR_OBJ = \
 	dialogue/AmayaQuickSplitButton.o \
 	dialogue/AmayaPanel.o \
 	dialogue/AmayaPopupList.o \
-	dialogue/AmayaSubPanel.o \
-	dialogue/AmayaSubPanelManager.o \
-	dialogue/AmayaFloatingPanel.o \
 	dialogue/AmayaApplyClassPanel.o \
 	dialogue/AmayaXHTMLPanel.o \
 	dialogue/AmayaExplorerPanel.o \

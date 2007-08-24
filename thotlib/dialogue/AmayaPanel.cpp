@@ -23,14 +23,14 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 
+#include "registry_wx.h"
 #include "message_wx.h"
 #include "appdialogue_wx.h"
 #include "appdialogue_wx_f.h"
 
 
 #include "AmayaPanel.h"
-#include "AmayaSubPanel.h"
-#include "AmayaSubPanelManager.h"
+
 #include "AmayaAttributePanel.h"
 #include "AmayaApplyClassPanel.h"
 #include "AmayaMathMLPanel.h"
@@ -40,176 +40,608 @@
 #include "AmayaSpeCharPanel.h"
 #include "AmayaNormalWindow.h"
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaPanel, wxPanel)
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  AmayaPanel
- * Description:  construct a panel (bookmarks, elements, attributes ...)
- *               TODO
-  -----------------------------------------------------------------------*/
-AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
-			,AmayaNormalWindow * p_parent_nwindow
-			,wxWindowID     id
-			,const wxPoint& pos
-			,const wxSize&  size
-			,long style
-			)
-  :  wxPanel(/* wxDynamicCast( p_parent_window, wxWindow ),
-                id, pos, size, style*/ )
-     ,m_pParentNWindow(p_parent_nwindow)
+//
+//
+// AmayaToolPanelBar
+//
+//
+
+IMPLEMENT_DYNAMIC_CLASS(AmayaToolPanelBar, wxPanel)
+
+BEGIN_EVENT_TABLE(AmayaToolPanelBar, wxPanel)
+  EVT_BUTTON(XRCID("wxID_BUTTON_CLOSE"), AmayaToolPanelBar::OnClose)
+END_EVENT_TABLE()
+
+
+AmayaToolPanelBar::AmayaToolPanelBar():
+wxPanel()
 {
-  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaPanel::AmayaPanel") );
+  new AmayaToolPanelHeader;
+}
 
-  // init the panel list
-  memset( m_aPanelList, 0, WXAMAYA_PANEL_TYPE_NB * sizeof(AmayaSubPanel *));
+AmayaToolPanelBar::AmayaToolPanelBar(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+    const wxSize& size, long style, const wxString& name):
+wxPanel()
+{
+  Create(parent, id, pos, size, style, name);
+}
 
-  // load resource
-  wxXmlResource::Get()->LoadPanel(this, p_parent_window, _T("wxID_PANEL"));
-  // get reference of usefull child
-  m_pScrolledWindow = XRCCTRL(*this, "wxID_PANEL_SWIN", wxScrolledWindow);
-  m_pScrolledWindow->SetScrollRate( 5, 5 );
+AmayaToolPanelBar::~AmayaToolPanelBar()
+{
+  SaveConfig();
+}
 
-  // load static sub-panels
-  m_aPanelList[WXAMAYA_PANEL_EXPLORER]   = new AmayaExplorerPanel(     m_pScrolledWindow, p_parent_nwindow );
-  m_aPanelList[WXAMAYA_PANEL_XHTML]      = new AmayaXHTMLPanel(     m_pScrolledWindow, p_parent_nwindow );
-  m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE]  = new AmayaAttributePanel( m_pScrolledWindow, p_parent_nwindow );
-  m_aPanelList[WXAMAYA_PANEL_APPLYCLASS] = new AmayaApplyClassPanel( m_pScrolledWindow, p_parent_nwindow );
-  m_aPanelList[WXAMAYA_PANEL_MATHML]     = new AmayaMathMLPanel( m_pScrolledWindow, p_parent_nwindow );
-  m_aPanelList[WXAMAYA_PANEL_SPECHAR]    = new AmayaSpeCharPanel( m_pScrolledWindow, p_parent_nwindow );
-  m_aPanelList[WXAMAYA_PANEL_XML]        = new AmayaXMLPanel( m_pScrolledWindow, p_parent_nwindow );
-
-  wxBoxSizer * p_PanelSizer = new wxBoxSizer ( wxVERTICAL );
-  m_pScrolledWindow->SetSizer(p_PanelSizer);
-  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_EXPLORER],   0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_XHTML],      0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE],  0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_APPLYCLASS], 0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_MATHML],     0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_SPECHAR],    0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_XML],        0, wxBOTTOM | wxEXPAND, 5 );
+bool AmayaToolPanelBar::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+    const wxSize& size, long style, const wxString& name)
+{
+  if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_PANEL")))
+    return false;
   
-  // setup labels
   XRCCTRL(*this, "wxID_LABEL_TOOLS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_TOOLS)));
   XRCCTRL(*this, "wxID_BUTTON_CLOSE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
+  
+  // To remove to show bar title.
+  wxSizer* sz = GetSizer();
+  if(sz)
+    {
+      sz->Show((size_t)0, false);
+      sz->Show((size_t)1, false);
+    }
+  
+  Initialize();
 
-  Layout();
-  SetAutoLayout(TRUE);
+  return true;
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  ~AmayaPanel
- * Description:  destructor
- *               TODO
-  -----------------------------------------------------------------------*/
-AmayaPanel::~AmayaPanel()
+void AmayaToolPanelBar::OnClose( wxCommandEvent& event )
+{
+  Hide();
+  if(GetParent())
+    GetParent()->Layout();
+}
+
+
+void AmayaToolPanelBar::Initialize()
+{
+  AddPanel(new AmayaXHTMLToolPanel);
+  AddPanel(new AmayaExplorerToolPanel);
+  AddPanel(new AmayaAttributeToolPanel);
+  AddPanel(new AmayaApplyClassToolPanel);
+  AddPanel(new AmayaMathMLToolPanel);
+  AddPanel(new AmayaXMLToolPanel);
+  AddPanel(new AmayaSpeCharToolPanel);
+
+  /* init default panel states */
+  TtaSetEnvBoolean("OPEN_PANEL", TRUE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL_EXPLORER", TRUE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL_XHTML", TRUE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", TRUE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL_XML", FALSE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL_MATHML", FALSE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", FALSE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", TRUE, FALSE);
+
+  
+  wxSizer* sz = NULL;
+  m_scwin = XRCCTRL(*this, "wxID_PANEL_SWIN", wxScrolledWindow);
+  if(m_scwin)
+    sz = m_scwin->GetSizer();
+  if(sz)
+    {
+      // Create panels.
+      for(std::list<AmayaToolPanelBarListItem>::iterator iter = m_panels.begin();
+            iter!=m_panels.end(); iter++)
+        {
+          AmayaToolPanelBarListItem& item = *iter;
+          item.panel = wxDynamicCast(item.ci->CreateObject(), AmayaToolPanel);
+          item.panel->Create(m_scwin, wxID_ANY);
+          item.panel->SetBar(this);
+          item.dock = new AmayaDockedToolPanelContainer(item.panel, this, m_scwin, wxID_ANY);
+          sz->Add(item.dock, 0, wxEXPAND|wxBOTTOM, 0);
+        }
+      LoadConfig();
+      sz->Layout();
+    }
+}
+
+void AmayaToolPanelBar::LoadConfig()
+{
+  // Show or hide panel using env
+  for(std::list<AmayaToolPanelBarListItem>::iterator iter = m_panels.begin();
+        iter!=m_panels.end(); iter++)
+    {
+      AmayaToolPanelBarListItem& item = *iter;
+      if(item.panel)
+        {
+          ThotBool value;
+          TtaGetEnvBoolean((char*)(const char*)
+              item.panel->GetToolPanelConfigKeyName().mb_str(wxConvUTF8),
+              &value);
+          MinimizePanel(item.panel, !value);
+        }
+    }
+}
+
+void AmayaToolPanelBar::SaveConfig()
+{
+  for(std::list<AmayaToolPanelBarListItem>::iterator iter = m_panels.begin();
+        iter!=m_panels.end(); iter++)
+    {
+      AmayaToolPanelBarListItem& item = *iter;
+      if(item.panel)
+        {
+          ThotBool value = IsExpanded(item.panel);
+          TtaSetEnvBoolean((char*)(const char*)
+              item.panel->GetToolPanelConfigKeyName().mb_str(wxConvUTF8),
+              value, TRUE);
+        }
+    }  
+  TtaSaveAppRegistry();
+}
+
+
+void AmayaToolPanelBar::AddPanel(AmayaToolPanel* panel)
+{
+  AmayaToolPanelBarListItem item;
+  item.ci        = panel->GetClassInfo();
+  item.panel     = panel;
+  item.dock      = NULL;
+  item.floa      = NULL;
+  item.shown     = true;
+  item.floating  = false;
+  item.minimized = false;
+  m_panels.push_back(item);
+}
+
+
+void AmayaToolPanelBar::ShowHeader(bool bShow)
+{
+  wxSizer* sz = GetSizer();
+  if(sz)
+    {
+      sz->Show((size_t)0, bShow);
+    }
+}
+
+
+const AmayaToolPanelBar::AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)const
+{
+  for(std::list<AmayaToolPanelBarListItem>::const_iterator iter = m_panels.begin();
+        iter!=m_panels.end(); iter++)
+    {
+      if((*iter).panel==panel)
+        {
+          return &(*iter);
+        }
+    }
+  return NULL;
+}
+
+AmayaToolPanelBar::AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)
+{
+  for(std::list<AmayaToolPanelBarListItem>::iterator iter = m_panels.begin();
+        iter!=m_panels.end(); iter++)
+    {
+      if((*iter).panel==panel)
+        {
+          return &(*iter);
+        }
+    }
+  return NULL;
+}
+
+void AmayaToolPanelBar::ShowPanel(AmayaToolPanel* panel, bool bShow)
+{
+  AmayaToolPanelBarListItem* item = FindItem(panel);
+  if(item && item->shown!=bShow)
+    {
+      item->shown = bShow;
+      if(m_scwin)
+        m_scwin->GetSizer()->Show(item->dock, bShow);
+      if(item->floa)
+        item->floa->Show(bShow);
+    }
+}
+
+void AmayaToolPanelBar::MinimizePanel(AmayaToolPanel* panel, bool bMin)
+{
+  AmayaToolPanelBarListItem* item = FindItem(panel);
+  if(item && item->minimized!=bMin && !item->floating && item->dock)
+    {
+      if(item->dock->Minimize(bMin))
+        item->minimized = bMin;
+    }
+}
+
+void AmayaToolPanelBar::ToggleMinimize(AmayaToolPanel* panel)
+{
+  AmayaToolPanelBarListItem* item = FindItem(panel);
+  if(item)
+      MinimizePanel(panel, !item->minimized);
+}
+
+
+void AmayaToolPanelBar::FloatPanel(AmayaToolPanel* panel, bool bFloat)
+{
+  AmayaToolPanelBarListItem* item = FindItem(panel);
+  if(item && item->floating!=bFloat && item->dock)
+    {
+      item->floating = bFloat;
+      if(bFloat)
+        {
+          item->dock->Detach();
+          if(item->floa==NULL)
+              item->floa = new AmayaFloatingToolPanelContainer(panel, this,
+                    this, wxID_ANY);
+          item->floa->Attach();
+          item->floa->Show();
+        }
+      else
+        {
+          if(item->floa!=NULL)
+            {
+              item->floa->Detach();
+              item->floa->Destroy();
+              item->floa = NULL;
+            }
+          item->dock->Attach();
+        }
+    }
+}
+
+void AmayaToolPanelBar::ToggleFloat(AmayaToolPanel* panel)
+{
+  AmayaToolPanelBarListItem* item = FindItem(panel);
+  if(item)
+    FloatPanel(panel, !item->floating);  
+}
+
+bool AmayaToolPanelBar::IsMinimized(const AmayaToolPanel* panel)const
+{
+  const AmayaToolPanelBarListItem* item = FindItem(panel);
+  if(item)
+    return item->minimized;
+  return false;
+}
+
+bool AmayaToolPanelBar::IsExpanded(const AmayaToolPanel* panel)const
+{
+  const AmayaToolPanelBarListItem* item = FindItem(panel);
+  if(item)
+    return !item->minimized;
+  return false;  
+}
+
+bool AmayaToolPanelBar::IsFloating(const AmayaToolPanel* panel)const
+{
+  const AmayaToolPanelBarListItem* item = FindItem(panel);
+  if(item)
+    return item->floating;
+  return false;
+}
+
+bool AmayaToolPanelBar::IsShown(const AmayaToolPanel* panel)const
+{
+  const AmayaToolPanelBarListItem* item = FindItem(panel);
+  if(item)
+    return item->shown;
+  return false;  
+}
+
+
+AmayaToolPanel* AmayaToolPanelBar::GetToolPanel(int type)
+{
+  for(std::list<AmayaToolPanelBarListItem>::const_iterator iter = m_panels.begin();
+        iter!=m_panels.end(); iter++)
+    {
+      if((*iter).panel->GetToolPanelType()==type)
+        {
+          return (*iter).panel;
+        }
+    }
+  return NULL;
+}
+
+void AmayaToolPanelBar::OpenToolPanel( int panel_type, bool bOpen)
+{
+  AmayaToolPanel* panel = GetToolPanel(panel_type);
+  if(panel)
+    MinimizePanel(panel, !bOpen);
+}
+
+
+//
+//
+// AmayaDockedToolPanelContainer
+//
+//
+
+wxBitmap AmayaDockedToolPanelContainer::s_Bitmap_DetachOn;
+wxBitmap AmayaDockedToolPanelContainer::s_Bitmap_DetachOff;
+wxBitmap AmayaDockedToolPanelContainer::s_Bitmap_ExpandOn;
+wxBitmap AmayaDockedToolPanelContainer::s_Bitmap_ExpandOff;
+bool AmayaDockedToolPanelContainer::s_bmpOk = false;
+
+BEGIN_EVENT_TABLE(AmayaDockedToolPanelContainer, wxPanel)
+  EVT_BUTTON( XRCID("wxID_BUTTON_EXPAND"), AmayaDockedToolPanelContainer::OnMinimize) 
+  EVT_BUTTON( XRCID("wxID_BUTTON_DETACH"), AmayaDockedToolPanelContainer::OnDetach)
+  
+  EVT_UPDATE_UI(XRCID("wxID_BUTTON_EXPAND"), AmayaDockedToolPanelContainer::OnUpdateMinimizeUI)
+END_EVENT_TABLE()
+
+AmayaDockedToolPanelContainer::AmayaDockedToolPanelContainer(
+    AmayaToolPanel* panel, AmayaToolPanelBar* bar, 
+    wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+    const wxSize& size, long style):
+wxPanel(),
+AmayaToolPanelContainer(panel, bar),
+m_bMinimized(false),
+m_bDetached(false)
+{
+  if(!s_bmpOk)
+    {
+      s_Bitmap_DetachOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "detach_floating.png" ), wxBITMAP_TYPE_PNG);
+      s_Bitmap_DetachOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "detach.png" ), wxBITMAP_TYPE_PNG);
+      s_Bitmap_ExpandOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "expand_on.png" ), wxBITMAP_TYPE_PNG);
+      s_Bitmap_ExpandOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "expand_off.png" ), wxBITMAP_TYPE_PNG);
+      s_bmpOk = true;
+    }
+  
+  wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, 
+                                        wxT("wxID_DOCKED_TOOL_PANEL_CONTAINER"));
+  
+  Attach();
+  XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->SetLabel(panel->GetToolPanelName());
+}
+
+AmayaDockedToolPanelContainer::~AmayaDockedToolPanelContainer()
+{
+}
+
+
+bool AmayaDockedToolPanelContainer::Minimize(bool bMinimize)
+{
+  wxSizer* sz = GetSizer();
+  if(sz->GetItem(1))
+    {
+      m_bMinimized = bMinimize;
+      sz->Show((size_t)1, !bMinimize);
+      if(bMinimize)
+        {
+          XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_ExpandOff );
+        }
+      else
+        {
+          XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_ExpandOn );
+        }
+      GetParent()->Layout();
+      return true;
+    }
+  else
+    {
+      return false;
+    }
+}
+
+bool AmayaDockedToolPanelContainer::Detach()
+{
+  wxSizer* sz = GetSizer();
+  if(sz)
+    {
+      m_bDetached = true;
+      XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetBitmapLabel( s_Bitmap_DetachOn );
+      if(!sz->Detach(GetPanel()))
+        return false;
+      GetParent()->Layout();
+      return true;
+    }  
+  return false;
+}
+
+bool AmayaDockedToolPanelContainer::Attach()
+{
+  GetPanel()->Reparent(this);
+  wxSizer* sz = GetSizer();
+  if(sz)
+    {
+      m_bDetached = false;
+      XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetBitmapLabel( s_Bitmap_DetachOff );
+      sz->Add(GetPanel(), 1, wxEXPAND);
+      sz->Layout();
+      GetParent()->Layout();
+      return true;
+    }
+  return false;
+}
+
+void AmayaDockedToolPanelContainer::OnMinimize(wxCommandEvent& event)
+{
+  if(GetBar())
+    GetBar()->ToggleMinimize(GetPanel());
+}
+
+void AmayaDockedToolPanelContainer::OnUpdateMinimizeUI(wxUpdateUIEvent& event)
+{
+  event.Enable(!m_bDetached);
+}
+
+void AmayaDockedToolPanelContainer::OnDetach(wxCommandEvent& event)
+{
+  if(GetBar())
+    GetBar()->ToggleFloat(GetPanel());  
+}
+
+
+//
+//
+// AmayaFloatingToolPanelContainer
+//
+//
+BEGIN_EVENT_TABLE(AmayaFloatingToolPanelContainer, wxDialog)
+  EVT_CLOSE( AmayaFloatingToolPanelContainer::OnClose )
+END_EVENT_TABLE()
+
+AmayaFloatingToolPanelContainer::AmayaFloatingToolPanelContainer(
+    AmayaToolPanel* panel, AmayaToolPanelBar* bar, 
+    wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+    const wxSize& size, long style):
+wxDialog(parent, id, wxT(""), pos, size, style),
+AmayaToolPanelContainer(panel, bar)
+{
+  wxSizer* sz = new wxBoxSizer(wxVERTICAL);
+  SetSizerAndFit(sz);
+  SetTitle(panel->GetToolPanelName());
+}
+
+AmayaFloatingToolPanelContainer::~AmayaFloatingToolPanelContainer()
+{
+}
+
+void AmayaFloatingToolPanelContainer::OnClose( wxCloseEvent& event )
+{
+  GetBar()->DockPanel(GetPanel());
+  event.Skip();
+}
+
+bool AmayaFloatingToolPanelContainer::Detach()
+{
+  wxSizer* sz = GetSizer();
+  if(sz)
+    {
+      return sz->Detach(GetPanel());
+    }
+  return false;
+}
+
+bool AmayaFloatingToolPanelContainer::Attach()
+{
+  GetPanel()->Reparent(this);
+  wxSizer* sz = GetSizer();
+  if(sz)
+    {
+      sz->Add(GetPanel(), 0, wxEXPAND);
+      sz->Layout();
+      Fit();
+      return true;
+    }
+  return false;
+}
+
+
+//
+//
+// AmayaToolPanel
+//
+//
+
+IMPLEMENT_ABSTRACT_CLASS(AmayaToolPanel, wxPanel)
+
+BEGIN_EVENT_TABLE(AmayaToolPanel, wxPanel)
+END_EVENT_TABLE()
+
+
+AmayaToolPanel::AmayaToolPanel():
+  wxPanel(),
+  m_bar(NULL),
+  m_ShouldBeUpdated(false)
 {
   
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  HideWhenUnsplit
- * Description:  must hide the panel & his childs
-  -----------------------------------------------------------------------*/
-void AmayaPanel::ShowWhenUnsplit( bool show )
+AmayaToolPanel::~AmayaToolPanel()
 {
-  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaPanel::ShowWhenUnsplit"));
-  if (!show)
+}
+
+int AmayaToolPanel::GetToolPanelType()const
+{
+  return WXAMAYA_PANEL_UNKNOWN;
+}
+
+wxString AmayaToolPanel::GetToolPanelConfigKeyName()const
+{
+  return wxT("OPEN_PANEL");
+}
+
+
+bool AmayaToolPanel::IsExpanded()
+{
+  return GetBar()->IsExpanded(this);  
+}
+
+bool AmayaToolPanel::IsFloating()
+{
+  return GetBar()->IsFloating(this);
+}
+
+bool AmayaToolPanel::IsVisible()
+{
+  return GetBar()->IsShown(this);
+}
+
+void AmayaToolPanel::ShouldBeUpdated( bool should_update )
+{
+  m_ShouldBeUpdated = should_update;
+}
+
+void AmayaToolPanel::DoUpdate()
+{
+  if (m_ShouldBeUpdated)
     {
-      Hide();
-   }
-  else
-    {
-      Show();
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaToolPanel::DoUpdate"));
+      m_ShouldBeUpdated = false;
     }
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  OnClose
- * Description:  this method is called when the button for quick split is pushed
-  -----------------------------------------------------------------------*/
-void AmayaPanel::OnClose( wxCommandEvent& event )
+void AmayaToolPanel::SendDataToPanel( AmayaParams& p )
 {
-  if ( event.GetId() != XRCCTRL(*this, "wxID_BUTTON_CLOSE", wxBitmapButton)->GetId() )
-    {
-      event.Skip();
-      return;
-    }
-  m_pParentNWindow->ClosePanel();  
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaToolPanel::SendDataToPanel"));
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  GetXHTMLPanel
- * Description:  
-  -----------------------------------------------------------------------*/
-AmayaXHTMLPanel * AmayaPanel::GetXHTMLPanel() const
-{
-  return (AmayaXHTMLPanel *)m_aPanelList[WXAMAYA_PANEL_XHTML];
-}
+//
+//
+// AmayaToolPanelHeader
+//
+//
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  GetAttributePanel
- * Description:  
-  -----------------------------------------------------------------------*/
-AmayaAttributePanel * AmayaPanel::GetAttributePanel() const
-{
-  return (AmayaAttributePanel *)m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE];
-}
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  GetApplyClassPanel
- * Description:  
-  -----------------------------------------------------------------------*/
-AmayaApplyClassPanel * AmayaPanel::GetApplyClassPanel() const
-{
-  return (AmayaApplyClassPanel *)m_aPanelList[WXAMAYA_PANEL_APPLYCLASS];
-}
+#include "wx/renderer.h"
+#include "wx/graphics.h"
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  RefreshToolTips
- * Description:  reassign the tooltips values
-  -----------------------------------------------------------------------*/
-void AmayaPanel::RefreshToolTips()
-{
-  m_aPanelList[WXAMAYA_PANEL_XHTML]->RefreshToolTips();
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  OpenSubPanel
- * Description:  expand the subpanel
-  -----------------------------------------------------------------------*/
-void AmayaPanel::OpenSubPanel( int panel_type )
-{
-  if (panel_type >= WXAMAYA_PANEL_TYPE_NB || panel_type < 0 || m_aPanelList[panel_type] == NULL )
-    return;
-  AmayaSubPanelManager::GetInstance()->Expand( m_aPanelList[panel_type] );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  CloseSubPanel
- * Description:  unexpand the subpanel
-  -----------------------------------------------------------------------*/
-void AmayaPanel::CloseSubPanel( int panel_type )
-{
-  if (panel_type >= WXAMAYA_PANEL_TYPE_NB || panel_type < 0 || m_aPanelList[panel_type] == NULL )
-    return;  
-  AmayaSubPanelManager::GetInstance()->UnExpand( m_aPanelList[panel_type] );
-}
-
-/*----------------------------------------------------------------------
- *  this is where the event table is declared
- *  the callbacks are assigned to an event type
- *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaPanel, wxPanel)
-  EVT_BUTTON( -1, AmayaPanel::OnClose)
+IMPLEMENT_DYNAMIC_CLASS(AmayaToolPanelHeader, wxPanel)
+BEGIN_EVENT_TABLE(AmayaToolPanelHeader, wxPanel)
+  EVT_PAINT(AmayaToolPanelHeader::OnPaint)
 END_EVENT_TABLE()
+
+AmayaToolPanelHeader::AmayaToolPanelHeader():
+wxPanel()
+{
+}
+
+AmayaToolPanelHeader::~AmayaToolPanelHeader()
+{
+}
+  
+bool AmayaToolPanelHeader::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+            const wxSize& size, long style, const wxString& name)
+{
+  return wxPanel::Create(parent, id, pos, size, style, name);
+}
+
+void AmayaToolPanelHeader::OnPaint(wxPaintEvent& event)
+{
+#if wxUSE_GRAPHICS_CONTEXT
+  wxPaintDC dc(this);
+  wxRect r(0, 0, GetClientSize().x, GetClientSize().y);
+  wxGraphicsContext* gc = wxGraphicsContext::Create(dc);
+  
+  wxGraphicsBrush gbrush = gc->CreateLinearGradientBrush(0, r.height/2, r.width, r.height/2,
+      wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW),
+      wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWFRAME));
+  gc->SetBrush(gbrush);
+  gc->DrawRectangle(0, 0, r.width, r.height);
+  
+#endif /* wxUSE_GRAPHICS_CONTEXT */
+}
+
 
 #endif /* #ifdef _WX */

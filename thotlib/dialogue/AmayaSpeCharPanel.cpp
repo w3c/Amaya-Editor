@@ -29,74 +29,51 @@
 
 #include "AmayaSpeCharPanel.h"
 #include "AmayaNormalWindow.h"
-#include "AmayaFloatingPanel.h"
-#include "AmayaSubPanelManager.h"
 #include "displayview_f.h"
 #include "mathml_filtres.h"
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaSpeCharPanel, AmayaSubPanel)
 
-  typedef struct _XmlEntity
-  {
-    char         *charName;      
-    int           charCode;      
-  } XmlEntity;
+//
+//
+// AmayaSpeCharToolPanel
+//
+//
 
-MathMLEntityHash AmayaSpeCharPanel::m_MathMLEntityHash;
-int * AmayaSpeCharPanel::m_pActiveFiltre = NULL;
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaSpeCharPanel
- *      Method:  AmayaSpeCharPanel
- * Description:  construct a panel (bookmarks, elements, attributes ...)
- -----------------------------------------------------------------------*/
-AmayaSpeCharPanel::AmayaSpeCharPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
-  : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_SPECHAR") )
+typedef struct _XmlEntity
 {
-  // setup labels
-  RefreshToolTips();
-  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SPECHAR)));
+  char         *charName;      
+  int           charCode;      
+} XmlEntity;
 
+
+MathMLEntityHash AmayaSpeCharToolPanel::m_MathMLEntityHash;
+int * AmayaSpeCharToolPanel::m_pActiveFiltre = NULL;
+
+
+IMPLEMENT_DYNAMIC_CLASS(AmayaSpeCharToolPanel, AmayaToolPanel)
+
+AmayaSpeCharToolPanel::AmayaSpeCharToolPanel():
+  AmayaToolPanel()
+{
+}
+
+AmayaSpeCharToolPanel::~AmayaSpeCharToolPanel()
+{
+}
+
+bool AmayaSpeCharToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+          const wxSize& size, long style, const wxString& name, wxObject* extra)
+{
+  if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_SPECHAR")))
+    return false;
+  
   m_pList = XRCCTRL(*this,"wxID_PANEL_MATH_LIST",wxComboBox);
 
   m_OffColour = XRCCTRL(*this, "wxID_PANEL_MATH_F1", wxBitmapButton)->GetBackgroundColour();
   m_OnColour  = wxColour(250, 200, 200);
 
   RefreshButtonState();
-
-  // register myself to the manager, so I will be avertised that another panel is floating ...
-  m_pManager->RegisterSubPanel( this );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaSpeCharPanel
- *      Method:  ~AmayaSpeCharPanel
- * Description:  destructor
- *               TODO
- -----------------------------------------------------------------------*/
-AmayaSpeCharPanel::~AmayaSpeCharPanel()
-{
-  // unregister myself to the manager, so nothing should be asked to me in future
-  m_pManager->UnregisterSubPanel( this );  
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaSpeCharPanel
- *      Method:  GetPanelType
- * Description:  
- -----------------------------------------------------------------------*/
-int AmayaSpeCharPanel::GetPanelType()
-{
-  return WXAMAYA_PANEL_SPECHAR;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaSpeCharPanel
- *      Method:  RefreshToolTips
- * Description:  reassign the tooltips values
- -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::RefreshToolTips()
-{  
+  
   XRCCTRL(*this,"wxID_PANEL_MATH_INSERT",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_INSERT)));
   
   XRCCTRL(*this,"wxID_PANEL_MATH_F1",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_GREEK_ALPHABET)));
@@ -107,24 +84,29 @@ void AmayaSpeCharPanel::RefreshToolTips()
   XRCCTRL(*this,"wxID_PANEL_MATH_F6",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BINARY_REL_NEG)));
   XRCCTRL(*this,"wxID_PANEL_MATH_F7",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_MISC)));
   XRCCTRL(*this,"wxID_PANEL_MATH_F8",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ARROW)));
-
-  // TODO
-  //XRCCTRL(*this,"wxID_PANEL_MATH_F8",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CUSTOM)));
+  
+  return true;
 }
+
+wxString AmayaSpeCharToolPanel::GetToolPanelName()const
+{
+  return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SPECHAR));
+}
+
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  OnButtonFiltre1
  * Description:  this method is called when the user click on a tool
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::OnButtonFiltre1( wxCommandEvent& event )
+void AmayaSpeCharToolPanel::OnButtonFiltre1( wxCommandEvent& event )
 {
   m_pActiveFiltre = filtre_greek;
   DoFilter( filtre_greek );
 
   AmayaParams p;
-  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
+  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
+  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
 /*----------------------------------------------------------------------
@@ -132,14 +114,14 @@ void AmayaSpeCharPanel::OnButtonFiltre1( wxCommandEvent& event )
  *      Method:  OnButtonFiltre2
  * Description:  this method is called when the user click on a tool
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::OnButtonFiltre2( wxCommandEvent& event )
+void AmayaSpeCharToolPanel::OnButtonFiltre2( wxCommandEvent& event )
 {
   m_pActiveFiltre = filtre_greek_maj;
   DoFilter( filtre_greek_maj );
 
   AmayaParams p;
-  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
+  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
+  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
 /*----------------------------------------------------------------------
@@ -147,14 +129,14 @@ void AmayaSpeCharPanel::OnButtonFiltre2( wxCommandEvent& event )
  *      Method:  OnButtonFiltre3
  * Description:  this method is called when the user click on a tool
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::OnButtonFiltre3( wxCommandEvent& event )
+void AmayaSpeCharToolPanel::OnButtonFiltre3( wxCommandEvent& event )
 {
   m_pActiveFiltre = filtre_maths;
   DoFilter( filtre_maths );
 
   AmayaParams p;
-  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
+  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
+  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
 /*----------------------------------------------------------------------
@@ -162,14 +144,14 @@ void AmayaSpeCharPanel::OnButtonFiltre3( wxCommandEvent& event )
  *      Method:  OnButtonFiltre4
  * Description:  this method is called when the user click on a tool
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::OnButtonFiltre4( wxCommandEvent& event )
+void AmayaSpeCharToolPanel::OnButtonFiltre4( wxCommandEvent& event )
 {
   m_pActiveFiltre = filtre_operateurs;
   DoFilter( filtre_operateurs );
 
   AmayaParams p;
-  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
+  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
+  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
 /*----------------------------------------------------------------------
@@ -177,14 +159,14 @@ void AmayaSpeCharPanel::OnButtonFiltre4( wxCommandEvent& event )
  *      Method:  OnButtonFiltre5
  * Description:  this method is called when the user click on a tool
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::OnButtonFiltre5( wxCommandEvent& event )
+void AmayaSpeCharToolPanel::OnButtonFiltre5( wxCommandEvent& event )
 {
   m_pActiveFiltre = filtre_relations_binaires;
   DoFilter( filtre_relations_binaires );
 
   AmayaParams p;
-  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
+  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
+  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
 /*----------------------------------------------------------------------
@@ -192,14 +174,14 @@ void AmayaSpeCharPanel::OnButtonFiltre5( wxCommandEvent& event )
  *      Method:  OnButtonFiltre6
  * Description:  this method is called when the user click on a tool
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::OnButtonFiltre6( wxCommandEvent& event )
+void AmayaSpeCharToolPanel::OnButtonFiltre6( wxCommandEvent& event )
 {
   m_pActiveFiltre = filtre_relations_binaires_negation;
   DoFilter( filtre_relations_binaires_negation );
 
   AmayaParams p;
-  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
+  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
+  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
 /*----------------------------------------------------------------------
@@ -207,14 +189,14 @@ void AmayaSpeCharPanel::OnButtonFiltre6( wxCommandEvent& event )
  *      Method:  OnButtonFiltre7
  * Description:  this method is called when the user click on a tool
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::OnButtonFiltre7( wxCommandEvent& event )
+void AmayaSpeCharToolPanel::OnButtonFiltre7( wxCommandEvent& event )
 {
   m_pActiveFiltre = filtre_divers;
   DoFilter( filtre_divers );
   
   AmayaParams p;
-  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
+  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
+  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
 /*----------------------------------------------------------------------
@@ -222,14 +204,14 @@ void AmayaSpeCharPanel::OnButtonFiltre7( wxCommandEvent& event )
  *      Method:  OnButtonFiltre8
  * Description:  this method is called when the user click on a tool
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::OnButtonFiltre8( wxCommandEvent& event )
+void AmayaSpeCharToolPanel::OnButtonFiltre8( wxCommandEvent& event )
 {
   m_pActiveFiltre = filtre_fleches;
   DoFilter( filtre_fleches );
   
   AmayaParams p;
-  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
+  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
+  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
 /*----------------------------------------------------------------------
@@ -237,7 +219,7 @@ void AmayaSpeCharPanel::OnButtonFiltre8( wxCommandEvent& event )
  *      Method:  DoFilter
  * Description:  this method is called to refresh the entity list with a given filter
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::DoFilter( int * filtre )
+void AmayaSpeCharToolPanel::DoFilter( int * filtre )
 {
   if (!filtre)
     return;
@@ -263,7 +245,7 @@ void AmayaSpeCharPanel::DoFilter( int * filtre )
  *      Method:  RefreshButtonState
  * Description:  this method is called to refresh the button colors
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::RefreshButtonState()
+void AmayaSpeCharToolPanel::RefreshButtonState()
 {
   if (m_pActiveFiltre == filtre_greek)
     XRCCTRL(*this, "wxID_PANEL_MATH_F1", wxBitmapButton)->SetBackgroundColour( m_OnColour );
@@ -305,7 +287,7 @@ void AmayaSpeCharPanel::RefreshButtonState()
  *      Method:  OnButtonInsert
  * Description:  this method is called wants to insert a char
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::OnButtonInsert( wxCommandEvent& event )
+void AmayaSpeCharToolPanel::OnButtonInsert( wxCommandEvent& event )
 {
   Document doc;
   int      view;
@@ -322,11 +304,11 @@ void AmayaSpeCharPanel::OnButtonInsert( wxCommandEvent& event )
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaSpeCharPanel
+ *       Class:  AmayaSpeCharToolPanel
  *      Method:  SendDataToPanel
  * Description:  refresh the button widgets of the frame's panel
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::SendDataToPanel( AmayaParams& p )
+void AmayaSpeCharToolPanel::SendDataToPanel( AmayaParams& p )
 {
   int action = (int)p.param1;
   if (action == wxSPECHAR_ACTION_INIT)
@@ -357,41 +339,32 @@ void AmayaSpeCharPanel::SendDataToPanel( AmayaParams& p )
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaSpeCharPanel
+ *       Class:  AmayaSpeCharToolPanel
  *      Method:  DoUpdate
  * Description:  force a refresh when the user expand or detach this panel
  -----------------------------------------------------------------------*/
-void AmayaSpeCharPanel::DoUpdate()
+void AmayaSpeCharToolPanel::DoUpdate()
 {
-  AmayaSubPanel::DoUpdate();
+  AmayaToolPanel::DoUpdate();
   DoFilter( m_pActiveFiltre );
 }
 
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaSpeCharPanel
- *      Method:  IsActive
- * Description:  
- -----------------------------------------------------------------------*/
-bool AmayaSpeCharPanel::IsActive()
-{
-  return AmayaSubPanel::IsActive();
-}
-
-/*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaSpeCharPanel, AmayaSubPanel)
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F1"), AmayaSpeCharPanel::OnButtonFiltre1 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F2"), AmayaSpeCharPanel::OnButtonFiltre2 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F3"), AmayaSpeCharPanel::OnButtonFiltre3 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F4"), AmayaSpeCharPanel::OnButtonFiltre4 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F5"), AmayaSpeCharPanel::OnButtonFiltre5 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F6"), AmayaSpeCharPanel::OnButtonFiltre6 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F7"), AmayaSpeCharPanel::OnButtonFiltre7 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F8"), AmayaSpeCharPanel::OnButtonFiltre8 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_INSERT"), AmayaSpeCharPanel::OnButtonInsert ) 
-  END_EVENT_TABLE()
+BEGIN_EVENT_TABLE(AmayaSpeCharToolPanel, AmayaToolPanel)
+  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F1"), AmayaSpeCharToolPanel::OnButtonFiltre1 )
+  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F2"), AmayaSpeCharToolPanel::OnButtonFiltre2 )
+  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F3"), AmayaSpeCharToolPanel::OnButtonFiltre3 )
+  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F4"), AmayaSpeCharToolPanel::OnButtonFiltre4 )
+  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F5"), AmayaSpeCharToolPanel::OnButtonFiltre5 )
+  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F6"), AmayaSpeCharToolPanel::OnButtonFiltre6 )
+  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F7"), AmayaSpeCharToolPanel::OnButtonFiltre7 )
+  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F8"), AmayaSpeCharToolPanel::OnButtonFiltre8 )
+  EVT_BUTTON( XRCID("wxID_PANEL_MATH_INSERT"), AmayaSpeCharToolPanel::OnButtonInsert ) 
+END_EVENT_TABLE()
+
 
 #endif /* #ifdef _WX */

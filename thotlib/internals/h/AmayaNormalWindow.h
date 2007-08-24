@@ -86,13 +86,12 @@ class AmayaNormalWindow : public AmayaWindow
   virtual void     AppendURL ( const wxString & new_url );
   virtual void     EmptyURLBar();
 
-  AmayaPanel * GetAmayaPanel() const;
+  AmayaToolPanelBar * GetToolPanelBar() const;
+  
   bool IsPanelOpened();
   void ClosePanel();
   void OpenPanel();
   virtual void RefreshShowPanelToggleMenu();
-
-//  virtual void DoClose( bool & veto );
 
  protected:
   DECLARE_EVENT_TABLE()
@@ -112,7 +111,9 @@ class AmayaNormalWindow : public AmayaWindow
 
   void OnClose(wxCloseEvent& event);
 
-  AmayaPanel *      m_pPanel;     // current selected panel
+  AmayaToolPanelBar *      m_pPanel;     // current selected panel
+  
+  
   AmayaNotebook *   m_pNotebook;         // tabs container
   wxPanel *         m_pNotebookPanel;
   int               m_SlashPos;          // the slash pos in pixel

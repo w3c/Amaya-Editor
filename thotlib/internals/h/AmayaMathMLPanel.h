@@ -4,7 +4,7 @@
 #define __AMAYAMATHMLPANEL_H__
 
 #include "wx/wx.h"
-#include "AmayaSubPanel.h"
+#include "AmayaPanel.h"
 
 class AmayaNormalWindow;
 
@@ -14,35 +14,37 @@ class AmayaNormalWindow;
  *      Created:  13/09/2004 04:45:34 PM CET
  *     Revision:  none
  */
-class AmayaMathMLPanel : public AmayaSubPanel
+class AmayaMathMLToolPanel : public AmayaToolPanel
 {
- public:
+  DECLARE_DYNAMIC_CLASS(AmayaMathMLToolPanel)
+public:
   typedef enum
     {
       wxMATHML_ACTION_UNKNOWN,
       wxMATHML_ACTION_INIT,
       wxMATHML_ACTION_REFRESH,
     } wxMATHML_ACTION;
+
   
- public:
-  DECLARE_DYNAMIC_CLASS(AmayaMathMLPanel)
+  AmayaMathMLToolPanel();
+  virtual ~AmayaMathMLToolPanel();
+  
+  virtual bool Create(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, 
+            const wxSize& size = wxDefaultSize, long style = 0,
+            const wxString& name = wxT("AmayaMathMLToolPanel"), wxObject* extra=NULL);
+  
+  virtual wxString GetToolPanelName()const;
+  virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_MATHML;}
+  virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_MATHML");}
 
-  AmayaMathMLPanel( wxWindow * p_parent_window = NULL
-		   ,AmayaNormalWindow * p_parent_nwindow = NULL );
-  virtual ~AmayaMathMLPanel();
+protected:
+ virtual void SendDataToPanel( AmayaParams& params );
 
-  virtual bool IsActive();
-  virtual int GetPanelType();
-  void RefreshToolTips();
-
- protected:
-  virtual void SendDataToPanel( AmayaParams& params );
-  virtual void DoUpdate();
-
- protected:
-  DECLARE_EVENT_TABLE()
-  void OnButton( wxCommandEvent& event );
+protected:
+ DECLARE_EVENT_TABLE()
+ void OnButton( wxCommandEvent& event );  
 };
+
 
 #endif // __AMAYAMATHMLPANEL_H__
 

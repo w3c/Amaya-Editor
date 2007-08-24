@@ -1,179 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxPanel" name="wxID_PANEL_SPECHAR">
+  <object class="wxPanel" name="wxID_TOOLPANEL_SPECHAR">
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
-        <object class="wxPanel" name="wxID_PANEL_TOP">
-          <object class="wxBoxSizer">
-            <orient>wxVERTICAL</orient>
-            <object class="sizeritem">
-              <object class="wxBoxSizer">
-                <orient>wxVERTICAL</orient>
-                <object class="sizeritem">
-                  <object class="wxPanel" name="wxID_PANEL_TITLE">
-                    <object class="wxBoxSizer">
-                      <orient>wxHORIZONTAL</orient>
-                      <object class="sizeritem">
-                        <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
-                          <bitmap>../icons/misc/expand_on.png</bitmap>
-                          <style platform="unix|win">wxNO_BORDER</style>
-                        </object>
-                        <flag>wxALIGN_CENTRE</flag>
-                      </object>
-                      <object class="sizeritem">
-                        <object class="wxStaticText" name="wxID_LABEL_TITLE">
-                          <label>*Special characters*</label>
-                          <style>wxALIGN_LEFT</style>
-                        </object>
-                        <option>1</option>
-                        <flag>wxALIGN_CENTRE</flag>
-                      </object>
-                      <object class="sizeritem">
-                        <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
-                          <bitmap>../icons/misc/detach.png</bitmap>
-                          <style platform="unix|win">wxNO_BORDER</style>
-                        </object>
-                        <flag>wxALIGN_CENTRE</flag>
-                      </object>
-                    </object>
-                    <style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
-                  </object>
-                  <flag>wxEXPAND</flag>
-                </object>
-                <object class="sizeritem">
-                  <object class="wxBoxSizer">
-                    <orient>wxVERTICAL</orient>
-                    <object class="sizeritem">
-                      <object class="wxPanel" name="wxID_PANEL_CONTENT">
-                        <object class="wxBoxSizer">
-                          <orient>wxVERTICAL</orient>
-                          <object class="spacer">
-                            <size>0,5</size>
-                          </object>
-                          <object class="sizeritem">
-                            <object class="wxPanel" name="wxID_PANEL_CONTENT_DETACH">
-                              <object class="wxBoxSizer">
-                                <orient>wxVERTICAL</orient>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxVERTICAL</orient>
-                                    <object class="sizeritem">
-                                      <object class="wxBoxSizer">
-                                        <orient>wxHORIZONTAL</orient>
-                                        <object class="sizeritem">
-                                          <object class="wxBitmapButton" name="wxID_PANEL_MATH_F1">
-                                            <bitmap>../icons/16x16/MATHML_F_greek.png</bitmap>
-                                            <size>24,-1</size>
-                                            <tooltip>*Filtre1*</tooltip>
-                                          </object>
-                                        </object>
-                                        <object class="sizeritem">
-                                          <object class="wxBitmapButton" name="wxID_PANEL_MATH_F2">
-                                            <bitmap>../icons/16x16/MATHML_F_greek_maj.png</bitmap>
-                                            <size>24,-1</size>
-                                            <tooltip>*Filtre2*</tooltip>
-                                          </object>
-                                        </object>
-                                        <object class="sizeritem">
-                                          <object class="wxBitmapButton" name="wxID_PANEL_MATH_F3">
-                                            <bitmap>../icons/16x16/MATHML_F_maths.png</bitmap>
-                                            <size>24,-1</size>
-                                            <tooltip>*Filtre3*</tooltip>
-                                          </object>
-                                        </object>
-                                        <object class="sizeritem">
-                                          <object class="wxBitmapButton" name="wxID_PANEL_MATH_F4">
-                                            <bitmap>../icons/16x16/MATHML_F_operateurs.png</bitmap>
-                                            <size>24,-1</size>
-                                            <tooltip>*Filtre4*</tooltip>
-                                          </object>
-                                        </object>
-                                        <object class="sizeritem">
-                                          <object class="wxBitmapButton" name="wxID_PANEL_MATH_F5">
-                                            <bitmap>../icons/16x16/MATHML_F_relations_binaires.png</bitmap>
-                                            <size>24,-1</size>
-                                            <tooltip>*Filtre5*</tooltip>
-                                          </object>
-                                        </object>
-                                        <object class="sizeritem">
-                                          <object class="wxBitmapButton" name="wxID_PANEL_MATH_F6">
-                                            <bitmap>../icons/16x16/MATHML_F_relations_negation.png</bitmap>
-                                            <size>24,-1</size>
-                                            <tooltip>*Filtre6*</tooltip>
-                                          </object>
-                                        </object>
-                                        <object class="sizeritem">
-                                          <object class="wxBitmapButton" name="wxID_PANEL_MATH_F7">
-                                            <bitmap>../icons/16x16/MATHML_F_divers.png</bitmap>
-                                            <size>24,-1</size>
-                                            <tooltip>*Filtre7*</tooltip>
-                                          </object>
-                                        </object>
-                                        <object class="sizeritem">
-                                          <object class="wxBitmapButton" name="wxID_PANEL_MATH_F8">
-                                            <bitmap>../icons/16x16/MATHML_F_fleches.png</bitmap>
-                                            <size>24,-1</size>
-                                            <tooltip>*Filtre7*</tooltip>
-                                          </object>
-                                        </object>
-                                      </object>
-                                    </object>
-                                  </object>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
-                                    <object class="sizeritem">
-                                      <object class="wxComboBox" name="wxID_PANEL_MATH_LIST">
-                                        <content/>
-                                        <size>80,-1</size>
-                                        <style>wxCB_READONLY</style>
-                                      </object>
-                                      <option>1</option>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_INSERT">
-                                        <bitmap>../icons/16x16/MATHML_insert.png</bitmap>
-                                        <tooltip>*Insert*</tooltip>
-                                      </object>
-                                      <flag>wxLEFT</flag>
-                                      <border>2</border>
-                                    </object>
-                                  </object>
-                                  <flag>wxALL|wxEXPAND</flag>
-                                  <border>2</border>
-                                </object>
-                              </object>
-                              <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
-                            </object>
-                            <option>1</option>
-                            <flag>wxEXPAND</flag>
-                          </object>
-                          <object class="spacer">
-                            <size>0,2</size>
-                          </object>
-                        </object>
-                        <style>wxTAB_TRAVERSAL</style>
-                      </object>
-                      <option>1</option>
-                      <flag>wxEXPAND</flag>
-                    </object>
-                  </object>
-                  <option>1</option>
-                  <flag>wxEXPAND</flag>
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_PANEL_MATH_F1">
+                  <bitmap>../icons/16x16/MATHML_F_greek.png</bitmap>
+                  <size>24,-1</size>
+                  <tooltip>*Filtre1*</tooltip>
                 </object>
               </object>
-              <option>1</option>
-              <flag>wxALL|wxEXPAND</flag>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_PANEL_MATH_F2">
+                  <bitmap>../icons/16x16/MATHML_F_greek_maj.png</bitmap>
+                  <size>24,-1</size>
+                  <tooltip>*Filtre2*</tooltip>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_PANEL_MATH_F3">
+                  <bitmap>../icons/16x16/MATHML_F_maths.png</bitmap>
+                  <size>24,-1</size>
+                  <tooltip>*Filtre3*</tooltip>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_PANEL_MATH_F4">
+                  <bitmap>../icons/16x16/MATHML_F_operateurs.png</bitmap>
+                  <size>24,-1</size>
+                  <tooltip>*Filtre4*</tooltip>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_PANEL_MATH_F5">
+                  <bitmap>../icons/16x16/MATHML_F_relations_binaires.png</bitmap>
+                  <size>24,-1</size>
+                  <tooltip>*Filtre5*</tooltip>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_PANEL_MATH_F6">
+                  <bitmap>../icons/16x16/MATHML_F_relations_negation.png</bitmap>
+                  <size>24,-1</size>
+                  <tooltip>*Filtre6*</tooltip>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_PANEL_MATH_F7">
+                  <bitmap>../icons/16x16/MATHML_F_divers.png</bitmap>
+                  <size>24,-1</size>
+                  <tooltip>*Filtre7*</tooltip>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_PANEL_MATH_F8">
+                  <bitmap>../icons/16x16/MATHML_F_fleches.png</bitmap>
+                  <size>24,-1</size>
+                  <tooltip>*Filtre7*</tooltip>
+                </object>
+              </object>
             </object>
           </object>
-          <style>wxTAB_TRAVERSAL</style>
         </object>
-        <option>1</option>
-        <flag>wxEXPAND</flag>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxComboBox" name="wxID_PANEL_MATH_LIST">
+              <content/>
+              <size>80,-1</size>
+              <style>wxCB_READONLY</style>
+            </object>
+            <option>1</option>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_PANEL_MATH_INSERT">
+              <bitmap>../icons/16x16/MATHML_insert.png</bitmap>
+              <tooltip>*Insert*</tooltip>
+            </object>
+            <flag>wxLEFT</flag>
+            <border>2</border>
+          </object>
+        </object>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>2</border>
       </object>
     </object>
-    <style>wxTAB_TRAVERSAL</style>
+    <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
   </object>
 </resource>

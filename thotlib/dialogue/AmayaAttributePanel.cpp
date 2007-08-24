@@ -42,14 +42,17 @@
 #include "AmayaAttributePanel.h"
 #include "AmayaNormalWindow.h"
 #include "AmayaFrame.h"
-#include "AmayaFloatingPanel.h"
-#include "AmayaSubPanelManager.h"
 
 #define COLOR_MANDATORY   wxColour(128, 0, 0)
 #define COLOR_READONLY    wxColour(64, 64, 64)
 #define COLOR_NEW         wxColour(0, 128, 0)
 
-wxString AmayaAttributePanel::s_subpanelClassNames[wxATTR_PANEID_MAX]=
+//
+//
+// AmayaAttributeToolPanel
+//
+//
+wxString AmayaAttributeToolPanel::s_subpanelClassNames[wxATTR_PANEID_MAX]=
 {
   wxT("AmayaEnumAttributeSubpanel"),      // wxATTR_PANEID_ENUM
   wxT("AmayaStringAttributeSubpanel"),    // wxATTR_PANEID_TEXT
@@ -57,7 +60,7 @@ wxString AmayaAttributePanel::s_subpanelClassNames[wxATTR_PANEID_MAX]=
   wxT("AmayaLangAttributeSubpanel")       // wxATTR_PANEID_LANG
 };
 
-AmayaAttributePanel::wxATTR_PANEID AmayaAttributePanel::s_subpanelAssoc[restr_content_max][wxATTR_INTTYPE_MAX] = 
+AmayaAttributeToolPanel::wxATTR_PANEID AmayaAttributeToolPanel::s_subpanelAssoc[restr_content_max][wxATTR_INTTYPE_MAX] = 
 {
   // wxATTR_INTTYPE_NUM  wxATTR_INTTYPE_TEXT wxATTR_INTTYPE_REF  wxATTR_INTTYPE_ENUM wxATTR_INTTYPE_LANG
     {wxATTR_PANEID_NUM,  wxATTR_PANEID_TEXT, wxATTR_PANEID_NONE, wxATTR_PANEID_ENUM, wxATTR_PANEID_LANG}, // restr_content_no_restr
@@ -67,29 +70,34 @@ AmayaAttributePanel::wxATTR_PANEID AmayaAttributePanel::s_subpanelAssoc[restr_co
     {wxATTR_PANEID_NONE, wxATTR_PANEID_LANG, wxATTR_PANEID_NONE, wxATTR_PANEID_LANG, wxATTR_PANEID_LANG}  // restr_content_lang
 };
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
+IMPLEMENT_DYNAMIC_CLASS(AmayaAttributeToolPanel, AmayaToolPanel)
 
-  /*----------------------------------------------------------------------
-   *       Class:  AmayaAttributePanel
-   *      Method:  AmayaAttributePanel
-   * Description:  construct a panel (bookmarks, elements, attributes ...)
-   *               TODO
-   -----------------------------------------------------------------------*/
-  AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window,
-                                            AmayaNormalWindow * p_parent_nwindow )
-    : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_ATTRIBUTE") )
-    ,m_attrList(NULL)
-    ,m_currentAttElem(NULL)
-    ,m_firstSel(NULL)
-    ,m_lastSel(NULL)
-    ,m_firstChar(0)
-    ,m_lastChar(0)
-    ,m_NbAttr(0)
-    ,m_NbAttr_evt(0)
-    ,m_currentPane(wxATTR_PANEID_NONE)
-    ,m_pCurrentlyEditedControl(NULL)
-    ,m_disactiveCount(0)
+AmayaAttributeToolPanel::AmayaAttributeToolPanel():
+  AmayaToolPanel()
+,m_attrList(NULL)
+,m_currentAttElem(NULL)
+,m_firstSel(NULL)
+,m_lastSel(NULL)
+,m_firstChar(0)
+,m_lastChar(0)
+,m_NbAttr(0)
+,m_NbAttr_evt(0)
+,m_currentPane(wxATTR_PANEID_NONE)
+,m_pCurrentlyEditedControl(NULL)
+,m_disactiveCount(0)
 {
+}
+
+AmayaAttributeToolPanel::~AmayaAttributeToolPanel()
+{
+}
+
+bool AmayaAttributeToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+          const wxSize& size, long style, const wxString& name, wxObject* extra)
+{
+  if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_ATTRIBUTE")))
+    return false;
+  
   m_pVPanelParent       = XRCCTRL(*this, "wxID_PANEL_ATTRVALUE", wxPanel);
   m_pVPanelSizer  = m_pVPanelParent->GetSizer();
 
@@ -102,7 +110,6 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
   m_pAttrList->InsertColumn(1, TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTRIBUTE_VALUE)));
   
   // setup labels
-  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTR)));
   XRCCTRL(*m_pVPanelParent, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DEL)));
   XRCCTRL(*m_pPanel_NewAttr, "wxID_ATTR_LABEL_NEW_ATTR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_INSERT)));
   
@@ -124,49 +131,30 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
                 {
                   m_subpanels[i]->Create(panelSubs, -1);
                   m_subpanels[i]->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_VALUE_OF_ATTR)));
-                  m_pSubpanelSizer->Add(m_subpanels[i], 1, wxEXPAND);
+                  m_pSubpanelSizer->Add(m_subpanels[i], 1, wxEXPAND)->Show(false);
                 }
             }
           m_pSubpanelSizer->Layout();
         }
     }
   
-  // register myself to the manager, so I will be avertised that another panel is floating ...
-  m_pManager->RegisterSubPanel( this );
-  
   SetupListValue(NULL);
+  return true;
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaAttributePanel
- *      Method:  ~AmayaAttributePanel
- * Description:  destructor
- *               TODO
- -----------------------------------------------------------------------*/
-AmayaAttributePanel::~AmayaAttributePanel()
+wxString AmayaAttributeToolPanel::GetToolPanelName()const
 {
-  // unregister myself to the manager, so nothing should be asked to me in future
-  m_pManager->UnregisterSubPanel( this );
+  return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTR));
 }
 
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaAttributePanel
- *      Method:  GetPanelType
- * Description:  
- -----------------------------------------------------------------------*/
-int AmayaAttributePanel::GetPanelType()
-{
-  return WXAMAYA_PANEL_ATTRIBUTE;
-}
-
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaAttributePanel
+ *       Class:  AmayaAttributeToolPanel
  *      Method:  RedirectFocusToEditableControl
  * Description:  Redirect the focus to the currently edited control.
  -----------------------------------------------------------------------*/
-void AmayaAttributePanel::RedirectFocusToEditableControl()
+void AmayaAttributeToolPanel::RedirectFocusToEditableControl()
 {
   if(m_pCurrentlyEditedControl)
     m_pCurrentlyEditedControl->SetFocus();
@@ -176,7 +164,7 @@ void AmayaAttributePanel::RedirectFocusToEditableControl()
   UpdateListColumnWidth
   Recompute width of list columns
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::UpdateListColumnWidth()
+void AmayaAttributeToolPanel::UpdateListColumnWidth()
 {
   // Resize columns.
   long sz0, sz1;
@@ -199,7 +187,7 @@ void AmayaAttributePanel::UpdateListColumnWidth()
   if can be modified
   returns: true if mandatory
   ----------------------------------------------------------------------*/
-bool AmayaAttributePanel::IsMandatory()const
+bool AmayaAttributeToolPanel::IsMandatory()const
 {
   return (!m_currentAttElem||
           AttrListElem_IsMandatory(m_currentAttElem));
@@ -209,7 +197,7 @@ bool AmayaAttributePanel::IsMandatory()const
   Check if the current attribute (if any) is read-only
   returns: true if read-only
   ----------------------------------------------------------------------*/
-bool AmayaAttributePanel::IsReadOnly()const
+bool AmayaAttributeToolPanel::IsReadOnly()const
 {
   return (!m_currentAttElem ||
           AttrListElem_IsReadOnly (m_currentAttElem));
@@ -220,7 +208,7 @@ bool AmayaAttributePanel::IsReadOnly()const
  * Show or hide the attribute bar, the bar where is shwon
  *  the attribute subpanel if any.
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::ShowAttributeBar(bool bShow)
+void AmayaAttributeToolPanel::ShowAttributeBar(bool bShow)
 {
   if(m_pVPanelSizer)
     {
@@ -233,7 +221,7 @@ void AmayaAttributePanel::ShowAttributeBar(bool bShow)
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
+void AmayaAttributeToolPanel::SendDataToPanel( AmayaParams& p )
 {
   DesactivatePanel();
   
@@ -254,7 +242,7 @@ void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
 /*----------------------------------------------------------------------
   Analyse elem param to find correct internal type.
   ----------------------------------------------------------------------*/
-AmayaAttributePanel::wxATTR_INTTYPE AmayaAttributePanel::GetInternalTypeFromAttrElem(PtrAttrListElem elem)
+AmayaAttributeToolPanel::wxATTR_INTTYPE AmayaAttributeToolPanel::GetInternalTypeFromAttrElem(PtrAttrListElem elem)
 {
   PtrTtAttribute  pAttr = AttrListElem_GetTtAttribute(elem);
   if(elem && pAttr)
@@ -283,7 +271,7 @@ AmayaAttributePanel::wxATTR_INTTYPE AmayaAttributePanel::GetInternalTypeFromAttr
   SelectAttribute
   select an attribut to the given position
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::SelectAttribute(int position)
+void AmayaAttributeToolPanel::SelectAttribute(int position)
 {
   wxATTR_INTTYPE  inttype;
   if (position!=wxID_ANY)
@@ -329,7 +317,7 @@ void AmayaAttributePanel::SelectAttribute(int position)
   SetupAttr
   Set the correct attribute type panel for an attribute
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::SetupAttr(PtrAttrListElem elem, wxATTR_PANEID type)
+void AmayaAttributeToolPanel::SetupAttr(PtrAttrListElem elem, wxATTR_PANEID type)
 {
   ShowAttributValue(type);
   m_subpanels[type]->SetSelectionPosition(m_firstSel, m_lastSel, 
@@ -344,7 +332,7 @@ void AmayaAttributePanel::SetupAttr(PtrAttrListElem elem, wxATTR_PANEID type)
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::QueryRemoveCurrentAttribute()
+void AmayaAttributeToolPanel::QueryRemoveCurrentAttribute()
 {
   if (!IsMandatory())
     RemoveCurrentAttribute();
@@ -358,7 +346,7 @@ void AmayaAttributePanel::QueryRemoveCurrentAttribute()
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::RemoveCurrentAttribute()
+void AmayaAttributeToolPanel::RemoveCurrentAttribute()
 {
   Document doc = TtaGetDocument((Element)m_firstSel);
   DisplayMode mode = TtaGetDisplayMode(doc);
@@ -392,7 +380,7 @@ void AmayaAttributePanel::RemoveCurrentAttribute()
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::CreateCurrentAttribute()
+void AmayaAttributeToolPanel::CreateCurrentAttribute()
 {
   wxString        name;
   long            index;
@@ -437,7 +425,7 @@ void AmayaAttributePanel::CreateCurrentAttribute()
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::ShowAttributValue( wxATTR_PANEID type )
+void AmayaAttributeToolPanel::ShowAttributValue( wxATTR_PANEID type )
 {
   m_currentPane = type;
 
@@ -458,11 +446,8 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_PANEID type )
       m_pCurrentlyEditedControl = NULL;
       ShowAttributeBar(false);
     }
-  GetParent()->GetParent()->Layout();
-  m_pVPanelSizer->Layout();
   GetParent()->Layout();
   Layout();
-  m_pPanelContentDetach->Layout();
   
   RedirectFocusToEditableControl();
 }
@@ -472,7 +457,7 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_PANEID type )
   SetupListValue
   init the attribut list
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::SetupListValue(DLList attrList)
+void AmayaAttributeToolPanel::SetupListValue(DLList attrList)
 {
   ForwardIterator iter;
   DLListNode      node;
@@ -558,7 +543,7 @@ void AmayaAttributePanel::SetupListValue(DLList attrList)
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::OnDelAttr( wxCommandEvent& event )
+void AmayaAttributeToolPanel::OnDelAttr( wxCommandEvent& event )
 {
   RemoveCurrentAttribute();
 }
@@ -567,7 +552,7 @@ void AmayaAttributePanel::OnDelAttr( wxCommandEvent& event )
   Update the value of an attribute in the list.
   Modify the content of the list without update it completely.
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::ModifyListAttrValue(const wxString& attrName,
+void AmayaAttributeToolPanel::ModifyListAttrValue(const wxString& attrName,
                                                        const wxString& attrVal)
 {
   long index = m_pAttrList->FindItem(wxID_ANY, attrName);
@@ -581,7 +566,7 @@ void AmayaAttributePanel::ModifyListAttrValue(const wxString& attrName,
 /*----------------------------------------------------------------------
   Retrieve the name of the currently selected attribute in the list.
   ----------------------------------------------------------------------*/
-wxString AmayaAttributePanel::GetCurrentSelectedAttrName()const
+wxString AmayaAttributeToolPanel::GetCurrentSelectedAttrName()const
 {
   long index = m_pAttrList->GetNextItem(wxID_ANY, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
   if(index!=wxNOT_FOUND)
@@ -595,7 +580,7 @@ wxString AmayaAttributePanel::GetCurrentSelectedAttrName()const
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::OnApply( wxCommandEvent& event )
+void AmayaAttributeToolPanel::OnApply( wxCommandEvent& event )
 {
   PtrTtAttribute  pAttr;
   char            buffer[MAX_LENGTH];
@@ -627,11 +612,11 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
 
 /*----------------------------------------------------------------------
   ForceAttributeUpdate force the current document to refresh the attribute list
-  => UpdateAttrMenu is called => AmayaAttributePanel::UpdateAttributeList is finaly called
+  => UpdateAttrMenu is called => AmayaAttributeToolPanel::UpdateAttributeList is finaly called
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::ForceAttributeUpdate()
+void AmayaAttributeToolPanel::ForceAttributeUpdate()
 {
   /* do the update */
   PtrDocument pDoc;
@@ -642,30 +627,19 @@ void AmayaAttributePanel::ForceAttributeUpdate()
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaAttributePanel
+ *       Class:  AmayaAttributeToolPanel
  *      Method:  DoUpdate
  * Description:  force a refresh when the user expand or detach this panel
  -----------------------------------------------------------------------*/
-void AmayaAttributePanel::DoUpdate()
+void AmayaAttributeToolPanel::DoUpdate()
 {
-  AmayaSubPanel::DoUpdate();
+  AmayaToolPanel::DoUpdate();
   ForceAttributeUpdate();  
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaAttributePanel
- *      Method:  IsActive
- * Description:  
  -----------------------------------------------------------------------*/
-bool AmayaAttributePanel::IsActive()
-{
-  return (AmayaSubPanel::IsActive());
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void AmayaAttributePanel::OnListItemSelected(wxListEvent& event)
+void AmayaAttributeToolPanel::OnListItemSelected(wxListEvent& event)
 {
   if(IsPanelActive())
     SelectAttribute(event.GetIndex());
@@ -674,7 +648,7 @@ void AmayaAttributePanel::OnListItemSelected(wxListEvent& event)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-void AmayaAttributePanel::OnListItemDeselected(wxListEvent& event)
+void AmayaAttributeToolPanel::OnListItemDeselected(wxListEvent& event)
 {
   if(IsPanelActive())
     SelectAttribute(wxID_ANY);
@@ -683,14 +657,14 @@ void AmayaAttributePanel::OnListItemDeselected(wxListEvent& event)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-void AmayaAttributePanel::OnInsert( wxCommandEvent& WXUNUSED(event))
+void AmayaAttributeToolPanel::OnInsert( wxCommandEvent& WXUNUSED(event))
 {
   CreateCurrentAttribute();
 }
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-void AmayaAttributePanel::OnUpdateDeleteButton(wxUpdateUIEvent& event)
+void AmayaAttributeToolPanel::OnUpdateDeleteButton(wxUpdateUIEvent& event)
 {
   
   if (IsPanelActive() && m_currentAttElem && m_currentPane!=wxATTR_PANEID_NONE)
@@ -703,22 +677,22 @@ void AmayaAttributePanel::OnUpdateDeleteButton(wxUpdateUIEvent& event)
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaAttributePanel, AmayaSubPanel)
-  EVT_LIST_ITEM_SELECTED(XRCID("wxID_CLIST_ATTR"), AmayaAttributePanel::OnListItemSelected)
-  EVT_LIST_ITEM_DESELECTED(XRCID("wxID_CLIST_ATTR"), AmayaAttributePanel::OnListItemDeselected)
+BEGIN_EVENT_TABLE(AmayaAttributeToolPanel, AmayaToolPanel)
+  EVT_LIST_ITEM_SELECTED(XRCID("wxID_CLIST_ATTR"), AmayaAttributeToolPanel::OnListItemSelected)
+  EVT_LIST_ITEM_DESELECTED(XRCID("wxID_CLIST_ATTR"), AmayaAttributeToolPanel::OnListItemDeselected)
   
-  EVT_TEXT_ENTER( XRCID("wxID_ATTR_TEXT_VALUE"),      AmayaAttributePanel::OnApply )
-  EVT_TEXT_ENTER( XRCID("wxID_ATTR_NUM_VALUE"),       AmayaAttributePanel::OnApply )
+  EVT_TEXT_ENTER( XRCID("wxID_ATTR_TEXT_VALUE"),      AmayaAttributeToolPanel::OnApply )
+  EVT_TEXT_ENTER( XRCID("wxID_ATTR_NUM_VALUE"),       AmayaAttributeToolPanel::OnApply )
 
-  EVT_CHOICE(XRCID("wxID_ATTR_COMBO_LANG_LIST"), AmayaAttributePanel::OnApply)
-  EVT_CHOICE(XRCID("wxID_ATTR_CHOICE_ENUM"), AmayaAttributePanel::OnApply)
+  EVT_CHOICE(XRCID("wxID_ATTR_COMBO_LANG_LIST"), AmayaAttributeToolPanel::OnApply)
+  EVT_CHOICE(XRCID("wxID_ATTR_CHOICE_ENUM"), AmayaAttributeToolPanel::OnApply)
 
-  EVT_BUTTON(     XRCID("wxID_OK"),              AmayaAttributePanel::OnApply )
+  EVT_BUTTON(     XRCID("wxID_OK"),              AmayaAttributeToolPanel::OnApply )
   
-  EVT_BUTTON(     XRCID("wxID_BUTTON_DEL_ATTR"), AmayaAttributePanel::OnDelAttr )
-  EVT_CHOICE(XRCID("wxID_CHOOSE_NEW_ATTRIBUTE"), AmayaAttributePanel::OnInsert)
+  EVT_BUTTON(     XRCID("wxID_BUTTON_DEL_ATTR"), AmayaAttributeToolPanel::OnDelAttr )
+  EVT_CHOICE(XRCID("wxID_CHOOSE_NEW_ATTRIBUTE"), AmayaAttributeToolPanel::OnInsert)
 
-  EVT_UPDATE_UI(  XRCID("wxID_BUTTON_DEL_ATTR"), AmayaAttributePanel::OnUpdateDeleteButton)
+  EVT_UPDATE_UI(  XRCID("wxID_BUTTON_DEL_ATTR"), AmayaAttributeToolPanel::OnUpdateDeleteButton)
 END_EVENT_TABLE()
 
 
@@ -845,7 +819,7 @@ bool AmayaEnumAttributeSubpanel::SetAttrListElem(PtrAttrListElem elem)
   m_pChoice->Clear();
   if(elem)
     {
-      m_type = (AmayaAttributePanel::wxATTR_INTTYPE)AttrListElem_GetType(elem);
+      m_type = (AmayaAttributeToolPanel::wxATTR_INTTYPE)AttrListElem_GetType(elem);
 
       if(AttrListElem_GetType(elem)==AtEnumAttr)
         {
@@ -910,7 +884,7 @@ bool AmayaEnumAttributeSubpanel::SetAttrListElem(PtrAttrListElem elem)
     }
   else
     {
-      m_type = AmayaAttributePanel::wxATTR_INTTYPE_MAX;
+      m_type = AmayaAttributeToolPanel::wxATTR_INTTYPE_MAX;
       return false;
     }
 }
@@ -922,11 +896,11 @@ wxString AmayaEnumAttributeSubpanel::GetStringValue()
 
 int AmayaEnumAttributeSubpanel::GetIntValue()
 {
-  if(m_type==AmayaAttributePanel::wxATTR_INTTYPE_ENUM)
+  if(m_type==AmayaAttributeToolPanel::wxATTR_INTTYPE_ENUM)
     {
       return (int)m_pChoice->GetClientData(m_pChoice->GetSelection())+1;
     }
-  else if(m_type==AmayaAttributePanel::wxATTR_INTTYPE_NUM)
+  else if(m_type==AmayaAttributeToolPanel::wxATTR_INTTYPE_NUM)
     {
       long i;
       m_pChoice->GetStringSelection().ToLong(&i);

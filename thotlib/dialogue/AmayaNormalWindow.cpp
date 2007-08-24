@@ -42,7 +42,6 @@
 #include "input_f.h"
 
 #include "AmayaNormalWindow.h"
-#include "AmayaSubPanelManager.h"
 #include "AmayaPanel.h"
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
@@ -74,11 +73,13 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
   TtaGetEnvInt ("SLASH_PANEL_POS", &m_SlashPos);
 
   // Create a background panel to contain everything : better look on windows
-  wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
+  wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxHORIZONTAL );
   SetSizer(p_TopSizer);
+  
   wxPanel * p_TopParent = new wxPanel( this, -1, wxDefaultPosition, wxDefaultSize,
                                        wxTAB_TRAVERSAL | wxCLIP_CHILDREN | wxNO_BORDER);
-  p_TopSizer->Add( p_TopParent, 1, wxALL | wxEXPAND, 0 );
+  
+  p_TopSizer->Add( p_TopParent, 3, wxALL | wxEXPAND, 0 );
 
   // Create a splitted vertical window
   m_pSplitterWindow = new wxSplitterWindow( p_TopParent, -1,
@@ -101,14 +102,15 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
 
   
   // Create a AmayaPanel to contains commands shortcut
-  m_pPanel = new AmayaPanel( m_pSplitterWindow, this, -1, wxDefaultPosition, wxDefaultSize,
+  m_pPanel = new AmayaToolPanelBar( m_pSplitterWindow, -1, wxDefaultPosition, wxDefaultSize,
                              wxTAB_TRAVERSAL
                              | wxRAISED_BORDER
                              | wxCLIP_CHILDREN );
 
+  
+  
   // Split the Notebook and the AmayaPanel
-  m_pSplitterWindow->SplitVertically(
-                                     m_pPanel,
+  m_pSplitterWindow->SplitVertically(m_pPanel,
                                      m_pNotebookPanel,
                                      m_SlashPos );  
   // do not split the panel by default
@@ -301,6 +303,8 @@ int AmayaNormalWindow::GetPageCount() const
     return 0;
   return (int)m_pNotebook->GetPageCount();
 }
+
+
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
@@ -589,7 +593,7 @@ void AmayaNormalWindow::OnSplitterDClick( wxSplitterEvent& event )
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnSplitterDClick") );
   m_pSplitterWindow->Unsplit( m_pPanel );
-  m_pPanel->ShowWhenUnsplit( false );
+//  m_pPanel->ShowWhenUnsplit( false );
   //  event.Skip();  
 }
 
@@ -629,7 +633,7 @@ void AmayaNormalWindow::ClosePanel()
   if (IsPanelOpened())
     {
       m_pSplitterWindow->Unsplit( m_pPanel );
-      m_pPanel->ShowWhenUnsplit( false );
+//      m_pPanel->ShowWhenUnsplit( false );
 
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
@@ -651,12 +655,8 @@ void AmayaNormalWindow::OpenPanel()
     {
       m_pSplitterWindow->SplitVertically( m_pPanel,
                                           m_pNotebookPanel,
-                                          m_SlashPos ); 
-      m_pPanel->ShowWhenUnsplit( true );
-
-      // now check panels to know if a refresh is needed
-      AmayaSubPanelManager::GetInstance()->CheckForDoUpdate();
-
+                                          m_SlashPos );
+      m_pPanel->Layout();
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
 
@@ -680,7 +680,7 @@ bool AmayaNormalWindow::IsPanelOpened()
  *      Method:  GetAmayaPanel
  * Description:  return the window's panel (exists only on AmayaNormalWindow)
  -----------------------------------------------------------------------*/
-AmayaPanel * AmayaNormalWindow::GetAmayaPanel() const
+AmayaToolPanelBar * AmayaNormalWindow::GetToolPanelBar() const
 {
   return m_pPanel;
 }
@@ -763,6 +763,9 @@ BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
 
   EVT_BUTTON( wxID_ANY,                       AmayaNormalWindow::OnSplitPanelButton)
   EVT_NOTEBOOK_PAGE_CHANGED( wxID_ANY, AmayaNormalWindow::OnNotebookPageChanged )
-  END_EVENT_TABLE()
+END_EVENT_TABLE()
 
+  
+  
+  
 #endif /* #ifdef _WX */

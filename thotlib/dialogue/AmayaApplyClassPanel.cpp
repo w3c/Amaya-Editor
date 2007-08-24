@@ -33,86 +33,51 @@
 
 #include "AmayaApplyClassPanel.h"
 #include "AmayaNormalWindow.h"
-#include "AmayaFloatingPanel.h"
-#include "AmayaSubPanelManager.h"
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaApplyClassPanel, AmayaSubPanel)
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaApplyClassPanel
- *      Method:  AmayaApplyClassPanel
- * Description:  construct a panel (bookmarks, elements, attributes, colors ...)
-  -----------------------------------------------------------------------*/
-AmayaApplyClassPanel::AmayaApplyClassPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
-  : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_APPLYCLASS") )
-    ,m_ApplyClassRef(0)
+//
+//
+// AmayaApplyClassToolPanel
+//
+//
+IMPLEMENT_DYNAMIC_CLASS(AmayaApplyClassToolPanel, AmayaToolPanel)
+
+AmayaApplyClassToolPanel::AmayaApplyClassToolPanel():
+  AmayaToolPanel()
+,m_ApplyClassRef(0)
 {
-  // setup labels
-  RefreshToolTips();
-  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY_CLASS)));
-
-  m_pClassList = XRCCTRL(*m_pPanelContentDetach,"wxID_LIST_APPLYCLASS",wxListBox);
-
-#if 0
-  // setup labels
-  RefreshToolTips();
-  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_FORMAT)));
-
-  //TtaGetMessage (LIB, TMSG_ALIGN)
-  XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_FORMATINDENT", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_INDENT_PTS)));
-  //TtaGetMessage (LIB, TMSG_INDENT)
-  XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_FORMATLINESPACE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_LINE_SPACING_PTS)));
-  //TtaGetMessage (LIB, TMSG_LINE_SPACING)
-
-  m_OffColour = XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->GetBackgroundColour();
-  m_OnColour  = wxColour(250, 200, 200);
-#endif /* 0 */
-
-  // register myself to the manager, so I will be avertised that another panel is floating ...
-  m_pManager->RegisterSubPanel( this );
-
-  RefreshApplyClassPanel();
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaApplyClassPanel
- *      Method:  ~AmayaApplyClassPanel
- * Description:  destructor
-  -----------------------------------------------------------------------*/
-AmayaApplyClassPanel::~AmayaApplyClassPanel()
-{  
-  // unregister myself to the manager, so nothing should be asked to me in future
-  m_pManager->UnregisterSubPanel( this );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaApplyClassPanel
- *      Method:  GetPanelType
- * Description:  
-  -----------------------------------------------------------------------*/
-int AmayaApplyClassPanel::GetPanelType()
+AmayaApplyClassToolPanel::~AmayaApplyClassToolPanel()
 {
-  return WXAMAYA_PANEL_APPLYCLASS;
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaApplyClassPanel
- *      Method:  RefreshToolTips
- * Description:  reassign the tooltips values
-  -----------------------------------------------------------------------*/
-void AmayaApplyClassPanel::RefreshToolTips()
-{  
-  XRCCTRL(*m_pPanelContentDetach,"wxID_LIST_APPLYCLASS",wxListBox)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL_CLASS)));
-  XRCCTRL(*m_pPanelContentDetach,"wxID_REFRESH",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_REFRESH)));
-  XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+bool AmayaApplyClassToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+          const wxSize& size, long style, const wxString& name, wxObject* extra)
+{
+  if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_APPLYCLASS")))
+    return false;
+  XRCCTRL(*this,"wxID_LIST_APPLYCLASS",wxListBox)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL_CLASS)));
+  XRCCTRL(*this,"wxID_REFRESH",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_REFRESH)));
+  XRCCTRL(*this,"wxID_APPLY",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+
+  m_pClassList = XRCCTRL(*this,"wxID_LIST_APPLYCLASS",wxListBox);
+
+  return true;
 }
+
+wxString AmayaApplyClassToolPanel::GetToolPanelName()const
+{
+  return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY_CLASS));
+}
+
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  SendDataToPanel
  * Description:  refresh the button widgets of the frame's panel
   -----------------------------------------------------------------------*/
-void AmayaApplyClassPanel::SendDataToPanel( AmayaParams& p )
+void AmayaApplyClassToolPanel::SendDataToPanel( AmayaParams& p )
 {
   int          nb_class = p.param1;
   const char  *listBuffer = (char *)p.param2;
@@ -137,10 +102,7 @@ void AmayaApplyClassPanel::SendDataToPanel( AmayaParams& p )
     m_pClassList->SetStringSelection(TtaConvMessageToWX(currentClass));
 
   /* recalculate layout */
-  GetParent()->GetParent()->Layout();
-  GetParent()->Layout();
   Layout();
-  m_pPanelContentDetach->Layout();
 }
 
 /*----------------------------------------------------------------------
@@ -148,19 +110,9 @@ void AmayaApplyClassPanel::SendDataToPanel( AmayaParams& p )
  *      Method:  DoUpdate
  * Description:  force a refresh when the user expand or detach this panel
   -----------------------------------------------------------------------*/
-void AmayaApplyClassPanel::DoUpdate()
+void AmayaApplyClassToolPanel::DoUpdate()
 {
-  AmayaSubPanel::DoUpdate();
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaApplyClassPanel
- *      Method:  IsActive
- * Description:  
-  -----------------------------------------------------------------------*/
-bool AmayaApplyClassPanel::IsActive()
-{
-  return AmayaSubPanel::IsActive();
+  AmayaToolPanel::DoUpdate();
 }
 
 /*----------------------------------------------------------------------
@@ -168,7 +120,7 @@ bool AmayaApplyClassPanel::IsActive()
  *      Method:  OnApply
  * Description:  
   -----------------------------------------------------------------------*/
-void AmayaApplyClassPanel::OnApply( wxCommandEvent& event )
+void AmayaApplyClassToolPanel::OnApply( wxCommandEvent& event )
 {
   ThotCallback(m_ApplyClassRef, INTEGER_DATA, (char*) 1);
 }
@@ -178,7 +130,7 @@ void AmayaApplyClassPanel::OnApply( wxCommandEvent& event )
  *      Method:  OnSelected
  * Description:  
   -----------------------------------------------------------------------*/
-void AmayaApplyClassPanel::OnSelected( wxCommandEvent& event )
+void AmayaApplyClassToolPanel::OnSelected( wxCommandEvent& event )
 {
   wxString s_selected = XRCCTRL(*this, "wxID_LIST_APPLYCLASS", wxListBox)->GetStringSelection();
   
@@ -198,7 +150,7 @@ void AmayaApplyClassPanel::OnSelected( wxCommandEvent& event )
  *      Method:  OnRefresh
  * Description:  refresh the panel from current selection
   -----------------------------------------------------------------------*/
-void AmayaApplyClassPanel::OnRefresh( wxCommandEvent& event )
+void AmayaApplyClassToolPanel::OnRefresh( wxCommandEvent& event )
 {
   RefreshApplyClassPanel();
 }
@@ -208,7 +160,7 @@ void AmayaApplyClassPanel::OnRefresh( wxCommandEvent& event )
  *      Method:  RefreshApplyClassPanel
  * Description:  refresh the panel from current selection
   -----------------------------------------------------------------------*/
-void AmayaApplyClassPanel::RefreshApplyClassPanel()
+void AmayaApplyClassToolPanel::RefreshApplyClassPanel()
 {
   Document doc;
   View view;
@@ -223,11 +175,12 @@ void AmayaApplyClassPanel::RefreshApplyClassPanel()
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaApplyClassPanel, AmayaSubPanel)
-  EVT_BUTTON( XRCID("wxID_APPLY"), AmayaApplyClassPanel::OnApply )
-  EVT_BUTTON( XRCID("wxID_REFRESH"), AmayaApplyClassPanel::OnRefresh )
-  EVT_LISTBOX( XRCID("wxID_LIST_APPLYCLASS"), AmayaApplyClassPanel::OnSelected ) 
-  EVT_LISTBOX_DCLICK( XRCID("wxID_LIST_APPLYCLASS"), AmayaApplyClassPanel::OnApply )
+BEGIN_EVENT_TABLE(AmayaApplyClassToolPanel, AmayaToolPanel)
+  EVT_BUTTON( XRCID("wxID_APPLY"), AmayaApplyClassToolPanel::OnApply )
+  EVT_BUTTON( XRCID("wxID_REFRESH"), AmayaApplyClassToolPanel::OnRefresh )
+  EVT_LISTBOX( XRCID("wxID_LIST_APPLYCLASS"), AmayaApplyClassToolPanel::OnSelected ) 
+  EVT_LISTBOX_DCLICK( XRCID("wxID_LIST_APPLYCLASS"), AmayaApplyClassToolPanel::OnApply )
 END_EVENT_TABLE()
+
 
 #endif /* #ifdef _WX */

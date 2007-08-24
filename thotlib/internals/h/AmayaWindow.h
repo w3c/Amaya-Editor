@@ -13,17 +13,17 @@
 #include "wx/splitter.h"
 #include "wx/notebook.h"
 
-class AmayaPanel;
 class AmayaPage;
 class AmayaFrame;
 class AmayaNotebook;
 class AmayaCParam;
 class AmayaURLBar;
 class AmayaToolBar;
-class AmayaPanel;
 class AmayaStatusBar;
 
 #include "windowtypes_wx.h"
+
+#include "AmayaPanel.h"
 
 /*
  * =====================================================================================
@@ -102,7 +102,8 @@ class AmayaWindow : public wxFrame
 
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
-  virtual AmayaPanel * GetAmayaPanel() const;
+  virtual AmayaToolPanelBar* GetToolPanelBar()const;
+  
   virtual bool IsPanelOpened();
   virtual void ClosePanel();
   virtual void OpenPanel();

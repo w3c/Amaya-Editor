@@ -35,12 +35,56 @@
         <border>4</border>
       </object>
       <object class="sizeritem">
-        <object class="wxScrolledWindow" name="wxID_PANEL_SWIN"/>
+        <object class="wxScrolledWindow" name="wxID_PANEL_SWIN">
+          <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+          </object>
+        </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
         <border>4</border>
       </object>
     </object>
-    <style>wxTAB_TRAVERSAL|wxRAISED_BORDER</style>
+    <style>wxTAB_TRAVERSAL</style>
+  </object>
+  <object class="wxPanel" name="wxID_DOCKED_TOOL_PANEL_CONTAINER">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxPanel" name="wxID_PANEL_TITLE" subclass="AmayaToolPanelHeader">
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
+                <bitmap>../icons/misc/expand_on.png</bitmap>
+                <style platform="unix|win">wxNO_BORDER</style>
+              </object>
+              <flag>wxALL|wxALIGN_CENTRE</flag>
+              <border>4</border>
+            </object>
+            <object class="sizeritem">
+              <object class="wxStaticText" name="wxID_LABEL_TITLE">
+                <label>Panel</label>
+                <style>wxALIGN_LEFT</style>
+              </object>
+              <option>1</option>
+              <flag>wxALL|wxALIGN_CENTRE</flag>
+              <border>4</border>
+            </object>
+            <object class="sizeritem">
+              <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
+                <bitmap>../icons/misc/detach.png</bitmap>
+                <style platform="unix|win">wxNO_BORDER</style>
+              </object>
+              <flag>wxALL|wxALIGN_CENTRE</flag>
+              <border>4</border>
+            </object>
+          </object>
+          <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
+        </object>
+        <flag>wxTOP|wxEXPAND</flag>
+      </object>
+    </object>
+    <style>wxTAB_TRAVERSAL</style>
   </object>
 </resource>

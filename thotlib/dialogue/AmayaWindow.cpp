@@ -341,6 +341,9 @@ void AmayaWindow::CleanUp()
 {
 }
 
+
+
+
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  OnIdle
@@ -402,10 +405,10 @@ void AmayaWindow::OnActivate( wxActivateEvent & event )
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  GetAmayaPanel
- * Description:  return the window's panel (exist only on AmayaNormalWindow)
+ *      Method:  GetToolPanelBar
+ * Description:  return the window's tool panel bar(exist only on AmayaNormalWindow)
   -----------------------------------------------------------------------*/
-AmayaPanel * AmayaWindow::GetAmayaPanel() const
+AmayaToolPanelBar * AmayaWindow::GetToolPanelBar() const
 {
   return NULL;
 }

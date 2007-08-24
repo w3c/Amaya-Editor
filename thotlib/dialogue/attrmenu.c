@@ -40,7 +40,6 @@
 #include "AmayaWindow.h"
 #include "AmayaPanel.h"
 #include "appdialogue_wx.h"
-#include "AmayaSubPanelManager.h"
 #include "wxinclude.h"
 #endif /* _WX */
 
@@ -235,14 +234,14 @@ static void InitFormLanguage (Document doc, View view, PtrElement firstSel,
 #ifdef _WX
   ptr = GetListOfLanguages (bufMenu, MAX_TXT_LEN, languageCode, &nbItem, &defItem);
   AmayaParams p;
-  p.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_SETUPLANG;
+  p.param1 = (int)AmayaAttributeToolPanel::wxATTR_ACTION_SETUPLANG;
   p.param2 = NULL;
   p.param3 = (void*)ptr;
   p.param4 = (void*)label;
   p.param5 = (void*)bufMenu;
   p.param7 = nbItem;
   p.param8 = defItem;
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
+  TtaSendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
 
 #ifdef _GTK
@@ -657,12 +656,12 @@ static void MenuValues (TtAttribute *pAttr, ThotBool required,
         if (!isRequiredDlg)
           {
             AmayaParams p;
-            p.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_SETUPNUM;
+            p.param1 = (int)AmayaAttributeToolPanel::wxATTR_ACTION_SETUPNUM;
             p.param2 = (void*)(required ? 0xFFFFFF : 0x000000);
             p.param8 = i;
             p.param9 = begin;
             p.param10 = end;
-            AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
+            TtaSendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
           }
         else
           {
@@ -708,10 +707,10 @@ static void MenuValues (TtAttribute *pAttr, ThotBool required,
         if (!isRequiredDlg)
           {
             AmayaParams p;
-            p.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_SETUPTEXT;
+            p.param1 = (int)AmayaAttributeToolPanel::wxATTR_ACTION_SETUPTEXT;
             p.param2 = (void*)(required ? 0xFFFFFF : 0x000000);
             p.param3 = (void*)TextAttrValue;
-            AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
+            TtaSendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
           }
         else
           {
@@ -805,12 +804,12 @@ static void MenuValues (TtAttribute *pAttr, ThotBool required,
         if (!isRequiredDlg)
           {
             AmayaParams p;
-            p.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_SETUPENUM;
+            p.param1 = (int)AmayaAttributeToolPanel::wxATTR_ACTION_SETUPENUM;
             p.param2 = (void*)(required ? 0xFFFFFF : 0x000000);
             p.param3 = (void*)bufMenu; /* list data */
             p.param7 = i; /* selected item */
             p.param8 = val; /* nb items */
-            AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
+            TtaSendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
           }
         else
           {
@@ -1536,11 +1535,12 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
 #ifdef _WX
   /* do nothing if the attribute dialog is not updatable (auto refresh
      checkbox activate) */
-  if (!AmayaSubPanelManager::GetInstance()->IsActive(WXAMAYA_PANEL_ATTRIBUTE))
-    {
-      AmayaSubPanelManager::GetInstance()->ShouldBeUpdated(WXAMAYA_PANEL_ATTRIBUTE);
-      return;
-    }
+  // TODO
+//  if (!AmayaSubPanelManager::GetInstance()->IsActive(WXAMAYA_PANEL_ATTRIBUTE))
+//    {
+//      AmayaSubPanelManager::GetInstance()->ShouldBeUpdated(WXAMAYA_PANEL_ATTRIBUTE);
+//      return;
+//    }
 #endif /* _WX */
 
   /* Compose le menu des attributs */
@@ -1577,14 +1577,14 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
             {
 #ifdef _WX
               list = BuildAttrList(pDoc, firstSel);
-              params.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_LISTUPDATE;
+              params.param1 = (int)AmayaAttributeToolPanel::wxATTR_ACTION_LISTUPDATE;
               params.param2 = (void*)list;
               params.param5 = (void*)firstSel;
               params.param6 = (void*)lastSel;
               params.param7 = firstChar;
               params.param8 = lastChar;
               
-              AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, params );
+              TtaSendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, params );
               return;
 #else /* _WX */
               nbItemAttr = BuildAttrMenu (bufMenuAttr, pDoc, firstSel,
@@ -1608,14 +1608,14 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
       PrevElTypeNumber = 0;
       PrevElAttr = FALSE;
 #ifdef _WX
-      params.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_LISTUPDATE;
+      params.param1 = (int)AmayaAttributeToolPanel::wxATTR_ACTION_LISTUPDATE;
       params.param2 = NULL;
       params.param5 = NULL;
       params.param6 = NULL;
       params.param7 = 0;
       params.param8 = 0;
               
-      AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, params );
+      TtaSendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, params );
               return;
 #endif /* _WX */
     }
