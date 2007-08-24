@@ -115,7 +115,7 @@ class AmayaNormalWindow : public AmayaWindow
   
   
   AmayaNotebook *   m_pNotebook;         // tabs container
-  wxPanel *         m_pNotebookPanel;
+//  wxPanel *         m_pNotebookPanel;
   int               m_SlashPos;          // the slash pos in pixel
 
   wxMenuItem * m_pMenuItemToggleFullScreen;
@@ -126,6 +126,8 @@ class AmayaNormalWindow : public AmayaWindow
 
   AmayaQuickSplitButton * m_pSplitPanelButton;
   AmayaStatusBar * m_pStatusBar;
+  
+  wxSizer* m_pLayoutSizer;
 };
 
 #endif // __AMAYANORMALWINDOW_H__

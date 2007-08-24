@@ -56,15 +56,14 @@ class AmayaPage;
 class AmayaNotebook : public wxNotebook
 {
  public:
-  DECLARE_DYNAMIC_CLASS(AmayaNotebook)
+  DECLARE_CLASS(AmayaNotebook)
 
-  AmayaNotebook( wxWindow * p_parent_window = NULL,
-		 AmayaWindow * p_amaya_window = NULL );
+  AmayaNotebook( wxWindow * window , wxWindowID id=wxID_ANY);
   virtual ~AmayaNotebook( );
  
   int GetPageId( const AmayaPage * p_page );
   AmayaWindow * GetWindowParent()
-    { return m_pAmayaWindow; } 
+    { return (AmayaWindow*)wxGetTopLevelParent(this); } 
   
   int GetMContextFrame();
 
@@ -87,7 +86,6 @@ class AmayaNotebook : public wxNotebook
   void OnClose(wxCloseEvent& event);
 
  protected:
-  AmayaWindow *  m_pAmayaWindow; // amaya parent window
   int            m_MContextFrameId;
 };
 

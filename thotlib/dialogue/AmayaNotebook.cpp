@@ -27,21 +27,18 @@
 #include "AmayaApp.h"
 #include "AmayaConfirmCloseTab.h"
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaNotebook, wxNotebook)
+IMPLEMENT_CLASS(AmayaNotebook, wxNotebook)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
-                              AmayaWindow * p_amaya_window )
-  :  wxNotebook( wxDynamicCast(p_parent_window, wxWindow),
-                 -1,
+AmayaNotebook::AmayaNotebook(wxWindow * window , wxWindowID id)
+  :  wxNotebook( window, id,
                  wxDefaultPosition, wxDefaultSize,
                  wxTAB_TRAVERSAL |
                  wxCLIP_CHILDREN |
                  wxFULL_REPAINT_ON_RESIZE |
                  wxNB_MULTILINE /* only windows */,
                  wxT("AmayaNotebook") )
-     ,m_pAmayaWindow( p_amaya_window )
      ,m_MContextFrameId(0)
 {
   SetImageList( AmayaApp::GetDocumentIconList() );
@@ -278,7 +275,7 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
                  event.GetPosition().x,
                  event.GetPosition().y );
 
-  int window_id = m_pAmayaWindow->GetWindowId();
+  int window_id = GetWindowParent()->GetWindowId();
   long flags    = 0;
   int page_id   = 0;
   wxPoint point = event.GetPosition();
