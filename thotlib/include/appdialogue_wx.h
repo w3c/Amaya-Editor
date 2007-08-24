@@ -12,7 +12,7 @@ extern void          ThotCallback ( int ref, int typedata, char *data );
 #ifdef _WX
 /* amaya need to know thotlib color list in order to setup the dialogs */
 extern int           NumberOfColors ( void );
-extern char *        ColorName ( int num );
+extern const char *  ColorName ( int num );
 
 extern int           TtaGetFrameWindowParentId( int frame_id );
 extern int           TtaGetWindowNumber( );

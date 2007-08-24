@@ -316,11 +316,11 @@ char *TtaGetMessage (int origin, int num)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void TtaDisplayMessage (int msgType, char *fmt,...)
+void TtaDisplayMessage (int msgType, const char *fmt,...)
 {
   va_list             pa;
   int                 i, lg, vald;
-  char               *vals, *p;
+  const char         *vals, *p;
   char                pBuffer[MAX_PATH];
 
   if (fmt)

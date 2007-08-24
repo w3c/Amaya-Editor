@@ -1309,7 +1309,7 @@ char *UpdateDocumentCharset (Document doc)
   Attribute		charsetAttr;
   AttributeType	attrType;
   CHARSET              charset;
-  char                *ptr;
+  const char          *ptr;
 #define MAX_CHARSET_LEN 50
   char                *charsetname;
   ThotBool             oldStructureChecking;

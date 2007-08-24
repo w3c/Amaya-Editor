@@ -61,9 +61,6 @@
 */
 
 
-/* this one should be exported from the thotlib */
-extern char  *ColorName (int num);
-
 #define ct_empty_string ""
 
 /* path to help */

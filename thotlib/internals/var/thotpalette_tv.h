@@ -171,7 +171,7 @@ RGBstruct RGB_colors[] = {
 {127,   0,  65}
 };
 
-char *Name_colors[] ={
+const char *Name_colors[] ={
 "White",
 "Black",
 "LightGrey2",

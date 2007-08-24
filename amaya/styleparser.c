@@ -185,7 +185,7 @@ static char *SkipQuotedString (char *ptr, char quote)
   print the error message msg on stderr.
   When the line is 0 ask to expat the current line number
   ----------------------------------------------------------------------*/
-static void CSSPrintError (char *msg, char *value)
+static void CSSPrintError (const char *msg, const char *value)
 {
   if (!DoDialog && !TtaIsPrinting () && ParsedDoc > 0)
     {
@@ -238,7 +238,7 @@ static void CSSPrintError (char *msg, char *value)
   CSSParseError
   print the error message msg on stderr.
   ----------------------------------------------------------------------*/
-static void CSSParseError (char *msg, char *value, char *endvalue)
+static void CSSParseError (const char *msg, const char *value, char *endvalue)
 {
   char        c = EOS;
 

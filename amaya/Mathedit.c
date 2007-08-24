@@ -3208,6 +3208,15 @@ static void CreateMathConstruct (int construct, ...)
         }
       else
         {
+         /* The selected element is a cell. Select its content. */
+          if(elType.ElTypeNum == MathML_EL_MTD)
+            sibling = TtaGetFirstChild(TtaGetFirstChild(sibling));
+
+         /* The selected element is a row. Select its parent mtable. */
+          if( elType.ElTypeNum == MathML_EL_MTR ||
+              elType.ElTypeNum == MathML_EL_MLABELEDTR)
+            sibling = TtaGetParent(TtaGetParent(sibling));
+
           /* the selected element is not a MROW */
           if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
               elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)

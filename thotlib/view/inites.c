@@ -284,7 +284,7 @@ void         FreeDocColors ()
    If ReduceColor environment setting is set, less color
    are allocated.
   ----------------------------------------------------------------------*/
-void InitDocColors (char *name)
+void InitDocColors (const char *name)
 {
 #ifdef _WINGUI
   PALETTEENTRY        sysPalEntries[256];
@@ -490,7 +490,7 @@ int NumberOfColors ()
 /*----------------------------------------------------------------------
    ColorName       returns the name of a color in Thot color table.
   ----------------------------------------------------------------------*/
-char *ColorName (int num)
+const char *ColorName (int num)
 {
    if (num < NColors && num >= 0)
       return Color_Table[num];
@@ -787,7 +787,7 @@ int NumberOfPatterns ()
 /*----------------------------------------------------------------------
    PatternName     returns the name of a pattern available.
   ----------------------------------------------------------------------*/
-char *PatternName (int num)
+const char *PatternName (int num)
 {
    if (num < NumberOfPatterns () && num >= 0)
       return Patterns[num];

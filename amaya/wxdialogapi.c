@@ -97,7 +97,7 @@ void  ParseStyleDlgValues (void *style_widget, char *cssRule)
 /*----------------------------------------------------------------------
   DisplayStyleValue: update the property in Style dialog
   ----------------------------------------------------------------------*/
-void  DisplayStyleValue (char *property, char *start_value, char *end_value)
+void  DisplayStyleValue (const char *property, char *start_value, char *end_value)
 {
 #ifdef _WX
   char c = EOS;

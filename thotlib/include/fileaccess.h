@@ -126,7 +126,7 @@ extern ThotBool TtaCompareFiles ( CONST char *file1,
    TRUE if the directory could be created or if it existed already,
    FALSE otherwise.
   ----------------------------------------------------------------------*/
-extern ThotBool TtaMakeDirectory ( char *directory );
+extern ThotBool TtaMakeDirectory ( const char *directory );
 
 /*----------------------------------------------------------------------
    TtaCheckDirectory
@@ -134,7 +134,7 @@ extern ThotBool TtaMakeDirectory ( char *directory );
    Return value:
    TRUE if the directory is OK, FALSE if not.	
   ----------------------------------------------------------------------*/
-extern ThotBool TtaCheckDirectory ( char *directory );
+extern ThotBool TtaCheckDirectory ( const char *directory );
 
 /*----------------------------------------------------------------------
   TtaCheckMakeDirectory
@@ -143,12 +143,12 @@ extern ThotBool TtaCheckDirectory ( char *directory );
   Return value:
   TRUE if the operation succeeds, FALSE otherwise.
   ----------------------------------------------------------------------*/
-extern ThotBool TtaCheckMakeDirectory (char *name, ThotBool recursive);
+extern ThotBool TtaCheckMakeDirectory (const char *name, ThotBool recursive);
 
 /*----------------------------------------------------------------------
   TtaIsW3Path returns TRUE if path is in fact a URL.       
   ----------------------------------------------------------------------*/
-extern ThotBool TtaIsW3Path (char *path);
+extern ThotBool TtaIsW3Path (const char *path);
 
 
 #endif /* __CEXTRACT__ */

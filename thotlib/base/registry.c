@@ -156,7 +156,7 @@ char *TtaSkipBlanks (char *ptr)
   TtaIsBlank returns True if the first character is a space, a tab, a
   linefeed or a newline.
   ----------------------------------------------------------------------*/
-ThotBool TtaIsBlank (char *ptr)
+ThotBool TtaIsBlank (const char *ptr)
 {
   if (*ptr == SPACE || *ptr == BSPACE || *ptr == EOL ||
       *ptr == TAB || *ptr == __CR__)
@@ -251,7 +251,7 @@ static void DoVariableSubstitution (char *input, int i_len, char *output,
 /*----------------------------------------------------------------------
   NewRegisterEntry : add a fresh new entry in the Register.
   ----------------------------------------------------------------------*/
-static int NewRegisterEntry (char *appli, char *name, char *value,
+static int NewRegisterEntry (const char *appli, const char *name, char *value,
                              RegistryLevel level)
 {
   char        resu[2000];
@@ -344,7 +344,7 @@ static int NewRegisterEntry (char *appli, char *name, char *value,
   AddRegisterEntry : add an entry in the Register, we first check
   that it doesn't already exist especially if the value is empty.
   ----------------------------------------------------------------------*/
-static int AddRegisterEntry (char *appli, char *name, char *value,
+static int AddRegisterEntry (const char *appli, const char *name, char *value,
                              RegistryLevel level, int overwrite)
 {
   char          resu[2000];
@@ -507,7 +507,7 @@ static void SortEnv (void)
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-ThotBool TtaGetEnvInt (char *name, int *value)
+ThotBool TtaGetEnvInt (const char *name, int *value)
 {
   char *strptr;
 
@@ -533,7 +533,7 @@ ThotBool TtaGetEnvInt (char *name, int *value)
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-ThotBool TtaGetEnvBoolean (char *name, ThotBool *value)
+ThotBool TtaGetEnvBoolean (const char *name, ThotBool *value)
 {
   char *strptr;
 
@@ -566,7 +566,7 @@ ThotBool TtaGetEnvBoolean (char *name, ThotBool *value)
   TtaGetEnvString : read the value associated to an environment string
   if not present return NULL.
   ----------------------------------------------------------------------*/
-char *TtaGetEnvString (char *name)
+char *TtaGetEnvString (const char *name)
 {
   RegistryEntry  cour;
   char          *value;
@@ -691,7 +691,7 @@ char *TtaGetEnvString (char *name)
   TtaClearEnvString : clears the value associated with an environment
   string, in the user registry.
   ----------------------------------------------------------------------*/
-void TtaClearEnvString (char *name)
+void TtaClearEnvString (const char *name)
 {
   AddRegisterEntry (AppRegistryEntryAppli, name, "", REGISTRY_USER, TRUE);
 }
@@ -700,7 +700,7 @@ void TtaClearEnvString (char *name)
   TtaSetEnvInt : set the value associated to an environment string,
   for the current application.
   ----------------------------------------------------------------------*/
-void TtaSetEnvInt (char *name, int value, int overwrite)
+void TtaSetEnvInt (const char *name, int value, int overwrite)
 {
   /* hardcoded so that the biggest integer value has 5 digits: 65535 */
   char ptr[6];
@@ -715,7 +715,7 @@ void TtaSetEnvInt (char *name, int value, int overwrite)
   TtaSetEnvBoolean : set the value associated to an environment string,
   for the current application.
   ----------------------------------------------------------------------*/
-void TtaSetEnvBoolean (char *name, ThotBool value, int overwrite)
+void TtaSetEnvBoolean (const char *name, ThotBool value, int overwrite)
 {
   char *ptr;
 
@@ -730,7 +730,7 @@ void TtaSetEnvBoolean (char *name, ThotBool value, int overwrite)
   TtaSetEnvString : set the value associated to an environment string,
   for the current application.
   ----------------------------------------------------------------------*/
-void TtaSetEnvString (char *name, char *value, int overwrite)
+void TtaSetEnvString (const char *name, char *value, int overwrite)
 {
   char *tmp = value;
   
@@ -749,7 +749,7 @@ void TtaSetEnvString (char *name, char *value, int overwrite)
   TtaSetDefEnvString : set the default value associated to an environment
   string, for the current application.
   ----------------------------------------------------------------------*/
-void TtaSetDefEnvString (char *name, char *value, int overwrite)
+void TtaSetDefEnvString (const char *name, char *value, int overwrite)
 {
   char *tmp = value;
              
@@ -765,7 +765,7 @@ void TtaSetDefEnvString (char *name, char *value, int overwrite)
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-ThotBool TtaGetDefEnvInt (char *name, int *value)
+ThotBool TtaGetDefEnvInt (const char *name, int *value)
 {
   char *strptr;
 
@@ -791,7 +791,7 @@ ThotBool TtaGetDefEnvInt (char *name, int *value)
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-ThotBool TtaGetDefEnvBoolean (char *name, ThotBool *value)
+ThotBool TtaGetDefEnvBoolean (const char *name, ThotBool *value)
 {
   char   *strptr;
 
@@ -823,7 +823,7 @@ ThotBool TtaGetDefEnvBoolean (char *name, ThotBool *value)
   TtaGetDefEnvString : read the default value associated to an 
   environment string. If not present, returns NULL.
   ----------------------------------------------------------------------*/
-char *TtaGetDefEnvString (char *name)
+char *TtaGetDefEnvString (const char *name)
 {
   RegistryEntry  cour;
   char          *value;

@@ -27,7 +27,7 @@ extern char    *TtaGetMessage (int, int);
 extern void     TtaDisplaySimpleMessage (int, int, int);
 extern void     TtaDisplaySimpleMessageString (int, int, int, char *);
 extern void     TtaDisplaySimpleMessageNum (int, int, int, int);
-extern void	TtaDisplayMessage (int msgType, char *fmt, ...);
+extern void	TtaDisplayMessage (int msgType, const char *fmt, ...);
 
 #endif /* __CEXTRACT__ */
 

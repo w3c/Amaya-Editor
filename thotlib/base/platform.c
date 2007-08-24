@@ -227,7 +227,6 @@ static ThotFileHandle TtaFileOpen (CONST char *name, ThotFileMode mode)
 #endif /* _WINGUI */
    return ret;
 }
-#endif /* _WX */
 
 /*----------------------------------------------------------------------
    TtaFileClose returns, 0: error, 1: OK.				
@@ -243,6 +242,7 @@ static int TtaFileClose (ThotFileHandle handle)
 #endif /* _WINGUI */
   return ret;
 }
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
    TtaGetFileSize

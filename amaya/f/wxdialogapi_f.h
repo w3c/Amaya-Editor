@@ -8,7 +8,7 @@
 
 extern void ParseStyleDlgValues ( void *style_widget,
                                   char *cssRule );
-extern void DisplayStyleValue ( char *property,
+extern void DisplayStyleValue ( const char *property,
                                 char *start_value,
                                 char *end_value );
 extern ThotBool CreateSelectOperatorDlgWX ( int ref,
@@ -167,7 +167,7 @@ extern ThotBool CreateNumDlgWX ( int ref,
 
 extern void ParseStyleDlgValues ( void *style_widget,
                                     char *cssRule );
-extern void DisplayStyleValue ( char *property,
+extern void DisplayStyleValue ( const char *property,
                                   char *start_value,
                                   char *end_value );
 extern ThotBool CreateSelectOperatorDlgWX ( int ref,

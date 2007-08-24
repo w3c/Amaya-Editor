@@ -994,7 +994,7 @@ int FileWriteAccess (char *fileName)
    TRUE if the directory could be created or if it existed already,
    FALSE otherwise.
   ----------------------------------------------------------------------*/
-ThotBool TtaMakeDirectory (char *directory)
+ThotBool TtaMakeDirectory (const char *directory)
 {
   int i;
 
@@ -1021,7 +1021,7 @@ ThotBool TtaMakeDirectory (char *directory)
    Return value:
    TRUE if the directory is OK, FALSE if not.	
   ----------------------------------------------------------------------*/
-ThotBool TtaCheckDirectory (char *directory)
+ThotBool TtaCheckDirectory (const char *directory)
 {
 #ifdef _WINGUI
    DWORD               attribs;
@@ -1066,7 +1066,7 @@ ThotBool TtaCheckDirectory (char *directory)
   Return value:
   TRUE if the operation succeeds, FALSE otherwise.
   ----------------------------------------------------------------------*/
-ThotBool TtaCheckMakeDirectory (char *name, ThotBool recursive)
+ThotBool TtaCheckMakeDirectory (const char *name, ThotBool recursive)
 {
   ThotBool  i;
   char     *tmp_name;
@@ -1129,7 +1129,7 @@ ThotBool TtaCheckMakeDirectory (char *name, ThotBool recursive)
   TtaIsW3Path                                           
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
-ThotBool TtaIsW3Path (char *path)
+ThotBool TtaIsW3Path (const char *path)
 {
   if (path == NULL)
     return FALSE;

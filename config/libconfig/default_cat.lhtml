@@ -1,106 +1,106 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="content-type"
+  content="application/xhtml+xml; charset=UTF-8" />
   <title>Default catalogue (thotdir)</title>
   <link href="catalogue.css" rel="stylesheet" type="text/css" />
-  <meta name="generator" content="amaya 6.2, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="Amaya, see http://www.w3.org/Amaya/" />
   <meta name="document" content="svglib_file" />
 </head>
 
 <body>
 
-
-<table border="1" title="List of SVG Images">
-  <caption>Various Images</caption>
+<table class="category" summary="List of SVG Images">
+  <caption>Images</caption>
   <tbody>
     <tr>
-      <td><a href="./colorbox.svg"><img class="image"
-        src="./colorbox.png" alt="Colored cube" /></a></td>
-      <td class="titre-graph" valign="middle">Color boxe</td>
-      <td class="commentaire" valign="middle">It's a cube with color</td>
+      <td class="image"><a href="colorbox.svg"><img src="./colorbox.png"
+        alt="Colored cube" /></a></td>
+      <td class="title">Color boxe</td>
+      <td class="description">A cube with color</td>
     </tr>
     <tr>
-      <td><a href="./Forward.svg"><img class="image"
-        src="./Forward.png" alt="forward type arrow" /></a></td>
-      <td class="titre-graph" valign="middle">Forward</td>
-      <td class="commentaire" valign="middle"></td>
+      <td class="image"><a href="Forward.svg"><img src="./Forward.png"
+        alt="forward type arrow" /></a></td>
+      <td class="title">Forward</td>
+      <td class="description">A forward button</td>
     </tr>
     <tr>
-      <td><a href="./trash.svg"><img class="image" src="./trash.png"
+      <td class="image"><a href="trash.svg"><img src="./trash.png"
         alt="trash" /></a></td>
-      <td class="titre-graph" valign="middle">trash</td>
-      <td class="commentaire" valign="middle">It's a full trash</td>
+      <td class="title">Trash</td>
+      <td class="description">A full trash</td>
     </tr>
     <tr>
-      <td><a href="./star.svg"><img class="image" src="./star.png"
-        alt="star" /></a></td>
-      <td class="titre-graph" valign="middle">Star</td>
-      <td class="commentaire" valign="middle"></td>
+      <td class="image"><a href="star.svg"><img src="./star.png" alt="star"
+        /></a></td>
+      <td class="title">Star</td>
+      <td class="description">A star with a smiling face</td>
     </tr>
     <tr>
-      <td><a href="./amaya_logo.svg"><img class="image" src="./amaya_logo.png"
-        alt="A tamaya"/></a></td>
-      <td class="titre-graph" valign="middle">Logo of Amaya</td>
-      <td class="commentaire" valign="middle">A tamaya</td>
+      <td class="image"><a href="amaya_logo.svg"><img src="./amaya_logo.png"
+        alt="A tamaya" /></a></td>
+      <td class="title">Logo of Amaya</td>
+      <td class="description">The famous tamaya</td>
     </tr>
     <tr>
-      <td><a href="./audio.svg"><img class="image" src="./audio.png"
+      <td class="image"><a href="audio.svg"><img src="./audio.png"
         alt="audio" /></a></td>
-      <td class="titre-graph" valign="middle">audio</td>
-      <td class="commentaire" valign="middle"></td>
+      <td class="title">Audio</td>
+      <td class="description">A musical note inside a balloon</td>
     </tr>
   </tbody>
 </table>
 
-<p></p>
-
-<table border="1" title="List of SVG Arrows">
-  <caption>Various Arrows</caption>
+<table class="category" summary="List of SVG Arrows">
+  <caption>Arrows</caption>
   <tbody>
     <tr>
-      <td><a href="./arrow1.svg"><img class="image" src="./arrow1.png"
+      <td class="image"><a href="arrow1.svg"><img src="./arrow1.png"
         alt="type arrow 1" /></a></td>
-      <td class="titre-graph" valign="middle">arrow 1</td>
-      <td class="commentaire" valign="middle">long black arrow</td>
+      <td class="title">Arrow 1</td>
+      <td class="description">long black arrow with text</td>
     </tr>
     <tr>
-      <td><a href="./arrow2.svg"><img class="image" src="./arrow2.png"
+      <td class="image"><a href="arrow2.svg"><img src="./arrow2.png"
         alt="type arrow 2" /></a></td>
-      <td class="titre-graph" valign="middle">arrow 2</td>
-      <td class="commentaire" valign="middle">short black arrow</td>
+      <td class="title">Arrow 2</td>
+      <td class="description">short black arrow</td>
     </tr>
-<tr>
-      <td><a href="./arrow3.svg"><img class="image" src="./arrow3.png"
+    <tr>
+      <td class="image"><a href="arrow3.svg"><img src="./arrow3.png"
         alt="type arrow 3" /></a></td>
-      <td class="titre-graph" valign="middle">arrow 3</td>
-      <td class="commentaire" valign="middle"></td>
+      <td class="title">Arrow 3</td>
+      <td class="description">discontinuous arrow</td>
     </tr>
     <tr>
-      <td><a href="./arrow4.svg"><img class="image" src="./arrow4.png"
+      <td class="image"><a href="arrow4.svg"><img src="./arrow4.png"
         alt="type arrow 4" /></a></td>
-      <td class="titre-graph" valign="middle">arrow 4</td>
-      <td class="commentaire" valign="middle">rounded arrow</td>
+      <td class="title">Arrow 4</td>
+      <td class="description">rounded arrow</td>
     </tr>
     <tr>
-      <td><a href="./arrow5.svg"><img class="image" src="./arrow5.png"
+      <td class="image"><a href="arrow5.svg"><img src="./arrow5.png"
         alt="type arrow 5" /></a></td>
-      <td class="titre-graph" valign="middle">arrow 5</td>
-      <td class="commentaire" valign="middle"></td>
+      <td class="title">Arrow 5</td>
+      <td class="description">black arrow with two ends</td>
     </tr>
     <tr>
-      <td><a href="./arrow6.svg"><img class="image" src="./arrow6.png"
+      <td class="image"><a href="arrow6.svg"><img src="./arrow6.png"
         alt="type arrow 6" /></a></td>
-      <td class="titre-graph" valign="middle">arrow 6</td>
-      <td class="commentaire" valign="middle"></td>
+      <td class="title">Arrow 6</td>
+      <td class="description">3D arrow</td>
     </tr>
     <tr>
-      <td><a href="./arrow7.svg"><img class="image" src="./arrow7.png"
+      <td class="image"><a href="arrow7.svg"><img src="./arrow7.png"
         alt="type arrow 7" /></a></td>
-      <td class="titre-graph" valign="middle">arrow 7</td>
-      <td class="commentaire" valign="middle">Simple arrow</td>
+      <td class="title">Arrow 7</td>
+      <td class="description">purple arrow</td>
     </tr>
   </tbody>
 </table>
-
 </body>
 </html>

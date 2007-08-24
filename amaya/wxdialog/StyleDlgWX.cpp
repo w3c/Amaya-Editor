@@ -311,7 +311,7 @@ void StyleDlgWX::SetColorTextChanged (int id)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void StyleDlgWX::SetValue (char *property, char *value)
+void StyleDlgWX::SetValue (const char *property, char *value)
 {
   wxCommandEvent  event;
   int             id;

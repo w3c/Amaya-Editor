@@ -5,7 +5,7 @@
  *
  */
 
-char *Name_patterns[] = {
+const char *Name_patterns[] = {
 "nopattern",               
 "foregroundcolor",
 "backgroundcolor" ,

@@ -115,7 +115,7 @@ static void SetImageRule (PtrElement pEl, int w, int h,
 /*----------------------------------------------------------------------
   PivotError							
   ----------------------------------------------------------------------*/
-static void PivotError (BinFile file, char *code)
+static void PivotError (BinFile file, const char *code)
 {
   int                 i, j;
   char                c;

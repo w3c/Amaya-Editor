@@ -755,7 +755,7 @@ void PreferenceDlgWX::SetupLabelDialog_Color()
 
   // setup combobox choices
   int    id_color   = 0;
-  char * color_name = NULL;
+  const char * color_name = NULL;
   while (id_color < NumberOfColors())
     {
       color_name = ColorName(id_color);

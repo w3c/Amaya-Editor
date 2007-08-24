@@ -6,9 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void InitDocColors ( char *name );
+extern void InitDocColors ( const char *name );
 extern void FreeDocColors ( void );
-extern char *ColorName ( int num );
+extern const char *ColorName ( int num );
 extern unsigned long ColorPixel ( int num );
 extern void TtaFreeThotColor ( int num );
 extern int TtaGetThotColor ( unsigned short red,
@@ -25,9 +25,9 @@ extern ThotPixmap CreatePattern ( int disp,
 
 #else /* __STDC__ */
 
-extern void InitDocColors ( char *name );
+extern void InitDocColors ( const char *name );
 extern void FreeDocColors ( void );
-extern char *ColorName ( int num );
+extern const char *ColorName ( int num );
 extern unsigned long ColorPixel ( int num );
 extern void TtaFreeThotColor ( int num );
 extern int TtaGetThotColor ( unsigned short red,

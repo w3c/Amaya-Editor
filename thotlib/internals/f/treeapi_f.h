@@ -97,7 +97,7 @@ extern int TtaGetElementLineNumber ( Element element );
 extern int TtaGetElementLevel ( Element element );
 extern int TtaIsConstant ( ElementType elementType );
 extern ThotBool TtaIsLeaf ( ElementType elementType );
-extern Construct TtaGetConstructOfType ( ElementType elementType );
+extern ConstructType TtaGetConstructOfType ( ElementType elementType );
 extern int TtaGetCardinalOfType ( ElementType elementType );
 extern void TtaGiveConstructorsOfType ( ElementType **typesArray,
                                         int *size,
@@ -106,7 +106,7 @@ extern int TtaGetRankInAggregate ( ElementType componentType,
                                    ElementType aggregateType );
 extern ThotBool TtaIsOptionalInAggregate ( int rank,
                                            ElementType elementType );
-extern Construct TtaGetConstruct ( Element element );
+extern ConstructType TtaGetConstruct ( Element element );
 extern AccessRight TtaGetAccessRight ( Element element );
 extern int TtaIsHolophrasted ( Element element );
 extern int TtaIsReadOnly ( Element element );
@@ -234,7 +234,7 @@ extern int TtaGetElementLineNumber ( Element element );
 extern int TtaGetElementLevel ( Element element );
 extern int TtaIsConstant ( ElementType elementType );
 extern ThotBool TtaIsLeaf ( ElementType elementType );
-extern Construct TtaGetConstructOfType ( ElementType elementType );
+extern ConstructType TtaGetConstructOfType ( ElementType elementType );
 extern int TtaGetCardinalOfType ( ElementType elementType );
 extern void TtaGiveConstructorsOfType ( ElementType **typesArray,
                                           int *size,
@@ -243,7 +243,7 @@ extern int TtaGetRankInAggregate ( ElementType componentType,
                                      ElementType aggregateType );
 extern ThotBool TtaIsOptionalInAggregate ( int rank,
                                              ElementType elementType );
-extern Construct TtaGetConstruct ( Element element );
+extern ConstructType TtaGetConstruct ( Element element );
 extern AccessRight TtaGetAccessRight ( Element element );
 extern int TtaIsHolophrasted ( Element element );
 extern int TtaIsReadOnly ( Element element );

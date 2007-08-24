@@ -40,7 +40,7 @@ void DisplayPRule (PtrPRule RP, FILE *fileDescriptor,
 /*----------------------------------------------------------------------
   DisplayStyleValue: update the property in Style dialog
   ----------------------------------------------------------------------*/
-void  DisplayStyleValue (char *property, char *start_value, char *end_value)
+void  DisplayStyleValue (const char *property, char *start_value, char *end_value)
 {
 }
 

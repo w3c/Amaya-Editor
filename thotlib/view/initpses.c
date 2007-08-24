@@ -35,7 +35,7 @@
 /*----------------------------------------------------------------------
    InitDocColors initialize the Thot internal color table. (fake)
   ----------------------------------------------------------------------*/
-void InitDocColors (char *name)
+void InitDocColors (const char *name)
 {
    NbExtColors = 0;
    Max_Extend_Colors = 256;
@@ -53,7 +53,7 @@ void FreeDocColors ()
 /*----------------------------------------------------------------------
    ColorName       returns the name of a color in Thot color table.
   ----------------------------------------------------------------------*/
-char     *ColorName (int num)
+const char     *ColorName (int num)
 {
    if (num < NColors && num >= 0)
       return Color_Table[num];

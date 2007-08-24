@@ -13,7 +13,7 @@ extern void FreeAllMessages ( void );
 extern char *TtaGetMessage ( int origin,
                              int num );
 extern void TtaDisplayMessage ( int msgType,
-                                char *fmt,
+                                const char *fmt,
                                 ... );
 extern void TtaDisplaySimpleMessage ( int msgType,
                                       int origin,
@@ -28,7 +28,7 @@ extern void FreeAllMessages ( void );
 extern char *TtaGetMessage ( int origin,
                                int num );
 extern void TtaDisplayMessage ( int msgType,
-                                  char *fmt,
+                                  const char *fmt,
                                   ... );
 extern void TtaDisplaySimpleMessage ( int msgType,
                                         int origin,
