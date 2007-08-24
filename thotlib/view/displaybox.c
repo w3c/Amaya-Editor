@@ -421,19 +421,19 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               break;
             case 3: /* LeftFloor ; U0230A */
               if (useStix)
-                DrawStixBracket (frame, xd, yd, width, height, 0, 2, size, fg);
+                DrawStixBracket (frame, xd, yd, width, height, 0, 3, size, fg);
               break;
             case 4: /* RightFloor ; U0230B */
               if (useStix)
-                DrawStixBracket (frame, xd, yd, width, height, 1, 2, size, fg);
+                DrawStixBracket (frame, xd, yd, width, height, 1, 3, size, fg);
               break;
             case 5: /* LeftCeiling ; U02308 */
               if (useStix)
-                DrawStixBracket (frame, xd, yd, width, height, 0, 3, size, fg);
+                DrawStixBracket (frame, xd, yd, width, height, 0, 2, size, fg);
               break;
             case 6: /* RightCeiling ; U02309 */
               if (useStix)
-                DrawStixBracket (frame, xd, yd, width, height, 1, 3, size, fg);
+                DrawStixBracket (frame, xd, yd, width, height, 1, 2, size, fg);
               break;
             case '(': /* c = 40 */
               if (useStix)

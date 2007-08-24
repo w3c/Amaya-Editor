@@ -1219,6 +1219,15 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                       case 7:
                         c = 0x2758; /* VerticalSeparator */
                         break;
+                      case 8 : /* HorizontalLine */
+                        c = 0x2500;
+                        break;
+                      case 9 : /* UnderBar */
+                        c = 0x332;
+                        break;
+                      case 10 : /* OverBar */
+                        c = 0xAF;
+                        break;
                       case 11:
                         c = 0x2223; /* VerticalBar */
                         break;
