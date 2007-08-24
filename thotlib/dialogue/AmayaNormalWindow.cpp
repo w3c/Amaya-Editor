@@ -51,20 +51,19 @@
 #include "AmayaQuickSplitButton.h"
 #include "AmayaStatusBar.h"
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
+IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
 
   /*----------------------------------------------------------------------
    *       Class:  AmayaNormalWindow
    *      Method:  AmayaNormalWindow
    * Description:  create a new AmayaNormalWindow
    -----------------------------------------------------------------------*/
-  AmayaNormalWindow::AmayaNormalWindow (int window_id
-                                        ,wxWindow *p_parent_window
+  AmayaNormalWindow::AmayaNormalWindow ( wxWindow * parent, wxWindowID id
                                         ,const wxPoint& pos
                                         ,const wxSize&  size
                                         ,int kind
                                         ) : 
-    AmayaWindow( window_id, p_parent_window, pos, size, kind ),
+    AmayaWindow( parent, id, pos, size, kind ),
     m_pStatusBar(NULL)
 {
   // initialize default slashbar position
@@ -84,14 +83,15 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
     m_pLayoutSizer = new wxBoxSizer(wxHORIZONTAL);
     {
       // create the quick split button used to show/hide the panel
-      m_pSplitPanelButton = new AmayaQuickSplitButton( this, AmayaQuickSplitButton::wxAMAYA_QS_TOOLS, 4 );
+      m_pSplitPanelButton = new AmayaQuickSplitButton(this, wxID_ANY, AmayaQuickSplitButton::wxAMAYA_QS_TOOLS);
       m_pLayoutSizer->Add(m_pSplitPanelButton, 0, wxEXPAND);
       
       // Create a splitted vertical window
-      m_pSplitterWindow = new wxSplitterWindow( this, -1,
+      m_pSplitterWindow = new wxSplitterWindow( this, wxID_ANY,
                                                 wxDefaultPosition, wxDefaultSize,
                                                 wxSP_3DBORDER | wxSP_3DSASH | wxSP_3D /*| wxSP_PERMIT_UNSPLIT*/ );
       m_pSplitterWindow->SetMinimumPaneSize( 100 );
+      m_pLayoutSizer->Add(m_pSplitterWindow, 1, wxEXPAND);
       {
         // Create a AmayaPanel to contains commands shortcut
         m_pPanel = new AmayaToolPanelBar( m_pSplitterWindow, -1, wxDefaultPosition, wxDefaultSize,
@@ -109,7 +109,6 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
         m_pSplitterWindow->Unsplit( m_pPanel );
       }
       
-      m_pLayoutSizer->Add(m_pSplitterWindow, 1, wxEXPAND);
     }
     p_TopSizer->Add(m_pLayoutSizer, 1, wxEXPAND);
   }  

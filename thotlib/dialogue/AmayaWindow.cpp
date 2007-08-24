@@ -54,30 +54,29 @@
 #include "AmayaApp.h"
 #include "AmayaLogDebug.h"
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaWindow, wxFrame)
+IMPLEMENT_ABSTRACT_CLASS(AmayaWindow, wxFrame)
 
   /* contains the last activated window id. */
   int AmayaWindow::m_ActiveWindowId = -1;
 
 DECLARE_EVENT_TYPE(wxEVT_AMAYA_ACTION_EVENT, -1)
-  DEFINE_EVENT_TYPE(wxEVT_AMAYA_ACTION_EVENT)
+DEFINE_EVENT_TYPE(wxEVT_AMAYA_ACTION_EVENT)
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  AmayaWindow
  * Description:  create a new AmayaWindow
   -----------------------------------------------------------------------*/
-AmayaWindow::AmayaWindow (  int window_id
-                              ,wxWindow *p_parent_window
+AmayaWindow::AmayaWindow (  wxWindow* parent
+                              ,wxWindowID id
                               ,const wxPoint &pos
                               ,const wxSize &size
                               ,int kind
                               ,long style
                               ) : 
-    wxFrame( wxDynamicCast(p_parent_window, wxWindow),
-             -1, _T(""), pos, size, style ),
+    wxFrame(parent, id, wxT(""), pos, size, style ),
     m_Kind( kind ),
-    m_WindowId( window_id ),
+    m_WindowId( id ),
     m_ActiveFrameId( 0 ),
     m_MustCheckFocusIsNotLost( false ),
     m_pMenuBar(NULL)

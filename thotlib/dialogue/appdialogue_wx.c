@@ -190,7 +190,7 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
     case WXAMAYAWINDOW_NORMAL:
     case WXAMAYAWINDOW_ANNOT:
     case WXAMAYAWINDOW_CSS:
-      p_window = new AmayaNormalWindow( window_id, p_parent_window,
+      p_window = new AmayaNormalWindow( p_parent_window, window_id,
                                         window_pos, window_size, kind );
       if (parent_window_id == 0)
         {
@@ -204,7 +204,7 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
         }
       break;
     case WXAMAYAWINDOW_SIMPLE:
-      p_window = new AmayaSimpleWindow( window_id, p_parent_window,
+      p_window = new AmayaSimpleWindow( p_parent_window, window_id,
                                         window_pos, window_size );
       break;
     }    

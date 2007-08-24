@@ -96,13 +96,11 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_w
 
   // Split button creation
   // this button is used to quickly split the page horizontaly
-  m_pSplitButtonBottom = new AmayaQuickSplitButton( this, AmayaQuickSplitButton::wxAMAYA_QS_HORIZONTAL, 4 );
+  m_pSplitButtonBottom = new AmayaQuickSplitButton( this, wxID_ANY, AmayaQuickSplitButton::wxAMAYA_QS_HORIZONTAL);
   p_sizerTop2->Add( m_pSplitButtonBottom, 0, wxEXPAND, 0 );
-  m_pSplitButtonBottom->ShowQuickSplitButton( true );
   // this button is used to quickly split the page verticaly
-  m_pSplitButtonRight = new AmayaQuickSplitButton( this, AmayaQuickSplitButton::wxAMAYA_QS_VERTICAL, 4 );
+  m_pSplitButtonRight = new AmayaQuickSplitButton( this, wxID_ANY, AmayaQuickSplitButton::wxAMAYA_QS_VERTICAL);
   p_sizerTop->Add( m_pSplitButtonRight, 0, wxEXPAND, 0 );
-  m_pSplitButtonRight->ShowQuickSplitButton( true );
 
   /// Insert to area : Top / bottom
   m_pTopFrame     = NULL;
@@ -231,12 +229,6 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   if (p_frame)
     p_frame->SetFrameTitle(p_frame->GetFrameTitle());
 
-//  if ( m_pTopFrame && m_pBottomFrame )
-//  {
-//    /* hide the split button */
-//    //      m_pSplitButtonBottom->ShowQuickSplitButton( false );
-//  }
-  
   SetAutoLayout(TRUE);
 
   // remember the last open view
@@ -321,12 +313,6 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
     {
       // there is no more frame
       SetActiveFrame( NULL );
-    }
-
-  if ( !(m_pTopFrame && m_pBottomFrame) )
-    {
-      /* show again the split button */
-      //      m_pSplitButtonBottom->ShowQuickSplitButton( true );
     }
 
 #ifdef _WINDOWS

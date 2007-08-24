@@ -18,15 +18,15 @@
 
 #include "AmayaQuickSplitButton.h"
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaQuickSplitButton, wxPanel)
+IMPLEMENT_CLASS(AmayaQuickSplitButton, wxPanel)
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaQuickSplitButton
  *      Method:  AmayaQuickSplitButton
   -----------------------------------------------------------------------*/
   AmayaQuickSplitButton::AmayaQuickSplitButton( wxWindow * p_parent_window,
-                                              wxAmayaQuickSplitMode mode, int width)
-  :  wxPanel( p_parent_window/*, -1, _T(""), wxDefaultPosition*/ )
+            wxWindowID id, wxAmayaQuickSplitMode mode, int width)
+  :  wxPanel( p_parent_window, id)
      ,m_Width(width)
      ,m_Mode(mode)
 {
@@ -68,7 +68,6 @@ AmayaQuickSplitButton::~AmayaQuickSplitButton()
 void AmayaQuickSplitButton::OnEnterWindow( wxMouseEvent& event )
 {
   m_OldColour = GetBackgroundColour();
-  //SetBackgroundColour(wxColour(255,50,50));
   SetBackgroundColour(wxColour(255,160,160));
   Refresh();
 
@@ -103,36 +102,6 @@ void AmayaQuickSplitButton::OnActivate( wxMouseEvent& event )
 
   event.Skip();
 }
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaQuickSplitButton
- *      Method:  ShowQuickSplitButton
- * Description:  this function will show/hide the quick splitbar button
-  -----------------------------------------------------------------------*/
-void AmayaQuickSplitButton::ShowQuickSplitButton( bool show )
-{
-  wxSize new_size;
-  if (m_Mode == wxAMAYA_QS_HORIZONTAL)
-    {
-    if (show)
-      new_size = wxSize( GetSize().GetWidth(), m_Width );
-    else
-      new_size = wxSize( GetSize().GetWidth(), 0 );
-    }
-  else if (m_Mode == wxAMAYA_QS_VERTICAL || m_Mode == wxAMAYA_QS_TOOLS)
-    {
-    if (show)
-      new_size = wxSize( m_Width, GetSize().GetHeight() );
-    else
-      new_size = wxSize( 0, GetSize().GetHeight() );
-    }
-
-  // re layout the top sizer and assign the new size
-  wxSizer * p_SizerTop = GetContainingSizer();
-  p_SizerTop->SetItemMinSize( this, new_size );
-  p_SizerTop->Layout();
-}
-
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared

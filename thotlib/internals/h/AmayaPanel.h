@@ -6,11 +6,11 @@
 #include "wx/wx.h"
 #include "wx/panel.h"
 #include "wx/scrolwin.h"
+#include "wx/dynarray.h"
 
 #include "paneltypes_wx.h"
 #include "AmayaParams.h"
 
-#include <list>
 
 class AmayaXHTMLPanel;
 class AmayaAttributePanel;
@@ -73,6 +73,21 @@ class AmayaToolPanelContainer;
 class AmayaDockedToolPanelContainer;
 class AmayaFloatingToolPanelContainer;
 
+
+struct AmayaToolPanelBarListItem
+{
+  wxClassInfo* ci;
+  AmayaToolPanel* panel;
+  AmayaDockedToolPanelContainer*   dock;
+  AmayaFloatingToolPanelContainer* floa;
+  bool shown;
+  bool floating;
+  bool minimized;
+};
+
+WX_DEFINE_ARRAY_PTR(AmayaToolPanelBarListItem *, AmayaToolPanelBarList);
+
+
 class AmayaToolPanelBar : public wxPanel
 {
   DECLARE_DYNAMIC_CLASS(AmayaToolPanelBar)
@@ -115,16 +130,6 @@ public:
 private:
   void OnClose( wxCommandEvent& event );
   
-  struct AmayaToolPanelBarListItem
-  {
-    wxClassInfo* ci;
-    AmayaToolPanel* panel;
-    AmayaDockedToolPanelContainer*   dock;
-    AmayaFloatingToolPanelContainer* floa;
-    bool shown;
-    bool floating;
-    bool minimized;
-  };
   void Initialize();
   
   void AddPanel(AmayaToolPanel* panel);
@@ -132,7 +137,7 @@ private:
   const AmayaToolPanelBarListItem* FindItem(const AmayaToolPanel* panel)const;
   AmayaToolPanelBarListItem* FindItem(const AmayaToolPanel* panel);
   
-  std::list<AmayaToolPanelBarListItem> m_panels;
+  AmayaToolPanelBarList m_panels;
   wxScrolledWindow* m_scwin;
 };
 

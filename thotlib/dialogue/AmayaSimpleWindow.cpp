@@ -39,16 +39,16 @@
 #include "AmayaSimpleWindow.h"
 #include "AmayaFrame.h"
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaSimpleWindow, AmayaWindow)
+IMPLEMENT_CLASS(AmayaSimpleWindow, AmayaWindow)
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaSimpleWindow
  *      Method:  AmayaSimpleWindow
  * Description:  create a new AmayaSimpleWindow
   -----------------------------------------------------------------------*/
-  AmayaSimpleWindow::AmayaSimpleWindow ( int window_id, wxWindow *p_parent_window,
+  AmayaSimpleWindow::AmayaSimpleWindow (  wxWindow * parent, wxWindowID id,
                                          const wxPoint& pos,const wxSize&  size) : 
-  AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_SIMPLE, wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT ),
+  AmayaWindow( parent, id, pos, size, WXAMAYAWINDOW_SIMPLE, wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT ),
   m_pFrame( NULL )
 {
   // Creation of the top sizer to contain simple frame

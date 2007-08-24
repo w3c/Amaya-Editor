@@ -53,10 +53,9 @@ class AmayaQuickSplitButton;
 class AmayaNormalWindow : public AmayaWindow
 {
  public:
-  DECLARE_DYNAMIC_CLASS(AmayaNormalWindow)
+  DECLARE_CLASS(AmayaNormalWindow)
 
-  AmayaNormalWindow ( int window_id = -1
-                      ,wxWindow *frame = NULL
+  AmayaNormalWindow (  wxWindow * parent, wxWindowID id=wxID_ANY
                       ,const wxPoint& pos  = wxDefaultPosition
                       ,const wxSize&  size = wxDefaultSize
                       ,int kind = WXAMAYAWINDOW_NORMAL);

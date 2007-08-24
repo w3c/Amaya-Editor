@@ -9,7 +9,7 @@
 class AmayaQuickSplitButton : public wxPanel
 {
  public:
-  DECLARE_DYNAMIC_CLASS(AmayaQuickSplitButton)
+  DECLARE_CLASS(AmayaQuickSplitButton)
 
  public:
   typedef enum
@@ -19,12 +19,11 @@ class AmayaQuickSplitButton : public wxPanel
       wxAMAYA_QS_TOOLS
     } wxAmayaQuickSplitMode;
 
-  AmayaQuickSplitButton( wxWindow * p_parent_window = NULL
-			 ,wxAmayaQuickSplitMode mode = wxAMAYA_QS_HORIZONTAL
-			 ,int width = 5 );
+  AmayaQuickSplitButton( wxWindow * p_parent_window,
+      wxWindowID id = wxID_ANY,
+			wxAmayaQuickSplitMode mode = wxAMAYA_QS_HORIZONTAL,
+			int width = 4);
   virtual ~AmayaQuickSplitButton();
-
-  void ShowQuickSplitButton( bool show );
 
  protected:
   DECLARE_EVENT_TABLE()  

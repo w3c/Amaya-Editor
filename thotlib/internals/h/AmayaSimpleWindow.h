@@ -35,15 +35,16 @@
 class AmayaSimpleWindow : public AmayaWindow
 {
 public:
-  DECLARE_DYNAMIC_CLASS(AmayaSimpleWindow)
+  DECLARE_CLASS(AmayaSimpleWindow)
 
-  AmayaSimpleWindow ( int             window_id = -1
-		      ,wxWindow *     frame = NULL
+  AmayaSimpleWindow ( wxWindow * parent, wxWindowID id=wxID_ANY
 		      ,const wxPoint& pos  = wxDefaultPosition
 		      ,const wxSize&  size = wxDefaultSize );
 
   virtual ~AmayaSimpleWindow();
 
+  
+  
   virtual AmayaFrame * GetActiveFrame() const;
   virtual void         CleanUp();
 
