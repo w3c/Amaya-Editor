@@ -42,7 +42,7 @@ typedef enum _SearchDomain
 SearchDomain;
 
 /* element construct */
-typedef enum _Construct
+typedef enum _ConstructType
   {
      ConstructIdentity,
      ConstructList,
@@ -59,7 +59,7 @@ typedef enum _Construct
      ConstructEmpty,
      ConstructError
   }
-Construct;
+ConstructType;
 
 #ifndef __CEXTRACT__
 
@@ -774,7 +774,7 @@ extern ThotBool          TtaIsLeaf (ElementType elementType);
    Return value:
    the construct that defines the structure of that element type.
    ---------------------------------------------------------------------- */
-extern Construct TtaGetConstructOfType (ElementType elementType);
+extern ConstructType TtaGetConstructOfType (ElementType elementType);
 
 /* ----------------------------------------------------------------------
    TtaGetCardinalOfType
@@ -841,7 +841,7 @@ extern ThotBool TtaIsOptionalInAggregate(int rank, ElementType elementType);
    Return value:
    the construct that defines the structure of that element.
    ---------------------------------------------------------------------- */
-extern Construct TtaGetConstruct (Element element);
+extern ConstructType TtaGetConstruct (Element element);
 
 /* ----------------------------------------------------------------------
    TtaGetAccessRight

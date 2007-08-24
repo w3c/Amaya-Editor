@@ -2035,9 +2035,9 @@ ThotBool TtaIsLeaf (ElementType elementType)
    Return value:
    the construct that defines the structure of that element type.
    ---------------------------------------------------------------------- */
-Construct TtaGetConstructOfType (ElementType elementType)
+ConstructType TtaGetConstructOfType (ElementType elementType)
 {
-  Construct           result;
+  ConstructType          result;
 
   UserErrorCode = 0;
   result = ConstructError;
@@ -2364,9 +2364,9 @@ ThotBool TtaIsOptionalInAggregate (int rank, ElementType elementType)
    Return value:
    the construct that defines the structure of that element.
    ---------------------------------------------------------------------- */
-Construct TtaGetConstruct (Element element)
+ConstructType TtaGetConstruct (Element element)
 {
-  Construct           result;
+  ConstructType          result;
 
   UserErrorCode = 0;
   result = ConstructError;

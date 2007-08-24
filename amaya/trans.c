@@ -2176,8 +2176,8 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
 {
 
   ElementType         elemTypeChild, tagElType, prevElType;
-  ElementType 	      *subTypes = NULL;
-  Construct           constOfType;
+  ElementType        *subTypes = NULL;
+  ConstructType       constOfType;
   char               *name;
   int                 cardinal, i = 0, start;
   ThotBool            result, found;
