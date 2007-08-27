@@ -968,13 +968,11 @@ AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode m
     }
 
   annot =  AnnotMeta_new ();
-  if (IsW3Path (source_doc_url)
-      || IsFilePath(source_doc_url))
+  if (source_doc_url &&
+      (IsW3Path (source_doc_url) || IsFilePath(source_doc_url)))
     annot->source_url = TtaStrdup (source_doc_url);
   else
-    {
-      annot->source_url = ANNOT_MakeFileURL (source_doc_url);
-    }
+    annot->source_url = ANNOT_MakeFileURL (source_doc_url);
   
   /* get the current date... cdate = mdate at this stage */
   annot->cdate = StrdupDate ();

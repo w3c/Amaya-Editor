@@ -2828,6 +2828,23 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       /* The toolkit has to do its job now */
       TtaHandlePendingEvents ();
     }
+  else if (docType == docAnnot)
+    {
+      window_id = TtaGetAnnotWindowId();
+      if (window_id != -1)
+        {
+          // the annotation window is already open
+          inNewWindow = FALSE;
+          isOpen = TRUE;
+          page_id   = TtaGetFreePageId( window_id );
+          page_position = 1;
+        }
+      else
+        {
+          isOpen = FALSE;
+          requested_doc = 0;
+        }
+    }
   else if (inNewWindow)
     {
       /* open the new document in a fresh window */
@@ -2967,6 +2984,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           int parent_window_id = TtaGetDocumentWindowId( oldDoc, -1 );
           if (docType == docLog)
             window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
+          else if (docType == docCSS)
+            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_CSS, 0 );
+          else if (docType == docAnnot)
+            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_ANNOT, 0 );
           else
             /* a normal window should never had a parent ! */
             window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );

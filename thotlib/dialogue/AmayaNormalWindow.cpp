@@ -105,9 +105,8 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
 
         ThotBool panel_opened;
         TtaGetEnvBoolean ("OPEN_PANEL", &panel_opened);
-
         OpenPanel();
-        if(!panel_opened)
+        if(!panel_opened || kind == WXAMAYAWINDOW_ANNOT || kind == WXAMAYAWINDOW_CSS)
           ClosePanel();
       }
       
@@ -132,6 +131,10 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
  -----------------------------------------------------------------------*/
 AmayaNormalWindow::~AmayaNormalWindow()
 {
+  int window_id = GetWindowId();
+
+  if (window_id == 1)
+    TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
   SetAutoLayout(FALSE);
 }
 
@@ -616,6 +619,7 @@ void AmayaNormalWindow::OnSplitPanelButton( wxCommandEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::ClosePanel()
 {
+  int window_id = GetWindowId();
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaNormalWindow::ClosePanel") );
 
   if (IsPanelOpened())
@@ -625,7 +629,8 @@ void AmayaNormalWindow::ClosePanel()
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
 
-      TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
+      if (window_id == 1)
+        TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
     }
 }
 
@@ -636,6 +641,7 @@ void AmayaNormalWindow::ClosePanel()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::OpenPanel()
 {
+  int window_id = GetWindowId();
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaNormalWindow::OpenPanel") );
   
   if (!IsPanelOpened())
@@ -661,7 +667,8 @@ void AmayaNormalWindow::OpenPanel()
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
 
-      TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
+      if (window_id == 1)
+        TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
     }
 }
 

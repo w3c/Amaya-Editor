@@ -245,7 +245,7 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   return window_id;
 #else
   return 0;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1095,7 +1095,7 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   return TRUE;
 #else
   return FALSE;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1156,7 +1156,7 @@ ThotBool TtaDetachFrame( int frame_id )
   return FALSE;
 #else
   return FALSE;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1235,7 +1235,7 @@ ThotBool TtaClosePage( int window_id, int page_id )
     return FALSE;
 #else
   return FALSE;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1257,7 +1257,7 @@ ThotBool TtaCloseAllPageButThis( int window_id, int page_id )
     return FALSE;
 #else
   return FALSE;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1272,7 +1272,7 @@ int TtaGetActiveWindowId()
   return AmayaWindow::GetActiveWindowId();
 #else
   return -1;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1306,7 +1306,30 @@ int TtaGetFreePageId( int window_id )
   return p_window->GetPageCount();
 #else
   return -1;
-#endif /* #ifdef _WX */
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaGetAnnotWindowId returns the annotation window id
+  params:
+  returns:
+  + int : the new window id or -1 if too much created window
+  ----------------------------------------------------------------------*/
+int TtaGetAnnotWindowId()
+{
+#ifdef _WX
+  int window_id = 1;
+  while ( window_id < MAX_WINDOW )
+    {
+      if ( WindowTable[window_id].WdWindow &&
+           WindowTable[window_id].WdWindow->GetKind() == WXAMAYAWINDOW_ANNOT)
+        return window_id;
+      window_id++;
+    }
+  return -1;
+#else
+  return -1;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1328,7 +1351,7 @@ int TtaGetFreeWindowId()
   return -1;
 #else
   return -1;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1360,7 +1383,7 @@ int TtaGetDocumentWindowId( Document doc_id, int schView )
   return FrameTable[frame_id].FrWindowId;
 #else
   return -1;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1384,7 +1407,7 @@ ThotBool TtaUniqueTabInWindow( Document doc_id )
       if (!found)
         frame_id++;
     }
-#endif /* #ifdef _WX */
+#endif /* _WX */
   return !found;
 }
 
@@ -1433,7 +1456,7 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
   if (!p_page)
     return;
   *page_position = p_page->GetFramePosition( FrameTable[frame_id].WdFrame );
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1453,7 +1476,7 @@ int TtaGetFrameDocumentId( int frame_id )
   return FrameTable[frame_id].FrDoc;
 #else
   return -1;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1473,7 +1496,7 @@ int TtaGetFrameWindowParentId( int frame_id )
   return FrameTable[frame_id].FrWindowId;
 #else
   return -1;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1488,7 +1511,7 @@ AmayaWindow * TtaGetWindowFromId( int window_id )
     return NULL;
   return WindowTable[window_id].WdWindow;
 }
-#endif /* #ifdef _WX */
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
   TtaGetFrameFromId returns a frame from its id
@@ -1502,7 +1525,7 @@ AmayaFrame * TtaGetFrameFromId( int frame_id )
     return NULL;
   return FrameTable[frame_id].WdFrame;
 }
-#endif /* #ifdef _WX */
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
   TtaGetFrameId returns the frame id corresponding to a sepcific position
@@ -1544,7 +1567,7 @@ void TtaCloseWindow( int window_id )
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   if (p_window)
     p_window->Close();
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1558,7 +1581,7 @@ void TtaEmptyURLBar( int window_id )
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   if (p_window)
     p_window->EmptyURLBar();
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1578,9 +1601,9 @@ int TtaGetWindowNumber( )
       window_id++;
     }
   return nb_window;
-#else /* #ifdef _WX */
+#else /* _WX */
   return 1;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1597,7 +1620,7 @@ ThotBool TtaFrameIsClosed( int frame_id )
   return FrameTable[frame_id].FrDoc <= 0;
 #else
   return TRUE;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1662,7 +1685,7 @@ void TtaSetURLBar( int frame_id, const char * listUrl, void (* procedure)())
    * this string is temporary and is updated each times the user modify the string.
    * when the user switch between frames, the window urlbar is updated with this string */
   FrameTable[frame_id].WdFrame->SetFrameURL( firsturl );
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
