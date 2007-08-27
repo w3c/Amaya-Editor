@@ -141,7 +141,7 @@ void SendByMailDlgWX::OnSupprToItem(wxCommandEvent& WXUNUSED(event))
   {
     m_newto->Clear();
     m_tos->Delete(m_currTo);
-    if(m_currTo>=m_tos->GetCount())
+    if(m_currTo>=(int)m_tos->GetCount())
       m_currTo = m_tos->GetCount()-1;
     m_tos->SetSelection(m_currTo);
   }
@@ -280,7 +280,7 @@ wxString SendByMailDlgWX::GetRecipientList()const
   wxString str;
   if(m_tos->GetCount()>0)
   {
-    for(int i=0; i< m_tos->GetCount(); i++)
+    for(int i=0; i<(int)m_tos->GetCount(); i++)
     {
       wxString s = m_tos->GetString(i);
       if(!s.IsEmpty())
