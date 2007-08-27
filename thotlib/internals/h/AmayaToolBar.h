@@ -55,6 +55,9 @@ public:
   
   AmayaWindow * m_pAmayaWindowParent;
   wxComboBox *  m_pComboBox;
+  
+  wxToolBar*  m_LeftToolBar;
+  wxToolBar*  m_RightToolBar;
 };
 
 #endif // __AMAYATOOLBAR_H__

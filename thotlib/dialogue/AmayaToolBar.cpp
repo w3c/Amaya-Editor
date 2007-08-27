@@ -58,43 +58,26 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
 
   m_pAmayaWindowParent = p_amaya_window_parent;
   m_pComboBox = XRCCTRL(*this, "wxID_TOOL_URL", wxComboBox);
-  if (WindowBColor == -1)
-    {
-      // Initialize the window background colour
-	  wxColour col = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
-      WindowBColor = TtaGetThotColor (col.Red(), col.Green(), col.Blue());
-    }
-  /* set tooltips */
-  XRCCTRL(*this, "wxID_TOOL_BACK", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_PREVIOUS)));
-  XRCCTRL(*this, "wxID_TOOL_FORWARD", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_NEXT)));
-  XRCCTRL(*this, "wxID_TOOL_RELOAD", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_RELOAD)));
-  XRCCTRL(*this, "wxID_TOOL_STOP", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_INTERRUPT)));
-  XRCCTRL(*this, "wxID_TOOL_HOME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_HOME)));
-  XRCCTRL(*this, "wxID_TOOL_SAVE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_SAVE)));
-  XRCCTRL(*this, "wxID_TOOL_SAVE_ALL", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_SAVE_ALL)));
-  XRCCTRL(*this, "wxID_TOOL_NEW", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage (LIB, TMSG_BUTTON_NEW)));
-  XRCCTRL(*this, "wxID_TOOL_OPEN", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage (LIB, TMSG_BUTTON_OPEN)));
-  XRCCTRL(*this, "wxID_TOOL_PRINT", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_PRINT)));
-  XRCCTRL(*this, "wxID_TOOL_FIND", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_SEARCH)));
-  XRCCTRL(*this, "wxID_TOOL_CSS", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CSSStyle)));
-  XRCCTRL(*this, "wxID_TOOL_LOGO", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetAppName())+_T(" ")+TtaConvMessageToWX(TtaGetAppVersion()));
+  m_LeftToolBar = XRCCTRL(*this, "wxID_TOOLBAR_LEFT", wxToolBar);
+  m_RightToolBar = XRCCTRL(*this, "wxID_TOOLBAR_RIGHT", wxToolBar);
 
-#ifdef _WINDOWS_26
-  XRCCTRL(*this, "wxID_TOOL_BACK", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_FORWARD", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_RELOAD", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_STOP", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_HOME", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_NEW", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_OPEN", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_SAVE", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_SAVE_ALL", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_PRINT", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_FIND", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_CSS", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-  XRCCTRL(*this, "wxID_TOOL_LOGO", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
-#endif /* _WINDOWS */
-  
+  /* set tooltips */
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_BACK")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_PREVIOUS)));
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_FORWARD")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_NEXT)));
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_RELOAD")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_RELOAD)));
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_STOP")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_INTERRUPT)));
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_HOME")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_HOME)));
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_SAVE")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_SAVE)));
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_SAVE_ALL")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_SAVE_ALL)));
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_NEW")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_NEW)));
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_OPEN")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_OPEN)));
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_PRINT")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_PRINT)));
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_FIND")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_SEARCH)));
+  m_LeftToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_CSS")), TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CSSStyle)));
+
+  m_RightToolBar->SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_LOGO")), 
+      TtaConvMessageToWX(TtaGetAppName())+_T(" ")+TtaConvMessageToWX(TtaGetAppVersion()));
+
   SetAutoLayout(TRUE);
 }
 
@@ -425,11 +408,7 @@ void AmayaToolBar::OnButton_Logo( wxCommandEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaToolBar::EnableTool( const wxString & xrc_id, bool enable )
 {
-  wxWindow * p_window = FindWindow(wxXmlResource::GetXRCID(xrc_id));
-  wxASSERT(p_window);
-
-  if (p_window)
-    p_window->Enable(enable);
+  m_LeftToolBar->EnableTool(wxXmlResource::GetXRCID(xrc_id), enable);
 }
 
 /*----------------------------------------------------------------------
@@ -437,19 +416,20 @@ void AmayaToolBar::EnableTool( const wxString & xrc_id, bool enable )
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaToolBar, wxPanel)
-  EVT_BUTTON( XRCID("wxID_TOOL_BACK"),           AmayaToolBar::OnButton_Back )
-  EVT_BUTTON( XRCID("wxID_TOOL_FORWARD"),        AmayaToolBar::OnButton_Forward )
-  EVT_BUTTON( XRCID("wxID_TOOL_RELOAD"),         AmayaToolBar::OnButton_Reload )
-  EVT_BUTTON( XRCID("wxID_TOOL_STOP"),           AmayaToolBar::OnButton_Stop )
-  EVT_BUTTON( XRCID("wxID_TOOL_HOME"),           AmayaToolBar::OnButton_Home )
-  EVT_BUTTON( XRCID("wxID_TOOL_SAVE"),           AmayaToolBar::OnButton_Save )
-  EVT_BUTTON( XRCID("wxID_TOOL_SAVE_ALL"),       AmayaToolBar::OnButton_Save_All )
-  EVT_BUTTON( XRCID("wxID_TOOL_NEW"),            AmayaToolBar::OnButton_New )
-  EVT_BUTTON( XRCID("wxID_TOOL_OPEN"),           AmayaToolBar::OnButton_Open )
-  EVT_BUTTON( XRCID("wxID_TOOL_PRINT"),          AmayaToolBar::OnButton_Print )
-  EVT_BUTTON( XRCID("wxID_TOOL_FIND"),           AmayaToolBar::OnButton_Find )
-  EVT_BUTTON( XRCID("wxID_TOOL_CSS"),            AmayaToolBar::OnButton_CSS )
-  EVT_BUTTON( XRCID("wxID_TOOL_LOGO"),           AmayaToolBar::OnButton_Logo )
+
+EVT_TOOL( XRCID("wxID_TOOL_BACK"),           AmayaToolBar::OnButton_Back )
+EVT_TOOL( XRCID("wxID_TOOL_FORWARD"),        AmayaToolBar::OnButton_Forward )
+EVT_TOOL( XRCID("wxID_TOOL_RELOAD"),         AmayaToolBar::OnButton_Reload )
+EVT_TOOL( XRCID("wxID_TOOL_STOP"),           AmayaToolBar::OnButton_Stop )
+EVT_TOOL( XRCID("wxID_TOOL_HOME"),           AmayaToolBar::OnButton_Home )
+EVT_TOOL( XRCID("wxID_TOOL_SAVE"),           AmayaToolBar::OnButton_Save )
+EVT_TOOL( XRCID("wxID_TOOL_SAVE_ALL"),       AmayaToolBar::OnButton_Save_All )
+EVT_TOOL( XRCID("wxID_TOOL_NEW"),            AmayaToolBar::OnButton_New )
+EVT_TOOL( XRCID("wxID_TOOL_OPEN"),           AmayaToolBar::OnButton_Open )
+EVT_TOOL( XRCID("wxID_TOOL_PRINT"),          AmayaToolBar::OnButton_Print )
+EVT_TOOL( XRCID("wxID_TOOL_FIND"),           AmayaToolBar::OnButton_Find )
+EVT_TOOL( XRCID("wxID_TOOL_CSS"),            AmayaToolBar::OnButton_CSS )
+EVT_TOOL( XRCID("wxID_TOOL_LOGO"),           AmayaToolBar::OnButton_Logo )
   EVT_COMBOBOX( XRCID("wxID_TOOL_URL"),          AmayaToolBar::OnURLSelected )
   EVT_TEXT_ENTER( XRCID("wxID_TOOL_URL"),        AmayaToolBar::OnURLTextEnter )
   EVT_TEXT( XRCID("wxID_TOOL_URL"),              AmayaToolBar::OnURLText )

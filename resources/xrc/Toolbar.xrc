@@ -4,114 +4,64 @@
     <object class="wxBoxSizer">
       <orient>wxHORIZONTAL</orient>
       <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_BACK">
-          <bitmap>../icons/22x22/back.png</bitmap>
-          <style>wxNO_BORDER</style>
+        <object class="wxToolBar" name="wxID_TOOLBAR_LEFT">
+          <object class="tool" name="wxID_TOOL_BACK">
+            <bitmap>../icons/22x22/back.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_FORWARD">
+            <bitmap>../icons/22x22/forward.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_RELOAD">
+            <bitmap>../icons/22x22/reload.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_STOP">
+            <bitmap>../icons/22x22/stop.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_HOME">
+            <bitmap>../icons/22x22/home.png</bitmap>
+          </object>
+          <object class="separator"/>
+          <object class="tool" name="wxID_TOOL_NEW">
+            <bitmap>../icons/22x22/new.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_OPEN">
+            <bitmap>../icons/22x22/open.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_SAVE">
+            <bitmap>../icons/22x22/save.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_SAVE_ALL">
+            <bitmap>../icons/22x22/save_all.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_PRINT">
+            <bitmap>../icons/22x22/print.png</bitmap>
+          </object>
+          <object class="separator"/>
+          <object class="tool" name="wxID_TOOL_FIND">
+            <bitmap>../icons/22x22/find.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_CSS">
+            <bitmap>../icons/22x22/css.png</bitmap>
+          </object>
+          <style>wxTB_NODIVIDER</style>
         </object>
-        <flag>wxALIGN_CENTRE</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_FORWARD">
-          <bitmap>../icons/22x22/forward.png</bitmap>
-          <style>wxNO_BORDER</style>
-        </object>
-        <flag>wxALIGN_CENTRE</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_RELOAD">
-          <bitmap>../icons/22x22/reload.png</bitmap>
-          <style>wxNO_BORDER</style>
-        </object>
-        <flag>wxALIGN_CENTRE</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_STOP">
-          <bitmap>../icons/22x22/stop.png</bitmap>
-          <style>wxNO_BORDER</style>
-        </object>
-        <flag>wxALIGN_CENTRE</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_HOME">
-          <bitmap>../icons/22x22/home.png</bitmap>
-          <style>wxNO_BORDER</style>
-        </object>
-        <flag>wxALIGN_CENTRE</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxStaticLine">
-          <style>wxLI_VERTICAL</style>
-        </object>
-        <flag>wxEXPAND</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_NEW">
-          <bitmap>../icons/22x22/new.png</bitmap>
-          <style>wxNO_BORDER</style>
-        </object>
-        <flag>wxALIGN_CENTRE</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_OPEN">
-          <bitmap>../icons/22x22/open.png</bitmap>
-          <style>wxNO_BORDER</style>
-        </object>
-        <flag>wxALIGN_CENTRE</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_SAVE">
-          <bitmap>../icons/22x22/save.png</bitmap>
-          <style>wxNO_BORDER</style>
-        </object>
-        <flag>wxALIGN_CENTRE</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_SAVE_ALL">
-          <bitmap>../icons/22x22/save_all.png</bitmap>
-          <style>wxNO_BORDER</style>
-        </object>
-        <flag>wxALIGN_CENTRE</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_PRINT">
-          <bitmap>../icons/22x22/print.png</bitmap>
-          <style>wxNO_BORDER</style>
-        </object>
-        <flag>wxALIGN_CENTRE</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxStaticLine">
-          <style>wxLI_VERTICAL</style>
-        </object>
-        <flag>wxEXPAND</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_FIND">
-          <bitmap>../icons/22x22/find.png</bitmap>
-          <style>wxNO_BORDER</style>
-        </object>
-        <flag>wxALIGN_CENTRE</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_CSS">
-          <bitmap>../icons/22x22/css.png</bitmap>
-          <style>wxNO_BORDER</style>
-        </object>
-        <flag>wxALIGN_CENTRE</flag>
+        <flag>wxALIGN_CENTRE_VERTICAL</flag>
       </object>
       <object class="sizeritem">
         <object class="wxComboBox" name="wxID_TOOL_URL">
           <content/>
         </object>
         <option>1</option>
-        <flag>wxALIGN_CENTRE</flag>
+        <flag>wxALIGN_CENTRE_VERTICAL</flag>
       </object>
       <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_LOGO">
-          <bitmap>../icons/22x22/logo.png</bitmap>
-          <style>wxNO_BORDER</style>
+        <object class="wxToolBar" name="wxID_TOOLBAR_RIGHT">
+          <object class="tool" name="wxID_TOOL_LOGO">
+            <bitmap>../icons/22x22/logo.png</bitmap>
+          </object>
+          <style>wxTB_NODIVIDER</style>
         </object>
-        <flag>wxALIGN_CENTRE</flag>
+        <flag>wxALIGN_CENTRE_VERTICAL</flag>
       </object>
     </object>
   </object>
