@@ -2739,6 +2739,8 @@ void SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl,
   Document            doc;
   int                 pos;
 
+  if (IsEmptyDocument (pDoc))
+    return; // don't select within an empty document
   if (pDoc && pEl)
     {
       pos = 0;
@@ -2777,7 +2779,9 @@ void SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
   NotifyElement       notifyEl;
   Document            doc;
 
-  if (pDoc != NULL && pEl != NULL)
+  if (IsEmptyDocument (pDoc))
+    return; // don't select within an empty document
+  if (pDoc && pEl)
     {
       SelectableAncestor (&pEl, &first);
       doc = IdentDocument (pDoc);

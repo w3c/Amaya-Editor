@@ -25,6 +25,7 @@ extern int CreateAbstractImage ( PtrDocument pDoc,
                                  int chosenView,
                                  ThotBool begin,
                                  PtrElement viewRoot );
+extern ThotBool IsEmptyDocument ( PtrDocument pDoc );
 extern void OpenCreatedView ( PtrDocument pDoc,
                               int view,
                               int X,
@@ -72,6 +73,7 @@ extern int CreateAbstractImage ( PtrDocument pDoc,
                                    int chosenView,
                                    ThotBool begin,
                                    PtrElement viewRoot );
+extern ThotBool IsEmptyDocument ( PtrDocument pDoc );
 extern void OpenCreatedView ( PtrDocument pDoc,
                                 int view,
                                 int X,
