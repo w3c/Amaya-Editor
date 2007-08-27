@@ -1343,8 +1343,8 @@ static void CreateMathConstruct (int construct, ...)
   int                symbol, symbol2, symboltype;
   int                number, type, degree, degreevar, ibefore, par;
   va_list            varpos;
-  ThotBool           oldStructureChecking;
-  ThotBool	         before, emptySel, ok, insertSibling, moveChild;
+  ThotBool           oldStructureChecking = TRUE;
+  ThotBool	         before, emptySel, ok, insertSibling, moveChild, isbinary;
   ThotBool           displayTableForm, registered, insertedMath = FALSE;
   
   doc = TtaGetSelectedDocument ();
@@ -1913,11 +1913,13 @@ static void CreateMathConstruct (int construct, ...)
     case 27: /* Binary operation/relation */
     case 28: /* congru */
     case 29: /* forall, exists, exists2 */
+    case 33: /* symbol with a under element */
     case 34: /* operator with an under element and an empty square after */
     case 35: /* n-ary operation/relation */
     case 39: /* parenthesis ; interval ; fence2 ; set/list extension */
     case 40: /* vertical fence */
     case 41: /* operator with a sub element and an empty square after (inf, max, min, sup, complementsub) */
+    case 43: /* diagonalintersection ; limtendsto ; tendstotendsto */
     case 44: /* elementary classical functions */
     case 45: /* lambda construct */
     case 46: /* quotient */
@@ -1951,8 +1953,6 @@ static void CreateMathConstruct (int construct, ...)
       newType.ElTypeNum = MathML_EL_MFENCED;
       break;
 
-    case 33: /* symbol with a under element */
-    case 43: /* diagonalintersection ; limtendsto ; tendstotendsto */
     case 60: /* underbrace */
       newType.ElTypeNum = MathML_EL_MUNDER;
       break;
@@ -2270,12 +2270,12 @@ static void CreateMathConstruct (int construct, ...)
           CreateNewMtable (child, 1, number, doc);
           moveHere = SelectMtableCell(child, 0, 0);
         } 
-      else if (construct == 26 || construct == 30 || construct == 31 || construct == 33)
+      else if (construct == 26 || construct == 30 || construct == 31)
         {
-          /* Accents ; Exposant ; Symbol sub ; Symbol under */
+          /* Accents ; Exposant ; Symbol sub */
           symboltype = (construct == 26 ? MathML_EL_MO : va_arg(varpos, int));
           symbol = va_arg(varpos, int);
-          if (construct == 31 || construct == 33)
+          if (construct == 31)
             {
             child = TtaGetFirstChild (el);
             moveHere = TtaGetFirstChild(TtaGetLastChild (el));
@@ -2286,7 +2286,42 @@ static void CreateMathConstruct (int construct, ...)
             child = TtaGetLastChild (el);
             }
 
-          if (construct == 33 && symbol == 'R')
+          leaf = TtaGetFirstChild (child);
+          child = leaf;
+          if (symbol <=0)
+            InsertText (&child, symboltype, va_arg(varpos, unsigned char*), doc);
+          else
+            InsertSymbol (&child, symboltype, symbol, doc);
+        
+          TtaDeleteTree (leaf, doc);
+        }
+
+      else if (construct == 33)
+        {
+          /* Symbol under */
+          isbinary = va_arg(varpos, int);
+          symboltype = va_arg(varpos, int);
+          symbol = va_arg(varpos, int);
+
+          leaf = TtaGetFirstChild (el); 
+          child = leaf;
+          if(isbinary)
+            {
+            InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+            moveHere = TtaGetFirstChild(child);
+            }
+            
+          InsertEmptyConstruct(&child, MathML_EL_MUNDER, doc);
+          child2 = child;
+
+          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          if(!isbinary)moveHere = TtaGetFirstChild(child);
+          TtaDeleteTree (leaf, doc);
+
+          child = TtaGetFirstChild (child2); 
+          if(!isbinary)nextToSelect = TtaGetFirstChild(TtaGetLastChild (child2));
+
+          if (symbol == 'R')
             {/* tendsto */
             AttachIntHorizStretch(child,doc);
             leaf = TtaGetFirstChild (child);
@@ -2550,9 +2585,28 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 43)
         {
           /* diagonalintersection ; limtendsto ; tendstotendsto */
+          isbinary = va_arg(varpos, int);
           symbol = va_arg(varpos, int);
           symbol2 = va_arg(varpos, int);
-          child = TtaGetFirstChild (el); 
+          
+          leaf = TtaGetFirstChild (el); 
+          child = leaf;
+          if(isbinary)
+            {
+            InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+            moveHere = TtaGetFirstChild(child);
+            }
+            
+          InsertEmptyConstruct(&child, MathML_EL_MUNDER, doc);
+          child2 = child;
+
+          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          if(!isbinary)moveHere = TtaGetFirstChild(child);
+          TtaDeleteTree (leaf, doc);
+
+          /* First element of the MUNDER */
+          child = TtaGetFirstChild (child2); 
+
           if (symbol == 'R')
             AttachIntHorizStretch(child,doc);
           leaf = TtaGetFirstChild (child);
@@ -2570,7 +2624,8 @@ static void CreateMathConstruct (int construct, ...)
 
           TtaDeleteTree (leaf, doc);
 
-          child = TtaGetLastChild (el); 
+          /* Second element of the MUNDER */
+          child = TtaGetLastChild (child2); 
           leaf = TtaGetFirstChild (child);
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
@@ -2579,7 +2634,7 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (child);
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          moveHere = TtaGetFirstChild(child);
+          if(!isbinary)nextToSelect = TtaGetFirstChild(child);
           if (symbol2 == 0)
             InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
           else
@@ -3902,7 +3957,7 @@ void CreateMDETERMINANT2 (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMDIAGONALINTERSECTION (Document document, View view)
 {
-  CreateMathConstruct (43, 916, '<');}
+  CreateMathConstruct (43, FALSE, 916, '<');}
 /*----------------------------------------------------------------------
   CreateMDIFF
   ----------------------------------------------------------------------*/
@@ -3986,7 +4041,7 @@ void CreateMEQUIVALENTBINARY (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMEQUIVALENTUNDER (Document document, View view)
 {
-  CreateMathConstruct (33, MathML_EL_MO, '~');}
+  CreateMathConstruct (33, TRUE, MathML_EL_MO, '~');}
 /*----------------------------------------------------------------------
   CreateMEULERGAMMA
   ----------------------------------------------------------------------*/
@@ -4242,14 +4297,14 @@ void CreateMLAMBDA (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMLIM (Document document, View view)
 {
-  CreateMathConstruct (33, MathML_EL_MO, 0, "lim");}
+  CreateMathConstruct (33, FALSE, MathML_EL_MO, 0, "lim");}
 
 /*----------------------------------------------------------------------
   CreateMLIMTENDSTO
   ----------------------------------------------------------------------*/
 void CreateMLIMTENDSTO (Document document, View view)
 {
-  CreateMathConstruct (43, 0, 8594, "lim");}
+  CreateMathConstruct (43, FALSE, 0, 8594, "lim");}
 
 /*----------------------------------------------------------------------
   CreateMMAP
@@ -4624,13 +4679,13 @@ void CreateMSUPUNDER (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMTENDSTO (Document document, View view)
 {
-  CreateMathConstruct (33, MathML_EL_MO, 'R');}
+  CreateMathConstruct (33, TRUE, MathML_EL_MO, 'R');}
 /*----------------------------------------------------------------------
   CreateMTENDSTOTENDSTO
   ----------------------------------------------------------------------*/
 void CreateMTENDSTOTENDSTO (Document document, View view)
 {
-  CreateMathConstruct (43, 'R', 8594);}
+  CreateMathConstruct (43, TRUE, 'R', 8594);}
 /*----------------------------------------------------------------------
   CreateMTIMES
   ----------------------------------------------------------------------*/
