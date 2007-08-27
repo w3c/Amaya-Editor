@@ -19,6 +19,12 @@
 
 #include "appdialogue_wx_f.h"
 
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "edit_tv.h"
+#include "frame_tv.h"
+
+
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaWindow.h"
@@ -41,6 +47,12 @@ AmayaNotebook::AmayaNotebook(wxWindow * window , wxWindowID id)
                  wxT("AmayaNotebook") )
      ,m_MContextFrameId(0)
 {
+  if (WindowBColor == -1)
+    {
+      // Initialize the window background colour
+    wxColour col = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
+      WindowBColor = TtaGetThotColor (col.Red(), col.Green(), col.Blue());
+    }
   SetImageList( AmayaApp::GetDocumentIconList() );
 }
 

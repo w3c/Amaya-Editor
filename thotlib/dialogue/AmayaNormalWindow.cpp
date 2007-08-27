@@ -71,6 +71,8 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
   // load slash position from registry
   TtaGetEnvInt ("SLASH_PANEL_POS", &m_SlashPos);
 
+  
+  
   // Create a background panel to contain everything : better look on windows
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
   
@@ -101,12 +103,12 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
         // Create the notebook
         m_pNotebook = new AmayaNotebook( m_pSplitterWindow, wxID_ANY );
 
-        // Split the Notebook and the AmayaPanel
-        m_pSplitterWindow->SplitVertically(m_pPanel,
-                                           m_pNotebook,
-                                           m_SlashPos );  
-        // do not split the panel by default
-        m_pSplitterWindow->Unsplit( m_pPanel );
+        ThotBool panel_opened;
+        TtaGetEnvBoolean ("OPEN_PANEL", &panel_opened);
+
+        OpenPanel();
+        if(!panel_opened)
+          ClosePanel();
       }
       
     }
@@ -556,7 +558,15 @@ void AmayaNormalWindow::OnMenuHighlight( wxMenuEvent& event )
 void AmayaNormalWindow::OnSplitterPosChanged( wxSplitterEvent& event )
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnSplitterPosChanged now = %d"), event.GetSashPosition() );
-  m_SlashPos = event.GetSashPosition();
+  
+  if(!strcmp(TtaGetEnvString("TOOLPANEL_LAYOUT"), "LEFT"))
+    {
+      m_SlashPos = event.GetSashPosition();
+    }
+  else
+    {
+      m_SlashPos = m_pSplitterWindow->GetSize().x - event.GetSashPosition();
+    }
 
   // save slash position into registry 
   TtaSetEnvInt("SLASH_PANEL_POS", m_SlashPos, TRUE);
@@ -573,8 +583,6 @@ void AmayaNormalWindow::OnSplitterDClick( wxSplitterEvent& event )
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnSplitterDClick") );
   m_pSplitterWindow->Unsplit( m_pPanel );
-//  m_pPanel->ShowWhenUnsplit( false );
-  //  event.Skip();  
 }
 
 /*----------------------------------------------------------------------
@@ -613,7 +621,6 @@ void AmayaNormalWindow::ClosePanel()
   if (IsPanelOpened())
     {
       m_pSplitterWindow->Unsplit( m_pPanel );
-//      m_pPanel->ShowWhenUnsplit( false );
 
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
@@ -643,11 +650,10 @@ void AmayaNormalWindow::OpenPanel()
         }
       else
         {
-          wxSize sz = GetSize();
           // Open tool panel bar at right.
           m_pSplitterWindow->SplitVertically( m_pNotebook,
                                               m_pPanel,
-                                              sz.x-m_SlashPos);
+                                              m_pSplitterWindow->GetSize().x-m_SlashPos);
           m_pLayoutSizer->Show(m_pSplitPanelButton, false);
           
         }
