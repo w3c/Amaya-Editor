@@ -437,6 +437,12 @@ extern void TtaRefreshElementMenu (Document doc, View view);
   ----------------------------------------------------------------------*/
 extern void TtaStringToClipboard (unsigned char *s, CHARSET encoding);
 
+
+/*----------------------------------------------------------------------
+  TtaUpdateToolPanelLayout
+  ----------------------------------------------------------------------*/
+extern void TtaUpdateToolPanelLayout ();
+
 #endif /* __CEXTRACT__  */
 
 #endif

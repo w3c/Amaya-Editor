@@ -518,7 +518,8 @@ bool AmayaFloatingToolPanelContainer::Attach()
   wxSizer* sz = GetSizer();
   if(sz)
     {
-      sz->Add(GetPanel(), 0, wxEXPAND);
+      GetPanel()->Show();
+      sz->Add(GetPanel(), 0, wxEXPAND)->Show(true);
       sz->Layout();
       Fit();
       return true;

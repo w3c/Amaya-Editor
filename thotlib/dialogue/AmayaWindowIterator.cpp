@@ -36,6 +36,7 @@
 
 #include "AmayaWindowIterator.h"
 #include "AmayaWindow.h"
+#include "AmayaNormalWindow.h"
 
 void AmayaWindowIterator::first()
 {
@@ -71,5 +72,20 @@ int AmayaWindowIterator::currentWindowId()
     return 0;
 }
 
+
+/*----------------------------------------------------------------------
+  TtaUpdateToolPanelLayout
+  ----------------------------------------------------------------------*/
+void TtaUpdateToolPanelLayout ()
+{
+  AmayaWindowIterator it;
+  for( it.first(); !it.isDone(); it.next() )
+    {
+      AmayaWindow* win = (AmayaWindow*)it.currentElement();
+      AmayaNormalWindow* thewin = wxDynamicCast(win, AmayaNormalWindow);
+      if(thewin)
+        thewin->RefreshToolPanelBar();
+    }
+}
 
 #endif /* #ifdef _WX */

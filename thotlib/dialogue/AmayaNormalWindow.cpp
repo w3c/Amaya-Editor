@@ -494,6 +494,7 @@ AmayaToolBar * AmayaNormalWindow::GetAmayaToolBar()
   return m_pToolBar;
 }
 
+
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
  *      Method:  CleanUp
@@ -632,9 +633,24 @@ void AmayaNormalWindow::OpenPanel()
   
   if (!IsPanelOpened())
     {
-      m_pSplitterWindow->SplitVertically( m_pPanel,
-                                          m_pNotebook,
-                                          m_SlashPos );
+      if(!strcmp(TtaGetEnvString("TOOLPANEL_LAYOUT"), "LEFT"))
+        {
+          // Open tool panel bar at left.
+          m_pSplitterWindow->SplitVertically( m_pPanel,
+                                              m_pNotebook,
+                                              m_SlashPos );
+          m_pLayoutSizer->Show(m_pSplitPanelButton, true);
+        }
+      else
+        {
+          wxSize sz = GetSize();
+          // Open tool panel bar at right.
+          m_pSplitterWindow->SplitVertically( m_pNotebook,
+                                              m_pPanel,
+                                              sz.x-m_SlashPos);
+          m_pLayoutSizer->Show(m_pSplitPanelButton, false);
+          
+        }
       m_pPanel->Layout();
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
@@ -662,6 +678,18 @@ bool AmayaNormalWindow::IsPanelOpened()
 AmayaToolPanelBar * AmayaNormalWindow::GetToolPanelBar() const
 {
   return m_pPanel;
+}
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  RefreshToolPanelBar
+ * Description:  Intend to change the layout of tool bar panel
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::RefreshToolPanelBar()
+{
+  ClosePanel();
+  OpenPanel();
 }
 
 /*----------------------------------------------------------------------

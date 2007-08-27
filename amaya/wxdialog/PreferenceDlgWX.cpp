@@ -271,6 +271,8 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ACCESSKEY)) );
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetString(2,TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_NONE)) );
 
+  XRCCTRL(*this, "wxID_LABEL_TOOLPANEL_ALIGN", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_TOOLPANEL_ALIGN)) );
+  
   /* tooltip of color buttons */
   XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
   XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
@@ -355,6 +357,12 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetInsertionPointEnd();
 #endif /* _WINDOW || _MACOS */
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
+  
+  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_TOOLPANEL_ALIGN_LEFT)) );
+  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_TOOLPANEL_ALIGN_RIGHT)) );
+  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_TOOLPANEL_ALIGN_FREE)) );
+  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->SetSelection(prop.ToolPanelLayout);
+  
 }
 
 /*----------------------------------------------------------------------
@@ -391,6 +399,9 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   else
     strncpy( prop.DialogueLang, buffer, 2 );
   prop.DialogueLang[2] = EOS;
+  
+  prop.ToolPanelLayout = XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->GetSelection();
+  
   return prop;
 }
 

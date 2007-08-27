@@ -233,212 +233,217 @@
 231 Per server
 232 Chiavi di accesso
 233 Ignora
-234 Elemento si stile
-235 No posso create un XPointer
-236 Impossibile attaccare uno start XPointer su un elemento aggiunto internamente
-237 Impossibile attaccare uno end XPointer su un elemento aggiunto internamente
-238 Non trovo dove muovere l'annotazione
-239 Non posso muovere l'annotazione su un diverso documento
-240 Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.
-241 Non posso creare un XPointer per questa annotazione
-242 Aggiungi una nuova annotazione
-243 Non posso postare l'annotazione
-244 Non posso cancellare l'annotazione
-245 Annotazione cancellata!
-246 Non posso caricare l'indice delle annotazioni
-247 Errore
-248 Seleziona un Charset
-249 Seleziona un tipo MIME
-250 Cambia Charset
-251 Cambia tipo MIME
-252 Cambia
-253 Questo tipo di documento non supporta i charset
-254 Per usare questa opzione, il target deve essere un'URL HTTP
-255 Errore: MIME type non valido
-256 Sconosciuto
-257 I stili sono ignorati - vedi File > Mostra le errore
-258 Questo documento è già caricato in un'altra finestra
-259 Salvare questa istanza può fare perdere degli aggiornamenti
-260 Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi
-261 Confermi l'operazione?
-262 Per un documento XHTML, usa il MIME type application/xhtml+xml
-263 Charset per i nuovi documenti
-264 Lock riuscito!
-265 Lock fallito!
-266 Metto il lock su %s...
-267 Il documento %s ha un lock!
-268 Il documento %s ha un lock da %s (timeout %s)
-269 Sovrascrivere l'informazione di lock?
-270 Copiare l'informazione di lock?
-271 Prova a togliere prima il lock dal documento..."
-272 Lock tolto!
-273 Lock non tolto!
-274 Tolgo il lock su %s...
-275 Tolto il lock al documento %s!
-276 Tolgo il lock al documento?
-277 Proprietà del documento
-278 Le proprietà del documento non sono disponibili
-279 Le proprietà del documento non sono al momento disponibili. Riprova più tardi...
-280 Cerco le proprietà del documento...
-281 Mi spiace, non c'è supporto WebDAV per URL di questo tipo %s
-282 Impossibile salvare le informazioni di lock sulla base locale
-283 Impossibile togliere le informazioni di lock dalla base locale
-284 Mi spiace, questa operazione non è permessa per %s
-285 Richiesta fallita! Motivo: Dipendenza non riuscita
-286 Richiesta fallita! Motivo: %s
-287 Riprovo?
-288 WebDAV
-289 Riferimento personale utente (URL)
-290 Resource List WebDAV per l'utente(URL URL)
-291 Profondità lock
-292 infinito
-293 Timeout per il lock
-294 Infinito
-295 Altro (Secondi)
-296 Scopo per il lock
-297 esclusivo
-298 condiviso
-299 Awarenees
-300 General awareness
-301 Awareness on exit
-302 Animazione
-303 Libreria SVG
-304 Opzione di copia
-305 Copia la selezione
-306 Riferisciti alla selezione
-307 Aggiungi un nuovo modello alla libreria
-308 URL del nuovo file SVG ...
-309 Titolo della libreria
-310 URL per la libreria
-311 Crea libreria
-312 Scorri la libreria
-313 Crea o cerca libreria
-314 La selezione non contiene solo elementi SVG. Per favore riseleziona.
-315 Il titolo della libreria è obbligatorio
-316 Muovi il cursore nel documento editato per definire la nuova posizione chiave...
-317 Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...
-318 Scegli il colore iniziale dell'elemento...
-319 Colore iniziale definito. Sposta il cursore per definire la durata dell'animazione...
-320 Scegli il colore finale...
-321 Animazione definita.
-322 Attributo animato
-323 Elemento senza ID
-324 Aggiungi ID
-325 Elimina ID
-326 Aggiungi/Elimina ID
-327 Applica l'operazione
-328 Inserisci un nome di elemento
-329 Applica il CSS
-330 Output corrente
-331 Nuova rubrica
-332 Proprietà del bookmark
-333 Proprietà della rubrica
-334 Gerarchia delle rubriche :
-335 Titolo :
-336 Richiama :
-337 Autore :
-338 Creato :
-339 Ultima modifica :
-340 Descrizione :
-341 Selezionare un elemento
-342 Tutti i CSS
-343 Regole di stile CSS applicate all'elemento <%s>\n
-344 Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n
-345 Carica oggetti (object, embed, iframe)
-346 Nessuna regola di stile per questo elemento
-347 Nessuna posizione di inserimenti definita. Selezionala prima
-348 Informazioni sul documento
-349 Tipo di documento
-350 MIME Type
-351 Charset
-352 Content Length
-353 Content Location
-354 Preferenze
-355 Carattere (&xxx;)
-356 Crea oggetto
-357 Directory
-358 File
-359 Sostituisci l'attuale
-360 In una nuova finestra
-361 Anti-aliasing
-362 Formato ISO per la data
-363 Locazione per i nuovi documenti
-364 Locazione per aprire documenti
-365 Avviso quando si chiudono pi tab
-366 Numero massimo di URL storicizzati
-367 Vuota la lista degli URL
-368 Mostra tutti gli shortcut
-368 Locazione per aprire documenti
-369 Lunghezza riga fissata (0 = valore di default)
-370 Modello
-371 Salva il documento come...
-372 Modello non trovato
-373 Mostra i box per il modello
-374 Applica chiude questo dialogo
-375 Non ammesso
-376 Elemento protetto
-377 La selezione non può attraversare un elemento di questo tipo
-378 Nessun titolo
-379 Salva comunque
-380 Non posso trovare l'host
-381 Il documento è stato modificato (412)
-382 Conflitto con lo stato attuale della risorsa
-383 Selezione non valida
-384 Elemento sconosciuto
-385 %d elementi aggiornati
-386 Il titolo è obbligatorio
-387 Modelli
-388 Numero di occorrenze
-389 Raggiunto il massimo numero di occorrenze
-390 Raggiunto il minimo numero di occorrenze
-391 Controllo ID duplicati
-392 Aggiungi il foglio di stile xsl per gli elementi MathML
-393 Inserisci l'operatore
-394 Scegli il modo in cui l'operatore viene visualizzato
-395 Inserisci un integrale
-396 Scegli il tipo di integrale
-397 Attributi dei delimitatori
-398 Scegli simboli di apertura, separazione e chiusura
-399 Numero di simboli operatore
-400 Numero di coordinate
-401 Lunghezza delle N-uple
-402 Numero di elementi
-403 Numbeo di variabili
-404 Grado della variabile
-405 Grado della  variable numero %d
-406 Documento composto
-407 Copia le risorse (stili e script)
-408 Dove salvare le risorse
-409 Dove salvare le immagini
-410 Documento
-411 Immagini, Stili e Script
-412 Email
-413 Parametri comuni per inviare messaggi:
-414 Indirizzo del server SMTP:
-415 Porta del server:
-416 (25 per default)
-417 Indirizzo di invio (campo From):
-418 A:
-419 Invia per email
-420 Titolo:
-421 Invia come:
-422 Corpo del messaggio
-423 Allegato
-424 Non inviare
-425 Invia
-426 Indirizzo e porta del server devono essere settati nelle Preferenze
-427 Messaggio:
-428 Messaggio alternativo di testo:
-429 Il server è irraggiungibile o non rispond
-430 Il server ha rifiutato il messaggio
-431 L'indirizzo del mittente è malformattato
-432 L'indirizzo di un destinatario è malformattato
-433 Il contenuto del messaggio è malformattato
-434 Messaggio non inviato
-435 Messaggio inviato
-436 Password
-437 Vuoi che Amaya ricordi questa password?
-438 Ricorda le password per i siti
-439 Siti
-440 Elimina tutti
-441 Nuovo
+234 **Tool panel bar alignment: 
+235 **left
+236 **right
+237 **free
+238 ** (must restart app)
+239 Elemento si stile
+240 No posso create un XPointer
+241 Impossibile attaccare uno start XPointer su un elemento aggiunto internamente
+242 Impossibile attaccare uno end XPointer su un elemento aggiunto internamente
+243 Non trovo dove muovere l'annotazione
+244 Non posso muovere l'annotazione su un diverso documento
+245 Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.
+246 Non posso creare un XPointer per questa annotazione
+247 Aggiungi una nuova annotazione
+248 Non posso postare l'annotazione
+249 Non posso cancellare l'annotazione
+250 Annotazione cancellata!
+251 Non posso caricare l'indice delle annotazioni
+252 Errore
+253 Seleziona un Charset
+254 Seleziona un tipo MIME
+255 Cambia Charset
+256 Cambia tipo MIME
+257 Cambia
+258 Questo tipo di documento non supporta i charset
+259 Per usare questa opzione, il target deve essere un'URL HTTP
+260 Errore: MIME type non valido
+261 Sconosciuto
+262 I stili sono ignorati - vedi File > Mostra le errore
+263 Questo documento è già caricato in un'altra finestra
+264 Salvare questa istanza può fare perdere degli aggiornamenti
+265 Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi
+266 Confermi l'operazione?
+267 Per un documento XHTML, usa il MIME type application/xhtml+xml
+268 Charset per i nuovi documenti
+269 Lock riuscito!
+270 Lock fallito!
+271 Metto il lock su %s...
+272 Il documento %s ha un lock!
+273 Il documento %s ha un lock da %s (timeout %s)
+274 Sovrascrivere l'informazione di lock?
+275 Copiare l'informazione di lock?
+276 Prova a togliere prima il lock dal documento..."
+277 Lock tolto!
+278 Lock non tolto!
+279 Tolgo il lock su %s...
+280 Tolto il lock al documento %s!
+281 Tolgo il lock al documento?
+282 Proprietà del documento
+283 Le proprietà del documento non sono disponibili
+284 Le proprietà del documento non sono al momento disponibili. Riprova più tardi...
+285 Cerco le proprietà del documento...
+286 Mi spiace, non c'è supporto WebDAV per URL di questo tipo %s
+287 Impossibile salvare le informazioni di lock sulla base locale
+288 Impossibile togliere le informazioni di lock dalla base locale
+289 Mi spiace, questa operazione non è permessa per %s
+290 Richiesta fallita! Motivo: Dipendenza non riuscita
+291 Richiesta fallita! Motivo: %s
+292 Riprovo?
+293 WebDAV
+294 Riferimento personale utente (URL)
+295 Resource List WebDAV per l'utente(URL URL)
+296 Profondità lock
+297 infinito
+298 Timeout per il lock
+299 Infinito
+300 Altro (Secondi)
+301 Scopo per il lock
+302 esclusivo
+303 condiviso
+304 Awarenees
+305 General awareness
+306 Awareness on exit
+307 Animazione
+308 Libreria SVG
+309 Opzione di copia
+310 Copia la selezione
+311 Riferisciti alla selezione
+312 Aggiungi un nuovo modello alla libreria
+313 URL del nuovo file SVG ...
+314 Titolo della libreria
+315 URL per la libreria
+316 Crea libreria
+317 Scorri la libreria
+318 Crea o cerca libreria
+319 La selezione non contiene solo elementi SVG. Per favore riseleziona.
+320 Il titolo della libreria è obbligatorio
+321 Muovi il cursore nel documento editato per definire la nuova posizione chiave...
+322 Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...
+323 Scegli il colore iniziale dell'elemento...
+324 Colore iniziale definito. Sposta il cursore per definire la durata dell'animazione...
+325 Scegli il colore finale...
+326 Animazione definita.
+327 Attributo animato
+328 Elemento senza ID
+329 Aggiungi ID
+330 Elimina ID
+331 Aggiungi/Elimina ID
+332 Applica l'operazione
+333 Inserisci un nome di elemento
+334 Applica il CSS
+335 Output corrente
+336 Nuova rubrica
+337 Proprietà del bookmark
+338 Proprietà della rubrica
+339 Gerarchia delle rubriche :
+340 Titolo :
+341 Richiama :
+342 Autore :
+343 Creato :
+344 Ultima modifica :
+345 Descrizione :
+346 Selezionare un elemento
+347 Tutti i CSS
+348 Regole di stile CSS applicate all'elemento <%s>\n
+349 Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n
+350 Carica oggetti (object, embed, iframe)
+351 Nessuna regola di stile per questo elemento
+352 Nessuna posizione di inserimenti definita. Selezionala prima
+353 Informazioni sul documento
+354 Tipo di documento
+355 MIME Type
+356 Charset
+357 Content Length
+358 Content Location
+359 Preferenze
+360 Carattere (&xxx;)
+361 Crea oggetto
+362 Directory
+363 File
+364 Sostituisci l'attuale
+365 In una nuova finestra
+366 Anti-aliasing
+367 Formato ISO per la data
+368 Locazione per i nuovi documenti
+369 Locazione per aprire documenti
+370 Avviso quando si chiudono pi tab
+371 Numero massimo di URL storicizzati
+372 Vuota la lista degli URL
+373 Mostra tutti gli shortcut
+373 Locazione per aprire documenti
+374 Lunghezza riga fissata (0 = valore di default)
+375 Modello
+376 Salva il documento come...
+377 Modello non trovato
+378 Mostra i box per il modello
+379 Applica chiude questo dialogo
+380 Non ammesso
+381 Elemento protetto
+382 La selezione non può attraversare un elemento di questo tipo
+383 Nessun titolo
+384 Salva comunque
+385 Non posso trovare l'host
+386 Il documento è stato modificato (412)
+387 Conflitto con lo stato attuale della risorsa
+388 Selezione non valida
+389 Elemento sconosciuto
+390 %d elementi aggiornati
+391 Il titolo è obbligatorio
+392 Modelli
+393 Numero di occorrenze
+394 Raggiunto il massimo numero di occorrenze
+395 Raggiunto il minimo numero di occorrenze
+396 Controllo ID duplicati
+397 Aggiungi il foglio di stile xsl per gli elementi MathML
+398 Inserisci l'operatore
+399 Scegli il modo in cui l'operatore viene visualizzato
+400 Inserisci un integrale
+401 Scegli il tipo di integrale
+402 Attributi dei delimitatori
+403 Scegli simboli di apertura, separazione e chiusura
+404 Numero di simboli operatore
+405 Numero di coordinate
+406 Lunghezza delle N-uple
+407 Numero di elementi
+408 Numbeo di variabili
+409 Grado della variabile
+410 Grado della  variable numero %d
+411 Documento composto
+412 Copia le risorse (stili e script)
+413 Dove salvare le risorse
+414 Dove salvare le immagini
+415 Documento
+416 Immagini, Stili e Script
+417 Email
+418 Parametri comuni per inviare messaggi:
+419 Indirizzo del server SMTP:
+420 Porta del server:
+421 (25 per default)
+422 Indirizzo di invio (campo From):
+423 A:
+424 Invia per email
+425 Titolo:
+426 Invia come:
+427 Corpo del messaggio
+428 Allegato
+429 Non inviare
+430 Invia
+431 Indirizzo e porta del server devono essere settati nelle Preferenze
+432 Messaggio:
+433 Messaggio alternativo di testo:
+434 Il server è irraggiungibile o non rispond
+435 Il server ha rifiutato il messaggio
+436 L'indirizzo del mittente è malformattato
+437 L'indirizzo di un destinatario è malformattato
+438 Il contenuto del messaggio è malformattato
+439 Messaggio non inviato
+440 Messaggio inviato
+441 Password
+442 Vuoi che Amaya ricordi questa password?
+443 Ricorda le password per i siti
+444 Siti
+445 Elimina tutti
+446 Nuovo

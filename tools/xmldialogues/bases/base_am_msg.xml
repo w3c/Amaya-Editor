@@ -3718,6 +3718,26 @@
 	<message xml:lang="tw">忽略</message>
 	<message xml:lang="sk">Ignorovať</message>
 </label>
+<label define="AM_TOOLPANEL_ALIGN">
+	<message xml:lang="en">Tool panel bar alignment: </message>
+	<message xml:lang="fr">Aligner les panneaux d'outils :</message>
+</label>
+<label define="AM_TOOLPANEL_ALIGN_LEFT">
+	<message xml:lang="en">left</message>
+	<message xml:lang="fr">à gauche</message>
+</label>
+<label define="AM_TOOLPANEL_ALIGN_RIGHT">
+	<message xml:lang="en">right</message>
+	<message xml:lang="fr">à droite</message>
+</label>
+<label define="AM_TOOLPANEL_ALIGN_FREE">
+	<message xml:lang="en">free</message>
+	<message xml:lang="fr">librement</message>
+</label>
+<label define="AM_TOOLPANEL_ALIGN_MUST_RESTART">
+	<message xml:lang="en"> (must restart app)</message>
+	<message xml:lang="fr"> (redémarrage nécessaire)</message>
+</label>
 <label define="AM_LOCAL_CSS">
 	<message xml:lang="en">Style element</message>
 	<message xml:lang="fr">Elément Style</message>

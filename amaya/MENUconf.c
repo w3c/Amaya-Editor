@@ -507,8 +507,11 @@ void InitAmayaDefEnv (void)
 
   /* Passwords */
   TtaSetEnvBoolean ("SAVE_PASSWORDS", TRUE, FALSE);
-
+  
   /* appearance */
+
+  /* Tool panel layout. */
+  TtaSetDefEnvString ("TOOLPANEL_LAYOUT", "RIGHT", FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -1633,6 +1636,14 @@ void GetGeneralConf (void)
   GetEnvString ("APP_TMPDIR", AppTmpDir);
   GetEnvString ("APP_HOME", AppHome);
 #endif /* _WINGUI */
+  
+  GetEnvString ("TOOLPANEL_LAYOUT", ptr);
+  if (!strcmp (ptr, "LEFT"))
+    GProp_General.ToolPanelLayout = 0;
+  else if (!strcmp (ptr, "FREE"))
+    GProp_General.ToolPanelLayout = 2;
+  else /* Default = RIGHT (queried by palette)*/
+    GProp_General.ToolPanelLayout = 1;
 }
 
 /*----------------------------------------------------------------------
@@ -1920,6 +1931,21 @@ void SetGeneralConf (void)
   TtaAppendDocumentPath (TempFileDirectory);
 #endif /* _WINGUI */
 
+  
+  switch(GProp_General.ToolPanelLayout)
+  {
+    case 0:
+      TtaSetEnvString ("TOOLPANEL_LAYOUT", "LEFT", TRUE);
+      break;
+    case 2:
+      TtaSetEnvString ("TOOLPANEL_LAYOUT", "FREE", TRUE);
+      break;
+    default:
+      TtaSetEnvString ("TOOLPANEL_LAYOUT", "RIGHT", TRUE);
+      break;
+  }
+  TtaUpdateToolPanelLayout();
+  
   TtaSaveAppRegistry ();
 }
 
@@ -1974,6 +2000,15 @@ void GetDefaultGeneralConf ()
   GetDefEnvString ("APP_TMPDIR", AppTmpDir);
   GetDefEnvString ("APP_HOME", AppHome);
 #endif /* _WINGUI */
+
+  GetDefEnvString ("TOOLPANEL_LAYOUT", ptr);
+  if (!strcmp (ptr, "LEFT"))
+    GProp_General.ToolPanelLayout = 0;
+  else if (!strcmp (ptr, "FREE"))
+    GProp_General.ToolPanelLayout = 2;
+  else /* Default = RIGHT (queried by palette)*/
+    GProp_General.ToolPanelLayout = 1;
+
 }
 
 #ifdef _WINGUI
@@ -2250,6 +2285,10 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	  
         case mGeneralAccessKey:
           GProp_General.AccesskeyMod = val;
+          break;
+
+        case mToolPanelLayout:
+          GProp_General.ToolPanelLayout = val;
           break;
 
         default:

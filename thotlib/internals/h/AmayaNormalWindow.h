@@ -86,6 +86,7 @@ class AmayaNormalWindow : public AmayaWindow
   virtual void     EmptyURLBar();
 
   AmayaToolPanelBar * GetToolPanelBar() const;
+  void RefreshToolPanelBar();
   
   bool IsPanelOpened();
   void ClosePanel();

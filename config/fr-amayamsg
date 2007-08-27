@@ -233,211 +233,216 @@
 231 Par serveur
 232 Accés rapides
 233 Ignorer
-234 Elément Style
-235 Impossible de créer un XPointer
-236 Impossible de débuter un XPointer sur un élément ajouté par Amaya
-237 Impossible de terminer un XPointer sur un élément ajouté par Amaya
-238 Je ne peux pas déplacer l'annotation là
-239 Je ne peux pas bouger l'annotation vers un autre document
-240 Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.
-241 Impossible de construire un XPointer pour cette annotation
-242 Faire une nouvelle annotation
-243 La publication de l'annotation a échoué
-244 La destruction de l'annotation a échoué
-245 Annotation détruite!
-246 Impossible de charger l'index des annotations
-247 Erreur
-248 Sélectionner un codage
-249 Sélectionner un type MIME
-250 Changer le codage
-251 Changer le type MIME
-252 Changer
-253 Ce type de document n'a pas de charset
-254 L'URL doit être de type HTTP pour utiliser
-255 Erreur: type MIME incorrect
-256 Inconnu
-257 Styles ignorés - voir Fichier > Montrer les erreurs
-258 Ce document est déjà affiché dans une autre fenêtre.
-259 Enregistrer cette instance peut provoquer des problèmes de mise à jour.
-260 Ajouter ou modifier le doctype du document supprimera certains éléments ou attributs
-261 Confirmez-vous l'opération ?
-262 Utiliser le type MIME application/xhtml+xml pour les documents XHTML
-263 Charset pour les nouveaux documents
-264 Verrou réussit!
-265 Verrou a échué!
-266 En attente d'un verrou sur %s...
-267 Document %s est verrouillé!
-268 Document %s a été verrouillé par %s (temps d'expiration %s)
-269 Surpasser le verrou?
-270 Copier les informations du verrou??
-271 Essayez déverrouillé le document...
-272 Déverrouillage a réussit!
-273 Dérrouillage a échoué!
-274 En attente d'une libération du verrou...
-275 Document %s est déverrouillé!
-276 Déverrouillé le document?
-277 Propriétes du document
-278 Propriétes du document ne sont pas disponibles
-279 Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
-280 En attente des propriétes du document...
-281 Désolé, WebDAV ne support pas URLs comme %s
-282 Sauvegarde du verrou dans la base local a échoué
-283 Impossible éffacer verrou de la base local
-284 Désolé, cette opération est interdit pour %s
-285 Opération a échué! Cause: Faute de dépendence
-286 Opération a échué! Cause: %s
-287 Ressayez?
-288 WebDAV
-289 Référence Personnelle de l'utilisateur (URL)
-290 List des Ressources de l'utilisateur (URL URL)
-291 Profondeur du Verrou
-292 infini
-293 Expiration du verrou
-294 Infini
-295 Autre (Secondes)
-296 Type du Verrou
-297 exclusif
-298 partagée
-299 Notification
-300 Notification général
-301 Notification àla sortie
-302 Animation
-303 Bibliotheque SVG
-304 Option de copie
-305 Copier
-306 Réferencer
-307 Ajouter un modèle dans la librairie
-308 URL du nouveau fichier SVG ...
-309 Titre de la librairie
-310 URL de la librairie
-311 Créer une librairie
-312 Parcourir les librairies
-313 Créer ou chercher une librairie
-314 La sélection contient des éléments non SVG. Effectuer une autre sélection SVP
-315 Le titre de la librairie est obligatoire
-316 Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...
-317 Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...
-318 Sélectionner la couleur de départ de l'élément...
-319 Couleur de départ définie. Déplacer le curseur de temps pour définir la durée de l'animation...
-320 Sélectionner la couleur de fin...
-321 Animation définie.
-322 Attribut animé
-323 Elément sans ID
-324 Ajouter ID
-325 Supprimer ID
-326 Ajouter/Supprimer IDs
-327 Appliquer opération
-328 Entrer le nom d'un élément
-329 Appliquer CSS
-330 Type d'écran courant
-331 Nouvelle Rubrique
-332 Propriétés du signet
-333 Propriétés de la rubrique
-334 Hiérarchie des rubriques:
-335 Titre :
-336 Appelle:
-337 Auteur:
-338 Crée:
-339 Dernière modification:
-340 Description:
-341 Sélectionnez un élément
-342 Toutes les CSS
-343 Règles de style CSS appliqué l'élément <%s> \n
-344 Les lignes bleues sont des liens activés par un double (ou simple) click\n
-345 Charger les objets (object, embed, iframe)
-346 Pas de règle de style pour cet élément
-347 Pas de position d'insertion définie. Sélectionnez d'abord
-348 Informations du document
-349 Type du document
-350 Type MIME
-351 Codage
-352 Taille du contenu
-353 Provenance
-354 Préférences
-355 Caractère (&xxx;)
-356 Création d'un objet
-357 Répertoire
-358 Fichier
-359 Remplacer le document
-360 Dans une nouvelle fenêtre
-361 Anti-aliasing
-362 Date au format ISO
-363 Ouvrir les nouveaux documents dans
-364 Endroit d'ouverture
-365 Avertir avant de fermer plusieurs onglets
-366 Nombre max d'url dans l'historique
-367 Vider la liste des urls
-368 Montrer tous les raccourcis
-369 Longueur de ligne fixée (0 = valeur par défaut)
-370 Modèle
-371 Enregistrer le document sous...
-372 Le modèle n'existe pas
-373 Montrer les cadres des modèles
-374 Appliquer ferme le dialogue
-375 Non autorisé
-376 Element protégé
-377 La sélection ne peut pas traverser un élément de ce type
-378 Pas d'en-tête trouvé
-379 Enregistrer quand même
-380 Serveur inconnu
-381 Document modifié (412)
-382 Conflit avec l'état de la ressource
-383 Sélection invalide
-384 Elément inconnu
-385 %d éléments changés
-386 Le titre est obligatoire
-387 Modèles
-388 Nombre d'occurrences
-389 Nombre maximal d'occurrences atteint
-390 Nombre minimum d'occurrences atteint
-391 Vérifier les IDs dupliqués
-392 Ajouter la feuille xsl pour les éléments MathML
-393 Insérer opérateur
-394 Choisir la façon dont l'opérateur doit être affiché
-395 Insérer une intégrale
-396 Choisir le type d'intégrale
-397 Attributs du fence
-398 Choisir les symboles ouvrant, séparateur et fermant
-399 Nombre de symboles opérateurs
-400 Nombre de coordonnées
-401 Longueur du N-uplet
-402 Nombre d'éléments
-403 Nombre de variables
-404 Degré
-405 Degré de la variable numéro %d
-406 Document composé
-407 Copier les ressources (styles et scripts)
-408 Où enregistrer les ressources
-409 Où enregistrer les images
-410 Document
-411 Images, Styles et Scripts
-412 Courriel
-413 Paramètres pour l'envoi de courriels :
-414 Adresse du serveur SMTP :
-415 Port :
-416 (25 par défaut)
-417 Adresse d'envoi (champ Expéditeur) :
-418 Destinataires :
-419 Envoyer par courriel
-420 Sujet :
-421 Envoyer en tant que :
-422 Corps du message
-423 Pièce jointe
-424 Ne pas envoyer
-425 Envoyer
-426 L'adresse et le port du serveur doivent être renseignés dans les Préférences
-427 Message :
-428 Message textuel alternatif :
-429 Le serveur est inaccessible ou ne répond pas
-430 Le serveur vous a rejeté
-431 L'adresse de l'envoyeur est mal formatée
-432 L'adresse d'un destinataire est mal formatée
-433 Le contenu du courriel est mal formatée
-434 Courriel non envoyé
-435 Courriel envoyé
-436 Mots de passe
-437 Voulez-vous qu'Amaya se souvienne de ce mot de passe ?
-438 Enregistrer les mots de passe
-439 Sites
-440 Tout effacer
-441 Nouveau
+234 Aligner les panneaux d'outils :
+235 à gauche
+236 à droite
+237 librement
+238  (redémarrage nécessaire)
+239 Elément Style
+240 Impossible de créer un XPointer
+241 Impossible de débuter un XPointer sur un élément ajouté par Amaya
+242 Impossible de terminer un XPointer sur un élément ajouté par Amaya
+243 Je ne peux pas déplacer l'annotation là
+244 Je ne peux pas bouger l'annotation vers un autre document
+245 Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.
+246 Impossible de construire un XPointer pour cette annotation
+247 Faire une nouvelle annotation
+248 La publication de l'annotation a échoué
+249 La destruction de l'annotation a échoué
+250 Annotation détruite!
+251 Impossible de charger l'index des annotations
+252 Erreur
+253 Sélectionner un codage
+254 Sélectionner un type MIME
+255 Changer le codage
+256 Changer le type MIME
+257 Changer
+258 Ce type de document n'a pas de charset
+259 L'URL doit être de type HTTP pour utiliser
+260 Erreur: type MIME incorrect
+261 Inconnu
+262 Styles ignorés - voir Fichier > Montrer les erreurs
+263 Ce document est déjà affiché dans une autre fenêtre.
+264 Enregistrer cette instance peut provoquer des problèmes de mise à jour.
+265 Ajouter ou modifier le doctype du document supprimera certains éléments ou attributs
+266 Confirmez-vous l'opération ?
+267 Utiliser le type MIME application/xhtml+xml pour les documents XHTML
+268 Charset pour les nouveaux documents
+269 Verrou réussit!
+270 Verrou a échué!
+271 En attente d'un verrou sur %s...
+272 Document %s est verrouillé!
+273 Document %s a été verrouillé par %s (temps d'expiration %s)
+274 Surpasser le verrou?
+275 Copier les informations du verrou??
+276 Essayez déverrouillé le document...
+277 Déverrouillage a réussit!
+278 Dérrouillage a échoué!
+279 En attente d'une libération du verrou...
+280 Document %s est déverrouillé!
+281 Déverrouillé le document?
+282 Propriétes du document
+283 Propriétes du document ne sont pas disponibles
+284 Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
+285 En attente des propriétes du document...
+286 Désolé, WebDAV ne support pas URLs comme %s
+287 Sauvegarde du verrou dans la base local a échoué
+288 Impossible éffacer verrou de la base local
+289 Désolé, cette opération est interdit pour %s
+290 Opération a échué! Cause: Faute de dépendence
+291 Opération a échué! Cause: %s
+292 Ressayez?
+293 WebDAV
+294 Référence Personnelle de l'utilisateur (URL)
+295 List des Ressources de l'utilisateur (URL URL)
+296 Profondeur du Verrou
+297 infini
+298 Expiration du verrou
+299 Infini
+300 Autre (Secondes)
+301 Type du Verrou
+302 exclusif
+303 partagée
+304 Notification
+305 Notification général
+306 Notification àla sortie
+307 Animation
+308 Bibliotheque SVG
+309 Option de copie
+310 Copier
+311 Réferencer
+312 Ajouter un modèle dans la librairie
+313 URL du nouveau fichier SVG ...
+314 Titre de la librairie
+315 URL de la librairie
+316 Créer une librairie
+317 Parcourir les librairies
+318 Créer ou chercher une librairie
+319 La sélection contient des éléments non SVG. Effectuer une autre sélection SVP
+320 Le titre de la librairie est obligatoire
+321 Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...
+322 Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...
+323 Sélectionner la couleur de départ de l'élément...
+324 Couleur de départ définie. Déplacer le curseur de temps pour définir la durée de l'animation...
+325 Sélectionner la couleur de fin...
+326 Animation définie.
+327 Attribut animé
+328 Elément sans ID
+329 Ajouter ID
+330 Supprimer ID
+331 Ajouter/Supprimer IDs
+332 Appliquer opération
+333 Entrer le nom d'un élément
+334 Appliquer CSS
+335 Type d'écran courant
+336 Nouvelle Rubrique
+337 Propriétés du signet
+338 Propriétés de la rubrique
+339 Hiérarchie des rubriques:
+340 Titre :
+341 Appelle:
+342 Auteur:
+343 Crée:
+344 Dernière modification:
+345 Description:
+346 Sélectionnez un élément
+347 Toutes les CSS
+348 Règles de style CSS appliqué l'élément <%s> \n
+349 Les lignes bleues sont des liens activés par un double (ou simple) click\n
+350 Charger les objets (object, embed, iframe)
+351 Pas de règle de style pour cet élément
+352 Pas de position d'insertion définie. Sélectionnez d'abord
+353 Informations du document
+354 Type du document
+355 Type MIME
+356 Codage
+357 Taille du contenu
+358 Provenance
+359 Préférences
+360 Caractère (&xxx;)
+361 Création d'un objet
+362 Répertoire
+363 Fichier
+364 Remplacer le document
+365 Dans une nouvelle fenêtre
+366 Anti-aliasing
+367 Date au format ISO
+368 Ouvrir les nouveaux documents dans
+369 Endroit d'ouverture
+370 Avertir avant de fermer plusieurs onglets
+371 Nombre max d'url dans l'historique
+372 Vider la liste des urls
+373 Montrer tous les raccourcis
+374 Longueur de ligne fixée (0 = valeur par défaut)
+375 Modèle
+376 Enregistrer le document sous...
+377 Le modèle n'existe pas
+378 Montrer les cadres des modèles
+379 Appliquer ferme le dialogue
+380 Non autorisé
+381 Element protégé
+382 La sélection ne peut pas traverser un élément de ce type
+383 Pas d'en-tête trouvé
+384 Enregistrer quand même
+385 Serveur inconnu
+386 Document modifié (412)
+387 Conflit avec l'état de la ressource
+388 Sélection invalide
+389 Elément inconnu
+390 %d éléments changés
+391 Le titre est obligatoire
+392 Modèles
+393 Nombre d'occurrences
+394 Nombre maximal d'occurrences atteint
+395 Nombre minimum d'occurrences atteint
+396 Vérifier les IDs dupliqués
+397 Ajouter la feuille xsl pour les éléments MathML
+398 Insérer opérateur
+399 Choisir la façon dont l'opérateur doit être affiché
+400 Insérer une intégrale
+401 Choisir le type d'intégrale
+402 Attributs du fence
+403 Choisir les symboles ouvrant, séparateur et fermant
+404 Nombre de symboles opérateurs
+405 Nombre de coordonnées
+406 Longueur du N-uplet
+407 Nombre d'éléments
+408 Nombre de variables
+409 Degré
+410 Degré de la variable numéro %d
+411 Document composé
+412 Copier les ressources (styles et scripts)
+413 Où enregistrer les ressources
+414 Où enregistrer les images
+415 Document
+416 Images, Styles et Scripts
+417 Courriel
+418 Paramètres pour l'envoi de courriels :
+419 Adresse du serveur SMTP :
+420 Port :
+421 (25 par défaut)
+422 Adresse d'envoi (champ Expéditeur) :
+423 Destinataires :
+424 Envoyer par courriel
+425 Sujet :
+426 Envoyer en tant que :
+427 Corps du message
+428 Pièce jointe
+429 Ne pas envoyer
+430 Envoyer
+431 L'adresse et le port du serveur doivent être renseignés dans les Préférences
+432 Message :
+433 Message textuel alternatif :
+434 Le serveur est inaccessible ou ne répond pas
+435 Le serveur vous a rejeté
+436 L'adresse de l'envoyeur est mal formatée
+437 L'adresse d'un destinataire est mal formatée
+438 Le contenu du courriel est mal formatée
+439 Courriel non envoyé
+440 Courriel envoyé
+441 Mots de passe
+442 Voulez-vous qu'Amaya se souvienne de ce mot de passe ?
+443 Enregistrer les mots de passe
+444 Sites
+445 Tout effacer
+446 Nouveau
