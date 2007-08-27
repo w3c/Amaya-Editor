@@ -50,7 +50,7 @@ AmayaNotebook::AmayaNotebook(wxWindow * window , wxWindowID id)
   if (WindowBColor == -1)
     {
       // Initialize the window background colour
-    wxColour col = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
+    wxColour col = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWFRAME);
       WindowBColor = TtaGetThotColor (col.Red(), col.Green(), col.Blue());
     }
   SetImageList( AmayaApp::GetDocumentIconList() );
