@@ -446,8 +446,8 @@ void AmayaAttributeToolPanel::ShowAttributValue( wxATTR_PANEID type )
       m_pCurrentlyEditedControl = NULL;
       ShowAttributeBar(false);
     }
-  GetParent()->Layout();
   Layout();
+  GetBar()->Layout();
   
   RedirectFocusToEditableControl();
 }

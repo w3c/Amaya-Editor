@@ -445,7 +445,8 @@ bool AmayaDockedToolPanelContainer::Attach()
     {
       m_bDetached = false;
       XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetBitmapLabel( s_Bitmap_DetachOff );
-      sz->Add(GetPanel(), 1, wxEXPAND);
+      GetPanel()->Show();
+      sz->Add(GetPanel(), 1, wxEXPAND)->Show(!m_bMinimized);
       sz->Layout();
       GetParent()->Layout();
       return true;
