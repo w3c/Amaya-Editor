@@ -632,6 +632,7 @@ THOT_EXPORT int iReload;
 THOT_EXPORT int iHome;
 THOT_EXPORT int iEditor;
 THOT_EXPORT int iSave;
+THOT_EXPORT int iSaveAll;
 THOT_EXPORT int iPrint;
 THOT_EXPORT int iFind;
 THOT_EXPORT int iI;

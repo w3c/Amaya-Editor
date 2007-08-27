@@ -194,40 +194,41 @@
 192 Adelante
 193 Actualizar
 194 Guardar
-195 Nuevo documento XHTML
-196 Abrir documento
-197 Imprimir
-198 Buscar
-199 Inicio
-200 Énfasis On/Off
-201 Enérgico On/Off
-202 Código On/Off
-203 Imagen
-204 Cabecera nivel 1 (h1)
-205 Cabecera nivel 2 (h2)
-206 Cabecera nivel 3 (h3)
-207 Lista no ordenada (ul)
-208 Lista ordenada (ol)
-209 Lista de definición (dl)
-210 Enlace
-211 Tabla
-212 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
-213 Avisarme cuando intente cerrar múltiples pestañas
-214 Cerrar pestañas
-215 Ningún error detectado
-216 Mostrar errores sintácticos
-217 Cajas
-218 División
-219 Destino
-220 Inserción On/Off
-221 Borrado On/Off
-222 Subíndice On/Off
-223 Superíndice On/Off
-224 Término
-225 Definición
-226 Objeto
-227 Estilo CSS
-228 Archivos
-229 Dividir horizontalmente
-230 Dividir vista verticalmente
-231 Ventana de herramientas
+195 Guardar todo
+196 Nuevo documento XHTML
+197 Abrir documento
+198 Imprimir
+199 Buscar
+200 Inicio
+201 Énfasis On/Off
+202 Enérgico On/Off
+203 Código On/Off
+204 Imagen
+205 Cabecera nivel 1 (h1)
+206 Cabecera nivel 2 (h2)
+207 Cabecera nivel 3 (h3)
+208 Lista no ordenada (ul)
+209 Lista ordenada (ol)
+210 Lista de definición (dl)
+211 Enlace
+212 Tabla
+213 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
+214 Avisarme cuando intente cerrar múltiples pestañas
+215 Cerrar pestañas
+216 Ningún error detectado
+217 Mostrar errores sintácticos
+218 Cajas
+219 División
+220 Destino
+221 Inserción On/Off
+222 Borrado On/Off
+223 Subíndice On/Off
+224 Superíndice On/Off
+225 Término
+226 Definición
+227 Objeto
+228 Estilo CSS
+229 Archivos
+230 Dividir horizontalmente
+231 Dividir vista verticalmente
+232 Ventana de herramientas

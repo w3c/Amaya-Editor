@@ -194,40 +194,41 @@
 192 Nasledujúci dokument
 193 Načítať najnovšiu verziu stránky
 194 Uložiť
-195 Nový XHTML dokument
-196 Otvoriť dokument
-197 Tlačiť
-198 Hľadať
-199 Prejsť na domovskú stránku
-200 Zvýrazniť On/Off
-201 Silno zvýrazniť On/Off
-202 Zdrojový kód On/Off
-203 Obrázok (img)
-204 Nadpis úrovne 1 (h1)
-205 Nadpis úrovne 2 (h2)
-206 Nadpis úrovne 3 (h3)
-207 Odrážky (ul)
-208 Číslovanie (ol)
-209 Zoznam definícií (dl)
-210 Hypertextový odkaz
-211 Tabuľka (table)
-212 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
-213 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
-214 Zatvoriť karty
-215 Žiadne chyby neboli nájdené
-216 Zobraziť nájdené chyby
-217 Kolónky
-218 Oddelenie, vrstva (div)
-219 Záložka
-220 Novovložený text On/Off
-221 Text na odstránenie On/Off
-222 Dolný index On/Off
-223 Horný index On/Off
-224 Termín (dt)
-225 Definícia termínu (dd)
-226 Objekt (object)
-227 CSS pravidlá
-228 Súbor
-229 Rozdeliť okno horizontálne
-230 Rozdeliť okno vertikálne
-231 Zobraziť/skryť nástroje
+195 Uložiť
+196 Nový XHTML dokument
+197 Otvoriť dokument
+198 Tlačiť
+199 Hľadať
+200 Prejsť na domovskú stránku
+201 Zvýrazniť On/Off
+202 Silno zvýrazniť On/Off
+203 Zdrojový kód On/Off
+204 Obrázok (img)
+205 Nadpis úrovne 1 (h1)
+206 Nadpis úrovne 2 (h2)
+207 Nadpis úrovne 3 (h3)
+208 Odrážky (ul)
+209 Číslovanie (ol)
+210 Zoznam definícií (dl)
+211 Hypertextový odkaz
+212 Tabuľka (table)
+213 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
+214 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
+215 Zatvoriť karty
+216 Žiadne chyby neboli nájdené
+217 Zobraziť nájdené chyby
+218 Kolónky
+219 Oddelenie, vrstva (div)
+220 Záložka
+221 Novovložený text On/Off
+222 Text na odstránenie On/Off
+223 Dolný index On/Off
+224 Horný index On/Off
+225 Termín (dt)
+226 Definícia termínu (dd)
+227 Objekt (object)
+228 CSS pravidlá
+229 Súbor
+230 Rozdeliť okno horizontálne
+231 Rozdeliť okno vertikálne
+232 Zobraziť/skryť nástroje

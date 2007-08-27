@@ -66,6 +66,13 @@
         <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
+        <object class="wxBitmapButton" name="wxID_TOOL_SAVE_ALL">
+          <bitmap>../icons/16x16/save_all.png</bitmap>
+          <style>wxNO_BORDER</style>
+        </object>
+        <flag>wxALIGN_CENTRE</flag>
+      </object>
+      <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_PRINT">
           <bitmap>../icons/16x16/print.png</bitmap>
           <style>wxNO_BORDER</style>

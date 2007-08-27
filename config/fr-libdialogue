@@ -194,40 +194,41 @@
 192 Document suivant
 193 Recharger
 194 Enregistrer
-195 Nouveau document XHTML
-196 Ouvrir
-197 Imprimer
-198 Chercher
-199 Page personnelle
-200 Mise en évidence On/Off
-201 Important On/Off
-202 Code On/Off
-203 Ajouter/Remplacer une image
-204 Titre niveau 1
-205 Titre niveau 2
-206 Titre niveau 3
-207 Liste
-208 Liste numérotée
-209 Liste de définitions
-210 Lien
-211 Tableau
-212 Etes vous certain de vouloir fermer %d onglets?
-213 M'avertir quand je ferme plusieurs onglets
-214 Fermer les onglets
-215 Aucune erreur détectée
-216 Montrer les erreurs
-217 Boîtes
-218 Division
-219 Cible
-220 Insertion On/Off
-221 Suppression On/Off
-222 Indice On/Off
-223 Exposant On/Off
-224 Terme
-225 Définition
-226 Objet
-227 Style CSS
-228 Fichiers
-229 Partager/étendre en horizontal
-230 Partager/étendre verticalement
-231 Montrer/cacher les outils
+195 Enregistrer tout
+196 Nouveau document XHTML
+197 Ouvrir
+198 Imprimer
+199 Chercher
+200 Page personnelle
+201 Mise en évidence On/Off
+202 Important On/Off
+203 Code On/Off
+204 Ajouter/Remplacer une image
+205 Titre niveau 1
+206 Titre niveau 2
+207 Titre niveau 3
+208 Liste
+209 Liste numérotée
+210 Liste de définitions
+211 Lien
+212 Tableau
+213 Etes vous certain de vouloir fermer %d onglets?
+214 M'avertir quand je ferme plusieurs onglets
+215 Fermer les onglets
+216 Aucune erreur détectée
+217 Montrer les erreurs
+218 Boîtes
+219 Division
+220 Cible
+221 Insertion On/Off
+222 Suppression On/Off
+223 Indice On/Off
+224 Exposant On/Off
+225 Terme
+226 Définition
+227 Objet
+228 Style CSS
+229 Fichiers
+230 Partager/étendre en horizontal
+231 Partager/étendre verticalement
+232 Montrer/cacher les outils

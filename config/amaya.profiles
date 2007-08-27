@@ -469,6 +469,7 @@ HelpXml
 &CreateDoctypeHtmlTransitional
 &CreateDoctypeHtmlStrict
 &SaveDocument
+&SaveAll
 &TtcCutSelection
 &TtcDeleteSelection
 &TtcPaste

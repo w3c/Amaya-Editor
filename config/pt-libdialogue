@@ -194,40 +194,41 @@
 192 Documento seguinte
 193 Recarregar
 194 Salvar
-195 Novo documento XHTML
-196 >Abrir documento
-197 Imprimir
-198 Buscar
-199 Home
-200 Ênfase On/Off
-201 Forte On/Off
-202 Código On/Off
-203 Inserir imagem
-204 Cabeçalho nível 1
-205 Cabeçalho nível 2
-206 Cabeçalho nível 3
-207 Lista com bolinhas
-208 Lista numerada
-209 Lista de definição
-210 Enlace
-211 Tabela
-212 **You are about to close %d open tabs. Are you sure you want to continue?
-213 **Warn me when I attempt to close multiple tabs
-214 **Close tabs
-215 **No error detected
-216 Exibir erros de gramática (parsing)
-217 **Boxes
-218 Divisão
-219 Destino
-220 Inserção On/Off
-221 Supressão On/Off
-222 Índice On/Off
-223 Expoente On/Off
-224 Termo
-225 Definição
-226 Objeto
-227 **CSS Style
-228 Arquivos
-229 **Horizontal split/unsplit
-230 **Vertical split/unsplit
-231 **Show/hide tools
+195 Salvar
+196 Novo documento XHTML
+197 >Abrir documento
+198 Imprimir
+199 Buscar
+200 Home
+201 Ênfase On/Off
+202 Forte On/Off
+203 Código On/Off
+204 Inserir imagem
+205 Cabeçalho nível 1
+206 Cabeçalho nível 2
+207 Cabeçalho nível 3
+208 Lista com bolinhas
+209 Lista numerada
+210 Lista de definição
+211 Enlace
+212 Tabela
+213 **You are about to close %d open tabs. Are you sure you want to continue?
+214 **Warn me when I attempt to close multiple tabs
+215 **Close tabs
+216 **No error detected
+217 Exibir erros de gramática (parsing)
+218 **Boxes
+219 Divisão
+220 Destino
+221 Inserção On/Off
+222 Supressão On/Off
+223 Índice On/Off
+224 Expoente On/Off
+225 Termo
+226 Definição
+227 Objeto
+228 **CSS Style
+229 Arquivos
+230 **Horizontal split/unsplit
+231 **Vertical split/unsplit
+232 **Show/hide tools

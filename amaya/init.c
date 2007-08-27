@@ -136,6 +136,8 @@ static ThotIcon       stopR;
 static ThotIcon       stopN;
 static ThotIcon       iconSave;
 static ThotIcon       iconSaveNo;
+static ThotIcon       iconSaveAll;
+static ThotIcon       iconSaveAllNo;
 static ThotIcon       iconFind;
 static ThotIcon       iconReload;
 static ThotIcon       iconI;
@@ -183,33 +185,35 @@ static ThotIcon       iconLogo;
 #define iconReload     3
 #define iconSave       4
 #define iconSaveNo     4
-#define iconPrint      5
-#define iconFind       6
-#define iconI          7
-#define iconINo        7
-#define iconB          8
-#define iconBNo        8
-#define iconT          9
-#define iconTNo        9
-#define iconHome      10
-#define iconImage     11
-#define iconImageNo   11
-#define iconH1        12
-#define iconH1No      12
-#define iconH2        13
-#define iconH2No      13
-#define iconH3        14
-#define iconH3No      14
-#define iconBullet    15
-#define iconBulletNo  15
-#define iconNum       16
-#define iconNumNo     16
-#define	iconDL        17
-#define	iconDLNo      17
-#define iconLink      18
-#define iconLinkNo    18
-#define iconTable     19
-#define iconTableNo   19
+#define iconSaveAll    5
+#define iconSaveAllNo  5
+#define iconPrint      6
+#define iconFind       7
+#define iconI          8
+#define iconINo        8
+#define iconB          9
+#define iconBNo        9
+#define iconT         10
+#define iconTNo       10
+#define iconHome      11
+#define iconImage     12
+#define iconImageNo   12
+#define iconH1        13
+#define iconH1No      13
+#define iconH2        14
+#define iconH2No      14
+#define iconH3        15
+#define iconH3No      15
+#define iconBullet    16
+#define iconBulletNo  16
+#define iconNum       17
+#define iconNumNo     17
+#define	iconDL        18
+#define	iconDLNo      18
+#define iconLink      19
+#define iconLinkNo    19
+#define iconTable     20
+#define iconTableNo   20
 
 extern int       menu_item;
 
@@ -816,13 +820,17 @@ static void SetFormReadWrite (Element el, Document doc)
 void DocStatusUpdate (Document doc, ThotBool modified)
 {
   Document    otherDoc;
+  int document;
+  ThotBool NoDocumentModified;
 
   if (modified && TtaGetDocumentAccessMode (doc))
     /* the document has been modified and is not in Read-Only mode */
     {
       TtaSetItemOn (doc, 1, File, BSave);
+      TtaSetItemOn (doc, 1, File, BSaveAll);
 #ifndef _WX
       TtaChangeButton (doc, 1, iSave, iconSave, TRUE);
+      TtaChangeButton (doc, 1, iSaveAll, iconSaveAll, TRUE);
 #endif /* _WX */
        /* if we have a pair source/structured document allow synchronization */
       otherDoc = DocumentSource[doc];
@@ -839,9 +847,15 @@ void DocStatusUpdate (Document doc, ThotBool modified)
   else
     /* the document is no longer modified */
     {
+      for (document = 1, NoDocumentModified = TRUE; NoDocumentModified && document < DocumentTableLength; document++)
+        if (TtaIsDocumentModified (document))NoDocumentModified = FALSE;
+        ;
+
       TtaSetItemOff (doc, 1, File, BSave);
+      if (NoDocumentModified) TtaSetItemOff (doc, 1, File, BSaveAll);
 #ifndef _WX
       TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
+      if (NoDocumentModified) TtaChangeButton (doc, 1, iSaveAll, iconSaveAllNo, FALSE);
 #endif /* _WX */
       if (TtaIsDocumentUpdated (doc))
         {
@@ -3070,6 +3084,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
                                 "SaveDocument",
                                 TtaGetMessage (LIB,TMSG_BUTTON_SAVE),
                                 TBSTYLE_BUTTON, FALSE);
+          iSaveAll = TtaAddButton (doc, 1, iconSaveAllNo, (Proc)SaveAll,
+                                "SaveAll",
+                                TtaGetMessage (LIB,TMSG_BUTTON_SAVE_ALL),
+                                TBSTYLE_BUTTON, FALSE);
           iPrint = TtaAddButton (doc, 1, iconPrint, (Proc)SetupAndPrint,  "SetupAndPrint",
                                  TtaGetMessage (LIB,TMSG_BUTTON_PRINT),
                                  TBSTYLE_BUTTON, TRUE);
@@ -3147,6 +3165,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           TtaSetItemOff (doc, 1, File, BBack);
           TtaSetItemOff (doc, 1, File, BForward);
           TtaSetItemOff (doc, 1, File, BSave);
+          TtaSetItemOff (doc, 1, File, BSaveAll);
           TtaSetItemOff (doc, 1, File, BSynchro);
 
           /* button bar On/Off => TODO for WX */
@@ -3193,6 +3212,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       TtaSetItemOff (doc, 1, File, BBack);
       TtaSetItemOff (doc, 1, File, BForward);
       TtaSetItemOff (doc, 1, File, BSave);
+      TtaSetItemOff (doc, 1, File, BSaveAll);
       TtaSetItemOff (doc, 1, File, BSynchro);
       TtaSetMenuOff (doc, 1, Attributes_);
 
@@ -3260,6 +3280,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /* ANNOTATIONS */
             }
           TtaSetItemOff (doc, 1, File, BSave);
+          TtaSetItemOff (doc, 1, File, BSaveAll);
           TtaSetItemOff (doc, 1, File, BSynchro);
           TtaSetItemOff (doc, 1, File, BDocInfo);
           TtaSetItemOff (doc, 1, File, BSetUpandPrint);
@@ -7386,6 +7407,10 @@ void FreeAmayaIcons ()
     delete iconSave;
   if (iconSaveNo) 	
     delete iconSaveNo;
+  if (iconSaveAll) 	
+    delete iconSaveAll;
+  if (iconSaveAllNo) 	
+    delete iconSaveAllNo;
   if (iconFind) 	
     delete iconFind;
   if (iconReload) 	
@@ -7457,6 +7482,8 @@ void FreeAmayaIcons ()
   stopN = (ThotIcon) 0;
   iconSave = (ThotIcon) 0;
   iconSaveNo = (ThotIcon) 0;
+  iconSaveAll = (ThotIcon) 0;
+  iconSaveAllNo = (ThotIcon) 0;
   iconFind = (ThotIcon) 0;
   iconReload = (ThotIcon) 0;
   iconHome = (ThotIcon) 0;
@@ -7613,6 +7640,8 @@ void InitAmaya (NotifyEvent * event)
   stopN         = (ThotIcon) 0;
   iconSave      = (ThotIcon) 0;
   iconSaveNo    = (ThotIcon) 0;
+  iconSaveAll   = (ThotIcon) 0;
+  iconSaveAllNo = (ThotIcon) 0;
   iconFind      = (ThotIcon) 0;
   iconReload    = (ThotIcon) 0;
   iconHome      = (ThotIcon) 0;
@@ -7652,6 +7681,8 @@ void InitAmaya (NotifyEvent * event)
   stopN = (ThotIcon) TtaCreatePixmapLogo (stopN_xpm);
   iconSave = (ThotIcon) TtaCreatePixmapLogo (save_xpm);
   iconSaveNo = (ThotIcon) TtaCreatePixmapLogo (saveNo_xpm);
+  iconSaveAll = (ThotIcon) TtaCreatePixmapLogo (save_xpm);
+  iconSaveAllNo = (ThotIcon) TtaCreatePixmapLogo (saveNo_xpm);
   iconFind = (ThotIcon) TtaCreatePixmapLogo (find_xpm);
   iconReload = (ThotIcon) TtaCreatePixmapLogo (Reload_xpm);
   iconHome = (ThotIcon) TtaCreatePixmapLogo (home_xpm);

@@ -194,40 +194,41 @@
 192 Sonraki belge
 193 Yeniden yükle
 194 Kaydet
-195 Yeni XHTML dosyası
-196 Belge aç
-197 Yazdır
-198 Ara
-199 Özel sayfa
-200 Vurgu On/Off
-201 Kuvvetli On/Off
-202 Kod On/Off
-203 Görüntü ekle
-204 Başlık 1
-205 Başlık 2
-206 Başlık 3
-207 Liste
-208 Numaralı liste
-209 Tanım listesi
-210 Bağlantı
-211 Tablo
-212 **You are about to close %d open tabs. Are you sure you want to continue?
-213 **Warn me when I attempt to close multiple tabs
-214 **Close tabs
-215 **No error detected
-216 Pars hatalarını göster
-217 **Boxes
-218 Bölme
-219 Yarat
-220 Araya Koy On/Off
-221 Sil On/Off
-222 Alt On/Off
-223 Üst On/Off
-224 Terim
-225 Tanım
-226 Nesne
-227 **CSS Style
-228 Dosyası
-229 **Horizontal split/unsplit
-230 **Vertical split/unsplit
-231 **Show/hide tools
+195 Kaydet
+196 Yeni XHTML dosyası
+197 Belge aç
+198 Yazdır
+199 Ara
+200 Özel sayfa
+201 Vurgu On/Off
+202 Kuvvetli On/Off
+203 Kod On/Off
+204 Görüntü ekle
+205 Başlık 1
+206 Başlık 2
+207 Başlık 3
+208 Liste
+209 Numaralı liste
+210 Tanım listesi
+211 Bağlantı
+212 Tablo
+213 **You are about to close %d open tabs. Are you sure you want to continue?
+214 **Warn me when I attempt to close multiple tabs
+215 **Close tabs
+216 **No error detected
+217 Pars hatalarını göster
+218 **Boxes
+219 Bölme
+220 Yarat
+221 Araya Koy On/Off
+222 Sil On/Off
+223 Alt On/Off
+224 Üst On/Off
+225 Terim
+226 Tanım
+227 Nesne
+228 **CSS Style
+229 Dosyası
+230 **Horizontal split/unsplit
+231 **Vertical split/unsplit
+232 **Show/hide tools

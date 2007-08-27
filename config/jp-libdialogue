@@ -194,40 +194,41 @@
 192 **Next document
 193 **Reload
 194 **Save
-195 **New XHTML document
-196 **Open document
-197 **Print
-198 **Search
-199 **Home
-200 **Emphasis On/Off
-201 **Strong On/Off
-202 **Code On/Off
-203 **Insert/Replace image
-204 **Heading level 1
-205 **Heading level 2
-206 **Heading level 3
-207 **Bulleted list
-208 **Numbered list
-209 **Definition list
-210 **Link
-211 **Table
-212 **You are about to close %d open tabs. Are you sure you want to continue?
-213 **Warn me when I attempt to close multiple tabs
-214 **Close tabs
-215 **No error detected
-216 **Show parsing errors
-217 **Boxes
-218 **Division
-219 **Target
-220 **Insertion On/Off
-221 **Deletion On/Off
-222 **Subscript On/Off
-223 **Superscript On/Off
-224 **Term
-225 **Definition
-226 **Object
-227 **CSS Style
-228 **Files
-229 **Horizontal split/unsplit
-230 **Vertical split/unsplit
-231 **Show/hide tools
+195 **Save All
+196 **New XHTML document
+197 **Open document
+198 **Print
+199 **Search
+200 **Home
+201 **Emphasis On/Off
+202 **Strong On/Off
+203 **Code On/Off
+204 **Insert/Replace image
+205 **Heading level 1
+206 **Heading level 2
+207 **Heading level 3
+208 **Bulleted list
+209 **Numbered list
+210 **Definition list
+211 **Link
+212 **Table
+213 **You are about to close %d open tabs. Are you sure you want to continue?
+214 **Warn me when I attempt to close multiple tabs
+215 **Close tabs
+216 **No error detected
+217 **Show parsing errors
+218 **Boxes
+219 **Division
+220 **Target
+221 **Insertion On/Off
+222 **Deletion On/Off
+223 **Subscript On/Off
+224 **Superscript On/Off
+225 **Term
+226 **Definition
+227 **Object
+228 **CSS Style
+229 **Files
+230 **Horizontal split/unsplit
+231 **Vertical split/unsplit
+232 **Show/hide tools

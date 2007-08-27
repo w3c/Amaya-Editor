@@ -210,6 +210,16 @@
 	<message xml:lang="tw">幫助(&amp;H)</message>
 	<message xml:lang="sk">&amp;Pomocník</message>
 </label>
+<label define="BNew_Tab">
+	<message xml:lang="en">New tab</message>
+	<message xml:lang="fr">Nouvel onglet</message>
+	<message xml:lang="es">Nueva pestaña</message>
+	<message xml:lang="de">Eine neue Registerkarte erstellen</message>
+	<message xml:lang="hu">Új fül</message>
+	<message xml:lang="sk">Nová karta</message>
+	<message xml:lang="it">Nuovo tab</message>
+	<message xml:lang="ru">Новая панель</message>
+</label>
 <label define="New1">
 	<message xml:lang="en">New</message>
 	<message xml:lang="fr">Nouveau</message>
@@ -881,7 +891,7 @@
 </label>
 <label define="BSave">
 	<message xml:lang="en">&amp;Save</message>
-	<message xml:lang="fr">&amp;Enregistrer</message>
+	<message xml:lang="fr">Enregi&amp;strer</message>
 	<message xml:lang="de">&amp;Speichern</message>
 	<message xml:lang="it">&amp;Salva</message>
 	<message xml:lang="tr">Kaydet(&amp;S)</message>
@@ -910,6 +920,11 @@
 	<message xml:lang="cn">另存为(&amp;A)...</message>
 	<message xml:lang="tw">另存為(&amp;A)...</message>
 	<message xml:lang="sk">Uložiť &amp;ako...</message>
+</label>
+<label define="BSaveAll">
+	<message xml:lang="en">Save All</message>
+	<message xml:lang="fr">Enregistrer tout</message>
+	<message xml:lang="es">Guardar toto</message>
 </label>
 <label define="BSynchro">
 	<message xml:lang="en">S&amp;ynchronize</message>

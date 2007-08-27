@@ -3072,6 +3072,22 @@
 	<message xml:lang="tw">保存</message>
 	<message xml:lang="sk">Uložiť</message>
 </label>
+<label define="TMSG_BUTTON_SAVE_ALL">
+	<message xml:lang="en">Save All</message>
+	<message xml:lang="fr">Enregistrer tout</message>
+	<message xml:lang="de">Speichern</message>
+	<message xml:lang="it">Salvare</message>
+	<message xml:lang="tr">Kaydet</message>
+	<message xml:lang="es">Guardar todo</message>
+	<message xml:lang="pt">Salvar</message>
+	<message xml:lang="fi">Tallenna</message>
+	<message xml:lang="ru">Сохранить</message>
+	<message xml:lang="hu">Mentés</message>
+	<message xml:lang="ka">შენახვა</message>
+	<message xml:lang="cn">保存</message>
+	<message xml:lang="tw">保存</message>
+	<message xml:lang="sk">Uložiť</message>
+</label>
 <label define="TMSG_BUTTON_NEW">
 	<message xml:lang="en">New XHTML document</message>
 	<message xml:lang="fr">Nouveau document XHTML</message>

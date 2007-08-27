@@ -36,6 +36,7 @@ DEFAULT
 MENUS
    Document Windows:
 	BEGIN
+  File button:BNew_Tab -> NewTab;
 	File.New1 button:BHtml -> NewXHTML icon:document_html.png;
 	File.New1 button:BHtml11 -> NewXHTML11 icon:document_html.png;
 	File.New1 button:BHtmlTransitional -> NewXHTMLTransitional icon:document_html.png;
@@ -78,8 +79,9 @@ MENUS
 	File button:BShowLogFile -> ShowLogFile;
 	File button:BDocInfo -> DocumentInfo;
 	File Separator;
-	File button:BSave -> SaveDocument icon;
+	File button:BSave -> SaveDocument;
 	File button:BSaveAs -> SaveDocumentAs;
+	File button:BSaveAll -> SaveAll;
 	File button:BSynchro -> Synchronize;
 	File.Doctype1 button:BRemoveDoctype -> RemoveDoctype;
 	File.Doctype1 button:BAddDoctype -> AddDoctype;

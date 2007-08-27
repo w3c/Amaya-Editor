@@ -71,6 +71,7 @@ static int g_reload_action_id = -1;
 static int g_stop_action_id = -1;
 static int g_home_action_id = -1;
 static int g_save_action_id = -1;
+static int g_save_all_action_id = -1;
 static int g_print_action_id = -1;
 static int g_find_action_id = -1;
 static int g_logo_action_id = -1;
@@ -721,6 +722,8 @@ void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
     g_home_action_id = FindMenuAction("GoToHome");
   if ( g_save_action_id == -1 )
     g_save_action_id = FindMenuAction("SaveDocument");
+  if ( g_save_action_id == -1 )
+    g_save_action_id = FindMenuAction("SaveAll");
   if ( g_print_action_id == -1 )
     g_print_action_id = FindMenuAction("SetupAndPrint");
   if ( g_find_action_id == -1 )
@@ -758,6 +761,11 @@ void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
     {
       action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
       p_toolbar->EnableTool(_T("wxID_TOOL_SAVE"), action_enable);
+    }
+  else if (changed_action_id == g_save_all_action_id)
+    {
+      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
+      p_toolbar->EnableTool(_T("wxID_TOOL_SAVE_ALL"), action_enable);
     }
   else if (changed_action_id == g_print_action_id)
     {

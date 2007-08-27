@@ -78,6 +78,7 @@ static char        *DefaultName;
 static char         tempSavedObject[MAX_LENGTH];
 static ThotBool     TextFormat;
 static ThotBool     Saving_lock = FALSE;
+static ThotBool     Saving_All_lock = FALSE;
 /* list attributes checked for updating URLs */
 static AttSearch    URL_attr_tab[] = {
   {HTML_ATTR_HREF_, XHTML_TYPE},
@@ -2821,6 +2822,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           TtaShowElement (otherDoc, 1, el, distance);
           /* but it could be saved too */
           TtaSetItemOn (doc, 1, File, BSave);
+          TtaSetItemOn (doc, 1, File, BSaveAll);
         }
     }
   else
@@ -2943,6 +2945,33 @@ void RedisplayDoc (Document doc)
       RestartParser (doc, tempdoc, tempdir, docname, TRUE, FALSE);
       TtaFreeMemory (tempdoc);
     }
+}
+
+
+/*----------------------------------------------------------------------
+  SaveAll
+  Entry point called when the user selects the SaveAll menu entry or
+  presses the SaveAll button.
+  ----------------------------------------------------------------------*/
+void SaveAll (Document doc, View view)
+{
+  int               document;
+
+  if (Saving_All_lock)
+    return;
+
+  Saving_All_lock = TRUE;
+
+  for (document = 1; document < DocumentTableLength; document++)
+    if (TtaIsDocumentModified (document))
+       SaveDocument (document, view);
+    ;
+
+  Saving_All_lock = FALSE;
+
+#ifdef _WX
+      TtaSetItemOff (doc, 1, File, BSaveAll);
+#endif /* _WX */
 }
 
 
