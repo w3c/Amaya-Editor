@@ -2836,7 +2836,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           // the annotation window is already open
           inNewWindow = FALSE;
           isOpen = TRUE;
+#ifdef _WX
           page_id   = TtaGetFreePageId( window_id );
+#endif /* _WX */
           page_position = 1;
         }
       else
@@ -2869,7 +2871,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           // the document is displayed in a window
           window_id = TtaGetDocumentWindowId( doc, -1 );
           wxASSERT(window_id > 0);
+#ifdef _WX
           page_id   = TtaGetFreePageId( window_id );
+#endif /* _WX */
           page_position = 1;
         }
 #else /* _WX */
@@ -2991,7 +2995,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           else
             /* a normal window should never had a parent ! */
             window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
-          page_id = TtaGetFreePageId( window_id );
+#ifdef _WX
+          page_id   = TtaGetFreePageId( window_id );
+#endif /* _WX */
           page_position = 1;
         }
 #endif /* _WX */

@@ -1944,7 +1944,9 @@ void SetGeneralConf (void)
       TtaSetEnvString ("TOOLPANEL_LAYOUT", "RIGHT", TRUE);
       break;
   }
+#ifdef _WX
   TtaUpdateToolPanelLayout();
+#endif /* _WX */
   
   TtaSaveAppRegistry ();
 }
