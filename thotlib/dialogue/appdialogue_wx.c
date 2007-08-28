@@ -695,6 +695,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
   TtaRefreshToolbarStats enable/disable, toggle/untoggle toolbar
   items widgets for the given doc
   ----------------------------------------------------------------------*/
+// TODO : remove it as not used anymore
 void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
 {
 #ifdef _WX

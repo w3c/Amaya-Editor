@@ -66,10 +66,16 @@ typedef struct
 {
   const char* idname;
   const char* action;
+  int         actionid;
   int tooltip_categ, tooltip_msg;
 } AmayaToolBarToolDef;
 
 WX_DECLARE_HASH_MAP( int, AmayaToolBarToolDef*, wxIntegerHash, wxIntegerEqual, AmayaToolBarToolDefHashMap );
+
+#define AMAYA_DECLARE_TOOLBAR_DEF_TABLE(name) AmayaToolBarToolDef name[];
+#define AMAYA_BEGIN_TOOLBAR_DEF_TABLE(name) AmayaToolBarToolDef name[]={
+#define AMAYA_TOOLBAR_DEF(idname, action, tip_categ, tip_msg) {idname, action, -1, tip_categ, tip_msg},
+#define AMAYA_END_TOOLBAR_DEF_TABLE() {NULL, NULL, -1, 0, 0} };
 
 class AmayaBaseToolBar : public wxToolBar
 {
@@ -85,8 +91,6 @@ public:
                const wxString& name = wxT("AmayaBaseToolBar") );
   virtual ~AmayaBaseToolBar();
 
-  /** Add number of toolitem definitions. */
-  void Add(AmayaToolBarToolDef* def, int nbdef);
   /** Add number of toolitem definitions. def must end by a NULL row.*/
   void Add(AmayaToolBarToolDef* def);
   
@@ -97,6 +101,8 @@ protected:
   AmayaToolBarToolDefHashMap m_map;
   
   void OnTool(wxCommandEvent& event);
+  
+  void OnUpdate(wxUpdateUIEvent& event);
 };
 
 
