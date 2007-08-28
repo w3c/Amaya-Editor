@@ -1521,13 +1521,12 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 void CheckTable (Element table, Document doc)
 {
   ElementType         elType;
-  Element             el, columnHeads, thead, tfoot, firstcolhead,
-    tbody, Tablebody, prevrow,
-    prevEl, nextEl, enclosingTable;
+  Element             el, columnHeads, thead, tfoot, firstcolhead, temp_el;
+  Element             tbody, table_body, prevrow, prevEl, nextEl, enclosingTable;
   AttributeType       attrType;
   Attribute           attr;
   ThotBool            previousStructureChecking;
-  ThotBool            before, inMath;
+  ThotBool            before, inMath, inTemplate;
 
   if (DocumentMeta[doc] && DocumentMeta[doc]->isTemplate)
     /* do not check the structure of a table when loading a template.
@@ -1541,27 +1540,51 @@ void CheckTable (Element table, Document doc)
       columnHeads = NULL;
       thead = NULL;
       tfoot = NULL;
-      Tablebody = NULL;
+      table_body = NULL;
       elType = TtaGetElementType (table);
       inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
+      inTemplate = FALSE;
       el = TtaGetFirstChild (table);
+      temp_el = NULL;
       while (el)
         {
           elType = TtaGetElementType (el);
-          if ((inMath && elType.ElTypeNum == MathML_EL_MTable_head) ||
+          if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+            {
+              // move down the template element
+              temp_el = el;
+              inTemplate = TRUE;
+            }
+          else if ((inMath && elType.ElTypeNum == MathML_EL_MTable_head) ||
               (!inMath && elType.ElTypeNum == HTML_EL_Table_head))
             columnHeads = el;
           else if ((inMath && elType.ElTypeNum == MathML_EL_MTable_body) ||
                    (!inMath && elType.ElTypeNum == HTML_EL_Table_body))
             {
-              if (Tablebody == NULL)
-                Tablebody = el;
+              if (table_body == NULL)
+                table_body = el;
             }
           else if (!inMath && elType.ElTypeNum == HTML_EL_thead)
             thead = el;
           else if (!inMath && elType.ElTypeNum == HTML_EL_tfoot)
             tfoot = el;
-          TtaNextSibling (&el);
+          prevEl = el;
+          if (temp_el)
+            {
+              el = TtaGetFirstChild (temp_el);
+              temp_el = NULL;
+            }
+          else
+            TtaNextSibling (&el);
+          if (el == NULL && inTemplate)
+            {
+              // move up the template element
+              el = TtaGetParent (prevEl);
+              if (el == table)
+                el = NULL;
+              else
+                TtaNextSibling (&el);
+            }
         }
 
       if (columnHeads != NULL)
@@ -1627,24 +1650,24 @@ void CheckTable (Element table, Document doc)
                 }
             }
 
-          if (Tablebody == NULL)
+          if (table_body == NULL)
             {
               /* There is no Table_body element. Create a Table_body element */
               if (inMath)
                 elType.ElTypeNum = MathML_EL_MTable_body;
               else
                 elType.ElTypeNum = HTML_EL_Table_body;
-              Tablebody = TtaNewElement (doc, elType);
-              if (Tablebody != NULL)
+              table_body = TtaNewElement (doc, elType);
+              if (table_body != NULL)
                 {
                   if (thead != NULL)
-                    TtaInsertSibling (Tablebody, thead, FALSE, doc);
+                    TtaInsertSibling (table_body, thead, FALSE, doc);
                   else
-                    TtaInsertSibling (Tablebody, columnHeads, FALSE, doc);
+                    TtaInsertSibling (table_body, columnHeads, FALSE, doc);
                   /* collect all Table_row elements and put them in the new
                      Table_body */
                   tbody = NULL;
-                  el = Tablebody;
+                  el = table_body;
                   TtaNextSibling (&el);
                   prevrow = NULL;
                   prevEl = NULL;
@@ -1664,7 +1687,7 @@ void CheckTable (Element table, Document doc)
                               elType.ElTypeNum = HTML_EL_tbody;
                               tbody = TtaNewElement (doc, elType);
                               if (prevEl == NULL)
-                                TtaInsertFirstChild (&tbody, Tablebody, doc);
+                                TtaInsertFirstChild (&tbody, table_body, doc);
                               else
                                 TtaInsertSibling (tbody, prevEl, FALSE, doc);
                               TtaInsertFirstChild (&el, tbody, doc);
@@ -1684,7 +1707,7 @@ void CheckTable (Element table, Document doc)
                             }
                           TtaRemoveTree (el, doc);
                           if (prevEl == NULL)
-                            TtaInsertFirstChild (&el, Tablebody, doc);
+                            TtaInsertFirstChild (&el, table_body, doc);
                           else
                             TtaInsertSibling (el, prevEl, FALSE, doc);
                           prevEl = el;
@@ -1694,11 +1717,11 @@ void CheckTable (Element table, Document doc)
                 }
             }
 
-          /* if there is a tfoot element, put it after the Tablebody element */
-          if (tfoot && Tablebody)
+          /* if there is a tfoot element, put it after the table_body element */
+          if (tfoot && table_body)
             {
               TtaRemoveTree (tfoot, doc);
-              TtaInsertSibling (tfoot, Tablebody, FALSE, doc);
+              TtaInsertSibling (tfoot, table_body, FALSE, doc);
             }
           /* associate each cell with a column */
           CheckAllRows (table, doc, FALSE, FALSE);
@@ -3243,6 +3266,9 @@ void RowPasted (NotifyElement * event)
 
   /* get the first column head in the table */
   colhead = TtaSearchTypedElement (elType, SearchInTree, table);
+  if (colhead == NULL)
+    // the table does have any colhead 
+    return;
 
   /* get the first cell in the pasted row */
   prevCell = NULL;

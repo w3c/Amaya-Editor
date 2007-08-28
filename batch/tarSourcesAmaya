@@ -122,7 +122,6 @@ ${LIBWWWDIR}/config/depcomp \
 ${REDLANDDIR} \
 ${WXWIDGETS}/art \
 ${WXWIDGETS}/build \
-${WXWIDGETS}/debian \
 ${WXWIDGETS}/distrib \
 ${WXWIDGETS}/include \
 ${WXWIDGETS}/lib \
@@ -132,8 +131,6 @@ ${WXWIDGETS}/*.in \
 ${WXWIDGETS}/mkinstalldirs \
 ${WXWIDGETS}/*.spec \
 ${WXWIDGETS}/*.m4 \
-${WXWIDGETS}/*_vms \
-${WXWIDGETS}/*.pl \
 ${WXWIDGETS}/install-sh \
 ${WXWIDGETS}/config* \
 ${WXWIDGETS}/*.txt \
@@ -269,6 +266,8 @@ ${AMAYADIR}/amaya/*.ico \
 ${AMAYADIR}/amaya/*.cur \
 ${AMAYADIR}/amaya/wxdialog/*.h \
 ${AMAYADIR}/amaya/wxdialog/*.cpp \
+${AMAYADIR}/amaya/wxdialog/*.rc \
+${AMAYADIR}/amaya/wxdialog/*.ico \
 ${AMAYADIR}/amaya/f/*.h \
 ${AMAYADIR}/amaya/xpm/*.xpm \
 ${AMAYADIR}/annotlib/Makefile.* \
@@ -412,7 +411,7 @@ mkdir $TMP
 cd $TMP
 tar xzf $DEST/amaya-tmp-$AMAYAVERSION.tgz
 tar xzf $DEST/libs-tmp-$AMAYAVERSION.tgz
-\rm -r */CVS */*/CVS */*/*/CVS */*/*/*/CVS */*/*/*/*/CVS */*/*/*/*/*/CVS
+\rm -r */CVS */*/CVS */*/*/CVS */*/*/*/CVS */*/*/*/*/CVS
 
 echo "Generating amaya-src tar file from $AMAYADIR"
 AMAYADIR=Amaya
