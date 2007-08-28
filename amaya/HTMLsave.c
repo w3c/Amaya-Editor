@@ -3230,10 +3230,11 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
                           NULL,
                           TtaGetMessage (AMAYA, AM_DONT_SAVE),
                           TtaGetMessage (LIB, TMSG_BUTTON_SAVE));
-#endif /* _WX */
+#else /* _WX */
           ConfirmError (doc, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED),
                         TtaGetMessage (AMAYA, AM_DONT_SAVE),
                         TtaGetMessage (LIB, TMSG_BUTTON_SAVE));
+#endif /* _WX */
         }
       if (UserAnswer)
         {
