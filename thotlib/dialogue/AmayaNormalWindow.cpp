@@ -518,7 +518,8 @@ void AmayaNormalWindow::EmptyURLBar()
  -----------------------------------------------------------------------*/
 AmayaToolBar * AmayaNormalWindow::GetAmayaToolBar()
 {
-  return m_pToolBar;
+  return NULL;
+//  return m_pToolBar;
 }
 
 

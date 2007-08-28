@@ -128,7 +128,7 @@ class AmayaNormalWindow : public AmayaWindow
   wxMenuItem * m_pMenuItemToggleToolTip;
 
   wxSplitterWindow * m_pSplitterWindow;  
-  AmayaToolBar *     m_pToolBar;
+//  AmayaToolBar *     m_pToolBar;
 
   AmayaQuickSplitButton * m_pSplitPanelButton;
   AmayaStatusBar * m_pStatusBar;
