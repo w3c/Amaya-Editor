@@ -1143,13 +1143,14 @@ void UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr,
       comparison = comparison ||
         (pPS->PsNComparAttrs->Num[pAttr->AeAttrNum - 1] > 0);
       /* next P schema */
-      if (pHd == NULL)
+      if (pHd)
+        /* get the next extension schema */
+        pHd = pHd->HdNextPSchema;
+      else if (CanApplyCSSToElement (pEl))
         /* extension schemas have not been checked yet */
         /* get the first extension schema */
         pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pEl);
-      else
-        /* get the next extension schema */
-        pHd = pHd->HdNextPSchema;
+
       if (pHd == NULL)
         /* no more extension schemas. Stop */
         pPS = NULL;

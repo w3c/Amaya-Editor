@@ -157,6 +157,17 @@ static void UpdateCSSVisibility (PtrAbstractBox pAb)
 }
 
 /*----------------------------------------------------------------------
+  CanApplyCSSToElement returns TRUE when CSS rules apply to this element
+  ----------------------------------------------------------------------*/
+ThotBool CanApplyCSSToElement (PtrElement pEl)
+{
+  return (pEl &&
+          pEl->ElTypeNumber >= pEl->ElStructSchema->SsRootElem &&
+          strcmp (pEl->ElStructSchema->SsName, "Template") && // not template element
+          !TypeHasException (ExcHidden, pEl->ElTypeNumber, pEl->ElStructSchema));
+}
+
+/*----------------------------------------------------------------------
   SetAccessMode updates the access  mode in all abstract boxes of
   all document views.
   ----------------------------------------------------------------------*/
@@ -3554,9 +3565,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
                  all schema extensions */
               /* We need to do that only if the element is not a basic or
                  hidden element */
-              if (pEl->ElTypeNumber >= pEl->ElStructSchema->SsRootElem &&
-                  !TypeHasException (ExcHidden, pEl->ElTypeNumber,
-                                     pEl->ElStructSchema))
+              if (CanApplyCSSToElement (pEl))
                 {
                   pHd = FirstPSchemaExtension (pSchS, pDoc, pEl);
                   while (pHd)
@@ -3708,16 +3717,14 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
                       pAttr = pAttr->AeNext;
                     }
 
-                  if (pHd == NULL)
-                    /* it was the main P schema, get the first schema extension */
-                    {
-                      if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
-                        pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc,
-                                                     pEl);
-                    }
-                  else
-                    /* next style sheet (P schema extension) */
+                  if (pHd)
+                     /* next style sheet (P schema extension) */
                     pHd = pHd->HdNextPSchema;
+                  else if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1 &&
+                           CanApplyCSSToElement (pEl))
+                    /* it was the main P schema, get the first schema extension */
+                    pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
+
                   if (pHd == NULL)
                     /* no schema any more. stop */
                     pSchP = NULL;
@@ -4152,17 +4159,16 @@ static ThotBool ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
         }
       while (valNum > 0);
 
-      if (pHd == NULL)
-        {
-          /* on n'a pas encore traite' les schemas de presentation additionnels
-             On prend le premier schema additionnel si on travaille pour la vue
-             principale, sinon on ignore les schemas additionnels. */
-          if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1)
-            pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pEl);
-        }
-      else
+      if (pHd)
         /* passe au schema additionnel suivant */
         pHd = pHd->HdNextPSchema;
+      else if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1 &&     /* main view */
+               CanApplyCSSToElement (pEl))
+        /* on n'a pas encore traite' les schemas de presentation additionnels
+           On prend le premier schema additionnel si on travaille pour la vue
+           principale, sinon on ignore les schemas additionnels. */
+        pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pEl);
+
       if (pHd == NULL)
         /* il n'y a pas (ou plus) de schemas additionnels a prendre en compte*/
         pSchP = NULL;
@@ -4361,13 +4367,14 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
         }
 
       /* next P schema */
-      if (pHd == NULL)
+      if (pHd)
+        /* get the next extension schema */
+        pHd = pHd->HdNextPSchema;
+      else if (viewSch == 1 &&     /* main view */
+               CanApplyCSSToElement (pEl))
         /* extension schemas have not been checked yet */
         /* get the first extension schema */
         pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
-      else
-        /* get the next extension schema */
-        pHd = pHd->HdNextPSchema;
       if (pHd == NULL)
         /* no more extension schemas. Stop */
         pSP = NULL;
@@ -4850,9 +4857,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   /* We need to do that only if we are working for the main view and if
      the element is not a basic or hidden element */
   if (viewSch == 1 &&     /* main view */
-      pEl->ElTypeNumber >= pEl->ElStructSchema->SsRootElem &&   // not basic 
-      strcmp (pEl->ElStructSchema->SsName, "Template") && // not template element
-      !TypeHasException (ExcHidden, pEl->ElTypeNumber, pEl->ElStructSchema))
+      CanApplyCSSToElement (pEl))
     {
       /* get the first P schema extension */
       pHd = FirstPSchemaExtension (pDoc->DocSSchema, pDoc, pEl);
@@ -5066,7 +5071,8 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
       if (pHd)
         /* next style sheet (P schema extension) */
         pHd = pHd->HdNextPSchema;
-      else
+      else if (viewSch == 1 &&     /* main view */
+               CanApplyCSSToElement (pEl))
         /* it was the main P schema, get the first schema extension */
         pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
       if (pHd)

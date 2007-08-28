@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool CanApplyCSSToElement ( PtrElement pEl );
 extern void SetAccessMode ( PtrDocument pDoc,
                             int accessMode );
 extern PtrPRule GetRule ( PtrPRule *pRSpecif,
@@ -127,6 +128,7 @@ extern PtrAbstractBox AbsBoxesCreate ( PtrElement pEl,
 
 #else /* __STDC__ */
 
+extern ThotBool CanApplyCSSToElement ( PtrElement pEl );
 extern void SetAccessMode ( PtrDocument pDoc,
                               int accessMode );
 extern PtrPRule GetRule ( PtrPRule *pRSpecif,

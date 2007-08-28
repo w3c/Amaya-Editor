@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -407,9 +407,10 @@ void RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
       /* next style sheet (P schema extension, aka CSS style sheet) */
       if (pHd)
         pHd = pHd->HdNextPSchema;
-      else
+      else if (CanApplyCSSToElement (pEl))
         /* it was the main P schema, get the first schema extension */
         pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pEl);
+
       if (pHd)
         pPSchema = pHd->HdPSchema;
       else
@@ -556,13 +557,14 @@ void ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc,
                 }
             }
           /* next P schema */
-          if (pHd == NULL)
+          if (pHd)
+            /* get the next extension schema */
+            pHd = pHd->HdNextPSchema;
+          else if (CanApplyCSSToElement (pEl))
             /* extension schemas have not been checked yet */
             /* get the first extension schema */
             pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
-          else
-            /* get the next extension schema */
-            pHd = pHd->HdNextPSchema;
+
           if (pHd == NULL)
             /* no more extension schemas. Stop */
             pPS = NULL;
@@ -823,13 +825,14 @@ void RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc,
                 RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr, TRUE, NULL);
             }
           /* next P schema */
-          if (pHd == NULL)
+          if (pHd)
+            /* get the next extension schema */
+            pHd = pHd->HdNextPSchema;
+          else if (CanApplyCSSToElement (pEl))
             /* extension schemas have not been checked yet */
             /* get the first extension schema */
             pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
-          else
-            /* get the next extension schema */
-            pHd = pHd->HdNextPSchema;
+
           if (pHd == NULL)
             /* no more extension schemas. Stop */
             pPS = NULL;
@@ -1071,12 +1074,13 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
       
       /* next P schema */
       if (pHd == NULL)
+        /* get the next extension schema */
+        pHd = pHd->HdNextPSchema;
+      else if (CanApplyCSSToElement (pEl))
         /* extension schemas have not been checked yet */
         /* get the first extension schema */
         pHd = FirstPSchemaExtension (pNewAttr->AeAttrSSchema, pDoc, pEl);
-      else
-        /* get the next extension schema */
-        pHd = pHd->HdNextPSchema;
+
       if (pHd == NULL)
         /* no more extension schemas. Stop */
         pPS = NULL;

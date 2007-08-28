@@ -3868,7 +3868,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
             pHd = FirstPSchemaExtension (pSchemaStr, pDoc, NULL);
           else
             pHd = NULL;
-          while (pHd != NULL)
+          while (pHd)
             {
               pSc1 = pHd->HdPSchema;
               if (pSc1 != NULL)

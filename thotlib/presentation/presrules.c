@@ -1361,14 +1361,14 @@ static ThotBool AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb,
             /* on n'a pas encore trouve'. On cherche dans les schemas de */
             /* presentation additionnels */
             {
-              if (pHd == NULL)
-                /* on n'a pas encore traite' les schemas de presentation
-                   additionnels. On prend le premier schema additionnel. */
+              if (pHd)
+                /* get next extension schema */
+                pHd = pHd->HdNextPSchema;
+              else if (CanApplyCSSToElement (pAb->AbElement))
+                /* get first extension schema */
                 pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc,
                                              pAb->AbElement);
-              else
-                /* passe au schema additionnel suivant */
-                pHd = pHd->HdNextPSchema;
+
               if (pHd == NULL)
                 /* il n'y a pas (ou plus) de schemas additionnels */
                 pSchP = NULL;
@@ -1961,14 +1961,15 @@ FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
                   ok = PageCreateRule (pPRuleCre, pSchP, pAbbCreated, &result);
                 }
               while (valNum > 0);
-              if (pHd == NULL)
-                /* on n'a pas encore traite' les schemas de presentation
-                   additionnels. On prend le premier schema additionnel. */
+
+              if (pHd)
+                /* get next extension schema */
+                pHd = pHd->HdNextPSchema;
+              else if (CanApplyCSSToElement (pAbbCreator->AbElement))
+                /* get first extension schema */
                 pHd = FirstPSchemaExtension (pA->AeAttrSSchema, pDoc,
                                              pAbbCreator->AbElement);
-              else
-                /* passe au schema additionnel suivant */
-                pHd = pHd->HdNextPSchema;
+
               if (pHd == NULL)
                 /* il n'y a pas (ou plus) de schemas additionnels */
                 pSchP = NULL;

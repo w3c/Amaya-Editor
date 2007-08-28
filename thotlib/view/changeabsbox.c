@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -350,8 +350,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
          hidden element */
       if (view == 1 &&                   /* main view */
           !presBox &&                    /* not a presentation box */
-          index >= pSchS->SsRootElem &&  /* not a basic element */
-          !TypeHasException (ExcHidden, index, pSchS)) /*not a hidden element*/
+          CanApplyCSSToElement (pEl)) /*not a hidden element*/
         {
           /* get the first P schema extension */
           pHd = FirstPSchemaExtension (pDoc->DocSSchema, pDoc, NULL);
@@ -537,7 +536,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
           /* next style sheet (P schema extension) */
           if (pHd)
             pHd = pHd->HdNextPSchema;
-          else
+          else if (CanApplyCSSToElement (pEl))
             /* it was the main P schema, get the first schema extension */
             pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
           if (pHd)
@@ -1612,13 +1611,13 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
               ApplInheritedCreationRules (pEl, pDoc, inheritTable,
                                           first, change);
             }
-          if (pHd == NULL)
+          if (pHd)
+            /* get the next extension schema */
+            pHd = pHd->HdNextPSchema;
+          else if (CanApplyCSSToElement (pEl))
             /* extension schemas have not been checked yet */
             /* get the first extension schema */
             pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
-          else
-            /* get the next extension schema */
-            pHd = pHd->HdNextPSchema;
           if (pHd == NULL)
             /* no more extension schemas. Stop */
             pSP = NULL;
@@ -1630,7 +1629,7 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
       /* presentation ? */
       pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
       /* boucle sur les attributs de l'element */
-      while (pAttr != NULL)
+      while (pAttr)
         {
           pSP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
           pHd = NULL;
@@ -1650,13 +1649,14 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
                                          change, first);
                 }
               while (valNum > 0);
-              if (pHd == NULL)
+              if (pHd)
+                /* get the next extension schema */
+                pHd = pHd->HdNextPSchema;
+              else if (CanApplyCSSToElement (pEl))
                 /* extension schemas have not been checked yet */
                 /* get the first extension schema */
                 pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pEl);
-              else
-                /* get the next extension schema */
-                pHd = pHd->HdNextPSchema;
+
               if (pHd == NULL)
                 /* no more extension schemas. Stop */
                 pSP = NULL;
