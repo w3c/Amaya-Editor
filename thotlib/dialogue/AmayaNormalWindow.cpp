@@ -4,6 +4,7 @@
 #include "wx/tglbtn.h"
 #include "wx/string.h"
 #include "wx/spinctrl.h"
+#include "wx/xrc/xmlres.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -70,16 +71,14 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
   TtaSetEnvInt("SLASH_PANEL_POS", 195, FALSE);
   // load slash position from registry
   TtaGetEnvInt ("SLASH_PANEL_POS", &m_SlashPos);
-
-  
   
   // Create a background panel to contain everything : better look on windows
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
   
   {
     // Create the toolbar
-    m_pToolBar = new AmayaToolBar( this, this );
-    p_TopSizer->Add( m_pToolBar, 0, wxEXPAND);
+    p_TopSizer->Add( wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_BROWSING")), 0, wxEXPAND);
+    p_TopSizer->Add( wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_EDITING")), 0, wxEXPAND);
     
     // Global layout
     m_pLayoutSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -619,7 +618,6 @@ void AmayaNormalWindow::OnSplitPanelButton( wxCommandEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::ClosePanel()
 {
-  int window_id = GetWindowId();
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaNormalWindow::ClosePanel") );
 
   if (IsPanelOpened())
@@ -629,8 +627,7 @@ void AmayaNormalWindow::ClosePanel()
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
 
-      if (window_id == 1)
-        TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
+      TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
     }
 }
 
@@ -641,7 +638,6 @@ void AmayaNormalWindow::ClosePanel()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::OpenPanel()
 {
-  int window_id = GetWindowId();
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaNormalWindow::OpenPanel") );
   
   if (!IsPanelOpened())
@@ -667,8 +663,7 @@ void AmayaNormalWindow::OpenPanel()
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
 
-      if (window_id == 1)
-        TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
+      TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
     }
 }
 

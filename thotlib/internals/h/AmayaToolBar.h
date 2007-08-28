@@ -4,6 +4,8 @@
 #define __AMAYATOOLBAR_H__
 
 #include "wx/panel.h"
+#include "wx/hashmap.h"
+
 
 class AmayaFrame;
 class AmayaWindow;
@@ -58,6 +60,64 @@ public:
   
   wxToolBar*  m_LeftToolBar;
   wxToolBar*  m_RightToolBar;
+};
+
+typedef struct
+{
+  const char* idname;
+  const char* action;
+  int tooltip_categ, tooltip_msg;
+} AmayaToolBarToolDef;
+
+WX_DECLARE_HASH_MAP( int, AmayaToolBarToolDef*, wxIntegerHash, wxIntegerEqual, AmayaToolBarToolDefHashMap );
+
+class AmayaBaseToolBar : public wxToolBar
+{
+  DECLARE_DYNAMIC_CLASS(AmayaToolBarEditing)
+  DECLARE_EVENT_TABLE()
+public:
+  AmayaBaseToolBar();
+  bool Create( wxWindow *parent,
+               wxWindowID id,
+               const wxPoint& pos = wxDefaultPosition,
+               const wxSize& size = wxDefaultSize,
+               long style = 0,
+               const wxString& name = wxT("AmayaBaseToolBar") );
+  virtual ~AmayaBaseToolBar();
+
+  /** Add number of toolitem definitions. */
+  void Add(AmayaToolBarToolDef* def, int nbdef);
+  /** Add number of toolitem definitions. def must end by a NULL row.*/
+  void Add(AmayaToolBarToolDef* def);
+  
+  // Called after all tools have been added.
+  virtual bool Realize();
+
+protected:
+  AmayaToolBarToolDefHashMap m_map;
+  
+  void OnTool(wxCommandEvent& event);
+};
+
+
+class AmayaToolBarEditing : public AmayaBaseToolBar
+{
+  DECLARE_DYNAMIC_CLASS(AmayaToolBarEditing)
+public:
+  
+  static AmayaToolBarEditing s_tb;
+  
+  AmayaToolBarEditing();
+};
+
+class AmayaToolBarBrowsing : public AmayaBaseToolBar
+{
+  DECLARE_DYNAMIC_CLASS(AmayaToolBarBrowsing)
+public:
+  
+  static AmayaToolBarBrowsing s_tb;
+  
+  AmayaToolBarBrowsing();
 };
 
 #endif // __AMAYATOOLBAR_H__

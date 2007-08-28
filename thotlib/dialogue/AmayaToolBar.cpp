@@ -435,4 +435,136 @@ EVT_TOOL( XRCID("wxID_TOOL_LOGO"),           AmayaToolBar::OnButton_Logo )
   EVT_TEXT( XRCID("wxID_TOOL_URL"),              AmayaToolBar::OnURLText )
 END_EVENT_TABLE()
 
+//
+//
+// AmayaBaseToolBar
+//
+//
+
+IMPLEMENT_DYNAMIC_CLASS(AmayaBaseToolBar, wxToolBar)
+BEGIN_EVENT_TABLE(AmayaBaseToolBar, wxToolBar)
+  EVT_TOOL(wxID_ANY, AmayaBaseToolBar::OnTool)
+END_EVENT_TABLE()
+
+
+AmayaBaseToolBar::AmayaBaseToolBar():
+wxToolBar()
+{
+  
+}
+
+bool AmayaBaseToolBar::Create( wxWindow *parent, wxWindowID id,
+     const wxPoint& pos, const wxSize& size, long style, const wxString& name)
+{
+  return wxToolBar::Create(parent, id, pos, size, style, name);
+}
+
+AmayaBaseToolBar::~AmayaBaseToolBar()
+{
+}
+
+void AmayaBaseToolBar::Add(AmayaToolBarToolDef* def, int nbdef)
+{
+  while(nbdef>0)
+    {
+      m_map[wxXmlResource::GetXRCID(wxString(def->idname, wxConvUTF8))] = def;
+      nbdef--;
+    }
+}
+
+void AmayaBaseToolBar::Add(AmayaToolBarToolDef* def)
+{
+  while(def->idname!=NULL)
+    {
+      m_map[wxXmlResource::GetXRCID(wxString(def->idname, wxConvUTF8))] = def;
+      def++;
+    }  
+}
+
+bool AmayaBaseToolBar::Realize()
+{
+  AmayaToolBarToolDefHashMap::iterator it;
+  // For each registered tool
+  for( it = m_map.begin(); it != m_map.end(); ++it )
+  {
+    // set the tooltip content
+    if(it->second->tooltip_categ!=wxID_ANY && it->second->tooltip_msg!=wxID_ANY)
+      SetToolShortHelp(it->first, TtaConvMessageToWX(
+        TtaGetMessage(it->second->tooltip_categ,it->second->tooltip_msg)));
+  }
+  return wxToolBar::Realize();
+}
+
+void AmayaBaseToolBar::OnTool(wxCommandEvent& event)
+{
+  AmayaToolBarToolDef* def = m_map[event.GetId()];
+  if(def && def->action!=NULL && def->action[0]!=0)
+    {
+      Document doc;
+      View view;
+      FrameToView (TtaGiveActiveFrame(), &doc, &view);
+      TtaExecuteMenuAction (def->action, doc, view, FALSE);
+    }
+}
+
+
+
+//
+//
+// AmayaToolBarEditing
+//
+//
+
+
+static AmayaToolBarToolDef AmayaToolBarEditingToolDef[]={
+  {"wxID_TOOL_NEW", "NewXHTML", LIB, TMSG_BUTTON_NEW},
+  {"wxID_TOOL_OPEN", "OpenDoc", LIB, TMSG_BUTTON_OPEN},
+  {"wxID_TOOL_SAVE", "SaveDocument", LIB, TMSG_BUTTON_SAVE},
+  {"wxID_TOOL_SAVE_ALL", "SaveAll", LIB, TMSG_BUTTON_SAVE_ALL},
+  {"wxID_TOOL_PRINT", "SetupAndPrint", LIB, TMSG_BUTTON_PRINT},
+  {"wxID_TOOL_UNDO", "", LIB, wxID_ANY},
+  {"wxID_TOOL_REDO", "", LIB, wxID_ANY},
+  {"wxID_TOOL_CUT", "", LIB, wxID_ANY},
+  {"wxID_TOOL_COPY", "", LIB, wxID_ANY},
+  {"wxID_TOOL_PASTE", "", LIB, wxID_ANY},
+  {"wxID_TOOL_SPELLCHECK", "", LIB, wxID_ANY},
+  {"wxID_TOOL_FIND", "", LIB, wxID_ANY},
+  {"wxID_TOOL_CSS", "SetCSSStyle", LIB, TMSG_CSSStyle},
+  {NULL, NULL, 0, 0}
+};
+
+IMPLEMENT_DYNAMIC_CLASS(AmayaToolBarEditing, AmayaBaseToolBar)
+
+AmayaToolBarEditing::AmayaToolBarEditing():
+  AmayaBaseToolBar()
+{
+  Add(AmayaToolBarEditingToolDef);
+}
+
+
+//
+//
+// AmayaToolBarBrowsing
+//
+//
+
+
+static AmayaToolBarToolDef AmayaToolBarBrowsingToolDef[]={
+  {"wxID_TOOL_BACK", "GotoPreviousHTML", LIB, TMSG_BUTTON_PREVIOUS},
+  {"wxID_TOOL_FORWARD", "GotoNextHTML", LIB, TMSG_BUTTON_NEXT},
+  {"wxID_TOOL_RELOAD", "Reload", LIB, TMSG_BUTTON_RELOAD},
+  {"wxID_TOOL_STOP", "StopTransfer", LIB, TMSG_BUTTON_INTERRUPT},
+  {"wxID_TOOL_HOME", "GoToHome", LIB, TMSG_BUTTON_HOME},
+  {NULL, NULL, 0, 0}
+};
+
+IMPLEMENT_DYNAMIC_CLASS(AmayaToolBarBrowsing, AmayaBaseToolBar)
+
+AmayaToolBarBrowsing::AmayaToolBarBrowsing():
+  AmayaBaseToolBar()
+{
+  Add(AmayaToolBarBrowsingToolDef);
+}
+
+
 #endif /* #ifdef _WX */

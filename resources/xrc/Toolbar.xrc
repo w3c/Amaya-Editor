@@ -43,7 +43,7 @@
           <object class="tool" name="wxID_TOOL_CSS">
             <bitmap>../icons/22x22/css.png</bitmap>
           </object>
-          <style>wxTB_NODIVIDER</style>
+          <bitmapsize>24,24</bitmapsize>
         </object>
         <flag>wxALIGN_CENTRE_VERTICAL</flag>
       </object>
@@ -59,9 +59,108 @@
           <object class="tool" name="wxID_TOOL_LOGO">
             <bitmap>../icons/22x22/logo.png</bitmap>
           </object>
+          <bitmapsize>24,24</bitmapsize>
           <style>wxTB_NODIVIDER</style>
         </object>
         <flag>wxALIGN_CENTRE_VERTICAL</flag>
+      </object>
+    </object>
+  </object>
+  <object class="wxPanel" name="wxID_PANEL_TOOLBAR_BROWSING">
+    <object class="wxBoxSizer">
+      <orient>wxHORIZONTAL</orient>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="ToolbarBrowsing" subclass="AmayaToolBarBrowsing">
+          <object class="tool" name="wxID_TOOL_BACK">
+            <bitmap>../icons/22x22/back.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_FORWARD">
+            <bitmap>../icons/22x22/forward.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_RELOAD">
+            <bitmap>../icons/22x22/reload.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_STOP">
+            <bitmap>../icons/22x22/stop.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_HOME">
+            <bitmap>../icons/22x22/home.png</bitmap>
+          </object>
+          <bitmapsize>24,24</bitmapsize>
+        </object>
+        <flag>wxEXPAND</flag>
+      </object>
+      <object class="sizeritem">
+        <object class="wxComboBox" name="wxID_TOOL_URL">
+          <content/>
+          <size>-1,-1</size>
+        </object>
+        <option>1</option>
+        <flag>wxALIGN_CENTRE_VERTICAL</flag>
+      </object>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="">
+          <object class="tool" name="wxID_TOOL_LOGO">
+            <bitmap>../icons/22x22/logo.png</bitmap>
+          </object>
+          <bitmapsize>24,24</bitmapsize>
+          <style>wxTB_NODIVIDER</style>
+        </object>
+        <flag>wxALIGN_LEFT|wxALIGN_RIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+        <border>2</border>
+      </object>
+    </object>
+  </object>
+  <object class="wxPanel" name="wxID_PANEL_TOOLBAR_EDITING">
+    <object class="wxBoxSizer">
+      <orient>wxHORIZONTAL</orient>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="ToolbarEditing" subclass="AmayaToolBarEditing">
+          <bitmapsize>24,24</bitmapsize>
+          <object class="tool" name="wxID_TOOL_NEW">
+            <bitmap>../icons/22x22/new.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_OPEN">
+            <bitmap>../icons/22x22/open.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_SAVE">
+            <bitmap>../icons/22x22/save.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_SAVE_ALL">
+            <bitmap>../icons/22x22/save_all.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_PRINT">
+            <bitmap>../icons/22x22/print.png</bitmap>
+          </object>
+          <object class="separator"/>
+          <object class="tool" name="wxID_TOOL_UNDO">
+            <bitmap>../icons/22x22/undo.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_REDO">
+            <bitmap>../icons/22x22/redo.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_CUT">
+            <bitmap>../icons/22x22/cut.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_COPY">
+            <bitmap>../icons/22x22/copy.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_PASTE">
+            <bitmap>../icons/22x22/paste.png</bitmap>
+          </object>
+          <object class="separator"/>
+          <object class="tool" name="wxID_TOOL_SPELLCHECK">
+            <bitmap>../icons/22x22/spellcheck.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_FIND">
+            <bitmap>../icons/22x22/find.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_CSS">
+            <bitmap>../icons/22x22/css.png</bitmap>
+          </object>
+        </object>
+        <option>1</option>
+        <flag>wxEXPAND</flag>
       </object>
     </object>
   </object>
