@@ -27,6 +27,9 @@
 #include "AHTrdf2annot_f.h"
 
 /* Amaya includes */
+#ifdef _WX
+#include "appdialogue_wx.h"
+#endif /* _WX */
 #include "init_f.h"
 #include "HTMLactions_f.h"
 #include "AHTURLTools_f.h"
@@ -890,6 +893,10 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   /* initialize everything */
   mode = (AnnotMode)(mode | ANNOT_initATitle | ANNOT_initBody);
   ANNOT_InitDocumentStructure (doc, doc_annot, annot, mode);
+#ifdef _WX
+  // set the default icon
+  TtaSetPageIcon (doc_annot, 1, NULL);
+#endif /* _WX */
 
   /* turn on/off entries in the menu bar */
   UpdateContextSensitiveMenus (doc, 1);
