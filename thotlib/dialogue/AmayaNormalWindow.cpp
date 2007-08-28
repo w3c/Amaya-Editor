@@ -577,6 +577,22 @@ void AmayaNormalWindow::OnSplitterPosChanged( wxSplitterEvent& event )
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
+ *      Method:  OnSize
+ * Description:  Handle window resizing event
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::OnSize(wxSizeEvent& event)
+{
+  if(!strcmp(TtaGetEnvString("TOOLPANEL_LAYOUT"), "RIGHT"))
+    {
+      m_pSplitterWindow->SetSashPosition(GetSize().x-m_SlashPos);
+    }
+    
+  event.Skip();
+}
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
  *      Method:  OnSplitterDClick
  * Description:  called when a double click is done on the splitbar
  *               detach the panel area (hide it)
@@ -772,6 +788,7 @@ BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
   EVT_MENU(wxID_ANY,   AmayaNormalWindow::OnMenuItem )
    
   EVT_CLOSE(AmayaNormalWindow::OnClose )
+  EVT_SIZE(AmayaNormalWindow::OnSize)
 
   EVT_SPLITTER_SASH_POS_CHANGED(wxID_ANY, 	AmayaNormalWindow::OnSplitterPosChanged )
   EVT_SPLITTER_DCLICK(wxID_ANY, 		AmayaNormalWindow::OnSplitterDClick )

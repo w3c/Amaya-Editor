@@ -110,6 +110,7 @@ class AmayaNormalWindow : public AmayaWindow
   void OnNotebookPageChanged( wxNotebookEvent& event );
 
   void OnClose(wxCloseEvent& event);
+  void OnSize(wxSizeEvent& event);
 
   AmayaToolPanelBar *      m_pPanel;     // current selected panel
   
