@@ -1946,6 +1946,28 @@ void ConfirmError (Document document, View view, char *label,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+void ConfirmError3L (Document document, View view, char *label1, char *label2,
+                    char *label3, char *extrabutton, char *confirmbutton)
+{
+#ifdef _WX
+  ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
+                                             TtaGetViewFrame (document, view),
+                                             NULL, extrabutton, confirmbutton,
+                                             label1, label2, label3);
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+    }
+#endif /* _WX */
+  /* remove the critic section */
+  CriticConfirm = FALSE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void InitConfirm3L (Document document, View view, char *label1, char *label2,
                     char *label3, ThotBool withCancel)
 {

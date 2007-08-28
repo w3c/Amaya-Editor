@@ -497,6 +497,12 @@ Element InsertWithNotify (Element el, Element child, Element parent, Document do
   NotifyElement    event;
   char            *name;
   ThotBool         isRow = FALSE, isCell = FALSE;
+  ThotBool         isImage = FALSE;
+  ThotBool         oldStructureChecking;
+
+  // avoid to check attributes now
+  oldStructureChecking = TtaGetStructureChecking (doc);
+  TtaSetStructureChecking (FALSE, doc);
 
   elType = TtaGetElementType (el);
   name = TtaGetSSchemaName (elType.ElSSchema);
@@ -508,12 +514,17 @@ Element InsertWithNotify (Element el, Element child, Element parent, Document do
            (!strcmp (name,"MathML") &&
             (elType.ElTypeNum == MathML_EL_MTR ||
              elType.ElTypeNum == MathML_EL_MLABELEDTR)));
+  isImage = (!strcmp (name,"HTML") && 
+              (elType.ElTypeNum == HTML_EL_IMG || elType.ElTypeNum == HTML_EL_Object));
   if (child)
     TtaInsertSibling (el, child, FALSE, doc);
   else
     TtaInsertFirstChild (&el, parent, doc);
+  TtaSetStructureChecking (oldStructureChecking, doc);
 
-  if (isCell)
+  if (isImage)
+    InsertImageOrObject (el, doc);
+  else if (isCell)
     {
       // a cell is created
       NewCell (el, doc, TRUE, TRUE, TRUE);
@@ -525,8 +536,24 @@ Element InsertWithNotify (Element el, Element child, Element parent, Document do
       event.document = doc;
       RowPasted (&event);
     }
-  //else
-  // TtaNotifySubTree (TteElemNew, doc, el, FALSE);
+  
+  if (!strcmp (name,"HTML"))
+    {
+      elType.ElTypeNum = HTML_EL_IMG;
+      child = TtaSearchTypedElement (elType, SearchInTree, el);
+      while (child)
+        {
+          InsertImageOrObject (child, doc);
+          child = TtaSearchTypedElementInTree (elType, SearchForward, el, child);
+        }
+      elType.ElTypeNum = HTML_EL_Object;
+      child = TtaSearchTypedElement (elType, SearchInTree, el);
+      while (child)
+        {
+          InsertImageOrObject (child, doc);
+          child = TtaSearchTypedElementInTree (elType, SearchForward, el, child);
+        }
+    }
   return el;
 }
 

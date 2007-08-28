@@ -34,6 +34,8 @@ extern void AddNewImage ( Document doc,
                           ThotBool isInput );
 extern void CreateImage ( Document doc,
                           View view );
+extern void InsertImageOrObject ( Element el,
+                                  Document doc );
 extern ThotBool AddLocalImage ( char *fullname,
                                 char *name,
                                 char *url,
@@ -73,6 +75,8 @@ extern void AddNewImage ( Document doc,
                             ThotBool isInput );
 extern void CreateImage ( Document doc,
                             View view );
+extern void InsertImageOrObject ( Element el,
+                                    Document doc );
 extern ThotBool AddLocalImage ( char *fullname,
                                   char *name,
                                   char *url,

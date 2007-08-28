@@ -4850,7 +4850,8 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   /* We need to do that only if we are working for the main view and if
      the element is not a basic or hidden element */
   if (viewSch == 1 &&     /* main view */
-      pEl->ElTypeNumber >= pEl->ElStructSchema->SsRootElem &&   /* not basic */
+      pEl->ElTypeNumber >= pEl->ElStructSchema->SsRootElem &&   // not basic 
+      strcmp (pEl->ElStructSchema->SsName, "Template") && // not template element
       !TypeHasException (ExcHidden, pEl->ElTypeNumber, pEl->ElStructSchema))
     {
       /* get the first P schema extension */

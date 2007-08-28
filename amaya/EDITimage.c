@@ -1803,6 +1803,20 @@ void CreateImage (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  InsertImageOrObject
+  ----------------------------------------------------------------------*/
+void InsertImageOrObject (Element el, Document doc)
+{
+  NotifyOnTarget   event;
+
+  event.element = el;
+  event.document = doc;
+  ImgAlt[0] = EOS;
+  CreateNewImage = FALSE;
+  UpdateSRCattribute (&event);
+}
+
+/*----------------------------------------------------------------------
   AddLocalImage adds a new local image into image descriptor table   
   with the purpose of having it saved through the Net later.    
   This function copy the image in the TempFileDirectory.        
