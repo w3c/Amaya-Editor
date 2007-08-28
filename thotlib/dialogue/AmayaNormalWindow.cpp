@@ -41,6 +41,7 @@
 #include "displayview_f.h"
 #include "appdialogue_wx.h"
 #include "input_f.h"
+#include "editcommands_f.h"
 
 #include "AmayaNormalWindow.h"
 #include "AmayaPanel.h"
@@ -51,6 +52,17 @@
 #include "AmayaToolBar.h"
 #include "AmayaQuickSplitButton.h"
 #include "AmayaStatusBar.h"
+
+#ifdef _MACOS
+/* Wrap-up to prevent an event when the tabs are switched on Mac */
+static ThotBool  UpdateFrameUrl = TRUE;
+#endif /* _MACOS */
+
+#ifdef _WINDOWS
+static  char      BufUrl[2048];
+static  ThotBool  isBufUrl = 0;
+#endif /* _WINDOWS */
+
 
 IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
 
@@ -65,6 +77,7 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
                                         ,int kind
                                         ) : 
     AmayaWindow( parent, id, pos, size, kind ),
+    m_pComboBox(NULL),
     m_pStatusBar(NULL)
 {
   // initialize default slashbar position
@@ -77,7 +90,9 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
   
   {
     // Create the toolbar
-    p_TopSizer->Add( wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_BROWSING")), 0, wxEXPAND);
+    wxPanel* p = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_BROWSING"));
+    m_pComboBox = XRCCTRL(*p, "wxID_TOOL_URL", wxComboBox);
+    p_TopSizer->Add( p, 0, wxEXPAND);
     p_TopSizer->Add( wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_EDITING")), 0, wxEXPAND);
     
     // Global layout
@@ -445,12 +460,20 @@ AmayaFrame * AmayaNormalWindow::GetActiveFrame() const
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::SetURL ( const wxString & new_url )
 {
-  // do not update window url if the url is empty
-  //if (new_url.IsEmpty() )
-  //  return;
-
-  if (m_pToolBar)
-    m_pToolBar->SetURLValue( new_url );
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::SetURL - ")+new_url);
+#ifdef _MACOS
+  UpdateFrameUrl = FALSE;
+#endif /* _MACOS */
+  if(m_pComboBox)
+    {
+      if (m_pComboBox->FindString(new_url) == wxNOT_FOUND)
+        m_pComboBox->Append(new_url);
+      // new url should exists into combobox items so just select it.
+      m_pComboBox->SetStringSelection( new_url );
+    }
+#ifdef _MACOS
+  UpdateFrameUrl = TRUE;
+#endif /* _MACOS */
 }
 
 /*----------------------------------------------------------------------
@@ -460,10 +483,10 @@ void AmayaNormalWindow::SetURL ( const wxString & new_url )
  -----------------------------------------------------------------------*/
 wxString AmayaNormalWindow::GetURL( )
 {
-  if (m_pToolBar)
-    return m_pToolBar->GetURLValue();
+  if(m_pComboBox)
+    return m_pComboBox->GetValue( );
   else
-    return wxString(_T(""));
+    return wxT("");
 }
 
 /*----------------------------------------------------------------------
@@ -473,8 +496,8 @@ wxString AmayaNormalWindow::GetURL( )
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::AppendURL ( const wxString & new_url )
 {
-  if (m_pToolBar)
-    m_pToolBar->AppendURL( new_url );
+  if(m_pComboBox)
+    m_pComboBox->Append( new_url );
 }
 
 /*----------------------------------------------------------------------
@@ -484,8 +507,8 @@ void AmayaNormalWindow::AppendURL ( const wxString & new_url )
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::EmptyURLBar()
 {
-  if (m_pToolBar)
-    m_pToolBar->ClearURL();
+  if(m_pComboBox)
+    m_pComboBox->Clear();
 }
 
 /*----------------------------------------------------------------------
@@ -773,7 +796,89 @@ void AmayaNormalWindow::OnNotebookPageChanged( wxNotebookEvent& event )
   }
 }
 
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnURLSelected
+ * Description:  Called when the user select a new url
+ *               there is a bug in wxWidgets on GTK version, this event is 
+ *               called to often : each times user move the mouse with button pressed.
+  -----------------------------------------------------------------------*/
+void AmayaNormalWindow::OnURLSelected( wxCommandEvent& event )
+{
+  GotoSelectedURL();
+}
 
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnURLText
+ * Description:  Called when the url text is changed
+ *               Just update the current frame internal url variable
+  -----------------------------------------------------------------------*/
+void AmayaNormalWindow::OnURLText( wxCommandEvent& event )
+{
+#ifdef _MACOS
+  if (UpdateFrameUrl)
+#endif /* _MACOS */
+    {
+      AmayaFrame * p_frame = GetActiveFrame();
+      if (p_frame)
+        p_frame->UpdateFrameURL(m_pComboBox->GetValue());
+      event.Skip();
+    }
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnURLText
+ * Description:  the user has typed ENTER with his keyboard or clicked on validate button =>
+ *               simply activate the callback
+  -----------------------------------------------------------------------*/
+void AmayaNormalWindow::OnURLTextEnter( wxCommandEvent& event )
+{
+   // TtaDisplayMessage (INFO, buffer);
+  GotoSelectedURL();
+  // do not skip this event because we don't want to propagate this event
+  // event.Skip();
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  GotoSelectedURL
+ * Description:  validate the selection
+  -----------------------------------------------------------------------*/
+void AmayaNormalWindow::GotoSelectedURL()
+{
+  Document doc;
+  View     view;
+
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  CloseTextInsertion ();
+
+  /* call the callback  with the url selected text */
+  PtrDocument pDoc = LoadedDocument[doc-1];
+  wxASSERT(pDoc);
+  if (pDoc && pDoc->Call_Text)
+    {
+      char buffer[2048];
+      strcpy(buffer, (m_pComboBox->GetValue()).mb_str(wxConvUTF8));
+// patch to go-round a bug on Windows (TEXT_ENTER event called twice)
+#ifdef _WINDOWS 
+    if (isBufUrl == FALSE)
+    {
+      isBufUrl = TRUE;
+        (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+       strcpy (BufUrl, buffer);
+    }
+    else if (strcmp (buffer, BufUrl) != 0)
+    {
+        (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+       strcpy (BufUrl, buffer);
+    }
+#else /* _WINDOWS */
+        (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+#endif /* _WINDOWS */
+    }
+}
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -790,11 +895,16 @@ BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
   EVT_CLOSE(AmayaNormalWindow::OnClose )
   EVT_SIZE(AmayaNormalWindow::OnSize)
 
-  EVT_SPLITTER_SASH_POS_CHANGED(wxID_ANY, 	AmayaNormalWindow::OnSplitterPosChanged )
-  EVT_SPLITTER_DCLICK(wxID_ANY, 		AmayaNormalWindow::OnSplitterDClick )
+  EVT_SPLITTER_SASH_POS_CHANGED(wxID_ANY, AmayaNormalWindow::OnSplitterPosChanged )
+  EVT_SPLITTER_DCLICK(wxID_ANY, 		      AmayaNormalWindow::OnSplitterDClick )
 
-  EVT_BUTTON( wxID_ANY,                       AmayaNormalWindow::OnSplitPanelButton)
-  EVT_NOTEBOOK_PAGE_CHANGED( wxID_ANY, AmayaNormalWindow::OnNotebookPageChanged )
+  EVT_BUTTON( wxID_ANY,                   AmayaNormalWindow::OnSplitPanelButton)
+  EVT_NOTEBOOK_PAGE_CHANGED( wxID_ANY,    AmayaNormalWindow::OnNotebookPageChanged )
+  
+  EVT_COMBOBOX( XRCID("wxID_TOOL_URL"),   AmayaNormalWindow::OnURLSelected )
+  EVT_TEXT_ENTER( XRCID("wxID_TOOL_URL"), AmayaNormalWindow::OnURLTextEnter )
+  EVT_TEXT( XRCID("wxID_TOOL_URL"),       AmayaNormalWindow::OnURLText )
+  
 END_EVENT_TABLE()
 
   

@@ -84,6 +84,8 @@ class AmayaNormalWindow : public AmayaWindow
   virtual void     SetURL ( const wxString & new_url );
   virtual void     AppendURL ( const wxString & new_url );
   virtual void     EmptyURLBar();
+  
+  void     GotoSelectedURL();
 
   AmayaToolPanelBar * GetToolPanelBar() const;
   void RefreshToolPanelBar();
@@ -111,12 +113,15 @@ class AmayaNormalWindow : public AmayaWindow
 
   void OnClose(wxCloseEvent& event);
   void OnSize(wxSizeEvent& event);
+  
+  void OnURLTextEnter( wxCommandEvent& event );
+  void OnURLSelected( wxCommandEvent& event );
+  void OnURLText( wxCommandEvent& event );
 
   AmayaToolPanelBar *      m_pPanel;     // current selected panel
-  
+  wxComboBox  *     m_pComboBox;            // URL combo box
   
   AmayaNotebook *   m_pNotebook;         // tabs container
-//  wxPanel *         m_pNotebookPanel;
   int               m_SlashPos;          // the slash pos in pixel
 
   wxMenuItem * m_pMenuItemToggleFullScreen;
