@@ -293,16 +293,6 @@ void AmayaWindow::OnSize( wxSizeEvent& event )
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  GetAmayaToolBar
- * Description:  return the current toolbar
-  -----------------------------------------------------------------------*/
-AmayaToolBar * AmayaWindow::GetAmayaToolBar()
-{
-  return NULL;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaWindow
  *      Method:  GetAmayaStatusBar
  * Description:  
   -----------------------------------------------------------------------*/
@@ -462,24 +452,21 @@ void AmayaWindow::ToggleFullScreen()
   //     but it require to contribute to wxwidgets (submit a patch)
   //     it's possible with this function gtk_notebook_set_show_tabs()
   //     (http://developer.gnome.org/doc/API/2.0/gtk/GtkNotebook.html#gtk-notebook-set-show-tabs)
-  if (IsFullScreen())
-    {
-      wxFrame::SetMenuBar(m_pMenuBar);
-      if (GetStatusBar())
-        GetStatusBar()->Show();
-      if (GetAmayaToolBar())
-        GetAmayaToolBar()->Show();
-      ShowFullScreen(false);
-    }
-  else
-    {
-      wxFrame::SetMenuBar(NULL);
-      if (GetStatusBar())
-        GetStatusBar()->Hide();
-      if (GetAmayaToolBar())
-        GetAmayaToolBar()->Hide();
-      ShowFullScreen(true);
-    }
+  ShowFullScreen(!IsFullScreen());
+  
+//  if (IsFullScreen())
+//    {
+//      wxFrame::SetMenuBar(m_pMenuBar);
+//      if (GetStatusBar())
+//        GetStatusBar()->Show();
+//    }
+//  else
+//    {
+//      wxFrame::SetMenuBar(NULL);
+//      if (GetStatusBar())
+//        GetStatusBar()->Hide();
+//      ShowFullScreen(true);
+//    }
 }
 
 /*----------------------------------------------------------------------

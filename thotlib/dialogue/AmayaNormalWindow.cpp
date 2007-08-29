@@ -89,11 +89,12 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
   
   {
-    // Create the toolbar
-    wxPanel* p = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_BROWSING"));
-    m_pComboBox = XRCCTRL(*p, "wxID_TOOL_URL", wxComboBox);
-    p_TopSizer->Add( p, 0, wxEXPAND);
-    p_TopSizer->Add( wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_EDITING")), 0, wxEXPAND);
+    // Create toolbars
+    m_pToolBarBrowsing = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_BROWSING"));
+    m_pComboBox = XRCCTRL(*m_pToolBarBrowsing, "wxID_TOOL_URL", wxComboBox);
+    m_pToolBarEditing = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_EDITING"));
+    p_TopSizer->Add( m_pToolBarBrowsing, 0, wxEXPAND);
+    p_TopSizer->Add( m_pToolBarEditing, 0, wxEXPAND);
     
     // Global layout
     m_pLayoutSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -150,6 +151,18 @@ AmayaNormalWindow::~AmayaNormalWindow()
   if (window_id == 1)
     TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
   SetAutoLayout(FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  Unused
+ * Description:  Unused function, just force to link RTTI dependancies
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::Unused()
+{
+  new AmayaToolBarEditing;
+  new AmayaToolBarBrowsing;
 }
 
 /*----------------------------------------------------------------------
@@ -511,17 +524,6 @@ void AmayaNormalWindow::EmptyURLBar()
     m_pComboBox->Clear();
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaNormalWindow
- *      Method:  GetAmayaToolBar
- * Description:  return the current toolbar
- -----------------------------------------------------------------------*/
-AmayaToolBar * AmayaNormalWindow::GetAmayaToolBar()
-{
-  return NULL;
-//  return m_pToolBar;
-}
-
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
@@ -535,6 +537,27 @@ void AmayaNormalWindow::CleanUp()
 
   if(GetPageCount()==0)
     Close();
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  ToggleFullScreen
+ * Description:  switch on/off fullscreen state
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::ToggleFullScreen()
+{
+  printf("AmayaNormalWindow::ToggleFullScreen\n");
+  if (IsFullScreen())
+    {
+      GetSizer()->Show(m_pToolBarEditing, true);
+      GetSizer()->Show(m_pToolBarBrowsing, true);
+    }
+  else
+    {
+      GetSizer()->Show(m_pToolBarEditing, false);
+      GetSizer()->Show(m_pToolBarBrowsing, false);      
+    }
+  AmayaWindow::ToggleFullScreen();
 }
 
 /*----------------------------------------------------------------------

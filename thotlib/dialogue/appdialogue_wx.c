@@ -698,6 +698,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 // TODO : remove it as not used anymore
 void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
 {
+#if 0
 #ifdef _WX
   int            window_id = TtaGetDocumentWindowId( doc_id, -1 );
   AmayaWindow *   p_window = TtaGetWindowFromId(window_id);
@@ -784,6 +785,7 @@ void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
       p_toolbar->EnableTool(_T("wxID_TOOL_LOGO"), action_enable);
     }
 #endif /* _WX */
+#endif /* 0 */
 }
 
 /*----------------------------------------------------------------------

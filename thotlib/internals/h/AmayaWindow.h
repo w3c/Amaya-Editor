@@ -117,7 +117,6 @@ class AmayaWindow : public wxFrame
   virtual AmayaPage *    GetPage( int position ) const;
   virtual int            GetPageCount() const;
 
-  virtual AmayaToolBar * GetAmayaToolBar();
   virtual AmayaStatusBar * GetAmayaStatusBar();
   virtual void SetPageIcon(int page_id, char *iconpath);
 

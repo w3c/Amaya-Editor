@@ -64,6 +64,8 @@ class AmayaNormalWindow : public AmayaWindow
   virtual AmayaPage *  GetActivePage() const;
   virtual AmayaFrame * GetActiveFrame() const;
   virtual void         CleanUp();
+  
+  void Unused();
 
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
@@ -75,7 +77,6 @@ class AmayaNormalWindow : public AmayaWindow
   virtual AmayaPage *    GetPage( int position ) const;
   virtual int            GetPageCount() const;
 
-  virtual AmayaToolBar * GetAmayaToolBar();
   virtual AmayaStatusBar * GetAmayaStatusBar();
   virtual void SetPageIcon(int page_id, char *iconpath);
 
@@ -103,6 +104,8 @@ class AmayaNormalWindow : public AmayaWindow
   void OnMenuOpen( wxMenuEvent& event );
 #endif /* __WXDEBUG__ */
 
+  virtual void ToggleFullScreen();
+  
   void OnMenuItem( wxCommandEvent& event );
   void OnMenuHighlight( wxMenuEvent& event );
   void OnSplitterUnsplit( wxSplitterEvent& event );
@@ -118,20 +121,16 @@ class AmayaNormalWindow : public AmayaWindow
   void OnURLSelected( wxCommandEvent& event );
   void OnURLText( wxCommandEvent& event );
 
-  AmayaToolPanelBar *      m_pPanel;     // current selected panel
-  wxComboBox  *     m_pComboBox;            // URL combo box
-  
-  AmayaNotebook *   m_pNotebook;         // tabs container
-  int               m_SlashPos;          // the slash pos in pixel
 
-  wxMenuItem * m_pMenuItemToggleFullScreen;
-  wxMenuItem * m_pMenuItemToggleToolTip;
-
-  wxSplitterWindow * m_pSplitterWindow;  
-//  AmayaToolBar *     m_pToolBar;
-
-  AmayaQuickSplitButton * m_pSplitPanelButton;
-  AmayaStatusBar * m_pStatusBar;
+  AmayaToolPanelBar       *m_pPanel;            // current selected panel
+  wxComboBox              *m_pComboBox;         // URL combo box
+  AmayaNotebook           *m_pNotebook;         // tabs container
+  wxSplitterWindow        *m_pSplitterWindow;
+  int                      m_SlashPos;          // the slash pos in pixel
+  wxPanel                 *m_pToolBarEditing;
+  wxPanel                 *m_pToolBarBrowsing;
+  AmayaQuickSplitButton   *m_pSplitPanelButton;
+  AmayaStatusBar          *m_pStatusBar;
   
   wxSizer* m_pLayoutSizer;
 };
