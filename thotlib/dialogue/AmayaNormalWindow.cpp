@@ -78,7 +78,8 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
                                         ) : 
     AmayaWindow( parent, id, pos, size, kind ),
     m_pComboBox(NULL),
-    m_pStatusBar(NULL)
+    m_pStatusBar(NULL),
+	m_pNotebook(NULL)
 {
   // initialize default slashbar position
   TtaSetEnvInt("SLASH_PANEL_POS", 195, FALSE);
