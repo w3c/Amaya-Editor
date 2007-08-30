@@ -3137,7 +3137,7 @@
 	<message xml:lang="sk">Tlačiť</message>
 </label>
 <label define="TMSG_BUTTON_SEARCH">
-	<message xml:lang="en">Search</message>
+	<message xml:lang="en">Find</message>
 	<message xml:lang="fr">Chercher</message>
 	<message xml:lang="de">Suchen/Ersetzen</message>
 	<message xml:lang="it">Cerca</message>
@@ -3649,6 +3649,102 @@
 	<message xml:lang="cn">显示工具栏</message>
 	<message xml:lang="tw">顯示工具欄</message>
 	<message xml:lang="sk">Zobraziť/skryť nástroje</message>
+</label>
+<label define="TMSG_Undo">
+	<message xml:lang="en">Undo</message>
+	<message xml:lang="fr">Défaire</message>
+	<message xml:lang="de">Rückgängig</message>
+	<message xml:lang="it">Ritratta</message>
+	<message xml:lang="es">Deshacer</message>
+	<message xml:lang="pt">Desfazer</message>
+	<message xml:lang="fi">Kumoa</message>
+	<message xml:lang="tr">Geri al</message>
+	<message xml:lang="ru">Отменить</message>
+	<message xml:lang="hu">Visszavon</message>
+	<message xml:lang="ka">დაბრუნება</message>
+	<message xml:lang="cn">撤销</message>
+	<message xml:lang="tw">撤銷</message>
+	<message xml:lang="sk">Späť</message>
+</label>
+<label define="TMSG_Redo">
+	<message xml:lang="en">Redo</message>
+	<message xml:lang="fr">Refaire</message>
+	<message xml:lang="de">Erneut</message>
+	<message xml:lang="it">Rifai</message>
+	<message xml:lang="es">Rehacer</message>
+	<message xml:lang="pt">Refazer</message>
+	<message xml:lang="fi">Tee uudelleen</message>
+	<message xml:lang="tr">Iileri al</message>
+	<message xml:lang="ru">Вернуть</message>
+	<message xml:lang="hu">Újra</message>
+	<message xml:lang="ka">გამეორება</message>
+	<message xml:lang="cn">重做</message>
+	<message xml:lang="tw">重做</message>
+	<message xml:lang="sk">Opakovať</message>
+</label>
+<label define="TMSG_Cut">
+	<message xml:lang="en">Cut</message>
+	<message xml:lang="fr">Couper</message>
+	<message xml:lang="de">Ausschneiden</message>
+	<message xml:lang="it">Taglia</message>
+	<message xml:lang="tr">Kes</message>
+	<message xml:lang="es">Cortar</message>
+	<message xml:lang="pt">Recortar</message>
+	<message xml:lang="fi">Leikkaa</message>
+	<message xml:lang="ru">Вырезать</message>
+	<message xml:lang="hu">Kivágás</message>
+	<message xml:lang="ka">ამოჭრა</message>
+	<message xml:lang="cn">剪切</message>
+	<message xml:lang="tw">剪切</message>
+	<message xml:lang="sk">Vystrihnúť</message>
+</label>
+<label define="TMSG_Copy">
+	<message xml:lang="en">Copy</message>
+	<message xml:lang="fr">Copier</message>
+	<message xml:lang="de">Kopieren</message>
+	<message xml:lang="it">Copia</message>
+	<message xml:lang="tr">Kopyala</message>
+	<message xml:lang="es">Copiar</message>
+	<message xml:lang="pt">Copiar</message>
+	<message xml:lang="fi">Kopioi</message>
+	<message xml:lang="ru">Копировать</message>
+	<message xml:lang="hu">Másolás</message>
+	<message xml:lang="ka">კოპირება</message>
+	<message xml:lang="cn">复制</message>
+	<message xml:lang="tw">復制</message>
+	<message xml:lang="sk">Kopírovať</message>
+</label>
+<label define="TMSG_Paste">
+	<message xml:lang="en">Paste</message>
+	<message xml:lang="fr">Coller</message>
+	<message xml:lang="de">Einfügen</message>
+	<message xml:lang="it">Incolla</message>
+	<message xml:lang="tr">Yapıştır</message>
+	<message xml:lang="es">Pegar</message>
+	<message xml:lang="pt">Colar</message>
+	<message xml:lang="fi">Liitä</message>
+	<message xml:lang="ru">Вставить</message>
+	<message xml:lang="hu">Beillesztés</message>
+	<message xml:lang="ka">ჩასმა</message>
+	<message xml:lang="cn">粘贴</message>
+	<message xml:lang="tw">粘貼</message>
+	<message xml:lang="sk">Prilepiť</message>
+</label>
+<label define="TMSG_Spell">
+	<message xml:lang="en">Check spelling</message>
+	<message xml:lang="fr">Vérifier orthographe</message>
+	<message xml:lang="de">Rechtschreibprüfung</message>
+	<message xml:lang="it">Controllo ortografico</message>
+	<message xml:lang="tr">Yazım hataları ara</message>
+	<message xml:lang="es">Revisar ortografía</message>
+	<message xml:lang="pt">Verificar ortografia</message>
+	<message xml:lang="fi">Tarkista oikeinkirjoitus</message>
+	<message xml:lang="ru">Проверка правописания</message>
+	<message xml:lang="hu">Szóelemző</message>
+	<message xml:lang="ka">მართლწერის შემოწმება</message>
+	<message xml:lang="cn">拼写检查</message>
+	<message xml:lang="tw">拼寫檢查</message>
+	<message xml:lang="sk">Kontrola pravopisu</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>

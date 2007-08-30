@@ -235,6 +235,12 @@
 #define TMSG_SplitHorizontally		230
 #define TMSG_SplitVertically		231
 #define TMSG_ShowPanel		232
-#define TMSG_LIB_MSG_MAX		233
+#define TMSG_Undo		233
+#define TMSG_Redo		234
+#define TMSG_Cut		235
+#define TMSG_Copy		236
+#define TMSG_Paste		237
+#define TMSG_Spell		238
+#define TMSG_LIB_MSG_MAX		239
 
 #endif

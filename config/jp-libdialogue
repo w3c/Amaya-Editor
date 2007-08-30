@@ -198,7 +198,7 @@
 196 **New XHTML document
 197 **Open document
 198 **Print
-199 **Search
+199 **Find
 200 **Home
 201 **Emphasis On/Off
 202 **Strong On/Off
@@ -232,3 +232,9 @@
 230 **Horizontal split/unsplit
 231 **Vertical split/unsplit
 232 **Show/hide tools
+233 **Undo
+234 **Redo
+235 **Cut
+236 **Copy
+237 **Paste
+238 **Check spelling
