@@ -886,7 +886,7 @@ static ThotBool CheckValue (char *buffer, ThotBool negative, ThotBool length,
               *ptr = ptr[1];
               ptr++;
             }
-           while (*pos != EOS);
+           while (*ptr != EOS);
         }
 
       if (*ptr == EOS)
@@ -925,6 +925,18 @@ static ThotBool CheckValue (char *buffer, ThotBool negative, ThotBool length,
           return FALSE;
         }
     }
+  else if (length &&
+           (!strcmp (ptr, "px") ||
+            !strcmp (ptr, "pt") ||
+            !strcmp (ptr, "pc") ||
+            !strcmp (ptr, "in") ||
+            !strcmp (ptr, "mm") ||
+            !strcmp (ptr, "cm") ||
+            !strcmp (ptr, "em") ||
+            !strcmp (ptr, "ex")))
+        return ret;
+  else if (percent && !strcmp (ptr, "%"))
+    return ret;
   else if (!string)
     {
       buffer[0] = EOS;
@@ -934,6 +946,25 @@ static ThotBool CheckValue (char *buffer, ThotBool negative, ThotBool length,
     return ret;
 }
 
+
+/*----------------------------------------------------------------------
+  Replace px, pt, pc, in, mm, cm, em, ex, % by 0
+  -----------------------------------------------------------------------*/
+static void CopyValueOrZero (char *buffer, const char *ptr)
+{
+  if (!strcmp (ptr, "px") ||
+      !strcmp (ptr, "pt") ||
+      !strcmp (ptr, "pc") ||
+      !strcmp (ptr, "in") ||
+      !strcmp (ptr, "mm") ||
+      !strcmp (ptr, "cm") ||
+      !strcmp (ptr, "em") ||
+      !strcmp (ptr, "ex") ||
+      !strcmp (ptr, "%"))
+    strcat (buffer, "0");
+  else
+    strcat (buffer, ptr);
+}
 
 /*----------------------------------------------------------------------
   Class:  StyleDlgWX
@@ -1455,7 +1486,7 @@ void StyleDlgWX::GetValueDialog_Text()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "font-size: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -1491,7 +1522,7 @@ void StyleDlgWX::GetValueDialog_Text()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "line-height: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -1500,7 +1531,7 @@ void StyleDlgWX::GetValueDialog_Text()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "text-indent: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -1509,7 +1540,7 @@ void StyleDlgWX::GetValueDialog_Text()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "vertical-align: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -1554,7 +1585,7 @@ void StyleDlgWX::GetValueDialog_Text()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "word-spacing: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -1563,7 +1594,7 @@ void StyleDlgWX::GetValueDialog_Text()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "letter-spacing: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -1655,11 +1686,11 @@ void StyleDlgWX::GetValueDialog_Color()
         {
           strcpy (&Buffer[Index], "background-position: ");
           if (value.Len() > 0)
-            strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+            CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
           if (value.Len() > 0 && svalue.Len() > 0)
             strcat (&Buffer[Index], " ");
           if (svalue.Len() > 0)
-            strcat (&Buffer[Index], (const char*)svalue.mb_str(wxConvUTF8));
+            CopyValueOrZero (&Buffer[Index], svalue.mb_str(wxConvUTF8));
            strcat (&Buffer[Index], End_rule);
           Index += strlen (&Buffer[Index]);
         }
@@ -1668,7 +1699,7 @@ void StyleDlgWX::GetValueDialog_Color()
           if (value.Len() > 0)
             {
               strcpy (&Buffer[Index], "background-position: ");
-              strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+              CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
               strcat (&Buffer[Index], End_rule);
               Index += strlen (&Buffer[Index]);
             }
@@ -1690,7 +1721,7 @@ void StyleDlgWX::GetValueDialog_Color()
       if (value.Len() > 0)
         {
           strcat (&Buffer[Index], " ");
-          strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+          CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
         }
       if (cvalue.Len() > 0)
         {
@@ -1716,7 +1747,7 @@ void StyleDlgWX::GetValueDialog_Color()
       if (value.Len() > 0)
         {
           strcat (&Buffer[Index], " ");
-          strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+          CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
         }
       if (cvalue.Len() > 0)
         {
@@ -1742,7 +1773,7 @@ void StyleDlgWX::GetValueDialog_Color()
       if (value.Len() > 0)
         {
           strcat (&Buffer[Index], " ");
-          strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+          CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
         }
       if (cvalue.Len() > 0)
         {
@@ -1769,7 +1800,7 @@ void StyleDlgWX::GetValueDialog_Color()
       if (value.Len() > 0)
         {
           strcat (&Buffer[Index], " ");
-          strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+          CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
         }
       if (cvalue.Len() > 0)
         {
@@ -1795,7 +1826,7 @@ void StyleDlgWX::GetValueDialog_Color()
       if (value.Len() > 0)
         {
           strcat (&Buffer[Index], " ");
-          strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+          CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
         }
       if (cvalue.Len() > 0)
         {
@@ -1976,7 +2007,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "margin-top: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -1986,7 +2017,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "margin-bottom: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -1996,7 +2027,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "margin-left: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2006,7 +2037,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "margin-right: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2016,7 +2047,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "padding-top: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2026,7 +2057,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "padding-bottom: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2036,7 +2067,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "padding-left: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2046,7 +2077,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "padding-right: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2056,7 +2087,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "margin: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2066,7 +2097,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "padding: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2076,7 +2107,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "width: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2086,7 +2117,7 @@ void StyleDlgWX::GetValueDialog_Box()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "height: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2203,7 +2234,7 @@ void StyleDlgWX::GetValueDialog_Format()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "position: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2213,7 +2244,7 @@ void StyleDlgWX::GetValueDialog_Format()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "top: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2223,7 +2254,7 @@ void StyleDlgWX::GetValueDialog_Format()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "bottom: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2233,7 +2264,7 @@ void StyleDlgWX::GetValueDialog_Format()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "left: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }
@@ -2243,7 +2274,7 @@ void StyleDlgWX::GetValueDialog_Format()
   if (value.Len() > 0)
     {
       strcpy (&Buffer[Index], "right: ");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }

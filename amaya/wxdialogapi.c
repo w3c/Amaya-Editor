@@ -107,10 +107,11 @@ void  DisplayStyleValue (const char *property, char *start_value, char *end_valu
       if (end_value)
         {
           c = *end_value;
-          *end_value = EOS;
+          if (c != EOS)
+            *end_value = EOS;
         }
       Style_dlg->SetValue (property, start_value);
-      if (end_value)
+      if (end_value && c != *end_value)
         *end_value = c;
     }
 #endif /* _WX */
