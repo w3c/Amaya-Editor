@@ -42,7 +42,6 @@
 // AmayaBaseToolBar
 //
 //
-
 IMPLEMENT_DYNAMIC_CLASS(AmayaBaseToolBar, wxToolBar)
 BEGIN_EVENT_TABLE(AmayaBaseToolBar, wxToolBar)
   EVT_TOOL(wxID_ANY, AmayaBaseToolBar::OnTool)
@@ -50,22 +49,30 @@ BEGIN_EVENT_TABLE(AmayaBaseToolBar, wxToolBar)
 END_EVENT_TABLE()
 
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 AmayaBaseToolBar::AmayaBaseToolBar():
 wxToolBar()
 {
   
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 bool AmayaBaseToolBar::Create( wxWindow *parent, wxWindowID id,
      const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 {
   return wxToolBar::Create(parent, id, pos, size, style, name);
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 AmayaBaseToolBar::~AmayaBaseToolBar()
 {
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 void AmayaBaseToolBar::Add(AmayaToolBarToolDef* def)
 {
   while(def->idname!=NULL)
@@ -79,6 +86,8 @@ void AmayaBaseToolBar::Add(AmayaToolBarToolDef* def)
     }  
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 bool AmayaBaseToolBar::Realize()
 {
   AmayaToolBarToolDefHashMap::iterator it;
@@ -93,6 +102,8 @@ bool AmayaBaseToolBar::Realize()
   return wxToolBar::Realize();
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 void AmayaBaseToolBar::OnTool(wxCommandEvent& event)
 {
   AmayaToolBarToolDef* def = m_map[event.GetId()];
@@ -105,6 +116,8 @@ void AmayaBaseToolBar::OnTool(wxCommandEvent& event)
     }
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 void AmayaBaseToolBar::OnUpdate(wxUpdateUIEvent& event)
 {
   AmayaToolBarToolDef* def = m_map[event.GetId()];
@@ -126,8 +139,6 @@ void AmayaBaseToolBar::OnUpdate(wxUpdateUIEvent& event)
 // AmayaToolBarEditing
 //
 //
-
-
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaToolBarEditingToolDef)
   AMAYA_TOOLBAR_DEF("wxID_TOOL_NEW",        "NewXHTML",       LIB, TMSG_BUTTON_NEW)
@@ -148,6 +159,8 @@ AMAYA_END_TOOLBAR_DEF_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaToolBarEditing, AmayaBaseToolBar)
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 AmayaToolBarEditing::AmayaToolBarEditing():
   AmayaBaseToolBar()
 {
@@ -160,7 +173,6 @@ AmayaToolBarEditing::AmayaToolBarEditing():
 // AmayaToolBarBrowsing
 //
 //
-
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaToolBarBrowsingToolDef)
   AMAYA_TOOLBAR_DEF("wxID_TOOL_BACK",    "GotoPreviousHTML", LIB, TMSG_BUTTON_PREVIOUS)
@@ -173,11 +185,12 @@ AMAYA_END_TOOLBAR_DEF_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaToolBarBrowsing, AmayaBaseToolBar)
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 AmayaToolBarBrowsing::AmayaToolBarBrowsing():
   AmayaBaseToolBar()
 {
   Add(AmayaToolBarBrowsingToolDef);
 }
 
-
-#endif /* #ifdef _WX */
+#endif /* _WX */

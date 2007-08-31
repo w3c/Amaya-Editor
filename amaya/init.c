@@ -745,7 +745,7 @@ void ActiveTransfer (Document document)
 #ifndef _WX
         TtaChangeButton (document, 1, iStop, stopR, TRUE);
 #else /* _WX */
-      TtaEnableAction(document, "StopTransfer", TRUE);
+        TtaEnableAction(document, "StopTransfer", TRUE);
 #endif /* _WX */
     }
 }
@@ -770,7 +770,7 @@ void SetStopButton (Document document)
         /* this document is displayed */
         TtaChangeButton (document, 1, iStop, stopR, TRUE);
 #else /* _WX */
-      TtaEnableAction(document, "StopTransfer", TRUE);
+        TtaEnableAction(document, "StopTransfer", TRUE);
 #endif /* _WX */
     }
 }
@@ -3272,13 +3272,13 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
   /* store the new document type */
   DocumentTypes[doc] = docType;
+
 #ifdef _WX
   /* now be sure that the urlbar is setup */
   //if (DocumentURLs[doc] && strcmp (DocumentURLs[doc], "empty"))
   TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
                    TRUE, (Proc)TextURL, URL_list );
 #endif /* _WX */
-
   if ((DocumentTypes[doc] == docHTML ||
        DocumentTypes[doc] == docSVG ||
        DocumentTypes[doc] == docXml ||
@@ -5049,11 +5049,12 @@ void ShowSource (Document doc, View view)
             SetArrowButton (DocumentSource[doc], FALSE, FALSE);
 
 #ifdef _WX
+          TtaEnableAction(sourceDoc, "StopTransfer", FALSE);;
           /* update toggle buttons */
-	  if (HSplit[doc] == TRUE && VSplit[doc] == FALSE)
-	    ShowHSplitToggle (sourceDoc, 1);
-	  if (HSplit[doc] == FALSE && VSplit[doc] == TRUE)
-	    ShowVSplitToggle (sourceDoc, 1);
+          if (HSplit[doc] == TRUE && VSplit[doc] == FALSE)
+            ShowHSplitToggle (sourceDoc, 1);
+          if (HSplit[doc] == FALSE && VSplit[doc] == TRUE)
+            ShowVSplitToggle (sourceDoc, 1);
 #endif /* _WX */
 
           // check if a parsing error is detected

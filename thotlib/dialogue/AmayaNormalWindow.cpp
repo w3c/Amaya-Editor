@@ -77,15 +77,14 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
                                         ,int kind
                                         ) : 
     AmayaWindow( parent, id, pos, size, kind ),
-    m_pComboBox(NULL),
-    m_pStatusBar(NULL),
-	m_pNotebook(NULL)
+    m_pComboBox(NULL)
 {
   // initialize default slashbar position
   TtaSetEnvInt("SLASH_PANEL_POS", 195, FALSE);
   // load slash position from registry
   TtaGetEnvInt ("SLASH_PANEL_POS", &m_SlashPos);
-  
+  m_pNotebook = NULL;
+  m_pStatusBar = NULL;
   // Create a background panel to contain everything : better look on windows
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
   

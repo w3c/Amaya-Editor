@@ -1189,7 +1189,6 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
 #ifdef _WX
   wxASSERT_MSG(FALSE, _T("Unused function"));
 #endif /* _WX */
-
 #ifndef _WX
   Item_Ctl           *ptritem;
   char                string[MENU_VAL_LENGTH];
@@ -1315,6 +1314,8 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
                     }
                 }
 
+              /* activate this entry */
+              MenuActionList[action].ActionActive[frame] = TRUE;
               /* Is it the Paste command */
               if (!strcmp (MenuActionList[action].ActionName, "TtcPaste"))
                 {
@@ -1326,15 +1327,15 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
                 {
                   FrameTable[frame].MenuUndo = ref;
                   FrameTable[frame].EntryUndo = entries;
+                  MenuActionList[action].ActionActive[frame] = FALSE;
                 }
               /* Is it the Redo command */
               else if (!strcmp (MenuActionList[action].ActionName, "TtcRedo"))
                 {
                   FrameTable[frame].MenuRedo = ref;
                   FrameTable[frame].EntryRedo = entries;
+                  MenuActionList[action].ActionActive[frame] = FALSE;
                 }
-              /* activate this entry */
-              MenuActionList[action].ActionActive[frame] = TRUE;
             }
         }
 
@@ -2579,14 +2580,10 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
 {
   Menu_Ctl           *ptrmenu, *ptrsmenu;
   Item_Ctl           *ptr, *sptr;
-  int                 frame, profile, action;
-  int                 ref, i, j, m;
+  int                 profile, action, i, j, m = 0;
 
   if (doc)
     {
-      frame = GetWindowNumber (doc, view);
-      ref = frame + MAX_LocalMenu;
-      m = 0;
 #ifdef _WX
       ptrmenu = DocumentMenuList;
       profile = TtaGetDocumentProfile (doc);
@@ -2621,17 +2618,22 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
                             ;	/* separator */
                           else if (Prof_BelongDoctype (MenuActionList[action].ActionName,
                                                        profile, RO))
-                            MenuActionList[action].ActionActive[frame] = TRUE;
+                            MenuActionList[action].ActionActive[doc] = TRUE;
                           else
-                            MenuActionList[action].ActionActive[frame] = FALSE;
+                            MenuActionList[action].ActionActive[doc] = FALSE;
                           j++;
                         }
                     }
+                  else if (MenuActionList[action].ActionName == NULL ||
+                           !strcmp (MenuActionList[action].ActionName, "TtcUndo") ||
+                           !strcmp (MenuActionList[action].ActionName, "TtcRedo") ||
+                           !strcmp (MenuActionList[action].ActionName, "StopTransfer"))
+                    ; // don't change the current status
                   else if (Prof_BelongDoctype (MenuActionList[action].ActionName,
                                                profile, RO))
-                    MenuActionList[action].ActionActive[frame] = TRUE;
+                    MenuActionList[action].ActionActive[doc] = TRUE;
                   else
-                    MenuActionList[action].ActionActive[frame] = FALSE;
+                    MenuActionList[action].ActionActive[doc] = FALSE;
                   i++;
                 }
               // refresh that menu
@@ -2640,6 +2642,10 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
           ptrmenu = ptrmenu->NextMenu;
         }
 #else /*_WX */
+      int                 frame, ref;
+
+      frame = GetWindowNumber (doc, view);
+      ref = frame + MAX_LocalMenu;
       ptrmenu = FrameTable[frame].FrMenus;
       i = 0;
       while (ptrmenu)
