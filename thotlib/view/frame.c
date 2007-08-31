@@ -1911,8 +1911,9 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                                y_min, y_max, not_in_feedback);
                       if (IfPopMatrix (pAb))
                         {
-                          OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
-                                            clipXOfFirstCoordSys, clipYOfFirstCoordSys);
+                          if (pAb->AbBox == systemOriginRoot)
+                            OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
+                                              clipXOfFirstCoordSys, clipYOfFirstCoordSys);
                         }
                     }
                   not_g_opacity_displayed = TRUE;
