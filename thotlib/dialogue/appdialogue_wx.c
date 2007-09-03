@@ -65,16 +65,6 @@
 
 #ifdef _WX
 static int g_logerror_action_id = -1;
-static int g_back_action_id = -1;
-static int g_forward_action_id = -1;
-static int g_reload_action_id = -1;
-static int g_stop_action_id = -1;
-static int g_home_action_id = -1;
-static int g_save_action_id = -1;
-static int g_save_all_action_id = -1;
-static int g_print_action_id = -1;
-static int g_find_action_id = -1;
-static int g_logo_action_id = -1;
 
 static void TtaMakeWindowMenuBar( int window_id );
 static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu );
@@ -628,8 +618,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
               p_menu_item->Check(item_toggle);
             }
           
-          /* refresh the corresponding toolbar/statusbar tool */
-          TtaRefreshToolbarStats( item_action, doc_id );
+          /* refresh the corresponding statusbar tool */
           TtaRefreshStatusBarStats( item_action, doc_id );
         }
       return;
@@ -654,8 +643,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
               item_action  = ptritem[item_nb].ItemAction;
               item_enable  = MenuActionList[item_action].ActionActive[doc_id];
               p_menu_bar->Enable(item_id, item_enable);
-              /* refresh the corresponding toolbar/statusbar tool */
-              TtaRefreshToolbarStats( item_action, doc_id );
+              /* refresh the corresponding statusbar tool */
               TtaRefreshStatusBarStats( item_action, doc_id );
               break;
               
@@ -665,8 +653,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
               item_toggle  = MenuActionList[item_action].ActionToggle[doc_id];
               p_menu_bar->Check(item_id, item_toggle);
               p_menu_bar->Enable(item_id, item_enable);
-              /* refresh the corresponding toolbar/statusbar tool */
-              TtaRefreshToolbarStats( item_action, doc_id );
+              /* refresh the corresponding statusbar tool */
               TtaRefreshStatusBarStats( item_action, doc_id );
               break;
               
@@ -691,102 +678,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 #endif /* _WX */
 }
 
-/*----------------------------------------------------------------------
-  TtaRefreshToolbarStats enable/disable, toggle/untoggle toolbar
-  items widgets for the given doc
-  ----------------------------------------------------------------------*/
-// TODO : remove it as not used anymore
-void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
-{
-#if 0
-#ifdef _WX
-  int            window_id = TtaGetDocumentWindowId( doc_id, -1 );
-  AmayaWindow *   p_window = TtaGetWindowFromId(window_id);
-  wxASSERT(p_window);
-  AmayaToolBar * p_toolbar = p_window->GetAmayaToolBar();
-  ThotBool   action_enable = FALSE;
 
-  /* do nothing if there is no toolbar: it's the case of
-     AmayaSimpleWindow (log, show apply style ...)*/
-  if(!p_toolbar)
-    return;
-
-  /* initialize toolbar actions id */
-  if ( g_back_action_id == -1 )
-    g_back_action_id = FindMenuAction("GotoPreviousHTML");
-  if ( g_forward_action_id == -1 )
-    g_forward_action_id = FindMenuAction("GotoNextHTML");
-  if ( g_reload_action_id == -1 )
-    g_reload_action_id = FindMenuAction("Reload");
-  if ( g_stop_action_id == -1 )
-    g_stop_action_id = FindMenuAction("StopTransfer");
-  if ( g_home_action_id == -1 )
-    g_home_action_id = FindMenuAction("GoToHome");
-  if ( g_save_action_id == -1 )
-    g_save_action_id = FindMenuAction("SaveDocument");
-  if ( g_save_action_id == -1 )
-    g_save_action_id = FindMenuAction("SaveAll");
-  if ( g_print_action_id == -1 )
-    g_print_action_id = FindMenuAction("SetupAndPrint");
-  if ( g_find_action_id == -1 )
-    g_find_action_id = FindMenuAction("TtcSearchText");
-  if ( g_logo_action_id == -1 )
-    g_logo_action_id = FindMenuAction("HelpLocal");
-
-  /* refresh the specified tool */
-  if (changed_action_id == g_back_action_id)
-    {
-      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
-      p_toolbar->EnableTool(_T("wxID_TOOL_BACK"), action_enable);
-    }
-  else if (changed_action_id == g_forward_action_id)
-    {
-      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
-      p_toolbar->EnableTool(_T("wxID_TOOL_FORWARD"), action_enable);
-    }
-  else if (changed_action_id == g_reload_action_id)
-    {
-      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
-      p_toolbar->EnableTool(_T("wxID_TOOL_RELOAD"), action_enable);
-    }
-  else if (changed_action_id == g_stop_action_id)
-    {
-      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
-      p_toolbar->EnableTool(_T("wxID_TOOL_STOP"), action_enable);
-    }
-  else if (changed_action_id == g_home_action_id)
-    {
-      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
-      p_toolbar->EnableTool(_T("wxID_TOOL_HOME"), action_enable);
-    }
-  else if (changed_action_id == g_save_action_id)
-    {
-      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
-      p_toolbar->EnableTool(_T("wxID_TOOL_SAVE"), action_enable);
-    }
-  else if (changed_action_id == g_save_all_action_id)
-    {
-      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
-      p_toolbar->EnableTool(_T("wxID_TOOL_SAVE_ALL"), action_enable);
-    }
-  else if (changed_action_id == g_print_action_id)
-    {
-      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
-      p_toolbar->EnableTool(_T("wxID_TOOL_PRINT"), action_enable);
-    }
-  else if (changed_action_id == g_find_action_id)
-    {
-      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
-      p_toolbar->EnableTool(_T("wxID_TOOL_FIND"), action_enable);
-    }
-  else if (changed_action_id == g_logo_action_id)
-    {
-      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
-      p_toolbar->EnableTool(_T("wxID_TOOL_LOGO"), action_enable);
-    }
-#endif /* _WX */
-#endif /* 0 */
-}
 
 /*----------------------------------------------------------------------
   TtaRefreshStatusBarStats enable/disable, toggle/untoggle statusbar
@@ -1757,33 +1649,57 @@ void TtaSwitchPanelButton (Document doc, View view, int panel_type,
                            int button_id, ThotBool value)
 {
 #ifdef _WX
+  static int  idaction[WXAMAYA_PANEL_XHTML_SUB+1];
+  static bool isinit = false;
+  
+  if(!isinit)
+    {
+      idaction[WXAMAYA_PANEL_XHTML_DIV]    = FindMenuAction("CreateDivision");
+      idaction[WXAMAYA_PANEL_XHTML_H1]     = FindMenuAction("CreateHeading1");
+      idaction[WXAMAYA_PANEL_XHTML_H2]     = FindMenuAction("CreateHeading2");
+      idaction[WXAMAYA_PANEL_XHTML_H3]     = FindMenuAction("CreateHeading3");
+      idaction[WXAMAYA_PANEL_XHTML_TABLE]  = FindMenuAction("CreateTable");
+      idaction[WXAMAYA_PANEL_XHTML_TARGET] = FindMenuAction("CreateTarget");
+      idaction[WXAMAYA_PANEL_XHTML_LINK]   = FindMenuAction("CreateOrChangeLink");
+      idaction[WXAMAYA_PANEL_XHTML_BULLET] = FindMenuAction("CreateList");
+      idaction[WXAMAYA_PANEL_XHTML_NL]     = FindMenuAction("CreateNumberedList");
+      idaction[WXAMAYA_PANEL_XHTML_DL]     = FindMenuAction("CreateDefinitionList");
+      idaction[WXAMAYA_PANEL_XHTML_DT]     = FindMenuAction("CreateDefinitionTerm");
+      idaction[WXAMAYA_PANEL_XHTML_DD]     = FindMenuAction("CreateDefinitionDef");
+      idaction[WXAMAYA_PANEL_XHTML_IMG]    = FindMenuAction("CreateImage");
+      idaction[WXAMAYA_PANEL_XHTML_OBJ]    = FindMenuAction("CreateObject");
+      idaction[WXAMAYA_PANEL_XHTML_STRONG] = FindMenuAction("SetOnOffStrong");
+      idaction[WXAMAYA_PANEL_XHTML_EMPH]   = FindMenuAction("SetOnOffEmphasis");
+      idaction[WXAMAYA_PANEL_XHTML_CODE]   = FindMenuAction("SetOnOffCode");
+      idaction[WXAMAYA_PANEL_XHTML_INS]    = FindMenuAction("SetOnOffINS");
+      idaction[WXAMAYA_PANEL_XHTML_DEL]    = FindMenuAction("SetOnOffDEL");
+      idaction[WXAMAYA_PANEL_XHTML_SUB]    = FindMenuAction("SetOnOffSub");
+      idaction[WXAMAYA_PANEL_XHTML_SUP]    = FindMenuAction("SetOnOffSup");
+      isinit = true;
+    }
+  
   int frame_id = -1;
   if (doc == 0 && view == 0)
     TtaError (ERR_invalid_parameter);
   else
     {
-      frame_id = GetWindowNumber (doc, view);
-      if (frame_id <= 0 || frame_id > MAX_FRAME)
-        TtaError (ERR_invalid_parameter);
-      else if (FrameTable[frame_id].WdFrame != 0)
+      
+      switch (panel_type)
         {
-          bool * p_enable_array  = NULL;
-          bool * p_checked_array = NULL;
-          
-          switch (panel_type)
+        case WXAMAYA_PANEL_XHTML:
+          switch(button_id)
             {
-            case WXAMAYA_PANEL_XHTML:
-              p_enable_array  = FrameTable[frame_id].EnabledButton_Panel_XHTML;
-              p_checked_array = FrameTable[frame_id].CheckedButton_Panel_XHTML;
-              break;
+              case WXAMAYA_PANEL_XHTML_EMPH:
+              case WXAMAYA_PANEL_XHTML_STRONG:
+              case WXAMAYA_PANEL_XHTML_INS:
+              case WXAMAYA_PANEL_XHTML_DEL:
+              case WXAMAYA_PANEL_XHTML_CODE:
+              case WXAMAYA_PANEL_XHTML_SUB:
+              case WXAMAYA_PANEL_XHTML_SUP:
+                MenuActionList[idaction[button_id]].ActionToggle[doc] = value;
+                break;
             }
-          
-          /* switch the button */
-          if (p_checked_array)
-            {
-              p_checked_array[button_id] = value;
-              TtaRefreshPanelButton( doc, view, panel_type );
-            }
+          break;
         }
     }
 #endif /* _WX */

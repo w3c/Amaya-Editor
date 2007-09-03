@@ -3922,7 +3922,6 @@ void TtaEnableAction( Document document, const char * action_name, ThotBool enab
     {
       MenuActionList[action_id].ActionActive[document] = enable;
       TtaRefreshMenuItemStats( document, NULL, item_id );
-      TtaRefreshToolbarStats( action_id, document );
     }    
 #endif /* _WX */
 }

@@ -4,6 +4,98 @@
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_XHTML_1" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_PANEL_XHTML_DIV">
+            <bitmap>../icons/16x16/XHTML_Div.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_H1">
+            <bitmap>../icons/16x16/XHTML_H1.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_H2">
+            <bitmap>../icons/16x16/XHTML_H2.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_H3">
+            <bitmap>../icons/16x16/XHTML_H3.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_TABLE">
+            <bitmap>../icons/16x16/XHTML_Table.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_TARGET">
+            <bitmap>../icons/16x16/XHTML_Target.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_LINK">
+            <bitmap>../icons/16x16/XHTML_Link.png</bitmap>
+          </object>
+          <style></style>
+        </object>
+        <flag>wxEXPAND</flag>
+      </object>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_XHTML_2" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_PANEL_XHTML_BULLET">
+            <bitmap>../icons/16x16/XHTML_Bullet.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_NL">
+            <bitmap>../icons/16x16/XHTML_Num.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_DL">
+            <bitmap>../icons/16x16/XHTML_DL.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_DT">
+            <bitmap>../icons/16x16/XHTML_DT.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_DD">
+            <bitmap>../icons/16x16/XHTML_DD.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_IMG">
+            <bitmap>../icons/16x16/XHTML_Image.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_OBJ">
+            <bitmap>../icons/16x16/XHTML_object.png</bitmap>
+          </object>
+        </object>
+        <flag>wxEXPAND</flag>
+      </object>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_XHTML_3" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_PANEL_XHTML_STRONG">
+            <bitmap>../icons/16x16/XHTML_B.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_EMPH">
+            <bitmap>../icons/16x16/XHTML_I.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_CODE">
+            <bitmap>../icons/16x16/XHTML_T.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_INS">
+            <bitmap>../icons/16x16/XHTML_ins.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_DEL">
+            <bitmap>../icons/16x16/XHTML_del.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_SUP">
+            <bitmap>../icons/16x16/XHTML_sup.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_SUB">
+            <bitmap>../icons/16x16/XHTML_sub.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+        </object>
+        <flag>wxEXPAND</flag>
+      </object>
+    </object>
+    <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
+  </object>
+  <object class="wxPanel" name="wxID_TOOLPANEL_XHTML_OLD">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
@@ -190,91 +282,6 @@
           </object>
         </object>
         <flag>wxALL|wxEXPAND</flag>
-      </object>
-    </object>
-    <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
-  </object>
-  <object class="wxPanel" name="wxID_TOOLPANEL_XHTML_NEW">
-    <object class="wxBoxSizer">
-      <orient>wxVERTICAL</orient>
-      <object class="sizeritem">
-        <object class="wxToolBar">
-          <object class="tool" name="wxID_PANEL_XHTML_DIV">
-            <bitmap>../icons/16x16/XHTML_Div.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_H1">
-            <bitmap>../icons/16x16/XHTML_H1.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_H2">
-            <bitmap>../icons/16x16/XHTML_H2.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_H3">
-            <bitmap>../icons/16x16/XHTML_H3.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_TABLE">
-            <bitmap>../icons/16x16/XHTML_Table.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_TARGET">
-            <bitmap>../icons/16x16/XHTML_Target.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_LINK">
-            <bitmap>../icons/16x16/XHTML_Link.png</bitmap>
-          </object>
-          <style></style>
-        </object>
-        <flag>wxEXPAND</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxToolBar">
-          <object class="tool" name="wxID_PANEL_XHTML_BULLET">
-            <bitmap>../icons/16x16/XHTML_Bullet.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_NL">
-            <bitmap>../icons/16x16/XHTML_Num.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_DL">
-            <bitmap>../icons/16x16/XHTML_DL.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_DT">
-            <bitmap>../icons/16x16/XHTML_DT.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_DD">
-            <bitmap>../icons/16x16/XHTML_DD.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_IMG">
-            <bitmap>../icons/16x16/XHTML_Image.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_OBJ">
-            <bitmap>../icons/16x16/XHTML_object.png</bitmap>
-          </object>
-        </object>
-        <flag>wxEXPAND</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxToolBar">
-          <object class="tool" name="wxID_PANEL_XHTML_STRONG">
-            <bitmap>../icons/16x16/XHTML_B.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_EMPH">
-            <bitmap>../icons/16x16/XHTML_I.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_CODE">
-            <bitmap>../icons/16x16/XHTML_T.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_INS">
-            <bitmap>../icons/16x16/XHTML_ins.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_DEL">
-            <bitmap>../icons/16x16/XHTML_del.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_SUP">
-            <bitmap>../icons/16x16/XHTML_sup.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_SUB">
-            <bitmap>../icons/16x16/XHTML_sub.png</bitmap>
-          </object>
-        </object>
-        <flag>wxEXPAND</flag>
       </object>
     </object>
     <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>

@@ -127,6 +127,7 @@ void AmayaBaseToolBar::OnUpdate(wxUpdateUIEvent& event)
       View view;
       FrameToView (TtaGiveActiveFrame(), &doc, &view);
       event.Enable(MenuActionList[def->actionid].ActionActive[doc]);
+      event.Check(MenuActionList[def->actionid].ActionToggle[doc]);
     }
   else
     event.Enable(true);
