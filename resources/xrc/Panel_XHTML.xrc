@@ -26,7 +26,7 @@
           <object class="tool" name="wxID_PANEL_XHTML_LINK">
             <bitmap>../icons/16x16/XHTML_Link.png</bitmap>
           </object>
-          <style></style>
+          <bitmapsize>16,16</bitmapsize>
         </object>
         <flag>wxEXPAND</flag>
       </object>
@@ -53,6 +53,7 @@
           <object class="tool" name="wxID_PANEL_XHTML_OBJ">
             <bitmap>../icons/16x16/XHTML_object.png</bitmap>
           </object>
+          <bitmapsize>16,16</bitmapsize>
         </object>
         <flag>wxEXPAND</flag>
       </object>
@@ -86,6 +87,7 @@
             <bitmap>../icons/16x16/XHTML_sub.png</bitmap>
             <toggle>1</toggle>
           </object>
+          <bitmapsize>16,16</bitmapsize>
         </object>
         <flag>wxEXPAND</flag>
       </object>
