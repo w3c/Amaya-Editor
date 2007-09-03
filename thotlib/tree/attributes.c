@@ -1073,7 +1073,7 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
         (pPS->PsNComparAttrs->Num[pNewAttr->AeAttrNum - 1] != 0);
       
       /* next P schema */
-      if (pHd == NULL)
+      if (pHd)
         /* get the next extension schema */
         pHd = pHd->HdNextPSchema;
       else if (CanApplyCSSToElement (pEl))
