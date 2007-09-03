@@ -9,6 +9,7 @@
 extern void SmallLettering ( unsigned char *word );
 extern ThotBool IsSeparatorChar ( CHAR_T c );
 extern int HyphenLastWord ( SpecFont font,
+                            int variant,
                             Language language,
                             PtrTextBuffer *buffer,
                             int *rank,
@@ -21,6 +22,7 @@ extern ThotBool CanHyphen ( PtrBox pBox );
 extern void SmallLettering ( unsigned char *word );
 extern ThotBool IsSeparatorChar ( CHAR_T c );
 extern int HyphenLastWord ( SpecFont font,
+                              int variant,
                               Language language,
                               PtrTextBuffer *buffer,
                               int *rank,

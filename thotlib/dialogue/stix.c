@@ -796,7 +796,7 @@ static int StixBracketWidth (int height, SpecFont font)
   int             i, size;
   ThotFont        pfont;
 
-  GetFontAndIndexFromSpec (32, font, &pfont);
+  GetFontAndIndexFromSpec (32, font, 1, &pfont);
   if (pfont && height <= (int) (1.3 * FontHeight (pfont)))
     /* use an ordinary parenthesis */
     i = CharacterWidth ('(', pfont);
@@ -937,7 +937,7 @@ static int StixParenthesisWidth (int height, SpecFont font)
   int          i, size;
   ThotFont     pfont;
 
-  GetFontAndIndexFromSpec (32, font, &pfont);
+  GetFontAndIndexFromSpec (32, font, 1, &pfont);
   if (pfont && height <= (int) (1.3 * FontHeight (pfont)))
     /* use an ordinary parenthesis */
     i = CharacterWidth ('(', pfont);
@@ -1023,7 +1023,7 @@ static int StixBraceWidth (int height, SpecFont font)
   int             i, size;
   ThotFont        pfont;
 
-  GetFontAndIndexFromSpec (32, font, &pfont);
+  GetFontAndIndexFromSpec (32, font, 1, &pfont);
   if (pfont && height <= (int) (1.3 * FontHeight (pfont)))
     /* use an ordinary parenthesis */
     i = CharacterWidth ('(', pfont);

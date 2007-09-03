@@ -394,7 +394,7 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb)
   width returns the width of the text.
   ----------------------------------------------------------------------*/
 char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
-                     SpecFont font, int *width, int *nSpaces,
+                     SpecFont font, int variant, int *width, int *nSpaces,
                      char dir, char bidi, ThotBool *embedded, char prevscript)
 {
   char                script, sc;
@@ -412,7 +412,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 
   /* space width */
   if (*nSpaces == 0)
-    spaceWidth = BoxCharacterWidth (SPACE, font);
+    spaceWidth = BoxCharacterWidth (SPACE, 1, font);
   else
     spaceWidth = *nSpaces;
   /* first character in the buffer */
@@ -456,7 +456,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
                   if (car >= 0x060C && car <= 0x06B0) /* arabic char */
                     charWidth = BoxArabicCharacterWidth (car, pBuffer, ind, font);
                   else
-                    charWidth = BoxCharacterWidth (car, font);
+                    charWidth = BoxCharacterWidth (car, 1, font);
                   *width += charWidth;
                   if (car == 0x28 || car == 0x29 )
                     *embedded = TRUE;
@@ -659,7 +659,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
       else if (car >= 0x060C && car <= 0x06B0) /* arabic char */
         charWidth = BoxArabicCharacterWidth (car, pBuffer, ind, font);
       else
-        charWidth = BoxCharacterWidth (car, font);
+        charWidth = BoxCharacterWidth (car, variant, font);
       *width += charWidth;
       if (car != EOS)
         pos++;
@@ -720,7 +720,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
   if (pAb->AbVolume == 0)
     {
       /* empty Symbol */
-      *width = BoxCharacterWidth (SPACE, font);
+      *width = BoxCharacterWidth (SPACE, 1, font);
       *height = hfont * 2;
     }
   else
@@ -731,20 +731,20 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         {
         case 'c':	/*integrale curviligne */
         case 'i':	/*integrale */
-          *width = BoxCharacterWidth (0xf3, font);
+          *width = BoxCharacterWidth (0xf3, 1, font);
           break;
         case 'd':	/*integrale double */
         case '1':	/* Clockwise Integral */
         case '2':	/* ClockwiseContourIntegral */
         case '3':	/* CounterClockwiseContourIntegral */
-          *width = BoxCharacterWidth (0xf3, font) * 3 / 2;
+          *width = BoxCharacterWidth (0xf3, 1, font) * 3 / 2;
           break;
         case 'e':	/* double contour integral */
-          *width = BoxCharacterWidth (0xf3, font) * 2;
+          *width = BoxCharacterWidth (0xf3, 1, font) * 2;
           break;
         case 't':	/*integrale triple */
         case 'f':	/* triple contour integral */
-          *width = BoxCharacterWidth (0xf3, font) * 5 / 2;
+          *width = BoxCharacterWidth (0xf3, 1, font) * 5 / 2;
           break;
         case 'r':	/* root */
           *width = hfont;
@@ -753,7 +753,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case 'P':	/*pi */
         case 'I':	/*intersection */
         case 'U':	/*union */
-          *width = BoxCharacterWidth (229, font);
+          *width = BoxCharacterWidth (229, 1, font);
           break;
         case 'b': /* Over bracket */
         case 'B': /* Under bracket */
@@ -822,26 +822,26 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case 7:  /* VerticalSeparator */
         case 11: /* VerticalBar */
         case 12: /* DoubleVerticalBar */
-          *width = BoxCharacterWidth (0xe6, font);
+          *width = BoxCharacterWidth (0xe6, 1, font);
           if (pAb->AbShape == 12)
             *width *= 2;
            break;
         case '<':
         case '>':
-          *width = BoxCharacterWidth (0xf1, font) * 2;
+          *width = BoxCharacterWidth (0xf1, 1, font) * 2;
           break;
         case '|':       /* VerticalLine */
-          *width = BoxCharacterWidth (0x7c, font);  /* | */
+          *width = BoxCharacterWidth (0x7c, 1, font);  /* | */
           break;
         case 'D':       /* double vertical bar */
-          *width = BoxCharacterWidth (0x7c, font) * 3;  /* | */
+          *width = BoxCharacterWidth (0x7c, 1, font) * 3;  /* | */
           break;
 
         case 'v':
         case '^': /* UpArrow */
         case 'V': /* DownArrow */
         case 155: /* UpDownArrow */
-          *width = BoxCharacterWidth (0x6c, font);	/* 'm' */
+          *width = BoxCharacterWidth (0x6c, 1, font);	/* 'm' */
           break;
 
         case 161: /* UpTeeArrow */
@@ -869,13 +869,13 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case 211: /* LeftDownTeeVector */
         case 212: /* UpEquilibrium */
         case 213: /* ReverseUpEquilibrium */
-          *width = BoxCharacterWidth (SPACE, font) * 4;
+          *width = BoxCharacterWidth (SPACE, 1, font) * 4;
           break;
         case '?':
-          *width = BoxCharacterWidth (0x3f, font);   /* ? */
+          *width = BoxCharacterWidth (0x3f, 1, font);   /* ? */
           break;
         default:
-          *width = BoxCharacterWidth (SPACE, font);
+          *width = BoxCharacterWidth (SPACE, 1, font);
           break;
         }
     }
@@ -893,7 +893,7 @@ void GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height)
 
   box = pAb->AbBox;
   font = box->BxFont;
-  *width = BoxCharacterWidth (109, font);	/*'m' */
+  *width = BoxCharacterWidth (109, 1, font);	/*'m' */
   /* use the Symbols font if possible */
   hfont = BoxFontHeight (font, 'G');
   *height = hfont * 2;
@@ -1295,8 +1295,9 @@ static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
           lg = nChars;
           if (box->BxPrevious && box->BxPrevious->BxScript != EOS)
             prevscript = box->BxPrevious->BxScript;
-          script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
-                                   dir, pAb->AbUnicodeBidi, &EmbeddedScript, prevscript);
+          script = GiveTextParams (&pBuffer, &ind, &nChars, font, pAb->AbFontVariant,
+                                   &bwidth, &spaces, dir, pAb->AbUnicodeBidi,
+                                   &EmbeddedScript, prevscript);
           box->BxScript = script;
           *width += bwidth;
           *nSpaces += spaces;
@@ -2339,7 +2340,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
     script = 'L';
   /* teste l'unite */
   font = ThotLoadFont (script, pAb->AbFont, FontStyleAndWeight(pAb),
-                       height, unit, frame);
+                       height, unit, pAb->AbFontVariant, frame);
 
   /* Creation */
   pBox = pAb->AbBox;
@@ -4100,17 +4101,17 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                 pBox->BxFont = ThotLoadFont (TtaGetScript (pAb->AbLang),
                                              pAb->AbFont,
                                              FontStyleAndWeight(pAb),
-                                             height, unit, frame);
+                                             height, unit, pAb->AbFontVariant, frame);
               else
                 pBox->BxFont = ThotLoadFont ('L', pAb->AbFont,
                                              FontStyleAndWeight(pAb),
-                                             height, unit, frame);
+                                             height, unit, pAb->AbFontVariant, frame);
             }
           else if (pAb->AbLeafType == LtSymbol)
             pBox->BxFont = ThotLoadFont ('G', pAb->AbFont, FontStyleAndWeight (pAb),
-                                         height, unit, frame);
+                                         height, unit, 1, frame);
           else
-            pBox->BxFont = ThotLoadFont ('L', 1, 0, height, unit, frame);
+            pBox->BxFont = ThotLoadFont ('L', 1, 0, height, unit, 1, frame);
 	  
           /* transmit underline and thickness */
           pBox->BxUnderline = pAb->AbUnderline;
@@ -4139,7 +4140,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                   /* Si la boite est justifiee */
                   if (pBox->BxSpaceWidth != 0)
                     {
-                      i = pBox->BxSpaceWidth - BoxCharacterWidth (SPACE, pBox->BxFont);
+                      i = pBox->BxSpaceWidth - BoxCharacterWidth (SPACE, 1, pBox->BxFont);
                       /* On prend la largeur justifiee */
                       width = width + i * nSpaces + pBox->BxNPixels;
                       /* width shift */

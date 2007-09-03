@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -446,7 +446,8 @@ void ComputeViewSelMarks (ViewSelection *selMark, int frame)
           pBuffer = pBox->BxBuffer;
           ind = pBox->BxIndChar;
           /* Only the width is requested: Override and Latin */
-          GiveTextParams (&pBuffer, &ind, &pos, pBox->BxFont, &x, &spaces, 'L',
+          GiveTextParams (&pBuffer, &ind, &pos, pBox->BxFont,
+                          pAb->AbFontVariant, &x, &spaces, 'L',
                           'O', &embedded,'*');
           if (pBox->BxSpaceWidth)
             {
@@ -665,7 +666,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
                       if (c == SPACE && pBox->BxSpaceWidth != 0)
                         pViewSelEnd->VsXPos += pBox->BxSpaceWidth;
                       else
-                        pViewSelEnd->VsXPos += BoxCharacterWidth (c, pBox->BxFont);
+                        pViewSelEnd->VsXPos += BoxCharacterWidth (c, pAb->AbFontVariant, pBox->BxFont);
                     }
                 }
             }

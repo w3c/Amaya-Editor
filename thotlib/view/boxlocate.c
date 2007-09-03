@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1092,7 +1092,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   /* Est-ce un point caracteristique specifique du graphique ? */
   if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
     {
-      GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
+      GetFontAndIndexFromSpec (32, pBox->BxFont, 1, &font);
       xp =  FontHeight (font);
       xm = xp / 2;
       xp = xp / 4;
@@ -2817,7 +2817,7 @@ void LocateClickedChar (PtrBox pBox, int frame, ThotBool extend,
   int                 extraSpace;
   int                 spaceWidth;
   int                 charWidth;
-  int                 t, b, l, r;
+  int                 t, b, l, r, variant;
   SpecFont            font;
   CHAR_T              c;
   ThotBool            notfound, rtl;
@@ -2845,12 +2845,16 @@ void LocateClickedChar (PtrBox pBox, int frame, ThotBool extend,
   else
     {
       font = pBox->BxFont;
+      if (pBox->BxAbstractBox)
+        variant = pBox->BxAbstractBox->AbFontVariant;
+      else
+        variant = 1;
       dx = 0;
       length = pBox->BxNChars;
       /* space width */
       if (pBox->BxSpaceWidth == 0)
         {
-          spaceWidth = BoxCharacterWidth (SPACE, font);
+          spaceWidth = BoxCharacterWidth (SPACE, 1, font);
           extraSpace = 0;
         }
       else
@@ -2872,7 +2876,7 @@ void LocateClickedChar (PtrBox pBox, int frame, ThotBool extend,
               if ( c >= 0x060C && c <= 0x06B0 ) /*arabic char*/
                 charWidth = BoxArabicCharacterWidth (c, pBuffer, &ind, font);
               else
-                charWidth = BoxCharacterWidth (c, font);
+                charWidth = BoxCharacterWidth (c, variant, font);
             }
           if (extend)
             notfound = (dx + (charWidth / 2) < *x);

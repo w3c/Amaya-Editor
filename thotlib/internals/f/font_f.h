@@ -13,6 +13,7 @@ extern int CharacterWidth ( int c,
                             ThotFont font );
 extern int SpecialCharBoxWidth ( CHAR_T c );
 extern int BoxCharacterWidth ( CHAR_T c,
+                               int variant,
                                SpecFont specfont );
 extern int CharacterHeight ( int c,
                              ThotFont font );
@@ -63,12 +64,14 @@ extern void ChangeFontsetSize ( int size,
                                 int frame );
 extern int GetFontAndIndexFromSpec ( CHAR_T c,
                                      SpecFont fontset,
+                                     int variant,
                                      ThotFont *font );
 extern SpecFont ThotLoadFont ( char script,
                                int family,
                                int highlight,
                                int size,
                                TypeUnit unit,
+                               int variant,
                                int frame );
 extern void TtaSetFontZoom ( int zoom );
 extern void InitDialogueFonts ( char *name );
@@ -93,6 +96,7 @@ extern int CharacterWidth ( int c,
                               ThotFont font );
 extern int SpecialCharBoxWidth ( CHAR_T c );
 extern int BoxCharacterWidth ( CHAR_T c,
+                                 int variant,
                                  SpecFont specfont );
 extern int CharacterHeight ( int c,
                                ThotFont font );
@@ -143,12 +147,14 @@ extern void ChangeFontsetSize ( int size,
                                   int frame );
 extern int GetFontAndIndexFromSpec ( CHAR_T c,
                                        SpecFont fontset,
+                                       int variant,
                                        ThotFont *font );
 extern SpecFont ThotLoadFont ( char script,
                                  int family,
                                  int highlight,
                                  int size,
                                  TypeUnit unit,
+                                 int variant,
                                  int frame );
 extern void TtaSetFontZoom ( int zoom );
 extern void InitDialogueFonts ( char *name );

@@ -3077,7 +3077,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             case 'i':	/* integral */
             case 'c':	/* circle integral */
               if (i == 0)
-                i = BoxCharacterWidth (0xf3, font);
+                i = BoxCharacterWidth (0xf3, 1, font);
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
             case 'd':	/* double integral */
@@ -3085,18 +3085,18 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             case '2':	/* ClockwiseContourIntegral */
             case '3':	/* CounterClockwiseContourIntegral */
               if (i == 0)
-                i = BoxCharacterWidth (0xf3, font) * 3 / 2;
+                i = BoxCharacterWidth (0xf3, 1, font) * 3 / 2;
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;		
             case 'e':	/* double contour integral */
               if (i == 0)
-                i = BoxCharacterWidth (0xf3, font) * 2;
+                i = BoxCharacterWidth (0xf3, 1, font) * 2;
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;		
             case 't':	/* triple integral */
             case 'f':	/* triple contour integral */
               if (i == 0)
-                i = BoxCharacterWidth (0xf3, font) * 5 / 2;
+                i = BoxCharacterWidth (0xf3, 1, font) * 5 / 2;
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;		
             case '(':
@@ -3112,13 +3112,13 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             case 5:
             case 6:
               if (i == 0)
-                i = BoxCharacterWidth (0xe6, font);
+                i = BoxCharacterWidth (0xe6, 1, font);
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
             case '<':
             case '>':
               if (i == 0)
-                i = BoxCharacterWidth (0xf1, font);
+                i = BoxCharacterWidth (0xf1, 1, font);
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
             case '|':       /* VerticalLine */
@@ -3126,14 +3126,14 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             case 11:       /* VerticalBar ; U02223 */
             case 12:       /* DoubleVerticalBar ; U02956 */
               if (i == 0)
-                i = BoxCharacterWidth (0x7c, font);  /* | */
+                i = BoxCharacterWidth (0x7c, 1, font);  /* | */
               if (pAb->AbShape == 12)
                 i *= 2;
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
             case 'D':       /* double vertical bar */
               if (i == 0)
-                i = BoxCharacterWidth (0x7c, font) * 3;  /* | */
+                i = BoxCharacterWidth (0x7c, 1, font) * 3;  /* | */
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
 
@@ -3142,7 +3142,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             case 'V': /* DownArrow */
             case 155: /* UpDownArrow */
               if (i == 0)
-                i  = BoxCharacterWidth (0x6c, font);	/* 'm' */
+                i  = BoxCharacterWidth (0x6c, 1, font);	/* 'm' */
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
 
@@ -3172,7 +3172,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             case 212: /* UpEquilibrium */
             case 213: /* ReverseUpEquilibrium */
               if (i == 0)
-                i  = BoxCharacterWidth (SPACE, font) * 4;
+                i  = BoxCharacterWidth (SPACE, 1, font) * 4;
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
 

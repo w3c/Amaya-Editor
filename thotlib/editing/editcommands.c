@@ -120,7 +120,7 @@ ThotBool TtaIsTextInserting ()
   target buffer if target parameter is not NULL.
   ----------------------------------------------------------------------*/
 static void CopyString (Buffer source, Buffer target, int count,
-                        SpecFont font, int *sourceInd, int *targetInd,
+                        SpecFont font, int variant, int *sourceInd, int *targetInd,
                         int *width, int *nSpaces, int *nChars)
 {
   int                 nb;
@@ -144,7 +144,7 @@ static void CopyString (Buffer source, Buffer target, int count,
           (*nChars)++;
           if (car == SPACE)
             (*nSpaces)++;
-          *width += BoxCharacterWidth (car, font);
+          *width += BoxCharacterWidth (car, variant, font);
         }
     }
 }
@@ -761,10 +761,9 @@ static PtrTextBuffer GetNewBuffer (PtrTextBuffer pBuffer, int frame)
   - le pointeur sur le dernier buffer destination utilise.        
   - la largeur, le nombre de blancs et de caracteres copies.      
   ----------------------------------------------------------------------*/
-static void CopyBuffers (SpecFont font, int frame, int startInd, int endInd,
-                         int targetInd, PtrTextBuffer pSourceBuffer,
-                         PtrTextBuffer pEndBuffer,
-                         PtrTextBuffer *pTargetBuffer,
+static void CopyBuffers (SpecFont font, int variant, int frame, int startInd,
+                         int endInd, int targetInd, PtrTextBuffer pSourceBuffer,
+                         PtrTextBuffer pEndBuffer, PtrTextBuffer *pTargetBuffer,
                          int *width, int *nSpaces, int *nChars)
 {
   PtrTextBuffer       pBuffer;
@@ -805,7 +804,7 @@ static void CopyBuffers (SpecFont font, int frame, int startInd, int endInd,
         {
           /* end of source buffer */
           CopyString (pBuffer->BuContent, target, sourceLength,
-                      font, &sourceInd, &targetInd, width, nSpaces,
+                      font, variant, &sourceInd, &targetInd, width, nSpaces,
                       nChars);
           if (pBuffer == pEndBuffer)
             pBuffer = NULL;
@@ -817,7 +816,7 @@ static void CopyBuffers (SpecFont font, int frame, int startInd, int endInd,
         {
           /* end of target buffer */
           CopyString (pBuffer->BuContent, target, targetlength,
-                      font, &sourceInd, &targetInd, width, nSpaces,
+                      font, variant, &sourceInd, &targetInd, width, nSpaces,
                       nChars);
           (*pTargetBuffer)->BuLength = FULL_BUFFER;
           (*pTargetBuffer)->BuContent[FULL_BUFFER] = EOS;
@@ -1549,7 +1548,7 @@ static void SaveInClipboard (int *charsDelta, int *spacesDelta, int *xDelta,
                   /* sauve le texte selectionne dans la feuille */
                   i = 0;	/* Indice de debut */
                   pTargetBuffer = &ClipboardThot;
-                  CopyBuffers (pAb->AbBox->BxFont, frame, ind,
+                  CopyBuffers (pAb->AbBox->BxFont, pAb->AbFontVariant, frame, ind,
                                pFrame->FrSelectionEnd.VsIndBuf, i,
                                pBuffer, pFrame->FrSelectionEnd.VsBuffer,
                                &pTargetBuffer, xDelta, spacesDelta, charsDelta);
@@ -1594,7 +1593,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
   ThotBool            open;
 
   font = pBox->BxFont;
-  width = BoxCharacterWidth (109, font);
+  width = BoxCharacterWidth (109, 1, font);
   height = BoxFontHeight (font, pBox->BxScript);
   if (pAb->AbVolume == 0)
     DefClip (frame, 0, 0, 0, 0);
@@ -1700,7 +1699,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
         if (pBox->BxSpaceWidth != 0)
           {
             /* adjusted box */
-            i = BoxCharacterWidth (SPACE, font);
+            i = BoxCharacterWidth (SPACE, 1, font);
             adjust = xDelta + (pBox->BxSpaceWidth - i) * spacesDelta;
           }
         else
@@ -1829,7 +1828,7 @@ static void DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth,
               spacesDelta = 0;
             }
           else
-            CopyBuffers (pBox->BxFont, frame,
+            CopyBuffers (pBox->BxFont, pAb->AbFontVariant, frame,
                          start, end, 0,
                          pFrame->FrSelectionBegin.VsBuffer,
                          pFrame->FrSelectionEnd.VsBuffer, &pTargetBuffer,
@@ -1907,7 +1906,7 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 
       /* Insertion des caracteres */
       pNewBuffer = pBuffer;
-      CopyBuffers (font, frame, 0, 0, ind, clipboard, NULL,
+      CopyBuffers (font, pAb->AbFontVariant, frame, 0, 0, ind, clipboard, NULL,
                    &pNewBuffer, &xDelta, &spacesDelta,
                    &charsDelta);
       /* termine l'insertion */
@@ -1937,7 +1936,7 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
       if (pBox->BxSpaceWidth != 0)
         {
           /* Si la boite est adjustifiee */
-          i = BoxCharacterWidth (SPACE, font);
+          i = BoxCharacterWidth (SPACE, 1, font);
           adjust = xDelta + (pBox->BxSpaceWidth - i) * spacesDelta;
         }
       else
@@ -2668,7 +2667,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
   int                 xx, xDelta, adjust;
   int                 spacesDelta, charsDelta, pix;
   int                 topY, bottomY, visib, zoom;
-  int                 t, b, l, r, ind;
+  int                 t, b, l, r, ind, variant = 1;
   int                 previousChars, previousInd, previousPos;
   char                script, oldscript;
   ThotBool            beginOfBox, toDelete;
@@ -2756,7 +2755,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                       /* keyboard ni Symbol ni Graphique */
                       /* bloque l'affichage de la fenetre */
                       pFrame->FrReady = FALSE;
-		      
+                      variant = pAb->AbFontVariant;
                       /* initialise l'insertion */
                       if (!TextInserting)
                         StartTextInsertion (pAb, frame, pSelBox,
@@ -2948,7 +2947,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                       return FALSE/*selNext*/;
                                     }
                                   /* update selection marks */
-                                  xDelta = BoxCharacterWidth (109, font);
+                                  xDelta = BoxCharacterWidth (109, 1, font);
                                   pViewSel->VsXPos = 0;
                                   pViewSel->VsIndBox = 0;
                                   pViewSel->VsNSpaces = 0;
@@ -2971,7 +2970,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                       pAb->AbBox->BxNChars == 1)
                                     {
                                       /* the box becomes empty */
-                                      xDelta = BoxCharacterWidth (109, font);
+                                      xDelta = BoxCharacterWidth (109, 1, font);
                                       xx = 0;
 
                                       /* update selection marks */
@@ -2988,7 +2987,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                     }
                                   else
                                     {
-                                      xDelta = - BoxCharacterWidth (c, font);
+                                      xDelta = - BoxCharacterWidth (c, variant, font);
                                       pViewSel->VsBox = pSelBox;
                                       pViewSel->VsIndBox = pSelBox->BxNChars;
                                       if (pViewSel->VsLine)
@@ -3008,7 +3007,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                   /* removing a space between two boxes */
                                   /* recompute the paragraph */
                                   toSplit = TRUE;
-                                  xDelta = - BoxCharacterWidth (c, font);
+                                  xDelta = - BoxCharacterWidth (c, 1, font);
                                   if (previousChars == 0)
                                     {
                                       /* selection at the beginning of the box  */
@@ -3028,7 +3027,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                           pSelBox->BxFirstChar--;
                                           if (pBox->BxNChars == 1)
                                             /* the box becomes empty */
-                                            xDelta = BoxCharacterWidth (109, font) - pBox->BxWidth;
+                                            xDelta = BoxCharacterWidth (109, 1, font) - pBox->BxWidth;
                                         }
                                       else if (pBox->BxFirstChar == 1)
                                         {
@@ -3056,7 +3055,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                   /* other cases */
                                   if (c == SPACE)
                                     {
-                                      xDelta = - BoxCharacterWidth (SPACE, font);
+                                      xDelta = - BoxCharacterWidth (SPACE, 1, font);
                                       adjust = - pSelBox->BxSpaceWidth;
                                       if (adjust < 0)
                                         {
@@ -3068,7 +3067,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                     /* null character */
                                     xDelta = 0;
                                   else
-                                    xDelta = - BoxCharacterWidth (c, font);
+                                    xDelta = - BoxCharacterWidth (c, variant, font);
                                   /* update the displayed area */
                                   xx += xDelta;
                                   DefBoxRegion (frame, pSelBox, xx, xx, -1, -1);
@@ -3131,7 +3130,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                             {
                               /* Mise a jour des marques */
                               GetExtraMargins (pSelBox, NULL, frame, &t, &b, &l, &r);
-                              xDelta = BoxCharacterWidth (c, font);
+                              xDelta = BoxCharacterWidth (c, variant, font);
                               pViewSel->VsXPos = xDelta + l;
                               pViewSel->VsIndBox = charsDelta;
                               pViewSel->VsNSpaces = spacesDelta;
@@ -3161,7 +3160,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                             {
                               /* Prepare la mise a jour de la boite */
                               toSplit = TRUE;
-                              xDelta = BoxCharacterWidth (c, font);
+                              xDelta = BoxCharacterWidth (c, variant, font);
                               if (c == SPACE)
                                 adjust = pSelBox->BxSpaceWidth;
                               if (previousChars == 0 && pSelBox->BxFirstChar == 1)
@@ -3190,7 +3189,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                             {
                               if (c == SPACE)
                                 {
-                                  xDelta = BoxCharacterWidth (SPACE, font);
+                                  xDelta = BoxCharacterWidth (SPACE, 1, font);
                                   adjust = pSelBox->BxSpaceWidth;
                                   if (adjust > 0)
                                     if (pSelBox->BxNPixels > pViewSel->VsNSpaces)
@@ -3201,13 +3200,13 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                 {
                                   /* il faut reevaluer la mise en ligne */
                                   toSplit = TRUE;
-                                  xDelta = BoxCharacterWidth (c, font);
+                                  xDelta = BoxCharacterWidth (c, 1, font);
                                 }
                               else if (c == EOS)
                                 /* Caractere Nul */
                                 xDelta = 0;
                               else
-                                xDelta = BoxCharacterWidth (c, font);
+                                xDelta = BoxCharacterWidth (c, variant, font);
 
                               if (/*beginOfBox && */previousChars == 0)
                                 {

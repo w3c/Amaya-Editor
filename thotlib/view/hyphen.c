@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -143,7 +143,7 @@ ThotBool IsSeparatorChar (CHAR_T c)
    - la longueur des se'parateurs qui pre'ce`dent le       
    de'but du mot.                                        
   ----------------------------------------------------------------------*/
-static int NextWord (SpecFont font, PtrTextBuffer *buffer, int *rank,
+static int NextWord (SpecFont font, int variant, PtrTextBuffer *buffer, int *rank,
 		     CHAR_T *word, int *width)
 {
    PtrTextBuffer       adbuff;
@@ -187,10 +187,10 @@ static int NextWord (SpecFont font, PtrTextBuffer *buffer, int *rank,
 		if (j <= 1)
 		  {
 		     changedebut = TRUE;
-		     lg += BoxCharacterWidth (word[j], font);
+		     lg += BoxCharacterWidth (word[j], variant, font);
 		     if (j == 1)
 			/* Il faut comptabiliser le caractere precedent */
-			lg += BoxCharacterWidth (word[j - 1], font);
+			lg += BoxCharacterWidth (word[j - 1], variant, font);
 		     nbChars += j + 1;
 		     j = 0;
 		  }
@@ -208,7 +208,7 @@ static int NextWord (SpecFont font, PtrTextBuffer *buffer, int *rank,
 		    {
 		       /* Le debut du mot est deplace */
 		       changedebut = TRUE;
-		       lg += BoxCharacterWidth (word[j], font);
+		       lg += BoxCharacterWidth (word[j], variant, font);
 		       nbChars++;
 		    }
 	       }
@@ -264,8 +264,8 @@ static int WordHyphen (STRING word, int length, Language language,
   - width is the width of the first part of the word including the hyphen.
   - hyphen is TRUE if an hyphen should be displayed.
   ----------------------------------------------------------------------*/
-int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
-		    int *rank, int *width, ThotBool *hyphen)
+int HyphenLastWord (SpecFont font, int variant, Language language, PtrTextBuffer *buffer,
+                    int *rank, int *width, ThotBool *hyphen)
 {
   PtrTextBuffer       adbuff;
   CHAR_T              word[THOT_MAX_CHAR];
@@ -294,12 +294,12 @@ int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
 	}
 
       /* get the next word */
-      nbChars = NextWord (font, &adbuff, &i, word, &w);
+      nbChars = NextWord (font, variant, &adbuff, &i, word, &w);
       /* hyphen width */
       if (language < TtaGetFirstUserLanguage ())
 	lghyphen = 0;
       else
-	lghyphen = BoxCharacterWidth (173, font);
+	lghyphen = BoxCharacterWidth (173, 1, font);
       /* width available for the first part of the word */
       rest = *width - w - lghyphen;
       if (word)
@@ -309,12 +309,12 @@ int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
 	{
 	  /* look for a break */
 	  length = 0;
-	  charWidth = BoxCharacterWidth (word[length], font);
+	  charWidth = BoxCharacterWidth (word[length], variant, font);
 	  while (rest >= charWidth && length < wordLength)
 	    {
 	      rest -= charWidth;
 	      length++;
-	      charWidth = BoxCharacterWidth (word[length], font);
+	      charWidth = BoxCharacterWidth (word[length], variant, font);
 	    }
 
 	  if (length > 1)
@@ -341,7 +341,7 @@ int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
 			{
 			  /* width and length of the first part of the word */
 			  length--;
-			  *width += BoxCharacterWidth (adbuff->BuContent[i++], font);
+			  *width += BoxCharacterWidth (adbuff->BuContent[i++], variant, font);
 			}
 		    }
 		  

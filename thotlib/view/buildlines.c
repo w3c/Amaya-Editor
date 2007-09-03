@@ -264,7 +264,7 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
                 if (pBox->BxAbstractBox->AbLeafType == LtText)
                   {
                     pBox->BxSpaceWidth = 0;
-                    delta = pBox->BxNSpaces * BoxCharacterWidth (SPACE, pBox->BxFont);
+                    delta = pBox->BxNSpaces * BoxCharacterWidth (SPACE, 1, pBox->BxFont);
                     pBox->BxW -= delta;
                     pBox->BxWidth -= delta;
                     nSpaces += pBox->BxNSpaces;
@@ -892,7 +892,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
   CHAR_T              character;
   int                 i, j, l;
   int                 nChars;
-  int                 wWidth;
+  int                 wWidth, variant;
   ThotBool            found;
 
   found = FALSE;
@@ -908,7 +908,10 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
   i = pBox->BxIndChar;
   *pNewBuff = pBuffer;
   *newIndex = 0;
-
+  if (pBox->BxAbstractBox)
+    variant = pBox->BxAbstractBox->AbFontVariant;
+  else
+    variant = 1;
   if (pBuffer && i >= pBuffer->BuLength)
     {
       /* start at the end of a buffer, get the next one */
@@ -923,7 +926,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
         {
           /* It's a break element */
           found = TRUE;
-          *breakWidth = BoxCharacterWidth (BREAK_LINE, font);
+          *breakWidth = BoxCharacterWidth (BREAK_LINE, 1, font);
           *boxLength = j;
           i++;
           if (i >= pBuffer->BuLength)
@@ -948,7 +951,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
           if (character == SPACE)
             {
               (*nSpaces)++;
-              *boxWidth += BoxCharacterWidth (SPACE, font);
+              *boxWidth += BoxCharacterWidth (SPACE, 1, font);
               /* compare word widths */
               if (*wordWidth < wWidth)
                 *wordWidth = wWidth;
@@ -959,7 +962,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
               if (character >= 0x060C && character <= 0x06B0) /* arabic char */
                 l = BoxArabicCharacterWidth (character, &pBuffer, &i, font);
               else
-                l = BoxCharacterWidth (character, font);
+                l = BoxCharacterWidth (character, variant, font);
               *boxWidth += l;
               wWidth += l;
             }
@@ -1018,7 +1021,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
   CHAR_T              character;
   int                 i, count;
   int                 carWidth, newWidth;
-  int                 width;
+  int                 width, variant;
   int                 wordLength, charIndex;
   int                 dummySpaces, spaceWidth;
   int                 spaceAdjust;
@@ -1047,8 +1050,12 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
   wordLength = 0;
   spaceCount = 0;
   still = TRUE;
-  spaceWidth = BoxCharacterWidth (SPACE, font);
+  spaceWidth = BoxCharacterWidth (SPACE, 1, font);
   spaceAdjust = spaceWidth;
+  if (pBox->BxAbstractBox)
+    variant = pBox->BxAbstractBox->AbFontVariant;
+  else
+    variant = 1;
   if (pBox->BxScript == 'L')
     language = pBox->BxAbstractBox->AbLang;
   else
@@ -1080,7 +1087,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
         if (character >= 0x060C && character <= 0x06B0) /* arabic char */
           carWidth = BoxArabicCharacterWidth (character, &pBuffer, &charIndex, font);
         else
-          carWidth = BoxCharacterWidth (character, font);
+          carWidth = BoxCharacterWidth (character, variant, font);
 
       if ((newWidth + carWidth > max || i >= count) && i != 0 &&
           // don't split a word
@@ -1301,7 +1308,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
               width = max;
               pBuffer = pBox->BxBuffer;
               charIndex = pBox->BxIndChar;
-              wordLength = HyphenLastWord (font, language, &pBuffer,
+              wordLength = HyphenLastWord (font, variant, language, &pBuffer,
                                            &charIndex, &width, &still);
               if (wordLength > 0)
                 {
@@ -1316,7 +1323,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
             {
               /* try to hyphen the last word */
               width = max - *boxWidth - dummySpaces * spaceAdjust;
-              wordLength = HyphenLastWord (font, language, pNewBuff,
+              wordLength = HyphenLastWord (font, variant, language, pNewBuff,
                                            newIndex, &width, &still);
             }
 	  
@@ -1345,7 +1352,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
         {
           /* generate an hyphen */
           dummySpaces = -1;
-          *boxWidth += BoxCharacterWidth (173, font);
+          *boxWidth += BoxCharacterWidth (173, 1, font);
           /* remove one or more characters corresponding to the hyphen width */
           while (*boxWidth > max && *boxLength > 1)
             {
@@ -1363,7 +1370,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
               if (character >= 0x060C && character <= 0x06B0) /* arabic char */
                 *boxWidth -= BoxArabicCharacterWidth (character, &pBuffer, &charIndex, font);
               else      
-                *boxWidth -= BoxCharacterWidth (character, font);
+                *boxWidth -= BoxCharacterWidth (character, variant, font);
               (*boxLength)--;
             }
         }
@@ -1444,7 +1451,7 @@ static ThotBool BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
     spaceWidth = 0;
   else
     /* break on a space */
-    spaceWidth = BoxCharacterWidth (SPACE, font);
+    spaceWidth = BoxCharacterWidth (SPACE, 1, font);
 
   /*
    * Generate a new piece:
@@ -1484,7 +1491,7 @@ static ThotBool BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
         {
           /* add the hyphen at the end */
           pBox->BxType = BoDotted;
-          width -= BoxCharacterWidth (173, font);
+          width -= BoxCharacterWidth (173, 1, font);
           lostPixels = 0;
         }
       else if (pBox->BxType != BoScript)
@@ -1588,7 +1595,7 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max, int l,
     spaceWidth = 0;
   else
     /* breakmak on a space */
-    spaceWidth = BoxCharacterWidth (SPACE, font);
+    spaceWidth = BoxCharacterWidth (SPACE, 1, font);
 
   /*
    * Generate two pieces:
@@ -1657,7 +1664,7 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max, int l,
         {
           /* add the hyphen at the end */
           ibox1->BxType = BoDotted;
-          width -= BoxCharacterWidth (173, font);
+          width -= BoxCharacterWidth (173, 1, font);
           lostPixels = 0;
         }
       else
@@ -3430,7 +3437,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
         removed = pAb->AbDead;
       if (pAb && pAb->AbLeafType == LtText)
         {
-          x = BoxCharacterWidth (SPACE, pBox->BxFont);
+          x = BoxCharacterWidth (SPACE, 1, pBox->BxFont);
           if (pViewSel->VsBox == pBox)
             {
               /* need to update the current selection */
@@ -3499,7 +3506,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
                   if (pBox->BxType == BoDotted && !removed)
                     {
                       /* remove the hyphen width */
-                      width -= BoxCharacterWidth (173, pBox->BxFont);
+                      width -= BoxCharacterWidth (173, 1, pBox->BxFont);
                       /* check if it's a script */
                       if (pBox->BxAbstractBox->AbBox &&
                           pBox->BxAbstractBox->AbBox->BxType == BoMulScript &&
@@ -3538,14 +3545,14 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
                               if (c == 0xA /* LINEFEED */)
                                 {
                                   diff -= 1;
-                                  width += BoxCharacterWidth ((CHAR_T)c, ibox1->BxFont);
+                                  width += BoxCharacterWidth ((CHAR_T)c, 1, ibox1->BxFont);
                                 }
                               width = width + (diff * x);
                               nspace += diff;
                             }
                           else if (ibox1->BxType == BoDotted)
                             /* remove the hyphen width */
-                            width -= BoxCharacterWidth (173, ibox1->BxFont);
+                            width -= BoxCharacterWidth (173, 1, ibox1->BxFont);
                           if (pNextBox && pNextBox->BxScript == ibox1->BxScript)
                             /* add skipped spaces at the end of the box */
                             lost = ibox1->BxFirstChar + ibox1->BxNChars;
@@ -3989,12 +3996,12 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
               lostPixels = pBoxToBreak->BxFirstChar - pLine->LiLastPiece->BxNChars - pLine->LiLastPiece->BxFirstChar;
               if (lostPixels != 0)
                 {
-                  lostPixels = lostPixels * BoxCharacterWidth (SPACE, pBoxToBreak->BxFont);
+                  lostPixels = lostPixels * BoxCharacterWidth (SPACE, 1, pBoxToBreak->BxFont);
                   noWrappedWidth += lostPixels;
                 }
               if (pLine->LiLastPiece->BxType == BoDotted)
                 /* remove the dash width */
-                noWrappedWidth -= BoxCharacterWidth (173, pBoxToBreak->BxFont);
+                noWrappedWidth -= BoxCharacterWidth (173, 1, pBoxToBreak->BxFont);
             }
           if (breakLine || !full)
             {
@@ -4479,7 +4486,7 @@ ThotBool RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
   ViewFrame          *pFrame;
   ViewSelection      *pSelBegin;
   ViewSelection      *pSelEnd;
-  int                 w, h, height, width, l;
+  int                 w, h, height, width, l, variant;
   ThotBool            changeSelectBegin, changeSelectEnd;
   ThotBool            status, extensibleBox, shrunk = FALSE;
 
@@ -4487,7 +4494,7 @@ ThotBool RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
   /* Si la boite est eclatee, on remonte jusqu'a la boite bloc de lignes */
   while (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost)
     pAb = pAb->AbEnclosing;
-
+  variant = pAb->AbFontVariant;
   pBox = pAb->AbBox;
   if (pBox)
     {
@@ -4627,7 +4634,7 @@ ThotBool RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
                         if (c >= 0x060C && c <= 0x06B0) /* arabic char */
                           pSelEnd->VsXPos += BoxArabicCharacterWidth (c, &(pSelEnd->VsBuffer), &(pSelEnd->VsIndBuf), pSelBox->BxFont);
                         else
-                          pSelEnd->VsXPos += BoxCharacterWidth (c, pSelBox->BxFont);
+                          pSelEnd->VsXPos += BoxCharacterWidth (c, variant, pSelBox->BxFont);
                     }
                 }
             }
@@ -4754,7 +4761,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
           if (pLine->LiSpaceWidth > 0)
             {
               /* this line is already justified */
-              lostPixels = BoxCharacterWidth (SPACE, pBox->BxFont);
+              lostPixels = BoxCharacterWidth (SPACE, 1, pBox->BxFont);
               realLength = pLine->LiRealLength + xDelta - spaceDelta * (pLine->LiSpaceWidth - lostPixels);
               lostPixels = pLine->LiXMax - pLine->LiMinLength;
             }

@@ -654,14 +654,14 @@ int SpecialCharBoxWidth (CHAR_T c)
 /*----------------------------------------------------------------------
   BoxCharacterWidth returns the width of a char in a given font
   ----------------------------------------------------------------------*/
-int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
+int BoxCharacterWidth (CHAR_T c, int variant, SpecFont specfont)
 {
   ThotFont        font;
   int             car;
 
   if (SpecialCharBoxWidth (c))
     return 1;
-  car = GetFontAndIndexFromSpec (c, specfont, &font);
+  car = GetFontAndIndexFromSpec (c, specfont, variant, &font);
   if (font == NULL)
     return 6;
   else
@@ -808,7 +808,7 @@ int BoxFontHeight (SpecFont specfont, char code)
     h = FontHeight (specfont->Font_1);
   if (h == 0)
     {
-      car = GetFontAndIndexFromSpec (120, specfont, &font);
+      car = GetFontAndIndexFromSpec (120, specfont, 1, &font);
       h = FontHeight (font);
     }
   return h;
@@ -839,7 +839,7 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
         dist = 0;
       else
         {
-          dist = BoxCharacterWidth ('m', pAb->AbBox->BxFont);
+          dist = BoxCharacterWidth ('m', 1, pAb->AbBox->BxFont);
           // XFontAscent (pAb->AbBox->BxFont);
           if (dist > 0)
             dist = dist * val / 10;
@@ -918,7 +918,7 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
         dist = 0;
       else
         {
-          dist =  BoxCharacterWidth ('m', pAb->AbBox->BxFont);
+          dist =  BoxCharacterWidth ('m', 1, pAb->AbBox->BxFont);
           // XFontAscent (pAb->AbBox->BxFont);
           if (dist > 0)
             dist = dist * 10 / dist;
@@ -997,7 +997,7 @@ int BoxFontBase (SpecFont specfont)
   ThotFont        font;
   unsigned char   car;
 
-  car = GetFontAndIndexFromSpec (120, specfont, &font);
+  car = GetFontAndIndexFromSpec (120, specfont, 1, &font);
   return FontBase (font);
 }
 
@@ -1671,9 +1671,11 @@ void ChangeFontsetSize (int size, PtrBox box, int frame)
 
 /*----------------------------------------------------------------------
   GetFontAndIndexFromSpec returns the glyph index and the font
-  used to display the wide character c
+  used to display the wide character c.
+  Generate smallcaps if variant is 2
   ----------------------------------------------------------------------*/
-int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
+int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
+                             ThotFont *font)
 {
   ThotFont           lfont, *pfont;
   CHARSET            encoding;
@@ -1704,6 +1706,10 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
         {
           /* 0 -> FF */
           *font = fontset->Font_1;
+          // generate smallcaps
+          if (variant == 2 &&
+              c <= 0x7A /* z */ && c >= 0x61 /* a */)
+            c -= 32;
           car = (int) c;
           code = 1;
         }
@@ -2138,7 +2144,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
   LoadFontSet allocate a font set and load the ISO-latin-1 font.
   ----------------------------------------------------------------------*/
 static SpecFont LoadFontSet (char script, int family, int highlight,
-                             int size, TypeUnit unit, int frame)
+                             int size, TypeUnit unit, int variant, int frame)
 {
   int                 index, i;
   SpecFont            prevfontset, fontset;
@@ -2152,6 +2158,11 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
   else
     index = size;
 
+  // reduce the size for smallcaps charaters
+  if (variant == 2)
+    if (index > 6) index -= 2;
+    else index -= 1;
+    
   /* look for the fontsel */
   fontset = FirstFontSel;
   mask = 1 << (frame - 1);
@@ -2214,10 +2225,10 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
 
 /*----------------------------------------------------------------------
   ThotLoadFont try to load a font given a set of attributes like script,
-  family, the size and for a given frame.
+  family, the size and variant for a given frame.
   ----------------------------------------------------------------------*/
 SpecFont ThotLoadFont (char script, int family, int highlight, int size,
-                       TypeUnit unit, int frame)
+                       TypeUnit unit, int variant, int frame)
 {
   int          zoom;
 
@@ -2268,7 +2279,7 @@ SpecFont ThotLoadFont (char script, int family, int highlight, int size,
   /* the minimum size is 6 points */
   if (size < 6 && unit == UnPoint)
     size = 6;
-  return LoadFontSet (script, family, highlight, size, unit, frame);
+  return LoadFontSet (script, family, highlight, size, unit, variant, frame);
 }
 
 /*----------------------------------------------------------------------
