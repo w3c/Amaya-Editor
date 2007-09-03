@@ -1670,6 +1670,18 @@ void ChangeFontsetSize (int size, PtrBox box, int frame)
 }
 
 /*----------------------------------------------------------------------
+  GetCapital converts lower case into upper case characters
+  ----------------------------------------------------------------------*/
+static CHAR_T GetCapital (CHAR_T c)
+{
+  if ((c >= 0x61 /* a */ && c <= 0x7A /* z */) ||
+      (c >= 0xE0 /* a` */ && c <= 0xFD /* y' */ && c != 0xF7))
+    return c - 32;
+  else
+    return c;
+}
+
+/*----------------------------------------------------------------------
   GetFontAndIndexFromSpec returns the glyph index and the font
   used to display the wide character c.
   Generate smallcaps if variant is 2
@@ -1679,13 +1691,19 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
 {
   ThotFont           lfont, *pfont;
   CHARSET            encoding;
+  CHAR_T             ref_c = c;
   char               code = ' ';
   int                car;
-  int                frame;
+  int                frame, size;
   unsigned int       mask, fontmask;
   
   *font = NULL;
+  if (variant == 2)
+    c =GetCapital (c);
+  if (c == EOS)
+    c = ref_c;
   car = EOS;
+  size = fontset->FontSize;
   if (fontset)
     {
       if (c == EOL || c == BREAK_LINE ||
@@ -1702,14 +1720,10 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
           *font = fontset->Font_1;
           car = (int) c;
         }
-      else if (c <= 0xFF)
+      else if (c <= 0xFF && c == ref_c)
         {
           /* 0 -> FF */
           *font = fontset->Font_1;
-          // generate smallcaps
-          if (variant == 2 &&
-              c <= 0x7A /* z */ && c >= 0x61 /* a */)
-            c -= 32;
           car = (int) c;
           code = 1;
         }
@@ -1726,6 +1740,19 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
         }
       else
         {
+#ifdef _WX
+          if (c != ref_c)
+            {
+              // generate small-caps
+              car = (int)c;
+              pfont = &(fontset->Font_19);
+              encoding = UNICODE_1_1;
+              code = '1';
+              if (size > 6) size -= 2;
+              else size -= 1;
+            }
+          else
+#endif /* _WX */
           if (c >= 0x370 && c < 0x3FF)
             {
               /* Greek characters */
@@ -2091,7 +2118,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                         {
                           lfont = LoadNearestFont (code, fontset->FontFamily,
                                                    fontset->FontHighlight,
-                                                   fontset->FontSize, fontset->FontSize,
+                                                   size, size,
                                                    frame, TRUE, TRUE);
                           if (code == '7' && GreekFontScript == 'G')
                             /* use the font Symbol instead of a greek font */
@@ -2144,7 +2171,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
   LoadFontSet allocate a font set and load the ISO-latin-1 font.
   ----------------------------------------------------------------------*/
 static SpecFont LoadFontSet (char script, int family, int highlight,
-                             int size, TypeUnit unit, int variant, int frame)
+                             int size, TypeUnit unit, int frame)
 {
   int                 index, i;
   SpecFont            prevfontset, fontset;
@@ -2158,11 +2185,6 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
   else
     index = size;
 
-  // reduce the size for smallcaps charaters
-  if (variant == 2)
-    if (index > 6) index -= 2;
-    else index -= 1;
-    
   /* look for the fontsel */
   fontset = FirstFontSel;
   mask = 1 << (frame - 1);
@@ -2228,7 +2250,7 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
   family, the size and variant for a given frame.
   ----------------------------------------------------------------------*/
 SpecFont ThotLoadFont (char script, int family, int highlight, int size,
-                       TypeUnit unit, int variant, int frame)
+                       TypeUnit unit, int frame)
 {
   int          zoom;
 
@@ -2279,7 +2301,7 @@ SpecFont ThotLoadFont (char script, int family, int highlight, int size,
   /* the minimum size is 6 points */
   if (size < 6 && unit == UnPoint)
     size = 6;
-  return LoadFontSet (script, family, highlight, size, unit, variant, frame);
+  return LoadFontSet (script, family, highlight, size, unit, frame);
 }
 
 /*----------------------------------------------------------------------
@@ -2640,6 +2662,8 @@ void ThotFreeFont (int frame)
                     fontset->SFont_16 = NULL;
                   else if (fontset->SFont_17 == TtFonts[i])
                     fontset->SFont_17 = NULL;
+                  else if (fontset->Font_19 == TtFonts[i])
+                    fontset->Font_19 = NULL;
                   fontset = fontset->NextFontSet;
                 }
 #endif /* _GL */

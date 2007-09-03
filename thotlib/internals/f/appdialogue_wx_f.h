@@ -21,8 +21,6 @@ extern void TtaRefreshTopMenuStats ( int doc_id,
 extern void TtaRefreshMenuItemStats ( int doc_id,
                                       Menu_Ctl * ptrmenu,
                                       int menu_item_id );
-extern void TtaRefreshToolbarStats ( int changed_action_id,
-                                     Document doc_id );
 extern void TtaRefreshStatusBarStats ( int changed_action_id,
                                        Document doc_id );
 extern int TtaMakeFrame ( const char * schema_name,
@@ -114,8 +112,6 @@ extern void TtaRefreshTopMenuStats ( int doc_id,
 extern void TtaRefreshMenuItemStats ( int doc_id,
                                         Menu_Ctl * ptrmenu,
                                         int menu_item_id );
-extern void TtaRefreshToolbarStats ( int changed_action_id,
-                                       Document doc_id );
 extern void TtaRefreshStatusBarStats ( int changed_action_id,
                                          Document doc_id );
 extern int TtaMakeFrame ( const char * schema_name,

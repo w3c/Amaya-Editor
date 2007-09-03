@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -153,7 +153,7 @@ void SetUpperCase (char *string)
   ----------------------------------------------------------------------*/
 void SetCapital (char *string)
 {
-  if (isimin (string[0]) != 0)
+  if (isimin (string[0]) != EOS)
     string[0] = toupper (string[0]);
 
 }

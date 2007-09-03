@@ -1230,8 +1230,21 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                             }
                                           if (!done)
                                             {
-                                              TtaRegisterAttributeReplace (newAttr, child, doc);
-                                              TtaSetAttributeText (newAttr, name, child, doc);
+                                              if (name[0] == EOS)
+                                                {
+                                                  Element firstC, lastC;
+                                                  // the attribute is now empty
+                                                  TtaRegisterAttributeDelete (newAttr, child, doc);
+                                                  TtaRemoveAttribute (child, newAttr, doc);
+                                                  DeleteSpanIfNoAttr (child, doc,
+                                                                      &firstC, &lastC);
+                                                  parse = FALSE;
+                                                }
+                                              else
+                                                {
+                                                  TtaRegisterAttributeReplace (newAttr, child, doc);
+                                                  TtaSetAttributeText (newAttr, name, child, doc);
+                                                }
                                             }
                                           if (parse)
                                             // apply CSS properties

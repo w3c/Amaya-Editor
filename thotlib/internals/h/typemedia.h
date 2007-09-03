@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -41,6 +41,7 @@ typedef struct _FontSet {
   ThotFont      Font_16; /* Symbol */
   ThotFont      Font_17; /* Arabic or JIS */
   ThotFont      Font_18; /* Georgian */
+  ThotFont      Font_19; /* Small-caps */
   ThotFont      SFont_1; /* STIX fonts */
   ThotFont      SFont_2;
   ThotFont      SFont_3;

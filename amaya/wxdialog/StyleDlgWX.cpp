@@ -2330,7 +2330,7 @@ void StyleDlgWX::OnOk( wxCommandEvent& event )
       while (Index > 0 && Buffer[Index - 1] != ';')
         Index--;
       Buffer[Index] = EOS;
-      if (Buffer[0] != EOS)
+      //if (Buffer[0] != EOS)
         // not an empty style
         ThotCallback (m_ref, STRING_DATA, Buffer);
       TtaFreeMemory (Buffer);

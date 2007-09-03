@@ -71,7 +71,6 @@ extern SpecFont ThotLoadFont ( char script,
                                int highlight,
                                int size,
                                TypeUnit unit,
-                               int variant,
                                int frame );
 extern void TtaSetFontZoom ( int zoom );
 extern void InitDialogueFonts ( char *name );
@@ -154,7 +153,6 @@ extern SpecFont ThotLoadFont ( char script,
                                  int highlight,
                                  int size,
                                  TypeUnit unit,
-                                 int variant,
                                  int frame );
 extern void TtaSetFontZoom ( int zoom );
 extern void InitDialogueFonts ( char *name );

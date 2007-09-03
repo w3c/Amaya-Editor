@@ -2340,7 +2340,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
     script = 'L';
   /* teste l'unite */
   font = ThotLoadFont (script, pAb->AbFont, FontStyleAndWeight(pAb),
-                       height, unit, pAb->AbFontVariant, frame);
+                       height, unit, frame);
 
   /* Creation */
   pBox = pAb->AbBox;
@@ -4101,17 +4101,17 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                 pBox->BxFont = ThotLoadFont (TtaGetScript (pAb->AbLang),
                                              pAb->AbFont,
                                              FontStyleAndWeight(pAb),
-                                             height, unit, pAb->AbFontVariant, frame);
+                                             height, unit, frame);
               else
                 pBox->BxFont = ThotLoadFont ('L', pAb->AbFont,
                                              FontStyleAndWeight(pAb),
-                                             height, unit, pAb->AbFontVariant, frame);
+                                             height, unit, frame);
             }
           else if (pAb->AbLeafType == LtSymbol)
             pBox->BxFont = ThotLoadFont ('G', pAb->AbFont, FontStyleAndWeight (pAb),
-                                         height, unit, 1, frame);
+                                         height, unit, frame);
           else
-            pBox->BxFont = ThotLoadFont ('L', 1, 0, height, unit, 1, frame);
+            pBox->BxFont = ThotLoadFont ('L', 1, 0, height, unit, frame);
 	  
           /* transmit underline and thickness */
           pBox->BxUnderline = pAb->AbUnderline;
