@@ -67,5 +67,29 @@ wxString AmayaExplorerToolPanel::GetToolPanelName()const
   return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_EXPLORE));
 }
 
+/*----------------------------------------------------------------------
+ *       Class:  AmayaExplorerToolPanel
+ *      Method:  OnDirTreeItemActivate
+ * Description:  
+  -----------------------------------------------------------------------*/
+void AmayaExplorerToolPanel::OnDirTreeItemActivate(wxTreeEvent& event)
+{
+  wxGenericDirCtrl* dirCtrl = XRCCTRL(*this, "wxID_DIRCTRL_EXPLORER", wxGenericDirCtrl);
+  if(!dirCtrl->GetFilePath().IsEmpty())
+  {
+    char buffer[MAX_TXT_LEN];
+    strcpy(buffer, dirCtrl->GetFilePath().mb_str(wxConvUTF8));
+    TtaSetEnvString ("EXPLORER_PATH", buffer, TRUE);
+    OpenNewDocFromArgv(buffer);
+  }
+}
+
+/*----------------------------------------------------------------------
+ *  this is where the event table is declared
+ *  the callbacks are assigned to an event type
+ *----------------------------------------------------------------------*/
+BEGIN_EVENT_TABLE(AmayaExplorerToolPanel, AmayaToolPanel)
+  EVT_TREE_ITEM_ACTIVATED( wxID_ANY, AmayaExplorerToolPanel::OnDirTreeItemActivate)
+END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

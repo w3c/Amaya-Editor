@@ -32,6 +32,9 @@ public:
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_EXPLORER;}
   virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_EXPLORER");}
 
+protected:
+  DECLARE_EVENT_TABLE()
+  void OnDirTreeItemActivate(wxTreeEvent& event);
   
 };
 
