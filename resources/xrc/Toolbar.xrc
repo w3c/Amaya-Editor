@@ -99,7 +99,7 @@
         <flag>wxALIGN_CENTRE_VERTICAL</flag>
       </object>
       <object class="sizeritem">
-        <object class="wxToolBar" name="">
+        <object class="wxToolBar" name="" subclass="AmayaToolBarLogo">
           <object class="tool" name="wxID_TOOL_LOGO">
             <bitmap>../icons/22x22/logo.png</bitmap>
           </object>

@@ -46,11 +46,13 @@ public:
   virtual bool Realize();
 
 protected:
-  AmayaToolBarToolDefHashMap m_map;
+  AmayaToolBarToolDefHashMap* m_map;
   
   void OnTool(wxCommandEvent& event);
   
   void OnUpdate(wxUpdateUIEvent& event);
+private:
+  AmayaToolBarToolDefHashMap  m_mymap;
 };
 
 
@@ -58,9 +60,6 @@ class AmayaToolBarEditing : public AmayaBaseToolBar
 {
   DECLARE_DYNAMIC_CLASS(AmayaToolBarEditing)
 public:
-  
-  static AmayaToolBarEditing s_tb;
-  
   AmayaToolBarEditing();
 };
 
@@ -68,11 +67,17 @@ class AmayaToolBarBrowsing : public AmayaBaseToolBar
 {
   DECLARE_DYNAMIC_CLASS(AmayaToolBarBrowsing)
 public:
-  
-  static AmayaToolBarBrowsing s_tb;
-  
   AmayaToolBarBrowsing();
 };
+
+class AmayaToolBarLogo : public AmayaBaseToolBar
+{
+  DECLARE_DYNAMIC_CLASS(AmayaToolBarLogo)
+public:
+  AmayaToolBarLogo();
+  virtual bool Realize();
+};
+
 
 #endif // __AMAYATOOLBAR_H__
 

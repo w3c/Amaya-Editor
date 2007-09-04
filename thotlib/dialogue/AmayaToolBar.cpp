@@ -52,7 +52,8 @@ END_EVENT_TABLE()
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
 AmayaBaseToolBar::AmayaBaseToolBar():
-wxToolBar()
+wxToolBar(),
+m_map(&m_mymap)
 {
   
 }
@@ -81,7 +82,7 @@ void AmayaBaseToolBar::Add(AmayaToolBarToolDef* def)
         def->actionid = FindMenuAction(def->action);
       else
         def->actionid = -1;
-      m_map[wxXmlResource::GetXRCID(wxString(def->idname, wxConvUTF8))] = def;
+      m_mymap[wxXmlResource::GetXRCID(wxString(def->idname, wxConvUTF8))] = def;
       def++;
     }  
 }
@@ -92,7 +93,7 @@ bool AmayaBaseToolBar::Realize()
 {
   AmayaToolBarToolDefHashMap::iterator it;
   // For each registered tool
-  for( it = m_map.begin(); it != m_map.end(); ++it )
+  for( it = m_map->begin(); it != m_map->end(); ++it )
   {
     // set the tooltip content
     if (it->second && it->second->tooltip_categ!=wxID_ANY &&
@@ -107,7 +108,8 @@ bool AmayaBaseToolBar::Realize()
  -----------------------------------------------------------------------*/
 void AmayaBaseToolBar::OnTool(wxCommandEvent& event)
 {
-  AmayaToolBarToolDef* def = m_map[event.GetId()];
+  AmayaToolBarToolDefHashMap::iterator iter = m_map->find(event.GetId()); 
+  AmayaToolBarToolDef* def = iter!=m_map->end()?iter->second:NULL; 
   if(def && def->action!=NULL && def->action[0]!=0)
     {
       Document doc;
@@ -121,7 +123,8 @@ void AmayaBaseToolBar::OnTool(wxCommandEvent& event)
  -----------------------------------------------------------------------*/
 void AmayaBaseToolBar::OnUpdate(wxUpdateUIEvent& event)
 {
-  AmayaToolBarToolDef* def = m_map[event.GetId()];
+  AmayaToolBarToolDefHashMap::iterator iter = m_map->find(event.GetId()); 
+  AmayaToolBarToolDef* def = iter!=m_map->end()?iter->second:NULL; 
   if(def && def->actionid!=-1)
     {
       Document doc;
@@ -194,5 +197,39 @@ AmayaToolBarBrowsing::AmayaToolBarBrowsing():
 {
   Add(AmayaToolBarBrowsingToolDef);
 }
+
+
+//
+//
+// AmayaToolBarLogo
+//
+//
+static
+AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaToolBarLogoToolDef)
+  AMAYA_TOOLBAR_DEF("wxID_TOOL_LOGO",    "HelpLocal", 0, 0)
+AMAYA_END_TOOLBAR_DEF_TABLE()
+
+
+IMPLEMENT_DYNAMIC_CLASS(AmayaToolBarLogo, AmayaBaseToolBar)
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+AmayaToolBarLogo::AmayaToolBarLogo():
+  AmayaBaseToolBar()
+{
+  Add(AmayaToolBarLogoToolDef);
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+bool AmayaToolBarLogo::Realize()
+{
+  if(!AmayaBaseToolBar::Realize())
+    return false;
+  SetToolShortHelp(wxXmlResource::GetXRCID(wxT("wxID_TOOL_LOGO")), 
+      TtaConvMessageToWX(TtaGetAppName())+_T(" ")+TtaConvMessageToWX(TtaGetAppVersion()));
+  return true;
+}
+
 
 #endif /* _WX */
