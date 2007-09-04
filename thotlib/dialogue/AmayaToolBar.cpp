@@ -82,7 +82,8 @@ void AmayaBaseToolBar::Add(AmayaToolBarToolDef* def)
         def->actionid = FindMenuAction(def->action);
       else
         def->actionid = -1;
-      m_mymap[wxXmlResource::GetXRCID(wxString(def->idname, wxConvUTF8))] = def;
+      m_map->insert(AmayaToolBarToolDefHashMap::value_type(
+          wxXmlResource::GetXRCID(wxString(def->idname, wxConvUTF8)), def));
       def++;
     }  
 }

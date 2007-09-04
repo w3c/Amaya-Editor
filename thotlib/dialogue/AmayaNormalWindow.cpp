@@ -45,6 +45,7 @@
 
 #include "AmayaNormalWindow.h"
 #include "AmayaPanel.h"
+#include "AmayaMathMLPanel.h"
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
@@ -163,6 +164,7 @@ void AmayaNormalWindow::Unused()
 {
   new AmayaToolBarEditing;
   new AmayaToolBarBrowsing;
+  new AmayaMathMLToolBar;
 }
 
 /*----------------------------------------------------------------------

@@ -5,6 +5,7 @@
 
 #include "wx/wx.h"
 #include "AmayaPanel.h"
+#include "AmayaToolBar.h"
 
 class AmayaNormalWindow;
 
@@ -36,15 +37,18 @@ public:
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_MATHML;}
   virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_MATHML");}
-
-protected:
- virtual void SendDataToPanel( AmayaParams& params );
-
-protected:
- DECLARE_EVENT_TABLE()
- void OnButton( wxCommandEvent& event );  
 };
 
+
+class AmayaMathMLToolBar : public AmayaBaseToolBar
+{
+  DECLARE_DYNAMIC_CLASS(AmayaMathMLToolBar)
+public:
+  AmayaMathMLToolBar();
+private:
+  static AmayaToolBarToolDefHashMap s_mymap;
+  static bool s_isinit;
+};
 
 #endif // __AMAYAMATHMLPANEL_H__
 
