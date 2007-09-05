@@ -5,14 +5,23 @@
 
 #include "wx/wx.h"
 #include "wx/notebook.h"
+#include "wx/choicebk.h"
+#include "wx/toolbook.h"
 #include "wx/imaglist.h"
 #include "AmayaPanel.h"
 
 
 class AmayaNormalWindow;
 
-WX_DECLARE_HASH_MAP( int, wxString, wxIntegerHash, wxIntegerEqual, MathMLEntityHash );
-WX_DECLARE_HASH_MAP( int, int, wxIntegerHash, wxIntegerEqual, MathMLWxEntityHash );
+typedef struct
+{
+  int unicode;
+  const char* name;
+}AmayaSpeChar;
+
+WX_DECLARE_HASH_MAP( int, AmayaSpeChar*, wxIntegerHash, wxIntegerEqual, AmayaSpeCharMap );
+
+
 
 class AmayaSpeCharToolPanel :  public AmayaToolPanel
 {
@@ -40,12 +49,10 @@ protected:
   void OnTool(wxCommandEvent& event);
   
   DECLARE_EVENT_TABLE()
-
-  MathMLWxEntityHash m_hash;
-  wxNotebook *m_pNotebook;
-  wxImageList m_imagelist;
   
-  static MathMLEntityHash s_MathMLEntityHash;
+  AmayaSpeCharMap m_hash;
+  wxChoicebook *m_pBook;
+  wxImageList m_imagelist;
 };
 
 #endif // __AMAYASPECHARPANEL_H__
