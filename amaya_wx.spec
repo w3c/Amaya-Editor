@@ -86,7 +86,7 @@ autoconf
 mkdir linux
 cd linux
 export HOME=`pwd`
-../configure --with-wx --prefix=/usr/share --exec=/usr/share 
+../configure --prefix=/usr/share --exec=/usr/share  --datadir=/usr/share
 #cp Options.orig Options
 #make all
 make
