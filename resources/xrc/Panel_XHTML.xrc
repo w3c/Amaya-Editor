@@ -5,9 +5,6 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_XHTML_1" subclass="AmayaBaseToolBar">
-          <object class="tool" name="wxID_PANEL_XHTML_DIV">
-            <bitmap>../icons/16x16/XHTML_Div.png</bitmap>
-          </object>
           <object class="tool" name="wxID_PANEL_XHTML_H1">
             <bitmap>../icons/16x16/XHTML_H1.png</bitmap>
           </object>
@@ -19,6 +16,9 @@
           </object>
           <object class="tool" name="wxID_PANEL_XHTML_TABLE">
             <bitmap>../icons/16x16/XHTML_Table.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_DIV">
+            <bitmap>../icons/16x16/XHTML_Div.png</bitmap>
           </object>
           <object class="tool" name="wxID_PANEL_XHTML_TARGET">
             <bitmap>../icons/16x16/XHTML_Target.png</bitmap>
