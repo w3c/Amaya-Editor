@@ -252,7 +252,7 @@ and must be removed at the end of the debug */
 #define MAX_BYTES 6
 
 /* we encourage using "long" to store pointer values, never use "int" ! */
-#ifndef __intptr_t_defined
+#if !defined(__intptr_t_defined) && !defined(_INTPTR_T_DEFINED)
 #define __intptr_t_defined
 typedef           long   intptr_t;
 #endif

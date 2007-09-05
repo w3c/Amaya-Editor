@@ -143,10 +143,6 @@ SOURCE=..\..\thotlib\dialogue\AmayaFileDropTarget.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\AmayaFloatingPanel.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\AmayaFrame.cpp
 # End Source File
 # Begin Source File
@@ -220,14 +216,6 @@ SOURCE=..\..\thotlib\dialogue\AmayaStatsThread.cpp
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\AmayaStatusBar.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\AmayaSubPanel.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\AmayaSubPanelManager.cpp
 # End Source File
 # Begin Source File
 

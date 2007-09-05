@@ -8,7 +8,7 @@
 ;General
 
   ;Name and file
-  !define VERSION "9.55"
+  !define VERSION "9.56"
   Name "Amaya"
   OutFile "amaya-WinXP-${VERSION}.exe"
   
@@ -157,35 +157,9 @@ Section "Amaya" SecAmaya
      Abort "WinME not supported"
  
    lbl_winnt:
- 
-   StrCpy $R1 $R0 1
- 
-   StrCmp $R1 '3' lbl_winnt_x
-   StrCmp $R1 '4' lbl_winnt_x
- 
-   StrCpy $R1 $R0 3
- 
-   StrCmp $R1 '5.0' lbl_winnt_2000
-   StrCmp $R1 '5.1' lbl_winnt_XP
-   StrCmp $R1 '5.2' lbl_winnt_2003
-    Abort "Only WinXP/2k/NT are supported"
- 
-   lbl_winnt_x:
-     StrCpy $R0 "NT $R0" 6
    Goto lbl_done
  
-   lbl_winnt_2000:
-     Strcpy $R0 '2000'
-   Goto lbl_done
- 
-   lbl_winnt_XP:
-     Strcpy $R0 'XP'
-   Goto lbl_done
- 
-   lbl_winnt_2003:
-     Strcpy $R0 '2003'
-   Goto lbl_done
- 
+
    lbl_done:
   ;XXXXXXXXXXXXXXXXXXXXXXXXXX
 

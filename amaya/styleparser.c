@@ -3918,9 +3918,9 @@ static char *ParseCSSMaxHeight (Element element, PSchema tsch,
     CSSParseError ("height value", ptr, cssRule);
   else if (DoDialog)
     DisplayStyleValue ("max-height", ptr, cssRule);
-  else if (DoApply)
-    /* install the new presentation */
-    /*TtaSetStylePresentation (PRHeight, element, tsch, context, val)*/;
+  /*else if (DoApply)
+    install the new presentation
+    TtaSetStylePresentation (PRHeight, element, tsch, context, val)*/;
   return (cssRule);
 }
 
@@ -3954,7 +3954,7 @@ static char *ParseCSSMinHeight (Element element, PSchema tsch,
     CSSParseError ("height value", ptr, cssRule);
   else if (DoDialog)
     DisplayStyleValue ("min-height", ptr, cssRule);
-  else if (DoApply)
+  /*else if (DoApply)*/
     /* install the new presentation */
     /*TtaSetStylePresentation (PRHeight, element, tsch, context, val)*/;
   return (cssRule);
