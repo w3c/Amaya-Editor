@@ -116,8 +116,8 @@ void AmayaToolPanelBar::Initialize()
     sz = m_scwin->GetSizer();
 
   
-  AddPanel(new AmayaXHTMLToolPanel);
   AddPanel(new AmayaExplorerToolPanel);
+  AddPanel(new AmayaXHTMLToolPanel);
   AddPanel(new AmayaAttributeToolPanel);
   AddPanel(new AmayaApplyClassToolPanel);
   AddPanel(new AmayaMathMLToolPanel);
