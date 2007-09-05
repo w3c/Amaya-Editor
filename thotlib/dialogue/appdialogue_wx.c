@@ -1678,7 +1678,6 @@ void TtaSwitchPanelButton (Document doc, View view, int panel_type,
       isinit = true;
     }
   
-  int frame_id = -1;
   if (doc == 0 && view == 0)
     TtaError (ERR_invalid_parameter);
   else

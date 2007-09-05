@@ -2,6 +2,7 @@
 
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
+#include "wx/utils.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -26,345 +27,674 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "paneltypes_wx.h"
+#include "registry_wx.h"
 
 #include "AmayaSpeCharPanel.h"
 #include "AmayaNormalWindow.h"
 #include "displayview_f.h"
-#include "mathml_filtres.h"
 
 
-//
-//
-// AmayaSpeCharToolPanel
-//
-//
 
-typedef struct _XmlEntity
+/**
+ * Defines entries for SpecChar panel.
+ */
+typedef struct
 {
-  char         *charName;      
-  int           charCode;      
-} XmlEntity;
+  int msg; // Message ident in LIB
+  const char* icon_path; // Path to icon
+  int* table; // address of spechar table
+}SpecialCharEntry;
 
+/* Pour retrouver les carateres correspondants aux nombres hexadecimaux
+   il suffit d'aller a la page web du site unicode :
+   http://www.unicode.org/Public/UNIDATA/UnicodeData.txt*/
 
-MathMLEntityHash AmayaSpeCharToolPanel::m_MathMLEntityHash;
-int * AmayaSpeCharToolPanel::m_pActiveFiltre = NULL;
+extern int filtre_greek[];
+extern int filtre_greek_maj[];
+extern int filtre_maths[];
+extern int filtre_operateurs[];
+extern int filtre_relations_binaires[];
+extern int filtre_relations_binaires_negation[];
+extern int filtre_divers[];
+extern int filtre_fleches[];
 
+extern SpecialCharEntry special_char_entries[]; 
+
+//
+//
+// AmayaSpeCharToolPanelNew
+//
+//
+
+#define MAX_TOOL_PER_LINE 8
+
+MathMLEntityHash AmayaSpeCharToolPanel::s_MathMLEntityHash;
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaSpeCharToolPanel, AmayaToolPanel)
 
+BEGIN_EVENT_TABLE(AmayaSpeCharToolPanel, AmayaToolPanel)
+  EVT_TOOL(wxID_ANY, AmayaSpeCharToolPanel::OnTool)
+END_EVENT_TABLE()
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaSpeCharToolPanel
+ *      Method:  Create
+-----------------------------------------------------------------------*/
 AmayaSpeCharToolPanel::AmayaSpeCharToolPanel():
-  AmayaToolPanel()
+  AmayaToolPanel(),
+  m_pNotebook(NULL),
+  m_imagelist(16,16)
 {
 }
 
-AmayaSpeCharToolPanel::~AmayaSpeCharToolPanel()
-{
-}
-
+/*----------------------------------------------------------------------
+ *       Class:  AmayaSpeCharToolPanel
+ *      Method:  Create
+-----------------------------------------------------------------------*/
 bool AmayaSpeCharToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
           const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
-  if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_SPECHAR")))
+  if(!wxPanel::Create(parent, id, pos, size, style, name))
     return false;
-  
-  m_pList = XRCCTRL(*this,"wxID_PANEL_MATH_LIST",wxComboBox);
-
-  m_OffColour = XRCCTRL(*this, "wxID_PANEL_MATH_F1", wxBitmapButton)->GetBackgroundColour();
-  m_OnColour  = wxColour(250, 200, 200);
-
-  RefreshButtonState();
-  
-  XRCCTRL(*this,"wxID_PANEL_MATH_INSERT",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_INSERT)));
-  
-  XRCCTRL(*this,"wxID_PANEL_MATH_F1",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_GREEK_ALPHABET)));
-  XRCCTRL(*this,"wxID_PANEL_MATH_F2",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_GREEK_CAP)));
-  XRCCTRL(*this,"wxID_PANEL_MATH_F3",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_MATHML)));
-  XRCCTRL(*this,"wxID_PANEL_MATH_F4",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_OPERATOR)));
-  XRCCTRL(*this,"wxID_PANEL_MATH_F5",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BINARY_REL)));
-  XRCCTRL(*this,"wxID_PANEL_MATH_F6",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BINARY_REL_NEG)));
-  XRCCTRL(*this,"wxID_PANEL_MATH_F7",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_MISC)));
-  XRCCTRL(*this,"wxID_PANEL_MATH_F8",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ARROW)));
-  
+  Initialize();
   return true;
 }
 
+/*----------------------------------------------------------------------
+ *       Class:  AmayaSpeCharToolPanel
+ *      Method:  GetToolPanelName
+-----------------------------------------------------------------------*/
 wxString AmayaSpeCharToolPanel::GetToolPanelName()const
 {
   return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SPECHAR));
 }
 
-
 /*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  OnButtonFiltre1
- * Description:  this method is called when the user click on a tool
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::OnButtonFiltre1( wxCommandEvent& event )
+ *       Class:  AmayaSpeCharToolPanel
+ *      Method:  GetToolPanelName
+-----------------------------------------------------------------------*/
+void AmayaSpeCharToolPanel::Initialize()
 {
-  m_pActiveFiltre = filtre_greek;
-  DoFilter( filtre_greek );
-
-  AmayaParams p;
-  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
-  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  OnButtonFiltre2
- * Description:  this method is called when the user click on a tool
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::OnButtonFiltre2( wxCommandEvent& event )
-{
-  m_pActiveFiltre = filtre_greek_maj;
-  DoFilter( filtre_greek_maj );
-
-  AmayaParams p;
-  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
-  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  OnButtonFiltre3
- * Description:  this method is called when the user click on a tool
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::OnButtonFiltre3( wxCommandEvent& event )
-{
-  m_pActiveFiltre = filtre_maths;
-  DoFilter( filtre_maths );
-
-  AmayaParams p;
-  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
-  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  OnButtonFiltre4
- * Description:  this method is called when the user click on a tool
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::OnButtonFiltre4( wxCommandEvent& event )
-{
-  m_pActiveFiltre = filtre_operateurs;
-  DoFilter( filtre_operateurs );
-
-  AmayaParams p;
-  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
-  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  OnButtonFiltre5
- * Description:  this method is called when the user click on a tool
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::OnButtonFiltre5( wxCommandEvent& event )
-{
-  m_pActiveFiltre = filtre_relations_binaires;
-  DoFilter( filtre_relations_binaires );
-
-  AmayaParams p;
-  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
-  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  OnButtonFiltre6
- * Description:  this method is called when the user click on a tool
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::OnButtonFiltre6( wxCommandEvent& event )
-{
-  m_pActiveFiltre = filtre_relations_binaires_negation;
-  DoFilter( filtre_relations_binaires_negation );
-
-  AmayaParams p;
-  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
-  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  OnButtonFiltre7
- * Description:  this method is called when the user click on a tool
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::OnButtonFiltre7( wxCommandEvent& event )
-{
-  m_pActiveFiltre = filtre_divers;
-  DoFilter( filtre_divers );
-  
-  AmayaParams p;
-  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
-  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  OnButtonFiltre8
- * Description:  this method is called when the user click on a tool
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::OnButtonFiltre8( wxCommandEvent& event )
-{
-  m_pActiveFiltre = filtre_fleches;
-  DoFilter( filtre_fleches );
-  
-  AmayaParams p;
-  p.param1 = (int)AmayaSpeCharToolPanel::wxSPECHAR_ACTION_REFRESH;
-  TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  DoFilter
- * Description:  this method is called to refresh the entity list with a given filter
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::DoFilter( int * filtre )
-{
-  if (!filtre)
-    return;
-
-  m_pList->Clear();
-  int element_id = 0;
-  while ( filtre[element_id] != -1 )
+  if(!m_pNotebook)
     {
-      wxString & entity_name = m_MathMLEntityHash[filtre[element_id]];
-      if (entity_name.IsEmpty())
-        m_pList->Append( wxString((wxChar)filtre[element_id]) );
-      else
-        m_pList->Append( entity_name
-                         + _T(" : ")
-                         + wxString((wxChar)filtre[element_id]));
-      element_id++;
+      
+      wxSizer* sz = new wxBoxSizer(wxVERTICAL);
+      m_pNotebook = new wxNotebook(this, wxID_ANY);
+      sz->Add(m_pNotebook, 1, wxEXPAND);
+      SetSizer(sz);
+      
+      m_pNotebook->SetImageList(&m_imagelist);
+      
+      SpecialCharEntry *entry = special_char_entries;
+      while(entry->table!=NULL)
+        {
+          int *car = entry->table;
+          wxBitmap bmp;
+          bmp.LoadFile(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, entry->icon_path), wxBITMAP_TYPE_ANY);
+          int img = m_imagelist.Add(bmp);
+          
+          wxPanel*   panel = new wxPanel(m_pNotebook, wxID_ANY);
+          wxToolBar* tb = NULL;
+          m_pNotebook->AddPage(panel, wxT("")/*TtaConvMessageToWX(TtaGetMessage(LIB,entry->msg))*/, false, img);
+          sz = new wxBoxSizer(wxVERTICAL);
+          int line = 0;
+          while(*car!=-1)
+            {
+              if(++line>MAX_TOOL_PER_LINE || !tb)
+                {
+                  if(tb)
+                    tb->Realize();
+                  tb = new wxToolBar(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                      wxTB_HORIZONTAL|wxNO_BORDER|wxTB_TEXT|wxTB_NOICONS|wxTB_NODIVIDER);
+                  tb->SetToolBitmapSize(wxSize(16,16));
+                  sz->Add(tb, 0);
+                  line = 0;
+                }
+              int toolid = wxNewId();
+              m_hash[toolid] = *car;
+              wxString str = wxChar(*car);
+              tb->AddTool(toolid, str, wxNullBitmap);
+              car++;
+            }
+          entry++;
+          panel->SetSizer(sz);
+        }
     }
-  m_pList->SetSelection(0);
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  RefreshButtonState
- * Description:  this method is called to refresh the button colors
+ *       Class:  AmayaSpeCharToolPanel
+ *      Method:  OnTool
  -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::RefreshButtonState()
-{
-  if (m_pActiveFiltre == filtre_greek)
-    XRCCTRL(*this, "wxID_PANEL_MATH_F1", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*this, "wxID_PANEL_MATH_F1", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  if (m_pActiveFiltre == filtre_greek_maj)
-    XRCCTRL(*this, "wxID_PANEL_MATH_F2", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*this, "wxID_PANEL_MATH_F2", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  if (m_pActiveFiltre == filtre_maths)
-    XRCCTRL(*this, "wxID_PANEL_MATH_F3", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*this, "wxID_PANEL_MATH_F3", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  if (m_pActiveFiltre == filtre_operateurs)
-    XRCCTRL(*this, "wxID_PANEL_MATH_F4", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*this, "wxID_PANEL_MATH_F4", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  if (m_pActiveFiltre == filtre_relations_binaires)
-    XRCCTRL(*this, "wxID_PANEL_MATH_F5", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*this, "wxID_PANEL_MATH_F5", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  if (m_pActiveFiltre == filtre_relations_binaires_negation)
-    XRCCTRL(*this, "wxID_PANEL_MATH_F6", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*this, "wxID_PANEL_MATH_F6", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  if (m_pActiveFiltre == filtre_divers)
-    XRCCTRL(*this, "wxID_PANEL_MATH_F7", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*this, "wxID_PANEL_MATH_F7", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  if (m_pActiveFiltre == filtre_fleches )
-    XRCCTRL(*this, "wxID_PANEL_MATH_F8", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*this, "wxID_PANEL_MATH_F8", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-}
-
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPanel
- *      Method:  OnButtonInsert
- * Description:  this method is called wants to insert a char
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::OnButtonInsert( wxCommandEvent& event )
+void AmayaSpeCharToolPanel::OnTool(wxCommandEvent& event)
 {
   Document doc;
   int      view;
 
-  if (m_pList->GetSelection() != wxNOT_FOUND)
-    {
-      int charactere = m_pActiveFiltre[m_pList->GetSelection()];
-      //InsertChar (TtaGiveActiveFrame(), charactere, -1);
-      FrameToView (TtaGiveActiveFrame(), &doc, &view);
-      TtcInsertChar (doc, view, charactere);
-      CloseTextInsertion ();
-      TtaRedirectFocus();
-    }
+  int charactere = m_hash[event.GetId()];
+  //InsertChar (TtaGiveActiveFrame(), charactere, -1);
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtcInsertChar (doc, view, charactere);
+  CloseTextInsertion ();
+  TtaRedirectFocus();
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaSpeCharToolPanel
- *      Method:  SendDataToPanel
- * Description:  refresh the button widgets of the frame's panel
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::SendDataToPanel( AmayaParams& p )
+
+//
+//
+// Special character lists.
+//
+//
+
+/* Pour retrouver les carateres correspondants aux nombres hexadecimaux
+   il suffit d'aller a la page web du site unicode :
+   http://www.unicode.org/Public/UNIDATA/UnicodeData.txt*/
+
+int filtre_greek[] =
+  {
+    0x3b1, /* GREEK SMALL LETTER ALPHA */
+    0x3b2, /* GREEK SMALL LETTER BETA */
+    0x3b3, /* GREEK SMALL LETTER GAMMA */
+    0x3b4, /* GREEK SMALL LETTER DELTA */
+    0x3b5, /* GREEK SMALL LETTER EPSILON */
+    0x3b6, /* GREEK SMALL LETTER ZETA */
+    0x3b7, /* GREEK SMALL LETTER ETA */
+    0x3b8, /* GREEK SMALL LETTER THETA */
+    0x3b9, /* GREEK SMALL LETTER IOTA */
+    0x3ba, /* GREEK SMALL LETTER KAPPA */
+    0x3bb, /* GREEK SMALL LETTER LAMDA */
+    0x3bc, /* GREEK SMALL LETTER MU */
+    0x3bd, /* GREEK SMALL LETTER NU */
+    0x3be, /* GREEK SMALL LETTER XI */
+    0x3bf, /* GREEK SMALL LETTER OMICRON */
+    0x3c0, /* GREEK SMALL LETTER PI */
+    0x3d6, /* GREEK SMALL LETTER RHO */
+    0x3c1, /* GREEK SMALL LETTER RHO */
+    0x3c2, /* GREEK SMALL LETTER FINAL SIGMA */
+    0x3c3, /* GREEK SMALL LETTER SIGMA */
+    0x3c4, /* GREEK SMALL LETTER TAU */
+    0x3c5, /* GREEK SMALL LETTER UPSILON */
+    0x3c6, /* GREEK SMALL LETTER PHI */
+    0x3c7, /* GREEK SMALL LETTER CHI */
+    0x3c8, /* GREEK SMALL LETTER PSI */
+    0x3c9, /* GREEK SMALL LETTER OMEGA */
+    0x3d5, /* GREEK PHI SYMBOL */
+    0x3f0, /* GREEK KAPPA SYMBOL */
+    0x3f1, /* GREEK RHO SYMBOL */
+    -1
+  };
+
+int filtre_greek_maj[] =
+  {
+    0x391, /* beta */
+    0x392, /* beta */
+    0x3a7, /* beta */
+    0x394, /* beta */
+    0x395, /* beta */
+    0x3a6, /* beta */
+    0x393, /* beta */
+    0x397, /* beta */
+    0x399, /* beta */
+    0x3d1, /* beta */
+    0x39a, /* beta */
+    0x39b, /* beta */
+    0x39c, /* beta */
+    0x39d, /* beta */
+    0x39f, /* beta */
+    0x3a0, /* beta */
+    0x398, /* beta */
+    0x3a1, /* beta */
+    0x3a3, /* beta */
+    0x3a4, /* beta */
+    0x3a5, /* beta */
+    0x3c2, /* beta */
+    0x3a9, /* beta */
+    0x39e, /* beta */
+    0x3a8, /* beta */
+    0x396, /* beta */
+    0x3dc, /* beta */
+    -1
+  };
+
+int filtre_maths[] =
+  {
+    0x221d,/*  */
+    0x221e,/*  */
+    0x2113,/*  */
+    0x210E,/*  */
+    0x210F,/*  */
+    0x2118,/*  */
+    0x2200,/*  */
+    0x2203,/*  */
+    0x2204,/*  */
+    0x2036,/*  */
+    0x2037,/*  */
+    0x2571,/*  */
+    0x2572,/*  */
+    0x22A4,/*  */
+    0x22a5,/*  */
+    0x019B,/*  */
+    0x00F0,/*  */
+    0x2220,/*  */
+    0x2221,/*  */
+    0x2222,/*  */
+    0x2112,/*  */
+    0x2131,/*  */
+    0x2201,/*  */
+    0x2132,/*  */
+    0x2141,/*  */
+    0x2225,/*  */
+    0x2226,/*  */
+    0x2209,/*  */
+    0x2208,/*  */
+    0x220A,/*  */
+    0x220d,/*  */
+    0x220B,/*  */
+    0x220C,/*  */
+    0x2102,/*  */
+    0x2115,/*  */
+    0x2119,/*  */
+    0x211A,/*  */
+    0x211D,/*  */
+    0x2124,/*  */
+    0x2103,/*  */
+    0x2109,/*  */
+    0x210B,/*  */
+    0x2136,/*  */
+    0x212B,/*  */
+    0x212F,/*  */
+    0x212E,/*  */
+    0x00B5,/*  */
+    0x2127,/*  */
+    0x2129,/*  */
+    0x212A,/*  */
+    0x2223,/*  */
+    0x220f,/*  */
+    -1
+  };
+
+int filtre_operateurs[] =
+  {
+    0x2207,
+    0x2202,
+    0x221a,
+    0x00B1, /* � */
+    0x2213,
+    0x2208,
+    0x2209,
+    0x2217,
+    0x002B, /* + */
+    0x2212,
+    0x002E, /* . */
+    0x2044,
+    0x00F7, /* � */
+    0x00D7, /* multiplication*/
+    0x2022,
+    0x2229,
+    0x222a,
+    0x2218,
+    0x2293,
+    0x2294,
+    0x2216,
+    0x2295,
+    0x2297,
+    0x2205,
+    0x2296,
+    0x2299,
+    0x229B,
+    0x2298,
+    0x229A,
+    0x2227,
+    0x2228,
+    0x22B2,
+    0x22B3,
+    0x22BB,
+    0x22BD,
+    0x2240,
+    0x2306,
+    0x22B4,
+    0x22B5,
+    0x229E,
+    0x229F,
+    0x22A0,
+    0x22A1,
+    0x22D3,
+    0x22D2,
+    0x22C9,
+    0x22CA,
+    0x22CE,
+    0x22CF,
+    0x22CB,
+    0x22CC,
+    0x2214,
+    0x22BA,
+    0x22C7,
+    0x00B7,
+    0x222b,
+    0x222C,
+    0x222D,
+    0x222E,
+    0x222F,
+    0x2230,
+    0x2231,
+    0x2232,
+    0x2233,
+    0x2211, /* sum */
+  8719, /* prod */
+    -1
+  };
+
+int filtre_relations_binaires[] =
+  {
+    
+    0x2264,
+    0x2265,
+    0x003C, /* < */
+    0x003E, /* > */
+    0x003D, /* = */
+    0x2208,
+    0x2245,
+    0x2248,
+    0x223c,
+    0x2261,
+    0x224A,
+    0x2243,
+    0x227A,
+    0x227C,
+    0x227B,
+    0x227D,
+    0x226A,
+    0x226B,
+    0x2282,
+    0x2286,
+    0x2283,
+    0x2287,
+    0x228F,
+    0x2291,
+    0x2290,
+    0x2292,
+    0x22A2,
+    0x224D,
+    0x22A3,
+    0x2225,
+    0x2223,
+    0x22a5,
+    0x22C8,
+    0x22A8,
+    0x2250,
+    0x22A9,
+    0x22AA,
+    0x22A7,
+    0x22AB,
+    0x2257,
+    0x227E,
+    0x227E,
+    0x2272,
+    0x2273,
+    0x227C,
+    0x227D,
+    0x22DE,
+    0x22DF,
+    0x2266,
+    0x2267,
+    0x2276,
+    0x2277,
+    0x2252,
+    0x2253,
+    0x226C,
+    0x2256,
+    0x22D0,
+    0x22D1,
+    0x224F,
+    0x224E,
+    0x22D8,
+    0x22D9,
+    0x223E,
+    0x22D4,
+    0x2242,
+    0x2243,
+    0x22D6,
+    0x22D7,
+    0x22DA,
+    0x22DB,
+    -1
+  };
+
+int filtre_relations_binaires_negation[] =
+  {
+    0x2209,
+    0x2260,
+    0x2268,
+    0x2269,
+    0x2270,
+    0x2271,
+    0x226E,
+    0x226F,
+    0x2280,
+    0x2281,
+    0x2268,
+    0x2269,
+    0x2270,
+    0x2271,
+    0x22E8,
+    0x22E9,
+    0x2268,
+    0x2269,
+    0x2241,
+    0x2247,
+    0x228A,
+    0x228B,
+    0x2288,
+    0x2289,
+    0x2226,
+    0x2224,
+    0x22AC,
+    0x22AD,
+    0x22AE,
+    0x22AF,
+    0x22EA,
+    0x22EB,
+    0x22EC,
+    0x22ED,
+    0x22E2,
+    0x22E3,
+    0x22E4,
+    0x22E5,
+    -1
+  };
+
+int filtre_divers[] =
+  {
+    
+    0x2605,
+    0x2606,
+    0x24C8,
+    0x24C7,
+    0x2460,
+    0x0025, /* % */
+    0x003F, /* ? */
+    0x0021, /* ! */
+    0x2663,
+    0x2666,
+    0x2665,
+    0x2660,
+    0x2122,
+    0x25ca,
+    0x25A0,
+    0x00B0, /* � */
+    0x25A1,
+    0x25B2,
+    0x25B3,
+    0x25BC,
+    0x25BD,
+    0x25C6,
+    0x25C7,
+    0x25CB,
+    0x25CF,
+    0x25B0,
+    0x25B1,
+    0x2720,
+    0x2713,
+    0x2717,
+    0x271D,
+    0x2702,
+    0x2710,
+    0x20AC,
+    0x00A2,
+    0x00A3,
+    0x00A5,
+    0x0024,
+    0x0040,
+    0x00A4,
+    0x00A7,
+    0x00A9,
+    0x00AE,
+    0x00A6,
+    0x2014,
+    0x21b5,
+    0x2236,
+    0x003B, /* ; */
+    0x002C, /* , */
+    0x2234,
+    0x0027,
+    0x0022,
+    -1
+  };
+
+  int filtre_fleches[] =
+  {
+    
+    0x2190,
+    0x2191,
+    0x2192,
+    0x2193,
+    0x2194,
+    0x2195,
+    0x2196,
+    0x2197,
+    0x2198,
+    0x2199,
+    0x219A,
+    0x219B,
+    0x219C,
+    0x219D,
+    0x219E,
+    0x219F,
+    0x21A0,
+    0x21A1,
+    0x21A2,
+    0x21A3,
+    0x21A4,
+    0x21A5,
+    0x21A6,
+    0x21A7,
+    0x21A8,
+    0x21A9,
+    0x21AA,
+    0x21AB,
+    0x21AC,
+    0x21AD,
+    0x21AE,
+    0x21AF,
+    0x21B0,
+    0x21B1,
+    0x21B2,
+    0x21B3,
+    0x21B4,
+    0x21B5,
+    0x21B6,
+    0x21B7,
+    0x21B8,
+    0x21B9,
+    0x21BA,
+    0x21BB,
+    0x21BC,
+    0x21BD,
+    0x21BE,
+    0x21BF,
+    0x21C0,
+    0x21C1,
+    0x21C2,
+    0x21C3,
+    0x21C4,
+    0x21C5,
+    0x21C6,
+    0x21C7,
+    0x21C8,
+    0x21C9,
+    0x21CA,
+    0x21CB,
+    0x21CC,
+    0x21CD,
+    0x21CE,
+    0x21CF,
+    0x21D0,
+    0x21D1,
+    0x21D2,
+    0x21D3,
+    0x21D4,
+    0x21D5,
+    0x21D6,
+    0x21D7,
+    0x21D8,
+    0x21D9,
+    0x21DA,
+    0x21DB,
+    0x21DC,
+    0x21DD,
+    0x21DE,
+    0x21DF,
+    0x21E0,
+    0x21E1,
+    0x21E2,
+    0x21E3,
+    0x21E4,
+    0x21E5,
+    0x21E6,
+    0x21E7,
+    0x21E8,
+    0x21E9,
+    0x21EA,
+    0x21EB,
+    0x21EC,
+    0x21ED,
+    0x21EE,
+    0x21EF,
+    0x21F0,
+    0x21F1,
+    0x21F2,
+    0x21F3,
+    0x21F4,
+    0x21F5,
+    0x21F6,
+    0x21F7,
+    0x21F8,
+    0x21F9,
+    0x21FA,
+    0x21FB,
+    0x21FC,
+    0x21FD,
+    0x21FE,
+    0x21FF,
+    -1
+  };
+
+  
+SpecialCharEntry special_char_entries[]=
 {
-  int action = (int)p.param1;
-  if (action == wxSPECHAR_ACTION_INIT)
-    {
-      XmlEntity *MathEntityTable = (XmlEntity *)p.param2;
-      
-      // initialize entity hashtable
-      int entity_id = 0;
-      while (MathEntityTable[entity_id].charCode != -1)
-        {
-          m_MathMLEntityHash[MathEntityTable[entity_id].charCode] = TtaConvMessageToWX(MathEntityTable[entity_id].charName);
-          entity_id++;
-        }
-
-      // now select the default filter
-      if (!m_pActiveFiltre)
-        {
-          m_pActiveFiltre = filtre_greek;
-          DoFilter( m_pActiveFiltre );
-          RefreshButtonState();
-        }
-    }
-  else if (action == wxSPECHAR_ACTION_REFRESH)
-    {
-      DoFilter( m_pActiveFiltre );
-      RefreshButtonState();
-    }
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaSpeCharToolPanel
- *      Method:  DoUpdate
- * Description:  force a refresh when the user expand or detach this panel
- -----------------------------------------------------------------------*/
-void AmayaSpeCharToolPanel::DoUpdate()
-{
-  AmayaToolPanel::DoUpdate();
-  DoFilter( m_pActiveFiltre );
-}
-
-
-/*----------------------------------------------------------------------
- *  this is where the event table is declared
- *  the callbacks are assigned to an event type
- *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaSpeCharToolPanel, AmayaToolPanel)
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F1"), AmayaSpeCharToolPanel::OnButtonFiltre1 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F2"), AmayaSpeCharToolPanel::OnButtonFiltre2 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F3"), AmayaSpeCharToolPanel::OnButtonFiltre3 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F4"), AmayaSpeCharToolPanel::OnButtonFiltre4 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F5"), AmayaSpeCharToolPanel::OnButtonFiltre5 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F6"), AmayaSpeCharToolPanel::OnButtonFiltre6 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F7"), AmayaSpeCharToolPanel::OnButtonFiltre7 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_F8"), AmayaSpeCharToolPanel::OnButtonFiltre8 )
-  EVT_BUTTON( XRCID("wxID_PANEL_MATH_INSERT"), AmayaSpeCharToolPanel::OnButtonInsert ) 
-END_EVENT_TABLE()
+    {TMSG_GREEK_ALPHABET, "MATHML_F_greek.png", filtre_greek},
+    {TMSG_GREEK_CAP, "MATHML_F_greek_maj.png", filtre_greek_maj},
+    {TMSG_MATHML, "MATHML_F_maths.png", filtre_maths},
+    {TMSG_OPERATOR, "MATHML_F_operateurs.png", filtre_operateurs},
+    {TMSG_BINARY_REL, "MATHML_F_relations_binaires.png",
+          filtre_relations_binaires},
+    {TMSG_BINARY_REL_NEG, "MATHML_F_relations_negation.png",
+          filtre_relations_binaires_negation},
+    {TMSG_MISC, "MATHML_F_divers.png", filtre_divers},
+    {TMSG_ARROW, "MATHML_F_fleches.png", filtre_fleches},
+    {-1, NULL, NULL}
+    
+};
 
 
 #endif /* #ifdef _WX */
