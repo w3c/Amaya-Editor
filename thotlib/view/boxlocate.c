@@ -845,8 +845,8 @@ ThotPoint *BuildPolygonForPath (PtrPathSeg pPa, int frame,
                           (double) x1, (double) y1, 
                           (double) x2, (double) y2, 
                           (double) cx1, (double) cy1,
-                          (int) fmod(pPa->XAxisRotation, 360), 
-                          pPa->LargeArc, pPa->Sweep,
+                          fmod((double)pPa->XAxisRotation, 360), 
+                          (double)pPa->LargeArc, pPa->Sweep,
                           &points, npoints, &maxpoints);
           x2 = (double) (PixelValue (pPa->XEnd, UnPixel, NULL,
                                      ViewFrameTable[frame - 1].FrMagnification));

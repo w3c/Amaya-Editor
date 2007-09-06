@@ -1753,8 +1753,8 @@ void DrawPath (int frame, int thick, int style, int x, int y,
                               x1, y1, 
                               x2, y2, 
                               cx1, cy1,
-                              fmod (pPa->XAxisRotation, 360), 
-                              pPa->LargeArc, pPa->Sweep,
+                              fmod ((double)pPa->XAxisRotation, 360), 
+                              (double)pPa->LargeArc, pPa->Sweep,
                               mesh);
               MeshNewPoint (x2, y2, mesh);
               break;

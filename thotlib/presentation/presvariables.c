@@ -1110,8 +1110,8 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 {
   int                 f, l;
   int                 i;
-  long                tod;
-  long               *pt;
+  time_t              tod;
+  time_t             *pt;
   struct tm          *ptm;
   PtrTextBuffer       isOld, isNew;
   PtrAttribute        pA;
