@@ -40,17 +40,17 @@
 //
 
 static
-AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaXHTMLToolDef1)
+AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaXHTMLToolDef)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_DIV",     "CreateDivision",       LIB, TMSG_BUTTON_DIV)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H1",      "CreateHeading1",       LIB, TMSG_BUTTON_H1)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H2",      "CreateHeading2",       LIB, TMSG_BUTTON_H2)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H3",      "CreateHeading3",       LIB, TMSG_BUTTON_H3)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H4",      "CreateHeading4",       LIB, TMSG_BUTTON_H3)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_P",      "CreateParagraph",       LIB, TMSG_BUTTON_H3)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_TABLE",   "CreateTable",          LIB, TMSG_BUTTON_TABLE)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_TARGET",  "CreateTarget",         LIB, TMSG_BUTTON_TARGET)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_LINK",    "CreateOrChangeLink",   LIB, TMSG_BUTTON_LINK)
-AMAYA_END_TOOLBAR_DEF_TABLE()
 
-AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaXHTMLToolDef2)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_BULLET",  "CreateList",           LIB, TMSG_BUTTON_UL)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_NL",      "CreateNumberedList",   LIB, TMSG_BUTTON_OL)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_DL",      "CreateDefinitionList", LIB, TMSG_BUTTON_DL)
@@ -58,9 +58,7 @@ AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaXHTMLToolDef2)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_DD",      "CreateDefinitionDef",  LIB, TMSG_BUTTON_DD)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_IMG",     "CreateImage",          LIB, TMSG_BUTTON_IMG)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_OBJ",     "CreateObject",         LIB, TMSG_OBJECT)
-AMAYA_END_TOOLBAR_DEF_TABLE()
 
-AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaXHTMLToolDef3)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_STRONG",  "SetOnOffStrong",       LIB, TMSG_BUTTON_BOLD)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_EMPH",    "SetOnOffEmphasis",     LIB, TMSG_BUTTON_ITALICS)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_CODE",    "SetOnOffCode",         LIB, TMSG_BUTTON_CODE)
@@ -90,13 +88,16 @@ bool AmayaXHTMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   m_tbar1 = XRCCTRL(*this,"wxID_TOOLBAR_XHTML_1", AmayaBaseToolBar);
   m_tbar2 = XRCCTRL(*this,"wxID_TOOLBAR_XHTML_2", AmayaBaseToolBar);
   m_tbar3 = XRCCTRL(*this,"wxID_TOOLBAR_XHTML_3", AmayaBaseToolBar);
-  
-  m_tbar1->Add(AmayaXHTMLToolDef1);
+  m_tbar4 = XRCCTRL(*this,"wxID_TOOLBAR_XHTML_4", AmayaBaseToolBar);
+
+  m_tbar1->Add(AmayaXHTMLToolDef);
   m_tbar1->Realize();
-  m_tbar2->Add(AmayaXHTMLToolDef2);
+  m_tbar2->Add(AmayaXHTMLToolDef);
   m_tbar2->Realize();
-  m_tbar3->Add(AmayaXHTMLToolDef3);
+  m_tbar3->Add(AmayaXHTMLToolDef);
   m_tbar3->Realize();
+  m_tbar4->Add(AmayaXHTMLToolDef);
+  m_tbar4->Realize();
   
   SetAutoLayout(true);
   

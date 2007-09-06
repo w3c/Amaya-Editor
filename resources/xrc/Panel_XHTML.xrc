@@ -14,53 +14,22 @@
           <object class="tool" name="wxID_PANEL_XHTML_H3">
             <bitmap>../icons/16x16/XHTML_H3.png</bitmap>
           </object>
-          <object class="tool" name="wxID_PANEL_XHTML_TABLE">
-            <bitmap>../icons/16x16/XHTML_Table.png</bitmap>
+          <object class="tool" name="wxID_PANEL_XHTML_H4">
+            <bitmap>../icons/16x16/XHTML_H4.png</bitmap>
           </object>
-          <object class="tool" name="wxID_PANEL_XHTML_DIV">
-            <bitmap>../icons/16x16/XHTML_Div.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_TARGET">
-            <bitmap>../icons/16x16/XHTML_Target.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_LINK">
-            <bitmap>../icons/16x16/XHTML_Link.png</bitmap>
+          <object class="tool" name="wxID_PANEL_XHTML_P">
+            <bitmap>../icons/16x16/XHTML_P.png</bitmap>
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_NODIVIDER</style>
+          <object class="tool" name="wxID_PANEL_XHTML_DIV">
+            <bitmap>../icons/16x16/XHTML_Div.png</bitmap>
+          </object>
         </object>
       </object>
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_XHTML_2" subclass="AmayaBaseToolBar">
-          <object class="tool" name="wxID_PANEL_XHTML_BULLET">
-            <bitmap>../icons/16x16/XHTML_Bullet.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_NL">
-            <bitmap>../icons/16x16/XHTML_Num.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_DL">
-            <bitmap>../icons/16x16/XHTML_DL.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_DT">
-            <bitmap>../icons/16x16/XHTML_DT.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_DD">
-            <bitmap>../icons/16x16/XHTML_DD.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_IMG">
-            <bitmap>../icons/16x16/XHTML_Image.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_XHTML_OBJ">
-            <bitmap>../icons/16x16/XHTML_object.png</bitmap>
-          </object>
-          <bitmapsize>16,16</bitmapsize>
-          <margins>2,0</margins>
-          <style>wxTB_NODIVIDER</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <object class="wxToolBar" name="wxID_TOOLBAR_XHTML_3" subclass="AmayaBaseToolBar">
           <object class="tool" name="wxID_PANEL_XHTML_STRONG">
             <bitmap>../icons/16x16/XHTML_B.png</bitmap>
             <toggle>1</toggle>
@@ -88,6 +57,51 @@
           <object class="tool" name="wxID_PANEL_XHTML_SUB">
             <bitmap>../icons/16x16/XHTML_sub.png</bitmap>
             <toggle>1</toggle>
+          </object>
+          <bitmapsize>16,16</bitmapsize>
+          <margins>2,0</margins>
+          <style>wxTB_NODIVIDER</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_XHTML_3" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_PANEL_XHTML_BULLET">
+            <bitmap>../icons/16x16/XHTML_Bullet.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_NL">
+            <bitmap>../icons/16x16/XHTML_Num.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_DL">
+            <bitmap>../icons/16x16/XHTML_DL.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_DT">
+            <bitmap>../icons/16x16/XHTML_DT.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_DD">
+            <bitmap>../icons/16x16/XHTML_DD.png</bitmap>
+          </object>
+          <bitmapsize>16,16</bitmapsize>
+          <margins>2,0</margins>
+          <style>wxTB_NODIVIDER</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_XHTML_4" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_PANEL_XHTML_LINK">
+            <bitmap>../icons/16x16/XHTML_Link.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_TARGET">
+            <bitmap>../icons/16x16/XHTML_Target.png</bitmap>
+          </object>
+          <object class="separator"/>
+          <object class="tool" name="wxID_PANEL_XHTML_IMG">
+            <bitmap>../icons/16x16/XHTML_Image.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_OBJ">
+            <bitmap>../icons/16x16/XHTML_object.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_TABLE">
+            <bitmap>../icons/16x16/XHTML_Table.png</bitmap>
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
