@@ -260,77 +260,80 @@
 258 添加/刪除 ID(&A)...
 259 顯示工具欄(&T)
 260 全屏顯示(&F)
-261 顯示按鈕欄(&B)
-262 顯示 ADDRESS(&D)
-263 顯示 MAP 區域(&M)
-264 顯示目標 (&T)
-265 放大
-266 縮小
-267 顯示格式化的視圖(&F)
-268 顯示結構(&S)
-269 顯示源文件(&U)
-270 顯示鏈接(&K)
-271 顯示候選(&A)
-272 顯示表格內容(&O)
-273 顯示時間排列
-274 水平排列視圖
-275 垂直排列視圖
-276 字符樣式(&H)...
-277 顏色(&O)...
-278 CSS樣式(&S)...
-279 格式(&F)...
-280 背景圖片(&B)...
-281 創建規則(&R)...
-282 應用CLASS(&C)...
-283 顯示已應用的樣式...
-284 鏈接(&K)...
-285 打開(&N)...
-286 禁用(&D)...
-287 啟用(&E)...
-288 移除(&V)...
-289 為選擇區作注釋
-290 為文檔作注釋
-291 移動到選擇區
-292 存儲選擇區為 XPointer(&X)
-293 移動到已存儲的 XPointer
-294 答復注釋
-295 提交到服務器
-296 刪除
-297 載入
-298 自定義查詢...
-299 本地過濾器...
-300 鎖定資源...
-301 取消鎖定資源...
-302 查看資源屬性...
-303 復制鎖定信息...
-304 鎖定了嗎?
-305 關于 Amaya
-306 關于 Amaya at W3C
-307 索引
-308 Browsing
-309 Views
-310 Selecting
-311 Document
-312 Creating elements
-313 Attributes
-314 Characters
-315 **Templates
-316 Restructuring
-317 Links
-318 Tables
-319 Image maps
-320 Math
-321 Graphics
-322 XML support
-323 Style sheets
-324 Searching
-325 Spell Checking
-326 Publishing
-327 協作
-328 Printing
-329 Numbering
-330 Making books
-331 Annotations
-332 Configuring
-333 ShortCuts
-334 Accessibility in Amaya
+261 **Show/Hide toolbars
+262 **&Browsing
+263 **&Editing
+264 顯示按鈕欄(&B)
+265 顯示 ADDRESS(&D)
+266 顯示 MAP 區域(&M)
+267 顯示目標 (&T)
+268 放大
+269 縮小
+270 顯示格式化的視圖(&F)
+271 顯示結構(&S)
+272 顯示源文件(&U)
+273 顯示鏈接(&K)
+274 顯示候選(&A)
+275 顯示表格內容(&O)
+276 顯示時間排列
+277 水平排列視圖
+278 垂直排列視圖
+279 字符樣式(&H)...
+280 顏色(&O)...
+281 CSS樣式(&S)...
+282 格式(&F)...
+283 背景圖片(&B)...
+284 創建規則(&R)...
+285 應用CLASS(&C)...
+286 顯示已應用的樣式...
+287 鏈接(&K)...
+288 打開(&N)...
+289 禁用(&D)...
+290 啟用(&E)...
+291 移除(&V)...
+292 為選擇區作注釋
+293 為文檔作注釋
+294 移動到選擇區
+295 存儲選擇區為 XPointer(&X)
+296 移動到已存儲的 XPointer
+297 答復注釋
+298 提交到服務器
+299 刪除
+300 載入
+301 自定義查詢...
+302 本地過濾器...
+303 鎖定資源...
+304 取消鎖定資源...
+305 查看資源屬性...
+306 復制鎖定信息...
+307 鎖定了嗎?
+308 關于 Amaya
+309 關于 Amaya at W3C
+310 索引
+311 Browsing
+312 Views
+313 Selecting
+314 Document
+315 Creating elements
+316 Attributes
+317 Characters
+318 **Templates
+319 Restructuring
+320 Links
+321 Tables
+322 Image maps
+323 Math
+324 Graphics
+325 XML support
+326 Style sheets
+327 Searching
+328 Spell Checking
+329 Publishing
+330 協作
+331 Printing
+332 Numbering
+333 Making books
+334 Annotations
+335 Configuring
+336 ShortCuts
+337 Accessibility in Amaya

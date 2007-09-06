@@ -4,10 +4,10 @@
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
-        <object class="wxNotebook" name="">
+        <object class="wxChoicebook" name="">
           <style>wxNO_BORDER</style>
-          <object class="notebookpage">
-            <label>1</label>
+          <object class="choicebookpage">
+            <label>Constructions de base</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -155,8 +155,8 @@
               </object>
             </object>
           </object>
-          <object class="notebookpage">
-            <label>2</label>
+          <object class="choicebookpage">
+            <label>Comparaisons et logique</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -302,8 +302,8 @@
               </object>
             </object>
           </object>
-          <object class="notebookpage">
-            <label>3</label>
+          <object class="choicebookpage">
+            <label>Ensembles</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -470,8 +470,8 @@
               </object>
             </object>
           </object>
-          <object class="notebookpage">
-            <label>4</label>
+          <object class="choicebookpage">
+            <label>Sommes</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -617,8 +617,8 @@
               </object>
             </object>
           </object>
-          <object class="notebookpage">
-            <label>5</label>
+          <object class="choicebookpage">
+            <label>Intégrales</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -779,8 +779,8 @@
               </object>
             </object>
           </object>
-          <object class="notebookpage">
-            <label>6</label>
+          <object class="choicebookpage">
+            <label>Trigonométrie</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>

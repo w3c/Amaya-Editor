@@ -8185,6 +8185,32 @@ void ShowPanel (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  ShowBrowsingBar
+  show/hide the navigation toolbar
+  ----------------------------------------------------------------------*/
+void ShowBrowsingBar (Document doc, View view)
+{
+#ifdef _WX
+  int frame_id = GetWindowNumber (doc, view);
+  TtaToggleToolbar( frame_id, 0 );
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  ShowEditingBar
+  show/hide the edition toolbar
+  ----------------------------------------------------------------------*/
+void ShowEditingBar (Document doc, View view)
+{
+#ifdef _WX
+  int frame_id = GetWindowNumber (doc, view);
+  TtaToggleToolbar( frame_id, 1 );
+#endif /* _WX */
+}
+
+
+
+/*----------------------------------------------------------------------
   FullScreen
   enable/disable fullscreen
   ----------------------------------------------------------------------*/

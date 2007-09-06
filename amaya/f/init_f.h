@@ -168,6 +168,10 @@ extern void ChangeAttrOnRoot ( Document doc,
                                int attrNum );
 extern void ShowPanel ( Document doc,
                         View view );
+extern void ShowBrowsingBar ( Document doc,
+                              View view );
+extern void ShowEditingBar ( Document doc,
+                             View view );
 extern void FullScreen ( Document doc,
                          View view );
 extern void SplitHorizontally ( Document doc,
@@ -390,6 +394,10 @@ extern void ChangeAttrOnRoot ( Document doc,
                                  int attrNum );
 extern void ShowPanel ( Document doc,
                           View view );
+extern void ShowBrowsingBar ( Document doc,
+                                View view );
+extern void ShowEditingBar ( Document doc,
+                               View view );
 extern void FullScreen ( Document doc,
                            View view );
 extern void SplitHorizontally ( Document doc,

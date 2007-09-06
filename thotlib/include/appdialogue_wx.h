@@ -43,6 +43,7 @@ extern void TtaSwitchPanelButton( Document doc, View view,
 				  ThotBool value );
 
 extern void TtaToggleOnOffSidePanel( int frame_id );
+extern void TtaToggleToolbar( int frame_id, int toolbar_id );
 extern void TtaToggleOnOffFullScreen( int frame_id );
 extern ThotBool TtaGetFullScreenState(int frame_id );
 extern void TtaSplitViewVertically( int frame_id );

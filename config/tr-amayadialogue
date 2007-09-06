@@ -260,77 +260,80 @@
 258 IDs ekle/sil
 259 **Show &tools
 260 **&Fullscreen
-261 Tusları göster
-262 Adres göster
-263 Yakınlaştır
-264 Hedefi göster
-265 Uzaklaştır
-266 Harita alanlarını göster
-267 **Show &formatted view
-268 Yapıyı göster
-269 kaynak göster
-270 Bağlantıları göster
-271 Alternatif gösterim
-272 Içindekileri göster
-273 Zaman sırası
-274 **Split view horizontally
-275 **Split view vertically
-276 Karakter tarzı...
-277 Renkler...
-278 **CSS &Style...
-279 Biçim...
-280 Arkaplan görüntüsü...
-281 Kural yarat...
-282 \'class\' uygula...
-283 **Show applied style...
-284 Bağlantı
-285 Aç
-286 Olumsuzla
-287 Olumla
-288 Sil
-289 Seçili alan ekleme
-290 Doküman eklemek
-291 Seçili alanı taşı
-292 seçilen alanı XPointer gibi kaydet
-293 Xpointer\'daki birikenleri taşı
-294 Tekrar ekle
-295 Server\'e kaydet
-296 Sil
-297 Yükle
-298 Kişisel ayarlama...
-299 Sabit filitre...
-300 Tekrar okumayı kitle...
-301 Tekrar okumayı kilidi aç...
-302 Tekrar okuma ayarlarını göster...
-303 kilitli bilgileri kopyala...
-304 kitli mi?
-305 Amaya hakkında
-306 W3C deki Amaya hakkında
-307 Içerik
-308 Tarama
-309 Görünümler
-310 Seç
-311 Döküman
-312 Yarat
-313 Tarz tanımları
-314 karakterler
-315 **Templates
-316 Yeniden yapılandırma
-317 Bağlantılar
-318 Tablolar
-319 Aktif alan
-320 Matematik
-321 Grafik
-322 XML desteği
-323 Görüntü haritaları
-324 Yazı hataları arama
-325 Yazı hataları düzeltmek
-326 Bastırma
-327 Birlikte çalışmak
-328 Sayfa yerleştirme
-329 Numaralandır
-330 Kitap oluşturma
-331 Not ekleme
-332 Yapılandırması
-333 Kısalmalar
-334 Amaya\'ya ulaşmak
+261 **Show/Hide toolbars
+262 **&Browsing
+263 **&Editing
+264 Tusları göster
+265 Adres göster
+266 Yakınlaştır
+267 Hedefi göster
+268 Uzaklaştır
+269 Harita alanlarını göster
+270 **Show &formatted view
+271 Yapıyı göster
+272 kaynak göster
+273 Bağlantıları göster
+274 Alternatif gösterim
+275 Içindekileri göster
+276 Zaman sırası
+277 **Split view horizontally
+278 **Split view vertically
+279 Karakter tarzı...
+280 Renkler...
+281 **CSS &Style...
+282 Biçim...
+283 Arkaplan görüntüsü...
+284 Kural yarat...
+285 \'class\' uygula...
+286 **Show applied style...
+287 Bağlantı
+288 Aç
+289 Olumsuzla
+290 Olumla
+291 Sil
+292 Seçili alan ekleme
+293 Doküman eklemek
+294 Seçili alanı taşı
+295 seçilen alanı XPointer gibi kaydet
+296 Xpointer\'daki birikenleri taşı
+297 Tekrar ekle
+298 Server\'e kaydet
+299 Sil
+300 Yükle
+301 Kişisel ayarlama...
+302 Sabit filitre...
+303 Tekrar okumayı kitle...
+304 Tekrar okumayı kilidi aç...
+305 Tekrar okuma ayarlarını göster...
+306 kilitli bilgileri kopyala...
+307 kitli mi?
+308 Amaya hakkında
+309 W3C deki Amaya hakkında
+310 Içerik
+311 Tarama
+312 Görünümler
+313 Seç
+314 Döküman
+315 Yarat
+316 Tarz tanımları
+317 karakterler
+318 **Templates
+319 Yeniden yapılandırma
+320 Bağlantılar
+321 Tablolar
+322 Aktif alan
+323 Matematik
+324 Grafik
+325 XML desteği
+326 Görüntü haritaları
+327 Yazı hataları arama
+328 Yazı hataları düzeltmek
+329 Bastırma
+330 Birlikte çalışmak
+331 Sayfa yerleştirme
+332 Numaralandır
+333 Kitap oluşturma
+334 Not ekleme
+335 Yapılandırması
+336 Kısalmalar
+337 Amaya\'ya ulaşmak

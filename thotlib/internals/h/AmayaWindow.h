@@ -126,6 +126,12 @@ class AmayaWindow : public wxFrame
   virtual void     AppendURL ( const wxString & new_url );
   virtual void     EmptyURLBar();
 
+  // toolbars
+  virtual bool IsToolBarShown(int toolbarID)const{return false;}
+  virtual void ShowToolBar(int toolbarID, bool bShow=true){}
+  virtual void HideToolBar(int toolbarID){ShowToolBar(toolbarID, false);}
+  
+  
   // --------------------------------------------- //
   // WXAMAYAWINDOW_SIMPLE interface
   virtual bool         AttachFrame( AmayaFrame * p_frame );

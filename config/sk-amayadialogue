@@ -260,77 +260,80 @@
 258 &Pridať/odstrániť ID...
 259 Panel s &nástrojmi
 260 &Celá obrazovka
-261 &Navigačný panel
-262 Panel s a&dresou
-263 Oblasti &obrázkov
-264 &Záložky
-265 Zväčšiť veľkosť textu
-266 Zmenšiť veľkosť textu
-267 &Normálne zobrazenie
-268 &Štruktúru
-269 Zdrojový kód stránky
-270 Hypertextové odkazy
-271 Len text
-272 Obsah
-273 Časová os
-274 Rozdeliť okno horizontálne
-275 Rozdeliť okno vertikálne
-276 &Formát písma...
-277 F&arby...
-278 CSS &pravidlá...
-279 &Formátovať...
-280 P&ozadie...
-281 Vytvoriť &pravidlo...
-282 Aplikovať &triedu (class)...
-283 Zobraziť použité štýly...
-284 P&ripojiť súbor s CSS...
-285 &Otvoriť súbor s CSS...
-286 &Vypnuť CSS pravidlá...
-287 &Zapnúť CSS pravidlá...
-288 O&strániť súbor s CSS...
-289 Okomentovať výber
-290 Okomentovať dokument
-291 Presunúť k výberu
-292 Uložiť výber ako &XPointer
-293 Presunúť k uloženému XPointeru
-294 Reagovať na komentár
-295 Odoslať na server
-296 Odstrániť komentár
-297 Nahrať komentár
-298 Zadefinovať požiadavku...
-299 Filtrovať komentáre...
-300 Uzamknúť zdrojový súbor...
-301 Odomknúť zdrojový súbor...
-302 Zobraziť vlastnosti zdroja...
-303 Kopírovať informácie o uzamknutí...
-304 Zamknutý?
-305 O programe Amaya
-306 Domoská stránka programu Amaya
-307 Témy pomocníka
-308 Prehliadanie
-309 Zobrazenia
-310 Označovanie
-311 Vytváranie dokumentu
-312 Vkladanie prvkov
-313 Atribúty
-314 Vkladanie znakov
-315 Šablóny
-316 Úprava dokumentu
-317 Prepojenia
-318 Tabuľky
-319 Oblasti obrázkov
-320 Vzorce
-321 Úprava SVG grafiky
-322 XML podpora
-323 Kaskádové štýly
-324 Vyhľadávanie
-325 Kontrola pravopisu
-326 Publikovanie
-327 Spolupráca
-328 Tlač
-329 Číslovanie podkapitol
-330 Vytváranie kníh
-331 Komentáre
-332 Nastavenia programu
-333 Klávesové skratky
-334 Zjednodušenie ovládania
+261 **Show/Hide toolbars
+262 **&Browsing
+263 **&Editing
+264 &Navigačný panel
+265 Panel s a&dresou
+266 Oblasti &obrázkov
+267 &Záložky
+268 Zväčšiť veľkosť textu
+269 Zmenšiť veľkosť textu
+270 &Normálne zobrazenie
+271 &Štruktúru
+272 Zdrojový kód stránky
+273 Hypertextové odkazy
+274 Len text
+275 Obsah
+276 Časová os
+277 Rozdeliť okno horizontálne
+278 Rozdeliť okno vertikálne
+279 &Formát písma...
+280 F&arby...
+281 CSS &pravidlá...
+282 &Formátovať...
+283 P&ozadie...
+284 Vytvoriť &pravidlo...
+285 Aplikovať &triedu (class)...
+286 Zobraziť použité štýly...
+287 P&ripojiť súbor s CSS...
+288 &Otvoriť súbor s CSS...
+289 &Vypnuť CSS pravidlá...
+290 &Zapnúť CSS pravidlá...
+291 O&strániť súbor s CSS...
+292 Okomentovať výber
+293 Okomentovať dokument
+294 Presunúť k výberu
+295 Uložiť výber ako &XPointer
+296 Presunúť k uloženému XPointeru
+297 Reagovať na komentár
+298 Odoslať na server
+299 Odstrániť komentár
+300 Nahrať komentár
+301 Zadefinovať požiadavku...
+302 Filtrovať komentáre...
+303 Uzamknúť zdrojový súbor...
+304 Odomknúť zdrojový súbor...
+305 Zobraziť vlastnosti zdroja...
+306 Kopírovať informácie o uzamknutí...
+307 Zamknutý?
+308 O programe Amaya
+309 Domoská stránka programu Amaya
+310 Témy pomocníka
+311 Prehliadanie
+312 Zobrazenia
+313 Označovanie
+314 Vytváranie dokumentu
+315 Vkladanie prvkov
+316 Atribúty
+317 Vkladanie znakov
+318 Šablóny
+319 Úprava dokumentu
+320 Prepojenia
+321 Tabuľky
+322 Oblasti obrázkov
+323 Vzorce
+324 Úprava SVG grafiky
+325 XML podpora
+326 Kaskádové štýly
+327 Vyhľadávanie
+328 Kontrola pravopisu
+329 Publikovanie
+330 Spolupráca
+331 Tlač
+332 Číslovanie podkapitol
+333 Vytváranie kníh
+334 Komentáre
+335 Nastavenia programu
+336 Klávesové skratky
+337 Zjednodušenie ovládania

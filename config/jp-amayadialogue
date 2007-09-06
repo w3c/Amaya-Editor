@@ -260,77 +260,80 @@
 258 **&Add/Remove IDs...
 259 **Show &tools
 260 **&Fullscreen
-261 **Show &button bar
-262 **Show a&ddress
-263 **Show &map areas
-264 **Show &targets
-265 **Zoom in
-266 **Zoom out
-267 **Show &formatted view
-268 **Show &structure
-269 **Show so&urce
-270 **Show lin&ks
-271 **Show &alternate
-272 **Show table &of contents
-273 **Show timeline
-274 **Split view horizontally
-275 **Split view vertically
-276 **C&haracter style...
-277 **C&olors...
-278 **CSS &Style...
-279 **&Format...
-280 **&Background image...
-281 **Create &rule...
-282 **Apply &class...
-283 **Show applied style...
-284 **Lin&k...
-285 **Ope&n...
-286 **&Disable...
-287 **&Enable...
-288 **Remo&ve...
-289 **Annotate selection
-290 **Annotate document
-291 **Move to selection
-292 **Store selection as &XPointer
-293 **Move to stored XPointer
-294 **Reply to annotation
-295 **Post to server
-296 **Delete
-297 **Load
-298 **Customize query...
-299 **Local filter...
-300 **Lock resource...
-301 **Unlock resource...
-302 **View resource properties...
-303 **Copy lock information...
-304 **Locked?
-305 **About Amaya
-306 **About Amaya at W3C
-307 **Index
-308 **Browsing
-309 **Views
-310 **Selecting
-311 **Documents
-312 **Creating elements
-313 **Attributes
-314 **Characters
-315 **Templates
-316 **Restructuring
-317 **Links
-318 **Tables
-319 **Image maps
-320 **Math
-321 **Graphics
-322 **XML support
-323 **Style sheets
-324 **Searching
-325 **Spell Checking
-326 **Publishing
-327 **Cooperation
-328 **Printing
-329 **Numbering
-330 **Making books
-331 **Annotations
-332 **Configuring
-333 **ShortCuts
-334 **Accessibility in Amaya
+261 **Show/Hide toolbars
+262 **&Browsing
+263 **&Editing
+264 **Show &button bar
+265 **Show a&ddress
+266 **Show &map areas
+267 **Show &targets
+268 **Zoom in
+269 **Zoom out
+270 **Show &formatted view
+271 **Show &structure
+272 **Show so&urce
+273 **Show lin&ks
+274 **Show &alternate
+275 **Show table &of contents
+276 **Show timeline
+277 **Split view horizontally
+278 **Split view vertically
+279 **C&haracter style...
+280 **C&olors...
+281 **CSS &Style...
+282 **&Format...
+283 **&Background image...
+284 **Create &rule...
+285 **Apply &class...
+286 **Show applied style...
+287 **Lin&k...
+288 **Ope&n...
+289 **&Disable...
+290 **&Enable...
+291 **Remo&ve...
+292 **Annotate selection
+293 **Annotate document
+294 **Move to selection
+295 **Store selection as &XPointer
+296 **Move to stored XPointer
+297 **Reply to annotation
+298 **Post to server
+299 **Delete
+300 **Load
+301 **Customize query...
+302 **Local filter...
+303 **Lock resource...
+304 **Unlock resource...
+305 **View resource properties...
+306 **Copy lock information...
+307 **Locked?
+308 **About Amaya
+309 **About Amaya at W3C
+310 **Index
+311 **Browsing
+312 **Views
+313 **Selecting
+314 **Documents
+315 **Creating elements
+316 **Attributes
+317 **Characters
+318 **Templates
+319 **Restructuring
+320 **Links
+321 **Tables
+322 **Image maps
+323 **Math
+324 **Graphics
+325 **XML support
+326 **Style sheets
+327 **Searching
+328 **Spell Checking
+329 **Publishing
+330 **Cooperation
+331 **Printing
+332 **Numbering
+333 **Making books
+334 **Annotations
+335 **Configuring
+336 **ShortCuts
+337 **Accessibility in Amaya

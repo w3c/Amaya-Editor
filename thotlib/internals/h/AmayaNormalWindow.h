@@ -121,6 +121,9 @@ class AmayaNormalWindow : public AmayaWindow
   void OnURLSelected( wxCommandEvent& event );
   void OnURLText( wxCommandEvent& event );
 
+  bool IsToolBarShown(int toolbarID)const;
+  void ShowToolBar(int toolbarID, bool bShow=true);
+  virtual void RefreshShowToolBarToggleMenu(int toolbarID);
 
   AmayaToolPanelBar       *m_pPanel;            // current selected panel
   wxComboBox              *m_pComboBox;         // URL combo box

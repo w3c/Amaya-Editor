@@ -69,6 +69,8 @@ TtcChildElement
 TtcPreviousElement
 TtcNextElement
 CopyLocation
+ShowBrowsingBar
+ShowEditingBar
 
 ################# AMAYA BROWSER
 <Browser>

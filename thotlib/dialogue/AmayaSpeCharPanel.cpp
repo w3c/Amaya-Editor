@@ -155,13 +155,14 @@ void AmayaSpeCharToolPanel::Initialize()
       int line = 0;
       while(car->unicode!=-1)
         {
-          if(++line>MAX_TOOL_PER_LINE || !tb)
+          if(++line>=MAX_TOOL_PER_LINE || !tb)
             {
               if(tb)
                 tb->Realize();
               tb = new wxToolBar(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                   wxTB_HORIZONTAL|wxNO_BORDER|/*wxTB_TEXT|wxTB_NOICONS|*/wxTB_NODIVIDER);
               tb->SetToolBitmapSize(wxSize(16,16));
+              tb->SetToolPacking(4);
               sz->Add(tb, 0);
               line = 0;
             }

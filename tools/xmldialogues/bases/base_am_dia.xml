@@ -3999,6 +3999,18 @@
 	<message xml:lang="tw">全屏顯示(&amp;F)</message>
 	<message xml:lang="sk">&amp;Celá obrazovka</message>
 </label>
+<label define="toolbars">
+  <message xml:lang="en">Show/Hide toolbars</message>
+  <message xml:lang="fr">Barres d'outils</message>
+</label>
+<label define="TShowBrowsingBar">
+  <message xml:lang="en">&amp;Browsing</message>
+  <message xml:lang="fr">&amp;Navigation</message>
+</label>
+<label define="toggle:TShowEditingBar">
+  <message xml:lang="en">&amp;Editing</message>
+  <message xml:lang="fr">&amp;Édition</message>
+</label>
 <label define="TShowButtonbar">
 	<message xml:lang="en">Show &amp;button bar</message>
 	<message xml:lang="fr">Montrer &amp;boutons</message>

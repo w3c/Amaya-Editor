@@ -260,77 +260,80 @@
 258 Id hinzufügen/entfernen...
 259 &Hilfsmittel anzeigen
 260 &Vollbildanzeige
-261 Symbolleiste anzeigen
-262 Adresszeile anzeigen
-263 Aktive Bildbereiche
-264 Anker anzeigen
-265 Schrift vergrößern
-266 Schrift verkleinern
-267 Layoutansicht
-268 Struktur
-269 Quelltext
-270 Verweise
-271 Textbrowser
-272 Inhaltsverzeichnis
-273 Zeitliche Reihenfolge
-274 Ansicht horizontal teilen
-275 Ansicht vertikal teilen
-276 Schrift...
-277 Farbe...
-278 CSS &Stil
-279 Ausrichtung...
-280 Hintergrundbild...
-281 Regel erzeugen...
-282 Klasse übernehmen...
-283 Zugewiesenes Format anzeigen...
-284 Verknüpfen...
-285 Öffnen...
-286 Deaktivieren...
-287 Aktivieren...
-288 Entfernen...
-289 Zur Markierung
-290 Zum Dokument
-291 Auf Markierung verschieben
-292 Als XPointer speichern
-293 Auf XPointer verschieben
-294 Beantworten
-295 Veröffentlichen
-296 Löschen
-297 Laden
-298 Abfrage bearbeiten...
-299 Filter...
-300 Resource sperren...
-301 Resource entsperren...
-302 Resourceeigenschaften anzeigen...
-303 Sperrinformation kopieren...
-304 Gesperrt?
-305 Info
-306 Über Amaya
-307 Index
-308 Browsen
-309 Ansichten
-310 Markieren
-311 Dokuments
-312 Elemente
-313 Attribute
-314 Zeichen
-315 Vorlagen
-316 Transformieren
-317 Verweise
-318 Tabellen
-319 Aktive Bildbereiche
-320 Formeln
-321 SVG
-322 XML
-323 Formate/Formatvorlagen
-324 Suchen/Ersetzen
-325 Rechtschreibprüfung
-326 Speichern/Veröffentlichen
-327 Kooperation
-328 Drucken
-329 Abschnitte numerieren
-330 Buch erstellen
-331 Anmerkungen
-332 Konfiguration
-333 Tastenkürzel
-334 Benutzerfreundlichkeit
+261 **Show/Hide toolbars
+262 **&Browsing
+263 **&Editing
+264 Symbolleiste anzeigen
+265 Adresszeile anzeigen
+266 Aktive Bildbereiche
+267 Anker anzeigen
+268 Schrift vergrößern
+269 Schrift verkleinern
+270 Layoutansicht
+271 Struktur
+272 Quelltext
+273 Verweise
+274 Textbrowser
+275 Inhaltsverzeichnis
+276 Zeitliche Reihenfolge
+277 Ansicht horizontal teilen
+278 Ansicht vertikal teilen
+279 Schrift...
+280 Farbe...
+281 CSS &Stil
+282 Ausrichtung...
+283 Hintergrundbild...
+284 Regel erzeugen...
+285 Klasse übernehmen...
+286 Zugewiesenes Format anzeigen...
+287 Verknüpfen...
+288 Öffnen...
+289 Deaktivieren...
+290 Aktivieren...
+291 Entfernen...
+292 Zur Markierung
+293 Zum Dokument
+294 Auf Markierung verschieben
+295 Als XPointer speichern
+296 Auf XPointer verschieben
+297 Beantworten
+298 Veröffentlichen
+299 Löschen
+300 Laden
+301 Abfrage bearbeiten...
+302 Filter...
+303 Resource sperren...
+304 Resource entsperren...
+305 Resourceeigenschaften anzeigen...
+306 Sperrinformation kopieren...
+307 Gesperrt?
+308 Info
+309 Über Amaya
+310 Index
+311 Browsen
+312 Ansichten
+313 Markieren
+314 Dokuments
+315 Elemente
+316 Attribute
+317 Zeichen
+318 Vorlagen
+319 Transformieren
+320 Verweise
+321 Tabellen
+322 Aktive Bildbereiche
+323 Formeln
+324 SVG
+325 XML
+326 Formate/Formatvorlagen
+327 Suchen/Ersetzen
+328 Rechtschreibprüfung
+329 Speichern/Veröffentlichen
+330 Kooperation
+331 Drucken
+332 Abschnitte numerieren
+333 Buch erstellen
+334 Anmerkungen
+335 Konfiguration
+336 Tastenkürzel
+337 Benutzerfreundlichkeit

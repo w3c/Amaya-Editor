@@ -260,77 +260,80 @@
 258 &Crear/Borrar atributos id...
 259 Ventana de &herramientas
 260 &Pantalla completa
-261 &Barra de botones
-262 D&irección
-263 Áreas de &mapas
-264 &Destinos
-265 &Aumentar tamaño de texto
-266 &Reducir tamaño de texto
-267 &Vista formateada
-268 Es&tructura
-269 Código &fuente
-270 &Enlaces
-271 A&lternativo
-272 Tabla de &contenidos
-273 Planificación
-274 Dividir vista horizontalmente
-275 Dividir vista verticalmente
-276 &Carácter...
-277 C&olores...
-278 &Estilo CSS...
-279 &Párrafo...
-280 &Imagen de fondo...
-281 Crear &regla...
-282 A&plicar clase...
-283 &Mostrar estilo aplicado...
-284 &Enlazar hoja de estilo...
-285 &Abrir hoja de estilo enlazada...
-286 &Desactivar hoja de estilo enlazada...
-287 Acti&var hoja de estilo enlazada...
-288 &Borrar enlace a hoja de estilo...
-289 Anotar &selección
-290 Anotar &documento
-291 &Mover a selección
-292 Guardar selección como &XPointer
-293 Mover a &XPointer guardado
-294 &Responder a anotación
-295 &Enviar al servidor
-296 &Borrar
-297 &Cargar
-298 &Personalizar consulta...
-299 &Filtro local...
-300 Bloquear recurso
-301 Desbloquear recurso...
-302 Ver propiedades del recurso...
-303 Copiar información de bloqueo
-304 ¿Bloqueado?
-305 Acerca de Amaya
-306 Página web de Amaya en el W3C
-307 Índice
-308 Navegar
-309 Vistas
-310 Seleccionar
-311 Documentos
-312 Crear elementos
-313 Atributos
-314 Caracteres
-315 Modelos
-316 Reestructurar
-317 Enlaces
-318 Tablas
-319 Mapas de imagen
-320 MathML
-321 Gráficos
-322 Soporte XML
-323 Hojas de estilo
-324 Buscar
-325 Revisar ortografía
-326 Publicar
-327 Cooperación
-328 Imprimir
-329 Numerar
-330 Hacer libros
-331 Anotaciones
-332 Configurar
-333 Atajos de teclado
-334 Accesibilidad
+261 **Show/Hide toolbars
+262 **&Browsing
+263 **&Editing
+264 &Barra de botones
+265 D&irección
+266 Áreas de &mapas
+267 &Destinos
+268 &Aumentar tamaño de texto
+269 &Reducir tamaño de texto
+270 &Vista formateada
+271 Es&tructura
+272 Código &fuente
+273 &Enlaces
+274 A&lternativo
+275 Tabla de &contenidos
+276 Planificación
+277 Dividir vista horizontalmente
+278 Dividir vista verticalmente
+279 &Carácter...
+280 C&olores...
+281 &Estilo CSS...
+282 &Párrafo...
+283 &Imagen de fondo...
+284 Crear &regla...
+285 A&plicar clase...
+286 &Mostrar estilo aplicado...
+287 &Enlazar hoja de estilo...
+288 &Abrir hoja de estilo enlazada...
+289 &Desactivar hoja de estilo enlazada...
+290 Acti&var hoja de estilo enlazada...
+291 &Borrar enlace a hoja de estilo...
+292 Anotar &selección
+293 Anotar &documento
+294 &Mover a selección
+295 Guardar selección como &XPointer
+296 Mover a &XPointer guardado
+297 &Responder a anotación
+298 &Enviar al servidor
+299 &Borrar
+300 &Cargar
+301 &Personalizar consulta...
+302 &Filtro local...
+303 Bloquear recurso
+304 Desbloquear recurso...
+305 Ver propiedades del recurso...
+306 Copiar información de bloqueo
+307 ¿Bloqueado?
+308 Acerca de Amaya
+309 Página web de Amaya en el W3C
+310 Índice
+311 Navegar
+312 Vistas
+313 Seleccionar
+314 Documentos
+315 Crear elementos
+316 Atributos
+317 Caracteres
+318 Modelos
+319 Reestructurar
+320 Enlaces
+321 Tablas
+322 Mapas de imagen
+323 MathML
+324 Gráficos
+325 Soporte XML
+326 Hojas de estilo
+327 Buscar
+328 Revisar ortografía
+329 Publicar
+330 Cooperación
+331 Imprimir
+332 Numerar
+333 Hacer libros
+334 Anotaciones
+335 Configurar
+336 Atajos de teclado
+337 Accesibilidad

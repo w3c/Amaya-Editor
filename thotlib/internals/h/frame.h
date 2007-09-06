@@ -113,6 +113,14 @@ typedef struct _Frame_Ctl {
 
 } Frame_Ctl;
 
+
+typedef enum
+{
+  ToolBarBrowsing,
+  ToolBarEditing,
+  ToolBarNumber
+};
+
 /*
  * wxWidgets Window_Ctl definition
  * this is the description of a Frame_Ctl container
@@ -136,7 +144,7 @@ typedef struct _Window_Ctl {
   int        MenuItemUndo;              /* Menu including the Undo command or -1  */
   int        MenuItemRedo;              /* Menu including the Redo command or -1  */
   int        MenuItemShowPanelID;       /* show/hide panel menu item ID or -1     */
-
+  int        MenuItemShowToolBar[ToolBarNumber];    /* show/hide toolbar menu item ID or -1   */
 } Window_Ctl;
 
 #endif /* #if defined(_WX) */

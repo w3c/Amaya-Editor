@@ -360,6 +360,12 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
           else if (!strcmp (MenuActionList[item_action].ActionName, "AmayaClose"))
             wxApp::s_macExitMenuItemId = item_id;
 #endif /* _MACOS */
+          /* Is it the "ShowBrowsingBar" command */
+          else if (!strcmp (MenuActionList[item_action].ActionName, "ShowBrowsingBar"))
+            WindowTable[window_id].MenuItemShowToolBar[ToolBarBrowsing] = item_id;
+          /* Is it the "ShowEditingBar" command */
+          else if (!strcmp (MenuActionList[item_action].ActionName, "ShowEditingBar"))
+            WindowTable[window_id].MenuItemShowToolBar[ToolBarEditing] = item_id;
         }
       
       if ( p_menu_item &&
@@ -1795,6 +1801,35 @@ void TtaToggleOnOffSidePanel( int frame_id )
     p_window->OpenPanel();
 #endif /* _WX */
 }
+
+/*----------------------------------------------------------------------
+  TtaToggleOnOffToolBar
+  Open or close toolbar.
+  \param frame_id Frame identifier
+  \param toolbar_id Toolbar identifier:
+    - 0 Browsing toolbar
+    - 1 Edition toolbar
+  ----------------------------------------------------------------------*/
+void TtaToggleToolbar( int frame_id, int toolbar_id )
+{
+#ifdef _WX
+  /* get the parent window */
+  AmayaWindow * p_window = TtaGetWindowFromId(TtaGetFrameWindowParentId(frame_id));
+  if (!p_window)
+    {
+      wxASSERT(false);
+      return;
+    }
+
+  /* close or open the panel depending on panel state */
+  if (p_window->IsToolBarShown(toolbar_id))
+    p_window->HideToolBar(toolbar_id);
+  else
+    p_window->ShowToolBar(toolbar_id);
+#endif /* _WX */
+}
+
+
 
 /*----------------------------------------------------------------------
   TtaSplitViewHorizontally

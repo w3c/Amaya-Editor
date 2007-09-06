@@ -526,6 +526,78 @@ void AmayaNormalWindow::EmptyURLBar()
     m_pComboBox->Clear();
 }
 
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  IsToolBarShown
+ * Description:  Query if a toolbar is shown
+ -----------------------------------------------------------------------*/
+bool AmayaNormalWindow::IsToolBarShown(int toolbarID)const
+{
+  switch(toolbarID)
+  {
+    case 0:
+      return GetSizer()->IsShown(m_pToolBarBrowsing);
+    case 1:
+      return GetSizer()->IsShown(m_pToolBarEditing);
+    default:
+      return false;
+  }
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  ShowToolBar
+ * Description:  Toggle a toolbar state (shown/hidden)
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::ShowToolBar(int toolbarID, bool bShow)
+{
+  switch(toolbarID)
+  {
+    case 0:
+      GetSizer()->Show(m_pToolBarBrowsing, bShow);
+      break;
+    case 1:
+      GetSizer()->Show(m_pToolBarEditing, bShow);
+      break;
+    default:
+      break;
+  }
+  Layout();
+  RefreshShowToolBarToggleMenu(toolbarID);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  RefreshShowToolBarToggleMenu
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::RefreshShowToolBarToggleMenu(int toolbarID)
+{
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaNormalWindow::RefreshShowToolBarToggleMenu %d"), toolbarID );
+
+  // update menu items of each documents
+  int doc_id    = 1;
+  int frame_id  = 0;
+  int window_id = GetWindowId();
+  int itemID    = WindowTable[window_id].MenuItemShowToolBar[toolbarID];
+  int action    = FindMenuActionFromMenuItemID(NULL, itemID);
+  ThotBool on   = IsToolBarShown(toolbarID);
+    
+  while ( action >= 0 && doc_id < MAX_DOCUMENTS )
+    {
+      if (LoadedDocument[doc_id-1])
+        {
+          frame_id = LoadedDocument[doc_id-1]->DocViewFrame[0];
+          if (FrameTable[frame_id].FrWindowId == window_id)
+            {
+              /* toggle the menu item of every documents */
+              MenuActionList[action].ActionToggle[doc_id] = on;
+              TtaRefreshMenuItemStats( doc_id, NULL, itemID );
+            }
+        }
+      doc_id++;
+    }
+}
+
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
@@ -549,16 +621,8 @@ void AmayaNormalWindow::CleanUp()
 void AmayaNormalWindow::ToggleFullScreen()
 {
   printf("AmayaNormalWindow::ToggleFullScreen\n");
-  if (IsFullScreen())
-    {
-      GetSizer()->Show(m_pToolBarEditing, true);
-      GetSizer()->Show(m_pToolBarBrowsing, true);
-    }
-  else
-    {
-      GetSizer()->Show(m_pToolBarEditing, false);
-      GetSizer()->Show(m_pToolBarBrowsing, false);      
-    }
+  ShowToolBar(0, IsFullScreen());
+  ShowToolBar(1, IsFullScreen());
   AmayaWindow::ToggleFullScreen();
 }
 
@@ -765,6 +829,7 @@ void AmayaNormalWindow::RefreshToolPanelBar()
   OpenPanel();
 }
 
+
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
  *      Method:  RefreshShowPanelToggleMenu
@@ -798,6 +863,7 @@ void AmayaNormalWindow::RefreshShowPanelToggleMenu()
       doc_id++;
     }
 }
+
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
