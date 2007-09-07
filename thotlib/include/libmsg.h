@@ -241,6 +241,12 @@
 #define TMSG_Copy		236
 #define TMSG_Paste		237
 #define TMSG_Spell		238
-#define TMSG_LIB_MSG_MAX		239
+#define TMSG_MATH_PANEL_1		239
+#define TMSG_MATH_PANEL_2		240
+#define TMSG_MATH_PANEL_3		241
+#define TMSG_MATH_PANEL_4		242
+#define TMSG_MATH_PANEL_5		243
+#define TMSG_MATH_PANEL_6		244
+#define TMSG_LIB_MSG_MAX		245
 
 #endif

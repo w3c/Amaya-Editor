@@ -4,10 +4,10 @@
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
-        <object class="wxChoicebook" name="">
+        <object class="wxChoicebook" name="wxID_MATHS_CHOICEBOOK">
           <style>wxNO_BORDER</style>
           <object class="choicebookpage">
-            <label>Constructions de base</label>
+            <label>Various constructs</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -156,7 +156,7 @@
             </object>
           </object>
           <object class="choicebookpage">
-            <label>Comparaisons et logique</label>
+            <label>Relations of equivalence and orders and logic</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -303,7 +303,7 @@
             </object>
           </object>
           <object class="choicebookpage">
-            <label>Ensembles</label>
+            <label>Set theory and functions and maps</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -471,7 +471,7 @@
             </object>
           </object>
           <object class="choicebookpage">
-            <label>Sommes</label>
+            <label>Arithmetic, operations, complexes and constants</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -618,7 +618,7 @@
             </object>
           </object>
           <object class="choicebookpage">
-            <label>Intégrales</label>
+            <label>Analysis, linear algebra and statistic</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -780,7 +780,7 @@
             </object>
           </object>
           <object class="choicebookpage">
-            <label>Trigonométrie</label>
+            <label>Classical elementary functions</label>
             <object class="wxPanel">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>

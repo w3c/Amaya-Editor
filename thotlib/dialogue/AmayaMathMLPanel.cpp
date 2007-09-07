@@ -2,6 +2,7 @@
 
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
+#include "wx/choicebk.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -31,6 +32,7 @@
 #include "AmayaNormalWindow.h"
 
 
+
 //
 //
 // AmayaMathMLToolPanel
@@ -51,7 +53,16 @@ AmayaMathMLToolPanel::~AmayaMathMLToolPanel()
 bool AmayaMathMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
           const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
-  return wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_MATHML"));
+  if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_MATHML")))
+    return false;
+  wxChoicebook* book = XRCCTRL(*this,"wxID_MATHS_CHOICEBOOK", wxChoicebook);
+  book->SetPageText(0, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_1)));
+  book->SetPageText(1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_2)));
+  book->SetPageText(2, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_3)));
+  book->SetPageText(3, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_4)));
+  book->SetPageText(4, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_5)));
+  book->SetPageText(5, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_6)));
+  return true;
 }
 
 wxString AmayaMathMLToolPanel::GetToolPanelName()const

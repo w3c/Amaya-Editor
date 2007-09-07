@@ -3746,6 +3746,31 @@
 	<message xml:lang="tw">拼寫檢查</message>
 	<message xml:lang="sk">Kontrola pravopisu</message>
 </label>
+<label define="TMSG_MATH_PANEL_1">
+  <message xml:lang="en">Various constructs</message>
+  <message xml:lang="fr">Constructions diverses</message>
+</label>
+<label define="TMSG_MATH_PANEL_2">
+  <message xml:lang="en">Relations, orders and logic</message>
+  <message xml:lang="fr">Relations, ordre et logique</message>
+</label>
+<label define="TMSG_MATH_PANEL_3">
+  <message xml:lang="en">Sets and functions</message>
+  <message xml:lang="fr">Ensembles et fonctions</message>
+</label>
+<label define="TMSG_MATH_PANEL_4">
+  <message xml:lang="en">Arithmetic, operations, complexes and constants</message>
+  <message xml:lang="fr">Arithmétique, opérations, complexes et constantes</message>
+</label>
+<label define="TMSG_MATH_PANEL_5">
+  <message xml:lang="en">Analysis, linear algebra and statistic</message>
+  <message xml:lang="fr">Analyse, algèbre linéaire et statistiques</message>
+</label>
+<label define="TMSG_MATH_PANEL_6">
+  <message xml:lang="en">Trigonometry and logarithms</message>
+  <message xml:lang="fr">Trigonométrie et logarithmes</message>
+</label>
+
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>
