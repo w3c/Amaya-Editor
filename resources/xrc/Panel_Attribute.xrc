@@ -5,7 +5,7 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxListCtrl" name="wxID_CLIST_ATTR">
-          <size>140,150</size>
+          <size>120,150</size>
           <style>wxLC_REPORT|wxLC_ALIGN_LEFT|wxLC_SINGLE_SEL|wxRAISED_BORDER</style>
           <focused>1</focused>
         </object>
@@ -90,7 +90,6 @@
         <border>2</border>
       </object>
     </object>
-    <size>140,-1</size>
     <style>wxTAB_TRAVERSAL</style>
   </object>
   <object class="wxPanel" name="wxID_SUBPANEL_ATTRIBUTE_ENUM">

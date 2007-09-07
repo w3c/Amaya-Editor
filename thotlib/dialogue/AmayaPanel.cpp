@@ -239,6 +239,7 @@ void AmayaToolPanelBar::ShowPanel(AmayaToolPanel* panel, bool bShow)
         m_scwin->GetSizer()->Show(item->dock, bShow);
       if(item->floa)
         item->floa->Show(bShow);
+      Layout();
     }
 }
 
@@ -249,6 +250,7 @@ void AmayaToolPanelBar::MinimizePanel(AmayaToolPanel* panel, bool bMin)
     {
       if(item->dock->Minimize(bMin))
         item->minimized = bMin;
+      Layout();
     }
 }
 
@@ -285,6 +287,7 @@ void AmayaToolPanelBar::FloatPanel(AmayaToolPanel* panel, bool bFloat)
             }
           item->dock->Attach();
         }
+      Layout();
     }
 }
 
