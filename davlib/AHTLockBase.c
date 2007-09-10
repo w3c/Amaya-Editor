@@ -48,7 +48,7 @@ PUBLIC time_t strtotime (char *time)
     while (ptr1 && *ptr1 && *ptr1==' ') ptr1++;
  
     /* month */
-    ptr2 = strchr ((const char*)ptr1,' ');
+    ptr2 = strchr (ptr1,' ');
     if (!ptr2) return 0;
     *ptr2='\0';
     ptr2++;
@@ -62,7 +62,7 @@ PUBLIC time_t strtotime (char *time)
     /* day */
     ptr1 = ptr2; 
     while (ptr1 && *ptr1 && *ptr1==' ') ptr1++;
-    ptr2 = strchr ((const char*)ptr1,' ');
+    ptr2 = strchr (ptr1,' ');
     if (!ptr2) return 0;
     *ptr2='\0';
     ptr2++;
@@ -72,7 +72,7 @@ PUBLIC time_t strtotime (char *time)
     /* hour */
     ptr1 = ptr2; 
     while (ptr1 && *ptr1 && *ptr1==' ') ptr1++;
-    ptr2 = strchr ((const char*)ptr1,':');
+    ptr2 = strchr (ptr1,':');
     if (!ptr2) return 0;
     *ptr2='\0';
     ptr2++;
@@ -81,7 +81,7 @@ PUBLIC time_t strtotime (char *time)
 
     /* minute */
     ptr1 = ptr2; 
-    ptr2 = strchr ((const char*)ptr1,':');
+    ptr2 = strchr (ptr1,':');
     if (!ptr2) return 0;
     *ptr2='\0';
     ptr2++;
@@ -90,7 +90,7 @@ PUBLIC time_t strtotime (char *time)
    
     /* second */
     ptr1 = ptr2; 
-    ptr2 = strchr ((const char*)ptr1,' ');
+    ptr2 = strchr (ptr1,' ');
     if (!ptr2) return 0;
     *ptr2='\0';
     ptr2++;
