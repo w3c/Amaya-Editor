@@ -207,40 +207,42 @@
 205 Cabeçalho nível 1
 206 Cabeçalho nível 2
 207 Cabeçalho nível 3
-208 Lista com bolinhas
-209 Lista numerada
-210 Lista de definição
-211 Enlace
-212 Tabela
-213 **You are about to close %d open tabs. Are you sure you want to continue?
-214 **Warn me when I attempt to close multiple tabs
-215 **Close tabs
-216 **No error detected
-217 Exibir erros de gramática (parsing)
-218 **Boxes
-219 Divisão
-220 Destino
-221 Inserção On/Off
-222 Supressão On/Off
-223 Índice On/Off
-224 Expoente On/Off
-225 Termo
-226 Definição
-227 Objeto
-228 **CSS Style
-229 Arquivos
-230 **Horizontal split/unsplit
-231 **Vertical split/unsplit
-232 **Show/hide tools
-233 Desfazer
-234 Refazer
-235 Recortar
-236 Copiar
-237 Colar
-238 Verificar ortografia
-239 **Various constructs
-240 **Relations, orders and logic
-241 **Sets and functions
-242 **Arithmetic, operations, complexes and constants
-243 **Analysis, linear algebra and statistic
-244 **Trigonometry and logarithms
+208 Cabeçalho nível 4
+209 Parágrafo
+210 Lista com bolinhas
+211 Lista numerada
+212 Lista de definição
+213 Enlace
+214 Tabela
+215 **You are about to close %d open tabs. Are you sure you want to continue?
+216 **Warn me when I attempt to close multiple tabs
+217 **Close tabs
+218 **No error detected
+219 Exibir erros de gramática (parsing)
+220 **Boxes
+221 Divisão
+222 Destino
+223 Inserção On/Off
+224 Supressão On/Off
+225 Índice On/Off
+226 Expoente On/Off
+227 Termo
+228 Definição
+229 Objeto
+230 **CSS Style
+231 Arquivos
+232 **Horizontal split/unsplit
+233 **Vertical split/unsplit
+234 **Show/hide tools
+235 Desfazer
+236 Refazer
+237 Recortar
+238 Copiar
+239 Colar
+240 Verificar ortografia
+241 **Various constructs
+242 **Relations, orders and logic
+243 **Sets and functions
+244 **Arithmetic, operations, complexes and constants
+245 **Analysis, linear algebra and statistic
+246 **Trigonometry and logarithms

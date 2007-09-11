@@ -3238,7 +3238,7 @@
 	<message xml:lang="de">Überschrift Ebene 1</message>
 	<message xml:lang="it">Intestazione di livello 1</message>
 	<message xml:lang="tr">Başlık 1</message>
-	<message xml:lang="es">Cabecera nivel 1 (h1)</message>
+	<message xml:lang="es">Cabecera nivel 1</message>
 	<message xml:lang="pt">Cabeçalho nível 1</message>
 	<message xml:lang="fi">Otsikkokoko 1</message>
 	<message xml:lang="ru">Заголовок уровень 1</message>
@@ -3246,7 +3246,7 @@
 	<message xml:lang="ka">სათაურის დონე 1</message>
 	<message xml:lang="cn">标题1</message>
 	<message xml:lang="tw">標題1</message>
-	<message xml:lang="sk">Nadpis úrovne 1 (h1)</message>
+	<message xml:lang="sk">Nadpis úrovne 1</message>
 </label>
 <label define="TMSG_BUTTON_H2">
 	<message xml:lang="en">Heading level 2</message>
@@ -3254,7 +3254,7 @@
 	<message xml:lang="de">Überschrift Ebene 2</message>
 	<message xml:lang="it">Intestazione di livello 2</message>
 	<message xml:lang="tr">Başlık 2</message>
-	<message xml:lang="es">Cabecera nivel 2 (h2)</message>
+	<message xml:lang="es">Cabecera nivel 2</message>
 	<message xml:lang="pt">Cabeçalho nível 2</message>
 	<message xml:lang="fi">Otsikkokoko 2</message>
 	<message xml:lang="ru">Заголовок уровень 2</message>
@@ -3262,7 +3262,7 @@
 	<message xml:lang="ka">სათაურის დონე 2</message>
 	<message xml:lang="cn">标题2</message>
 	<message xml:lang="tw">標題2</message>
-	<message xml:lang="sk">Nadpis úrovne 2 (h2)</message>
+	<message xml:lang="sk">Nadpis úrovne 2</message>
 </label>
 <label define="TMSG_BUTTON_H3">
 	<message xml:lang="en">Heading level 3</message>
@@ -3270,7 +3270,7 @@
 	<message xml:lang="de">Überschrift Ebene 3</message>
 	<message xml:lang="it">Intestazione di livello 3</message>
 	<message xml:lang="tr">Başlık 3</message>
-	<message xml:lang="es">Cabecera nivel 3 (h3)</message>
+	<message xml:lang="es">Cabecera nivel 3</message>
 	<message xml:lang="pt">Cabeçalho nível 3</message>
 	<message xml:lang="fi">Otsikkokoko 3</message>
 	<message xml:lang="ru">Заголовок уровень 3</message>
@@ -3278,7 +3278,39 @@
 	<message xml:lang="ka">სათაურის დონე 3</message>
 	<message xml:lang="cn">标题3</message>
 	<message xml:lang="tw">標題3</message>
-	<message xml:lang="sk">Nadpis úrovne 3 (h3)</message>
+	<message xml:lang="sk">Nadpis úrovne 3</message>
+</label>
+<label define="TMSG_BUTTON_H4">
+	<message xml:lang="en">Heading level 4</message>
+	<message xml:lang="fr">Titre niveau 4</message>
+	<message xml:lang="de">Überschrift Ebene 4</message>
+	<message xml:lang="it">Intestazione di livello 4</message>
+	<message xml:lang="tr">Başlık 4</message>
+	<message xml:lang="es">Cabecera nivel 4</message>
+	<message xml:lang="pt">Cabeçalho nível 4</message>
+	<message xml:lang="fi">Otsikkokoko 4</message>
+	<message xml:lang="ru">Заголовок уровень 4</message>
+	<message xml:lang="hu">4. szint</message>
+	<message xml:lang="ka">სათაურის დონე 4</message>
+	<message xml:lang="cn">标题4</message>
+	<message xml:lang="tw">標題4</message>
+	<message xml:lang="sk">Nadpis úrovne 4</message>
+</label>
+<label define="TMSG_BUTTON_P">
+	<message xml:lang="en">Paragraph</message>
+	<message xml:lang="fr">Paragraphe</message>
+	<message xml:lang="de">Absatz</message>
+	<message xml:lang="it">Paragrafo</message>
+	<message xml:lang="tr">Paragraf</message>
+	<message xml:lang="es">Párrafo</message>
+	<message xml:lang="pt">Parágrafo</message>
+	<message xml:lang="fi">Pykälä</message>
+	<message xml:lang="ru">Параграф</message>
+	<message xml:lang="hu">&amp;Bekezdés</message>
+	<message xml:lang="ka">პარაგრაფი</message>
+	<message xml:lang="cn">段落</message>
+	<message xml:lang="tw">段落</message>
+	<message xml:lang="sk">Odsek</message>
 </label>
 <label define="TMSG_BUTTON_UL">
 	<message xml:lang="en">Bulleted list</message>

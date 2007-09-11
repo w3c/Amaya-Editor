@@ -207,40 +207,42 @@
 205 1. szint
 206 2. szint
 207 3. szint
-208 Listajeles lista
-209 Számozott lista
-210 Meghatározás lista
-211 Kapocs
-212 Táblázat
-213 %d lap bezárására készül. Valóban folytatni kívánja?
-214 Figyelmeztessen több lap bezárásakor
-215 Lapok bezárása
-216 Nincs hiba
-217 Elemzési hibák mutatása
-218 Dobozok
-219 Felosztás
-220 Létrehozása
-221 &Beillesztés On/Off
-222 &Törlés On/Off
-223 &Alsó index On/Off
-224 Felső index On/Off
-225 Szócikk
-226 Meghatározás
-227 Objektum
-228 CSS Stílus
-229 Fájl
-230 Vízszintes felosztás
-231 Függőleges felosztás
-232 Eszközsor mutatása
-233 Visszavon
-234 Újra
-235 Kivágás
-236 Másolás
-237 Beillesztés
-238 Szóelemző
-239 **Various constructs
-240 **Relations, orders and logic
-241 **Sets and functions
-242 **Arithmetic, operations, complexes and constants
-243 **Analysis, linear algebra and statistic
-244 **Trigonometry and logarithms
+208 4. szint
+209 &Bekezdés
+210 Listajeles lista
+211 Számozott lista
+212 Meghatározás lista
+213 Kapocs
+214 Táblázat
+215 %d lap bezárására készül. Valóban folytatni kívánja?
+216 Figyelmeztessen több lap bezárásakor
+217 Lapok bezárása
+218 Nincs hiba
+219 Elemzési hibák mutatása
+220 Dobozok
+221 Felosztás
+222 Létrehozása
+223 &Beillesztés On/Off
+224 &Törlés On/Off
+225 &Alsó index On/Off
+226 Felső index On/Off
+227 Szócikk
+228 Meghatározás
+229 Objektum
+230 CSS Stílus
+231 Fájl
+232 Vízszintes felosztás
+233 Függőleges felosztás
+234 Eszközsor mutatása
+235 Visszavon
+236 Újra
+237 Kivágás
+238 Másolás
+239 Beillesztés
+240 Szóelemző
+241 **Various constructs
+242 **Relations, orders and logic
+243 **Sets and functions
+244 **Arithmetic, operations, complexes and constants
+245 **Analysis, linear algebra and statistic
+246 **Trigonometry and logarithms

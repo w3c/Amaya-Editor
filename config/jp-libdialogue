@@ -207,40 +207,42 @@
 205 **Heading level 1
 206 **Heading level 2
 207 **Heading level 3
-208 **Bulleted list
-209 **Numbered list
-210 **Definition list
-211 **Link
-212 **Table
-213 **You are about to close %d open tabs. Are you sure you want to continue?
-214 **Warn me when I attempt to close multiple tabs
-215 **Close tabs
-216 **No error detected
-217 **Show parsing errors
-218 **Boxes
-219 **Division
-220 **Target
-221 **Insertion On/Off
-222 **Deletion On/Off
-223 **Subscript On/Off
-224 **Superscript On/Off
-225 **Term
-226 **Definition
-227 **Object
-228 **CSS Style
-229 **Files
-230 **Horizontal split/unsplit
-231 **Vertical split/unsplit
-232 **Show/hide tools
-233 **Undo
-234 **Redo
-235 **Cut
-236 **Copy
-237 **Paste
-238 **Check spelling
-239 **Various constructs
-240 **Relations, orders and logic
-241 **Sets and functions
-242 **Arithmetic, operations, complexes and constants
-243 **Analysis, linear algebra and statistic
-244 **Trigonometry and logarithms
+208 **Heading level 4
+209 **Paragraph
+210 **Bulleted list
+211 **Numbered list
+212 **Definition list
+213 **Link
+214 **Table
+215 **You are about to close %d open tabs. Are you sure you want to continue?
+216 **Warn me when I attempt to close multiple tabs
+217 **Close tabs
+218 **No error detected
+219 **Show parsing errors
+220 **Boxes
+221 **Division
+222 **Target
+223 **Insertion On/Off
+224 **Deletion On/Off
+225 **Subscript On/Off
+226 **Superscript On/Off
+227 **Term
+228 **Definition
+229 **Object
+230 **CSS Style
+231 **Files
+232 **Horizontal split/unsplit
+233 **Vertical split/unsplit
+234 **Show/hide tools
+235 **Undo
+236 **Redo
+237 **Cut
+238 **Copy
+239 **Paste
+240 **Check spelling
+241 **Various constructs
+242 **Relations, orders and logic
+243 **Sets and functions
+244 **Arithmetic, operations, complexes and constants
+245 **Analysis, linear algebra and statistic
+246 **Trigonometry and logarithms

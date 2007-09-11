@@ -204,43 +204,45 @@
 202 Silno zvýrazniť On/Off
 203 Zdrojový kód On/Off
 204 Obrázok (img)
-205 Nadpis úrovne 1 (h1)
-206 Nadpis úrovne 2 (h2)
-207 Nadpis úrovne 3 (h3)
-208 Odrážky (ul)
-209 Číslovanie (ol)
-210 Zoznam definícií (dl)
-211 Hypertextový odkaz
-212 Tabuľka (table)
-213 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
-214 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
-215 Zatvoriť karty
-216 Žiadne chyby neboli nájdené
-217 Zobraziť nájdené chyby
-218 Kolónky
-219 Oddelenie, vrstva (div)
-220 Záložka
-221 Novovložený text On/Off
-222 Text na odstránenie On/Off
-223 Dolný index On/Off
-224 Horný index On/Off
-225 Termín (dt)
-226 Definícia termínu (dd)
-227 Objekt (object)
-228 CSS pravidlá
-229 Súbor
-230 Rozdeliť okno horizontálne
-231 Rozdeliť okno vertikálne
-232 Zobraziť/skryť nástroje
-233 Späť
-234 Opakovať
-235 Vystrihnúť
-236 Kopírovať
-237 Prilepiť
-238 Kontrola pravopisu
-239 **Various constructs
-240 **Relations, orders and logic
-241 **Sets and functions
-242 **Arithmetic, operations, complexes and constants
-243 **Analysis, linear algebra and statistic
-244 **Trigonometry and logarithms
+205 Nadpis úrovne 1
+206 Nadpis úrovne 2
+207 Nadpis úrovne 3
+208 Nadpis úrovne 4
+209 Odsek
+210 Odrážky (ul)
+211 Číslovanie (ol)
+212 Zoznam definícií (dl)
+213 Hypertextový odkaz
+214 Tabuľka (table)
+215 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
+216 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
+217 Zatvoriť karty
+218 Žiadne chyby neboli nájdené
+219 Zobraziť nájdené chyby
+220 Kolónky
+221 Oddelenie, vrstva (div)
+222 Záložka
+223 Novovložený text On/Off
+224 Text na odstránenie On/Off
+225 Dolný index On/Off
+226 Horný index On/Off
+227 Termín (dt)
+228 Definícia termínu (dd)
+229 Objekt (object)
+230 CSS pravidlá
+231 Súbor
+232 Rozdeliť okno horizontálne
+233 Rozdeliť okno vertikálne
+234 Zobraziť/skryť nástroje
+235 Späť
+236 Opakovať
+237 Vystrihnúť
+238 Kopírovať
+239 Prilepiť
+240 Kontrola pravopisu
+241 **Various constructs
+242 **Relations, orders and logic
+243 **Sets and functions
+244 **Arithmetic, operations, complexes and constants
+245 **Analysis, linear algebra and statistic
+246 **Trigonometry and logarithms

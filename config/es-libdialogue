@@ -204,43 +204,45 @@
 202 Enérgico On/Off
 203 Código On/Off
 204 Imagen
-205 Cabecera nivel 1 (h1)
-206 Cabecera nivel 2 (h2)
-207 Cabecera nivel 3 (h3)
-208 Lista no ordenada (ul)
-209 Lista ordenada (ol)
-210 Lista de definición (dl)
-211 Enlace
-212 Tabla
-213 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
-214 Avisarme cuando intente cerrar múltiples pestañas
-215 Cerrar pestañas
-216 Ningún error detectado
-217 Mostrar errores sintácticos
-218 Cajas
-219 División
-220 Destino
-221 Inserción On/Off
-222 Borrado On/Off
-223 Subíndice On/Off
-224 Superíndice On/Off
-225 Término
-226 Definición
-227 Objeto
-228 Estilo CSS
-229 Archivos
-230 Dividir horizontalmente
-231 Dividir vista verticalmente
-232 Ventana de herramientas
-233 Deshacer
-234 Rehacer
-235 Cortar
-236 Copiar
-237 Pegar
-238 Revisar ortografía
-239 **Various constructs
-240 **Relations, orders and logic
-241 **Sets and functions
-242 **Arithmetic, operations, complexes and constants
-243 **Analysis, linear algebra and statistic
-244 **Trigonometry and logarithms
+205 Cabecera nivel 1
+206 Cabecera nivel 2
+207 Cabecera nivel 3
+208 Cabecera nivel 4
+209 Párrafo
+210 Lista no ordenada (ul)
+211 Lista ordenada (ol)
+212 Lista de definición (dl)
+213 Enlace
+214 Tabla
+215 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
+216 Avisarme cuando intente cerrar múltiples pestañas
+217 Cerrar pestañas
+218 Ningún error detectado
+219 Mostrar errores sintácticos
+220 Cajas
+221 División
+222 Destino
+223 Inserción On/Off
+224 Borrado On/Off
+225 Subíndice On/Off
+226 Superíndice On/Off
+227 Término
+228 Definición
+229 Objeto
+230 Estilo CSS
+231 Archivos
+232 Dividir horizontalmente
+233 Dividir vista verticalmente
+234 Ventana de herramientas
+235 Deshacer
+236 Rehacer
+237 Cortar
+238 Copiar
+239 Pegar
+240 Revisar ortografía
+241 **Various constructs
+242 **Relations, orders and logic
+243 **Sets and functions
+244 **Arithmetic, operations, complexes and constants
+245 **Analysis, linear algebra and statistic
+246 **Trigonometry and logarithms

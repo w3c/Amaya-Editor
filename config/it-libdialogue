@@ -207,40 +207,42 @@
 205 Intestazione di livello 1
 206 Intestazione di livello 2
 207 Intestazione di livello 3
-208 Lista puntata
-209 Lista numerata
-210 Lista di definizioni
-211 Collegamento
-212 Tabella
-213 Stai per chiudere %d tab aperti. Vuoi proprio proseguire?
-214 Avvisami quando cerco di chiudere pi tab
-215 Chiudi tab
-216 Nessun errore trovato
-217 Mostra le errore
-218 Box
-219 Divisione
-220 Obiettivo
-221 Inserzione On/Off
-222 Cancellazione On/Off
-223 Pedice On/Off
-224 Indice On/Off
-225 Termine
-226 Definizione
-227 Oggetto
-228 CSS Style
-229 Files
-230 Dividi la vista in orizzontale
-231 Dividi la vista in verticale
-232 Mostra strumenti
-233 Ritratta
-234 Rifai
-235 Taglia
-236 Copia
-237 Incolla
-238 Controllo ortografico
-239 **Various constructs
-240 **Relations, orders and logic
-241 **Sets and functions
-242 **Arithmetic, operations, complexes and constants
-243 **Analysis, linear algebra and statistic
-244 **Trigonometry and logarithms
+208 Intestazione di livello 4
+209 Paragrafo
+210 Lista puntata
+211 Lista numerata
+212 Lista di definizioni
+213 Collegamento
+214 Tabella
+215 Stai per chiudere %d tab aperti. Vuoi proprio proseguire?
+216 Avvisami quando cerco di chiudere pi tab
+217 Chiudi tab
+218 Nessun errore trovato
+219 Mostra le errore
+220 Box
+221 Divisione
+222 Obiettivo
+223 Inserzione On/Off
+224 Cancellazione On/Off
+225 Pedice On/Off
+226 Indice On/Off
+227 Termine
+228 Definizione
+229 Oggetto
+230 CSS Style
+231 Files
+232 Dividi la vista in orizzontale
+233 Dividi la vista in verticale
+234 Mostra strumenti
+235 Ritratta
+236 Rifai
+237 Taglia
+238 Copia
+239 Incolla
+240 Controllo ortografico
+241 **Various constructs
+242 **Relations, orders and logic
+243 **Sets and functions
+244 **Arithmetic, operations, complexes and constants
+245 **Analysis, linear algebra and statistic
+246 **Trigonometry and logarithms
