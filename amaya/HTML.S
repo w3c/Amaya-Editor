@@ -979,7 +979,7 @@ EXCEPT
         SCRIPT_:        ReturnCreateNL, NoReplicate;
         Text_Area:      ReturnCreateNL, NoReplicate;
         HTMLfragment:   NoMove, NoResize, Hidden, NoBreakByReturn;
-        Division:       NoMove, NoResize;
+        Division:       NoMove, NoResize, NoBreakByReturn;
         INS:            NoReplicate;
         DEL:            NoReplicate;
         ins:            NoReplicate;
