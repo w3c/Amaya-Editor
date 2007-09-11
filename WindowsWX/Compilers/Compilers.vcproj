@@ -178,7 +178,7 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\..\wxWidgets\lib\vc_dll"
-				IgnoreDefaultLibraryNames="libc"
+				IgnoreDefaultLibraryNames="libc;libcmt"
 				ProgramDatabaseFile=".\..\bin/Compilers.pdb"
 				SubSystem="2"
 				TargetMachine="1"

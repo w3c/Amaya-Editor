@@ -80,7 +80,7 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\wxWidgets\lib\vc_dll;..\..\Mesa\lib;..\..\freetype\objs"
-				IgnoreDefaultLibraryNames="LIBC.lib"
+				IgnoreDefaultLibraryNames="LIBC.lib;LIBCMT.lib"
 				ProgramDatabaseFile=".\bin/amaya.pdb"
 				SubSystem="2"
 				TargetMachine="1"
