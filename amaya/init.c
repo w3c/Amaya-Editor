@@ -2864,10 +2864,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           page_position = 1;
         }
       else
-        {
-          isOpen = FALSE;
-          requested_doc = 0;
-        }
+        isOpen = FALSE;
+      requested_doc = 0;
     }
   else if (inNewWindow)
     {
