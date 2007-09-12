@@ -116,7 +116,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\wxWidgets\lib\vc_dll\mswud,..\,..\..\..\wxWidgets\include,..\..\..\wxWidgets\contrib\include,..\..\libpng\zlib,..\..\..\wxWidgets\src\jpeg,..\..\..\wxWidgets\src\tiff,..\..\..\wxWidgets\src\png,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\amaya,..\..\..\freetype\include"
-				PreprocessorDefinitions="WWW_WIN_DLL;SOCKS;__WXMSW__;UNICODE;STDC_HEADERS;XMD_H;_STIX;_FONTCONFIG;_GLANIM;_GLTRANSFORMATION;THOT_TOOLTIPS;_SVGLIB;_SVGANIM;_WINDOWS;_GL;WIN32;WINVER=0x400;wxUSE_GUI=1;_WX;WXUSINGDLL"
+				PreprocessorDefinitions="WWW_WIN_DLL;SOCKS;__WXMSW__;UNICODE;STDC_HEADERS;XMD_H;_STIX;_FONTCONFIG;_GLANIM;THOT_TOOLTIPS;_SVGLIB;_SVGANIM;_WINDOWS;_GL;WIN32;WINVER=0x400;wxUSE_GUI=1;_WX;WXUSINGDLL"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\Debug/libThotEditor.pch"

@@ -232,7 +232,7 @@
 				<Tool
 					Name="VCResourceCompilerTool"
 					PreprocessorDefinitions=""
-					AdditionalIncludeDirectories="\src\Amaya\batch"
+					AdditionalIncludeDirectories=""
 				/>
 			</FileConfiguration>
 			<FileConfiguration
@@ -241,7 +241,7 @@
 				<Tool
 					Name="VCResourceCompilerTool"
 					PreprocessorDefinitions=""
-					AdditionalIncludeDirectories="\src\Amaya\batch"
+					AdditionalIncludeDirectories=""
 				/>
 			</FileConfiguration>
 		</File>
