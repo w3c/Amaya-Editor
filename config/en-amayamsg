@@ -445,4 +445,11 @@
 443 Remember passwords for sites
 444 Sites
 445 Remove All
-446 New
+446 An error occured during the building of the javascript/DOM objects
+447 A script is still running but will be aborted as soon as possible. Please try later.
+448 Javascript/DOM can not be enabled in this view.
+449 Enter a javascript command:
+450 The command returned the value: %s
+451 The command returned no value
+452 SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+453 New

@@ -24,7 +24,8 @@ typedef enum
   docMath,
   docXml,
   docLibrary,
-  docBookmark
+  docBookmark,
+  docJavascript
 } DocumentType;
 
 /* The different events to open a new document */

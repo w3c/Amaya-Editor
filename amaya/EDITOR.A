@@ -210,7 +210,7 @@ MENUS
 	Types.StructTypes button:BBase -> CreateBase;
 	Types.StructTypes button:BMeta -> CreateMeta;
 	Types.StructTypes button:BLink -> CreateLinkInHead;
-	Types.StructTypes button:BScript -> CreateScript;
+	Types.StructTypes button:BScript -> InsertScript;
 	Types.StructTypes button:BNoScript -> CreateNOSCRIPT;
 
 	Types button:BParagraph -> CreateParagraph;
@@ -364,6 +364,13 @@ MENUS
 	Cooperation_ button:BCopyLock -> CopyLockInformation;
 	Cooperation_ Separator;
   Cooperation_ toggle:BLockIndicator -> LockIndicator;
+
+  JavascriptDom_ toggle:BSwitch_JS_DOM-> SwitchJavaScript;
+  JavascriptDom_ button:BExecuteACommand -> ExecuteACommand;
+  JavascriptDom_ button:BExecuteExternal -> ExecuteExternal;
+	JavascriptDom_ Separator;
+  JavascriptDom_ button:BAddExternal -> AddExternal;
+  JavascriptDom_ button:BInsertScript -> InsertScript;
 
 	Help_ button:BInformation -> HelpAmaya icon:about.png;
 	Help_ button:BAtW3C -> HelpAtW3C;

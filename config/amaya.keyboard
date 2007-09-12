@@ -143,6 +143,13 @@ Ctrl <Key>i , Ctrl <Key>x:         SetOnOffDefinition()
 Ctrl <Key>i , Ctrl <Key>y:         SetOnOffAcronym() 
 Ctrl <Key>i , Ctrl <Key>z:         SetOnOffBDO() 
 
+#Javascript and DOM
+Ctrl <Key>j , Ctrl <Key>j:         Switch_JS_DOM() 
+Ctrl <Key>j , Ctrl <Key>c:         ExecuteACommand() 
+Ctrl <Key>j , Ctrl <Key>e:         ExecuteExternal() 
+Ctrl <Key>j , Ctrl <Key>a:         AddExternal() 
+Ctrl <Key>j , Ctrl <Key>i:         CreateScript() 
+
 #Links and SvgLibrary
 Ctrl <Key>l , Ctrl <Key>a:         AddNewModelIntoLibrary()
 Ctrl <Key>l , Ctrl <Key>c:         CopyLocation()

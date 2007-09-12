@@ -239,7 +239,9 @@ typedef enum _ClickEvent {
 #define DocInfoDocTypeTitle   478
 #define DocInfoDocType        479
 #define CssDirSave            480
-#define MAX_REF         481
+#define JavascriptPromptForm 481
+#define JavascriptPromptText 482
+#define MAX_REF 483
 
 #define FormPrint        1
 #define PrintOptions     2
@@ -387,6 +389,7 @@ THOT_EXPORT ThotBool   Answer_save_password;
 THOT_EXPORT char       Display_password[NAME_LENGTH];
 THOT_EXPORT char       ScanFilter[NAME_LENGTH]; /* to scan directories    */
 THOT_EXPORT char       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the user for a MathML expression */
+THOT_EXPORT char       JavascriptPromptValue[MAX_LENGTH]; /* value typed by the user in a prompt form */
 THOT_EXPORT char       IdElemName[MAX_LENGTH]; /* element name typed by the user from the MakeID menu */
 THOT_EXPORT char       IdStatus[50]; /* element name typed by the user from the MakeID menu */
 THOT_EXPORT char       ImgFilter[NAME_LENGTH];
@@ -451,6 +454,7 @@ THOT_EXPORT ThotBool   IsNewAnchor;
 THOT_EXPORT ThotBool   UseLastTarget;
 THOT_EXPORT ThotBool   LinkAsCSS;
 THOT_EXPORT ThotBool   LinkAsXmlCSS;
+THOT_EXPORT ThotBool   LinkAsJavascript;
 THOT_EXPORT ThotBool   SaveAsHTML;
 THOT_EXPORT ThotBool   SaveAsXML;
 THOT_EXPORT ThotBool   SaveAsText;
@@ -518,6 +522,7 @@ typedef enum
   docTemplate,
   docLibrary,
   docBookmark,
+  docJavascript,
   docTypeMax
 } DocumentType;
 

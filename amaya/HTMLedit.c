@@ -1292,7 +1292,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
 
 /*----------------------------------------------------------------------
   SetREFattribute
-  Set the HREF or CITE attribue of the element to the concatenation of
+  Set the HREF or CITE attribute of the element to the concatenation of
   targetURL and targetName expressed in dialog charset.
   ----------------------------------------------------------------------*/
 void SetREFattribute (Element element, Document doc, char *targetURL,
@@ -1334,6 +1334,8 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
             attrType.AttrTypeNum = HTML_ATTR_cite;
           else if (elType.ElTypeNum == HTML_EL_FRAME)
             attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
+          else if (elType.ElTypeNum == HTML_EL_SCRIPT_)
+            attrType.AttrTypeNum = HTML_ATTR_script_src;
           else
             attrType.AttrTypeNum = HTML_ATTR_HREF_;
         }
@@ -1754,7 +1756,9 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
                       elType.ElTypeNum == HTML_EL_INS ||
                       elType.ElTypeNum == HTML_EL_DEL)
                     attrType.AttrTypeNum = HTML_ATTR_cite;
-                  else
+                  else if (elType.ElTypeNum == HTML_EL_SCRIPT_)
+                    attrType.AttrTypeNum = HTML_ATTR_script_src;
+                  else 
                     attrType.AttrTypeNum = HTML_ATTR_HREF_;
                 }
 #ifdef _SVG
@@ -1818,6 +1822,10 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
         /* select a CSS file */
         CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
                              DocSelect, DirSelect, docCSS);
+      else if (LinkAsJavascript)
+        /* select a Javascript file */
+        CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
+                             DocSelect, DirSelect, docJavascript);
       else
         /* select any file */
         CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
@@ -1832,6 +1840,12 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
                                    TtaGetViewFrame (doc, 1), URL_list,
                                    AttrHREFvalue,
                                    doc, docCSS);
+      else if (LinkAsJavascript)
+        /* select a Javascript file */
+        created = CreateHRefDlgWX (BaseDialog + AttrHREFForm,
+                                   TtaGetViewFrame (doc, 1), URL_list,
+                                   AttrHREFvalue,
+                                   doc, docJavascript);
       else
         /* select any file */
         created = CreateHRefDlgWX (BaseDialog + AttrHREFForm,

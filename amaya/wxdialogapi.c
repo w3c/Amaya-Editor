@@ -992,6 +992,7 @@ ThotBool CreateDocInfoDlgWX (int ref, ThotWindow parent, int doc)
  Used to :
   - Add CSS file
   - Create/Modify a link
+  - Add Javascript file
  ------------------------------------------------------------------------*/
 ThotBool CreateHRefDlgWX (int ref, ThotWindow parent,
                           const char *url_list, const char *HRefValue,
@@ -1003,8 +1004,11 @@ ThotBool CreateHRefDlgWX (int ref, ThotWindow parent,
   wxString wx_filter;
   if (doc_type == docCSS)
     wx_filter = APPCSSNAMEFILTER;
-  else 
+  else if (doc_type == docJavascript)
+    wx_filter = APPJAVASCRIPTNAMEFILTER;
+  else
     wx_filter = APPFILENAMEFILTER;
+
   wxArrayString wx_items = BuildWX_URL_List(url_list);
 
   /* check if the dialog is already open */

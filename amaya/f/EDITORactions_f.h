@@ -6,6 +6,16 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void SwitchJavaScript ( Document document,
+                               View view );
+extern void ExecuteACommand ( Document document,
+                              View view );
+extern void InsertScript ( Document document,
+                           View view );
+extern void AddExternal ( Document document,
+                          View view );
+extern void ExecuteExternal ( Document document,
+                              View view );
 extern void NewXHTML ( Document doc,
                        View view );
 extern void NewXHTMLBasic ( Document doc,
@@ -73,7 +83,8 @@ extern void CreateComment ( Document doc,
 extern void CreateDate ( Document doc,
                          View view );
 extern void CreateScript ( Document doc,
-                           View view );
+                           View view,
+                           ThotBool ExternalFile );
 extern ThotBool HTMLelementAllowed ( Document doc );
 extern void CreateHTMLelement ( int typeNum,
                                 Document doc );
@@ -275,6 +286,16 @@ extern void LockIndicator ( Document doc,
 
 #else /* __STDC__ */
 
+extern void SwitchJavaScript ( Document document,
+                                 View view );
+extern void ExecuteACommand ( Document document,
+                                View view );
+extern void InsertScript ( Document document,
+                             View view );
+extern void AddExternal ( Document document,
+                            View view );
+extern void ExecuteExternal ( Document document,
+                                View view );
 extern void NewXHTML ( Document doc,
                          View view );
 extern void NewXHTMLBasic ( Document doc,
@@ -342,7 +363,8 @@ extern void CreateComment ( Document doc,
 extern void CreateDate ( Document doc,
                            View view );
 extern void CreateScript ( Document doc,
-                             View view );
+                             View view,
+                             ThotBool ExternalFile );
 extern ThotBool HTMLelementAllowed ( Document doc );
 extern void CreateHTMLelement ( int typeNum,
                                   Document doc );

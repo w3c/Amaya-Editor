@@ -6437,6 +6437,36 @@
 	<message xml:lang="it">Elimina tutti</message>
 	<message xml:lang="ru">Удалить все</message>
 </label>
+
+<label define="AM_JAVASCRIPT_CAN_NOT_BUILD">
+	<message xml:lang="en">An error occured during the building of the javascript/DOM objects</message>
+	<message xml:lang="fr">Une erreur s'est produite pendant la construction des objets javascript/DOM</message>
+</label>
+<label define="AM_JAVASCRIPT_IS_RUNNING">
+	<message xml:lang="en">A script is still running but will be aborted as soon as possible. Please try later.</message>
+	<message xml:lang="fr">Un script est encore en cours d'exécution mais sera interrompu dès que possible. Veuillez ressayer ultérieurement.</message>
+</label>
+<label define="AM_JAVASCRIPT_VIEW">
+	<message xml:lang="en">Javascript/DOM can not be enabled in this view.</message>
+	<message xml:lang="fr">Javascript/DOM ne peut être activé dans cette vue.</message>
+</label>
+<label define="AM_JAVASCRIPT_ENTER_A_COMMAND">
+	<message xml:lang="en">Enter a javascript command:</message>
+	<message xml:lang="fr">Rentrez une commande javascript :</message>
+</label>
+<label define="AM_JAVASCRIPT_RETURNED_VALUE">
+	<message xml:lang="en">The command returned the value: %s</message>
+	<message xml:lang="fr">La commande a retourné la valeur: %s</message>
+</label>
+<label define="AM_JAVASCRIPT_NO_RETURNED_VALUE">
+	<message xml:lang="en">The command returned no value</message>
+	<message xml:lang="fr">La commande n'a retourné aucune valeur</message>
+</label>
+<label define="AM_JAVASCRIPT_SCRIPT_ERROR">
+	<message xml:lang="en">SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s</message>
+	<message xml:lang="fr">SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s</message>
+</label>
+
 <label define="AM_NEW">
 	<message xml:lang="en">New</message>
 	<message xml:lang="fr">Nouveau</message>

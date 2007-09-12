@@ -63,6 +63,9 @@ ConstructType;
 
 #ifndef __CEXTRACT__
 
+extern void TtaSetSpiderMonkey (Element element, void *SpiderMonkeyElement);
+extern void *TtaGetSpiderMonkey (Element element);
+
 /* ----------------------------------------------------------------------
    TtaChangeElementType
  

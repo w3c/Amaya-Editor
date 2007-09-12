@@ -62,7 +62,7 @@
   
   #include "wxdialog/SendByMailDlgWX.h"
   #include "email.h"
-  
+  #include "javascript_f.h"
   extern XmlEntity *pMathEntityTable;
 #endif /* _WX */
 
@@ -828,7 +828,10 @@ void DocStatusUpdate (Document doc, ThotBool modified)
     {
       TtaSetItemOn (doc, 1, File, BSave);
       TtaSetItemOn (doc, 1, File, BSaveAll);
-#ifndef _WX
+#ifdef _JAVA
+      StopJavascript (doc);
+#endif /* _JAVA */
+#ifdef _WX
       TtaChangeButton (doc, 1, iSave, iconSave, TRUE);
       TtaChangeButton (doc, 1, iSaveAll, iconSaveAll, TRUE);
 #endif /* _WX */
@@ -853,6 +856,7 @@ void DocStatusUpdate (Document doc, ThotBool modified)
 
       TtaSetItemOff (doc, 1, File, BSave);
       if (NoDocumentModified) TtaSetItemOff (doc, 1, File, BSaveAll);
+
 #ifndef _WX
       TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
       if (NoDocumentModified) TtaChangeButton (doc, 1, iSaveAll, iconSaveAllNo, FALSE);
@@ -1059,8 +1063,8 @@ void UpdateEditorMenus (Document doc)
     {
       TtaSetMenuOff (doc, 1, Types);
       TtaSetMenuOff (doc, 1, XMLTypes);
+      TtaSetMenuOff (doc, 1, JavascriptDom_);
       TtaSetMenuOff (doc, 1, Links);
-      TtaSetMenuOff (doc, 1, XMLTypes);
       TtaSetItemOff (doc, 1, File, BSynchro);
       TtaSetItemOff (doc, 1, Edit_, BTransform);
     }
@@ -1277,6 +1281,11 @@ void UpdateEditorMenus (Document doc)
             TtaSetMenuOn (doc, view, XMLTypes);
         }
     }
+
+#ifdef _JAVA
+  /* Update the javascript menus */
+  UpdateJavascriptMenus ();
+#endif /* _JAVA */
 }
 
 
@@ -2399,7 +2408,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void  OpenDoc (Document doc, View view)
+void OpenDoc (Document doc, View view)
 {
 #ifndef _WX
   if (CanReplaceCurrentDocument (doc, view))
@@ -3345,6 +3354,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           TtaSetItemOff (doc, 1, Edit_, BTransform);
           TtaSetMenuOff (doc, 1, Types);
           TtaSetMenuOff (doc, 1, XMLTypes);
+          TtaSetMenuOff (doc, 1, JavascriptDom_);
           TtaSetMenuOff (doc, 1, Links);
           TtaSetMenuOff (doc, 1, Views);
           TtaSetMenuOff (doc, 1, Style);
@@ -4551,6 +4561,11 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
   int                visibility;
   ThotBool           stopped_flag = FALSE, keep;
 
+#ifdef _JAVA
+  /* Switch OFF the Javascipt/DOM engine before loading the document */
+  StopJavascript(doc);
+#endif /* _JAVA */
+
   /* restore the context associated with the request */
   ctx = (RELOAD_context *) context;
   documentname = ctx->documentname;
@@ -5356,6 +5371,11 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
   ThotBool            stopped_flag = FALSE;
   ThotBool            local_link;
 
+#ifdef _JAVA
+  /* Switch OFF the Javascipt/DOM engine before loading the document */
+  StopJavascript(newdoc);
+#endif /* _JAVA */
+
   /* restore GETHTMLDocument's context */  
   ctx = (AmayaDoc_context *) context;
   if (!ctx)
@@ -5370,6 +5390,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
   method = ctx->method;
   local_link = ctx->local_link;
   inNewWindow = ctx->inNewWindow;
+
   ok = TRUE;
   pathname = (char *)TtaGetMemory (MAX_LENGTH + 1);
   strncpy (pathname, urlName, MAX_LENGTH);
@@ -6230,6 +6251,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
                     }
                   else
                     {
+#ifdef _JAVA
+                      StopJavascript(CurrentDocument);
+#endif /* _JAVA */
                       NotFoundDoc (tempfile, CurrentDocument);
                     }
                 }
@@ -6790,7 +6814,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #if defined(_GTK) || defined(_WX) 
           if (LinkAsXmlCSS || LinkAsCSS)
             strcpy (ScanFilter, "*.css");
-          else if (!strcmp (ScanFilter, "*.css"))
+          else if (LinkAsJavascript)
+            strcpy (ScanFilter, "*.js");
+          else if (!strcmp (ScanFilter, "*.css") && !strcmp (ScanFilter, "*.js"))
             strcpy (ScanFilter, "*");
           WidgetParent = HrefAttrBrowser;
           BrowserForm (AttrHREFdocument, 1, &AttrHREFvalue[0]);
@@ -6813,6 +6839,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
           {
             LinkAsCSS = FALSE;
             LinkAsXmlCSS = FALSE;
+            LinkAsJavascript = FALSE;
             /* remove the link if it was just created */
             //TtaCancelLastRegisteredSequence (AttrHREFdocument);
             DoDeleteAnchor (AttrHREFdocument, 1, FALSE);
@@ -7036,6 +7063,16 @@ void CallbackDialogue (int ref, int typedata, char *data)
     case MathEntityText:
       strncpy (MathMLEntityName, data, MAX_LENGTH);
       MathMLEntityName[MAX_LENGTH - 1] = EOS;
+      break;
+    case JavascriptPromptForm:
+      if (val == 0)
+        /* no answer */
+        JavascriptPromptValue[0] = EOS;
+      TtaDestroyDialogue (ref);
+      break;
+    case JavascriptPromptText:
+      strncpy (JavascriptPromptValue, data, MAX_LENGTH);
+      JavascriptPromptValue[MAX_LENGTH - 1] = EOS;
       break;
     case MakeIdMenu:
       switch (val)
@@ -7681,6 +7718,7 @@ void InitAmaya (NotifyEvent * event)
   /* we're not linking an external CSS */
   LinkAsCSS = FALSE;
   LinkAsXmlCSS = FALSE;
+  LinkAsJavascript = FALSE;
 
   /* initialize icons */
 #ifdef _WX
@@ -8519,6 +8557,10 @@ void CheckAmayaClosed ()
 #ifdef _SVG
       SVGLIB_FreeDocumentResource ();
 #endif /* _SVG */
+#ifdef  _JAVA
+      DestroyJavascript ();
+#endif /* _JAVA */
+
       /* remove the AutoSave file */
       TtaQuit ();
     }
@@ -8697,6 +8739,9 @@ void AmayaClose (Document document, View view)
   SVGLIB_FreeDocumentResource ();
 #endif /* _SVG */
 
+#ifdef  _JAVA
+  DestroyJavascript ();
+#endif /* _JAVA */
   TtaQuit ();
 #endif /* _WX */
 }

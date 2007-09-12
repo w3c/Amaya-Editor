@@ -3754,6 +3754,8 @@ void CreateHRefDlgWindow (ThotWindow parent, char *HRefValue,
     
   if (doc_type == docCSS)
     SzFilter = APPCSSNAMEFILTER;
+  else if (doc_type == docJavascript)
+    SzFilter = APPJAVASCRIPTNAMEFILTER;
   else 
     SzFilter = APPALLFILESFILTER;
 

@@ -445,4 +445,11 @@
 443 Enregistrer les mots de passe
 444 Sites
 445 Tout effacer
-446 Nouveau
+446 Une erreur s'est produite pendant la construction des objets javascript/DOM
+447 Un script est encore en cours d'exécution mais sera interrompu dès que possible. Veuillez ressayer ultérieurement.
+448 Javascript/DOM ne peut être activé dans cette vue.
+449 Rentrez une commande javascript :
+450 La commande a retourné la valeur: %s
+451 La commande n'a retourné aucune valeur
+452 SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s
+453 Nouveau

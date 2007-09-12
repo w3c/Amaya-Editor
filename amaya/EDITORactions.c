@@ -72,7 +72,60 @@
 #include "davlib_f.h"
 #endif /* DAV */
 #include "libmanag_f.h"
+#ifdef _JAVA
+  #include "javascript_f.h"
+#endif /* _JAVA */
 
+/*----------------------------------------------------------------------
+  Switch_JS_DOM
+    Switch the javascript engine ON/OFF
+  -----------------------------------------------------------------------*/
+void SwitchJavaScript (Document document, View view)
+{
+#ifdef _JAVA
+  Switch_JS_DOM (document, view);
+#endif /* _JAVA */
+}
+
+/*----------------------------------------------------------------------
+  ExecuteACommand
+  Display a dialog box where the user can enter a javascript command
+  -----------------------------------------------------------------------*/
+void ExecuteACommand (Document document, View view)
+{
+#ifdef _JAVA
+   Execute_ACommand (document, view);
+#endif /* _JAVA */
+}
+
+/*----------------------------------------------------------------------
+  InsertScript
+    Add a <script> and open the structure View
+  -----------------------------------------------------------------------*/
+void InsertScript(Document document, View view)
+{
+  CreateScript (document, view, FALSE);
+}
+
+/*----------------------------------------------------------------------
+  AddExternal
+    Add a <script> inside with a src attribute pointing to
+    an external js file.
+  -----------------------------------------------------------------------*/
+void AddExternal(Document document, View view)
+{
+  CreateScript (document, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ExecuteExternal
+  -----------------------------------------------------------------------*/
+void ExecuteExternal (Document document, View view)
+{
+#ifdef _JAVA
+   Execute_External (document, view);
+#endif /* _JAVA */
+}
 
 /*----------------------------------------------------------------------
   NewXHTML: Create a new XHTML document
@@ -1527,7 +1580,7 @@ void CreateDate (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateScript
   ----------------------------------------------------------------------*/
-void CreateScript (Document doc, View view)
+void CreateScript (Document doc, View view, ThotBool ExternalFile)
 {
   SSchema             docSchema;
   ElementType         elType, headType;
@@ -1571,8 +1624,9 @@ void CreateScript (Document doc, View view)
       elType.ElTypeNum = 0;
       s = NULL;
     }
-  
+
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+
   if (s == NULL || strcmp (s, "HTML") || elType.ElTypeNum == HTML_EL_HEAD)
     {
       /* cannot insert at the current position */
@@ -1587,41 +1641,68 @@ void CreateScript (Document doc, View view)
       /* create Script in the body if we are within an HTML document
          and within an HTML element */
       elType.ElTypeNum = HTML_EL_SCRIPT_;
-      TtaInsertElement (elType, doc);
-      TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+
+      if(ExternalFile)
+        {
+        /* insert a script element after the selected element */
+        TtaInsertSibling (TtaNewElement (doc, elType), el, FALSE, doc);
+        TtaNextSibling(&el);
+        }
+      else
+        {
+        /* Insert a script element and open the structure view */
+        TtaInsertElement (elType, doc);
+        TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+        }
     }
 
   if (el)
     {
-      TtaGetEnvBoolean ("GENERATE_CDATA", &generateCDATA);
-      if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat &&
-          generateCDATA)
-        /* insert a cdata within */
-        elType.ElTypeNum = HTML_EL_CDATA;
-      else
-        /* insert a comment within */
-        elType.ElTypeNum = HTML_EL_Comment_;
-      child = TtaNewTree (doc, elType, "");
-      elType = TtaGetElementType (el);
-      if (TtaIsLeaf (elType))
+
+      if(ExternalFile)
         {
-          TtaInsertSibling (child, el, TRUE, doc);
-          TtaDeleteTree (el, doc);
+        /* register new created elements */
+        TtaRegisterElementCreate (el, doc);
+        LinkAsJavascript = TRUE;
+        SelectDestination (doc, el, FALSE, FALSE);
+        TtaCloseUndoSequence (doc);
         }
       else
-        TtaInsertFirstChild (&child, el, doc);
-      /* register new created elements */
-      TtaRegisterElementCreate (el, doc);
-      TtaCloseUndoSequence (doc);
-      while (child)
         {
-          el = child;
-          child = TtaGetFirstChild (el);
+        TtaGetEnvBoolean ("GENERATE_CDATA", &generateCDATA);
+        if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat &&
+            generateCDATA)
+          /* insert a cdata within */
+          elType.ElTypeNum = HTML_EL_CDATA;
+        else
+          /* insert a comment within */
+          elType.ElTypeNum = HTML_EL_Comment_;
+
+        child = TtaNewTree (doc, elType, "");
+        elType = TtaGetElementType (el);
+        if (TtaIsLeaf (elType))
+          {
+            TtaInsertSibling (child, el, TRUE, doc);
+            TtaDeleteTree (el, doc);
+          }
+        else
+          TtaInsertFirstChild (&child, el, doc);
+
+        /* register new created elements */
+        TtaRegisterElementCreate (el, doc);
+        TtaCloseUndoSequence (doc);
+
+        while (child)
+          {
+            el = child;
+            child = TtaGetFirstChild (el);
+          }
+        if (child)
+          TtaSelectElement (doc, child);
+        else
+          TtaSelectElement (doc, el);
         }
-      if (child)
-        TtaSelectElement (doc, child);
-      else
-        TtaSelectElement (doc, el);
+
     }
   TtaCloseUndoSequence (doc);
 #ifdef _WX

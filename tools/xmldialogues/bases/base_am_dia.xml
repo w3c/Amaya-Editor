@@ -194,6 +194,22 @@
 	<message xml:lang="tw">協作(&amp;O)</message>
 	<message xml:lang="sk">Sp&amp;olupráca</message>
 </label>
+<label define="JavascriptDom_">
+	<message xml:lang="en">&amp;Javascript/DOM</message>
+	<message xml:lang="fr">&amp;Javascript/DOM</message>
+	<message xml:lang="de">&amp;Javascript/DOM</message>
+	<message xml:lang="it">&amp;Javascript/DOM</message>
+	<message xml:lang="tr">&amp;Javascript/DOM</message>
+	<message xml:lang="es">&amp;Javascript/DOM</message>
+	<message xml:lang="pt">&amp;Javascript/DOM</message>
+	<message xml:lang="fi">&amp;Javascript/DOM</message>
+	<message xml:lang="ru">&amp;Javascript/DOM</message>
+	<message xml:lang="hu">&amp;Javascript/DOM</message>
+	<message xml:lang="ka">&amp;Javascript/DOM</message>
+	<message xml:lang="cn">&amp;Javascript/DOM</message>
+	<message xml:lang="tw">&amp;Javascript/DOM</message>
+	<message xml:lang="sk">&amp;Javascript/DOM</message>
+</label>
 <label define="Help_">
 	<message xml:lang="en">&amp;Help</message>
 	<message xml:lang="fr">A&amp;ide</message>
@@ -4698,6 +4714,26 @@
 	<message xml:lang="cn">锁定了吗?</message>
 	<message xml:lang="tw">鎖定了嗎?</message>
 	<message xml:lang="sk">Zamknutý?</message>
+</label>
+<label define="BSwitch_JS_DOM">
+	<message xml:lang="en">Enable/Disable</message>
+	<message xml:lang="fr">Activer/Désactiver</message>
+</label>
+<label define="BExecuteACommand">
+	<message xml:lang="en">Execute a command</message>
+	<message xml:lang="fr">Exécuter une commande</message>
+</label>
+<label define="BExecuteExternal">
+	<message xml:lang="en">Execute an external script</message>
+	<message xml:lang="fr">Exécuter un script externe</message>
+</label>
+<label define="BAddExternal">
+	<message xml:lang="en">Add an external script</message>
+	<message xml:lang="fr">Ajouter un script externe</message>
+</label>
+<label define="BInsertScript">
+	<message xml:lang="en">Insert a script</message>
+	<message xml:lang="fr">Inserer un script</message>
 </label>
 <label define="BInformation">
 	<message xml:lang="en">About Amaya</message>

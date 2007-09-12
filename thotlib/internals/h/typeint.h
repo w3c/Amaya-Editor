@@ -524,6 +524,7 @@ typedef struct _ElementDescr
   PtrElement		ElParent;	/* Parent in the abstract tree */
   PtrElement		ElPrevious;	/* Previous sibling in the abs. tree */
   PtrElement		ElNext;		/* next sibling in the abs. tree */
+  void * ElSpiderMonkey; /* Pointer on the corresponding SpiderMonkey element */
   PtrReferredDescr	ElReferredDescr;/* Pointer on the referenced element
 					   descriptor if there are references
 					   to this element */

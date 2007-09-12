@@ -56,6 +56,24 @@
 static char        nameBuffer[ELEM_NAME_LENGTH];
 
 /* ----------------------------------------------------------------------
+  TtaSetSpiderMonkey
+  Set the pointer to the corresponding SpiderMonkey element
+*/
+void TtaSetSpiderMonkey (Element element, void *SpiderMonkeyElement)
+{
+((PtrElement)element)->ElSpiderMonkey = SpiderMonkeyElement;
+}
+
+/* ----------------------------------------------------------------------
+  TtaGetSpiderMonkey
+  Return pointer to the corresponding SpiderMonkey element
+*/
+void *TtaGetSpiderMonkey (Element element)
+{
+return ((PtrElement)element)->ElSpiderMonkey;
+}
+
+/* ----------------------------------------------------------------------
    TtaChangeElementType
    Change the type of a given element.
    CAUTION: THIS FUNCTION SHOULD BE USED VERY CARFULLY!
