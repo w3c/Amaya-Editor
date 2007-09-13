@@ -873,13 +873,6 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
   /* y-a-t'il une selection courante ? */
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     return ret;
-  /* @@@@@  if (firstSel && firstSel == lastSel &&
-      firstSel->ElTerminal && firstSel->ElLeafType == LtPicture)
-    {
-      pE = firstSel->ElParent;
-      if (TypeHasException (ExcIsImg, pE->ElTypeNumber, pE->ElStructSchema))
-        return ret;
-        } @@@@@ */
   if (!pDoc->DocReadOnly)
     {
       doc = IdentDocument (pDoc);
@@ -952,8 +945,10 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
               if (pEl->ElLeafType == LtText)
                 /* selection is within a text leaf */
                 {
-                  if (firstChar > pEl->ElTextLength && pEl->ElNext != NULL)
-                    /* the selection is at the end of the text leaf */
+                  if (pEl->ElNext &&
+                      (firstChar == 0 || firstChar > pEl->ElTextLength))
+                    /* the selection is at the end of the text leaf or
+                       within an empty text leaf */
                     {
                       pNext = pEl->ElNext;
                       nextChar = 1;

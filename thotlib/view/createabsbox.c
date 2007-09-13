@@ -5959,7 +5959,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                           pLast = FALSE;
                       }
                     pAsc = pElChild->ElParent;
-                    while (pAsc != pEl)
+                    while (pAsc && pAsc != pEl)
                       {
                         if (pFirst)
                           pFirst = (pAsc->ElPrevious == NULL);
