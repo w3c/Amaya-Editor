@@ -374,6 +374,9 @@ static void         wrNumExcept (int Num)
 	    case ExcIsBreak:
 	       printf ("IsBreak");
 	       break;
+      case ExcListItemBreak:
+         printf ("ListItemBreak");
+         break;
 	    case ExcHighlightChildren:
 	       printf ("HighlightChildren");
 	       break;

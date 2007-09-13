@@ -2512,7 +2512,7 @@ ThotBool CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr,
   lineBlock indique si on veut diviser un line block ou	
   un element non mis en ligne.                            
   Retourne TRUE si c'est possible et dans ce cas :                
-  pList : l'element CsList qui englobe l'element a diviser	
+  pList : l'element List qui englobe l'element a diviser	
   pEl : l'element devant lequel se fera la division.      
   pSplitEl : l'element qui va etre divise'.		
   ----------------------------------------------------------------------*/
@@ -2543,7 +2543,7 @@ ThotBool CanSplitElement (PtrElement firstEl, int firstChar,
               firstEl->ElLeafType != LtPageColBreak &&
               firstEl->ElParent &&
               (firstEl->ElPrevious ||
-               (firstEl->ElLeafType == LtText && firstChar > 1) ||
+               firstEl->ElLeafType == LtText ||
                (firstEl->ElLeafType == LtPicture && firstChar > 0)))
             {
               /* on cherche d'abord si un element ascendant

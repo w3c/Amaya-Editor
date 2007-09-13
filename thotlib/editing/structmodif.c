@@ -26,6 +26,7 @@
 #include "fileaccess.h"
 #include "appdialogue.h"
 #include "content.h"
+#include "registry.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -70,6 +71,7 @@
 #include "structmodif_f.h"
 #include "textcommands_f.h"
 #include "tree_f.h"
+#include "undo_f.h"
 #include "views_f.h"
 
 /*----------------------------------------------------------------------
@@ -871,13 +873,13 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
   /* y-a-t'il une selection courante ? */
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     return ret;
-  if (firstSel && firstSel == lastSel &&
+  /* @@@@@  if (firstSel && firstSel == lastSel &&
       firstSel->ElTerminal && firstSel->ElLeafType == LtPicture)
     {
       pE = firstSel->ElParent;
       if (TypeHasException (ExcIsImg, pE->ElTypeNumber, pE->ElStructSchema))
         return ret;
-    }
+        } @@@@@ */
   if (!pDoc->DocReadOnly)
     {
       doc = IdentDocument (pDoc);
@@ -896,8 +898,9 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
               ok = TRUE;
               pAncest = pElReplicate->ElParent;
               pEl = firstSel;
-              if (firstChar <= 1 || !pEl->ElTerminal ||
-                  pEl->ElLeafType != LtText)
+              if (firstChar == 0 ||
+                  (pEl->ElTerminal && pEl->ElLeafType != LtText &&
+                   firstChar == 1))
                 /* la selection est en debut d'element */
                 {
                   /* tant qu'il n'y a pas de frere precedent, on remonte au
@@ -937,25 +940,31 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
       if (pAncest != NULL)
         {
           pPrev = pEl->ElPrevious;
-          TtaClearViewSelections ();	/* annule d'abord la selection */
+          TtaClearViewSelections ();	/* cancel current selection */
           pNext = pEl;
           nextChar = firstChar;
-	  
-          /* Coupure eventuelle de l'atome TEXTE */
+
+          AddEditOpInHistory (pElReplicate, pDoc, TRUE, TRUE);
+          /* we may need need to split a text leaf */
           if (pEl->ElTerminal)
             {
-              if (pEl->ElLeafType == LtText && firstChar > 1)
+              pPrev = pEl;
+              if (pEl->ElLeafType == LtText)
+                /* selection is within a text leaf */
                 {
                   if (firstChar > pEl->ElTextLength && pEl->ElNext != NULL)
+                    /* the selection is at the end of the text leaf */
                     {
-                      pPrev = pEl;
                       pNext = pEl->ElNext;
-                      if (pNext->ElTerminal && pNext->ElLeafType == LtText)
-                        nextChar = 1;
-                      else
-                        nextChar = 0;
+                      nextChar = 1;
+                    }
+                  else if (firstChar < 1)
+                    /* the selection is at the beginning of the text leaf */
+                    {
+                      nextChar = 1;
                     }
                   else
+                    /* the selection is within the text leaf */
                     {
                       SplitTextElement (pEl, firstChar, pDoc, TRUE,
                                         &pNext, TRUE);
@@ -969,12 +978,27 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
                         for (view = 0; view < MAX_VIEW_DOC; view++)
                           if (pNext && pNext->ElTextLength > 0)
                             UpdateAbsBoxVolume (pEl, view, pDoc);
-                      pPrev = pEl;
                       nextChar = 1;
                     }
                 }
               else if (pEl->ElLeafType == LtPicture && firstChar > 0 &&
                        pEl->ElNext != NULL )
+                {
+                  pNext = pEl->ElNext;
+                  if (pNext->ElTerminal && pNext->ElLeafType == LtText)
+                    nextChar = 1;
+                  else
+                    nextChar = 0;
+                }
+            }
+          else if (firstChar > 0 && pEl->ElNext != NULL &&
+                   TypeHasException (ExcIsImg, pEl->ElTypeNumber,
+                                     pEl->ElStructSchema))
+            /* end of an HTML <img> with a following sibling */
+            {
+              if (firstChar > 0 && firstSel->ElNext)
+                /* we are after the image. Split before the next
+                   sibling */
                 {
                   pPrev = pEl;
                   pNext = pEl->ElNext;
@@ -984,6 +1008,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
                     nextChar = 0;
                 }
             }
+
           pClose = SiblingElement (pPrev, FALSE);
           /* enregistre les elements preexistants */
           pE = pPrev->ElNext;
@@ -1034,7 +1059,10 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
                   notifyEl.position = TTE_TOOLKIT_DELETE;
                   if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
                     /* l'application refuse de continuer */
-                    return (ret);
+                    {
+                      CancelLastEditFromHistory (pDoc);
+                      return (ret);
+                    }
                 }
               if (pE->ElStructSchema != NULL)
                 {
@@ -1086,7 +1114,10 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
                   notifyEl.position = NSiblings;
                   if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
                     /* l'application refuse de continuer */
-                    return (ret);
+                    {
+                      CancelLastEditFromHistory (pDoc);
+                      return (ret);
+                    }
                 }
               pEl2 = ReplicateElement (pE, pDoc);
               InsertFirstChild (pEl2, pChild);
@@ -1121,7 +1152,10 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
                           notifyEl.position = TTE_TOOLKIT_DELETE;
                           if (CallEventType ((NotifyEvent *) (&notifyEl),TRUE))
                             /* l'application refuse de continuer */
-                            return (ret);
+                            {
+                              CancelLastEditFromHistory (pDoc);
+                              return (ret);
+                            }
 			  
                           RemoveElement (pClose);
                           /* notify the removed element */
@@ -1192,12 +1226,27 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
               SetDocumentModified (pDoc, TRUE, 30);
               if (select && pNext != NULL)
                 {
-                  if (nextChar == 0)
+                  if (nextChar == 0 &&
+                      !TypeHasException (ExcIsImg, pNext->ElTypeNumber,
+                                         pNext->ElStructSchema))
                     SelectElementWithEvent (pDoc, pNext, TRUE, TRUE);
                   else
-                    SelectPositionWithEvent (pDoc, pNext, nextChar);
+                    {
+                      if (nextChar <= 1)
+                        /* select the beginning of the leaf in element pNext */
+                        {
+                          while (pNext && !pNext->ElTerminal &&
+                                 pNext->ElFirstChild)
+                            pNext = pNext->ElFirstChild;
+                          if (pNext->ElTerminal &&
+                              pNext->ElLeafType == LtPicture)
+                            nextChar = 0;
+                        }
+                      SelectPositionWithEvent (pDoc, pNext, nextChar);
+                    }
                 }
               ret = TRUE;
+              AddEditOpInHistory (pElReplicate->ElNext, pDoc, FALSE, TRUE);
             }
           for (view = 0; view < MAX_VIEW_DOC; view++)
             if (pEl->ElAbstractBox[view] != NULL)

@@ -28,6 +28,7 @@
 #include "dialog.h"
 #include "tree.h"
 #include "content.h"
+#include "registry.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -1485,16 +1486,17 @@ static PtrElement ParentNotTemplate (PtrElement pEl)
   ----------------------------------------------------------------------*/
 void TtcCreateElement (Document doc, View view)
 {
-  PtrElement          firstSel, lastSel, pListEl, pE, pNew, pSibling;
+  PtrElement          firstSel, lastSel, pListEl, pE, pE1, pNew, pSibling, parent;
   PtrElement          pClose, pAncest, pElem, pParent, pElDelete, pPrevious;
-  PtrElement          pNext, pElReplicate, pAggregEl, pSib;
+  PtrElement          pNext, pElReplicate, pAggregEl, pSib, firstEl, lastEl;
   PtrDocument         pDoc;
   PtrSSchema          pSS;
   NotifyElement       notifyEl;
   int                 firstChar, lastChar, NSiblings;
   int                 frame, typeNum, nComp;
   ThotBool            ok, replicate, createAfter, selBegin, selEnd, ready;
-  ThotBool            empty, list, optional, deleteEmpty, histSeq;
+  ThotBool            empty, list, optional, deleteEmpty, histSeq,
+                      amayaLite, previous, following, specialBreak;
   ThotBool            lock = TRUE;
   DisplayMode         dispMode;
 
@@ -1502,6 +1504,8 @@ void TtcCreateElement (Document doc, View view)
     return;
   if (pDoc->DocReadOnly)
 		return;
+  firstEl = firstSel;
+  lastEl = lastSel;
   /* Check if we are changing the active frame */
   frame = GetWindowNumber (doc, view);
   if (frame != ActiveFrame)
@@ -1612,19 +1616,10 @@ void TtcCreateElement (Document doc, View view)
                                                          NULL, firstChar, lastChar);
                                     histSeq = TRUE;
                                   }
-                                AddEditOpInHistory (pParent->ElParent, pDoc,
-                                                    TRUE, TRUE);
-                                if (!BreakElement (pParent->ElParent, pElem,
-                                                   0, FALSE, TRUE))
-                                  /* operation failed, remove it from history*/
-                                  CancelLastEditFromHistory (pDoc);
-                                else
+                                if (BreakElement (pParent->ElParent, pElem,
+                                                  0, FALSE, TRUE))
                                   /* element pParent has been split */
                                   {
-                                    /* record the element that has been
-                                       created by BreakElement: it has to be
-                                       deleted when undoing the command */
-                                    AddEditOpInHistory (pParent->ElParent->ElNext, pDoc, FALSE, TRUE);
                                     SRuleForSibling (pDoc, pParent, FALSE, 1,
                                                      &typeNum, &pSS, &list, &optional);
                                     if (typeNum > 0)
@@ -1736,16 +1731,9 @@ void TtcCreateElement (Document doc, View view)
                                                  firstChar, lastChar);
                             histSeq = TRUE;
                           }
-                        AddEditOpInHistory (pParent, pDoc, TRUE, TRUE);
-			
                         if (BreakElement (pParent, pElem, 0, FALSE, FALSE))
                           /* element pParent has been split */
                           {
-                            /* record the element that has been
-                               created by BreakElement: it has to be
-                               deleted when undoing the command */
-                            AddEditOpInHistory (pParent->ElNext, pDoc, FALSE,
-                                                TRUE);
                             ready = TRUE;
                             pElDelete = pElem;
                             createAfter = TRUE;
@@ -1753,11 +1741,7 @@ void TtcCreateElement (Document doc, View view)
                           }
                         else
                           /* cannot split element */
-                          {
-                            /* remove operation from history */
-                            CancelLastEditFromHistory (pDoc);
-                            pListEl = NULL;
-                          }
+                          pListEl = NULL;
                       }
                   }
                 if (list && pListEl == NULL)
@@ -1794,6 +1778,7 @@ void TtcCreateElement (Document doc, View view)
       if (!ready && !empty)
         {
           /* La selection commence-t-elle en tete ou en queue d'element? */
+          pListEl = NULL;
           selBegin = FALSE;
           selEnd = FALSE;
           ok = TRUE;
@@ -1820,17 +1805,17 @@ void TtcCreateElement (Document doc, View view)
                     }
                   else if (firstSel->ElLeafType == LtPicture)
                     {
-                      // check previous and next of the picture
-                      PtrElement parent = firstSel->ElParent;
-                      if (TypeHasException (ExcIsImg, parent->ElTypeNumber,
-                                            parent->ElStructSchema))
-                        firstSel = lastSel = parent;
+                      // check previous and next siblings of the picture
                       if (firstSel->ElPrevious == NULL && firstChar == 0)
                         /* no previous and a selection at the left border */
                         selBegin = TRUE;
                       if (firstSel->ElNext == NULL && firstChar > 0)
                         /* no next and a selection at the right border */
                         selEnd = TRUE;
+                      parent = firstSel->ElParent;
+                      if (TypeHasException (ExcIsImg, parent->ElTypeNumber,
+                                            parent->ElStructSchema))
+                        firstEl = lastEl = parent;
                     }
                   else
                     {
@@ -1841,8 +1826,8 @@ void TtcCreateElement (Document doc, View view)
                           firstSel->ElPrevious == NULL &&
                           firstSel->ElNext == NULL &&
                           firstSel->ElParent)
-                        /* select the enclosing element */
-                        firstSel = lastSel = firstSel->ElParent;
+                        /* use the enclosing element */
+                        firstEl = lastEl = firstSel->ElParent;
                       selBegin = TRUE;
                       selEnd = TRUE;
                     }
@@ -1855,11 +1840,72 @@ void TtcCreateElement (Document doc, View view)
                 }
             }
 
+          specialBreak = FALSE;
+          TtaGetEnvBoolean ("AMAYA_LITE", &amayaLite);
+          if (amayaLite)
+            {
+              /* if we are within a Paragraph (or equivalent) at any level,
+                 we split that element */
+              pE = firstEl;
+              previous = FALSE;
+              following = FALSE;
+              while (pE &&
+                     !TypeHasException (ExcParagraphBreak, pE->ElTypeNumber,
+                                        pE->ElStructSchema))
+                {
+                  if (selBegin && pE->ElPrevious)
+                    previous = TRUE;
+                  if (selEnd && pE->ElNext)
+                    following = TRUE;
+                  pE = pE->ElParent;
+                }
+              if (pE)
+                /* there is an enclosing Paragraph (or equivalent) element,
+                   we can split it */
+                {
+                  if (previous)
+                    selBegin = FALSE;
+                  if (following)
+                    selEnd = FALSE;
+                }
+              /* if the Paragraph (or equivalent) element is within a HTML <li>
+                 we split that <li> element */
+              previous = FALSE;
+              following = FALSE;
+              pE1 = pE;
+              while (pE1 &&
+                     !TypeHasException (ExcListItemBreak, pE1->ElTypeNumber,
+                                        pE1->ElStructSchema))
+                {
+                  if (selBegin && pE1->ElPrevious)
+                    previous = TRUE;
+                  if (selEnd && pE1->ElNext)
+                    following = TRUE;
+                  pE1 = pE1->ElParent;
+                }
+              if (pE1)
+                {
+                  pE = pE1;
+                  if (previous)
+                    selBegin = FALSE;
+                  if (following)
+                    selEnd = FALSE;
+                }
+              if (pE)
+                /* there is an enclosing Paragraph or <li> element, we
+                   split it */
+                {
+                  specialBreak = TRUE;
+                  pElReplicate = pE;
+                  pListEl = pE->ElParent;
+                }
+            }
+
           /* Si la selection ne commence ni en tete ni en queue, on */
-          /* essaie de couper un paragraphe en deux */
+          /* essaie de couper un element en deux */
           if (!selBegin && !selEnd &&
-              CanSplitElement (firstSel, firstChar, TRUE, &pAncest, &pE,
-                               &pElReplicate))
+              (specialBreak || CanSplitElement (firstEl, firstChar, TRUE,
+                                                &pAncest, &pE, &pElReplicate)))
             {
               /* register the operation in history */
               if (!histSeq)
@@ -1868,14 +1914,10 @@ void TtcCreateElement (Document doc, View view)
                                        firstChar, lastChar);
                   histSeq = TRUE;
                 }
-              AddEditOpInHistory (pElReplicate, pDoc, TRUE, TRUE);
-	      
-              if (BreakElement (NULL, firstSel, firstChar, TRUE, TRUE))
+              if (!specialBreak)
+                pElReplicate = NULL;
+              if (BreakElement (pElReplicate, firstEl, firstChar, TRUE, TRUE))
                 {
-                  /* record the element that has been created by
-                     BreakElement: it has to be deleted when undoing the
-                     command */
-                  AddEditOpInHistory (pElReplicate->ElNext, pDoc, FALSE, TRUE);
                   CloseHistorySequence (pDoc);
                   if (!lock)
                     /* unlock table formatting */
@@ -1886,24 +1928,22 @@ void TtcCreateElement (Document doc, View view)
                 {
                   ok = FALSE;
                   pListEl = NULL;
-                /* remove operation from history */
-                CancelLastEditFromHistory (pDoc);
                 }
             }
 
           /* on cherche l'element CsList ascendant qui permet de creer un */
           /* element voisin */
-          if (lastSel->ElTerminal && lastSel->ElLeafType == LtPageColBreak)
+          if (lastEl->ElTerminal && lastEl->ElLeafType == LtPageColBreak)
             /* on ne duplique pas les sauts de pages */
             pListEl = NULL;
-          else if (ok)
+          else if (ok && !pListEl)
             {
-              if (lastSel->ElParent &&
-                  GetElementConstruct (lastSel->ElParent, &nComp) == CsAny)
-                pListEl = lastSel->ElParent;
+              if (lastEl->ElParent &&
+                  GetElementConstruct (lastEl->ElParent, &nComp) == CsAny)
+                pListEl = lastEl->ElParent;
               else
                 {
-                  pAncest = lastSel;
+                  pAncest = lastEl;
                   /* ignore the next Template ancestors */
                   while (pAncest->ElParent && pAncest->ElParent->ElStructSchema &&
                          !strcmp (pAncest->ElParent->ElStructSchema->SsName, "Template"))
@@ -1913,10 +1953,10 @@ void TtcCreateElement (Document doc, View view)
               /* si c'est la fin d'une liste de Textes on remonte */
               if (pListEl != NULL)
                 {
-                  if (lastSel->ElTerminal &&
-                      (lastSel->ElNext == NULL || selBegin) &&
-                      pListEl == ParentNotTemplate(lastSel) &&
-                      GetElementConstruct (lastSel->ElParent, &nComp) != CsAny &&
+                  if (lastEl->ElTerminal &&
+                      (lastEl->ElNext == NULL || selBegin) &&
+                      pListEl == ParentNotTemplate(lastEl) &&
+                      GetElementConstruct (lastEl->ElParent, &nComp) != CsAny &&
                       !TypeHasException (ExcReturnCreateWithin,
                                          pListEl->ElTypeNumber,
                                          pListEl->ElStructSchema))
@@ -1938,15 +1978,15 @@ void TtcCreateElement (Document doc, View view)
               else
                 {
                   /* There is no List ancestor, search an Any parent */
-                  if (lastSel->ElTerminal)
-                    pListEl = ParentAny (lastSel->ElParent);
+                  if (lastEl->ElTerminal)
+                    pListEl = ParentAny (lastEl->ElParent);
                   else
-                    pListEl = ParentAny (lastSel);
+                    pListEl = ParentAny (lastEl);
                   if (pListEl != NULL)
                     {
-                      if (lastSel->ElTerminal &&
-                          pListEl == lastSel->ElParent &&
-                          (lastSel->ElNext == NULL || selBegin) &&
+                      if (lastEl->ElTerminal &&
+                          pListEl == lastEl->ElParent &&
+                          (lastEl->ElNext == NULL || selBegin) &&
                           !TypeHasException (ExcReturnCreateWithin,
                                              pListEl->ElTypeNumber,
                                              pListEl->ElStructSchema))
@@ -1958,7 +1998,7 @@ void TtcCreateElement (Document doc, View view)
           /* verifie si les elements a doubler portent l'exception NoCreate */
           if (pListEl)
             {
-              pE = lastSel;
+              pE = lastEl;
               pElReplicate = NULL;
               do
                 {
@@ -2124,11 +2164,11 @@ void TtcCreateElement (Document doc, View view)
               else
                 {
                   /* Reconstruction d'une structure parallele */
-                  pNew = NewSubtree (lastSel->ElTypeNumber,
-                                     lastSel->ElStructSchema, pDoc,
+                  pNew = NewSubtree (lastEl->ElTypeNumber,
+                                     lastEl->ElStructSchema, pDoc,
                                      TRUE, TRUE, TRUE, TRUE);
-                  DuplicateAttrWithExc (pNew, lastSel);
-                  pE = lastSel;
+                  DuplicateAttrWithExc (pNew, lastEl);
+                  pE = lastEl;
                   while (pE->ElParent != pListEl && pE->ElParent &&
                          pE->ElParent->ElStructSchema &&
                          strcmp (pE->ElParent->ElStructSchema->SsName, "Template"))
@@ -2241,9 +2281,8 @@ void TtcCreateElement (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  AscentChildOfParagraph  return the ancestor of element pEl      
-  (or pEl itself) whose parent has exception              
-  ExcParagraphBreak.                                      
+  AscentChildOfParagraph  return the ancestor of element pEl
+  (or pEl itself) whose parent has exception ExcParagraphBreak.             
   ----------------------------------------------------------------------*/
 static PtrElement  AscentChildOfParagraph (PtrElement pEl)
 {

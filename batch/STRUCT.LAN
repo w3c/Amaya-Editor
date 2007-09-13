@@ -122,7 +122,7 @@ ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
 		 'ActiveRef' /  'NoSelect' /
      'HighlightChildren' / 'ExtendedSelection' /
      'SelectParent' / 'ClickableSurface' /
-		 'ParagraphBreak' / 'IsBreak' /
+		 'ParagraphBreak' / 'IsBreak' / 'ListItemBreak' /
 		 'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
      'ImportLine' / 'ImportParagraph' /
 		 'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /

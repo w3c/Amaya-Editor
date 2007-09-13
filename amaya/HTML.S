@@ -958,6 +958,8 @@ EXCEPT
         H6:             ParagraphBreak;
         Address:        ParagraphBreak;
         Term:           ParagraphBreak;
+        List_Item:      ListItemBreak;
+        Definition:      ListItemBreak;
         MAP:            IsDraw, IsMap, NoReplicate;
         IMG:            IsImg, NoReplicate;
         AREA:           MoveResize, ClickableSurface, HighlightChildren;

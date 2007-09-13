@@ -128,7 +128,7 @@ number
 			 'ActiveRef' /  'NoSelect' /
 	     'HighlightChildren' / 'ExtendedSelection' /
 	     'SelectParent' / 'ClickableSurface' /
-			 'ParagraphBreak' / 'IsBreak' /
+			 'ParagraphBreak' / 'IsBreak' / 'ListItemBreak' /
 			 'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
 	     'ImportLine' / 'ImportParagraph' /
 			 'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /
@@ -245,44 +245,45 @@ code  key-word      numbers of rules using the key-word
 1164  ClickableSurface     51
 1165  ParagraphBreak       51
 1166  IsBreak              51
-1167  ReturnCreateNL       51
-1168  ReturnCreateWithin   51
-1169  NoBreakByReturn      51
-1170  ImportLine           51
-1171  ImportParagraph      51
-1172  GraphCreation        51
-1173  IsDraw               51
-1174  IsGroup              51
-1175  EmptyGraphic         51
-1176  IsTable              51
-1177  IsRow                51
-1178  IsColHead            51
-1179  IsCell               51
-1180  IsCaption            51
-1181  ColRef               51
-1182  ColSpan              51
-1183  RowSpan              51
-1184  CssBackground        51
-1185  CssClass             51
-1186  CssId                51
-1187  CssPseudoClass       51
-1188  NoShowBox            51
-1189  SetWindowBackground  51
-1190  Shadow               51
-1191  EventAttr            51
-1192  SpacePreserve        51
-1193  IsPlaceholder        51
-1194  StartCounter         51
-1195  SetCounter           51
-1196  MarkupPreserve       51
-1197  NotAnElementNode     51
-1198  CheckAllChars        51
-1199  IsImg                51
-1200  IsMap                51
-1201  DuplicateAttr        51
-1202  PseudoParag          51
-1203  GiveName             51
-1204  Root                 54
+1167  ListItemBreak        51
+1168  ReturnCreateNL       51
+1169  ReturnCreateWithin   51
+1170  NoBreakByReturn      51
+1171  ImportLine           51
+1172  ImportParagraph      51
+1173  GraphCreation        51
+1174  IsDraw               51
+1175  IsGroup              51
+1176  EmptyGraphic         51
+1177  IsTable              51
+1178  IsRow                51
+1179  IsColHead            51
+1180  IsCell               51
+1181  IsCaption            51
+1182  ColRef               51
+1183  ColSpan              51
+1184  RowSpan              51
+1185  CssBackground        51
+1186  CssClass             51
+1187  CssId                51
+1188  CssPseudoClass       51
+1189  NoShowBox            51
+1190  SetWindowBackground  51
+1191  Shadow               51
+1192  EventAttr            51
+1193  SpacePreserve        51
+1194  IsPlaceholder        51
+1195  StartCounter         51
+1196  SetCounter           51
+1197  MarkupPreserve       51
+1198  NotAnElementNode     51
+1199  CheckAllChars        51
+1200  IsImg                51
+1201  IsMap                51
+1202  DuplicateAttr        51
+1203  PseudoParag          51
+1204  GiveName             51
+1205  Root                 54
 
 
 

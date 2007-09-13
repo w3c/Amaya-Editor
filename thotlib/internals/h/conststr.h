@@ -72,6 +72,7 @@
 #define ExcMarkupPreserve 46
 #define ExcNotAnElementNode 47
 #define ExcCheckAllChars 48
+#define ExcListItemBreak 49
 
 /* Draw exceptions */
 #define ExcSelectParent 310

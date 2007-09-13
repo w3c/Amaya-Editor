@@ -79,44 +79,45 @@ SelectParent 1163
 ClickableSurface 1164
 ParagraphBreak 1165
 IsBreak 1166
-ReturnCreateNL 1167
-ReturnCreateWithin 1168
-NoBreakByReturn 1169
-ImportLine 1170
-ImportParagraph 1171
-GraphCreation 1172
-IsDraw 1173
-IsGroup 1174
-EmptyGraphic 1175
-IsTable 1176
-IsRow 1177
-IsColHead 1178
-IsCell 1179
-IsCaption 1180
-ColRef 1181
-ColSpan 1182
-RowSpan 1183
-CssBackground 1184
-CssClass 1185
-CssId 1186
-CssPseudoClass 1187
-NoShowBox 1188
-SetWindowBackground 1189
-Shadow 1190
-EventAttr 1191
-SpacePreserve 1192
-IsPlaceholder 1193
-StartCounter 1194
-SetCounter 1195
-MarkupPreserve 1196
-NotAnElementNode 1197
-CheckAllChars 1198
-IsImg 1199
-IsMap 1200
-DuplicateAttr 1201
-PseudoParag 1202
-GiveName 1203
-Root 1204
+ListItemBreak 1167
+ReturnCreateNL 1168
+ReturnCreateWithin 1169
+NoBreakByReturn 1170
+ImportLine 1171
+ImportParagraph 1172
+GraphCreation 1173
+IsDraw 1174
+IsGroup 1175
+EmptyGraphic 1176
+IsTable 1177
+IsRow 1178
+IsColHead 1179
+IsCell 1180
+IsCaption 1181
+ColRef 1182
+ColSpan 1183
+RowSpan 1184
+CssBackground 1185
+CssClass 1186
+CssId 1187
+CssPseudoClass 1188
+NoShowBox 1189
+SetWindowBackground 1190
+Shadow 1191
+EventAttr 1192
+SpacePreserve 1193
+IsPlaceholder 1194
+StartCounter 1195
+SetCounter 1196
+MarkupPreserve 1197
+NotAnElementNode 1198
+CheckAllChars 1199
+IsImg 1200
+IsMap 1201
+DuplicateAttr 1202
+PseudoParag 1203
+GiveName 1204
+Root 1205
 
    1 1101 2001 1102 2002    2 1001 1103    3 1001 2001 1104    4 2002 2001 1105 
    5 2002 2001 1106    6 2002 2001 1107    7 2002 2001 1108    6 2002 2001 1109 
@@ -181,8 +182,9 @@ Root 1204
 2003 1174 2003 1175 2003 1176 2003 1177 2003 1178 2003 1179 2003 1180 2003 1181 
 2003 1182 2003 1183 2003 1184 2003 1185 2003 1186 2003 1187 2003 1188 2003 1189 
 2003 1190 2003 1191 2003 1192 2003 1193 2003 1194 2003 1195 2003 1196 2003 1197 
-2003 1198 2003 1199 2003 1200 2003 1201 2003 1202 2003 1203 2003   52 2000 
+2003 1198 2003 1199 2003 1200 2003 1201 2003 1202 2003 1203 2003 1204 2003   52 
+2000 
   52 3002 2000 
   53   54 2001   23 2002 2001 1007 1003   27 1004 2002 2001 1008 1003   28 1004 
 2002 2001 1123   29 2002 2000 
-  54 1204 2003    2 2000 
+  54 1205 2003    2 2000 

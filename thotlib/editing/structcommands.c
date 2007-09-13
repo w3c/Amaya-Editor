@@ -2268,16 +2268,8 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
 
       if (splitElem)
         /* coupe l'element en deux */
-        {
-          AddEditOpInHistory (pEl1, pDoc, TRUE, TRUE);
-          if (BreakElement (pEl1, firstEl, firstChar, FALSE, FALSE))
-            {
-              pEl1 = pEl1->ElNext;
-              AddEditOpInHistory (pEl1, pDoc, FALSE, TRUE);
-            }
-          else
-            CancelLastEditFromHistory (pDoc);
-        }
+        if (BreakElement (pEl1, firstEl, firstChar, FALSE, FALSE))
+          pEl1 = pEl1->ElNext;
 
       /* on detruit les paves des elements qui vont etre deplaces */
       pEl = firstEl;
@@ -3114,16 +3106,10 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                   if (splitElem)
                     /* coupe l'element en deux */
                     {
-                      /* store the editing operation in the history */
-                      AddEditOpInHistory (pSplitEl, pSelDoc, TRUE, TRUE);
                       ok = BreakElement (pSplitEl, pElSplit, firstChar, FALSE,
                                          FALSE);
-                      if (!ok)
-                        CancelLastEditFromHistory (pSelDoc);
-                      else
+                      if (ok)
                         {
-                          AddEditOpInHistory (pSplitEl->ElNext, pSelDoc, FALSE,
-                                              TRUE);
                           createAfter = TRUE;
                           if (ancestorRule > 0)
                             {
