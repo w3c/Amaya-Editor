@@ -1306,6 +1306,17 @@ extern void TtaGetXmlElementType (char *XMLElementName, ElementType *elType,
 extern void TtaChangeGenericSchemaNames (char *sSchemauri, char *sSchemaName,
 					 Document doc);
 
+
+/*----------------------------------------------------------------------
+  TtaBreakElement
+  Split the pSplitEl element and complete to replicate the pElReplicate
+  element.
+  block is TRUE if the split element is a block
+  Return TRUE if okay
+  select: select the new element
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaBreakElement (Element replicate, Element split,
+                                 int splitIndex, ThotBool block, ThotBool select);
 #endif /* __CEXTRACT__ */
 
 #endif

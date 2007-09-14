@@ -36,6 +36,11 @@ extern void SelectRange ( PtrDocument pDoc,
                           PtrElement lastSel,
                           int firstChar,
                           int lastChar );
+extern ThotBool TtaBreakElement ( Element replicate,
+                                  Element split,
+                                  int splitIndex,
+                                  ThotBool block,
+                                  ThotBool select );
 
 #else /* __STDC__ */
 
@@ -69,6 +74,11 @@ extern void SelectRange ( PtrDocument pDoc,
                             PtrElement lastSel,
                             int firstChar,
                             int lastChar );
+extern ThotBool TtaBreakElement ( Element replicate,
+                                    Element split,
+                                    int splitIndex,
+                                    ThotBool block,
+                                    ThotBool select );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

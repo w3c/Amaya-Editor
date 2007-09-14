@@ -27,6 +27,7 @@
 #include "appdialogue.h"
 #include "content.h"
 #include "registry.h"
+#include "application.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -70,6 +71,7 @@
 #include "structcreation_f.h"
 #include "structmodif_f.h"
 #include "textcommands_f.h"
+#include "thotmsg_f.h"
 #include "tree_f.h"
 #include "undo_f.h"
 #include "views_f.h"
@@ -848,8 +850,9 @@ ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 
 /*----------------------------------------------------------------------
   BreakElement
-  divise un element et complete chacune des parties.
-  Retourne TRUE en cas de succes.
+  Split the pSplitEl element and complete to replicate the pElReplicate
+  element.
+  Return TRUE if okay
   select: select the new element
   ----------------------------------------------------------------------*/
 ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
@@ -1374,4 +1377,30 @@ void SelectRange (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel,
       else
         ExtendSelection (lastSel, lastChar, TRUE, FALSE, FALSE);
     }
+}
+
+/*----------------------------------------------------------------------
+  TtaBreakElement
+  Split the pSplitEl element and complete to replicate the pElReplicate
+  element.
+  block is TRUE if the split element is a block
+  Return TRUE if okay
+  select: select the new element
+  ----------------------------------------------------------------------*/
+ThotBool TtaBreakElement (Element replicate, Element split,
+                          int splitIndex, ThotBool block, ThotBool select)
+{
+  ThotBool res = FALSE;
+
+  UserErrorCode = 0;
+  if (replicate == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (split == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!ElemIsAnAncestor((PtrElement) replicate, (PtrElement) split))
+    TtaError (ERR_invalid_parameter);
+  else
+    res = BreakElement ((PtrElement) replicate, (PtrElement) split,
+                        splitIndex, block, select);
+  return res;
 }

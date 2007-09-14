@@ -4180,13 +4180,16 @@ void SetCharFontOrPhrase (int doc, int elemtype)
       // check if a typed element is selected
       if (elType.ElTypeNum == elemtype || elType.ElTypeNum == blocktype)
         parent = firstSel;
-      remove = (firstSel == lastSel);
+      remove = (firstSel == lastSel &&
+                firstSelectedChar == 1 &&
+                lastSelectedChar >= i);
     }
   else
     elType.ElSSchema = TtaGetSSchema ("HTML", doc);
 
   if (parent == NULL)
     {
+
       if ( TtaIsSelectionEmpty ())
         {
           // check if the user wants to close the current element
@@ -4195,13 +4198,26 @@ void SetCharFontOrPhrase (int doc, int elemtype)
           i =  TtaGetElementVolume (firstSel);
           if (parentType.ElSSchema == elType.ElSSchema &&
               parentType.ElTypeNum == elemtype &&
-              elType.ElTypeNum == HTML_EL_TEXT_UNIT && lastSelectedChar >= i &&
-              firstSel == TtaGetLastChild (parent))
+              elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
+              ((firstSelectedChar == 1 && lastSelectedChar == 0) ||
+               (lastSelectedChar >= i && firstSel == TtaGetLastChild (parent))))
             {
+              // insert before or after
+              TtaOpenUndoSequence (doc, firstSel, lastSel, firstSelectedChar, lastSelectedChar);
               oldStructureChecking = TtaGetStructureChecking (doc);
               TtaSetStructureChecking (FALSE, doc);
-              TtcCreateElement (doc, 1);
+              el = TtaNewElement (doc, elType);
+              if (firstSelectedChar == 1 && lastSelectedChar == 0)
+                TtaInsertSibling (el, parent, TRUE, doc);
+              else
+                TtaInsertSibling (el, parent, FALSE, doc);
+              TtaRegisterElementCreate (el, doc);
+              TtaSelectElement (doc, el);
               TtaSetStructureChecking (oldStructureChecking, doc);
+              TtaCloseUndoSequence (doc);
+              /* mark the document as modified */
+              TtaSetDocumentModified (doc);
+              UpdateContextSensitiveMenus (doc, 1);
               return;
             }
         }
@@ -4226,11 +4242,51 @@ void SetCharFontOrPhrase (int doc, int elemtype)
   dispMode = TtaGetDisplayMode (doc);
   if (parent)
     {
+      // unset the current inline lement
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, DeferredDisplay);
       TtaClearViewSelections ();
       TtaOpenUndoSequence (doc, firstSel, lastSel, firstSelectedChar, lastSelectedChar);
-      ResetFontOrPhrase (doc, parent);
+      i =  TtaGetElementVolume (lastSel);
+      if (firstSelectedChar > 1 || lastSelectedChar < i)
+        {
+        /* split */
+          if (TtaBreakElement (parent, firstSel, firstSelectedChar, TRUE, FALSE))
+            {
+              Element child, new_ = NULL, top = NULL;
+              // insert after
+              oldStructureChecking = TtaGetStructureChecking (doc);
+              TtaSetStructureChecking (FALSE, doc);
+              TtaNextSibling (&parent);
+              // generate the tree of the new structure
+              child = TtaGetFirstChild (parent);
+              while (child)
+                {
+                  elType = TtaGetElementType (child);
+                  el = TtaNewElement (doc, elType);
+                  if (new_ == NULL)
+                    {
+                    // top of the new tree
+                    TtaInsertSibling (el, parent, TRUE, doc);
+                    top = new_ = el;
+                    }
+                  else
+                    {
+                      TtaInsertFirstChild  (&el, new_, doc);
+                      new_ = el;
+                    }
+                  child = TtaGetFirstChild (child);
+                }
+              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+              TtaRegisterElementCreate (top, doc);
+              TtaSelectElement (doc, el);
+              TtaSetStructureChecking (oldStructureChecking, doc);
+              /* mark the document as modified */
+              TtaSetDocumentModified (doc);
+            }
+        }
+      else
+        ResetFontOrPhrase (doc, parent);
       TtaCloseUndoSequence (doc);
       /* retore the display mode */
       if (dispMode == DisplayImmediately)
