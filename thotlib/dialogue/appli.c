@@ -1084,9 +1084,9 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
       frame == 0 ||
       frame > MAX_FRAME ||
       FrameTable[frame].FrDoc == 0 ||
-      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay ||
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay /*||
       ( FrameTable[frame].FrWidth == new_width &&
-        FrameTable[frame].FrHeight == new_height))
+        FrameTable[frame].FrHeight == new_height)*/)
     /* frame should not be displayed */
     return FALSE;
 #ifdef _WX
