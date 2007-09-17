@@ -819,11 +819,13 @@ void GenerateInlineElement (int eType, int aType, char * data)
                           if (!strcmp (name, "HTML") &&
                               IsCharacterLevelElement (parent) &&
                               el == TtaGetFirstChild (parent) &&
-                              el == TtaGetLastChild (parent))
+                              el == TtaGetLastChild (parent) &&
+                              firstchar <= 1)
                             {
                               el = parent;
                               firstSel = el;
                               elType = TtaGetElementType (parent);
+                              parent = NULL; // keep the whole parent
                             }
                         }
                     }
@@ -848,6 +850,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                   el = parent;
                                   firstSel = el;
                                   elType = TtaGetElementType (parent);
+                                  parent = NULL; // keep the whole parent
                                 }
                             }
                         }

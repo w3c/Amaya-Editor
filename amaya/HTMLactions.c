@@ -4143,11 +4143,14 @@ static void ResetFontOrPhrase (Document doc, Element elem)
   ----------------------------------------------------------------------*/
 void SetCharFontOrPhrase (int doc, int elemtype)
 {
-  Element             firstSel, lastSel, el, parent;
+  Element             firstSel, lastSel, el, parent, next;
+  Element             child, new_ = NULL, top = NULL, start = NULL;
   ElementType         elType, parentType;
   DisplayMode         dispMode;
+  Language            lang;
+  unsigned char      *buffer;
   int                 firstSelectedChar, lastSelectedChar, i;
-  int                 blocktype;
+  int                 blocktype, j, k, lg;
   ThotBool            remove;
   ThotBool            oldStructureChecking;
 
@@ -4247,13 +4250,24 @@ void SetCharFontOrPhrase (int doc, int elemtype)
         TtaSetDisplayMode (doc, DeferredDisplay);
       TtaClearViewSelections ();
       TtaOpenUndoSequence (doc, firstSel, lastSel, firstSelectedChar, lastSelectedChar);
-      i =  TtaGetElementVolume (lastSel);
-      if (firstSelectedChar > 1 || lastSelectedChar < i)
+      i =  TtaGetElementVolume (lastSel) + 1;
+      if (firstSelectedChar != 0 &&
+          (firstSelectedChar > 1 || lastSelectedChar < i))
         {
-        /* split */
+          /* split */
+          next = firstSel;
+          TtaGiveNextSelectedElement (doc, &next, &j, &k);
+          if (firstSel == lastSel)
+            {
+              if (lastSelectedChar < firstSelectedChar)
+                i = 0;
+              else
+                i = lastSelectedChar - firstSelectedChar; // some characters have to be moved
+            }
+          else
+            i -= firstSelectedChar;
           if (TtaBreakElement (parent, firstSel, firstSelectedChar, TRUE, FALSE))
             {
-              Element child, new_ = NULL, top = NULL;
               // insert after
               oldStructureChecking = TtaGetStructureChecking (doc);
               TtaSetStructureChecking (FALSE, doc);
@@ -4275,14 +4289,71 @@ void SetCharFontOrPhrase (int doc, int elemtype)
                       TtaInsertFirstChild  (&el, new_, doc);
                       new_ = el;
                     }
+                  parent = child;
                   child = TtaGetFirstChild (child);
                 }
-              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+              if (i > 0)
+                {
+                  /* there is some text to be copied */
+                  child = parent;
+                  lg = TtaGetTextLength (child);
+                  buffer = (unsigned char*)TtaGetMemory ((lg+1));
+                  memset (buffer, 0, lg);
+                  TtaGiveSubString (child, buffer, 1, i);
+                  TtaSetTextContent (el, buffer, lang, doc);
+                  TtaFreeMemory (buffer);
+                  if (i >= lg)
+                    {
+                      // remove the element
+                      TtaRegisterElementDelete (child, doc);
+                      TtaRemoveTree (child, doc);                      
+                    }
+                  else
+                    {
+                      TtaRegisterElementReplace (child, doc);
+                      TtaDeleteTextContent (child, 1, i, doc);
+                    }
+                }
               TtaRegisterElementCreate (top, doc);
-              TtaSelectElement (doc, el);
+              start = el; // new start selection
+              while (next)
+                {
+                  el = next;
+                  if ((j == 0 && k == 0) || k >  TtaGetTextLength (next))
+                    {
+                      // move the complete element
+                      TtaGiveNextSelectedElement (doc, &next, &j, &k);
+                      TtaRegisterElementDelete (el, doc);
+                      TtaRemoveTree (el, doc);
+                      TtaInsertSibling (el, top, FALSE, doc);
+                      top = el;
+                      TtaRegisterElementCreate (top, doc);
+                    }
+                  else
+                    {
+                      /* there is some text to be copied */
+                      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                      el = TtaNewElement (doc, elType);
+                      lg = TtaGetTextLength (next);
+                      buffer = (unsigned char*)TtaGetMemory ((lg+1));
+                      memset (buffer, 0, lg);
+                      k--;
+                      TtaGiveSubString (next, buffer, 1, k);
+                      TtaSetTextContent (el, buffer, lang, doc);
+                      TtaFreeMemory (buffer);
+                      TtaRegisterElementReplace (next, doc);
+                      TtaDeleteTextContent (next, 1, k, doc);
+                      TtaInsertSibling (el, top, FALSE, doc);
+                      top = el;
+                      next = NULL;
+                    }
+                }
+              TtaSelectElement (doc, start);
+              TtaExtendSelection (doc, top, TtaGetElementVolume (top) + 1);
               TtaSetStructureChecking (oldStructureChecking, doc);
               /* mark the document as modified */
               TtaSetDocumentModified (doc);
+              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
             }
         }
       else
