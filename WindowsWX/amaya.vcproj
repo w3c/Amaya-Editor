@@ -72,7 +72,7 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				CommandLine="copy  ..\..\wxWidgets\lib\vc_dll\*.dll      bin\&#x0D;&#x0A;copy  ..\..\Mesa\lib\OPENGL32.lib           .\&#x0D;&#x0A;copy  ..\..\Mesa\lib\GLU32.lib                  .\"
+				CommandLine="copy  ..\..\wxWidgets\lib\vc_dll\*.dll      bin\"
 			/>
 			<Tool
 				Name="VCLinkerTool"
@@ -173,17 +173,17 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				CommandLine="copy  ..\..\wxWidgets\lib\vc_dll\*.dll      bin\&#x0D;&#x0A;copy  ..\..\Mesa\lib\OPENGL32.lib           .\&#x0D;&#x0A;copy  ..\..\Mesa\lib\GLU32.lib                  .\"
+				CommandLine="copy  ..\..\wxWidgets\lib\vc_dll\*.dll      bin\&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCLinkerTool"
 				UseLibraryDependencyInputs="false"
-				AdditionalDependencies="wxbase28ud_xml.lib wxmsw28ud_gl.lib wxmsw28ud_xrc.lib wxmsw28ud_adv.lib wxmsw28ud_core.lib wxbase28ud.lib wxbase28ud_net.lib freetype2110_D.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="glu32.lib opengl32.lib wxbase28ud_xml.lib wxmsw28ud_gl.lib wxmsw28ud_xrc.lib wxmsw28ud_adv.lib wxmsw28ud_core.lib wxbase28ud.lib wxbase28ud_net.lib freetype2110_D.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib odbc32.lib odbccp32.lib"
 				OutputFile=".\bin/amaya.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\wxWidgets\lib\vc_dll;..\..\Mesa\lib;..\..\freetype\objs"
-				IgnoreDefaultLibraryNames="LIBCD.lib,LIBCMTD.lib"
+				IgnoreDefaultLibraryNames="LIBCD.lib;LIBCMTD.lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\bin/amaya.pdb"
 				SubSystem="2"
@@ -1225,10 +1225,6 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath=".\GLU32.lib"
-			>
-		</File>
-		<File
 			RelativePath="..\amaya\html2thot.c"
 			>
 			<FileConfiguration
@@ -1671,10 +1667,6 @@
 					CompileAs="2"
 				/>
 			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\OPENGL32.lib"
-			>
 		</File>
 		<File
 			RelativePath="..\amaya\query.c"
