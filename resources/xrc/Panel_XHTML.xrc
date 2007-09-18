@@ -22,7 +22,7 @@
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
-          <style>wxTB_NODIVIDER</style>
+          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
           <object class="tool" name="wxID_PANEL_XHTML_DIV">
             <bitmap>../icons/16x16/XHTML_Div.png</bitmap>
           </object>
@@ -60,7 +60,7 @@
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
-          <style>wxTB_NODIVIDER</style>
+          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -82,7 +82,7 @@
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
-          <style>wxTB_NODIVIDER</style>
+          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -105,7 +105,7 @@
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
-          <style>wxTB_NODIVIDER</style>
+          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
         </object>
       </object>
     </object>

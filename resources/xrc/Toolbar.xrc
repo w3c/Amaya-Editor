@@ -44,6 +44,7 @@
             <bitmap>../icons/22x22/css.png</bitmap>
           </object>
           <bitmapsize>24,24</bitmapsize>
+          <style>wxTB_FLAT</style>
         </object>
         <flag>wxALIGN_CENTRE_VERTICAL</flag>
       </object>
@@ -60,7 +61,7 @@
             <bitmap>../icons/22x22/logo.png</bitmap>
           </object>
           <bitmapsize>24,24</bitmapsize>
-          <style>wxTB_NODIVIDER</style>
+          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
         </object>
         <flag>wxALIGN_CENTRE_VERTICAL</flag>
       </object>
@@ -87,6 +88,7 @@
             <bitmap>../icons/22x22/home.png</bitmap>
           </object>
           <bitmapsize>24,24</bitmapsize>
+          <style>wxTB_FLAT</style>
         </object>
         <flag>wxEXPAND</flag>
       </object>
@@ -104,7 +106,7 @@
             <bitmap>../icons/22x22/logo.png</bitmap>
           </object>
           <bitmapsize>24,24</bitmapsize>
-          <style>wxTB_NODIVIDER</style>
+          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
         </object>
         <flag>wxALIGN_LEFT|wxALIGN_RIGHT|wxALIGN_CENTRE_VERTICAL</flag>
         <border>2</border>
@@ -158,6 +160,7 @@
           <object class="tool" name="wxID_TOOL_CSS">
             <bitmap>../icons/22x22/css.png</bitmap>
           </object>
+          <style>wxTB_FLAT</style>
         </object>
         <option>1</option>
         <flag>wxEXPAND</flag>
