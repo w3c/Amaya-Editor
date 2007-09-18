@@ -3087,8 +3087,8 @@ static void UpdateListItemNumber (PtrElement pElBegin, PtrElement pElModif,
 
   for (view = 1; view <= MAX_VIEW_DOC; view++)
     if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-      if (pElModif->ElAbstractBox[view - 1] &&
-          pElModif->ElAbstractBox[view - 1]->AbDisplay == 'L')
+      if (pElBegin->ElAbstractBox[view - 1] &&
+          pElBegin->ElAbstractBox[view - 1]->AbDisplay == 'L')
         /* this box is displayed as a list item */
         {
           FindFirstAbsBox (pElBegin, view);
