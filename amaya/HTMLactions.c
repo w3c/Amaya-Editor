@@ -4184,8 +4184,8 @@ void SetCharFontOrPhrase (int doc, int elemtype)
       if (elType.ElTypeNum == elemtype || elType.ElTypeNum == blocktype)
         parent = firstSel;
       remove = (firstSel == lastSel &&
-                firstSelectedChar == 1 &&
-                lastSelectedChar >= i);
+                ((firstSelectedChar == 0 && lastSelectedChar == 0) ||
+                (firstSelectedChar == 1 && lastSelectedChar >= i)));
     }
   else
     elType.ElSSchema = TtaGetSSchema ("HTML", doc);
