@@ -4147,7 +4147,7 @@ void SetCharFontOrPhrase (int doc, int elemtype)
   Element             child, new_ = NULL, top = NULL, start = NULL;
   ElementType         elType, parentType;
   DisplayMode         dispMode;
-  Language            lang;
+  Language            lang = TtaGetDefaultLanguage ();
   unsigned char      *buffer;
   int                 firstSelectedChar, lastSelectedChar, i;
   int                 blocktype, j, k, lg;
