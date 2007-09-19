@@ -853,7 +853,8 @@ void AmayaNormalWindow::RefreshShowPanelToggleMenu()
       if (LoadedDocument[doc_id-1])
         {
           frame_id = LoadedDocument[doc_id-1]->DocViewFrame[0];
-          if (FrameTable[frame_id].FrWindowId == window_id)
+          if (FrameTable[frame_id].FrWindowId == window_id &&
+			  MenuActionList[action].ActionToggle[doc_id] != on)
             {
               /* toggle the menu item of every documents */
               MenuActionList[action].ActionToggle[doc_id] = on;

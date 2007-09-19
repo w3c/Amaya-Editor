@@ -832,8 +832,8 @@ void DocStatusUpdate (Document doc, ThotBool modified)
       StopJavascript (doc);
 #endif /* _JAVA */
 #ifdef _WX
-      TtaChangeButton (doc, 1, iSave, iconSave, TRUE);
-      TtaChangeButton (doc, 1, iSaveAll, iconSaveAll, TRUE);
+      //TtaChangeButton (doc, 1, iSave, iconSave, TRUE);
+      //TtaChangeButton (doc, 1, iSaveAll, iconSaveAll, TRUE);
 #endif /* _WX */
        /* if we have a pair source/structured document allow synchronization */
       otherDoc = DocumentSource[doc];

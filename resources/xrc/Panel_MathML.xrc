@@ -41,7 +41,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_ENCLOSE">
                       <bitmap>../icons/16x16/MATHML_enclose.png</bitmap>
@@ -68,7 +67,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_SUP">
                       <bitmap>../icons/16x16/MATHML_sup.png</bitmap>
@@ -95,7 +93,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_NATURALS">
                       <bitmap>../icons/16x16/MATHML_naturals.png</bitmap>
@@ -122,7 +119,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_OVERARROW">
                       <bitmap>../icons/16x16/MATHML_overarrow.png</bitmap>
@@ -143,7 +139,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_OVERHAT">
                       <bitmap>../icons/16x16/MATHML_overhat.png</bitmap>
@@ -172,7 +167,6 @@
                 <orient>wxVERTICAL</orient>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_EQ">
                       <bitmap>../icons/16x16/MATHML_neq.png</bitmap>
@@ -199,7 +193,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_LT">
                       <bitmap>../icons/16x16/MATHML_lt.png</bitmap>
@@ -229,7 +222,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_INF">
                       <bitmap>../icons/16x16/MATHML_inf.png</bitmap>
@@ -259,7 +251,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_TRUE">
                       <bitmap>../icons/16x16/MATHML_true.png</bitmap>
@@ -281,7 +272,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_NOT">
                       <bitmap>../icons/16x16/MATHML_not.png</bitmap>
@@ -302,7 +292,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_XORBINARY">
                       <bitmap>../icons/16x16/MATHML_xorbinary.png</bitmap>
@@ -331,7 +320,6 @@
                 <orient>wxVERTICAL</orient>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_SETEXTENSION">
                       <bitmap>../icons/16x16/MATHML_setextension.png</bitmap>
@@ -355,7 +343,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_IN">
                       <bitmap>../icons/16x16/MATHML_in.png</bitmap>
@@ -385,7 +372,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_INTERSECTBINARY">
                       <bitmap>../icons/16x16/MATHML_intersectbinary.png</bitmap>
@@ -412,7 +398,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_EMPTYSET">
                       <bitmap>../icons/16x16/MATHML_emptyset.png</bitmap>
@@ -436,7 +421,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_CARTESIANPRODUCTBINARY">
                       <bitmap>../icons/16x16/MATHML_cartesianproductbinary.png</bitmap>
@@ -460,7 +444,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_MAP">
                       <bitmap>../icons/16x16/MATHML_map.png</bitmap>
@@ -484,7 +467,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_LAMBDA">
                       <bitmap>../icons/16x16/MATHML_lambda.png</bitmap>
@@ -513,7 +495,6 @@
                 <orient>wxVERTICAL</orient>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_SUM">
                       <bitmap>../icons/16x16/MATHML_sum.png</bitmap>
@@ -540,7 +521,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_FACTOROF">
                       <bitmap>../icons/16x16/MATHML_factorof.png</bitmap>
@@ -561,7 +541,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_PLUS">
                       <bitmap>../icons/16x16/MATHML_plus.png</bitmap>
@@ -582,7 +561,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_DIVIDE">
                       <bitmap>../icons/16x16/MATHML_divide.png</bitmap>
@@ -603,7 +581,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_FLOOR">
                       <bitmap>../icons/16x16/MATHML_floor.png</bitmap>
@@ -624,7 +601,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_COMPLEXCARTESIAN">
                       <bitmap>../icons/16x16/MATHML_complexcartesian.png</bitmap>
@@ -645,7 +621,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_EXPONENTIALE">
                       <bitmap>../icons/16x16/MATHML_exponentiale.png</bitmap>
@@ -674,7 +649,6 @@
                 <orient>wxVERTICAL</orient>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_DIFF2">
                       <bitmap>../icons/16x16/MATHML_diff2.png</bitmap>
@@ -704,7 +678,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_EQUIVALENTUNDER">
                       <bitmap>../icons/16x16/MATHML_equivalentunder.png</bitmap>
@@ -725,7 +698,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_SUPMINUS">
                       <bitmap>../icons/16x16/MATHML_supminus.png</bitmap>
@@ -746,7 +718,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_VECTORROW">
                       <bitmap>../icons/16x16/MATHML_vectorrow.png</bitmap>
@@ -773,7 +744,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_CURL">
                       <bitmap>../icons/16x16/MATHML_curl.png</bitmap>
@@ -794,7 +764,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_SCALARPRODUCT">
                       <bitmap>../icons/16x16/MATHML_scalarproduct.png</bitmap>
@@ -818,7 +787,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <bitmapsize>16,16</bitmapsize>
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_MEAN">
                       <bitmap>../icons/16x16/MATHML_mean.png</bitmap>
@@ -892,7 +860,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_TAN">
                       <bitmap></bitmap>
                       <label>tan</label>
@@ -956,7 +923,6 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_CSC">
                       <bitmap></bitmap>
                       <label>csc</label>
