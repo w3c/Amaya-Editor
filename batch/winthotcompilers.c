@@ -1405,6 +1405,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
       TranslateMessage (&msg);
       DispatchMessage (&msg);
     } 
-  return TRUE;
+  return 0;
 }
 #endif /* _WINDOWS */
