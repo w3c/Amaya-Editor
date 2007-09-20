@@ -3989,19 +3989,6 @@
 	<message xml:lang="tw">添加/刪除 ID(&amp;A)...</message>
 	<message xml:lang="sk">&amp;Pridať/odstrániť ID...</message>
 </label>
-<label define="TShowPanel">
-	<message xml:lang="en">Show &amp;tools</message>
-	<message xml:lang="fr">&amp;Montrer outils</message>
-	<message xml:lang="es">Ventana de &amp;herramientas</message>
-	<message xml:lang="de">&amp;Hilfsmittel anzeigen</message>
-	<message xml:lang="it">Mostra strumenti</message>
-	<message xml:lang="ru">Показать панель Инструм&amp;енты</message>
-	<message xml:lang="hu">&amp;Eszközsor mutatása</message>
-	<message xml:lang="ka">ხელსაწყოების ჩვენება</message>
-	<message xml:lang="cn">显示工具栏(&amp;T)</message>
-	<message xml:lang="tw">顯示工具欄(&amp;T)</message>
-	<message xml:lang="sk">Panel s &amp;nástrojmi</message>
-</label>
 <label define="BFullScreen">
 	<message xml:lang="en">&amp;Fullscreen</message>
 	<message xml:lang="fr">&amp;Plein écran</message>
@@ -4026,6 +4013,19 @@
 <label define="toggle:TShowEditingBar">
   <message xml:lang="en">&amp;Editing</message>
   <message xml:lang="fr">&amp;Édition</message>
+</label>
+<label define="TShowPanel">
+	<message xml:lang="en">Show &amp;tools</message>
+	<message xml:lang="fr">&amp;Montrer outils</message>
+	<message xml:lang="es">Ventana de &amp;herramientas</message>
+	<message xml:lang="de">&amp;Hilfsmittel anzeigen</message>
+	<message xml:lang="it">Mostra strumenti</message>
+	<message xml:lang="ru">Показать панель Инструм&amp;енты</message>
+	<message xml:lang="hu">&amp;Eszközsor mutatása</message>
+	<message xml:lang="ka">ხელსაწყოების ჩვენება</message>
+	<message xml:lang="cn">显示工具栏(&amp;T)</message>
+	<message xml:lang="tw">顯示工具欄(&amp;T)</message>
+	<message xml:lang="sk">Panel s &amp;nástrojmi</message>
 </label>
 <label define="TShowButtonbar">
 	<message xml:lang="en">Show &amp;button bar</message>

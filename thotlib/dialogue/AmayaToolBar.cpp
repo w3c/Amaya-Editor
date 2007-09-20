@@ -159,6 +159,8 @@ AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaToolBarEditingToolDef)
   AMAYA_TOOLBAR_DEF("wxID_TOOL_PASTE",      "PasteBuffer",      LIB, TMSG_Paste)
   AMAYA_TOOLBAR_DEF("wxID_TOOL_SPELLCHECK", "SpellCheck",       LIB, TMSG_Spell)
   AMAYA_TOOLBAR_DEF("wxID_TOOL_FIND",       "TtcSearchText",    LIB, TMSG_BUTTON_SEARCH)
+  AMAYA_TOOLBAR_DEF("wxID_TOOL_MAX",        "ZoomIn",         LIB, TMSG_ZoomIn)
+  AMAYA_TOOLBAR_DEF("wxID_TOOL_MIN",        "ZoomOut",        LIB, TMSG_ZoomOut)
   AMAYA_TOOLBAR_DEF("wxID_TOOL_CSS",        "SetCSSStyle",    LIB, TMSG_CSSStyle)
 AMAYA_END_TOOLBAR_DEF_TABLE()
 

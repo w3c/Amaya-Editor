@@ -3802,7 +3802,38 @@
   <message xml:lang="en">Trigonometry and logarithms</message>
   <message xml:lang="fr">Trigonométrie et logarithmes</message>
 </label>
-
+<label define="TMSG_ZoomIn">
+  <message xml:lang="en">Zoom in</message>
+  <message xml:lang="fr">Grossir</message>
+  <message xml:lang="de">Schrift vergrößern</message>
+  <message xml:lang="it">Ingrandisci</message>
+  <message xml:lang="tr">Uzaklaştır</message>
+  <message xml:lang="es">&amp;Aumentar tamaño de texto</message>
+  <message xml:lang="pt">Ampliar (Zoom in)</message>
+  <message xml:lang="fi">Lähennä</message>
+  <message xml:lang="ru">Увеличить</message>
+  <message xml:lang="hu">Nagyítás</message>
+  <message xml:lang="ka">გაზრდა</message>
+  <message xml:lang="cn">放大</message>
+  <message xml:lang="tw">放大</message>
+  <message xml:lang="sk">Zväčšiť veľkosť textu</message>
+</label>
+<label define="TMSG_ZoomOut">
+  <message xml:lang="en">Zoom out</message>
+  <message xml:lang="fr">Réduire</message>
+  <message xml:lang="de">Schrift verkleinern</message>
+  <message xml:lang="it">Rimpicciolisci</message>
+  <message xml:lang="tr">Harita alanlarını göster</message>
+  <message xml:lang="es">&amp;Reducir tamaño de texto</message>
+  <message xml:lang="pt">Reduzir (Zoom out)</message>
+  <message xml:lang="fi">Loitonna</message>
+  <message xml:lang="ru">Уменьшить</message>
+  <message xml:lang="hu">Kicsinyítés</message>
+  <message xml:lang="ka">შემცირება</message>
+  <message xml:lang="cn">缩小</message>
+  <message xml:lang="tw">縮小</message>
+  <message xml:lang="sk">Zmenšiť veľkosť textu</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

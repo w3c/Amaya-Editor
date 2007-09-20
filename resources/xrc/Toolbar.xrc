@@ -1,72 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxPanel" name="AmayaToolbar">
-    <object class="wxBoxSizer">
-      <orient>wxHORIZONTAL</orient>
-      <object class="sizeritem">
-        <object class="wxToolBar" name="wxID_TOOLBAR_LEFT">
-          <object class="tool" name="wxID_TOOL_BACK">
-            <bitmap>../icons/22x22/back.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_TOOL_FORWARD">
-            <bitmap>../icons/22x22/forward.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_TOOL_RELOAD">
-            <bitmap>../icons/22x22/reload.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_TOOL_STOP">
-            <bitmap>../icons/22x22/stop.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_TOOL_HOME">
-            <bitmap>../icons/22x22/home.png</bitmap>
-          </object>
-          <object class="separator"/>
-          <object class="tool" name="wxID_TOOL_NEW">
-            <bitmap>../icons/22x22/new.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_TOOL_OPEN">
-            <bitmap>../icons/22x22/open.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_TOOL_SAVE">
-            <bitmap>../icons/22x22/save.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_TOOL_SAVE_ALL">
-            <bitmap>../icons/22x22/save_all.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_TOOL_PRINT">
-            <bitmap>../icons/22x22/print.png</bitmap>
-          </object>
-          <object class="separator"/>
-          <object class="tool" name="wxID_TOOL_FIND">
-            <bitmap>../icons/22x22/find.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_TOOL_CSS">
-            <bitmap>../icons/22x22/css.png</bitmap>
-          </object>
-          <bitmapsize>24,24</bitmapsize>
-          <style>wxTB_FLAT</style>
-        </object>
-        <flag>wxALIGN_CENTRE_VERTICAL</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxComboBox" name="wxID_TOOL_URL">
-          <content/>
-        </object>
-        <option>1</option>
-        <flag>wxALIGN_CENTRE_VERTICAL</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxToolBar" name="wxID_TOOLBAR_RIGHT">
-          <object class="tool" name="wxID_TOOL_LOGO">
-            <bitmap>../icons/22x22/logo.png</bitmap>
-          </object>
-          <bitmapsize>24,24</bitmapsize>
-          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
-        </object>
-        <flag>wxALIGN_CENTRE_VERTICAL</flag>
-      </object>
-    </object>
-  </object>
   <object class="wxPanel" name="wxID_PANEL_TOOLBAR_BROWSING">
     <object class="wxBoxSizer">
       <orient>wxHORIZONTAL</orient>
@@ -156,6 +89,12 @@
           </object>
           <object class="tool" name="wxID_TOOL_FIND">
             <bitmap>../icons/22x22/find.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_MAX">
+            <bitmap>../icons/22x22/view_plus.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TOOL_MIN">
+            <bitmap>../icons/22x22/view_min.png</bitmap>
           </object>
           <object class="tool" name="wxID_TOOL_CSS">
             <bitmap>../icons/22x22/css.png</bitmap>

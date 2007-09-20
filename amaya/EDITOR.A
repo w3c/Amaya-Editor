@@ -302,16 +302,16 @@ MENUS
 	Links button:BDeleteAnchor -> DeleteAnchor icon:XHTML_DelTarget.png;
 	Links button:BMakeID -> MakeIDMenu;
 
-	Views toggle:TShowPanel -> ShowPanel icon:panel_on_off.png;
-	Views button:BFullScreen -> FullScreen icon:fullscreen.png;
+	Views button:BFullScreen -> FullScreen;
 	Views.toolbars toggle:TShowBrowsingBar -> ShowBrowsingBar;
-  Views.toolbars toggle:TShowEditingBar -> ShowEditingBar;
+	Views.toolbars toggle:TShowEditingBar -> ShowEditingBar;
+	Views.toolbars toggle:TShowPanel -> ShowPanel;
 	Views toggle:TShowButtonbar -> ShowButtons;
 	Views toggle:TShowTextZone -> ShowAddress;
 	Views toggle:TShowMapAreas -> ShowMapAreas;
 	Views toggle:TShowTargets -> ShowTargets;
-	Views toggle:TZoomIn -> ZoomIn icon:zoom_plus.png;
-	Views toggle:TZoomOut -> ZoomOut icon:zoom_minus.png;
+	Views toggle:TZoomIn -> ZoomIn;
+	Views toggle:TZoomOut -> ZoomOut;
 	Views Separator;
 	Views button:BShowFormatted -> ShowFormatted;
 	Views button:BShowStructure -> ShowStructure;

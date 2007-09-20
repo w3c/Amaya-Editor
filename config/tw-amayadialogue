@@ -259,11 +259,11 @@
 257 創建目標(&T)
 258 刪除 anchor(&D)
 259 添加/刪除 ID(&A)...
-260 顯示工具欄(&T)
-261 全屏顯示(&F)
-262 **Show/Hide toolbars
-263 **&Browsing
-264 **&Editing
+260 全屏顯示(&F)
+261 **Show/Hide toolbars
+262 **&Browsing
+263 **&Editing
+264 顯示工具欄(&T)
 265 顯示按鈕欄(&B)
 266 顯示 ADDRESS(&D)
 267 顯示 MAP 區域(&M)

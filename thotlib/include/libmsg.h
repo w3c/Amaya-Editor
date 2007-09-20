@@ -249,6 +249,8 @@
 #define TMSG_MATH_PANEL_4		244
 #define TMSG_MATH_PANEL_5		245
 #define TMSG_MATH_PANEL_6		246
-#define TMSG_LIB_MSG_MAX		247
+#define TMSG_ZoomIn		247
+#define TMSG_ZoomOut		248
+#define TMSG_LIB_MSG_MAX		249
 
 #endif
