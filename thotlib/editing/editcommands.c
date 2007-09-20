@@ -2947,7 +2947,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                       return FALSE/*selNext*/;
                                     }
                                   /* update selection marks */
-                                  xDelta = BoxCharacterWidth (109, 1, font);
+                                  xDelta = 2; // instead of BoxCharacterWidth (109, 1, font);
                                   pViewSel->VsXPos = 0;
                                   pViewSel->VsIndBox = 0;
                                   pViewSel->VsNSpaces = 0;
