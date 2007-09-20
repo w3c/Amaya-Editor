@@ -44,6 +44,18 @@ extern void TtaAttachAttribute (Element element, Attribute attribute, Document d
    ---------------------------------------------------------------------- */
 extern void TtaRemoveAttribute (Element element, Attribute attribute, Document document);
 
+
+/* ----------------------------------------------------------------------
+   TtaCopyAttributes
+
+   Copy all attributes of the src element to the target element
+   Parameters:
+   src: the element which provides attributes.
+   target: the element which receives attributes.
+   ---------------------------------------------------------------------- */
+extern void TtaCopyAttributes (Element src, Element target,
+                               Document doc_src, Document doc_target);
+
 /* ----------------------------------------------------------------------
    TtaSetAttributeValue
 

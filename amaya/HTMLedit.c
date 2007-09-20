@@ -525,7 +525,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
   Element         el, firstSel, lastSel, next, in_line, sibling, child;
   Element         last, parent, enclose, selected;
   ElementType	    elType, parentType, newType, childType;
-  Attribute       newAttr;
+  Attribute       newAttr, attr;
   AttributeType   attrType;
   Document        doc;
   int             i, j, firstchar, lastchar, lg, min, max;
@@ -533,8 +533,8 @@ void GenerateInlineElement (int eType, int aType, char * data)
   Language        lang;
   CHAR_T         *buffer;
   DisplayMode     dispMode;
-  ThotBool	      doit, split, before, charlevel, inside, done;
-  ThotBool        lastChanged, parse, open, selpos, isPict = FALSE;
+  ThotBool	      doit, split, before, charlevel, inside, done, removed;
+  ThotBool        lastChanged, parse, open, selpos, isPict = FALSE, skip;
   SSchema         templateSSchema;
 
   doc = TtaGetSelectedDocument();
@@ -768,10 +768,60 @@ void GenerateInlineElement (int eType, int aType, char * data)
                       lastChanged = TRUE;
                     }
                 }
+              else if (el && firstSel != lastSel &&
+                       aType != HTML_ATTR_Style_ &&
+                       elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+                {
+                  enclose = TtaGetExactTypedAncestor (firstSel, newType);
+                  if (enclose)
+                    {
+                      el = enclose;
+                      firstSel = el;
+                    }
+                  enclose = TtaGetExactTypedAncestor (lastSel, newType);
+                  if (enclose)
+                    {
+                      lastSel = enclose;
+                      lastChanged = TRUE;
+                    }
+                }
 
               while (el)
                 {
                   elType = TtaGetElementType (el);
+                  skip = FALSE;
+                  if (aType != HTML_ATTR_Style_ && aType != HTML_ATTR_Class)
+                    {
+                      // generate inline element
+                      while (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+                             !IsCharacterLevelElement (el))
+                        {
+                          // move down in block element
+                          child = TtaGetFirstChild (el);
+                          if (el == firstSel)
+                            firstSel = child;
+                          if (el == lastSel)
+                            lastSel = child;
+                          el = child;
+                          elType = TtaGetElementType (el);
+                        }
+                    }
+                  // remove the current inline element to extend it
+                  removed = (aType != HTML_ATTR_Style_  &&
+                             elType.ElTypeNum == newType.ElTypeNum &&
+                             elType.ElSSchema == newType.ElSSchema);
+                  if (removed)
+                    {
+                      attr = NULL;
+                      TtaNextAttribute (el, &attr);
+                      if (attr)
+                        {
+                          // don't remove an element with attributes
+                          TtaChangeTypeOfElement (el, doc, HTML_EL_Span);
+                          TtaRegisterElementTypeChange (el, elType.ElTypeNum, doc);
+                          removed = FALSE;
+                        }
+                    }
                   name = TtaGetSSchemaName (elType.ElSSchema);
                   lg =  TtaGetElementVolume (el);
                   split = ((el == firstSel || el == lastSel) &&
@@ -868,18 +918,19 @@ void GenerateInlineElement (int eType, int aType, char * data)
                       else
                         charlevel = TtaIsLeaf (elType);
                       if (!charlevel)
-                      // the element is probably a parent element
+                        // the element is probably a parent element
                         parent = el;
 
                       if (split && in_line == NULL)
                         doit = TRUE;
                       else if (elType.ElSSchema == newType.ElSSchema &&
                                elType.ElTypeNum == newType.ElTypeNum &&
-                               firstSel == lastSel)
+                               in_line == NULL && removed)
                         {
                           // we already have a such element
                           doit = FALSE;
                           charlevel = FALSE;
+                          skip = TRUE;
                         }
                       else if (in_line == NULL && !strcmp(name, "HTML"))
                         // if a strong, em is requested it should be created
@@ -894,75 +945,118 @@ void GenerateInlineElement (int eType, int aType, char * data)
                       
                       sibling = el;
                       before = FALSE;
-                      if (split)
+                      if (!skip)
                         {
-                          /* exclude trailing spaces from the in_line */
-                          if (lg > 0)
+                          if (split)
                             {
-                              buffer = (CHAR_T *)TtaGetMemory ((lg+1) * sizeof(CHAR_T) );
-                              TtaGiveBufferContent (el, buffer, lg, &lang);
-                              if (i == 0)
-                                i = lg + 1;
-                              if (el == lastSel && i <= lg)
+                              /* exclude trailing spaces from the in_line */
+                              if (lg > 0)
                                 {
-                                  min = firstchar;
+                                  buffer = (CHAR_T *)TtaGetMemory ((lg+1) * sizeof(CHAR_T) );
+                                  TtaGiveBufferContent (el, buffer, lg, &lang);
+                                  if (i == 0)
+                                    i = lg + 1;
+                                  if (el == lastSel && i <= lg)
+                                    {
+                                      min = firstchar;
+                                      if (selpos)
+                                        i++;
+                                      else
+                                        {
+                                          // not a position
+                                          while (i > min && buffer[i - 2] == SPACE)
+                                            i--;
+                                        }
+                                      if (i > 1)
+                                        {
+                                          TtaRegisterElementReplace (el, doc);
+                                          TtaSplitText (el, i, doc);
+                                          sibling = el;
+                                          TtaNextSibling (&sibling);
+                                          TtaRegisterElementCreate (sibling, doc);
+                                          // the first piece of el element should be moved
+                                          before = TRUE;
+                                        }
+                                      else
+                                        {
+                                          // don't manage this element
+                                          charlevel = FALSE;
+                                          if (el == lastSel)
+                                            lastSel = in_line;
+                                          el = NULL;
+                                        }
+                                    }
                                   if (selpos)
-                                    i++;
-                                  else
                                     {
-                                      // not a position
-                                      while (i > min && buffer[i - 2] == SPACE)
-                                        i--;
+                                      // empty selection -> generate a text
+                                      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                                      child = TtaNewElement (doc, elType);
+                                      TtaInsertFirstChild (&child, in_line, doc);
+                                      firstSel = child;
+                                      lastSel = child;
                                     }
-                                  if (i > 1)
+                                  else if (el == firstSel && firstchar > 1)
                                     {
-                                      TtaRegisterElementReplace (el, doc);
-                                      TtaSplitText (el, i, doc);
-                                      sibling = el;
-                                      TtaNextSibling (&sibling);
-                                      TtaRegisterElementCreate (sibling, doc);
-                                      // the first piece of el element should be moved
-                                      before = TRUE;
+                                      max = i;
+                                      if (firstSel != lastSel || i >= firstchar)
+                                        {
+                                          // not a position
+                                          while (firstchar <= max &&
+                                                 buffer[firstchar - 1] == SPACE)
+                                            firstchar++;
+                                        }
+                                      if (firstchar <= i && in_line)
+                                        /* split the first string */
+                                        {
+                                          // prepare the future selection
+                                          if (el == firstSel && in_line)
+                                            firstSel = in_line;
+                                          if (el == lastSel && in_line)
+                                            lastSel = in_line;
+                                          TtaRegisterElementReplace (el, doc);
+                                          TtaSplitText (el, firstchar, doc);
+                                          TtaNextSibling (&el);
+                                          TtaRemoveTree (el, doc);
+                                          if (doit)
+                                            // insert into the new created in_line
+                                            TtaInsertFirstChild (&el, in_line, doc);
+                                          else
+                                            {
+                                              // add at the end of the in_line
+                                              sibling = TtaGetLastChild (in_line);
+                                              TtaInsertSibling (el, sibling, FALSE, doc);
+                                            }
+                                        }
+                                      else
+                                        {
+                                          // don't manage this element
+                                          charlevel = FALSE;
+                                          if (el == firstSel && next)
+                                            {
+                                              // the selection starts with the next element
+                                              firstSel = next;
+                                              TtaRemoveTree (in_line, doc);
+                                              in_line = NULL;
+                                            }
+                                          else
+                                            {
+                                              // become an empty selection -> generate a text
+                                              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                                              child = TtaNewElement (doc, elType);
+                                              TtaInsertFirstChild (&child, in_line, doc);
+                                              firstSel = child;
+                                              lastSel = child;
+                                            }
+                                          el = in_line;
+                                        }
                                     }
-                                  else
-                                    {
-                                      // don't manage this element
-                                      charlevel = FALSE;
-                                      if (el == lastSel)
-                                        lastSel = in_line;
-                                      el = NULL;
-                                    }
-                                }
-                              if (selpos)
-                                {
-                                  // empty selection -> generate a text
-                                  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-                                  child = TtaNewElement (doc, elType);
-                                  TtaInsertFirstChild (&child, in_line, doc);
-                                  firstSel = child;
-                                  lastSel = child;
-                                }
-                              else if (el == firstSel && firstchar > 1)
-                                {
-                                  max = i;
-                                  if (firstSel != lastSel || i >= firstchar)
-                                    {
-                                      // not a position
-                                      while (firstchar <= max &&
-                                             buffer[firstchar - 1] == SPACE)
-                                        firstchar++;
-                                    }
-                                  if (firstchar <= i && in_line)
-                                    /* split the first string */
+                                  else if (before && in_line)
                                     {
                                       // prepare the future selection
-                                      if (el == firstSel && in_line)
+                                      if (el == firstSel)
                                         firstSel = in_line;
-                                      if (el == lastSel && in_line)
+                                      if (el == lastSel)
                                         lastSel = in_line;
-                                      TtaRegisterElementReplace (el, doc);
-                                      TtaSplitText (el, firstchar, doc);
-                                      TtaNextSibling (&el);
                                       TtaRemoveTree (el, doc);
                                       if (doit)
                                         // insert into the new created in_line
@@ -974,303 +1068,267 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                           TtaInsertSibling (el, sibling, FALSE, doc);
                                         }
                                     }
-                                 else
-                                    {
-                                      // don't manage this element
-                                      charlevel = FALSE;
-                                      if (el == firstSel && next)
-                                        {
-                                          // the selection starts with the next element
-                                          firstSel = next;
-                                          TtaRemoveTree (in_line, doc);
-                                          in_line = NULL;
-                                        }
-                                      else
-                                        {
-                                          // become an empty selection -> generate a text
-                                          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-                                          child = TtaNewElement (doc, elType);
-                                          TtaInsertFirstChild (&child, in_line, doc);
-                                          firstSel = child;
-                                          lastSel = child;
-                                        }
-                                      el = in_line;
-                                   }
-                                 }
-                              else if (before && in_line)
+                                  TtaFreeMemory (buffer);
+                                }
+                            }
+                          else if (in_line)
+                            {
+                              if (doit && (selpos || inside))
                                 {
+                                  // empty selection or block selection
+                                  // -> generate a text within the new in-line element
+                                  if (charlevel)
+                                    sibling = el;
+                                  else
+                                    sibling = NULL;
+                                  if (isPict)
+                                    before = (firstchar == 0);
+                                  else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+                                    before = (firstchar <= 1);
+                                  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                                  child = TtaNewElement (doc, elType);
+                                  TtaInsertFirstChild (&child, in_line, doc);
+                                  firstSel = child;
+                                  lastSel = child;
+                                }
+                              else if (el == parent || removed)
+                                {
+                                  // add children into the new in_line
+                                  enclose = el;
+                                  child = TtaGetFirstChild (el);
+                                  // is there a sibling element of this child?
+                                  el = child;
+                                  last = TtaGetLastChild(in_line); // last inserted child
+                                  while (child)
+                                    {
+                                      TtaNextSibling (&el);
+                                      if (el)
+                                        next = el;
+                                      TtaRegisterElementDelete (child, doc);
+                                      TtaRemoveTree (child, doc);
+                                      if (last)
+                                        TtaInsertSibling (child, last, FALSE, doc);
+                                      else
+                                        TtaInsertFirstChild (&child, in_line, doc);
+                                      last = child;
+                                      // get next sibling of moved 
+                                      child = el;
+                                    }
+                                  el = enclose;
+                                  if (removed)
+                                    {
+                                      // remove the enclose element
+                                      parent = TtaGetParent (enclose);
+                                      sibling = enclose;
+                                      TtaPreviousSibling (&sibling);
+                                      TtaRegisterElementDelete (enclose, doc);
+                                      TtaDeleteTree (enclose, doc);
+                                    }
+                                  else
+                                    // in_line will be inserted into the parent element
+                                    sibling = NULL;
+                                }
+                              else
+                                {
+                                  // add the element into the new in_line
+                                  TtaPreviousSibling (&sibling);
+                                  if (sibling == NULL)
+                                    {
+                                      sibling = el;
+                                      TtaNextSibling (&sibling);
+                                      before = TRUE;
+                                    }
+                                  if (sibling == NULL)
+                                    TtaInsertSibling (in_line, el, FALSE, doc);
+                                  TtaRegisterElementDelete (el, doc);
+                                  TtaRemoveTree (el, doc);
+                                  TtaInsertFirstChild (&el, in_line, doc);
+                                }
+                              if (doit)
+                                {
+                                  // should we change the selection
+                                  if (el == lastSel)
+                                    lastSel = in_line;
+                                  if (el == firstSel)
+                                    firstSel = in_line;
+                                }
+                            }
+
+                          if (doit && in_line)
+                            {
+                              if (sibling)
+                                TtaInsertSibling (in_line, sibling, before, doc);
+                              else if (parent)
+                                TtaInsertFirstChild (&in_line, parent, doc);
+                              /* generate the attribute */
+                              if (attrType.AttrTypeNum != 0)
+                                {
+                                  if (aType == HTML_ATTR_ID)
+                                    /* generate id and/or name, but do not register
+                                       these attributes in the undo queue, as the
+                                       in_line element itself will be registered
+                                       with its attributes */
+                                    CreateTargetAnchor (doc, in_line, FALSE, FALSE);
+                                  else if (aType == HTML_ATTR_Style_ && data &&
+                                           data[0] != EOS)
+                                    {
+                                      newAttr = TtaNewAttribute (attrType);
+                                      TtaAttachAttribute (in_line, newAttr, doc);
+                                      TtaSetAttributeText (newAttr, data, in_line, doc);
+                                    }
+                                }
+                              TtaRegisterElementCreate (in_line, doc);
+                              if (parse && data && data[0] != EOS)
+                                // apply CSS properties
+                                ParseHTMLSpecificStyle (in_line, data, doc, 1000, FALSE);
+                            }
+                          else if (in_line && charlevel)
+                            {
+                              TtaRegisterElementDelete (el, doc);
+                              TtaRemoveTree (el, doc);
+                              sibling = TtaGetLastChild (in_line);
+                              TtaInsertSibling (el, sibling, FALSE, doc);
+                              TtaRegisterElementCreate (el, doc);
+                              if (el == lastSel)
+                                lastSel = in_line;
+                            }
+                          else
+                            {
+                              if (charlevel)
+                                {
+                                  in_line = TtaGetParent(el);
                                   // prepare the future selection
                                   if (el == firstSel)
                                     firstSel = in_line;
                                   if (el == lastSel)
                                     lastSel = in_line;
-                                  TtaRemoveTree (el, doc);
-                                  if (doit)
-                                    // insert into the new created in_line
-                                    TtaInsertFirstChild (&el, in_line, doc);
-                                  else
-                                    {
-                                      // add at the end of the in_line
-                                      sibling = TtaGetLastChild (in_line);
-                                      TtaInsertSibling (el, sibling, FALSE, doc);
-                                    }
+                                  // apply the style to the enclosing element
+                                  el = in_line;
                                 }
-                              TtaFreeMemory (buffer);
-                            }
-                        }
-                      else if (doit && in_line)
-                        {
-                          if (selpos || inside)
-                            {
-                              // empty selection or block selection
-                              // -> generate a text within the new in-line element
-                              if (charlevel)
-                                sibling = el;
-                              else
-                                sibling = NULL;
-                              if (isPict)
-                                before = (firstchar == 0);
-                              else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-                                before = (firstchar <= 1);
-                              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-                              child = TtaNewElement (doc, elType);
-                              TtaInsertFirstChild (&child, in_line, doc);
-                              firstSel = child;
-                              lastSel = child;
-                            }
-                          else if (el == parent)
-                            {
-                              // add children into the new in_line
-                              child = TtaGetFirstChild (parent);
-                              childType = TtaGetElementType (child);
-                              while (!strcmp(TtaGetSSchemaName (childType.ElSSchema), "HTML") &&
-                                     !IsCharacterLevelElement (child))
-                                {
-                                  // is there a sibling element of this child?
-                                  el = child;
-                                  TtaNextSibling (&el);
-                                  if (el)
-                                    next = el;
-                                  parent = child;
-                                  child = TtaGetFirstChild (parent);
-                                  childType = TtaGetElementType (child);
-                                }
-                              // is there a sibling element of this child?
-                              el = child;
-                              last = NULL; // last inserted child
-                              while (child)
-                                {
-                              TtaNextSibling (&el);
-                              if (el)
-                                next = el;
-                                  TtaRegisterElementDelete (child, doc);
-                                  TtaRemoveTree (child, doc);
-                                  if (last)
-                                    TtaInsertSibling (child, last, FALSE, doc);
-                                  else
-                                    TtaInsertFirstChild (&child, in_line, doc);
-                                  last = child;
-                                  // get next sibling of moved 
-                                  child = el;
-                                }
-                              // restore the el value
-                              sibling = NULL;
-                            }
-                          else
-                            {
-                              // add the element into the new in_line
-                              TtaPreviousSibling (&sibling);
-                              if (sibling == NULL)
-                                {
-                                  sibling = el;
-                                  TtaNextSibling (&sibling);
-                                  before = TRUE;
-                                }
-                              if (sibling == NULL)
-                                TtaInsertSibling (in_line, el, FALSE, doc);
-                              TtaRegisterElementDelete (el, doc);
-                              TtaRemoveTree (el, doc);
-                              TtaInsertFirstChild (&el, in_line, doc);
-                            }
-                          if (el == lastSel)
-                            lastSel = in_line;
-                          if (el == firstSel)
-                            firstSel = in_line;
-                        }
+                              else if ((eType != HTML_EL_Anchor || aType == HTML_ATTR_HREF_) &&
+                                       eType != HTML_EL_Span)
+                                el = GenerateInlinechildren (el, newType, doc);
 
-                      if (doit && in_line)
-                        {
-                          if (sibling)
-                            TtaInsertSibling (in_line, sibling, before, doc);
-                          else if (parent)
-                            TtaInsertFirstChild (&in_line, parent, doc);
-                          /* generate the attribute */
-                          if (attrType.AttrTypeNum != 0)
-                            {
-                              if (aType == HTML_ATTR_ID)
-                                /* generate id and/or name, but do not register
-                                   these attributes in the undo queue, as the
-                                   in_line element itself will be registered
-                                   with its attributes */
-                                CreateTargetAnchor (doc, in_line, FALSE, FALSE);
-                              else
+                              if (el && attrType.AttrTypeNum != 0)
                                 {
-                                  newAttr = TtaNewAttribute (attrType);
-                                  TtaAttachAttribute (in_line, newAttr, doc);
-                                  TtaSetAttributeText (newAttr, data, in_line, doc);
-                                }
-                            }
-                          TtaRegisterElementCreate (in_line, doc);
-                          if (parse)
-                            // apply CSS properties
-                            ParseHTMLSpecificStyle (in_line, data, doc, 1000, FALSE);
-                        }
-                      else if (in_line && charlevel)
-                        {
-                          TtaRegisterElementDelete (el, doc);
-                          TtaRemoveTree (el, doc);
-                          sibling = TtaGetLastChild (in_line);
-                          TtaInsertSibling (el, sibling, FALSE, doc);
-                          TtaRegisterElementCreate (el, doc);
-                          if (el == lastSel)
-                            lastSel = in_line;
-                        }
-                      else
-                        {
-                          if (charlevel)
-                            {
-                              in_line = TtaGetParent(el);
-                              // prepare the future selection
-                              if (el == firstSel)
-                                firstSel = in_line;
-                              if (el == lastSel)
-                                lastSel = in_line;
-                              // apply the style to the enclosing element
-                              el = in_line;
-                            }
-                          else if ((eType != HTML_EL_Anchor || aType == HTML_ATTR_HREF_) &&
-                                   eType != HTML_EL_Span)
-                            el = GenerateInlinechildren (el, newType, doc);
-
-                          if (el && attrType.AttrTypeNum != 0)
-                            {
-                              // generate an attribute to element or its children
-                              child = last = el;
-                              elType = TtaGetElementType (el);
-                              if (TtaHasHiddenException (elType))
-                                {
-                                  // don't generate a style to hidden elements
-                                  last = TtaGetLastChild (el);
-                                  child = TtaGetFirstChild (el);
-                                }
-                              while (child)
-                                {
-                                  elType = TtaGetElementType (child);
+                                  // generate an attribute to element or its children
+                                  child = last = el;
+                                  elType = TtaGetElementType (el);
                                   if (TtaHasHiddenException (elType))
-                                    // skip hidden elements
-                                    child = TtaGetFirstChild (child);
-                                  if (aType == HTML_ATTR_ID)
-                                    // generate id and/or name
-                                     CreateTargetAnchor (doc, child, FALSE, TRUE);
-                                  else
                                     {
-                                      newAttr = TtaGetAttribute (child, attrType);
-                                      if (newAttr == NULL)
-                                        {
-                                          newAttr = TtaNewAttribute (attrType);
-                                          TtaAttachAttribute (child, newAttr, doc);
-                                          TtaSetAttributeText (newAttr, data, child, doc);
-                                          TtaRegisterAttributeCreate (newAttr, child, doc);
-                                          if (parse)
-                                            // apply CSS properties
-                                            ParseHTMLSpecificStyle (child, data, doc, 1000, FALSE);
-                                        }
+                                      // don't generate a style to hidden elements
+                                      last = TtaGetLastChild (el);
+                                      child = TtaGetFirstChild (el);
+                                    }
+                                  while (child)
+                                    {
+                                      elType = TtaGetElementType (child);
+                                      if (TtaHasHiddenException (elType))
+                                        // skip hidden elements
+                                        child = TtaGetFirstChild (child);
+                                      if (aType == HTML_ATTR_ID)
+                                        // generate id and/or name
+                                        CreateTargetAnchor (doc, child, FALSE, TRUE);
                                       else
                                         {
-                                          done = FALSE;
-                                          if (parse)
-                                            // CSS properties should be ended by ;
-                                            name = TtaStrdup (data);
+                                          newAttr = TtaGetAttribute (child, attrType);
+                                          if (newAttr == NULL)
+                                            {
+                                              newAttr = TtaNewAttribute (attrType);
+                                              TtaAttachAttribute (child, newAttr, doc);
+                                              TtaSetAttributeText (newAttr, data, child, doc);
+                                              TtaRegisterAttributeCreate (newAttr, child, doc);
+                                              if (parse)
+                                                // apply CSS properties
+                                                ParseHTMLSpecificStyle (child, data, doc, 1000, FALSE);
+                                            }
                                           else
                                             {
-                                              // several class names
-                                              lg = TtaGetTextAttributeLength (newAttr);
-                                              if (lg)
-                                                {
-                                                  int     ic, id, ld;
-                                                  ld = strlen (data);
-                                                  name = (char *)TtaGetMemory (lg + ld + 3);
-                                                  TtaGiveTextAttributeValue (newAttr, name, &lg);
-                                                  // check if the name is already there
-                                                  ic = id = 0;
-                                                  while (!done && ic <= lg && id <= ld)
-                                                    {
-                                                      if (data[id] == EOS &&
-                                                        (name[ic] == SPACE || name[ic] == EOS))
-                                                        done = TRUE;
-                                                      else if (name[ic] != data[id])
-                                                        {
-                                                          while (name[ic] != SPACE &&
-                                                                 name[ic] != EOS)
-                                                            ic++;
-                                                          id = 0;
-                                                          ic++;
-                                                        }
-                                                      else
-                                                        {
-                                                          ic++;
-                                                          id++;
-                                                        }
-                                                    }
-                                                  if (!done)
-                                                    {
-                                                      strcat (name, " ");
-                                                      strcat (name, data);
-                                                    }
-                                                }
-                                              else
+                                              done = FALSE;
+                                              if (parse)
+                                                // CSS properties should be ended by ;
                                                 name = TtaStrdup (data);
-                                            }
-                                          if (!done)
-                                            {
-                                              if (name[0] == EOS)
-                                                {
-                                                  Element firstC, lastC;
-                                                  // the attribute is now empty
-                                                  TtaRegisterAttributeDelete (newAttr, child, doc);
-                                                  TtaRemoveAttribute (child, newAttr, doc);
-                                                  DeleteSpanIfNoAttr (child, doc,
-                                                                      &firstC, &lastC);
-                                                  parse = FALSE;
-                                                }
                                               else
                                                 {
-                                                  TtaRegisterAttributeReplace (newAttr, child, doc);
-                                                  TtaSetAttributeText (newAttr, name, child, doc);
+                                                  // several class names
+                                                  lg = TtaGetTextAttributeLength (newAttr);
+                                                  if (lg)
+                                                    {
+                                                      int     ic, id, ld;
+                                                      ld = strlen (data);
+                                                      name = (char *)TtaGetMemory (lg + ld + 3);
+                                                      TtaGiveTextAttributeValue (newAttr, name, &lg);
+                                                      // check if the name is already there
+                                                      ic = id = 0;
+                                                      while (!done && ic <= lg && id <= ld)
+                                                        {
+                                                          if (data[id] == EOS &&
+                                                              (name[ic] == SPACE || name[ic] == EOS))
+                                                            done = TRUE;
+                                                          else if (name[ic] != data[id])
+                                                            {
+                                                              while (name[ic] != SPACE &&
+                                                                     name[ic] != EOS)
+                                                                ic++;
+                                                              id = 0;
+                                                              ic++;
+                                                            }
+                                                          else
+                                                            {
+                                                              ic++;
+                                                              id++;
+                                                            }
+                                                        }
+                                                      if (!done)
+                                                        {
+                                                          strcat (name, " ");
+                                                          strcat (name, data);
+                                                        }
+                                                    }
+                                                  else
+                                                    name = TtaStrdup (data);
                                                 }
+                                              if (!done)
+                                                {
+                                                  if (name[0] == EOS)
+                                                    {
+                                                      Element firstC, lastC;
+                                                      // the attribute is now empty
+                                                      TtaRegisterAttributeDelete (newAttr, child, doc);
+                                                      TtaRemoveAttribute (child, newAttr, doc);
+                                                      DeleteSpanIfNoAttr (child, doc,
+                                                                          &firstC, &lastC);
+                                                      parse = FALSE;
+                                                    }
+                                                  else
+                                                    {
+                                                      TtaRegisterAttributeReplace (newAttr, child, doc);
+                                                      TtaSetAttributeText (newAttr, name, child, doc);
+                                                    }
+                                                }
+                                              if (parse)
+                                                // apply CSS properties
+                                                ParseHTMLSpecificStyle (child, name, doc, 1000, FALSE);
+                                              TtaFreeMemory (name);
                                             }
-                                          if (parse)
-                                            // apply CSS properties
-                                            ParseHTMLSpecificStyle (child, name, doc, 1000, FALSE);
-                                          TtaFreeMemory (name);
                                         }
+                                      if (child == last)
+                                        child = NULL;
+                                      else
+                                        TtaNextSibling (&child);
                                     }
-                                  if (child == last)
-                                    child = NULL;
-                                  else
-                                    TtaNextSibling (&child);
                                 }
                             }
-                        }
 
-                      // check the next element
-                      if (in_line)
-                        {
-                          sibling = in_line;
-                          TtaNextSibling (&sibling);
-                          if (sibling != next)
-                            // cannot extent the in_line to the next element
-                            in_line = NULL;
+                          // check the next element
+                          if (in_line)
+                            {
+                              sibling = in_line;
+                              TtaNextSibling (&sibling);
+                              if (sibling != next)
+                                // cannot extent the in_line to the next element
+                                in_line = NULL;
+                            }
                         }
                     }
                   el = next;
@@ -1280,7 +1338,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
               TtaSetDisplayMode (doc, dispMode);
               TtaSelectElement (doc, firstSel);
               if (lastSel != firstSel)
-                 TtaExtendSelection (doc, lastSel, TtaGetElementVolume (lastSel) + 1);
+                TtaExtendSelection (doc, lastSel, TtaGetElementVolume (lastSel) + 1);
               /* mark the document as modified */
               TtaSetDocumentModified (doc);
               if (!open)

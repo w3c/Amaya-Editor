@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -292,7 +292,7 @@ void AttachMandatoryAttributes (PtrElement pEl, PtrDocument pDoc)
    Return value:
    the attribute that has been created.
    ---------------------------------------------------------------------- */
-Attribute           TtaNewAttribute (AttributeType attType)
+Attribute TtaNewAttribute (AttributeType attType)
 {
   PtrAttribute        pAttr;
 
@@ -404,7 +404,7 @@ void TtaAttachAttribute (Element element, Attribute attribute, Document document
 /*----------------------------------------------------------------------
   AttrOfElement verifies that the attribute belongs to the element
   ----------------------------------------------------------------------*/
-static ThotBool     AttrOfElement (Attribute attribute, Element element)
+static ThotBool AttrOfElement (Attribute attribute, Element element)
 {
   PtrAttribute        pAttr;
   ThotBool            ok;
@@ -678,6 +678,29 @@ void TtaNextAttribute (Element element, Attribute *attribute)
   else
     nextAttribute = ((PtrAttribute) (*attribute))->AeNext;
   *attribute = (Attribute) nextAttribute;
+}
+
+/* ----------------------------------------------------------------------
+   TtaCopyAttributes
+
+   Copy all attributes of the src element to the target element
+   Parameters:
+   src: the element which provides attributes.
+   target: the element which receives attributes.
+   ---------------------------------------------------------------------- */
+void TtaCopyAttributes (Element src, Element target,
+                        Document doc_src, Document doc_target)
+{
+  UserErrorCode = 0;
+  if (src == NULL || target == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      CopyAttributes ((PtrElement)src, (PtrElement)target,
+                      LoadedDocument[doc_src - 1],
+                      LoadedDocument[doc_target - 1],
+                      TRUE, FALSE);
+    }
 }
 
 
@@ -1077,8 +1100,7 @@ char *TtaGetAttributeValueName (AttributeType attType, int value)
    Return value:
    the corresponding int value, or 0 if error.
    ---------------------------------------------------------------------- */
-int TtaGetAttributeValueFromOriginalName (char *name,
-                                          AttributeType attType)
+int TtaGetAttributeValueFromOriginalName (char *name, AttributeType attType)
 {
   PtrTtAttribute       attr;
   int		       value, i;

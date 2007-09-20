@@ -2807,12 +2807,36 @@ void DocumentClosed (NotifyDialog * event)
 }
 
 /*----------------------------------------------------------------------
+  IsSelInElement
+  Return TRUE if a typed element includes the current selection
+  ----------------------------------------------------------------------*/
+static ThotBool IsSelInElement (Element firstSel, Element lastSel, ElementType elType,
+                                ElementType elTypeFirst, ElementType elTypeLast)
+{
+  ThotBool            newSelInElem;
+
+  if (firstSel == NULL)
+    newSelInElem = FALSE;
+  else
+    {
+      newSelInElem = ((elTypeFirst.ElTypeNum == elType.ElTypeNum &&
+                       elTypeFirst.ElSSchema == elType.ElSSchema) ||
+                      TtaGetExactTypedAncestor (firstSel, elType) != NULL);
+      if (newSelInElem)
+        newSelInElem = ((elTypeLast.ElTypeNum == elType.ElTypeNum &&
+                         elTypeLast.ElSSchema == elType.ElSSchema) ||
+                        TtaGetExactTypedAncestor (lastSel, elType) != NULL);
+    }
+  return newSelInElem;
+}
+
+/*----------------------------------------------------------------------
   A new element has been selected. Update menus accordingly.      
   ----------------------------------------------------------------------*/
 void UpdateContextSensitiveMenus (Document doc, View view)
 {
-  ElementType         elType, elTypeSel;
-  Element             firstSel;
+  ElementType         elType, elTypeFirst, elTypeLast;
+  Element             firstSel, lastSel;
   SSchema             sch;
   int                 firstChar, lastChar;
   ThotBool            newSelInElem, withHTML, withinTable, inMath;
@@ -2823,6 +2847,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
   withinTable = FALSE;
   inMath = FALSE;
   TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
+  TtaGiveLastSelectedElement (doc, &lastSel, &firstChar, &lastChar);
   if (firstSel)
     {
       /* check if there is HTML elements */
@@ -3000,123 +3025,63 @@ void UpdateContextSensitiveMenus (Document doc, View view)
     }
   /* update toggle buttons in menus "Information Type" and */
   /* "Character Element" */
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Emphasis;
-      elTypeSel = TtaGetElementType (firstSel);
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elTypeFirst = TtaGetElementType (firstSel);
+  elTypeLast = TtaGetElementType (lastSel);
+  elType.ElTypeNum = HTML_EL_Emphasis;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInEM != newSelInElem)
     {
       SelectionInEM = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TEmphasis, newSelInElem);
-#ifndef _WX
-      TtaSwitchButton (doc, 1, iI);
-#else /* _WX */
+#ifdef _WX
       TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_EMPH, newSelInElem );
 #endif /* _WX */	
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Strong;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Strong;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInSTRONG != newSelInElem)
     {
       SelectionInSTRONG = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TStrong, newSelInElem);
-#ifndef _WX
-      TtaSwitchButton (doc, 1, iB);
-#else /* _WX */
+#ifdef _WX
       TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_STRONG, newSelInElem );
 #endif /* _WX */
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Cite;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Cite;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInCITE != newSelInElem)
     {
       SelectionInCITE = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TCite, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_ABBR;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_ABBR;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInABBR != newSelInElem)
     {
       SelectionInABBR = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TAbbreviation, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_ACRONYM;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_ACRONYM;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInACRONYM != newSelInElem)
     {
       SelectionInACRONYM = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TAcronym, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
+  elType.ElTypeNum = HTML_EL_ins;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
+  if (!newSelInElem)
     {
-      elType.ElTypeNum = HTML_EL_ins;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-      if (!newSelInElem)
-        {
-          // check also the block element
-          elType.ElTypeNum = HTML_EL_INS;
-          if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-              elTypeSel.ElSSchema == elType.ElSSchema)
-            newSelInElem = TRUE;
-          else
-            newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-        }
+      // check also the block element
+      elType.ElTypeNum = HTML_EL_INS;
+      newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
     }
+
   if (SelectionInINS != newSelInElem)
     {
       SelectionInINS = newSelInElem;
@@ -3126,26 +3091,13 @@ void UpdateContextSensitiveMenus (Document doc, View view)
 #endif /* _WX */	
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
+  elType.ElTypeNum = HTML_EL_del;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
+  if (!newSelInElem)
     {
-      elType.ElTypeNum = HTML_EL_del;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-      if (!newSelInElem)
-        {
-          // check also the block element
-          elType.ElTypeNum = HTML_EL_DEL;
-          if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-              elTypeSel.ElSSchema == elType.ElSSchema)
-            newSelInElem = TRUE;
-          else
-            newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-        }
+      // check also the block element
+      elType.ElTypeNum = HTML_EL_DEL;
+      newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
     }
   if (SelectionInDEL != newSelInElem)
     {
@@ -3156,192 +3108,91 @@ void UpdateContextSensitiveMenus (Document doc, View view)
 #endif /* _WX */	
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Def;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Def;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInDFN != newSelInElem)
     {
       SelectionInDFN = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TDefinition, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Code;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Code;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInCODE != newSelInElem)
     {
       SelectionInCODE = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TCode, newSelInElem);
-#ifndef _WX
-      TtaSwitchButton (doc, 1, iT);
-#else /* _WX */
+#ifdef _WX
       TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_CODE, newSelInElem );
 #endif /* _WX */
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Variable_;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Variable_;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInVAR != newSelInElem)
     {
       SelectionInVAR = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TVariable, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Sample;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Sample;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInSAMP != newSelInElem)
     {
       SelectionInSAMP = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TSample, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Keyboard;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Keyboard;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInKBD != newSelInElem)
     {
       SelectionInKBD = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TKeyboard, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Italic_text;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Italic_text;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInI != newSelInElem)
     {
       SelectionInI = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TItalic, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Bold_text;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Bold_text;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInB != newSelInElem)
     {
       SelectionInB = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TBold, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Teletype_text;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Teletype_text;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInTT != newSelInElem)
     {
       SelectionInTT = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TTeletype, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Big_text;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Big_text;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInBIG != newSelInElem)
     {
       SelectionInBIG = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TBig, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Small_text;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Small_text;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInSMALL != newSelInElem)
     {
       SelectionInSMALL = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TSmall, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Subscript;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Subscript;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInSub != newSelInElem)
     {
       SelectionInSub = newSelInElem;
@@ -3351,17 +3202,8 @@ void UpdateContextSensitiveMenus (Document doc, View view)
 #endif /* _WX */	
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Superscript;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Superscript;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInSup != newSelInElem)
     {
       SelectionInSup = newSelInElem;
@@ -3371,34 +3213,16 @@ void UpdateContextSensitiveMenus (Document doc, View view)
 #endif /* _WX */	
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Quotation;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_Quotation;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInQuote != newSelInElem)
     {
       SelectionInQuote = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TQuotation, newSelInElem);
     }
 
-  if (firstSel == NULL)
-    newSelInElem = FALSE;
-  else
-    {
-      elType.ElTypeNum = HTML_EL_BDO;
-      if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-          elTypeSel.ElSSchema == elType.ElSSchema)
-        newSelInElem = TRUE;
-      else
-        newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
-    }
+  elType.ElTypeNum = HTML_EL_BDO;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
   if (SelectionInBDO != newSelInElem)
     {
       SelectionInBDO = newSelInElem;
@@ -4137,151 +3961,52 @@ static void ResetFontOrPhrase (Document doc, Element elem)
     }
 }
 
-
 /*----------------------------------------------------------------------
-  SetCharFontOrPhrase
+  SplitFontOrPhrase
+  Split the element elem
   ----------------------------------------------------------------------*/
-void SetCharFontOrPhrase (int doc, int elemtype)
+static void SplitFontOrPhrase (Document doc, Element elem, Element first,
+                               Element last, int firstChar, int lastChar)
 {
-  Element             firstSel, lastSel, el, parent, next;
-  Element             child, new_ = NULL, top = NULL, start = NULL;
-  ElementType         elType, parentType;
-  DisplayMode         dispMode;
+  Element             next, child, new_ = NULL, el, top = NULL, start = NULL;
+  ElementType         elType;
   Language            lang = TtaGetDefaultLanguage ();
   unsigned char      *buffer;
-  int                 firstSelectedChar, lastSelectedChar, i;
-  int                 blocktype, j, k, lg;
-  ThotBool            remove;
+  int                 i, j, k, lg;
   ThotBool            oldStructureChecking;
 
-  if (!TtaGetDocumentAccessMode (doc))
-    /* document is ReadOnly */
-    return;
-
-  TtaGiveFirstSelectedElement (doc, &firstSel, &firstSelectedChar,
-                               &lastSelectedChar);
-  if (firstSel == NULL)
+  if (elem)
     {
-      /* no selection available */
-      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
-      return;
-    }
-
-  TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastSelectedChar);
-  elType = TtaGetElementType (firstSel);
-  parent = NULL;
-  remove = FALSE;
-  // there are block and inline elements for ins and del
-  if (elemtype == HTML_EL_ins)
-    blocktype = HTML_EL_INS;
-  else if (elemtype == HTML_EL_del)
-    blocktype = HTML_EL_DEL;
-  else
-    blocktype = elemtype;
-  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-    {
-      // check if a typed element is selected
-      if (elType.ElTypeNum == elemtype || elType.ElTypeNum == blocktype)
-        parent = firstSel;
-      remove = (firstSel == lastSel &&
-                ((firstSelectedChar == 0 && lastSelectedChar == 0) ||
-                (firstSelectedChar == 1 && lastSelectedChar >= i)));
-    }
-  else
-    elType.ElSSchema = TtaGetSSchema ("HTML", doc);
-
-  if (parent == NULL)
-    {
-
-      if ( TtaIsSelectionEmpty ())
-        {
-          // check if the user wants to close the current element
-          parent = TtaGetParent (firstSel);
-          parentType = TtaGetElementType (parent);
-          i =  TtaGetElementVolume (firstSel);
-          if (parentType.ElSSchema == elType.ElSSchema &&
-              parentType.ElTypeNum == elemtype &&
-              elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
-              ((firstSelectedChar == 1 && lastSelectedChar == 0) ||
-               (lastSelectedChar >= i && firstSel == TtaGetLastChild (parent))))
-            {
-              // insert before or after
-              TtaOpenUndoSequence (doc, firstSel, lastSel, firstSelectedChar, lastSelectedChar);
-              oldStructureChecking = TtaGetStructureChecking (doc);
-              TtaSetStructureChecking (FALSE, doc);
-              el = TtaNewElement (doc, elType);
-              if (firstSelectedChar == 1 && lastSelectedChar == 0)
-                TtaInsertSibling (el, parent, TRUE, doc);
-              else
-                TtaInsertSibling (el, parent, FALSE, doc);
-              TtaRegisterElementCreate (el, doc);
-              TtaSelectElement (doc, el);
-              TtaSetStructureChecking (oldStructureChecking, doc);
-              TtaCloseUndoSequence (doc);
-              /* mark the document as modified */
-              TtaSetDocumentModified (doc);
-              UpdateContextSensitiveMenus (doc, 1);
-              return;
-            }
-        }
-      elType.ElTypeNum = elemtype;
-      parent = TtaGetExactTypedAncestor (firstSel, elType);
-      // check if the whole selection is included by the same parent
-      el = lastSel;
-      while (parent && el && el != parent)
-        el = TtaGetParent (el);
-      if (el == parent)
-        remove = TRUE;
-    }
-
-  if (parent && !remove)
-    {
-      /* the selected element is read-only */
-      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_INLINE);
-      return;
-    }
-
-  /* don't display immediately every change made to the document structure */
-  dispMode = TtaGetDisplayMode (doc);
-  if (parent)
-    {
-      // unset the current inline lement
-      if (dispMode == DisplayImmediately)
-        TtaSetDisplayMode (doc, DeferredDisplay);
-      TtaClearViewSelections ();
-      TtaOpenUndoSequence (doc, firstSel, lastSel, firstSelectedChar, lastSelectedChar);
-      i =  TtaGetElementVolume (lastSel) + 1;
-      if (firstSelectedChar != 0 &&
-          (firstSelectedChar > 1 || lastSelectedChar < i))
-        {
-          /* split */
-          next = firstSel;
+      /* split */
+      elType = TtaGetElementType (first);
+      next = first;
           TtaGiveNextSelectedElement (doc, &next, &j, &k);
-          if (firstSel == lastSel)
+          if (first == last)
             {
-              if (lastSelectedChar < firstSelectedChar)
+              if (lastChar < firstChar)
                 i = 0;
               else
-                i = lastSelectedChar - firstSelectedChar; // some characters have to be moved
+                i = lastChar - firstChar; // some characters have to be moved
             }
           else
-            i -= firstSelectedChar;
-          if (TtaBreakElement (parent, firstSel, firstSelectedChar, TRUE, FALSE))
+            i -= firstChar;
+          if (TtaBreakElement (elem, first, firstChar, TRUE, FALSE))
             {
               // insert after
               oldStructureChecking = TtaGetStructureChecking (doc);
               TtaSetStructureChecking (FALSE, doc);
-              TtaNextSibling (&parent);
+              TtaNextSibling (&elem);
               // generate the tree of the new structure
-              child = TtaGetFirstChild (parent);
+              child = TtaGetFirstChild (elem);
               while (child)
                 {
                   elType = TtaGetElementType (child);
                   el = TtaNewElement (doc, elType);
+                  TtaCopyAttributes (child, el, doc, doc);
                   if (new_ == NULL)
                     {
                     // top of the new tree
-                    TtaInsertSibling (el, parent, TRUE, doc);
+                    TtaInsertSibling (el, elem, TRUE, doc);
                     top = new_ = el;
                     }
                   else
@@ -4289,13 +4014,13 @@ void SetCharFontOrPhrase (int doc, int elemtype)
                       TtaInsertFirstChild  (&el, new_, doc);
                       new_ = el;
                     }
-                  parent = child;
+                  elem = child;
                   child = TtaGetFirstChild (child);
                 }
               if (i > 0)
                 {
                   /* there is some text to be copied */
-                  child = parent;
+                  child = elem;
                   lg = TtaGetTextLength (child);
                   buffer = (unsigned char*)TtaGetMemory ((lg+1));
                   memset (buffer, 0, lg);
@@ -4355,30 +4080,141 @@ void SetCharFontOrPhrase (int doc, int elemtype)
               TtaSetDocumentModified (doc);
               elType.ElTypeNum = HTML_EL_TEXT_UNIT;
             }
+    }
+}
+
+/*----------------------------------------------------------------------
+  SetCharFontOrPhrase
+  ----------------------------------------------------------------------*/
+void SetCharFontOrPhrase (int doc, int elemtype)
+{
+  Element             first, last, el, parent;
+  ElementType         elType, parentType;
+  Attribute           attr;
+  int                 firstChar, lastChar, i;
+  int                 blocktype;
+  ThotBool            remove;
+  ThotBool            oldStructureChecking;
+
+  if (!TtaGetDocumentAccessMode (doc))
+    /* document is ReadOnly */
+    return;
+
+  TtaGiveFirstSelectedElement (doc, &first, &firstChar, &lastChar);
+  if (first == NULL)
+    {
+      /* no selection available */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
+    }
+
+  TtaGiveLastSelectedElement (doc, &last, &i, &lastChar);
+  elType = TtaGetElementType (first);
+  parent = NULL;
+  remove = FALSE;
+  // there are block and inline elements for ins and del
+  if (elemtype == HTML_EL_ins)
+    blocktype = HTML_EL_INS;
+  else if (elemtype == HTML_EL_del)
+    blocktype = HTML_EL_DEL;
+  else
+    blocktype = elemtype;
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    {
+      // check if a typed element is selected
+      if (elType.ElTypeNum == elemtype || elType.ElTypeNum == blocktype)
+        parent = first;
+      remove = (first == last &&
+                ((firstChar == 0 && lastChar == 0) ||
+                (firstChar == 1 && lastChar >= i)));
+    }
+  else
+    elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+
+  if (parent == NULL)
+    {
+      if ( TtaIsSelectionEmpty ())
+        {
+          // check if the user wants to close the current element
+          parent = TtaGetParent (first);
+          parentType = TtaGetElementType (parent);
+          i =  TtaGetElementVolume (first);
+          if (parentType.ElSSchema == elType.ElSSchema &&
+              parentType.ElTypeNum == elemtype &&
+              elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
+              ((firstChar == 1 && lastChar == 0) ||
+               (lastChar >= i && first == TtaGetLastChild (parent))))
+            {
+              // insert before or after
+              TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
+              oldStructureChecking = TtaGetStructureChecking (doc);
+              TtaSetStructureChecking (FALSE, doc);
+              el = TtaNewElement (doc, elType);
+              if (firstChar == 1 && lastChar == 0)
+                TtaInsertSibling (el, parent, TRUE, doc);
+              else
+                TtaInsertSibling (el, parent, FALSE, doc);
+              TtaRegisterElementCreate (el, doc);
+              TtaSelectElement (doc, el);
+              TtaSetStructureChecking (oldStructureChecking, doc);
+              TtaCloseUndoSequence (doc);
+              /* mark the document as modified */
+              TtaSetDocumentModified (doc);
+              UpdateContextSensitiveMenus (doc, 1);
+              return;
+            }
         }
+      elType.ElTypeNum = elemtype;
+      parent = TtaGetExactTypedAncestor (first, elType);
+      // check if the whole selection is included by the same parent
+      el = last;
+      while (parent && el && el != parent)
+        el = TtaGetParent (el);
+      if (el == parent)
+        remove = TRUE;
+    }
+
+  if (parent && remove)
+    {
+      TtaClearViewSelections ();
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+
+      i =  TtaGetElementVolume (last) + 1;
+      if (firstChar != 0 && (firstChar > 1 || lastChar < i))
+        /* split */
+        SplitFontOrPhrase (doc, parent, first, last, firstChar, lastChar);
       else
-        ResetFontOrPhrase (doc, parent);
+        {
+          attr = NULL;
+          TtaNextAttribute (parent, &attr);
+          if (attr)
+            {
+              // don't remove an element with attributes
+              TtaChangeTypeOfElement (parent, doc, HTML_EL_Span);
+              TtaRegisterElementTypeChange (parent, elemtype, doc);
+              TtaSelectElement (doc, parent);
+            }
+          else
+            ResetFontOrPhrase (doc, parent);
+        }
       TtaCloseUndoSequence (doc);
-      /* retore the display mode */
-      if (dispMode == DisplayImmediately)
-        TtaSetDisplayMode (doc, dispMode);
     }
   else
     {
-      TtaOpenUndoSequence (doc, firstSel, lastSel, firstSelectedChar, lastSelectedChar);
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       if (elemtype == HTML_EL_ins || elemtype == HTML_EL_del)
         {
           oldStructureChecking = TtaGetStructureChecking (doc);
           TtaSetStructureChecking (FALSE, doc);
           // they could be block or inline elements
-          if (!IsCharacterLevelElement (firstSel) ||
-              (firstSel != lastSel && !IsCharacterLevelElement (lastSel)))
+          if (!IsCharacterLevelElement (first) ||
+              (first != last && !IsCharacterLevelElement (last)))
             // create a block element
             CreateHTMLelement (blocktype, doc);
-          else if (firstSel != lastSel)
+          else if (first != last)
             {
-              TtaNextSibling (&firstSel);
-              if (firstSel != lastSel && !IsCharacterLevelElement (firstSel))
+              TtaNextSibling (&first);
+              if (first != last && !IsCharacterLevelElement (first))
                 // create a block element
                 CreateHTMLelement (blocktype, doc);
               else

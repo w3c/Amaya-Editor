@@ -28,6 +28,12 @@ extern void ChangeLanguageLeaves ( PtrElement pEl,
                                    Language lang );
 extern void InsertElemAfterLastSibling ( PtrElement pOld,
                                          PtrElement pNew );
+extern void CopyAttributes ( PtrElement pEl1,
+                             PtrElement pEl2,
+                             PtrDocument pSourceDoc,
+                             PtrDocument pTargetDoc,
+                             ThotBool Check,
+                             ThotBool copyRef );
 extern ThotBool ElemIsWithinSubtree ( PtrElement pEl,
                                       PtrElement pRoot );
 extern ThotBool EquivalentType ( PtrElement pEl,
@@ -244,6 +250,12 @@ extern void ChangeLanguageLeaves ( PtrElement pEl,
                                      Language lang );
 extern void InsertElemAfterLastSibling ( PtrElement pOld,
                                            PtrElement pNew );
+extern void CopyAttributes ( PtrElement pEl1,
+                               PtrElement pEl2,
+                               PtrDocument pSourceDoc,
+                               PtrDocument pTargetDoc,
+                               ThotBool Check,
+                               ThotBool copyRef );
 extern ThotBool ElemIsWithinSubtree ( PtrElement pEl,
                                         PtrElement pRoot );
 extern ThotBool EquivalentType ( PtrElement pEl,

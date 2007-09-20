@@ -25,6 +25,10 @@ extern void TtaSetAttributeText ( Attribute attribute,
                                   Document document );
 extern void TtaNextAttribute ( Element element,
                                Attribute *attribute );
+extern void TtaCopyAttributes ( Element src,
+                                Element target,
+                                Document doc_src,
+                                Document doc_target );
 extern void TtaGiveAttributeType ( Attribute attribute,
                                    AttributeType *attType,
                                    int *attrKind );
@@ -88,6 +92,10 @@ extern void TtaSetAttributeText ( Attribute attribute,
                                     Document document );
 extern void TtaNextAttribute ( Element element,
                                  Attribute *attribute );
+extern void TtaCopyAttributes ( Element src,
+                                  Element target,
+                                  Document doc_src,
+                                  Document doc_target );
 extern void TtaGiveAttributeType ( Attribute attribute,
                                      AttributeType *attType,
                                      int *attrKind );

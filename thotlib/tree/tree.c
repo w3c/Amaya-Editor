@@ -880,9 +880,9 @@ void InsertElemAfterLastSibling (PtrElement pOld, PtrElement pNew)
   schemas that define the attributes to be copied.
   If copyRef is FALSE reference attributes are not copied.
   ----------------------------------------------------------------------*/
-static void CopyAttributes (PtrElement pEl1, PtrElement pEl2,
-                            PtrDocument pSourceDoc, PtrDocument pTargetDoc,
-                            ThotBool Check, ThotBool copyRef)
+void CopyAttributes (PtrElement pEl1, PtrElement pEl2,
+                     PtrDocument pSourceDoc, PtrDocument pTargetDoc,
+                     ThotBool Check, ThotBool copyRef)
 {
   PtrAttribute        pAttr1, pAttr2, pPrevAttr;
   PtrReference        rf;
