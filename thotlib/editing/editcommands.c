@@ -1593,7 +1593,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
   ThotBool            open;
 
   font = pBox->BxFont;
-  width = BoxCharacterWidth (109, 1, font);
+  width = 2; //BoxCharacterWidth (109, 1, font);
   height = BoxFontHeight (font, pBox->BxScript);
   if (pAb->AbVolume == 0)
     DefClip (frame, 0, 0, 0, 0);
@@ -2970,7 +2970,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                       pAb->AbBox->BxNChars == 1)
                                     {
                                       /* the box becomes empty */
-                                      xDelta = BoxCharacterWidth (109, 1, font);
+                                      xDelta = 2; //BoxCharacterWidth (109, 1, font);
                                       xx = 0;
 
                                       /* update selection marks */
@@ -3027,7 +3027,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                           pSelBox->BxFirstChar--;
                                           if (pBox->BxNChars == 1)
                                             /* the box becomes empty */
-                                            xDelta = BoxCharacterWidth (109, 1, font) - pBox->BxWidth;
+                                            xDelta = 2 - pBox->BxWidth;
                                         }
                                       else if (pBox->BxFirstChar == 1)
                                         {

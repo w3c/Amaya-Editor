@@ -536,20 +536,18 @@ ThotBool DeleteStyle (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  GetCurrentStyle
-  Get the current set of CSS properties applied to the current selection.
-The returned buffer must be freed by the calling function.
+  GetCurrentStyleAttribute
+  Return the current style attribute
   -----------------------------------------------------------------------*/
-char *GetCurrentStyle ()
+Attribute GetCurrentStyleAttribute ()
 {
   Document        doc;
-  Element         el, parent;
+  Element         el;
   ElementType	    elType;
   AttributeType   attrType;
-  Attribute       attr;
+  Attribute       attr = NULL;
   char           *name;
-  char           *buffer = NULL;
-  int             first, last, len;
+  int             first, last;
 
   doc = TtaGetSelectedDocument();
   if (doc)
@@ -558,55 +556,43 @@ char *GetCurrentStyle ()
       elType = TtaGetElementType (el);
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = 0;
-      parent = NULL;
       name = TtaGetSSchemaName (elType.ElSSchema);
+      //if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+      //  el = TtaGetParent (el);
       if (!strcmp(name, "MathML"))
-        {
-          if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-            el = TtaGetParent (el);
-          attrType.AttrTypeNum = MathML_ATTR_style_;
-        }
+        attrType.AttrTypeNum = MathML_ATTR_style_;
 #ifdef _SVG
       else if (!strcmp(name, "SVG"))
-        {
-          if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-            {
-              elType.ElTypeNum = HTML_EL_STYLE_;
-              parent = TtaGetTypedAncestor (el, elType);
-            }
-          else
-            attrType.AttrTypeNum = SVG_ATTR_style_;
-        }
+        attrType.AttrTypeNum = SVG_ATTR_style_;
 #endif /* _SVG */
       else if (!strcmp(name, "HTML"))
-        {
-          if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-            {
-              elType.ElTypeNum = SVG_EL_style__;
-              parent = TtaGetTypedAncestor (el, elType);
-            }
-          else
-            attrType.AttrTypeNum = HTML_ATTR_Style_;
-        }
-      else if (DocumentTypes[doc] == docCSS ||
-               DocumentTypes[doc] == docSource)
-        parent = el;
+        attrType.AttrTypeNum = HTML_ATTR_Style_;
 
-      if (parent)
-        {
-          // get the selected string
-        }
-      else if (attrType.AttrTypeNum)
-        {
-          // look for the style attribute
-          attr = TtaGetAttribute (el, attrType);
-          if (attr)
-            {
-              len = TtaGetTextAttributeLength (attr) + 1;
-              buffer = (char *)TtaGetMemory (len);
-              TtaGiveTextAttributeValue (attr, buffer, &len);
-            }
-        }
+      if (attrType.AttrTypeNum)
+        // look for the style attribute
+        attr = TtaGetAttribute (el, attrType);
+    }
+  return attr;
+}
+
+/*----------------------------------------------------------------------
+  GetCurrentStyle
+  Get the current set of CSS properties applied to the current selection.
+  The returned buffer must be freed by the calling function.
+  -----------------------------------------------------------------------*/
+char *GetCurrentStyle ()
+{
+  Attribute       attr;
+  char           *buffer = NULL;
+  int             len;
+
+  // look for the style attribute
+  attr = GetCurrentStyleAttribute ();
+  if (attr)
+    {
+      len = TtaGetTextAttributeLength (attr) + 1;
+      buffer = (char *)TtaGetMemory (len);
+      TtaGiveTextAttributeValue (attr, buffer, &len);
     }
   return buffer;
 }

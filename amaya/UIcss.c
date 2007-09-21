@@ -689,7 +689,9 @@ char *CssToPrint (Document doc, char *printdir)
   -----------------------------------------------------------------------*/
 static void GenerateStyle (char * data)
 {
-  int      profile, doc;
+  Element             el, firstC, lastC;
+  Attribute           attr;
+  int                 profile, doc, i, j;
 
   doc = TtaGetSelectedDocument();
   if (!TtaGetDocumentAccessMode (doc))
@@ -706,7 +708,27 @@ static void GenerateStyle (char * data)
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
       return;
     }
-  GenerateInlineElement (HTML_EL_Span, HTML_ATTR_Style_, data);
+  if (data && data[0] != EOS)
+    GenerateInlineElement (HTML_EL_Span, HTML_ATTR_Style_, data);
+  else
+    {
+      attr = GetCurrentStyleAttribute ();
+      if (attr)
+        {
+          // the attribute is now empty
+          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+          TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+          TtaRegisterAttributeDelete (attr, el, doc);
+          TtaRemoveAttribute (el, attr, doc);
+          DeleteSpanIfNoAttr (el, doc, &firstC, &lastC);
+          TtaSelectElement (doc, firstC);
+          if (lastC != firstC)
+            TtaExtendSelection (doc, lastC, TtaGetElementVolume (lastC) + 1);
+          TtaCloseUndoSequence (doc);
+        }
+      else
+        TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+    }
 }
 
 

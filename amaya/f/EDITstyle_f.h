@@ -20,6 +20,7 @@ extern void UpdateStyleSheetContent ( Document doc,
 extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
 extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern ThotBool DeleteStyle ( NotifyElement *event );
+extern Attribute GetCurrentStyleAttribute ( void );
 extern char *GetCurrentStyle ( void );
 extern void EnableStyleElement ( Document doc,
                                  Element el );
@@ -72,6 +73,7 @@ extern void UpdateStyleSheetContent ( Document doc,
 extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
 extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern ThotBool DeleteStyle ( NotifyElement *event );
+extern Attribute GetCurrentStyleAttribute ( void );
 extern char *GetCurrentStyle ( void );
 extern void EnableStyleElement ( Document doc,
                                    Element el );

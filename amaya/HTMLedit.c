@@ -538,6 +538,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
   SSchema         templateSSchema;
 
   doc = TtaGetSelectedDocument();
+  done = FALSE;
   if (doc)
     {
 
@@ -555,21 +556,25 @@ void GenerateInlineElement (int eType, int aType, char * data)
 #ifdef TEMPLATES
           /* Verify if template allow this element.*/
           templateSSchema = TtaGetSSchema ("Template", doc);
-          if(templateSSchema)
-          {
-            parent = GetFirstTemplateParentElement(firstSel);
-            elType.ElSSchema = TtaGetSSchema ("HTML", doc);
-            elType.ElTypeNum = eType;
-            if(parent)
+          if (templateSSchema)
             {
-              parentType = TtaGetElementType(parent);
-              if(parentType.ElSSchema==templateSSchema && parentType.ElTypeNum==Template_EL_bag)
-              {
-                if(!Template_CanInsertElementInBagElement(doc, elType, parent))
-                  return;
-              }
+              parent = GetFirstTemplateParentElement(firstSel);
+              elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+              elType.ElTypeNum = eType;
+              if(parent)
+                {
+                  parentType = TtaGetElementType(parent);
+                  if(parentType.ElSSchema == templateSSchema &&
+                     parentType.ElTypeNum==Template_EL_bag)
+                    {
+                      if (!Template_CanInsertElementInBagElement(doc, elType, parent))
+                        {
+                          TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+                          return;
+                        }
+                    }
+                }
             }
-          }
 #endif /* TEMPLATES */
           
           if (TtaIsReadOnly (firstSel))
@@ -645,7 +650,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
               TtaClearViewSelections ();
               /* Need to force a redisplay */
               dispMode = TtaGetDisplayMode (doc);
-              TtaSetDisplayMode (doc, DeferredDisplay/*NoComputedDisplay*/);
+              TtaSetDisplayMode (doc, DeferredDisplay);
               in_line = NULL;
               el = firstSel;
               parent = NULL;
@@ -694,6 +699,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                   TtaRegisterElementCreate (el, doc);
                   parent = el;
                   inside = TRUE;
+                  done = TRUE; // action done
                 }
               else if (aType == 0 &&
                        !strcmp(name, "HTML") &&
@@ -820,6 +826,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                           TtaChangeTypeOfElement (el, doc, HTML_EL_Span);
                           TtaRegisterElementTypeChange (el, elType.ElTypeNum, doc);
                           removed = FALSE;
+                          done = TRUE; // action done
                         }
                     }
                   name = TtaGetSSchemaName (elType.ElSSchema);
@@ -1178,6 +1185,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                     }
                                 }
                               TtaRegisterElementCreate (in_line, doc);
+                              done = TRUE; // action done
                               if (parse && data && data[0] != EOS)
                                 // apply CSS properties
                                 ParseHTMLSpecificStyle (in_line, data, doc, 1000, FALSE);
@@ -1189,6 +1197,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                               sibling = TtaGetLastChild (in_line);
                               TtaInsertSibling (el, sibling, FALSE, doc);
                               TtaRegisterElementCreate (el, doc);
+                              done = TRUE; // action done
                               if (el == lastSel)
                                 lastSel = in_line;
                             }
@@ -1238,6 +1247,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                               TtaAttachAttribute (child, newAttr, doc);
                                               TtaSetAttributeText (newAttr, data, child, doc);
                                               TtaRegisterAttributeCreate (newAttr, child, doc);
+                                              done = TRUE; // action done
                                               if (parse)
                                                 // apply CSS properties
                                                 ParseHTMLSpecificStyle (child, data, doc, 1000, FALSE);
@@ -1305,6 +1315,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                                       TtaRegisterAttributeReplace (newAttr, child, doc);
                                                       TtaSetAttributeText (newAttr, name, child, doc);
                                                     }
+                                                  done = TRUE; // action done
                                                 }
                                               if (parse)
                                                 // apply CSS properties
@@ -1348,6 +1359,8 @@ void GenerateInlineElement (int eType, int aType, char * data)
             }
         }
     }
+  if (!done)
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
 }
 
 

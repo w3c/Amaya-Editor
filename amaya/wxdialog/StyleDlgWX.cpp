@@ -587,7 +587,8 @@ void StyleDlgWX::InitValues ()
   XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
-  XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));  XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+  XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+  XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_COMBO_LINE", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_COMBO_INDENT", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_COMBO_VALIGN", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
