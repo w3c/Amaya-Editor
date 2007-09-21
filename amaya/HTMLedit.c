@@ -1306,8 +1306,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                                       // the attribute is now empty
                                                       TtaRegisterAttributeDelete (newAttr, child, doc);
                                                       TtaRemoveAttribute (child, newAttr, doc);
-                                                      DeleteSpanIfNoAttr (child, doc,
-                                                                          &firstC, &lastC);
+                                                      DeleteSpanIfNoAttr (child, doc, &firstC, &lastC);
                                                       parse = FALSE;
                                                     }
                                                   else

@@ -712,12 +712,15 @@ static void GenerateStyle (char * data)
     GenerateInlineElement (HTML_EL_Span, HTML_ATTR_Style_, data);
   else
     {
-      attr = GetCurrentStyleAttribute ();
+      TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+      TtaGiveLastSelectedElement (doc, &lastC, &i, &j);
+      if (el == lastC)
+        // only one selected element
+        attr = GetCurrentStyleAttribute ();
       if (attr)
         {
           // the attribute is now empty
           TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-          TtaGiveFirstSelectedElement (doc, &el, &i, &j);
           TtaRegisterAttributeDelete (attr, el, doc);
           TtaRemoveAttribute (el, attr, doc);
           DeleteSpanIfNoAttr (el, doc, &firstC, &lastC);
