@@ -1814,12 +1814,12 @@ void TtcCreateElement (Document doc, View view)
             pListEl = NULL;
         }
 	
+      selBegin = FALSE;
+      selEnd = FALSE;
       if (!ready && !empty)
         {
           /* La selection commence-t-elle en tete ou en queue d'element? */
           pListEl = NULL;
-          selBegin = FALSE;
-          selEnd = FALSE;
           ok = TRUE;
           if (firstSel == lastSel)
             /* only one element selected */
@@ -2136,7 +2136,7 @@ void TtcCreateElement (Document doc, View view)
             {
               /* annule d'abord la selection */
               TtaClearViewSelections ();
-              if (pElDelete != NULL)
+              if (pElDelete)
                 /* detruire le sous-arbre qu'on remplace */
                 {
                   deleteEmpty = TRUE;
@@ -2150,54 +2150,53 @@ void TtcCreateElement (Document doc, View view)
                                              firstChar, lastChar);
                       histSeq = TRUE;
                     }
-                  if (pElDelete)
+                  AddEditOpInHistory (pElDelete, pDoc, TRUE, FALSE);
+                  pPrevious = PreviousNotPage (pElDelete, TRUE);
+                  pNext = NextNotPage (pElDelete, FALSE);
+                  DestroyAbsBoxes (pElDelete, pDoc, TRUE);
+                  AbstractImageUpdated (pDoc);
+                  /* prepare l'evenement ElemDelete.Post */
+                  notifyEl.event = TteElemDelete;
+                  notifyEl.document = (Document) IdentDocument (pDoc);
+                  notifyEl.element = (Element) (pElDelete->ElParent);
+                  notifyEl.info = 0; /* not sent by undo */
+                  notifyEl.elementType.ElTypeNum = pElDelete->ElTypeNumber;
+                  notifyEl.elementType.ElSSchema =
+                    (SSchema) (pElDelete->ElStructSchema);
+                  pSibling = pElDelete;
+                  NSiblings = 0;
+                  while (pSibling->ElPrevious != NULL)
                     {
-                      AddEditOpInHistory (pElDelete, pDoc, TRUE, FALSE);
-                      pPrevious = PreviousNotPage (pElDelete, TRUE);
-                      pNext = NextNotPage (pElDelete, FALSE);
-                      DestroyAbsBoxes (pElDelete, pDoc, TRUE);
-                      AbstractImageUpdated (pDoc);
-                      /* prepare l'evenement ElemDelete.Post */
-                      notifyEl.event = TteElemDelete;
-                      notifyEl.document = (Document) IdentDocument (pDoc);
-                      notifyEl.element = (Element) (pElDelete->ElParent);
-                      notifyEl.info = 0; /* not sent by undo */
-                      notifyEl.elementType.ElTypeNum = pElDelete->ElTypeNumber;
-                      notifyEl.elementType.ElSSchema =
-                        (SSchema) (pElDelete->ElStructSchema);
-                      pSibling = pElDelete;
-                      NSiblings = 0;
-                      while (pSibling->ElPrevious != NULL)
-                        {
-                          NSiblings++;
-                          pSibling = pSibling->ElPrevious;
-                        }
-                      notifyEl.position = NSiblings;
-                      pClose = NextElement (pElDelete);
-                      
-                      /* retire l'element de l'arbre abstrait */
-                      RemoveElement (pElDelete);
-                      dispMode = TtaGetDisplayMode (doc);
-                      if (dispMode == DisplayImmediately)
-                        TtaSetDisplayMode (doc, DeferredDisplay);
-                      UpdateNumbers (pClose, pElDelete, pDoc, TRUE);
-                      if (dispMode == DisplayImmediately)
-                        TtaSetDisplayMode (doc, dispMode);
-                      
-                      RedisplayCopies (pElDelete, pDoc, TRUE);
-                      DeleteElement (&pElDelete, pDoc);
-                      /* envoie l'evenement ElemDelete.Post a l'application */
-                      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-                      if (pNext != NULL)
-                        if (SiblingElement (pNext, TRUE) == NULL)
-                          /* l'element qui suit l'element detruit devient premier*/
-                          ChangeFirstLast (pNext, pDoc, TRUE, FALSE);
-                      if (pPrevious != NULL)
-                        if (SiblingElement (pPrevious, FALSE) == NULL)
-                          /* l'element qui precede l'element detruit devient
-                             dernier */
-                          ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
+                      NSiblings++;
+                      pSibling = pSibling->ElPrevious;
                     }
+                  notifyEl.position = NSiblings;
+                  pClose = NextElement (pElDelete);
+
+                  /* retire l'element de l'arbre abstrait */
+                  if (ElemIsWithinSubtree (firstSel, pElDelete))
+                    firstSel = NULL;
+                  RemoveElement (pElDelete);
+                  dispMode = TtaGetDisplayMode (doc);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  UpdateNumbers (pClose, pElDelete, pDoc, TRUE);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, dispMode);
+
+                  RedisplayCopies (pElDelete, pDoc, TRUE);
+                  DeleteElement (&pElDelete, pDoc);
+                  /* envoie l'evenement ElemDelete.Post a l'application */
+                  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+                  if (pNext != NULL)
+                    if (SiblingElement (pNext, TRUE) == NULL)
+                      /* l'element qui suit l'element detruit devient premier*/
+                      ChangeFirstLast (pNext, pDoc, TRUE, FALSE);
+                  if (pPrevious != NULL)
+                    if (SiblingElement (pPrevious, FALSE) == NULL)
+                      /* l'element qui precede l'element detruit devient
+                         dernier */
+                      ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
                 }
               if (!replicate)
                 {
@@ -2315,7 +2314,7 @@ void TtcCreateElement (Document doc, View view)
                   if (dispMode == DisplayImmediately)
                     TtaSetDisplayMode (doc, dispMode);
                   /* restore a selection */
-                  if (amayaLite && selBegin)
+                  if (amayaLite && !empty && selBegin && firstSel)
                     {
                       /* set the caret at the position it was before */
                       if (!firstSel->ElTerminal)

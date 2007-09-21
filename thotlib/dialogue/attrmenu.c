@@ -71,13 +71,17 @@ static int          NumAttrValue;
 /* main menu of attributes */
 static PtrSSchema   AttrStruct[MAX_MENU * 2];
 static int          AttrNumber[MAX_MENU * 2];
+#ifndef _WX
 static int          ActiveAttr[MAX_MENU * 2];
 static ThotBool     AttrOblig[MAX_MENU * 2];
+#endif  /* _WX */
 static ThotBool     AttrEvent[MAX_MENU * 2];
 static int          AttrCorr[MAX_MENU * 2];
 /* submenu of event attributes */
 static int          AttrEventNumber[MAX_MENU];
+#ifndef _WX
 static int          ActiveEventAttr[MAX_MENU];
+#endif  /* _WX */
 static int          EventMenu[MAX_FRAME];
 
 /* the context of the attribute menu that was built previously */
@@ -942,6 +946,7 @@ void BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc, PtrElement pEl)
 #endif /* _GTK || _WX */
 }
 
+#ifndef _WX
 /*----------------------------------------------------------------------
   TteItemMenuAttr 
   sends the AttrMenu.Pre message which indicates that the editor
@@ -970,6 +975,7 @@ static ThotBool TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl,
   OK = !CallEventAttribute (&notifyAttr, TRUE);
   return OK;
 }
+#endif  /* _WX */
 
 /*----------------------------------------------------------------------
   TteItemMenuAttrExtended
@@ -1187,6 +1193,7 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
 }
 // __EK__
 
+#ifndef _WX
 /*----------------------------------------------------------------------
   BuildAttrMenu
   builds the Attributes menu and returns the number of attributes added
@@ -1363,15 +1370,12 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, PtrElement firstSel,
           pAttr->AeAttrSSchema = AttrStruct[att];
           pAttr->AeAttrNum = AttrNumber[att];
           pAttr->AeDefAttr = FALSE;
-#ifndef _WX
           if (pAt->AttrType == AtEnumAttr && pAt->AttrNEnumValues == 1)
             /* attribut enumere' a une seule valeur (attribut booleen) */
             sprintf (tempBuffer, "T%s", pAt->AttrName);
           else
             sprintf (tempBuffer, "T%s...", pAt->AttrName);
-#else  /* _WX */
           sprintf (tempBuffer, "T%s", pAt->AttrName);
-#endif /* _WX */
           i = strlen (tempBuffer) + 1;
           if (AttrEvent[att])
             {
@@ -1504,6 +1508,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, PtrElement firstSel,
 
   return (nbOfEntries - *nbEvent);
 }
+#endif  /* _WX */
 
 /*----------------------------------------------------------------------
   UpdateAttrMenu                                                       
