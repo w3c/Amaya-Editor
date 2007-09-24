@@ -1553,7 +1553,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
             {
               pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock,
                                             BoFloatBlock, BoCellBlock);
-              if (pOldBlock && pBlock != pOldBlock)
+              if (/* @@@@@ pOldBlock &&  */ pBlock != pOldBlock)
                 {
                   /* Add new lines */
                   text[i++] = EOL;
