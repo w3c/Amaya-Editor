@@ -208,6 +208,7 @@ EDITOR_OBJ = \
 	dialogue/AmayaPopupList.o \
 	dialogue/AmayaApplyClassPanel.o \
 	dialogue/AmayaXHTMLPanel.o \
+	dialogue/AmayaStylePanel.o \
 	dialogue/AmayaExplorerPanel.o \
 	dialogue/AmayaAttributePanel.o \
 	dialogue/AmayaMathMLPanel.o \

@@ -13,6 +13,7 @@ extern void SelectSiblings ( PtrElement *firstEl,
                              int *lastChar );
 extern void TtcInsertLineBreak ( Document doc,
                                  View view );
+extern ThotBool IsXMLEditMode ( void );
 extern void TtcCreateElement ( Document doc,
                                View view );
 extern void DeleteNextChar ( int frame,
@@ -29,6 +30,7 @@ extern void SelectSiblings ( PtrElement *firstEl,
                                int *lastChar );
 extern void TtcInsertLineBreak ( Document doc,
                                    View view );
+extern ThotBool IsXMLEditMode ( void );
 extern void TtcCreateElement ( Document doc,
                                  View view );
 extern void DeleteNextChar ( int frame,

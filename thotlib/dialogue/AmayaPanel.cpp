@@ -37,6 +37,7 @@
 #include "AmayaXHTMLPanel.h"
 #include "AmayaExplorerPanel.h"
 #include "AmayaXMLPanel.h"
+#include "AmayaStylePanel.h"
 #include "AmayaSpeCharPanel.h"
 #include "AmayaNormalWindow.h"
 
@@ -120,6 +121,7 @@ void AmayaToolPanelBar::Initialize()
   AddPanel(new AmayaXHTMLToolPanel);
   AddPanel(new AmayaAttributeToolPanel);
   AddPanel(new AmayaApplyClassToolPanel);
+  AddPanel(new AmayaStyleToolPanel);
   AddPanel(new AmayaMathMLToolPanel);
   AddPanel(new AmayaXMLToolPanel);
   AddPanel(new AmayaSpeCharToolPanel);
@@ -130,6 +132,7 @@ void AmayaToolPanelBar::Initialize()
   TtaSetEnvBoolean("OPEN_PANEL_XHTML", TRUE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", TRUE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL_XML", FALSE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL_STYLE", TRUE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL_MATHML", FALSE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", FALSE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", TRUE, FALSE);
@@ -431,7 +434,7 @@ bool AmayaDockedToolPanelContainer::Detach()
   if(sz)
     {
       m_bDetached = true;
-      XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetBitmapLabel( s_Bitmap_DetachOn );
+      // XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetBitmapLabel( s_Bitmap_DetachOn );
       if(!sz->Detach(GetPanel()))
         return false;
       GetParent()->Layout();
@@ -447,7 +450,8 @@ bool AmayaDockedToolPanelContainer::Attach()
   if(sz)
     {
       m_bDetached = false;
-      XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetBitmapLabel( s_Bitmap_DetachOff );
+      //XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetBitmapLabel( s_Bitmap_DetachOff );
+      XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->Hide();
       GetPanel()->Show();
       sz->Add(GetPanel(), 1, wxEXPAND)->Show(!m_bMinimized);
       sz->Layout();
