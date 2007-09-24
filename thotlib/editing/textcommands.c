@@ -1366,14 +1366,14 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   PtrTextBuffer       clipboard;
   PtrDocument         pDoc;
   PtrElement          pFirstEl, pLastEl;
-  PtrElement          pEl;
+  PtrElement          pEl, pAsc;
   PtrAbstractBox      pBlock, pOldBlock;
   CHAR_T             *text;
   int                 i, max;
   int                 lg, maxLength;
   int                 firstChar, lastChar;
   int                 v, ind;
-  ThotBool            inAttr;
+  ThotBool            inAttr, ignore;
 
   /* get the current view */
   v = view - 1;
@@ -1551,48 +1551,67 @@ static int CopyXClipboard (unsigned char **buffer, View view)
             pEl = NULL;	  
           if (pEl)
             {
-              pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock,
-                                            BoFloatBlock, BoCellBlock);
-              if (pBlock != pOldBlock)
+              /* if this leaf is within a comment, a PI or any other XML
+                 element that is not part of the document content, ignore it */
+              ignore = FALSE;
+              pAsc = pEl;
+              while (pAsc)
                 {
-                  /* Add a NewLine */
-                  text[i++] = EOL;
-                  text[i] = EOS;
-                }
-              /* copy the content of the element */
-              pOldBlock = pBlock;
-              if (pEl->ElLeafType == LtPicture)
-                {
-                  ustrcpy (&text[i], TEXT("<img>"));
-                  i += 5;
-                }
-              else if (pEl->ElLeafType == LtSymbol)
-                {
-                  ustrcpy (&text[i], TEXT("<symb>"));
-                  i += 6;
-                }
-              else if (pEl->ElLeafType == LtGraphics)
-                {
-                  ustrcpy (&text[i], TEXT("<graph>"));
-                  i += 7;
-                }
-              else
-                {
-                  clipboard = pEl->ElText;
-                  if (pEl == pLastEl && maxLength > lastChar)
-                    maxLength = lastChar;
-                  while (clipboard && i < max && maxLength)
+                  if (TypeHasException (ExcNotAnElementNode,
+                                        pAsc->ElTypeNumber,
+                                        pAsc->ElStructSchema))
                     {
-                      lg = clipboard->BuLength;
-                      if (lg > maxLength)
-                        lg = maxLength;
-                      /* check the validity of lg */
-                      if (lg + i > max - 1)
-                        lg = max - i - 1;
-                      ustrncpy (&text[i], clipboard->BuContent, lg);
-                      i += lg;
-                      maxLength -= lg;
-                      clipboard = clipboard->BuNext;
+                      ignore = TRUE;
+                      pAsc = NULL;
+                    }
+                  else
+                    pAsc = pAsc->ElParent;
+                }
+              if (!ignore)
+                {
+                  pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock,
+                                                BoFloatBlock, BoCellBlock);
+                  if (pBlock != pOldBlock)
+                    {
+                      /* Add a NewLine */
+                      text[i++] = EOL;
+                      text[i] = EOS;
+                    }
+                  /* copy the content of the element */
+                  pOldBlock = pBlock;
+                  if (pEl->ElLeafType == LtPicture)
+                    {
+                      ustrcpy (&text[i], TEXT("<img>"));
+                      i += 5;
+                    }
+                  else if (pEl->ElLeafType == LtSymbol)
+                    {
+                      ustrcpy (&text[i], TEXT("<symb>"));
+                      i += 6;
+                    }
+                  else if (pEl->ElLeafType == LtGraphics)
+                    {
+                      ustrcpy (&text[i], TEXT("<graph>"));
+                      i += 7;
+                    }
+                  else
+                    {
+                      clipboard = pEl->ElText;
+                      if (pEl == pLastEl && maxLength > lastChar)
+                        maxLength = lastChar;
+                      while (clipboard && i < max && maxLength)
+                        {
+                          lg = clipboard->BuLength;
+                          if (lg > maxLength)
+                            lg = maxLength;
+                          /* check the validity of lg */
+                          if (lg + i > max - 1)
+                            lg = max - i - 1;
+                          ustrncpy (&text[i], clipboard->BuContent, lg);
+                          i += lg;
+                          maxLength -= lg;
+                          clipboard = clipboard->BuNext;
+                        }
                     }
                 }
             }
