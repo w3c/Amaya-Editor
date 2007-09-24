@@ -20,9 +20,14 @@
           <object class="sizeritem">
             <object class="wxChoice" name="wxID_PANEL_CSS_THEME">
               <content>
-                <item/></content>
+                <item>Default style</item>
+                <item>Classic</item>
+                <item>Modern</item>
+              </content>
             </object>
+            <option>1</option>
             <flag>wxLEFT</flag>
+            <border>1</border>
           </object>
         </object>
       </object>
@@ -47,6 +52,9 @@
             <border>5</border>
           </object>
         </object>
+      </object>
+      <object class="spacer">
+        <size>0,10</size>
       </object>
       <object class="sizeritem">
         <object class="wxPanel" name="wxID_PANEL_STYLE">
@@ -96,9 +104,6 @@
             </object>
           </object>
         </object>
-      </object>
-      <object class="spacer">
-        <size>0,10</size>
       </object>
     </object>
   </object>
