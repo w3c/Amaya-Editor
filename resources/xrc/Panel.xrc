@@ -59,7 +59,7 @@
                 <bitmap>../icons/misc/expand_on.png</bitmap>
                 <style platform="unix|win">wxNO_BORDER</style>
               </object>
-              <flag>wxALL|wxALIGN_BOTTOM</flag>
+              <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
               <border>4</border>
             </object>
             <object class="sizeritem">
@@ -68,7 +68,7 @@
                 <style>wxALIGN_LEFT</style>
               </object>
               <option>1</option>
-              <flag>wxALL|wxALIGN_BOTTOM</flag>
+              <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
               <border>4</border>
             </object>
             <object class="sizeritem">
@@ -76,7 +76,7 @@
                 <bitmap>../icons/misc/detach.png</bitmap>
                 <style platform="unix|win">wxNO_BORDER</style>
               </object>
-              <flag>wxALL|wxALIGN_BOTTOM</flag>
+              <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
               <border>4</border>
             </object>
           </object>

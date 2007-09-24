@@ -26,8 +26,7 @@
               </content>
             </object>
             <option>1</option>
-            <flag>wxLEFT</flag>
-            <border>1</border>
+            <flag>wxLEFT|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
           </object>
         </object>
       </object>
