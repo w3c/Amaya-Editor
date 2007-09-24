@@ -1699,7 +1699,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
   
   *font = NULL;
   if (variant == 2)
-    c =GetCapital (c);
+    c = GetCapital (c);
   if (c == EOS)
     c = ref_c;
   car = EOS;
@@ -1748,8 +1748,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
               pfont = &(fontset->Font_19);
               encoding = UNICODE_1_1;
               code = '1';
-              if (size > 6) size -= 2;
-              else size -= 1;
+              size = (int) (size * .8);
             }
           else
 #endif /* _WX */
