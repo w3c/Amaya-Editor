@@ -13917,7 +13917,7 @@ fi # with_wx = no
 
 # the wx version
 AMAYAWX_MAJVER=9
-AMAYAWX_MINVER=56
+AMAYAWX_MINVER=99
 AMAYAWX_SUBVER=0
 
 #the old version (to remove when switching on wx)

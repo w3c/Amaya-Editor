@@ -729,8 +729,8 @@ static void GenerateStyle (char * data)
             TtaExtendSelection (doc, lastC, TtaGetElementVolume (lastC) + 1);
           TtaCloseUndoSequence (doc);
         }
-      else
-        TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+      //else
+      //  TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
     }
 }
 

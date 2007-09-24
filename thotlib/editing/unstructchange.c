@@ -1482,6 +1482,33 @@ static PtrElement ParentNotTemplate (PtrElement pEl)
 }
 
 /*----------------------------------------------------------------------
+  IsXMLEditMode returns the current edit mode
+  ----------------------------------------------------------------------*/
+ThotBool IsXMLEditMode ()
+{
+  PtrDocument         pDoc;
+  PtrElement          firstSel, lastSel;
+  int                 firstChar, lastChar;
+  ThotBool            edit;
+
+  TtaGetEnvBoolean ("XML_EDIT_MODE", &edit);
+  if (!edit)
+    {
+      // check if the insert point is within a XML structure
+      if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+        {
+          if (firstSel && firstSel->ElStructSchema &&
+              (!strcmp (firstSel->ElParent->ElStructSchema->SsName, "XML") ||
+               !strcmp (firstSel->ElParent->ElStructSchema->SsName, "SVG") ||
+               !strcmp (firstSel->ElParent->ElStructSchema->SsName, "MathML")))
+            // force the XML edit mode
+            return TRUE;
+        }
+    }
+  return edit;
+}
+
+/*----------------------------------------------------------------------
   TtcCreateElement handles the Return (or Enter) key.
   ----------------------------------------------------------------------*/
 void TtcCreateElement (Document doc, View view)
@@ -1496,7 +1523,7 @@ void TtcCreateElement (Document doc, View view)
   int                 frame, typeNum, nComp;
   ThotBool            ok, replicate, createAfter, selBegin, selEnd, ready;
   ThotBool            empty, list, optional, deleteEmpty, histSeq,
-                      amayaLite, previous, following, specialBreak,
+                      xmlmode, previous, following, specialBreak,
                       insertionPoint, extendHistory;
   ThotBool            lock = TRUE;
   DisplayMode         dispMode;
@@ -1518,8 +1545,8 @@ void TtcCreateElement (Document doc, View view)
         ActiveFrame = frame;
     }
   extendHistory = FALSE;
-  TtaGetEnvBoolean ("AMAYA_LITE", &amayaLite);
-  if (amayaLite)
+  xmlmode = IsXMLEditMode ();
+  if (!xmlmode)
     /* We should perhaps do the following whatever the editing mode,
        AmayaLite or not ... */
     {
@@ -1880,7 +1907,7 @@ void TtcCreateElement (Document doc, View view)
             }
 
           specialBreak = FALSE;
-          if (amayaLite)
+          if (!xmlmode)
             {
               /* if we are within a Paragraph (or equivalent) at any level,
                  we split that element */
@@ -2314,7 +2341,7 @@ void TtcCreateElement (Document doc, View view)
                   if (dispMode == DisplayImmediately)
                     TtaSetDisplayMode (doc, dispMode);
                   /* restore a selection */
-                  if (amayaLite && !empty && selBegin && firstSel)
+                  if (!xmlmode && !empty && selBegin && firstSel)
                     {
                       /* set the caret at the position it was before */
                       if (!firstSel->ElTerminal)
@@ -2386,7 +2413,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
   Document            doc;
   int                 nSiblings;
   int                 nbEl, j, firstChar, lastChar;
-  ThotBool            stop, ok, isRow, amayaLite, selHead;
+  ThotBool            stop, ok, isRow, xmlmode, selHead;
 
   if (pEl == NULL)
     return;
@@ -2488,9 +2515,9 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
         pE = pE->ElParent;
     }
 
-  /* In Amaya-lite mode, we merge two block elements */
-  TtaGetEnvBoolean ("AMAYA_LITE", &amayaLite);
-  if (amayaLite && pSibling)
+  /* In standard mode, we merge two block elements */
+  xmlmode = IsXMLEditMode ();
+  if (!xmlmode)
     {
       /* get the ancestor block element */
       pE = pEl;

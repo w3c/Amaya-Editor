@@ -7874,8 +7874,6 @@ void InitAmaya (NotifyEvent * event)
     ptr = NULL;
 
   /* Initialize environment variables if they are not defined */
-  TtaSetEnvBoolean ("SHOW_BUTTONS", TRUE, FALSE);
-  TtaSetEnvBoolean ("SHOW_ADDRESS", TRUE, FALSE);
   TtaSetEnvBoolean ("SHOW_MAP_AREAS", FALSE, FALSE);
   TtaSetEnvBoolean ("SHOW_TARGET", FALSE, FALSE);
   TtaSetEnvBoolean ("LOAD_IMAGES", TRUE, FALSE);
@@ -7888,9 +7886,13 @@ void InitAmaya (NotifyEvent * event)
 #ifdef _WX
   TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", TRUE, FALSE);
 #endif /* _WX */
-  /* get current value */
+  TtaSetEnvBoolean ("XML_EDIT_MODE", FALSE, FALSE);
+  TtaSetEnvBoolean ("AMAYA_LITE", FALSE, FALSE);
+  TtaSetEnvBoolean ("SHOW_BUTTONS", TRUE, FALSE);
+  TtaSetEnvBoolean ("SHOW_ADDRESS", TRUE, FALSE);
   TtaGetEnvBoolean ("SHOW_BUTTONS", &bt);
   TtaGetEnvBoolean ("SHOW_ADDRESS", &add);
+  /* get current value */
   TtaGetEnvBoolean ("SHOW_MAP_AREAS", &map);
   /* Create and intialize resources needed for each document */
   /* Style sheets are strored in directory .amaya/0 */

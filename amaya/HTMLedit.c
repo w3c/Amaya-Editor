@@ -546,7 +546,10 @@ void GenerateInlineElement (int eType, int aType, char * data)
       if (DocumentTypes[doc] == docText ||
           DocumentTypes[doc] == docCSS ||
           DocumentTypes[doc] == docSource)
-        TtaPasteFromBuffer ((unsigned char*)data, strlen(data), TtaGetDefaultCharset ());
+        {
+          TtaPasteFromBuffer ((unsigned char*)data, strlen(data), TtaGetDefaultCharset ());
+          done = TRUE;
+        }
       else
         {
           /* give current position */
@@ -1358,8 +1361,8 @@ void GenerateInlineElement (int eType, int aType, char * data)
             }
         }
     }
-  if (!done)
-    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+  //if (!done)
+  //  TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
 }
 
 

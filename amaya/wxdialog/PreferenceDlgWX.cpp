@@ -100,6 +100,8 @@ END_EVENT_TABLE()
 
 #if !defined(DAV) || !defined(TEMPLATES)
   wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
+  wxListView *list = p_notebook->GetListView();
+  list->SetSize (400,400);
 #endif /* DAV || TEMPLATES */
 #ifndef DAV
   // invalid WebDAV Page
@@ -110,7 +112,6 @@ END_EVENT_TABLE()
 
   // setup dialog title
   SetTitle( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DLGPREFERENCE_TITLE)));
-
   // send labels to dialog (labels depends on language)
   SetupLabelDialog_General();
   SetupLabelDialog_Browse();
@@ -161,6 +162,7 @@ END_EVENT_TABLE()
 
   // give focus to ...
   //  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
+  
 
   // on windows, the color selector dialog must be complete.
   colour_data.SetChooseFull(true);
