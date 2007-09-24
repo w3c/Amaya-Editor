@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxPanel" name="wxID_TOOLPANEL_STYLE">
+    <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_THEME">
+              <label>Theme</label>
+            </object>
+            <option>0</option>
+            <flag>wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+          </object>
+          <object class="spacer">
+            <size>5,0</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxChoice" name="wxID_PANEL_CSS_THEME">
+              <content>
+                <item/></content>
+            </object>
+            <flag>wxLEFT</flag>
+          </object>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_FONT_COLOR">
+              <label>Color of the font</label>
+            </object>
+            <option>0</option>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+          </object>
+          <object class="spacer">
+            <size>10,0</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_PANEL_CSS_COLOR">
+              <bitmap>../icons/misc/empty.png</bitmap>
+              <size>16,16</size>
+            </object>
+            <border>5</border>
+          </object>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <object class="wxPanel" name="wxID_PANEL_STYLE">
+          <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <object class="sizeritem">
+              <object class="wxToolBar" name="wxID_TOOLBAR_CSS_1" subclass="AmayaBaseToolBar">
+                <object class="tool" name="wxID_PANEL_CSS_LEFT">
+                  <bitmap>../icons/16x16/CSS_left.png</bitmap>
+                </object>
+                <object class="tool" name="wxID_PANEL_CSS_CENTER">
+                  <bitmap>../icons/16x16/CSS_center.png</bitmap>
+                </object>
+                <bitmapsize>16,16</bitmapsize>
+                <margins>2,0</margins>
+                <style>wxTB_NODIVIDER|wxTB_FLAT</style>
+                <object class="tool" name="wxID_PANEL_CSS_RIGHT">
+                  <bitmap>../icons/16x16/CSS_right.png</bitmap>
+                </object>
+                <object class="tool" name="wxID_PANEL_CSS_JUSTIFY">
+                  <bitmap>../icons/16x16/CSS_justify.png</bitmap>
+                </object>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <object class="wxToolBar" name="wxID_TOOLBAR_CSS_2" subclass="AmayaBaseToolBar">
+                <object class="tool" name="wxID_PANEL_CSS_S_LINE">
+                  <bitmap>../icons/16x16/CSS_s_line.png</bitmap>
+                </object>
+                <object class="tool" name="wxID_PANEL_CSS_H_LINE">
+                  <bitmap>../icons/16x16/CSS_h_line.png</bitmap>
+                </object>
+                <object class="tool" name="wxID_PANEL_CSS_D_LINE">
+                  <bitmap>../icons/16x16/CSS_d_line.png</bitmap>
+                </object>
+                <object class="separator"/>
+                <object class="tool" name="wxID_PANEL_CSS_INDENT">
+                  <bitmap>../icons/16x16/CSS_indent.png</bitmap>
+                </object>
+                <object class="tool" name="wxID_PANEL_CSS_NOINDENT">
+                  <bitmap>../icons/16x16/CSS_noindent.png</bitmap>
+                </object>
+                <bitmapsize>16,16</bitmapsize>
+                <margins>2,0</margins>
+                <style>wxTB_NODIVIDER|wxTB_FLAT</style>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+      <object class="spacer">
+        <size>0,10</size>
+      </object>
+    </object>
+  </object>
+</resource>
