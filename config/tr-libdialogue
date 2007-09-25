@@ -144,7 +144,7 @@
 142 Yenilendir
 143 Renk
 144 **Background color
-145 **Foreground color
+145 **Text color
 146 **Switch colors
 147 **Select a generic XML structure
 148 Kontrol ediliyor
@@ -229,7 +229,7 @@
 227 Terim
 228 Tanım
 229 Nesne
-230 **CSS Style
+230 **Style
 231 Dosyası
 232 **Horizontal split/unsplit
 233 **Vertical split/unsplit
@@ -248,3 +248,4 @@
 246 **Trigonometry and logarithms
 247 Uzaklaştır
 248 Harita alanlarını göster
+249 **Theme

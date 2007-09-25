@@ -65,7 +65,7 @@
 63 Fermer sans enregistrer
 64 Style des caractères
 65 Couleurs
-66 XHTML
+66 Eléments
 67 Supprimer
 68 Destination
 69 Fichier PostScript
@@ -144,7 +144,7 @@
 142 Actualiser
 143 Couleur
 144 Couleur de l'arrière-plan
-145 Couleur du premier plan
+145 Couleur du texte
 146 Echanger les couleurs
 147 Séléctionner une structure XML générique
 148 Où corriger
@@ -229,7 +229,7 @@
 227 Terme
 228 Définition
 229 Objet
-230 Style CSS
+230 Style
 231 Fichiers
 232 Partager/étendre en horizontal
 233 Partager/étendre verticalement
@@ -248,3 +248,4 @@
 246 Trigonométrie et logarithmes
 247 Grossir
 248 Réduire
+249 Thème

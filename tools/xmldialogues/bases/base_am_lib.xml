@@ -1073,12 +1073,12 @@
 	<message xml:lang="sk">Farby</message>
 </label>
 <label define="TMSG_XHTML">
-	<message xml:lang="en">XHTML</message>
-	<message xml:lang="fr">XHTML</message>
-	<message xml:lang="de">XHTML</message>
-	<message xml:lang="it">XHTML</message>
+	<message xml:lang="en">Elements</message>
+	<message xml:lang="fr">Eléments</message>
+	<message xml:lang="de">Elemente</message>
+	<message xml:lang="it">Elementi</message>
 	<message xml:lang="tr">XHTML</message>
-	<message xml:lang="es">XHTML</message>
+	<message xml:lang="es">Elementos</message>
 	<message xml:lang="pt">XHTML</message>
 	<message xml:lang="fi">XHTML</message>
 	<message xml:lang="ru">XHTML</message>
@@ -2334,8 +2334,8 @@
 	<message xml:lang="sk">Farba pozadia</message>
 </label>
 <label define="TMSG_CPCOLORFG">
-	<message xml:lang="en">Foreground color</message>
-	<message xml:lang="fr">Couleur du premier plan</message>
+	<message xml:lang="en">Text color</message>
+	<message xml:lang="fr">Couleur du texte</message>
 	<message xml:lang="es">Color del texto</message>
 	<message xml:lang="de">Vordergrundfarbe</message>
 	<message xml:lang="it">Colore per il testo</message>
@@ -2886,7 +2886,7 @@
 	<message xml:lang="ru">Отменить выбор</message>
 </label>
 <label define="TMSG_MATHML">
-	<message xml:lang="en">Maths</message>
+	<message xml:lang="en">Math</message>
 	<message xml:lang="fr">Maths</message>
 	<message xml:lang="de">Formel</message>
 	<message xml:lang="it">Formule matematiche</message>
@@ -3615,17 +3615,17 @@
 	<message xml:lang="sk">Objekt (object)</message>
 </label>
 <label define="TMSG_CSSStyle">
-	<message xml:lang="en">CSS Style</message>
-	<message xml:lang="fr">Style CSS</message>
-	<message xml:lang="it">CSS Style</message>
-	<message xml:lang="es">Estilo CSS</message>
-	<message xml:lang="hu">CSS Stílus</message>
-	<message xml:lang="de">CSS Stil</message>
-	<message xml:lang="ka">CSS style...</message>
-	<message xml:lang="ru">Настройка каскадной таблицы стиля CSS</message>
-	<message xml:lang="cn">CSS样式</message>
-	<message xml:lang="tw">CSS樣式</message>
-	<message xml:lang="sk">CSS pravidlá</message>
+	<message xml:lang="en">Style</message>
+	<message xml:lang="fr">Style</message>
+	<message xml:lang="it">Style</message>
+	<message xml:lang="es">Estilo</message>
+	<message xml:lang="hu">Stílus</message>
+	<message xml:lang="de">Stil</message>
+	<message xml:lang="ka">Style</message>
+	<message xml:lang="ru">Настройка каскадной таблицы стиля</message>
+	<message xml:lang="cn">样式</message>
+	<message xml:lang="tw">樣式</message>
+	<message xml:lang="sk">Pravidlá</message>
 </label>
 <label define="TMSG_EXPLORE">
 	<message xml:lang="en">Files</message>
@@ -3833,6 +3833,10 @@
   <message xml:lang="cn">缩小</message>
   <message xml:lang="tw">縮小</message>
   <message xml:lang="sk">Zmenšiť veľkosť textu</message>
+</label>
+<label define="TMSG_THEME">
+  <message xml:lang="en">Theme</message>
+  <message xml:lang="fr">Thème</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>

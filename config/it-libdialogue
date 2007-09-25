@@ -65,7 +65,7 @@
 63 Chiudi, non salvare
 64 Stile dei caratteri
 65 Colori
-66 XHTML
+66 Elementi
 67 Cancella
 68 Destinazione
 69 File PostScript
@@ -229,7 +229,7 @@
 227 Termine
 228 Definizione
 229 Oggetto
-230 CSS Style
+230 Style
 231 Files
 232 Dividi la vista in orizzontale
 233 Dividi la vista in verticale
@@ -248,3 +248,4 @@
 246 **Trigonometry and logarithms
 247 Ingrandisci
 248 Rimpicciolisci
+249 **Theme

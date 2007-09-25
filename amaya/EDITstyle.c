@@ -2037,46 +2037,6 @@ void ApplyClass (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  DoLeftAlign
-  Apply left-align style
-  ----------------------------------------------------------------------*/
-void DoLeftAlign (Document doc, View view)
-{
-  ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 0);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
-}
-
-/*----------------------------------------------------------------------
-  DoRightAlign
-  Apply right-align style
-  ----------------------------------------------------------------------*/
-void DoRightAlign (Document doc, View view)
-{
-  ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 1);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
-}
-
-/*----------------------------------------------------------------------
-  DoCenter
-  Apply center style
-  ----------------------------------------------------------------------*/
-void DoCenter (Document doc, View view)
-{
-  ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 2);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
-}
-
-/*----------------------------------------------------------------------
-  DoJustify
-  Apply justify style
-  ----------------------------------------------------------------------*/
-void DoJustify (Document doc, View view)
-{
-  ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 3);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
-}
-
-/*----------------------------------------------------------------------
   StyleCallbackDialogue : procedure for style dialogue events        
   ----------------------------------------------------------------------*/
 void StyleCallbackDialogue (int ref, int typedata, char  *data)

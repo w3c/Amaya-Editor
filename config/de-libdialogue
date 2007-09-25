@@ -65,7 +65,7 @@
 63 Nicht Speichern
 64 Schräge
 65 Farbe
-66 XHTML
+66 Elemente
 67 Löschen
 68 Ausgabe
 69 PostScript-Datei
@@ -229,7 +229,7 @@
 227 Begriff
 228 Definition
 229 Objekt
-230 CSS Stil
+230 Stil
 231 Durchsuchen
 232 Ansicht horizontal teilen
 233 Ansicht vertikal teilen
@@ -248,3 +248,4 @@
 246 **Trigonometry and logarithms
 247 Schrift vergrößern
 248 Schrift verkleinern
+249 **Theme

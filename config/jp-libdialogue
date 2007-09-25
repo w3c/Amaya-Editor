@@ -65,7 +65,7 @@
 63 **Close, don't save
 64 **Character style
 65 **Colors
-66 **XHTML
+66 **Elements
 67 **Delete
 68 **Output
 69 **PostScript file
@@ -144,7 +144,7 @@
 142 **Get
 143 **Color
 144 **Background color
-145 **Foreground color
+145 **Text color
 146 **Switch colors
 147 **Select a generic XML structure
 148 **Checking
@@ -181,7 +181,7 @@
 179 **Select a class or a pseudo-class
 180 **Select
 181 **Discard
-182 **Maths
+182 **Math
 183 **Misc
 184 **Binary relations
 185 **Binary relations of negation
@@ -229,7 +229,7 @@
 227 **Term
 228 **Definition
 229 **Object
-230 **CSS Style
+230 **Style
 231 **Files
 232 **Horizontal split/unsplit
 233 **Vertical split/unsplit
@@ -248,3 +248,4 @@
 246 **Trigonometry and logarithms
 247 **Zoom in
 248 **Zoom out
+249 **Theme

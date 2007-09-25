@@ -734,6 +734,42 @@ static void GenerateStyle (char * data)
     }
 }
 
+/*----------------------------------------------------------------------
+  DoLeftAlign
+  Apply left-align style
+  ----------------------------------------------------------------------*/
+void DoLeftAlign (Document doc, View view)
+{
+  GenerateStyle ("text-align:left;");
+}
+
+/*----------------------------------------------------------------------
+  DoRightAlign
+  Apply right-align style
+  ----------------------------------------------------------------------*/
+void DoRightAlign (Document doc, View view)
+{
+  GenerateStyle ("text-align:right;");
+}
+
+/*----------------------------------------------------------------------
+  DoCenter
+  Apply center style
+  ----------------------------------------------------------------------*/
+void DoCenter (Document doc, View view)
+{
+  GenerateStyle ("text-align:center;");
+}
+
+/*----------------------------------------------------------------------
+  DoJustify
+  Apply justify style
+  ----------------------------------------------------------------------*/
+void DoJustify (Document doc, View view)
+{
+  GenerateStyle ("text-align:justify;");
+}
+
 
 /*----------------------------------------------------------------------
   Callback procedure for dialogue events.                            

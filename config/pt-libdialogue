@@ -144,7 +144,7 @@
 142 Comece
 143 Cor
 144 **Background color
-145 **Foreground color
+145 **Text color
 146 **Switch colors
 147 **Select a generic XML structure
 148 Verificação
@@ -229,7 +229,7 @@
 227 Termo
 228 Definição
 229 Objeto
-230 **CSS Style
+230 **Style
 231 Arquivos
 232 **Horizontal split/unsplit
 233 **Vertical split/unsplit
@@ -248,3 +248,4 @@
 246 **Trigonometry and logarithms
 247 Ampliar (Zoom in)
 248 Reduzir (Zoom out)
+249 **Theme

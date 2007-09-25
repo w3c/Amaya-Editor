@@ -24,6 +24,14 @@ extern void UpdateStyleSheet ( char *url,
                                char *tempdoc );
 extern char *CssToPrint ( Document doc,
                           char *printdir );
+extern void DoLeftAlign ( Document doc,
+                          View view );
+extern void DoRightAlign ( Document doc,
+                           View view );
+extern void DoCenter ( Document doc,
+                       View view );
+extern void DoJustify ( Document doc,
+                        View view );
 extern void ShowAppliedStyle ( Document doc,
                                View view );
 extern void SynchronizeAppliedStyle ( NotifyElement *event );
@@ -61,6 +69,14 @@ extern void UpdateStyleSheet ( char *url,
                                  char *tempdoc );
 extern char *CssToPrint ( Document doc,
                             char *printdir );
+extern void DoLeftAlign ( Document doc,
+                            View view );
+extern void DoRightAlign ( Document doc,
+                             View view );
+extern void DoCenter ( Document doc,
+                         View view );
+extern void DoJustify ( Document doc,
+                          View view );
 extern void ShowAppliedStyle ( Document doc,
                                  View view );
 extern void SynchronizeAppliedStyle ( NotifyElement *event );

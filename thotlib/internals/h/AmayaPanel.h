@@ -13,6 +13,7 @@
 
 
 class AmayaXHTMLPanel;
+class AmayaStylePanel;
 class AmayaAttributePanel;
 class AmayaApplyClassPanel;
 class AmayaColorsPanel;

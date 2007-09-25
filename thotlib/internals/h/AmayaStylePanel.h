@@ -27,13 +27,15 @@ public:
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_XHTML;}
   virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_STYLE");}
-  
+  void OnColorPalette( wxCommandEvent& event );
+  void SetColor(int color);
+
 protected:
-
+  // Any class wishing to process wxWindows events must use this macro
+  DECLARE_EVENT_TABLE()
   AmayaBaseToolBar *m_tbar1, *m_tbar2;
- 
+  wxColourData colour_data;
 };
-
 
 
 #endif // __AMAYASTYLEPANEL_H__

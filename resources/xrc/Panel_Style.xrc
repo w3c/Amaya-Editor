@@ -11,8 +11,8 @@
             <object class="wxStaticText" name="wxID_THEME">
               <label>Theme</label>
             </object>
-            <option>0</option>
-            <flag>wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+            <option>1</option>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
           </object>
           <object class="spacer">
             <size>5,0</size>
@@ -20,7 +20,7 @@
           <object class="sizeritem">
             <object class="wxChoice" name="wxID_PANEL_CSS_THEME">
               <content>
-                <item>Default style</item>
+                <item>Standard</item>
                 <item>Classic</item>
                 <item>Modern</item>
               </content>
@@ -29,6 +29,9 @@
             <flag>wxLEFT|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
           </object>
         </object>
+      </object>
+      <object class="spacer">
+        <size>0,10</size>
       </object>
       <object class="sizeritem">
         <object class="wxBoxSizer">
@@ -56,7 +59,6 @@
         <size>0,10</size>
       </object>
       <object class="sizeritem">
-        <object class="wxPanel" name="wxID_PANEL_STYLE">
           <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient>
             <object class="sizeritem">
@@ -102,7 +104,6 @@
               </object>
             </object>
           </object>
-        </object>
       </object>
     </object>
   </object>
