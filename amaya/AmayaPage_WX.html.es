@@ -74,7 +74,7 @@
 </svg>
 </div>
 
-<h1>Bienvenido a Amaya 9.55</h1>
+<h1>Bienvenido a Amaya 9.99</h1>
 
 <p>Amaya es un cliente Web que actúa como navegador y como editor. Ha sido
 diseñado por el <a href="http://www.w3.org/">W3C</a> y el <a

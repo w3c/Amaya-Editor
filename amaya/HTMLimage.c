@@ -1179,13 +1179,16 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
                       if (!strncmp (pathname, "file:/", 6))
                         callback (doc, el, &pathname[6], extra, TRUE);
                       else
-                        callback (doc, el, &pathname[0], extra, TRUE);
+                        callback (doc, el, pathname, extra, TRUE);
                     }
                   else if (DocumentMeta[doc] &&
                            el == DocumentMeta[doc]->link_icon)
                     {
 #ifdef _WX
-                      TtaSetPageIcon (doc, 1, desc->tempfile);
+                      if (!strncmp (pathname, "file:/", 6))
+                        TtaSetPageIcon (doc, 1, &pathname[6]);
+                      else
+                        TtaSetPageIcon (doc, 1, pathname);
                       DocumentMeta[doc]->link_icon = NULL;
 #endif /* _WX */
                     }
