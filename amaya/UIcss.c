@@ -694,6 +694,9 @@ static void GenerateStyle (char * data)
   int                 profile, doc, i, j;
 
   doc = TtaGetSelectedDocument();
+  if (doc == 0)
+    return;
+
   if (!TtaGetDocumentAccessMode (doc))
     {
       /* the document is in ReadOnly mode */
@@ -708,11 +711,15 @@ static void GenerateStyle (char * data)
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
       return;
     }
+
+  TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+  if (el == NULL)
+    return;
+
   if (data && data[0] != EOS)
     GenerateInlineElement (HTML_EL_Span, HTML_ATTR_Style_, data);
   else
     {
-      TtaGiveFirstSelectedElement (doc, &el, &i, &j);
       TtaGiveLastSelectedElement (doc, &lastC, &i, &j);
       if (el == lastC)
         // only one selected element
@@ -735,12 +742,66 @@ static void GenerateStyle (char * data)
 }
 
 /*----------------------------------------------------------------------
+  GetEnclosingBlock
+  ----------------------------------------------------------------------*/
+static ThotBool GetEnclosingBlock (Document doc)
+{
+  Element             first, last;
+  ElementType	        elType;
+  int                 i, j;
+
+  TtaGiveFirstSelectedElement (doc, &first, &i, &j);
+  if (first == NULL)
+    return FALSE;
+  while (IsCharacterLevelElement (first))
+    // look for a block element
+    first = TtaGetParent (first);
+  elType = TtaGetElementType (first);
+  while (first &&
+         TtaHasHiddenException (elType) &&
+         elType.ElSSchema &&
+         strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+    {
+      // skip hidden and template elements
+      first = TtaGetParent (first);
+      elType = TtaGetElementType (first);
+    }
+
+  TtaGiveLastSelectedElement (doc, &last, &i, &j);
+  while (IsCharacterLevelElement (last))
+    // look for a block element
+    last = TtaGetParent (last);
+  elType = TtaGetElementType (last);
+  while (last &&
+         TtaHasHiddenException (elType) &&
+         elType.ElSSchema &&
+         strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+    {
+      // skip hidden and template elements
+      last = TtaGetParent (last);
+      elType = TtaGetElementType (last);
+    }
+
+  if (first)
+    {
+      TtaSelectElement (doc, first);
+      if (last != first)
+        TtaExtendSelection (doc, last, TtaGetElementVolume (last) + 1);
+      return TRUE;
+    }
+  else
+    // no block found
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
   DoLeftAlign
   Apply left-align style
   ----------------------------------------------------------------------*/
 void DoLeftAlign (Document doc, View view)
 {
-  GenerateStyle ("text-align:left;");
+  if (GetEnclosingBlock(doc))
+    GenerateStyle ("text-align:left;");
 }
 
 /*----------------------------------------------------------------------
@@ -749,7 +810,8 @@ void DoLeftAlign (Document doc, View view)
   ----------------------------------------------------------------------*/
 void DoRightAlign (Document doc, View view)
 {
-  GenerateStyle ("text-align:right;");
+  if (GetEnclosingBlock(doc))
+    GenerateStyle ("text-align:right;");
 }
 
 /*----------------------------------------------------------------------
@@ -758,7 +820,8 @@ void DoRightAlign (Document doc, View view)
   ----------------------------------------------------------------------*/
 void DoCenter (Document doc, View view)
 {
-  GenerateStyle ("text-align:center;");
+  if (GetEnclosingBlock(doc))
+    GenerateStyle ("text-align:center;");
 }
 
 /*----------------------------------------------------------------------
@@ -767,7 +830,48 @@ void DoCenter (Document doc, View view)
   ----------------------------------------------------------------------*/
 void DoJustify (Document doc, View view)
 {
-  GenerateStyle ("text-align:justify;");
+  if (GetEnclosingBlock(doc))
+    GenerateStyle ("text-align:justify;");
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void LineSpacingSingle (Document doc, View view)
+{
+  if (GetEnclosingBlock(doc))
+    GenerateStyle ("line-height:1em;");
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void LineSpacingHalf (Document doc, View view)
+{
+  if (GetEnclosingBlock(doc))
+    GenerateStyle ("line-height:1.5em;");
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void LineSpacingDouble (Document doc, View view)
+{
+  if (GetEnclosingBlock(doc))
+    GenerateStyle ("line-height:2em;");
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void MarginLeftIncrease (Document doc, View view)
+{
+  if (GetEnclosingBlock(doc))
+    GenerateStyle ("margin-left:2em;");
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void MarginLeftDecrease (Document doc, View view)
+{
+  if (GetEnclosingBlock(doc))
+    GenerateStyle ("margin-left:0;");
 }
 
 

@@ -32,6 +32,16 @@ extern void DoCenter ( Document doc,
                        View view );
 extern void DoJustify ( Document doc,
                         View view );
+extern void LineSpacingSingle ( Document doc,
+                                View view );
+extern void LineSpacingHalf ( Document doc,
+                              View view );
+extern void LineSpacingDouble ( Document doc,
+                                View view );
+extern void MarginLeftIncrease ( Document doc,
+                                 View view );
+extern void MarginLeftDecrease ( Document doc,
+                                 View view );
 extern void ShowAppliedStyle ( Document doc,
                                View view );
 extern void SynchronizeAppliedStyle ( NotifyElement *event );
@@ -77,6 +87,16 @@ extern void DoCenter ( Document doc,
                          View view );
 extern void DoJustify ( Document doc,
                           View view );
+extern void LineSpacingSingle ( Document doc,
+                                  View view );
+extern void LineSpacingHalf ( Document doc,
+                                View view );
+extern void LineSpacingDouble ( Document doc,
+                                  View view );
+extern void MarginLeftIncrease ( Document doc,
+                                   View view );
+extern void MarginLeftDecrease ( Document doc,
+                                   View view );
 extern void ShowAppliedStyle ( Document doc,
                                  View view );
 extern void SynchronizeAppliedStyle ( NotifyElement *event );

@@ -23,24 +23,6 @@ extern void TtcChangeGraphics ( Document document,
                                 View view );
 extern void TtcChangeFormat ( Document document,
                               View view );
-extern void TextAlignLeft ( Document document,
-                            View view );
-extern void TextAlignCenter ( Document document,
-                              View view );
-extern void TextAlignRight ( Document document,
-                             View view );
-extern void TextAlignJustify ( Document document,
-                               View view );
-extern void LineSapcingSingle ( Document document,
-                                View view );
-extern void LineSapcingHalf ( Document document,
-                              View view );
-extern void LineSapcingDouble ( Document document,
-                                View view );
-extern void MarginLeftIncrease ( Document document,
-                                 View view );
-extern void MarginLeftDecrease ( Document document,
-                                 View view );
 extern void ResetPresentMenus ( void );
 
 #else /* __STDC__ */
@@ -62,24 +44,6 @@ extern void TtcChangeGraphics ( Document document,
                                   View view );
 extern void TtcChangeFormat ( Document document,
                                 View view );
-extern void TextAlignLeft ( Document document,
-                              View view );
-extern void TextAlignCenter ( Document document,
-                                View view );
-extern void TextAlignRight ( Document document,
-                               View view );
-extern void TextAlignJustify ( Document document,
-                                 View view );
-extern void LineSapcingSingle ( Document document,
-                                  View view );
-extern void LineSapcingHalf ( Document document,
-                                View view );
-extern void LineSapcingDouble ( Document document,
-                                  View view );
-extern void MarginLeftIncrease ( Document document,
-                                   View view );
-extern void MarginLeftDecrease ( Document document,
-                                   View view );
 extern void ResetPresentMenus ( void );
 
 #endif /* __STDC__ */
