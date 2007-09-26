@@ -686,7 +686,7 @@ char *CssToPrint (Document doc, char *printdir)
 /*----------------------------------------------------------------------
   GenerateStyle
   Apply the current set of CSS properties to the current selection
-  Add is TRUE when the style is added to existing style
+  Add is TRUE when data is added to the existing style
   -----------------------------------------------------------------------*/
 void GenerateStyle (char * data , ThotBool add)
 {
@@ -718,7 +718,7 @@ void GenerateStyle (char * data , ThotBool add)
     return;
 
   if (data && data[0] != EOS)
-    GenerateInlineElement (HTML_EL_Span, HTML_ATTR_Style_, data);
+    GenerateInlineElement (HTML_EL_Span, HTML_ATTR_Style_, data, !add);
   else
     {
       TtaGiveLastSelectedElement (doc, &lastC, &i, &j);

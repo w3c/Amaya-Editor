@@ -509,7 +509,51 @@ static Element GenerateInlinechildren (Element el, ElementType newType, Document
   -----------------------------------------------------------------------*/
 void AttributeChange (int aType, char * data)
 {
-  GenerateInlineElement (HTML_EL_Span, aType, data);
+  GenerateInlineElement (HTML_EL_Span, aType, data, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+static void UpdateAttribute (Attribute attr, char * data, Element el, Document doc)
+{
+  char *buffer, *property, *start, *stop;
+  int   lg;
+
+  lg = TtaGetTextAttributeLength (attr);
+  property = strstr (data, ":");
+  if (lg && property)
+    {
+      // look for the property in the initial string
+      buffer = (char *)TtaGetMemory (lg + strlen (data) + 2);
+      TtaGiveTextAttributeValue (attr, buffer, &lg);
+      *property = EOS;
+      start = strstr (buffer, data);
+      if (start)
+        {
+          // remove the current property
+          stop = start;
+          while (*stop != EOS && *stop != ';')
+            stop++;
+          if (*stop == EOS)
+            *start = EOS;
+          else
+            while (*stop != EOS)
+              {
+                stop++;
+                *start = *stop;
+                start++;
+              }
+        }
+      *property = ':';
+      lg = strlen (buffer);
+      if (lg && buffer[lg-1] != ';')
+        strcat (buffer, ";");
+      strcat (buffer, data);
+      TtaSetAttributeText (attr, buffer, el, doc);
+      TtaFreeMemory (buffer);
+    }
+  else
+    TtaSetAttributeText (attr, data, el, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -520,7 +564,7 @@ void AttributeChange (int aType, char * data)
   If the selection is within a style element and the element type is
   a span adds the data into the style element.
   -----------------------------------------------------------------------*/
-void GenerateInlineElement (int eType, int aType, char * data)
+void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
 {
   Element         el, firstSel, lastSel, next, in_line, sibling, child;
   Element         last, parent, enclose, selected;
@@ -1310,12 +1354,14 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                                       TtaRegisterAttributeDelete (newAttr, child, doc);
                                                       TtaRemoveAttribute (child, newAttr, doc);
                                                       DeleteSpanIfNoAttr (child, doc, &firstC, &lastC);
-                                                      parse = FALSE;
                                                     }
                                                   else
                                                     {
                                                       TtaRegisterAttributeReplace (newAttr, child, doc);
-                                                      TtaSetAttributeText (newAttr, name, child, doc);
+                                                      if (replace)
+                                                        TtaSetAttributeText (newAttr, name, child, doc);
+                                                      else
+                                                        UpdateAttribute (newAttr, name, child, doc);
                                                     }
                                                   done = TRUE; // action done
                                                 }
@@ -2406,7 +2452,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
           TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
           if (createLink)
             {
-              GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_HREF_, "");
+              GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_HREF_, "", TRUE);
               // get the created anchor
               TtaGiveFirstSelectedElement (doc, &anchor, &firstChar, &i);
               if (anchor)
@@ -2424,7 +2470,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
                 }
             }
           else
-            GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_ID, "");
+            GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_ID, "", TRUE);
         }
     }
 

@@ -29,7 +29,8 @@ extern void AttributeChange ( int aType,
                               char * data );
 extern void GenerateInlineElement ( int eType,
                                     int aType,
-                                    char * data );
+                                    char * data,
+                                    ThotBool replace );
 extern void SetREFattribute ( Element element,
                               Document doc,
                               char *targetURL,
@@ -175,7 +176,8 @@ extern void AttributeChange ( int aType,
                                 char * data );
 extern void GenerateInlineElement ( int eType,
                                       int aType,
-                                      char * data );
+                                      char * data,
+                                      ThotBool replace );
 extern void SetREFattribute ( Element element,
                                 Document doc,
                                 char *targetURL,

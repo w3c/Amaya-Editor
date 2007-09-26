@@ -965,20 +965,8 @@
 	<message xml:lang="fr">Retirer le retrait</message>
 </label>
 <label define="TMSG_LINE_SPACING">
-	<message xml:lang="en">Single ine spacing</message>
+	<message xml:lang="en">Single line spacing</message>
 	<message xml:lang="fr">Interligne simple</message>
-	<message xml:lang="de">Zeilenabstand</message>
-	<message xml:lang="it">Interlinea</message>
-	<message xml:lang="tr">Satır aralığı</message>
-	<message xml:lang="es">Interlineado</message>
-	<message xml:lang="pt">Espaçamento entre linhas</message>
-	<message xml:lang="fi">Riviväli</message>
-	<message xml:lang="ru">Межстрочный интервал</message>
-	<message xml:lang="hu">Sortávolság</message>
-	<message xml:lang="ka">ინტერვალი</message>
-	<message xml:lang="cn">行间距</message>
-	<message xml:lang="tw">行間距</message>
-	<message xml:lang="sk">Riadkovanie</message>
 </label>
 <label define="TMSG_HLINE_SPACING">
 	<message xml:lang="en">Middle line spacing</message>
