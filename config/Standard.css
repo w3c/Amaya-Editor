@@ -1,0 +1,125 @@
+/* Standard style for Amaya Editor Lite */
+
+/* default rules for the whole document */
+body {
+    font-size: 12pt;
+    font-family: Times, serif;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    background-color: white;
+    line-height: 1.1em;}
+
+/* paragraphs */
+p  {
+    padding: 0;
+    margin-top: .5em;
+    margin-bottom: .5em;
+    text-align: justify;
+   }
+
+/* headings */
+h1 {
+    font-size: 150%;
+    font-weight: bold;
+    font-style: normal;
+    font-variant: small-caps;
+    text-align: center;
+    padding: 0;
+    margin-top: .9em;
+    margin-bottom: .9em;
+   }
+h2 {
+    font-size: 130%;
+    font-weight: bold;
+    font-style: normal;
+    padding: 0;
+    margin-top: .9em;
+    margin-bottom: .9em;
+   }
+h3 {
+    font-size: 110%;
+    font-weight: bold;
+    font-style: normal;
+    padding: 0;
+    margin-top: .7em;
+    margin-bottom: .7em;
+   }
+h4 {
+    font-size: 100%;
+    font-weight: bold;
+    font-style: normal;
+    padding: 0;
+    margin-top: .5em;
+    margin-bottom: .5em;
+   }
+h5 {
+    font-size: 100%;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin-top: .5em;
+    margin-bottom: .5em;
+   }
+h6 {
+    font-size: 100%;
+    font-weight: normal;
+    font-style: italic;
+    padding: 0;
+    margin-top: .5em;
+    margin-bottom: .5em;
+   }
+
+/* divisions */
+div {
+    padding: 0;
+    margin-top: 0em;
+    margin-bottom: 0em;
+   }
+
+/* lists */
+ul, ol {
+    padding: 0 0 0 2.5em;
+    margin-top: .5em;
+    margin-bottom: .5em;
+   }
+ul ul, ol ol, ul ol, ol ul {
+    margin-top: .1em;
+    margin-bottom: .1em;
+   }
+li {
+    padding: 0;
+    margin-top: .1em;
+    margin-bottom: .1em;
+    text-align: justify;
+   }
+li p {
+    margin-top: .1em;
+    margin-bottom: .1em;
+   }
+
+/* inline */
+strong {
+    font-weight: bold;
+   }
+em {
+    font-style: italic;
+   }
+code {
+    font-family: Courier New, Courier, monospace;
+   }
+ins {
+    background-color: yellow;
+    text-decoration: none;
+   }
+del {
+    text-decoration: line-through;
+   }
+
+/* anchors */
+a[href] {
+    color: blue;
+    text-decoration: underline;
+   }
+
+/* end */
