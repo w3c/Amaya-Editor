@@ -58,94 +58,94 @@
 56 Unterstrichen
 57 Durchgestrichen
 58 Größe (pt)
-59 Einrücken (pt)
-60 Zeilenabstand (pt)
-61 Zeilenabstand
-62 Speichern
-63 Nicht Speichern
-64 Schräge
-65 Farbe
-66 Elemente
-67 Löschen
-68 Ausgabe
-69 PostScript-Datei
-70 Drucker
-71 Suchen nach
-72 Buchstabenlage ignorieren
-73 Ersetzen durch
-74 Modus
-75 Nicht ersetzen
-76 Bestätigen
-77 Alle ersetzen
-78 Suchraum
-79 Oberhalb der Markierung
-80 Innerhalb der Markierung
-81 Unterhalb der Markierung
-82 Im gesamten Dokument
-83 Überspringen
-84 Standardfarbe
-85 vorher speichern?
-86 Dokument schließen
-87 Formelsatz
-88 Grafik
-89 Lateinisches Alphabet
-90 Griechiches Alphabet
-91 Speichern
-92 Text
-93 Zeichnung
-94 Symbol
-95 Bild
-96 XML/XTiger
-97 nach
-98 vor
-99 um
-100 Einfügen
+59 **Unindent
+60 Zeilenabstand
+61 **Middle line spacing
+62 **Double line spacing
+63 Speichern
+64 Nicht Speichern
+65 Schräge
+66 Farbe
+67 Elemente
+68 Löschen
+69 Ausgabe
+70 PostScript-Datei
+71 Drucker
+72 Suchen nach
+73 Buchstabenlage ignorieren
+74 Ersetzen durch
+75 Modus
+76 Nicht ersetzen
+77 Bestätigen
+78 Alle ersetzen
+79 Suchraum
+80 Oberhalb der Markierung
+81 Innerhalb der Markierung
+82 Unterhalb der Markierung
+83 Im gesamten Dokument
+84 Überspringen
+85 Standardfarbe
+86 vorher speichern?
+87 Dokument schließen
+88 Formelsatz
+89 Grafik
+90 Lateinisches Alphabet
+91 Griechiches Alphabet
+92 Speichern
+93 Text
+94 Zeichnung
+95 Symbol
+96 Bild
+97 XML/XTiger
+98 nach
+99 vor
+100 um
 101 Einfügen
-102 Erzeugen
-103 Einfügen
-104 Seitenumbruch
-105 Sprache des Elements
-106 Sprachvoreinstellung:
-107 Suche beendet
-108 Suche in
-109 Suche
-110 Schreibgeschütztes Dokument
-111 Suche beendet
-112 Standardzeichensatz
-113 Standardgrafik
-114 Standardformat
-115 Standardgeometrie
-116 pt
-117 Linienart
-118 Linienstärke
-119 Füllmuster
-120 Teilen
-121 Objekttyp
-122 Gehe zu Seite Nr.:
-123 egal
-124 Attribut suchen
-125 Suche nach Typ
-126 Dokumenttyp
-127 Attribut
-128 Wert
-129 Wert des Attributs
-130 Unbekanntes Attribut
-131 Abbrechen
-132 Fehler in der PostScript-Erkennung
-133 Auftrag vom Druckspooler "%s" zurückgewiesen
-134 Kann "%s" nicht erzeugen
-135 Überstrichen
-136 Format
-137 Ereignisse (Events)
-138 Löschen
-139 Linke Maustaste: Farbe für markierten Text
-140 Mittlere oder rechte Maustaste: Cursorfarbe
-141 Weiter ...
-142 Holen
-143 Farbe
-144 Hintergrundfarbe
-145 Vordergrundfarbe
-146 Farben wechseln
+102 Einfügen
+103 Erzeugen
+104 Einfügen
+105 Seitenumbruch
+106 Sprache des Elements
+107 Sprachvoreinstellung:
+108 Suche beendet
+109 Suche in
+110 Suche
+111 Schreibgeschütztes Dokument
+112 Suche beendet
+113 Standardzeichensatz
+114 Standardgrafik
+115 Standardformat
+116 Standardgeometrie
+117 pt
+118 Linienart
+119 Linienstärke
+120 Füllmuster
+121 Teilen
+122 Objekttyp
+123 Gehe zu Seite Nr.:
+124 egal
+125 Attribut suchen
+126 Suche nach Typ
+127 Dokumenttyp
+128 Attribut
+129 Wert
+130 Wert des Attributs
+131 Unbekanntes Attribut
+132 Abbrechen
+133 Fehler in der PostScript-Erkennung
+134 Auftrag vom Druckspooler "%s" zurückgewiesen
+135 Kann "%s" nicht erzeugen
+136 Überstrichen
+137 Format
+138 Ereignisse (Events)
+139 Löschen
+140 Linke Maustaste: Farbe für markierten Text
+141 Mittlere oder rechte Maustaste: Cursorfarbe
+142 Weiter ...
+143 Holen
+144 Farbe
+145 Hintergrundfarbe
+146 Vordergrundfarbe
 147 Wählen Sie eine generische XML-Struktur
 148 Überprüfe
 149 Suchen
@@ -175,8 +175,8 @@
 173 Erneuern
 174 Links
 175 Rechts
-176 Zentrieren
-177 Ausrichten
+176 Zur Mitte flanken
+177 Gerechtfertigt
 178 Klasse übernehnem
 179 Klasse oder Pseudoklasse wählen
 180 Auswählen

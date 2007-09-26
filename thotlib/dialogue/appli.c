@@ -1717,9 +1717,10 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 void TtaSetStatusSelectedElement(Document document, View view, Element elem)
 {
 #ifdef _WX
-  AmayaWindow    *window;
-  AmayaStatusBar *statusbar;
-  int             frame;
+  AmayaWindow       *window;
+  AmayaStatusBar    *statusbar;
+  PtrElement         pEl = (PtrElement)elem;
+  int                frame;
   
   frame = GetWindowNumber (document, view);
   if (frame == 0)
@@ -1734,11 +1735,25 @@ void TtaSetStatusSelectedElement(Document document, View view, Element elem)
           statusbar = wxDynamicCast(window->GetStatusBar(), AmayaStatusBar);
           if (statusbar)
             statusbar->SetSelectedElement (elem);
+          if (pEl && pEl->ElAbstractBox[0])
+            {
+#ifdef IV
+              // Update the current color in the tool panel
+              AmayaToolPanelBar *bar;
+              bar = window->GetToolPanelBar();
+              if (bar)
+                {
+                  AmayaToolPanel* panel = bar->GetToolPanel (WXAMAYA_PANEL_STYLE);
+                  if (panel)
+                    panel->SetColor (pEl->ElAbstractBox[0]->AbForeground);
+                }
+#endif
+            }
         }
     }
 #else  /* _WX */
   if (elem)
-    BuildSelectionMessage();
+    BuildSelectionMessage ();
 #endif /* _WX */
 }
 

@@ -34,7 +34,7 @@
 32 Format
 33 Défaut
 34 Alignement
-35 Renfoncement
+35 Mettre en retrait
 36 Impression en cours
 37 Imprimer
 38 Alimentation manuelle
@@ -58,94 +58,94 @@
 56 Souligné
 57 Biffé
 58 Corps (pt)
-59 Renfoncement (pt)
-60 Interligne (pt)
-61 Interligne
-62 Enregistrer le document
-63 Fermer sans enregistrer
-64 Style des caractères
-65 Couleurs
-66 Eléments
-67 Supprimer
-68 Destination
-69 Fichier PostScript
-70 Imprimante
-71 Texte à chercher
-72 Ignorer la casse
-73 Texte de remplacement
-74 Remplacement
-75 Sans remplacement
-76 Remplacement à la demande
-77 Remplacement automatique
-78 Où rechercher
-79 Avant la sélection
-80 Dans la sélection
-81 Après la sélection
-82 Dans tout le document
-83 Sauter
-84 Couleurs par défaut
-85 avant de le fermer
-86 Fermer un document
-87 Symboles mathématiques
-88 Graphiques
-89 Alphabet latin
-90 Alphabet grec
-91 Enregistrer
-92 Texte
-93 Graphique
-94 Symbole
-95 Image
-96 XML/XTiger
-97 après
-98 avant
-99 autour
-100 Inclure
-101 Coller
-102 à créer
-103 Insérer
-104 Saut de page
-105 Langue de l'élément
-106 Langue héritée :
-107 Pas trouvé
-108 Recherche dans
-109 Recherche
-110 Elément en lecture seule
-111 Plus de remplacements
-112 Caractères standard
-113 Graphiques standard
-114 Format standard
-115 Géométrie standard
-116 pt
-117 Style des traits
-118 Epaisseur des traits
-119 Motif de remplissage
-120 Diviser
-121 Type d'objet
-122 Aller page numéro :
-123 any
-124 Attribut à chercher
-125 Type à chercher
-126 Natures
-127 Attribut
-128 Valeur
-129 Valeur de l'attribut
-130 Attribut inconnu
-131 Annuler
-132 Erreur dans la traduction en PostScript
-133 Commande refusée par le spooler "%s"
-134 Impossible de créer "%s"
-135 Surligné
-136 Format de document
-137 Événements
-138 Retirer l'attribut
-139 Bouton gauche change la couleur de sélection
-140 Bouton milieu ou droit change la couleur du curseur
-141 Autres ...
-142 Actualiser
-143 Couleur
-144 Couleur de l'arrière-plan
-145 Couleur du texte
-146 Echanger les couleurs
+59 Retirer le retrait
+60 Interligne simple
+61 Interligne moyenne
+62 Interligne double
+63 Enregistrer le document
+64 Fermer sans enregistrer
+65 Style des caractères
+66 Couleurs
+67 Eléments
+68 Supprimer
+69 Destination
+70 Fichier PostScript
+71 Imprimante
+72 Texte à chercher
+73 Ignorer la casse
+74 Texte de remplacement
+75 Remplacement
+76 Sans remplacement
+77 Remplacement à la demande
+78 Remplacement automatique
+79 Où rechercher
+80 Avant la sélection
+81 Dans la sélection
+82 Après la sélection
+83 Dans tout le document
+84 Sauter
+85 Couleurs par défaut
+86 avant de le fermer
+87 Fermer un document
+88 Symboles mathématiques
+89 Graphiques
+90 Alphabet latin
+91 Alphabet grec
+92 Enregistrer
+93 Texte
+94 Graphique
+95 Symbole
+96 Image
+97 XML/XTiger
+98 après
+99 avant
+100 autour
+101 Inclure
+102 Coller
+103 à créer
+104 Insérer
+105 Saut de page
+106 Langue de l'élément
+107 Langue héritée :
+108 Pas trouvé
+109 Recherche dans
+110 Recherche
+111 Elément en lecture seule
+112 Plus de remplacements
+113 Caractères standard
+114 Graphiques standard
+115 Format standard
+116 Géométrie standard
+117 pt
+118 Style des traits
+119 Epaisseur des traits
+120 Motif de remplissage
+121 Diviser
+122 Type d'objet
+123 Aller page numéro :
+124 any
+125 Attribut à chercher
+126 Type à chercher
+127 Natures
+128 Attribut
+129 Valeur
+130 Valeur de l'attribut
+131 Attribut inconnu
+132 Annuler
+133 Erreur dans la traduction en PostScript
+134 Commande refusée par le spooler "%s"
+135 Impossible de créer "%s"
+136 Surligné
+137 Format de document
+138 Événements
+139 Retirer l'attribut
+140 Bouton gauche change la couleur de sélection
+141 Bouton milieu ou droit change la couleur du curseur
+142 Autres ...
+143 Actualiser
+144 Couleur
+145 Couleur de l'arrière-plan
+146 Couleur du texte
 147 Séléctionner une structure XML générique
 148 Où corriger
 149 Chercher/Suivant
@@ -173,10 +173,10 @@
 171 Outils
 172 Cet attribut est obligatoire, il ne peut pas être supprimé
 173 Actualiser
-174 Gauche
-175 Droite
-176 Centré
-177 Justifié
+174 Aligner à gauche
+175 Aligner à droite
+176 Centrer
+177 Justifier
 178 Appliquer classe
 179 Sélectionner une classe ou une pseudo-classe
 180 Sélectionner
@@ -200,9 +200,9 @@
 198 Imprimer
 199 Chercher
 200 Page personnelle
-201 Mise en évidence On/Off
-202 Important On/Off
-203 Code On/Off
+201 Mise en évidence Oui/Non
+202 Important Oui/Non
+203 Code Oui/Non
 204 Ajouter/Remplacer une image
 205 Titre niveau 1
 206 Titre niveau 2
@@ -222,10 +222,10 @@
 220 Boîtes
 221 Division
 222 Cible
-223 Insertion On/Off
-224 Suppression On/Off
-225 Indice On/Off
-226 Exposant On/Off
+223 Texte inséré Oui/Non
+224 Texte supprimé Oui/Non
+225 Indice Oui/Non
+226 Exposant Oui/Non
 227 Terme
 228 Définition
 229 Objet

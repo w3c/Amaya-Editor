@@ -32,7 +32,7 @@
 
 #include "AmayaStylePanel.h"
 #include "AmayaNormalWindow.h"
-
+extern void GenerateStyle (char * color, ThotBool add);
 
 //
 //
@@ -43,15 +43,15 @@ static int Current_Color = -1;
 
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaStyleToolDef)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_LEFT",    "DoLeftAlign", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_CENTER",  "DoCenter",  wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_RIGHT",   "DoRightAlign",  wxID_ANY, wxID_ANY )
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_JUSTIFY", "DoJustify",  wxID_ANY, wxID_ANY )
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_S_LINE",  "LineSpacingSingle",   wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_H_LINE",  "LineSpacingHalf",  wxID_ANY, wxID_ANY )
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_D_LINE",  "LineSpacingDouble",  wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_INDENT",  "MarginLeftIncrease",  wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_NOINDENT","MarginLeftDecrease",  wxID_ANY, wxID_ANY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_LEFT",    "DoLeftAlign", LIB, TMSG_FORMATLEFT)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_CENTER",  "DoCenter", LIB, TMSG_FORMATCENTER)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_RIGHT",   "DoRightAlign", LIB, TMSG_FORMATRIGHT)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_JUSTIFY", "DoJustify", LIB, TMSG_FORMATJUSTIFY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_S_LINE",  "LineSpacingSingle", LIB, TMSG_LINE_SPACING)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_H_LINE",  "LineSpacingHalf", LIB, TMSG_HLINE_SPACING)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_D_LINE",  "LineSpacingDouble", LIB, TMSG_DLINE_SPACING)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_INDENT",  "MarginLeftIncrease", LIB, TMSG_INDENT)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_NOINDENT","MarginLeftDecrease", LIB, TMSG_NOINDENT)
 AMAYA_END_TOOLBAR_DEF_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaStyleToolPanel, AmayaToolPanel)
@@ -86,7 +86,7 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   m_tbar2->Realize();
   SetAutoLayout(true);
   
-  XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_COLORS)));
+  XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORBUTTON)));
   XRCCTRL(*this, "wxID_FONT_COLOR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORFG)));
   XRCCTRL(*this, "wxID_THEME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_THEME)));
   SetColor (1);
@@ -108,9 +108,7 @@ wxString AmayaStyleToolPanel::GetToolPanelName()const
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::OnColorPalette( wxCommandEvent& event )
 {
-  unsigned short      red;
-  unsigned short      green;
-  unsigned short      blue;
+  char                color_string[100];
   int                 color;
 
   // open the color dialog and ask user to select a color.
@@ -120,11 +118,12 @@ void AmayaStyleToolPanel::OnColorPalette( wxCommandEvent& event )
       colour_data = dialog.GetColourData();
       wxColour col = colour_data.GetColour();
       XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", wxBitmapButton)->SetBackgroundColour( col );
-      color = TtaGetThotColor (red, green, blue);
+      color = TtaGetThotColor (col.Red(), col.Green(), col.Blue());
       if (color != Current_Color)
-        {
-          Current_Color = color;
-        }
+        Current_Color = color;
+      // generate a color style
+      sprintf( color_string, "color:#%02x%02x%02x", col.Red(), col.Green(), col.Blue());
+      GenerateStyle (color_string, TRUE);
     }
 }
 

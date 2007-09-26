@@ -58,94 +58,94 @@
 56 Aláhúzott
 57 Áthúzott
 58 Betáméret (pt)
-59 Behúzás (pt)
-60 Sortávolság (pt)
-61 Sortávolság
-62 Dokumentum mentése
-63 Bezárás mentés nélkül
-64 Karakter stílus
-65 Színek
-66 XHTML
-67 Törlés
-68 Kimenet
-69 PostScript fájl
-70 Nyomtató
-71 Keresés
-72 Ignore case
-73 Csere
+59 **Unindent
+60 Sortávolság
+61 **Middle line spacing
+62 **Double line spacing
+63 Dokumentum mentése
+64 Bezárás mentés nélkül
+65 Karakter stílus
+66 Színek
+67 XHTML
+68 Törlés
+69 Kimenet
+70 PostScript fájl
+71 Nyomtató
+72 Keresés
+73 Ignore case
 74 Csere
-75 Nincs csere
-76 Csere kérésre
-77 Automatikus csere
-78 Keresés helye
-79 Kijelölés előtt
-80 Kijelölésben
-81 Kijelölés után
-82 A teljes dokumentumban
-83 Ne cseréljen
-84 Alapszínek
-85 bezárás előtt
-86 Dokumentum bezárása
-87 Matematikai szimbólumok
-88 Grafika
-89 Latin ábécé
-90 Görög ábécé
-91 Mentés
-92 Szöveg
-93 Grafika
-94 szimbólum
-95 Kép
-96 XML/XTiger
-97 után
-98 előtt
-99 körül
-100 Include
-101 Beilleszt
-102 létrehozni
-103 Beilleszt
-104 Lapdobás
-105 Nyelvi elem
-106 Örökölt nyelv:
-107 nem található
-108 Keresés helye
-109 Keresés
-110 Csak olvasható elem
-111 Nincs mit cserélni
-112 Szabványos karakterek
-113 Szabványos grafika
-114 Szabványos formátum
-115 Szabványos elhelyezkedés
-116 pt
-117 Sor stílus
-118 Sor magasság
-119 Kitöltési mintázat
-120 Osztás
-121 Objektum típus
-122 Ugrás oldalszámra:
-123 Bármely
-124 Keresendő attribútum
-125 Keresendő típus
-126 Natures
-127 Attribútum
-128 Érték
-129 Attribútum érték
-130 Ismeretlen attribútum
-131 Mégsem
-132 HIba a PostScript fordításban
-133 A parancsot visszautasította a sorkezelő "%s"
-134 "%s" nem hozható létre
-135 Felülvonás
-136 Dokumentum formátum
-137 Események
-138 Attribútum eltávolítása
-139 A bal egérgomb a kijelölés színét adja meg
-140 A középső vagy jobb egérgomb a caret adja meg
-141 Egyéb...
-142 Get
-143 Szín
-144 Háttérszín
-145 Szín
-146 Színek cseréje
+75 Csere
+76 Nincs csere
+77 Csere kérésre
+78 Automatikus csere
+79 Keresés helye
+80 Kijelölés előtt
+81 Kijelölésben
+82 Kijelölés után
+83 A teljes dokumentumban
+84 Ne cseréljen
+85 Alapszínek
+86 bezárás előtt
+87 Dokumentum bezárása
+88 Matematikai szimbólumok
+89 Grafika
+90 Latin ábécé
+91 Görög ábécé
+92 Mentés
+93 Szöveg
+94 Grafika
+95 szimbólum
+96 Kép
+97 XML/XTiger
+98 után
+99 előtt
+100 körül
+101 Include
+102 Beilleszt
+103 létrehozni
+104 Beilleszt
+105 Lapdobás
+106 Nyelvi elem
+107 Örökölt nyelv:
+108 nem található
+109 Keresés helye
+110 Keresés
+111 Csak olvasható elem
+112 Nincs mit cserélni
+113 Szabványos karakterek
+114 Szabványos grafika
+115 Szabványos formátum
+116 Szabványos elhelyezkedés
+117 pt
+118 Sor stílus
+119 Sor magasság
+120 Kitöltési mintázat
+121 Osztás
+122 Objektum típus
+123 Ugrás oldalszámra:
+124 Bármely
+125 Keresendő attribútum
+126 Keresendő típus
+127 Natures
+128 Attribútum
+129 Érték
+130 Attribútum érték
+131 Ismeretlen attribútum
+132 Mégsem
+133 HIba a PostScript fordításban
+134 A parancsot visszautasította a sorkezelő "%s"
+135 "%s" nem hozható létre
+136 Felülvonás
+137 Dokumentum formátum
+138 Események
+139 Attribútum eltávolítása
+140 A bal egérgomb a kijelölés színét adja meg
+141 A középső vagy jobb egérgomb a caret adja meg
+142 Egyéb...
+143 Get
+144 Szín
+145 Háttérszín
+146 Szín
 147 Adjon meg egy általános XML szerkezetet
 148 Ellenőrzés
 149 Keresés/Kihagyás

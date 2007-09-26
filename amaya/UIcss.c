@@ -686,8 +686,9 @@ char *CssToPrint (Document doc, char *printdir)
 /*----------------------------------------------------------------------
   GenerateStyle
   Apply the current set of CSS properties to the current selection
+  Add is TRUE when the style is added to existing style
   -----------------------------------------------------------------------*/
-static void GenerateStyle (char * data)
+void GenerateStyle (char * data , ThotBool add)
 {
   Element             el, firstC, lastC;
   Attribute           attr;
@@ -801,7 +802,7 @@ static ThotBool GetEnclosingBlock (Document doc)
 void DoLeftAlign (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("text-align:left;");
+    GenerateStyle ("text-align:left;", TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -811,7 +812,7 @@ void DoLeftAlign (Document doc, View view)
 void DoRightAlign (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("text-align:right;");
+    GenerateStyle ("text-align:right;", TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -821,7 +822,7 @@ void DoRightAlign (Document doc, View view)
 void DoCenter (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("text-align:center;");
+    GenerateStyle ("text-align:center;", TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -831,7 +832,7 @@ void DoCenter (Document doc, View view)
 void DoJustify (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("text-align:justify;");
+    GenerateStyle ("text-align:justify;", TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -839,7 +840,7 @@ void DoJustify (Document doc, View view)
 void LineSpacingSingle (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("line-height:1em;");
+    GenerateStyle ("line-height:1em;", TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -847,7 +848,7 @@ void LineSpacingSingle (Document doc, View view)
 void LineSpacingHalf (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("line-height:1.5em;");
+    GenerateStyle ("line-height:1.5em;", TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -855,7 +856,7 @@ void LineSpacingHalf (Document doc, View view)
 void LineSpacingDouble (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("line-height:2em;");
+    GenerateStyle ("line-height:2em;", TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -863,7 +864,7 @@ void LineSpacingDouble (Document doc, View view)
 void MarginLeftIncrease (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("margin-left:2em;");
+    GenerateStyle ("margin-left:2em;", TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -871,7 +872,7 @@ void MarginLeftIncrease (Document doc, View view)
 void MarginLeftDecrease (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("margin-left:0;");
+    GenerateStyle ("margin-left:0;", TRUE);
 }
 
 
@@ -1011,7 +1012,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
       break;
     case CSSValue:
       if (data)
-        GenerateStyle (data);
+        GenerateStyle (data, FALSE);
       else
         TtaDestroyDialogue (ref);
       break;

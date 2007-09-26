@@ -274,6 +274,7 @@ public:
    * should be override in inherited class
    */
   virtual void SendDataToPanel( AmayaParams& params );
+  virtual void SetColor(int color);
 
 protected:
   /**

@@ -56,11 +56,15 @@ BEGIN_EVENT_TABLE(AmayaToolPanelBar, wxPanel)
 END_EVENT_TABLE()
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaToolPanelBar::AmayaToolPanelBar():
 wxPanel()
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaToolPanelBar::AmayaToolPanelBar(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
     const wxSize& size, long style, const wxString& name):
 wxPanel()
@@ -68,6 +72,8 @@ wxPanel()
   Create(parent, id, pos, size, style, name);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaToolPanelBar::~AmayaToolPanelBar()
 {
   SaveConfig();
@@ -79,6 +85,8 @@ AmayaToolPanelBar::~AmayaToolPanelBar()
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaToolPanelBar::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
     const wxSize& size, long style, const wxString& name)
 {
@@ -101,6 +109,8 @@ bool AmayaToolPanelBar::Create(wxWindow* parent, wxWindowID id, const wxPoint& p
   return true;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::OnClose( wxCommandEvent& event )
 {
   Hide();
@@ -109,6 +119,8 @@ void AmayaToolPanelBar::OnClose( wxCommandEvent& event )
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::Initialize()
 {
   wxSizer* sz = NULL;
@@ -141,6 +153,8 @@ void AmayaToolPanelBar::Initialize()
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::AddPanel(AmayaToolPanel* panel)
 {
   AmayaToolPanelBarListItem* item = new AmayaToolPanelBarListItem;
@@ -159,6 +173,8 @@ void AmayaToolPanelBar::AddPanel(AmayaToolPanel* panel)
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::LoadConfig()
 {
   // Show or hide panel using env
@@ -177,6 +193,8 @@ void AmayaToolPanelBar::LoadConfig()
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::SaveConfig()
 {
   unsigned int n;
@@ -194,6 +212,8 @@ void AmayaToolPanelBar::SaveConfig()
   TtaSaveAppRegistry();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::ShowHeader(bool bShow)
 {
   wxSizer* sz = GetSizer();
@@ -204,6 +224,8 @@ void AmayaToolPanelBar::ShowHeader(bool bShow)
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 const AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)const
 {
   unsigned int n;
@@ -218,6 +240,8 @@ const AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPane
   return NULL;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)
 {
   unsigned int n;
@@ -232,6 +256,8 @@ AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* pan
   return NULL;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::ShowPanel(AmayaToolPanel* panel, bool bShow)
 {
   AmayaToolPanelBarListItem* item = FindItem(panel);
@@ -246,6 +272,8 @@ void AmayaToolPanelBar::ShowPanel(AmayaToolPanel* panel, bool bShow)
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::MinimizePanel(AmayaToolPanel* panel, bool bMin)
 {
   AmayaToolPanelBarListItem* item = FindItem(panel);
@@ -257,6 +285,8 @@ void AmayaToolPanelBar::MinimizePanel(AmayaToolPanel* panel, bool bMin)
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::ToggleMinimize(AmayaToolPanel* panel)
 {
   AmayaToolPanelBarListItem* item = FindItem(panel);
@@ -265,6 +295,8 @@ void AmayaToolPanelBar::ToggleMinimize(AmayaToolPanel* panel)
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::FloatPanel(AmayaToolPanel* panel, bool bFloat)
 {
   AmayaToolPanelBarListItem* item = FindItem(panel);
@@ -294,6 +326,8 @@ void AmayaToolPanelBar::FloatPanel(AmayaToolPanel* panel, bool bFloat)
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::ToggleFloat(AmayaToolPanel* panel)
 {
   AmayaToolPanelBarListItem* item = FindItem(panel);
@@ -301,6 +335,8 @@ void AmayaToolPanelBar::ToggleFloat(AmayaToolPanel* panel)
     FloatPanel(panel, !item->floating);  
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaToolPanelBar::IsMinimized(const AmayaToolPanel* panel)const
 {
   const AmayaToolPanelBarListItem* item = FindItem(panel);
@@ -309,6 +345,8 @@ bool AmayaToolPanelBar::IsMinimized(const AmayaToolPanel* panel)const
   return false;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaToolPanelBar::IsExpanded(const AmayaToolPanel* panel)const
 {
   const AmayaToolPanelBarListItem* item = FindItem(panel);
@@ -317,6 +355,8 @@ bool AmayaToolPanelBar::IsExpanded(const AmayaToolPanel* panel)const
   return false;  
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaToolPanelBar::IsFloating(const AmayaToolPanel* panel)const
 {
   const AmayaToolPanelBarListItem* item = FindItem(panel);
@@ -325,6 +365,8 @@ bool AmayaToolPanelBar::IsFloating(const AmayaToolPanel* panel)const
   return false;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaToolPanelBar::IsShown(const AmayaToolPanel* panel)const
 {
   const AmayaToolPanelBarListItem* item = FindItem(panel);
@@ -334,6 +376,8 @@ bool AmayaToolPanelBar::IsShown(const AmayaToolPanel* panel)const
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaToolPanel* AmayaToolPanelBar::GetToolPanel(int type)
 {
   unsigned int n;
@@ -348,6 +392,8 @@ AmayaToolPanel* AmayaToolPanelBar::GetToolPanel(int type)
   return NULL;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::OpenToolPanel( int panel_type, bool bOpen)
 {
   AmayaToolPanel* panel = GetToolPanel(panel_type);
@@ -375,6 +421,8 @@ BEGIN_EVENT_TABLE(AmayaDockedToolPanelContainer, wxPanel)
   EVT_UPDATE_UI(XRCID("wxID_BUTTON_EXPAND"), AmayaDockedToolPanelContainer::OnUpdateMinimizeUI)
 END_EVENT_TABLE()
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaDockedToolPanelContainer::AmayaDockedToolPanelContainer(
     AmayaToolPanel* panel, AmayaToolPanelBar* bar, 
     wxWindow* parent, wxWindowID id, const wxPoint& pos, 
@@ -399,11 +447,15 @@ m_bDetached(false)
   XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->SetLabel(panel->GetToolPanelName());
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaDockedToolPanelContainer::~AmayaDockedToolPanelContainer()
 {
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaDockedToolPanelContainer::Minimize(bool bMinimize)
 {
   wxSizer* sz = GetSizer();
@@ -428,6 +480,8 @@ bool AmayaDockedToolPanelContainer::Minimize(bool bMinimize)
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaDockedToolPanelContainer::Detach()
 {
   wxSizer* sz = GetSizer();
@@ -443,6 +497,8 @@ bool AmayaDockedToolPanelContainer::Detach()
   return false;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaDockedToolPanelContainer::Attach()
 {
   GetPanel()->Reparent(this);
@@ -461,17 +517,23 @@ bool AmayaDockedToolPanelContainer::Attach()
   return false;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaDockedToolPanelContainer::OnMinimize(wxCommandEvent& event)
 {
   if(GetBar())
     GetBar()->ToggleMinimize(GetPanel());
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaDockedToolPanelContainer::OnUpdateMinimizeUI(wxUpdateUIEvent& event)
 {
   event.Enable(!m_bDetached);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaDockedToolPanelContainer::OnDetach(wxCommandEvent& event)
 {
   if(GetBar())
@@ -488,6 +550,8 @@ BEGIN_EVENT_TABLE(AmayaFloatingToolPanelContainer, wxDialog)
   EVT_CLOSE( AmayaFloatingToolPanelContainer::OnClose )
 END_EVENT_TABLE()
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaFloatingToolPanelContainer::AmayaFloatingToolPanelContainer(
     AmayaToolPanel* panel, AmayaToolPanelBar* bar, 
     wxWindow* parent, wxWindowID id, const wxPoint& pos, 
@@ -500,16 +564,22 @@ AmayaToolPanelContainer(panel, bar)
   SetTitle(panel->GetToolPanelName());
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaFloatingToolPanelContainer::~AmayaFloatingToolPanelContainer()
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaFloatingToolPanelContainer::OnClose( wxCloseEvent& event )
 {
   GetBar()->DockPanel(GetPanel());
   event.Skip();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaFloatingToolPanelContainer::Detach()
 {
   wxSizer* sz = GetSizer();
@@ -520,6 +590,8 @@ bool AmayaFloatingToolPanelContainer::Detach()
   return false;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaFloatingToolPanelContainer::Attach()
 {
   GetPanel()->Reparent(this);
@@ -548,6 +620,8 @@ BEGIN_EVENT_TABLE(AmayaToolPanel, wxPanel)
 END_EVENT_TABLE()
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaToolPanel::AmayaToolPanel():
   wxPanel(),
   m_bar(NULL),
@@ -556,41 +630,57 @@ AmayaToolPanel::AmayaToolPanel():
   
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaToolPanel::~AmayaToolPanel()
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 int AmayaToolPanel::GetToolPanelType()const
 {
   return WXAMAYA_PANEL_UNKNOWN;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 wxString AmayaToolPanel::GetToolPanelConfigKeyName()const
 {
   return wxT("OPEN_PANEL");
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaToolPanel::IsExpanded()
 {
   return GetBar()->IsExpanded(this);  
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaToolPanel::IsFloating()
 {
   return GetBar()->IsFloating(this);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaToolPanel::IsVisible()
 {
   return GetBar()->IsShown(this);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanel::ShouldBeUpdated( bool should_update )
 {
   m_ShouldBeUpdated = should_update;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanel::DoUpdate()
 {
   if (m_ShouldBeUpdated)
@@ -600,9 +690,18 @@ void AmayaToolPanel::DoUpdate()
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaToolPanel::SendDataToPanel( AmayaParams& p )
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaToolPanel::SendDataToPanel"));
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaToolPanel::SetColor (int color)
+{
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaToolPanel::SetColor"));
 }
 
 #endif /* #ifdef _WX */

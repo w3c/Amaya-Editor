@@ -2417,7 +2417,7 @@ void TtcChangeFormat (Document document, View view)
           TtaSetMenuForm (NumMenuAlignment, i - 1);
           /* zone de saisie du renfoncement en points typo */
           TtaNewNumberForm (NumZoneRecess, NumFormPresFormat,
-                            TtaGetMessage (LIB, TMSG_INDENT_PTS), 0, 300, TRUE);
+                            TtaGetMessage (LIB, TMSG_INDENT), 0, 300, TRUE);
           /* initialise la valeur du renfoncement */
 #endif /* _GTK */
          
@@ -2454,7 +2454,7 @@ void TtcChangeFormat (Document document, View view)
 
           /* zone de saisie de l'interligne en points typo */
           TtaNewNumberForm (NumZoneLineSpacing, NumFormPresFormat,
-                            TtaGetMessage (LIB, TMSG_LINE_SPACING_PTS), 1, 200, TRUE);
+                            TtaGetMessage (LIB, TMSG_LINE_SPACING), 1, 200, TRUE);
 
           /* sous-menu Interligne (Grandeur) */
           i = 0;

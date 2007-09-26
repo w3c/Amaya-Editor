@@ -360,13 +360,12 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
 #endif /* _WINDOW || _MACOS */
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
   
-  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_TOOLPANEL_ALIGN_LEFT)) );
-  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_TOOLPANEL_ALIGN_RIGHT)) );
+  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_FORMATLEFT)) );
+  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_FORMATRIGHT)) );
 #ifdef EK
-  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_TOOLPANEL_ALIGN_FREE)) );
+  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX("Detach") );
 #endif /* EK */
   XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->SetSelection(prop.ToolPanelLayout);
-  
 }
 
 /*----------------------------------------------------------------------
@@ -759,7 +758,7 @@ void PreferenceDlgWX::SetupLabelDialog_Color()
   wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_COLOR") );
   if (page_id >= 0)
-    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_COLOR_MENU)) );
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_COLORS)) );
 
   XRCCTRL(*this, "wxID_LABEL_TEXTCOLOR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DOC_FG_COLOR)) );
   XRCCTRL(*this, "wxID_LABEL_BACKCOLOR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DOC_BG_COLOR)) );

@@ -2826,22 +2826,6 @@
 	<message xml:lang="tw">改變會在新窗口內生效</message>
 	<message xml:lang="sk">Zmeny sa prejavia až po ukončení a opätovnom spustení programu.</message>
 </label>
-<label define="AM_COLOR_MENU">
-	<message xml:lang="en">Colors</message>
-	<message xml:lang="fr">Couleurs</message>
-	<message xml:lang="de">Farben</message>
-	<message xml:lang="it">Colori</message>
-	<message xml:lang="es">Colores</message>
-	<message xml:lang="pt">Cores</message>
-	<message xml:lang="fi">Väri</message>
-	<message xml:lang="tr">Renk ayarları</message>
-	<message xml:lang="ru">Цвет</message>
-	<message xml:lang="hu">Színek</message>
-	<message xml:lang="ka">ფერები</message>
-	<message xml:lang="cn">颜色</message>
-	<message xml:lang="tw">顏色</message>
-	<message xml:lang="sk">Farby</message>
-</label>
 <label define="AM_DOC_FG_COLOR">
 	<message xml:lang="en">Document foreground color</message>
 	<message xml:lang="fr">Couleur du texte</message>

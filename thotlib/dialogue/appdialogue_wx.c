@@ -2007,13 +2007,11 @@ void TtaSendDataToPanel( int panel_type, AmayaParams& params )
   if(activeWindow)
     {
       bar = activeWindow->GetToolPanelBar();
-      if(bar)
+      if (bar)
         {
           AmayaToolPanel* panel = bar->GetToolPanel(panel_type);
-          if(panel)
-            {
-              panel->SendDataToPanel(params);
-            }
+          if (panel)
+            panel->SendDataToPanel(params);
         }
     }
 }

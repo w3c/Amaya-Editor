@@ -58,94 +58,94 @@
 56 Sottolineato
 57 Sbarrato
 58 Dimensione (pt)
-59 Indentazione (pt)
-60 Interlinea (pt)
-61 Interlinea
-62 Salva il documento
-63 Chiudi, non salvare
-64 Stile dei caratteri
-65 Colori
-66 Elementi
-67 Cancella
-68 Destinazione
-69 File PostScript
-70 Stampante
-71 Cerca
-72 Ignori il caso
-73 Rimpiazza con
-74 Rimpiazza
-75 Non rimpiazzare
-76 Rimpiazza su richiesta
-77 Rimpiazzamento automatico
-78 Dove cercare
-79 Prima della selezione
-80 Nella selezione
-81 Dopo la selezione
-82 L\'intero documento
-83 Non rimpiazzare
-84 Colori di default
-85 prima di chiuderlo
-86 Chiudi un documento
-87 Simboli matematici
-88 Grafica
-89 Alfabeto latino
-90 Alfabeto greco
-91 Salva
-92 Testo
-93 Grafica
-94 Simbolo
-95 Immagine
-96 XML/XTiger
-97 dopo
-98 prima
-99 intorno
-100 Includi
-101 Incolla
-102 da creare
-103 Inserisci
-104 Salto pagina
-105 Lingua dell'elemento
-106 Lingua ereditata:
-107 Non trovato
-108 Cerca in
-109 Cerca
-110 Elemento a sola lettura
-111 Nulla da rimpiazzare
-112 Caratteri standard
-113 Grafica standard
-114 Formato standard
-115 Geometria standard
-116 pt
-117 Stile delle linee
-118 Spessore delle linee
-119 Motivo di riempimento
-120 Dividi
-121 Tipo di oggetto
-122 Vai a pagina numero:
-123 Any
-124 Attributo da cercare
-125 Tipo da cercare
-126 Nature
-127 Attributo
-128 Valore
-129 Valore dell\'attributo
-130 Attributo sconosciuto
-131 Annulla
-132 Errore nella traduzione in PostScript
-133 Comando rifiutato dallo spooler "%s"
-134 Impossibile creare "%s"
-135 Soprassegnato
-136 Formato del documento
-137 Eventi
-138 Rimuovi l\'attributo
-139 Il tasto di sinistra setta il colore della selezione
-140 l tasto centrale o di destra setta il colore del cursore
-141 Encora ...
-142 Usa colori
-143 Colore
-144 Colore di sfondo
-145 Colore per il testo
-146 Scambia colori
+59 **Unindent
+60 Interlinea
+61 **Middle line spacing
+62 **Double line spacing
+63 Salva il documento
+64 Chiudi, non salvare
+65 Stile dei caratteri
+66 Colori
+67 Elementi
+68 Cancella
+69 Destinazione
+70 File PostScript
+71 Stampante
+72 Cerca
+73 Ignori il caso
+74 Rimpiazza con
+75 Rimpiazza
+76 Non rimpiazzare
+77 Rimpiazza su richiesta
+78 Rimpiazzamento automatico
+79 Dove cercare
+80 Prima della selezione
+81 Nella selezione
+82 Dopo la selezione
+83 L\'intero documento
+84 Non rimpiazzare
+85 Colori di default
+86 prima di chiuderlo
+87 Chiudi un documento
+88 Simboli matematici
+89 Grafica
+90 Alfabeto latino
+91 Alfabeto greco
+92 Salva
+93 Testo
+94 Grafica
+95 Simbolo
+96 Immagine
+97 XML/XTiger
+98 dopo
+99 prima
+100 intorno
+101 Includi
+102 Incolla
+103 da creare
+104 Inserisci
+105 Salto pagina
+106 Lingua dell'elemento
+107 Lingua ereditata:
+108 Non trovato
+109 Cerca in
+110 Cerca
+111 Elemento a sola lettura
+112 Nulla da rimpiazzare
+113 Caratteri standard
+114 Grafica standard
+115 Formato standard
+116 Geometria standard
+117 pt
+118 Stile delle linee
+119 Spessore delle linee
+120 Motivo di riempimento
+121 Dividi
+122 Tipo di oggetto
+123 Vai a pagina numero:
+124 Any
+125 Attributo da cercare
+126 Tipo da cercare
+127 Nature
+128 Attributo
+129 Valore
+130 Valore dell\'attributo
+131 Attributo sconosciuto
+132 Annulla
+133 Errore nella traduzione in PostScript
+134 Comando rifiutato dallo spooler "%s"
+135 Impossibile creare "%s"
+136 Soprassegnato
+137 Formato del documento
+138 Eventi
+139 Rimuovi l\'attributo
+140 Il tasto di sinistra setta il colore della selezione
+141 l tasto centrale o di destra setta il colore del cursore
+142 Encora ...
+143 Usa colori
+144 Colore
+145 Colore di sfondo
+146 Colore per il testo
 147 Scegli una struttura XML generica
 148 Controlla
 149 Cerca

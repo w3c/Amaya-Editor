@@ -58,94 +58,94 @@
 56 Alleviivaa
 57 Vedä yli
 58 Kappalekoko (pt)
-59 Sisennä (pt)
-60 Riviväli (pt)
-61 Riviväli
-62 Tallenna dokumentti
-63 Sulje, älä tallenna
-64 Merkkityyli
-65 Värit
-66 XHTML
-67 Poista
-68 Tuloste
-69 PostScript tiedosto
-70 Tulostin
-71 Etsi
-72 ISOLLA = pienellä
-73 Korvaa tällä
-74 Korvaa
-75 Älä korvaa
-76 Korvaa pyynnöstä
-77 Automaattinen korvus
-78 Etsi missä
-79 Ennen valintaa
-80 Valinnan sisällä
-81 Valinnan jälkeen
-82 Koko dokumentissa
-83 Älä korvaa
-84 Oletusvärit
-85 ennen sen sulkemista
-86 Sulje dokumentti
-87 Matemaattiset symbolit
-88 Grafiikka
-89 Latinalaiset aakkoset
-90 Kreikkalaiset aakkoset
-91 Tallenna
-92 Tekstiä
-93 Grafiikkaa
-94 Symboli
-95 Kuva
-96 XML/XTiger
-97 jälkeen
-98 ennen
-99 ympärillä
-100 Sisällytä
-101 Liitä
-102 luoda
-103 Sisällytä
-104 Katkaise sivu
-105 Elementin kieli
-106 Peritty kieli:
-107 Ei löydy
-108 Etsi tässä
-109 Etsi
-110 Vain lukuelementti
-111 Ei korvattavaa
-112 Vakiomerkit
-113 Vakiografiikka
-114 Vakiomuoto
-115 Vakiogeometria
-116 pt
-117 Viivatyyli
-118 Viivapaksuus
-119 Täyttökuvio
-120 Jaa
-121 Elementtityyppi
-122 Siirry sivulle:
-123 Mikä tahansa
-124 Määre etsintään
-125 Tyyppi etsintään
-126 Luonteet
-127 Määreen
-128 Arvo
-129 Määreen arvo
-130 Tuntematon määre
-131 Peruuta
-132 Virhe PostScript käännöksessä
-133 Kirjoitinajuri hylkäsi komennon "%s"
-134 Ei voi luoda "%s"
-135 Yliviivaa
-136 Dokumentin muoto
-137 Tapahtumat
-138 Poista määritys
-139 Hiiren vasen näppäin asettaa valintavärin
-140 Hiiren keskimmäinen tai oikea näppäin asettaa caret värin
-141 Lisää ...
-142 Hae
-143 Väri
-144 **Background color
-145 **Text color
-146 **Switch colors
+59 **Unindent
+60 Riviväli
+61 **Middle line spacing
+62 **Double line spacing
+63 Tallenna dokumentti
+64 Sulje, älä tallenna
+65 Merkkityyli
+66 Värit
+67 XHTML
+68 Poista
+69 Tuloste
+70 PostScript tiedosto
+71 Tulostin
+72 Etsi
+73 ISOLLA = pienellä
+74 Korvaa tällä
+75 Korvaa
+76 Älä korvaa
+77 Korvaa pyynnöstä
+78 Automaattinen korvus
+79 Etsi missä
+80 Ennen valintaa
+81 Valinnan sisällä
+82 Valinnan jälkeen
+83 Koko dokumentissa
+84 Älä korvaa
+85 Oletusvärit
+86 ennen sen sulkemista
+87 Sulje dokumentti
+88 Matemaattiset symbolit
+89 Grafiikka
+90 Latinalaiset aakkoset
+91 Kreikkalaiset aakkoset
+92 Tallenna
+93 Tekstiä
+94 Grafiikkaa
+95 Symboli
+96 Kuva
+97 XML/XTiger
+98 jälkeen
+99 ennen
+100 ympärillä
+101 Sisällytä
+102 Liitä
+103 luoda
+104 Sisällytä
+105 Katkaise sivu
+106 Elementin kieli
+107 Peritty kieli:
+108 Ei löydy
+109 Etsi tässä
+110 Etsi
+111 Vain lukuelementti
+112 Ei korvattavaa
+113 Vakiomerkit
+114 Vakiografiikka
+115 Vakiomuoto
+116 Vakiogeometria
+117 pt
+118 Viivatyyli
+119 Viivapaksuus
+120 Täyttökuvio
+121 Jaa
+122 Elementtityyppi
+123 Siirry sivulle:
+124 Mikä tahansa
+125 Määre etsintään
+126 Tyyppi etsintään
+127 Luonteet
+128 Määreen
+129 Arvo
+130 Määreen arvo
+131 Tuntematon määre
+132 Peruuta
+133 Virhe PostScript käännöksessä
+134 Kirjoitinajuri hylkäsi komennon "%s"
+135 Ei voi luoda "%s"
+136 Yliviivaa
+137 Dokumentin muoto
+138 Tapahtumat
+139 Poista määritys
+140 Hiiren vasen näppäin asettaa valintavärin
+141 Hiiren keskimmäinen tai oikea näppäin asettaa caret värin
+142 Lisää ...
+143 Hae
+144 Väri
+145 **Background color
+146 **Text color
 147 **Select a generic XML structure
 148 Tarkistetaan
 149 Etsi/Hylkää
@@ -173,8 +173,8 @@
 171 **Tools
 172 **Mandatory attribute, it can't be removed
 173 **Refresh
-174 **Left
-175 **Right
+174 **Align left
+175 **Align right
 176 **Center
 177 **Justify
 178 Käytä luokkaa

@@ -58,94 +58,94 @@
 56 Podčiarknuté
 57 Prečiarknuté
 58 Veľkosť písmen (v bodoch)
-59 Osadenie (v bodoch)
-60 Riadkovanie (v bodoch)
-61 Riadkovanie
-62 Uložiť dokument
-63 Zatvoriť bez uloženia
-64 Štýl znakov
-65 Farby
-66 XHTML
-67 Odstrániť
-68 Výstup
-69 PostScriptový súbor
-70 Tlačiareň
-71 Hľadať výraz
-72 Nerozlišovať veľkosť písmen
-73 Nahradiť výrazom
-74 Nahradiť
-75 Nič nenahrádzať
-76 Potrvrdzovať nahradenie
-77 Automaticky nahradiť
-78 Kde hľadať
-79 Pred výberom
-80 Vo výbere
-81 Za výberom
-82 V celom dokumente
-83 Nenahrádzať
-84 Pôvodné farby
-85 pred zatvorením
-86 Zatvoriť dokumetn
-87 Matematické symboly
-88 Grafika
-89 Latinská abeceda
-90 Grécka abeceda
-91 Uložiť
-92 Text
-93 Grafika
-94 Symbol
-95 Obrázok
-96 XML/XTiger
-97 za
-98 pred
-99 okolo
-100 Zahrnúť
-101 Prilepiť
-102 vytvoriť
-103 Vložiť
-104 Koniec strany
-105 Jazyk prvku
-106 Prevzatý jazyk:
-107 Nenájdené
-108 Hľadať v
-109 Hľadať
-110 Prvok iba na čítanie
-111 Nie je čo nahrádzať
-112 Štandardné znaky
-113 Štandardná grafika
-114 Štandardný formát
-115 Štandardné rozmery
-116 body
-117 Štýl riadkov
-118 Šírka riadka
-119 Vzor výplne
-120 Rozdeliť
-121 Typ objektu
-122 Prejsť na stranu číslo:
-123 Ľubovoľný
-124 Hľadať atribút
-125 Hľadať typ
-126 Prirodzený
-127 Atríbútu
-128 Hodnota
-129 Hodnota atríbútu
-130 Neznámy atribút
-131 Zrušiť
-132 Chyba v PostScriptovom preklade
-133 Príkaz odmietnutý tlačiarňou "%s"
-134 Nedá sa vytvoriť "%s"
-135 Pruh nad
-136 Formát dokumentu
-137 Udalosti
-138 Odstániť atribút
-139 Ľavým tlačidlom nastavíte farbu výberu
-140 Stredným alebo pravým tlačidlom nastavíte farbu bez označenia
-141 Ďalej ...
-142 Získať
-143 Farba
-144 Farba pozadia
-145 Farba popredia
-146 Zmeniť farby
+59 **Unindent
+60 Riadkovanie
+61 **Middle line spacing
+62 **Double line spacing
+63 Uložiť dokument
+64 Zatvoriť bez uloženia
+65 Štýl znakov
+66 Farby
+67 XHTML
+68 Odstrániť
+69 Výstup
+70 PostScriptový súbor
+71 Tlačiareň
+72 Hľadať výraz
+73 Nerozlišovať veľkosť písmen
+74 Nahradiť výrazom
+75 Nahradiť
+76 Nič nenahrádzať
+77 Potrvrdzovať nahradenie
+78 Automaticky nahradiť
+79 Kde hľadať
+80 Pred výberom
+81 Vo výbere
+82 Za výberom
+83 V celom dokumente
+84 Nenahrádzať
+85 Pôvodné farby
+86 pred zatvorením
+87 Zatvoriť dokumetn
+88 Matematické symboly
+89 Grafika
+90 Latinská abeceda
+91 Grécka abeceda
+92 Uložiť
+93 Text
+94 Grafika
+95 Symbol
+96 Obrázok
+97 XML/XTiger
+98 za
+99 pred
+100 okolo
+101 Zahrnúť
+102 Prilepiť
+103 vytvoriť
+104 Vložiť
+105 Koniec strany
+106 Jazyk prvku
+107 Prevzatý jazyk:
+108 Nenájdené
+109 Hľadať v
+110 Hľadať
+111 Prvok iba na čítanie
+112 Nie je čo nahrádzať
+113 Štandardné znaky
+114 Štandardná grafika
+115 Štandardný formát
+116 Štandardné rozmery
+117 body
+118 Štýl riadkov
+119 Šírka riadka
+120 Vzor výplne
+121 Rozdeliť
+122 Typ objektu
+123 Prejsť na stranu číslo:
+124 Ľubovoľný
+125 Hľadať atribút
+126 Hľadať typ
+127 Prirodzený
+128 Atríbútu
+129 Hodnota
+130 Hodnota atríbútu
+131 Neznámy atribút
+132 Zrušiť
+133 Chyba v PostScriptovom preklade
+134 Príkaz odmietnutý tlačiarňou "%s"
+135 Nedá sa vytvoriť "%s"
+136 Pruh nad
+137 Formát dokumentu
+138 Udalosti
+139 Odstániť atribút
+140 Ľavým tlačidlom nastavíte farbu výberu
+141 Stredným alebo pravým tlačidlom nastavíte farbu bez označenia
+142 Ďalej ...
+143 Získať
+144 Farba
+145 Farba pozadia
+146 Farba popredia
 147 Vybrať základnú štruktúru XML
 148 Kontrola
 149 Hľadať/Preskočiť

@@ -176,280 +176,279 @@
 174 Uložiť súčasné rozmery
 175 Obnoviť základné rozmery
 176 Zmeny sa prejavia až po ukončení a opätovnom spustení programu.
-177 Farby
-178 Farba textu dokumentu
-179 Farba pozadia dokumentu
-180 Farba textu menu
-181 Farba pozadia menu
-182 Nedá sa spustiť Cache. Asi ste zadali neplatný priečinok pre dočasné súbory Cache alebo ho uzamkol iný používateľ.
-183 Zoznam uprednostňovaných jazykov napr.: "sk, cs, en":
-184 Táto zmena sa neprejaví pokým program Amaya nebude reštartovaný
-185 Povoliť automatické presmerovanie metódy PUT pre tieto domény
-186 Ignorovať pravidlá CSS
-187 Zmeniť typ na
-188 (každý záznam oddeľte medzerou)
-189 Bez proxy z týchto domén
-190 Iba proxy z týchto domén
-191 Meno znaku
-192 Užívateľský priečinok
-193 Dočasný priečinok
-194 Použiť paletu
-195 Rozlišovanie podľa jazyka
-196 Komenmtáre
-197 Vložiť prepojenie
-198 Používateľ komentýrov a pznámok
-199 Vzdialený server komentárov
-200 Servery komentárov
-201 Automaticky nahrať lokálne komentáre
-202 Automaticky nahrať vzdialené komentáre
-203 Zrušiť automatické nahrávanie vzdialených komentárov pri každom spustení (pre prácu offline)
-204 Farba vyznačeného textu
-205 Pozadie vyznačeného textu
-206 Orientácia
-207 Na výšku
-208 Na šírku
-209 Ponechať viacnásobné medzery
-210 Chyba(y) v zdrojovom kóde
-211 Kritická chyba - Opravte zdrojový kód aby bolo možné pokračovať
-212 Skúste zvoliť 'Súbor/Načítať s kódovaním'
-213 Neplatný znak
-214 Profil dokumentu:
-215 Nájdené chyby - pozri Súbor > Skontrolovať chyby
-216 Kódovanie tohto dokumentu nie je podporované programom Amaya
-217 Úpravou a uložením tohto dokumentu zmeníte jeho typ
-218 Nedostupné
-219 Nalistovať
-220 Prehliadač súborov
-221 Výber
-222 Menu filtra lokálnych komentárov
-223 Zobraziť chyby
-224 Skryť
-225 Zobraziť všetko
-226 Skryť všetko
-227 * znamená skryté, - znamená čiastočne skryté
-228 Možnosti filtra
-229 Podľa autora
-230 Podľa typu
-231 Podľa servera
-232 Klávesa pre prístup k menu
-233 Ignorovať
-234 **Tool panel bar alignment: 
-235 **left
-236 **right
-237 **free
-238 ** (must restart app)
-239 Prvok štýl(style)
-240 Nedá sa vytvoriť XPointer
-241 Nie je možné napojiť začiatok XPointera na vnútorne pridaný prvok
-242 Nie je možné napojiť koniec XPointera na vnútorne pridaný prvok
-243 Nedokážem sa zistiť kam bol presunutý komentár
-244 Nedokážem presunúť komentár do iného dokumentu
-245 Nebol vytvorený žiadny uživateľský komentár. Otvorte Komentáre/Konfigurácia menu.
-246 Nedá sa vytvoriť Xpointer pre kometár
-247 Vytvoriť nový kometár
-248 Odoslanie komentára zlyhalo
-249 Zmazanie kometára zlyhalo
-250 Komentár odstránený!
-251 Načítanie indexov komentára zlyhalo
-252 Chyba
-253 Vybrať znakovú sadu
-254 Vybrať MIME typ
-255 Zmeniť znakovú sadu
-256 Zmeniť MIME typ
-257 Zmeniť
-258 Tento typ dokumentu nepodporuje znakové sady
-259 Pre funkčnosť tejto voľby musí byť cieľ typu HTTP URL
-260 Chyba: neplatný MIME typ
-261 Neznámy
-262 Štýly sú ignorované - pozri Súbor > Skontrolovať chyby
-263 Tento dokument je už načítaný v inom okne
-264 Uložením tejto inštancie povedie k strate novších znien v dokumente
-265 Pridaním alebo zmenou prvku doctype budú odstránené niektoré prvky a atribúty
-266 Prosím potvrďte operáciu
-267 Použiť MIME typ application/xhtml+xml pre XHTML dokumenty
-268 Znaková sada pre nový dokument
-269 Uzamknutie úspešné!
-270 Uzamknutie neúspešné!
-271 Zamykanie %s...
-272 Dokument %s je uzamknutý!
-273 Dokument %s je uzapknutý %s (čas uzamknutia %s)
-274 Prepísať informácie o uzamknutí?
-275 Kopírovať informácie o uzamknutí?
-276 Pokúšam sa najprv odomknúť dokument...
-277 Odomknutie úspešné!
-278 Odomknutie neúspešné!
-279 Odomkýnanie %s...
-280 Dokument %s je odomknutý!
-281 Odomknúť dokument?
-282 Vlastnosti dokumentu
-283 Vlastnosti dokumentu nie sú prístupné
-284 Vlastnosti dokumentu sú dočasne neprístupné. Skúste neskôr...
-285 Hľadám vlastnosti dokumentu...
-286 Prepáčte, tento typ URL adries %s nepodporuje funkciu WebDAV
-287 Nedá sa uložiť informácia o uzamknutí do lokálneho zdroja
-288 Nedá sa odstrániť informácia o uzamknutí z lokálneho zdroja
-289 Prepáčte, táto operácia nie je dovolená pre %s
-290 Požiadavka odmietnutá! Príčina: zlá nadväznosť
-291 Požiadavka odmietnutá! Príčina: %s
-292 Skúsiť znova?
-293 WebDAV
-294 Používateské osobné príručky (URL)
-295 Používateľské WebDAV zoznamy zdrojov (URL URL)
-296 Hĺbka uzamknutia
-297 neobmedzená
-298 Trvanie uzamknutia
-299 Neobmedzené
-300 Obmedzené (v sekundách)
-301 Typ uzamknutia
-302 výhradné
-303 zdielané
-304 Upozornenia
-305 Základné upozornenia
-306 Upozorňovať pri skončení
-307 Animácia
-308 Knižnica SVG
-309 Kopírovať voľbu
-310 Kopírovať výber
-311 Odkázať na výber
-312 Pridať nový model do knižnice
-313 URL Nového SVG súboru ...
-314 Názov knižnice
-315 URL Knižnice
-316 Vytvoriť knižnicu
-317 Nalistovať knižnicu
-318 Vytvoriť alebo vyhľadať knižnicu
-319 Výber neobsahuje prvky SVG. Urobte nový výber
-320 Názov knižnive je povinný
-321 Presuňte pozíciu kurzora na miesto vdokumente, kde sa má vytvoriť nová kľučová pozícia...
-322 Kľučová pozícia definovaná. Ťahaním posuvníka nastavte dĺžku trvania animácie...
-323 Vyberte počiatočnú farbu prvku...
-324 Počiatočná farba definovaná. Ťahaním posuvníka nastavte dĺžku trvania animácie...
-325 Vyberte koncovú farbu...
-326 Animacia definovaná.
-327 Animovaný atribút
-328 Prvok bez ID
-329 Pridať ID
-330 Odstrániť ID
-331 Pridať/odstrániť ID
-332 Aplikovať operáciu
-333 Zadajte meno prvku
-334 Aplikovať CSS
-335 Súčasný typ obrazovky
-336 Nová téma
-337 Vlastnosti záložky
-338 Vlastnosti témy
-339 Hierarchia tém:
-340 Názov:
-341 Zmeny:
-342 Autor:
-343 Vytvorené:
-344 Posledná zmena:
-345 Popis:
-346 Vyberte prvok
-347 Všetky CSS pravidlá
-348 CSS pravidlá aplikované na <%s> prvok\n
-349 Modré riadky sú prepojenia aktivovateľné dvojitým (alebo jednoduchým) kliknutím\n
-350 Načítať objekty (object, embed, iframe)
-351 Pre tento prvok nie sú definované CSS pravidlá
-352 Najskôr vyberte miesto pre aplikovanie voľby
-353 Informácie o dokumente
-354 Typ dokumentu
-355 MIME typ
-356 Znaková sada
-357 Dĺžka dokumentu
-358 Umiestnenie obsahu
-359 Možnosti
-360 Znak (&xxx;)
-361 Vytvoriť objekt
-362 Priečinok
-363 Súbor
-364 Nahradiť súčasný obsah
-365 V novom okne
-366 Anti-aliasing
-367 Použiť ISO formát pre dátum
-368 Nové umiestnenie dokumentu
-369 Odkazy otvárať
-370 Varovať pri zatváraní viacerých kariet
-371 Maximálny počet zapamätaných url adries
-372 Vymazať zoznam url
-373 Zobrazovať všetky prepojenia
-374 Pevná dĺžka riadkov (0 = predvolená hodnota)
-375 Šablóna
-376 Uložiť dokument ako...
-377 Šablóna nebola nájdená
-378 Zobraziť bloky šablón
-379 Zatvoriť diálóg pos stlačení tlačidla Aplikuj
-380 Nie je dovolené
-381 Chránený prvok
-382 Výber nemôže byť krížený prvkom tohto typu
-383 Nebol nájdený nadpis
-384 Napriek tomu uložiť
-385 Neviem lokalizovať hostiteľa
-386 Dokument sa zmenil (412)
-387 Konflikt so súčasným stavom zdroja
-388 Neplatný výber
-389 Neznámy prvok
-390 Počet aktualizovaných prvkov: %d 
-391 Je potrebné zadať názov
-392 Šablóny
-393 Počet výskytov
-394 Maximálny počet dosiahnutých výskytov
-395 Manimálny počet dosiahnutých výskytov
-396 Kontrolovať duplicitné ID
-397 Pridať XSL štýly pre prvky jazyka MathML
-398 Vložiť operátor
-399 Vyberte spôsob akým budú operátory zobrazené
-400 Vložiť integrál
-401 Vyberte typ integrálu
-402 Atribúty ohraničenia
-403 Vyberte otvoriť, oddelovače a ukončenie symbolov
-404 Počet sybolov operátorov
-405 Počet koordinátov
-406 Dĺžka N-tuplov
-407 Počet prvkov
-408 Počet premenných
-409 Stupeň voľnosti
-410 Počet stupňov voľnosti premenných %d
-411 Zložený dokument
-412 Skopírovať zdroje (štýly a skripty)
-413 Umiestnenie zdrojov
-414 Umiestnenie obrázkov
-415 Dokument
-416 Obrázky, štýly a skripty
-417 Mail
-418 Spoločné parametre pre odosielanie mailov:
-419 Adresa SMTP servera:
-420 Port:
-421 (štandardný je 25)
-422 Adresa odosielateľa (Od koho)
-423 Komu:
-424 Odoslať mailom
-425 Predmet :
-426 Odoslať ako:
-427 Text správy
-428 Príloha
-429 Neodosielať
-430 Odoslať
-431 Adresa servera a port musia byť nastavené v nastaveniach.
-432 Správa:
-433 Alternatívna textová správa:
-434 Server je nedostupný alebo neodpovedá
-435 Server prerušil spojenie
-436 Adredsa odosielateľa má nesprávny tvar
-437 Adresa príjemcu má nesprávny tvar
-438 Obsah mail má nesprávny tvar
-439 Správa nebola odoslaná
-440 Správa bola odoslaná
-441 Heslá
-442 Chcete aby si program Amaya zapamätal toto heslo
-443 **Remember passwords for sites
-444 Umiestnenia
-445 Odstrániť všetky
-446 **An error occured during the building of the javascript/DOM objects
-447 **A script is still running but will be aborted as soon as possible. Please try later.
-448 **Javascript/DOM can not be enabled in this view.
-449 **Enter a javascript command:
-450 **The command returned the value: %s
-451 **The command returned no value
-452 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-453 Nový
+177 Farba textu dokumentu
+178 Farba pozadia dokumentu
+179 Farba textu menu
+180 Farba pozadia menu
+181 Nedá sa spustiť Cache. Asi ste zadali neplatný priečinok pre dočasné súbory Cache alebo ho uzamkol iný používateľ.
+182 Zoznam uprednostňovaných jazykov napr.: "sk, cs, en":
+183 Táto zmena sa neprejaví pokým program Amaya nebude reštartovaný
+184 Povoliť automatické presmerovanie metódy PUT pre tieto domény
+185 Ignorovať pravidlá CSS
+186 Zmeniť typ na
+187 (každý záznam oddeľte medzerou)
+188 Bez proxy z týchto domén
+189 Iba proxy z týchto domén
+190 Meno znaku
+191 Užívateľský priečinok
+192 Dočasný priečinok
+193 Použiť paletu
+194 Rozlišovanie podľa jazyka
+195 Komenmtáre
+196 Vložiť prepojenie
+197 Používateľ komentýrov a pznámok
+198 Vzdialený server komentárov
+199 Servery komentárov
+200 Automaticky nahrať lokálne komentáre
+201 Automaticky nahrať vzdialené komentáre
+202 Zrušiť automatické nahrávanie vzdialených komentárov pri každom spustení (pre prácu offline)
+203 Farba vyznačeného textu
+204 Pozadie vyznačeného textu
+205 Orientácia
+206 Na výšku
+207 Na šírku
+208 Ponechať viacnásobné medzery
+209 Chyba(y) v zdrojovom kóde
+210 Kritická chyba - Opravte zdrojový kód aby bolo možné pokračovať
+211 Skúste zvoliť 'Súbor/Načítať s kódovaním'
+212 Neplatný znak
+213 Profil dokumentu:
+214 Nájdené chyby - pozri Súbor > Skontrolovať chyby
+215 Kódovanie tohto dokumentu nie je podporované programom Amaya
+216 Úpravou a uložením tohto dokumentu zmeníte jeho typ
+217 Nedostupné
+218 Nalistovať
+219 Prehliadač súborov
+220 Výber
+221 Menu filtra lokálnych komentárov
+222 Zobraziť chyby
+223 Skryť
+224 Zobraziť všetko
+225 Skryť všetko
+226 * znamená skryté, - znamená čiastočne skryté
+227 Možnosti filtra
+228 Podľa autora
+229 Podľa typu
+230 Podľa servera
+231 Klávesa pre prístup k menu
+232 Ignorovať
+233 **Tool panel bar alignment: 
+234 **left
+235 **right
+236 **free
+237 ** (must restart app)
+238 Prvok štýl(style)
+239 Nedá sa vytvoriť XPointer
+240 Nie je možné napojiť začiatok XPointera na vnútorne pridaný prvok
+241 Nie je možné napojiť koniec XPointera na vnútorne pridaný prvok
+242 Nedokážem sa zistiť kam bol presunutý komentár
+243 Nedokážem presunúť komentár do iného dokumentu
+244 Nebol vytvorený žiadny uživateľský komentár. Otvorte Komentáre/Konfigurácia menu.
+245 Nedá sa vytvoriť Xpointer pre kometár
+246 Vytvoriť nový kometár
+247 Odoslanie komentára zlyhalo
+248 Zmazanie kometára zlyhalo
+249 Komentár odstránený!
+250 Načítanie indexov komentára zlyhalo
+251 Chyba
+252 Vybrať znakovú sadu
+253 Vybrať MIME typ
+254 Zmeniť znakovú sadu
+255 Zmeniť MIME typ
+256 Zmeniť
+257 Tento typ dokumentu nepodporuje znakové sady
+258 Pre funkčnosť tejto voľby musí byť cieľ typu HTTP URL
+259 Chyba: neplatný MIME typ
+260 Neznámy
+261 Štýly sú ignorované - pozri Súbor > Skontrolovať chyby
+262 Tento dokument je už načítaný v inom okne
+263 Uložením tejto inštancie povedie k strate novších znien v dokumente
+264 Pridaním alebo zmenou prvku doctype budú odstránené niektoré prvky a atribúty
+265 Prosím potvrďte operáciu
+266 Použiť MIME typ application/xhtml+xml pre XHTML dokumenty
+267 Znaková sada pre nový dokument
+268 Uzamknutie úspešné!
+269 Uzamknutie neúspešné!
+270 Zamykanie %s...
+271 Dokument %s je uzamknutý!
+272 Dokument %s je uzapknutý %s (čas uzamknutia %s)
+273 Prepísať informácie o uzamknutí?
+274 Kopírovať informácie o uzamknutí?
+275 Pokúšam sa najprv odomknúť dokument...
+276 Odomknutie úspešné!
+277 Odomknutie neúspešné!
+278 Odomkýnanie %s...
+279 Dokument %s je odomknutý!
+280 Odomknúť dokument?
+281 Vlastnosti dokumentu
+282 Vlastnosti dokumentu nie sú prístupné
+283 Vlastnosti dokumentu sú dočasne neprístupné. Skúste neskôr...
+284 Hľadám vlastnosti dokumentu...
+285 Prepáčte, tento typ URL adries %s nepodporuje funkciu WebDAV
+286 Nedá sa uložiť informácia o uzamknutí do lokálneho zdroja
+287 Nedá sa odstrániť informácia o uzamknutí z lokálneho zdroja
+288 Prepáčte, táto operácia nie je dovolená pre %s
+289 Požiadavka odmietnutá! Príčina: zlá nadväznosť
+290 Požiadavka odmietnutá! Príčina: %s
+291 Skúsiť znova?
+292 WebDAV
+293 Používateské osobné príručky (URL)
+294 Používateľské WebDAV zoznamy zdrojov (URL URL)
+295 Hĺbka uzamknutia
+296 neobmedzená
+297 Trvanie uzamknutia
+298 Neobmedzené
+299 Obmedzené (v sekundách)
+300 Typ uzamknutia
+301 výhradné
+302 zdielané
+303 Upozornenia
+304 Základné upozornenia
+305 Upozorňovať pri skončení
+306 Animácia
+307 Knižnica SVG
+308 Kopírovať voľbu
+309 Kopírovať výber
+310 Odkázať na výber
+311 Pridať nový model do knižnice
+312 URL Nového SVG súboru ...
+313 Názov knižnice
+314 URL Knižnice
+315 Vytvoriť knižnicu
+316 Nalistovať knižnicu
+317 Vytvoriť alebo vyhľadať knižnicu
+318 Výber neobsahuje prvky SVG. Urobte nový výber
+319 Názov knižnive je povinný
+320 Presuňte pozíciu kurzora na miesto vdokumente, kde sa má vytvoriť nová kľučová pozícia...
+321 Kľučová pozícia definovaná. Ťahaním posuvníka nastavte dĺžku trvania animácie...
+322 Vyberte počiatočnú farbu prvku...
+323 Počiatočná farba definovaná. Ťahaním posuvníka nastavte dĺžku trvania animácie...
+324 Vyberte koncovú farbu...
+325 Animacia definovaná.
+326 Animovaný atribút
+327 Prvok bez ID
+328 Pridať ID
+329 Odstrániť ID
+330 Pridať/odstrániť ID
+331 Aplikovať operáciu
+332 Zadajte meno prvku
+333 Aplikovať CSS
+334 Súčasný typ obrazovky
+335 Nová téma
+336 Vlastnosti záložky
+337 Vlastnosti témy
+338 Hierarchia tém:
+339 Názov:
+340 Zmeny:
+341 Autor:
+342 Vytvorené:
+343 Posledná zmena:
+344 Popis:
+345 Vyberte prvok
+346 Všetky CSS pravidlá
+347 CSS pravidlá aplikované na <%s> prvok\n
+348 Modré riadky sú prepojenia aktivovateľné dvojitým (alebo jednoduchým) kliknutím\n
+349 Načítať objekty (object, embed, iframe)
+350 Pre tento prvok nie sú definované CSS pravidlá
+351 Najskôr vyberte miesto pre aplikovanie voľby
+352 Informácie o dokumente
+353 Typ dokumentu
+354 MIME typ
+355 Znaková sada
+356 Dĺžka dokumentu
+357 Umiestnenie obsahu
+358 Možnosti
+359 Znak (&xxx;)
+360 Vytvoriť objekt
+361 Priečinok
+362 Súbor
+363 Nahradiť súčasný obsah
+364 V novom okne
+365 Anti-aliasing
+366 Použiť ISO formát pre dátum
+367 Nové umiestnenie dokumentu
+368 Odkazy otvárať
+369 Varovať pri zatváraní viacerých kariet
+370 Maximálny počet zapamätaných url adries
+371 Vymazať zoznam url
+372 Zobrazovať všetky prepojenia
+373 Pevná dĺžka riadkov (0 = predvolená hodnota)
+374 Šablóna
+375 Uložiť dokument ako...
+376 Šablóna nebola nájdená
+377 Zobraziť bloky šablón
+378 Zatvoriť diálóg pos stlačení tlačidla Aplikuj
+379 Nie je dovolené
+380 Chránený prvok
+381 Výber nemôže byť krížený prvkom tohto typu
+382 Nebol nájdený nadpis
+383 Napriek tomu uložiť
+384 Neviem lokalizovať hostiteľa
+385 Dokument sa zmenil (412)
+386 Konflikt so súčasným stavom zdroja
+387 Neplatný výber
+388 Neznámy prvok
+389 Počet aktualizovaných prvkov: %d 
+390 Je potrebné zadať názov
+391 Šablóny
+392 Počet výskytov
+393 Maximálny počet dosiahnutých výskytov
+394 Manimálny počet dosiahnutých výskytov
+395 Kontrolovať duplicitné ID
+396 Pridať XSL štýly pre prvky jazyka MathML
+397 Vložiť operátor
+398 Vyberte spôsob akým budú operátory zobrazené
+399 Vložiť integrál
+400 Vyberte typ integrálu
+401 Atribúty ohraničenia
+402 Vyberte otvoriť, oddelovače a ukončenie symbolov
+403 Počet sybolov operátorov
+404 Počet koordinátov
+405 Dĺžka N-tuplov
+406 Počet prvkov
+407 Počet premenných
+408 Stupeň voľnosti
+409 Počet stupňov voľnosti premenných %d
+410 Zložený dokument
+411 Skopírovať zdroje (štýly a skripty)
+412 Umiestnenie zdrojov
+413 Umiestnenie obrázkov
+414 Dokument
+415 Obrázky, štýly a skripty
+416 Mail
+417 Spoločné parametre pre odosielanie mailov:
+418 Adresa SMTP servera:
+419 Port:
+420 (štandardný je 25)
+421 Adresa odosielateľa (Od koho)
+422 Komu:
+423 Odoslať mailom
+424 Predmet :
+425 Odoslať ako:
+426 Text správy
+427 Príloha
+428 Neodosielať
+429 Odoslať
+430 Adresa servera a port musia byť nastavené v nastaveniach.
+431 Správa:
+432 Alternatívna textová správa:
+433 Server je nedostupný alebo neodpovedá
+434 Server prerušil spojenie
+435 Adredsa odosielateľa má nesprávny tvar
+436 Adresa príjemcu má nesprávny tvar
+437 Obsah mail má nesprávny tvar
+438 Správa nebola odoslaná
+439 Správa bola odoslaná
+440 Heslá
+441 Chcete aby si program Amaya zapamätal toto heslo
+442 **Remember passwords for sites
+443 Umiestnenia
+444 Odstrániť všetky
+445 **An error occured during the building of the javascript/DOM objects
+446 **A script is still running but will be aborted as soon as possible. Please try later.
+447 **Javascript/DOM can not be enabled in this view.
+448 **Enter a javascript command:
+449 **The command returned the value: %s
+450 **The command returned no value
+451 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+452 Nový

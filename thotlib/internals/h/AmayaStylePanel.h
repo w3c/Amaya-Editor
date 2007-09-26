@@ -25,7 +25,7 @@ public:
             const wxString& name = wxT("AmayaStyleToolPanel"), wxObject* extra=NULL);
   
   virtual wxString GetToolPanelName()const;
-  virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_XHTML;}
+  virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_STYLE;}
   virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_STYLE");}
   void OnColorPalette( wxCommandEvent& event );
   void SetColor(int color);

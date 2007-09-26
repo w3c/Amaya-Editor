@@ -240,7 +240,7 @@ extern char  *ColorName (int num);
 static HWND     ColorHwnd = NULL;
 static AM_WIN_MenuText WIN_ColorMenuText[] = 
   {
-    {AM_INIT_ALL, AM_COLOR_MENU},
+    {AM_INIT_ALL, AM_FG_SEL_COLOR},
     {IDC_TFGCOLOR, AM_DOC_FG_COLOR},
     {IDC_TBGCOLOR, AM_DOC_BG_COLOR},
     {IDC_TFGSELCOLOR, AM_FG_SEL_COLOR},
@@ -3677,7 +3677,7 @@ void         ColorConfMenu (Document document, View view)
 
   TtaNewSheet (ColorBase + ColorMenu, 
                TtaGetViewFrame (document, view),
-               TtaGetMessage (AMAYA, AM_COLOR_MENU),
+               TtaGetMessage (LIB, TMSG_COLORS),
                2, s, TRUE, 2, 'L', D_DONE);
   /* first col */
   TtaNewTextForm (ColorBase + mFgColor,

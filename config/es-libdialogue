@@ -58,94 +58,94 @@
 56 Subrayado
 57 Tachado
 58 Tamaño del cuerpo (pt)
-59 Sangría (pt):
-60 Interlineado (pt):
-61 Interlineado
-62 Guardar documento
-63 Cerrar, no guardar
-64 Estilo de carácter
-65 Colores
-66 Elementos
-67 Borrar
-68 Salida
-69 Archivo PostScript
-70 Impresora
-71 Buscar:
-72 Ignorar mayúsculas/minúsculas
-73 Reemplazar por:
-74 Reemplazar
-75 No reemplazar
-76 Solicitar confirmación
-77 Reemplazar automáticamente
-78 Dónde buscar
-79 Antes de la selección
-80 En la selección
-81 Tras la selección
-82 En todo el documento
-83 No reemplazar
-84 Colores por omisión
-85 antes de cerrarlo
-86 Cerrar un documento
-87 Símbolos matemáticos
-88 Gráficos
-89 Alfabeto latino
-90 Alfabeto griego
-91 Guardar
-92 Texto
-93 Gráfico
-94 Símbolo
-95 Imagen
-96 XML/XTiger
-97 después
-98 antes
-99 alrededor
-100 Incluir
-101 Pegar
-102 para crear
-103 Insertar
-104 Salto de página
-105 Idioma del elemento
-106 Idioma heredado:
-107 No encontrado
-108 Buscar en
-109 Buscar
-110 Elemento de sólo lectura
-111 Nada que sustituir
-112 Caracteres estándar
-113 Gráficos estándar
-114 Formato estándar
-115 Geometría estándar
-116 pt
-117 Estilo de línea
-118 Grosor de línea
-119 Patrón de relleno
-120 Dividir
-121 Tipo de objeto
-122 Ir a página número:
-123 Cualquiera
-124 Atributo a buscar
-125 Tipo a buscar
-126 Natures
-127 Atributo
-128 Valores
-129 Valores de atributo
-130 Atributo desconocido
-131 Cancelar
-132 Error en traducción PostScript
-133 Orden rechazada por el spooler "%s"
-134 No puedo crear "%s"
-135 Suprarayado
-136 Formato de documento
-137 Eventos
-138 Eliminar atributo
-139 El botón izquierdo fija el color del texto de la selección
-140 El botón derecho o el central fijan el color del fondo de la selección
-141 Más ...
-142 Obtener
-143 Color
-144 Color del fondo
-145 Color del texto
-146 Intercambiar colores
+59 **Unindent
+60 Interlineado
+61 **Middle line spacing
+62 **Double line spacing
+63 Guardar documento
+64 Cerrar, no guardar
+65 Estilo de carácter
+66 Colores
+67 Elementos
+68 Borrar
+69 Salida
+70 Archivo PostScript
+71 Impresora
+72 Buscar:
+73 Ignorar mayúsculas/minúsculas
+74 Reemplazar por:
+75 Reemplazar
+76 No reemplazar
+77 Solicitar confirmación
+78 Reemplazar automáticamente
+79 Dónde buscar
+80 Antes de la selección
+81 En la selección
+82 Tras la selección
+83 En todo el documento
+84 No reemplazar
+85 Colores por omisión
+86 antes de cerrarlo
+87 Cerrar un documento
+88 Símbolos matemáticos
+89 Gráficos
+90 Alfabeto latino
+91 Alfabeto griego
+92 Guardar
+93 Texto
+94 Gráfico
+95 Símbolo
+96 Imagen
+97 XML/XTiger
+98 después
+99 antes
+100 alrededor
+101 Incluir
+102 Pegar
+103 para crear
+104 Insertar
+105 Salto de página
+106 Idioma del elemento
+107 Idioma heredado:
+108 No encontrado
+109 Buscar en
+110 Buscar
+111 Elemento de sólo lectura
+112 Nada que sustituir
+113 Caracteres estándar
+114 Gráficos estándar
+115 Formato estándar
+116 Geometría estándar
+117 pt
+118 Estilo de línea
+119 Grosor de línea
+120 Patrón de relleno
+121 Dividir
+122 Tipo de objeto
+123 Ir a página número:
+124 Cualquiera
+125 Atributo a buscar
+126 Tipo a buscar
+127 Natures
+128 Atributo
+129 Valores
+130 Valores de atributo
+131 Atributo desconocido
+132 Cancelar
+133 Error en traducción PostScript
+134 Orden rechazada por el spooler "%s"
+135 No puedo crear "%s"
+136 Suprarayado
+137 Formato de documento
+138 Eventos
+139 Eliminar atributo
+140 El botón izquierdo fija el color del texto de la selección
+141 El botón derecho o el central fijan el color del fondo de la selección
+142 Más ...
+143 Obtener
+144 Color
+145 Color del fondo
+146 Color del texto
 147 Seleccione una estructura genérica
 148 Comprobar
 149 Buscar/Saltar

@@ -58,94 +58,94 @@
 56 Sublinhado
 57 Cortado (cross out)
 58 Tamanho do corpo (pt)
-59 Indentação (pt)
-60 Espaçamento entre linhas (pt)
-61 Espaçamento entre linhas
-62 Salvar documento
-63 Fechar sem salvar
-64 Estilo de carácter
-65 Cores
-66 XHTML
-67 Suprimir
-68 Destino (Output)
-69 Arquivo PostScript
-70 Impressora
-71 Buscar
-72 Ignore o caso
-73 Substituir por
-74 Substituir
-75 Não substituir
-76 Substituir sob demanda
-77 Substituição Automática
-78 Onde buscar
-79 Antes da seleção
-80 Dentro da seleção
-81 Depois da seleção
-82 No documento todo
-83 Não substituir
-84 Cores padrão
-85 antes de fechá-lo
-86 Fechar um documento
-87 Símbolos matemáticos
-88 Gráficos
-89 Alfabeto Latino
-90 Alfabeto Grego
-91 Salvar
-92 Texto
-93 Gráfico
-94 Símbolo
-95 Imagem
-96 XML/XTiger
-97 depois
-98 antes
-99 em torno de
-100 Incluir
-101 Colar
-102 criar
-103 Inserir
-104 Quebra de página
-105 Idioma do elemento
-106 Idioma herdado:
-107 Não encontrado
-108 Buscar em
-109 Buscar
-110 elemento somente de leitura
-111 Nada a substituir
-112 Caracteres padrão
-113 Gráficos padrão
-114 Formato padrão
-115 Geometria padrão
-116 pt
-117 Estilo de linha
-118 espessura da linha
-119 Padrão de preenchimento
-120 Dividir
-121 Tipo de objeto
-122 Ir à página número:
-123 Qualquer
-124 Atributo a buscar
-125 Tipo a buscar
-126 Naturezas
-127 Atributo
-128 Valor
-129 Valor do atributo
-130 Atributo desconhecido
-131 Cancelar
-132 Erro em tradução PostScript
-133 Comando recusado pelo spooler "%s"
-134 Não é possível criar "%s"
-135 Sobrelinhado (Overline)
-136 Formato de documento
-137 Eventos
-138 Remover atributo
-139 Botão esquerdo fixa a cor da seleção
-140 Botão do meio ou da direita fixa a cor do cursor
-141 Mais ...
-142 Comece
-143 Cor
-144 **Background color
-145 **Text color
-146 **Switch colors
+59 **Unindent
+60 Espaçamento entre linhas
+61 **Middle line spacing
+62 **Double line spacing
+63 Salvar documento
+64 Fechar sem salvar
+65 Estilo de carácter
+66 Cores
+67 XHTML
+68 Suprimir
+69 Destino (Output)
+70 Arquivo PostScript
+71 Impressora
+72 Buscar
+73 Ignore o caso
+74 Substituir por
+75 Substituir
+76 Não substituir
+77 Substituir sob demanda
+78 Substituição Automática
+79 Onde buscar
+80 Antes da seleção
+81 Dentro da seleção
+82 Depois da seleção
+83 No documento todo
+84 Não substituir
+85 Cores padrão
+86 antes de fechá-lo
+87 Fechar um documento
+88 Símbolos matemáticos
+89 Gráficos
+90 Alfabeto Latino
+91 Alfabeto Grego
+92 Salvar
+93 Texto
+94 Gráfico
+95 Símbolo
+96 Imagem
+97 XML/XTiger
+98 depois
+99 antes
+100 em torno de
+101 Incluir
+102 Colar
+103 criar
+104 Inserir
+105 Quebra de página
+106 Idioma do elemento
+107 Idioma herdado:
+108 Não encontrado
+109 Buscar em
+110 Buscar
+111 elemento somente de leitura
+112 Nada a substituir
+113 Caracteres padrão
+114 Gráficos padrão
+115 Formato padrão
+116 Geometria padrão
+117 pt
+118 Estilo de linha
+119 espessura da linha
+120 Padrão de preenchimento
+121 Dividir
+122 Tipo de objeto
+123 Ir à página número:
+124 Qualquer
+125 Atributo a buscar
+126 Tipo a buscar
+127 Naturezas
+128 Atributo
+129 Valor
+130 Valor do atributo
+131 Atributo desconhecido
+132 Cancelar
+133 Erro em tradução PostScript
+134 Comando recusado pelo spooler "%s"
+135 Não é possível criar "%s"
+136 Sobrelinhado (Overline)
+137 Formato de documento
+138 Eventos
+139 Remover atributo
+140 Botão esquerdo fixa a cor da seleção
+141 Botão do meio ou da direita fixa a cor do cursor
+142 Mais ...
+143 Comece
+144 Cor
+145 **Background color
+146 **Text color
 147 **Select a generic XML structure
 148 Verificação
 149 Buscar/Pular
@@ -173,8 +173,8 @@
 171 **Tools
 172 **Mandatory attribute, it can't be removed
 173 **Refresh
-174 **Left
-175 **Right
+174 **Align left
+175 **Align right
 176 **Center
 177 **Justify
 178 Applicar classe

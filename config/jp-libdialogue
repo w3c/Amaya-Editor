@@ -58,94 +58,94 @@
 56 **Underline
 57 **Cross out
 58 **Body size (pt)
-59 **Indent (pt)
-60 **Line spacing (pt)
-61 **Line spacing
-62 **Save document
-63 **Close, don't save
-64 **Character style
-65 **Colors
-66 **Elements
-67 **Delete
-68 **Output
-69 **PostScript file
-70 **Printer
-71 **Search for
-72 **Ignore case
-73 **Replace by
-74 **Replace
-75 **No replace
-76 **Replace on request
-77 **Automatic replace
-78 **Search where
-79 **Before selection
-80 **Within selection
-81 **After selection
-82 **In the whole document
-83 **Do not replace
-84 **Default colors
-85 **before closing it
-86 **Close a document
-87 **Math symbols
-88 **Graphics
-89 **Latin alphabet
-90 **Greek alphabet
-91 **Save
-92 **Text
-93 **Graphic
-94 **Symbol
-95 **Image
-96 **XML/XTiger
-97 **after
-98 **before
-99 **around
-100 **Include
-101 **Paste
-102 **to create
-103 **Insert
-104 **Page break
-105 **Language of element
-106 **Inherited language:
-107 **Not found
-108 **Search in
-109 **Search
-110 **Read only element
-111 **Nothing to replace
-112 **Standard characters
-113 **Standard graphics
-114 **Standard format
-115 **Standard geometry
-116 **pt
-117 **Line style
-118 **Line weight
-119 **Fill pattern
-120 **Split
-121 **Object type
-122 **Goto page number:
-123 **Any
-124 **Attribute to search
-125 **Type to search
-126 **Natures
-127 **Attribute
-128 **Value
-129 **Attribute value
-130 **Unknown attribute
-131 **Cancel
-132 **Error in PostScript translation
-133 **Command refused by the spooler "%s"
-134 **Cannot create "%s"
-135 **Overline
-136 **Document format
-137 **Events
-138 **Remove attribute
-139 **Left button sets the selection color
-140 **Middle or Right button sets the caret color
-141 **More ...
-142 **Get
-143 **Color
-144 **Background color
-145 **Text color
-146 **Switch colors
+59 **Unindent
+60 **Single ine spacing
+61 **Middle line spacing
+62 **Double line spacing
+63 **Save document
+64 **Close, don't save
+65 **Character style
+66 **Colors
+67 **Elements
+68 **Delete
+69 **Output
+70 **PostScript file
+71 **Printer
+72 **Search for
+73 **Ignore case
+74 **Replace by
+75 **Replace
+76 **No replace
+77 **Replace on request
+78 **Automatic replace
+79 **Search where
+80 **Before selection
+81 **Within selection
+82 **After selection
+83 **In the whole document
+84 **Do not replace
+85 **Default colors
+86 **before closing it
+87 **Close a document
+88 **Math symbols
+89 **Graphics
+90 **Latin alphabet
+91 **Greek alphabet
+92 **Save
+93 **Text
+94 **Graphic
+95 **Symbol
+96 **Image
+97 **XML/XTiger
+98 **after
+99 **before
+100 **around
+101 **Include
+102 **Paste
+103 **to create
+104 **Insert
+105 **Page break
+106 **Language of element
+107 **Inherited language:
+108 **Not found
+109 **Search in
+110 **Search
+111 **Read only element
+112 **Nothing to replace
+113 **Standard characters
+114 **Standard graphics
+115 **Standard format
+116 **Standard geometry
+117 **pt
+118 **Line style
+119 **Line weight
+120 **Fill pattern
+121 **Split
+122 **Object type
+123 **Goto page number:
+124 **Any
+125 **Attribute to search
+126 **Type to search
+127 **Natures
+128 **Attribute
+129 **Value
+130 **Attribute value
+131 **Unknown attribute
+132 **Cancel
+133 **Error in PostScript translation
+134 **Command refused by the spooler "%s"
+135 **Cannot create "%s"
+136 **Overline
+137 **Document format
+138 **Events
+139 **Remove attribute
+140 **Left button sets the selection color
+141 **Middle or Right button sets the caret color
+142 **More ...
+143 **Get
+144 **Color
+145 **Background color
+146 **Text color
 147 **Select a generic XML structure
 148 **Checking
 149 **Search/Skip
@@ -173,8 +173,8 @@
 171 **Tools
 172 **Mandatory attribute, it can't be removed
 173 **Refresh
-174 **Left
-175 **Right
+174 **Align left
+175 **Align right
 176 **Center
 177 **Justify
 178 **Apply class
@@ -222,8 +222,8 @@
 220 **Boxes
 221 **Division
 222 **Target
-223 **Insertion On/Off
-224 **Deletion On/Off
+223 **Inserted text On/Off
+224 **Deleted text On/Off
 225 **Subscript On/Off
 226 **Superscript On/Off
 227 **Term

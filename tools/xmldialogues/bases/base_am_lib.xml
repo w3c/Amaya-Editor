@@ -581,7 +581,7 @@
 </label>
 <label define="TMSG_INDENT">
 	<message xml:lang="en">Indent</message>
-	<message xml:lang="fr">Renfoncement</message>
+	<message xml:lang="fr">Mettre en retrait</message>
 	<message xml:lang="de">Einrücken</message>
 	<message xml:lang="it">Indentazione</message>
 	<message xml:lang="tr">İçeriden</message>
@@ -960,41 +960,13 @@
 	<message xml:lang="tw">大小 (pt)</message>
 	<message xml:lang="sk">Veľkosť písmen (v bodoch)</message>
 </label>
-<label define="TMSG_INDENT_PTS">
-	<message xml:lang="en">Indent (pt)</message>
-	<message xml:lang="fr">Renfoncement (pt)</message>
-	<message xml:lang="de">Einrücken (pt)</message>
-	<message xml:lang="it">Indentazione (pt)</message>
-	<message xml:lang="tr">İçeriden (pt)</message>
-	<message xml:lang="es">Sangría (pt):</message>
-	<message xml:lang="pt">Indentação (pt)</message>
-	<message xml:lang="fi">Sisennä (pt)</message>
-	<message xml:lang="ru">Отступ (п.)</message>
-	<message xml:lang="hu">Behúzás (pt)</message>
-	<message xml:lang="ka">აბზაცი (pt)</message>
-	<message xml:lang="cn">缩进 (pt)</message>
-	<message xml:lang="tw">縮進 (pt)</message>
-	<message xml:lang="sk">Osadenie (v bodoch)</message>
-</label>
-<label define="TMSG_LINE_SPACING_PTS">
-	<message xml:lang="en">Line spacing (pt)</message>
-	<message xml:lang="fr">Interligne (pt)</message>
-	<message xml:lang="de">Zeilenabstand (pt)</message>
-	<message xml:lang="it">Interlinea (pt)</message>
-	<message xml:lang="tr">Satır aralığı (pt)</message>
-	<message xml:lang="es">Interlineado (pt):</message>
-	<message xml:lang="pt">Espaçamento entre linhas (pt)</message>
-	<message xml:lang="fi">Riviväli (pt)</message>
-	<message xml:lang="ru">Межстрочный интервал (п.)</message>
-	<message xml:lang="hu">Sortávolság (pt)</message>
-	<message xml:lang="ka">ინტერვალი (pt)</message>
-	<message xml:lang="cn">行间距 (pt)</message>
-	<message xml:lang="tw">行間距 (pt)</message>
-	<message xml:lang="sk">Riadkovanie (v bodoch)</message>
+<label define="TMSG_NOINDENT">
+	<message xml:lang="en">Unindent</message>
+	<message xml:lang="fr">Retirer le retrait</message>
 </label>
 <label define="TMSG_LINE_SPACING">
-	<message xml:lang="en">Line spacing</message>
-	<message xml:lang="fr">Interligne</message>
+	<message xml:lang="en">Single ine spacing</message>
+	<message xml:lang="fr">Interligne simple</message>
 	<message xml:lang="de">Zeilenabstand</message>
 	<message xml:lang="it">Interlinea</message>
 	<message xml:lang="tr">Satır aralığı</message>
@@ -1007,6 +979,14 @@
 	<message xml:lang="cn">行间距</message>
 	<message xml:lang="tw">行間距</message>
 	<message xml:lang="sk">Riadkovanie</message>
+</label>
+<label define="TMSG_HLINE_SPACING">
+	<message xml:lang="en">Middle line spacing</message>
+	<message xml:lang="fr">Interligne moyenne</message>
+</label>
+<label define="TMSG_DLINE_SPACING">
+	<message xml:lang="en">Double line spacing</message>
+	<message xml:lang="fr">Interligne double</message>
 </label>
 <label define="TMSG_SAVE_DOC">
 	<message xml:lang="en">Save document</message>
@@ -2346,19 +2326,6 @@
 	<message xml:lang="tw">前景色</message>
 	<message xml:lang="sk">Farba popredia</message>
 </label>
-<label define="TMSG_CPCOLORSWITCH">
-	<message xml:lang="en">Switch colors</message>
-	<message xml:lang="fr">Echanger les couleurs</message>
-	<message xml:lang="es">Intercambiar colores</message>
-	<message xml:lang="de">Farben wechseln</message>
-	<message xml:lang="it">Scambia colori</message>
-	<message xml:lang="ru">Поменять местами цвета</message>
-	<message xml:lang="hu">Színek cseréje</message>
-	<message xml:lang="ka">ფერების გადართვა</message>
-	<message xml:lang="cn">切换颜色</message>
-	<message xml:lang="tw">切換顏色</message>
-	<message xml:lang="sk">Zmeniť farby</message>
-</label>
 <label define="TMSG_NO_ELEMENT">
 	<message xml:lang="en">Select a generic XML structure</message>
 	<message xml:lang="fr">Séléctionner une structure XML générique</message>
@@ -2774,8 +2741,8 @@
 	<message xml:lang="sk">Obnoviť</message>
 </label>
 <label define="TMSG_FORMATLEFT">
-	<message xml:lang="en">Left</message>
-	<message xml:lang="fr">Gauche</message>
+	<message xml:lang="en">Align left</message>
+	<message xml:lang="fr">Aligner à gauche</message>
 	<message xml:lang="es">Izquierda</message>
 	<message xml:lang="de">Links</message>
 	<message xml:lang="it">Sinistra</message>
@@ -2787,8 +2754,8 @@
 	<message xml:lang="sk">Doľava</message>
 </label>
 <label define="TMSG_FORMATRIGHT">
-	<message xml:lang="en">Right</message>
-	<message xml:lang="fr">Droite</message>
+	<message xml:lang="en">Align right</message>
+	<message xml:lang="fr">Aligner à droite</message>
 	<message xml:lang="es">Derecha</message>
 	<message xml:lang="de">Rechts</message>
 	<message xml:lang="it">Destra</message>
@@ -2801,9 +2768,9 @@
 </label>
 <label define="TMSG_FORMATCENTER">
 	<message xml:lang="en">Center</message>
-	<message xml:lang="fr">Centré</message>
+	<message xml:lang="fr">Centrer</message>
 	<message xml:lang="es">Centrado</message>
-	<message xml:lang="de">Zentrieren</message>
+	<message xml:lang="de">Zur Mitte flanken</message>
 	<message xml:lang="it">Centro</message>
 	<message xml:lang="ru">По центру</message>
 	<message xml:lang="hu">Középre zárt</message>
@@ -2814,9 +2781,9 @@
 </label>
 <label define="TMSG_FORMATJUSTIFY">
 	<message xml:lang="en">Justify</message>
-	<message xml:lang="fr">Justifié</message>
+	<message xml:lang="fr">Justifier</message>
 	<message xml:lang="es">Justificado</message>
-	<message xml:lang="de">Ausrichten</message>
+	<message xml:lang="de">Gerechtfertigt</message>
 	<message xml:lang="it">Giustifica</message>
 	<message xml:lang="ru">По ширине</message>
 	<message xml:lang="hu">Sorkizárt</message>
@@ -3170,7 +3137,7 @@
 </label>
 <label define="TMSG_BUTTON_ITALICS">
 	<message xml:lang="en">Emphasis On/Off</message>
-	<message xml:lang="fr">Mise en évidence On/Off</message>
+	<message xml:lang="fr">Mise en évidence Oui/Non</message>
 	<message xml:lang="de">Betont On/Off</message>
 	<message xml:lang="it">Enfasi On/Off</message>
 	<message xml:lang="tr">Vurgu On/Off</message>
@@ -3186,7 +3153,7 @@
 </label>
 <label define="TMSG_BUTTON_BOLD">
 	<message xml:lang="en">Strong On/Off</message>
-	<message xml:lang="fr">Important On/Off</message>
+	<message xml:lang="fr">Important Oui/Non</message>
 	<message xml:lang="de">Hervorgehoben On/Off</message>
 	<message xml:lang="it">Forte On/Off</message>
 	<message xml:lang="tr">Kuvvetli On/Off</message>
@@ -3202,7 +3169,7 @@
 </label>
 <label define="TMSG_BUTTON_CODE">
 	<message xml:lang="en">Code On/Off</message>
-	<message xml:lang="fr">Code On/Off</message>
+	<message xml:lang="fr">Code Oui/Non</message>
 	<message xml:lang="de">Code On/Off</message>
 	<message xml:lang="it">Codice On/Off</message>
 	<message xml:lang="tr">Kod On/Off</message>
@@ -3503,8 +3470,8 @@
 	<message xml:lang="sk">Záložka</message>
 </label>
 <label define="TMSG_INSERTION">
-	<message xml:lang="en">Insertion On/Off</message>
-	<message xml:lang="fr">Insertion On/Off</message>
+	<message xml:lang="en">Inserted text On/Off</message>
+	<message xml:lang="fr">Texte inséré Oui/Non</message>
 	<message xml:lang="de">Eingefügter Text On/Off</message>
 	<message xml:lang="it">Inserzione On/Off</message>
 	<message xml:lang="es">Inserción On/Off</message>
@@ -3519,8 +3486,8 @@
 	<message xml:lang="sk">Novovložený text On/Off</message>
 </label>
 <label define="TMSG_DELETION">
-	<message xml:lang="en">Deletion On/Off</message>
-	<message xml:lang="fr">Suppression On/Off</message>
+	<message xml:lang="en">Deleted text On/Off</message>
+	<message xml:lang="fr">Texte supprimé Oui/Non</message>
 	<message xml:lang="de">Gelöschter Text On/Off</message>
 	<message xml:lang="it">Cancellazione On/Off</message>
 	<message xml:lang="es">Borrado On/Off</message>
@@ -3536,7 +3503,7 @@
 </label>
 <label define="TMSG_SUB">
 	<message xml:lang="en">Subscript On/Off</message>
-	<message xml:lang="fr">Indice On/Off</message>
+	<message xml:lang="fr">Indice Oui/Non</message>
 	<message xml:lang="de">Tiefgestellt On/Off</message>
 	<message xml:lang="it">Pedice On/Off</message>
 	<message xml:lang="tr">Alt On/Off</message>
@@ -3552,7 +3519,7 @@
 </label>
 <label define="TMSG_SUP">
 	<message xml:lang="en">Superscript On/Off</message>
-	<message xml:lang="fr">Exposant On/Off</message>
+	<message xml:lang="fr">Exposant Oui/Non</message>
 	<message xml:lang="de">Hochgestellt On/Off</message>
 	<message xml:lang="it">Indice On/Off</message>
 	<message xml:lang="tr">Üst On/Off</message>

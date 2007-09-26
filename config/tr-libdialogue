@@ -58,94 +58,94 @@
 56 Altçizgi
 57 Cross out
 58 Body boyu (pt)
-59 İçeriden (pt)
-60 Satır aralığı (pt)
-61 Satır aralığı
-62 Belge kaydet
-63 Kapat, kaydetme
-64 Karakter tarzı
-65 Renkler
-66 XHTML
-67 Sil
-68 Çıktı
-69 PostScript dosya
-70 Yazıcı
-71 Metin arama
-72 BÜYÜK HARF = küçük harf
-73 ile değiştir
-74 Değiştir
-75 Değiştirme
-76 İstek üzerine değiştir
-77 Otomatik olarak değiştir
-78 Arama nerede
-79 Seçimden önce
-80 Seçim içi
-81 Seçimden sonra
-82 Tüm belgede
-83 Değiştirme
-84 Öntanımlı renkler
-85 kapamadan önce
-86 Belgeyi kapa
-87 Matematik sembolleri
-88 Grafik
-89 Latin alfabesi
-90 Yunan alfabesi
-91 Kaydet
-92 Metin
-93 Grafik
-94 Simge
-95 Görüntü
-96 XML/XTiger
-97 önce
-98 sonra
-99 civarında
-100 Ekle
-101 Yapıştır
-102 Yapılmalıdır
-103 Ekle
-104 Sayfa kesmesi
-105 Birimin dili
-106 Alınan dil
-107 Bulunamadı
-108 Ara
+59 **Unindent
+60 Satır aralığı
+61 **Middle line spacing
+62 **Double line spacing
+63 Belge kaydet
+64 Kapat, kaydetme
+65 Karakter tarzı
+66 Renkler
+67 XHTML
+68 Sil
+69 Çıktı
+70 PostScript dosya
+71 Yazıcı
+72 Metin arama
+73 BÜYÜK HARF = küçük harf
+74 ile değiştir
+75 Değiştir
+76 Değiştirme
+77 İstek üzerine değiştir
+78 Otomatik olarak değiştir
+79 Arama nerede
+80 Seçimden önce
+81 Seçim içi
+82 Seçimden sonra
+83 Tüm belgede
+84 Değiştirme
+85 Öntanımlı renkler
+86 kapamadan önce
+87 Belgeyi kapa
+88 Matematik sembolleri
+89 Grafik
+90 Latin alfabesi
+91 Yunan alfabesi
+92 Kaydet
+93 Metin
+94 Grafik
+95 Simge
+96 Görüntü
+97 XML/XTiger
+98 önce
+99 sonra
+100 civarında
+101 Ekle
+102 Yapıştır
+103 Yapılmalıdır
+104 Ekle
+105 Sayfa kesmesi
+106 Birimin dili
+107 Alınan dil
+108 Bulunamadı
 109 Ara
-110 Salt-oku birim
-111 Değiştirilecek bir şey yok
-112 Standart karakterler
-113 Standart grafikler
-114 Standart biçim
-115 Standart geometri
-116 pt
-117 Çizgi tarzı
-118 Çizgi ağırlığı
-119 Doldurma şekli
-120 Ayır
-121 Nesne türü
-122 Numaralı sayfaya git
-123 Herhangi
-124 Aranacak olan özellik
-125 Aranacak olan tip
-126 özellikler
-127 Özellik
-128 Değeri
-129 Özellik değeri
-130 Bilinmeyen özellik
-131 Vazgeç
-132 PostScript dönüşümünde hata
-133 Komut "%s" tarafından reddedildi.
-134 "%s" yaratılamadı
-135 Üstçizgi
-136 Dokümanın forması
-137 Olaylar
-138 Özeliği sil
-139 Sol düğme seçilin rengini değiştiriyor
-140 Orta ve sağ düğme kürsör\'ün rengini değiştiriyor
-141 Diğer...
-142 Yenilendir
-143 Renk
-144 **Background color
-145 **Text color
-146 **Switch colors
+110 Ara
+111 Salt-oku birim
+112 Değiştirilecek bir şey yok
+113 Standart karakterler
+114 Standart grafikler
+115 Standart biçim
+116 Standart geometri
+117 pt
+118 Çizgi tarzı
+119 Çizgi ağırlığı
+120 Doldurma şekli
+121 Ayır
+122 Nesne türü
+123 Numaralı sayfaya git
+124 Herhangi
+125 Aranacak olan özellik
+126 Aranacak olan tip
+127 özellikler
+128 Özellik
+129 Değeri
+130 Özellik değeri
+131 Bilinmeyen özellik
+132 Vazgeç
+133 PostScript dönüşümünde hata
+134 Komut "%s" tarafından reddedildi.
+135 "%s" yaratılamadı
+136 Üstçizgi
+137 Dokümanın forması
+138 Olaylar
+139 Özeliği sil
+140 Sol düğme seçilin rengini değiştiriyor
+141 Orta ve sağ düğme kürsör\'ün rengini değiştiriyor
+142 Diğer...
+143 Yenilendir
+144 Renk
+145 **Background color
+146 **Text color
 147 **Select a generic XML structure
 148 Kontrol ediliyor
 149 Atla ve sonraki
@@ -173,8 +173,8 @@
 171 **Tools
 172 **Mandatory attribute, it can't be removed
 173 **Refresh
-174 **Left
-175 **Right
+174 **Align left
+175 **Align right
 176 **Center
 177 **Justify
 178 Sınıf uygula
