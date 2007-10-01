@@ -33,26 +33,8 @@
 
 #include "AmayaSpeCharPanel.h"
 #include "AmayaNormalWindow.h"
+#include "AmayaToolBar.h"
 #include "displayview_f.h"
-
-
-template<int width, int height>
-wxBitmap wxCharToIcon(const wxString str)
-{
-  wxBitmap bmp(width, height);
-  wxMemoryDC dc;
-  dc.SelectObject(bmp);
-  dc.SetBrush(*wxWHITE_BRUSH);
-  dc.Clear();
-  
-  wxFont font = dc.GetFont();
-  font.SetPointSize(PixelToPoint(height-2));
-  dc.SetFont(font);
-  
-  dc.DrawLabel(str, wxRect(0, 0, width, height), wxALIGN_CENTER);
-  dc.SelectObject(wxNullBitmap);
-  return bmp;
-}
 
 
 /**
