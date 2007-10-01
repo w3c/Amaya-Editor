@@ -4,6 +4,10 @@
 #define __AMAYAMATHMLPANEL_H__
 
 #include "wx/wx.h"
+#include "wx/notebook.h"
+#include "wx/choicebk.h"
+#include "wx/toolbook.h"
+#include "wx/imaglist.h"
 #include "AmayaPanel.h"
 #include "AmayaToolBar.h"
 
@@ -37,6 +41,12 @@ public:
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_MATHML;}
   virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_MATHML");}
+  
+protected:
+  void Initialize();
+
+  wxChoicebook *m_pBook;
+  wxImageList m_imagelist;
 };
 
 
@@ -45,6 +55,7 @@ class AmayaMathMLToolBar : public AmayaBaseToolBar
   DECLARE_DYNAMIC_CLASS(AmayaMathMLToolBar)
 public:
   AmayaMathMLToolBar();
+
 private:
   static AmayaToolBarToolDefHashMap s_mymap;
   static bool s_isinit;

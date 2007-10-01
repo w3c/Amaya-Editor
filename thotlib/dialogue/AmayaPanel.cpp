@@ -229,10 +229,10 @@ void AmayaToolPanelBar::ShowHeader(bool bShow)
 const AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)const
 {
   unsigned int n;
-  for(n=0; n<m_panels.GetCount(); n++)
+  for (n = 0; n < m_panels.GetCount(); n++)
     {
       AmayaToolPanelBarListItem &item = *(m_panels[n]);
-      if(item.panel==panel)
+      if (item.panel == panel)
         {
           return &item;
         }
@@ -245,10 +245,10 @@ const AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPane
 AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)
 {
   unsigned int n;
-  for(n=0; n<m_panels.GetCount(); n++)
+  for (n = 0; n < m_panels.GetCount(); n++)
     {
       AmayaToolPanelBarListItem &item = *(m_panels[n]);
-      if(item.panel==panel)
+      if (item.panel == panel)
         {
           return &item;
         }

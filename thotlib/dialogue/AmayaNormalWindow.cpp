@@ -108,7 +108,7 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
       m_pSplitterWindow = new wxSplitterWindow( this, wxID_ANY,
                                                 wxDefaultPosition, wxDefaultSize,
                                                 wxSP_3DBORDER | wxSP_3DSASH | wxSP_3D /*| wxSP_PERMIT_UNSPLIT*/ );
-      m_pSplitterWindow->SetMinimumPaneSize( 100 );
+      m_pSplitterWindow->SetMinimumPaneSize( 196 );
       m_pLayoutSizer->Add(m_pSplitterWindow, 1, wxEXPAND);
       {
         // Create a AmayaPanel to contains commands shortcut
@@ -755,8 +755,7 @@ void AmayaNormalWindow::ClosePanel()
 
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
-
-      TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
+      //TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
     }
 }
 
@@ -791,8 +790,7 @@ void AmayaNormalWindow::OpenPanel()
       m_pPanel->Layout();
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
-
-      TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
+      //TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
     }
 }
 

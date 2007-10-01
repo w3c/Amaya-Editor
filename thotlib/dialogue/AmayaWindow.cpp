@@ -43,12 +43,10 @@
 #include "input_f.h"
 
 #include "AmayaWindow.h"
-#include "AmayaPanel.h"
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"
-#include "AmayaToolBar.h"
 #include "AmayaStatusBar.h"
 #include "AmayaPanel.h"
 #include "AmayaApp.h"

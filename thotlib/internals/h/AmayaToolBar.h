@@ -3,8 +3,10 @@
 #ifndef __AMAYATOOLBAR_H__
 #define __AMAYATOOLBAR_H__
 
+#include "wx/xrc/xmlres.h"              // XRC XML resouces
 #include "wx/panel.h"
 #include "wx/hashmap.h"
+#include "wx/dcmemory.h"
 
 #include "units_f.h" // for PixelToPoint function
 
@@ -24,7 +26,7 @@ wxBitmap wxCharToIcon(const wxString str)
   dc.Clear();
   
   wxFont font = dc.GetFont();
-  font.SetPointSize(PixelToPoint(height-2));
+  font.SetPointSize(7);
   dc.SetFont(font);
   
   dc.DrawLabel(str, wxRect(0, 0, width, height), wxALIGN_CENTER);

@@ -151,7 +151,8 @@ void AmayaSpeCharToolPanel::Initialize()
           int toolid = wxNewId();
           m_hash[toolid] = car;
           wxString str = wxChar(car->unicode);
-          tb->AddTool(toolid, str, wxCharToIcon<16, 16>(wxString(wxChar(car->unicode))), TtaConvMessageToWX(car->name));
+          tb->AddTool(toolid, str, wxCharToIcon<16, 16>(wxString(wxChar(car->unicode))),
+                      TtaConvMessageToWX(car->name));
           car++;
         }
       entry++;

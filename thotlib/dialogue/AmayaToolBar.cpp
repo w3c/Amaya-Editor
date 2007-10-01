@@ -76,9 +76,9 @@ AmayaBaseToolBar::~AmayaBaseToolBar()
  -----------------------------------------------------------------------*/
 void AmayaBaseToolBar::Add(AmayaToolBarToolDef* def)
 {
-  while(def->idname!=NULL)
+  while (def->idname != NULL)
     {
-      if(def->action!=NULL && def->action[0]!=0)
+      if (def->action != NULL && def->action[0] != 0)
         def->actionid = FindMenuAction(def->action);
       else
         def->actionid = -1;
@@ -94,13 +94,13 @@ bool AmayaBaseToolBar::Realize()
 {
   AmayaToolBarToolDefHashMap::iterator it;
   // For each registered tool
-  for( it = m_map->begin(); it != m_map->end(); ++it )
+  for (it = m_map->begin(); it != m_map->end(); ++it )
   {
     // set the tooltip content
     if (it->second && it->second->tooltip_categ!=wxID_ANY &&
-	it->second->tooltip_msg!=wxID_ANY)
+        it->second->tooltip_msg!=wxID_ANY)
       SetToolShortHelp(it->first, TtaConvMessageToWX(
-        TtaGetMessage(it->second->tooltip_categ,it->second->tooltip_msg)));
+         TtaGetMessage(it->second->tooltip_categ,it->second->tooltip_msg)));
   }
   return wxToolBar::Realize();
 }
@@ -111,7 +111,7 @@ void AmayaBaseToolBar::OnTool(wxCommandEvent& event)
 {
   AmayaToolBarToolDefHashMap::iterator iter = m_map->find(event.GetId()); 
   AmayaToolBarToolDef* def = iter!=m_map->end()?iter->second:NULL; 
-  if(def && def->action!=NULL && def->action[0]!=0)
+  if (def && def->action != NULL && def->action[0] != 0)
     {
       Document doc;
       View view;

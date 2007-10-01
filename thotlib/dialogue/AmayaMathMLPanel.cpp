@@ -2,7 +2,8 @@
 
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
-#include "wx/choicebk.h"
+#include "wx/utils.h"
+#include "wx/dcmemory.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -23,13 +24,43 @@
 #include "appdialogue_wx_f.h"
 #include "panel.h"
 #include "editcommands_f.h"
+#include "units_f.h"
 
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "paneltypes_wx.h"
+#include "registry_wx.h"
 
 #include "AmayaMathMLPanel.h"
 #include "AmayaNormalWindow.h"
+#include "displayview_f.h"
+
+
+/**
+ * Defines entries for Trigo panel.
+ */
+#define MAX_TOOL_PER_LINE 4
+char *TrigoTable[] = 
+  {
+  "sin", "sinh", "arcsin", "arcsinh",
+  "cos", "cosh", "arccos", "arccosh",
+  "tan", "tanh", "arctan", "arctanh",
+  "cot", "coth", "arccot", "arccoth",
+  "sec", "sech", "arcsec", "arcsech",
+  "csc", "csch", "arccsc", "arccsch",
+  "exp", "ln", "log"
+  };
+
+int MAX_Trigo = sizeof(TrigoTable) / sizeof (char *);
+char * TrigoID[]={
+  "wxID_PANEL_MATH_SIN", "wxID_PANEL_MATH_SINH", "wxID_PANEL_MATH_ARCSIN", "wxID_PANEL_MATH_ARCSINH",
+  "wxID_PANEL_MATH_COS", "wxID_PANEL_MATH_COSH", "wxID_PANEL_MATH_ARCCOS", "wxID_PANEL_MATH_ARCCOSH",
+  "wxID_PANEL_MATH_TAN", "wxID_PANEL_MATH_TANH", "wxID_PANEL_MATH_ARCTAN", "wxID_PANEL_MATH_ARCTANH",
+  "wxID_PANEL_MATH_COT", "wxID_PANEL_MATH_COTH", "wxID_PANEL_MATH_ARCCOT", "wxID_PANEL_MATH_ARCCOTH",
+  "wxID_PANEL_MATH_SEC", "wxID_PANEL_MATH_SECH", "wxID_PANEL_MATH_ARCSEC", "wxID_PANEL_MATH_ARCSECH",
+  "wxID_PANEL_MATH_CSC", "wxID_PANEL_MATH_CSCH", "wxID_PANEL_MATH_ARCCSC", "wxID_PANEL_MATH_ARCCSCH",
+  "wxID_PANEL_MATH_EXP", "wxID_PANEL_MATH_LN", "wxID_PANEL_MATH_LOG"
+};
 
 
 
@@ -41,33 +72,82 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaMathMLToolPanel, AmayaToolPanel)
 
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
 AmayaMathMLToolPanel::AmayaMathMLToolPanel():
-  AmayaToolPanel()
+  AmayaToolPanel(),
+  m_pBook(NULL),
+  m_imagelist(16,16)
 {
 }
 
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
 AmayaMathMLToolPanel::~AmayaMathMLToolPanel()
 {
 }
 
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
 bool AmayaMathMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
           const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_MATHML")))
     return false;
-  wxChoicebook* book = XRCCTRL(*this,"wxID_MATHS_CHOICEBOOK", wxChoicebook);
-  book->SetPageText(0, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_1)));
-  book->SetPageText(1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_2)));
-  book->SetPageText(2, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_3)));
-  book->SetPageText(3, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_4)));
-  book->SetPageText(4, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_5)));
-  book->SetPageText(5, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_6)));
+  m_pBook = XRCCTRL(*this,"wxID_MATHS_CHOICEBOOK", wxChoicebook);
+  m_pBook->SetPageText(0, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_1)));
+  m_pBook->SetPageText(1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_2)));
+  m_pBook->SetPageText(2, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_3)));
+  m_pBook->SetPageText(3, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_4)));
+  m_pBook->SetPageText(4, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_5)));
+  m_pBook->SetPageText(5, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_6)));
+  Initialize();
   return true;
 }
 
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
 wxString AmayaMathMLToolPanel::GetToolPanelName()const
 {
   return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_MATHML));
+}
+
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
+void AmayaMathMLToolPanel::Initialize()
+{
+  wxSizer* sz = new wxBoxSizer(wxVERTICAL);
+  sz->Add(m_pBook, 1, wxEXPAND);
+  SetSizer(sz);
+  m_pBook->SetImageList(&m_imagelist);
+  wxBitmap bmp;
+  bmp.LoadFile(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, ""), wxBITMAP_TYPE_ANY);
+  int img = m_imagelist.Add(bmp);
+  wxPanel*   panel = new wxPanel(m_pBook, wxID_ANY);
+  m_pBook->AddPage(panel, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_6)), false, img);
+  
+  wxToolBar* tb = NULL;
+  sz = new wxBoxSizer(wxVERTICAL);
+  int i, line = 0;
+  for (i = 0; i < MAX_Trigo; i++)
+    {
+      if( ++line >= MAX_TOOL_PER_LINE || !tb)
+        {
+          if (tb)
+            tb->Realize();
+          tb = new AmayaMathMLToolBar();
+          tb->Create(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                     wxTB_HORIZONTAL|wxNO_BORDER|/*wxTB_TEXT|wxTB_NOICONS|*/wxTB_NODIVIDER);
+          tb->SetToolBitmapSize(wxSize(34,16));
+          tb->SetToolPacking(4);
+          sz->Add(tb, 0);
+          line = 0;
+        }
+      int toolid = wxXmlResource::GetXRCID( TtaConvMessageToWX(TrigoID[i]));
+      wxString str = TtaConvMessageToWX(TrigoTable[i]);
+      tb->AddTool(toolid, str, wxCharToIcon<34, 16>(str), str);
+    }
+  panel->SetSizer(sz);
 }
 
 static
@@ -298,7 +378,6 @@ AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaMathMLToolBarToolDef)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_MATH_TANH",     "CreateMTANH", wxID_ANY, wxID_ANY)
 AMAYA_END_TOOLBAR_DEF_TABLE()
 
-
 //
 //
 // AmayaMathMLToolBar
@@ -307,6 +386,8 @@ AMAYA_END_TOOLBAR_DEF_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaMathMLToolBar, AmayaBaseToolBar)
 
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
 AmayaMathMLToolBar::AmayaMathMLToolBar():
   AmayaBaseToolBar()
 {
@@ -320,6 +401,9 @@ AmayaMathMLToolBar::AmayaMathMLToolBar():
     }
 }
 
+
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
 AmayaToolBarToolDefHashMap AmayaMathMLToolBar::s_mymap;
 bool AmayaMathMLToolBar::s_isinit = false;
 
