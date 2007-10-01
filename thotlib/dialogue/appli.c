@@ -1739,14 +1739,9 @@ void TtaSetStatusSelectedElement(Document document, View view, Element elem)
             {
 #ifdef IV
               // Update the current color in the tool panel
-              AmayaToolPanelBar *bar;
-              bar = window->GetToolPanelBar();
-              if (bar)
-                {
-                  AmayaToolPanel* panel = bar->GetToolPanel (WXAMAYA_PANEL_STYLE);
-                  if (panel)
-                    panel->SetColor (pEl->ElAbstractBox[0]->AbForeground);
-                }
+              AmayaToolPanel* panel = window->GetPanel (WXAMAYA_PANEL_STYLE);
+              if (panel)
+                panel->SetColor (pEl->ElAbstractBox[0]->AbForeground);
 #endif
             }
         }

@@ -88,13 +88,13 @@ class AmayaNormalWindow : public AmayaWindow
   
   void     GotoSelectedURL();
 
-  AmayaToolPanelBar * GetToolPanelBar() const;
   void RefreshToolPanelBar();
+  virtual AmayaToolPanel* GetToolPanel(int kind);
   
-  bool IsPanelOpened();
-  void ClosePanel();
-  void OpenPanel();
-  virtual void RefreshShowPanelToggleMenu();
+  virtual bool ToolPanelsShown();
+  virtual void HideToolPanels();
+  virtual void ShowToolPanels();
+  virtual void RefreshShowToolPanelToggleMenu();
 
  protected:
   DECLARE_EVENT_TABLE()

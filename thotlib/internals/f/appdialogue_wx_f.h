@@ -74,9 +74,6 @@ extern ThotBool TtaFrameIsClosed ( int frame_id );
 extern void TtaSetURLBar ( int frame_id,
                            const char * listUrl,
                            void (* procedure)() );
-extern void TtaRefreshPanelButton ( Document doc,
-                                    View view,
-                                    int panel_type );
 extern void TtaSwitchPanelButton ( Document doc,
                                    View view,
                                    int panel_type,
@@ -167,9 +164,6 @@ extern ThotBool TtaFrameIsClosed ( int frame_id );
 extern void TtaSetURLBar ( int frame_id,
                              const char * listUrl,
                              void (* procedure)() );
-extern void TtaRefreshPanelButton ( Document doc,
-                                      View view,
-                                      int panel_type );
 extern void TtaSwitchPanelButton ( Document doc,
                                      View view,
                                      int panel_type,

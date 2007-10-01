@@ -121,9 +121,12 @@ IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
 
         ThotBool panel_opened;
         TtaGetEnvBoolean ("OPEN_PANEL", &panel_opened);
-        OpenPanel();
+        
+        Freeze();
+        ShowToolPanels();
         if(!panel_opened || kind == WXAMAYAWINDOW_ANNOT || kind == WXAMAYAWINDOW_CSS)
-          ClosePanel();
+          HideToolPanels();
+        Thaw();
       }
       
     }
@@ -150,7 +153,7 @@ AmayaNormalWindow::~AmayaNormalWindow()
   int window_id = GetWindowId();
 
   if (window_id == 1)
-    TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
+    TtaSetEnvBoolean("OPEN_PANEL", ToolPanelsShown(), TRUE);
   SetAutoLayout(FALSE);
 }
 
@@ -732,9 +735,9 @@ void AmayaNormalWindow::OnSplitPanelButton( wxCommandEvent& event )
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnSplitPanelButton") );
 
   if (!m_pSplitterWindow->IsSplit())
-    OpenPanel();
+    ShowToolPanels();
   else
-    ClosePanel();
+    HideToolPanels();
 
   // do not skip this event because on windows, the callback is called twice
   //event.Skip();
@@ -742,33 +745,32 @@ void AmayaNormalWindow::OnSplitPanelButton( wxCommandEvent& event )
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
- *      Method:  ClosePanel
+ *      Method:  HideToolPanels
  * Description:  close the side panel
  -----------------------------------------------------------------------*/
-void AmayaNormalWindow::ClosePanel()
+void AmayaNormalWindow::HideToolPanels()
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaNormalWindow::ClosePanel") );
 
-  if (IsPanelOpened())
+  if (ToolPanelsShown())
     {
       m_pSplitterWindow->Unsplit( m_pPanel );
 
       // refresh the corresponding menu item state
-      RefreshShowPanelToggleMenu();
-      //TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
+      RefreshShowToolPanelToggleMenu();
     }
 }
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
- *      Method:  OpenPanel
+ *      Method:  ShowToolPanels
  * Description:  open the side panel
  -----------------------------------------------------------------------*/
-void AmayaNormalWindow::OpenPanel()
+void AmayaNormalWindow::ShowToolPanels()
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaNormalWindow::OpenPanel") );
   
-  if (!IsPanelOpened())
+  if (!ToolPanelsShown())
     {
       if(!strcmp(TtaGetEnvString("TOOLPANEL_LAYOUT"), "LEFT"))
         {
@@ -789,17 +791,16 @@ void AmayaNormalWindow::OpenPanel()
         }
       m_pPanel->Layout();
       // refresh the corresponding menu item state
-      RefreshShowPanelToggleMenu();
-      //TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
+      RefreshShowToolPanelToggleMenu();
     }
 }
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
- *      Method:  IsPanelOpened
+ *      Method:  ToolPanelsShown
  * Description:  returns true if the side panel is opened
  -----------------------------------------------------------------------*/
-bool AmayaNormalWindow::IsPanelOpened()
+bool AmayaNormalWindow::ToolPanelsShown()
 {
   return m_pSplitterWindow->IsSplit();
 }
@@ -807,14 +808,13 @@ bool AmayaNormalWindow::IsPanelOpened()
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
- *      Method:  GetAmayaPanel
+ *      Method:  GetToolPanel
  * Description:  return the window's panel (exists only on AmayaNormalWindow)
  -----------------------------------------------------------------------*/
-AmayaToolPanelBar * AmayaNormalWindow::GetToolPanelBar() const
+AmayaToolPanel* AmayaNormalWindow::GetToolPanel(int kind)
 {
-  return m_pPanel;
+  return m_pPanel->GetToolPanel(kind);
 }
-
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
@@ -823,18 +823,18 @@ AmayaToolPanelBar * AmayaNormalWindow::GetToolPanelBar() const
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::RefreshToolPanelBar()
 {
-  ClosePanel();
-  OpenPanel();
+  HideToolPanels();
+  ShowToolPanels();
 }
 
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
- *      Method:  RefreshShowPanelToggleMenu
+ *      Method:  RefreshShowToolPanelToggleMenu
  * Description:  is called to toggle on/off the "Show/Hide panel" menu item depeding on
  *               the panel showing state.
  -----------------------------------------------------------------------*/
-void AmayaNormalWindow::RefreshShowPanelToggleMenu()
+void AmayaNormalWindow::RefreshShowToolPanelToggleMenu()
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::RefreshShowPanelToggleMenu") );
 
@@ -844,7 +844,7 @@ void AmayaNormalWindow::RefreshShowPanelToggleMenu()
   int window_id = GetWindowId();
   int itemID    = WindowTable[window_id].MenuItemShowPanelID;
   int action    = FindMenuActionFromMenuItemID(NULL, itemID);
-  ThotBool on   = IsPanelOpened();
+  ThotBool on   = ToolPanelsShown();
     
   while ( action >= 0 && doc_id < MAX_DOCUMENTS )
     {

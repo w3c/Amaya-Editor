@@ -102,12 +102,11 @@ class AmayaWindow : public wxFrame
 
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
-  virtual AmayaToolPanelBar* GetToolPanelBar()const;
-  
-  virtual bool IsPanelOpened();
-  virtual void ClosePanel();
-  virtual void OpenPanel();
-  virtual void RefreshShowPanelToggleMenu();
+  virtual AmayaToolPanel* GetToolPanel(int kind){return NULL;}
+  virtual bool ToolPanelsShown();
+  virtual void HideToolPanels();
+  virtual void ShowToolPanels();
+  virtual void RefreshShowToolPanelToggleMenu();
 
   virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
   virtual bool           AttachPage( int position, AmayaPage * p_page );

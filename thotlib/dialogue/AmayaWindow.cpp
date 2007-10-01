@@ -392,50 +392,40 @@ void AmayaWindow::OnActivate( wxActivateEvent & event )
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  GetToolPanelBar
- * Description:  return the window's tool panel bar(exist only on AmayaNormalWindow)
-  -----------------------------------------------------------------------*/
-AmayaToolPanelBar * AmayaWindow::GetToolPanelBar() const
-{
-  return NULL;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaWindow
- *      Method:  ClosePanel
+ *      Method:  HideToolPanels
  * Description:  close the side panel
   -----------------------------------------------------------------------*/
-void AmayaWindow::ClosePanel()
+void AmayaWindow::HideToolPanels()
 {
 }
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  OpenPanel
+ *      Method:  ShowToolPanels
  * Description:  open the side panel
   -----------------------------------------------------------------------*/
-void AmayaWindow::OpenPanel()
+void AmayaWindow::ShowToolPanels()
 {
 }
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  IsPanelOpened
+ *      Method:  ToolPanelsShown
  * Description:  returns true if the side panel is opened
   -----------------------------------------------------------------------*/
-bool AmayaWindow::IsPanelOpened()
+bool AmayaWindow::ToolPanelsShown()
 {
   return false;
 }
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  RefreshShowPanelToggleMenu
+ *      Method:  RefreshShowToolPanelToggleMenu
  * Description:  is called to toggle on/off the "Show/Hide panel" menu item depeding on
  *               the panel showing state.
  *               Only used by AmayaNormalWindow
   -----------------------------------------------------------------------*/
-void AmayaWindow::RefreshShowPanelToggleMenu()
+void AmayaWindow::RefreshShowToolPanelToggleMenu()
 {
 }
 

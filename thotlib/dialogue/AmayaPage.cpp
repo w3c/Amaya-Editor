@@ -926,7 +926,7 @@ void AmayaPage::RefreshShowPanelToggleMenu()
   wxASSERT(GetWindowParent());
 
   if (GetWindowParent())
-    GetWindowParent()->RefreshShowPanelToggleMenu();
+    GetWindowParent()->RefreshShowToolPanelToggleMenu();
 }
 
 /*----------------------------------------------------------------------

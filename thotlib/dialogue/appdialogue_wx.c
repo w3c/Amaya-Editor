@@ -217,20 +217,16 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
      the opengl canvas can't be correctly realized */
   TtaShowWindow( window_id, TRUE );
 
-  // setup window panel
-  AmayaToolPanelBar * p_panel = p_window->GetToolPanelBar();
-  if (p_panel)
-    {
-      /* open or close panels */
-      if (kind == WXAMAYAWINDOW_NORMAL)
-        TtaGetEnvBoolean ("OPEN_PANEL", &value);
-      else
-        value = FALSE;
-      if (value)
-        p_window->OpenPanel();
-      else
-        p_window->ClosePanel();
-    }
+  /* setup window panel   */
+  /* open or close panels */
+  if (kind == WXAMAYAWINDOW_NORMAL)
+    TtaGetEnvBoolean ("OPEN_PANEL", &value);
+  else
+    value = FALSE;
+  if (value)
+    p_window->ShowToolPanels();
+  else
+    p_window->HideToolPanels();
   
   return window_id;
 #else
@@ -1590,61 +1586,6 @@ void TtaSetURLBar( int frame_id, const char * listUrl, void (* procedure)())
 }
 
 /*----------------------------------------------------------------------
-  TtaRefreshPanelButton - 
-  refresh the button widgets of the frame's panel
-  params:
-  + panel_type : the panel type
-  returns:
-  ----------------------------------------------------------------------*/
-void TtaRefreshPanelButton( Document doc, View view, int panel_type )
-{
-#ifdef _WX
-  int frame_id = -1;
-  if (doc == 0 && view == 0)
-    TtaError (ERR_invalid_parameter);
-  else
-    {
-      frame_id = GetWindowNumber (doc, view);
-      if (frame_id <= 0 || frame_id > MAX_FRAME)
-        TtaError (ERR_invalid_parameter);
-      else if (FrameTable[frame_id].WdFrame != 0 &&
-               FrameTable[frame_id].WdFrame->IsActive())
-        {
-          /* get the frame's window parent */
-          AmayaWindow * p_window = TtaGetWindowFromId( FrameTable[frame_id].FrWindowId );
-          wxASSERT( p_window );
-          if ( !p_window )
-            return;
-          /* get the window's panel */
-          AmayaToolPanelBar * bar = p_window->GetToolPanelBar();
-          /* it is possible to have no panel, for example with
-             AmayaSimpleWindow (ShowAppliedStyle) */
-          if ( !bar )
-            return;
-          
-          /* get the subpanel depending on panel_type */
-          AmayaToolPanel * toolpanel = NULL;
-          bool * p_checked_array = NULL;
-          switch (panel_type)
-            {
-            case WXAMAYA_PANEL_XHTML:
-              toolpanel      = bar->GetToolPanel(WXAMAYA_PANEL_XHTML);
-              p_checked_array = FrameTable[frame_id].CheckedButton_Panel_XHTML;
-              break;
-            }
-          if (!toolpanel)
-            return;
-          
-          /* refresh the subpanel with button stats */
-          AmayaParams p;
-          p.param2 = (void*)p_checked_array;
-          toolpanel->SendDataToPanel(p);
-        }
-    }
-#endif /* _WX */
-}
-
-/*----------------------------------------------------------------------
   TtaSwitchPanelButton - 
   switch on/off a button in a given panel
   params:
@@ -1795,10 +1736,10 @@ void TtaToggleOnOffSidePanel( int frame_id )
     }
 
   /* close or open the panel depending on panel state */
-  if (p_window->IsPanelOpened())
-    p_window->ClosePanel();
+  if (p_window->ToolPanelsShown())
+    p_window->HideToolPanels();
   else
-    p_window->OpenPanel();
+    p_window->ShowToolPanels();
 #endif /* _WX */
 }
 
@@ -1919,7 +1860,7 @@ void TtaDoPostFrameCreation( int frame_id )
       return;
     }
   /* refresh specific menu item states */
-  p_window->RefreshShowPanelToggleMenu();
+  p_window->RefreshShowToolPanelToggleMenu();
 #endif /* _WX */
 }
 
@@ -2003,16 +1944,11 @@ void TtaRegisterOpenURLCallback( void (*callback) (void *) )
 void TtaSendDataToPanel( int panel_type, AmayaParams& params )
 {
   AmayaWindow * activeWindow = TtaGetActiveWindow();
-  AmayaToolPanelBar* bar;
   if(activeWindow)
     {
-      bar = activeWindow->GetToolPanelBar();
-      if (bar)
-        {
-          AmayaToolPanel* panel = bar->GetToolPanel(panel_type);
-          if (panel)
-            panel->SendDataToPanel(params);
-        }
+      AmayaToolPanel* panel = activeWindow->GetToolPanel(panel_type);
+      if (panel)
+        panel->SendDataToPanel(params);
     }
 }
 #endif /* _WX */
