@@ -39,6 +39,27 @@
 /**
  * Defines entries for Trigo panel.
  */
+#ifdef _MACOS
+#define MAX_TOOL_PER_LINE 6
+char *TrigoTable[] = 
+  {
+    "sin", "cos", "tan", "sec", "csc", "exp",
+    "sinh", "cosh", "tanh", "sech", "csch", "ln",
+    "arcsin", "arccos", "arctan", "arcsec", "arccsc", "log",
+    "arcsinh", "arccosh", "arctanh", "arcsech", "arccsch"
+  };
+
+char * TrigoID[]={
+  "wxID_PANEL_MATH_SIN", "wxID_PANEL_MATH_COS", "wxID_PANEL_MATH_TAN",
+  "wxID_PANEL_MATH_SEC", "wxID_PANEL_MATH_CSC", "wxID_PANEL_MATH_EXP",
+  "wxID_PANEL_MATH_SINH", "wxID_PANEL_MATH_COSH", "wxID_PANEL_MATH_TANH",
+  "wxID_PANEL_MATH_SECH", "wxID_PANEL_MATH_CSCH", "wxID_PANEL_MATH_LN",
+  "wxID_PANEL_MATH_ARCSIN", "wxID_PANEL_MATH_ARCCOS", "wxID_PANEL_MATH_ARCTAN",
+  "wxID_PANEL_MATH_ARCSEC", "wxID_PANEL_MATH_ARCCSC", "wxID_PANEL_MATH_LOG",
+  "wxID_PANEL_MATH_ARCSINH", "wxID_PANEL_MATH_ARCCOSH", "wxID_PANEL_MATH_ARCTANH",
+  "wxID_PANEL_MATH_ARCSECH", "wxID_PANEL_ARCMATH_CSCH"
+};
+#else /* _MACOS */
 #define MAX_TOOL_PER_LINE 4
 char *TrigoTable[] = 
   {
@@ -51,7 +72,6 @@ char *TrigoTable[] =
   "exp", "ln", "log"
   };
 
-int MAX_Trigo = sizeof(TrigoTable) / sizeof (char *);
 char * TrigoID[]={
   "wxID_PANEL_MATH_SIN", "wxID_PANEL_MATH_SINH", "wxID_PANEL_MATH_ARCSIN", "wxID_PANEL_MATH_ARCSINH",
   "wxID_PANEL_MATH_COS", "wxID_PANEL_MATH_COSH", "wxID_PANEL_MATH_ARCCOS", "wxID_PANEL_MATH_ARCCOSH",
@@ -61,7 +81,9 @@ char * TrigoID[]={
   "wxID_PANEL_MATH_CSC", "wxID_PANEL_MATH_CSCH", "wxID_PANEL_MATH_ARCCSC", "wxID_PANEL_MATH_ARCCSCH",
   "wxID_PANEL_MATH_EXP", "wxID_PANEL_MATH_LN", "wxID_PANEL_MATH_LOG"
 };
+#endif /* _MACOS */
 
+int MAX_Trigo = sizeof(TrigoTable) / sizeof (char *);
 
 
 //
@@ -100,7 +122,7 @@ bool AmayaMathMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint
   m_pBook->SetPageText(2, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_3)));
   m_pBook->SetPageText(3, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_4)));
   m_pBook->SetPageText(4, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_5)));
-  m_pBook->SetPageText(5, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_6)));
+  // add the trigonometry page
   Initialize();
   return true;
 }
@@ -137,15 +159,23 @@ void AmayaMathMLToolPanel::Initialize()
             tb->Realize();
           tb = new AmayaMathMLToolBar();
           tb->Create(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                     wxTB_HORIZONTAL|wxNO_BORDER|/*wxTB_TEXT|wxTB_NOICONS|*/wxTB_NODIVIDER);
-          tb->SetToolBitmapSize(wxSize(34,16));
+                     wxTB_HORIZONTAL|wxNO_BORDER|wxTB_NODIVIDER);
+#ifdef _MACOS
+          tb->SetToolBitmapSize(wxSize(24,24));
+#else /* _MACOS */
+          tb->SetToolBitmapSize(wxSize(36,16));
+#endif /* _MACOS */
           tb->SetToolPacking(4);
           sz->Add(tb, 0);
           line = 0;
         }
       int toolid = wxXmlResource::GetXRCID( TtaConvMessageToWX(TrigoID[i]));
       wxString str = TtaConvMessageToWX(TrigoTable[i]);
-      tb->AddTool(toolid, str, wxCharToIcon<34, 16>(str), str);
+#ifdef _MACOS
+      tb->AddTool(toolid, str, wxCharToIcon<24,24>(str), str);
+#else /* _MACOS */
+      tb->AddTool(toolid, str, wxCharToIcon<36, 16>(str), str);
+#endif /* _MACOS */
     }
   panel->SetSizer(sz);
 }
