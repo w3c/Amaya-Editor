@@ -6,6 +6,7 @@
 #include "wx/wx.h"
 #include "AmayaPanel.h"
 #include "AmayaToolBar.h"
+#include "AmayaColorButton.h"
 
 class AmayaNormalWindow;
 
@@ -27,7 +28,8 @@ public:
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_STYLE;}
   virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_STYLE");}
-  void OnColorPalette( wxCommandEvent& event );
+  void OnColorPalette( AmayaColorButtonEvent& event );
+  
   void SetColor(int color);
 
 protected:

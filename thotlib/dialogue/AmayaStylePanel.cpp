@@ -3,6 +3,7 @@
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
 #include "wx/colordlg.h"
+#include "wx/clrpicker.h"
 
 
 #include "thot_gui.h"
@@ -32,6 +33,8 @@
 
 #include "AmayaStylePanel.h"
 #include "AmayaNormalWindow.h"
+#include "AmayaColorButton.h"
+
 extern void GenerateStyle (char * color, ThotBool add);
 
 //
@@ -77,6 +80,10 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_STYLE")))
     return false;
   
+  wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_PANEL_CSS_COLOR"),
+      new AmayaColorButton(this, XRCID("wxID_PANEL_CSS_COLOR"), wxColour(0,0,0), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
+
+  
   m_tbar1 = XRCCTRL(*this,"wxID_TOOLBAR_CSS_1", AmayaBaseToolBar);
   m_tbar2 = XRCCTRL(*this,"wxID_TOOLBAR_CSS_2", AmayaBaseToolBar);
 
@@ -86,7 +93,8 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   m_tbar2->Realize();
   SetAutoLayout(true);
   
-  XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORBUTTON)));
+//  XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", AmayaColorButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORBUTTON)));
+  
   XRCCTRL(*this, "wxID_FONT_COLOR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORFG)));
   XRCCTRL(*this, "wxID_THEME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_THEME)));
   SetColor (1);
@@ -106,26 +114,22 @@ wxString AmayaStyleToolPanel::GetToolPanelName()const
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaStyleToolPanel::OnColorPalette( wxCommandEvent& event )
+void AmayaStyleToolPanel::OnColorPalette( AmayaColorButtonEvent& event )
 {
-  char                color_string[100];
-  int                 color;
-
-  // open the color dialog and ask user to select a color.
-  wxColourDialog dialog (this, &colour_data);
-  if (dialog.ShowModal() == wxID_OK)
-    {
-      colour_data = dialog.GetColourData();
-      wxColour col = colour_data.GetColour();
-      XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", wxBitmapButton)->SetBackgroundColour( col );
-      color = TtaGetThotColor (col.Red(), col.Green(), col.Blue());
-      if (color != Current_Color)
-        Current_Color = color;
-      // generate a color style
-      sprintf( color_string, "color:#%02x%02x%02x", col.Red(), col.Green(), col.Blue());
-      GenerateStyle (color_string, TRUE);
-    }
+  char     color_string[100];
+  int      color;
+  wxColour col = event.GetColour();
+  
+  color = TtaGetThotColor (col.Red(), col.Green(), col.Blue());
+  if (color != Current_Color)
+    Current_Color = color;
+  // generate a color style
+  sprintf( color_string, "color:#%02x%02x%02x", col.Red(), col.Green(), col.Blue());
+  
+  GenerateStyle (color_string, TRUE);
 }
+
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -143,7 +147,7 @@ void AmayaStyleToolPanel::SetColor(int color)
   Current_Color = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
   col = wxColour ( red, green, blue );
-  XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+  XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", AmayaColorButton)->SetColour( col );
 }
 
 /*----------------------------------------------------------------------
@@ -151,7 +155,7 @@ void AmayaStyleToolPanel::SetColor(int color)
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
-  EVT_BUTTON(XRCID("wxID_PANEL_CSS_COLOR"), AmayaStyleToolPanel::OnColorPalette )
+  EVT_AMAYA_COLOR_CHANGED(wxID_ANY, AmayaStyleToolPanel::OnColorPalette )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
