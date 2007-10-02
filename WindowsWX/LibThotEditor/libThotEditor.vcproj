@@ -371,6 +371,10 @@
 			</FileConfiguration>
 		</File>
 		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaColorButton.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\thotlib\dialogue\AmayaConfirmCloseTab.cpp"
 			>
 			<FileConfiguration
@@ -875,6 +879,10 @@
 					PreprocessorDefinitions=""
 				/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaStylePanel.cpp"
+			>
 		</File>
 		<File
 			RelativePath="..\..\thotlib\dialogue\AmayaToolBar.cpp"
