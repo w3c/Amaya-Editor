@@ -29,8 +29,6 @@ bool PreferenceDlgWX::m_OnApplyLock = FALSE;
 static int MyRef = 0;
 
 
-WX_DEFINE_ARRAY_INT(int, ArrayOfInts);
-
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
@@ -103,24 +101,11 @@ END_EVENT_TABLE()
   MyRef = ref;
 
   
-  // Change listbook style
-  {
-    wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
-    wxListView *list = p_notebook->GetListView();
-    ArrayOfInts arr;
-    long item = -1;
-    for ( ;; )
-      {
-        item = list->GetNextItem(item);
-        arr.Add(item);
-        if ( item == -1 )
-          break;
-      }
-    list->SetSingleStyle(wxLC_LIST);
-    for(item=0; item<(int)arr.GetCount(); item++)
-      list->InsertItem(arr[item], wxT(""));
-  }
-
+#if !defined(DAV) || !defined(TEMPLATES)
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
+  wxListView *list = p_notebook->GetListView();
+  list->SetSize (400,400);
+#endif /* DAV || TEMPLATES */
 #ifndef DAV
   // invalid WebDAV Page
   int page_id = GetPagePosFromXMLID( _T("wxID_PAGE_DAV") );
