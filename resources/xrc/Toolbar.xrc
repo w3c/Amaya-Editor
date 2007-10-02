@@ -83,6 +83,9 @@
           <object class="tool" name="wxID_TOOL_PASTE">
             <bitmap>../icons/22x22/paste.png</bitmap>
           </object>
+          <object class="tool" name="wxID_TOOL_CSS">
+            <bitmap>../icons/22x22/css.png</bitmap>
+          </object>
           <object class="separator"/>
           <object class="tool" name="wxID_TOOL_SPELLCHECK">
             <bitmap>../icons/22x22/spellcheck.png</bitmap>
@@ -90,14 +93,12 @@
           <object class="tool" name="wxID_TOOL_FIND">
             <bitmap>../icons/22x22/find.png</bitmap>
           </object>
+          <object class="separator"/>
           <object class="tool" name="wxID_TOOL_MAX">
             <bitmap>../icons/22x22/view_plus.png</bitmap>
           </object>
           <object class="tool" name="wxID_TOOL_MIN">
             <bitmap>../icons/22x22/view_min.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_TOOL_CSS">
-            <bitmap>../icons/22x22/css.png</bitmap>
           </object>
           <style>wxTB_FLAT</style>
         </object>
