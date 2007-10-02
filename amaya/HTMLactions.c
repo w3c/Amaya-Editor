@@ -3980,106 +3980,106 @@ static void SplitFontOrPhrase (Document doc, Element elem, Element first,
       /* split */
       elType = TtaGetElementType (first);
       next = first;
-          TtaGiveNextSelectedElement (doc, &next, &j, &k);
-          if (first == last)
-            {
-              if (lastChar < firstChar)
-                i = 0;
-              else
-                i = lastChar - firstChar; // some characters have to be moved
-            }
+      TtaGiveNextSelectedElement (doc, &next, &j, &k);
+      if (first == last)
+        {
+          if (lastChar < firstChar)
+            i = 0;
           else
-            i -= firstChar;
-          if (TtaBreakElement (elem, first, firstChar, TRUE, FALSE))
+            i = lastChar - firstChar; // some characters have to be moved
+        }
+      else
+        i =  TtaGetElementVolume (last) + 1 - firstChar;
+      if (TtaBreakElement (elem, first, firstChar, TRUE, FALSE))
+        {
+          // insert after
+          oldStructureChecking = TtaGetStructureChecking (doc);
+          TtaSetStructureChecking (FALSE, doc);
+          TtaNextSibling (&elem);
+          // generate the tree of the new structure
+          child = TtaGetFirstChild (elem);
+          while (child)
             {
-              // insert after
-              oldStructureChecking = TtaGetStructureChecking (doc);
-              TtaSetStructureChecking (FALSE, doc);
-              TtaNextSibling (&elem);
-              // generate the tree of the new structure
-              child = TtaGetFirstChild (elem);
-              while (child)
+              elType = TtaGetElementType (child);
+              el = TtaNewElement (doc, elType);
+              TtaCopyAttributes (child, el, doc, doc);
+              if (new_ == NULL)
                 {
-                  elType = TtaGetElementType (child);
-                  el = TtaNewElement (doc, elType);
-                  TtaCopyAttributes (child, el, doc, doc);
-                  if (new_ == NULL)
-                    {
-                    // top of the new tree
-                    TtaInsertSibling (el, elem, TRUE, doc);
-                    top = new_ = el;
-                    }
-                  else
-                    {
-                      TtaInsertFirstChild  (&el, new_, doc);
-                      new_ = el;
-                    }
-                  elem = child;
-                  child = TtaGetFirstChild (child);
+                  // top of the new tree
+                  TtaInsertSibling (el, elem, TRUE, doc);
+                  top = new_ = el;
                 }
-              if (i > 0)
+              else
+                {
+                  TtaInsertFirstChild  (&el, new_, doc);
+                  new_ = el;
+                }
+              elem = child;
+              child = TtaGetFirstChild (child);
+            }
+          if (i > 0)
+            {
+              /* there is some text to be copied */
+              child = elem;
+              lg = TtaGetTextLength (child);
+              buffer = (unsigned char*)TtaGetMemory ((lg+1));
+              memset (buffer, 0, lg);
+              TtaGiveSubString (child, buffer, 1, i);
+              TtaSetTextContent (el, buffer, lang, doc);
+              TtaFreeMemory (buffer);
+              if (i >= lg)
+                {
+                  // remove the element
+                  TtaRegisterElementDelete (child, doc);
+                  TtaRemoveTree (child, doc);                      
+                }
+              else
+                {
+                  TtaRegisterElementReplace (child, doc);
+                  TtaDeleteTextContent (child, 1, i, doc);
+                }
+            }
+          TtaRegisterElementCreate (top, doc);
+          start = el; // new start selection
+          while (next)
+            {
+              el = next;
+              if ((j == 0 && k == 0) || k >  TtaGetTextLength (next))
+                {
+                  // move the complete element
+                  TtaGiveNextSelectedElement (doc, &next, &j, &k);
+                  TtaRegisterElementDelete (el, doc);
+                  TtaRemoveTree (el, doc);
+                  TtaInsertSibling (el, top, FALSE, doc);
+                  top = el;
+                  TtaRegisterElementCreate (top, doc);
+                }
+              else
                 {
                   /* there is some text to be copied */
-                  child = elem;
-                  lg = TtaGetTextLength (child);
+                  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                  el = TtaNewElement (doc, elType);
+                  lg = TtaGetTextLength (next);
                   buffer = (unsigned char*)TtaGetMemory ((lg+1));
                   memset (buffer, 0, lg);
-                  TtaGiveSubString (child, buffer, 1, i);
+                  k--;
+                  TtaGiveSubString (next, buffer, 1, k);
                   TtaSetTextContent (el, buffer, lang, doc);
                   TtaFreeMemory (buffer);
-                  if (i >= lg)
-                    {
-                      // remove the element
-                      TtaRegisterElementDelete (child, doc);
-                      TtaRemoveTree (child, doc);                      
-                    }
-                  else
-                    {
-                      TtaRegisterElementReplace (child, doc);
-                      TtaDeleteTextContent (child, 1, i, doc);
-                    }
+                  TtaRegisterElementReplace (next, doc);
+                  TtaDeleteTextContent (next, 1, k, doc);
+                  TtaInsertSibling (el, top, FALSE, doc);
+                  top = el;
+                  next = NULL;
                 }
-              TtaRegisterElementCreate (top, doc);
-              start = el; // new start selection
-              while (next)
-                {
-                  el = next;
-                  if ((j == 0 && k == 0) || k >  TtaGetTextLength (next))
-                    {
-                      // move the complete element
-                      TtaGiveNextSelectedElement (doc, &next, &j, &k);
-                      TtaRegisterElementDelete (el, doc);
-                      TtaRemoveTree (el, doc);
-                      TtaInsertSibling (el, top, FALSE, doc);
-                      top = el;
-                      TtaRegisterElementCreate (top, doc);
-                    }
-                  else
-                    {
-                      /* there is some text to be copied */
-                      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-                      el = TtaNewElement (doc, elType);
-                      lg = TtaGetTextLength (next);
-                      buffer = (unsigned char*)TtaGetMemory ((lg+1));
-                      memset (buffer, 0, lg);
-                      k--;
-                      TtaGiveSubString (next, buffer, 1, k);
-                      TtaSetTextContent (el, buffer, lang, doc);
-                      TtaFreeMemory (buffer);
-                      TtaRegisterElementReplace (next, doc);
-                      TtaDeleteTextContent (next, 1, k, doc);
-                      TtaInsertSibling (el, top, FALSE, doc);
-                      top = el;
-                      next = NULL;
-                    }
-                }
-              TtaSelectElement (doc, start);
-              TtaExtendSelection (doc, top, TtaGetElementVolume (top) + 1);
-              TtaSetStructureChecking (oldStructureChecking, doc);
-              /* mark the document as modified */
-              TtaSetDocumentModified (doc);
-              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
             }
+          TtaSelectElement (doc, start);
+          TtaExtendSelection (doc, top, TtaGetElementVolume (top) + 1);
+          TtaSetStructureChecking (oldStructureChecking, doc);
+          /* mark the document as modified */
+          TtaSetDocumentModified (doc);
+          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+        }
     }
 }
 

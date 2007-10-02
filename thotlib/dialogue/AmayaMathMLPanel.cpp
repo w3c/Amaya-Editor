@@ -143,7 +143,7 @@ void AmayaMathMLToolPanel::Initialize()
   SetSizer(sz);
   m_pBook->SetImageList(&m_imagelist);
   wxBitmap bmp;
-  bmp.LoadFile(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, ""), wxBITMAP_TYPE_ANY);
+  bmp.LoadFile(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "dummy.png"), wxBITMAP_TYPE_ANY);
   int img = m_imagelist.Add(bmp);
   wxPanel*   panel = new wxPanel(m_pBook, wxID_ANY);
   m_pBook->AddPage(panel, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_6)), false, img);
