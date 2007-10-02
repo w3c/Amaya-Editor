@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(SendByMailDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       SendByMailDlgWX::OnCancelButton)
-  EVT_TEXT(       XRCID("wxID_COMBO_NEW_TO"),  SendByMailDlgWX::OnNewToTextModified)
+//  EVT_TEXT(       XRCID("wxID_COMBO_NEW_TO"),  SendByMailDlgWX::OnNewToTextModified)
   EVT_TEXT_ENTER( XRCID("wxID_COMBO_NEW_TO"),  SendByMailDlgWX::OnNewToEnterPressed)
   
   EVT_LISTBOX(    XRCID("wxID_LIST_TO"),      SendByMailDlgWX::OnToItemSelected)
