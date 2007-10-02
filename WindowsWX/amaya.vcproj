@@ -76,7 +76,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxbase28u_xml.lib wxmsw28u_gl.lib wxmsw28u_xrc.lib wxmsw28u_adv.lib wxmsw28u_core.lib wxbase28u.lib wxbase28u_net.lib freetype2110.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="glu32.lib opengl32.lib wxbase28u_xml.lib wxmsw28u_gl.lib wxmsw28u_xrc.lib wxmsw28u_adv.lib wxmsw28u_core.lib wxbase28u.lib wxbase28u_net.lib freetype2110.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib odbc32.lib odbccp32.lib"
 				OutputFile=".\bin/amaya.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"

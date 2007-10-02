@@ -18,7 +18,6 @@
 #include "typemedia.h"
 #include "registry.h"
 #include "registry_wx.h"
-#include "logdebug.h"
 
 /*----------------------------------------------------------------------
   TtaGetResourcesPathWX - 
@@ -83,7 +82,7 @@ wxString TtaGetResourcePathWX( wxResourceType type, const char * filename )
       }
       break;
     }
-  TTALOGDEBUG_0( TTA_LOG_INIT, _T("TtaGetResourcePathWX: path=")+path);
+  //TTALOGDEBUG_0( TTA_LOG_INIT, _T("TtaGetResourcePathWX: path=")+path);
   return path;
 }
 
