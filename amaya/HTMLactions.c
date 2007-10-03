@@ -4093,7 +4093,7 @@ void SetCharFontOrPhrase (int doc, int elemtype)
   Attribute           attr;
   int                 firstChar, lastChar, i;
   int                 blocktype;
-  ThotBool            remove;
+  ThotBool            remove, charlevel;
   ThotBool            oldStructureChecking;
 
   if (!TtaGetDocumentAccessMode (doc))
@@ -4206,8 +4206,11 @@ void SetCharFontOrPhrase (int doc, int elemtype)
         {
           oldStructureChecking = TtaGetStructureChecking (doc);
           TtaSetStructureChecking (FALSE, doc);
+          elType = TtaGetElementType (first);
+          charlevel = (IsCharacterLevelElement (first) ||
+                       elType.ElTypeNum == HTML_EL_Basic_Elem);
           // they could be block or inline elements
-          if (!IsCharacterLevelElement (first) ||
+          if (!charlevel ||
               (first != last && !IsCharacterLevelElement (last)))
             // create a block element
             CreateHTMLelement (blocktype, doc);
