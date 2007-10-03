@@ -2963,9 +2963,11 @@ void SaveAll (Document doc, View view)
   Saving_All_lock = TRUE;
 
   for (document = 1; document < DocumentTableLength; document++)
-    if (TtaIsDocumentModified (document))
-       SaveDocument (document, view);
-    ;
+    {
+      if (TtaIsDocumentModified (document) &&
+          DocumentTypes[document] != docTemplate)
+        SaveDocument (document, view);
+    }
 
   Saving_All_lock = FALSE;
 
