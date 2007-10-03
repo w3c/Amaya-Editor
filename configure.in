@@ -68,7 +68,7 @@ AC_PATH_PROG(SED, sed, /bin/sed, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(AR, ar, /usr/bin/ar, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(DIFF, diff, /usr/bin/diff, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 
-
+hmo
 dnl
 dnl Checks for libraries.
 dnl
@@ -1457,15 +1457,13 @@ fi
 if test -f script_uninstall ; then
    chmod a+x script_uninstall
 fi
+if test -f bin/amaya ; then
+   chmod 755 bin/amaya
+    echo WARNING : `ls -l bin/amaya`
+fi
 ])
 
 dnl
-dnl Generate the script
-dnl
-if test "$AMAYAOS" != "MACOSX" ; then
-    chmod a+x bin/amaya
-fi
-
 if test "$build_amaya" = "yes" ; then
     echo Amaya $AMAYA_VER configured
     echo Amaya configured with libWWW

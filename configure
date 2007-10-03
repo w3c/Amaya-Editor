@@ -3982,7 +3982,7 @@ echo "${ECHO_T}no" >&6
 fi
 
 
-
+hmo
 
 
 echo "$as_me:$LINENO: checking for socket in -lsocket" >&5
@@ -16360,6 +16360,10 @@ fi
 if test -f script_uninstall ; then
    chmod a+x script_uninstall
 fi
+if test -f bin/amaya ; then
+   chmod 755 bin/amaya
+    echo WARNING : `ls -l bin/amaya`
+fi
  ;;
   esac
 done
@@ -16394,10 +16398,6 @@ if test "$no_create" != yes; then
   $ac_cs_success || { (exit 1); exit 1; }
 fi
 
-
-if test "$AMAYAOS" != "MACOSX" ; then
-    chmod a+x bin/amaya
-fi
 
 if test "$build_amaya" = "yes" ; then
     echo Amaya $AMAYA_VER configured
