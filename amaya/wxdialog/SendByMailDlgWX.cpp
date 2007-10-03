@@ -42,7 +42,8 @@ END_EVENT_TABLE()
     + ps_file : postscript file
   ----------------------------------------------------------------------*/
 SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
-  AmayaDialog( parent, ref )
+  AmayaDialog( parent, ref ),
+  m_grid(NULL)
 {
   m_ref = ref;
 
