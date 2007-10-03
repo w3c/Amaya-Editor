@@ -9,39 +9,9 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxSplitterWindow">
-          <object class="wxPanel">
+          <object class="wxPanel" name="wxID_PANEL_MAIL_HEADER">
             <object class="wxBoxSizer">
               <orient>wxVERTICAL</orient>
-              <object class="sizeritem">
-                <object class="wxBoxSizer">
-                  <orient>wxHORIZONTAL</orient>
-                  <object class="sizeritem">
-                    <object class="wxStaticText" name="wxID_LABEL_TO">
-                      <label>*Destinataires :*</label>
-                    </object>
-                    <flag>wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL</flag>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxComboBox" name="wxID_COMBO_NEW_TO">
-                      <content/>
-                      <style></style>
-                    </object>
-                    <option>1</option>
-                    <flag>wxALL|wxEXPAND</flag>
-                    <border>4</border>
-                  </object>
-                </object>
-                <option>0</option>
-                <flag>wxEXPAND</flag>
-              </object>
-              <object class="sizeritem">
-                <object class="wxListBox" name="wxID_LIST_TO">
-                  <content/>
-                </object>
-                <option>1</option>
-                <flag>wxALL|wxEXPAND</flag>
-                <border>4</border>
-              </object>
               <object class="sizeritem">
                 <object class="wxStaticLine"/>
                 <flag>wxALL|wxEXPAND</flag>
@@ -87,7 +57,7 @@
           <orientation>horizontal</orientation>
           <sashpos>200</sashpos>
           <minsize>92</minsize>
-          <object class="wxPanel">
+          <object class="wxPanel" name="wxID_PANEL_MAIL_CONTENT">
             <object class="wxBoxSizer">
               <orient>wxVERTICAL</orient>
               <object class="sizeritem">
