@@ -422,6 +422,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\amaya\wxdialog\ListBoxBook.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\amaya\wxdialog\ListDlgWX.cpp"
 				>
 				<FileConfiguration

@@ -8,7 +8,7 @@
 ;General
 
   ;Name and file
-  !define VERSION "9.56"
+  !define VERSION "9.99"
   Name "Amaya"
   OutFile "amaya-WinXP-${VERSION}.exe"
   
@@ -254,6 +254,7 @@ Section "Amaya" SecAmaya
   File config\amaya.kb
   File config\amaya.profiles
   File config\*.rdf
+  File config\*.css
   File config\annot.schemas
   File config\win-thot.rc
 

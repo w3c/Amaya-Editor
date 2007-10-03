@@ -122,6 +122,7 @@ bool AmayaMathMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint
   m_pBook->SetPageText(2, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_3)));
   m_pBook->SetPageText(3, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_4)));
   m_pBook->SetPageText(4, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_5)));
+  m_pBook->SetSelection(0);
   // add the trigonometry page
   Initialize();
   return true;

@@ -46,7 +46,7 @@ wxListBoxBook::Create(wxWindow *parent,
         return false;
 
     m_bookctrl = new wxListBox (this, wxID_ANY,
-                    wxDefaultPosition, wxSize(160,160),
+                    wxDefaultPosition, wxSize(100,160),
                     0, NULL, wxLB_SINGLE);
 
 #ifdef __WXMSW__
