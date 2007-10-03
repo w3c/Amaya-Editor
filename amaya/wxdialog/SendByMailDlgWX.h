@@ -58,9 +58,9 @@ private:
   void LoadRecentList();
   
   void OnCloseDialog(wxCommandEvent& event);
-
-  
   void OnGridCellChange(wxGridEvent& event);
+  
+  void OnSize(wxSizeEvent& event);
   
  // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()

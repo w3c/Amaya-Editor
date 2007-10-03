@@ -31,6 +31,7 @@ BEGIN_EVENT_TABLE(SendByMailDlgWX, AmayaDialog)
   EVT_BUTTON(wxID_CANCEL, SendByMailDlgWX::OnCloseDialog)
   
   EVT_GRID_CMD_CELL_CHANGE(wxID_ANY, SendByMailDlgWX::OnGridCellChange)
+  EVT_SIZE(SendByMailDlgWX::OnSize)
 END_EVENT_TABLE()
 
 
@@ -57,10 +58,11 @@ SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
       m_grid = new wxGrid(panel, wxID_ANY);
       panel->GetSizer()->Prepend(m_grid, 1, wxEXPAND);
       m_grid->CreateGrid(1, 1);
-      m_grid->SetRowLabelSize(22);
+      m_grid->SetRowLabelSize(0);
+      m_grid->SetDefaultColSize(2);
       m_grid->SetColLabelValue(0, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_TO_)));
       m_grid->SetColMinimalWidth(0, 160);
-      m_grid->SetColSize(0, 300);
+      m_grid->SetColSize(0, m_grid->GetSize().x-20);
       LoadRecentList();
       m_grid->SetDefaultEditor(new wxGridCellChoiceEditor(m_rcptArray, true));      
     }
@@ -279,6 +281,14 @@ void SendByMailDlgWX::OnCloseDialog(wxCommandEvent& event)
         }      
     }
   SaveRecentList();
+  event.Skip();
+}
+
+
+void SendByMailDlgWX::OnSize(wxSizeEvent& event)
+{
+  if(m_grid)
+    m_grid->SetColSize(0, m_grid->GetSize().x-20);
   event.Skip();
 }
 
