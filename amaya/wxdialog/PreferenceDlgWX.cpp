@@ -195,6 +195,8 @@ END_EVENT_TABLE()
   SetAutoLayout( TRUE );
   Fit();
 
+  CentreOnScreen();
+  
   // this flag is used to know when events can be proceed
   // for example : when resources are loaded it produces "Page changed" events
   m_IsInitialized = true;
