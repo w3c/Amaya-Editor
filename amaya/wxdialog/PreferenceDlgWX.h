@@ -12,6 +12,8 @@
 #include "AmayaDialog.h"
 #include "MENUconf.h"
 
+#include "ListBoxBook.h"
+
 //-----------------------------------------------------------------------------
 // Class definition: HRefDlgWX
 //-----------------------------------------------------------------------------
@@ -121,6 +123,8 @@ private:
   DECLARE_EVENT_TABLE()
 
 private:
+  wxListBoxBook *m_book;
+  
   wxArrayString m_UrlList;
   
   // "Color" tab

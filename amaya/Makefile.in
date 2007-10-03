@@ -217,6 +217,7 @@ AMAYA_OBJ = \
 	wxdialog/HRefDlgWX.o \
 	wxdialog/ImageDlgWX.o \
 	wxdialog/InitConfirmDlgWX.o \
+	wxdialog/ListBoxBook.o \
 	wxdialog/ListDlgWX.o \
 	wxdialog/ListEditDlgWX.o \
 	wxdialog/NewTemplateDocDlgWX.o \
