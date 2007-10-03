@@ -9,6 +9,9 @@
 #include "wx/spinctrl.h"
 #include "AmayaDialog.h"
 
+class wxGrid;
+class wxGridEvent;
+
 //-----------------------------------------------------------------------------
 // Class definition: SendByMailDlgWX
 //-----------------------------------------------------------------------------
@@ -47,26 +50,18 @@ private:
     // Override base class functions of a wxDialog.
   void OnCancelButton( wxCommandEvent& event );
 
-  void OnNewToTextModified(wxCommandEvent& event);
-  void OnNewToEnterPressed(wxCommandEvent& event);
-  
-  
-  void OnToItemSelected(wxCommandEvent& event);
-
-  void OnSupprToItem(wxCommandEvent& event);
-
   void OnUpdateSendButton(wxUpdateUIEvent& event);
-  
+
   void OnChangeMessageClass(wxCommandEvent& event);
 
-  void SetCurrentToItemText();
-  void SuggestAddress();
-  void FillRecentAddress();
   void SaveRecentList();
   void LoadRecentList();
   
   void OnCloseDialog(wxCommandEvent& event);
 
+  
+  void OnGridCellChange(wxGridEvent& event);
+  
  // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 
@@ -75,8 +70,7 @@ private:
   
   wxArrayString m_rcptArray;
   
-  wxListBox*  m_tos;
-  wxComboBox* m_newto;
+  wxGrid*     m_grid;
 };
 
 #endif  //__SENDBYMAILDLGWX_H__

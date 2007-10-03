@@ -9,6 +9,7 @@
 #include <wx/valtext.h>
 #include <wx/tokenzr.h>
 #include <wx/recguard.h>
+#include <wx/grid.h>
 
 
 #define THOT_EXPORT extern
@@ -23,16 +24,13 @@
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(SendByMailDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       SendByMailDlgWX::OnCancelButton)
-//  EVT_TEXT(       XRCID("wxID_COMBO_NEW_TO"),  SendByMailDlgWX::OnNewToTextModified)
-  EVT_TEXT_ENTER( XRCID("wxID_COMBO_NEW_TO"),  SendByMailDlgWX::OnNewToEnterPressed)
-  
-  EVT_LISTBOX(    XRCID("wxID_LIST_TO"),      SendByMailDlgWX::OnToItemSelected)
-  EVT_MENU(       wxID_DELETE,                SendByMailDlgWX::OnSupprToItem)
   EVT_UPDATE_UI(  wxID_OK,                    SendByMailDlgWX::OnUpdateSendButton)
   EVT_RADIOBOX(   XRCID("wxID_RADIOBOX_SEND_CLASS"), SendByMailDlgWX::OnChangeMessageClass)
   
   EVT_BUTTON(wxID_OK,     SendByMailDlgWX::OnCloseDialog)
   EVT_BUTTON(wxID_CANCEL, SendByMailDlgWX::OnCloseDialog)
+  
+  EVT_GRID_CMD_CELL_CHANGE(wxID_ANY, SendByMailDlgWX::OnGridCellChange)
 END_EVENT_TABLE()
 
 
@@ -44,8 +42,7 @@ END_EVENT_TABLE()
     + ps_file : postscript file
   ----------------------------------------------------------------------*/
 SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
-  AmayaDialog( parent, ref ),
-  m_currTo(wxID_ANY)
+  AmayaDialog( parent, ref )
 {
   m_ref = ref;
 
@@ -53,7 +50,20 @@ SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_EMAILS_SEND_BY_MAIL) );
   SetTitle( wx_title );
 
-  XRCCTRL(*this, "wxID_LABEL_TO",   wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_TO_)) );
+  wxPanel* panel = XRCCTRL(*this, "wxID_PANEL_MAIL_HEADER", wxPanel);
+  if(panel)
+    {
+      m_grid = new wxGrid(panel, wxID_ANY);
+      panel->GetSizer()->Prepend(m_grid, 1, wxEXPAND);
+      m_grid->CreateGrid(1, 1);
+      m_grid->SetRowLabelSize(22);
+      m_grid->SetColLabelValue(0, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_TO_)));
+      m_grid->SetColMinimalWidth(0, 160);
+      m_grid->SetColSize(0, 300);
+      LoadRecentList();
+      m_grid->SetDefaultEditor(new wxGridCellChoiceEditor(m_rcptArray, true));      
+    }
+  
   XRCCTRL(*this, "wxID_LABEL_SUBJECT",   wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SUBJECT_)) );
   XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SEND_AS_)) );
   XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SEND_AS_ATTACHMENT)) );
@@ -63,25 +73,22 @@ SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_EMAILS_SEND) ));
 
-  m_tos   = XRCCTRL(*this, "wxID_LIST_TO",     wxListBox);
-  m_newto = XRCCTRL(*this, "wxID_COMBO_NEW_TO", wxComboBox);
-
-  wxAcceleratorEntry entries[2];
-  entries[0].Set(wxACCEL_NORMAL,  WXK_DELETE, wxID_DELETE);
-  entries[1].Set(wxACCEL_NORMAL,  WXK_BACK, wxID_DELETE);
-  wxAcceleratorTable accel(2, entries);
-  m_tos->SetAcceleratorTable(accel);
-
   UpdateMessageLabel();
-
-  LoadRecentList();
-  
-  FillRecentAddress();
-  m_newto->SetValue(wxT(""));
 
   Layout();
   SetAutoLayout( TRUE );
   SetSize(600, 400);
+}
+
+/*----------------------------------------------------------------------
+  Called when a grid cell content was changed.
+  ----------------------------------------------------------------------*/
+void SendByMailDlgWX::OnGridCellChange(wxGridEvent& event)
+{
+  wxGrid* grid = (wxGrid*)event.GetEventObject();
+  if(event.GetRow()==grid->GetNumberRows()-1)
+    grid->AppendRows();
+  event.Skip();
 }
 
 /*----------------------------------------------------------------------
@@ -114,97 +121,26 @@ void SendByMailDlgWX::OnCancelButton( wxCommandEvent& event )
   event.Skip();
 }
 
-void SendByMailDlgWX::OnNewToTextModified(wxCommandEvent& WXUNUSED(event))
-{
-  SetCurrentToItemText();
-  SuggestAddress();
-}
-
-void SendByMailDlgWX::OnNewToEnterPressed(wxCommandEvent& WXUNUSED(event))
-{
-  SetCurrentToItemText();
-  AddAddressToRecentList(m_newto->GetValue());
-  m_currTo = m_tos->Append(wxT(""));
-  m_tos->SetSelection(m_currTo);
-  m_newto->Clear();
-}
-
-void SendByMailDlgWX::OnToItemSelected(wxCommandEvent& event)
-{
-  m_currTo = event.GetSelection();
-  m_newto->SetValue(m_tos->GetString(m_currTo));
-}
-
-void SendByMailDlgWX::OnSupprToItem(wxCommandEvent& WXUNUSED(event))
-{
-  if(m_currTo!=wxID_ANY)
-  {
-    m_newto->Clear();
-    m_tos->Delete(m_currTo);
-    if(m_currTo>=(int)m_tos->GetCount())
-      m_currTo = m_tos->GetCount()-1;
-    m_tos->SetSelection(m_currTo);
-  }
-}
-
 void SendByMailDlgWX::OnUpdateSendButton(wxUpdateUIEvent& event)
 {
-  event.Enable(m_tos->GetCount()>0);
+  if(m_grid && m_grid->GetNumberRows()>0)
+    {
+      int n;
+      for(n=0; n<m_grid->GetNumberRows(); n++)
+        {
+          if(!(m_grid->GetCellValue(n, 0).Trim().IsEmpty()))
+            {
+              event.Enable(true);
+              return;
+            }
+        }
+    }
+  event.Enable(false);
 }
 
 void SendByMailDlgWX::OnChangeMessageClass(wxCommandEvent& WXUNUSED(event))
 {
   UpdateMessageLabel();
-}
-
-
-/**----------------------------------------------------------------------
-  SetCurrentToItemText
-  Set the label of the current to item in the list
-  ----------------------------------------------------------------------*/
-void SendByMailDlgWX::SetCurrentToItemText()
-{
-  wxString str = m_newto->GetValue();
-
-  if(m_currTo==wxID_ANY)
-  {
-    if(!str.IsEmpty())
-    {
-      m_currTo = m_tos->Append(str);
-      m_tos->SetSelection(m_currTo);
-    }
-  }
-  else
-  {
-    m_tos->SetString(m_currTo, str);
-  }
-}
-
-void SendByMailDlgWX::SuggestAddress()
-{
-  long id = wxNOT_FOUND;
-  wxString str = m_newto->GetValue();
-  if(m_newto->GetInsertionPoint()==m_newto->GetLastPosition())
-  {
-    if(str.Length()>2)
-    {
-      int i;
-      for(i=0; i<(int)m_rcptArray.GetCount(); i++)
-      {
-        if(m_rcptArray[i].StartsWith((const wxChar*)str))
-        {
-          if(id!=wxNOT_FOUND)
-            return; // More than one choice, dont do anything
-          id = i;
-        }
-      }
-      if(id!=wxNOT_FOUND)
-      {
-        m_newto->SetValue(m_rcptArray[id]);
-        m_newto->SetSelection(str.Length(), -1);
-      }
-    }
-  }
 }
 
 void SendByMailDlgWX::AddAddressToRecentList(const wxString& addr)
@@ -219,14 +155,7 @@ void SendByMailDlgWX::AddAddressToRecentList(const wxString& addr)
     {
       m_rcptArray.RemoveAt(m_rcptArray.GetCount()-1);
     }
-    FillRecentAddress();
   }
-}
-
-void SendByMailDlgWX::FillRecentAddress()
-{
-  m_newto->Clear();
-  m_newto->Append(m_rcptArray);
 }
 
 wxString SendByMailDlgWX::GetSubject()const
@@ -267,28 +196,46 @@ void SendByMailDlgWX::SetSendMode(int mode)
 
 wxArrayString  SendByMailDlgWX::GetRecipients()const
 {
-  return m_tos->GetStrings();
+  wxArrayString arr;
+  int n;
+  for(n=0; n<m_grid->GetNumberRows(); n++)
+    {
+      wxString str = m_grid->GetCellValue(n, 0).Trim(); 
+      if(!str.IsEmpty())
+          arr.Add(str);
+    }
+  return arr;
 }
 
 void SendByMailDlgWX::SetRecipients(const wxArrayString & rcpt)
 {
-  m_tos->Append(rcpt);
+  m_grid->BeginBatch();
+  
+  unsigned int n;
+  for(n=0; n<rcpt.GetCount(); n++)
+    {
+      wxString str = rcpt[n].Trim();
+      if(!str.IsEmpty())
+        {
+          m_grid->AppendRows();
+          m_grid->SetCellValue(m_grid->GetNumberRows()-1, 0, str);
+        }
+    }
+  m_grid->EndBatch();
 }
 
 wxString SendByMailDlgWX::GetRecipientList()const
 {
-  wxString str;
-  if(m_tos->GetCount()>0)
-  {
-    for(int i=0; i<(int)m_tos->GetCount(); i++)
+  wxString res;
+  int n;
+  for(n=0; n<m_grid->GetNumberRows(); n++)
     {
-      wxString s = m_tos->GetString(i);
-      if(!s.IsEmpty())
-        str << wxT("|") << s;
+      wxString str = m_grid->GetCellValue(n, 0).Trim(); 
+      if(!str.IsEmpty())
+        res << wxT("|") << str;
     }
-  }
-  str.Remove(0,1);
-  return str;
+  res.Remove(0,1);
+  return res;
 }
 
 void SendByMailDlgWX::SaveRecentList()
@@ -312,20 +259,24 @@ void SendByMailDlgWX::LoadRecentList()
   if(lastRcpt)
   {
     wxString rcpts(lastRcpt, wxConvUTF8);
-    wxStringTokenizer tkz(wxString(rcpts, wxConvUTF8), wxT("|"));
-    while ( tkz.HasMoreTokens() )
-    {
-      m_rcptArray.Add(tkz.GetNextToken());
-    }
+    m_rcptArray = ::wxStringTokenize(wxString(rcpts, wxConvUTF8), wxT("|"));
   }
   if(m_rcptArray.GetCount()==0)
-  {
     m_rcptArray.Add(wxString(TtaGetEnvString ("EMAILS_FROM_ADDRESS"), wxConvUTF8));
-  }
 }
 
 void SendByMailDlgWX::OnCloseDialog(wxCommandEvent& event)
 {
+  if(event.GetId()==wxID_OK)
+    {
+      int n;
+      for(n=0; n<m_grid->GetNumberRows(); n++)
+        {
+          wxString str = m_grid->GetCellValue(n, 0).Trim(); 
+          if(!str.IsEmpty())
+            AddAddressToRecentList(str);
+        }      
+    }
   SaveRecentList();
   event.Skip();
 }
