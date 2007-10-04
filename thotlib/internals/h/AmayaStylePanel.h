@@ -29,8 +29,9 @@ public:
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_STYLE;}
   virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_STYLE");}
   void OnColorPalette( AmayaColorButtonEvent& event );
-  
   void SetColor(int color);
+  void OnThemeChange( wxCommandEvent& event );
+  void SetTheme(char *theme);
 
 protected:
   // Any class wishing to process wxWindows events must use this macro

@@ -965,6 +965,47 @@ char *GetStyleContents (Element el)
 }
 
 /*----------------------------------------------------------------------
+  LoadACSSFile 
+  Allocate and return a buffer that gives the local CSS file contents
+  ----------------------------------------------------------------------*/
+char *LoadACSSFile (char *cssfile)
+{
+  gzFile              res;
+  int                 lenBuff = 0;
+  int                 len;
+  char               *tmpBuff = NULL;
+#define	              COPY_BUFFER_SIZE	1024
+  char                bufferRead[COPY_BUFFER_SIZE + 1];
+  ThotBool            endOfFile = FALSE;
+
+  res = TtaGZOpen (cssfile);
+  if (res == NULL)
+    return tmpBuff;
+  while (!endOfFile)
+    {
+      len = gzread (res, bufferRead, COPY_BUFFER_SIZE);
+      if (len < COPY_BUFFER_SIZE)
+        endOfFile = TRUE;
+      lenBuff += len;
+    }
+  len = 0;
+  TtaGZClose (res);
+  tmpBuff = (char *)TtaGetMemory (lenBuff + 1);
+  if (tmpBuff == NULL)
+    return tmpBuff;
+  res = TtaGZOpen (cssfile);
+  if (res == NULL)
+    {
+      TtaFreeMemory (tmpBuff);
+      return NULL;
+    }
+  len = gzread (res, tmpBuff, lenBuff);
+  tmpBuff[lenBuff] = 0;
+  TtaGZClose (res);
+  return tmpBuff;     
+}
+
+/*----------------------------------------------------------------------
   LoadStyleSheet loads the external Style Sheet found at the given url
   (in dialog charset).
   The parameter link gives the element which links the CSS or NULL.
@@ -979,18 +1020,12 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
 {
   CSSInfoPtr          refcss = NULL;
   PInfoPtr            pInfo;
-  gzFile              res;
   char                tempfile[MAX_LENGTH];
   char                tempURL[MAX_LENGTH];
   char               *tmpBuff;
-  int                 lenBuff = 0;
   CSSCategory         category;
-  int                 len;
   ThotBool            import, printing;
   ThotBool            loadcss;
-#define	              COPY_BUFFER_SIZE	1024
-  char                bufferRead[COPY_BUFFER_SIZE + 1];
-  ThotBool            endOfFile = FALSE;
 
   /* check if we have to load CSS */
   TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
@@ -1061,45 +1096,12 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   if ( pInfo->PiSchemas == NULL || import)
     {
       /* load the resulting file in memory */
-      res = TtaGZOpen (tempfile);
-      if (res == NULL)
-        {
-          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-          return;
-        }
-      while (!endOfFile)
-        {
-          len = gzread (res, bufferRead, COPY_BUFFER_SIZE);
-          if (len < COPY_BUFFER_SIZE)
-            endOfFile = TRUE;
-          lenBuff += len;
-        }
-      len = 0;
-      TtaGZClose (res);
-      tmpBuff = (char *)TtaGetMemory (lenBuff + 1);
+      tmpBuff = LoadACSSFile (tempfile);
       if (tmpBuff == NULL)
         {
           TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
           return;
         }
-      res = TtaGZOpen (tempfile);
-      if (res == NULL)
-        {
-          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-          TtaFreeMemory (tmpBuff);
-          return;
-        }
-      len = gzread (res, tmpBuff, lenBuff);
-      if (len < 0)
-        {
-          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-          TtaGZClose (res);
-          ReadCSSRules (doc, refcss, tmpBuff, tempURL, 0, FALSE, NULL);
-          TtaFreeMemory (tmpBuff);
-          return;
-        }
-      tmpBuff[lenBuff] = 0;
-      TtaGZClose (res);
       if (css)
         urlRef = css->url;
       ReadCSSRules (doc, refcss, tmpBuff, urlRef, 0, FALSE, link);

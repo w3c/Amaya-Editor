@@ -28,6 +28,7 @@
 
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
+#include "EDITORactions_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
@@ -678,57 +679,55 @@ void DeleteStyleElement (Document doc, Element el)
 
 
 /*----------------------------------------------------------------------
-  StyleChanged
+  ApplyStyleChange
   A STYLE element has been changed in the HEAD
+  OldBuffer gives the previous contents
+  buffer give the new contents
   ----------------------------------------------------------------------*/
-void StyleChanged (NotifyOnTarget *event)
+void ApplyStyleChange (Element el, Document doc, char *buffer)
 {
   DisplayMode         dispMode;
-  char               *buffer, *ptr1, *ptr2;
+  char               *ptr1, *ptr2;
   char               *pEnd, *nEnd;
   char                c;
   int                 i, j;
   int                 previousEnd, nextEnd;
   int                 braces;
 
-  /* get the new content of the style element */
-  buffer = GetStyleContents (event->element);
   /* compare both strings */
   i = 0;
   ptr1 = buffer;
   previousEnd = i;
   pEnd = ptr1;
   braces = 0;
-  dispMode = TtaGetDisplayMode (event->document);
-  RemoveParsingErrors (event->document);
+  dispMode = TtaGetDisplayMode (doc);
+  RemoveParsingErrors (doc);
   // close attached log documents
-  CloseLogs (event->document);
+  CloseLogs (doc);
   if (OldBuffer == NULL)
     {
       if (buffer)
         {
-          TtaSetDisplayMode (event->document, DeferredDisplay);
+          TtaSetDisplayMode (doc, NoComputedDisplay);
           /* This is a brand new style element */
-          ApplyCSSRules (event->element, buffer, event->document, FALSE);
-          TtaSetDisplayMode (event->document, dispMode);
+          ApplyCSSRules (el, buffer, doc, FALSE);
+          TtaSetDisplayMode (doc, dispMode);
         }
     }
   else
     {
       if (buffer == NULL)
         {
-          TtaSetDisplayMode (event->document, DeferredDisplay);
+          TtaSetDisplayMode (doc, NoComputedDisplay);
           /* the style element has been cleared. Remove the style made by the
              previous content */
-          ApplyCSSRules (event->element, OldBuffer, event->document, TRUE);
-          TtaSetDisplayMode (event->document, dispMode);
+          ApplyCSSRules (el, OldBuffer, doc, TRUE);
+          TtaSetDisplayMode (doc, dispMode);
         }
       else
         {
-          if (strstr (OldBuffer, "float") || strstr (buffer, "float"))
-            TtaSetDisplayMode (event->document, NoComputedDisplay);
-          else
-            TtaSetDisplayMode (event->document, DeferredDisplay);
+          //if (strstr (OldBuffer, "float") || strstr (buffer, "float"))
+          TtaSetDisplayMode (doc, NoComputedDisplay);
           /* handle only differences */
           while (OldBuffer[i] == *ptr1 && *ptr1 != EOS)
             {
@@ -791,7 +790,7 @@ void StyleChanged (NotifyOnTarget *event)
                       /* cut here */
                       c = *ptr2;
                       *ptr2 = EOS;
-                      ApplyCSSRules (event->element, ptr1, event->document,
+                      ApplyCSSRules (el, ptr1, doc,
                                      TRUE);
                       *ptr2 = c;
                       ptr1 = ptr2;
@@ -810,7 +809,7 @@ void StyleChanged (NotifyOnTarget *event)
                       /* cut here */
                       c = *ptr2;
                       *ptr2 = EOS;
-                      ApplyCSSRules (event->element, ptr1, event->document,
+                      ApplyCSSRules (el, ptr1, doc,
                                      FALSE);
                       *ptr2 = c;
                       ptr1 = ptr2;
@@ -819,14 +818,117 @@ void StyleChanged (NotifyOnTarget *event)
                 }
             }
           /* reset the display mode */
-          TtaSetDisplayMode (event->document, dispMode);
+          TtaSetDisplayMode (doc, dispMode);
         }
       TtaFreeMemory (OldBuffer);
       OldBuffer = NULL;
     }
+}
+
+/*----------------------------------------------------------------------
+  StyleChanged
+  A STYLE element has been changed in the HEAD
+  ----------------------------------------------------------------------*/
+void StyleChanged (NotifyOnTarget *event)
+{
+  char               *buffer;
+
+  /* get the new content of the style element */
+  buffer = GetStyleContents (event->element);
+  ApplyStyleChange (event->element, event->document, buffer);
   TtaFreeMemory (buffer);
   // check if an error is found in the new string
   CheckParsingErrors (event->document);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void ChangeTheme (char *theme)
+{
+  Element             root, el, head, content, next;
+  ElementType	        elType;
+  Attribute           attr;
+  AttributeType       attrType;
+  Document            doc;
+  Language            language = TtaGetDefaultLanguage ();
+  char               *buffer = NULL, *ptr, *filename;
+  int                 view;
+
+  TtaGetActiveView (&doc, &view);
+  if (doc == 0 || theme == NULL)
+    return;
+  if (doc && DocumentTypes[doc] == docHTML)
+    {
+      root = TtaGetMainRoot (doc);
+      elType = TtaGetElementType (root);
+      elType.ElTypeNum = HTML_EL_HEAD;
+      head = TtaSearchTypedElement (elType, SearchForward, root);
+      elType.ElTypeNum = HTML_EL_STYLE_;
+      el = TtaSearchTypedElement (elType, SearchForward, head);
+      if (!el)
+        {
+          TtaSetStructureChecking (FALSE, doc);
+          el = InsertWithinHead (doc, 1, HTML_EL_STYLE_);
+          TtaSetStructureChecking (TRUE, doc);
+          if (el)
+            {
+              TtaExtendUndoSequence (doc);
+              attrType.AttrSSchema = elType.ElSSchema;
+              attrType.AttrTypeNum = HTML_ATTR_Notation;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              TtaSetAttributeText (attr, "text/css", el, doc);
+            }
+        }
+      else
+        TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+
+      if (el && !TtaIsReadOnly (el))
+        {
+          OldBuffer = GetStyleContents (el);
+          // remove the current content
+          content = TtaGetFirstChild (el);
+          while (content)
+            {
+              next = content;
+              TtaNextSibling (&next);
+              TtaRegisterElementDelete(content, doc);
+              TtaDeleteTree (content, doc);
+              content = next;
+            }
+          if (strcmp (theme, "standard"))
+            {
+              // look for the css file
+              ptr = TtaGetEnvString ("THOTDIR");
+              filename = (char *)TtaGetMemory (strlen (ptr) + strlen(theme) + 20);
+              sprintf (filename, "%s%cconfig%c%s.css", ptr, DIR_SEP, DIR_SEP, theme);
+              buffer = LoadACSSFile (filename);
+
+              if (buffer)
+                {
+                  // insert the new content
+                  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                  content = TtaNewElement (doc, elType);
+                  sprintf (filename, "/* %s.css */\n", theme);
+                  TtaSetTextContent (content, (unsigned char*)filename, language, doc);
+                  TtaInsertFirstChild (&content, el, doc);
+                  TtaRegisterElementCreate (content, doc);
+
+                  next = TtaNewElement (doc, elType);
+                  TtaSetTextContent (next, (unsigned char*)buffer, language, doc);
+                  TtaInsertSibling (next, content, FALSE, doc);
+                  TtaRegisterElementCreate (next, doc);
+                }
+              TtaFreeMemory (filename);
+            }
+
+          ApplyStyleChange (el, doc, buffer);
+          TtaFreeMemory (buffer);
+          TtaSetDocumentModified (doc);
+          // check if an error is found in the new string
+          TtaCloseUndoSequence (doc);
+        }
+    }
 }
 
 

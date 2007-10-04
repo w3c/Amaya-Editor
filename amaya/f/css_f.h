@@ -41,6 +41,7 @@ extern void RemoveStyle ( char *url,
                           Element link,
                           CSSCategory category );
 extern char *GetStyleContents ( Element el );
+extern char *LoadACSSFile ( char *cssfile );
 extern void LoadStyleSheet ( char *url,
                              Document doc,
                              Element link,
@@ -86,6 +87,7 @@ extern void RemoveStyle ( char *url,
                             Element link,
                             CSSCategory category );
 extern char *GetStyleContents ( Element el );
+extern char *LoadACSSFile ( char *cssfile );
 extern void LoadStyleSheet ( char *url,
                                Document doc,
                                Element link,

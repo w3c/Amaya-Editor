@@ -70,6 +70,9 @@ extern void SpellCheck ( Document doc,
                          View view );
 extern void CreateBreak ( Document doc,
                           View view );
+extern Element InsertWithinHead ( Document doc,
+                                  View view,
+                                  int elementT );
 extern void CreateBase ( Document doc,
                          View view );
 extern void CreateMeta ( Document doc,
@@ -350,6 +353,9 @@ extern void SpellCheck ( Document doc,
                            View view );
 extern void CreateBreak ( Document doc,
                             View view );
+extern Element InsertWithinHead ( Document doc,
+                                    View view,
+                                    int elementT );
 extern void CreateBase ( Document doc,
                            View view );
 extern void CreateMeta ( Document doc,

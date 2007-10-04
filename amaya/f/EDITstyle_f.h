@@ -26,7 +26,11 @@ extern void EnableStyleElement ( Document doc,
                                  Element el );
 extern void DeleteStyleElement ( Document doc,
                                  Element el );
+extern void ApplyStyleChange ( Element el,
+                               Document doc,
+                               char *buffer );
 extern void StyleChanged ( NotifyOnTarget *event );
+extern void ChangeTheme ( char *theme );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void SetStyleString ( Document doc,
                              Element el,
@@ -71,7 +75,11 @@ extern void EnableStyleElement ( Document doc,
                                    Element el );
 extern void DeleteStyleElement ( Document doc,
                                    Element el );
+extern void ApplyStyleChange ( Element el,
+                                 Document doc,
+                                 char *buffer );
 extern void StyleChanged ( NotifyOnTarget *event );
+extern void ChangeTheme ( char *theme );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void SetStyleString ( Document doc,
                                Element el,

@@ -44,6 +44,7 @@ extern void MarginLeftIncrease ( Document doc,
                                  View view );
 extern void MarginLeftDecrease ( Document doc,
                                  View view );
+extern void ChangeTheme ( char *theme );
 extern void ShowAppliedStyle ( Document doc,
                                View view );
 extern void SynchronizeAppliedStyle ( NotifyElement *event );
@@ -101,6 +102,7 @@ extern void MarginLeftIncrease ( Document doc,
                                    View view );
 extern void MarginLeftDecrease ( Document doc,
                                    View view );
+extern void ChangeTheme ( char *theme );
 extern void ShowAppliedStyle ( Document doc,
                                  View view );
 extern void SynchronizeAppliedStyle ( NotifyElement *event );

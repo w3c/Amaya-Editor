@@ -1268,7 +1268,7 @@ void CreateBreak (Document doc, View view)
   insert the element type.
   Return TRUE if it succeeds.
   ----------------------------------------------------------------------*/
-static Element InsertWithinHead (Document doc, View view, int elementT)
+Element InsertWithinHead (Document doc, View view, int elementT)
 {
   ElementType         elType;
   Element             el, firstSel, lastSel, head, parent, new_, title;

@@ -36,14 +36,13 @@
 #include "AmayaColorButton.h"
 
 extern void GenerateStyle (char * color, ThotBool add);
-
+extern void ChangeTheme (char *theme);
 //
 //
 // AmayaStyleToolPanel
 //
 //
-static int Current_Color = -1;
-
+static int  Current_Color = -1;
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaStyleToolDef)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_LEFT",    "DoLeftAlign", LIB, TMSG_FORMATLEFT)
@@ -98,6 +97,7 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   XRCCTRL(*this, "wxID_FONT_COLOR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORFG)));
   XRCCTRL(*this, "wxID_THEME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_THEME)));
   SetColor (1);
+  SetTheme ("Standard");
   return true;
 }
 
@@ -130,7 +130,6 @@ void AmayaStyleToolPanel::OnColorPalette( AmayaColorButtonEvent& event )
 }
 
 
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::SetColor(int color)
@@ -151,11 +150,39 @@ void AmayaStyleToolPanel::SetColor(int color)
 }
 
 /*----------------------------------------------------------------------
+  OnColorPalette is called when the user click on the color palette button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnThemeChange( wxCommandEvent& event )
+{
+  wxString  value;
+  char      theme[100];
+
+  value = XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->GetStringSelection();
+  strcpy (theme, (const char*)value.mb_str(wxConvUTF8));
+  if (!strcasecmp (theme, "Standard"))
+    ChangeTheme ("standard");
+  else if (!strcasecmp (theme, "classic"))
+    ChangeTheme ("Classic");
+  else if (!strcasecmp (theme, "modern"))
+    ChangeTheme ("Modern");
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::SetTheme(char *theme)
+{
+  XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->SetStringSelection(TtaConvMessageToWX(theme));
+}
+
+/*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
   EVT_AMAYA_COLOR_CHANGED(wxID_ANY, AmayaStyleToolPanel::OnColorPalette )
+  EVT_CHOICE(XRCID("wxID_PANEL_CSS_THEME"), AmayaStyleToolPanel::OnThemeChange)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

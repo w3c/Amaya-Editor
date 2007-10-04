@@ -875,7 +875,6 @@ void MarginLeftDecrease (Document doc, View view)
     GenerateStyle ("margin-left:0;", TRUE);
 }
 
-
 /*----------------------------------------------------------------------
   Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
