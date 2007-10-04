@@ -1567,7 +1567,7 @@ void TtcCreateElement (Document doc, View view)
       if (!insertionPoint && !empty)
         {
           /* delete the selected content/elements the usual way */
-          CutCommand (FALSE, FALSE);
+          TtcDeleteSelection (doc, view);
           /* the Cut command has closed its history sequence. We will need
              to extend this sequence instead of opening a new one for the
              elements that will be created/deleted in the following */
