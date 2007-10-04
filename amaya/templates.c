@@ -102,8 +102,10 @@ ThotBool CheckPromptIndicator (Element el, Document doc)
           attrType.AttrTypeNum = Template_ATTR_prompt;
           att = TtaGetAttribute (parent, attrType);
           if (att)
-            TtaSelectElement (doc, el);
-          return TRUE;
+            {
+              TtaSelectElement (doc, el);
+              return TRUE;
+            }
         }
     }
 #endif /* TEMPLATES */
@@ -1430,7 +1432,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   Document       doc = event->document;
   Element        elem = event->element;
   Element        xtElem, parent;
-  Element        sibling;
+  Element        sibling, leaf;
   ElementType    xtType, elType;
   char*          type;
   Declaration    dec;
@@ -1492,7 +1494,19 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
       TtaDeleteTree(elem, doc);
       Template_DecrementRepeatOccurNumber(xtElem);
       InstantiateRepeat(t, xtElem, doc, TRUE);
-      TtaSelectElement(doc, sibling);
+      leaf = TtaGetFirstLeaf (sibling);
+      elType = TtaGetElementType (leaf);
+      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+        {
+          if (!CheckPromptIndicator (leaf, doc))
+           TtaSelectString (doc, leaf, 1, 0);
+        }
+      else
+        {
+          if (leaf)
+            sibling = leaf;
+          TtaSelectElement(doc, sibling);
+        }
       return TRUE;
     }
   }
