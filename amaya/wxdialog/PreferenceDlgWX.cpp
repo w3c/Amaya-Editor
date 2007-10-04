@@ -192,8 +192,8 @@ END_EVENT_TABLE()
   // on windows, the color selector dialog must be complete.
   colour_data.SetChooseFull(true);
 
-  SetAutoLayout( TRUE );
-  Fit();
+  SetSize(720, 420);
+  
 
   CentreOnScreen();
   

@@ -2,15 +2,14 @@
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
   <object class="wxDialog" name="PreferenceDlgWX">
     <title>PreferenceDlgWX</title>
-    <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxNO_3D|wxTAB_TRAVERSAL|wxCLIP_CHILDREN</style>
+    <size>480,200</size>
+    <style>wxDEFAULT_DIALOG_STYLE|wxTAB_TRAVERSAL|wxCLIP_CHILDREN|wxNO_3D</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="spacer">
-            <size>200,0</size>
             <option>1</option>
           </object>
           <object class="sizeritem">
@@ -530,6 +529,7 @@
         <border>10</border>
       </object>
     </object>
+    <style>wxTAB_TRAVERSAL</style>
   </object>
   <object class="wxPanel" name="wxID_PAGE_CACHE">
     <object class="wxBoxSizer">
@@ -1134,6 +1134,9 @@
             </object>
             <option>1</option>
             <flag>wxALL|wxEXPAND</flag>
+          </object>
+          <object class="spacer">
+            <size>10,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxSpinCtrl" name="wxID_TIMEOUT_VALUE">
