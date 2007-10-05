@@ -157,7 +157,9 @@ Section "Amaya" SecAmaya
      Abort "WinME not supported"
  
    lbl_winnt:
-   Goto lbl_done
+     StrCpy $R1 $R0 3
+     StrCpy $R0 'XP'
+     Goto lbl_done
  
 
    lbl_done:
