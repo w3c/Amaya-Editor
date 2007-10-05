@@ -799,6 +799,58 @@ static ThotBool GetEnclosingBlock (Document doc)
   DoLeftAlign
   Apply left-align style
   ----------------------------------------------------------------------*/
+void DoStyleColor (char *color)
+{
+  Element             first, parent, el = NULL;
+  ElementType         elType;
+  Document            doc;
+  int                 firstChar, lastChar, i;
+  ThotBool            open = FALSE, before;
+
+  doc = TtaGetSelectedDocument();
+  if (!TtaGetDocumentAccessMode (doc))
+    /* document is ReadOnly */
+    return;
+
+  if ( TtaIsSelectionEmpty ())
+    {
+      TtaGiveFirstSelectedElement (doc, &first, &firstChar, &lastChar);
+      parent = TtaGetParent (first);
+      elType = TtaGetElementType (parent);
+      i =  TtaGetElementVolume (first);
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+          elType.ElTypeNum == HTML_EL_Span)
+        {
+          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+          if (firstChar == 1 && lastChar == 0 && first == TtaGetFirstChild (parent))
+            {
+              open = TRUE;
+              before = TRUE;
+            }
+          else if  (lastChar >= i && first == TtaGetLastChild (parent))
+            {
+              open = TRUE;
+              before = FALSE;
+            }
+          if (open)
+            {
+              TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+              el = TtaNewElement (doc, elType);
+              TtaInsertSibling (el, parent, before, doc);
+              TtaSelectElement (doc, el);
+              TtaRegisterElementCreate (el, doc);
+            }
+        }
+    }
+  GenerateStyle (color, TRUE);
+  if (open)
+    TtaCloseUndoSequence (doc);
+}
+
+/*----------------------------------------------------------------------
+  DoLeftAlign
+  Apply left-align style
+  ----------------------------------------------------------------------*/
 void DoLeftAlign (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))

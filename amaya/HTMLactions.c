@@ -4142,7 +4142,7 @@ void SetCharFontOrPhrase (int doc, int elemtype)
           if (parentType.ElSSchema == elType.ElSSchema &&
               parentType.ElTypeNum == elemtype &&
               elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
-              ((firstChar == 1 && lastChar == 0) ||
+              ((firstChar == 1 && lastChar == 0 && first == TtaGetFirstChild (parent)) ||
                (lastChar >= i && first == TtaGetLastChild (parent))))
             {
               // insert before or after

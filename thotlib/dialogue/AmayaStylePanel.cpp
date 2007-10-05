@@ -26,6 +26,7 @@
 #include "panel.h"
 #include "displayview_f.h"
 #include "registry_wx.h"
+#include "editcommands_f.h"
 
 #define THOT_EXPORT extern
 #include "frame_tv.h"
@@ -35,7 +36,7 @@
 #include "AmayaNormalWindow.h"
 #include "AmayaColorButton.h"
 
-extern void GenerateStyle (char * color, ThotBool add);
+extern void DoStyleColor (char * color);
 extern void ChangeTheme (char *theme);
 //
 //
@@ -125,8 +126,8 @@ void AmayaStyleToolPanel::OnColorPalette( AmayaColorButtonEvent& event )
     Current_Color = color;
   // generate a color style
   sprintf( color_string, "color:#%02x%02x%02x", col.Red(), col.Green(), col.Blue());
-  
-  GenerateStyle (color_string, TRUE);
+  CloseTextInsertion ();
+  DoStyleColor (color_string);
 }
 
 
@@ -161,6 +162,7 @@ void AmayaStyleToolPanel::OnThemeChange( wxCommandEvent& event )
 
   value = XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->GetStringSelection();
   strcpy (theme, (const char*)value.mb_str(wxConvUTF8));
+  CloseTextInsertion ();
   if (!strcasecmp (theme, "No theme"))
     ChangeTheme ("Standard");
   else if (!strcasecmp (theme, "classic"))

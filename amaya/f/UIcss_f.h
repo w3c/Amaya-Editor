@@ -26,6 +26,7 @@ extern char *CssToPrint ( Document doc,
                           char *printdir );
 extern void GenerateStyle ( char * data,
                             ThotBool add );
+extern void DoStyleColor ( char *color );
 extern void DoLeftAlign ( Document doc,
                           View view );
 extern void DoRightAlign ( Document doc,
@@ -83,6 +84,7 @@ extern char *CssToPrint ( Document doc,
                             char *printdir );
 extern void GenerateStyle ( char * data,
                               ThotBool add );
+extern void DoStyleColor ( char *color );
 extern void DoLeftAlign ( Document doc,
                             View view );
 extern void DoRightAlign ( Document doc,
