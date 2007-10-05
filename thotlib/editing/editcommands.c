@@ -375,8 +375,8 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
   int                 nChars;
   int                 i, j;
   int                 ind;
-  int                 frame;
-  ThotBool            notified;
+  int                 frame, docview;
+  ThotBool            notified, presentBox;
 
   /* force the end of current shortcut sequence */
   TtaCloseShortcutSequence ();
@@ -486,18 +486,24 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
           pFrame = &ViewFrameTable[frame - 1];
           pViewSel = &pFrame->FrSelectionBegin;
           pViewSelEnd = &pFrame->FrSelectionEnd;
-          if (pSelBox->BxAbstractBox->AbPresentationBox &&
-              pSelBox->BxAbstractBox->AbCreatorAttr)
+          presentBox = (pSelBox->BxAbstractBox->AbPresentationBox &&
+                        pSelBox->BxAbstractBox->AbCreatorAttr);
+          if (presentBox)
             {
               /* update the selection within the attribute */
               FirstSelectedCharInAttr = pSelBox->BxFirstChar + pViewSelEnd->VsIndBox;
               LastSelectedCharInAttr = pSelBox->BxFirstChar + pViewSel->VsIndBox;
               SelPosition = (LastSelectedCharInAttr <= FirstSelectedCharInAttr);
             }
+          pEl = pSelBox->BxAbstractBox->AbElement;
+          docview = pSelBox->BxAbstractBox->AbDocView;
           NewContent (pSelBox->BxAbstractBox);
-          /* Check if a paragraph should be reformatted after an edit */
-          CloseParagraphInsertion (pSelBox->BxAbstractBox, frame);
-	    
+          if (presentBox)
+            /* Check if a paragraph should be reformatted after an edit */
+            CloseParagraphInsertion (pSelBox->BxAbstractBox, frame);
+          else
+            // the abstract box could be freed by the application
+            CloseParagraphInsertion (pEl->ElAbstractBox[docview - 1], frame);
           /* update the new selection */
           if (pViewSel->VsBox && LastInsertAttr == NULL)
             {

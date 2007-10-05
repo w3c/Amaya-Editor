@@ -3053,11 +3053,33 @@ void ElementCreated (NotifyElement *event)
   An HTML element will be deleted.
   Update the namespace declarations associated with that element
   ----------------------------------------------------------------------*/
+void TextPasted (NotifyElement *event)
+{
+  Element         parent;
+  ElementType	    elType;
+  NotifyOnTarget  style_event;
+
+  parent = TtaGetParent (event->element);
+  elType = TtaGetElementType (parent);
+  if (elType.ElTypeNum == HTML_EL_STYLE_)
+    {
+      style_event.element = parent;
+      style_event.document = event->document;
+      StyleChanged (&style_event);
+    }
+}
+
+/*----------------------------------------------------------------------
+  ElementWillBeDeleted
+  An HTML element will be deleted.
+  Update the namespace declarations associated with that element
+  ----------------------------------------------------------------------*/
 ThotBool ElementWillBeDeleted (NotifyElement *event)
 {
-  ElementType	 elType;
-  Element      parent;
-  char        *name;
+  ElementType	    elType;
+  Element         parent;
+  NotifyOnTarget  style_event;
+  char           *name;
 
   elType = TtaGetElementType (event->element);
   name = TtaGetSSchemaName (elType.ElSSchema);
@@ -3068,6 +3090,14 @@ ThotBool ElementWillBeDeleted (NotifyElement *event)
       /* it could be an input element */
       parent = TtaGetParent (event->element);
       elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == HTML_EL_STYLE_)
+        {
+          // save the current style content
+          style_event.element = parent;
+          style_event.document = event->document;
+          ChangeStyle (&style_event);
+        }
+
       if (elType.ElTypeNum == HTML_EL_Text_Input ||
           elType.ElTypeNum == HTML_EL_Password_Input ||
           elType.ElTypeNum == HTML_EL_Text_Area ||

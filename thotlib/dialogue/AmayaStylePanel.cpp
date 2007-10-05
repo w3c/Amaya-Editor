@@ -161,8 +161,8 @@ void AmayaStyleToolPanel::OnThemeChange( wxCommandEvent& event )
 
   value = XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->GetStringSelection();
   strcpy (theme, (const char*)value.mb_str(wxConvUTF8));
-  if (!strcasecmp (theme, "Standard"))
-    ChangeTheme ("standard");
+  if (!strcasecmp (theme, "No theme"))
+    ChangeTheme ("Standard");
   else if (!strcasecmp (theme, "classic"))
     ChangeTheme ("Classic");
   else if (!strcasecmp (theme, "modern"))
@@ -173,7 +173,12 @@ void AmayaStyleToolPanel::OnThemeChange( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::SetTheme(char *theme)
 {
-  XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->SetStringSelection(TtaConvMessageToWX(theme));
+  if (!strcasecmp (theme, "Standard"))
+    XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->SetStringSelection(TtaConvMessageToWX("No theme"));
+  else if (!strcasecmp (theme, "Classic"))
+    XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->SetStringSelection(TtaConvMessageToWX("Classic"));
+  else if (!strcasecmp (theme, "Modern"))
+    XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->SetStringSelection(TtaConvMessageToWX("Modern"));
 }
 
 /*----------------------------------------------------------------------

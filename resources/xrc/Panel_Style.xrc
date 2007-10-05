@@ -20,7 +20,7 @@
           <object class="sizeritem">
             <object class="wxChoice" name="wxID_PANEL_CSS_THEME">
               <content>
-                <item>Standard</item>
+                <item>No theme</item>
                 <item>Classic</item>
                 <item>Modern</item>
               </content>

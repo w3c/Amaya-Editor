@@ -63,6 +63,8 @@ extern void CreateRemoveIDAttribute ( char *elName,
 extern void CheckPseudoParagraph ( Element el,
                                    Document doc );
 extern void ElementCreated ( NotifyElement *event );
+extern ThotBool TextWillBePasted ( NotifyOnValue *event );
+extern void TextPasted ( NotifyElement *event );
 extern ThotBool ElementWillBeDeleted ( NotifyElement *event );
 extern void ElementDeleted ( NotifyElement *event );
 extern void RegisterURLSavedElements ( Document doc );
@@ -210,6 +212,8 @@ extern void CreateRemoveIDAttribute ( char *elName,
 extern void CheckPseudoParagraph ( Element el,
                                      Document doc );
 extern void ElementCreated ( NotifyElement *event );
+extern ThotBool TextWillBePasted ( NotifyOnValue *event );
+extern void TextPasted ( NotifyElement *event );
 extern ThotBool ElementWillBeDeleted ( NotifyElement *event );
 extern void ElementDeleted ( NotifyElement *event );
 extern void RegisterURLSavedElements ( Document doc );

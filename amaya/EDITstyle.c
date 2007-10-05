@@ -790,8 +790,7 @@ void ApplyStyleChange (Element el, Document doc, char *buffer)
                       /* cut here */
                       c = *ptr2;
                       *ptr2 = EOS;
-                      ApplyCSSRules (el, ptr1, doc,
-                                     TRUE);
+                      ApplyCSSRules (el, ptr1, doc, TRUE);
                       *ptr2 = c;
                       ptr1 = ptr2;
                     }
@@ -809,8 +808,7 @@ void ApplyStyleChange (Element el, Document doc, char *buffer)
                       /* cut here */
                       c = *ptr2;
                       *ptr2 = EOS;
-                      ApplyCSSRules (el, ptr1, doc,
-                                     FALSE);
+                      ApplyCSSRules (el, ptr1, doc, FALSE);
                       *ptr2 = c;
                       ptr1 = ptr2;
                     }
@@ -906,7 +904,7 @@ void ChangeTheme (char *theme)
               TtaDeleteTree (content, doc);
               content = next;
             }
-          if (strcmp (theme, "standard"))
+          if (strcmp (theme, "Standard"))
             {
               // look for the css file
               ptr = TtaGetEnvString ("THOTDIR");

@@ -45,7 +45,10 @@ ELEMENTS
         END;
 
    TEXT_UNIT:
+        BEGIN
         ElemTextModify.Post -> CheckNewLines;
+        ElemPaste.Post -> TextPasted;
+        END;
 
    DOCTYPE:
         ElemMenu.Pre -> HTMLElementTypeInMenu;
