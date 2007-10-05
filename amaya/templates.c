@@ -144,7 +144,10 @@ void RemovePromptIndicator (Element el, Document doc)
           attrType.AttrTypeNum = Template_ATTR_prompt;
           att = TtaGetAttribute (parent, attrType);
           if (att)
-            TtaRemoveAttribute (parent, att, doc);
+            {
+              TtaRegisterAttributeDelete (att, parent, doc);
+              TtaRemoveAttribute (parent, att, doc);
+            }
         }
     }
 #endif /* TEMPLATES */
