@@ -1279,7 +1279,7 @@ static ThotBool AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb,
                                    PtrDocument pDoc)
 {
   ThotBool            ret, stop;
-  int                 valNum;
+  int                 valNum, match;
   PtrPRule            pPRule;
   PtrPSchema          pSchP;
   PtrHandlePSchema    pHd;
@@ -1298,11 +1298,11 @@ static ThotBool AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb,
         {
           /* process all values of the attribute, in case of a text attribute
              with multiple values */
-          valNum = 1;
+          valNum = 1; match = 1;
           do
             {
               pPRule = AttrPresRule (pAttr, pAb->AbElement, FALSE, NULL, pSchP,
-                                     &valNum, &attrBlock);
+                                     &valNum, &match, &attrBlock);
               /* saute les regles precedant les  fonctions */
               stop = FALSE;
               do
@@ -1924,7 +1924,7 @@ FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
   PtrPSchema          pSPR;
   PtrAttribute        pAttr;
   PtrAttribute        pA;
-  int                 valNum;
+  int                 valNum, match;
   ThotBool            ok;
   PtrPSchema          pSchP;
   PtrHandlePSchema    pHd;
@@ -1953,11 +1953,11 @@ FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
               /* attribut dans ce schema de presentation */
               /* process all values of the attribute, in case of a text
                  attribute with multiple values */
-              valNum = 1;
+              valNum = 1; match = 1;
               do
                 {
                   pPRuleCre = AttrPresRule (pA, pAbbCreator->AbElement, FALSE,
-                                            NULL, pSchP, &valNum, &attrBlock);
+                                     NULL, pSchP, &valNum, &match, &attrBlock);
                   ok = PageCreateRule (pPRuleCre, pSchP, pAbbCreated, &result);
                 }
               while (valNum > 0);

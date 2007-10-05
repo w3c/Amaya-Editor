@@ -195,7 +195,7 @@ static void GetInheritedPRule (PtrPRule *pRule, PtrElement pEl,
   PtrAttribute      pA;
   PtrAttributePres  attrBlock;
   PtrPRule          pR;
-  int               l, valNum;
+  int               l, valNum, match;
 
   for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
     if ((*inheritTable)[l - 1])
@@ -218,12 +218,12 @@ static void GetInheritedPRule (PtrPRule *pRule, PtrElement pEl,
                 pFirstAncest = pElAttr->ElParent;
                 /* process all values of the attribute, in case of a text
                    attribute with multiple values */
-                valNum = 1;
+                valNum = 1; match = 1;
                 do
                   {
                     /* first rule for this value of the attr */
                     pR = AttrPresRule (pA, pEl, TRUE, NULL, pSP, &valNum,
-                                       &attrBlock);
+                                       &match, &attrBlock);
                     /* check all rules for this value */
                     while (pR)
                       {
@@ -298,7 +298,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
   InheritAttrTable   *inheritTable;
   PtrPSchema          pSP, pSPattr;
   PtrHandlePSchema    pHd;
-  int                 valNum;
+  int                 valNum, match;
   PtrAttributePres    prevAttrBlock, attrBlock;
 
   pRule = NULL;
@@ -493,11 +493,11 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
                         pSSattr = pDoc->DocSSchema;
                       /* process all values of the attribute, in case of a
                          text attribute with multiple values */
-                      valNum = 1;
+                      valNum = 1; match = 1;
                       do
                         {
                           pR = AttrPresRule (pA, pEl, FALSE, NULL, pSPattr,
-                                             &valNum, &attrBlock);
+                                             &valNum, &match, &attrBlock);
                           /* look at all rules for this value */
                           while (pR)
                             {
@@ -1505,7 +1505,7 @@ static void ApplInheritedCreationRules (PtrElement pEl, PtrDocument pDoc,
   PtrPSchema        pSchP;
   PtrPRule          pRPres;
   PtrAttributePres  attrBlock;
-  int               l, valNum;
+  int               l, valNum, match;
 
   for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
     if ((*inheritTable)[l - 1])
@@ -1522,11 +1522,11 @@ static void ApplInheritedCreationRules (PtrElement pEl, PtrDocument pDoc,
             pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
             /* process all values of the attribute, in case of a text attribute
                with multiple values */
-            valNum = 1;
+            valNum = 1; match = 1;
             do
               {
                 pRPres = AttrPresRule (pAttr, pEl, TRUE, NULL, pSchP, &valNum,
-                                       &attrBlock);
+                                       &match, &attrBlock);
                 /* traite les regles de creation associees a l'attribut */
                 ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl,
                                        change, first);
@@ -1553,7 +1553,7 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
   PtrPSchema          pSP;
   PtrHandlePSchema    pHd;
   PtrAttribute        pAttr;
-  int                 valNum;
+  int                 valNum, match;
   InheritAttrTable   *inheritTable;
   PtrAttributePres    attrBlock;
 
@@ -1639,11 +1639,11 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
               /* l'attribut */
               /* process all values of the attribute, in case of a text
                  attribute with multiple values */
-              valNum = 1;
+              valNum = 1; match = 1;
               do
                 {
                   pRPres = AttrPresRule (pAttr, pEl, FALSE, NULL, pSP,
-                                         &valNum, &attrBlock);
+                                         &valNum, &match, &attrBlock);
                   /* traite les regles de creation associees a l'attribut */
                   ApplFunctionPresRules (pRPres, pSP, pAttr, pDoc, pEl,
                                          change, first);
@@ -3748,7 +3748,7 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
   PtrAttribute        pAttrib;
   PtrHandlePSchema    pHd;
   TypeUnit            unit;
-  int                 view, viewSch, val = 0, valNum, index, vol;
+  int                 view, viewSch, val = 0, valNum, match, index, vol;
   PtrAttributePres    attrBlock;
   ThotBool            appl, stop, sameType, found;
   ThotBool            existingView;
@@ -3766,12 +3766,12 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
     {
       /* process all values of the attribute, in case of a text attribute
          with multiple values */
-      valNum = 1;
+      valNum = 1; match = 1;
       do
         {
           /* pR: premiere regle correspondant a cette valeur de l'attribut */
           pR = AttrPresRule (pAttr, pEl, inherit, pAttrComp, pSchP, &valNum,
-                             &attrBlock);
+                             &match, &attrBlock);
           firstOfType = pR;
           /* traite toutes les regles associees a cette valeur d'attribut dans */
           /* ce schema de presentation */

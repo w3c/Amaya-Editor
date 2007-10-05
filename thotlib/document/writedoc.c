@@ -105,33 +105,33 @@ void TtaSaveDocument (Document document, char *documentName)
     {
       pDoc = LoadedDocument[document - 1];
       if (pDoc->DocReadOnly)
-	TtaError (ERR_read_only_document);
+        TtaError (ERR_read_only_document);
       else
-	{
-	  /* Arrange the file name */
-	  FindCompleteName (documentName, "PIV", pDoc->DocDirectory, path, &i);
-	  pivotFile = TtaWriteOpen (path);
-	  if (pivotFile == 0)
-	    TtaError (ERR_cannot_open_pivot_file);
-	  else
-	    {
-	      /* writing the document in the file in the pivot format */
-	      SauveDoc (pivotFile, pDoc);
-	      TtaWriteClose (pivotFile);
-	      if (strcmp (documentName, pDoc->DocDName) != 0)
-		/* The document is saved under a new name */
-		{
-		  /* The application wants to create a copy of the document */
-		  /* Puts the new name into the document descriptor */
-		  strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
-		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+        {
+          /* Arrange the file name */
+          FindCompleteName (documentName, "PIV", pDoc->DocDirectory, path, &i);
+          pivotFile = TtaWriteOpen (path);
+          if (pivotFile == 0)
+            TtaError (ERR_cannot_open_pivot_file);
+          else
+            {
+              /* writing the document in the file in the pivot format */
+              SauveDoc (pivotFile, pDoc);
+              TtaWriteClose (pivotFile);
+              if (strcmp (documentName, pDoc->DocDName) != 0)
+                /* The document is saved under a new name */
+                {
+                  /* The application wants to create a copy of the document */
+                  /* Puts the new name into the document descriptor */
+                  strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+                  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 #ifndef NODISPLAY
-		  /* changes the title of frames */
-		  ChangeDocumentName (pDoc, documentName); 
+                  /* changes the title of frames */
+                  ChangeDocumentName (pDoc, documentName); 
 #endif
-		}
-	    }
-	}
+                }
+            }
+        }
     }
 }
 
@@ -148,38 +148,38 @@ static ThotBool simpleSave (PtrDocument pDoc, char *name, ThotBool withEvent)
 
    if (!pDoc->DocReadOnly)
      {
-	pivotFile = TtaWriteOpen (name);
-	if (pivotFile == 0)
-	   return FALSE;
-	else
-	  {
-	     if (withEvent)
-	       {
-		  /* envoie l'evenement DocSave.Pre a l'application */
-		  notifyDoc.event = TteDocSave;
-		  notifyDoc.document = (Document) IdentDocument (pDoc);
-		  notifyDoc.view = 0;
-		  ok = !CallEventType ((NotifyEvent *) & notifyDoc, TRUE);
-	       }
-	     else
-		ok = TRUE;
-	     if (ok)
-		/* l'application laisse Thot effectuer la sauvegarde */
-	       {
-		  /* ecrit le document dans ce fichier sous la forme pivot */
-		  SauveDoc (pivotFile, pDoc);
-		  TtaWriteClose (pivotFile);
-		  if (withEvent)
-		    {
-		       /* envoie l'evenement DocSave.Post a l'application */
-		       notifyDoc.event = TteDocSave;
-		       notifyDoc.document = (Document) IdentDocument (pDoc);
-		       notifyDoc.view = 0;
-		       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-		    }
-	       }
-	     return TRUE;
-	  }
+       pivotFile = TtaWriteOpen (name);
+       if (pivotFile == 0)
+         return FALSE;
+       else
+         {
+           if (withEvent)
+             {
+               /* envoie l'evenement DocSave.Pre a l'application */
+               notifyDoc.event = TteDocSave;
+               notifyDoc.document = (Document) IdentDocument (pDoc);
+               notifyDoc.view = 0;
+               ok = !CallEventType ((NotifyEvent *) & notifyDoc, TRUE);
+             }
+           else
+             ok = TRUE;
+           if (ok)
+             /* l'application laisse Thot effectuer la sauvegarde */
+             {
+               /* ecrit le document dans ce fichier sous la forme pivot */
+               SauveDoc (pivotFile, pDoc);
+               TtaWriteClose (pivotFile);
+               if (withEvent)
+                 {
+                   /* envoie l'evenement DocSave.Post a l'application */
+                   notifyDoc.event = TteDocSave;
+                   notifyDoc.document = (Document) IdentDocument (pDoc);
+                   notifyDoc.view = 0;
+                   CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+                 }
+             }
+           return TRUE;
+         }
      }
    return FALSE;
 }
@@ -201,8 +201,8 @@ static ThotBool saveWithExtension (PtrDocument pDoc, char *extension)
    FindCompleteName (pDoc->DocDName, extension, pDoc->DocDirectory, buf, &i);
    if (simpleSave (pDoc, buf, FALSE))
      {
-	UpdateAllInclusions (pDoc);
-	return TRUE;
+       UpdateAllInclusions (pDoc);
+       return TRUE;
      }
    else
      return FALSE;
@@ -212,7 +212,7 @@ static ThotBool saveWithExtension (PtrDocument pDoc, char *extension)
    StoreDocument       sauve le document pDoc dans un fichier
   ----------------------------------------------------------------------*/
 ThotBool StoreDocument (PtrDocument pDoc, PathBuffer docName,
-			PathBuffer dirName, ThotBool copy, ThotBool move)
+                        PathBuffer dirName, ThotBool copy, ThotBool move)
 {
    PathBuffer          bakName, pivName, tempName, backName, oldDir;
    NotifyDialog        notifyDoc;
@@ -226,100 +226,103 @@ ThotBool StoreDocument (PtrDocument pDoc, PathBuffer docName,
    notifyDoc.document = (Document) IdentDocument (pDoc);
    notifyDoc.view = 0;
    if (CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-      /* l'application a pris la sauvegarde en charge */
-      status = TRUE;
+     /* l'application a pris la sauvegarde en charge */
+     status = TRUE;
    else
      {
-	status = TRUE;
-	sameFile = TRUE;
-	if (strcmp (docName, pDoc->DocDName) != 0)
-	   sameFile = FALSE;
-	if (strcmp (dirName, pDoc->DocDirectory) != 0)
-	   sameFile = FALSE;
+       status = TRUE;
+       sameFile = TRUE;
+       if (strcmp (docName, pDoc->DocDName) != 0)
+         sameFile = FALSE;
+       if (strcmp (dirName, pDoc->DocDirectory) != 0)
+         sameFile = FALSE;
 
-	/* construit le nom complet de l'ancien fichier de sauvegarde */
-	FindCompleteName (pDoc->DocDName, "BAK", pDoc->DocDirectory, bakName, &i);
-	strncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
-	/*     SECURITE:                                         */
-	/*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
-	/*     directement X.PIV ...                             */
-	/*     On fait ensuite des renommages                    */
-	FindCompleteName (docName, "PIV", dirName, buf, &i);
-	/* on teste d'abord le droit d'ecriture sur le .PIV */
-	ok = FileWriteAccess (buf) == 0;
-	if (ok)
-	  {
-	     FindCompleteName (docName, "Tmp", dirName, tempName, &i);
-	     /* on teste le droit d'ecriture sur le .Tmp */
-	     ok = FileWriteAccess (tempName) == 0;
-	     if (ok)
-	       ok = simpleSave (pDoc, tempName, FALSE);
-	     if (ok)
-	       UpdateAllInclusions (pDoc);
-	  }
-	if (!ok)
-	  {
-	     /* on indique un nom connu de l'utilisateur... */
-	     FindCompleteName (docName, "PIV", dirName, buf, &i);
-	     status = FALSE;
-	  }
-	else
-	  {
-	     /* 1- faire mv .PIV sur .OLD sauf si c'est une copie */
-	     /* Le nom et le directory du document peuvent avoir change'. */
-	     /* le fichier .OLD reste dans l'ancien directory, avec */
-	     /* l'ancien nom */
-	     FindCompleteName (pDoc->DocDName, "PIV", oldDir, pivName, &i);
-	     if (!copy)
-	       {
-		  FindCompleteName (pDoc->DocDName, "OLD", oldDir, backName, &i);
-		  rename_ok = TtaFileRename (pivName, backName);
-	       }
-	     /* 2- faire mv du .Tmp sur le .PIV */
-	     FindCompleteName (docName, "PIV", dirName, pivName, &i);
-	     rename_ok = TtaFileRename (tempName, pivName);
-	     if (rename_ok)
-		/* >> tout s'est bien passe' << */
-		/* detruit l'ancienne sauvegarde */
-	       {
-		  TtaFileUnlink (bakName);
-		  /* c'est trop tot pour perdre l'ancien nom du fichier et son */
-		  /* directory d'origine. */
-		  SetDocumentModified (pDoc, FALSE, 0);
+       /* construit le nom complet de l'ancien fichier de sauvegarde */
+       FindCompleteName (pDoc->DocDName, "BAK", pDoc->DocDirectory,
+                         bakName, &i);
+       strncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
+       /*     SECURITE:                                         */
+       /*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
+       /*     directement X.PIV ...                             */
+       /*     On fait ensuite des renommages                    */
+       FindCompleteName (docName, "PIV", dirName, buf, &i);
+       /* on teste d'abord le droit d'ecriture sur le .PIV */
+       ok = FileWriteAccess (buf) == 0;
+       if (ok)
+         {
+           FindCompleteName (docName, "Tmp", dirName, tempName, &i);
+           /* on teste le droit d'ecriture sur le .Tmp */
+           ok = FileWriteAccess (tempName) == 0;
+           if (ok)
+             ok = simpleSave (pDoc, tempName, FALSE);
+           if (ok)
+             UpdateAllInclusions (pDoc);
+         }
+       if (!ok)
+         {
+           /* on indique un nom connu de l'utilisateur... */
+           FindCompleteName (docName, "PIV", dirName, buf, &i);
+           status = FALSE;
+         }
+       else
+         {
+           /* 1- faire mv .PIV sur .OLD sauf si c'est une copie */
+           /* Le nom et le directory du document peuvent avoir change'. */
+           /* le fichier .OLD reste dans l'ancien directory, avec */
+           /* l'ancien nom */
+           FindCompleteName (pDoc->DocDName, "PIV", oldDir, pivName, &i);
+           if (!copy)
+             {
+               FindCompleteName (pDoc->DocDName, "OLD", oldDir, backName, &i);
+               rename_ok = TtaFileRename (pivName, backName);
+             }
+           /* 2- faire mv du .Tmp sur le .PIV */
+           FindCompleteName (docName, "PIV", dirName, pivName, &i);
+           rename_ok = TtaFileRename (tempName, pivName);
+           if (rename_ok)
+             /* >> tout s'est bien passe' << */
+             /* detruit l'ancienne sauvegarde */
+             {
+               TtaFileUnlink (bakName);
+               /* c'est trop tot pour perdre l'ancien nom du fichier et son */
+               /* directory d'origine. */
+               SetDocumentModified (pDoc, FALSE, 0);
 
-		  if (!sameFile)
-		    {
-		      if (strcmp (dirName, oldDir) != 0 &&
-			  strcmp (docName, pDoc->DocDName) == 0)
-			/* changement de directory sans changement de nom */
-			if (move)
-			  {
-			    /* detruire l'ancien fichier PIV */
-			    FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf, &i);
-			    TtaFileUnlink (buf);
-			  }
+               if (!sameFile)
+                 {
+                   if (strcmp (dirName, oldDir) != 0 &&
+                       strcmp (docName, pDoc->DocDName) == 0)
+                     /* changement de directory sans changement de nom */
+                     if (move)
+                       {
+                         /* detruire l'ancien fichier PIV */
+                         FindCompleteName (pDoc->DocDName, "PIV", oldDir,
+                                           buf, &i);
+                         TtaFileUnlink (buf);
+                       }
 
-		      if (strcmp (docName, pDoc->DocDName) != 0)
-			{
-			  /* il y a effectivement changement de nom */
-			  if (move)
-			    {
-			      /* il s'agit d'un changement de nom du document */
-			      /* detruit l'ancien fichier .PIV */
-			      FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf, &i);
-			      TtaFileUnlink (buf);
-			    }
-			}
-		      strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
-		      strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
-		      ChangeDocumentName (pDoc, docName);
-		    }
-	       }
-	     notifyDoc.event = TteDocSave;
-	     notifyDoc.document = (Document) IdentDocument (pDoc);
-	     notifyDoc.view = 0;
-	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	  }
+                   if (strcmp (docName, pDoc->DocDName) != 0)
+                     {
+                       /* il y a effectivement changement de nom */
+                       if (move)
+                         {
+                           /* il s'agit d'un changement de nom du document */
+                           /* detruit l'ancien fichier .PIV */
+                           FindCompleteName (pDoc->DocDName, "PIV", oldDir,
+                                             buf, &i);
+                           TtaFileUnlink (buf);
+                         }
+                     }
+                   strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+                   strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
+                   ChangeDocumentName (pDoc, docName);
+                 }
+             }
+           notifyDoc.event = TteDocSave;
+           notifyDoc.document = (Document) IdentDocument (pDoc);
+           notifyDoc.view = 0;
+           CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+         }
      }
    return status;
 }
@@ -336,8 +339,7 @@ static ThotBool interactiveSave (PtrDocument pDoc)
   status = FALSE;
   if (pDoc->DocSSchema)
     status = StoreDocument (pDoc, SaveFileName, SaveDirectoryName,
-			    SaveDocWithCopy, SaveDocWithMove);
-  
+                            SaveDocWithCopy, SaveDocWithMove);
   if (status)
     SetDocumentModified (pDoc, FALSE, 0);
   return status;
@@ -378,28 +380,29 @@ ThotBool            WriteDocument (PtrDocument pDoc, int mode)
    if (pDoc != NULL)
      if (mode >= 0 && mode <= 5)
        switch (mode)
-	 {
-	 case 0:
-	   if (DocumentToSave == pDoc)
-	     ok = interactiveSave (pDoc);
-	   break;
-	 case 1:
-	   ok = saveWithExtension (pDoc, "BAK");
-	   break;
-	 case 2:
-	   ok = saveWithExtension (pDoc, "BAK");
-	   break;
-	 case 3:
-	   ok = saveWithExtension (pDoc, "SAV");
-	   break;
-	 case 4:
-	   SetWriteDirectory (pDoc, pDoc->DocDName, pDoc->DocDirectory, FALSE, FALSE);
-	   ok = interactiveSave (pDoc);
-	   break;
-	 case 5:
-	   ok = saveWithExtension (pDoc, "PIV");
-	   break;
-	 }
+         {
+         case 0:
+           if (DocumentToSave == pDoc)
+             ok = interactiveSave (pDoc);
+           break;
+         case 1:
+           ok = saveWithExtension (pDoc, "BAK");
+           break;
+         case 2:
+           ok = saveWithExtension (pDoc, "BAK");
+           break;
+         case 3:
+           ok = saveWithExtension (pDoc, "SAV");
+           break;
+         case 4:
+           SetWriteDirectory (pDoc, pDoc->DocDName, pDoc->DocDirectory,
+                              FALSE, FALSE);
+           ok = interactiveSave (pDoc);
+           break;
+         case 5:
+           ok = saveWithExtension (pDoc, "PIV");
+           break;
+         }
    return ok;
 }
 

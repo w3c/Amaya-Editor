@@ -2971,12 +2971,15 @@ static ThotBool SameChar (CHAR_T c1, CHAR_T c2, int attrNum)
   as a list of space separated values. Should be 1 for the first call.
   valueNum is updated to indicate the rank of the next value to be
   processed. 0 indicates that there is no more values.
+  match = 1 indicates that we have not yet done any string value match yet
+    and it is changed to 0 to indicate that a different string match must
+    be done for the next call.
   When returning, attrBlock contains a pointer to the block of presentation
   rules to which the returned rule belongs.
   ----------------------------------------------------------------------*/
 PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
                        ThotBool inheritRule, PtrAttribute pAttrComp,
-                       PtrPSchema pSchP, int *valueNum,
+                       PtrPSchema pSchP, int *valueNum, int *match,
                        PtrAttributePres *attrBlock)
 {
   PtrPRule            pRule;
@@ -2990,7 +2993,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   unsigned int        len;
   int                 i, j, k, attrNum;
   CHAR_T             *refVal;
-  ThotBool            found, ok;
+  ThotBool            found, ok, firstVal;
 
   pRule = NULL;
   *attrBlock = NULL;
@@ -3008,6 +3011,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
       return (NULL);
     }
 
+  firstVal = (*valueNum == 1);
   pPRdef = pPRinherit = NULL;
   len = 0;
   attrValue = NULL;
@@ -3149,6 +3153,17 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
                                           attrValue[j - 1] == SPACE) &&
                                       (attrValue[k] == EOS ||
                                        attrValue[k] == SPACE);
+                                    if (ok && firstVal && *valueNum == 0 && *match)
+                                      /* we are testing the first value and
+                                         there is no other value and that's
+                                         the first match we try. Stop
+                                         here. Next time we will test exact
+                                         match */
+                                      {
+                                        i = 0; /* stop */
+                                        *match = 0;
+                                        *valueNum = 1;
+                                      }
                                   }
                                 else if (pAPRule->ApMatch == CoMatch)
                                   /* the whole attribute value must be equal */
@@ -3470,7 +3485,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
   PtrAbstractBox      pAbbCreated, pAbbReturn;
   PtrAttribute        pAttr;
   PtrElement          pEl, pElAttr, pFirstAncest;
-  int                 l, valNum, lqueue;
+  int                 l, valNum, match, lqueue;
   InheritAttrTable   *inheritTable;
   PtrHandlePSchema    pHd;
   PtrAttributePres    attrBlock;
@@ -3619,11 +3634,11 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
                               {
                                 /* process all values of the attribute, in case of
                                    a text attribute with multiple values */
-                                valNum = 1;
+                                valNum = 1; match = 1;
                                 do
                                   {
                                     pRule = AttrPresRule (pAttr, pEl, TRUE, NULL,
-                                                          pSchP, &valNum, &attrBlock);
+                                                          pSchP, &valNum, &match, &attrBlock);
                                     if (pRule && !pRule->PrDuplicate)
                                       ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
                                                       &pAbbCreated, pAttr, pDoc,
@@ -3660,11 +3675,11 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
                               {
                                 /* process all values of the attribute, in case of
                                    a text attribute with multiple values */
-                                valNum = 1;
+                                valNum = 1; match = 1;
                                 do
                                   {
                                     pRule = AttrPresRule (pAttr, pEl, TRUE, NULL,
-                                                          pSchP, &valNum, &attrBlock);
+                                                          pSchP, &valNum, &match, &attrBlock);
                                     if (pRule && !pRule->PrDuplicate)
                                       ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
                                                       &pAbbCreated, pAttr, pDoc,
@@ -3702,12 +3717,12 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
                         pSSattr = pDoc->DocSSchema;
                       /* process all values of the attribute, in case of a text
                          attribute with multiple values */
-                      valNum = 1;
+                      valNum = 1; match = 1;
                       do
                         {
                           /* first rule for this value of the attribute */
                           pRule = AttrPresRule (pAttr, pEl, FALSE, NULL,
-                                                pSchPattr, &valNum, &attrBlock);
+                                                pSchPattr, &valNum, &match, &attrBlock);
                           ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
                                           &pAbbCreated, pAttr, pDoc, pAb, head,
                                           pRule, &pseudoElem);
@@ -4060,7 +4075,7 @@ static ThotBool ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
   PtrHandlePSchema    pHd;
   PtrAttributePres    attrBlock;
   TypeUnit            unit;
-  int                 view, valNum;
+  int                 view, valNum, match;
   ThotBool            stop, useView1, cssUndisplay = FALSE;
 
   /* on cherchera d'abord dans le schema de presentation principal de */
@@ -4075,13 +4090,13 @@ static ThotBool ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
     {
       /* process all values of the attribute, in case of a text attribute
          with multiple values */
-      valNum = 1;
+      valNum = 1; match = 1;
       do
         {
           /* cherche la premiere regle de presentation pour cette valeur */
           /* de l'attribut, dans ce schema de presentation */
           pR = AttrPresRule (pAttr, pEl, inheritRule, NULL, pSchP, &valNum,
-                             &attrBlock);
+                             &match, &attrBlock);
           while (pR != NULL)
             {
               if (pR->PrType == PtVisibility)
@@ -4695,7 +4710,7 @@ static void GetRulesFromInheritedAttributes (PtrElement pEl,
   PtrSSchema	     pSSattr;
   PtrAttributePres   attrBlock;
   PtrPRule           pRule, pR;
-  int                view, valNum;
+  int                view, valNum, match;
 
   do
     {
@@ -4718,12 +4733,12 @@ static void GetRulesFromInheritedAttributes (PtrElement pEl,
             pSSattr = pDoc->DocSSchema;
           /* process all values of the attribute, in case of a
              text attribute with a list of values */
-          valNum = 1;
+          valNum = 1; match = 1;
           do
             {
               /* first rule for this value of the attribute */
               pR = AttrPresRule (pAttr, pEl, TRUE, NULL, pSchPres, &valNum,
-                                 &attrBlock);
+                                 &match, &attrBlock);
               /* look at all rules associated with this value */
               while (pR != NULL)
                 {
@@ -4787,7 +4802,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                      PtrAbstractBox pNewAbbox, void* CSScasc,
                      FILE *fileDescriptor, ThotBool pseudoElOnly)
 {
-  int                 i, view, l, valNum;
+  int                 i, view, l, valNum, match;
   PtrPRule            pRuleView, pRule, pR;
   PtrHandlePSchema    pHd;
   PtrPSchema          pSchPres, pSchPattr;
@@ -5025,12 +5040,12 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                 pSSattr = pDoc->DocSSchema;
               /* process all values of the attribute, in case of a text
                  attribute with multiple values */
-              valNum = 1;
+              valNum = 1; match = 1;
               do
                 {
                   /* first rule for this value of the attribute */
                   pR = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchPattr,
-                                     &valNum, &attrBlock);
+                                     &valNum, &match, &attrBlock);
                   /* look for all rules associated with this value */
                   while (pR)
                     {
