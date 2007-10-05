@@ -115,42 +115,43 @@ ThotBool CheckPromptIndicator (Element el, Document doc)
 /*----------------------------------------------------------------------
   RemovePromptIndicator removes the enclosing prompt indicator
   ----------------------------------------------------------------------*/
-void RemovePromptIndicator (Element el, Document doc)
+ThotBool RemovePromptIndicator (NotifyOnTarget *event)
 {
 #ifdef TEMPLATES
   ElementType     elType;
-  Element         parent;
+  Element         parent, el;
   AttributeType   attrType;
   Attribute       att;
+  Document        doc;
   SSchema         templateSSchema;
 
+  el = event->element;
+  doc = event->document;
   elType = TtaGetElementType (el);
   templateSSchema = TtaGetSSchema ("Template", doc);
-	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+  parent = TtaGetParent (el);
+  elType = TtaGetElementType (parent);
+  while (parent && elType.ElSSchema != templateSSchema)
     {
-      parent = TtaGetParent (el);
+      parent = TtaGetParent (parent);
       elType = TtaGetElementType (parent);
-      while (parent && elType.ElSSchema != templateSSchema)
+    }
+  if (parent &&
+      (elType.ElTypeNum == Template_EL_useEl ||
+       elType.ElTypeNum == Template_EL_useSimple))
+    {
+      // there is a parent template use
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = Template_ATTR_prompt;
+      att = TtaGetAttribute (parent, attrType);
+      if (att)
         {
-          parent = TtaGetParent (parent);
-          elType = TtaGetElementType (parent);
-        }
-      if (parent &&
-          (elType.ElTypeNum == Template_EL_useEl ||
-           elType.ElTypeNum == Template_EL_useSimple))
-        {
-          // there is a parent template use
-          attrType.AttrSSchema = elType.ElSSchema;
-          attrType.AttrTypeNum = Template_ATTR_prompt;
-          att = TtaGetAttribute (parent, attrType);
-          if (att)
-            {
-              TtaRegisterAttributeDelete (att, parent, doc);
-              TtaRemoveAttribute (parent, att, doc);
-            }
+          TtaRegisterAttributeDelete (att, parent, doc);
+          TtaRemoveAttribute (parent, att, doc);
         }
     }
 #endif /* TEMPLATES */
+  return FALSE;		/* let Thot perform normal operation */
 }
 
 

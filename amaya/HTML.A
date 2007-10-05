@@ -46,6 +46,7 @@ ELEMENTS
 
    TEXT_UNIT:
         BEGIN
+        ElemTextModify.Pre -> RemovePromptIndicator;
         ElemTextModify.Post -> CheckNewLines;
         ElemPaste.Post -> TextPasted;
         END;
