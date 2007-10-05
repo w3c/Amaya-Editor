@@ -853,6 +853,8 @@ void ChangeTheme (char *theme)
   Language            language = TtaGetDefaultLanguage ();
   char               *buffer = NULL, *ptr, *filename;
   int                 view;
+  DisplayMode         dispMode;
+  ThotBool            isNew = FALSE;
 
   TtaGetActiveView (&doc, &view);
   if (doc == 0 || theme == NULL)
@@ -870,6 +872,7 @@ void ChangeTheme (char *theme)
           TtaSetStructureChecking (FALSE, doc);
           el = InsertWithinHead (doc, 1, HTML_EL_STYLE_);
           TtaSetStructureChecking (TRUE, doc);
+          isNew = TRUE;
           if (el)
             {
               TtaExtendUndoSequence (doc);
@@ -885,7 +888,14 @@ void ChangeTheme (char *theme)
 
       if (el && !TtaIsReadOnly (el))
         {
-          OldBuffer = GetStyleContents (el);
+          dispMode = TtaGetDisplayMode (doc);
+          RemoveParsingErrors (doc);
+          // close attached log documents
+          CloseLogs (doc);
+          TtaSetDisplayMode (doc, NoComputedDisplay);
+          if (!isNew)
+            //RemoveADocStyle (doc, el);
+            RemoveStyle (NULL, doc, TRUE, FALSE, el, CSS_DOCUMENT_STYLE);
           // remove the current content
           content = TtaGetFirstChild (el);
           while (content)
@@ -903,7 +913,6 @@ void ChangeTheme (char *theme)
               filename = (char *)TtaGetMemory (strlen (ptr) + strlen(theme) + 20);
               sprintf (filename, "%s%cconfig%c%s.css", ptr, DIR_SEP, DIR_SEP, theme);
               buffer = LoadACSSFile (filename);
-
               if (buffer)
                 {
                   // insert the new content
@@ -920,10 +929,11 @@ void ChangeTheme (char *theme)
                   TtaRegisterElementCreate (next, doc);
                 }
               TtaFreeMemory (filename);
+              EnableStyleElement (doc, el);
             }
 
-          ApplyStyleChange (el, doc, buffer);
           TtaFreeMemory (buffer);
+          TtaSetDisplayMode (doc, dispMode);
           TtaSetDocumentModified (doc);
           // check if an error is found in the new string
           TtaCloseUndoSequence (doc);
