@@ -69,6 +69,8 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
   useType = TtaGetElementType (useFirst);
   use = TtaCopyElement (useFirst, doc, doc, el);
 
+  TtaChangeElementType(use, Template_EL_useSimple);
+
   /* insert it */
   if (elPrev)
     TtaInsertSibling(use, elPrev, FALSE, doc);
