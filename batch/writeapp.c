@@ -206,6 +206,8 @@ static void         PrintMenus (PtrAppMenu firstMenu)
 	    fprintf (AppFile, ", \"MenuHelp\");\n");
 	  else if (!strcmp (menu->AppMenuName, "Context_"))
 	    fprintf (AppFile, ", \"MenuContext\");\n");
+    else if (!strcmp (menu->AppMenuName, "DocContext_"))
+      fprintf (AppFile, ", \"MenuDocContext\");\n");
 	  else
 	    fprintf (AppFile, ", \"\");\n");
 	  
