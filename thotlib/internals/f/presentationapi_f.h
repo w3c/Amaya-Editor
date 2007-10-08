@@ -71,6 +71,11 @@ extern void TtaChangeBoxPosition ( Element element,
 extern int TtaGetDepth ( Element element,
                          Document document,
                          View view );
+extern void TtaGiveBoxColors ( Element element,
+                               Document document,
+                               View view,
+                               int *color,
+                               int *bg_color );
 extern void TtaGiveBoxSize ( Element element,
                              Document document,
                              View view,
@@ -171,6 +176,11 @@ extern void TtaChangeBoxPosition ( Element element,
 extern int TtaGetDepth ( Element element,
                            Document document,
                            View view );
+extern void TtaGiveBoxColors ( Element element,
+                                 Document document,
+                                 View view,
+                                 int *color,
+                                 int *bg_color );
 extern void TtaGiveBoxSize ( Element element,
                                Document document,
                                View view,

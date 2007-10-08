@@ -751,6 +751,8 @@ static ThotBool GetEnclosingBlock (Document doc)
   ElementType	        elType;
   int                 i, j;
 
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+    return FALSE;
   TtaGiveFirstSelectedElement (doc, &first, &i, &j);
   if (first == NULL)
     return FALSE;
@@ -804,17 +806,35 @@ void DoStyleColor (char *color)
   Element             first, parent, el = NULL;
   ElementType         elType;
   Document            doc;
+  char               *ptr;
   int                 firstChar, lastChar, i;
+  int                 col, bg_col, new_col;
+  unsigned short      red, green, blue;
+  
   ThotBool            open = FALSE, before;
 
   doc = TtaGetSelectedDocument();
-  if (!TtaGetDocumentAccessMode (doc))
+  if (!TtaGetDocumentAccessMode (doc) || color == NULL)
     /* document is ReadOnly */
+    return;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+    return;
+  // new thot color
+  ptr = strstr (color, "#");
+  if (ptr == NULL)
+    return;
+  TtaGiveRGB (ptr, &red, &green, &blue);
+  new_col = TtaGetThotColor (red, green, blue);
+
+  // check the current color
+  TtaGiveFirstSelectedElement (doc, &first, &firstChar, &lastChar);
+  TtaGiveBoxColors (first, doc, 1, &col, &bg_col);
+  if (new_col == col)
+    // do nothing
     return;
 
   if ( TtaIsSelectionEmpty ())
     {
-      TtaGiveFirstSelectedElement (doc, &first, &firstChar, &lastChar);
       parent = TtaGetParent (first);
       elType = TtaGetElementType (parent);
       i =  TtaGetElementVolume (first);
@@ -839,10 +859,13 @@ void DoStyleColor (char *color)
               TtaInsertSibling (el, parent, before, doc);
               TtaSelectElement (doc, el);
               TtaRegisterElementCreate (el, doc);
+              TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
             }
         }
     }
-  GenerateStyle (color, TRUE);
+
+  if (new_col != col)
+    GenerateStyle (color, TRUE);
   if (open)
     TtaCloseUndoSequence (doc);
 }

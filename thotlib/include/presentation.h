@@ -492,7 +492,8 @@ extern void TtaSetPRuleView (PRule pRule, int view);
    deltaY: height increment in units (positive, negative or zero).
    unit: the unit used for the values.
   ----------------------------------------------------------------------*/
-extern void TtaChangeBoxSize (Element element, Document document, View view, int deltaX, int deltaY, TypeUnit unit);
+extern void TtaChangeBoxSize (Element element, Document document, View view,
+                              int deltaX, int deltaY, TypeUnit unit);
 
 /*----------------------------------------------------------------------
    TtaChangeBoxPosition
@@ -506,7 +507,8 @@ extern void TtaChangeBoxSize (Element element, Document document, View view, int
    deltaY: vertical shift in units (positive, negative or zero).
    unit: the unit used for the values.
   ----------------------------------------------------------------------*/
-extern void TtaChangeBoxPosition (Element element, Document document, View view, int X, int Y, TypeUnit unit);
+extern void TtaChangeBoxPosition (Element element, Document document,
+                                  View view, int X, int Y, TypeUnit unit);
 
 /*----------------------------------------------------------------------
    TtaGetDepth
@@ -518,6 +520,22 @@ extern void TtaChangeBoxPosition (Element element, Document document, View view,
    view: the view.
   ----------------------------------------------------------------------*/
 extern int TtaGetDepth (Element element, Document document, View view);
+
+
+/*----------------------------------------------------------------------
+  TtaGiveBoxColors
+  Returns the color and background color of the box corresponding to an
+  element in a given view.
+  Parameters:
+  element: the element of interest.
+  document: the document of interest.
+  view: the view.
+  Return parameters:
+  color the thot
+  bg_color
+  ----------------------------------------------------------------------*/
+extern void TtaGiveBoxColors (Element element, Document document, View view,
+                              int *color, int *bg_color);
 
 /*----------------------------------------------------------------------
    TtaGiveBoxSize
@@ -532,7 +550,8 @@ extern int TtaGetDepth (Element element, Document document, View view);
    width: box width in units.
    height: box height in units.
   ----------------------------------------------------------------------*/
-extern void TtaGiveBoxSize (Element element, Document document, View view, TypeUnit unit, /*OUT*/ int *width, /*OUT*/ int *height);
+extern void TtaGiveBoxSize (Element element, Document document, View view,
+                            TypeUnit unit, /*OUT*/ int *width, /*OUT*/ int *height);
 
 /*----------------------------------------------------------------------
    TtaGiveBoxPosition
@@ -551,7 +570,8 @@ extern void TtaGiveBoxSize (Element element, Document document, View view, TypeU
    yCoord:  distance from the upper edge of the parent box to the upper
    edge of the box, in units.
   ----------------------------------------------------------------------*/
-extern void TtaGiveBoxPosition (Element element, Document document, View view, TypeUnit unit, /*OUT*/ int *xCoord, /*OUT*/ int *yCoord);
+extern void TtaGiveBoxPosition (Element element, Document document, View view,
+                                TypeUnit unit, /*OUT*/ int *xCoord, /*OUT*/ int *yCoord);
 
 /*----------------------------------------------------------------------
    TtaGiveBoxAbsPosition
@@ -571,7 +591,8 @@ extern void TtaGiveBoxPosition (Element element, Document document, View view, T
    yCoord:  distance from the upper edge of the window to the upper
    edge of the box.
   ----------------------------------------------------------------------*/
-extern void TtaGiveBoxAbsPosition (Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord);
+extern void TtaGiveBoxAbsPosition (Element element, Document document, View view,
+                                   TypeUnit unit, int *xCoord, int *yCoord);
 
 /*----------------------------------------------------------------------
    TtaGiveWindowSize
@@ -585,12 +606,14 @@ extern void TtaGiveBoxAbsPosition (Element element, Document document, View view
    width: window width in units.
    height: window height in units.
   ----------------------------------------------------------------------*/
-extern void TtaGiveWindowSize (Document document, View view, TypeUnit unit, int *width, int *height);
+extern void TtaGiveWindowSize (Document document, View view, TypeUnit unit,
+                               int *width, int *height);
 
 /*----------------------------------------------------------------------
  *   TtaGiveRGB returns the RGB of the color.
  ----------------------------------------------------------------------*/
-extern char *TtaGiveRGB (char *colname, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue );
+extern char *TtaGiveRGB (char *colname, /*OUT*/ unsigned short *red,
+                         /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue );
 
 /*----------------------------------------------------------------------
    TtaGiveThotRGB returns the Red Green and Blue values corresponding
@@ -598,7 +621,8 @@ extern char *TtaGiveRGB (char *colname, /*OUT*/ unsigned short *red, /*OUT*/ uns
    If the color doesn't exist the function returns the values
    for the default color.
   ----------------------------------------------------------------------*/
-extern void TtaGiveThotRGB (int num, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue);
+extern void TtaGiveThotRGB (int num, /*OUT*/ unsigned short *red,
+                            /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue);
 
 /*----------------------------------------------------------------------
    TtaNextPRule

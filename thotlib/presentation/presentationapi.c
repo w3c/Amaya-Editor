@@ -2282,6 +2282,53 @@ int TtaGetDepth (Element element, Document document, View view)
 
 
 /*----------------------------------------------------------------------
+  TtaGiveBoxColors
+  Returns the color and background color of the box corresponding to an
+  element in a given view.
+  Parameters:
+  element: the element of interest.
+  document: the document of interest.
+  view: the view.
+  Return parameters:
+  color the thot
+  bg_color
+  ----------------------------------------------------------------------*/
+void TtaGiveBoxColors (Element element, Document document, View view,
+                       int *color, int *bg_color)
+{
+  PtrAbstractBox      pAb;
+  int                 frame;
+
+  UserErrorCode = 0;
+  *color = 1;
+  *bg_color = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  /* verifies the parameter document */
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is correct */
+    {
+      frame = GetWindowNumber (document, view);
+      if (frame != 0)
+        {
+          pAb = AbsBoxOfEl ((PtrElement) element, view);
+          if (pAb == NULL || pAb->AbBox == NULL)
+            TtaError (ERR_element_has_no_box);
+          else
+            {
+              *color = pAb->AbForeground;
+              *bg_color = pAb->AbBackground;
+            }
+        }
+    }
+}
+
+
+/*----------------------------------------------------------------------
   TtaGiveBoxSize
   Returns the height and width of the box corresponding to an element in
   a given view.
@@ -3235,7 +3282,7 @@ int TtaGetPRuleUnit (PRule pRule)
   Return value:
   number of the view to which the presentation rule applies.
   ----------------------------------------------------------------------*/
-int                 TtaGetPRuleView (PRule pRule)
+int TtaGetPRuleView (PRule pRule)
 {
   int                 view;
 
@@ -3259,7 +3306,7 @@ int                 TtaGetPRuleView (PRule pRule)
   Return value:
   0 if both rules are different, 1 if they are identical.
   ----------------------------------------------------------------------*/
-int                 TtaSamePRules (PRule pRule1, PRule pRule2)
+int TtaSamePRules (PRule pRule1, PRule pRule2)
 {
   int                 result;
   PtrPRule            pR1, pR2;
