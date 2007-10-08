@@ -33,16 +33,22 @@ extern void CheckUniqueName ( Element el,
                               Document doc,
                               Attribute attr,
                               AttributeType attrType );
-extern void FollowTheLink_callback ( int targetDocument,
-                                     int status,
-                                     char *urlName,
-                                     char *outputfile,
-                                     char *proxyname,
-                                     AHTHeaders *http_headers,
-                                     void *context );
+extern void Do_follow_link_callback ( int targetDocument,
+                                      int status,
+                                      char *urlName,
+                                      char *outputfile,
+                                      char *proxyname,
+                                      AHTHeaders *http_headers,
+                                      void *context );
 extern ThotBool IsCSSLink ( Element el,
                             Document doc );
 extern void CheckRefresh ( Document doc );
+extern void FollowTheLink ( Document document,
+                            View view );
+extern void FollowTheLinkNewWin ( Document document,
+                                  View view );
+extern void FollowTheLinkNewTab ( Document document,
+                                  View view );
 extern void DoAction ( Document doc,
                        View view );
 extern ThotBool AcceptTab ( NotifyOnTarget *event );
@@ -119,16 +125,22 @@ extern void CheckUniqueName ( Element el,
                                 Document doc,
                                 Attribute attr,
                                 AttributeType attrType );
-extern void FollowTheLink_callback ( int targetDocument,
-                                       int status,
-                                       char *urlName,
-                                       char *outputfile,
-                                       char *proxyname,
-                                       AHTHeaders *http_headers,
-                                       void *context );
+extern void Do_follow_link_callback ( int targetDocument,
+                                        int status,
+                                        char *urlName,
+                                        char *outputfile,
+                                        char *proxyname,
+                                        AHTHeaders *http_headers,
+                                        void *context );
 extern ThotBool IsCSSLink ( Element el,
                               Document doc );
 extern void CheckRefresh ( Document doc );
+extern void FollowTheLink ( Document document,
+                              View view );
+extern void FollowTheLinkNewWin ( Document document,
+                                    View view );
+extern void FollowTheLinkNewTab ( Document document,
+                                    View view );
 extern void DoAction ( Document doc,
                          View view );
 extern ThotBool AcceptTab ( NotifyOnTarget *event );

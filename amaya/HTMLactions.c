@@ -81,17 +81,17 @@
 
 
 /* Some prototypes */
-static ThotBool     FollowTheLink (Element anchor, Element elSource,
+static ThotBool     Do_follow_link (Element anchor, Element elSource,
                                    Attribute HrefAttr, Document doc);
 
 /* the structure used for the Forward and Backward buttons history callbacks */
-typedef struct _FollowTheLink_context {
+typedef struct _Do_follow_link_context {
   Document             doc;
   Element              anchor;
   Element              elSource;
   char                *sourceDocUrl;
   char                *utf8path;
-} FollowTheLink_context;
+} Do_follow_link_context;
 
 
 /* info about the last element highlighted when synchronizing with the
@@ -102,6 +102,7 @@ static Attribute    HighLightAttribute = NULL;
 static ThotBool     Follow_exclusive = FALSE;
 static ThotBool     Refresh_exclusive = FALSE;
 static ThotBool     SelectionChanging = FALSE;
+static Element      Right_ClikedElement = NULL;
 
 /*----------------------------------------------------------------------
   CharNum_IN_Line
@@ -1307,10 +1308,10 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
 
 
 /*----------------------------------------------------------------------
-  FollowTheLink_callback
+  Do_follow_link_callback
   This function is called when the document is loaded
   ----------------------------------------------------------------------*/
-void FollowTheLink_callback (int targetDocument, int status, char *urlName,
+void Do_follow_link_callback (int targetDocument, int status, char *urlName,
                              char *outputfile, char *proxyname,
                              AHTHeaders *http_headers, void *context)
 {
@@ -1323,7 +1324,7 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
   Attribute           PseudoAttr, HrefAttr;
   SSchema             docSchema; 
   View                view;
-  FollowTheLink_context  *ctx = (FollowTheLink_context *) context;
+  Do_follow_link_context  *ctx = (Do_follow_link_context *) context;
   char               *sourceDocUrl, *utf8path;
   char                newurl[MAX_LENGTH], newname[MAX_LENGTH];
 
@@ -1394,7 +1395,7 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
           attrType.AttrTypeNum = HTML_ATTR_HREF_;
           HrefAttr = TtaGetAttribute (elFound, attrType);
           if (HrefAttr)
-            FollowTheLink (elFound, elSource, HrefAttr, doc);
+            Do_follow_link (elFound, elSource, HrefAttr, doc);
           return;
         }
       else
@@ -1477,11 +1478,11 @@ ThotBool IsCSSLink (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  FollowTheLink follows the link starting from the anchor element for a
+  Do_follow_link follows the link starting from the anchor element for a
   double click on the elSource element.
   The parameter doc is the document that contains the origin element.
   ----------------------------------------------------------------------*/
-static ThotBool FollowTheLink (Element anchor, Element elSource,
+static ThotBool Do_follow_link (Element anchor, Element elSource,
                                Attribute HrefAttr, Document doc)
 {
   AttributeType          attrType;
@@ -1495,7 +1496,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
   char                  *utf8path, *info, *s;
   int                    length;
   int                    method;
-  FollowTheLink_context *ctx;
+  Do_follow_link_context *ctx;
   ThotBool		           isHTML, history, readonly = FALSE;
   char                   newurl[MAX_LENGTH], newname[MAX_LENGTH];
 
@@ -1542,7 +1543,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
         utf8path[length--] = EOS;
        
       /* save the context */
-      ctx = (FollowTheLink_context*)TtaGetMemory (sizeof (FollowTheLink_context));
+      ctx = (Do_follow_link_context*)TtaGetMemory (sizeof (Do_follow_link_context));
       ctx->anchor = anchor;
       ctx->doc = doc;
       ctx->utf8path = utf8path;
@@ -1558,7 +1559,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
           /* the target element is part of the same document */
           targetDocument = doc;
           /* manually invoke the callback */
-          FollowTheLink_callback (targetDocument, 0, NULL, NULL, NULL, NULL, 
+          Do_follow_link_callback (targetDocument, 0, NULL, NULL, NULL, NULL, 
                                   (void *) ctx);
         }
       else
@@ -1654,7 +1655,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
               targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc, 
                                             method, history, 
                                             (void (*)(int, int, char*, char*, char*,
-                                                      const AHTHeaders*, void*)) FollowTheLink_callback,
+                                                      const AHTHeaders*, void*)) Do_follow_link_callback,
                                             (void *) ctx);
               if (readonly)
                 {
@@ -1930,9 +1931,41 @@ static ThotBool ActivateElement (Element element, Document document)
   anchor = SearchAnchor (document, element, &HrefAttr, FALSE);
 
   if (anchor && HrefAttr)
-    return (FollowTheLink (anchor, element, HrefAttr, document));
+    return (Do_follow_link (anchor, element, HrefAttr, document));
   else
     return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void FollowTheLink (Document document, View view)
+{
+  DontReplaceOldDoc = FALSE;
+  if (Right_ClikedElement)
+    ActivateElement (Right_ClikedElement, document);
+  Right_ClikedElement = NULL;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void FollowTheLinkNewWin (Document document, View view)
+{
+  DontReplaceOldDoc = TRUE;
+  InNewWindow       = TRUE;
+  if (Right_ClikedElement)
+    ActivateElement (Right_ClikedElement, document);
+  Right_ClikedElement = NULL;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void FollowTheLinkNewTab (Document document, View view)
+{
+  DontReplaceOldDoc = TRUE;
+  InNewWindow       = FALSE;
+  if (Right_ClikedElement)
+    ActivateElement (Right_ClikedElement, document);
+  Right_ClikedElement = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -2436,24 +2469,23 @@ ThotBool SimpleLClick (NotifyElement *event)
   return FALSE;
 }
 
-
 /*----------------------------------------------------------------------
   SimpleRClick     The user has clicked an element.         
   ----------------------------------------------------------------------*/
 ThotBool SimpleRClick (NotifyElement *event)
 {
+#ifdef _WX
+  Right_ClikedElement = event->element;
+  /* don't let Thot perform normal operation if there is an activation */
+  return FALSE;
+#else /* _WX */
   ThotBool done;
   
-#ifdef _WX
-  LoadDefaultOpeningLocation (TRUE); // in new frame
-  done = ActivateElement (event->element, event->document);
-#else /* _WX */
   DontReplaceOldDoc = TRUE;
   done = ActivateElement (event->element, event->document);
   DontReplaceOldDoc = FALSE;
-#endif /* _WX*/
-  /* don't let Thot perform normal operation if there is an activation */
   return done;
+#endif /* _WX*/
 }
 
 /*----------------------------------------------------------------------
