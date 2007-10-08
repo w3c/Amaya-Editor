@@ -413,6 +413,8 @@ static void TtaMakeWindowMenuBar( int window_id )
           /* remember specials menus */
           if (ptrmenu->MenuContext) 
             WindowTable[window_id].MenuContext = ptrmenu->MenuID;
+          else if (ptrmenu->MenuDocContext) 
+            WindowTable[window_id].MenuDocContext = ptrmenu->MenuID;
           else if (ptrmenu->MenuAttr)
             WindowTable[window_id].MenuAttr = ptrmenu->MenuID;
           else if (ptrmenu->MenuSelect) 
@@ -430,7 +432,7 @@ static void TtaMakeWindowMenuBar( int window_id )
           
           /* Le menu contextuel ne doit pas etre accroche a notre bar de menu */
           /* il sera affiche qd le boutton droit de la souris sera active */
-          if (!ptrmenu->MenuContext)
+          if (!ptrmenu->MenuContext && !ptrmenu->MenuDocContext)
             p_menu_bar->Append( p_menu,
                                 TtaConvMessageToWX( TtaGetMessage (THOT, ptrmenu->MenuID) ) );
           
@@ -630,7 +632,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
   /* refresh every entry */
   while (ptrmenu)
     {
-      if (!ptrmenu->MenuContext)
+      if (!ptrmenu->MenuContext && !ptrmenu->MenuDocContext)
 	  {
       ptritem = ptrmenu->ItemsList;
       item_nb = 0;      
@@ -1716,6 +1718,29 @@ wxMenu * TtaGetContextMenu( int window_id )
     return NULL;
 }
 #endif /* _WX */
+
+
+#ifdef _WX
+/*----------------------------------------------------------------------
+  TtaGetDocContextMenu - 
+  this function returns the contextual doc menu of the given window
+  params:
+  + window_id : the parent window of the active frame
+  returns:
+  + wxMenu * : a pointer on a wxMenu, call PopupMenu to show it.
+  ----------------------------------------------------------------------*/
+wxMenu * TtaGetDocContextMenu( int window_id )
+{
+  int menu_id = WindowTable[window_id].MenuDocContext;
+
+  if (menu_id)
+    return WindowTable[window_id].WdMenus[menu_id];
+  else
+    return NULL;
+}
+#endif /* _WX */
+
+
 
 /*----------------------------------------------------------------------
   TtaToggleOnOffSidePanel

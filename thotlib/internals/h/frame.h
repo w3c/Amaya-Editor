@@ -140,6 +140,7 @@ typedef struct _Window_Ctl {
   int        MenuSelect;                /* Selection top menu ID or -1       */
   int        MenuHelp;                  /* Help top menu or -1               */
   int        MenuContext;               /* Contextual top menu ID or -1      */
+  int        MenuDocContext;            /* Contextual doc menu ID or -1      */
   int        MenuItemPaste;             /* Menu including the Paste command or -1 */
   int        MenuItemUndo;              /* Menu including the Undo command or -1  */
   int        MenuItemRedo;              /* Menu including the Redo command or -1  */

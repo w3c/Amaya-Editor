@@ -865,6 +865,7 @@ void TteAddMenu (int view, int menuID, int itemsNumber, char *menuName)
   newmenu->MenuSelect = FALSE;
   newmenu->MenuHelp = FALSE;
   newmenu->MenuContext = FALSE;
+  newmenu->MenuDocContext = FALSE;
   if (!strcmp (menuName, "MenuAttribute"))
     newmenu->MenuAttr = TRUE;
   else if (!strcmp (menuName, "MenuSelection"))
@@ -873,6 +874,8 @@ void TteAddMenu (int view, int menuID, int itemsNumber, char *menuName)
     newmenu->MenuHelp = TRUE;
   else if (!strcmp (menuName, "MenuContext"))
     newmenu->MenuContext = TRUE;
+  else if (!strcmp (menuName, "MenuDocContext"))
+    newmenu->MenuDocContext = TRUE;
    
   /* creation et initialisation de la table des items */
   ptr = (Item_Ctl *)TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
@@ -943,6 +946,7 @@ void TteAddSubMenu( int menuID,	int itemID, int itemsNumber )
           newmenu->MenuSelect = FALSE;
           newmenu->MenuHelp = FALSE;
           newmenu->MenuContext = FALSE;
+          newmenu->MenuDocContext = FALSE;
 
           /* creation et initialisation de la table des items */
           ptr = (Item_Ctl *) TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
@@ -2595,6 +2599,7 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
               !ptrmenu->MenuAttr &&
               !ptrmenu->MenuSelect &&
               !ptrmenu->MenuContext &&
+              !ptrmenu->MenuDocContext &&
               !ptrmenu->MenuHelp &&
               (ptrmenu->MenuView == 0 || ptrmenu->MenuView == view) &&
               Prof_ShowMenu (ptrmenu))

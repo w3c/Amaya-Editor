@@ -110,6 +110,17 @@ MENUS
 	Context_ Separator;
 	Context_ button:BCloseTab -> AmayaCloseTab;
 
+  DocContext_ button:BFollowTheLink -> FollowTheLink;
+  DocContext_ button:BFollowTheLinkNewWin -> FollowTheLinkNewWin;
+  DocContext_ button:BFollowTheLinkNewTab -> FollowTheLinkNewTab;
+  DocContext_ Separator;
+  DocContext_ button:BCut -> TtcCutSelection icon:cut.png;
+  DocContext_ button:BCopy -> TtcCopySelection icon:copy.png;
+  DocContext_ button:BPaste -> PasteBuffer icon:paste.png;
+  DocContext_ button:BClear -> TtcDeleteSelection icon:editdelete.png;
+  DocContext_ button:BInsertBefore -> InsertBefore icon:insert.png;
+  DocContext_ button:BInsertAfter -> InsertAfter icon:append.png;
+
 	Edit_ button:BUndo -> TtcUndo icon:undo.png;
 	Edit_ button:BRedo -> TtcRedo icon:redo.png;
 	Edit_ Separator;

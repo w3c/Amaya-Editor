@@ -57,6 +57,7 @@ typedef struct _Menu_Ctl
   ThotBool	MenuSelect;	/* This menu is the select menu		*/
   ThotBool	MenuHelp;	/* This menu is the help menu		*/
   ThotBool	MenuContext;	/* This menu is the contextual menu     */
+  ThotBool  MenuDocContext;  /* This menu is the contextual menu inside documents */
   int		ItemsNb;	/* Number of items in the menu menu	*/
   Item_Ctl     *ItemsList;	/* Pointer to the first item structure	*/
   struct _Menu_Ctl	*NextMenu;	/* Next menu		    	*/

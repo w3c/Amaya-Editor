@@ -14,6 +14,7 @@ extern int TtaMakeWindow ( int x,
                            int h,
                            int kind,
                            int parent_window_id );
+extern void TtaMakeWindowMenuBar ( int window_id );
 extern void TtaInitMenuItemStats ( int doc_id );
 extern void TtaInitTopMenuStats ( int doc_id );
 extern void TtaRefreshTopMenuStats ( int doc_id,
@@ -104,6 +105,7 @@ extern int TtaMakeWindow ( int x,
                              int h,
                              int kind,
                              int parent_window_id );
+extern void TtaMakeWindowMenuBar ( int window_id );
 extern void TtaInitMenuItemStats ( int doc_id );
 extern void TtaInitTopMenuStats ( int doc_id );
 extern void TtaRefreshTopMenuStats ( int doc_id,

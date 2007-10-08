@@ -56,6 +56,9 @@ TtcNextElement
 +templates
 +browsing_WX
 +edit_WX
+FollowTheLink
+FollowTheLinkNewWin
+FollowTheLinkNewTab
 #+javascript_dom
 HelpLocal
 ShowPanel

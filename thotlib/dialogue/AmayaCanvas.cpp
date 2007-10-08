@@ -362,6 +362,8 @@ void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
 
   // force the focus when clicking on the canvas because the focus is locked on panel buttons
   TtaRedirectFocus();
+  
+  event.Skip();
 }
 
 /*----------------------------------------------------------------------
@@ -415,6 +417,8 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
 
   // force the focus when clicking on the canvas because the focus is locked on panel buttons
   TtaRedirectFocus();
+  event.Skip();
+
 }
 
 /*----------------------------------------------------------------------
@@ -553,6 +557,49 @@ void AmayaCanvas::OnEraseBackground(wxEraseEvent& WXUNUSED(event))
   TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnEraseBackground frame=%d"), m_pAmayaFrame->GetFrameId() );
 }
 
+
+
+/*----------------------------------------------------------------------
+  Class:  AmayaCanvas
+  Method:  OnContextMenu
+  Description:  
+ -----------------------------------------------------------------------*/
+void AmayaCanvas::OnContextMenu( wxContextMenuEvent & event )
+{
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaCanvas::OnContextMenu - (x,y)=(%d,%d)"),
+                 event.GetPosition().x,
+                 event.GetPosition().y );
+
+  AmayaWindow* wind = (AmayaWindow*) wxGetTopLevelParent(this);
+  
+  int window_id = wind->GetWindowId();
+  long flags    = 0;
+  int page_id   = 0;
+  wxPoint point = event.GetPosition();
+//  wxPoint origin = GetClientAreaOrigin();
+//#ifdef _MACOS_26
+//  point = ScreenToClient(point);
+//  point.y += origin.y; 
+//  page_id   = HitTest(point, &flags);
+//#else /* _MACOS */
+//  page_id   = HitTest(ScreenToClient(point), &flags);
+//#endif /* _MACOS */
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - page_id=%d, flags=%d"), page_id, flags );
+
+  // store the aimed frame, it's possible that it is not the current active one
+  if (page_id >= 0)
+    {
+//      m_MContextFrameId = TtaGetFrameId ( window_id, page_id, 1 );
+      wxMenu * p_menu = TtaGetDocContextMenu ( window_id );
+#ifdef _MACOS_26
+      PopupMenu (p_menu, point);
+#else /* _MACOS */
+      PopupMenu (p_menu, ScreenToClient(point));
+#endif /* _MACOS */
+    }
+  //  event.Skip();
+}
+
 /*----------------------------------------------------------------------
    This is where the event table is declared
    the callbacks are assigned to an event type
@@ -583,7 +630,10 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxGLCanvas)
   
   EVT_TIMER( -1,        AmayaCanvas::OnTimerMouseMove)
 
+  EVT_CONTEXT_MENU(AmayaCanvas::OnContextMenu)
+
+  
   //   EVT_CHAR( AmayaCanvas::OnChar )
-  END_EVENT_TABLE()
+END_EVENT_TABLE()
 
 #endif // #ifdef _WX

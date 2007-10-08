@@ -9432,4 +9432,16 @@ void SendByMail (Document document, View view)
 #endif /* _WX */
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void FollowTheLink (Document document, View view)
+{
+}
 
+void FollowTheLinkNewWin (Document document, View view)
+{
+}
+
+void FollowTheLinkNewTab (Document document, View view)
+{
+}
