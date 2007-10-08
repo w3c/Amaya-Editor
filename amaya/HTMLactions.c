@@ -1937,6 +1937,18 @@ static ThotBool ActivateElement (Element element, Document document)
 }
 
 /*----------------------------------------------------------------------
+  WithinLinkElement returns TRUE if the selection is within a link
+  ----------------------------------------------------------------------*/
+ThotBool WithinLinkElement (Element element, Document document)
+{
+  Element   ancestor;
+  Attribute attr;
+
+  ancestor = SearchAnchor (document, element, &attr, FALSE);
+  return (ancestor != NULL);
+}
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void FollowTheLink (Document document, View view)
 {
