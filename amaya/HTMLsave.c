@@ -2048,8 +2048,7 @@ void RedisplaySourceFile (Document doc)
   char               *localFile;
   char	              documentname[MAX_LENGTH];
   char	              tempdir[MAX_LENGTH];
-  int		      position;
-  int		      distance;
+  int		              position, distance;
   NotifyElement       event;
 
   if (DocumentTypes[doc] == docHTML ||

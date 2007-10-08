@@ -25,12 +25,14 @@
 #include "SVG.h"
 #endif
 #include "fetchHTMLname.h"
+#include "MENUconf.h"
 
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
 #include "EDITORactions_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
+#include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
 #include "UIcss_f.h"
@@ -844,13 +846,15 @@ void StyleChanged (NotifyOnTarget *event)
 void ChangeTheme (char *theme)
 {
   Element             root, el, head, content, next;
+  Element             el_select, el_show;
   ElementType	        elType;
   Attribute           attr;
   AttributeType       attrType;
   Document            doc;
   Language            language = TtaGetDefaultLanguage ();
   char               *buffer = NULL, *ptr, *filename;
-  int                 view;
+  int                 view, i, j;
+  int		              position, distance;
   DisplayMode         dispMode;
   ThotBool            isNew = FALSE;
 
@@ -860,6 +864,12 @@ void ChangeTheme (char *theme)
   if (doc && DocumentTypes[doc] == docHTML)
     {
       root = TtaGetMainRoot (doc);
+
+      /* get the current position in the document */
+      TtaGiveFirstSelectedElement (doc, &el_select, &i, &j);
+      position = RelativePosition (doc, &distance);
+      el_show = ElementAtPosition (doc, position);
+        
       elType = TtaGetElementType (root);
       elType.ElTypeNum = HTML_EL_HEAD;
       head = TtaSearchTypedElement (elType, SearchForward, root);
@@ -931,10 +941,20 @@ void ChangeTheme (char *theme)
             }
 
           TtaFreeMemory (buffer);
-          TtaSetDisplayMode (doc, dispMode);
-          TtaSetDocumentModified (doc);
           // check if an error is found in the new string
           TtaCloseUndoSequence (doc);
+          TtaSetDisplayMode (doc, dispMode);
+
+          /* restore the current position in the document */
+          TtaShowElement (doc, 1, el_show, distance);
+          if (el_select)
+            {
+              if (j == 0 && i == 0)
+                TtaSelectElement (doc, el_select);
+              else
+                TtaSelectString (doc, el_select, i, j);
+            }
+          TtaSetDocumentModified (doc);
         }
     }
 }

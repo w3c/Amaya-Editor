@@ -43,6 +43,8 @@ extern void Do_follow_link_callback ( int targetDocument,
 extern ThotBool IsCSSLink ( Element el,
                             Document doc );
 extern void CheckRefresh ( Document doc );
+extern ThotBool WithinLinkElement ( Element element,
+                                    Document document );
 extern void FollowTheLink ( Document document,
                             View view );
 extern void FollowTheLinkNewWin ( Document document,
@@ -135,6 +137,8 @@ extern void Do_follow_link_callback ( int targetDocument,
 extern ThotBool IsCSSLink ( Element el,
                               Document doc );
 extern void CheckRefresh ( Document doc );
+extern ThotBool WithinLinkElement ( Element element,
+                                      Document document );
 extern void FollowTheLink ( Document document,
                               View view );
 extern void FollowTheLinkNewWin ( Document document,
