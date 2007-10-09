@@ -36,7 +36,7 @@ DEFAULT
 MENUS
    Document Windows:
 	BEGIN
-  File button:BNew_Tab -> NewTab;
+  File button:BNewTab -> NewTab;
 	File.New1 button:BHtml -> NewXHTML icon:document_html.png;
 	File.New1 button:BHtml11 -> NewXHTML11 icon:document_html.png;
 	File.New1 button:BHtmlTransitional -> NewXHTMLTransitional icon:document_html.png;
@@ -102,24 +102,24 @@ MENUS
 	File button:BCloseWindow -> AmayaCloseWindow;
 	File button:BExit -> AmayaClose;
 
-	Context_ button:BNewTab -> NewTab;
+	Context_ button:BCNewTab -> NewTab;
 	Context_ Separator;
 	Context_ button:BRefreshTab -> RefreshTab;
 	Context_ button:BRefreshAllTabs -> RefreshAllTabs;
 	Context_ button:BCloseOtherTabs -> CloseOtherTabs;
 	Context_ Separator;
-	Context_ button:BCloseTab -> AmayaCloseTab;
+	Context_ button:BCCloseTab -> AmayaCloseTab;
 
   DocContext_ button:BFollowTheLink -> FollowTheLink;
   DocContext_ button:BFollowTheLinkNewWin -> FollowTheLinkNewWin;
   DocContext_ button:BFollowTheLinkNewTab -> FollowTheLinkNewTab;
   DocContext_ Separator;
-  DocContext_ button:BCut -> TtcCutSelection icon:cut.png;
-  DocContext_ button:BCopy -> TtcCopySelection icon:copy.png;
-  DocContext_ button:BPaste -> PasteBuffer icon:paste.png;
-  DocContext_ button:BClear -> TtcDeleteSelection icon:editdelete.png;
-  DocContext_ button:BInsertBefore -> InsertBefore icon:insert.png;
-  DocContext_ button:BInsertAfter -> InsertAfter icon:append.png;
+  DocContext_ button:BCCut -> TtcCutSelection icon:cut.png;
+  DocContext_ button:BCCopy -> TtcCopySelection icon:copy.png;
+  DocContext_ button:BCPaste -> PasteBuffer icon:paste.png;
+  DocContext_ button:BCClear -> TtcDeleteSelection icon:editdelete.png;
+  DocContext_ button:BCInsertBefore -> InsertBefore icon:insert.png;
+  DocContext_ button:BCInsertAfter -> InsertAfter icon:append.png;
 
 	Edit_ button:BUndo -> TtcUndo icon:undo.png;
 	Edit_ button:BRedo -> TtcRedo icon:redo.png;

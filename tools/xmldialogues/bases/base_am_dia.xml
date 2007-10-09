@@ -242,7 +242,7 @@
 	<message xml:lang="tw">幫助(&amp;H)</message>
 	<message xml:lang="sk">&amp;Pomocník</message>
 </label>
-<label define="BNew_Tab">
+<label define="BNewTab">
 	<message xml:lang="en">New tab</message>
 	<message xml:lang="fr">Nouvel onglet</message>
 	<message xml:lang="es">Nueva pestaña</message>
@@ -1199,7 +1199,8 @@
 	<message xml:lang="tw">退出(&amp;X)</message>
 	<message xml:lang="sk">U&amp;končiť</message>
 </label>
-<label define="BNewTab">
+<!-- Context menu: -->
+<label define="BCNewTab">
 	<message xml:lang="en">New tab</message>
 	<message xml:lang="fr">Nouvel onglet</message>
 	<message xml:lang="es">Nueva pestaña</message>
@@ -1239,7 +1240,20 @@
 	<message xml:lang="it">Chiudi gli altri tab</message>
 	<message xml:lang="ru">Закрыть остальные панели</message>
 </label>
-<!-- Document context menu : -->
+<label define="BCCloseTab">
+	<message xml:lang="en">Close tab</message>
+	<message xml:lang="fr">Fermer l'onglet</message>
+	<message xml:lang="de">Registerkarte schließen</message>
+	<message xml:lang="es">Cerrar pestaña</message>
+	<message xml:lang="it">Chiudi tab</message>
+	<message xml:lang="ru">Закрыть панель</message>
+	<message xml:lang="hu">Lap bezárása</message>
+	<message xml:lang="ka">დაფის დახურვა</message>
+	<message xml:lang="cn">关闭标签</message>
+	<message xml:lang="tw">關閉標簽</message>
+	<message xml:lang="sk">Zavrieť kartu</message>
+</label>
+<!-- Document context menu: -->
 <label define="BFollowTheLink">
 	<message xml:lang="en">Follow the link</message>
 	<message xml:lang="fr">Ouvrir le lien</message>
@@ -1252,102 +1266,100 @@
 	<message xml:lang="en">Follow the link in new tab</message>
 	<message xml:lang="fr">Ouvrir le lien dans un nouvel onglet</message>
 </label>
-<label define="BCut">
-	<message xml:lang="en">Cu&amp;t</message>
-	<message xml:lang="fr">Cou&amp;per</message>
+<label define="BCCut">
+	<message xml:lang="en">Cut</message>
+	<message xml:lang="fr">Couper</message>
 	<message xml:lang="de">Ausschneiden</message>
 	<message xml:lang="it">Taglia</message>
 	<message xml:lang="tr">Kes</message>
-	<message xml:lang="es">Cor&amp;tar</message>
+	<message xml:lang="es">Cortar</message>
 	<message xml:lang="pt">Recortar</message>
 	<message xml:lang="fi">Leikkaa</message>
-	<message xml:lang="ru">Выр&amp;езать</message>
-	<message xml:lang="hu">&amp;Kivágás</message>
+	<message xml:lang="ru">Вырезать</message>
+	<message xml:lang="hu">Kivágás</message>
 	<message xml:lang="ka">ამოჭრა</message>
-	<message xml:lang="cn">剪切(&amp;T)</message>
-	<message xml:lang="tw">剪切(&amp;T)</message>
-	<message xml:lang="sk">&amp;Vystrihnúť</message>
+	<message xml:lang="cn">剪切</message>
+	<message xml:lang="tw">剪切</message>
+	<message xml:lang="sk">Vystrihnúť</message>
 </label>
-<label define="BCopy">
-	<message xml:lang="en">&amp;Copy</message>
-	<message xml:lang="fr">&amp;Copier</message>
+<label define="BCCopy">
+	<message xml:lang="en">Copy</message>
+	<message xml:lang="fr">Copier</message>
 	<message xml:lang="de">Kopieren</message>
 	<message xml:lang="it">Copia</message>
 	<message xml:lang="tr">Kopyala</message>
-	<message xml:lang="es">&amp;Copiar</message>
+	<message xml:lang="es">Copiar</message>
 	<message xml:lang="pt">Copiar</message>
 	<message xml:lang="fi">Kopioi</message>
 	<message xml:lang="ru">Копировать</message>
-	<message xml:lang="hu">&amp;Másolás</message>
+	<message xml:lang="hu">Másolás</message>
 	<message xml:lang="ka">კოპირება</message>
-	<message xml:lang="cn">复制(&amp;C)</message>
-	<message xml:lang="tw">復制(&amp;C)</message>
-	<message xml:lang="sk">&amp;Kopírovať</message>
+	<message xml:lang="cn">复制</message>
+	<message xml:lang="tw">復制</message>
+	<message xml:lang="sk">Kopírovať</message>
 </label>
-<label define="BPaste">
-	<message xml:lang="en">&amp;Paste</message>
-	<message xml:lang="fr">Co&amp;ller</message>
+<label define="BCPaste">
+	<message xml:lang="en">Paste</message>
+	<message xml:lang="fr">Coller</message>
 	<message xml:lang="de">Einfügen</message>
 	<message xml:lang="it">Incolla</message>
 	<message xml:lang="tr">Yapıştır</message>
-	<message xml:lang="es">&amp;Pegar</message>
+	<message xml:lang="es">Pegar</message>
 	<message xml:lang="pt">Colar</message>
 	<message xml:lang="fi">Liitä</message>
 	<message xml:lang="ru">Вставить</message>
-	<message xml:lang="hu">Be&amp;illesztés</message>
+	<message xml:lang="hu">Beillesztés</message>
 	<message xml:lang="ka">ჩასმა</message>
-	<message xml:lang="cn">粘贴(&amp;P)</message>
-	<message xml:lang="tw">粘貼(&amp;P)</message>
-	<message xml:lang="sk">&amp;Prilepiť</message>
+	<message xml:lang="cn">粘贴</message>
+	<message xml:lang="tw">粘貼</message>
+	<message xml:lang="sk">Prilepiť</message>
 </label>
-<label define="BClear">
-	<message xml:lang="en">&amp;Delete</message>
-	<message xml:lang="fr">Dé&amp;truire</message>
+<label define="BCClear">
+	<message xml:lang="en">Delete</message>
+	<message xml:lang="fr">Détruire</message>
 	<message xml:lang="de">Löschen</message>
 	<message xml:lang="it">Cancella</message>
 	<message xml:lang="tr">Temizle</message>
-	<message xml:lang="es">&amp;Borrar</message>
+	<message xml:lang="es">Borrar</message>
 	<message xml:lang="pt">Apagar</message>
 	<message xml:lang="fi">Poista</message>
 	<message xml:lang="ru">Удалить</message>
-	<message xml:lang="hu">&amp;Törlés</message>
+	<message xml:lang="hu">Törlés</message>
 	<message xml:lang="ka">წაშლა</message>
-	<message xml:lang="cn">删除(&amp;D)</message>
-	<message xml:lang="tw">刪除(&amp;D)</message>
-	<message xml:lang="sk">Vy&amp;mazať</message>
+	<message xml:lang="cn">删除</message>
+	<message xml:lang="tw">刪除</message>
+	<message xml:lang="sk">Vymazať</message>
 </label>
-<label define="BInsertBefore">
-	<message xml:lang="en">&amp;Insert</message>
-	<message xml:lang="fr">&amp;Insérer</message>
-	<message xml:lang="es">&amp;Insertar delante</message>
-	<message xml:lang="it">&amp;Inserisci</message>
-	<message xml:lang="de">&amp;Einfügen (davor)</message>
+<label define="BCInsertBefore">
+	<message xml:lang="en">Insert</message>
+	<message xml:lang="fr">Insérer</message>
+	<message xml:lang="es">Insertar delante</message>
+	<message xml:lang="it">Inserisci</message>
+	<message xml:lang="de">Einfügen (davor)</message>
 	<message xml:lang="ru">Вставить перед</message>
 	<message xml:lang="hu">Be&amp;szúrás</message>
 	<message xml:lang="ka">ჩამატება</message>
-	<message xml:lang="cn">插入(&amp;I)</message>
-	<message xml:lang="tw">插入(&amp;I)</message>
-	<message xml:lang="sk">Vložiť pre&amp;d</message>
+	<message xml:lang="cn">插入</message>
+	<message xml:lang="tw">插入</message>
+	<message xml:lang="sk">Vložiť pred</message>
 </label>
-<label define="BInsertAfter">
-	<message xml:lang="en">&amp;Append</message>
-	<message xml:lang="fr">&amp;Ajouter</message>
-	<message xml:lang="es">&amp;Añadir detrás</message>
-	<message xml:lang="it">&amp;Aggiungi</message>
-	<message xml:lang="de">&amp;Inzufügen (danach)</message>
-	<message xml:lang="pt">&amp;Adicionar</message>
-	<message xml:lang="fi">&amp;Lisää</message>
-	<message xml:lang="tr">&amp;Ekle</message>
+<label define="BCInsertAfter">
+	<message xml:lang="en">Append</message>
+	<message xml:lang="fr">Ajouter</message>
+	<message xml:lang="es">Añadir detrás</message>
+	<message xml:lang="it">Aggiungi</message>
+	<message xml:lang="de">Inzufügen (danach)</message>
+	<message xml:lang="pt">Adicionar</message>
+	<message xml:lang="fi">Lisää</message>
+	<message xml:lang="tr">Ekle</message>
 	<message xml:lang="ru">Добавить после</message>
-	<message xml:lang="hu">&amp;Hozzáfűzés</message>
+	<message xml:lang="hu">Hozzáfűzés</message>
 	<message xml:lang="ka">დამატება</message>
-	<message xml:lang="cn">附加(&amp;A)</message>
-	<message xml:lang="tw">附加(&amp;A)</message>
-	<message xml:lang="sk">Vložiť &amp;za</message>
+	<message xml:lang="cn">附加</message>
+	<message xml:lang="tw">附加</message>
+	<message xml:lang="sk">Vložiť za</message>
 </label>
 <!-- End of Document context menu. -->
-
-
 <label define="BUndo">
 	<message xml:lang="en">&amp;Undo</message>
 	<message xml:lang="fr">&amp;Défaire</message>
