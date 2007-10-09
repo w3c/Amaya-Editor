@@ -2395,3 +2395,30 @@ void TtaSendStatsInfo()
 #endif /* _WX */
 #endif /* SEND_STATS */
 }
+
+
+static PopupDocContextMenuFuction s_PopupDocContextMenuFuction = NULL;
+
+/*----------------------------------------------------------------------
+  TtaSetPopupDocContextMenuFunction()
+  Set the function to popup a context menu
+  ----------------------------------------------------------------------*/
+void TtaSetPopupDocContextMenuFunction(PopupDocContextMenuFuction fn)
+{
+#ifdef _WX
+  s_PopupDocContextMenuFuction = fn;
+#endif /* _WX */
+}
+
+
+/*----------------------------------------------------------------------
+  TtaPopupDocContextMenu(int, wxWindow*)
+  Popup a context menu
+  ----------------------------------------------------------------------*/
+void TtaPopupDocContextMenu(int document, int window, void* win, int x, int y)
+{
+#ifdef _WX
+  if(s_PopupDocContextMenuFuction && win)
+    s_PopupDocContextMenuFuction(document, window, win, x, y);
+#endif /* _WX */
+}
