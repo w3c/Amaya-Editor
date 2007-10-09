@@ -276,6 +276,10 @@ extern int       menu_item;
 extern void InitMathML ();
 extern void InitTemplates ();
 
+#ifdef _WX
+static int AmayaPopupDocContextMenu(int document, int window, wxWindow* win, int x, int y);
+#endif /* _WX */
+
 typedef enum
   {
     OpenDocBrowser,
@@ -8034,6 +8038,10 @@ void InitAmaya (NotifyEvent * event)
   InitTemplates();
 #endif
 
+#ifdef _WX
+  TtaSetPopupDocContextMenuFunction((PopupDocContextMenuFuction)AmayaPopupDocContextMenu);
+#endif /* _WX */
+  
   InsertableElement_Init();
 
   URL_list = NULL;
@@ -9431,3 +9439,35 @@ void SendByMail (Document document, View view)
   wxRmdir(wxString(temppath, wxConvUTF8));  
 #endif /* _WX */
 }
+
+#ifdef _WX
+static int AmayaPopupDocContextMenu(int document, int window, wxWindow* win, int x, int y)
+{
+  wxMenu * p_menu = TtaGetDocContextMenu ( window );
+  if(p_menu && document)
+    {
+      bool b = !CanFollowTheLink(document);
+      wxMenuItem* items[4];
+      if(b)
+        {
+          // Remove link menu items (open in ...)
+          items[0] = p_menu->Remove(p_menu->FindItemByPosition(0));
+          items[1] = p_menu->Remove(p_menu->FindItemByPosition(0));
+          items[2] = p_menu->Remove(p_menu->FindItemByPosition(0));
+          items[3] = p_menu->Remove(p_menu->FindItemByPosition(0));
+        }
+      
+      win->PopupMenu (p_menu, win->ScreenToClient(wxPoint(x, y)));
+      
+      if(b)
+        {
+          // Reinsert link menu items (open in ...)
+          p_menu->Prepend(items[3]);
+          p_menu->Prepend(items[2]);
+          p_menu->Prepend(items[1]);
+          p_menu->Prepend(items[0]);
+        }
+    }
+
+}
+#endif /* _WX */

@@ -45,6 +45,7 @@ extern ThotBool IsCSSLink ( Element el,
 extern void CheckRefresh ( Document doc );
 extern ThotBool WithinLinkElement ( Element element,
                                     Document document );
+extern ThotBool CanFollowTheLink ( Document document );
 extern void FollowTheLink ( Document document,
                             View view );
 extern void FollowTheLinkNewWin ( Document document,
@@ -139,6 +140,7 @@ extern ThotBool IsCSSLink ( Element el,
 extern void CheckRefresh ( Document doc );
 extern ThotBool WithinLinkElement ( Element element,
                                       Document document );
+extern ThotBool CanFollowTheLink ( Document document );
 extern void FollowTheLink ( Document document,
                               View view );
 extern void FollowTheLinkNewWin ( Document document,

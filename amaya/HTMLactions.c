@@ -1949,6 +1949,21 @@ ThotBool WithinLinkElement (Element element, Document document)
 }
 
 /*----------------------------------------------------------------------
+  CanFollowTheLink returns TRUE if the currently right-clic selected element
+  is a link element.
+  ----------------------------------------------------------------------*/
+ThotBool CanFollowTheLink (Document document)
+{
+  if(Right_ClikedElement && TtaGetDocument(Right_ClikedElement)==document)
+    {
+      if(WithinLinkElement(Right_ClikedElement, document))
+        return TRUE;
+    }
+  return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void FollowTheLink (Document document, View view)
 {

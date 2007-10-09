@@ -16,6 +16,7 @@
 
 #include "typemedia.h"
 #include "appdialogue.h"
+#include "appdialogue_wx.h"
 #include "dialog.h"
 #include "application.h"
 #include "dialog.h"
@@ -572,32 +573,46 @@ void AmayaCanvas::OnContextMenu( wxContextMenuEvent & event )
 
   AmayaWindow* wind = (AmayaWindow*) wxGetTopLevelParent(this);
   
-  int window_id = wind->GetWindowId();
-  long flags    = 0;
-  int page_id   = 0;
-  wxPoint point = event.GetPosition();
-//  wxPoint origin = GetClientAreaOrigin();
-//#ifdef _MACOS_26
-//  point = ScreenToClient(point);
-//  point.y += origin.y; 
-//  page_id   = HitTest(point, &flags);
-//#else /* _MACOS */
-//  page_id   = HitTest(ScreenToClient(point), &flags);
-//#endif /* _MACOS */
+  int      window_id = wind->GetWindowId();
+  long     flags     = 0;
+  int      page_id   = 0;
+  wxPoint  point     = event.GetPosition();
+  Document document;
+  View     view;
+  FrameToView (m_pAmayaFrame->GetFrameId(), &document, &view);
+  
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - page_id=%d, flags=%d"), page_id, flags );
 
-  // store the aimed frame, it's possible that it is not the current active one
-  if (page_id >= 0)
+  if (page_id >= 0 && document)
     {
-//      m_MContextFrameId = TtaGetFrameId ( window_id, page_id, 1 );
-      wxMenu * p_menu = TtaGetDocContextMenu ( window_id );
-#ifdef _MACOS_26
-      PopupMenu (p_menu, point);
-#else /* _MACOS */
-      PopupMenu (p_menu, ScreenToClient(point));
-#endif /* _MACOS */
+      TtaPopupDocContextMenu(document, window_id, this, point.x, point.y);
+//    wxMenu * p_menu = TtaGetDocContextMenu ( window_id );
+//    if(p_menu && document)
+//      {
+//        bool b = !CanFollowTheLink(document);
+//        wxMenuItem* items[4];
+//        if(b)
+//          {
+//            // Remove link menu items (open in ...)
+//            items[0] = p_menu->Remove(p_menu->FindItemByPosition(0));
+//            items[1] = p_menu->Remove(p_menu->FindItemByPosition(0));
+//            items[2] = p_menu->Remove(p_menu->FindItemByPosition(0));
+//            items[3] = p_menu->Remove(p_menu->FindItemByPosition(0));
+//          }
+//        
+//        PopupMenu (p_menu, ScreenToClient(point));
+//        
+//        if(b)
+//          {
+//            // Reinsert link menu items (open in ...)
+//            p_menu->Prepend(items[3]);
+//            p_menu->Prepend(items[2]);
+//            p_menu->Prepend(items[1]);
+//            p_menu->Prepend(items[0]);
+//          }
+//      }
     }
-  //  event.Skip();
+  event.Skip();
 }
 
 /*----------------------------------------------------------------------

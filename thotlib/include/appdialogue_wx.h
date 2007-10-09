@@ -65,6 +65,13 @@ extern ThotBool TtaIsSpecialKey( int wx_keycode );
 
 extern void TtaSendStatsInfo();
 
+
+/* Function prototype to show a context menu.*/
+typedef int(*PopupDocContextMenuFuction)(int document, int window, void* win, int x, int y);
+
+void TtaSetPopupDocContextMenuFunction(PopupDocContextMenuFuction fn);
+void TtaPopupDocContextMenu(int document, int window, void* win, int x, int y);
+
 #endif /* _WX */
 
 extern void TtaCheckLostFocus();
