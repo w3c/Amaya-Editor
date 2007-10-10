@@ -66,6 +66,14 @@
               <object class="wxStaticText" name="wxID_LABEL_TITLE">
                 <label>Panel</label>
                 <style>wxALIGN_LEFT</style>
+                <font>
+                  <size>10</size>
+                  <family>swiss</family>
+                  <style>normal</style>
+                  <weight>bold</weight>
+                  <underlined>0</underlined>
+                  <face>Sans</face>
+                </font>
               </object>
               <option>1</option>
               <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
