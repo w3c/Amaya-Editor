@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -221,19 +221,19 @@ static void FreeFontEntry (GL_font* font)
 /*----------------------------------------------------------------------
   Char index Cache freeing recursive function 
   ----------------------------------------------------------------------*/
-static void FreeACharCache (Char_Cache_index *Cache)
+static void FreeACharCache (Char_Cache_index *cache)
 {
-  if (Cache->next)
-    FreeACharCache (Cache->next);
-  if (Cache->glyph.data)
+  if (cache->next)
+    FreeACharCache (cache->next);
+  if (cache->glyph.data)
     {
       /* the cache data can be of tow different type */
-      if (Cache->glyph.data_type == GL_GLYPH_DATATYPE_GLLIST)
-        glDeleteLists(*((GLuint*)Cache->glyph.data), 1); /* a glList */
-      else if (Cache->glyph.data_type == GL_GLYPH_DATATYPE_FTBITMAP)
-        TtaFreeMemory (Cache->glyph.data); /* a freetype bitmap */
+      if (cache->glyph.data_type == GL_GLYPH_DATATYPE_GLLIST)
+        glDeleteLists(*((GLuint*)cache->glyph.data), 1); /* a glList */
+      else if (cache->glyph.data_type == GL_GLYPH_DATATYPE_FTBITMAP)
+        TtaFreeMemory (cache->glyph.data); /* a freetype bitmap */
     }
-  TtaFreeMemory (Cache);  
+  TtaFreeMemory (cache);  
 }
 
 /*----------------------------------------------------------------------
@@ -295,7 +295,7 @@ Char_Cache_index *Char_index_lookup_cache (GL_font *font, unsigned int idx,
     MakeBitmapGlyph (font, cache->character, &cache->glyph);
   /* return the new cache entry */
 
-  return (cache);  
+  return (cache);
 }
 
 /*----------------------------------------------------------------------
@@ -718,8 +718,7 @@ static int FontDescender (GL_font *font)
 /*----------------------------------------------------------------------
   FaceKernAdvance : Return Distance between 2 glyphs
   ----------------------------------------------------------------------*/
-static float FaceKernAdvance (FT_Face face, unsigned int index1, 
-                              unsigned int index2)
+static float FaceKernAdvance (FT_Face face, unsigned int index1,  unsigned int index2)
 {  
   FT_Vector kernAdvance;
 
@@ -736,10 +735,112 @@ static float FaceKernAdvance (FT_Face face, unsigned int index1,
 
 /********OPENGL BITMAP CONSTRUCTION SET********/
 /*----------------------------------------------------------------------
+  GetCharacterGlyph
+  ----------------------------------------------------------------------*/
+unsigned char *GetCharacterGlyph (GL_font *font, unsigned int idx, int w, int h)
+{
+  FT_BitmapGlyph  bitmap;
+  FT_Bitmap       *source = NULL;
+  FT_Glyph        Glyph;
+  unsigned        char *data = NULL, *dest = NULL, *src = NULL;
+  unsigned char  *bsrc, b;
+  unsigned int    index;
+  int             err = 0, p, i, y, width, height, offx, offy;
+
+  p = w * h * 3; // 3 bytes by pixel
+  data = (unsigned char *)TtaGetMemory (p);
+  memset (data, 0xFF, p);
+  index = FT_Get_Char_Index (font->face, idx);
+  if (index != 0 &&
+      !FT_Load_Glyph (font->face, index, thot_ft_load_mode) &&
+      !FT_Get_Glyph (font->face->glyph, &Glyph))
+    {
+      if (Glyph->format != ft_glyph_format_bitmap)
+        /* Last parameter tells that we destroy font's bitmap
+         * So we MUST cache it */
+        err = FT_Glyph_To_Bitmap (&Glyph, thot_ft_render_mode, 0, 1);
+      if (err)
+        FT_Done_Glyph (Glyph);
+      else
+        {
+          /* when the glyph is found into the font, we must come here */
+          bitmap = (FT_BitmapGlyph) Glyph;
+          source = &bitmap->bitmap;
+          width = source->width;
+          height = source->rows;
+          offx = (w-width)/2;
+          offy = (h-height)/2;
+          if(offx<0)
+            offx = 0;
+          if(offy<0)
+            offy = 0;
+          if (data)
+            {
+              dest = data;
+              src = source->buffer;
+              switch (source->pixel_mode)
+                {
+                  /* 1 bit per pixel, expand the bitmap */
+                case ft_pixel_mode_mono:
+                  for (y = offy; y < h; y++)
+                    {
+                      if ( y - offy < height)
+                        {
+                          dest = data + y * w * 3 + offx * 3;
+                          bsrc = src;
+                          b = 0;
+                          for (i = 0; i < w; i++)
+                            {
+                              if (i < width)
+                                {
+                                  if (i%8 == 0)
+                                    b = *bsrc++; // get the current byte
+                                  if (b&0x80)
+                                    memset (dest, 0, 3);
+                                  b <<= 1;
+                                }
+                              dest += 3; // next 3 bytes
+                            }
+                          src += source->pitch;
+                        }
+                    }
+                  break;
+                  /* one byte per pixel, just copy the bitmap */
+                case ft_pixel_mode_grays:
+                  for (y = offy; y < h; y++)
+                    {
+                      dest = data + y * w * 3 + offx * 3;
+                      if ( y - offy < height)
+                        {
+                          bsrc = src;
+                          b = 0;
+                          for (i = 0; i < w; i++)
+                            {
+                              if (i < width)
+                                {
+                                  b = *bsrc++; // get the current byte
+                                  memset (dest, ~b, 3);
+                                }
+                              dest += 3; // next 3 bytes
+                            }
+                          src += source->pitch;
+                        }
+                    }
+                  break;
+                default:
+                  ; /* currently unused by freetype */
+                }
+            }
+        }
+    }
+  
+  return data;
+}
+
+/*----------------------------------------------------------------------
   MakeBitmapGlyph : Make bitmap and struct to handle the glyph
   ----------------------------------------------------------------------*/
-static void MakeBitmapGlyph (GL_font *font, unsigned int g,
-                             GL_glyph *BitmapGlyph)
+static void MakeBitmapGlyph (GL_font *font, unsigned int g, GL_glyph *BitmapGlyph)
 {
   FT_BitmapGlyph  bitmap;
   FT_Bitmap       *source = NULL;

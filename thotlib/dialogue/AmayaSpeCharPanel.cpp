@@ -35,6 +35,8 @@
 #include "AmayaNormalWindow.h"
 #include "AmayaToolBar.h"
 #include "displayview_f.h"
+#include "font_f.h"
+#include "openglfont.h"
 
 
 /**
@@ -109,13 +111,19 @@ wxString AmayaSpeCharToolPanel::GetToolPanelName()const
   return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SPECHAR));
 }
 
+
 /*----------------------------------------------------------------------
  *       Class:  AmayaSpeCharToolPanel
  *      Method:  GetToolPanelName
 -----------------------------------------------------------------------*/
 void AmayaSpeCharToolPanel::Initialize()
 {
-  wxSizer* sz = new wxBoxSizer(wxVERTICAL);
+  ThotFont  font;
+  SpecFont  fontset;
+  int       index;
+  unsigned char     *data;
+  wxSizer*  sz = new wxBoxSizer(wxVERTICAL);
+
   m_pBook = new wxChoicebook(this, wxID_ANY);
   sz->Add(m_pBook, 1, wxEXPAND);
   SetSizer(sz);
@@ -132,12 +140,13 @@ void AmayaSpeCharToolPanel::Initialize()
       
       wxPanel*   panel = new wxPanel(m_pBook, wxID_ANY);
       wxToolBar* tb = NULL;
-      m_pBook->AddPage(panel, TtaConvMessageToWX(TtaGetMessage(LIB,entry->msg))/*wxT("")*/, false, img);
+      m_pBook->AddPage(panel, TtaConvMessageToWX(TtaGetMessage(LIB,entry->msg)), false, img);
       sz = new wxBoxSizer(wxVERTICAL);
       int line = 0;
-      while(car->unicode!=-1)
+      fontset = ThotLoadFont ('L', 1, 0, 12, UnPixel, 1);
+      while (car->unicode != -1)
         {
-          if(++line>=MAX_TOOL_PER_LINE || !tb)
+          if (++line >= MAX_TOOL_PER_LINE || !tb)
             {
               if(tb)
                 tb->Realize();
@@ -150,9 +159,15 @@ void AmayaSpeCharToolPanel::Initialize()
             }
           int toolid = wxNewId();
           m_hash[toolid] = car;
+          index = GetFontAndIndexFromSpec (car->unicode, fontset, 0, &font);
+          data = GetCharacterGlyph ((GL_font *)font, index, 16, 16);
           wxString str = wxChar(car->unicode);
-          tb->AddTool(toolid, str, wxCharToIcon<16, 16>(wxString(wxChar(car->unicode))),
+          wxImage img(16, 16, data, false);
+          tb->AddTool(toolid, str, wxBitmap(img),
                       TtaConvMessageToWX(car->name));
+          //tb->AddTool(toolid, str, wxCharToIcon<16, 16>(wxString(wxChar(car->unicode))),
+          //            TtaConvMessageToWX(car->name));
+          //TtaFreeMemory (data);
           car++;
         }
       entry++;

@@ -680,7 +680,7 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y,
   CHAR_T symbols[2];
   
   symbols[0] = c;
-  symbols[1] = '\0';
+  symbols[1] = EOS;
   if (fg < 0 || GL_font == NULL)
     return;
   GL_SetForeground (fg, TRUE); 

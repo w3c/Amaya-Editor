@@ -24,14 +24,12 @@ void *gl_font_init        (const char *font_filename,
 			   char alphabet, int size);
 void  gl_font_delete      (void *gl_font);
 int   GetFontFilename     (char script, int family, 
-			   int highlight, int size, 
-			   char *filename);
+			   int highlight, int size,  char *filename);
 void  FTLibraryFree ();
 int SetTextureScale (ThotBool Scaled);
 void StopTextureScale (int texture_id);
-void MakePolygonGlyph (GL_font *font,
-		       unsigned int g,
-		       GL_glyph *BitmapGlyph);
+unsigned char *GetCharacterGlyph (GL_font *font, unsigned int idx, int w, int h);
+void MakePolygonGlyph (GL_font *font, unsigned int g, GL_glyph *BitmapGlyph);
 
 int   UnicodeFontRenderPoly (void *gl_font, wchar_t *string, 
 			     float x, float y, int size);

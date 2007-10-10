@@ -15,7 +15,7 @@
             <flag>wxALIGN_CENTRE_VERTICAL</flag>
           </object>
           <object class="spacer">
-            <size>5,0</size>
+            <size>2,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxChoice" name="wxID_PANEL_CSS_THEME">
