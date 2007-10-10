@@ -1594,6 +1594,105 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 }
 
 /*----------------------------------------------------------------------
+  GetPreviousSibling
+  returns the sibling element before element el, ignoring Tamplate
+  elements.
+  ----------------------------------------------------------------------*/
+static PtrElement GetPreviousSibling (PtrElement el)
+{
+  PtrSSchema           elSS;
+  PtrElement           sibling, child, ancestor, prev;
+
+  sibling = el;
+  if (sibling)
+    {
+      elSS = el->ElStructSchema;
+      do
+        {
+          sibling = sibling->ElPrevious;
+          if (sibling)
+            {
+              if (!strcmp (sibling->ElStructSchema->SsName, "Template"))
+                /* it's a Template element. Look for its first descendant that
+                   is not a Template element */
+                {
+                  child = sibling;
+                  do
+                    {
+                      if (child->ElTerminal)
+                        child = NULL;
+                      else
+                        child = child->ElFirstChild;
+                    }
+                  while (child &&
+                         !strcmp (child->ElStructSchema->SsName, "Template"));
+                  if (child)
+                    return child;
+                  else
+                    // ignore empty template elements
+                    return GetPreviousSibling (sibling);
+                }
+              else
+                return sibling;
+            }
+          else
+            /* no sibling. If the ancestor is a Template element, find the last
+               ancestor that is a Template element and take its next sibling */
+            {
+              ancestor = el->ElParent;
+              prev = NULL;
+              while (ancestor)
+                {
+                  if (strcmp (ancestor->ElStructSchema->SsName,"Template"))
+                    /* this ancestor is not a Template element */
+                    {
+                      /* take the sibling of the previous ancestor */
+                      if (prev)
+                        sibling = prev->ElPrevious;
+                      else
+                        sibling = NULL;
+                      ancestor = NULL;
+                    }
+                  else
+                    {
+                      /* this ancestor is a Template element. Remember it and
+                         get the next ancestor */
+                      prev = ancestor;
+                      sibling = ancestor->ElPrevious;
+                      if (!sibling)
+                        ancestor = ancestor->ElParent;
+                      else
+                        {
+                          if (strcmp (sibling->ElStructSchema->SsName, "Template"))
+                            /* not a template element */
+                            ancestor = NULL;
+                          else
+                            /* it's a Template element. Look for its first
+                               descendant that is not a Template element */
+                            {
+                              child = sibling;
+                              do
+                                {
+                                  if (child->ElTerminal)
+                                    child = NULL;
+                                  else
+                                    child = child->ElFirstChild;
+                                }
+                              while (child &&
+                                     !strcmp (child->ElStructSchema->SsName, "Template"));
+                              return child;
+                            } 
+                        }
+                    }
+                }
+            }
+        } 
+      while (sibling);
+    }
+  return sibling;
+}
+
+/*----------------------------------------------------------------------
   ComputeListItemNumber
   Compute the value of the presentation box representing a list item counter.
   Return TRUE if the value has changed.
@@ -1603,7 +1702,7 @@ ThotBool ComputeListItemNumber (PtrAbstractBox pAb)
   char             number[20];
   int              count, length;
   CounterStyle     countStyle;
-  PtrElement       pPrev;
+  PtrElement       pPrev, pAsc;
   PtrAttribute     pAttr;
   ThotBool         change, set;
 
@@ -1626,13 +1725,18 @@ ThotBool ComputeListItemNumber (PtrAbstractBox pAb)
           else
             count++;
         }
-      pPrev = pPrev->ElPrevious;
+      pPrev = GetPreviousSibling (pPrev);
     }
   if (!set && pAb->AbElement && pAb->AbElement->ElParent)
     {
-      pAttr = GetAttrElementWithException (ExcStartCounter,
-                                           pAb->AbElement->ElParent);
+      /* get the parent element */
+      pAsc = pAb->AbElement->ElParent;
+      /* skip enclosing Template elements to find the real parent */
+      while (!strcmp (pAsc->ElStructSchema->SsName, "Template"))
+        pAsc = pAsc->ElParent;
+      pAttr = GetAttrElementWithException (ExcStartCounter, pAsc);
       if (pAttr && pAttr->AeAttrType == AtNumAttr)
+        /* the parent element sets an initial value to the counter */
         {
           count += pAttr->AeAttrValue;
           count--;
