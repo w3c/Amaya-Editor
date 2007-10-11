@@ -1833,7 +1833,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                     c = 100;
                   else if (c == 0x210E /* planckh */)
                     c = 104;
-                  else /* ExponentialE */
+                  else  if (c == 0x2147 /* ExponentialE */)
                     c = 101;
                 }
             }
