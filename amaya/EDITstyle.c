@@ -633,18 +633,21 @@ void EnableStyleElement (Document doc, Element el)
         {
           /* get the style element in the document head */
           buffer = GetStyleContents (el);
-          css = SearchCSS (doc, NULL, el, &pInfo);
-          if (pInfo)
-            pInfo->PiEnabled = TRUE;
-          dispMode = TtaGetDisplayMode (doc);
-          if (dispMode != NoComputedDisplay)
-            TtaSetDisplayMode (doc, NoComputedDisplay);
-          ReadCSSRules (doc, NULL, buffer, NULL, TtaGetElementLineNumber (el),
-                        FALSE, el);
-          /* Restore the display mode */
-          if (dispMode != NoComputedDisplay)
-            TtaSetDisplayMode (doc, dispMode);
-          TtaFreeMemory (buffer);
+          if (buffer)
+            {
+              css = SearchCSS (doc, NULL, el, &pInfo);
+              if (pInfo)
+                pInfo->PiEnabled = TRUE;
+              dispMode = TtaGetDisplayMode (doc);
+              if (dispMode != NoComputedDisplay)
+                TtaSetDisplayMode (doc, NoComputedDisplay);
+              ReadCSSRules (doc, NULL, buffer, NULL, TtaGetElementLineNumber (el),
+                            FALSE, el);
+              /* Restore the display mode */
+              if (dispMode != NoComputedDisplay)
+                TtaSetDisplayMode (doc, dispMode);
+              TtaFreeMemory (buffer);
+            }
         }
     }
 }
@@ -658,7 +661,7 @@ void DeleteStyleElement (Document doc, Element el)
   ElementType		elType;
   char                 *name;
 
-  if (el)
+  if (el && !TtaIsReadOnly (el))
     {
       /* get the style element in the document head */
       elType = TtaGetElementType (el);
@@ -894,18 +897,17 @@ void ChangeTheme (char *theme)
       else
         TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 
-      if (el && !TtaIsReadOnly (el))
+      if (el)
         {
           dispMode = TtaGetDisplayMode (doc);
           RemoveParsingErrors (doc);
           // close attached log documents
           CloseLogs (doc);
           TtaSetDisplayMode (doc, NoComputedDisplay);
-          if (!isNew)
-            //RemoveADocStyle (doc, el);
-            RemoveStyle (NULL, doc, TRUE, FALSE, el, CSS_DOCUMENT_STYLE);
           // remove the current content
-          content = TtaGetFirstChild (el);
+          content = GetNoTemplateChild (el, TRUE);
+          if (!isNew && content && !TtaIsReadOnly (content))
+            RemoveStyle (NULL, doc, TRUE, FALSE, el, CSS_DOCUMENT_STYLE);
           while (content)
             {
               next = content;
@@ -926,21 +928,15 @@ void ChangeTheme (char *theme)
                   // insert the new content
                   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
                   content = TtaNewElement (doc, elType);
-                  sprintf (filename, "/* %s.css */\n", theme);
-                  TtaSetTextContent (content, (unsigned char*)filename, language, doc);
+                  TtaSetTextContent (content, (unsigned char*)buffer, language, doc);
                   TtaInsertFirstChild (&content, el, doc);
                   TtaRegisterElementCreate (content, doc);
-
-                  next = TtaNewElement (doc, elType);
-                  TtaSetTextContent (next, (unsigned char*)buffer, language, doc);
-                  TtaInsertSibling (next, content, FALSE, doc);
-                  TtaRegisterElementCreate (next, doc);
                 }
               TtaFreeMemory (filename);
+              TtaFreeMemory (buffer);
               EnableStyleElement (doc, el);
             }
 
-          TtaFreeMemory (buffer);
           // check if an error is found in the new string
           TtaCloseUndoSequence (doc);
           TtaSetDisplayMode (doc, dispMode);

@@ -109,7 +109,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"span", SPACE, HTML_EL_Span, L_BasicValue, TRUE},
    {"strike", SPACE, HTML_EL_Struck_text, L_TransitionalValue, TRUE},
    {"strong", SPACE, HTML_EL_Strong, L_BasicValue, TRUE},
-   {"style", SPACE, HTML_EL_STYLE_, L_StrictValue, FALSE},
+   {"style", SPACE, HTML_EL_STYLE_, L_BasicValue, FALSE},
    {"sub", SPACE, HTML_EL_Subscript, L_StrictValue, TRUE},
    {"sup", SPACE, HTML_EL_Superscript, L_StrictValue, TRUE},
    {"symb", SPACE, HTML_EL_SYMBOL_UNIT, L_OtherValue, TRUE},
