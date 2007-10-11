@@ -221,8 +221,6 @@ void AmayaAdvancedWindow::SaveConfig()
                     (char*)(const char*)str.mb_str(wxConvUTF8), TRUE);
   }
 
-  // TODO  
-
   AmayaNormalWindow::SaveConfig();
 }
 

@@ -152,6 +152,7 @@ class AmayaWindow : public wxFrame
   void OnIdle( wxIdleEvent& event );
   void OnActivate( wxActivateEvent & event );
   void OnAmayaAction( wxCommandEvent& event );
+  void OnCloseEvent(wxCloseEvent& event);
 
  protected:
   int               m_Kind;               // window kind

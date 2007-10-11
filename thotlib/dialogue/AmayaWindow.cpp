@@ -140,7 +140,6 @@ void AmayaWindow::LoadConfig()
 void AmayaWindow::SaveConfig()
 {
   TtaSaveAppRegistry();
-  printf("!! saved !!\n");
 }
 
 /*----------------------------------------------------------------------
@@ -545,6 +544,17 @@ void AmayaWindow::OnAmayaAction( wxCommandEvent& event )
 }
 
 /*----------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  OnCloseEvent
+ * Description:  catch the close event
+  -----------------------------------------------------------------------*/
+void AmayaWindow::OnCloseEvent(wxCloseEvent& event)
+{
+  SaveConfig();
+  event.Skip();
+}
+
+/*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
@@ -558,6 +568,7 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
   //  EVT_CHAR( AmayaWindow::OnChar )
 #endif /* !_WINDOWS  && ! MACOS */
   EVT_COMMAND(-1, wxEVT_AMAYA_ACTION_EVENT, AmayaWindow::OnAmayaAction)
-  END_EVENT_TABLE()
+  EVT_CLOSE(AmayaWindow::OnCloseEvent)
+END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
