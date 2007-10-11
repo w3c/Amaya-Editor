@@ -89,366 +89,368 @@
 87 CSS eltávolítása
 88 W3C Web szerkesztő/böngészője
 89 (küldje el emailben a www-amaya@w3.org címre)
-90 %s karakternél hosszabb URL-ek nem kezelhetők
-91 Csak az alaptípus támogatott
-92 Kapcsok frissítése: %s%% kész
-93 Nincs menteni való
-94 ismétlés-y
-95 Adja meg a felhasználónevet:
-96 %d outstanding requests
-97 Nincs elérhető CSS fájl
-98 Ne mentse
-99 ismétlés nélkül
-100 A dokumentumnak nincs neve. Mentés az következő néven:
-101 Beépülő modulok
-102 Ismeretlen hiba az URL mentése közben: %s
-103 A kiszolgálóval nem létesíthető kapcsolat
-104 A hozzáférést a kiszolgáló megtagadta: %s
-105 A művelet sikeres: %s
-106 %s létrehozva
-107 %s frissítve
-108 A művelet sikeres, állapotkód: %s
-109 A kiszolgáló nem tudja értelmezni a kérés szintakszisát
-110 A kiszolgálónak nincs új visszaküldhető adata
-111 Ez a mód tiltott
-112 Kérjük, hitelesítsen: %s
-113 Ellenőrzés ...
-114 A mentés (%s) sikertelen, Mentsük lemezre?
-115 A mentés (%s) hibásnak mutatkozik, hagyjuk figyelmen kívül?
-116 Az URL (%s) átirányítva ide: %s, hagyjuk figyelmen kívül?
-117 A(z) %s újratültése sikertelen, hagyjuk figyelmen kívül?
-118 A kiszolgáló es hibát jelzett: %s
-119 A kiszolgáló nem támogatja ezt a kérési módot
-120 Szűrő
-121 aktív átvitel
-122 sorban álló átvitel
-123 Tartalomjegyzék
-124 Kapocsjegyzék
-125 Ismétlési mód
-126 ismétlés
-127 ismétlés-x
-128 Az Amaya előző futása hibával végződött. Betöltsük a dokumentumok biztonsági mentését?
-129 A hitelesítés sikertelen. Próbáljuk újra?
-130 A művelet át lesz irányítva. Folytassuk?
-131 Sorok száma
-132 Oszlopok száma
-133 Keret
-134 Szövegváltozat
-135 A szövegváltozat is kötelező
-136 URL nyomtatása
-137 Alkalmaz
-138 Alapértékek
-139 A gyorstár kiírása
-140 Gyorstár
-141 Gyorstár engedélyezése
-142 A védett dokumentumok gyorstárazása
-143 Szétkapcsolt mód
-144 A lejárat figyelmen kívül hagyása: header
-145 Mappagyorstár
-146 Gyorstár mérete (Mb)
-147 Gyorstár bejegyzés méretkorlátja (Mb)
-148 Proxy
-149 HTTP proxy (pl., www.w3.org:1234)
-150 Proxy tartomány lista (pl., lists.w3.org)
-151 Általános
-152 Honlap
-153 Gyorstipp késleltetése (emp)
-154 Duplakattintás késleltetése (emp)
-155 A menü betűkészletének mérete
-156 Betűkészlet nagyítása
-157 Párbeszéd nyelve
-158 Soronkénti beillesztés engedélyezése
-159 Biztonsági mentések haszánlata
-160 Elhelyezkedés mentése kilépéskor
-161 Háttésképek mentése
-162 Gombsor mutatása
-163 Cím mutatása
-164 Célpontok mutatása
-165 CR/LF exportálása
-166 Böngészés
-167 Képek betöltése (img)
-168 Kapcsokra ugrás duplakattintással
-169 Kiadás
-170 ETAGS és előfeltételek használata
-171 Minden PUT és GET ellenőrzése
-172 Az URL-ek neve '/' jellel végződik
-173 Elhelyezkedés
-174 Jelenlegi elhelyezkedés mentése
-175 Alap elhelyezkedés visszaállítása
-176 A változások új ablak nyitásakor lépnek életbe
-177 Dokumentum színe
-178 Dokumentum háttérszíne
-179 Menü színe
-180 Menu háttérszíne
-181 A gyorstár nem indítható. Érvénytelen gyorstár mappát adott meg, vagy az Amaya egy másik példánya használja a gyorstárat.
-182 Kedvenc nyelvek listája, például "hu, en, fr":
-183 Ezek a változások nem lépnek életbe, míg újra nem indítja az Amayát
-184 Önműködő PUT átirányítások engedélyezése ehhez a tartományhoz
-185 Stíluslapok figyelmen kívül hagyása
-186 Átalakítás típusa
-187 (az egyes tételeket szóközzel válasszuk el)
-188 Nincs proxy ezekhez a tartományokhoz
-189 Csak ezekhez a tartományokhoz van proxy
-190 Karakter neve
-191 Amaya felhasználói mappa
-192 Ideiglenes mappa
-193 Dokkoló használata
-194 Language Negotiation
-195 Jegyzetek
-196 Kapocs
-197 Annotation and bookmark user
-198 Annotation post server
-199 Annotation servers
-200 Helyi jegyzetek önműködő betöltése
-201 Távoli jegyzetek önműködő betöltése
-202 Minden indításkor a távoli jegyzetek önműködő betöltésének tiltása (szétkapcsolt munkához)
-203 Kijelölés színe
-204 Kijelölés háttérszíne
-205 Tájolása
-206 Álló
-207 Fekvő
-208 Többszörös szóköz megtartása
-209 Hiba a forráskódban
-210 Végzetes hiba - Javítsa ki a forráskódot
-211 Próbálja a 'Fájl/Kényszerített karakter kódolás' menüt
-212 Érvénytelen karakterek
-213 Dokumentum profile:
-214 Néhány elem/attribútum figyelmen kívül hagyva - see Fájl > Elemzési hibák mutatása
-215 Ezen dokumentum kódolását az Amaya nem támogatja
-216 Ezen dokumentum szerkesztése és mentés megváltoztatja a dokumentum típusát
-217 Nem elérhető
-218 Böngészés
-219 Fájl tallózás
-220 Kijelölés
-221 Jegyzet helyi szűrő menü
-222 Mutat
-223 Rejt
-224 Mindent mutat
-225 Mindent rejt
-226 *: rejtett, -: részben rejtett
-227 Szűrő beállításai
-228 Szerző szerint
-229 Típus szerint
-230 Kiszolgáló szerint
-231 Gyorsbillentyűk
-232 Kihagy
-233 **Tool panel bar alignment: 
-234 **left
-235 **right
-236 **free
-237 ** (must restart app)
-238 Stíluselem
-239 XPointer nem hozható létre
-240 Belső hozzáadott elemhez nem társítható kezdő XPointer
-241 Belső hozzáadott elemhez nem társítható vég XPointer
-242 A jegyzet új helye nem található
-243 Másik dokumentumba nem helyezhető a jegyzet
-244 Nincs jegyzet felhasználó. Kérjük, nyissa meg a Jegyzet/Beállítások menüt.
-245 Ehhez a jegyzethez nem hozható létre XPointer
-246 Új jegyzet létrehozása
-247 A jegyzet elküldése sikertelen
-248 A jegyzet törlése sikertelen
-249 A jegyzet törölve!
-250 A jegyzetindex betöltése sikertelen
-251 Hiba
-252 Adja meg a karakter kódolást
-253 Adja meg a MIME típust
-254 karakter kódolás megváltoztatása
-255 MIME típus megváltoztatása
-256 Változtatás
-257 Ez a dokumentumtípus nem támogatja a karakterkészleteteket
-258 A célpont HTTP URL kell legyen
-259 Hiba: érvénytelen MIME típus
-260 Ismeretlen
-261 A stílusok figyelmen kívül hagyva - lásd: Fájl > Elemzési hibák mutatása
-262 Ez a dokumentum már be van töltve egy másik ablakban.
-263 Annak a példánynak a mentése frissítési problémákat okozhat
-264 A doctype hozzáadása vagy megváltoztatása néhány elem és attribútum elvesztésével jár
-265 Kérjük, erősítse meg a műveletet
-266 Use the application/xhtml+xml MIME type for XHTML dokumentums
-267 Új dokumentumok karakterkészlete
-268 Zárolás sikeres!
-269 Zárolás sikertelen!
-270 %s zárolása...
-271 A dokumentum (%s) zárolva!
-272 A dokumentumot (%s) zárolta: %s (időtúllépés: %s)
-273 Felülírjuk a zárolási adatokat?
-274 Másoljuk a zárolási adatokat?
-275 Előbb próbálja meg felszabadítani a dokumentumot...
-276 A felszabadítás sikeres!
-277 A felszabadítás sikertelen!
-278 %s felszabadítása...
-279 A dokumentum (%s) felszabadítva!
-280 Felszabadítsuk a dokumentumot?
-281 A dokumentum tulajdonságai
-282 A dokumentum tulajdonságai nem elérhetők
-283 A dokumentum tulajdonságai jelenleg nem elérhetők. Próbálja később...
-284 A dokumentum tulajdonságainak keresése...
-285 Az ilyen típusú (%s) URL-ekhez nincs WebDAV támogatás
-286 A zárolási adatok helyi mentése sikertelen
-287 A zárolási adatok helyi visszaállítása sikertelen
-288 Ez a művelet nem tiltott (%s)
-289 A kérés sikertelen! Ok: sikertelen függőség
-290 A kérés sikertelen! Ok: %s
-291 Újra próbálja?
-292 WebDAV
-293 User's Personal Reference (URL)
-294 User's WebDAV erőforrás listája (URL URL)
-295 Zárolás mélysége
-296 végtelen
-297 Zárolás időkorlát
-298 Végtelen
-299 Egyéb (másodperc)
-300 Zárolás hatóköre
-301 kizárólagos
-302 megosztott
-303 Tudomás
-304 Általános tudomás
-305 Tudomás kilépéskor
-306 Animáció
-307 SVG könyvtár
-308 Copy option
-309 Kijelölés másolása
-310 Hivatkozás a kijelölésre
-311 Új model hozzáadása a könyvtárhoz
-312 Az új SVG fájl URL-je...
-313 Könyvtár címe
-314 Könyvtár URL-je
-315 Könyvtár létrehozása
-316 Könyvtár tallózása
-317 Könyvtár létrehozása vagy keresése
-318 A kijelölésben nincs SVG elem.
-319 A könyvtár cím kötelező
-320 Helyezze el az egérmutatót a szerkesztett dokumentumban az új kulcs megadásához...
-321 A kulcshelyzet megadva. Mozgassa a csúszkát az animáció hosszának megadásához...
-322 Jelölje ki az elem kezdőszínét...
-323 A kezdőszín megadva. Mozgassa a csúszkát az animáció hosszának megadásához...
-324 Jelölje ki az elem zárószínét...
-325 Az animáció megadva.
-326 Animált attribútum
-327 ID nélküli elem
-328 ID hozzáadása
-329 ID eltávolítása
-330 ID-k hozzáadása/eltávolítása
-331 A művelet alkalmazása
-332 Adja meg az elem nevét
-333 CSS alkalmazása
-334 Jelenlegi képernyőtípus
-335 Új téma
-336 Könyvjelző tulajdonságai
-337 Téma tulajdonságai
-338 Téma szerkezete:
-339 Cím:
-340 Recalls:
-341 Szerző:
-342 Kelt:
-343 Utolsó módosítás:
-344 Leírás:
-345 Adjon meg egy elemet
-346 Minden CSS
-347 CSS stílus szabályok alkalmazása a(z) <%s> elemre\n
-348 A kék sorok dupla (vagy egyszeres) kattintással aktiválható kapcsok\n
-349 Objektumok betöltése (object, embed, iframe)
-350 Ehhez az elemhez nem tartokzik stílus szabály
-351 Nincs beillesztési hely megadva. Jelöljn ki egyet
-352 Dokumentum adatai
-353 Dokumentum típus
-354 MIME típus
-355 karakterkészlet
-356 Tartalom hossza
-357 Tartalom helye
-358 Beállítások
-359 Karakter (&xxx;)
-360 Objektum létrehozása
-361 Mappa
-362 Fájl
-363 Jelenlegi cseréje
-364 Új ablakban
-365 Élsimítás
-366 Dátum ISO formátuma
-367 Dokumentumok új helye
-368 Hely megnyitása
-369 Több lap bezárásakor figyelmeztetés
-370 URL-ek legnagyobb száma az előzménylistában
-371 URL lista törlése
-372 Minden gyorsbillentyű mutatása
-373 Rögzített sorhossz (0 = alapérték)
-374 Sablon
-375 Dokumentum mentése másként...
-376 A sablon nem található
-377 A sablon dobozainak mutatása
-378 Az Alkalmaz gomb bezárja a párbeszédablakot
-379 Nem engedélyezett
-380 Védett elem
-381 A kijelölés nem érinthet ilyen típusú elemet
-382 No heading found
-383 Mentés így is
-384 Az állomás nem található
-385 A dokumentum megváltozott (412)
-386 Ellentmondás az erőforrás jelenlegi állapotával
-387 Érvénytelen kijelölés
-388 Ismeretlen elem
-389 %d frissített elem
-390 A cím kötelező
-391 Sablonok
-392 Előfordulások száma
-393 Elértük az előfordulások legnagyobb számát
-394 Elértük az előfordulások legkisebb számát
-395 Többszörös azonosító ellenőrzése
-396 Adja hozzá az xsl stíluslapot a MathML elemekhez
-397 Műveleti jel beillesztése
-398 Válassza ki a műveleti jel megjelenítési módját
-399 Integrál beillesztése
-400 Válassza ki az integrál típusát
-401 Szögletes zárójel attribútumai
-402 Válassza ki a nyitó, elválasztó és záró jeleket
-403 Műveleti jelek száma
-404 Coordináták száma
-405 N-esek hossza
-406 Elemek száma
-407 Változók száma
-408 Rend
-409 A változó rendje (%d)
-410 Összetett dokumentum
-411 **Copy resources (styles and scripts)
-412 **Where to save resources
-413 **Where to save images
-414 **Document
-415 **Images, Styles and Scripts
-416 **Mail
-417 **Common parameters for sending mails:
-418 **SMTP server address:
-419 **Server port:
-420 **(25 by default)
-421 **Sending address (From field):
-422 **To:
-423 **Send by mail
-424 **Subject:
-425 **Send as:
-426 **Message body
-427 **Attachment
-428 **Don't send
-429 **Send
-430 **The server address and port must be set in Preferences
-431 **Message:
-432 **Alternate textual  message:
-433 **The server is unreachable or does not respond
-434 **The server has reject you
-435 **The sender address is misformatted
-436 **A recipient address is misformatted
-437 **The mail content is misformatted
-438 **Mail not sent
-439 **Mail sent
-440 **Passwords
-441 **Do you want Amaya to remember this password?
-442 **Remember passwords for sites
-443 **Sites
-444 **Remove All
-445 **An error occured during the building of the javascript/DOM objects
-446 **A script is still running but will be aborted as soon as possible. Please try later.
-447 **Javascript/DOM can not be enabled in this view.
-448 **Enter a javascript command:
-449 **The command returned the value: %s
-450 **The command returned no value
-451 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-452 Új
+90 **Copyright  �  1994-2007 INRIA and W3C� (MIT, ERCIM, Keio), All Rights Reserved.
+91 **w3.org/Amaya/
+92 %s karakternél hosszabb URL-ek nem kezelhetők
+93 Csak az alaptípus támogatott
+94 Kapcsok frissítése: %s%% kész
+95 Nincs menteni való
+96 ismétlés-y
+97 Adja meg a felhasználónevet:
+98 %d outstanding requests
+99 Nincs elérhető CSS fájl
+100 Ne mentse
+101 ismétlés nélkül
+102 A dokumentumnak nincs neve. Mentés az következő néven:
+103 Beépülő modulok
+104 Ismeretlen hiba az URL mentése közben: %s
+105 A kiszolgálóval nem létesíthető kapcsolat
+106 A hozzáférést a kiszolgáló megtagadta: %s
+107 A művelet sikeres: %s
+108 %s létrehozva
+109 %s frissítve
+110 A művelet sikeres, állapotkód: %s
+111 A kiszolgáló nem tudja értelmezni a kérés szintakszisát
+112 A kiszolgálónak nincs új visszaküldhető adata
+113 Ez a mód tiltott
+114 Kérjük, hitelesítsen: %s
+115 Ellenőrzés ...
+116 A mentés (%s) sikertelen, Mentsük lemezre?
+117 A mentés (%s) hibásnak mutatkozik, hagyjuk figyelmen kívül?
+118 Az URL (%s) átirányítva ide: %s, hagyjuk figyelmen kívül?
+119 A(z) %s újratültése sikertelen, hagyjuk figyelmen kívül?
+120 A kiszolgáló es hibát jelzett: %s
+121 A kiszolgáló nem támogatja ezt a kérési módot
+122 Szűrő
+123 aktív átvitel
+124 sorban álló átvitel
+125 Tartalomjegyzék
+126 Kapocsjegyzék
+127 Ismétlési mód
+128 ismétlés
+129 ismétlés-x
+130 Az Amaya előző futása hibával végződött. Betöltsük a dokumentumok biztonsági mentését?
+131 A hitelesítés sikertelen. Próbáljuk újra?
+132 A művelet át lesz irányítva. Folytassuk?
+133 Sorok száma
+134 Oszlopok száma
+135 Keret
+136 Szövegváltozat
+137 A szövegváltozat is kötelező
+138 URL nyomtatása
+139 Alkalmaz
+140 Alapértékek
+141 A gyorstár kiírása
+142 Gyorstár
+143 Gyorstár engedélyezése
+144 A védett dokumentumok gyorstárazása
+145 Szétkapcsolt mód
+146 A lejárat figyelmen kívül hagyása: header
+147 Mappagyorstár
+148 Gyorstár mérete (Mb)
+149 Gyorstár bejegyzés méretkorlátja (Mb)
+150 Proxy
+151 HTTP proxy (pl., www.w3.org:1234)
+152 Proxy tartomány lista (pl., lists.w3.org)
+153 Általános
+154 Honlap
+155 Gyorstipp késleltetése (emp)
+156 Duplakattintás késleltetése (emp)
+157 A menü betűkészletének mérete
+158 Betűkészlet nagyítása
+159 Párbeszéd nyelve
+160 Soronkénti beillesztés engedélyezése
+161 Biztonsági mentések haszánlata
+162 Elhelyezkedés mentése kilépéskor
+163 Háttésképek mentése
+164 Gombsor mutatása
+165 Cím mutatása
+166 Célpontok mutatása
+167 CR/LF exportálása
+168 Böngészés
+169 Képek betöltése (img)
+170 Kapcsokra ugrás duplakattintással
+171 Kiadás
+172 ETAGS és előfeltételek használata
+173 Minden PUT és GET ellenőrzése
+174 Az URL-ek neve '/' jellel végződik
+175 Elhelyezkedés
+176 Jelenlegi elhelyezkedés mentése
+177 Alap elhelyezkedés visszaállítása
+178 A változások új ablak nyitásakor lépnek életbe
+179 Dokumentum színe
+180 Dokumentum háttérszíne
+181 Menü színe
+182 Menu háttérszíne
+183 A gyorstár nem indítható. Érvénytelen gyorstár mappát adott meg, vagy az Amaya egy másik példánya használja a gyorstárat.
+184 Kedvenc nyelvek listája, például "hu, en, fr":
+185 Ezek a változások nem lépnek életbe, míg újra nem indítja az Amayát
+186 Önműködő PUT átirányítások engedélyezése ehhez a tartományhoz
+187 Stíluslapok figyelmen kívül hagyása
+188 Átalakítás típusa
+189 (az egyes tételeket szóközzel válasszuk el)
+190 Nincs proxy ezekhez a tartományokhoz
+191 Csak ezekhez a tartományokhoz van proxy
+192 Karakter neve
+193 Amaya felhasználói mappa
+194 Ideiglenes mappa
+195 Dokkoló használata
+196 Language Negotiation
+197 Jegyzetek
+198 Kapocs
+199 Annotation and bookmark user
+200 Annotation post server
+201 Annotation servers
+202 Helyi jegyzetek önműködő betöltése
+203 Távoli jegyzetek önműködő betöltése
+204 Minden indításkor a távoli jegyzetek önműködő betöltésének tiltása (szétkapcsolt munkához)
+205 Kijelölés színe
+206 Kijelölés háttérszíne
+207 Tájolása
+208 Álló
+209 Fekvő
+210 Többszörös szóköz megtartása
+211 Hiba a forráskódban
+212 Végzetes hiba - Javítsa ki a forráskódot
+213 Próbálja a 'Fájl/Kényszerített karakter kódolás' menüt
+214 Érvénytelen karakterek
+215 Dokumentum profile:
+216 Néhány elem/attribútum figyelmen kívül hagyva - see Fájl > Elemzési hibák mutatása
+217 Ezen dokumentum kódolását az Amaya nem támogatja
+218 Ezen dokumentum szerkesztése és mentés megváltoztatja a dokumentum típusát
+219 Nem elérhető
+220 Böngészés
+221 Fájl tallózás
+222 Kijelölés
+223 Jegyzet helyi szűrő menü
+224 Mutat
+225 Rejt
+226 Mindent mutat
+227 Mindent rejt
+228 *: rejtett, -: részben rejtett
+229 Szűrő beállításai
+230 Szerző szerint
+231 Típus szerint
+232 Kiszolgáló szerint
+233 Gyorsbillentyűk
+234 Kihagy
+235 **Tool panel bar alignment: 
+236 **left
+237 **right
+238 **free
+239 ** (must restart app)
+240 Stíluselem
+241 XPointer nem hozható létre
+242 Belső hozzáadott elemhez nem társítható kezdő XPointer
+243 Belső hozzáadott elemhez nem társítható vég XPointer
+244 A jegyzet új helye nem található
+245 Másik dokumentumba nem helyezhető a jegyzet
+246 Nincs jegyzet felhasználó. Kérjük, nyissa meg a Jegyzet/Beállítások menüt.
+247 Ehhez a jegyzethez nem hozható létre XPointer
+248 Új jegyzet létrehozása
+249 A jegyzet elküldése sikertelen
+250 A jegyzet törlése sikertelen
+251 A jegyzet törölve!
+252 A jegyzetindex betöltése sikertelen
+253 Hiba
+254 Adja meg a karakter kódolást
+255 Adja meg a MIME típust
+256 karakter kódolás megváltoztatása
+257 MIME típus megváltoztatása
+258 Változtatás
+259 Ez a dokumentumtípus nem támogatja a karakterkészleteteket
+260 A célpont HTTP URL kell legyen
+261 Hiba: érvénytelen MIME típus
+262 Ismeretlen
+263 A stílusok figyelmen kívül hagyva - lásd: Fájl > Elemzési hibák mutatása
+264 Ez a dokumentum már be van töltve egy másik ablakban.
+265 Annak a példánynak a mentése frissítési problémákat okozhat
+266 A doctype hozzáadása vagy megváltoztatása néhány elem és attribútum elvesztésével jár
+267 Kérjük, erősítse meg a műveletet
+268 Use the application/xhtml+xml MIME type for XHTML dokumentums
+269 Új dokumentumok karakterkészlete
+270 Zárolás sikeres!
+271 Zárolás sikertelen!
+272 %s zárolása...
+273 A dokumentum (%s) zárolva!
+274 A dokumentumot (%s) zárolta: %s (időtúllépés: %s)
+275 Felülírjuk a zárolási adatokat?
+276 Másoljuk a zárolási adatokat?
+277 Előbb próbálja meg felszabadítani a dokumentumot...
+278 A felszabadítás sikeres!
+279 A felszabadítás sikertelen!
+280 %s felszabadítása...
+281 A dokumentum (%s) felszabadítva!
+282 Felszabadítsuk a dokumentumot?
+283 A dokumentum tulajdonságai
+284 A dokumentum tulajdonságai nem elérhetők
+285 A dokumentum tulajdonságai jelenleg nem elérhetők. Próbálja később...
+286 A dokumentum tulajdonságainak keresése...
+287 Az ilyen típusú (%s) URL-ekhez nincs WebDAV támogatás
+288 A zárolási adatok helyi mentése sikertelen
+289 A zárolási adatok helyi visszaállítása sikertelen
+290 Ez a művelet nem tiltott (%s)
+291 A kérés sikertelen! Ok: sikertelen függőség
+292 A kérés sikertelen! Ok: %s
+293 Újra próbálja?
+294 WebDAV
+295 User's Personal Reference (URL)
+296 User's WebDAV erőforrás listája (URL URL)
+297 Zárolás mélysége
+298 végtelen
+299 Zárolás időkorlát
+300 Végtelen
+301 Egyéb (másodperc)
+302 Zárolás hatóköre
+303 kizárólagos
+304 megosztott
+305 Tudomás
+306 Általános tudomás
+307 Tudomás kilépéskor
+308 Animáció
+309 SVG könyvtár
+310 Copy option
+311 Kijelölés másolása
+312 Hivatkozás a kijelölésre
+313 Új model hozzáadása a könyvtárhoz
+314 Az új SVG fájl URL-je...
+315 Könyvtár címe
+316 Könyvtár URL-je
+317 Könyvtár létrehozása
+318 Könyvtár tallózása
+319 Könyvtár létrehozása vagy keresése
+320 A kijelölésben nincs SVG elem.
+321 A könyvtár cím kötelező
+322 Helyezze el az egérmutatót a szerkesztett dokumentumban az új kulcs megadásához...
+323 A kulcshelyzet megadva. Mozgassa a csúszkát az animáció hosszának megadásához...
+324 Jelölje ki az elem kezdőszínét...
+325 A kezdőszín megadva. Mozgassa a csúszkát az animáció hosszának megadásához...
+326 Jelölje ki az elem zárószínét...
+327 Az animáció megadva.
+328 Animált attribútum
+329 ID nélküli elem
+330 ID hozzáadása
+331 ID eltávolítása
+332 ID-k hozzáadása/eltávolítása
+333 A művelet alkalmazása
+334 Adja meg az elem nevét
+335 CSS alkalmazása
+336 Jelenlegi képernyőtípus
+337 Új téma
+338 Könyvjelző tulajdonságai
+339 Téma tulajdonságai
+340 Téma szerkezete:
+341 Cím:
+342 Recalls:
+343 Szerző:
+344 Kelt:
+345 Utolsó módosítás:
+346 Leírás:
+347 Adjon meg egy elemet
+348 Minden CSS
+349 CSS stílus szabályok alkalmazása a(z) <%s> elemre\n
+350 A kék sorok dupla (vagy egyszeres) kattintással aktiválható kapcsok\n
+351 Objektumok betöltése (object, embed, iframe)
+352 Ehhez az elemhez nem tartokzik stílus szabály
+353 Nincs beillesztési hely megadva. Jelöljn ki egyet
+354 Dokumentum adatai
+355 Dokumentum típus
+356 MIME típus
+357 karakterkészlet
+358 Tartalom hossza
+359 Tartalom helye
+360 Beállítások
+361 Karakter (&xxx;)
+362 Objektum létrehozása
+363 Mappa
+364 Fájl
+365 Jelenlegi cseréje
+366 Új ablakban
+367 Élsimítás
+368 Dátum ISO formátuma
+369 Dokumentumok új helye
+370 Hely megnyitása
+371 Több lap bezárásakor figyelmeztetés
+372 URL-ek legnagyobb száma az előzménylistában
+373 URL lista törlése
+374 Minden gyorsbillentyű mutatása
+375 Rögzített sorhossz (0 = alapérték)
+376 Sablon
+377 Dokumentum mentése másként...
+378 A sablon nem található
+379 A sablon dobozainak mutatása
+380 Az Alkalmaz gomb bezárja a párbeszédablakot
+381 Nem engedélyezett
+382 Védett elem
+383 A kijelölés nem érinthet ilyen típusú elemet
+384 No heading found
+385 Mentés így is
+386 Az állomás nem található
+387 A dokumentum megváltozott (412)
+388 Ellentmondás az erőforrás jelenlegi állapotával
+389 Érvénytelen kijelölés
+390 Ismeretlen elem
+391 %d frissített elem
+392 A cím kötelező
+393 Sablonok
+394 Előfordulások száma
+395 Elértük az előfordulások legnagyobb számát
+396 Elértük az előfordulások legkisebb számát
+397 Többszörös azonosító ellenőrzése
+398 Adja hozzá az xsl stíluslapot a MathML elemekhez
+399 Műveleti jel beillesztése
+400 Válassza ki a műveleti jel megjelenítési módját
+401 Integrál beillesztése
+402 Válassza ki az integrál típusát
+403 Szögletes zárójel attribútumai
+404 Válassza ki a nyitó, elválasztó és záró jeleket
+405 Műveleti jelek száma
+406 Coordináták száma
+407 N-esek hossza
+408 Elemek száma
+409 Változók száma
+410 Rend
+411 A változó rendje (%d)
+412 Összetett dokumentum
+413 **Copy resources (styles and scripts)
+414 **Where to save resources
+415 **Where to save images
+416 **Document
+417 **Images, Styles and Scripts
+418 **Mail
+419 **Common parameters for sending mails:
+420 **SMTP server address:
+421 **Server port:
+422 **(25 by default)
+423 **Sending address (From field):
+424 **To:
+425 **Send by mail
+426 **Subject:
+427 **Send as:
+428 **Message body
+429 **Attachment
+430 **Don't send
+431 **Send
+432 **The server address and port must be set in Preferences
+433 **Message:
+434 **Alternate textual  message:
+435 **The server is unreachable or does not respond
+436 **The server has reject you
+437 **The sender address is misformatted
+438 **A recipient address is misformatted
+439 **The mail content is misformatted
+440 **Mail not sent
+441 **Mail sent
+442 **Passwords
+443 **Do you want Amaya to remember this password?
+444 **Remember passwords for sites
+445 **Sites
+446 **Remove All
+447 **An error occured during the building of the javascript/DOM objects
+448 **A script is still running but will be aborted as soon as possible. Please try later.
+449 **Javascript/DOM can not be enabled in this view.
+450 **Enter a javascript command:
+451 **The command returned the value: %s
+452 **The command returned no value
+453 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+454 Új

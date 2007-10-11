@@ -1448,6 +1448,13 @@
 	<message xml:lang="tw">(mail issues to www-amaya@w3.org)</message>
 	<message xml:lang="sk">(problémy posielať na www-amaya@w3.org)</message>
 </label>
+<label define="AM_ABOUT_COPYRIGHT">
+	<message xml:lang="en">Copyright  ©  1994-2007 INRIA and W3C® (MIT, ERCIM, Keio), All Rights Reserved.</message>
+	<message xml:lang="fr">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio), tous droits réservés.</message>
+</label>
+<label define="AM_ABOUT_WEBSITE">
+	<message xml:lang="en">w3.org/Amaya/</message>
+</label>
 <label define="AM_TOO_LONG_URL">
 	<message xml:lang="en">Can't handle URLs having more than %s chars</message>
 	<message xml:lang="fr">Erreur interne : URL de longueur supérieure à %s caractères</message>

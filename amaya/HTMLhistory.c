@@ -33,7 +33,9 @@
 
 #ifdef _WX
 #include "wx/msgdlg.h"
+#include "wx/aboutdlg.h"
 #include "message_wx.h"
+#include "registry_wx.h"
 #endif /* _WX */
 
 #define DOC_HISTORY_SIZE 32
@@ -900,14 +902,18 @@ void HelpAmaya (Document document, View view)
 #endif /* _WINGUI */
 
 #ifdef _WX
-  wxMessageDialog dlg( TtaGetViewFrame(document,view),
-                       TtaConvMessageToWX(localname)+_T("\n")+
-                       TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT1))+_T("\n")+
-                       TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT2)),
-                       _T(""), /* dialog title */
-                       wxOK | wxICON_INFORMATION | wxSTAY_ON_TOP,
-                       wxDefaultPosition );
-  dlg.ShowModal();
+  wxIcon icon(TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "logo.png"), wxBITMAP_TYPE_PNG);
+  
+  wxAboutDialogInfo info;
+  info.SetName(TtaConvMessageToWX(TtaGetAppName()));
+  info.SetVersion(TtaConvMessageToWX(TtaGetAppVersion()));
+  info.SetDescription(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT1)));
+  info.SetCopyright(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT_COPYRIGHT)));
+// Dont work :
+//  info.SetWebSite(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT_WEBSITE)));
+  info.SetIcon(icon);
+  wxAboutBox(info);
+  
 #endif /* _WX */
 }
 
