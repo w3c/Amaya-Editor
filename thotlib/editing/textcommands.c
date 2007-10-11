@@ -1483,6 +1483,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   text = (CHAR_T *)TtaGetMemory (max * sizeof (CHAR_T));
   text[0] = EOS;
   /* Copy the text into the buffer */
+  pOldBlock = NULL;
   i = 0;
   pEl = pFirstEl;
   ind = firstChar - 1;
@@ -1507,6 +1508,8 @@ static int CopyXClipboard (unsigned char **buffer, View view)
           maxLength -= lg;
           clipboard = clipboard->BuNext;
         }
+      pOldBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock,
+                                       BoFloatBlock, BoCellBlock);
     }
   else if (pFirstEl->ElTerminal)
     {
@@ -1537,7 +1540,6 @@ static int CopyXClipboard (unsigned char **buffer, View view)
     }
  
   /* copy the text of following elements */
-  pOldBlock = NULL;
   while (pEl)
     {
       pEl = FwdSearch5Types (pEl, CharString + 1,
