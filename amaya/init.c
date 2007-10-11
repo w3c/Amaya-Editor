@@ -9468,6 +9468,6 @@ static int AmayaPopupDocContextMenu(int document, int window, wxWindow* win, int
           p_menu->Prepend(items[0]);
         }
     }
-
+  return -1;
 }
 #endif /* _WX */
