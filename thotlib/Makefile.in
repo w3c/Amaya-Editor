@@ -203,6 +203,8 @@ EDITOR_OBJ = \
 	dialogue/AmayaWindowIterator.o \
 	dialogue/AmayaSimpleWindow.o \
 	dialogue/AmayaNormalWindow.o \
+	dialogue/AmayaClassicWindow.o \
+	dialogue/AmayaAdvancedWindow.o \
 	dialogue/AmayaQuickSplitButton.o \
 	dialogue/AmayaPanel.o \
 	dialogue/AmayaPopupList.o \

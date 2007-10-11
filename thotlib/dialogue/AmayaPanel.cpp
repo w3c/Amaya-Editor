@@ -31,18 +31,6 @@
 
 #include "AmayaPanel.h"
 
-#include "AmayaAttributePanel.h"
-#include "AmayaApplyClassPanel.h"
-#include "AmayaMathMLPanel.h"
-#include "AmayaXHTMLPanel.h"
-#include "AmayaExplorerPanel.h"
-#include "AmayaXMLPanel.h"
-#include "AmayaStylePanel.h"
-#include "AmayaSpeCharPanel.h"
-#include "AmayaNormalWindow.h"
-
-
-
 //
 //
 // AmayaToolPanelBar
@@ -76,7 +64,6 @@ wxPanel()
   ----------------------------------------------------------------------*/
 AmayaToolPanelBar::~AmayaToolPanelBar()
 {
-  SaveConfig();
   // Show or hide panel using env
   unsigned int n;
   for(n=0; n<m_panels.GetCount(); n++)
@@ -127,35 +114,12 @@ void AmayaToolPanelBar::Initialize()
   m_scwin = XRCCTRL(*this, "wxID_PANEL_SWIN", wxScrolledWindow);
   if(m_scwin)
     sz = m_scwin->GetSizer();
-
-  
-  AddPanel(new AmayaExplorerToolPanel);
-  AddPanel(new AmayaXHTMLToolPanel);
-  AddPanel(new AmayaAttributeToolPanel);
-  AddPanel(new AmayaApplyClassToolPanel);
-  AddPanel(new AmayaStyleToolPanel);
-  AddPanel(new AmayaMathMLToolPanel);
-  AddPanel(new AmayaXMLToolPanel);
-  AddPanel(new AmayaSpeCharToolPanel);
-
-  /* init default panel states */
-  TtaSetEnvBoolean("OPEN_PANEL", TRUE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_EXPLORER", TRUE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_XHTML", TRUE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", TRUE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_XML", FALSE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_STYLE", TRUE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_MATHML", FALSE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", FALSE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", TRUE, FALSE);
-
-  LoadConfig();
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void AmayaToolPanelBar::AddPanel(AmayaToolPanel* panel)
+bool AmayaToolPanelBar::AddPanel(AmayaToolPanel* panel)
 {
   AmayaToolPanelBarListItem* item = new AmayaToolPanelBarListItem;
   item->ci        = panel->GetClassInfo();
@@ -167,9 +131,13 @@ void AmayaToolPanelBar::AddPanel(AmayaToolPanel* panel)
   item->minimized = false;
   m_panels.Add(item);
   item->panel->Create(m_scwin, wxID_ANY);
-  item->panel->SetBar(this);
+  item->panel->SetExapndedFlag(true);
+  item->panel->SetFloatingFlag(false);
+  item->panel->SetVisibleFlag(true);
+  item->panel->SetWindow((AmayaNormalWindow*)this->GetParent());
   item->dock->Attach();
   m_scwin->GetSizer()->Add(item->dock, 0, wxEXPAND|wxBOTTOM, 0);
+  return true;
 }
 
 
@@ -185,7 +153,7 @@ void AmayaToolPanelBar::LoadConfig()
       if(item.panel)
         {
           ThotBool value;
-          wxString str = item.panel->GetToolPanelConfigKeyName();
+          wxString str = wxT("OPEN_") + item.panel->GetToolPanelConfigKeyName();
           TtaGetEnvBoolean((char*)(const char*)str.mb_str(wxConvUTF8),
               &value);
           MinimizePanel(item.panel, !value);
@@ -204,12 +172,10 @@ void AmayaToolPanelBar::SaveConfig()
       if(item.panel)
         {
           ThotBool value = IsExpanded(item.panel);
-          TtaSetEnvBoolean((char*)(const char*)
-              item.panel->GetToolPanelConfigKeyName().mb_str(wxConvUTF8),
-              value, TRUE);
+          wxString str = wxT("OPEN_") + item.panel->GetToolPanelConfigKeyName();
+          TtaSetEnvBoolean((char*)(const char*)str.mb_str(wxConvUTF8), value, TRUE);
         }
-    }  
-  TtaSaveAppRegistry();
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -268,6 +234,7 @@ void AmayaToolPanelBar::ShowPanel(AmayaToolPanel* panel, bool bShow)
         m_scwin->GetSizer()->Show(item->dock, bShow);
       if(item->floa)
         item->floa->Show(bShow);
+      panel->SetVisibleFlag(bShow);
       Layout();
     }
 }
@@ -282,6 +249,7 @@ void AmayaToolPanelBar::MinimizePanel(AmayaToolPanel* panel, bool bMin)
       if(item->dock->Minimize(bMin))
         item->minimized = bMin;
       Layout();
+      panel->SetExapndedFlag(!bMin);
     }
 }
 
@@ -322,6 +290,7 @@ void AmayaToolPanelBar::FloatPanel(AmayaToolPanel* panel, bool bFloat)
             }
           item->dock->Attach();
         }
+      panel->SetFloatingFlag(bFloat);
       Layout();
     }
 }
@@ -625,7 +594,10 @@ END_EVENT_TABLE()
 AmayaToolPanel::AmayaToolPanel():
   wxPanel(),
   m_bar(NULL),
-  m_ShouldBeUpdated(false)
+  m_ShouldBeUpdated(false),
+  m_bExpanded(true),
+  m_bFloating(false),
+  m_bVisible(true)
 {
   
 }
@@ -647,29 +619,7 @@ int AmayaToolPanel::GetToolPanelType()const
   ----------------------------------------------------------------------*/
 wxString AmayaToolPanel::GetToolPanelConfigKeyName()const
 {
-  return wxT("OPEN_PANEL");
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-bool AmayaToolPanel::IsExpanded()
-{
-  return GetBar()->IsExpanded(this);  
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-bool AmayaToolPanel::IsFloating()
-{
-  return GetBar()->IsFloating(this);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-bool AmayaToolPanel::IsVisible()
-{
-  return GetBar()->IsShown(this);
+  return wxT("PANEL");
 }
 
 /*----------------------------------------------------------------------

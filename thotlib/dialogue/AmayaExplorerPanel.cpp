@@ -69,6 +69,16 @@ wxString AmayaExplorerToolPanel::GetToolPanelName()const
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaExplorerToolPanel
+ *      Method:  GetDefaultAUIConfig
+ * Description:  Return a default AUI config for the panel.
+ -----------------------------------------------------------------------*/
+wxString AmayaExplorerToolPanel::GetDefaultAUIConfig()
+{
+  return wxT("state=18875900;dir=4;layer=0;row=0;pos=0;prop=100000;bestw=160;besth=250;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1;floaty=447;floatw=168;floath=274");
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaExplorerToolPanel
  *      Method:  OnDirTreeItemActivate
  * Description:  
   -----------------------------------------------------------------------*/

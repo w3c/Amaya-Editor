@@ -41,8 +41,11 @@ public:
   
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_SPECHAR;}
-  virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_SPECHAR");}
-  
+  virtual wxString GetToolPanelConfigKeyName()const{return wxT("PANEL_SPECHAR");}
+
+  /** Return a default AUI config for the panel.*/
+  virtual wxString GetDefaultAUIConfig();
+
 protected:
   void Initialize();
   

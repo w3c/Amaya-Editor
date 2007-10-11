@@ -128,12 +128,12 @@ public:
   void LoadConfig();
   void SaveConfig();
   
+  bool AddPanel(AmayaToolPanel* panel);
+  
 private:
   void OnClose( wxCommandEvent& event );
   
   void Initialize();
-  
-  void AddPanel(AmayaToolPanel* panel);
   
   const AmayaToolPanelBarListItem* FindItem(const AmayaToolPanel* panel)const;
   AmayaToolPanelBarListItem* FindItem(const AmayaToolPanel* panel);
@@ -255,14 +255,21 @@ public:
   /** Panel state config key name. */
   virtual wxString GetToolPanelConfigKeyName()const;
   
-  AmayaToolPanelBar* GetBar(){return m_bar;}
-  const AmayaToolPanelBar* GetBar()const{return m_bar;}
-  void SetBar(AmayaToolPanelBar* bar){m_bar = bar;}
   
-  bool IsExpanded();
-  bool IsFloating();
-  bool IsVisible();
+  /** Return a default AUI config for the panel.*/
+  virtual wxString GetDefaultAUIConfig() {return wxT("");}
 
+  /** Return if the panel can be resized or not.*/
+  virtual bool CanResize() {return true;}
+  
+  bool IsExpanded() {return m_bExpanded;}
+  bool IsFloating() {return m_bFloating;}
+  bool IsVisible()  {return m_bVisible;}
+
+  void SetExapndedFlag(bool bExpanded) {m_bExpanded = bExpanded;}
+  void SetFloatingFlag(bool bFloating) {m_bFloating = bFloating;}
+  void SetVisibleFlag(bool bVisible) {m_bVisible = bVisible;}
+  
   /**
    * Setup a flag used to force DoUpdate call when the
    * sub panel is ready to be updated (when it is visible).
@@ -276,6 +283,18 @@ public:
   virtual void SendDataToPanel( AmayaParams& params );
   virtual void SetColor(int color);
 
+  /**
+   * Retrieve the window to which the panel is attached.
+   */
+  AmayaNormalWindow* GetWindow(){return m_window;}
+  const AmayaNormalWindow* GetWindow()const{return m_window;}
+  
+  /**
+   * Set the window to which the panel is attached.
+   */
+  void SetWindow(AmayaNormalWindow* window){m_window = window;}
+  
+  
 protected:
   /**
    * This method is called when the sub-panel is ready to be updated
@@ -284,8 +303,11 @@ protected:
   virtual void DoUpdate();
   
 private:
+  AmayaNormalWindow* m_window;
   AmayaToolPanelBar* m_bar;
+  
   bool m_ShouldBeUpdated;
+  bool m_bExpanded, m_bFloating, m_bVisible;
 };
 
 #endif // __AMAYAPANEL_H__

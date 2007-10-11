@@ -68,7 +68,7 @@ AC_PATH_PROG(SED, sed, /bin/sed, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(AR, ar, /usr/bin/ar, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(DIFF, diff, /usr/bin/diff, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 
-hmo
+
 dnl
 dnl Checks for libraries.
 dnl
@@ -517,7 +517,7 @@ if test "$with_wx" = "yes" ; then
   # setup libraries paths
   WX_LIBRARIES=""
   WX_LIBRARIES_EXTRA_PARAM=""
-  WXCONFIG_LIBS_PARAM="xrc,adv,core,xml,net"
+  WXCONFIG_LIBS_PARAM="aui,xrc,adv,core,xml,net"
   # GL is used ?
   if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
     WXCONFIG_LIBS_PARAM="${WXCONFIG_LIBS_PARAM},gl"

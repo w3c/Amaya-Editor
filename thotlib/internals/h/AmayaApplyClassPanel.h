@@ -30,7 +30,10 @@ public:
   
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_APPLYCLASS;}
-  virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_APPLYCLASS");}
+  virtual wxString GetToolPanelConfigKeyName()const{return wxT("PANEL_APPLYCLASS");}
+
+  /** Return a default AUI config for the panel.*/
+  virtual wxString GetDefaultAUIConfig();
 
 
 protected:

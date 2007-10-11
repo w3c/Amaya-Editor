@@ -66,7 +66,6 @@
 #ifdef _WX
 static int g_logerror_action_id = -1;
 
-static void TtaMakeWindowMenuBar( int window_id );
 static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu );
 WX_DECLARE_STRING_HASH_MAP( int, wxStringIntMap );
 wxStringIntMap g_iconSourceMap;
@@ -181,8 +180,9 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
     case WXAMAYAWINDOW_NORMAL:
     case WXAMAYAWINDOW_ANNOT:
     case WXAMAYAWINDOW_CSS:
-      p_window = new AmayaNormalWindow( p_parent_window, window_id,
+      p_window = AmayaNormalWindow::CreateNormalWindow( p_parent_window, window_id,
                                         window_pos, window_size, kind );
+      
       if (parent_window_id == 0)
         {
           // setup the maximized state (only for normal windows)
@@ -203,16 +203,6 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   if (!p_window)
     return -1; /* no enough memory */
 
-  /* save the window reference into the global array */ 
-  WindowTable[window_id].WdWindow = p_window;
-  WindowTable[window_id].FrWidth  = p_window->GetSize().GetWidth();
-  WindowTable[window_id].FrHeight = p_window->GetSize().GetHeight();
-  WindowTable[window_id].WdStatus = p_window->GetAmayaStatusBar();
-
-  /* do not create menus for a simple window */
-  if (kind != WXAMAYAWINDOW_SIMPLE)
-    TtaMakeWindowMenuBar( window_id );
-  
   /* need to show the window now because if it's done later,
      the opengl canvas can't be correctly realized */
   TtaShowWindow( window_id, TRUE );
@@ -387,7 +377,7 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
   TtaMakeWindowMenuBar creates the window menu bar widgets from the
   model (DocumentMenuList)
   ----------------------------------------------------------------------*/
-static void TtaMakeWindowMenuBar( int window_id )
+void TtaMakeWindowMenuBar( int window_id )
 {
 #ifdef _WX
   AmayaWindow        *p_window = TtaGetWindowFromId( window_id );
@@ -2397,7 +2387,9 @@ void TtaSendStatsInfo()
 }
 
 
+
 #ifdef _WX
+
 static PopupDocContextMenuFuction s_PopupDocContextMenuFuction = NULL;
 
 /*----------------------------------------------------------------------

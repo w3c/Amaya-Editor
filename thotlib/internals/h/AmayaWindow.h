@@ -19,11 +19,10 @@ class AmayaNotebook;
 class AmayaCParam;
 class AmayaURLBar;
 class AmayaToolBar;
+class AmayaToolPanel;
 class AmayaStatusBar;
 
 #include "windowtypes_wx.h"
-
-#include "AmayaPanel.h"
 
 /*
  * =====================================================================================
@@ -94,20 +93,27 @@ class AmayaWindow : public wxFrame
   static int    GetActiveWindowId() { return m_ActiveWindowId; }
   static AmayaWindow * GetActiveWindow();
 
-  virtual void         CleanUp();
+  virtual void CleanUp();
+  virtual bool Initialize();
+  
   virtual AmayaPage *  GetActivePage() const;
   virtual AmayaFrame * GetActiveFrame() const;
 
   virtual void ToggleFullScreen();
-
+  
+  virtual void LoadConfig();
+  virtual void SaveConfig();
+  
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
+  virtual void UpdateToolPanelLayout();
   virtual AmayaToolPanel* GetToolPanel(int kind){return NULL;}
   virtual bool ToolPanelsShown();
   virtual void HideToolPanels();
   virtual void ShowToolPanels();
   virtual void RefreshShowToolPanelToggleMenu();
 
+  virtual wxWindow*      GetPageContainer()const{return NULL;}
   virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
   virtual bool           AttachPage( int position, AmayaPage * p_page );
   virtual bool           DetachPage( int position );
@@ -126,7 +132,7 @@ class AmayaWindow : public wxFrame
   virtual void     EmptyURLBar();
 
   // toolbars
-  virtual bool IsToolBarShown(int toolbarID)const{return false;}
+  virtual bool IsToolBarShown(int toolbarID){return false;}
   virtual void ShowToolBar(int toolbarID, bool bShow=true){}
   virtual void HideToolBar(int toolbarID){ShowToolBar(toolbarID, false);}
   
@@ -136,12 +142,7 @@ class AmayaWindow : public wxFrame
   virtual bool         AttachFrame( AmayaFrame * p_frame );
   virtual AmayaFrame * DetachFrame();
 
- public:
-  //  bool CheckUnicodeKey( wxKeyEvent& event );
-  //  bool CheckSpecialKey( wxKeyEvent& event );
-  //  bool CheckShortcutKey( wxKeyEvent& event );
-  //  bool IsSpecialKey( int wx_keycode );
-
+  
  public:
   void OnChar( wxKeyEvent& event );
   

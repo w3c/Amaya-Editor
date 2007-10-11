@@ -147,6 +147,16 @@ wxString AmayaAttributeToolPanel::GetToolPanelName()const
   return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTR));
 }
 
+/*----------------------------------------------------------------------
+ *       Class:  AmayaAttributeToolPanel
+ *      Method:  GetDefaultAUIConfig
+ * Description:  Return a default AUI config for the panel.
+ -----------------------------------------------------------------------*/
+wxString AmayaAttributeToolPanel::GetDefaultAUIConfig()
+{
+  return wxT("state=18875900;dir=4;layer=0;row=0;pos=1;prop=100000;bestw=137;besth=225;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1052;floaty=818;floatw=145;floath=249");
+}
+
 
 
 /*----------------------------------------------------------------------
@@ -447,7 +457,6 @@ void AmayaAttributeToolPanel::ShowAttributValue( wxATTR_PANEID type )
       ShowAttributeBar(false);
     }
   Layout();
-  GetBar()->Layout();
   
   RedirectFocusToEditableControl();
 }

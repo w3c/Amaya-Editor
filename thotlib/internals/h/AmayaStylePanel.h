@@ -27,7 +27,13 @@ public:
   
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_STYLE;}
-  virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_STYLE");}
+  virtual wxString GetToolPanelConfigKeyName()const{return wxT("PANEL_STYLE");}
+
+  /** Return a default AUI config for the panel.*/
+  virtual wxString GetDefaultAUIConfig();
+
+  virtual bool CanResize() {return false;}
+  
   void OnColorPalette( AmayaColorButtonEvent& event );
   void SetColor(int color);
   void OnThemeChange( wxCommandEvent& event );

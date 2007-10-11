@@ -74,6 +74,15 @@ wxString AmayaXMLToolPanel::GetToolPanelName()const
   return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_EL_TYPE));
 }
 
+/*----------------------------------------------------------------------
+ *       Class:  AmayaXMLToolPanel
+ *      Method:  GetDefaultAUIConfig
+ * Description:  Return a default AUI config for the panel.
+ -----------------------------------------------------------------------*/
+wxString AmayaXMLToolPanel::GetDefaultAUIConfig()
+{
+  return wxT("state=18875900;dir=4;layer=0;row=0;pos=3;prop=100000;bestw=68;besth=136;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1057;floaty=535;floatw=76;floath=160");
+}
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaXMLToolPanel

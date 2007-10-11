@@ -25,10 +25,15 @@ public:
   virtual bool Create(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, 
             const wxSize& size = wxDefaultSize, long style = 0,
             const wxString& name = wxT("AmayaXHTMLToolPanel"), wxObject* extra=NULL);
+
+  /** Return a default AUI config for the panel.*/
+  virtual wxString GetDefaultAUIConfig();
+
+  virtual bool CanResize() {return false;}
   
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_XHTML;}
-  virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_XHTML");}
+  virtual wxString GetToolPanelConfigKeyName()const{return wxT("PANEL_XHTML");}
   
 protected:
 

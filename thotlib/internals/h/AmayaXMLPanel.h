@@ -29,8 +29,10 @@ public:
   
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_XML;}
-  virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_XML");}
+  virtual wxString GetToolPanelConfigKeyName()const{return wxT("PANEL_XML");}
 
+  /** Return a default AUI config for the panel.*/
+  virtual wxString GetDefaultAUIConfig();
 
 protected:
  virtual void SendDataToPanel( AmayaParams& params );

@@ -30,7 +30,10 @@ public:
   
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_EXPLORER;}
-  virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_EXPLORER");}
+  virtual wxString GetToolPanelConfigKeyName()const{return wxT("PANEL_EXPLORER");}
+
+  /** Return a default AUI config for the panel.*/
+  virtual wxString GetDefaultAUIConfig();
 
 protected:
   DECLARE_EVENT_TABLE()

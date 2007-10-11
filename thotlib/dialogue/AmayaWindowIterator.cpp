@@ -84,7 +84,7 @@ void TtaUpdateToolPanelLayout ()
       AmayaWindow* win = (AmayaWindow*)it.currentElement();
       AmayaNormalWindow* thewin = wxDynamicCast(win, AmayaNormalWindow);
       if(thewin)
-        thewin->RefreshToolPanelBar();
+        thewin->UpdateToolPanelLayout();
     }
 }
 

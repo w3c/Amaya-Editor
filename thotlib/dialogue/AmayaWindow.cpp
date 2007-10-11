@@ -48,7 +48,6 @@
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"
 #include "AmayaStatusBar.h"
-#include "AmayaPanel.h"
 #include "AmayaApp.h"
 #include "AmayaLogDebug.h"
 
@@ -79,6 +78,11 @@ AmayaWindow::AmayaWindow (  wxWindow* parent
     m_MustCheckFocusIsNotLost( false ),
     m_pMenuBar(NULL)
 {
+  WindowTable[id].WdWindow = this;
+  WindowTable[id].FrWidth  = 640;
+  WindowTable[id].FrHeight = 480;
+  WindowTable[id].WdStatus = NULL;
+
   TTALOGDEBUG_1( TTA_LOG_DIALOG,  _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
   SetIcon( AmayaApp::GetAppIcon() );
 
@@ -99,12 +103,44 @@ AmayaWindow::AmayaWindow (  wxWindow* parent
 AmayaWindow::~AmayaWindow()
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaWindow::~AmayaWindow: window_id=%d"), m_WindowId );
+  
   // empty the current window entry
   memset(&WindowTable[m_WindowId], 0, sizeof(Window_Ctl));
 
 #ifdef __WXDEBUG__
   AmayaApp::DestroyAmayaLogDebug();
 #endif /* __WXDEBUG__ */
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  Initialize
+ * Description:  Initialize common part of all AmayaNormalWindow-based.
+ -----------------------------------------------------------------------*/
+bool AmayaWindow::Initialize()
+{
+  LoadConfig();  
+  return true;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  LoadConfig
+ * Description:  Load the config from registry and initialize dependancies
+ -----------------------------------------------------------------------*/
+void AmayaWindow::LoadConfig()
+{
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  SaveConfig
+ * Description:  Save config to registry
+ -----------------------------------------------------------------------*/
+void AmayaWindow::SaveConfig()
+{
+  TtaSaveAppRegistry();
+  printf("!! saved !!\n");
 }
 
 /*----------------------------------------------------------------------
@@ -392,6 +428,15 @@ void AmayaWindow::OnActivate( wxActivateEvent & event )
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
+ *      Method:  UpdateToolPanelLayout
+ * Description:  Update the layout of the toolpanels
+  -----------------------------------------------------------------------*/
+void AmayaWindow::UpdateToolPanelLayout()
+{
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaWindow
  *      Method:  HideToolPanels
  * Description:  close the side panel
   -----------------------------------------------------------------------*/
@@ -442,19 +487,6 @@ void AmayaWindow::ToggleFullScreen()
   //     (http://developer.gnome.org/doc/API/2.0/gtk/GtkNotebook.html#gtk-notebook-set-show-tabs)
   ShowFullScreen(!IsFullScreen());
   
-//  if (IsFullScreen())
-//    {
-//      wxFrame::SetMenuBar(m_pMenuBar);
-//      if (GetStatusBar())
-//        GetStatusBar()->Show();
-//    }
-//  else
-//    {
-//      wxFrame::SetMenuBar(NULL);
-//      if (GetStatusBar())
-//        GetStatusBar()->Hide();
-//      ShowFullScreen(true);
-//    }
 }
 
 /*----------------------------------------------------------------------

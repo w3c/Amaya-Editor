@@ -41,7 +41,7 @@
 
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaXHTMLToolDef)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_P",      "CreateParagraph",       LIB, TMSG_BUTTON_P)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_P",       "CreateParagraph",       LIB, TMSG_BUTTON_P)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H1",      "CreateHeading1",       LIB, TMSG_BUTTON_H1)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H2",      "CreateHeading2",       LIB, TMSG_BUTTON_H2)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H3",      "CreateHeading3",       LIB, TMSG_BUTTON_H3)
@@ -107,6 +107,16 @@ bool AmayaXHTMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
 wxString AmayaXHTMLToolPanel::GetToolPanelName()const
 {
   return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_XHTML));
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaXHTMLToolPanel
+ *      Method:  GetDefaultAUIConfig
+ * Description:  Return a default AUI config for the panel.
+ -----------------------------------------------------------------------*/
+wxString AmayaXHTMLToolPanel::GetDefaultAUIConfig()
+{
+  return wxT("state=18875644;dir=2;layer=0;row=0;pos=0;prop=100000;bestw=184;besth=112;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1083;floaty=784;floatw=192;floath=136");
 }
 
 

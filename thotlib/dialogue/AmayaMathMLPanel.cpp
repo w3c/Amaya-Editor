@@ -136,6 +136,16 @@ wxString AmayaMathMLToolPanel::GetToolPanelName()const
 }
 
 /*----------------------------------------------------------------------
+ *       Class:  AmayaMathMLToolPanel
+ *      Method:  GetDefaultAUIConfig
+ * Description:  Return a default AUI config for the panel.
+ -----------------------------------------------------------------------*/
+wxString AmayaMathMLToolPanel::GetDefaultAUIConfig()
+{
+  return wxT("state=18875900;dir=2;layer=0;row=0;pos=3;prop=100000;bestw=210;besth=228;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1");
+}
+
+/*----------------------------------------------------------------------
 -----------------------------------------------------------------------*/
 void AmayaMathMLToolPanel::Initialize()
 {

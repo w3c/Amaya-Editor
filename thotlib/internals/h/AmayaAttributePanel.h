@@ -72,7 +72,10 @@ public:
   
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_ATTRIBUTE;}
-  virtual wxString GetToolPanelConfigKeyName()const{return wxT("OPEN_PANEL_ATTRIBUTE");}
+  virtual wxString GetToolPanelConfigKeyName()const{return wxT("PANEL_ATTRIBUTE");}
+
+  /** Return a default AUI config for the panel.*/
+  virtual wxString GetDefaultAUIConfig();
 
   
   void ForceAttributeUpdate();
