@@ -174,8 +174,8 @@ void AmayaNormalWindow::LoadConfig()
   RegisterToolPanel(new AmayaApplyClassToolPanel);
   RegisterToolPanel(new AmayaStyleToolPanel);
   RegisterToolPanel(new AmayaMathMLToolPanel);
-  RegisterToolPanel(new AmayaXMLToolPanel);
   RegisterToolPanel(new AmayaSpeCharToolPanel);
+  RegisterToolPanel(new AmayaXMLToolPanel);
 
   /* init default panel states */
   TtaSetEnvBoolean("OPEN_PANEL_EXPLORER", TRUE, FALSE);
