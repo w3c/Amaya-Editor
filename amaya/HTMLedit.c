@@ -1223,7 +1223,9 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                                        in_line element itself will be registered
                                        with its attributes */
                                     CreateTargetAnchor (doc, in_line, FALSE, FALSE);
-                                  else if (aType == HTML_ATTR_Style_ && data &&
+                                  else if ((aType == HTML_ATTR_Style_ ||
+                                            aType == HTML_ATTR_Class) &&
+                                           data &&
                                            data[0] != EOS)
                                     {
                                       newAttr = TtaNewAttribute (attrType);
