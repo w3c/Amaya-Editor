@@ -107,6 +107,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaAddPointEvtHandler.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaAdvancedWindow.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\base\AmayaApp.cpp
 # End Source File
 # Begin Source File
@@ -124,6 +128,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaAttributePanel.cpp
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\AmayaCanvas.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\AmayaClassicWindow.cpp
 # End Source File
 # Begin Source File
 
