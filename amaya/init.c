@@ -4324,7 +4324,7 @@ Document LoadDocument (Document doc, char *pathname,
         {
           /* store a copy of the local document */
           /* allocate and initialize a teporary document */
-          if (method != CE_INSTANCE)
+          if (method != CE_INSTANCE || !TtaFileExist (localdoc))
             TtaFileCopy (pathname, localdoc);
         }
 
@@ -4605,7 +4605,7 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
           status == 0)
         {
           /* add the URI in the combobox string */
-          keep = (method == CE_ABSOLUTE || method == CE_INIT);
+          keep = (method == CE_ABSOLUTE || method == CE_INIT || method == CE_INSTANCE);
           if (form_data && method == CE_FORM_GET)
             AddURLInCombobox (urlName, form_data, keep);
           else

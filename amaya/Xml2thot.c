@@ -3026,12 +3026,16 @@ static void EndOfXmlAttributeName (char *attrName, char *uriName,
     {
       /* This attribute is not in the corresponding mapping table */
       strcpy ((char *)schemaName, (char *)currentParserCtxt->SSchemaName);
-      sprintf (msgBuffer, "Invalid or unsupported %s attribute \"%s\"",
-               schemaName, attrName);
-      XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
-      /* Attach an Invalid_attribute to the current element */
-      /* It may be a valid attribute that is not yet defined in Amaya tables */
-      UnknownXmlAttribute (attrName, NULL);
+      // skip possible old template attributes
+      if (strcmp (schemaName, "Template"))
+        {
+          sprintf (msgBuffer, "Invalid or unsupported %s attribute \"%s\"",
+                   schemaName, attrName);
+          XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+          /* Attach an Invalid_attribute to the current element */
+          /* It may be a valid attribute that is not yet defined in Amaya tables */
+          UnknownXmlAttribute (attrName, NULL);
+        }
       UnknownAttr = TRUE;
     }
   else
