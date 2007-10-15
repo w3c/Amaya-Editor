@@ -117,6 +117,16 @@ bool AmayaAdvancedWindow::Initialize()
                 Name(wxT("Edition")).Caption(wxT("Edition")).ToolbarPane().Top().
                 Gripper(false).Row(1).Floatable(false).PaneBorder(false));
 
+  wxAuiDockArt* art = m_manager.GetArtProvider();
+  if(art)
+    {
+      art->SetMetric(wxAUI_DOCKART_CAPTION_SIZE, 18);
+      wxFont font = art->GetFont(wxAUI_DOCKART_CAPTION_FONT);
+      font.SetPointSize(10);
+      font.SetWeight(wxFONTWEIGHT_BOLD);
+      art->SetFont(wxAUI_DOCKART_CAPTION_FONT, font);
+    }
+  
   // Commit positions to AUI.
   m_manager.Update();
   
@@ -523,7 +533,14 @@ void AmayaAdvancedWindow::ShowToolPanels()
  -----------------------------------------------------------------------*/
 bool AmayaAdvancedWindow::ToolPanelsShown()
 {
-  return true;
+  AmayaAdvanceToolPanelMap::iterator it;
+  for(it = m_panels.begin(); it!=m_panels.end(); ++it )
+  {
+//    wxAuiPaneInfo& pane = m_manager.GetPane(it->second);
+    if(it->second->IsShown())
+      return true;
+  }  
+  return false;
 }
 
 
