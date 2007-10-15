@@ -35,6 +35,7 @@
 #include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
+#include "HTMLsave_f.h"
 #include "UIcss_f.h"
 #include "css_f.h"
 #include "fetchHTMLname_f.h"
@@ -55,12 +56,12 @@
 
 
 static char         ListBuffer[MAX_CSS_LENGTH];
-static char        *OldBuffer;
 static int          NbClass = 0;
 static char         CurrentClass[80];
 static Element      ClassReference;
 static Document     DocReference;
 static Document	    ApplyClassDoc;
+static ThotBool     OldBuffer = FALSE;
 
 
 /*----------------------------------------------------------------------
@@ -517,16 +518,6 @@ ThotBool UpdateStyleDelete (NotifyAttribute * event)
   return FALSE;  /* let Thot perform normal operation */
 }
 
-/*----------------------------------------------------------------------
-  ChangeStyle
-  the STYLE element will be changed in the document HEAD.
-  ----------------------------------------------------------------------*/
-ThotBool ChangeStyle (NotifyOnTarget * event)
-{
-  OldBuffer = GetStyleContents (event->element);
-  return FALSE;  /* let Thot perform normal operation */
-}
-
 
 /*----------------------------------------------------------------------
   DeleteStyle
@@ -686,146 +677,42 @@ void DeleteStyleElement (Document doc, Element el)
 /*----------------------------------------------------------------------
   ApplyStyleChange
   A STYLE element has been changed in the HEAD
-  OldBuffer gives the previous contents
+  OldBuffer says if there is a previous contents
   buffer give the new contents
   ----------------------------------------------------------------------*/
-void ApplyStyleChange (Element el, Document doc, char *buffer)
+static void ApplyStyleChange (Element el, Document doc)
 {
   DisplayMode         dispMode;
-  char               *ptr1, *ptr2;
-  char               *pEnd, *nEnd;
-  char                c;
-  int                 i, j;
-  int                 previousEnd, nextEnd;
-  int                 braces;
 
-  /* compare both strings */
-  i = 0;
-  ptr1 = buffer;
-  previousEnd = i;
-  pEnd = ptr1;
-  braces = 0;
   dispMode = TtaGetDisplayMode (doc);
+  TtaSetDisplayMode (doc, NoComputedDisplay);
   RemoveParsingErrors (doc);
   // close attached log documents
   CloseLogs (doc);
-  if (OldBuffer == NULL)
+
+  if (OldBuffer)
     {
-      if (buffer)
-        {
-          TtaSetDisplayMode (doc, NoComputedDisplay);
-          /* This is a brand new style element */
-          ApplyCSSRules (el, buffer, doc, FALSE);
-          TtaSetDisplayMode (doc, dispMode);
-        }
+      // remove previous style rules
+      RemoveStyle (NULL, doc, TRUE, FALSE, el, CSS_DOCUMENT_STYLE);
+      OldBuffer = FALSE;
     }
-  else
-    {
-      if (buffer == NULL)
-        {
-          TtaSetDisplayMode (doc, NoComputedDisplay);
-          /* the style element has been cleared. Remove the style made by the
-             previous content */
-          ApplyCSSRules (el, OldBuffer, doc, TRUE);
-          TtaSetDisplayMode (doc, dispMode);
-        }
-      else
-        {
-          //if (strstr (OldBuffer, "float") || strstr (buffer, "float"))
-          TtaSetDisplayMode (doc, NoComputedDisplay);
-          /* handle only differences */
-          while (OldBuffer[i] == *ptr1 && *ptr1 != EOS)
-            {
-              if (i > 0 && OldBuffer[i-1] == '{')
-                braces++;
-              if (i > 0 &&
-                  (OldBuffer[i-1] == '}' ||
-                   ((OldBuffer[i-1] == ';' || OldBuffer[i-1] == '>') &&
-                    braces == 0)))
-                {
-                  if (OldBuffer[i-1] == '}')
-                    braces--;
-                  previousEnd = i;
-                  pEnd = ptr1;
-                }
-              i++;
-              ptr1++;
-            }
+  /* Apply new style rules */
+  EnableStyleElement (doc, el);
+  TtaSetDisplayMode (doc, dispMode);
+}
 
-          /* now ptr1 and OldBuffer[i] point to different strings */
-          if (*ptr1 != EOS)
-            {
-              ptr2 = ptr1 + strlen (ptr1);
-              j = i + strlen (&OldBuffer[i]);
-              nextEnd = j;
-              nEnd = ptr2;
-              braces = 0;
-              while (OldBuffer[j] == *ptr2 && ptr2 != ptr1)
-                {
-                  if (j > i && OldBuffer[j-1] == '{')
-                    braces++;
-                  if (j > i &&
-                      (OldBuffer[j-1] == '}' ||
-                       ((OldBuffer[j-1] == '@' || OldBuffer[j-1] == '<') &&
-                        braces == 0)))
-                    {
-                      if (OldBuffer[j-1] == '}')
-                        braces--;
-                      nextEnd = j;
-                      nEnd = ptr2;
-                    }
-                  j--;
-                  ptr2--;
-                }
-              if (ptr1 != ptr2)
-                {
-                  /* take complete CSS rules */
-                  OldBuffer[nextEnd] = EOS;
-                  *nEnd = EOS;
+/*----------------------------------------------------------------------
+  ChangeStyle
+  the STYLE element will be changed in the document HEAD.
+  ----------------------------------------------------------------------*/
+ThotBool ChangeStyle (NotifyOnTarget * event)
+{
+  ThotBool            loadcss;
 
-                  /* remove previous rules */
-                  ptr1 = &OldBuffer[previousEnd];
-                  ptr2 = ptr1;
-                  do
-                    {
-                      while (*ptr2 != '}' && *ptr2 != EOS)
-                        ptr2++;
-                      if (*ptr2 != EOS)
-                        ptr2++;
-                      /* cut here */
-                      c = *ptr2;
-                      *ptr2 = EOS;
-                      ApplyCSSRules (el, ptr1, doc, TRUE);
-                      *ptr2 = c;
-                      ptr1 = ptr2;
-                    }
-                  while (*ptr2 != EOS);
-
-                  /* add new rules */
-                  ptr1 = pEnd;
-                  ptr2 = ptr1;
-                  do
-                    {
-                      while (*ptr2 != '}' && *ptr2 != EOS)
-                        ptr2++;
-                      if (*ptr2 != EOS)
-                        ptr2++;
-                      /* cut here */
-                      c = *ptr2;
-                      *ptr2 = EOS;
-                      ApplyCSSRules (el, ptr1, doc, FALSE);
-                      *ptr2 = c;
-                      ptr1 = ptr2;
-                    }
-                  while (*ptr2 != EOS);
-                }
-            }
-          /* reset the display mode */
-          TtaSetDisplayMode (doc, dispMode);
-        }
-      TtaFreeMemory (OldBuffer);
-      OldBuffer = NULL;
-    }
+  TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+  if (loadcss && event->element)
+    OldBuffer = TRUE;
+  return FALSE;  /* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
@@ -834,12 +721,11 @@ void ApplyStyleChange (Element el, Document doc, char *buffer)
   ----------------------------------------------------------------------*/
 void StyleChanged (NotifyOnTarget *event)
 {
-  char               *buffer;
+  ThotBool            loadcss;
 
-  /* get the new content of the style element */
-  buffer = GetStyleContents (event->element);
-  ApplyStyleChange (event->element, event->document, buffer);
-  TtaFreeMemory (buffer);
+  TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+  if (loadcss && event->element)
+    ApplyStyleChange (event->element, event->document);
   // check if an error is found in the new string
   CheckParsingErrors (event->document);
 }
@@ -864,6 +750,8 @@ void ChangeTheme (char *theme)
   TtaGetActiveView (&doc, &view);
   if (doc == 0 || theme == NULL)
     return;
+  if (DocumentTypes[doc] == docSource)
+    doc = GetDocFromSource (doc);
   if (doc && DocumentTypes[doc] == docHTML)
     {
       root = TtaGetMainRoot (doc);
@@ -878,7 +766,7 @@ void ChangeTheme (char *theme)
       head = TtaSearchTypedElement (elType, SearchForward, root);
       elType.ElTypeNum = HTML_EL_STYLE_;
       el = TtaSearchTypedElement (elType, SearchForward, head);
-      if (!el)
+      if (el == NULL)
         {
           TtaSetStructureChecking (FALSE, doc);
           el = InsertWithinHead (doc, 1, HTML_EL_STYLE_);
@@ -899,60 +787,72 @@ void ChangeTheme (char *theme)
 
       if (el)
         {
-          dispMode = TtaGetDisplayMode (doc);
-          RemoveParsingErrors (doc);
-          // close attached log documents
-          CloseLogs (doc);
-          TtaSetDisplayMode (doc, NoComputedDisplay);
-          // remove the current content
           content = GetNoTemplateChild (el, TRUE);
-          if (!isNew && content && !TtaIsReadOnly (content))
-            RemoveStyle (NULL, doc, TRUE, FALSE, el, CSS_DOCUMENT_STYLE);
-          while (content)
+          if (content && TtaIsReadOnly (content))
             {
-              next = content;
-              TtaNextSibling (&next);
-              TtaRegisterElementDelete(content, doc);
-              TtaDeleteTree (content, doc);
-              content = next;
+              // cannot change the content type
+              TtaCloseUndoSequence (doc);
+              content = NULL;
             }
-          if (strcmp (theme, "Standard"))
+          if (content)
             {
-              // look for the css file
-              ptr = TtaGetEnvString ("THOTDIR");
-              filename = (char *)TtaGetMemory (strlen (ptr) + strlen(theme) + 20);
-              sprintf (filename, "%s%cconfig%c%s.css", ptr, DIR_SEP, DIR_SEP, theme);
-              buffer = LoadACSSFile (filename);
-              if (buffer)
+              dispMode = TtaGetDisplayMode (doc);
+              RemoveParsingErrors (doc);
+              // close attached log documents
+              CloseLogs (doc);
+              TtaSetDisplayMode (doc, NoComputedDisplay);
+              // remove the current content
+              if (!isNew && content && !TtaIsReadOnly (content))
+                RemoveStyle (NULL, doc, TRUE, FALSE, el, CSS_DOCUMENT_STYLE);
+              while (content)
                 {
-                  // insert the new content
-                  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-                  content = TtaNewElement (doc, elType);
-                  TtaSetTextContent (content, (unsigned char*)buffer, language, doc);
-                  TtaInsertFirstChild (&content, el, doc);
-                  TtaRegisterElementCreate (content, doc);
+                  next = content;
+                  TtaNextSibling (&next);
+                  TtaRegisterElementDelete(content, doc);
+                  TtaDeleteTree (content, doc);
+                  content = next;
                 }
-              TtaFreeMemory (filename);
-              TtaFreeMemory (buffer);
-              EnableStyleElement (doc, el);
-            }
+              if (strcmp (theme, "Standard"))
+                {
+                  // look for the css file
+                  ptr = TtaGetEnvString ("THOTDIR");
+                  filename = (char *)TtaGetMemory (strlen (ptr) + strlen(theme) + 20);
+                  sprintf (filename, "%s%cconfig%c%s.css", ptr, DIR_SEP, DIR_SEP, theme);
+                  buffer = LoadACSSFile (filename);
+                  if (buffer)
+                    {
+                      // insert the new content
+                      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                      content = TtaNewElement (doc, elType);
+                      TtaSetTextContent (content, (unsigned char*)buffer, language, doc);
+                      TtaInsertFirstChild (&content, el, doc);
+                      TtaRegisterElementCreate (content, doc);
+                    }
+                  TtaFreeMemory (filename);
+                  TtaFreeMemory (buffer);
+                  EnableStyleElement (doc, el);
+                }
 
-          // check if an error is found in the new string
-          TtaCloseUndoSequence (doc);
-          TtaSetDisplayMode (doc, dispMode);
+              // check if an error is found in the new string
+              TtaCloseUndoSequence (doc);
+              TtaSetDisplayMode (doc, dispMode);
 
-          /* restore the current position in the document */
-          TtaShowElement (doc, 1, el_show, distance);
-          if (el_select)
-            {
-              if (j == 0 && i == 0)
-                TtaSelectElement (doc, el_select);
-              else
-                TtaSelectString (doc, el_select, i, j);
+              /* restore the current position in the document */
+              TtaShowElement (doc, 1, el_show, distance);
+              if (el_select)
+                {
+                  if (j == 0 && i == 0)
+                    TtaSelectElement (doc, el_select);
+                  else
+                    TtaSelectString (doc, el_select, i, j);
+                }
+              TtaSetDocumentModified (doc);
             }
-          TtaSetDocumentModified (doc);
         }
     }
+#ifdef _WX
+  TtaRedirectFocus();
+#endif /* _WX */
 }
 
 

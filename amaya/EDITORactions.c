@@ -1286,7 +1286,9 @@ Element InsertWithinHead (Document doc, View view, int elementT)
       elType.ElTypeNum = HTML_EL_HEAD;
       el = TtaGetMainRoot (doc);
       head = TtaSearchTypedElement (elType, SearchForward, el);
-      
+      if (head && TtaIsReadOnly (head))
+        return NULL;
+
       /* give current position */
       TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &j);
       TtaGiveLastSelectedElement (doc, &lastSel, &j, &lastChar);
