@@ -1400,7 +1400,7 @@ void Do_follow_link_callback (int targetDocument, int status, char *urlName,
         }
       else
         {
-          if (targetDocument == doc)
+          if (targetDocument == doc && utf8path[0] == '#')
             {
               /* jump in the same document */
               /* record current position in the history */
