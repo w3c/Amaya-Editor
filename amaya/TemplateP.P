@@ -595,12 +595,6 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;    
 
-  currentOccurs:
-  BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;    
-
   types:
   BEGIN
 	CreateBefore(AttrNameAndValue);

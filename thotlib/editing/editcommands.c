@@ -700,11 +700,14 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
           pSelAb = *pAb;
           if (pSelAb && pSelAb->AbElement && moveSelection)
             {
-              /* signale le changement de selection a l'editeur */
+              ThotBool saveTextInserting = TextInserting;
+              TextInserting = TRUE;
+              /* say that the selection changes and a text inserting is started */
               if (pSelAb->AbVolume == 0)
                 ChangeSelection (*frame, pSelAb, 0, FALSE, TRUE, FALSE, FALSE);
               else
                 ChangeSelection (*frame, pSelAb, i, FALSE, TRUE, FALSE, FALSE);
+              TextInserting = saveTextInserting;
             }
         }
     }

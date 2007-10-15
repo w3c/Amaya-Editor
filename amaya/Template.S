@@ -38,7 +38,7 @@ STRUCT
   union ( ATTR name; includeAt = TEXT; exclude = TEXT ) = CONSTANT C_CR; {It is always empty}
   import ( ATTR src = TEXT ) = CONSTANT C_CR; {It is always empty}
 
-  repeat ( ATTR title = TEXT; minOccurs = TEXT; maxOccurs = TEXT; currentOccurs = TEXT ) =
+  repeat ( ATTR title = TEXT; minOccurs = TEXT; maxOccurs = TEXT) =
   	LIST OF ( Repetition =
 		  CASE OF
 		    useEl;

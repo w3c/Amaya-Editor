@@ -79,7 +79,6 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
   Template_InsertUseChildren(doc, use, decl);
 
   TtaRegisterElementCreate (use, doc);
-  Template_IncrementRepeatOccurNumber (el);
   return use;
 #else /* TEMPLATES */
   return NULL;
@@ -789,10 +788,11 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
 {
 #ifdef TEMPLATES
   Element        child, newChild;
-  Attribute      curAtt,  minAtt,  maxAtt;
-  AttributeType  curType, minType, maxType;
-  char           *text, *types = NULL, *title = NULL;
-  int            curVal,  minVal,  maxVal;
+  ElementType    newElType;
+  Attribute      minAtt,  maxAtt;
+  AttributeType  minType, maxType;
+  char          *text, *types = NULL, *title = NULL;
+  int            curVal, minVal,  maxVal;
   int            childrenCount;
 
 
@@ -800,17 +800,14 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
     return;
 
   //Preparing types
-  curType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
-  minType.AttrSSchema = maxType.AttrSSchema = curType.AttrSSchema;
-  curType.AttrTypeNum = Template_ATTR_currentOccurs; 
+  minType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
   minType.AttrTypeNum = Template_ATTR_minOccurs;
+  maxType.AttrSSchema =  minType.AttrSSchema;
   maxType.AttrTypeNum = Template_ATTR_maxOccurs;
-
-  //Get currentOccurs, minOccurs and maxOccurs attributes
-  curAtt = TtaGetAttribute (el, curType);
+  newElType.ElSSchema = minType.AttrSSchema;
+  //Get minOccurs and maxOccurs attributes
   minAtt = TtaGetAttribute (el, minType);
   maxAtt = TtaGetAttribute (el, maxType);
-
   //Get the values
   if (minAtt)
     {
@@ -819,13 +816,17 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
         {
           minVal = atoi(text);
           TtaFreeMemory(text);
+          curVal = minVal;
         }
       else
         //Error : Attribute with no value
         return;
     }
   else
-    minVal = 0;
+    {
+      minVal = 0;
+      curVal = 1;
+    }
 
   if (maxAtt)
     {
@@ -845,24 +846,9 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
   else
     maxVal = INT_MAX;
 
-  if (curAtt)
-    {
-      text = GetAttributeStringValue(el, curAtt, NULL);
-      if (text)
-        {
-          curVal = atoi(text);
-          TtaFreeMemory(text);
-        }
-      else
-        //Error : Attribute with no value
-        return;
-    }
-  else
-    curVal = minVal;
-
   text = (char*)TtaGetMemory(MAX_LENGTH);
-  //Create non existing attributes
-  if (!minAtt)
+  //Create non existing min max attributes
+  if (minAtt == NULL)
     {      
       minAtt = TtaNewAttribute (minType);
       sprintf (text, "%d", minVal);
@@ -872,7 +858,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
         TtaRegisterAttributeCreate (minAtt, el, doc);
     }
 
-  if (!maxAtt)
+  if (maxAtt == NULL)
     {  
       maxAtt = TtaNewAttribute (maxType);
       if (maxVal < INT_MAX)
@@ -884,20 +870,9 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
       if (registerUndo)
         TtaRegisterAttributeCreate (maxAtt, el, doc);
     }
+  TtaFreeMemory(text);
 
-  if (!curAtt)
-    {
-      curAtt = TtaNewAttribute (curType);
-      sprintf (text,"%d",curVal);
-      TtaAttachAttribute (el, curAtt, doc);
-      TtaSetAttributeText (curAtt, text, el, doc);
-      if (registerUndo)
-        TtaRegisterAttributeCreate (curAtt, el, doc);
-    }
-  if (text)
-    TtaFreeMemory(text);
-
-  //We must have currentOccurs children
+  //We must have minOccurs children
   child = TtaGetFirstChild(el);
   if (!child)
     //Error : a repeat must have at least one child which will be the model
@@ -916,13 +891,10 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
   child = TtaGetLastChild(el);
   types = GetAttributeStringValueFromNum (child, Template_ATTR_types, NULL);
   title = GetAttributeStringValueFromNum (child, Template_ATTR_title, NULL);
+  newElType.ElTypeNum = Template_EL_useEl;
   while (childrenCount < curVal)
     {
-      ElementType newElType;
-      newElType.ElSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
-      newElType.ElTypeNum = Template_EL_useEl;
       newChild = TtaNewElement (doc, newElType);
-      
       // Insert it
       TtaInsertSibling (newChild, child, FALSE, doc);
       SetAttributeStringValueWithUndo (newChild, Template_ATTR_types, types);
@@ -937,7 +909,6 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
     
   Template_FixAccessRight (t, el, doc);
   TtaUpdateAccessRightInViews (doc, el);
-  
   TtaFreeMemory (types);
   TtaFreeMemory (title);
 #endif /* TEMPLATES */

@@ -623,54 +623,6 @@ void UseCreated (NotifyElement *event)
 #endif /* TEMPLATES */
 }
 
-/*----------------------------------------------------------------------
-  Template_IncrementRepeatOccurNumber
-  Increment the number of occurs of a xt:repeat
-  @param el element (xt:repeat)
-  ----------------------------------------------------------------------*/
-void Template_IncrementRepeatOccurNumber(Element el)
-{
-#ifdef TEMPLATES
-  char* current;
-  char  newVal[8];
-  int curVal;
-
-  current = GetAttributeStringValueFromNum(el, Template_ATTR_currentOccurs, NULL);
-  if (current)
-  {
-    curVal = atoi(current);
-    curVal++;
-    TtaFreeMemory(current);
-    sprintf(newVal, "%d", curVal);
-    SetAttributeStringValue(el, Template_ATTR_currentOccurs, newVal);
-  }
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
-  Template_DecrementRepeatOccurNumber
-  Decrement the number of occurs of a xt:repeat
-  @param el element (xt:repeat)
-  ----------------------------------------------------------------------*/
-void Template_DecrementRepeatOccurNumber(Element el)
-{
-#ifdef TEMPLATES
-  char* current;
-  char  newVal[8];
-  int curVal;
-
-  current = GetAttributeStringValueFromNum(el, Template_ATTR_currentOccurs, NULL);
-  if (current)
-  {
-    curVal = atoi(current);
-    curVal--;
-    TtaFreeMemory(current);
-    sprintf(newVal, "%d", curVal);
-    SetAttributeStringValue(el, Template_ATTR_currentOccurs, newVal);
-  }
-#endif /* TEMPLATES */
-}
-
 
 /*----------------------------------------------------------------------
   Template_CanInsertRepeatChild
@@ -681,39 +633,25 @@ void Template_DecrementRepeatOccurNumber(Element el)
 ThotBool Template_CanInsertRepeatChild(Element el)
 {
 #ifdef TEMPLATES
-  char* max;
-  char* current;
-  int maxVal, curVal;
-  Element child;
+  char     *max;
+  int       maxVal, curVal;
+  Element   child;
 
   max = GetAttributeStringValueFromNum(el, Template_ATTR_maxOccurs, NULL);
   if (max)
-  {
-    if (!strcmp(max, "*"))
-      {
-        TtaFreeMemory(max);
-        return TRUE;
-      }
-    maxVal = atoi (max);
-    TtaFreeMemory (max);
-
-    current = GetAttributeStringValueFromNum(el, Template_ATTR_currentOccurs, NULL);
-    if (current)
     {
-      curVal = atoi (current);
-      TtaFreeMemory (current);
-    }
-    else
-    {
+      if (!strcmp(max, "*"))
+        {
+          TtaFreeMemory(max);
+          return TRUE;
+        }
+      maxVal = atoi (max);
+      TtaFreeMemory (max);
       curVal = 0;
       for (child = TtaGetFirstChild(el); child; TtaNextSibling(&child))
-      {
         curVal++;
-      }
+      return (curVal < maxVal);
     }
-
-    return curVal<maxVal;
-  }
   else
     return TRUE;
 #endif /* TEMPLATES */
@@ -1496,7 +1434,6 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
       sibling = TtaGetSuccessor(elem);
       TtaRegisterElementDelete(elem, doc);
       TtaDeleteTree(elem, doc);
-      Template_DecrementRepeatOccurNumber(xtElem);
       InstantiateRepeat(t, xtElem, doc, TRUE);
       leaf = TtaGetFirstLeaf (sibling);
       elType = TtaGetElementType (leaf);
