@@ -692,7 +692,7 @@ void GenerateStyle (char * data , ThotBool add)
 {
   Element             el, firstC, lastC;
   Attribute           attr;
-  int                 profile, doc, i, j;
+  int                 doc, i, j;
 
   doc = TtaGetSelectedDocument();
   if (doc == 0)
@@ -702,14 +702,6 @@ void GenerateStyle (char * data , ThotBool add)
     {
       /* the document is in ReadOnly mode */
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_READONLY);
-      return;
-    }
-
-  profile = TtaGetDocumentProfile (doc);
-  if (profile == L_Basic)
-    {
-      // cannot generate inline style
-      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
       return;
     }
 

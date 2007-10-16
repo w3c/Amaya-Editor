@@ -516,8 +516,10 @@ void AttributeChange (int aType, char * data)
   -----------------------------------------------------------------------*/
 static void UpdateAttribute (Attribute attr, char * data, Element el, Document doc)
 {
-  char *buffer, *property, *start, *stop;
-  int   lg;
+  char     *buffer, *property, *start, *stop;
+  char      value[50];
+  int       lg, val, inc;
+  ThotBool  margin;
 
   lg = TtaGetTextAttributeLength (attr);
   property = strstr (data, ":");
@@ -527,28 +529,58 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
       buffer = (char *)TtaGetMemory (lg + strlen (data) + 2);
       TtaGiveTextAttributeValue (attr, buffer, &lg);
       *property = EOS;
+      margin = !strcmp (data, "margin-left");
       start = strstr (buffer, data);
+      *property = ':';
       if (start)
         {
-          // remove the current property
+          // remove or update the current property
           stop = start;
           while (*stop != EOS && *stop != ';')
             stop++;
           if (*stop == EOS)
-            *start = EOS;
+            {
+              // the property is the last one
+              val = atoi (&start[12]);
+              *start = EOS;
+            }
           else
-            while (*stop != EOS)
-              {
-                stop++;
-                *start = *stop;
-                start++;
-              }
+            {
+              // there are other properties after
+              *stop = EOS;
+              val = atoi (&start[12]);
+              *stop = ';';
+              while (*stop != EOS)
+                {
+                  stop++;
+                  *start = *stop;
+                  start++;
+                }
+            }
         }
-      *property = ':';
+      else
+        // no margin update
+        margin = FALSE;
       lg = strlen (buffer);
       if (lg && buffer[lg-1] != ';')
         strcat (buffer, ";");
-      strcat (buffer, data);
+      if (margin)
+        {
+          // increment or decrement the value
+          inc = atoi (&property[1]);
+          if (inc == 0 && val != 0)
+            val -= 2;
+          else if (inc == 2)
+            val += 2;
+          sprintf ((char *)value, "margin-left:%dem", (int)val);
+          strcat (buffer, value);
+          ParseHTMLSpecificStyle (el, value, doc, 1000, FALSE);
+        }
+      else
+        {
+          strcat (buffer, data);
+          ParseHTMLSpecificStyle (el, data, doc, 1000, FALSE);
+        }
       TtaSetAttributeText (attr, buffer, el, doc);
       TtaFreeMemory (buffer);
     }
@@ -1363,7 +1395,11 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                                                       if (replace)
                                                         TtaSetAttributeText (newAttr, name, child, doc);
                                                       else
-                                                        UpdateAttribute (newAttr, name, child, doc);
+                                                        {
+                                                          UpdateAttribute (newAttr, name, child, doc);
+                                                          // the parsing is already done
+                                                          parse = FALSE;
+                                                        }
                                                     }
                                                   done = TRUE; // action done
                                                 }
