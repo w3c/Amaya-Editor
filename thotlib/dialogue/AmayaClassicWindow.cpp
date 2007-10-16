@@ -45,7 +45,8 @@
 
 #include "AmayaClassicWindow.h"
 #include "AmayaPanel.h"
-#include "AmayaClassicNotebook.h"
+//#include "AmayaClassicNotebook.h"
+#include "AmayaAdvancedNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"
@@ -136,7 +137,8 @@ bool AmayaClassicWindow::Initialize()
                                    | wxRAISED_BORDER
                                    | wxCLIP_CHILDREN );
         // Create the notebook
-        m_pNotebook = new AmayaClassicNotebook( m_pSplitterWindow, wxID_ANY );
+//        m_pNotebook = new AmayaClassicNotebook( m_pSplitterWindow, wxID_ANY );
+        m_pNotebook = new AmayaAdvancedNotebook( m_pSplitterWindow, wxID_ANY );
 
         ThotBool panel_opened;
         TtaGetEnvBoolean ("OPEN_PANEL", &panel_opened);
