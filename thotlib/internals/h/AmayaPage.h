@@ -6,6 +6,7 @@
 #include "wx/wx.h"
 #include "wx/panel.h"
 #include "wx/splitter.h"
+#include "wx/imaglist.h"
 
 
 class AmayaFrame;
