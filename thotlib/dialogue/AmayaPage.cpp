@@ -38,10 +38,10 @@
 
 #include "wx/log.h"
 
-#include "AmayaNormalWindow.h"
+#include "AmayaWindow.h"
 #include "AmayaFrame.h"
 #include "AmayaPage.h"
-#include "AmayaNotebook.h"
+#include "AmayaClassicNotebook.h"
 #include "AmayaQuickSplitButton.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
@@ -61,7 +61,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
   -----------------------------------------------------------------------*/
 AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_window )
   :  wxPanel( p_parent_window, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("AmayaPage"))
-  ,m_pNoteBookParent( NULL )
+  ,m_pContainer( NULL )
   ,m_pWindowParent( p_amaya_parent_window )
   ,m_SlashRatio( 0.5 )
   ,m_PageId(-1)
@@ -684,11 +684,11 @@ void AmayaPage::OnClose(wxCloseEvent& event)
     event.Veto();
   else if (frame_id == TtaGiveActiveFrame ())
     {
-      AmayaPage * p_page = (AmayaPage *)m_pNoteBookParent->GetPage(page_id);
+      AmayaPage * p_page = (AmayaPage *)m_pContainer->GetPage(page_id);
       p_page->SetSelected( TRUE );
       //#ifdef _MACOS
       // On Mac OS the event is not automatically sent to the notebook
-      m_pNoteBookParent->SetSelection(page_id);
+      m_pContainer->SetSelection(page_id);
       //#endif /* _MACOS */
     }
 }
@@ -706,25 +706,25 @@ bool AmayaPage::CleanUp()
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaPage
- *      Method:  SetNotebookParent
- * Description:  update the notebook page's parent
+ *      Method:  SetContainer
+ * Description:  update the page's container (notebook ...)
   -----------------------------------------------------------------------*/
-void AmayaPage::SetNotebookParent( AmayaNotebook * p_notebook )
+void AmayaPage::SetContainer( AmayaPageContainer * p_container )
 {
-  m_pNoteBookParent = p_notebook;
+  m_pContainer = p_container;
 
-  if (m_pNoteBookParent->GetWindowParent() != GetWindowParent())
-    SetWindowParent( m_pNoteBookParent->GetWindowParent() );
+  if (m_pContainer->GetAmayaWindow() != GetWindowParent())
+    SetWindowParent( m_pContainer->GetAmayaWindow() );
 }
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaPage
- *      Method:  GetNotebookParent
- * Description:  what is the parent of this page ?
+ *      Method:  GetContainer
+ * Description:  what is the container of this page ?
   -----------------------------------------------------------------------*/
-AmayaNotebook * AmayaPage::GetNotebookParent()
+AmayaPageContainer * AmayaPage::GetContainer()
 {
-  return m_pNoteBookParent;
+  return m_pContainer;
 }
 
 /*----------------------------------------------------------------------
@@ -900,11 +900,11 @@ AmayaFrame * AmayaPage::GetActiveFrame() const
   -----------------------------------------------------------------------*/
 void AmayaPage::RaisePage()
 {
-  AmayaNotebook * p_notebook = GetNotebookParent();
-  if (p_notebook)
+  AmayaPageContainer * p_container = GetContainer();
+  if (p_container)
     {
       // raise the notebook page
-      p_notebook->SetSelection(GetPageId());
+      p_container->SetSelection(GetPageId());
       
       SetSelected( TRUE );
     }
@@ -954,5 +954,8 @@ BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
   EVT_BUTTON( -1,                       AmayaPage::OnSplitButton)
 
 END_EVENT_TABLE()
+
+
+
 
 #endif /* #ifdef _WX */ 

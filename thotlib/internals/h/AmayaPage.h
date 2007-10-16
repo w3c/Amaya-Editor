@@ -9,8 +9,11 @@
 
 
 class AmayaFrame;
-class AmayaNotebook;
+class AmayaClassicNotebook;
 class AmayaQuickSplitButton;
+class AmayaWindow;
+
+class AmayaPageContainer;
 
 // there is a maximum of 2 frames into a page
 #define MAX_MULTI_FRAME 2
@@ -86,8 +89,8 @@ public:
   void         SetActiveFrame( const AmayaFrame * p_frame );
   AmayaFrame * GetActiveFrame() const;
   
-  void SetNotebookParent( AmayaNotebook * p_notebook );
-  AmayaNotebook * GetNotebookParent();
+  void SetContainer( AmayaPageContainer * p_container );
+  AmayaPageContainer * GetContainer();
   
   AmayaWindow * GetWindowParent();
   void SetWindowParent( AmayaWindow * p_window );
@@ -121,14 +124,14 @@ public:
 
   void OnClose(wxCloseEvent& event);
   
-  wxSplitterWindow * m_pSplitterWindow;
+  wxSplitterWindow *      m_pSplitterWindow;
   AmayaQuickSplitButton * m_pSplitButtonBottom; // button used to quickly split the frame horizontaly
   AmayaQuickSplitButton * m_pSplitButtonRight; // button used to quickly split the frame verticaly
-  wxPanel *          m_DummyPanel;
-  AmayaFrame *       m_pTopFrame;
-  AmayaFrame *       m_pBottomFrame;
-  AmayaNotebook *    m_pNoteBookParent;
-  AmayaWindow *      m_pWindowParent;
+  wxPanel *               m_DummyPanel;
+  AmayaFrame *            m_pTopFrame;
+  AmayaFrame *            m_pBottomFrame;
+  AmayaPageContainer *    m_pContainer;
+  AmayaWindow *           m_pWindowParent;
   
   float              m_SlashRatio; // 0.5 => page is half splitted
 
@@ -145,6 +148,37 @@ public:
   int                m_MasterFrameId;
 
   char               m_LastOpenViewName[50];
+};
+
+
+/**
+ * Base AmayaPageContainer.
+ * Do not use directly, use AmayaClassicNotebook or AmayaAdvancedNotebook instead.
+ **/
+class AmayaPageContainer
+{
+public:
+  virtual ~AmayaPageContainer(){}
+  
+  virtual int GetPageId( const AmayaPage * p_page ) = 0;
+  virtual AmayaWindow * GetAmayaWindow() = 0;
+//  {return wxDynamicCast(wxGetTopLevelParent(this), AmayaWindow);} 
+  
+  virtual void UpdatePageId() = 0;
+  
+  virtual bool ClosePage(int page_id) = 0;
+  virtual bool CloseAllButPage(int position) = 0;
+
+  virtual AmayaPage* GetPage(size_t WXUNUSED(page)) {return NULL;}
+  virtual int SetSelection(size_t WXUNUSED(page)) {return wxID_ANY;}
+  
+  virtual bool SetPageText(size_t WXUNUSED(page), const wxString& WXUNUSED(text)){return false;}
+  virtual bool SetPageImage(size_t WXUNUSED(page), int WXUNUSED(image)){return false;}
+  virtual void SetImageList(wxImageList* WXUNUSED(imageList)){}
+  
+  virtual bool InsertPage(size_t index, AmayaPage* page, const wxString& text, bool select = false, int imageId = -1)=0;
+  
+  virtual void CleanUp() = 0;
 };
 
 #endif // __AMAYAPAGE_H__

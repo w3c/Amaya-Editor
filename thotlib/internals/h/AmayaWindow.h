@@ -15,7 +15,6 @@
 
 class AmayaPage;
 class AmayaFrame;
-class AmayaNotebook;
 class AmayaCParam;
 class AmayaURLBar;
 class AmayaToolBar;

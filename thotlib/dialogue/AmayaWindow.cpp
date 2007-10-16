@@ -43,7 +43,6 @@
 #include "input_f.h"
 
 #include "AmayaWindow.h"
-#include "AmayaNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"

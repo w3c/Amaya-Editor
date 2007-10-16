@@ -8,6 +8,7 @@
 
 class AmayaQuickSplitButton;
 class AmayaToolPanelBar;
+class AmayaClassicNotebook;
 
 /*
  * =====================================================================================
@@ -112,7 +113,7 @@ private:
   void OnSize(wxSizeEvent& event);
   
   AmayaToolPanelBar       *m_pPanel;            // current selected panel
-  AmayaNotebook           *m_pNotebook;         // tabs container
+  AmayaClassicNotebook           *m_pNotebook;         // tabs container
   wxSplitterWindow        *m_pSplitterWindow;
   int                      m_SlashPos;          // the slash pos in pixel
   AmayaQuickSplitButton   *m_pSplitPanelButton;

@@ -56,7 +56,6 @@
 #include "AmayaPage.h"
 #include "AmayaToolBar.h"
 #include "AmayaStatusBar.h"
-#include "AmayaNotebook.h"
 #include "AmayaPanel.h"
 #include "AmayaExplorerPanel.h"
 #include "AmayaXHTMLPanel.h"

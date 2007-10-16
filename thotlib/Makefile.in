@@ -204,7 +204,9 @@ EDITOR_OBJ = \
 	dialogue/AmayaSimpleWindow.o \
 	dialogue/AmayaNormalWindow.o \
 	dialogue/AmayaClassicWindow.o \
+  dialogue/AmayaClassicNotebook.o \
 	dialogue/AmayaAdvancedWindow.o \
+  dialogue/AmayaAdvancedNotebook.o \
 	dialogue/AmayaQuickSplitButton.o \
 	dialogue/AmayaPanel.o \
 	dialogue/AmayaPopupList.o \
@@ -219,7 +221,6 @@ EDITOR_OBJ = \
 	dialogue/AmayaFrame.o \
 	dialogue/AmayaCanvas.o \
 	dialogue/AmayaColorButton.o \
-	dialogue/AmayaNotebook.o \
 	dialogue/AmayaToolBar.o \
 	dialogue/AmayaScrollBar.o \
 	dialogue/AmayaFileDropTarget.o \

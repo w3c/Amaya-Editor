@@ -52,7 +52,7 @@
 #include "AmayaSpeCharPanel.h"
 #include "AmayaStylePanel.h"
 
-#include "AmayaNotebook.h"
+#include "AmayaAdvancedNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"
@@ -104,8 +104,8 @@ bool AmayaAdvancedWindow::Initialize()
   m_manager.SetManagedWindow(this);
   
   // Create the notebook
-  m_notebook = new AmayaNotebook(this, wxID_ANY );
-  m_manager.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("AmayaNotebook")).
+  m_notebook = new AmayaAdvancedNotebook(this, wxID_ANY );
+  m_manager.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("AmayaAdvancedNotebook")).
                                     CenterPane().PaneBorder(false));
 
   
@@ -273,7 +273,7 @@ bool AmayaAdvancedWindow::AttachPage( int position, AmayaPage * p_page )
       /* notebook is a new parent for the page
        * warning: AmayaPage original parent must be a wxNotbook */
       //    p_page->Reparent( m_notebook );
-      p_page->SetNotebookParent( m_notebook );
+      p_page->SetContainer( m_notebook );
     
       /* insert the page in the notebook */
       ret = m_notebook->InsertPage( position,

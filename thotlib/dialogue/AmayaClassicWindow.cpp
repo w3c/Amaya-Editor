@@ -45,7 +45,7 @@
 
 #include "AmayaClassicWindow.h"
 #include "AmayaPanel.h"
-#include "AmayaNotebook.h"
+#include "AmayaClassicNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"
@@ -136,7 +136,7 @@ bool AmayaClassicWindow::Initialize()
                                    | wxRAISED_BORDER
                                    | wxCLIP_CHILDREN );
         // Create the notebook
-        m_pNotebook = new AmayaNotebook( m_pSplitterWindow, wxID_ANY );
+        m_pNotebook = new AmayaClassicNotebook( m_pSplitterWindow, wxID_ANY );
 
         ThotBool panel_opened;
         TtaGetEnvBoolean ("OPEN_PANEL", &panel_opened);
@@ -247,7 +247,7 @@ bool AmayaClassicWindow::AttachPage( int position, AmayaPage * p_page )
       /* notebook is a new parent for the page
        * warning: AmayaPage original parent must be a wxNotbook */
       //    p_page->Reparent( m_pNotebook );
-      p_page->SetNotebookParent( m_pNotebook );
+      p_page->SetContainer( m_pNotebook );
     
       /* insert the page in the notebook */
       ret = m_pNotebook->InsertPage( position,

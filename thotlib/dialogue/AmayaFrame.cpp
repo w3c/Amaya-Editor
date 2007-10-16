@@ -44,7 +44,7 @@
 
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
-#include "AmayaNotebook.h"
+#include "AmayaClassicNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaCallback.h"
 #include "AmayaScrollBar.h"
@@ -430,10 +430,10 @@ void AmayaFrame::SetFrameTitle(const wxString & frame_name)
   AmayaPage * p_page = GetPageParent();
   if (p_page)
     {
-      AmayaNotebook * p_notebook = p_page->GetNotebookParent();
-      if (p_notebook)
+      AmayaPageContainer * p_container = p_page->GetContainer();
+      if (p_container)
         {
-          int page_id = p_notebook->GetPageId(p_page);
+          int page_id = p_container->GetPageId(p_page);
           if (page_id >= 0)
             {
               // setup the page tooltip
@@ -443,7 +443,7 @@ void AmayaFrame::SetFrameTitle(const wxString & frame_name)
 
               // setup the tab title
               wxString frame_title = GetFrameTitle();
-              p_notebook->SetPageText( page_id,
+              p_container->SetPageText( page_id,
                                        wxString(frame_title).Truncate(15) + (frame_title.Len() > 15 ? _T("...") : _T("")) );
             }
         }
@@ -470,10 +470,10 @@ void AmayaFrame::UpdateFrameIcon()
         wxASSERT(icon_type);
         AmayaPage * p_page = p_frame->GetPageParent();
         wxASSERT(p_page);
-        AmayaNotebook * p_notebook = p_page->GetNotebookParent();
-        wxASSERT(p_notebook);
-        int page_id = p_notebook->GetPageId(p_page);
-        p_notebook->SetPageImage(page_id, AmayaApp::GetDocumentIconId(icon_type));
+        AmayaPageContainer * p_container = p_page->GetContainer();
+        wxASSERT(p_container);
+        int page_id = p_container->GetPageId(p_page);
+        p_container->SetPageImage(page_id, AmayaApp::GetDocumentIconId(icon_type));
       }
     }
 }

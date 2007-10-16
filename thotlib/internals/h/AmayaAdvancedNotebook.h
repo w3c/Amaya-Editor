@@ -1,17 +1,18 @@
 #ifdef _WX
 
-#ifndef __AMAYANOTEBOOK_H__
-#define __AMAYANOTEBOOK_H__
+#ifndef AMAYAADVANCEDNOTEBOOK_H_
+#define AMAYAADVANCEDNOTEBOOK_H_
+
 
 #include "wx/wx.h"
-#include "wx/notebook.h"
+#include "wx/aui/auibook.h"
 
+#include "AmayaPage.h"
 
 class AmayaWindow;
-class AmayaPage;
 
 /*
- *  Description:  - AmayaNotebook is a AmayaPage container
+ *  Description:  - AmayaAdvancedNotebook is a AmayaPage container
  *  
  *                  + A window can contains several documents.
  *                  + Each document is placed into a page.
@@ -29,7 +30,7 @@ class AmayaPage;
  * |+----------------------------------------------------+|
  * || ToolBar                                            ||
  * |+----------------------------------------------------+|
- * |+[AmayaPanel]--+ +[AmayaNoteBook]-------------------+ |
+ * |+[AmayaPanel]--+ +[AmayaAdvancedNotebook]-----------+ |
  * ||              | |+-----------+                     | |
  * ||              | ||[AmayaPage]+--------------------+| |
  * ||              | ||+------------------------------+|| |
@@ -53,17 +54,16 @@ class AmayaPage;
  *     Revision:  none
 */
 
-class AmayaNotebook : public wxNotebook
+class AmayaAdvancedNotebook : public wxAuiNotebook, public AmayaPageContainer
 {
  public:
-  DECLARE_CLASS(AmayaNotebook)
+  DECLARE_CLASS(AmayaAdvancedNotebook)
 
-  AmayaNotebook( wxWindow * window , wxWindowID id=wxID_ANY);
-  virtual ~AmayaNotebook( );
+  AmayaAdvancedNotebook( wxWindow * window , wxWindowID id=wxID_ANY);
+  virtual ~AmayaAdvancedNotebook( );
  
   int GetPageId( const AmayaPage * p_page );
-  AmayaWindow * GetWindowParent()
-    { return (AmayaWindow*)wxGetTopLevelParent(this); } 
+  virtual AmayaWindow * GetAmayaWindow();
   
   int GetMContextFrame();
 
@@ -73,24 +73,37 @@ class AmayaNotebook : public wxNotebook
   bool CloseAllButPage(int position);
 
   void CleanUp();
+  
+  AmayaPage* GetPage(size_t page) {return wxDynamicCast(wxAuiNotebook::GetPage(page), AmayaPage);}
+  int SetSelection(size_t page) {return wxAuiNotebook::SetSelection(page);}
 
- protected:
+  bool SetPageText(size_t page, const wxString& text){return wxAuiNotebook::SetPageText(page, text);}
+  bool SetPageImage(size_t page, int image);
+  void SetImageList(wxImageList* imageList){m_imageList = imageList;}
+
+  bool InsertPage(size_t index, AmayaPage* page, const wxString& text, bool select, int imageId);
+
+  
+protected:
   DECLARE_EVENT_TABLE()
 #ifdef __WXDEBUG__
-  void OnPageChanging(wxNotebookEvent& event);
+  void OnPageChanging(wxAuiNotebookEvent& event);
 #endif /* __WXDEBUG__ */
-  void OnPageChanged(wxNotebookEvent& event);
+  void OnPageChanged(wxAuiNotebookEvent& event);
   void OnContextMenu( wxContextMenuEvent & event );
   void OnContextMenuItem( wxCommandEvent& event );
 
   void OnClose(wxCloseEvent& event);
+  
+  void OnClosePage(wxAuiNotebookEvent& event);
 
  protected:
   int            m_MContextFrameId;
+  wxImageList*   m_imageList;
 };
 
-#endif // __AMAYANOTEBOOK_H__
+
+#endif /*AMAYAADVANCEDNOTEBOOK_H_*/
 
 #endif /* #ifdef _WX */
-
 

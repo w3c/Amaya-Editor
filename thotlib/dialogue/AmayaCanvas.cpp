@@ -581,7 +581,7 @@ void AmayaCanvas::OnContextMenu( wxContextMenuEvent & event )
   View     view;
   FrameToView (m_pAmayaFrame->GetFrameId(), &document, &view);
   
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - page_id=%d, flags=%d"), page_id, flags );
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaCanvas::OnContextMenu - page_id=%d, flags=%d"), page_id, flags );
 
   if (page_id >= 0 && document)
     {

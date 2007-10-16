@@ -25,7 +25,7 @@
 #include "frame_tv.h"
 
 
-#include "AmayaNotebook.h"
+#include "AmayaAdvancedNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
@@ -33,19 +33,18 @@
 #include "AmayaApp.h"
 #include "AmayaConfirmCloseTab.h"
 
-IMPLEMENT_CLASS(AmayaNotebook, wxNotebook)
+IMPLEMENT_CLASS(AmayaAdvancedNotebook, wxAuiNotebook)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-AmayaNotebook::AmayaNotebook(wxWindow * window , wxWindowID id)
-  :  wxNotebook( window, id,
+AmayaAdvancedNotebook::AmayaAdvancedNotebook(wxWindow * window , wxWindowID id)
+  :  wxAuiNotebook( window, id,
                  wxDefaultPosition, wxDefaultSize,
-                 wxTAB_TRAVERSAL |
-                 wxCLIP_CHILDREN |
-                 wxFULL_REPAINT_ON_RESIZE |
-                 wxNB_MULTILINE /* only windows */,
-                 wxT("AmayaNotebook") )
-     ,m_MContextFrameId(0)
+                 wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE |  
+                 wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_CLOSE_ON_ACTIVE_TAB |
+                 wxAUI_NB_WINDOWLIST_BUTTON),
+     m_MContextFrameId(0),
+     m_imageList(NULL)
 {
   if (WindowBColor == -1)
     {
@@ -58,17 +57,50 @@ AmayaNotebook::AmayaNotebook(wxWindow * window , wxWindowID id)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-AmayaNotebook::~AmayaNotebook()
+AmayaAdvancedNotebook::~AmayaAdvancedNotebook()
 {
 }
 
 /*----------------------------------------------------------------------
-  Class:  AmayaNotebook
+  Class:  AmayaAdvancedNotebook
+  Method:  InsertPage
+  Description: Insert a page.
+ -----------------------------------------------------------------------*/
+bool AmayaAdvancedNotebook::InsertPage(size_t index, AmayaPage* page, const wxString& text, bool select, int imageId)
+{
+  printf("AmayaAdvancedNotebook::InsertPage %d\n", index);
+  
+  wxBitmap bmp = wxNullBitmap;
+  if(imageId>=0)
+    bmp = m_imageList->GetIcon(imageId);
+  
+  return wxAuiNotebook::InsertPage(index, page, text, select, bmp);
+}
+
+/*----------------------------------------------------------------------
+  Class:  AmayaAdvancedNotebook
+  Method:  SetPageImage
+  Description: Close a page.
+  Return: false if cant close it.
+ -----------------------------------------------------------------------*/
+bool AmayaAdvancedNotebook::SetPageImage(size_t page, int image)
+{
+  if(m_imageList && image!=wxID_ANY && image<m_imageList->GetImageCount())
+    {
+      wxBitmap bmp(m_imageList->GetIcon(image));
+      SetPageBitmap(page, bmp);
+      return true;
+    }
+  return false;
+}
+
+/*----------------------------------------------------------------------
+  Class:  AmayaAdvancedNotebook
   Method:  ClosePage
   Description: Close a page.
   Return: false if cant close it.
  -----------------------------------------------------------------------*/
-bool AmayaNotebook::ClosePage(int page_id)
+bool AmayaAdvancedNotebook::ClosePage(int page_id)
 {
   AmayaPage *page = (AmayaPage*)GetPage( page_id );
   page->Hide();
@@ -89,11 +121,11 @@ bool AmayaNotebook::ClosePage(int page_id)
 
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaNotebook
+ *       Class:  AmayaAdvancedNotebook
  *      Method:  CloseAllButPage
  * Description:  Close all notebook pages but not one.
  -----------------------------------------------------------------------*/
-bool AmayaNotebook::CloseAllButPage(int position)
+bool AmayaAdvancedNotebook::CloseAllButPage(int position)
 {
   int pos;
   AmayaPage* sel = (AmayaPage*) GetPage(position);
@@ -117,11 +149,11 @@ bool AmayaNotebook::CloseAllButPage(int position)
 
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaNotebook
+ *       Class:  AmayaAdvancedNotebook
  *      Method:  CleanUp
  * Description:  check that there is no empty pages
  -----------------------------------------------------------------------*/
-void AmayaNotebook::CleanUp()
+void AmayaAdvancedNotebook::CleanUp()
 {
   int pos;
   
@@ -138,11 +170,11 @@ void AmayaNotebook::CleanUp()
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaNotebook
+ *       Class:  AmayaAdvancedNotebook
  *      Method:  OnClose
  * Description:  Intercept the CLOSE event and prevent it if ncecessary.
   -----------------------------------------------------------------------*/
-void AmayaNotebook::OnClose(wxCloseEvent& event)
+void AmayaAdvancedNotebook::OnClose(wxCloseEvent& event)
 {
   /* show a warning if there is more than one tab */
   if (GetPageCount() > 1 && AmayaConfirmCloseTab::DoesUserWantToShowMe())
@@ -172,12 +204,26 @@ void AmayaNotebook::OnClose(wxCloseEvent& event)
 }
 
 /*----------------------------------------------------------------------
-  Class:  AmayaNotebook
+ *       Class:  AmayaAdvancedNotebook
+ *      Method:  OnClosePage
+ * Description:  Intercept the PAGE CLOSE event and prevent it if ncecessary.
+  -----------------------------------------------------------------------*/
+void AmayaAdvancedNotebook::OnClosePage(wxAuiNotebookEvent& event)
+{
+  if(event.GetSelection()!=wxID_ANY)
+    ClosePage(event.GetSelection());
+  else if(GetSelection()!=wxID_ANY)
+    ClosePage(GetSelection());
+}
+
+
+/*----------------------------------------------------------------------
+  Class:  AmayaAdvancedNotebook
   Method:  UpdatePageId
   Description:  this function is called to update the page id and document's pageid
   when a page has been removed or moved ... 
  -----------------------------------------------------------------------*/
-void AmayaNotebook::UpdatePageId()
+void AmayaAdvancedNotebook::UpdatePageId()
 {
   /* update page_id for each page */
   unsigned int page_id = 0;
@@ -197,16 +243,16 @@ void AmayaNotebook::UpdatePageId()
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaNotebook
+ *       Class:  AmayaAdvancedNotebook
  *      Method:  OnPageChanging
  * Description:  The page selection is about to be changed.
  *               Processes a wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING event.
  *               This event can be vetoed.
  -----------------------------------------------------------------------*/
 #ifdef __WXDEBUG__
-void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
+void AmayaAdvancedNotebook::OnPageChanging(wxAuiNotebookEvent& event)
 {
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnPageChanging : old=%d, new=%d"),
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaAdvancedNotebook::OnPageChanging : old=%d, new=%d"),
                  event.GetOldSelection(),
                  event.GetSelection() );
   event.Skip();
@@ -214,13 +260,13 @@ void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
 #endif /* __WXDEBUG__ */
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaNotebook
+ *       Class:  AmayaAdvancedNotebook
  *      Method:  OnPageChanged
  * Description:  called when a new page has been selected
  -----------------------------------------------------------------------*/
-void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
+void AmayaAdvancedNotebook::OnPageChanged(wxAuiNotebookEvent& event)
 {
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnPageChanged : old=%d, new=%d"),
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaAdvancedNotebook::OnPageChanged : old=%d, new=%d"),
                  event.GetOldSelection(),
                  event.GetSelection() );
 
@@ -259,11 +305,11 @@ void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
 }
 
 /*----------------------------------------------------------------------
-  Class:  AmayaNotebook
+  Class:  AmayaAdvancedNotebook
   Method:  GetPageId
   Description:  used to get the page Id when only the page @ is known
  -----------------------------------------------------------------------*/
-int AmayaNotebook::GetPageId( const AmayaPage * p_page )
+int AmayaAdvancedNotebook::GetPageId( const AmayaPage * p_page )
 {
   unsigned int page_id = 0;
   bool found = false;
@@ -281,62 +327,66 @@ int AmayaNotebook::GetPageId( const AmayaPage * p_page )
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
-void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
+AmayaWindow * AmayaAdvancedNotebook::GetAmayaWindow()
 {
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - (x,y)=(%d,%d)"),
+  return wxDynamicCast(wxGetTopLevelParent(this), AmayaWindow);
+} 
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void AmayaAdvancedNotebook::OnContextMenu( wxContextMenuEvent & event )
+{
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaAdvancedNotebook::OnContextMenu - (x,y)=(%d,%d)"),
                  event.GetPosition().x,
                  event.GetPosition().y );
 
-  int window_id = GetWindowParent()->GetWindowId();
-  long flags    = 0;
-  int page_id   = 0;
+  int page_id   = GetSelection();
+
+  /* Specific wxAuiNotebook protected code : */
+  wxWindow* wnd;
+  wxPoint pos = ScreenToClient(event.GetPosition());
+  wxAuiTabCtrl* tab = GetTabCtrlFromPoint(pos);
+  if(tab)
+    {
+      pos = tab->ScreenToClient(event.GetPosition());
+      if (tab->TabHitTest(pos.x, pos.y, &wnd))
+      {
+        page_id = GetPageIndex(wnd);
+      }
+    }
+  int window_id = GetAmayaWindow()->GetWindowId();
   wxPoint point = event.GetPosition();
-  wxPoint origin = GetClientAreaOrigin();
-#ifdef _MACOS_26
-  point = ScreenToClient(point);
-  point.y += origin.y; 
-  page_id   = HitTest(point, &flags);
-#else /* _MACOS */
-  page_id   = HitTest(ScreenToClient(point), &flags);
-#endif /* _MACOS */
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - page_id=%d, flags=%d"), page_id, flags );
 
   // store the aimed frame, it's possible that it is not the current active one
   if (page_id >= 0)
     {
       m_MContextFrameId = TtaGetFrameId ( window_id, page_id, 1 );
       wxMenu * p_menu = TtaGetContextMenu ( window_id );
-#ifdef _MACOS_26
-      PopupMenu (p_menu, point);
-#else /* _MACOS */
       PopupMenu (p_menu, ScreenToClient(point));
-#endif /* _MACOS */
     }
-
-  //  event.Skip();
 }
 
 /*----------------------------------------------------------------------
-  Class:  AmayaNotebook
+  Class:  AmayaAdvancedNotebook
   Method:  GetMContextFrame
   Description:  return the aimed frame by the last context menu
  -----------------------------------------------------------------------*/
-int AmayaNotebook::GetMContextFrame()
+int AmayaAdvancedNotebook::GetMContextFrame()
 {
   return m_MContextFrameId;
 }
 
-
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
-  EVT_CLOSE( AmayaNotebook::OnClose )
-  EVT_NOTEBOOK_PAGE_CHANGED(  -1, AmayaNotebook::OnPageChanged )
+BEGIN_EVENT_TABLE(AmayaAdvancedNotebook, wxAuiNotebook)
+  EVT_AUINOTEBOOK_BUTTON(wxID_ANY, AmayaAdvancedNotebook::OnClosePage)
+  
+  EVT_CLOSE( AmayaAdvancedNotebook::OnClose )
+  EVT_AUINOTEBOOK_PAGE_CHANGED(  -1, AmayaAdvancedNotebook::OnPageChanged )
 #ifdef __WXDEBUG__  
-  EVT_NOTEBOOK_PAGE_CHANGING( -1, AmayaNotebook::OnPageChanging )
+  EVT_AUINOTEBOOK_PAGE_CHANGING( -1, AmayaAdvancedNotebook::OnPageChanging )
 #endif /* __WXDEBUG__ */
-  EVT_CONTEXT_MENU(               AmayaNotebook::OnContextMenu )
+  EVT_CONTEXT_MENU(               AmayaAdvancedNotebook::OnContextMenu )
 END_EVENT_TABLE()
   
 #endif /* #ifdef _WX */

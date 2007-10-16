@@ -46,7 +46,7 @@
 #include "AmayaNormalWindow.h"
 #include "AmayaPanel.h"
 #include "AmayaMathMLPanel.h"
-#include "AmayaNotebook.h"
+#include "AmayaClassicNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"

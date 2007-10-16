@@ -58,7 +58,7 @@ wxwidgets: rebuild force
 
 gl: rebuild force
 	@(if test -d "$(GL_BUILDDIR)" ; then cd "$(GL_BUILDDIR)" ; \
-	  $(MAKE) linux; fi)
+	  $(MAKE) ; fi)
 
 print_prog: rebuild force bin/str
 	@(if test -d thotlib ; then cd thotlib ; \

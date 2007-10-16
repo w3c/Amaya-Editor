@@ -9,6 +9,8 @@
 
 #include "windowtypes_wx.h"
 
+class AmayaAdvancedNotebook;
+
 WX_DECLARE_HASH_MAP(int, AmayaToolPanel*, wxIntegerHash, wxIntegerEqual, AmayaAdvanceToolPanelMap);
 
 
@@ -82,7 +84,7 @@ private:
   void OnUpdateToolPanelMenu(wxUpdateUIEvent&);
   
   wxAuiManager   m_manager;
-  AmayaNotebook* m_notebook;
+  AmayaAdvancedNotebook* m_notebook;
   
   AmayaAdvanceToolPanelMap m_panels;
   AmayaAdvanceToolPanelMap m_panelMenus;

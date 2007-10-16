@@ -43,7 +43,6 @@
 #include "AmayaSimpleWindow.h"
 #include "AmayaPage.h"
 #include "AmayaToolBar.h"
-#include "AmayaNotebook.h"
 #include "AmayaPanel.h"
 #include "AmayaXHTMLPanel.h"
 
