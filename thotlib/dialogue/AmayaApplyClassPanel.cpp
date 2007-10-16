@@ -78,7 +78,7 @@ wxString AmayaApplyClassToolPanel::GetToolPanelName()const
  -----------------------------------------------------------------------*/
 wxString AmayaApplyClassToolPanel::GetDefaultAUIConfig()
 {
-  return wxT("state=18875900;dir=4;layer=0;row=0;pos=2;prop=100000;bestw=60;besth=128;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1053;floaty=777;floatw=68;floath=152");
+  return wxT("state=18875852;dir=4;layer=0;row=0;pos=2;prop=100000;bestw=60;besth=128;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1053;floaty=777;floatw=68;floath=152");
 }
 
 

@@ -154,7 +154,7 @@ wxString AmayaAttributeToolPanel::GetToolPanelName()const
  -----------------------------------------------------------------------*/
 wxString AmayaAttributeToolPanel::GetDefaultAUIConfig()
 {
-  return wxT("state=18875900;dir=4;layer=0;row=0;pos=1;prop=100000;bestw=137;besth=225;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1052;floaty=818;floatw=145;floath=249");
+  return wxT("state=18875852;dir=4;layer=0;row=0;pos=1;prop=100000;bestw=137;besth=225;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1052;floaty=818;floatw=145;floath=249");
 }
 
 

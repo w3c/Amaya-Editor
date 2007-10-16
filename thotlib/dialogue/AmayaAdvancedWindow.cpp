@@ -170,6 +170,9 @@ void AmayaAdvancedWindow::LoadConfig()
       str = it->second->GetDefaultAUIConfig();
     
     m_manager.LoadPaneInfo(str, m_manager.GetPane(it->second));
+    
+//    m_manager.GetPane(it->second).TopDockable(false).BottomDockable(false);
+    
   }
   m_manager.Update();
 
@@ -479,7 +482,8 @@ bool AmayaAdvancedWindow::RegisterToolPanel(AmayaToolPanel* tool)
   
   m_manager.AddPane(tool, wxAuiPaneInfo().
           Name(tool->GetToolPanelConfigKeyName()).Caption(tool->GetToolPanelName()).
-          PaneBorder(false).Dockable().Right().
+          PaneBorder(false).
+          LeftDockable().RightDockable().Right().
           Resizable(tool->CanResize()).
           CloseButton(true).PinButton());
   
