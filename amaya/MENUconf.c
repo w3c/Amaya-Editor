@@ -511,6 +511,7 @@ void InitAmayaDefEnv (void)
   /* appearance */
 
   /* Tool panel layout. */
+  TtaSetEnvBoolean("ADVANCE_USER_INTERFACE", FALSE, FALSE);
   TtaSetDefEnvString ("TOOLPANEL_LAYOUT", "RIGHT", FALSE);
 }
 
@@ -1600,6 +1601,7 @@ void GetGeneralConf (void)
 {
   char       ptr[MAX_LENGTH];
   int        oldzoom;
+  ThotBool   aui = FALSE;
 
   TtaGetEnvInt ("FontZoom", &(GProp_General.Zoom));
   if (GProp_General.Zoom == 0)
@@ -1637,13 +1639,19 @@ void GetGeneralConf (void)
   GetEnvString ("APP_HOME", AppHome);
 #endif /* _WINGUI */
   
-  GetEnvString ("TOOLPANEL_LAYOUT", ptr);
-  if (!strcmp (ptr, "LEFT"))
-    GProp_General.ToolPanelLayout = 0;
-  else if (!strcmp (ptr, "FREE"))
-    GProp_General.ToolPanelLayout = 2;
-  else /* Default = RIGHT (queried by palette)*/
-    GProp_General.ToolPanelLayout = 1;
+  
+  /* User interface : */
+  TtaGetEnvBoolean("ADVANCE_USER_INTERFACE", &aui);
+  if(aui)
+      GProp_General.ToolPanelLayout = 2;
+  else
+    {
+      GetEnvString ("TOOLPANEL_LAYOUT", ptr);
+      if (!strcmp (ptr, "LEFT"))
+        GProp_General.ToolPanelLayout = 0;
+      else /* Default = RIGHT (queried by palette)*/
+        GProp_General.ToolPanelLayout = 1;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1931,19 +1939,18 @@ void SetGeneralConf (void)
   TtaAppendDocumentPath (TempFileDirectory);
 #endif /* _WINGUI */
 
-  
-  switch(GProp_General.ToolPanelLayout)
-  {
-    case 0:
-      TtaSetEnvString ("TOOLPANEL_LAYOUT", "LEFT", TRUE);
-      break;
-    case 2:
-      TtaSetEnvString ("TOOLPANEL_LAYOUT", "FREE", TRUE);
-      break;
-    default:
-      TtaSetEnvString ("TOOLPANEL_LAYOUT", "RIGHT", TRUE);
-      break;
-  }
+
+  if(GProp_General.ToolPanelLayout==2)
+    TtaSetEnvBoolean("ADVANCE_USER_INTERFACE", TRUE, TRUE);
+  else
+    {
+      TtaSetEnvBoolean("ADVANCE_USER_INTERFACE", FALSE, TRUE);
+      if(GProp_General.ToolPanelLayout==0)
+        TtaSetEnvString ("TOOLPANEL_LAYOUT", "LEFT", TRUE);
+      else
+        TtaSetEnvString ("TOOLPANEL_LAYOUT", "RIGHT", TRUE);
+    }
+
 #ifdef _WX
   TtaUpdateToolPanelLayout();
 #endif /* _WX */
@@ -1957,6 +1964,7 @@ void SetGeneralConf (void)
   ----------------------------------------------------------------------*/
 void GetDefaultGeneralConf ()
 {
+  ThotBool   aui = FALSE;
   char       ptr[MAX_LENGTH];
 
   TtaGetDefEnvInt ("FontZoom", &(GProp_General.Zoom));
@@ -2003,14 +2011,20 @@ void GetDefaultGeneralConf ()
   GetDefEnvString ("APP_HOME", AppHome);
 #endif /* _WINGUI */
 
-  GetDefEnvString ("TOOLPANEL_LAYOUT", ptr);
-  if (!strcmp (ptr, "LEFT"))
-    GProp_General.ToolPanelLayout = 0;
-  else if (!strcmp (ptr, "FREE"))
-    GProp_General.ToolPanelLayout = 2;
-  else /* Default = RIGHT (queried by palette)*/
-    GProp_General.ToolPanelLayout = 1;
 
+  
+  TtaGetDefEnvBoolean("ADVANCE_USER_INTERFACE", &aui);
+  if(aui)
+    GProp_General.ToolPanelLayout = 2;
+  else
+    {
+      GetDefEnvString ("TOOLPANEL_LAYOUT", ptr);
+      if (!strcmp (ptr, "LEFT"))
+        GProp_General.ToolPanelLayout = 0;
+      else /* Default = RIGHT (queried by palette)*/
+        GProp_General.ToolPanelLayout = 1;
+      
+    }
 }
 
 #ifdef _WINGUI

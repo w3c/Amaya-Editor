@@ -454,4 +454,5 @@
 452 **The command returned no value
 453 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
 454 Удалить все
-455 Новый
+455 **Customizable
+456 Новый

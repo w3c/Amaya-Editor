@@ -6474,6 +6474,13 @@
 	<message xml:lang="tw">新建</message>
 	<message xml:lang="sk">Nový</message>
 </label>
+
+
+<label define="AM_AUI_FREE_PANEL_POS">
+	<message xml:lang="en">Customizable</message>
+	<message xml:lang="fr">Paramétrable</message>
+</label>
+
 <label define="AMAYA_MSG_MAX">
 	<message xml:lang="ru">Новый</message>
 </label>

@@ -381,9 +381,7 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   
   XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_FORMATLEFT)) );
   XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_FORMATRIGHT)) );
-#ifdef EK
-  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX("Detach") );
-#endif /* EK */
+  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_AUI_FREE_PANEL_POS)) );
   XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->SetSelection(prop.ToolPanelLayout);
 }
 
@@ -421,7 +419,7 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   else
     strncpy( prop.DialogueLang, buffer, 2 );
   prop.DialogueLang[2] = EOS;
-  
+
   prop.ToolPanelLayout = XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->GetSelection();
   
   return prop;
@@ -952,7 +950,6 @@ void PreferenceDlgWX::OnColorTextChanged( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupLabelDialog_Geometry()
 {
-  int      page_id;
   ThotBool val;
 
   XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SAVE_GEOMETRY_ON_EXIT)) );

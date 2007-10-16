@@ -454,3 +454,4 @@
 452 La commande n'a retourné aucune valeur
 453 SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s
 454 Nouveau
+455 Paramétrable
