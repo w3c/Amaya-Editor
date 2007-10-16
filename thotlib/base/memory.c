@@ -700,7 +700,6 @@ void GetElement (PtrElement * pEl)
       pNewEl->ElParent = NULL;
       pNewEl->ElPrevious = NULL;
       pNewEl->ElNext = NULL;
-      pNewEl->ElSpiderMonkey = NULL;
       pNewEl->ElReferredDescr = NULL;
       pNewEl->ElFirstSchDescr = NULL;
       pNewEl->ElFirstAttr = NULL;

@@ -30,7 +30,7 @@
      - In javascript.c, complete the functions that manipulate your property:
         getProperty, setProperty (if your property is not readonly)...
 
-     - If your property does not belong to an already declared class, you
+     - If your property does not belong to a class already declared, you
        have to create one first (see the instructions for Classes). Then
        apply JS_DefineProperties to all the object of the classes that
        have the property.
@@ -43,7 +43,7 @@
 
      - In javascript.c, create the C function representing the method.
 
-     - If your method does not belong to an already declared class, you
+     - If your method does not belong to a class already declared, you
        have to create one first (see the instructions for Classes). Then
        apply JS_DefineFunctions to all the object of the classes that
        have the method.
@@ -56,13 +56,13 @@
        
          > The first element is the name of your class
 
-         > If the class is supposed to be applied to objects that have an
-           equivalent in Thot document tree (type Element), then add a
+         > It is often useful to have private data for an object (for
+            instance to find which Thot Element it represents) so 
            JSCLASS_HAS_PRIVATE flag to the second element.
 
          > The next four elements indicate the name of the C functions
            (for instance getProperty) that manipulate properties of an
-           object, respectivly to add, delete, get or set a property.
+           object, respectively to add, delete, get or set a property.
            If they are not used, then put JS_PropertyStub.
            
          > The last elements indicate other manipulations, that normally
@@ -70,7 +70,7 @@
            JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 
       - Define Properties and Methods to use with your class. See the
-        instructions before.
+        instructions above.
 
       - In javascript.c, make Amaya apply your class (and the corresponding
         property and methods) to a certain kind of objects:
@@ -80,13 +80,33 @@
           this must directly be done in the function InitJavascript.
 
         > Otherwise, you have to analyse the type of Thot's Document/Node
-          in the function BuildDocumentTree in order to apply the class to
+          in the function Element_to_jsval in order to apply the class to
           each object of the expected type.
 
         >  To create an object with a given class use the function
            JS_NewObject. If the object is actually a property, you have to
            use JS_DefineObject. Note that in this case, it is not mandatory
            to define the property in javascript.h
+
+  * Properties/Methods that need a specific treatment
+
+       For some kinds of properties/methods, the instructions above are not
+       enough. For example if X is an element, consider:
+ 
+         X.getElementsByTagName("div").item(2)         [1]
+         X.getElementsByTagName("div")                 [2]
+
+       [1] returns the second "div" in the element X.
+       [2] returns a NodeList of all the "div" in X. The problem is that the
+         list is modified at the same time as the DOM tree, so you have to
+         return an object that describes the way you obtain this list.
+
+       Use ObjectWithInfo
+
+            ***!!!! TODO: Currently the returned value is a typed object
+                     with a private data that points to a jsArray. But
+                      this has to be improved...
+                                                                     !!!!***
 
   -----------------------------------------------------------------------*/
 
@@ -122,10 +142,17 @@ enum properties_names
 
  DOCUMENTTYPE_NAME, DOCUMENTTYPE_ENTITIES, DOCUMENTTYPE_NOTATIONS,
 
+ ATTR_NAME, ATTR_SPECIFIED, ATTR_VALUE,
+
+ ELEMENT_TAGNAME,
+
  NODE_NODENAME, NODE_NODEVALUE, NODE_NODETYPE, NODE_PARENTNODE, NODE_CHILDNODES, NODE_FIRSTCHILD,
  NODE_LASTCHILD, NODE_PREVIOUSSIBLING, NODE_NEXTSIBLING, NODE_ATTRIBUTES, NODE_OWNERDOCUMENT,
 
  NODELIST_LENGTH
+
+ /* Put here methods that need CreateTemporary */
+ , GETELEMENTSBYTAGNAME,
 };
 
 /*----------------------------------------------------------------------
@@ -395,6 +422,8 @@ static JSClass DocumentFragment_class =
 /*----------------------------------------------------------------------
   Object Document
   -----------------------------------------------------------------------*/
+static JSBool _getElementsByTagName(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+
 /*
 
 static JSBool Document_createElement(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
@@ -403,21 +432,20 @@ static JSBool Document_createCDATASection(JSContext *cx, JSObject *obj, uintN ar
 static JSBool Document_createProcessingInstruction(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool Document_createAttribute(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool Document_createEntityReference(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool Document_getElementsByTagName(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+*/
 
 static JSFunctionSpec Document_functions[] =
 {
-  / name of javascript function     name of C function                   number of arguments  /
-  {"createElement"                , Document_createElement               ,        1},
+  /* name of javascript function     name of C function                   number of arguments  */
+/*  {"createElement"                , Document_createElement               ,        1},
   {"createDocumentFragment"       , Document_createDocumentFragment      ,        0},
   {"createCDATASection"           , Document_createCDATASection          ,        1},
   {"createProcessingInstruction"  , Document_createProcessingInstruction ,        2},
   {"createAttribute"              , Document_createAttribute             ,        1},
-  {"createEntityReference"        , Document_createEntityReference       ,        1},
-  {"getElementsByTagName"         , Document_getElementsByTagName        ,        1},
+  {"createEntityReference"        , Document_createEntityReference       ,        1},*/
+  {"getElementsByTagName"         , _getElementsByTagName        ,        1},
   {0}
 };
-*/
 
 static JSPropertySpec Document_properties[] =
 {
@@ -521,24 +549,25 @@ static JSClass NodeList_class =
 /*----------------------------------------------------------------------
   Object NamedNodeMap
   -----------------------------------------------------------------------*/
-/*
 static JSBool NamedNodeMap_getNamedItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+/*
 static JSBool NamedNodeMap_setNamedItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool NamedNodeMap_removeNamedItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool NamedNodeMap_item(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+*/
 
 static JSFunctionSpec NamedNodeMap_functions[] =
 {
   {"getNamedItem"                 , NamedNodeMap_getNamedItem           ,        1},
-  {"setNamedItem"                 , NamedNodeMap_setNamedItem           ,        1},
+/*  {"setNamedItem"                 , NamedNodeMap_setNamedItem           ,        1},
   {"removeNamedItem"              , NamedNodeMap_removeNamedItem        ,        1},
-  {"item"                         , NamedNodeMap_item                   ,        1},
+  {"item"                         , NamedNodeMap_item                   ,        1},*/
   {0}
 };
 
 static JSPropertySpec NamedNodeMap_properties[] =
 {
-  {"length"            ,      NAMEDNODEMAP_LENGTH               , JSPROP_READONLY},
+/*  {"length"            ,      NAMEDNODEMAP_LENGTH               , JSPROP_READONLY},*/
   {0}
 };
 
@@ -548,7 +577,6 @@ static JSClass NamedNodeMap_class =
   JS_PropertyStub,JS_PropertyStub,getProperty,JS_PropertyStub,
   JS_EnumerateStub,JS_ResolveStub,JS_ConvertStub,JS_FinalizeStub
 };
-*/
 
 /*----------------------------------------------------------------------
   Object CharacterData
@@ -588,7 +616,6 @@ static JSClass CharacterData_class =
 /*----------------------------------------------------------------------
   Object Attr
   -----------------------------------------------------------------------*/
-/*
 static JSPropertySpec Attr_properties[] =
 {
   {"name"            ,      ATTR_NAME                   , JSPROP_READONLY},
@@ -596,7 +623,6 @@ static JSPropertySpec Attr_properties[] =
   {"value"           ,      ATTR_VALUE                  , JSPROP_READONLY},
   {0}
 };
-*/
 
 static JSClass Attr_class =
 {
@@ -615,20 +641,19 @@ static JSBool Element_setAttribute(JSContext *cx, JSObject *obj, uintN argc, jsv
 static JSBool Element_removeAttribute(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool Element_getAttributeNode(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool Element_setAttributeNode(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool Element_removeAttributeNode(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool Element_getElementsByTagName(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool Element_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool Element_removeAttributeNode(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);*/
+/*static JSBool Element_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);*/
 
 static JSFunctionSpec Element_functions[] =
 {
-  {"getAttribute"                 , Element_getAttribute                ,        1},
+/*  {"getAttribute"                 , Element_getAttribute                ,        1},
   {"setAttribute"                 , Element_setAttribute                ,        1},
   {"removeAttribute"              , Element_removeAttribute             ,        1},
   {"getAttributeNode"             , Element_getAttributeNode            ,        1},
   {"setAttributeNode"             , Element_setAttributeNode            ,        1},
-  {"removeAttributeNode"          , Element_removeAttributeNode         ,        1},
-  {"getElementsByTagName"         , Element_getElementsByTagName        ,        1},
-  {"normalize"                    , Element_normalize                   ,        0},
+  {"removeAttributeNode"          , Element_removeAttributeNode         ,        1},*/
+  {"getElementsByTagName"         , _getElementsByTagName        ,        1},
+/*  {"normalize"                    , Element_normalize                   ,        0},*/
   {0}
 };
 
@@ -638,7 +663,6 @@ static JSPropertySpec Element_properties[] =
   {0}
 };
 
-*/
 static JSClass Element_class =
 {
   "Element", JSCLASS_HAS_PRIVATE,

@@ -8,11 +8,19 @@
 
 extern void Switch_JS_DOM ( Document document,
                             View view );
-extern void Execute_ACommand ( Document document,
-                               View view );
-extern void Execute_External ( Document document,
-                               View view );
+extern void ExecuteACommand ( Document document,
+                              View view );
+extern void ExecuteExternal ( Document document,
+                              View view );
+extern void AddExternal ( Document document,
+                          View view );
+extern void InsertScript ( Document document,
+                           View view );
 extern void UpdateJavascriptMenus ( void );
+extern ThotBool CheckInitJavascript ( Document doc,
+                                      View view );
+extern ThotBool InitJavascript ( Document document,
+                                 View view );
 extern void StopJavascript ( Document doc );
 extern void DestroyJavascript ( void );
 
@@ -20,11 +28,19 @@ extern void DestroyJavascript ( void );
 
 extern void Switch_JS_DOM ( Document document,
                               View view );
-extern void Execute_ACommand ( Document document,
-                                 View view );
-extern void Execute_External ( Document document,
-                                 View view );
+extern void ExecuteACommand ( Document document,
+                                View view );
+extern void ExecuteExternal ( Document document,
+                                View view );
+extern void AddExternal ( Document document,
+                            View view );
+extern void InsertScript ( Document document,
+                             View view );
 extern void UpdateJavascriptMenus ( void );
+extern ThotBool CheckInitJavascript ( Document doc,
+                                        View view );
+extern ThotBool InitJavascript ( Document document,
+                                   View view );
 extern void StopJavascript ( Document doc );
 extern void DestroyJavascript ( void );
 

@@ -7,7 +7,7 @@
 
 /*
  * This module contains functions to deal with javascript
- * thanks to SpiderMonkey (Mozilla's interpreter).
+ * using SpiderMonkey (Mozilla's interpreter).
  * See also javascript.h before adding new javascript objects.
  *
  * Author: F. Wang
@@ -20,7 +20,7 @@
  * The object at top level is the "global object". There is no
  * W3C-standard that defines what are its direct children but
  * the organization in Amaya has been chosen to be compatible
- * with the one of usual browsers: 
+ * with the one of usual browsers:
  *
  *  Window (global object)
  *    |
@@ -46,18 +46,12 @@
  *
  * Navigator, Screen, History and Location are objects that allow
  * to access general informations about supported features and
- * to execute several Amaya commands.
+ * to execute several commands of Amaya.
  *
  * Document represents the structure of the current document.
  * Its organization is a W3C standard called "Document Object Model".
  * The specifications can be found at http://www.w3.org/DOM/DOMTR
  * 
- * The javascript object Document is created at initialization according
- * to the structure of the Thot tree. Each javascript object representing
- * a node has a private data where the actual Thot node is stored.
- * Similarly, a Thot Element has a pointer "SpiderMonkey" on the
- * corresponding javascript object.
- *
   -----------------------------------------------------------------------*/
 
 /* Included headerfiles */
@@ -87,7 +81,6 @@
 #include "EDITORactions_f.h"
 #include "HTMLhistory_f.h"
 #include "fetchXMLname_f.h"
-#include "javascript_f.h"
 #include "SVGbuilder_f.h"
 #include "html2thot_f.h"
 #include "HTMLtable_f.h"
@@ -118,32 +111,38 @@ static JSObject *gobj;
 
 /* Informations about the document where the script is run */
 static Document jsdocument;
-static ThotBool withDocType, useMath;
 static View jsview;
-static jsval documentElement;
+static ThotBool withDocType;
 static ThotBool ContinueScript = FALSE;
+static ThotBool ConfirmDialog = FALSE;
 
 /* Functions that deal with the scripts */
-static JSBool jsContinueScript();
 static ThotBool CheckInitJavascript (Document doc, View view);
 static ThotBool InitJavascript (Document document, View view);
-static ThotBool BuildDocumentTree(Element ThotNode, JSObject *jsParentNode);
+static ThotBool CreateDoctypeObject(JSObject *document_object);
 static void ExecuteAllScripts();
 static void ExecuteScripts (Element Script);
 //static void ExecuteJSfile (const char *location);
 static ThotBool IsJavascript(Element Script);
 static void printError(JSContext *cx, const char *message, JSErrorReport *report);
+//TODO: add a callbackbranch
 
-/* Functions used for conversion with SpiderMonkey's types */
-static jsval Element_to_jsval(Element element, int direction);
-static jsval str_to_jsval(JSContext *cx, char *string);
-static char *jsval_to_str(JSContext *cx, jsval value);
+/* Functions used for conversion between Thot/SpiderMonkey */
+static jsval Element_to_jsval(JSContext *cx, Element ThotNode);
+static jsval Attribute_to_jsval(JSContext *cx, Attribute ThotAttr);
+static JSBool jsContinueScript();
+static jsval string_to_jsval(JSContext *cx, char *string);
+static char *jsval_to_string(JSContext *cx, jsval value);
+static void jsval_to_ElementType (JSContext *cx, jsval name, ElementType *elType);
+static void jsval_to_AttributeType (JSContext *cx, jsval name, AttributeType *attrType);
 
-/* Functions used in the DOM interface */
+/* Other functions used by the DOM interface */
+static jsval ObjectWithInfo(JSContext *cx, JSObject *obj, JSClass *jsclass, int name_id, uintN argc, jsval *argv);
+static ThotBool IsElementNode(Element element);
+static Element NextTypedNodeElement (ElementType elType, Element Tree, Element Start);
 static int GetNodeType(JSObject *obj);
 static jsval GetNodeName(JSContext *cx, JSObject *obj);
 static jsval GetNodeValue(JSContext *cx, JSObject *obj);
-
 
 /*----------------------------------------------------------------------
   Switch_JS_DOM
@@ -177,10 +176,10 @@ void Switch_JS_DOM(Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  Execute_ACommand
+  ExecuteACommand
     Display a dialog box where the user can enter a javascript command
   -----------------------------------------------------------------------*/
-void Execute_ACommand(Document document, View view)
+void ExecuteACommand(Document document, View view)
 {
 jsval rval;
 char *rchar = NULL;
@@ -210,7 +209,7 @@ char *rchar = NULL;
       TtaSetStatus (jsdocument, 1, TtaGetMessage(AMAYA, AM_JAVASCRIPT_NO_RETURNED_VALUE), NULL);
     else
       {
-      rchar = jsval_to_str(gcx, rval);
+      rchar = jsval_to_string(gcx, rval);
       /* TODO: handle returned value with \n */
       TtaSetStatus (jsdocument, 1, TtaGetMessage(AMAYA, AM_JAVASCRIPT_RETURNED_VALUE), rchar);
       }
@@ -220,9 +219,11 @@ char *rchar = NULL;
 }
 
 /*----------------------------------------------------------------------
-  Execute_External
+  ExecuteExternal
+    Open a dialogue that allows the user to select a js file and
+    to execute it in the document.
   -----------------------------------------------------------------------*/
-void Execute_External(Document document, View view)
+void ExecuteExternal(Document document, View view)
 {
   if(ContinueScript)
     {
@@ -232,14 +233,22 @@ void Execute_External(Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  jsContinueScript
-    This function returns a JSBool version of ContinueScript
-    It must be returned at each end of a javascript functions, so that
-    SpiderMonkey can interrupt the execution if necessary.
+  AddExternal
+    Add a <script> inside with a src attribute pointing to
+    an external js file.
   -----------------------------------------------------------------------*/
-static JSBool jsContinueScript()
+void AddExternal(Document document, View view)
 {
-return (ContinueScript ? JS_TRUE : JS_FALSE);
+  CreateScript (document, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  InsertScript
+    Add a <script> and open the structure View
+  -----------------------------------------------------------------------*/
+void InsertScript(Document document, View view)
+{
+  CreateScript (document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -284,7 +293,7 @@ Document document;
     - Call InitJavascript
     - Check whether an error occured
   -----------------------------------------------------------------------*/
-static ThotBool CheckInitJavascript(Document doc, View view)
+ThotBool CheckInitJavascript(Document doc, View view)
 {
 if(gcx && JS_IsRunning(gcx))
   {
@@ -350,9 +359,9 @@ return TRUE;
   Build the javascript/DOM objects
   return TRUE if no error occured
   -----------------------------------------------------------------------*/
-static ThotBool InitJavascript (Document document, View view)
+ThotBool InitJavascript (Document document, View view)
 {
-JSObject *object;
+  JSObject *object, *object2;
 
 /* initialize the JS run time */
   if(!grt)grt = JS_NewRuntime(8L * 1024L * 1024L);
@@ -364,24 +373,28 @@ JSObject *object;
 
   if(gcx)
     {
-    /* Check if no script/function are running, so that gcx
+    /* Check if no scripts/functions are running, so that gcx
        can be safely destroyed. Normally, this has already
        be checked in CheckInitJavascript  */
     if(JS_IsRunning(gcx))
       return FALSE;
-    else
-      JS_DestroyContext(gcx);
+
+    /* Destroy the context */
+    JS_DestroyContext(gcx);
     }
 
   gcx = JS_NewContext(grt, 8192);
   if (!gcx)return FALSE;
 
+/* Set a CallBackBranch */
+/* TODO: Call TtaHandlePendingEvents so that the user can stop javascript,
+   even in loops
+JS_SetBranchCallback(gcx, (JSBranchCallback) ??);
+*/
+
 /* register document and view */
   jsdocument = document;
   jsview = view;
-
-/* Check if jsdocument has a doctype */
-  HasADoctype (jsdocument, &withDocType, &useMath); 
 
 /* register error handler */
   JS_SetErrorReporter(gcx, printError);
@@ -395,29 +408,82 @@ JSObject *object;
   JS_DefineFunctions(gcx, gobj, window_functions);
   JS_DefineProperties(gcx, gobj, window_properties);
 
-/* create objects at top level : navigator, screen, history, location */
+/* create the object navigator */
   object = JS_DefineObject(gcx, gobj, "navigator", &navigator_class, NULL, JSPROP_READONLY);
   if(!object)return FALSE;
-  JS_DefineFunctions(gcx, object, navigator_functions);
-  JS_DefineProperties(gcx, object, navigator_properties);
+    JS_DefineFunctions(gcx, object, navigator_functions);
+    JS_DefineProperties(gcx, object, navigator_properties);
 
+/* create the object screen */
   object = JS_DefineObject(gcx, gobj, "screen", &screen_class, NULL, JSPROP_READONLY);
   if(!object)return FALSE;
-  JS_DefineProperties(gcx, object, screen_properties);
+    JS_DefineProperties(gcx, object, screen_properties);
 
+/* create the object history */
   object = JS_DefineObject(gcx, gobj, "history", &history_class, NULL, JSPROP_READONLY);
   if(!object)return FALSE;
-  JS_DefineFunctions(gcx, object, history_functions);
-  JS_DefineProperties(gcx, object, history_properties);
+    JS_DefineFunctions(gcx, object, history_functions);
+    JS_DefineProperties(gcx, object, history_properties);
 
+/* create the object location */
   object = JS_DefineObject(gcx, gobj, "location", &location_class, NULL, JSPROP_READONLY);
   if(!object)return FALSE;
-  JS_DefineFunctions(gcx, object, location_functions);
-  JS_DefineProperties(gcx, object, location_properties);
+    JS_DefineFunctions(gcx, object, location_functions);
+    JS_DefineProperties(gcx, object, location_properties);
 
-/* recursively create the javascript object Document, according to Amaya's tree */
-  documentElement = JSVAL_NULL;
-  if(!BuildDocumentTree(TtaGetMainRoot(jsdocument), gobj))return FALSE;
+/* create the object document */
+  object = JS_DefineObject(gcx, gobj, "document", &Document_class, NULL, JSPROP_READONLY);
+  if(!object)return FALSE;
+    JS_DefineFunctions(gcx, object, Document_functions);
+    JS_DefineFunctions(gcx, object, Node_functions);
+    JS_DefineProperties(gcx, object, Node_properties);
+    JS_DefineProperties(gcx, object, Document_properties);
+    JS_SetPrivate(gcx, object, (void *)TtaGetMainRoot(jsdocument));
+
+  /* create the document.doctype object */
+    if(!CreateDoctypeObject(object))
+      return FALSE;
+
+  /* create the document.implementation object */
+    object2 = JS_DefineObject(gcx, object, "implementation", &DOMImplementation_class, NULL, JSPROP_READONLY);
+    if(!object2)return FALSE;
+      JS_DefineFunctions(gcx, object2, DOMImplementation_functions);
+
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  CreateDoctypeObject
+  -----------------------------------------------------------------------*/
+static ThotBool CreateDoctypeObject(JSObject *document_object)
+{
+  JSObject *object;
+  Element         el_doc, el_doctype;
+  ElementType elType;
+  char           *s;
+
+  el_doc = TtaGetMainRoot (jsdocument);
+  elType = TtaGetElementType (el_doc);
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp (s, "HTML") == 0)
+    elType.ElTypeNum = HTML_EL_DOCTYPE;
+  else if (strcmp (s, "SVG") == 0)
+    elType.ElTypeNum = SVG_EL_DOCTYPE;
+  else if (strcmp (s, "MathML") == 0)
+    elType.ElTypeNum = MathML_EL_DOCTYPE;
+  else
+    elType.ElTypeNum = XML_EL_doctype;
+
+  el_doctype = TtaSearchTypedElement (elType, SearchInTree, el_doc);
+  withDocType = (el_doctype != NULL);
+
+  if(withDocType)
+    {
+    object = JS_DefineObject(gcx, document_object, "doctype", &DocumentType_class, NULL, JSPROP_READONLY);
+    if(!object)return FALSE;
+    JS_DefineProperties(gcx, object, DocumentType_properties);
+    JS_SetPrivate(gcx, object, (void *)el_doctype);
+    }
 
   return TRUE;
 }
@@ -431,11 +497,14 @@ void StopJavascript (Document doc)
 {
   if(doc == jsdocument)
     {
-    jsdocument = 0;
+    /* Destroy alert, confirm, "enter a command" and prompt */
+    /* TODO:alert */
+    if(ConfirmDialog)TtaDestroyDialogue (BaseDialog + ConfirmForm);
+    TtaDestroyDialogue (BaseDialog + JavascriptPromptForm);
+
+    /* Update data */
     ContinueScript = FALSE;
     UpdateJavascriptMenus ();
-
-    /* TODO: destroy dialog "enter a command", alert, confirm, and prompt */
     }
 }
 
@@ -446,151 +515,10 @@ void StopJavascript (Document doc)
   -----------------------------------------------------------------------*/
 void DestroyJavascript ()
 {
+if(ContinueScript)StopJavascript (jsdocument);
 if(gcx)JS_DestroyContext(gcx);
 if(grt)JS_DestroyRuntime(grt);
 JS_ShutDown();
-}
-
-/*----------------------------------------------------------------------
-  BuildDocumentTree
-  Create the javascript object representing ThotNode and all its children.
-  jsParent represents the parent of ThotNode if it has any, or the global
-  object (Window) otherwise.
------------------------------------------------------------------------*/
-static ThotBool BuildDocumentTree(Element ThotNode, JSObject *jsParent)
-{
-ThotBool BuildSubTree = TRUE;
-int TypeOfNode;
-JSClass *ClassToApply;
-JSObject *jsNode, *object;
-Element child;
-
-if(jsParent == gobj)
-  {
-  /* It's the Document object */
-
-  /* Create the object */
-  jsNode = JS_DefineObject(gcx, jsParent, "document", &Document_class, NULL, JSPROP_READONLY);
-  if(!jsNode)return FALSE;
-
-  /* Create its basic properties and methods (DOM Core) */
-
-  //JS_DefineFunctions(gcx, jsNode, Document_functions);
-  JS_DefineFunctions(gcx, jsNode, Node_functions);
-  JS_DefineProperties(gcx, jsNode, Node_properties);
-  JS_DefineProperties(gcx, jsNode, Document_properties);
-
-  /* Create its implementation property */
-  object = JS_DefineObject(gcx, jsNode, "implementation", &DOMImplementation_class, NULL, JSPROP_READONLY);
-  if(!object)return FALSE;
-  JS_DefineFunctions(gcx, object, DOMImplementation_functions);
-
-  /* Create its childNodes property */
-  object = JS_DefineObject(gcx, jsNode, "childNodes", &NodeList_class, NULL, JSPROP_READONLY);
-  if(!object)return FALSE;
-  JS_DefineProperties(gcx, object, NodeList_properties);
-  JS_DefineFunctions(gcx, object, NodeList_functions);
-    
-  /* Add properties and methods according to the type of document */
-     /* TODO: DOM HTML */
-  }
-else
-  {
-  /* It's not the root : analyse the type of node */
-  TypeOfNode = TtaGetElementType(ThotNode).ElTypeNum;
-
-  /* Choose the class to apply according to the type of ThotNode */
-  switch(TypeOfNode)
-    {
-    case HTML_EL_DOCTYPE_line:
-    case HTML_EL_Document_URL:
-    case HTML_EL_C_Empty:
-      return TRUE; /* These elements are not taken into account to build the DOM tree */
-    break;
-
-    case HTML_EL_DOCTYPE:
-      ClassToApply = NULL;
-      BuildSubTree = FALSE;
-
-      jsNode = JS_DefineObject(gcx, jsParent, "doctype", &DocumentType_class, NULL, JSPROP_READONLY);
-      if(!jsNode)return FALSE;
-
-    break;
-
-    case TEXT_UNIT:
-      ClassToApply = &Text_class;
-      BuildSubTree = FALSE;
-    break;
-
-    case HTML_EL_Comment_:
-      ClassToApply = &Comment_class;
-      BuildSubTree = FALSE;
-    break;
-
-    case HTML_EL_CDATA:
-      ClassToApply = &CDATASection_class;
-      BuildSubTree = FALSE;
-    break;
-
-    default:
-      ClassToApply = &Element_class;
-    break;
-    }
-
-  if(ClassToApply)
-    {
-    /* The object has not been already created. Create it with the given Class */
-    jsNode = JS_NewObject(gcx, ClassToApply, NULL, jsParent);
-    if(!jsNode)return FALSE;
-    }
-
-  /* Create its basic properties and methods (DOM Core) */
-  JS_DefineProperties(gcx, jsNode, Node_properties);
-  JS_DefineFunctions(gcx, jsNode, Node_functions);
-
-  /* Create its childNodes property */
-  object = JS_DefineObject(gcx, jsNode, "childNodes", &NodeList_class, NULL, JSPROP_READONLY);
-  if(!object)return FALSE;
-  JS_DefineProperties(gcx, object, NodeList_properties);
-  JS_DefineFunctions(gcx, object, NodeList_functions);
-
-  /* Add properties and methods according to the type of ThotNode */
-  switch(TypeOfNode)
-    {
-    case HTML_EL_DOCTYPE:
-      JS_DefineProperties(gcx, jsNode, DocumentType_properties);
-    break;
-
-    case HTML_EL_HTML:
-      documentElement = OBJECT_TO_JSVAL(jsNode);
-    break;
-
-    case TEXT_UNIT:
-      //JS_DefineFunctions(gcx, jsNode, Text_functions);
-    break;
-
-    default:
-    break;
-    }
-  }
-
-/* register ThotNode and jsNode as a private data of each other
-   in order to easily manipulate both trees */
-  JS_SetPrivate(gcx, jsNode, (void *)ThotNode);
-  TtaSetSpiderMonkey(ThotNode, (void *)jsNode);
-
-/* Apply BuildDocumentTree to the ThotNode's children */
-if(BuildSubTree)
-  {
-  child = TtaGetFirstChild(ThotNode);
-
-  while(child)
-    {
-    BuildDocumentTree(child, jsNode);
-    TtaNextSibling(&child);
-    }
-  }
-return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -778,7 +706,7 @@ if(strcmp("text/javascript", buffer))return FALSE; else return TRUE;
 
 /*----------------------------------------------------------------------
   printError
-  Report javascript error
+    Report javascript error
   -----------------------------------------------------------------------*/
 static void printError(JSContext *cx, const char *message, JSErrorReport *report)
 {
@@ -789,61 +717,272 @@ TtaDisplayMessage(FATAL, TtaGetMessage(AMAYA, AM_JAVASCRIPT_SCRIPT_ERROR),
 
 /*----------------------------------------------------------------------
   Element_to_jsval
-  Convert a Thot element into an element of the javascript tree
-  If there is no corresponding element in the javascript tree, look
-  the next one in the given direction. If no direction is specified
-  or no element is found, JSVAL_NULL is returned.
+    Convert a Thot element into a javascript object.
   -----------------------------------------------------------------------*/
-static jsval Element_to_jsval(Element element, int direction)
+static jsval Element_to_jsval(JSContext *cx, Element ThotNode)
 {
-JSObject *jsobj = NULL;
+int TypeOfNode;
+JSClass *ClassToApply;
+JSObject *jsNode;
 
-while(element)
-  {
-  jsobj = (JSObject *)TtaGetSpiderMonkey(element);
+if(!ThotNode)return JSVAL_NULL;
 
-  if(jsobj)
-    return OBJECT_TO_JSVAL(jsobj);
-  else
+  /* It's not the root : analyse the type of node */
+  TypeOfNode = TtaGetElementType(ThotNode).ElTypeNum;
+
+  /* Choose the class to apply according to the type of ThotNode */
+  switch(TypeOfNode)
     {
-    /* look for another element */
-    switch(direction)
-      {
-      case -1:
-        TtaPreviousSibling(&element);
-      break;
+    case HTML_EL_DOCTYPE_line:
+    case HTML_EL_Document_URL:
+    case HTML_EL_C_Empty:
+    case HTML_EL_Basic_Elem:
+    case HTML_EL_C_BR:
+      return JSVAL_NULL; /* These elements are not taken into account to build the DOM tree */
+    break;
 
-      case +1:
-        TtaNextSibling(&element);
-      break;
+    case HTML_EL_DOCTYPE:
+      ClassToApply = &DocumentType_class;
+    break;
 
-      default:
-        return JSVAL_NULL;
-      break;
-      }
+    case TEXT_UNIT:
+      ClassToApply = &Text_class;
+    break;
+
+    case HTML_EL_Comment_:
+      ClassToApply = &Comment_class;
+    break;
+
+    case HTML_EL_CDATA:
+      ClassToApply = &CDATASection_class;
+    break;
+
+    default:
+      ClassToApply = &Element_class;
+    break;
     }
 
-  }
+  jsNode = JS_NewObject(cx, ClassToApply, NULL, NULL);
+  if(!jsNode)return JSVAL_NULL;
 
-return JSVAL_NULL;
+  /* Create its basic properties and methods (DOM Core) */
+  JS_DefineProperties(cx, jsNode, Node_properties);
+  JS_DefineFunctions(cx, jsNode, Node_functions);
+
+  /* Add properties and methods according to the type of ThotNode */
+  switch(TypeOfNode)
+    {
+    case TEXT_UNIT:
+      //JS_DefineFunctions(cx, jsNode, Text_functions);
+    break;
+
+    case HTML_EL_DOCTYPE:
+      JS_DefineProperties(cx, jsNode, DocumentType_properties);
+    break;
+
+    default:
+      JS_DefineProperties(cx, jsNode, Element_properties);
+      JS_DefineFunctions(cx, jsNode, Element_functions);
+    break;
+    }
+
+  /* register ThotNode as a private data */
+  JS_SetPrivate(cx, jsNode, (void *)ThotNode);
+
+  return OBJECT_TO_JSVAL(jsNode);
 }
 
 /*----------------------------------------------------------------------
-  str_to_jsval
-  Convert a string to a javascript value
+  Attribute_to_jsval
+    Convert a Thot attribute into a javascript object
   -----------------------------------------------------------------------*/
-static jsval str_to_jsval(JSContext *cx, char *string)
+static jsval Attribute_to_jsval(JSContext *cx, Attribute ThotAttr)
+{
+JSObject *jsAttr;
+
+if(!ThotAttr)return JSVAL_NULL;
+
+  jsAttr = JS_NewObject(cx, &Attr_class, NULL, NULL);
+  if(!jsAttr)return JSVAL_NULL;
+  
+  JS_DefineProperties(cx, jsAttr, Node_properties);
+  JS_DefineFunctions(cx, jsAttr, Node_functions);
+  JS_DefineProperties(cx, jsAttr, Attr_properties);
+
+  /* register ThotAttr as a private data */
+  JS_SetPrivate(cx, jsAttr, (void *)ThotAttr);
+
+  return OBJECT_TO_JSVAL(jsAttr);
+}
+
+/*----------------------------------------------------------------------
+  jsContinueScript
+    This function returns a JSBool version of ContinueScript
+    It must be returned at each end of a javascript functions, so that
+    SpiderMonkey can interrupt the execution if necessary.
+  -----------------------------------------------------------------------*/
+static JSBool jsContinueScript()
+{
+return (ContinueScript ? JS_TRUE : JS_FALSE);
+}
+
+/*----------------------------------------------------------------------
+  string_to_jsval
+    Convert a string to a javascript value
+  -----------------------------------------------------------------------*/
+static jsval string_to_jsval(JSContext *cx, char *string)
 {
 return STRING_TO_JSVAL(JS_NewStringCopyZ(cx, string));
 }
 
 /*----------------------------------------------------------------------
-  jsval_to_str
-  Convert a javascript value to a string
+  jsval_to_string
+    Convert a javascript value to a string
   -----------------------------------------------------------------------*/
-static char *jsval_to_str(JSContext *cx, jsval value)
+static char *jsval_to_string(JSContext *cx, jsval value)
 {
 return (JSVAL_IS_VOID(value) ? NULL : JS_GetStringBytes(JS_ValueToString(cx, value)) );
+}
+
+/*----------------------------------------------------------------------
+  jsval_to_ElementType
+    Convert a javascript string coding a tag name into an ElementType
+  -----------------------------------------------------------------------*/
+static void jsval_to_ElementType (JSContext *cx, jsval name, ElementType *elType)
+{
+char*       mappedName;
+char       content;
+ThotBool    checkProfile;
+int xmlType; /* See parser.h */
+
+  elType->ElSSchema = 0;
+
+  for(xmlType=XHTML_TYPE; xmlType<Template_TYPE; xmlType++)
+    {
+    elType->ElTypeNum = 0; 
+    MapXMLElementType(xmlType, jsval_to_string(cx, name), elType, &mappedName, &content,
+                      &checkProfile, jsdocument);
+    if(elType->ElTypeNum)break;
+    }
+
+}
+
+/*----------------------------------------------------------------------
+  jsval_to_AttributeType
+    Convert a javascript string coding an attribute name into an AttributeType
+  -----------------------------------------------------------------------*/
+static void jsval_to_AttributeType (JSContext *cx, jsval name, AttributeType *attrType)
+{
+  attrType->AttrSSchema = NULL;
+  TtaGetXmlAttributeType (jsval_to_string(cx, name), attrType, jsdocument);
+}
+
+/*----------------------------------------------------------------------
+  ObjectWithInfo
+    Create an object of class jsclass, built by the Property/Method name_id
+    and using the argc arguments pointed by argv. The parent object is obj.
+
+    This function is used for specific objects such as NodeList or NamedNodeMap.
+  -----------------------------------------------------------------------*/
+static jsval ObjectWithInfo(JSContext *cx, JSObject *obj, JSClass *jsclass, int name_id, uintN argc, jsval *argv)
+{
+uintN i;
+jsval v;
+
+/* TODO: Rewrite and improve this function...
+   Return null for the moment... */
+return JSVAL_NULL;
+
+/* Create the jsobject and an array to store information */
+JSObject *jsobj = JS_NewObject(cx, jsclass, NULL, obj);
+JSObject *jsarray = JS_NewArrayObject(cx, 0, NULL);
+
+if(!jsobj || !jsarray)return JSVAL_NULL;
+
+/* Define properties and methods according to the class */
+switch(name_id)
+  {
+  /* NodeList */
+  case NODE_CHILDNODES:
+  case GETELEMENTSBYTAGNAME:
+    JS_DefineProperties(cx, jsobj, NodeList_properties);
+    JS_DefineFunctions(cx, jsobj, NodeList_functions);
+  break;
+
+  /* NamedNodeMap */
+  case NODE_ATTRIBUTES:
+  case DOCUMENTTYPE_ENTITIES:
+  case DOCUMENTTYPE_NOTATIONS:
+    JS_DefineProperties(cx, jsobj, NamedNodeMap_properties);
+    JS_DefineFunctions(cx, jsobj, NamedNodeMap_functions);
+  break;
+
+  default:
+  break;
+  }
+  
+/* Set the jsarray as a child of jsobj */
+if(JS_SetParent(cx, jsarray, jsobj) != JS_TRUE)return JSVAL_NULL;
+if(JS_SetPrivate(cx, jsobj, (void *)jsarray) != JS_TRUE)return JSVAL_NULL;
+
+/* Store the name_id in the array */ 
+v = INT_TO_JSVAL(name_id);
+if(JS_SetElement(cx, jsarray, 0, &v) != JS_TRUE)return JSVAL_NULL;
+
+/* Store the arguments argv in the array */
+for(i = 0; i < argc; i++)
+  {
+  v = argv[i];
+  if(JS_SetElement(cx, jsarray, i+1, &v) != JS_TRUE)return JSVAL_NULL;
+  }
+return OBJECT_TO_JSVAL(jsobj);
+}
+
+/*----------------------------------------------------------------------
+    IsElementNode
+  -----------------------------------------------------------------------*/
+static ThotBool IsElementNode(Element element)
+{
+
+if(!element)return FALSE; 
+
+  /* Choose the class to apply according to the type of ThotNode */
+  switch(TtaGetElementType(element).ElTypeNum)
+    {
+    case HTML_EL_DOCTYPE_line:
+    case HTML_EL_Document_URL:
+    case HTML_EL_C_Empty:
+    case HTML_EL_Basic_Elem:
+    case HTML_EL_C_BR:
+    case HTML_EL_DOCTYPE:
+    case TEXT_UNIT:
+    case HTML_EL_Comment_:
+    case HTML_EL_CDATA:
+      return FALSE;
+    break;
+
+    default:
+      return TRUE;
+    break;
+    }
+}
+
+/*----------------------------------------------------------------------
+  NextTypedNodeElement
+  -----------------------------------------------------------------------*/
+static Element NextTypedNodeElement (ElementType elType, Element Tree, Element Start)
+{
+Element child = NULL;
+
+if(Start == NULL)
+  child = TtaSearchTypedElement(elType, SearchInTree, Tree);
+else
+  child = TtaSearchTypedElementInTree(elType, SearchForward, Tree, Start);
+
+  while(child && !IsElementNode(child))
+    child = TtaSearchTypedElementInTree(elType, SearchForward, Tree, child);
+  
+return child;
 }
 
 /*----------------------------------------------------------------------
@@ -883,15 +1022,15 @@ switch(GetNodeType(obj))
   {
   case ELEMENT_NODE:
     element = (Element)JS_GetPrivate(cx, obj);
-    return str_to_jsval(cx, TtaGetElementTypeOriginalName(TtaGetElementType(element)) );
+    return string_to_jsval(cx, GetXMLElementName(TtaGetElementType(element), jsdocument) );
   break;
   case ATTRIBUTE_NODE:
   break;
   case TEXT_NODE:
-    return str_to_jsval(cx, "#text");
+    return string_to_jsval(cx, "#text");
   break;
   case CDATA_SECTION_NODE:
-    return str_to_jsval(cx, "#cdata-section");
+    return string_to_jsval(cx, "#cdata-section");
   break;
   case ENTITY_REFERENCE_NODE:
   break;
@@ -900,15 +1039,15 @@ switch(GetNodeType(obj))
   case PROCESSING_INSTRUCTION_NODE:
   break;
   case COMMENT_NODE:
-    return str_to_jsval(cx, "#comment");
+    return string_to_jsval(cx, "#comment");
   break;
   case DOCUMENT_NODE:
-    return str_to_jsval(cx, "#document");
+    return string_to_jsval(cx, "#document");
   break;
   case DOCUMENT_TYPE_NODE:
   break;
   case DOCUMENT_FRAGMENT_NODE:
-    return str_to_jsval(cx, "#document-fragment");
+    return string_to_jsval(cx, "#document-fragment");
   break;
   case NOTATION_NODE:
   break;
@@ -927,6 +1066,7 @@ static jsval GetNodeValue(JSContext *cx, JSObject *obj)
 {
 jsval name;
 char *text = NULL;
+Attribute attr;
 Element element;
 int len;
 Language	lang;
@@ -934,6 +1074,16 @@ Language	lang;
 switch(GetNodeType(obj))
   {
   case ATTRIBUTE_NODE:
+    attr = (Attribute)JS_GetPrivate(cx, obj);
+    len = TtaGetTextAttributeLength(attr);
+    text = (char *)TtaGetMemory (len + 1);
+    if(text)
+      {
+      TtaGiveTextAttributeValue(attr, (char *)text, &len);
+      name = string_to_jsval(cx, text);
+      TtaFreeMemory(text);
+      return name;
+      }
   break;
   case TEXT_NODE:
     element = (Element)JS_GetPrivate(cx, obj);
@@ -942,7 +1092,7 @@ switch(GetNodeType(obj))
     if(text)
       {
       TtaGiveTextContent(element, (unsigned char *)text, &len, &lang);
-      name = str_to_jsval(cx, text);
+      name = string_to_jsval(cx, text);
       TtaFreeMemory(text);
       return name;
       }
@@ -971,7 +1121,7 @@ if(JSVAL_IS_INT(id))
   switch (JSVAL_TO_INT(id))
     {
     case LOCATION_HREF:
-      urlname = jsval_to_str(cx, *vp);
+      urlname = jsval_to_string(cx, *vp);
       if(urlname)
         {
         GetAmayaDoc (urlname, NULL, jsdocument, jsdocument, CE_ABSOLUTE, TRUE, NULL, NULL);
@@ -991,10 +1141,12 @@ return jsContinueScript();
   -----------------------------------------------------------------------*/
 static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
-Element element;
+Element element, child;
 ElementType    elType;
 char *text;
 int n, width, height;
+JSObject *array;
+jsval array_element;
 
 if(JSVAL_IS_INT(id))
   {
@@ -1012,31 +1164,31 @@ if(JSVAL_IS_INT(id))
     case WINDOW_LENGTH: *vp = JSVAL_ZERO; break;
 
     case NAVIGATOR_BROWSERLANGUAGE:
-      *vp = str_to_jsval(cx, TtaGetLanguageName(TtaGetDefaultLanguage()));
+      *vp = string_to_jsval(cx, TtaGetLanguageName(TtaGetDefaultLanguage()));
     break;
 
     case NAVIGATOR_APPNAME:
     case NAVIGATOR_USERAGENT:
-      *vp = str_to_jsval(cx, "Amaya");
+      *vp = string_to_jsval(cx, "Amaya");
     break;
 
     case NAVIGATOR_APPCODENAME:
-      *vp = str_to_jsval(cx, "The W3C's editor/browser");
+      *vp = string_to_jsval(cx, "The W3C's editor/browser");
     break;
 
     case NAVIGATOR_APPVERSION:
-      *vp = str_to_jsval(cx, "9.55");
+      *vp = string_to_jsval(cx, "9.56");
     break;
 
     case NAVIGATOR_PLATFORM:
        #ifdef _WINDOWS
-          *vp = str_to_jsval(cx, "Windows");
+          *vp = string_to_jsval(cx, "Windows");
        #else
           #ifdef _MACOS
-          *vp = str_to_jsval(cx, "MacOS");
+          *vp = string_to_jsval(cx, "MacOS");
           #else
             #ifdef _UNIX
-               *vp = str_to_jsval(cx, "Unix");
+               *vp = string_to_jsval(cx, "Unix");
             #endif
           #endif
        #endif
@@ -1066,32 +1218,49 @@ if(JSVAL_IS_INT(id))
 
     case LOCATION_HREF:
     case LOCATION_HASH:
-      /* TODO: for href, return the complete url (with #xxx) */       
-      *vp = str_to_jsval(cx, DocumentURLs[jsdocument]);
+      /* TODO: for href, return the complete url (with #xxx) */
+      *vp = string_to_jsval(cx, DocumentURLs[jsdocument]);
     break;
 
     case LOCATION_PATHNAME:
       text = GetBaseURL (jsdocument);
       if(text)
         {
-        *vp = str_to_jsval(cx, text);
+        *vp = string_to_jsval(cx, text);
         TtaFreeMemory (text);
         }
     break;
 
     case DOCUMENT_DOCUMENTELEMENT:
-      *vp = documentElement;
+      element = TtaGetMainRoot (jsdocument);
+      elType = TtaGetElementType (element);
+      elType.ElTypeNum = HTML_EL_HTML;
+      child = TtaSearchTypedElement (elType, SearchInTree, element);
+      if(!child)
+        /* return the main root */
+        *vp = Element_to_jsval(cx, element);
+      else
+        /* return the HTML tag */
+        *vp = Element_to_jsval(cx, child);
+
+      /* TODO: add SVG, MathML roots... */
+
     break;
 
     case DOCUMENT_DOCTYPE:
       /* If the document has no doctype, return null */
-      if(!withDocType)*vp = JSVAL_NULL;
+      if(!withDocType)
+        *vp = JSVAL_NULL;
     break;
 
     case DOCUMENTTYPE_NAME:
       elType = TtaGetElementType (TtaGetMainRoot (jsdocument));
       text = TtaGetSSchemaName (elType.ElSSchema);
-      *vp = str_to_jsval(cx, text);
+      *vp = string_to_jsval(cx, text);
+    break;
+
+    case ELEMENT_TAGNAME:
+      *vp = GetNodeName(cx, obj);
     break;
 
     case NODE_NODETYPE:
@@ -1108,41 +1277,74 @@ if(JSVAL_IS_INT(id))
 
     case NODE_ATTRIBUTES:
       if(GetNodeType(obj) == ELEMENT_NODE)
-        {
-        /* TODO: return a NamedNodeMap */
-        *vp = JSVAL_NULL;
-        }
+        *vp = ObjectWithInfo(cx, obj, &NamedNodeMap_class, NODE_ATTRIBUTES, 0, NULL);
       else *vp = JSVAL_NULL;
     break;
 
+    case NODE_CHILDNODES:
+      *vp = ObjectWithInfo(cx, obj, &NodeList_class, NODE_CHILDNODES, 0, NULL);
+    break;
+
     case NODE_PARENTNODE:
-      element = (Element)JS_GetPrivate(cx, obj);
-      element = TtaGetParent(element);
-      *vp = Element_to_jsval(element, 0);
+      switch(GetNodeType(obj))
+        {
+        case ATTRIBUTE_NODE:
+        case ENTITY_NODE:
+        case NOTATION_NODE:
+          *vp = JSVAL_NULL;
+        break;
+
+        default:
+          element = (Element)JS_GetPrivate(cx, obj);
+          element = TtaGetParent(element);
+          *vp = Element_to_jsval(cx, element);
+        break;
+        }
     break;
 
     case NODE_FIRSTCHILD:
-      element = (Element)JS_GetPrivate(cx, obj);
-      element = TtaGetFirstChild(element);
-      *vp = Element_to_jsval(element, +1);
+      if(GetNodeType(obj) == ATTRIBUTE_NODE)
+        {
+        /* TODO */
+        *vp = JSVAL_NULL;
+        }
+      else
+        {
+        element = (Element)JS_GetPrivate(cx, obj);
+        element = TtaGetFirstChild(element);
+        *vp = Element_to_jsval(cx, element);
+        }
     break;
 
     case NODE_LASTCHILD:
-      element = (Element)JS_GetPrivate(cx, obj);
-      element = TtaGetLastChild(element);
-      *vp = Element_to_jsval(element, -1);
+      if(GetNodeType(obj) == ATTRIBUTE_NODE)
+        {
+        /* TODO */
+        *vp = JSVAL_NULL;
+        }
+      else
+        {
+        element = (Element)JS_GetPrivate(cx, obj);
+        element = TtaGetLastChild(element);
+        *vp = Element_to_jsval(cx, element);
+        }
     break;
 
     case NODE_PREVIOUSSIBLING:
-      element = (Element)JS_GetPrivate(cx, obj);
-      TtaPreviousSibling(&element);
-      *vp = Element_to_jsval(element, -1);
+      if(GetNodeType(obj) == ATTRIBUTE_NODE)
+        *vp = JSVAL_NULL;
+      else
+        {
+        element = (Element)JS_GetPrivate(cx, obj);
+        TtaPreviousSibling(&element);
+        *vp = Element_to_jsval(cx, element);
+        }
     break;
 
     case NODE_NEXTSIBLING:
       element = (Element)JS_GetPrivate(cx, obj);
       TtaNextSibling(&element);
-      *vp = Element_to_jsval(element, +1);
+      *vp = Element_to_jsval(cx, element);
     break;
 
     case NODE_OWNERDOCUMENT:
@@ -1150,17 +1352,47 @@ if(JSVAL_IS_INT(id))
       if(TtaGetParent(element))
         {
         element = TtaGetMainRoot(jsdocument);
-        *vp = Element_to_jsval(element, 0);
+        *vp = Element_to_jsval(cx, element);
         }
       else
         *vp = JSVAL_NULL;
     break;
 
     case NODELIST_LENGTH:
-      /* TODO: deal with the case getElementsByTagName */
+      array = (JSObject *)JS_GetPrivate(cx, obj);
+
+      JS_GetElement(cx, array, 0, &array_element);
       element = (Element)JS_GetPrivate(cx, JS_GetParent(cx, obj));
-      element = TtaGetFirstChild(element);
-      for(n = 0; element != NULL ; n++)TtaNextSibling(&element);
+
+      switch(JSVAL_TO_INT(array_element))
+        {
+        case NODE_CHILDNODES:
+          element = TtaGetFirstChild(element);
+          for(n = 0; element != NULL ; n++)TtaNextSibling(&element);
+        break;
+ 
+        case GETELEMENTSBYTAGNAME:
+          JS_GetElement(cx, array, 1, &array_element);
+
+          /* Check whether we have to match all the element or a particular type */
+          if(!strcmp("*", jsval_to_string(cx, array_element) ))
+            {
+            elType.ElSSchema = NULL;
+            elType.ElTypeNum = 0;
+            }
+          else
+            {
+            /* TODO? If elType.ElTypeNum = 0; i.e. unknown tagname */
+            jsval_to_ElementType (cx, array_element, &elType);
+            }
+
+          child = NextTypedNodeElement (elType, element, NULL);
+        
+          for(n = 0; child != NULL ; n++)
+            child = NextTypedNodeElement (elType, element, child);
+        break;
+        }
+
       *vp = INT_TO_JSVAL(n);
     break;
 
@@ -1186,25 +1418,29 @@ static JSBool window_alert(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
     }
   else
     {
-    msg = jsval_to_str(cx, *argv);
+    msg = jsval_to_string(cx, *argv);
     /* TODO: make a non-modal window, to allow javascript engine to be switch OFF */
     TtaDisplayMessage(INFO, msg);
+
     return jsContinueScript();
     }
 }
 
 static JSBool window_confirm(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-  char *msg = jsval_to_str(cx, *argv);
+  char *msg = jsval_to_string(cx, *argv);
+  ConfirmDialog = TRUE;
   InitConfirm (jsdocument, jsview, msg);
+  ConfirmDialog = FALSE;
   *rval = BOOLEAN_TO_JSVAL(UserAnswer);
+
   return jsContinueScript();
 }
 
 static JSBool window_prompt(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-  char *msg = jsval_to_str(cx, argv[0]);
-  char *value = jsval_to_str(cx, argv[1]);
+  char *msg = jsval_to_string(cx, argv[0]);
+  char *value = jsval_to_string(cx, argv[1]);
 
 #ifdef _WX
   *JavascriptPromptValue = EOS;
@@ -1214,7 +1450,7 @@ static JSBool window_prompt(JSContext *cx, JSObject *obj, uintN argc, jsval *arg
   TtaWaitShowDialogue ();
   if(!ContinueScript)return JS_FALSE;
 
-  *rval = str_to_jsval(cx, JavascriptPromptValue);
+  *rval = string_to_jsval(cx, JavascriptPromptValue);
 #endif /* _WX */
 
   return jsContinueScript();
@@ -1281,7 +1517,7 @@ return JS_FALSE;
 
 static JSBool location_assign(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-char *urlname = jsval_to_str(cx, *argv);
+char *urlname = jsval_to_string(cx, *argv);
 if(urlname)
   {
   GetAmayaDoc (urlname, NULL, jsdocument, jsdocument, CE_ABSOLUTE, TRUE, NULL, NULL);
@@ -1292,7 +1528,7 @@ return jsContinueScript();
 
 static JSBool location_replace(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-char *urlname = jsval_to_str(cx, *argv);
+char *urlname = jsval_to_string(cx, *argv);
 if(urlname)
   {
   GetAmayaDoc (urlname, NULL, jsdocument, jsdocument, CE_ABSOLUTE, TRUE, NULL, NULL);
@@ -1305,6 +1541,15 @@ static JSBool location_reload(JSContext *cx, JSObject *obj, uintN argc, jsval *a
 {
 Reload(jsdocument, jsview);
 return JS_FALSE;
+}
+
+/*----------------------------------------------------------------------
+  Object Document
+  -----------------------------------------------------------------------*/
+static JSBool _getElementsByTagName(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+  *rval = ObjectWithInfo(cx, obj, &NodeList_class, GETELEMENTSBYTAGNAME, argc, argv);
+  return jsContinueScript();
 }
 
 /*----------------------------------------------------------------------
@@ -1322,8 +1567,9 @@ static JSBool DOMImplementation_hasFeature(JSContext *cx, JSObject *obj, uintN a
     }
   else
     {
-    feature = jsval_to_str(cx, argv[0]);
-    version = jsval_to_str(cx, argv[1]);
+    /* TODO : to uppercase */
+    feature = jsval_to_string(cx, argv[0]);
+    version = jsval_to_string(cx, argv[1]);
     *rval = BOOLEAN_TO_JSVAL((/*!strcmp(feature, "HTML") ||*/ !strcmp(feature, "XML")) && (version == NULL || !strcmp(version, "1.0")) );
     return jsContinueScript();
     }
@@ -1343,7 +1589,7 @@ static JSBool Node_hasChildNodes(JSContext *cx, JSObject *obj, uintN argc, jsval
   Element element;
   element = (Element)JS_GetPrivate(cx, obj);
   element = TtaGetFirstChild(element);
-  *rval = BOOLEAN_TO_JSVAL(Element_to_jsval(element, +1) != JSVAL_NULL);
+  *rval = BOOLEAN_TO_JSVAL(Element_to_jsval(cx, element) != JSVAL_NULL);
   return jsContinueScript();
 }
 
@@ -1354,14 +1600,98 @@ static JSBool Node_hasChildNodes(JSContext *cx, JSObject *obj, uintN argc, jsval
   -----------------------------------------------------------------------*/
 static JSBool NodeList_item(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-Element element;
+Element element, child;
+ElementType elType;
 int n;
-/* TODO: deal with the case getElementsByTagName */
+JSObject *array;
+jsval array_element;
 
-  n = JSVAL_TO_INT(argv[0]);
+  /* get the element from which we got the NodeList */
   element = (Element)JS_GetPrivate(cx, JS_GetParent(cx, obj));
-  element = TtaGetFirstChild(element);
-  for( ; n > 0 && element != NULL ; n--)TtaNextSibling(&element);
-  *rval = Element_to_jsval(element, +1);
+
+  array = (JSObject *)JS_GetPrivate(cx, obj);
+  JS_GetElement(cx, array, 0, &array_element);
+  n = JSVAL_TO_INT(argv[0]);
+
+  switch(JSVAL_TO_INT(array_element))
+    {
+    case NODE_CHILDNODES:
+      element = TtaGetFirstChild(element);
+      for( ; n > 0 && element != NULL ; n--)TtaNextSibling(&element);
+      *rval = Element_to_jsval(cx, element);
+    break;
+
+    case GETELEMENTSBYTAGNAME:
+      JS_GetElement(cx, array, 1, &array_element);
+
+      /* Check whether we have to match all the element or a particular type */
+      if(!strcmp("*", jsval_to_string(cx, array_element) ))
+        {
+        elType.ElSSchema = NULL;
+        elType.ElTypeNum = 0;
+        }
+      else
+        {
+        /* TODO? If elType.ElTypeNum = 0; i.e. unknown tagname */
+        jsval_to_ElementType (cx, array_element, &elType);
+        }
+
+      child = NextTypedNodeElement (elType, element, NULL);
+
+      for( ; n > 0 && child != NULL ; n--)
+        child = NextTypedNodeElement (elType, element, child);
+
+      *rval = Element_to_jsval(cx, child);
+    break;
+    }
+
   return jsContinueScript();
 }
+
+/*----------------------------------------------------------------------
+  Object NamedNodeMap
+  -----------------------------------------------------------------------*/
+static JSBool NamedNodeMap_getNamedItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+Element element;
+AttributeType attrType;
+Attribute      attr;
+
+JSObject *array;
+jsval array_element;
+
+  /* get the element from which we got the NamedNodeMap */
+  element = (Element)JS_GetPrivate(cx, JS_GetParent(cx, obj));
+
+  array = (JSObject *)JS_GetPrivate(cx, obj);
+  JS_GetElement(cx, array, 0, &array_element);
+ 
+  switch(JSVAL_TO_INT(array_element))
+    {
+    case NODE_ATTRIBUTES:
+      jsval_to_AttributeType(cx, argv[0], &attrType);
+      attr = TtaGetAttribute (element, attrType);
+      *rval = Attribute_to_jsval(cx, attr);
+    break;
+
+    case DOCUMENTTYPE_ENTITIES:
+    case DOCUMENTTYPE_NOTATIONS:
+      /* TODO */
+      *rval = JSVAL_NULL;
+    break;
+    }
+
+  return jsContinueScript();
+}
+
+/*----------------------------------------------------------------------
+  Object Element
+  -----------------------------------------------------------------------*/
+/*
+static JSBool Element_getAttribute(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool Element_setAttribute(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool Element_removeAttribute(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool Element_getAttributeNode(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool Element_setAttributeNode(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool Element_removeAttributeNode(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool Element_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);*/

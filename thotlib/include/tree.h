@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -62,9 +62,6 @@ typedef enum _ConstructType
 ConstructType;
 
 #ifndef __CEXTRACT__
-
-extern void TtaSetSpiderMonkey (Element element, void *SpiderMonkeyElement);
-extern void *TtaGetSpiderMonkey (Element element);
 
 /* ----------------------------------------------------------------------
    TtaChangeElementType

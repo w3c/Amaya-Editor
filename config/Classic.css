@@ -8,7 +8,10 @@ body {
     font-style: normal;
     color: black;
     background-color: white;
-    line-height: 1em;}
+    line-height: 1em;
+    margin-left: 4em;
+    margin-right: 2em;
+   }
 
 /* paragraphs */
 p  {
@@ -21,17 +24,18 @@ p  {
 
 /* headings */
 h1 {
-    font-size: 130%;
-    font-weight: normal;
+    background-color: #e8e1e1;
+    font-size: 150%;
+    font-weight: bold;
     font-style: normal;
     font-variant: normal;
     text-align: center;
     padding: 0;
     margin-top: .7em;
-    margin-bottom: .7em;
+    margin-bottom: 2em;
    }
 h2 {
-    font-size: 110%;
+    font-size: 130%;
     font-weight: bold;
     font-style: normal;
     padding: 0;
@@ -102,6 +106,7 @@ dl {
     padding: 0;
     margin-top: .1em;
     margin-bottom: .1em;
+    margin-left: 1em;
    }
 dl dl {
     margin-top: .1em;
@@ -109,6 +114,7 @@ dl dl {
    }
 dt {
     padding: 0;
+    font-weight: bold;
     margin-top: .1em;
     margin-bottom: .1em;
    }
@@ -121,6 +127,9 @@ dd {
 dl p {
     margin-top: .1em;
     margin-bottom: .1em;
+   }
+th {
+    background-color: #e8e1e1;
    }
 
 /* inline */

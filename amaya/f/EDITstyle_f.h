@@ -18,7 +18,6 @@ extern void UpdateStyleSheetContent ( Document doc,
                                       char *oldpath,
                                       char *newpath );
 extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
-extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern ThotBool DeleteStyle ( NotifyElement *event );
 extern Attribute GetCurrentStyleAttribute ( void );
 extern char *GetCurrentStyle ( void );
@@ -26,6 +25,7 @@ extern void EnableStyleElement ( Document doc,
                                  Element el );
 extern void DeleteStyleElement ( Document doc,
                                  Element el );
+extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern void StyleChanged ( NotifyOnTarget *event );
 extern void ChangeTheme ( char *theme );
 extern void UpdateStylePost ( NotifyAttribute * event );
@@ -64,7 +64,6 @@ extern void UpdateStyleSheetContent ( Document doc,
                                         char *oldpath,
                                         char *newpath );
 extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
-extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern ThotBool DeleteStyle ( NotifyElement *event );
 extern Attribute GetCurrentStyleAttribute ( void );
 extern char *GetCurrentStyle ( void );
@@ -72,6 +71,7 @@ extern void EnableStyleElement ( Document doc,
                                    Element el );
 extern void DeleteStyleElement ( Document doc,
                                    Element el );
+extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern void StyleChanged ( NotifyOnTarget *event );
 extern void ChangeTheme ( char *theme );
 extern void UpdateStylePost ( NotifyAttribute * event );

@@ -6,9 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TtaSetSpiderMonkey ( Element element,
-                                 void *SpiderMonkeyElement );
-extern void *TtaGetSpiderMonkey ( Element element );
 extern void TtaChangeElementType ( Element element,
                                    int typeNum );
 extern ThotBool TtaChangeTypeOfElement ( Element elem,
@@ -146,9 +143,6 @@ extern ThotBool TtaHasReturnCreateNLException ( ElementType elType );
 
 #else /* __STDC__ */
 
-extern void TtaSetSpiderMonkey ( Element element,
-                                   void *SpiderMonkeyElement );
-extern void *TtaGetSpiderMonkey ( Element element );
 extern void TtaChangeElementType ( Element element,
                                      int typeNum );
 extern ThotBool TtaChangeTypeOfElement ( Element elem,
