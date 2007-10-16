@@ -1961,7 +1961,7 @@ RULES
         MarginBottom: H1Margin;
         Width: auto{Enclosing . Width};
         Display: Block;
-        Size: Enclosing + 6 pt;
+        Size: Enclosing + 10 pt;
         Weight: Bold;
         Hyphenate: No;
         IN Structure_view BEGIN
@@ -4577,9 +4577,9 @@ RULES
         Width: Enclosed . Width {20 px};
         Adjust: Enclosing =;
         PaddingTop: 1 px;
-        PaddingRight: 1 px;
+        PaddingRight: 2 px;
         PaddingBottom: 1 px;
-        PaddingLeft: 1 px;
+        PaddingLeft: 2 px;
         BorderTopColor: Grey;
         BorderLeftColor: Grey;
         BorderBottomColor: DarkGrey1;

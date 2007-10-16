@@ -2251,12 +2251,11 @@ void DoTableCreation (Document doc)
   Element             el, new_, caption, cell, row, child;
   AttributeType       attrType;
   Attribute           attr;
-  int                 firstChar, i;
-#ifdef IV
-  char                stylebuff[50];
-  ThotBool            loadcss;
-#endif /* IV */
+  int                 firstChar, i, profile;
+  char                stylebuff[100];
+  ThotBool            loadcss, amaya_lite;
 
+  TtaGetEnvBoolean ("AMAYA_LITE", &amaya_lite);
   /* get the new Table element */
   TtaSetDisplayMode (doc, SuspendDisplay);
   TtaLockTableFormatting ();
@@ -2264,39 +2263,27 @@ void DoTableCreation (Document doc)
   elType.ElTypeNum = HTML_EL_Table_;
   TtaCreateElement (elType, doc);
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &i);
-  elType.ElTypeNum = HTML_EL_CAPTION;
-  caption = TtaNewTree (doc, elType, "");
-  TtaInsertFirstChild (&caption, el, doc);
-  //TtaSelectElement (doc, TtaGetFirstLeaf (caption));
-  /* close the undo sequence if it's still open */
-  TtaCloseUndoSequence (doc);
-  if (el != NULL)
+  if (el)
     {
+      profile = TtaGetDocumentProfile(doc);
+      if (!amaya_lite)
+        {
+          // insert the caption
+          elType.ElTypeNum = HTML_EL_CAPTION;
+          caption = TtaNewTree (doc, elType, "");
+          TtaInsertFirstChild (&caption, el, doc);
+        }
+
+      /* manage the border attribute */
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = HTML_ATTR_Border;
       attr = TtaGetAttribute (el, attrType);
-      if (TtaGetDocumentProfile(doc) == L_Basic)
+      if (profile == L_Basic)
         {
-          /* remove the Border attribute */
-          if (attr != NULL)
+          if (attr)
+            /* remove the Border attribute */
             TtaRemoveAttribute (el, attr, doc);
-#ifdef IV
-          /* generate a border style */
-          attrType.AttrTypeNum = HTML_ATTR_Style_;
-          attr = TtaNewAttribute (attrType);
-          sprintf (stylebuff, "border: solid %dpx", TBorder);
-          TtaSetAttributeText (attr, stylebuff, el, doc);	       
-          //TtaAttachAttribute (el, attr, doc);
-          /* check if we have to load CSS */
-          TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
-          if (loadcss)
-            ParseHTMLSpecificStyle (el, stylebuff, doc, 1000, FALSE);
-#endif /* IV */
         }
-      else if (attr && TBorder == 0)
-        /* the table has a Border attribute but the user don't want
-           any border. Remove the attribute */
-        TtaRemoveAttribute (el, attr, doc);
       else
         {
           if (attr == NULL)
@@ -2307,7 +2294,21 @@ void DoTableCreation (Document doc)
             }
           TtaSetAttributeValue (attr, TBorder, el, doc);
         }
-      
+
+      /* generate width style */
+      attrType.AttrTypeNum = HTML_ATTR_Style_;
+      attr = TtaNewAttribute (attrType);
+      if (profile == L_Basic)
+        sprintf (stylebuff, "width: 100%%; border: solid %dpx", TBorder);
+      else
+        strcpy (stylebuff, "width: 100%");
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeText (attr, stylebuff, el, doc);	       
+      /* check if we have to load CSS */
+      TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+      if (loadcss)
+        ParseHTMLSpecificStyle (el, stylebuff, doc, 1000, FALSE);
+
       elType.ElTypeNum = HTML_EL_Table_cell;
       cell = TtaSearchTypedElement (elType, SearchInTree, el);
       elType.ElTypeNum = HTML_EL_Data_cell;
@@ -2341,18 +2342,8 @@ void DoTableCreation (Document doc)
       CheckAllRows (el, doc, FALSE, FALSE);
     }
 
-#ifdef IV
-  /* generate a width style */
-  attrType.AttrTypeNum = HTML_ATTR_Style_;
-  attr = TtaNewAttribute (attrType);
-  strcpy (stylebuff, "width: 100%");
-  TtaSetAttributeText (attr, stylebuff, el, doc);	       
-  //TtaAttachAttribute (el, attr, doc);
-  /* check if we have to load CSS */
-  TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
-  if (loadcss)
-    ParseHTMLSpecificStyle (el, stylebuff, doc, 1000, FALSE);
-#endif /* IV */
+  /* close the undo sequence if it's still open */
+  TtaCloseUndoSequence (doc);
   TtaUnlockTableFormatting ();
   TtaSetDisplayMode (doc, DisplayImmediately);
   UpdateContextSensitiveMenus (doc, 1);
