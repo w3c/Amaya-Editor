@@ -92,6 +92,8 @@ protected:
   void OnContextMenu( wxContextMenuEvent & event );
   void OnContextMenuItem( wxCommandEvent& event );
 
+  void OnMouseMiddleUp(wxMouseEvent& event);
+  
   void OnClose(wxCloseEvent& event);
 
  protected:

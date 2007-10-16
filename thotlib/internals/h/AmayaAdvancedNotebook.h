@@ -92,9 +92,8 @@ protected:
   void OnPageChanged(wxAuiNotebookEvent& event);
   void OnContextMenu( wxContextMenuEvent & event );
   void OnContextMenuItem( wxCommandEvent& event );
-
-  void OnClose(wxCloseEvent& event);
   
+  void OnClose(wxCloseEvent& event);
   void OnClosePage(wxAuiNotebookEvent& event);
 
  protected:

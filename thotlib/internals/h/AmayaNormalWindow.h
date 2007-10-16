@@ -30,6 +30,7 @@ class AmayaNormalWindow : public AmayaWindow
                     ,const wxSize&  size = wxDefaultSize
                     ,int kind = WXAMAYAWINDOW_NORMAL);
   
+  static int GetNormalWindowCount(){return s_normalWindowCount;}
   
   AmayaNormalWindow (  wxWindow * parent, wxWindowID id=wxID_ANY
                       ,const wxPoint& pos  = wxDefaultPosition

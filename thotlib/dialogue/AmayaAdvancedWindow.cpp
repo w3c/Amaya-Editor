@@ -143,10 +143,6 @@ void AmayaAdvancedWindow::CleanUp()
 {
   if(m_notebook)
     m_notebook->CleanUp();
-  
-//  Disconnect(wxEVT_COMMAND_MENU_SELECTED);
-//  Disconnect(wxEVT_UPDATE_UI);
-  
   AmayaNormalWindow::CleanUp();
 }
 

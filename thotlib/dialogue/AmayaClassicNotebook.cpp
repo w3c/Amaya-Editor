@@ -23,11 +23,13 @@
 #define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "frame_tv.h"
-
+#include "views_f.h"
+#include "applicationapi_f.h"
 
 #include "AmayaClassicNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaWindow.h"
+#include "AmayaNormalWindow.h"
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
 #include "AmayaApp.h"
@@ -83,6 +85,9 @@ bool AmayaClassicNotebook::ClosePage(int page_id)
   
   if(page->Close())
   {
+    if(GetPageCount()==1 && AmayaNormalWindow::GetNormalWindowCount()==1)
+      TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
+    
     DeletePage(page_id);
     /** \todo Update selection with old selection page. */
     UpdatePageId();    
@@ -342,6 +347,29 @@ int AmayaClassicNotebook::GetMContextFrame()
 }
 
 
+/*----------------------------------------------------------------------
+  Class:  AmayaClassicNotebook
+  Method:  OnMouseMiddleUp
+  Description:  Handle Mouse middle clic on a tab
+ -----------------------------------------------------------------------*/
+void AmayaClassicNotebook::OnMouseMiddleUp(wxMouseEvent& event)
+{
+  int page_id   = wxID_ANY;
+  long flags    = 0;
+  page_id   = HitTest(event.GetPosition(), &flags);
+  if (page_id != wxID_ANY)
+    {
+      AmayaPage* page = wxDynamicCast(GetPage(page_id), AmayaPage);
+      if(page)
+        {
+          PtrDocument         pDoc;
+          int                 view;
+          GetDocAndView (page->GetActiveFrame()->GetFrameId(), &pDoc, &view);
+          TtaExecuteMenuAction("AmayaCloseTab", (Document)IdentDocument(pDoc), view, FALSE);
+        }
+    }
+}
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -352,6 +380,7 @@ BEGIN_EVENT_TABLE(AmayaClassicNotebook, wxNotebook)
   EVT_NOTEBOOK_PAGE_CHANGING( -1, AmayaClassicNotebook::OnPageChanging )
 #endif /* __WXDEBUG__ */
   EVT_CONTEXT_MENU(               AmayaClassicNotebook::OnContextMenu )
+  EVT_MIDDLE_UP(AmayaClassicNotebook::OnMouseMiddleUp)
 END_EVENT_TABLE()
   
 #endif /* #ifdef _WX */

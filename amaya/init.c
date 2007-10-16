@@ -8589,18 +8589,12 @@ void AmayaCloseTab (Document doc, View view)
   if (CanReplaceCurrentDocument (doc, view))
     {
       window_id = TtaGetDocumentWindowId( doc, view );
-      if (TtaUniqueTabInWindow (doc))
-        TtaCloseWindow( window_id );
-      else
-        {
-          /* Get the window id and page id of current document and
-             close the corresponding page */
-          TtaGetDocumentPageId( doc, view, &page_id, &page_position );
-          TtaClosePage( window_id, page_id );
-          
-          /* Close the windows if it contains no more page */
-          TtaCleanUpWindow( window_id );
-        }
+      /* Get the window id and page id of current document and
+         close the corresponding page */
+      TtaGetDocumentPageId( doc, view, &page_id, &page_position );
+      TtaClosePage( window_id, page_id );
+      
+      TtaCleanUpWindow( window_id );
     }
 #endif /* _WX */
 }
