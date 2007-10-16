@@ -6,6 +6,7 @@
 
 #include "wx/wx.h"
 #include "wx/aui/auibook.h"
+#include "wx/imaglist.h"
 
 #include "AmayaPage.h"
 
