@@ -1521,20 +1521,20 @@
 	<message xml:lang="sk">Obrázok</message>
 </label>
 <label define="TMSG_EL_TYPE">
-	<message xml:lang="en">XML/XTiger</message>
-	<message xml:lang="fr">XML/XTiger</message>
-	<message xml:lang="de">XML/XTiger</message>
-	<message xml:lang="it">XML/XTiger</message>
-	<message xml:lang="tr">XML/XTiger</message>
-	<message xml:lang="es">XML/XTiger</message>
-	<message xml:lang="pt">XML/XTiger</message>
-	<message xml:lang="fi">XML/XTiger</message>
-	<message xml:lang="ru">XML/XTiger</message>
-	<message xml:lang="hu">XML/XTiger</message>
-	<message xml:lang="ka">XML/XTiger</message>
-	<message xml:lang="cn">XML/XTiger</message>
-	<message xml:lang="tw">XML/XTiger</message>
-	<message xml:lang="sk">XML/XTiger</message>
+	<message xml:lang="en">XML Elements</message>
+	<message xml:lang="fr">Eléments XML</message>
+	<message xml:lang="de">Elemente XML</message>
+	<message xml:lang="it">Elementi XML</message>
+	<message xml:lang="tr">XML</message>
+	<message xml:lang="es">Elementos XML</message>
+	<message xml:lang="pt">XML</message>
+	<message xml:lang="fi">XML</message>
+	<message xml:lang="ru">XML</message>
+	<message xml:lang="hu">XML</message>
+	<message xml:lang="ka">XML</message>
+	<message xml:lang="cn">XML</message>
+	<message xml:lang="tw">XML</message>
+	<message xml:lang="sk">XML</message>
 </label>
 <label define="TMSG_AFTER">
 	<message xml:lang="en">after</message>

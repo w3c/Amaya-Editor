@@ -178,13 +178,13 @@ void AmayaNormalWindow::LoadConfig()
   RegisterToolPanel(new AmayaXMLToolPanel);
 
   /* init default panel states */
-  TtaSetEnvBoolean("OPEN_PANEL_EXPLORER", TRUE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL_EXPLORER", FALSE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL_XHTML", TRUE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", TRUE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", FALSE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL_XML", FALSE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL_STYLE", TRUE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL_MATHML", FALSE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", FALSE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", TRUE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", TRUE, FALSE);
 }
 
@@ -206,7 +206,7 @@ void AmayaNormalWindow::SaveConfig()
  -----------------------------------------------------------------------*/
 wxPanel* AmayaNormalWindow::GetToolBarEditing()
 {
-  if(!m_pToolBarEditing)
+  if (!m_pToolBarEditing)
     m_pToolBarEditing = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_EDITING"));
   return m_pToolBarEditing;
 }
@@ -218,7 +218,7 @@ wxPanel* AmayaNormalWindow::GetToolBarEditing()
  -----------------------------------------------------------------------*/
 wxPanel* AmayaNormalWindow::GetToolBarBrowsing()
 {
-  if(!m_pToolBarBrowsing)
+  if (!m_pToolBarBrowsing)
     {
       m_pToolBarBrowsing = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_BROWSING"));
       m_pComboBox = XRCCTRL(*m_pToolBarBrowsing, "wxID_TOOL_URL", wxComboBox);

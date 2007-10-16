@@ -1255,16 +1255,16 @@
 </label>
 <!-- Document context menu: -->
 <label define="BFollowTheLink">
-	<message xml:lang="en">Follow the link</message>
+	<message xml:lang="en">Open the link</message>
 	<message xml:lang="fr">Ouvrir le lien</message>
 </label>
-<label define="BFollowTheLinkNewWin">
-	<message xml:lang="en">Follow the link in new window</message>
-	<message xml:lang="fr">Ouvrir le lien dans une nouvelle fenêtre</message>
-</label>
 <label define="BFollowTheLinkNewTab">
-	<message xml:lang="en">Follow the link in new tab</message>
+	<message xml:lang="en">Open the link in new tab</message>
 	<message xml:lang="fr">Ouvrir le lien dans un nouvel onglet</message>
+</label>
+<label define="BFollowTheLinkNewWin">
+	<message xml:lang="en">Open the link in new window</message>
+	<message xml:lang="fr">Ouvrir le lien dans une nouvelle fenêtre</message>
 </label>
 <label define="BCCut">
 	<message xml:lang="en">Cut</message>

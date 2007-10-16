@@ -353,8 +353,11 @@ int AmayaClassicWindow::GetPageCount() const
   -----------------------------------------------------------------------*/
 void AmayaClassicWindow::OnClose(wxCloseEvent& event)
 {
-  if (s_normalWindowCount==1)
-    TtaSetEnvBoolean("OPEN_PANEL", ToolPanelsShown(), TRUE);
+  if (s_normalWindowCount == 1)
+    {
+      SaveConfig();
+      TtaSetEnvBoolean("OPEN_PANEL", ToolPanelsShown(), TRUE);
+    }
   
   if(m_pNotebook)
   {

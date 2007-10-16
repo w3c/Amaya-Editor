@@ -111,8 +111,8 @@ MENUS
 	Context_ button:BCCloseTab -> AmayaCloseTab;
 
   DocContext_ button:BFollowTheLink -> FollowTheLink;
-  DocContext_ button:BFollowTheLinkNewWin -> FollowTheLinkNewWin;
   DocContext_ button:BFollowTheLinkNewTab -> FollowTheLinkNewTab;
+  DocContext_ button:BFollowTheLinkNewWin -> FollowTheLinkNewWin;
   DocContext_ Separator;
   DocContext_ button:BCCut -> TtcCutSelection icon:cut.png;
   DocContext_ button:BCCopy -> TtcCopySelection icon:copy.png;
