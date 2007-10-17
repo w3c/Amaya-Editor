@@ -2,8 +2,9 @@
 ## by comments lines beginning with one or several hashes '#' (like ####VIEWS).
 ## These comments are there to help you searching your module (or function).
 
-## The structure is recursive (modules contains functions and modules which can
-## contain other functions and modules which ...)
+## The structure is recursive (modules contains functions, GUI elements
+## and modules which can contain other functions, GUI elements and
+## modules which ...)
 
 ## This file can contain 5 different types of elements :
 ##   ** Profile definitions: 
@@ -24,6 +25,9 @@
 ##   ** Function insertions: 
 ##      Function are inserted in module without any symbol before the
 ##      name of the function or with the symbol '&'.
+##   ** GUI element insertion:
+##      GUI elements are inserted in module with a star '*' prefix before the
+##      GUI class name.
 
 ## WARNING : Marks '&' before a function's name are marks used by internal 
 ## profile function. You don't have to deal with it (they are used to determine 
