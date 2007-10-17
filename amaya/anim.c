@@ -2920,8 +2920,6 @@ void ShowSourceOfTimeline (Document document, View view)
                        tempdocument, TRUE, FALSE);
           SetWindowTitle (document, sourceDoc, 0);
 	 
-          TtcSwitchButtonBar (sourceDoc, 1); 
-          TtcSwitchCommands (sourceDoc, 1);
 #ifdef ANNOTATIONS
           TtaSetMenuOff (sourceDoc, 1, Annotations_);
 #endif
@@ -4196,13 +4194,7 @@ static void Show_timeline_help (NotifyElement *event)
       /* open a new window to display the new document */
       dt[basedoc].helpdoc = GetAmayaDoc (buffer, NULL, 0, basedoc, CE_HELP,
                                          FALSE, FALSE, FALSE);
-#else /* _WX */
-      /* open a new window to display the new document */
-      dt[basedoc].helpdoc = GetAmayaDoc (buffer, NULL, 0,0, CE_HELP,
-                                         FALSE, FALSE, FALSE);
 #endif /* _WX */
-      /* no button bar */
-      TtcSwitchButtonBar (dt[basedoc].helpdoc, 1);
       /* set the document in Read Only mode */
       TtaSetDocumentAccessMode (dt[basedoc].helpdoc, 0);
     }

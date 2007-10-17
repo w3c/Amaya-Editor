@@ -17,8 +17,6 @@ extern void CreateAreaCircle ( Document doc,
                                View view );
 extern void CreateAreaPoly ( Document doc,
                              View view );
-extern void ChangeBackgroundImage ( Document document,
-                                    View view );
 extern void ComputeSRCattribute ( Element el,
                                   Document doc,
                                   Document sourceDocument,
@@ -58,8 +56,6 @@ extern void CreateAreaCircle ( Document doc,
                                  View view );
 extern void CreateAreaPoly ( Document doc,
                                View view );
-extern void ChangeBackgroundImage ( Document document,
-                                      View view );
 extern void ComputeSRCattribute ( Element el,
                                     Document doc,
                                     Document sourceDocument,

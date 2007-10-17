@@ -762,20 +762,16 @@ void CreateAreaPoly (Document doc, View view)
 static char *GetImageURL (Document document, View view,
                           ThotBool isObject, ThotBool isInput)
 {
-#if defined(_GTK) || defined(_WX)
+#ifdef _WX
   LoadedImageDesc   *desc;
   char               tempfile[MAX_LENGTH];
   char               s[MAX_LENGTH];
-#endif /* _GTK || _WX */
-#ifdef _GTK
-  int                i;
-#endif /* _GTK */
 
   if (isObject)
     RefFormImage = BaseImage + FormObject;
   else
     RefFormImage = BaseImage + FormImage;
-#ifdef _WX
+
   if (LastURLImage[0] == EOS)
     {
       TtaExtractName (DocumentURLs[document], LastURLImage, s);
@@ -785,52 +781,7 @@ static char *GetImageURL (Document document, View view,
       else
         strcat (LastURLImage, "img.png");
     }
-#else /* _WX */
-  if (LastURLImage[0] == EOS)
-    {
-      strcpy (LastURLImage, DirectoryImage);
-      strcat (LastURLImage, DIR_STR);
-      strcat (LastURLImage, ImageName);
-    }
-#endif /* _WX */
 
-#ifdef _GTK
-  /* Dialogue form for open URL or local */
-  i = 0;
-  strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
-  TtaNewSheet (RefFormImage, TtaGetViewFrame (document, view),
-               TtaGetMessage (LIB, TMSG_BUTTON_IMG),
-               3, s, TRUE, 2, 'L', D_CANCEL);
-  TtaNewTextForm (BaseImage + ImageURL, RefFormImage,
-                  TtaGetMessage (LIB, TMSG_BUTTON_IMG), 50, 1, FALSE);
-  TtaNewLabel (BaseImage + ImageLabel, RefFormImage, " ");
-  if (isObject)
-    /* not ALT attribute for objects */
-    TtaNewLabel (BaseImage + ImageAlt, RefFormImage, " ");
-  else
-    {
-      TtaNewTextForm (BaseImage + ImageAlt, RefFormImage,
-                      TtaGetMessage (AMAYA, AM_ALT), 50, 1, TRUE);
-    }
-  TtaNewLabel (BaseImage + ImageLabel2, RefFormImage, " ");
-  TtaListDirectory (DirectoryImage, RefFormImage,
-                    TtaGetMessage (AMAYA, AM_IMAGES_LOCATION),
-                    BaseImage + ImageDir, ImgFilter,
-                    TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-  TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-  TtaSetTextForm (BaseImage + ImageAlt, ImgAlt);
-  TtaNewTextForm (BaseImage + ImageFilter, RefFormImage,
-                  TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
-  TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
-  TtaNewLabel (BaseImage + ImageLabel3, RefFormImage, " ");
-  TtaNewLabel (BaseImage + ImageLabel4, RefFormImage, " ");
-#endif /* _GTK */
-
-#ifdef _WX
   if (isObject)
     CreateObjectDlgWX (RefFormImage, TtaGetViewFrame (document, view),
                        TtaGetMessage (AMAYA, AM_NEWOBJECT),
@@ -843,9 +794,6 @@ static char *GetImageURL (Document document, View view,
     CreateImageDlgWX (RefFormImage, TtaGetViewFrame (document, view),
                       TtaGetMessage (LIB, TMSG_BUTTON_IMG),
                       LastURLImage, ImgAlt);
-#endif /* _WX */
-
-#if defined(_GTK) || defined(_WX)
   TtaSetDialoguePosition ();
   TtaShowDialogue (RefFormImage, FALSE);
   TtaWaitShowDialogue ();
@@ -867,91 +815,10 @@ static char *GetImageURL (Document document, View view,
           return (ImageName);
         }
     }
-#endif /* _GTK || _WX */
-
-#ifdef _WINGUI
-  CreateOpenImgDlgWindow (TtaGetViewFrame (document, view), LastURLImage, -1,
-                          -1, docImage, !isObject);
-#endif /* _WINGUI */
-
+#endif /* _WX */
   return (LastURLImage);
 }
 
-
-/*----------------------------------------------------------------------
-  ChangeBackgroundImage
-  display a form to set or change the background image
-  -----------------------------------------------------------------------*/
-void ChangeBackgroundImage (Document document, View view)
-{
-#ifndef _WX
-  char           *s = (char *)TtaGetMemory (MAX_LENGTH);
-#ifdef _GTK
-  int             i;
-
-  /* there is a selection */
-  i = 0;
-  strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
-  RefFormImage = BaseImage + FormBackground;
-  TtaNewSheet (RefFormImage, TtaGetViewFrame(document, view),
-               TtaGetMessage (AMAYA, AM_BACKGROUND_IMAGE), 3, s, TRUE, 2,
-               'L', D_CANCEL);
-  TtaNewTextForm (BaseImage + ImageURL, RefFormImage,
-                  TtaGetMessage (AMAYA, AM_BACKGROUND_IMAGE), 50, 1, TRUE);
-  TtaNewLabel (BaseImage + ImageLabel, RefFormImage, " ");
-  TtaListDirectory (DirectoryImage, RefFormImage,
-                    TtaGetMessage (LIB, TMSG_DOC_DIR),
-                    BaseImage + ImageDir, ImgFilter,
-                    TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-  if (LastURLImage[0] != EOS)
-    TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-  else
-    {
-      strcpy (s, DirectoryImage);
-      strcat (s, DIR_STR);
-      strcat (s, ImageName);
-      TtaSetTextForm (BaseImage + ImageURL, s);
-    }
-
-  TtaNewTextForm (BaseImage + ImageFilter, RefFormImage,
-                  TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
-  TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
-  /* selector for repeat mode */
-  i = 0;
-  sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_REPEAT));
-  i += strlen (&s[i]) + 1;
-  sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_REPEAT_X));
-  i += strlen (&s[i]) + 1;
-  sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_REPEAT_Y));
-  i += strlen (&s[i]) + 1;
-  sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_NO_REPEAT));
-  TtaNewSubmenu (BaseImage + RepeatImage, RefFormImage, 0,
-                 TtaGetMessage (AMAYA, AM_REPEAT_MODE), 4, s, NULL, 0, FALSE);
-  TtaSetMenuForm (BaseImage + RepeatImage, RepeatValue);
-  /* save the document concerned */
-  ImgDocument = document;
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (RefFormImage, TRUE);
-#endif /* _GTK */
-
-#ifdef _WINGUI
-  if (LastURLImage[0] != EOS)
-    strcpy (s, LastURLImage);
-  else {
-    strcpy (s, DirectoryImage);
-    strcat (s, DIR_STR);
-    strcat (s, ImageName);
-  }
-  ImgDocument = document;
-  CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), s);
-#endif /* _WINGUI */
-  TtaFreeMemory (s);
-#endif /* _WX */
-}
 
 
 /*----------------------------------------------------------------------

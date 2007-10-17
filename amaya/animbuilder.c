@@ -47,57 +47,9 @@ static int        AnimButton;
 #ifndef _WINGUI
 #include "xpm/animplay.xpm"
 #include "xpm/animstop.xpm"
-#else /* _WINGUI */
-#include "wininclude.h"
-#define iconAnim 29
-#define iconAnimNo 29
-#endif /*_WINGUI*/
-#endif /*_GL*/
-
-/*----------------------------------------------------------------------
-  SwitchIconAnimPlay
-  ----------------------------------------------------------------------*/
-void SwitchIconAnimPlay (Document doc, View view, ThotBool state)
-{
-#ifdef _GL
-#ifndef _WX
-  if (state)
-    TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnim, state);
-  else
-    TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnimNo, state);
-#endif /* _WX */
-#endif /* _GL */
-}
-
-#ifdef _GL
-/*----------------------------------------------------------------------
-  AnimPlay: Launch the timer needed to change time.
-  ----------------------------------------------------------------------*/
-void Anim_Play (Document document, View view)
-{
-  TtaPlay (document, view);
-}
-#endif /*_GL*/
-
-/*----------------------------------------------------------------------
-  AddAnimPlayButton: Add a play button
-  ----------------------------------------------------------------------*/
-void AddAnimPlayButton (Document doc, View view)
-{
-#ifdef _GL
-#ifndef _WINGUI
-  iconAnim = TtaCreatePixmapLogo (animplay_xpm);
-  iconAnimNo = TtaCreatePixmapLogo (animstop_xpm);
 #endif /* _WINGUI */
-  AnimButton = TtaAddButton (doc,
-                             1,  
-                             (ThotIcon)iconAnim,
-                             (Proc)Anim_Play,
-                             "Anim_Play",
-                             TtaGetMessage (AMAYA, AM_BUTTON_ANIM),
-                             TBSTYLE_BUTTON, TRUE);
 #endif /*_GL*/
-}
+
 
 /*----------------------------------------------------------------------
   get_int_attribute_from_el: Get a int value from an xml attribute

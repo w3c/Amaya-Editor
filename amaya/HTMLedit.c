@@ -1845,10 +1845,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 #endif /* #if defined(_GTK) */
    
   ThotBool            isHTML;
-  ThotBool            fromButton = FALSE;
-
-  fromButton = TtaIsButtonActivated (doc, 1);
-  if (fromButton || clickFirst)
+  if (clickFirst)
     {
       /* ask the user to select target document and target anchor */
       TtaUnmapDialogue (BaseDialog + AttrHREFForm);
@@ -1888,7 +1885,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
   AttrHREFelement = el;
   AttrHREFdocument = doc;
   AttrHREFundoable = withUndo;
-  if ((fromButton || clickFirst) && (doc != targetDoc || TargetName != NULL))
+  if ((clickFirst) && (doc != targetDoc || TargetName != NULL))
     /* the user has clicked another document or a target element */
     /* create the attribute HREF or CITE */
     SetREFattribute (el, doc, TargetDocumentURL, TargetName);
@@ -1896,8 +1893,6 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
     /* the user has clicked the same document: pop up a dialogue box
        to allow the user to type the target URI */
     {
-      if (fromButton)
-        TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
       /* Dialogue form to insert HREF name */
       if (el)
         {

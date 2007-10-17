@@ -11,11 +11,6 @@ extern void CheckSVGRoot ( Document doc,
 extern void CreateGraphicElement ( int entry );
 extern void FreeSVG ( void );
 extern void InitSVG ( void );
-extern void AddGraphicsButton ( Document doc,
-                                View view );
-extern void SwitchIconGraph ( Document doc,
-                              View view,
-                              ThotBool state );
 extern ThotBool SVGElementTypeInMenu ( NotifyElement *event );
 extern void SVGCreated ( NotifyElement * event );
 extern ThotBool SVGWillBeDeleted ( NotifyElement * event );
@@ -33,11 +28,6 @@ extern void CheckSVGRoot ( Document doc,
 extern void CreateGraphicElement ( int entry );
 extern void FreeSVG ( void );
 extern void InitSVG ( void );
-extern void AddGraphicsButton ( Document doc,
-                                  View view );
-extern void SwitchIconGraph ( Document doc,
-                                View view,
-                                ThotBool state );
 extern ThotBool SVGElementTypeInMenu ( NotifyElement *event );
 extern void SVGCreated ( NotifyElement * event );
 extern ThotBool SVGWillBeDeleted ( NotifyElement * event );

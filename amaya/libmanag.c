@@ -142,7 +142,7 @@ static char         listTitle [MAX_BUFF];
   ----------------------------------------------------------------------*/
 static void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *title)
 {
-/* Utiliser un tableau plutôt qu'une liste chainée */
+/* Utiliser un tableau plutï¿½t qu'une liste chainï¿½e */
 /* ensuite modifier test sur les lignes du tableau avec un indice (Cf. FrameTable)*/
 /*!!!!!!modifier le nom des variables */
   ListUriTitle     *listCur, *listNext, *listNew; /* *curCel, *nextCel, *newCel*/
@@ -160,7 +160,7 @@ static void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *titl
 	{
 	  listCur = listNext;
 	  /* A EFFECTUER test pour savoir si l'url est deja placer dans la liste */
-	  /* il n'est pas necessaire d'ajouter deux fois la même librairie dans la liste!!!*/
+	  /* il n'est pas necessaire d'ajouter deux fois la mï¿½me librairie dans la liste!!!*/
 	  listNext = listNext->next;
 	  index++;
 	}
@@ -1160,7 +1160,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   /*
    *
    * Initialiser les metas: DocumentMeta[newLibraryDoc]
-   * OK mais voir si DocumentSource et DocumentURLs ne pose pas de problème
+   * OK mais voir si DocumentSource et DocumentURLs ne pose pas de problï¿½me
    */
   /* store the document profile */
   TtaSetDocumentProfile (newLibraryDoc, L_Xhtml11);
@@ -1374,7 +1374,7 @@ char *CreateUniqueLibraryTitle (char *title)
   strcpy (Title, title);
   while (IsLibraryTitleExist (Title))
     {
-      /* A EFFECTUER : ajouter des parenthèses autour du nombre */
+      /* A EFFECTUER : ajouter des parenthï¿½ses autour du nombre */
       sprintf (Title, "%s%d", title, i);
       i++;
     }
@@ -1742,7 +1742,7 @@ void ShowLibrary (Document doc, View view)
 #ifdef _SVG
   /* open catalogue */
   OpenCatalogue (doc, view);
-  /* Création des widgets de la fenêtre pour obtenir l'ergonomie souhaitée */
+  /* Crï¿½ation des widgets de la fenï¿½tre pour obtenir l'ergonomie souhaitï¿½e */
   /* A effectuer si necessaire en modifiant les Widgets de la FrameTable */
   TtaHandlePendingEvents ();  
 #endif /* _SVG */
@@ -1768,7 +1768,7 @@ void SaveSVGURL (Document doc, Element El)
   currentEl = El;
   /*
    *solution avec tant que non TtaGetTextLength alors TtaGetFirstChild 
-   *(contournement du problème lié à la recherche sur le ptr de l'élément 
+   *(contournement du problï¿½me liï¿½ ï¿½ la recherche sur le ptr de l'ï¿½lï¿½ment 
    *  ElTerminal = 1 ou 0)
    */
   prevEl = TtaGetParent (currentEl);
@@ -2553,9 +2553,9 @@ void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
 
 /*----------------------------------------------------------------------
   CopyUseElementAttribute
-  A REFLECHIR: le mode de copie pour l'ajout d'un modèle dans la librairie
-  lorsqu'on a la présence d'un ou plusieurs éléments "use" référencant le
-  même objet graphique.
+  A REFLECHIR: le mode de copie pour l'ajout d'un modï¿½le dans la librairie
+  lorsqu'on a la prï¿½sence d'un ou plusieurs ï¿½lï¿½ments "use" rï¿½fï¿½rencant le
+  mï¿½me objet graphique.
   ----------------------------------------------------------------------*/
 void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
 {
@@ -2623,7 +2623,7 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
 		{
 		  /* change the value of the concerned attribute */
 		  /*
-		    TODO une fonction générique qui remplace la valeur
+		    TODO une fonction gï¿½nï¿½rique qui remplace la valeur
 		    courante d'un attribut
 		    void ChangeAttributeValue (Element curEl,
 		    Attribute currentAttr, int TypeOfValue, char *value)
@@ -2778,7 +2778,7 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
     TtaAttachAttribute (anchorEl, attr, libDoc);
   /* newURL must be a svg URL */
   ExtractLibraryPrefixFilename (newURL);
-  /* écrire fonction de récupération de l'id créé lors de CreateSVGFileofSVGSelected 
+  /* ï¿½crire fonction de rï¿½cupï¿½ration de l'id crï¿½ï¿½ lors de CreateSVGFileofSVGSelected 
      A EFFECTUER*/
   strcat (newURL, ".svg#object");
   basename = GetBaseURL (libDoc);
@@ -3061,8 +3061,8 @@ ThotBool WriteInterSessionLibraryFileManager ()
   if (file)
     {
       succeed = TRUE;
-      /* necessité de tester le nombre d'uri a placer dans lib_files.dat
-	 pour éviter d'avoir un EOL à la fin du fichier (Pas sous GTK)*/
+      /* necessitï¿½ de tester le nombre d'uri a placer dans lib_files.dat
+	 pour ï¿½viter d'avoir un EOL ï¿½ la fin du fichier (Pas sous GTK)*/
       while (curList)
 	{
 	  if (curList->customLibrary)
@@ -3172,35 +3172,6 @@ void RemoveLibraryModel (Document deletedDoc, Element deletedEl)
 }
 
 
-/*----------------------------------------------------------------------
-   AddLibraryButton    
-  ----------------------------------------------------------------------*/
-void AddLibraryButton (Document doc, View view)
-{
-#ifdef _SVG
-  LibSVGButton = TtaAddButton (doc, 1, iconLibsvg, (Proc)ShowLibrary,
-			      "ShowLibrary",
-			      TtaGetMessage (AMAYA, AM_BUTTON_SVG_LIBRARY),
-			      TBSTYLE_BUTTON, TRUE);
-#endif /* _SVG */ 
-}
-
-
-/*----------------------------------------------------------------------
-  SwitchIconGraph
-  ----------------------------------------------------------------------*/
-void SwitchIconLibrary (Document doc, View view, ThotBool state)
-{
-#ifdef _SVG
-#ifndef _WX
-  if (state)
-    TtaChangeButton (doc, view, LibSVGButton, iconLibsvg, state);
-  else
-    TtaChangeButton (doc, view, LibSVGButton, iconLibsvgNo, state);
-#endif /* _WX */
-#endif /* _SVG */
-}
-
 
 /*----------------------------------------------------------------------
    OpenLibraryCallback
@@ -3240,7 +3211,7 @@ void OpenLibraryCallback (Document doc, View view, char *text)
       else
 	{
 	  DontReplaceOldDoc = FALSE;
-	  /* TESTER si le document a été modifié avant d'ouvrir le nouveau document */
+	  /* TESTER si le document a ï¿½tï¿½ modifiï¿½ avant d'ouvrir le nouveau document */
 	  if (TtaIsDocumentModified (doc))
 	    CanReplaceCurrentDocument (doc, 1);
 	  else

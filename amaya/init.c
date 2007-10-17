@@ -1093,32 +1093,12 @@ void UpdateEditorMenus (Document doc)
       TtaSetItemOn (doc, 1, Types, BScript);
       TtaSetItemOn (doc, 1, Types, BNoScript);
     }
-#else /* _WX */
-  /* structure information is active only in the structure view */
-  TtaSetItemOff (doc, 1, Types, BStyle);
-  TtaSetItemOff (doc, 1, Types, BComment);
-  TtaSetItemOff (doc, 1, Types, BBase);
-  TtaSetItemOff (doc, 1, Types, BMeta);
-  TtaSetItemOff (doc, 1, Types, BLink);
-  TtaSetItemOff (doc, 1, Types, BScript);
-  TtaSetItemOff (doc, 1, Types, BNoScript);
-  TtaSetItemOff (doc, 1, XMLTypes, BXMLComment);
 #endif /* _WX */
   /* invalid all table edits as long as the selection is out of a table */
   if (TtaIsDocumentSelected (doc))
     SetTableMenuOn (doc, 1);
   else
     SetTableMenuOff (doc, 1);
-
-#ifndef _WX
-  /* SG: I dont understand why these items are enabled here ...
-   * because SwitchUndo, SwitchPaste functions do the work before  */
-  TtaSetItemOn (doc, 1, Edit_, BUndo);
-  TtaSetItemOn (doc, 1, Edit_, BRedo);
-  TtaSetItemOn (doc, 1, Edit_, BCut);
-  TtaSetItemOn (doc, 1, Edit_, BPaste);
-  TtaSetItemOn (doc, 1, Edit_, BClear);
-#endif /* _WX */
 
   if (DocumentTypes[doc] == docHTML ||
       DocumentTypes[doc] == docAnnot ||
@@ -1131,7 +1111,6 @@ void UpdateEditorMenus (Document doc)
       TtaSetMenuOn (doc, 1, Style);
       if (DocumentTypes[doc] == docMath)
         {
-          SwitchIconMath (doc, 1, TRUE);
           TtaSetMenuOn (doc, 1, XMLTypes);
           TtaSetMenuOff (doc, 1, Types);
           TtaSetItemOn (doc, 1, Edit_, BTransform);
@@ -1151,41 +1130,12 @@ void UpdateEditorMenus (Document doc)
           TtaSetMenuOn (doc, 1, Types);
           TtaSetMenuOn (doc, 1, Links);
 
-#ifndef _WX
-          TtaChangeButton (doc, 1, iI, iconI, TRUE);
-          TtaChangeButton (doc, 1, iB, iconB, TRUE);
-          TtaChangeButton (doc, 1, iT, iconT, TRUE);
-          TtaChangeButton (doc, 1, iImage, iconImage, TRUE);
-          TtaChangeButton (doc, 1, iH1, iconH1, TRUE);
-          TtaChangeButton (doc, 1, iH2, iconH2, TRUE);
-          TtaChangeButton (doc, 1, iH3, iconH3, TRUE);
-          TtaChangeButton (doc, 1, iBullet, iconBullet, TRUE);
-          TtaChangeButton (doc, 1, iNum, iconNum, TRUE);
-          TtaChangeButton (doc, 1, iDL, iconDL, TRUE);
-          TtaChangeButton (doc, 1, iTable, iconTable, TRUE);
-          TtaChangeButton (doc, 1, iLink, iconLink, TRUE);
-#endif /* _WX */
-
-          SwitchIconMath (doc, 1, TRUE);
-#ifdef _SVG
-          SwitchIconGraph (doc, 1, TRUE);
-          SwitchIconLibrary (doc, 1, TRUE);
-#ifdef _GL
-          SwitchIconAnimPlay (doc, 1, TRUE);
-#endif /*_GL*/
-#endif /* _SVG */
         }
 
       view = TtaGetViewFromName (doc, "Structure_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
         {
           /* update specific menu entries */
-#ifndef _WX
-          TtaUpdateMenus (doc, view, FALSE);
-          TtaSetItemOff (doc, view, File, BShowLogFile);
-          TtaSetItemOff (doc, view, File, BSynchro);
-          SetTableMenuOff (doc, view); /* no table commands */
-#endif /* _WX */
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
           TtaSetItemOn (doc, view, Edit_, BClear);
@@ -1202,22 +1152,6 @@ void UpdateEditorMenus (Document doc)
       if (view != 0 && TtaIsViewOpen (doc, view))
         {
           /* update specific menu entries */
-#ifndef _WX
-          TtaUpdateMenus (doc, view, FALSE);
-          TtaSetItemOff (doc, view, File, BShowLogFile);
-          TtaSetItemOff (doc, view, File, BSynchro);
-          /* structure information is active only in the structure view */
-          TtaSetItemOff (doc, view, Types, BStyle);
-          TtaSetItemOff (doc, view, Types, BComment);
-          TtaSetItemOff (doc, view, Types, BBase);
-          TtaSetItemOff (doc, view, Types, BMeta);
-          TtaSetItemOff (doc, view, Types, BLink);
-          TtaSetItemOff (doc, view, Types, BScript);
-          TtaSetItemOff (doc, view, Types, BNoScript);
-          TtaSetItemOff (doc, view, XMLTypes, BXMLComment);
-          SetTableMenuOff (doc, view); /* no table commands */
-          SetCharsetMenuOff (doc, view); /* no charset commands */
-#endif /* _WX */
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
           TtaSetItemOn (doc, view, Edit_, BClear);
@@ -1229,21 +1163,6 @@ void UpdateEditorMenus (Document doc)
       if (view != 0 && TtaIsViewOpen (doc, view))
         {
           /* update specific menu entries */
-#ifndef _WX
-          TtaUpdateMenus (doc, view, FALSE);
-          TtaSetItemOff (doc, view, File, BShowLogFile);
-          TtaSetItemOff (doc, view, File, BSynchro);
-          /* structure information is active only in the structure view */
-          TtaSetItemOff (doc, view, Types, BStyle);
-          TtaSetItemOff (doc, view, Types, BComment);
-          TtaSetItemOff (doc, view, Types, BBase);
-          TtaSetItemOff (doc, view, Types, BMeta);
-          TtaSetItemOff (doc, view, Types, BLink);
-          TtaSetItemOff (doc, view, Types, BScript);
-          TtaSetItemOff (doc, view, Types, BNoScript);
-          TtaSetItemOff (doc, view, XMLTypes, BXMLComment);
-          SetTableMenuOff (doc, view); /* no table commands */
-#endif /* _WX */
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
           TtaSetItemOn (doc, view, Edit_, BClear);
@@ -1260,21 +1179,6 @@ void UpdateEditorMenus (Document doc)
       if (view != 0 && TtaIsViewOpen (doc, view))
         {
           /* update specific menu entries */
-#ifndef _WX
-          TtaUpdateMenus (doc, view, FALSE);
-          TtaSetItemOff (doc, view, File, BShowLogFile);
-          TtaSetItemOff (doc, view, File, BSynchro);
-          /* structure information is active only in the structure view */
-          TtaSetItemOff (doc, view, Types, BStyle);
-          TtaSetItemOff (doc, view, Types, BComment);
-          TtaSetItemOff (doc, view, Types, BBase);
-          TtaSetItemOff (doc, view, Types, BMeta);
-          TtaSetItemOff (doc, view, Types, BLink);
-          TtaSetItemOff (doc, view, Types, BScript);
-          TtaSetItemOff (doc, view, Types, BNoScript);
-          TtaSetItemOff (doc, view, XMLTypes, BXMLComment);
-          SetTableMenuOff (doc, view); /* no table commands */
-#endif /* _WX */
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
           TtaSetItemOn (doc, view, Edit_, BClear);
@@ -3085,7 +2989,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
 #ifndef DAV    /* don't active the WebDAV menu if flag is off */
       TtaSetMenuOff (doc, 1, Cooperation_);
-      TtaSetItemOff (doc, 1, Edit_, BCoopConfig);
 #endif  /* DAV */
 
       /* do we have to redraw buttons and menus? */
@@ -3101,167 +3004,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /* _SVG */
 #endif /* _WX */
 
-#ifndef _WX
-          TtcSwitchButtonBar (doc, 1); /* no button bar */
-          if (docType != docLibrary)
-            TtcSwitchCommands (doc, 1); /* no command open */
-#ifdef _SVG
-          else
-            /* Initialize SVG Library Buffer string */
-            TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-                            FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
-#endif /* _SVG */
-#endif /* _WX */
         }
-      else if (!isOpen)
-        /* if isOpen is true, it means that a new window has been opened for this document 
-         * we must initialize each things that must be initialized once for the window */
-        {
-          /* create the  button bar */
-#ifndef _WX
-          /* use a new window: Create all buttons */
-          iStop =TtaAddButton (doc, 1, stopN, (Proc)StopTransfer,"StopTransfer",
-                               TtaGetMessage (LIB,TMSG_BUTTON_INTERRUPT),
-                               TBSTYLE_BUTTON, FALSE);
-          iBack = TtaAddButton (doc, 1, iconBackNo, (Proc)GotoPreviousHTML,
-                                "GotoPreviousHTML",
-                                TtaGetMessage (LIB,TMSG_BUTTON_PREVIOUS),
-                                TBSTYLE_BUTTON, FALSE);
-          iForward = TtaAddButton (doc, 1, iconForwardNo, (Proc)GotoNextHTML,
-                                   "GotoNextHTML",
-                                   TtaGetMessage (LIB,TMSG_BUTTON_NEXT),
-                                   TBSTYLE_BUTTON, FALSE);
-          iReload = TtaAddButton (doc, 1, iconReload, (Proc)Reload, "Reload",
-                                  TtaGetMessage (LIB,TMSG_BUTTON_RELOAD),
-                                  TBSTYLE_BUTTON, TRUE);
-          iHome = TtaAddButton (doc, 1, iconHome, (Proc)GoToHome, "GoToHome",
-                                TtaGetMessage (LIB,TMSG_BUTTON_HOME),
-                                TBSTYLE_BUTTON, TRUE);
-          /* SEPARATOR */
-          TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
-          iSave = TtaAddButton (doc, 1, iconSaveNo, (Proc)SaveDocument,
-                                "SaveDocument",
-                                TtaGetMessage (LIB,TMSG_BUTTON_SAVE),
-                                TBSTYLE_BUTTON, FALSE);
-          iSaveAll = TtaAddButton (doc, 1, iconSaveAllNo, (Proc)SaveAll,
-                                "SaveAll",
-                                TtaGetMessage (LIB,TMSG_BUTTON_SAVE_ALL),
-                                TBSTYLE_BUTTON, FALSE);
-          iPrint = TtaAddButton (doc, 1, iconPrint, (Proc)SetupAndPrint,  "SetupAndPrint",
-                                 TtaGetMessage (LIB,TMSG_BUTTON_PRINT),
-                                 TBSTYLE_BUTTON, TRUE);
-          iFind = TtaAddButton (doc, 1, iconFind, (Proc)TtcSearchText,
-                                "TtcSearchText", 
-                                TtaGetMessage (LIB,TMSG_BUTTON_SEARCH),
-                                TBSTYLE_BUTTON, TRUE);
-          /* SEPARATOR */
-          TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
-          iI =  TtaAddButton (doc, 1, iconI, (Proc)SetOnOffEmphasis,
-                              "SetOnOffEmphasis",
-                              TtaGetMessage (LIB,TMSG_BUTTON_ITALICS),
-                              TBSTYLE_CHECK, TRUE);
-          iB =  TtaAddButton (doc, 1, iconB, (Proc)SetOnOffStrong, "SetOnOffStrong",
-                              TtaGetMessage (LIB,TMSG_BUTTON_BOLD),
-                              TBSTYLE_CHECK, TRUE);
-          iT = TtaAddButton (doc, 1, iconT, (Proc)SetOnOffCode, "SetOnOffCode",
-                             TtaGetMessage (LIB,TMSG_BUTTON_CODE),
-                             TBSTYLE_CHECK, TRUE);
-          /* SEPARATOR */
-          TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
-          iImage = TtaAddButton (doc, 1, iconImage, (Proc)CreateImage,
-                                 "CreateImage", 
-                                 TtaGetMessage (LIB,TMSG_BUTTON_IMG),
-                                 TBSTYLE_BUTTON, TRUE);
-          iH1 = TtaAddButton (doc, 1, iconH1, (Proc)CreateHeading1,
-                              "CreateHeading1", 
-                              TtaGetMessage (LIB,TMSG_BUTTON_H1),
-                              TBSTYLE_BUTTON, TRUE);
-          iH2 = TtaAddButton (doc, 1, iconH2, (Proc)CreateHeading2,
-                              "CreateHeading2", 
-                              TtaGetMessage (LIB,TMSG_BUTTON_H2),
-                              TBSTYLE_BUTTON, TRUE);
-          iH3 = TtaAddButton (doc, 1, iconH3, (Proc)CreateHeading3,
-                              "CreateHeading3", 
-                              TtaGetMessage (LIB,TMSG_BUTTON_H3),
-                              TBSTYLE_BUTTON, TRUE);
-          iBullet = TtaAddButton (doc, 1, iconBullet, (Proc)CreateList,
-                                  "CreateList",
-                                  TtaGetMessage (LIB,TMSG_BUTTON_UL),
-                                  TBSTYLE_BUTTON, TRUE);
-          iNum = TtaAddButton (doc, 1, iconNum, (Proc)CreateNumberedList,
-                               "CreateNumberedList",
-                               TtaGetMessage (LIB,TMSG_BUTTON_OL),
-                               TBSTYLE_BUTTON, TRUE);
-          iDL = TtaAddButton (doc, 1, iconDL, (Proc)CreateDefinitionList,
-                              "CreateDefinitionList",
-                              TtaGetMessage (LIB,TMSG_BUTTON_DL),
-                              TBSTYLE_BUTTON, TRUE);
-          iLink = TtaAddButton (doc, 1, iconLink, (Proc)CreateOrChangeLink,
-                                "CreateOrChangeLink",
-                                TtaGetMessage (LIB,TMSG_BUTTON_LINK),
-                                TBSTYLE_BUTTON, TRUE);
-          iTable = TtaAddButton (doc, 1, iconTable, (Proc)CreateTable,
-                                 "CreateTable",
-                                 TtaGetMessage (LIB,TMSG_BUTTON_TABLE),
-                                 TBSTYLE_BUTTON, TRUE);
-          AddMathButton (doc, 1);
-#ifdef _SVG
-          AddGraphicsButton (doc, 1);
-          AddLibraryButton (doc, 1);
-#ifdef _GL
-          AddAnimPlayButton (doc, 1);
-#endif /*_GL*/
-#endif /* _SVG */
-#endif /* _WX */
-
-#ifndef _WX
-          TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-                          TRUE, (Proc)TextURL, URL_list);
-#endif /* _WX */
-
-#if defined(_GTK) || defined(_WINGUI)
-          /* initial state for menu entries */
-          TtaSetItemOff (doc, 1, File, BBack);
-          TtaSetItemOff (doc, 1, File, BForward);
-          TtaSetItemOff (doc, 1, File, BSave);
-          TtaSetItemOff (doc, 1, File, BSaveAll);
-          TtaSetItemOff (doc, 1, File, BSynchro);
-
-          /* button bar On/Off => TODO for WX */
-          if (SButtons[doc] && docType != docBookmark)
-            TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
-          else
-            /* hide buttons */
-            TtcSwitchButtonBar (doc, 1);
-	   
-          /* Url bar On/Off => TODO for WX */
-          if (SAddress[doc])
-            TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
-          else
-            /* hide the address */
-            TtcSwitchCommands (doc, 1);
-
-          /* MapArea menu item */
-          TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
-          TtaSetMenuOff (doc, 1, Attributes_);
-
-          /* SplitView menu items */
-          TtaSetToggleItem (doc, 1, Views, TSplitHorizontally, HSplit[doc]);
-          TtaSetToggleItem (doc, 1, Views, TSplitVertically, VSplit[doc]);
-
-          TtaSetMenuOff (doc, 1, Attributes_);
-
-          /* if we open the new document in a new view, control */
-          /* is transferred from previous document to new document */
-          if (oldDoc != doc && oldDoc != 0)
-            {
-              ResetStop (oldDoc);
-              /* clear the status line of previous document */
-              TtaSetStatus (oldDoc, 1, " ", NULL);
-              ActiveTransfer (doc);
-            }
-#endif /* _GTK || _WINGUI */
-        } /* isOpen */
     }
 
   if (!replaceOldDoc || !isOpen)
@@ -3273,7 +3016,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       TtaSetItemOff (doc, 1, File, BSave);
       TtaSetItemOff (doc, 1, File, BSaveAll);
       TtaSetItemOff (doc, 1, File, BSynchro);
-      TtaSetMenuOff (doc, 1, Attributes_);
 
       /* init MapAreas menu item */
       TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
@@ -3321,10 +3063,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
         {
           if (DocumentTypes[doc] != docBookmark)
             {
-              TtaSetItemOff (doc, 1, File, BHtmlBasic);
-              TtaSetItemOff (doc, 1, File, BHtmlStrict);
-              TtaSetItemOff (doc, 1, File, BHtml11);
-              TtaSetItemOff (doc, 1, File, BHtmlTransitional);
               TtaSetItemOff (doc, 1, File, BMathml);
               TtaSetItemOff (doc, 1, File, BSvg);
               TtaSetItemOff (doc, 1, File, BTemplate);
@@ -3335,7 +3073,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
               TtaSetItemOff (doc, 1, File, BForward);
 #ifdef ANNOTATIONS
               TtaSetMenuOff (doc, 1, Annotations_);
-              TtaSetItemOff (doc, 1, Edit_, BConfigAnnotations);
 #endif /* ANNOTATIONS */
             }
           TtaSetItemOff (doc, 1, File, BSave);
@@ -3361,7 +3098,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           TtaSetMenuOff (doc, 1, Links);
           TtaSetMenuOff (doc, 1, Views);
           TtaSetMenuOff (doc, 1, Style);
-          TtaSetMenuOff (doc, 1, Attributes_);
           TtaSetMenuOff (doc, 1, Help_);
           if (docType != docBookmark)
             {
@@ -3398,23 +3134,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
               TtaSetItemOff (doc, 1, Style, BEnableCSS);
               TtaSetItemOff (doc, 1, Style, BRemoveCSS);
             }
-#else /* _WX */
-          if (DocumentTypes[doc] == docMath)
-            TtaSetMenuOn (doc, 1, Style);
-          else
-            TtaSetMenuOff (doc, 1, Style);
-          TtaChangeButton (doc, 1, iI, iconINo, FALSE);
-          TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
-          TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
-          TtaChangeButton (doc, 1, iImage, iconImageNo, FALSE);
-          TtaChangeButton (doc, 1, iH1, iconH1No, FALSE);
-          TtaChangeButton (doc, 1, iH2, iconH2No, FALSE);
-          TtaChangeButton (doc, 1, iH3, iconH3No, FALSE);
-          TtaChangeButton (doc, 1, iBullet, iconBulletNo, FALSE);
-          TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
-          TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
-          TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
-          TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
 #endif /* _WX */
           TtaSetItemOff (doc, 1, Views, TShowMapAreas);
           TtaSetItemOff (doc, 1, Views, TShowTargets);
@@ -3427,11 +3146,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
               TtaSetItemOff (doc, 1, XMLTypes, BAddNewModel);
               TtaSetMenuOn (doc, 1, XMLTypes);
               TtaSetMenuOn (doc, 1, Views);
-              TtaSetMenuOn (doc, 1, Attributes_);
-#ifdef _SVG
-              SwitchIconGraph (doc, 1, FALSE);
-              SwitchIconLibrary (doc, 1, FALSE);
-#endif /* _SVG */
             }
           else
             {
@@ -3440,9 +3154,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /* _WX */
                 TtaSetMenuOff (doc, 1, Views);
               TtaSetItemOff (doc, 1, Edit_, BTransform);
-              SwitchIconMath (doc, 1, FALSE);
               TtaSetMenuOff (doc, 1, XMLTypes);
-              TtaSetMenuOff (doc, 1, Attributes_);
 #ifdef ANNOTATIONS
               TtaSetMenuOff (doc, 1, Annotations_);
 #endif /* ANNOTATIONS */
@@ -3450,9 +3162,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
         }
       else if (DocumentTypes[doc] == docAnnot)
         {
-#ifndef _WX
-          TtcSwitchCommands (doc, 1); /* no command open */
-#endif /* _WX */
           TtaSetItemOff (doc, 1, Views, BShowAlternate);
           TtaSetItemOff (doc, 1, Views, BShowToC);
           TtaSetItemOff (doc, 1, Views, BShowSource);
@@ -5109,13 +4818,7 @@ void ShowFormatted (Document doc, View view)
       TtaGetViewGeometry (doc, structureName, &x, &y, &w, &h);
       structView = TtaOpenView (doc, structureName, x, y, w, h);
       if (structView != 0)
-        {
-#ifndef _WX
-          TtcSwitchButtonBar (doc, structView); /* no button bar */
-          TtcSwitchCommands (doc, structView); /* no command open */
-#endif /* _WX */
           UpdateEditorMenus (doc);
-        }
     }
   SetWindowTitle (doc, doc, 0);
 
@@ -5147,13 +4850,7 @@ void ShowStructure (Document doc, View view)
       TtaGetViewGeometry (doc, structureName, &x, &y, &w, &h);
       structView = TtaOpenView (doc, structureName, x, y, w, h);
       if (structView != 0)
-        {
-#ifndef _WX
-          TtcSwitchButtonBar (doc, structView); /* no button bar */
-          TtcSwitchCommands (doc, structView); /* no command open */
-#endif /* _WX */
           UpdateEditorMenus (doc);
-        }
     }
   SetWindowTitle (doc, doc, 0);
 
@@ -5187,10 +4884,6 @@ void ShowAlternate (Document doc, View view)
       if (altView != 0)
         {
           SetWindowTitle (doc, doc, altView);
-#ifndef _WX
-          TtcSwitchButtonBar (doc, altView); /* no button bar */
-          TtcSwitchCommands (doc, altView); /* no command open */
-#endif /* _WX */
           UpdateEditorMenus (doc);
         }
     }
@@ -5226,10 +4919,6 @@ void ShowLinks (Document doc, View view)
       if (linksView != 0)
         {
           SetWindowTitle (doc, doc, linksView);
-#ifndef _WX
-          TtcSwitchButtonBar (doc, linksView); /* no button bar */
-          TtcSwitchCommands (doc, linksView); /* no command open */
-#endif /* _WX */
           UpdateEditorMenus (doc);
         }
     }
@@ -5265,10 +4954,6 @@ void ShowToC (Document doc, View view)
       if (tocView != 0)
         {
           SetWindowTitle (doc, doc, tocView);
-#ifndef _WX
-          TtcSwitchButtonBar (doc, tocView); /* no button bar */
-          TtcSwitchCommands (doc, tocView); /* no command open */
-#endif /* _WX */
           UpdateEditorMenus (doc);
         }
     }
@@ -5825,10 +5510,6 @@ Document GetAmayaDoc (char *urlname, char *form_data,
           if (newdoc)
             {
               /* help document has to be in read-only mode */
-#ifndef _WX
-              TtcSwitchCommands (newdoc, 1); /* no command open */
-#endif /* _WX */
-              TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
               TtaSetMenuOff (newdoc, 1, Help_);
             }
         }
@@ -8403,84 +8084,6 @@ void ShowMapAreas (Document doc, View view)
   TtaSetToggleItem (doc, view, Views, TShowMapAreas, MapAreas[doc]);
 #endif /* _GTK || _WX */
   ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
-}
-
-/*----------------------------------------------------------------------
-  ShowButtons
-  Execute the "Show Buttons" command
-  ----------------------------------------------------------------------*/
-void ShowButtons (Document doc, View view)
-{
-
-#ifdef _WINGUI
-  int frame = GetWindowNumber (doc, view);
-
-  if (frame == 0 || frame > 10)
-    TtaError (ERR_invalid_parameter);
-  else
-    {
-      HMENU hmenu = WIN_GetMenu (frame); 
-      if (!SButtons[doc])
-        {
-          CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
-          SButtons[doc] = TRUE;
-        }
-      else
-        {
-          hmenu = WIN_GetMenu (frame); 
-          CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-          SButtons[doc] = FALSE;
-        }
-    }
-#endif /* _WINGUI */
-  
-#if defined(_GTK) || defined(_WX)  
-  SButtons[doc] = !SButtons[doc];
-#endif /* #if defined(_GTK) || defined(_WX) */
-  
-  TtaSetToggleItem (doc, 1, Views, TShowButtonbar, SButtons[doc]);
-#ifndef _WX
-  TtcSwitchButtonBar (doc, view);
-#endif /* _WX */
-}
-
-/*----------------------------------------------------------------------
-  ShowAddress
-  Execute the "Show Address" command
-  ----------------------------------------------------------------------*/
-void ShowAddress (Document doc, View view)
-{
-  
-#ifdef _WINGUI
-  int frame = GetWindowNumber (doc, view);
-
-  if (frame == 0 || frame > 10)
-    TtaError (ERR_invalid_parameter);
-  else
-    {
-      HMENU hmenu = WIN_GetMenu (frame); 
-      if (!SAddress[doc])
-        {
-          CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
-          SAddress[doc] = TRUE;
-        }
-      else
-        {
-          hmenu = WIN_GetMenu (frame); 
-          CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-          SAddress[doc] = FALSE;
-        }
-    }
-#endif /* _WINGUI */
-  
-#if defined(_GTK) || defined(_WX)  
-  SAddress[doc] = !SAddress[doc];
-#endif /* #if defined(_GTK) || defined(_WX) */
-  
-  TtaSetToggleItem (doc, 1, Views, TShowTextZone, SAddress[doc]);
-#ifndef _WX
-  TtcSwitchCommands (doc, view);
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

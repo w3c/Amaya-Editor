@@ -18,14 +18,6 @@ extern void ExecuteExternal ( Document document,
                               View view );
 extern void NewXHTML ( Document doc,
                        View view );
-extern void NewXHTMLBasic ( Document doc,
-                            View view );
-extern void NewXHTMLStrict ( Document doc,
-                             View view );
-extern void NewXHTML11 ( Document doc,
-                         View view );
-extern void NewXHTMLTransitional ( Document doc,
-                                   View view );
 extern void NewMathML ( Document doc,
                         View view );
 extern void NewSVG ( Document doc,
@@ -226,23 +218,7 @@ extern void FlushCache ( Document doc,
                          View view );
 extern void ConfigAmaya ( Document doc,
                           View view );
-extern void ConfigColor ( Document doc,
-                          View view );
-extern void ConfigGeometry ( Document doc,
-                             View view );
-extern void ConfigGeneral ( Document doc,
-                            View view );
-extern void ConfigBrowse ( Document doc,
-                           View view );
-extern void ConfigPublish ( Document doc,
-                            View view );
-extern void ConfigCache ( Document doc,
-                          View view );
-extern void ConfigProxy ( Document doc,
-                          View view );
 extern void SaveOptions ( Document doc,
-                          View view );
-extern void ConfigAnnot ( Document doc,
                           View view );
 extern void AnnotateDocument ( Document doc,
                                View view );
@@ -282,8 +258,6 @@ extern void PropDocument ( Document doc,
                            View view );
 extern void CopyLockInformation ( Document doc,
                                   View view );
-extern void CooperationConfig ( Document doc,
-                                View view );
 extern void LockIndicator ( Document doc,
                             View view );
 
@@ -301,14 +275,6 @@ extern void ExecuteExternal ( Document document,
                                 View view );
 extern void NewXHTML ( Document doc,
                          View view );
-extern void NewXHTMLBasic ( Document doc,
-                              View view );
-extern void NewXHTMLStrict ( Document doc,
-                               View view );
-extern void NewXHTML11 ( Document doc,
-                           View view );
-extern void NewXHTMLTransitional ( Document doc,
-                                     View view );
 extern void NewMathML ( Document doc,
                           View view );
 extern void NewSVG ( Document doc,
@@ -509,23 +475,7 @@ extern void FlushCache ( Document doc,
                            View view );
 extern void ConfigAmaya ( Document doc,
                             View view );
-extern void ConfigColor ( Document doc,
-                            View view );
-extern void ConfigGeometry ( Document doc,
-                               View view );
-extern void ConfigGeneral ( Document doc,
-                              View view );
-extern void ConfigBrowse ( Document doc,
-                             View view );
-extern void ConfigPublish ( Document doc,
-                              View view );
-extern void ConfigCache ( Document doc,
-                            View view );
-extern void ConfigProxy ( Document doc,
-                            View view );
 extern void SaveOptions ( Document doc,
-                            View view );
-extern void ConfigAnnot ( Document doc,
                             View view );
 extern void AnnotateDocument ( Document doc,
                                  View view );
@@ -565,8 +515,6 @@ extern void PropDocument ( Document doc,
                              View view );
 extern void CopyLockInformation ( Document doc,
                                     View view );
-extern void CooperationConfig ( Document doc,
-                                  View view );
 extern void LockIndicator ( Document doc,
                               View view );
 

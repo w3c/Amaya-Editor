@@ -625,7 +625,8 @@ void Prof_InitTable (char *profile)
   char               *ptr;
   char                buffer[MAX_LENGTH];
   int                 i, j;
-
+  ThotBool            amaya_lite = FALSE;
+  
   /* open the profile file */
   ptr = TtaGetEnvString ("Profiles_File");
   if (ptr && *ptr)
@@ -650,9 +651,9 @@ void Prof_InitTable (char *profile)
               else
                 strcpy (UserProfile, profile);
             }
-#ifdef _WX
-          strcat (UserProfile, "_WX");
-#endif /* _WX */
+          TtaGetEnvBoolean ("AMAYA_LITE", &amaya_lite);
+          if(amaya_lite)
+            strcat (UserProfile, "_Lite");
 
           /* Fill a profile and module tables */
           while (fgets (ProfileBuff, sizeof (ProfileBuff), profFile))

@@ -10,10 +10,6 @@ extern void ThotUpdatePalette ( void );
 extern void ThotSelectPalette ( int bground,
                                 int fground );
 extern void ThotGetSelectedElementColor ( void );
-extern ThotBool ThotCreatePalette ( int x,
-                                    int y );
-extern void TtcChangeColors ( Document document,
-                              View view );
 extern void TtcGetPaletteColors ( int *fg,
                                   int *bg,
                                   ThotBool palType );
@@ -24,10 +20,6 @@ extern void ThotUpdatePalette ( void );
 extern void ThotSelectPalette ( int bground,
                                   int fground );
 extern void ThotGetSelectedElementColor ( void );
-extern ThotBool ThotCreatePalette ( int x,
-                                      int y );
-extern void TtcChangeColors ( Document document,
-                                View view );
 extern void TtcGetPaletteColors ( int *fg,
                                     int *bg,
                                     ThotBool palType );

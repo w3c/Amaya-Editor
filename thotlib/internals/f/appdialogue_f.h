@@ -48,30 +48,6 @@ extern void BuildPopdown ( Menu_Ctl *ptrmenu,
                            ThotBool update,
                            ThotBool RO );
 extern void TteOpenMainWindow ( char *name );
-extern int TtaAddButton ( Document document,
-                          View view,
-                          ThotIcon picture,
-                          void (*procedure) (),
-                          char *functionName,
-                          char *info,
-                          unsigned char type,
-                          ThotBool state );
-extern void TtaSwitchButton ( Document doc,
-                              View view,
-                              int index );
-extern void TtaChangeButton ( Document doc,
-                              View view,
-                              int index,
-                              ThotIcon picture,
-                              ThotBool state );
-extern void TtcSwitchButtonBar ( Document doc,
-                                 View view );
-extern ThotBool TtaIsButtonActivated ( Document document,
-                                       View view );
-extern void TtaSetButtonActivatedStatus ( ThotBool new_status );
-extern void APP_TextCallback ( ThotWidget w,
-                               int frame,
-                               void *call_d );
 extern int TtaAddTextZone ( Document doc,
                             View view,
                             char *label,
@@ -184,30 +160,6 @@ extern void BuildPopdown ( Menu_Ctl *ptrmenu,
                              ThotBool update,
                              ThotBool RO );
 extern void TteOpenMainWindow ( char *name );
-extern int TtaAddButton ( Document document,
-                            View view,
-                            ThotIcon picture,
-                            void (*procedure) (),
-                            char *functionName,
-                            char *info,
-                            unsigned char type,
-                            ThotBool state );
-extern void TtaSwitchButton ( Document doc,
-                                View view,
-                                int index );
-extern void TtaChangeButton ( Document doc,
-                                View view,
-                                int index,
-                                ThotIcon picture,
-                                ThotBool state );
-extern void TtcSwitchButtonBar ( Document doc,
-                                   View view );
-extern ThotBool TtaIsButtonActivated ( Document document,
-                                         View view );
-extern void TtaSetButtonActivatedStatus ( ThotBool new_status );
-extern void APP_TextCallback ( ThotWidget w,
-                                 int frame,
-                                 void *call_d );
 extern int TtaAddTextZone ( Document doc,
                               View view,
                               char *label,

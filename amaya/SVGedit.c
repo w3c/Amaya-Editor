@@ -2257,34 +2257,6 @@ void InitSVG ()
 #endif /* _SVG */
 }
 
-/*----------------------------------------------------------------------
-  AddGraphicsButton    
-  ----------------------------------------------------------------------*/
-void AddGraphicsButton (Document doc, View view)
-{
-#ifdef _SVG
-  GraphButton = TtaAddButton (doc, 1, (ThotIcon)iconGraph,
-                              (Proc)ShowGraphicsPalette,
-                              "ShowGraphicsPalette",
-                              TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
-                              TBSTYLE_BUTTON, TRUE);
-#endif /* _SVG */
-}
-
-/*----------------------------------------------------------------------
-  SwitchIconGraph
-  ----------------------------------------------------------------------*/
-void SwitchIconGraph (Document doc, View view, ThotBool state)
-{
-#ifdef _SVG
-#ifndef _WX
-  if (state)
-    TtaChangeButton (doc, view, GraphButton, (ThotIcon)iconGraph, state);
-  else
-    TtaChangeButton (doc, view, GraphButton, (ThotIcon)iconGraphNo, state);
-#endif /* _WX */
-#endif /* _SVG */
-}
 
 /*----------------------------------------------------------------------
   SVGElementTypeInMenu

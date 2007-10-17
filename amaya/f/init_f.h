@@ -188,10 +188,6 @@ extern void HideVSplitToggle ( Document doc,
                                View view );
 extern void ShowMapAreas ( Document doc,
                            View view );
-extern void ShowButtons ( Document doc,
-                          View view );
-extern void ShowAddress ( Document doc,
-                          View view );
 extern void MakeIDMenu ( Document doc,
                          View view );
 extern void CheckAmayaClosed ( void );
@@ -414,10 +410,6 @@ extern void HideVSplitToggle ( Document doc,
                                  View view );
 extern void ShowMapAreas ( Document doc,
                              View view );
-extern void ShowButtons ( Document doc,
-                            View view );
-extern void ShowAddress ( Document doc,
-                            View view );
 extern void MakeIDMenu ( Document doc,
                            View view );
 extern void CheckAmayaClosed ( void );

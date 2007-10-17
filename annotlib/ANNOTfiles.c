@@ -1053,7 +1053,7 @@ void ANNOT_PrepareAnnotView (Document document)
   view = TtaGetViewFromName (document, "Formatted_view");
   if (view == 0)
   {
-    fprintf (stderr, "(ANNOT_OpenMainView) ERREUR : échec ouverture vue principale fichier d'annotation\n");
+    fprintf (stderr, "(ANNOT_OpenMainView) ERREUR : ï¿½chec ouverture vue principale fichier d'annotation\n");
     TtaCloseDocument (document);
   }
   else
@@ -1064,19 +1064,12 @@ void ANNOT_PrepareAnnotView (Document document)
     /*    TtaSetMenuOff (document, view, Help_); */
     TtaSetItemOff (document, view, File, BBack);
     TtaSetItemOff (document, view, File, BForward);
-    TtaSetItemOff (document, view, File, BHtmlBasic);
-    TtaSetItemOff (document, view, File, BHtmlStrict);
-    TtaSetItemOff (document, view, File, BHtml11);
-    TtaSetItemOff (document, view, File, BHtmlTransitional);
     TtaSetItemOff (document, view, File, BTemplate);
     TtaSetItemOff (document, view, File, BCss);
     TtaSetItemOff (document, view, File, BOpenDoc);
     TtaSetItemOff (document, view, File, BOpenInNewWindow);
     TtaSetItemOff (document, view, File, BSaveAs);
 
-    /* views */
-    TtaSetItemOff (document, view, Views, TShowTextZone);
-    /* TtaSetItemOff (document, view, Views, BShowStructure); */
     TtaSetItemOff (document, view, Views, BShowAlternate);
     TtaSetItemOff (document, view, Views, BShowSource);
     TtaSetItemOff (document, view, Views, BShowLinks);

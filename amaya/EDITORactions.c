@@ -136,38 +136,6 @@ void NewXHTML (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  NewXHTMLBasic: Create a new Basic XHTML document
-  ----------------------------------------------------------------------*/
-void NewXHTMLBasic (Document doc, View view)
-{
-  OpenNew (doc, view, docHTML, L_Basic);
-}
-
-/*----------------------------------------------------------------------
-  NewXHTMLStrict: Create a new Strict XHTML document
-  ----------------------------------------------------------------------*/
-void NewXHTMLStrict (Document doc, View view)
-{
-  OpenNew (doc, view, docHTML, L_Strict);
-}
-
-/*----------------------------------------------------------------------
-  NewXHTML11: Create a new XHTML1.1 document
-  ----------------------------------------------------------------------*/
-void NewXHTML11 (Document doc, View view)
-{
-  OpenNew (doc, view, docHTML, L_Xhtml11);
-}
-
-/*----------------------------------------------------------------------
-  NewXHTMLTransitional: Create a new Transitional XHTML document
-  ----------------------------------------------------------------------*/
-void NewXHTMLTransitional (Document doc, View view)
-{
-  OpenNew (doc, view, docHTML, L_Transitional);
-}
-
-/*----------------------------------------------------------------------
   NewMathML: Create a new MathML document
   ----------------------------------------------------------------------*/
 void NewMathML (Document doc, View view)
@@ -4511,87 +4479,12 @@ void ConfigAmaya (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  ConfigColor
-  A frontend to the Color configuration menu
-  ----------------------------------------------------------------------*/
-void ConfigColor (Document doc, View view)
-{
-  ColorConfMenu (doc, view);
-}
-
-/*----------------------------------------------------------------------
-  ConfigGeometry
-  A frontend to the Geometry configuration menu
-  ----------------------------------------------------------------------*/
-void ConfigGeometry (Document doc, View view)
-{
-  GeometryConfMenu (doc, view);
-}
-
-/*----------------------------------------------------------------------
-  ConfigGeneral
-  A frontend to the Browsing Editing configuration menu
-  ----------------------------------------------------------------------*/
-void ConfigGeneral (Document doc, View view)
-{
-  GeneralConfMenu (doc, view);
-}
-
-/*----------------------------------------------------------------------
-  ConfigBrowse
-  A frontend to the Browsing Editing configuration menu
-  ----------------------------------------------------------------------*/
-void ConfigBrowse (Document doc, View view)
-{
-  BrowseConfMenu (doc, view);
-}
-
-/*----------------------------------------------------------------------
-  ConfigPublish
-  A frontend to the Browsing Editing configuration menu
-  ----------------------------------------------------------------------*/
-void ConfigPublish (Document doc, View view)
-{
-  PublishConfMenu (doc, view);
-}
-
-/*----------------------------------------------------------------------
-  ConfigCache
-  A frontend to the cache configuration menu
-  ----------------------------------------------------------------------*/
-void ConfigCache (Document doc, View view)
-{
-  CacheConfMenu (doc, view);
-}
-
-/*----------------------------------------------------------------------
-  ConfigProxy
-  A frontend to the proxy configuration menu
-  ----------------------------------------------------------------------*/
-void ConfigProxy (Document doc, View view)
-{
-  ProxyConfMenu (doc, view);
-}
-
-
-/*----------------------------------------------------------------------
   SaveOptions
   Saves the user modified configuration options
   ----------------------------------------------------------------------*/
 void SaveOptions (Document doc, View view)
 {
   TtaSaveAppRegistry ();
-}
-
-/*----------------------------------------------------------------------
-  ConfigAnnot
-  A frontend to the Templates configuration menu
-  ----------------------------------------------------------------------*/
-void ConfigAnnot (Document doc, View view)
-{
-#ifdef ANNOTATIONS
-  AnnotConfMenu (doc, view);
-#endif /* ANNOTATIONS */
 }
 
 /*----------------------------------------------------------------------
@@ -4810,20 +4703,6 @@ void CopyLockInformation (Document doc, View view)
   DAVCopyLockInfo (doc, view);
 #endif /* DAV */
 }
-
-
-/*----------------------------------------------------------------------
-  DAVConfigure 
-  A Configure dialogue for the WebDAV user's preferences.
-  ----------------------------------------------------------------------*/
-void CooperationConfig (Document doc, View view) 
-{
-#ifdef DAV
-  DAVPreferences (doc, view);
-#endif /* DAV */
-}
-
-
 
 /*----------------------------------------------------------------------
   LockIndicator

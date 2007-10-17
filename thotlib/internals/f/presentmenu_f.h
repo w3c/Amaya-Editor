@@ -17,12 +17,8 @@ extern void CallbackStdPresMenu ( int ref,
 extern void CallbackPresMenu ( int ref,
                                int val,
                                char *txt );
-extern void TtcChangeCharacters ( Document document,
-                                  View view );
 extern void TtcChangeGraphics ( Document document,
                                 View view );
-extern void TtcChangeFormat ( Document document,
-                              View view );
 extern void ResetPresentMenus ( void );
 
 #else /* __STDC__ */
@@ -38,12 +34,8 @@ extern void CallbackStdPresMenu ( int ref,
 extern void CallbackPresMenu ( int ref,
                                  int val,
                                  char *txt );
-extern void TtcChangeCharacters ( Document document,
-                                    View view );
 extern void TtcChangeGraphics ( Document document,
                                   View view );
-extern void TtcChangeFormat ( Document document,
-                                View view );
 extern void ResetPresentMenus ( void );
 
 #endif /* __STDC__ */

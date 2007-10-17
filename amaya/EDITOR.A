@@ -38,10 +38,6 @@ MENUS
 	BEGIN
   File button:BNewTab -> NewTab;
 	File.New1 button:BHtml -> NewXHTML icon:document_html.png;
-	File.New1 button:BHtml11 -> NewXHTML11 icon:document_html.png;
-	File.New1 button:BHtmlTransitional -> NewXHTMLTransitional icon:document_html.png;
-	File.New1 button:BHtmlStrict -> NewXHTMLStrict icon:document_html.png;
-	File.New1 button:BHtmlBasic -> NewXHTMLBasic icon:document_html.png;
 	File.New1 button:BMathml -> NewMathML icon:document_math.png;
 	File.New1 button:BSvg -> NewSVG icon:document_svg.png;
 	File.New1 button:BCss -> NewCss icon:document_css.png;
@@ -140,15 +136,6 @@ MENUS
 	Edit_.NavGoto button:BNextElement -> TtcNextElement;
 	Edit_ Separator;
 	Edit_ button:BConfigure -> ConfigAmaya icon:preferences.png;
-	Edit_.Coptions button:BConfigGeneral -> ConfigGeneral;
-	Edit_.Coptions button:BConfigBrowse -> ConfigBrowse;
-	Edit_.Coptions button:BConfigPublish -> ConfigPublish;
-	Edit_.Coptions button:BConfigCache -> ConfigCache;
-	Edit_.Coptions button:BConfigProxy -> ConfigProxy;
-	Edit_.Coptions button:BConfigColor -> ConfigColor;
-	Edit_.Coptions button:BConfigGeometry -> ConfigGeometry;
-	Edit_.Coptions button:BConfigAnnotations -> ConfigAnnot;
-	Edit_.Coptions button:BCoopConfig -> CooperationConfig;
 
 	Types button:BTitle -> ChangeTitle;
 	Types Separator;
@@ -317,8 +304,6 @@ MENUS
 	Views.toolbars toggle:TShowBrowsingBar -> ShowBrowsingBar;
 	Views.toolbars toggle:TShowEditingBar -> ShowEditingBar;
 	Views.toolbars toggle:TShowPanel -> ShowPanel;
-	Views toggle:TShowButtonbar -> ShowButtons;
-	Views toggle:TShowTextZone -> ShowAddress;
 	Views toggle:TShowMapAreas -> ShowMapAreas;
 	Views toggle:TShowTargets -> ShowTargets;
 	Views toggle:TZoomIn -> ZoomIn;
@@ -334,15 +319,10 @@ MENUS
 	Views toggle:TSplitHorizontally -> SplitHorizontally;
 	Views toggle:TSplitVertically -> SplitVertically;
 
-  Style button:BCharacterStyle -> TtcChangeCharacters;
-  Style button:BColors -> TtcChangeColors;
   Style button:BCSSStyle -> SetCSSStyle icon:css.png;
-  Style button:BFormat -> TtcChangeFormat;
-	Style button:BBackgroundImage -> ChangeBackgroundImage icon:BG_repeat.png;
 	Style Separator;
 
 	Style button:BCreateClass -> CreateClass;
-	Style button:BApplyClass -> ApplyClass;
 	Style button:BShowAppliedStyle -> ShowAppliedStyle;
   Style Separator;
 	Style button:BLinkCSS -> LinkCSS;
@@ -350,8 +330,6 @@ MENUS
 	Style button:BDisableCSS -> DisableCSS;
 	Style button:BEnableCSS -> EnableCSS;
 	Style button:BRemoveCSS -> RemoveCSS;
-
-	Attributes_;
 
 	Annotations_ button:BAnnotateSelection -> AnnotateSelection;
 	Annotations_ button:BAnnotateDocument -> AnnotateDocument;

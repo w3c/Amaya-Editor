@@ -1814,56 +1814,6 @@ static void UpdateShowTargets ()
     }
 }
 
-#ifndef _WX
-/*----------------------------------------------------------------------
-  UpdateShowButtons
-  Sets the show buttons on all documents
-  ----------------------------------------------------------------------*/
-static void UpdateShowButtons ()
-{
-  int               doc;
-
-  for (doc = 1; doc < DocumentTableLength; doc++)
-    {
-      if (DocumentURLs[doc] &&
-          SButtons[doc] != GProp_General.S_Buttons &&
-          (DocumentTypes[doc] == docHTML ||
-           DocumentTypes[doc] == docSVG ||
-           DocumentTypes[doc] == docXml ||
-           DocumentTypes[doc] == docMath))
-        /* generate numbers */
-        ShowButtons (doc, 1);
-      else
-        /* update only the indicator */
-        SButtons[doc] = GProp_General.S_Buttons;
-    }
-}
-
-/*----------------------------------------------------------------------
-  UpdateShowAddress
-  Sets the show address on all documents
-  ----------------------------------------------------------------------*/
-static void UpdateShowAddress ()
-{
-  int               doc;
-  
-  for (doc = 1; doc < DocumentTableLength; doc++)
-    {
-      if (DocumentURLs[doc] &&
-          SAddress[doc] != GProp_General.S_Address &&
-          (DocumentTypes[doc] == docHTML ||
-           DocumentTypes[doc] == docSVG ||
-           DocumentTypes[doc] == docXml ||
-           DocumentTypes[doc] == docMath))
-        /* generate numbers */
-        ShowAddress (doc, 1);
-      else
-        /* update only the indicator */
-        SAddress[doc] = GProp_General.S_Address;
-    }
-}
-#endif /* _WX */
-
 /*----------------------------------------------------------------------
   SetGeneralConf
   Updates the registry General values and calls the General functions
@@ -1899,16 +1849,6 @@ void SetGeneralConf (void)
       GProp_General.S_AutoSave = (AutoSave_Interval > 0);
     }
   /* handling show buttons, address, targets and section numbering */
-#ifndef _WX
-  TtaGetEnvBoolean ("SHOW_BUTTONS", &old);
-  TtaSetEnvBoolean ("SHOW_BUTTONS", GProp_General.S_Buttons, TRUE);
-  if (old != GProp_General.S_Buttons)
-    UpdateShowButtons ();
-  TtaGetEnvBoolean ("SHOW_ADDRESS", &old);
-  TtaSetEnvBoolean ("SHOW_ADDRESS", GProp_General.S_Address, TRUE);
-  if (old != GProp_General.S_Address)
-    UpdateShowAddress ();
-#endif /* _WX */
   TtaGetEnvBoolean ("SHOW_TARGET", &old);
   TtaSetEnvBoolean ("SHOW_TARGET", GProp_General.S_Targets, TRUE);
   if (old != GProp_General.S_Targets)

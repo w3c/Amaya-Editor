@@ -81,10 +81,7 @@ extern void         TtcStandardGeometry (Document document, View view);
 extern void         TtaSetTransformCallback (Func2 function);
 
 /* List of editor dialogue actions */
-extern void         TtcChangeCharacters (Document document, View view);
-extern void         TtcChangeColors (Document document, View view);
 extern void         TtcGetPaletteColors (int *fgcolor, int *bgcolor, ThotBool palType);
-extern void         TtcChangeFormat (Document document, View view);
 extern void         TtcChangeGraphics (Document document, View view);
 extern void         TtcChildElement (Document document, View view);
 extern void         TtcCloseDocument (Document document, View view);
