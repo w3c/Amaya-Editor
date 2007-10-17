@@ -114,8 +114,10 @@ bool AmayaClassicWindow::Initialize()
   
   {
     // Create toolbars
-    p_TopSizer->Add( GetToolBarBrowsing(), 0, wxEXPAND);
-    p_TopSizer->Add( GetToolBarEditing(), 0, wxEXPAND);
+    if(HaveToolBarBrowsing())
+      p_TopSizer->Add( GetToolBarBrowsing(), 0, wxEXPAND);
+    if(HaveToolBarEditing())
+      p_TopSizer->Add( GetToolBarEditing(), 0, wxEXPAND);
     
     // Global layout
     m_pLayoutSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -398,12 +400,17 @@ bool AmayaClassicWindow::IsToolBarShown(int toolbarID)
   switch(toolbarID)
   {
     case 0:
-      return GetSizer()->IsShown(GetToolBarBrowsing());
+      if(HaveToolBarBrowsing())
+        return GetSizer()->IsShown(GetToolBarBrowsing());
+      break;
     case 1:
-      return GetSizer()->IsShown(GetToolBarEditing());
+      if(HaveToolBarEditing())
+        return GetSizer()->IsShown(GetToolBarEditing());
+      break;
     default:
-      return false;
+      break;
   }
+  return false;
 }
 
 /*----------------------------------------------------------------------
@@ -416,10 +423,12 @@ void AmayaClassicWindow::ShowToolBar(int toolbarID, bool bShow)
   switch(toolbarID)
   {
     case 0:
-      GetSizer()->Show(GetToolBarBrowsing(), bShow);
+      if(HaveToolBarBrowsing())
+        GetSizer()->Show(GetToolBarBrowsing(), bShow);
       break;
     case 1:
-      GetSizer()->Show(GetToolBarEditing(), bShow);
+      if(HaveToolBarEditing())
+        GetSizer()->Show(GetToolBarEditing(), bShow);
       break;
     default:
       break;

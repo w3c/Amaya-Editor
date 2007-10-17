@@ -117,9 +117,13 @@ AmayaWindow( parent, id, pos, size, kind ),
 m_pStatusBar(NULL),
 m_pToolBarEditing(NULL),
 m_pToolBarBrowsing(NULL),
+m_haveTBEditing( Prof_ShowGUI("AmayaToolBarEditing") ),
+m_haveTBBrowsing( Prof_ShowGUI("AmayaToolBarBrowsing") ),
 m_pComboBox(NULL)
 {
   s_normalWindowCount++;
+  
+  
 }
 
 /*----------------------------------------------------------------------
@@ -215,7 +219,7 @@ void AmayaNormalWindow::SaveConfig()
  -----------------------------------------------------------------------*/
 wxPanel* AmayaNormalWindow::GetToolBarEditing()
 {
-  if (!m_pToolBarEditing)
+  if (!m_pToolBarEditing && m_haveTBEditing)
     m_pToolBarEditing = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_EDITING"));
   return m_pToolBarEditing;
 }
@@ -227,7 +231,7 @@ wxPanel* AmayaNormalWindow::GetToolBarEditing()
  -----------------------------------------------------------------------*/
 wxPanel* AmayaNormalWindow::GetToolBarBrowsing()
 {
-  if (!m_pToolBarBrowsing)
+  if (!m_pToolBarBrowsing && m_haveTBBrowsing)
     {
       m_pToolBarBrowsing = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_BROWSING"));
       m_pComboBox = XRCCTRL(*m_pToolBarBrowsing, "wxID_TOOL_URL", wxComboBox);

@@ -110,12 +110,14 @@ bool AmayaAdvancedWindow::Initialize()
 
   
   // Add toolbars to AUI
-  m_manager.AddPane(GetToolBarBrowsing(), wxAuiPaneInfo().
-                Name(wxT("Browsing")).Caption(wxT("Browsing")).ToolbarPane().Top().
-                Gripper(false).Row(0).Floatable(false).PaneBorder(false));
-  m_manager.AddPane(GetToolBarEditing(), wxAuiPaneInfo().
-                Name(wxT("Edition")).Caption(wxT("Edition")).ToolbarPane().Top().
-                Gripper(false).Row(1).Floatable(false).PaneBorder(false));
+  if(HaveToolBarBrowsing())
+    m_manager.AddPane(GetToolBarBrowsing(), wxAuiPaneInfo().
+                  Name(wxT("Browsing")).Caption(wxT("Browsing")).ToolbarPane().Top().
+                  Gripper(false).Row(0).Floatable(false).PaneBorder(false));
+  if(HaveToolBarEditing())
+    m_manager.AddPane(GetToolBarEditing(), wxAuiPaneInfo().
+                  Name(wxT("Edition")).Caption(wxT("Edition")).ToolbarPane().Top().
+                  Gripper(false).Row(1).Floatable(false).PaneBorder(false));
 
   wxAuiDockArt* art = m_manager.GetArtProvider();
   if(art)
@@ -425,12 +427,17 @@ bool AmayaAdvancedWindow::IsToolBarShown(int toolbarID)
   switch(toolbarID)
   {
     case 0:
-      return m_manager.GetPane(GetToolBarBrowsing()).IsShown();
+      if(HaveToolBarBrowsing())
+        return m_manager.GetPane(GetToolBarBrowsing()).IsShown();
+      break;
     case 1:
-      return m_manager.GetPane(GetToolBarEditing()).IsShown();
+      if(HaveToolBarEditing())
+        return m_manager.GetPane(GetToolBarEditing()).IsShown();
+      break;
     default:
-      return false;
+      break;
   }
+  return false;
 }
 
 /*----------------------------------------------------------------------
@@ -443,10 +450,12 @@ void AmayaAdvancedWindow::ShowToolBar(int toolbarID, bool bShow)
   switch(toolbarID)
   {
     case 0:
-      m_manager.GetPane(GetToolBarBrowsing()).Show(bShow);
+      if(HaveToolBarBrowsing())
+        m_manager.GetPane(GetToolBarBrowsing()).Show(bShow);
       break;
     case 1:
-      m_manager.GetPane(GetToolBarEditing()).Show(bShow);
+      if(HaveToolBarEditing())
+        m_manager.GetPane(GetToolBarEditing()).Show(bShow);
       break;
     default:
       break;
@@ -689,10 +698,16 @@ void AmayaAdvancedWindow::OnMenuItem( wxCommandEvent& event )
 
 void AmayaAdvancedWindow::OnSize(wxSizeEvent& event)
 {
-  wxAuiPaneInfo& pane1 = m_manager.GetPane(GetToolBarBrowsing());
-  wxAuiPaneInfo& pane2 = m_manager.GetPane(GetToolBarEditing());
-  pane1.BestSize(GetClientSize().x, -1);
-  pane2.BestSize(GetClientSize().x, -1);
+  if(HaveToolBarBrowsing())
+    {
+      wxAuiPaneInfo& pane1 = m_manager.GetPane(GetToolBarBrowsing());
+      pane1.BestSize(GetClientSize().x, -1);
+    }
+  if(HaveToolBarEditing())
+    {
+      wxAuiPaneInfo& pane2 = m_manager.GetPane(GetToolBarEditing());
+      pane2.BestSize(GetClientSize().x, -1);
+    }
   m_manager.Update();
   event.Skip();
 }

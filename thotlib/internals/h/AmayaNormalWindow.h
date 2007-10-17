@@ -93,6 +93,9 @@ protected:
   const wxPanel* GetToolBarEditing()const {return m_pToolBarEditing;}
   const wxPanel* GetToolBarBrowsing()const {return m_pToolBarBrowsing;}
 
+  bool HaveToolBarEditing()const{return m_haveTBEditing;}
+  bool HaveToolBarBrowsing()const{return m_haveTBBrowsing;}
+  
   virtual void ToggleFullScreen();
   
   virtual bool RegisterToolPanel(AmayaToolPanel* tool) {return false;}
@@ -118,6 +121,9 @@ protected:
   AmayaStatusBar          *m_pStatusBar;
   wxPanel                 *m_pToolBarEditing;
   wxPanel                 *m_pToolBarBrowsing;
+  
+  bool                    m_haveTBEditing, m_haveTBBrowsing;
+  
   wxComboBox              *m_pComboBox;         // URL combo box
 
   static int s_normalWindowCount;   

@@ -59,8 +59,6 @@ TtcChildElement
 TtcPreviousElement
 TtcNextElement
 CopyLocation
-ShowBrowsingBar
-ShowEditingBar
 
 ################# AMAYA BROWSER
 <Browser>
@@ -281,6 +279,8 @@ ReadAsSHIFT_JIS
 TtcCopySelection
 TtcSearchText
 SendByMail
+ShowBrowsingBar
+*AmayaToolBarBrowsing
 *AmayaExplorerToolPanel
 
 ########### EDITING
@@ -343,6 +343,8 @@ HelpXml
 &Synchronize
 &InsertBefore
 &InsertAfter
+ShowEditingBar
+*AmayaToolBarEditing
 *AmayaXHTMLToolPanel
 *AmayaStyleToolPanel
 *AmayaSpeCharToolPanel
