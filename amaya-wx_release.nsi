@@ -178,6 +178,7 @@ Section "Amaya" SecAmaya
   File WindowsWX\bin\wxmsw*u_html_vc_custom.dll
   File WindowsWX\bin\wxmsw*u_core_vc_custom.dll
   File WindowsWX\bin\wxmsw*u_adv_vc_custom.dll
+  File WindowsWX\bin\wxmsw*u_aui_vc_custom.dll
   File WindowsWX\bin\wxmsw*u_gl_vc_custom.dll
   File WindowsWX\bin\wxbase*u_vc_custom.dll
   File WindowsWX\bin\wxbase*u_net_vc_custom.dll

@@ -107,6 +107,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaAddPointEvtHandler.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaAdvancedNotebook.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaAdvancedWindow.cpp
 # End Source File
 # Begin Source File
@@ -128,6 +132,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaAttributePanel.cpp
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\AmayaCanvas.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\AmayaClassicNotebook.cpp
 # End Source File
 # Begin Source File
 
@@ -176,10 +184,6 @@ SOURCE=..\..\thotlib\dialogue\AmayaMovingBoxEvtHandler.cpp
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\AmayaNormalWindow.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\AmayaNotebook.cpp
 # End Source File
 # Begin Source File
 
