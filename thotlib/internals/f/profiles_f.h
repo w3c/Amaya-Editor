@@ -23,6 +23,7 @@ extern ThotBool Prof_ShowSeparator ( Menu_Ctl *ptrmenu,
 extern ThotBool Prof_ShowButton ( char *FunctionName );
 extern ThotBool Prof_ShowSubMenu ( Menu_Ctl *ptrsubmenu );
 extern ThotBool Prof_ShowMenu ( Menu_Ctl *ptrmenu );
+extern ThotBool Prof_ShowGUI ( const char* name );
 
 #else /* __STDC__ */
 
@@ -43,6 +44,7 @@ extern ThotBool Prof_ShowSeparator ( Menu_Ctl *ptrmenu,
 extern ThotBool Prof_ShowButton ( char *FunctionName );
 extern ThotBool Prof_ShowSubMenu ( Menu_Ctl *ptrsubmenu );
 extern ThotBool Prof_ShowMenu ( Menu_Ctl *ptrmenu );
+extern ThotBool Prof_ShowGUI ( const char* name );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

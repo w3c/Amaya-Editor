@@ -26,6 +26,8 @@
 #include "registry.h"
 #include "profiles.h"
 
+#include "containers.h"
+
 #define PROFILE_START              '<'
 #define PROFILE_END                '>'
 #define DOCTYPE_START              '{'
@@ -34,17 +36,21 @@
 #define MODULE_END                 ']'
 #define MODULE_REF                 '+'
 #define EDITING_REF                '&'
-
+#define GUI_REF                    '*'
 
 #define MAX_ENTRIES 10
+
 typedef struct _Profile_Ctl *PtrProCtl;
 typedef struct _ProElement
 {
   char                *ProName;      /* Name of the entry */
   PtrProCtl            ProSubModule; /* Pointer to a sub-module context */
-  ThotBool             ProIsModule;    /* TRUE if it is a sub-module */
+  ThotBool             ProIsModule;  /* TRUE if it is a sub-module */
   ThotBool             ProEdit;      /* TRUE if it's a editing function */
+  ThotBool             ProGui;       /* TRUE if it's a gui */
 } ProElement;
+
+
 
 typedef struct _Profile_Ctl
 {
@@ -59,7 +65,7 @@ typedef struct _Profile_Ctl
 /* Profiles table contains the name of all the available profiles */
 static PtrProCtl            ProfileTable = NULL;
 static int                  NbProfiles = 0;
-/* Profiles table contains the name of all the available profiles */
+/* Doctypes table contains the name of all the available doctypes */
 static PtrProCtl            DoctypeTable = NULL;
 static int                  NbDoctypes = 0;
 /* Modules table contains the name of all the available modules */
@@ -75,6 +81,7 @@ static ThotBool            *FunctionRO = NULL;
 /* The first context of the current module or profile in progress */
 static PtrProCtl            CurrentModule;
 static int                  CurrentEntries;
+
 /* Determine either a profile is defined or not */
 static ThotBool             CheckProfile = FALSE;
 /* User Profile (taken from the thot.rc) */
@@ -83,6 +90,10 @@ static PtrProCtl            UserProfContext = NULL;
 static char                 ProfileBuff[MAX_PRO_LENGTH];
 /* This boolean goes FALSE if the profile only contains browsing functions */
 static ThotBool             EnableEdit = TRUE;
+
+
+/* List containing names of GUI allowed elements.*/
+static DLList               GuiList = NULL;
 
 #include "registry_f.h"
 
@@ -129,12 +140,12 @@ static void SkipAllBlanks (char *Astring)
   while (Astring[c++] != EOS);
 }
 
-
 /*----------------------------------------------------------------------
   AddInTable inserts an element in a table.
   The parameter name is the name of the new entry.
   The parameter isModule is TRUE if that entry is the name of a module.
   The parameter edit is TRUE if that entry is an editable function.
+  The parameter gui is TRUE if that entry is gui.
   The parameter subModule points to the first ctxt of the sub-module. If
   t is NULL and isModule is TRUE the context is created.
   The parameter number give the current number of entries in the table.
@@ -142,6 +153,7 @@ static void SkipAllBlanks (char *Astring)
   Return the first context of the new module.
   ----------------------------------------------------------------------*/
 static PtrProCtl AddInTable (char *name, ThotBool isModule, ThotBool edit,
+                             ThotBool gui,
                              PtrProCtl subModule, int number,
                              PtrProCtl ctxt)
 {
@@ -176,6 +188,7 @@ static PtrProCtl AddInTable (char *name, ThotBool isModule, ThotBool edit,
           current->ProEntries[i].ProName = TtaStrdup (name);
           current->ProEntries[i].ProIsModule = isModule;
           current->ProEntries[i].ProEdit = edit;
+          current->ProEntries[i].ProGui = gui;
           if (isModule && subModule == NULL)
             {
               /* allocate the context of the sub-module */
@@ -204,11 +217,10 @@ static PtrProCtl AddModule (char *name)
       ModuleTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
       memset (ModuleTable, 0, sizeof (Profile_Ctl));
     }
-  new_ = AddInTable (name, TRUE, FALSE, NULL, NbModules, ModuleTable);
+  new_ = AddInTable (name, TRUE, FALSE, FALSE, NULL, NbModules, ModuleTable);
   NbModules++;
   return new_;
 }
-
 
 /*----------------------------------------------------------------------
   AddProfile inserts a new profile in the profile table.
@@ -224,7 +236,7 @@ static PtrProCtl AddProfile (char *name)
       ProfileTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
       memset (ProfileTable, 0, sizeof (Profile_Ctl));
     }
-  new_ = AddInTable (name, TRUE, FALSE, NULL, NbProfiles, ProfileTable);
+  new_ = AddInTable (name, TRUE, FALSE, FALSE, NULL, NbProfiles, ProfileTable);
   NbProfiles++;
   /* store the context of the user profile */
   if (UserProfContext == NULL && !strcmp (name, UserProfile))
@@ -246,10 +258,11 @@ static PtrProCtl AddDoctype (char *name)
       DoctypeTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
       memset (DoctypeTable, 0, sizeof (Profile_Ctl));
     }
-  new_ = AddInTable (name, TRUE, FALSE, NULL, NbDoctypes, DoctypeTable);
+  new_ = AddInTable (name, TRUE, FALSE, FALSE, NULL, NbDoctypes, DoctypeTable);
   NbDoctypes++;
   return new_;
 }
+
 
 
 /*----------------------------------------------------------------------
@@ -388,7 +401,19 @@ static void ProcessDefinition (char *element)
       else
         ctxt = pEntry->ProSubModule;
       /* add the new entry in the current profile or module */
-      AddInTable (&element[1], TRUE, FALSE, ctxt, CurrentEntries, CurrentModule);
+      AddInTable (&element[1], TRUE, FALSE, FALSE, ctxt, CurrentEntries, CurrentModule);
+      CurrentEntries++;
+    }
+  else if (*element == GUI_REF)
+    {
+      /*
+       * The element is a gui -> insert it in the module
+       * or the profile in progress.
+       * Skip the GUI_REF tag
+       */
+
+      /* add the new entry in the current profile or module */
+      AddInTable (&element[1], FALSE, FALSE, TRUE, NULL, CurrentEntries, CurrentModule);
       CurrentEntries++;
     }
   else
@@ -401,19 +426,18 @@ static void ProcessDefinition (char *element)
 
       /* add the new entry in the current profile or module */
       if (*element == EDITING_REF)
-        AddInTable (&element[1], FALSE, TRUE, NULL, CurrentEntries, CurrentModule);
+        AddInTable (&element[1], FALSE, TRUE, FALSE, NULL, CurrentEntries, CurrentModule);
       else
-        AddInTable (element, FALSE, FALSE, NULL, CurrentEntries, CurrentModule);
+        AddInTable (element, FALSE, FALSE, FALSE, NULL, CurrentEntries, CurrentModule);
       CurrentEntries++;
     }
 }
 
-
 /*-----------------------------------------------------------------------
-  AddFunctions keep in the function table the list of functions
-  declared in the list of contexts.
+  AddFunctionsAndGuis keep in the function table (resp. gui) the list of
+  functions (resp. gui)declared in the list of contexts.
   ----------------------------------------------------------------------*/
-static void AddFunctions (PtrProCtl ctxt, PtrProCtl functionTable)
+static void AddFunctionsAndGuis (PtrProCtl ctxt, PtrProCtl functionTable)
 {
   int           i;
 
@@ -423,14 +447,19 @@ static void AddFunctions (PtrProCtl ctxt, PtrProCtl functionTable)
       while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
         {
           if (ctxt->ProEntries[i].ProIsModule)
-            /* add functions of the sub-module */
-            AddFunctions (ctxt->ProEntries[i].ProSubModule, functionTable);
+            /* add functions and gui of the sub-module */
+            AddFunctionsAndGuis (ctxt->ProEntries[i].ProSubModule, functionTable);
           else
             {
-              AddInTable (ctxt->ProEntries[i].ProName, FALSE,
-                          ctxt->ProEntries[i].ProEdit, NULL,
-                          NbFunctions, functionTable);
-              NbFunctions++;
+              if(ctxt->ProEntries[i].ProGui)
+                  DLList_Append(GuiList, TtaStrdup(ctxt->ProEntries[i].ProName));
+              else
+                {
+                  AddInTable (ctxt->ProEntries[i].ProName, FALSE,
+                              ctxt->ProEntries[i].ProEdit, FALSE, NULL,
+                              NbFunctions, functionTable);
+                  NbFunctions++;
+                }
             }
           /* next entry */
           i++;
@@ -439,7 +468,6 @@ static void AddFunctions (PtrProCtl ctxt, PtrProCtl functionTable)
       ctxt = ctxt->ProNext;
     }
 }
-
 
 /*----------------------------------------------------------------------
   SortFunctionTable generates the function table in ascending
@@ -668,6 +696,9 @@ void Prof_InitTable (char *profile)
         }
     }
 
+  
+  
+  
   /* All functions are available when:
    * - the profiles file doesn't exist
    * - or there is no specific user profile
@@ -679,9 +710,15 @@ void Prof_InitTable (char *profile)
       /* Now build the list of current available functions */
       if (UserProfContext)
         {
+
           FunctionTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
           memset (FunctionTable, 0, sizeof (Profile_Ctl));
-          AddFunctions (UserProfContext, FunctionTable);
+
+          GuiList = DLList_Create();
+          GuiList->destroyElement = (Container_DestroyElementFunction)TtaFreeMemory;
+          
+          AddFunctionsAndGuis (UserProfContext, FunctionTable);
+
           /* generate a sorted list of available functions */
           SortFunctionTable (FunctionTable);
           /* delete the function table */
@@ -759,6 +796,9 @@ void Prof_FreeTable ()
   TtaFreeMemory (FunctionRO);
   FunctionRO = NULL;
   NbFunctions = 0;
+  
+  /* delete the gui list */
+  DLList_Destroy(GuiList);
 }
 
 /*----------------------------------------------------------------------
@@ -895,4 +935,25 @@ ThotBool Prof_ShowMenu (Menu_Ctl *ptrmenu)
       item ++;
     }
   return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
+  Prof_ShowGUI : Check if a GUI element has to be displayed.
+  -----------------------------------------------------------------------*/
+ThotBool Prof_ShowGUI (const char* name)
+{
+  ThotBool res = FALSE;
+  ForwardIterator iter = DLList_GetForwardIterator(GuiList);
+  DLListNode      node;
+  ITERATOR_FOREACH(iter, DLListNode, node)
+    {
+      if(!strcmp((const char*)node->elem, name))
+        {
+          res = TRUE;
+          break;
+        }
+    }
+  TtaFreeMemory(iter);
+  return res;
 }

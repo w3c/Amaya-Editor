@@ -58,7 +58,6 @@ CopyLocation
 ShowBrowsingBar
 ShowEditingBar
 
-
 ################# AMAYA BROWSER
 <Browser>
 +browsing
@@ -278,6 +277,7 @@ ReadAsSHIFT_JIS
 TtcCopySelection
 TtcSearchText
 SendByMail
+*AmayaExplorerToolPanel
 
 ########### EDITING
 [edit]
@@ -339,6 +339,11 @@ HelpXml
 &Synchronize
 &InsertBefore
 &InsertAfter
+*AmayaXHTMLToolPanel
+*AmayaStyleToolPanel
+*AmayaSpeCharToolPanel
+*AmayaAttributeToolPanel
+*AmayaXMLToolPanel
 
 ######### VIEWS
 [views]
@@ -540,6 +545,7 @@ SelectColumn
 &PasteAfter
 HelpMath
 HelpTables
+*AmayaMathMLToolPanel
 
 ################# SVG
 [svg]
@@ -564,6 +570,7 @@ HelpSVG
 [attr-style]
 &CreateStyle
 &CreateClass
+*AmayaApplyClassToolPanel
 
 [css-browsing]
 OpenCSS

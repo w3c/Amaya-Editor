@@ -42,6 +42,7 @@
 #include "appdialogue_wx.h"
 #include "input_f.h"
 #include "editcommands_f.h"
+#include "profiles_f.h"
 
 #include "AmayaNormalWindow.h"
 #include "AmayaPanel.h"
@@ -168,14 +169,22 @@ void AmayaNormalWindow::CleanUp()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::LoadConfig()
 {
-  RegisterToolPanel(new AmayaExplorerToolPanel);
-  RegisterToolPanel(new AmayaXHTMLToolPanel);
-  RegisterToolPanel(new AmayaAttributeToolPanel);
-  RegisterToolPanel(new AmayaApplyClassToolPanel);
-  RegisterToolPanel(new AmayaStyleToolPanel);
-  RegisterToolPanel(new AmayaMathMLToolPanel);
-  RegisterToolPanel(new AmayaSpeCharToolPanel);
-  RegisterToolPanel(new AmayaXMLToolPanel);
+  if(Prof_ShowGUI("AmayaExplorerToolPanel"))
+    RegisterToolPanel(new AmayaExplorerToolPanel);
+  if(Prof_ShowGUI("AmayaXHTMLToolPanel"))
+    RegisterToolPanel(new AmayaXHTMLToolPanel);
+  if(Prof_ShowGUI("AmayaAttributeToolPanel"))
+    RegisterToolPanel(new AmayaAttributeToolPanel);
+  if(Prof_ShowGUI("AmayaApplyClassToolPanel"))
+    RegisterToolPanel(new AmayaApplyClassToolPanel);
+  if(Prof_ShowGUI("AmayaStyleToolPanel"))
+    RegisterToolPanel(new AmayaStyleToolPanel);
+  if(Prof_ShowGUI("AmayaMathMLToolPanel"))
+    RegisterToolPanel(new AmayaMathMLToolPanel);
+  if(Prof_ShowGUI("AmayaSpeCharToolPanel"))
+    RegisterToolPanel(new AmayaSpeCharToolPanel);
+  if(Prof_ShowGUI("AmayaXMLToolPanel"))
+    RegisterToolPanel(new AmayaXMLToolPanel);
 
   /* init default panel states */
   TtaSetEnvBoolean("OPEN_PANEL_EXPLORER", FALSE, FALSE);
