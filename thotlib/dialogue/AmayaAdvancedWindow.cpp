@@ -223,11 +223,14 @@ void AmayaAdvancedWindow::SaveConfig()
   AmayaAdvanceToolPanelMap::iterator it;
   for(it = m_panels.begin(); it!=m_panels.end(); ++it )
   {
-    wxString str = m_manager.SavePaneInfo(m_manager.GetPane(it->second)),
-             name = wxT("AUI_") + it->second->GetToolPanelConfigKeyName();
-    
-    TtaSetEnvString((const char*)name.mb_str(wxConvUTF8),
-                    (char*)(const char*)str.mb_str(wxConvUTF8), TRUE);
+    if(it->second)
+      {
+        wxString str = m_manager.SavePaneInfo(m_manager.GetPane(it->second)),
+                 name = wxT("AUI_") + it->second->GetToolPanelConfigKeyName();
+        
+        TtaSetEnvString((const char*)name.mb_str(wxConvUTF8),
+                        (char*)(const char*)str.mb_str(wxConvUTF8), TRUE);
+      }
   }
 
   AmayaNormalWindow::SaveConfig();
@@ -536,8 +539,7 @@ bool AmayaAdvancedWindow::ToolPanelsShown()
   AmayaAdvanceToolPanelMap::iterator it;
   for(it = m_panels.begin(); it!=m_panels.end(); ++it )
   {
-//    wxAuiPaneInfo& pane = m_manager.GetPane(it->second);
-    if(it->second->IsShown())
+    if(it->second && it->second->IsShown())
       return true;
   }  
   return false;
