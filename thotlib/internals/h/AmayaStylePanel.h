@@ -37,7 +37,7 @@ public:
   void OnColorPalette( AmayaColorButtonEvent& event );
   void SetColor(int color);
   void OnThemeChange( wxCommandEvent& event );
-  void SetTheme(char *theme);
+  void SetTheme(const char *theme);
 
 protected:
   // Any class wishing to process wxWindows events must use this macro

@@ -298,7 +298,7 @@ char *TtaGetLanguageNameFromCode (char *code)
    TtaGetISO639Code
    Returns the language code in the ISO639 table
   ----------------------------------------------------------------------*/
-char *TtaGetISO639Code (int val)
+const char *TtaGetISO639Code (int val)
 {
   int                 max;
 

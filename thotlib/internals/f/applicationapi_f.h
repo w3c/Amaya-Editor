@@ -18,9 +18,9 @@ extern void TtaInitialize ( char *applicationName );
 extern void TtaSetApplicationQuit ( Proc procedure );
 extern void TtaQuit ( void );
 extern void TtaSetErrorMessages ( int on );
-extern char *TtaGetVersion ( void );
+extern const char *TtaGetVersion ( void );
 extern int TtaGetErrorCode ( void );
-extern char *TtaGetStrError ( int errorCode );
+extern const char *TtaGetStrError ( int errorCode );
 extern void ThotExit ( int result );
 
 #else /* __STDC__ */
@@ -37,9 +37,9 @@ extern void TtaInitialize ( char *applicationName );
 extern void TtaSetApplicationQuit ( Proc procedure );
 extern void TtaQuit ( void );
 extern void TtaSetErrorMessages ( int on );
-extern char *TtaGetVersion ( void );
+extern const char *TtaGetVersion ( void );
 extern int TtaGetErrorCode ( void );
-extern char *TtaGetStrError ( int errorCode );
+extern const char *TtaGetStrError ( int errorCode );
 extern void ThotExit ( int result );
 
 #endif /* __STDC__ */

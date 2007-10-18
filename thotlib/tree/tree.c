@@ -437,7 +437,7 @@ static PtrElement BackSearchVisibleSubtree (PtrElement pEl, int *view)
   Returns TRUE if the element pointed by pEL is the one we are looking
   for, FALSE otherwise.
   ----------------------------------------------------------------------*/
-static ThotBool AttrFound (PtrElement pEl, int val, char *textVal,
+static ThotBool AttrFound (PtrElement pEl, int val, const char *textVal,
                            int attNum, PtrSSchema pSS)
 {
   PtrAttribute        pAttr;
@@ -492,7 +492,7 @@ static ThotBool AttrFound (PtrElement pEl, int val, char *textVal,
   FwdSearchAttrInSubtree
   ----------------------------------------------------------------------*/
 static PtrElement FwdSearch2AttrInSubtree (PtrElement pEl, ThotBool test,
-                                           int val, char *textVal,
+                                           int val, const char *textVal,
                                            int attNum, int attNum2,
                                            PtrSSchema pSS, PtrSSchema pSS2)
 {
@@ -521,7 +521,7 @@ static PtrElement FwdSearch2AttrInSubtree (PtrElement pEl, ThotBool test,
   BackSearchAttrInSubtree
   ----------------------------------------------------------------------*/
 static PtrElement BackSearch2AttrInSubtree (PtrElement pEl, int val,
-                                            char *textVal,
+                                            const char *textVal,
                                             int attNum, int attNum2,
                                             PtrSSchema pSS, PtrSSchema pSS2)
 {
@@ -1622,7 +1622,7 @@ PtrElement BackSearchVisibleElem (PtrElement pRoot, PtrElement pEl, int view)
   If attNum2 != 0 the search stops on the first attNum or attNum2 found.
   The function returns a pointer to the found element or NULL.
   ----------------------------------------------------------------------*/
-PtrElement FwdSearch2Attributes (PtrElement pEl, int val, char *textVal,
+PtrElement FwdSearch2Attributes (PtrElement pEl, int val, const char *textVal,
                                  int attNum, int attNum2, PtrSSchema pSS,
                                  PtrSSchema pSS2)
 {
@@ -1690,7 +1690,7 @@ PtrElement FwdSearch2Attributes (PtrElement pEl, int val, char *textVal,
   If attNum2 != 0 the search stops on the first attNum or attNum2 found.
   The function returns a pointer to the found element or NULL.   
   ----------------------------------------------------------------------*/
-PtrElement BackSearch2Attributes (PtrElement pEl, int val, char *textVal,
+PtrElement BackSearch2Attributes (PtrElement pEl, int val, const char *textVal,
                                   int attNum, int attNum2, PtrSSchema pSS,
                                   PtrSSchema pSS2)
 {

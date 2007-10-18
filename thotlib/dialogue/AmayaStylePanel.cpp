@@ -37,7 +37,7 @@
 #include "AmayaColorButton.h"
 
 extern void DoStyleColor (char * color);
-extern void ChangeTheme (char *theme);
+extern void ChangeTheme (const char *theme);
 //
 //
 // AmayaStyleToolPanel
@@ -183,7 +183,7 @@ void AmayaStyleToolPanel::OnThemeChange( wxCommandEvent& event )
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void AmayaStyleToolPanel::SetTheme(char *theme)
+void AmayaStyleToolPanel::SetTheme(const char *theme)
 {
   if (!strcasecmp (theme, "Standard"))
     XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->SetStringSelection(TtaConvMessageToWX("No theme"));

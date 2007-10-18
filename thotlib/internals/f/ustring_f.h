@@ -39,7 +39,7 @@ extern CHAR_T *ustrstr ( const CHAR_T *str,
 extern CHARSET TtaGetCharset ( char *charsetname );
 extern CHARSET TtaGetLocaleCharset ( void );
 extern CHARSET TtaGetDefaultCharset ( void );
-extern char *TtaGetCharsetName ( CHARSET charset );
+extern const char *TtaGetCharsetName ( CHARSET charset );
 
 #else /* __STDC__ */
 
@@ -76,7 +76,7 @@ extern CHAR_T *ustrstr ( const CHAR_T *str,
 extern CHARSET TtaGetCharset ( char *charsetname );
 extern CHARSET TtaGetLocaleCharset ( void );
 extern CHARSET TtaGetDefaultCharset ( void );
-extern char *TtaGetCharsetName ( CHARSET charset );
+extern const char *TtaGetCharsetName ( CHARSET charset );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

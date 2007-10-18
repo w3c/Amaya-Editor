@@ -2726,7 +2726,7 @@ static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
   AddANewNamespaceUri
   ----------------------------------------------------------------------*/
 static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
-                                 char *nsPrefix, char *NsUri)
+                                 char *nsPrefix, const char *NsUri)
 {
   PtrNsUriDescr  newUriDecl, uriDecl, prevUriDecl;
 
@@ -2763,7 +2763,7 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
   Add a namespace declaration to the document
   ----------------------------------------------------------------------*/
 void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
-                              char *nsPrefix, char *NsUri)
+                              char *nsPrefix, const char *NsUri)
 {
   PtrNsUriDescr   uriDecl;
   ThotBool        found;

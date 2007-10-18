@@ -24,7 +24,7 @@
 /*----------------------------------------------------------------------
    DisplayConfirmMessage displays the given message (text).        
   ----------------------------------------------------------------------*/
-void DisplayConfirmMessage (char *text)
+void DisplayConfirmMessage (const char *text)
 {
    fprintf (stderr, text);
 }

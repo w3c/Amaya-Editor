@@ -1066,7 +1066,8 @@ static void GeneratePostscriptFont (char r_name[10], char script, int family,
 static void FontIdentifier (char script, int family, int highlight, int size,
                             TypeUnit unit, char r_name[10], char r_nameX[100])
 {
-  char        *wght, *slant, *ffamily;
+  char        *ffamily;
+  const char  *wght, *slant;
   char        encoding[3];
 
   /* apply the current font zoom */
@@ -2317,7 +2318,7 @@ void TtaSetFontZoom (int zoom)
 /*----------------------------------------------------------------------
   InitDialogueFonts initialize the standard fonts used by the Thot Toolkit.
   ----------------------------------------------------------------------*/
-void InitDialogueFonts (char *name)
+void InitDialogueFonts (const char *name)
 {
 #ifdef _GTK
   int              ndir, ncurrent;

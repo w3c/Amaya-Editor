@@ -98,10 +98,10 @@ bool AmayaAttributeToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPo
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_ATTRIBUTE")))
     return false;
   
-  m_pVPanelParent       = XRCCTRL(*this, "wxID_PANEL_ATTRVALUE", wxPanel);
-  m_pVPanelSizer  = m_pVPanelParent->GetSizer();
+  m_pVPanelParent = XRCCTRL(*this, "wxID_PANEL_ATTRVALUE", wxPanel);
+  m_pVPanelSizer = m_pVPanelParent->GetSizer();
 
-  m_pAttrList     = XRCCTRL(*this, "wxID_CLIST_ATTR", wxListCtrl);
+  m_pAttrList = XRCCTRL(*this, "wxID_CLIST_ATTR", wxListCtrl);
   m_pPanel_NewAttr = XRCCTRL(*m_pVPanelParent, "wxID_PANEL_CHOOSE_NEW_ATTRIBUTE", wxPanel);
   m_pNewAttrChoice = XRCCTRL(*m_pPanel_NewAttr, "wxID_CHOOSE_NEW_ATTRIBUTE", wxChoice);
 
@@ -903,11 +903,11 @@ wxString AmayaEnumAttributeSubpanel::GetStringValue()
   return m_pChoice->GetStringSelection();
 }
 
-int AmayaEnumAttributeSubpanel::GetIntValue()
+intptr_t AmayaEnumAttributeSubpanel::GetIntValue()
 {
   if(m_type==AmayaAttributeToolPanel::wxATTR_INTTYPE_ENUM)
     {
-      return (int)m_pChoice->GetClientData(m_pChoice->GetSelection())+1;
+      return (intptr_t)m_pChoice->GetClientData(m_pChoice->GetSelection())+1;
     }
   else if(m_type==AmayaAttributeToolPanel::wxATTR_INTTYPE_NUM)
     {
@@ -1060,7 +1060,7 @@ wxString AmayaNumAttributeSubpanel::GetStringValue()
 }
 
 
-int AmayaNumAttributeSubpanel::GetIntValue()
+intptr_t AmayaNumAttributeSubpanel::GetIntValue()
 {
   return m_pSpin->GetValue();
 }
@@ -1192,7 +1192,7 @@ wxString AmayaLangAttributeSubpanel::GetStringValue()
             (const char*)m_pCombo->GetStringSelection().mb_str(wxConvUTF8)));
 }
 
-int AmayaLangAttributeSubpanel::GetIntValue()
+intptr_t AmayaLangAttributeSubpanel::GetIntValue()
 {
   return (int)TtaGetLanguageIdFromName((char*)
             (const char*)m_pCombo->GetStringSelection().mb_str(wxConvUTF8));

@@ -556,7 +556,7 @@ PtrPathSeg CopyPath (PtrPathSeg firstPathEl)
   of text buffers.
   Return TRUE if equals.
   ----------------------------------------------------------------------*/
-ThotBool StringAndTextEqual (char *text, PtrTextBuffer pBuf)
+ThotBool StringAndTextEqual (const char *text, PtrTextBuffer pBuf)
 {
   unsigned char      *ptr;
   wchar_t             wc;

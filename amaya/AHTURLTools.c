@@ -175,7 +175,7 @@ char *EscapeXML (const char *string)
   int   buffer_len;
   int   buffer_free_mem;
   char *ptr;
-  char *entity = NULL;
+  const char *entity = NULL;
   int   new_chars;
   void *status;
 
@@ -373,9 +373,9 @@ void ExplodeURL (char *url, char **proto, char **host, char **dir,
   Converts a Thot PicType into the equivalent MIME type. If no convertion
   is possible, it returns NULL.
   ----------------------------------------------------------------------*/
-char *PicTypeToMIME (PicType contentType)
+const char *PicTypeToMIME (PicType contentType)
 {
-  char *mime_type;
+  const char *mime_type;
   
   switch (contentType)
     {
@@ -460,9 +460,9 @@ ThotBool ImageElement (Document doc, char **url, Element *image)
   DocImageMimeType
   Returns the MIME type of a docImage document.
   ----------------------------------------------------------------------*/
-char *DocImageMimeType (Document doc)
+const char *DocImageMimeType (Document doc)
 {
-  char *mime_type;
+  const char *mime_type;
   LoadedImageDesc *pImage;
   PicType type;
   Element image;

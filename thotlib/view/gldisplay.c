@@ -331,7 +331,7 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
   ThotWindow          w = None;
   ThotFont            font;
   SpecFont            spec;
-  char               *ptcar;
+  const char         *ptcar;
   int                 xcour, width, nb;
 
   spec = ThotLoadFont ('L', 1, 0, 6, UnPoint, frame);

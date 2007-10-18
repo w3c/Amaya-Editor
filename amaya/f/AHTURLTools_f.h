@@ -16,11 +16,11 @@ extern void ExplodeURL ( char *url,
                          char **host,
                          char **dir,
                          char **file );
-extern char *PicTypeToMIME ( PicType contentType );
+extern const char *PicTypeToMIME ( PicType contentType );
 extern ThotBool ImageElement ( Document doc,
                                char **url,
                                Element *image );
-extern char *DocImageMimeType ( Document doc );
+extern const char *DocImageMimeType ( Document doc );
 extern ThotBool IsHTMLName ( const char *path );
 extern ThotBool IsMathMLName ( const char *path );
 extern ThotBool IsSVGName ( const char *path );
@@ -83,11 +83,11 @@ extern void ExplodeURL ( char *url,
                            char **host,
                            char **dir,
                            char **file );
-extern char *PicTypeToMIME ( PicType contentType );
+extern const char *PicTypeToMIME ( PicType contentType );
 extern ThotBool ImageElement ( Document doc,
                                  char **url,
                                  Element *image );
-extern char *DocImageMimeType ( Document doc );
+extern const char *DocImageMimeType ( Document doc );
 extern ThotBool IsHTMLName ( const char *path );
 extern ThotBool IsMathMLName ( const char *path );
 extern ThotBool IsSVGName ( const char *path );

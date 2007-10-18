@@ -23,7 +23,7 @@ extern ThotBool MergeTextElements ( PtrElement pEl,
 extern PtrTextBuffer CopyText ( PtrTextBuffer pBuf,
                                 PtrElement pEl );
 extern PtrPathSeg CopyPath ( PtrPathSeg firstPathEl );
-extern ThotBool StringAndTextEqual ( char *text,
+extern ThotBool StringAndTextEqual ( const char *text,
                                      PtrTextBuffer pBuf );
 extern ThotBool TextsEqual ( PtrTextBuffer pBuf1,
                              PtrTextBuffer pBuf2 );
@@ -111,7 +111,7 @@ extern ThotBool MergeTextElements ( PtrElement pEl,
 extern PtrTextBuffer CopyText ( PtrTextBuffer pBuf,
                                   PtrElement pEl );
 extern PtrPathSeg CopyPath ( PtrPathSeg firstPathEl );
-extern ThotBool StringAndTextEqual ( char *text,
+extern ThotBool StringAndTextEqual ( const char *text,
                                        PtrTextBuffer pBuf );
 extern ThotBool TextsEqual ( PtrTextBuffer pBuf1,
                                PtrTextBuffer pBuf2 );

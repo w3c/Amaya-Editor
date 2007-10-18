@@ -199,7 +199,7 @@ static char *NameCode (char* name)
 /*----------------------------------------------------------------------
   KeyName translates a key value into a key name.
   ----------------------------------------------------------------------*/
-static char *KeyName (unsigned int key)
+static const char *KeyName (unsigned int key)
 {
   static char s[2];
 
@@ -1399,7 +1399,7 @@ void FreeTranslations ()
 /*----------------------------------------------------------------------
   EndOfString check wether string end by suffix.
   ----------------------------------------------------------------------*/
-static int EndOfString (char *string, char *suffix)
+static int EndOfString (const char *string, const char *suffix)
 {
   int             string_lenght, suffix_lenght;
 
@@ -1541,7 +1541,8 @@ ThotBool TtaInShortcutSequence ()
 void TtaListShortcuts (Document doc, FILE *fileDescriptor)
 {
   KEY                *next, *ptr;
-  char               *s, *k1, sk1[10], *k2;
+  char               sk1[10];
+  const char         *s, *k1, *k2;
   int                 i;
 
   s = TtaGetEnvString ("ACCESSKEY_MOD");

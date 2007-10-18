@@ -24,7 +24,7 @@
 
 extern PtrEventsSet pAppli;
 extern PtrSSchema   pSSchema;
-extern char        *RegisteredAppEvents[];
+extern const char  *RegisteredAppEvents[];
 extern PtrAppName   SchemasUsed;
 extern PtrAppName   MenusUsed;
 extern PtrAppName   ItemsUsed;

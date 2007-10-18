@@ -41,7 +41,7 @@
  */
 #ifdef _MACOS
 #define MAX_TOOL_PER_LINE 6
-char *TrigoTable[] = 
+const char *TrigoTable[] = 
   {
     "sin", "cos", "tan", "sec", "csc", "exp",
     "sinh", "cosh", "tanh", "sech", "csch", "ln",
@@ -49,7 +49,7 @@ char *TrigoTable[] =
     "arcsinh", "arccosh", "arctanh", "arcsech", "arccsch"
   };
 
-char * TrigoID[]={
+const char * TrigoID[]={
   "wxID_PANEL_MATH_SIN", "wxID_PANEL_MATH_COS", "wxID_PANEL_MATH_TAN",
   "wxID_PANEL_MATH_SEC", "wxID_PANEL_MATH_CSC", "wxID_PANEL_MATH_EXP",
   "wxID_PANEL_MATH_SINH", "wxID_PANEL_MATH_COSH", "wxID_PANEL_MATH_TANH",
@@ -61,7 +61,7 @@ char * TrigoID[]={
 };
 #else /* _MACOS */
 #define MAX_TOOL_PER_LINE 4
-char *TrigoTable[] = 
+const char *TrigoTable[] = 
   {
   "sin", "sinh", "arcsin", "arcsinh",
   "cos", "cosh", "arccos", "arccosh",
@@ -72,7 +72,7 @@ char *TrigoTable[] =
   "exp", "ln", "log"
   };
 
-char * TrigoID[]={
+const char * TrigoID[]={
   "wxID_PANEL_MATH_SIN", "wxID_PANEL_MATH_SINH", "wxID_PANEL_MATH_ARCSIN", "wxID_PANEL_MATH_ARCSINH",
   "wxID_PANEL_MATH_COS", "wxID_PANEL_MATH_COSH", "wxID_PANEL_MATH_ARCCOS", "wxID_PANEL_MATH_ARCCOSH",
   "wxID_PANEL_MATH_TAN", "wxID_PANEL_MATH_TANH", "wxID_PANEL_MATH_ARCTAN", "wxID_PANEL_MATH_ARCTANH",

@@ -96,7 +96,7 @@ static char         IconName[100];
 
 /* the list RegisteredAppEvents have to be conform to the type enum APPevent
    defined into appaction.h */
-char               *RegisteredAppEvents[] =
+const char         *RegisteredAppEvents[] =
 {
    "AttrMenu",
    "AttrCreate",

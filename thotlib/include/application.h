@@ -136,7 +136,7 @@ extern void TtaSetErrorMessages (int on);
    Return value:
    identifier of the current version.
   ----------------------------------------------------------------------*/
-extern char *TtaGetVersion (void);
+extern const char *TtaGetVersion (void);
 
 /*----------------------------------------------------------------------
    TtaGetErrorCode
@@ -156,7 +156,7 @@ extern int TtaGetErrorCode (void);
    No return value
    See also: TtaGetErrorCode
   ----------------------------------------------------------------------*/
-extern char *TtaGetStrError (int errorCode);
+extern const char *TtaGetStrError (int errorCode);
 
 /*----------------------------------------------------------------------
    TtaExtractName: extracts the directory and the file name.       

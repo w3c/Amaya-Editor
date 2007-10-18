@@ -30,7 +30,7 @@
    DisplayConfirmMessage
    displays the given message (text).
   ----------------------------------------------------------------------*/
-void DisplayConfirmMessage (char *text)
+void DisplayConfirmMessage (const char *text)
 {
 #ifdef _WINGUI
   int ndx;

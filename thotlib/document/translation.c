@@ -4622,7 +4622,7 @@ void ExportXmlDocument (Document doc, PtrElement pNode, ThotBool recordLineNb)
   PtrTtAttribute      pAttr1;
   PtrDocument         pDoc;
   CHARSET             charset;
-  char               *charset_name;
+  const char         *charset_name;
   char               *startName = NULL;
   char               *endName = NULL;
   char               *ns_prefix;

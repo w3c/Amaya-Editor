@@ -732,7 +732,7 @@ void StyleChanged (NotifyOnTarget *event)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void ChangeTheme (char *theme)
+void ChangeTheme (const char *theme)
 {
   Element             root, el, head, content, next;
   Element             el_select, el_show;

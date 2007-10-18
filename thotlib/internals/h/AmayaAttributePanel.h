@@ -196,7 +196,7 @@ public:
   /**
    * Get the int/enum value entered by the user.
    */
-  virtual int GetIntValue(){return 0;}
+  virtual intptr_t GetIntValue(){return 0;}
   /**
    * Helper function to send OK button event to parent.
    */
@@ -243,7 +243,7 @@ public:
   /**
    * Get the int/enum value entered by the user.
    */
-  virtual int GetIntValue();
+  virtual intptr_t GetIntValue();
   
   virtual wxWindow* GetEditionControl(){return m_pChoice;}  
 private:
@@ -305,7 +305,7 @@ public:
   /**
    * Get the int/enum value entered by the user.
    */
-  virtual int GetIntValue();
+  virtual intptr_t GetIntValue();
   /**
    * Get the string value entered by the user.
    */
@@ -342,7 +342,7 @@ public:
   /**
    * Get the int/enum value entered by the user.
    */
-  virtual int GetIntValue();
+  virtual intptr_t GetIntValue();
 
   virtual wxWindow* GetEditionControl(){return m_pCombo;}  
 private:

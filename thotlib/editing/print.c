@@ -2142,7 +2142,7 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
   DisplayConfirmMessage
   displays the given message (text).
   ----------------------------------------------------------------------*/
-void DisplayConfirmMessage (char *text)
+void DisplayConfirmMessage (const char *text)
 {
 #ifdef _GTK
   gtk_window_set_title (GTK_WINDOW (window),text); 

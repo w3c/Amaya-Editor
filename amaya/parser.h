@@ -86,7 +86,7 @@ ParserData;
 
 typedef struct _XmlEntity
 {
-  char         *charName;      /* entity name */
+  const char   *charName;      /* entity name */
   int           charCode;      /* decimal code of ISO-Latin1 char */
 }
 XmlEntity;

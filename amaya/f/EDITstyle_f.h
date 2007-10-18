@@ -27,7 +27,7 @@ extern void DeleteStyleElement ( Document doc,
                                  Element el );
 extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern void StyleChanged ( NotifyOnTarget *event );
-extern void ChangeTheme ( char *theme );
+extern void ChangeTheme ( const char *theme );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void SetStyleString ( Document doc,
                              Element el,
@@ -73,7 +73,7 @@ extern void DeleteStyleElement ( Document doc,
                                    Element el );
 extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern void StyleChanged ( NotifyOnTarget *event );
-extern void ChangeTheme ( char *theme );
+extern void ChangeTheme ( const char *theme );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void SetStyleString ( Document doc,
                                Element el,

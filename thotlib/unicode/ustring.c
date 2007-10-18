@@ -34,11 +34,11 @@ unsigned long offset[6] = {
 };
 
 typedef struct {
-  char       *ISOCode;
+  const char *ISOCode;
   CHARSET     Charset;
 } CharsetCode;
 
-static CharsetCode CharsetCodeTable[] =
+static const CharsetCode CharsetCodeTable[] =
 {
     {"us-ascii",         US_ASCII},
     {"ascii",            US_ASCII},
@@ -476,7 +476,7 @@ CHARSET TtaGetDefaultCharset ()
 /*----------------------------------------------------------------------
   TtaGetCharsetName gives the constant string of the charset ISO name.
   ----------------------------------------------------------------------*/
-char *TtaGetCharsetName (CHARSET charset)
+const char *TtaGetCharsetName (CHARSET charset)
 {
   int index = 0;
 

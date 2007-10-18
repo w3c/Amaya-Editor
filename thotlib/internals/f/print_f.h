@@ -34,7 +34,7 @@ extern ThotBool PrintOnePage ( PtrDocument pDoc,
                                PtrAbstractBox rootAbsBox,
                                int clipOrg,
                                ThotBool last );
-extern void DisplayConfirmMessage ( char *text );
+extern void DisplayConfirmMessage ( const char *text );
 extern void DisplayMessage ( char *text,
                              int msgType );
 extern void TtaError ( int errorCode );
@@ -71,7 +71,7 @@ extern ThotBool PrintOnePage ( PtrDocument pDoc,
                                  PtrAbstractBox rootAbsBox,
                                  int clipOrg,
                                  ThotBool last );
-extern void DisplayConfirmMessage ( char *text );
+extern void DisplayConfirmMessage ( const char *text );
 extern void DisplayMessage ( char *text,
                                int msgType );
 extern void TtaError ( int errorCode );

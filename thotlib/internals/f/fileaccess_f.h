@@ -48,14 +48,14 @@ extern void TtaExtractName ( char *text,
                              char *aDirectory,
                              char *aName );
 extern void MakeCompleteName ( char *fname,
-                               char *fext,
+                               const char *fext,
                                char *directory_list,
                                char *completeName,
                                int *length );
 extern void GetPictureFileName ( char *name,
                                  char *fileName );
 extern void FindCompleteName ( char *fileName,
-                               char *extension,
+                               const char *extension,
                                PathBuffer directory,
                                PathBuffer completeName,
                                int *length );
@@ -110,14 +110,14 @@ extern void TtaExtractName ( char *text,
                                char *aDirectory,
                                char *aName );
 extern void MakeCompleteName ( char *fname,
-                                 char *fext,
+                                 const char *fext,
                                  char *directory_list,
                                  char *completeName,
                                  int *length );
 extern void GetPictureFileName ( char *name,
                                    char *fileName );
 extern void FindCompleteName ( char *fileName,
-                                 char *extension,
+                                 const char *extension,
                                  PathBuffer directory,
                                  PathBuffer completeName,
                                  int *length );

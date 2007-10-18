@@ -171,7 +171,8 @@ void add_inc_dep(inc_dep cour, char *filename)
     cour->includes[cour->nb_includes++] = strdup(filename);
 }
 
-char *filename, *command, __depname[MAX_PATH_LENGHT] = "\n\t@touch ";
+char *filename,__depname[MAX_PATH_LENGHT] = "\n\t@touch ";
+const char *command;
 
 #define depname (__depname+9)
 

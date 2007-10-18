@@ -743,7 +743,7 @@ void TtaExtractName (char *text, char *aDirectory, char *aName)
    dans directory_list le 1er nom du path fourni a` l'appel
    (MakeCompleteName est utilise pour la lecture)          
   ----------------------------------------------------------------------*/
-void MakeCompleteName (char *fname, char *fext, char *directory_list,
+void MakeCompleteName (char *fname, const char *fext, char *directory_list,
 		       char *completeName, int *length)
 {
    int                 i, j;
@@ -829,7 +829,7 @@ void GetPictureFileName (char *name, char *fileName)
    IsExtended compare la fin de fileName avec extension. Si la fin 
    est identique, retourne Vrai.                           
   ----------------------------------------------------------------------*/
-static ThotBool IsExtended (char *fileName, char *extension)
+static ThotBool IsExtended (const char *fileName, const char *extension)
 {
    int                 i, j;
    int                 nameLength, extLength;
@@ -870,7 +870,7 @@ static ThotBool IsExtended (char *fileName, char *extension)
    Si fileName se termine deja par extension, alors copie  
    simplement fileName dans completeName.                  
   ----------------------------------------------------------------------*/
-void FindCompleteName (char *fileName, char *extension,
+void FindCompleteName (char *fileName, const char *extension,
 		       PathBuffer directory, PathBuffer completeName,
 		       int *length)
 {

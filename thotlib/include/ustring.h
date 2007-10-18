@@ -76,7 +76,7 @@ extern CHARSET TtaGetDefaultCharset ();
 /*----------------------------------------------------------------------
   TtaGetCharsetName gives the constant string of the charset ISO name.
   ----------------------------------------------------------------------*/
-extern char *TtaGetCharsetName (CHARSET charset);
+extern const char *TtaGetCharsetName (CHARSET charset);
 
 extern int ustrcasecmp (const CHAR_T *, const CHAR_T *);
 extern CHAR_T *ustrcat (CHAR_T *, const CHAR_T *);

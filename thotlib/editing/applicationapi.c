@@ -442,7 +442,7 @@ void TtaSetErrorMessages (int on)
   Return value:
   identifier of the current version.
   ----------------------------------------------------------------------*/
-char *TtaGetVersion ()
+const char *TtaGetVersion ()
 {
   UserErrorCode = 0;
   return (VersionId);
@@ -472,9 +472,9 @@ int TtaGetErrorCode ()
   See also:
   TtaGetErrorCode
   ----------------------------------------------------------------------*/
-char *TtaGetStrError (int errorCode)
+const char *TtaGetStrError (int errorCode)
 {
-  char             *strError = NULL;
+  const char             *strError = NULL;
 
   switch (errorCode)
     {

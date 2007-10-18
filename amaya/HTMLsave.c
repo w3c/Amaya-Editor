@@ -2274,7 +2274,7 @@ static ThotBool HasSavingName (Document doc, View view, char *url,
   Return 0 if the file has been saved
   ----------------------------------------------------------------------*/
 static int SafeSaveFileThroughNet (Document doc, char *localfile,
-                                   char *remotefile, char *content_type,
+                                   char *remotefile, const char *content_type,
                                    ThotBool use_preconditions)
 {
   char              msg[MAX_LENGTH];
@@ -2365,7 +2365,7 @@ static ThotBool SaveObjectThroughNet (Document doc, View view,
 {
   char            *tempname;
   char            *msg;
-  char            *content_type;
+  const char      *content_type;
   int              remainder = 500;
   int              res;
 
@@ -2445,7 +2445,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   LoadedImageDesc *pImage;
   char            *tempname;
   char            *msg;
-  char            *content_type;
+  const char      *content_type;
   int              remainder = 10000;
   int              index = 0, len, nb = 0;
   int              i, res;

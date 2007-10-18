@@ -14,7 +14,7 @@ extern void TtaInitDialogue ( char *server,
                               ThotAppContext *app_context );
 extern void InitDialogueFont ( void );
 extern int TtaGetReferencesBase ( int number );
-extern void DisplayConfirmMessage ( char *text );
+extern void DisplayConfirmMessage ( const char *text );
 extern void DisplayMessage ( char *text,
                              int msgType );
 extern int DestContenuMenu ( struct Cat_Context *catalogue );
@@ -198,7 +198,7 @@ extern void TtaInitDialogue ( char *server,
                                 ThotAppContext *app_context );
 extern void InitDialogueFont ( void );
 extern int TtaGetReferencesBase ( int number );
-extern void DisplayConfirmMessage ( char *text );
+extern void DisplayConfirmMessage ( const char *text );
 extern void DisplayMessage ( char *text,
                                int msgType );
 extern int DestContenuMenu ( struct Cat_Context *catalogue );

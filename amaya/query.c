@@ -283,7 +283,7 @@ AHTDocId_Status    *GetDocIdStatus (int docid, HTList * documents)
   AHTGuessAtom_for
   Converts an Amaya type descriptor into the equivalent MIME type.
   ----------------------------------------------------------------------*/
-static  HTAtom *AHTGuessAtom_for (char *urlName, char *contentType)
+static  HTAtom *AHTGuessAtom_for (char *urlName, const char *contentType)
 {
   HTAtom           *atom;
   char *          filename;
@@ -3407,7 +3407,7 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
   HT_OK
   ----------------------------------------------------------------------*/
 int PutObjectWWW (int docid, char *fileName, char *urlName, 
-                  char *contentType, char *outputfile, int mode,
+                  const char *contentType, char *outputfile, int mode,
                   TTcbf *terminate_cbf, void *context_tcbf)
 {
   AHTReqContext      *me;
@@ -3417,7 +3417,6 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   char               *fileURL;
   char               *etag = NULL;
   HTParentAnchor     *dest_anc_parent;
-  char               *tmp;
   char               *esc_url;
   int                 UsePreconditions;
   char                url_name[MAX_LENGTH];
@@ -3436,7 +3435,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   else
     {
       /* should we protect the PUT against lost updates? */
-      tmp = TtaGetEnvString ("ENABLE_LOST_UPDATE_CHECK");
+      const char *tmp = TtaGetEnvString ("ENABLE_LOST_UPDATE_CHECK");
       if (tmp && *tmp && strcasecmp (tmp, "yes"))
         lost_update_check = FALSE;
 
@@ -3490,7 +3489,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   /* prepare the target URL */
   if (resource_name)
     {
-      tmp = strstr (urlName, resource_name);     
+      char *tmp = strstr (urlName, resource_name);     
       if (!tmp)
         {
           /* urlName does not include the resource name */
@@ -3623,7 +3622,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   charset = TtaGetDocumentCharset (docid);
   if (charset != UNDEFINED_CHARSET)
     {
-      tmp =  TtaGetCharsetName (charset);
+      const char *tmp =  TtaGetCharsetName (charset);
       if (tmp && *tmp != EOS)
         {
           tmp2 = TtaStrdup (tmp);
