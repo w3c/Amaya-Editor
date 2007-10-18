@@ -2604,27 +2604,12 @@ static void GiveWindowGeometry (Document doc, int docType, int method,
     label = "Annot_Formatted_view";
   else if (docType == docBookmark)
     label = "Topics_Formatted_view";
-#ifndef _WX
-  else if (docType == docSource)
-    label = "Source_view";
-  else
-    label = "Formatted_view";
-#else /* _WX */
   else
     label = "Wx_Window";
-#endif /* _WX */
   TtaGetViewGeometry (doc, label, x, y, w, h);
 
-#ifdef _WX
-  if (w == 0 || h == 0)
+  if (*w == 0 || *h == 0)
     TtaGetViewGeometry (doc, "Formatted_view", x, y, w, h);
-#else /* _WX */
-  if (docType == docMath)
-    {
-      *h = 300;
-      *w = 580;
-    }
-#endif /* _WX */
 
   /* change the position slightly to avoid hiding completely the main
      view of other documents */
@@ -7570,6 +7555,7 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvBoolean ("EDIT_SRC_TEMPLATE", FALSE, FALSE);
 #ifdef _WX
   TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", TRUE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL", TRUE, TRUE);
 #endif /* _WX */
   TtaSetEnvBoolean ("XML_EDIT_MODE", FALSE, FALSE);
   TtaSetEnvBoolean ("AMAYA_LITE", FALSE, FALSE);

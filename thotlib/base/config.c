@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1314,13 +1314,13 @@ static ThotBool getXYWidthHeight (char *line, PtrDocument pDoc, int *x,
         result = TRUE;
     }
   /* check the position/size is coherent */
-  if (*x<0)
+  if (*x < 0)
     *x = 0;
-  if (*y<0)
+  if (*y < 0)
     *y = 0;
-  if (*width<0)
+  if (*width <= 0)
     *width = 800;
-  if (*height<0)
+  if (*height <= 0)
     *height = 600;
   return result;
 }

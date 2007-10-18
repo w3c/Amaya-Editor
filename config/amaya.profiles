@@ -36,7 +36,6 @@
 
 #-------------------- User Profiles ------------------------------------------
 ################# AMAYA EDITOR
-# Give the list of visible functions
 <Editor>
 +config
 +templates
@@ -46,6 +45,29 @@ FollowTheLink
 FollowTheLinkNewWin
 FollowTheLinkNewTab
 #+javascript_dom
+HelpLocal
+ShowPanel
+FullScreen
+SplitHorizontally
+SplitVertically
+ZoomIn
+ZoomOut
+&TransformType
+TtcParentElement
+TtcChildElement
+TtcPreviousElement
+TtcNextElement
+CopyLocation
+
+################# AMAYA EDITOR_Lite
+<Editor_Lite>
++config
++templates
++browsing_Lite
++edit_Lite
+FollowTheLink
+FollowTheLinkNewWin
+FollowTheLinkNewTab
 HelpLocal
 ShowPanel
 FullScreen
@@ -283,6 +305,47 @@ ShowBrowsingBar
 *AmayaToolBarBrowsing
 *AmayaExplorerToolPanel
 
+######### BROWSING_Lite
+[browsing_Lite]
+#+annot-module
+#+views
+HelpViews
+ShowSource
+ShowStructure
+TtcCloseView
++print
+AmayaClose
+DocumentInfo
+DoAction
+HelpAmaya
+HelpAtW3C
+HelpIndex
+HelpSearching
+HelpSelecting
+GoToHome
+GotoPreviousHTML
+GotoNextHTML
+HelpBrowsing
+NextLinkOrFormElement
+OpenDoc
+PreviousLinkOrFormElement
+Reload
+SaveDocumentAs
+ShowLogFile
+StopTransfer
+AmayaCloseTab
+NewTab
+RefreshTab
+RefreshAllTabs
+CloseOtherTabs
+AmayaCloseWindow
+TtcCopySelection
+TtcSearchText
+SendByMail
+ShowBrowsingBar
+*AmayaToolBarBrowsing
+#*AmayaExplorerToolPanel
+
 ########### EDITING
 [edit]
 +attr-style
@@ -326,12 +389,7 @@ HelpXml
 &NewCss
 &RemoveDoctype
 &AddDoctype
-&CreateDoctypeXhtml11
-&CreateDoctypeXhtmlTransitional
-&CreateDoctypeXhtmlStrict
-&CreateDoctypeXhtmlBasic
 &CreateDoctypeHtmlTransitional
-&CreateDoctypeHtmlStrict
 &SaveDocument
 &SaveAll
 &TtcCutSelection
@@ -350,6 +408,49 @@ ShowEditingBar
 *AmayaSpeCharToolPanel
 *AmayaAttributeToolPanel
 *AmayaXMLToolPanel
+
+########### EDITING_Lite
+[edit_Lite]
++bdi-text-module
++css-style
++hypertext-module
++image-module
++list-module
+#+struct-module
+&ChangeTitle
++text-module
++forms
++edit-module
++presentation-module
++maths
++spell
++tables
+&CreateMath
+#&SetCSSStyle
+HelpDocument
+HelpChanging
+HelpTemplating
+HelpPublishing
+HelpAccess
+&NewXHTML
+&NewMathML
+&NewCss
+&SaveDocument
+&SaveAll
+&TtcCutSelection
+&TtcDeleteSelection
+&TtcPaste
+&PasteBuffer
+&TtcUndo
+&TtcRedo
+&Synchronize
+&InsertBefore
+&InsertAfter
+ShowEditingBar
+*AmayaToolBarEditing
+*AmayaXHTMLToolPanel
+*AmayaStyleToolPanel
+*AmayaSpeCharToolPanel
 
 ######### VIEWS
 [views]
@@ -413,7 +514,7 @@ HelpEditChar
 &DeleteAnchor
 HelpLinks
 &LinkToPreviousTarget
-&XPointer_bufferStore
+#&XPointer_bufferStore
 ShowTargets
 
 [list-module]
