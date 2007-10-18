@@ -81,9 +81,6 @@ Package=<4>
     Project_Dep_Name libraptor
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name librdf
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name printlib
     End Project Dependency
 }}}
