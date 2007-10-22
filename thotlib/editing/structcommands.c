@@ -3476,16 +3476,27 @@ void TtaInsertAnyElement (Document document, ThotBool before)
       else if (pSelDoc->DocReadOnly)
         /* the document can not be modified */
         return;
-      else if (firstSel && ElementIsReadOnly (firstSel->ElParent))
-        /* the parent can not be modified */
-        return;
 
       if (before)
-        SRuleForSibling (pDoc, firstSel, TRUE, 1, &typeNum, &pSS, &isList,
-                         &optional);
+        {
+          if (firstSel && firstSel->ElTypeNumber == (CharString + 1))
+            firstSel = firstSel->ElParent;
+          if (firstSel && ElementIsReadOnly (firstSel->ElParent))
+            /* the parent can not be modified */
+            return;
+          SRuleForSibling (pDoc, firstSel, TRUE, 1, &typeNum, &pSS, &isList,
+                           &optional);
+        }
       else
-        SRuleForSibling (pDoc, lastSel, FALSE, 1, &typeNum, &pSS, &isList,
-                         &optional);
+        {
+          if (lastSel && lastSel->ElTypeNumber == (CharString + 1))
+            lastSel = lastSel->ElParent;
+          if (lastSel && ElementIsReadOnly (lastSel->ElParent))
+            /* the parent can not be modified */
+            return;
+          SRuleForSibling (pDoc, lastSel, FALSE, 1, &typeNum, &pSS, &isList,
+                           &optional);
+        }
       if (typeNum == 0 || pSS == NULL)
         /* no sibling allowed */
         return;
