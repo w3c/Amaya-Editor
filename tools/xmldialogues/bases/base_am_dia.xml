@@ -162,6 +162,22 @@
 	<message xml:lang="tw">樣式(&amp;S)</message>
 	<message xml:lang="sk">Š&amp;týl</message>
 </label>
+<label define="Attributes_">
+<message xml:lang="en">Attributes</message>
+<message xml:lang="fr">Attributs</message>
+<message xml:lang="de">Attribute</message>
+<message xml:lang="it">Attributi</message>
+<message xml:lang="tr">Özellik</message>
+<message xml:lang="es">Atributos</message>
+<message xml:lang="pt">Atributos</message>
+<message xml:lang="fi">Asetukset</message>
+<message xml:lang="ru">Атрибуты</message>
+<message xml:lang="hu">Attribútumok</message>
+<message xml:lang="ka">ატრიბუტები</message>
+<message xml:lang="cn">属性</message>
+<message xml:lang="tw">屬性</message>
+<message xml:lang="sk">Atribúty</message>
+</label>
 <label define="Annotations_">
 	<message xml:lang="en">A&amp;nnotations</message>
 	<message xml:lang="fr">A&amp;nnotations</message>

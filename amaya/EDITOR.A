@@ -322,6 +322,8 @@ MENUS
   Style button:BCSSStyle -> SetCSSStyle icon:css.png;
 	Style Separator;
 
+	Attributes_;
+
 	Style button:BCreateClass -> CreateClass;
 	Style button:BShowAppliedStyle -> ShowAppliedStyle;
   Style Separator;

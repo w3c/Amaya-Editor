@@ -373,6 +373,7 @@ ShowBrowsingBar
 +spell
 +svg
 +tables
+&MenuAttribute
 &CreateBase
 &CreateMath
 &SetCSSStyle
@@ -425,6 +426,7 @@ ShowEditingBar
 +maths
 +spell
 +tables
+&MenuAttribute
 &CreateMath
 #&SetCSSStyle
 HelpDocument
