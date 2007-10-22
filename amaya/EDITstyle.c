@@ -815,9 +815,17 @@ void ChangeTheme (const char *theme)
               if (strcmp (theme, "Standard"))
                 {
                   // look for the css file
-                  ptr = TtaGetEnvString ("THOTDIR");
+                  ptr = TtaGetEnvString ("APP_HOME");
                   filename = (char *)TtaGetMemory (strlen (ptr) + strlen(theme) + 20);
-                  sprintf (filename, "%s%cconfig%c%s.css", ptr, DIR_SEP, DIR_SEP, theme);
+                  sprintf (filename, "%s%c%s.css", ptr, DIR_SEP, theme);
+                  if (!TtaFileExist (filename))
+                    {
+                      // the user didn't define CSS files
+                      TtaFreeMemory (filename);
+                      ptr = TtaGetEnvString ("THOTDIR");
+                      filename = (char *)TtaGetMemory (strlen (ptr) + strlen(theme) + 20);
+                      sprintf (filename, "%s%cconfig%c%s.css", ptr, DIR_SEP, DIR_SEP, theme);
+                    }
                   buffer = LoadACSSFile (filename);
                   if (buffer)
                     {

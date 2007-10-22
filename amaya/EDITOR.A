@@ -405,6 +405,7 @@ FUNCTIONS
   GoToHome,
   ShowLibrary,
   AddNewModelIntoLibraryForm,
+  ApplyClass,
   DoLeftAlign,
   DoCenter,
   DoRightAlign,

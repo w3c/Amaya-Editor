@@ -679,6 +679,7 @@ HelpSVG
 [attr-style]
 &CreateStyle
 &CreateClass
+ApplyClass
 *AmayaApplyClassToolPanel
 
 [css-browsing]
