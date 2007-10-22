@@ -18,6 +18,9 @@ extern void ParseCSSImageCallback ( Document doc,
                                     char *file,
                                     void *extra,
                                     ThotBool isnew );
+extern int GetEmValue ( char *data,
+                        Element el,
+                        Document doc );
 extern char *GetCSSBackgroundURL ( char *cssRule );
 extern void ParseCSSRule ( Element element,
                            PSchema tsch,
@@ -87,6 +90,9 @@ extern void ParseCSSImageCallback ( Document doc,
                                       char *file,
                                       void *extra,
                                       ThotBool isnew );
+extern int GetEmValue ( char *data,
+                          Element el,
+                          Document doc );
 extern char *GetCSSBackgroundURL ( char *cssRule );
 extern void ParseCSSRule ( Element element,
                              PSchema tsch,

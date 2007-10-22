@@ -480,6 +480,18 @@ extern void TtaSetPositionPRuleDelta (Element element, PRule pRule, int delta,
 extern void TtaSetPRuleView (PRule pRule, int view);
 
 /*----------------------------------------------------------------------
+  TtaGetPixelValue converts a logical value into a pixel value for
+  a given element.
+  ----------------------------------------------------------------------*/
+extern int TtaGetPixelValue (int val, int unit, Element element, Document document);
+
+/*----------------------------------------------------------------------
+  TtaGetLogicalValue converts a pixel value into a logical value for
+  a given element.
+  ----------------------------------------------------------------------*/
+extern int TtaGetLogicalValue (int val, int unit, Element element, Document document);
+
+/*----------------------------------------------------------------------
    TtaChangeBoxSize
 
    Changes the height and width of the box corresponding to an element in

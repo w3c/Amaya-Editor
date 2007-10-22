@@ -4069,6 +4069,28 @@ static char *ParseCSSMinWidth (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
+  GetEmMarginValue returns the em value 
+  ----------------------------------------------------------------------*/
+int GetEmValue (char *data, Element el, Document doc)
+{
+  PresentationValue   val;
+  char               *ptr;
+  int                 value;
+
+  val.typed_data.real = FALSE;
+  ptr = SkipBlanksAndComments (data);
+  if (!strncasecmp (data, "auto", 4))
+    value = TtaGetPixelValue (0, VALUE_AUTO, el, doc);
+  else
+    {
+      ptr = ParseCSSUnit (data, &val);
+      value = TtaGetPixelValue (val.typed_data.value, val.typed_data.unit,
+                             el, doc);
+    }
+  return TtaGetLogicalValue (value, UNIT_EM, el, doc);
+}
+
+/*----------------------------------------------------------------------
   ParseACSSMarginTop: parse a CSS margin-top attribute
   ----------------------------------------------------------------------*/
 static char *ParseACSSMarginTop (Element element, PSchema tsch,

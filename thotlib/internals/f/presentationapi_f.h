@@ -56,6 +56,14 @@ extern void TtaSetPositionPRuleDelta ( Element element,
                                        Document document );
 extern void TtaSetPRuleView ( PRule pRule,
                               int view );
+extern int TtaGetPixelValue ( int val,
+                              int unit,
+                              Element element,
+                              Document document );
+extern int TtaGetLogicalValue ( int val,
+                                int unit,
+                                Element element,
+                                Document document );
 extern void TtaChangeBoxSize ( Element element,
                                Document document,
                                View view,
@@ -161,6 +169,14 @@ extern void TtaSetPositionPRuleDelta ( Element element,
                                          Document document );
 extern void TtaSetPRuleView ( PRule pRule,
                                 int view );
+extern int TtaGetPixelValue ( int val,
+                                int unit,
+                                Element element,
+                                Document document );
+extern int TtaGetLogicalValue ( int val,
+                                  int unit,
+                                  Element element,
+                                  Document document );
 extern void TtaChangeBoxSize ( Element element,
                                  Document document,
                                  View view,

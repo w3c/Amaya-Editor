@@ -541,14 +541,14 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
           if (*stop == EOS)
             {
               // the property is the last one
-              val = atoi (&start[12]);
+              val = GetEmValue (&start[12], el, doc);
               *start = EOS;
             }
           else
             {
               // there are other properties after
               *stop = EOS;
-              val = atoi (&start[12]);
+              val = GetEmValue (&start[12], el, doc);
               *stop = ';';
               while (*stop != EOS)
                 {

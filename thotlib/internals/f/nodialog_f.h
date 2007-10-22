@@ -6,6 +6,14 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern int TtaGetPixelValue ( int val,
+                              int unit,
+                              Element element,
+                              Document document );
+extern int TtaGetLogicalValue ( int val,
+                                int unit,
+                                Element element,
+                                Document document );
 extern void TtaExecuteMenuAction ( const char *actionName,
                                    Document doc,
                                    View view,
@@ -175,6 +183,14 @@ extern ThotBool TtaDetachFrame ( int frame_id );
 
 #else /* __STDC__ */
 
+extern int TtaGetPixelValue ( int val,
+                                int unit,
+                                Element element,
+                                Document document );
+extern int TtaGetLogicalValue ( int val,
+                                  int unit,
+                                  Element element,
+                                  Document document );
 extern void TtaExecuteMenuAction ( const char *actionName,
                                      Document doc,
                                      View view,

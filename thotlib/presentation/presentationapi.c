@@ -1213,7 +1213,7 @@ PRule TtaNewPRuleForNamedView (int presentationType, char *viewName,
   Return value:
   new presentation rule.
   ----------------------------------------------------------------------*/
-PRule               TtaCopyPRule (PRule pRule)
+PRule TtaCopyPRule (PRule pRule)
 {
   PtrPRule            copy;
 
@@ -2109,6 +2109,162 @@ void TtaSetPRuleView (PRule pRule, int view)
 
 #ifndef NODISPLAY
 /*----------------------------------------------------------------------
+  TtaGetPixelValue converts a logical value into a pixel value for
+  a given element.
+  ----------------------------------------------------------------------*/
+int TtaGetPixelValue (int val, int unit, Element element, Document document)
+{
+  PtrAbstractBox      pAb = NULL;
+  TypeUnit            int_unit;
+  int                 frame;
+  int                 w, h;
+
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame = GetWindowNumber (document, 1);
+      if (frame)
+        pAb = AbsBoxOfEl ((PtrElement) element, 1);
+      if (pAb == NULL)
+        TtaError (ERR_element_has_no_box);
+      else
+        {
+          // get the internal unit
+          switch (unit)
+            {
+            case UNIT_REL:
+            case UNIT_EM:
+              int_unit = UnRelative;
+              val *= 10;
+              break;
+            case UNIT_PT:
+              int_unit = UnPoint;
+              break;
+            case UNIT_PC:
+              int_unit = UnPoint;
+              val *= 12;
+              break;
+            case UNIT_IN:
+              int_unit = UnPoint;
+              val *= 72;
+              break;
+            case UNIT_CM:
+              int_unit = UnPoint;
+              val *= 28;
+              break;
+            case UNIT_MM:
+              int_unit = UnPoint;
+              val *= 28;
+              val /= 10;
+              break;
+            case UNIT_PERCENT:
+              int_unit = UnPercent;
+              break;
+            case UNIT_XHEIGHT:
+              int_unit = UnXHeight;
+              val *= 10;
+              break;
+            case VALUE_AUTO:
+              int_unit = UnAuto;
+              break;
+            default:
+              int_unit = UnPixel;
+              break;
+            }
+          if (int_unit == UnPercent || int_unit == UnAuto)
+            {
+              if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
+                GetSizesFrame (frame, &w, &h);
+              else
+                w = pAb->AbEnclosing->AbBox->BxW;
+              if (int_unit == UnAuto)
+                val = w;
+              else
+                val = PixelValue (val, UnPercent, (PtrAbstractBox) w,
+                                  ViewFrameTable[0].FrMagnification);
+            }
+          else
+            val = PixelValue (val, int_unit, pAb, 0);
+        }
+    }
+  return val;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetLogicalValue converts a pixel value into a logical value for
+  a given element.
+  ----------------------------------------------------------------------*/
+int TtaGetLogicalValue (int val, int unit, Element element, Document document)
+{
+  PtrAbstractBox      pAb = NULL;
+  TypeUnit            int_unit;
+  int                 frame;
+  int                 w, h;
+
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame = GetWindowNumber (document, 1);
+      if (frame)
+        pAb = AbsBoxOfEl ((PtrElement) element, 1);
+      if (pAb == NULL)
+        TtaError (ERR_element_has_no_box);
+      else
+        {
+          // get the internal unit
+          switch (unit)
+            {
+            case UNIT_REL:
+            case UNIT_EM:
+              int_unit = UnRelative;
+              break;
+            case UNIT_PT:
+            case UNIT_PC:
+            case UNIT_IN:
+            case UNIT_CM:
+            case UNIT_MM:
+              int_unit = UnPoint;
+              break;
+            case UNIT_PERCENT:
+              int_unit = UnPercent;
+              break;
+            case UNIT_XHEIGHT:
+              int_unit = UnXHeight;
+              break;
+            case VALUE_AUTO:
+              int_unit = UnAuto;
+              break;
+            default:
+              int_unit = UnPixel;
+              break;
+            }
+          if (int_unit == UnPercent || int_unit == UnAuto)
+            {
+              if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
+                GetSizesFrame (frame, &w, &h);
+              else
+                w = pAb->AbEnclosing->AbBox->BxW;
+              if (int_unit == UnAuto)
+                val = w;
+              else
+                val = LogicalValue (val, UnPercent, (PtrAbstractBox) w,
+                                    ViewFrameTable[frame - 1].FrMagnification);
+            }
+          else
+            val = LogicalValue (val, int_unit, pAb, 0);
+          /* translate to external units */
+          if (unit == UNIT_REL || unit == UNIT_EM || unit == UNIT_XHEIGHT)
+            val /= 10;
+        }
+    }
+  return val;
+}
+
+/*----------------------------------------------------------------------
   TtaChangeBoxSize
 
   Changes the height and width of the box corresponding to an element in
@@ -2140,7 +2296,7 @@ void TtaChangeBoxSize (Element element, Document document, View view,
     /* parameter document is correct */
     {
       frame = GetWindowNumber (document, view);
-      if (frame != 0)
+      if (frame)
         {
           pAb = AbsBoxOfEl ((PtrElement) element, view);
           if (pAb == NULL)
@@ -2154,8 +2310,8 @@ void TtaChangeBoxSize (Element element, Document document, View view,
                     GetSizesFrame (frame, &x, &y);
                   else
                     {
-                      x = pAb->AbEnclosing->AbBox->BxWidth;
-                      y = pAb->AbEnclosing->AbBox->BxHeight;
+                      x = pAb->AbEnclosing->AbBox->BxW;
+                      y = pAb->AbEnclosing->AbBox->BxH;
                     }
                   deltaX = PixelValue (deltaX, UnPercent, (PtrAbstractBox) x, 0);
                   deltaY = PixelValue (deltaY, UnPercent, (PtrAbstractBox) y, 0);
@@ -2220,8 +2376,8 @@ void TtaChangeBoxPosition (Element element, Document document, View view,
                     GetSizesFrame (frame, &x, &y);
                   else
                     {
-                      x = pAb->AbEnclosing->AbBox->BxWidth;
-                      y = pAb->AbEnclosing->AbBox->BxHeight;
+                      x = pAb->AbEnclosing->AbBox->BxW;
+                      y = pAb->AbEnclosing->AbBox->BxH;
                     }
                   deltaX = PixelValue (deltaX, UnPercent, (PtrAbstractBox) x, 0);
                   deltaY = PixelValue (deltaY, UnPercent, (PtrAbstractBox) y, 0);

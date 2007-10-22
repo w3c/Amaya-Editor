@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -21,6 +21,24 @@
 #include "application.h"
 #include "memory_f.h"
 #include "nodialog.h"
+
+/*----------------------------------------------------------------------
+  TtaGetPixelValue converts a logical value into a pixel value for
+  a given element.
+  ----------------------------------------------------------------------*/
+int TtaGetPixelValue (int val, int unit, Element element, Document document)
+{
+  return 0;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetLogicalValue converts a pixel value into a logical value for
+  a given element.
+  ----------------------------------------------------------------------*/
+int TtaGetLogicalValue (int val, int unit, Element element, Document document)
+{
+  return 0;
+}
 
 /*----------------------------------------------------------------------
   TtaExecuteMenuAction execute the corresponding menu action.
