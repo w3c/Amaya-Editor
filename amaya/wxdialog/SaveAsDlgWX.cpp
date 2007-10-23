@@ -303,7 +303,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
   XRCCTRL(*this, "wxID_SAVE", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_BUTTON_SAVE) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
   XRCCTRL(*this, "wxID_BROWSE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
-  XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CLEAR) ));
+  XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetToolTip(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CLEAR) ));
   
   // Set focus to ...
   //  XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetFocus();

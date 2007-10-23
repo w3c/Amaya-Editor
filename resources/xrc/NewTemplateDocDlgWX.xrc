@@ -78,6 +78,17 @@
                     <size>5,0</size>
                   </object>
                   <object class="sizeritem">
+                    <object class="wxBitmapButton" name="wxID_CLEAR">
+                      <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
+                      <style></style>
+                      <tooltip>Browse directory</tooltip>
+                    </object>
+                    <flag></flag>
+                  </object>
+                  <object class="spacer">
+                    <size>5,0</size>
+                  </object>
+                  <object class="sizeritem">
                     <object class="wxBitmapButton" name="wxID_BUTTON_INSTANCEDIR">
                       <bitmap stock_id="wxART_FOLDER"></bitmap>
                       <style></style>
@@ -169,13 +180,6 @@
                 <object class="wxButton" name="wxID_OK">
                   <label>*Create document*</label>
                   <default>1</default>
-                </object>
-                <flag>wxALL</flag>
-                <border>5</border>
-              </object>
-              <object class="sizeritem">
-                <object class="wxButton" name="wxID_CLEAR">
-                  <label>*Clear*</label>
                 </object>
                 <flag>wxALL</flag>
                 <border>5</border>

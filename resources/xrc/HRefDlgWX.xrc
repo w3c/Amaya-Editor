@@ -45,10 +45,12 @@
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_CLEAR">
-                  <bitmap>../icons/16x16/editdelete.png</bitmap>
+                  <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
                 </object>
                 <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                <border>5</border>
+              </object>
+              <object class="spacer">
+                <size>2,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BROWSE">

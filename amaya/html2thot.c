@@ -794,7 +794,7 @@ static PtrClosedElement copyCEstring (PtrClosedElement first)
   InitMapping     intialise the list of the elements closed by
   each start tag.
   ----------------------------------------------------------------------*/
-void                   InitMapping (void)
+void InitMapping (void)
 {
   int                 line;
   int                 entry;
@@ -6843,6 +6843,7 @@ void CheckAbstractTree (Document doc, ThotBool isXTiger)
             while (ok);
         }
 
+#ifdef IV
       /* checks all MAP elements. If they are within a Block element, */
       /* move them up in the structure */
       el = elRoot;
@@ -6874,6 +6875,7 @@ void CheckAbstractTree (Document doc, ThotBool isXTiger)
                 }
             }
         }
+#endif /* IV */
 
       /* If element BODY is empty, create an empty element as a placeholder*/
       if (elBody)

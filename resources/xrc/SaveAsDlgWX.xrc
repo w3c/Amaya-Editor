@@ -45,9 +45,19 @@
                               <size>5,0</size>
                             </object>
                             <object class="sizeritem">
+                              <object class="wxBitmapButton" name="wxID_CLEAR">
+                                <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
+                              </object>
+                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                            </object>
+                            <object class="spacer">
+                              <size>5,0</size>
+                            </object>
+                            <object class="sizeritem">
                               <object class="wxBitmapButton" name="wxID_BROWSE">
                                 <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
                               </object>
+                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
                             </object>
                           </object>
                           <option>0</option>
@@ -320,14 +330,6 @@
             <object class="wxButton" name="wxID_SAVE">
               <label>*Confirm*</label>
               <default>1</default>
-            </object>
-          </object>
-          <object class="spacer">
-            <size>5,0</size>
-          </object>
-          <object class="sizeritem">
-            <object class="wxButton" name="wxID_CLEAR">
-              <label>*Clear*</label>
             </object>
           </object>
           <object class="spacer">

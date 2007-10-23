@@ -815,7 +815,7 @@ int BoxFontHeight (SpecFont specfont, char code)
 }
 
 /*----------------------------------------------------------------------
-  PixelValue computes the pixel size for a given logical unit.
+  PixelValue converts a logical value into a pixel value.
   pAb is the current abstract box except for UnPercent unit
   where it holds the comparison value.
   ----------------------------------------------------------------------*/
@@ -894,7 +894,7 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 }
 
 /*----------------------------------------------------------------------
-  LogicalValue computes the logical value for a given pixel size.
+  LogicalValue converts a pixel value into a logical value.
   pAb is the current abstract box except for UnPercent unit
   where it holds the comparison value.
   ----------------------------------------------------------------------*/
