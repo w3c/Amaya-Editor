@@ -32,7 +32,7 @@ href="http://www.w3.org/Amaya/User/New.html">Amaya 9.55</a>).</p>
     contextual menu</li>
   <li>Possibility to display whole tools on the left, or on the right, or to
     custumize tool by tool</li>
-  <li>Change the behaviour of Enter, Delete, and Backspace keys
+  <li>Change the behaviour of Enter, Delete, and Backspace keys 
     <p>a) Enter deletes the selected contents and breaks the bloc at the
     current position</p>
     <p>b) Delete deletes the selected contents and moves the cursor after</p>
@@ -53,17 +53,24 @@ href="http://www.w3.org/Amaya/User/New.html">Amaya 9.55</a>).</p>
 
 <h3>Bug fixes</h3>
 <ul>
+  <li>Set the environment variable G_SLICE="always-malloc" to prevent a crash
+    on new Linux platforms (the crash occurs as soon as a dialog is
+  displayed)</li>
   <li>A reference to the current page now moves to the top of page</li>
   <li>Amaya generated an explicit lang="en" attribute when an element of an
     English document is copied and pasted into a French document</li>
   <li>"Preserve Lines When Pasting" didn't work correctly in MacOS X</li>
   <li>The Preferences dialog didn't display correctly</li>
+  <li>In dialogs, buttons that clear an URI are now displayed close to the
+  URI</li>
+  <li>It's now possible to delete a link with the Link dialog</li>
+  <li>Maps areas could be lost</li>
 </ul>
 
 <p></p>
 <hr />
 <address>
-  last revised Date: <!--$date=-->2007-10-18<!--$-->
+  last revised Date: <!--$date=-->2007-10-23<!--$-->
 
 </address>
 </body>
