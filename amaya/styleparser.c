@@ -7660,6 +7660,32 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   LineNumber = numberOfLinesRead + 1;
   NewLineSkipped = 0;
   newlines = 0;
+
+  /* Search for an UTF-8 BOM character (EF BB BF) */
+  if (index == 0 && strlen(buffer) > 2 &&
+      (unsigned char) buffer[0] == 0xEF &&
+      (unsigned char) buffer[1] == 0xBB &&
+      (unsigned char) buffer[2] == 0xBF)
+    {
+      index = 3;
+    }
+
+  /* Search for an UTF-16 Big Endian BOM character (FE FF) */
+  if (index == 0 && strlen(buffer) > 1 &&
+      (unsigned char) buffer[0] == 0xFE &&
+      (unsigned char) buffer[1] == 0xFF)
+    {
+      index = 2;
+    }
+
+  /* Search for an UTF-16 Little Endian BOM character (FF FE) */
+  if (index == 0 && strlen(buffer) > 1 &&
+      (unsigned char) buffer[0] == 0xFF &&
+      (unsigned char) buffer[1] == 0xFE)
+    {
+      index = 2;
+    }
+  
   while (CSSindex < MAX_CSS_LENGTH && c != EOS && !eof)
     {
       c = buffer[index++];
