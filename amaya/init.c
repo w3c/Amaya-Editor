@@ -3004,6 +3004,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
       /* init MapAreas menu item */
       TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
+      TtaGetEnvBoolean ("BROWSE_TOOLBAR", &show);
+      TtaSetToggleItem (doc, 1, Views, TShowBrowsingBar, show);
+      TtaGetEnvBoolean ("EDIT_TOOLBAR", &show);
+      TtaSetToggleItem (doc, 1, Views, TShowEditingBar, show);
 #endif /* _WX */
     }
 
@@ -7341,7 +7345,7 @@ void InitAmaya (NotifyEvent * event)
   char               *ptr;
   int                 i;
   ThotBool            restoredDoc;
-  ThotBool            map, add, bt;
+  ThotBool            map;
 
   if (AmayaInitialized)
     return;
@@ -7553,16 +7557,12 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvBoolean ("INSERT_NBSP", FALSE, FALSE);
   TtaSetEnvBoolean ("GENERATE_MATHPI", TRUE, FALSE);
   TtaSetEnvBoolean ("EDIT_SRC_TEMPLATE", FALSE, FALSE);
-#ifdef _WX
   TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", TRUE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL", TRUE, TRUE);
-#endif /* _WX */
-  TtaSetEnvBoolean ("XML_EDIT_MODE", FALSE, FALSE);
+  TtaSetEnvBoolean("OPEN_PANEL", TRUE, FALSE);
   TtaSetEnvBoolean ("AMAYA_LITE", FALSE, FALSE);
-  TtaSetEnvBoolean ("SHOW_BUTTONS", TRUE, FALSE);
-  TtaSetEnvBoolean ("SHOW_ADDRESS", TRUE, FALSE);
-  TtaGetEnvBoolean ("SHOW_BUTTONS", &bt);
-  TtaGetEnvBoolean ("SHOW_ADDRESS", &add);
+  TtaSetEnvBoolean("BROWSE_TOOLBAR", TRUE, FALSE);
+  TtaSetEnvBoolean("EDIT_TOOLBAR", TRUE, FALSE);
+  TtaSetEnvBoolean ("XML_EDIT_MODE", FALSE, FALSE);
   /* get current value */
   TtaGetEnvBoolean ("SHOW_MAP_AREAS", &map);
   /* Create and intialize resources needed for each document */
@@ -7577,8 +7577,8 @@ void InitAmaya (NotifyEvent * event)
       MapAreas[i] = map;
       HSplit[i] = FALSE;
       VSplit[i] = FALSE;
-      SButtons[i] = bt;
-      SAddress[i] = add;
+      SButtons[i] = FALSE;
+      SAddress[i] = FALSE;
       /* initialize history */
       InitDocHistory (i);
     }

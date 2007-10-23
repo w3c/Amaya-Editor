@@ -51,17 +51,8 @@ class AmayaNormalWindow : public AmayaWindow
   
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
-//  virtual wxWindow*      GetPageContainer()const;
   virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
-//  virtual bool           AttachPage( int position, AmayaPage * p_page );  // TODO virtualize !!!
-//  virtual bool           DetachPage( int position );
-//  virtual bool           ClosePage( int position );  // TODO virtualize !!!
-//  virtual bool           CloseAllButPage( int position );   // TODO virtualize !!!
-//  virtual AmayaPage *    GetPage( int position ) const;   // TODO virtualize !!!
-//  virtual int            GetPageCount() const;   // TODO virtualize !!!
-
   virtual AmayaStatusBar * GetAmayaStatusBar();
-//  virtual void SetPageIcon(int page_id, char *iconpath);
 
   // url bar control
   virtual wxString GetURL();
@@ -70,13 +61,6 @@ class AmayaNormalWindow : public AmayaWindow
   virtual void     EmptyURLBar();
   
   void     GotoSelectedURL();
-
-//  void RefreshToolPanelBar();
-//  virtual AmayaToolPanel* GetToolPanel(int kind);
-  
-//  virtual bool ToolPanelsShown();
-//  virtual void HideToolPanels();
-//  virtual void ShowToolPanels();
   virtual void RefreshShowToolPanelToggleMenu();
 
 protected:
@@ -96,26 +80,14 @@ protected:
   bool HaveToolBarEditing()const{return m_haveTBEditing;}
   bool HaveToolBarBrowsing()const{return m_haveTBBrowsing;}
   
-  virtual void ToggleFullScreen();
-  
+  virtual void ToggleFullScreen();  
   virtual bool RegisterToolPanel(AmayaToolPanel* tool) {return false;}
   
-//  void OnMenuItem( wxCommandEvent& event ); // TODO virtualize !!!
   void OnMenuHighlight( wxMenuEvent& event );
-//  void OnSplitterUnsplit( wxSplitterEvent& event );
-//  void OnSplitterDClick( wxSplitterEvent& event );
-//  void OnSplitterPosChanged( wxSplitterEvent& event );
-//  void OnSplitPanelButton( wxCommandEvent& event );
-//  void OnNotebookPageChanged( wxNotebookEvent& event );
-
-//  void OnSize(wxSizeEvent& event);
-  
   void OnURLTextEnter( wxCommandEvent& event );
   void OnURLSelected( wxCommandEvent& event );
   void OnURLText( wxCommandEvent& event );
 
-//  bool IsToolBarShown(int toolbarID);
-//  void ShowToolBar(int toolbarID, bool bShow=true);
   virtual void RefreshShowToolBarToggleMenu(int toolbarID);
   
   AmayaStatusBar          *m_pStatusBar;

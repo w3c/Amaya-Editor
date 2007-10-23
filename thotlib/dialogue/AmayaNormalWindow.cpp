@@ -117,13 +117,11 @@ AmayaWindow( parent, id, pos, size, kind ),
 m_pStatusBar(NULL),
 m_pToolBarEditing(NULL),
 m_pToolBarBrowsing(NULL),
-m_haveTBEditing( Prof_ShowGUI("AmayaToolBarEditing") ),
-m_haveTBBrowsing( Prof_ShowGUI("AmayaToolBarBrowsing") ),
 m_pComboBox(NULL)
 {
+  m_haveTBEditing = Prof_ShowGUI("AmayaToolBarEditing");
+  m_haveTBBrowsing = Prof_ShowGUI("AmayaToolBarBrowsing");
   s_normalWindowCount++;
-  
-  
 }
 
 /*----------------------------------------------------------------------
@@ -151,7 +149,6 @@ bool AmayaNormalWindow::Initialize()
   m_pStatusBar = new AmayaStatusBar(this);
   SetStatusBar(m_pStatusBar);
   WindowTable[m_WindowId].WdStatus = m_pStatusBar;
-
   return AmayaWindow::Initialize();
 }
 
@@ -208,6 +205,14 @@ void AmayaNormalWindow::LoadConfig()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::SaveConfig()
 {
+  if (IsToolBarShown(0))
+    TtaSetEnvBoolean("BROWSE_TOOLBAR", TRUE, TRUE);
+  else
+    TtaSetEnvBoolean("BROWSE_TOOLBAR", FALSE, TRUE);
+  if (IsToolBarShown(1))
+    TtaSetEnvBoolean("EDIT_TOOLBAR", TRUE, TRUE);
+  else
+    TtaSetEnvBoolean("EDIT_TOOLBAR", FALSE, TRUE);
   AmayaWindow::SaveConfig();
 }
 
@@ -219,8 +224,16 @@ void AmayaNormalWindow::SaveConfig()
  -----------------------------------------------------------------------*/
 wxPanel* AmayaNormalWindow::GetToolBarEditing()
 {
+  ThotBool show;
+
   if (!m_pToolBarEditing && m_haveTBEditing)
-    m_pToolBarEditing = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_EDITING"));
+    {
+      m_pToolBarEditing = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_EDITING"));
+      TtaGetEnvBoolean ("EDIT_TOOLBAR", &show);
+      if (!show)
+        m_pToolBarEditing->Hide();
+      //    HideToolBar(1);
+    }
   return m_pToolBarEditing;
 }
 
@@ -231,10 +244,15 @@ wxPanel* AmayaNormalWindow::GetToolBarEditing()
  -----------------------------------------------------------------------*/
 wxPanel* AmayaNormalWindow::GetToolBarBrowsing()
 {
+  ThotBool show;
+
   if (!m_pToolBarBrowsing && m_haveTBBrowsing)
     {
       m_pToolBarBrowsing = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_BROWSING"));
       m_pComboBox = XRCCTRL(*m_pToolBarBrowsing, "wxID_TOOL_URL", wxComboBox);
+      TtaGetEnvBoolean ("BROWSE_TOOLBAR", &show);
+      if (!show)
+        m_pToolBarBrowsing->Hide();
     }
   return m_pToolBarBrowsing;
 }
