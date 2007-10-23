@@ -346,7 +346,7 @@ void SaveAsDlgWX::OnConfirmButton( wxCommandEvent& event )
       if (CopyImages)
         {
           path = XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->GetValue( );
-          strncpy( buffer, (const char*)path.mb_str(wxConvUTF8), MAX_LENGTH-1);
+          strncpy( buffer, (const char*)path.Trim(TRUE).Trim(FALSE).mb_str(wxConvUTF8), MAX_LENGTH-1);
           buffer[MAX_LENGTH-1] = EOS;
           ThotCallback (BaseDialog + ImgDirSave,  STRING_DATA, (char *)buffer);
         }
@@ -390,6 +390,7 @@ void SaveAsDlgWX::OnDirImgButton( wxCommandEvent& event )
   int             len;
 
   path = XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->GetValue();
+  path = path.Trim(TRUE).Trim(FALSE);
   if ((MysaveImgs || CopyImages) && !path.StartsWith(_T("http")))
     {
       // Create a generic filedialog
@@ -422,6 +423,7 @@ void SaveAsDlgWX::OnDirCssButton( wxCommandEvent& event )
   int             len;
 
   path = XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->GetValue();
+  path = path.Trim(TRUE).Trim(FALSE);
   if ((MysaveCss || CopyCss) && !path.StartsWith(_T("http")))
     {
       // Create a generic filedialog
@@ -463,7 +465,8 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
      );
   
   // force the directory and file name, except for W3 docs on windows 
-    path = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue();
+  path = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue();
+  path = path.Trim(TRUE).Trim(FALSE);
   if (path.StartsWith(_T("http")) ||
       path.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
     p_dlg->SetDirectory(wxGetHomeDir());
@@ -554,6 +557,7 @@ void SaveAsDlgWX::OnImagesChkBox ( wxCommandEvent& event )
       // update the image path
       XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetEditable (true);
       wxString path = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue( );
+      path = path.Trim(TRUE).Trim(FALSE);
       int end_pos = path.Find(DIR_SEP, true);
       wxString dir_value = path.SubString(0, end_pos);
       XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(dir_value);
@@ -582,6 +586,7 @@ void SaveAsDlgWX::OnCssChkBox ( wxCommandEvent& event )
       // update the image path
       XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetEditable (true);
       wxString path = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue( );
+      path = path.Trim(TRUE).Trim(FALSE);
       int end_pos = path.Find(DIR_SEP, true);
       wxString dir_value = path.SubString(0, end_pos);
       XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetValue(dir_value);
@@ -613,6 +618,7 @@ void SaveAsDlgWX::OnUrlsChkBox ( wxCommandEvent& event )
 void SaveAsDlgWX::OnDocLocation ( wxCommandEvent& event )
 {
   wxString path = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue( );
+  path = path.Trim(TRUE).Trim(FALSE);
   if (CopyImages || CopyCss)
     {
       // Update other paths

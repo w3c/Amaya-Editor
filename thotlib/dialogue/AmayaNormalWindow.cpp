@@ -344,7 +344,10 @@ void AmayaNormalWindow::SetURL ( const wxString & new_url )
 wxString AmayaNormalWindow::GetURL( )
 {
   if(m_pComboBox)
-    return m_pComboBox->GetValue( );
+    {
+      wxString path = m_pComboBox->GetValue ();
+      return path.Trim(TRUE).Trim(FALSE);
+    }
   else
     return wxT("");
 }
@@ -559,7 +562,7 @@ void AmayaNormalWindow::GotoSelectedURL()
   if (pDoc && pDoc->Call_Text)
     {
       char buffer[2048];
-      strcpy(buffer, (m_pComboBox->GetValue()).mb_str(wxConvUTF8));
+      strcpy(buffer, (m_pComboBox->GetValue()).Trim(TRUE).Trim(FALSE).mb_str(wxConvUTF8));
 // patch to go-round a bug on Windows (TEXT_ENTER event called twice)
 #ifdef _WINDOWS
     if (isBufUrl == FALSE)

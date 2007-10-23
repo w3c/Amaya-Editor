@@ -272,6 +272,7 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
 
   // get the combobox current url
   value = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
+  value = value.Trim(TRUE).Trim(FALSE);
   // Get the document title
   if (Mandatory_title)
     {
