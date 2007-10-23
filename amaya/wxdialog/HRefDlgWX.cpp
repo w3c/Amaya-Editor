@@ -115,6 +115,7 @@ void HRefDlgWX::OnOk( wxCommandEvent& event )
 {
   // get the combobox current url
   wxString url = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
+  url = url.Trim(TRUE).Trim(FALSE);
   Waiting = 0;
   // allocate a temporary buffer to copy the 'const char *' url buffer 
   char buffer[MAX_LENGTH];
