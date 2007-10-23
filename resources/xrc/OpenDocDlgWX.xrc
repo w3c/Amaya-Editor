@@ -23,17 +23,25 @@
                 <flag>wxEXPAND</flag>
               </object>
               <object class="spacer">
-                <size>5,10</size>
+                <size>2,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_CLEAR">
+                  <bitmap>../icons/16x16/editdelete.png</bitmap>
+                </object>
+                <border>5</border>
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BUTTON_FILENAME">
                   <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
                 </object>
+                <border>5</border>
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BUTTON_DIR">
                   <bitmap stock_id="wxART_FOLDER"></bitmap>
                 </object>
+                <border>5</border>
               </object>
             </object>
             <flag>wxBOTTOM|wxEXPAND</flag>
@@ -165,13 +173,6 @@
             <object class="wxButton" name="wxID_OK">
               <label>*Open*</label>
               <default>1</default>
-            </object>
-          </object>
-          <object class="sizeritem">
-            <flag>wxALL</flag>
-            <border>5</border>
-            <object class="wxButton" name="wxID_CLEAR">
-              <label>*Clear*</label>
             </object>
           </object>
           <object class="sizeritem">

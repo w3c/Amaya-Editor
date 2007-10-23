@@ -24,6 +24,7 @@ BEGIN_EVENT_TABLE(HRefDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_OK"),           HRefDlgWX::OnOk )
   EVT_BUTTON(     XRCID("wxID_BROWSE"),       HRefDlgWX::OnBrowse )
   EVT_BUTTON(     XRCID("wxID_CLICK"),        HRefDlgWX::OnClick )
+  EVT_BUTTON(     XRCID("wxID_DELETE"),       HRefDlgWX::OnDelete )
   EVT_BUTTON(     XRCID("wxID_CLEAR"),        HRefDlgWX::OnClear )
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       HRefDlgWX::OnCancel )
   EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),     HRefDlgWX::OnOk )
@@ -59,7 +60,9 @@ HRefDlgWX::HRefDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_BROWSE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CLICK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLICK) ));
-  XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
+  XRCCTRL(*this, "wxID_CLICK", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLICK) ));
+  XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
+  XRCCTRL(*this, "wxID_DELETE", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_DEL) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
 
   // fill the combobox with url list
@@ -164,6 +167,17 @@ void HRefDlgWX::OnBrowse( wxCommandEvent& event )
       *m_pLastUsedFilter = p_dlg->GetFilterIndex();
       p_dlg->Destroy();
     }
+}
+
+/*----------------------------------------------------------------------
+  OnDelete called when the user clicks on delete button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void HRefDlgWX::OnDelete( wxCommandEvent& event )
+{
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 4);
+  ThotCallback (MyRef, INTEGER_DATA, (char*)1);
 }
 
 /*----------------------------------------------------------------------

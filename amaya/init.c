@@ -6478,6 +6478,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
             /* create an attribute HREF for the Link_Anchor */
             SetREFattribute (AttrHREFelement, AttrHREFdocument,
                              AttrHREFvalue, NULL);
+	  else
+	    DoDeleteAnchor (AttrHREFdocument, 1, TRUE);
           TtaDestroyDialogue (BaseDialog + AttrHREFForm);
           TtaDestroyDialogue (BaseDialog + FileBrowserForm);
         }

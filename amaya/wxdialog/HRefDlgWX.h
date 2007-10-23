@@ -37,6 +37,7 @@ private:
   void OnBrowse( wxCommandEvent& event );
   void OnClick( wxCommandEvent& event );
   void OnClear( wxCommandEvent& event );
+  void OnDelete( wxCommandEvent& event );
   void OnCancel( wxCommandEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro

@@ -10,81 +10,70 @@
         <object class="wxBoxSizer">
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_LABEL">
-              
-              
-              <label>*Insert the URI or browse*</label>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticBitmap">
+                  <bitmap>../icons/16x16/XHTML_Link.png</bitmap>
+                </object>
+                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_LABEL">
+                  <label>*Insert the URI or browse*</label>
+                </object>
+                <flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                <border>4</border>
+              </object>
             </object>
-            
-            
-            <flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
-            
-            
-            <border>4</border>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
-                <object class="wxStaticBitmap">
-                  
-                  
-                  <bitmap>../icons/16x16/XHTML_Link.png</bitmap>
-                </object>
-                
-                
-                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
-                
-                
-                <border>5</border>
-              </object>
-              <object class="sizeritem">
                 <object class="wxComboBox" name="wxID_COMBOBOX">
-                  
-                  
                   <content/>
-                  
-                  
                   <size>400,-1</size>
-                  
-                  
                   <focused>1</focused>
                 </object>
-                
-                
                 <option>1</option>
-                
-                
                 <flag>wxEXPAND</flag>
               </object>
               <object class="spacer">
-                
-                
-                <size>5,0</size>
+                <size>2,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_CLEAR">
+                  <bitmap>../icons/16x16/editdelete.png</bitmap>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <border>5</border>
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BROWSE">
-                  
-                  
                   <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
                 </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="spacer">
+                <size>5,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxButton" name="wxID_CLICK">
+                  <label>Click</label>
+                  <tooltip>Click the target</tooltip>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
               </object>
             </object>
-            
-            
             <flag>wxEXPAND</flag>
           </object>
           <object class="spacer">
-            
-            
             <size>0,10</size>
           </object>
         </object>
-        
-        
         <flag>wxALL|wxEXPAND</flag>
-        
-        
         <border>5</border>
       </object>
       <object class="sizeritem">
@@ -93,57 +82,24 @@
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_OK">
-              
-              
               <label>OK</label>
-              
-              
               <default>1</default>
             </object>
-            
-            
             <flag>wxALL</flag>
-            
-            
             <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxButton" name="wxID_CLICK">
-              
-              
-              <label>CLICK</label>
+            <object class="wxButton" name="wxID_DELETE">
+              <label>DELETE</label>
             </object>
-            
-            
             <flag>wxALL</flag>
-            
-            
-            <border>5</border>
-          </object>
-          <object class="sizeritem">
-            <object class="wxButton" name="wxID_CLEAR">
-              
-              
-              <label>CLEAR</label>
-            </object>
-            
-            
-            <flag>wxALL</flag>
-            
-            
             <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_CANCEL">
-              
-              
               <label>CANCEL</label>
             </object>
-            
-            
             <flag>wxALL</flag>
-            
-            
             <border>5</border>
           </object>
         </object>
