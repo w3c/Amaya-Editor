@@ -584,34 +584,7 @@ void AmayaCanvas::OnContextMenu( wxContextMenuEvent & event )
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaCanvas::OnContextMenu - page_id=%d, flags=%d"), page_id, flags );
 
   if (page_id >= 0 && document)
-    {
       TtaPopupDocContextMenu(document, window_id, this, point.x, point.y);
-//    wxMenu * p_menu = TtaGetDocContextMenu ( window_id );
-//    if(p_menu && document)
-//      {
-//        bool b = !CanFollowTheLink(document);
-//        wxMenuItem* items[4];
-//        if(b)
-//          {
-//            // Remove link menu items (open in ...)
-//            items[0] = p_menu->Remove(p_menu->FindItemByPosition(0));
-//            items[1] = p_menu->Remove(p_menu->FindItemByPosition(0));
-//            items[2] = p_menu->Remove(p_menu->FindItemByPosition(0));
-//            items[3] = p_menu->Remove(p_menu->FindItemByPosition(0));
-//          }
-//        
-//        PopupMenu (p_menu, ScreenToClient(point));
-//        
-//        if(b)
-//          {
-//            // Reinsert link menu items (open in ...)
-//            p_menu->Prepend(items[3]);
-//            p_menu->Prepend(items[2]);
-//            p_menu->Prepend(items[1]);
-//            p_menu->Prepend(items[0]);
-//          }
-//      }
-    }
   event.Skip();
 }
 

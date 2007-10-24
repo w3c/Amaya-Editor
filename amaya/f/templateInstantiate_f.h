@@ -16,7 +16,8 @@ extern Element Template_InsertRepeatChild ( Document doc,
                                             int pos );
 extern Element Template_InsertBagChild ( Document doc,
                                          Element el,
-                                         Declaration decl );
+                                         Declaration decl,
+                                         ThotBool before );
 extern void CreateInstance ( char *templatePath,
                              char *instancePath,
                              int basedoc );
@@ -73,7 +74,8 @@ extern Element Template_InsertRepeatChild ( Document doc,
                                               int pos );
 extern Element Template_InsertBagChild ( Document doc,
                                            Element el,
-                                           Declaration decl );
+                                           Declaration decl,
+                                           ThotBool before );
 extern void CreateInstance ( char *templatePath,
                                char *instancePath,
                                int basedoc );

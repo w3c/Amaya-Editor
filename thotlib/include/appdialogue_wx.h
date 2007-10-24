@@ -77,4 +77,9 @@ void TtaPopupDocContextMenu(int document, int window, void* win, int x, int y);
 extern void TtaCheckLostFocus();
 extern void TtaRedirectFocus();
 
+void TtaResetEnumContextMenu();
+void TtaSetEnumContextMenu(int res);
+int TtaGetEnumContextMenu();
+
+
 #endif /* #define __APPDIALOGUE_WX_H__ */

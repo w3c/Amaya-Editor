@@ -130,7 +130,7 @@ Element Template_InsertRepeatChild (Document doc, Element el, Declaration decl, 
   @param decl Template declaration of the element to insert
   @return The inserted element
   ----------------------------------------------------------------------*/
-Element Template_InsertBagChild (Document doc, Element el, Declaration decl)
+Element Template_InsertBagChild (Document doc, Element el, Declaration decl, ThotBool before)
 {
 #ifdef TEMPLATES
   Element     sel;
@@ -158,7 +158,7 @@ Element Template_InsertBagChild (Document doc, Element el, Declaration decl)
           sel = TtaGetParent (sel);
         if (sel)
           TtaSelectElement (doc, sel);
-        TtaInsertAnyElement (doc, FALSE);
+        TtaInsertAnyElement (doc, before);
       }
     TtaInsertElement (newElType, doc);
     TtaGiveFirstSelectedElement (doc, &sel, &start, &end);

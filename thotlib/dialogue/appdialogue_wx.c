@@ -70,6 +70,9 @@ WX_DECLARE_STRING_HASH_MAP( int, wxStringIntMap );
 wxStringIntMap g_iconSourceMap;
 #endif /* _WX */
 
+static int s_enumContextMenuResult;
+
+
 /* 
  * In this file there is a list of functions useful
  * to build step by step the user interface.
@@ -2411,3 +2414,33 @@ void TtaPopupDocContextMenu(int document, int window, void* win, int x, int y)
     s_PopupDocContextMenuFuction(document, window, win, x, y);
 }
 #endif /* _WX */
+
+
+/*----------------------------------------------------------------------
+  TtaResetEnumContextMenu()
+  Reset the return value of a popup menu 
+  (id value between 0 and 1000, -1 if cancelled)
+  ----------------------------------------------------------------------*/
+void TtaResetEnumContextMenu()
+{
+  s_enumContextMenuResult = -1;
+}
+
+/*----------------------------------------------------------------------
+  TtaSetEnumContextMenu()
+  Set the return value of a popup menu.
+  ----------------------------------------------------------------------*/
+void TtaSetEnumContextMenu(int res)
+{
+  s_enumContextMenuResult = res;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetEnumContextMenu()
+  Get the return value of a popup menu.
+  ----------------------------------------------------------------------*/
+int TtaGetEnumContextMenu()
+{
+  return s_enumContextMenuResult;
+}
+

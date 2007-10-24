@@ -94,6 +94,9 @@ extern void TtaRegisterOpenURLCallback ( void (*callback) (void *) );
 extern void TtaCheckLostFocus ( void );
 extern void TtaRedirectFocus ( void );
 extern void TtaSendStatsInfo ( void );
+extern void TtaResetEnumContextMenu ( void );
+extern void TtaSetEnumContextMenu ( int res );
+extern int TtaGetEnumContextMenu ( void );
 
 #else /* __STDC__ */
 
@@ -185,6 +188,9 @@ extern void TtaRegisterOpenURLCallback ( void (*callback) (void *) );
 extern void TtaCheckLostFocus ( void );
 extern void TtaRedirectFocus ( void );
 extern void TtaSendStatsInfo ( void );
+extern void TtaResetEnumContextMenu ( void );
+extern void TtaSetEnumContextMenu ( int res );
+extern int TtaGetEnumContextMenu ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -2536,16 +2536,7 @@ ThotBool AnnotSimpleClick (NotifyElement *event)
 void UpdateXmlElementListTool (Element el, Document doc)
 {
 #ifdef TEMPLATES
-  if (IsTemplateInstanceDocument(doc))
-    {
-      if (!IsTemplateElement(el))
-        el = GetFirstTemplateParentElement(el);
-    
-      DLList list = InsertableElement_Update(doc, el); 
-      AmayaParams    p = {-1, list, (void*)InsertableElement_DoInsertElement, NULL};    
-      TtaSendDataToPanel( WXAMAYA_PANEL_XML, p );    
-    }
-  else
+  if (!IsTemplateInstanceDocument(doc))
 #endif /* TEMPLATE */
     TtaRefreshElementMenu(doc, 1);
 }

@@ -554,6 +554,18 @@ void AmayaWindow::OnCloseEvent(wxCloseEvent& event)
 }
 
 /*----------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  OnPopupMenuEvent
+ * Description:  catch the close event
+  -----------------------------------------------------------------------*/
+void AmayaWindow::OnPopupMenuEvent(wxCommandEvent& event)
+{
+  TtaSetEnumContextMenu(event.GetId()); 
+  event.Skip();
+}
+
+
+/*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
@@ -568,6 +580,7 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
 #endif /* !_WINDOWS  && ! MACOS */
   EVT_COMMAND(-1, wxEVT_AMAYA_ACTION_EVENT, AmayaWindow::OnAmayaAction)
   EVT_CLOSE(AmayaWindow::OnCloseEvent)
+  EVT_MENU_RANGE(0, 1000, AmayaWindow::OnPopupMenuEvent)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

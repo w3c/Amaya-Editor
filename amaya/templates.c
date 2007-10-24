@@ -783,7 +783,7 @@ ThotBool BagButtonClicked (NotifyElement *event)
                     TtaSelectElement (doc, el);
                     TtaInsertAnyElement (doc, FALSE);
                   }
-                newEl = Template_InsertBagChild (doc, bagEl, decl);
+                newEl = Template_InsertBagChild (doc, bagEl, decl, FALSE);
 
                 /* Finish insertion.*/
                 TtaCloseUndoSequence (doc);

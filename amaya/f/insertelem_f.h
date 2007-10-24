@@ -12,6 +12,10 @@ extern DLList InsertableElement_GetList ( Document doc );
 extern DLList InsertableElement_Update ( Document doc,
                                          Element el );
 extern void InsertableElement_DoInsertElement ( void* el );
+extern void InsertableElement_InsertElement ( void* el,
+                                              ThotBool before );
+extern void InsertableElement_QueryInsertElement ( void* el,
+                                                   ThotBool before );
 
 #else /* __STDC__ */
 
@@ -21,6 +25,10 @@ extern DLList InsertableElement_GetList ( Document doc );
 extern DLList InsertableElement_Update ( Document doc,
                                            Element el );
 extern void InsertableElement_DoInsertElement ( void* el );
+extern void InsertableElement_InsertElement ( void* el,
+                                                ThotBool before );
+extern void InsertableElement_QueryInsertElement ( void* el,
+                                                     ThotBool before );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

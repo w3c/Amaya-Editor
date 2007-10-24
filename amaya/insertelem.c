@@ -397,7 +397,8 @@ void InsertableElement_DoInsertElement (void* el)
         break;
       case Template_EL_bag:
         newEl = Template_InsertBagChild (doc, ref,
-                                         (Declaration)elem->elem.component.declaration);
+                                         (Declaration)elem->elem.component.declaration,
+                                         FALSE);
         break;
       default:
         break;
@@ -407,4 +408,93 @@ void InsertableElement_DoInsertElement (void* el)
 
   if (newEl)
     TtaSelectElement (doc, newEl);
+}
+
+/*----------------------------------------------------------------------
+  GetFirstChildElementTo
+  Find and retrieve the first child of root element which is an ascendent
+  of the leaf element.
+  If leaf is a child of root, return leaf itself.
+  ----------------------------------------------------------------------*/
+static Element GetFirstChildElementTo(Element root, Element leaf)
+{
+  Element parent = TtaGetParent(leaf);
+  if(root==0 || leaf==0 || parent==0)
+    return 0;
+  
+  while(parent)
+    {
+      if(parent==root)
+        return leaf;
+      leaf = parent;
+      parent = TtaGetParent(parent);
+    }
+  return 0;
+}
+
+/*----------------------------------------------------------------------
+  InsertableElement_InsertElement
+  Insert the specified element in the given document before or after the selection.
+  \param el Element to insert (ElemListElement)
+  \param before True if inserting before given element, false after.
+  ----------------------------------------------------------------------*/
+void InsertableElement_InsertElement (void* el, ThotBool before)
+{
+#ifdef TEMPLATES
+  ElemListElement elem = (ElemListElement) el;
+  Element         ref = elem->refElem;
+  ElementType     refType = TtaGetElementType (ref);
+  Document        doc = TtaGetDocument (ref);
+  Element         newEl = NULL, sibling = NULL;
+  SSchema         templateSSchema;
+  Element     sel;
+  int         car1, car2;
+
+  templateSSchema = TtaGetSSchema ("Template", doc);
+
+  if (templateSSchema && refType.ElSSchema == templateSSchema)
+  {
+    switch(refType.ElTypeNum)
+    {
+      case Template_EL_repeat:
+        if (elem->typeClass==DefinedComponent)
+          {
+            TtaGiveFirstSelectedElement(doc, &sel, &car1, &car2);
+            sibling = GetFirstChildElementTo(ref, sel);
+            if(sibling)
+              {
+                if(before)
+                  TtaPreviousSibling(&sibling);
+                newEl = Template_InsertRepeatChildAfter (doc, ref,
+                                                    (Declaration)elem->elem.component.declaration,
+                                                    sibling);
+              }
+          }
+        break;
+      case Template_EL_bag:
+        newEl = Template_InsertBagChild (doc, ref,
+                                         (Declaration)elem->elem.component.declaration,
+                                         before);
+        break;
+      default:
+        break;
+    }
+  }
+#endif /* TEMPLATES */
+
+  if (newEl)
+    TtaSelectElement (doc, newEl);
+}
+
+
+/*----------------------------------------------------------------------
+  InsertableElement_QueryInsertElement(void* el, ThotBool bAfter)
+  Do a InsertableElement_InsertElement with undo/redo management.
+  ----------------------------------------------------------------------*/
+void InsertableElement_QueryInsertElement(void* el, ThotBool before)
+{
+#ifdef TEMPLATES
+  // TODO Undo/Redo
+  InsertableElement_InsertElement (el, before);
+#endif /* TEMPLATES */
 }
