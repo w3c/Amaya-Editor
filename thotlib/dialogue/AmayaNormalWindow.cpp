@@ -159,7 +159,7 @@ bool AmayaNormalWindow::Initialize()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::CleanUp()
 {
-  if(GetPageCount()==0)
+  if(GetPageCount() == 0)
     Close();
 }
 

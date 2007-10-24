@@ -69,10 +69,11 @@ AmayaAdvancedNotebook::~AmayaAdvancedNotebook()
   Method:  InsertPage
   Description: Insert a page.
  -----------------------------------------------------------------------*/
-bool AmayaAdvancedNotebook::InsertPage(size_t index, AmayaPage* page, const wxString& text, bool select, int imageId)
+bool AmayaAdvancedNotebook::InsertPage(size_t index, AmayaPage* page,
+									   const wxString& text, bool select, int imageId)
 {
   wxBitmap bmp = wxNullBitmap;
-  if(imageId>=0)
+  if (imageId >= 0)
     bmp = m_imageList->GetIcon(imageId);
   
   return wxAuiNotebook::InsertPage(index, page, text, select, bmp);
@@ -104,18 +105,22 @@ bool AmayaAdvancedNotebook::SetPageImage(size_t page, int image)
 bool AmayaAdvancedNotebook::ClosePage(int page_id)
 {
   AmayaPage *page = (AmayaPage*)GetPage( page_id );
+  bool result = true;
+
   page->Hide();
-  
-  
+  if(GetPageCount()==1 &&
+     AmayaNormalWindow::GetNormalWindowCount()==1)
+	{
+      TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
+	  result = false;
+	}
+
   if(page->Close())
   {
-    if(GetPageCount()==1 && AmayaNormalWindow::GetNormalWindowCount()==1)
-      TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
-
     DeletePage(page_id);
     /** \todo Update selection with old selection page. */
     UpdatePageId();    
-    return true;
+    return result;
   }
   else
   {
@@ -160,18 +165,21 @@ bool AmayaAdvancedNotebook::CloseAllButPage(int position)
  -----------------------------------------------------------------------*/
 void AmayaAdvancedNotebook::CleanUp()
 {
-  int pos;
-  
-  for(pos=GetPageCount()-1; pos>0; pos--)
+  int pos, count = GetPageCount();
+
+  if (count > 0)
   {
-    AmayaPage *page = (AmayaPage*) GetPage(pos);
-    if(page->CleanUp())
-    {
-      page->Close(true);
-      DeletePage(pos);
-    }
+    for(pos = count-1; pos > 0; pos--)
+	{
+      AmayaPage *page = (AmayaPage*) GetPage(pos);
+      if(page->CleanUp())
+	  {
+        page->Close(true);
+        DeletePage(pos);
+	  }
+	}
+    UpdatePageId();
   }
-  UpdatePageId();
 }
 
 /*----------------------------------------------------------------------
@@ -181,8 +189,10 @@ void AmayaAdvancedNotebook::CleanUp()
   -----------------------------------------------------------------------*/
 void AmayaAdvancedNotebook::OnClose(wxCloseEvent& event)
 {
+  int page_id = 0, count = GetPageCount();
+
   /* show a warning if there is more than one tab */
-  if (GetPageCount() > 1 && AmayaConfirmCloseTab::DoesUserWantToShowMe())
+  if (count > 1 && AmayaConfirmCloseTab::DoesUserWantToShowMe())
   {
     AmayaConfirmCloseTab dlg(this, GetPageCount());
     if ( dlg.ShowModal() != wxID_OK)
@@ -192,8 +202,7 @@ void AmayaAdvancedNotebook::OnClose(wxCloseEvent& event)
     }        
   }
 
-  int page_id = 0;
-  for(page_id=GetPageCount()-1; page_id>=0; page_id--)
+  for (page_id = count-1; page_id >= 0; page_id--)
   {
     AmayaPage * page = (AmayaPage *)GetPage(page_id);
     if(page->Close())
@@ -217,9 +226,9 @@ void AmayaAdvancedNotebook::OnClosePage(wxAuiNotebookEvent& event)
 {
   int page_id   = wxID_ANY;
   long flags    = 0;
-  if(event.GetSelection()!=wxID_ANY)
+  if (event.GetSelection() != wxID_ANY)
     page_id = event.GetSelection();
-  else if(GetSelection()!=wxID_ANY)
+  else if (GetSelection() != wxID_ANY)
     page_id = GetSelection();
   if (page_id != wxID_ANY)
     {
@@ -254,7 +263,7 @@ void AmayaAdvancedNotebook::UpdatePageId()
         }
       else
         {
-          wxASSERT_MSG(FALSE, _T("y a un problem, on essaye de mettre a jour une page qui est deja fermee") );
+          //wxASSERT_MSG(FALSE, _T("y a un problem, on essaye de mettre a jour une page qui est deja fermee") );
         }
       page_id++;
     }

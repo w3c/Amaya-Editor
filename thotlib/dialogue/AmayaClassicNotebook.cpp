@@ -81,17 +81,22 @@ bool AmayaClassicNotebook::InsertPage(size_t index, AmayaPage* page, const wxStr
 bool AmayaClassicNotebook::ClosePage(int page_id)
 {
   AmayaPage *page = (AmayaPage*)GetPage( page_id );
+  bool result = true;
+
   page->Hide();
+  if(GetPageCount()==1 &&
+     AmayaNormalWindow::GetNormalWindowCount()==1)
+	{
+      TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
+	  result = false;
+	}
   
   if(page->Close())
   {
-    if(GetPageCount()==1 && AmayaNormalWindow::GetNormalWindowCount()==1)
-      TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
-    
     DeletePage(page_id);
     /** \todo Update selection with old selection page. */
     UpdatePageId();    
-    return true;
+    return result;
   }
   else
   {
