@@ -47,21 +47,29 @@ void OpenNewDocFromArgv( char * url );
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaExplorerToolPanel, AmayaToolPanel)
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 AmayaExplorerToolPanel::AmayaExplorerToolPanel():
   AmayaToolPanel()
 {
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 AmayaExplorerToolPanel::~AmayaExplorerToolPanel()
 {
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 bool AmayaExplorerToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
           const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
   return wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_EXPLORER"));
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 wxString AmayaExplorerToolPanel::GetToolPanelName()const
 {
   return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_EXPLORE));
@@ -85,7 +93,7 @@ wxString AmayaExplorerToolPanel::GetDefaultAUIConfig()
 void AmayaExplorerToolPanel::OnDirTreeItemActivate(wxTreeEvent& event)
 {
   wxGenericDirCtrl* dirCtrl = XRCCTRL(*this, "wxID_DIRCTRL_EXPLORER", wxGenericDirCtrl);
-  if(!dirCtrl->GetFilePath().IsEmpty())
+  if (!dirCtrl->GetFilePath().IsEmpty())
   {
     char buffer[MAX_TXT_LEN];
     strcpy(buffer, dirCtrl->GetFilePath().mb_str(wxConvUTF8));

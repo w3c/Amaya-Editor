@@ -150,12 +150,11 @@ void AmayaToolPanelBar::LoadConfig()
   for(n=0; n<m_panels.GetCount(); n++)
     {
       AmayaToolPanelBarListItem &item = *(m_panels[n]);
-      if(item.panel)
+      if (item.panel)
         {
           ThotBool value;
           wxString str = wxT("OPEN_") + item.panel->GetToolPanelConfigKeyName();
-          TtaGetEnvBoolean((char*)(const char*)str.mb_str(wxConvUTF8),
-              &value);
+          TtaGetEnvBoolean((char*)(const char*)str.mb_str(wxConvUTF8), &value);
           MinimizePanel(item.panel, !value);
         }
     }
@@ -227,7 +226,7 @@ AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* pan
 void AmayaToolPanelBar::ShowPanel(AmayaToolPanel* panel, bool bShow)
 {
   AmayaToolPanelBarListItem* item = FindItem(panel);
-  if(item && item->shown!=bShow)
+  if (item && item->shown != bShow)
     {
       item->shown = bShow;
       if(m_scwin)
@@ -244,7 +243,7 @@ void AmayaToolPanelBar::ShowPanel(AmayaToolPanel* panel, bool bShow)
 void AmayaToolPanelBar::MinimizePanel(AmayaToolPanel* panel, bool bMin)
 {
   AmayaToolPanelBarListItem* item = FindItem(panel);
-  if(item && item->minimized!=bMin && !item->floating && item->dock)
+  if (item && item->minimized != bMin && !item->floating && item->dock)
     {
       if(item->dock->Minimize(bMin))
         item->minimized = bMin;
@@ -432,14 +431,10 @@ bool AmayaDockedToolPanelContainer::Minimize(bool bMinimize)
     {
       m_bMinimized = bMinimize;
       sz->Show((size_t)1, !bMinimize);
-      if(bMinimize)
-        {
-          XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_ExpandOff );
-        }
+      if (bMinimize)
+        XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_ExpandOff );
       else
-        {
-          XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_ExpandOn );
-        }
+        XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_ExpandOn );
       GetParent()->Layout();
       return true;
     }

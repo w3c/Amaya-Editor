@@ -232,7 +232,6 @@ wxPanel* AmayaNormalWindow::GetToolBarEditing()
       TtaGetEnvBoolean ("EDIT_TOOLBAR", &show);
       if (!show)
         m_pToolBarEditing->Hide();
-      //    HideToolBar(1);
     }
   return m_pToolBarEditing;
 }
