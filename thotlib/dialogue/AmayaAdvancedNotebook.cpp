@@ -46,9 +46,9 @@ AmayaAdvancedNotebook::AmayaAdvancedNotebook(wxWindow * window , wxWindowID id)
                  wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE |  
                  wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_CLOSE_ON_ALL_TABS |
                  wxAUI_NB_WINDOWLIST_BUTTON),
-     m_MContextFrameId(0),
      m_imageList(NULL)
 {
+  m_MContextFrameId = 0;
   if (WindowBColor == -1)
     {
       // Initialize the window background colour
@@ -225,7 +225,6 @@ void AmayaAdvancedNotebook::OnClose(wxCloseEvent& event)
 void AmayaAdvancedNotebook::OnClosePage(wxAuiNotebookEvent& event)
 {
   int page_id   = wxID_ANY;
-  long flags    = 0;
   if (event.GetSelection() != wxID_ANY)
     page_id = event.GetSelection();
   else if (GetSelection() != wxID_ANY)
@@ -391,16 +390,6 @@ void AmayaAdvancedNotebook::OnContextMenu( wxContextMenuEvent & event )
       wxMenu * p_menu = TtaGetContextMenu ( window_id );
       PopupMenu (p_menu, ScreenToClient(point));
     }
-}
-
-/*----------------------------------------------------------------------
-  Class:  AmayaAdvancedNotebook
-  Method:  GetMContextFrame
-  Description:  return the aimed frame by the last context menu
- -----------------------------------------------------------------------*/
-int AmayaAdvancedNotebook::GetMContextFrame()
-{
-  return m_MContextFrameId;
 }
 
 /*----------------------------------------------------------------------

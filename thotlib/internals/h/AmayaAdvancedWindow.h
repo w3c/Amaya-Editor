@@ -36,8 +36,6 @@ AmayaAdvancedWindow (  wxWindow * parent, wxWindowID id=wxID_ANY
 
   virtual ~AmayaAdvancedWindow();
 
-  virtual AmayaPage *  GetActivePage() const;
-  
   virtual bool Initialize();
   virtual void CleanUp();
   
@@ -46,14 +44,6 @@ AmayaAdvancedWindow (  wxWindow * parent, wxWindowID id=wxID_ANY
   
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
-  virtual wxWindow*      GetPageContainer()const;
-  virtual bool           AttachPage( int position, AmayaPage * p_page );
-  virtual bool           DetachPage( int position );
-  virtual bool           ClosePage( int position );
-  virtual bool           CloseAllButPage( int position );
-  virtual AmayaPage *    GetPage( int position ) const;
-  virtual int            GetPageCount() const;
-
   virtual void SetPageIcon(int page_id, char *iconpath);
 
   virtual void UpdateToolPanelLayout();
@@ -66,11 +56,15 @@ AmayaAdvancedWindow (  wxWindow * parent, wxWindowID id=wxID_ANY
 protected:
   DECLARE_EVENT_TABLE()
 
+  virtual AmayaPageContainer* GetPageContainer();
+  virtual const AmayaPageContainer* GetPageContainer()const;
+  
+  virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
+  
   virtual void ToggleFullScreen();
   
   virtual bool RegisterToolPanel(AmayaToolPanel* tool);
 
-  void OnMenuItem( wxCommandEvent& event );
   void OnClose(wxCloseEvent& event);
 
   bool IsToolBarShown(int toolbarID);

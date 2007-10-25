@@ -66,8 +66,6 @@ class AmayaAdvancedNotebook : public wxAuiNotebook, public AmayaPageContainer
   int GetPageId( const AmayaPage * p_page );
   virtual AmayaWindow * GetAmayaWindow();
   
-  int GetMContextFrame();
-
   void UpdatePageId();
   
   bool ClosePage(int page_id);
@@ -75,7 +73,10 @@ class AmayaAdvancedNotebook : public wxAuiNotebook, public AmayaPageContainer
 
   void CleanUp();
   
-  AmayaPage* GetPage(size_t page) {return wxDynamicCast(wxAuiNotebook::GetPage(page), AmayaPage);}
+  AmayaPage*  GetPage(size_t page)const {return wxDynamicCast(wxAuiNotebook::GetPage(page), AmayaPage);}
+  size_t      GetPageCount() const{return wxAuiNotebook::GetPageCount();}
+  
+  int GetSelection()const {return wxAuiNotebook::GetSelection();}
   int SetSelection(size_t page) {return wxAuiNotebook::SetSelection(page);}
 
   bool SetPageText(size_t page, const wxString& text){return wxAuiNotebook::SetPageText(page, text);}
@@ -84,7 +85,10 @@ class AmayaAdvancedNotebook : public wxAuiNotebook, public AmayaPageContainer
 
   bool InsertPage(size_t index, AmayaPage* page, const wxString& text, bool select, int imageId);
 
+  virtual operator wxWindow *(){return (wxWindow*)(wxAuiNotebook*)this;}
   
+  virtual bool Layout(){return wxAuiNotebook::Layout();}
+
 protected:
   DECLARE_EVENT_TABLE()
 #ifdef __WXDEBUG__
@@ -97,8 +101,7 @@ protected:
   void OnClose(wxCloseEvent& event);
   void OnClosePage(wxAuiNotebookEvent& event);
 
- protected:
-  int            m_MContextFrameId;
+protected:
   wxImageList*   m_imageList;
 };
 

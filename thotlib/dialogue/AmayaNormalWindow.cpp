@@ -282,19 +282,17 @@ AmayaStatusBar * AmayaNormalWindow::GetAmayaStatusBar()
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
- *      Method:  CreatePage
- * Description:  create a new AmayaPage.
- *               it's possible to attach automaticaly this page to the window or not
+ *      Method:  GetActivePage
+ * Description:  return the current selected page
  -----------------------------------------------------------------------*/
-AmayaPage * AmayaNormalWindow::CreatePage( bool attach, int position )
+AmayaPage * AmayaNormalWindow::GetActivePage() const
 {
-  AmayaPage * page = new AmayaPage( GetPageContainer(), this );
-  
-  if (attach)
-    AttachPage( position, page );
-  
-  return page;
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::GetActivePage") );
+  if (!GetPageContainer())
+    return NULL;
+  return (GetPageContainer()->GetSelection() >= 0) ? GetPage(GetPageContainer()->GetSelection()) : NULL;
 }
+
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
@@ -311,6 +309,101 @@ AmayaFrame * AmayaNormalWindow::GetActiveFrame() const
   else
     return NULL;
 }
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  AttachPage
+ * Description:  really attach a page to the current window
+ -----------------------------------------------------------------------*/
+bool AmayaNormalWindow::AttachPage( int position, AmayaPage * p_page )
+{
+  bool ret;
+  if (!GetPageContainer())
+    ret = false;
+  else
+    {
+      /* notebook is a new parent for the page
+       * warning: AmayaPage original parent must be a wxNotbook */
+      //    p_page->Reparent( m_pNotebook );
+      p_page->SetContainer( GetPageContainer() );
+    
+      /* insert the page in the notebook */
+      ret = GetPageContainer()->InsertPage( position,
+                                     p_page,
+                                     _T(""),  /* this is the page name */
+                                     false,
+                                     0 ); /* this is the default image id */
+
+      // update the pages ids
+      GetPageContainer()->UpdatePageId();
+
+      // the inserted page should be forced to notebook size
+      GetPageContainer()->Layout();
+      TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNormalWindow::AttachPage - pagesize: w=%d h=%d"),
+                     p_page->GetSize().GetWidth(),
+                     p_page->GetSize().GetHeight());
+
+      SetAutoLayout(TRUE);
+    }
+  return ret;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  ClosePage
+ * Description:  ferme une page
+ -----------------------------------------------------------------------*/
+bool AmayaNormalWindow::ClosePage( int page_id )
+{
+  // flush all pending events
+  wxTheApp->Yield();
+
+  if (GetPageContainer() == NULL)
+    return true;
+  else
+    return GetPageContainer()->ClosePage(page_id);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  CloseAllButPage
+ * Description:  ferme toutes les pages sauf une
+ -----------------------------------------------------------------------*/
+bool AmayaNormalWindow::CloseAllButPage( int position )
+{
+  if(GetPageContainer())
+    return GetPageContainer()->CloseAllButPage(position);
+  else
+    return false;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  GetPage
+ * Description:  search the page at given position
+ -----------------------------------------------------------------------*/
+AmayaPage * AmayaNormalWindow::GetPage( int position )const
+{
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::GetPage") );
+  if (!GetPageContainer())
+    return NULL;
+  if (GetPageCount() <= position)
+    return NULL;
+  return (AmayaPage *)GetPageContainer()->GetPage(position);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  GetPage
+ * Description:  how many page into the window
+ -----------------------------------------------------------------------*/
+int AmayaNormalWindow::GetPageCount() const
+{
+  if (!GetPageContainer())
+    return 0;
+  return (int)GetPageContainer()->GetPageCount();
+}
+
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
@@ -580,6 +673,108 @@ void AmayaNormalWindow::GotoSelectedURL()
 #endif /* _WINDOWS */
     }
 }
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnMenuItem
+ * Description:  this method is called when a menu item is pressed
+ *               it will generate an event to differe the menu item action
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
+{
+  wxMenu * p_menu = (wxMenu *)event.GetEventObject();
+  long     id     = event.GetId();
+  int action_id   = -1;
+
+  action_id = FindMenuActionFromMenuItemID (DocumentMenuList, id);
+  /* do not allow CTRL-C CTRL-X CTRL-V in "text" widgets */
+  wxWindow *       p_win_focus         = wxWindow::FindFocus();
+  wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+  wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+  wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+  if (( p_text_ctrl || p_combo_box || p_spinctrl ) &&
+      action_id >= 0 && action_id < MaxMenuAction && 
+      MenuActionList[action_id].ActionName)
+    {
+      if (p_text_ctrl)
+        {
+          if (!strcmp (MenuActionList[action_id].ActionName, "TtcCutSelection"))
+            {
+              p_text_ctrl->Cut();
+              return;
+            }
+          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcCopySelection"))
+            {
+              p_text_ctrl->Copy();
+              return;
+            }
+          else if (!strcmp (MenuActionList[action_id].ActionName, "PasteBuffer"))
+            {
+              p_text_ctrl->Paste();
+              return;
+            }
+          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcUndo"))
+            {
+              p_text_ctrl->Undo();
+              return;
+            }
+          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcRedo"))
+            {
+              p_text_ctrl->Redo();
+              return;
+            }
+        }
+      else if (p_combo_box)
+        {
+          if (!strcmp (MenuActionList[action_id].ActionName, "TtcCutSelection"))
+            {
+              p_combo_box->Cut();
+              return;
+            }
+          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcCopySelection"))
+            {
+              p_combo_box->Copy();
+              return;
+            }
+          else if (!strcmp (MenuActionList[action_id].ActionName, "PasteBuffer"))
+            {
+              p_combo_box->Paste();
+              return;
+            }
+          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcUndo"))
+            {
+              p_combo_box->Undo();
+              return;
+            }
+          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcRedo"))
+            {
+              p_combo_box->Redo();
+              return;
+            }
+        }
+      else
+        {
+          event.Skip();
+          return;
+        }
+    }
+
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuItem id=%d action_id=%d"), id, action_id );
+  
+  /* if this menu is the context menu it's possible that the current active document is not the wanted one */
+  wxMenu *   p_context_menu = TtaGetContextMenu( GetWindowId() );
+  Document   doc;
+  View       view;
+  if (p_menu && p_menu == p_context_menu)
+    FrameToView (GetPageContainer()->GetMContextFrame(), &doc, &view);
+  else
+    FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  AmayaWindow::DoAmayaAction( action_id, doc, view );
+  event.Skip();
+}
+
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -590,6 +785,7 @@ BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
   EVT_MENU_CLOSE( AmayaNormalWindow::OnMenuClose )
 #endif /* __WXDEBUG__ */
   
+  EVT_MENU(wxID_ANY,   AmayaNormalWindow::OnMenuItem )
   EVT_MENU_HIGHLIGHT_ALL( AmayaNormalWindow::OnMenuHighlight )
    
   EVT_COMBOBOX( XRCID("wxID_TOOL_URL"),   AmayaNormalWindow::OnURLSelected )

@@ -112,7 +112,6 @@ class AmayaWindow : public wxFrame
   virtual void ShowToolPanels();
   virtual void RefreshShowToolPanelToggleMenu();
 
-  virtual wxWindow*      GetPageContainer()const{return NULL;}
   virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
   virtual bool           AttachPage( int position, AmayaPage * p_page );
   virtual bool           DetachPage( int position );

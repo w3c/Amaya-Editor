@@ -47,8 +47,8 @@ AmayaClassicNotebook::AmayaClassicNotebook(wxWindow * window , wxWindowID id)
                  wxFULL_REPAINT_ON_RESIZE |
                  wxNB_MULTILINE /* only windows */,
                  wxT("AmayaClassicNotebook") )
-     ,m_MContextFrameId(0)
 {
+  m_MContextFrameId = 0;
   if (WindowBColor == -1)
     {
       // Initialize the window background colour
@@ -340,17 +340,6 @@ void AmayaClassicNotebook::OnContextMenu( wxContextMenuEvent & event )
 
   //  event.Skip();
 }
-
-/*----------------------------------------------------------------------
-  Class:  AmayaClassicNotebook
-  Method:  GetMContextFrame
-  Description:  return the aimed frame by the last context menu
- -----------------------------------------------------------------------*/
-int AmayaClassicNotebook::GetMContextFrame()
-{
-  return m_MContextFrameId;
-}
-
 
 /*----------------------------------------------------------------------
   Class:  AmayaClassicNotebook

@@ -7,7 +7,7 @@
 #include "windowtypes_wx.h"
 
 class AmayaQuickSplitButton;
-
+class AmayaPageContainer;
 /*
  * =====================================================================================
  *        Class:  AmayaNormalWindow
@@ -38,7 +38,7 @@ class AmayaNormalWindow : public AmayaWindow
                       ,int kind = WXAMAYAWINDOW_NORMAL);
   virtual ~AmayaNormalWindow();
 
-//  virtual AmayaPage *  GetActivePage() const;   // TODO virtualize !!!
+  virtual AmayaPage *  GetActivePage() const;
   virtual AmayaFrame * GetActiveFrame() const;
 
   virtual void CleanUp();
@@ -51,7 +51,7 @@ class AmayaNormalWindow : public AmayaWindow
   
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
-  virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
+  virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 ) = 0;
   virtual AmayaStatusBar * GetAmayaStatusBar();
 
   // url bar control
@@ -62,6 +62,12 @@ class AmayaNormalWindow : public AmayaWindow
   
   void     GotoSelectedURL();
   virtual void RefreshShowToolPanelToggleMenu();
+  
+  virtual bool AttachPage( int position, AmayaPage * p_page );
+  virtual bool ClosePage( int position );
+  virtual bool CloseAllButPage( int position );
+  virtual AmayaPage *    GetPage( int position ) const;
+  virtual int            GetPageCount() const;
 
 protected:
   DECLARE_EVENT_TABLE()
@@ -71,6 +77,9 @@ protected:
   void OnMenuOpen( wxMenuEvent& event );
 #endif /* __WXDEBUG__ */
 
+  virtual const AmayaPageContainer* GetPageContainer()const{return NULL;}
+  virtual AmayaPageContainer* GetPageContainer(){return NULL;}
+  
   wxPanel* GetToolBarEditing();
   wxPanel* GetToolBarBrowsing();
 
@@ -83,6 +92,7 @@ protected:
   virtual void ToggleFullScreen();  
   virtual bool RegisterToolPanel(AmayaToolPanel* tool) {return false;}
   
+  void OnMenuItem( wxCommandEvent& event );
   void OnMenuHighlight( wxMenuEvent& event );
   void OnURLTextEnter( wxCommandEvent& event );
   void OnURLSelected( wxCommandEvent& event );

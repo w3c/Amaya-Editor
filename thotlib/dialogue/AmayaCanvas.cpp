@@ -574,14 +574,13 @@ void AmayaCanvas::OnContextMenu( wxContextMenuEvent & event )
   AmayaWindow* wind = (AmayaWindow*) wxGetTopLevelParent(this);
   
   int      window_id = wind->GetWindowId();
-  long     flags     = 0;
   int      page_id   = 0;
   wxPoint  point     = event.GetPosition();
   Document document;
   View     view;
   FrameToView (m_pAmayaFrame->GetFrameId(), &document, &view);
   
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaCanvas::OnContextMenu - page_id=%d, flags=%d"), page_id, flags );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaCanvas::OnContextMenu - page_id=%d"), page_id);
 
   if (page_id >= 0 && document)
       TtaPopupDocContextMenu(document, window_id, this, point.x, point.y);

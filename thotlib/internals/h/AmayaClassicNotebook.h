@@ -64,8 +64,6 @@ class AmayaClassicNotebook : public wxNotebook, public AmayaPageContainer
   int GetPageId( const AmayaPage * p_page );
   virtual AmayaWindow * GetAmayaWindow();
   
-  int GetMContextFrame();
-
   void UpdatePageId();
   
   bool ClosePage(int page_id);
@@ -73,7 +71,10 @@ class AmayaClassicNotebook : public wxNotebook, public AmayaPageContainer
 
   void CleanUp();
   
-  AmayaPage* GetPage(size_t page) {return wxDynamicCast(wxNotebook::GetPage(page), AmayaPage);}
+  size_t     GetPageCount() const{return wxNotebook::GetPageCount();}
+  AmayaPage* GetPage(size_t page)const {return wxDynamicCast(wxNotebook::GetPage(page), AmayaPage);}
+  virtual int GetSelection()const{return wxNotebook::GetSelection();}
+
   int SetSelection(size_t page) {return wxNotebook::SetSelection(page);}
 
   bool SetPageText(size_t page, const wxString& text){return wxNotebook::SetPageText(page, text);}
@@ -82,6 +83,9 @@ class AmayaClassicNotebook : public wxNotebook, public AmayaPageContainer
 
   bool InsertPage(size_t index, AmayaPage* page, const wxString& text, bool select = false, int imageId = -1);
 
+  virtual operator wxWindow *(){return (wxWindow*)(wxNotebook*)this;}
+
+  virtual bool Layout(){ return wxNotebook::Layout();}
   
 protected:
   DECLARE_EVENT_TABLE()
@@ -95,9 +99,6 @@ protected:
   void OnMouseMiddleUp(wxMouseEvent& event);
   
   void OnClose(wxCloseEvent& event);
-
- protected:
-  int            m_MContextFrameId;
 };
 
 #endif // AMAYACLASSICNOTEBOOK_H_

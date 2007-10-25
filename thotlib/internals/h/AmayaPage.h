@@ -163,14 +163,15 @@ public:
   
   virtual int GetPageId( const AmayaPage * p_page ) = 0;
   virtual AmayaWindow * GetAmayaWindow() = 0;
-//  {return wxDynamicCast(wxGetTopLevelParent(this), AmayaWindow);} 
   
   virtual void UpdatePageId() = 0;
   
   virtual bool ClosePage(int page_id) = 0;
   virtual bool CloseAllButPage(int position) = 0;
 
-  virtual AmayaPage* GetPage(size_t WXUNUSED(page)) {return NULL;}
+  virtual AmayaPage* GetPage(size_t WXUNUSED(page))const {return NULL;}
+  virtual size_t     GetPageCount() const{return 0;}
+  virtual int GetSelection()const{return wxID_ANY;}
   virtual int SetSelection(size_t WXUNUSED(page)) {return wxID_ANY;}
   
   virtual bool SetPageText(size_t WXUNUSED(page), const wxString& WXUNUSED(text)){return false;}
@@ -180,6 +181,14 @@ public:
   virtual bool InsertPage(size_t index, AmayaPage* page, const wxString& text, bool select = false, int imageId = -1)=0;
   
   virtual void CleanUp() = 0;
+  
+  virtual bool Layout()=0;
+
+  virtual int GetMContextFrame()const{return m_MContextFrameId;}
+  
+  virtual operator wxWindow *() = 0;
+protected:
+  int            m_MContextFrameId;
 };
 
 #endif // __AMAYAPAGE_H__

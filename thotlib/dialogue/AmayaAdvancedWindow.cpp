@@ -100,8 +100,6 @@ AmayaAdvancedWindow::~AmayaAdvancedWindow()
  -----------------------------------------------------------------------*/
 bool AmayaAdvancedWindow::Initialize()
 {
-  wxPanel *pane;
-
   // Setup AUI !
   m_manager.SetManagedWindow(this);
   
@@ -255,130 +253,39 @@ void AmayaAdvancedWindow::SetPageIcon(int page_id, char *iconpath)
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaAdvancedWindow
- *      Method:  GetPageContainer
- * Description:  Retrieve the window wichi will directly contain the page.
+ *      Method:  CreatePage
+ * Description:  create a new AmayaPage.
+ *               it's possible to attach automaticaly this page to the window or not
  -----------------------------------------------------------------------*/
-wxWindow* AmayaAdvancedWindow::GetPageContainer()const
+AmayaPage * AmayaAdvancedWindow::CreatePage( bool attach, int position )
+{
+  AmayaPage * page = new AmayaPage( m_notebook, this );
+  
+  if (attach)
+    AttachPage( position, page );
+  
+  return page;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaAdvancedWindow
+ *      Method:  GetPageContainer
+ * Description:  Return the container of AmayaPages
+ -----------------------------------------------------------------------*/
+AmayaPageContainer* AmayaAdvancedWindow::GetPageContainer()
 {
   return m_notebook;
 }
 
-
 /*----------------------------------------------------------------------
  *       Class:  AmayaAdvancedWindow
- *      Method:  AttachPage
- * Description:  really attach a page to the current window
+ *      Method:  GetPageContainer
+ * Description:  Return the container of AmayaPages
  -----------------------------------------------------------------------*/
-bool AmayaAdvancedWindow::AttachPage( int position, AmayaPage * p_page )
+const AmayaPageContainer* AmayaAdvancedWindow::GetPageContainer()const
 {
-  bool ret;
-  if (!m_notebook)
-    ret = false;
-  else
-    {
-      /* notebook is a new parent for the page
-       * warning: AmayaPage original parent must be a wxNotbook */
-      //    p_page->Reparent( m_notebook );
-      p_page->SetContainer( m_notebook );
-    
-      /* insert the page in the notebook */
-      ret = m_notebook->InsertPage( position,
-                                     p_page,
-                                     _T(""),  /* this is the page name */
-                                     false,
-                                     0 ); /* this is the default image id */
-
-      // update the pages ids
-      m_notebook->UpdatePageId();
-
-      // the inserted page should be forced to notebook size
-      m_notebook->Layout();
-      TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaAdvancedWindow::AttachPage - pagesize: w=%d h=%d"),
-                     p_page->GetSize().GetWidth(),
-                     p_page->GetSize().GetHeight());
-
-      SetAutoLayout(TRUE);
-    }
-  return ret;
+  return m_notebook;
 }
-
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaAdvancedWindow
- *      Method:  DetachPage
- * Description:  
- -----------------------------------------------------------------------*/
-bool AmayaAdvancedWindow::DetachPage( int position )
-{
-  return false;
-}
-
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaAdvancedWindow
- *      Method:  ClosePage
- * Description:  ferme une page
- -----------------------------------------------------------------------*/
-bool AmayaAdvancedWindow::ClosePage( int page_id )
-{
-  // flush all pending events
-  wxTheApp->Yield();
-
-  if (m_notebook == NULL)
-    return true;
-  else
-  {
-    if(m_notebook->ClosePage(page_id))
-    {
-      /** \todo Test if no more page is present on the window.*/
-      return true;
-    }
-    else
-      return false;
-  }
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaAdvancedWindow
- *      Method:  CloseAllButPage
- * Description:  ferme toutes les pages sauf une
- -----------------------------------------------------------------------*/
-bool AmayaAdvancedWindow::CloseAllButPage( int position )
-{
-  if(m_notebook)
-    return m_notebook->CloseAllButPage(position);
-  else
-    return false;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaAdvancedWindow
- *      Method:  GetPage
- * Description:  search the page at given position
- -----------------------------------------------------------------------*/
-AmayaPage * AmayaAdvancedWindow::GetPage( int position ) const
-{
-  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaAdvancedWindow::GetPage") );
-  if (!m_notebook)
-    return NULL;
-  if (GetPageCount() <= position)
-    return NULL;
-  return (AmayaPage *)m_notebook->GetPage(position);
-}
-
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaAdvancedWindow
- *      Method:  GetPage
- * Description:  how many page into the window
- -----------------------------------------------------------------------*/
-int AmayaAdvancedWindow::GetPageCount() const
-{
-  if (!m_notebook)
-    return 0;
-  return (int)m_notebook->GetPageCount();
-}
-
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaAdvancedWindow
@@ -402,20 +309,6 @@ void AmayaAdvancedWindow::OnClose(wxCloseEvent& event)
     m_notebook = NULL;
   }
   event.Skip();
-}
-
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaAdvancedWindow
- *      Method:  GetActivePage
- * Description:  return the current selected page
- -----------------------------------------------------------------------*/
-AmayaPage * AmayaAdvancedWindow::GetActivePage() const
-{
-  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaAdvancedWindow::GetActivePage") );
-  if (!m_notebook)
-    return NULL;
-  return (m_notebook->GetSelection() >= 0) ? GetPage(m_notebook->GetSelection()) : NULL;
 }
 
 
@@ -600,105 +493,6 @@ void AmayaAdvancedWindow::OnNotebookPageChanged( wxNotebookEvent& event )
   }
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaAdvancedWindow
- *      Method:  OnMenuItem
- * Description:  this method is called when a menu item is pressed
- *               it will generate an event to differe the menu item action
- -----------------------------------------------------------------------*/
-void AmayaAdvancedWindow::OnMenuItem( wxCommandEvent& event )
-{
-  wxMenu * p_menu = (wxMenu *)event.GetEventObject();
-  long     id     = event.GetId();
-  int action_id   = -1;
-
-  action_id = FindMenuActionFromMenuItemID (DocumentMenuList, id);
-  /* do not allow CTRL-C CTRL-X CTRL-V in "text" widgets */
-  wxWindow *       p_win_focus         = wxWindow::FindFocus();
-  wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
-  wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
-  wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
-  if (( p_text_ctrl || p_combo_box || p_spinctrl ) &&
-      action_id >= 0 && action_id < MaxMenuAction && 
-      MenuActionList[action_id].ActionName)
-    {
-      if (p_text_ctrl)
-        {
-          if (!strcmp (MenuActionList[action_id].ActionName, "TtcCutSelection"))
-            {
-              p_text_ctrl->Cut();
-              return;
-            }
-          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcCopySelection"))
-            {
-              p_text_ctrl->Copy();
-              return;
-            }
-          else if (!strcmp (MenuActionList[action_id].ActionName, "PasteBuffer"))
-            {
-              p_text_ctrl->Paste();
-              return;
-            }
-          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcUndo"))
-            {
-              p_text_ctrl->Undo();
-              return;
-            }
-          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcRedo"))
-            {
-              p_text_ctrl->Redo();
-              return;
-            }
-        }
-      else if (p_combo_box)
-        {
-          if (!strcmp (MenuActionList[action_id].ActionName, "TtcCutSelection"))
-            {
-              p_combo_box->Cut();
-              return;
-            }
-          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcCopySelection"))
-            {
-              p_combo_box->Copy();
-              return;
-            }
-          else if (!strcmp (MenuActionList[action_id].ActionName, "PasteBuffer"))
-            {
-              p_combo_box->Paste();
-              return;
-            }
-          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcUndo"))
-            {
-              p_combo_box->Undo();
-              return;
-            }
-          else if (!strcmp (MenuActionList[action_id].ActionName, "TtcRedo"))
-            {
-              p_combo_box->Redo();
-              return;
-            }
-        }
-      else
-        {
-          event.Skip();
-          return;
-        }
-    }
-
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuItem id=%d action_id=%d"), id, action_id );
-  
-  /* if this menu is the context menu it's possible that the current active document is not the wanted one */
-  wxMenu *   p_context_menu = TtaGetContextMenu( GetWindowId() );
-  Document   doc;
-  View       view;
-  if (p_menu && p_menu == p_context_menu)
-    FrameToView (m_notebook->GetMContextFrame(), &doc, &view);
-  else
-    FrameToView (TtaGiveActiveFrame(), &doc, &view);
-  AmayaWindow::DoAmayaAction( action_id, doc, view );
-  event.Skip();
-}
-
 void AmayaAdvancedWindow::OnSize(wxSizeEvent& event)
 {
   if(HaveToolBarBrowsing())
@@ -719,9 +513,7 @@ void AmayaAdvancedWindow::OnSize(wxSizeEvent& event)
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaAdvancedWindow, AmayaWindow)
-
-  EVT_MENU(wxID_ANY,   AmayaAdvancedWindow::OnMenuItem )
+BEGIN_EVENT_TABLE(AmayaAdvancedWindow, AmayaNormalWindow)
   
   EVT_SIZE(AmayaAdvancedWindow::OnSize)
    
