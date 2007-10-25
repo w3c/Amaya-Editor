@@ -11,12 +11,8 @@
  * Authors: I. Vatton (INRIA)
  *          D. Veillard (INRIA) - Removed X remapping of keys,
  *                                lead to crash in some configurations
- *          R. Guetari (W3C/INRIA) - Previous Windows version
- *          P. Cheyrou-Lagreze (INRIA) - gtk input
  */
-#ifdef _WX
 #include "wx/wx.h"
-#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -52,18 +48,8 @@ KEY;
 #include "appdialogue_tv.h"
 #include "select_tv.h"
 
-#ifdef _GTK
-#include "gtk-functions.h"
-#include "absboxes_f.h" 
-#endif /* _GTK */
-#if defined(_WINGUI)
-#include "appli_f.h"
-#include "input_f.h"
-#endif /* #if defined(_WINGUI) */
-#ifdef _WX
 #include "appdialogue_wx.h"
 #include "AmayaWindow.h"
-#endif /* _WX */
 /* Actions table */
 #include "applicationapi_f.h"
 #include "callback_f.h"
@@ -163,38 +149,8 @@ static KEY         *Automata_current = NULL;
 /* Access key table for loaded documents */
 static Proc2        AccessKeyFunction = NULL;
 static KEY         *DocAccessKey[MAX_DOCUMENTS];
-#ifdef _WINGUI
-static ThotBool    Special;
-#endif /* _WINGUI */
 
 
-#if 0 /* This function is not used, could be removed ??? */
-/*----------------------------------------------------------------------
-  NameCode
-  translates the keynames not supported by the interpreter of
-  Motif translations.
-  ----------------------------------------------------------------------*/
-static char *NameCode (char* name)
-{
-  if (strlen (name) < 5)
-    if (name[0] == ',')
-      return ("0x2c");
-    else
-      return (name);
-  else if (!strcasecmp (name, "Return"))
-    return ("0x0d");
-  else if (!strcasecmp (name, "Backspace"))
-    return ("0x08");
-  else if (!strcasecmp (name, "Space"))
-    return ("0x20");
-  else if (!strcasecmp (name, "Escape"))
-    return ("0x18");
-  else if (!strcasecmp (name, "Delete"))
-    return ("0x7f");
-  else
-    return (name);
-}
-#endif /* 0 */
 
 /*----------------------------------------------------------------------
   KeyName translates a key value into a key name.
@@ -210,9 +166,6 @@ static const char *KeyName (unsigned int key)
     case THOT_KEY_BackSpace:
       return "Backspace";
     case THOT_KEY_Tab:
-#if !defined(_WINGUI) && !defined(_WX)
-    case THOT_KEY_TAB:
-#endif /* !defined(_WINGUI) && !defned(_WX) */
       return "Tab";
     case THOT_KEY_Escape:
       return "Escape";
@@ -375,7 +328,6 @@ static unsigned int SpecialKey (char *name, ThotBool shifted, ThotBool *isSpecia
       return (unsigned int) c;
     }
 }
-
 
 
 /*----------------------------------------------------------------------
@@ -543,340 +495,6 @@ static ThotBool MemoKey (int mod1, int key1, ThotBool spec1, int mod2,
 }
 
 
-#ifdef _WINGUI
-/*----------------------------------------------------------------------
-  MSCharTranslation
-  MS-Window front-end to the character translation and handling.
-  Decodes the MS-Window callback parameters and calls the
-  generic character handling function.
-  Returns TRUE if an access key was executed.
-  ----------------------------------------------------------------------*/
-ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
-                              LPARAM lParam, ThotBool isSpecial)
-{
-  int  keyboard_mask = 0;   
-  int  status, ret;
-
-  if (frame < 0)
-    return FALSE;
-  status = GetKeyState (VK_CONTROL);
-  if (HIBYTE (status))
-    /* the Control key is pressed */
-    keyboard_mask |= THOT_MOD_CTRL;
-  /* Alt key is a particular key for Windows. It generates a WM_SYSKEYDOWN and */
-  /* usulally we have not to trap this event and let Windows do.  In our case, */
-  /* we do not use the standard accelerator tables as in common Windows appli. */
-  /* Is the Alt key pressed ?? */
-  status = GetKeyState (VK_MENU);
-  if (HIBYTE (status))
-    {
-      if (keyboard_mask == THOT_MOD_CTRL)
-        /* ctrl + alt = altgr */
-        keyboard_mask = 0;
-      else
-        /* the Alt key is pressed */
-        keyboard_mask |= THOT_MOD_ALT;
-    }
-
-  status = GetKeyState (VK_SHIFT);
-  if (HIBYTE (status)) 
-    /* the Shift key is pressed */
-    keyboard_mask |= THOT_MOD_SHIFT;
-
-  if (msg == WM_KEYDOWN && wParam == VK_RETURN && 
-      !(keyboard_mask & THOT_MOD_ALT))
-    return FALSE;
-
-  /* check if it's a special key */
-  Special = isSpecial;
-#ifdef OLD_VERSION
-  if (HIBYTE (GetKeyState (VK_UP)))
-    Special = TRUE;
-  else if (HIBYTE (GetKeyState (VK_LEFT)))
-    Special = TRUE;
-  else if (HIBYTE (GetKeyState (VK_RIGHT)))
-    Special = TRUE;
-  else if (HIBYTE (GetKeyState (VK_UP)))
-    Special = TRUE;
-  else if (HIBYTE (GetKeyState (VK_DOWN)))
-    Special = TRUE;
-  else if (HIBYTE (GetKeyState (VK_BACK)))
-    Special = TRUE;
-  else if (HIBYTE (GetKeyState (VK_DELETE)))
-    Special = TRUE;
-  else if (HIBYTE (GetKeyState (VK_PRIOR)))
-    Special = TRUE;
-  else if (HIBYTE (GetKeyState (VK_NEXT)))
-    Special = TRUE;
-  else if (HIBYTE (GetKeyState (VK_HOME)))
-    Special = TRUE;
-  else if (HIBYTE (GetKeyState (VK_END)))
-    Special = TRUE;
-  else if (HIBYTE (GetKeyState (VK_RETURN)))
-    Special = TRUE;
-  else if (keyboard_mask & THOT_MOD_CTRL && wParam < 32)
-    {
-      /* Windows translates Ctrl a-z */
-      if (keyboard_mask & THOT_MOD_SHIFT)
-        wParam += 64;
-      else
-        wParam += 96;
-    }
-#else /* OLD_VERSION */
-  if (HIBYTE (GetKeyState (VK_RETURN)))
-    Special = TRUE;
-	else if (keyboard_mask & THOT_MOD_CTRL && wParam < 32)
-    {
-      /* Windows translates Ctrl a-z */
-      if (keyboard_mask & THOT_MOD_SHIFT)
-        wParam += 64;
-      else
-	      wParam += 96;
-    }
-#endif /* OLD_VERSION */
-
-  if (msg != WM_SYSCHAR && msg != WM_SYSKEYDOWN &&
-      wParam == 0x0A)
-    /* Return should generate a linefeed key
-       Removing this test will break Ctrl Return */
-    wParam = 0x0D;
-  ret = ThotInput (frame, (unsigned int) wParam, 0, keyboard_mask,
-                   wParam, Special);
-  return (ret == 1);
-}
-
-#endif /* _WINGUI */
-
-#ifdef _GTK
-/*----------------------------------------------------------------------
-  CharTranslationGTK
-  GTK front-end to the character translation and handling.
-  Decodes the GTK key press event  and calls the generic character
-  handling function.
-  ----------------------------------------------------------------------*/
-gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
-{
-  CHARSET             charset;
-  Document            document;
-  View                view;
-  KeySym              key;
-  GtkWidget          *drawing_area;
-  GtkEntry           *textzone;
-  wchar_t            *str, *p;
-  unsigned int        state, save;
-  int                 status;
-  int                 PicMask;
-  intptr_t            frame;
-
-  frame = (intptr_t) data;
-  if (frame > MAX_FRAME)
-    frame = 0;
-  FrameToView (frame, &document, &view);
-
-  /* the drawing area is the main zone where keypress event must be active */
-  drawing_area = FrameTable[frame].WdFrame;
-  /* Focus is on all the drawing frame : 
-     Drawing area and his hiden text catcher (for multikey),
-     and the URL text textzone, 
-     so we must now know where is the focus, 
-     to analyse the meaning of the keypress
-     and setting it on one of the  textfields*/
-  if (FrameTable[frame].Text_Zone)
-    {
-      if (GTK_WIDGET_HAS_FOCUS (FrameTable[frame].Text_Zone))
-        /* We're in the url zone*/
-        return FALSE;
-      else
-        { 
-          /* We're in the drawing so get the hidden textfield adress*/		 
-          textzone = (GtkEntry*)gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
-          gtk_widget_grab_focus (GTK_WIDGET(textzone));
-        }
-    }
-  status = 0;
-  /* control, alt and mouse status bits of the state are ignored */
-  state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK);
-
-  key = event->keyval;
-  if (event->state != state)
-    {
-      save = event->state;
-      event->state = state;
-      state = save;
-    }
-  PicMask = 0;
-  if (state & GDK_SHIFT_MASK)
-    PicMask |= THOT_MOD_SHIFT;
-  /*if (state & GDK_LOCK_MASK)
-    PicMask |= THOT_MOD_SHIFT;*/
-  if (state & GDK_CONTROL_MASK)
-    PicMask |= THOT_MOD_CTRL;
-  if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
-    PicMask |= THOT_MOD_ALT;
-  if (event->keyval == GDK_VoidSymbol)
-    {
-      /******* Not sure this code makes sense */
-      charset = TtaGetCharset (TtaGetEnvString ("Input_Charset"));
-      if (charset != UNDEFINED_CHARSET)
-        {
-          str = TtaConvertByteToWC ((unsigned char*)event->string, charset);
-          p = str;
-          while (*p)
-            {
-              if (MenuActionList[0].Call_Action)
-                (*(Proc3)MenuActionList[0].Call_Action) (
-                                                         (void *)document,
-                                                         (void *)view,
-                                                         (void *)*p);
-              p++;
-            }
-          TtaFreeMemory (str);
-          return FALSE;
-        }
-    }
-  if (strlen(event->string) > 0)
-    {
-      /* event->string is encoded in system locale charset */
-      CHARSET local_charset = TtaGetLocaleCharset();
-      wchar_t * value = TtaConvertByteToWC((unsigned char *)event->string,
-                                           local_charset);
-      ThotInput (frame, (unsigned int)value[0], 0, PicMask, key, FALSE);
-    }
-  else
-    ThotInput (frame, (unsigned int)EOS, 0, PicMask, key, TRUE);
-  gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
-  return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  GtkLining
-  When user hold clicked a button or pressed a key
-  those functions are called by a timer each 100 ms
-  in order to repeat user action until he released the button
-  or move away from the widget.
-  ----------------------------------------------------------------------*/
-gboolean GtkLiningDown (gpointer data)
-{
-  intptr_t  frame;
-  Document  doc; 
-  int       view;
-  
-  frame = (intptr_t) data; 
-  FrameToView (frame, &doc, &view);
-  TtcLineDown (doc, view);
-  /* As this is a timeout function, return TRUE so that it
-     continues to get called */
-  return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-gboolean GtkLiningUp (gpointer data)
-{
-  intptr_t  frame;
-  Document  doc; 
-  int       view;
-  
-  frame = (intptr_t) data; 
-  FrameToView (frame, &doc, &view);
-  TtcLineUp (doc, view);
-  /* As this is a timeout function, return TRUE so that it
-     continues to get called */
-  return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  KeyScrolledGTK
-  Capture click on the scrollbar in order to enable
-  Crtl + click event, that let user go on top or bottom of the doc
-  Click on button in order to move only for one line and without calling
-  recursivly the FrameVScrolled callback.   
-  ----------------------------------------------------------------------*/
-gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
-{
-  intptr_t            frame;
-  GdkEventKey         *eventkey;
-  GdkEventButton      *eventmouse;
-  Document            doc; 
-  int                 view;
-  int                 x, y;
-  int                 height;
-  static int          timer = None; 
-  GdkModifierType state;
-  GtkEntry           *textzone;
-
-  frame = (intptr_t) data; 
-  FrameToView (frame, &doc, &view);
-  textzone = 0;
-  if (timer != None)
-    {
-      gtk_timeout_remove (timer);
-      timer = None;
-    } 
-  if (event->type != GDK_LEAVE_NOTIFY)
-    gtk_widget_grab_focus (GTK_WIDGET(w));  
-  if (event->type == GDK_BUTTON_PRESS)
-    {
-      eventmouse = (GdkEventButton*) event;
-      if (eventmouse->button == 1) 
-        {
-          /* 16 is the pixel size of the scrollbar buttons*/
-          height = w->allocation.height - 16;
-          gdk_window_get_pointer (w->window, &x, &y, &state);
-          if (eventmouse->state & GDK_CONTROL_MASK)
-            {
-              if (y > height)
-                JumpIntoView (frame, 100);			
-              else if (y < 16)
-                JumpIntoView (frame, 0);
-            }
-          else if  (y > height){
-            TtcLineDown (doc, view); 
-            timer = gtk_timeout_add (100, GtkLiningDown, (gpointer) frame);
-          }
-          else if  (y < 16){
-            TtcLineUp (doc, view);	    
-            timer = gtk_timeout_add (100, GtkLiningUp, (gpointer) frame);
-          }
-          else
-            return FALSE;
-          /* this prevent GTK Callback to act !!*/
-          gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "button_press_event");
-          return TRUE;
-        }
-		 
-    } 
-  /* Code is here, but didn't manage to always catch those events..
-     But as CRTL + UP and CTRL + DOWN work like UP and DOWN should...
-     The problem is that Key event are catched before, by the Main Window 
-     In CharTranslation GTK... We need to redesign all Key catching if we 
-     wanna catch UP and DOWN... As we sadly cannot get mouse position in a key event... */
-  else if (event->type == GDK_KEY_PRESS)
-    {
-      eventkey = (GdkEventKey*) event;
-      if (eventkey->keyval == GDK_Up) 
-        { 
-          TtcLineDown (doc, view); 
-          timer = gtk_timeout_add (50, GtkLiningDown, (gpointer) frame);
-          /* this prevent GTK Callback to act !!*/
-          gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
-          return TRUE;
-        }
-      else if (eventkey->keyval == GDK_Down)
-        { 
-          TtcLineDown (doc, view); 
-          timer = gtk_timeout_add (50, GtkLiningDown, (gpointer) frame);
-          /* this prevent GTK Callback to act !!*/
-          gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
-          return TRUE;
-        }
-    }
-
-  return FALSE;
-}
-#endif /* _GTK */
-
-
 /*----------------------------------------------------------------------
   APPKey send a message msg to the application.   
   ----------------------------------------------------------------------*/
@@ -934,10 +552,8 @@ int ThotInput (int frame, unsigned int value, int command, int modifiers,
     found = TRUE;
   else
     {
-#ifdef _WX
   TTALOGDEBUG_5( TTA_LOG_KEYINPUT, _T("ThotInput: frame=%d value=%d modifiers=%d key=%d isKey=%d"),
                  frame, value, modifiers, key, isKey);
-#endif /* _WX */
       if (ClickIsDone == 1 &&
           (key == THOT_KEY_Escape || key == THOT_KEY_Delete))
         /* Amaya is waiting for a clickselection */
@@ -980,9 +596,6 @@ int ThotInput (int frame, unsigned int value, int command, int modifiers,
               if (ptr != NULL)
                 {
                   if (ptr->K_EntryCode == key &&
-#ifdef _WINGUI
-                      ptr->K_Special == Special &&
-#endif /* _WINGUI */
                       modtype == ptr->K_Modifier)
                     found = TRUE;
                   else
@@ -1052,13 +665,7 @@ int ThotInput (int frame, unsigned int value, int command, int modifiers,
             {
               if (ptr != NULL)
                 {
-#ifdef _WINGUI
-                  if (ptr->K_EntryCode == key
-                      && ptr->K_Special == isKey)
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
                     if (ptr->K_EntryCode == key)
-#endif /* #if defined(_GTK) || defined(_WX) */
                       {
                         /* first level entry found */
                         found = TRUE;
@@ -1070,10 +677,8 @@ int ThotInput (int frame, unsigned int value, int command, int modifiers,
                             command = ptr->K_Command;
                           }
                       }
-#if defined(_GTK) || defined(_WINGUI) || defined(_WX)
                     else
                       ptr = ptr->K_Other;
-#endif /* #if defined(_GTK) || defined(_WINGUI) || defined(_WX) */
                 }
             }
         }
@@ -1089,9 +694,7 @@ int ThotInput (int frame, unsigned int value, int command, int modifiers,
           case THOT_KEY_Up:
             index = MY_KEY_Up;
             break;
-#ifdef _WX
           case WXK_NUMPAD_ENTER:
-#endif /* _WX */
           case THOT_KEY_Return:
             index = MY_KEY_Return;
             break;
@@ -1127,11 +730,6 @@ int ThotInput (int frame, unsigned int value, int command, int modifiers,
             break;
           default:
             index = -1;
-#ifdef _WINGUI
-            /* Nothing to do */ 
-            Automata_current = NULL;
-            return 0;
-#endif /* _WINGUI */
             break;
           }
         if (index >= 0)
@@ -1209,26 +807,16 @@ int ThotInput (int frame, unsigned int value, int command, int modifiers,
             done = FALSE;
           /* Call action if it's active */
           if (!done &&
-#ifdef _WX
               MenuActionList[command].ActionActive[document])
-#else /* _WX */
-            (MenuActionList[command].ActionActive[frame] ||
-             MenuActionList[command].ActionActive[mainframe]))
-#endif /* _WX */
         {
           /* available action for this frame or the main frame */
           if (MenuActionList[command].Call_Action)
             {
-#ifdef _WX
               /* I just generate an event which contains "command, doc, and view"
                * then I post it on current window eventhandler in order
                * to differe the shortcut action to avoid crash which can occurs 
                * when an action destroy something which is used further by wxWidgets. */
               AmayaWindow::DoAmayaAction( command, document, view );
-#else /* _WX */
-              (*(Proc2)MenuActionList[command].Call_Action) ((void *)document,
-                                                             (void *)view);
-#endif /* _WX */ 
               done = TRUE;
             }
           
@@ -1260,14 +848,11 @@ int ThotInput (int frame, unsigned int value, int command, int modifiers,
     {
       if (key/*value*/ == THOT_KEY_Escape)
         {
-#ifdef _WX
           // check the fullscreen state is enable or not
           // if yes, just disable fullscreen
           if (TtaGetFullScreenState(frame))
             TtaToggleOnOffFullScreen(frame);
-          else
-#endif /* _WX */
-          if (MenuActionList[CMD_ParentElement].Call_Action)
+          else if (MenuActionList[CMD_ParentElement].Call_Action)
             {
               /* close the current insertion */
               CloseTextInsertion ();
@@ -1638,9 +1223,6 @@ void InitTranslations (char *appliname)
   char                fullName[200];  /* ligne en construction pour motif */
   char                home[200], name[80];
   char               *addr;
-#ifndef _WX
-  const char         *sep = "+";
-#endif /* _WX */
   char                transText[MAX_LENGTH], ch[MAX_LENGTH];
   char                equiv[MAX_LENGTH]; /* equivalents caracteres pour motif */
   unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
@@ -1663,15 +1245,14 @@ void InitTranslations (char *appliname)
 
 #ifdef _WINDOWS
   strcat (name, ".kb");
-#endif  /* _WINDOWS */
-#ifdef _UNIX
+#else  /* _WINDOWS */
 #ifdef _MACOS
   // change the unix choice for MacOS platforms
   strcat (name, ".kb-mac");
 #else /* _MACOS */
   strcat (name, ".keyboard");
 #endif /* _MACOS */
-#endif  /* _UNIX */
+#endif  /* _WINDOWS */
 
   strcpy (home, appHome);
   strcat (home, DIR_STR);
@@ -1725,16 +1306,6 @@ void InitTranslations (char *appliname)
                   if (i > 0 && transText[i] == ':')
                     transText[i] = EOS;
                 }
-#ifdef _WINGUI
-			  if (mod1 & THOT_MOD_CTRL)
-			  {
-				  // ctrl + and ctrl - are never sent to the application
-				if (transText[0] == '-' ||
-					transText[0] == '+' ||
-					transText[0] == '=')
-			      mod1 = mod1 - THOT_MOD_CTRL + THOT_MOD_ALT;
-			  }
-#endif /* _WINGUI */
               /* convert to keysym for the automata */
               key1 = SpecialKey (transText, (mod1 & THOT_MOD_SHIFT) != 0, &isSpecialKey1);
 
@@ -1743,7 +1314,6 @@ void InitTranslations (char *appliname)
               fscanf (file, "%80s", ch);
 
               /* Register the equiv string */
-#ifdef _WX
               if (show_sequence || ch[0] != ',')
                 {
 #ifdef _MACOS
@@ -1781,32 +1351,6 @@ void InitTranslations (char *appliname)
                     SetCapital (transText);
                   strcat (equiv, transText);
                 }
-#else /* _WX */
-              if (ch[0] == ',')
-                strcpy (equiv, "(");
-              if (mod1 & THOT_MOD_CTRL)
-                strcat (equiv, "Ctrl");
-              else if (mod1 & THOT_MOD_ALT)
-                strcat (equiv, "Alt");
-              if (mod1 & THOT_MOD_SHIFT)
-                {
-                   if (ch[0] == ',')
-                    strcat (equiv, " ");
-                  else
-                    strcat (equiv, sep);
-                  strcat (equiv, "Shift");
-                }
-              if (mod1 != THOT_NO_MOD)
-                {
-                  if (ch[0] == ',')
-                    strcat (equiv, " ");
-                  else
-                    strcat (equiv, sep);
-                }
-              if (ch[0] != ',' && transText[0] >= 'a' && transText[0] <= 'z')
-                SetCapital (transText);
-              strcat (equiv, transText);
-#endif /* _WX */
 
               if (ch[0] == ',')
                 {
@@ -1838,9 +1382,8 @@ void InitTranslations (char *appliname)
                     }
                   key2 = SpecialKey (transText, (mod2 & THOT_MOD_SHIFT) != 0, &isSpecialKey2);
                   /* register the second part of the equiv string */
-#ifdef _WX
+
                   if (show_sequence)
-#endif /* _WX */
                     {
                       strcat (equiv, " ");
                       strcat (equiv, transText);
@@ -1862,10 +1405,6 @@ void InitTranslations (char *appliname)
                 while (i != ')');
 
               /* Locate the action name */
-#ifndef _WX
-              if (!strcmp (ch, "AmayaCloseTab"))
-                strcpy (ch, "AmayaCloseWindow");
-#endif /* _WX */
               for (i = 0; i < max; i++)
                 if (!strcmp (ch, MenuActionList[i].ActionName))
                   break;
