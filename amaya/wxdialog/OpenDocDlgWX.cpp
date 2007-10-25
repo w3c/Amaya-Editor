@@ -132,13 +132,13 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   // setup combobox values
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->Append( urlList );
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( urlToOpen );
-#if defined(_WINDOW) || defined(_MACOS)
+#if defined(_WINDOWS) || defined(_MACOS)
   // select the string
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetSelection(0, -1);
-#else /* _WINDOW || _MACOS */
+#else /* _WINDOWS || _MACOS */
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
-  #endif /* _WINDOW || _MACOS */
+  #endif /* _WINDOWS || _MACOS */
 
   // dir separator
   wxChar dir_sep = DIR_SEP;

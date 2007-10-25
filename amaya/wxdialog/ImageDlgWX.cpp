@@ -59,15 +59,15 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->SetValue( alt );
 
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
-#ifdef _WINDOW
+#ifdef _WINDOWS
   // select the string
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetSelection(0, -1);
-#else /* _WINDOW */
+#else /* _WINDOWS */
 #ifndef _MACOS
   // set te cursor to the end
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetInsertionPointEnd();
 #endif /* _MACOS */
-#endif /* _WINDOW */
+#endif /* _WINDOWS */
 
   SetAutoLayout( TRUE );
 }
