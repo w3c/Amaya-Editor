@@ -539,8 +539,6 @@ void AmayaClassicWindow::OnNotebookPageChanged( wxNotebookEvent& event )
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaClassicWindow, AmayaNormalWindow)
-
-  EVT_MENU(wxID_ANY,   AmayaClassicWindow::OnMenuItem )
    
   EVT_CLOSE(AmayaClassicWindow::OnClose )
   EVT_SIZE(AmayaClassicWindow::OnSize)
