@@ -4093,16 +4093,17 @@ Document LoadDocument (Document doc, char *pathname,
       if (docType != docLog)
         TtaSetStatusSelectedElement (newdoc, 1, NULL);
 
+#ifdef TEMPLATES
+      DocumentMeta[newdoc]->template_version = NULL;
+#endif /* TEMPLATES */
+
       /* Set character encoding */
       DocumentMeta[newdoc]->charset = NULL;
       charEncoding = HTTP_headers (http_headers, AM_HTTP_CHARSET);
       httpcharset = TtaGetCharset (charEncoding);
 
-#ifdef TEMPLATES
-      DocumentMeta[newdoc]->template_version = NULL;
-#endif /* TEMPLATES */
-
-      if (httpcharset != UNDEFINED_CHARSET && charEncoding)
+      if (httpcharset != UNDEFINED_CHARSET &&
+          httpcharset != UNSUPPORTED_CHARSET && charEncoding)
         {
           TtaSetDocumentCharset (newdoc, httpcharset, FALSE);
           DocumentMeta[newdoc]->charset = TtaStrdup (charEncoding);

@@ -1328,7 +1328,8 @@ char *UpdateDocumentCharset (Document doc)
       else
         {
           ptr = TtaGetCharsetName (charset);
-          strcat (charsetname, ptr);
+          if (ptr)
+            strcat (charsetname, ptr);
         }
       /* set the Charset attribute of the root element*/
       if (DocumentTypes[doc] == docHTML)
