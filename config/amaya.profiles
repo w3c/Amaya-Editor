@@ -373,7 +373,7 @@ ShowBrowsingBar
 +spell
 +svg
 +tables
-&MenuAttribute
+#&MenuAttribute
 &CreateBase
 &CreateMath
 &SetCSSStyle
