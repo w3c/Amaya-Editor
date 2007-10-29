@@ -2559,7 +2559,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                                 pE->ElStructSchema))
             /* we are at the beginning of another list item */
             {
-              if (pSibling->ElParent && pE != pSibling->ElParent &&
+              if (pSibling && pSibling->ElParent && pE != pSibling->ElParent &&
                   TypeHasException (ExcListItemBreak,
                                     pSibling->ElParent->ElTypeNumber,
                                     pSibling->ElParent->ElStructSchema))

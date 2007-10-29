@@ -5523,8 +5523,10 @@ Document GetAmayaDoc (char *urlname, char *form_data,
         {
           /* In case of initial document, open the view before loading */
           /* add the URI in the combobox string */
-          if (method != CE_MAKEBOOK && method != CE_TEMPLATE)
-              AddURLInCombobox (initial_url, NULL, FALSE);
+          if (method == CE_INSTANCE)
+            AddURLInCombobox (initial_url, NULL, TRUE);
+          else
+            AddURLInCombobox (initial_url, NULL, FALSE);
           newdoc = InitDocAndView (doc,
                                    FALSE /* replaceOldDoc */,
 #ifndef _WX
