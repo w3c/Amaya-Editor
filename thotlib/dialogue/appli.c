@@ -663,15 +663,15 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
   FrameTable[frame].FrHeight = new_height;
 
   /* redraw */
-  //if (GL_prepare( frame))
+  if (GL_prepare( frame))
     {
       /* prevent flickering*/
-      GL_SwapStop (frame);
+      //GL_SwapStop (frame);
       GLResize (new_width, new_height, 0, 0);
       DefClip (frame, -1, -1, -1, -1);
       FrameRedraw (frame, new_width, new_height);
       //GL_SwapEnable (frame);
-      //GL_Swap (frame);
+      GL_Swap (frame);
 
       //#if !defined(_MACOS) && !defined(_WINDOWS)
       // we need to recalculate the glcanvas after the RESIZE event
