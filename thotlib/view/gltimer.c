@@ -345,6 +345,8 @@ ThotBool GL_DrawAll ()
                             {
                               if (BadGLCard)
                                 DefClip (frame, -1, -1, -1, -1);
+                                /* prevent flickering*/
+                              GL_SwapStop (frame);
                               RedrawFrameBottom (frame, 0, NULL); 
                               if (was_animation)
                                 {
@@ -362,6 +364,7 @@ ThotBool GL_DrawAll ()
                                       lastime = current_time;
                                     }
                                 }
+                              GL_SwapEnable (frame);
                               GL_Swap (frame);  
                             }
 #ifdef _GL_DEBUG

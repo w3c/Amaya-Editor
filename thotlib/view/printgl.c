@@ -1008,13 +1008,6 @@ void GL_SwapEnable (int frame)
 
 
 #ifdef _WINDOWS
-/*----------------------------------------------------------------------
-  WinGL_Swap : specific to windows
-  ----------------------------------------------------------------------*/
-void WinGL_Swap (HDC hDC)
-{
-  /*wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 */
-}
 
 #ifdef _WIN_PRINT
 /*----------------------------------------------------------------------
