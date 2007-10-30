@@ -508,7 +508,6 @@ void AmayaNormalWindow::RefreshShowToolBarToggleMenu(int toolbarID)
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::ToggleFullScreen()
 {
-  printf("AmayaNormalWindow::ToggleFullScreen\n");
   AmayaWindow::ToggleFullScreen();
 }
 

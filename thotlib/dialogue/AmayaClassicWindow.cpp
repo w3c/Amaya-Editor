@@ -343,7 +343,6 @@ void AmayaClassicWindow::ShowToolBar(int toolbarID, bool bShow)
  -----------------------------------------------------------------------*/
 void AmayaClassicWindow::ToggleFullScreen()
 {
-  printf("AmayaClassicWindow::ToggleFullScreen\n");
   ShowToolBar(0, IsFullScreen());
   ShowToolBar(1, IsFullScreen());
   AmayaNormalWindow::ToggleFullScreen();
