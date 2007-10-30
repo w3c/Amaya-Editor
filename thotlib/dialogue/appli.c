@@ -560,7 +560,7 @@ void SetSharedContext (int frame)
 #endif /*_NOSHARELIST*/
 #endif /* _GL */
 
-
+static ThotBool Current_Expose = FALSE;
 /*----------------------------------------------------------------------
   FrameExposeCallback (generic callback) 
   is called when a frame should be redisplayed
@@ -581,6 +581,9 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return FALSE;
 
+  if (Current_Expose)
+	  return FALSE;
+  Current_Expose = TRUE;
   pFrame = &ViewFrameTable[frame - 1];
 #ifdef _GL
   /* THIS JUST DOESN'T WORK !!!
@@ -590,9 +593,7 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
      it work, just have to come here and code it here
      with an hardware opengl implementation on their PC...
      They will see the Speed problem...*/
-  /*if (event->count > 0)*/
-  /*    return TRUE; */
-  //if (GL_prepare (frame))
+  if (GL_prepare (frame))
     {
       /* prevent flickering*/
       GL_SwapStop (frame);
@@ -620,6 +621,7 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
   DefClip (frame, x, y, x + w, y + h);
   RedrawFrameBottom (frame, 0, NULL);
 #endif /* _GL */
+  Current_Expose = FALSE;
   return TRUE;
 }
 
@@ -2182,12 +2184,6 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
 {
   int              clipx, clipy, clipwidth, clipheight;
 
-#ifndef _GL 
-#ifdef _GTK
-  GdkRectangle      rect;
-#endif /* _GTK */
-#endif /* _GL */
-
   if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) 
     {
       /* compute the clipping area in the window */
@@ -2215,20 +2211,6 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
       clipy += FrameTable[frame].FrTopMargin;
 
 #ifndef _GL
-#ifdef _WINGUI
-      if (!(clipRgn = CreateRectRgn (clipx, clipy, 
-                                     clipx + clipwidth, clipy + clipheight)))
-        WinErrorBox (NULL, "DefineClipping");
-#endif  /* _WINGUI */ 
-#ifdef _GTK 
-      rect.x = clipx;
-      rect.y = clipy;
-      rect.width = clipwidth;
-      rect.height = clipheight;
-      gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
-      gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
-      gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
-#endif /* _GTK */      
       if (raz > 0)
         Clear (frame, clipwidth, clipheight, clipx, clipy);
 #else /* _GL */
@@ -2237,7 +2219,6 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
                       - (clipy + clipheight),
                       clipwidth,
                       clipheight); 
-
       if (raz > 0 && GL_prepare (frame))
         {
 #ifdef _GL_COLOR_DEBUG
