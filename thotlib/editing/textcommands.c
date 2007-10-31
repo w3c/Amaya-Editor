@@ -1508,7 +1508,8 @@ static int CopyXClipboard (unsigned char **buffer, View view)
           maxLength -= lg;
           clipboard = clipboard->BuNext;
         }
-      pOldBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock,
+      if (pEl)
+        pOldBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock,
                                        BoFloatBlock, BoCellBlock);
     }
   else if (pFirstEl->ElTerminal)
