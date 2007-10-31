@@ -2541,7 +2541,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
             /* this is the lowest level block element seen so far */
             pE1 = pE;
           pE = pE->ElFirstChild;
-          if (before)
+          if (before && pE)
             while (pE->ElNext)
               pE = pE->ElNext;
         }
@@ -2551,10 +2551,10 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
       /* Are we in the special case of a BackSpace at the beginning of a list
          item? */
       if (before &&     /* BackSpace */
-          pElem->ElParent && pElem->ElParent->ElParent)
+          pElem && pElem->ElParent && pElem->ElParent->ElParent)
         {
           pE = pElem->ElParent->ElParent;
-          if (pE->ElParent &&
+          if (pE && pE->ElParent &&
               TypeHasException (ExcListItemBreak, pE->ElTypeNumber,
                                 pE->ElStructSchema))
             /* we are at the beginning of another list item */
@@ -2585,10 +2585,10 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
            children of element pSibling become siblings of element pElem? */
         {
           pSibling = pSibling->ElFirstChild;
-          if (pSibling != NULL)
+          if (pSibling)
             {
               if (before)
-                while (pSibling->ElNext != NULL)
+                while (pSibling->ElNext)
                   pSibling = pSibling->ElNext;
               if (!AllowedSibling (pElem, pDoc, pSibling->ElTypeNumber,
                                pSibling->ElStructSchema, before, FALSE,FALSE))
