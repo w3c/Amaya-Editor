@@ -770,7 +770,7 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
   else
     FrameToView (TtaGiveActiveFrame(), &doc, &view);
   AmayaWindow::DoAmayaAction( action_id, doc, view );
-  event.Skip();
+  //event.Skip();
 }
 
 
