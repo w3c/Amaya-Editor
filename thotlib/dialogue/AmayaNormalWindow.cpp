@@ -692,6 +692,10 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
   wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
   wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
   wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+  wxMenu *         p_context_menu      = TtaGetContextMenu( GetWindowId() );
+  Document   doc;
+  View       view;
+
   if (( p_text_ctrl || p_combo_box || p_spinctrl ) &&
       action_id >= 0 && action_id < MaxMenuAction && 
       MenuActionList[action_id].ActionName)
@@ -762,15 +766,16 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuItem id=%d action_id=%d"), id, action_id );
   
   /* if this menu is the context menu it's possible that the current active document is not the wanted one */
-  wxMenu *   p_context_menu = TtaGetContextMenu( GetWindowId() );
-  Document   doc;
-  View       view;
   if (p_menu && p_menu == p_context_menu)
     FrameToView (GetPageContainer()->GetMContextFrame(), &doc, &view);
   else
     FrameToView (TtaGiveActiveFrame(), &doc, &view);
   AmayaWindow::DoAmayaAction( action_id, doc, view );
-  //event.Skip();
+  if (action_id == -1 ||
+      (MenuActionList[action_id].ActionName &&
+      (!strcmp (MenuActionList[action_id].ActionName, "TtcPreviousElement") ||
+       !strcmp (MenuActionList[action_id].ActionName, "TtcNextElement"))))
+  event.Skip();
 }
 
 
