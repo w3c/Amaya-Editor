@@ -89,8 +89,8 @@
 87 Sil CSS
 88 W3C için tarayıcı ve belge düzenleyici
 89 Sorularınızı www-amaya@w3.org adreine gönderin
-90 **Copyright  �  1994-2007 INRIA and W3C� (MIT, ERCIM, Keio), All Rights Reserved.
-91 **w3.org/Amaya/
+90 Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)
+91 w3.org/Amaya/
 92 %s karakterden uzun URL\'ler şimdilik işlenemiyor
 93 Sadece öntanımlı tip kullanılabilir
 94 Bağlantı güncellemesi: %s%% tamamlandı
@@ -237,221 +237,219 @@
 235 **Tool panel bar alignment: 
 236 **left
 237 **right
-238 **free
-239 ** (must restart app)
-240 Verilerin dizaynı
-241 XPointer yaratılamıyor
-242 Amaya tarafından eklenen XPointer başlanamıyor
-243 Amaya tarafından eklenen XPointer bitiremiyor
-244 Eklemeler yerinden oynatılamıyor
-245 Eklemeler başka bir belgeye konamıyor
-246 Kunlayıcı ismi verilmemiştir. Ekleme/Ayarlar menüsüne bakın
-247 Bu not için XPointer yaratmak imkansızdır
-248 Yeni not yap
-249 Notun yayın hatası
-250 Notun iptal hatası
-251 Not iptal edildi!
-252 Notların içeriğini yüklemek imkansızdır
-253 Hata
-254 Charset seçin
-255 MIME tipi seçin
-256 Charset\'i değiştir
-257 MIME tipini değiştir
-258 Değiştir
-259 Bu tip belgenin Charset\'i yoktur
-260 URL\'i kullanmak için HTTP tipten olması gerekiyor
-261 Hata: MIME tipi doğru değil
-262 Yabancı
-263 Dizayn bilinmiyor - Görünümler > Hataları göster bakın
-264 Bu belge başka bir pencerede açılmıştır
-265 Bu belgeleri kayıt etmek güncelleştirme problemleri çıkara bilir
-266 **Adding or changing the doctype will remove some elements or attributes
-267 **Please confirm operation
-268 XHTML belgeleri için MIME tipi uygulama/xhtml+xml \'li kullanın
-269 **Charset for new documents
-270 Kilitleme başarılı olmuştur!
-271 Kilitleme başarısız olmuştur!
-272 %s için kilit bekleniyor...
-273 %s belgesi kilitlenmiştir!
-274 %s belgesi %s tarafından kilitlenmiştir (son kullanma süresi %s)
-275 Kilidi geçin?
-276 Kilit bilgilerini kaydet?
-277 Belgenin kilidini açmayı deneyin...
-278 Kilit açma başarılı olmuştur!
-279 Kilit açma başarısız olmuştur!
-280 %s kilidini aç...
-281 %s belgenin kilidi açıldı!
-282 Belgenin kilidini aç?
-283 Belge özellikleri
-284 Belgenin özellikleri kullanamazsınız
-285 Belgenin özellikleri şu an kullanamazsınız. Biraz sonra yeniden deneyin...
-286 Belgenin özellikleri bekleniyor...
-287 Malesef, WebDav URL\'leri %s gibi desteklemiyor
-288 Kilidin lokal temelde kayıtı başarısız olmuştur
-289 Kilidin lokal temelde silinmesi imkansızdır
-290 Malesef bu operasion %s için yasaktır
-291 Operasion başarısız olmuştur! Neden: bağımlılık hatası
-292 Operasion başarısız olmuştur! Neden: %s
-293 Yeniden dene?
-294 WebDAV
-295 Kullanıyıcının özel referansı (URL)
-296 Kullanıyıcının referans listesi (URL URL)
-297 Kilit derinliği
+238 Verilerin dizaynı
+239 XPointer yaratılamıyor
+240 Amaya tarafından eklenen XPointer başlanamıyor
+241 Amaya tarafından eklenen XPointer bitiremiyor
+242 Eklemeler yerinden oynatılamıyor
+243 Eklemeler başka bir belgeye konamıyor
+244 Kunlayıcı ismi verilmemiştir. Ekleme/Ayarlar menüsüne bakın
+245 Bu not için XPointer yaratmak imkansızdır
+246 Yeni not yap
+247 Notun yayın hatası
+248 Notun iptal hatası
+249 Not iptal edildi!
+250 Notların içeriğini yüklemek imkansızdır
+251 Hata
+252 Charset seçin
+253 MIME tipi seçin
+254 Charset\'i değiştir
+255 MIME tipini değiştir
+256 Değiştir
+257 Bu tip belgenin Charset\'i yoktur
+258 URL\'i kullanmak için HTTP tipten olması gerekiyor
+259 Hata: MIME tipi doğru değil
+260 Yabancı
+261 Dizayn bilinmiyor - Görünümler > Hataları göster bakın
+262 Bu belge başka bir pencerede açılmıştır
+263 Bu belgeleri kayıt etmek güncelleştirme problemleri çıkara bilir
+264 **Adding or changing the doctype will remove some elements or attributes
+265 **Please confirm operation
+266 XHTML belgeleri için MIME tipi uygulama/xhtml+xml \'li kullanın
+267 **Charset for new documents
+268 Kilitleme başarılı olmuştur!
+269 Kilitleme başarısız olmuştur!
+270 %s için kilit bekleniyor...
+271 %s belgesi kilitlenmiştir!
+272 %s belgesi %s tarafından kilitlenmiştir (son kullanma süresi %s)
+273 Kilidi geçin?
+274 Kilit bilgilerini kaydet?
+275 Belgenin kilidini açmayı deneyin...
+276 Kilit açma başarılı olmuştur!
+277 Kilit açma başarısız olmuştur!
+278 %s kilidini aç...
+279 %s belgenin kilidi açıldı!
+280 Belgenin kilidini aç?
+281 Belge özellikleri
+282 Belgenin özellikleri kullanamazsınız
+283 Belgenin özellikleri şu an kullanamazsınız. Biraz sonra yeniden deneyin...
+284 Belgenin özellikleri bekleniyor...
+285 Malesef, WebDav URL\'leri %s gibi desteklemiyor
+286 Kilidin lokal temelde kayıtı başarısız olmuştur
+287 Kilidin lokal temelde silinmesi imkansızdır
+288 Malesef bu operasion %s için yasaktır
+289 Operasion başarısız olmuştur! Neden: bağımlılık hatası
+290 Operasion başarısız olmuştur! Neden: %s
+291 Yeniden dene?
+292 WebDAV
+293 Kullanıyıcının özel referansı (URL)
+294 Kullanıyıcının referans listesi (URL URL)
+295 Kilit derinliği
+296 Sonsuz
+297 Bitiş süresi
 298 Sonsuz
-299 Bitiş süresi
-300 Sonsuz
-301 Diyer (Saniye)
-302 Kilit tipi
-303 Uyuşmaz
-304 paylaş
-305 Bildiri
-306 Genel bildiri
-307 çıkış bildirisi
-308 Hareket
-309 SVG kütüphanesi
-310 Kopya opsionu
-311 Kopyala
-312 Referans et
-313 Kütüphanede yeni model ekle
-314 Yeni SVG dosyasının URL\'i...
-315 Kütüphane başlıgı
-316 URL Kütüphanesi
-317 Kütüphane yarat
-318 Kütüphane tara
-319 Kütüphane yarat veya ara
-320 Vu seçimde SVG olmayan veriler içeriyor. Lütfen başka seçim yapın
-321 Kütüphane başlıgı mecburdur
-322 Açılan belgede yeni anahtar durum tanımlamak için durum kürsörünü oynatın ...
-323 Anahtar durum tanımlaştı. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
-324 Elemanın başlangıç rengini seçin
-325 Başlangıç rengini seçin. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
-326 Bitiş rengini seçin...
-327 Hareket tanımlaştı
-328 Hareketli özellikler
-329 Tanımsız eleman
-330 **Add ID
-331 **Remove ID
-332 **Add/Remove IDs
-333 **Apply operation
-334 **Enter an element name
-335 **Apply CSS
-336 **Current screen type
-337 **New Topic
-338 **Bookmark Properties
-339 **Topic Properties
-340 **Topic hierarchy:
-341 Başlık:
-342 **Recalls:
-343 Sahip:
-344 **Created:
-345 **Last modified:
-346 **Description:
-347 **Please select an element
-348 **All CSS
-349 **CSS style rules applied to the <%s> element\n
-350 **Blue lines are links activated by a double (or a single) click\n
-351 **Load objects (object, embed, iframe)
-352 **No style rule for this element
-353 **No insert position defined. Please select first
-354 **Document information
-355 **Document Type
-356 **MIME Type
-357 **Charset
-358 **Content Length
-359 **Content Location
-360 Tercih
-361 Karakter (&xxx;)
-362 **Create Object
-363 **Directory
-364 **File
-365 **Replace current
-366 **In new Window
-367 Anti-aliasing
-368 **ISO format for date
-369 **New documents location
-370 **Opening location
-371 **Warn when closing multiple tabs
-372 **Max url number in history
-373 **Clear url list
-374 **Display all shortcuts
-375 **Fixed line length (0 = default value)
-376 **Template
-377 **Save the document as...
-378 **Template not found
-379 **Show template's boxes
-380 **Apply closes the dialogue
-381 **Not allowed
-382 **Protected element
-383 **The selection should not cross an element of this type
-384 **No heading found
-385 **Save anyway
-386 **Cannot locate host
-387 **Document has changed (412)
-388 **Conflict with the current state of the resource
-389 **Invalid selection
-390 **Unknown element
-391 **%d updated elements
-392 **The title is mandatory
-393 **Templates
-394 **Number of occurrences
-395 **Maximum number of occurrences reached
-396 **Minimum number of occurrences reached
-397 **Check duplicated IDs
-398 **Add the xsl stylesheet for MathML elements
-399 **Insert operator
-400 **Select the way the operator has to be displayed
-401 **Insert an integral
-402 **Select the type of integral
-403 **Attributes of the fence
-404 **Select open, separator and close symbols
-405 **Number of operator symbols
-406 **Number of coordinates
-407 **Length of the N-tuples
-408 **Number of elements
-409 **Number of variables
-410 **Degree
-411 **Degree of the variable number %d
-412 **Compound document
-413 **Copy resources (styles and scripts)
-414 **Where to save resources
-415 **Where to save images
-416 **Document
-417 **Images, Styles and Scripts
-418 **Mail
-419 **Common parameters for sending mails:
-420 **SMTP server address:
-421 **Server port:
-422 **(25 by default)
-423 **Sending address (From field):
-424 **To:
-425 **Send by mail
-426 **Subject:
-427 **Send as:
-428 **Message body
-429 **Attachment
-430 **Don't send
-431 **Send
-432 **The server address and port must be set in Preferences
-433 **Message:
-434 **Alternate textual  message:
-435 **The server is unreachable or does not respond
-436 **The server has reject you
-437 **The sender address is misformatted
-438 **A recipient address is misformatted
-439 **The mail content is misformatted
-440 **Mail not sent
-441 **Mail sent
-442 **Passwords
-443 **Do you want Amaya to remember this password?
-444 **Remember passwords for sites
-445 **Sites
-446 **Remove All
-447 **An error occured during the building of the javascript/DOM objects
-448 **A script is still running but will be aborted as soon as possible. Please try later.
-449 **Javascript/DOM can not be enabled in this view.
-450 **Enter a javascript command:
-451 **The command returned the value: %s
-452 **The command returned no value
-453 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-454 Yeni
-455 **Customizable
+299 Diyer (Saniye)
+300 Kilit tipi
+301 Uyuşmaz
+302 paylaş
+303 Bildiri
+304 Genel bildiri
+305 çıkış bildirisi
+306 Hareket
+307 SVG kütüphanesi
+308 Kopya opsionu
+309 Kopyala
+310 Referans et
+311 Kütüphanede yeni model ekle
+312 Yeni SVG dosyasının URL\'i...
+313 Kütüphane başlıgı
+314 URL Kütüphanesi
+315 Kütüphane yarat
+316 Kütüphane tara
+317 Kütüphane yarat veya ara
+318 Vu seçimde SVG olmayan veriler içeriyor. Lütfen başka seçim yapın
+319 Kütüphane başlıgı mecburdur
+320 Açılan belgede yeni anahtar durum tanımlamak için durum kürsörünü oynatın ...
+321 Anahtar durum tanımlaştı. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
+322 Elemanın başlangıç rengini seçin
+323 Başlangıç rengini seçin. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
+324 Bitiş rengini seçin...
+325 Hareket tanımlaştı
+326 Hareketli özellikler
+327 Tanımsız eleman
+328 **Add ID
+329 **Remove ID
+330 **Add/Remove IDs
+331 **Apply operation
+332 **Enter an element name
+333 **Apply CSS
+334 **Current screen type
+335 **New Topic
+336 **Bookmark Properties
+337 **Topic Properties
+338 **Topic hierarchy:
+339 Başlık:
+340 **Recalls:
+341 Sahip:
+342 **Created:
+343 **Last modified:
+344 **Description:
+345 **Please select an element
+346 **All CSS
+347 **CSS style rules applied to the <%s> element\n
+348 **Blue lines are links activated by a double (or a single) click\n
+349 **Load objects (object, embed, iframe)
+350 **No style rule for this element
+351 **No insert position defined. Please select first
+352 **Document information
+353 **Document Type
+354 **MIME Type
+355 **Charset
+356 **Content Length
+357 **Content Location
+358 Tercih
+359 Karakter (&xxx;)
+360 **Create Object
+361 **Directory
+362 **File
+363 **Replace current
+364 **In new Window
+365 Anti-aliasing
+366 **ISO format for date
+367 **New documents location
+368 **Opening location
+369 **Warn when closing multiple tabs
+370 **Max url number in history
+371 **Clear url list
+372 **Display all shortcuts
+373 **Fixed line length (0 = default value)
+374 **Template
+375 **Save the document as...
+376 **Template not found
+377 **Show template's boxes
+378 **Apply closes the dialogue
+379 **Not allowed
+380 **Protected element
+381 **The selection should not cross an element of this type
+382 **No heading found
+383 **Save anyway
+384 **Cannot locate host
+385 **Document has changed (412)
+386 **Conflict with the current state of the resource
+387 **Invalid selection
+388 **Unknown element
+389 **%d updated elements
+390 **The title is mandatory
+391 **Templates
+392 **Number of occurrences
+393 **Maximum number of occurrences reached
+394 **Minimum number of occurrences reached
+395 **Check duplicated IDs
+396 **Add the xsl stylesheet for MathML elements
+397 **Insert operator
+398 **Select the way the operator has to be displayed
+399 **Insert an integral
+400 **Select the type of integral
+401 **Attributes of the fence
+402 **Select open, separator and close symbols
+403 **Number of operator symbols
+404 **Number of coordinates
+405 **Length of the N-tuples
+406 **Number of elements
+407 **Number of variables
+408 **Degree
+409 **Degree of the variable number %d
+410 **Compound document
+411 **Copy resources (styles and scripts)
+412 **Where to save resources
+413 **Where to save images
+414 **Document
+415 **Images, Styles and Scripts
+416 **Mail
+417 **Common parameters for sending mails:
+418 **SMTP server address:
+419 **Server port:
+420 **(25 by default)
+421 **Sending address (From field):
+422 **To:
+423 **Send by mail
+424 **Subject:
+425 **Send as:
+426 **Message body
+427 **Attachment
+428 **Don't send
+429 **Send
+430 **The server address and port must be set in Preferences
+431 **Message:
+432 **Alternate textual  message:
+433 **The server is unreachable or does not respond
+434 **The server has reject you
+435 **The sender address is misformatted
+436 **A recipient address is misformatted
+437 **The mail content is misformatted
+438 **Mail not sent
+439 **Mail sent
+440 **Passwords
+441 **Do you want Amaya to remember this password?
+442 **Remember passwords for sites
+443 **Sites
+444 **Remove All
+445 **An error occured during the building of the javascript/DOM objects
+446 **A script is still running but will be aborted as soon as possible. Please try later.
+447 **Javascript/DOM can not be enabled in this view.
+448 **Enter a javascript command:
+449 **The command returned the value: %s
+450 **The command returned no value
+451 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+452 Yeni
+453 **Customizable

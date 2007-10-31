@@ -1450,10 +1450,37 @@
 </label>
 <label define="AM_ABOUT_COPYRIGHT">
 	<message xml:lang="en">Copyright  ©  1994-2007 INRIA and W3C® (MIT, ERCIM, Keio), All Rights Reserved.</message>
+	<message xml:lang="es">Copyright  ©  1994-2007 INRIA and W3C® (MIT, ERCIM, Keio), Todos los derechos reservados.</message>
 	<message xml:lang="fr">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio), tous droits réservés.</message>
+	<message xml:lang="de">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="it">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="tr">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="pt">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="fi">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="ru">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="hu">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="ka">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="cn">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="tk">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="en">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="sk">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
 </label>
 <label define="AM_ABOUT_WEBSITE">
 	<message xml:lang="en">w3.org/Amaya/</message>
+	<message xml:lang="fr">w3.org/Amaya/</message>
+	<message xml:lang="es">w3.org/Amaya/</message>
+	<message xml:lang="de">w3.org/Amaya/</message>
+	<message xml:lang="it">w3.org/Amaya/</message>
+	<message xml:lang="tr">w3.org/Amaya/</message>
+	<message xml:lang="pt">w3.org/Amaya/</message>
+	<message xml:lang="fi">w3.org/Amaya/</message>
+	<message xml:lang="ru">w3.org/Amaya/</message>
+	<message xml:lang="hu">w3.org/Amaya/</message>
+	<message xml:lang="ka">w3.org/Amaya/</message>
+	<message xml:lang="cn">w3.org/Amaya/</message>
+	<message xml:lang="tk">w3.org/Amaya/</message>
+	<message xml:lang="en">w3.org/Amaya/</message>
+	<message xml:lang="sk">w3.org/Amaya/</message>
 </label>
 <label define="AM_TOO_LONG_URL">
 	<message xml:lang="en">Can't handle URLs having more than %s chars</message>
@@ -3711,23 +3738,18 @@
 </label>
 <label define="AM_TOOLPANEL_ALIGN">
 	<message xml:lang="en">Tool panel bar alignment: </message>
+	<message xml:lang="es">Posición de la ventana de herramientas:</message>
 	<message xml:lang="fr">Aligner les panneaux d'outils :</message>
 </label>
 <label define="AM_TOOLPANEL_ALIGN_LEFT">
 	<message xml:lang="en">left</message>
+	<message xml:lang="es">Izquierda</message>
 	<message xml:lang="fr">à gauche</message>
 </label>
 <label define="AM_TOOLPANEL_ALIGN_RIGHT">
 	<message xml:lang="en">right</message>
+	<message xml:lang="es">Derecha</message>
 	<message xml:lang="fr">à droite</message>
-</label>
-<label define="AM_TOOLPANEL_ALIGN_FREE">
-	<message xml:lang="en">free</message>
-	<message xml:lang="fr">librement</message>
-</label>
-<label define="AM_TOOLPANEL_ALIGN_MUST_RESTART">
-	<message xml:lang="en"> (must restart app)</message>
-	<message xml:lang="fr"> (redémarrage nécessaire)</message>
 </label>
 <label define="AM_LOCAL_CSS">
 	<message xml:lang="en">Style element</message>
@@ -6431,30 +6453,37 @@
 
 <label define="AM_JAVASCRIPT_CAN_NOT_BUILD">
 	<message xml:lang="en">An error occured during the building of the javascript/DOM objects</message>
+	<message xml:lang="es">Ocurrió un error durante la construcción de los objetos JavaScript/DOM</message>
 	<message xml:lang="fr">Une erreur s'est produite pendant la construction des objets javascript/DOM</message>
 </label>
 <label define="AM_JAVASCRIPT_IS_RUNNING">
 	<message xml:lang="en">A script is still running but will be aborted as soon as possible. Please try later.</message>
+	<message xml:lang="es">Un script se está ejecutando todavía, pero se abortará lo antes posible.</message>
 	<message xml:lang="fr">Un script est encore en cours d'exécution mais sera interrompu dès que possible. Veuillez ressayer ultérieurement.</message>
 </label>
 <label define="AM_JAVASCRIPT_VIEW">
 	<message xml:lang="en">Javascript/DOM can not be enabled in this view.</message>
+	<message xml:lang="es">No se puede activar JavaScript/DOM en esta vista</message>
 	<message xml:lang="fr">Javascript/DOM ne peut être activé dans cette vue.</message>
 </label>
 <label define="AM_JAVASCRIPT_ENTER_A_COMMAND">
 	<message xml:lang="en">Enter a javascript command:</message>
+	<message xml:lang="es">Escriba un comando JavaScript:</message>
 	<message xml:lang="fr">Rentrez une commande javascript :</message>
 </label>
 <label define="AM_JAVASCRIPT_RETURNED_VALUE">
 	<message xml:lang="en">The command returned the value: %s</message>
+	<message xml:lang="es">El comando devolvió el valor: %s</message>
 	<message xml:lang="fr">La commande a retourné la valeur: %s</message>
 </label>
 <label define="AM_JAVASCRIPT_NO_RETURNED_VALUE">
 	<message xml:lang="en">The command returned no value</message>
+	<message xml:lang="es">El comando no devolvió ningún valor</message>
 	<message xml:lang="fr">La commande n'a retourné aucune valeur</message>
 </label>
 <label define="AM_JAVASCRIPT_SCRIPT_ERROR">
 	<message xml:lang="en">SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s</message>
+	<message xml:lang="es">SpiderMonkey devolvió el error siguiente:\n\nArchivo: %s\nLínea: %d\n\n%s</message>
 	<message xml:lang="fr">SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s</message>
 </label>
 
@@ -6478,6 +6507,7 @@
 
 <label define="AM_AUI_FREE_PANEL_POS">
 	<message xml:lang="en">Customizable</message>
+	<message xml:lang="es"></message>
 	<message xml:lang="fr">Paramétrable</message>
 </label>
 

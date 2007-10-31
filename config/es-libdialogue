@@ -58,10 +58,10 @@
 56 Subrayado
 57 Tachado
 58 Tamaño del cuerpo (pt)
-59 **Unindent
-60 **Single line spacing
-61 **Middle line spacing
-62 **Double line spacing
+59 Reducir indentado
+60 Interlineado sencillo
+61 Interlineado 1,5 líneas
+62 Interlineado doble
 63 Guardar documento
 64 Cerrar, no guardar
 65 Estilo de carácter
@@ -201,8 +201,8 @@
 199 Buscar
 200 Inicio
 201 Énfasis On/Off
-202 Enérgico On/Off
-203 Código On/Off
+202 Enérgico (strong) On/Off
+203 Código (code) On/Off
 204 Imagen
 205 Cabecera nivel 1
 206 Cabecera nivel 2
@@ -222,10 +222,10 @@
 220 Cajas
 221 División
 222 Destino
-223 Inserción On/Off
-224 Borrado On/Off
-225 Subíndice On/Off
-226 Superíndice On/Off
+223 Inserción (ins) On/Off
+224 Borrado (del) On/Off
+225 Subíndice (sub) On/Off
+226 Superíndice (sup) On/Off
 227 Término
 228 Definición
 229 Objeto
@@ -240,12 +240,12 @@
 238 Copiar
 239 Pegar
 240 Revisar ortografía
-241 **Various constructs
-242 **Relations, orders and logic
-243 **Sets and functions
-244 **Arithmetic, operations, complexes and constants
-245 **Analysis, linear algebra and statistic
-246 **Trigonometry and logarithms
+241 Varios
+242 Relaciones, orden y lógica
+243 Conjuntos y funciones
+244 Aritmética, operaciones, complejos y constantes
+245 Análisis, álgebra lineal y estadística
+246 Trigonometría y logaritmos
 247 &Aumentar tamaño de texto
 248 &Reducir tamaño de texto
-249 **Theme
+249 Tema

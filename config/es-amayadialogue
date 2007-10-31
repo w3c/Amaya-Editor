@@ -76,9 +76,9 @@
 74 Actualizar todas las pestañas
 75 Cerrar las otras pestañas
 76 Cerrar pestaña
-77 **Open the link
-78 **Open the link in new tab
-79 **Open the link in new window
+77 Abrir enlace
+78 Abrir enlace en una nueva pestaña
+79 Abrir enlace en una nueva ventana
 80 Cortar
 81 Copiar
 82 Pegar
@@ -257,9 +257,9 @@
 255 &Borrar ancla (a)
 256 &Crear/Borrar atributos id...
 257 &Pantalla completa
-258 **Show/Hide toolbars
-259 **&Browsing
-260 **&Editing
+258 Barras de herramientas
+259 &Navegación
+260 &Edición
 261 Ventana de &herramientas
 262 Áreas de &mapas
 263 &Destinos
@@ -298,11 +298,11 @@
 296 Ver propiedades del recurso...
 297 Copiar información de bloqueo
 298 ¿Bloqueado?
-299 **Enable/Disable
-300 **Execute a command
-301 **Execute an external script
-302 **Add an external script
-303 **Insert a script
+299 Activar/Desactivar
+300 Ejecutar un comando
+301 Ejecutar un script externo
+302 Añadir un script externo
+303 Insertar un script
 304 Acerca de Amaya
 305 Página web de Amaya en el W3C
 306 Índice

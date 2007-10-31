@@ -89,8 +89,8 @@
 87 Entfernen CSS
 88 Der W3C Browser und Editor für das Web
 89 (Probleme an www-amaya@w3.org senden)
-90 **Copyright  ©  1994-2007 INRIA and W3C® (MIT, ERCIM, Keio), All Rights Reserved.
-91 **w3.org/Amaya/
+90 Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)
+91 w3.org/Amaya/
 92 URI länger als %s Zeichen werden zur Zeit nicht unterstützt
 93 Nur Standardtyp erlaubt
 94 Aktualisierung der Verweise %s%% erfolgreich
@@ -237,221 +237,219 @@
 235 **Tool panel bar alignment: 
 236 **left
 237 **right
-238 **free
-239 ** (must restart app)
-240 Formatelement
-241 Kann XPointer nicht erzeugen
-242 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
-243 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
-244 Kein Ziel zum Verschieben der Anmerkung gefunden
-245 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
-246 Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen
-247 Für diese Anmerkung kann kein XPointer erzeugt werden
-248 Neue Anmerkung erzeugen
-249 Absenden der Anmerkung gescheitert
-250 Löschen der Anmerkung gescheitert
-251 Anmerkung gelöscht
-252 Laden des Anmerkungsindex gescheitert
-253 Fehler
-254 Zeichenkodierung wählen
-255 MIME-Typ wählen
-256 Zeichenkodierung ändern
-257 MIME-Typ ändern
-258 Ändern
-259 Dieser Dokumenttyp unterstützt keine Zeichensätze
-260 Diese Option kann nur mit einem HTTP URI Ziel verwendet werden
-261 Fehler: ungültiger MIME-Typ
-262 Unbekannt
-263 Formatvorlagen wurden ignoriert - siehe Datei > Parserfehler anzeigen
-264 Dieses Dokument wird bereits in einem anderen Fenster angezeigt
-265 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
-266 Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren
-267 Soll die Operation ausgeführt werden ?
-268 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
-269 Standardzeichensatz für neue Dakumente
-270 Sperrung erfolgreich
-271 Sperrung fehlgeschlagen
-272 Sperre %s...
-273 Dokument %s ist gesperrt
-274 Dokument %s wurde von %s gesperrt (timeout %s)
-275 Sperrinformation überschreiben?
-276 Sperrinformation kopieren?
-277 Versuche Dokument zu entsperren...
-278 Entsperrung erfolgreich
-279 Entsperrung fehlgeschlagen
-280 Entsperre %s...
-281 Dokument ist entsperrt
-282 Dokument entsperren?
-283 Dokumenteigenschaften
-284 Dokumenteigenschaften nicht verfügbar
-285 Dokumenteigenschaften momentan nicht verfügbar. Versuchen Sie es später...
-286 Suche nach Dokumenteigenschaften...
-287 Keine WebDAV-Unterstützung für URLs vom Typ %s
-288 Konnte Sperrinformation lokal nicht speichern
-289 Konnte Sperrinformation lokal nicht entfernen
-290 Operation nicht erlaubt für %s
-291 Anforderung fehlgeschlagen: keine Abhängigkeit
-292 Anforderung fehlgeschlagen: %s
-293 Erneut versuchen?
-294 WebDAV
-295 Persönliche Benutzerreferenzen (URL)
-296 WebDAV Resourcenliste des Benutzers (URL)
-297 Sperrtiefe
+238 Formatelement
+239 Kann XPointer nicht erzeugen
+240 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
+241 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
+242 Kein Ziel zum Verschieben der Anmerkung gefunden
+243 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
+244 Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen
+245 Für diese Anmerkung kann kein XPointer erzeugt werden
+246 Neue Anmerkung erzeugen
+247 Absenden der Anmerkung gescheitert
+248 Löschen der Anmerkung gescheitert
+249 Anmerkung gelöscht
+250 Laden des Anmerkungsindex gescheitert
+251 Fehler
+252 Zeichenkodierung wählen
+253 MIME-Typ wählen
+254 Zeichenkodierung ändern
+255 MIME-Typ ändern
+256 Ändern
+257 Dieser Dokumenttyp unterstützt keine Zeichensätze
+258 Diese Option kann nur mit einem HTTP URI Ziel verwendet werden
+259 Fehler: ungültiger MIME-Typ
+260 Unbekannt
+261 Formatvorlagen wurden ignoriert - siehe Datei > Parserfehler anzeigen
+262 Dieses Dokument wird bereits in einem anderen Fenster angezeigt
+263 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
+264 Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren
+265 Soll die Operation ausgeführt werden ?
+266 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
+267 Standardzeichensatz für neue Dakumente
+268 Sperrung erfolgreich
+269 Sperrung fehlgeschlagen
+270 Sperre %s...
+271 Dokument %s ist gesperrt
+272 Dokument %s wurde von %s gesperrt (timeout %s)
+273 Sperrinformation überschreiben?
+274 Sperrinformation kopieren?
+275 Versuche Dokument zu entsperren...
+276 Entsperrung erfolgreich
+277 Entsperrung fehlgeschlagen
+278 Entsperre %s...
+279 Dokument ist entsperrt
+280 Dokument entsperren?
+281 Dokumenteigenschaften
+282 Dokumenteigenschaften nicht verfügbar
+283 Dokumenteigenschaften momentan nicht verfügbar. Versuchen Sie es später...
+284 Suche nach Dokumenteigenschaften...
+285 Keine WebDAV-Unterstützung für URLs vom Typ %s
+286 Konnte Sperrinformation lokal nicht speichern
+287 Konnte Sperrinformation lokal nicht entfernen
+288 Operation nicht erlaubt für %s
+289 Anforderung fehlgeschlagen: keine Abhängigkeit
+290 Anforderung fehlgeschlagen: %s
+291 Erneut versuchen?
+292 WebDAV
+293 Persönliche Benutzerreferenzen (URL)
+294 WebDAV Resourcenliste des Benutzers (URL)
+295 Sperrtiefe
+296 Unendlich
+297 Sperrzeitüberschreitung
 298 Unendlich
-299 Sperrzeitüberschreitung
-300 Unendlich
-301 Andere (Sekunden)
-302 Sperrbereich
-303 Exklusiv
-304 Gemeinsam
-305 Benachrichtigung
-306 Immer benachrichtigen
-307 Am Ende benachrichtigen
-308 Animation
-309 SVG Bibliothek
-310 Option kopieren
-311 Markierung kopieren
-312 Auf Markierung beziehen
-313 Neues Modell zu Bibliothek hinzufügen
-314 URL der neuen SVG-Datei ...
-315 Titel der Bibliothek
-316 URL der Bibliothek
-317 Bibliothek erzeugen
-318 Bibliothek durchsuchen
-319 Bibliothek erzeugen oder suchen
-320 Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren
-321 Der Titel der Bibliothek muss angegeben werden
-322 Den Cursor an die neue Schlüsselposition bewegen...
-323 Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...
-324 Anfangsfarbe des Elements wählen...
-325 Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...
-326 Endfarbe wählen...
-327 Animation definiert.
-328 Animiertes Attribut
-329 Element ohne ID
-330 ID hinzufügen
-331 ID löschen
-332 IDs hinzufügen/löschen
-333 Operationen anwenden
-334 Elementname eingeben
-335 CSS anwenden
-336 Aktueller Bildschirmtyp
-337 Neue Überschrift
-338 Lesezeicheneigenschaften
-339 Eigenschaften der Überschriften
-340 Inhaltsverzeichnis:
-341 Titel:
-342 Umbenennen:
-343 Autor:
-344 Erstellt am:
-345 Zuletzt geändert am:
-346 Beschreibung:
-347 Wählen Sie bitte ein Element aus
-348 CSS komplett
-349 CSS-Regeln, die für <%s> gelten\n
-350 Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n
-351 Objekte laden (object, embed, iframe)
-352 Für dieses Element gibt es keine Formatvorlage
-353 Keine Einfügeposition definiert. Bitte zuerst auswählen
-354 Dokumentinformation
-355 Documenttyp
-356 MIME Type
-357 Zeichensatz
-358 Content Length
-359 Content Location
-360 Einstellungen
-361 Zeichen (&xxx;)
-362 Objekt erzeugen
-363 Verzeichnis
-364 Datei
-365 Aktuelle Seite ersetzen
-366 In neuem Fenster
-367 Anti-aliasing
-368 ISO-Datumsformat
-369 Ort für neue Dokumente
-370 Ort zum Öffnen
-371 Warnen, falls mehrere Registerkarten geschlossen werden sollen
-372 Die maximale Anzahl an URLs in der History ist erreicht
-373 URL-Liste löschen
-374 Alle Tastaturkürzel anzeigen
-375 Feste Zeilenlänge (0 = Standardwert)
-376 Vorlage
-377 Dokument speichern als...
-378 Vorlage konnte nicht gefunden werden
-379 Vorlagenumrisse anzeigen
-380 Mit "Anwenden" wird der Dialog geschlossen
-381 Nicht möglich
-382 Geschütztes Element
-383 Die Auswahl darf ein solches Element nicht treffen
-384 Keine Titel
-385 Trotzdem sichern
-386 Der Host konnte nicht gefunden werden
-387 Das Dokument wurde verändert (412)
-388 Es besteht ein Konflikt mit dem aktuellen Status der Ressource
-389 Die Auswahl ist ungültig
-390 Unbekanntes Element
-391 %d aktualisierte Elemente
-392 Der Titel muss angegeben werden
-393 Vorlagen
-394 Häufigkeit des Auftretens
-395 Die maximal mögliche Zahl des Auftretens wurde erreicht
-396 Die minimal mögliche Zahl des Auftretens wurde erreicht
-397 Überprüfen doppelter IDs
-398 Füge XSL-Form für MathML-Elemente hinzu
-399 Einfügen eines Operators
-400 Wählen der Art der Operatordarstellung
-401 Einfügen eines Integrals
-402 Auswählen des Integraltyps
-403 Attribute für die Grenzen
-404 Wählen der Eröffungs-, Trennungs- und Schließungssymbole
-405 Anzahl der Operatorsymbole
-406 Anzahl der Koordinaten
-407 Länge der n-Tupel
-408 Anzahl der Elemente
-409 Anzahl der Variablen
-410 Grad
-411 Grad der Variable mit Nummer %d
-412 Mischdokument
-413 **Copy resources (styles and scripts)
-414 **Where to save resources
-415 **Where to save images
-416 **Document
-417 **Images, Styles and Scripts
-418 **Mail
-419 **Common parameters for sending mails:
-420 **SMTP server address:
-421 **Server port:
-422 **(25 by default)
-423 **Sending address (From field):
-424 **To:
-425 **Send by mail
-426 **Subject:
-427 **Send as:
-428 **Message body
-429 **Attachment
-430 **Don't send
-431 **Send
-432 **The server address and port must be set in Preferences
-433 **Message:
-434 **Alternate textual  message:
-435 **The server is unreachable or does not respond
-436 **The server has reject you
-437 **The sender address is misformatted
-438 **A recipient address is misformatted
-439 **The mail content is misformatted
-440 **Mail not sent
-441 **Mail sent
-442 **Passwords
-443 **Do you want Amaya to remember this password?
-444 **Remember passwords for sites
-445 **Sites
-446 **Remove All
-447 **An error occured during the building of the javascript/DOM objects
-448 **A script is still running but will be aborted as soon as possible. Please try later.
-449 **Javascript/DOM can not be enabled in this view.
-450 **Enter a javascript command:
-451 **The command returned the value: %s
-452 **The command returned no value
-453 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-454 Neu
-455 **Customizable
+299 Andere (Sekunden)
+300 Sperrbereich
+301 Exklusiv
+302 Gemeinsam
+303 Benachrichtigung
+304 Immer benachrichtigen
+305 Am Ende benachrichtigen
+306 Animation
+307 SVG Bibliothek
+308 Option kopieren
+309 Markierung kopieren
+310 Auf Markierung beziehen
+311 Neues Modell zu Bibliothek hinzufügen
+312 URL der neuen SVG-Datei ...
+313 Titel der Bibliothek
+314 URL der Bibliothek
+315 Bibliothek erzeugen
+316 Bibliothek durchsuchen
+317 Bibliothek erzeugen oder suchen
+318 Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren
+319 Der Titel der Bibliothek muss angegeben werden
+320 Den Cursor an die neue Schlüsselposition bewegen...
+321 Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+322 Anfangsfarbe des Elements wählen...
+323 Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+324 Endfarbe wählen...
+325 Animation definiert.
+326 Animiertes Attribut
+327 Element ohne ID
+328 ID hinzufügen
+329 ID löschen
+330 IDs hinzufügen/löschen
+331 Operationen anwenden
+332 Elementname eingeben
+333 CSS anwenden
+334 Aktueller Bildschirmtyp
+335 Neue Überschrift
+336 Lesezeicheneigenschaften
+337 Eigenschaften der Überschriften
+338 Inhaltsverzeichnis:
+339 Titel:
+340 Umbenennen:
+341 Autor:
+342 Erstellt am:
+343 Zuletzt geändert am:
+344 Beschreibung:
+345 Wählen Sie bitte ein Element aus
+346 CSS komplett
+347 CSS-Regeln, die für <%s> gelten\n
+348 Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n
+349 Objekte laden (object, embed, iframe)
+350 Für dieses Element gibt es keine Formatvorlage
+351 Keine Einfügeposition definiert. Bitte zuerst auswählen
+352 Dokumentinformation
+353 Documenttyp
+354 MIME Type
+355 Zeichensatz
+356 Content Length
+357 Content Location
+358 Einstellungen
+359 Zeichen (&xxx;)
+360 Objekt erzeugen
+361 Verzeichnis
+362 Datei
+363 Aktuelle Seite ersetzen
+364 In neuem Fenster
+365 Anti-aliasing
+366 ISO-Datumsformat
+367 Ort für neue Dokumente
+368 Ort zum Öffnen
+369 Warnen, falls mehrere Registerkarten geschlossen werden sollen
+370 Die maximale Anzahl an URLs in der History ist erreicht
+371 URL-Liste löschen
+372 Alle Tastaturkürzel anzeigen
+373 Feste Zeilenlänge (0 = Standardwert)
+374 Vorlage
+375 Dokument speichern als...
+376 Vorlage konnte nicht gefunden werden
+377 Vorlagenumrisse anzeigen
+378 Mit "Anwenden" wird der Dialog geschlossen
+379 Nicht möglich
+380 Geschütztes Element
+381 Die Auswahl darf ein solches Element nicht treffen
+382 Keine Titel
+383 Trotzdem sichern
+384 Der Host konnte nicht gefunden werden
+385 Das Dokument wurde verändert (412)
+386 Es besteht ein Konflikt mit dem aktuellen Status der Ressource
+387 Die Auswahl ist ungültig
+388 Unbekanntes Element
+389 %d aktualisierte Elemente
+390 Der Titel muss angegeben werden
+391 Vorlagen
+392 Häufigkeit des Auftretens
+393 Die maximal mögliche Zahl des Auftretens wurde erreicht
+394 Die minimal mögliche Zahl des Auftretens wurde erreicht
+395 Überprüfen doppelter IDs
+396 Füge XSL-Form für MathML-Elemente hinzu
+397 Einfügen eines Operators
+398 Wählen der Art der Operatordarstellung
+399 Einfügen eines Integrals
+400 Auswählen des Integraltyps
+401 Attribute für die Grenzen
+402 Wählen der Eröffungs-, Trennungs- und Schließungssymbole
+403 Anzahl der Operatorsymbole
+404 Anzahl der Koordinaten
+405 Länge der n-Tupel
+406 Anzahl der Elemente
+407 Anzahl der Variablen
+408 Grad
+409 Grad der Variable mit Nummer %d
+410 Mischdokument
+411 **Copy resources (styles and scripts)
+412 **Where to save resources
+413 **Where to save images
+414 **Document
+415 **Images, Styles and Scripts
+416 **Mail
+417 **Common parameters for sending mails:
+418 **SMTP server address:
+419 **Server port:
+420 **(25 by default)
+421 **Sending address (From field):
+422 **To:
+423 **Send by mail
+424 **Subject:
+425 **Send as:
+426 **Message body
+427 **Attachment
+428 **Don't send
+429 **Send
+430 **The server address and port must be set in Preferences
+431 **Message:
+432 **Alternate textual  message:
+433 **The server is unreachable or does not respond
+434 **The server has reject you
+435 **The sender address is misformatted
+436 **A recipient address is misformatted
+437 **The mail content is misformatted
+438 **Mail not sent
+439 **Mail sent
+440 **Passwords
+441 **Do you want Amaya to remember this password?
+442 **Remember passwords for sites
+443 **Sites
+444 **Remove All
+445 **An error occured during the building of the javascript/DOM objects
+446 **A script is still running but will be aborted as soon as possible. Please try later.
+447 **Javascript/DOM can not be enabled in this view.
+448 **Enter a javascript command:
+449 **The command returned the value: %s
+450 **The command returned no value
+451 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+452 Neu
+453 **Customizable

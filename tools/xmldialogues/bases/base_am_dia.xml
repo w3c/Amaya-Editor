@@ -1192,14 +1192,17 @@
 <!-- Document context menu: -->
 <label define="BFollowTheLink">
 	<message xml:lang="en">Open the link</message>
+	<message xml:lang="es">Abrir enlace</message>
 	<message xml:lang="fr">Ouvrir le lien</message>
 </label>
 <label define="BFollowTheLinkNewTab">
 	<message xml:lang="en">Open the link in new tab</message>
+	<message xml:lang="es">Abrir enlace en una nueva pestaña</message>
 	<message xml:lang="fr">Ouvrir le lien dans un nouvel onglet</message>
 </label>
 <label define="BFollowTheLinkNewWin">
 	<message xml:lang="en">Open the link in new window</message>
+	<message xml:lang="es">Abrir enlace en una nueva ventana</message>
 	<message xml:lang="fr">Ouvrir le lien dans une nouvelle fenêtre</message>
 </label>
 <label define="BCCut">
@@ -3919,14 +3922,17 @@
 </label>
 <label define="toolbars">
   <message xml:lang="en">Show/Hide toolbars</message>
+  <message xml:lang="es">Barras de herramientas</message>
   <message xml:lang="fr">Barres d'outils</message>
 </label>
 <label define="TShowBrowsingBar">
   <message xml:lang="en">&amp;Browsing</message>
+  <message xml:lang="es">&amp;Navegación</message>
   <message xml:lang="fr">&amp;Navigation</message>
 </label>
 <label define="toggle:TShowEditingBar">
   <message xml:lang="en">&amp;Editing</message>
+  <message xml:lang="es">&amp;Edición</message>
   <message xml:lang="fr">&amp;Édition</message>
 </label>
 <label define="TShowPanel">
@@ -4520,22 +4526,27 @@
 </label>
 <label define="BSwitch_JS_DOM">
 	<message xml:lang="en">Enable/Disable</message>
+	<message xml:lang="es">Activar/Desactivar</message>
 	<message xml:lang="fr">Activer/Désactiver</message>
 </label>
 <label define="BExecuteACommand">
 	<message xml:lang="en">Execute a command</message>
+	<message xml:lang="es">Ejecutar un comando</message>
 	<message xml:lang="fr">Exécuter une commande</message>
 </label>
 <label define="BExecuteExternal">
 	<message xml:lang="en">Execute an external script</message>
+	<message xml:lang="es">Ejecutar un script externo</message>
 	<message xml:lang="fr">Exécuter un script externe</message>
 </label>
 <label define="BAddExternal">
 	<message xml:lang="en">Add an external script</message>
+	<message xml:lang="es">Añadir un script externo</message>
 	<message xml:lang="fr">Ajouter un script externe</message>
 </label>
 <label define="BInsertScript">
 	<message xml:lang="en">Insert a script</message>
+	<message xml:lang="es">Insertar un script</message>
 	<message xml:lang="fr">Inserer un script</message>
 </label>
 <label define="BInformation">

@@ -962,18 +962,22 @@
 </label>
 <label define="TMSG_NOINDENT">
 	<message xml:lang="en">Unindent</message>
+	<message xml:lang="es">Reducir indentado</message>
 	<message xml:lang="fr">Retirer le retrait</message>
 </label>
 <label define="TMSG_LINE_SPACING">
 	<message xml:lang="en">Single line spacing</message>
+	<message xml:lang="es">Interlineado sencillo</message>
 	<message xml:lang="fr">Interligne simple</message>
 </label>
 <label define="TMSG_HLINE_SPACING">
 	<message xml:lang="en">Middle line spacing</message>
+	<message xml:lang="es">Interlineado 1,5 líneas</message>
 	<message xml:lang="fr">Interligne moyenne</message>
 </label>
 <label define="TMSG_DLINE_SPACING">
 	<message xml:lang="en">Double line spacing</message>
+	<message xml:lang="es">Interlineado doble</message>
 	<message xml:lang="fr">Interligne double</message>
 </label>
 <label define="TMSG_SAVE_DOC">
@@ -3127,7 +3131,7 @@
 	<message xml:lang="en">Emphasis On/Off</message>
 	<message xml:lang="fr">Mise en évidence Oui/Non</message>
 	<message xml:lang="de">Betont On/Off</message>
-	<message xml:lang="it">Enfasi On/Off</message>
+	<message xml:lang="it">Enfasi (em) On/Off</message>
 	<message xml:lang="tr">Vurgu On/Off</message>
 	<message xml:lang="es">Énfasis On/Off</message>
 	<message xml:lang="pt">Ênfase On/Off</message>
@@ -3145,7 +3149,7 @@
 	<message xml:lang="de">Hervorgehoben On/Off</message>
 	<message xml:lang="it">Forte On/Off</message>
 	<message xml:lang="tr">Kuvvetli On/Off</message>
-	<message xml:lang="es">Enérgico On/Off</message>
+	<message xml:lang="es">Enérgico (strong) On/Off</message>
 	<message xml:lang="pt">Forte On/Off</message>
 	<message xml:lang="fi">Lihavoi On/Off</message>
 	<message xml:lang="ru">Особое выделение Вкл./Выкл.</message>
@@ -3161,7 +3165,7 @@
 	<message xml:lang="de">Code On/Off</message>
 	<message xml:lang="it">Codice On/Off</message>
 	<message xml:lang="tr">Kod On/Off</message>
-	<message xml:lang="es">Código On/Off</message>
+	<message xml:lang="es">Código (code) On/Off</message>
 	<message xml:lang="pt">Código On/Off</message>
 	<message xml:lang="fi">Koodi On/Off</message>
 	<message xml:lang="ru">Выделение компьютерного кода Вкл./Выкл.</message>
@@ -3462,7 +3466,7 @@
 	<message xml:lang="fr">Texte inséré Oui/Non</message>
 	<message xml:lang="de">Eingefügter Text On/Off</message>
 	<message xml:lang="it">Inserzione On/Off</message>
-	<message xml:lang="es">Inserción On/Off</message>
+	<message xml:lang="es">Inserción (ins) On/Off</message>
 	<message xml:lang="pt">Inserção On/Off</message>
 	<message xml:lang="fi">Lisäys On/Off</message>
 	<message xml:lang="tr">Araya Koy On/Off</message>
@@ -3478,7 +3482,7 @@
 	<message xml:lang="fr">Texte supprimé Oui/Non</message>
 	<message xml:lang="de">Gelöschter Text On/Off</message>
 	<message xml:lang="it">Cancellazione On/Off</message>
-	<message xml:lang="es">Borrado On/Off</message>
+	<message xml:lang="es">Borrado (del) On/Off</message>
 	<message xml:lang="pt">Supressão On/Off</message>
 	<message xml:lang="fi">Poisto On/Off</message>
 	<message xml:lang="tr">Sil On/Off</message>
@@ -3495,7 +3499,7 @@
 	<message xml:lang="de">Tiefgestellt On/Off</message>
 	<message xml:lang="it">Pedice On/Off</message>
 	<message xml:lang="tr">Alt On/Off</message>
-	<message xml:lang="es">Subíndice On/Off</message>
+	<message xml:lang="es">Subíndice (sub) On/Off</message>
 	<message xml:lang="pt">Índice On/Off</message>
 	<message xml:lang="fi">Alaindeksi On/Off</message>
 	<message xml:lang="ru">Подстрочный индекс Вкл./Выкл.</message>
@@ -3511,7 +3515,7 @@
 	<message xml:lang="de">Hochgestellt On/Off</message>
 	<message xml:lang="it">Indice On/Off</message>
 	<message xml:lang="tr">Üst On/Off</message>
-	<message xml:lang="es">Superíndice On/Off</message>
+	<message xml:lang="es">Superíndice (sup) On/Off</message>
 	<message xml:lang="pt">Expoente On/Off</message>
 	<message xml:lang="fi">Yläindeksi On/Off</message>
 	<message xml:lang="ru">Надстрочный индекс Вкл./Выкл.</message>
@@ -3735,26 +3739,32 @@
 </label>
 <label define="TMSG_MATH_PANEL_1">
   <message xml:lang="en">Various constructs</message>
+  <message xml:lang="es">Varios</message>
   <message xml:lang="fr">Constructions diverses</message>
 </label>
 <label define="TMSG_MATH_PANEL_2">
   <message xml:lang="en">Relations, orders and logic</message>
+  <message xml:lang="es">Relaciones, orden y lógica</message>
   <message xml:lang="fr">Relations, ordre et logique</message>
 </label>
 <label define="TMSG_MATH_PANEL_3">
   <message xml:lang="en">Sets and functions</message>
+  <message xml:lang="es">Conjuntos y funciones</message>
   <message xml:lang="fr">Ensembles et fonctions</message>
 </label>
 <label define="TMSG_MATH_PANEL_4">
   <message xml:lang="en">Arithmetic, operations, complexes and constants</message>
+  <message xml:lang="es">Aritmética, operaciones, complejos y constantes</message>
   <message xml:lang="fr">Arithmétique, opérations, complexes et constantes</message>
 </label>
 <label define="TMSG_MATH_PANEL_5">
   <message xml:lang="en">Analysis, linear algebra and statistic</message>
+  <message xml:lang="es">Análisis, álgebra lineal y estadística</message>
   <message xml:lang="fr">Analyse, algèbre linéaire et statistiques</message>
 </label>
 <label define="TMSG_MATH_PANEL_6">
   <message xml:lang="en">Trigonometry and logarithms</message>
+  <message xml:lang="es">Trigonometría y logaritmos</message>
   <message xml:lang="fr">Trigonométrie et logarithmes</message>
 </label>
 <label define="TMSG_ZoomIn">
@@ -3791,6 +3801,7 @@
 </label>
 <label define="TMSG_THEME">
   <message xml:lang="en">Theme</message>
+  <message xml:lang="es">Tema</message>
   <message xml:lang="fr">Thème</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
