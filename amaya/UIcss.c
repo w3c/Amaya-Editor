@@ -691,7 +691,7 @@ char *CssToPrint (Document doc, char *printdir)
 void GenerateStyle (char * data , ThotBool add)
 {
   Element             el, firstC, lastC;
-  Attribute           attr;
+  Attribute           attr = NULL;
   int                 doc, i, j;
 
   doc = TtaGetSelectedDocument();

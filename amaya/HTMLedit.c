@@ -518,7 +518,7 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
 {
   char     *buffer, *property, *start, *stop;
   char      value[50];
-  int       lg, val, inc;
+  int       lg, val = 0, inc;
   ThotBool  margin;
 
   lg = TtaGetTextAttributeLength (attr);
@@ -600,7 +600,7 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
 {
   Element         el, firstSel, lastSel, next, in_line, sibling, child;
   Element         last, parent, enclose, selected;
-  ElementType	    elType, parentType, newType, childType;
+  ElementType	  elType, parentType, newType, childType;
   Attribute       newAttr, attr;
   AttributeType   attrType;
   Document        doc;
@@ -617,8 +617,6 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
   done = FALSE;
   if (doc)
     {
-
-
       if (DocumentTypes[doc] == docText ||
           DocumentTypes[doc] == docCSS ||
           DocumentTypes[doc] == docSource)
@@ -664,32 +662,30 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
             }
           /* register this element in the editing history */
           elType = TtaGetElementType (firstSel);
+          newType.ElSSchema = elType.ElSSchema;
+          newType.ElTypeNum = 0;
+          attrType.AttrSSchema = elType.ElSSchema;
+          attrType.AttrTypeNum = aType;
           name = TtaGetSSchemaName (elType.ElSSchema);
           el = NULL;
           parse = (aType == HTML_ATTR_Style_);
           // check if it's within a style element
           parentType.ElSSchema = elType.ElSSchema;
-          if (!strcmp(name, "HTML"))
+          if (!strcmp (name, "HTML"))
             {
               parentType.ElTypeNum = HTML_EL_STYLE_;
               el = TtaGetTypedAncestor (firstSel, parentType);
-              newType.ElSSchema = elType.ElSSchema;
               newType.ElTypeNum = eType;
-              attrType.AttrSSchema = elType.ElSSchema;
-              attrType.AttrTypeNum = aType;
             }
 #ifdef _SVG
-          else if (!strcmp(name, "SVG"))
+          else if (!strcmp (name, "SVG"))
             {
               parentType.ElTypeNum = SVG_EL_style__;
               el = TtaGetTypedAncestor (firstSel, parentType);
-              newType.ElSSchema = elType.ElSSchema;
               if (eType == HTML_EL_Anchor)
                 newType.ElTypeNum = SVG_EL_a;
               else
                 newType.ElTypeNum = 0;
-              attrType.AttrSSchema = elType.ElSSchema;
-              attrType.AttrTypeNum = aType;
               if (aType == HTML_ATTR_HREF_)
                 attrType.AttrTypeNum = SVG_ATTR_xlink_href;
               else if (aType == HTML_ATTR_Class)
@@ -698,12 +694,8 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                 attrType.AttrTypeNum = SVG_ATTR_style_;
             }
 #endif /* _SVG */
-          else if (!strcmp(name, "MathML"))
+          else if (!strcmp (name, "MathML"))
             {
-              newType.ElSSchema = elType.ElSSchema;
-              newType.ElTypeNum = 0;
-              attrType.AttrSSchema = elType.ElSSchema;
-              attrType.AttrTypeNum = aType;
               if (aType == HTML_ATTR_Class)
                 attrType.AttrTypeNum = MathML_ATTR_class;
               else if (aType == HTML_ATTR_Style_)
@@ -1477,6 +1469,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
     TtaOpenUndoSequence (doc, element, element, 0, 0);
 
   elType = TtaGetElementType (element);
+  attrType.AttrSSchema = elType.ElSSchema;
   s = TtaGetSSchemaName (elType.ElSSchema);
   isHTML = !strcmp (s, "HTML");
   isSVG = !strcmp (s, "SVG");
@@ -1486,7 +1479,6 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
     {
       if (isHTML)
         {
-          attrType.AttrSSchema = elType.ElSSchema;
           if (elType.ElTypeNum == HTML_EL_Block_Quote ||
               elType.ElTypeNum == HTML_EL_Quotation ||
               elType.ElTypeNum == HTML_EL_INS ||
@@ -1502,7 +1494,6 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 #ifdef _SVG
       else if (isSVG)
         {
-          attrType.AttrSSchema = elType.ElSSchema;
           attrType.AttrTypeNum = SVG_ATTR_xlink_href;
         }
 #endif /* _SVG */
