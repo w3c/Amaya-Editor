@@ -136,7 +136,6 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
 #else /* _MACOS */
   int           min_y = 0;
 #endif /* _MACOS */
-  ThotBool      value;
  
   if (window_id >= MAX_WINDOW)
     return 0; /* there is no more free windows */
@@ -209,17 +208,6 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
      the opengl canvas can't be correctly realized */
   TtaShowWindow( window_id, TRUE );
 
-  /* setup window panel   */
-  /* open or close panels */
-  if (kind == WXAMAYAWINDOW_NORMAL)
-    TtaGetEnvBoolean ("OPEN_PANEL", &value);
-  else
-    value = FALSE;
-  if (value)
-    p_window->ShowToolPanels();
-  else
-    p_window->HideToolPanels();
-  
   return window_id;
 #else
   return 0;

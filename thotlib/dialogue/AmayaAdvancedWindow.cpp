@@ -156,7 +156,11 @@ void AmayaAdvancedWindow::CleanUp()
 void AmayaAdvancedWindow::LoadConfig()
 {
   AmayaNormalWindow::LoadConfig();
-  
+  ThotBool open;
+
+  TtaGetEnvBoolean("OPEN_PANEL", &open);
+  m_bShowPanels = open;
+
   // Load tool states and positions.
   AmayaAdvanceToolPanelMap::iterator it;
   for(it = m_panels.begin(); it!=m_panels.end(); ++it )
@@ -169,7 +173,11 @@ void AmayaAdvancedWindow::LoadConfig()
     
     m_manager.LoadPaneInfo(str, m_manager.GetPane(it->second));
     
-//    m_manager.GetPane(it->second).TopDockable(false).BottomDockable(false);
+    name = wxT("OPEN_") + it->second->GetToolPanelConfigKeyName();
+    TtaGetEnvBoolean((const char*)name.mb_str(wxConvUTF8), &open);
+    it->second->SetVisibleFlag(open);
+    m_manager.GetPane(it->second).Show(open && m_bShowPanels);
+    
     
   }
   m_manager.Update();
@@ -411,6 +419,7 @@ void AmayaAdvancedWindow::HideToolPanels()
     pane.Hide();
   }
   m_manager.Update();
+  m_bShowPanels = false;
 }
 
 
@@ -427,9 +436,11 @@ void AmayaAdvancedWindow::ShowToolPanels()
   for(it = m_panels.begin(); it!=m_panels.end(); ++it )
   {
     wxAuiPaneInfo& pane = m_manager.GetPane(it->second);
-    pane.Show();
+    if(it->second->IsVisible())
+      pane.Show();
   }
   m_manager.Update();
+  m_bShowPanels = true;
 }
 
 
@@ -440,13 +451,7 @@ void AmayaAdvancedWindow::ShowToolPanels()
  -----------------------------------------------------------------------*/
 bool AmayaAdvancedWindow::ToolPanelsShown()
 {
-  AmayaAdvanceToolPanelMap::iterator it;
-  for(it = m_panels.begin(); it!=m_panels.end(); ++it )
-  {
-    if(it->second && it->second->IsShown())
-      return true;
-  }  
-  return false;
+  return m_bShowPanels;
 }
 
 

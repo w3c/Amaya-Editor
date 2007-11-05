@@ -83,6 +83,8 @@ private:
   AmayaAdvanceToolPanelMap m_panels;
   AmayaAdvanceToolPanelMap m_panelMenus;
   
+  bool m_bShowPanels;
+  
 };
 
 #endif /*AMAYAADVANCEDWINDOW_H__*/
