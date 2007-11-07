@@ -1101,6 +1101,8 @@ void UpdateSRCattribute (NotifyOnTarget *event)
       /* copy image name in ALT attribute */
       if (ImgAlt[0] != EOS)
         {
+          if (!CreateNewImage && !newAttr)
+            TtaRegisterAttributeReplace (attr, elSRC, doc);
 #ifdef _WX
           TtaSetAttributeText (attr, ImgAlt, elSRC, doc);
 #else /* _WX */
@@ -1110,13 +1112,8 @@ void UpdateSRCattribute (NotifyOnTarget *event)
           TtaFreeMemory (utf8value);
 #endif /* _WX */
         }
-      if (!CreateNewImage)
-        {
-          if (newAttr)
+      if (!CreateNewImage && newAttr)
             TtaRegisterAttributeCreate (attr, elSRC, doc);
-          else
-            TtaRegisterAttributeReplace (attr, elSRC, doc);
-        }
     }
 
   /* search the SRC attribute */
@@ -1132,7 +1129,10 @@ void UpdateSRCattribute (NotifyOnTarget *event)
       TtaAttachAttribute (el, attr, doc);
     }
   else
-    newAttr = FALSE;
+    {
+      newAttr = FALSE;
+      TtaRegisterAttributeReplace (attr, elSRC, doc);
+    }
 #ifdef _WX
   ComputeSRCattribute (el, doc, 0, attr, text);
 #else /* _WX */
@@ -1462,7 +1462,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
   NotifyOnTarget     event;
   char              *name, *value;
   int                c1, i, j, cN, length, width, height, w, h;
-  ThotBool           oldStructureChecking, newAttr;
+  ThotBool           oldStructureChecking, newAttr, checkdim = FALSE;
 
   TtaGiveFirstSelectedElement (doc, &firstSelEl, &c1, &i); 
   if (firstSelEl == NULL)
@@ -1484,6 +1484,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
            and only this element is selected */
         /* The user wants to replace an existing <img> */
         {
+	  checkdim = TRUE;
           /* get the value of the current src attribute for this image
              to initialize the image dialogue box */
           attrType.AttrSSchema = elType.ElSSchema;
@@ -1549,8 +1550,9 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
           CreateNewImage = FALSE;
           TtaOpenUndoSequence (doc, firstSelEl, lastSelEl, c1, cN);
           UpdateSRCattribute (&event);
-          TtaCloseUndoSequence(doc);
-          TtaSetDocumentModified (doc);
+	  TtaSetDocumentModified (doc);
+	  if (!checkdim)
+	    TtaCloseUndoSequence(doc);
         }
       else
         /* the user want to insert a new image */
@@ -1591,71 +1593,84 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
               oldStructureChecking = TtaGetStructureChecking (doc);
               TtaSetStructureChecking (FALSE, doc);
               TtaCreateElement (elType, doc);
-
-              // check if the width, height attributes must be generated
-              TtaGiveFirstSelectedElement (doc, &el, &c1, &i); 
-              elType = TtaGetElementType (el);
-              if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-                el = TtaGetParent (el);
-              attrType.AttrSSchema = elType.ElSSchema;
-              /* search informations about height and width */
-              width = 0; height = 0;
-              TtaGivePictureSize (el, &width, &height);
-              if (width > 0 && height > 0)
-                {
-                  /* attach height and width attributes to the image */
-                  TtaExtendUndoSequence (doc);
-                  value = (char *)TtaGetMemory (50);
-                  attrType.AttrTypeNum = HTML_ATTR_Width__;
-                  attr = TtaGetAttribute (el, attrType);
-                  if (attr == NULL)
-                    {
-                      newAttr = TRUE;
-                      attr = TtaNewAttribute (attrType);
-                      TtaAttachAttribute (el, attr, doc);
-                    }
-                  else
-                    newAttr = FALSE;
-                  // check if the image is larger than the window
-                  TtaGiveWindowSize (doc, 1, UnPixel, &w, &h);
-                  if (width < w)
-                    sprintf (value, "%d", width);
-                 else
-                    strcpy (value, "100%");
-                  TtaSetAttributeText (attr, value, el, doc);
-                  if (newAttr)
-                    TtaRegisterAttributeCreate (attr, el, doc);
-                  else
-                    TtaRegisterAttributeReplace (attr, el, doc);
-                  if (width < w)
-                    {
-                      attrType.AttrTypeNum = HTML_ATTR_Height_;
-                      attr = TtaGetAttribute (el, attrType);
-                      if (attr == NULL)
-                        {
-                          newAttr = TRUE;
-                          attr = TtaNewAttribute (attrType);
-                          TtaAttachAttribute (el, attr, doc);
-                        }
-                      else
-                        newAttr = FALSE;
-                      sprintf (value, "%d", height);
-                      TtaSetAttributeText (attr, value, el, doc);
-                      if (newAttr)
-                        TtaRegisterAttributeCreate (attr, el, doc);
-                      else
-                        TtaRegisterAttributeReplace (attr, el, doc);
-                    }
-                  else
-                    // generate the internal attribute to apply %
-                    CreateAttrWidthPercentPxl (value, el, doc, width);
-                  TtaFreeMemory (value);
-                  TtaCloseUndoSequence(doc);
-                  TtaUpdateAttrMenu (doc);
-                }
-              TtaSetStructureChecking (oldStructureChecking, doc);
-            }
-        }
+	      TtaSetStructureChecking (oldStructureChecking, doc);
+	      checkdim = TRUE;
+	    }
+	}
+    }
+  if (checkdim)
+    {
+      // check if the width, height attributes must be generated
+      TtaGiveFirstSelectedElement (doc, &el, &c1, &i); 
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	el = TtaGetParent (el);
+      attrType.AttrSSchema = elType.ElSSchema;
+      /* search informations about height and width */
+      width = 0; height = 0;
+      TtaGivePictureSize (el, &width, &height);
+      if (width > 0 && height > 0)
+	{
+	  /* attach height and width attributes to the image */
+	  TtaExtendUndoSequence (doc);
+	  value = (char *)TtaGetMemory (50);
+	  attrType.AttrTypeNum = HTML_ATTR_Width__;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr == NULL)
+	    {
+	      newAttr = TRUE;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (el, attr, doc);
+	    }
+	  else
+	    newAttr = FALSE;
+	  // check if the image is larger than the window
+	  TtaGiveWindowSize (doc, 1, UnPixel, &w, &h);
+	  if (width < w)
+	    sprintf (value, "%d", width);
+	  else
+	    strcpy (value, "100%");
+	  if (!newAttr)
+	    TtaRegisterAttributeReplace (attr, el, doc);
+	  TtaSetAttributeText (attr, value, el, doc);
+	  if (newAttr)
+	    TtaRegisterAttributeCreate (attr, el, doc);
+	  
+	  if (width < w)
+	    {
+	      attrType.AttrTypeNum = HTML_ATTR_Height_;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr == NULL)
+		{
+		  newAttr = TRUE;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (el, attr, doc);
+		}
+	      else
+		newAttr = FALSE;
+	      sprintf (value, "%d", height);
+	      if (!newAttr)
+		TtaRegisterAttributeReplace (attr, el, doc);
+	      TtaSetAttributeText (attr, value, el, doc);
+	      if (newAttr)
+		TtaRegisterAttributeCreate (attr, el, doc);
+	    }
+	  else
+	    {
+	      attrType.AttrTypeNum = HTML_ATTR_Height_;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr)
+		{
+		  TtaRegisterAttributeDelete (attr, el, doc);
+		  TtaRemoveAttribute (el, attr ,doc);
+		}
+	      // generate the internal attribute to apply %
+	      CreateAttrWidthPercentPxl (value, el, doc, width);
+	    }
+	  TtaFreeMemory (value);
+	  TtaCloseUndoSequence(doc);
+	  TtaUpdateAttrMenu (doc);
+	}
       ImgDocument = 0;
     }
 }
