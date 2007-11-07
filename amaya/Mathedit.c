@@ -2299,7 +2299,7 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 33)
         {
           /* Symbol under */
-          isbinary = va_arg(varpos, int);
+          isbinary = (va_arg(varpos, int) == 1);
           symboltype = va_arg(varpos, int);
           symbol = va_arg(varpos, int);
 
@@ -2585,7 +2585,7 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 43)
         {
           /* diagonalintersection ; limtendsto ; tendstotendsto */
-          isbinary = va_arg(varpos, int);
+          isbinary = (va_arg(varpos, int) == 1);
           symbol = va_arg(varpos, int);
           symbol2 = va_arg(varpos, int);
           
