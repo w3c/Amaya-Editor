@@ -23,7 +23,7 @@ AMAYA_MATH_INCLUDES=
 
 MATH_SCHEMAS= $(AMAYA)/MathML.S $(AMAYA)/MathMLP.P $(AMAYA)/MathMLT.T
 
-math_schema= compMATH compMATHP compMATHT
+math_schema= compMATH compMATHP compMATHT MathML.h
 
 #
 # Structure schema compilation.

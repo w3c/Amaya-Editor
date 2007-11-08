@@ -6,9 +6,31 @@
 
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
-WWWDAV = @WWWDAV@
 LIBWWW_RDF_PARSER = @LIBWWW_RDF_PARSER@
 LIBZ = @LIBZ@
+
+AMAYA_LIBWWW_LIBS = @LIBWWW_LDFLAGS@ \
+			-lwwwzip \
+			-lwwwapp \
+			-lwwwhtml \
+			-lwwwhttp \
+			-lwwwmime \
+			-lwwwftp \
+			-lwwwfile \
+			-lwwwdir \
+			-lwwwcache \
+			-lwwwstream \
+			-lwwwtrans \
+			-lwwwcore \
+			-lwwwutils \
+			-lmd5 \
+			-lexpat
+
+AMAYA_LIBWWW_INCLUDES = @LIBWWW_CFLAGS@
+
+AMAYA_DAV_LIBS = @AMAYA_DAV_LIBS@
+AMAYA_DAV_OPTIONS = @AMAYA_DAV_OPTIONS@
+AMAYA_DAV_INCLUDES = @AMAYA_DAV_INCLUDES@
 
 OBJDIRS = wxdialog
 
@@ -86,10 +108,6 @@ force :
 ../tools/mkdep/mkdep : 
 	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
 
-#../libraptor/.libs/libraptor.a \
-#amaya_comp_libraptor: @MAKERAPTOR@ force
-#	@(cd .. ; $(MAKE) libraptor CC="$(CC)" CFLAGS="-O2 -x c")
-
 ../redland/librdf/.libs/librdf.a \
 ../redland/raptor/.libs/libraptor.a \
 amaya_comp_redland: @MAKEREDLAND@ force
@@ -104,8 +122,13 @@ amaya_comp_redland: @MAKEREDLAND@ force
 #									#
 #########################################################################
 
-#include the fragment "amaya/Makefile.libwww" for libwww if configured in
-@www_frag@
+AMAYA_LIBWWW_OBJ= \
+	AHTBridge.o \
+	AHTFWrite.o \
+	answer.o \
+	query.o \
+	AHTMemConv.o \
+	AHTInit.o
 
 #include the fragment "amaya/Makefile.svg" for svg if configured in
 @svg_frag@
@@ -115,9 +138,6 @@ amaya_comp_redland: @MAKEREDLAND@ force
 
 #include the fragment "annotlib/Makefile.annot" for annotations if configured in
 @annot_frag@
-
-#include the fragment "davlib/Makefile.dav" for webdav if configured in
-@dav_frag@
 
 #include the fragment "amaya/Makefile.templates" for templates if configured in
 @templates_frag@

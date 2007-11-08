@@ -1373,13 +1373,14 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
 #ifdef TEMPLATES
   Document       doc = event->document;
   Element        elem = event->element;
-  Element        xtElem, parent;
-  Element        sibling, leaf;
+  Element        xtElem, parent, sibling, leaf;
   ElementType    xtType, elType;
   char*          type;
   Declaration    dec;
   SSchema        templateSSchema;
   XTigerTemplate t;
+  int            pos;
+  ThotBool       selparent = FALSE;
 
   if(event->info==1)
     return FALSE;
@@ -1431,23 +1432,24 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
     }
     else if (xtType.ElTypeNum==Template_EL_repeat)
     {
-      sibling = TtaGetSuccessor(elem);
+      sibling = TtaGetSuccessor (elem);
+      if (sibling == NULL)
+        {
+          // there is no next element
+          sibling = TtaGetPredecessor (elem);
+          if (sibling == NULL)
+            selparent = TRUE;
+        }
       TtaRegisterElementDelete(elem, doc);
       TtaDeleteTree(elem, doc);
       InstantiateRepeat(t, xtElem, doc, TRUE);
-      leaf = TtaGetFirstLeaf (sibling);
-      elType = TtaGetElementType (leaf);
-      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-        {
-          if (!CheckPromptIndicator (leaf, doc))
-           TtaSelectString (doc, leaf, 1, 0);
-        }
+      if (selparent)
+        // look for the new sibling
+        sibling = TtaGetFirstChild (parent);
+      if (sibling)
+        TtaSelectElement(doc, sibling);
       else
-        {
-          if (leaf)
-            sibling = leaf;
-          TtaSelectElement(doc, sibling);
-        }
+        TtaSelectElement(doc, parent);
       return TRUE;
     }
   }
