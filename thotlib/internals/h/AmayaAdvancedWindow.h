@@ -83,7 +83,8 @@ private:
   AmayaAdvanceToolPanelMap m_panels;
   AmayaAdvanceToolPanelMap m_panelMenus;
   
-  bool m_bShowPanels;
+  bool     m_bShowPanels;
+  wxString m_strPanelPerspective;
   
 };
 

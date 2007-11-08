@@ -5,6 +5,7 @@
 #include "wx/tglbtn.h"
 #include "wx/string.h"
 #include "wx/spinctrl.h"
+#include "wx/tokenzr.h"
 #include "wx/xrc/xmlres.h"
 
 #include "thot_gui.h"
@@ -105,19 +106,19 @@ bool AmayaAdvancedWindow::Initialize()
   
   // Create the notebook
   m_notebook = new AmayaAdvancedNotebook(this, wxID_ANY );
-  m_manager.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("AmayaAdvancedNotebook")).
-                                    CenterPane().PaneBorder(false));
-
-  
-  // Add toolbars to AUI
-  if(HaveToolBarBrowsing())
-    m_manager.AddPane(GetToolBarBrowsing(), wxAuiPaneInfo().
-                  Name(wxT("Browsing")).Caption(wxT("Browsing")).ToolbarPane().Top().
-                  Gripper(false).Row(0).Floatable(false).PaneBorder(false));
-  if(HaveToolBarEditing())
-    m_manager.AddPane(GetToolBarEditing(), wxAuiPaneInfo().
-                  Name(wxT("Edition")).Caption(wxT("Edition")).ToolbarPane().Top().
-                  Gripper(false).Row(1).Floatable(false).PaneBorder(false));
+//  m_manager.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("AmayaAdvancedNotebook")).
+//                                    CenterPane().PaneBorder(false));
+//
+//  
+//  // Add toolbars to AUI
+//  if(HaveToolBarBrowsing())
+//    m_manager.AddPane(GetToolBarBrowsing(), wxAuiPaneInfo().
+//                  Name(wxT("Browsing")).Caption(wxT("Browsing")).ToolbarPane().Top().
+//                  Gripper(false).Row(0).Floatable(false).PaneBorder(false));
+//  if(HaveToolBarEditing())
+//    m_manager.AddPane(GetToolBarEditing(), wxAuiPaneInfo().
+//                  Name(wxT("Edition")).Caption(wxT("Edition")).ToolbarPane().Top().
+//                  Gripper(false).Row(1).Floatable(false).PaneBorder(false));
 
   wxAuiDockArt* art = m_manager.GetArtProvider();
   if(art)
@@ -157,16 +158,21 @@ void AmayaAdvancedWindow::LoadConfig()
 {
   AmayaNormalWindow::LoadConfig();
   ThotBool open;
+  wxString str, name;
 
   TtaGetEnvBoolean("OPEN_PANEL", &open);
   m_bShowPanels = open;
 
+  str = TtaConvMessageToWX(TtaGetEnvString("AUI_DECORATION"));
+  if(!str.IsEmpty())
+    m_manager.LoadPerspective(str, false);
+  
   // Load tool states and positions.
   AmayaAdvanceToolPanelMap::iterator it;
   for(it = m_panels.begin(); it!=m_panels.end(); ++it )
   {
-    wxString name = wxT("AUI_") + it->second->GetToolPanelConfigKeyName();
-    wxString str = TtaConvMessageToWX(TtaGetEnvString((const char*)name.mb_str(wxConvUTF8)));
+    name = wxT("AUI_") + it->second->GetToolPanelConfigKeyName();
+    str = TtaConvMessageToWX(TtaGetEnvString((const char*)name.mb_str(wxConvUTF8)));
     
     if(str.Trim().IsEmpty())
       str = it->second->GetDefaultAUIConfig();
@@ -177,9 +183,23 @@ void AmayaAdvancedWindow::LoadConfig()
     TtaGetEnvBoolean((const char*)name.mb_str(wxConvUTF8), &open);
     it->second->SetVisibleFlag(open);
     m_manager.GetPane(it->second).Show(open && m_bShowPanels);
-    
-    
   }
+
+ 
+  m_manager.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("AmayaAdvancedNotebook")).
+                                    CenterPane().PaneBorder(false));
+  // Add toolbars to AUI
+  if(HaveToolBarBrowsing())
+    m_manager.AddPane(GetToolBarBrowsing(), wxAuiPaneInfo().
+                  Name(wxT("Browsing")).Caption(wxT("Browsing")).ToolbarPane().Top().
+                  Gripper(false).Row(0).Floatable(false).PaneBorder(false));
+  if(HaveToolBarEditing())
+    m_manager.AddPane(GetToolBarEditing(), wxAuiPaneInfo().
+                  Name(wxT("Edition")).Caption(wxT("Edition")).ToolbarPane().Top().
+                  Gripper(false).Row(1).Floatable(false).PaneBorder(false));
+
+  
+  
   m_manager.Update();
 
   // Add menu items
@@ -218,6 +238,7 @@ void AmayaAdvancedWindow::OnToggleToolPanelMenu(wxCommandEvent& event)
 
 void AmayaAdvancedWindow::OnUpdateToolPanelMenu(wxUpdateUIEvent& event)
 {
+  event.Enable(m_bShowPanels);
   event.Check(m_manager.GetPane(m_panelMenus[event.GetId()]).IsShown());
 }
 
@@ -229,20 +250,37 @@ void AmayaAdvancedWindow::OnUpdateToolPanelMenu(wxUpdateUIEvent& event)
  -----------------------------------------------------------------------*/
 void AmayaAdvancedWindow::SaveConfig()
 {
+  wxString str, name;
+  
   // Save tool states and positions.
   AmayaAdvanceToolPanelMap::iterator it;
   for(it = m_panels.begin(); it!=m_panels.end(); ++it )
   {
     if(it->second)
       {
-        wxString str = m_manager.SavePaneInfo(m_manager.GetPane(it->second)),
-                 name = wxT("AUI_") + it->second->GetToolPanelConfigKeyName();
+        str = m_manager.SavePaneInfo(m_manager.GetPane(it->second));
+        name = wxT("AUI_") + it->second->GetToolPanelConfigKeyName();
         
         TtaSetEnvString((const char*)name.mb_str(wxConvUTF8),
                         (char*)(const char*)str.mb_str(wxConvUTF8), TRUE);
       }
   }
 
+  // Little hack to save manager perspective without panel description.
+  str = m_manager.SavePerspective();
+  wxStringTokenizer tkz(str, wxT("|"));
+  str = wxT("");
+  while ( tkz.HasMoreTokens() )
+  {
+    wxString token = tkz.GetNextToken();
+    if(token.Find(wxT("name="))==wxNOT_FOUND)
+      str += wxT("|") + token;
+  }
+  if(str[0]==wxT('|'))
+    str.Remove(0, 1);
+  TtaSetEnvString("AUI_DECORATION", (char*)(const char*)str.mb_str(wxConvUTF8), TRUE);
+
+  // Commit config
   AmayaNormalWindow::SaveConfig();
 }
 
@@ -412,6 +450,8 @@ void AmayaAdvancedWindow::HideToolPanels()
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaAdvancedWindow::HideToolPanels") );
 
+  m_strPanelPerspective = m_manager.SavePerspective();
+  
   AmayaAdvanceToolPanelMap::iterator it;
   for(it = m_panels.begin(); it!=m_panels.end(); ++it )
   {
@@ -439,7 +479,8 @@ void AmayaAdvancedWindow::ShowToolPanels()
     if(it->second->IsVisible())
       pane.Show();
   }
-  m_manager.Update();
+  m_manager.LoadPerspective(m_strPanelPerspective);
+//  m_manager.Update();
   m_bShowPanels = true;
 }
 
