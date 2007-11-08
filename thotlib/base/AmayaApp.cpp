@@ -77,7 +77,7 @@ int AmayaApp::AttrList[] =
   WX_GL_STENCIL_SIZE, 1,
   WX_GL_DOUBLEBUFFER,
 #ifdef _WINDOWS
-//  WX_GL_NOT_ACCELERATED, /* don't change the position of this entry (12) */
+  WX_GL_NOT_ACCELERATED, /* don't change the position of this entry (12) */
 #endif /* _WINDOWS */
   0
 };
@@ -212,7 +212,7 @@ bool AmayaApp::OnInit()
           wxPrintf(_T("FATAL ERROR : Your OpenGL implementation does not support needed features!\n"));
           wxExit();
         }
-    }
+  }
   TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - A valide opengl configuration has been found."));
 #endif /* _GL */
   
@@ -303,6 +303,10 @@ bool AmayaApp::OnInit()
   SetupDocumentIconList();
 #endif /* _GLPRINT */
   m_AmayaIsInit = true;
+
+  // Log window.
+//  new wxLogWindow(NULL, wxT("Amaya traces"));
+
   return true;
 }
 
@@ -491,8 +495,8 @@ int * AmayaApp::GetGL_AttrList()
   TtaGetEnvBoolean("GL_ACCELERATED", &gl_accelerated);
   if (gl_accelerated)
     AttrList[12] = 0; /* ok enable opengl hardware acceleration */
-  else
-    AttrList[12] = 0;//WX_GL_NOT_ACCELERATED; /* disable opengl hardware acceleration */
+  //else
+  //  AttrList[12] = 0;//WX_GL_NOT_ACCELERATED; /* disable opengl hardware acceleration */
 #endif /* _WINDOWS */
   return AttrList;
 }
