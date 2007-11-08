@@ -1586,7 +1586,7 @@ void TtcCreateElement (Document doc, View view)
       InsertChar (GetWindowNumber (doc, view), '\n', -1);
       CloseTextInsertion ();
     }
-  else if (firstSel->ElParent && !ElementIsReadOnly (firstSel->ElParent))
+  else if (firstSel && firstSel->ElParent && !ElementIsReadOnly (firstSel->ElParent))
     {
       /* lock the table formatting */
       TtaGiveTableFormattingLock (&lock);
