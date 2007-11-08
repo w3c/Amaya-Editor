@@ -867,7 +867,8 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                 {
                   elType = TtaGetElementType (el);
                   skip = FALSE;
-                  if (aType != HTML_ATTR_Style_ && aType != HTML_ATTR_Class)
+                  if (aType != HTML_ATTR_Style_ && aType != HTML_ATTR_Class
+                      && aType != HTML_ATTR_ID)
                     {
                       // generate inline element
                       while (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
