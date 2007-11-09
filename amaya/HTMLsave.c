@@ -1511,7 +1511,7 @@ void SetNamespacesAndDTD (Document doc)
 #ifdef ANNOTATIONS
       (DocumentTypes[doc] == docAnnot && ANNOT_bodyType (doc) == docHTML) ||
 #endif /* ANNOTATIONS */
-      DocumentTypes[doc] == docHTML)
+      DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docTemplate)
     {
       /* delete the previous PI attribute */
       attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);

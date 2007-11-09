@@ -359,6 +359,17 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnUseTemplate( wxCommandEvent& event )
 {
+  // the user cannot change the profile of a template
+  if (m_UseTemplate)
+    {
+      XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Show();
+      XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Show();
+    }
+  else
+    {
+      XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Hide();
+      XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Hide();
+    }
   m_UseTemplate = !m_UseTemplate;
 }
 
@@ -461,6 +472,7 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
     }
 
   // give the new url to amaya (to do url completion)
+  ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)docname);
   if (temp[0] != EOS)
     {
       CreateInstanceOfTemplate (Ref_doc, temp, docname);
@@ -469,7 +481,6 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
     }
   else
     {
-      ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)docname);
       // return done
       Waiting = 0;
       // create or load the new document

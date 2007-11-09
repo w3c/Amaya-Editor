@@ -192,7 +192,8 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
   DocumentType      docType;
   ElementType       elType;
   Element           root, title, text;
-  char             *localFile, *s;
+  CHARSET           charset;
+  char             *localFile, *s, *charsetname;
 
   XTigerTemplate t = GetXTigerTemplate(templatePath);
   if (t == NULL)
@@ -208,11 +209,8 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
     newdoc = TtaGetNextDocumentIndex ();
   else
     newdoc = basedoc;
-#ifndef IV
+
   localFile = GetLocalPath (newdoc, instancePath);
-#else
-  localFile = TtaStrdup (instancePath);
-#endif
   if (!TtaPrepareUndo (doc))
     {
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
@@ -265,6 +263,18 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
                 // Look for the first text child
                 TtaNextSibling (&text);
             }
+        
+          // update the charset if needed
+          charsetname = TtaGetEnvString ("DOCUMENT_CHARSET");
+          charset = TtaGetCharset (charsetname);
+          if (charset != UNDEFINED_CHARSET && strcmp (charsetname, DocumentMeta[doc]->charset))
+            {
+              TtaSetDocumentCharset (doc, charset, FALSE);
+              DocumentMeta[doc]->charset = TtaStrdup (charsetname);
+              SetNamespacesAndDTD (doc);
+            }
+
+          // export the document
           if (TtaGetDocumentProfile(doc) == L_Xhtml11 ||
               TtaGetDocumentProfile(doc) == L_Basic)
             TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLT11");
@@ -280,14 +290,9 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
       TtaUndoNoRedo (doc);
       TtaClearUndoHistory (doc);
       RemoveParsingErrors (doc);
-
-#ifndef IV
       GetAmayaDoc (instancePath, NULL, basedoc, basedoc, CE_INSTANCE,
                    !DontReplaceOldDoc, NULL, NULL);
       TtaSetDocumentModified (newdoc);
-#else
-      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-#endif
     }
   TtaFreeMemory (localFile);
 #endif /* TEMPLATES */
@@ -1022,9 +1027,9 @@ void DoInstanceTemplate (char *templatename)
   XTigerTemplate  t;
   ElementType     elType;
   Element         root, piElem, doctype, elFound, text;
+  Document        doc;
   char           *s, *charsetname = NULL, buffer[MAX_LENGTH];
   int             pi_type;
-  Document        doc;
 
   //Instantiate all elements
   t = GetXTigerTemplate(templatename);
@@ -1066,6 +1071,7 @@ void DoInstanceTemplate (char *templatename)
       elType.ElTypeNum = XML_EL_doctype;
       pi_type = XML_EL_xmlpi;
     }
+
   doctype = TtaSearchTypedElement (elType, SearchInTree, root);
   if (!doctype)
     {
