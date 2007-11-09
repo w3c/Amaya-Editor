@@ -14,9 +14,7 @@
 
 /* Included headerfiles */
 
-#ifdef _WX
-  #include "wx/wx.h"
-#endif /* _WX */
+#include "wx/wx.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern /* defined into css.c */
@@ -40,84 +38,28 @@
 #include "templateDeclarations_f.h"
 #endif /* TEMPLATES */
 
-#ifdef _GTK
-  #include "gtkdialogapi.h"
-  extern char      LostPicturePath [MAX_LENGTH];
-#endif /* _GTK */
 #ifdef _WINDOWS
   #include <commctrl.h>
   extern char      LostPicturePath [MAX_LENGTH];
 #endif /* _WINDOWS */
-#ifdef _WINGUI
-  #include "resource.h"
-#endif /* _WINGUI */
-#ifdef _WX
-  #include "message_wx.h"
-  #include "wxdialogapi_f.h"
-  #include "windowtypes_wx.h"
-  #include "paneltypes_wx.h"
-  #include "registry_wx.h"
-  #include "appdialogue_wx.h"
-  #include "AmayaWindowIterator.h"
-  #include "AmayaParams.h"
-  #include "Elemlist.h"
-  
-  #include "wxdialog/SendByMailDlgWX.h"
-  #include "email.h"
-  #include "javascript_f.h"
-  extern XmlEntity *pMathEntityTable;
-#endif /* _WX */
+
+#include "message_wx.h"
+#include "wxdialogapi_f.h"
+#include "windowtypes_wx.h"
+#include "paneltypes_wx.h"
+#include "registry_wx.h"
+#include "appdialogue_wx.h"
+#include "AmayaWindowIterator.h"
+#include "AmayaParams.h"
+#include "Elemlist.h"
+
+#include "wxdialog/SendByMailDlgWX.h"
+#include "email.h"
+#include "javascript_f.h"
+extern XmlEntity *pMathEntityTable;
 
 #include "appdialogue_wx.h"
   
-#if defined(_GTK)
-#include "stopN.xpm"
-#include "stopR.xpm"
-#include "save.xpm"
-#include "saveNo.xpm"
-#include "find.xpm"
-#include "Reload.xpm"
-#include "Print.xpm"
-#include "Back.xpm"
-#include "BackNo.xpm"
-#include "Forward.xpm"
-#include "ForwardNo.xpm"
-#include "I.xpm"
-#include "INo.xpm"
-#include "B.xpm"
-#include "BNo.xpm"
-#include "T.xpm"
-#include "TNo.xpm"
-#include "H1.xpm"
-#include "H1No.xpm"
-#include "H2.xpm"
-#include "H2No.xpm"
-#include "H3.xpm"
-#include "H3No.xpm"
-#include "Num.xpm"
-#include "NumNo.xpm"
-#include "Bullet.xpm"
-#include "BulletNo.xpm"
-#include "Image.xpm"
-#include "ImageNo.xpm"
-#include "DL.xpm"
-#include "DLNo.xpm"
-#include "Link.xpm"
-#include "LinkNo.xpm"
-#include "Table.xpm"
-#include "TableNo.xpm"
-#include "home.xpm"
-#endif /* #if defned(_GTK) */
-
-#ifdef _WINGUI
-/*
-  #ifndef __GNUC__
-  #include <direct.h>
-  #endif 
-*/
-int             Window_Curs;
-char            DocToOpen[MAX_LENGTH];
-#endif /* _WINGUI */
 
 static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
@@ -133,7 +75,6 @@ static ThotBool     WelcomePage = FALSE;
    document view twice */
 static int          Loading_method = CE_INIT;
 
-#if defined(_GTK) || defined(_WX)
 static ThotIcon       stopR;
 static ThotIcon       stopN;
 static ThotIcon       iconSave;
@@ -172,55 +113,8 @@ static ThotIcon       iconLinkNo;
 static ThotIcon       iconTable;
 static ThotIcon       iconTableNo;
 static ThotIcon       iconHome;
-#ifdef _WX
 static ThotIcon       iconLogo;
-#endif /* _WX */
-#endif /* #if defined(_GTK) || defined(_WX) */
 
-#ifdef _WINGUI
-#define stopR          0
-#define stopN          0
-#define iconBack       1
-#define iconBackNo     1
-#define iconForward    2
-#define iconForwardNo  2
-#define iconReload     3
-#define iconSave       4
-#define iconSaveNo     4
-#define iconSaveAll    5
-#define iconSaveAllNo  5
-#define iconPrint      6
-#define iconFind       7
-#define iconI          8
-#define iconINo        8
-#define iconB          9
-#define iconBNo        9
-#define iconT         10
-#define iconTNo       10
-#define iconHome      11
-#define iconImage     12
-#define iconImageNo   12
-#define iconH1        13
-#define iconH1No      13
-#define iconH2        14
-#define iconH2No      14
-#define iconH3        15
-#define iconH3No      15
-#define iconBullet    16
-#define iconBulletNo  16
-#define iconNum       17
-#define iconNumNo     17
-#define	iconDL        18
-#define	iconDLNo      18
-#define iconLink      19
-#define iconLinkNo    19
-#define iconTable     20
-#define iconTableNo   20
-
-extern int       menu_item;
-
-#include "wininclude.h"
-#endif /* _WINGUI */
 #include "MENUconf.h"
 #include "AHTURLTools_f.h"
 #include "css_f.h"
@@ -263,9 +157,8 @@ extern int       menu_item;
 #ifdef BOOKMARKS
 #include "BMevent_f.h"
 #endif /* BOOKMARKS */
-#ifdef _WX
+
 #include "wxdialogapi_f.h"
-#endif /* _WX */
 
 #ifdef DAV
 #define WEBDAV_EXPORT extern
@@ -278,9 +171,7 @@ extern int       menu_item;
 extern void InitMathML ();
 extern void InitTemplates ();
 
-#ifdef _WX
 static int AmayaPopupDocContextMenu(int document, int window, wxWindow* win, int x, int y);
-#endif /* _WX */
 
 typedef enum
   {
@@ -423,118 +314,6 @@ char * DocumentTypeString (Document document)
   ----------------------------------------------------------------------*/
 void DocumentInfo (Document document, View view)
 {
-#if defined(_GTK)
-  char         *content;
-
-  /* Main form */
-  TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
-               "Document Information",
-               0, NULL, FALSE, 8, 'L', D_DONE);
-
-  /* Document information labels */
-  TtaNewLabel (BaseDialog + DocInfoTitle1,
-               BaseDialog + DocInfoForm,
-               "________________");
-
-  /* Document URL */
-  TtaNewLabel (BaseDialog + DocInfoURLTitle,
-               BaseDialog + DocInfoForm,
-               TtaGetMessage (AMAYA, AM_HREF_VALUE));
-
-  /* Document type */
-  TtaNewLabel (BaseDialog + DocInfoDocTypeTitle,
-               BaseDialog + DocInfoForm,
-               "Document Type");
-
-  /* Mime Type */
-  TtaNewLabel (BaseDialog + DocInfoMimeTypeTitle,
-               BaseDialog + DocInfoForm,
-               "MIME Type");
-  /* Charset */
-  TtaNewLabel (BaseDialog + DocInfoCharsetTitle,
-               BaseDialog + DocInfoForm,
-               "Charset");
-
-  /* Content Length */
-  TtaNewLabel (BaseDialog + DocInfoContentTitle,
-               BaseDialog + DocInfoForm,
-               "Content Length");
-
-  /* Content Location */
-  TtaNewLabel (BaseDialog + DocInfoLocationTitle,
-               BaseDialog + DocInfoForm,
-               "Content Location");
-
-  TtaNewLabel (BaseDialog + DocInfoTitle2,
-               BaseDialog + DocInfoForm,
-               "________________");
-
-  /* Document information contents */
-  TtaNewLabel (BaseDialog + DocInfoContent1,
-               BaseDialog + DocInfoForm,
-               "___________________________________________");
-  /* Document URL */
-  if (DocumentURLs[document] != NULL)
-    content = DocumentURLs[document];
-  else
-    content = TtaGetMessage (AMAYA, AM_UNKNOWN);
-  TtaNewLabel (BaseDialog + DocInfoURL,
-               BaseDialog + DocInfoForm, content);
-
-  /* Document Type */
-  content = DocumentTypeString (document);
-  if (!content)
-    content = TtaGetMessage (AMAYA, AM_UNKNOWN);
-  TtaNewLabel (BaseDialog + DocInfoDocType,
-               BaseDialog + DocInfoForm, content);
-
-  /* Mime Type */
-  if (DocumentMeta[document] && DocumentMeta[document]->content_type)
-    content = DocumentMeta[document]->content_type;
-  else
-    content = TtaGetMessage (AMAYA, AM_UNKNOWN);
-  TtaNewLabel (BaseDialog + DocInfoMimeType,
-               BaseDialog + DocInfoForm, content);
-
-  /* Charset */
-  if (DocumentMeta[document] && DocumentMeta[document]->charset != NULL)
-    content = DocumentMeta[document]->charset;
-  else
-    content = TtaGetMessage (AMAYA, AM_UNKNOWN);
-  TtaNewLabel (BaseDialog + DocInfoCharset,
-               BaseDialog + DocInfoForm, content);
-
-  /* Content Length */
-  if (DocumentMeta[document] && DocumentMeta[document]->content_length)
-    content = DocumentMeta[document]->content_length;
-  else
-    content = TtaGetMessage (AMAYA, AM_UNKNOWN);
-  TtaNewLabel (BaseDialog + DocInfoContent,
-               BaseDialog + DocInfoForm, content);
-
-  /* Content Location */
-  if (DocumentMeta[document] 
-      && DocumentMeta[document]->full_content_location != NULL)
-    content = DocumentMeta[document]->full_content_location;
-  else
-    content = TtaGetMessage (AMAYA, AM_UNKNOWN);
-  TtaNewLabel (BaseDialog + DocInfoLocation,
-               BaseDialog + DocInfoForm, content);
-
-  /* end of dialogue */
-  TtaNewLabel (BaseDialog + DocInfoContent2,
-               BaseDialog + DocInfoForm,
-               "___________________________________________");
-
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + DocInfoForm, TRUE);
-#endif /* #if defined(_GTK) */
-   
-#ifdef _WINGUI
-  CreateDocumentInfoDlgWindow (TtaGetViewFrame (document, view),
-                               document);
-#endif /* _WINGUI */
-#ifdef _WX
   ThotBool created = CreateDocInfoDlgWX (BaseDialog + DocInfoForm,
                                          TtaGetViewFrame (document, view), document);
   if (created)
@@ -544,7 +323,6 @@ void DocumentInfo (Document document, View view)
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -699,11 +477,6 @@ void SetArrowButton (Document doc, ThotBool back, ThotBool on)
             TtaSetItemOff (DocumentSource[doc], 1, File, BForward);
         }
     }
-#ifndef _WX
-  TtaChangeButton (doc, 1, index, picture, state);
-  if (DocumentSource[doc])
-    TtaChangeButton (DocumentSource[doc], 1, index, picture, state);
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -726,11 +499,7 @@ void ResetStop (Document document)
                 /* if there was no error message, display the LOADED message */
                 TtaSetStatus (document, 1,
                               TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-#ifndef _WX
-              TtaChangeButton (document, 1, iStop, stopN, FALSE);
-#else /* _WX */
               TtaEnableAction(document, "StopTransfer", FALSE);
-#endif /* _WX */
             }
           DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
         }
@@ -748,11 +517,7 @@ void ActiveTransfer (Document document)
       FilesLoading[document] = 1;
       if (TtaGetViewFrame (document, 1) != 0)
         /* this document is displayed */
-#ifndef _WX
-        TtaChangeButton (document, 1, iStop, stopR, TRUE);
-#else /* _WX */
         TtaEnableAction(document, "StopTransfer", TRUE);
-#endif /* _WX */
     }
 }
 
@@ -772,12 +537,7 @@ void SetStopButton (Document document)
         }
 
       if (TtaGetViewFrame (document, 1) != 0)
-#ifndef _WX
-        /* this document is displayed */
-        TtaChangeButton (document, 1, iStop, stopR, TRUE);
-#else /* _WX */
         TtaEnableAction(document, "StopTransfer", TRUE);
-#endif /* _WX */
     }
 }
 
@@ -837,9 +597,6 @@ void DocStatusUpdate (Document doc, ThotBool modified)
 #ifdef _JAVA
       StopJavascript (doc);
 #endif /* _JAVA */
-#ifndef _WX
-      TtaChangeButton (doc, 1, iSave, iconSave, TRUE);
-#endif /* _WX */
        /* if we have a pair source/structured document allow synchronization */
       otherDoc = DocumentSource[doc];
       if (!otherDoc)
@@ -862,10 +619,6 @@ void DocStatusUpdate (Document doc, ThotBool modified)
       TtaSetItemOff (doc, 1, File, BSave);
       if (NoDocumentModified) TtaSetItemOff (doc, 1, File, BSaveAll);
 
-#ifndef _WX
-      TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
-      if (NoDocumentModified) TtaChangeButton (doc, 1, iSaveAll, iconSaveAllNo, FALSE);
-#endif /* _WX */
       if (TtaIsDocumentUpdated (doc))
         {
           /* if we have a pair source/structured document allow synchronization */
@@ -1081,7 +834,6 @@ void UpdateEditorMenus (Document doc)
 
   /* Update the doctype menu */
   UpdateDoctypeMenu (doc);
-#ifdef _WX
   /* structure information is active only in the structure view */
   if (profile == L_Basic)
     {
@@ -1095,7 +847,6 @@ void UpdateEditorMenus (Document doc)
       TtaSetItemOn (doc, 1, Types, BScript);
       TtaSetItemOn (doc, 1, Types, BNoScript);
     }
-#endif /* _WX */
   /* invalid all table edits as long as the selection is out of a table */
   if (TtaIsDocumentSelected (doc))
     SetTableMenuOn (doc, 1);
@@ -1301,19 +1052,14 @@ void CheckParsingErrors (Document doc)
   char      *ptr;
   char       fileName[200];
   char       text [200];
-#ifndef _WX
-  int        prof;
-#endif /* _WX */
   ThotBool   closeLog = FALSE;
 
   // Avoid recursive call
   if (CriticCheckError)
     return;
   CriticCheckError = TRUE;
-#ifndef _WINGUI
   CloseLogs (doc);
   closeLog = TRUE;
-#endif /* _WINGUI */
 
   if (BADMimeType)
     {
@@ -1413,59 +1159,6 @@ void CheckParsingErrors (Document doc)
                     }
             }
         }
-#ifndef _WX
-      else if (XMLErrorsFoundInProfile)
-        {
-          /* Some elements or attributes are not supported */
-          /* in the current document profile */
-          prof = TtaGetDocumentProfile (doc);
-          if (prof == L_Basic)
-            {
-              strcpy (text, TtaGetMessage (AMAYA, AM_XML_PROFILE));
-              strcat (text, " XHTML Basic");
-            }
-          else if (prof == L_Strict)
-            {
-              strcpy (text, TtaGetMessage (AMAYA, AM_XML_PROFILE));
-              if (DocumentMeta[doc]->xmlformat)
-                strcat (text, " XHTML 1.0 Strict");
-              else
-                strcat (text, " HTML 4.0 Strict");
-            }
-          else if (prof == L_Xhtml11)
-            {
-              strcpy (text, TtaGetMessage (AMAYA, AM_XML_PROFILE));
-              strcat (text, " XHTML 1.1");
-            }
-          else
-            strcpy (text, "");
-
-          InitConfirm3L (doc, 1, text, NULL,
-                         TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
-          CleanUpParsingErrors ();
-          if (UserAnswer)
-            {
-              CloseLogs (doc);
-              closeLog = TRUE;
-              ShowLogFile (doc, 1);
-              ShowSource (doc, 1);
-            }
-        }
-      else if (XMLErrorsFound)
-        {
-          /* Parsing errors detected */
-          strcpy (text, "");
-          InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_XML_WARNING));
-          CleanUpParsingErrors ();
-          if (UserAnswer)
-            {
-              CloseLogs (doc);
-              closeLog = TRUE;
-              ShowLogFile (doc, 1);
-              ShowSource (doc, 1);
-            }
-        }
-#endif /* _WX */
       CleanUpParsingErrors ();
       if (!closeLog)
         {
@@ -1517,11 +1210,7 @@ void StopTransfer (Document document, View view)
   else if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
     {
       if (TtaGetViewFrame (document, 1) != 0)
-#ifndef _WX
-        TtaChangeButton (document, 1, iStop, stopN, FALSE);
-#else /* _WX */
       TtaEnableAction(document, "StopTransfer", FALSE);
-#endif /* _WX */
       StopRequest (document);
       FilesLoading[document] = 0;
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
@@ -1718,53 +1407,6 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
 {
   char      name[MAX_LENGTH];
   char      passwd[MAX_LENGTH];
-  
-#ifdef _GTK
-  char *label;
-
-  name[0] = EOS;
-  passwd[0] = EOS;
-  GetPasswordTable (i_auth, &name[0], &passwd[0]);
-
-  TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 
-              TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION),
-              TRUE, 1, 'L', D_CANCEL);
-
-  label = (char *)TtaGetMemory (((server) ? strlen (server) : 0)
-                                + strlen (TtaGetMessage (AMAYA, 
-                                                         AM_AUTHENTICATION_REALM_SERVER))
-                                + ((auth_realm) ? strlen (auth_realm) : 0)
-                                + 20); /*a bit more than enough memory */
-  sprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM_SERVER),
-           ((auth_realm) ? auth_realm : ""), 
-           ((server) ? server : ""));
-  TtaNewLabel (BaseDialog + RealmText, BaseDialog + FormAnswer,
-               label);
-  TtaFreeMemory (label);
-   
-  TtaNewTextForm (BaseDialog + NameText, BaseDialog + FormAnswer,
-                  TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
-  TtaNewPwdForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
-                 TtaGetMessage (AMAYA, AM_PASSWORD), NAME_LENGTH, 1, TRUE);
-   
-  TtaSetTextForm (BaseDialog + NameText, Answer_name);
-  TtaSetTextForm (BaseDialog + PasswordText, Answer_password);
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
-  TtaWaitShowDialogue ();
-  if (UserAnswer &&
-      (Answer_name[0] == EOS || Answer_password[0] == EOS))
-    {
-      /* no login name or password, retry */
-      TtaSetTextForm (BaseDialog + NameText, Answer_name);
-      TtaSetTextForm (BaseDialog + PasswordText, Answer_password);
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
-      TtaWaitShowDialogue ();
-    }
-#endif /* _GTK */
-
-#ifdef _WX
   ThotBool  created;
 
   name[0] = EOS;
@@ -1780,12 +1422,6 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
       TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
     }
   TtaWaitShowDialogue ();
-#endif /* _WX */
-#ifdef _WINGUI
-  CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view),
-                                 (char *)auth_realm, server);
-#endif /* _WINGUI */
-
 }
 
 
@@ -1797,12 +1433,7 @@ void InitInfo (char *label, char *info)
 {
   if (!info || *info == EOS)
     return;
-#ifdef _WINGUI   
-  MessageBox (NULL, info, label, MB_OK);
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)  
   TtaDisplayMessage (CONFIRM, info, NULL);
-#endif /* #if defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -1810,34 +1441,6 @@ void InitInfo (char *label, char *info)
 void ConfirmError (Document document, View view, char *label,
                    char *extrabutton, char *confirmbutton)
 {
-#ifdef _GTK
-  char      s[MAX_LENGTH];
-  int       i, n;
-
-  i = 0;
-  n = 0;
-  if (confirmbutton)
-    {
-      strcpy (&s[i], confirmbutton);
-      i += strlen (&s[i]) + 1;
-      n++;
-    }
-  if (extrabutton)
-    {
-      /* display 3 buttons: extrabutton - show - cancel */
-      strcpy (&s[i], extrabutton);
-      n++;
-    }
-  TtaNewSheet (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
-               TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
-               n, s, TRUE, 2, 'L', D_DISCARD);
-  TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, label);
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
-  /* wait for an answer */
-  TtaWaitShowDialogue ();
-#endif /* _GTK */
-#ifdef _WX
   ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
                                              TtaGetViewFrame (document, view),
                                              NULL, extrabutton, confirmbutton,
@@ -1849,15 +1452,6 @@ void ConfirmError (Document document, View view, char *label,
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
-#endif /* _WX */
-#ifdef _WINGUI
-  if (confirmbutton)
-    CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
-                                extrabutton, confirmbutton, label);
-  else
-    CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
-                                confirmbutton, extrabutton, label);
-#endif /* _WINGUI */
   /* remove the critic section */
   CriticConfirm = FALSE;
 }
@@ -1867,7 +1461,6 @@ void ConfirmError (Document document, View view, char *label,
 void ConfirmError3L (Document document, View view, char *label1, char *label2,
                     char *label3, char *extrabutton, char *confirmbutton)
 {
-#ifdef _WX
   ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
                                              TtaGetViewFrame (document, view),
                                              NULL, extrabutton, confirmbutton,
@@ -1879,7 +1472,6 @@ void ConfirmError3L (Document document, View view, char *label1, char *label2,
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
-#endif /* _WX */
   /* remove the critic section */
   CriticConfirm = FALSE;
 }
@@ -1897,36 +1489,6 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
   else
     CriticConfirm = TRUE;
 
-#ifdef _GTK
-  /* Confirm form */
-  if (withCancel)
-    TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),  
-                TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_CANCEL);
-  else
-    TtaNewDialogSheet (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
-                       TtaGetMessage(LIB, TMSG_LIB_CONFIRM),
-                       1,  TtaGetMessage(LIB, TMSG_LIB_CONFIRM),
-                       FALSE, 3, 'L');
-  /* open as many label widgets as \n we find in the label */
-  if (label1 && *label1 != EOS)
-    TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmForm, label1);
-  else
-    TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmForm, "");
-  /* open as many label widgets as \n we find in the label */
-  if (label2 && *label2 != EOS)
-    TtaNewLabel (BaseDialog + Label2, BaseDialog + ConfirmForm, label2);
-  else
-    TtaNewLabel (BaseDialog + Label2, BaseDialog + ConfirmForm, "");
-  if (label3 && *label3  != EOS)
-    TtaNewLabel (BaseDialog + Label3, BaseDialog + ConfirmForm, label3);
-  else
-    TtaNewLabel (BaseDialog + Label3, BaseDialog + ConfirmForm, "");
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
-  /* wait for an answer */
-  TtaWaitShowDialogue ();
-#endif /* _GTK */
-#ifdef _WX
   char *confirm = NULL;
   if (withCancel)
     confirm = TtaGetMessage (LIB, TMSG_LIB_CONFIRM);
@@ -1945,12 +1507,6 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
       //if (AmayaIsAlive ())
       //  TtaDestroyDialogue (BaseDialog + ConfirmForm);   
     }
-#endif /* _WX */
-#ifdef _WINGUI
-  CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view),
-                                TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
-                                label1, label2, label3, withCancel);
-#endif /* _WINGUI */
   CriticConfirm = FALSE;
 }
 
@@ -1967,16 +1523,6 @@ void InitConfirm (Document document, View view, char *label)
   else
     CriticConfirm = TRUE;
 
-#ifdef _GTK
-  TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
-              TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
-  TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, label);
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
-  /* wait for an answer */
-  TtaWaitShowDialogue ();
-#endif /* _GTK */   
-#ifdef _WX
   ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
                                              TtaGetViewFrame (document, view),
                                              NULL /* title */,
@@ -1990,11 +1536,6 @@ void InitConfirm (Document document, View view, char *label)
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
-#endif /* _WX */
-#ifdef _WINGUI
-  CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
-                              NULL, NULL, label);
-#endif /* _WINGUI */
   /* remove the critic section */
   CriticConfirm = FALSE;
 }
@@ -2006,41 +1547,6 @@ void InitConfirm (Document document, View view, char *label)
   ----------------------------------------------------------------------*/
 void InitCharset (Document document, View view, char *url)
 {
-#if defined(_GTK)
-  char   s[MAX_LENGTH]; /* general purpose buffer */
-  int    i;
-
-  i = 0;
-  strcpy (&s[i], "Bus-ascii");
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], "BUTF-8");
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], "Biso-8859-1");
-  i += strlen (&s[i]) + 1;
-  if (!strcmp (UserCharset, "us-ascii"))
-    i = 0;
-  else if (!strcmp (UserCharset, "iso-8859-1"))
-    i = 2;
-  else
-    i = 1;
-      
-  TtaNewForm (BaseDialog + CharsetForm, TtaGetViewFrame (document, view),
-              TtaGetMessage (AMAYA, AM_SELECT_CHARSET), TRUE, 1, 'L', D_CANCEL);
-  /* radio buttons */
-  TtaNewSubmenu (BaseDialog + CharsetSel, BaseDialog + CharsetForm, 0,
-                 NULL, 3, s, NULL, 0, FALSE);
-  TtaSetMenuForm (BaseDialog + CharsetSel, i);
-      
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + CharsetForm, FALSE);
-  /* wait for an answer */
-  TtaWaitShowDialogue ();
-#endif /* defined(_GTK) */
-
-#ifdef _WINGUI
-  CreateCharsetDlgWindow (TtaGetViewFrame (document, view));
-#endif /* _WINGUI */
-
 }
 
 /*----------------------------------------------------------------------
@@ -2096,31 +1602,6 @@ void InitMimeType (Document document, View view, char *url, char *status)
         "application/smil\0";
       nbmimetypes = 7;
     }
-
-#if defined(_GTK)
-  TtaNewForm (BaseDialog + MimeTypeForm, TtaGetViewFrame (document, view),
-              TtaGetMessage (AMAYA, AM_SELECT_MIMETYPE),  TRUE, 1, 'L', D_CANCEL);
-  /* selector */
-  TtaNewSelector (BaseDialog + MimeTypeSel, BaseDialog + MimeTypeForm, NULL,
-                  nbmimetypes, mimetypes_list, 4, NULL, TRUE, FALSE);
-  /* status */
-  if (status && *status)
-    TtaNewLabel (BaseDialog + MimeFormStatus, BaseDialog + MimeTypeForm, status);
-  else
-    TtaNewLabel (BaseDialog + MimeFormStatus, BaseDialog + MimeTypeForm,
-                 "     ");
-  TtaSetSelector (BaseDialog + MimeTypeSel, -1,  UserMimeType);
-
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + MimeTypeForm, FALSE);
-  /* wait for an answer */
-  TtaWaitShowDialogue ();
-#endif /* #if defined(_GTK) */
-
-#ifdef _WINGUI
-  CreateMimeTypeDlgWindow (TtaGetViewFrame (document, view), nbmimetypes,
-                           mimetypes_list);
-#endif /* _WINGUI */
 }
 
 /*-------------------------------------------------------------------------
@@ -2129,67 +1610,6 @@ void InitMimeType (Document document, View view, char *url, char *status)
   -------------------------------------------------------------------------*/
 static void BrowserForm (Document doc, View view, char *urlname)
 {
-#if defined(_GTK)
-  char      s[MAX_LENGTH];
-  int       i;
-  char      tempfile[MAX_LENGTH];
-
-  /* Dialogue form for open URL or local */
-  i = 0;
-  strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
-   
-  TtaNewSheet (BaseDialog + FileBrowserForm, TtaGetViewFrame (doc, 1),
-               TtaGetMessage (AMAYA, AM_FILE_BROWSER), 3, s,
-               TRUE, 2, 'L', D_CANCEL);
-  TtaNewTextForm (BaseDialog + FileBrowserText, BaseDialog + FileBrowserForm,
-                  TtaGetMessage (AMAYA, AM_SELECTION), 50, 1, TRUE);
-  TtaNewLabel (BaseDialog + FileBrowserLocalName,
-               BaseDialog + FileBrowserForm, " ");
-
-  /* initialise the text fields in the dialogue box */
-  tempfile[0] = EOS;
-  if (urlname[0] != EOS)
-    NormalizeFile (urlname, tempfile, AM_CONV_NONE);
-   
-  if (tempfile[0] != EOS && !IsW3Path (tempfile))
-    {
-      /* it's a local file,
-         initialize the file selector to the current position */
-      if (TtaCheckDirectory (tempfile))
-        {
-          strcpy (DirectoryName, tempfile);
-          DocumentName[0] = EOS;
-        }
-      else
-        TtaExtractName (tempfile, DirectoryName, DocumentName);
-    }
-  /* use the last selection in other cases */
-  if (DirectoryName[0] == EOS)
-    {
-      getcwd (DirectoryName, MAX_LENGTH);
-      DocumentName[0] = EOS;
-    }
-  strcpy (s, DirectoryName);
-  strcat (s, DIR_STR);
-  strcat (s, DocumentName);
-  TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
-                    TtaGetMessage (LIB, TMSG_DOC_DIR),
-                    BaseDialog + BrowserDirSelect, ScanFilter,
-                    TtaGetMessage (AMAYA, AM_FILES),
-                    BaseDialog + BrowserDocSelect);
-  TtaNewTextForm (BaseDialog + FileBrowserFilter,
-                  BaseDialog + FileBrowserForm,
-                  TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
-
-  TtaSetTextForm (BaseDialog + FileBrowserText, s);
-  TtaSetTextForm (BaseDialog + FileBrowserFilter, ScanFilter);
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + FileBrowserForm, FALSE);
-#endif /* #if defined(_GTK)*/
 }
 
 /*----------------------------------------------------------------------
@@ -2204,32 +1624,8 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
   char              s [MAX_LENGTH];
   char             *thotdir;
   ThotBool          remote;
-#ifdef _WX
   wxString          homedir;
   ThotBool          created;
-#else /* _WX */
-#ifdef _WINDOWS
-  char             *d;
-#endif /* _WINDOWS */
-  char             *homedir;
-#endif /* _WX */
-#ifdef _GTK
-  int               i;
-
-  /* Dialogue form for open URL or local */
-  i = 0;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_OPEN_URL));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
-
-  TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (doc, view),
-               title, 3, s, TRUE, 2, 'L', D_CANCEL);
-  TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
-                  TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
-  TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
-#endif /* _GTK */
 
   CurrentDocument = doc;
   /* generate the right name and URI */
@@ -2269,21 +1665,8 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
           // Avoid to create new documents into Amaya space
           if (!strncmp (s, thotdir, strlen (thotdir)))
             {
-#ifdef _WX
               homedir = TtaGetHomeDir();
               strcpy (s, (const char *)homedir.mb_str(wxConvUTF8));
-#else /* _WX */
-#ifdef _WINDOWS
-              d = getenv ("HOMEDRIVE");
-              homedir = getenv ("HOMEPATH");
-              if (d && *d && homedir)
-                sprintf (s, "%s%s", d, homedir);
-#else /* _WINDOWS */
-              homedir = getenv ("HOME");
-			  if (homedir)
-          strcpy (s, homedir);
-#endif /* _WINDOWS */
-#endif /* _WX */
             }
           strcpy (DirectoryName, s);
           strcpy (DocumentName, name);
@@ -2292,12 +1675,6 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
         }
       strcpy (LastURLName, s);
     }
-
-#ifdef  _WINGUI
-  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, name,
-                          DocSelect, DirSelect, docType);
-#endif /* _WINGUI */
-#ifdef _WX
   /* here we pass also 'URL_list', because we want generate a combobox choice list */
   created = CreateOpenDocDlgWX( BaseDialog + OpenForm,
                                 TtaGetViewFrame (doc, view), title, URL_list, s, name,
@@ -2307,42 +1684,22 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseDialog + OpenForm, TRUE);
     }
-#endif /* _WX */
-#ifdef _GTK
-  TtaSetTextForm (BaseDialog + URLName, s);
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + OpenForm, TRUE);
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void OpenDoc (Document doc, View view)
 {
-#ifndef _WX
-  if (CanReplaceCurrentDocument (doc, view))
-    {
-      /* load the new document */
-      DontReplaceOldDoc = FALSE;
-      InNewWindow = FALSE;
-#endif /* _WX */
-      NewFile = FALSE;
-       /* no specific type requested */
-      InitOpenDocForm (doc, view, "",
-                       TtaGetMessage (LIB, TMSG_BUTTON_OPEN), docText);
-#ifndef _WX
-    }
-#endif /* _WX */
+  NewFile = FALSE;
+   /* no specific type requested */
+  InitOpenDocForm (doc, view, "",
+                   TtaGetMessage (LIB, TMSG_BUTTON_OPEN), docText);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void OpenDocInNewWindow (Document document, View view)
 {
-#ifndef _WX
-  DontReplaceOldDoc = TRUE;
-  InNewWindow = TRUE;
-#endif /* _WX */
   NewFile = FALSE;
   /* no specific type requested */
   InitOpenDocForm (document, view, "",
@@ -2356,9 +1713,7 @@ void OpenDocInNewWindow (Document document, View view)
 void OpenNew (Document document, View view, int docType, int docProfile)
 {
   char    name[100];
-#ifdef _WX
   char   *s, *compound;
-#endif /* _WX */
 
   /* create a new document */
   DontReplaceOldDoc = TRUE;
@@ -2370,7 +1725,6 @@ void OpenNew (Document document, View view, int docType, int docProfile)
   strcpy (name, TtaGetMessage (AMAYA, AM_NEW));
   if (NewDocType == docHTML)
     {
-#ifdef _WX
       s = TtaGetEnvString ("XHTML_Profile");
       compound = TtaGetMessage (AMAYA, AM_COMPOUND_DOCUMENT);
       if (s && compound && !strcmp (s, compound))
@@ -2379,21 +1733,6 @@ void OpenNew (Document document, View view, int docType, int docProfile)
         strcat (name,".html");
         InitOpenDocForm (document, view, name,
                          TtaGetMessage (LIB, TMSG_BUTTON_NEW), docHTML);
-#else /* _WX */
-        strcat (name,".html");
-      if (docProfile == L_Basic)
-        InitOpenDocForm (document, view, name,
-                         TtaGetMessage (AMAYA, AM_NEW_HTML_BASIC), docHTML);
-      else if (docProfile == L_Strict)
-        InitOpenDocForm (document, view, name,
-                         TtaGetMessage (AMAYA, AM_NEW_HTML_STRICT), docHTML);
-      else if (docProfile == L_Transitional)
-        InitOpenDocForm (document, view, name,
-                         TtaGetMessage (AMAYA, AM_NEW_HTML_TRANSITIONAL), docHTML);
-      else
-        InitOpenDocForm (document, view, name,
-                         TtaGetMessage (AMAYA, AM_NEW_HTML11), docHTML);
-#endif /* _WX */
       /* will scan html documents */
       strcpy (ScanFilter, "*.*htm*");
     }
@@ -2678,16 +2017,11 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   int           page_position = 0;
   /* ------------------------------------ */
   
-#ifdef _WINGUI
-  Window_Curs = IDC_WINCURSOR;
-#endif /* _WINGUI */
-
   /* is there any editing function available */
   if (!TtaCanEdit ())
     /* change the document status */
     readOnly = TRUE;
 
-#ifdef _WX
   /* if it is a source document, reload its corresponding document */
   if (DocumentTypes[oldDoc] == docSource)
     oldDoc = GetDocFromSource (oldDoc);
@@ -2696,7 +2030,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
    * just open it in a new window */
   if (oldDoc == 0 && inNewWindow == 0)
     inNewWindow = TRUE;
-#endif /* _WX */
 
   /* previous document */
   doc = oldDoc;
@@ -2705,7 +2038,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
     {
       // transmit the visibility to the new document
       visibility = TtaGetSensibility (doc, 1);
-#ifdef _WX
       /* get the old document window */
       window_id = TtaGetDocumentWindowId( doc, -1 );
       /* get the old document page id */
@@ -2713,7 +2045,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       /* force the document's page position because sometime oldDoc is
          a source document placed on the bottom part of the page */
       page_position = 1;
-#endif /* _WX */
       if (DocumentTypes[doc] == docHTML ||
           DocumentTypes[doc] == docSVG ||
           DocumentTypes[doc] == docXml ||
@@ -2741,10 +2072,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       /* remove the current selection */
       TtaUnselect (doc);
       UpdateContextSensitiveMenus (doc, 1);
-#ifdef _WX
       HideHSplitToggle (doc, 1);
       HideVSplitToggle (doc, 1);
-#endif /* _WX */
       TtaFreeView (doc, 1);
       isOpen = TRUE;
       /* use the same document identifier */
@@ -2761,9 +2090,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           // the annotation window is already open
           inNewWindow = FALSE;
           isOpen = TRUE;
-#ifdef _WX
           page_id   = TtaGetFreePageId( window_id );
-#endif /* _WX */
           page_position = 1;
         }
       else
@@ -2780,7 +2107,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
     {
       /* open the new document in the same window but in a fresh page */
       requested_doc = 0;
-#ifdef _WX
       isOpen = TRUE;
       if (docType == docSource)
         {
@@ -2794,14 +2120,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           // the document is displayed in a window
           window_id = TtaGetDocumentWindowId( doc, -1 );
           wxASSERT(window_id > 0);
-#ifdef _WX
           page_id   = TtaGetFreePageId( window_id );
-#endif /* _WX */
           page_position = 1;
         }
-#else /* _WX */
-      isOpen = FALSE; /* the menu and icons are already created */
-#endif /* _WX */
     }
 
   /* Init the new document */
@@ -2903,7 +2224,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
       /* gets registered window parameters */
       GiveWindowGeometry (doc, docType, method, &x, &y, &w, &h);
-#ifdef _WX
       /* create a new window if needed */
       if (window_id == -1)
         {
@@ -2918,21 +2238,16 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           else
             /* a normal window should never had a parent ! */
             window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
-#ifdef _WX
           page_id   = TtaGetFreePageId( window_id );
-#endif /* _WX */
           page_position = 1;
         }
-#endif /* _WX */
 
-#ifdef _WX
       /* init default documents menus states: enable/disable, toggle/untoggle
        * need to be done before frame creation because the active frame will
        * use it to refresh the menus */
       if (!replaceOldDoc || !isOpen)
         TtaInitMenuItemStats(doc);
       TtaInitTopMenuStats(doc);
-#endif /* _WX */
 
       DocumentTypes[doc] = docType;
       /* open the main view */
@@ -2961,11 +2276,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           return (0);
         }
 
-#ifdef _WX
       /* init the zoom factor to 0 if the document isn't replaced */
       if (!replaceOldDoc)
         TtaSetZoom (doc, -1, 0);
-#endif /* _WX */
 
        /* update the menus according to the profile */
        /* By default no log file */
@@ -2982,21 +2295,17 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       reinitialized = (docType != DocumentTypes[doc]);
       if (docType == docLog || docType == docLibrary || docType == docSource)
         {
-#ifdef _WX
 #ifdef _SVG
           if (docType == docLibrary)
             /* Initialize SVG Library Buffer string */
             TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
                             FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
 #endif /* _SVG */
-#endif /* _WX */
-
         }
     }
 
   if (!replaceOldDoc || !isOpen)
     {
-#ifdef _WX
       /* initial state for menu entries */
       TtaSetItemOff (doc, 1, File, BBack);
       TtaSetItemOff (doc, 1, File, BForward);
@@ -3010,27 +2319,20 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       TtaSetToggleItem (doc, 1, Views, TShowBrowsingBar, show);
       TtaGetEnvBoolean ("EDIT_TOOLBAR", &show);
       TtaSetToggleItem (doc, 1, Views, TShowEditingBar, show);
-#endif /* _WX */
     }
 
   /* store the new document type */
   DocumentTypes[doc] = docType;
 
-#ifdef _WX
   /* now be sure that the urlbar is setup */
   //if (DocumentURLs[doc] && strcmp (DocumentURLs[doc], "empty"))
   TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
                    TRUE, (Proc)TextURL, URL_list );
-#endif /* _WX */
   if ((DocumentTypes[doc] == docHTML ||
        DocumentTypes[doc] == docSVG ||
        DocumentTypes[doc] == docXml ||
        DocumentTypes[doc] == docMath ||
-       DocumentTypes[doc] == docLibrary)
-#ifndef _WX
-      && !replaceOldDoc
-#endif /* _WX */
-      )
+       DocumentTypes[doc] == docLibrary))
     {
       /* init show target menu item */
       TtaGetEnvBoolean ("SHOW_TARGET", &show);
@@ -3103,7 +2405,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
                DocumentTypes[doc] == docCSS ||
                DocumentTypes[doc] == docMath)
         {
-#ifdef _WX
           TtaSetMenuOn (doc, 1, Style);
           if (DocumentTypes[doc] == docMath)
             {
@@ -3125,7 +2426,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
               TtaSetItemOff (doc, 1, Style, BEnableCSS);
               TtaSetItemOff (doc, 1, Style, BRemoveCSS);
             }
-#endif /* _WX */
           TtaSetItemOff (doc, 1, Views, TShowMapAreas);
           TtaSetItemOff (doc, 1, Views, TShowTargets);
           TtaSetMenuOff (doc, 1, Doctype1);
@@ -3140,9 +2440,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
             }
           else
             {
-#ifdef _WX
               if (DocumentTypes[doc] != docSource)
-#endif /* _WX */
                 TtaSetMenuOff (doc, 1, Views);
               TtaSetItemOff (doc, 1, Edit_, BTransform);
               TtaSetMenuOff (doc, 1, XMLTypes);
@@ -3202,10 +2500,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
         }
     }
 
-#ifdef _WX
   // show the window if it's not allready done
   TtaShowWindow( window_id, TRUE );
-#endif /* _WX */
   return (doc);
 }
 
@@ -3942,10 +3238,8 @@ Document LoadDocument (Document doc, char *pathname,
             {
               docType = docLog;
               newdoc = doc;
-#ifdef _WX
               /* the LOG window labels have UTF8 charset on wxWidgets interface */
               charset = UTF_8;
-#endif /* _WX */
             }
           else if (docType != DocumentTypes[doc] && DocumentTypes[doc] != docLibrary)
             /* replace the current document by a new one */
@@ -4236,10 +3530,8 @@ Document LoadDocument (Document doc, char *pathname,
         ANNOT_bodyType_set (newdoc, annotBodyType);
 #endif /* ANNOTATIONS */
     }
-#ifdef _WX
   // refresh the XML panel
   TtaRefreshElementMenu (newdoc, 1);
-#endif /* _WX */
   TtaFreeMemory (content_type);
   TtaFreeMemory (localdoc);
   return (newdoc);
@@ -4358,10 +3650,8 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
             ANNOT_AutoLoad (newdoc, 1);
 #endif /* ANNOTATIONS */
           TtaHandlePendingEvents ();
-#ifdef _WX
           // set the default icon
           TtaSetPageIcon (newdoc, 1, NULL);
-#endif /* _WX */
           /* fetch and display all images referred by the document */
           stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_NOCACHE | AMAYA_LOAD_IMAGE, NULL);
           if (stopped_flag == FALSE) 
@@ -4678,21 +3968,12 @@ void ShowSource (Document doc, View view)
 
       TtaExtractName (localFile, tempdir, documentname);
       /* open a window for the source code */
-#ifdef _WX
       sourceDoc = InitDocAndView (doc,
                                   FALSE /* replaceOldDoc */,
                                   FALSE /* inNewWindow */,
                                   documentname, (DocumentType)docSource, doc, FALSE,
                                   TtaGetDocumentProfile (doc),
                                   (int)CE_ABSOLUTE);   
-#else /* _WX */
-      sourceDoc = InitDocAndView (doc,
-                                  FALSE /* replaceOldDoc */,
-                                  TRUE /* inNewWindow */,
-                                  documentname, (DocumentType)docSource, doc, FALSE,
-                                  L_Other, (int)CE_ABSOLUTE);   
-#endif /* _WX */
-
       if (sourceDoc > 0)
         {
           DocumentSource[doc] = sourceDoc;
@@ -4765,14 +4046,12 @@ void ShowSource (Document doc, View view)
           else
             SetArrowButton (DocumentSource[doc], FALSE, FALSE);
 
-#ifdef _WX
           TtaEnableAction(sourceDoc, "StopTransfer", FALSE);;
           /* update toggle buttons */
           if (HSplit[doc] == TRUE && VSplit[doc] == FALSE)
             ShowHSplitToggle (sourceDoc, 1);
           if (HSplit[doc] == FALSE && VSplit[doc] == TRUE)
             ShowVSplitToggle (sourceDoc, 1);
-#endif /* _WX */
 
           // check if a parsing error is detected
           sprintf (tempdir, "%s%c%d%cPARSING.ERR",
@@ -5133,10 +4412,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
                                                       NULL);
               else
                 {
-#ifdef _WX
                   // set the default icon
                   TtaSetPageIcon (newdoc, 1, NULL);
-#endif /* _WX */
                   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
 #ifdef ANNOTATIONS
                   /* if it's an annotation, add the existing metadata */
@@ -5316,12 +4593,6 @@ Document GetAmayaDoc (char *urlname, char *form_data,
       TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), lg_uri);
       return (0);
     }
-#ifndef _WX
-  else
-    /* clean up the status line */
-    TtaSetStatus (baseDoc, 1, " ", NULL);
-#endif /* _WX */
-
   /* check if the request comes from the source document */
   if (doc && DocumentTypes[doc] == docSource)
     doc = GetDocFromSource (doc);
@@ -5484,21 +4755,12 @@ Document GetAmayaDoc (char *urlname, char *form_data,
         {
           /* add the URI in the combobox string */
           AddURLInCombobox (initial_url, NULL, FALSE);
-#ifdef _WX
           /* need to create a new window for the document */
           newdoc = InitDocAndView (baseDoc,
                                    !DontReplaceOldDoc /* replaceOldDoc */,
                                    InNewWindow /* inNewWindow */,
                                    documentname, (DocumentType)docType, 0, TRUE,
                                    L_Other, method);
-#else /* _WX */
-          /* need to create a new window for the document */
-          newdoc = InitDocAndView (doc,
-                                   FALSE /* replaceOldDoc */,
-                                   TRUE /* inNewWindow */,
-                                   documentname, (DocumentType)docType, 0, TRUE,
-                                   L_Other, method);
-#endif /* _WX */
           if (newdoc)
             {
               /* help document has to be in read-only mode */
@@ -5529,11 +4791,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
             AddURLInCombobox (initial_url, NULL, FALSE);
           newdoc = InitDocAndView (doc,
                                    FALSE /* replaceOldDoc */,
-#ifndef _WX
-                                   TRUE /* inNewWindow */,
-#else /* _WX */
                                    InNewWindow /* inNewWindow */,
-#endif /* _WX */
                                    documentname, (DocumentType)docType, 0, FALSE,
                                    L_Other, method);
         }
@@ -5742,16 +5000,6 @@ static void ChangeDoctype (ThotBool isXml)
   ----------------------------------------------------------------------*/
 static void UpdateSaveAsButtons ()
 {
-#if defined(_GTK)
-  int	active;
-
-  if (SaveAsHTML || SaveAsXML)
-    active = 1;
-  else
-    active = 0;
-  TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, (ThotColor)-1, active);
-  TtaRedrawMenuEntry (BaseDialog + ToggleSave, 1, NULL, (ThotColor)-1, active);
-#endif /* defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -5791,14 +5039,6 @@ static void SetFileSuffix ()
           if (strncmp (suffix, &SaveName[i], 3) == 0)
             /* the requested suffix is already here. Do nothing */
             i = 0;
-#ifdef _WINGUI
-          strcpy (DocToOpen, SavePath);
-          if (strchr (SavePath, '/'))
-            strcat (DocToOpen, URL_STR);
-          else
-            strcat (DocToOpen, DIR_STR);
-          strcat (DocToOpen, SaveName);
-#endif /* _WINGUI */
         }
      
       if (i > 0)
@@ -5814,26 +5054,11 @@ static void SetFileSuffix ()
             strcat (filename, DIR_STR);
           strcat (filename, SaveName);
 
-#ifdef _WINGUI
-          sprintf (DocToOpen, filename);
-#endif /* _WINGUI */
-
-#ifdef _GTK
-          TtaSetTextForm (BaseDialog + NameSave, filename);
-#endif /* defined(_GTK) */
-
-#ifdef _WX
           strcpy(SaveFileName, filename);
-#endif /* _WX */
-
           TtaFreeMemory (filename);
         }
       else
-        {
-#ifdef _WX
-          SaveFileName[0] = EOS;
-#endif /* _WX */
-        }
+        SaveFileName[0] = EOS;
     }
 }
 
@@ -5847,9 +5072,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
   char              tempname[MAX_LENGTH];
   char              sep, *ptr;
   long int          val;
-#ifdef _WX
   int               i;
-#endif /* _WX */
   ThotBool          change, updated;
 
   if (typedata == STRING_DATA && data && strchr (data, '/'))
@@ -5867,7 +5090,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
       if (val == 1)
         /* Confirm */
         {
-#ifdef _WX
           /* get the current document (CurrentDocument not valid) */
           TtaGiveActiveView (&doc, &i);
           if (DocumentSource[doc] && DocumentTypes[doc] != docSource)
@@ -5880,11 +5102,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
               (!DontReplaceOldDoc && CanReplaceCurrentDocument(CurrentDocument, 1)) /* wants to replace the current document */
                )
             {
-#else /* _WX */
-              /* Do not destroy this dialog on WX to prevent a crash on mac version */
-              TtaDestroyDialogue (BaseDialog + OpenForm);
-              TtaDestroyDialogue (BaseDialog + FileBrowserForm);
-#endif /* _WX */
               if (LastURLName[0] != EOS)
                 {
                   TtaSetStatus (CurrentDocument, 1,
@@ -5963,17 +5180,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
                               TtaGetMessage (AMAYA, AM_CANNOT_LOAD), "");
               NewFile = FALSE;
               CurrentDocument = 0;
-#ifdef _WX
             }
-#endif /* _WX */
         }
       else if (val == 2)
         {
           /* Browse button */
-#if defined(_GTK) || defined(_WX) 
           WidgetParent = OpenDocBrowser;
           BrowserForm (CurrentDocument, 1, &LastURLName[0]);
-#endif /* defined(_GTK) || defined(_WX) */
         }
       else if (val == 3)
         {
@@ -5981,17 +5194,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
           LastURLName[0] = EOS;
           DirectoryName[0] = EOS;
           DocumentName[0] = EOS;
-#if defined(_GTK) || defined(_WX) 
           TtaSetTextForm (BaseDialog + URLName, LastURLName);
-#endif /* defined(_GTK) || defined(_WX) */
         }
-#ifdef _WX
       else if (val == 0)
         {
           /* if the user has clicked on Cancel button, just destroy the dialog */
           TtaDestroyDialogue ( ref );
         }
-#endif /* _WX */
       else if (NewFile)
         {
           /* the command is aborted */
@@ -6083,10 +5292,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
       break;
 
     case DirSelect:
-#ifdef _WINGUI
-      sprintf (DirectoryName, "%s", data);
-#endif /* _WINGUI */      
-#if defined(_GTK) || defined(_WX)  
       if (DirectoryName[0] != EOS)
         {
           if (!strcmp (data, ".."))
@@ -6108,7 +5313,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
                             BaseDialog + DocSelect);
           DocumentName[0] = EOS;
         }
-#endif /* defined(_GTK) || defined(_WX) */
       break;
 
     case DocSelect:
@@ -6122,9 +5326,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       strcpy (tempfile, DirectoryName);
       strcat (tempfile, DIR_STR);
       strcat (tempfile, DocumentName);
-#if defined(_GTK) || defined(_WX) 
       TtaSetTextForm (BaseDialog + URLName, tempfile);
-#endif /* defined(_GTK) || defined(_WX) */
       break;
 
     case ConfirmForm:
@@ -6138,10 +5340,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* Filter value */
       if (strlen (data) <= NAME_LENGTH)
         strcpy (ScanFilter, data);
-#if defined(_GTK) || defined(_WX) 
       else
         TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
-#endif /* defined(_GTK) || defined(_WX) */
       break;
 
     case FormAnswer:
@@ -6170,7 +5370,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
       break;
 
     case PasswordText:
-#ifdef _WX
       i = strlen (data);
       if (i < NAME_LENGTH - 1)
         {
@@ -6187,20 +5386,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
       else
         Answer_password[NAME_LENGTH - 1] = EOS;
       break;
-#endif /* _WX */
     case PasswordSave:
       if (val == 0)
          Answer_save_password = FALSE;
       else
          Answer_save_password = TRUE;
       break;
-#ifdef _WX
       i = strlen (data);
-#endif /* _WX */
-#ifdef _GTK
-      strncpy (Answer_password, data, NAME_LENGTH);
-      Answer_password[NAME_LENGTH - 1] = EOS;
-#endif /* _GTK */
       break;
 
       /* *********Save document as********* */
@@ -6229,12 +5421,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
           SaveAsText = TRUE;
           SaveAsHTML = FALSE;
           SaveAsXML = FALSE;
-#if defined(_GTK)
-          TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
-          TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
-          UpdateSaveAsButtons ();
-#endif /* defined(_GTK) */
-    
+   
           SetFileSuffix ();
           break;
         }
@@ -6275,14 +5462,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
                   && (UserMimeType[0] == EOS))
                 {
 
-#if defined(_GTK) || defined(_WX) 
                   TtaNewLabel (BaseDialog + SaveFormStatus,
                                BaseDialog + SaveForm,
                                TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* defined(_GTK) || defined(_WX) */
-#ifdef _WINGUI      
-                  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* _WINGUI */
                   break;
                 }
             }
@@ -6313,13 +5495,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
       else if (val == 2)
         /* "Browse" button */
         {
-#if defined(_GTK) || defined(_WX) 
           WidgetParent = DocSaveBrowser;
           strcpy (LastURLName, SavePath);
           strcat (LastURLName, DIR_STR);
           strcat (LastURLName, SaveName);
           BrowserForm (SavingDocument, 1, LastURLName);
-#endif /* defined(_GTK) || defined(_WX) */
         }
       else if (val == 3)
         /* "Clear" button */
@@ -6329,10 +5509,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
               SavePath[0] = EOS;
               SaveImgsURL[0] = EOS;
               SaveName[0] = EOS;
-#if defined(_GTK)
-              TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
-              TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
-#endif /* defined(_GTK) */
             }
         }
       else if (val == 4)
@@ -6343,33 +5519,17 @@ void CallbackDialogue (int ref, int typedata, char *data)
               if (DocumentTypes[SavingDocument] != docImage)
                 {
                   /* clear the status message */
-#if defined(_GTK)
-                  TtaNewLabel (BaseDialog + SaveFormStatus,
-                               BaseDialog + SaveForm, " ");
-#endif /* defined(_GTK) */
-#ifdef _WINGUI      
-                  SaveAsDlgStatus ("");
-#endif /* _WINGUI */
                   InitCharset (SavingDocument, 1, SavePath);
                   if (SaveFormTmp[0] != EOS)
                     {
                       strcpy (UserCharset, SaveFormTmp);
-#if defined(_GTK)
-                      TtaNewLabel (BaseDialog + CharsetSave,  
-                                   BaseDialog + SaveForm, UserCharset);
-#endif /* #if defined(_GTK) */
                     }
                 }
               else
                 {
-#if defined(_GTK) || defined(_WX) 
                   TtaNewLabel (BaseDialog + SaveFormStatus,
                                BaseDialog + SaveForm,
                                TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
-#endif /* #if defined(_GTK) || defined(_WX) */
-#ifdef _WINGUI
-                  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
-#endif /* _WINGUI */
                 }
             }
         }
@@ -6381,35 +5541,22 @@ void CallbackDialogue (int ref, int typedata, char *data)
               if (SavePath[0])
                 {
                   /* clear the status message */
-
-#if defined(_GTK) || defined(_WX) 
                   TtaNewLabel (BaseDialog + SaveFormStatus,
                                BaseDialog + SaveForm,
                                " ");
-#endif /* #if defined(_GTK) || defined(_WX) */
-#ifdef _WINGUI      
-                  SaveAsDlgStatus ("");
-#endif /* _WINGUI */
                   InitMimeType (SavingDocument, 1, SavePath, NULL);
                   if (SaveFormTmp[0] != EOS)
                     {
                       strcpy (UserMimeType, SaveFormTmp);   
-#if defined(_GTK) || defined(_WX) 
                       TtaNewLabel (BaseDialog + MimeTypeSave,  
                                    BaseDialog + SaveForm, UserMimeType);
-#endif /* #if defined(_GTK) || defined(_WX) */
                     }
                 }
               else
                 {
-#if defined(_GTK) || defined(_WX) 
                   TtaNewLabel (BaseDialog + SaveFormStatus,
                                BaseDialog + SaveForm,
                                TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
-#endif /* #if defined(_GTK) || defined(_WX) */
-#ifdef _WINGUI      
-                  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
-#endif /* _WINGUI */
                 }
             }
         }
@@ -6491,7 +5638,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
       else if (val == 2)
         /* Browse button */
         {
-#if defined(_GTK) || defined(_WX) 
           if (LinkAsXmlCSS || LinkAsCSS)
             strcpy (ScanFilter, "*.css");
           else if (LinkAsJavascript)
@@ -6500,7 +5646,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
             strcpy (ScanFilter, "*");
           WidgetParent = HrefAttrBrowser;
           BrowserForm (AttrHREFdocument, 1, &AttrHREFvalue[0]);
-#endif /* #if defined(_GTK) || defined(_WX) */
         }
       else if (val == 3)
         /* allow one to click the target */
@@ -6509,9 +5654,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
         {
           /* Clear button */
           AttrHREFvalue[0] = EOS;
-#if defined(_GTK) || defined(_WX) 
           TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
-#endif /* #if defined(_GTK) || defined(_WX) */
         }
       else 
         /* Cancel button */
@@ -6557,7 +5700,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
           /* Confirm button */
           /* it's no longer the default Welcome page */
           WelcomePage = FALSE;
-#if defined(_GTK) || defined(_WX) 
           /* this code is only valid under Unix. */
           /* In Windows, we're using a system widget */
           strcpy (tempfile, DirectoryName);
@@ -6581,7 +5723,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
             }
           /* remove the browsing dialogue */
           TtaDestroyDialogue (ref);
-#endif /* defined(_GTK) || defined(_WX) */
         }
       else if (val == 2)
         /* Clear button */
@@ -6589,17 +5730,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
           if (WidgetParent == OpenDocBrowser)
             {
               LastURLName[0] = EOS;
-#if defined(_GTK) || defined(_WX) 
               TtaSetTextForm (BaseDialog + FileBrowserText, LastURLName);
-#endif /* #if defined(_GTK) || defined(_WX) */
-        
             }
           else if (WidgetParent == HrefAttrBrowser)
             {
               tempname[0] = EOS; 	       
-#if defined(_GTK) || defined(_WX) 
               TtaSetTextForm (BaseDialog + FileBrowserText, tempname);
-#endif /* #if defined(_GTK) || defined(_WX) */
             }
         }
       else if (val == 3)
@@ -6636,10 +5772,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
       
       /* *********Browser DirSelect*********** */
     case BrowserDirSelect:
-#ifdef _WINGUI
-      sprintf (DirectoryName, "%s", data);
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)  
       if (DirectoryName[0] != EOS)
         {
           if (!strcmp (data, ".."))
@@ -6667,7 +5799,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
                             BaseDialog + BrowserDocSelect);
           DocumentName[0] = EOS;
         }
-#endif /* #if defined(_GTK) || defined(_WX) */
       break;
       
       /* *********Browser DocSelect*********** */
@@ -6683,9 +5814,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       strcpy (tempfile, DirectoryName);
       strcat (tempfile, DIR_STR);
       strcat (tempfile, DocumentName);
-#if defined(_GTK) || defined(_WX) 
       TtaSetTextForm (BaseDialog + FileBrowserText, tempfile);
-#endif /* #if defined(_GTK) || defined(_WX) */
       break;
       
       /* *********Browser Filter*********** */
@@ -6693,10 +5822,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* Filter value */
       if (strlen(data) <= NAME_LENGTH)
         strcpy (ScanFilter, data);
-#if defined(_GTK) || defined(_WX) 
       else
         TtaSetTextForm (BaseDialog + BrowserFilterText, ScanFilter);
-#endif /* #if defined(_GTK) || defined(_WX) */
       break;
       
     case TitleForm:
@@ -6759,21 +5886,17 @@ void CallbackDialogue (int ref, int typedata, char *data)
         {
         case 1:
           CreateRemoveIDAttribute (IdElemName, IdDoc, TRUE, IdApplyToSelection);
-#if defined(_GTK) || defined(_WX) 
           /* and show the status */
           TtaNewLabel (BaseDialog + mIdStatus,
                        BaseDialog + MakeIdMenu,
                        IdStatus);
-#endif /* #if defined(_GTK) || defined(_WX) */
           break;
         case 2:
           CreateRemoveIDAttribute (IdElemName, IdDoc, FALSE, IdApplyToSelection);
-#if defined(_GTK) || defined(_WX) 
           /* and show the status */
           TtaNewLabel (BaseDialog + mIdStatus,
                        BaseDialog + MakeIdMenu,
                        IdStatus);
-#endif /* #if defined(_GTK) || defined(_WX) */
           break;
         }
       break;
@@ -6855,14 +5978,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
               if (SaveFormTmp[0] == EOS ||!strchr (SaveFormTmp, '/'))
                 {
                   SaveFormTmp[0] = EOS;
-#if defined(_GTK)
-                  InitMimeType (SavingDocument, 1, SavePath,
-                                TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* _GTK */
-#ifdef _WINGUI
-                  /* the Window dialog won't be closed */
-                  MimeTypeDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* _WINGUI */
                 }
               else
                 TtaDestroyDialogue (ref);
@@ -6948,10 +6063,8 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
       TtaSetDocumentModified (newdoc);
       W3Loading = 0;		/* loading is complete now */
       DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
-#ifdef _WX
       // set the default icon
       TtaSetPageIcon (newdoc, 1, NULL);
-#endif /* _WX */
       stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
       if (!stopped_flag)
         {
@@ -7163,7 +6276,6 @@ static ThotBool RestoreAmayaDocs ()
 void FreeAmayaIcons ()
 {
   /* free allocated icons */
-#if defined(_WX)
   if (stopR)
     delete stopR;
   if (stopN) 	
@@ -7282,7 +6394,6 @@ void FreeAmayaIcons ()
   iconTable = (ThotIcon) 0;
   iconTableNo = (ThotIcon) 0;
   iconLogo = (ThotIcon) 0;
-#endif /* defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -7401,7 +6512,6 @@ void InitAmaya (NotifyEvent * event)
   LinkAsJavascript = FALSE;
 
   /* initialize icons */
-#ifdef _WX
   stopR         = (ThotIcon) 0;
   stopN         = (ThotIcon) 0;
   iconSave      = (ThotIcon) 0;
@@ -7441,47 +6551,6 @@ void InitAmaya (NotifyEvent * event)
   iconTable = (ThotIcon) 0;
   iconTableNo = (ThotIcon) 0;
   iconLogo = (ThotIcon) 0;
-#endif /* _WX */
-#ifdef _GTK
-  stopR = (ThotIcon) TtaCreatePixmapLogo (stopR_xpm);
-  stopN = (ThotIcon) TtaCreatePixmapLogo (stopN_xpm);
-  iconSave = (ThotIcon) TtaCreatePixmapLogo (save_xpm);
-  iconSaveNo = (ThotIcon) TtaCreatePixmapLogo (saveNo_xpm);
-  iconSaveAll = (ThotIcon) TtaCreatePixmapLogo (save_xpm);
-  iconSaveAllNo = (ThotIcon) TtaCreatePixmapLogo (saveNo_xpm);
-  iconFind = (ThotIcon) TtaCreatePixmapLogo (find_xpm);
-  iconReload = (ThotIcon) TtaCreatePixmapLogo (Reload_xpm);
-  iconHome = (ThotIcon) TtaCreatePixmapLogo (home_xpm);
-  iconI = (ThotIcon) TtaCreatePixmapLogo (I_xpm);
-  iconINo = (ThotIcon) TtaCreatePixmapLogo (INo_xpm);
-  iconB = (ThotIcon) TtaCreatePixmapLogo (B_xpm);
-  iconBNo = (ThotIcon) TtaCreatePixmapLogo (BNo_xpm);
-  iconT = (ThotIcon) TtaCreatePixmapLogo (T_xpm);
-  iconTNo = (ThotIcon) TtaCreatePixmapLogo (TNo_xpm);
-  iconBack = (ThotIcon) TtaCreatePixmapLogo (Back_xpm);
-  iconBackNo = (ThotIcon) TtaCreatePixmapLogo (BackNo_xpm);
-  iconForward = (ThotIcon) TtaCreatePixmapLogo (Forward_xpm);
-  iconForwardNo = (ThotIcon) TtaCreatePixmapLogo (ForwardNo_xpm);
-  iconH1 = (ThotIcon) TtaCreatePixmapLogo (H1_xpm);
-  iconH1No = (ThotIcon) TtaCreatePixmapLogo (H1No_xpm);
-  iconH2 = (ThotIcon) TtaCreatePixmapLogo (H2_xpm);
-  iconH2No = (ThotIcon) TtaCreatePixmapLogo (H2No_xpm);
-  iconH3 = (ThotIcon) TtaCreatePixmapLogo (H3_xpm);
-  iconH3No = (ThotIcon) TtaCreatePixmapLogo (H3No_xpm);
-  iconPrint = (ThotIcon) TtaCreatePixmapLogo (Print_xpm);
-  iconBullet = (ThotIcon) TtaCreatePixmapLogo (Bullet_xpm);
-  iconBulletNo = (ThotIcon) TtaCreatePixmapLogo (BulletNo_xpm);
-  iconNum = (ThotIcon) TtaCreatePixmapLogo (Num_xpm);
-  iconNumNo = (ThotIcon) TtaCreatePixmapLogo (NumNo_xpm);
-  iconImage = (ThotIcon) TtaCreatePixmapLogo (Image_xpm);
-  iconImageNo = (ThotIcon) TtaCreatePixmapLogo (ImageNo_xpm);
-  iconDL = (ThotIcon) TtaCreatePixmapLogo (DL_xpm);
-  iconDLNo = (ThotIcon) TtaCreatePixmapLogo (DLNo_xpm);
-  iconLink = (ThotIcon) TtaCreatePixmapLogo (Link_xpm);
-  iconLinkNo = (ThotIcon) TtaCreatePixmapLogo (LinkNo_xpm);
-  iconTable = (ThotIcon) TtaCreatePixmapLogo (Table_xpm);
-  iconTableNo = (ThotIcon) TtaCreatePixmapLogo (TableNo_xpm);
-#endif /* _GTK */
 
   /* init transformation callback */
   TtaSetTransformCallback ((Func2) TransformIntoType);
@@ -7509,12 +6578,7 @@ void InitAmaya (NotifyEvent * event)
         {
           sprintf (TempFileDirectory,
                    TtaGetMessage (AMAYA, AM_CANNOT_CREATE_DIRECTORY), s);
-#ifdef _WINGUI
-          MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX) 
           fprintf (stderr, TempFileDirectory);
-#endif /* defined(_GTK) || defined(_WX) */
           exit (1);
         }
     }
@@ -7522,17 +6586,7 @@ void InitAmaya (NotifyEvent * event)
   /* add the temporary directory in document path */
   strcpy (TempFileDirectory, s);
   TtaAppendDocumentPath (TempFileDirectory);
-#ifdef _WINGUI
-  s = TtaGetEnvString ("APP_HOME");
-  if (!TtaCheckMakeDirectory (s, TRUE))
-    /* didn't work, so we exit */
-    {
-      sprintf (TempFileDirectory,
-               TtaGetMessage (AMAYA, AM_CANNOT_CREATE_DIRECTORY), s);
-      MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
-      exit (1);
-    }
-#endif /* _WINGUI */
+
   /*
    * Build the User preferences file name:
    * $HOME/.amaya/amaya.css on Unix platforms
@@ -7597,28 +6651,8 @@ void InitAmaya (NotifyEvent * event)
   DirectoryName[0] = EOS;
   SavedDocumentURL = NULL;
   /* set path on current directory */
-#ifdef _WX
   wxString homedir = TtaGetHomeDir ();
   strcpy (DirectoryName, (const char *)homedir.mb_str(wxConvUTF8));
-#else /* _WX */
-#ifdef _WINDOWS
-  s = getenv ("HOMEDRIVE");
-  ptr = getenv ("HOMEPATH");
-  if (s && *s && ptr)
-    {
-      sprintf (DirectoryName, "%s%s", s, ptr);
-      s = NULL;
-      ptr = NULL;
-    }
-#else /* _WINDOWS */
-  s = getenv ("HOME");
-  if (s && *s)
-    {
-      strcpy (DirectoryName, s);
-      s = NULL;
-    }
-#endif /* _WINDOWS */
-#endif /* _WX */
   if (DirectoryName[0] == EOS || !TtaDirExists (DirectoryName))
     getcwd (DirectoryName, MAX_LENGTH);
   DocumentName = (char *)TtaGetMemory (MAX_LENGTH);
@@ -7690,9 +6724,6 @@ void InitAmaya (NotifyEvent * event)
 #ifdef _WINDOWS
   sprintf (LostPicturePath, "%s\\amaya\\lost.gif", TtaGetEnvString ("THOTDIR"));
 #endif /* _WINDOWS */
-#ifdef _GTK
-  sprintf (LostPicturePath, "%s/amaya/lost.gif", TtaGetEnvString ("THOTDIR"));   
-#endif /* _GTK */
   InitMathML ();
 #ifdef _SVG
   InitSVG ();
@@ -7712,9 +6743,7 @@ void InitAmaya (NotifyEvent * event)
   InitTemplates();
 #endif
 
-#ifdef _WX
   TtaSetPopupDocContextMenuFunction((PopupDocContextMenuFuction)AmayaPopupDocContextMenu);
-#endif /* _WX */
   
   InsertableElement_Init();
 
@@ -7737,7 +6766,6 @@ void InitAmaya (NotifyEvent * event)
       TtaFreeMemory (ptr);
       return;
     }
-#ifdef _WX
   int arg_doc_id = 1;
   while (arg_doc_id < appArgc)
     {
@@ -7748,21 +6776,11 @@ void InitAmaya (NotifyEvent * event)
   /* load the homepage if nothing has been found in the command line */
   if (arg_doc_id == 1)
     OpenNewDocFromArgv(NULL);
-#else /* _WX */
-  if (appArgc % 2 == 0)
-    /* The last argument in the command line is the document to be opened */
-    s = appArgv[appArgc - 1];
-
-  // load the document with its url (s)
-  OpenNewDocFromArgv(s);
-#endif /* _WX */
-
 
   TtaFreeMemory (ptr);
   ptr = NULL;
   Loading_method = CE_ABSOLUTE;
 
-#ifdef _WX
   /* register openurl callback in order to call it when twice amaya instance are running */
   TtaRegisterOpenURLCallback( (void (*)(void*))OpenNewDocFromArgv );
 
@@ -7771,7 +6789,6 @@ void InitAmaya (NotifyEvent * event)
   p.param1 = 1; /* init action */
   p.param2 = (void*)pMathEntityTable;
   TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -7782,10 +6799,8 @@ void OpenNewDocFromArgv( char * url )
   char ptr[MAX_LENGTH];
   char * s = url;
   
-#ifdef _WX
   /* load the document in the default location */
   LoadDefaultOpeningLocation (TRUE);
-#endif /* _WX */
 
   if (s == NULL || s[0] == EOS)
     /* no argument: display the Home Page */
@@ -7897,10 +6912,8 @@ void ChangeAttrOnRoot (Document doc, int attrNum)
   ----------------------------------------------------------------------*/
 void ShowPanel (Document doc, View view)
 {
-#ifdef _WX
   int frame_id = GetWindowNumber (doc, view);
   TtaToggleOnOffSidePanel( frame_id );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -7909,10 +6922,8 @@ void ShowPanel (Document doc, View view)
   ----------------------------------------------------------------------*/
 void ShowBrowsingBar (Document doc, View view)
 {
-#ifdef _WX
   int frame_id = GetWindowNumber (doc, view);
   TtaToggleToolbar( frame_id, 0 );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -7921,10 +6932,8 @@ void ShowBrowsingBar (Document doc, View view)
   ----------------------------------------------------------------------*/
 void ShowEditingBar (Document doc, View view)
 {
-#ifdef _WX
   int frame_id = GetWindowNumber (doc, view);
   TtaToggleToolbar( frame_id, 1 );
-#endif /* _WX */
 }
 
 
@@ -7935,10 +6944,8 @@ void ShowEditingBar (Document doc, View view)
   ----------------------------------------------------------------------*/
 void FullScreen (Document doc, View view)
 {
-#ifdef _WX
   int frame_id = GetWindowNumber (doc, view);
   TtaToggleOnOffFullScreen( frame_id );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -7946,11 +6953,9 @@ void FullScreen (Document doc, View view)
   split horizontally the view
   ----------------------------------------------------------------------*/
 void SplitHorizontally (Document doc, View view)
-{  
-#ifdef _WX
+{
   int frame_id = GetWindowNumber (doc, view);
   TtaSplitViewHorizontally( frame_id );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -7959,10 +6964,8 @@ void SplitHorizontally (Document doc, View view)
   ----------------------------------------------------------------------*/
 void SplitVertically (Document doc, View view)
 {
-#ifdef _WX
   int frame_id = GetWindowNumber (doc, view);
   TtaSplitViewVertically( frame_id );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -7971,7 +6974,6 @@ void SplitVertically (Document doc, View view)
   ----------------------------------------------------------------------*/
 void ShowHSplitToggle (Document doc, View view)
 {  
-#ifdef _WX
   HSplit[doc] = TRUE;
   TtaSetToggleItem (doc, view, Views, TSplitHorizontally, HSplit[doc]);
   // Set V toggle off
@@ -7983,7 +6985,6 @@ void ShowHSplitToggle (Document doc, View view)
       TtaSetToggleItem (DocumentSource[doc], 1, Views,
 			TSplitHorizontally, HSplit[DocumentSource[doc]]);
     }
-#endif /* _WX */
 }
 /*----------------------------------------------------------------------
   ShowVSplitToggle
@@ -7991,7 +6992,6 @@ void ShowHSplitToggle (Document doc, View view)
   ----------------------------------------------------------------------*/
 void ShowVSplitToggle (Document doc, View view)
 {  
-#ifdef _WX
   VSplit[doc] = TRUE;
   TtaSetToggleItem (doc, view, Views, TSplitVertically, VSplit[doc]);
   // Set H toggle off
@@ -8003,7 +7003,6 @@ void ShowVSplitToggle (Document doc, View view)
       TtaSetToggleItem (DocumentSource[doc], 1, Views,
 			TSplitVertically, VSplit[DocumentSource[doc]]);
     }
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -8012,7 +7011,6 @@ void ShowVSplitToggle (Document doc, View view)
   ----------------------------------------------------------------------*/
 void HideHSplitToggle (Document doc, View view)
 {  
-#ifdef _WX
   HSplit[doc] = FALSE;
   TtaSetToggleItem (doc, view, Views, TSplitHorizontally, HSplit[doc]);
   // Update the document source toggle
@@ -8022,7 +7020,6 @@ void HideHSplitToggle (Document doc, View view)
       TtaSetToggleItem (DocumentSource[doc], 1, Views,
 			TSplitHorizontally, HSplit[DocumentSource[doc]]);
     }
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -8030,8 +7027,7 @@ void HideHSplitToggle (Document doc, View view)
   Hide toggle mark
   ----------------------------------------------------------------------*/
 void HideVSplitToggle (Document doc, View view)
-{  
-#ifdef _WX
+{
   VSplit[doc] = FALSE;
   TtaSetToggleItem (doc, view, Views, TSplitVertically, VSplit[doc]);
   // Update the document source toggle
@@ -8041,7 +7037,6 @@ void HideVSplitToggle (Document doc, View view)
       TtaSetToggleItem (DocumentSource[doc], 1, Views,
 			TSplitVertically, VSplit[DocumentSource[doc]]);
     }
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -8050,32 +7045,8 @@ void HideVSplitToggle (Document doc, View view)
   ----------------------------------------------------------------------*/
 void ShowMapAreas (Document doc, View view)
 {
-#ifdef _WINGUI
-  int frame = GetWindowNumber (doc, view);
-
-  if (frame == 0 || frame > 10)
-    TtaError (ERR_invalid_parameter);
-  else
-    {
-      HMENU hmenu = WIN_GetMenu (frame);
-      if (!MapAreas[doc])
-        {
-          CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
-          MapAreas[doc] = TRUE;
-        }
-      else
-        {
-          hmenu = WIN_GetMenu (frame); 
-          CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-          MapAreas[doc] = FALSE;
-        }
-    }
-#endif /* _WINGUI */
-  
-#if defined(_GTK) || defined(_WX)  
   MapAreas[doc] = !MapAreas[doc];
   TtaSetToggleItem (doc, view, Views, TShowMapAreas, MapAreas[doc]);
-#endif /* _GTK || _WX */
   ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
 }
 
@@ -8085,17 +7056,14 @@ void ShowMapAreas (Document doc, View view)
   ----------------------------------------------------------------------*/
 void MakeIDMenu (Document doc, View view)
 {
-#if defined(_GTK) || defined(_WX) 
   int     i;
   char    s[MAX_LENGTH];
-#endif /* #if defined(_GTK) || defined(_WX) */
 
   /* initialize the global variables */
   IdStatus[0] = EOS;
   IdDoc = doc;
 
   /* Create the dialogue form */
-#if defined(_GTK) || defined(_WX) 
   i = 0;
   strcpy (&s[i], TtaGetMessage (AMAYA, ADD_ID));
   i += strlen (&s[i]) + 1;
@@ -8127,19 +7095,12 @@ void MakeIDMenu (Document doc, View view)
   TtaSetMenuForm (BaseDialog + mIdUseSelection, IdApplyToSelection);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + MakeIdMenu, TRUE);
-#endif /* #if defined(_GTK) || defined(_WX) */
 
-#ifdef _WINGUI  
-  CreateMakeIDDlgWindow (TtaGetViewFrame (doc, view));
-#endif /* _WINGUI */
-
-#ifdef _WX
   if (CreateMakeIdDlgWX (BaseDialog + MakeIdMenu, TtaGetViewFrame (doc, view)))
     {
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseDialog + MakeIdMenu, FALSE);
     }
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -8177,7 +7138,6 @@ void CheckAmayaClosed ()
   ----------------------------------------------------------------------*/
 void AmayaCloseTab (Document doc, View view)
 {
-#ifdef _WX
   int page_id       = -1;
   int page_position = 0;
   int window_id     = 0;
@@ -8191,7 +7151,6 @@ void AmayaCloseTab (Document doc, View view)
       if (TtaClosePage( window_id, page_id ))
 		TtaCleanUpWindow( window_id );
     }
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -8199,7 +7158,6 @@ void AmayaCloseTab (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CloseOtherTabs( Document doc, View view)
 {
-#ifdef _WX
   int page_id       = -1;
   int page_position = 0;
   int window_id     = 0;
@@ -8209,7 +7167,6 @@ void CloseOtherTabs( Document doc, View view)
      close the corresponding page */
   TtaGetDocumentPageId (doc, view, &page_id, &page_position);
   TtaCloseAllPageButThis (window_id, page_id);
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -8217,7 +7174,6 @@ void CloseOtherTabs( Document doc, View view)
   ----------------------------------------------------------------------*/
 void NewTab (Document doc, View view)
 {
-#ifdef _WX
   char  *s = (char *)TtaGetMemory (MAX_LENGTH);
 #ifdef _WINDOWS
   sprintf (s, "%s\\empty", TtaGetEnvString ("THOTDIR"));
@@ -8230,7 +7186,6 @@ void NewTab (Document doc, View view)
   InNewWindow       = FALSE;
   ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (char*)1);
   TtaFreeMemory (s);
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -8255,7 +7210,6 @@ void RefreshTab (Document doc, View view)
   ----------------------------------------------------------------------*/
 void RefreshAllTabs (Document doc, View view)
 {
-#ifdef _WX
   int      i;
   int      ref_id = 0, window_id;
   
@@ -8271,7 +7225,6 @@ void RefreshAllTabs (Document doc, View view)
             RefreshTab (i, 1);
         }
     }
-#endif /* _WX */
 }
 
 
@@ -8281,67 +7234,21 @@ void AmayaCloseWindow (Document doc, View view)
 {
   /* Save the current windows geometry */
   SaveGeometryOnExit( doc, NULL);
-#ifdef _WX
   /* get the document's parent window and try to close it */
   int window_id = TtaGetDocumentWindowId( doc, view );
   TtaCloseWindow( window_id );
-#else /* _WX */
-  if (DocumentURLs[doc] && view == 1)
-    {
-      TtcCloseDocument (doc, view);
-      if (!W3Loading)
-        CheckAmayaClosed ();
-    }
-  else
-    TtcCloseView (doc, view);
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void AmayaClose (Document document, View view)
 {
-#ifdef _WX
   AmayaWindowIterator it;
   for( it.first(); !it.isDone(); it.next() )
     {
       /* close each window one by one */
       TtaCloseWindow( it.currentWindowId() );
     }
-#endif /* _WX */
-
-#ifndef _WX
-  int          i;
-  ThotBool     documentClosed;
-
-  /* invalid current loading */
-  W3Loading = 0;
-
-  documentClosed = TRUE;
-
-  /* Save the current windows geometry */
-  SaveGeometryOnExit( document, NULL );
-
-  /* free each loaded document */
-  for (i = DocumentTableLength; i > 0; i--)
-    if (DocumentURLs[i] != NULL)
-      {
-        TtcCloseDocument (i, 1);
-        documentClosed = (DocumentURLs[i] == NULL);
-        if (!documentClosed)
-          return;
-      }
-  /* remove images loaded by shared CSS style sheets */
-  RemoveDocumentImages (0);
-#ifdef _SVG
-  SVGLIB_FreeDocumentResource ();
-#endif /* _SVG */
-
-#ifdef  _JAVA
-  DestroyJavascript ();
-#endif /* _JAVA */
-  TtaQuit ();
-#endif /* _WX */
 }
 
 
@@ -8370,14 +7277,9 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
   urlstring = (char *) TtaGetMemory (MAX_LENGTH);
   /* open the file list_url.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
-#ifdef _WX
   /* force url encoding to utf8 */
   sprintf (urlstring, "%s%clist_url_utf8.dat", app_home, DIR_SEP);
   encoding = UTF_8;
-#else /* _WX */
-  sprintf (urlstring, "%s%clist_url.dat", app_home, DIR_SEP);
-  encoding = TtaGetLocaleCharset();
-#endif /* _WX */
   /* keep the previous list */
   old_list = URL_list;
   /* create a new list */
@@ -8468,12 +7370,8 @@ void InitStringForCombobox ()
   /* open the file list_url.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
 
-#ifdef _WX
   /* force url encoding to utf8 */
   sprintf ((char *)urlstring, "%s%clist_url_utf8.dat", app_home, DIR_SEP);
-#else /* _WX */
-  sprintf ((char *)urlstring, "%s%clist_url.dat", app_home, DIR_SEP);
-#endif /* _WX */
   
   file = TtaReadOpen ((char *)urlstring);
   *urlstring = EOS;
@@ -8819,16 +7717,11 @@ void ClearURLList()
 
   /* cleanup the urllist file */ 
   app_home = TtaGetEnvString ("APP_HOME");
-#ifdef _WX
   /* force url encoding to utf8 */
   sprintf ((char *)filename, "%s%clist_url_utf8.dat", app_home, DIR_SEP);
-#else /* _WX */
-  sprintf ((char *)filename, "%s%clist_url.dat", app_home, DIR_SEP);
-#endif /* _WX */
   file = TtaWriteOpen(filename);
   TtaWriteClose(file);
 
-#ifdef _WX
   /* then cleanup the combobox widget */
   AmayaWindowIterator it;
   for( it.first(); !it.isDone(); it.next() )
@@ -8836,16 +7729,13 @@ void ClearURLList()
       /* empty url list on each windows */
       TtaEmptyURLBar( it.currentWindowId() );
     }
-#endif /* _WX */
 }
 
 
-#ifdef _WX
 #include <wx/sstream.h>
 #include <wx/wfstream.h>
 #include <wx/dir.h>
 #include "../thotlib/internals/h/SMTP.h"
-#endif /* _WX */
 
 /*----------------------------------------------------------------------
  * Retrieve a valid temporary directory path.
@@ -8888,7 +7778,6 @@ char* CreateTempDirectory(const char* name)
   ----------------------------------------------------------------------*/
 void SendByMail (Document document, View view)
 {
-#ifdef _WX
   char                 buff[MAX_LENGTH], *appname, *vers;
   ElementType          elType;
   Element              docEl, el, text;
@@ -9025,11 +7914,9 @@ void SendByMail (Document document, View view)
   for (i = 0; i < (int)files.GetCount(); i++)
     wxRemoveFile(files[i]);
   
-  wxRmdir(wxString(temppath, wxConvUTF8));  
-#endif /* _WX */
+  wxRmdir(wxString(temppath, wxConvUTF8));
 }
 
-#ifdef _WX
 static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, int y)
 {
   wxMenu * p_menu = TtaGetDocContextMenu ( window );
@@ -9134,4 +8021,3 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
     }
   return -1;
 }
-#endif /* _WX */
