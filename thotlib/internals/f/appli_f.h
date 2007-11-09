@@ -11,9 +11,6 @@ extern void FrameKilled ( int *w,
                           int frame,
                           int *info );
 extern ThotBool KillFrameCallback ( int frame );
-extern void FrameToRedisplay ( ThotWindow w,
-                               int frame,
-                               void *ev );
 extern void FrameRedraw ( int frame,
                           unsigned int width,
                           unsigned int height );
@@ -127,9 +124,6 @@ extern void FrameKilled ( int *w,
                             int frame,
                             int *info );
 extern ThotBool KillFrameCallback ( int frame );
-extern void FrameToRedisplay ( ThotWindow w,
-                                 int frame,
-                                 void *ev );
 extern void FrameRedraw ( int frame,
                             unsigned int width,
                             unsigned int height );

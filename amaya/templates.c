@@ -368,27 +368,6 @@ void InitTemplates ()
 
 
 /*----------------------------------------------------------------------
-  NewTemplate: Create the "new document from template" dialog
-  ----------------------------------------------------------------------*/
-void NewTemplate (Document doc, View view)
-{
-#ifdef TEMPLATES
-  ThotBool     created;
-
-  if (Templates_Map == NULL)
-    InitializeTemplateEnvironment ();
-  created = CreateNewTemplateDocDlgWX (BaseDialog + OpenTemplate,
-                                      /*TtaGetViewFrame (doc, view)*/NULL, doc,
-                                      TtaGetMessage (AMAYA, AM_NEW_TEMPLATE));
-  if (created)
-    {
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + OpenTemplate, TRUE);
-    }
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
   Load a template and create the instance file - update images and 
   stylesheets related to the template.
   ----------------------------------------------------------------------*/

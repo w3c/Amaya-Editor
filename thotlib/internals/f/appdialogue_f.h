@@ -40,13 +40,6 @@ extern void TteAddMenuItem ( int menuID,
                              const char *actionName,
                              char itemType,
                              const char * iconName );
-extern void BuildPopdown ( Menu_Ctl *ptrmenu,
-                           int ref,
-                           ThotMenu button,
-                           int frame,
-                           int doc,
-                           ThotBool update,
-                           ThotBool RO );
 extern void TteOpenMainWindow ( char *name );
 extern int TtaAddTextZone ( Document doc,
                             View view,
@@ -57,8 +50,6 @@ extern int TtaAddTextZone ( Document doc,
 extern void TtaSetTextZone ( Document doc,
                              View view,
                              char *listUrl );
-extern void TtcSwitchCommands ( Document doc,
-                                View view );
 extern void DrawingInput ( int *w,
                            int frame,
                            int *infos );
@@ -152,13 +143,6 @@ extern void TteAddMenuItem ( int menuID,
                                const char *actionName,
                                char itemType,
                                const char * iconName );
-extern void BuildPopdown ( Menu_Ctl *ptrmenu,
-                             int ref,
-                             ThotMenu button,
-                             int frame,
-                             int doc,
-                             ThotBool update,
-                             ThotBool RO );
 extern void TteOpenMainWindow ( char *name );
 extern int TtaAddTextZone ( Document doc,
                               View view,
@@ -169,8 +153,6 @@ extern int TtaAddTextZone ( Document doc,
 extern void TtaSetTextZone ( Document doc,
                                View view,
                                char *listUrl );
-extern void TtcSwitchCommands ( Document doc,
-                                  View view );
 extern void DrawingInput ( int *w,
                              int frame,
                              int *infos );

@@ -169,8 +169,10 @@ XTigerTemplate LookForXTigerLibrary (const char *templatePath)
 XTigerTemplate GetXTigerTemplate (const char *templatePath)
 {
 #ifdef TEMPLATES
-  if (templatePath==NULL)
+  if (templatePath == NULL)
     return NULL;
+  if (Templates_Map == NULL)
+    InitializeTemplateEnvironment ();
   return (XTigerTemplate) HashMap_Get(Templates_Map, (void*)templatePath);
 #else
   return NULL;

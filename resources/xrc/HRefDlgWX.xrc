@@ -32,6 +32,15 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_CLEAR">
+                  <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="spacer">
+                <size>2,0</size>
+              </object>
+              <object class="sizeritem">
                 <object class="wxComboBox" name="wxID_COMBOBOX">
                   <content/>
                   <size>400,-1</size>
@@ -39,15 +48,6 @@
                 </object>
                 <option>1</option>
                 <flag>wxEXPAND</flag>
-              </object>
-              <object class="spacer">
-                <size>2,0</size>
-              </object>
-              <object class="sizeritem">
-                <object class="wxBitmapButton" name="wxID_CLEAR">
-                  <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
-                </object>
-                <flag>wxALIGN_CENTRE_VERTICAL</flag>
               </object>
               <object class="spacer">
                 <size>2,0</size>

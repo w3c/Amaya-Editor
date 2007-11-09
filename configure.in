@@ -1466,7 +1466,7 @@ fi
 dnl
 if test "$build_amaya" = "yes" ; then
     echo Amaya $AMAYA_VER configured
-    echo Amaya configured with libWWW
+    echo Amaya configured with libWWW \(local source\)
     if test "$with_math" = "yes" ; then
 	echo Amaya configured with Math support
     fi
@@ -1484,7 +1484,7 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
     if test "$with_templates" = "yes" ; then
-	echo Amaya configured with templates support \(experimental\)
+	echo Amaya configured with templates support
     fi
     if test "$with_generic_xml" = "yes" ; then
 	echo Amaya configured with generic XML support

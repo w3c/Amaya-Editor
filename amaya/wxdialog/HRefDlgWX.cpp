@@ -60,9 +60,9 @@ HRefDlgWX::HRefDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_BROWSE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CLICK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLICK) ));
-  XRCCTRL(*this, "wxID_CLICK", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLICK) ));
+  XRCCTRL(*this, "wxID_CLICK", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CREATE_BY_CLICK) ));
   XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
-  XRCCTRL(*this, "wxID_DELETE", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_DEL) ));
+  XRCCTRL(*this, "wxID_DELETE", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_DELETE_LINK) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
 
   // fill the combobox with url list

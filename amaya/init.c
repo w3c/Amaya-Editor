@@ -1675,10 +1675,11 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
         }
       strcpy (LastURLName, s);
     }
+
   /* here we pass also 'URL_list', because we want generate a combobox choice list */
   created = CreateOpenDocDlgWX( BaseDialog + OpenForm,
-                                TtaGetViewFrame (doc, view), title, URL_list, s, name,
-                                DocSelect, DirSelect, docType, NewFile );
+                                TtaGetViewFrame (doc, view), title, URL_list, s,
+                                docType, doc, NewFile );
   if (created)
     {
       TtaSetDialoguePosition ();
@@ -2283,9 +2284,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* update the menus according to the profile */
        /* By default no log file */
       TtaSetItemOff (doc, 1, File, BShowLogFile);
-#ifndef TEMPLATES
-      TtaSetItemOff (doc, 1, File, BTemplate);
-#endif /* TEMPLATES */
 
 #ifndef DAV    /* don't active the WebDAV menu if flag is off */
       TtaSetMenuOff (doc, 1, Cooperation_);
@@ -2358,7 +2356,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
             {
               TtaSetItemOff (doc, 1, File, BMathml);
               TtaSetItemOff (doc, 1, File, BSvg);
-              TtaSetItemOff (doc, 1, File, BTemplate);
               TtaSetItemOff (doc, 1, File, BCss);
               TtaSetItemOff (doc, 1, File, BOpenDoc);
               TtaSetItemOff (doc, 1, File, BReload);

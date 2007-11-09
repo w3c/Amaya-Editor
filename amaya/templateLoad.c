@@ -274,7 +274,7 @@ void LoadTemplate (Document doc, char* templatename)
 
   if (!IsW3Path (templatename))
     {
-      //Stores the template path for show it in next instanciation forms
+      //Stores the template path and shows it in next instanciation forms
       directory	= (char*) TtaGetMemory (size);
       s	= (char*) TtaGetMemory (size);
       TtaExtractName (templatename, directory, s);	

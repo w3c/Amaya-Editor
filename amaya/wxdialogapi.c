@@ -17,7 +17,6 @@
 #include "styleparser_f.h"
 
 #ifdef _WX
-  #include "wxdialog/NewTemplateDocDlgWX.h"
   #include "wxdialog/AuthentDlgWX.h"
   #include "wxdialog/CheckedListDlgWX.h"
   #include "wxdialog/CreateTableDlgWX.h"
@@ -313,27 +312,19 @@ ThotBool CreateInitConfirmDlgWX ( int ref, ThotWindow parent,
     + parent : parent window
     + title : dialog title
     + listUrl : the url list to show in the combobox
-    + docName : ??? not used
-    + doc_select : ??? not used
-    + dir_select : ??? not used 
-    + doc_type : ??? not used
   returns:
   ----------------------------------------------------------------------*/
 ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
                               const char *urlList, const char *urlToOpen,
-                              const char *docName, int doc_select,
-                              int dir_select, DocumentType doc_type,
-                              ThotBool newfile)
+                              DocumentType doc_type, int doc, ThotBool newfile)
 {
 #ifdef _WX
-  int select_charset = 1;
 
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
     return FALSE;
 
   wxString wx_title     = TtaConvMessageToWX( title );
-  wxString wx_docName   = TtaConvMessageToWX( docName );
   wxString wx_urlToOpen = TtaConvMessageToWX( urlToOpen );
   wxString wx_filter;
   wxString wx_profiles = _T("");
@@ -344,8 +335,6 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
     if (newfile)
       /* create a new HTML document: activate the list of profiles */
       wx_profiles = _T("XHTML Transitional");
-    else
-      select_charset = 0;
     }
   else if (doc_type == docMath)
     wx_filter = APPMATHNAMEFILTER;
@@ -354,7 +343,6 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
   else if (doc_type == docCSS)
     {
       wx_filter = APPCSSNAMEFILTER;
-      select_charset = 0; // no charset selection
     }
   else if (doc_type == docImage)
     wx_filter = APPIMAGENAMEFILTER;
@@ -365,17 +353,15 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
   else 
     {
       wx_filter = APPFILENAMEFILTER;
-      select_charset = 0; // open an existing document
     }
 
-  OpenDocDlgWX * p_dlg = new OpenDocDlgWX( ref, parent,
+  OpenDocDlgWX * p_dlg = new OpenDocDlgWX( ref, NULL/*parent*/,
                                            wx_title,
-                                           wx_docName,
                                            BuildWX_URL_List(urlList),
                                            wx_urlToOpen,
                                            wx_filter,
                                            &g_Last_used_filter,
-                                           wx_profiles, select_charset);
+                                           wx_profiles, doc, newfile);
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
@@ -389,52 +375,6 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
 #else /* _WX */
   return FALSE;
 #endif /* _WX */
-}
-
-
-/*----------------------------------------------------------------------
-  CreateNewTemplateDocDlgWX create the dialog for creating new documents from
-  template
-  params:
-    + parent : parent window
-    + title : dialog title
-    + templateList : template list to show in the combobox
-    + templateToOpen : user defined template
-    + docName : place to store the template's instance
-
-  returns:
-  ----------------------------------------------------------------------*/
-ThotBool CreateNewTemplateDocDlgWX (int ref,  ThotWindow parent, Document doc,
-                                    const char *title)
-{
-#if defined(TEMPLATES) && defined(_WX)
-  /* check if the dialog is alredy open */
-  if (TtaRaiseDialogue (ref))
-    return FALSE;
-  
-  wxString wx_title = TtaConvMessageToWX( title );
-  wxString wx_filter = TtaConvMessageToWX("All files (*.*)\0*.*\0");
-  
-  NewTemplateDocDlgWX * p_dlg = new NewTemplateDocDlgWX( ref,
-                                                         parent,
-                                                         doc,
-                                                         wx_title,
-                                                         wx_filter,
-                                                         &g_Last_used_filter
-                                                         );
-
-  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-      /* the dialog has been sucesfully registred */
-      return TRUE;
-  else
-    {
-      /* an error occured durring registration */
-      p_dlg->Destroy();
-      return FALSE;
-    }
-#else /* TEMPLATES */
-  return FALSE;
-#endif /* TEMPLATES */
 }
 
 

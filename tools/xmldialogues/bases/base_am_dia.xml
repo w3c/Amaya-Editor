@@ -332,22 +332,6 @@
 	<message xml:lang="tw">新建 CSS 樣式表(&amp;T)...</message>
 	<message xml:lang="sk">Nový súbor &amp;CSS pravidiel...</message>
 </label>
-<label define="BTemplate">
-	<message xml:lang="en">From t&amp;emplate...</message>
-	<message xml:lang="fr">A partir du Modèl&amp;e...</message>
-	<message xml:lang="de">Schablon&amp;e...</message>
-	<message xml:lang="it">Mod&amp;ello</message>
-	<message xml:lang="es">Desd&amp;e plantilla</message>
-	<message xml:lang="pt">Do gabarito(&amp;E)</message>
-	<message xml:lang="fi">Valmiista mallista(&amp;E)</message>
-	<message xml:lang="tr">Mod&amp;el</message>
-	<message xml:lang="ru">Из шаблона</message>
-	<message xml:lang="hu">&amp;Sablonból(&amp;E)</message>
-	<message xml:lang="ka">თარგიდან(&amp;E)</message>
-	<message xml:lang="cn">来自模板(&amp;E)...</message>
-	<message xml:lang="tw">來自模板(&amp;E)...</message>
-	<message xml:lang="sk">Zo &amp;šablóny...</message>
-</label>
 <label define="BOpenDoc">
 	<message xml:lang="en">&amp;Open document...</message>
 	<message xml:lang="fr">&amp;Ouvrir...</message>

@@ -6486,7 +6486,6 @@
 	<message xml:lang="es">SpiderMonkey devolvió el error siguiente:\n\nArchivo: %s\nLínea: %d\n\n%s</message>
 	<message xml:lang="fr">SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s</message>
 </label>
-
 <label define="AM_NEW">
 	<message xml:lang="en">New</message>
 	<message xml:lang="fr">Nouveau</message>
@@ -6503,16 +6502,42 @@
 	<message xml:lang="tw">新建</message>
 	<message xml:lang="sk">Nový</message>
 </label>
-
-
 <label define="AM_AUI_FREE_PANEL_POS">
 	<message xml:lang="en">Customizable</message>
 	<message xml:lang="es"></message>
 	<message xml:lang="fr">Paramétrable</message>
 </label>
-
+<label define="AM_CREATE">
+	<message xml:lang="en">Create</message>
+	<message xml:lang="fr">Créer</message>
+	<message xml:lang="es">Crear</message>
+	<message xml:lang="it">Crea</message>
+	<message xml:lang="de">Anker</message>
+	<message xml:lang="pt">Create</message>
+	<message xml:lang="fi">Luo</message>
+	<message xml:lang="hu">Létrehozása</message>
+</label>
+<label define="AM_CREATE_BY_CLICK">
+	<message xml:lang="en">Create the link by click</message>
+	<message xml:lang="fr">Créer le lien en cliquant</message>
+</label>
+<label define="AM_DELETE_LINK">
+	<message xml:lang="en">Delete link</message>
+	<message xml:lang="fr">Detruire le lien</message>
+	<message xml:lang="de">Verweis löschen</message>
+	<message xml:lang="it">Cancella ancora</message>
+	<message xml:lang="tr">tanımı sil</message>
+	<message xml:lang="es">Borrar ancla</message>
+	<message xml:lang="pt">Apagar âncora</message>
+	<message xml:lang="fi">Poista linkki</message>
+	<message xml:lang="ru">Удалить ссылку или цель</message>
+	<message xml:lang="hu">Horgony törlése</message>
+	<message xml:lang="ka">ღუზის წაშლა</message>
+	<message xml:lang="cn">删除 anchor</message>
+	<message xml:lang="tw">刪除 anchor</message>
+	<message xml:lang="sk">Odstrániť odkaz</message>
+</label>
 <label define="AMAYA_MSG_MAX">
-	<message xml:lang="ru">Новый</message>
 </label>
 </messages>
 </base>

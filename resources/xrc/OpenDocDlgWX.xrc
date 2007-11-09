@@ -13,6 +13,15 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_CLEAR">
+                  <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="spacer">
+                <size>2,0</size>
+              </object>
+              <object class="sizeritem">
                 <object class="wxComboBox" name="wxID_COMBOBOX">
                   <content/>
                   <size>420,-1</size>
@@ -21,15 +30,6 @@
                 </object>
                 <option>1</option>
                 <flag>wxEXPAND</flag>
-              </object>
-              <object class="spacer">
-                <size>2,0</size>
-              </object>
-              <object class="sizeritem">
-                <object class="wxBitmapButton" name="wxID_CLEAR">
-                  <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
-                </object>
-                <flag>wxALIGN_CENTRE_VERTICAL</flag>
               </object>
               <object class="spacer">
                 <size>2,0</size>
@@ -147,6 +147,44 @@
             </object>
             <flag>wxBOTTOM|wxEXPAND</flag>
             <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticBoxSizer">
+              <orient>wxVERTICAL</orient>
+              <object class="sizeritem">
+                <object class="wxCheckBox" name="wxID_USE_TEMPLATE">
+                  <label>Use a template</label>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxHORIZONTAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxComboBox" name="wxID_TEMPLATEFILENAME">
+                      <content/>
+                      <size>420,-1</size>
+                      <style>wxCB_DROPDOWN</style>
+                      <focused>1</focused>
+                    </object>
+                    <option>1</option>
+                    <flag>wxEXPAND</flag>
+                  </object>
+                  <object class="spacer">
+                    <size>2,0</size>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxBitmapButton" name="wxID_BUTTON_TEMPLATE">
+                      <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                    </object>
+                    <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                  </object>
+                </object>
+                <flag>wxBOTTOM|wxEXPAND</flag>
+                <border>4</border>
+              </object>
+              <label></label>
+            </object>
+            <flag>wxEXPAND</flag>
           </object>
         </object>
         <flag>wxALL|wxEXPAND</flag>

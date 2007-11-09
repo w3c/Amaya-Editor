@@ -3,17 +3,28 @@
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
 #include "wx/string.h"
-
+#include "wx/arrstr.h"
+#include "wx/dir.h"
+#include "application.h"
 #include "AmayaApp.h"
 #include "OpenDocDlgWX.h"
+
+#include "Elemlist.h"
+#include "containers.h"
 
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 #include "thot_sys.h"
+#include "templates.h"
+#include "templates_f.h"
+#include "registry_wx.h"
+#include "MENUconf_f.h"
+
 static int      Waiting = 0;
 static int      MyRef = 0;
+static int      Ref_doc = 0;
 static ThotBool Mandatory_title = FALSE;
 static char    *compound_string;
 
@@ -21,15 +32,50 @@ static char    *compound_string;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(OpenDocDlgWX, AmayaDialog)
-  EVT_BUTTON(     XRCID("wxID_OK"),              OpenDocDlgWX::OnOpenButton )
-  EVT_BUTTON(     XRCID("wxID_CLEAR"),           OpenDocDlgWX::OnClearButton )
-  EVT_BUTTON(     XRCID("wxID_CANCEL"),          OpenDocDlgWX::OnCancelButton )
-  EVT_BUTTON(     XRCID("wxID_BUTTON_DIR"),      OpenDocDlgWX::OnDirButton )
-  EVT_BUTTON(     XRCID("wxID_BUTTON_FILENAME"), OpenDocDlgWX::OnFilenameButton )
-  EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),        OpenDocDlgWX::OnOpenButton )
-  EVT_COMBOBOX( XRCID("wxID_COMBOBOX"),          OpenDocDlgWX::OnURLSelected )
-  EVT_COMBOBOX( XRCID("wxID_PROFILE"),           OpenDocDlgWX::OnProfileSelected )
+  EVT_BUTTON(XRCID("wxID_OK"),              OpenDocDlgWX::OnOpenButton )
+  EVT_BUTTON(XRCID("wxID_CLEAR"),           OpenDocDlgWX::OnClearButton )
+  EVT_BUTTON(XRCID("wxID_CANCEL"),          OpenDocDlgWX::OnCancelButton )
+  EVT_BUTTON(XRCID("wxID_BUTTON_DIR"),      OpenDocDlgWX::OnDirButton )
+  EVT_BUTTON(XRCID("wxID_BUTTON_FILENAME"), OpenDocDlgWX::OnFilenameButton )
+  EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),   OpenDocDlgWX::OnOpenButton )
+  EVT_COMBOBOX(XRCID("wxID_COMBOBOX"),      OpenDocDlgWX::OnURLSelected )
+  EVT_COMBOBOX(XRCID("wxID_PROFILE"),       OpenDocDlgWX::OnProfileSelected )
+  EVT_CHECKBOX(XRCID("wxID_USE_TEMPLATE"),  OpenDocDlgWX::OnUseTemplate )
 END_EVENT_TABLE()
+
+
+/*----------------------------------------------------------------------
+  UpdateTemplateFromDir
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void OpenDocDlgWX::UpdateTemplateList ()
+{
+  Prop_Templates       prop = GetProp_Templates();
+  Prop_Templates_Path *path = prop.FirstPath;
+  wxArrayString        templateList;
+  wxString             value;
+  bool                 initialized = false;
+
+  if (!m_LockUpdateFlag)
+    {
+      m_LockUpdateFlag = true;
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Clear();
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue( TtaConvMessageToWX(""));
+      while (path)
+        {
+          value = TtaConvMessageToWX(path->Path);
+          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append(value);
+          if (!initialized)
+            {
+              XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetStringSelection(value);
+              initialized = true;
+            }
+          path = path->NextPath;
+        }
+      m_LockUpdateFlag = false;
+   }
+}
 
 /*----------------------------------------------------------------------
   OpenDocDlgWX create the dialog used to select a new document
@@ -37,30 +83,32 @@ END_EVENT_TABLE()
   params:
     + parent : parent window
     + title : dialog title
-    + docName : ??? not used
   returns:
   ----------------------------------------------------------------------*/
 OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
-                            const wxString & docName, const wxArrayString & urlList,
+                            const wxArrayString & urlList,
                             const wxString & urlToOpen, const wxString & filter,
                             int * p_last_used_filter, const wxString & profiles,
-                            int newfile) :
+                            int doc, ThotBool newfile) :
   AmayaDialog( parent, ref )
   ,m_Filter(filter)
   ,m_LockUpdateFlag(false)
   ,m_pLastUsedFilter(p_last_used_filter)
 {
-  char   *s;
+  char      *s;
+  char       buffer[MAX_LENGTH];
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("OpenDocDlgWX"));
   // waiting for a return
   Waiting = 1;
   MyRef = ref;
+  Ref_doc = doc;
+  GetTemplatesConf ();
+  m_UseTemplate = false;
   compound_string = TtaGetMessage(AMAYA,AM_COMPOUND_DOCUMENT);
 
   // update dialog labels with given ones
   SetTitle( title );
-  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_OPEN_URL) ));
   XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_REPLACECURRENT)));
@@ -70,6 +118,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   if (newfile)
     {
       // New HTML document
+      XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CREATE) ));
       XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
       XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->Hide();
 
@@ -89,6 +138,10 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
           XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Hide();
           XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Hide();
           XRCCTRL(*this, "wxID_ERROR", wxStaticText)->Hide();
+          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Hide();
+          XRCCTRL(*this, "wxID_BUTTON_TEMPLATE", wxBitmapButton)->Hide();
+          XRCCTRL(*this, "wxID_USE_TEMPLATE", wxCheckBox)->Hide();
+          //XRCCTRL(*this, "wxID_TEMPLATE_SIZER", wxStaticBoxSizer)->Hide();
           GetSizer()->SetSizeHints( this );
         }
       else
@@ -96,6 +149,14 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
           // document title
           Mandatory_title = TRUE;
           XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_BM_TITLE)));
+#ifdef TEMPLATES
+          XRCCTRL(*this, "wxID_BUTTON_TEMPLATE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
+          XRCCTRL(*this, "wxID_USE_TEMPLATE", wxCheckBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_NEW_TEMPLATE)));
+#else /* TEMPLATES */
+          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Hide();
+          XRCCTRL(*this, "wxID_BUTTON_TEMPLATE", wxBitmapButton)->Hide();
+          XRCCTRL(*this, "wxID_USE_TEMPLATE", wxCheckBox)->Hide();
+#endif /* TEMPLATES */
           XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
           XRCCTRL(*this, "wxID_ERROR", wxStaticText)->SetLabel( TtaConvMessageToWX(""));
           // Get the last selected profile
@@ -106,11 +167,15 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
             XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue(TtaConvMessageToWX(s));
           else
             XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue( profiles );
+
+          // Update the template combobox with pre-declared templates
+          UpdateTemplateList ();
         }
     }
   else
     {
       // Not a new HTML document
+      XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_OPEN_URL) ));
       Mandatory_title = FALSE;
       XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
       XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->Hide();
@@ -121,6 +186,10 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
       XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Hide();
       XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Hide();
       XRCCTRL(*this, "wxID_ERROR", wxStaticText)->Hide();
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Hide();
+      XRCCTRL(*this, "wxID_BUTTON_TEMPLATE", wxBitmapButton)->Hide();
+      XRCCTRL(*this, "wxID_USE_TEMPLATE", wxCheckBox)->Hide();
+      //XRCCTRL(*this, "wxID_TEMPLATE_SIZER", wxStaticBoxSizer)->Hide();
       GetSizer()->SetSizeHints( this );
     }
 
@@ -129,9 +198,31 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   TtaGetEnvInt("NEW_LOCATION", &where_to_open_doc);
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetSelection(where_to_open_doc);
 
-  // setup combobox values
+  // Initalize the combobox of file names
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->Append( urlList );
-  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( urlToOpen );
+  if (newfile)
+    {
+      // generate the default name
+      strncpy( buffer, (const char*)urlToOpen.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+      buffer[MAX_LENGTH - 1] = EOS;
+      if (TtaFileExist(buffer))
+        {
+          int        i = 1, len;
+          len = strlen (buffer);
+          while (buffer[len] != '.')
+            len--;
+          do
+            {
+              sprintf (&buffer[len], "%d.html", i);
+              i++;
+            }
+          while (TtaFileExist(buffer));
+        }
+      XRCCTRL(*this, "wxID_COMBOBOX",wxComboBox )->SetValue(TtaConvMessageToWX(buffer));
+    }
+  else
+      XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( urlToOpen );
+
 #if defined(_WINDOWS) || defined(_MACOS)
   // select the string
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetSelection(0, -1);
@@ -139,10 +230,6 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
   #endif /* _WINDOWS || _MACOS */
-
-  // dir separator
-  wxChar dir_sep = DIR_SEP;
-  m_DirSep = wxString(dir_sep);
 
   Fit();
   Refresh();
@@ -158,9 +245,9 @@ OpenDocDlgWX::~OpenDocDlgWX()
   if (Waiting)
     // no return done
     ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
-  else
-    // clean up the dialog context
-    TtaDestroyDialogue (MyRef);
+  //else
+  // clean up the dialog context
+  //TtaDestroyDialogue (MyRef);
 }
 
 /*----------------------------------------------------------------------
@@ -213,22 +300,36 @@ void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
 {
+  wxFileDialog  *p_dlg;
   wxString url, file_value;
+  int      id = event.GetId();
+  int      temp_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_TEMPLATE"));
 
   // Create a generic filedialog
-  wxFileDialog * p_dlg = new wxFileDialog
-    (this,
-     TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
-     _T(""),
-     _T(""),
-     m_Filter,
-     wxOPEN | wxCHANGE_DIR /* remember last directory */);
+ if (id == temp_id)
+    {
+      p_dlg = new wxFileDialog(this,
+                               TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
+                               _T(""), _T(""), _T("Templates (*.xtd)|*.xtd"),
+                               wxOPEN | wxCHANGE_DIR);
+      url = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue( );
+    }
+  else
+    {
+      p_dlg = new wxFileDialog (this,
+                                TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
+                                _T(""),_T(""), m_Filter,
+                                wxOPEN | wxCHANGE_DIR);
 
-  // get the combobox current url
-  url = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
-  if (url.StartsWith(_T("http")) ||
-      url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
-    p_dlg->SetDirectory(wxGetHomeDir());
+      // get the combobox current url
+      url = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
+      p_dlg->SetFilterIndex(*m_pLastUsedFilter);
+    }
+
+ // set an initial path
+ if (url.StartsWith(_T("http")) ||
+     url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
+   p_dlg->SetDirectory(wxGetHomeDir());
   else
     {
       file_value = url.AfterLast (DIR_SEP);
@@ -236,17 +337,29 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
       p_dlg->SetFilename (file_value);
     }
 
-  p_dlg->SetFilterIndex(*m_pLastUsedFilter);
-
   if (p_dlg->ShowModal() == wxID_OK)
     {
-      *m_pLastUsedFilter = p_dlg->GetFilterIndex();
-      XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( p_dlg->GetPath() );
-      XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
-      p_dlg->Destroy();
+      if (id == temp_id)
+        XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue( p_dlg->GetPath() );
+      else
+        {
+          *m_pLastUsedFilter = p_dlg->GetFilterIndex();
+          XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( p_dlg->GetPath() );
+          XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
+        }
     }
-  else
-    p_dlg->Destroy();
+  p_dlg->Destroy();
+}
+
+
+/*----------------------------------------------------------------------
+  OnOpenButton called when the user validate his selection
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void OpenDocDlgWX::OnUseTemplate( wxCommandEvent& event )
+{
+  m_UseTemplate = !m_UseTemplate;
 }
 
 
@@ -259,11 +372,23 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
 {
   wxString        value, title, name;
   char            buffer[MAX_LENGTH];
+  char            temp[MAX_LENGTH], docname[MAX_LENGTH];
   int             where_id, end_pos;
 
   if (!Waiting)
     // no return done
     return;
+
+  // get the template path
+  if (m_UseTemplate)
+    {
+      value = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue( );
+      value = value.Trim(TRUE).Trim(FALSE);
+      strncpy (temp, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+      temp[MAX_LENGTH - 1] = EOS;
+    }
+  else
+    temp[0] = EOS;
 
   // get the selected charset
   value = XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->GetStringSelection();
@@ -273,6 +398,9 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
   // get the combobox current url
   value = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
   value = value.Trim(TRUE).Trim(FALSE);
+  strncpy (docname, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+  docname[MAX_LENGTH - 1] = EOS;
+
   // Get the document title
   if (Mandatory_title)
     {
@@ -317,10 +445,6 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
         }
     }
 
-  // give the new url to amaya (to do url completion)
-  strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH - 1);
-  buffer[MAX_LENGTH - 1] = EOS;
-  ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)buffer );
 
   // get the "where to open" indicator
   where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
@@ -336,11 +460,21 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
       ThotCallback (BaseDialog + DocInfoDocType,  STRING_DATA, (char *)buffer );
     }
 
-  // return done
-  Waiting = 0;
-  // create or load the new document
-  ThotCallback (MyRef, INTEGER_DATA, (char*)1);
-
+  // give the new url to amaya (to do url completion)
+  if (temp[0] != EOS)
+    {
+      CreateInstanceOfTemplate (Ref_doc, temp, docname);
+      Waiting = 0;
+      TtaDestroyDialogue (MyRef);
+    }
+  else
+    {
+      ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)docname);
+      // return done
+      Waiting = 0;
+      // create or load the new document
+      ThotCallback (MyRef, INTEGER_DATA, (char*)1);
+    }
   /* The dialogue is no longer destroyed in the callback to prevent a crash on Mac */
   TtaDestroyDialogue (MyRef);
 }
@@ -416,7 +550,6 @@ void OpenDocDlgWX::OnProfileSelected( wxCommandEvent& event )
           strcat (buffer, ".html");
           XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue(TtaConvMessageToWX(buffer));
         }
-
     }
 }
 

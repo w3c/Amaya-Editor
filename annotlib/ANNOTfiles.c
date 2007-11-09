@@ -1064,7 +1064,6 @@ void ANNOT_PrepareAnnotView (Document document)
     /*    TtaSetMenuOff (document, view, Help_); */
     TtaSetItemOff (document, view, File, BBack);
     TtaSetItemOff (document, view, File, BForward);
-    TtaSetItemOff (document, view, File, BTemplate);
     TtaSetItemOff (document, view, File, BCss);
     TtaSetItemOff (document, view, File, BOpenDoc);
     TtaSetItemOff (document, view, File, BOpenInNewWindow);

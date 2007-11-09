@@ -453,3 +453,6 @@
 451 SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s
 452 Nouveau
 453 Paramétrable
+454 Créer
+455 Créer le lien en cliquant
+456 Detruire le lien

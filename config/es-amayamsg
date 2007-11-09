@@ -453,3 +453,6 @@
 451 SpiderMonkey devolvió el error siguiente:\n\nArchivo: %s\nLínea: %d\n\n%s
 452 Nuevo
 453 
+454 Crear
+455 **Create the link by click
+456 Borrar ancla
