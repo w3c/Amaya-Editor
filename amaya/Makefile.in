@@ -220,7 +220,6 @@ AMAYA_OBJ = \
 	wxdialog/ListBoxBook.o \
 	wxdialog/ListDlgWX.o \
 	wxdialog/ListEditDlgWX.o \
-	wxdialog/NewTemplateDocDlgWX.o \
 	wxdialog/MakeIdDlgWX.o \
 	wxdialog/NumDlgWX.o \
 	wxdialog/ObjectDlgWX.o \
