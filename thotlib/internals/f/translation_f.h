@@ -26,7 +26,8 @@ extern ThotBool TtaExportDocument ( Document document,
                                     char *tschema );
 extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
                                                       char *fileName,
-                                                      char *tschema );
+                                                      char *tschema,
+                                                      ThotBool skipXTiger );
 
 #else /* __STDC__ */
 
@@ -50,7 +51,8 @@ extern ThotBool TtaExportDocument ( Document document,
                                       char *tschema );
 extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
                                                         char *fileName,
-                                                        char *tschema );
+                                                        char *tschema,
+                                                        ThotBool skipXTiger );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

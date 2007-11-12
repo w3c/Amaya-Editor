@@ -458,9 +458,10 @@ THOT_EXPORT ThotBool   LinkAsJavascript;
 THOT_EXPORT ThotBool   SaveAsHTML;
 THOT_EXPORT ThotBool   SaveAsXML;
 THOT_EXPORT ThotBool   SaveAsText;
-THOT_EXPORT ThotBool   CopyImages;	/* should we copy images in Save As */
-THOT_EXPORT ThotBool   CopyCss;         /* should we copy images in Save As */
-THOT_EXPORT ThotBool   UpdateURLs;	/* should we update URLs in Save As */
+THOT_EXPORT ThotBool   CopyImages;	    /* should amaya copy images in Save As? */
+THOT_EXPORT ThotBool   CopyCss;         /* should amaya copy CSS in Save As? */
+THOT_EXPORT ThotBool   UpdateURLs;	    /* should amaya update URLs in Save As? */
+THOT_EXPORT ThotBool   RemoveTemplate;	/* should amaya remove template in Save As? */
 THOT_EXPORT ThotBool   UserAnswer;
 THOT_EXPORT ThotBool   ExtraChoice;
 THOT_EXPORT ThotBool   TableMenuActive;

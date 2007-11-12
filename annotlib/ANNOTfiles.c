@@ -1128,7 +1128,7 @@ ThotBool ANNOT_LocalSave (Document doc_annot, char *html_filename)
   /* set up the charset and namespaces */
   SetNamespacesAndDTD (doc_annot);
   result = TtaExportDocumentWithNewLineNumbers (doc_annot, html_filename, 
-					       "AnnotT");
+					       "AnnotT", FALSE);
 
   /* update the annotation icon to the new type */
   if (result && !Annot_IsReplyTo (doc_annot))

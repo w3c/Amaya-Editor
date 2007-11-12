@@ -25,7 +25,7 @@
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
-          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
+          <style>wxTB_NODIVIDER|wxTB_FLAT|wxBORDER_SUNKEN</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -47,7 +47,7 @@
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
-          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
+          <style>wxTB_NODIVIDER|wxTB_FLAT|wxBORDER_SUNKEN</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -82,7 +82,7 @@
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
-          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
+          <style>wxTB_NODIVIDER|wxTB_FLAT|wxBORDER_SUNKEN</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -105,7 +105,7 @@
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
-          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
+          <style>wxTB_NODIVIDER|wxTB_FLAT|wxBORDER_SUNKEN</style>
         </object>
       </object>
     </object>

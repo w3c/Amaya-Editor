@@ -6537,6 +6537,10 @@
 	<message xml:lang="tw">刪除 anchor</message>
 	<message xml:lang="sk">Odstrániť odkaz</message>
 </label>
+<label define="AM_REMOVE_XTIGER">
+	<message xml:lang="en">Save without template</message>
+	<message xml:lang="fr">Sauver sans modèle</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

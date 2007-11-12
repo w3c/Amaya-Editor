@@ -235,10 +235,10 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
       switch (docType)
         {
         case docSVG:
-          TtaExportDocumentWithNewLineNumbers (doc, localFile, "SVGT");
+          TtaExportDocumentWithNewLineNumbers (doc, localFile, "SVGT", FALSE);
           break;
         case docMath:
-          TtaExportDocumentWithNewLineNumbers (doc, localFile, "MathMLT");
+          TtaExportDocumentWithNewLineNumbers (doc, localFile, "MathMLT", FALSE);
           break;
         case docHTML:
           // Initialize the document title
@@ -277,12 +277,12 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
           // export the document
           if (TtaGetDocumentProfile(doc) == L_Xhtml11 ||
               TtaGetDocumentProfile(doc) == L_Basic)
-            TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLT11");
+            TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLT11", FALSE);
           else
-            TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLTX");
+            TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLTX", FALSE);
           break;
         default:
-          TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL);
+          TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL, FALSE);
           break;
         }
 

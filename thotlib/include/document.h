@@ -148,14 +148,13 @@ extern ThotBool TtaExportDocument (Document document, char *fileName,
    fileName: name of the file in which the document must be saved,
    including the directory name.
    TSchemaName: name of the translation schema to be used. The directory
-   name must not be specified in parameter TSchemaName. See
-   function TtaSetSchemaPath.
+   name must not be specified in parameter tschema (See TtaSetSchemaPath)
+   skipXTiger is TRUE if XTiger elements are removed
 
    Return: TRUE if done correctly
   ----------------------------------------------------------------------*/
 extern ThotBool TtaExportDocumentWithNewLineNumbers (Document document,
-						     char *fileName,
-						     char *TSchemaName);
+						     char *fileName, char *TSchemaName, ThotBool skipXTiger);
 
 /*----------------------------------------------------------------------
    TtaCloseDocument

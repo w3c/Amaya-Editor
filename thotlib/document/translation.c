@@ -59,7 +59,7 @@ AnOutputFile;
 static ThotBool          StartDollar = FALSE;
 static ThotBool          StartDate = FALSE;
 static ThotBool          IgnoreDate = FALSE;
-
+static ThotBool          Skip_Template = FALSE;
 static ThotBool          RCSDollar = FALSE;
 static ThotBool          RCSMarker = FALSE;
 static unsigned char     RCSString[512];
@@ -3986,8 +3986,7 @@ static void TranslateTree (PtrElement pEl, Document doc,
   NotifyElement    notifyEl;
   int              elemType, i;
   ThotBool         found;
-  ThotBool         removeEl;
-  ThotBool         ignoreEl;
+  ThotBool         removeEl, ignoreEl, skip;
   ThotBool         withBreak = lineBreak;
   char            *ns_prefix, *buffer;
 
@@ -4081,7 +4080,7 @@ static void TranslateTree (PtrElement pEl, Document doc,
                       }
                 }
             }
-      if (pTSch != NULL)
+      if (pTSch)
         /* on ne traduit pas les elements dont le schema de structure n'a */
         /* pas de schema de traduction correspondant */
         {
@@ -4089,35 +4088,43 @@ static void TranslateTree (PtrElement pEl, Document doc,
              in the element being translated */
           if (recordLineNb)
             pEl->ElLineNb = OutFile[1].OfLineNumber + 1;
+          // chek if it is a skipped XTiger element
           /* Cherche et applique les regles de traduction associees au type */
           /* de l'element et qui doivent s'appliquer avant la traduction du */
           /* contenu de l'element */
-          ApplyElTypeRules (TBefore, &transChar, &withBreak, &removeEl, &ignoreEl,
-                            pEl, elemType, pTSch, pSS, doc, recordLineNb);
-          /* on ne traduit les attributs que si ce n'est pas deja fait par */
-          /* une regle Create Attributes associee au type et si on n'a pas */
-          /* rencontre' de re`gle Ignore */
-          if (!pEl->ElTransAttr && !ignoreEl)
+          skip = (Skip_Template &&
+                  pTSch->TsStructName && !strcmp (pTSch->TsStructName, "Template"));
+          if (skip)
+            removeEl = ignoreEl = FALSE;
+          else
             {
-              /* Export the namespace declarations associated with  
-                 this element before exporting its attributes */
-              if (IsTranslateTag (pTSch, pSS) != 0)
-                ExportNsDeclaration (doc, pEl);
-              /* Parcourt les attributs de l'element et applique les regles
-                 des attributs qui doivent etre appliquees avant la
-                 traduction du contenu de l'element */
-              ApplyAttrRules (TBefore, pEl, &removeEl, &ignoreEl, &transChar,
-                              &withBreak, doc, recordLineNb);
+              ApplyElTypeRules (TBefore, &transChar, &withBreak, &removeEl, &ignoreEl,
+                                pEl, elemType, pTSch, pSS, doc, recordLineNb);
+              /* on ne traduit les attributs que si ce n'est pas deja fait par */
+              /* une regle Create Attributes associee au type et si on n'a pas */
+              /* rencontre' de re`gle Ignore */
+              if (!pEl->ElTransAttr && !ignoreEl)
+                {
+                  /* Export the namespace declarations associated with  
+                     this element before exporting its attributes */
+                  if (IsTranslateTag (pTSch, pSS) != 0)
+                    ExportNsDeclaration (doc, pEl);
+                  /* Parcourt les attributs de l'element et applique les regles
+                     des attributs qui doivent etre appliquees avant la
+                     traduction du contenu de l'element */
+                  ApplyAttrRules (TBefore, pEl, &removeEl, &ignoreEl, &transChar,
+                                  &withBreak, doc, recordLineNb);
+                }
+              /* on ne traduit la presentation que si ce n'est pas deja fait par */
+              /* une regle Create Presentation et si on n'a pas rencontre' de */
+              /* regle Ignore */
+              if (!pEl->ElTransPres && !ignoreEl)
+                /* Parcourt les presentations de l'element et applique les regles
+                   de traduction correspondantes qui doivent ^etre appliquees
+                   avant la traduction du contenu de l'element */
+                ApplyPresTRules (TBefore, pEl, &removeEl, &ignoreEl, &transChar,
+                                 &withBreak, NULL, doc, recordLineNb);
             }
-          /* on ne traduit la presentation que si ce n'est pas deja fait par */
-          /* une regle Create Presentation et si on n'a pas rencontre' de */
-          /* regle Ignore */
-          if (!pEl->ElTransPres && !ignoreEl)
-            /* Parcourt les presentations de l'element et applique les regles
-               de traduction correspondantes qui doivent ^etre appliquees
-               avant la traduction du contenu de l'element */
-            ApplyPresTRules (TBefore, pEl, &removeEl, &ignoreEl, &transChar,
-                             &withBreak, NULL, doc, recordLineNb);
           /* traduit le contenu de l'element, sauf si on a deja rencontre' */
           /* une regle Remove ou Ignore pour cet element. */
           if (!removeEl && !ignoreEl)
@@ -4148,24 +4155,27 @@ static void TranslateTree (PtrElement pEl, Document doc,
           /* on ne traduit la presentation que si ce n'est pas deja fait par */
           /* une regle Create Presentation et si on n'a pas rencontre' de */
           /* regle Ignore */
-          if (!pEl->ElTransPres && !ignoreEl)
-            /* Parcourt les presentations de l'element et applique les regles
-               de traduction correspondantes qui doivent ^etre appliquees
-               apres la traduction du contenu */
-            ApplyPresTRules (TAfter, pEl, &removeEl, &ignoreEl, &transChar,
-                             &withBreak, NULL, doc, recordLineNb);
-          if (!pEl->ElTransAttr && !ignoreEl)
-            /* Parcourt les attributs de l'element et applique les regles des
-               attributs qui doivent etre appliquees apres la traduction du
-               contenu */
-            ApplyAttrRules (TAfter, pEl, &removeEl, &ignoreEl, &transChar,
-                            &withBreak, doc, recordLineNb);
-          /* Cherche et applique les regles associees au type de l'element et
-             qui doivent s'appliquer apres la traduction du contenu */
-          if (!ignoreEl)
-            ApplyElTypeRules (TAfter, &transChar, &withBreak, &removeEl,
-                              &ignoreEl, pEl, elemType, pTSch, pSS, doc,
-                              recordLineNb);
+          if (!skip)
+            {
+              if (!pEl->ElTransPres && !ignoreEl)
+                /* Parcourt les presentations de l'element et applique les regles
+                   de traduction correspondantes qui doivent ^etre appliquees
+                   apres la traduction du contenu */
+                ApplyPresTRules (TAfter, pEl, &removeEl, &ignoreEl, &transChar,
+                                 &withBreak, NULL, doc, recordLineNb);
+              if (!pEl->ElTransAttr && !ignoreEl)
+                /* Parcourt les attributs de l'element et applique les regles des
+                   attributs qui doivent etre appliquees apres la traduction du
+                   contenu */
+                ApplyAttrRules (TAfter, pEl, &removeEl, &ignoreEl, &transChar,
+                                &withBreak, doc, recordLineNb);
+              /* Cherche et applique les regles associees au type de l'element et
+                 qui doivent s'appliquer apres la traduction du contenu */
+              if (!ignoreEl)
+                ApplyElTypeRules (TAfter, &transChar, &withBreak, &removeEl,
+                                  &ignoreEl, pEl, elemType, pTSch, pSS, doc,
+                                  recordLineNb);
+            }
           if (!enforce)
             /* marque que l'element a ete traite' */
             pEl->ElTransContent = TRUE;
@@ -4934,8 +4944,12 @@ ThotBool TtaExportDocument (Document document, char *fileName, char *tschema)
   else if (LoadedDocument[document - 1] == NULL)
     TtaError (ERR_invalid_document_parameter);
   else
-    /* parameter document is correct */
-    ok = ExportDocument (document, fileName, tschema, FALSE);
+    {
+      /* parameter document is correct */
+      Skip_Template = TRUE; // skip template elements
+      ok = ExportDocument (document, fileName, tschema, FALSE);
+      Skip_Template = FALSE;
+    }
   return (ok);
 }
 
@@ -4954,11 +4968,11 @@ ThotBool TtaExportDocument (Document document, char *fileName, char *tschema)
   fileName: name of the file in which the document must be saved,
   including the directory name.
   tschema: name of the translation schema to be used. The directory
-  name must not be specified in parameter tschema. See
-  function TtaSetSchemaPath.
+  name must not be specified in parameter tschema (See TtaSetSchemaPath)
+  skipXTiger is TRUE if XTiger elements are removed
   ----------------------------------------------------------------------*/
 ThotBool TtaExportDocumentWithNewLineNumbers (Document document, char *fileName,
-                                              char *tschema)
+                                              char *tschema, ThotBool skipXTiger)
 {
   ThotBool ok = FALSE;
 
@@ -4971,7 +4985,11 @@ ThotBool TtaExportDocumentWithNewLineNumbers (Document document, char *fileName,
   else if (fileName == NULL)
     TtaError (ERR_invalid_parameter);
   else
-    /* parameter document is correct */
-    ok = ExportDocument (document, fileName, tschema, TRUE);
+    {
+      /* parameter document is correct */
+      Skip_Template = skipXTiger; // should amaya skip template elements
+      ok = ExportDocument (document, fileName, tschema, TRUE);
+      Skip_Template = TRUE;
+    }
   return (ok);
 }

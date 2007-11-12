@@ -17,8 +17,6 @@ extern void FreeTemplateRepositoryList ( void* list );
 extern void GetTemplateRepositoryList ( void* list );
 extern void SetTemplateRepositoryList ( const void* list );
 extern void InitTemplates ( void );
-extern void NewTemplate ( Document doc,
-                          View view );
 extern void CreateInstanceOfTemplate ( Document doc,
                                        char *templatename,
                                        char *docname );
@@ -62,8 +60,6 @@ extern void FreeTemplateRepositoryList ( void* list );
 extern void GetTemplateRepositoryList ( void* list );
 extern void SetTemplateRepositoryList ( const void* list );
 extern void InitTemplates ( void );
-extern void NewTemplate ( Document doc,
-                            View view );
 extern void CreateInstanceOfTemplate ( Document doc,
                                          char *templatename,
                                          char *docname );

@@ -35,20 +35,20 @@
                           <object class="wxBoxSizer">
                             <orient>wxHORIZONTAL</orient>
                             <object class="sizeritem">
-                              <object class="wxTextCtrl" name="wxID_DOC_LOCATION_CTRL">
-                                <size>450,-1</size>
+                              <object class="wxBitmapButton" name="wxID_CLEAR">
+                                <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
                               </object>
-                              <option>1</option>
-                              <flag>wxEXPAND</flag>
+                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
                             </object>
                             <object class="spacer">
                               <size>5,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxBitmapButton" name="wxID_CLEAR">
-                                <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
+                              <object class="wxTextCtrl" name="wxID_DOC_LOCATION_CTRL">
+                                <size>450,-1</size>
                               </object>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                              <option>1</option>
+                              <flag>wxEXPAND</flag>
                             </object>
                             <object class="spacer">
                               <size>5,0</size>
@@ -93,7 +93,7 @@
                               <flag>wxALL|wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxBoxSizer">
+                              <object class="wxStaticBoxSizer">
                                 <orient>wxVERTICAL</orient>
                                 <object class="sizeritem">
                                   <object class="wxStaticText" name="wxID_OPTIONS">
@@ -124,6 +124,13 @@
                                 <object class="sizeritem">
                                   <object class="wxCheckBox" name="wxID_CPY_CSS_CHK">
                                     <label>*Copier les feuillesde style*</label>
+                                  </object>
+                                  <flag>wxALL|wxEXPAND</flag>
+                                </object>
+                                <label></label>
+                                <object class="sizeritem">
+                                  <object class="wxCheckBox" name="wxID_REMOVE_TEMPLATE">
+                                    <label>*Retirer le code XTiger*</label>
                                   </object>
                                   <flag>wxALL|wxEXPAND</flag>
                                 </object>

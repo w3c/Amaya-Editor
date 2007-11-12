@@ -14,9 +14,7 @@
 
 /* DEBUG_AMAYA_SAVE Print out debug information when saving */
 
-#ifdef _WX
 #include "wx/wx.h"
-#endif /* _WX */
 
 /* Included headerfiles */
 #define THOT_EXPORT extern
@@ -58,17 +56,8 @@ typedef struct _AttSearch
   int   type;
 } AttSearch;
 
-#ifdef _WINGUI
-#include "resource.h"
-static char       CurrentDocToSave[MAX_LENGTH];
-static char       CurrentPathName[MAX_LENGTH];
-extern HINSTANCE    hInstance;
-#endif /* _WINGUI */
-
-#ifdef _WX
 #include "wxdialogapi_f.h"
 #include "appdialogue_wx.h"
-#endif /* _WX */
 #ifdef TEMPLATES
 #include "Template.h"
 #endif /* TEMPLATES */
@@ -120,77 +109,6 @@ static AttSearch    SRC_attr_tab[] = {
 #include "styleparser_f.h"
 #include "Xml2thot_f.h"
 
-#ifdef _WINGUI
-#include "wininclude.h"
-
-/*-----------------------------------------------------------------------
-  SaveAsDlgProc
-  ------------------------------------------------------------------------*/
-LRESULT CALLBACK GetSaveDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-                                 LPARAM lParam)
-{
-  static char txt [500];
-  
-  switch (msg)
-    {
-    case WM_INITDIALOG:
-      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SAVE_AS));
-      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-                     TtaGetMessage (LIB, TMSG_BUTTON_SAVE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
-      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
-                     TtaGetMessage (LIB, TMSG_CANCEL));
-      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, CurrentPathName);
-      break;
-      
-    case WM_COMMAND:
-      if (HIWORD (wParam) == EN_UPDATE)
-        {
-          if (LOWORD (wParam) == IDC_EDITDOCSAVE)
-            GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, CurrentDocToSave,
-                            sizeof (CurrentDocToSave) - 1);
-        }
-      switch (LOWORD (wParam))
-        {
-        case IDC_BROWSE:
-          /* by default keep the same document name */
-          WIN_ListSaveDirectory (hwnDlg,
-                                 TtaGetMessage (AMAYA, AM_SAVE_AS),
-                                 CurrentDocToSave);
-          SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, CurrentDocToSave);
-          TtaExtractName (CurrentDocToSave, SavePath, ObjectName);
-          ThotCallback (BaseDialog + NameSave, STRING_DATA, CurrentDocToSave);
-          break;
-
-        case IDCANCEL:
-          EndDialog (hwnDlg, IDCANCEL);
-          ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char *) 0);
-          break;
-
-        case ID_CONFIRM:
-          /* TODO: Extract directory and file name from urlToOpen */
-          EndDialog (hwnDlg, ID_CONFIRM);
-          strcpy (LastURLName, CurrentDocToSave);
-          ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char *) 1);
-          break;
-        }
-      break;
-      
-    default: return FALSE;
-    }
-  return TRUE;
-}
-
-/*-----------------------------------------------------------------------
-  CreateGetSaveDlgWindow
-  ------------------------------------------------------------------------*/
-void CreateGetSaveDlgWindow (HWND parent, char *path_name)
-{  
-  strcpy (CurrentPathName, path_name);
-  DialogBox (hInstance, MAKEINTRESOURCE (GETSAVEDIALOG), parent,
-             (DLGPROC) GetSaveDlgProc);
-}
-#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   CheckValidProfile
@@ -860,15 +778,8 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
   ----------------------------------------------------------------------*/
 static void InitSaveForm (Document document, View view, char *pathname)
 {
-#ifdef _GTK
-  char             buffer[3000];
-  char             s[MAX_LENGTH];
-  int              i;
-#endif /* _GTK */
-#ifdef _WX
   LoadedImageDesc *pImage;
   ThotBool         created, saveImgs;
-#endif /* _WX */
 
   if (TextFormat)
     {
@@ -889,101 +800,6 @@ static void InitSaveForm (Document document, View view, char *pathname)
       SaveAsText = FALSE;
     }
   
-#ifdef _GTK
-  /* destroy any previous instance of the Save as form */
-  TtaDestroyDialogue (BaseDialog + SaveForm);
-   
-  /* dialogue form for saving a document */
-  i = 0;
-  strcpy (&s[i], TtaGetMessage (LIB, TMSG_BUTTON_SAVE));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_CHANGE_CHARSET));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_CHANGE_MIME_TYPE));
-  TtaNewSheet (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
-               TtaGetMessage (AMAYA, AM_SAVE_AS), 5, s, TRUE, 2, 'L',
-               D_CANCEL);
-
-  /* first line */
-  if (!TextFormat && DocumentTypes[document] != docMath 
-      && DocumentTypes[document] != docSVG
-      && DocumentTypes[document] != docImage
-      && DocumentTypes[document] != docXml)
-    {
-      /* choice between html, xhtml and text */
-      sprintf (buffer, "%s%c%s%c%c%s", "BHTML", EOS, "BXML", EOS,
-               'B', TtaGetMessage (AMAYA, AM_TEXT));
-      TtaNewSubmenu (BaseDialog + RadioSave, BaseDialog + SaveForm, 0,
-                     TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 3, buffer,
-                     NULL, 0, TRUE);
-      if (SaveAsHTML)
-        TtaSetMenuForm (BaseDialog + RadioSave, 0);
-      else if (SaveAsXML)
-        TtaSetMenuForm (BaseDialog + RadioSave, 1);
-      else
-        TtaSetMenuForm (BaseDialog + RadioSave, 2);
-    }
-  else
-    TtaNewLabel (BaseDialog + RadioSave, BaseDialog + SaveForm, "");
-  TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
-                  TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, FALSE);
-  TtaSetTextForm (BaseDialog + NameSave, pathname);
-  /* second line */
-  /* Transform URL option */
-  if (!TextFormat && DocumentTypes[document] != docImage)
-    {
-      sprintf (buffer, "B%s%cB%s",
-               TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
-               TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
-      TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
-                        TtaGetMessage (LIB, TMSG_OPTIONS), 2, buffer,
-                        NULL, TRUE);
-      if (DocumentTypes[document] == docMath ||
-          DocumentTypes[document] == docXml)
-        TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, (ThotColor)-1, FALSE);
-      else
-        TtaSetToggleMenu (BaseDialog + ToggleSave, 0, CopyImages);
-      TtaSetToggleMenu (BaseDialog + ToggleSave, 1, UpdateURLs);
-    }
-  else
-    TtaNewLabel (BaseDialog + ToggleSave, BaseDialog + SaveForm, "");
-
-  /* Save images option */
-  if (!TextFormat &&
-      DocumentTypes[document] != docMath &&
-      DocumentTypes[document] != docImage &&
-      DocumentTypes[document] != docXml)
-    {
-      TtaNewTextForm (BaseDialog + ImgDirSave, BaseDialog + SaveForm,
-                      TtaGetMessage (AMAYA, AM_IMAGES_LOCATION), 50, 1, FALSE);
-      TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
-    }
-  else
-    TtaNewLabel (BaseDialog + ImgDirSave, BaseDialog + SaveForm, "");
-    
-  /* third line */
-  TtaNewLabel (BaseDialog + CharsetSaveL, BaseDialog + SaveForm,
-               "Charset:  ");
-  TtaNewLabel (BaseDialog + CharsetSave,  BaseDialog + SaveForm, 
-               UserCharset[0] != EOS ? UserCharset : (char *)"UNKNOWN");
-  /* fourth line */
-  TtaNewLabel (BaseDialog + MimeTypeSaveL, BaseDialog + SaveForm, 
-               "MIME type:");
-  TtaNewLabel (BaseDialog + MimeTypeSave,  BaseDialog + SaveForm, 
-               UserMimeType[0] != EOS ? UserMimeType : (char *)"UNKNOWN");
-  /* fifth line */
-  TtaNewLabel (BaseDialog + SaveFormStatus, BaseDialog + SaveForm, " ");
-
-  TtaShowDialogue (BaseDialog + SaveForm, TRUE);
-#endif /* _GTK */
-#ifdef _WINGUI
-  CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname);
-#endif /* _WINGUI */
-#ifdef _WX
   saveImgs = FALSE;
   if (IsW3Path (pathname))
     {
@@ -997,10 +813,10 @@ static void InitSaveForm (Document document, View view, char *pathname)
     }
   created = CreateSaveAsDlgWX (BaseDialog + SaveForm,
                                TtaGetViewFrame (document, view), pathname,
-                               document, saveImgs);
+                               document, saveImgs,
+                               IsTemplateInstanceDocument(document));
   if (created)
     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#endif /* _WX */
 }
 
 
@@ -1010,9 +826,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
 void InitSaveObjectForm (Document document, View view, char *object,
                          char *pathname)
 {
-#ifndef _WINGUI
   char           tempdir[MAX_LENGTH];
-#endif /* _WINGUI */
 
   if (Saving_lock)
     // there is a current saving operation
@@ -1020,31 +834,11 @@ void InitSaveObjectForm (Document document, View view, char *object,
 
   SavingObject = document;
   strncpy (tempSavedObject, object, sizeof (tempSavedObject));
-#ifdef _GTK
-  /* Dialogue form for saving as */
-  TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
-              TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
-  TtaListDirectory (SavePath, BaseDialog + SaveForm,
-                    TtaGetMessage (LIB, TMSG_DOC_DIR),
-                    BaseDialog + DirSave, "",
-                    TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
-  TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
-                  TtaGetMessage (AMAYA, AM_OBJECT_LOCATION), 50, 1, FALSE);
-  TtaSetTextForm (BaseDialog + NameSave, pathname);
-  TtaExtractName (pathname, tempdir, ObjectName);
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#endif  /* _GTK */
-#ifdef _WINGUI
-  CreateGetSaveDlgWindow (TtaGetViewFrame (document, view), pathname);
-#endif /* _WINGUI */
-#ifdef _WX
   ThotBool created;
 
   TtaExtractName (pathname, tempdir, ObjectName);
   created = CreateSaveObject (BaseDialog + SaveForm,
                               TtaGetViewFrame (document, view), ObjectName);
-#endif  /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1095,10 +889,8 @@ void DoSaveObjectAs (void)
       if (res)
         {
           Saving_lock = FALSE;
-#ifndef _WINGUI
           TtaSetDialoguePosition ();
           TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#endif /* !_WINGUI */
           return;
         }
       SavingObject = 0;
@@ -1116,10 +908,8 @@ void DoSaveObjectAs (void)
       if (!UserAnswer)
         {
           /* the user has to change the name of the saving file */
-#ifndef _WINGUI
           TtaSetDialoguePosition ();
           TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#endif /* !_WINGUI */
           // redisplay Save form
           res = SavingObject;
           SavingObject = 0;
@@ -1573,6 +1363,17 @@ void SetNamespacesAndDTD (Document doc)
                       mathPI = FALSE;
                       elFound = NULL;
                     }
+                  else if (RemoveTemplate && strstr (buffer, "xtiger template"))
+                    {
+                      TtaDeleteTree (el, doc);
+                      if (DocumentMeta[doc])
+                        {
+                          TtaFreeMemory (DocumentMeta[doc]->template_url);
+                          DocumentMeta[doc]->template_url = NULL;
+                          TtaFreeMemory (DocumentMeta[doc]->template_version);
+                          DocumentMeta[doc]->template_version = NULL;
+                        }
+                    }
                   if (elFound)
                     TtaNextSibling (&elFound);
                 }
@@ -1822,7 +1623,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
                TempFileDirectory, DIR_SEP, ext_doc, DIR_SEP, documentname);
       if (!DocumentMeta[doc]->xmlformat && xml_doctype)
         //convert HTML into XHTML
-        TtaExportDocumentWithNewLineNumbers (doc, tempdoc2, "HTMLTX");
+        TtaExportDocumentWithNewLineNumbers (doc, tempdoc2, "HTMLTX", FALSE);
       else
         TtaFileCopy (localFile, tempdoc2);
     }
@@ -1900,15 +1701,15 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
 
       /* Save this new document state */
       if (DocumentTypes[doc] == docSVG)
-        TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "SVGT");
+        TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "SVGT", FALSE);
       else if (DocumentTypes[doc] == docMath)
-        TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "MathMLT");
+        TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "MathMLT", FALSE);
       else if (new_doctype == L_Xhtml11 || new_doctype == L_Basic)
-        TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "HTMLT11");
+        TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "HTMLT11", FALSE);
       else if (xml_doctype)
-        TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "HTMLTX");
+        TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "HTMLTX", FALSE);
       else
-        TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "HTMLT");
+        TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "HTMLT", FALSE);
 
       /* reparse the document */
       DocumentMeta[doc]->xmlformat = xml_doctype;
@@ -2130,19 +1931,19 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
           if (SaveAsXML)
             {
               if (TtaGetDocumentProfile(doc) == L_Xhtml11 || TtaGetDocumentProfile(doc) == L_Basic)
-                ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT11");
+                ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT11", RemoveTemplate);
               else
-                ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX");
+                ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX", RemoveTemplate);
             }
           else
-            ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT");
+            ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT", RemoveTemplate);
         }
       else if (DocumentTypes[doc] == docSVG)
-        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT");
+        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT", RemoveTemplate);
       else if (DocumentTypes[doc] == docMath)
-        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
+        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT", RemoveTemplate);
       else if (DocumentTypes[doc] == docXml)
-        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL);
+        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL, RemoveTemplate);
       else if (DocumentTypes[doc] == docImage)
         {
           /* copy the image file to the new destination */
@@ -2187,7 +1988,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
           ptr = GetLocalPath (doc, tempname);
           if (DocumentTypes[doc] == docImage)
             /* export the new container (but to the temporary file name */
-            ok = TtaExportDocumentWithNewLineNumbers (doc, ptr, "HTMLTX");
+            ok = TtaExportDocumentWithNewLineNumbers (doc, ptr, "HTMLTX", FALSE);
           else
             ok = TtaFileCopy (tempname, ptr);
           TtaFreeMemory (ptr);
@@ -2380,7 +2181,7 @@ static ThotBool SaveObjectThroughNet (Document doc, View view,
   /* build the output */
   if (DocumentTypes[doc] == docSource)
     /* it's a source file, renumber lines */
-    TtaExportDocumentWithNewLineNumbers (doc, tempname, "TextFileT");
+    TtaExportDocumentWithNewLineNumbers (doc, tempname, "TextFileT", FALSE);
   else
     TtaExportDocument (doc, tempname, "TextFileT");
 
@@ -2465,22 +2266,22 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
     if (SaveAsXML)
       {
         if (TtaGetDocumentProfile(doc) == L_Xhtml11 || TtaGetDocumentProfile(doc) == L_Basic)
-          TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT11");
+          TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT11", RemoveTemplate);
         else
-          TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX");
+          TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX", RemoveTemplate);
         DocumentMeta[doc]->xmlformat = TRUE;
       }
     else
       {
-        TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT");
+        TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT", RemoveTemplate);
         DocumentMeta[doc]->xmlformat = FALSE;
       }
   else if (DocumentTypes[doc] == docSVG)
-    TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT");
+    TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT", RemoveTemplate);
   else if (DocumentTypes[doc] == docMath)
-    TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
+    TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT", RemoveTemplate);
   else if (DocumentTypes[doc] == docXml)
-    TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL);
+    TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL, RemoveTemplate);
 #ifdef BOOKMARKS
   else if (DocumentTypes[doc] == docBookmark)
     BM_DocSave (doc, tempname);
@@ -2488,19 +2289,12 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   else if (DocumentTypes[doc] == docImage)
     {
       /* export the new container using the image file name */
-      TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX");
+      TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX", FALSE);
       TtaFreeMemory (tempname);
       pImage = SearchLoadedImageByURL (doc, url);
       tempname = TtaStrdup (pImage->localName);
     }
   res = 0;
-#ifdef _GTK
-  TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (doc, view), 
-              TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
-              TRUE, 1, 'L', D_CANCEL);
-  TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmSave,
-               TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
-#endif /* _GTK */
   msg[0] = EOS;
   len = 0;
   pImage = ImageURLs;
@@ -2535,19 +2329,6 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       for (i = 0; i < nb; i++)
         imgToSave[i] = TRUE;
 
-#ifdef _GTK
-      if (nb < 6)
-        TtaNewSizedSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
-                             "", nb, msg, 300, nb+1, NULL, FALSE, TRUE);
-      else
-        TtaNewSizedSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
-                             "", nb, msg, 300, 6, NULL, FALSE, TRUE);
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
-      /* wait for an answer */
-      TtaWaitShowDialogue ();
-#endif  /* _GTK */
-#ifdef _WX
       /* TODO: display the list of saved images */
       ThotBool created =  CreateCheckedListDlgWX( BaseDialog + ConfirmSave,
                                                   TtaGetViewFrame (doc, view),
@@ -2561,10 +2342,6 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
           /* wait for an answer */
           TtaWaitShowDialogue ();
         }
-#endif  /* _WX */
-#ifdef _WINGUI
-      CreateSaveListDlgWindow (TtaGetViewFrame (doc, view), nb, msg);
-#endif /* _WINGUI */
       if (!UserAnswer)
         /* do not continue */
         res = -1;
@@ -2760,18 +2537,18 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
             {
               if (TtaGetDocumentProfile (doc) == L_Xhtml11 || TtaGetDocumentProfile (doc) == L_Basic)
-                TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT11");
+                TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT11", FALSE);
               else if (DocumentMeta[doc]->xmlformat)
-                TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLTX");
+                TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLTX", FALSE);
               else
-                TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT");
+                TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT", FALSE);
             }
           else if (DocumentTypes[doc] == docSVG)
-            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "SVGT");
+            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "SVGT", FALSE);
           else if (DocumentTypes[doc] == docMath)
-            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "MathMLT");
+            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "MathMLT", FALSE);
           else
-            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, NULL);
+            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, NULL, FALSE);
           ResetHighlightedElement ();
           RedisplaySourceFile (doc);
           otherDoc = DocumentSource[doc];
@@ -2803,7 +2580,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           TtaSetDocumentAccessMode (otherDoc, 1);
           /* save the current state of the document into the temporary file */
           tempdoc = GetLocalPath (otherDoc, DocumentURLs[otherDoc]);
-          TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
+          TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT", FALSE);
           TtaExtractName (tempdoc, tempdir, docname);
           ResetHighlightedElement ();
           RestartParser (otherDoc, tempdoc, tempdir, docname, TRUE, TRUE);
@@ -3376,7 +3153,7 @@ static ThotBool  AutoSaveDocument (Document doc, View view, char *local_url)
     {
       if (DocumentTypes[doc] == docSource)
         /* it's a source file. renumber lines */
-        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "TextFileT");
+        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "TextFileT", FALSE);
       else
         ok = TtaExportDocument (doc, tempname, "TextFileT");
     }
@@ -3389,24 +3166,24 @@ static ThotBool  AutoSaveDocument (Document doc, View view, char *local_url)
             {
               if (TtaGetDocumentProfile(doc) == L_Xhtml11 || TtaGetDocumentProfile(doc) == L_Basic)
                 ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-                                                          "HTMLT11");
+                                                          "HTMLT11", FALSE);
               else
                 ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-                                                          "HTMLTX");
+                                                          "HTMLTX", FALSE);
               DocumentMeta[doc]->xmlformat = TRUE;
             }
           else
             {
-              ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT");
+              ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT", FALSE);
               DocumentMeta[doc]->xmlformat = FALSE;
             }
         }
       else if (DocumentTypes[doc] == docSVG)
-        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT");
+        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT", FALSE);
       else if (DocumentTypes[doc] == docMath)
-        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
+        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT", FALSE);
       else if (DocumentTypes[doc] == docXml)
-        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL);
+        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL, FALSE);
     }
 
   return (ok);

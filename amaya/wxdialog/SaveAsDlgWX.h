@@ -19,10 +19,8 @@ public:
     
   // Constructor.
   SaveAsDlgWX( int ref,
-               wxWindow* parent,
-               const wxString & pathname,
-               int doc,
-               bool saveImgs);
+               wxWindow* parent, const wxString & pathname, int doc,
+               ThotBool  saveImgs, ThotBool  checkTemplate);
   
   // Destructor.                  
   virtual ~SaveAsDlgWX();
@@ -42,6 +40,7 @@ private:
   void OnImagesChkBox( wxCommandEvent& event );
   void OnCssChkBox( wxCommandEvent& event );
   void OnUrlsChkBox( wxCommandEvent& event );
+  void OnTemplateChkBox( wxCommandEvent& event );
   void OnDocLocation( wxCommandEvent& event );
   void OnImgLocation( wxCommandEvent& event );
   void OnCssLocation( wxCommandEvent& event );

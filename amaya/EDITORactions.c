@@ -931,18 +931,18 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
       if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
         {
           if (TtaGetDocumentProfile (doc) == L_Xhtml11 || TtaGetDocumentProfile (doc) == L_Basic)
-            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT11");
+            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT11", FALSE);
           else if (DocumentMeta[doc]->xmlformat || xmlDoctype)
-            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLTX");
+            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLTX", FALSE);
           else
-            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT");
+            TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT", FALSE);
         }
       else if (DocumentTypes[doc] == docSVG)
-        TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "SVGT");
+        TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "SVGT", FALSE);
       else if (DocumentTypes[doc] == docMath)
-        TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "MathMLT");
+        TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "MathMLT", FALSE);
       else
-        TtaExportDocumentWithNewLineNumbers (doc, tempdoc, NULL);
+        TtaExportDocumentWithNewLineNumbers (doc, tempdoc, NULL, FALSE);
     }
 
   /* Parse the document with the new doctype */

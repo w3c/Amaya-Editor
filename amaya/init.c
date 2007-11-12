@@ -3943,23 +3943,23 @@ void ShowSource (Document doc, View view)
             {
               if (TtaGetDocumentProfile (doc) == L_Xhtml11 || TtaGetDocumentProfile (doc) == L_Basic)
                 TtaExportDocumentWithNewLineNumbers (doc, localFile,
-                                                     "HTMLT11");
+                                                     "HTMLT11", FALSE);
               else if (DocumentMeta[doc]->xmlformat)
                 TtaExportDocumentWithNewLineNumbers (doc, localFile,
-                                                     "HTMLTX");
+                                                     "HTMLTX", FALSE);
               else
                 TtaExportDocumentWithNewLineNumbers (doc, localFile,
-                                                     "HTMLT");
+                                                     "HTMLT", FALSE);
             }
           else if (DocumentTypes[doc] == docSVG)
             TtaExportDocumentWithNewLineNumbers (doc, localFile,
-                                                 "SVGT");
+                                                 "SVGT", FALSE);
           else if (DocumentTypes[doc] == docMath)
             TtaExportDocumentWithNewLineNumbers (doc, localFile,
-                                                 "MathMLT");
+                                                 "MathMLT", FALSE);
 #ifdef XML_GENERIC
           else if (DocumentTypes[doc] == docXml)
-            TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL);
+            TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL, FALSE);
 #endif /* XML_GENERIC */
         }
 
@@ -6669,6 +6669,7 @@ void InitAmaya (NotifyEvent * event)
   SaveAsXML = FALSE;
   SaveAsText = FALSE;
   CopyImages = FALSE;
+  RemoveTemplate = FALSE;
   UpdateURLs = FALSE;
   SavingFile = (char *)TtaGetMemory (MAX_LENGTH);
   AttrHREFvalue = (char *)TtaGetMemory (MAX_LENGTH);

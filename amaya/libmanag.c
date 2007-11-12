@@ -2940,7 +2940,7 @@ void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *title)
   if (svgDoc)
     {
       SaveAsText = FALSE;
-      ok = TtaExportDocumentWithNewLineNumbers (svgDoc, newURL, "SVGT");
+      ok = TtaExportDocumentWithNewLineNumbers (svgDoc, newURL, "SVGT", FALSE);
     }
 
   while (i < 1000000)

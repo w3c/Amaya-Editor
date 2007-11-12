@@ -33,12 +33,6 @@ extern ThotBool CreateOpenDocDlgWX ( int ref,
                                      DocumentType doc_type,
                                      int doc,
                                      ThotBool newfile );
-extern ThotBool CreateNewTemplateDocDlgWX ( int ref,
-                                            ThotWindow parent,
-                                            Document doc,
-                                            const char *title,
-                                            const char *urlList,
-                                            const char *docName );
 extern ThotBool CreateImageDlgWX ( int ref,
                                    ThotWindow parent,
                                    const char *title,
@@ -78,7 +72,8 @@ extern ThotBool CreateSaveAsDlgWX ( int ref,
                                     ThotWindow parent,
                                     char* pathname,
                                     int doc,
-                                    ThotBool saveImgs );
+                                    ThotBool saveImgs,
+                                    ThotBool checkTemplate );
 extern ThotBool CreateSaveObject ( int ref,
                                    ThotWindow parent,
                                    char* objectname );
@@ -192,12 +187,6 @@ extern ThotBool CreateOpenDocDlgWX ( int ref,
                                        DocumentType doc_type,
                                        int doc,
                                        ThotBool newfile );
-extern ThotBool CreateNewTemplateDocDlgWX ( int ref,
-                                              ThotWindow parent,
-                                              Document doc,
-                                              const char *title,
-                                              const char *urlList,
-                                              const char *docName );
 extern ThotBool CreateImageDlgWX ( int ref,
                                      ThotWindow parent,
                                      const char *title,
@@ -237,7 +226,8 @@ extern ThotBool CreateSaveAsDlgWX ( int ref,
                                       ThotWindow parent,
                                       char* pathname,
                                       int doc,
-                                      ThotBool saveImgs );
+                                      ThotBool saveImgs,
+                                      ThotBool checkTemplate );
 extern ThotBool CreateSaveObject ( int ref,
                                      ThotWindow parent,
                                      char* objectname );

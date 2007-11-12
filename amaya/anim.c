@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 2002-2005
+ *  (c) COPYRIGHT INRIA and W3C, 2002-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2866,7 +2866,7 @@ void ShowSourceOfTimeline (Document document, View view)
         {
           tempdocument = TtaStrdup ("C:\\temp2.svg");
           ok = TtaExportDocumentWithNewLineNumbers (document,
-                                                    tempdocument, "TimelineT");
+                                                    tempdocument, "TimelineT", TRUE);
         }
 
       TtaExtractName (tempdocument, tempdir, documentname);
