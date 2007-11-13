@@ -13,9 +13,7 @@ extern int WX_SearchResult; /* 0 if ok, 1 if no replace, 2 if not found */
 #endif /* _WX */
 
 
-#if defined(_GTK)
-  #include <X11/Intrinsic.h>
-#endif /* #if defined(_GTK) */
+
 #include "typebase.h"
 #include "tree.h"
 
@@ -29,19 +27,6 @@ enum DButtons
 
 
 #ifndef __CEXTRACT__
-#ifdef _GTK 
-#include <gtk/gtk.h> 
-/*-------------------------------------------------------------------------------
-  ExposeEvent reaffichee la page lorsqu'un :
-  evenement de type "expose_event" est emis.
-  Le parametre widget donne la reference de la drawing_area dans laquelle
-  la page doit etre redessinee.
-  Le parametre event donne des informations sur l'evenement.
-  Le parametre data contient le numero de la frame.
---------------------------------------------------------------------------------*/
-extern gint ExposeEvent (ThotWidget widget, GdkEventExpose *event, gpointer data);
-#endif /* _GTK */
-
 
 /*----------------------------------------------------------------------
    TtaNewPulldown cre'e un pull-down menu :                           

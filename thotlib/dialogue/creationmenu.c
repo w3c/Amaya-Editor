@@ -21,9 +21,6 @@
 #include "typemedia.h"
 #include "interface.h"
 #include "application.h"
-#ifdef _WINGUI
-#include "wininclude.h"
-#endif /* _WINGUI */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -41,10 +38,9 @@
 #include "structcreation_f.h"
 #include "structselect_f.h"
 #include "thotmsg_f.h"
-#ifdef _WX
+
 #include "appdialogue_wx.h"
 #include "paneltypes_wx.h"
-#endif /* _WX */
 
 static char     NameOfElementToBeCreated[MAX_TXT_LEN];
 #define MAX_MENU_LENGTH  5000
@@ -141,10 +137,10 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
   PtrSSchema     pSS;
   char           menuBuf[MAX_MENU_LENGTH];
   int            nbItem, height, firstChar, lastChar;
-#ifdef _WX 
+
   AmayaParams    p;
   int            typeNum;
-#endif /* _WX */
+
   ThotBool       withTextInput = FALSE;
 
   UserErrorCode = 0;
@@ -182,7 +178,6 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
         nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
 
       /* generate the form with two buttons Insert and Done */
-#ifdef _WX 
       p.param1 = nbItem;
       p.param2 = (void*)menuBuf;
       if (firstSel && nbItem)
@@ -195,30 +190,6 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
       /* the dialog reference used to call the right callback in thotlib */
       p.param4 = (void*)(NumFormElemToBeCreated);
       TtaSendDataToPanel( WXAMAYA_PANEL_XML, p );
-#endif /* _WX */
-#ifdef _WINGUI
-      if (nbItem > 0)
-        CreateXMLDlgWindow (NULL, nbItem, menuBuf, withTextInput);
-#endif /* _WINGUI */
-#ifdef _GTK
-      if (nbItem > 0)
-        {
-          TtaNewSheet (NumFormElemToBeCreated, TtaGetViewFrame (doc, view),
-                       TtaGetMessage(LIB, TMSG_EL_TYPE),
-                       1, TtaGetMessage (LIB, TMSG_INSERT), FALSE, 2, 'L',
-                       D_DONE);
-          if (nbItem >= 4)
-            height = 4;
-          else
-            height = nbItem;
-          /* does not allow the user to create new type names in well
-             defined XML vocabularies */
-          TtaNewSizedSelector (NumSelectElemToBeCreated, NumFormElemToBeCreated,
-                               TtaGetMessage (LIB, TMSG_EL_TYPE), nbItem, menuBuf,
-                               200, height, NULL, withTextInput, TRUE);
-          TtaShowDialogue (NumFormElemToBeCreated, TRUE);
-        }
-#endif /* _GTK */
       return (nbItem == 0);
     }
   return FALSE;
@@ -230,9 +201,7 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
   ----------------------------------------------------------------------*/
 void TtaRefreshElementMenu (Document doc, View view)
 {
-#ifdef _WX 
   UpdateXMLMenu (doc, view); 
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -322,25 +291,6 @@ void CallbackElemToBeCreated (int ref, int val, char *txt)
                     {
                       CreateNewElement (typeNum, pSS, pDoc, FALSE);
                       nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
-#ifdef _WINGUI
-                      CreateXMLDlgWindow (NULL, nbItem, menuBuf, TRUE);
-#endif /* _WINGUI */
-#ifdef _GTK
-                      if (nbItem > 0)
-                        {
-                          if (nbItem >= 4)
-                            height = 4;
-                          else
-                            height = nbItem;
-                          /* does not allow the user to create new type names in well
-                             defined XML vocabularies */
-                          TtaNewSizedSelector (NumSelectElemToBeCreated,
-                                               NumFormElemToBeCreated,
-                                               TtaGetMessage (LIB, TMSG_EL_TYPE),
-                                               nbItem, menuBuf,
-                                               200, height, NULL, TRUE, TRUE);
-                        }
-#endif /* _GTK */
                     }
                 }
             }
@@ -363,11 +313,6 @@ void BuildChoiceMenu (char *menuBuf, char *menuTitle, int nbEntries,
   if (natureChoice)
     {
       menu = NumFormNature;
-#ifdef _GTK
-      /* selector stating the nature of the element to create (or of the capture zone
-         if the configuration files don't define any natures */
-      TtaNewForm (NumFormNature, 0, TtaGetMessage (LIB, TMSG_OBJECT_TYPE), TRUE, 1, 'L', D_CANCEL);
-#endif /* _GTK */
       nbitem = ConfigMakeDocTypeMenu (menuBufB, &length, FALSE);
       if (nbitem > 0)
         /* the Start Up file defines the natures */
@@ -378,19 +323,10 @@ void BuildChoiceMenu (char *menuBuf, char *menuTitle, int nbEntries,
           else
             length = 5;
           /* creates the selector */
-#ifdef _GTK
-          TtaNewSelector (NumSelectNatureName, NumFormNature,
-                          TtaGetMessage (LIB, TMSG_OBJECT_TYPE), nbitem, menuBufB, length, NULL, TRUE, FALSE);
-          /* sets the selector on its first entry */
-          TtaSetSelector (NumSelectNatureName, 0, "");
-#endif /* _GTK */
         }
       else
         /* we did not create a selector, we create a capture zone having
            the nature of the element to create */
-#ifdef _GTK
-        TtaNewTextForm (NumSelectNatureName, NumFormNature, TtaGetMessage (LIB, TMSG_OBJECT_TYPE), 30, 1, FALSE)
-#endif /* _GTK */
           ;
     }
   else
@@ -410,13 +346,6 @@ void BuildChoiceMenu (char *menuBuf, char *menuTitle, int nbEntries,
         }
       TtaNewPopup (NumMenuElChoice, 0, menuTitle, nbEntries, menuBufB, NULL, 'L');
     }
-#ifdef _GTK
-  TtaShowDialogue (menu, FALSE);
-  /* waits until the user has answered to the menu and that the 
-     mediator has called ChoiceMenuCallback */
-  TtaWaitShowDialogue ();
-#endif /* #ifdef _GTK */
-
 #endif /* IV */
 }
 
@@ -464,11 +393,6 @@ void BuildPasteMenu (int RefMenu, char *menuBuf, Name title,
       src += l + 1;
     }
   TtaNewPopup (RefMenu, 0, title, nbEntries, menuBufB, NULL, button);
-#ifdef _GTK
-  TtaShowDialogue (RefMenu, FALSE);
-  /* waits for the user's answer */
-  TtaWaitShowDialogue ();
-#endif /* #ifdef _GTK */
 }
 
 
