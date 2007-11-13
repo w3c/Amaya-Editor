@@ -91,6 +91,7 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   m_tbar1->Realize();
   m_tbar2->Add(AmayaStyleToolDef);
   m_tbar2->Realize();
+  Fit();
   SetAutoLayout(true);
   
 //  XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", AmayaColorButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORBUTTON)));

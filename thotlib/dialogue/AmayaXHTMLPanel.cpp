@@ -98,7 +98,7 @@ bool AmayaXHTMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   m_tbar3->Realize();
   m_tbar4->Add(AmayaXHTMLToolDef);
   m_tbar4->Realize();
-  
+  Fit();
   SetAutoLayout(true);
   
   return true;
