@@ -742,10 +742,10 @@ void ChangeTheme (const char *theme)
   Document            doc;
   Language            language = TtaGetDefaultLanguage ();
   char               *buffer = NULL, *ptr, *filename;
-  int                 view, i, j;
+  int                 view, i, j, len;
   int		              position, distance;
   DisplayMode         dispMode;
-  ThotBool            isNew = FALSE;
+  ThotBool            isNew = FALSE, found = FALSE;
 
   TtaGetActiveView (&doc, &view);
   if (doc == 0 || theme == NULL)
@@ -760,12 +760,31 @@ void ChangeTheme (const char *theme)
       TtaGiveFirstSelectedElement (doc, &el_select, &i, &j);
       position = RelativePosition (doc, &distance);
       el_show = ElementAtPosition (doc, position);
-        
+      
       elType = TtaGetElementType (root);
+      attrType.AttrSSchema = elType.ElSSchema;
       elType.ElTypeNum = HTML_EL_HEAD;
       head = TtaSearchTypedElement (elType, SearchForward, root);
       elType.ElTypeNum = HTML_EL_STYLE_;
       el = TtaSearchTypedElement (elType, SearchForward, head);
+      while (!found && el)
+        {
+          // check if it's the right style element
+          attrType.AttrTypeNum = HTML_ATTR_Title;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
+            {
+              len = TtaGetTextAttributeLength (attr) + 1;
+              buffer = (char *)TtaGetMemory (len);
+              TtaGiveTextAttributeValue (attr, buffer, &len);
+              if (!strcmp (buffer, "Amaya theme"))
+                found = TRUE;
+              else
+                el = TtaSearchTypedElementInTree (elType, SearchForward, head, el);
+              TtaFreeMemory (buffer);
+              buffer = NULL;
+            }
+        }
       if (el == NULL)
         {
           TtaSetStructureChecking (FALSE, doc);
@@ -775,11 +794,14 @@ void ChangeTheme (const char *theme)
           if (el)
             {
               TtaExtendUndoSequence (doc);
-              attrType.AttrSSchema = elType.ElSSchema;
               attrType.AttrTypeNum = HTML_ATTR_Notation;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (el, attr, doc);
               TtaSetAttributeText (attr, "text/css", el, doc);
+              attrType.AttrTypeNum = HTML_ATTR_Title;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              TtaSetAttributeText (attr, "Amaya theme", el, doc);
             }
         }
       else

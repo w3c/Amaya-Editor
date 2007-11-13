@@ -4837,7 +4837,6 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
           elType.ElTypeNum == HTML_EL_SCRIPT_ ||
           elType.ElTypeNum == HTML_EL_Element)
         return TRUE;
-
       /* BASEFONT and PARAM accept only ID */
       else if (elType.ElTypeNum == HTML_EL_BaseFont ||
                elType.ElTypeNum == HTML_EL_Parameter)
@@ -4851,7 +4850,9 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
           else
             return TRUE;
         }
-
+      else if (elType.ElTypeNum == HTML_EL_STYLE_ &&
+               event->attributeType.AttrTypeNum == HTML_ATTR_Title)
+        return FALSE;   
       /* coreattrs */
       else if (event->attributeType.AttrTypeNum == HTML_ATTR_ID ||
                event->attributeType.AttrTypeNum == HTML_ATTR_Class ||
