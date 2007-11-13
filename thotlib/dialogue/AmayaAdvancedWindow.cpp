@@ -228,6 +228,8 @@ void AmayaAdvancedWindow::LoadConfig()
     }
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 void AmayaAdvancedWindow::OnToggleToolPanelMenu(wxCommandEvent& event)
 {
   m_manager.GetPane(m_panelMenus[event.GetId()]).Show(event.IsChecked());
@@ -236,6 +238,8 @@ void AmayaAdvancedWindow::OnToggleToolPanelMenu(wxCommandEvent& event)
   m_manager.Update();
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 void AmayaAdvancedWindow::OnUpdateToolPanelMenu(wxUpdateUIEvent& event)
 {
   event.Enable(m_bShowPanels);
@@ -263,6 +267,10 @@ void AmayaAdvancedWindow::SaveConfig()
         
         TtaSetEnvString((const char*)name.mb_str(wxConvUTF8),
                         (char*)(const char*)str.mb_str(wxConvUTF8), TRUE);
+        // Say if the panel is on/off
+        name = wxT("OPEN_") + it->second->GetToolPanelConfigKeyName();
+        TtaSetEnvBoolean((const char*)name.mb_str(wxConvUTF8),
+                         (ThotBool)it->second->IsVisible(), TRUE);
       }
   }
 
@@ -340,7 +348,7 @@ const AmayaPageContainer* AmayaAdvancedWindow::GetPageContainer()const
   -----------------------------------------------------------------------*/
 void AmayaAdvancedWindow::OnClose(wxCloseEvent& event)
 {
-  if (s_normalWindowCount==1)
+  if (s_normalWindowCount == 1)
     TtaSetEnvBoolean("OPEN_PANEL", ToolPanelsShown(), TRUE);
   
   if(m_notebook)
