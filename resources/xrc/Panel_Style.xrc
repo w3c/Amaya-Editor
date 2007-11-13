@@ -11,11 +11,11 @@
             <object class="wxStaticText" name="wxID_THEME">
               <label>Theme</label>
             </object>
-            <option>1</option>
+            <option>0</option>
             <flag>wxALIGN_CENTRE_VERTICAL</flag>
           </object>
           <object class="spacer">
-            <size>2,0</size>
+            <size>10,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxChoice" name="wxID_PANEL_CSS_THEME">
