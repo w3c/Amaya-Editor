@@ -390,7 +390,12 @@ HelpXml
 &NewCss
 &RemoveDoctype
 &AddDoctype
+&CreateDoctypeXhtml11
+&CreateDoctypeXhtmlTransitional
+&CreateDoctypeXhtmlStrict
+&CreateDoctypeXhtmlBasic
 &CreateDoctypeHtmlTransitional
+&CreateDoctypeHtmlStrict
 &SaveDocument
 &SaveAll
 &TtcCutSelection
