@@ -134,7 +134,7 @@
 132 A operação será redirecionada. Continuar?
 133 Número de linhas
 134 Número de colunas
-135 Borda
+135 Borda (pixel)
 136 Texto alternativo
 137 O texto alternativo é mandatório
 138 Imprimir URL
@@ -457,3 +457,10 @@
 455 **Create the link by click
 456 Apagar âncora
 457 **Save without template
+458 **With theme ...
+459 **Maximum width
+460 **Caption
+461 **No caption
+462 **With a caption
+463 **Size
+464 **Position

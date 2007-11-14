@@ -32,14 +32,11 @@ private:
     // Override base class functions of a wxDialog.
   void OnConfirmButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
+  void OnSelectFormat( wxCommandEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
     
-private:
-  int   m_cols;
-  int   m_rows;
-  int   m_border;
 };
 
 #endif  //__CREATETABLEDLGWX_H__

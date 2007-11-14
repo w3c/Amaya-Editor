@@ -5855,9 +5855,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
     case TableCols:
       NumberCols = val;
       break;
-    case TableBorder:
-      TBorder = val;
-      break;
     case MathEntityForm:
       /* ********* MathML entity form ********* */
       if (val == 0)

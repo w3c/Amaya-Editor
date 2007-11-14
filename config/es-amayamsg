@@ -134,7 +134,7 @@
 132 La operación será redirigida. ¿Continuar?
 133 Número de filas:
 134 Número de columnas:
-135 Grosor del borde:
+135 Grosor del borde (pixel)
 136 Texto alternativo:
 137 El texto alternativo es obligatorio
 138 Imprimir URL
@@ -457,3 +457,10 @@
 455 **Create the link by click
 456 Borrar ancla
 457 **Save without template
+458 **With theme ...
+459 **Maximum width
+460 **Caption
+461 **No caption
+462 **With a caption
+463 **Size
+464 **Position

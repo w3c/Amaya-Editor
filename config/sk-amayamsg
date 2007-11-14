@@ -134,7 +134,7 @@
 132 Operácia bude presmerovaná. Pokračovať?
 133 Počet riadkov
 134 Počet stĺpcov
-135 Okraj
+135 Okraj (pixel)
 136 Alternatívny text
 137 Alternatívny text je povinný
 138 Tlačiť URL odkazy
@@ -457,3 +457,10 @@
 455 **Create the link by click
 456 Odstrániť odkaz
 457 **Save without template
+458 **With theme ...
+459 **Maximum width
+460 **Caption
+461 **No caption
+462 **With a caption
+463 **Size
+464 **Position

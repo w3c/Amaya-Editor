@@ -134,7 +134,7 @@
 132 操作会被重定向, 继续吗?
 133 行数
 134 列数
-135 边框
+135 边框 (pixel)
 136 代替文本
 137 必须使用代替文本
 138 打印 URL
@@ -457,3 +457,10 @@
 455 **Create the link by click
 456 删除 anchor
 457 **Save without template
+458 **With theme ...
+459 **Maximum width
+460 **Caption
+461 **No caption
+462 **With a caption
+463 **Size
+464 **Position

@@ -434,7 +434,8 @@ THOT_EXPORT int	       BaseCSS;
 THOT_EXPORT int        ReturnOption;
 THOT_EXPORT int        NumberRows;
 THOT_EXPORT int        NumberCols;
-THOT_EXPORT int        TBorder;
+THOT_EXPORT int        TBorder; // border width of created tables
+THOT_EXPORT int        TCaption; // value 0=top, 1=bottom, 2=left, 3=right, 4=no
 THOT_EXPORT int        ReturnOptionMenu;
 THOT_EXPORT int        IdDoc;
 THOT_EXPORT int        BaseLibrary;
@@ -449,6 +450,7 @@ THOT_EXPORT Document   ParsedCSS; /* The CSS document currently parsed */
 THOT_EXPORT Element    AttrHREFelement;
 THOT_EXPORT char      *AttrHREFvalue;
 THOT_EXPORT Document   SelectionDoc;
+THOT_EXPORT ThotBool   TMAX_Width;
 THOT_EXPORT ThotBool   AttrHREFundoable;
 THOT_EXPORT ThotBool   IsNewAnchor;
 THOT_EXPORT ThotBool   UseLastTarget;

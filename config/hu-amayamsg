@@ -134,7 +134,7 @@
 132 A művelet át lesz irányítva. Folytassuk?
 133 Sorok száma
 134 Oszlopok száma
-135 Keret
+135 Keret (pixel)
 136 Szövegváltozat
 137 A szövegváltozat is kötelező
 138 URL nyomtatása
@@ -457,3 +457,10 @@
 455 **Create the link by click
 456 Horgony törlése
 457 **Save without template
+458 **With theme ...
+459 **Maximum width
+460 **Caption
+461 **No caption
+462 **With a caption
+463 **Size
+464 **Position

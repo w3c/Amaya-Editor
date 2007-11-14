@@ -458,4 +458,11 @@
 #define AM_CREATE_BY_CLICK		455
 #define AM_DELETE_LINK		456
 #define AM_REMOVE_XTIGER		457
-#define AMAYA_MSG_MAX		458
+#define AM_USE_THEME		458
+#define AM_MAX_WIDTH		459
+#define AM_CAPTION		460
+#define AM_NO_CAPTION		461
+#define AM_TOP_CAPTION		462
+#define AM_SIZE		463
+#define AM_POSITION		464
+#define AMAYA_MSG_MAX		465

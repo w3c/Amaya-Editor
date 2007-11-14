@@ -2168,20 +2168,20 @@
 	<message xml:lang="sk">Počet stĺpcov</message>
 </label>
 <label define="AM_BORDER">
-	<message xml:lang="en">Border</message>
-	<message xml:lang="fr">Bordure</message>
-	<message xml:lang="de">Rahmen:</message>
-	<message xml:lang="it">Bordo</message>
-	<message xml:lang="es">Grosor del borde:</message>
-	<message xml:lang="pt">Borda</message>
-	<message xml:lang="fi">Reunus</message>
-	<message xml:lang="tr">çerçeve</message>
-	<message xml:lang="ru">Ширина линии границы</message>
-	<message xml:lang="hu">Keret</message>
-	<message xml:lang="ka">ჩარჩო</message>
-	<message xml:lang="cn">边框</message>
-	<message xml:lang="tw">邊框</message>
-	<message xml:lang="sk">Okraj</message>
+	<message xml:lang="en">Border (pixel)</message>
+	<message xml:lang="fr">Bordure (pixel)</message>
+	<message xml:lang="de">Rahmen (pixel)</message>
+	<message xml:lang="it">Bordo (pixel)</message>
+	<message xml:lang="es">Grosor del borde (pixel)</message>
+	<message xml:lang="pt">Borda (pixel)</message>
+	<message xml:lang="fi">Reunus (pixel)</message>
+	<message xml:lang="tr">çerçeve (pixel)</message>
+	<message xml:lang="ru">Ширина линии границы (pixel)</message>
+	<message xml:lang="hu">Keret (pixel)</message>
+	<message xml:lang="ka">ჩარჩო (pixel)</message>
+	<message xml:lang="cn">边框 (pixel)</message>
+	<message xml:lang="tw">邊框 (pixel)</message>
+	<message xml:lang="sk">Okraj (pixel)</message>
 </label>
 <label define="AM_ALT">
 	<message xml:lang="en">Alternate text</message>
@@ -6540,6 +6540,34 @@
 <label define="AM_REMOVE_XTIGER">
 	<message xml:lang="en">Save without template</message>
 	<message xml:lang="fr">Sauver sans modèle</message>
+</label>
+<label define="AM_USE_THEME">
+	<message xml:lang="en">With theme ...</message>
+	<message xml:lang="fr">Avec le thème ...</message>
+</label>
+<label define="AM_MAX_WIDTH">
+	<message xml:lang="en">Maximum width</message>
+	<message xml:lang="fr">Largeur maximum</message>
+</label>
+<label define="AM_CAPTION">
+<message xml:lang="en">Caption</message>
+<message xml:lang="fr">Légende</message>
+</label>
+<label define="AM_NO_CAPTION">
+<message xml:lang="en">No caption</message>
+<message xml:lang="fr">Sans légende</message>
+</label>
+<label define="AM_TOP_CAPTION">
+<message xml:lang="en">With a caption</message>
+<message xml:lang="fr">Avec une légende</message>
+</label>
+<label define="AM_SIZE">
+<message xml:lang="en">Size</message>
+<message xml:lang="fr">Dimension</message>
+</label>
+<label define="AM_POSITION">
+<message xml:lang="en">Position</message>
+<message xml:lang="fr">Position</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

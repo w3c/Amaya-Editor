@@ -8,73 +8,203 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
+          <orient>wxVERTICAL</orient>
+          <object class="spacer">
+            <size>0,10</size>
+          </object>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_NUMBER_COL_TXT">
-              <label>Number of columns   </label>
-              <size>150,-1</size>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_SIZE">
+                  <label>Size</label>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticLine">
+                  <size>300,-1</size>
+                </object>
+                <flag>wxRIGHT|wxALIGN_BOTTOM</flag>
+                <border>5</border>
+              </object>
             </object>
-            <flag>wxALL|wxEXPAND</flag>
+            <flag>wxALL</flag>
+          </object>
+          <object class="spacer">
+            <size>0,5</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="spacer">
+                <size>20,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_NUMBER_COL_TXT">
+                  <label>Number of columns   </label>
+                  <size>150,-1</size>
+                </object>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxSpinCtrl" name="wxID_NUMBER_COL">
+                  <value>2</value>
+                  <min>1</min>
+                  <max>100</max>
+                  <size>60,-1</size>
+                  <focused>1</focused>
+                </object>
+              </object>
+            </object>
+            <flag>wxALL</flag>
             <border>5</border>
           </object>
-          <object class="sizeritem">
-            <object class="wxSpinCtrl" name="wxID_NUMBER_COL">
-              <value>2</value>
-              <min>1</min>
-              <max>50</max>
-              <focused>1</focused>
-            </object>
-            <flag>wxALL|wxEXPAND</flag>
+          <object class="spacer">
+            <size>0,5</size>
           </object>
-        </object>
-        <flag>wxALL|wxEXPAND</flag>
-        <border>5</border>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_NUMBER_ROW_TXT">
-              <label>Number of raws</label>
-              <size>150,-1</size>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="spacer">
+                <size>20,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_NUMBER_ROW_TXT">
+                  <label>Number of raws</label>
+                  <size>150,-1</size>
+                </object>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxSpinCtrl" name="wxID_NUMBER_ROW">
+                  <value>2</value>
+                  <min>1</min>
+                  <max>100</max>
+                  <size>60,-1</size>
+                </object>
+              </object>
             </object>
-            <flag>wxALL|wxEXPAND</flag>
+            <flag>wxALL</flag>
             <border>5</border>
           </object>
-          <object class="sizeritem">
-            <object class="wxSpinCtrl" name="wxID_NUMBER_ROW">
-              <value>2</value>
-              <min>1</min>
-              <max>50</max>
-            </object>
-            <flag>wxALL|wxEXPAND</flag>
+          <object class="spacer">
+            <size>0,5</size>
           </object>
-        </object>
-        <flag>wxALL|wxEXPAND</flag>
-        <border>5</border>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_TABLE_BORDER_TXT">
-              <label>Border</label>
-              <size>150,-1</size>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_PARAMETERS">
+                  <label>Options</label>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticLine">
+                  <size>300,-1</size>
+                </object>
+                <flag>wxRIGHT|wxALIGN_BOTTOM</flag>
+                <border>5</border>
+              </object>
             </object>
-            <flag>wxALL|wxEXPAND</flag>
+            <flag>wxALL</flag>
+          </object>
+          <object class="spacer">
+            <size>0,5</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="spacer">
+                <size>20,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_TABLE_BORDER_TXT">
+                  <label>Border (pixels)</label>
+                  <size>150,-1</size>
+                </object>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxSpinCtrl" name="wxID_TABLE_BORDER">
+                  <value>1</value>
+                  <min>0</min>
+                  <max>50</max>
+                  <size>60,-1</size>
+                </object>
+              </object>
+            </object>
+            <flag>wxALL</flag>
             <border>5</border>
           </object>
+          <object class="spacer">
+            <size>0,5</size>
+          </object>
           <object class="sizeritem">
-            <object class="wxSpinCtrl" name="wxID_TABLE_BORDER">
-              <value>1</value>
-              <min>0</min>
-              <max>50</max>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="spacer">
+                <size>20,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxRadioBox" name="wxID_CAPTION">
+                  <label>Caption</label>
+                  <content>
+                    <item>Caption displayed on the top</item>
+                    <item>Caption is not displayed</item>
+                  </content>
+                  <size>300,-1</size>
+                  <style>wxRA_SPECIFY_COLS</style>
+                </object>
+                <flag>wxALL</flag>
+                <border>5</border>
+              </object>
+              <object class="spacer">
+                <size>20,0</size>
+              </object>
             </object>
-            <flag>wxALL|wxEXPAND</flag>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+          <object class="spacer">
+            <size>0,10</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="spacer">
+                <size>20,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxButton" name="wxID_FORMAT_BUTTON">
+                  <label>Use a default theme ...</label>
+                </object>
+                <option>1</option>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="spacer">
+                <size>20,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxCheckBox" name="wxID_EXTEND_WIDTH">
+                  <label>100% width</label>
+                  <checked>1</checked>
+                </object>
+                <option>1</option>
+                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+            </object>
+          </object>
+          <object class="spacer">
+            <size>0,20</size>
           </object>
         </object>
-        <flag>wxALL|wxEXPAND</flag>
-        <border>5</border>
+        <option>1</option>
+        <flag>wxEXPAND</flag>
+        <border>10</border>
       </object>
       <object class="sizeritem">
         <object class="wxBoxSizer">

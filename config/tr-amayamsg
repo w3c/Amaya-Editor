@@ -134,7 +134,7 @@
 132 Operasion yönlendirilecek. Devam?
 133 Sıra sayısı
 134 Sütün sayısı
-135 çerçeve
+135 çerçeve (pixel)
 136 Yeniden yerleştirme metini
 137 Yeniden yerleştirme metini mecburdur
 138 URL\'i yazdır
@@ -457,3 +457,10 @@
 455 **Create the link by click
 456 tanımı sil
 457 **Save without template
+458 **With theme ...
+459 **Maximum width
+460 **Caption
+461 **No caption
+462 **With a caption
+463 **Size
+464 **Position

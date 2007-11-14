@@ -35,10 +35,6 @@
 #include "BMevent_f.h"
 #endif /* BOOKMARKS */
 
-#ifdef _WINGUI
-#include "wininclude.h"
-#endif /* _WINGUI */
-
 #include "MENUconf.h"
 #include "css_f.h"
 #include "html2thot_f.h"
@@ -2221,9 +2217,8 @@ void DoTableCreation (Document doc)
   Attribute           attr;
   int                 firstChar, i, profile;
   char                stylebuff[100];
-  ThotBool            loadcss, amaya_lite;
+  ThotBool            loadcss;
 
-  TtaGetEnvBoolean ("AMAYA_LITE", &amaya_lite);
   /* get the new Table element */
   TtaSetDisplayMode (doc, SuspendDisplay);
   TtaLockTableFormatting ();
@@ -2234,7 +2229,7 @@ void DoTableCreation (Document doc)
   if (el)
     {
       profile = TtaGetDocumentProfile(doc);
-      if (!amaya_lite)
+      if (TCaption != 1)
         {
           // insert the caption
           elType.ElTypeNum = HTML_EL_CAPTION;
@@ -2267,8 +2262,13 @@ void DoTableCreation (Document doc)
       attrType.AttrTypeNum = HTML_ATTR_Style_;
       attr = TtaNewAttribute (attrType);
       if (profile == L_Basic)
-        sprintf (stylebuff, "width: 100%%; border: solid %dpx", TBorder);
-      else
+        {
+          if (TMAX_Width)
+            sprintf (stylebuff, "width: 100%%; border: solid %dpx", TBorder);
+          else
+            sprintf (stylebuff, "border: solid %dpx", TBorder);
+        }
+      else if (TMAX_Width)
         strcpy (stylebuff, "width: 100%");
       TtaAttachAttribute (el, attr, doc);
       TtaSetAttributeText (attr, stylebuff, el, doc);	       
@@ -2336,10 +2336,6 @@ void CreateTable (Document doc, View view)
           NumberRows = 2;
           NumberCols = 2;
           TBorder = 1;
-#ifdef _WINGUI
-          CreateTableDlgWindow (NumberCols, NumberRows, TBorder);
-#endif  /* _WINGUI */
-#ifdef _WX
           ThotBool created;
           created = CreateCreateTableDlgWX (BaseDialog + TableForm,
                                             TtaGetViewFrame (doc, view),
@@ -2350,25 +2346,6 @@ void CreateTable (Document doc, View view)
               /* wait for an answer */
               TtaWaitShowDialogue ();
             }
-#endif /* _WX */
-#ifdef _GTK
-          TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
-                      TtaGetMessage (LIB, TMSG_BUTTON_TABLE), TRUE, 1, 'L', D_CANCEL);
-          TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
-                            TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
-          TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,
-                            TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
-          TtaNewNumberForm (BaseDialog + TableBorder, BaseDialog + TableForm,
-                            TtaGetMessage (AMAYA, AM_BORDER), 0, 50, TRUE);
-          TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
-          TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
-          TtaSetNumberForm (BaseDialog + TableBorder, TBorder);
-          TtaSetDialoguePosition ();
-          TtaShowDialogue (BaseDialog + TableForm, FALSE);
-          /* wait for an answer */
-          TtaWaitShowDialogue ();
-#endif /* _GTK */
-
           if (!UserAnswer)
             return;
         }

@@ -134,7 +134,7 @@
 132 L'opération sera redirigée. Voulez-vous continuer ?
 133 Nombre de lignes
 134 Nombre de colonnes
-135 Bordure
+135 Bordure (pixel)
 136 Texte de remplacement
 137 Le texte de remplacement est obligatoire
 138 Imprimer l'URL
@@ -457,3 +457,10 @@
 455 Créer le lien en cliquant
 456 Detruire le lien
 457 Sauver sans modèle
+458 Avec le thème ...
+459 Largeur maximum
+460 Légende
+461 Sans légende
+462 Avec une légende
+463 Dimension
+464 Position

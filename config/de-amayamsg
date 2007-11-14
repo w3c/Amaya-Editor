@@ -134,7 +134,7 @@
 132 Umleitung folgen?
 133 Zeilen:
 134 Spalten:
-135 Rahmen:
+135 Rahmen (pixel)
 136 Alternativer Text:
 137 Alternativer Text ist erforderlich!
 138 URI im Seitenkopf
@@ -457,3 +457,10 @@
 455 **Create the link by click
 456 Verweis löschen
 457 **Save without template
+458 **With theme ...
+459 **Maximum width
+460 **Caption
+461 **No caption
+462 **With a caption
+463 **Size
+464 **Position
