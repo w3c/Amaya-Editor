@@ -12,6 +12,7 @@ extern XTigerTemplate NewXTigerTemplate ( const char *templatePath );
 extern XTigerTemplate NewXTigerLibrary ( const char *templatePath );
 extern XTigerTemplate LookForXTigerLibrary ( const char *templatePath );
 extern XTigerTemplate GetXTigerTemplate ( const char *templatePath );
+extern XTigerTemplate GetXTigerDocTemplate ( Document doc );
 extern void Template_AddStandardDependancies ( XTigerTemplate t );
 extern XTigerTemplate CreatePredefinedTypesLibrary ( void );
 extern XTigerTemplate CreateHTMLLibrary ( void );
@@ -41,6 +42,8 @@ extern Declaration Template_GetSimpleTypeDeclaration ( const XTigerTemplate t,
                                                        const char *name );
 extern Declaration Template_GetComponentDeclaration ( const XTigerTemplate t,
                                                       const char *name );
+extern Declaration Template_GetElementDeclaration ( const XTigerTemplate t,
+                                                    const char *name );
 extern void Template_Close ( XTigerTemplate t );
 extern void Template_FillDeclarations ( XTigerTemplate t );
 extern void Template_AddLibraryDeclarations ( XTigerTemplate t,
@@ -104,6 +107,7 @@ extern XTigerTemplate NewXTigerTemplate ( const char *templatePath );
 extern XTigerTemplate NewXTigerLibrary ( const char *templatePath );
 extern XTigerTemplate LookForXTigerLibrary ( const char *templatePath );
 extern XTigerTemplate GetXTigerTemplate ( const char *templatePath );
+extern XTigerTemplate GetXTigerDocTemplate ( Document doc );
 extern void Template_AddStandardDependancies ( XTigerTemplate t );
 extern XTigerTemplate CreatePredefinedTypesLibrary ( void );
 extern XTigerTemplate CreateHTMLLibrary ( void );
@@ -133,6 +137,8 @@ extern Declaration Template_GetSimpleTypeDeclaration ( const XTigerTemplate t,
                                                          const char *name );
 extern Declaration Template_GetComponentDeclaration ( const XTigerTemplate t,
                                                         const char *name );
+extern Declaration Template_GetElementDeclaration ( const XTigerTemplate t,
+                                                      const char *name );
 extern void Template_Close ( XTigerTemplate t );
 extern void Template_FillDeclarations ( XTigerTemplate t );
 extern void Template_AddLibraryDeclarations ( XTigerTemplate t,

@@ -63,7 +63,7 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
 
   if (!TtaGetDocumentAccessMode (doc))
     return NULL;
-
+  
   /* Copy xt:use with xt:types param */
   useFirst = TtaGetFirstChild (el);
   useType = TtaGetElementType (useFirst);
@@ -136,6 +136,7 @@ Element Template_InsertBagChild (Document doc, Element el, Declaration decl, Tho
   Element     sel;
   ElementType newElType, selType;
   int start, end;
+  SSchema sstempl = TtaGetSSchema ("Template", doc);
 
   if (!TtaGetDocumentAccessMode (doc) || !decl)
     return NULL;
@@ -143,11 +144,23 @@ Element Template_InsertBagChild (Document doc, Element el, Declaration decl, Tho
   TtaGiveFirstSelectedElement (doc, &sel, &start, &end);
   if (TtaIsAncestor (sel, el))
   {
-    newElType.ElSSchema = TtaGetSSchema ("Template", doc);
-    if (decl->nature == UnionNat)
-      newElType.ElTypeNum = Template_EL_useEl;
-    else
-      newElType.ElTypeNum = Template_EL_useSimple;
+    
+    switch(decl->nature)
+    {
+      case UnionNat:
+        newElType.ElTypeNum = Template_EL_useEl;
+        newElType.ElSSchema = sstempl;
+        break;
+      case ComponentNat:
+        newElType.ElTypeNum = Template_EL_useSimple;
+        newElType.ElSSchema = sstempl;
+        break;
+      case XmlElementNat:
+        GIType (decl->name, &newElType, doc);
+        break;
+      default:
+        break;
+    }
 
     selType = TtaGetElementType (sel);
     if (decl->blockLevel && 
@@ -162,7 +175,7 @@ Element Template_InsertBagChild (Document doc, Element el, Declaration decl, Tho
       }
     TtaInsertElement (newElType, doc);
     TtaGiveFirstSelectedElement (doc, &sel, &start, &end);
-    if (sel)
+    if (sel && newElType.ElSSchema == sstempl)
     {
       selType = TtaGetElementType (sel);
       TtaUnselect (doc);

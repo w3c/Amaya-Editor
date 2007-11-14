@@ -39,6 +39,7 @@
 #include "fetchXMLname_f.h"
 #include "MENUconf.h"
 
+
 /* Paths from which looking for templates.*/
 static Prop_Templates_Path *TemplateRepositoryPaths;
 
@@ -679,6 +680,10 @@ static char* QueryStringFromMenu (Document doc, char* items)
 }
 #endif /* TEMPLATES */
 
+#ifdef AMAYA_DEBUG
+void FillInsertableElemList (Document doc, Element elem, DLList list);
+#endif /* AMAYA_DEBUG */
+
 /*----------------------------------------------------------------------
   BagButtonClicked
   Called when a bag button is clicked.
@@ -732,6 +737,21 @@ ThotBool BagButtonClicked (NotifyElement *event)
     if (types)
       {
         listtypes = Template_ExpandTypes (t, types, bagEl, FALSE);
+#ifdef AMAYA_DEBUG
+      printf("BagButtonClicked : \n  > %s\n", listtypes);
+//      {
+//        DLList list = DLList_Create();
+//        FillInsertableElemList (doc, TtaGetFirstChild(bagEl), list);
+//        DLListNode node;
+//        ForwardIterator iter = DLList_GetForwardIterator(list);
+//        ITERATOR_FOREACH(iter, DLListNode, node)
+//        {
+//          ElemListElement elem = (ElemListElement)node->elem;
+//          printf("  + %s\n", ElemListElement_GetName(elem));
+//        }
+//        DLList_Destroy(list);
+//      }
+#endif /* AMAYA_DEBUG */
         result = QueryStringFromMenu (doc, listtypes);
         TtaFreeMemory (listtypes);
         if (result)
@@ -845,6 +865,10 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
       if (types)
       {
         listtypes = Template_ExpandTypes (t, types, NULL, FALSE);
+#ifdef AMAYA_DEBUG
+      printf("RepeatButtonClicked : \n  > %s\n", listtypes);
+#endif /* AMAYA_DEBUG */
+        
         result = QueryStringFromMenu (doc, listtypes);
         TtaFreeMemory (listtypes);
         if (result)
@@ -948,6 +972,10 @@ ThotBool UseButtonClicked (NotifyElement *event)
     if (types)
     {
       listtypes = Template_ExpandTypes(t, types, NULL, FALSE);
+#ifdef AMAYA_DEBUG
+      printf("UseButtonClicked : \n  > %s\n", listtypes);
+#endif /* AMAYA_DEBUG */
+      
       result = QueryStringFromMenu(doc, listtypes);
       if (result)
       {
@@ -1352,13 +1380,12 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
 #ifdef TEMPLATES
   Document       doc = event->document;
   Element        elem = event->element;
-  Element        xtElem, parent, sibling, leaf;
+  Element        xtElem, parent, sibling;
   ElementType    xtType, elType;
   char*          type;
   Declaration    dec;
   SSchema        templateSSchema;
   XTigerTemplate t;
-  int            pos;
   ThotBool       selparent = FALSE;
 
   if(event->info==1)

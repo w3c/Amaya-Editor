@@ -23,6 +23,7 @@
 #include "style.h"
 
 #include "containers.h"
+#include "Elemlist.h"
 #include "insertelem_f.h"
 
 

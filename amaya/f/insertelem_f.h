@@ -8,26 +8,36 @@
 
 extern void InsertableElement_Init ( void );
 extern void InsertableElement_Final ( void );
+extern void FillInsertableElemList ( Document doc,
+                                     Element elem,
+                                     DLList list );
 extern DLList InsertableElement_GetList ( Document doc );
 extern DLList InsertableElement_Update ( Document doc,
                                          Element el );
+extern DLList InsertableElement_ComputeList ( Document doc,
+                                              Element el );
 extern void InsertableElement_DoInsertElement ( void* el );
-extern void InsertableElement_InsertElement ( void* el,
-                                              ThotBool before );
-extern void InsertableElement_QueryInsertElement ( void* el,
+extern Element InsertableElement_InsertElement ( ElemListElement elem,
+                                                 ThotBool before );
+extern void InsertableElement_QueryInsertElement ( ElemListElement elem,
                                                    ThotBool before );
 
 #else /* __STDC__ */
 
 extern void InsertableElement_Init ( void );
 extern void InsertableElement_Final ( void );
+extern void FillInsertableElemList ( Document doc,
+                                       Element elem,
+                                       DLList list );
 extern DLList InsertableElement_GetList ( Document doc );
 extern DLList InsertableElement_Update ( Document doc,
                                            Element el );
+extern DLList InsertableElement_ComputeList ( Document doc,
+                                                Element el );
 extern void InsertableElement_DoInsertElement ( void* el );
-extern void InsertableElement_InsertElement ( void* el,
-                                                ThotBool before );
-extern void InsertableElement_QueryInsertElement ( void* el,
+extern Element InsertableElement_InsertElement ( ElemListElement elem,
+                                                   ThotBool before );
+extern void InsertableElement_QueryInsertElement ( ElemListElement elem,
                                                      ThotBool before );
 
 #endif /* __STDC__ */

@@ -2407,7 +2407,7 @@ void TtaPopupDocContextMenu(int document, int window, void* win, int x, int y)
 /*----------------------------------------------------------------------
   TtaResetEnumContextMenu()
   Reset the return value of a popup menu 
-  (id value between 0 and 1000, -1 if cancelled)
+  (id value between 1000 and 2000, -1 if cancelled)
   ----------------------------------------------------------------------*/
 void TtaResetEnumContextMenu()
 {

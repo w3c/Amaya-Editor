@@ -16,6 +16,7 @@
 #include "tree.h"
 #include "document.h"
 #include "containers.h"
+#include "Elemlist.h"
 #include "insertelem_f.h"
 
 #include "Template.h"
@@ -179,6 +180,17 @@ XTigerTemplate GetXTigerTemplate (const char *templatePath)
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+  Get the XTiger document template 
+  ----------------------------------------------------------------------*/
+XTigerTemplate GetXTigerDocTemplate (Document doc)
+{
+#ifdef TEMPLATES
+  return GetXTigerTemplate(DocumentMeta[doc]->template_url);
+#else
+  return NULL;
+#endif /* TEMPLATES */
+}
 
 /*----------------------------------------------------------------------
   Template_AddStandardDependancies
@@ -753,6 +765,22 @@ Declaration Template_GetComponentDeclaration (const XTigerTemplate t, const char
 #ifdef TEMPLATES
   if (t)
      return (Declaration)HashMap_Get (t->components, (void*)name); 
+  else
+#endif /* TEMPLATES */
+    return NULL;
+}
+
+/*----------------------------------------------------------------------
+  Template_GetElementDeclaration
+  Find a declaration of an element in a specified template and return it.
+  \param t Template in which search the declaration
+  \param name Declaration name to find.
+  ----------------------------------------------------------------------*/
+Declaration Template_GetElementDeclaration (const XTigerTemplate t, const char *name)
+{
+#ifdef TEMPLATES
+  if (t)
+     return (Declaration)HashMap_Get (t->elements, (void*)name); 
   else
 #endif /* TEMPLATES */
     return NULL;

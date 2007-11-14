@@ -8,12 +8,12 @@
 
 typedef enum
 {
+  /** XTiger component. */
+  DefinedComponent,
   /** Base language element. */
   LanguageElement,
   /** Base type (string, number ...).*/
-  BaseType,
-  /** XTiger component. */
-  DefinedComponent
+  BaseType
 }ElementListElementTypeClass;
 
 /**

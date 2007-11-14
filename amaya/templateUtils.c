@@ -178,6 +178,29 @@ Element GetFirstEditableElement (Element el)
 }
 
 /*----------------------------------------------------------------------
+  TemplateCanInsertFirstChild
+  Test if an element can be inserted as child of another, bypassing xt.
+----------------------------------------------------------------------*/
+ThotBool TemplateCanInsertFirstChild(ElementType elementType, Element parent, Document document)
+{
+#ifdef TEMPLATES
+  SSchema         templateSSchema = TtaGetSSchema ("Template", document);
+  ElementType     parType;
+  
+  while(parent)
+    {
+      parType = TtaGetElementType(parent);
+      if(parType.ElSSchema != templateSSchema)
+        break;
+      parent = TtaGetParent(parent);
+    }
+  if(!parent)
+    return FALSE;
+#endif /* TEMPLATES */
+  return TtaCanInsertFirstChild(elementType, parent, document);
+}
+
+/*----------------------------------------------------------------------
   ValidateTemplateAttrInMenu
   Validate the status of an attribute according to xt::atribute rules.
   ----------------------------------------------------------------------*/

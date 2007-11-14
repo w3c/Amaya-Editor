@@ -121,7 +121,7 @@ void ElemListElement_Destroy(ElemListElement elem)
 const char* ElemListElement_GetName(ElemListElement elem)
 {
   if (elem->typeClass == LanguageElement && elem->elem.element.name == NULL)
-     elem->elem.element.name = TtaGetElementTypeName(elem->elem.element.type);
+     elem->elem.element.name = TtaStrdup(TtaGetElementTypeName(elem->elem.element.type));
  
   switch(elem->typeClass)
     {

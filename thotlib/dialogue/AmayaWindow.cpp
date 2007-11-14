@@ -562,7 +562,7 @@ void AmayaWindow::OnCloseEvent(wxCloseEvent& event)
 void AmayaWindow::OnPopupMenuEvent(wxCommandEvent& event)
 {
   TtaSetEnumContextMenu(event.GetId()); 
-  event.Skip();
+  //event.Skip();
 }
 
 
@@ -571,6 +571,7 @@ void AmayaWindow::OnPopupMenuEvent(wxCommandEvent& event)
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
+  EVT_MENU_RANGE(1000, 2000, AmayaWindow::OnPopupMenuEvent)
   EVT_SIZE(      AmayaWindow::OnSize )
   EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
   EVT_ACTIVATE(  AmayaWindow::OnActivate )
@@ -581,7 +582,6 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
 #endif /* !_WINDOWS  && ! MACOS */
   EVT_COMMAND(-1, wxEVT_AMAYA_ACTION_EVENT, AmayaWindow::OnAmayaAction)
   EVT_CLOSE(AmayaWindow::OnCloseEvent)
-  EVT_MENU_RANGE(0, 1000, AmayaWindow::OnPopupMenuEvent)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

@@ -30,6 +30,7 @@
 
 
 #include "containers.h"
+#include "Elemlist.h"
 #include "insertelem_f.h"
 
 #ifdef TEMPLATES
@@ -7928,7 +7929,7 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
       ForwardIterator iter;
       Element         el;
       DLListNode      node;
-      int             firstChar, lastChar, id=0;
+      int             firstChar, lastChar, id=1000;
       wxMenuItem     *itemTemplateInsert = NULL,
                      *itemTemplateAppend = NULL,
                      *oldInsert = NULL,
@@ -7952,18 +7953,17 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
       if(bTemplate)
         {
           TtaGiveFirstSelectedElement(doc, &el, &firstChar, &lastChar);
-          if (el && !IsTemplateElement(el))
-            el = GetFirstTemplateParentElement(el);
+          
           if(el)
             {
               menuTemplateInsert = new wxMenu;
               menuTemplateAppend = new wxMenu;
-              list = InsertableElement_Update(doc, el);
+              list = InsertableElement_ComputeList(doc, el);
               iter = DLList_GetForwardIterator(list);
               ITERATOR_FOREACH(iter, DLListNode, node)
                 {
                   ElemListElement elem = (ElemListElement)node->elem;
-                  if (elem && elem->typeClass==DefinedComponent)
+                  if (elem)
                     {
                       wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
                       menuTemplateInsert->Append(id, str);
@@ -7991,14 +7991,14 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
       if(itemTemplateInsert)
         {
           id = TtaGetEnumContextMenu();
-          
           if(id!=-1)
             {
+              id -= 1000;
               DLListNode node = DLList_GetElement(list, id<100?id:id-100);
               if(node && node->elem)
-                InsertableElement_QueryInsertElement(node->elem, id<100);
+                  InsertableElement_QueryInsertElement((ElemListElement)node->elem, id<100);
             }
-          
+          DLList_Destroy(list);
           p_menu->Destroy(itemTemplateInsert);
           p_menu->Destroy(itemTemplateAppend);
           p_menu->Append(oldInsert);
