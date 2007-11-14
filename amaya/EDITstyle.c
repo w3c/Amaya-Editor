@@ -784,9 +784,16 @@ void ChangeTheme (const char *theme)
               TtaFreeMemory (buffer);
               buffer = NULL;
             }
+          else
+            el = TtaSearchTypedElementInTree (elType, SearchForward, head, el);
         }
+
       if (el == NULL)
         {
+          if (!strcmp (theme, "Standard"))
+            // nothing to do
+            return;
+
           TtaSetStructureChecking (FALSE, doc);
           el = InsertWithinHead (doc, 1, HTML_EL_STYLE_);
           TtaSetStructureChecking (TRUE, doc);
@@ -1283,7 +1290,7 @@ static void UpdateClass (Document doc)
 {
   DisplayMode         dispMode;
   Attribute           attr;
-  AttributeType       attrType;
+  AttributeType       attrType, attrTypeT;
   Element             el, root, child, title, head, line, prev, styleEl;
   ElementType         elType, selType;
   char               *stylestring;
@@ -1345,6 +1352,9 @@ static void UpdateClass (Document doc)
       elType.ElTypeNum = HTML_EL_STYLE_;
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = HTML_ATTR_Notation;
+      // check also if it's a theme
+      attrTypeT.AttrSSchema = elType.ElSSchema;
+      attrTypeT.AttrTypeNum = HTML_ATTR_Title;
     }
 #ifdef _SVG
   else if (!strcmp (schName, "SVG"))
@@ -1355,6 +1365,9 @@ static void UpdateClass (Document doc)
       elType.ElTypeNum = SVG_EL_style__;
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = SVG_ATTR_type;
+      // check also if it's a theme
+      attrTypeT.AttrSSchema = elType.ElSSchema;
+      attrTypeT.AttrTypeNum = SVG_ATTR_title_;
     }
 #endif /* _SVG */
   el = head;
@@ -1374,6 +1387,16 @@ static void UpdateClass (Document doc)
               TtaGiveTextAttributeValue (attr, a_class, &len);
               found = (!strcmp (a_class, "text/css"));
               TtaFreeMemory (a_class);
+              // check if it's a theme
+              attr = TtaGetAttribute (el, attrTypeT);
+              if (found && attr)
+                {
+                  len = TtaGetTextAttributeLength (attr);
+                  a_class = (char *)TtaGetMemory (len + 1);
+                  TtaGiveTextAttributeValue (attr, a_class, &len);
+                  found = (strcmp (a_class, "Amaya theme"));
+                  TtaFreeMemory (a_class);
+                }
             }
         }
     }
