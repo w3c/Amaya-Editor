@@ -2803,13 +2803,14 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
   PtrElement          pElem, pElSplit, pSplitEl, pNextEl, pParent;
   ElementType	        elType;
   PtrDocument         pSelDoc;
+  Document            doc = IdentDocument (pDoc);
   NotifyElement       notifyEl;
   int                 firstChar, lastChar, origFirstChar, origLastChar,
     NSiblings, ancestorRule, rule, nComp, nAncest, i;
 #define MAX_ANCESTORS_CREATE 10
   int                 ancest[MAX_ANCESTORS_CREATE];
   ThotBool            InsertionPoint, ok, createAfter, splitElem, elConst;
-  ThotBool            empty, selHead, selTail, done, deleted;
+  ThotBool            empty, selHead, selTail, done, deleted, histOpen;
 
   nAncest = 0;
   NSiblings = 0;
@@ -2892,11 +2893,14 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                 ok = FALSE;
               else
                 {
-                  OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
-                                       firstChar, lastChar);
+                  histOpen = TtaPrepareUndo (doc);
+                  if (!histOpen)
+                    OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
+                                         firstChar, lastChar);
                   ok = ChangeTypeOfElements (firstSel, lastSel, pSelDoc,
                                              typeNum, pSS);
-                  CloseHistorySequence (pSelDoc);
+                  if (!histOpen)
+                    CloseHistorySequence (pSelDoc);
                 }
               if (!ok && typeNum > 7 /* should be a constant */)
                 /* ca n'a pas marche'. essaie les transformations de */
@@ -2917,6 +2921,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                 if (firstSel != lastSel)
                   {
                     /* store the command in the history */
+                  histOpen = TtaPrepareUndo (doc);
+                  if (!histOpen)
                     OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
                                          firstChar, lastChar);
                     pEl = firstSel;
@@ -2931,7 +2937,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                         pEl = NextInSelection (pEl, lastSel);
                       }
                     while (pEl != NULL);
-                    CloseHistorySequence (pSelDoc);
+                    if (!histOpen)
+                      CloseHistorySequence (pSelDoc);
                   }
             }
           else
@@ -3437,7 +3444,7 @@ void TtaInsertAnyElement (Document document, ThotBool before)
   PtrElement      firstSel, lastSel, pNew, pSibling, pSel, pNextEl, pSecond;
   int             firstChar, lastChar, typeNum, nSiblings;
   PtrSSchema      pSS;
-  ThotBool        isList, optional;
+  ThotBool        isList, optional, histOpen;;
   NotifyElement   notifyEl;
 
   UserErrorCode = 0;
@@ -3529,8 +3536,11 @@ void TtaInsertAnyElement (Document document, ThotBool before)
       if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
         /* application does not accept element creation */
         return;
-      OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
-                           lastChar);
+
+      histOpen = TtaPrepareUndo (document);
+      if (!histOpen)
+        OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
+                             lastChar);
       TtaClearViewSelections ();
 
       /* if the selection is in a TEXT leaf, split the leaf */
@@ -3638,7 +3648,8 @@ void TtaInsertAnyElement (Document document, ThotBool before)
                 SelectElementWithEvent (pDoc, pSel, TRUE, TRUE);
             }
         }
-      CloseHistorySequence (pDoc);  
+      if (!histOpen)
+        CloseHistorySequence (pDoc);  
     }
 }
 

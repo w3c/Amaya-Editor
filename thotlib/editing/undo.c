@@ -826,6 +826,7 @@ void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel, PtrElement last
 {
   PtrEditOperation	editOp;
 
+  //printf ("OpenHistorySequence\n");
   /* can not open a sequence if a sequence is already open */
   if (pDoc->DocEditSequence)
     {
@@ -876,6 +877,7 @@ ThotBool CloseHistorySequence (PtrDocument pDoc)
 {
   ThotBool	result;
 
+  //printf ("CloseHistorySequence\n");
   result = FALSE;
   if (pDoc)
     {

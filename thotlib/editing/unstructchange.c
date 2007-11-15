@@ -605,7 +605,7 @@ void PasteCommand ()
   int                 firstChar, lastChar, view, i, nRowsTempCol, info = 0;
   int                 colspan, rowspan, back, rowType;
   ThotBool            ok, before, within, lock, cancelled, first, beginning;
-  ThotBool            savebefore, withinTable;
+  ThotBool            savebefore, withinTable, histOpen;
 
   before = FALSE;
   withinTable = FALSE;
@@ -638,9 +638,10 @@ void PasteCommand ()
               /* table formatting is not loked, lock it now */
               TtaLockTableFormatting ();
             }
-
-          OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
-                               lastChar-1);
+          histOpen = TtaPrepareUndo (doc);
+          if (!histOpen)
+            OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
+                                 lastChar-1);
           pCell = NULL;
           if (WholeColumnSaved || TableRowsSaved)
             {
@@ -1110,7 +1111,8 @@ void PasteCommand ()
 
           /* close the history sequence after applications have possibly
              registered more changes to the pasted elements */
-          CloseHistorySequence (pDoc);
+          if (!histOpen)
+            CloseHistorySequence (pDoc);
 
           if (!lock)
             {
@@ -1509,6 +1511,12 @@ ThotBool IsXMLEditMode ()
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static ThotBool NotifyNewElement (Document doc, Element el, ThotBool before)
+{
+}
+
+/*----------------------------------------------------------------------
   TtcCreateElement handles the Return (or Enter) key.
   ----------------------------------------------------------------------*/
 void TtcCreateElement (Document doc, View view)
@@ -1524,7 +1532,7 @@ void TtcCreateElement (Document doc, View view)
   ThotBool            ok, replicate, createAfter, selBegin, selEnd, ready;
   ThotBool            empty, list, optional, deleteEmpty, histSeq,
                       xmlmode, previous, following, specialBreak,
-                      insertionPoint, extendHistory;
+                      insertionPoint, extendHistory, prevHist;
   ThotBool            lock = TRUE;
   DisplayMode         dispMode;
 
@@ -1566,6 +1574,48 @@ void TtcCreateElement (Document doc, View view)
                                   firstSel->ElStructSchema)));
       if (!insertionPoint && !empty)
         {
+          // get the future insert point
+          if (firstChar == 0 && lastChar == 0)
+            {
+              dispMode = TtaGetDisplayMode (doc);
+              if (dispMode == DisplayImmediately)
+                TtaSetDisplayMode (doc, DeferredDisplay);
+              if (!TypeHasException (ExcIsCell, firstSel->ElTypeNumber, firstSel->ElStructSchema))
+                {
+                  // duplicate first the first selected element
+                  notifyEl.event = TteElemNew;
+                  notifyEl.document = doc;
+                  notifyEl.element = (Element) (firstSel->ElParent);
+                  notifyEl.info = 0; /* not sent by undo */
+                  notifyEl.elementType.ElTypeNum = firstSel->ElTypeNumber;
+                  notifyEl.elementType.ElSSchema = (SSchema) firstSel->ElStructSchema;
+                  pSibling = firstSel;
+                  NSiblings = 0;
+                  while (pSibling->ElPrevious)
+                    {
+                      NSiblings++;
+                      pSibling = pSibling->ElPrevious;
+                    }
+                  notifyEl.position = NSiblings;
+                  if (!CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+                    {
+                      CreateNewElement (firstSel->ElTypeNumber, firstSel->ElStructSchema,
+                                        pDoc, TRUE);
+                      notifyEl.element = (Element) (firstSel->ElPrevious);
+                      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+                      TtaExtendUndoSequence (doc);
+                    }
+                }
+              // restore the initial selection
+              NewSelection (doc, (Element)firstSel, NULL, 0, 0);
+              SelectElement (pDoc, firstSel, TRUE, FALSE, TRUE);
+              if (lastSel != firstSel)
+                ExtendSelection (lastSel, 0, TRUE, FALSE, FALSE);
+              CutCommand (FALSE, FALSE);
+              if (dispMode == DisplayImmediately)
+                TtaSetDisplayMode (doc, dispMode);
+              return;
+            }
           /* delete the selected content/elements the usual way */
           TtcDeleteSelection (doc, view);
           /* the Cut command has closed its history sequence. We will need
@@ -1573,8 +1623,11 @@ void TtcCreateElement (Document doc, View view)
              elements that will be created/deleted in the following */
           extendHistory = TRUE;
           /* get the new selection after the deletion */
-          GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar,
-                               &lastChar);
+          GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar);
+          if (firstSel == lastSel &&
+              (TypeHasException (ExcIsCell, firstSel->ElTypeNumber, firstSel->ElStructSchema) ||
+               TypeHasException (ExcIsRow, firstSel->ElTypeNumber, firstSel->ElStructSchema)))
+            return;
         }
     }
   firstEl = firstSel;
@@ -1605,7 +1658,8 @@ void TtcCreateElement (Document doc, View view)
       typeNum = 0;
       pSS = NULL;
       deleteEmpty = FALSE;
-      histSeq = FALSE;	/* no history sequence open */
+      histSeq = FALSE;	/* no new history sequence open */
+      prevHist = TtaPrepareUndo (doc);	/* is there a history sequence open */
       if (firstChar > 0 && firstChar == lastChar)
         lastChar--;
 
@@ -1653,8 +1707,7 @@ void TtcCreateElement (Document doc, View view)
                   }
                 else if (pListEl == NULL)
                   {
-                    if (GetElementConstruct (pParent->ElParent, &nComp) ==
-                        CsAggregate)
+                    if (GetElementConstruct (pParent->ElParent, &nComp) == CsAggregate)
                       {
                         SRuleForSibling (pDoc, pParent, FALSE, 1, &typeNum,
                                          &pSS, &list, &optional);
@@ -1670,7 +1723,7 @@ void TtcCreateElement (Document doc, View view)
                                 pElem->ElNext != NULL)
                               {
                                 /* store the editing operation in the history*/
-                                if (!histSeq)
+                                if (!prevHist && !histSeq)
                                   {
                                     if (extendHistory)
                                       TtaExtendUndoSequence (doc);
@@ -1788,7 +1841,7 @@ void TtcCreateElement (Document doc, View view)
                       /* try to split element pParent before element pElem */
                       {
                         /* store the editing operation in the history */
-                        if (!histSeq)
+                        if (!prevHist && !histSeq)
                           {
                             if (extendHistory)
                               TtaExtendUndoSequence (doc);
@@ -1973,7 +2026,7 @@ void TtcCreateElement (Document doc, View view)
                                                 &pAncest, &pE, &pElReplicate)))
             {
               /* register the operation in history */
-              if (!histSeq)
+              if (!prevHist && !histSeq)
                 {
                   if (extendHistory)
                     TtaExtendUndoSequence (doc);
@@ -1986,7 +2039,8 @@ void TtcCreateElement (Document doc, View view)
                 pElReplicate = NULL;
               if (BreakElement (pElReplicate, firstEl, firstChar, TRUE, TRUE))
                 {
-                  CloseHistorySequence (pDoc);
+                  if (histSeq)
+                    CloseHistorySequence (pDoc);
                   if (!lock)
                     /* unlock table formatting */
                     TtaUnlockTableFormatting ();
@@ -2130,14 +2184,14 @@ void TtcCreateElement (Document doc, View view)
             pListEl = pAggregEl;
           /* demande a l'application si on peut creer ce type d'element */
           notifyEl.event = TteElemNew;
-          notifyEl.document = (Document) IdentDocument (pDoc);
+          notifyEl.document = doc;
           notifyEl.element = (Element) (pElReplicate->ElParent);
           notifyEl.info = 0; /* not sent by undo */
           notifyEl.elementType.ElTypeNum = typeNum;
           notifyEl.elementType.ElSSchema = (SSchema) pSS;
           pSibling = pElReplicate;
           NSiblings = 0;
-          while (pSibling->ElPrevious != NULL)
+          while (pSibling->ElPrevious)
             {
               NSiblings++;
               pSibling = pSibling->ElPrevious;
@@ -2167,7 +2221,7 @@ void TtcCreateElement (Document doc, View view)
                 /* detruire le sous-arbre qu'on remplace */
                 {
                   deleteEmpty = TRUE;
-                  if (!histSeq)
+                  if (!prevHist && !histSeq)
                     {
                       /* handle the remaining unlock of table formatting */
                       if (extendHistory)
@@ -2184,7 +2238,7 @@ void TtcCreateElement (Document doc, View view)
                   AbstractImageUpdated (pDoc);
                   /* prepare l'evenement ElemDelete.Post */
                   notifyEl.event = TteElemDelete;
-                  notifyEl.document = (Document) IdentDocument (pDoc);
+                  notifyEl.document = doc;
                   notifyEl.element = (Element) (pElDelete->ElParent);
                   notifyEl.info = 0; /* not sent by undo */
                   notifyEl.elementType.ElTypeNum = pElDelete->ElTypeNumber;
@@ -2292,7 +2346,7 @@ void TtcCreateElement (Document doc, View view)
                     /* element pSib is no longer the first child */
                     ChangeFirstLast (pSib, pDoc, TRUE, TRUE);
                 }
-              if (!histSeq)
+              if (!prevHist && !histSeq)
                 {
                   if (extendHistory)
                     TtaExtendUndoSequence (doc);
@@ -2413,7 +2467,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
   Document            doc;
   int                 nSiblings;
   int                 nbEl, j, firstChar, lastChar;
-  ThotBool            stop, ok, isRow, xmlmode, selHead;
+  ThotBool            stop, ok, isRow, xmlmode, selHead, histOpen;
 
   if (pEl == NULL)
     return;
@@ -2491,11 +2545,14 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
        (pSibling) is empty.
        Delete the empty sibling */
     {
-      OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
+      histOpen = TtaPrepareUndo (doc);
+      if (!histOpen)
+        OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
       /* record the element to be deleted in the history */
       AddEditOpInHistory (pSibling, pDoc, TRUE, FALSE);
       TtaDeleteTree ((Element)pSibling, doc);
-      CloseHistorySequence (pDoc);
+      if (!histOpen)
+        CloseHistorySequence (pDoc);
       return;
     }
 
@@ -2668,10 +2725,13 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                 /* pSibling is empty. Delete it */
                 {
                   /* record the element to be deleted in the history */
+                  histOpen = TtaPrepareUndo (doc);
+                  if (!histOpen)
                   OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
                   AddEditOpInHistory (pSibling, pDoc, TRUE, FALSE);
                   TtaDeleteTree ((Element)pSibling, doc);
-                  CloseHistorySequence (pDoc);
+                  if (!histOpen)
+                    CloseHistorySequence (pDoc);
                 }
             }
           else
@@ -2750,7 +2810,9 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                                 pParent->ElStructSchema);
 
       /* start history sequence */
-      OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
+      histOpen = TtaPrepareUndo (doc);
+      if (!histOpen)
+        OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
       /* move all these elements */
       j = 0;
       while (pSibling)
@@ -2974,7 +3036,8 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
             }
         }
       /* end of command: close history sequence */
-      CloseHistorySequence (pDoc);
+      if (!histOpen)
+        CloseHistorySequence (pDoc);
     }
 }
 
