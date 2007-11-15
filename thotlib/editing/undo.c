@@ -1459,7 +1459,7 @@ void TtcUndo (Document doc, View view)
 
   lock = TRUE;
   pDoc = LoadedDocument [doc - 1];
-  if (!pDoc->DocLastEdit)
+  if (pDoc == NULL || !pDoc->DocLastEdit)
     /* history is empty */
     return;
   if (pDoc->DocEditSequence)

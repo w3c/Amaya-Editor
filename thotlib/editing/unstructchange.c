@@ -1577,34 +1577,18 @@ void TtcCreateElement (Document doc, View view)
           // get the future insert point
           if (firstChar == 0 && lastChar == 0)
             {
+              if (ElementIsReadOnly (firstSel->ElParent) ||
+                  ElementIsReadOnly (lastSel->ElParent))
+                return;
               dispMode = TtaGetDisplayMode (doc);
               if (dispMode == DisplayImmediately)
                 TtaSetDisplayMode (doc, DeferredDisplay);
               if (!TypeHasException (ExcIsCell, firstSel->ElTypeNumber, firstSel->ElStructSchema))
                 {
                   // duplicate first the first selected element
-                  notifyEl.event = TteElemNew;
-                  notifyEl.document = doc;
-                  notifyEl.element = (Element) (firstSel->ElParent);
-                  notifyEl.info = 0; /* not sent by undo */
-                  notifyEl.elementType.ElTypeNum = firstSel->ElTypeNumber;
-                  notifyEl.elementType.ElSSchema = (SSchema) firstSel->ElStructSchema;
-                  pSibling = firstSel;
-                  NSiblings = 0;
-                  while (pSibling->ElPrevious)
-                    {
-                      NSiblings++;
-                      pSibling = pSibling->ElPrevious;
-                    }
-                  notifyEl.position = NSiblings;
-                  if (!CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
-                    {
-                      CreateNewElement (firstSel->ElTypeNumber, firstSel->ElStructSchema,
-                                        pDoc, TRUE);
-                      notifyEl.element = (Element) (firstSel->ElPrevious);
-                      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-                      TtaExtendUndoSequence (doc);
-                    }
+                  CreateNewElement (firstSel->ElTypeNumber, firstSel->ElStructSchema,
+                                    pDoc, TRUE);
+                  TtaExtendUndoSequence (doc);
                 }
               // restore the initial selection
               NewSelection (doc, (Element)firstSel, NULL, 0, 0);
