@@ -555,7 +555,7 @@ void InsertableElement_QueryInsertElement(ElemListElement elem, ThotBool before)
   /* Prepare insertion.*/          
   oldStructureChecking = TtaGetStructureChecking (doc);
   TtaSetStructureChecking (FALSE, doc);
-  TtaOpenUndoSequence (doc, elSel, NULL, firstSel, lastSel);
+  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   
   /* Do the insertion */
   newEl = InsertableElement_InsertElement (elem, before);
@@ -567,17 +567,19 @@ void InsertableElement_QueryInsertElement(ElemListElement elem, ThotBool before)
   // restore the display
   TtaSetDisplayMode (doc, dispMode);
 
-
-  firstEl = GetFirstEditableElement (newEl);
-  if (firstEl)
+  if (newEl)
     {
-      TtaSelectElement (doc, firstEl);
-      TtaSetStatusSelectedElement (doc, 1, firstEl);
-    }
-  else
-    {
-      TtaSelectElement (doc, newEl);
-      TtaSetStatusSelectedElement (doc, 1, newEl);
+      firstEl = GetFirstEditableElement (newEl);
+      if (firstEl)
+        {
+          TtaSelectElement (doc, firstEl);
+          TtaSetStatusSelectedElement (doc, 1, firstEl);
+        }
+      else
+        {
+          TtaSelectElement (doc, newEl);
+          TtaSetStatusSelectedElement (doc, 1, newEl);
+        }
     }
 #endif /* TEMPLATES */
 }

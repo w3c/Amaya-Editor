@@ -435,7 +435,7 @@ THOT_EXPORT int        ReturnOption;
 THOT_EXPORT int        NumberRows;
 THOT_EXPORT int        NumberCols;
 THOT_EXPORT int        TBorder; // border width of created tables
-THOT_EXPORT int        TCaption; // value 0=top, 1=bottom, 2=left, 3=right, 4=no
+THOT_EXPORT int        TCaption; // value 0=top, 1=bottom, 2=no
 THOT_EXPORT int        ReturnOptionMenu;
 THOT_EXPORT int        IdDoc;
 THOT_EXPORT int        BaseLibrary;

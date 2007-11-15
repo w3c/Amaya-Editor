@@ -172,23 +172,24 @@ Element Template_InsertBagChild (Document doc, Element el, Declaration decl, Tho
         if (sel)
           TtaSelectElement (doc, sel);
         TtaInsertAnyElement (doc, before);
+        TtaExtendUndoSequence (doc);
       }
     TtaInsertElement (newElType, doc);
     TtaGiveFirstSelectedElement (doc, &sel, &start, &end);
     if (sel && newElType.ElSSchema == sstempl)
-    {
-      selType = TtaGetElementType (sel);
-      TtaUnselect (doc);
-      
-      if (selType.ElSSchema == newElType.ElSSchema &&
-          selType.ElTypeNum == Template_EL_useSimple)
       {
-        SetAttributeStringValueWithUndo (sel, Template_ATTR_types, decl->name);
-        SetAttributeStringValueWithUndo (sel, Template_ATTR_title, decl->name);
-        Template_InsertUseChildren (doc, sel, decl);
-      }
-      return sel;
-    }   
+        selType = TtaGetElementType (sel);
+        TtaUnselect (doc);
+        
+        if (selType.ElSSchema == newElType.ElSSchema &&
+            selType.ElTypeNum == Template_EL_useSimple)
+          {
+            SetAttributeStringValueWithUndo (sel, Template_ATTR_types, decl->name);
+            SetAttributeStringValueWithUndo (sel, Template_ATTR_title, decl->name);
+            Template_InsertUseChildren (doc, sel, decl);
+          }
+      }   
+    return sel;
   }
 #endif /* TEMPLATES */
   return NULL;
