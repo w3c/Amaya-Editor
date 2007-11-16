@@ -147,6 +147,13 @@
             <object class="wxBoxSizer">
               <orient>wxVERTICAL</orient>
               <object class="sizeritem">
+                <object class="wxCheckBox" name="wxID_XML_EDIT">
+                  <label>*Mode d'edition XML*</label>
+                </object>
+                <option>1</option>
+                <flag>wxALL|wxEXPAND</flag>
+              </object>
+              <object class="sizeritem">
                 <object class="wxCheckBox" name="wxID_CHECK_CCLINE">
                   <label>*Activer le coller ligne a ligne*</label>
                 </object>

@@ -280,6 +280,7 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   XRCCTRL(*this, "wxID_LABEL_CHARZOOM", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ZOOM)) );
   XRCCTRL(*this, "wxID_LABEL_LG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DIALOGUE_LANGUAGE)) );
 
+  XRCCTRL(*this, "wxID_XML_EDIT", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_XML_EDIT)) );
   XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PASTE_LINE_BY_LINE)) );
   XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_AUTO_SAVE)) );
   XRCCTRL(*this, "wxID_CHECK_INSERT_NBSP", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INSERT_NBSP)) );
@@ -327,6 +328,7 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetValue( TtaConvMessageToWX(prop.HomePage) );
   XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSpinCtrl)->SetValue( prop.Zoom );
 
+  XRCCTRL(*this, "wxID_XML_EDIT", wxCheckBox)->SetValue( prop.XMLEdit );
   XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->SetValue( prop.PasteLineByLine );
   XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->SetValue( prop.S_AutoSave );
   XRCCTRL(*this, "wxID_CHECK_INSERT_NBSP", wxCheckBox)->SetValue( prop.S_NBSP );
@@ -401,6 +403,7 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   strcpy( prop.HomePage, (const char*)value.mb_str(wxConvUTF8) );
 
   prop.Zoom = XRCCTRL(*this, "wxID_CHARZOOM_VALUE",     wxSpinCtrl)->GetValue();
+  prop.XMLEdit = XRCCTRL(*this, "wxID_XML_EDIT", wxCheckBox)->GetValue();
   prop.PasteLineByLine = XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->GetValue();
   prop.S_AutoSave = XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->GetValue();
   prop.S_NBSP = XRCCTRL(*this, "wxID_CHECK_INSERT_NBSP", wxCheckBox)->GetValue();

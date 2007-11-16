@@ -33,8 +33,6 @@ extern void ColorConfMenu ( Document document,
                             View view );
 extern void SetGeometryConf ( int document,
                               const char * view_name );
-extern void GeometryConfMenu ( Document document,
-                               View view );
 extern void AnnotConfMenu ( Document document,
                             View view );
 extern void GetTemplatesConf ( void );
@@ -110,8 +108,6 @@ extern void ColorConfMenu ( Document document,
                               View view );
 extern void SetGeometryConf ( int document,
                                 const char * view_name );
-extern void GeometryConfMenu ( Document document,
-                                 View view );
 extern void AnnotConfMenu ( Document document,
                               View view );
 extern void GetTemplatesConf ( void );

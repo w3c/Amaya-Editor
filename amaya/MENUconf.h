@@ -108,6 +108,7 @@ typedef struct Prop_General_t
   int      AccesskeyMod;
   int      FontMenuSize;
   char     HomePage[MAX_LENGTH];
+  ThotBool XMLEdit;
   ThotBool PasteLineByLine;
   ThotBool S_Buttons;
   ThotBool S_Address;
