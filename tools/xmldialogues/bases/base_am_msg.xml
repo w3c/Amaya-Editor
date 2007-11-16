@@ -6550,15 +6550,7 @@
 	<message xml:lang="fr">Pleine largeur</message>
 </label>
 <label define="AM_CAPTION">
-<message xml:lang="en">Caption</message>
-<message xml:lang="fr">Légende</message>
-</label>
-<label define="AM_NO_CAPTION">
-<message xml:lang="en">No caption</message>
-<message xml:lang="fr">Sans légende</message>
-</label>
-<label define="AM_TOP_CAPTION">
-<message xml:lang="en">With a caption</message>
+<message xml:lang="en">With caption</message>
 <message xml:lang="fr">Avec une légende</message>
 </label>
 <label define="AM_SIZE">

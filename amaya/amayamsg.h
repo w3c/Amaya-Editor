@@ -461,9 +461,7 @@
 #define AM_USE_THEME		458
 #define AM_MAX_WIDTH		459
 #define AM_CAPTION		460
-#define AM_NO_CAPTION		461
-#define AM_TOP_CAPTION		462
-#define AM_SIZE		463
-#define AM_POSITION		464
-#define AM_XML_EDIT		465
-#define AMAYA_MSG_MAX		466
+#define AM_SIZE		461
+#define AM_POSITION		462
+#define AM_XML_EDIT		463
+#define AMAYA_MSG_MAX		464

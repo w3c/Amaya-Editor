@@ -2229,7 +2229,7 @@ void DoTableCreation (Document doc)
   if (el)
     {
       profile = TtaGetDocumentProfile(doc);
-      if (TCaption != 1)
+      if (TCaption == 1)
         {
           // insert the caption
           elType.ElTypeNum = HTML_EL_CAPTION;

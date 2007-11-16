@@ -52,10 +52,8 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_NUMBER_COL_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_COLS) ));
   XRCCTRL(*this, "wxID_NUMBER_ROW_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_ROWS) ));
   XRCCTRL(*this, "wxID_EXTEND_WIDTH", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_MAX_WIDTH) ));
-  XRCCTRL(*this, "wxID_CAPTION", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CAPTION) ));
-  XRCCTRL(*this, "wxID_CAPTION", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CAPTION) ));
-  XRCCTRL(*this, "wxID_CAPTION", wxRadioBox)->SetString(0, TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_TOP_CAPTION) ));
-  XRCCTRL(*this, "wxID_CAPTION", wxRadioBox)->SetString(1, TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NO_CAPTION) ));
+  XRCCTRL(*this, "wxID_CAPTION", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CAPTION) ));
+  XRCCTRL(*this, "wxID_CAPTION", wxCheckBox)->SetValue(true);
 
   // update dialog Spin Ctrls
   XRCCTRL(*this, "wxID_NUMBER_ROW", wxSpinCtrl)->SetValue(def_rows);
@@ -109,7 +107,10 @@ void CreateTableDlgWX::OnConfirmButton( wxCommandEvent& event )
     TMAX_Width = TRUE;
   else
     TMAX_Width = FALSE;
-  TCaption = XRCCTRL(*this, "wxID_CAPTION", wxRadioBox)->GetSelection();
+  if (XRCCTRL(*this, "wxID_CAPTION", wxCheckBox)->IsChecked())
+    TCaption = 1;
+  else
+    TCaption = 0;
   ThotCallback (BaseDialog + TableForm, INTEGER_DATA, (char *) 1);
 
 }
