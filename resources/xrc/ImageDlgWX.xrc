@@ -11,78 +11,86 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL">
-              
               <label>*Get the Image name*</label>
             </object>
-            
             <flag>wxALL|wxEXPAND</flag>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_CLEAR">
+                  <tooltip>*Browse*</tooltip>
+                  <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <border>5</border>
+              </object>
+              <object class="spacer">
+                <size>2,0</size>
+              </object>
+              <object class="sizeritem">
                 <object class="wxTextCtrl" name="wxID_URL">
-                  
                   <size>400, -1</size>
-                  
                   <focused>1</focused>
                 </object>
-                
                 <option>1</option>
-                
-                <flag>wxALIGN_CENTRE</flag>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BROWSEBUTTON">
-                  
                   <tooltip>*Browse*</tooltip>
-                  
                   <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
                 </object>
-                
-                <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
-                
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
                 <border>5</border>
               </object>
             </object>
-            
             <option>0</option>
-            
             <flag>wxALL|wxEXPAND</flag>
           </object>
           <object class="spacer">
-            
             <size>0,10</size>
           </object>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_ALT_LABEL">
-              
-              <label>*Get the ALT value*</label>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_ALT_LABEL">
+                  <label>*Get the ALT value*</label>
+                  <size>150,-1</size>
+                </object>
+                <option>1</option>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <border>5</border>
+              </object>
+              <object class="spacer">
+                <size>2,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_ALT"/>
+                <option>1</option>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
             </object>
-            
             <flag>wxALL|wxEXPAND</flag>
           </object>
-          <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_ALT"/>
-            
-            <flag>wxALL|wxEXPAND</flag>
+          <object class="spacer">
+            <size>0,10</size>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_MANDATORY">
-              
               <label>*ALT Mandatory*</label>
-              
               <size>250,-1</size>
-              
               <fg>#7A1919</fg>
             </object>
-            
             <flag>wxALL|wxEXPAND</flag>
           </object>
+          <object class="spacer">
+            <size>0,10</size>
+          </object>
         </object>
-        
         <flag>wxALL|wxEXPAND</flag>
-        
         <border>5</border>
       </object>
       <object class="sizeritem">
@@ -91,22 +99,18 @@
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="spacer">
-            
             <option>1</option>
           </object>
           <object class="sizeritem">
             <flag>wxRIGHT</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_OPENBUTTON">
-              
               <label>OPENBUTTON</label>
-              
               <default>1</default>
             </object>
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_CANCEL">
-              
               <label>CANCELBUTTON</label>
             </object>
           </object>

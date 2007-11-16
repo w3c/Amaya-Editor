@@ -1528,7 +1528,7 @@ void SectionNumbering (Document doc, View view)
     /* no HTML element */
     return;
 
-  if (TtaPrepareUndo (doc))
+  if (TtaHasUndoSequence (doc))
     closeUndo = FALSE;
   else
     {
@@ -1816,7 +1816,7 @@ void MakeToc (Document doc, View view)
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, SuspendDisplay);
 
-  if (TtaPrepareUndo (doc))
+  if (TtaHasUndoSequence (doc))
     closeUndo = FALSE;
   else
     {

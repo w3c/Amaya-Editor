@@ -2338,7 +2338,7 @@ static ThotPictInfo *GetImageDesc (Element element)
 {
   PtrAbstractBox   pAb;
   PtrElement       pEl = (PtrElement) element;
-  ThotPictInfo    *imageDesc;
+  ThotPictInfo    *imageDesc = NULL;
   int              view;
   ThotBool         found;
 
@@ -2347,8 +2347,7 @@ static ThotPictInfo *GetImageDesc (Element element)
 
   if (pEl == NULL)
     TtaError (ERR_invalid_parameter);
-
-  if (TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
+  else if (TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
     pEl = pEl->ElFirstChild;
 
   if (pEl == NULL)

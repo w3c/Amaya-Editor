@@ -19,6 +19,14 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_CLEAR">
+                  <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
+                </object>
+              </object>
+              <object class="spacer">
+                <size>5,0</size>
+              </object>
+              <object class="sizeritem">
                 <object class="wxTextCtrl" name="wxID_URL">
                   <size>400,-1</size>
                   <focused>1</focused>

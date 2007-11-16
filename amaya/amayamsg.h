@@ -465,4 +465,5 @@
 #define AM_TOP_CAPTION		462
 #define AM_SIZE		463
 #define AM_POSITION		464
-#define AMAYA_MSG_MAX		465
+#define AM_XML_EDIT		465
+#define AMAYA_MSG_MAX		466

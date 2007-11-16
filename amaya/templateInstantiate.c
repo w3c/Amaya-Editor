@@ -225,7 +225,7 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
     newdoc = basedoc;
 
   localFile = GetLocalPath (newdoc, instancePath);
-  if (!TtaPrepareUndo (doc))
+  if (!TtaHasUndoSequence (doc))
     {
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       root = TtaGetRootElement(doc);

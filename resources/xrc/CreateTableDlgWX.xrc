@@ -10,7 +10,7 @@
         <object class="wxBoxSizer">
           <orient>wxVERTICAL</orient>
           <object class="spacer">
-            <size>0,10</size>
+            <size>0,5</size>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
@@ -39,7 +39,7 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="spacer">
-                <size>20,0</size>
+                <size>10,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_NUMBER_COL_TXT">
@@ -68,7 +68,7 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="spacer">
-                <size>20,0</size>
+                <size>10,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_NUMBER_ROW_TXT">
@@ -119,7 +119,7 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="spacer">
-                <size>20,0</size>
+                <size>10,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_TABLE_BORDER_TXT">
@@ -147,7 +147,7 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="spacer">
-                <size>20,0</size>
+                <size>10,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxRadioBox" name="wxID_CAPTION">
@@ -156,21 +156,18 @@
                     <item>Caption displayed on the top</item>
                     <item>Caption is not displayed</item>
                   </content>
-                  <size>300,-1</size>
+                  <size>250,-1</size>
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
                 <flag>wxALL</flag>
                 <border>5</border>
-              </object>
-              <object class="spacer">
-                <size>20,0</size>
               </object>
             </object>
             <flag>wxALL</flag>
             <border>5</border>
           </object>
           <object class="spacer">
-            <size>0,10</size>
+            <size>0,5</size>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">

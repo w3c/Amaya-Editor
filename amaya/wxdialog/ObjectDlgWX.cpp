@@ -20,9 +20,10 @@ static int      Waiting = 0;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(ObjectDlgWX, AmayaDialog)
-  EVT_BUTTON(     XRCID("wxID_OK"),           ObjectDlgWX::OnOpenButton )
-  EVT_BUTTON(     XRCID("wxID_BROWSEBUTTON"), ObjectDlgWX::OnBrowseButton )
-  EVT_BUTTON(     XRCID("wxID_CANCEL"),       ObjectDlgWX::OnCancelButton )
+  EVT_BUTTON( XRCID("wxID_OK"),               ObjectDlgWX::OnOpenButton )
+  EVT_BUTTON( XRCID("wxID_BROWSEBUTTON"),     ObjectDlgWX::OnBrowseButton )
+  EVT_BUTTON( XRCID("wxID_CANCEL"),           ObjectDlgWX::OnCancelButton )
+  EVT_BUTTON( XRCID("wxID_CLEAR"),            ObjectDlgWX::OnClearButton )
   EVT_TEXT_ENTER( XRCID("wxID_ID_URL"),       ObjectDlgWX::OnOpenButton )
   EVT_TEXT_ENTER( XRCID("wxID_ID_ALT"),       ObjectDlgWX::OnOpenButton )
   EVT_COMBOBOX( XRCID("wxID_MIME_TYPE_CB"),   ObjectDlgWX::OnMimeTypeCbx )
@@ -56,6 +57,7 @@ ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_ALT_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT) ));
   XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
+  XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
   XRCCTRL(*this, "wxID_BROWSEBUTTON", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
@@ -115,6 +117,16 @@ void ObjectDlgWX::OnMimeTypeCbx( wxCommandEvent& event )
 
   wxASSERT( wx_mimetype.Len() < MAX_LENGTH );
   strcpy( UserMimeType, (const char*)wx_mimetype.mb_str(wxConvUTF8) );
+}
+
+/*----------------------------------------------------------------------
+  OnClearButton called when the user wants to clear each fields
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void ObjectDlgWX::OnClearButton( wxCommandEvent& event )
+{
+  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(_T(""));
 }
 
 /*----------------------------------------------------------------------

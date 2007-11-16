@@ -10,9 +10,9 @@
 
 #ifndef __CEXTRACT__
 /* ----------------------------------------------------------------------
-   TtaPrepareUndo returns TRUE if a undo sequence is opened
+   TtaHasUndoSequence returns TRUE if a undo sequence is opened
   ----------------------------------------------------------------------*/
-extern ThotBool TtaPrepareUndo (Document document);
+extern ThotBool TtaHasUndoSequence (Document document);
 
 /* ----------------------------------------------------------------------
    TtaOpenUndoSequence

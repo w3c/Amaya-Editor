@@ -29,9 +29,9 @@
 
 
 /* ----------------------------------------------------------------------
-   TtaPrepareUndo returns TRUE if a undo sequence is opened
+   TtaHasUndoSequence returns TRUE if a undo sequence is opened
   ----------------------------------------------------------------------*/
-ThotBool TtaPrepareUndo (Document document)
+ThotBool TtaHasUndoSequence (Document document)
 {
 
   if (document < 1 || document > MAX_DOCUMENTS)

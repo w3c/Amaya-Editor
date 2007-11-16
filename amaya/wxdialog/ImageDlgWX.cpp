@@ -19,11 +19,12 @@ static int      Waiting = 0;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(ImageDlgWX, AmayaDialog)
-  EVT_BUTTON(     XRCID("wxID_OPENBUTTON"),   ImageDlgWX::OnOpenButton )
-  EVT_BUTTON(     XRCID("wxID_BROWSEBUTTON"), ImageDlgWX::OnBrowseButton )
-  EVT_BUTTON(     XRCID("wxID_CANCEL"),       ImageDlgWX::OnCancelButton )
-  EVT_TEXT_ENTER( XRCID("wxID_URL"),          ImageDlgWX::OnOpenButton )
-  EVT_TEXT_ENTER( XRCID("wxID_ALT"),          ImageDlgWX::OnOpenButton )
+  EVT_BUTTON( XRCID("wxID_OPENBUTTON"),   ImageDlgWX::OnOpenButton )
+  EVT_BUTTON( XRCID("wxID_BROWSEBUTTON"), ImageDlgWX::OnBrowseButton )
+  EVT_BUTTON( XRCID("wxID_CANCEL"),       ImageDlgWX::OnCancelButton )
+  EVT_BUTTON( XRCID("wxID_CLEAR"),        ImageDlgWX::OnClearButton )
+  EVT_TEXT_ENTER( XRCID("wxID_URL"),      ImageDlgWX::OnOpenButton )
+  EVT_TEXT_ENTER( XRCID("wxID_ALT"),      ImageDlgWX::OnOpenButton )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -51,7 +52,9 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
   SetTitle( title );
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_BUTTON_IMG) ));
   XRCCTRL(*this, "wxID_ALT_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT) ));
+  //XRCCTRL(*this, "wxID_POSITION_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_POSITION) ));
   XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( "" ));
+  XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
   XRCCTRL(*this, "wxID_OPENBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_BROWSEBUTTON", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
@@ -80,6 +83,16 @@ ImageDlgWX::~ImageDlgWX()
   if (Waiting)
   // no return done
     ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+}
+
+/*----------------------------------------------------------------------
+  OnClearButton called when the user wants to clear each fields
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void ImageDlgWX::OnClearButton( wxCommandEvent& event )
+{
+  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(_T(""));
 }
 
 /*----------------------------------------------------------------------
@@ -156,7 +169,7 @@ void ImageDlgWX::OnBrowseButton( wxCommandEvent& event )
       // so if I do not delete it manualy here it will be deleted twice
       p_dlg->Destroy();
       // simulate the open command
-      OnOpenButton( event );
+      //OnOpenButton( event );
     }
   else
     p_dlg->Destroy();

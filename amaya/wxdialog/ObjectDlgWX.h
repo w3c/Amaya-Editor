@@ -33,6 +33,7 @@ public:
 private:
 
   void OnMimeTypeCbx( wxCommandEvent& event );
+  void OnClearButton( wxCommandEvent& event );
   void OnOpenButton( wxCommandEvent& event );
   void OnBrowseButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );

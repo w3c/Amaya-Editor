@@ -6389,7 +6389,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
         }
     }
 
-  if (TtaPrepareUndo (doc))
+  if (TtaHasUndoSequence (doc))
     closeUndoSeq = FALSE;
   else
     {

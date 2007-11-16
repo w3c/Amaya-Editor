@@ -638,7 +638,7 @@ void PasteCommand ()
               /* table formatting is not loked, lock it now */
               TtaLockTableFormatting ();
             }
-          histOpen = TtaPrepareUndo (doc);
+          histOpen = TtaHasUndoSequence (doc);
           if (!histOpen)
             OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
                                  lastChar-1);
@@ -1527,7 +1527,7 @@ void TtcCreateElement (Document doc, View view)
   PtrDocument         pDoc;
   PtrSSchema          pSS;
   NotifyElement       notifyEl;
-  int                 firstChar, lastChar, NSiblings;
+  int                 firstChar, lastChar, NSiblings, i, j;
   int                 frame, typeNum, nComp;
   ThotBool            ok, replicate, createAfter, selBegin, selEnd, ready;
   ThotBool            empty, list, optional, deleteEmpty, histSeq,
@@ -1590,14 +1590,20 @@ void TtcCreateElement (Document doc, View view)
                                     pDoc, TRUE);
                   TtaExtendUndoSequence (doc);
                 }
+              // keep the new selection
+              GetCurrentSelection (&pDoc, &pE, &pE1, &i, &j);
               // restore the initial selection
-              NewSelection (doc, (Element)firstSel, NULL, 0, 0);
               SelectElement (pDoc, firstSel, TRUE, FALSE, TRUE);
               if (lastSel != firstSel)
                 ExtendSelection (lastSel, 0, TRUE, FALSE, FALSE);
               CutCommand (FALSE, FALSE);
+              // set the new selection
+              SelectElement (pDoc, pE, TRUE, TRUE, TRUE);
               if (dispMode == DisplayImmediately)
                 TtaSetDisplayMode (doc, dispMode);
+              // check if the undo history is not closed
+              if (TtaHasUndoSequence (doc))
+                TtaCloseUndoSequence (doc);
               return;
             }
           /* delete the selected content/elements the usual way */
@@ -1643,7 +1649,7 @@ void TtcCreateElement (Document doc, View view)
       pSS = NULL;
       deleteEmpty = FALSE;
       histSeq = FALSE;	/* no new history sequence open */
-      prevHist = TtaPrepareUndo (doc);	/* is there a history sequence open */
+      prevHist = TtaHasUndoSequence (doc);	/* is there a history sequence open */
       if (firstChar > 0 && firstChar == lastChar)
         lastChar--;
 
@@ -2529,7 +2535,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
        (pSibling) is empty.
        Delete the empty sibling */
     {
-      histOpen = TtaPrepareUndo (doc);
+      histOpen = TtaHasUndoSequence (doc);
       if (!histOpen)
         OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
       /* record the element to be deleted in the history */
@@ -2709,7 +2715,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                 /* pSibling is empty. Delete it */
                 {
                   /* record the element to be deleted in the history */
-                  histOpen = TtaPrepareUndo (doc);
+                  histOpen = TtaHasUndoSequence (doc);
                   if (!histOpen)
                   OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
                   AddEditOpInHistory (pSibling, pDoc, TRUE, FALSE);
@@ -2794,7 +2800,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                                 pParent->ElStructSchema);
 
       /* start history sequence */
-      histOpen = TtaPrepareUndo (doc);
+      histOpen = TtaHasUndoSequence (doc);
       if (!histOpen)
         OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
       /* move all these elements */

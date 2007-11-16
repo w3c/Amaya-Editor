@@ -2893,7 +2893,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                 ok = FALSE;
               else
                 {
-                  histOpen = TtaPrepareUndo (doc);
+                  histOpen = TtaHasUndoSequence (doc);
                   if (!histOpen)
                     OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
                                          firstChar, lastChar);
@@ -2921,7 +2921,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                 if (firstSel != lastSel)
                   {
                     /* store the command in the history */
-                  histOpen = TtaPrepareUndo (doc);
+                  histOpen = TtaHasUndoSequence (doc);
                   if (!histOpen)
                     OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
                                          firstChar, lastChar);
@@ -3537,7 +3537,7 @@ void TtaInsertAnyElement (Document document, ThotBool before)
         /* application does not accept element creation */
         return;
 
-      histOpen = TtaPrepareUndo (document);
+      histOpen = TtaHasUndoSequence (document);
       if (!histOpen)
         OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
                              lastChar);

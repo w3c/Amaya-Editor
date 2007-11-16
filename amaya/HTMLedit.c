@@ -714,7 +714,7 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
           
           if (el == NULL)
             {
-              open = TtaPrepareUndo (doc);
+              open = TtaHasUndoSequence (doc);
               if (!open)
                 TtaOpenUndoSequence (doc, firstSel, lastSel, firstchar, lastchar);
               /* hide the selection before modifications */
@@ -2890,7 +2890,7 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
   if (!TtaSameTypes (TtaGetElementType (el), elType))
     el = SearchTypedElementForward (elType, el, lastEl);
 
-  if (TtaPrepareUndo (doc))
+  if (TtaHasUndoSequence (doc))
     closeUndo = FALSE;
   else
     {

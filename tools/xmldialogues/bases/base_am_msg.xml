@@ -6546,8 +6546,8 @@
 	<message xml:lang="fr">Avec le thème ...</message>
 </label>
 <label define="AM_MAX_WIDTH">
-	<message xml:lang="en">Maximum width</message>
-	<message xml:lang="fr">Largeur maximum</message>
+	<message xml:lang="en">Full width</message>
+	<message xml:lang="fr">Pleine largeur</message>
 </label>
 <label define="AM_CAPTION">
 <message xml:lang="en">Caption</message>
@@ -6568,6 +6568,10 @@
 <label define="AM_POSITION">
 <message xml:lang="en">Position</message>
 <message xml:lang="fr">Position</message>
+</label>
+<label define="AM_XML_EDIT">
+<message xml:lang="en">XML editing mode</message>
+<message xml:lang="fr">Mode d'édition XML</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

@@ -968,7 +968,7 @@ ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
                   /* register the deleted cells only if the column is
                      deleted explicitely by the user */
                   if (!ifEmpty)
-                    if (TtaPrepareUndo (doc))
+                    if (TtaHasUndoSequence (doc))
                       {
                         TtaRegisterElementDelete (cell, doc);
                         /* change the value of "info" in the latest cell
@@ -1012,7 +1012,7 @@ ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
             }
           TtaDeleteTree (colhead, doc);
           if (!ifEmpty)
-            if (TtaPrepareUndo (doc))
+            if (TtaHasUndoSequence (doc))
               /* The value of "info" in the latest cell deletion recorded in
                  the Undo queue should be 4 to allow procedure CellPasted to
                  regenerate a column head for the last cell when undoing
@@ -2605,7 +2605,7 @@ ThotBool DeleteTBody (NotifyElement * event)
     return FALSE;		/* let Thot perform normal operation */
   else
     {
-      if (TtaPrepareUndo (doc))
+      if (TtaHasUndoSequence (doc))
         TtaRegisterElementDelete (el, doc);
       // prepare the next selection
       sibling = GetNoTemplateSibling (el, FALSE);
@@ -3175,7 +3175,7 @@ void TablebodyDeleted (NotifyElement * event)
     }
   if (empty)
     {
-      if (TtaPrepareUndo (doc))
+      if (TtaHasUndoSequence (doc))
         /* register that the table is deleted */
         TtaRegisterElementDelete (table, doc);
       TtaDeleteTree (table, doc);

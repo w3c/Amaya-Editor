@@ -1604,73 +1604,74 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
       TtaGiveFirstSelectedElement (doc, &el, &c1, &i); 
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-	el = TtaGetParent (el);
+        el = TtaGetParent (el);
       attrType.AttrSSchema = elType.ElSSchema;
       /* search informations about height and width */
       width = 0; height = 0;
-      TtaGivePictureSize (el, &width, &height);
+      if (el)
+        TtaGivePictureSize (el, &width, &height);
       if (width > 0 && height > 0)
-	{
-	  /* attach height and width attributes to the image */
-	  TtaExtendUndoSequence (doc);
-	  value = (char *)TtaGetMemory (50);
-	  attrType.AttrTypeNum = HTML_ATTR_Width__;
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr == NULL)
-	    {
-	      newAttr = TRUE;
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, doc);
-	    }
-	  else
-	    newAttr = FALSE;
-	  // check if the image is larger than the window
-	  TtaGiveWindowSize (doc, 1, UnPixel, &w, &h);
-	  if (width < w)
-	    sprintf (value, "%d", width);
-	  else
-	    strcpy (value, "100%");
-	  if (!newAttr)
-	    TtaRegisterAttributeReplace (attr, el, doc);
-	  TtaSetAttributeText (attr, value, el, doc);
-	  if (newAttr)
-	    TtaRegisterAttributeCreate (attr, el, doc);
+        {
+          /* attach height and width attributes to the image */
+          TtaExtendUndoSequence (doc);
+          value = (char *)TtaGetMemory (50);
+          attrType.AttrTypeNum = HTML_ATTR_Width__;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr == NULL)
+            {
+              newAttr = TRUE;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+            }
+          else
+            newAttr = FALSE;
+          // check if the image is larger than the window
+          TtaGiveWindowSize (doc, 1, UnPixel, &w, &h);
+          if (width < w)
+            sprintf (value, "%d", width);
+          else
+            strcpy (value, "100%");
+          if (!newAttr)
+            TtaRegisterAttributeReplace (attr, el, doc);
+          TtaSetAttributeText (attr, value, el, doc);
+          if (newAttr)
+            TtaRegisterAttributeCreate (attr, el, doc);
 	  
-	  if (width < w)
-	    {
-	      attrType.AttrTypeNum = HTML_ATTR_Height_;
-	      attr = TtaGetAttribute (el, attrType);
-	      if (attr == NULL)
-		{
-		  newAttr = TRUE;
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (el, attr, doc);
-		}
-	      else
-		newAttr = FALSE;
-	      sprintf (value, "%d", height);
-	      if (!newAttr)
-		TtaRegisterAttributeReplace (attr, el, doc);
-	      TtaSetAttributeText (attr, value, el, doc);
-	      if (newAttr)
-		TtaRegisterAttributeCreate (attr, el, doc);
-	    }
-	  else
-	    {
-	      attrType.AttrTypeNum = HTML_ATTR_Height_;
-	      attr = TtaGetAttribute (el, attrType);
-	      if (attr)
-		{
-		  TtaRegisterAttributeDelete (attr, el, doc);
-		  TtaRemoveAttribute (el, attr ,doc);
-		}
-	      // generate the internal attribute to apply %
-	      CreateAttrWidthPercentPxl (value, el, doc, width);
-	    }
-	  TtaFreeMemory (value);
-	  TtaCloseUndoSequence(doc);
-	  TtaUpdateAttrMenu (doc);
-	}
+          if (width < w)
+            {
+              attrType.AttrTypeNum = HTML_ATTR_Height_;
+              attr = TtaGetAttribute (el, attrType);
+              if (attr == NULL)
+                {
+                  newAttr = TRUE;
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (el, attr, doc);
+                }
+              else
+                newAttr = FALSE;
+              sprintf (value, "%d", height);
+              if (!newAttr)
+                TtaRegisterAttributeReplace (attr, el, doc);
+              TtaSetAttributeText (attr, value, el, doc);
+              if (newAttr)
+                TtaRegisterAttributeCreate (attr, el, doc);
+            }
+          else
+            {
+              attrType.AttrTypeNum = HTML_ATTR_Height_;
+              attr = TtaGetAttribute (el, attrType);
+              if (attr)
+                {
+                  TtaRegisterAttributeDelete (attr, el, doc);
+                  TtaRemoveAttribute (el, attr ,doc);
+                }
+              // generate the internal attribute to apply %
+              CreateAttrWidthPercentPxl (value, el, doc, width);
+            }
+          TtaFreeMemory (value);
+          TtaCloseUndoSequence(doc);
+          TtaUpdateAttrMenu (doc);
+        }
       ImgDocument = 0;
     }
 }

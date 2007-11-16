@@ -32,6 +32,7 @@ public:
 
 private:
 
+  void OnClearButton( wxCommandEvent& event );
   void OnOpenButton( wxCommandEvent& event );
   void OnBrowseButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
