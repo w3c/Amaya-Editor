@@ -14,7 +14,7 @@ Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya_wx
 Release:      1
-Copyright:    Copyright 1995-2007 (MIT) (INRIA), (L)GPL compatible
+License:    W3C http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
