@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern void TtaSetAttributeChangeFunction ( Proc2 procedure );
 extern void CallbackReqAttrMenu ( int ref,
                                   int val,
@@ -33,9 +32,9 @@ extern void CallbackLanguageMenu ( int ref,
                                    char *txt );
 extern void CloseAttributeDialogues ( PtrDocument pDoc );
 extern void AttributeMenuLoadResources ( void );
+extern void TtaSetAttributeFilterProc ( AttributeFilterProc proc );
 
 #else /* __STDC__ */
-
 extern void TtaSetAttributeChangeFunction ( Proc2 procedure );
 extern void CallbackReqAttrMenu ( int ref,
                                     int val,
@@ -63,6 +62,7 @@ extern void CallbackLanguageMenu ( int ref,
                                      char *txt );
 extern void CloseAttributeDialogues ( PtrDocument pDoc );
 extern void AttributeMenuLoadResources ( void );
+extern void TtaSetAttributeFilterProc ( AttributeFilterProc proc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

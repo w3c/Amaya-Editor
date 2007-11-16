@@ -46,6 +46,12 @@ typedef struct _TypeRestriction
   char*                  RestrEnumVal;/** enum values. */
 }TypeRestriction;
 
+/**
+ * Callback prototype for filtering attributes.
+ */
+typedef void        (*AttributeFilterProc) (Element, Document, SSchema, int, TypeRestriction*);
+
+
 typedef void        (*Proc) ();
 typedef void        (*Proc1) (void * );
 typedef void        (*Proc2) (void *,void *);
@@ -442,6 +448,14 @@ extern void TtaStringToClipboard (unsigned char *s, CHARSET encoding);
   TtaUpdateToolPanelLayout
   ----------------------------------------------------------------------*/
 extern void TtaUpdateToolPanelLayout ();
+
+/*----------------------------------------------------------------------
+  TtaSetAttributeFilterProc
+  Register a callback function which filter attribute properties
+  before showing them in a list to the user.
+  ----------------------------------------------------------------------*/
+extern void TtaSetAttributeFilterProc (AttributeFilterProc);
+
 
 #endif /* __CEXTRACT__  */
 

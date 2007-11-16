@@ -6559,6 +6559,7 @@ void InitAmaya (NotifyEvent * event)
   TtaSetNextCellInColumnFunction ((Proc5) NextCellInColumn);
   TtaSetFocusChange ((Proc1) FocusChanged);
   TtaSetAttributeChangeFunction ((Proc2) AttributeChange);
+
   /* Initialize the Amaya user and tmp directories */
   s = TtaGetEnvString ("APP_TMPDIR");
   if (!TtaCheckMakeDirectory (s, TRUE))
@@ -6577,7 +6578,7 @@ void InitAmaya (NotifyEvent * event)
           exit (1);
         }
     }
-
+  
   /* add the temporary directory in document path */
   strcpy (TempFileDirectory, s);
   TtaAppendDocumentPath (TempFileDirectory);
