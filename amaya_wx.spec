@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 9.55
+%define version 9.99
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -104,6 +104,6 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 /bin/ln -f -s /usr/share/Amaya/wx/bin/amaya /usr/bin/amaya
 %postun
 rm -f /usr/bin/amaya
-rm -f /usr/applications/Amaya.desktop
-rm -f /usr/pixmaps/amaya.png
+rm -f /usr/share/applications/Amaya.desktop
+rm -f /usr/share/pixmaps/amaya.png
 
