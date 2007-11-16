@@ -46,6 +46,11 @@ extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
 extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );
 extern ThotBool TemplateAttrInMenu ( NotifyAttribute * event );
+extern void TemplateAttributeFilter ( Element el,
+                                      Document doc,
+                                      SSchema sschema,
+                                      int num,
+                                      TypeRestriction* restr );
 
 #else /* __STDC__ */
 
@@ -89,6 +94,11 @@ extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
 extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );
 extern ThotBool TemplateAttrInMenu ( NotifyAttribute * event );
+extern void TemplateAttributeFilter ( Element el,
+                                        Document doc,
+                                        SSchema sschema,
+                                        int num,
+                                        TypeRestriction* restr );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
