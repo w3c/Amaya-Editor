@@ -281,7 +281,9 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
           // update the charset if needed
           charsetname = TtaGetEnvString ("DOCUMENT_CHARSET");
           charset = TtaGetCharset (charsetname);
-          if (charset != UNDEFINED_CHARSET && strcmp (charsetname, DocumentMeta[doc]->charset))
+          if (charset != UNDEFINED_CHARSET &&
+              DocumentMeta[doc]->charset &&
+              strcmp (charsetname, DocumentMeta[doc]->charset))
             {
               TtaSetDocumentCharset (doc, charset, FALSE);
               DocumentMeta[doc]->charset = TtaStrdup (charsetname);
