@@ -72,6 +72,8 @@ AmayaAttributeToolPanel::wxATTR_PANEID AmayaAttributeToolPanel::s_subpanelAssoc[
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaAttributeToolPanel, AmayaToolPanel)
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 AmayaAttributeToolPanel::AmayaAttributeToolPanel():
   AmayaToolPanel()
 ,m_attrList(NULL)
@@ -88,10 +90,14 @@ AmayaAttributeToolPanel::AmayaAttributeToolPanel():
 {
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 AmayaAttributeToolPanel::~AmayaAttributeToolPanel()
 {
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 bool AmayaAttributeToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
           const wxSize& size, long style, const wxString& name, wxObject* extra)
 {

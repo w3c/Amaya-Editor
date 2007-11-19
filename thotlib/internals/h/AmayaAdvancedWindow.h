@@ -76,7 +76,7 @@ private:
   
   void OnToggleToolPanelMenu(wxCommandEvent&);
   void OnUpdateToolPanelMenu(wxUpdateUIEvent&);
-  
+
   wxAuiManager   m_manager;
   AmayaAdvancedNotebook* m_notebook;
   

@@ -216,7 +216,7 @@ void AmayaAdvancedWindow::LoadConfig()
             int id = ::wxNewId();
             
             menu->AppendCheckItem(id, it->second->GetToolPanelName());
-            menu->Check(id, it->second->IsVisible());
+            menu->Check(id, it->second->IsShown());
             m_panelMenus[id] = it->second;
             
             // Connect toggle menu event
@@ -270,7 +270,7 @@ void AmayaAdvancedWindow::SaveConfig()
         // Say if the panel is on/off
         name = wxT("OPEN_") + it->second->GetToolPanelConfigKeyName();
         TtaSetEnvBoolean((const char*)name.mb_str(wxConvUTF8),
-                         (ThotBool)it->second->IsVisible(), TRUE);
+                         (ThotBool)it->second->IsShown(), TRUE);
       }
   }
 
@@ -484,7 +484,7 @@ void AmayaAdvancedWindow::ShowToolPanels()
   for(it = m_panels.begin(); it!=m_panels.end(); ++it )
   {
     wxAuiPaneInfo& pane = m_manager.GetPane(it->second);
-    if(it->second->IsVisible())
+    if(it->second->IsShown())
       pane.Show();
   }
   m_manager.LoadPerspective(m_strPanelPerspective);
@@ -547,6 +547,8 @@ void AmayaAdvancedWindow::OnNotebookPageChanged( wxNotebookEvent& event )
   }
 }
 
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
 void AmayaAdvancedWindow::OnSize(wxSizeEvent& event)
 {
   if(HaveToolBarBrowsing())
@@ -563,6 +565,7 @@ void AmayaAdvancedWindow::OnSize(wxSizeEvent& event)
   event.Skip();
 }
 
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -570,15 +573,12 @@ void AmayaAdvancedWindow::OnSize(wxSizeEvent& event)
 BEGIN_EVENT_TABLE(AmayaAdvancedWindow, AmayaNormalWindow)
   
   EVT_SIZE(AmayaAdvancedWindow::OnSize)
-   
   EVT_CLOSE(AmayaAdvancedWindow::OnClose )
-
   EVT_NOTEBOOK_PAGE_CHANGED( wxID_ANY,    AmayaAdvancedWindow::OnNotebookPageChanged )
   
   EVT_COMBOBOX( XRCID("wxID_TOOL_URL"),   AmayaAdvancedWindow::OnURLSelected )
   EVT_TEXT_ENTER( XRCID("wxID_TOOL_URL"), AmayaAdvancedWindow::OnURLTextEnter )
   EVT_TEXT( XRCID("wxID_TOOL_URL"),       AmayaAdvancedWindow::OnURLText )
-  
 END_EVENT_TABLE()
 
 
