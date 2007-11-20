@@ -876,7 +876,12 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
   pEl = pFirstSel;
   while (pEl)
     {
-      if (!ElementIsReadOnly (pEl))
+#ifdef EK
+// Removed to enable attr change in templates.
+// Reactive it if any problems.
+// Normally, attr changes for really readonly element cant pass here !
+//      if (!ElementIsReadOnly (pEl))
+#endif /* EK */
         {
           isDone = TRUE;
           if (pEl->ElStructSchema &&
@@ -1134,7 +1139,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   Set a new value for the specified attr for the currently selected range.
   \param value char* is the attr is text and int if num or enum.
   ----------------------------------------------------------------------*/
-void SetAttrValueToRange(PtrAttrListElem elem, void* value)
+void SetAttrValueToRange(PtrAttrListElem elem, intptr_t value)
 {
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel;
@@ -1230,9 +1235,9 @@ void SetAttrValueToRange(PtrAttrListElem elem, void* value)
                                                  (void *)value);
             }
           else
-            /* apply the attribute to each sub-element */
-            AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
-                             firstSel, pDoc, TRUE);
+              /* apply the attribute to each sub-element */
+              AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
+                               firstSel, pDoc, TRUE);
           if (isCLASS)
             TtaExecuteMenuAction ("ApplyClass", doc, 1, TRUE);
           break;
@@ -1653,14 +1658,3 @@ void AttributeMenuLoadResources ()
         EventMenu[i] = 0;
     }
 }
-
-/*----------------------------------------------------------------------
-  TtaSetAttributeFilterProc
-  Register a callback function which filter attribute properties
-  before showing them in a list to the user.
-  ----------------------------------------------------------------------*/
-void TtaSetAttributeFilterProc (AttributeFilterProc proc)
-{
-  AttributeFilterProcedure = (AttributeFilterProc)proc;
-}
-

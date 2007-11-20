@@ -449,14 +449,6 @@ extern void TtaStringToClipboard (unsigned char *s, CHARSET encoding);
   ----------------------------------------------------------------------*/
 extern void TtaUpdateToolPanelLayout ();
 
-/*----------------------------------------------------------------------
-  TtaSetAttributeFilterProc
-  Register a callback function which filter attribute properties
-  before showing them in a list to the user.
-  ----------------------------------------------------------------------*/
-extern void TtaSetAttributeFilterProc (AttributeFilterProc);
-
-
 #endif /* __CEXTRACT__  */
 
 #endif

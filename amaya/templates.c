@@ -363,9 +363,6 @@ void SetTemplateRepositoryList (const void* list)
   -----------------------------------------------------------------------*/
 void InitTemplates ()
 {
-  /* Init Template element attribute restriction filter. */
-  TtaSetAttributeFilterProc(TemplateAttributeFilter);
-
   TtaSetEnvBoolean ("SHOW_TEMPLATES", TRUE, FALSE);
   LoadTemplateRepositoryList (&TemplateRepositoryPaths);
 }
@@ -1504,15 +1501,3 @@ ThotBool TemplateAttrInMenu (NotifyAttribute * event)
     return FALSE;
 }
 
-/*----------------------------------------------------------------------
-  TemplateAttributeFilter
-  Callback procedure to filter attribute (attribute restriction).
-  ----------------------------------------------------------------------*/
-void TemplateAttributeFilter(Element el, Document doc, SSchema sschema, int num, TypeRestriction* restr)
-{
-  AttributeType attrType;
-  attrType.AttrSSchema = sschema;
-  attrType.AttrTypeNum = num;
-  
-//  printf("TemplateAttributeFilter %s %s\n", TtaStrdup(TtaGetElementTypeName(TtaGetElementType(el))), TtaStrdup(TtaGetAttributeName(attrType)));
-}

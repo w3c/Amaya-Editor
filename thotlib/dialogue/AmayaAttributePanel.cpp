@@ -413,7 +413,7 @@ void AmayaAttributeToolPanel::CreateCurrentAttribute()
           if (pAttr && pAttr->AttrType == AtEnumAttr &&
               pAttr->AttrNEnumValues == 1)
             {
-              SetAttrValueToRange (elem, (void*)1);
+              SetAttrValueToRange (elem, (intptr_t)1);
               ForceAttributeUpdate();
             }
           else
@@ -610,13 +610,13 @@ void AmayaAttributeToolPanel::OnApply( wxCommandEvent& event )
         {
           int test = m_subpanels[m_currentPane]->GetIntValue();
           value = m_subpanels[m_currentPane]->GetStringValue();
-          SetAttrValueToRange(m_currentAttElem, (void*)test);
+          SetAttrValueToRange(m_currentAttElem, (intptr_t)test);
         }
       else if(pAttr->AttrType==AtTextAttr)
         {
           value = m_subpanels[m_currentPane]->GetStringValue();
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH-1);
-          SetAttrValueToRange(m_currentAttElem, (void*)buffer);
+          SetAttrValueToRange(m_currentAttElem, (intptr_t)buffer);
         }
       ModifyListAttrValue(GetCurrentSelectedAttrName(), value);
     }

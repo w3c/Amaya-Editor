@@ -261,7 +261,8 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
                          type = TtaGetAttributeValue(attr);
                        else
                          type = Template_ATTR_type_VAL_string;
-
+#ifdef AMAYA_DEBUG
+#ifdef EK
 /******************************************************************************/
                        printf("Attribute : %s \n", attrName);
                        switch(useAt)
@@ -295,11 +296,12 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
                            break;
                        }
 /******************************************************************************/
-
+#endif  /* EK */
+#endif /* AMAYA_DEBUG */
                        event->restr.RestrType = (RestrictionContentType)type;
                        /* If attr is prohibited, dont show it.*/
                        if(useAt==Template_ATTR_useAt_VAL_prohibited)
-                         return TRUE;
+                           return TRUE;
                        if(useAt==Template_ATTR_useAt_VAL_required)
                          {
                            /* Force the usage of this attribute.*/
@@ -344,7 +346,7 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
             }
         }
       
-      return FALSE;
+      return TRUE;
     }
   else
 #endif /* TEMPLATES */
