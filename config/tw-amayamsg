@@ -427,39 +427,40 @@
 425 **Send as:
 426 **Message body
 427 **Attachment
-428 **Don't send
-429 **Send
-430 **The server address and port must be set in Preferences
-431 **Message:
-432 **Alternate textual  message:
-433 **The server is unreachable or does not respond
-434 **The server has reject you
-435 **The sender address is misformatted
-436 **A recipient address is misformatted
-437 **The mail content is misformatted
-438 **Mail not sent
-439 **Mail sent
-440 **Passwords
-441 **Do you want Amaya to remember this password?
-442 **Remember passwords for sites
-443 **Sites
-444 **Remove All
-445 **An error occured during the building of the javascript/DOM objects
-446 **A script is still running but will be aborted as soon as possible. Please try later.
-447 **Javascript/DOM can not be enabled in this view.
-448 **Enter a javascript command:
-449 **The command returned the value: %s
-450 **The command returned no value
-451 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-452 新建
-453 **Customizable
-454 **Create
-455 **Create the link by click
-456 刪除 anchor
-457 **Save without template
-458 **With theme ...
-459 **Full width
-460 **With caption
-461 **Size
-462 **Position
-463 **XML editing mode
+428 **Zip archive
+429 **Don't send
+430 **Send
+431 **The server address and port must be set in Preferences
+432 **Message:
+433 **Alternate textual  message:
+434 **The server is unreachable or does not respond
+435 **The server has reject you
+436 **The sender address is misformatted
+437 **A recipient address is misformatted
+438 **The mail content is misformatted
+439 **Mail not sent
+440 **Mail sent
+441 **Passwords
+442 **Do you want Amaya to remember this password?
+443 **Remember passwords for sites
+444 **Sites
+445 **Remove All
+446 **An error occured during the building of the javascript/DOM objects
+447 **A script is still running but will be aborted as soon as possible. Please try later.
+448 **Javascript/DOM can not be enabled in this view.
+449 **Enter a javascript command:
+450 **The command returned the value: %s
+451 **The command returned no value
+452 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+453 新建
+454 **Customizable
+455 **Create
+456 **Create the link by click
+457 刪除 anchor
+458 **Save without template
+459 **With theme ...
+460 **Full width
+461 **With caption
+462 **Size
+463 **Position
+464 **XML editing mode

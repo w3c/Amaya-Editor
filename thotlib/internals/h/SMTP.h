@@ -248,10 +248,11 @@ public:
      * the type will be determined by the file extension.
      * \param fileName Filename of the new file attachment.
      * \param mimeType MIME main type, like 'image/jpeg'.
-     * \param bInline True if the file is attached inline or false if attachment 
+     * \param bInline True if the file is attached inline or false if attachment
+     * \param name Alternative name used in the mail. 
      * \return The wxMimeSlot node. 
      */
-    wxNode* AddFile(const wxFileName& fileName, wxString mimeType = wxT(""), bool bInline=false);
+    wxNode* AddFile(const wxFileName& fileName, wxString mimeType = wxT(""), bool bInline=false, const wxString& name=wxT(""));
     
     wxNode* AddAlternative(const wxString data, const wxString& mimeType = wxT("text/plain"));
     wxNode* AddAlternativeFile(const wxFileName& fileName, wxString mimeType = wxT("text/plain"));

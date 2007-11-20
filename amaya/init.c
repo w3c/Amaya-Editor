@@ -161,6 +161,8 @@ static ThotIcon       iconLogo;
 
 #include "wxdialogapi_f.h"
 
+#include "archives.h"
+
 #ifdef DAV
 #define WEBDAV_EXPORT extern
 #include "davlib.h"
@@ -7858,18 +7860,31 @@ void SendByMail (Document document, View view)
         
         // Send all attached files (images, css ...) as attachments.
         if (dlg.SendAsAttachment () || dlg.SendAsContent ())
-        {
-          wxFileName    msgName (wxString(docPath, wxConvUTF8));
-          wxArrayString files;
-          wxDir::GetAllFiles (wxString(temppath, wxConvLibc), &files, wxT(""), wxDIR_FILES);
-          for (i = 0; i < (int)files.GetCount(); i++)
           {
-            wxFileName filename(files[i]);
-            if (filename.GetFullName() != wxString(dstFileName, wxConvUTF8))
-              TtaAddEMailAttachmentFile(mail, "",
-                                        (const char*)filename.GetFullPath().mb_str(wxConvUTF8));
+            wxFileName    msgName (wxString(docPath, wxConvUTF8));
+            wxArrayString files;
+            wxDir::GetAllFiles (TtaConvMessageToWX(temppath), &files, wxT(""), wxDIR_FILES);
+            for (i = 0; i < (int)files.GetCount(); i++)
+            {
+              wxFileName filename(files[i]);
+              if (filename.GetFullName() != wxString(dstFileName, wxConvUTF8))
+                TtaAddEMailAttachmentFile(mail, "",
+                                          (const char*)filename.GetFullPath().mb_str(wxConvUTF8));
+            }
           }
-        }
+        else if (dlg.SendAsZip()) // Send all by zip file
+          {
+            wxString zip = wxFileName::CreateTempFileName(wxT("amayazip"));
+            if(!zip.IsEmpty() && TtaCreateZipArchive(temppath , (const char*)zip.mb_str(wxConvUTF8)))
+              {
+                wxFileName zipname(TtaConvMessageToWX(docPath) + wxT(".zip"));
+                
+                TtaAddEMailAttachmentFileAlternativeName(mail, "",
+                                     (const char*)zip.mb_str(wxConvUTF8),
+                                     (const char*)zipname.GetFullName().mb_str(wxConvUTF8));
+              }
+          }
+
 
         error = 0;
         if (TtaSendEMail (mail, server, port, &error))

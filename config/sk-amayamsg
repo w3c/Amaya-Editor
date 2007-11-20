@@ -427,39 +427,40 @@
 425 Odoslať ako:
 426 Text správy
 427 Príloha
-428 Neodosielať
-429 Odoslať
-430 Adresa servera a port musia byť nastavené v nastaveniach.
-431 Správa:
-432 Alternatívna textová správa:
-433 Server je nedostupný alebo neodpovedá
-434 Server prerušil spojenie
-435 Adredsa odosielateľa má nesprávny tvar
-436 Adresa príjemcu má nesprávny tvar
-437 Obsah mail má nesprávny tvar
-438 Správa nebola odoslaná
-439 Správa bola odoslaná
-440 Heslá
-441 Chcete aby si program Amaya zapamätal toto heslo
-442 **Remember passwords for sites
-443 Umiestnenia
-444 Odstrániť všetky
-445 **An error occured during the building of the javascript/DOM objects
-446 **A script is still running but will be aborted as soon as possible. Please try later.
-447 **Javascript/DOM can not be enabled in this view.
-448 **Enter a javascript command:
-449 **The command returned the value: %s
-450 **The command returned no value
-451 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-452 Nový
-453 **Customizable
-454 **Create
-455 **Create the link by click
-456 Odstrániť odkaz
-457 **Save without template
-458 **With theme ...
-459 **Full width
-460 **With caption
-461 **Size
-462 **Position
-463 **XML editing mode
+428 **Zip archive
+429 Neodosielať
+430 Odoslať
+431 Adresa servera a port musia byť nastavené v nastaveniach.
+432 Správa:
+433 Alternatívna textová správa:
+434 Server je nedostupný alebo neodpovedá
+435 Server prerušil spojenie
+436 Adredsa odosielateľa má nesprávny tvar
+437 Adresa príjemcu má nesprávny tvar
+438 Obsah mail má nesprávny tvar
+439 Správa nebola odoslaná
+440 Správa bola odoslaná
+441 Heslá
+442 Chcete aby si program Amaya zapamätal toto heslo
+443 **Remember passwords for sites
+444 Umiestnenia
+445 Odstrániť všetky
+446 **An error occured during the building of the javascript/DOM objects
+447 **A script is still running but will be aborted as soon as possible. Please try later.
+448 **Javascript/DOM can not be enabled in this view.
+449 **Enter a javascript command:
+450 **The command returned the value: %s
+451 **The command returned no value
+452 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+453 Nový
+454 **Customizable
+455 **Create
+456 **Create the link by click
+457 Odstrániť odkaz
+458 **Save without template
+459 **With theme ...
+460 **Full width
+461 **With caption
+462 **Size
+463 **Position
+464 **XML editing mode

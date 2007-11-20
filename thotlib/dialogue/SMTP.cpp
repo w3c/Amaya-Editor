@@ -552,7 +552,7 @@ m_alternatives(wxMIMETYPE_MULTIPART_ALTERNATIVE)
 {
 }
 
-wxNode* wxEmailMessage::AddFile(const wxFileName& fileName, wxString mimeType, bool bInline)
+wxNode* wxEmailMessage::AddFile(const wxFileName& fileName, wxString mimeType, bool bInline, const wxString& name)
 {
     if(fileName.FileExists())
     {
@@ -565,7 +565,7 @@ wxNode* wxEmailMessage::AddFile(const wxFileName& fileName, wxString mimeType, b
                     mimeType = wxT("application/octet-stream");
             }
         }
-        wxNode *node = m_attachements.Append(fileName, wxT(""), mimeType);
+        wxNode *node = m_attachements.Append(fileName, /*wxT("")*/name, mimeType);
         if(node)
         {
             ((wxMimeSlot*)node->GetData())->SetExtraParam(wxT("Content-Disposition"), bInline?wxT("inline"):wxT("attachment"));
@@ -574,6 +574,7 @@ wxNode* wxEmailMessage::AddFile(const wxFileName& fileName, wxString mimeType, b
     }
     return NULL;
 }
+
 
 wxNode* wxEmailMessage::AddAlternativeFile(const wxFileName& fileName, wxString mimeType)
 {
@@ -640,7 +641,7 @@ bool wxEmailMessage::Write(wxOutputStream& out)
 
     if(m_toArray.GetCount() > 0) {
         msg << wxT("To: ");
-        for(i = 0; i < m_toArray.GetCount() ; i++) {
+        for(i = 0; i < (int)m_toArray.GetCount() ; i++) {
             if(i > 0) msg << wxT(",") << wxT("\r\n    ");
             msg << m_toArray[i];
         }
@@ -648,7 +649,7 @@ bool wxEmailMessage::Write(wxOutputStream& out)
     }
     if(m_ccArray.GetCount() > 0) {
         msg << wxT("Cc: ");
-        for(i = 0; i < m_ccArray.GetCount() ; i++) {
+        for(i = 0; i < (int)m_ccArray.GetCount() ; i++) {
             if(i > 0) msg << wxT(",") << wxT("\r\n    ");
             msg << m_ccArray[i];
         }
@@ -656,7 +657,7 @@ bool wxEmailMessage::Write(wxOutputStream& out)
     }
     if(m_bccArray.GetCount() > 0) {
         msg << wxT("Cc: ");
-        for(i = 0; i < m_bccArray.GetCount() ; i++) {
+        for(i = 0; i < (int)m_bccArray.GetCount() ; i++) {
             if(i > 0) msg << wxT(",") << wxT("\r\n    ");
             msg << m_bccArray[i];
         }
@@ -668,7 +669,7 @@ bool wxEmailMessage::Write(wxOutputStream& out)
         msg << wxT("Subject: ") << m_subject << wxT("\r\n");
     }
     
-    for(i = 0; i < m_extraHeaders.GetCount() ; i++) {
+    for(i = 0; i < (int)m_extraHeaders.GetCount() ; i++) {
         msg << m_extraHeaders[i] << wxT("\r\n");
     }
     

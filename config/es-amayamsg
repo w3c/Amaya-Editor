@@ -427,39 +427,40 @@
 425 Enviar como:
 426 Mensaje
 427 Adjuntar
-428 No enviar
-429 Enviar
-430 Establecer dirección y puerto del servidor en menú Preferencias
-431 Texto:
-432 Texto alternativo:
-433 Servidor no encontrado o no responde
-434 El servidor ha rechazado la conexión
-435 Dirección del remitente incorrecta
-436 Dirección de destino incorrecta
-437 Texto del mensaje incorrecto
-438 Correo no enviado
-439 Correo enviado
-440 Contraseñas
-441 ¿Desea que Amaya recuerde esta contraseña?
-442 Recordar contraseñas de los sitios
-443 Sitios
-444 Eliminar todo
-445 Ocurrió un error durante la construcción de los objetos JavaScript/DOM
-446 Un script se está ejecutando todavía, pero se abortará lo antes posible.
-447 No se puede activar JavaScript/DOM en esta vista
-448 Escriba un comando JavaScript:
-449 El comando devolvió el valor: %s
-450 El comando no devolvió ningún valor
-451 SpiderMonkey devolvió el error siguiente:\n\nArchivo: %s\nLínea: %d\n\n%s
-452 Nuevo
-453 
-454 Crear
-455 **Create the link by click
-456 Borrar ancla
-457 **Save without template
-458 **With theme ...
-459 **Full width
-460 **With caption
-461 **Size
-462 **Position
-463 **XML editing mode
+428 **Zip archive
+429 No enviar
+430 Enviar
+431 Establecer dirección y puerto del servidor en menú Preferencias
+432 Texto:
+433 Texto alternativo:
+434 Servidor no encontrado o no responde
+435 El servidor ha rechazado la conexión
+436 Dirección del remitente incorrecta
+437 Dirección de destino incorrecta
+438 Texto del mensaje incorrecto
+439 Correo no enviado
+440 Correo enviado
+441 Contraseñas
+442 ¿Desea que Amaya recuerde esta contraseña?
+443 Recordar contraseñas de los sitios
+444 Sitios
+445 Eliminar todo
+446 Ocurrió un error durante la construcción de los objetos JavaScript/DOM
+447 Un script se está ejecutando todavía, pero se abortará lo antes posible.
+448 No se puede activar JavaScript/DOM en esta vista
+449 Escriba un comando JavaScript:
+450 El comando devolvió el valor: %s
+451 El comando no devolvió ningún valor
+452 SpiderMonkey devolvió el error siguiente:\n\nArchivo: %s\nLínea: %d\n\n%s
+453 Nuevo
+454 
+455 Crear
+456 **Create the link by click
+457 Borrar ancla
+458 **Save without template
+459 **With theme ...
+460 **Full width
+461 **With caption
+462 **Size
+463 **Position
+464 **XML editing mode

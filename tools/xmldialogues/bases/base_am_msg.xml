@@ -6315,6 +6315,10 @@
 	<message xml:lang="it">Allegato</message>
 	<message xml:lang="ru">Вложение</message>
 </label>
+<label define="AM_EMAILS_SEND_AS_ZIP">
+	<message xml:lang="en">Zip archive</message>
+	<message xml:lang="fr">Archive zip</message>
+</label>
 <label define="AM_EMAILS_DONT_SEND">
 	<message xml:lang="en">Don't send</message>
 	<message xml:lang="es">No enviar</message>

@@ -428,39 +428,40 @@
 425 Invia come:
 426 Corpo del messaggio
 427 Allegato
-428 Non inviare
-429 Invia
-430 Indirizzo e porta del server devono essere settati nelle Preferenze
-431 Messaggio:
-432 Messaggio alternativo di testo:
-433 Il server è irraggiungibile o non rispond
-434 Il server ha rifiutato il messaggio
-435 L'indirizzo del mittente è malformattato
-436 L'indirizzo di un destinatario è malformattato
-437 Il contenuto del messaggio è malformattato
-438 Messaggio non inviato
-439 Messaggio inviato
-440 Password
-441 Vuoi che Amaya ricordi questa password?
-442 Ricorda le password per i siti
-443 Siti
-444 Elimina tutti
-445 **An error occured during the building of the javascript/DOM objects
-446 **A script is still running but will be aborted as soon as possible. Please try later.
-447 **Javascript/DOM can not be enabled in this view.
-448 **Enter a javascript command:
-449 **The command returned the value: %s
-450 **The command returned no value
-451 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-452 Nuovo
-453 **Customizable
-454 Crea
-455 **Create the link by click
-456 Cancella ancora
-457 **Save without template
-458 **With theme ...
-459 **Full width
-460 **With caption
-461 **Size
-462 **Position
-463 **XML editing mode
+428 **Zip archive
+429 Non inviare
+430 Invia
+431 Indirizzo e porta del server devono essere settati nelle Preferenze
+432 Messaggio:
+433 Messaggio alternativo di testo:
+434 Il server è irraggiungibile o non rispond
+435 Il server ha rifiutato il messaggio
+436 L'indirizzo del mittente è malformattato
+437 L'indirizzo di un destinatario è malformattato
+438 Il contenuto del messaggio è malformattato
+439 Messaggio non inviato
+440 Messaggio inviato
+441 Password
+442 Vuoi che Amaya ricordi questa password?
+443 Ricorda le password per i siti
+444 Siti
+445 Elimina tutti
+446 **An error occured during the building of the javascript/DOM objects
+447 **A script is still running but will be aborted as soon as possible. Please try later.
+448 **Javascript/DOM can not be enabled in this view.
+449 **Enter a javascript command:
+450 **The command returned the value: %s
+451 **The command returned no value
+452 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+453 Nuovo
+454 **Customizable
+455 Crea
+456 **Create the link by click
+457 Cancella ancora
+458 **Save without template
+459 **With theme ...
+460 **Full width
+461 **With caption
+462 **Size
+463 **Position
+464 **XML editing mode

@@ -427,39 +427,40 @@
 425 Envoyer en tant que :
 426 Corps du message
 427 Pièce jointe
-428 Ne pas envoyer
-429 Envoyer
-430 L'adresse et le port du serveur doivent être renseignés dans les Préférences
-431 Message :
-432 Message textuel alternatif :
-433 Le serveur est inaccessible ou ne répond pas
-434 Le serveur vous a rejeté
-435 L'adresse de l'envoyeur est mal formatée
-436 L'adresse d'un destinataire est mal formatée
-437 Le contenu du courriel est mal formatée
-438 Courriel non envoyé
-439 Courriel envoyé
-440 Mots de passe
-441 Voulez-vous qu'Amaya se souvienne de ce mot de passe ?
-442 Enregistrer les mots de passe
-443 Sites
-444 Tout effacer
-445 Une erreur s'est produite pendant la construction des objets javascript/DOM
-446 Un script est encore en cours d'exécution mais sera interrompu dès que possible. Veuillez ressayer ultérieurement.
-447 Javascript/DOM ne peut être activé dans cette vue.
-448 Rentrez une commande javascript :
-449 La commande a retourné la valeur: %s
-450 La commande n'a retourné aucune valeur
-451 SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s
-452 Nouveau
-453 Paramétrable
-454 Créer
-455 Créer le lien en cliquant
-456 Detruire le lien
-457 Sauver sans modèle
-458 Avec le thème ...
-459 Pleine largeur
-460 Avec une légende
-461 Dimension
-462 Position
-463 Mode d'édition XML
+428 Archive zip
+429 Ne pas envoyer
+430 Envoyer
+431 L'adresse et le port du serveur doivent être renseignés dans les Préférences
+432 Message :
+433 Message textuel alternatif :
+434 Le serveur est inaccessible ou ne répond pas
+435 Le serveur vous a rejeté
+436 L'adresse de l'envoyeur est mal formatée
+437 L'adresse d'un destinataire est mal formatée
+438 Le contenu du courriel est mal formatée
+439 Courriel non envoyé
+440 Courriel envoyé
+441 Mots de passe
+442 Voulez-vous qu'Amaya se souvienne de ce mot de passe ?
+443 Enregistrer les mots de passe
+444 Sites
+445 Tout effacer
+446 Une erreur s'est produite pendant la construction des objets javascript/DOM
+447 Un script est encore en cours d'exécution mais sera interrompu dès que possible. Veuillez ressayer ultérieurement.
+448 Javascript/DOM ne peut être activé dans cette vue.
+449 Rentrez une commande javascript :
+450 La commande a retourné la valeur: %s
+451 La commande n'a retourné aucune valeur
+452 SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s
+453 Nouveau
+454 Paramétrable
+455 Créer
+456 Créer le lien en cliquant
+457 Detruire le lien
+458 Sauver sans modèle
+459 Avec le thème ...
+460 Pleine largeur
+461 Avec une légende
+462 Dimension
+463 Position
+464 Mode d'édition XML

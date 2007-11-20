@@ -12,13 +12,22 @@
 class wxGrid;
 class wxGridEvent;
 
+typedef enum
+{
+  SendByMailAsAttachment = 0,
+  SendByMailAsMessage    = 1,
+  SendByMailAsZip        = 2,
+  DontSendByMail         = 3
+}SendByMailMode;
+
+
 //-----------------------------------------------------------------------------
 // Class definition: SendByMailDlgWX
 //-----------------------------------------------------------------------------
 
 class SendByMailDlgWX : public AmayaDialog
 {
-public: 
+public:
     
   // Constructor.
   SendByMailDlgWX( int ref, wxWindow* parent);
@@ -34,6 +43,7 @@ public:
   
   bool SendAsAttachment()const;
   bool SendAsContent()const;
+  bool SendAsZip()const;
 
   void SetSendMode(int mode);
     

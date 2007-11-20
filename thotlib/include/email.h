@@ -15,6 +15,7 @@ void TtaAddEMailAlternative(EMail mail, const char* mimeType, const char* conten
 
 ThotBool TtaAddEMailAlternativeFile(EMail mail, const char* mimeType, const char* filename, const char* charset);
 ThotBool TtaAddEMailAttachmentFile(EMail mail, const char* mimeType, const char* filename);
+ThotBool TtaAddEMailAttachmentFileAlternativeName(EMail mail, const char* mimeType, const char* filename, const char* name);
 
 
 typedef enum _EmailErrorCode

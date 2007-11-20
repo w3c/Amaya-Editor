@@ -78,6 +78,13 @@ ThotBool TtaAddEMailAttachmentFile(EMail mail, const char* mimeType, const char*
 #endif /* _WX */  
 }
 
+ThotBool TtaAddEMailAttachmentFileAlternativeName(EMail mail, const char* mimeType, const char* filename, const char* name)
+{
+#ifdef _WX  
+  return (((wxEmailMessage*)mail)->AddFile(wxString(filename, wxConvUTF8), wxString(mimeType, wxConvUTF8), false, wxString(name, wxConvUTF8)))!=NULL;
+#endif /* _WX */  
+}
+
 
 ThotBool TtaSendEMail(EMail mail, const char* serverAddress, int port, int* error)
 {

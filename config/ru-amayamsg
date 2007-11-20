@@ -427,39 +427,40 @@
 425 Отправить как:
 426 Тело сообщения
 427 Вложение
-428 Не отправлять
-429 Отправить
-430 Адрес сервера и его порт должны быть указаны в настройках
-431 Сообщение:
-432 Альтернативное текстовое сообщение:
-433 Сервер недоступен или не отвечает
-434 Сервер отказал вам в соединении
-435 Адрес отправителя имеет неправильный формат
-436 Адрес получателся имеет неправильный формат
-437 Содержимое почты имеет неправильный формат
-438 Почта не отправлена
-439 Почта отправлена
-440 Пароли
-441 Запомнить пароль
-442 Запоминать пароли для сайтов
-443 Сайты
-444 Удалить все
-445 **An error occured during the building of the javascript/DOM objects
-446 **A script is still running but will be aborted as soon as possible. Please try later.
-447 **Javascript/DOM can not be enabled in this view.
-448 **Enter a javascript command:
-449 **The command returned the value: %s
-450 **The command returned no value
-451 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-452 Удалить все
-453 **Customizable
-454 **Create
-455 **Create the link by click
-456 Удалить ссылку или цель
-457 **Save without template
-458 **With theme ...
-459 **Full width
-460 **With caption
-461 **Size
-462 **Position
-463 **XML editing mode
+428 **Zip archive
+429 Не отправлять
+430 Отправить
+431 Адрес сервера и его порт должны быть указаны в настройках
+432 Сообщение:
+433 Альтернативное текстовое сообщение:
+434 Сервер недоступен или не отвечает
+435 Сервер отказал вам в соединении
+436 Адрес отправителя имеет неправильный формат
+437 Адрес получателся имеет неправильный формат
+438 Содержимое почты имеет неправильный формат
+439 Почта не отправлена
+440 Почта отправлена
+441 Пароли
+442 Запомнить пароль
+443 Запоминать пароли для сайтов
+444 Сайты
+445 Удалить все
+446 **An error occured during the building of the javascript/DOM objects
+447 **A script is still running but will be aborted as soon as possible. Please try later.
+448 **Javascript/DOM can not be enabled in this view.
+449 **Enter a javascript command:
+450 **The command returned the value: %s
+451 **The command returned no value
+452 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+453 Удалить все
+454 **Customizable
+455 **Create
+456 **Create the link by click
+457 Удалить ссылку или цель
+458 **Save without template
+459 **With theme ...
+460 **Full width
+461 **With caption
+462 **Size
+463 **Position
+464 **XML editing mode

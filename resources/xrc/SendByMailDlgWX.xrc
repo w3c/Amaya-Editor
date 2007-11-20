@@ -42,10 +42,11 @@
                   <label>*Envoyer en tant que :*</label>
                   <content>
                     <item>*Piece jointe*</item>
+                    <item>*Archive zip*</item>
                     <item>*Contenu*</item>
                     <item>*Ne pas envoyer*</item>
                   </content>
-                  <dimension>3</dimension>
+                  <dimension>4</dimension>
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
                 <option>0</option>

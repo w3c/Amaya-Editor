@@ -232,6 +232,7 @@ EDITOR_OBJ = \
 	dialogue/callbackinit.o \
 	dialogue/appdialogue.o \
 	dialogue/appli.o \
+	dialogue/archives.o \
 	dialogue/attrmenu.o \
 	dialogue/base64.o \
 	dialogue/browser.o \

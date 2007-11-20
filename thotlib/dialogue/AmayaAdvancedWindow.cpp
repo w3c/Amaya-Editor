@@ -64,6 +64,7 @@
 
 IMPLEMENT_CLASS(AmayaAdvancedWindow, AmayaNormalWindow)
 
+#include "archives.h"
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaAdvancedWindow
