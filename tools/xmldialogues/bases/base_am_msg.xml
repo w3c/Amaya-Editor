@@ -6508,7 +6508,7 @@
 </label>
 <label define="AM_AUI_FREE_PANEL_POS">
 	<message xml:lang="en">Customizable</message>
-	<message xml:lang="es"></message>
+	<message xml:lang="es">Personalizable</message>
 	<message xml:lang="fr">Paramétrable</message>
 </label>
 <label define="AM_CREATE">
