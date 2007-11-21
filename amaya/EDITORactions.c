@@ -2259,23 +2259,28 @@ void DoTableCreation (Document doc)
         }
 
       /* generate width style */
-      attrType.AttrTypeNum = HTML_ATTR_Style_;
-      attr = TtaNewAttribute (attrType);
-      if (profile == L_Basic)
+      if (TMAX_Width || profile == L_Basic)
         {
-          if (TMAX_Width)
-            sprintf (stylebuff, "width: 100%%; border: solid %dpx", TBorder);
+          attrType.AttrTypeNum = HTML_ATTR_Style_;
+          attr = TtaNewAttribute (attrType);
+          if (profile == L_Basic)
+            {
+              if (TMAX_Width)
+                sprintf (stylebuff, "width: 100%%; border: solid %dpx", TBorder);
+              else
+                sprintf (stylebuff, "border: solid %dpx", TBorder);
+            }
+          else if (TMAX_Width)
+            strcpy (stylebuff, "width: 100%");
           else
-            sprintf (stylebuff, "border: solid %dpx", TBorder);
+            stylebuff[0] = EOS;
+          TtaAttachAttribute (el, attr, doc);
+          TtaSetAttributeText (attr, stylebuff, el, doc);	 
+          /* check if we have to load CSS */
+          TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+          if (loadcss)
+            ParseHTMLSpecificStyle (el, stylebuff, doc, 1000, FALSE);
         }
-      else if (TMAX_Width)
-        strcpy (stylebuff, "width: 100%");
-      TtaAttachAttribute (el, attr, doc);
-      TtaSetAttributeText (attr, stylebuff, el, doc);	       
-      /* check if we have to load CSS */
-      TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
-      if (loadcss)
-        ParseHTMLSpecificStyle (el, stylebuff, doc, 1000, FALSE);
 
       elType.ElTypeNum = HTML_EL_Table_cell;
       cell = TtaSearchTypedElement (elType, SearchInTree, el);
