@@ -7947,8 +7947,8 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
                      *itemTemplateAppend = NULL,
                      *oldInsert = NULL,
                      *oldAppend = NULL;
-      wxMenu         *menuTemplateInsert = new wxMenu,
-                     *menuTemplateAppend = new wxMenu;
+      wxMenu         *menuTemplateInsert = NULL,
+                     *menuTemplateAppend = NULL;
 
 #endif /* TEMPLATES */
       
@@ -7967,7 +7967,7 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
         {
           TtaGiveFirstSelectedElement(doc, &el, &firstChar, &lastChar);
           
-          if(el)
+          if(el && !TtaIsLeaf(TtaGetElementType(el)))
             {
               menuTemplateInsert = new wxMenu;
               menuTemplateAppend = new wxMenu;
