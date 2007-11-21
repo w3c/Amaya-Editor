@@ -1125,11 +1125,11 @@ void StopTextureScale ( int texture_id )
   Drawpixel Method for software implementation, as it's much faster for those
   Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
-static void GL_TextureInit (unsigned char *Image,   int width, int height)
+static void GL_TextureInit (unsigned char *image,  int width, int height)
 {
   /* We give te texture to opengl Pipeline system */
   glTexImage2D (GL_TEXTURE_2D, 0, GL_ALPHA, width, height, 0,
-                GL_ALPHA, GL_UNSIGNED_BYTE,(GLvoid *) Image);
+                GL_ALPHA, GL_UNSIGNED_BYTE,(GLvoid *) image);
 }
 
 /*----------------------------------------------------------------------
@@ -1138,13 +1138,13 @@ static void GL_TextureInit (unsigned char *Image,   int width, int height)
   Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
 static void GL_TextMap (float x, float y, int width, int height,
-                        int Texture_w, int Texture_h)
+                        int texture_w, int texture_h)
 {
   float GL_w, GL_h;
   int xFrame, yFrame;
 
-  GL_w =/* SUPERSAMPLING*/ ((float)width / (float)Texture_w);  
-  GL_h = /*SUPERSAMPLING*/ ((float)height / (float)Texture_h);
+  GL_w =/* SUPERSAMPLING*/ ((float)width / (float)texture_w);  
+  GL_h = /*SUPERSAMPLING*/ ((float)height / (float)texture_h);
   xFrame = (int) x;
   yFrame = (int) y;
   glBegin (GL_QUADS); 
@@ -1175,9 +1175,9 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   GL_font            *font;
   GL_glyph           *glyph;
   Char_Cache_index   *cache;
-  unsigned char      *data;
-  float		      maxy, miny, shift, xorg;
-  int                 Width, Height, width, bitmap_alloc;
+  unsigned char      *data = NULL;
+  float		            maxy, miny, shift, xorg;
+  int                 w, h, width, bitmap_alloc;
   register int        pen_x, n;
  
   if (text == NULL) 
@@ -1237,8 +1237,8 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
     }
   
   maxy = maxy - miny;
-  Height = (p2 ((int) maxy));
-  Width = 0;
+  h = (p2 ((int) maxy));
+  w = 0;
   
   /*shift if the first pos is neg */
   if (bitmap_pos[0].x < 0)
@@ -1252,15 +1252,15 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
     if (bitmaps[n])
       {
         width = (int) (bitmap_pos[n].x + shift + bitmaps[n]->dimension.x);
-        Width = (p2 (width));
+        w = (p2 (width));
         break;
       }
     else 
       n--;  
-  if (Height <= 0 || Width <= 0 || fabs (miny - 10000) < 0.0001)
+  if (h <= 0 || w <= 0 || fabs (miny - 10000) < 0.0001)
     return 0;
   
-  bitmap_alloc = (sizeof (unsigned char) * Height * Width) + 4;
+  bitmap_alloc = (sizeof (unsigned char) * h * w) + 4;
   if (bitmap_alloc >= MAX_BITMAP_ALLOC)
     {
       data = (unsigned char *)TtaGetMemory (bitmap_alloc); 
@@ -1280,7 +1280,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
                         (int) (bitmap_pos[n].y - miny),
                         (int) bitmaps[n]->dimension.x, 
                         (int) bitmaps[n]->dimension.y, 
-                        Width,
+                        w,
                         // if it's the first lettre just copy the bitmap without testing the pixels
                         (n == 0) ||
                         // OR
@@ -1302,13 +1302,13 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   /* if notinfeedbackmode (we draw draw something) then */
   /* throw bitmap data to OpenGL */
   if (GL_NotInFeedbackMode ())
-    GL_TextureInit (data, Width, Height);
+    GL_TextureInit (data, w, h);
   if (data && bitmap_alloc >= MAX_BITMAP_ALLOC)
     TtaFreeMemory (data);
 
   /* now map the created texture on a quad */
   y -= SUPERSAMPLING (maxy + miny);
-  GL_TextMap ((x - SUPERSAMPLING(shift)), y, width, (int) maxy, Width, Height);
+  GL_TextMap ((x - SUPERSAMPLING(shift)), y, width, (int) maxy, w, h);
   
   /* If there is no cache we must free
      allocated glyphs   */
