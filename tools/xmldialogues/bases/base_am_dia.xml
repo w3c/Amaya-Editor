@@ -876,7 +876,7 @@
 <label define="BSaveAll">
 	<message xml:lang="en">Save All</message>
 	<message xml:lang="fr">Enregistrer tout</message>
-	<message xml:lang="es">Guardar toto</message>
+	<message xml:lang="es">Guardar todo</message>
 </label>
 <label define="BSynchro">
 	<message xml:lang="en">S&amp;ynchronize</message>

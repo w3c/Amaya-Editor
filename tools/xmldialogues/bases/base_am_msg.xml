@@ -6524,6 +6524,7 @@
 <label define="AM_CREATE_BY_CLICK">
 	<message xml:lang="en">Create the link by click</message>
 	<message xml:lang="fr">Créer le lien en cliquant</message>
+	<message xml:lang="es">Crear el enlace haciendo clic en el destino</message>
 </label>
 <label define="AM_DELETE_LINK">
 	<message xml:lang="en">Delete link</message>
@@ -6544,30 +6545,37 @@
 <label define="AM_REMOVE_XTIGER">
 	<message xml:lang="en">Save without template</message>
 	<message xml:lang="fr">Sauver sans modèle</message>
+	<message xml:lang="es">Guardar sin plantilla</message>
 </label>
 <label define="AM_USE_THEME">
 	<message xml:lang="en">With theme ...</message>
 	<message xml:lang="fr">Avec le thème ...</message>
+	<message xml:lang="es">Con tema ...</message>
 </label>
 <label define="AM_MAX_WIDTH">
 	<message xml:lang="en">Full width</message>
 	<message xml:lang="fr">Pleine largeur</message>
+	<message xml:lang="es">Ancho 100%</message>
 </label>
 <label define="AM_CAPTION">
-<message xml:lang="en">With caption</message>
-<message xml:lang="fr">Avec une légende</message>
+	<message xml:lang="en">With caption</message>
+	<message xml:lang="fr">Avec une légende</message>
+	<message xml:lang="es">Con leyenda</message>
 </label>
 <label define="AM_SIZE">
-<message xml:lang="en">Size</message>
-<message xml:lang="fr">Dimension</message>
+	<message xml:lang="en">Size</message>
+	<message xml:lang="fr">Dimension</message>
+	<message xml:lang="es">Tamaño</message>
 </label>
 <label define="AM_POSITION">
 <message xml:lang="en">Position</message>
 <message xml:lang="fr">Position</message>
+	<message xml:lang="es">Posición</message>
 </label>
 <label define="AM_XML_EDIT">
-<message xml:lang="en">XML editing mode</message>
-<message xml:lang="fr">Mode d'édition XML</message>
+	<message xml:lang="en">XML editing mode</message>
+	<message xml:lang="fr">Mode d'édition XML</message>
+	<message xml:lang="es">Modo de edición XML</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
