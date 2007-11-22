@@ -1741,6 +1741,8 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table,
   int                 width, percent;
   ThotBool            reformat;
 
+  if (FrameTable[frame].FrView != 1)
+    return FALSE;
   box = cell->AbBox;
   GiveCellWidths (cell, frame, &min, &max, &width, &percent);
   if (width && width < min)

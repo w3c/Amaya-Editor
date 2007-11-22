@@ -612,10 +612,11 @@ BOXES
                 Visibility: 0;
         IN Alternate_view
                 Visibility: 0;
-        IN Links_view
-                Visibility: 5;
+        IN Links_view BEGIN
+           Visibility: 5;
+           END;
         IN Table_of_contents
-                Visibility: 5;
+           Visibility: 5;
         END;
 #endif
 
@@ -4607,6 +4608,16 @@ RULES
                 HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
                 Width: Right = Enclosing . Right;
                 END;
+        IN Links_view BEGIN
+                PaddingTop: 0;
+                PaddingRight: 0;
+                PaddingBottom: 0;
+                PaddingLeft: 0;
+                VertPos : Top = Previous AnyElem . Bottom;
+                HorizPos: Left = Enclosing . Left;
+                Width: Enclosed. Width;
+                Height: Enclosed . Height;
+                END;
         END;
 
  Heading_cell:
@@ -4653,6 +4664,15 @@ RULES
                 VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
                 Width: Right = Enclosing . Right;
+                END;
+        IN Links_view BEGIN
+                PaddingTop: 0;
+                PaddingRight: 0;
+                PaddingBottom: 0;
+                PaddingLeft: 0;
+                VertPos: Top = Previous AnyElem. Bottom;
+                HorizPos: Left = Enclosing . Left;
+                Width: Enclosed . Width;
                 END;
         END;
 
@@ -5738,6 +5758,9 @@ ATTRIBUTES
         IN Alternate_view BEGIN
            Width: Enclosing . Width;
            END;
+        IN Links_view BEGIN
+           Width: Enclosing . Width;
+           END;
         END;
 
  IntWidthPercent:
@@ -5761,6 +5784,9 @@ ATTRIBUTES
                 Width: Right = Enclosing . Right;
                 END;
           if not Data_cell and not Heading_cell
+           Width: Enclosing . Width;
+           END;
+        IN Links_view BEGIN
            Width: Enclosing . Width;
            END;
         END;
@@ -6632,6 +6658,12 @@ ATTRIBUTES
                 PaddingBottom: 0;
                 PaddingLeft: 0;
                 END;
+        IN Links_view BEGIN
+                PaddingTop: 0;
+                PaddingRight: 0;
+                PaddingBottom: 0;
+                PaddingLeft: 0;
+                END;
         END;
 
  cellpadding (Heading_cell):
@@ -6647,6 +6679,12 @@ ATTRIBUTES
                 PaddingLeft: 0;
                 END;
         IN Alternate_view BEGIN
+                PaddingTop: 0;
+                PaddingRight: 0;
+                PaddingBottom: 0;
+                PaddingLeft: 0;
+                END;
+        IN Links_view BEGIN
                 PaddingTop: 0;
                 PaddingRight: 0;
                 PaddingBottom: 0;
@@ -6749,6 +6787,10 @@ ATTRIBUTES
                 Width: Right = Enclosing . Right;
                 HorizPos: Left = Previous . Left + STRUCT_INDENT;
                 END;
+        IN Links_view BEGIN
+                HorizPos: Left = Enclosing . Left;
+                Width: Enclosed . Width;
+                END;
         END;
 
  ColExt:
@@ -6759,6 +6801,10 @@ ATTRIBUTES
         IN Alternate_view BEGIN
                 Width: Right = Enclosing . Right;
                 HorizPos: Left = Previous . Left + STRUCT_INDENT;
+                END;
+        IN Links_view BEGIN
+                Width: Enclosed . Width;
+                HorizPos: Left = Enclosing . Left;
                 END;
         END;
 
@@ -6773,6 +6819,11 @@ ATTRIBUTES
                 Depth: 0;
                 END;        
         IN Alternate_view BEGIN
+                Height: Enclosed . Height;
+                VertOverflow: No;
+                Depth: 0;
+                END;        
+        IN Links_view BEGIN
                 Height: Enclosed . Height;
                 VertOverflow: No;
                 Depth: 0;
@@ -7074,6 +7125,8 @@ ATTRIBUTES
                 VertPos: Top = Previous . Bottom;
         IN Alternate_view
                 VertPos: Top = Previous . Bottom;
+        IN Links_view
+                VertPos: Top = Previous . Bottom;
         END;
  Row_valign (Heading_cell) = Row_top :
         BEGIN
@@ -7081,6 +7134,8 @@ ATTRIBUTES
         IN Structure_view
                 VertPos: Top = Previous . Bottom;
         IN Alternate_view
+                VertPos: Top = Previous . Bottom;
+        IN Links_view
                 VertPos: Top = Previous . Bottom;
         END;
  Row_valign = Row_top :
@@ -7093,6 +7148,8 @@ ATTRIBUTES
                 VertPos: Top = Previous . Bottom;
         IN Alternate_view
                 VertPos: Top = Previous . Bottom;
+        IN Links_view
+                VertPos: Top = Previous . Bottom;
         END;
  Row_valign (Heading_cell) = Row_middle :
         BEGIN
@@ -7100,6 +7157,8 @@ ATTRIBUTES
         IN Structure_view
                 VertPos: Top = Previous . Bottom;
         IN Alternate_view
+                VertPos: Top = Previous . Bottom;
+        IN Links_view
                 VertPos: Top = Previous . Bottom;
         END;
  Row_valign = Row_middle :
@@ -7112,6 +7171,8 @@ ATTRIBUTES
                 VertPos: Top = Previous . Bottom;
         IN Alternate_view
                 VertPos: Top = Previous . Bottom;
+        IN Links_view
+                VertPos: Top = Previous . Bottom;
         END;
  Row_valign (Heading_cell) = Row_bottom :
         BEGIN
@@ -7119,6 +7180,8 @@ ATTRIBUTES
         IN Structure_view
                 VertPos: Top = Previous . Bottom;
         IN Alternate_view
+                VertPos: Top = Previous . Bottom;
+        IN Links_view
                 VertPos: Top = Previous . Bottom;
         END;
  Row_valign = Row_bottom :
@@ -7129,6 +7192,8 @@ ATTRIBUTES
         VertPos : HRef = Previous AnyElem . HRef;
         IN Structure_view
                 VertPos: Top = Previous . Bottom;
+        IN Links_view
+                VertPos: Top = Previous . Bottom;
         END;
  Row_valign (Heading_cell) = Row_baseline :
         BEGIN
@@ -7136,6 +7201,8 @@ ATTRIBUTES
         IN Structure_view
                 VertPos: Top = Previous . Bottom;
         IN Alternate_view
+                VertPos: Top = Previous . Bottom;
+        IN Links_view
                 VertPos: Top = Previous . Bottom;
         END;
  Row_valign = Row_baseline :
@@ -7149,6 +7216,8 @@ ATTRIBUTES
                 VertPos: Top = Previous . Bottom;
         IN Alternate_view
                 VertPos: Top = Previous . Bottom;
+        IN Links_view
+                VertPos: Top = Previous . Bottom;
         END;
 
  Cell_valign = Cell_middle :
@@ -7158,6 +7227,8 @@ ATTRIBUTES
         IN Structure_view
                 VertPos: Top = Previous . Bottom;
         IN Alternate_view
+                VertPos: Top = Previous . Bottom;
+        IN Links_view
                 VertPos: Top = Previous . Bottom;
         END;
 
@@ -7169,6 +7240,8 @@ ATTRIBUTES
                 VertPos: Top = Previous . Bottom;
         IN Alternate_view
                 VertPos: Top = Previous . Bottom;
+        IN Links_view
+                VertPos: Top = Previous . Bottom;
         END;
 
  Cell_valign = Cell_baseline :
@@ -7178,6 +7251,8 @@ ATTRIBUTES
         IN Structure_view
                 VertPos: Top = Previous . Bottom;
         IN Alternate_view
+                VertPos: Top = Previous . Bottom;
+        IN Links_view
                 VertPos: Top = Previous . Bottom;
         END;
 
@@ -7289,9 +7364,9 @@ ATTRIBUTES
         if not PICTURE_UNIT
                    CreateFirst(Target_gif);
 #endif
-        if Anchor BEGIN
-           CreateLast(ATTR_ID_ANCH);
-           CreateLast(VALUE_ID_ANCH);
+          CreateLast(ATTR_ID_ANCH);
+          CreateLast(VALUE_ID_ANCH);
+        {if Anchor BEGIN}
 #ifdef LINK_NUMBER
            CreateAfter(TargetPageNumber);
 #endif
@@ -7300,7 +7375,7 @@ ATTRIBUTES
            Underline: Underlined;
 #endif
 #endif
-           END;
+           {END;}
         IN Structure_view
            BEGIN
            if Anchor BEGIN
@@ -7308,8 +7383,10 @@ ATTRIBUTES
                 Underline: Enclosing =;
                 END;
            END;
-        IN Alternate_view
-           BEGIN
+        IN Links_view BEGIN
+           visibility: 7;
+           END;
+        IN Alternate_view BEGIN
            if Anchor BEGIN
                 Foreground: Enclosing =;
                 Underline: Enclosing =;
