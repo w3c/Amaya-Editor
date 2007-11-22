@@ -3887,6 +3887,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                 pAb->AbFontVariant = 1;
                 break;
               }
+          break;
         case PtFont:
           c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
           if (!appl && pEl->ElParent == NULL)
