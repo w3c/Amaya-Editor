@@ -1586,7 +1586,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 nbcar, x, y, y1;
   int                 lgspace, whitespace;
   int                 fg, bg, fgbox, bgbox;
-  int                 width, xpos;
+  int                 width, xpos, underline_width;
   int                 left, right, variant;
   ThotBool            shadow;
   ThotBool            blockbegin, withinSel = FALSE;
@@ -1684,6 +1684,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       width = pBox->BxW;
       if (width < 0)
         width = 0;
+      underline_width = width;
       whitespace = BoxCharacterWidth (SPACE, 1, font);
       lgspace = pBox->BxSpaceWidth;
       if (lgspace == 0)
@@ -2201,9 +2202,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
                   if (underline_id)
                     StopTextureScale (underline_id);
                   underline_id = SetTextureScale (IsBoxDeformed(pBox));
-                  DisplayUnderline (frame, x, y+t, pBox->BxH, pBox->BxUnderline, width, fg);
+                  DisplayUnderline (frame, x, y+t, pBox->BxH, pBox->BxUnderline,
+                                    underline_width, fg);
 #else /* _GL */
-                  DisplayUnderline (frame, x, y+t, pBox->BxH, pBox->BxUnderline, width, fg);
+                  DisplayUnderline (frame, x, y+t, pBox->BxH, pBox->BxUnderline,
+                                    underline_width, fg);
 #endif /* _GL */
                 }
               nbcar = 0;
