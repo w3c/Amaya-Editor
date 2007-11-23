@@ -3804,6 +3804,14 @@
   <message xml:lang="es">Tema</message>
   <message xml:lang="fr">Thème</message>
 </label>
+<label define="TMSG_INSERT_MODE_XML">
+  <message xml:lang="en">XML</message>
+  <message xml:lang="fr">XML</message>
+</label>
+<label define="TMSG_INSERT_MODE_TEXT">
+  <message xml:lang="en">Text</message>
+  <message xml:lang="fr">Texte</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

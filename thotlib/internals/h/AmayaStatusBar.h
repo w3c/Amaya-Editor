@@ -34,12 +34,14 @@ class AmayaStatusBar : public wxStatusBar
   DECLARE_EVENT_TABLE()
   void OnLogErrorButton(wxCommandEvent& event);
   void OnSize(wxSizeEvent& event);
-
+  void OnUpdateUI(wxUpdateUIEvent& event);
+  
  protected:
   enum
     {
       Field_Path,
       Field_Text,
+      Field_InsertMode,
       Field_LogError,
       Field_Max
     };

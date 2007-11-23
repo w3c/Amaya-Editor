@@ -252,6 +252,8 @@
 #define TMSG_ZoomIn		247
 #define TMSG_ZoomOut		248
 #define TMSG_THEME		249
-#define TMSG_LIB_MSG_MAX		250
+#define TMSG_INSERT_MODE_XML		250
+#define TMSG_INSERT_MODE_TEXT		251
+#define TMSG_LIB_MSG_MAX		252
 
 #endif

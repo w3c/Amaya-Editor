@@ -35,6 +35,7 @@
 #include "AmayaParams.h"
 #include "appdialogue_wx_f.h"
 #include "displayview_f.h"
+#include "unstructchange_f.h"
 
 #include "AmayaStatusBar.h"
 /* the log button should be shifted on MacOS platforms */
@@ -52,6 +53,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaStatusBar, wxStatusBar)
 BEGIN_EVENT_TABLE(AmayaStatusBar, wxStatusBar)
   EVT_BUTTON( -1, AmayaStatusBar::OnLogErrorButton )
   EVT_SIZE( AmayaStatusBar::OnSize )
+  EVT_UPDATE_UI(wxID_ANY, AmayaStatusBar::OnUpdateUI)
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -74,7 +76,7 @@ AmayaStatusBar::AmayaStatusBar( wxWindow * p_parent )
   m_pathCtrl = new AmayaPathControl(this, wxID_ANY);
 
   // setup statusbar attributes
-  static const int widths[Field_Max] = { -1, -1, m_pLogErrorButton->GetSize().GetWidth()+LOG_SHIFT};
+  static const int widths[Field_Max] = { -1, -1, 48, m_pLogErrorButton->GetSize().GetWidth()+LOG_SHIFT};
   SetFieldsCount(Field_Max);
   SetStatusWidths(Field_Max, widths);
   SetMinHeight(m_pLogErrorButton->GetSize().GetHeight()+4);
@@ -157,6 +159,16 @@ void AmayaStatusBar::SetSelectedElement(Element elem)
 void AmayaStatusBar::SetStatusText(const wxString& text, int i)
 {
   wxStatusBar::SetStatusText(text, Field_Text);
+}
+
+/*----------------------------------------------------------------------
+  OnUpdateUI
+  ----------------------------------------------------------------------*/
+void AmayaStatusBar::OnUpdateUI(wxUpdateUIEvent& event)
+{
+  static wxString xml = TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_INSERT_MODE_XML));
+  static wxString txt = TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_INSERT_MODE_TEXT));
+  wxStatusBar::SetStatusText(IsXMLEditMode()?xml:txt, Field_InsertMode);
 }
 
 #endif /* _WX */
