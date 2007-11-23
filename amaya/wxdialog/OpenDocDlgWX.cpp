@@ -32,15 +32,19 @@ static char    *compound_string;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(OpenDocDlgWX, AmayaDialog)
-  EVT_BUTTON(XRCID("wxID_OK"),              OpenDocDlgWX::OnOpenButton )
-  EVT_BUTTON(XRCID("wxID_CLEAR"),           OpenDocDlgWX::OnClearButton )
-  EVT_BUTTON(XRCID("wxID_CANCEL"),          OpenDocDlgWX::OnCancelButton )
-  EVT_BUTTON(XRCID("wxID_BUTTON_DIR"),      OpenDocDlgWX::OnDirButton )
-  EVT_BUTTON(XRCID("wxID_BUTTON_FILENAME"), OpenDocDlgWX::OnFilenameButton )
-  EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),   OpenDocDlgWX::OnOpenButton )
-  EVT_COMBOBOX(XRCID("wxID_COMBOBOX"),      OpenDocDlgWX::OnURLSelected )
-  EVT_COMBOBOX(XRCID("wxID_PROFILE"),       OpenDocDlgWX::OnProfileSelected )
-  EVT_CHECKBOX(XRCID("wxID_USE_TEMPLATE"),  OpenDocDlgWX::OnUseTemplate )
+  EVT_BUTTON(XRCID("wxID_OK"),                    OpenDocDlgWX::OnOpenButton )
+  EVT_BUTTON(XRCID("wxID_CLEAR"),                 OpenDocDlgWX::OnClearButton )
+  EVT_BUTTON(XRCID("wxID_CANCEL"),                OpenDocDlgWX::OnCancelButton )
+  EVT_BUTTON(XRCID("wxID_BUTTON_DIR"),            OpenDocDlgWX::OnDirButton )
+  EVT_BUTTON(XRCID("wxID_BUTTON_FILENAME"),       OpenDocDlgWX::OnFilenameButton )
+  EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),         OpenDocDlgWX::OnOpenButton )
+  EVT_COMBOBOX(XRCID("wxID_COMBOBOX"),            OpenDocDlgWX::OnURLSelected )
+  EVT_COMBOBOX(XRCID("wxID_PROFILE"),             OpenDocDlgWX::OnProfileSelected )
+  EVT_CHECKBOX(XRCID("wxID_USE_TEMPLATE"),        OpenDocDlgWX::OnUseTemplate )
+  EVT_COMBOBOX(XRCID("wxID_TEMPLATEFILENAME"),    OpenDocDlgWX::OnTemplateSelected )
+  EVT_TEXT_ENTER(XRCID("wxID_TEMPLATEFILENAME"),  OpenDocDlgWX::OnTemplateSelected )
+  EVT_BUTTON(XRCID("wxID_BUTTON_TEMPLATE"),       OpenDocDlgWX::OnTemplateButton )
+
 END_EVENT_TABLE()
 
 
@@ -104,7 +108,6 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   MyRef = ref;
   Ref_doc = doc;
   GetTemplatesConf ();
-  m_UseTemplate = false;
   compound_string = TtaGetMessage(AMAYA,AM_COMPOUND_DOCUMENT);
 
   // update dialog labels with given ones
@@ -359,18 +362,7 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnUseTemplate( wxCommandEvent& event )
 {
-  // the user cannot change the profile of a template
-  if (m_UseTemplate)
-    {
-      XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Show();
-      XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Show();
-    }
-  else
-    {
-      XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Hide();
-      XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Hide();
-    }
-  m_UseTemplate = !m_UseTemplate;
+  UseTemplate(event.IsChecked());
 }
 
 
@@ -391,7 +383,7 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
     return;
 
   // get the template path
-  if (m_UseTemplate)
+  if (TemplateUsed())
     {
       value = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue( );
       value = value.Trim(TRUE).Trim(FALSE);
@@ -563,5 +555,63 @@ void OpenDocDlgWX::OnProfileSelected( wxCommandEvent& event )
         }
     }
 }
+
+/*----------------------------------------------------------------------
+  Class:  OpenDocDlgWX
+  Method:  OnTemplateSelected
+  ----------------------------------------------------------------------*/
+void OpenDocDlgWX::OnTemplateSelected( wxCommandEvent& event )
+{
+  UseTemplate(true);
+}
+
+
+/*----------------------------------------------------------------------
+  Class:  OpenDocDlgWX
+  Method:  TemplateUsed
+  Test if templates are used.
+  ----------------------------------------------------------------------*/
+bool OpenDocDlgWX::TemplateUsed()const
+{
+  return XRCCTRL(*this, "wxID_USE_TEMPLATE", wxCheckBox)->GetValue();
+}
+
+/*----------------------------------------------------------------------
+  Class:  OpenDocDlgWX
+  Method:  UseTemplate
+  Set if template are used
+  ----------------------------------------------------------------------*/
+void OpenDocDlgWX::UseTemplate(bool use)
+{
+  XRCCTRL(*this, "wxID_USE_TEMPLATE", wxCheckBox)->SetValue(use);
+  
+  XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Show(!use);
+  XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Show(!use);
+}
+
+/*----------------------------------------------------------------------
+  Class:  OpenDocDlgWX
+  Method:  OnTemplateButton
+  Show a FileDialog to choose a template file
+  ----------------------------------------------------------------------*/
+void OpenDocDlgWX::OnTemplateButton( wxCommandEvent& event )
+{
+  wxFileName path = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue();
+  
+  
+  
+  
+  wxFileDialog dlg(this, TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
+                         path.GetPath(), path.GetFullName(), _T("Templates (*.xtd)|*.xtd"),
+                         wxOPEN | wxCHANGE_DIR);
+  
+  if (dlg.ShowModal() == wxID_OK)
+    {
+      path = dlg.GetPath();
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue(path.GetFullPath());
+      UseTemplate(true);
+    }
+}
+
 
 #endif /* _WX */

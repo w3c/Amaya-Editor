@@ -31,6 +31,9 @@ public:
     
   // Destructor.                  
   virtual ~OpenDocDlgWX();
+  
+  bool TemplateUsed()const;
+  void UseTemplate(bool use);
 
 private:
   // Any class wishing to process wxWindows events must use this macro
@@ -44,11 +47,12 @@ private:
   void OnURLSelected( wxCommandEvent& event );
   void OnProfileSelected( wxCommandEvent& event );
   void OnUseTemplate( wxCommandEvent& event );
-
+  void OnTemplateSelected( wxCommandEvent& event );
+  void OnTemplateButton( wxCommandEvent& event );
+  
  private:
   wxString m_Filter;
   bool     m_LockUpdateFlag;
-  bool     m_UseTemplate;
   int *    m_pLastUsedFilter;
   wxString m_DirSep;
 };
