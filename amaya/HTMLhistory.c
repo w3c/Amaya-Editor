@@ -11,9 +11,7 @@
  *
  */
 
-#ifdef _WX
 #include "wx/wx.h"
-#endif /* _WX */
  
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -21,22 +19,16 @@
 #include "css.h"
 #include "MENUconf.h"
 
-#ifdef _WINGUI
-#include "wininclude.h"
-#endif /* _WINGUI */
-#
 #include "AHTURLTools_f.h"
 #include "HTMLhistory_f.h"
 #include "HTMLsave_f.h"
 #include "init_f.h"
 #include "MENUconf_f.h"
 
-#ifdef _WX
 #include "wx/msgdlg.h"
 #include "wx/aboutdlg.h"
 #include "message_wx.h"
 #include "registry_wx.h"
-#endif /* _WX */
 
 #define DOC_HISTORY_SIZE 32
 
@@ -875,38 +867,12 @@ void HelpAmaya (Document document, View view)
   TtaWriteClose (list);
 #endif /* AMAYA_DEBUG */
 
-#if defined(_GTK)
-  TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view),
-                     (char *)TtaGetAppName(), 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
-#endif  /* #if defined(_GTK) */
-   
-  strcpy (localname, TtaGetAppName());
-  strcat (localname, " - ");
-  strcat (localname, TtaGetAppVersion());
-  strcat (localname, "     ");
-  strcat (localname, TtaGetAppDate());
-   
-#if defined(_GTK)
-  TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
-  TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
-              TtaGetMessage(AMAYA, AM_ABOUT1));
-  TtaNewLabel(BaseDialog + About2, BaseDialog + AboutForm,
-              TtaGetMessage(AMAYA, AM_ABOUT2));
-  TtaShowDialogue (BaseDialog + AboutForm, FALSE);
-#endif /* #if defined(_GTK) */
 
-#ifdef _WINGUI
-  CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname,
-                       TtaGetMessage(AMAYA, AM_ABOUT1),
-                       TtaGetMessage(AMAYA, AM_ABOUT2));
-#endif /* _WINGUI */
-
-#ifdef _WX
   wxIcon icon(TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "logo.png"), wxBITMAP_TYPE_PNG);
   
   wxAboutDialogInfo info;
   info.SetName(TtaConvMessageToWX(TtaGetAppName()));
-  info.SetVersion(TtaConvMessageToWX(TtaGetAppVersion()));
+  info.SetVersion(TtaConvMessageToWX(TtaGetAppVersion()) + wxT(" (") + TtaConvMessageToWX(TtaGetAppDate()) + wxT(")"));
   info.SetDescription(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT1)));
   info.SetCopyright(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT_COPYRIGHT)));
 // Dont work :
@@ -914,7 +880,6 @@ void HelpAmaya (Document document, View view)
   info.SetIcon(icon);
   wxAboutBox(info);
   
-#endif /* _WX */
 }
 
 
@@ -926,15 +891,10 @@ void HelpAtW3C (Document document, View view)
 
   strcpy (localname, AMAYA_PAGE_DOC);
   strcat (localname, "BinDist.html");
-#ifdef _WX
   LoadDefaultOpeningLocation (TRUE); //in new frame
   document = GetAmayaDoc (localname, NULL, document, document,
                           CE_HELP,
                           FALSE, NULL, NULL);
-#else /* _WX */
-  document = GetAmayaDoc (localname, NULL, 0, 0, CE_HELP,
-                          FALSE, NULL, NULL);
-#endif /* _WX */
   InitDocHistory (document);
 }
 
@@ -957,14 +917,9 @@ void HelpLocal (Document doc, View view)
         /* get the standard english documentation */
         sprintf (localname, "%s%camaya%c%s", s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
     }
-#ifdef _WX
   LoadDefaultOpeningLocation (TRUE); // in new frame
   document = GetAmayaDoc (localname, NULL, doc, doc, CE_HELP,
                           FALSE, NULL, NULL);
-#else /* _WX */
-  document = GetAmayaDoc (localname, NULL, 0, 0, CE_HELP,
-                          FALSE, NULL, NULL);
-#endif /* _WX */
   InitDocHistory (document);
 }
 
@@ -979,11 +934,7 @@ static void DisplayHelp (int doc, int index)
   char       *helpdir;
   Element     root;
 
-#ifdef _WX
   helpdir = "WX";
-#else /* _WX */
-  helpdir = "html";
-#endif /* _WX */
   lang = TtaGetVarLANG ();
   s = TtaGetEnvString ("THOTDIR");
   if (s != NULL)
@@ -997,14 +948,9 @@ static void DisplayHelp (int doc, int index)
         sprintf (localname, "%s%cdoc%c%s%c%s", s, DIR_SEP, DIR_SEP,
                  helpdir, DIR_SEP, Manual[index]);
     }
-#ifdef _WX
   LoadDefaultOpeningLocation (TRUE); //in new frame
   document = GetAmayaDoc (localname, NULL, doc, doc, CE_HELP,
                           FALSE, NULL, NULL);
-#else /* _WX */
-  document = GetAmayaDoc (localname, NULL, 0, 0, CE_HELP,
-                          FALSE, NULL, NULL);
-#endif /* _WX */
   /* Set the Help document in ReadOnly mode */
   root = TtaGetMainRoot (document);
   TtaSetAccessRight (root, ReadOnly, document);
