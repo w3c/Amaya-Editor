@@ -258,12 +258,6 @@ typedef enum _ClickEvent {
 #define AddSVGModel              4
 #define NewSVGFileURL            5
 #define SVGLibCatalogueTitle     6
-#define SVGLibraryLabel          7
-#define SVGLibraryLabel1         8
-#define SVGLibraryLabel2         9
-#define SVGLibraryLabel3        10
-#define SVGLibraryLabel4        11
-#define NewSVGLibraryTitle      12
 #define NewSVGLibrary           13
 #define SVGLibraryURL           14
 #define SVGLibraryDir           15
@@ -275,21 +269,9 @@ typedef enum _ClickEvent {
 #define LIBRARY_MAX_REF         21
 
 #define ImageURL	1
-#define ImageLabel	2
-#define ImageLabel2	3
-#define ImageLabel3	4
-#define ImageLabel4	5
-#define ImageDir	6
-#define ImageSel	7
-#define ImageFilter     8
-#define FormImage	9
-#define RepeatImage    10
-#define FormBackground 11
-#define ImageAlt       12
-#define FormAlt        13
-#define FormObject     14
-#define ImageType      15
-#define IMAGE_MAX_REF  16
+#define FormImage	      2
+#define FormObject      3
+#define IMAGE_MAX_REF   4
 
 #define CSSForm         0
 #define CSSSelect       1

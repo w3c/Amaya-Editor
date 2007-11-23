@@ -6607,6 +6607,7 @@ void InitAmaya (NotifyEvent * event)
     ptr = NULL;
 
   /* Initialize environment variables if they are not defined */
+  TtaSetEnvString ("DOCUMENT_CHARSET", "iso-8859-1", FALSE);
   TtaSetEnvBoolean ("SHOW_MAP_AREAS", FALSE, FALSE);
   TtaSetEnvBoolean ("SHOW_TARGET", FALSE, FALSE);
   TtaSetEnvBoolean ("LOAD_IMAGES", TRUE, FALSE);

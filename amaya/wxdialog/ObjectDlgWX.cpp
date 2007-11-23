@@ -141,26 +141,29 @@ void ObjectDlgWX::OnOpenButton( wxCommandEvent& event )
 
   // get the current url
   wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
-  wxASSERT( url.Len() < MAX_LENGTH );
+  if (url.Len() == 0)
+    {
+      Waiting = 0;
+      ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+      return;
+    }
+
   strcpy( buffer, (const char*)url.mb_str(wxConvUTF8) );
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseImage + ImageURL,  STRING_DATA, (char *)buffer );
 
   // get the current alt
   wxString alt = XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->GetValue( );
-  wxASSERT( alt.Len() < 512 );
-  strcpy( Alt, (const char*)alt.mb_str(wxConvUTF8) );
-  // give the new url to amaya (to do url completion)
-  ThotCallback (BaseImage + ImageAlt,  STRING_DATA, (char *)Alt );
-
-  if (Alt[0] == EOS)
+  if (alt.Len() == 0)
     XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT_MISSING) ));
   else
      {
        // load the image
        // return done
        Waiting = 0;
-       ThotCallback (MyRef, INTEGER_DATA, (char*)1);
+       strncpy (ImgAlt, (const char*)alt.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+       ImgAlt[MAX_LENGTH - 1] = EOS;
+       ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
      }
 }
 

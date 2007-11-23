@@ -107,7 +107,13 @@ void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
 
   // get the current url
   wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
-  wxASSERT( url.Len() < MAX_LENGTH );
+  if (url.Len() == 0)
+    {
+      Waiting = 0;
+      ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+      return;
+    }
+
   strcpy( Buffer, (const char*)url.mb_str(wxConvUTF8) );
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseImage + ImageURL,  STRING_DATA, (char *)Buffer );
@@ -124,14 +130,12 @@ void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
           return;
         }
       else
-        ThotCallback (BaseImage + ImageAlt,  STRING_DATA, "");
+        ImgAlt[MAX_LENGTH - 1] = EOS;
     }
-
   else
     {
-      strncpy ( Alt, (const char*)alt.mb_str(wxConvUTF8), 512);
-      Alt[511] = EOS;
-      ThotCallback (BaseImage + ImageAlt,  STRING_DATA, (char *)Alt );
+      strncpy (ImgAlt, (const char*)alt.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+      ImgAlt[MAX_LENGTH - 1] = EOS;
     }
 
   // load the image

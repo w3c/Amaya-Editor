@@ -10,13 +10,7 @@ extern ThotBool IsCurrentSelectionSVG ( void );
 extern ThotBool IsCurrentSelectionContainsUseElement ( void );
 extern void AddNewModelIntoLibraryForm ( Document doc,
                                          View view );
-extern void CallbackLibrary ( int ref,
-                              int typedata,
-                              char *data );
 extern void CloseLibrary ( Document doc );
-extern void CreateNewLibraryDialog ( Document doc,
-                                     View view );
-extern void ShowLibraryBrowser ( void );
 extern int SVGLibraryListItemNumber ( char *buffer );
 extern char *IsSVGCatalogueExist ( char *data );
 extern void AddGraphicalObjectIntoCatalogue ( Document doc,
@@ -89,13 +83,7 @@ extern ThotBool IsCurrentSelectionSVG ( void );
 extern ThotBool IsCurrentSelectionContainsUseElement ( void );
 extern void AddNewModelIntoLibraryForm ( Document doc,
                                            View view );
-extern void CallbackLibrary ( int ref,
-                                int typedata,
-                                char *data );
 extern void CloseLibrary ( Document doc );
-extern void CreateNewLibraryDialog ( Document doc,
-                                       View view );
-extern void ShowLibraryBrowser ( void );
 extern int SVGLibraryListItemNumber ( char *buffer );
 extern char *IsSVGCatalogueExist ( char *data );
 extern void AddGraphicalObjectIntoCatalogue ( Document doc,
