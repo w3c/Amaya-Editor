@@ -311,9 +311,6 @@ RULES
 	LineWeight: 0;
 	Height: Enclosing . Height min;
 	Size: DOC_FONTSIZE;
-	PaddingBottom: 2 cm;
-	PaddingLeft: 0.5 cm;
-	PaddingRight: 0.5 cm;
 	IN Structure_view BEGIN
 		Visibility: 10;
 		Size: DOC_FONTSIZE;
@@ -329,10 +326,16 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
+	MarginBottom: 2 cm;
+	MarginLeft: 0.5 cm;
+	MarginRight: 0.5 cm;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+  	MarginBottom: 0;
+	  MarginLeft: 0;
+	  MarginRight: 0;
 	  END;
 	END;
 

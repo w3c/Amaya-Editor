@@ -7142,7 +7142,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                       if (ctxt->schema == NULL && att != 0)
                         ctxt->schema = TtaGetDocumentSSchema (doc);
                     }
-                  if (att == 0 && ctxt->schema == NULL)
+                  if (att == 0 && xmlType != XML_TYPE)
                     /* Attribute name not found: Search in the list of all
                        schemas loaded for this document */
                     {
@@ -7150,26 +7150,23 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                       TtaGetXmlAttributeType (attrnames[j], &attrType, doc);
                       att = attrType.AttrTypeNum;
                       if (att != 0)
-                        ctxt->schema = attrType.AttrSSchema;
+                        {
+                          ctxt->schema = attrType.AttrSSchema;
+                          schemaName = TtaGetSSchemaName(attrType.AttrSSchema);
+                        }
                     }
                   attrType.AttrSSchema = ctxt->schema;
                   attrType.AttrTypeNum = att;
-                  if (i == 0 && att == 0 && ctxt->schema == NULL)
+                  if (i == 0 && att == 0)
                     {
-                      /* Not found -> search in the list of loaded schemas */
-                      attrType.AttrSSchema = NULL;
-                      TtaGetXmlAttributeType (attrnames[j], &attrType, doc);
-                      att = attrType.AttrTypeNum;
-                      if (attrType.AttrSSchema)
-                        /* the element type concerns an imported nature */
-                        schemaName = TtaGetSSchemaName(attrType.AttrSSchema);
 #ifdef XML_GENERIC
-                      else if (xmlType == XML_TYPE)
+                      if (xmlType == XML_TYPE)
                         {
                           /* The attribute is not yet present in the tree */
                           /* Create a new global attribute */
                           attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
                           TtaAppendXmlAttribute (attrnames[j], &attrType, doc);
+                          att = attrType.AttrTypeNum;
                         }
 #endif /* XML_GENERIC */
                       if (attrType.AttrSSchema == NULL)
