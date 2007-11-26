@@ -27,6 +27,8 @@
 
 #include "wx/msgdlg.h"
 #include "wx/aboutdlg.h"
+#include "wx/wfstream.h"
+#include "wx/sstream.h"
 #include "message_wx.h"
 #include "registry_wx.h"
 
@@ -744,7 +746,8 @@ void AddDocHistory (Document doc, char *url, char *initial_url,
   ----------------------------------------------------------------------*/
 void HelpAmaya (Document document, View view)
 {
-  char                  localname[MAX_LENGTH];
+  char  localname[MAX_LENGTH];
+  char *s = TtaGetEnvString ("THOTDIR");
 #ifdef AMAYA_CRASH
   /* force amaya to crash : activate AMAYA_CRASH flag only for debug */
   memset(0,0,10);
@@ -878,6 +881,18 @@ void HelpAmaya (Document document, View view)
 // Dont work :
 //  info.SetWebSite(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT_WEBSITE)));
   info.SetIcon(icon);
+  
+  if (s != NULL)
+    {
+      /* get the welcome in the current language */
+      sprintf (localname, "%s%camaya%cCOPYRIGHT", s, DIR_SEP, DIR_SEP);
+      
+      wxFFile file(TtaConvMessageToWX(localname));
+      wxString str;
+      if(file.ReadAll(&str))
+        info.SetLicence(str);
+    }
+  
   wxAboutBox(info);
   
 }
