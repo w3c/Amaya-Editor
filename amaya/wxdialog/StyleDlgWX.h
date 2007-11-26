@@ -50,9 +50,8 @@ private:
 private:
   // "Color" tab
   wxColourData colour_data;
-  wxColour     m_OffColour;
-  wxColour     m_OnColour;
   int          m_ref;
+  wxColour     m_OffColour;
   static bool  m_OnApplyLock;
 };
 

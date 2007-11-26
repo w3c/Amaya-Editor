@@ -699,40 +699,27 @@
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxBitmapButton" name="wxID_BUTTON_NOREPEAT">
-                                <bitmap>../icons/16x16/BG_norepeat.png</bitmap>
-                                <tooltip>no-repeat</tooltip>
+                              <object class="wxToolBar" name="wxID_REPEAT_TOOL">
+                                <bitmapsize>16,16</bitmapsize>
+                                <margins>4,4</margins>
+                                <object class="tool" name="wxID_NOREPEAT">
+                                  <bitmap>../icons/16x16/BG_norepeat.png</bitmap>
+                                  <toggle>1</toggle>
+                                </object>
+                                <object class="tool" name="wxID_REPEAT">
+                                  <bitmap>../icons/16x16/BG_repeat.png</bitmap>
+                                  <toggle>1</toggle>
+                                </object>
+                                <object class="tool" name="wxID_XREPEAT">
+                                  <bitmap>../icons/16x16/BG_repeat_x.png</bitmap>
+                                  <toggle>1</toggle>
+                                </object>
+                                <object class="tool" name="wxID_YREPEAT">
+                                  <bitmap>../icons/16x16/BG_repeat_y.png</bitmap>
+                                  <toggle>1</toggle>
+                                </object>
+                                <separation>4</separation>
                               </object>
-                            </object>
-                            <object class="spacer">
-                              <size>5,0</size>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxBitmapButton" name="wxID_BUTTON_REPEAT">
-                                <bitmap>../icons/16x16/BG_repeat.png</bitmap>
-                                <tooltip>repeat</tooltip>
-                              </object>
-                            </object>
-                            <object class="spacer">
-                              <size>5,0</size>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxBitmapButton" name="wxID_BUTTON_XREPEAT">
-                                <bitmap>../icons/16x16/BG_repeat_x.png</bitmap>
-                                <tooltip>repeat-x</tooltip>
-                              </object>
-                            </object>
-                            <object class="spacer">
-                              <size>5,0</size>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxBitmapButton" name="wxID_BUTTON_YREPEAT">
-                                <bitmap>../icons/16x16/BG_repeat_y.png</bitmap>
-                                <tooltip>repeat-y</tooltip>
-                              </object>
-                            </object>
-                            <object class="spacer">
-                              <size>10,0</size>
                             </object>
                           </object>
                           <flag>wxALL|wxEXPAND</flag>

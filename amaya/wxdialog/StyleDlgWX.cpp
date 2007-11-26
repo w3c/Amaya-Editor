@@ -60,10 +60,10 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
 
   EVT_BUTTON( XRCID("wxID_BUTTON_BGIMAGE"),      StyleDlgWX::OnBrowseButton )
   EVT_BUTTON( XRCID("wxID_BUTTON_LISTIMAGE"),    StyleDlgWX::OnBrowseButton )
-  EVT_BUTTON( XRCID("wxID_BUTTON_NOREPEAT"),     StyleDlgWX::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_REPEAT"),       StyleDlgWX::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_XREPEAT"),      StyleDlgWX::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_YREPEAT"),      StyleDlgWX::OnButton )
+  EVT_TOOL( XRCID("wxID_NOREPEAT"),     StyleDlgWX::OnButton ) 
+  EVT_TOOL( XRCID("wxID_REPEAT"),       StyleDlgWX::OnButton ) 
+  EVT_TOOL( XRCID("wxID_XREPEAT"),      StyleDlgWX::OnButton ) 
+  EVT_TOOL( XRCID("wxID_YREPEAT"),      StyleDlgWX::OnButton )
 
   EVT_TEXT( XRCID("wxID_COMBO_SIZE"),     StyleDlgWX::OnValueChanged ) 
   EVT_TEXT( XRCID("wxID_COMBO_LINE"),     StyleDlgWX::OnValueChanged ) 
@@ -312,6 +312,7 @@ void StyleDlgWX::SetColorTextChanged (int id)
   ----------------------------------------------------------------------*/
 void StyleDlgWX::SetValue (const char *property, char *value)
 {
+  wxToolBar* tb = XRCCTRL(*this, "wxID_REPEAT_TOOL", wxToolBar);
   wxCommandEvent  event;
   int             id;
   ThotBool        notfound = FALSE;
@@ -332,34 +333,34 @@ void StyleDlgWX::SetValue (const char *property, char *value)
           if (!strncmp (value, "no-repeat", 9))
             {
               BG_repeat = 1;
-              XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-              XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-              XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-              XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              tb->ToggleTool(XRCID("wxID_NOREPEAT"), true);
+              tb->ToggleTool(XRCID("wxID_REPEAT"), false);
+              tb->ToggleTool(XRCID("wxID_XREPEAT"), false);
+              tb->ToggleTool(XRCID("wxID_YREPEAT"), false);
             }
           else if (!strncmp (value, "repeat-x", 8))
             {
               BG_repeat = 2;
-              XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-              XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-              XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-              XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              tb->ToggleTool(XRCID("wxID_NOREPEAT"), false);
+              tb->ToggleTool(XRCID("wxID_REPEAT"), false);
+              tb->ToggleTool(XRCID("wxID_XREPEAT"), true);
+              tb->ToggleTool(XRCID("wxID_YREPEAT"), false);
             }
           else if (!strncmp (value, "repeat-y", 8))
             {
               BG_repeat = 3;
-              XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-              XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-              XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-              XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              tb->ToggleTool(XRCID("wxID_NOREPEAT"), false);
+              tb->ToggleTool(XRCID("wxID_REPEAT"), false);
+              tb->ToggleTool(XRCID("wxID_XREPEAT"), false);
+              tb->ToggleTool(XRCID("wxID_YREPEAT"), true);
             }
           else if (!strncmp (value, "repeat", 6))
             {
               BG_repeat = 4;
-              XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-              XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-              XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-              XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+              tb->ToggleTool(XRCID("wxID_NOREPEAT"), false);
+              tb->ToggleTool(XRCID("wxID_REPEAT"), true);
+              tb->ToggleTool(XRCID("wxID_XREPEAT"), false);
+              tb->ToggleTool(XRCID("wxID_YREPEAT"), false);
             }
         }
       else if (!strncmp (property, "background-attachment", 21))
@@ -575,6 +576,7 @@ void StyleDlgWX::SetValue (const char *property, char *value)
   ----------------------------------------------------------------------*/
 void StyleDlgWX::InitValues ()
 {
+  wxToolBar* tb = XRCCTRL(*this, "wxID_REPEAT_TOOL", wxToolBar);
   XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX(""));
 
   XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
@@ -636,10 +638,14 @@ void StyleDlgWX::InitValues ()
   XRCCTRL(*this, "wxID_CHOICE_LISTSTYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_CHOICE_LISTPOSITION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
   BG_repeat = 0;
-  XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  tb->ToggleTool(XRCID("wxID_NOREPEAT"), false);
+  tb->ToggleTool(XRCID("wxID_REPEAT"), false);
+  tb->ToggleTool(XRCID("wxID_XREPEAT"), false);
+  tb->ToggleTool(XRCID("wxID_YREPEAT"), false);
+  tb->SetToolShortHelp(XRCID("wxID_NOREPEAT"), TtaConvMessageToWX( "no-repeat" ));
+  tb->SetToolShortHelp(XRCID("wxID_REPEAT"), TtaConvMessageToWX( "repeat" ));
+  tb->SetToolShortHelp(XRCID("wxID_XREPEAT"), TtaConvMessageToWX( "repeat-x" ));
+  tb->SetToolShortHelp(XRCID("wxID_YREPEAT"), TtaConvMessageToWX( "repeat-y" ));
   XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetBackgroundColour( m_OffColour );
@@ -713,12 +719,11 @@ StyleDlgWX::StyleDlgWX( int ref, wxWindow* parent ) :
   /* tooltip of browse buttons */
   XRCCTRL(*this, "wxID_BUTTON_BGIMAGE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_BUTTON_LISTIMAGE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
-  m_OffColour = XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->GetBackgroundColour();
-  m_OnColour  = wxColour(250, 200, 200);
 
   // init the close check entry
   TtaGetEnvBoolean ("CLOSE_WHEN_APPLY", &check);
   XRCCTRL(*this, "wx_CHECK_CLOSE", wxCheckBox)->SetValue(check);
+  m_OffColour = XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->GetBackgroundColour();
   InitValues ();
 
   // on windows, the color selector dialog must be complete.
@@ -737,7 +742,7 @@ StyleDlgWX::~StyleDlgWX()
   /* do not call this one because it cancel the link creation */
 }
 
-
+static bool Exclude_Button = false;
 /*----------------------------------------------------------------------
   Class:  StyleDlgWX
   Method:  OnButton
@@ -745,71 +750,76 @@ StyleDlgWX::~StyleDlgWX()
   -----------------------------------------------------------------------*/
 void StyleDlgWX::OnButton( wxCommandEvent& event )
 {
+  if (Exclude_Button)
+    return;
+  Exclude_Button = true;
+  wxToolBar* tb = XRCCTRL(*this, "wxID_REPEAT_TOOL", wxToolBar);
   int id = event.GetId();
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_BUTTON_NOREPEAT")) )
+  if ( id == wxXmlResource::GetXRCID(_T("wxID_NOREPEAT")) )
     {
       if (BG_repeat == 1)
         {
           BG_repeat = 0;
-          XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          //tb->ToggleTool(XRCID("wxID_NOREPEAT"), false);
         }
       else
         {
           BG_repeat = 1;
-          XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-          XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-          XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-          XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          tb->ToggleTool(XRCID("wxID_NOREPEAT"), true);
+          tb->ToggleTool(XRCID("wxID_REPEAT"), false);
+          tb->ToggleTool(XRCID("wxID_XREPEAT"), false);
+          tb->ToggleTool(XRCID("wxID_YREPEAT"), false);
         }
     }
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_BUTTON_XREPEAT")) )
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_XREPEAT")) )
     {
       if (BG_repeat == 2)
         {
           BG_repeat = 0;
-          XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          //tb->ToggleTool(XRCID("wxID_XREPEAT"), false);
         }
       else
         {
           BG_repeat = 2;
-          XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-          XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-          XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-          XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          tb->ToggleTool(XRCID("wxID_NOREPEAT"), false);
+          tb->ToggleTool(XRCID("wxID_REPEAT"), false);
+          tb->ToggleTool(XRCID("wxID_XREPEAT"), true);
+          tb->ToggleTool(XRCID("wxID_YREPEAT"), false);
         }
     }
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_BUTTON_YREPEAT")) )
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_YREPEAT")) )
     {
      if (BG_repeat == 3)
         {
           BG_repeat = 0;
-          XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          //tb->ToggleTool(XRCID("wxID_YREPEAT"), false);
         }
       else
         {
           BG_repeat = 3;
-          XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-          XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-          XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-          XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          tb->ToggleTool(XRCID("wxID_NOREPEAT"), false);
+          tb->ToggleTool(XRCID("wxID_REPEAT"), false);
+          tb->ToggleTool(XRCID("wxID_XREPEAT"), false);
+          tb->ToggleTool(XRCID("wxID_YREPEAT"), true);
         }
     }
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_BUTTON_REPEAT")) )
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_REPEAT")) )
     {
      if (BG_repeat == 4)
         {
           BG_repeat = 0;
-          XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          //tb->ToggleTool(XRCID("wxID_REPEAT"), false);
         }
       else
         {
           BG_repeat = 4;
-          XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-          XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-          XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-          XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          tb->ToggleTool(XRCID("wxID_NOREPEAT"), false);
+          tb->ToggleTool(XRCID("wxID_REPEAT"), true);
+          tb->ToggleTool(XRCID("wxID_XREPEAT"), false);
+          tb->ToggleTool(XRCID("wxID_YREPEAT"), false);
         }
     }
+  Exclude_Button = false;
 }
 
 /*----------------------------------------------------------------------
