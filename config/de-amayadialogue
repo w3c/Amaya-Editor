@@ -20,7 +20,7 @@
 18 SVG...
 19 Forma&tvorlage...
 20 Öffnen(&O)...
-21 **&File...
+21 &Datei
 22 Öffnen (neues Fenster)...
 23 Aktualisie&ren
 24 Lies als
@@ -54,7 +54,7 @@
 52 &info
 53 &Speichern
 54 Speichern unter...
-55 **Save All
+55 Alles Speichern
 56 S&ynchronisieren
 57 DTD ändern
 58 DTD entfernen
@@ -65,7 +65,7 @@
 63 XHTML 1.0 Basic
 64 HTML 4.01 Transitional
 65 HTML Strict
-66 **Send by mail ...
+66 Per E-Mail senden...
 67 Dr&uckoptionen...
 68 Drucken(&P)
 69 Registerkarte schließen(&C)
@@ -76,9 +76,9 @@
 74 Alle Registerkarten aktualisieren
 75 Alle übrigen Registerkarten schließen
 76 Registerkarte schließen
-77 **Open the link
-78 **Open the link in new tab
-79 **Open the link in new window
+77 Verweis öffnen
+78 Verweis in neuem Tab öffnen
+79 Verweis in neuem Fenster öffnen
 80 Ausschneiden
 81 Kopieren
 82 Einfügen
@@ -258,9 +258,9 @@
 256 Verweis/Anker löschen
 257 Id hinzufügen/entfernen...
 258 &Vollbildanzeige
-259 **Show/Hide toolbars
-260 **&Browsing
-261 **&Editing
+259 Werkzeugleisten anzeigen/ausblenden
+260 &Durchsuchen
+261 &Bearbeiten
 262 &Hilfsmittel anzeigen
 263 Aktive Bildbereiche
 264 Anker anzeigen
@@ -299,11 +299,11 @@
 297 Resourceeigenschaften anzeigen...
 298 Sperrinformation kopieren...
 299 Gesperrt?
-300 **Enable/Disable
-301 **Execute a command
-302 **Execute an external script
-303 **Add an external script
-304 **Insert a script
+300 Aktivieren/Deaktivieren
+301 Befehl ausführen
+302 externes Skript ausführen
+303 externes Skript hinzufügen
+304 Skript einfügen
 305 Info
 306 Über Amaya
 307 Index

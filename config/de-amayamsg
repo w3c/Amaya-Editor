@@ -234,9 +234,9 @@
 232 Server
 233 Zugriffstasten
 234 Ignorieren
-235 **Tool panel bar alignment: 
-236 **left
-237 **right
+235 Werkzeugleiste ausrichten
+236 links
+237 rechts
 238 Formatelement
 239 Kann XPointer nicht erzeugen
 240 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
@@ -410,57 +410,57 @@
 408 Grad
 409 Grad der Variable mit Nummer %d
 410 Mischdokument
-411 **Copy resources (styles and scripts)
-412 **Where to save resources
-413 **Where to save images
-414 **Document
-415 **Images, Styles and Scripts
-416 **Mail
-417 **Common parameters for sending mails:
-418 **SMTP server address:
-419 **Server port:
-420 **(25 by default)
-421 **Sending address (From field):
-422 **To:
-423 **Send by mail
-424 **Subject:
-425 **Send as:
-426 **Message body
-427 **Attachment
-428 **Zip archive
-429 **Don't send
-430 **Send
-431 **The server address and port must be set in Preferences
-432 **Message:
-433 **Alternate textual  message:
-434 **The server is unreachable or does not respond
-435 **The server has reject you
-436 **The sender address is misformatted
-437 **A recipient address is misformatted
-438 **The mail content is misformatted
-439 **Mail not sent
-440 **Mail sent
-441 **Passwords
-442 **Do you want Amaya to remember this password?
-443 **Remember passwords for sites
-444 **Sites
-445 **Remove All
-446 **An error occured during the building of the javascript/DOM objects
-447 **A script is still running but will be aborted as soon as possible. Please try later.
-448 **Javascript/DOM can not be enabled in this view.
-449 **Enter a javascript command:
-450 **The command returned the value: %s
-451 **The command returned no value
-452 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+411 Bezugsquelle kopieren (Stile und Skripte)
+412 Speicherort der Bezugsquellen
+413 Speicherort für Bilder
+414 Dokument
+415 Bilder, Stile und Skripte
+416 E-Mail
+417 Grundeinstellungen für E-Mail versenden
+418 SMTP Server AdresseServer Port
+419 Server Port
+420 (25 voreingestellt)
+421 Absender Adresse (From field):
+422 An
+423 Per E-Mail versenden
+424 Betreff:
+425 Versenden als:
+426 Nachricht
+427 Anhang
+428 Zip Archiv
+429 Nicht senden
+430 absenden
+431 Die Server-Adresse und der Port müssen in den Einstellungen konfiguriert sein
+432 Nachricht
+433 alternative textbasierte Nachricht
+434 Der Server ist nicht erreichbar oder antwortet nicht
+435 Der Server hat Sie nicht akzeptiert
+436 Die Absender-Adresse ist falsch formatiert
+437 Eine Empfänger-Adresse ist falsch formatiert
+438 Der Inhalt der Nachricht ist falsch formatiert
+439 E-Mail wurde nicht gesendet
+440 E-Mail wurde gesendet
+441 Passwörter
+442 Wollen Sie, dass Amaya das Passwort speichert?
+443 Passwörter für Sites speichern
+444 Sites (alle Dateien)
+445 Alles entfernen
+446 Ein Fehler ist aufgetreten beim Aufbau des Javascript/DOM Objekts
+447 Ein Skript wird noch ausgeführt, aber beendet sobald es möglich ist. Bitte später versuchen
+448 Javascript/DOM kann in dieser Ansichtsoption nicht aktiviert werden
+449 Geben Sie einen Javascript-Befehl ein
+450 Der Befehl wurde als Wert: %s ausgegeben
+451 Der Befehl hat keinen Wert ausgegeben
+452 SpyderMonkey hat folgenden Fehler ausgegeben:\n\nFile: %s\nLine: %d\n\n%s
 453 Neu
-454 **Customizable
+454 Anpassen
 455 Anker
-456 **Create the link by click
+456 Den Verweis durch anklicken herstellen
 457 Verweis löschen
-458 **Save without template
-459 **With theme ...
-460 **Full width
-461 **With caption
-462 **Size
-463 **Position
-464 **XML editing mode
+458 Speichern ohne Vorlage
+459 Mit Thema...
+460 Ganze Breite
+461 Mit Titel
+462 Grösse
+463 Position
+464 XML Bearbeiten Betriebsart

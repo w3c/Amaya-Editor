@@ -58,10 +58,10 @@
 56 Aláhúzott
 57 Áthúzott
 58 Betáméret (pt)
-59 **Unindent
-60 **Single line spacing
-61 **Middle line spacing
-62 **Double line spacing
+59 Behúzás csökkentése
+60 Egyes sortávolság
+61 Közepes sortávolság
+62 Kettős sortávolság
 63 Dokumentum mentése
 64 Bezárás mentés nélkül
 65 Karakter stílus
@@ -240,15 +240,15 @@
 238 Másolás
 239 Beillesztés
 240 Szóelemző
-241 **Various constructs
-242 **Relations, orders and logic
-243 **Sets and functions
-244 **Arithmetic, operations, complexes and constants
-245 **Analysis, linear algebra and statistic
-246 **Trigonometry and logarithms
+241 Különböző szerkezetek
+242 Relációk, rendek és logika
+243 Halmazok és függvények
+244 Számelmélet, műveletek, komplexek és állandók
+245 Analízis, lineáris algebra és statisztika
+246 Trigonometria és logaritmusok
 247 Nagyítás
 248 Kicsinyítés
-249 **Theme
-250 **XML
-251 **Text
+249 Téma
+250 XML
+251 Szöveg
 252 **No recent document

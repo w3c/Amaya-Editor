@@ -349,8 +349,20 @@
 	<message xml:lang="sk">&amp;Otvoriť dokument...</message>
 </label>
 <label define="BOpenDoc">
-	<message xml:lang="en">&amp;File...</message>
-	<message xml:lang="fr">&amp;Fichier...</message>
+	<message xml:lang="en">&amp;File</message>
+	<message xml:lang="fr">&amp;Fichier</message>
+	<message xml:lang="de">&amp;Datei</message>
+	<message xml:lang="it">&amp;File</message>
+	<message xml:lang="tr">&amp;Dosya</message>
+	<message xml:lang="es">&amp;Archivo</message>
+	<message xml:lang="pt">&amp;Arquivo</message>
+	<message xml:lang="fi">&amp;Tiedosto</message>
+	<message xml:lang="ru">Ф&amp;айл</message>
+	<message xml:lang="hu">&amp;Fájl</message>
+	<message xml:lang="ka">&amp;ფაილი</message>
+	<message xml:lang="cn">文件(&amp;F)</message>
+	<message xml:lang="tw">文件(&amp;F)</message>
+	<message xml:lang="sk">&amp;Súbor</message>
 </label>
 <label define="BOpenInNewWindow">
 	<message xml:lang="en">Open in new &amp;window...</message>
@@ -881,6 +893,8 @@
 	<message xml:lang="en">Save All</message>
 	<message xml:lang="fr">Enregistrer tout</message>
 	<message xml:lang="es">Guardar todo</message>
+	<message xml:lang="de">Alles Speichern</message>
+	<message xml:lang="hu">Mind mentése</message>
 </label>
 <label define="BSynchro">
 	<message xml:lang="en">S&amp;ynchronize</message>
@@ -1045,6 +1059,8 @@
 	<message xml:lang="sk">Odoslať mailom ...</message>
 	<message xml:lang="it">Invia per email  ...</message>
 	<message xml:lang="ru">Настройка и печать...</message>
+	<message xml:lang="de">Per E-Mail senden...</message>
+	<message xml:lang="hu">Küldés elektronikus levélben...</message>
 </label>
 <label define="BSetUpandPrint">
 	<message xml:lang="en">Set&amp;up and Print...</message>
@@ -1182,16 +1198,22 @@
 	<message xml:lang="en">Open the link</message>
 	<message xml:lang="es">Abrir enlace</message>
 	<message xml:lang="fr">Ouvrir le lien</message>
+	<message xml:lang="de">Verweis öffnen</message>
+	<message xml:lang="hu">A kapocs megnyitása</message>
 </label>
 <label define="BFollowTheLinkNewTab">
 	<message xml:lang="en">Open the link in new tab</message>
 	<message xml:lang="es">Abrir enlace en una nueva pestaña</message>
 	<message xml:lang="fr">Ouvrir le lien dans un nouvel onglet</message>
+	<message xml:lang="de">Verweis in neuem Tab öffnen</message>
+	<message xml:lang="hu">A kapocs megnyitása új fülön</message>
 </label>
 <label define="BFollowTheLinkNewWin">
 	<message xml:lang="en">Open the link in new window</message>
 	<message xml:lang="es">Abrir enlace en una nueva ventana</message>
 	<message xml:lang="fr">Ouvrir le lien dans une nouvelle fenêtre</message>
+	<message xml:lang="de">Verweis in neuem Fenster öffnen</message>
+	<message xml:lang="hu">A kapocs megnyitása új ablakban</message>
 </label>
 <label define="BCCut">
 	<message xml:lang="en">Cut</message>
@@ -3913,19 +3935,25 @@
 	<message xml:lang="sk">&amp;Celá obrazovka</message>
 </label>
 <label define="toolbars">
-  <message xml:lang="en">Show/Hide toolbars</message>
-  <message xml:lang="es">Barras de herramientas</message>
-  <message xml:lang="fr">Barres d'outils</message>
+	<message xml:lang="en">Show/Hide toolbars</message>
+	<message xml:lang="es">Barras de herramientas</message>
+	<message xml:lang="fr">Barres d'outils</message>
+	<message xml:lang="de">Werkzeugleisten anzeigen/ausblenden</message>
+	<message xml:lang="hu">Eszköztárak mutatása/rejtése</message>
 </label>
 <label define="TShowBrowsingBar">
-  <message xml:lang="en">&amp;Browsing</message>
-  <message xml:lang="es">&amp;Navegación</message>
-  <message xml:lang="fr">&amp;Navigation</message>
+	<message xml:lang="en">&amp;Browsing</message>
+	<message xml:lang="es">&amp;Navegación</message>
+	<message xml:lang="fr">&amp;Navigation</message>
+	<message xml:lang="de">&amp;Durchsuchen</message>
+	<message xml:lang="hu">&amp;Böngészés</message>
 </label>
 <label define="toggle:TShowEditingBar">
-  <message xml:lang="en">&amp;Editing</message>
-  <message xml:lang="es">&amp;Edición</message>
-  <message xml:lang="fr">&amp;Édition</message>
+	<message xml:lang="en">&amp;Editing</message>
+	<message xml:lang="es">&amp;Edición</message>
+	<message xml:lang="fr">&amp;Édition</message>
+	<message xml:lang="de">&amp;Bearbeiten</message>
+	<message xml:lang="hu">&amp;Szerkesztés</message>
 </label>
 <label define="TShowPanel">
 	<message xml:lang="en">Show &amp;tools</message>
@@ -4520,26 +4548,36 @@
 	<message xml:lang="en">Enable/Disable</message>
 	<message xml:lang="es">Activar/Desactivar</message>
 	<message xml:lang="fr">Activer/Désactiver</message>
+	<message xml:lang="de">Aktivieren/Deaktivieren</message>
+	<message xml:lang="hu">Engedélyezés/tiltás</message>
 </label>
 <label define="BExecuteACommand">
 	<message xml:lang="en">Execute a command</message>
 	<message xml:lang="es">Ejecutar un comando</message>
 	<message xml:lang="fr">Exécuter une commande</message>
+	<message xml:lang="de">Befehl ausführen</message>
+	<message xml:lang="hu">Parancs végrehajtása</message>
 </label>
 <label define="BExecuteExternal">
 	<message xml:lang="en">Execute an external script</message>
 	<message xml:lang="es">Ejecutar un script externo</message>
 	<message xml:lang="fr">Exécuter un script externe</message>
+	<message xml:lang="de">externes Skript ausführen</message>
+	<message xml:lang="hu">Külső szkript végrehajtása</message>
 </label>
 <label define="BAddExternal">
 	<message xml:lang="en">Add an external script</message>
 	<message xml:lang="es">Añadir un script externo</message>
 	<message xml:lang="fr">Ajouter un script externe</message>
+	<message xml:lang="de">externes Skript hinzufügen</message>
+	<message xml:lang="hu">Külső szkript hozzáadása</message>
 </label>
 <label define="BInsertScript">
 	<message xml:lang="en">Insert a script</message>
 	<message xml:lang="es">Insertar un script</message>
 	<message xml:lang="fr">Inserer un script</message>
+	<message xml:lang="de">Skript einfügen</message>
+	<message xml:lang="hu">Szkript beillesztése</message>
 </label>
 <label define="BInformation">
 	<message xml:lang="en">About Amaya</message>

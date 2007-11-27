@@ -20,7 +20,7 @@
 18 Új SV&G dokumentum...
 19 Új CSS s&tíluslap...
 20 D&okumentum megnyitása...
-21 **&File...
+21 &Fájl
 22 Új &ablakban...
 23 Dokumentum újratöltése(&R)
 24 Kényszerített karakter &kódolás
@@ -54,7 +54,7 @@
 52 Dokumentum adata&i
 53 Mentés(&S)
 54 Mentés másként(&A)...
-55 **Save All
+55 Mind mentése
 56 Szinkronizálás(&Y)
 57 Doctype megváltoztatása
 58 doctype eltávolítása
@@ -65,7 +65,7 @@
 63 XHTML 1.0 alappá tétel
 64 &HTML 4.01 átmenetivé tétel
 65 HTML 4.01 kötötté tétel
-66 **Send by mail ...
+66 Küldés elektronikus levélben...
 67 Beállítás és nyomtatás(&U)...
 68 Nyomtatás(&P)
 69 Lap bezárása(&C)
@@ -76,9 +76,9 @@
 74 Minden fül frissítése
 75 Többi fül bezárása
 76 Lap bezárása
-77 **Open the link
-78 **Open the link in new tab
-79 **Open the link in new window
+77 A kapocs megnyitása
+78 A kapocs megnyitása új fülön
+79 A kapocs megnyitása új ablakban
 80 Kivágás
 81 Másolás
 82 Beillesztés
@@ -258,9 +258,9 @@
 256 &Horgony törlése
 257 &Azonosítók (id) hozzáadása/törlése...
 258 &Teljes képenyő
-259 **Show/Hide toolbars
-260 **&Browsing
-261 **&Editing
+259 Eszköztárak mutatása/rejtése
+260 &Böngészés
+261 &Szerkesztés
 262 &Eszközsor mutatása
 263 &Térképterületek mutatása
 264 &Célpontok mutatása
@@ -299,11 +299,11 @@
 297 Erőforrás &tulajdonságai...
 298 Zárolási adatok &másolása...
 299 &Zárolt?
-300 **Enable/Disable
-301 **Execute a command
-302 **Execute an external script
-303 **Add an external script
-304 **Insert a script
+300 Engedélyezés/tiltás
+301 Parancs végrehajtása
+302 Külső szkript végrehajtása
+303 Külső szkript hozzáadása
+304 Szkript beillesztése
 305 Amaya &névjegye
 306 Az Amaya a W3C &webhelyen
 307 &Betűrendes mutató

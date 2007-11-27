@@ -58,10 +58,10 @@
 56 Unterstrichen
 57 Durchgestrichen
 58 Größe (pt)
-59 **Unindent
-60 **Single line spacing
-61 **Middle line spacing
-62 **Double line spacing
+59 Ohne Einrücken
+60 Einzelne Zeile Abstand
+61 Mittlere Zeile Abstand
+62 Doppelte Zeile Abstand
 63 Speichern
 64 Nicht Speichern
 65 Schräge
@@ -240,15 +240,15 @@
 238 Kopieren
 239 Einfügen
 240 Rechtschreibprüfung
-241 **Various constructs
-242 **Relations, orders and logic
-243 **Sets and functions
-244 **Arithmetic, operations, complexes and constants
-245 **Analysis, linear algebra and statistic
-246 **Trigonometry and logarithms
+241 Verschiedene Konstruktionen
+242 Abhängigkeiten, Aufträge und Verknüpfungssteuerungen
+243 Datensätze und Funktionen
+244 arithmetisch, Abläufe, Verzweigungen und Konstante
+245 Analyse, lineare Algebra und Statistik
+246 Trigonometrie und Logarithmen
 247 Schrift vergrößern
 248 Schrift verkleinern
-249 **Theme
-250 **XML
+249 Thema
+250 XML
 251 **Text
 252 **No recent document

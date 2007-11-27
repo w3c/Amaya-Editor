@@ -3740,16 +3740,22 @@
 	<message xml:lang="en">Tool panel bar alignment: </message>
 	<message xml:lang="es">Posición de la ventana de herramientas:</message>
 	<message xml:lang="fr">Aligner les panneaux d'outils :</message>
+	<message xml:lang="de">Werkzeugleiste ausrichten</message>
+	<message xml:lang="hu">Eszközsor igazítása:</message>
 </label>
 <label define="AM_TOOLPANEL_ALIGN_LEFT">
 	<message xml:lang="en">left</message>
 	<message xml:lang="es">Izquierda</message>
 	<message xml:lang="fr">à gauche</message>
+	<message xml:lang="de">links</message>
+	<message xml:lang="hu">balra</message>
 </label>
 <label define="AM_TOOLPANEL_ALIGN_RIGHT">
 	<message xml:lang="en">right</message>
 	<message xml:lang="es">Derecha</message>
 	<message xml:lang="fr">à droite</message>
+	<message xml:lang="de">rechts</message>
+	<message xml:lang="hu">jobbra</message>
 </label>
 <label define="AM_LOCAL_CSS">
 	<message xml:lang="en">Style element</message>
@@ -6186,6 +6192,8 @@
 	<message xml:lang="sk">Skopírovať zdroje (štýly a skripty)</message>
 	<message xml:lang="it">Copia le risorse (stili e script)</message>
 	<message xml:lang="ru">Копировать ресурсы (стили и сценарии)</message>
+	<message xml:lang="de">Bezugsquelle kopieren (Stile und Skripte)</message>
+	<message xml:lang="hu">Erőforrások másolása (stílusok és szkriptek)</message>
 </label>
 <label define="AM_WHERE_RESOURCE">
 	<message xml:lang="en">Where to save resources</message>
@@ -6194,6 +6202,8 @@
 	<message xml:lang="sk">Umiestnenie zdrojov</message>
 	<message xml:lang="it">Dove salvare le risorse</message>
 	<message xml:lang="ru">Место для сохранения ресурсов</message>
+	<message xml:lang="de">Speicherort der Bezugsquellen</message>
+	<message xml:lang="hu">Hova mentsük az erőforrásokat</message>
 </label>
 <label define="AM_WHERE_IMAGE">
 	<message xml:lang="en">Where to save images</message>
@@ -6202,6 +6212,8 @@
 	<message xml:lang="sk">Umiestnenie obrázkov</message>
 	<message xml:lang="it">Dove salvare le immagini</message>
 	<message xml:lang="ru">Место для сохранения изображений</message>
+	<message xml:lang="de">Speicherort für Bilder</message>
+	<message xml:lang="hu">Hova mentsük a képeket</message>
 </label>
 <label define="AM_QUICK_SAVE">
 	<message xml:lang="en">Document</message>
@@ -6210,6 +6222,8 @@
 	<message xml:lang="sk">Dokument</message>
 	<message xml:lang="it">Documento</message>
 	<message xml:lang="ru">Документ</message>
+	<message xml:lang="de">Dokument</message>
+	<message xml:lang="hu">Dokumentum</message>
 </label>
 <label define="AM_EXTENSION">
 	<message xml:lang="en">Images, Styles and Scripts</message>
@@ -6218,6 +6232,8 @@
 	<message xml:lang="sk">Obrázky, štýly a skripty</message>
 	<message xml:lang="it">Immagini, Stili e Script</message>
 	<message xml:lang="ru">Изображения, стили и сценарии</message>
+	<message xml:lang="de">Bilder, Stile und Skripte</message>
+	<message xml:lang="hu">Képek, stílusok és szkriptek</message>
 </label>
 <label define="AM_EMAILS">
 	<message xml:lang="en">Mail</message>
@@ -6226,6 +6242,8 @@
 	<message xml:lang="sk">Mail</message>
 	<message xml:lang="it">Email</message>
 	<message xml:lang="ru">Почта</message>
+	<message xml:lang="de">E-Mail</message>
+	<message xml:lang="hu">Elektronikus levél</message>
 </label>
 <label define="AM_EMAILS_PROPERTIES">
 	<message xml:lang="en">Common parameters for sending mails:</message>
@@ -6234,6 +6252,8 @@
 	<message xml:lang="sk">Spoločné parametre pre odosielanie mailov:</message>
 	<message xml:lang="it">Parametri comuni per inviare messaggi:</message>
 	<message xml:lang="ru">Настройки почты:</message>
+	<message xml:lang="de">Grundeinstellungen für E-Mail versenden</message>
+	<message xml:lang="hu">Elektronikus levélküldés általános paraméterei:</message>
 </label>
 <label define="AM_EMAILS_SERVER_ADDRESS">
 	<message xml:lang="en">SMTP server address:</message>
@@ -6242,6 +6262,8 @@
 	<message xml:lang="sk">Adresa SMTP servera:</message>
 	<message xml:lang="it">Indirizzo del server SMTP:</message>
 	<message xml:lang="ru">Адрес SMTP сервера:</message>
+	<message xml:lang="de">SMTP Server AdresseServer Port</message>
+	<message xml:lang="hu">SMTP kiszolgáló címe:</message>
 </label>
 <label define="AM_EMAILS_SERVER_PORT">
 	<message xml:lang="en">Server port:</message>
@@ -6250,6 +6272,8 @@
 	<message xml:lang="sk">Port:</message>
 	<message xml:lang="it">Porta del server:</message>
 	<message xml:lang="ru">Порт сервера:</message>
+	<message xml:lang="de">Server Port</message>
+	<message xml:lang="hu">Kiszolgáló kapu:</message>
 </label>
 <label define="AM_EMAILS_SERVER_DEFPORT">
 	<message xml:lang="en">(25 by default)</message>
@@ -6258,6 +6282,8 @@
 	<message xml:lang="sk">(štandardný je 25)</message>
 	<message xml:lang="it">(25 per default)</message>
 	<message xml:lang="ru">(по умолчанию 25)</message>
+	<message xml:lang="de">(25 voreingestellt)</message>
+	<message xml:lang="hu">(alapértelmezett: 25 )</message>
 </label>
 <label define="AM_EMAILS_FROM_">
 	<message xml:lang="en">Sending address (From field):</message>
@@ -6266,6 +6292,8 @@
 	<message xml:lang="sk">Adresa odosielateľa (Od koho)</message>
 	<message xml:lang="it">Indirizzo di invio (campo From):</message>
 	<message xml:lang="ru">Адрес отправителя (Из поля):</message>
+	<message xml:lang="de">Absender Adresse (From field):</message>
+	<message xml:lang="hu">Feladó címe (From mező):</message>
 </label>
 <label define="AM_EMAILS_TO_">
 	<message xml:lang="en">To:</message>
@@ -6274,6 +6302,8 @@
 	<message xml:lang="sk">Komu:</message>
 	<message xml:lang="it">A:</message>
 	<message xml:lang="ru">Кому:</message>
+	<message xml:lang="de">An</message>
+	<message xml:lang="hu">Címzett:</message>
 </label>
 <label define="AM_EMAILS_SEND_BY_MAIL">
 	<message xml:lang="en">Send by mail</message>
@@ -6282,6 +6312,8 @@
 	<message xml:lang="sk">Odoslať mailom</message>
 	<message xml:lang="it">Invia per email</message>
 	<message xml:lang="ru">Отправить по почте</message>
+	<message xml:lang="de">Per E-Mail versenden</message>
+	<message xml:lang="hu">Küldés elektronikus levélben</message>
 </label>
 <label define="AM_EMAILS_SUBJECT_">
 	<message xml:lang="en">Subject:</message>
@@ -6290,6 +6322,8 @@
 	<message xml:lang="sk">Predmet :</message>
 	<message xml:lang="it">Titolo:</message>
 	<message xml:lang="ru">Тема:</message>
+	<message xml:lang="de">Betreff:</message>
+	<message xml:lang="hu">Tárgy:</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_">
 	<message xml:lang="en">Send as:</message>
@@ -6298,6 +6332,8 @@
 	<message xml:lang="sk">Odoslať ako:</message>
 	<message xml:lang="it">Invia come:</message>
 	<message xml:lang="ru">Отправить как:</message>
+	<message xml:lang="de">Versenden als:</message>
+	<message xml:lang="hu">Küldi:</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_MESSAGE">
 	<message xml:lang="en">Message body</message>
@@ -6306,6 +6342,8 @@
 	<message xml:lang="sk">Text správy</message>
 	<message xml:lang="it">Corpo del messaggio</message>
 	<message xml:lang="ru">Тело сообщения</message>
+	<message xml:lang="de">Nachricht</message>
+	<message xml:lang="hu">Üzenet szövege</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_ATTACHMENT">
 	<message xml:lang="en">Attachment</message>
@@ -6314,10 +6352,14 @@
 	<message xml:lang="sk">Príloha</message>
 	<message xml:lang="it">Allegato</message>
 	<message xml:lang="ru">Вложение</message>
+	<message xml:lang="de">Anhang</message>
+	<message xml:lang="hu">Melléklet</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_ZIP">
 	<message xml:lang="en">Zip archive</message>
 	<message xml:lang="fr">Archive zip</message>
+	<message xml:lang="de">Zip Archiv</message>
+	<message xml:lang="hu">Zip</message>
 </label>
 <label define="AM_EMAILS_DONT_SEND">
 	<message xml:lang="en">Don't send</message>
@@ -6326,6 +6368,8 @@
 	<message xml:lang="sk">Neodosielať</message>
 	<message xml:lang="it">Non inviare</message>
 	<message xml:lang="ru">Не отправлять</message>
+	<message xml:lang="de">Nicht senden</message>
+	<message xml:lang="hu">Ne küldje</message>
 </label>
 <label define="AM_EMAILS_SEND">
 	<message xml:lang="en">Send</message>
@@ -6334,6 +6378,8 @@
 	<message xml:lang="sk">Odoslať</message>
 	<message xml:lang="it">Invia</message>
 	<message xml:lang="ru">Отправить</message>
+	<message xml:lang="de">absenden</message>
+	<message xml:lang="hu">Küldés</message>
 </label>
 <label define="AM_EMAILS_NO_SERVER">
 	<message xml:lang="en">The server address and port must be set in Preferences</message>
@@ -6342,6 +6388,8 @@
 	<message xml:lang="sk">Adresa servera a port musia byť nastavené v nastaveniach.</message>
 	<message xml:lang="it">Indirizzo e porta del server devono essere settati nelle Preferenze</message>
 	<message xml:lang="ru">Адрес сервера и его порт должны быть указаны в настройках</message>
+	<message xml:lang="de">Die Server-Adresse und der Port müssen in den Einstellungen konfiguriert sein</message>
+	<message xml:lang="hu">A kiszolgáló címét és kapuját a Beállításoknál kell megadni</message>
 </label>
 <label define="AM_EMAILS_MESSAGE_BODY">
 	<message xml:lang="en">Message:</message>
@@ -6350,6 +6398,8 @@
 	<message xml:lang="sk">Správa:</message>
 	<message xml:lang="it">Messaggio:</message>
 	<message xml:lang="ru">Сообщение:</message>
+	<message xml:lang="de">Nachricht</message>
+	<message xml:lang="hu">Üzenet:</message>
 </label>
 <label define="AM_EMAILS_MESSAGE_ALTERN">
 	<message xml:lang="en">Alternate textual  message:</message>
@@ -6358,6 +6408,8 @@
 	<message xml:lang="sk">Alternatívna textová správa:</message>
 	<message xml:lang="it">Messaggio alternativo di testo:</message>
 	<message xml:lang="ru">Альтернативное текстовое сообщение:</message>
+	<message xml:lang="de">alternative textbasierte Nachricht</message>
+	<message xml:lang="hu">Másik szövegüzenet:</message>
 </label>
 <label define="AM_EMAILS_ERR_SERVER_RESPOND">
 	<message xml:lang="en">The server is unreachable or does not respond</message>
@@ -6366,6 +6418,8 @@
 	<message xml:lang="sk">Server je nedostupný alebo neodpovedá</message>
 	<message xml:lang="it">Il server è irraggiungibile o non rispond</message>
 	<message xml:lang="ru">Сервер недоступен или не отвечает</message>
+	<message xml:lang="de">Der Server ist nicht erreichbar oder antwortet nicht</message>
+	<message xml:lang="hu">A kiszolgáló elérhetetlen vagy nem válaszol</message>
 </label>
 <label define="AM_EMAILS_ERR_SERVER_REJECT">
 	<message xml:lang="en">The server has reject you</message>
@@ -6374,6 +6428,8 @@
 	<message xml:lang="sk">Server prerušil spojenie</message>
 	<message xml:lang="it">Il server ha rifiutato il messaggio</message>
 	<message xml:lang="ru">Сервер отказал вам в соединении</message>
+	<message xml:lang="de">Der Server hat Sie nicht akzeptiert</message>
+	<message xml:lang="hu">A kiszolgáló elutasítja a kérést</message>
 </label>
 <label define="AM_EMAILS_ERR_FROM_ADDR">
 	<message xml:lang="en">The sender address is misformatted</message>
@@ -6382,6 +6438,8 @@
 	<message xml:lang="sk">Adredsa odosielateľa má nesprávny tvar</message>
 	<message xml:lang="it">L'indirizzo del mittente è malformattato</message>
 	<message xml:lang="ru">Адрес отправителя имеет неправильный формат</message>
+	<message xml:lang="de">Die Absender-Adresse ist falsch formatiert</message>
+	<message xml:lang="hu">A küldő címének formátuma érvénytelen</message>
 </label>
 <label define="AM_EMAILS_ERR_RCPT_ADDR">
 	<message xml:lang="en">A recipient address is misformatted</message>
@@ -6390,6 +6448,8 @@
 	<message xml:lang="sk">Adresa príjemcu má nesprávny tvar</message>
 	<message xml:lang="it">L'indirizzo di un destinatario è malformattato</message>
 	<message xml:lang="ru">Адрес получателся имеет неправильный формат</message>
+	<message xml:lang="de">Eine Empfänger-Adresse ist falsch formatiert</message>
+	<message xml:lang="hu">A címzett címének formátuma érvénytelen</message>
 </label>
 <label define="AM_EMAILS_ERR_BAD_CONTENT">
 	<message xml:lang="en">The mail content is misformatted</message>
@@ -6398,6 +6458,8 @@
 	<message xml:lang="sk">Obsah mail má nesprávny tvar</message>
 	<message xml:lang="it">Il contenuto del messaggio è malformattato</message>
 	<message xml:lang="ru">Содержимое почты имеет неправильный формат</message>
+	<message xml:lang="de">Der Inhalt der Nachricht ist falsch formatiert</message>
+	<message xml:lang="hu">Az üzenet tartalma érvénytelen formátumú</message>
 </label>
 <label define="AM_EMAILS_ERR_UNKNOW">
 	<message xml:lang="en">Mail not sent</message>
@@ -6406,6 +6468,8 @@
 	<message xml:lang="sk">Správa nebola odoslaná</message>
 	<message xml:lang="it">Messaggio non inviato</message>
 	<message xml:lang="ru">Почта не отправлена</message>
+	<message xml:lang="de">E-Mail wurde nicht gesendet</message>
+	<message xml:lang="hu">Üzenet nincs elküldve</message>
 </label>
 <label define="AM_EMAILS_SENT">
 	<message xml:lang="en">Mail sent</message>
@@ -6414,6 +6478,8 @@
 	<message xml:lang="sk">Správa bola odoslaná</message>
 	<message xml:lang="it">Messaggio inviato</message>
 	<message xml:lang="ru">Почта отправлена</message>
+	<message xml:lang="de">E-Mail wurde gesendet</message>
+	<message xml:lang="hu">Üzenet elküldve</message>
 </label>
 <label define="AM_PASSWORDS">
 	<message xml:lang="en">Passwords</message>
@@ -6422,6 +6488,8 @@
 	<message xml:lang="sk">Heslá</message>
 	<message xml:lang="it">Password</message>
 	<message xml:lang="ru">Пароли</message>
+	<message xml:lang="de">Passwörter</message>
+	<message xml:lang="hu">Jelszavak</message>
 </label>
 <label define="AM_PASSWORDS_SAVE">
 	<message xml:lang="en">Do you want Amaya to remember this password?</message>
@@ -6430,6 +6498,8 @@
 	<message xml:lang="sk">Chcete aby si program Amaya zapamätal toto heslo</message>
 	<message xml:lang="it">Vuoi che Amaya ricordi questa password?</message>
 	<message xml:lang="ru">Запомнить пароль</message>
+	<message xml:lang="de">Wollen Sie, dass Amaya das Passwort speichert?</message>
+	<message xml:lang="hu">Jegyezze meg az Amaya a jelszót?</message>
 </label>
 <label define="AM_PASSWORDS_SAVE_OPTION">
 	<message xml:lang="en">Remember passwords for sites</message>
@@ -6437,6 +6507,8 @@
 	<message xml:lang="fr">Enregistrer les mots de passe</message>
 	<message xml:lang="it">Ricorda le password per i siti</message>
 	<message xml:lang="ru">Запоминать пароли для сайтов</message>
+	<message xml:lang="de">Passwörter für Sites speichern</message>
+	<message xml:lang="hu">Jegyezze meg a weblapok jelszavait</message>
 </label>
 <label define="AM_PASSWORDS_LIST">
 	<message xml:lang="en">Sites</message>
@@ -6445,6 +6517,8 @@
 	<message xml:lang="sk">Umiestnenia</message>
 	<message xml:lang="it">Siti</message>
 	<message xml:lang="ru">Сайты</message>
+	<message xml:lang="de">Sites (alle Dateien)</message>
+	<message xml:lang="hu">Weblapok</message>
 </label>
 <label define="AM_PASSWORDS_EMPTY">
 	<message xml:lang="en">Remove All</message>
@@ -6453,42 +6527,57 @@
 	<message xml:lang="sk">Odstrániť všetky</message>
 	<message xml:lang="it">Elimina tutti</message>
 	<message xml:lang="ru">Удалить все</message>
+	<message xml:lang="de">Alles entfernen</message>
+	<message xml:lang="hu">Mind törlése</message>
 </label>
-
 <label define="AM_JAVASCRIPT_CAN_NOT_BUILD">
 	<message xml:lang="en">An error occured during the building of the javascript/DOM objects</message>
 	<message xml:lang="es">Ocurrió un error durante la construcción de los objetos JavaScript/DOM</message>
 	<message xml:lang="fr">Une erreur s'est produite pendant la construction des objets javascript/DOM</message>
+	<message xml:lang="de">Ein Fehler ist aufgetreten beim Aufbau des Javascript/DOM Objekts</message>
+	<message xml:lang="hu">Hiba a javascript/DOM objektum felépítése közben</message>
 </label>
 <label define="AM_JAVASCRIPT_IS_RUNNING">
 	<message xml:lang="en">A script is still running but will be aborted as soon as possible. Please try later.</message>
 	<message xml:lang="es">Un script se está ejecutando todavía, pero se abortará lo antes posible.</message>
 	<message xml:lang="fr">Un script est encore en cours d'exécution mais sera interrompu dès que possible. Veuillez ressayer ultérieurement.</message>
+	<message xml:lang="de">Ein Skript wird noch ausgeführt, aber beendet sobald es möglich ist. Bitte später versuchen</message>
+	<message xml:lang="hu">A szkript még fut, de amint lehet, megszakítjuk. Próbálja később.</message>
 </label>
 <label define="AM_JAVASCRIPT_VIEW">
 	<message xml:lang="en">Javascript/DOM can not be enabled in this view.</message>
 	<message xml:lang="es">No se puede activar JavaScript/DOM en esta vista</message>
 	<message xml:lang="fr">Javascript/DOM ne peut être activé dans cette vue.</message>
+	<message xml:lang="de">Javascript/DOM kann in dieser Ansichtsoption nicht aktiviert werden</message>
+	<message xml:lang="hu">A javascript/DOM nem engedélyezhető ebben a nézetben.</message>
 </label>
 <label define="AM_JAVASCRIPT_ENTER_A_COMMAND">
 	<message xml:lang="en">Enter a javascript command:</message>
 	<message xml:lang="es">Escriba un comando JavaScript:</message>
 	<message xml:lang="fr">Rentrez une commande javascript :</message>
+	<message xml:lang="de">Geben Sie einen Javascript-Befehl ein</message>
+	<message xml:lang="hu">Adjon meg egy javascript parancsot:</message>
 </label>
 <label define="AM_JAVASCRIPT_RETURNED_VALUE">
 	<message xml:lang="en">The command returned the value: %s</message>
 	<message xml:lang="es">El comando devolvió el valor: %s</message>
 	<message xml:lang="fr">La commande a retourné la valeur: %s</message>
+	<message xml:lang="de">Der Befehl wurde als Wert: %s ausgegeben</message>
+	<message xml:lang="hu">A parancs a következő értéket adta vissza: %s</message>
 </label>
 <label define="AM_JAVASCRIPT_NO_RETURNED_VALUE">
 	<message xml:lang="en">The command returned no value</message>
 	<message xml:lang="es">El comando no devolvió ningún valor</message>
 	<message xml:lang="fr">La commande n'a retourné aucune valeur</message>
+	<message xml:lang="de">Der Befehl hat keinen Wert ausgegeben</message>
+	<message xml:lang="hu">A parancs nem adott vissza értéket</message>
 </label>
 <label define="AM_JAVASCRIPT_SCRIPT_ERROR">
 	<message xml:lang="en">SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s</message>
 	<message xml:lang="es">SpiderMonkey devolvió el error siguiente:\n\nArchivo: %s\nLínea: %d\n\n%s</message>
 	<message xml:lang="fr">SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s</message>
+	<message xml:lang="de">SpyderMonkey hat folgenden Fehler ausgegeben:\n\nFile: %s\nLine: %d\n\n%s</message>
+	<message xml:lang="hu">A SpiderMonkey a következő hibát adta vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
 </label>
 <label define="AM_NEW">
 	<message xml:lang="en">New</message>
@@ -6510,6 +6599,8 @@
 	<message xml:lang="en">Customizable</message>
 	<message xml:lang="es">Personalizable</message>
 	<message xml:lang="fr">Paramétrable</message>
+	<message xml:lang="de">Anpassen</message>
+	<message xml:lang="hu">Egyedi</message>
 </label>
 <label define="AM_CREATE">
 	<message xml:lang="en">Create</message>
@@ -6525,6 +6616,8 @@
 	<message xml:lang="en">Create the link by click</message>
 	<message xml:lang="fr">Créer le lien en cliquant</message>
 	<message xml:lang="es">Crear el enlace haciendo clic en el destino</message>
+	<message xml:lang="de">Den Verweis durch anklicken herstellen</message>
+	<message xml:lang="hu">Kapocs létrehozása kattintással</message>
 </label>
 <label define="AM_DELETE_LINK">
 	<message xml:lang="en">Delete link</message>
@@ -6546,36 +6639,50 @@
 	<message xml:lang="en">Save without template</message>
 	<message xml:lang="fr">Sauver sans modèle</message>
 	<message xml:lang="es">Guardar sin plantilla</message>
+	<message xml:lang="de">Speichern ohne Vorlage</message>
+	<message xml:lang="hu">Mentés sablon nélkül</message>
 </label>
 <label define="AM_USE_THEME">
 	<message xml:lang="en">With theme ...</message>
 	<message xml:lang="fr">Avec le thème ...</message>
 	<message xml:lang="es">Con tema ...</message>
+	<message xml:lang="de">Mit Thema...</message>
+	<message xml:lang="hu">Témával ...</message>
 </label>
 <label define="AM_MAX_WIDTH">
 	<message xml:lang="en">Full width</message>
 	<message xml:lang="fr">Pleine largeur</message>
 	<message xml:lang="es">Ancho 100%</message>
+	<message xml:lang="de">Ganze Breite</message>
+	<message xml:lang="hu">Teljes szélesség</message>
 </label>
 <label define="AM_CAPTION">
 	<message xml:lang="en">With caption</message>
 	<message xml:lang="fr">Avec une légende</message>
 	<message xml:lang="es">Con leyenda</message>
+	<message xml:lang="de">Mit Titel</message>
+	<message xml:lang="hu">Felirattal</message>
 </label>
 <label define="AM_SIZE">
 	<message xml:lang="en">Size</message>
 	<message xml:lang="fr">Dimension</message>
 	<message xml:lang="es">Tamaño</message>
+	<message xml:lang="de">Grösse</message>
+	<message xml:lang="hu">Méret</message>
 </label>
 <label define="AM_POSITION">
 <message xml:lang="en">Position</message>
 <message xml:lang="fr">Position</message>
 	<message xml:lang="es">Posición</message>
+	<message xml:lang="de">Position</message>
+	<message xml:lang="hu">Helyzet</message>
 </label>
 <label define="AM_XML_EDIT">
 	<message xml:lang="en">XML editing mode</message>
 	<message xml:lang="fr">Mode d'édition XML</message>
 	<message xml:lang="es">Modo de edición XML</message>
+	<message xml:lang="de">XML Bearbeiten Betriebsart</message>
+	<message xml:lang="hu">XML szerkesztési mód</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

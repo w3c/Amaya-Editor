@@ -964,21 +964,29 @@
 	<message xml:lang="en">Unindent</message>
 	<message xml:lang="es">Reducir indentado</message>
 	<message xml:lang="fr">Retirer le retrait</message>
+	<message xml:lang="de">Ohne Einrücken</message>
+	<message xml:lang="hu">Behúzás csökkentése</message>
 </label>
 <label define="TMSG_LINE_SPACING">
 	<message xml:lang="en">Single line spacing</message>
 	<message xml:lang="es">Interlineado sencillo</message>
 	<message xml:lang="fr">Interligne simple</message>
+	<message xml:lang="de">Einzelne Zeile Abstand</message>
+	<message xml:lang="hu">Egyes sortávolság</message>
 </label>
 <label define="TMSG_HLINE_SPACING">
 	<message xml:lang="en">Middle line spacing</message>
 	<message xml:lang="es">Interlineado 1,5 líneas</message>
 	<message xml:lang="fr">Interligne moyenne</message>
+	<message xml:lang="de">Mittlere Zeile Abstand</message>
+	<message xml:lang="hu">Közepes sortávolság</message>
 </label>
 <label define="TMSG_DLINE_SPACING">
 	<message xml:lang="en">Double line spacing</message>
 	<message xml:lang="es">Interlineado doble</message>
 	<message xml:lang="fr">Interligne double</message>
+	<message xml:lang="de">Doppelte Zeile Abstand</message>
+	<message xml:lang="hu">Kettős sortávolság</message>
 </label>
 <label define="TMSG_SAVE_DOC">
 	<message xml:lang="en">Save document</message>
@@ -3741,31 +3749,43 @@
   <message xml:lang="en">Various constructs</message>
   <message xml:lang="es">Varios</message>
   <message xml:lang="fr">Constructions diverses</message>
+	<message xml:lang="de">Verschiedene Konstruktionen</message>
+	<message xml:lang="hu">Különböző szerkezetek</message>
 </label>
 <label define="TMSG_MATH_PANEL_2">
   <message xml:lang="en">Relations, orders and logic</message>
   <message xml:lang="es">Relaciones, orden y lógica</message>
   <message xml:lang="fr">Relations, ordre et logique</message>
+	<message xml:lang="de">Abhängigkeiten, Aufträge und Verknüpfungssteuerungen</message>
+	<message xml:lang="hu">Relációk, rendek és logika</message>
 </label>
 <label define="TMSG_MATH_PANEL_3">
   <message xml:lang="en">Sets and functions</message>
   <message xml:lang="es">Conjuntos y funciones</message>
   <message xml:lang="fr">Ensembles et fonctions</message>
+	<message xml:lang="de">Datensätze und Funktionen</message>
+	<message xml:lang="hu">Halmazok és függvények</message>
 </label>
 <label define="TMSG_MATH_PANEL_4">
   <message xml:lang="en">Arithmetic, operations, complexes and constants</message>
   <message xml:lang="es">Aritmética, operaciones, complejos y constantes</message>
   <message xml:lang="fr">Arithmétique, opérations, complexes et constantes</message>
+	<message xml:lang="de">arithmetisch, Abläufe, Verzweigungen und Konstante</message>
+	<message xml:lang="hu">Számelmélet, műveletek, komplexek és állandók</message>
 </label>
 <label define="TMSG_MATH_PANEL_5">
   <message xml:lang="en">Analysis, linear algebra and statistic</message>
   <message xml:lang="es">Análisis, álgebra lineal y estadística</message>
   <message xml:lang="fr">Analyse, algèbre linéaire et statistiques</message>
+	<message xml:lang="de">Analyse, lineare Algebra und Statistik</message>
+	<message xml:lang="hu">Analízis, lineáris algebra és statisztika</message>
 </label>
 <label define="TMSG_MATH_PANEL_6">
   <message xml:lang="en">Trigonometry and logarithms</message>
   <message xml:lang="es">Trigonometría y logaritmos</message>
   <message xml:lang="fr">Trigonométrie et logarithmes</message>
+	<message xml:lang="de">Trigonometrie und Logarithmen</message>
+	<message xml:lang="hu">Trigonometria és logaritmusok</message>
 </label>
 <label define="TMSG_ZoomIn">
   <message xml:lang="en">Zoom in</message>
@@ -3803,14 +3823,39 @@
   <message xml:lang="en">Theme</message>
   <message xml:lang="es">Tema</message>
   <message xml:lang="fr">Thème</message>
+<message xml:lang="de">Thema</message>
+<message xml:lang="hu">Téma</message>
 </label>
 <label define="TMSG_INSERT_MODE_XML">
-  <message xml:lang="en">XML</message>
-  <message xml:lang="fr">XML</message>
+	<message xml:lang="en">XML</message>
+	<message xml:lang="fr">XML</message>
+	<message xml:lang="de">XML</message>
+	<message xml:lang="it">XML</message>
+	<message xml:lang="tr">XML</message>
+	<message xml:lang="es">XML</message>
+	<message xml:lang="pt">XML</message>
+	<message xml:lang="fi">XML</message>
+	<message xml:lang="ru">XML</message>
+	<message xml:lang="hu">XML</message>
+	<message xml:lang="ka">XML</message>
+	<message xml:lang="cn">XML</message>
+	<message xml:lang="tw">XML</message>
+	<message xml:lang="sk">XML</message>
 </label>
 <label define="TMSG_INSERT_MODE_TEXT">
-  <message xml:lang="en">Text</message>
-  <message xml:lang="fr">Texte</message>
+	<message xml:lang="en">Text</message>
+	<message xml:lang="fr">Texte</message>
+	<message xml:lang="it">Testo</message>
+	<message xml:lang="tr">Text</message>
+	<message xml:lang="es">Texto</message>
+	<message xml:lang="pt">Texto</message>
+	<message xml:lang="fi">Teksti</message>
+	<message xml:lang="ru">Text</message>
+	<message xml:lang="hu">Szöveg</message>
+	<message xml:lang="ka">ტექსტი</message>
+	<message xml:lang="cn">Text</message>
+	<message xml:lang="tw">Text</message>
+	<message xml:lang="sk">Textové</message>
 </label>
 <label define="TMSG_NO_RECENT_DOC">
   <message xml:lang="en">No recent document</message>
