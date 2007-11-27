@@ -279,6 +279,10 @@ SOURCE=..\..\thotlib\editing\applicationapi.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\archives.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\tree\attributeapi.c
 # End Source File
 # Begin Source File

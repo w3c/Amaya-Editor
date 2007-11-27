@@ -6,9 +6,9 @@
 #include "wx/dir.h"       // for wxDir
 #include "wx/filename.h"  // for wxFileName
 #include "wx/string.h"    // for wxString
-#include "archives.h"
-
 #include "message_wx.h" // for TtaConvMessageToWX
+
+#include "archives.h"
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
