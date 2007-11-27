@@ -500,7 +500,9 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
               (pBox->BxAbstractBox->AbDisplay == 'B' ||
                pBox->BxType == BoTable))
             {
-              if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle)
+              if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle ||
+                  (pBox->BxAbstractBox->AbLeftMarginUnit == UnAuto &&
+                   pBox->BxAbstractBox->AbRightMarginUnit == UnAuto))
                 delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
               else if (pBox->BxAbstractBox->AbHorizPos.PosEdge == Left)
                 delta = pLine->LiXMax - pLine->LiRealLength;
@@ -521,7 +523,9 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
           (pBox->BxAbstractBox->AbDisplay == 'B' ||
            pBox->BxType == BoTable))
         {
-          if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle)
+          if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle ||
+              (pBox->BxAbstractBox->AbLeftMarginUnit == UnAuto &&
+               pBox->BxAbstractBox->AbRightMarginUnit == UnAuto))
             delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
           else if (pBox->BxAbstractBox->AbHorizPos.PosEdge == Right)
             delta = pLine->LiXMax - pLine->LiRealLength;
@@ -3657,7 +3661,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   PtrAbstractBox      pChildAb, pCell;
   PtrAbstractBox      pAb, pRootAb, pParent;
   PtrBox              pBoxToBreak, pNextBox;
-  PtrBox              floatL, floatR;
+  PtrBox              floatL, floatR, box;
   AbPosition         *pPosAb;
   int                 x, lineSpacing, indent, maxWidth;
   int                 org, width, noWrappedWidth;
@@ -4014,7 +4018,19 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
           if (toAdjust &&
               (full || pAb->AbTruncatedTail || pLine->LiRealLength > pLine->LiXMax) &&
               pAb->AbAdjust == AlignJustify)
-            Adjust (pBox, pLine, frame, xAbs, yAbs);
+            {
+              box = pLine->LiFirstBox;
+              if (box == pLine->LiLastBox &&
+                  box->BxAbstractBox &&
+                  box->BxAbstractBox->AbLeafType == LtCompound &&
+                  box->BxAbstractBox->AbFloat == 'N' &&
+                  !ExtraFlow (box, frame) &&
+                  (box->BxAbstractBox->AbDisplay == 'B' ||
+                   box->BxType == BoTable))
+                Align (pBox, pLine, frame, xAbs, yAbs);
+              else
+                Adjust (pBox, pLine, frame, xAbs, yAbs);
+            }
           else
             {
               if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum &&

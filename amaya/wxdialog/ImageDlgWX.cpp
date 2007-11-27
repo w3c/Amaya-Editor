@@ -23,6 +23,10 @@ BEGIN_EVENT_TABLE(ImageDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_BROWSEBUTTON"), ImageDlgWX::OnBrowseButton )
   EVT_BUTTON( XRCID("wxID_CANCEL"),       ImageDlgWX::OnCancelButton )
   EVT_BUTTON( XRCID("wxID_CLEAR"),        ImageDlgWX::OnClearButton )
+  EVT_TOOL( XRCID("wxID_INLINE"),         ImageDlgWX::OnPosition ) 
+  EVT_TOOL( XRCID("wxID_LEFT"),           ImageDlgWX::OnPosition ) 
+  EVT_TOOL( XRCID("wxID_RIGHT"),          ImageDlgWX::OnPosition ) 
+  EVT_TOOL( XRCID("wxID_CENTER"),         ImageDlgWX::OnPosition ) 
   EVT_TEXT_ENTER( XRCID("wxID_URL"),      ImageDlgWX::OnOpenButton )
   EVT_TEXT_ENTER( XRCID("wxID_ALT"),      ImageDlgWX::OnOpenButton )
 END_EVENT_TABLE()
@@ -72,6 +76,23 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
 #endif /* _MACOS */
 #endif /* _WINDOWS */
 
+  wxToolBar* tb = XRCCTRL(*this, "wxID_TOOL", wxToolBar);
+  switch (ImgPosition)
+    {
+    case 1:
+      tb->ToggleTool(XRCID("wxID_LEFT"), true);
+      break;
+    case 2:
+      tb->ToggleTool(XRCID("wxID_CENTER"), true);
+      break;
+    case 3:
+      tb->ToggleTool(XRCID("wxID_RIGHT"), true);
+      break;
+    default:
+      tb->ToggleTool(XRCID("wxID_INLINE"), true);
+      break;
+    }
+
   SetAutoLayout( TRUE );
 }
 
@@ -96,6 +117,46 @@ void ImageDlgWX::OnClearButton( wxCommandEvent& event )
 }
 
 /*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+void ImageDlgWX::OnPosition( wxCommandEvent& event )
+{
+  wxToolBar* tb = XRCCTRL(*this, "wxID_TOOL", wxToolBar);
+  int id = event.GetId();
+  if ( id == wxXmlResource::GetXRCID(_T("wxID_INLINE")) )
+    {
+      tb->ToggleTool(XRCID("wxID_INLINE"), true);
+      tb->ToggleTool(XRCID("wxID_LEFT"), false);
+      tb->ToggleTool(XRCID("wxID_CENTER"), false);
+      tb->ToggleTool(XRCID("wxID_RIGHT"), false);
+      ImgPosition = 0;
+    }
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_LEFT")) )
+    {
+      tb->ToggleTool(XRCID("wxID_INLINE"), false);
+      tb->ToggleTool(XRCID("wxID_LEFT"), true);
+      tb->ToggleTool(XRCID("wxID_CENTER"), false);
+      tb->ToggleTool(XRCID("wxID_RIGHT"), false);
+      ImgPosition = 1;
+    }
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_CENTER")) )
+    {
+      tb->ToggleTool(XRCID("wxID_INLINE"), false);
+      tb->ToggleTool(XRCID("wxID_LEFT"), false);
+      tb->ToggleTool(XRCID("wxID_CENTER"), true);
+      tb->ToggleTool(XRCID("wxID_RIGHT"), false);
+      ImgPosition = 2;
+    }
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_RIGHT")) )
+    {
+      tb->ToggleTool(XRCID("wxID_INLINE"), false);
+      tb->ToggleTool(XRCID("wxID_LEFT"), false);
+      tb->ToggleTool(XRCID("wxID_CENTER"), false);
+      tb->ToggleTool(XRCID("wxID_RIGHT"), true);
+      ImgPosition = 3;
+    }
+}
+
+/*----------------------------------------------------------------------
   OnOpenButton called when the user validate his selection
   params:
   returns:
@@ -103,7 +164,6 @@ void ImageDlgWX::OnClearButton( wxCommandEvent& event )
 void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
 {
   char     Buffer[MAX_LENGTH];
-  char     Alt[512];
 
   // get the current url
   wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );

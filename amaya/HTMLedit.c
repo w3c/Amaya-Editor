@@ -1330,13 +1330,21 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                                             {
                                               done = FALSE;
                                               if (parse)
-                                                // CSS properties should be ended by ;
-                                                name = TtaStrdup (data);
+                                                {
+                                                  // remove style rules
+                                                  lg = TtaGetTextAttributeLength (newAttr) + 1;
+                                                  name = (char *)TtaGetMemory (lg);
+                                                  TtaGiveTextAttributeValue (newAttr, name, &lg);
+                                                  ParseHTMLSpecificStyle (child, name, doc, 1000, TRUE);
+                                                  TtaFreeMemory (name);
+                                                  // CSS properties should be ended by ;
+                                                  name = TtaStrdup (data);
+                                                }
                                               else
                                                 {
                                                   // several class names
                                                   lg = TtaGetTextAttributeLength (newAttr);
-                                                  if (lg)
+                                                  if (lg && !replace)
                                                     {
                                                       int     ic, id, ld;
                                                       ld = strlen (data);

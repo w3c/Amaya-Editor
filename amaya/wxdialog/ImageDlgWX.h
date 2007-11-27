@@ -36,13 +36,14 @@ private:
   void OnOpenButton( wxCommandEvent& event );
   void OnBrowseButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
+  void OnPosition( wxCommandEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 
 private:
-  wxString m_Filter;
-  int *    m_pLastUsedFilter;
+  wxString     m_Filter;
+  int         *m_pLastUsedFilter;
 
 };
 

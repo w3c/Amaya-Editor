@@ -692,7 +692,8 @@ void GenerateStyle (char * data , ThotBool add)
 {
   Element             el, firstC, lastC;
   Attribute           attr = NULL;
-  int                 doc, i, j;
+  char                 *value;
+  int                 doc, i, j, len;
 
   doc = TtaGetSelectedDocument();
   if (doc == 0)
@@ -721,6 +722,12 @@ void GenerateStyle (char * data , ThotBool add)
         {
           // the attribute is now empty
           TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+          // remove style rules
+          len = TtaGetTextAttributeLength (attr);
+          value = (char *)TtaGetMemory (len);
+          TtaGiveTextAttributeValue (attr, value, &len);
+          ParseHTMLSpecificStyle (el, value, doc, 1000, TRUE);
+          // remove the attribute
           TtaRegisterAttributeDelete (attr, el, doc);
           TtaRemoveAttribute (el, attr, doc);
           DeleteSpanIfNoAttr (el, doc, &firstC, &lastC);

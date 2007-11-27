@@ -1186,9 +1186,9 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
   Attribute          attr;
   AttributeType      attrType;
   NotifyOnTarget     event;
-  char              *name, *value;
-  int                c1, i, j, cN, length, width, height, w, h;
-  ThotBool           oldStructureChecking, newAttr, checkdim = FALSE;
+  char              *name, *value, *start, *stop;
+  int                c1, i, j, cN, length, width, height, w, h, len;
+  ThotBool           oldStructureChecking, newAttr, checkoptions = FALSE;
 
   TtaGiveFirstSelectedElement (doc, &firstSelEl, &c1, &i); 
   if (firstSelEl == NULL)
@@ -1210,7 +1210,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
            and only this element is selected */
         /* The user wants to replace an existing <img> */
         {
-	  checkdim = TRUE;
+          checkoptions = TRUE;
           /* get the value of the current src attribute for this image
              to initialize the image dialogue box */
           attrType.AttrSSchema = elType.ElSSchema;
@@ -1254,21 +1254,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
             {
               length = TtaGetTextAttributeLength (attr) + 1;
               if (length <= MAX_LENGTH)
-                {
-#ifdef _WX
-                  TtaGiveTextAttributeValue (attr, ImgAlt, &length);
-#else /* _WX */
-                  /* get a buffer for the attribute value */
-                  value = (char *)TtaGetMemory (length);
-		              /* copy the ALT attribute into the buffer */
-                  TtaGiveTextAttributeValue (attr, value, &length);
-                  name = (char *)TtaConvertMbsToByte ((unsigned char *)value,
-                                                      TtaGetDefaultCharset ());
-                  strncpy (ImgAlt, name, MAX_LENGTH-1);
-                  TtaFreeMemory (value);
-                  TtaFreeMemory (name);
-#endif /* _WX */
-                }
+                TtaGiveTextAttributeValue (attr, ImgAlt, &length);
             }
           /* display the image dialogue box */
           event.element = firstSelEl;
@@ -1276,9 +1262,9 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
           CreateNewImage = FALSE;
           TtaOpenUndoSequence (doc, firstSelEl, lastSelEl, c1, cN);
           UpdateSRCattribute (&event);
-	  TtaSetDocumentModified (doc);
-	  if (!checkdim)
-	    TtaCloseUndoSequence(doc);
+          TtaSetDocumentModified (doc);
+          if (!checkoptions)
+            TtaCloseUndoSequence(doc);
         }
       else
         /* the user want to insert a new image */
@@ -1319,12 +1305,13 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
               oldStructureChecking = TtaGetStructureChecking (doc);
               TtaSetStructureChecking (FALSE, doc);
               TtaCreateElement (elType, doc);
-	      TtaSetStructureChecking (oldStructureChecking, doc);
-	      checkdim = TRUE;
-	    }
-	}
+              TtaSetStructureChecking (oldStructureChecking, doc);
+              checkoptions = TRUE;
+            }
+        }
     }
-  if (checkdim)
+
+  if (checkoptions)
     {
       // check if the width, height attributes must be generated
       TtaGiveFirstSelectedElement (doc, &el, &c1, &i); 
@@ -1332,6 +1319,88 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
       if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
         el = TtaGetParent (el);
       attrType.AttrSSchema = elType.ElSSchema;
+
+      // check the requested position
+      TtaExtendUndoSequence (doc);
+      attrType.AttrTypeNum = HTML_ATTR_Style_;
+      attr = TtaGetAttribute (el, attrType);
+      value = NULL;
+      if (attr == NULL)
+        {
+          if (ImgPosition)
+            {
+              newAttr = TRUE;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              value = (char *)TtaGetMemory (80);
+              value[0] = EOS;
+            }
+        }
+      else
+        {
+          newAttr = FALSE;
+          len = TtaGetTextAttributeLength (attr) + 80;
+          value = (char *)TtaGetMemory (len);
+          TtaGiveTextAttributeValue (attr, value, &len);
+          // remove style rules
+          ParseHTMLSpecificStyle (el, value, doc, 1000, TRUE);
+          stop = NULL;
+          start = strstr (value, "float");
+          if (start)
+            stop = start + 5;
+          else
+            {
+              start = strstr (value, "display: block; text-align: center; margin-left: auto; margin-right: auto");
+              stop = start + 66;
+            }
+          if (start)
+            {
+              while (*stop != EOS && *stop != ';')
+                stop++;
+              if (*stop != EOS)
+                stop++;
+              while (*stop != EOS)
+                {
+                  *start = *stop;
+                  start++;
+                  stop++;
+                }
+              *start = EOS;
+            }
+          if (value[0] != EOS)
+            strcat (value, "; ");
+        }
+      if (ImgPosition == 1)
+        strcat (value, "float: left");
+      else if (ImgPosition == 2)
+        strcat (value, "display: block; text-align: center; margin-left: auto; margin-right: auto");
+      else if (ImgPosition == 3)
+        strcat (value, "float: right");
+      if (ImgPosition)
+        {
+          if (!newAttr)
+            TtaRegisterAttributeReplace (attr, el, doc);
+          TtaSetAttributeText (attr, value, el, doc);
+          if (newAttr)
+            TtaRegisterAttributeCreate (attr, el, doc);
+          ParseHTMLSpecificStyle (el, value, doc, 1000, FALSE);
+        }
+      else if (attr)
+        {
+          if (value[0] != EOS)
+            {
+              TtaRegisterAttributeReplace (attr, el, doc);
+              TtaSetAttributeText (attr, value, el, doc);
+            }
+          else
+            {
+              TtaRegisterAttributeDelete (attr, el, doc);
+              TtaRemoveAttribute (el, attr, doc);
+            }
+        }
+      TtaFreeMemory (value);
+      TtaCloseUndoSequence(doc);
+
       /* search informations about height and width */
       width = 0; height = 0;
       if (el)

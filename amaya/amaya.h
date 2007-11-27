@@ -360,25 +360,13 @@ typedef enum _ClickEvent {
 #define AMAYA_PARSE_PUNCTUATION 1   /* Include delimiters, e.g, "/" and ":" */
 #define AMAYA_PARSE_ALL         31  /* All the parts */
 
+#define MAX_AutoSave_list 20
+
 THOT_EXPORT int        AMAYA;     /* Index of amaya message table */
 extern      int        appArgc;	  /* defined in EDITORAPP.c */
 extern      char     **appArgv;   /* defined in EDITORAPP.c */
-THOT_EXPORT char       TempFileDirectory[MAX_LENGTH];
-THOT_EXPORT char       Answer_text[MAX_LENGTH];
-THOT_EXPORT char       Answer_name[NAME_LENGTH];
-THOT_EXPORT char       Answer_password[NAME_LENGTH];
-THOT_EXPORT ThotBool   Answer_save_password;
-THOT_EXPORT char       Display_password[NAME_LENGTH];
-THOT_EXPORT char       ScanFilter[NAME_LENGTH]; /* to scan directories    */
-THOT_EXPORT char       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the user for a MathML expression */
-THOT_EXPORT char       JavascriptPromptValue[MAX_LENGTH]; /* value typed by the user in a prompt form */
-THOT_EXPORT char       IdElemName[MAX_LENGTH]; /* element name typed by the user from the MakeID menu */
-THOT_EXPORT char       IdStatus[50]; /* element name typed by the user from the MakeID menu */
-THOT_EXPORT char       ImgFilter[NAME_LENGTH];
-THOT_EXPORT char       DirectoryImage[MAX_LENGTH];
-THOT_EXPORT char       LastURLImage[MAX_LENGTH];
-THOT_EXPORT char       ImageName[MAX_LENGTH];
-THOT_EXPORT char       ImgAlt[MAX_LENGTH];
+
+THOT_EXPORT char      *AttrHREFvalue;
 THOT_EXPORT char      *LastURLName;	/* last URL requested               */
 THOT_EXPORT char      *Error_DocURL; /* The parsed file */
 THOT_EXPORT char      *DirectoryName;	/* local path of the document       */
@@ -391,21 +379,47 @@ THOT_EXPORT char      *SaveImgsURL;	/* where to save remote Images      */
 THOT_EXPORT char      *SaveCssURL;	/* where to save remote Images      */
 THOT_EXPORT char      *TargetName;
 THOT_EXPORT char      *SavingFile;	/* complete path or URL of the document */
-THOT_EXPORT char      *SavedDocumentURL;/* URL of the document that contained
-					   the elements that are now in the
-					   Cut and Paste buffer */
-THOT_EXPORT char      UserMimeType[MAX_LENGTH];
+THOT_EXPORT char      *SavedDocumentURL;/* URL of the document that contained the elements
+                                           that are now in the Cut and Paste buffer */
+THOT_EXPORT char      *AutoSave_list;
+THOT_EXPORT char      *Template_list; /* list of templates */
+THOT_EXPORT char      *URL_list; /* list of previous open URLs */
+#ifdef _SVG
+THOT_EXPORT char      *SVGlib_list;
+#endif /* _SVG */
+THOT_EXPORT char       TempFileDirectory[MAX_LENGTH];
+THOT_EXPORT char       Answer_text[MAX_LENGTH];
+THOT_EXPORT char       Answer_name[NAME_LENGTH];
+THOT_EXPORT char       Answer_password[NAME_LENGTH];
+THOT_EXPORT char       Display_password[NAME_LENGTH];
+THOT_EXPORT char       ScanFilter[NAME_LENGTH]; /* to scan directories    */
+THOT_EXPORT char       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the user for a MathML expression */
+THOT_EXPORT char       JavascriptPromptValue[MAX_LENGTH]; /* value typed by the user in a prompt form */
+THOT_EXPORT char       IdElemName[MAX_LENGTH]; /* element name typed by the user from the MakeID menu */
+THOT_EXPORT char       IdStatus[50]; /* element name typed by the user from the MakeID menu */
+THOT_EXPORT char       ImgFilter[NAME_LENGTH];
+THOT_EXPORT char       DirectoryImage[MAX_LENGTH];
+THOT_EXPORT char       LastURLImage[MAX_LENGTH];
+THOT_EXPORT char       ImageName[MAX_LENGTH];
+THOT_EXPORT char       ImgAlt[MAX_LENGTH];
+THOT_EXPORT char       UserMimeType[MAX_LENGTH];
                                         /* Used to pass the user's MIME type 
 					   choice when doing a Save As of a
 					   local object to a server */
-THOT_EXPORT char      UserCharset[MAX_LENGTH];
+THOT_EXPORT char       UserCharset[MAX_LENGTH];
                                         /* Used to pass the user's charset
 					   choice when doing a Save As of a
 					   local object to a server */
-THOT_EXPORT char      SaveFormTmp[MAX_LENGTH];
+THOT_EXPORT char       SaveFormTmp[MAX_LENGTH];
                                         /* Used for storing the temporary
 					   changes in the ChangeCharset and
 					   ChangeMimetype forms */
+
+THOT_EXPORT int        URL_list_len;
+THOT_EXPORT int        Template_list_len;
+/* list of auto-saved files */
+THOT_EXPORT int        AutoSave_list_len;
+THOT_EXPORT int        AutoSave_Interval;
 THOT_EXPORT int        Lg_password;
 THOT_EXPORT int        BaseDialog;
 THOT_EXPORT int        BasePrint;
@@ -417,10 +431,12 @@ THOT_EXPORT int        ReturnOption;
 THOT_EXPORT int        NumberRows;
 THOT_EXPORT int        NumberCols;
 THOT_EXPORT int        TBorder; // border width of created tables
-THOT_EXPORT int        TCaption; // value 0=top, 1=bottom, 2=no
+THOT_EXPORT int        TCaption; // value 0=no, 1=yes
+THOT_EXPORT int        ImgPosition; // value 0=inline, 1=left, 2=center 3=right
 THOT_EXPORT int        ReturnOptionMenu;
 THOT_EXPORT int        IdDoc;
 THOT_EXPORT int        BaseLibrary;
+
 THOT_EXPORT Document   CurrentDocument;
 THOT_EXPORT Document   SavingDocument;
 THOT_EXPORT Document   SavingObject;
@@ -429,9 +445,16 @@ THOT_EXPORT Document   DocBook;
 THOT_EXPORT Document   IncludedDocument;
 THOT_EXPORT Document   ParsedDoc; /* The document to which CSS are applied */
 THOT_EXPORT Document   ParsedCSS; /* The CSS document currently parsed */
-THOT_EXPORT Element    AttrHREFelement;
-THOT_EXPORT char      *AttrHREFvalue;
 THOT_EXPORT Document   SelectionDoc;
+THOT_EXPORT Document   W3Loading; /* the document being loaded */
+THOT_EXPORT Document   BackupDocument; /* the current backup */
+THOT_EXPORT Element    AttrHREFelement;
+
+THOT_EXPORT FILE      *ErrFile;
+THOT_EXPORT FILE      *CSSErrFile;
+
+THOT_EXPORT ThotBool   URL_list_keep;
+THOT_EXPORT ThotBool   Answer_save_password;
 THOT_EXPORT ThotBool   TMAX_Width;
 THOT_EXPORT ThotBool   AttrHREFundoable;
 THOT_EXPORT ThotBool   IsNewAnchor;
@@ -489,8 +512,7 @@ THOT_EXPORT ThotBool   Synchronizing;
 THOT_EXPORT ThotBool   AmayaUniqueInstance;
 THOT_EXPORT ThotBool   IdApplyToSelection; /* used in the Make ID menu */
 THOT_EXPORT ThotBool   Check_read_ids; /* check all parsed IDs */
-THOT_EXPORT FILE      *ErrFile;
-THOT_EXPORT FILE      *CSSErrFile;
+
 typedef enum
 {
   docFree,
@@ -575,10 +597,6 @@ THOT_EXPORT char                    *DocumentURLs[DocumentTableLength];
 THOT_EXPORT DocumentMetaDataElement *DocumentMeta[DocumentTableLength];
 /* Type of document */
 THOT_EXPORT DocumentType             DocumentTypes[DocumentTableLength];
-/* Document that shows buttons */
-THOT_EXPORT ThotBool                 SButtons[DocumentTableLength];
-/* Document that shows address */
-THOT_EXPORT ThotBool                 SAddress[DocumentTableLength];
 /* Document that shows map areas */
 THOT_EXPORT ThotBool                 MapAreas[DocumentTableLength];
 /* Document splitted horizontally */
@@ -592,57 +610,11 @@ THOT_EXPORT int                      FilesLoading[DocumentTableLength];
 /* Status (error, success) of the download of the objects of a document */
 THOT_EXPORT int                      DocNetworkStatus[DocumentTableLength];
 
-THOT_EXPORT Document                 W3Loading; /* the document being loaded */
-THOT_EXPORT Document                 BackupDocument; /* the current backup */
-
-/* list of previous open URLs */
-THOT_EXPORT char                    *URL_list;
-THOT_EXPORT int                      URL_list_len;
-THOT_EXPORT ThotBool                 URL_list_keep;
-
-/* list of templates */
-THOT_EXPORT char                    *Template_list;
-THOT_EXPORT int                      Template_list_len;
-
-#ifdef _SVG
-THOT_EXPORT char                    *SVGlib_list;
-#endif /* _SVG */
-
-/* list of auto-saved files */
-#define MAX_AutoSave_list 20
-THOT_EXPORT char                    *AutoSave_list;
-THOT_EXPORT int                      AutoSave_list_len;
-THOT_EXPORT int                      AutoSave_Interval;
-
-/* button indexes */
-THOT_EXPORT int iStop;
-THOT_EXPORT int iBack;
-THOT_EXPORT int iForward;
-THOT_EXPORT int iReload;
-THOT_EXPORT int iHome;
-THOT_EXPORT int iEditor;
-THOT_EXPORT int iSave;
-THOT_EXPORT int iSaveAll;
-THOT_EXPORT int iPrint;
-THOT_EXPORT int iFind;
-THOT_EXPORT int iI;
-THOT_EXPORT int iB;
-THOT_EXPORT int iT;
-THOT_EXPORT int iImage;
-THOT_EXPORT int iH1;
-THOT_EXPORT int iH2;
-THOT_EXPORT int iH3;
-THOT_EXPORT int iBullet;
-THOT_EXPORT int iNum;
-THOT_EXPORT int iDL;
-THOT_EXPORT int iLink;
-THOT_EXPORT int iTable;
-THOT_EXPORT int iLogo;
 
 #define IMAGE_NOT_LOADED        0
-#define IMAGE_LOCAL		1
-#define IMAGE_LOADED		2
-#define IMAGE_MODIFIED		3
+#define IMAGE_LOCAL		          1
+#define IMAGE_LOADED		        2
+#define IMAGE_MODIFIED		      3
 
 
 typedef void (*LoadedImageCallback)(Document doc, Element el, char *file,
