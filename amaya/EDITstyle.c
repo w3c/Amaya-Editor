@@ -1394,7 +1394,7 @@ static void UpdateClass (Document doc)
                   len = TtaGetTextAttributeLength (attr);
                   a_class = (char *)TtaGetMemory (len + 1);
                   TtaGiveTextAttributeValue (attr, a_class, &len);
-                  found = (strcmp (a_class, "Amaya theme"));
+                  found = (strcmp (a_class, "Amaya theme") == 0);
                   TtaFreeMemory (a_class);
                 }
             }
