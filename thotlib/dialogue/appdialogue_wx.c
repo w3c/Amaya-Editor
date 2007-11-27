@@ -215,6 +215,20 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
 }
 
 /*----------------------------------------------------------------------
+  BuildRecentDocMenu build the recent document menu
+  ----------------------------------------------------------------------*/
+static void BuildRecentDocMenu(int window_id, wxMenuItem* item)
+{
+  if(item)
+    {
+      AmayaNormalWindow * win = wxDynamicCast(WindowTable[window_id].WdWindow,
+                                                      AmayaNormalWindow);
+      if(win)
+          win->PrepareRecentDocumentMenu(item);
+    }
+}
+
+/*----------------------------------------------------------------------
   BuildPopdownWX builds menus items and sub-menus and hangs it to the given p_menu
   ----------------------------------------------------------------------*/
 static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
@@ -355,6 +369,13 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
       
       if (p_menu_item)
         p_menu->Append(p_menu_item);
+      
+      if (item_action != -1)
+        {
+          /* Is it the Open recent menu ? */
+          if (!strcmp (MenuActionList[item_action].ActionName, "OpenDoc"))
+            BuildRecentDocMenu(window_id, p_menu_item);
+        }
       
       item_nb++;
     }

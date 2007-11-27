@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -79,6 +78,8 @@ extern void OpenDoc ( Document doc,
                       View view );
 extern void OpenDocInNewWindow ( Document document,
                                  View view );
+extern void OpenRecentDoc ( Document document,
+                            View view );
 extern void OpenNew ( Document document,
                       View view,
                       int docType,
@@ -227,7 +228,6 @@ extern void SendByMail ( Document document,
                          View view );
 
 #else /* __STDC__ */
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -301,6 +301,8 @@ extern void OpenDoc ( Document doc,
                         View view );
 extern void OpenDocInNewWindow ( Document document,
                                    View view );
+extern void OpenRecentDoc ( Document document,
+                              View view );
 extern void OpenNew ( Document document,
                         View view,
                         int docType,

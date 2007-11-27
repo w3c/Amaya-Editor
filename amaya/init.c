@@ -1712,6 +1712,17 @@ void OpenDocInNewWindow (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void OpenRecentDoc (Document document, View view)
+{
+#ifdef AMAYA_DEBUG
+  printf("OpenRecentDoc\n");
+#endif /* AMAYA_DEBUG */
+}
+
+
+
+/*----------------------------------------------------------------------
   OpenNew: create a new document
   ----------------------------------------------------------------------*/
 void OpenNew (Document document, View view, int docType, int docProfile)

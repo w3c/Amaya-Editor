@@ -332,7 +332,7 @@
 	<message xml:lang="tw">新建 CSS 樣式表(&amp;T)...</message>
 	<message xml:lang="sk">Nový súbor &amp;CSS pravidiel...</message>
 </label>
-<label define="BOpenDoc">
+<label define="OpenAFile">
 	<message xml:lang="en">&amp;Open document...</message>
 	<message xml:lang="fr">&amp;Ouvrir...</message>
 	<message xml:lang="de">Öffnen(&amp;O)...</message>
@@ -347,6 +347,10 @@
 	<message xml:lang="cn">打开文档(&amp;O)...</message>
 	<message xml:lang="tw">打開文檔(&amp;O)...</message>
 	<message xml:lang="sk">&amp;Otvoriť dokument...</message>
+</label>
+<label define="BOpenDoc">
+	<message xml:lang="en">&amp;File...</message>
+	<message xml:lang="fr">&amp;Fichier...</message>
 </label>
 <label define="BOpenInNewWindow">
 	<message xml:lang="en">Open in new &amp;window...</message>

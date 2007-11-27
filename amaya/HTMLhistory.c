@@ -27,8 +27,7 @@
 
 #include "wx/msgdlg.h"
 #include "wx/aboutdlg.h"
-#include "wx/wfstream.h"
-#include "wx/sstream.h"
+#include "wx/ffile.h"
 #include "message_wx.h"
 #include "registry_wx.h"
 

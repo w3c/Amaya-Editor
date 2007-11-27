@@ -3812,6 +3812,10 @@
   <message xml:lang="en">Text</message>
   <message xml:lang="fr">Texte</message>
 </label>
+<label define="TMSG_NO_RECENT_DOC">
+  <message xml:lang="en">No recent document</message>
+  <message xml:lang="fr">Aucun document récent</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

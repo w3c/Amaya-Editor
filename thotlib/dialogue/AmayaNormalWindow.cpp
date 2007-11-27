@@ -78,6 +78,9 @@ static  char      BufUrl[2048];
 static  ThotBool  isBufUrl = 0;
 #endif /* _WINDOWS */
 
+#define RECENT_DOC_ID     2000
+#define RECENT_DOC_MAX_NB   16
+
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
  *      Method:  CreateNormalWindow
@@ -447,10 +450,32 @@ wxString AmayaNormalWindow::GetURL( )
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
  *      Method:  AppendURL
- * Description:  TODO
+ * Description:  Append an url to the urlbar and to the MRU menu
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::AppendURL ( const wxString & new_url )
 {
+  // Add the url to the MRU menu
+  wxMenu     *menu;
+  wxMenuItem *item;
+  if(m_URLs.GetCount()<RECENT_DOC_MAX_NB)
+    {
+      if(m_URLs.Index(new_url)==wxNOT_FOUND)
+        {
+          if(GetMenuBar() && GetMenuBar()->GetMenu(0))
+            {
+              item = GetMenuBar()->GetMenu(0)->FindItem(RECENT_DOC_ID, &menu);
+              if(item)
+                {
+                  if(m_URLs.IsEmpty())
+                    menu->Destroy(RECENT_DOC_ID);
+                  menu->Append(RECENT_DOC_ID+m_URLs.GetCount(), new_url);
+                }
+            }
+          m_URLs.Add(new_url);
+        }
+    }
+  
+  // Add the url to the urlbar
   if(m_pComboBox)
     m_pComboBox->Append( new_url );
 }
@@ -459,9 +484,33 @@ void AmayaNormalWindow::AppendURL ( const wxString & new_url )
  *       Class:  AmayaNormalWindow
  *      Method:  EmptyURLBar
  * Description:  remove all items in the url bar
+ *               remove MRU from menu.
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::EmptyURLBar()
 {
+  // Remove MRU from menu
+  wxMenu     *menu;
+  wxMenuItem *item;
+  if(GetMenuBar() && GetMenuBar()->GetMenu(0))
+    {
+      item = GetMenuBar()->GetMenu(0)->FindItem(RECENT_DOC_ID, &menu);
+      if(item && !m_URLs.IsEmpty())
+        {
+          for(int i=RECENT_DOC_ID; i<RECENT_DOC_ID+RECENT_DOC_MAX_NB; i++)
+            {
+              if(menu->FindItem(i))
+                menu->Destroy(i);
+              else
+                break;
+            }
+          menu->Append(RECENT_DOC_ID,
+              TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_NO_RECENT_DOC)))
+              ->Enable(false);
+        }
+    }
+  m_URLs.Clear();
+
+  // Cleare url bar
   if(m_pComboBox)
     m_pComboBox->Clear();
 }
@@ -778,6 +827,42 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
   event.Skip();
 }
 
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  PrepareRecentDocumentMenu
+ * Description:  Modify the menu to prepare insertion of the MRU
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::PrepareRecentDocumentMenu(wxMenuItem* item)
+{
+  if(item)
+    {
+      wxMenu* menu = item->GetMenu();
+      menu->AppendSeparator();
+      menu->Append(RECENT_DOC_ID,
+          TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_NO_RECENT_DOC)))
+          ->Enable(false);
+    }
+}
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnRecentDocMenu
+ * Description:  
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::OnRecentDocMenu(wxCommandEvent& event)
+{
+  int id = event.GetId() - RECENT_DOC_ID;
+  if(id<m_URLs.GetCount())
+    {
+      wxString str = m_URLs[id];
+      if(str)
+        {
+          SetURL(str);
+          GotoSelectedURL();
+        }
+    }
+}
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
@@ -795,6 +880,9 @@ BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
   EVT_COMBOBOX( XRCID("wxID_TOOL_URL"),   AmayaNormalWindow::OnURLSelected )
   EVT_TEXT_ENTER( XRCID("wxID_TOOL_URL"), AmayaNormalWindow::OnURLTextEnter )
   EVT_TEXT( XRCID("wxID_TOOL_URL"),       AmayaNormalWindow::OnURLText )
+  
+  EVT_MENU_RANGE(RECENT_DOC_ID, RECENT_DOC_ID+RECENT_DOC_MAX_NB,
+                                        AmayaNormalWindow::OnRecentDocMenu)
   
 END_EVENT_TABLE()
 

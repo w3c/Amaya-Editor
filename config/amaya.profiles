@@ -263,6 +263,7 @@ GotoNextHTML
 HelpBrowsing
 NextLinkOrFormElement
 OpenDoc
+OpenFile
 PreviousLinkOrFormElement
 Reload
 SaveDocumentAs
@@ -328,6 +329,7 @@ GotoNextHTML
 HelpBrowsing
 NextLinkOrFormElement
 OpenDoc
+OpenFile
 PreviousLinkOrFormElement
 Reload
 SaveDocumentAs

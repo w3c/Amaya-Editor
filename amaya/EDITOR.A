@@ -42,8 +42,9 @@ MENUS
 	File.New1 button:BSvg -> NewSVG icon:document_svg.png;
 	File.New1 button:BCss -> NewCss icon:document_css.png;
 
-	File button:BOpenDoc -> OpenDoc;
+	File.OpenAFile button:BOpenDoc -> OpenDoc;
 	File button:BOpenInNewWindow -> OpenDocInNewWindow;
+	
 	File button:BReload -> Reload;
 	File.Charset1 button:BUTF_8 -> ReadAsUTF_8;
 	File.Charset1 button:BISO_8859_1 -> ReadAsISO_8859_1;

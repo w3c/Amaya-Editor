@@ -69,6 +69,9 @@ class AmayaNormalWindow : public AmayaWindow
   virtual AmayaPage *    GetPage( int position ) const;
   virtual int            GetPageCount() const;
 
+  virtual void PrepareRecentDocumentMenu(wxMenuItem* item);
+  void OnRecentDocMenu(wxCommandEvent& event);
+  
 protected:
   DECLARE_EVENT_TABLE()
 
@@ -107,6 +110,8 @@ protected:
   bool                    m_haveTBEditing, m_haveTBBrowsing;
   
   wxComboBox              *m_pComboBox;         // URL combo box
+  
+  wxArrayString           m_URLs;
 
   static int s_normalWindowCount;   
 

@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern ThotBool CheckValidProfile ( NotifyElement *event );
 extern ThotBool CheckGenerator ( NotifyElement *event );
 extern ThotBool CheckUSEMAP ( NotifyAttribute *event );
@@ -78,7 +77,6 @@ extern ThotBool SaveTempCopy ( Document doc,
                                char** filename );
 
 #else /* __STDC__ */
-
 extern ThotBool CheckValidProfile ( NotifyElement *event );
 extern ThotBool CheckGenerator ( NotifyElement *event );
 extern ThotBool CheckUSEMAP ( NotifyAttribute *event );
