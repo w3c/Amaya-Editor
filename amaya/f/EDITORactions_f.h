@@ -260,6 +260,8 @@ extern void CopyLockInformation ( Document doc,
                                   View view );
 extern void LockIndicator ( Document doc,
                             View view );
+extern void SelectAll ( Document doc,
+                        View view );
 
 #else /* __STDC__ */
 
@@ -517,6 +519,8 @@ extern void CopyLockInformation ( Document doc,
                                     View view );
 extern void LockIndicator ( Document doc,
                               View view );
+extern void SelectAll ( Document doc,
+                          View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

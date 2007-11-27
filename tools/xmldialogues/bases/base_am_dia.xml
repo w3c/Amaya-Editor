@@ -1412,6 +1412,10 @@
 	<message xml:lang="tw">附加(&amp;A)</message>
 	<message xml:lang="sk">Vložiť &amp;za</message>
 </label>
+<label define="BSelectAll">
+	<message xml:lang="en">Select All</message>
+	<message xml:lang="fr">Tout sélectionner</message>
+</label>
 <label define="BFind">
 	<message xml:lang="en">&amp;Find...</message>
 	<message xml:lang="fr">Rec&amp;hercher...</message>

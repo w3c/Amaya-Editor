@@ -4700,3 +4700,27 @@ void LockIndicator (Document doc, View view)
 
 
 /*------------ End: WebDAV Modifications by Manuele Kirsch -----------*/
+
+
+/*----------------------------------------------------------------------
+  SelectAll
+  ----------------------------------------------------------------------*/
+void SelectAll (Document doc, View view) 
+{
+  Element     el;
+  ElementType elType;
+  
+  switch(DocumentTypes[doc])
+  {
+    case docHTML:
+      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+      elType.ElTypeNum = HTML_EL_BODY;
+      el = TtaSearchTypedElement(elType, SearchInTree, TtaGetRootElement(doc));
+      if(el)
+          TtaSelectElement(doc, el);
+      break;
+    default:
+      TtaSelectElement(doc, TtaGetRootElement(doc));
+      break;
+  }
+}

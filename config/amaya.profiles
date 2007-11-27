@@ -409,6 +409,7 @@ HelpXml
 &Synchronize
 &InsertBefore
 &InsertAfter
+&SelectAll
 ShowEditingBar
 *AmayaToolBarEditing
 *AmayaXHTMLToolPanel
@@ -455,6 +456,7 @@ HelpAccess
 &Synchronize
 &InsertBefore
 &InsertAfter
+&SelectAll
 ShowEditingBar
 *AmayaToolBarEditing
 *AmayaXHTMLToolPanel

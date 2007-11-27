@@ -126,6 +126,7 @@ MENUS
 	Edit_ button:BClear -> TtcDeleteSelection icon:editdelete.png;
 	Edit_ button:BInsertBefore -> InsertBefore icon:insert.png;
 	Edit_ button:BInsertAfter -> InsertAfter icon:append.png;
+	Edit_ button:BSelectAll -> SelectAll;
 	Edit_ Separator;
 	Edit_ button:BFind -> TtcSearchText icon:find.png;
 	Edit_ button:BSpellCheck -> SpellCheck icon:spellcheck.png;
