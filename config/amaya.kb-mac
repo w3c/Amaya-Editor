@@ -43,6 +43,7 @@ Ctrl <Key>6:                       ZoomOut()
 Ctrl <Key>-:                       ZoomOut()
 Ctrl <Key>=:                       ZoomIn()
 Ctrl <Key>+:                       ZoomIn()
+Ctrl <Key>a:                       SelecteAll()
 
 # BR and &nbsp;
 Ctrl <Key>Return:                  CreateBreak("\212") 
@@ -56,8 +57,7 @@ Shift <Key>F4:                     TtcPreviousElement()
 
 #Following commented out to remember default actions
 #<Key>Right:                       TtcNextChar() 
-#<Key>Left:                        TtcPreviousChar() 
-#Ctrl <Key>a:                      TtcStartOfLine() 
+#<Key>Left:                        TtcPreviousChar()  
 #Shift Ctrl <Key>A:                TtcSelStartOfLine() 
 #Ctrl <Key>e:                      TtcEndOfLine() 
 #Shift Ctrl <Key>E:                TtcSelEndOfLine() 
@@ -137,7 +137,7 @@ Shift Ctrl <Key>G , Shift Ctrl <Key>W:   TtcInsertChar("&#x3A9;")
 
 #Headings sbmenu
 Ctrl <Key>h , Ctrl <Key>&:   CreateHeading1() 
-Ctrl <Key>h , Ctrl <Key>é:   CreateHeading2() 
+Ctrl <Key>h , Ctrl <Key>ï¿½:   CreateHeading2() 
 Ctrl <Key>h , Ctrl <Key>":   CreateHeading3() 
 Ctrl <Key>h , Ctrl <Key>':   CreateHeading4() 
 Ctrl <Key>h , Ctrl <Key>(:   CreateHeading5() 
