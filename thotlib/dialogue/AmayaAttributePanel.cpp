@@ -38,6 +38,7 @@
 #include "paneltypes_wx.h"
 #include "appdialogue_wx.h"
 #include "appdialogue_wx_f.h"
+#include "structselect_f.h"
 
 #include "AmayaAttributePanel.h"
 #include "AmayaNormalWindow.h"
@@ -364,8 +365,13 @@ void AmayaAttributeToolPanel::QueryRemoveCurrentAttribute()
   ----------------------------------------------------------------------*/
 void AmayaAttributeToolPanel::RemoveCurrentAttribute()
 {
-  Document doc = TtaGetDocument((Element)m_firstSel);
-  DisplayMode mode = TtaGetDisplayMode(doc);
+  PtrElement    pEl;
+  Attribute     attr;
+  AttributeType attrType;
+  int           kind;
+
+  Document     doc = TtaGetDocument((Element)m_firstSel);
+  DisplayMode  mode = TtaGetDisplayMode(doc);
   
   DesactivatePanel();
 
@@ -374,19 +380,29 @@ void AmayaAttributeToolPanel::RemoveCurrentAttribute()
     {
       TtaSetDisplayMode(doc, DeferredDisplay);
       TtaOpenUndoSequence(doc, (Element)m_firstSel, (Element)m_lastSel,
-                                                      m_firstChar, m_lastChar);
-      TtaRegisterAttributeDelete((Attribute)m_currentAttElem->val,
-                                                     (Element)m_firstSel, doc);
-      TtaRemoveAttribute((Element)m_firstSel, (Attribute)m_currentAttElem->val,
-                                                                          doc);
+			  m_firstChar, m_lastChar);
+
+      /* first selected element */
+      pEl = (PtrElement)m_firstSel;
+      attr = (Attribute)m_currentAttElem->val;
+      TtaGiveAttributeType (attr, &attrType, &kind);
+      while (pEl != NULL)
+        {
+	  TtaRegisterAttributeDelete(attr, (Element)pEl, doc);
+	  TtaRemoveAttribute((Element)pEl, attr, doc);
+           /* next element in the selection */
+          pEl = NextInSelection (pEl, (PtrElement)m_lastSel);
+	  attr = TtaGetAttribute ((Element)pEl, attrType);
+        }
+      
       TtaSetDocumentModified(doc);
       TtaCloseUndoSequence(doc);
       TtaSetDisplayMode(doc, mode);
       ForceAttributeUpdate();
     }
-
+  
   ActivePanel();
-
+  
   /* try to redirect focus to canvas */
   TtaRedirectFocus();  
 }
