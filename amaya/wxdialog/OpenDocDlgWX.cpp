@@ -226,17 +226,19 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   else
       XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( urlToOpen );
 
+  Fit();
+  Refresh();
+  SetAutoLayout( TRUE );
+
+  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetFocus();
 #if defined(_WINDOWS) || defined(_MACOS)
   // select the string
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetSelection(0, -1);
 #else /* _WINDOWS || _MACOS */
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
-  #endif /* _WINDOWS || _MACOS */
+#endif /* _WINDOWS || _MACOS */
 
-  Fit();
-  Refresh();
-  SetAutoLayout( TRUE );
 }
 
 /*----------------------------------------------------------------------

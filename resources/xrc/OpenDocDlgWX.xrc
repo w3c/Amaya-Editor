@@ -3,7 +3,7 @@
   <object class="wxDialog" name="OpenDocDlgWX">
     <title>*Open/New document*</title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxWANTS_CHARS|wxRESIZE_BORDER</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxTAB_TRAVERSAL|wxWANTS_CHARS</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
