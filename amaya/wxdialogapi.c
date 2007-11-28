@@ -27,7 +27,6 @@
   #include "wxdialog/ListDlgWX.h"
   #include "wxdialog/ListEditDlgWX.h"
   #include "wxdialog/MakeIdDlgWX.h"
-  #include "wxdialog/NumDlgWX.h"
   #include "wxdialog/ObjectDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
   #include "wxdialog/PreferenceDlgWX.h"
@@ -42,6 +41,8 @@
   #include "wxdialog/StyleDlgWX.h"
   #include "wxdialog/TextDlgWX.h"
   #include "wxdialog/TitleDlgWX.h"
+
+  #include "wx/numdlg.h"
 
 static StyleDlgWX *Style_dlg = NULL;
 
@@ -1245,30 +1246,29 @@ ThotBool CreateEnumListDlgWX (int ref, int subref, ThotWindow parent,
 ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
                          const char *title, const char *label, int value)
 {
-#ifdef _WX
-  /* check if the dialog is already open */
-  if (TtaRaiseDialogue (ref))
-    return FALSE;
-
   wxString      wx_title = TtaConvMessageToWX( title );
   wxString      wx_label = TtaConvMessageToWX( label );
   
-  /* create the dialog */
-  NumDlgWX * p_dlg = new NumDlgWX( ref, subref,
-                                   parent, wx_title,
-                                   wx_label, value );
-
-  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    /* the dialog has been sucessfully registred */
-    return TRUE;
+  value = wxGetNumberFromUser(wx_label, wxT(""), wx_title, value, 0, 100, parent);
+  
+  if(value==wxNOT_FOUND)
+    {
+      if (ref == MathsDialogue + FormMaths)
+        ThotCallback (ref, INTEGER_DATA, (char*)0);
+    }
   else
     {
-      /* an error occured during registration */
-      p_dlg->Destroy();
-      return FALSE;
+      if (ref == MathsDialogue + FormMaths)
+        {
+          ThotCallback (ref, INTEGER_DATA, (char*)value);
+        }
+      else
+        {
+          ThotCallback (subref, INTEGER_DATA, (char *)value);
+          ThotCallback (ref, INTEGER_DATA, (char*)1);
+        }
     }
-#else /* _WX */
-  return FALSE;
-#endif /* _WX */
+  
+  return TRUE;
 }
 
