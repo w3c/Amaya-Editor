@@ -213,7 +213,6 @@ AMAYA_OBJ = \
 	wxdialog/CheckedListDlgWX.o \
 	wxdialog/CreateTableDlgWX.o \
 	wxdialog/DocInfoDlgWX.o \
-	wxdialog/EnumListDlgWX.o \
 	wxdialog/HRefDlgWX.o \
 	wxdialog/ImageDlgWX.o \
 	wxdialog/InitConfirmDlgWX.o \

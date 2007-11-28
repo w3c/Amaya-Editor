@@ -21,7 +21,6 @@
   #include "wxdialog/CheckedListDlgWX.h"
   #include "wxdialog/CreateTableDlgWX.h"
   #include "wxdialog/DocInfoDlgWX.h"
-  #include "wxdialog/EnumListDlgWX.h"
   #include "wxdialog/HRefDlgWX.h"
   #include "wxdialog/ImageDlgWX.h"
   #include "wxdialog/InitConfirmDlgWX.h"
@@ -1199,12 +1198,6 @@ ThotBool CreateEnumListDlgWX (int ref, int subref, ThotWindow parent,
                               int nb_item, const char *items,
                               int selection)
 {
-#ifdef OLD_DIALOG
-#ifdef _WX
-  /* check if the dialog is alredy open */
-  if (TtaRaiseDialogue (ref))
-    return FALSE;
-
   wxString      wx_title = TtaConvMessageToWX( title );
   wxString      wx_label = TtaConvMessageToWX( label );
   wxArrayString wx_items;
@@ -1223,48 +1216,12 @@ ThotBool CreateEnumListDlgWX (int ref, int subref, ThotWindow parent,
     {
       /* TODO: change the message when there is no items, should never occured */
       wxMessageDialog messagedialog( NULL,
-				     TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_NO_CSS)),
-				     wx_title,
-				     (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+             TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_NO_CSS)),
+             wx_title,
+             (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
       messagedialog.ShowModal();
       return FALSE;
-    }
-
-  /* create the dialog */
-  EnumListDlgWX * p_dlg = new EnumListDlgWX( ref, subref,
-					     parent,
-					     wx_title,
-					     wx_label,
-					     wx_items,
-					     selection );
-
-  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-      /* the dialog has been sucesfully registred */
-      return TRUE;
-  else
-    {
-      /* an error occured durring registration */
-      p_dlg->Destroy();
-      return FALSE;
-    }
-#else /* _WX */
-  return FALSE;
-#endif /* _WX */
-#else /* OLD_DIALOG */
-  
-  wxString      wx_title = TtaConvMessageToWX( title );
-  wxString      wx_label = TtaConvMessageToWX( label );
-  wxArrayString wx_items;
-  
-  /* build the enum list strings */
-  int i = 0;
-  int index = 0;
-  while (i < nb_item && items[index] != EOS)
-    {
-      wx_items.Add( TtaConvMessageToWX( &items[index] ) );
-      index += strlen (&items[index]) + 1; /* one entry length */
-      i++;
-    }
+    }  
 
   wxSingleChoiceDialog dlg(parent, wx_label, wx_title, wx_items);
   dlg.SetSelection(selection);
@@ -1277,8 +1234,7 @@ ThotBool CreateEnumListDlgWX (int ref, int subref, ThotWindow parent,
           ThotCallback (ref, INTEGER_DATA, (char*)1);
         }
     }
-  
-#endif /* OLD_DIALOG */
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
