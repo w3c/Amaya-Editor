@@ -220,7 +220,10 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
              num < msgNumber)
         {
           s = (char *)TtaGetMemory (strlen ((const char *)pBuff) + 1);
-          strcpy (s, (const char *)AsciiTranslate ((char *)pBuff));
+          if (pBuff[0] == '*' && pBuff[1] == '*')
+            strcpy (s, (const char *)AsciiTranslate ((char *)&pBuff[2]));
+          else
+            strcpy (s, (const char *)AsciiTranslate ((char *)pBuff));
 #ifndef _WX
           if (encoding == UTF_8 && DialogCharset != UTF_8)
             {
