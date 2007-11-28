@@ -24,6 +24,10 @@ BEGIN_EVENT_TABLE(ObjectDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_BROWSEBUTTON"),     ObjectDlgWX::OnBrowseButton )
   EVT_BUTTON( XRCID("wxID_CANCEL"),           ObjectDlgWX::OnCancelButton )
   EVT_BUTTON( XRCID("wxID_CLEAR"),            ObjectDlgWX::OnClearButton )
+  EVT_TOOL( XRCID("wxID_INLINE"),             ObjectDlgWX::OnPosition ) 
+  EVT_TOOL( XRCID("wxID_LEFT"),               ObjectDlgWX::OnPosition ) 
+  EVT_TOOL( XRCID("wxID_RIGHT"),              ObjectDlgWX::OnPosition ) 
+  EVT_TOOL( XRCID("wxID_CENTER"),             ObjectDlgWX::OnPosition ) 
   EVT_TEXT_ENTER( XRCID("wxID_ID_URL"),       ObjectDlgWX::OnOpenButton )
   EVT_TEXT_ENTER( XRCID("wxID_ID_ALT"),       ObjectDlgWX::OnOpenButton )
   EVT_COMBOBOX( XRCID("wxID_MIME_TYPE_CB"),   ObjectDlgWX::OnMimeTypeCbx )
@@ -55,6 +59,7 @@ ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NEWOBJECT) ));
   XRCCTRL(*this, "wxID_TYPE_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_SELECT_MIMETYPE) ));
   XRCCTRL(*this, "wxID_ALT_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT) ));
+  XRCCTRL(*this, "wxID_POSITION_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_POSITION) ));
   XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
@@ -87,6 +92,28 @@ ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->SetValue( mime_type );
 
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
+
+  wxToolBar* tb = XRCCTRL(*this, "wxID_TOOL", wxToolBar);
+  ImgPosition = 2;
+  switch (ImgPosition)
+    {
+    case 1:
+      tb->ToggleTool(XRCID("wxID_LEFT"), true);
+      break;
+    case 2:
+      tb->ToggleTool(XRCID("wxID_CENTER"), true);
+      break;
+    case 3:
+      tb->ToggleTool(XRCID("wxID_RIGHT"), true);
+      break;
+    default:
+      tb->ToggleTool(XRCID("wxID_INLINE"), true);
+      break;
+    }
+
+  SetAutoLayout( TRUE );
+
+  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetFocus();
 #if defined(_WINDOWS) || defined(_MACOS)
   // select the string
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetSelection(0, -1);
@@ -94,8 +121,6 @@ ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
   // set te cursor to the end
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetInsertionPointEnd();
 #endif /* _WINDOWS || _MACOS */
-
-  SetAutoLayout( TRUE );
 }
 
 /*----------------------------------------------------------------------
@@ -130,6 +155,46 @@ void ObjectDlgWX::OnClearButton( wxCommandEvent& event )
 }
 
 /*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+void ObjectDlgWX::OnPosition( wxCommandEvent& event )
+{
+  wxToolBar* tb = XRCCTRL(*this, "wxID_TOOL", wxToolBar);
+  int id = event.GetId();
+  if ( id == wxXmlResource::GetXRCID(_T("wxID_INLINE")) )
+    {
+      tb->ToggleTool(XRCID("wxID_INLINE"), true);
+      tb->ToggleTool(XRCID("wxID_LEFT"), false);
+      tb->ToggleTool(XRCID("wxID_CENTER"), false);
+      tb->ToggleTool(XRCID("wxID_RIGHT"), false);
+      ImgPosition = 0;
+    }
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_LEFT")) )
+    {
+      tb->ToggleTool(XRCID("wxID_INLINE"), false);
+      tb->ToggleTool(XRCID("wxID_LEFT"), true);
+      tb->ToggleTool(XRCID("wxID_CENTER"), false);
+      tb->ToggleTool(XRCID("wxID_RIGHT"), false);
+      ImgPosition = 1;
+    }
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_CENTER")) )
+    {
+      tb->ToggleTool(XRCID("wxID_INLINE"), false);
+      tb->ToggleTool(XRCID("wxID_LEFT"), false);
+      tb->ToggleTool(XRCID("wxID_CENTER"), true);
+      tb->ToggleTool(XRCID("wxID_RIGHT"), false);
+      ImgPosition = 2;
+    }
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_RIGHT")) )
+    {
+      tb->ToggleTool(XRCID("wxID_INLINE"), false);
+      tb->ToggleTool(XRCID("wxID_LEFT"), false);
+      tb->ToggleTool(XRCID("wxID_CENTER"), false);
+      tb->ToggleTool(XRCID("wxID_RIGHT"), true);
+      ImgPosition = 3;
+    }
+}
+
+/*----------------------------------------------------------------------
   OnOpenButton called when the user validate his selection
   params:
   returns:
@@ -155,7 +220,10 @@ void ObjectDlgWX::OnOpenButton( wxCommandEvent& event )
   // get the current alt
   wxString alt = XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->GetValue( );
   if (alt.Len() == 0)
-    XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT_MISSING) ));
+    {
+      XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT_MISSING) ));
+      XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->SetFocus();
+    }
   else
      {
        // load the image

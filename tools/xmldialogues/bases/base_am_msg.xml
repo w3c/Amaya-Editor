@@ -2200,8 +2200,8 @@
 	<message xml:lang="sk">Alternatívny text</message>
 </label>
 <label define="AM_ALT_MISSING">
-	<message xml:lang="en">The Alternate text is mandatory</message>
-	<message xml:lang="fr">Le texte de remplacement est obligatoire</message>
+	<message xml:lang="en">Give an alternate text</message>
+	<message xml:lang="fr">Donner texte de remplacement !</message>
 	<message xml:lang="de">Alternativer Text ist erforderlich!</message>
 	<message xml:lang="it">Il testo alternativo è obbligatorio</message>
 	<message xml:lang="es">El texto alternativo es obligatorio</message>
@@ -6671,8 +6671,8 @@
 	<message xml:lang="hu">Méret</message>
 </label>
 <label define="AM_POSITION">
-<message xml:lang="en">Position</message>
-<message xml:lang="fr">Position</message>
+	<message xml:lang="en">Position</message>
+	<message xml:lang="fr">Position</message>
 	<message xml:lang="es">Posición</message>
 	<message xml:lang="de">Position</message>
 	<message xml:lang="hu">Helyzet</message>

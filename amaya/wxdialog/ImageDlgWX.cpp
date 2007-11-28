@@ -56,7 +56,7 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
   SetTitle( title );
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_BUTTON_IMG) ));
   XRCCTRL(*this, "wxID_ALT_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT) ));
-  //XRCCTRL(*this, "wxID_POSITION_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_POSITION) ));
+  XRCCTRL(*this, "wxID_POSITION_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_POSITION) ));
   XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
   XRCCTRL(*this, "wxID_OPENBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
@@ -66,17 +66,9 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->SetValue( alt );
 
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
-#ifdef _WINDOWS
-  // select the string
-  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetSelection(0, -1);
-#else /* _WINDOWS */
-#ifndef _MACOS
-  // set te cursor to the end
-  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetInsertionPointEnd();
-#endif /* _MACOS */
-#endif /* _WINDOWS */
 
   wxToolBar* tb = XRCCTRL(*this, "wxID_TOOL", wxToolBar);
+  ImgPosition = 0;
   switch (ImgPosition)
     {
     case 1:
@@ -94,6 +86,17 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
     }
 
   SetAutoLayout( TRUE );
+
+  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetFocus();
+#ifdef _WINDOWS
+  // select the string
+  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetSelection(0, -1);
+#else /* _WINDOWS */
+#ifndef _MACOS
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetInsertionPointEnd();
+#endif /* _MACOS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -187,6 +190,7 @@ void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
           // request an alternate
           XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT_MISSING) ));
           Waiting = 2;
+          XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->SetFocus();
           return;
         }
       else

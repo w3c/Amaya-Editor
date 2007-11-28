@@ -3856,10 +3856,13 @@
 	<message xml:lang="cn">Text</message>
 	<message xml:lang="tw">Text</message>
 	<message xml:lang="sk">Textové</message>
+	<message xml:lang="de">Text</message>
 </label>
 <label define="TMSG_NO_RECENT_DOC">
-  <message xml:lang="en">No recent document</message>
-  <message xml:lang="fr">Aucun document récent</message>
+	<message xml:lang="en">No recent document</message>
+	<message xml:lang="fr">Pas de document récent</message>
+	<message xml:lang="de">Keine neuen Dokumente</message>
+	<message xml:lang="it">Nessun documento recente</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>

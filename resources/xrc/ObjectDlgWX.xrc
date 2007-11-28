@@ -58,9 +58,9 @@
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_TYPE_LABEL">
                   <label>Get the MIME Type :</label>
+                  <size>200,-1</size>
                 </object>
-                <flag>wxALL|wxEXPAND</flag>
-                <border>5</border>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
               </object>
               <object class="sizeritem">
                 <object class="wxComboBox" name="wxID_MIME_TYPE_CB">
@@ -77,16 +77,70 @@
             <size>0,10</size>
           </object>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_ALT_LABEL">
-              <label>Get alternate text</label>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="spacer">
+                <size>5,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_ALT_LABEL">
+                  <label>Get alternate text</label>
+                  <size>200,-1</size>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_ALT">
+                  <size>300,-1</size>
+                </object>
+                <flag>wxEXPAND</flag>
+                <border>5</border>
+              </object>
             </object>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
+            <flag>wxEXPAND</flag>
+          </object>
+          <object class="spacer">
+            <size>0,10</size>
+            <flag>wxALIGN_BOTTOM</flag>
           </object>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_ALT"/>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_POSITION_LABEL">
+                  <label>Position of the new created image</label>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="spacer">
+                <size>5,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxToolBar" name="wxID_TOOL">
+                  <object class="tool" name="wxID_INLINE">
+                    <bitmap>../icons/16x16/inline_image.png</bitmap>
+                    <toggle>1</toggle>
+                  </object>
+                  <bitmapsize>16,16</bitmapsize>
+                  <object class="tool" name="wxID_LEFT">
+                    <bitmap>../icons/16x16/left_image.png</bitmap>
+                    <toggle>1</toggle>
+                  </object>
+                  <object class="tool" name="wxID_CENTER">
+                    <bitmap>../icons/16x16/center_image.png</bitmap>
+                    <toggle>1</toggle>
+                  </object>
+                  <object class="tool" name="wxID_RIGHT">
+                    <bitmap>../icons/16x16/right_image.png</bitmap>
+                    <toggle>1</toggle>
+                  </object>
+                  <margins>4,4</margins>
+                  <style>wxTB_FLAT</style>
+                </object>
+              </object>
+            </object>
             <flag>wxALL|wxEXPAND</flag>
-            <minsize>300,-1</minsize>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_MANDATORY">

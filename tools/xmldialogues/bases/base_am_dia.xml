@@ -4548,7 +4548,7 @@
 	<message xml:lang="en">Enable/Disable</message>
 	<message xml:lang="es">Activar/Desactivar</message>
 	<message xml:lang="fr">Activer/Désactiver</message>
-	<message xml:lang="de">Aktivieren/Deaktivieren</message>
+	<message xml:lang="de">Java-Unterstützung ein-/ausschalten</message>
 	<message xml:lang="hu">Engedélyezés/tiltás</message>
 </label>
 <label define="BExecuteACommand">

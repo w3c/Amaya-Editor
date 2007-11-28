@@ -25,7 +25,7 @@
 #include "SVG.h"
 
 static Document   ImgDocument;
-static ThotBool   CreateNewImage;
+static ThotBool   CreateNewImage, CreateNewObject = FALSE;
 static int        RepeatValue;
 static int        RefFormImage = 0;
 
@@ -661,6 +661,12 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
             TtaSetAttributeText (srcattr, value, pict, doc);
           /* set and display the element content */
           DisplayImage (doc, pict, NULL, pathimage, NULL);
+          // check if the pict element is still there
+          elType = TtaGetElementType (el);
+          if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+            srcattr = TtaGetAttribute (pict, attrType);
+          else
+            srcattr = NULL;
           TtaFreeMemory (base);
           TtaFreeMemory (value);
           /*TtaSetTextContent (pict, (unsigned char *)pathimage, SPACE, doc);*/
@@ -678,12 +684,111 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
           ResetStop (doc);
         }
     }
-  if (newPict)
+  if (newPict || srcattr == NULL)
     ;
   else if (newAttr)
     TtaRegisterAttributeCreate (srcattr, pict, doc);
   else
     TtaRegisterAttributeReplace (srcattr, pict, doc);
+}
+
+/*----------------------------------------------------------------------
+  UpdatePosition
+  ----------------------------------------------------------------------*/
+static void UpdatePosition (Document doc, Element el)
+{
+  ElementType        elType;
+  Attribute          attr;
+  AttributeType      attrType;
+  char              *value, *start, *stop;
+  int                len;
+  ThotBool           newAttr = FALSE;
+
+  if (el == NULL)
+    return;
+  // check the requested position
+  TtaExtendUndoSequence (doc);
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_Style_;
+  attr = TtaGetAttribute (el, attrType);
+  value = NULL;
+  if (attr == NULL)
+    {
+      if (ImgPosition)
+        {
+          newAttr = TRUE;
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (el, attr, doc);
+          value = (char *)TtaGetMemory (80);
+          value[0] = EOS;
+        }
+    }
+  else
+    {
+      newAttr = FALSE;
+      len = TtaGetTextAttributeLength (attr) + 80;
+      value = (char *)TtaGetMemory (len);
+      TtaGiveTextAttributeValue (attr, value, &len);
+      // remove style rules
+      ParseHTMLSpecificStyle (el, value, doc, 1000, TRUE);
+      stop = NULL;
+      start = strstr (value, "float");
+      if (start)
+        stop = start + 5;
+      else
+        {
+          start = strstr (value, "display: block; text-align: center; margin-left: auto; margin-right: auto");
+          stop = start + 66;
+        }
+      if (start)
+        {
+          while (*stop != EOS && *stop != ';')
+            stop++;
+          if (*stop != EOS)
+            stop++;
+          while (*stop != EOS)
+            {
+              *start = *stop;
+              start++;
+              stop++;
+            }
+          *start = EOS;
+        }
+      if (value[0] != EOS)
+        strcat (value, "; ");
+    }
+  if (ImgPosition == 1)
+    strcat (value, "float: left");
+  else if (ImgPosition == 2)
+    strcat (value, "display: block; text-align: center; margin-left: auto; margin-right: auto");
+  else if (ImgPosition == 3)
+    strcat (value, "float: right");
+
+  if (ImgPosition)
+    {
+      if (!newAttr)
+        TtaRegisterAttributeReplace (attr, el, doc);
+      TtaSetAttributeText (attr, value, el, doc);
+      if (newAttr)
+        TtaRegisterAttributeCreate (attr, el, doc);
+      ParseHTMLSpecificStyle (el, value, doc, 1000, FALSE);
+    }
+  else if (attr)
+    {
+      if (value[0] != EOS)
+        {
+          TtaRegisterAttributeReplace (attr, el, doc);
+          TtaSetAttributeText (attr, value, el, doc);
+        }
+      else
+        {
+          TtaRegisterAttributeDelete (attr, el, doc);
+          TtaRemoveAttribute (el, attr, doc);
+        }
+    }
+  TtaFreeMemory (value);
+  TtaCloseUndoSequence(doc);
 }
 
 
@@ -960,6 +1065,10 @@ void UpdateSRCattribute (NotifyOnTarget *event)
             }
 #endif /* _SVG */
         }
+
+      // check the position
+      UpdatePosition (doc, elSRC);
+      // generate alternate text
       if (ImgAlt[0] != EOS && el)
         {
           // generate the Alternate text
@@ -1018,6 +1127,9 @@ void SvgImageCreated (NotifyElement *event)
   char              *pathimage;
   char              *imagename;
 
+  if (CreateObject)
+    // nothing to do
+    return;
   el = event->element;
   doc = event->document;
   /* display the Image form and get the user feedback */
@@ -1161,6 +1273,7 @@ void  CreateObject (Document doc, View view)
 
   if (HTMLelementAllowed (doc))
     {
+      CreateNewObject = TRUE;
       /* Don't check mandatory attributes */
       TtaSetStructureChecking (FALSE, doc);
       ImgAlt[0] = EOS;
@@ -1173,8 +1286,10 @@ void  CreateObject (Document doc, View view)
       /* Check the Thot abstract tree against the structure schema. */
       TtaSetStructureChecking (TRUE, doc);
       CreateNewImage = FALSE;
+      CreateNewObject = FALSE;
     }
 }
+
 
 /*----------------------------------------------------------------------
   AddNewImage
@@ -1186,8 +1301,8 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
   Attribute          attr;
   AttributeType      attrType;
   NotifyOnTarget     event;
-  char              *name, *value, *start, *stop;
-  int                c1, i, j, cN, length, width, height, w, h, len;
+  char              *name, *value;
+  int                c1, i, j, cN, length, width, height, w, h;
   ThotBool           oldStructureChecking, newAttr, checkoptions = FALSE;
 
   TtaGiveFirstSelectedElement (doc, &firstSelEl, &c1, &i); 
@@ -1318,89 +1433,9 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
         el = TtaGetParent (el);
+
+      UpdatePosition (doc, el);
       attrType.AttrSSchema = elType.ElSSchema;
-
-      // check the requested position
-      TtaExtendUndoSequence (doc);
-      attrType.AttrTypeNum = HTML_ATTR_Style_;
-      attr = TtaGetAttribute (el, attrType);
-      value = NULL;
-      if (attr == NULL)
-        {
-          if (ImgPosition)
-            {
-              newAttr = TRUE;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (el, attr, doc);
-              value = (char *)TtaGetMemory (80);
-              value[0] = EOS;
-            }
-        }
-      else
-        {
-          newAttr = FALSE;
-          len = TtaGetTextAttributeLength (attr) + 80;
-          value = (char *)TtaGetMemory (len);
-          TtaGiveTextAttributeValue (attr, value, &len);
-          // remove style rules
-          ParseHTMLSpecificStyle (el, value, doc, 1000, TRUE);
-          stop = NULL;
-          start = strstr (value, "float");
-          if (start)
-            stop = start + 5;
-          else
-            {
-              start = strstr (value, "display: block; text-align: center; margin-left: auto; margin-right: auto");
-              stop = start + 66;
-            }
-          if (start)
-            {
-              while (*stop != EOS && *stop != ';')
-                stop++;
-              if (*stop != EOS)
-                stop++;
-              while (*stop != EOS)
-                {
-                  *start = *stop;
-                  start++;
-                  stop++;
-                }
-              *start = EOS;
-            }
-          if (value[0] != EOS)
-            strcat (value, "; ");
-        }
-      if (ImgPosition == 1)
-        strcat (value, "float: left");
-      else if (ImgPosition == 2)
-        strcat (value, "display: block; text-align: center; margin-left: auto; margin-right: auto");
-      else if (ImgPosition == 3)
-        strcat (value, "float: right");
-      if (ImgPosition)
-        {
-          if (!newAttr)
-            TtaRegisterAttributeReplace (attr, el, doc);
-          TtaSetAttributeText (attr, value, el, doc);
-          if (newAttr)
-            TtaRegisterAttributeCreate (attr, el, doc);
-          ParseHTMLSpecificStyle (el, value, doc, 1000, FALSE);
-        }
-      else if (attr)
-        {
-          if (value[0] != EOS)
-            {
-              TtaRegisterAttributeReplace (attr, el, doc);
-              TtaSetAttributeText (attr, value, el, doc);
-            }
-          else
-            {
-              TtaRegisterAttributeDelete (attr, el, doc);
-              TtaRemoveAttribute (el, attr, doc);
-            }
-        }
-      TtaFreeMemory (value);
-      TtaCloseUndoSequence(doc);
-
       /* search informations about height and width */
       width = 0; height = 0;
       if (el)
