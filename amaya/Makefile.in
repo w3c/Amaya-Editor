@@ -220,7 +220,6 @@ AMAYA_OBJ = \
 	wxdialog/ListDlgWX.o \
 	wxdialog/ListEditDlgWX.o \
 	wxdialog/MakeIdDlgWX.o \
-	wxdialog/NumDlgWX.o \
 	wxdialog/ObjectDlgWX.o \
 	wxdialog/OpenDocDlgWX.o \
 	wxdialog/PreferenceDlgWX.o \
@@ -233,7 +232,6 @@ AMAYA_OBJ = \
 	wxdialog/SpellCheckDlgWX.o \
 	wxdialog/SendByMailDlgWX.o \
 	wxdialog/StyleDlgWX.o \
-	wxdialog/TextDlgWX.o \
 	wxdialog/TitleDlgWX.o \
 	wxdialogapi.o \
 	EDITORAPP.o \

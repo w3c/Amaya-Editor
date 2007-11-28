@@ -39,7 +39,6 @@
   #include "wxdialog/SendByMailDlgWX.h"
   #include "wxdialog/SpellCheckDlgWX.h"
   #include "wxdialog/StyleDlgWX.h"
-  #include "wxdialog/TextDlgWX.h"
   #include "wxdialog/TitleDlgWX.h"
 
   #include "wx/numdlg.h"
@@ -983,38 +982,27 @@ ThotBool CreateHRefDlgWX (int ref, ThotWindow parent,
     + value : init value
   returns:
   ----------------------------------------------------------------------*/
+static char Buffer[512];
 ThotBool CreateTextDlgWX (int ref, int subref, ThotWindow parent,
                           const char *title, const char *label,
                           const char *value)
 {
-#ifdef _WX
   wxString wx_title   = TtaConvMessageToWX( title );
   wxString wx_label   = TtaConvMessageToWX( label );
   wxString wx_value = TtaConvMessageToWX( value );
 
-  /* check if the dialog is alredy open */
-  if (TtaRaiseDialogue (ref))
-    return FALSE;
-
-  TextDlgWX * p_dlg = new TextDlgWX( ref, subref, parent,
-				     wx_title,
-				     wx_label,
-				     wx_value );
-
-  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+  
+  wxTextEntryDialog dlg(parent, wx_label, wx_title, wx_value);
+  if(dlg.ShowModal()==wxID_OK)
     {
-      /* the dialog has been sucesfully registred */
-      return TRUE;
+      wx_value = dlg.GetValue();
+      wxASSERT( wx_value.Len() < 512 );
+      strcpy( Buffer, (const char*)wx_value.mb_str(wxConvUTF8) );
+      ThotCallback (subref, STRING_DATA, (char *)Buffer);
+      ThotCallback (ref, INTEGER_DATA, (char*)1);
     }
-  else
-    {
-      /* an error occured durring registration */
-      p_dlg->Destroy();
-      return FALSE;
-    }
-#else /* _WX */
-  return FALSE;
-#endif /* _WX */
+
+  return TRUE;
 }
 
 /*-----------------------------------------------------------------------
