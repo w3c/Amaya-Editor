@@ -1199,6 +1199,7 @@ ThotBool CreateEnumListDlgWX (int ref, int subref, ThotWindow parent,
                               int nb_item, const char *items,
                               int selection)
 {
+#ifdef OLD_DIALOG
 #ifdef _WX
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
@@ -1248,7 +1249,36 @@ ThotBool CreateEnumListDlgWX (int ref, int subref, ThotWindow parent,
     }
 #else /* _WX */
   return FALSE;
-#endif /* _WX */  
+#endif /* _WX */
+#else /* OLD_DIALOG */
+  
+  wxString      wx_title = TtaConvMessageToWX( title );
+  wxString      wx_label = TtaConvMessageToWX( label );
+  wxArrayString wx_items;
+  
+  /* build the enum list strings */
+  int i = 0;
+  int index = 0;
+  while (i < nb_item && items[index] != EOS)
+    {
+      wx_items.Add( TtaConvMessageToWX( &items[index] ) );
+      index += strlen (&items[index]) + 1; /* one entry length */
+      i++;
+    }
+
+  wxSingleChoiceDialog dlg(parent, wx_label, wx_title, wx_items);
+  dlg.SetSelection(selection);
+  if(dlg.ShowModal()==wxID_OK)
+    {
+      int id = dlg.GetSelection();
+      if(id!=wxNOT_FOUND)
+        {
+          ThotCallback (subref, INTEGER_DATA, (char*)id);
+          ThotCallback (ref, INTEGER_DATA, (char*)1);
+        }
+    }
+  
+#endif /* OLD_DIALOG */
 }
 
 /*----------------------------------------------------------------------
