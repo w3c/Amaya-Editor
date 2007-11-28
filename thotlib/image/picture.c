@@ -628,6 +628,13 @@ static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
 {
   float    texH, texW, texX, texY;
     
+#ifdef _WINDOWS
+  /* Test to avoid a crash with background images > 1024 on Windows */
+  /* Laurent and Irene 28/11/2007 */
+  if ((float)desc->PicWidth < 1024)
+  {
+#endif /* _WINDOWS */
+  
   GL_SetPicForeground ();
   if (PrintingGL)
     PrintPoscriptImage (desc, x, y, w, h, frame);
@@ -672,6 +679,9 @@ static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
       if (GL_NotInFeedbackMode ())
         glDisable (GL_TEXTURE_2D); 
     }
+#ifdef _WINDOWS
+  }
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
