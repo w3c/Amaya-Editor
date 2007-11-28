@@ -40,16 +40,6 @@
 #include <commctrl.h>
 #endif /* _WINDOWS */
 
-#ifdef _GL
-static ThotIcon   iconAnim;
-static ThotIcon   iconAnimNo;
-static int        AnimButton;
-#ifndef _WINGUI
-#include "xpm/animplay.xpm"
-#include "xpm/animstop.xpm"
-#endif /* _WINGUI */
-#endif /*_GL*/
-
 
 /*----------------------------------------------------------------------
   get_int_attribute_from_el: Get a int value from an xml attribute
