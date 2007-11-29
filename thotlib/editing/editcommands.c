@@ -2219,7 +2219,7 @@ ThotBool ContentEditing (int editType)
             {
               pLastAb = pBox->BxAbstractBox;
               /* saute les paves de presentation selectionnes */
-              while (pLastAb != pAb && pLastAb->AbPresentationBox)
+              while (pLastAb && pLastAb != pAb && pLastAb->AbPresentationBox)
                 pLastAb = pLastAb->AbPrevious;
             }
 	  
