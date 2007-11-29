@@ -102,6 +102,9 @@
 #endif /* _WINDOWS */
 #include "XLinkedit_f.h"
 
+void UpdateJavascriptMenus ();
+void StopJavascript (Document doc);
+
 /* headerfiles and objects used by SpiderMonkey */
 #include <jsapi.h>
 #include "javascript.h"
@@ -176,10 +179,10 @@ void Switch_JS_DOM(Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  ExecuteACommand
+  Execute_ACommand
     Display a dialog box where the user can enter a javascript command
   -----------------------------------------------------------------------*/
-void ExecuteACommand(Document document, View view)
+void Execute_ACommand(Document document, View view)
 {
 jsval rval;
 char *rchar = NULL;
@@ -219,34 +222,34 @@ char *rchar = NULL;
 }
 
 /*----------------------------------------------------------------------
-  ExecuteExternal
+  Execute_External
     Open a dialogue that allows the user to select a js file and
     to execute it in the document.
   -----------------------------------------------------------------------*/
-void ExecuteExternal(Document document, View view)
+void Execute_External(Document document, View view)
 {
   if(ContinueScript)
     {
     /* TODO */
-     //ExecuteJSfile
+     //ExecuteJSfile 
     }
 }
 
 /*----------------------------------------------------------------------
-  AddExternal
+  Add_External
     Add a <script> inside with a src attribute pointing to
     an external js file.
   -----------------------------------------------------------------------*/
-void AddExternal(Document document, View view)
+void Add_External(Document document, View view)
 {
   CreateScript (document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
-  InsertScript
+  Insert_Script
     Add a <script> and open the structure View
   -----------------------------------------------------------------------*/
-void InsertScript(Document document, View view)
+void Insert_Script(Document document, View view)
 {
   CreateScript (document, view, FALSE);
 }
@@ -1567,10 +1570,9 @@ static JSBool DOMImplementation_hasFeature(JSContext *cx, JSObject *obj, uintN a
     }
   else
     {
-    /* TODO : to uppercase */
     feature = jsval_to_string(cx, argv[0]);
     version = jsval_to_string(cx, argv[1]);
-    *rval = BOOLEAN_TO_JSVAL((/*!strcmp(feature, "HTML") ||*/ !strcmp(feature, "XML")) && (version == NULL || !strcmp(version, "1.0")) );
+    *rval = BOOLEAN_TO_JSVAL((/*!strcasecmp(feature, "HTML") ||*/ !strcasecmp(feature, "XML")) && (version == NULL || !strcmp(version, "1.0")) );
     return jsContinueScript();
     }
 }
