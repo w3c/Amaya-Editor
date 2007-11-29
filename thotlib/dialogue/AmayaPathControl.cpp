@@ -40,6 +40,7 @@ wxControl(parent, id, pos, size, style),
 m_focused(NULL),
 m_height(0)
 {
+  SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CLIC_ELEM_TO_SELECT_IT)));
 }
 
 /*----------------------------------------------------------------------

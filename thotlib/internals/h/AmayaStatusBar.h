@@ -10,6 +10,8 @@
 #include "wx/dialog.h"
 #include "AmayaPathControl.h"
 
+class AmayaStatusText;
+
 //-----------------------------------------------------------------------------
 // Class definition: AmayaStatusBar
 //-----------------------------------------------------------------------------
@@ -29,6 +31,8 @@ class AmayaStatusBar : public wxStatusBar
   virtual void SetStatusText(const wxString& text, int i = 0); 
   void SetSelectedElement(Element elem);
 
+  int HitTest(const wxPoint& pt);
+  
  private:
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
@@ -36,6 +40,12 @@ class AmayaStatusBar : public wxStatusBar
   void OnSize(wxSizeEvent& event);
   void OnUpdateUI(wxUpdateUIEvent& event);
   
+  void OnDoubleClic(wxMouseEvent& event);
+  
+  void OnMouseEnter(wxMouseEvent& event);
+  void OnMouseExit(wxMouseEvent& event);
+  void OnMouseMove(wxMouseEvent& event);
+   
  protected:
   enum
     {
@@ -49,7 +59,8 @@ class AmayaStatusBar : public wxStatusBar
   wxBitmapButton * m_pLogErrorButton;
   wxBitmap         m_LogErrorBmp_Green;
   wxBitmap         m_LogErrorBmp_Red;
-  AmayaPathControl* m_pathCtrl; 
+  AmayaPathControl*m_pathCtrl;
+  AmayaStatusText *m_insertMode;
 };
 
 #endif  // __AMAYASTATUSBAR_H__
