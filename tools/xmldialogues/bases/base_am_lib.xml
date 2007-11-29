@@ -3866,13 +3866,13 @@
 	<message xml:lang="hu">Nincs korábbi dokumentum</message>
 </label>
 <label define="TMSG_CLIC_ELEM_TO_SELECT_IT">
-  <message xml:lang="en">Click an element to select it.</message>
-  <message xml:lang="fr">Cliquez sur un élément pour le sélectionner.</message>
+  <message xml:lang="en">Click an element to select it</message>
+  <message xml:lang="fr">Cliquer sur un élément pour le sélectionner</message>
 </label>
 
 <label define="TMSG_INSERT_MODE">
-  <message xml:lang="en">Insert mode.</message>
-  <message xml:lang="fr">Mode d'insertion.</message>
+  <message xml:lang="en">Click to change the editing mode</message>
+  <message xml:lang="fr">Cliquer pour changer de mode d'édition</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
