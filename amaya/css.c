@@ -972,7 +972,7 @@ char *LoadACSSFile (char *cssfile)
 {
   gzFile              res;
   int                 lenBuff = 0;
-  int                 len;
+  int                 len, i, j;
   char               *tmpBuff = NULL;
 #define	              COPY_BUFFER_SIZE	1024
   char                bufferRead[COPY_BUFFER_SIZE + 1];
@@ -1001,6 +1001,17 @@ char *LoadACSSFile (char *cssfile)
     }
   len = gzread (res, tmpBuff, lenBuff);
   tmpBuff[lenBuff] = 0;
+  // Remove CR characters
+  j = i = 0;
+  while (j <= len)
+    {
+      if (tmpBuff[j] == __CR__)
+        j++;
+      if (i != j)
+        tmpBuff[i] = tmpBuff[j];
+      i++;
+      j++;
+    }
   TtaGZClose (res);
   return tmpBuff;     
 }
