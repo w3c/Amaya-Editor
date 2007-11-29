@@ -502,6 +502,8 @@ void AmayaAttributeToolPanel::SetupListValue(DLList attrList)
   m_pAttrList->DeleteAllItems();
   m_pNewAttrChoice->Clear();
   
+  m_pVPanelSizer->Hide((size_t)0);
+  
   if(m_attrList)
     DLList_Destroy(m_attrList);
   m_attrList = attrList;
