@@ -856,7 +856,7 @@ void AmayaNormalWindow::PrepareRecentDocumentMenu(wxMenuItem* item)
 void AmayaNormalWindow::OnRecentDocMenu(wxCommandEvent& event)
 {
   int id = event.GetId() - RECENT_DOC_ID;
-  if(id<m_URLs.GetCount())
+  if(id < (int)m_URLs.GetCount())
     {
       wxString str = m_URLs[id];
       if(str)

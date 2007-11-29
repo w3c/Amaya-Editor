@@ -167,6 +167,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaFrame.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaHelpWindow.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\base\AmayaLogDebug.cpp
 # End Source File
 # Begin Source File

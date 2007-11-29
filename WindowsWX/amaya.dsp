@@ -57,7 +57,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy   ..\..\wxWidgets\lib\vc_dll\*.dll   bin\  	copy   ..\..\wxWidgets\lib\vc_dll\wxjpeg.lib   bin\ 
+PreLink_Cmds=copy    ..\..\wxWidgets\lib\vc_dll\*.dll    bin\   	copy    ..\..\wxWidgets\lib\vc_dll\wxjpeg.lib    bin\ 
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
@@ -88,7 +88,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy    ..\..\wxWidgets\lib\vc_dll\*.dll    bin\  	copy   ..\..\wxWidgets\lib\vc_dll\wxjpeg.lib   bin\ 
+PreLink_Cmds=copy     ..\..\wxWidgets\lib\vc_dll\*.dll     bin\   	copy    ..\..\wxWidgets\lib\vc_dll\wxjpeg.lib    bin\ 
 # End Special Build Tool
 
 !ENDIF 
@@ -122,10 +122,6 @@ SOURCE=..\amaya\wxdialog\DocInfoDlgWX.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\wxdialog\EnumListDlgWX.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\wxdialog\HRefDlgWX.cpp
 # End Source File
 # Begin Source File
@@ -151,10 +147,6 @@ SOURCE=..\amaya\wxdialog\ListEditDlgWX.cpp
 # Begin Source File
 
 SOURCE=..\amaya\wxdialog\MakeIdDlgWX.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\wxdialog\NumDlgWX.cpp
 # End Source File
 # Begin Source File
 
@@ -203,10 +195,6 @@ SOURCE=..\amaya\wxdialog\SpellCheckDlgWX.cpp
 # Begin Source File
 
 SOURCE=..\amaya\wxdialog\StyleDlgWX.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\wxdialog\TextDlgWX.cpp
 # End Source File
 # Begin Source File
 
