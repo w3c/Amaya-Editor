@@ -207,6 +207,7 @@ EDITOR_OBJ = \
   dialogue/AmayaClassicNotebook.o \
 	dialogue/AmayaAdvancedWindow.o \
   dialogue/AmayaAdvancedNotebook.o \
+  dialogue/AmayaHelpWindow.o \
 	dialogue/AmayaQuickSplitButton.o \
 	dialogue/AmayaPanel.o \
 	dialogue/AmayaPopupList.o \

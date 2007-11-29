@@ -66,6 +66,7 @@
 
 #include "AmayaClassicWindow.h"
 #include "AmayaAdvancedWindow.h"
+#include "AmayaHelpWindow.h"
 
 
 #ifdef _MACOS
@@ -93,8 +94,10 @@ AmayaNormalWindow* AmayaNormalWindow::CreateNormalWindow(wxWindow * parent, wxWi
   
   ThotBool b;
   TtaGetEnvBoolean("ADVANCE_USER_INTERFACE", &b);
-  
-  if(b)
+
+  if(kind==WXAMAYAWINDOW_HELP)
+    return new AmayaHelpWindow(parent, id, pos, size, kind);
+  else if(b)
     return new AmayaAdvancedWindow(parent, id, pos, size, kind);
   else
     return new AmayaClassicWindow(parent, id, pos, size, kind);  
