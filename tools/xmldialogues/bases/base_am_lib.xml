@@ -3863,6 +3863,7 @@
 	<message xml:lang="fr">Pas de document récent</message>
 	<message xml:lang="de">Keine neuen Dokumente</message>
 	<message xml:lang="it">Nessun documento recente</message>
+	<message xml:lang="hu">Nincs korábbi dokumentum</message>
 </label>
 <label define="TMSG_CLIC_ELEM_TO_SELECT_IT">
   <message xml:lang="en">Click an element to select it.</message>
