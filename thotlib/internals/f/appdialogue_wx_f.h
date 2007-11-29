@@ -54,6 +54,7 @@ extern ThotBool TtaCloseAllPageButThis ( int window_id,
                                          int page_id );
 extern int TtaGetActiveWindowId ( void );
 extern int TtaGetFreePageId ( int window_id );
+extern int TtaGetHelpWindowId ( void );
 extern int TtaGetAnnotWindowId ( void );
 extern int TtaGetFreeWindowId ( void );
 extern int TtaGetDocumentWindowId ( Document doc_id,
@@ -148,6 +149,7 @@ extern ThotBool TtaCloseAllPageButThis ( int window_id,
                                            int page_id );
 extern int TtaGetActiveWindowId ( void );
 extern int TtaGetFreePageId ( int window_id );
+extern int TtaGetHelpWindowId ( void );
 extern int TtaGetAnnotWindowId ( void );
 extern int TtaGetFreeWindowId ( void );
 extern int TtaGetDocumentWindowId ( Document doc_id,

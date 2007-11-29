@@ -59,6 +59,14 @@ extern int TtaGetDocumentWindowId ( Document doc_id,
                                     int view );
 
 /*----------------------------------------------------------------------
+  TtaGetHelpWindowId returns the help window id
+  params:
+  returns:
+  + int : the new window id or -1 if too much created window
+  ----------------------------------------------------------------------*/
+extern int TtaGetHelpWindowId();
+
+/*----------------------------------------------------------------------
   TtaGetAnnotWindowId returns the annotation window id
   params:
   returns:

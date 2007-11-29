@@ -508,6 +508,7 @@ bool AmayaCanvas::IsParentFrameActive()
       break;
     case WXAMAYAWINDOW_NORMAL:
     case WXAMAYAWINDOW_ANNOT:
+    case WXAMAYAWINDOW_HELP:
     case WXAMAYAWINDOW_CSS:
       {
         AmayaPage * p_page = m_pAmayaFrame->GetPageParent();

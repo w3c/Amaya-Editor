@@ -1127,7 +1127,7 @@ void SvgImageCreated (NotifyElement *event)
   char              *pathimage;
   char              *imagename;
 
-  if (CreateObject)
+  if (CreateNewObject)
     // nothing to do
     return;
   el = event->element;

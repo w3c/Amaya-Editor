@@ -147,7 +147,10 @@ bool AmayaClassicWindow::Initialize()
         
         Freeze();
         ShowToolPanels();
-        if(!panel_opened || GetKind() == WXAMAYAWINDOW_ANNOT || GetKind() == WXAMAYAWINDOW_CSS)
+        if(!panel_opened ||
+           GetKind() == WXAMAYAWINDOW_ANNOT ||
+           GetKind() == WXAMAYAWINDOW_HELP ||
+           GetKind() == WXAMAYAWINDOW_CSS)
           HideToolPanels();
         Thaw();
       }

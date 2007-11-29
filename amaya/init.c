@@ -2049,9 +2049,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       /* The toolkit has to do its job now */
       TtaHandlePendingEvents ();
     }
-  else if (docType == docAnnot)
+  else if (docType == docAnnot || method == CE_HELP)
     {
-      window_id = TtaGetAnnotWindowId();
+      if (method == CE_HELP)
+        window_id = TtaGetHelpWindowId();
+      else
+        window_id = TtaGetAnnotWindowId();
       if (window_id != -1)
         {
           // the annotation window is already open
@@ -2196,12 +2199,14 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
         {
           /* get the parent window because the log should stay on top of his parent */
           int parent_window_id = TtaGetDocumentWindowId( oldDoc, -1 );
-          if (docType == docLog)
+          if (docType == docLog || docType == docLibrary)
             window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
           else if (docType == docCSS)
             window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_CSS, 0 );
           else if (docType == docAnnot)
             window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_ANNOT, 0 );
+          else if (method == CE_HELP)
+            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_HELP, 0 );
           else
             /* a normal window should never had a parent ! */
             window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );

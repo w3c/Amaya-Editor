@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -161,7 +162,6 @@ extern Document GetAmayaDoc ( char *urlname,
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
-extern void FreeAmayaIcons ( void );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
 extern void OpenNewDocFromArgv ( char * url );
@@ -228,6 +228,7 @@ extern void SendByMail ( Document document,
                          View view );
 
 #else /* __STDC__ */
+
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -384,7 +385,6 @@ extern Document GetAmayaDoc ( char *urlname,
 extern void CallbackDialogue ( int ref,
                                  int typedata,
                                  char *data );
-extern void FreeAmayaIcons ( void );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
 extern void OpenNewDocFromArgv ( char * url );

@@ -515,6 +515,7 @@ void AmayaFrame::SetWindowTitle(const wxString & window_name)
   int kind = p_window->GetKind();
   if (kind == WXAMAYAWINDOW_NORMAL ||
       kind == WXAMAYAWINDOW_ANNOT ||
+      kind == WXAMAYAWINDOW_HELP ||
       kind == WXAMAYAWINDOW_CSS)
     {
       // check if this frame's page is active or not
@@ -720,6 +721,7 @@ void AmayaFrame::RaiseFrame()
   int kind = p_window->GetKind();
   if ( kind == WXAMAYAWINDOW_NORMAL ||
        kind == WXAMAYAWINDOW_ANNOT ||
+       kind == WXAMAYAWINDOW_HELP ||
        kind == WXAMAYAWINDOW_CSS)
     {
       // raise the page parent

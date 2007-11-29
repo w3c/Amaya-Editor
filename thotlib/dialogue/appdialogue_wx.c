@@ -180,6 +180,7 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
     {
     case WXAMAYAWINDOW_NORMAL:
     case WXAMAYAWINDOW_ANNOT:
+    case WXAMAYAWINDOW_HELP:
     case WXAMAYAWINDOW_CSS:
       p_window = AmayaNormalWindow::CreateNormalWindow( p_parent_window, window_id,
                                         window_pos, window_size, kind );
@@ -861,6 +862,7 @@ ThotBool TtaMakePage( int window_id, int page_id )
   kind = p_window->GetKind();
   if (kind == WXAMAYAWINDOW_NORMAL ||
       kind == WXAMAYAWINDOW_ANNOT ||
+      kind == WXAMAYAWINDOW_HELP ||
       kind == WXAMAYAWINDOW_CSS)
     {
       AmayaPage * p_page = p_window->GetPage(page_id);
@@ -961,6 +963,7 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   kind = p_window->GetKind();
   if (kind == WXAMAYAWINDOW_NORMAL ||
       kind == WXAMAYAWINDOW_ANNOT ||
+      kind == WXAMAYAWINDOW_HELP ||
       kind == WXAMAYAWINDOW_CSS)
     {
       AmayaPage * p_page = p_window->GetPage(page_id);
@@ -1033,6 +1036,7 @@ ThotBool TtaDetachFrame( int frame_id )
     }
   else if (kind == WXAMAYAWINDOW_NORMAL ||
            kind == WXAMAYAWINDOW_ANNOT ||
+           kind == WXAMAYAWINDOW_HELP ||
            kind == WXAMAYAWINDOW_CSS)
     {
       AmayaPage * p_page = p_window->GetPage(page_id);
@@ -1210,6 +1214,25 @@ int TtaGetFreePageId( int window_id )
 }
 
 /*----------------------------------------------------------------------
+  TtaGetHelpWindowId returns the help window id
+  params:
+  returns:
+  + int : the new window id or -1 if too much created window
+  ----------------------------------------------------------------------*/
+int TtaGetHelpWindowId()
+{
+  int window_id = 1;
+  while ( window_id < MAX_WINDOW )
+    {
+      if ( WindowTable[window_id].WdWindow &&
+           WindowTable[window_id].WdWindow->GetKind() == WXAMAYAWINDOW_HELP)
+        return window_id;
+      window_id++;
+    }
+  return -1;
+}
+
+/*----------------------------------------------------------------------
   TtaGetAnnotWindowId returns the annotation window id
   params:
   returns:
@@ -1217,7 +1240,6 @@ int TtaGetFreePageId( int window_id )
   ----------------------------------------------------------------------*/
 int TtaGetAnnotWindowId()
 {
-#ifdef _WX
   int window_id = 1;
   while ( window_id < MAX_WINDOW )
     {
@@ -1227,9 +1249,6 @@ int TtaGetAnnotWindowId()
       window_id++;
     }
   return -1;
-#else
-  return -1;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1240,7 +1259,6 @@ int TtaGetAnnotWindowId()
   ----------------------------------------------------------------------*/
 int TtaGetFreeWindowId()
 {
-#ifdef _WX
   int window_id = 1;
   while ( window_id < MAX_WINDOW )
     {
@@ -1249,9 +1267,6 @@ int TtaGetFreeWindowId()
       window_id++;
     }
   return -1;
-#else
-  return -1;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
