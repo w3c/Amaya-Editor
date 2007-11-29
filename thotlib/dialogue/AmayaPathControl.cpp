@@ -32,6 +32,9 @@
 WX_DEFINE_LIST(AmayaPathControlItemList);
 
 
+static wxString s_sep = wxT(">");
+static wxString s_dots = wxT("...");
+
 /*------------------------------------------------------------------------------
   ----------------------------------------------------------------------------*/
 AmayaPathControl::AmayaPathControl(wxWindow* parent, wxWindowID id,
@@ -141,13 +144,11 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
   wxPaintDC dc(this);
   wxSize sz = GetClientSize();
   
-  static wxString sep = wxT("/"); 
   wxSize szSep;
-  dc.GetTextExtent(sep, &szSep.x, &szSep.y);
+  dc.GetTextExtent(s_sep, &szSep.x, &szSep.y);
   szSep.x += 4;
-  static wxString dots = wxT("..."); 
   wxSize szDots;
-  dc.GetTextExtent(dots, &szDots.x, &szDots.y);
+  dc.GetTextExtent(s_dots, &szDots.x, &szDots.y);
   szDots.x += 4;
   
   int x = 0;
@@ -160,7 +161,7 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
         {
           if (!bIsFirst)
             {
-              dc.DrawText(sep, x+2, y);
+              dc.DrawText(s_sep, x+2, y);
               x += szSep.x;
             }
           else
@@ -171,7 +172,7 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
       else if (bIsFirst)
         {
           // display "..."
-          dc.DrawText(dots, x+2, y);
+          dc.DrawText(s_dots, x+2, y);
           x = szDots.x;
           bIsFirst = false;
         }
@@ -188,13 +189,11 @@ void AmayaPathControl::PreCalcPositions()
   wxSize sz = GetClientSize();
   int y = (sz.y-m_height)/2, x, dx;
 
-  static wxString sep = wxT("/"); 
   wxSize szSep;
-  dc.GetTextExtent(sep, &szSep.x, &szSep.y);
+  dc.GetTextExtent(s_sep, &szSep.x, &szSep.y);
   szSep.x += 4;
-  static wxString dots = wxT("..."); 
   wxSize szDots;
-  dc.GetTextExtent(dots, &szDots.x, &szDots.y);
+  dc.GetTextExtent(s_dots, &szDots.x, &szDots.y);
   szDots.x += 4;
 
   int cx = 0;
