@@ -47,8 +47,8 @@
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_NUMBER_COL_TXT">
                   <label>Number of columns   </label>
-                  <size>150,-1</size>
                 </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
                 <border>5</border>
               </object>
               <object class="sizeritem">
@@ -60,24 +60,14 @@
                   <focused>1</focused>
                 </object>
               </object>
-            </object>
-            <flag>wxALL</flag>
-            <border>5</border>
-          </object>
-          <object class="spacer">
-            <size>0,5</size>
-          </object>
-          <object class="sizeritem">
-            <object class="wxBoxSizer">
-              <orient>wxHORIZONTAL</orient>
               <object class="spacer">
                 <size>10,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_NUMBER_ROW_TXT">
                   <label>Number of raws</label>
-                  <size>150,-1</size>
                 </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
                 <border>5</border>
               </object>
               <object class="sizeritem">
@@ -93,7 +83,7 @@
             <border>5</border>
           </object>
           <object class="spacer">
-            <size>0,5</size>
+            <size>0,10</size>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
@@ -126,11 +116,11 @@
               <orient>wxHORIZONTAL</orient>
               <object class="spacer">
                 <size>10,0</size>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_TABLE_BORDER_TXT">
-                  <label>Border (pixels)</label>
-                  <size>150,-1</size>
+                  <label>Border width (pixels)</label>
                 </object>
                 <flag>wxALIGN_CENTRE_VERTICAL</flag>
                 <border>5</border>
@@ -145,15 +135,14 @@
                 <flag>wxALIGN_CENTRE_VERTICAL</flag>
               </object>
               <object class="spacer">
-                <size>20,0</size>
+                <size>30,0</size>
               </object>
               <object class="sizeritem">
-                <object class="wxCheckBox" name="wxID_CAPTION">
-                  <label>Caption</label>
-                  <size>150,-1</size>
+                <object class="wxButton" name="wxID_FORMAT_BUTTON">
+                  <label>Use a default theme ...</label>
                 </object>
-                <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
-                <border>5</border>
+                <option>1</option>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
               </object>
             </object>
             <flag>wxALL</flag>
@@ -179,17 +168,7 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="spacer">
-                <size>20,0</size>
-              </object>
-              <object class="sizeritem">
-                <object class="wxButton" name="wxID_FORMAT_BUTTON">
-                  <label>Use a default theme ...</label>
-                </object>
-                <option>1</option>
-                <flag>wxALIGN_CENTRE_VERTICAL</flag>
-              </object>
-              <object class="spacer">
-                <size>50,0</size>
+                <size>10,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxCheckBox" name="wxID_EXTEND_WIDTH">
@@ -198,6 +177,17 @@
                 </object>
                 <option>1</option>
                 <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="spacer">
+                <size>50,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxCheckBox" name="wxID_CAPTION">
+                  <label>Caption</label>
+                  <size>150,-1</size>
+                </object>
+                <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
+                <border>5</border>
               </object>
             </object>
           </object>

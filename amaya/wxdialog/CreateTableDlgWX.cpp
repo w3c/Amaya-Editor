@@ -77,6 +77,7 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_NUMBER_ROW", wxSpinCtrl )->SetRange(1, 1000);
   XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl )->SetRange(1, 1000);
 
+  XRCCTRL(*this, "wxID_FORMAT_BUTTON", wxButton)->Hide();
   Layout();
   
   SetAutoLayout( TRUE );
