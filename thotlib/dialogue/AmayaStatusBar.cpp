@@ -81,7 +81,7 @@ private:
 };
 BEGIN_EVENT_TABLE(AmayaStatusText, wxStaticText)
   EVT_UPDATE_UI(wxID_ANY, AmayaStatusText::OnUpdate)
-  EVT_LEFT_DCLICK(AmayaStatusText::OnDblClick)
+  EVT_LEFT_UP(AmayaStatusText::OnDblClick)
 END_EVENT_TABLE()
 
 
