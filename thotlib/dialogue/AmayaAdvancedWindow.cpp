@@ -233,9 +233,11 @@ void AmayaAdvancedWindow::LoadConfig()
  -----------------------------------------------------------------------*/
 void AmayaAdvancedWindow::OnToggleToolPanelMenu(wxCommandEvent& event)
 {
-  m_manager.GetPane(m_panelMenus[event.GetId()]).Show(event.IsChecked());
-  m_panelMenus[event.GetId()]->SetVisibleFlag(event.IsChecked());
-  event.Skip();
+  int id = event.GetId();
+  bool check = event.IsChecked();
+  m_manager.GetPane(m_panelMenus[id]).Show(event.IsChecked());
+  m_panelMenus[id]->SetVisibleFlag(event.IsChecked());
+  //event.Skip(); doesn't work on MacOSX
   m_manager.Update();
 }
 
