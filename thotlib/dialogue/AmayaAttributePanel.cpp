@@ -388,8 +388,11 @@ void AmayaAttributeToolPanel::RemoveCurrentAttribute()
       TtaGiveAttributeType (attr, &attrType, &kind);
       while (pEl != NULL)
         {
-	  TtaRegisterAttributeDelete(attr, (Element)pEl, doc);
-	  TtaRemoveAttribute((Element)pEl, attr, doc);
+	  if (attr)
+	    {
+	      TtaRegisterAttributeDelete(attr, (Element)pEl, doc);
+	      TtaRemoveAttribute((Element)pEl, attr, doc);
+	    }
            /* next element in the selection */
           pEl = NextInSelection (pEl, (PtrElement)m_lastSel);
 	  attr = TtaGetAttribute ((Element)pEl, attrType);
