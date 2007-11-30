@@ -76,7 +76,6 @@ public:
 #endif /* _GL */
   virtual ~AmayaCanvas( );
 
-  bool IsParentFrameActive();
   bool IsInit();
   
 protected:

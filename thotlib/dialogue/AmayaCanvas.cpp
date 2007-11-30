@@ -114,17 +114,6 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
   wxGLCanvas::OnSize(event);
 #endif /* _GL */
 
-  // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentFrameActive())
-    {
-      TTALOGDEBUG_3( TTA_LOG_DIALOG, _T("AmayaCanvas::OnSize: frame=%d w=%d h=%d (skip)"),
-                     m_pAmayaFrame->GetFrameId(),
-                     event.GetSize().GetWidth(),
-                     event.GetSize().GetHeight() );
-      event.Skip();
-      return;
-    }
-  
   // do not resize while opengl is not initialized
   if (!m_Init)
     {
@@ -159,15 +148,6 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaCanvas::OnPaint( wxPaintEvent& event )
 {
-  // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentFrameActive())
-    {
-      TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnPaint : frame=%d (skip)"),
-                     m_pAmayaFrame->GetFrameId() );
-      event.Skip();
-      return;
-    }
-
   /*
    * Note that In a paint event handler, the application must
    * always create a wxPaintDC object, even if you do not use it.
@@ -209,15 +189,6 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaCanvas::OnMouseDbClick( wxMouseEvent& event )
 {
-  // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentFrameActive())
-    {
-      TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
-                     m_pAmayaFrame->GetFrameId() );
-      event.Skip();
-      return;
-    }
-
   int frame = m_pAmayaFrame->GetFrameId();
 
   int thot_mod_mask = THOT_NO_MOD;
@@ -290,15 +261,6 @@ void AmayaCanvas::OnTimerMouseMove( wxTimerEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaCanvas::OnMouseWheel( wxMouseEvent& event )
 {
-  // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentFrameActive())
-    {
-      TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
-                     m_pAmayaFrame->GetFrameId() );
-      event.Skip();
-      return;
-    }
-
   int frame = m_pAmayaFrame->GetFrameId();
 
   int thot_mod_mask = THOT_NO_MOD;
@@ -332,15 +294,6 @@ void AmayaCanvas::OnMouseWheel( wxMouseEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
 {
-  // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentFrameActive())
-    {
-      TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
-                     m_pAmayaFrame->GetFrameId() );
-      event.Skip();
-      return;
-    }
-
   int frame = m_pAmayaFrame->GetFrameId();
 
   int thot_mod_mask = THOT_NO_MOD;
@@ -375,15 +328,6 @@ void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
 void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
 {
   int thot_mod_mask = THOT_NO_MOD;
-
-  // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentFrameActive())
-    {
-      TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
-                     m_pAmayaFrame->GetFrameId() );
-      event.Skip();
-      return;
-    }
 
   m_IsMouseSelecting = true;
   m_MouseMoveTimer.Stop();
@@ -483,47 +427,7 @@ void AmayaCanvas::Init()
   wxPostEvent(this, event );
 }
 
-/*----------------------------------------------------------------------
-        Class:  AmayaCanvas
-      Method:  IsParentFrameActive
-  Description:  test if the parent frame which contains this canvas is active or not
-                this depends on window type
-  -----------------------------------------------------------------------*/
-bool AmayaCanvas::IsParentFrameActive()
-{
-  if (!m_pAmayaFrame)
-    return false;
-  
-  AmayaWindow * p_window = m_pAmayaFrame->GetWindowParent();
-  if (!p_window)
-    return false;
 
-  switch( p_window->GetKind() )
-    {
-    case WXAMAYAWINDOW_SIMPLE:
-      {
-        // we draw something only when the window is shown (everytime maybe ...)
-        return p_window->IsShown();
-      }
-      break;
-    case WXAMAYAWINDOW_NORMAL:
-    case WXAMAYAWINDOW_ANNOT:
-    case WXAMAYAWINDOW_HELP:
-    case WXAMAYAWINDOW_CSS:
-      {
-        AmayaPage * p_page = m_pAmayaFrame->GetPageParent();
-        if (!p_page)
-          return false;
-        // if we are closing the page, continue to draw into because maybe the page has been modified so a dialog is poped up
-        // we need to draw the page else a gray page will be shown when the document was modified.
-        TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaCanvas::IsParentFrameActive page = %d select = %d"), p_page->GetPageId(), p_page->IsSelected() );
-        return (p_page->IsSelected() /*&& !p_page->IsClosed()*/);
-      }      
-      break;
-    }
-
-  return false;
-}
 
 /*----------------------------------------------------------------------
   Class:  AmayaCanvas
