@@ -2134,7 +2134,11 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
   wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
   wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
-  if (( p_text_ctrl || p_combo_box || p_spinctrl ) && event.CmdDown())
+  if (( p_text_ctrl || p_combo_box || p_spinctrl ) && event.CmdDown()
+#ifdef _WINDOWS
+	  && !event.AltDown()
+#endif /* _WINDOWS */
+	  )
     {
       if (p_combo_box)
         {
@@ -2160,6 +2164,10 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
             p_text_ctrl->Cut();
           else if (thot_keysym == 90) // Ctrl Z
             p_text_ctrl->Undo();
+#ifdef _WINDOWS
+		  else
+		    return false;
+#endif /* _WINDOWS */
         }
       return true;
     }
@@ -2290,7 +2298,7 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 #ifdef _MACOS
       if (proceed_key && thot_keysym == WXK_PAGEUP)
 	    thot_keysym = WXK_PRIOR;
-      if (proceed_key && thot_keysym == WXK_PAGEDOWN)
+      else if (proceed_key && thot_keysym == WXK_PAGEDOWN)
 	    thot_keysym = WXK_NEXT;
 #endif /* _MACOS */
       
