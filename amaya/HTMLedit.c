@@ -2002,11 +2002,26 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
                                    AttrHREFvalue,
                                    doc, docJavascript);
       else
+	  {
+		if (AttrHREFvalue[0] == EOS &&
+			((TargetDocumentURL && TargetDocumentURL[0] != EOS) ||
+			(TargetName && TargetName[0] != EOS)))
+		{
+          // by default propose the last created target
+		  if (TargetDocumentURL && strcmp (TargetDocumentURL, DocumentURLs[doc]))
+            strcpy (AttrHREFvalue, TargetDocumentURL);
+		  if (TargetName && TargetName[0] != EOS)
+		  {
+          strcat (AttrHREFvalue, "#");
+		  strcat (AttrHREFvalue, TargetName);
+		  }
+		}
         /* select any file */
         created = CreateHRefDlgWX (BaseDialog + AttrHREFForm,
                                    TtaGetViewFrame (doc, 1), URL_list,
                                    AttrHREFvalue,
                                    doc, docText);
+	  }
       if (created)
         {
           TtaSetDialoguePosition ();

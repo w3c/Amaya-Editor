@@ -170,8 +170,6 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
   // Document location
   XRCCTRL(*this, "wxID_DOC_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_DOC_LOCATION) ));
   XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue(pathname);
-  // set te cursor to the end
-  XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetInsertionPointEnd();
 
   // Charset  
   wxString wx_label = TtaConvMessageToWX( "Charset :" );
@@ -317,12 +315,16 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
   XRCCTRL(*this, "wxID_BROWSE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
   XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetToolTip(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CLEAR) ));
   
-  // Set focus to ...
-  //  XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetFocus();
-
   Fit();
   Refresh();
   SetAutoLayout( TRUE );
+
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetInsertionPointEnd();
+#ifndef _MACOS
+  // give focus to ...
+  XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetFocus();
+#endif /* _MACOS */
 }
 
 /*---------------------------------------------------------------------------

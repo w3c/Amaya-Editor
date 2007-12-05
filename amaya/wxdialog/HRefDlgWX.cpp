@@ -66,6 +66,7 @@ HRefDlgWX::HRefDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
 
   // fill the combobox with url list
+  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->Append(wx_init_value);
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->Append(url_list);
   // initialize it
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue(wx_init_value);
@@ -73,7 +74,6 @@ HRefDlgWX::HRefDlgWX( int ref, wxWindow* parent, const wxString & title,
   SetAutoLayout( TRUE );
 
   // set te cursor to the end
-  //XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetSelection (0, -1);
 #ifndef _MACOS
   // give focus to ...

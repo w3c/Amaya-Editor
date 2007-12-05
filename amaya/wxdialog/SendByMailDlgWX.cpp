@@ -108,11 +108,11 @@ void SendByMailDlgWX::UpdateMessageLabel()
 {
   if(XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS", wxRadioBox)->GetSelection()==1)
   {
-    XRCCTRL(*this, "wxID_LABEL_MESSAGE",   wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_MESSAGE_ALTERN)) );
+    XRCCTRL(*this, "wxID_LABEL_MESSAGE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_MESSAGE_ALTERN)) );
   }
   else
   {
-    XRCCTRL(*this, "wxID_LABEL_MESSAGE",   wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_MESSAGE_BODY)) );
+    XRCCTRL(*this, "wxID_LABEL_MESSAGE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_MESSAGE_BODY)) );
   }
 }
 
@@ -125,6 +125,8 @@ void SendByMailDlgWX::OnCancelButton( wxCommandEvent& event )
   event.Skip();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SendByMailDlgWX::OnUpdateSendButton(wxUpdateUIEvent& event)
 {
   if(m_grid && m_grid->GetNumberRows()>0)
@@ -142,11 +144,15 @@ void SendByMailDlgWX::OnUpdateSendButton(wxUpdateUIEvent& event)
   event.Enable(false);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SendByMailDlgWX::OnChangeMessageClass(wxCommandEvent& WXUNUSED(event))
 {
   UpdateMessageLabel();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SendByMailDlgWX::AddAddressToRecentList(const wxString& addr)
 {
   if(!addr.IsEmpty())
@@ -162,47 +168,65 @@ void SendByMailDlgWX::AddAddressToRecentList(const wxString& addr)
   }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 wxString SendByMailDlgWX::GetSubject()const
 {
   return XRCCTRL(*this, "wxID_EDIT_SUBJECT",   wxTextCtrl)->GetValue();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SendByMailDlgWX::SetSubject(const wxString& subject)
 {
   XRCCTRL(*this, "wxID_EDIT_SUBJECT",   wxTextCtrl)->SetValue(subject);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 wxString SendByMailDlgWX::GetMessage()const
 {
   return XRCCTRL(*this, "wxID_EDIT_MESSAGE",   wxTextCtrl)->GetValue();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SendByMailDlgWX::SetMessage(const wxString& message)
 {
   XRCCTRL(*this, "wxID_EDIT_MESSAGE",   wxTextCtrl)->SetValue(message);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool SendByMailDlgWX::SendAsAttachment()const
 {
   return XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->GetSelection()==SendByMailAsAttachment;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool SendByMailDlgWX::SendAsContent()const
 {
   return XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->GetSelection()==SendByMailAsMessage;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool SendByMailDlgWX::SendAsZip()const
 {
   return XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->GetSelection()==SendByMailAsZip;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SendByMailDlgWX::SetSendMode(int mode)
 {
   XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->SetSelection(mode);
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 wxArrayString  SendByMailDlgWX::GetRecipients()const
 {
   wxArrayString arr;
@@ -216,6 +240,8 @@ wxArrayString  SendByMailDlgWX::GetRecipients()const
   return arr;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SendByMailDlgWX::SetRecipients(const wxArrayString & rcpt)
 {
   m_grid->BeginBatch();
@@ -233,6 +259,8 @@ void SendByMailDlgWX::SetRecipients(const wxArrayString & rcpt)
   m_grid->EndBatch();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 wxString SendByMailDlgWX::GetRecipientList()const
 {
   wxString res;
@@ -247,6 +275,8 @@ wxString SendByMailDlgWX::GetRecipientList()const
   return res;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SendByMailDlgWX::SaveRecentList()
 {
   /* Save m_rcptArray .*/
@@ -262,6 +292,8 @@ void SendByMailDlgWX::SaveRecentList()
   }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SendByMailDlgWX::LoadRecentList()
 {
   char* lastRcpt = TtaGetEnvString ("EMAILS_LAST_RCPT");
@@ -274,6 +306,8 @@ void SendByMailDlgWX::LoadRecentList()
     m_rcptArray.Add(wxString(TtaGetEnvString ("EMAILS_FROM_ADDRESS"), wxConvUTF8));
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SendByMailDlgWX::OnCloseDialog(wxCommandEvent& event)
 {
   if(event.GetId()==wxID_OK)
@@ -290,7 +324,8 @@ void SendByMailDlgWX::OnCloseDialog(wxCommandEvent& event)
   event.Skip();
 }
 
-
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SendByMailDlgWX::OnSize(wxSizeEvent& event)
 {
   if(m_grid)

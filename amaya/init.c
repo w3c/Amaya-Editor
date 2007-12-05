@@ -7581,7 +7581,7 @@ void SendByMail (Document document, View view)
   EMail                mail;
   wxArrayString        arr;
   SendByMailDlgWX      dlg(0, NULL); 
-  char                *temppath = CreateTempDirectory ("sendmail/");
+  char                *temppath;
   char                *server = TtaGetEnvString ("EMAILS_SMTP_SERVER");
   char                *from   = TtaGetEnvString ("EMAILS_FROM_ADDRESS");
   char                *docPath, *docType, *docChar;
@@ -7590,6 +7590,11 @@ void SendByMail (Document document, View view)
   int                  error;
   ThotBool             retry = TRUE;
 
+#ifdef _WINDOWS
+  temppath = CreateTempDirectory ("sendmail\\");
+#else /* _WINDOWS */
+  temppath = CreateTempDirectory ("sendmail/");
+#endif /* _WINDOWS */
   TtaGetEnvInt ("EMAILS_SMTP_PORT", &port);
   if (server == NULL || from == NULL ||
       server[0] == EOS || from[0] == EOS || port == 0)
