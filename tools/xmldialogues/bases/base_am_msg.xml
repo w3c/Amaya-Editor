@@ -6360,6 +6360,7 @@
 	<message xml:lang="fr">Archive zip</message>
 	<message xml:lang="de">Zip Archiv</message>
 	<message xml:lang="hu">Zip</message>
+	<message xml:lang="es">Archivo zip</message>
 </label>
 <label define="AM_EMAILS_DONT_SEND">
 	<message xml:lang="en">Don't send</message>

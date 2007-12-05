@@ -3864,15 +3864,22 @@
 	<message xml:lang="de">Keine neuen Dokumente</message>
 	<message xml:lang="it">Nessun documento recente</message>
 	<message xml:lang="hu">Nincs korábbi dokumentum</message>
+	<message xml:lang="es">No existe documento anterior</message>
 </label>
 <label define="TMSG_CLIC_ELEM_TO_SELECT_IT">
   <message xml:lang="en">Click an element to select it</message>
   <message xml:lang="fr">Cliquer sur un élément pour le sélectionner</message>
+	<message xml:lang="de">Klicken Sie auf ein Element um es auszuwählen</message>
+	<message xml:lang="hu">Elem kijelölése kattintással</message>
+	<message xml:lang="es">Haga clic en un elemento para seleccionarlo</message>
 </label>
 
 <label define="TMSG_INSERT_MODE">
   <message xml:lang="en">Click to change the editing mode</message>
   <message xml:lang="fr">Cliquer pour changer de mode d'édition</message>
+	<message xml:lang="de">Klicken Sie um den Editmodus zu wechseln</message>
+	<message xml:lang="hu">Szerkesztési mód váltása kattintással</message>
+	<message xml:lang="es">Haga clic para cambiar el modo de edición</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>

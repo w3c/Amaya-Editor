@@ -1438,6 +1438,7 @@
 	<message xml:lang="en">Select All</message>
 	<message xml:lang="fr">Tout sélectionner</message>
 	<message xml:lang="hu">Mindent kijelöl</message>
+	<message xml:lang="es">Seleccionar todo</message>
 </label>
 <label define="BFind">
 	<message xml:lang="en">&amp;Find...</message>
