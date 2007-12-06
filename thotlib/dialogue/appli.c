@@ -1028,10 +1028,6 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
               s = (char *)TtaGetMemory (length + strlen (name));
               sprintf (s, text, name);
             }
-          /* 
-           * do not use the FrameTable[frame].WdStatus field because it's simplier
-           * to update only the frame's parent window
-           */
           if (FrameTable[frame].WdFrame)
             FrameTable[frame].WdFrame->SetStatusBarText( TtaConvMessageToWX( s ) );
           TtaFreeMemory (s);
@@ -2012,57 +2008,17 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 {
   unsigned char      *title = NULL;
-#ifdef _WX
   AmayaFrame         *p_frame;
-#else /* _WX */
-  CHAR_T             *ptr;
-  unsigned char      *s;
-#if defined(_GTK)
-  ThotWidget          w;
-#endif /* #if defined(_GTK) */
-#endif /* _WX */
 
-#ifndef _WX
-  if (encoding == TtaGetDefaultCharset ())
-    title = text;
-  else if (encoding == UTF_8)
-    title = TtaConvertMbsToByte (text, TtaGetDefaultCharset ());
-  else
-    {
-      ptr = TtaConvertByteToWC (text, encoding);
-      title = TtaConvertWCToByte (ptr, TtaGetDefaultCharset ());
-      TtaFreeMemory (ptr);
-    }
-#else /* _WX */
   /* Disabled for the moment, impossible to Save As otherwise */
   /*
     wxASSERT_MSG( encoding == UTF_8, _T("Encoding should be UTF8 !") );
   */
   title = text;
-#endif /* _WX */
 
-#ifdef _WX
   p_frame = FrameTable[frame].WdFrame;
   if ( p_frame )
     p_frame->SetFrameTitle( TtaConvMessageToWX( (char *)title ) );
-#else /* _WX */
-  /* Add the Amaya version */
-  s = (unsigned char *)TtaGetMemory (strlen ((const char *)title) + strlen (TtaGetAppVersion()) + 10);
-  sprintf ((char *)s, "%s - Amaya %s", title, TtaGetAppVersion());
-#ifdef _WINGUI
-  if (FrMainRef [frame])
-    SetWindowText (FrMainRef[frame], s);
-#endif /* _WINGUI */
-#ifdef _GTK
-  w = FrameTable[frame].WdFrame;
-  if (w)
-    {
-      w = gtk_widget_get_toplevel (w);
-      gtk_window_set_title (GTK_WINDOW(w), (gchar *)s);
-    }
-#endif /* _GTK */
-  TtaFreeMemory (s);
-#endif /* _WX */
 
   if (title != text)
     TtaFreeMemory (title);

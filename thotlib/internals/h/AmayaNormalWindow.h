@@ -38,21 +38,27 @@ class AmayaNormalWindow : public AmayaWindow
                       ,int kind = WXAMAYAWINDOW_NORMAL);
   virtual ~AmayaNormalWindow();
 
+  // Init and config :
+  virtual void CleanUp();
+  virtual bool Initialize();
+  virtual void LoadConfig();
+  virtual void SaveConfig();
+
+  // Window decorations :
+  virtual AmayaStatusBar * CreateStatusBar();
+  virtual void             CreateMenuBar();
+
+  
   virtual AmayaPage *  GetActivePage() const;
   virtual AmayaFrame * GetActiveFrame() const;
 
-  virtual void CleanUp();
-  virtual bool Initialize();
 
   void Unused();
 
-  virtual void LoadConfig();
-  virtual void SaveConfig();
   
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
   virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 ) = 0;
-  virtual AmayaStatusBar * GetAmayaStatusBar();
 
   // url bar control
   virtual wxString GetURL();
@@ -103,7 +109,6 @@ protected:
 
   virtual void RefreshShowToolBarToggleMenu(int toolbarID);
   
-  AmayaStatusBar          *m_pStatusBar;
   wxPanel                 *m_pToolBarEditing;
   wxPanel                 *m_pToolBarBrowsing;
   

@@ -236,7 +236,7 @@ void AmayaClassicWindow::SetPageIcon(int page_id, char *iconpath)
  -----------------------------------------------------------------------*/
 AmayaPage * AmayaClassicWindow::CreatePage( bool attach, int position )
 {
-  AmayaPage * page = new AmayaPage( m_pNotebook, this );
+  AmayaPage * page = new AmayaSplittablePage( m_pNotebook, this );
   
   if (attach)
     AttachPage( position, page );
@@ -519,7 +519,7 @@ void AmayaClassicWindow::UpdateToolPanelLayout()
  -----------------------------------------------------------------------*/
 void AmayaClassicWindow::OnNotebookPageChanged( wxNotebookEvent& event )
 {
-  AmayaStatusBar* status = GetAmayaStatusBar();
+  AmayaStatusBar* status = GetStatusBar();
   if(status){
     Document   doc;
     View       view;

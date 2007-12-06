@@ -91,7 +91,6 @@ CallbackCTX;
 
 static PtrCallbackCTX FirstCallbackAPI;
 static int          FreeMenuAction;
-static  ThotBool    ActivatedButton = FALSE;   
 static ThotBool     g_DoingAction = FALSE;
 
 void InitClue (ThotWidget toplevel);

@@ -236,7 +236,8 @@ void AmayaAdvancedNotebook::OnClosePage(wxAuiNotebookEvent& event)
         {
           PtrDocument         pDoc;
           int                 view;
-          GetDocAndView (page->GetActiveFrame()->GetFrameId(), &pDoc, &view);
+          AmayaFrame*         frame = page->GetActiveFrame();
+          GetDocAndView (frame->GetFrameId(), &pDoc, &view);
           TtaExecuteMenuAction("AmayaCloseTab", (Document)IdentDocument(pDoc), view, FALSE);
         }
     }
@@ -327,8 +328,10 @@ void AmayaAdvancedNotebook::OnPageChanged(wxAuiNotebookEvent& event)
         page_id++;
       }
   }    
+
   event.Skip();
 }
+
 
 /*----------------------------------------------------------------------
   Class:  AmayaAdvancedNotebook
@@ -388,7 +391,8 @@ void AmayaAdvancedNotebook::OnContextMenu( wxContextMenuEvent & event )
     {
       m_MContextFrameId = TtaGetFrameId ( window_id, page_id, 1 );
       wxMenu * p_menu = TtaGetContextMenu ( window_id );
-      PopupMenu (p_menu, ScreenToClient(point));
+      if(p_menu)
+        PopupMenu (p_menu, ScreenToClient(point));
     }
 }
 

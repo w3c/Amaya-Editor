@@ -74,13 +74,11 @@ AmayaWindow::AmayaWindow (  wxWindow* parent
     m_Kind( kind ),
     m_WindowId( id ),
     m_ActiveFrameId( 0 ),
-    m_MustCheckFocusIsNotLost( false ),
-    m_pMenuBar(NULL)
+    m_MustCheckFocusIsNotLost( false )
 {
   WindowTable[id].WdWindow = this;
   WindowTable[id].FrWidth  = 640;
   WindowTable[id].FrHeight = 480;
-  WindowTable[id].WdStatus = NULL;
 
   TTALOGDEBUG_1( TTA_LOG_DIALOG,  _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
   SetIcon( AmayaApp::GetAppIcon() );
@@ -118,6 +116,12 @@ AmayaWindow::~AmayaWindow()
  -----------------------------------------------------------------------*/
 bool AmayaWindow::Initialize()
 {
+  AmayaStatusBar* sbar = CreateStatusBar();
+  if(sbar)
+    SetStatusBar(sbar);
+  
+  CreateMenuBar();
+  
   LoadConfig();  
   return true;
 }
@@ -294,18 +298,6 @@ void AmayaWindow::EmptyURLBar()
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  SetMenuBar
- * Description:  override the wxFrame::SetMenuBar methode to remember the menubar for fullscreen mode
-  -----------------------------------------------------------------------*/
-void AmayaWindow::SetMenuBar( wxMenuBar * p_menu_bar )
-{
-  m_pMenuBar = p_menu_bar;
-  wxFrame::SetMenuBar(p_menu_bar);
-}
-
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaWindow
  *      Method:  OnSize
  * Description:  the window is resized, we must recalculate by hand the new urlbar size
  *               (wxWidgets is not able to do that itself ...)
@@ -326,13 +318,33 @@ void AmayaWindow::OnSize( wxSizeEvent& event )
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  GetAmayaStatusBar
+ *      Method:  GetStatusBar
  * Description:  
   -----------------------------------------------------------------------*/
-AmayaStatusBar * AmayaWindow::GetAmayaStatusBar()
+AmayaStatusBar * AmayaWindow::GetStatusBar()
+{
+  return wxDynamicCast(wxFrame::GetStatusBar(), AmayaStatusBar);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  CreateStatusBar
+ * Description:  
+  -----------------------------------------------------------------------*/
+AmayaStatusBar * AmayaWindow::CreateStatusBar()
 {
   return NULL;
 }
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  CreateMenuBar
+ * Description:  
+  -----------------------------------------------------------------------*/
+void AmayaWindow::CreateMenuBar()
+{
+}
+
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow

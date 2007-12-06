@@ -57,7 +57,6 @@
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"
-#include "AmayaToolBar.h"
 #include "AmayaQuickSplitButton.h"
 #include "AmayaStatusBar.h"
 
@@ -142,6 +141,24 @@ void AmayaHelpWindow::SaveConfig()
   AmayaNormalWindow::SaveConfig();
 }
 
+/*----------------------------------------------------------------------
+ *       Class:  AmayaHelpWindow
+ *      Method:  CreateStatusBar
+ * Description:  
+  -----------------------------------------------------------------------*/
+AmayaStatusBar * AmayaHelpWindow::CreateStatusBar()
+{
+  return NULL;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaHelpWindow
+ *      Method:  CreateMenuBar
+ * Description:  
+  -----------------------------------------------------------------------*/
+void AmayaHelpWindow::CreateMenuBar()
+{
+}
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaHelpWindow
@@ -163,7 +180,7 @@ void AmayaHelpWindow::SetPageIcon(int page_id, char *iconpath)
  -----------------------------------------------------------------------*/
 AmayaPage * AmayaHelpWindow::CreatePage( bool attach, int position )
 {
-  AmayaPage * page = new AmayaPage( m_notebook, this );
+  AmayaPage * page = new AmayaSimplePage( m_notebook, this );
   
   if (attach)
     AttachPage( position, page );

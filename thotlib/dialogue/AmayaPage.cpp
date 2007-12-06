@@ -44,11 +44,295 @@
 #include "AmayaClassicNotebook.h"
 #include "AmayaQuickSplitButton.h"
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
+//
+//
+//
+// AmayaPage
+//
+//
+//
+
+IMPLEMENT_ABSTRACT_CLASS(AmayaPage, wxPanel)
+
+BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
+END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  AmayaPage
+ * Description:  constructor of the page.
+  -----------------------------------------------------------------------*/
+AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_window ):
+wxPanel( p_parent_window, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("AmayaPage")),
+m_pContainer( NULL ),
+m_PageId(-1),
+m_IsClosed( FALSE ),
+m_IsSelected(false),
+m_MasterFrameId(-1)
+{
+  
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  ~AmayaPage
+  -----------------------------------------------------------------------*/
+AmayaPage::~AmayaPage()
+{
+  
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  GetWindowParent
+ * Description:  set/get the top window parent
+  -----------------------------------------------------------------------*/
+AmayaWindow * AmayaPage::GetWindowParent()
+{
+  return wxDynamicCast(wxGetTopLevelParent(this), AmayaWindow);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  SetPageId
+ * Description:  update the page id (page position in the notebook)
+  -----------------------------------------------------------------------*/
+void AmayaPage::SetPageId( int page_id )
+{
+  // update each owned frames
+  int frame_id = 1;
+  for(frame_id=1; frame_id<MAX_FRAME; frame_id++)
+    {
+      if (!TtaFrameIsClosed(frame_id))
+        {
+          // if this frame is owned by this page
+          if (FrameTable[frame_id].FrPageId == m_PageId)
+            {
+              FrameTable[frame_id].FrPageId = page_id;
+            }
+        }
+    }
+
+  // update the internal page_id with the new one
+  m_PageId = page_id;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  SetSelected
+ * Description:  the notebook has a new selected page then it calls SetSelected(TRUE)
+ *               on the selected page and SetSelected(FALSE) on the other one
+  -----------------------------------------------------------------------*/
+void AmayaPage::SetSelected( bool isSelected )
+{
+  m_IsSelected = isSelected;
+  if (isSelected)
+    {
+      // if there is an active frame
+      if ( GetActiveFrame() )
+        {
+          // activate it : setup the corresponding menu and update internal boolean
+          GetActiveFrame()->SetActive( TRUE );
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  RaisePage
+ * Description:  raise the page and the window if necessary
+  -----------------------------------------------------------------------*/
+void AmayaPage::RaisePage()
+{
+  AmayaPageContainer * p_container = GetContainer();
+  if (p_container)
+    {
+      // raise the notebook page
+      p_container->SetSelection(GetPageId());
+      SetSelected( TRUE );
+    }
+  // force the window's parent to raises to the top of the window hierarchy 
+  // if it is a managed window (dialog or frame).
+  if ( GetWindowParent() )
+    GetWindowParent()->Raise();
+}
+
+
+
+
+
+
+
+//
+//
+//
+// AmayaSimplePage
+//
+//
+//
+
+IMPLEMENT_DYNAMIC_CLASS(AmayaSimplePage, AmayaPage)
+
+BEGIN_EVENT_TABLE(AmayaSimplePage, AmayaPage)
+  EVT_CLOSE(AmayaSimplePage::OnClose )
+END_EVENT_TABLE()
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaSimplePage
+ *      Method:  AmayaSimplePage
+ * Description:  constructor of the page 
+  -----------------------------------------------------------------------*/
+AmayaSimplePage::AmayaSimplePage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_window):
+AmayaPage( p_parent_window, p_amaya_parent_window),
+m_pFrame(NULL)
+{
+  SetSizer(new wxBoxSizer(wxVERTICAL));
+  SetAutoLayout(true);
+}
+
+/*----------------------------------------------------------------------
+ *       Class: AmayaSimplePage 
+ *      Method: ~AmayaSimplePage 
+ * Description: destructor of AmayaSimplePage (do nothing)
+  -----------------------------------------------------------------------*/
+AmayaSimplePage::~AmayaSimplePage()
+{
+  
+}
+
+/*----------------------------------------------------------------------
+*       Class: AmayaSimplePage 
+*      Method: AttachFrame
+* Description: attache a AmayaFrame to the page (top or bottom)
+*      params:
+*        + AmayaFrame * p_frame : the frame to attach
+*        + int position : the position identifier - top (1) or bottom (2)
+*      return:
+*        + AmayaFrame * : the old frame or NULL if there was no old frame at this place
+ -----------------------------------------------------------------------*/
+AmayaFrame * AmayaSimplePage::AttachFrame( AmayaFrame * p_frame, int )
+{
+  AmayaFrame* res = m_pFrame;
+  
+  wxSizer *sz = GetSizer();
+  if(m_pFrame)
+    sz->Detach(m_pFrame);
+  
+  p_frame->Reparent(this);
+  sz->Add(p_frame, 1, wxEXPAND);
+
+  m_pFrame = p_frame;
+  SetMasterFrameId(p_frame->GetFrameId());
+  
+  
+  if (p_frame)
+    p_frame->SetPageParent( this ); // I'm your parent
+  // update the page title (same as bottom frame)
+  if (p_frame)
+    p_frame->SetFrameTitle(p_frame->GetFrameTitle());
+
+  
+  sz->Layout();
+  SetAutoLayout(true);
+  return res;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaSimplePage
+ *      Method:  DetachFrame
+ * Description:  detache the frame (hide it but don't delete it)
+ *      params:
+ *        + 1 the top frame
+ *        + 2 the bottom frame 
+ *      return:
+ *        + AmayaFrame* : the detached frame
+  -----------------------------------------------------------------------*/
+AmayaFrame * AmayaSimplePage::DetachFrame( int )
+{
+  AmayaFrame* res = m_pFrame;
+  GetSizer()->Detach(m_pFrame);
+  m_pFrame = NULL;
+  SetMasterFrameId(-1);
+  return res;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaSimplePage
+ *      Method:  CleanUp
+ * Description:  check that there is no empty pages
+ *      Return:  true if the page can be removed from parent
+  -----------------------------------------------------------------------*/
+bool AmayaSimplePage::CleanUp()
+{
+  return !m_pFrame;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaSimplePage
+ *      Method:  GetFramePosition
+ * Description:  return the frame position if it exist in the current page
+  -----------------------------------------------------------------------*/
+int AmayaSimplePage::GetFramePosition( const AmayaFrame * p_frame ) const
+{
+  return p_frame==m_pFrame?1:0;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaSimplePage
+ *      Method:  OnClose
+ * Description:  Intercept the CLOSE event and prevent it if ncecessary.
+  -----------------------------------------------------------------------*/
+void AmayaSimplePage::OnClose(wxCloseEvent& event)
+{
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaSimplePage::OnClose frame=%d"), 
+                                     m_pFrame?m_pFrame->GetFrameId():-1);
+  
+  SetIsClosed(true);
+  
+  if(m_pFrame)
+    {
+      int frame_id = m_pFrame->GetFrameId();
+      int page_id  = FrameTable[frame_id].FrPageId;
+
+      if (page_id > 0)
+        page_id--;
+
+      // try to close the frame : the user can choose to close or not with a dialog
+      m_pFrame->Close();
+      
+      // if the user doesn't want to close then just reattach the frame
+      if ( !TtaFrameIsClosed (frame_id) )
+        {
+          // if the frame didnt die, just re-attach it
+          AttachFrame(m_pFrame, 1);
+          SetIsClosed(false);
+        }
+    }
+
+  if(!IsClosed())
+    event.Veto();
+}
+
+
+
+
+
+
+
+//
+//
+//
+// AmayaSplittablePage
+//
+//
+//
+
+IMPLEMENT_DYNAMIC_CLASS(AmayaSplittablePage, AmayaPage)
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaSplittablePage
+ *      Method:  AmayaSplittablePage
  * Description:  constructor of the page :
  *   wxBoxSizer
  *   [
@@ -59,16 +343,11 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
  *       ]
  *   ]
   -----------------------------------------------------------------------*/
-AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_window )
-  :  wxPanel( p_parent_window, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("AmayaPage"))
-  ,m_pContainer( NULL )
+AmayaSplittablePage::AmayaSplittablePage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_window )
+  :  AmayaPage( p_parent_window, p_amaya_parent_window)
   ,m_pWindowParent( p_amaya_parent_window )
   ,m_SlashRatio( 0.5 )
-  ,m_PageId(-1)
-  ,m_IsClosed( FALSE )
   ,m_ActiveFrame(1) // by default, frame 1 is selected
-  ,m_IsSelected(false)
-  ,m_MasterFrameId(-1)
 {
   // Insert a forground sizer
   wxBoxSizer * p_sizerTop = new wxBoxSizer ( wxHORIZONTAL );
@@ -119,20 +398,20 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_w
 
 
 /*----------------------------------------------------------------------
- *       Class: AmayaPage 
- *      Method: ~AmayaPage 
- * Description: destructor of AmayaPage (do nothing)
+ *       Class: AmayaSplittablePage 
+ *      Method: ~AmayaSplittablePage 
+ * Description: destructor of AmayaSplittablePage (do nothing)
   -----------------------------------------------------------------------*/
-AmayaPage::~AmayaPage()
+AmayaSplittablePage::~AmayaSplittablePage()
 {
 }
 
 /*----------------------------------------------------------------------
- *       Class: AmayaPage 
+ *       Class: AmayaSplittablePage 
  *      Method: GetQuickSplitButton
  * Description: destructor of AmayaPage (do nothing)
   -----------------------------------------------------------------------*/
-AmayaQuickSplitButton * AmayaPage::GetQuickSplitButton (ThotBool horizontal)
+AmayaQuickSplitButton * AmayaSplittablePage::GetQuickSplitButton (ThotBool horizontal)
 {
   if (horizontal)
 	 return m_pSplitButtonBottom;
@@ -141,7 +420,7 @@ AmayaQuickSplitButton * AmayaPage::GetQuickSplitButton (ThotBool horizontal)
 }
 
  /*----------------------------------------------------------------------
- *       Class: AmayaPage 
+ *       Class: AmayaSplittablePage 
  *      Method: AttachFrame
  * Description: attache a AmayaFrame to the page (top or bottom)
  *      params:
@@ -150,13 +429,13 @@ AmayaQuickSplitButton * AmayaPage::GetQuickSplitButton (ThotBool horizontal)
  *      return:
  *        + AmayaFrame * : the old frame or NULL if there was no old frame at this place
   -----------------------------------------------------------------------*/
-AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
+AmayaFrame * AmayaSplittablePage::AttachFrame( AmayaFrame * p_frame, int position )
 {
   // check if this is the first frame or not
   // the first one will be considered ad the master
   // the master frame is the on which control the urlbar, buttons (TODO : and menus)
   if ( !m_pTopFrame && !m_pBottomFrame )
-    m_MasterFrameId = p_frame->GetFrameId();
+    SetMasterFrameId(p_frame->GetFrameId());
 
   // Select the right frame
   AmayaFrame ** pp_frame_container = NULL;
@@ -169,7 +448,7 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
       pp_frame_container = &m_pBottomFrame;
       break;
     default:
-      wxASSERT_MSG(FALSE, _T("AmayaPage::AttachFrame -> Bad position"));
+      wxASSERT_MSG(FALSE, _T("AmayaSplittablePage::AttachFrame -> Bad position"));
       return NULL;
       break;
     }
@@ -217,7 +496,7 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   	}
     AdjustSplitterPos();
   }
-  wxASSERT_MSG(ok, _T("AmayaPage::AttachFrame -> Impossible d'attacher la frame") );
+  wxASSERT_MSG(ok, _T("AmayaSplittablePage::AttachFrame -> Impossible d'attacher la frame") );
 
   // update old and new AmayaFrame parents
   if (oldframe)
@@ -239,7 +518,7 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  DetachFrame
  * Description:  detache the frame (hide it but don't delete it)
  *      params:
@@ -248,7 +527,7 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
  *      return:
  *        + AmayaFrame* : the detached frame
   -----------------------------------------------------------------------*/
-AmayaFrame * AmayaPage::DetachFrame( int position )
+AmayaFrame * AmayaSplittablePage::DetachFrame( int position )
 {
   // Select the right frame : top or bottom
   AmayaFrame ** pp_frame_container = NULL;
@@ -332,17 +611,17 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
   // if there is no more frame, the master frame must be erased 
   // the master frame is the on which control the urlbar, buttons (TODO : and menus)
   if ( !m_pTopFrame && !m_pBottomFrame )
-    m_MasterFrameId = -1;
+    SetMasterFrameId(-1);
 
   return oldframe;
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  DoBottomSplitButtonAction
  * Description:  
   -----------------------------------------------------------------------*/
-void AmayaPage::DoBottomSplitButtonAction()
+void AmayaSplittablePage::DoBottomSplitButtonAction()
 {
   // Update toggle menu item
   AmayaFrame * p_frame = GetFrame(1);
@@ -373,11 +652,11 @@ void AmayaPage::DoBottomSplitButtonAction()
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  DoRightSplitButtonAction
  * Description:  
   -----------------------------------------------------------------------*/
-void AmayaPage::DoRightSplitButtonAction()
+void AmayaSplittablePage::DoRightSplitButtonAction()
 {
   AmayaFrame * p_frame = GetFrame(1);
   Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
@@ -407,11 +686,11 @@ void AmayaPage::DoRightSplitButtonAction()
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  OnSplitButton
  * Description:  this method is called when the button for quickly split is pushed
   -----------------------------------------------------------------------*/
-void AmayaPage::OnSplitButton( wxCommandEvent& event )
+void AmayaSplittablePage::OnSplitButton( wxCommandEvent& event )
 {
   // do nothing if the button is not a quicksplit one
   if ( event.GetId() == m_pSplitButtonBottom->GetId() )
@@ -427,31 +706,31 @@ void AmayaPage::OnSplitButton( wxCommandEvent& event )
 
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  SetSplitMode
  * Description:  used to control the split orientation (call it just before DoSplitUnsplit())
   -----------------------------------------------------------------------*/
-void AmayaPage::SetSplitMode( int mode )
+void AmayaSplittablePage::SetSplitMode( int mode )
 {
   m_pSplitterWindow->SetSplitMode(mode);
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  GetSplitterWindow
  * Description:  return the page's splitter window pointer 
   -----------------------------------------------------------------------*/
-wxSplitterWindow * AmayaPage::GetSplitterWindow()
+wxSplitterWindow * AmayaSplittablePage::GetSplitterWindow()
 {
   return m_pSplitterWindow;
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  DoSplitUnsplit
  * Description:  toggle split/unsplit state
   -----------------------------------------------------------------------*/
-void AmayaPage::DoSplitUnsplit()
+void AmayaSplittablePage::DoSplitUnsplit()
 {
     AmayaFrame * p_frame = GetFrame(1);
     if (p_frame == NULL)
@@ -484,11 +763,11 @@ void AmayaPage::DoSplitUnsplit()
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  DoSwitchHoriVert
  * Description:  switch horizontal/vertical split direction
   -----------------------------------------------------------------------*/
-void AmayaPage::DoSwitchHoriVert()
+void AmayaSplittablePage::DoSwitchHoriVert()
 {
   if (m_pSplitterWindow->IsSplit())
     {
@@ -505,12 +784,12 @@ void AmayaPage::DoSwitchHoriVert()
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  OnSplitterPosChanged
  * Description:  this method is called when the splitter position has changed
  *               this method calculate the new ratio (m_SlashRatio)
   -----------------------------------------------------------------------*/
-void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
+void AmayaSplittablePage::OnSplitterPosChanged( wxSplitterEvent& event )
 {
     // calculate the new ratio (depending of window size)
     float new_slash_pos = event.GetSashPosition();
@@ -529,12 +808,12 @@ void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  OnSplitterDClick
  * Description:  called when a double click is done on the splitbar
  *               detach the bottom frame
   -----------------------------------------------------------------------*/
-void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
+void AmayaSplittablePage::OnSplitterDClick( wxSplitterEvent& event )
 {
   AmayaFrame * p_frame = GetFrame(1);
   Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
@@ -547,12 +826,12 @@ void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  OnSplitterUnsplit
  * Description:  called when the splitbar is unsplited
  *               TODO
   -----------------------------------------------------------------------*/
-void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
+void AmayaSplittablePage::OnSplitterUnsplit( wxSplitterEvent& event )
 {
   // the frame has been maybe unsplited manualy
   // maybe an update is needed
@@ -571,33 +850,25 @@ void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  OnSize
  * Description:  called when the AmayaPage is resized.
  *               assign a right value to the splitbar position
  *               depending of m_SlashRatio position
   -----------------------------------------------------------------------*/
-void AmayaPage::OnSize( wxSizeEvent& event )
+void AmayaSplittablePage::OnSize( wxSizeEvent& event )
 {
-  // do not update the size if the page is not selected
-  if ( !IsSelected() )
-  {
-    event.Skip();
-    return;
-  }
-  
   AdjustSplitterPos();
-
   event.Skip();
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  AdjustSplitterPos
  * Description:  adjust the splitbar position,
  *               the split bar pos could be horizontal or vertical
   -----------------------------------------------------------------------*/
-void AmayaPage::AdjustSplitterPos( int height, int width )
+void AmayaSplittablePage::AdjustSplitterPos( int height, int width )
 {
   if ( height == -1 )
     height = GetSize().GetHeight();
@@ -627,17 +898,17 @@ void AmayaPage::AdjustSplitterPos( int height, int width )
 
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  OnClose
  * Description:  Intercept the CLOSE event and prevent it if ncecessary.
   -----------------------------------------------------------------------*/
-void AmayaPage::OnClose(wxCloseEvent& event)
+void AmayaSplittablePage::OnClose(wxCloseEvent& event)
 {
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaPage::OnClose topframe=%d bottomframe=%d"),
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaSplittablePage::OnClose topframe=%d bottomframe=%d"),
                  m_pTopFrame ? m_pTopFrame->GetFrameId() : -1,
                  m_pBottomFrame ? m_pBottomFrame->GetFrameId() : -1 );
   
-  m_IsClosed = TRUE;
+  SetIsClosed(true);
   int frame_id = 0;
   int page_id = 0;
   AmayaFrame * p_AmayaFrame = NULL;
@@ -657,12 +928,12 @@ void AmayaPage::OnClose(wxCloseEvent& event)
         {
           // if the frame didnt die, just re-attach it
           AttachFrame(p_AmayaFrame, 1);
-          m_IsClosed = FALSE;
+          SetIsClosed(false);
         }
     }
 
   // Kill bottom frame
-  if ( m_pBottomFrame && m_IsClosed)
+  if ( m_pBottomFrame && IsClosed())
     { 
       p_AmayaFrame = m_pBottomFrame;
       frame_id     = m_pBottomFrame->GetFrameId();
@@ -675,171 +946,32 @@ void AmayaPage::OnClose(wxCloseEvent& event)
         {
           // if the frame didnt die, just re-attach it
           AttachFrame(p_AmayaFrame, 2);
-          m_IsClosed = FALSE;
+          SetIsClosed(false);
         }
       
     }
 
-  if(!m_IsClosed)
+  if(!IsClosed())
     event.Veto();
-  else if (frame_id == TtaGiveActiveFrame ())
-    {
-      AmayaPage * p_page = (AmayaPage *)m_pContainer->GetPage(page_id);
-      p_page->SetSelected( TRUE );
-      //#ifdef _MACOS
-      // On Mac OS the event is not automatically sent to the notebook
-      m_pContainer->SetSelection(page_id);
-      //#endif /* _MACOS */
-    }
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  CleanUp
  * Description:  check that there is no empty pages
  *      Return:  true if the page can be removed from parent
   -----------------------------------------------------------------------*/
-bool AmayaPage::CleanUp()
+bool AmayaSplittablePage::CleanUp()
 {
   return (!m_pTopFrame && !m_pBottomFrame);
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  SetContainer
- * Description:  update the page's container (notebook ...)
-  -----------------------------------------------------------------------*/
-void AmayaPage::SetContainer( AmayaPageContainer * p_container )
-{
-  m_pContainer = p_container;
-
-  if (m_pContainer->GetAmayaWindow() != GetWindowParent())
-    SetWindowParent( m_pContainer->GetAmayaWindow() );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  GetContainer
- * Description:  what is the container of this page ?
-  -----------------------------------------------------------------------*/
-AmayaPageContainer * AmayaPage::GetContainer()
-{
-  return m_pContainer;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  SetWindowParent / GetWindowParent
- * Description:  set/get the top window parent
-  -----------------------------------------------------------------------*/
-AmayaWindow * AmayaPage::GetWindowParent()
-{
-  return m_pWindowParent;
-}
-void AmayaPage::SetWindowParent( AmayaWindow * p_window )
-{
-  m_pWindowParent = p_window;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  IsClosed
- * Description:  to know if this page is going do die
-  -----------------------------------------------------------------------*/
-bool AmayaPage::IsClosed()
-{
-  return m_IsClosed;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  IsSelected
- * Description:  to know if this page is currently selected
-  -----------------------------------------------------------------------*/
-bool AmayaPage::IsSelected()
-{
-  return m_IsSelected;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  SetSelected
- * Description:  the notebook has a new selected page then it calls SetSelected(TRUE)
- *               on the selected page and SetSelected(FALSE) on the other one
-  -----------------------------------------------------------------------*/
-void AmayaPage::SetSelected( bool isSelected )
-{
-  m_IsSelected = isSelected;
-  if (isSelected)
-    {
-      for ( int frame_pos = 1; frame_pos<=2; frame_pos++ )
-        {
-          if ( GetFrame(frame_pos) )
-            {
-              // post a size event to force frame refresh
-              // to canvas
-              AmayaCanvas * p_canvas = GetFrame(frame_pos)->GetCanvas();
-              if ( p_canvas )
-                {
-                  wxSizeEvent event_canvas( p_canvas->GetSize() );
-                  wxPostEvent( p_canvas, event_canvas );
-                }
-              // to page
-              //	      wxSizeEvent event_page( GetSize() );
-              //	      wxPostEvent( this, event_page );
-            }
-        }
-      
-      // if there is an active frame
-      if ( GetActiveFrame() )
-        {
-          // activate it : setup the corresponding menu and update internal boolean
-          GetActiveFrame()->SetActive( TRUE );
-        }
-    }
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  SetPageId
- * Description:  update the page id (page position in the notebook)
-  -----------------------------------------------------------------------*/
-void AmayaPage::SetPageId( int page_id )
-{
-  // update each owned frames
-  int frame_id = 1;
-  while( frame_id < MAX_FRAME )
-    {
-      if (!TtaFrameIsClosed(frame_id))
-	{
-	  // if this frame is owned by this page
-	  if (FrameTable[frame_id].FrPageId == m_PageId)
-	    {
-	      FrameTable[frame_id].FrPageId = page_id;
-	    }
-	}
-      frame_id++;
-    }
-
-  // update the internal page_id with the new one
-  m_PageId = page_id;
-}
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  GetPageId
- * Description:  return the page position relatively to other window pages
-  -----------------------------------------------------------------------*/
-int AmayaPage::GetPageId()
-{
-  return m_PageId;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  GetFrame
  * Description:  return the first or second page frame
   -----------------------------------------------------------------------*/
-AmayaFrame * AmayaPage::GetFrame( int frame_position ) const
+AmayaFrame * AmayaSplittablePage::GetFrame( int frame_position ) const
 {
   if (frame_position == 1)
     {
@@ -850,15 +982,15 @@ AmayaFrame * AmayaPage::GetFrame( int frame_position ) const
       return m_pBottomFrame;
     }
   else
-    return NULL;
+    return m_pTopFrame;
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  GetFramePosition
  * Description:  return the frame position if it exist in the current page
   -----------------------------------------------------------------------*/
-int AmayaPage::GetFramePosition( const AmayaFrame * p_frame ) const
+int AmayaSplittablePage::GetFramePosition( const AmayaFrame * p_frame ) const
 {
   if ( p_frame == GetFrame(1) )
     return 1;
@@ -869,59 +1001,39 @@ int AmayaPage::GetFramePosition( const AmayaFrame * p_frame ) const
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  
+ *       Class:  AmayaSplittablePage
+ *      Method:  SetActiveFrame
  * Description:  
   -----------------------------------------------------------------------*/
-void AmayaPage::SetActiveFrame( const AmayaFrame * p_frame )
+void AmayaSplittablePage::SetActiveFrame( const AmayaFrame * p_frame )
 {
   if ( p_frame == GetFrame(1) )
     m_ActiveFrame = 1;
   else if ( p_frame == GetFrame(2) )
     m_ActiveFrame = 2;
   else
-    m_ActiveFrame = 0;
+    m_ActiveFrame = 1;
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  
+ *       Class:  AmayaSplittablePage
+ *      Method:  GetActiveFrame
  * Description:  
   -----------------------------------------------------------------------*/
-AmayaFrame * AmayaPage::GetActiveFrame() const
+AmayaFrame * AmayaSplittablePage::GetActiveFrame() const
 {
   return GetFrame( m_ActiveFrame );
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  RaisePage
- * Description:  raise the page and the window if necessary
-  -----------------------------------------------------------------------*/
-void AmayaPage::RaisePage()
-{
-  AmayaPageContainer * p_container = GetContainer();
-  if (p_container)
-    {
-      // raise the notebook page
-      p_container->SetSelection(GetPageId());
-      
-      SetSelected( TRUE );
-    }
-  // force the window's parent to raises to the top of the window hierarchy 
-  // if it is a managed window (dialog or frame).
-  if ( GetWindowParent() )
-    GetWindowParent()->Raise();
-}
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaPage
+ *       Class:  AmayaSplittablePage
  *      Method:  RefreshSplitToggleMenu()
  * Description:  is called to toggle on/off the "Show/Hide panel" menu item depeding on
  *               the panel showing state.
  *               Just forward the request to the parent window.
   -----------------------------------------------------------------------*/
-void AmayaPage::RefreshShowPanelToggleMenu()
+void AmayaSplittablePage::RefreshShowPanelToggleMenu()
 {
   wxASSERT(GetWindowParent());
 
@@ -929,29 +1041,20 @@ void AmayaPage::RefreshShowPanelToggleMenu()
     GetWindowParent()->RefreshShowToolPanelToggleMenu();
 }
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  GetMasterFrameId
- * Description:  the master frame is the on which control the urlbar, buttons (TODO : and menus)
-  -----------------------------------------------------------------------*/
-int AmayaPage::GetMasterFrameId()
-{
-  return m_MasterFrameId;
-}
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
-  EVT_SPLITTER_SASH_POS_CHANGED( -1, 	AmayaPage::OnSplitterPosChanged )
-  EVT_SPLITTER_DCLICK( -1, 		AmayaPage::OnSplitterDClick )
-  EVT_SPLITTER_UNSPLIT( -1, 		AmayaPage::OnSplitterUnsplit )
+BEGIN_EVENT_TABLE(AmayaSplittablePage, AmayaPage)
+  EVT_SPLITTER_SASH_POS_CHANGED( -1, 	AmayaSplittablePage::OnSplitterPosChanged )
+  EVT_SPLITTER_DCLICK( -1, 		AmayaSplittablePage::OnSplitterDClick )
+  EVT_SPLITTER_UNSPLIT( -1, 		AmayaSplittablePage::OnSplitterUnsplit )
   
-  EVT_SIZE( 				AmayaPage::OnSize )
-  EVT_CLOSE( 				AmayaPage::OnClose )
+  EVT_SIZE( 				AmayaSplittablePage::OnSize )
+  EVT_CLOSE( 				AmayaSplittablePage::OnClose )
 
-  EVT_BUTTON( -1,                       AmayaPage::OnSplitButton)
+  EVT_BUTTON( -1,                       AmayaSplittablePage::OnSplitButton)
 
 END_EVENT_TABLE()
 

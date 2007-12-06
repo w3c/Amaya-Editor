@@ -512,18 +512,6 @@ void AmayaFrame::SetWindowTitle(const wxString & window_name)
   if (!p_window)
     return;
 
-  int kind = p_window->GetKind();
-  if (kind == WXAMAYAWINDOW_NORMAL ||
-      kind == WXAMAYAWINDOW_ANNOT ||
-      kind == WXAMAYAWINDOW_HELP ||
-      kind == WXAMAYAWINDOW_CSS)
-    {
-      // check if this frame's page is active or not
-      AmayaPage * p_page = GetPageParent();
-      if ( !p_page || !p_page->IsSelected() )
-        return;
-    }
-
   p_window->SetTitle( m_WindowTitle +
                       _T(" - Amaya ") +
                       TtaConvMessageToWX(TtaGetAppVersion()) );

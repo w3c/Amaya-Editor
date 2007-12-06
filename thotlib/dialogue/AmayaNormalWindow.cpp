@@ -120,7 +120,6 @@ AmayaNormalWindow::AmayaNormalWindow ( wxWindow * parent, wxWindowID id
                                       ,int kind
                                       ) : 
 AmayaWindow( parent, id, pos, size, kind ),
-m_pStatusBar(NULL),
 m_pToolBarEditing(NULL),
 m_pToolBarBrowsing(NULL),
 m_pComboBox(NULL)
@@ -148,14 +147,29 @@ AmayaNormalWindow::~AmayaNormalWindow()
  -----------------------------------------------------------------------*/
 bool AmayaNormalWindow::Initialize()
 {
+  return AmayaWindow::Initialize();
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  CreateStatusBar
+ * Description:  
+  -----------------------------------------------------------------------*/
+AmayaStatusBar * AmayaNormalWindow::CreateStatusBar()
+{
+  return new AmayaStatusBar(this);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  CreateMenuBar
+ * Description:  
+  -----------------------------------------------------------------------*/
+void AmayaNormalWindow::CreateMenuBar()
+{
   // Creation of the menubar
   TtaMakeWindowMenuBar(m_WindowId);
 
-  // Creation of the statusbar
-  m_pStatusBar = new AmayaStatusBar(this);
-  SetStatusBar(m_pStatusBar);
-  WindowTable[m_WindowId].WdStatus = m_pStatusBar;
-  return AmayaWindow::Initialize();
 }
 
 /*----------------------------------------------------------------------
@@ -273,17 +287,6 @@ void AmayaNormalWindow::Unused()
   new AmayaToolBarEditing;
   new AmayaToolBarBrowsing;
   new AmayaMathMLToolBar;
-}
-
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaNormalWindow
- *      Method:  GetAmayaStatusBar
- * Description:  
- -----------------------------------------------------------------------*/
-AmayaStatusBar * AmayaNormalWindow::GetAmayaStatusBar()
-{
-  return m_pStatusBar;
 }
 
 /*----------------------------------------------------------------------

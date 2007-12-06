@@ -339,7 +339,8 @@ ThotBool GL_DrawAll ()
                       {
 #ifdef _WX
                         // do not draw anything if the animated canvas page is not raidsed
-                        if (FrameTable[frame].WdFrame->GetPageParent()->IsSelected())
+//                        if (FrameTable[frame].WdFrame->GetPageParent()->IsSelected())
+                        if (FrameTable[frame].WdFrame->GetPageParent()->IsShown())
 #endif /* _WX */
                           if (GL_prepare (frame))
                             {

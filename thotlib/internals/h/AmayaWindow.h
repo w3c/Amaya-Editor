@@ -84,24 +84,43 @@ class AmayaWindow : public wxFrame
   virtual ~AmayaWindow();
   
   static void   DoAmayaAction( int command, int doc, int view );
-  
-  void          SetMenuBar( wxMenuBar * p_menu_bar );
-  int		        GetWindowId() { return m_WindowId; }
+
+  // Init and config :
+  virtual void CleanUp();
+  virtual bool Initialize();
+  virtual void LoadConfig();
+  virtual void SaveConfig();
+
+  // Window properties :
+  int           GetWindowId() { return m_WindowId; }
   void          SetWindowId( int window_id ) { m_WindowId = window_id; }
   int           GetKind() const { return m_Kind; }
   static int    GetActiveWindowId() { return m_ActiveWindowId; }
   static AmayaWindow * GetActiveWindow();
 
-  virtual void CleanUp();
-  virtual bool Initialize();
+  // Window decorations :
+  virtual AmayaStatusBar * GetStatusBar();
+  virtual AmayaStatusBar * CreateStatusBar();
+  virtual void             CreateMenuBar();
+
   
+  // Page and frame management :
   virtual AmayaPage *  GetActivePage() const;
   virtual AmayaFrame * GetActiveFrame() const;
+  virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
+  virtual bool           AttachPage( int position, AmayaPage * p_page );
+  virtual bool           DetachPage( int position );
+  virtual bool           ClosePage( int position );
+  virtual bool           CloseAllButPage( int position );
+  virtual AmayaPage *    GetPage( int position ) const;
+  virtual int            GetPageCount() const;
+  
+  
+
+  
 
   virtual void ToggleFullScreen();
   
-  virtual void LoadConfig();
-  virtual void SaveConfig();
   
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
@@ -112,15 +131,7 @@ class AmayaWindow : public wxFrame
   virtual void ShowToolPanels();
   virtual void RefreshShowToolPanelToggleMenu();
 
-  virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
-  virtual bool           AttachPage( int position, AmayaPage * p_page );
-  virtual bool           DetachPage( int position );
-  virtual bool           ClosePage( int position );
-  virtual bool           CloseAllButPage( int position );
-  virtual AmayaPage *    GetPage( int position ) const;
-  virtual int            GetPageCount() const;
 
-  virtual AmayaStatusBar * GetAmayaStatusBar();
   virtual void SetPageIcon(int page_id, char *iconpath);
 
   // url bar control
@@ -160,7 +171,6 @@ class AmayaWindow : public wxFrame
   static int        m_ActiveWindowId;
   int               m_ActiveFrameId;
   bool              m_MustCheckFocusIsNotLost;
-  wxMenuBar *       m_pMenuBar;
 };
 
 #endif // __AMAYAWINDOW_H__

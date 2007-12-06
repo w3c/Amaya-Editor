@@ -2199,17 +2199,26 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
         {
           /* get the parent window because the log should stay on top of his parent */
           int parent_window_id = TtaGetDocumentWindowId( oldDoc, -1 );
-          if (docType == docLog || docType == docLibrary)
-            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
-          else if (docType == docCSS)
-            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_CSS, 0 );
-          else if (docType == docAnnot)
-            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_ANNOT, 0 );
-          else if (method == CE_HELP)
-            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_HELP, 0 );
-          else
-            /* a normal window should never had a parent ! */
-            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
+          switch(docType)
+            {
+              case docLog:
+              case docLibrary:
+                window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
+                break;
+              case docCSS:
+                window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_CSS, 0 );
+                break;
+              case docAnnot:
+                window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_ANNOT, 0 );
+                break;
+              default:
+                if (method == CE_HELP)
+                  window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_HELP, 0 );
+                else
+                  /* a normal window should never had a parent ! */
+                  window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
+                break;
+            }
           page_id   = TtaGetFreePageId( window_id );
           page_position = 1;
         }

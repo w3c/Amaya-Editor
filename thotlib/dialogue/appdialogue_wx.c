@@ -1,10 +1,9 @@
-#ifdef _WX
+
 #include "wx/wx.h"
 #include "wx/bmpbuttn.h"
 #include "wx/spinctrl.h"
 #include "wx/socket.h"
 #include "wx/hashmap.h"
-#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -62,13 +61,11 @@
 #include "AmayaStatsThread.h"
 #include "AmayaQuickSplitButton.h"
 
-#ifdef _WX
 static int g_logerror_action_id = -1;
 
 static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu );
 WX_DECLARE_STRING_HASH_MAP( int, wxStringIntMap );
 wxStringIntMap g_iconSourceMap;
-#endif /* _WX */
 
 static int s_enumContextMenuResult;
 
@@ -108,13 +105,11 @@ static int s_enumContextMenuResult;
   ----------------------------------------------------------------------*/
 void TtaShowWindow( int window_id, ThotBool show )
 {
-#ifdef _WX  
   AmayaWindow * p_window = WindowTable[window_id].WdWindow;
   if (p_window == NULL)
     return;
 
   p_window->Show( show );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -126,7 +121,6 @@ void TtaShowWindow( int window_id, ThotBool show )
   ----------------------------------------------------------------------*/
 int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
 {
-#ifdef _WX
   AmayaWindow  *p_window = NULL;
   wxSize        window_size;
   int           window_id = TtaGetFreeWindowId();
@@ -210,9 +204,6 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   TtaShowWindow( window_id, TRUE );
 
   return window_id;
-#else
-  return 0;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -234,7 +225,6 @@ static void BuildRecentDocMenu(int window_id, wxMenuItem* item)
   ----------------------------------------------------------------------*/
 static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 {
-#ifdef _WX
   Item_Ctl *   ptritem = ptrmenu->ItemsList;
   Menu_Ctl *   item_submenu = NULL;
   int          item_nb = 0;
@@ -380,7 +370,6 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
       
       item_nb++;
     }
-#endif /* _WX */
 }
 
 
@@ -391,7 +380,6 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
   ----------------------------------------------------------------------*/
 void TtaMakeWindowMenuBar( int window_id )
 {
-#ifdef _WX
   AmayaWindow        *p_window = TtaGetWindowFromId( window_id );
   Menu_Ctl           *ptrmenu = DocumentMenuList; /* this is the menus model */
   wxMenuBar          *p_menu_bar = p_window->GetMenuBar();
@@ -443,7 +431,6 @@ void TtaMakeWindowMenuBar( int window_id )
     }
   
   p_window->SetMenuBar( p_menu_bar );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -452,7 +439,6 @@ void TtaMakeWindowMenuBar( int window_id )
   ----------------------------------------------------------------------*/
 void TtaInitMenuItemStats( int doc_id )
 {
-#ifdef _WX
   /* loop on each menu actions */
   int action_id = MAX_INTERNAL_CMD;
   while ( action_id < TtaGetMenuActionNumber() )
@@ -463,7 +449,6 @@ void TtaInitMenuItemStats( int doc_id )
       MenuActionList[action_id].ActionToggle[doc_id] = FALSE;
       action_id++;
     }
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -472,12 +457,10 @@ void TtaInitMenuItemStats( int doc_id )
   ----------------------------------------------------------------------*/
 void TtaInitTopMenuStats( int doc_id )
 {
-#ifdef _WX
   /* enable every menu */
   PtrDocument pDoc = LoadedDocument[doc_id-1];
   if (pDoc && pDoc->EnabledMenus)
     memset(pDoc->EnabledMenus, TRUE, sizeof(pDoc->EnabledMenus));
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -485,7 +468,6 @@ void TtaInitTopMenuStats( int doc_id )
   ----------------------------------------------------------------------*/
 void TtaRefreshTopMenuStats( int doc_id, int menu_id )
 {
-#ifdef _WX
   int           window_id  = TtaGetDocumentWindowId( doc_id, -1 );
   AmayaWindow * p_window   = TtaGetWindowFromId(window_id);
   wxMenuBar *   p_menu_bar;
@@ -559,7 +541,6 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
         }
       menu_id++;
     }
-#endif /* _WX */
 }
 
 
@@ -569,7 +550,6 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
   ----------------------------------------------------------------------*/
 void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 {
-#ifdef _WX
   int           window_id  = TtaGetDocumentWindowId( doc_id, -1 );
   AmayaWindow * p_window   = TtaGetWindowFromId(window_id);
   
@@ -681,7 +661,6 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
       }
       ptrmenu = ptrmenu->NextMenu;
     }
-#endif /* _WX */
 }
 
 
@@ -693,11 +672,10 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
   ----------------------------------------------------------------------*/
 void TtaRefreshStatusBarStats( int changed_action_id, Document doc_id)
 {
-#ifdef _WX
   int            window_id = TtaGetDocumentWindowId( doc_id, -1 );
   AmayaWindow *   p_window = TtaGetWindowFromId(window_id);
   wxASSERT(p_window);
-  AmayaStatusBar * p_sbar = p_window->GetAmayaStatusBar();
+  AmayaStatusBar * p_sbar = p_window->GetStatusBar();
   ThotBool   action_enable = FALSE;
 
   /* do nothing if there is no sbar: it's the case of
@@ -715,7 +693,6 @@ void TtaRefreshStatusBarStats( int changed_action_id, Document doc_id)
       action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
       p_sbar->EnableLogError(action_enable);
     }
-#endif /* _WX */
 }
 
 
@@ -737,8 +714,6 @@ int TtaMakeFrame( const char * schema_name, int schView,
                   int width, int height, int * volume, const char * viewName,
                   int window_id, int page_id, int page_position )
 {
-#ifdef _WX
-
   /* finding a free frame id */
   int        frame_id = 1;
   ThotBool   found = FALSE;
@@ -774,7 +749,8 @@ int TtaMakeFrame( const char * schema_name, int schView,
       
       /* on MacOSX Reparenting is forbidden, so we must give the
          right parent to the frame at creation */
-      AmayaPage * p_page = p_AmayaWindow->GetPage(page_id);
+      AmayaSplittablePage * p_page = wxDynamicCast(p_AmayaWindow->GetPage(page_id),
+                                      AmayaSplittablePage);
       wxWindow * p_real_parent = NULL;
       if (p_page)
         p_real_parent = p_page->GetSplitterWindow(); /* it's a AmayaNormalWindow */
@@ -836,9 +812,6 @@ int TtaMakeFrame( const char * schema_name, int schView,
   FrameTable[frame_id].FrView   	= schView;
 
   return frame_id;
-#else
-  return 0;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -853,7 +826,6 @@ int TtaMakeFrame( const char * schema_name, int schView,
   ----------------------------------------------------------------------*/
 ThotBool TtaMakePage( int window_id, int page_id )
 {
-#ifdef _WX
   int kind;
 
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
@@ -875,7 +847,6 @@ ThotBool TtaMakePage( int window_id, int page_id )
           return TRUE;
         }
     }
-#endif /* _WX */
   return FALSE;
 }
 
@@ -883,7 +854,6 @@ ThotBool TtaMakePage( int window_id, int page_id )
   ----------------------------------------------------------------------*/
 int TtaGetIconIndex (const char * filename)
 {
-#ifdef _WX
   wxString path = TtaConvMessageToWX(filename);
   wxStringIntMap::iterator iter =  g_iconSourceMap.find(path);
   if (iter != g_iconSourceMap.end())
@@ -901,7 +871,6 @@ int TtaGetIconIndex (const char * filename)
           return  index;
         }
     }
-#endif /* _WX*/
   return 0;
 }
 
@@ -911,7 +880,6 @@ int TtaGetIconIndex (const char * filename)
   ----------------------------------------------------------------------*/
 void TtaSetPageIcon( Document doc, View view, char *iconpath)
 {
-#ifdef _WX
   int            frame;
   AmayaWindow   *p_AmayaWindow;
 
@@ -935,7 +903,6 @@ void TtaSetPageIcon( Document doc, View view, char *iconpath)
       if (p_frame)
         p_frame->UpdateFrameIcon();
     }
-#endif /*_WX */	      
 }
 
 /*----------------------------------------------------------------------
@@ -950,7 +917,6 @@ void TtaSetPageIcon( Document doc, View view, char *iconpath)
   ----------------------------------------------------------------------*/
 ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position )
 {
-#ifdef _WX
   int kind;
 
   if (!FrameTable[frame_id].WdFrame)
@@ -996,9 +962,6 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
      wxWindowDisabler and it makes menus blinking */
   wxYield();
   return TRUE;
-#else
-  return FALSE;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1012,7 +975,6 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   ----------------------------------------------------------------------*/
 ThotBool TtaDetachFrame( int frame_id )
 {
-#ifdef _WX
   int kind;
   int window_id        = FrameTable[frame_id].FrWindowId;
   int page_id          = FrameTable[frame_id].FrPageId;
@@ -1058,9 +1020,6 @@ ThotBool TtaDetachFrame( int frame_id )
     }
 
   return FALSE;
-#else
-  return FALSE;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1073,7 +1032,6 @@ ThotBool TtaDetachFrame( int frame_id )
   ----------------------------------------------------------------------*/
 ThotBool TtaDestroyFrame( int frame_id )
 {
-#ifdef _WX
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("TtaDestroyFrame: frame_id=%d"), frame_id );
 
   AmayaFrame * p_frame   = FrameTable[frame_id].WdFrame;  
@@ -1083,11 +1041,8 @@ ThotBool TtaDestroyFrame( int frame_id )
 
   p_frame->Show();
   p_frame->FreeFrame();
-
+  
   return TRUE;
-#else /* _WX */
-  return FALSE;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1098,7 +1053,6 @@ ThotBool TtaDestroyFrame( int frame_id )
   ----------------------------------------------------------------------*/
 void TtaCleanUpWindow( int window_id )
 {
-#ifdef _WX
   AmayaWindow * p_window = NULL;
   if (window_id == 0)
     {
@@ -1117,7 +1071,6 @@ void TtaCleanUpWindow( int window_id )
       if (p_window)
         p_window->CleanUp();
     }
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1131,15 +1084,11 @@ void TtaCleanUpWindow( int window_id )
   ----------------------------------------------------------------------*/
 ThotBool TtaClosePage( int window_id, int page_id )
 {
-#ifdef _WX 
   AmayaWindow * p_window = TtaGetWindowFromId( window_id );
   if (p_window && page_id >= 0)
     return p_window->ClosePage( page_id );
   else
     return FALSE;
-#else
-  return FALSE;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1153,15 +1102,11 @@ ThotBool TtaClosePage( int window_id, int page_id )
   ----------------------------------------------------------------------*/
 ThotBool TtaCloseAllPageButThis( int window_id, int page_id )
 {
-#ifdef _WX 
   AmayaWindow * p_window = TtaGetWindowFromId( window_id );
   if (p_window && page_id >= 0)
     return p_window->CloseAllButPage( page_id );
   else
     return FALSE;
-#else
-  return FALSE;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1172,11 +1117,7 @@ ThotBool TtaCloseAllPageButThis( int window_id, int page_id )
   ----------------------------------------------------------------------*/
 int TtaGetActiveWindowId()
 {
-#ifdef _WX 
   return AmayaWindow::GetActiveWindowId();
-#else
-  return -1;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1201,16 +1142,12 @@ AmayaWindow * TtaGetActiveWindow()
   ----------------------------------------------------------------------*/
 int TtaGetFreePageId( int window_id )
 {
-#ifdef _WX
   AmayaWindow * p_window = WindowTable[window_id].WdWindow;
   if (p_window == NULL)
     return -1;
 
   /* just return the pages count (first page id is 0) */
   return p_window->GetPageCount();
-#else
-  return -1;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1282,7 +1219,6 @@ int TtaGetFreeWindowId()
   ----------------------------------------------------------------------*/
 int TtaGetDocumentWindowId( Document doc_id, int schView )
 {
-#ifdef _WX
   int        frame_id = 1;
   ThotBool   found = FALSE;
   while (frame_id <= MAX_FRAME && !found)
@@ -1296,9 +1232,6 @@ int TtaGetDocumentWindowId( Document doc_id, int schView )
     return -1;
 
   return FrameTable[frame_id].FrWindowId;
-#else
-  return -1;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1309,7 +1242,6 @@ int TtaGetDocumentWindowId( Document doc_id, int schView )
 ThotBool TtaUniqueTabInWindow( Document doc_id )
 {
   ThotBool   found = FALSE;
-#ifdef _WX
   int        frame_id = 1;
   int        window_id = 0;
 
@@ -1322,7 +1254,6 @@ ThotBool TtaUniqueTabInWindow( Document doc_id )
       if (!found)
         frame_id++;
     }
-#endif /* _WX */
   return !found;
 }
 
@@ -1341,7 +1272,6 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
                            int * page_id,
                            int * page_position )
 {
-#ifdef _WX
   int        frame_id = 1;
   ThotBool   found = FALSE;
 
@@ -1371,7 +1301,6 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
   if (!p_page)
     return;
   *page_position = p_page->GetFramePosition( FrameTable[frame_id].WdFrame );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1385,13 +1314,9 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
   ----------------------------------------------------------------------*/
 int TtaGetFrameDocumentId( int frame_id )
 {
-#ifdef _WX
   if (frame_id <= 0 || frame_id >= MAX_FRAME )
     return -1;
   return FrameTable[frame_id].FrDoc;
-#else
-  return -1;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1405,13 +1330,9 @@ int TtaGetFrameDocumentId( int frame_id )
   ----------------------------------------------------------------------*/
 int TtaGetFrameWindowParentId( int frame_id )
 {
-#ifdef _WX
   if (frame_id <= 0 || frame_id >= MAX_FRAME )
     return -1;
   return FrameTable[frame_id].FrWindowId;
-#else
-  return -1;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1453,7 +1374,6 @@ AmayaFrame * TtaGetFrameFromId( int frame_id )
   ----------------------------------------------------------------------*/
 int TtaGetFrameId( int window_id, int page_id, int position )
 {
-#ifdef _WX  
   AmayaWindow * p_window = TtaGetWindowFromId( window_id );
   if (!p_window)
     return 0;
@@ -1464,9 +1384,6 @@ int TtaGetFrameId( int window_id, int page_id, int position )
   if (!p_frame)
     return 0;
   return p_frame->GetFrameId();
-#else /* _WX */
-  return 0;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1476,13 +1393,11 @@ int TtaGetFrameId( int window_id, int page_id, int position )
   ----------------------------------------------------------------------*/
 void TtaCloseWindow( int window_id )
 {
-#ifdef _WX
   // handle all pending events before closing the current window
   TtaHandlePendingEvents ();
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   if (p_window)
     p_window->Close();
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1492,11 +1407,9 @@ void TtaCloseWindow( int window_id )
   ----------------------------------------------------------------------*/
 void TtaEmptyURLBar( int window_id )
 {
-#ifdef _WX
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   if (p_window)
     p_window->EmptyURLBar();
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1506,7 +1419,6 @@ void TtaEmptyURLBar( int window_id )
   ----------------------------------------------------------------------*/
 int TtaGetWindowNumber( )
 {
-#ifdef _WX
   int window_id = 1;
   int nb_window = 0;
   while ( window_id < MAX_WINDOW )
@@ -1516,9 +1428,6 @@ int TtaGetWindowNumber( )
       window_id++;
     }
   return nb_window;
-#else /* _WX */
-  return 1;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1531,11 +1440,7 @@ int TtaGetWindowNumber( )
   ----------------------------------------------------------------------*/
 ThotBool TtaFrameIsClosed( int frame_id )
 {
-#ifdef _WX
   return FrameTable[frame_id].FrDoc <= 0;
-#else
-  return TRUE;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1548,7 +1453,6 @@ ThotBool TtaFrameIsClosed( int frame_id )
   ----------------------------------------------------------------------*/
 void TtaSetURLBar( int frame_id, const char * listUrl, void (* procedure)())
 {
-#ifdef _WX
   const    char *ptr, *ptr1;
   wxString urltoappend, firsturl;
 
@@ -1600,7 +1504,6 @@ void TtaSetURLBar( int frame_id, const char * listUrl, void (* procedure)())
    * this string is temporary and is updated each times the user modify the string.
    * when the user switch between frames, the window urlbar is updated with this string */
   FrameTable[frame_id].WdFrame->SetFrameURL( firsturl );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1613,7 +1516,6 @@ void TtaSetURLBar( int frame_id, const char * listUrl, void (* procedure)())
 void TtaSwitchPanelButton (Document doc, View view, int panel_type,
                            int button_id, ThotBool value)
 {
-#ifdef _WX
   static int  idaction[WXAMAYA_PANEL_XHTML_SUB+1];
   static bool isinit = false;
   
@@ -1666,7 +1568,6 @@ void TtaSwitchPanelButton (Document doc, View view, int panel_type,
           break;
         }
     }
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1680,7 +1581,6 @@ void TtaSwitchPanelButton (Document doc, View view, int panel_type,
   ----------------------------------------------------------------------*/
 ThotBool TtaRegisterWidgetWX( int ref, void * p_widget )
 {
-#ifdef _WX
   struct Cat_Context *catalogue;
 
   if (ref == 0)
@@ -1710,9 +1610,6 @@ ThotBool TtaRegisterWidgetWX( int ref, void * p_widget )
       catalogue->Cat_Type         = CAT_DIALOG;
     }
   return TRUE;
-#else /* _WX */
-  return FALSE;
-#endif /* _WX */
 }
 
 #ifdef _WX
@@ -1767,7 +1664,6 @@ wxMenu * TtaGetDocContextMenu( int window_id )
   ----------------------------------------------------------------------*/
 void TtaToggleOnOffSidePanel( int frame_id )
 {
-#ifdef _WX
   /* get the parent window */
   AmayaWindow * p_window = TtaGetWindowFromId(TtaGetFrameWindowParentId(frame_id));
   if (!p_window)
@@ -1781,7 +1677,6 @@ void TtaToggleOnOffSidePanel( int frame_id )
     p_window->HideToolPanels();
   else
     p_window->ShowToolPanels();
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1794,7 +1689,6 @@ void TtaToggleOnOffSidePanel( int frame_id )
   ----------------------------------------------------------------------*/
 void TtaToggleToolbar( int frame_id, int toolbar_id )
 {
-#ifdef _WX
   /* get the parent window */
   AmayaWindow * p_window = TtaGetWindowFromId(TtaGetFrameWindowParentId(frame_id));
   if (!p_window)
@@ -1808,7 +1702,6 @@ void TtaToggleToolbar( int frame_id, int toolbar_id )
     p_window->HideToolBar(toolbar_id);
   else
     p_window->ShowToolBar(toolbar_id);
-#endif /* _WX */
 }
 
 
@@ -1821,7 +1714,6 @@ void TtaToggleToolbar( int frame_id, int toolbar_id )
   ----------------------------------------------------------------------*/
 void TtaSplitViewHorizontally( int frame_id )
 {
-#ifdef _WX
   AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
   if (!p_frame)
     {
@@ -1829,18 +1721,15 @@ void TtaSplitViewHorizontally( int frame_id )
       return;
     }
 
-  AmayaPage * p_page = p_frame->GetPageParent();
-  if (!p_page)
+  AmayaSplittablePage * p_page = wxDynamicCast(p_frame->GetPageParent(),
+                                                AmayaSplittablePage);
+  if (p_page)
     {
-      wxASSERT(false);
-      return;
+      // simulate a split action
+      wxMouseEvent event_mouse( wxEVT_LEFT_DCLICK );
+      wxPostEvent( p_page->GetQuickSplitButton ( TRUE ), event_mouse );
+      //p_page->DoBottomSplitButtonAction();
     }
-
-  // simulate a split action
-  wxMouseEvent event_mouse( wxEVT_LEFT_DCLICK );
-  wxPostEvent( p_page->GetQuickSplitButton ( TRUE ), event_mouse );
-  //p_page->DoBottomSplitButtonAction();
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1851,7 +1740,6 @@ void TtaSplitViewHorizontally( int frame_id )
   ----------------------------------------------------------------------*/
 void TtaSplitViewVertically( int frame_id )
 {
-#ifdef _WX
   AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
   if (!p_frame)
     {
@@ -1859,18 +1747,15 @@ void TtaSplitViewVertically( int frame_id )
       return;
     }
 
-  AmayaPage * p_page = p_frame->GetPageParent();
-  if (!p_page)
+  AmayaSplittablePage * p_page = wxDynamicCast(p_frame->GetPageParent(),
+                                                AmayaSplittablePage);
+  if (p_page)
     {
-      wxASSERT(false);
-      return;
+      // simulate a split action
+      wxMouseEvent event_mouse( wxEVT_LEFT_DCLICK );
+      wxPostEvent( p_page->GetQuickSplitButton ( FALSE ), event_mouse );
+      //p_page->DoRightSplitButtonAction();
     }
-
-  // simulate a split action
-  wxMouseEvent event_mouse( wxEVT_LEFT_DCLICK );
-  wxPostEvent( p_page->GetQuickSplitButton ( FALSE ), event_mouse );
-  //p_page->DoRightSplitButtonAction();
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1884,7 +1769,6 @@ void TtaSplitViewVertically( int frame_id )
   ----------------------------------------------------------------------*/
 void TtaDoPostFrameCreation( int frame_id )
 {
-#ifdef _WX
   /* wait for frame initialisation (needed by opengl) */
   TtaHandlePendingEvents();
   /* wait for frame initialisation (needed by opengl) 
@@ -1902,7 +1786,6 @@ void TtaDoPostFrameCreation( int frame_id )
     }
   /* refresh specific menu item states */
   p_window->RefreshShowToolPanelToggleMenu();
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1914,7 +1797,6 @@ void TtaDoPostFrameCreation( int frame_id )
   ----------------------------------------------------------------------*/
 void TtaToggleOnOffFullScreen( int frame_id )
 {
-#ifdef _WX
   AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
   if (!p_frame)
     {
@@ -1930,7 +1812,6 @@ void TtaToggleOnOffFullScreen( int frame_id )
     }
 
   p_window->ToggleFullScreen();
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1941,7 +1822,6 @@ void TtaToggleOnOffFullScreen( int frame_id )
   ----------------------------------------------------------------------*/
 ThotBool TtaGetFullScreenState(int frame_id )
 {
-#ifdef _WX
   AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
   if (!p_frame)
     {
@@ -1957,9 +1837,6 @@ ThotBool TtaGetFullScreenState(int frame_id )
     }
 
   return p_window->IsFullScreen();
-#else /* _WX */
-  return FALSE;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1969,10 +1846,8 @@ ThotBool TtaGetFullScreenState(int frame_id )
   ----------------------------------------------------------------------*/
 void TtaRegisterOpenURLCallback( void (*callback) (void *) )
 {
-#ifdef _WX
   /* register openurl callback in order to call it when twice amaya instance are running */
   ((AmayaApp *)wxTheApp)->RegisterOpenURLCallback( callback );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -2003,14 +1878,12 @@ void TtaSendDataToPanel( int panel_type, AmayaParams& params )
   ----------------------------------------------------------------------*/
 void TtaCheckLostFocus()
 {
-#ifdef _WX
   wxWindow *focus = wxWindow::FindFocus();
   if (!focus)
     {
       TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("TtaCheckLostFocus, focus was lost!") );
       TtaRedirectFocus();
     }
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -2021,14 +1894,12 @@ void TtaCheckLostFocus()
   ----------------------------------------------------------------------*/
 void TtaRedirectFocus ()
 {
-#ifdef _WX
   int active_frame_id = TtaGiveActiveFrame();
 
   AmayaFrame * p_frame = TtaGetFrameFromId( active_frame_id );
   if (p_frame)
     p_frame->GetCanvas()->SetFocus();
   TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("TtaRedirectFocus activeframe=%d"), active_frame_id );
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -2380,7 +2251,6 @@ ThotBool TtaIsSpecialKey( int wx_keycode )
 void TtaSendStatsInfo()
 {
 #ifdef SEND_STATS
-#ifdef _WX
   if (Printing)
     return;
   /* default value for SEND_STATS is "Yes" */
@@ -2416,7 +2286,6 @@ void TtaSendStatsInfo()
        * only on time each users */
       TtaSetEnvString ("VERSION", (char *)TtaGetAppVersion(), TRUE);
     }
-#endif /* _WX */
 #endif /* SEND_STATS */
 }
 

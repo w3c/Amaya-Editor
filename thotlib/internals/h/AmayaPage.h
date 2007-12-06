@@ -65,13 +65,98 @@ class AmayaPageContainer;
  *     Revision:  none
 */
 
+/**
+ * AmayaPage is the base class for pages.
+ */
 class AmayaPage : public wxPanel
 {
+  DECLARE_ABSTRACT_CLASS(AmayaPage)
+  DECLARE_EVENT_TABLE()
 public:
-  DECLARE_DYNAMIC_CLASS(AmayaPage)
-
-  AmayaPage( wxWindow * p_parent_window = NULL, AmayaWindow * p_amaya_parent_window = NULL );
+  AmayaPage(wxWindow * p_parent_window = NULL, AmayaWindow * p_amaya_parent_window = NULL );
   virtual ~AmayaPage();
+
+  virtual AmayaWindow * GetWindowParent();
+
+  virtual AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position ) {return NULL;}
+  virtual AmayaFrame * DetachFrame( int position ) {return NULL;}
+
+  virtual void         SetActiveFrame( const AmayaFrame * p_frame ) {}
+  virtual AmayaFrame * GetActiveFrame() const {return NULL;}
+
+  virtual void SetContainer( AmayaPageContainer * container ){m_pContainer = container;} 
+  virtual AmayaPageContainer * GetContainer() {return m_pContainer;}
+  
+  virtual void SetPageId( int page_id );
+  virtual int  GetPageId()const{return m_PageId;}
+
+  virtual bool IsClosed()const{return m_IsClosed;}
+  virtual void SetIsClosed(bool closed){m_IsClosed=closed;}
+  
+  virtual bool IsSelected(){return m_IsSelected;}
+  virtual void SetSelected( bool isSelected );
+  
+  virtual bool CleanUp() =0;
+
+  virtual void RaisePage();
+  virtual int GetMasterFrameId()const{return m_MasterFrameId;}
+  
+  
+  virtual AmayaFrame * GetFrame( int frame_position ) const=0;
+  virtual int GetFramePosition( const AmayaFrame * p_frame ) const=0;
+
+protected:
+  void SetMasterFrameId(int id){m_MasterFrameId = id;}
+  
+private:
+  AmayaPageContainer *m_pContainer;
+  int                 m_PageId;
+  bool                m_IsClosed;
+  bool                m_IsSelected;
+  int                 m_MasterFrameId;
+};
+
+
+/**
+ * AmayaSimplePage is a page which can only be wiewed (no split). 
+ */
+class AmayaSimplePage : public AmayaPage
+{
+public:
+  DECLARE_DYNAMIC_CLASS(AmayaSimplePage)
+
+  AmayaSimplePage( wxWindow * p_parent_window = NULL, AmayaWindow * p_amaya_parent_window = NULL );
+  virtual ~AmayaSimplePage();
+
+  AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position );
+  AmayaFrame * DetachFrame( int position );
+
+  void         SetActiveFrame( const AmayaFrame * p_frame ){/* Do nothing, always one frame always active.*/}
+  AmayaFrame * GetActiveFrame() const{return m_pFrame; /* always one frame always active.*/}
+  
+  bool CleanUp();
+  AmayaFrame * GetFrame(int WXUNUSED(frame_position))const{return m_pFrame;}
+  int GetFramePosition( const AmayaFrame * p_frame ) const;
+private:
+  DECLARE_EVENT_TABLE()
+  void OnClose(wxCloseEvent& event);
+  AmayaFrame *m_pFrame;
+};
+
+
+
+
+/**
+ * AmayaSplittablePage is the page class which can be
+ * splitted horizontally or vertically.
+ */ 
+class AmayaSplittablePage : public AmayaPage
+{
+public:
+  DECLARE_DYNAMIC_CLASS(AmayaSplittablePage)
+
+  AmayaSplittablePage( wxWindow * p_parent_window = NULL, AmayaWindow * p_amaya_parent_window = NULL );
+  virtual ~AmayaSplittablePage();
 
   AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position );
   AmayaFrame * DetachFrame( int position );
@@ -82,30 +167,13 @@ public:
   void DoSplitUnsplit();
   void DoSwitchHoriVert();
 
-  bool IsClosed();
-  bool IsSelected();
-  void SetSelected( bool isSelected );
   AmayaQuickSplitButton * GetQuickSplitButton (ThotBool horizontal);
 
   void         SetActiveFrame( const AmayaFrame * p_frame );
   AmayaFrame * GetActiveFrame() const;
-  
-  void SetContainer( AmayaPageContainer * p_container );
-  AmayaPageContainer * GetContainer();
-  
-  AmayaWindow * GetWindowParent();
-  void SetWindowParent( AmayaWindow * p_window );
-
-  void SetPageId( int page_id );
-  int  GetPageId();
-
-
-  void RaisePage();
 
   AmayaFrame * GetFrame( int frame_position ) const;
   int GetFramePosition( const AmayaFrame * p_frame ) const;
-
-  int GetMasterFrameId();
 
   wxSplitterWindow * GetSplitterWindow();
 
@@ -135,22 +203,15 @@ public:
   AmayaWindow *           m_pWindowParent;
   
   float              m_SlashRatio; // 0.5 => page is half splitted
-
-  int                m_PageId;
-  bool               m_IsClosed;
   int                m_ActiveFrame; // 1 first frame / 2 second frame
 
   // these 2 atributes are used to remember the type of views on each frames
   wxString           m_FirstViewType;
   wxString           m_SecondViewType;
-
-  bool               m_IsSelected;
-
-  int                m_MasterFrameId;
+  
 
   char               m_LastOpenViewName[50];
 };
-
 
 /**
  * Base AmayaPageContainer.

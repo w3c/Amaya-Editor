@@ -10,7 +10,6 @@
 class AmayaCanvas;
 class AmayaPage;
 class AmayaWindow;
-class AmayaContext;
 class wxGLContext;
 class AmayaScrollBar;
 

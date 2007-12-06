@@ -39,6 +39,10 @@ AmayaHelpWindow (  wxWindow * parent, wxWindowID id=wxID_ANY
   virtual void LoadConfig();
   virtual void SaveConfig();
   
+  // Window decorations :
+  virtual AmayaStatusBar * CreateStatusBar();
+  virtual void             CreateMenuBar();
+  
   virtual void SetPageIcon(int page_id, char *iconpath);
 
   
