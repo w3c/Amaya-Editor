@@ -166,7 +166,7 @@ void CreateDoctype (Document doc, Element doctype, int profile,
   ElementType     elType, lineType, piType;
   Element         docEl, doctypeLine, text, child, prev;
   Language        language;
-  char		  buffer[400], *name;
+  char		        buffer[400], *name, *private_dtd;
   
   /* Don't check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (FALSE, doc);
@@ -251,7 +251,11 @@ void CreateDoctype (Document doc, Element doctype, int profile,
   if (text != NULL)
     {
       TtaInsertFirstChild (&text, doctypeLine, doc);
-      if (profile == L_Basic)
+      // check first if the user wants to use a private HTML declaration
+      private_dtd = TtaGetEnvString ("LOCAL_HTML_DOCTYPE_1");
+      if (private_dtd && private_dtd[0] != EOS)
+        TtaSetTextContent (text, (unsigned char*)private_dtd, language, doc);
+      else if (profile == L_Basic)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML10_BASIC, language, doc);
       else if (profile == L_Strict && DocumentMeta[doc]->xmlformat)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML10_STRICT, language, doc);
@@ -295,7 +299,11 @@ void CreateDoctype (Document doc, Element doctype, int profile,
   if (text != NULL)
     {
       TtaInsertFirstChild (&text, doctypeLine, doc);
-      if (profile == L_Basic)
+      // check first if the user wants to use a private HTML declaration
+      private_dtd = TtaGetEnvString ("LOCAL_HTML_DOCTYPE_2");
+      if (private_dtd && private_dtd[0] != EOS)
+        TtaSetTextContent (text, (unsigned char*)private_dtd, language, doc);
+      else if (profile == L_Basic)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML10_BASIC, language, doc);
       else if (profile == L_Strict && DocumentMeta[doc]->xmlformat)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML10_STRICT, language, doc);

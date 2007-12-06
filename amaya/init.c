@@ -4879,6 +4879,7 @@ static void ChangeDoctype (ThotBool isXml)
   Document     doc;
   ElementType  elType;
   Element      root, htmlRoot, doctype, doctypeLine, prevLine, text;
+  char        *private_dtd;
 
   doc = SavingDocument;
   root = TtaGetMainRoot (doc);
@@ -4922,7 +4923,10 @@ static void ChangeDoctype (ThotBool isXml)
   if (text != NULL)
     {
       TtaInsertFirstChild (&text, doctypeLine, SavingDocument);
-      if (isXml)
+      private_dtd = TtaGetEnvString ("LOCAL_HTML_DOCTYPE_1");
+      if (private_dtd && private_dtd[0] != EOS)
+        TtaSetTextContent (text, (unsigned char*)private_dtd,Latin_Script , doc);
+      else if (isXml)
         {
           /* XML document */
           if (profile == L_Strict)
@@ -4949,7 +4953,10 @@ static void ChangeDoctype (ThotBool isXml)
   if (text != NULL)
     {
       TtaInsertFirstChild (&text, doctypeLine, doc);
-      if (isXml)
+      private_dtd = TtaGetEnvString ("LOCAL_HTML_DOCTYPE_1");
+      if (private_dtd && private_dtd[0] != EOS)
+        TtaSetTextContent (text, (unsigned char*)private_dtd,Latin_Script , doc);
+      else if (isXml)
         {
           /* XML document */
           if (profile == L_Strict)
@@ -6412,6 +6419,8 @@ void InitAmaya (NotifyEvent * event)
 
   /* Initialize environment variables if they are not defined */
   TtaSetEnvString ("DOCUMENT_CHARSET", "iso-8859-1", FALSE);
+  TtaSetEnvString ("LOCAL_HTML_DOCTYPE_1", "", FALSE);
+  TtaSetEnvString ("LOCAL_HTML_DOCTYPE_2", "", FALSE);
   TtaSetEnvBoolean ("SHOW_MAP_AREAS", FALSE, FALSE);
   TtaSetEnvBoolean ("SHOW_TARGET", FALSE, FALSE);
   TtaSetEnvBoolean ("LOAD_IMAGES", TRUE, FALSE);
@@ -6427,6 +6436,7 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvBoolean("BROWSE_TOOLBAR", TRUE, FALSE);
   TtaSetEnvBoolean("EDIT_TOOLBAR", TRUE, FALSE);
   TtaSetEnvBoolean ("XML_EDIT_MODE", FALSE, FALSE);
+  TtaSetEnvBoolean ("USE_XML_DECLARATION", TRUE, FALSE);
   /* get current value */
   TtaGetEnvBoolean ("SHOW_MAP_AREAS", &map);
   /* Create and intialize resources needed for each document */

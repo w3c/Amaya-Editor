@@ -1391,6 +1391,9 @@ void SetNamespacesAndDTD (Document doc)
             }
         }
 
+      if (xmlDecl)
+        // check if the user wants to generate xml declaration
+        TtaGetEnvBoolean ("USE_XML_DECLARATION", &xmlDecl);
       if (xmlDecl && charsetname[0] != EOS)
         {
           /* generate the XML declaration */
