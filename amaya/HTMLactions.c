@@ -1786,6 +1786,18 @@ static void DblClickOnButton (Element element, Document document)
 }
 
 /*----------------------------------------------------------------------
+  WithinLinkElement returns TRUE if the selection is within a link
+  ----------------------------------------------------------------------*/
+ThotBool WithinLinkElement (Element element, Document document)
+{
+  Element   ancestor;
+  Attribute attr;
+
+  ancestor = SearchAnchor (document, element, &attr, FALSE);
+  return (ancestor != NULL);
+}
+
+/*----------------------------------------------------------------------
   ActivateElement    The user has activated an element.         
   ----------------------------------------------------------------------*/
 static ThotBool ActivateElement (Element element, Document document)
@@ -1798,6 +1810,7 @@ static ThotBool ActivateElement (Element element, Document document)
 
   elType = TtaGetElementType (element);
   name = TtaGetSSchemaName(elType.ElSSchema);
+  anchor = NULL;
   isSVG = FALSE;
   isXLink = FALSE;
   isHTML = FALSE;
@@ -1816,28 +1829,29 @@ static ThotBool ActivateElement (Element element, Document document)
       elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
     /* it's a basic element. It is interested whatever its namespace */
     ok = TRUE;
-  else if (isHTML &&
-           (elType.ElTypeNum == HTML_EL_LINK ||
-            elType.ElTypeNum == HTML_EL_Anchor ||
-            elType.ElTypeNum == HTML_EL_AREA ||
-            elType.ElTypeNum == HTML_EL_FRAME ||
-            elType.ElTypeNum == HTML_EL_Block_Quote ||
-            elType.ElTypeNum == HTML_EL_Quotation ||
-            elType.ElTypeNum == HTML_EL_ins ||
-            elType.ElTypeNum == HTML_EL_del ||
-            elType.ElTypeNum == HTML_EL_C_Empty ||
-            elType.ElTypeNum == HTML_EL_Radio_Input ||
-            elType.ElTypeNum == HTML_EL_Checkbox_Input ||
-            elType.ElTypeNum == HTML_EL_Option_Menu ||
-            elType.ElTypeNum == HTML_EL_Submit_Input ||
-            elType.ElTypeNum == HTML_EL_Reset_Input ||
-            elType.ElTypeNum == HTML_EL_BUTTON_ ||
-            elType.ElTypeNum == HTML_EL_File_Input))
-    ok = TRUE;
+  else if (isHTML)
+    ok = (elType.ElTypeNum == HTML_EL_LINK ||
+          elType.ElTypeNum == HTML_EL_Anchor ||
+          elType.ElTypeNum == HTML_EL_AREA ||
+          elType.ElTypeNum == HTML_EL_FRAME ||
+          elType.ElTypeNum == HTML_EL_Block_Quote ||
+          elType.ElTypeNum == HTML_EL_Quotation ||
+          elType.ElTypeNum == HTML_EL_ins ||
+          elType.ElTypeNum == HTML_EL_del ||
+          elType.ElTypeNum == HTML_EL_C_Empty ||
+          elType.ElTypeNum == HTML_EL_Radio_Input ||
+          elType.ElTypeNum == HTML_EL_Checkbox_Input ||
+          elType.ElTypeNum == HTML_EL_Option_Menu ||
+          elType.ElTypeNum == HTML_EL_Submit_Input ||
+          elType.ElTypeNum == HTML_EL_Reset_Input ||
+          elType.ElTypeNum == HTML_EL_BUTTON_ ||
+          elType.ElTypeNum == HTML_EL_File_Input);
   else if (isXLink)
     ok = TRUE;
   else if (isSVG)
     ok = TRUE;
+  else
+    ok = WithinLinkElement (element, document);
 
   if (!ok)
     /* DoubleClick is disabled for this element type */
@@ -1934,18 +1948,6 @@ static ThotBool ActivateElement (Element element, Document document)
     return (Do_follow_link (anchor, element, HrefAttr, document));
   else
     return FALSE;
-}
-
-/*----------------------------------------------------------------------
-  WithinLinkElement returns TRUE if the selection is within a link
-  ----------------------------------------------------------------------*/
-ThotBool WithinLinkElement (Element element, Document document)
-{
-  Element   ancestor;
-  Attribute attr;
-
-  ancestor = SearchAnchor (document, element, &attr, FALSE);
-  return (ancestor != NULL);
 }
 
 /*----------------------------------------------------------------------
