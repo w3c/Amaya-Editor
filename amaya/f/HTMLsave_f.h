@@ -76,6 +76,8 @@ extern void DoSaveAs ( char *user_charset,
 extern ThotBool SaveTempCopy ( Document doc,
                                const char* dstdir,
                                char** filename );
+extern void SendByMail ( Document document,
+                         View view );
 
 #else /* __STDC__ */
 
@@ -149,6 +151,8 @@ extern void DoSaveAs ( char *user_charset,
 extern ThotBool SaveTempCopy ( Document doc,
                                  const char* dstdir,
                                  char** filename );
+extern void SendByMail ( Document document,
+                           View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

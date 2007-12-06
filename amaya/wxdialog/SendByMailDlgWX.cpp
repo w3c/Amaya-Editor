@@ -61,10 +61,11 @@ SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
       m_grid->SetRowLabelSize(0);
       m_grid->SetDefaultColSize(2);
       m_grid->SetColLabelValue(0, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_TO_)));
-      m_grid->SetColMinimalWidth(0, 160);
+      m_grid->SetColMinimalWidth(0, 300);
       m_grid->SetColSize(0, m_grid->GetSize().x-20);
       LoadRecentList();
-      m_grid->SetDefaultEditor(new wxGridCellChoiceEditor(m_rcptArray, true));      
+      m_grid->SetDefaultEditor(new wxGridCellChoiceEditor(m_rcptArray, true));
+      panel->GetSizer()->SetSizeHints( this );
     }
   
   XRCCTRL(*this, "wxID_LABEL_SUBJECT",   wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SUBJECT_)) );
@@ -82,6 +83,7 @@ SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
   Layout();
   SetAutoLayout( TRUE );
   SetSize(600, 400);
+  GetSizer()->SetSizeHints( this );
 }
 
 /*----------------------------------------------------------------------

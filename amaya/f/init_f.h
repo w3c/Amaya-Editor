@@ -224,8 +224,6 @@ extern int GetMaxURLList ( void );
 extern void SetMaxURLList ( int max );
 extern void ClearURLList ( void );
 extern char* CreateTempDirectory ( const char* name );
-extern void SendByMail ( Document document,
-                         View view );
 
 #else /* __STDC__ */
 
@@ -447,8 +445,6 @@ extern int GetMaxURLList ( void );
 extern void SetMaxURLList ( int max );
 extern void ClearURLList ( void );
 extern char* CreateTempDirectory ( const char* name );
-extern void SendByMail ( Document document,
-                           View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

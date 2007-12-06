@@ -4,17 +4,38 @@
  */
 
 #ifndef __CEXTRACT__
+#ifdef __STDC__
+
+extern void Switch_JS_DOM ( Document document,
+                            View view );
+extern void Execute_ACommand ( Document document,
+                               View view );
+extern void Execute_External ( Document document,
+                               View view );
+extern void Add_External ( Document document,
+                           View view );
+extern void Insert_Script ( Document document,
+                            View view );
+extern void UpdateJavascriptMenus ( void );
+extern ThotBool CheckInitJavascript ( Document doc,
+                                      View view );
+extern ThotBool InitJavascript ( Document document,
+                                 View view );
+extern void StopJavascript ( Document doc );
+extern void DestroyJavascript ( void );
+
+#else /* __STDC__ */
 
 extern void Switch_JS_DOM ( Document document,
                               View view );
 extern void Execute_ACommand ( Document document,
-                                View view );
+                                 View view );
 extern void Execute_External ( Document document,
-                                View view );
+                                 View view );
 extern void Add_External ( Document document,
-                            View view );
-extern void Insert_Script ( Document document,
                              View view );
+extern void Insert_Script ( Document document,
+                              View view );
 extern void UpdateJavascriptMenus ( void );
 extern ThotBool CheckInitJavascript ( Document doc,
                                         View view );
@@ -23,4 +44,5 @@ extern ThotBool InitJavascript ( Document document,
 extern void StopJavascript ( Document doc );
 extern void DestroyJavascript ( void );
 
+#endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -15,6 +15,8 @@
 /* DEBUG_AMAYA_SAVE Print out debug information when saving */
 
 #include "wx/wx.h"
+#include "wx/dir.h"
+#include "wx/filename.h"  // for wxFileName
 
 /* Included headerfiles */
 #define THOT_EXPORT extern
@@ -27,6 +29,13 @@
 #include "SVG.h"
 #endif /* _SVG */
 #include "XML.h"
+#include "zlib.h"
+#include "message_wx.h"
+#include "wxdialogapi_f.h"
+#include "archives.h"
+
+#include "email.h"
+#include "wxdialog/SendByMailDlgWX.h"
 
 #ifdef ANNOTATIONS
 #include "Annot.h"
@@ -39,6 +48,7 @@
 #include "BMevent_f.h"
 #endif /* BOOKMARKS */
 #include "MENUconf.h"
+
 #include "css_f.h"
 #include "EDITORactions_f.h"
 #include "fetchXMLname_f.h"
@@ -4536,4 +4546,165 @@ ThotBool SaveTempCopy (Document doc, const char* dstdir, char** filename)
     *filename = TtaStrdup(SaveName);
   
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void SendByMail (Document document, View view)
+{
+  char                 buff[MAX_LENGTH], *appname, *vers;
+  ElementType          elType;
+  Element              docEl, el, text;
+  int                  len, i;
+  Language             lang;
+  EMail                mail;
+  wxArrayString        arr;
+  SendByMailDlgWX      dlg(0, NULL); 
+  char                *temppath;
+  char                *server = TtaGetEnvString ("EMAILS_SMTP_SERVER");
+  char                *from   = TtaGetEnvString ("EMAILS_FROM_ADDRESS");
+  char                *docPath, *docType, *docChar;
+  char                *dstFileName = NULL;  
+  int                  port;
+  int                  error;
+  ThotBool             retry = TRUE;
+
+#ifdef _WINDOWS
+  temppath = CreateTempDirectory ("sendmail\\");
+#else /* _WINDOWS */
+  temppath = CreateTempDirectory ("sendmail/");
+#endif /* _WINDOWS */
+  TtaGetEnvInt ("EMAILS_SMTP_PORT", &port);
+  if (server == NULL || from == NULL ||
+      server[0] == EOS || from[0] == EOS || port == 0)
+  {
+    TtaDisplaySimpleMessage (INFO, AMAYA, AM_EMAILS_NO_SERVER);
+    // TODO Show the properties dialog at the "emails" tab.
+    return;
+  }
+
+  Synchronize(document, view); 
+  SaveTempCopy(document, temppath, &dstFileName);
+  if (DocumentTypes[document] == docHTML)
+  {
+    docEl = TtaGetMainRoot (document);
+    elType = TtaGetElementType(docEl);
+    elType.ElTypeNum = HTML_EL_TITLE;
+    el = TtaSearchTypedElement (elType, SearchInTree, docEl);
+    text = TtaGetFirstChild (el);
+    len = TtaGetTextLength(text);
+    if (len > 0)
+    {
+      len = MAX_LENGTH-1;
+      TtaGiveTextContent(text, (unsigned char*)buff, &len, &lang);
+      buff[len] = EOS;
+    }
+    else
+      buff[0] = EOS;
+    dlg.SetSubject(TtaConvMessageToWX (buff));
+  }
+
+  // generate the application name
+  vers = (char *) TtaGetAppVersion();
+  appname = (char *) TtaGetMemory (strlen (vers) + 10);
+  sprintf (appname, "Amaya (%s)", vers);
+  while (retry)
+  {
+    if (dlg.ShowModal() == wxID_OK)
+    {
+      mail = TtaNewEMail ((const char*)dlg.GetSubject().mb_str(wxConvUTF8),
+                          (const char*) dlg.GetMessage().mb_str(wxConvUTF8),
+                          from);
+      if (mail)
+      {
+        TtaSetMailer(mail, appname);
+        
+        arr = dlg.GetRecipients();
+        for (i = 0; i < (int)arr.GetCount(); i++)
+        {
+          wxString rcpt = arr[i];
+          rcpt.Trim(true).Trim(false);
+          if (!rcpt.IsEmpty ())
+            TtaAddEMailToRecipient (mail, (const char*) rcpt.mb_str(wxConvUTF8));
+        }
+        docPath = GetLocalPath (document, DocumentURLs[document]);
+        docType = DocumentMeta[document]->content_type;
+        docChar = DocumentMeta[document]->charset;
+
+        // Send document as attachment
+        if (dlg.SendAsAttachment ())
+          TtaAddEMailAttachmentFile (mail, docType, docPath);
+        // Send document as mail message
+        else if (dlg.SendAsContent ())
+          TtaAddEMailAlternativeFile(mail, docType, docPath, docChar);
+        
+        // Send all attached files (images, css ...) as attachments.
+        if (dlg.SendAsAttachment () || dlg.SendAsContent ())
+          {
+            wxFileName    msgName (wxString(docPath, wxConvUTF8));
+            wxArrayString files;
+            wxDir::GetAllFiles (TtaConvMessageToWX(temppath), &files, wxT(""), wxDIR_FILES);
+            for (i = 0; i < (int)files.GetCount(); i++)
+            {
+              wxFileName filename(files[i]);
+              if (filename.GetFullName() != wxString(dstFileName, wxConvUTF8))
+                TtaAddEMailAttachmentFile(mail, "",
+                                          (const char*)filename.GetFullPath().mb_str(wxConvUTF8));
+            }
+          }
+        else if (dlg.SendAsZip()) // Send all by zip file
+          {
+            wxString zip = wxFileName::CreateTempFileName(wxT("amayazip"));
+            if(!zip.IsEmpty() && TtaCreateZipArchive(temppath , (const char*)zip.mb_str(wxConvUTF8)))
+              {
+                wxFileName zipname(TtaConvMessageToWX(docPath) + wxT(".zip"));
+                
+                TtaAddEMailAttachmentFileAlternativeName(mail, "",
+                                     (const char*)zip.mb_str(wxConvUTF8),
+                                     (const char*)zipname.GetFullName().mb_str(wxConvUTF8));
+              }
+          }
+
+
+        error = 0;
+        if (TtaSendEMail (mail, server, port, &error))
+          TtaSetStatus (document, view, TtaGetMessage (AMAYA, AM_EMAILS_SENT), NULL);
+      }
+
+      switch(error)
+      {
+        case EMAIL_OK:
+          retry = FALSE;
+          break;
+        case EMAIL_SERVER_NOT_RESPOND:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_SERVER_RESPOND);
+          break;
+        case EMAIL_SERVER_REJECT:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_SERVER_REJECT);
+          break;
+        case EMAIL_FROM_BAD_ADDRESS:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_FROM_ADDR);
+          break;
+        case EMAIL_TO_BAD_ADDRESS:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_RCPT_ADDR);
+          break;
+        case EMAIL_BAD_CONTENT:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_BAD_CONTENT);
+          break;
+        default:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_UNKNOW);
+          break;
+      }
+    }
+    else
+      break;
+  }
+  TtaFreeMemory (appname);
+  // Remove temp dir content.
+  wxArrayString files;
+  wxDir::GetAllFiles(wxString(temppath, wxConvUTF8), &files, wxT(""), wxDIR_FILES);
+  for (i = 0; i < (int)files.GetCount(); i++)
+    wxRemoveFile(files[i]);
+  
+  wxRmdir(wxString(temppath, wxConvUTF8));
 }

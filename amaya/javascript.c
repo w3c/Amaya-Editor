@@ -102,8 +102,7 @@
 #endif /* _WINDOWS */
 #include "XLinkedit_f.h"
 
-void UpdateJavascriptMenus ();
-void StopJavascript (Document doc);
+#include "javascript_f.h"
 
 /* headerfiles and objects used by SpiderMonkey */
 #include <jsapi.h>
@@ -189,7 +188,7 @@ char *rchar = NULL;
 
   if(ContinueScript)
     {
-    #ifdef _WX
+#ifdef _WX
     /* Ask the user to enter a command */
     *JavascriptPromptValue = EOS;
 
@@ -216,8 +215,7 @@ char *rchar = NULL;
       /* TODO: handle returned value with \n */
       TtaSetStatus (jsdocument, 1, TtaGetMessage(AMAYA, AM_JAVASCRIPT_RETURNED_VALUE), rchar);
       }
-
-    #endif /* _WX */
+#endif /* _WX */
     }
 }
 
@@ -263,27 +261,27 @@ void Insert_Script(Document document, View view)
   -----------------------------------------------------------------------*/
 void UpdateJavascriptMenus ()
 {
-Document document;
+  Document document;
 
   for (document = 1; document < DocumentTableLength; document++)
     {
     if(document == jsdocument && ContinueScript)
       {
       /* javascript item ON */
-      #ifdef _WX
+#ifdef _WX
         TtaSetToggleItem (document, 1, JavascriptDom_, BSwitch_JS_DOM, TRUE);
         TtaSetItemOn (document, 1, JavascriptDom_, BExecuteACommand);
         TtaSetItemOn (document, 1, JavascriptDom_, BExecuteExternal);
       #endif /* _WX */
       }
-    else
+else
       {
       /* javascript item OFF */
       #ifdef _WX
         TtaSetToggleItem (document, 1, JavascriptDom_, BSwitch_JS_DOM, FALSE);
         TtaSetItemOff (document, 1, JavascriptDom_, BExecuteACommand);
         TtaSetItemOff (document, 1, JavascriptDom_, BExecuteExternal);
-      #endif /* _WX */
+#endif /* _WX */
       }
     }
 }
@@ -1184,17 +1182,17 @@ if(JSVAL_IS_INT(id))
     break;
 
     case NAVIGATOR_PLATFORM:
-       #ifdef _WINDOWS
+#ifdef _WINDOWS
           *vp = string_to_jsval(cx, "Windows");
-       #else
-          #ifdef _MACOS
+#else
+#ifdef _MACOS
           *vp = string_to_jsval(cx, "MacOS");
-          #else
-            #ifdef _UNIX
-               *vp = string_to_jsval(cx, "Unix");
-            #endif
-          #endif
-       #endif
+#else
+#ifdef _UNIX
+          *vp = string_to_jsval(cx, "Unix");
+#endif
+#endif
+#endif
     break;
 
     case NAVIGATOR_COOKIESENABLED:
