@@ -7,7 +7,6 @@
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
 THOTINCLUDES = @THOTINCLUDES@
-LIBZ = @LIBZ@
 
 include Options
 

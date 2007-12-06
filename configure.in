@@ -203,15 +203,17 @@ esac
 dnl
 dnl GL canvas is disabled by default in 8.7.x
 dnl GL canvas is enabled by default in 9.x
-dnl - 8.7.x needs : GL, GLX, GLU, freetype2, gtkgl
 dnl - 9.x needs : GL, GLX, GLU, freetype2, wxGLCanvas
 dnl GL is for opengl
 dnl GlX is for XWindow integration
 dnl GLU is for tesselation algortihms (until we extract it from this lib)
 dnl (tesselation is used for polygons with holes in it...)
-dnl gtkgl is for integration of opengl in GTK
 dnl freetype2 is for text drawing (fonts ...)
 dnl wxGLCanvas is for integration of opengl in wxWidgets (WX)
+
+with_wx="yes"
+AC_ARG_ENABLE(system-wx,       [  --enable-system-wx      try the wxWidgets system library ])
+
 AC_ARG_WITH([gl],
    AC_HELP_STRING([--with-gl],[enable canvas with hardware OpenGL implementation]),
    [case "${withval}" in
@@ -221,35 +223,6 @@ AC_ARG_WITH([gl],
 	esac],
 	[with_gl="no"])
 
-# check if gtk gui should be used
-AC_ARG_WITH(gtk, [ ])
-if test "$with_gtk" = "yes" ; then
-  if test "$withval" = "no" ; then
-    with_gtk="no"
-    with_wx="yes"
-  else
-    with_gtk="yes"
-    with_wx="no"
-  fi
-fi
-
-# check if wxWidgets gui should be used
-AC_ARG_WITH(wx, [ ])
-if test "$with_wx" = "yes" ; then
-  if test "$withval" = "no" ; then
-    with_wx="no"
-  else
-    with_wx="yes"
-    with_gtk="no"
-  fi
-fi
-AC_ARG_ENABLE(system-wx,       [  --enable-system-wx      try the wxWidgets system library ])
-if test "$with_gtk" = "" -o "$with_wx=" = "" ; then
-  # Nothing is enable so force the default GUI toolkit (WX)
-  with_gtk="no"
-  with_wx="yes"
-fi
-
 # check for mesa library (OpenGL)
 AC_ARG_WITH(MESA,              [  --with-mesa             enable canvas with software OpenGL implementation (default) ])
 if test "$with_mesa" = "" ; then
@@ -257,25 +230,14 @@ if test "$with_mesa" = "" ; then
 fi
 
 
-# Check if at least one GUI toolkit is enabled
-if test "$with_wx" = "no" ; then
-  if test "$with_gtk" = "no" ; then
-    # Nothing is enable so force the default GUI toolkit (WX)
-    with_wx="yes"
-    with_gtk="no"
-  fi
-fi
-
 # mesa (software) gl implementation is default with wx (hardware gl implem can be choosen with --with-gl option)
-if test "$with_wx" = "yes" -o "$with_wx" = "" ; then
- if test "$AMAYAOS" = "MACOSX" ; then
-    with_mesa="no"
-    with_gl="yes"
- else
+if test "$AMAYAOS" = "MACOSX" ; then
+  with_mesa="no"
+  with_gl="yes"
+else
   if test "$with_gl" = "no" ; then
     with_mesa="yes"
   fi
- fi
 fi
 
 # check if wxWidgets debug is enable
@@ -294,138 +256,59 @@ if test "$with_wxsrcdir" = "" ; then
 fi
 
 
-if test "$with_wx" = "yes" ; then
-  if test "$with_gtk" = "yes" ; then
-    echo 
-    echo "****************************************************************"
-    echo " ERROR: "
-    echo " More than one GUI toolkit is enable"
-    echo " Only one GUI toolkit should be enable (turn off one)"
-    echo " exemple ok :  ../configure --with-gtk "
-    echo " exemple !ok : ../configure --with-gtk --with-wx"
-    echo "****************************************************************"
-    echo 
-    exit 1
-  fi
-fi
-
-
 # setup the AMAYAGUI variable used to identify used GUI when 'make install' is called
-# now several amaya gui can coexist.
-if test "$with_gtk" = "yes" ; then
-  AMAYAGUI="gtk"
-fi
-if test "$with_gl" = "yes" ; then
-  AMAYAGUI="gl"
-fi
-if test "$with_wx" = "yes" ; then
-  AMAYAGUI="wx"
-fi
+AMAYAGUI="wx"
 AC_SUBST(AMAYAGUI)
-
-
-if test "$with_gtk" = "yes" ; then
-  gdkimlib_h_found="no"
-
-  # check that gtk-config exists
-  AC_CHECK_PROG(GTKCONFIG_FOUND,gtk-config,yes,no)
-  if test "$GTKCONFIG_FOUND" = no ; then
-    AC_MSG_ERROR(Cannot find gtk-config. Please install gtk development library.)
-  fi
-		    
-  GTK_INCLUDES="${GTK_INCLUDES} `gtk-config --cflags`"
-  AC_SUBST(GTK_INCLUDES)
-  GTK_LIBRARIES="`gtk-config --libs`"
-  # GL doesn't need the imlib
-  if test "${with_gl}" != "yes" ; then
-    GTK_LIBRARIES="${GTK_LIBRARIES} -lgdk_imlib"
-  else
-    gdkimlib_h_found="yes"
-  fi
-
-  AC_SUBST(GTK_LIBRARIES)
-  GTK_OPTIONS="-D_GTK"
-  no_graphic=yes
-
-  # SG : lookingfor gtkimlib includes
-  #      because not found with gtk-config on macosx
-  gtk_path_for_gdkimlib_h="`gtk-config --prefix`"
-  for ac_dir in               \
-    /sw/include/              \
-    /sw/local/include         \
-    /usr/include              \
-    /usr/local/include        \
-    "$gtk_path_for_gdkimlib_h/include" \
-    "$gtk_path_for_gdkimlib_h/local/include" \
-    ; \
-  do
-    if test -r "$ac_dir/gdk_imlib.h"; then
-      echo "found gdk_imlib.h"
-      gdkimlib_h_found="yes"
-      GTK_INCLUDES="${GTK_INCLUDES} -I$ac_dir"
-      break
-    fi
-  done 
-
-  if test "$gdkimlib_h_found" = "no" ; then
-    echo
-    echo "****************************************************************"
-    echo " ERROR: gdk_imlib.h not found -"
-    echo " [please install imlib developpement package (libimlib1-devel on mandrake)]"
-    echo "****************************************************************"
-    exit 1
-  fi											      
-fi
 
 
 if test "$with_mesa" = "yes" ; then
   # --------- compile Mesa library (opengl) --------------- #
   # check that sources of Mesa exists
   if test ! -f ../../Mesa/Makefile ; then
-    AC_MSG_ERROR(Mesa library sources not found (opengl). Please download Mesa sources (http://www.mesa3d.org/) or remove --with-gl option !)
-
+    GL_BUILDDIR=""
+    GL_INCLUDES="-I/usr/include"
+    GL_LIBRARIES="-Wl,-rpath,usr/lib -L/usr/lib -lGL -lGLU"
+    echo "---> Use system Mesa library"
+  else
+    OLDDIR=`pwd`
+    GL_BUILDDIR="${OLDDIR}/Mesa"
+    if test ! -d "$GL_BUILDDIR" ; then
+      echo "---> Install Mesa library into ${GL_BUILDDIR}"
+      mkdir -p ${GL_BUILDDIR}
+      cp -r ../../Mesa/* ${GL_BUILDDIR}
+      echo "---> Install Mesa library into ${GL_BUILDDIR} - DONE"
+    fi
+    # this is the flags used to build amaya with OpenGL
+    GL_INCLUDES="-I${GL_BUILDDIR}/include"
+    GL_LIBRARIES="-Wl,-rpath,${GL_BUILDDIR}/lib -L${GL_BUILDDIR}/lib -lGL -lGLU"
   fi
-
-  OLDDIR=`pwd`
-  GL_BUILDDIR="${OLDDIR}/Mesa"
-  if test ! -d "$GL_BUILDDIR" ; then
-    echo "---> Install Mesa library into ${GL_BUILDDIR}"
-    mkdir -p ${GL_BUILDDIR}
-    cp -r ../../Mesa/* ${GL_BUILDDIR}
-    echo "---> Install Mesa library into ${GL_BUILDDIR} - DONE"
-  fi
-
-  # this is the flags used to build amaya with OpenGL
   GL_OPTIONS="-D_GL"
-  GL_INCLUDES="-I${GL_BUILDDIR}/include"
-  GL_LIBRARIES="-Wl,-rpath,${GL_BUILDDIR}/lib -L${GL_BUILDDIR}/lib -lGL -lGLU"
   AC_SUBST(GL_BUILDDIR)
   AC_SUBST(GL_INCLUDES)
   AC_SUBST(GL_LIBRARIES)
 fi
 
-if test "$with_wx" = "yes" ; then
-  if test "$enable_system_wx" = "yes"; then
-    AC_PATH_PROG(WXCONFIG, wx-config)
-    if test -z "$WXCONFIG"; then
-      enable_system_wx="no"
-    fi
+if test "$enable_system_wx" = "yes"; then
+  AC_PATH_PROG(WXCONFIG, wx-config)
+  if test -z "$WXCONFIG"; then
+    enable_system_wx="no"
   fi
+fi
   
-  if test "$enable_system_wx" != "yes"; then
-    # WX_SRCDIR is better to understand the code than with_wxsrcdir variable
-    if test ! -f $with_wxsrcdir/Makefile.in ; then
-      $with_wxsrcdir = ../../wxWidgets
-    fi
-    cd $with_wxsrcdir
-    WX_SRCDIR=`pwd`
-    cd -
-    AC_SUBST(WX_SRCDIR)
+if test "$enable_system_wx" != "yes"; then
+  # WX_SRCDIR is better to understand the code than with_wxsrcdir variable
+  if test ! -f $with_wxsrcdir/Makefile.in ; then
+    $with_wxsrcdir = ../../wxWidgets
+  fi
+  cd $with_wxsrcdir
+  WX_SRCDIR=`pwd`
+  cd -
+  AC_SUBST(WX_SRCDIR)
 
-    # check that sources of wxWidgets exists
-    if test ! -f $WX_SRCDIR/Makefile.in ; then
-      AC_MSG_ERROR(wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/), or remove --with-wx option, or check --with-wxsrcdir is correct !)
-    fi
+  # check that sources of wxWidgets exists
+  if test ! -f $WX_SRCDIR/Makefile.in ; then
+    AC_MSG_ERROR(wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/), or remove --with-wx option, or check --with-wxsrcdir is correct !)
+  fi
 
   # --------- configure wxWidgets library --------------- #
   echo "---> Configuring wxWidgets library."
@@ -504,46 +387,39 @@ if test "$with_wx" = "yes" ; then
   # setup include paths  
   # "-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff" is a temporary patch to fix incorrect generated paths by wx-config --cxxflags (remove it when wxWidgets will be fixed)
   WX_INCLUDES="-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff"
-
   BUILDWXWIDGETS="wxwidgets"
   AC_SUBST(BUILDWXWIDGETS)
 
- fi
+fi #!$enable_system_wx
 
-  WX_INCLUDES="$WX_INCLUDES `$WXCONFIG --cxxflags`"
+WX_INCLUDES="$WX_INCLUDES `$WXCONFIG --cxxflags`"
+AC_SUBST(WX_INCLUDES)
 
-  AC_SUBST(WX_INCLUDES)
-
-  # setup libraries paths
-  WX_LIBRARIES=""
-  WX_LIBRARIES_EXTRA_PARAM=""
-  WXCONFIG_LIBS_PARAM="aui,xrc,adv,core,xml,net"
-  # GL is used ?
-  if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
-    WXCONFIG_LIBS_PARAM="${WXCONFIG_LIBS_PARAM},gl"
-    # SG: this is a mistery why wx-config doesn't add these needed option on macosx
-    if test "$AMAYAOS" = "MACOSX" ; then
-      WX_LIBRARIES_EXTRA_PARAM="-framework OpenGL -framework AGL"
-    fi
+# setup libraries paths
+WX_LIBRARIES=""
+WX_LIBRARIES_EXTRA_PARAM=""
+WXCONFIG_LIBS_PARAM="aui,xrc,adv,core,xml,net"
+# GL is used ?
+if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
+  WXCONFIG_LIBS_PARAM="${WXCONFIG_LIBS_PARAM},gl"
+  # SG: this is a mistery why wx-config doesn't add these needed option on macosx
+  if test "$AMAYAOS" = "MACOSX" ; then
+    WX_LIBRARIES_EXTRA_PARAM="-framework OpenGL -framework AGL"
   fi
- if test "$AMAYAOS" = "MACOSX" ; then
+fi
+if test "$AMAYAOS" = "MACOSX" ; then
    WXCONFIG_LIBS_PARAM="${WXCONFIG_LIBS_PARAM},html"
- fi
-
-  WX_LIBRARIES="`$WXCONFIG --libs $WXCONFIG_LIBS_PARAM` ${WX_LIBRARIES_EXTRA_PARAM}"
-  AC_SUBST(WX_LIBRARIES)
-  
-  WX_LINKDEPS="`$WXCONFIG --linkdeps`"
-  AC_SUBST(WX_LINKDEPS)
-
-  WX_OPTIONS="-D_WX"
-  # --------- configuring wxWidgets paths - DONE --------------- #
-
-  no_graphic=yes
 fi
 
+WX_LIBRARIES="`$WXCONFIG --libs $WXCONFIG_LIBS_PARAM` ${WX_LIBRARIES_EXTRA_PARAM}"
+AC_SUBST(WX_LIBRARIES)
+WX_LINKDEPS="`$WXCONFIG --linkdeps`"
+AC_SUBST(WX_LINKDEPS)
+WX_OPTIONS="-D_WX"
+# --------- configuring wxWidgets paths - DONE --------------- #
+
 if test "${GCC}" = "yes"; then
-   CPP="${CPP} -x c"
+  CPP="${CPP} -x c"
 fi
 
 dnl  ***************************************************************
@@ -553,86 +429,15 @@ dnl
 dnl  ***************************************************************
 
 # Do not care with libpng or libjpeg with wx version because we use the wxwidgets one.
-if test "$with_wx" = "no" ; then
-  # We don't use our graphic libraries for the pure GTK version (without GL)
-
-  # if configure has option --with-graphiclibs then dont check for system graphic libs
-  # force amaya static graphic libs to be used
-  AC_ARG_WITH(graphiclibs, [  --with-graphiclibs      use static libjpeg, libpng.])
-  if test "$with_graphiclibs" = "yes" -o "$enable_graphiclibs" = "yes" ; then
-    no_graphic="no"
-  else
-    no_graphic="yes"
-  fi
-		  
-  if test "$no_graphic" = yes; then
-  dnl
-      AC_MSG_CHECKING([for libjpeg version = 6b])
-      AC_EGREP_CPP([x 62 *x],
-          [#include <jpeglib.h>
-           x JPEG_LIB_VERSION x],
-  dnl
-      AC_MSG_RESULT([yes])
-        JPEGINCL=''
-        LIBJPEG='-ljpeg'
-        MAKEJPEG=['#'],
-  dnl
-        AC_MSG_RESULT([no])
-        JPEGINCL='-I$(THOTDIR)/libjpeg'
-        LIBJPEG='../libjpeg.a'      dnl LIBJPEG goes into amaya/Makefile.in
-        )
-  dnl    
-  dnl
-    AC_MSG_CHECKING([for libpng version = 1.0.x or 1.2.x])
-    AC_EGREP_CPP([x \"1.[02]\..*\" *x],
-        [#include <png.h>
-	x PNG_LIBPNG_VER_STRING x],
-  dnl
-    AC_MSG_RESULT([yes])
-        PNGINCL=''
-        LIBPNG='-lpng'
-        LIBZ=''
-	MAKEPNG=['#'],
-dnl
-    AC_MSG_RESULT([no])
-  	    PNGINCL='-I$(THOTDIR)/libpng -I$(THOTDIR)/libpng/zlib'
-        LIBPNG='../libpng.a'
-        LIBZ='../libz.a'
-        )
-  else
-    JPEGINCL='-I$(THOTDIR)/libjpeg'
-    LIBJPEG='../libjpeg.a'
-    PNGINCL='-I$(THOTDIR)/libpng -I$(THOTDIR)/libpng/zlib'
-    LIBPNG='../libpng.a'
-    LIBZ='../libz.a'
-  fi
-  dnl
-  AC_SUBST(LIBJPEG)
-  AC_SUBST(LIBPNG)
-  AC_SUBST(LIBZ)
-  AC_SUBST(MAKEJPEG)
-  AC_SUBST(MAKEPNG)
-fi # with_wx = no
 
 # the wx version
 AMAYAWX_MAJVER=9
 AMAYAWX_MINVER=99
 AMAYAWX_SUBVER=0
-
-#the old version (to remove when switching on wx)
-AMAYA_MAJVER=8
-AMAYA_MINVER=54
-AMAYA_SUBVER=0
-
-if test "$with_wx" = "yes" ; then
-  APP_MAJVER=$AMAYAWX_MAJVER
-  APP_MINVER=$AMAYAWX_MINVER
-  APP_SUBVER=$AMAYAWX_SUBVER
-else
-  APP_MAJVER=$AMAYA_MAJVER
-  APP_MINVER=$AMAYA_MINVER
-  APP_SUBVER=$AMAYA_SUBVER
-fi
+APP_MAJVER=$AMAYAWX_MAJVER
+APP_MINVER=$AMAYAWX_MINVER
+APP_SUBVER=$AMAYAWX_SUBVER
+APP_SUBVER=$AMAYA_SUBVER
 
 if test $APP_SUBVER = 0 ; then
   APP_VER=$APP_MAJVER.$APP_MINVER
@@ -644,15 +449,9 @@ fi
 APPVERSION_H=../thotlib/internals/h/appversion.h
 echo "#ifndef __APPVERSION_H__" > $APPVERSION_H
 echo "#define __APPVERSION_H__" >> $APPVERSION_H
-echo "#ifdef _WX" >> $APPVERSION_H
 echo "#define APP_MAJVER $AMAYAWX_MAJVER" >> $APPVERSION_H
 echo "#define APP_MINVER $AMAYAWX_MINVER" >> $APPVERSION_H
 echo "#define APP_SUBVER $AMAYAWX_SUBVER" >> $APPVERSION_H
-echo "#else /* _WX */" >> $APPVERSION_H
-echo "#define APP_MAJVER $AMAYA_MAJVER" >> $APPVERSION_H
-echo "#define APP_MINVER $AMAYA_MINVER" >> $APPVERSION_H
-echo "#define APP_SUBVER $AMAYA_SUBVER" >> $APPVERSION_H
-echo "#endif /* _WX */" >> $APPVERSION_H
 echo "#endif /* __APPVERSION_H__ */" >> $APPVERSION_H
 
 dnl
@@ -812,42 +611,6 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
     AC_SUBST(GL_LIBRARIES)
   fi # if with_gl
 	
-  # ---------- Check for gtkglarea.h only if gtk gui is selected
-  if test "$with_gtk" = "yes" ; then
-    AC_MSG_CHECKING([GTKGLAREA])
-    for ac_dir in               		\
-	  	/usr/include/GL			\
-		/usr/include 			\
-		/usr/X11R6/include/GL   	\
-		/usr/X11R6/include 		\
-		/usr/local/include		\
-		/usr/local/include/GL		\
-		; \
-    do  if test -r "$ac_dir/gtkgl/gtkglarea.h" ; then
-      gtkgl_inc="yes"
-        if test "$ac_dir" != "/usr/include" ; then
-          if test "$ac_dir" != "$GL_INC_II" ; then
-            if test "$ac_dir" != "$GL_INC_I" ; then
-              GTK_GL_INCLUDES="-I$ac_dir"
-            fi
-          fi
-        fi
-        AC_MSG_RESULT([yes])
-        break	
-    fi
-    done
-    GTK_GL_LIBRARIES="-lgtkgl"
-
-    if test "$gtkgl_inc" = "" ; then
-      AC_MSG_WARN(Gtkglarea headers (gktglarea.h) not found !!)
-      AC_MSG_WARN(Disabling opengl build !)
-      with_gl="no"
-      exit 1;
-    fi
-    AC_SUBST(GTK_GL_INCLUDES)
-    AC_SUBST(GTK_GL_LIBRARIES)
-  fi # "$with_gtk" = "yes"
-
   # ---------- Checking for freetype lib (fonts library)
   if test "$AMAYAOS" = "MACOSX" ; then
      # we use a static version of freetype lib for mac osx
@@ -903,78 +666,6 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
   fi # "$AMAYAOS" = "MACOSX"
   AC_SUBST(FREETYPE_INCLUDES)
   AC_SUBST(FREETYPE_LIBRARIES)
-
-
-
-  # ----------- START CHECKING XFT
-  # checking for Xft which is only used on GTK version (not wxWidgets)
-if test "$with_gtk" = "yes" ; then
-
-  # checking for xft lib
-  # (not used because xft-config doesn't exist on debian stable)
-  #if test ! -f $(which xft-config) ; then
-  #  AC_MSG_ERROR(Cannot find Xft library. Please install it.)
-  #fi
-  #XFT_INCLUDES=`xft-config --cflags`
-  #XFT_LIBRARIES=`xft-config --libs`
-  #AC_SUBST(XFT_INCLUDES)
-  #AC_SUBST(XFT_LIBRARIES)
-
-  AC_MSG_CHECKING([Xft])
-  for ac_dir in               		\
-		/usr/include 			\
-		/usr/X11R6/include 		\
-		/usr/local/include		\
-		/usr/include/X11/Xft		\
-		/usr/X11R6/include/X11/Xft	\
-		/usr/local/include/X11/Xft	\
-		/usr/include/X11/Xft1		\
-		/usr/X11R6/include/X11/Xft1	\
-		/usr/include/Xft2/X11/Xft/      \
-		/usr/local/include/X11/Xft1	\
-		/usr/include/X11/Xft2		\
-		/usr/X11R6/include/X11/Xft2	\
-		/usr/local/include/X11/Xft2	\
-		; \
-  do  if test -r "$ac_dir/Xft.h" ; then
-    xft_inc="yes"
-    XFT_INCLUDES="-I$ac_dir"
-    AC_MSG_RESULT([yes])	
-    break	
-  fi
-  done	
-  if test "$xft_inc" = "" ; then
-    AC_MSG_WARN(Xft 2 headers (Xft.h) not found !!)
-    AC_MSG_WARN(Disabling opengl build !)
-      with_gl="no"
-      exit 1;
-  fi
-
-  AC_MSG_CHECKING([Xft-library])
- 
-  for ac_dir in               		\
-		/usr/lib 			\
-		/usr/X11R6/lib	 		\
-		/usr/local/lib	 		\
-		; \
-  do  if test -r "$ac_dir/libXft.so" ; then
-    xft_lib="yes"
-    XFT_LIBRARIES="-L$ac_dir -lXft"
-    AC_MSG_RESULT([yes])
-    break	
-  fi
-  done	
-  if test "$xft_lib" = "" ; then
-    AC_MSG_WARN(Xft 2 librarie (libXft.so) not found !!)
-    AC_MSG_WARN(Disabling opengl build !)
-      with_gl="no"
-      exit 1;
-  fi
-
-  AC_SUBST(XFT_INCLUDES)
-  AC_SUBST(XFT_LIBRARIES)
-  # END CHECKING XFT #
-fi # "$with_gtk" = "yes"
 
 
   AC_MSG_CHECKING([gcc3])	
@@ -1221,10 +912,9 @@ fi
 dnl
 dnl The options for each library or binary
 dnl
+THOT_OPTIONS="$OS_OPTIONS $GL_OPTIONS $WX_OPTIONS"
 
-THOT_OPTIONS="$OS_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS"
-
-AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $TEMPLATES_OPTIONS"
+AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GL_OPTIONS $WX_OPTIONS $TEMPLATES_OPTIONS"
 
 if test "$with_debug" = "yes" ; then
   AMAYA_OPTIONS="$AMAYA_OPTIONS -DAMAYA_DEBUG"
@@ -1309,7 +999,6 @@ AC_SUBST(THOTINCLUDES)
 AC_SUBST(APIINCLUDES)
 AC_SUBST(VPATHOPT)
 
-AC_SUBST(GTK_OPTIONS)
 AC_SUBST(THOT_OPTIONS)
 AC_SUBST(AMAYA_OPTIONS)
 AC_SUBST(AMAYA_ANNOT_OPTIONS)
@@ -1499,22 +1188,6 @@ if test "$build_amaya" = "yes" ; then
     if test "$with_dav" = "yes" ; then
 	echo Amaya configured with WebDAV support
     fi
-fi
-
-if test "$with_wx" = "no" ; then
-  if test "$no_graphic" = "yes" ; then
-      echo "Amaya configured with system graphic libraries (libjpeg, libpng, zlib)"
-  else
-      echo "Amaya configured with static graphic libraries (libjpeg, libpng, zlib)"
-      if test "$with_gtk" = "yes" -o "$with_gl" = "yes" ; then
-        echo "  N.B. This option may not work in your platform. If Amaya crashes"
-        echo "  when opening a PNG file. Recompile it using the system libraries."
-      fi
-  fi
-fi
-
-if test "$with_gtk" = "yes" ; then
-    echo "Amaya configured with GTK"
 fi
 
 if test "$with_wx" = "yes" ; then
