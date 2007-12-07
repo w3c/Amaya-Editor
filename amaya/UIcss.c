@@ -1005,6 +1005,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
             case 1:
               /* display the CSS file */
 #ifdef _WX
+              DontReplaceOldDoc = TRUE;
               GetAmayaDoc (ptr, NULL, CSSdocument,
                            CSSdocument, CE_CSS, TRUE, NULL, NULL);
 #else /* _WX */

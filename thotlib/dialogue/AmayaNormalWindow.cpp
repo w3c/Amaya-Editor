@@ -76,7 +76,7 @@ static ThotBool  UpdateFrameUrl = TRUE;
 
 #ifdef _WINDOWS
 static  char      BufUrl[2048];
-static  ThotBool  isBufUrl = 0;
+static  ThotBool  isBufUrl = FALSE;
 #endif /* _WINDOWS */
 
 #define RECENT_DOC_ID     2000
@@ -716,6 +716,7 @@ void AmayaNormalWindow::GotoSelectedURL()
       isBufUrl = TRUE;
         (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
        strcpy (BufUrl, buffer);
+      isBufUrl = FALSE;
     }
     else if (strcmp (buffer, BufUrl) != 0)
     {
