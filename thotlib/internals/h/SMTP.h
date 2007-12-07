@@ -30,7 +30,7 @@ class wxDebugOutputStream : public wxFilterOutputStream{
 protected:
     virtual size_t OnSysWrite(const void *buffer, size_t size)
     {
-      printf("(%05d) >> %s\n",  size, (const char*)buffer);
+      printf("(%05d) >> %s\n",  (int)size, (const char*)buffer);
       GetFilterOutputStream()->Write(buffer, size);
       return size;
     }

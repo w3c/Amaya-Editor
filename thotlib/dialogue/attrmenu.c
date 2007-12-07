@@ -59,8 +59,6 @@ static int          NumAttrValue;
 /* main menu of attributes */
 static PtrSSchema   AttrStruct[MAX_MENU * 2];
 static int          AttrNumber[MAX_MENU * 2];
-static int          ActiveAttr[MAX_MENU * 2];
-static ThotBool     AttrOblig[MAX_MENU * 2];
 static ThotBool     AttrEvent[MAX_MENU * 2];
 static int          AttrCorr[MAX_MENU * 2];
 /* submenu of event attributes */
