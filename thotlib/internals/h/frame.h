@@ -41,8 +41,8 @@ typedef struct _Frame_Ctl {
   ThotScrollBar WdScrollH;              /* Widget of Horizontal Scroll       */
   ThotFrame  	WdFrame;                /* Widget of the Document Frame      */
 
-  bool       EnabledButton_Panel_XHTML[MAX_BUTTON]; /* Enabled XHTML panel buttons           */
-  bool       CheckedButton_Panel_XHTML[MAX_BUTTON]; /* Checked XHTML panel buttons           */  
+  ThotBool   EnabledButton_Panel_XHTML[MAX_BUTTON]; /* Enabled XHTML panel buttons           */
+  ThotBool   CheckedButton_Panel_XHTML[MAX_BUTTON]; /* Checked XHTML panel buttons           */  
   
 #ifdef _GL
   ThotBool   DblBuffNeedSwap;
@@ -88,7 +88,6 @@ typedef struct _Window_Ctl {
   int        MenuItemShowPanelID;       /* show/hide panel menu item ID or -1     */
   int        MenuItemShowToolBar[ToolBarNumber];    /* show/hide toolbar menu item ID or -1   */
 } Window_Ctl;
-
 
 #endif /* !NODISPLAY */
 

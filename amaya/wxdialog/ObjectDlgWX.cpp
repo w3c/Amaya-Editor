@@ -202,7 +202,6 @@ void ObjectDlgWX::OnPosition( wxCommandEvent& event )
 void ObjectDlgWX::OnOpenButton( wxCommandEvent& event )
 {
   char     buffer[MAX_LENGTH];
-  char     Alt[512];
 
   // get the current url
   wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
