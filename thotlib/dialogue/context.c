@@ -320,17 +320,12 @@ void ThotInitDisplay (char* name, int dx, int dy)
 #endif /* _WINGUI */
 
 #ifdef _WX
-#ifndef _WINDOWS
    int display_width_px, display_height_px;
    int display_width_mm, display_height_mm;
    wxDisplaySize(&display_width_px, &display_height_px);
    wxDisplaySizeMM(&display_width_mm, &display_height_mm);
    DOT_PER_INCH = (int)((((float)display_width_px)*25.4) / ((float)display_width_mm));
    DOT_PER_INCH = ApproximateDotPerInch(DOT_PER_INCH);
-#else /* _WINDOWS */
-   ScreenHDC dc;
-   DOT_PER_INCH = ::GetDeviceCaps(dc, LOGPIXELSY);
-#endif /* _WINDOWS */
 #ifdef _GL
    TtWDepth = wxDisplayDepth(); 
 #endif /*_GL */
