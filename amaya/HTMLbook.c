@@ -1830,6 +1830,7 @@ void MakeToc (Document doc, View view)
       child = TtaGetFirstChild (toc);
       TtaRegisterElementDelete (child, doc);
       TtaRemoveTree (child, doc);
+      TtaSetDocumentModified (doc);
     }
 
   // keep in memory the current selected element
