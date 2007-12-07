@@ -340,6 +340,9 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
       file_value = url.AfterLast (DIR_SEP);
       p_dlg->SetPath (url);
       p_dlg->SetFilename (file_value);
+      // Open the directory in the url
+      wxString address = url.BeforeLast (DIR_SEP);
+      p_dlg->SetDirectory(address);
     }
 
   if (p_dlg->ShowModal() == wxID_OK)
@@ -354,6 +357,9 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
         }
     }
   p_dlg->Destroy();
+
+  //Focus the open button after the file blowser is closed
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetFocus();
 }
 
 
