@@ -101,18 +101,14 @@
          list is modified at the same time as the DOM tree, so you have to
          return an object that describes the way you obtain this list.
 
-       Use ObjectWithInfo
-
-            ***!!!! TODO: Currently the returned value is a typed object
-                     with a private data that points to a jsArray. But
-                      this has to be improved...
-                                                                     !!!!***
+       This is done by using private data. See the function ObjectWithInfo.
 
   -----------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------
   Functions used to manipulate property values
   -----------------------------------------------------------------------*/
+static void finalizeObjectWithInfo(JSContext *cx, JSObject *obj);
 static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 static JSBool setProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
@@ -151,7 +147,7 @@ enum properties_names
 
  NODELIST_LENGTH
 
- /* Put here methods that need CreateTemporary */
+ /* Put here methods that use the ObjectWithInfo function to create their PrivateData */
  , GETELEMENTSBYTAGNAME,
 };
 
@@ -543,15 +539,15 @@ static JSClass NodeList_class =
 {
   "NodeList", JSCLASS_HAS_PRIVATE,
   JS_PropertyStub,JS_PropertyStub,getProperty,JS_PropertyStub,
-  JS_EnumerateStub,JS_ResolveStub,JS_ConvertStub,JS_FinalizeStub
+  JS_EnumerateStub,JS_ResolveStub,JS_ConvertStub,finalizeObjectWithInfo
 };
 
 /*----------------------------------------------------------------------
   Object NamedNodeMap
   -----------------------------------------------------------------------*/
 static JSBool NamedNodeMap_getNamedItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-/*
 static JSBool NamedNodeMap_setNamedItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+/*
 static JSBool NamedNodeMap_removeNamedItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool NamedNodeMap_item(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 */
@@ -559,8 +555,8 @@ static JSBool NamedNodeMap_item(JSContext *cx, JSObject *obj, uintN argc, jsval 
 static JSFunctionSpec NamedNodeMap_functions[] =
 {
   {"getNamedItem"                 , NamedNodeMap_getNamedItem           ,        1},
-/*  {"setNamedItem"                 , NamedNodeMap_setNamedItem           ,        1},
-  {"removeNamedItem"              , NamedNodeMap_removeNamedItem        ,        1},
+  {"setNamedItem"                 , NamedNodeMap_setNamedItem           ,        1},
+  /*  {"removeNamedItem"              , NamedNodeMap_removeNamedItem        ,        1},
   {"item"                         , NamedNodeMap_item                   ,        1},*/
   {0}
 };
@@ -575,7 +571,7 @@ static JSClass NamedNodeMap_class =
 {
   "NamedNodeMap", JSCLASS_HAS_PRIVATE,
   JS_PropertyStub,JS_PropertyStub,getProperty,JS_PropertyStub,
-  JS_EnumerateStub,JS_ResolveStub,JS_ConvertStub,JS_FinalizeStub
+  JS_EnumerateStub,JS_ResolveStub,JS_ConvertStub,finalizeObjectWithInfo
 };
 
 /*----------------------------------------------------------------------
