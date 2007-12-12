@@ -1948,6 +1948,9 @@ void CreateDefinitionDef (Document doc, View view)
 void CreateHorizontalRule (Document doc, View view)
 {
   CreateHTMLelement (HTML_EL_Horizontal_Rule, doc);
+  // then insert an empty element after
+  TtaExtendUndoSequence (doc);  
+  InsertAfter (doc, view);
 }
 
 /*----------------------------------------------------------------------

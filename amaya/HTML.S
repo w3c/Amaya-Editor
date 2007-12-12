@@ -964,6 +964,7 @@ EXCEPT
         IMG:            IsImg, NoReplicate;
         AREA:           MoveResize, ClickableSurface, HighlightChildren;
         Anchor:         ClickableSurface;
+        Horizontal_Rule: ClickableSurface;
         Form:           NoReplicate;
         Image_Input:    IsImg, NoReplicate;
         Password_Input: Shadow, NoReplicate;
