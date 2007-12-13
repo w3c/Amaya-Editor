@@ -65,7 +65,26 @@ AmayaExplorerToolPanel::~AmayaExplorerToolPanel()
 bool AmayaExplorerToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
           const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
-  return wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_EXPLORER"));
+  if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_EXPLORER")))
+    return false;
+  
+  char    *s;
+  wxString path;
+  wxGenericDirCtrl* dirCtrl = XRCCTRL(*this, "wxID_DIRCTRL_EXPLORER", wxGenericDirCtrl);
+  
+  // Initial selection in the set of folders
+  s = TtaGetEnvString ("EXPLORER_PATH");
+  if (s)
+    path = TtaConvMessageToWX(s);
+  else
+    path = TtaGetHomeDir();
+  
+  dirCtrl->ExpandPath(path);
+  //dirCtrl->SetFilter(APPFILENAMEFILTER);
+  //dirCtrl->GetFilterListCtrl()->FillFilterList(APPFILENAMEFILTER, 0);
+  dirCtrl->DoResize();
+  
+  return true;
 }
 
 /*----------------------------------------------------------------------
