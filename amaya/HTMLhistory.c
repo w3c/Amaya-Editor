@@ -888,8 +888,10 @@ void HelpAmaya (Document document, View view)
       
       wxFFile file(TtaConvMessageToWX(localname));
       wxString str;
-      if(file.ReadAll(&str))
-        info.SetLicence(str);
+      if(file.ReadAll(&str, wxConvISO8859_1))
+        {
+          info.SetLicence(str);
+        }
     }
   
   wxAboutBox(info);
