@@ -82,4 +82,8 @@ void TtaSetEnumContextMenu(int res);
 int TtaGetEnumContextMenu();
 
 
+typedef int(*DocumentPageTypeFunction)(Document doc);
+void TtaRegisterDocumentPageTypeFunction(DocumentPageTypeFunction fct);
+int TtaGetDocumentPageType(Document doc);
+
 #endif /* #define __APPDIALOGUE_WX_H__ */

@@ -151,7 +151,7 @@ void AmayaWindow::SaveConfig()
  * Description:  create a new AmayaPage, the notebook will be the parent page
  *               it's possible to attach automaticaly this page to the window or not
   -----------------------------------------------------------------------*/
-AmayaPage * AmayaWindow::CreatePage( bool attach, int position )
+AmayaPage * AmayaWindow::CreatePage( Document doc,  bool attach, int position )
 {
   printf("AmayaWindow::CreatePage\n");
   return NULL;

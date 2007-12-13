@@ -88,7 +88,7 @@ protected:
   virtual AmayaPageContainer* GetPageContainer();
   virtual const AmayaPageContainer* GetPageContainer()const;
   
-  virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
+  virtual AmayaPage *    CreatePage( Document doc, bool attach = false, int position = 0 );
   
   virtual void ToggleFullScreen();
 

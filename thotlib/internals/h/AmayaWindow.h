@@ -107,7 +107,7 @@ class AmayaWindow : public wxFrame
   // Page and frame management :
   virtual AmayaPage *  GetActivePage() const;
   virtual AmayaFrame * GetActiveFrame() const;
-  virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
+  virtual AmayaPage *    CreatePage( Document doc, bool attach = false, int position = 0 );
   virtual bool           AttachPage( int position, AmayaPage * p_page );
   virtual bool           DetachPage( int position );
   virtual bool           ClosePage( int position );

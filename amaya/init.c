@@ -58,7 +58,6 @@
 extern XmlEntity *pMathEntityTable;
 
 #include "appdialogue_wx.h"
-  
 
 static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
@@ -6555,6 +6554,7 @@ void InitAmaya (NotifyEvent * event)
   InitTemplates();
 #endif
 
+  TtaRegisterDocumentPageTypeFunction(ChooseDocumentPage);
   TtaSetPopupDocContextMenuFunction((PopupDocContextMenuFuction)AmayaPopupDocContextMenu);
   
   InsertableElement_Init();
@@ -7691,3 +7691,23 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
     }
   return -1;
 }
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+int ChooseDocumentPage(Document doc)
+{
+  switch(DocumentTypes[doc])
+  {
+    case docHTML:
+    case docSVG:
+    case docMath:
+    case docXml:
+    case docTemplate:
+      return WXAMAYAPAGE_SPLITTABLE;
+    default :
+      return WXAMAYAPAGE_SIMPLE;
+      
+  }
+};
+

@@ -52,6 +52,17 @@
 //
 //
 
+AmayaPage* AmayaPage::CreateAmayaPage(wxWindow* parent, AmayaWindow* window, Document doc)
+{
+  switch(TtaGetDocumentPageType(doc))
+  {
+    case WXAMAYAPAGE_SPLITTABLE:
+      return new AmayaSplittablePage(parent, window);
+    default:
+      return new AmayaSimplePage(parent, window);
+  }
+}
+
 IMPLEMENT_ABSTRACT_CLASS(AmayaPage, wxPanel)
 
 BEGIN_EVENT_TABLE(AmayaPage, wxPanel)

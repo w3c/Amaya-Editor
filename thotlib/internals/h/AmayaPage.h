@@ -73,6 +73,8 @@ class AmayaPage : public wxPanel
   DECLARE_ABSTRACT_CLASS(AmayaPage)
   DECLARE_EVENT_TABLE()
 public:
+  static AmayaPage* CreateAmayaPage(wxWindow* parent, AmayaWindow* window, Document doc);
+  
   AmayaPage(wxWindow * p_parent_window = NULL, AmayaWindow * p_amaya_parent_window = NULL );
   virtual ~AmayaPage();
 

@@ -58,7 +58,7 @@ class AmayaNormalWindow : public AmayaWindow
   
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
-  virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 ) = 0;
+  virtual AmayaPage *    CreatePage( Document doc, bool attach = false, int position = 0 )=0;
 
   // url bar control
   virtual wxString GetURL();
@@ -86,6 +86,8 @@ protected:
   void OnMenuOpen( wxMenuEvent& event );
 #endif /* __WXDEBUG__ */
 
+  virtual AmayaPage* DoCreatePage( wxWindow* parent, Document doc, bool attach = false, int position = 0 );
+  
   virtual const AmayaPageContainer* GetPageContainer()const{return NULL;}
   virtual AmayaPageContainer* GetPageContainer(){return NULL;}
   

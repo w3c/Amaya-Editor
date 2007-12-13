@@ -8,12 +8,6 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 
-#include "AmayaApp.h"
-#include "AmayaCanvas.h"
-#include "AmayaFrame.h"
-#include "AmayaPage.h"
-#include "AmayaWindow.h"
-
 #include "typemedia.h"
 #include "appdialogue.h"
 #include "appdialogue_wx.h"
@@ -43,6 +37,13 @@
 #ifdef _GL
 #include "glwindowdisplay.h"
 #endif /*_GL*/
+
+#include "AmayaApp.h"
+#include "AmayaCanvas.h"
+#include "AmayaFrame.h"
+#include "AmayaPage.h"
+#include "AmayaWindow.h"
+
 
 #ifdef _GL
 IMPLEMENT_DYNAMIC_CLASS(AmayaCanvas, wxGLCanvas)
@@ -476,7 +477,7 @@ void AmayaCanvas::OnContextMenu( wxContextMenuEvent & event )
                  event.GetPosition().x,
                  event.GetPosition().y );
 
-  AmayaWindow* wind = (AmayaWindow*) wxGetTopLevelParent(this);
+  AmayaWindow* wind = wxDynamicCast(wxGetTopLevelParent(this), AmayaWindow);
   
   int      window_id = wind->GetWindowId();
   int      page_id   = 0;

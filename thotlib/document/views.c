@@ -579,8 +579,6 @@ void OpenCreatedView (PtrDocument pDoc, int view,
   
       /* the new document needs a new frame */
       int doc_id = IdentDocument(pDoc);
-      
-      TtaMakePage(window_id, page_id);
 
       frame = TtaMakeFrame( pSS->SsName,
                             schView,

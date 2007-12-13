@@ -178,8 +178,9 @@ void AmayaHelpWindow::SetPageIcon(int page_id, char *iconpath)
  * Description:  create a new AmayaPage.
  *               it's possible to attach automaticaly this page to the window or not
  -----------------------------------------------------------------------*/
-AmayaPage * AmayaHelpWindow::CreatePage( bool attach, int position )
+AmayaPage * AmayaHelpWindow::CreatePage( Document doc, bool attach, int position )
 {
+  // Force using AmayaSimplePage : help pages are not code-viewable
   AmayaPage * page = new AmayaSimplePage( m_notebook, this );
   
   if (attach)

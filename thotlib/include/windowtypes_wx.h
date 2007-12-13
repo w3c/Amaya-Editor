@@ -14,6 +14,14 @@ typedef enum
     WXAMAYAWINDOW_HELP
   } wxAMAYAWINDOW_KIND;
 
+  
+/* use to differenciate AmayaPage types */
+typedef enum
+{
+  WXAMAYAPAGE_SIMPLE,
+  WXAMAYAPAGE_SPLITTABLE
+} wxAMAYAPAGE_TYPE;
+  
 #endif /* __WINDOWTYPES_H__ */
 
 #endif /* _WX */

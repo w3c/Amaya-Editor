@@ -313,14 +313,9 @@ void AmayaAdvancedWindow::SetPageIcon(int page_id, char *iconpath)
  * Description:  create a new AmayaPage.
  *               it's possible to attach automaticaly this page to the window or not
  -----------------------------------------------------------------------*/
-AmayaPage * AmayaAdvancedWindow::CreatePage( bool attach, int position )
+AmayaPage * AmayaAdvancedWindow::CreatePage( Document doc, bool attach, int position )
 {
-  AmayaPage * page = new AmayaSplittablePage( m_notebook, this );
-  
-  if (attach)
-    AttachPage( position, page );
-  
-  return page;
+  return AmayaNormalWindow::DoCreatePage(m_notebook, doc, attach, position);
 }
 
 /*----------------------------------------------------------------------

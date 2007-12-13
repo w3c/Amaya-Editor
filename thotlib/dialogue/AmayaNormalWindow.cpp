@@ -321,6 +321,21 @@ AmayaFrame * AmayaNormalWindow::GetActiveFrame() const
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
+ *      Method:  DoCreatePage
+ * Description:  Really create a page and return it.
+ -----------------------------------------------------------------------*/
+AmayaPage* AmayaNormalWindow::DoCreatePage( wxWindow* parent, Document doc, bool attach, int position)
+{
+  AmayaPage * page = AmayaPage::CreateAmayaPage(parent, this, doc );
+  
+  if (attach)
+    AttachPage( position, page );
+  
+  return page;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
  *      Method:  AttachPage
  * Description:  really attach a page to the current window
  -----------------------------------------------------------------------*/

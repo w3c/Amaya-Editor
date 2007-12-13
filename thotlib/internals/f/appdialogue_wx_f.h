@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern void TtaShowWindow ( int window_id,
                             ThotBool show );
 extern int TtaMakeWindow ( int x,
@@ -36,7 +35,8 @@ extern int TtaMakeFrame ( const char * schema_name,
                           int page_id,
                           int page_position );
 extern ThotBool TtaMakePage ( int window_id,
-                              int page_id );
+                              int page_id,
+                              Document doc );
 extern int TtaGetIconIndex ( const char * filename );
 extern void TtaSetPageIcon ( Document doc,
                              View view,
@@ -100,7 +100,6 @@ extern void TtaSetEnumContextMenu ( int res );
 extern int TtaGetEnumContextMenu ( void );
 
 #else /* __STDC__ */
-
 extern void TtaShowWindow ( int window_id,
                               ThotBool show );
 extern int TtaMakeWindow ( int x,
@@ -131,7 +130,8 @@ extern int TtaMakeFrame ( const char * schema_name,
                             int page_id,
                             int page_position );
 extern ThotBool TtaMakePage ( int window_id,
-                                int page_id );
+                                int page_id,
+                                Document doc );
 extern int TtaGetIconIndex ( const char * filename );
 extern void TtaSetPageIcon ( Document doc,
                                View view,

@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -224,9 +223,9 @@ extern int GetMaxURLList ( void );
 extern void SetMaxURLList ( int max );
 extern void ClearURLList ( void );
 extern char* CreateTempDirectory ( const char* name );
+extern int ChooseDocumentPage ( Document doc );
 
 #else /* __STDC__ */
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -445,6 +444,7 @@ extern int GetMaxURLList ( void );
 extern void SetMaxURLList ( int max );
 extern void ClearURLList ( void );
 extern char* CreateTempDirectory ( const char* name );
+extern int ChooseDocumentPage ( Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

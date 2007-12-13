@@ -718,6 +718,9 @@ int TtaMakeFrame( const char * schema_name, int schView,
   int        frame_id = 1;
   ThotBool   found = FALSE;
 
+  /* Create empty page to embed new frame */
+  TtaMakePage(window_id, page_id, doc_id);
+
   while (frame_id <= MAX_FRAME && !found)
     {
       found = (FrameTable[frame_id].FrDoc == 0 &&
@@ -819,12 +822,13 @@ int TtaMakeFrame( const char * schema_name, int schView,
   params:
   + window_id : the window where the page should be attached
   + page_id : the page index into the window where the page must be inserted
+  + doc_id : the document id of the future attached document.
   returns:
   + true if ok
   + false if it's impossible to create this page because another
   page exists at this place or the window is invalid
   ----------------------------------------------------------------------*/
-ThotBool TtaMakePage( int window_id, int page_id )
+ThotBool TtaMakePage( int window_id, int page_id, Document doc)
 {
   int kind;
 
@@ -841,7 +845,7 @@ ThotBool TtaMakePage( int window_id, int page_id )
       if (!p_page)
         {
           /* the page does not exist yet, just create it */
-          p_page = p_window->CreatePage();
+          p_page = p_window->CreatePage(doc);
           /* and link it to the window */
           p_window->AttachPage(page_id, p_page);
           return TRUE;
@@ -2345,3 +2349,33 @@ int TtaGetEnumContextMenu()
   return s_enumContextMenuResult;
 }
 
+
+#ifdef _WX
+/*----------------------------------------------------------------------
+  s_documentPageTypeFunction
+  Callback pointer to query an AmayaPage type from the document id.
+  ----------------------------------------------------------------------*/
+static DocumentPageTypeFunction s_documentPageTypeFunction = NULL;
+
+/*----------------------------------------------------------------------
+  TtaRegisterDocumentPageTypeFunction()
+  Register the callback to query what type of AmayaPage should be used
+  to show a document.
+  ----------------------------------------------------------------------*/
+void TtaRegisterDocumentPageTypeFunction(DocumentPageTypeFunction fct)
+{
+  s_documentPageTypeFunction = fct;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetDocumentPageType()
+  Query what type of AmayaPage shoud be used to show a document.
+  ----------------------------------------------------------------------*/
+int TtaGetDocumentPageType(Document doc)
+{
+  if(s_documentPageTypeFunction)
+    return s_documentPageTypeFunction(doc);
+  else
+    return WXAMAYAPAGE_SIMPLE;
+}
+#endif /* _WX */
