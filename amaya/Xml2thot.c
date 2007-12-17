@@ -2662,6 +2662,7 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
   int            k, l, m;
   int            entityValue;	
   ThotBool       found, end;
+  char           msgBuffer[MaxMsgLength];
 
   max = *length;
   buffer = (unsigned char *)TtaGetMemory (4 * max + 1);
@@ -2743,6 +2744,13 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
                       for (m = 0; entityName[m] != EOS; m++)
                         buffer[j++] = entityName[m];
                       buffer[j++] = ';';
+                      if (!found)
+                        {
+                         sprintf ((char *)msgBuffer, "Unknown entity \"%s;\"",
+                                  entityName);
+                         XmlParseError (errorParsing,
+                                        (unsigned char *)msgBuffer, 0);
+                        }
                     }
                 }
               else
