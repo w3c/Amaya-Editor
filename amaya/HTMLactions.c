@@ -1281,7 +1281,7 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
               length = TtaGetTextAttributeLength (attr) + 1;
               name = (char *)TtaGetMemory (length);
               TtaGiveTextAttributeValue (attr, name, &length);
-              sprintf (msgBuffer, "Invalid ID value %s", name);
+              sprintf (msgBuffer, "Invalid ID value \"%s\"", name);
               lineNum = TtaGetElementLineNumber(el);
               if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
                 XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
@@ -1289,18 +1289,21 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
                 HTMLParseError (doc, msgBuffer, lineNum);
               TtaFreeMemory (name);
             }
-        }
-      else
-        {
-          // this function is optional because it increases the loading time
-          if (Check_read_ids && MakeUniqueName (el, doc, FALSE, FALSE))
+          else
             {
-              sprintf (msgBuffer, "Duplicate attribute value %s", name);
-              lineNum = TtaGetElementLineNumber(el);
-              if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
-                XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
-              else
-                HTMLParseError (doc, msgBuffer, lineNum);
+             // this function is optional because it increases the loading time
+              if (Check_read_ids && MakeUniqueName (el, doc, FALSE, FALSE))
+                {
+                  length = TtaGetTextAttributeLength (attr) + 1;
+                  name = (char *)TtaGetMemory (length);
+                  TtaGiveTextAttributeValue (attr, name, &length);
+                  sprintf (msgBuffer, "Duplicate ID value \"%s\"", name);
+                  lineNum = TtaGetElementLineNumber(el);
+                  if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+                    XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
+                  else
+                    HTMLParseError (doc, msgBuffer, lineNum);
+                }
             }
         }
     }
