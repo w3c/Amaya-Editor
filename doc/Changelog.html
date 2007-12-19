@@ -34,31 +34,23 @@ href="http://www.w3.org/Amaya/User/New.html">Amaya 9.55</a>).</p>
     append template components</li>
   <li>Tools can be displayed on the left, or on the right, or custumized tool
     by tool</li>
-  <li>The default editing mode changes the behaviour of Enter, Delete, and
-    Backspace keys 
-    <p>By default Amaya works now as a classical word processing:</p>
-    <ul>
-      <li>Enter within a block deletes the selected contents and breaks the
-        bloc at the current position<br />
-      </li>
-      <li>Delete deletes the selected contents and moves the cursor after</li>
-      <li>Backspace deletes the selected contents and moves the cursor
-      before</li>
-      <li>On/Off buttons or entries can be used to go in/out of an inline
-        element.<br />
-        For example you click strong, enter the strong text, then click
-        strong to close the element.</li>
-      <li>Insert and Append commands must be used to insert before and after
-        the selected structure element</li>
-    </ul>
-    <p>The XML editing mode is more confortable when editing nested
-    structures.</p>
-    <p>A new option in Preferences menu allows one to switch from the word
-    processing mode (called Text mode) to the XML editing mode (called XML)
-    and vice versa. A new button in the bottom line displays the current
-    editing mode (text or XML) and allows one to switch the mode more
-    quickly.</p>
+  <li>The default editing mode changes the behaviour of the Enter key
+    <p>Enter within a block deletes the selected contents and breaks the
+    block at the current position. When a block element is selected
+    (&lt;p&gt;, &lt;div&gt;, table element), Enter deletes the current
+    selected element and generates a new instance.</p>
+    <p>The XML editing mode is more comfortable when editing nested
+    structures. A new option in Preferences dialog allows one to choose the
+    word processing mode (called Text mode) or the XML editing mode (called
+    XML). A button in the bottom line displays the current editing mode (text
+    or XML) and it allows one to switch the mode more quickly.</p>
   </li>
+  <li>On/Off buttons or entries can be used to go in/out of an inline
+    element.<br />
+    For example you click strong, enter the strong text, then click strong to
+    close the element.</li>
+  <li>Insert and Append commands must be used to insert before and after the
+    selected structure element</li>
   <li>First implementation of Amaya themes</li>
   <li>Possibility to change tabs order or to display two documents side by
     side</li>
@@ -97,12 +89,13 @@ href="http://www.w3.org/Amaya/User/New.html">Amaya 9.55</a>).</p>
   <li>When changing or deleting the same attribute for several contiguous
     elements, only the first element in the set has the change/deletion
     applied.</li>
+  <li>Avoid several concurrent download of a document</li>
 </ul>
 
 <p></p>
 <hr />
 <address>
-  last revised Date: <!--$date=-->2007-11-30<!--$-->
+  last revised Date: <!--$date=-->2007-12-19<!--$-->
 
 </address>
 </body>
