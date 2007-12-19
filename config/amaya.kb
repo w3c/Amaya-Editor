@@ -80,6 +80,8 @@ Ctrl <Key>v:	                   PasteBuffer()
 Ctrl <Key>x:	                   TtcCutSelection()
 Ctrl <Key>y:                       TtcRedo() 
 Ctrl <Key>z:                       TtcUndo() 
+Ctrl <Key>k:                       InsertAfter()
+Shift Ctrl <Key>K:                 InsertBefore()
 # BR and &nbsp;
 Ctrl <Key>Return:                  CreateBreak("\212") 
 Ctrl <Key>Space:                   TtcInsertChar("\240")

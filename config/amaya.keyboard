@@ -82,7 +82,9 @@ Ctrl <Key>v:	                   PasteBuffer()
 Ctrl <Key>x:	                   TtcCutSelection()
 Shift Ctrl <Key>Z:                 TtcRedo() 
 Ctrl <Key>z:                       TtcUndo() 
-
+Ctrl <Key>k:                       InsertAfter() 
+Shift Ctrl <Key>K:                 InsertBefore() 
+ 
 #Headings sbmenu
 Ctrl <Key>h , Ctrl <Key>&:   CreateHeading1() 
 Ctrl <Key>h , Ctrl <Key>�:   CreateHeading2() 

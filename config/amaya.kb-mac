@@ -81,6 +81,8 @@ Ctrl <Key>c:                       TtcCopySelection()
 Ctrl <Key>v:	                   PasteBuffer()
 Ctrl <Key>x:	                   TtcCutSelection()
 #Ctrl <Key>d:                      TtcDeleteSelection() 
+Ctrl <Key>k:                       InsertAfter()
+Shift Ctrl <Key>K:                 InsertBefore()
 Ctrl <Key>f:	                   TtcSearchText()
 Ctrl <Key>::		           SpellCheck()
 
