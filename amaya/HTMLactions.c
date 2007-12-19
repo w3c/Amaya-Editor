@@ -3670,7 +3670,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
             ShowSource (doc, 1);
           doc = DocumentSource[doc];
         }
-      TtaRaiseView (doc, 1);
+      //TtaRaiseView (doc, 1);
       /* look for an element with the same line number in the other doc */
       /* line numbers are increasing in document order */
       el = TtaGetMainRoot (doc);

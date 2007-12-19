@@ -4560,6 +4560,8 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   ThotBool            ok;
   char                lg_uri[10];
 
+  if (W3Loading && W3Loading == doc)
+    return (0);
   /* Extract parameters if necessary */
   if (strlen (urlname) > MAX_LENGTH - 1) 
     {
