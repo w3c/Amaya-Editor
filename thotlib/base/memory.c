@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -854,8 +854,14 @@ void GetReferredDescr (PtrReferredDescr * pDR)
   ----------------------------------------------------------------------*/
 void FreeReferredDescr (PtrReferredDescr pDR)
 {
-  if (pDR != NULL)
+  if (pDR)
     {
+      if (pDR->RePrevious)
+        pDR->RePrevious->ReNext = pDR->ReNext;
+      if (pDR->ReNext)
+        pDR->ReNext->RePrevious = pDR->RePrevious;
+      pDR->RePrevious = NULL;
+      pDR->ReNext = NULL;
       TtaFreeMemory (pDR);
       NbUsed_DescRef--;
     }
