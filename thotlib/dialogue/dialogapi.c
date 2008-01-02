@@ -5621,8 +5621,10 @@ void TtaShowDialogue (int ref, ThotBool remanent)
               ShowCat = catalogue;
             }
 	  
+	  wxPoint pos = wxGetMousePosition();
           catalogue->Cat_Widget->Show();
           catalogue->Cat_Widget->Raise();
+	  catalogue->Cat_Widget->Move(pos);
         }
     }
   else if (catalogue->Cat_Type == CAT_SCRPOPUP)

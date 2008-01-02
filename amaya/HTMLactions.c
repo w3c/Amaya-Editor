@@ -3664,7 +3664,8 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
   if (line)
     {
       /* open the source file */
-      if (DocumentTypes[doc] != docCSS && DocumentTypes[doc] != docSource)
+      if (DocumentTypes[doc] != docCSS && DocumentTypes[doc] != docSource 
+	  && DocumentTypes[doc] != docText)
         {
           if (DocumentSource[doc] == 0)
             ShowSource (doc, 1);
@@ -3712,6 +3713,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
               // display the char index
               sprintf (message, "Character: %d", index);
               TtaSetStatus (doc, 1, message, NULL);
+	      //TtaRaiseView (doc, 1);
             }
         }
       else
