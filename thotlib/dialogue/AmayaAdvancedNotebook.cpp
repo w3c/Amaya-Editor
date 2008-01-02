@@ -70,13 +70,15 @@ AmayaAdvancedNotebook::~AmayaAdvancedNotebook()
   Description: Insert a page.
  -----------------------------------------------------------------------*/
 bool AmayaAdvancedNotebook::InsertPage(size_t index, AmayaPage* page,
-									   const wxString& text, bool select, int imageId)
+				       const wxString& text, bool select, int imageId)
 {
-  wxBitmap bmp = wxNullBitmap;
   if (imageId >= 0)
-    bmp = m_imageList->GetIcon(imageId);
-  
-  return wxAuiNotebook::InsertPage(index, page, text, select, bmp);
+    {
+      wxBitmap bmp(m_imageList->GetIcon(imageId));
+      return wxAuiNotebook::InsertPage(index, page, text, select, bmp);
+    }
+  else
+    return wxAuiNotebook::InsertPage(index, page, text, select, wxNullBitmap);
 }
 
 /*----------------------------------------------------------------------

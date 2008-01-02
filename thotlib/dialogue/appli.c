@@ -1178,12 +1178,14 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
       
     case THOT_RIGHT_BUTTON:
       {
+#ifdef IV
         if (thot_mod_mask & THOT_MOD_CTRL)
           {
             /* resize a box */
             ApplyDirectResize (frame, x, y);
           }
         else
+#endif
           {
             ClickFrame = frame;
             ClickX = x;
