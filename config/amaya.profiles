@@ -194,6 +194,7 @@ HelpAtW3C
 
 ################# Annot
 {Annot}
++annot-module
 +base-module
 +bdi-text-module
 +clientside-module
