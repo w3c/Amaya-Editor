@@ -14,6 +14,7 @@ extern Element GetNoTemplateSibling ( Element el,
                                       ThotBool before );
 extern Element GetNoTemplateChild ( Element el,
                                     ThotBool first );
+extern Element GetNoTemplateParent ( Element el );
 extern Element GetNextNode ( Element curr );
 extern void SetTargetContent ( Document doc,
                                Attribute attrNAME );
@@ -162,6 +163,7 @@ extern Element GetNoTemplateSibling ( Element el,
                                         ThotBool before );
 extern Element GetNoTemplateChild ( Element el,
                                       ThotBool first );
+extern Element GetNoTemplateParent ( Element el );
 extern Element GetNextNode ( Element curr );
 extern void SetTargetContent ( Document doc,
                                  Attribute attrNAME );

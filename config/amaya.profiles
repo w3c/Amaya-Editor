@@ -143,8 +143,6 @@ HelpAtW3C
 +svg
 +tables
 +text-module
-&InsertBefore
-&InsertAfter
 
 ################# XHTML-BASIC
 {XHTML Basic}
@@ -157,8 +155,6 @@ HelpAtW3C
 +object-module
 +struct-module
 +text-module
-&InsertBefore
-&InsertAfter
 
 ################# XHTML1.1
 {XHTML 1.1}
@@ -183,24 +179,18 @@ HelpAtW3C
 +tables
 +text-module
 +ruby
-&InsertBefore
-&InsertAfter
 
 ################# MathML
 {MathML}
 +basic-style
 +hypertext-module
 +maths
-&InsertBefore
-&InsertAfter
 
 ################# SVG
 {SVG}
 +basic-style
 +hypertext-module
 +maths
-&InsertBefore
-&InsertAfter
 
 ################# Annot
 {Annot}
@@ -227,8 +217,6 @@ HelpAtW3C
 +text-module
 ReplyToAnnotation
 PostAnnotation
-&InsertBefore
-&InsertAfter
 
 
 #-------------------- Modules ---------------------------------------------
@@ -386,6 +374,8 @@ HelpTemplating
 HelpPublishing
 HelpAccess
 HelpXml
+&InsertBefore
+&InsertAfter
 &NewXHTML
 &NewMathML
 &NewSVG
@@ -407,8 +397,6 @@ HelpXml
 &TtcUndo
 &TtcRedo
 &Synchronize
-&InsertBefore
-&InsertAfter
 &SelectAll
 ShowEditingBar
 *AmayaToolBarEditing
@@ -442,6 +430,8 @@ HelpChanging
 HelpTemplating
 HelpPublishing
 HelpAccess
+&InsertBefore
+&InsertAfter
 &NewXHTML
 &NewMathML
 &NewCss
@@ -454,8 +444,6 @@ HelpAccess
 &TtcUndo
 &TtcRedo
 &Synchronize
-&InsertBefore
-&InsertAfter
 &SelectAll
 ShowEditingBar
 *AmayaToolBarEditing

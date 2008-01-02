@@ -134,6 +134,24 @@ Element GetNoTemplateChild (Element el, ThotBool first)
 }
 
 /*----------------------------------------------------------------------
+  GetNoTemplateParent
+  ----------------------------------------------------------------------*/
+Element GetNoTemplateParent (Element el)
+{
+  ElementType         elType;
+
+  if (el)
+    el = TtaGetParent (el);
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+        return el;
+    }
+  return NULL;
+}
+
+/*----------------------------------------------------------------------
   GetNextNode
   Return the next node in the tree, using a complete traversal algorithm.
   ----------------------------------------------------------------------*/

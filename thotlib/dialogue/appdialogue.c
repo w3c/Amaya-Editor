@@ -913,7 +913,7 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
                           if (action == -1)
                             ;	/* separator */
                           else if (Prof_BelongDoctype (MenuActionList[action].ActionName,
-                                                       profile, RO))
+                                                       profile, RO) <= 0)
                             MenuActionList[action].ActionActive[doc] = TRUE;
                           else
                             MenuActionList[action].ActionActive[doc] = FALSE;
@@ -926,7 +926,7 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
                            !strcmp (MenuActionList[action].ActionName, "StopTransfer"))
                     ; // don't change the current status
                   else if (Prof_BelongDoctype (MenuActionList[action].ActionName,
-                                               profile, RO))
+                                               profile, RO) <= 0)
                     MenuActionList[action].ActionActive[doc] = TRUE;
                   else
                     MenuActionList[action].ActionActive[doc] = FALSE;
