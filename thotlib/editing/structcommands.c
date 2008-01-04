@@ -900,13 +900,13 @@ void CopyCommand ()
           if (CopyAndCutFunction)
             (*(Proc1)CopyAndCutFunction) ((void *) doc);
           pEl = NULL;
-          if (WholeColumnSelected && SelectedColumn && firstSel &&
+          if (WholeColumnSelected && FirstSelectedColumn && firstSel &&
               NextCellInColumnFunction)
             /* copying all the cells of a table column */
             {
               row = NULL;
               (*(Proc5)NextCellInColumnFunction) ((void*)(&pEl), (void*)(&row),
-                                                  (void*)SelectedColumn, (void*)doc, (void*)(&fakeCell));
+                                                  (void*)FirstSelectedColumn, (void*)doc, (void*)(&fakeCell));
             }
           else
             /* first selected element */
@@ -1008,10 +1008,10 @@ void CopyCommand ()
               else if (NextCellInColumnFunction &&
                        TypeHasException (ExcIsCell, pEl->ElTypeNumber,
                                          pEl->ElStructSchema) &&
-                       WholeColumnSelected && SelectedColumn)
+                       WholeColumnSelected && FirstSelectedColumn)
                 /* copying all the cells of a table column */
                 (*(Proc5)NextCellInColumnFunction) ((void*)(&pEl),
-                                                    (void*)(&row), (void*)SelectedColumn, (void*)doc,
+                                                    (void*)(&row), (void*)FirstSelectedColumn, (void*)doc,
                                                     (void*)(&fakeCell));
               else
                 /* normal case. Take the next element in the current
@@ -1483,18 +1483,18 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
                   pFree = NULL;
                   enclosingCell = NULL;
                   fakeCell = FALSE;
-                  if (WholeColumnSelected && SelectedColumn)
+                  if (WholeColumnSelected && FirstSelectedColumn)
                     {
                       /* send the ElemDelete.Pre event for the column head
                          and check if the delete operation is accepted */
                       notifyEl.event = TteElemDelete;
                       notifyEl.document = doc;
-                      notifyEl.element = (Element) SelectedColumn;
+                      notifyEl.element = (Element) FirstSelectedColumn;
                       notifyEl.info = 0; /* not sent by undo */
-                      notifyEl.elementType.ElTypeNum = SelectedColumn->ElTypeNumber;
-                      notifyEl.elementType.ElSSchema = (SSchema) (SelectedColumn->ElStructSchema);
+                      notifyEl.elementType.ElTypeNum = FirstSelectedColumn->ElTypeNumber;
+                      notifyEl.elementType.ElSSchema = (SSchema) (FirstSelectedColumn->ElStructSchema);
                       NSiblings = 0;
-                      pF = SelectedColumn;
+                      pF = FirstSelectedColumn;
                       while (pF->ElPrevious != NULL)
                         {
                           NSiblings++;
@@ -1508,7 +1508,7 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
                         {
                           row = NULL;
                           (*(Proc5)NextCellInColumnFunction) ((void*)(&pEl),
-                                                              (void*)(&row), (void*)SelectedColumn,
+                                                              (void*)(&row), (void*)FirstSelectedColumn,
                                                               (void*)doc, (void*)(&fakeCell));
                         }
                     }
@@ -1569,10 +1569,10 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
                                     }
                                 }
                               else if (NextCellInColumnFunction &&
-                                       WholeColumnSelected && SelectedColumn)
+                                       WholeColumnSelected && FirstSelectedColumn)
                                 /* deleting all cells of a table column */
                                 (*(Proc5)NextCellInColumnFunction) ((void*)(&pEl),
-                                                                    (void*)(&row), (void*)SelectedColumn,
+                                                                    (void*)(&row), (void*)FirstSelectedColumn,
                                                                     (void*)doc, (void*)(&fakeCell));
                               else
                                 {
@@ -1737,18 +1737,18 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
                         }
                     }
 	      
-                  if (WholeColumnSelected && SelectedColumn)
+                  if (WholeColumnSelected && FirstSelectedColumn)
                     {
                       /* delete abstract boxes of the column head */
-                      DestroyAbsBoxes (SelectedColumn, pSelDoc, TRUE);
+                      DestroyAbsBoxes (FirstSelectedColumn, pSelDoc, TRUE);
                       notifyEl.event = TteElemDelete;
                       notifyEl.document = doc;
-                      notifyEl.element = (Element) SelectedColumn->ElParent;
+                      notifyEl.element = (Element) FirstSelectedColumn->ElParent;
                       notifyEl.info = 0; /* not sent by undo */
-                      notifyEl.elementType.ElTypeNum = SelectedColumn->ElTypeNumber;
-                      notifyEl.elementType.ElSSchema = (SSchema) (SelectedColumn->ElStructSchema);
+                      notifyEl.elementType.ElTypeNum = FirstSelectedColumn->ElTypeNumber;
+                      notifyEl.elementType.ElSSchema = (SSchema) (FirstSelectedColumn->ElStructSchema);
                       NSiblings = 0;
-                      pF = SelectedColumn;
+                      pF = FirstSelectedColumn;
                       while (pF->ElPrevious != NULL)
                         {
                           NSiblings++;
@@ -1756,8 +1756,8 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
                         }
                       notifyEl.position = NSiblings;
                       /* record that deletion in the history */
-                      AddEditOpInHistory (SelectedColumn, pSelDoc, TRUE, FALSE);
-                      RemoveElement (SelectedColumn);
+                      AddEditOpInHistory (FirstSelectedColumn, pSelDoc, TRUE, FALSE);
+                      RemoveElement (FirstSelectedColumn);
                       /* send the ElemDelete.Post event */
                       CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
                     }

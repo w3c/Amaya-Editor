@@ -1093,7 +1093,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
               notifyEl.position = 0;
               CallEventType ((NotifyEvent *) & notifyEl, FALSE);
             }
-          if (editOp->EoColumnSelected && SelectedColumn)
+          if (editOp->EoColumnSelected && FirstSelectedColumn)
             /* select the whole column */
             TtaSelectEnclosingColumn ((Element)(editOp->EoFirstSelectedEl));
         }

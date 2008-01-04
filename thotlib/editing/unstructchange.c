@@ -1170,7 +1170,7 @@ void SelectSiblings (PtrElement *firstEl, PtrElement *lastEl,
   if (!SelContinue)
     /* discrete selection. don't do anything */
     return;
-  if (SelectedColumn)
+  if (FirstSelectedColumn)
     /* We are in column selection mode */
     {
       /* if the selection starts at the beginning of an element, select

@@ -15,7 +15,7 @@ THOT_EXPORT int          KeyboardMode;	/* current keyboard */
 /* NULL if there is no selection at all */
 THOT_EXPORT PtrDocument  SelectedDocument;
 
-/* number of the view from which the user has selected */
+/* number of the view from which the user has made the current selection */
 THOT_EXPORT int          SelectedView;
 
 /* first selected element */
@@ -25,7 +25,7 @@ THOT_EXPORT PtrElement   FirstSelectedElement;
 THOT_EXPORT PtrElement   LastSelectedElement;
 
 /* index of first selected character in the the first selected element */
-/* Zero if the selection starts at the beginning of the element */
+/* 0 if the selection starts at the beginning of the first selected element */
 THOT_EXPORT int          FirstSelectedChar;
 
 /* index of last selected character in the last selected element */
@@ -38,7 +38,7 @@ THOT_EXPORT PtrElement   FixedElement;
 /* rank of the character where the user clickeded first */
 THOT_EXPORT int          FixedChar;
 
-/* The current selection is simply a caret */
+/* The current selection is simply a caret (i.e a position, not a range) */
 THOT_EXPORT ThotBool     SelPosition;
 
 /* If the current selection is a PolyLine, rank of the selected
@@ -57,23 +57,26 @@ THOT_EXPORT ThotBool     SynchronizeViews;
 THOT_EXPORT ThotBool     SelectionUpdatesMenus;
 
 /* selection mode */
-/* If TRUE the selection is represented by variables FirstSelectedElement,
-LastSelectedElement, FirstSelectedChar, LastSelectedChar */
-/* If FALSE the selection is represented by table SelElement */
+/* If SelContinue is TRUE, the current selection is represented by variables
+   FirstSelectedElement, LastSelectedElement, FirstSelectedChar, and
+   LastSelectedChar */
+/* If SelContinue is FALSE, the current selection is represented by table
+   SelElement */
 THOT_EXPORT ThotBool     SelContinue;
 /* SelectedColumn is meaningful only when SelContinue is TRUE. In this case,
 if SelectedColumn is not NULL, the current selection is all table cells
 comprised between FirstSelectedElement and LastSelectedElement that belong
 to the same table column whose head is SelectedColumn. FirstSelectedElement
-and LastSelectedElement are (within) cells belonging to the same column. */
-THOT_EXPORT PtrElement   SelectedColumn;
-/* When SelectedColumn is not NULL, WholeColumnSelected indicates whether the
-   whole column is selected or only some (parts of) its cells */
+and LastSelectedElement are (within) cells belonging to that column. */
+THOT_EXPORT PtrElement   FirstSelectedColumn;
+THOT_EXPORT PtrElement   LastSelectedColumn;
+/* When FirstSelectedColumn is not NULL, WholeColumnSelected indicates whether
+   the whole column is selected or only some (parts of) its cells */
 THOT_EXPORT ThotBool     WholeColumnSelected;
 /* Current selection mode */
-THOT_EXPORT ThotBool 	 StructSelectionMode;
-/* selection in the character string of an attribute value */
+THOT_EXPORT ThotBool 	   StructSelectionMode;
 
+/* selection in the character string of an attribute value */
 THOT_EXPORT PtrDocument  DocSelectedAttr;
 THOT_EXPORT PtrAbstractBox AbsBoxSelectedAttr;
 THOT_EXPORT int          FirstSelectedCharInAttr;
