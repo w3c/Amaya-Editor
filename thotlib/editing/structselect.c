@@ -2171,8 +2171,9 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                                ThotBool begin, ThotBool drag,
                                ThotBool checkSelection)
 {
-  PtrElement          oldFirstEl, oldLastEl, pElP, pAsc, pCell1, pCell2, pCell;
-  PtrElement          pRow, pColHead1, pColHead2, pNext, parent;
+  PtrElement          oldFirstEl, oldLastEl, pElP, pAsc, pCell1, pCell2, pCell,
+                      pRow, pColHead1, pColHead2, pTable1, pTable2,
+                      pNext, parent;
   int                 oldFirstChar, oldLastChar, back;
   ThotBool            change, done, sel;
   ThotBool            updateFixed;
@@ -2307,6 +2308,23 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                    outside, or it has started outside of a table and the user
                    tries to extend it in a table. This is invalid */
                 return;
+              if (pCell1 && pCell2)
+                {
+                  /* get the table that contains pCell1 */
+                  pTable1 = pCell1;
+                  while (pTable1 && !TypeHasException (ExcIsTable,
+                                                      pTable1->ElTypeNumber,
+                                                      pTable1->ElStructSchema))
+                    pTable1 = pTable1->ElParent;
+                  /* get the table that contains pCell2 */
+                  pTable2 = pCell2;
+                  while (pTable2 && !TypeHasException (ExcIsTable,
+                                                      pTable2->ElTypeNumber,
+                                                      pTable2->ElStructSchema))
+                    pTable2 = pTable2->ElParent;
+                  if (pTable1 != pTable2)
+                    return;
+                }
               if (pCell1)
                 {
                   /* pCell1 is the cell containing the initial point of the
@@ -2316,21 +2334,6 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                     /* pEl is in a cell (pCell2), but not in the same cell as
                        the initial selection. */
                     {
-                      /* Are both cells within the same table? */
-                      pAsc = pCell2;
-                      do
-                        pAsc = pAsc->ElParent;
-                      while (pAsc &&
-                             !ElemIsAnAncestor (pAsc, pCell1));
-                      /* is the current selection within a single cell of the
-                         current table ? */
-                      while (pAsc &&
-                             !TypeHasException (ExcIsTable, pAsc->ElTypeNumber,
-                                                pAsc->ElStructSchema))
-                        pAsc = pAsc->ElParent;
-                      if (!pAsc)
-                        /* not in the same table */
-                        return;
                       pColHead1 = GetColHeadOfCell (pCell1);
                       pColHead2 = GetColHeadOfCell (pCell2);
                       if (ElemIsBefore (pColHead1, pColHead2))
