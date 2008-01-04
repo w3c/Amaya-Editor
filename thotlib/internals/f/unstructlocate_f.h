@@ -13,7 +13,8 @@ extern int GetBoxDistance ( PtrBox pBox,
                             int xRef,
                             int yRef,
                             int ratio,
-                            int frame );
+                            int frame,
+                            PtrElement *matchCell );
 extern PtrAbstractBox GetParentWithException ( int exceptNum,
                                                PtrAbstractBox pAb );
 extern void GetClickedBox ( PtrBox *result,
@@ -34,7 +35,8 @@ extern int GetBoxDistance ( PtrBox pBox,
                               int xRef,
                               int yRef,
                               int ratio,
-                              int frame );
+                              int frame,
+                              PtrElement *matchCell );
 extern PtrAbstractBox GetParentWithException ( int exceptNum,
                                                  PtrAbstractBox pAb );
 extern void GetClickedBox ( PtrBox *result,

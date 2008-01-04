@@ -1871,6 +1871,7 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow)
   PtrAbstractBox      pAb;
   PtrBox              pSelBox, pBox;
   PtrBox              box;
+  PtrElement          matchCell = NULL, prevMatch;
   int                 max;
   int                 pointIndex;
   int                 d;
@@ -1879,7 +1880,7 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow)
   pBox = NULL;
   pSelBox = NULL;
   /* au-dela de max, on n'accepte pas la selection */
-  max = 2000;
+  max = THOT_MAXINT;
   pFrame = &ViewFrameTable[frame - 1];
 
   if (pFrame->FrAbstractBox != NULL)
@@ -1887,10 +1888,14 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow)
   if (pBox != NULL)
     {
       pBox = pBox->BxNext;
-      while (pBox != NULL)
+      while (pBox)
         {
           pAb = pBox->BxAbstractBox;
-          if (/*pAb->AbVisibility >= pFrame->FrVisibility &&*/
+          prevMatch = matchCell;
+          if (matchCell && !ElemIsAnAncestor (matchCell, pAb->AbElement))
+            // the element is not within that cell
+            ;
+          else if (/*pAb->AbVisibility >= pFrame->FrVisibility &&*/
               (!pAb->AbPresentationBox || pAb->AbCanBeModified))
             {
               if (pAb->AbLeafType == LtGraphics ||
@@ -1917,11 +1922,14 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow)
                            pBox->BxType == BoBlock || pBox->BxNChars == 0)
 #endif /* _GL */
                        )
-                d = GetBoxDistance (pBox, *pFlow, xRef, yRef, Y_RATIO, frame);
+                d = GetBoxDistance (pBox, *pFlow, xRef, yRef, Y_RATIO, frame, &matchCell);
               else
                 d = max + 1;
 
               /* get the closest element */
+              if (prevMatch != matchCell && matchCell)
+                // ignore previous boxes out of the current cell
+                max = THOT_MAXINT;
               if (d < max)
                 {
                   max = d;
