@@ -3192,6 +3192,8 @@ void ElementDeleted (NotifyElement *event)
   name = TtaGetSSchemaName (elType.ElSSchema);
   if (strcmp (name, "HTML"))
     return;
+  // it could be the parent of a deleted table
+  CheckDeleteParentTable (event->element);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
        elType.ElTypeNum == HTML_EL_Inserted_Text)
     {

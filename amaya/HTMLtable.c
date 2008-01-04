@@ -2521,6 +2521,21 @@ static void ClearColumn (Element colhead, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  CheckDeleteParentTable checks if the table parent has been deleted
+  ----------------------------------------------------------------------*/
+void CheckDeleteParentTable (Element el)
+{
+  if (DeletedTable && el &&
+      (ParentDeletedTable == el ||
+       TtaGetParent (ParentDeletedTable) == NULL))
+    {
+      // the deleted table is the registered table
+      DeletedTable = NULL;
+      ParentDeletedTable = NULL;
+    }
+}
+
+/*----------------------------------------------------------------------
   DeleteTable
   A table will be deleted by the user.
   ----------------------------------------------------------------------*/
