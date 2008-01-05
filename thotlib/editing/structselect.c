@@ -3558,29 +3558,31 @@ ThotBool SelectPairInterval ()
 
 
 /*----------------------------------------------------------------------
-  SelColumn
-  Select the whole column.
+  SelColumns
+  Select the whole columns between col1 and col2.
   ----------------------------------------------------------------------*/
-static void SelColumn (PtrElement column)
+static void SelColumns (PtrElement col1, PtrElement col2)
 {
   PtrElement          pNextRow, pCell;
   PtrElement          pFirst, pLast, pRow, pTable;
   int                 rowType, back;
   
   /* get the table ancestor first */
-  pTable = column;
-  while (pTable &&
-         !TypeHasException (ExcIsTable,
-                            pTable->ElTypeNumber,
-                            pTable->ElStructSchema))
+  pTable = col1;
+  while (pTable && !TypeHasException (ExcIsTable, pTable->ElTypeNumber,
+                                      pTable->ElStructSchema))
     pTable = pTable->ElParent;
+  if (!pTable)
+    return;
   /* get the first row of the table */
-  rowType = GetElemWithException (ExcIsRow, column->ElStructSchema);
-  pRow = FwdSearchTypedElem (column, rowType, column->ElStructSchema, NULL);
+  rowType = GetElemWithException (ExcIsRow, col1->ElStructSchema);
+  pRow = FwdSearchTypedElem (col1, rowType, col1->ElStructSchema, NULL);
   /* get the relevant cell in the first row */
   do
     {
-      pCell = GetCellInRow (pRow, column, FALSE, &back);
+      pCell = GetCellInRow (pRow, col1, TRUE, &back);
+      if (pCell && back > 0)
+        pCell = pCell->ElNext;
       if (!pCell)
         pRow = NextRowInTable (pRow, pTable);
     }
@@ -3597,7 +3599,7 @@ static void SelColumn (PtrElement column)
   /* get the relevant cell in the last row */
   do
     {
-      pCell = GetCellInRow (pRow, column, FALSE, &back);
+      pCell = GetCellInRow (pRow, col2, TRUE, &back);
       if (!pCell)
         pRow = PreviousRowInTable (pRow, pTable);
     }
@@ -3611,8 +3613,8 @@ static void SelColumn (PtrElement column)
       ExtendSelection (pLast, 0, FALSE, TRUE, FALSE);
     }
   WholeColumnSelected = TRUE;
-  FirstSelectedColumn = column;
-  LastSelectedColumn = column;
+  FirstSelectedColumn = col1;
+  LastSelectedColumn = col2;
 }
 
 /*----------------------------------------------------------------------
@@ -3646,7 +3648,7 @@ void TtaSelectEnclosingColumn (Element el)
 {
   el = TtaGetColumn (el);
   if (el)
-    SelColumn ((PtrElement) el);
+    SelColumns ((PtrElement) el, (PtrElement) el);
 }
 
 /*----------------------------------------------------------------------
@@ -3659,7 +3661,8 @@ void TtaSelectEnclosingColumn (Element el)
   ----------------------------------------------------------------------*/
 void SelectAround (int val)
 {
-  PtrElement          pEl, pParent, pFirst, pLast, firstParent, lastParent;
+  PtrElement          pEl, pParent, pFirst, pLast, firstParent, lastParent,
+                      pRow1, pRow2;
   ThotBool            done;
 
   pEl = NULL;
@@ -3750,8 +3753,44 @@ void SelectAround (int val)
                       if (!done)
                         {
                           /* the current selection contains only complete cells */
-                          /* select all cells in the column */
-                          SelColumn (FirstSelectedColumn);
+                          if (FirstSelectedColumn == LastSelectedColumn)
+                            /* all selected cells are in the same column.
+                               Select that column */ 
+                            SelColumns (FirstSelectedColumn,
+                                        LastSelectedColumn);
+                          else
+                            {
+                              /* if all selected cells are in the same row,
+                                 select that row */
+                              /* get the row that contains the first selected
+                                 element */
+                              pRow1 = FirstSelectedElement->ElParent;
+                              while (pRow1 && !TypeHasException (ExcIsRow,
+                                                     pRow1->ElTypeNumber,
+                                                     pRow1->ElStructSchema))
+                                pRow1 = pRow1->ElParent;
+                              if (pRow1)
+                                {
+                                  /* get the row that contains the last
+                                     selected element */
+                                  pRow2 = LastSelectedElement->ElParent;
+                                  while (pRow2 && !TypeHasException (ExcIsRow,
+                                                      pRow2->ElTypeNumber,
+                                                      pRow2->ElStructSchema))
+                                    pRow2 = pRow2->ElParent;
+                                  if (pRow2 == pRow1)
+                                    {
+                                      SelectElementWithEvent (SelectedDocument,
+                                                           pRow1, TRUE, FALSE);
+                                      done = TRUE;
+                                    }
+                                }
+                              if (!done)
+                                /* select all columns that contain the current
+                                   selection */
+                                SelColumns (FirstSelectedColumn,
+                                            LastSelectedColumn);
+                            } 
                           return;
                         }
                     }
