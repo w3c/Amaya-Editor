@@ -81,8 +81,8 @@ extern void CreateScript ( Document doc,
                            View view,
                            ThotBool ExternalFile );
 extern ThotBool HTMLelementAllowed ( Document doc );
-extern void CreateHTMLelement ( int typeNum,
-                                Document doc );
+extern ThotBool CreateHTMLelement ( int typeNum,
+                                    Document doc );
 extern void CreateParagraph ( Document doc,
                               View view );
 extern void CreateHeading1 ( Document doc,
@@ -340,8 +340,8 @@ extern void CreateScript ( Document doc,
                              View view,
                              ThotBool ExternalFile );
 extern ThotBool HTMLelementAllowed ( Document doc );
-extern void CreateHTMLelement ( int typeNum,
-                                  Document doc );
+extern ThotBool CreateHTMLelement ( int typeNum,
+                                      Document doc );
 extern void CreateParagraph ( Document doc,
                                 View view );
 extern void CreateHeading1 ( Document doc,

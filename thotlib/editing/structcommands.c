@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2007
+ *  (c) COPYRIGHT INRIA 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2788,15 +2788,13 @@ static ThotBool CanInsertBySplitting (PtrElement *pEl, int charSplit,
 }
 
 /*----------------------------------------------------------------------
-  CreateNewElement						
-  L'utilisateur veut creer, pour le document pDoc, au voisinage   
-  de la selection courante, un element du type typeNum defini     
-  dans le schema de structure pSS.               			
-  Before indique si on veut inserer le nouvel element avant la    
-  selection courante (TRUE) ou a la place de la selection         
-  courante (FALSE).                                               
+  CreateNewElement
+  The user wants to create a new given typed element (typeNum, pSS), for
+  the pDoc document, near the current selection.
+  Before is set TRUE when the new element should be inserted before,
+  FALSE if it should replace the selection.
   ----------------------------------------------------------------------*/
-void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
+ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                        ThotBool Before)
 {
   PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pSecond;
@@ -2816,16 +2814,29 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
   NSiblings = 0;
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
                             &lastChar))
-    return;
+    return FALSE;
   else if (pSelDoc != pDoc)
     /* the document asking for the creation of a new element is NOT the */
     /* document containing the current selection */
-    return;
-  else if (!pSelDoc->DocReadOnly)
+    return FALSE;
+  else if (pSelDoc->DocReadOnly)
+    return FALSE;
+  else if ((TypeHasException (ExcIsRow, firstSel->ElTypeNumber,
+                              firstSel->ElStructSchema) ||
+            TypeHasException (ExcIsColHead, firstSel->ElTypeNumber,
+                              firstSel->ElStructSchema) ||
+            TypeHasException (ExcIsCell, firstSel->ElTypeNumber,
+                              firstSel->ElStructSchema)) &&
+           (pSS != firstSel->ElStructSchema ||
+            typeNum != firstSel->ElTypeNumber))
+    // don't create another kind of element within a table
+    return FALSE;
+  else
     /* there is a selection and the document can be modified */
     {
       elConst = FALSE;
       empty = FALSE;
+      ok = FALSE;
       InsertionPoint = (firstSel == lastSel  &&
                         firstSel->ElTerminal &&
                         ((firstSel->ElLeafType == LtText && firstChar > 0 &&
@@ -2943,7 +2954,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
             }
           else
             /* on ne fait rien */
-            return;
+            return FALSE;
         }
 
       if (InsertionPoint)
@@ -2956,7 +2967,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
           /* verifie si l'element a creer porte l'exception NoCreate */
           if (TypeHasException (ExcNoCreate, typeNum, pSS))
             /* abandon */
-            return;
+            return FALSE;
 	  
           if (elConst || empty)
             {
@@ -3076,7 +3087,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                 }
             }
 	  
-          if (ok && pEl != NULL)
+          if (ok && pEl)
             {
               /* demande a l'application si on peut creer ce type d'element */
               notifyEl.event = TteElemNew;
@@ -3101,7 +3112,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
             }
 
           pNew = NULL;
-          if (ok && pEl != NULL)
+          if (ok && pEl)
             {
               /* After element */
               OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
@@ -3352,6 +3363,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
             }
         }
     }
+  return ok;
 }
 
 /* ----------------------------------------------------------------------
@@ -3368,9 +3380,12 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
    Parameters:
    elementType: type of the element to be created.
    document: the document for which the element is created.
+   Return TRUE if the action is done
    ---------------------------------------------------------------------- */
-void TtaCreateElement (ElementType elementType, Document document)
+ThotBool TtaCreateElement (ElementType elementType, Document document)
 {
+  ThotBool done = FALSE;
+
   UserErrorCode = 0;
   if (elementType.ElSSchema == NULL)
     TtaError (ERR_invalid_parameter);
@@ -3384,9 +3399,10 @@ void TtaCreateElement (ElementType elementType, Document document)
     /* Parameter document is ok */
     TtaError (ERR_invalid_element_type);
   else
-    CreateNewElement (elementType.ElTypeNum,
-                      (PtrSSchema) (elementType.ElSSchema),
-                      LoadedDocument[document - 1], FALSE);
+    done = CreateNewElement (elementType.ElTypeNum,
+                             (PtrSSchema) (elementType.ElSSchema),
+                             LoadedDocument[document - 1], FALSE);
+  return done;
 }
 
 
@@ -3402,9 +3418,12 @@ void TtaCreateElement (ElementType elementType, Document document)
    Parameters:
    elementType: type of the element to be created.
    document: the document for which the element is created.
+   Return TRUE if the action is done
    ---------------------------------------------------------------------- */
-void TtaInsertElement (ElementType elementType, Document document)
+ThotBool TtaInsertElement (ElementType elementType, Document document)
 {
+  ThotBool done = FALSE;
+
   UserErrorCode = 0;
   if (elementType.ElSSchema == NULL)
     TtaError (ERR_invalid_parameter);
@@ -3418,9 +3437,10 @@ void TtaInsertElement (ElementType elementType, Document document)
     /* Parameter document is ok */
     TtaError (ERR_invalid_element_type);
   else
-    CreateNewElement (elementType.ElTypeNum,
-                      (PtrSSchema) (elementType.ElSSchema),
-                      LoadedDocument[document - 1], TRUE);
+    done = CreateNewElement (elementType.ElTypeNum,
+                             (PtrSSchema) (elementType.ElSSchema),
+                             LoadedDocument[document - 1], TRUE);
+  return done;
 }
 
 /* ----------------------------------------------------------------------

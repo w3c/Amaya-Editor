@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1847,10 +1847,9 @@ void MakeToc (Document doc, View view)
             {
               /* generate the enclosing division */
               elType.ElTypeNum = HTML_EL_Division;
-              TtaInsertElement (elType, doc);
-              TtaGiveFirstSelectedElement (doc, &child, &firstChar, &i);
-              if (child != ancest)
+              if (TtaInsertElement (elType, doc))
                 {
+                  TtaGiveFirstSelectedElement (doc, &child, &firstChar, &i);
                   /* the div and its initial content is now created */
                   toc = TtaGetTypedAncestor (child, elType);
                   TtaRegisterElementDelete (child, doc);
@@ -1858,6 +1857,7 @@ void MakeToc (Document doc, View view)
                 }
               else
                 {
+                  // the division is not created
                   if (closeUndo)
                     TtaCloseUndoSequence (doc);
                   if (dispMode == DisplayImmediately)
@@ -1865,6 +1865,7 @@ void MakeToc (Document doc, View view)
                   TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
                   return;
                 }
+
               if (toc)
                 {
                   /* it's the last created element */
@@ -1875,6 +1876,7 @@ void MakeToc (Document doc, View view)
                   TtaRegisterAttributeCreate (attr, toc, doc);
                 }
             }
+
           if (toc == NULL)
             el = NULL;
           else

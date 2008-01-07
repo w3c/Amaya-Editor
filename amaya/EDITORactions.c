@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1200,37 +1200,39 @@ void CreateBreak (Document doc, View view)
     return;
 
   elType.ElTypeNum = HTML_EL_BR;
-  TtaCreateElement (elType, doc);
-  TtaGiveLastSelectedElement (doc, &el, &firstChar, &lastChar);
-  br = el;
-  TtaNextSibling (&el);
-  if (el == NULL)
+  if (TtaCreateElement (elType, doc))
     {
-      /* Insert a text element after the BR */
-      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      el = TtaNewElement (doc, elType);
-      TtaInsertSibling (el, br, FALSE, doc);
-      /* move the selection */
-      TtaSelectString (doc, el, 1, 0);
-    }
-  else
-    {
-      /* move the selection */
-      parent = el;
-      while (el != NULL && !TtaIsLeaf (TtaGetElementType (el)))
-        {
-          parent = el;
-          el = TtaGetFirstChild (parent);
-        }
+      TtaGiveLastSelectedElement (doc, &el, &firstChar, &lastChar);
+      br = el;
+      TtaNextSibling (&el);
       if (el == NULL)
-        TtaSelectElement (doc, parent);
+        {
+          /* Insert a text element after the BR */
+          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+          el = TtaNewElement (doc, elType);
+          TtaInsertSibling (el, br, FALSE, doc);
+          /* move the selection */
+          TtaSelectString (doc, el, 1, 0);
+        }
       else
         {
-          elType = TtaGetElementType (el);
-          if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-            TtaSelectString (doc, el, 1, 0);
+          /* move the selection */
+          parent = el;
+          while (el != NULL && !TtaIsLeaf (TtaGetElementType (el)))
+            {
+              parent = el;
+              el = TtaGetFirstChild (parent);
+            }
+          if (el == NULL)
+            TtaSelectElement (doc, parent);
           else
-            TtaSelectString (doc, el, 0, 0);
+            {
+              elType = TtaGetElementType (el);
+              if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+                TtaSelectString (doc, el, 1, 0);
+              else
+                TtaSelectString (doc, el, 0, 0);
+            }
         }
     }
 }
@@ -1788,10 +1790,11 @@ ThotBool HTMLelementAllowed (Document doc)
 /*----------------------------------------------------------------------
   CreateHTMLelement
   ----------------------------------------------------------------------*/
-void CreateHTMLelement (int typeNum, Document doc)
+ThotBool CreateHTMLelement (int typeNum, Document doc)
 {
   DisplayMode         dispMode;
   ElementType         elType;
+  ThotBool            done;
 
   if (HTMLelementAllowed (doc))
     {
@@ -1800,10 +1803,12 @@ void CreateHTMLelement (int typeNum, Document doc)
         TtaSetDisplayMode (doc, SuspendDisplay);
       elType.ElSSchema = TtaGetSSchema ("HTML", doc);
       elType.ElTypeNum = typeNum;
-      TtaCreateElement (elType, doc);
+      done = TtaCreateElement (elType, doc);
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, dispMode);
+      return done;
     }
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -1872,34 +1877,36 @@ void CreateMap (Document doc, View view)
   int            i, j;
   ThotBool       oldStructureChecking;
 
-  CreateHTMLelement (HTML_EL_Division, doc);
-  TtaExtendUndoSequence (doc);
-  TtaGiveFirstSelectedElement (doc, &el, &i, &j);
-  oldStructureChecking = TtaGetStructureChecking (doc);
-  TtaSetStructureChecking (FALSE, doc);
-  elType = TtaGetElementType (el);
-  elType.ElTypeNum = HTML_EL_map;
-  div = TtaGetParent (el);
-  map = TtaNewElement (doc, elType);
-  TtaInsertFirstChild (&map, div, doc);
-  TtaDeleteTree (el, doc);
-  // generate the id and or name attribute
-  CreateTargetAnchor (doc, map, FALSE, TRUE);
-  // generate a division
-  elType.ElTypeNum = HTML_EL_Division;
-  div = TtaNewElement (doc, elType);
-  TtaInsertFirstChild (&div, map, doc);
-  elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-  p =  TtaNewElement (doc, elType);
-  TtaInsertFirstChild (&p, div, doc);
-  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-  el =  TtaNewElement (doc, elType);
-  TtaInsertFirstChild (&el, p, doc);
-  TtaRegisterElementCreate (map, doc);
-  TtaSelectElement (doc, el);
-  TtaSetStructureChecking (oldStructureChecking, doc);
-  // it should include a link
-  CreateOrChangeLink (doc, view);
+  if (CreateHTMLelement (HTML_EL_Division, doc))
+    {
+      TtaExtendUndoSequence (doc);
+      TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+      oldStructureChecking = TtaGetStructureChecking (doc);
+      TtaSetStructureChecking (FALSE, doc);
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = HTML_EL_map;
+      div = TtaGetParent (el);
+      map = TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&map, div, doc);
+      TtaDeleteTree (el, doc);
+      // generate the id and or name attribute
+      CreateTargetAnchor (doc, map, FALSE, TRUE);
+      // generate a division
+      elType.ElTypeNum = HTML_EL_Division;
+      div = TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&div, map, doc);
+      elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+      p =  TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&p, div, doc);
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      el =  TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&el, p, doc);
+      TtaRegisterElementCreate (map, doc);
+      TtaSelectElement (doc, el);
+      TtaSetStructureChecking (oldStructureChecking, doc);
+      // it should include a link
+      CreateOrChangeLink (doc, view);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1947,10 +1954,12 @@ void CreateDefinitionDef (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateHorizontalRule (Document doc, View view)
 {
-  CreateHTMLelement (HTML_EL_Horizontal_Rule, doc);
-  // then insert an empty element after
-  TtaExtendUndoSequence (doc);  
-  InsertAfter (doc, view);
+  if (CreateHTMLelement (HTML_EL_Horizontal_Rule, doc))
+    {
+      // then insert an empty element after
+      TtaExtendUndoSequence (doc);  
+      InsertAfter (doc, view);
+    }
 }
 
 /*----------------------------------------------------------------------

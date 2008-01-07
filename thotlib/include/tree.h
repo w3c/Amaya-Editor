@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -285,8 +285,9 @@ extern void TtaInsertFirstChild (/*INOUT*/ Element *newElement, Element parent,
    Parameters:
    elementType: type of the element to be created.
    document: the document for which the element is created.
+   Return TRUE if the action is done
    ---------------------------------------------------------------------- */
-extern void TtaCreateElement (ElementType elementType, Document document);
+extern ThotBool TtaCreateElement (ElementType elementType, Document document);
 
 /* ----------------------------------------------------------------------
    TtaInsertElement
@@ -300,8 +301,9 @@ extern void TtaCreateElement (ElementType elementType, Document document);
    Parameters:
    elementType: type of the element to be created.
    document: the document for which the element is created.
+   Return TRUE if the action is done
    ---------------------------------------------------------------------- */
-extern void TtaInsertElement (ElementType elementType, Document document);
+extern ThotBool TtaInsertElement (ElementType elementType, Document document);
 
 /* ----------------------------------------------------------------------
    TtaInsertAnyElement

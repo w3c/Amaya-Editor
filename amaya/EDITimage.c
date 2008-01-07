@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1419,9 +1419,11 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
               /* do not check mandatory attributes */
               oldStructureChecking = TtaGetStructureChecking (doc);
               TtaSetStructureChecking (FALSE, doc);
-              TtaCreateElement (elType, doc);
+              checkoptions = TtaCreateElement (elType, doc);
               TtaSetStructureChecking (oldStructureChecking, doc);
-              checkoptions = TRUE;
+              if (!checkoptions)
+                // the image was not created
+                TtaCloseUndoSequence(doc);
             }
         }
     }
