@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -623,10 +623,20 @@ int TtaGetReferencesBase (int number)
   ----------------------------------------------------------------------*/
 void DisplayConfirmMessage (const char *text)
 {
+  int                 display_width_px, display_height_px;
+  int                 width, height;
+
   wxMessageDialog messagedialog( NULL,
                                  TtaConvMessageToWX(text), 
                                  TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM)),
                                  (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+  wxPoint pos = wxGetMousePosition();
+  wxDisplaySize(&display_width_px, &display_height_px);
+  if (pos.x + width > display_width_px)
+    pos.x = display_width_px - width;
+  if (pos.y + height > display_height_px)
+    pos.x = display_height_px - height;
+  messagedialog.Move(pos);
   messagedialog.ShowModal();
 }
 
@@ -5556,12 +5566,6 @@ void TtaAbortShowDialogue ()
   ----------------------------------------------------------------------*/
 void TtaSetDialoguePosition ()
 {
-#ifdef _GTK
-  GdkModifierType     flag_tmp;
-
-  gdk_window_get_pointer ((GdkWindow *)(gdk_window_get_toplevels()->data),
-                          &ShowX,  &ShowY, &flag_tmp);
-#endif /* _GTK */
 #ifdef _WX
   wxPoint p = wxGetMousePosition();
   ShowX = p.x;
@@ -5577,12 +5581,10 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 #ifdef _WINGUI
   POINT               curPoint;
 #endif  /* _WINGUI */
-#if defined(_GTK)
-  int                 n;  
-  ThotBool            usedoubleclick;  
-#endif /* _GTK */
   ThotWidget          w;
   struct Cat_Context *catalogue;
+  int                 display_width_px, display_height_px;
+  int                 width, height;
 
   if (ref == 0)
     {
@@ -5621,10 +5623,16 @@ void TtaShowDialogue (int ref, ThotBool remanent)
               ShowCat = catalogue;
             }
 	  
-	  wxPoint pos = wxGetMousePosition();
+          wxPoint pos = wxGetMousePosition();
+          wxDisplaySize(&display_width_px, &display_height_px);
+          catalogue->Cat_Widget->GetSize (&width, &height);
+          if (pos.x + width > display_width_px)
+            pos.x = display_width_px - width;
+          if (pos.y + height > display_height_px)
+            pos.x = display_height_px - height;
+          catalogue->Cat_Widget->Move(pos);
           catalogue->Cat_Widget->Show();
           catalogue->Cat_Widget->Raise();
-	  catalogue->Cat_Widget->Move(pos);
         }
     }
   else if (catalogue->Cat_Type == CAT_SCRPOPUP)
@@ -5669,82 +5677,6 @@ void TtaShowDialogue (int ref, ThotBool remanent)
       UpdateWindow (w);
     }
 #endif  /* _WINGUI */
-#ifdef _GTK
-  if (GTK_WIDGET_VISIBLE (w))
-    {
-      gtk_widget_show_all (GTK_WIDGET (w));
-      gdk_window_raise (GTK_WIDGET (w)->window);
-    }
-  /*===========> Active un pop-up menu */
-  else if (catalogue->Cat_Type == CAT_POPUP || catalogue->Cat_Type == CAT_PULL
-           || catalogue->Cat_Type == CAT_SCRPOPUP)
-    {
-      /* Faut-il invalider un TtaShowDialogue precedent */
-      TtaAbortShowDialogue ();
-      /* Memorise qu'un retour sur le catalogue est attendu et */
-      /* qu'il peut etre aborte' si et seulement s'il n'est pas remanent */
-      if (!remanent)
-        {
-          ShowReturn = 1;
-          ShowCat = catalogue;
-        }
-      TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedoubleclick);
-      if (catalogue->Cat_Button == 'L')
-        {
-          if (usedoubleclick)
-            /* prevent to close immediately the popup menu */
-            n = 3;
-          else
-            n = 1;
-        }
-      else
-        n = 3;
-      if (catalogue->Cat_Type == CAT_SCRPOPUP)
-        {
-          gtk_widget_show_all ((GtkWidget *) w);
-          gtk_widget_grab_focus ((GtkWidget *) w);
-          gdk_keyboard_grab (((GtkWidget *)w)->window, TRUE, GDK_CURRENT_TIME);
-        }
-      else
-        {
-          gtk_menu_popup ((GtkMenu *) w, NULL, NULL, NULL, 0, n, (guint32) 0);
-          /* force grab focus ... with ?old? gtk version the focus not seems to be set by default ... */
-          gtk_widget_grab_focus ((GtkWidget *) w);
-          gtk_widget_show_all ((GtkWidget *) w);
-          gdk_keyboard_grab (((GtkWidget *)w)->window, TRUE, GDK_CURRENT_TIME);
-        }
-    } 
-  /*===========> Active un formulaire */
-  else if ((catalogue->Cat_Type == CAT_FORM ||
-            catalogue->Cat_Type == CAT_SHEET || 
-            catalogue->Cat_Type == CAT_DIALOG) &&
-           catalogue->Cat_PtParent == NULL)
-    {
-      /* Faut-il invalider un TtaShowDialogue precedent */
-      TtaAbortShowDialogue ();
-      /* Memorise qu'un retour sur le catalogue est attendu et */
-      /* qu'il peut etre aborter si et seulement s'il n'est pas remanent */
-      if (!remanent)
-        {
-          ShowReturn = 1;
-          ShowCat = catalogue;
-        }
-      /* Pour les feuilles de dialogue force le bouton par defaut */
-      if ((catalogue->Cat_Type == CAT_SHEET  || 
-           catalogue->Cat_Type == CAT_DIALOG || 
-           catalogue->Cat_Type == CAT_FORM) &&
-          catalogue->Cat_Entries)
-        {
-          if (catalogue->Cat_Entries->E_ThotWidget[1])
-            gtk_widget_grab_default (GTK_WIDGET(catalogue->Cat_Entries->E_ThotWidget[1]));
-          else if (catalogue->Cat_Entries->E_ThotWidget[0])
-            gtk_widget_grab_default (GTK_WIDGET(catalogue->Cat_Entries->E_ThotWidget[0]));
-        }
-      INITform (w, catalogue, NULL);
-    }
-  else
-    TtaError (ERR_invalid_reference);
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------

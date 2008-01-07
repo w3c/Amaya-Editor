@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1488,41 +1488,15 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   p_window->GetPosition( xmm, ymm );
 
   /* check the position/size is coherent */
-  if (*xmm<0)
+  if (*xmm < 0)
     *xmm = 0;
-  if (*ymm<0)
+  if (*ymm < 0)
     *ymm = 0;
-  if (*width<0)
+  if (*width < 0)
     *width = 800;
-  if (*height<0)
+  if (*height < 0)
     *height = 600;
 #endif /* _WX */
-
-#ifdef _GTK
-  int           frame;
-  ThotWidget    widget;
-  ThotWidget    tmpw;
-  Position      x, y;
-  Dimension     w, h;
-
-  frame =  GetWindowNumber (doc, view);
-  widget = (ThotWidget) FrameTable[frame].WdFrame;
-  /*tmpw = GTK_WIDGET (widget);*/
-  tmpw = gtk_widget_get_toplevel (GTK_WIDGET (widget));
-  /* values of w h are not realy exact, there are too much pixel (2 or 3) */
-  w = tmpw->allocation.width - 4;
-  h = tmpw->allocation.height - 4;
-  x = tmpw->allocation.x;
-  if (x > 500)
-    x = 500;
-  y = tmpw->allocation.y;
-  if (y > 300)
-    y = 300;
-  *xmm = x;
-  *ymm = y;
-  *width = w;
-  *height = h;
-#endif /* _GTK */
 #ifdef _WINGUI
   int  frame;
   HWND hWnd;
