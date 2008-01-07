@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -70,10 +70,12 @@ int GetDistance (int value, int delta)
 int GetBoxDistance (PtrBox pBox, PtrFlow pFlow, int xRef, int yRef,
                     int ratio, int frame, PtrElement *matchCell)
 {
-  PtrAbstractBox      pCell;
+  PtrAbstractBox      pCell, row;
+  PtrBox              sibling;
   PtrDocument         pDoc;
   int                 value, x, y, width, height;
   int                 xcell, ycell, wcell, hcell, view;
+  int                 s, l, r, t, b;
 
   *matchCell = NULL;
   if (pBox == NULL || pBox->BxAbstractBox == NULL ||
@@ -87,9 +89,6 @@ int GetBoxDistance (PtrBox pBox, PtrFlow pFlow, int xRef, int yRef,
   else
     pCell = NULL;
 
-  if (pCell && pCell->AbPrevious && pCell->AbPrevious->AbPresentationBox)
-    /* use the pesentation box limits */
-    pCell = pCell->AbPrevious;
   xcell = ycell = 0;
   wcell = hcell = MAX_DISTANCE;
 #ifdef _GL
@@ -99,11 +98,34 @@ int GetBoxDistance (PtrBox pBox, PtrFlow pFlow, int xRef, int yRef,
   height = pBox->BxClipH;
   if (pCell && pCell->AbBox)
     {
-      /* get cell limits */
-      xcell = pCell->AbBox->BxClipX;
-      ycell = pCell->AbBox->BxClipY;
-      wcell = pCell->AbBox->BxClipW;
-      hcell = pCell->AbBox->BxClipH;
+      // get the current cell spacing
+      s = 0;
+      row = SearchEnclosingType (pCell, BoRow, BoRow, BoRow);
+      if (row)
+        {
+          l = row->AbBox->BxLMargin + row->AbBox->BxLBorder + row->AbBox->BxLPadding;
+          r = row->AbBox->BxRMargin + row->AbBox->BxRBorder + row->AbBox->BxRPadding;
+          t = row->AbBox->BxTMargin + row->AbBox->BxTBorder + row->AbBox->BxTPadding;
+          b = row->AbBox->BxBMargin + row->AbBox->BxBBorder + row->AbBox->BxBPadding;
+          if (row  && row->AbPrevious)
+            {
+              sibling = row->AbPrevious->AbBox;
+              s = row->AbBox->BxYOrg - sibling->BxYOrg - sibling->BxHeight;
+            }
+          else if (row  && row->AbNext)
+            {
+              sibling = row->AbNext->AbBox;
+              s = sibling->BxYOrg - row->AbBox->BxYOrg - row->AbBox->BxHeight;
+            }
+        }
+      /* use the frame limits */
+      if (pCell && pCell->AbPrevious && pCell->AbPrevious->AbPresentationBox)
+        pCell = pCell->AbPrevious;
+       /* compute cell limits */
+      xcell = pCell->AbBox->BxClipX - l - s / 2;
+      ycell = pCell->AbBox->BxClipY - t - s / 2;
+      wcell = pCell->AbBox->BxClipW + l + r + s;
+      hcell = pCell->AbBox->BxClipH + t + b + s;
     }
 #else /*_GL */
   x = pBox->BxXOrg;
