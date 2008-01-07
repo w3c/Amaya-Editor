@@ -58,10 +58,10 @@
 56 Sottolineato
 57 Sbarrato
 58 Dimensione (pt)
-59 **Unindent
-60 **Single line spacing
-61 **Middle line spacing
-62 **Double line spacing
+59 Senza indentazione
+60 Interlinea singola
+61 Interlinea mediana
+62 Interlinea doppia
 63 Salva il documento
 64 Chiudi, non salvare
 65 Stile dei caratteri
@@ -240,15 +240,15 @@
 238 Copia
 239 Incolla
 240 Controllo ortografico
-241 **Various constructs
-242 **Relations, orders and logic
-243 **Sets and functions
-244 **Arithmetic, operations, complexes and constants
-245 **Analysis, linear algebra and statistic
-246 **Trigonometry and logarithms
+241 Costrutti vari
+242 Relazioni, ordine e logica
+243 Insiemi e funzioni
+244 Arihmetica, operazioni, complessi e costanti
+245 Analisi, algebra lineare e statistica
+246 Trigonometria e logaritmi
 247 Ingrandisci
 248 Rimpicciolisci
-249 **Theme
+249 Tema
 250 XML
 251 Testo
 252 Nessun documento recente

@@ -54,7 +54,7 @@
 52 &Info sul documento
 53 &Salva
 54 S&alva con nome...
-55 **Save All
+55 Salva Tutto
 56 Sincronizza(&Y)
 57 Cambia/Crea doctype
 58 Elimina doctype
@@ -76,9 +76,9 @@
 74 Ricarica tutti i tab
 75 Chiudi gli altri tab
 76 Chiudi tab
-77 **Open the link
-78 **Open the link in new tab
-79 **Open the link in new window
+77 Apri il collegamento
+78 Apri il collegamento in una nuova scheda
+79 Apri il collegamento in una nuova finestra
 80 Taglia
 81 Copia
 82 Incolla
@@ -93,7 +93,7 @@
 91 Cancella
 92 &Inserisci
 93 &Aggiungi
-94 **Select All
+94 Seleziona Tutto
 95 Trova...
 96 Controllo ortografico...
 97 Trasforma...
@@ -258,9 +258,9 @@
 256 Cancella ancora
 257 Aggiungi/Togli ID...
 258 Schermo intero
-259 **Show/Hide toolbars
-260 **&Browsing
-261 **&Editing
+259 Mostra/Nascodi la barra degli strumenti
+260 &Browsing
+261 &Modifica
 262 Mostra strumenti
 263 Mostra le zone attive
 264 Mostra obiettivi
@@ -299,11 +299,11 @@
 297 Informazioni per il lock...
 298 Copia delle informazioni per il lock...
 299 Lock?
-300 **Enable/Disable
-301 **Execute a command
-302 **Execute an external script
-303 **Add an external script
-304 **Insert a script
+300 Attiva/Disattiva
+301 Esegui un comando
+302 Esegui un comando
+303 Aggiungi uno script esterno
+304 Inserisci uno script
 305 Informazioni su Amaya
 306 Informazioni su Amaya al W3C
 307 Indice

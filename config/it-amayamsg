@@ -234,9 +234,9 @@
 232 Per server
 233 Chiavi di accesso
 234 Ignora
-235 **Tool panel bar alignment: 
-236 **left
-237 **right
+235 Allineamento della barra degli strumenti:
+236 sinistra
+237 destra
 238 Elemento si stile
 239 No posso create un XPointer
 240 Impossibile attaccare uno start XPointer su un elemento aggiunto internamente
@@ -428,7 +428,7 @@
 425 Invia come:
 426 Corpo del messaggio
 427 Allegato
-428 **Zip archive
+428 Archivio Zip
 429 Non inviare
 430 Invia
 431 Indirizzo e porta del server devono essere settati nelle Preferenze
@@ -446,22 +446,22 @@
 443 Ricorda le password per i siti
 444 Siti
 445 Elimina tutti
-446 **An error occured during the building of the javascript/DOM objects
-447 **A script is still running but will be aborted as soon as possible. Please try later.
-448 **Javascript/DOM can not be enabled in this view.
-449 **Enter a javascript command:
-450 **The command returned the value: %s
-451 **The command returned no value
-452 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+446 Si è verificato un errore mentre si caricavano oggetti di javascript/DOM
+447 E' in esecuzione uno script che si cercherà di fermare prima possibile. Per favore prova più tardi.
+448 Javascript/DOM non è disponibile in questa vista.
+449 Inserisci un comando javascript:
+450 Il comando riporta il valore: %s
+451 Il comando riporta nessun valore
+452 SpiderMonkey riporta il seguente errore:\n\nFile: %s\nLine: %d\n\n%s
 453 Nuovo
-454 **Customizable
+454 Personalizzabile
 455 Crea
-456 **Create the link by click
+456 Creare il collegamento con un click
 457 Cancella ancora
-458 **Save without template
-459 **With theme ...
-460 **Full width
-461 **With caption
-462 **Size
-463 **Position
-464 **XML editing mode
+458 Salvare senza template
+459 Con il tema ...
+460 Larghezza intera
+461 Con intestazione
+462 Grandezza
+463 Posizione
+464 Modalità di editing XML

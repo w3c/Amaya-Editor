@@ -966,6 +966,7 @@
 	<message xml:lang="fr">Retirer le retrait</message>
 	<message xml:lang="de">Ohne Einrücken</message>
 	<message xml:lang="hu">Behúzás csökkentése</message>
+	<message xml:lang="it">Senza indentazione</message>
 </label>
 <label define="TMSG_LINE_SPACING">
 	<message xml:lang="en">Single line spacing</message>
@@ -973,6 +974,7 @@
 	<message xml:lang="fr">Interligne simple</message>
 	<message xml:lang="de">Einzelne Zeile Abstand</message>
 	<message xml:lang="hu">Egyes sortávolság</message>
+	<message xml:lang="it">Interlinea singola</message>
 </label>
 <label define="TMSG_HLINE_SPACING">
 	<message xml:lang="en">Middle line spacing</message>
@@ -980,6 +982,7 @@
 	<message xml:lang="fr">Interligne moyenne</message>
 	<message xml:lang="de">Mittlere Zeile Abstand</message>
 	<message xml:lang="hu">Közepes sortávolság</message>
+	<message xml:lang="it">Interlinea mediana</message>
 </label>
 <label define="TMSG_DLINE_SPACING">
 	<message xml:lang="en">Double line spacing</message>
@@ -987,6 +990,7 @@
 	<message xml:lang="fr">Interligne double</message>
 	<message xml:lang="de">Doppelte Zeile Abstand</message>
 	<message xml:lang="hu">Kettős sortávolság</message>
+	<message xml:lang="it">Interlinea doppia</message>
 </label>
 <label define="TMSG_SAVE_DOC">
 	<message xml:lang="en">Save document</message>
@@ -3751,6 +3755,7 @@
   <message xml:lang="fr">Constructions diverses</message>
 	<message xml:lang="de">Verschiedene Konstruktionen</message>
 	<message xml:lang="hu">Különböző szerkezetek</message>
+	<message xml:lang="it">Costrutti vari</message>
 </label>
 <label define="TMSG_MATH_PANEL_2">
   <message xml:lang="en">Relations, orders and logic</message>
@@ -3758,6 +3763,7 @@
   <message xml:lang="fr">Relations, ordre et logique</message>
 	<message xml:lang="de">Abhängigkeiten, Aufträge und Verknüpfungssteuerungen</message>
 	<message xml:lang="hu">Relációk, rendek és logika</message>
+	<message xml:lang="it">Relazioni, ordine e logica</message>
 </label>
 <label define="TMSG_MATH_PANEL_3">
   <message xml:lang="en">Sets and functions</message>
@@ -3765,6 +3771,7 @@
   <message xml:lang="fr">Ensembles et fonctions</message>
 	<message xml:lang="de">Datensätze und Funktionen</message>
 	<message xml:lang="hu">Halmazok és függvények</message>
+	<message xml:lang="it">Insiemi e funzioni</message>
 </label>
 <label define="TMSG_MATH_PANEL_4">
   <message xml:lang="en">Arithmetic, operations, complexes and constants</message>
@@ -3772,6 +3779,7 @@
   <message xml:lang="fr">Arithmétique, opérations, complexes et constantes</message>
 	<message xml:lang="de">arithmetisch, Abläufe, Verzweigungen und Konstante</message>
 	<message xml:lang="hu">Számelmélet, műveletek, komplexek és állandók</message>
+	<message xml:lang="it">Arihmetica, operazioni, complessi e costanti</message>
 </label>
 <label define="TMSG_MATH_PANEL_5">
   <message xml:lang="en">Analysis, linear algebra and statistic</message>
@@ -3779,6 +3787,7 @@
   <message xml:lang="fr">Analyse, algèbre linéaire et statistiques</message>
 	<message xml:lang="de">Analyse, lineare Algebra und Statistik</message>
 	<message xml:lang="hu">Analízis, lineáris algebra és statisztika</message>
+	<message xml:lang="it">Analisi, algebra lineare e statistica</message>
 </label>
 <label define="TMSG_MATH_PANEL_6">
   <message xml:lang="en">Trigonometry and logarithms</message>
@@ -3786,6 +3795,7 @@
   <message xml:lang="fr">Trigonométrie et logarithmes</message>
 	<message xml:lang="de">Trigonometrie und Logarithmen</message>
 	<message xml:lang="hu">Trigonometria és logaritmusok</message>
+	<message xml:lang="it">Trigonometria e logaritmi</message>
 </label>
 <label define="TMSG_ZoomIn">
   <message xml:lang="en">Zoom in</message>
@@ -3825,6 +3835,7 @@
   <message xml:lang="fr">Thème</message>
 <message xml:lang="de">Thema</message>
 <message xml:lang="hu">Téma</message>
+	<message xml:lang="it">Tema</message>
 </label>
 <label define="TMSG_INSERT_MODE_XML">
 	<message xml:lang="en">XML</message>

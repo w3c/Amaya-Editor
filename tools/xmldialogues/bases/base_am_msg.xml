@@ -3742,6 +3742,7 @@
 	<message xml:lang="fr">Aligner les panneaux d'outils :</message>
 	<message xml:lang="de">Werkzeugleiste ausrichten</message>
 	<message xml:lang="hu">Eszközsor igazítása:</message>
+	<message xml:lang="it">Allineamento della barra degli strumenti:</message>
 </label>
 <label define="AM_TOOLPANEL_ALIGN_LEFT">
 	<message xml:lang="en">left</message>
@@ -3749,6 +3750,7 @@
 	<message xml:lang="fr">à gauche</message>
 	<message xml:lang="de">links</message>
 	<message xml:lang="hu">balra</message>
+	<message xml:lang="it">sinistra</message>
 </label>
 <label define="AM_TOOLPANEL_ALIGN_RIGHT">
 	<message xml:lang="en">right</message>
@@ -3756,6 +3758,7 @@
 	<message xml:lang="fr">à droite</message>
 	<message xml:lang="de">rechts</message>
 	<message xml:lang="hu">jobbra</message>
+	<message xml:lang="it">destra</message>
 </label>
 <label define="AM_LOCAL_CSS">
 	<message xml:lang="en">Style element</message>
@@ -6361,6 +6364,7 @@
 	<message xml:lang="de">Zip Archiv</message>
 	<message xml:lang="hu">Zip</message>
 	<message xml:lang="es">Archivo zip</message>
+	<message xml:lang="it">Archivio Zip</message>
 </label>
 <label define="AM_EMAILS_DONT_SEND">
 	<message xml:lang="en">Don't send</message>
@@ -6537,6 +6541,7 @@
 	<message xml:lang="fr">Une erreur s'est produite pendant la construction des objets javascript/DOM</message>
 	<message xml:lang="de">Ein Fehler ist aufgetreten beim Aufbau des Javascript/DOM Objekts</message>
 	<message xml:lang="hu">Hiba a javascript/DOM objektum felépítése közben</message>
+	<message xml:lang="it">Si è verificato un errore mentre si caricavano oggetti di javascript/DOM</message>
 </label>
 <label define="AM_JAVASCRIPT_IS_RUNNING">
 	<message xml:lang="en">A script is still running but will be aborted as soon as possible. Please try later.</message>
@@ -6544,6 +6549,7 @@
 	<message xml:lang="fr">Un script est encore en cours d'exécution mais sera interrompu dès que possible. Veuillez ressayer ultérieurement.</message>
 	<message xml:lang="de">Ein Skript wird noch ausgeführt, aber beendet sobald es möglich ist. Bitte später versuchen</message>
 	<message xml:lang="hu">A szkript még fut, de amint lehet, megszakítjuk. Próbálja később.</message>
+	<message xml:lang="it">E' in esecuzione uno script che si cercherà di fermare prima possibile. Per favore prova più tardi.</message>
 </label>
 <label define="AM_JAVASCRIPT_VIEW">
 	<message xml:lang="en">Javascript/DOM can not be enabled in this view.</message>
@@ -6551,6 +6557,7 @@
 	<message xml:lang="fr">Javascript/DOM ne peut être activé dans cette vue.</message>
 	<message xml:lang="de">Javascript/DOM kann in dieser Ansichtsoption nicht aktiviert werden</message>
 	<message xml:lang="hu">A javascript/DOM nem engedélyezhető ebben a nézetben.</message>
+	<message xml:lang="it">Javascript/DOM non è disponibile in questa vista.</message>
 </label>
 <label define="AM_JAVASCRIPT_ENTER_A_COMMAND">
 	<message xml:lang="en">Enter a javascript command:</message>
@@ -6558,6 +6565,7 @@
 	<message xml:lang="fr">Rentrez une commande javascript :</message>
 	<message xml:lang="de">Geben Sie einen Javascript-Befehl ein</message>
 	<message xml:lang="hu">Adjon meg egy javascript parancsot:</message>
+	<message xml:lang="it">Inserisci un comando javascript:</message>
 </label>
 <label define="AM_JAVASCRIPT_RETURNED_VALUE">
 	<message xml:lang="en">The command returned the value: %s</message>
@@ -6565,6 +6573,7 @@
 	<message xml:lang="fr">La commande a retourné la valeur: %s</message>
 	<message xml:lang="de">Der Befehl wurde als Wert: %s ausgegeben</message>
 	<message xml:lang="hu">A parancs a következő értéket adta vissza: %s</message>
+	<message xml:lang="it">Il comando riporta il valore: %s</message>
 </label>
 <label define="AM_JAVASCRIPT_NO_RETURNED_VALUE">
 	<message xml:lang="en">The command returned no value</message>
@@ -6572,6 +6581,7 @@
 	<message xml:lang="fr">La commande n'a retourné aucune valeur</message>
 	<message xml:lang="de">Der Befehl hat keinen Wert ausgegeben</message>
 	<message xml:lang="hu">A parancs nem adott vissza értéket</message>
+	<message xml:lang="it">Il comando riporta nessun valore</message>
 </label>
 <label define="AM_JAVASCRIPT_SCRIPT_ERROR">
 	<message xml:lang="en">SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s</message>
@@ -6579,6 +6589,7 @@
 	<message xml:lang="fr">SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s</message>
 	<message xml:lang="de">SpyderMonkey hat folgenden Fehler ausgegeben:\n\nFile: %s\nLine: %d\n\n%s</message>
 	<message xml:lang="hu">A SpiderMonkey a következő hibát adta vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
+	<message xml:lang="it">SpiderMonkey riporta il seguente errore:\n\nFile: %s\nLine: %d\n\n%s</message>
 </label>
 <label define="AM_NEW">
 	<message xml:lang="en">New</message>
@@ -6602,6 +6613,7 @@
 	<message xml:lang="fr">Paramétrable</message>
 	<message xml:lang="de">Anpassen</message>
 	<message xml:lang="hu">Egyedi</message>
+	<message xml:lang="it">Personalizzabile</message>
 </label>
 <label define="AM_CREATE">
 	<message xml:lang="en">Create</message>
@@ -6619,6 +6631,7 @@
 	<message xml:lang="es">Crear el enlace haciendo clic en el destino</message>
 	<message xml:lang="de">Den Verweis durch anklicken herstellen</message>
 	<message xml:lang="hu">Kapocs létrehozása kattintással</message>
+	<message xml:lang="it">Creare il collegamento con un click</message>
 </label>
 <label define="AM_DELETE_LINK">
 	<message xml:lang="en">Delete link</message>
@@ -6642,6 +6655,7 @@
 	<message xml:lang="es">Guardar sin plantilla</message>
 	<message xml:lang="de">Speichern ohne Vorlage</message>
 	<message xml:lang="hu">Mentés sablon nélkül</message>
+	<message xml:lang="it">Salvare senza template</message>
 </label>
 <label define="AM_USE_THEME">
 	<message xml:lang="en">With theme ...</message>
@@ -6649,6 +6663,7 @@
 	<message xml:lang="es">Con tema ...</message>
 	<message xml:lang="de">Mit Thema...</message>
 	<message xml:lang="hu">Témával ...</message>
+	<message xml:lang="it">Con il tema ...</message>
 </label>
 <label define="AM_MAX_WIDTH">
 	<message xml:lang="en">Full width</message>
@@ -6656,6 +6671,7 @@
 	<message xml:lang="es">Ancho 100%</message>
 	<message xml:lang="de">Ganze Breite</message>
 	<message xml:lang="hu">Teljes szélesség</message>
+	<message xml:lang="it">Larghezza intera</message>
 </label>
 <label define="AM_CAPTION">
 	<message xml:lang="en">With caption</message>
@@ -6663,6 +6679,7 @@
 	<message xml:lang="es">Con leyenda</message>
 	<message xml:lang="de">Mit Titel</message>
 	<message xml:lang="hu">Felirattal</message>
+	<message xml:lang="it">Con intestazione</message>
 </label>
 <label define="AM_SIZE">
 	<message xml:lang="en">Size</message>
@@ -6670,6 +6687,7 @@
 	<message xml:lang="es">Tamaño</message>
 	<message xml:lang="de">Grösse</message>
 	<message xml:lang="hu">Méret</message>
+	<message xml:lang="it">Grandezza</message>
 </label>
 <label define="AM_POSITION">
 	<message xml:lang="en">Position</message>
@@ -6677,6 +6695,7 @@
 	<message xml:lang="es">Posición</message>
 	<message xml:lang="de">Position</message>
 	<message xml:lang="hu">Helyzet</message>
+	<message xml:lang="it">Posizione</message>
 </label>
 <label define="AM_XML_EDIT">
 	<message xml:lang="en">XML editing mode</message>
@@ -6684,6 +6703,7 @@
 	<message xml:lang="es">Modo de edición XML</message>
 	<message xml:lang="de">XML Bearbeiten Betriebsart</message>
 	<message xml:lang="hu">XML szerkesztési mód</message>
+	<message xml:lang="it">Modalità di editing XML</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

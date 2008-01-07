@@ -895,6 +895,7 @@
 	<message xml:lang="es">Guardar todo</message>
 	<message xml:lang="de">Alles Speichern</message>
 	<message xml:lang="hu">Mind mentése</message>
+	<message xml:lang="it">Salva Tutto</message>
 </label>
 <label define="BSynchro">
 	<message xml:lang="en">S&amp;ynchronize</message>
@@ -1200,6 +1201,7 @@
 	<message xml:lang="fr">Ouvrir le lien</message>
 	<message xml:lang="de">Verweis öffnen</message>
 	<message xml:lang="hu">A kapocs megnyitása</message>
+	<message xml:lang="it">Apri il collegamento</message>
 </label>
 <label define="BFollowTheLinkNewTab">
 	<message xml:lang="en">Open the link in new tab</message>
@@ -1207,6 +1209,7 @@
 	<message xml:lang="fr">Ouvrir le lien dans un nouvel onglet</message>
 	<message xml:lang="de">Verweis in neuem Tab öffnen</message>
 	<message xml:lang="hu">A kapocs megnyitása új fülön</message>
+	<message xml:lang="it">Apri il collegamento in una nuova scheda</message>
 </label>
 <label define="BFollowTheLinkNewWin">
 	<message xml:lang="en">Open the link in new window</message>
@@ -1214,6 +1217,7 @@
 	<message xml:lang="fr">Ouvrir le lien dans une nouvelle fenêtre</message>
 	<message xml:lang="de">Verweis in neuem Fenster öffnen</message>
 	<message xml:lang="hu">A kapocs megnyitása új ablakban</message>
+	<message xml:lang="it">Apri il collegamento in una nuova finestra</message>
 </label>
 <label define="BCCut">
 	<message xml:lang="en">Cut</message>
@@ -1439,7 +1443,7 @@
 	<message xml:lang="fr">Tout sélectionner</message>
 	<message xml:lang="hu">Mindent kijelöl</message>
 	<message xml:lang="es">Seleccionar todo</message>
-</label>
+	<message xml:lang="it">Seleziona Tutto</message></label>
 <label define="BFind">
 	<message xml:lang="en">&amp;Find...</message>
 	<message xml:lang="fr">Rec&amp;hercher...</message>
@@ -3942,6 +3946,7 @@
 	<message xml:lang="fr">Barres d'outils</message>
 	<message xml:lang="de">Werkzeugleisten anzeigen/ausblenden</message>
 	<message xml:lang="hu">Eszköztárak mutatása/rejtése</message>
+	<message xml:lang="it">Mostra/Nascodi la barra degli strumenti</message>
 </label>
 <label define="TShowBrowsingBar">
 	<message xml:lang="en">&amp;Browsing</message>
@@ -3949,6 +3954,7 @@
 	<message xml:lang="fr">&amp;Navigation</message>
 	<message xml:lang="de">&amp;Durchsuchen</message>
 	<message xml:lang="hu">&amp;Böngészés</message>
+	<message xml:lang="it">&amp;Browsing</message>
 </label>
 <label define="toggle:TShowEditingBar">
 	<message xml:lang="en">&amp;Editing</message>
@@ -3956,6 +3962,7 @@
 	<message xml:lang="fr">&amp;Édition</message>
 	<message xml:lang="de">&amp;Bearbeiten</message>
 	<message xml:lang="hu">&amp;Szerkesztés</message>
+	<message xml:lang="it">&amp;Modifica</message>
 </label>
 <label define="TShowPanel">
 	<message xml:lang="en">Show &amp;tools</message>
@@ -4552,6 +4559,7 @@
 	<message xml:lang="fr">Activer/Désactiver</message>
 	<message xml:lang="de">Java-Unterstützung ein-/ausschalten</message>
 	<message xml:lang="hu">Engedélyezés/tiltás</message>
+	<message xml:lang="it">Attiva/Disattiva</message>
 </label>
 <label define="BExecuteACommand">
 	<message xml:lang="en">Execute a command</message>
@@ -4559,6 +4567,7 @@
 	<message xml:lang="fr">Exécuter une commande</message>
 	<message xml:lang="de">Befehl ausführen</message>
 	<message xml:lang="hu">Parancs végrehajtása</message>
+	<message xml:lang="it">Esegui un comando</message>
 </label>
 <label define="BExecuteExternal">
 	<message xml:lang="en">Execute an external script</message>
@@ -4566,6 +4575,7 @@
 	<message xml:lang="fr">Exécuter un script externe</message>
 	<message xml:lang="de">externes Skript ausführen</message>
 	<message xml:lang="hu">Külső szkript végrehajtása</message>
+	<message xml:lang="it">Esegui un comando</message>
 </label>
 <label define="BAddExternal">
 	<message xml:lang="en">Add an external script</message>
@@ -4573,6 +4583,7 @@
 	<message xml:lang="fr">Ajouter un script externe</message>
 	<message xml:lang="de">externes Skript hinzufügen</message>
 	<message xml:lang="hu">Külső szkript hozzáadása</message>
+	<message xml:lang="it">Aggiungi uno script esterno</message>
 </label>
 <label define="BInsertScript">
 	<message xml:lang="en">Insert a script</message>
@@ -4580,6 +4591,7 @@
 	<message xml:lang="fr">Inserer un script</message>
 	<message xml:lang="de">Skript einfügen</message>
 	<message xml:lang="hu">Szkript beillesztése</message>
+	<message xml:lang="it">Inserisci uno script</message>
 </label>
 <label define="BInformation">
 	<message xml:lang="en">About Amaya</message>
