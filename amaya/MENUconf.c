@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1999-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1999-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1686,8 +1686,6 @@ void GetBrowseConf (void)
   TtaGetEnvBoolean ("LOAD_CSS", &(GProp_Browse.LoadCss));
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick));
   TtaGetEnvBoolean ("CHECK_READ_IDS", &(GProp_Browse.WarnIDs));
-  //TtaGetEnvBoolean ("ENABLE_FTP", &val);
-  AHTFTPURL_flag_set (TRUE);
   GetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
   if (GProp_Browse.ScreenType[0] == EOS)
     // no current selection

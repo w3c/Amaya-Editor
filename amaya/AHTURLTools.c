@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -19,7 +19,6 @@
 
 #include "init_f.h"
 #include "AHTURLTools_f.h"
-#include "query_f.h"
 
 #define MAX_PRINT_URL_LENGTH 50
 typedef struct _HTURI
@@ -1082,7 +1081,7 @@ ThotBool IsHTTPPath (const char *path)
     return FALSE;
 
   if ((!strncmp (path, "http:", 5) != 0)
-      || (AHTFTPURL_flag () && !strncmp (path, "ftp:", 4))
+      || !strncmp (path, "ftp:", 4)
       || !strncmp (path, "internal:", 9))
     return TRUE;
   return FALSE;
@@ -1148,7 +1147,7 @@ ThotBool IsValidProtocol (const char *url)
 {
   if (!strncmp (url, "http:", 5)
       || !strncmp (url, "internal:", 9)
-      || (AHTFTPURL_flag () && !strncmp (url, "ftp:", 4)))
+      || !strncmp (url, "ftp:", 4))
     /* experimental */
     /*** || !strncmp (path, "news:", 5)***/ 
     return (TRUE);
