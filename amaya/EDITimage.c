@@ -1302,7 +1302,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
   AttributeType      attrType;
   NotifyOnTarget     event;
   char              *name, *value;
-  int                c1, i, j, cN, length, width, height, w, h;
+  int                c1, i, j, cN, length, width, height, w, h, profile;
   ThotBool           oldStructureChecking, newAttr, checkoptions = FALSE;
 
   TtaGiveFirstSelectedElement (doc, &firstSelEl, &c1, &i); 
@@ -1402,10 +1402,15 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
                   (elType.ElTypeNum == HTML_EL_Element ||
                    XhtmlCannotContainText (elType)))
                 {
+		  profile = TtaGetDocumentProfile (doc);
+		  if (profile == L_Strict || profile == L_Basic)
+		    /* For a Strict or Basic profile, create a Paragraph to contain the image (instead of a pseudo-paragraph) */
+		    elType.ElTypeNum = HTML_EL_Paragraph;
+		  else
+		    elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
                   TtaOpenUndoSequence (doc, firstSelEl, lastSelEl, c1, cN);
                   if (elType.ElTypeNum == HTML_EL_Element)
                     TtaRegisterElementDelete (firstSelEl, doc);
-                  elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
                   parent = TtaNewTree (doc, elType, "");
                   TtaInsertFirstChild (&parent, firstSelEl, doc);
                   TtaRegisterElementCreate (parent, doc);
