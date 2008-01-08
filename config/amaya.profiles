@@ -194,7 +194,6 @@ HelpAtW3C
 
 ################# Annot
 {Annot}
-+annot-module
 +base-module
 +bdi-text-module
 +clientside-module
@@ -216,8 +215,7 @@ HelpAtW3C
 +svg
 +tables
 +text-module
-ReplyToAnnotation
-PostAnnotation
++annot-annot
 
 
 #-------------------- Modules ---------------------------------------------
@@ -716,15 +714,20 @@ HelpNumbering
 &MakeIDMenu
 
 [annot-module]
++annot-doc
++annot-annot
+
+[annot-doc]
 AnnotateSelection
 AnnotateDocument
 DeleteAnnotation
-HelpAnnotation
 LoadAnnotations
+HelpAnnotation
 MoveAnnotationSel
 MoveAnnotationXPtr
-PostAnnotation
-ReplyToAnnotation
 XPointer_bufferStore
 
+[annot-annot]
+PostAnnotation
+ReplyToAnnotation
 
