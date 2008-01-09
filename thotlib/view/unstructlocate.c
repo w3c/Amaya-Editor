@@ -205,7 +205,7 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
   PtrAbstractBox      pAb, active, sel_active;
   PtrBox              pSelBox, pBox;
   PtrBox              graphicBox;
-  PtrElement          matchCell = NULL, prevMatch;
+  PtrElement          matchCell = NULL, prevMatch = NULL;
   ViewFrame          *pFrame;
   int                 dist;
   int                 pointIndex;
@@ -229,7 +229,9 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
       while (pBox)
         {
           pAb = pBox->BxAbstractBox;
-          prevMatch = matchCell;
+          if (matchCell)
+            // keep in memory the previous found cell
+            prevMatch = matchCell;
 #ifdef _GL
           if (pBox->BxBoundinBoxComputed ||
               pBox->BxType == BoBlock || pBox->BxNChars == 0)
