@@ -1403,8 +1403,8 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
                    XhtmlCannotContainText (elType)))
                 {
 		  profile = TtaGetDocumentProfile (doc);
-		  if (profile == L_Strict || profile == L_Basic)
-		    /* For a Strict or Basic profile, create a Paragraph to contain the image (instead of a pseudo-paragraph) */
+		  if ((profile == L_Strict || profile == L_Basic) &&(!IsBlockElementType (elType)))
+		    /* For a Strict or Basic profile, create a Paragraph that contain the image (instead of a pseudo-paragraph) */
 		    elType.ElTypeNum = HTML_EL_Paragraph;
 		  else
 		    elType.ElTypeNum = HTML_EL_Pseudo_paragraph;

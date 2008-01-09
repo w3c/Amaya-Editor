@@ -1022,11 +1022,15 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
 {
   ElementType   parentType, newElType, elType, prevType, ancestorType;
   Element       newEl, ancestor, prev, prevprev;
+  int           profile;
+  char          msgBuffer[MaxMsgLength];
+  char         *typeName;
 
   if (parent == NULL)
     return;
    
   elType = TtaGetElementType (*el);
+  typeName = TtaGetElementTypeName (elType);
 
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || 
       elType.ElTypeNum == HTML_EL_BR ||
@@ -1060,13 +1064,25 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
       if (ancestor != NULL)
         {
           elType = TtaGetElementType (ancestor);
+          
           if (XhtmlCannotContainText (elType) &&
               !XmlWithinStack (HTML_EL_Option_Menu, XhtmlParserCtxt->XMLSSchema))
             {
+	      profile = TtaGetDocumentProfile (XMLcontext.doc);
+	      if ((profile == L_Basic || profile == L_Strict) && (!IsBlockElementType (elType)))
+		{
+		  sprintf ((char *)msgBuffer, 
+			   "Element <%s> not allowed outside a block Element - <p> forced", typeName);
+		  XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+		  newElType.ElTypeNum = HTML_EL_Paragraph;
+		}
+	      else
+		{
+		  newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+		}
               /* Element ancestor cannot contain text directly. Create a */
               /* Pseudo_paragraph element as the parent of the text element */
               newElType.ElSSchema = XhtmlParserCtxt->XMLSSchema;
-              newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
               newEl = TtaNewElement (doc, newElType);
               XmlSetElemLineNumber (newEl);
               /* insert the new Pseudo_paragraph element */
