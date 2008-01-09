@@ -2452,7 +2452,8 @@ static void MakeSelectionRectangle ()
   ----------------------------------------------------------------------*/
 static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                                ThotBool begin, ThotBool drag,
-                               ThotBool checkSelection)
+                               ThotBool checkSelection,
+                               ThotBool checkTableSelection)
 {
   PtrElement          oldFirstEl, oldLastEl, pElP, pAsc, pCell1, pCell2,
                       pColHead1, pColHead2, pTable1, pTable2,
@@ -2710,7 +2711,7 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                 }
             }
 
-          if (FirstSelectedColumn)
+          if (FirstSelectedColumn && checkTableSelection)
             /* we are in table selection mode. Make sure that the selection
                has the shape of a rectangle */
             MakeSelectionRectangle ();
@@ -2891,7 +2892,7 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
 void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
                       ThotBool drag)
 {
-  DoExtendSelection (pEl, rank, fixed, begin, drag, TRUE);
+  DoExtendSelection (pEl, rank, fixed, begin, drag, TRUE, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -3879,7 +3880,10 @@ static void SelColumns (PtrElement col1, PtrElement col2)
   else
     {
       SelectElementWithEvent (SelectedDocument, pFirst, TRUE, FALSE);
-      ExtendSelection (pLast, 0, FALSE, TRUE, FALSE);
+      DoExtendSelection (pLast, 0, FALSE, TRUE, FALSE, TRUE, FALSE); /* the
+        last parameter should be TRUE, but we do not want multiple columns
+        to be selected as long as commands Cut, Copy and Paste can not
+        handle mutiple columns at a time */
     }
   WholeColumnSelected = TRUE;
   FirstSelectedColumn = col1;
@@ -3931,7 +3935,8 @@ void TtaSelectEnclosingColumn (Element el)
 void SelectAround (int val)
 {
   PtrElement          pEl, pParent, pFirst, pLast, firstParent, lastParent,
-                      pRow1, pRow2;
+                      pRow, pRow1, pRow2, pCol, pTable;
+  int                 nRows, nCols;
   ThotBool            done;
 
   pEl = NULL;
@@ -3968,8 +3973,8 @@ void SelectAround (int val)
                 /* we are in column selection mode */
                 {
                   if (WholeColumnSelected)
-                    /* the whole column is already selected. Select the enclosing
-                       table */
+                    /* the whole columns are already selected. Select the
+                       enclosing table */
                     {
                       pParent = FirstSelectedColumn->ElParent;
                       while (pParent && !TypeHasException (ExcIsTable,
@@ -4021,12 +4026,12 @@ void SelectAround (int val)
                         }
                       if (!done)
                         {
-                          /* the current selection contains only complete cells */
+                          /* the current selection contains only full cells */
                           if (FirstSelectedColumn == LastSelectedColumn)
                             /* all selected cells are in the same column.
                                Select that column */ 
                             SelColumns (FirstSelectedColumn,
-                                        LastSelectedColumn);
+                                        FirstSelectedColumn);
                           else
                             {
                               /* if all selected cells are in the same row,
@@ -4038,27 +4043,69 @@ void SelectAround (int val)
                                                      pRow1->ElTypeNumber,
                                                      pRow1->ElStructSchema))
                                 pRow1 = pRow1->ElParent;
-                              if (pRow1)
+                              /* get the row that contains the last
+                                 selected element */
+                              pRow2 = LastSelectedElement->ElParent;
+                              while (pRow2 && !TypeHasException (ExcIsRow,
+                                                       pRow2->ElTypeNumber,
+                                                       pRow2->ElStructSchema))
+                                pRow2 = pRow2->ElParent;
+                              if (pRow1 && pRow2 == pRow1)
+                                /* all selected cells are in the same row.
+                                   Select that row */
+                                SelectElementWithEvent (SelectedDocument,
+                                                        pRow1, TRUE, FALSE);
+                              else
                                 {
-                                  /* get the row that contains the last
-                                     selected element */
-                                  pRow2 = LastSelectedElement->ElParent;
-                                  while (pRow2 && !TypeHasException (ExcIsRow,
-                                                      pRow2->ElTypeNumber,
-                                                      pRow2->ElStructSchema))
-                                    pRow2 = pRow2->ElParent;
-                                  if (pRow2 == pRow1)
+                                  /* the selected cells are in several rows and
+                                  several columns. Check the number of rows and
+                                  columns */
+                                  pTable = pRow1;
+                                  while (pTable &&
+                                         !TypeHasException (ExcIsTable,
+                                                     pTable->ElTypeNumber,
+                                                     pTable->ElStructSchema))
+                                    pTable = pTable->ElParent;
+                                  if (!pTable)
+                                    return;
+                                  nRows = 1;
+                                  pRow = pRow1;
+                                  while (pRow && pRow != pRow2)
+                                    {
+                                      pRow = NextRowInTable (pRow, pTable);
+                                      nRows++;
+                                    }
+                                  nCols = 1;
+                                  pCol = FirstSelectedColumn;
+                                  while (pCol && pCol != LastSelectedColumn)
+                                    {
+                                      pCol = NextColumnInTable (pCol, pTable);
+                                      nCols++;
+                                    }
+                                  if (nCols <= nRows)
+                                    /* we should select all columns containing
+                                       the current selection:
+                                    SelColumns (FirstSelectedColumn,
+                                                LastSelectedColumn); */
+                                    {
+                                    /* but, as commands Copy, Delete and Paste
+                                     can not yet handle several columns at a
+                                     time, we select multiple rows instead */
+                                      SelectElementWithEvent (SelectedDocument,
+                                                           pRow1, TRUE, FALSE);
+                                      ExtendSelection (pRow2, 0, FALSE, TRUE,
+                                                       FALSE);
+                                    } 
+                                  else
+                                    /* select all rows containing the
+                                       current selection */
                                     {
                                       SelectElementWithEvent (SelectedDocument,
                                                            pRow1, TRUE, FALSE);
-                                      done = TRUE;
-                                    }
+                                      ExtendSelection (pRow2, 0, FALSE, TRUE,
+                                                       FALSE);
+                                    } 
                                 }
-                              if (!done)
-                                /* select all columns that contain the current
-                                   selection */
-                                SelColumns (FirstSelectedColumn,
-                                            LastSelectedColumn);
                             } 
                           return;
                         }
@@ -4080,7 +4127,8 @@ void SelectAround (int val)
                               SelPosition)
                             {
                               // select the whole element
-                               DoExtendSelection (FirstSelectedElement, 0, TRUE,TRUE, TRUE, TRUE);
+                               DoExtendSelection (FirstSelectedElement, 0,
+                                                  TRUE,TRUE, TRUE, TRUE, TRUE);
                               return;
                             }
                           else if (FirstSelectedElement->ElParent &&
@@ -4155,7 +4203,7 @@ void SelectAround (int val)
                                                   TRUE, FALSE);
                           /* keep the selection as it is */
                           DoExtendSelection (lastParent, 0, FALSE, TRUE, FALSE,
-                                             FALSE);
+                                             FALSE, TRUE);
                         }
                       else
                         SelectElementWithEvent (SelectedDocument, pFirst, TRUE,
