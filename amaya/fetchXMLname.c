@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -70,7 +70,6 @@ SSchema GetMathMLSSchema (Document doc)
   GetSVGSSchema returns the SVG Thot schema for document doc.
   ----------------------------------------------------------------------*/
 SSchema GetSVGSSchema (Document doc)
-
 {
   SSchema	SVGSSchema;
 
@@ -85,7 +84,6 @@ SSchema GetSVGSSchema (Document doc)
   GetXLinkSSchema returns the XLink Thot schema for document doc.
   ----------------------------------------------------------------------*/
 SSchema GetXLinkSSchema (Document doc)
-
 {
   SSchema	XLinkSSchema;
 
@@ -99,7 +97,6 @@ SSchema GetXLinkSSchema (Document doc)
 /* --------------------------------------------------------------------
    GetTemplateSSchema returns the Template Thot schema for document doc.
    --------------------------------------------------------------------*/
-
 SSchema GetTemplateSSchema (Document doc)
 {
   SSchema       TemplateSSchema;
@@ -108,7 +105,6 @@ SSchema GetTemplateSSchema (Document doc)
   if (TemplateSSchema == NULL)
     TemplateSSchema = TtaNewNature (doc, TtaGetDocumentSSchema(doc), NULL,
                                     "Template", "TemplateP");
-  
   return (TemplateSSchema);
 }
     
@@ -119,7 +115,6 @@ SSchema GetTemplateSSchema (Document doc)
   (this is not XML, but its useful to have this function here).
   ----------------------------------------------------------------------*/
 SSchema GetTextSSchema (Document doc)
-
 {
   SSchema	XLinkSSchema;
 
@@ -135,7 +130,6 @@ SSchema GetTextSSchema (Document doc)
   Returns the XML Thot schema of name schemaName for the document doc.
   ----------------------------------------------------------------------*/
 SSchema GetGenericXMLSSchema (char *schemaName, Document doc)
-
 {
   SSchema	XMLSSchema;
 
@@ -280,6 +274,7 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
       else
         ptr = SVGElemMappingTable;
     }
+#ifdef TEMPLATES
   else if (XMLtype == Template_TYPE)
     {
       if (profile == L_Basic && DocumentTypes[doc] == docHTML)
@@ -291,6 +286,7 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
       else
         ptr = TemplateElemMappingTable;
     }
+#endif /* TEMPLATES */
   else
     ptr = NULL;
    
@@ -363,6 +359,10 @@ char *GetXMLElementName (ElementType elType, Document doc)
         ptr = SVGElemMappingTable;
       else if (strcmp ("HTML", name) == 0)
         ptr = XHTMLElemMappingTable;
+#ifdef TEMPLATES
+      else if (strcmp ("Template", name) == 0)
+        ptr = TemplateElemMappingTable;
+#endif /* TEMPLATES */
       else
         ptr = NULL;
 
@@ -414,6 +414,10 @@ ThotBool IsXMLElementInline (ElementType elType, Document doc)
         ptr = SVGElemMappingTable;
       else if (strcmp ("HTML", name) == 0)
         ptr = XHTMLElemMappingTable;
+#ifdef TEMPLATES
+      else if (strcmp ("Template", name) == 0)
+        ptr = TemplateElemMappingTable;
+#endif /* TEMPLATES */
       else
         ptr = NULL;
       

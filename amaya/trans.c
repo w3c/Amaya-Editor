@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -848,7 +848,7 @@ static ThotBool StartFragmentParser (strMatchChildren *sMatch, Document doc,
 ThotBool *selectionDone)
 {
   strMatchChildren   *prevMatch, *DMatch;
-  Element             courEl, invEl, newEl, prev, next, child, cnext, br;
+  Element             courEl, invEl, newEl, prev, next, child, cnext, br, parent;
   ElementType         typeEl, elType, brType;
   ThotBool            res;
   SSchema             selSch, courSch;
@@ -876,8 +876,9 @@ ThotBool *selectionDone)
   while (myFirstSelect == NULL)
     {
       courEl = TtaGetParent (courEl);
-      if (TtaGetParent (courEl))
-        elType = TtaGetElementType (TtaGetParent (courEl));
+      parent = TtaGetParent (courEl);
+      if (parent)
+        elType = TtaGetElementType (parent);
       else
         elType = TtaGetElementType (courEl);
       courSch = elType.ElSSchema;
@@ -1876,13 +1877,14 @@ static void ApplyTransformation (strMatch *sm, Document doc)
           /* deletes the source structure elements */
           child = sm->MatchChildren;
           TtaSetErrorMessages (0);
-          while (child != NULL)
+          while (child)
             {
-              if (child->MatchNode->Elem != NULL &&
+              if (child->MatchNode->Elem &&
                   FindListSTreeByLabel (TtaGetElementLabel (child->MatchNode->Elem)) == NULL)
                 {
-                  if (TtaGetParent (child->MatchNode->Elem) != NULL)
-                    TtaDeleteTree (TtaGetParent (child->MatchNode->Elem), doc);
+                  elParent = TtaGetParent (child->MatchNode->Elem);
+                  if (elParent)
+                    TtaDeleteTree (elParent, doc);
                   else
                     TtaDeleteTree (child->MatchNode->Elem, doc);
                 }
@@ -1900,6 +1902,14 @@ static void ApplyTransformation (strMatch *sm, Document doc)
           elType = TtaGetElementType (myFirstSelect);
           sch = elType.ElSSchema;
           name = (char *)TtaGetSSchemaName (sch);
+          while (!strcmp (name, "Template"))
+            {
+              // check the included tree
+              myFirstSelect = TtaGetFirstChild (myFirstSelect);
+              elType = TtaGetElementType (myFirstSelect);
+              sch = elType.ElSSchema;
+              name = (char *)TtaGetSSchemaName (sch);
+            }
           if (!strcmp (name, "MathML"))
             {
               /* checking the MathML thot tree */
@@ -1910,7 +1920,7 @@ static void ApplyTransformation (strMatch *sm, Document doc)
               while (elParent != NULL &&
                      !strcmp ((char *)GetXMLElementName (TtaGetElementType (elParent), doc), "???"))
                 elParent = TtaGetParent (elParent);
-              if (elParent != NULL)
+              if (elParent)
                 {
                   TtaSetStructureChecking (FALSE, doc);
                   /* set the document context */
@@ -2069,19 +2079,19 @@ static ThotBool CheckSelectionLevel (Document doc)
             }
         }
     }
-  else if (myFirstSelect != NULL)
+  else if (myFirstSelect)
     {
       /* only one element is selected, check if its parent surround */
       /* the whole selection */
       prevFirst = TtaGetFirstChild (myFirstSelect);
       nextLast = TtaGetLastChild (myFirstSelect);
-      while (prevFirst != NULL && prevFirst == nextLast)
+      while (prevFirst && prevFirst == nextLast)
         {
           myFirstSelect = prevFirst;
           prevFirst = TtaGetFirstChild (myFirstSelect);
           nextLast = TtaGetLastChild (myFirstSelect);
         }
-      if (prevFirst != NULL)
+      if (prevFirst)
         {
           myFirstSelect = prevFirst;
           myLastSelect = nextLast;
@@ -2092,8 +2102,8 @@ static ThotBool CheckSelectionLevel (Document doc)
     }
   
   mySelect = NULL;
-  result = (myFirstSelect != NULL && parentFirst == parentLast);
-  if (result && parentFirst != NULL)
+  result = (myFirstSelect && parentFirst == parentLast);
+  if (result && parentFirst)
     {
       /* check if there is any sibling */
       nextLast = myLastSelect;
@@ -2105,7 +2115,7 @@ static ThotBool CheckSelectionLevel (Document doc)
       /* check if ancestors have any sibling */
       /* if it is not the case, they become the first selected element */
       elType = TtaGetElementType (parentFirst);
-      while (parentFirst != NULL &&
+      while (parentFirst &&
              /* all selected elements are selected? */
              nextLast == NULL && prevFirst == NULL &&
              /* it's not the HTML element? */
@@ -2181,6 +2191,11 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
   char               *name;
   int                 cardinal, i = 0, start;
   ThotBool            result, found;
+
+  // check if it is a template element
+  if (!strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "Template"))
+    // should check if the tag is allowed there
+    return TRUE;
 
   result = FALSE;
   elemTypeChild.ElSSchema = elemType.ElSSchema;
@@ -2761,7 +2776,7 @@ ThotBool TransformIntoType (ElementType * resultType, Document doc)
   
   /* context initialisation -- checks the selection */
   ok = CheckSelectionLevel (TransDoc);
-  if (ok)  
+  if (ok)
     {
       CourTransSet = NULL;
       ok = FALSE;

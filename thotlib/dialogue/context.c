@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -150,25 +150,6 @@ void TtaUpdateEditorColors (void)
 static void InitColors ()
 {
   ThotBool            found;
-#ifdef _GTK
-  GdkVisual          *vptr;
-  GdkVisualType       vinfo;
-  vptr = gdk_visual_get_best ();
-  vinfo = gdk_visual_get_best_type ();
-  if (vptr)
-    TtIsTrueColor = (vinfo == GDK_VISUAL_TRUE_COLOR || vinfo == GDK_VISUAL_DIRECT_COLOR );
-  else
-    TtIsTrueColor = FALSE;
-  /* Depending on the display Black and White order may be inverted */
-  // if (XWhitePixel (TtDisplay, TtScreen) == 0)
-  gdk_color_white (TtCmap, (GdkColor *)&cwhite);
-  gdk_color_black (TtCmap, (GdkColor *)&cblack);
-  /* Initialize colors for the application */
-  Black_Color = 0x000000;
-  FgMenu_Color = 0x000000;
-  White_Color = 0xffffff;
-  Scroll_Color =  0xffffff;
-#endif /* _GTK */
 
   if (TtWDepth > 1)
     TtaUpdateEditorColors ();
@@ -179,81 +160,6 @@ static void InitColors ()
       found = FindColor ("BgSelectColor", "Black", &Black_Color);
     }
 }
-
-#if defined(_GTK) || defined(_WX)
-/*----------------------------------------------------------------------
-  InitGraphicContexts initialize the X-Windows graphic contexts and their
-  Windows counterpart in Microsoft environment.
- ----------------------------------------------------------------------*/
-static void InitGraphicContexts (void)
-{
-#ifdef _GTK
-  int                 white;
-  int                 black;
-  ThotPixmap          pix;
-
-  gdk_rgb_init ();
-
-  white = ColorNumber ("White");
-  black = ColorNumber ("Black");
-  pix = CreatePattern (0, black, white, 6);
-  
-  /* Create a Graphic Context to write white on black. */
-  TtWhiteGC = gdk_gc_new (DefaultDrawable);
-  gdk_rgb_gc_set_background (TtWhiteGC, Black_Color);
-  gdk_rgb_gc_set_foreground (TtWhiteGC, White_Color);
-  gdk_gc_set_function (TtWhiteGC, GDK_COPY); 
-  gdk_gc_set_exposures (TtWhiteGC, TRUE);
-
- 
-  /* Create a Graphic Context to write black on white. */
-  TtBlackGC = gdk_gc_new (DefaultDrawable);
-  gdk_rgb_gc_set_foreground (TtBlackGC, Black_Color);
-  gdk_rgb_gc_set_background (TtBlackGC, White_Color);
-  gdk_gc_set_function (TtBlackGC, GDK_COPY);
-  
-  /*
-   * Create a Graphic Context to write black on white,
-   * but with a specific 10101010 pattern.
-   */
-  TtLineGC = gdk_gc_new (DefaultDrawable);
-  gdk_rgb_gc_set_foreground (TtLineGC, Black_Color);
-  gdk_rgb_gc_set_background (TtLineGC, White_Color);
-  gdk_gc_set_function (TtLineGC, GDK_COPY);
-  gdk_gc_set_tile (TtLineGC, (GdkPixmap *)pix);
-
-  /* Another Graphic Context to write black on white, for dialogs. */
-  TtDialogueGC = gdk_gc_new (DefaultDrawable);
-  gdk_rgb_gc_set_foreground (TtDialogueGC, Black_Color);
-  gdk_rgb_gc_set_background (TtDialogueGC, White_Color);
-  gdk_gc_set_function (TtDialogueGC, GDK_COPY);
-
-  /*
-    * A Graphic Context to show selected objects. On X-Windows,
-    * the colormap indexes are XORed to show the object without
-    * destroying the colors : XOR.XOR = I ...
-    */
-  TtInvertGC = gdk_gc_new (DefaultDrawable);
-  if (TtWDepth > 1)
-    gdk_rgb_gc_set_foreground (TtInvertGC, Black_Color);
-  else
-    gdk_rgb_gc_set_foreground (TtInvertGC, Black_Color);
-  gdk_rgb_gc_set_background (TtInvertGC, White_Color);
-  gdk_gc_set_function (TtInvertGC, GDK_INVERT);
-
-  /*
-   * A Graphic Context for trame objects.
-   */
-  TtGreyGC = gdk_gc_new (DefaultDrawable);
-  gdk_rgb_gc_set_foreground (TtGreyGC, Black_Color);
-  gdk_rgb_gc_set_background (TtGreyGC, White_Color);
-  gdk_gc_set_function (TtGreyGC, GDK_COPY);
-  gdk_gc_set_fill (TtGreyGC, GDK_TILED);
-
-  gdk_pixmap_unref ((GdkPixmap *)pix);
-#endif /* _GTK */
-}
-#endif /* defined(_GTK) || defined(_WX) */
 
 
 /*----------------------------------------------------------------------
@@ -331,42 +237,11 @@ void ThotInitDisplay (char* name, int dx, int dy)
 #endif /*_GL */
    InitDocColors (name);
    InitColors ();
-   InitGraphicContexts ();
    InitCurs ();
    InitDialogueFonts (name);
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
 #endif /* _WX */
-
-#ifdef _GTK
-   /* Declaration of a DefaultDrawable useful for the creation of Pixmap and the
-      initialization of GraphicContexts */
-   DefaultWindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-   gtk_widget_realize (DefaultWindow);
-   DefaultDrawingarea = gtk_drawing_area_new();
-   gtk_widget_set_parent (DefaultDrawingarea, DefaultWindow); 
-   gtk_widget_realize (DefaultDrawingarea);
-   DefaultDrawable = DefaultDrawingarea->window;
-   /* int x, y, width, height, depth;
-      gdk_window_get_geometry (DefaultDrawable, &x, &y, &width, &height, &depth);*/
-   TtRootWindow = DefaultWindow->window;
-#ifndef _GL
-   gtk_widget_push_visual (gdk_imlib_get_visual ());
-   gtk_widget_push_colormap (gdk_imlib_get_colormap ());
-   TtWDepth = gdk_visual_get_best_depth (); 
-   TtCmap = gdk_imlib_get_colormap ();
-#else /*_GL*/
-   TtWDepth = gdk_visual_get_best_depth (); 
-   TtCmap = gdk_colormap_new (gdk_rgb_get_visual (), TRUE);
-#endif /* _GL    */
-   InitDocColors (name);
-   InitColors ();
-   InitGraphicContexts ();
-   InitCurs ();
-   InitDialogueFonts (name);
-   /* Initialization of Picture Drivers */
-   InitPictureHandlers (FALSE);
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------

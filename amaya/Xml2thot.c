@@ -5474,12 +5474,17 @@ ThotBool ParseXmlBuffer (char *xmlBuffer, Element el, ThotBool isclosed,
   /* general initialization */
   RootElement = NULL;
   if (isclosed)
-    {
-      parent = TtaGetParent (el);
-      elType = TtaGetElementType (parent);
-    }
+    parent = TtaGetParent (el);
   else
-    elType = TtaGetElementType (el);
+    parent = el;
+
+  // skip Template elements
+  do
+    {
+      elType = TtaGetElementType (parent);
+      parent = TtaGetParent (parent);
+    }
+  while (!strcmp (TtaGetSSchemaName(elType.ElSSchema), "Template"));
   schemaName = TtaGetSSchemaName(elType.ElSSchema);
   InitializeXmlParsingContext (doc, el, isclosed, TRUE);
   ChangeXmlParserContextByDTD (schemaName);

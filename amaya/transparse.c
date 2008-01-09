@@ -2147,7 +2147,7 @@ ThotBool DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
    BinFile             infile = (BinFile)0;
    char                msg[200];
    char	               fileName[MAX_LENGTH];
-   char                pathes[MAX_LENGTH];
+   char                paths[MAX_LENGTH];
    char               *next, *cour, *lan;
    ThotBool            found = FALSE;
    struct stat        *StatBuffer;
@@ -2173,8 +2173,8 @@ ThotBool DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
      }
 
    /* build the transformation file name from schema directory and schema name */
-   TtaGetSchemaPath (pathes, MAX_LENGTH);
-   cour = pathes;
+   TtaGetSchemaPath (paths, MAX_LENGTH);
+   cour = paths;
    while (!found && cour != NULL)
      {
    	next = strchr (cour, PATH_SEP);
