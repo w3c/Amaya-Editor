@@ -2898,20 +2898,24 @@ void UpdateContextSensitiveMenus (Document doc, View view)
 
   if (doc == 0)
     return;
+  sch = NULL;
+  /* check if there are HTML elements in the document */
+  sch = TtaGetSSchema ("HTML", doc);
   withHTML = (DocumentTypes[doc] == docHTML && DocumentURLs[doc]);
+  if (!withHTML)
+    /* this is not a HTML document */
+    /* check if there are HTML elements in the document */
+    withHTML = (sch != NULL);
   withinTable = FALSE;
   inMath = FALSE;
   TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
   TtaGiveLastSelectedElement (doc, &lastSel, &firstChar, &lastChar);
   if (firstSel)
     {
-      /* check if there is HTML elements */
-      sch = TtaGetSSchema ("HTML", doc);
-      withHTML = (sch != NULL);
-
       /* look for an enclosing cell */
       elType = TtaGetElementType (firstSel);
       if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+        /* the current selection starts with a MathML element */
         {
           elType.ElTypeNum = MathML_EL_MTABLE;
           withinTable = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
@@ -3019,6 +3023,31 @@ void UpdateContextSensitiveMenus (Document doc, View view)
         {
           TtaSetItemOn (doc, 1, Types, BPasteBefore);
           TtaSetItemOn (doc, 1, Types, BPasteAfter);
+        }
+    }
+  if (withinTable)
+    {
+      if (inMath)
+        {
+          if (CanHShrinkCell (doc))
+            TtaSetItemOn (doc, 1, XMLTypes, BMCellHShrink);
+          else
+            TtaSetItemOff (doc, 1, XMLTypes, BMCellHShrink);
+          if (CanVShrinkCell (doc))
+            TtaSetItemOn (doc, 1, XMLTypes, BMCellVShrink);
+          else
+            TtaSetItemOff (doc, 1, XMLTypes, BMCellVShrink);
+        }
+      else
+        {
+          if (CanHShrinkCell (doc))
+            TtaSetItemOn (doc, 1, Types, BCellHShrink);
+          else
+            TtaSetItemOff (doc, 1, Types, BCellHShrink);
+          if (CanVShrinkCell (doc))
+            TtaSetItemOn (doc, 1, Types, BCellVShrink);
+          else
+            TtaSetItemOff (doc, 1, Types, BCellVShrink);
         }
     }
 

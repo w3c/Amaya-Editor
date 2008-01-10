@@ -2359,7 +2359,7 @@ void CreateTable (Document doc, View view)
         /* selection empty.  Display the Table dialogue box */
         {
           NumberRows = 2;
-          NumberCols = 2;
+          NumberCols = 5;
           TBorder = 1;
           ThotBool created;
           created = CreateCreateTableDlgWX (BaseDialog + TableForm,
@@ -2872,22 +2872,30 @@ void ChangeToHeadingCell (Document doc, View view)
 
 /*----------------------------------------------------------------------
   GetEnclosingCell
-  Return the table cell element that contains the beginning of the
-  current selection in document doc.
+  Return the table cell element that contains the beginning (if first)
+  or the end of the current selection in document doc.
   ----------------------------------------------------------------------*/
-static Element GetEnclosingCell (Document doc)
+static Element GetEnclosingCell (Document doc, ThotBool first)
 {
   Element             el, firstSel, lastSel;
   ElementType         elType;
   char               *s;
   int                 firstchar, lastchar, i;
 
-  el = NULL;
+  el = NULL; firstSel = NULL; lastSel = NULL;
   /* get the first selected element */
-  TtaGiveFirstSelectedElement (doc, &firstSel, &firstchar, &i);
-  if (firstSel)
+  if (first)
     {
+      TtaGiveFirstSelectedElement (doc, &firstSel, &firstchar, &i);
       el = firstSel;
+    }
+  else
+    {
+      TtaGiveLastSelectedElement (doc, &lastSel, &lastchar, &i);
+      el = lastSel;
+    }
+  if (el)
+    {
       elType = TtaGetElementType (el);
       s = TtaGetSSchemaName (elType.ElSSchema);
       while (el &&
@@ -2906,7 +2914,10 @@ static Element GetEnclosingCell (Document doc)
         }
       if (el)
         {
-          TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastchar);
+          if (first)
+            TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastchar);
+          else
+            TtaGiveFirstSelectedElement (doc, &lastSel, &i, &lastchar);
           TtaOpenUndoSequence (doc, firstSel, lastSel, firstchar, lastchar);
         }
     }
@@ -2927,7 +2938,7 @@ void CellVertExtend (Document doc, View view)
   int           span, nextSpan, newSpan, i;
   ThotBool      inMath;
 
-  cell = GetEnclosingCell (doc);
+  cell = GetEnclosingCell (doc, TRUE);
   if (cell)
     {
       elType = TtaGetElementType (cell);
@@ -3056,7 +3067,7 @@ void CellHorizExtend (Document doc, View view)
   int           span, nextSpan, newSpan, i;
   ThotBool      inMath;
 
-  cell = GetEnclosingCell (doc);
+  cell = GetEnclosingCell (doc, TRUE);
   if (cell)
     {
       elType = TtaGetElementType (cell);
@@ -3167,54 +3178,135 @@ void CellHorizExtend (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  CanVShrinkCell
+  Check if command "Shrink cell vertically" can be applied to the
+  current selection
+  ----------------------------------------------------------------------*/
+ThotBool CanVShrinkCell (Document doc)
+{
+  Element       cell, lastCell;
+  ElementType   elType;
+  Attribute     attr;
+  AttributeType attrType;
+  int           span;
+  ThotBool      inMath;
+
+  cell = GetEnclosingCell (doc, TRUE);
+  if (!cell)
+    return FALSE;
+  lastCell = GetEnclosingCell (doc, FALSE);
+  if (!lastCell || lastCell != cell)
+    return FALSE;
+  elType = TtaGetElementType (cell);
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc));
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (inMath)
+    attrType.AttrTypeNum = MathML_ATTR_rowspan_;
+  else
+    attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+  attr = TtaGetAttribute (cell, attrType);
+  if (!attr)
+    return FALSE;
+  span = TtaGetAttributeValue (attr);
+  if (span == 0)
+    span = GetActualColspan (cell, inMath);
+  if (span < 2)
+    return FALSE;
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
   CellVertShrink
   ----------------------------------------------------------------------*/
 void CellVertShrink (Document doc, View view)
 {
-  Element       cell;
+  Element       cell, lastCell;
   ElementType   elType;
   Attribute     attr;
   AttributeType attrType;
   int           span, newSpan;
   ThotBool      inMath;
 
-  cell = GetEnclosingCell (doc);
-  if (cell)
+  /* Function UpdateContextSensitiveMenus (HTMLactions.c) should deactivate
+     the corresponding menu item (XHTML/Table/ShrinkVertical) if the
+     current selection is not (within) a single table cell that has
+     rowspan attribute. */
+  cell = GetEnclosingCell (doc, TRUE);
+  if (!cell)
+    return;
+  lastCell = GetEnclosingCell (doc, FALSE);
+  if (!lastCell || lastCell != cell)
+    return;
+  elType = TtaGetElementType (cell);
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc));
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (inMath)
+    attrType.AttrTypeNum = MathML_ATTR_rowspan_;
+  else
+    attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+  attr = TtaGetAttribute (cell, attrType);
+  if (attr)
     {
-      elType = TtaGetElementType (cell);
-      inMath = !TtaSameSSchemas (elType.ElSSchema,
-                                 TtaGetSSchema ("HTML", doc));
-      attrType.AttrSSchema = elType.ElSSchema;
-      if (inMath)
-        attrType.AttrTypeNum = MathML_ATTR_rowspan_;
-      else
-        attrType.AttrTypeNum = HTML_ATTR_rowspan_;
-      attr = TtaGetAttribute (cell, attrType);
-      if (attr)
+      span = TtaGetAttributeValue (attr);
+      if (span == 0)
+        span = GetActualRowspan (cell, inMath);
+      if (span >= 2)
         {
-          span = TtaGetAttributeValue (attr);
-          if (span == 0)
-            span = GetActualRowspan (cell, inMath);
-          if (span >= 2)
+          newSpan = span - 1;
+          if (newSpan == 1)
             {
-              newSpan = span - 1;
-              if (newSpan == 1)
-                {
-                  TtaRegisterAttributeDelete (attr, cell, doc);
-                  TtaRemoveAttribute (cell, attr, doc);
-                }
-              else
-                {
-                  TtaRegisterAttributeReplace (attr, cell, doc);
-                  TtaSetAttributeValue (attr, newSpan, cell, doc);
-                }
-              ChangeRowspan (cell, span, &newSpan, doc);
-              SetRowExt (cell, newSpan, doc, inMath);
-              TtaCloseUndoSequence (doc);
-              TtaSetDocumentModified (doc);
+              TtaRegisterAttributeDelete (attr, cell, doc);
+              TtaRemoveAttribute (cell, attr, doc);
             }
+          else
+            {
+              TtaRegisterAttributeReplace (attr, cell, doc);
+              TtaSetAttributeValue (attr, newSpan, cell, doc);
+            }
+          ChangeRowspan (cell, span, &newSpan, doc);
+          SetRowExt (cell, newSpan, doc, inMath);
+          TtaCloseUndoSequence (doc);
+          TtaSetDocumentModified (doc);
         }
     }
+}
+
+/*----------------------------------------------------------------------
+  CanHShrinkCell
+  Check if command "Shrink cell horizontally" can be applied to the
+  current selection
+  ----------------------------------------------------------------------*/
+ThotBool CanHShrinkCell (Document doc)
+{
+  Element       cell, lastCell;
+  ElementType   elType;
+  Attribute     attr;
+  AttributeType attrType;
+  int           span;
+  ThotBool      inMath;
+
+  cell = GetEnclosingCell (doc, TRUE);
+  if (!cell)
+    return FALSE;
+  lastCell = GetEnclosingCell (doc, FALSE);
+  if (!lastCell || lastCell != cell)
+    return FALSE;
+  elType = TtaGetElementType (cell);
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc));
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (inMath)
+    attrType.AttrTypeNum = MathML_ATTR_columnspan;
+  else
+    attrType.AttrTypeNum = HTML_ATTR_colspan_;
+  attr = TtaGetAttribute (cell, attrType);
+  if (!attr)
+    return FALSE;
+  span = TtaGetAttributeValue (attr);
+  if (span == 0)
+    span = GetActualColspan (cell, inMath);
+  if (span < 2)
+    return FALSE;
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -3222,48 +3314,49 @@ void CellVertShrink (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CellHorizShrink (Document doc, View view)
 {
-  Element       cell;
+  Element       cell, lastCell;
   ElementType   elType;
   Attribute     attr;
   AttributeType attrType;
   int           span, newSpan;
   ThotBool      inMath;
 
-  cell = GetEnclosingCell (doc);
-  if (cell)
+  cell = GetEnclosingCell (doc, TRUE);
+  if (!cell)
+    return;
+  lastCell = GetEnclosingCell (doc, FALSE);
+  if (!lastCell || lastCell != cell)
+    return;
+  elType = TtaGetElementType (cell);
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc));
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (inMath)
+    attrType.AttrTypeNum = MathML_ATTR_columnspan;
+  else
+    attrType.AttrTypeNum = HTML_ATTR_colspan_;
+  attr = TtaGetAttribute (cell, attrType);
+  if (attr)
     {
-      elType = TtaGetElementType (cell);
-      inMath = !TtaSameSSchemas (elType.ElSSchema,
-                                 TtaGetSSchema ("HTML", doc));
-      attrType.AttrSSchema = elType.ElSSchema;
-      if (inMath)
-        attrType.AttrTypeNum = MathML_ATTR_columnspan;
-      else
-        attrType.AttrTypeNum = HTML_ATTR_colspan_;
-      attr = TtaGetAttribute (cell, attrType);
-      if (attr)
+      span = TtaGetAttributeValue (attr);
+      if (span == 0)
+        span = GetActualColspan (cell, inMath);
+      if (span >= 2)
         {
-          span = TtaGetAttributeValue (attr);
-          if (span == 0)
-            span = GetActualColspan (cell, inMath);
-          if (span >= 2)
+          newSpan = span - 1;
+          if (newSpan == 1)
             {
-              newSpan = span - 1;
-              if (newSpan == 1)
-                {
-                  TtaRegisterAttributeDelete (attr, cell, doc);
-                  TtaRemoveAttribute (cell, attr, doc);
-                }
-              else
-                {
-                  TtaRegisterAttributeReplace (attr, cell, doc);
-                  TtaSetAttributeValue (attr, newSpan, cell, doc);
-                }
-              ChangeColspan (cell, span, &newSpan, doc);
-              SetColExt (cell, newSpan, doc, inMath, FALSE);
-              TtaCloseUndoSequence (doc);
-              TtaSetDocumentModified (doc);
+              TtaRegisterAttributeDelete (attr, cell, doc);
+              TtaRemoveAttribute (cell, attr, doc);
             }
+          else
+            {
+              TtaRegisterAttributeReplace (attr, cell, doc);
+              TtaSetAttributeValue (attr, newSpan, cell, doc);
+            }
+          ChangeColspan (cell, span, &newSpan, doc);
+          SetColExt (cell, newSpan, doc, inMath, FALSE);
+          TtaCloseUndoSequence (doc);
+          TtaSetDocumentModified (doc);
         }
     }
 }
@@ -3273,15 +3366,18 @@ void CellHorizShrink (Document doc, View view)
   Return the table row element that contains the beginning of the
   current selection in document doc.
   ----------------------------------------------------------------------*/
-static Element GetEnclosingRow (Document doc)
+static Element GetEnclosingRow (Document doc, ThotBool first)
 {
   Element             el;
   ElementType         elType;
   char               *s;
   int                 firstchar, lastchar;
 
-  /* get the first selected element */
-  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+  /* get the first (or last) selected element */
+  if (first)
+    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+  else
+    TtaGiveLastSelectedElement (doc, &el, &firstchar, &lastchar);
   if (el)
     {
       elType = TtaGetElementType (el);
@@ -3306,14 +3402,20 @@ static Element GetEnclosingRow (Document doc)
 
 /*----------------------------------------------------------------------
   SelectRow
+  Select the table row to which the first selected element belongs.
   ----------------------------------------------------------------------*/
 void SelectRow (Document doc, View view)
 {
   Element     el;
 
-  el = GetEnclosingRow (doc);
+  el = GetEnclosingRow (doc, TRUE);
   if (el)
-    TtaSelectElement (doc, el);
+    {
+      TtaSelectElement (doc, el);
+      el = GetEnclosingRow (doc, FALSE);
+      if (el)
+        TtaExtendSelection (doc, el, 0);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3321,21 +3423,69 @@ void SelectRow (Document doc, View view)
   ----------------------------------------------------------------------*/
 static void CreateRow (Document doc, View view, ThotBool before)
 {
-  Element             el, elNew;
+  Element             el, elNew, cell, row, nextRow;
+  Attribute           attr;
   ElementType         elType;
+  AttributeType       attrType;
+  int                 span, i;
   NotifyElement       event;
   DisplayMode         dispMode;
+  ThotBool            inMath;
 
-  el = GetEnclosingRow (doc);
-  if (el)
+  row = NULL;
+  if (!before)
+    /* creating a row after the current selection */
+    {
+      /* if the end of the selection is (within) a cell that is extended
+         vertically, find the row that corresponds to the bottom of that cell*/
+      cell = GetEnclosingCell (doc, FALSE);
+      if (cell)
+        {
+          /* get the rowspan of the cell */
+          elType = TtaGetElementType (cell);
+          inMath = !TtaSameSSchemas (elType.ElSSchema,
+                                     TtaGetSSchema ("HTML", doc));
+          attrType.AttrSSchema = elType.ElSSchema;
+          if (inMath)
+            attrType.AttrTypeNum = MathML_ATTR_rowspan_;
+          else
+            attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+          attr = TtaGetAttribute (cell, attrType);
+          if (!attr)
+            span = 1;
+          else
+            {
+              span = TtaGetAttributeValue (attr);
+              if (span < 0)
+                span = 1;
+              if (span == 0)
+                /* infinite spanning */
+                span = 10000;
+            }
+          if (span > 1)
+            {
+              /* get the next row after the cell */
+              row = TtaGetParent (cell);
+              nextRow = GetSiblingRow (row, FALSE, inMath);
+              for (i = 1; i < span && nextRow; i++)
+                {
+                  row = nextRow;
+                  nextRow = GetSiblingRow (row, FALSE, inMath);
+                }
+            }
+        }
+    }
+  if (!row)
+    row = GetEnclosingRow (doc, before);
+  if (row)
     {
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, DeferredDisplay);
-      elType = TtaGetElementType (el);
+      elType = TtaGetElementType (row);
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       elNew = TtaNewElement (doc, elType);
-      TtaInsertSibling (elNew, el, before, doc);
+      TtaInsertSibling (elNew, row, before, doc);
       event.element = elNew;
       event.document = doc;
       RowCreated (&event);
@@ -3366,6 +3516,7 @@ void CreateRowAfter (Document doc, View view)
 
 /*----------------------------------------------------------------------
   SelectColumn
+  Select the table column to which the first selected element belongs.
   ----------------------------------------------------------------------*/
 void SelectColumn (Document doc, View view)
 {
@@ -3382,7 +3533,7 @@ void SelectColumn (Document doc, View view)
   ----------------------------------------------------------------------*/
 static void CreateColumn (Document doc, View view, ThotBool before)
 {
-  Element             cell, elNew, col;
+  Element             cell, lastCell, elNew, col, lastCol;
   ElementType         elType;
   Attribute           attr;
   AttributeType       attrType;
@@ -3390,32 +3541,49 @@ static void CreateColumn (Document doc, View view, ThotBool before)
   ThotBool            inMath;
 
   /* get the enclosing cell */
-  cell = GetEnclosingCell (doc);
+  cell = GetEnclosingCell (doc, before);
   if (cell)
     {
       elType = TtaGetElementType (cell);
       inMath = !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML");  
-      /* get the colspan value of the element */
-      attrType.AttrSSchema = elType.ElSSchema;
       col = NULL;
       if (!before)
         {
+          attrType.AttrSSchema = elType.ElSSchema;
           if (inMath)
             attrType.AttrTypeNum = MathML_ATTR_MColExt;
           else
             attrType.AttrTypeNum = HTML_ATTR_ColExt;
-          attr = TtaGetAttribute (cell, attrType);
-          if (attr)
-            TtaGiveReferenceAttributeValue (attr, &col);
+          lastCell = cell; /* last selected cell (in tree order) */
+          lastCol = TtaGetColumn (lastCell); /* rightmost column */
+          cell = GetEnclosingCell (doc, TRUE); /* first selected cell */
+          /* check all cells in the current selection to find the rightmost
+             column (lastCol) to which a selected cell is extended */
+          do
+            {
+              attr = TtaGetAttribute (cell, attrType);
+              if (attr)
+                /* this cell is extended horizontally. Get its rightmost col */
+                TtaGiveReferenceAttributeValue (attr, &col);
+              else
+                col = TtaGetColumn (cell);
+              if (TtaIsBefore (lastCol, col))
+                lastCol = col;
+              if (cell == lastCell)
+                cell = NULL;
+              else
+                TtaGiveNextElement (doc, &cell, lastCell);
+            }
+          while (cell);
+          col = lastCol;
         }
-      if (col == NULL)
+      if (!col)
         col = TtaGetColumn (cell);
       if (col)
         {
           dispMode = TtaGetDisplayMode (doc);
           if (dispMode == DisplayImmediately)
             TtaSetDisplayMode (doc, DeferredDisplay);
-	  
           /* Create the column */
           elNew = NewColumnHead (col, before, FALSE, NULL, doc, inMath, TRUE);
           TtaSetDisplayMode (doc, dispMode);
@@ -3450,7 +3618,7 @@ void PasteBefore (Document doc, View view)
   ElementType         elType;
 
   /* get the enclosing cell */
-  cell = GetEnclosingCell (doc);
+  cell = GetEnclosingCell (doc, TRUE);
   if (cell)
     {
       /* move the selection at the beginning of the cell */
@@ -3480,7 +3648,7 @@ void PasteAfter (Document doc, View view)
   int                 len;
 
   /* get the enclosing cell */
-  cell = GetEnclosingCell (doc);
+  cell = GetEnclosingCell (doc, FALSE);
   if (cell)
     {
       /* move the selection at the end of the cell */
@@ -3580,7 +3748,7 @@ void CreateTHead (Document doc, View view)
   NotifyElement       event;
   ThotBool            before;
 
-  cell = GetEnclosingCell (doc);
+  cell = GetEnclosingCell (doc, TRUE);
   if (cell)
     {
       el = BeginningOrEndOfTBody (cell, doc, TRUE, FALSE, &before);
@@ -3621,7 +3789,7 @@ void CreateTBody (Document doc, View view)
   NotifyElement       event;
   ThotBool            before;
 
-  cell = GetEnclosingCell (doc);
+  cell = GetEnclosingCell (doc, TRUE);
   if (cell)
     {
       el = BeginningOrEndOfTBody (cell, doc, FALSE, FALSE, &before);
@@ -3662,7 +3830,7 @@ void CreateTFoot (Document doc, View view)
   NotifyElement       event;
   ThotBool            before;
 
-  cell = GetEnclosingCell (doc);
+  cell = GetEnclosingCell (doc, TRUE);
   if (cell)
     {
       el = BeginningOrEndOfTBody (cell, doc, FALSE, TRUE, &before);
