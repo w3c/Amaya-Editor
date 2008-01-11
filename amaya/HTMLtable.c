@@ -82,7 +82,7 @@ Element GetSiblingRow (Element row, ThotBool before, ThotBool inMath)
   GetSiblingCell
   returns the sibling cell before or after the current cell.
   ----------------------------------------------------------------------*/
-static Element GetSiblingCell (Element cell, ThotBool before, ThotBool inMath)
+Element GetSiblingCell (Element cell, ThotBool before, ThotBool inMath)
 {
   ElementType         elType;
   SSchema             cellSS;
@@ -201,7 +201,7 @@ static Element GetSiblingCell (Element cell, ThotBool before, ThotBool inMath)
   returns the first cell contained in a given row.
   Element row must be a table row.
   ----------------------------------------------------------------------*/
-static Element GetFirstCellOfRow (Element row, ThotBool inMath)
+Element GetFirstCellOfRow (Element row, ThotBool inMath)
 {
   Element     firstCell, el;
   ElementType rowType, elType;

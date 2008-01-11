@@ -4024,7 +4024,8 @@ void SelectionChanged (NotifyElement *event)
             TtaSetStatus (doc, 1, "  ", NULL);
         }
 #endif /* _WX */
-      TtaSetStatusSelectedElement(doc, 1, el);
+      if (event->event != TteElemExtendSelect)
+        TtaSetStatusSelectedElement(doc, 1, el);
     }
   SelectionChanging = FALSE;
 }

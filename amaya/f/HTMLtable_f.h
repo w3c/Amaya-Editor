@@ -10,6 +10,11 @@ extern ThotBool WithinLastPastedCell ( Element el );
 extern Element GetSiblingRow ( Element row,
                                ThotBool before,
                                ThotBool inMath );
+extern Element GetSiblingCell ( Element cell,
+                                ThotBool before,
+                                ThotBool inMath );
+extern Element GetFirstCellOfRow ( Element row,
+                                   ThotBool inMath );
 extern int SetRowExt ( Element cell,
                        int span,
                        Document doc,
@@ -99,6 +104,11 @@ extern ThotBool WithinLastPastedCell ( Element el );
 extern Element GetSiblingRow ( Element row,
                                  ThotBool before,
                                  ThotBool inMath );
+extern Element GetSiblingCell ( Element cell,
+                                  ThotBool before,
+                                  ThotBool inMath );
+extern Element GetFirstCellOfRow ( Element row,
+                                     ThotBool inMath );
 extern int SetRowExt ( Element cell,
                          int span,
                          Document doc,

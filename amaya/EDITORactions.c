@@ -3194,6 +3194,45 @@ void CellHorizExtend (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  GetEnclosingRow
+  Return the table row element that contains the beginning of the
+  current selection in document doc.
+  ----------------------------------------------------------------------*/
+static Element GetEnclosingRow (Document doc, ThotBool first)
+{
+  Element             el;
+  ElementType         elType;
+  char               *s;
+  int                 firstchar, lastchar;
+
+  /* get the first (or last) selected element */
+  if (first)
+    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+  else
+    TtaGiveLastSelectedElement (doc, &el, &firstchar, &lastchar);
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      while (el &&
+             (strcmp (s, "HTML") ||
+              elType.ElTypeNum != HTML_EL_Table_row) &&
+             (strcmp (s, "MathML") ||
+              (elType.ElTypeNum != MathML_EL_MTR &&
+               elType.ElTypeNum != MathML_EL_MLABELEDTR)))
+        {
+          el = TtaGetParent (el);
+          if (el)
+            {
+              elType = TtaGetElementType (el);
+              s = TtaGetSSchemaName (elType.ElSSchema);
+            }
+        }
+    }
+  return el;
+}
+
+/*----------------------------------------------------------------------
   CanMergeSelectedCells
   Check if command "Merge selected cells" can be applied to the
   current selection
@@ -3201,14 +3240,24 @@ void CellHorizExtend (Document doc, View view)
 ThotBool CanMergeSelectedCells (Document doc)
 {
   Element       cell, lastCell;
+  ThotBool      ok;
 
+  ok = FALSE;
   cell = GetEnclosingCell (doc, TRUE, FALSE);
-  if (!cell)
-    return FALSE;
-  lastCell = GetEnclosingCell (doc, FALSE, FALSE);
-  if (!lastCell || lastCell == cell)
-    return FALSE;
-  return TRUE;
+  if (cell)
+    /* the current selection starts with a cell */
+    {
+      lastCell = GetEnclosingCell (doc, FALSE, FALSE);
+      if (lastCell && lastCell != cell)
+        /* is end with another cell. OK. */
+        ok = TRUE;
+    }
+  else
+    {
+      if (GetEnclosingRow (doc, TRUE) && GetEnclosingRow (doc, FALSE))
+        ok = TRUE;
+    }
+  return ok;
 }
 
 /*----------------------------------------------------------------------
@@ -3227,13 +3276,34 @@ void MergeSelectedCells (Document doc, View view)
   DisplayMode   dispMode;
 
   /* get the cell containing the beginning of the current selection */
+  lastCell = NULL;
   firstCell = GetEnclosingCell (doc, TRUE, FALSE);
-  if (!firstCell)
-    return;
-  /* get the cell containing the end of the current selection */
-  lastCell = GetEnclosingCell (doc, FALSE, FALSE);
-  if (!lastCell || lastCell == firstCell)
-    /* only one cell selected */
+  if (firstCell)
+    {
+      /* get the cell containing the end of the current selection */
+      lastCell = GetEnclosingCell (doc, FALSE, FALSE);
+      if (!lastCell || lastCell == firstCell)
+        /* only one cell selected. Can't merge anything. */
+        firstCell = NULL;
+    }
+  else
+    {
+      firstRow = GetEnclosingRow (doc, TRUE);
+      lastRow = GetEnclosingRow (doc, FALSE);
+      elType = TtaGetElementType (firstRow);
+      inMath = !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML");  
+      if (firstRow && lastRow)
+        {
+          firstCell = GetFirstCellOfRow (firstRow, inMath);
+          cell = GetFirstCellOfRow (lastRow, inMath);
+          while (cell)
+            {
+              lastCell = cell;
+              cell = GetSiblingCell (cell, FALSE, inMath);
+            }
+        }
+    }
+  if (!firstCell || !lastCell)
     return;
   elType = TtaGetElementType (firstCell);
   inMath = !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML");  
@@ -3595,45 +3665,6 @@ void CellHorizShrink (Document doc, View view)
         }
     }
   TtaCloseUndoSequence (doc);
-}
-
-/*----------------------------------------------------------------------
-  GetEnclosingRow
-  Return the table row element that contains the beginning of the
-  current selection in document doc.
-  ----------------------------------------------------------------------*/
-static Element GetEnclosingRow (Document doc, ThotBool first)
-{
-  Element             el;
-  ElementType         elType;
-  char               *s;
-  int                 firstchar, lastchar;
-
-  /* get the first (or last) selected element */
-  if (first)
-    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-  else
-    TtaGiveLastSelectedElement (doc, &el, &firstchar, &lastchar);
-  if (el)
-    {
-      elType = TtaGetElementType (el);
-      s = TtaGetSSchemaName (elType.ElSSchema);
-      while (el &&
-             (strcmp (s, "HTML") ||
-              elType.ElTypeNum != HTML_EL_Table_row) &&
-             (strcmp (s, "MathML") ||
-              (elType.ElTypeNum != MathML_EL_MTR &&
-               elType.ElTypeNum != MathML_EL_MLABELEDTR)))
-        {
-          el = TtaGetParent (el);
-          if (el)
-            {
-              elType = TtaGetElementType (el);
-              s = TtaGetSSchemaName (elType.ElSSchema);
-            }
-        }
-    }
-  return el;
 }
 
 /*----------------------------------------------------------------------
