@@ -634,10 +634,9 @@ void TtaRefreshMenuItemStats( int doc_id, void * context, int menu_item_id )
 #ifdef _MACOS
               // sometimes the system desactivates these menu entries
               if (item_enable && name &&
-                  ((!strcmp (name, "TtcCopySelection") ||
-                    !strcmp (name, "TtcCutSelection") ||
-                    !strcmp (name, "TtcDeleteSelection") ||
-                    !strcmp (name, "PasteBuffer")))
+                  (!strcmp (name, "TtcCopySelection") ||
+                   !strcmp (name, "TtcCutSelection") ||
+                   !strcmp (name, "PasteBuffer")))
                   p_menu_bar->Enable(item_id, false);
 #endif /* _MACOS */
               p_menu_bar->Enable(item_id, (bool)item_enable);
