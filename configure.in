@@ -351,7 +351,7 @@ if test "$enable_system_wx" != "yes"; then
   fi
   if test "$AMAYAOS" = "MACOSX" ; then
     # MACOSX
-    WXCONFIGURE_OPTION="--with-opengl --disable-shared --enable-unicode --with-libpng=builtin --with-libjpeg=builtin"
+    WXCONFIGURE_OPTION="--with-opengl --disable-shared --disable-tga --enable-unicode --with-libpng=builtin --with-libjpeg=builtin"
   fi
   if test $with_wxdebug = yes ; then
     WXCONFIGURE_OPTION="$WXCONFIGURE_OPTION --enable-debug"
@@ -938,6 +938,10 @@ for ac_dir in               \
   /Developer/SDKs/MacOSX10.2.8.sdk/usr/include/sys/    \
   /Developer/SDKs/MacOSX10.3.0.sdk/usr/include/objc/   \
   /Developer/SDKs/MacOSX10.3.0.sdk/usr/include/sys/    \
+  /Developer/SDKs/MacOSX10.4u.sdk/usr/include/objc/   \
+  /Developer/SDKs/MacOSX10.4u.sdk/usr/include/sys/    \
+  /Developer/SDKs/MacOSX10.3.9.sdk/usr/include/objc/   \
+  /Developer/SDKs/MacOSX10.3.9.sdk/usr/include/sys/    \
   ; \
 do
   if test -r "$ac_dir/malloc.h"; then

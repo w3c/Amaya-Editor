@@ -13574,11 +13574,11 @@ echo "$as_me: error: wxWidgets library sources not found. Please download wxWidg
     #   --enable-unicode        compile wxString with Unicode support
     #   --with-gtk              use GTK+
     #   --with-opengl           use OpenGL (or Mesa)
-    WXCONFIGURE_OPTION="--build=$build_alias --host=$host_alias --target=$target_alias --with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --disable-shared  --with-libpng=builtin --with-libjpeg=builtin --with-libtiff=builtin $WXCONFIGURE_TUNNING_OPTION"
+    WXCONFIGURE_OPTION="--build=$build_alias --host=$host_alias --target=$target_alias --with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --disable-shared  --with-libpng=builtin --with-libjpeg=builtin --with-libtiff=builtin  --with-libxpm=builtin $WXCONFIGURE_TUNNING_OPTION"
   fi
   if test "$AMAYAOS" = "MACOSX" ; then
     # MACOSX
-    WXCONFIGURE_OPTION="--with-opengl --disable-shared --enable-unicode --with-libpng=builtin --with-libjpeg=builtin"
+    WXCONFIGURE_OPTION="--with-opengl --disable-shared --disable-tga --enable-unicode --with-libpng=builtin --with-libjpeg=builtin"
   fi
   if test $with_wxdebug = yes ; then
     WXCONFIGURE_OPTION="$WXCONFIGURE_OPTION --enable-debug"
@@ -14470,6 +14470,10 @@ for ac_dir in               \
   /Developer/SDKs/MacOSX10.2.8.sdk/usr/include/sys/    \
   /Developer/SDKs/MacOSX10.3.0.sdk/usr/include/objc/   \
   /Developer/SDKs/MacOSX10.3.0.sdk/usr/include/sys/    \
+  /Developer/SDKs/MacOSX10.4u.sdk/usr/include/objc/   \
+  /Developer/SDKs/MacOSX10.4u.sdk/usr/include/sys/    \
+  /Developer/SDKs/MacOSX10.3.9.sdk/usr/include/objc/   \
+  /Developer/SDKs/MacOSX10.3.9.sdk/usr/include/sys/    \
   ; \
 do
   if test -r "$ac_dir/malloc.h"; then
