@@ -32,6 +32,8 @@ class AmayaNormalWindow : public AmayaWindow
   
   static int GetNormalWindowCount(){return s_normalWindowCount;}
   
+  static void RegisterThotToolPanels();
+  
   AmayaNormalWindow (  wxWindow * parent, wxWindowID id=wxID_ANY
                       ,const wxPoint& pos  = wxDefaultPosition
                       ,const wxSize&  size = wxDefaultSize

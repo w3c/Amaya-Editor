@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxPanel" name="StyleListPanel">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxCheckListBox" name="wxID_CHECKLIST_CSS">
+          <style>wxLB_EXTENDED</style>
+        </object>
+        <option>1</option>
+        <flag>wxEXPAND</flag>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_BUTTON_ADD_CSS">
+              <bitmap>../icons/16x16/editadd.png</bitmap>
+              <tooltip>*Ajouter une CSS*</tooltip>
+            </object>
+            <flag>wxALL</flag>
+            <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_BUTTON_DEL_CSS">
+              <bitmap>../icons/16x16/editdelete.png</bitmap>
+              <tooltip>*Supprimer une CSS*</tooltip>
+              <style>wxBU_AUTODRAW</style>
+            </object>
+            <flag>wxALL</flag>
+            <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticLine">
+              <style>wxLI_VERTICAL</style>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>8</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_BUTTON_ACTIVE_CSS">
+              <bitmap>../icons/16x16/ok.png</bitmap>
+              <tooltip>*Activer une CSS*</tooltip>
+            </object>
+            <flag>wxALL</flag>
+            <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_BUTTON_DESACTIVE_CSS">
+              <bitmap>../icons/16x16/cancel.png</bitmap>
+              <tooltip>*Desactiver une CSS*</tooltip>
+            </object>
+            <flag>wxALL</flag>
+            <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticLine">
+              <style>wxLI_VERTICAL</style>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>8</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_BUTTON_VIEW_CSS">
+              <bitmap>../icons/16x16/open.png</bitmap>
+              <tooltip>*Affichar la CSS*</tooltip>
+            </object>
+            <flag>wxALL</flag>
+            <border>4</border>
+          </object>
+          <orient>wxHORIZONTAL</orient>
+        </object>
+        <option>0</option>
+        <flag>wxALIGN_CENTRE_HORIZONTAL</flag>
+      </object>
+    </object>
+    <style>wxTAB_TRAVERSAL</style>
+  </object>
+</resource>

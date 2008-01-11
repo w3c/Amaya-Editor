@@ -4,7 +4,7 @@
 #define __AMAYAEXPLORERPANEL_H__
 
 #include "wx/wx.h"
-#include "AmayaPanel.h"
+#include "AmayaToolPanel.h"
 
 class AmayaNormalWindow;
 class wxTreeEvent;
@@ -38,6 +38,7 @@ public:
 protected:
   DECLARE_EVENT_TABLE()
   void OnDirTreeItemActivate(wxTreeEvent& event);
+  void OnClose(wxCloseEvent& event);
   
 };
 

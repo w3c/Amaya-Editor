@@ -30,6 +30,11 @@
 
 
 #include "AmayaPanel.h"
+#include "AmayaToolPanel.h"
+
+// Set of registered AmayaToolPanel class infos.
+ClassInfoSet g_AmayaToolPanelClassInfoSet; 
+
 
 //
 //
@@ -648,5 +653,15 @@ void AmayaToolPanel::SetColor (int color)
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaToolPanel::SetColor"));
 }
+
+
+/**
+ * Function to register a new AmayaToolPanel class.
+ */
+void RegisterToolPanelClass(wxClassInfo* ci)
+{
+  g_AmayaToolPanelClassInfoSet.insert(ci);
+}
+
 
 #endif /* #ifdef _WX */

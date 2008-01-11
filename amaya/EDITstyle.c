@@ -1997,6 +1997,11 @@ void ApplyClass (Document doc, View view)
   char                bufMenu[MAX_TXT_LEN];
 #endif /* _GTK */
 
+  AmayaParams p;
+  p.param1 = doc;
+  TtaSendDataToPanel( WXAMAYA_PANEL_STYLE_LIST, p );
+
+  
   TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &lastSelectedChar);
   if (DocumentURLs[doc] == NULL)
     return;
@@ -2106,7 +2111,6 @@ void ApplyClass (Document doc, View view)
 #endif /* _WINGUI */
 
 #ifdef _WX  
-  AmayaParams p;
   p.param1 = NbClass;
   p.param2 = (void*)ListBuffer;
   p.param3 = (void*)CurrentClass;

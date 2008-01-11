@@ -6,7 +6,7 @@
 #include "wx/wx.h"
 #include "wx/spinctrl.h"
 
-#include "AmayaPanel.h"
+#include "AmayaToolPanel.h"
 
 class AmayaNormalWindow;
 
@@ -31,6 +31,7 @@ public:
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_APPLYCLASS;}
   virtual wxString GetToolPanelConfigKeyName()const{return wxT("PANEL_APPLYCLASS");}
+  virtual bool GetDefaultVisibilityState()const{return true;}
 
   /** Return a default AUI config for the panel.*/
   virtual wxString GetDefaultAUIConfig();

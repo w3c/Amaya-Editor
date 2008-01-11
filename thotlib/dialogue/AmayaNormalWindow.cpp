@@ -183,6 +183,19 @@ void AmayaNormalWindow::CleanUp()
     Close();
 }
 
+
+void AmayaNormalWindow::RegisterThotToolPanels()
+{
+  RegisterToolPanelClass(CLASSINFO(AmayaExplorerToolPanel));
+  RegisterToolPanelClass(CLASSINFO(AmayaXHTMLToolPanel));
+  RegisterToolPanelClass(CLASSINFO(AmayaAttributeToolPanel));
+  RegisterToolPanelClass(CLASSINFO(AmayaApplyClassToolPanel));
+  RegisterToolPanelClass(CLASSINFO(AmayaStyleToolPanel));
+  RegisterToolPanelClass(CLASSINFO(AmayaMathMLToolPanel));
+  RegisterToolPanelClass(CLASSINFO(AmayaSpeCharToolPanel));
+  RegisterToolPanelClass(CLASSINFO(AmayaXMLToolPanel));
+}
+
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
  *      Method:  LoadConfig
@@ -190,32 +203,28 @@ void AmayaNormalWindow::CleanUp()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::LoadConfig()
 {
-  if(Prof_ShowGUI("AmayaExplorerToolPanel"))
-    RegisterToolPanel(new AmayaExplorerToolPanel);
-  if(Prof_ShowGUI("AmayaXHTMLToolPanel"))
-    RegisterToolPanel(new AmayaXHTMLToolPanel);
-  if(Prof_ShowGUI("AmayaAttributeToolPanel"))
-    RegisterToolPanel(new AmayaAttributeToolPanel);
-  if(Prof_ShowGUI("AmayaApplyClassToolPanel"))
-    RegisterToolPanel(new AmayaApplyClassToolPanel);
-  if(Prof_ShowGUI("AmayaStyleToolPanel"))
-    RegisterToolPanel(new AmayaStyleToolPanel);
-  if(Prof_ShowGUI("AmayaMathMLToolPanel"))
-    RegisterToolPanel(new AmayaMathMLToolPanel);
-  if(Prof_ShowGUI("AmayaSpeCharToolPanel"))
-    RegisterToolPanel(new AmayaSpeCharToolPanel);
-  if(Prof_ShowGUI("AmayaXMLToolPanel"))
-    RegisterToolPanel(new AmayaXMLToolPanel);
-
-  /* init default panel states */
-  TtaSetEnvBoolean("OPEN_PANEL_EXPLORER", FALSE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_XHTML", TRUE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", FALSE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_XML", FALSE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_STYLE", TRUE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_MATHML", FALSE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", TRUE, FALSE);
-  TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", TRUE, FALSE);
+  ClassInfoSet::iterator it;
+  for( it = g_AmayaToolPanelClassInfoSet.begin();
+      it != g_AmayaToolPanelClassInfoSet.end(); ++it )
+  {
+      wxClassInfo *ci = *it;
+      wxString name = ci->GetClassName();
+      
+      if(Prof_ShowGUI((const char*)wxString(name).mb_str(wxConvUTF8)))
+        {
+          wxObject* object = ci->CreateObject();
+          AmayaToolPanel* panel = wxDynamicCast(object, AmayaToolPanel);
+          if(panel)
+            {
+              RegisterToolPanel(panel);
+              wxString str = wxT("OPEN_") + panel->GetToolPanelConfigKeyName();
+              TtaSetEnvBoolean((const char*)str.mb_str(wxConvUTF8),
+                   panel->GetDefaultVisibilityState(), FALSE);
+            }
+          else
+            delete object;
+        }
+  }
 }
 
 /*----------------------------------------------------------------------

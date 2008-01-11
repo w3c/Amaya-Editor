@@ -27,6 +27,8 @@
 #endif /* _WINGUI */
 #ifdef _WX
 #include "wxdialogapi_f.h"
+#include "appdialogue_wx.h"
+
 #endif /* _WX */
 
 static int         CSScase;
@@ -62,6 +64,7 @@ static char       *DisplayCategory[]={
 #include "query_f.h"
 #include "styleparser_f.h"
 #include "Xmlbuilder_f.h"
+#include "paneltypes_wx.h"
 
 /*----------------------------------------------------------------------
   LoadRemoteStyleSheet loads a remote style sheet into a file.
@@ -948,6 +951,123 @@ void MarginLeftDecrease (Document doc, View view)
   if (GetEnclosingBlock(doc))
     GenerateStyle ("margin-left:0;", TRUE);
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static CSSInfoPtr GetCSSFromInfo(Document doc, PInfoPtr pInfo)
+{
+  CSSInfoPtr          css = CSSList;
+  PInfoPtr            pI;
+  while (css)
+    {
+      pI = css->infos[doc];
+      while (pI)
+        {
+          if(pI==pInfo)
+            return css;
+          pI = pI->PiNext;
+        }
+      css = css->NextCSS;
+    }
+  return NULL;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void MakeDisableCSS(Document doc, PInfoPtr pInfo)
+{
+  CSSInfoPtr css;  
+    
+  /* disable the CSS file, but not remove */
+  if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
+    RemoveStyle (NULL, doc, TRUE, FALSE, pInfo->PiLink, pInfo->PiCategory);
+  else
+    {
+      css = GetCSSFromInfo(doc, pInfo);
+      if(css)
+        {
+          if(!css->url)
+            RemoveStyle (css->localName, doc, TRUE, FALSE, NULL, pInfo->PiCategory);
+          else
+            RemoveStyle (css->url, doc, TRUE, FALSE, NULL, pInfo->PiCategory);
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void MakeEnableCSS(Document doc, PInfoPtr pInfo)
+{
+  CSSInfoPtr css;  
+    
+  /* enable the CSS file */
+  if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
+    EnableStyleElement (doc, pInfo->PiLink);
+  else
+    {
+      css = GetCSSFromInfo(doc, pInfo);
+      if(css)
+        {
+          if(!css->url)
+            AddStyle (css->localName, doc, NULL, pInfo->PiCategory);
+          else
+            AddStyle (css->url, doc, NULL, pInfo->PiCategory);
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void MakeOpenCSS(Document doc, PInfoPtr pInfo)
+{
+  CSSInfoPtr css;
+  css = GetCSSFromInfo(doc, pInfo);
+  if(css)
+    {
+      DontReplaceOldDoc = TRUE;
+      if(!css->url)
+        GetAmayaDoc (css->localName, NULL, doc, doc, CE_CSS, TRUE, NULL, NULL);
+      else
+        GetAmayaDoc (css->url, NULL, doc, doc, CE_CSS, TRUE, NULL, NULL);
+    }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void MakeRemoveCSS(Document doc, PInfoPtr pInfo)
+{
+  CSSInfoPtr css, cssNext;
+  PInfoPtr   pInfoNext;
+  Element    el, firstSel, lastSel;
+  char       *ptr = NULL, *localname = NULL;
+  int        j, firstChar, lastChar;
+  
+  /* remove the link to this file */
+  if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
+    DeleteStyleElement (doc, pInfo->PiLink);
+  else if (pInfo->PiCategory == CSS_EXTERNAL_STYLE)
+    {
+      css = GetCSSFromInfo(doc, pInfo);
+      
+      /* look for the element LINK */
+      el = pInfo->PiLink;
+      RemoveLink (el, doc);
+      /* give current position */
+      TtaGiveFirstSelectedElement (doc,
+                                   &firstSel,
+                                   &firstChar, &j);
+      TtaGiveLastSelectedElement (doc,
+                                  &lastSel, &j, &lastChar);
+      /* register this element in the editing history */
+      TtaOpenUndoSequence (doc, firstSel,
+                           lastSel, firstChar, lastChar);
+      TtaRegisterElementDelete (el, doc);
+      TtaDeleteTree (el, doc);
+      TtaCloseUndoSequence (doc);
+      TtaSetDocumentModified (doc);
+    }
+}
+
 
 /*----------------------------------------------------------------------
   Callback procedure for dialogue events.                            

@@ -133,6 +133,8 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 #include "viewapi_f.h"
 #include "xwindowdisplay_f.h"
 #include "appdialogue_wx_f.h"
+#include "paneltypes_wx.h"
+
 
 /* defined into amaya directory ...*/
 extern void ZoomIn (Document document, View view);
@@ -2034,6 +2036,7 @@ void ChangeSelFrame (int frame)
   Document            doc, olddoc;
   View                view;
   int                 oldframe;
+  AmayaParams         params;
 
   if (ActiveFrame != frame)
     {
@@ -2054,6 +2057,7 @@ void ChangeSelFrame (int frame)
       TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
       TtaRefreshElementMenu (doc, 1);
       UpdateAttrMenu (LoadedDocument[doc-1], TRUE);
+      
 #endif /* _WX */
       /* the active frame changed so update the application focus */
       TtaRedirectFocus();

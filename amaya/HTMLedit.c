@@ -64,11 +64,14 @@ static int          OldHeight;
 #include "tree.h"
 #include "interface.h"
 
+
 #ifdef _WINGUI
 #include "wininclude.h"
 #endif /* _WINGUI */
 #ifdef _WX
 #include "wxdialogapi_f.h"
+#include "paneltypes_wx.h"
+#include "appdialogue_wx.h"
 #endif /* _WX */
 
 static ThotBool     Document_state;
@@ -1487,6 +1490,8 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
   int                 length, piNum;
   ThotBool            new_, oldStructureChecking;
   ThotBool            isHTML, isSVG;
+  AmayaParams         params;
+
 
   if (element == NULL)
     return;
@@ -1622,6 +1627,10 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
                     }
                   strcat (buffer, "\"");
                   TtaSetTextContent (element, (unsigned char *)buffer, Latin_Script, doc);
+                  
+                  /* Query update Style List tool panel. */
+                  params.param1 = doc;
+                  TtaSendDataToPanel( WXAMAYA_PANEL_STYLE_LIST, params );
                 }
             }
         }
@@ -1703,6 +1712,11 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
         TtaSetAttributeText (attr, "text/css", element, doc);	   
         if (AttrHREFundoable && new_)
           TtaRegisterAttributeCreate (attr, element, doc);
+        
+        /* Query update Style List tool panel. */
+        params.param1 = doc;
+        TtaSendDataToPanel( WXAMAYA_PANEL_STYLE_LIST, params );
+
       }
   if (AttrHREFundoable)
     {

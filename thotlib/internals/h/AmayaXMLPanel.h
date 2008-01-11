@@ -6,7 +6,7 @@
 #include "wx/wx.h"
 #include "wx/spinctrl.h"
 
-#include "AmayaPanel.h"
+#include "AmayaToolPanel.h"
 
 class AmayaNormalWindow;
 

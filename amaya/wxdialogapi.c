@@ -54,6 +54,7 @@ int img_Last_used_filter = 0;
 int obj_Last_used_filter = 0;
 int link_Last_used_filter = 0;
 
+
 /*----------------------------------------------------------------------
   ParseStyleDlgValues: parse a CSS Style string to update the Style
   dialog
@@ -239,7 +240,6 @@ ThotBool CreateSelectIntegralDlgWX ( int ref, ThotWindow parent)
   return FALSE;
 #endif /* _WX */
 }
-
 
 /*----------------------------------------------------------------------
   CreateInitConfirmDlgWX create the dialog for document changes
@@ -791,6 +791,8 @@ ThotBool CreateCSSDlgWX (int ref, int subref, ThotWindow parent, char *title,
   return FALSE;
 #endif /* _WX */  
 }
+
+
 
 /*----------------------------------------------------------------------
   CreateListDlgWX proposes 

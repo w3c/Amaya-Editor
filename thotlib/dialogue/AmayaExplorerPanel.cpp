@@ -122,11 +122,30 @@ void AmayaExplorerToolPanel::OnDirTreeItemActivate(wxTreeEvent& event)
 }
 
 /*----------------------------------------------------------------------
+ *       Class:  AmayaExplorerToolPanel
+ *      Method:  OnClose
+ * Description:  
+  -----------------------------------------------------------------------*/
+void AmayaExplorerToolPanel::OnClose(wxCloseEvent& event)
+{
+  wxGenericDirCtrl* dirCtrl = XRCCTRL(*this, "wxID_DIRCTRL_EXPLORER", wxGenericDirCtrl);
+  if (!dirCtrl->GetFilePath().IsEmpty())
+  {
+    char buffer[MAX_TXT_LEN];
+    strcpy(buffer, dirCtrl->GetFilePath().mb_str(wxConvUTF8));
+    TtaSetEnvString ("EXPLORER_PATH", buffer, TRUE);
+  }
+  
+  event.Skip();
+}
+
+/*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaExplorerToolPanel, AmayaToolPanel)
   EVT_TREE_ITEM_ACTIVATED( wxID_ANY, AmayaExplorerToolPanel::OnDirTreeItemActivate)
+  EVT_CLOSE(AmayaExplorerToolPanel::OnClose)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

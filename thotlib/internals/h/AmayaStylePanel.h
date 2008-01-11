@@ -4,7 +4,7 @@
 #define __AMAYASTYLEPANEL_H__
 
 #include "wx/wx.h"
-#include "AmayaPanel.h"
+#include "AmayaToolPanel.h"
 #include "AmayaToolBar.h"
 #include "AmayaColorButton.h"
 
@@ -31,6 +31,7 @@ public:
 
   /** Return a default AUI config for the panel.*/
   virtual wxString GetDefaultAUIConfig();
+  virtual bool GetDefaultVisibilityState()const{return true;}
 
   virtual bool CanResize() {return false;}
   

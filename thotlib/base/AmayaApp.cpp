@@ -38,6 +38,7 @@
 #include "wxAmayaSocketEvent.h"
 #include "AmayaAppInstance.h"
 #include "AmayaWindow.h"
+#include "AmayaNormalWindow.h"
 
 IMPLEMENT_APP(AmayaApp)
 
@@ -262,6 +263,7 @@ bool AmayaApp::OnInit()
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "Panel_MathML.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "Panel_XHTML.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "Panel_Style.xrc") );
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "Panel_StyleList.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "Panel_Explorer.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "Panel_XML.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "PreferenceDlgWX.xrc") );
@@ -297,6 +299,10 @@ bool AmayaApp::OnInit()
 
   // fill the icons list
   SetupDocumentIconList();
+  
+  /* Register all default thot tool panels. */
+  AmayaNormalWindow::RegisterThotToolPanels();
+  
 #endif /* _GLPRINT */
   m_AmayaIsInit = true;
 

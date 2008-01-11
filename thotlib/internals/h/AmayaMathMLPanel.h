@@ -8,7 +8,7 @@
 #include "wx/choicebk.h"
 #include "wx/toolbook.h"
 #include "wx/imaglist.h"
-#include "AmayaPanel.h"
+#include "AmayaToolPanel.h"
 #include "AmayaToolBar.h"
 
 class AmayaNormalWindow;

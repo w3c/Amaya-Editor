@@ -92,6 +92,7 @@ void ListDlgWX::OnCancelButton( wxCommandEvent& event )
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
+
 #endif /* _WX */
 
 

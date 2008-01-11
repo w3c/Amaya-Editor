@@ -677,16 +677,17 @@ ApplyClass
 *AmayaApplyClassToolPanel
 
 [css-browsing]
-OpenCSS
-DisableCSS
-EnableCSS
+*StyleListToolPanel
+#OpenCSS
+#DisableCSS
+#EnableCSS
 HelpStyleSheets
 
 [css-style]
 +css-browsing
 ShowAppliedStyle
-&LinkCSS
-&RemoveCSS
+#&LinkCSS
+#&RemoveCSS
 
 ########### OPTIONAL MODULES
 [config]

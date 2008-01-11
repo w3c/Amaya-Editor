@@ -231,6 +231,7 @@ AMAYA_OBJ = \
 	wxdialog/SpellCheckDlgWX.o \
 	wxdialog/SendByMailDlgWX.o \
 	wxdialog/StyleDlgWX.o \
+  wxdialog/StyleListToolPanel.o \
 	wxdialog/TitleDlgWX.o \
 	wxdialogapi.o \
 	EDITORAPP.o \

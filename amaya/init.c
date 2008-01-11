@@ -53,6 +53,8 @@
 #include "AmayaWindowIterator.h"
 #include "AmayaParams.h"
 #include "Elemlist.h"
+  
+#include "wxdialog/StyleListToolPanel.h"
 
 #include "javascript_f.h"
 extern XmlEntity *pMathEntityTable;
@@ -6579,6 +6581,9 @@ void InitAmaya (NotifyEvent * event)
   TtaSetPopupDocContextMenuFunction((PopupDocContextMenuFuction)AmayaPopupDocContextMenu);
   
   InsertableElement_Init();
+  
+  /* Register Amaya-specific ToolPanel classes. */
+  RegisterToolPanelClass(CLASSINFO(StyleListToolPanel));
 
   URL_list = NULL;
   URL_list_len = 0;

@@ -45,6 +45,14 @@ extern void MarginLeftIncrease ( Document doc,
                                  View view );
 extern void MarginLeftDecrease ( Document doc,
                                  View view );
+extern void MakeDisableCSS ( Document doc,
+                             PInfoPtr pInfo );
+extern void MakeEnableCSS ( Document doc,
+                            PInfoPtr pInfo );
+extern void MakeOpenCSS ( Document doc,
+                          PInfoPtr pInfo );
+extern void MakeRemoveCSS ( Document doc,
+                            PInfoPtr pInfo );
 extern void ShowAppliedStyle ( Document doc,
                                View view );
 extern void SynchronizeAppliedStyle ( NotifyElement *event );
@@ -103,6 +111,14 @@ extern void MarginLeftIncrease ( Document doc,
                                    View view );
 extern void MarginLeftDecrease ( Document doc,
                                    View view );
+extern void MakeDisableCSS ( Document doc,
+                               PInfoPtr pInfo );
+extern void MakeEnableCSS ( Document doc,
+                              PInfoPtr pInfo );
+extern void MakeOpenCSS ( Document doc,
+                            PInfoPtr pInfo );
+extern void MakeRemoveCSS ( Document doc,
+                              PInfoPtr pInfo );
 extern void ShowAppliedStyle ( Document doc,
                                  View view );
 extern void SynchronizeAppliedStyle ( NotifyElement *event );

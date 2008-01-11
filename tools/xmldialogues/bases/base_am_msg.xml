@@ -6705,6 +6705,30 @@
 	<message xml:lang="hu">XML szerkesztési mód</message>
 	<message xml:lang="it">Modalità di editing XML</message>
 </label>
+<label define="AM_PANEL_STYLE_LIST">
+	<message xml:lang="en">CSS list</message>
+	<message xml:lang="fr">Liste des CSS</message>
+</label>
+<label define="AM_PANEL_CSS_ADD">
+	<message xml:lang="en">Add a CSS ...</message>
+	<message xml:lang="fr">Ajouter une CSS ...</message>
+</label>
+<label define="AM_PANEL_CSS_REM">
+	<message xml:lang="en">Remove selected CSS</message>
+	<message xml:lang="fr">Retirer les CSS sélectionnées</message>
+</label>
+<label define="AM_PANEL_CSS_ACTIVE">
+	<message xml:lang="en">Active selected CSS</message>
+	<message xml:lang="fr">Activer les CSS sélectionnées</message>
+</label>
+<label define="AM_PANEL_CSS_DISACTIVE">
+	<message xml:lang="en">Disactive selected CSS</message>
+	<message xml:lang="fr">Désactiver les CSS sélectionnées</message>
+</label>
+<label define="AM_PANEL_CSS_OPEN">
+	<message xml:lang="en">Open selected CSS</message>
+	<message xml:lang="fr">Ouvre les CSS sélectionnées</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

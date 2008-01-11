@@ -4,7 +4,7 @@
 #define __AMAYAATTRIBUTEPANEL_H__
 
 #include "wx/wx.h"
-#include "AmayaPanel.h"
+#include "AmayaToolPanel.h"
 #include "wx/listctrl.h"
 #include "wx/spinctrl.h"
 

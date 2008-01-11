@@ -8,7 +8,7 @@
 #include "wx/choicebk.h"
 #include "wx/toolbook.h"
 #include "wx/imaglist.h"
-#include "AmayaPanel.h"
+#include "AmayaToolPanel.h"
 
 
 class AmayaNormalWindow;
@@ -42,6 +42,7 @@ public:
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_SPECHAR;}
   virtual wxString GetToolPanelConfigKeyName()const{return wxT("PANEL_SPECHAR");}
+  virtual bool GetDefaultVisibilityState()const{return true;}
 
   /** Return a default AUI config for the panel.*/
   virtual wxString GetDefaultAUIConfig();

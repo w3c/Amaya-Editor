@@ -36,6 +36,10 @@ private:
   int m_SubRef;
 };
 
+
+
+
+
 #endif  //__LISTDLGWX_H__
 
 #endif /* _WX */
