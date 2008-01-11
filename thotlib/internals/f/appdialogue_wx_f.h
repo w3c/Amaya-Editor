@@ -20,7 +20,7 @@ extern void TtaInitTopMenuStats ( int doc_id );
 extern void TtaRefreshTopMenuStats ( int doc_id,
                                      int menu_id );
 extern void TtaRefreshMenuItemStats ( int doc_id,
-                                      Menu_Ctl * ptrmenu,
+                                      void * context,
                                       int menu_item_id );
 extern void TtaRefreshStatusBarStats ( int changed_action_id,
                                        Document doc_id );
@@ -116,7 +116,7 @@ extern void TtaInitTopMenuStats ( int doc_id );
 extern void TtaRefreshTopMenuStats ( int doc_id,
                                        int menu_id );
 extern void TtaRefreshMenuItemStats ( int doc_id,
-                                        Menu_Ctl * ptrmenu,
+                                        void * context,
                                         int menu_item_id );
 extern void TtaRefreshStatusBarStats ( int changed_action_id,
                                          Document doc_id );

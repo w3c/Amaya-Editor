@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -764,9 +764,18 @@ void UpdateEditorMenus (Document doc)
   int        profile;
   ThotBool   isXhtml11;
 
+  if (DocumentTypes[doc] == docLog || DocumentTypes[doc] == docBookmark ||
+      DocumentMeta[doc] == NULL || DocumentMeta[doc]->method == CE_HELP)
+    return;
+  // first get menu updates attached to the document profile
+  TtaUpdateMenus (doc, 1, FALSE);
   profile = TtaGetDocumentProfile (doc);
   isXhtml11 = (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat &&
                profile != L_Strict && profile != L_Basic);
+  if (DocumentTypes[doc] == docCSS || DocumentTypes[doc] == docText)
+      TtaSetItemOff (doc, 1, Style, BShowAppliedStyle);
+  else
+      TtaSetItemOn (doc, 1, Style, BShowAppliedStyle);
 
   /* update specific menu entries */
   if (DocumentTypes[doc] == docCSS)
@@ -779,10 +788,7 @@ void UpdateEditorMenus (Document doc)
       TtaSetItemOff (doc, 1, Edit_, BTransform);
     }
   else if (DocumentTypes[doc] == docHTML)
-    {
-      TtaSetMenuOn (doc, 1, Types);
-      TtaUpdateMenus (doc, 1, FALSE);
-    }
+    TtaSetMenuOn (doc, 1, Types);
 
   /* Update the doctype menu */
   UpdateDoctypeMenu (doc);
@@ -898,6 +904,7 @@ void UpdateEditorMenus (Document doc)
   /* Update the javascript menus */
   UpdateJavascriptMenus ();
 #endif /* _JAVA */
+  TtaRefreshTopMenuStats (doc, -1);
 }
 
 
@@ -1966,7 +1973,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   char          buffer[MAX_LENGTH];
   int           x, y, w, h;
   int           requested_doc, visibility = 5;
-  Language	lang;
+  Language	    lang;
   ThotBool      isOpen, reinitialized = FALSE, show;
   /* specific to wxWidgets user interface */
   /* ------------------------------------ */
@@ -2808,6 +2815,7 @@ Document LoadDocument (Document doc, char *pathname,
       /* if a CSS document has a xml header, CheckDocHeader will detect that the document is XML !
        * (ex: http://www.inrialpes.fr has a css with a xml header :( )
        * when we know that the document is CSS (method == CE_CSS) we should force docType to docCSS */
+      docProfile = L_CSS;
       isXML   = FALSE;
       unknown = FALSE;
     }
@@ -2835,6 +2843,7 @@ Document LoadDocument (Document doc, char *pathname,
             {
               // only display the source of this document
               docType = docText;
+              docProfile = L_TEXT;
               isXML = FALSE;
             }
         }
@@ -2855,7 +2864,7 @@ Document LoadDocument (Document doc, char *pathname,
       else if (IsTextName (pathname))
         {
           docType = docText;
-          docProfile = L_Other;
+          docProfile = L_TEXT;
           unknown = FALSE;
         }
       else if (IsImageName (pathname))
@@ -2889,6 +2898,7 @@ Document LoadDocument (Document doc, char *pathname,
             {
               // only display the source of this document
               docType = docText;
+              docProfile = L_TEXT;
               isXML = FALSE;
             }
           docProfile = L_Other;
@@ -2954,6 +2964,7 @@ Document LoadDocument (Document doc, char *pathname,
                   /* ignore the mime type */
                   isXML = TRUE;
                   docType = thotType;
+                  docProfile = L_SVG;
                   BADMimeType = TRUE;
                 }
               else if (thotType == docMath)
@@ -2961,6 +2972,7 @@ Document LoadDocument (Document doc, char *pathname,
                   /* ignore the mime type */
                   isXML = TRUE;
                   docType = thotType;
+                  docProfile = L_MathML;
                   BADMimeType = TRUE;
                 }
               else
@@ -3013,11 +3025,12 @@ Document LoadDocument (Document doc, char *pathname,
                       // only display the source of this document
                       docType = docText;
                       isXML = FALSE;
+                      docProfile = L_TEXT;
                     }
 #else /* XML_GENERIC */
                   docType = docText;
+                  docProfile = L_TEXT;
 #endif /* XML_GENERIC */
-                  docProfile = L_Other;
                 }
               unknown = FALSE;
             }
@@ -3025,7 +3038,7 @@ Document LoadDocument (Document doc, char *pathname,
                    !strncasecmp (&content_type[i+1], "css", 3))
             {
               docType = docCSS;
-              docProfile = L_Other;
+              docProfile = L_CSS;
               unknown = FALSE;
             }
           else if ((contentText || contentApplication) &&
@@ -3041,7 +3054,7 @@ Document LoadDocument (Document doc, char *pathname,
           else if (contentText)
             {
               docType = docText;
-              docProfile = L_Other;
+              docProfile = L_TEXT;
               unknown = FALSE;
             }
           else if (contentApplication &&
@@ -3049,7 +3062,7 @@ Document LoadDocument (Document doc, char *pathname,
                     !strncasecmp (&content_type[i+1], "x-javascript", 12)))
             {
               docType = docText;
-              docProfile = L_Other;
+              docProfile = L_TEXT;
               unknown = FALSE;
             }	     
           else if (contentApplication &&
@@ -3057,7 +3070,7 @@ Document LoadDocument (Document doc, char *pathname,
             {
               /* it's an DTD document */
               docType = docText;
-              docProfile = L_Other;
+              docProfile = L_TEXT;
               unknown = FALSE;
             }
           else if (MultipleBookmarks() &&
@@ -3069,10 +3082,11 @@ Document LoadDocument (Document doc, char *pathname,
               isRDF = TRUE;
 #ifdef XML_GENERIC      
               docType = docXml;
+              docProfile = L_Other;
 #else /* XML_GENERIC */
               docType = docText;
+              docProfile = L_TEXT;
 #endif /* XML_GENERIC */
-              docProfile = L_Other;
               unknown = FALSE;
             }
           else if (contentApplication &&
@@ -3103,7 +3117,7 @@ Document LoadDocument (Document doc, char *pathname,
               /* it's an XML document */
               isXML = TRUE;
               docType = docSVG;
-              docProfile = L_Other;
+              docProfile = L_SVG;
               unknown = FALSE;
             }
           else if (contentImage)
@@ -3479,6 +3493,7 @@ Document LoadDocument (Document doc, char *pathname,
       TtaFreeMemory (tempdir);
    
       /* Update the Doctype menu */
+      TtaSetDocumentProfile (newdoc, docProfile);
       UpdateEditorMenus (newdoc);
 
       if (*inNewWindow || newdoc != doc)

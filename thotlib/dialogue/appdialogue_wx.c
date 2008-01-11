@@ -464,7 +464,8 @@ void TtaInitTopMenuStats( int doc_id )
 }
 
 /*----------------------------------------------------------------------
-  TtaRefreshMenuStats enable/disable top menubar menus for the given doc
+  TtaRefreshMenuStats enable/disable a top menu for the given doc
+  or all menus (menu_id = -1)
   ----------------------------------------------------------------------*/
 void TtaRefreshTopMenuStats( int doc_id, int menu_id )
 {
@@ -509,7 +510,7 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
           if (top_menu_pos >= 0 && top_menu_pos < top_menu_count)
             {
               // it has been found, update it
-              p_menu_bar->EnableTop(top_menu_pos, pDoc->EnabledMenus[menu_id]);
+              p_menu_bar->EnableTop(top_menu_pos, (bool)pDoc->EnabledMenus[menu_id]);
             }
           else
             {
@@ -536,7 +537,7 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
           if (top_menu_pos >= 0 && top_menu_pos < top_menu_count)
             {
               // it has been found, update it
-              p_menu_bar->EnableTop(top_menu_pos, pDoc->EnabledMenus[menu_id]);
+              p_menu_bar->EnableTop(top_menu_pos, (bool)pDoc->EnabledMenus[menu_id]);
             }
         }
       menu_id++;
@@ -546,12 +547,13 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
 
 /*----------------------------------------------------------------------
   TtaRefreshMenuItemStats enable/disable, toggle/untoggle menu items
-  widgets for the given doc
+  widgets for the given doc or all items of all menus (menu_id = -1)
   ----------------------------------------------------------------------*/
-void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
+void TtaRefreshMenuItemStats( int doc_id, void * context, int menu_item_id )
 {
   int           window_id  = TtaGetDocumentWindowId( doc_id, -1 );
-  AmayaWindow * p_window   = TtaGetWindowFromId(window_id);
+  Menu_Ctl     *ptrmenu = (Menu_Ctl *)context;
+  AmayaWindow  *p_window   = TtaGetWindowFromId(window_id);
   
   if (!p_window)
     return;
@@ -562,7 +564,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
   Menu_Ctl *    item_submenu = NULL;
   int           item_nb = 0;
   int           item_id = menu_item_id;
-  char          item_type = ' ';
+  char          item_type = ' ', *name;
   int           item_action = 0;
   ThotBool      item_enable = FALSE;
   ThotBool      item_toggle = FALSE;
@@ -628,7 +630,17 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
             case 'B': /* a normal menu item */
               item_action  = ptritem[item_nb].ItemAction;
               item_enable  = MenuActionList[item_action].ActionActive[doc_id];
-              p_menu_bar->Enable(item_id, item_enable);
+              name = MenuActionList[item_action].ActionName;
+#ifdef _MACOS
+              // sometimes the system desactivates these menu entries
+              if (item_enable && name &&
+                  ((!strcmp (name, "TtcCopySelection") ||
+                    !strcmp (name, "TtcCutSelection") ||
+                    !strcmp (name, "TtcDeleteSelection") ||
+                    !strcmp (name, "PasteBuffer")))
+                  p_menu_bar->Enable(item_id, false);
+#endif /* _MACOS */
+              p_menu_bar->Enable(item_id, (bool)item_enable);
               /* refresh the corresponding statusbar tool */
               TtaRefreshStatusBarStats( item_action, doc_id );
               break;
@@ -637,8 +649,8 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
               item_action  = ptritem[item_nb].ItemAction;
               item_enable  = MenuActionList[item_action].ActionActive[doc_id];
               item_toggle  = MenuActionList[item_action].ActionToggle[doc_id];
-              p_menu_bar->Check(item_id, item_toggle);
-              p_menu_bar->Enable(item_id, item_enable);
+              p_menu_bar->Check(item_id, (bool)item_toggle);
+              p_menu_bar->Enable(item_id, (bool)item_enable);
               /* refresh the corresponding statusbar tool */
               TtaRefreshStatusBarStats( item_action, doc_id );
               break;

@@ -640,6 +640,7 @@ void AmayaFrame::SetActive( bool active )
   wxString  url;
   int       doc_id;
   int       frame_id;
+  ThotBool  change = (m_IsActive == active);
 
  // do nothing if the frame stat doesnt change
   //if (m_IsActive == active)
@@ -657,9 +658,11 @@ void AmayaFrame::SetActive( bool active )
   
   // refresh the document's menu bar
   doc_id = FrameTable[frame_id].FrDoc;
-  TtaRefreshTopMenuStats( doc_id, -1 );
-  TtaRefreshMenuItemStats( doc_id, NULL, -1 );
-
+  if (change)
+    {
+      TtaRefreshTopMenuStats( doc_id, -1 );
+      TtaRefreshMenuItemStats( doc_id, NULL, -1 );
+    }
   // the window's menubar must be updated with the new active frame's one
   AmayaWindow * p_window = GetWindowParent();
   if ( !p_window )

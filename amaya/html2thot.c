@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -5371,6 +5371,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                       if (ptr && ptr < end)
                         {
                           *thotType = docHTML;
+                          *docProfile = L_Transitional;
                           ptr = strstr (&buffer[i], "XHTML");
                           if (!ptr || (ptr && ptr > end))
                             ptr = strstr (&buffer[i], "xhtml");
@@ -5468,6 +5469,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                               *thotType = docSVG;
                               *isXML = TRUE;
                               *isknown = TRUE;
+                              *docProfile = L_SVG;
                             }
                           else
                             {
@@ -5548,6 +5550,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                   *thotType = docHTML;
                                   *isXML = TRUE;
                                   *isknown = TRUE;
+                                  *docProfile = L_Transitional;
                                 }
                             }
                           else
@@ -5563,7 +5566,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           endOfSniffedFile = TRUE;
                           /* We consider the document as a svg one */
                           *thotType = docSVG;
-                          *docProfile = L_Other;
+                          *docProfile = L_SVG;
                           end = strstr (&buffer[i], ">");
                           ptrns = strstr (&buffer[i], "xmlns");
                           if (ptrns && ptrns < end)

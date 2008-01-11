@@ -1,6 +1,6 @@
 /*
  *
- *  COPYRIGHT MIT and INRIA, 1996-2007
+ *  COPYRIGHT MIT and INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -601,8 +601,8 @@ int Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
 {
   int              left, right, middle, i;
 
-  if (NbFunctions == 0 || docProfile == 0)
-    /* All functions are allowed */
+  if (NbFunctions == 0 || docProfile == 0 || name == NULL)
+    /* no specific profile */
     return -1;
 
   /* Dichotomic search */
@@ -611,6 +611,22 @@ int Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
   if (!strcmp (name, "CreateRuby") && docProfile == L_Strict)
     /* refused */
     return 0;
+  if (!strcmp (name, "TtcUndo") ||
+      !strcmp (name, "TtcRedo") ||
+      !strcmp (name, "StopTransfer"))
+    // don't change the current status
+    return -1;
+  if (!strcmp (name, "TtcCopySelection"))
+    return 1; /* always active */
+  if (!strcmp (name, "TtcCutSelection") ||
+      !strcmp (name, "TtcDeleteSelection") ||
+      !strcmp (name, "PasteBuffer"))
+    {
+      if (RO)
+        return 0; /* refused */
+      else
+        return 1; /* always active */
+    }
 
   while (left <= right)
     {
@@ -760,6 +776,8 @@ void Prof_InitTable (char *profile)
                 FunctionMask[i] = (FunctionMask[i] | L_Bookmarks);
               else if (strstr (DoctypeTable->ProEntries[j].ProName, "CSS"))
                 FunctionMask[i] = (FunctionMask[i] | L_CSS);
+              else if (strstr (DoctypeTable->ProEntries[j].ProName, "Text"))
+                FunctionMask[i] = (FunctionMask[i] | L_TEXT);
             }
         }
     }

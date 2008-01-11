@@ -377,7 +377,7 @@ HelpXml
 &InsertAfter
 &NewXHTML
 &NewMathML
-&NewSVG
+#&NewSVG
 &NewCss
 &RemoveDoctype
 &AddDoctype
@@ -682,11 +682,11 @@ ApplyClass
 OpenCSS
 DisableCSS
 EnableCSS
-ShowAppliedStyle
 HelpStyleSheets
 
 [css-style]
 +css-browsing
+ShowAppliedStyle
 &LinkCSS
 &RemoveCSS
 
@@ -720,14 +720,14 @@ HelpNumbering
 [annot-doc]
 AnnotateSelection
 AnnotateDocument
-DeleteAnnotation
 LoadAnnotations
 HelpAnnotation
-MoveAnnotationSel
-MoveAnnotationXPtr
-XPointer_bufferStore
 
 [annot-annot]
+DeleteAnnotation
 PostAnnotation
 ReplyToAnnotation
+#MoveAnnotationSel
+#MoveAnnotationXPtr
+#XPointer_bufferStore
 

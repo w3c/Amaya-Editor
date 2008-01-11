@@ -1,5 +1,5 @@
 /*
- * Copyright (c) INRIA 1996-2007
+ * Copyright (c) INRIA 1996-2008
  */
 
 /*
@@ -876,7 +876,7 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
 {
   Menu_Ctl           *ptrmenu, *ptrsmenu;
   Item_Ctl           *ptr, *sptr;
-  int                 profile, action, i, j, m = 0;
+  int                 profile, action, i, j, m = 0, res;
 
   if (doc)
     {
@@ -912,24 +912,25 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
                           action = sptr[j].ItemAction;
                           if (action == -1)
                             ;	/* separator */
-                          else if (Prof_BelongDoctype (MenuActionList[action].ActionName,
-                                                       profile, RO) != 0)
-                            MenuActionList[action].ActionActive[doc] = TRUE;
                           else
-                            MenuActionList[action].ActionActive[doc] = FALSE;
+                            {
+                              res = Prof_BelongDoctype (MenuActionList[action].ActionName, profile, RO);
+                              if (res == 1)
+                                MenuActionList[action].ActionActive[doc] = TRUE;
+                              else if (res == 0)
+                                MenuActionList[action].ActionActive[doc] = FALSE;
+                            }
                           j++;
                         }
                     }
-                  else if (MenuActionList[action].ActionName == NULL ||
-                           !strcmp (MenuActionList[action].ActionName, "TtcUndo") ||
-                           !strcmp (MenuActionList[action].ActionName, "TtcRedo") ||
-                           !strcmp (MenuActionList[action].ActionName, "StopTransfer"))
-                    ; // don't change the current status
-                  else if (Prof_BelongDoctype (MenuActionList[action].ActionName,
-                                               profile, RO) != 0)
-                    MenuActionList[action].ActionActive[doc] = TRUE;
                   else
-                    MenuActionList[action].ActionActive[doc] = FALSE;
+                    {
+                      res = Prof_BelongDoctype (MenuActionList[action].ActionName, profile, RO);
+                      if (res == 1)
+                         MenuActionList[action].ActionActive[doc] = TRUE;
+                       else if (res == 0)
+                         MenuActionList[action].ActionActive[doc] = FALSE;
+                     }
                   i++;
                 }
               // refresh that menu
@@ -1446,10 +1447,12 @@ void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
   FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
   if (action > 0 && action < MaxMenuAction &&
       MenuActionList[action].ActionActive[document])
+    {
     /* the entry is found and is active */
-    MenuActionList[action].ActionActive[document] = FALSE;
-  if (menu > 0)
-    TtaRefreshMenuItemStats( document, NULL, itemID );
+      MenuActionList[action].ActionActive[document] = FALSE;
+      if (menu > 0)
+        TtaRefreshMenuItemStats( document, NULL, itemID );
+    }
 }
 
 
@@ -1480,7 +1483,8 @@ void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
     {
       /* the entry is found and is not active */
       MenuActionList[action].ActionActive[document] = TRUE;
-      TtaRefreshMenuItemStats( document, NULL, itemID );
+      if (menu > 0)
+        TtaRefreshMenuItemStats( document, NULL, itemID );
     }
 }
 

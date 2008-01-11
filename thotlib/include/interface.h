@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2007
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -420,6 +420,18 @@ extern void TtaGiveSelectPosition (Document document, Element element,
   ----------------------------------------------------------------------*/
 extern void TtaUpdateMenus (Document doc, View view, ThotBool RO);
 
+
+/*----------------------------------------------------------------------
+  TtaRefreshMenuStats enable/disable a top menu for the given doc
+  or all menus (menu_id = -1)
+  ----------------------------------------------------------------------*/
+extern void TtaRefreshTopMenuStats(Document doc, int menu_id );
+
+/*----------------------------------------------------------------------
+  TtaRefreshMenuItemStats enable/disable, toggle/untoggle menu items
+  widgets for the given doc or all items of all menus (menu_id = -1)
+  ----------------------------------------------------------------------*/
+extern void TtaRefreshMenuItemStats (Document doc, void *ptrmenu, int menu_item_id );
 
 /*----------------------------------------------------------------------
    TtaListShortcuts
