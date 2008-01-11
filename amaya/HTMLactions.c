@@ -2987,6 +2987,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       TtaSetItemOn (doc, 1, Types, BTFoot);
       TtaSetItemOn (doc, 1, Types, BDataCell);
       TtaSetItemOn (doc, 1, Types, BHeadingCell);
+      TtaSetItemOn (doc, 1, Types, BCellMerge);
       TtaSetItemOn (doc, 1, Types, BCellHExtend);
       TtaSetItemOn (doc, 1, Types, BCellVExtend);
       TtaSetItemOn (doc, 1, Types, BCellHShrink);
@@ -3001,6 +3002,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
   if (withinTable && inMath && !MTableMenuActive)
     {
       MTableMenuActive = TRUE;
+      TtaSetItemOn (doc, 1, XMLTypes, BMCellMerge);
       TtaSetItemOn (doc, 1, XMLTypes, BMCellHExtend);
       TtaSetItemOn (doc, 1, XMLTypes, BMCellVExtend);
       TtaSetItemOn (doc, 1, XMLTypes, BMCellHShrink);
@@ -3039,15 +3041,15 @@ void UpdateContextSensitiveMenus (Document doc, View view)
             TtaSetItemOff (doc, 1, XMLTypes, BMCellVShrink);
           if (CanMergeSelectedCells (doc))
             {
-            TtaSetItemOn (doc, 1, XMLTypes, BMCellMerge);
-            TtaSetItemOff (doc, 1, XMLTypes, BMCellHExtend);
-            TtaSetItemOff (doc, 1, XMLTypes, BMCellVExtend);
+              TtaSetItemOn (doc, 1, XMLTypes, BMCellMerge);
+              TtaSetItemOff (doc, 1, XMLTypes, BMCellHExtend);
+              TtaSetItemOff (doc, 1, XMLTypes, BMCellVExtend);
             }
           else
             {
-            TtaSetItemOff (doc, 1, XMLTypes, BMCellMerge);
-            TtaSetItemOn (doc, 1, XMLTypes, BMCellHExtend);
-            TtaSetItemOn (doc, 1, XMLTypes, BMCellVExtend);
+              TtaSetItemOff (doc, 1, XMLTypes, BMCellMerge);
+              TtaSetItemOn (doc, 1, XMLTypes, BMCellHExtend);
+              TtaSetItemOn (doc, 1, XMLTypes, BMCellVExtend);
             }
         }
       else
@@ -3062,15 +3064,15 @@ void UpdateContextSensitiveMenus (Document doc, View view)
             TtaSetItemOff (doc, 1, Types, BCellVShrink);
           if (CanMergeSelectedCells (doc))
             {
-            TtaSetItemOn (doc, 1, Types, BCellMerge);
-            TtaSetItemOff (doc, 1, Types, BCellHExtend);
-            TtaSetItemOff (doc, 1, Types, BCellVExtend);
+              TtaSetItemOn (doc, 1, Types, BCellMerge);
+              TtaSetItemOff (doc, 1, Types, BCellHExtend);
+              TtaSetItemOff (doc, 1, Types, BCellVExtend);
             }
           else
             {
-            TtaSetItemOff (doc, 1, Types, BCellMerge);
-            TtaSetItemOn (doc, 1, Types, BCellHExtend);
-            TtaSetItemOn (doc, 1, Types, BCellVExtend);
+              TtaSetItemOff (doc, 1, Types, BCellMerge);
+              TtaSetItemOn (doc, 1, Types, BCellHExtend);
+              TtaSetItemOn (doc, 1, Types, BCellVExtend);
             }
         }
     }

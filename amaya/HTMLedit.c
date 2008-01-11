@@ -1857,11 +1857,6 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
   char               *buffer = NULL, *name;
   int                 length;
 
-#if defined(_GTK)
-  int                 i;
-  char                s[MAX_LENGTH];
-#endif /* #if defined(_GTK) */
-   
   ThotBool            isHTML;
   if (clickFirst)
     {
@@ -1964,46 +1959,6 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 
       TtaExtractName (DocumentURLs[doc], DirectoryName, DocumentName);
 
-#if defined(_GTK)
-      /* Dialogue form for open URL or local */
-      i = 0;
-      strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      i += strlen (&s[i]) + 1;
-      strcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
-      i += strlen (&s[i]) + 1;
-      strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLICK));
-      i += strlen (&s[i]) + 1;
-      strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
-	
-      TtaNewSheet (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),
-                   TtaGetMessage (AMAYA, AM_ATTRIBUTE), 4, s,
-                   TRUE, 2, 'L', D_CANCEL);
-      TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
-                      TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
-      TtaNewLabel (BaseDialog + HREFLocalName,
-                   BaseDialog + AttrHREFForm, " ");
-      /* initialise the text field in the dialogue box */
-      TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
-      /*strcpy (s, DirectoryName);
-        strcat (s, DIR_STR);
-        strcat (s, DocumentName);*/
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
-#endif /* #if defined(_GTK) */
-#ifdef _WINGUI
-      if (LinkAsXmlCSS || LinkAsCSS)
-        /* select a CSS file */
-        CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
-                             DocSelect, DirSelect, docCSS);
-      else if (LinkAsJavascript)
-        /* select a Javascript file */
-        CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
-                             DocSelect, DirSelect, docJavascript);
-      else
-        /* select any file */
-        CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
-                             DocSelect, DirSelect, docText);
-#endif  /* _WINGUI */
 #ifdef _WX
       ThotBool created = FALSE;
 	
@@ -2021,6 +1976,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
                                    doc, docJavascript);
       else
 	  {
+#ifdef IV
 		if (AttrHREFvalue[0] == EOS &&
 			((TargetDocumentURL && TargetDocumentURL[0] != EOS) ||
 			(TargetName && TargetName[0] != EOS)))
@@ -2034,6 +1990,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 		  strcat (AttrHREFvalue, TargetName);
 		  }
 		}
+#endif
         /* select any file */
         created = CreateHRefDlgWX (BaseDialog + AttrHREFForm,
                                    TtaGetViewFrame (doc, 1), URL_list,
