@@ -50,7 +50,7 @@ ThotBool WithinLastPastedCell (Element el)
 
 /*----------------------------------------------------------------------
   GetSiblingRow
-  returns the sibling row before or after the cuttent row.
+  returns the sibling row before or after the current row.
   ----------------------------------------------------------------------*/
 Element GetSiblingRow (Element row, ThotBool before, ThotBool inMath)
 {
@@ -1026,11 +1026,11 @@ ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
 }
 
 /*----------------------------------------------------------------------
-  NextRow
+  NextTableRow
   return the next row. Takes into account possible Template elements
   enclosing the given row or the next one.
   ----------------------------------------------------------------------*/
-static Element NextRow (Element row)
+Element NextTableRow (Element row)
 {
   Element       next, child, ancestor, prev;
   ElementType   elType;
@@ -1060,7 +1060,7 @@ static Element NextRow (Element row)
             return child;
           else
             // ignore empty template elements
-            return NextRow (next);
+            return NextTableRow (next);
         }
     }
   else
@@ -1206,7 +1206,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
       group = TtaGetParent (row);
       while (row)
         {
-          nextRow = NextRow (row);
+          nextRow = NextTableRow (row);
           elType = TtaGetElementType (row);
           if ((!inMath && elType.ElTypeNum == rowType) ||
               (inMath && (elType.ElTypeNum == MathML_EL_MTR ||

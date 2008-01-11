@@ -3178,6 +3178,220 @@ void CellHorizExtend (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  CanMergeSelectedCells
+  Check if command "Merge selected cells" can be applied to the
+  current selection
+  ----------------------------------------------------------------------*/
+ThotBool CanMergeSelectedCells (Document doc)
+{
+  Element       cell, lastCell;
+
+  cell = GetEnclosingCell (doc, TRUE);
+  if (!cell)
+    return FALSE;
+  lastCell = GetEnclosingCell (doc, FALSE);
+  if (!lastCell || lastCell == cell)
+    return FALSE;
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  MergeSelectedCells
+  Merge theall selected cells into a single cell.
+  ----------------------------------------------------------------------*/
+void MergeSelectedCells (Document doc, View view)
+{
+  Element       firstCell, lastCell, cell, firstRow, lastRow, row, firstCol,
+                lastCol, col;
+  ElementType   elType;
+  Attribute     attr, colspanAttr, rowspanAttr;
+  AttributeType attrType;
+  int           rowspan, colspan, span, nrow, ncol;
+  ThotBool      inMath;
+
+  /* get the cell containing the beginning of the current selection */
+  firstCell = GetEnclosingCell (doc, TRUE);
+  if (!firstCell)
+    return;
+  /* get the cell containing the end of the current selection */
+  lastCell = GetEnclosingCell (doc, FALSE);
+  if (!lastCell || lastCell == firstCell)
+    /* only one cell selected */
+    return;
+  elType = TtaGetElementType (firstCell);
+  inMath = !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML");  
+  attrType.AttrSSchema = elType.ElSSchema;
+  /* the current selection is supposed to contain only cells that have the
+     shape of a rectangle */
+  /* count the number of rows in the current selection */
+  firstRow = TtaGetParent (firstCell);
+  lastRow = TtaGetParent (lastCell);
+  nrow = 0;
+  row = firstRow;
+  while (row)
+    {
+      nrow++;
+      if (row == lastRow)
+        row = NULL;
+      else
+        row = NextTableRow (row);
+    }
+  /* get the rowspan value of the last selected cell */
+  if (inMath)
+    attrType.AttrTypeNum = MathML_ATTR_rowspan_;
+  else
+    attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+  rowspanAttr = TtaGetAttribute (firstCell, attrType);
+  if (rowspanAttr)
+    {
+      rowspan = TtaGetAttributeValue (rowspanAttr);
+      if (rowspan < 0)
+        rowspan = 1;
+    }
+  else
+    rowspan = 1;
+  attr = TtaGetAttribute (lastCell, attrType);
+  if (attr)
+    {
+      span = TtaGetAttributeValue (attr);
+      if (span < 0)
+        span = 1;
+    }
+  else
+    span = 1;
+  if (span == 0)
+    /* "infinite" spanning */
+    nrow = 0;
+  else
+    nrow = nrow + span - 1;
+
+  if (inMath)
+    attrType.AttrTypeNum = MathML_ATTR_columnspan;
+  else
+    attrType.AttrTypeNum = HTML_ATTR_colspan_;
+  colspanAttr = TtaGetAttribute (firstCell, attrType);
+  if (colspanAttr)
+    {
+      colspan = TtaGetAttributeValue (colspanAttr);
+      if (colspan < 0)
+        colspan = 1;
+    }
+  else
+    colspan = 1;
+
+  /* check all cells in the first row selected to find the rightmost
+     column (lastCol) of the current selection */
+  firstCol = TtaGetColumn (firstCell);
+  lastCol = TtaGetColumn (lastCell); /* initial rightmost column in selection*/
+  if (inMath)
+    attrType.AttrTypeNum = MathML_ATTR_MColExt;
+  else
+    attrType.AttrTypeNum = HTML_ATTR_ColExt;
+  cell = firstCell;
+  do
+    {
+      attr = TtaGetAttribute (cell, attrType);
+      if (attr)
+        /* this cell is extended horizontally. Get its rightmost col */
+        TtaGiveReferenceAttributeValue (attr, &col);
+      else
+        col = TtaGetColumn (cell);
+      if (TtaIsBefore (lastCol, col))
+        /* this is the rightmost column we have seen so far */
+        lastCol = col;
+      if (cell == lastCell)
+        cell = NULL;
+      else
+        {
+          TtaGiveNextElement (doc, &cell, lastCell);
+          if (cell && TtaGetParent (cell) != firstRow)
+            /* end of first row */
+            cell = NULL;
+        }
+    }
+  while (cell);
+  /* count the number of columns in the current selection */
+  ncol = 0;
+  col = firstCol;
+  while (col)
+    {
+      ncol++;
+      if (col == lastCol)
+        col = NULL;
+      else
+        TtaNextSibling (&col);
+    }
+  /* merge cells */
+  TtaOpenUndoSequence (doc, firstCell, lastCell, 0, 0);
+  if (ncol != colspan)
+    {
+      ChangeColspan (firstCell, colspan, &ncol, doc);
+      SetColExt (firstCell, ncol, doc, inMath, FALSE);
+      if (!colspanAttr)
+        {
+          if (ncol != 1)
+            {
+              if (inMath)
+                attrType.AttrTypeNum = MathML_ATTR_columnspan;
+              else
+                attrType.AttrTypeNum = HTML_ATTR_colspan_;
+              colspanAttr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (firstCell, colspanAttr, doc);
+              TtaSetAttributeValue (colspanAttr, ncol, firstCell, doc);
+              TtaRegisterAttributeCreate (colspanAttr, firstCell, doc);
+            }
+        }
+      else
+        {
+          if (ncol == 1)
+            {
+              TtaRegisterAttributeDelete (colspanAttr, firstCell, doc);
+              TtaRemoveAttribute (firstCell, colspanAttr, doc);
+            }
+          else
+            {
+              TtaRegisterAttributeReplace (colspanAttr, firstCell, doc);
+              TtaSetAttributeValue (colspanAttr, ncol, firstCell, doc);
+            }
+        }
+    }
+  if (nrow != rowspan)
+    {
+      ChangeRowspan (firstCell, rowspan, &nrow, doc);
+      /* set and register the new value of attribute rowspan */
+      if (!rowspanAttr)
+        {
+          if (nrow != 1)
+            {
+              if (inMath)
+                attrType.AttrTypeNum = MathML_ATTR_rowspan_;
+              else
+                attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+              rowspanAttr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (firstCell, rowspanAttr, doc);
+              TtaSetAttributeValue (rowspanAttr, nrow, firstCell, doc);
+              TtaRegisterAttributeCreate (rowspanAttr, firstCell, doc);
+            }
+        }
+      else
+        {
+          if (nrow == 1)
+            {
+              TtaRegisterAttributeDelete (rowspanAttr, firstCell, doc);
+              TtaRemoveAttribute (firstCell, rowspanAttr, doc);
+            }
+          else
+            {
+              TtaRegisterAttributeReplace (rowspanAttr, firstCell, doc);
+              TtaSetAttributeValue (rowspanAttr, nrow, firstCell, doc);
+            }
+        }
+      SetRowExt (firstCell, nrow, doc, inMath);
+    }
+  TtaCloseUndoSequence (doc);
+}
+
+/*----------------------------------------------------------------------
   CanVShrinkCell
   Check if command "Shrink cell vertically" can be applied to the
   current selection

@@ -136,10 +136,13 @@ extern void CellVertExtend ( Document doc,
                              View view );
 extern void CellHorizExtend ( Document doc,
                               View view );
-extern ThotBool CanHShrinkCell ( Document doc );
+extern ThotBool CanMergeSelectedCells ( Document doc );
+extern void MergeSelectedCells ( Document doc,
+                                 View view );
+extern ThotBool CanVShrinkCell ( Document doc );
 extern void CellVertShrink ( Document doc,
                              View view );
-extern ThotBool CanVShrinkCell ( Document doc );
+extern ThotBool CanHShrinkCell ( Document doc );
 extern void CellHorizShrink ( Document doc,
                               View view );
 extern void SelectRow ( Document doc,
@@ -397,6 +400,9 @@ extern void CellVertExtend ( Document doc,
                                View view );
 extern void CellHorizExtend ( Document doc,
                                 View view );
+extern ThotBool CanMergeSelectedCells ( Document doc );
+extern void MergeSelectedCells ( Document doc,
+                                   View view );
 extern ThotBool CanVShrinkCell ( Document doc );
 extern void CellVertShrink ( Document doc,
                                View view );

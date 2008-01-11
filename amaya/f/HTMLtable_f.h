@@ -33,6 +33,7 @@ extern ThotBool RemoveColumn ( Element colhead,
                                Document doc,
                                ThotBool ifEmpty,
                                ThotBool inMath );
+extern Element NextTableRow ( Element row );
 extern void CheckAllRows ( Element table,
                            Document doc,
                            ThotBool placeholder,
@@ -121,6 +122,7 @@ extern ThotBool RemoveColumn ( Element colhead,
                                  Document doc,
                                  ThotBool ifEmpty,
                                  ThotBool inMath );
+extern Element NextTableRow ( Element row );
 extern void CheckAllRows ( Element table,
                              Document doc,
                              ThotBool placeholder,
