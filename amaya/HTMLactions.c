@@ -3037,6 +3037,18 @@ void UpdateContextSensitiveMenus (Document doc, View view)
             TtaSetItemOn (doc, 1, XMLTypes, BMCellVShrink);
           else
             TtaSetItemOff (doc, 1, XMLTypes, BMCellVShrink);
+          if (CanMergeSelectedCells (doc))
+            {
+            TtaSetItemOn (doc, 1, XMLTypes, BMCellMerge);
+            TtaSetItemOff (doc, 1, XMLTypes, BMCellHExtend);
+            TtaSetItemOff (doc, 1, XMLTypes, BMCellVExtend);
+            }
+          else
+            {
+            TtaSetItemOff (doc, 1, XMLTypes, BMCellMerge);
+            TtaSetItemOn (doc, 1, XMLTypes, BMCellHExtend);
+            TtaSetItemOn (doc, 1, XMLTypes, BMCellVExtend);
+            }
         }
       else
         {
@@ -3048,6 +3060,18 @@ void UpdateContextSensitiveMenus (Document doc, View view)
             TtaSetItemOn (doc, 1, Types, BCellVShrink);
           else
             TtaSetItemOff (doc, 1, Types, BCellVShrink);
+          if (CanMergeSelectedCells (doc))
+            {
+            TtaSetItemOn (doc, 1, Types, BCellMerge);
+            TtaSetItemOff (doc, 1, Types, BCellHExtend);
+            TtaSetItemOff (doc, 1, Types, BCellVExtend);
+            }
+          else
+            {
+            TtaSetItemOff (doc, 1, Types, BCellMerge);
+            TtaSetItemOn (doc, 1, Types, BCellHExtend);
+            TtaSetItemOn (doc, 1, Types, BCellVExtend);
+            }
         }
     }
 

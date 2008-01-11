@@ -186,6 +186,7 @@ MENUS
 	Types.Table Separator;
 	Types.Table button:BDataCell -> ChangeToDataCell;
 	Types.Table button:BHeadingCell -> ChangeToHeadingCell;
+	Types.Table button:BCellMerge -> MergeSelectedCells;
 	Types.Table button:BCellHExtend -> CellHorizExtend;
 	Types.Table button:BCellVExtend -> CellVertExtend;
 	Types.Table button:BCellHShrink -> CellHorizShrink;
@@ -274,6 +275,7 @@ MENUS
   XMLTypes.MathConstruct button:BMultiscripts -> CreateMMULTISCRIPTS icon:MATHML_mscript.png;
   XMLTypes.MathMatrics button:BMatrix -> CreateMTABLE icon:MATHML_matrix.png;
   XMLTypes.MathMatrics Separator;
+	XMLTypes.MathMatrics button:BMCellMerge -> MergeSelectedCells;
 	XMLTypes.MathMatrics button:BMCellHExtend -> CellHorizExtend;
 	XMLTypes.MathMatrics button:BMCellVExtend -> CellVertExtend;
 	XMLTypes.MathMatrics button:BMCellHShrink -> CellHorizShrink;

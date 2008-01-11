@@ -147,190 +147,192 @@
 145 tfoot
 146 改为数据单元格 (td)
 147 改为表头单元格 (th)
-148 与右侧单元格合并
-149 与下方单元格合并
-150 收缩水平范围
-151 收缩垂直范围
-152 选择该行
-153 插入新行
-154 附加一行
-155 选择该列
-156 插入新列
-157 附加一列
-158 粘贴在前
-159 粘贴在后
-160 MAP 区域
-161 插入 MAP
-162 圆形区域
-163 多边形区域
-164 矩形区域
-165 框架(&S)
-166 style
-167 Comment
-168 base
-169 meta
-170 link
-171 script
-172 noscript
-173 段落 (p)
-174 预格式化 (pre)
-175 ADDRESS (address)
-176 水平标尺 (hr)
-177 图片 (img)...
-178 换行 (br)
-179 层 (div)
-180 区域引用 (blockquote)
-181 内嵌 frame (iframe)
-182 ruby
-183 信息类型
-184 强调 (em)
-185 加强 (strong)
-186 引用 (cite)
-187 定义 (dfn)
-188 代码 (code)
-189 变量 (var)
-190 样例 (samp)
-191 键盘 (kbd)
-192 所写 (abbr)
-193 首字母 (acronym)
-194 插入 (ins)
-195 删除 (del)
-196 字符元素
-197 斜体 (i)
-198 粗体 (b)
-199 打字机风格 (tt)
-200 大号
-201 小号
-202 桥表 (sub)
-203 上标 (sup)
-204 Quotation 引用 (q)
-205 文字反排 (bdo)
-206 区域统计(&S)
-207 生成内容列表(&G)
-208 插入时间戳
-209 制作书籍(&M)
-210 新建数学公式 (math)
-211 基本元素(&E)
-212 普通文本 (mtext)
-213 识别符 (mi)
-214 数字 (mn)
-215 算符 (mo)
-216 空格 (mspace)
-217 特殊字符 (&xxx;)
-218 不可见次数
-219 采用函数
-220 构架(&C)
-221 根 (mroot)
-222 平方根 (msqrt)
-223 封装 (menclose)
-224 分数 (mfrac)
-225 上标下标 (msubsup)
-226 下标 (msub)
-227 上标 (msup)
-228 顶部底部标记 (munderover)
-229 底部标记 (munder)
-230 顶部标记 (mover)
-231 括号 (mrow)
-232 多重标记 (mmultiscripts)
-233 矩阵
-234 新建矩阵 (mtable)
-235 与右侧单元格
-236 与下方单元格
-237 收缩水平范围
-238 收缩垂直范围
-239 选择该行
-240 插入新行
-241 附加一行
-242 选择该列
-243 插入新列
-244 附加一列
-245 粘贴在前
-246 粘贴在后
-247 显示图形库
-248 添加选中图形
-249 注释
-250 XML 元素...
-251 复制地址
-252 粘贴地址
-253 链接到上个目标(&L)
-254 创建或更改链接(&C)...
-255 创建目标(&T)
-256 删除 anchor(&D)
-257 添加/删除 ID(&A)...
-258 全屏显示(&F)
-259 **Show/Hide toolbars
-260 **&Browsing
-261 **&Editing
-262 显示工具栏(&T)
-263 显示 MAP 区域(&M)
-264 显示目标 (&T)
-265 放大
-266 缩小
-267 显示格式化的视图(&F)
-268 显示结构(&S)
-269 显示源文件(&U)
-270 显示链接(&K)
-271 显示候选(&A)
-272 显示表格内容(&O)
-273 显示时间排列
-274 水平排列视图
-275 垂直排列视图
-276 CSS样式(&S)...
-277 创建规则(&R)...
-278 显示已应用的样式...
-279 链接(&K)...
-280 打开(&N)...
-281 禁用(&D)...
-282 启用(&E)...
-283 移除(&V)...
-284 为选择区作注释
-285 为文档作注释
-286 移动到选择区
-287 存储选择区为 XPointer(&X)
-288 移动到已存储的 XPointer
-289 答复注释
-290 提交到服务器
-291 删除
-292 载入
-293 自定义查询...
-294 本地过滤器...
-295 锁定资源...
-296 取消锁定资源...
-297 查看资源属性...
-298 复制锁定信息...
-299 锁定了吗?
-300 **Enable/Disable
-301 **Execute a command
-302 **Execute an external script
-303 **Add an external script
-304 **Insert a script
-305 关于 Amaya
-306 关于 Amaya at W3C
-307 索引
-308 Browsing
-309 Views
-310 Selecting
-311 Document
-312 Creating elements
-313 Attributes
-314 Characters
-315 **Templates
-316 Restructuring
-317 Links
-318 Tables
-319 Image maps
-320 Math
-321 Graphics
-322 XML support
-323 Style sheets
-324 Searching
-325 Spell Checking
-326 Publishing
-327 协作
-328 Printing
-329 Numbering
-330 Making books
-331 Annotations
-332 Configuring
-333 ShortCuts
-334 Accessibility in Amaya
+148 **Merge
+149 与右侧单元格合并
+150 与下方单元格合并
+151 收缩水平范围
+152 收缩垂直范围
+153 选择该行
+154 插入新行
+155 附加一行
+156 选择该列
+157 插入新列
+158 附加一列
+159 粘贴在前
+160 粘贴在后
+161 MAP 区域
+162 插入 MAP
+163 圆形区域
+164 多边形区域
+165 矩形区域
+166 框架(&S)
+167 style
+168 Comment
+169 base
+170 meta
+171 link
+172 script
+173 noscript
+174 段落 (p)
+175 预格式化 (pre)
+176 ADDRESS (address)
+177 水平标尺 (hr)
+178 图片 (img)...
+179 换行 (br)
+180 层 (div)
+181 区域引用 (blockquote)
+182 内嵌 frame (iframe)
+183 ruby
+184 信息类型
+185 强调 (em)
+186 加强 (strong)
+187 引用 (cite)
+188 定义 (dfn)
+189 代码 (code)
+190 变量 (var)
+191 样例 (samp)
+192 键盘 (kbd)
+193 所写 (abbr)
+194 首字母 (acronym)
+195 插入 (ins)
+196 删除 (del)
+197 字符元素
+198 斜体 (i)
+199 粗体 (b)
+200 打字机风格 (tt)
+201 大号
+202 小号
+203 桥表 (sub)
+204 上标 (sup)
+205 Quotation 引用 (q)
+206 文字反排 (bdo)
+207 区域统计(&S)
+208 生成内容列表(&G)
+209 插入时间戳
+210 制作书籍(&M)
+211 新建数学公式 (math)
+212 基本元素(&E)
+213 普通文本 (mtext)
+214 识别符 (mi)
+215 数字 (mn)
+216 算符 (mo)
+217 空格 (mspace)
+218 特殊字符 (&xxx;)
+219 不可见次数
+220 采用函数
+221 构架(&C)
+222 根 (mroot)
+223 平方根 (msqrt)
+224 封装 (menclose)
+225 分数 (mfrac)
+226 上标下标 (msubsup)
+227 下标 (msub)
+228 上标 (msup)
+229 顶部底部标记 (munderover)
+230 底部标记 (munder)
+231 顶部标记 (mover)
+232 括号 (mrow)
+233 多重标记 (mmultiscripts)
+234 矩阵
+235 新建矩阵 (mtable)
+236 **Merge
+237 与右侧单元格
+238 与下方单元格
+239 收缩水平范围
+240 收缩垂直范围
+241 选择该行
+242 插入新行
+243 附加一行
+244 选择该列
+245 插入新列
+246 附加一列
+247 粘贴在前
+248 粘贴在后
+249 显示图形库
+250 添加选中图形
+251 注释
+252 XML 元素...
+253 复制地址
+254 粘贴地址
+255 链接到上个目标(&L)
+256 创建或更改链接(&C)...
+257 创建目标(&T)
+258 删除 anchor(&D)
+259 添加/删除 ID(&A)...
+260 全屏显示(&F)
+261 **Show/Hide toolbars
+262 **&Browsing
+263 **&Editing
+264 显示工具栏(&T)
+265 显示 MAP 区域(&M)
+266 显示目标 (&T)
+267 放大
+268 缩小
+269 显示格式化的视图(&F)
+270 显示结构(&S)
+271 显示源文件(&U)
+272 显示链接(&K)
+273 显示候选(&A)
+274 显示表格内容(&O)
+275 显示时间排列
+276 水平排列视图
+277 垂直排列视图
+278 CSS样式(&S)...
+279 创建规则(&R)...
+280 显示已应用的样式...
+281 链接(&K)...
+282 打开(&N)...
+283 禁用(&D)...
+284 启用(&E)...
+285 移除(&V)...
+286 为选择区作注释
+287 为文档作注释
+288 移动到选择区
+289 存储选择区为 XPointer(&X)
+290 移动到已存储的 XPointer
+291 答复注释
+292 提交到服务器
+293 删除
+294 载入
+295 自定义查询...
+296 本地过滤器...
+297 锁定资源...
+298 取消锁定资源...
+299 查看资源属性...
+300 复制锁定信息...
+301 锁定了吗?
+302 **Enable/Disable
+303 **Execute a command
+304 **Execute an external script
+305 **Add an external script
+306 **Insert a script
+307 关于 Amaya
+308 关于 Amaya at W3C
+309 索引
+310 Browsing
+311 Views
+312 Selecting
+313 Document
+314 Creating elements
+315 Attributes
+316 Characters
+317 **Templates
+318 Restructuring
+319 Links
+320 Tables
+321 Image maps
+322 Math
+323 Graphics
+324 XML support
+325 Style sheets
+326 Searching
+327 Spell Checking
+328 Publishing
+329 协作
+330 Printing
+331 Numbering
+332 Making books
+333 Annotations
+334 Configuring
+335 ShortCuts
+336 Accessibility in Amaya

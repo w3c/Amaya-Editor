@@ -590,6 +590,8 @@ HelpImageMaps
 &CreateTBody
 &ChangeToDataCell
 &ChangeToHeadingCell
+
+[table-edit]
 &CellVertExtend
 &CellHorizExtend
 &CellVertShrink
@@ -600,20 +602,29 @@ SelectRow
 SelectColumn
 &CreateColumnBefore
 &CreateColumnAfter
+SelectRow
+&CreateRowBefore
+&CreateRowAfter
+SelectColumn
+&CreateColumnBefore
+&CreateColumnAfter
+&MergeSelectedCells
 &PasteBefore
 &PasteAfter
-HelpTables
 
 [tables]
 +basic-table-module
++table-edit
 &CreateColgroup
 &CreateCol
 &CreateTHead
 &CreateTFoot
+HelpTables
 
 ################# MATHML
 [maths]
 #+css-style
++table-edit
 &CreateMathMenu
 &CreateMTEXT
 &CreateMI
@@ -636,20 +647,7 @@ HelpTables
 &CreateMROW
 &CreateMMULTISCRIPTS
 &CreateMTABLE
-&CellVertExtend
-&CellHorizExtend
-&CellVertShrink
-&CellHorizShrink
-SelectRow
-&CreateRowBefore
-&CreateRowAfter
-SelectColumn
-&CreateColumnBefore
-&CreateColumnAfter
-&PasteBefore
-&PasteAfter
-HelpMath
-HelpTables
+&PHelpMath
 *AmayaMathMLToolPanel
 
 ################# SVG

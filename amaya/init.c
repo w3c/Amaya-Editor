@@ -646,6 +646,7 @@ void SetTableMenuOff (Document doc, View view)
   TtaSetItemOff (doc, view, Types, BTFoot);
   TtaSetItemOff (doc, view, Types, BDataCell);
   TtaSetItemOff (doc, view, Types, BHeadingCell);
+  TtaSetItemOff (doc, view, Types, BCellMerge);
   TtaSetItemOff (doc, view, Types, BCellHExtend);
   TtaSetItemOff (doc, view, Types, BCellVExtend);
   TtaSetItemOff (doc, view, Types, BCellHShrink);
@@ -658,6 +659,7 @@ void SetTableMenuOff (Document doc, View view)
   TtaSetItemOff (doc, view, Types, BCreateColumnA);
   TtaSetItemOff (doc, view, Types, BPasteBefore);
   TtaSetItemOff (doc, view, Types, BPasteAfter);
+  TtaSetItemOff (doc, view, XMLTypes, BMCellMerge);
   TtaSetItemOff (doc, view, XMLTypes, BMCellHExtend);
   TtaSetItemOff (doc, view, XMLTypes, BMCellVExtend);
   TtaSetItemOff (doc, view, XMLTypes, BMCellHShrink);
@@ -688,6 +690,7 @@ void SetTableMenuOn (Document doc, View view)
       TtaSetItemOn (doc, view, Types, BTFoot);
       TtaSetItemOn (doc, view, Types, BDataCell);
       TtaSetItemOn (doc, view, Types, BHeadingCell);
+      TtaSetItemOn (doc, view, Types, BCellMerge);
       TtaSetItemOn (doc, view, Types, BCellHExtend);
       TtaSetItemOn (doc, view, Types, BCellVExtend);
       TtaSetItemOn (doc, view, Types, BCellHShrink);
@@ -709,6 +712,7 @@ void SetTableMenuOn (Document doc, View view)
       TtaSetItemOff (doc, view, Types, BTFoot);
       TtaSetItemOff (doc, view, Types, BDataCell);
       TtaSetItemOff (doc, view, Types, BHeadingCell);
+      TtaSetItemOff (doc, view, Types, BCellMerge);
       TtaSetItemOff (doc, view, Types, BCellHExtend);
       TtaSetItemOff (doc, view, Types, BCellVExtend);
       TtaSetItemOff (doc, view, Types, BCellHShrink);
