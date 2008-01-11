@@ -2493,7 +2493,8 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
           oldLastEl = LastSelectedElement;
           oldFirstChar = FirstSelectedChar;
           oldLastChar = LastSelectedChar;
-          if (oldFirstEl->ElTerminal && oldFirstEl->ElLeafType != LtPicture &&
+          if (oldFirstEl &&
+              oldFirstEl->ElTerminal && oldFirstEl->ElLeafType != LtPicture &&
               oldLastChar == 0 && oldFirstEl == oldLastEl &&
               oldFirstChar == oldLastChar)
             {
@@ -2799,10 +2800,11 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                oldLastChar != LastSelectedChar))
             {
               change = TRUE;
-              if ((!oldFirstEl->ElTerminal || oldFirstEl->ElLeafType != LtPicture) &&
+              if (oldFirstEl)
+                if ((!oldFirstEl->ElTerminal || oldFirstEl->ElLeafType != LtPicture) &&
                   !TypeHasException (ExcIsImg, FirstSelectedElement->ElTypeNumber,
                                      FirstSelectedElement->ElStructSchema))
-                {
+                  {
                   // select the parent element if the whole content is selected
                   if (FirstSelectedChar == 0 && !FirstSelectedColumn)
                     while (FirstSelectedElement->ElNext == NULL
@@ -2814,7 +2816,7 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                       LastSelectedElement = FirstSelectedElement;
                       LastSelectedChar = 0;
                     }
-                }
+                  }
               if (LastSelectedChar == 0 &&
                   LastSelectedElement != FirstSelectedElement &&
                   !LastSelectedColumn)
@@ -3836,6 +3838,9 @@ static void SelColumns (PtrElement col1, PtrElement col2)
   PtrElement          pNextRow, pCell;
   PtrElement          pFirst, pLast, pRow, pTable;
   int                 rowType, back;
+  NotifyElement       notifyEl;
+  Document            doc;
+  ThotBool            result;
   
   /* get the table ancestor first */
   pTable = col1;
@@ -3880,10 +3885,35 @@ static void SelColumns (PtrElement col1, PtrElement col2)
   else
     {
       SelectElementWithEvent (SelectedDocument, pFirst, TRUE, FALSE);
-      DoExtendSelection (pLast, 0, FALSE, TRUE, FALSE, TRUE, FALSE); /* the
-        last parameter should be TRUE, but we do not want multiple columns
-        to be selected as long as commands Cut, Copy and Paste can not
-        handle mutiple columns at a time */
+      /* send event TteElemExtendSelect.Pre to the application*/
+      doc = IdentDocument (SelectedDocument);
+      notifyEl.event = TteElemExtendSelect;
+      notifyEl.document = doc;
+      notifyEl.element = (Element) pLast;
+      notifyEl.info = 0; /* not sent by undo */
+      notifyEl.elementType.ElTypeNum = pLast->ElTypeNumber;
+      notifyEl.elementType.ElSSchema = (SSchema) (pLast->ElStructSchema);
+      notifyEl.position = 0;
+      result = CallEventType ((NotifyEvent *) &notifyEl, TRUE);
+      if (!result)
+        /* application accepts selection */
+        {
+          /* do select */
+          DoExtendSelection (pLast, 0, FALSE, TRUE, FALSE, TRUE, FALSE); /* the
+          last parameter should be TRUE, but we do not want multiple columns
+          to be selected as long as commands Cut, Copy and Paste can not
+          handle mutiple columns at a time */
+          
+          /* send event TteElemExtendSelect.Post to the application */
+          notifyEl.event = TteElemExtendSelect;
+          notifyEl.document = doc;
+          notifyEl.element = (Element) pLast;
+          notifyEl.elementType.ElTypeNum = pLast->ElTypeNumber;
+          notifyEl.info = 0; /* not sent by undo */
+          notifyEl.elementType.ElSSchema = (SSchema) (pLast->ElStructSchema);
+          notifyEl.position = 0;
+          CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+        }
     }
   WholeColumnSelected = TRUE;
   FirstSelectedColumn = col1;

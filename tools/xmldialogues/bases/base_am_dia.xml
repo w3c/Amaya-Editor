@@ -2124,10 +2124,10 @@
 <message xml:lang="tw">改為表頭單元格 (th)</message>
 <message xml:lang="sk">Zmeniť na bunku s nadpisom (th)</message></label>
 <label define="BCellMerge">
-<message xml:lang="en">Merge</message>
-<message xml:lang="fr">Fusionner</message>
+<message xml:lang="en">Merge cells</message>
+<message xml:lang="fr">Fusionner les cellules</message>
 <message xml:lang="it">Unisci</message>
-<message xml:lang="de">Zusammenfügen</message>
+<message xml:lang="de">Zusammenfügen die Zellen</message>
 <message xml:lang="es">Unir</message>
 <message xml:lang="ru">Объединить</message>
 <message xml:lang="hu">Egyesítés</message>
@@ -3384,10 +3384,10 @@
 <message xml:lang="tw">新建矩陣 (mtable)</message>
 <message xml:lang="sk">Nová matica (mtable)</message></label>
 <label define="BMCellMerge">
-<message xml:lang="en">Merge</message>
-<message xml:lang="fr">Fusionner</message>
+<message xml:lang="en">Merge cells</message>
+<message xml:lang="fr">Fusionner les cellules</message>
 <message xml:lang="it">Unisci</message>
-<message xml:lang="de">Zusammenfügen</message>
+<message xml:lang="de">Zusammenfügen die Zellen</message>
 <message xml:lang="es">Unir</message>
 <message xml:lang="ru">Объединить</message>
 <message xml:lang="hu">Egyesítés</message>

@@ -724,6 +724,8 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
 //    }
 
   /* Compose le menu des attributs */
+  if (!pDoc)
+    return;
   if (pDoc == SelectedDocument && !pDoc->DocReadOnly)
     {
       selectionOK = GetCurrentSelection (&pDoc, &firstSel, &lastSel,
