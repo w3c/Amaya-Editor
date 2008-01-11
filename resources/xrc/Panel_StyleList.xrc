@@ -70,7 +70,6 @@
           <orient>wxHORIZONTAL</orient>
         </object>
         <option>0</option>
-        <flag>wxALIGN_CENTRE_HORIZONTAL</flag>
       </object>
     </object>
     <style>wxTAB_TRAVERSAL</style>
