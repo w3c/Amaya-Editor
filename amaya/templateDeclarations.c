@@ -43,8 +43,9 @@ char* XTigerHTMLUnions[] =
   "appHTMLCharTypes", "i b tt u s big small sub sup q bdo",
   "appHTMLForm", "input option optgroup select button label",
   "appHTMLInlines", "appHTMLInfoTypes appHTMLCharTypes appHTMLForm a font span img br object",
-  "appHTMLBlocks", "p h1 h2 h3 h4 h5 h6 textarea ol ul li dd dl dt address fieldset legend caption ins del div",
-  UNION_APP_HTML , "appHTMLInlines appHTMLBlocks",
+  "appHTMLBlocks", "p h1 h2 h3 h4 h5 h6 textarea ol ul li dd dl dt address fieldset legend ins del div",
+  "appHTMLTable", "table thead tbody tfoot caption tr th td",
+  UNION_APP_HTML , "appHTMLInlines appHTMLBlocks appHTMLTable",
   NULL, NULL
 };
 
@@ -54,7 +55,8 @@ char* XTigerHTMLElements = "em strong cite dfn code var samp kbd abbr acronym in
                     "input option optgroup select button label "
                     "a font span img br object "
                     "p h1 h2 h3 h4 h5 h6 textarea ol ul li dd dl dt "
-                    "address fieldset legend caption ins del div";
+                    "address fieldset legend ins del div"
+                    "table thead tbody tfoot caption tr th td";
                     
 
 
