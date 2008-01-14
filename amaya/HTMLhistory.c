@@ -881,6 +881,7 @@ void HelpAmaya (Document document, View view)
 //  info.SetWebSite(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT_WEBSITE)));
   info.SetIcon(icon);
   
+#ifndef _MACOS
   if (s != NULL)
     {
       /* get the welcome in the current language */
@@ -893,6 +894,7 @@ void HelpAmaya (Document document, View view)
           info.SetLicence(str);
         }
     }
+#endif
   
   wxAboutBox(info);
   
