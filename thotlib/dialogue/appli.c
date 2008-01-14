@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,9 +14,8 @@
  *          S. Gully (INRIA) - GTK and wxWidgets Versions
  */
 
-#ifdef _WX
 #include "wx/wx.h"
-#endif /* _WX */
+#include "wx/utils.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -36,33 +35,14 @@
 #include "logdebug.h"
 #include "appversion.h"
 
-#ifdef _GTK
-#include <gdk/gdkx.h>
-#endif /*_GTK*/
 #ifdef _GL
-#if defined (_MACOS) && defined (_WX) 
+#ifdef _MACOS
 #include <gl.h>
-#else /* _MACOS  && _WX */
+#else /* _MACOS */
 #include <GL/gl.h>
 #endif /* _MACOS */
 #include "glwindowdisplay.h"
-#ifdef _GTK
-#include <gtkgl/gtkglarea.h>
-#endif /*_GTK*/
 #endif /*_GL*/
-#ifdef _WINGUI
-#include "winsys.h"
-#include "wininclude.h"
-
-#ifdef WM_MOUSELAST
-#ifndef WM_MOUSEWHEEL
-#define WM_MOUSEWHEEL WM_MOUSELAST+1 
-#endif /*WM_MOUSEWHEEL*/
-#endif /*WM_MOUSELAST*/
-#endif /* _WINGUI */
-#ifdef _GTK
-static gchar *null_string;
-#endif /*_GTK*/
 static ThotBool     ComputeScrollBar = TRUE;
 
 /* Focus change callback procedure */
@@ -87,7 +67,6 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 #include "thotcolor_tv.h"
 #include "attrmenu.h"
 
-#ifdef _WX
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
@@ -95,10 +74,6 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 #include "message_wx.h"
 #include "AmayaScrollBar.h"
 #include "AmayaStatusBar.h"
-#endif /* _WX */
-#ifdef _GTK
-#include "gtk-functions.h"
-#endif /* _GTK */
 
 #include "appli_f.h"
 #include "absboxes_f.h"
@@ -147,219 +122,6 @@ extern void ZoomOut (Document document, View view);
 static ThotBool g_NeedRedisplayAllTheFrame[MAX_FRAME];
 #endif /* _GL */
 
-#ifdef _WINGUI
-#define URL_TXTZONE     0
-#define TITLE_TXTZONE   1
-#define IDR_TOOLBAR    165
-#define MENU_VIEWS            551
-#define SHOW_STRUCTURE        553
-#define SHOW_ALTERNATE        554
-#define SHOW_LINKS            555
-#define SHOW_TAB_OF_CONTENTS  556
-#define CLOSE_STRUCTURE       232
-#define CLOSE_ALTERNATE       272
-#define CLOSE_LINKS           312
-#define CLOSE_TAB_OF_CONTENTS 352
-#define WM_ENTER (WM_USER)
-#define MAX_MENUS 5
-
-#define ToolBar_AutoSize(hwnd) \
-    (void)SendMessage((hwnd), TB_AUTOSIZE, 0, 0L)
-
-#define ToolBar_GetItemRect(hwnd, idButton, lprc) \
-    (BOOL)SendMessage((hwnd), TB_GETITEMRECT, (WPARAM)idButton, (LPARAM)(LPRECT)lprc)
-
-#define ToolBar_GetToolTips(hwnd) \
-    (HWND)SendMessage((hwnd), TB_GETTOOLTIPS, 0, 0L)
-
-#define ToolBar_ButtonStructSize(hwnd) \
-    (void)SendMessage((hwnd), TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L)
-
-#define ToolBar_AddBitmap(hwnd, nButtons, lptbab) \
-    (int)SendMessage((hwnd), TB_ADDBITMAP, (WPARAM)nButtons, (LPARAM)(LPTBADDBITMAP) lptbab)
-
-#define ToolBar_AddString(hwnd, hinst, idString) \
-    (int)SendMessage((hwnd), TB_ADDSTRING, (WPARAM)(HINSTANCE)hinst, (LPARAM)idString)
-
-#define ToolTip_AddTool(hwnd, lpti) \
-    (BOOL)SendMessage((hwnd), TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) lpti)
-
-extern HWND      hwndClient;
-extern HWND      ToolBar;
-extern HWND      logoFrame;
-extern HWND      StatusBar;
-extern HWND      WIN_curWin;
-extern HWND      currentDlg;
-extern int       ReturnOption;
-extern int       Window_Curs;
-
-static HWND      hwndHead;
-static char     *txtZoneLabel;
-static char      URL_txt [500];
-static ThotBool  paletteRealized = FALSE;
-
-int         X_Pos;
-int         Y_Pos;
-int         cyToolBar;
-TBADDBITMAP ThotTBBitmap;
-static ThotWindow WIN_curWin = NULL;
-
-static int FRWidth[MAX_FRAME];
-static int FRHeight[MAX_FRAME];
-
-/*----------------------------------------------------------------------
-  Win_Scroll_visible : Tells if a scrollbar is currently visible or not
-  ----------------------------------------------------------------------*/
-static ThotBool Win_Scroll_visible (HWND scroll_hwnd)
-{
-  SCROLLINFO          scrollInfo;
-
-  memset(&scrollInfo, 0, sizeof(scrollInfo));
-  scrollInfo.cbSize = sizeof(scrollInfo);
-  scrollInfo.fMask = SIF_RANGE;
-
-  GetScrollInfo(scroll_hwnd, SB_CTL, &scrollInfo);
-
-  if (scrollInfo.nMin == 0 && scrollInfo.nMax == 2) 
-    return FALSE;
-  else
-    return TRUE;
-}
-/*----------------------------------------------------------------------
-  WIN_GetDeviceContext selects a Device Context for a given
-  thot window.
-  ----------------------------------------------------------------------*/
-void WIN_GetDeviceContext (int frame)
-{
-#ifndef _GLPRINT
-  if (frame < 0 || frame > MAX_FRAME)
-    {
-      if (TtDisplay)
-        return;
-      TtDisplay = GetDC (WIN_curWin);
-      return;
-    }
-  if (FrRef[frame])
-    {
-      /* release the previous Device Context. */
-      if (TtDisplay)
-        WIN_ReleaseDeviceContext ();
-      /* load the new Context. */
-      TtDisplay = GetDC (FrRef[frame]);
-      if (TtDisplay != NULL)
-        {
-          WIN_curWin = FrRef[frame];
-          SetICMMode (TtDisplay, ICM_ON);
-        }
-    }
-#endif /*_GLPRINT*/
-}
-
-/*----------------------------------------------------------------------
-  WIN_ReleaseDeviceContext :  unselect the Device Context
-  ----------------------------------------------------------------------*/
-void WIN_ReleaseDeviceContext (void)
-{
-#ifndef _GLPRINT
-  /* release the previous Device Context. */
-  if (TtDisplay != NULL)
-    {     
-      SetICMMode (TtDisplay, ICM_OFF);
-      ReleaseDC (WIN_curWin, TtDisplay);
-    }
-  TtDisplay = NULL;
-#endif /*_GLPRINT*/
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-ThotBool RegisterWin95 (CONST WNDCLASS* lpwc)
-{
-  WNDCLASSEX wcex;
-
-  wcex.style = lpwc->style;
-  wcex.lpfnWndProc = lpwc->lpfnWndProc;
-  wcex.cbClsExtra = lpwc->cbClsExtra;
-  wcex.cbWndExtra = lpwc->cbWndExtra;
-  wcex.hInstance = lpwc->hInstance;
-  wcex.hIcon = lpwc->hIcon;
-  wcex.hCursor = lpwc->hCursor;
-  wcex.hbrBackground = lpwc->hbrBackground;
-  wcex.lpszMenuName = lpwc->lpszMenuName;
-  wcex.lpszClassName = lpwc->lpszClassName;
-  /* Added elements for Windows 95. */
-  wcex.cbSize = sizeof(WNDCLASSEX);
-  wcex.hIconSm = LoadIcon (hInstance, IDI_APPLICATION);
-  return RegisterClassEx( &wcex );
-}
-
-#ifndef _WIN_PRINT
-#ifndef _GL
-/*----------------------------------------------------------------------
-  Clear clear the area of frame located at (x, y) and of size width x height.
-  ----------------------------------------------------------------------*/
-void Clear (int frame, int width, int height, int x, int y)
-{
-  ThotWindow          w;
-  HBRUSH              hBrush;
-  HBRUSH              hOldBrush;
-
-  w = FrRef[frame];
-  if (w != None)
-    {
-      hBrush = CreateSolidBrush (ColorPixel (BackgroundColor[frame]));
-      hOldBrush = SelectObject (TtDisplay, hBrush);
-      PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
-      SelectObject (TtDisplay, hOldBrush);
-      DeleteObject (hBrush);
-    }
-}
-
-/*----------------------------------------------------------------------
-  Scroll do a scrolling/Bitblt of frame of a width x height area
-  from (xd,yd) to (xf,yf).
-  ----------------------------------------------------------------------*/
-void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
-{
-  RECT cltRect;
-
-  if (FrRef[frame])
-    {
-      GetClientRect (FrRef[frame], &cltRect);
-      ScrollWindowEx (FrRef[frame], xf - xd, yf - yd, NULL, &cltRect,
-                      NULL, NULL, SW_INVALIDATE);
-    }
-}
-#endif /*_GL*/
-#endif /* _WIN_PRINT */
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-ThotBool InitToolTip (HWND hwndToolBar)
-{
-  BOOL     bSuccess;
-  HWND     hwndTT;
-  TOOLINFO ti;
-
-  /* Fetch handle to tooltip control */
-  hwndTT = ToolBar_GetToolTips (hwndToolBar);
-  if (hwndTT == NULL) 
-    return FALSE;
-
-  ZeroMemory (&ti, sizeof (TOOLINFO));
-  ti.cbSize   = sizeof (TOOLINFO);
-  ti.uFlags   = TTF_IDISHWND | TTF_CENTERTIP | TTF_SUBCLASS;
-  ti.hwnd     = hwndToolBar;
-  ti.uId      = 0;
-  ti.lpszText = LPSTR_TEXTCALLBACK;
-  bSuccess = ToolTip_AddTool (hwndTT, &ti);
-  if (!bSuccess)
-    return FALSE;
-
-  return bSuccess;
-}
-#endif /* _WINGUI */
-
 /*----------------------------------------------------------------------
   GetFrameNumber returns the Thot window number associated.
   ----------------------------------------------------------------------*/
@@ -367,15 +129,9 @@ int GetFrameNumber (ThotWindow win)
 {
   int frame;
 
-#ifndef _WX
-  for (frame = 1; frame <= MAX_FRAME; frame++)
-    if (FrRef[frame] == win)
-      return (frame);
-#else /* _WX */
   for (frame = 1; frame <= MAX_FRAME; frame++)
     if ((ThotWindow)FrameTable[frame].WdFrame == win)
       return (frame);  
-#endif /* _WX */
   
   return (-1);
 }
@@ -389,26 +145,10 @@ void FrameKilled (int *w, int frame, int *info)
 {
   /* Enleve la procedure de Callback */
   /* Detruit la fenetre si elle existe encore */
-#ifndef _WX
-  if (frame > 0 && FrRef[frame] != 0)
-    ViewClosed (frame);
-#else /* _WX */
   if (frame > 0 && FrameTable[frame].WdFrame != 0)
     ViewClosed (frame);
-#endif /* _WX */
 }
 
-
-/*----------------------------------------------------------------------
-  Called when a click is done on the up right corner cross
-  Kill the current document ( GTK version )                            
-  ----------------------------------------------------------------------*/
-#ifdef _GTK
-gboolean KillFrameGTK (GtkWidget *widget, GdkEvent *event, gpointer f)
-{
-  return KillFrameCallback( (intptr_t)f );
-}
-#endif /* _GTK */
 
 /*----------------------------------------------------------------------
   KillFrameCallback (generic way)
@@ -425,22 +165,11 @@ ThotBool KillFrameCallback( int frame )
       CloseView (pDoc, view);
     }
 
-#ifndef _WX  
-  for (frame = 0; frame <= MAX_FRAME; frame++)
-    if (FrRef[frame] != 0)
-      /* there is still an active frame */
-      return TRUE;
-#else /* #ifndef _WX */
   for (frame = 0; frame <= MAX_FRAME; frame++)
     if (FrameTable[frame].WdFrame != 0)
       /* there is still an active frame */
       return TRUE;
-#endif /* #ifndef _WX */
 
-#ifndef _WX
-  /* this is done into AmayaApp::OnExit */
-  TtaQuit();
-#endif /* _WX */
   return FALSE;
 }
 
@@ -451,7 +180,6 @@ ThotBool KillFrameCallback( int frame )
   ----------------------------------------------------------------------*/
 void FrameRedraw (int frame, unsigned int width, unsigned int height)
 {
-#if defined(_GTK) || defined(_WX)
   int                 dx, dy, view;
   NotifyWindow        notifyDoc;
   Document            doc;
@@ -487,7 +215,6 @@ void FrameRedraw (int frame, unsigned int width, unsigned int height)
           CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
         }
     }
-#endif /* #if defined(_GTK) || defined(_WX) */
 }
 
 #ifdef _GL
@@ -504,20 +231,12 @@ void  GL_DestroyFrame (int frame)
     return;
   for (i = 0 ; i <= MAX_FRAME; i++)
     {  
-#ifdef _WX
       if (i != GetSharedContext() && !TtaFrameIsClosed(i))
-#endif /* _WX */
-#if defined(_GTK)
-        if (i != GetSharedContext() && FrameTable[i].WdFrame)
-#endif /*#if defined(_GTK) */
-#ifdef _WINGUI
-          if (i != GetSharedContext() && GL_Context[i])
-#endif /* _WINGUI */
-            {
-              SetSharedContext(i);
-              /* stop the loop */
-              i = MAX_FRAME + 1;
-            } 
+        {
+          SetSharedContext(i);
+          /* stop the loop */
+          i = MAX_FRAME + 1;
+        } 
     }
   if (i > MAX_FRAME)
     {
@@ -527,22 +246,8 @@ void  GL_DestroyFrame (int frame)
     }
 #endif /*_NOSHARELIST*/
   FreeAllPicCacheFromFrame (frame);
-#ifdef _WINGUI
-  /* make our context 'un-'current */
-  /*wglMakeCurrent (NULL, NULL);*/
-  /* delete the rendering context */
-  if (GL_Context[frame])
-    wglDeleteContext (GL_Context[frame]);
-  /*if (GL_Windows[frame])*/
-  /*ReleaseDC (hwndClient, GL_Windows[frame]);*/
-  GL_Windows[frame] = 0;
-  GL_Context[frame] = 0;
-#endif /* _WINGUI */
 }
 
-#endif /* _GL */
-
-#ifdef _GL
 #ifndef _NOSHARELIST
 /*----------------------------------------------------------------------
   GetSharedContext : get the name of the frame used as shared context
@@ -561,6 +266,7 @@ void SetSharedContext (int frame)
 }
 #endif /*_NOSHARELIST*/
 #endif /* _GL */
+
 
 static ThotBool Current_Expose = FALSE;
 /*----------------------------------------------------------------------
@@ -917,27 +623,16 @@ void InitializeOtherThings ()
 
   /* Initialisation de la table des widgets de frames */
   for (i = 0; i <= MAX_FRAME; i++)
-#ifdef _WX
     /* fill with 0 all the fields */
     memset (&FrameTable[i], 0, sizeof(Frame_Ctl));
-#else /* _WX */
-  {
-    FrameTable[i].WdFrame = 0;
-    FrameTable[i].FrDoc = 0;
-  }
-#endif /* _WX */      
 
-#ifdef _WX
   memset( WindowTable, 0, sizeof(Window_Ctl)*(MAX_WINDOW+1) );
-#endif /* _WX */
+
   ClickIsDone = 0;
   ClickFrame = 0;
   ClickX = 0;
   ClickY = 0;
   /* message de selection vide */
-#ifdef _GTK
-  null_string = (gchar *)"";
-#endif /* _GTK */
   OldMsgSelect[0] = EOS;
   OldDocMsgSelect = NULL;
 }
@@ -1044,7 +739,6 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
   ----------------------------------------------------------------------*/
 void TtaSetStatusSelectedElement(Document document, View view, Element elem)
 {
-#ifdef _WX
   AmayaWindow       *window;
   AmayaStatusBar    *statusbar;
   PtrElement         pEl = (PtrElement)elem;
@@ -1074,7 +768,6 @@ void TtaSetStatusSelectedElement(Document document, View view, Element elem)
             }
         }
     }
-#endif /* _WX */
 }
 
 
@@ -1108,7 +801,6 @@ static ThotBool     Selecting = FALSE;
 ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
                                  int thot_mod_mask, int x, int y )
 {
-#ifdef _WX
 #if !defined (_WINDOWS) && !defined (_MACOS)
   Document   document;
   View       view;
@@ -1197,8 +889,6 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
       }
       break;
     }
-  
-#endif /* _WX */
   return TRUE;
 }
 
@@ -1219,7 +909,6 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
 ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
                                int thot_mod_mask, int x, int y )
 {
-#ifdef _WX
 #if !defined(_WINDOWS) && !defined(_MACOS)
   Document   document;
   View       view;
@@ -1243,7 +932,6 @@ ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
       // et tue le dialogue qui demande si on veut sauver.
       //    TtaAbortShowDialogue ();
     }
-#endif /* _WX */
   return TRUE;
 }
 
@@ -1264,7 +952,6 @@ ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
 ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
                                    int thot_mod_mask, int x, int y )
 {
-#ifdef _WX
 #if !defined (_WINDOWS) && !defined (_MACOS)
   Document   document;
   View       view;
@@ -1307,7 +994,6 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
       }
       break;
     }
-#endif /* _WX */
   return TRUE;
 }
 
@@ -1325,7 +1011,6 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
  ----------------------------------------------------------------------*/
 ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
 {
-#ifdef _WX
   if ( Selecting )
     {
       
@@ -1400,9 +1085,8 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
             {
               LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
             }
-        }      
+        }
     }
-#endif /* _WX */
   return TRUE;
 }
 
@@ -1427,7 +1111,6 @@ ThotBool FrameMouseWheelCallback(
                                  int delta,
                                  int x, int y )
 {
-#ifdef _WX
   Document   document;
   View       view;
 
@@ -1458,303 +1141,8 @@ ThotBool FrameMouseWheelCallback(
         {
           VerticalScroll (frame, 39, 1);
         }
-    }	
-#endif /* _WX */
-  return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  Evenement sur une frame document.                              
-  D.V. equivalent de la fontion MS-Windows ci dessus !        
-  GTK: fonction qui traite les click de la souris sauf la selection   
-  ----------------------------------------------------------------------*/
-#ifdef _GTK
-gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event,
-                           gpointer data)
-{
-  intptr_t            frame;
-  GtkEntry            *textzone;
-  static int          timer = None;
-  Document            document;
-  View                view;
-
-  frame = (intptr_t)data;
-#ifdef _GL
-  GL_prepare (frame);  
-#endif /* _GL */
-  frame = (intptr_t)data;
-  if (FrameTable[frame].FrDoc == 0 ||
-      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-    /* don't manage a document with NoComputedDisplay mode */
-    return FALSE;
-  else if (event == NULL)
-    /* a TtaWaitShowDialogue in progress, don't change the selection */
-    return FALSE;
-  else if (ClickIsDone == 1 && event->type == GDK_BUTTON_PRESS)
-    /* Amaya is waiting for a click selection */
-    {
-      ClickIsDone = 0;
-      ClickFrame = frame;
-      ClickX = (int)event->x;
-      ClickY = (int)event->y;
-      return FALSE;
-    }
-  else if (TtaTestWaitShowDialogue ()
-           && (event->type != GDK_BUTTON_PRESS || 
-               event->type != GDK_2BUTTON_PRESS ||
-               event->type != GDK_MOTION_NOTIFY || 
-               (event->state & GDK_CONTROL_MASK ) == 0))
-    {
-      /* a TtaWaitShowDialogue in progress, don't change the selection */
-      return FALSE;
-    }
-  
-  /* 
-     Set the drawing area Focused
-     By setting the focus on the text zone
-     If another action specifically need focus, 
-     w'ell grab it with the action
-  */
-  textzone = (GtkEntry*)gtk_object_get_data (GTK_OBJECT (widget), "Text_catcher");
-  gtk_widget_grab_focus (GTK_WIDGET(textzone));  
-
-  switch (event->type)
-    {
-    case GDK_BUTTON_PRESS:
-      /* drag is finished */
-      if (timer != None)
-        {
-          gtk_timeout_remove (timer);
-          timer = None;
-          Selecting = FALSE;
-        } 
-      switch (event->button)
-        {
-          /* ==========LEFT BUTTON========== */
-        case 1:
-          /* stop any current insertion of text */
-          CloseTextInsertion ();
-          /* Est-ce que la touche modifieur de geometrie est active ? */
-	
-          if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
-            /* moving a box */     
-            ApplyDirectTranslate (frame, (int)event->x, (int)event->y);
-          else if ((event->state & GDK_SHIFT_MASK ) == GDK_SHIFT_MASK)
-            {
-              /* a selection extension */
-              TtaAbortShowDialogue ();
-              LocateSelectionInView (frame, (int)event->x, (int)event->y, 1);
-              FrameToView (frame, &document, &view);
-              DoCopyToClipboard (document, view, FALSE, TRUE);
-            }
-          else
-            {
-              /* a simple selection */
-              ClickFrame = frame;
-              ClickX = (int)event->x;
-              ClickY = (int)event->y;
-              LocateSelectionInView (frame, ClickX, ClickY, 2);
-              Selecting = TRUE;
-            }
-          break;
-        case 2:
-          /* ==========MIDDLE BUTTON========== */
-          if ((event->state & GDK_CONTROL_MASK) != 0)
-            /* resizing a box */
-            ApplyDirectResize (frame, (int)event->x, (int)event->y);
-          else
-            {
-              ClickFrame = frame;
-              ClickX = (int)event->x;
-              ClickY = (int)event->y; 
-              LocateSelectionInView (frame, ClickX, ClickY, 5);	     
-            }
-          break;
-        case 3:
-          /* ==========RIGHT BUTTON========== */
-          if ((event->state & GDK_CONTROL_MASK) != 0)
-            /* resize a box */
-            ApplyDirectResize (frame, (int)event->x, (int)event->y);
-          else
-            {
-              ClickFrame = frame;
-              ClickX = (int)event->x;
-              ClickY = (int)event->y;
-              LocateSelectionInView (frame, ClickX, ClickY, 6);
-            }
-          break;	
-        case 4:
-          /* wheel mice up */
-          FrameToView (frame, &document, &view);
-          if ((event->state & GDK_CONTROL_MASK) != 0)
-            {
-              ;
-#ifdef _ZOOMSCROLL
-              ZoomIn (document, view);	   
-#endif /* _ZOOMSCROLL    */
-            }
-          else
-            { 
-              VerticalScroll (frame, -39, 1);
-            }	  
-          break;
-        case 5:
-          /* wheel mice down */
-          FrameToView (frame, &document, &view); 
-          if ((event->state & GDK_CONTROL_MASK) != 0)
-            {
-              ;
-#ifdef _ZOOMSCROLL
-              ZoomOut (document, view);	   
-#endif /* _ZOOMSCROLL    */      
-            }
-          else
-            {
-              VerticalScroll (frame, 39, 1);
-            }
-          break;
-        default:
-          break;
-        }
-      break;
-    case GDK_2BUTTON_PRESS:
-      /*======== DOUBLE CLICK ===========*/
-      switch (event->button)
-        {
-        case 1:
-          /* LEFT BUTTON */
-          ClickFrame = frame;
-          ClickX = (int)event->x;
-          ClickY = (int)event->y;
-          LocateSelectionInView (frame, ClickX, ClickY, 3);
-          break;
-        case 2:
-          /* MIDDLE BUTTON */
-          /* handle a simple selection */
-          ClickFrame = frame;
-          ClickX = (int)event->x;
-          ClickY = (int)event->y;
-          LocateSelectionInView (frame, ClickX, ClickY, 5);
-          break;
-        case 3:
-          /* RIGHT BUTTON */
-          /* handle a simple selection */
-          ClickFrame = frame;
-          ClickX = (int)event->x;
-          ClickY = (int)event->y;
-          LocateSelectionInView (frame, ClickX, ClickY, 6);
-          break;
-        }
-      break;
-    case GDK_MOTION_NOTIFY: 
-      /* extend the current selection */
-      if (Selecting == TRUE)
-        {
-          /* We add a callback timer caller */
-          if (timer == None)
-            timer = gtk_timeout_add (100,  GtkLiningSelection, 
-                                     (gpointer) frame);
-        }
-      break;
-    case GDK_BUTTON_RELEASE:
-      /* if a button release, we save the selection in the clipboard */
-      /* drag is finished */
-      /* we stop the callback calling timer */
-      Selecting = FALSE;
-      if (timer != None)
-        {
-          gtk_timeout_remove (timer);
-          timer = None;
-          FrameToView (frame, &document, &view);
-          DoCopyToClipboard (document, view, FALSE, TRUE);
-        } 
-      else if (event->button == 1)
-        {
-          ClickFrame = frame;
-          ClickX = (int)event->x;
-          ClickY = (int)event->y;
-          LocateSelectionInView (frame, ClickX, ClickY, 4);
-          TtaAbortShowDialogue ();
-        }
-      break;
-    case GDK_KEY_PRESS: 
-      TtaAbortShowDialogue ();
-      CharTranslationGTK (widget, (GdkEventKey*)event, data);
-      break;
-    default:
-      break;
     }
   return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  DragCallbackGTK handles drag and drop                     
-  ----------------------------------------------------------------------*/
-gboolean DragCallbackGTK (GtkWidget *widget, GdkDragContext *drag_context,
-                          gint x, gint y, guint time, gpointer user_data)
-{
-  /* TODO */
-  return FALSE;
-}
-  
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-gboolean FocusInCallbackGTK (GtkWidget *widget, GdkEventFocus *event,
-                             gpointer user_data)
-{
-  gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)TRUE);
-  return FALSE;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-gboolean FocusOutCallbackGTK (GtkWidget *widget, GdkEventFocus *event,
-                              gpointer user_data)
-{
-  gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)FALSE);
-  return FALSE;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-gboolean ButtonPressCallbackGTK (GtkWidget *widget, GdkEventButton *event,
-                                 gpointer user_data)
-{
-  gtk_object_set_data (GTK_OBJECT(widget), "ButtonPress", (gpointer)TRUE);    
-  return FALSE;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-gboolean ButtonReleaseCallbackGTK (GtkWidget *widget, GdkEventButton *event,
-                                   gpointer user_data)
-{
-  gtk_object_set_data (GTK_OBJECT(widget), "ButtonRelease", (gpointer)TRUE);    
-  return FALSE;
-}
-#endif /*_GTK*/
-
-
-/*----------------------------------------------------------------------
-  ThotGrab fait un XGrabPointer.                                  
-  ----------------------------------------------------------------------*/
-void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
-{
-#ifdef _GTK
-  gdk_pointer_grab (win, FALSE, (GdkEventMask)events, win, cursor,
-                    GDK_CURRENT_TIME);
-#endif /* _GTK */
-}
-
-
-/*----------------------------------------------------------------------
-  ThotUngrab est une fonction d'interface pour UnGrab.            
-  ----------------------------------------------------------------------*/
-void ThotUngrab ()
-{
-#ifdef _GTK
-  gdk_pointer_ungrab (GDK_CURRENT_TIME);
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1762,11 +1150,7 @@ void ThotUngrab ()
   ----------------------------------------------------------------------*/
 ThotWindow TtaGetThotWindow (int frame)
 {
-#ifndef _WX  
-  return FrRef[frame];
-#else /* _WX */
   return (ThotWindow)FrameTable[frame].WdFrame;
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1774,24 +1158,7 @@ ThotWindow TtaGetThotWindow (int frame)
   ----------------------------------------------------------------------*/
 void SetCursorWatch (int thotThotWindowid)
 {
-#ifdef _GTK
-  Drawable            drawable;
-  int                 frame;
-  ThotWidget          w;
-  
-  drawable = (Drawable)TtaGetThotWindow (thotThotWindowid);
-  for (frame = 1; frame <= MAX_FRAME; frame++)
-    {
-      w = FrameTable[frame].WdFrame;
-      if (w  && w->window)
-        gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
-    }
-#endif /* _GTK */
-
-#ifdef _WINGUI
-  SetCursor (LoadCursor (NULL, IDC_WAIT));
-  ShowCursor (TRUE);
-#endif /* #ifdef _WINGUI */  
+  ::wxBeginBusyCursor();
 }
 
 /*----------------------------------------------------------------------
@@ -1799,106 +1166,69 @@ void SetCursorWatch (int thotThotWindowid)
   ----------------------------------------------------------------------*/
 void ResetCursorWatch (int thotThotWindowid)
 {  
-#ifdef _GTK
-  Drawable            drawable;
-  int                 frame;
-  ThotWidget          w;
-
-  drawable = (Drawable) TtaGetThotWindow (thotThotWindowid);
-  for (frame = 1; frame <= MAX_FRAME; frame++)
-    {
-      w = FrameTable[frame].WdFrame;
-      if (w && w->window)
-        gdk_window_set_cursor (GTK_WIDGET(w)->window, ArrowCurs);
-    }
-#endif /* _GTK */
-
-#ifdef _WINGUI
-  ShowCursor (FALSE);
-  SetCursor (LoadCursor (NULL, IDC_ARROW));
-#endif /* _WINGUI */
+  ::wxEndBusyCursor();
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtaSetCursorWatch (Document document, View view)
 {
+#ifdef TODO
   int                 frame;
-#ifdef _GTK
-  Drawable            drawable;
-  ThotWidget          w;
-#endif /* _GTK */
-
   UserErrorCode = 0;
   /* verifie le parametre document */
   if (document == 0 && view == 0)
     {
       for (frame = 1; frame <= MAX_FRAME; frame++)
         {
-#ifdef _GTK
-          drawable = (Drawable)TtaGetThotWindow (frame);
-          if (drawable != 0)
-            {
-              w = FrameTable[frame].WdFrame;
-              gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
-            }
-#endif /* _GTK */
+          /* TODO
+          if(FrameTable[frame].WdFrame)
+            FrameTable[frame].WdFrame->SetCursor(WaitCursor);
+           */
         }
     }
   else
     {
       frame = GetWindowNumber (document, view);
-#ifdef _GTK
-      if (frame != 0)
+      if(frame !=0 && FrameTable[frame].WdFrame)
         {
-          w = FrameTable[frame].WdFrame;
-          gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
+          /* TODO
+           FrameTable[frame].WdFrame->SetCursor(WaitCursor);
+           */
         }
-#endif /* _GTK */
     }
+#endif /* TODO */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtaResetCursor (Document document, View view)
 {
+#ifdef TODO
   int                 frame;
-#ifdef _GTK
-  Drawable            drawable;
-  ThotWidget          w;
-#endif /* _GTK */
-
   UserErrorCode = 0;
   /* verifie le parametre document */
   if (document == 0 && view == 0)
     {
       for (frame = 1; frame <= MAX_FRAME; frame++)
         {
-#ifdef _GTK
-          drawable = (Drawable)TtaGetThotWindow (frame);
-          if (drawable != 0)
-            {
-              w = FrameTable[frame].WdFrame;
-              if (w != NULL)
-                if (w->window != NULL)
-                  gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
-            }
-#endif /* _GTK */
+          /* TODO
+          if(FrameTable[frame].WdFrame)
+            FrameTable[frame].WdFrame->SetCursor(NormalCursor);
+           */
         }
     }
   else
     {
       frame = GetWindowNumber (document, view);
-#ifdef _GTK
-      if (frame != 0)
+      if(frame !=0 && FrameTable[frame].WdFrame)
         {
-          w = FrameTable[frame].WdFrame;
-          if (w != NULL)
-            if (w->window != NULL)
-              gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
+          /* TODO
+           FrameTable[frame].WdFrame->SetCursor(NormalCursor);
+           */
         }
-#endif /* _GTK */
     }
+#endif /* TODO */
 }
 
 /*----------------------------------------------------------------------
@@ -1906,22 +1236,9 @@ void TtaResetCursor (Document document, View view)
   ----------------------------------------------------------------------*/
 void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 {
-#if defined(_WX) | defined(_GTK)
   ThotEvent           event;
   int                 i;
-#endif /* _WX | _GTK */
-#if defined(_WX)
   ThotFrame           w;
-#endif /* _WX */
-#ifdef _GTK   
-  Drawable            drawable;
-  ThotWidget          w;
-#endif /* _GTK */
-#ifdef _WINGUI
-  MSG                 event;
-  HCURSOR             cursor;          
-  int                 curFrame;
-#endif /* _WINGUI */
 
   if (ClickIsDone == 1)
     {
@@ -1929,24 +1246,6 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
       *pAb = NULL;
     }
 
-  /* Change the cursor */
-#ifdef _WINGUI
-  cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
-#endif  /* _WINGUI */
-#ifdef _GTK
-  for (i = 1; i <= MAX_FRAME; i++)
-    {
-      drawable = (Drawable)TtaGetThotWindow (i);
-      if (drawable)
-        {
-          w = FrameTable[i].WdFrame;
-          if (w && w->window)
-            gdk_window_set_cursor(GTK_WIDGET(w)->window, WindowCurs);
-        }
-    }
-#endif /* _GTK */
-
-#ifdef _WX
   /* change the cursor */
   for (i = 1; i <= MAX_FRAME; i++)
     {
@@ -1954,7 +1253,6 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
       if (w)
         w->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
     }
-#endif /* _WX */
 
   /* wait the click on the target */
   ClickIsDone = 1;
@@ -1963,33 +1261,9 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
   ClickY = 0;
   while (ClickIsDone == 1)
     {
-#if defined(_GTK) | defined(_WX)
       TtaHandleOneEvent (&event);
-#endif /* _GTK | _WX */
-#ifdef _WINGUI
-      GetMessage (&event, NULL, 0, 0);
-      curFrame = GetFrameNumber (event.hwnd);
-      TtaHandleOneEvent (&event);
-      SetCursor (cursor);
-#endif /* _WINGUI */
     }
 
-#ifdef _GTK
-  /* Restore the cursor */
-  for (i = 1; i <= MAX_FRAME; i++)
-    {
-      drawable = (Drawable)TtaGetThotWindow (i);
-      if (drawable)
-        {
-          w = FrameTable[i].WdFrame;  
-          if (w != NULL)
-            if (w->window != NULL)
-              gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
-        }
-    }
-#endif /* _GTK */
-
-#ifdef _WX
   /* restore the cursor */
   for (i = 1; i <= MAX_FRAME; i++)
     {
@@ -1997,7 +1271,6 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
       if (w)
         w->GetCanvas()->SetCursor( wxNullCursor );
     }
-#endif /* _WX */
 
   *frame = ClickFrame;
   if (ClickFrame > 0 && ClickFrame <= MAX_FRAME)
@@ -2052,13 +1325,12 @@ void ChangeSelFrame (int frame)
           olddoc && LoadedDocument[olddoc-1]->DocTypeName &&
           strcmp (LoadedDocument[olddoc-1]->DocTypeName, "log"))
         (*(Proc1)ChangeFocusFunction) ((void *) doc);
-#ifdef _WX
+
       /* update the class list */
       TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
       TtaRefreshElementMenu (doc, 1);
       UpdateAttrMenu (LoadedDocument[doc-1], TRUE);
       
-#endif /* _WX */
       /* the active frame changed so update the application focus */
       TtaRedirectFocus();
     }
@@ -2085,56 +1357,19 @@ int GetWindowFrame (ThotWindow w)
   /* On recherche l'indice de la fenetre */
   for (f = 0; f <= MAX_FRAME; f++)
     {
-#ifndef _WX
-      if (FrRef[f] != 0 && FrRef[f] == w)
-        break;
-#else /* _WX */
       if (FrameTable[f].WdFrame != 0 && (ThotWindow)FrameTable[f].WdFrame == w)
         break;
-#endif /* _WX */
     }
   return (f);
 }
-
-#ifdef _WINGUI
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-int GetWindowWinMainFrame (ThotWindow w)
-{
-  int                 f;
-
-  /* On recherche l'indice de la fenetre */
-  for (f = 0; f <= MAX_FRAME; f++) {
-    if (FrMainRef[f] != 0 && FrMainRef[f] == w)
-      break;
-  }
-  return (f);
-}
-#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   GetSizesFrame retourne les dimensions de la fenetre d'indice frame.        
   ----------------------------------------------------------------------*/
 void GetSizesFrame (int frame, int *width, int *height)
 {
-#if defined(_GTK) || defined(_WX) 
   *width = FrameTable[frame].FrWidth;
   *height = FrameTable[frame].FrHeight;
-#endif /* #if defined(_GTK) || defined(_WX) */
-#ifdef _WINGUI
-  RECT rWindow;
-
-  if (GetClientRect (FrRef[frame], &rWindow) != 0)
-    {
-      *height = rWindow.bottom - rWindow.top;
-      *width  = rWindow.right - rWindow.left;
-    }
-  else
-    {
-      *height = 0;
-      *width = 0;
-    }
-#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -2199,26 +1434,7 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
   ----------------------------------------------------------------------*/
 void RemoveClipping (int frame)
 {
-#ifndef _GL
-#ifdef _GTK
-  GdkRectangle         rect;
-
-  rect.x = 0;
-  rect.y = 0;
-  rect.width = MAX_SIZE;
-  rect.height = MAX_SIZE;
-
-  gdk_gc_set_clip_rectangle (TtLineGC, &rect);
-  gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
-  gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
-#endif /* _GTK */
-#ifdef _WINGUI
-  SelectClipRgn(TtDisplay, NULL); 
-  if (clipRgn && !DeleteObject (clipRgn))
-    WinErrorBox (NULL, "RemoveClipping");
-  clipRgn = (HRGN) 0;
-#endif /* _WINGUI */
-#else /* _GL */
+#ifdef _GL
   GL_UnsetClipping ();
 #endif /*_GL*/
 }
@@ -2233,19 +1449,10 @@ void UpdateScrollbars (int frame)
   int                 width, height;
   int                 l, h;
   ThotScrollBar       hscroll, vscroll;
-#ifdef _GTK
-  GtkAdjustment      *tmpw;  
-#endif /* _GTK */ 
-#ifdef _WINGUI
-  SCROLLINFO          scrollInfo;
-  ThotBool            need_resize;
-#endif /* _WINGUI */
 
-#ifdef _WX
   /* prevent infinite loop (hide/show) when scrollbars are regenerated by a resize event */
   if (!ComputeScrollBar)
     return;
-#endif /* _WX */
 
   if (FrameUpdating ||
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
@@ -2262,11 +1469,8 @@ void UpdateScrollbars (int frame)
   if (hscroll == NULL || vscroll == NULL)
     return;
 
-#if defined(_GTK) || defined(_WX)
   l = FrameTable[frame].FrWidth;
   h = FrameTable[frame].FrHeight;
-
-#ifdef _WX
   /*
     virtual void SetScrollbar(int position, int thumbSize, int range, int pageSize, const bool refresh = true)
     Sets the scrollbar properties.
@@ -2293,155 +1497,6 @@ void UpdateScrollbars (int frame)
     }
   else
     FrameTable[frame].WdFrame->HideScrollbar(1);
-#endif /*_WX*/
-
-#ifdef _GTK
-  if (width + x <= l &&
-      (width + vscroll->allocation.width <= l || 
-       x || width <= 60))
-    {
-      tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
-      if (tmpw)
-        {
-          tmpw->lower = (gfloat) 0;
-          tmpw->upper = (gfloat) l;
-          tmpw->page_size = (gfloat) width;
-          tmpw->page_increment = (gfloat) width-13;
-          tmpw->step_increment = (gfloat) 8;
-          tmpw->value = (gfloat) x;
-          gtk_adjustment_changed (tmpw);
-          if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)) == FALSE)
-            {
-              gtk_widget_show (GTK_WIDGET (hscroll));
-              gtk_widget_draw_default (GTK_WIDGET (hscroll));
-            }
-        }
-    }
-  else
-    /*if ((width + vscroll->allocation.width) > l && 
-      x == 0 && width > 60)*/
-    {
-      if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)))
-        gtk_widget_hide (GTK_WIDGET (hscroll));
-    }  
-  
-  if (height + y <= h &&
-      (height + hscroll->allocation.height <= h || y))
-    {
-      tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
-      if (tmpw)
-        {
-          tmpw->lower = (gfloat) 0;
-          tmpw->upper = (gfloat) h;
-          tmpw->page_size = (gfloat) height;
-          tmpw->page_increment = (gfloat) height;
-          tmpw->step_increment = (gfloat) 6;
-          tmpw->value = (gfloat) y;
-          gtk_adjustment_changed (tmpw);
-          if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)) == FALSE)
-            {
-              gtk_widget_show (GTK_WIDGET (vscroll));
-              gtk_widget_draw_default (GTK_WIDGET (vscroll));
-            }
-        }
-    }
-  else
-    /*if ((height + hscroll->allocation.height) > h && y == 0)*/
-    {
-      if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)))
-        gtk_widget_hide (GTK_WIDGET (vscroll));
-    }  
-#endif /*_GTK*/  
-#endif /* #if defined(_GTK) || defined(_WX) */
-
-#ifdef _WINGUI
-  if (!ComputeScrollBar)
-	return;
-  ComputeScrollBar = FALSE;
-  need_resize = FALSE;
-  l = FrameTable[frame].FrWidth;
-  h = FrameTable[frame].FrHeight;
-  memset(&scrollInfo, 0, sizeof(scrollInfo));	
-  scrollInfo.cbSize = sizeof (SCROLLINFO);
-  scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE;
-  if (width >= l - 4 && x == 0 && width > 60)
-    {
-      /*hide*/
-      if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == TRUE)
-        {
-          scrollInfo.nMax = 2;
-          SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
-          ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
-          need_resize = TRUE;
-        }
-    }
-  else if (width + x <= l)
-    {
-      /*show*/
-      if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == FALSE)
-        {
-          CloseTextInsertion ();
-          ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, TRUE);
-          need_resize = TRUE;
-        }
-      scrollInfo.nMax   = l;
-      scrollInfo.nPage  = width;
-      scrollInfo.nPos   = x;	 
-      SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
-    }
-  else
-    /*update*/
-    if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == FALSE)
-      {
-        CloseTextInsertion ();
-        ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
-        need_resize = TRUE;
-      }
-   
-  if (height >= h && y == 0)
-    { 
-      /*hide*/
-      if (Win_Scroll_visible (FrameTable[frame].WdScrollV))
-        {
-          scrollInfo.nMax = 2;
-          SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
-          ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, FALSE);
-          need_resize = TRUE;
-        }
-    }
-  else if (height + y <= h)
-    {
-      /*show*/
-      if (Win_Scroll_visible (FrameTable[frame].WdScrollV) == FALSE)
-        {
-          CloseTextInsertion ();
-          ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
-          need_resize = TRUE;
-        }
-      scrollInfo.nMax   = h;
-      scrollInfo.nPage  = height;
-      scrollInfo.nPos   = y;
-      SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
-	 
-    }
-  else
-    /*show*/
-    if (Win_Scroll_visible (FrameTable[frame].WdScrollV) == FALSE)
-      {
-        CloseTextInsertion ();
-        ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
-        need_resize = TRUE;
-      }
-
-  if (need_resize)
-    {
-      Wnd_ResizeContent (FrMainRef[frame], 
-                         FRWidth[frame], 
-                         FRHeight[frame],  
-                         frame);
-    }
-  ComputeScrollBar = TRUE;
-#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
