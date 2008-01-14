@@ -5,6 +5,7 @@
 #include "wx/string.h"
 #include "wx/spinctrl.h"
 #include "wx/xrc/xmlres.h"
+#include "wx/tokenzr.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -183,9 +184,17 @@ void AmayaNormalWindow::CleanUp()
     Close();
 }
 
-
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  RegisterThotToolPanels
+ * Description:  Register thot-side AmayaToolPanel.
+ -----------------------------------------------------------------------*/
 void AmayaNormalWindow::RegisterThotToolPanels()
 {
+  TtaSetEnvString("CLASSIC_PANEL_ORDER",
+      "AmayaExplorerToolPanel;AmayaXHTMLToolPanel;AmayaAttributeToolPanel;AmayaApplyClassToolPanel;"
+      "AmayaStyleToolPanel;AmayaMathMLToolPanel;AmayaSpeCharToolPanel;AmayaXMLToolPanel",
+      FALSE);
   RegisterToolPanelClass(CLASSINFO(AmayaExplorerToolPanel));
   RegisterToolPanelClass(CLASSINFO(AmayaXHTMLToolPanel));
   RegisterToolPanelClass(CLASSINFO(AmayaAttributeToolPanel));
@@ -203,28 +212,45 @@ void AmayaNormalWindow::RegisterThotToolPanels()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::LoadConfig()
 {
+  unsigned int  n;
+  wxArrayString arr;
   ClassInfoSet::iterator it;
+
+  wxString str = TtaConvMessageToWX(TtaGetEnvString("CLASSIC_PANEL_ORDER"));
+  arr = wxStringTokenize(str, wxT(";"));
+
   for( it = g_AmayaToolPanelClassInfoSet.begin();
       it != g_AmayaToolPanelClassInfoSet.end(); ++it )
   {
       wxClassInfo *ci = *it;
       wxString name = ci->GetClassName();
-      
-      if(Prof_ShowGUI((const char*)wxString(name).mb_str(wxConvUTF8)))
-        {
-          wxObject* object = ci->CreateObject();
-          AmayaToolPanel* panel = wxDynamicCast(object, AmayaToolPanel);
-          if(panel)
-            {
-              RegisterToolPanel(panel);
-              wxString str = wxT("OPEN_") + panel->GetToolPanelConfigKeyName();
-              TtaSetEnvBoolean((const char*)str.mb_str(wxConvUTF8),
-                   panel->GetDefaultVisibilityState(), FALSE);
-            }
-          else
-            delete object;
-        }
+      if(arr.Index(name, true)==wxNOT_FOUND)
+        arr.Add(name);
   }
+  
+  
+  for(n = 0; n<arr.GetCount(); n++)
+    {
+      wxClassInfo *ci = wxClassInfo::FindClass(arr[n]);
+      if(ci)
+        {
+          wxString name = ci->GetClassName();
+          if(Prof_ShowGUI((const char*)wxString(name).mb_str(wxConvUTF8)))
+            {
+              wxObject* object = ci->CreateObject();
+              AmayaToolPanel* panel = wxDynamicCast(object, AmayaToolPanel);
+              if(panel)
+                {
+                  RegisterToolPanel(panel);
+                  wxString str = wxT("OPEN_") + panel->GetToolPanelConfigKeyName();
+                  TtaSetEnvBoolean((const char*)str.mb_str(wxConvUTF8),
+                       panel->GetDefaultVisibilityState(), FALSE);
+                }
+              else
+                delete object;
+            }
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
