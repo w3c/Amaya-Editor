@@ -147,7 +147,7 @@
 145 tfoot………..
 146 **Change to Data cell (td)
 147 **Change to Heading cell (th)
-148 **Merge
+148 **Merge cells
 149 **Join with the cell at the right
 150 **Join with the cell below
 151 **Shrink horizontal extend
@@ -235,7 +235,7 @@
 233 Multiscripts (mmultiscripts)
 234 &Matris
 235 Matris (mtable)
-236 **Merge
+236 **Merge cells
 237 **Join with the cell at the right
 238 **Join with the cell below
 239 **Shrink horizontal extend

@@ -147,7 +147,7 @@
 145 Pied (tfoot)
 146 Changer en cellule (td)
 147 Changer en cellule titre (th)
-148 Fusionner
+148 Fusionner les cellules
 149 Joindre avec la cellule de droite
 150 Joindre avec la cellule au-dessous
 151 Réduire extension horizontale
@@ -235,7 +235,7 @@
 233 Multiscripts (mmultiscripts)
 234 &Matrices
 235 Nouvelle matrice (mtable)
-236 Fusionner
+236 Fusionner les cellules
 237 Joindre avec la cellule de droite
 238 Joindre avec la cellule au-dessous
 239 Réduire extension horizontale

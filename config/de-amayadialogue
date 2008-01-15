@@ -147,7 +147,7 @@
 145 Fußzeile (tfoot)
 146 Umwandeln in Datenzelle (td)
 147 Umwandeln in Titelzelle (th)
-148 Zusammenfügen
+148 Zusammenfügen die Zellen
 149 Zusammenfügen mit rechter Zelle
 150 Zusammenfügen mit der Zelle darunter
 151 Verkleinern der Breite
@@ -235,7 +235,7 @@
 233 Vierfachindex (mmultiscripts)
 234 &Matrices
 235 Matrix (mtable)
-236 Zusammenfügen
+236 Zusammenfügen die Zellen
 237 Zusammenfügen mit rechter Zelle
 238 Zusammenfügen mit der Zelle darunter
 239 Verkleinern der Breite
