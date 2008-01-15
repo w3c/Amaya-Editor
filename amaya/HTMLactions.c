@@ -2898,7 +2898,6 @@ void UpdateContextSensitiveMenus (Document doc, View view)
 
   if (doc == 0)
     return;
-  sch = NULL;
   /* check if there are HTML elements in the document */
   sch = TtaGetSSchema ("HTML", doc);
   withHTML = (DocumentTypes[doc] == docHTML && DocumentURLs[doc]);

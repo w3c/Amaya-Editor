@@ -257,6 +257,13 @@
 #define TMSG_NO_RECENT_DOC		252
 #define TMSG_CLIC_ELEM_TO_SELECT_IT		253
 #define TMSG_INSERT_MODE		254
-#define TMSG_LIB_MSG_MAX		255
+#define CellMerge		255
+#define CellHShrink		256
+#define CellVShrink		257
+#define CreateRowB		258
+#define CreateRowA		259
+#define CreateColumnB		260
+#define CreateColumnA		261
+#define TMSG_LIB_MSG_MAX		262
 
 #endif

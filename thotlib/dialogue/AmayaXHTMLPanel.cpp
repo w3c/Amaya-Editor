@@ -24,7 +24,6 @@
 #include "panel.h"
 #include "displayview_f.h"
 #include "registry_wx.h"
-
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "paneltypes_wx.h"
@@ -41,7 +40,7 @@
 
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaXHTMLToolDef)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_P",       "CreateParagraph",       LIB, TMSG_BUTTON_P)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_P",       "CreateParagraph",      LIB, TMSG_BUTTON_P)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H1",      "CreateHeading1",       LIB, TMSG_BUTTON_H1)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H2",      "CreateHeading2",       LIB, TMSG_BUTTON_H2)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H3",      "CreateHeading3",       LIB, TMSG_BUTTON_H3)
@@ -66,6 +65,14 @@ AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaXHTMLToolDef)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_DEL",     "SetOnOffDEL",          LIB, TMSG_DELETION)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_SUB",     "SetOnOffSub",          LIB, TMSG_SUB)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_SUP",     "SetOnOffSup",          LIB, TMSG_SUP)
+
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_TABLE_MERGE",     "MergeSelectedCells",   LIB, CellMerge)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_TABLE_SPLIT_H",   "CellHorizShrink",      LIB, CellHShrink)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_TABLE_SPLIT_V",   "CellVertShrink",       LIB, CellVShrink)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_TABLE_INSERT_ROW","CreateRowBefore",      LIB, CreateRowB)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_TABLE_APPEND_ROW","CreateRowAfter",       LIB, CreateRowA)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_TABLE_INSERT_COL","CreateColumnBefore",   LIB, CreateColumnB)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_TABLE_APPEND_COL","CreateColumnAfter",    LIB, CreateColumnA)
 AMAYA_END_TOOLBAR_DEF_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaXHTMLToolPanel, AmayaToolPanel)
@@ -89,6 +96,7 @@ bool AmayaXHTMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   m_tbar2 = XRCCTRL(*this,"wxID_TOOLBAR_XHTML_2", AmayaBaseToolBar);
   m_tbar3 = XRCCTRL(*this,"wxID_TOOLBAR_XHTML_3", AmayaBaseToolBar);
   m_tbar4 = XRCCTRL(*this,"wxID_TOOLBAR_XHTML_4", AmayaBaseToolBar);
+  m_tbar5 = XRCCTRL(*this,"wxID_TOOLBAR_XHTML_5", AmayaBaseToolBar);
 
   m_tbar1->Add(AmayaXHTMLToolDef);
   m_tbar1->Realize();
@@ -98,6 +106,8 @@ bool AmayaXHTMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   m_tbar3->Realize();
   m_tbar4->Add(AmayaXHTMLToolDef);
   m_tbar4->Realize();
+  m_tbar5->Add(AmayaXHTMLToolDef);
+  m_tbar5->Realize();
   Fit();
   SetAutoLayout(true);
   
@@ -116,7 +126,7 @@ wxString AmayaXHTMLToolPanel::GetToolPanelName()const
  -----------------------------------------------------------------------*/
 wxString AmayaXHTMLToolPanel::GetDefaultAUIConfig()
 {
-  return wxT("state=18875596;dir=2;layer=0;row=0;pos=0;prop=100000;bestw=184;besth=112;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1083;floaty=784;floatw=192;floath=136");
+  return wxT("state=18875596;dir=2;layer=0;row=0;pos=0;prop=100000;bestw=184;besth=120;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1083;floaty=784;floatw=192;floath=136");
 }
 
 

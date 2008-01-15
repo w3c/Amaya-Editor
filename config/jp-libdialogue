@@ -254,3 +254,10 @@
 252 **No recent document
 253 **Click an element to select it
 254 **Click to change the editing mode
+255 **Merge cells
+256 **Shrink horizontal extend
+257 **Shrink vertical extend
+258 **Insert a row
+259 **Append a row
+260 **Insert a column
+261 **Append a column

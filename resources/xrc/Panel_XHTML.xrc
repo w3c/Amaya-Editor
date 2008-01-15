@@ -108,6 +108,41 @@
           <style>wxTB_NODIVIDER|wxTB_FLAT</style>
         </object>
       </object>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_XHTML_5" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_PANEL_TABLE_MERGE">
+            <bitmap>../icons/16x16/Table_merge.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_TABLE_SPLIT_H">
+            <bitmap>../icons/16x16/Table_split_h.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_TABLE_SPLIT_V">
+            <bitmap>../icons/16x16/Table_split_v.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_TABLE_INSERT_ROW">
+            <bitmap>../icons/16x16/Table_row.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_TABLE_APPEND_ROW">
+            <bitmap>../icons/16x16/Table_row_a.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_TABLE_INSERT_COL">
+            <bitmap>../icons/16x16/Table_col.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <object class="tool" name="wxID_PANEL_TABLE_APPEND_COL">
+            <bitmap>../icons/16x16/Table_col_a.png</bitmap>
+            <toggle>1</toggle>
+          </object>
+          <bitmapsize>16,16</bitmapsize>
+          <margins>2,0</margins>
+          <style>wxTB_NODIVIDER|wxTB_FLAT</style>
+        </object>
+      </object>
     </object>
     <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
   </object>

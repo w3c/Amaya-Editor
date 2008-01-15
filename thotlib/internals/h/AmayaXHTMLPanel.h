@@ -39,7 +39,7 @@ public:
   
 protected:
 
-  AmayaBaseToolBar *m_tbar1, *m_tbar2, *m_tbar3, *m_tbar4;
+  AmayaBaseToolBar *m_tbar1, *m_tbar2, *m_tbar3, *m_tbar4, *m_tbar5;
  
 };
 

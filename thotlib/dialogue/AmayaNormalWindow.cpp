@@ -192,8 +192,8 @@ void AmayaNormalWindow::CleanUp()
 void AmayaNormalWindow::RegisterThotToolPanels()
 {
   TtaSetEnvString("CLASSIC_PANEL_ORDER",
-      "AmayaExplorerToolPanel;AmayaXHTMLToolPanel;AmayaAttributeToolPanel;AmayaApplyClassToolPanel;"
-      "AmayaStyleToolPanel;AmayaMathMLToolPanel;AmayaSpeCharToolPanel;AmayaXMLToolPanel",
+      "AmayaExplorerToolPanel;AmayaXHTMLToolPanel;AmayaAttributeToolPanel;AmayaStyleToolPanel;"
+      "AmayaApplyClassToolPanel;AmayaMathMLToolPanel;AmayaSpeCharToolPanel;AmayaXMLToolPanel",
       FALSE);
   RegisterToolPanelClass(CLASSINFO(AmayaExplorerToolPanel));
   RegisterToolPanelClass(CLASSINFO(AmayaXHTMLToolPanel));
