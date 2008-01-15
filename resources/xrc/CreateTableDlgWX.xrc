@@ -83,7 +83,7 @@
             <border>5</border>
           </object>
           <object class="spacer">
-            <size>0,10</size>
+            <size>0,5</size>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
@@ -135,7 +135,7 @@
                 <flag>wxALIGN_CENTRE_VERTICAL</flag>
               </object>
               <object class="spacer">
-                <size>30,0</size>
+                <size>20,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxButton" name="wxID_FORMAT_BUTTON">
@@ -150,16 +150,6 @@
           </object>
           <object class="spacer">
             <size>0,5</size>
-          </object>
-          <object class="sizeritem">
-            <object class="wxBoxSizer">
-              <orient>wxHORIZONTAL</orient>
-              <object class="spacer">
-                <size>10,0</size>
-              </object>
-            </object>
-            <flag>wxALL</flag>
-            <border>5</border>
           </object>
           <object class="spacer">
             <size>0,5</size>
@@ -192,7 +182,7 @@
             </object>
           </object>
           <object class="spacer">
-            <size>0,20</size>
+            <size>0,5</size>
           </object>
         </object>
         <option>1</option>

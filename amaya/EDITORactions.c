@@ -2347,11 +2347,53 @@ void DoTableCreation (Document doc)
   ----------------------------------------------------------------------*/
 void CreateTable (Document doc, View view)
 {
-  ElementType         elType;
+  ElementType         elType, elTypeFirst;
+  Element             firstSel, lastSel;
+  SSchema             sch;
+  int                 firstChar, lastChar;
+  char               *name;
+  ThotBool            withinTable, inMath;
+
+  withinTable = FALSE;
+  inMath = FALSE;
+  sch = TtaGetSSchema ("HTML", doc);
+  TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
+  if (firstSel)
+    {
+      /* look for an enclosing cell */
+      elTypeFirst = TtaGetElementType (firstSel);
+      elType.ElSSchema = elTypeFirst.ElSSchema;
+      name = TtaGetSSchemaName (elType.ElSSchema);
+      if ((!strcmp (name, "MathML") && elTypeFirst.ElTypeNum == MathML_EL_MTABLE) ||
+          (!strcmp (name, "HTML") && elTypeFirst.ElTypeNum == HTML_EL_Table_))
+        return;
+      else if (!strcmp (name, "MathML"))
+        /* the current selection starts with a MathML element */
+        {
+          elType.ElTypeNum = MathML_EL_MTABLE;
+          withinTable = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
+          inMath = TRUE;
+          if (withinTable &&
+              (TtaIsColumnRowSelected (doc) ||
+               elTypeFirst.ElTypeNum == MathML_EL_MTD))
+            return;
+        }
+      else if (!strcmp (name, "HTML"))
+        /* the current selection starts with a MathML element */
+        {
+          elType.ElTypeNum = HTML_EL_Table_;
+          withinTable = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
+          if (withinTable &&
+              (TtaIsColumnRowSelected (doc) ||
+               elTypeFirst.ElTypeNum == HTML_EL_Data_cell ||
+               elTypeFirst.ElTypeNum == HTML_EL_Heading_cell))
+            return;
+        }
+    }
 
   if (!HTMLelementAllowed (doc))
     return;
-  elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+  elType.ElSSchema = sch;
   if (elType.ElSSchema)
     {
       /* check the selection */
@@ -4266,7 +4308,7 @@ static void CreateInputElement (Document doc, View view, int elInput)
 {
   ElementType         elType;
   AttributeType       attrType;
-  Element             el, input, parent;
+  Element             el, input = NULL, parent;
   Attribute           attr;
   int                 firstchar, lastchar;
   ThotBool            withinP, oldStructureChecking;
@@ -4293,7 +4335,7 @@ static void CreateInputElement (Document doc, View view, int elInput)
           input = TtaNewTree (doc, elType, "");
           if (elInput == HTML_EL_Text_Area)
             AddRowsColumns (input, doc);
-          TtaInsertFirstChild (&input, parent, doc);	   
+          TtaInsertFirstChild (&input, parent, doc);
           /* Insert a text element before */
           elType.ElTypeNum = HTML_EL_TEXT_UNIT;
           el = TtaNewElement (doc, elType);
@@ -4306,28 +4348,30 @@ static void CreateInputElement (Document doc, View view, int elInput)
           oldStructureChecking = TtaGetStructureChecking (doc);
           if (elInput == HTML_EL_Text_Area)
             TtaSetStructureChecking (FALSE, doc);
-          TtaInsertElement (elType, doc);
-          TtaGiveFirstSelectedElement (doc, &input, &firstchar, &lastchar);
-          if (input)
+          if (TtaInsertElement (elType, doc))
             {
-              elType = TtaGetElementType (input);
-              while (input && elType.ElTypeNum != elInput)
+              TtaGiveFirstSelectedElement (doc, &input, &firstchar, &lastchar);
+              if (input)
                 {
-                  input = TtaGetParent (input);
                   elType = TtaGetElementType (input);
-                }
-              if (input && (elInput == HTML_EL_Text_Area) && (elType.ElTypeNum == elInput))
-                AddRowsColumns (input, doc);
-              if (elInput == HTML_EL_Text_Area)
-                TtaSetStructureChecking (oldStructureChecking, doc);
-              /* add a text before if needed */
-              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-              el = input;
-              TtaPreviousSibling (&el);
-              if (el == NULL)
-                {
-                  el = TtaNewElement (doc, elType);
-                  TtaInsertSibling (el, input, TRUE, doc);
+                  while (input && elType.ElTypeNum != elInput)
+                    {
+                      input = TtaGetParent (input);
+                      elType = TtaGetElementType (input);
+                    }
+                  if (input && (elInput == HTML_EL_Text_Area) && (elType.ElTypeNum == elInput))
+                    AddRowsColumns (input, doc);
+                  if (elInput == HTML_EL_Text_Area)
+                    TtaSetStructureChecking (oldStructureChecking, doc);
+                  /* add a text before if needed */
+                  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                  el = input;
+                  TtaPreviousSibling (&el);
+                  if (el == NULL)
+                    {
+                      el = TtaNewElement (doc, elType);
+                      TtaInsertSibling (el, input, TRUE, doc);
+                    }
                 }
             }
         }
@@ -4355,9 +4399,7 @@ static void CreateInputElement (Document doc, View view, int elInput)
                  select the following text element */
               if (elInput != HTML_EL_BUTTON_ &&
                   elInput != HTML_EL_Option_Menu)
-                {
                 TtaSelectElement (doc, el);
-                }
             }
         }
     }
@@ -4633,55 +4675,55 @@ void  CreateIFrame (Document doc, View view)
       TtaSetStructureChecking (FALSE, doc);
       elType.ElSSchema = TtaGetSSchema ("HTML", doc);
       elType.ElTypeNum = HTML_EL_IFRAME;
-      TtaInsertElement (elType, doc);
-      /* Check the Thot abstract tree against the structure schema. */
-      TtaSetStructureChecking (TRUE, doc);
-
-      /* get the first selected element, i.e. the Object element */
-      TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-      
-      elType = TtaGetElementType (el);
-      while (el != NULL &&
-             elType.ElTypeNum != HTML_EL_IFRAME)
+      if (TtaInsertElement (elType, doc))
         {
-          el = TtaGetParent (el);
+          /* Check the Thot abstract tree against the structure schema. */
+          TtaSetStructureChecking (TRUE, doc);
+          /* get the first selected element, i.e. the Object element */
+          TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
           elType = TtaGetElementType (el);
-        }
-      
-      if (el == NULL)
-        return;
+          while (el != NULL &&
+                 elType.ElTypeNum != HTML_EL_IFRAME)
+            {
+              el = TtaGetParent (el);
+              elType = TtaGetElementType (el);
+            }
+          
+          if (el == NULL)
+            return;
 
-      TtaExtendUndoSequence (doc);
-      /* copy SRC attribute */
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr == NULL)
-        {
-           attr = TtaNewAttribute (attrType);
-           TtaAttachAttribute (el, attr, doc);
-           TtaSetAttributeText (attr, "source.html", el, doc);
-           TtaRegisterAttributeCreate (attr, el, doc);
-         }
-      /* now create a child element */
-      child = TtaGetLastChild (el);
-      if (child == NULL)
-        {
-          elType.ElTypeNum = HTML_EL_Iframe_Content;
+          TtaExtendUndoSequence (doc);
+          /* copy SRC attribute */
+          attrType.AttrSSchema = elType.ElSSchema;
+          attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr == NULL)
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              TtaSetAttributeText (attr, "source.html", el, doc);
+              TtaRegisterAttributeCreate (attr, el, doc);
+            }
+          /* now create a child element */
+          child = TtaGetLastChild (el);
+          if (child == NULL)
+            {
+              elType.ElTypeNum = HTML_EL_Iframe_Content;
+              child = TtaNewElement (doc, elType);
+              TtaInsertFirstChild (&child, el, doc);
+              TtaRegisterElementCreate (child, doc);
+            }
+          elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+          el = TtaNewElement (doc, elType);
+          TtaInsertFirstChild (&el, child, doc);
+          TtaRegisterElementCreate (el, doc);
+          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
           child = TtaNewElement (doc, elType);
           TtaInsertFirstChild (&child, el, doc);
+          TtaSelectElement (doc, child);
           TtaRegisterElementCreate (child, doc);
+          TtaCloseUndoSequence (doc);
         }
-      elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-      el = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&el, child, doc);
-      TtaRegisterElementCreate (el, doc);
-      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      child = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&child, el, doc);
-      TtaSelectElement (doc, child);
-      TtaRegisterElementCreate (child, doc);
-      TtaCloseUndoSequence (doc);
   }
 }
 
