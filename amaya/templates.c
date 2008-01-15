@@ -1,6 +1,6 @@
 /*
  *
- *  COPYRIGHT INRIA and W3C, 1996-2007
+ *  COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -683,6 +683,19 @@ static char* QueryStringFromMenu (Document doc, char* items)
 #ifdef AMAYA_DEBUG
 void FillInsertableElemList (Document doc, Element elem, DLList list);
 #endif /* AMAYA_DEBUG */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+char *Template_GetListTypes (XTigerTemplate t, Element el)
+{
+#ifdef TEMPLATES
+  char  *listtypes = NULL, *types;
+
+  types = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
+  if (types)
+    listtypes = Template_ExpandTypes (t, types, el, FALSE);
+  return listtypes;
+#endif /* TEMPLATES */
+}
 
 /*----------------------------------------------------------------------
   BagButtonClicked
@@ -706,9 +719,9 @@ ThotBool BagButtonClicked (NotifyElement *event)
   Element         newEl = NULL;
   View            view;
   SSchema         templateSSchema;
-  char*           types;
-  char*           listtypes = NULL;
-  char*           result = NULL;
+  char           *listtypes = NULL;
+  char           *result = NULL;
+  char           *types;
   ThotBool        oldStructureChecking;
   DisplayMode     dispMode;
 
@@ -733,10 +746,9 @@ ThotBool BagButtonClicked (NotifyElement *event)
 
   if (bagEl)
   {
-    types = GetAttributeStringValueFromNum (bagEl, Template_ATTR_types, NULL);
-    if (types)
+    listtypes = Template_GetListTypes (t, bagEl);
+    if (listtypes)
       {
-        listtypes = Template_ExpandTypes (t, types, bagEl, FALSE);
 #ifdef AMAYA_DEBUG
       printf("BagButtonClicked : \n  > %s\n", listtypes);
 //      {
@@ -804,7 +816,6 @@ ThotBool BagButtonClicked (NotifyElement *event)
               }
           }
       }
-    TtaFreeMemory (types);
     TtaFreeMemory (result);
   }
 #endif /* TEMPLATES */
@@ -832,9 +843,8 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   Element         firstEl;
   Element         newEl = NULL;
   View            view;
-  char*           listtypes = NULL;
-  char*           result = NULL;
-  char*           types;
+  char           *listtypes = NULL;
+  char           *result = NULL;
   ThotBool        oldStructureChecking;
   DisplayMode     dispMode;
 
@@ -861,10 +871,9 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
     if (Template_CanInsertRepeatChild (repeatEl))
     {
       firstEl = TtaGetFirstChild (repeatEl);
-      types = GetAttributeStringValueFromNum (firstEl, Template_ATTR_types, NULL);
-      if (types)
+    listtypes = Template_GetListTypes (t, firstEl);
+    if (listtypes)
       {
-        listtypes = Template_ExpandTypes (t, types, NULL, FALSE);
 #ifdef AMAYA_DEBUG
       printf("RepeatButtonClicked : \n  > %s\n", listtypes);
 #endif /* AMAYA_DEBUG */
@@ -913,7 +922,6 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
           }
         }
       }
-      TtaFreeMemory(types);
       TtaFreeMemory(result);
     }
     else /* if (Template_CanInsertRepeatChild(repeatEl)) */

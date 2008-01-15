@@ -16,6 +16,11 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "message.h"
+#ifdef TEMPLATES
+#include "templates.h"
+#include "templateDeclarations_f.h"
+#include "templates_f.h"
+#endif /* TEMPLATES */
 
 
 #undef THOT_EXPORT
@@ -429,31 +434,28 @@ static ThotBool ChildrenMatch (strNode * n, strSymbDesc * p)
         return FALSE;
     }
   /* looking for a matching of each child of symbol p (candidate) with the
-     children of the source node n */ 
+     children of the source node n */
   child = n->Child;
-  IntersectMatch (&(child->Candidates), p->Children, child->Matches);
+  IntersectMatch (&(child->Candidates), candidate, child->Matches);
   candidate = child->Candidates;
   if (candidate == NULL)
-    {
       return FALSE;
-    }
+
   InitMatchStack ();
   while (!matchFailed && !matchFound)
     {
-      if (child == NULL && (candidate != NULL && candidate->Symbol == NULL))
+      if (child == NULL && (candidate && candidate->Symbol == NULL))
         {
           /* all the children of n are matched, add a matching for n and p */
           ConstListMatch (n, p);
           matchFound = TRUE;
         }
-      else if (child == NULL || candidate == NULL ||
-               candidate->Symbol == NULL)
+      else if (child == NULL || candidate == NULL || candidate->Symbol == NULL)
         {  
           /* the children are not all matched, pop the matching stack to see
              if an other symbol can be matched with a node already explored*/
           PopMatchStack (&child, &ms);
-          while (child != NULL &&
-                 ms->Next == NULL)
+          while (child != NULL && ms->Next == NULL)
             PopMatchStack (&child, &ms);
           if (child == NULL)
             {
@@ -2182,22 +2184,47 @@ static void MyNextSelectedElement (Document doc, Element * elSelect)
   WARNING This function works as long as there are no cycles in S schema
   whithout any HTML element inside....
   ----------------------------------------------------------------------*/
-static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag)
+static ThotBool IsValidHtmlChild (ElementType elemType, char *tag,
+                                  char *prevtag, Element el)
 {
-
   ElementType         elemTypeChild, tagElType, prevElType;
   ElementType        *subTypes = NULL;
   ConstructType       constOfType;
-  char               *name;
+  char               *name, *listtypes;
   int                 cardinal, i = 0, start;
   ThotBool            result, found;
 
   // check if it is a template element
-  if (!strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "Template"))
-    // should check if the tag is allowed there
-    return TRUE;
-
   result = FALSE;
+  if (!strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "Template"))
+    {
+#ifdef TEMPLATES
+      XTigerTemplate  t;
+
+      // check if the tag is allowed there
+      t = GetXTigerTemplate (DocumentMeta[TransDoc]->template_url);
+      if (t)
+        {
+          listtypes = Template_GetListTypes (t, el);
+          name = listtypes;
+          i = strlen (tag);
+          while (name)
+            {
+              name = strstr (name, tag);
+              if (name && name[i] == SPACE)
+                {
+                  result = TRUE;
+                  name = NULL;
+                }
+              else if (name)
+                name += i;
+            }
+          TtaFreeMemory (listtypes);
+        }
+#endif /* TEMPLATES */
+      return result;
+    }
+
   elemTypeChild.ElSSchema = elemType.ElSSchema;
   cardinal = TtaGetCardinalOfType (elemType);
   if (cardinal > 0)
@@ -2228,13 +2255,13 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
                   if (!strcmp ((char *)name, "???") ||
                       !strcmp ((char *)name, "none"))
                     /* search if tag can be inserted as a child of the identity */
-                    result = IsValidHtmlChild (subTypes[0], tag, "");
+                    result = IsValidHtmlChild (subTypes[0], tag, "", el);
                 }
               /* any math element can be inserted under <math> (only row in MathML.S)*/
               if (!result &&
                   !strcmp ((char *)TtaGetElementTypeName (elemType), "math") && 
                   !strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "MathML"))
-                result = IsValidHtmlChild (subTypes[0], tag, "");
+                result = IsValidHtmlChild (subTypes[0], tag, "", el);
             }
           break;
 	  
@@ -2249,7 +2276,7 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
                   if (!strcmp ((char *)name, "???") ||
                       !strcmp ((char *)name, "p*") ||
                       !strcmp ((char *)name, "none"))
-                    result = IsValidHtmlChild (subTypes[0], tag, "");
+                    result = IsValidHtmlChild (subTypes[0], tag, "", el);
                 }
             }
           break;
@@ -2265,7 +2292,7 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
                 if (!strcmp ((char *)name, "???") ||
                     !strcmp ((char *)name, "p*") ||
                     !strcmp ((char *)name, "none"))
-                  result = IsValidHtmlChild (subTypes[i], tag, "");
+                  result = IsValidHtmlChild (subTypes[i], tag, "", el);
               }
           break;
 	  
@@ -2325,7 +2352,7 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
                           !strcmp ((char *)name, "p*") ||
                           !strcmp ((char *)name, "none"))
                         {
-                          result = IsValidHtmlChild (subTypes[i], tag, "");
+                          result = IsValidHtmlChild (subTypes[i], tag, "", el);
                           if (!result &&
                               TtaIsOptionalInAggregate(i, elemType)) 
                             i++;
@@ -2350,7 +2377,7 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
                 if (!strcmp ((char *)name, "???") ||
                     !strcmp ((char *)name, "p*") ||
                     !strcmp ((char *)name, "none"))
-                  result = IsValidHtmlChild (subTypes[i], tag, "");
+                  result = IsValidHtmlChild (subTypes[i], tag, "", el);
               }
           break;
 	  
@@ -2368,7 +2395,7 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
                   if (!strcmp ((char *)name, "???") ||
                       !strcmp ((char *)name, "p*") ||
                       !strcmp ((char *)name, "none"))
-                    result = IsValidHtmlChild (subTypes[0], tag, "");
+                    result = IsValidHtmlChild (subTypes[0], tag, "", el);
                 }
             }
           break;
@@ -2426,7 +2453,8 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
                   if (strcmp ((char *)prevTag, (char *)smc->MatchNode->Tag))
                     result = IsValidHtmlChild (elemTypeRoot,
                                                (char *)smc->MatchNode->Tag,
-                                               prevTag);
+                                               prevTag,
+                                               sm->MatchNode->Elem);
                   strcpy ((char *)prevTag, (char *)smc->MatchNode->Tag);
                 }
             }
@@ -2446,7 +2474,8 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
                 {
                   result = IsValidHtmlChild (elemTypeRoot,
                                              (char *)node->Tag,
-                                             prevTag);
+                                             prevTag,
+                                             sm->MatchNode->Elem);
                   strcpy ((char *)prevTag, (char *)node->Tag);
                 }
             }
@@ -2456,12 +2485,13 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
               if (node != NULL)
                 {
                   if (!strcmp ((char *)node->Tag, "*"))
-                    strcpy ((char *)curTag, (char *)smc->MatchNode->Tag);
+                    strcpy ((char *)curTag, (char *)sm->MatchNode->Tag);
                   else
                     strcpy ((char *)curTag, (char *)node->Tag);
                   result = IsValidHtmlChild (elemTypeRoot,
                                              curTag,
-                                             prevTag);
+                                             prevTag,
+                                             sm->MatchNode->Elem);
                   strcpy ((char *)prevTag, (char *)curTag);
                 }
               else		/*deleted node */

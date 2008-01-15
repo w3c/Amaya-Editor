@@ -31,6 +31,8 @@ extern void giveItems ( char *text,
 extern ThotBool UseToBeCreated ( NotifyElement *event );
 extern void UseCreated ( NotifyElement *event );
 extern ThotBool Template_CanInsertRepeatChild ( Element el );
+extern char *Template_GetListTypes ( XTigerTemplate t,
+                                     Element el );
 extern ThotBool BagButtonClicked ( NotifyElement *event );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
@@ -74,6 +76,8 @@ extern void giveItems ( char *text,
 extern ThotBool UseToBeCreated ( NotifyElement *event );
 extern void UseCreated ( NotifyElement *event );
 extern ThotBool Template_CanInsertRepeatChild ( Element el );
+extern char *Template_GetListTypes ( XTigerTemplate t,
+                                       Element el );
 extern ThotBool BagButtonClicked ( NotifyElement *event );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
