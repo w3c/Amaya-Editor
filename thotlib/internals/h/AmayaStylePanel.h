@@ -35,14 +35,27 @@ public:
 
   virtual bool CanResize() {return false;}
   
-  void OnColorPalette( AmayaColorButtonEvent& event );
   void SetColor(int color);
-  void OnThemeChange( wxCommandEvent& event );
+  void SetBackgroundColor(int color);
   void SetTheme(const char *theme);
+
+  void GenerateFontColour(wxColour c);
+  void GenerateBackgroundColour(wxColour c);
 
 protected:
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
+  
+  void OnChooseFontColor(wxCommandEvent& event);
+  void OnColorFontPalette( AmayaColorButtonEvent& event );
+
+  void OnChooseBackgroundColor(wxCommandEvent& event);
+  void OnColorBackgroundPalette( AmayaColorButtonEvent& event );
+
+  
+  void OnThemeChange( wxCommandEvent& event );
+
+
   AmayaBaseToolBar *m_tbar1, *m_tbar2;
   wxColourData colour_data;
 };

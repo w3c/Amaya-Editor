@@ -34,7 +34,7 @@ typedef void (wxEvtHandler::*AmayaColorButtonEventFunction)(AmayaColorButtonEven
 #define EVT_AMAYA_COLOR_CHANGED(id, fn) wx__DECLARE_EVT1(AMAYA_COLOR_CHANGED, id, AmayaColorButtonEventHandler(fn))
 
 
-
+#define AMAYA_COLOR_BUTTON_QUERY_ON_CLICK   0x1L
 
 /*
  *  Description:  - AmayaColorButton is a special button for choosing a color.
@@ -58,6 +58,8 @@ public:
   wxColour GetColour()const;
   void SetColour(const wxColour& col);
 
+  wxColour ChooseColour();
+  
 protected:
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()

@@ -78,21 +78,28 @@ void AmayaColorButton::SetColour(const wxColour& col)
 {
   SetBackgroundColour(col);
   Refresh();
-  SetToolTip(wxString::Format(wxT("#%02x%02x%02x"), col.Red(), col.Green(), col.Blue()));
 }
 
-void AmayaColorButton::OnLeftButtonDown(wxMouseEvent& event)
+wxColour AmayaColorButton::ChooseColour()
 {
   wxColourDialog dialog (this, &s_colData);
   if (dialog.ShowModal() == wxID_OK)
     {
       s_colData = dialog.GetColourData();
-      wxColour col = s_colData.GetColour();
-      SetColour(col);
-
-      AmayaColorButtonEvent evt(col, AMAYA_COLOR_CHANGED, GetId());
-      ProcessEvent(evt);
+      SetColour(s_colData.GetColour());
     }
+  return GetColour();
+}
+
+void AmayaColorButton::OnLeftButtonDown(wxMouseEvent& event)
+{
+  wxColour col = GetColour();
+  
+  if(HasFlag(AMAYA_COLOR_BUTTON_QUERY_ON_CLICK))
+      col = ChooseColour();
+  
+  AmayaColorButtonEvent evt(col, AMAYA_COLOR_CHANGED, GetId());
+  ProcessEvent(evt);
 }
 
 

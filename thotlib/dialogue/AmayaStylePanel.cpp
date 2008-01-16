@@ -44,6 +44,8 @@ extern void ChangeTheme (const char *theme);
 //
 //
 static int  Current_Color = -1;
+static int  Current_BackgroundColor = -1;
+
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaStyleToolDef)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_LEFT",    "DoLeftAlign", LIB, TMSG_FORMATLEFT)
@@ -83,6 +85,9 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_PANEL_CSS_COLOR"),
       new AmayaColorButton(this, XRCID("wxID_PANEL_CSS_COLOR"), wxColour(0,0,0), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
 
+  wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_PANEL_CSS_BK_COLOR"),
+      new AmayaColorButton(this, XRCID("wxID_PANEL_CSS_BK_COLOR"), wxColour(255,255,255), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
+
   
   m_tbar1 = XRCCTRL(*this,"wxID_TOOLBAR_CSS_1", AmayaBaseToolBar);
   m_tbar2 = XRCCTRL(*this,"wxID_TOOLBAR_CSS_2", AmayaBaseToolBar);
@@ -94,9 +99,12 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   Fit();
   SetAutoLayout(true);
   
-//  XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", AmayaColorButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORBUTTON)));
+  XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", AmayaColorButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORFG)));
+  XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORBG)));
   
-  XRCCTRL(*this, "wxID_FONT_COLOR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORFG)));
+  XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORFG)));
+  XRCCTRL(*this, "wxID_BUTTON_BKCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORBG)));
+  
   XRCCTRL(*this, "wxID_THEME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_THEME)));
   SetColor (1);
   SetTheme ("Standard");
@@ -117,28 +125,8 @@ wxString AmayaStyleToolPanel::GetToolPanelName()const
  -----------------------------------------------------------------------*/
 wxString AmayaStyleToolPanel::GetDefaultAUIConfig()
 {
+//  return wxT("");
   return wxT("state=18875596;dir=2;layer=0;row=0;pos=1;prop=100000;bestw=187;besth=119;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1073;floaty=587;floatw=195;floath=143");
-}
-
-
-/*----------------------------------------------------------------------
-  OnColorPalette is called when the user click on the color palette button
-  params:
-  returns:
-  ----------------------------------------------------------------------*/
-void AmayaStyleToolPanel::OnColorPalette( AmayaColorButtonEvent& event )
-{
-  char     color_string[100];
-  int      color;
-  wxColour col = event.GetColour();
-  
-  color = TtaGetThotColor (col.Red(), col.Green(), col.Blue());
-  if (color != Current_Color)
-    Current_Color = color;
-  // generate a color style
-  sprintf( color_string, "color:#%02x%02x%02x", col.Red(), col.Green(), col.Blue());
-  CloseTextInsertion ();
-  DoStyleColor (color_string);
 }
 
 
@@ -160,6 +148,26 @@ void AmayaStyleToolPanel::SetColor(int color)
   col = wxColour ( red, green, blue );
   XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", AmayaColorButton)->SetColour( col );
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::SetBackgroundColor(int color)
+{
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+  wxColour            col;
+
+  if (color == Current_BackgroundColor)
+    // already set
+    return;
+
+  Current_BackgroundColor = color;
+  TtaGiveThotRGB (color, &red, &green, &blue);
+  col = wxColour ( red, green, blue );
+  XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->SetColour( col );  
+}
+
 
 /*----------------------------------------------------------------------
   OnColorPalette is called when the user click on the color palette button
@@ -195,11 +203,82 @@ void AmayaStyleToolPanel::SetTheme(const char *theme)
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::GenerateFontColour(wxColour c)
+{
+  char     color_string[100];
+  int      color;
+  color = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
+  if (color != Current_Color)
+    Current_Color = color;
+  // generate a color style
+  sprintf( color_string, "color:#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
+  CloseTextInsertion ();
+  DoStyleColor (color_string);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnChooseFontColor(wxCommandEvent& event)
+{
+  GenerateFontColour(XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", AmayaColorButton)->ChooseColour());  
+}
+
+/*----------------------------------------------------------------------
+  OnColorPalette is called when the user click on the color palette button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnColorFontPalette( AmayaColorButtonEvent& event )
+{
+  GenerateFontColour(event.GetColour());
+}
+
+
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::GenerateBackgroundColour(wxColour c)
+{
+  char     color_string[100];
+  int      color;
+  color = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
+  if (color != Current_BackgroundColor)
+    Current_BackgroundColor = color;
+  // generate a color style
+  sprintf( color_string, "background-color:#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
+  CloseTextInsertion ();
+  DoStyleColor (color_string);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnChooseBackgroundColor(wxCommandEvent& event)
+{
+  GenerateBackgroundColour(XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->ChooseColour());    
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnColorBackgroundPalette( AmayaColorButtonEvent& event )
+{
+  GenerateBackgroundColour(event.GetColour());  
+}
+
+
+
+/*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
-  EVT_AMAYA_COLOR_CHANGED(wxID_ANY, AmayaStyleToolPanel::OnColorPalette )
+  EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_PANEL_CSS_COLOR"), AmayaStyleToolPanel::OnColorFontPalette )
+  EVT_BUTTON(XRCID("wxID_BUTTON_TEXTCOLOR"), AmayaStyleToolPanel::OnChooseFontColor)
+
+  EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_PANEL_CSS_BK_COLOR"), AmayaStyleToolPanel::OnColorBackgroundPalette )
+  EVT_BUTTON(XRCID("wxID_BUTTON_BKCOLOR"), AmayaStyleToolPanel::OnChooseBackgroundColor)
+
   EVT_CHOICE(XRCID("wxID_PANEL_CSS_THEME"), AmayaStyleToolPanel::OnThemeChange)
 END_EVENT_TABLE()
 
