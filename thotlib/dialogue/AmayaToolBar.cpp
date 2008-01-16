@@ -93,6 +93,9 @@ void AmayaBaseToolBar::Add(AmayaToolBarToolDef* def)
  -----------------------------------------------------------------------*/
 bool AmayaBaseToolBar::Realize()
 {
+  wxArrayInt arr;
+  unsigned int n;
+  
   AmayaToolBarToolDefHashMap::iterator it;
   // For each registered tool
   for (it = m_map->begin(); it != m_map->end(); ++it )
@@ -118,12 +121,16 @@ bool AmayaBaseToolBar::Realize()
           {
             if(!Prof_BelongTable(def->action))
               {
-                DeleteTool(current->GetId());
+                arr.Add(current->GetId());
               }
-          }
-        
+          }        
       }
   }
+  
+  for(n=0; n<arr.GetCount(); n++)
+    {
+      DeleteTool(arr[n]);
+    }
   
   return wxToolBar::Realize();
 }
