@@ -227,6 +227,11 @@ void AmayaAdvancedWindow::LoadConfig()
           }
         }
     }
+  
+  if(GetKind()==WXAMAYAWINDOW_ANNOT)
+    {
+      HideToolPanels();
+    }
 }
 
 /*----------------------------------------------------------------------
