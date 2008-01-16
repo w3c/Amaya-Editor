@@ -624,7 +624,7 @@ int TtaGetReferencesBase (int number)
 void DisplayConfirmMessage (const char *text)
 {
   int                 display_width_px, display_height_px;
-  int                 width, height;
+  int                 width = 200, height = 100;
 
   wxMessageDialog messagedialog( NULL,
                                  TtaConvMessageToWX(text), 
