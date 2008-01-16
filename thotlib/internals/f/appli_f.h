@@ -80,11 +80,6 @@ extern ThotBool FrameMouseWheelCallback ( int frame,
                                           int delta,
                                           int x,
                                           int y );
-extern void ThotGrab ( ThotWindow win,
-                       ThotCursor cursor,
-                       long events,
-                       int disp );
-extern void ThotUngrab ( void );
 extern ThotWindow TtaGetThotWindow ( int frame );
 extern void SetCursorWatch ( int thotThotWindowid );
 extern void ResetCursorWatch ( int thotThotWindowid );
@@ -193,11 +188,6 @@ extern ThotBool FrameMouseWheelCallback ( int frame,
                                             int delta,
                                             int x,
                                             int y );
-extern void ThotGrab ( ThotWindow win,
-                         ThotCursor cursor,
-                         long events,
-                         int disp );
-extern void ThotUngrab ( void );
 extern ThotWindow TtaGetThotWindow ( int frame );
 extern void SetCursorWatch ( int thotThotWindowid );
 extern void ResetCursorWatch ( int thotThotWindowid );

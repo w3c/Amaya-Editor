@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void UpdateStyleList ( Document doc );
 extern char *UpdateCSSURLs ( Document doc,
                              char *oldpath,
                              char *newpath,
@@ -52,6 +53,7 @@ extern void StyleCallbackDialogue ( int ref,
 
 #else /* __STDC__ */
 
+extern void UpdateStyleList ( Document doc );
 extern char *UpdateCSSURLs ( Document doc,
                                char *oldpath,
                                char *newpath,

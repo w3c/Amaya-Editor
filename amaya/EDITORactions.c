@@ -43,6 +43,7 @@
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
+#include "EDITstyle_f.h"
 #include "fetchXMLname_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
@@ -448,6 +449,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       
       /* Load user's style sheet */
       LoadUserStyleSheet (doc);
+      UpdateStyleList (doc);
 
       /* Set the namespace declaration */
       elType.ElTypeNum = HTML_EL_HTML;
@@ -791,6 +793,7 @@ void NotFoundDoc (char *url, Document doc)
         TtaDeleteTree (doctype, doc);
       /* Load user's style sheet */
       LoadUserStyleSheet (doc);
+      UpdateStyleList (doc);
 
       /* Set the namespace declaration */
       elType.ElTypeNum = HTML_EL_HTML;
@@ -2348,7 +2351,7 @@ void DoTableCreation (Document doc)
 void CreateTable (Document doc, View view)
 {
   ElementType         elType, elTypeFirst;
-  Element             firstSel, lastSel;
+  Element             firstSel;
   SSchema             sch;
   int                 firstChar, lastChar;
   char               *name;

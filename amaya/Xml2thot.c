@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -25,6 +25,7 @@
 #include "document.h"
 
 #include "AHTURLTools_f.h"
+#include "EDITstyle_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
@@ -6066,6 +6067,7 @@ void StartXmlParser (Document doc, char *fileName,
              selector in the User style sheet */
           LoadUserStyleSheet (doc);
           TtaSetDisplayMode (doc, DisplayImmediately);
+          UpdateStyleList (doc);
         }
 
       /* Check the Thot abstract tree against the structure schema. */

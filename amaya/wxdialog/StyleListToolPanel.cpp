@@ -155,6 +155,8 @@ void StyleListToolPanel::Update(Document doc)
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void StyleListToolPanel::OnCheckSheet(wxCommandEvent& event)
 {
   int item = event.GetSelection();
@@ -171,18 +173,39 @@ void StyleListToolPanel::OnCheckSheet(wxCommandEvent& event)
     }  
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void StyleListToolPanel::OnAddSheet(wxCommandEvent& event)
 {
+  Document   doc;
+  int        view;
+
+  TtaGetActiveView (&doc, &view);
+  if (doc == 0 ||
+      DocumentTypes[doc] == docSource || DocumentTypes[doc] == docCSS ||
+      DocumentTypes[doc] == docText)
+    return;
   LinkCSS(m_doc, 1);
   Update(m_doc);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void StyleListToolPanel::OnRemSheet(wxCommandEvent& event)
 {
   wxArrayPtrVoid infos;
   wxArrayInt selections;
+  Document   doc;
+  int        view;
+
+  TtaGetActiveView (&doc, &view);
+  if (doc == 0 ||
+      DocumentTypes[doc] == docSource || DocumentTypes[doc] == docCSS ||
+      DocumentTypes[doc] == docText)
+    return;
+
   int i, nb = m_list->GetSelections(selections);
-  for(i=0; i<nb; i++)
+  for (i=0; i<nb; i++)
     {
       int item = selections[i];
       if(item!=wxNOT_FOUND)
@@ -198,11 +221,21 @@ void StyleListToolPanel::OnRemSheet(wxCommandEvent& event)
   Update(m_doc);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void StyleListToolPanel::OnActivateSheet(wxCommandEvent& event)
 {
   wxArrayInt selections;
+  Document   doc;
+  int        view;
+
+  TtaGetActiveView (&doc, &view);
+  if (doc == 0 ||
+      DocumentTypes[doc] == docSource || DocumentTypes[doc] == docCSS ||
+      DocumentTypes[doc] == docText)
+    return;
   int i, nb = m_list->GetSelections(selections);
-  for(i=0; i<nb; i++)
+  for (i=0; i<nb; i++)
     {
       int item = selections[i];
       if(item!=wxNOT_FOUND)
@@ -215,11 +248,21 @@ void StyleListToolPanel::OnActivateSheet(wxCommandEvent& event)
   Update(m_doc);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void StyleListToolPanel::OnDesactivateSheet(wxCommandEvent& event)
 {
   wxArrayInt selections;
+  Document   doc;
+  int        view;
+
+  TtaGetActiveView (&doc, &view);
+  if (doc == 0 ||
+      DocumentTypes[doc] == docSource || DocumentTypes[doc] == docCSS ||
+      DocumentTypes[doc] == docText)
+    return;
   int i, nb = m_list->GetSelections(selections);
-  for(i=0; i<nb; i++)
+  for (i=0; i<nb; i++)
     {
       int item = selections[i];
       if(item!=wxNOT_FOUND)
@@ -232,12 +275,15 @@ void StyleListToolPanel::OnDesactivateSheet(wxCommandEvent& event)
   Update(m_doc);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void StyleListToolPanel::OnShowSheet(wxCommandEvent& event)
 {
   wxArrayPtrVoid infos;
   wxArrayInt selections;
+
   int i, nb = m_list->GetSelections(selections);
-  for(i=0; i<nb; i++)
+  for (i=0; i<nb; i++)
     {
       int item = selections[i];
       if(item!=wxNOT_FOUND)
@@ -251,22 +297,32 @@ void StyleListToolPanel::OnShowSheet(wxCommandEvent& event)
     MakeOpenCSS(m_doc, (PInfoPtr)infos[i]);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void StyleListToolPanel::OnUpdateAddSheet(wxUpdateUIEvent& event)
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void StyleListToolPanel::OnUpdateRemSheet(wxUpdateUIEvent& event)
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void StyleListToolPanel:: OnUpdateActivateSheet(wxUpdateUIEvent& event)
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void StyleListToolPanel:: OnUpdateDesactivateSheet(wxUpdateUIEvent& event)
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void StyleListToolPanel::OnUpdateShowSheet(wxUpdateUIEvent& event)
 {
 }

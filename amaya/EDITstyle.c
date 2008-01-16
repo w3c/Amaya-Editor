@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -65,6 +65,19 @@ static ThotBool     OldBuffer = FALSE;
 
 
 /*----------------------------------------------------------------------
+  UpdateStyleList
+  ----------------------------------------------------------------------*/
+void UpdateStyleList (Document doc)
+{
+#ifdef _WX
+  AmayaParams p;
+
+  p.param1 = doc;
+  TtaSendDataToPanel( WXAMAYA_PANEL_STYLE_LIST, p );
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
   RemoveElementStyle cleans all the presentation rules of a given element.
   The parameter removeSpan is True when the span has to be removed.
   ----------------------------------------------------------------------*/
@@ -115,6 +128,7 @@ static void RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
 
   /* remove all the specific presentation rules applied to the element */
   TtaCleanElementPresentation (el, doc);
+  UpdateStyleList (doc);
 }
 
 
@@ -699,6 +713,7 @@ static void ApplyStyleChange (Element el, Document doc)
   /* Apply new style rules */
   EnableStyleElement (doc, el);
   TtaSetDisplayMode (doc, dispMode);
+  UpdateStyleList (doc);
 }
 
 /*----------------------------------------------------------------------
@@ -889,6 +904,7 @@ void ChangeTheme (const char *theme)
     }
 #ifdef _WX
   TtaRedirectFocus();
+  UpdateStyleList (doc);
 #endif /* _WX */
 }
 
@@ -1988,20 +2004,13 @@ void ApplyClass (Document doc, View view)
   Element             el, ancestor;
   ElementType	        elType;
 #ifdef _WX
+  AmayaParams         p;
   char                a_class_with_dot[51];
 #endif /* _WX */
   char                a_class[50], *name;
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
-#ifdef _GTK
-  char                bufMenu[MAX_TXT_LEN];
-#endif /* _GTK */
 
-  AmayaParams p;
-  p.param1 = doc;
-  TtaSendDataToPanel( WXAMAYA_PANEL_STYLE_LIST, p );
-
-  
   TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &lastSelectedChar);
   if (DocumentURLs[doc] == NULL)
     return;
@@ -2033,19 +2042,7 @@ void ApplyClass (Document doc, View view)
     }
 
   /* updating the class name selector. */
-#ifdef _GTK
-  strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
-  TtaNewSheet (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
-               TtaGetMessage (LIB, TMSG_APPLY_CLASS), 1,
-               bufMenu, FALSE, 2, 'L', D_DONE);
-#endif /* _GTK */
   NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, "(no_class)");
-#ifdef _GTK
-  TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
-                  TtaGetMessage (LIB, TMSG_SEL_CLASS),
-                  NbClass, ListBuffer, 5, NULL, FALSE, TRUE);
-#endif /* _GTK */
-
   if (el)
     {
       /* preselect the entry corresponding to the class of the first selected
@@ -2081,9 +2078,6 @@ void ApplyClass (Document doc, View view)
     {
       len = 50;
       TtaGiveTextAttributeValue (attr, a_class, &len);
-#ifdef _GTK
-      TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
-#endif /* _GTK */
 #ifdef _WX
       a_class_with_dot[0] = EOS;
       strcat(a_class_with_dot, ".");
@@ -2094,22 +2088,9 @@ void ApplyClass (Document doc, View view)
 #endif /* _WX */
     }
   else
-    {
-#ifdef _GTK
-      TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
-#endif /* _GTK */
-      strcpy (CurrentClass, "(no_class)");
-    }
+    strcpy (CurrentClass, "(no_class)");
 
   /* pop-up the dialogue box. */
-#ifdef _GTK
-  TtaShowDialogue (BaseDialog + AClassForm, TRUE);
-#endif /* _GTK */
-
-#ifdef _WINGUI
-  CreateApplyClassDlgWindow (TtaGetViewFrame (doc, 1), NbClass, ListBuffer);
-#endif /* _WINGUI */
-
 #ifdef _WX  
   p.param1 = NbClass;
   p.param2 = (void*)ListBuffer;

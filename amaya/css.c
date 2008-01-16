@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -31,7 +31,6 @@
 #include "AHTURLTools_f.h"
 #include "UIcss_f.h"
 #include "styleparser_f.h"
-
 
 
 /*----------------------------------------------------------------------

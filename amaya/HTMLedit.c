@@ -388,6 +388,7 @@ void RemoveLink (Element el, Document doc)
 ThotBool DeleteLink (NotifyElement *event)
 {
   RemoveLink (event->element, event->document);
+  UpdateStyleList (event->document);
   return FALSE;		/* let Thot perform normal operation */
 }
 
@@ -1490,8 +1491,6 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
   int                 length, piNum;
   ThotBool            new_, oldStructureChecking;
   ThotBool            isHTML, isSVG;
-  AmayaParams         params;
-
 
   if (element == NULL)
     return;
@@ -1629,8 +1628,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
                   TtaSetTextContent (element, (unsigned char *)buffer, Latin_Script, doc);
                   
                   /* Query update Style List tool panel. */
-                  params.param1 = doc;
-                  TtaSendDataToPanel( WXAMAYA_PANEL_STYLE_LIST, params );
+                  UpdateStyleList (doc);
                 }
             }
         }
@@ -1714,9 +1712,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
           TtaRegisterAttributeCreate (attr, element, doc);
         
         /* Query update Style List tool panel. */
-        params.param1 = doc;
-        TtaSendDataToPanel( WXAMAYA_PANEL_STYLE_LIST, params );
-
+        UpdateStyleList (doc);
       }
   if (AttrHREFundoable)
     {

@@ -23,6 +23,7 @@
 
 #include "AHTURLTools_f.h"
 #include "css_f.h"
+#include "EDITstyle_f.h"
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
@@ -1763,6 +1764,7 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
             {
               LoadStyleSheet (buff, doc, el, NULL, NULL, media, FALSE);
               TtaFreeMemory (buff);
+              UpdateStyleList (doc);
             }
           TtaFreeMemory (utf8path);
         }
@@ -7409,7 +7411,10 @@ void StartParser (Document doc, char *fileName,
           CheckAbstractTree (HTMLcontext.doc, IsXTiger (documentName));
           // now load the user style sheet
           if (!external_doc)
+            {
             LoadUserStyleSheet (doc);
+            UpdateStyleList (doc);
+            }
         }
 
       TtaGZClose (stream);
