@@ -12,7 +12,7 @@
 #include "AmayaParams.h"
 
 #include "wx/hashset.h"
-WX_DECLARE_HASH_SET( wxClassInfo*, wxPointerHash, wxPointerEqual, ClassInfoSet );
+WX_DECLARE_HASH_SET( wxClassInfo *, wxPointerHash, wxPointerEqual, ClassInfoSet );
 extern ClassInfoSet g_AmayaToolPanelClassInfoSet; // Set of registered AmayaToolPanel class infos.
 
 

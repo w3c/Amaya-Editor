@@ -1036,8 +1036,7 @@ void MakeOpenCSS(Document doc, PInfoPtr pInfo)
   ----------------------------------------------------------------------*/
 void MakeRemoveCSS(Document doc, PInfoPtr pInfo)
 {
-  CSSInfoPtr css, cssNext;
-  PInfoPtr   pInfoNext;
+  CSSInfoPtr css;
   Element    el, firstSel, lastSel;
   char       *ptr = NULL, *localname = NULL;
   int        j, firstChar, lastChar;

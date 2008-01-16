@@ -71,9 +71,9 @@ typedef enum
 typedef struct _Window_Ctl {
   int        FrWidth;                   /* Window Width                      */
   int        FrHeight;                  /* Window Height                     */
-  
+#ifdef _WX  
   AmayaWindow * WdWindow;               /* Widget of the wxWidgets window    */
-
+#endif /* _WX */
   ThotMenu      WdMenus[MAX_MENU];      /* List of menu Widgets in the menubar
 					   these widgets are build with FrMenus model */
   struct     _Menu_Ctl *FrMenus;        /* First menu context                */

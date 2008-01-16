@@ -721,7 +721,6 @@ ThotBool BagButtonClicked (NotifyElement *event)
   SSchema         templateSSchema;
   char           *listtypes = NULL;
   char           *result = NULL;
-  char           *types;
   ThotBool        oldStructureChecking;
   DisplayMode     dispMode;
 
@@ -1387,7 +1386,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
 #ifdef TEMPLATES
   Document       doc = event->document;
   Element        elem = event->element;
-  Element        xtElem, parent, sibling;
+  Element        xtElem, parent = NULL, sibling;
   ElementType    xtType, elType;
   char*          type;
   Declaration    dec;
