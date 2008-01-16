@@ -96,7 +96,7 @@ wxString StyleListToolPanel::GetToolPanelName()const
  -----------------------------------------------------------------------*/
 wxString StyleListToolPanel::GetDefaultAUIConfig()
 {
-  return wxT(""); //state=18875852;dir=4;layer=0;row=0;pos=0;prop=100000;bestw=160;besth=250;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1;floaty=447;floatw=168;floath=274");
+  return wxT("");
 }
 
 /*----------------------------------------------------------------------
@@ -118,6 +118,7 @@ void StyleListToolPanel::Update(Document doc)
   if(m_list)
     {
       m_list->Clear();
+      m_map.clear();
       
       CSSInfoPtr          css;
       PInfoPtr            pInfo;
@@ -141,7 +142,8 @@ void StyleListToolPanel::Update(Document doc)
                   wxString str = TtaConvMessageToWX(DisplayCategory[pInfo->PiCategory]) +
                   TtaConvMessageToWX(ptr);
                   
-                  int item = m_list->Append(str, (void*)pInfo);
+                  int item = m_list->Append(str);
+                  m_map[item] = pInfo;
                   if(pInfo->PiEnabled)
                     m_list->Check(item);
                   
@@ -162,7 +164,7 @@ void StyleListToolPanel::OnCheckSheet(wxCommandEvent& event)
   int item = event.GetSelection();
   if(item!=wxNOT_FOUND)
     {
-      PInfoPtr pInfo = (PInfoPtr) m_list->GetClientData(item);
+      PInfoPtr pInfo = m_map[item];
       if(pInfo)
         {
           if(m_list->IsChecked(item))
@@ -210,7 +212,7 @@ void StyleListToolPanel::OnRemSheet(wxCommandEvent& event)
       int item = selections[i];
       if(item!=wxNOT_FOUND)
         {
-          PInfoPtr pInfo = (PInfoPtr) m_list->GetClientData(item);
+          PInfoPtr pInfo = m_map[item];
           if(pInfo)
             infos.Add(pInfo);
         }
@@ -240,7 +242,7 @@ void StyleListToolPanel::OnActivateSheet(wxCommandEvent& event)
       int item = selections[i];
       if(item!=wxNOT_FOUND)
         {
-          PInfoPtr pInfo = (PInfoPtr) m_list->GetClientData(item);
+          PInfoPtr pInfo = m_map[item];
           if(pInfo)
             MakeEnableCSS(m_doc, pInfo);
         }
@@ -267,7 +269,7 @@ void StyleListToolPanel::OnDesactivateSheet(wxCommandEvent& event)
       int item = selections[i];
       if(item!=wxNOT_FOUND)
         {
-          PInfoPtr pInfo = (PInfoPtr) m_list->GetClientData(item);
+          PInfoPtr pInfo = m_map[item];
           if(pInfo)
             MakeDisableCSS(m_doc, pInfo);
         }
@@ -288,7 +290,7 @@ void StyleListToolPanel::OnShowSheet(wxCommandEvent& event)
       int item = selections[i];
       if(item!=wxNOT_FOUND)
         {
-          PInfoPtr pInfo = (PInfoPtr) m_list->GetClientData(item);
+          PInfoPtr pInfo = m_map[item];
           if(pInfo)
             infos.Add(pInfo);
         }

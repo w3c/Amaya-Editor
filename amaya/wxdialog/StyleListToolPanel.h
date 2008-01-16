@@ -13,6 +13,12 @@
 #include "tree.h"
 #include "document.h"
 
+#include "wx/hashmap.h"
+
+typedef struct _PInfo *PInfoPtr;
+
+WX_DECLARE_HASH_MAP( int, PInfoPtr, wxIntegerHash, wxIntegerEqual, StyleListInfoMap );
+
 //-----------------------------------------------------------------------------
 // Class definition: StyleListToolPanel
 //-----------------------------------------------------------------------------
@@ -43,6 +49,7 @@ public:
 protected:
   virtual void SendDataToPanel( AmayaParams& params );
 private:
+  StyleListInfoMap m_map;
   wxCheckListBox* m_list;
   Document m_doc;
 
