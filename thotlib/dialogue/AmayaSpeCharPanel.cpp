@@ -119,7 +119,7 @@ wxString AmayaSpeCharToolPanel::GetToolPanelName()const
  -----------------------------------------------------------------------*/
 wxString AmayaSpeCharToolPanel::GetDefaultAUIConfig()
 {
-  return wxT("state=18875852;dir=2;layer=0;row=0;pos=2;prop=100000;bestw=210;besth=424;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1");
+  return wxT("dir=2;layer=0;row=0;pos=2");
 }
 
 /*----------------------------------------------------------------------

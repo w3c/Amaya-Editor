@@ -174,7 +174,7 @@ void AmayaAdvancedWindow::LoadConfig()
   {
     name = wxT("AUI_") + it->second->GetToolPanelConfigKeyName();
     str = TtaConvMessageToWX(TtaGetEnvString((const char*)name.mb_str(wxConvUTF8)));
-    
+
     if(str.Trim().IsEmpty())
       str = it->second->GetDefaultAUIConfig();
     
@@ -257,6 +257,8 @@ void AmayaAdvancedWindow::OnUpdateToolPanelMenu(wxUpdateUIEvent& event)
 void AmayaAdvancedWindow::SaveConfig()
 {
   wxString str, name;
+  wxArrayString arr;
+  unsigned int n;
   
   // Save tool states and positions.
   AmayaAdvanceToolPanelMap::iterator it;
@@ -266,6 +268,23 @@ void AmayaAdvancedWindow::SaveConfig()
       {
         str = m_manager.SavePaneInfo(m_manager.GetPane(it->second));
         name = wxT("AUI_") + it->second->GetToolPanelConfigKeyName();
+        arr.Clear();
+        arr = wxStringTokenize(str, wxT(";"));
+        str.Empty();
+        
+        // Filter each config variable
+        for(n=0; n<arr.GetCount(); n++)
+          {
+            wxString &s = arr[n];
+            if(s.StartsWith(wxT("dir")) ||
+                s.StartsWith(wxT("layer")) ||
+                s.StartsWith(wxT("row")) ||
+                s.StartsWith(wxT("pos"))
+               )
+              {
+                str += s + wxT(";");
+              }
+          }
         
         TtaSetEnvString((const char*)name.mb_str(wxConvUTF8),
                         (char*)(const char*)str.mb_str(wxConvUTF8), TRUE);
@@ -438,6 +457,7 @@ bool AmayaAdvancedWindow::RegisterToolPanel(AmayaToolPanel* tool)
           Name(tool->GetToolPanelConfigKeyName()).Caption(tool->GetToolPanelName()).
           PaneBorder(false).
           LeftDockable().RightDockable().Right().
+          TopDockable(false).BottomDockable(false).
           Resizable(tool->CanResize()).
           CloseButton(true).PinButton());
   

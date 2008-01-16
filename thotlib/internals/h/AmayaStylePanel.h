@@ -33,7 +33,6 @@ public:
   virtual wxString GetDefaultAUIConfig();
   virtual bool GetDefaultVisibilityState()const{return true;}
 
-  virtual bool CanResize() {return false;}
   
   void SetColor(int color);
   void SetBackgroundColor(int color);

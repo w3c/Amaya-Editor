@@ -126,7 +126,7 @@ wxString AmayaStyleToolPanel::GetToolPanelName()const
 wxString AmayaStyleToolPanel::GetDefaultAUIConfig()
 {
 //  return wxT("");
-  return wxT("state=18875596;dir=2;layer=0;row=0;pos=1;prop=100000;bestw=187;besth=119;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1073;floaty=587;floatw=195;floath=143");
+  return wxT("dir=2;layer=0;row=0;pos=1");
 }
 
 

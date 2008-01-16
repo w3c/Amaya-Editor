@@ -30,9 +30,6 @@ public:
   virtual wxString GetDefaultAUIConfig();
   virtual bool GetDefaultVisibilityState()const{return true;}
 
-  
-  virtual bool CanResize() {return false;}
-  
   virtual wxString GetToolPanelName()const;
   virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_XHTML;}
   virtual wxString GetToolPanelConfigKeyName()const{return wxT("PANEL_XHTML");}

@@ -101,7 +101,7 @@ wxString AmayaExplorerToolPanel::GetToolPanelName()const
  -----------------------------------------------------------------------*/
 wxString AmayaExplorerToolPanel::GetDefaultAUIConfig()
 {
-  return wxT("state=18875852;dir=4;layer=0;row=0;pos=0;prop=100000;bestw=160;besth=250;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1;floaty=447;floatw=168;floath=274");
+  return wxT("dir=4;layer=0;row=0;pos=0");
 }
 
 /*----------------------------------------------------------------------
