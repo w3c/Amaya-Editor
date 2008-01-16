@@ -887,7 +887,36 @@ PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
                         {
                           pCell = GetCellInRow (pRow, FirstSelectedColumn,
                                                 TRUE, &back);
-                          if (pCell)
+                          if (!pCell)
+                            /* this row has no cell in the first selected col.
+                               nor before. */
+                            {
+                              if (LastSelectedColumn == FirstSelectedColumn)
+                                /* the whole selection is in a single column */
+                                pCell = NULL;
+                              else
+                                {
+                                  /* take the first cell in the row */
+                                  if (!pRow->ElTerminal)
+                                    pCell = pRow->ElFirstChild;
+                                  while (pCell && !TypeHasException (ExcIsCell,
+                                                        pCell->ElTypeNumber,
+                                                        pCell->ElStructSchema))
+                                    pCell = pCell->ElNext;
+                                  if (pCell)
+                                    {
+                                    pCol = GetColHeadOfCell (pCell);
+                                    if (pCol != LastSelectedColumn)
+                                      /* this cell is not in the last
+                                         selected column */
+                                      if (!ElemIsBefore (pCol, LastSelectedColumn))
+                                        /* this cell is after the last
+                                           selected column */
+                                        pCell = NULL;
+                                    }                                  
+                                }
+                            }
+                          else
                             {
                               if (back > 0)
                                 /* pCell is an extended cell from a previous
@@ -899,11 +928,11 @@ PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
                                 else
                                   {
                                   pCell = pCell->ElNext;
-                                  if (!TypeHasException (ExcIsCell,
+                                  while (pCell && !TypeHasException (ExcIsCell,
                                                         pCell->ElTypeNumber,
                                                         pCell->ElStructSchema))
-                                    pCell = NULL;
-                                  else
+                                    pCell = pCell->ElNext;
+                                  if (pCell)
                                     {
                                     pCol = GetColHeadOfCell (pCell);
                                     if (pCol != LastSelectedColumn)
@@ -915,21 +944,21 @@ PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
                                         pCell = NULL;
                                     }
                                   }
-                              if (pCell)
-                                /* there is a cell for that column in the row*/
-                                if (ElemIsWithinSubtree (pLastEl, pCell))
-                                  /* this cell contains the end of the
-                                     selection */
-                                  {
-                                    pEl = pCell;
-                                    while (pEl != pLastEl &&
-                                           ElemIsWithinSubtree (pLastEl, pEl))
-                                      pEl = pEl->ElFirstChild;
-                                  }
-                                else
-                                  /* take that cell */
-                                  pEl = pCell;
                             }
+                          if (pCell)
+                            /* the row contains a cell that is between the
+                               selected columns */
+                            if (ElemIsWithinSubtree (pLastEl, pCell))
+                              /* this cell contains the end of the selection */
+                              {
+                                pEl = pCell;
+                                while (pEl != pLastEl &&
+                                       ElemIsWithinSubtree (pLastEl, pEl))
+                                  pEl = pEl->ElFirstChild;
+                              }
+                            else
+                              /* take that cell */
+                              pEl = pCell;
                         }
                     }
                 }
@@ -2184,8 +2213,8 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin,
   ----------------------------------------------------------------------*/
 static void MakeSelectionRectangle ()
 {
-  PtrElement          pTable, pCell, pRow, pCurRow, pLastRow, pFirstRow,
-                      pCol, pCurCol;
+  PtrElement          pTable, pCell, pRow, pCurRow, pLastRow, pFirstRow, pR,
+                      rowOfCell, pCol, pCurCol, pC;
   PtrAttribute        attrSpan;
   int                 back, span, i;
   ThotBool            change, checkCell;
@@ -2218,47 +2247,81 @@ static void MakeSelectionRectangle ()
   while (pCurRow)
     {
       pCell = GetCellInRow (pCurRow, FirstSelectedColumn, TRUE, &back);
+      rowOfCell = pCurRow;
       /* check the cells that are part of the current selection in this row */
       do
         {
           checkCell = TRUE;
           if (!pCell)
-            /* this row does not contain any cell up to the first selected col.
-               This is due to a cell above in the first column of the table
-               that is extended vertically. */
-            /* selection must start in the first column of the table */
+            /* this row does not contain any cell up to the first selected
+               column */
             {
-              /* get the first column of the table */
-              do
+              if (pCurRow != pFirstRow)
+                /* this is not the first row of the selection */
                 {
-                  pCol = PreviousColumnInTable (FirstSelectedColumn);
-                  if (pCol)
-                    FirstSelectedColumn = pCol;
-                }
-              while (pCol);
-              /* find the previous row that contains a cell in the first col */
-              pRow = PreviousRowInTable (pRow, pTable);
-              while (pRow && !pCell)
-                {
-                  pCell = GetCellInRow (pRow, FirstSelectedColumn, FALSE,
-                                        &back);
-                  if (pCell)
-                    /* there is a cell in the first column of this row */
-                    {
-                      if (ElemIsBefore (pRow, pFirstRow))
-                        /* this cell is above the first selected cell.
-                           Make it the new first selected cell */
-                        {
-                          FirstSelectedElement = pCell;
-                          pFirstRow = pRow;
-                          /* check the table again starting from the new first
-                             selected cell */
-                          MakeSelectionRectangle ();
-                          pRow = NULL;  pCell = NULL;
-                        }
-                    }
+                  if (LastSelectedColumn == FirstSelectedColumn)
+                    /* the whole selection is in a single column */
+                    pCell = NULL;
                   else
-                    pRow = PreviousRowInTable (pRow, pTable);
+                    {
+                      /* get the first cell in the row */
+                      if (!pCurRow->ElTerminal)
+                        pCell = pCurRow->ElFirstChild;
+                      while (pCell && !TypeHasException (ExcIsCell,
+                                                        pCell->ElTypeNumber,
+                                                        pCell->ElStructSchema))
+                        pCell = pCell->ElNext;
+                      if (pCell)
+                        {
+                          pCol = GetColHeadOfCell (pCell);
+                          if (pCol != LastSelectedColumn)
+                            /* this cell is not in the last selected column */
+                            if (!ElemIsBefore (pCol, LastSelectedColumn))
+                              /* this cell is after the last selected column,
+                               ignore it */
+                              pCell = NULL;
+                        }                                  
+                    }
+                }
+              else
+                /* This is the first row of the selection */
+                /* There is a cell above in the first column of the table
+                   that is extended vertically. */
+                {
+                  /* selection must start in the first column of the table */
+                  /* get the first column of the table */
+                  do
+                    {
+                      pCol = PreviousColumnInTable (FirstSelectedColumn);
+                      if (pCol)
+                        FirstSelectedColumn = pCol;
+                    }
+                  while (pCol);
+                  /* find the previous row that has a cell in the first col */
+                  pRow = PreviousRowInTable (pCurRow, pTable);
+                  while (pRow && !pCell)
+                    {
+                      pCell = GetCellInRow (pRow, FirstSelectedColumn, FALSE,
+                                            &back);
+                      if (pCell)
+                        /* there is a cell in the first column of this row */
+                        {
+                          rowOfCell = pRow;
+                          if (ElemIsBefore (pRow, pFirstRow))
+                            /* this cell is above the first selected cell.
+                               Make it the new first selected cell */
+                            {
+                              FirstSelectedElement = pCell;
+                              pFirstRow = pRow;
+                              /* check the table again starting from the new
+                                 first selected cell */
+                              MakeSelectionRectangle ();
+                              pRow = NULL;  pCell = NULL;
+                            }
+                        }
+                      else
+                        pRow = PreviousRowInTable (pRow, pTable);
+                    }
                 }
             }
           else if (back > 0)
@@ -2270,7 +2333,7 @@ static void MakeSelectionRectangle ()
                 span = 1;
               else
                 span = attrSpan->AeAttrValue;
-              if (span >= back+1)
+              if (span >= back+1 || span == 0)
                 /* the previous cell in that row is extended up to (and
                    including) the first selected column.
                    It must be part of the selection */
@@ -2345,12 +2408,18 @@ static void MakeSelectionRectangle ()
                 span = attrSpan->AeAttrValue;
               else
                 span = 1;
-              if (span > 1)
+              if (span != 1)
                 {
                   /* does this cell extend beyound the last selected column? */
                   pCol = GetColHeadOfCell (pCell);
-                  for (i = 1; pCol && i < span; i++)
-                     pCol = NextColumnInTable (pCol, pTable);
+                  pC = pCol;
+                  /* span = 0 means "to the last column of the table" */
+                  for (i = 1; pC && (i < span || span == 0); i++)
+                    {
+                      pC = NextColumnInTable (pC, pTable);
+                      if (pC)
+                        pCol = pC;
+                    }
                   if (pCol != LastSelectedColumn &&
                       ElemIsBefore (LastSelectedColumn, pCol))
                     /* this cell spans outside of the current selection */
@@ -2362,10 +2431,9 @@ static void MakeSelectionRectangle ()
                       pCurRow = NULL; pCell = NULL;
                     }
                 }
-              if (pCell && pCurRow == pLastRow)
-                if (pCell != LastSelectedElement &&
-                    ElemIsBefore (LastSelectedElement, pCell))
-                  LastSelectedElement = pCell;
+              if (pCell && pCell != LastSelectedElement &&
+                  ElemIsBefore (LastSelectedElement, pCell))
+                LastSelectedElement = pCell;
             }
 
           /* now, check the bottom of the current cell */
@@ -2377,12 +2445,18 @@ static void MakeSelectionRectangle ()
                 span = attrSpan->AeAttrValue;
               else
                 span = 1;
-              if (span > 1)
+              if (span != 1)
                 {
                   /* does this cell extend beyound the last selected row? */
-                  pRow = pCurRow;
-                  for (i = 1; pRow && i < span; i++)
-                    pRow = NextRowInTable (pRow, pTable);
+                  pRow = rowOfCell;
+                  pR = pRow;
+                  /* span = 0 means "to the bottom of the table" */
+                  for (i = 1; pR && (i < span || span == 0); i++)
+                    {
+                      pR = NextRowInTable (pR, pTable);
+                      if (pR)
+                        pRow = pR;
+                    }
                   if (pRow != pLastRow &&
                       ElemIsBefore (pLastRow, pRow))
                     /* this cell spans outside of the current selection */
@@ -2404,6 +2478,8 @@ static void MakeSelectionRectangle ()
                     {
                       pCurCol = NextColumnInTable (pCurCol, pTable);
                       pCell = GetCellInRow (pCurRow, pCurCol, TRUE, &back);
+                      if (pCell)
+                        rowOfCell = pCurRow;
                     }
                 }
               else

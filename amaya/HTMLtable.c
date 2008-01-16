@@ -3540,6 +3540,8 @@ int GetActualColspan (Element cell, ThotBool inMath)
   attr = TtaGetAttribute (cell, attrType);
   if (attr)
     TtaGiveReferenceAttributeValue (attr, &colhead);
+  else
+    colhead = NULL;
   span = 1;
   while (colhead)
     {

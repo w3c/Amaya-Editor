@@ -3524,7 +3524,8 @@ void MergeSelectedCells (Document doc, View view)
       SetRowExt (firstCell, nrow, doc, inMath);
     }
   TtaCloseUndoSequence (doc);
-  if (dispMode == DisplayImmediately)
+  TtaSetDocumentModified (doc);
+ if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
 }
 
