@@ -35,6 +35,7 @@
 #include "AmayaToolBar.h"
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
+#include "profiles_f.h"
 
 
 //
@@ -102,6 +103,28 @@ bool AmayaBaseToolBar::Realize()
       SetToolShortHelp(it->first, TtaConvMessageToWX(
          TtaGetMessage(it->second->tooltip_categ,it->second->tooltip_msg)));
   }
+  
+  // Prof_BelongTable()
+
+  wxToolBarToolsList::iterator iter;
+  for (iter = m_tools.begin(); iter != m_tools.end(); ++iter)
+  {
+    wxToolBarToolBase *current = *iter;
+    if(current)
+      {
+        AmayaToolBarToolDefHashMap::iterator iter = m_map->find(current->GetId()); 
+        AmayaToolBarToolDef* def = iter!=m_map->end()?iter->second:NULL; 
+        if (def && def->action != NULL && def->action[0] != 0)
+          {
+            if(!Prof_BelongTable(def->action))
+              {
+                DeleteTool(current->GetId());
+              }
+          }
+        
+      }
+  }
+  
   return wxToolBar::Realize();
 }
 
