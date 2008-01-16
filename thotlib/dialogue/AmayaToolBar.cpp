@@ -127,12 +127,15 @@ bool AmayaBaseToolBar::Realize()
       }
   }
   
+  if(!wxToolBar::Realize())
+    return false;
+  
   for(n=0; n<arr.GetCount(); n++)
     {
       DeleteTool(arr[n]);
     }
   
-  return wxToolBar::Realize();
+  return true; 
 }
 
 /*----------------------------------------------------------------------
