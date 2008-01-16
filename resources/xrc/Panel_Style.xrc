@@ -35,29 +35,57 @@
       </object>
       <object class="sizeritem">
         <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
-          <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_FONT_COLOR">
-              <label>Color of the font</label>
-            </object>
-            <option>0</option>
-            <flag>wxALIGN_CENTRE_VERTICAL</flag>
-          </object>
-          <object class="spacer">
-            <size>10,0</size>
-          </object>
           <object class="sizeritem">
             <object class="unknown" name="wxID_PANEL_CSS_COLOR">
               <size>16,16</size>
+              <tooltip>*Apply text color*</tooltip>
             </object>
-            <border>5</border>
-            <minsize>16,16</minsize>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+            <border>0</border>
           </object>
+          <object class="spacer">
+            <size>4,0</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_BUTTON_TEXTCOLOR">
+              <bitmap>../icons/16x16/colorize.png</bitmap>
+              <tooltip>*Choose and apply text color*</tooltip>
+            </object>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+            <border>0</border>
+          </object>
+          <object class="spacer">
+            <size>16,0</size>
+          </object>
+          <object class="sizeritem">
+            <object class="unknown" name="wxID_PANEL_CSS_BK_COLOR">
+              <size>16,16</size>
+              <tooltip>*Apply text color*</tooltip>
+            </object>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+            <border>0</border>
+          </object>
+          <object class="spacer">
+            <size>4,0</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_BUTTON_BKCOLOR">
+              <bitmap>../icons/16x16/colorize.png</bitmap>
+              <tooltip>*Choose and apply text color*</tooltip>
+            </object>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+            <border>0</border>
+          </object>
+          <orient>wxHORIZONTAL</orient>
         </object>
+        <border>0</border>
       </object>
+      
       <object class="spacer">
         <size>0,10</size>
       </object>
+      
+      
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <orient>wxVERTICAL</orient>
