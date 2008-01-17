@@ -220,104 +220,116 @@
 218 Plávajúci rámec (iframe)
 219 Ruby poznámka (ruby)
 220 CSS &pravidlá...
-221 Vytvoriť &pravidlo...
-222 Zobraziť použité štýly...
-223 P&ripojiť súbor s CSS...
-224 &Otvoriť súbor s CSS...
-225 &Vypnuť CSS pravidlá...
-226 &Zapnúť CSS pravidlá...
-227 O&strániť súbor s CSS...
-228 Kopírovať adresu odkazu
-229 Prilepiť adresu odkazu
-230 &Prepojiť s predošlou záložkou
-231 &Vytvoriť alebo zmeniť odkaz...
-232 Vytvoriť &záložku
-233 O&dstrániť odkaz/záložku
-234 &Pridať/odstrániť ID...
-235 Kontrola pravopi&su
-236 T&ransformovať
-237 Tabuľka
-238 Zlúčiť
-239 Zlúčiť s pravou bunkou
-240 Zlúčiť s dolnou bunkou
-241 Rozdeliť bunky horizontálne
-242 Rozdeliť bunky vertikálne
-243 Označiť riadok
-244 Vložiť riadok nad
-245 Vložiť riadok pod
-246 Označiť stĺpec
-247 Vložiť stĺpec vľavo
-248 Vložiť stĺpec vpravo
-249 Prilepiť pred
-250 Prilepiť za
-251 Zmeniť názov (title)
-252 Zmeniť typ dokumentu
-253 Odstrániť označenie dokumentu
-254 Pridať označenie dokumentu
-255 Zmeniť na XHTML 1.1
-256 Zmeniť na XHTML 1.0 Transitional
-257 Zmeniť na XHTML 1.0 Strict
-258 Zmeniť na XHTML 1.0 Basic
-259 Zmeniť na HTML 4.01 Transitional
-260 Zmeniť na HTML 4.01 Strict
-261 &Očíslovať podkapitoly
-262 &Vytvoriť obsah
-263 &Zostaviť knihu
-264 Vložiť dnešný dátum
-265 **Graphics
-266 Zobraziť SVG knižnicu
-267 Pridať do SVG knižnice
-268 &Komentáre
-269 Okomentovať výber
-270 Okomentovať dokument
-271 Presunúť k výberu
-272 Uložiť výber ako &XPointer
-273 Presunúť k uloženému XPointeru
-274 Reagovať na komentár
-275 Odoslať na server
-276 Odstrániť komentár
-277 Nahrať komentár
-278 Zadefinovať požiadavku...
-279 Filtrovať komentáre...
-280 Sp&olupráca
-281 Uzamknúť zdrojový súbor...
-282 Odomknúť zdrojový súbor...
-283 Zobraziť vlastnosti zdroja...
-284 Kopírovať informácie o uzamknutí...
-285 Zamknutý?
-286 &Javascript/DOM
-287 **Enable/Disable
-288 **Execute a command
-289 **Execute an external script
-290 **Add an external script
-291 **Insert a script
-292 O programe Amaya
-293 Domoská stránka programu Amaya
-294 Témy pomocníka
-295 Prehliadanie
-296 Zobrazenia
-297 Označovanie
-298 Vytváranie dokumentu
-299 Vkladanie prvkov
-300 Atribúty
-301 Vkladanie znakov
-302 Šablóny
-303 Úprava dokumentu
-304 Prepojenia
-305 Tabuľky
-306 Oblasti obrázkov
-307 Vzorce
-308 Úprava SVG grafiky
-309 XML podpora
-310 Kaskádové štýly
-311 Vyhľadávanie
-312 Kontrola pravopisu
-313 Publikovanie
-314 Spolupráca
-315 Tlač
-316 Číslovanie podkapitol
-317 Vytváranie kníh
-318 Komentáre
-319 Nastavenia programu
-320 Klávesové skratky
-321 Zjednodušenie ovládania
+221 **Align
+222 **Left
+223 **Center
+224 **Right
+225 **Justify
+226 **Line spacing
+227 **Single
+228 **Half
+229 **Double
+230 **Indent
+231 **Increase
+232 **Decrease
+233 Vytvoriť &pravidlo...
+234 Zobraziť použité štýly...
+235 P&ripojiť súbor s CSS...
+236 &Otvoriť súbor s CSS...
+237 &Vypnuť CSS pravidlá...
+238 &Zapnúť CSS pravidlá...
+239 O&strániť súbor s CSS...
+240 Kopírovať adresu odkazu
+241 Prilepiť adresu odkazu
+242 &Prepojiť s predošlou záložkou
+243 &Vytvoriť alebo zmeniť odkaz...
+244 Vytvoriť &záložku
+245 O&dstrániť odkaz/záložku
+246 &Pridať/odstrániť ID...
+247 Kontrola pravopi&su
+248 T&ransformovať
+249 Tabuľka
+250 Zlúčiť
+251 Zlúčiť s pravou bunkou
+252 Zlúčiť s dolnou bunkou
+253 Rozdeliť bunky horizontálne
+254 Rozdeliť bunky vertikálne
+255 Označiť riadok
+256 Vložiť riadok nad
+257 Vložiť riadok pod
+258 Označiť stĺpec
+259 Vložiť stĺpec vľavo
+260 Vložiť stĺpec vpravo
+261 Prilepiť pred
+262 Prilepiť za
+263 Zmeniť názov (title)
+264 Zmeniť typ dokumentu
+265 Odstrániť označenie dokumentu
+266 Pridať označenie dokumentu
+267 Zmeniť na XHTML 1.1
+268 Zmeniť na XHTML 1.0 Transitional
+269 Zmeniť na XHTML 1.0 Strict
+270 Zmeniť na XHTML 1.0 Basic
+271 Zmeniť na HTML 4.01 Transitional
+272 Zmeniť na HTML 4.01 Strict
+273 &Očíslovať podkapitoly
+274 &Vytvoriť obsah
+275 &Zostaviť knihu
+276 Vložiť dnešný dátum
+277 **Graphics
+278 Zobraziť SVG knižnicu
+279 Pridať do SVG knižnice
+280 &Komentáre
+281 Okomentovať výber
+282 Okomentovať dokument
+283 Presunúť k výberu
+284 Uložiť výber ako &XPointer
+285 Presunúť k uloženému XPointeru
+286 Reagovať na komentár
+287 Odoslať na server
+288 Odstrániť komentár
+289 Nahrať komentár
+290 Zadefinovať požiadavku...
+291 Filtrovať komentáre...
+292 Sp&olupráca
+293 Uzamknúť zdrojový súbor...
+294 Odomknúť zdrojový súbor...
+295 Zobraziť vlastnosti zdroja...
+296 Kopírovať informácie o uzamknutí...
+297 Zamknutý?
+298 &Javascript/DOM
+299 **Enable/Disable
+300 **Execute a command
+301 **Execute an external script
+302 **Add an external script
+303 **Insert a script
+304 O programe Amaya
+305 Domoská stránka programu Amaya
+306 Témy pomocníka
+307 Prehliadanie
+308 Zobrazenia
+309 Označovanie
+310 Vytváranie dokumentu
+311 Vkladanie prvkov
+312 Atribúty
+313 Vkladanie znakov
+314 Šablóny
+315 Úprava dokumentu
+316 Prepojenia
+317 Tabuľky
+318 Oblasti obrázkov
+319 Vzorce
+320 Úprava SVG grafiky
+321 XML podpora
+322 Kaskádové štýly
+323 Vyhľadávanie
+324 Kontrola pravopisu
+325 Publikovanie
+326 Spolupráca
+327 Tlač
+328 Číslovanie podkapitol
+329 Vytváranie kníh
+330 Komentáre
+331 Nastavenia programu
+332 Klávesové skratky
+333 Zjednodušenie ovládania

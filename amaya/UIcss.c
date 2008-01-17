@@ -800,8 +800,8 @@ static ThotBool GetEnclosingBlock (Document doc)
 }
 
 /*----------------------------------------------------------------------
-  DoLeftAlign
-  Apply left-align style
+  DoStyleColor
+  Apply color style
   ----------------------------------------------------------------------*/
 void DoStyleColor (char *color)
 {
@@ -812,8 +812,7 @@ void DoStyleColor (char *color)
   int                 firstChar, lastChar, i;
   int                 col, bg_col, new_col;
   unsigned short      red, green, blue;
-  
-  ThotBool            open = FALSE, before;
+  ThotBool            open = FALSE, before, isBg;
 
   doc = TtaGetSelectedDocument();
   if (!TtaGetDocumentAccessMode (doc) || color == NULL)
@@ -825,13 +824,14 @@ void DoStyleColor (char *color)
   ptr = strstr (color, "#");
   if (ptr == NULL)
     return;
+  isBg =  (strstr (color, "background-color") != NULL);
   TtaGiveRGB (ptr, &red, &green, &blue);
   new_col = TtaGetThotColor (red, green, blue);
 
   // check the current color
   TtaGiveFirstSelectedElement (doc, &first, &firstChar, &lastChar);
   TtaGiveBoxColors (first, doc, 1, &col, &bg_col);
-  if (new_col == col)
+  if ((isBg && new_col == bg_col) || new_col == col)
     // do nothing
     return;
 
@@ -866,7 +866,7 @@ void DoStyleColor (char *color)
         }
     }
 
-  if (new_col != col)
+  if ((isBg && new_col == bg_col) || new_col != col)
     GenerateStyle (color, TRUE);
   if (open)
     TtaCloseUndoSequence (doc);

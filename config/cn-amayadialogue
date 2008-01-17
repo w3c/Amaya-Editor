@@ -220,104 +220,116 @@
 218 内嵌 frame (iframe)
 219 ruby
 220 CSS样式(&S)...
-221 创建规则(&R)...
-222 显示已应用的样式...
-223 链接(&K)...
-224 打开(&N)...
-225 禁用(&D)...
-226 启用(&E)...
-227 移除(&V)...
-228 复制地址
-229 粘贴地址
-230 链接到上个目标(&L)
-231 创建或更改链接(&C)...
-232 创建目标(&T)
-233 删除 anchor(&D)
-234 添加/删除 ID(&A)...
-235 拼写检查(&K)...
-236 转换(&M)...
-237 Table
-238 **Merge cells
-239 与右侧单元格合并
-240 与下方单元格合并
-241 收缩水平范围
-242 收缩垂直范围
-243 选择该行
-244 插入新行
-245 附加一行
-246 选择该列
-247 插入新列
-248 附加一列
-249 粘贴在前
-250 粘贴在后
-251 更改标题...
-252 改变文档类型
-253 删除doctype声明
-254 添加doctype声明
-255 改为XHTML 1.1
-256 改为 XHTML 1.0 Transitional
-257 改为 XHTML 1.0 Strict
-258 改为 XHTML 1.0 Basic
-259 改为 HTML 4.01 Transitional
-260 改为 HTML 4.01 Strict
-261 区域统计(&S)
-262 生成内容列表(&G)
-263 制作书籍(&M)
-264 插入时间戳
-265 **Graphics
-266 显示图形库
-267 添加选中图形
-268 注释
-269 为选择区作注释
-270 为文档作注释
-271 移动到选择区
-272 存储选择区为 XPointer(&X)
-273 移动到已存储的 XPointer
-274 答复注释
-275 提交到服务器
-276 删除
-277 载入
-278 自定义查询...
-279 本地过滤器...
-280 协作(&O)
-281 锁定资源...
-282 取消锁定资源...
-283 查看资源属性...
-284 复制锁定信息...
-285 锁定了吗?
-286 &Javascript/DOM
-287 **Enable/Disable
-288 **Execute a command
-289 **Execute an external script
-290 **Add an external script
-291 **Insert a script
-292 关于 Amaya
-293 关于 Amaya at W3C
-294 索引
-295 Browsing
-296 Views
-297 Selecting
-298 Document
-299 Creating elements
-300 Attributes
-301 Characters
-302 **Templates
-303 Restructuring
-304 Links
-305 Tables
-306 Image maps
-307 Math
-308 Graphics
-309 XML support
-310 Style sheets
-311 Searching
-312 Spell Checking
-313 Publishing
-314 协作
-315 Printing
-316 Numbering
-317 Making books
-318 Annotations
-319 Configuring
-320 ShortCuts
-321 Accessibility in Amaya
+221 **Align
+222 **Left
+223 **Center
+224 **Right
+225 **Justify
+226 **Line spacing
+227 **Single
+228 **Half
+229 **Double
+230 **Indent
+231 **Increase
+232 **Decrease
+233 创建规则(&R)...
+234 显示已应用的样式...
+235 链接(&K)...
+236 打开(&N)...
+237 禁用(&D)...
+238 启用(&E)...
+239 移除(&V)...
+240 复制地址
+241 粘贴地址
+242 链接到上个目标(&L)
+243 创建或更改链接(&C)...
+244 创建目标(&T)
+245 删除 anchor(&D)
+246 添加/删除 ID(&A)...
+247 拼写检查(&K)...
+248 转换(&M)...
+249 Table
+250 **Merge cells
+251 与右侧单元格合并
+252 与下方单元格合并
+253 收缩水平范围
+254 收缩垂直范围
+255 选择该行
+256 插入新行
+257 附加一行
+258 选择该列
+259 插入新列
+260 附加一列
+261 粘贴在前
+262 粘贴在后
+263 更改标题...
+264 改变文档类型
+265 删除doctype声明
+266 添加doctype声明
+267 改为XHTML 1.1
+268 改为 XHTML 1.0 Transitional
+269 改为 XHTML 1.0 Strict
+270 改为 XHTML 1.0 Basic
+271 改为 HTML 4.01 Transitional
+272 改为 HTML 4.01 Strict
+273 区域统计(&S)
+274 生成内容列表(&G)
+275 制作书籍(&M)
+276 插入时间戳
+277 **Graphics
+278 显示图形库
+279 添加选中图形
+280 注释
+281 为选择区作注释
+282 为文档作注释
+283 移动到选择区
+284 存储选择区为 XPointer(&X)
+285 移动到已存储的 XPointer
+286 答复注释
+287 提交到服务器
+288 删除
+289 载入
+290 自定义查询...
+291 本地过滤器...
+292 协作(&O)
+293 锁定资源...
+294 取消锁定资源...
+295 查看资源属性...
+296 复制锁定信息...
+297 锁定了吗?
+298 &Javascript/DOM
+299 **Enable/Disable
+300 **Execute a command
+301 **Execute an external script
+302 **Add an external script
+303 **Insert a script
+304 关于 Amaya
+305 关于 Amaya at W3C
+306 索引
+307 Browsing
+308 Views
+309 Selecting
+310 Document
+311 Creating elements
+312 Attributes
+313 Characters
+314 **Templates
+315 Restructuring
+316 Links
+317 Tables
+318 Image maps
+319 Math
+320 Graphics
+321 XML support
+322 Style sheets
+323 Searching
+324 Spell Checking
+325 Publishing
+326 协作
+327 Printing
+328 Numbering
+329 Making books
+330 Annotations
+331 Configuring
+332 ShortCuts
+333 Accessibility in Amaya

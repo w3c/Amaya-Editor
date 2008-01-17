@@ -219,105 +219,117 @@
 217 **blockquote
 218 **Inline frame (iframe)
 219 **ruby
-220 **CSS &Style...
-221 **Create &rule...
-222 **Show applied style...
-223 **Lin&k...
-224 **Ope&n...
-225 **&Disable...
-226 **&Enable...
-227 **Remo&ve...
-228 **Copy location
-229 **Paste location
-230 **&Link to previous target
-231 **&Create or change link...
-232 **Create &target
-233 **&Delete link or target
-234 **&Add/Remove IDs...
-235 **Chec&k spelling...
-236 **Transfor&m...
-237 **table
-238 **Merge cells
-239 **Join with the cell at the right
-240 **Join with the cell below
-241 **Shrink horizontal extend
-242 **Shrink vertical extend
-243 **Select the row
-244 **Insert a row
-245 **Append a row
-246 **Select the column
-247 **Insert a column
-248 **Append a column
-249 **Paste before
-250 **Paste after
-251 **Change Title...
-252 **Change Doctype
-253 **Remove the doctype
-254 **Add a doctype
-255 **Change to XHTML 1.1
-256 **Change to XHTML 1.0 Transitional
-257 **Change to XHTML 1.0 Strict
-258 **Change to XHTML 1.0 Basic
-259 **Change to HTML 4.01 Transitional
-260 **Change to HTML 4.01 Strict
-261 **&Section numbering
-262 **&Add/Update Table of contents
-263 **&Make book
-264 **Insert time stamp
-265 **Graphics
-266 **Show SVG library
-267 **Add to SVG library
-268 **A&nnotations
-269 **Annotate selection
-270 **Annotate document
-271 **Move to selection
-272 **Store selection as &XPointer
-273 **Move to stored XPointer
-274 **Reply to annotation
-275 **Post to server
-276 **Delete
-277 **Load
-278 **Customize query...
-279 **Local filter...
-280 **C&ooperation
-281 **Lock resource...
-282 **Unlock resource...
-283 **View resource properties...
-284 **Copy lock information...
-285 **Locked?
-286 **&Javascript/DOM
-287 **Enable/Disable
-288 **Execute a command
-289 **Execute an external script
-290 **Add an external script
-291 **Insert a script
-292 **About Amaya
-293 **About Amaya at W3C
-294 **Index
-295 **Browsing
-296 **Views
-297 **Selecting
-298 **Documents
-299 **Creating elements
-300 **Attributes
-301 **Characters
-302 **Templates
-303 **Restructuring
-304 **Links
-305 **Tables
-306 **Image maps
-307 **Math
-308 **Graphics
-309 **XML support
-310 **Style sheets
-311 **Searching
-312 **Spell Checking
-313 **Publishing
-314 **Cooperation
-315 **Printing
-316 **Numbering
-317 **Making books
-318 **Annotations
-319 **Configuring
-320 **ShortCuts
-321 **Accessibility in Amaya
+220 **&Style editor...
+221 **Align
+222 **Left
+223 **Center
+224 **Right
+225 **Justify
+226 **Line spacing
+227 **Single
+228 **Half
+229 **Double
+230 **Indent
+231 **Increase
+232 **Decrease
+233 **Create &rule...
+234 **Show applied style...
+235 **Lin&k...
+236 **Ope&n...
+237 **&Disable...
+238 **&Enable...
+239 **Remo&ve...
+240 **Copy location
+241 **Paste location
+242 **&Link to previous target
+243 **&Create or change link...
+244 **Create &target
+245 **&Delete link or target
+246 **&Add/Remove IDs...
+247 **Chec&k spelling...
+248 **Transfor&m...
+249 **table
+250 **Merge cells
+251 **Join with the cell at the right
+252 **Join with the cell below
+253 **Shrink horizontal extend
+254 **Shrink vertical extend
+255 **Select the row
+256 **Insert a row
+257 **Append a row
+258 **Select the column
+259 **Insert a column
+260 **Append a column
+261 **Paste before
+262 **Paste after
+263 **Change Title...
+264 **Change Doctype
+265 **Remove the doctype
+266 **Add a doctype
+267 **Change to XHTML 1.1
+268 **Change to XHTML 1.0 Transitional
+269 **Change to XHTML 1.0 Strict
+270 **Change to XHTML 1.0 Basic
+271 **Change to HTML 4.01 Transitional
+272 **Change to HTML 4.01 Strict
+273 **&Section numbering
+274 **&Add/Update Table of contents
+275 **&Make book
+276 **Insert time stamp
+277 **Graphics
+278 **Show SVG library
+279 **Add to SVG library
+280 **A&nnotations
+281 **Annotate selection
+282 **Annotate document
+283 **Move to selection
+284 **Store selection as &XPointer
+285 **Move to stored XPointer
+286 **Reply to annotation
+287 **Post to server
+288 **Delete
+289 **Load
+290 **Customize query...
+291 **Local filter...
+292 **C&ooperation
+293 **Lock resource...
+294 **Unlock resource...
+295 **View resource properties...
+296 **Copy lock information...
+297 **Locked?
+298 **&Javascript/DOM
+299 **Enable/Disable
+300 **Execute a command
+301 **Execute an external script
+302 **Add an external script
+303 **Insert a script
+304 **About Amaya
+305 **About Amaya at W3C
+306 **Index
+307 **Browsing
+308 **Views
+309 **Selecting
+310 **Documents
+311 **Creating elements
+312 **Attributes
+313 **Characters
+314 **Templates
+315 **Restructuring
+316 **Links
+317 **Tables
+318 **Image maps
+319 **Math
+320 **Graphics
+321 **XML support
+322 **Style sheets
+323 **Searching
+324 **Spell Checking
+325 **Publishing
+326 **Cooperation
+327 **Printing
+328 **Numbering
+329 **Making books
+330 **Annotations
+331 **Configuring
+332 **ShortCuts
+333 **Accessibility in Amaya

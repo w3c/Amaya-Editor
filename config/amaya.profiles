@@ -82,6 +82,53 @@ TtcPreviousElement
 TtcNextElement
 CopyLocation
 
+################# AMAYA EDITOR_Lite2
+<Editor_Lite2>
++config
++templates
++browsing_Lite
++edit_Lite
++math
+FollowTheLink
+FollowTheLinkNewWin
+FollowTheLinkNewTab
+HelpLocal
+ShowPanel
+FullScreen
+SplitHorizontally
+SplitVertically
+ZoomIn
+ZoomOut
+&TransformType
+TtcParentElement
+TtcChildElement
+TtcPreviousElement
+TtcNextElement
+CopyLocation
+
+################# AMAYA EDITOR_Lite3
+<Editor_Lite2>
++config
++templates
++browsing_Lite
++edit_Lite
+FollowTheLink
+FollowTheLinkNewWin
+FollowTheLinkNewTab
+HelpLocal
+ShowPanel
+FullScreen
+SplitHorizontally
+SplitVertically
+ZoomIn
+ZoomOut
+&TransformType
+TtcParentElement
+TtcChildElement
+TtcPreviousElement
+TtcNextElement
+CopyLocation
+
 ################# AMAYA BROWSER
 <Browser>
 +browsing
@@ -354,7 +401,6 @@ ShowBrowsingBar
 +meta-module
 +presentation-module
 +makebook
-+makeid
 +maths
 +object-module
 +ruby
@@ -362,6 +408,7 @@ ShowBrowsingBar
 +spell
 +svg
 +tables
+&ChangeTitle
 #&MenuAttribute
 &CreateBase
 &CreateMath
@@ -405,34 +452,22 @@ ShowEditingBar
 *AmayaAttributeToolPanel
 *AmayaXMLToolPanel
 
-# Theses options should be moved :
-# they are here just to show them in amaya
-&DoLeftAlign
-&DoCenter
-&DoRightAlign
-&DoJustify
-&LineSpacingSingle
-&LineSpacingHalf
-&LineSpacingDouble
-&MarginLeftIncrease
-&MarginLeftDecrease
-
 ########### EDITING_Lite
 [edit_Lite]
 +bdi-text-module
-+css-style
++css-style-lite
 +hypertext-module
 +image-module
++makebook-lite
 +list-module
 #+struct-module
-&ChangeTitle
 +text-module
 +forms
 +edit-module
 +presentation-module
-+maths
 +spell
 +tables
+&SingleNewXHTML
 &MenuAttribute
 &CreateMath
 #&SetCSSStyle
@@ -443,9 +478,6 @@ HelpPublishing
 HelpAccess
 &InsertBefore
 &InsertAfter
-&NewXHTML
-&NewMathML
-&NewCss
 &SaveDocument
 &SaveAll
 &TtcCutSelection
@@ -709,10 +741,22 @@ ApplyClass
 HelpStyleSheets
 
 [css-style]
-+css-browsing
++css-style-lite
 ShowAppliedStyle
 #&LinkCSS
 #&RemoveCSS
+
+[css-style-lite]
++css-browsing
+&DoLeftAlign
+&DoCenter
+&DoRightAlign
+&DoJustify
+&LineSpacingSingle
+&LineSpacingHalf
+&LineSpacingDouble
+&MarginLeftIncrease
+&MarginLeftDecrease
 
 ########### OPTIONAL MODULES
 [config]
@@ -728,14 +772,17 @@ SpellCheck
 HelpSpellChecking
 
 [makebook]
-HelpMakeBook
-HelpNumbering
-&MakeBook
 &MakeToc
 &SectionNumbering
-
-[makeid]
 &MakeIDMenu
+&MakeBook
+HelpNumbering
+HelpMakeBook
+
+[makebook-lite]
+HelpNumbering
+&MakeToc
+&SectionNumbering
 
 [annot-module]
 +annot-doc

@@ -553,6 +553,9 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
       *property = EOS;
       margin = !strcmp (data, "margin-left");
       start = strstr (buffer, data);
+      if (start && start != buffer && start[-1] != SPACE && start[-1] != ';' &&
+          start[strlen (data)] != ':')
+        start = NULL;
       *property = ':';
       if (start)
         {
@@ -1416,13 +1419,14 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                                                     {
                                                       TtaRegisterAttributeReplace (newAttr, child, doc);
                                                       if (replace)
-                                                        TtaSetAttributeText (newAttr, name, child, doc);
-                                                      else
                                                         {
-                                                          UpdateAttribute (newAttr, name, child, doc);
-                                                          // the parsing is already done
-                                                          parse = FALSE;
+                                                          TtaSetAttributeText (newAttr, name, child, doc);
+                                                          //if (parse)
+                                                            // apply CSS properties
+                                                          //  ParseHTMLSpecificStyle (child, name, doc, 1000, FALSE);
                                                         }
+                                                      else
+                                                        UpdateAttribute (newAttr, name, child, doc);
                                                     }
                                                   done = TRUE; // action done
                                                 }

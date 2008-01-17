@@ -220,104 +220,116 @@
 218 Inline-Frame (iframe)
 219 Ruby
 220 CSS &Stil
-221 Regel erzeugen...
-222 Zugewiesenes Format anzeigen...
-223 Verknüpfen...
-224 Öffnen...
-225 Deaktivieren...
-226 Aktivieren...
-227 Entfernen...
-228 Internetadresse kopieren
-229 Internetadresse einfügen
-230 Auf vorherigen Anker
-231 Erzeugen/Ändern...
-232 Anker erzeugen
-233 Verweis/Anker löschen
-234 Id hinzufügen/entfernen...
-235 Rechtschreibprüfung...
-236 Transformieren...
-237 Tabelle
-238 Zusammenfügen die Zellen
-239 Zusammenfügen mit rechter Zelle
-240 Zusammenfügen mit der Zelle darunter
-241 Verkleinern der Breite
-242 Verkleinern der Breite
-243 Zeile auswählen
-244 Zeile einfügen (davor)
-245 Zeile inzufügen (danach)
-246 Spalte auswählen
-247 Spalte einfügen (davor)
-248 Spalte inzufügen (danach)
-249 Einfügen (davor)
-250 Einfügen (danach)
-251 Titel ändern
-252 DTD ändern
-253 DTD entfernen
-254 Dokumenttyp hinzufügen
-255 XHTML 1.1
-256 Dokumenttyp XHTML 1.0 Transitional zuweisen
-257 XHTML 1.0 Strict
-258 XHTML 1.0 Basic
-259 HTML 4.01 Transitional
-260 HTML Strict
-261 Abschnitte numerieren
-262 Inhaltsverzeichnis erzeugen
-263 Buch erstellen
-264 Zeitstempel einfügen
-265 **Graphics
-266 SVG-Bibliothek anzeigen...
-267 Markierung in SVG-Bibliothek
-268 A&nmerkungen
-269 Zur Markierung
-270 Zum Dokument
-271 Auf Markierung verschieben
-272 Als XPointer speichern
-273 Auf XPointer verschieben
-274 Beantworten
-275 Veröffentlichen
-276 Löschen
-277 Laden
-278 Abfrage bearbeiten...
-279 Filter...
-280 &Kooperation
-281 Resource sperren...
-282 Resource entsperren...
-283 Resourceeigenschaften anzeigen...
-284 Sperrinformation kopieren...
-285 Gesperrt?
-286 &Javascript/DOM
-287 Java-Unterstützung ein-/ausschalten
-288 Befehl ausführen
-289 externes Skript ausführen
-290 externes Skript hinzufügen
-291 Skript einfügen
-292 Info
-293 Über Amaya
-294 Index
-295 Browsen
-296 Ansichten
-297 Markieren
-298 Dokuments
-299 Elemente
-300 Attribute
-301 Zeichen
-302 Vorlagen
-303 Transformieren
-304 Verweise
-305 Tabellen
-306 Aktive Bildbereiche
-307 Formeln
-308 SVG
-309 XML
-310 Formate/Formatvorlagen
-311 Suchen/Ersetzen
-312 Rechtschreibprüfung
-313 Speichern/Veröffentlichen
-314 Kooperation
-315 Drucken
-316 Abschnitte numerieren
-317 Buch erstellen
-318 Anmerkungen
-319 Konfiguration
-320 Tastenkürzel
-321 Benutzerfreundlichkeit
+221 **Align
+222 **Left
+223 **Center
+224 **Right
+225 **Justify
+226 **Line spacing
+227 **Single
+228 **Half
+229 **Double
+230 **Indent
+231 **Increase
+232 **Decrease
+233 Regel erzeugen...
+234 Zugewiesenes Format anzeigen...
+235 Verknüpfen...
+236 Öffnen...
+237 Deaktivieren...
+238 Aktivieren...
+239 Entfernen...
+240 Internetadresse kopieren
+241 Internetadresse einfügen
+242 Auf vorherigen Anker
+243 Erzeugen/Ändern...
+244 Anker erzeugen
+245 Verweis/Anker löschen
+246 Id hinzufügen/entfernen...
+247 Rechtschreibprüfung...
+248 Transformieren...
+249 Tabelle
+250 Zusammenfügen die Zellen
+251 Zusammenfügen mit rechter Zelle
+252 Zusammenfügen mit der Zelle darunter
+253 Verkleinern der Breite
+254 Verkleinern der Breite
+255 Zeile auswählen
+256 Zeile einfügen (davor)
+257 Zeile inzufügen (danach)
+258 Spalte auswählen
+259 Spalte einfügen (davor)
+260 Spalte inzufügen (danach)
+261 Einfügen (davor)
+262 Einfügen (danach)
+263 Titel ändern
+264 DTD ändern
+265 DTD entfernen
+266 Dokumenttyp hinzufügen
+267 XHTML 1.1
+268 Dokumenttyp XHTML 1.0 Transitional zuweisen
+269 XHTML 1.0 Strict
+270 XHTML 1.0 Basic
+271 HTML 4.01 Transitional
+272 HTML Strict
+273 Abschnitte numerieren
+274 Inhaltsverzeichnis erzeugen
+275 Buch erstellen
+276 Zeitstempel einfügen
+277 **Graphics
+278 SVG-Bibliothek anzeigen...
+279 Markierung in SVG-Bibliothek
+280 A&nmerkungen
+281 Zur Markierung
+282 Zum Dokument
+283 Auf Markierung verschieben
+284 Als XPointer speichern
+285 Auf XPointer verschieben
+286 Beantworten
+287 Veröffentlichen
+288 Löschen
+289 Laden
+290 Abfrage bearbeiten...
+291 Filter...
+292 &Kooperation
+293 Resource sperren...
+294 Resource entsperren...
+295 Resourceeigenschaften anzeigen...
+296 Sperrinformation kopieren...
+297 Gesperrt?
+298 &Javascript/DOM
+299 Java-Unterstützung ein-/ausschalten
+300 Befehl ausführen
+301 externes Skript ausführen
+302 externes Skript hinzufügen
+303 Skript einfügen
+304 Info
+305 Über Amaya
+306 Index
+307 Browsen
+308 Ansichten
+309 Markieren
+310 Dokuments
+311 Elemente
+312 Attribute
+313 Zeichen
+314 Vorlagen
+315 Transformieren
+316 Verweise
+317 Tabellen
+318 Aktive Bildbereiche
+319 Formeln
+320 SVG
+321 XML
+322 Formate/Formatvorlagen
+323 Suchen/Ersetzen
+324 Rechtschreibprüfung
+325 Speichern/Veröffentlichen
+326 Kooperation
+327 Drucken
+328 Abschnitte numerieren
+329 Buch erstellen
+330 Anmerkungen
+331 Konfiguration
+332 Tastenkürzel
+333 Benutzerfreundlichkeit
