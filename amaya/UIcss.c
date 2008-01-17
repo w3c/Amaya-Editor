@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -466,18 +466,18 @@ void UpdateStyleSheet (char *url, char *tempdoc)
                                   /* the CSS parser detected an error */
                                   TtaWriteClose (ErrFile);
                                   ErrFile = NULL;
-                                  TtaSetItemOn (doc, 1, File, BShowLogFile);
+                                  TtaSetItemOn (doc, 1, Views, BShowLogFile);
                                   if (ParsedCSS)
                                     {
                                       TtaWriteClose (CSSErrFile);
                                       CSSErrFile = NULL;
-                                      TtaSetItemOn (ParsedCSS, 1, File, BShowLogFile);
+                                      TtaSetItemOn (ParsedCSS, 1, Views, BShowLogFile);
                                     }
                                   CSSErrorsFound = FALSE;
                                   InitInfo ("", TtaGetMessage (AMAYA, AM_CSS_ERROR));
                                 }
                               else
-                                TtaSetItemOff (doc, 1, File, BShowLogFile);
+                                TtaSetItemOff (doc, 1, Views, BShowLogFile);
                               /* Restore the display mode */
                               if (dispMode == DisplayImmediately)
                                 TtaSetDisplayMode (doc, dispMode);
@@ -1038,7 +1038,6 @@ void MakeRemoveCSS(Document doc, PInfoPtr pInfo)
 {
   CSSInfoPtr css;
   Element    el, firstSel, lastSel;
-  char       *ptr = NULL, *localname = NULL;
   int        j, firstChar, lastChar;
   
   /* remove the link to this file */

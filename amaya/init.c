@@ -649,31 +649,18 @@ void SetTableMenuOff (Document doc, View view)
   TtaSetItemOff (doc, view, Types, BDataCell);
   TtaSetItemOff (doc, view, Types, BHeadingCell);
   TtaSetItemOff (doc, view, Types, BCellMerge);
-  TtaSetItemOff (doc, view, Types, BCellHExtend);
-  TtaSetItemOff (doc, view, Types, BCellVExtend);
-  TtaSetItemOff (doc, view, Types, BCellHShrink);
-  TtaSetItemOff (doc, view, Types, BCellVShrink);
-  TtaSetItemOff (doc, view, Types, BSelectRow);
-  TtaSetItemOff (doc, view, Types, BCreateRowB);
-  TtaSetItemOff (doc, view, Types, BCreateRowA);
-  TtaSetItemOff (doc, view, Types, BSelectColumn);
-  TtaSetItemOff (doc, view, Types, BCreateColumnB);
-  TtaSetItemOff (doc, view, Types, BCreateColumnA);
-  TtaSetItemOff (doc, view, Types, BPasteBefore);
-  TtaSetItemOff (doc, view, Types, BPasteAfter);
-  TtaSetItemOff (doc, view, XMLTypes, BMCellMerge);
-  TtaSetItemOff (doc, view, XMLTypes, BMCellHExtend);
-  TtaSetItemOff (doc, view, XMLTypes, BMCellVExtend);
-  TtaSetItemOff (doc, view, XMLTypes, BMCellHShrink);
-  TtaSetItemOff (doc, view, XMLTypes, BMCellVShrink);
-  TtaSetItemOff (doc, view, XMLTypes, BMSelectRow);
-  TtaSetItemOff (doc, view, XMLTypes, BMCreateRowB);
-  TtaSetItemOff (doc, view, XMLTypes, BMCreateRowA);
-  TtaSetItemOff (doc, view, XMLTypes, BMSelectColumn);
-  TtaSetItemOff (doc, view, XMLTypes, BMCreateColumnB);
-  TtaSetItemOff (doc, view, XMLTypes, BMCreateColumnA);
-  TtaSetItemOff (doc, view, XMLTypes, BMPasteBefore);
-  TtaSetItemOff (doc, view, XMLTypes, BMPasteAfter);
+  TtaSetItemOff (doc, view, Tools, BCellHExtend);
+  TtaSetItemOff (doc, view, Tools, BCellVExtend);
+  TtaSetItemOff (doc, view, Tools, BCellHShrink);
+  TtaSetItemOff (doc, view, Tools, BCellVShrink);
+  TtaSetItemOff (doc, view, Tools, BSelectRow);
+  TtaSetItemOff (doc, view, Tools, BCreateRowB);
+  TtaSetItemOff (doc, view, Tools, BCreateRowA);
+  TtaSetItemOff (doc, view, Tools, BSelectColumn);
+  TtaSetItemOff (doc, view, Tools, BCreateColumnB);
+  TtaSetItemOff (doc, view, Tools, BCreateColumnA);
+  TtaSetItemOff (doc, view, Tools, BPasteBefore);
+  TtaSetItemOff (doc, view, Tools, BPasteAfter);
 }
 
 /*----------------------------------------------------------------------
@@ -692,17 +679,6 @@ void SetTableMenuOn (Document doc, View view)
       TtaSetItemOn (doc, view, Types, BTFoot);
       TtaSetItemOn (doc, view, Types, BDataCell);
       TtaSetItemOn (doc, view, Types, BHeadingCell);
-      TtaSetItemOn (doc, view, Types, BCellMerge);
-      TtaSetItemOn (doc, view, Types, BCellHExtend);
-      TtaSetItemOn (doc, view, Types, BCellVExtend);
-      TtaSetItemOn (doc, view, Types, BCellHShrink);
-      TtaSetItemOn (doc, view, Types, BCellVShrink);
-      TtaSetItemOn (doc, view, Types, BSelectRow);
-      TtaSetItemOn (doc, view, Types, BCreateRowB);
-      TtaSetItemOn (doc, view, Types, BCreateRowA);
-      TtaSetItemOn (doc, view, Types, BSelectColumn);
-      TtaSetItemOn (doc, view, Types, BCreateColumnB);
-      TtaSetItemOn (doc, view, Types, BCreateColumnA);
     }
   else
     {
@@ -714,48 +690,37 @@ void SetTableMenuOn (Document doc, View view)
       TtaSetItemOff (doc, view, Types, BTFoot);
       TtaSetItemOff (doc, view, Types, BDataCell);
       TtaSetItemOff (doc, view, Types, BHeadingCell);
-      TtaSetItemOff (doc, view, Types, BCellMerge);
-      TtaSetItemOff (doc, view, Types, BCellHExtend);
-      TtaSetItemOff (doc, view, Types, BCellVExtend);
-      TtaSetItemOff (doc, view, Types, BCellHShrink);
-      TtaSetItemOff (doc, view, Types, BCellVShrink);
-      TtaSetItemOff (doc, view, Types, BSelectRow);
-      TtaSetItemOff (doc, view, Types, BCreateRowB);
-      TtaSetItemOff (doc, view, Types, BCreateRowA);
-      TtaSetItemOff (doc, view, Types, BSelectColumn);
-      TtaSetItemOff (doc, view, Types, BCreateColumnB);
-      TtaSetItemOff (doc, view, Types, BCreateColumnA);
-      TtaSetItemOff (doc, view, Types, BPasteBefore);
-      TtaSetItemOff (doc, view, Types, BPasteAfter);
     }
-  if (MTableMenuActive)
+  if (TableMenuActive || MTableMenuActive)
     {
-      /* a matrice element is selected */
-      TtaSetItemOn (doc, view, XMLTypes, BMCellHExtend);
-      TtaSetItemOn (doc, view, XMLTypes, BMCellVExtend);
-      TtaSetItemOn (doc, view, XMLTypes, BMCellHShrink);
-      TtaSetItemOn (doc, view, XMLTypes, BMCellVShrink);
-      TtaSetItemOn (doc, view, XMLTypes, BMSelectRow);
-      TtaSetItemOn (doc, view, XMLTypes, BMCreateRowB);
-      TtaSetItemOn (doc, view, XMLTypes, BMCreateRowA);
-      TtaSetItemOn (doc, view, XMLTypes, BMSelectColumn);
-      TtaSetItemOn (doc, view, XMLTypes, BMCreateColumnB);
-      TtaSetItemOn (doc, view, XMLTypes, BMCreateColumnA);
+      /* a table element is selected */
+      TtaSetItemOn (doc, view, Tools, BCellMerge);
+      TtaSetItemOn (doc, view, Tools, BCellHExtend);
+      TtaSetItemOn (doc, view, Tools, BCellVExtend);
+      TtaSetItemOn (doc, view, Tools, BCellHShrink);
+      TtaSetItemOn (doc, view, Tools, BCellVShrink);
+      TtaSetItemOn (doc, view, Tools, BSelectRow);
+      TtaSetItemOn (doc, view, Tools, BCreateRowB);
+      TtaSetItemOn (doc, view, Tools, BCreateRowA);
+      TtaSetItemOn (doc, view, Tools, BSelectColumn);
+      TtaSetItemOn (doc, view, Tools, BCreateColumnB);
+      TtaSetItemOn (doc, view, Tools, BCreateColumnA);
     }
   else
     {
-      TtaSetItemOff (doc, view, XMLTypes, BMCellHExtend);
-      TtaSetItemOff (doc, view, XMLTypes, BMCellVExtend);
-      TtaSetItemOff (doc, view, XMLTypes, BMCellHShrink);
-      TtaSetItemOff (doc, view, XMLTypes, BMCellVShrink);
-      TtaSetItemOff (doc, view, XMLTypes, BMSelectRow);
-      TtaSetItemOff (doc, view, XMLTypes, BMCreateRowB);
-      TtaSetItemOff (doc, view, XMLTypes, BMCreateRowA);
-      TtaSetItemOff (doc, view, XMLTypes, BMSelectColumn);
-      TtaSetItemOff (doc, view, XMLTypes, BMCreateColumnB);
-      TtaSetItemOff (doc, view, XMLTypes, BMCreateColumnA);
-      TtaSetItemOff (doc, view, XMLTypes, BMPasteBefore);
-      TtaSetItemOff (doc, view, XMLTypes, BMPasteAfter);
+      TtaSetItemOff (doc, view, Tools, BCellMerge);
+      TtaSetItemOff (doc, view, Tools, BCellHExtend);
+      TtaSetItemOff (doc, view, Tools, BCellVExtend);
+      TtaSetItemOff (doc, view, Tools, BCellHShrink);
+      TtaSetItemOff (doc, view, Tools, BCellVShrink);
+      TtaSetItemOff (doc, view, Tools, BSelectRow);
+      TtaSetItemOff (doc, view, Tools, BCreateRowB);
+      TtaSetItemOff (doc, view, Tools, BCreateRowA);
+      TtaSetItemOff (doc, view, Tools, BSelectColumn);
+      TtaSetItemOff (doc, view, Tools, BCreateColumnB);
+      TtaSetItemOff (doc, view, Tools, BCreateColumnA);
+      TtaSetItemOff (doc, view, Tools, BPasteBefore);
+      TtaSetItemOff (doc, view, Tools, BPasteAfter);
     }
 }
 
@@ -787,11 +752,9 @@ void UpdateEditorMenus (Document doc)
   if (DocumentTypes[doc] == docCSS)
     {
       TtaSetMenuOff (doc, 1, Types);
-      TtaSetMenuOff (doc, 1, XMLTypes);
-      TtaSetMenuOff (doc, 1, JavascriptDom_);
+      TtaSetMenuOff (doc, 1, Tools);
       TtaSetMenuOff (doc, 1, Links);
       TtaSetItemOff (doc, 1, File, BSynchro);
-      TtaSetItemOff (doc, 1, Edit_, BTransform);
     }
   else if (DocumentTypes[doc] == docHTML)
     TtaSetMenuOn (doc, 1, Types);
@@ -824,26 +787,14 @@ void UpdateEditorMenus (Document doc)
       DocumentTypes[doc] == docXml ||
       DocumentTypes[doc] == docImage)
     {
-      TtaSetItemOn (doc, 1, Edit_, BSpellCheck);
+      TtaSetItemOn (doc, 1, Tools, BSpellCheck);
       TtaSetMenuOn (doc, 1, Style);
       if (DocumentTypes[doc] == docMath)
-        {
-          TtaSetMenuOn (doc, 1, XMLTypes);
-          TtaSetMenuOff (doc, 1, Types);
-          TtaSetItemOn (doc, 1, Edit_, BTransform);
-        }
+        TtaSetItemOn (doc, 1, Tools, BTransform);
       else
         {
           if (DocumentTypes[doc] == docHTML)
-            {
-              if (isXhtml11)
-                TtaSetMenuOn (doc, 1, XMLTypes);
-              else
-                TtaSetMenuOff (doc, 1, XMLTypes);
-              TtaSetItemOn (doc, 1, Edit_, BTransform);
-            }
-          else if (DocumentTypes[doc] != docImage)
-            TtaSetMenuOn (doc, 1, XMLTypes);
+            TtaSetItemOn (doc, 1, Tools, BTransform);
           TtaSetMenuOn (doc, 1, Types);
           TtaSetMenuOn (doc, 1, Links);
 
@@ -856,14 +807,10 @@ void UpdateEditorMenus (Document doc)
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
           TtaSetItemOn (doc, view, Edit_, BClear);
-          TtaSetItemOn (doc, view, Edit_, BSpellCheck);
-          TtaSetItemOn (doc, view, Edit_, BTransform);
+          TtaSetItemOn (doc, view, Tools, BSpellCheck);
+          TtaSetItemOn (doc, view, Tools, BTransform);
           if (DocumentTypes[doc] != docMath)
-            {
-              TtaSetMenuOn (doc, view, Types);
-              if (DocumentTypes[doc] != docHTML || isXhtml11)
-                TtaSetMenuOn (doc, view, XMLTypes);
-            }
+            TtaSetMenuOn (doc, view, Types);
         }
       view = TtaGetViewFromName (doc, "Alternate_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -872,9 +819,7 @@ void UpdateEditorMenus (Document doc)
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
           TtaSetItemOn (doc, view, Edit_, BClear);
-          TtaSetItemOn (doc, view, Edit_, BSpellCheck);
-          if (isXhtml11)
-            TtaSetMenuOn (doc, view, XMLTypes);
+          TtaSetItemOn (doc, view, Tools, BSpellCheck);
         }
       view = TtaGetViewFromName (doc, "Links_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -883,14 +828,10 @@ void UpdateEditorMenus (Document doc)
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
           TtaSetItemOn (doc, view, Edit_, BClear);
-          TtaSetItemOn (doc, view, Edit_, BSpellCheck);
-          TtaSetItemOn (doc, view, Edit_, BTransform);
+          TtaSetItemOn (doc, view, Tools, BSpellCheck);
+          TtaSetItemOn (doc, view, Tools, BTransform);
           if (DocumentTypes[doc] != docMath)
-            {
-              TtaSetMenuOn (doc, view, Types);
-              if (DocumentTypes[doc] != docHTML || isXhtml11)
-                TtaSetMenuOn (doc, view, XMLTypes);
-            }
+            TtaSetMenuOn (doc, view, Types);
         }
       view = TtaGetViewFromName (doc, "Table_of_contents");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -899,10 +840,8 @@ void UpdateEditorMenus (Document doc)
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
           TtaSetItemOn (doc, view, Edit_, BClear);
-          TtaSetItemOn (doc, view, Edit_, BSpellCheck);
-          TtaSetItemOn (doc, view, Edit_, BTransform);
-          if (isXhtml11)
-            TtaSetMenuOn (doc, view, XMLTypes);
+          TtaSetItemOn (doc, view, Tools, BSpellCheck);
+          TtaSetItemOn (doc, view, Tools, BTransform);
         }
     }
 
@@ -1035,10 +974,10 @@ void CheckParsingErrors (Document doc)
   if (ErrFile)
     {
       /* Active the menu entry */
-      TtaSetItemOn (doc, 1, File, BShowLogFile);
+      TtaSetItemOn (doc, 1, Views, BShowLogFile);
       if (DocumentSource[doc])
         /* update the document source too */
-        TtaSetItemOn (DocumentSource[doc], 1, File, BShowLogFile);
+        TtaSetItemOn (DocumentSource[doc], 1, Views, BShowLogFile);
 	
       if (XMLCharacterNotSupported || XMLInvalidToken)
         {
@@ -1128,19 +1067,19 @@ void CheckParsingErrors (Document doc)
       if (!closeLog)
         {
           CloseLogs (doc);
-          TtaSetItemOn (doc, 1, File, BShowLogFile);
+          TtaSetItemOn (doc, 1, Views, BShowLogFile);
           if (DocumentSource[doc])
             /* update the document source too */
-            TtaSetItemOn (DocumentSource[doc], 1, File, BShowLogFile);
+            TtaSetItemOn (DocumentSource[doc], 1, Views, BShowLogFile);
         }
     }
   else
     {
       CloseLogs (doc);
-      TtaSetItemOff (doc, 1, File, BShowLogFile);
+      TtaSetItemOff (doc, 1, Views, BShowLogFile);
       if (DocumentSource[doc])
         /* update the document source too */
-        TtaSetItemOff (DocumentSource[doc], 1, File, BShowLogFile);
+        TtaSetItemOff (DocumentSource[doc], 1, Views, BShowLogFile);
     }
   CriticCheckError = FALSE;
 }
@@ -1809,19 +1748,19 @@ void UpdateDoctypeMenu (Document doc)
       if (withDocType)
         {
           /* there is a Doctype */
-          TtaSetItemOn  (doc, 1, File, BRemoveDoctype);
-          TtaSetItemOff (doc, 1, File, BAddDoctype);
+          TtaSetItemOn  (doc, 1, Tools, BRemoveDoctype);
+          TtaSetItemOff (doc, 1, Tools, BAddDoctype);
         }
       else
         {
           /* there is no Doctype */
-          TtaSetItemOff  (doc, 1, File, BRemoveDoctype);
+          TtaSetItemOff  (doc, 1, Tools, BRemoveDoctype);
           if (docType == docHTML ||
               (!useMathML && !useSVG && !useHTML))
-            TtaSetItemOn (doc, 1, File, BAddDoctype);
+            TtaSetItemOn (doc, 1, Tools, BAddDoctype);
           else
             /* no Doctype available */
-            TtaSetItemOff (doc, 1, File, BAddDoctype);
+            TtaSetItemOff (doc, 1, Tools, BAddDoctype);
         }
 
       if (docType == docHTML)
@@ -1830,59 +1769,59 @@ void UpdateDoctypeMenu (Document doc)
              A confirmation will be requested if some attribues
              or elements may be lost */
           if (TtaGetDocumentProfile(doc) == L_Xhtml11) /* already done */
-            TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
+            TtaSetItemOff (doc, 1, Tools, BDoctypeXhtml11);
           else
-            TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+            TtaSetItemOn (doc, 1, Tools, BDoctypeXhtml11);
 
           if (TtaGetDocumentProfile(doc) == L_Transitional &&
               DocumentMeta[doc]->xmlformat == TRUE) /* already done */
-            TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
+            TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlTransitional);
           else
-            TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+            TtaSetItemOn (doc, 1, Tools, BDoctypeXhtmlTransitional);
 
           if (TtaGetDocumentProfile(doc) == L_Strict &&
               DocumentMeta[doc]->xmlformat == TRUE) /* already done */
-            TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
+            TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlStrict);
           else
-            TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+            TtaSetItemOn (doc, 1, Tools, BDoctypeXhtmlStrict);
 
           if (TtaGetDocumentProfile(doc) == L_Basic) /* already done */
-            TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
+            TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlBasic);
           else
-            TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+            TtaSetItemOn (doc, 1, Tools, BDoctypeXhtmlBasic);
 
           if (TtaGetDocumentProfile(doc) == L_Transitional &&
               DocumentMeta[doc]->xmlformat != TRUE) /* already done */
-            TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
+            TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlTransitional);
           else
-            TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
+            TtaSetItemOn (doc, 1, Tools, BDoctypeHtmlTransitional);
 
           if (TtaGetDocumentProfile(doc) == L_Strict &&
               DocumentMeta[doc]->xmlformat != TRUE) /* already done */
-            TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
+            TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlStrict);
           else
-            TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
+            TtaSetItemOn (doc, 1, Tools, BDoctypeHtmlStrict);
         }
       else
         {
-          TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
-          TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
-          TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
-          TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
-          TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
-          TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
+          TtaSetItemOff (doc, 1, Tools, BDoctypeXhtml11);
+          TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlTransitional);
+          TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlStrict);
+          TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlBasic);
+          TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlTransitional);
+          TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlStrict);
         }
     }
   else
     {
-      TtaSetItemOff (doc, 1, File, BRemoveDoctype);
-      TtaSetItemOff (doc, 1, File, BAddDoctype);
-      TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
-      TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
-      TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
-      TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
-      TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
-      TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
+      TtaSetItemOff (doc, 1, Tools, BRemoveDoctype);
+      TtaSetItemOff (doc, 1, Tools, BAddDoctype);
+      TtaSetItemOff (doc, 1, Tools, BDoctypeXhtml11);
+      TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlTransitional);
+      TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlStrict);
+      TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlBasic);
+      TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlTransitional);
+      TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlStrict);
     }
 }
 
@@ -2273,7 +2212,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
        /* update the menus according to the profile */
        /* By default no log file */
-      TtaSetItemOff (doc, 1, File, BShowLogFile);
+      TtaSetItemOff (doc, 1, Views, BShowLogFile);
 
 #ifndef DAV    /* don't active the WebDAV menu if flag is off */
       TtaSetMenuOff (doc, 1, Cooperation_);
@@ -2358,23 +2297,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           TtaSetItemOff (doc, 1, File, BSave);
           TtaSetItemOff (doc, 1, File, BSaveAll);
           TtaSetItemOff (doc, 1, File, BSynchro);
-          TtaSetItemOff (doc, 1, File, BDocInfo);
           TtaSetItemOff (doc, 1, File, BSetUpandPrint);
           TtaSetItemOff (doc, 1, File, BPrint);
           SetCharsetMenuOff (doc, 1); /* no charset commands */
           /* invalid the DoctypeMenu */
-          TtaSetItemOff (doc, 1, File, BRemoveDoctype);
-          TtaSetItemOff (doc, 1, File, BAddDoctype);
-          TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
-          TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
-          TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
-          TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
-          TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
-          TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
-          TtaSetItemOff (doc, 1, Edit_, BTransform);
           TtaSetMenuOff (doc, 1, Types);
-          TtaSetMenuOff (doc, 1, XMLTypes);
-          TtaSetMenuOff (doc, 1, JavascriptDom_);
+          TtaSetMenuOff (doc, 1, Tools);
           TtaSetMenuOff (doc, 1, Links);
           TtaSetMenuOff (doc, 1, Views);
           TtaSetMenuOff (doc, 1, Style);
@@ -2392,7 +2320,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
                DocumentTypes[doc] == docCSS ||
                DocumentTypes[doc] == docMath)
         {
-          TtaSetMenuOn (doc, 1, Style);
+          if (DocumentTypes[doc] != docText)
+            TtaSetMenuOn (doc, 1, Style);
           if (DocumentTypes[doc] == docMath)
             {
               TtaSetItemOn (doc, 1, Style, BCreateClass);
@@ -2420,17 +2349,15 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           TtaSetMenuOff (doc, 1, Links);
           if (DocumentTypes[doc] == docMath)
             {
-              TtaSetItemOff (doc, 1, XMLTypes, BShowLibrary);
-              TtaSetItemOff (doc, 1, XMLTypes, BAddNewModel);
-              TtaSetMenuOn (doc, 1, XMLTypes);
+              TtaSetItemOff (doc, 1, Tools, BShowLibrary);
+              TtaSetItemOff (doc, 1, Tools, BAddNewModel);
               TtaSetMenuOn (doc, 1, Views);
             }
           else
             {
               if (DocumentTypes[doc] != docSource)
                 TtaSetMenuOff (doc, 1, Views);
-              TtaSetItemOff (doc, 1, Edit_, BTransform);
-              TtaSetMenuOff (doc, 1, XMLTypes);
+              TtaSetItemOff (doc, 1, Tools, BTransform);
 #ifdef ANNOTATIONS
               TtaSetMenuOff (doc, 1, Annotations_);
 #endif /* ANNOTATIONS */
@@ -2441,7 +2368,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           TtaSetItemOff (doc, 1, Views, BShowAlternate);
           TtaSetItemOff (doc, 1, Views, BShowToC);
           TtaSetItemOff (doc, 1, Views, BShowSource);
-          TtaSetItemOff (doc, 1, Views, BShowTimeLine);
         }
       else
         {
@@ -2450,23 +2376,16 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           TtaSetItemOn (doc, 1, Views, BShowLinks);
           /* turn off the assign annotation buttons (should be
              contextual */
-          TtaSetItemOff (doc, 1, Annotations_, BReplyToAnnotation);
-          TtaSetItemOff (doc, 1, Annotations_, BMoveAnnotSel);
-          TtaSetItemOff (doc, 1, Annotations_, BMoveAnnotXPtr);
-          TtaSetItemOff (doc, 1, Annotations_, BPostAnnot);
+          /* TtaSetItemOff (doc, 1, Tools, BReplyToAnnotation);
+          TtaSetItemOff (doc, 1, Tools, BMoveAnnotSel);
+          TtaSetItemOff (doc, 1, Tools, BMoveAnnotXPtr);
+          TtaSetItemOff (doc, 1, Tools, BPostAnnot);*/
           if (DocumentTypes[doc] == docHTML)
             {
               TtaSetItemOn (doc, 1, Views, TShowMapAreas);
               TtaSetItemOn (doc, 1, Views, BShowAlternate);
               TtaSetItemOn (doc, 1, Views, BShowToC);
-              TtaSetItemOn (doc, 1, Types, BTitle);
-              if (profile == L_Strict || profile == L_Basic)
-                {
-                  TtaSetMenuOff (doc, 1, XMLTypes);
-                  TtaSetItemOff (doc, 1, Views, BShowTimeLine);
-                }
-              else
-                TtaSetItemOn (doc, 1, Views, BShowTimeLine);
+              // TtaSetItemOn (doc, 1, Tools, BTitle);
             }
           else
             {
@@ -2475,14 +2394,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
               if (DocumentTypes[doc] == docSVG)
                 {
                   TtaSetItemOn (doc, 1, Views, BShowAlternate);
-                  TtaSetItemOff (doc, 1, Types, BTitle);
-                  TtaSetItemOn (doc, 1, Views, BShowTimeLine);
+                  // TtaSetItemOff (doc, 1, Tools, BTitle);
                 }
               else
-                {
-                  TtaSetItemOff (doc, 1, Views, BShowAlternate);
-                  TtaSetItemOff (doc, 1, Views, BShowTimeLine);
-                }
+                TtaSetItemOff (doc, 1, Views, BShowAlternate);
             }
         }
     }
@@ -2618,7 +2533,7 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
             TtaFreeMemory (DocumentURLs[i]);
             DocumentURLs[i] = NULL;
             /* switch off the button Show Log file */
-            TtaSetItemOff (doc, 1, File, BShowLogFile);
+            TtaSetItemOff (doc, 1, Views, BShowLogFile);
           }
       }
 
@@ -4052,7 +3967,7 @@ void ShowSource (Document doc, View view)
           sprintf (tempdir, "%s%c%d%cPARSING.ERR",
                    TempFileDirectory, DIR_SEP, doc, DIR_SEP);
           if (TtaFileExist (tempdir))
-            TtaSetItemOn (sourceDoc, 1, File, BShowLogFile);
+            TtaSetItemOn (sourceDoc, 1, Views, BShowLogFile);
           SynchronizeSourceView (&event);
         }
       TtaFreeMemory (localFile);

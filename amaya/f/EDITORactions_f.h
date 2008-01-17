@@ -16,6 +16,8 @@ extern void AddExternal ( Document document,
                           View view );
 extern void ExecuteExternal ( Document document,
                               View view );
+extern void SingleNewXHTML ( Document doc,
+                             View view );
 extern void NewXHTML ( Document doc,
                        View view );
 extern void NewMathML ( Document doc,
@@ -280,6 +282,8 @@ extern void AddExternal ( Document document,
                             View view );
 extern void ExecuteExternal ( Document document,
                                 View view );
+extern void SingleNewXHTML ( Document doc,
+                               View view );
 extern void NewXHTML ( Document doc,
                          View view );
 extern void NewMathML ( Document doc,

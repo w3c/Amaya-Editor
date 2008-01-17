@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 2007
+ *  (c) COPYRIGHT INRIA and W3C, 2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -281,18 +281,18 @@ void UpdateJavascriptMenus ()
       {
       /* javascript item ON */
 #ifdef _WX
-        TtaSetToggleItem (document, 1, JavascriptDom_, BSwitch_JS_DOM, TRUE);
-        TtaSetItemOn (document, 1, JavascriptDom_, BExecuteACommand);
-        TtaSetItemOn (document, 1, JavascriptDom_, BExecuteExternal);
+        TtaSetToggleItem (document, 1, Tools, BSwitch_JS_DOM, TRUE);
+        TtaSetItemOn (document, 1, Tools, BExecuteACommand);
+        TtaSetItemOn (document, 1, Tools, BExecuteExternal);
       #endif /* _WX */
       }
 else
       {
       /* javascript item OFF */
       #ifdef _WX
-        TtaSetToggleItem (document, 1, JavascriptDom_, BSwitch_JS_DOM, FALSE);
-        TtaSetItemOff (document, 1, JavascriptDom_, BExecuteACommand);
-        TtaSetItemOff (document, 1, JavascriptDom_, BExecuteExternal);
+        TtaSetToggleItem (document, 1, Tools, BSwitch_JS_DOM, FALSE);
+        TtaSetItemOff (document, 1, Tools, BExecuteACommand);
+        TtaSetItemOff (document, 1, Tools, BExecuteExternal);
 #endif /* _WX */
       }
     }

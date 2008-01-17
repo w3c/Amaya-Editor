@@ -125,6 +125,13 @@ void ExecuteExternal (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
+  SingleNewXHTML: Create a new XHTML document
+  ----------------------------------------------------------------------*/
+void SingleNewXHTML (Document doc, View view)
+{
+  OpenNew (doc, view, docHTML, 0);
+}
+/*----------------------------------------------------------------------
   NewXHTML: Create a new XHTML document
   ----------------------------------------------------------------------*/
 void NewXHTML (Document doc, View view)
