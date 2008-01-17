@@ -405,6 +405,18 @@ ShowEditingBar
 *AmayaAttributeToolPanel
 *AmayaXMLToolPanel
 
+# Theses options should be moved :
+# they are here just to show them in amaya
+&DoLeftAlign
+&DoCenter
+&DoRightAlign
+&DoJustify
+&LineSpacingSingle
+&LineSpacingHalf
+&LineSpacingDouble
+&MarginLeftIncrease
+&MarginLeftDecrease
+
 ########### EDITING_Lite
 [edit_Lite]
 +bdi-text-module
@@ -449,6 +461,19 @@ ShowEditingBar
 *AmayaXHTMLToolPanel
 *AmayaStyleToolPanel
 *AmayaSpeCharToolPanel
+
+# Theses options should be moved :
+# they are here just to show them in amaya
+&DoLeftAlign
+&DoCenter
+&DoRightAlign
+&DoJustify
+&LineSpacingSingle
+&LineSpacingHalf
+&LineSpacingDouble
+&MarginLeftIncrease
+&MarginLeftDecrease
+
 
 ######### VIEWS
 [views]
