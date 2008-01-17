@@ -186,8 +186,9 @@ MENUS
 	Types button:BRule -> CreateHorizontalRule icon:XHTML_hr.png;
 	Types button:BBreak -> CreateBreak icon: XHTML_br.png;
 	Types button:BPreformatted -> CreatePreformatted;
-	Types.Table button:BTable -> CreateTable icon:XHTML_Table.png;
+	Types button:SingleTable -> SingleCreateTable icon:XHTML_Table.png;
 	Types.Table Separator;
+	Types.Table button:Table -> CreateTable icon:XHTML_Table.png;
 	Types.Table button:BCaption -> CreateCaption;
 	Types.Table button:BColgroup -> CreateColgroup;
 	Types.Table button:BCol -> CreateCol;

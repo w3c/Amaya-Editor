@@ -2435,6 +2435,14 @@ void CreateTable (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  SingleCreateTable
+  ----------------------------------------------------------------------*/
+void SingleCreateTable (Document doc, View view)
+{
+  CreateTable (doc, view);
+}
+
+/*----------------------------------------------------------------------
   CreateCaption
   If the selection is a position anywhere within a table, create an empty
   caption element in this table and set the selection in this new caption.

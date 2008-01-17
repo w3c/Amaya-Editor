@@ -159,6 +159,7 @@ HelpAtW3C
 +meta-module
 +presentation-module
 +maths
++tables
 &CreateMath
 +object-module
 +script-module
@@ -183,6 +184,7 @@ HelpAtW3C
 +meta-module
 +presentation-module
 +maths
++tables
 &CreateMath
 +object-module
 +script-module
@@ -220,6 +222,7 @@ HelpAtW3C
 +presentation-module
 +maths
 &CreateMath
++tables
 +object-module
 +script-module
 +svg
@@ -466,7 +469,8 @@ ShowEditingBar
 +edit-module
 +presentation-module
 +spell
-+tables
+&SingleCreateTable
++table-edit
 &SingleNewXHTML
 &MenuAttribute
 &CreateMath

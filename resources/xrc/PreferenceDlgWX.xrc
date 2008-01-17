@@ -231,6 +231,28 @@
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_PROFILE">
+              <label>*Amaya profile :*</label>
+            </object>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+          </object>
+          <object class="sizeritem">
+            <object class="wxChoice" name="wxID_CHOICE_PROFILE">
+              <content>
+                <item>Light</item>
+                <item>Light+Math</item>
+                <item>Web</item>
+                <item>Web+Math</item>
+                <item>Complete</item>
+              </content>
+            </object>
+            <option>1</option>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+          </object>
+          <object class="spacer">
+            <size>5,0</size>
+          </object>
+          <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_TOOLPANEL_ALIGN">
               <label>*Aligner les panneaux d'outils :*</label>
             </object>
