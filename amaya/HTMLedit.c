@@ -1421,16 +1421,16 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                                                       if (replace)
                                                         {
                                                           TtaSetAttributeText (newAttr, name, child, doc);
-                                                          //if (parse)
+                                                          if (parse)
                                                             // apply CSS properties
-                                                          //  ParseHTMLSpecificStyle (child, name, doc, 1000, FALSE);
+                                                            ParseHTMLSpecificStyle (child, name, doc, 1000, FALSE);
                                                         }
                                                       else
                                                         UpdateAttribute (newAttr, name, child, doc);
                                                     }
                                                   done = TRUE; // action done
                                                 }
-                                              if (parse)
+                                              else if (parse)
                                                 // apply CSS properties
                                                 ParseHTMLSpecificStyle (child, name, doc, 1000, FALSE);
                                               TtaFreeMemory (name);

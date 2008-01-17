@@ -5236,6 +5236,9 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
       inputBuffer[LgBuffer] = EOS;
       TtaAppendTextContent (el, (unsigned char *)inputBuffer, doc);
     }
+  if (DocumentTypes[doc] != docSource)
+    // clean up the list of css files
+    UpdateStyleList (doc);
 }
 
 /*----------------------------------------------------------------------

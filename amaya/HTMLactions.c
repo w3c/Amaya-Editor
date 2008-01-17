@@ -45,6 +45,7 @@
 #include "init_f.h"
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
+#include "EDITstyle_f.h"
 #include "fetchXMLname_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
@@ -2702,6 +2703,8 @@ void FocusChanged (Document doc)
         // Amaya is creating the source view of the current document
         return;
     }
+
+  UpdateStyleList (doc);
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] && DocumentSource[i] != doc &&
         DocumentTypes[i] == docLog)

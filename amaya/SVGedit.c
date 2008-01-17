@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -30,23 +30,6 @@
 #include "SVG.h"
 #include "HTML.h"
 
-#if defined(_GTK)
-#include "Graph.xpm"
-#include "GraphNo.xpm"
-#include "line.xpm"
-#include "rect.xpm"
-#include "roundrect.xpm"
-#include "circle.xpm"
-#include "oval.xpm"
-#include "polyline.xpm"
-#include "polygon.xpm"
-#include "spline.xpm"
-#include "closed.xpm"
-#include "label.xpm"
-#include "text.xpm"
-#include "group.xpm"
-#endif /* #if defined(_GTK) */
-
 #include "libmanag_f.h"
 #include "anim_f.h"
 #include "Mathedit_f.h"
@@ -56,7 +39,6 @@
 
 static ThotIcon   iconGraph;
 static ThotIcon   iconGraphNo;
-static int      GraphButton;
 static ThotIcon   mIcons[12];
 static ThotBool PaletteDisplayed = FALSE;
 static ThotBool InCreation = FALSE;
@@ -2145,64 +2127,6 @@ static void CallbackGraph (int ref, int typedata, char *data)
     default:
       break;
     }
-}
-
-#ifdef _GTK
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-gboolean CloseSvgPalette (GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-  PaletteDisplayed = FALSE;
-  TtaDestroyDialogue ((long int) data);
-  return TRUE;
-}
-#endif /* _GTK */
-
-/*----------------------------------------------------------------------
-  ShowGraphicsPalette displays the Graphics palette
-  ----------------------------------------------------------------------*/
-static void ShowGraphicsPalette (Document doc, View view)
-{
-#ifdef _GTK
-  GtkWidget *w;
-#endif /*_GTK*/
-
-  if (!TtaGetDocumentAccessMode (doc))
-    /* the document is in ReadOnly mode */
-    return;
-
-#if defined(_GTK)
-  if (!PaletteDisplayed)
-    {
-      PaletteDisplayed = TRUE;
-      /* Dialogue box for the graphics palette */
-      TtaNewSheet (GraphDialogue + FormGraph, TtaGetViewFrame (doc, view),
-                   TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
-                   0, NULL, TRUE, 2, 'L', D_DONE);
-      TtaNewIconMenu (GraphDialogue + MenuGraph, GraphDialogue + FormGraph, 0,
-                      NULL, 6, mIcons, FALSE);
-      TtaNewIconMenu (GraphDialogue + MenuGraph1, GraphDialogue + FormGraph, 0,
-                      NULL, 6, &mIcons[6], FALSE);
-      /* do not select the entry because it's not necessary */
-      /*TtaSetMenuForm (GraphDialogue + MenuGraph, 0);*/
-      TtaSetDialoguePosition ();
-    }
-  TtaShowDialogue (GraphDialogue + FormGraph, TRUE);
-
-  w =   CatWidget (GraphDialogue + FormGraph);
-  gtk_signal_connect (GTK_OBJECT (w), 
-                      "delete_event",
-                      GTK_SIGNAL_FUNC (CloseSvgPalette), 
-                      (gpointer)(GraphDialogue + FormGraph));
-
-  gtk_signal_connect (GTK_OBJECT (w), 
-                      "destroy",
-                      GTK_SIGNAL_FUNC (CloseSvgPalette), 
-                      (gpointer)(GraphDialogue + FormGraph));
-#endif /* #if defined(_GTK) */
-#ifdef _WINGUI
-  CreateGraphicsDlgWindow (TtaGetThotWindow (GetWindowNumber (doc, view)));
-#endif /* _WINGUI */
 }
 #endif /* _SVG */
 

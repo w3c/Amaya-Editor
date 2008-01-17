@@ -456,7 +456,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       
       /* Load user's style sheet */
       LoadUserStyleSheet (doc);
-      UpdateStyleList (doc);
 
       /* Set the namespace declaration */
       elType.ElTypeNum = HTML_EL_HTML;
@@ -679,6 +678,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
 #ifdef _WX
   // set the default icon
   TtaSetPageIcon (doc, 1, NULL);
+  UpdateStyleList (doc);
 #endif /* _WX */
   UpdateEditorMenus (doc);
 }
@@ -800,7 +800,6 @@ void NotFoundDoc (char *url, Document doc)
         TtaDeleteTree (doctype, doc);
       /* Load user's style sheet */
       LoadUserStyleSheet (doc);
-      UpdateStyleList (doc);
 
       /* Set the namespace declaration */
       elType.ElTypeNum = HTML_EL_HTML;
@@ -918,6 +917,7 @@ void NotFoundDoc (char *url, Document doc)
   UpdateDoctypeMenu (doc);
   /* the document should be saved */
   TtaSetDocumentUnmodified (doc);
+  UpdateStyleList (doc);
   UpdateEditorMenus (doc);
   TtaSetAccessRight (root, ReadOnly, doc);
 }
@@ -3542,6 +3542,7 @@ void MergeSelectedCells (Document doc, View view)
   TtaSetDocumentModified (doc);
  if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
+ UpdateContextSensitiveMenus (doc, view);
 }
 
 /*----------------------------------------------------------------------
@@ -3636,6 +3637,7 @@ void CellVertShrink (Document doc, View view)
         }
     }
   TtaCloseUndoSequence (doc);
+  UpdateContextSensitiveMenus (doc, view);
 }
 
 /*----------------------------------------------------------------------
@@ -3726,6 +3728,8 @@ void CellHorizShrink (Document doc, View view)
         }
     }
   TtaCloseUndoSequence (doc);
+  UpdateContextSensitiveMenus (doc, view);
+
 }
 
 /*----------------------------------------------------------------------

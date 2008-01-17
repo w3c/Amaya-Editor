@@ -147,11 +147,11 @@ MENUS
 	Views toggle:TZoomIn -> ZoomIn;
 	Views toggle:TZoomOut -> ZoomOut;
 
-	Types button:BParagraph -> CreateParagraph;
+	Types button:BParagraph -> CreateParagraph icon:XHTML_P.png;
 	Types.Heading button:BH1 -> CreateHeading1 icon:XHTML_H1.png;
 	Types.Heading button:BH2 -> CreateHeading2 icon:XHTML_H2.png;
 	Types.Heading button:BH3 -> CreateHeading3 icon:XHTML_H3.png;
-	Types.Heading button:BH4 -> CreateHeading4;
+	Types.Heading button:BH4 -> CreateHeading4 icon:XHTML_H4.png;
 	Types.Heading button:BH5 -> CreateHeading5;
 	Types.Heading button:BH6 -> CreateHeading6;
 	Types.Lists button:BBulletedList -> CreateList icon:XHTML_Bullet.png;
@@ -222,7 +222,7 @@ MENUS
   Types.MathConstruct button:BMultiscripts -> CreateMMULTISCRIPTS icon:MATHML_mscript.png;
   Types.MathConstruct  button:BMatrix -> CreateMTABLE icon:MATHML_matrix.png;
 
-	Types.Form button:BForm -> CreateForm icon:XHTML_form.png;
+	Types.Form button:BForm -> CreateForm;
 	Types.Form Separator;
 	Types.Form button:BPushButton -> CreatePushButton;
 	Types.Form button:BToggle -> CreateToggle icon:XHTML_check.png;
@@ -257,20 +257,20 @@ MENUS
 	Types.StructTypes button:BNoScript -> CreateNOSCRIPT;
 
 	Types button:BDivision -> CreateDivision icon:XHTML_Div.png;
-	Types button:BAddress -> CreateAddress  icon:XHTML_add.png;
+	Types button:BAddress -> CreateAddress;
 	Types button:BBlockQuote -> CreateBlockQuote icon:XHTML_quote.png;
 	Types button:BIFrame -> CreateIFrame;
 	Types button:BRuby -> CreateRuby;
 
-  Style.Align  button:BLeftAlign -> DoLeftAlign;
-  Style.Align  button:BAlignCenter -> DoCenter;
-  Style.Align  button:BRightAlign -> DoRightAlign;
-  Style.Align  button:BJustify -> DoJustify;
-  Style.LineSpacing button:BLineSpacingSingle -> LineSpacingSingle;
-  Style.LineSpacing button:BLineSpacingHalf -> LineSpacingHalf;
-  Style.LineSpacing button:BLineSpacingDouble -> LineSpacingDouble;
-  Style.Indent  button:BIncrease -> MarginLeftIncrease;
-  Style.Indent  button:BDecrease -> MarginLeftDecrease;
+  Style.Align button:BLeftAlign -> DoLeftAlign icon:CSS_left.png;
+  Style.Align button:BAlignCenter -> DoCenter icon:CSS_center.png;
+  Style.Align button:BRightAlign -> DoRightAlign icon:CSS_right.png;
+  Style.Align button:BJustify -> DoJustify icon:CSS_justify.png;
+  Style.LineSpacing button:BLineSpacingSingle -> LineSpacingSingle icon:CSS_s_line.png;
+  Style.LineSpacing button:BLineSpacingHalf -> LineSpacingHalf icon:CSS_h_line.png;
+  Style.LineSpacing button:BLineSpacingDouble -> LineSpacingDouble icon:CSS_d_line.png;
+  Style.Indent  button:BIncrease -> MarginLeftIncrease icon:CSS_indent.png;
+  Style.Indent  button:BDecrease -> MarginLeftDecrease icon:CSS_noindent.png;
   Style Separator;
   Style button:BCSSStyle -> SetCSSStyle icon:css.png;
 	Style button:BCreateClass -> CreateClass;
