@@ -1395,26 +1395,29 @@ HashMap Template_ExpandUnion(XTigerTemplate t, Declaration decl)
               if (node->elem==NULL)
                 node->elem = Template_GetDeclaration(t, (const char*)node->key);
               child = (Declaration) node->elem;
-              /* If element is union, expand it and add content in expanded map.*/
-              if (child->nature==UnionNat)
-              {
-                HashMap         children  = Template_ExpandUnion(t, child);
-                ForwardIterator childIter = HashMap_GetForwardIterator(children);
-                HashMapNode     childNode;
-                ITERATOR_FOREACH(childIter, HashMapNode, childNode)
-                  {
-                    Declaration granchild = (Declaration) childNode->elem;
-                    if (!HashMap_Get(expanded, granchild->name))
-                      HashMap_Set(expanded, granchild->name, granchild);
-                  }
-                TtaFreeMemory(childIter);
-              }
-              else
-              {
-                /* Add it to expanded map.*/
-                if (!HashMap_Get(expanded, child->name))
-                  HashMap_Set(expanded, child->name, child);
-              }
+              if(child)
+                {
+                  /* If element is union, expand it and add content in expanded map.*/
+                  if (child->nature==UnionNat)
+                    {
+                      HashMap         children  = Template_ExpandUnion(t, child);
+                      ForwardIterator childIter = HashMap_GetForwardIterator(children);
+                      HashMapNode     childNode;
+                      ITERATOR_FOREACH(childIter, HashMapNode, childNode)
+                        {
+                          Declaration granchild = (Declaration) childNode->elem;
+                          if (!HashMap_Get(expanded, granchild->name))
+                            HashMap_Set(expanded, granchild->name, granchild);
+                        }
+                      TtaFreeMemory(childIter);
+                    }
+                  else
+                    {
+                      /* Add it to expanded map.*/
+                      if (!HashMap_Get(expanded, child->name))
+                        HashMap_Set(expanded, child->name, child);
+                    }
+                }
             }
           TtaFreeMemory(iter);
           
