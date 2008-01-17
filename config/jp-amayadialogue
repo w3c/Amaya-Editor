@@ -144,94 +144,94 @@
 142 **Superscript (sup)
 143 **Quotation (q)
 144 **BiDi override (bdo)
-145 **Table
-146 **table
-147 **caption
-148 **colgroup
-149 **col
-150 **thead
-151 **tbody
-152 **tfoot
-153 **Change to Data cell (td)
-154 **Change to Heading cell (th)
-155 **&Constructions
-156 **New formula (math)
-157 **Plain text (mtext)
-158 **Identifier (mi)
-159 **Number (mn)
-160 **Operator (mo)
-161 **Space (mspace)
-162 **Character (&xxx;)
-163 **InvisibleTimes
-164 **ApplyFunction
-165 **Root (mroot)
-166 **Square root (msqrt)
-167 **Enclose (menclose)
-168 **Fraction (mfrac)
-169 **Subscript and superscript (msubsup)
-170 **Subscript (msub)
-171 **Superscript (msup)
-172 **Under and over (munderover)
-173 **Under (munder)
-174 **Over (mover)
-175 **Parentheses (mrow)
-176 **Multiscripts (mmultiscripts)
-177 **New matrix (mtable)
-178 **Form
-179 **Insert a form
-180 **Button (input)
-181 **Checkbox (input)
-182 **File selector (input)
-183 **Hidden (input)
-184 **Image (input)...
-185 **Password (input)
-186 **Radio (input)
-187 **Reset (input)
-188 **Submit (input)
-189 **Text (input)
-190 **fieldset
-191 **label
-192 **Menu (option)
-193 **Submenu (optgroup)
-194 **textarea
-195 **Object
-196 **object
-197 **Parameter (param)
-198 **Map area
-199 **Insert a map
-200 **Circle area
-201 **Polygon area
-202 **Rectangle area
-203 **&Structure
-204 **style
-205 **Comment
-206 **base
-207 **meta
-208 **link
-209 **script
-210 **noscript
-211 **Image (img)...
-212 **Division (div)
-213 **Preformatted (pre)
-214 **address
-215 **Horizontal rule (hr)
-216 **Break (br)
+145 **Image (img)...
+146 **Horizontal rule (hr)
+147 **Break (br)
+148 **Table
+149 **table
+150 **caption
+151 **colgroup
+152 **col
+153 **thead
+154 **tbody
+155 **tfoot
+156 **Change to Data cell (td)
+157 **Change to Heading cell (th)
+158 **&Constructions
+159 **New formula (math)
+160 **Plain text (mtext)
+161 **Identifier (mi)
+162 **Number (mn)
+163 **Operator (mo)
+164 **Space (mspace)
+165 **Character (&xxx;)
+166 **InvisibleTimes
+167 **ApplyFunction
+168 **Root (mroot)
+169 **Square root (msqrt)
+170 **Enclose (menclose)
+171 **Fraction (mfrac)
+172 **Subscript and superscript (msubsup)
+173 **Subscript (msub)
+174 **Superscript (msup)
+175 **Under and over (munderover)
+176 **Under (munder)
+177 **Over (mover)
+178 **Parentheses (mrow)
+179 **Multiscripts (mmultiscripts)
+180 **New matrix (mtable)
+181 **Form
+182 **Insert a form
+183 **Button (input)
+184 **Checkbox (input)
+185 **File selector (input)
+186 **Hidden (input)
+187 **Image (input)...
+188 **Password (input)
+189 **Radio (input)
+190 **Reset (input)
+191 **Submit (input)
+192 **Text (input)
+193 **fieldset
+194 **label
+195 **Menu (option)
+196 **Submenu (optgroup)
+197 **textarea
+198 **Object
+199 **object
+200 **Parameter (param)
+201 **Map area
+202 **Insert a map
+203 **Circle area
+204 **Polygon area
+205 **Rectangle area
+206 **&Structure
+207 **style
+208 **Comment
+209 **base
+210 **meta
+211 **link
+212 **script
+213 **noscript
+214 **Division (div)
+215 **Preformatted (pre)
+216 **address
 217 **blockquote
 218 **Inline frame (iframe)
 219 **ruby
-220 **&Style editor...
-221 **Align
-222 **Left
-223 **Center
-224 **Right
-225 **Justify
-226 **Line spacing
-227 **Single
-228 **Half
-229 **Double
-230 **Indent
-231 **Increase
-232 **Decrease
+220 **Align
+221 **Left
+222 **Center
+223 **Right
+224 **Justify
+225 **Line spacing
+226 **Single
+227 **Half
+228 **Double
+229 **Indent
+230 **Increase
+231 **Decrease
+232 **&Style editor...
 233 **Create &rule...
 234 **Show applied style...
 235 **Lin&k...
@@ -248,7 +248,7 @@
 246 **&Add/Remove IDs...
 247 **Chec&k spelling...
 248 **Transfor&m...
-249 **table
+249 **Edit table
 250 **Merge cells
 251 **Join with the cell at the right
 252 **Join with the cell below

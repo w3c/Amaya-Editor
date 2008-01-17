@@ -182,6 +182,10 @@ MENUS
   Types.Font toggle:TQuotation -> SetOnOffQuotation;
   Types.Font toggle:TBDO -> SetOnOffBDO;
 
+	Types button:BImage -> CreateImage icon:XHTML_Image.png;
+	Types button:BRule -> CreateHorizontalRule icon:XHTML_hr.png;
+	Types button:BBreak -> CreateBreak icon: XHTML_br.png;
+	Types button:BPreformatted -> CreatePreformatted;
 	Types.Table button:BTable -> CreateTable icon:XHTML_Table.png;
 	Types.Table Separator;
 	Types.Table button:BCaption -> CreateCaption;
@@ -251,17 +255,12 @@ MENUS
 	Types.StructTypes button:BScript -> InsertScript;
 	Types.StructTypes button:BNoScript -> CreateNOSCRIPT;
 
-	Types button:BImage -> CreateImage icon:XHTML_Image.png;
 	Types button:BDivision -> CreateDivision icon:XHTML_Div.png;
-	Types button:BPreformatted -> CreatePreformatted;
 	Types button:BAddress -> CreateAddress  icon:XHTML_add.png;
-	Types button:BRule -> CreateHorizontalRule icon:XHTML_hr.png;
-	Types button:BBreak -> CreateBreak icon: XHTML_br.png;
 	Types button:BBlockQuote -> CreateBlockQuote icon:XHTML_quote.png;
 	Types button:BIFrame -> CreateIFrame;
 	Types button:BRuby -> CreateRuby;
 
-  Style button:BCSSStyle -> SetCSSStyle icon:css.png;
   Style.Align  button:BLeftAlign -> DoLeftAlign;
   Style.Align  button:BAlignCenter -> DoCenter;
   Style.Align  button:BRightAlign -> DoRightAlign;
@@ -272,6 +271,7 @@ MENUS
   Style.Indent  button:BIncrease -> MarginLeftIncrease;
   Style.Indent  button:BDecrease -> MarginLeftDecrease;
   Style Separator;
+  Style button:BCSSStyle -> SetCSSStyle icon:css.png;
 	Style button:BCreateClass -> CreateClass;
 	Style button:BShowAppliedStyle -> ShowAppliedStyle;
 	Style button:BLinkCSS -> LinkCSS;

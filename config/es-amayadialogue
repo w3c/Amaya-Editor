@@ -144,94 +144,94 @@
 142 Superíndice (sup)
 143 Cita (q)
 144 BiDi override (bdo)
-145 Tabla
-146 Insertar tabla (table)
-147 Leyenda (caption)
-148 Grupo de columnas (colgroup)
-149 Columna (col)
-150 thead
-151 tbody
-152 tfoot
-153 Cambiar a celda de datos (td)
-154 Cambiar a celda de cabecera (th)
-155 &Construcciones
-156 &Nueva fórmula (math)
-157 Texto simple (mtext)
-158 Identificador (mi)
-159 Número (mn)
-160 Operador (mo)
-161 Espacio (mspace)
-162 Carácter (&xxx;)
-163 InvisibleTimes
-164 ApplyFunction
-165 Raíz (mroot)
-166 Raíz cuadrada (msqrt)
-167 Enclose (menclose)
-168 Fracción (mfrac)
-169 Subíndice y superíndice (msubsup)
-170 Subíndice (msub)
-171 Superíndice (msup)
-172 Bajo y sobre (munderover)
-173 Bajo (munder)
-174 Sobre (mover)
-175 Paréntesis (mrow)
-176 Multiscripts (mmultiscripts)
-177 Matriz (mtable)
-178 Formulario
-179 Insertar formulario (form)
-180 Botón (button)
-181 Casilla de verificación (checkbox input)
-182 Selector de archivo (file input)
-183 Oculto (hidden input)
-184 Imagen (image input)...
-185 Contraseña (password input)
-186 Radio (radio input)
-187 Reset (reset input)
-188 Enviar (submit input)
-189 Texto (text input)
-190 Campos (fieldset)
-191 Etiqueta (label)
-192 Menú (select)
-193 Submenú (optgroup)
-194 Área de texto (textarea)
-195 Objeto
-196 Objeto (objet)
-197 Parámetro (param)
-198 Área de mapa
-199 Insertar mapa
-200 Círculo (area)
-201 Polígono (area)
-202 Rectángulo (area)
-203 Es&tructura
-204 Estilo (style)
-205 C&omentario
-206 base
-207 meta
-208 Enlace (link)
-209 script
-210 noscript
-211 Imagen (img)...
-212 División (div)
-213 Pre-formateado (pre)
-214 Dirección (address)
-215 Línea Horizontal (hr)
-216 Salto de línea (br)
+145 Imagen (img)...
+146 Línea Horizontal (hr)
+147 Salto de línea (br)
+148 Tabla
+149 Insertar tabla (table)
+150 Leyenda (caption)
+151 Grupo de columnas (colgroup)
+152 Columna (col)
+153 thead
+154 tbody
+155 tfoot
+156 Cambiar a celda de datos (td)
+157 Cambiar a celda de cabecera (th)
+158 &Construcciones
+159 &Nueva fórmula (math)
+160 Texto simple (mtext)
+161 Identificador (mi)
+162 Número (mn)
+163 Operador (mo)
+164 Espacio (mspace)
+165 Carácter (&xxx;)
+166 InvisibleTimes
+167 ApplyFunction
+168 Raíz (mroot)
+169 Raíz cuadrada (msqrt)
+170 Enclose (menclose)
+171 Fracción (mfrac)
+172 Subíndice y superíndice (msubsup)
+173 Subíndice (msub)
+174 Superíndice (msup)
+175 Bajo y sobre (munderover)
+176 Bajo (munder)
+177 Sobre (mover)
+178 Paréntesis (mrow)
+179 Multiscripts (mmultiscripts)
+180 Matriz (mtable)
+181 Formulario
+182 Insertar formulario (form)
+183 Botón (button)
+184 Casilla de verificación (checkbox input)
+185 Selector de archivo (file input)
+186 Oculto (hidden input)
+187 Imagen (image input)...
+188 Contraseña (password input)
+189 Radio (radio input)
+190 Reset (reset input)
+191 Enviar (submit input)
+192 Texto (text input)
+193 Campos (fieldset)
+194 Etiqueta (label)
+195 Menú (select)
+196 Submenú (optgroup)
+197 Área de texto (textarea)
+198 Objeto
+199 Objeto (objet)
+200 Parámetro (param)
+201 Área de mapa
+202 Insertar mapa
+203 Círculo (area)
+204 Polígono (area)
+205 Rectángulo (area)
+206 Es&tructura
+207 Estilo (style)
+208 C&omentario
+209 base
+210 meta
+211 Enlace (link)
+212 script
+213 noscript
+214 División (div)
+215 Pre-formateado (pre)
+216 Dirección (address)
 217 blockquote
 218 Inline frame (iframe)
 219 ruby
-220 &Estilo...
-221 **Align
-222 **Left
-223 **Center
-224 **Right
-225 **Justify
-226 **Line spacing
-227 **Single
-228 **Half
-229 **Double
-230 **Indent
-231 **Increase
-232 **Decrease
+220 **Align
+221 **Left
+222 **Center
+223 **Right
+224 **Justify
+225 **Line spacing
+226 **Single
+227 **Half
+228 **Double
+229 **Indent
+230 **Increase
+231 **Decrease
+232 &Estilo...
 233 Crear &regla...
 234 &Mostrar estilo aplicado...
 235 &Enlazar hoja de estilo...
@@ -248,7 +248,7 @@
 246 &Crear/Borrar atributos id...
 247 &Revisar ortografía...
 248 &Transformar...
-249 Tabla
+249 **Edit table
 250 Unir
 251 Unir con celda derecha
 252 Unir con celda inferior

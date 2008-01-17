@@ -144,94 +144,94 @@
 142 Hochgestellt (sup)
 143 Zitat (q)
 144 Textrichtung LTR/RTL (bdo)
-145 Tabelle
-146 Neue Tabelle (table)
-147 Überschrift (caption)
-148 Spaltengruppe (colgroup)
-149 Spalte (col)
-150 Kopf (thead)
-151 Körper (tbody)
-152 Fußzeile (tfoot)
-153 Umwandeln in Datenzelle (td)
-154 Umwandeln in Titelzelle (th)
-155 &Konstrukte
-156 Neue Formel (math)
-157 Text (mtext)
-158 Bezeichner (mi)
-159 Zahl (mn)
-160 Operator (mo)
-161 Leerzeichen (mspace)
-162 Zeichen (&xxx;)
-163 Unsichtbare Multiplikation
-164 Angewendete Funktion
-165 Wurzel (mroot)
-166 Quadratwurzel (msqrt)
-167 Einschluß (menclose)
-168 Bruch (mfrac)
-169 Index und Exponent (msubsup)
-170 Index (msub)
-171 Exponent (msup)
-172 Unter- und Überschrift (munderover)
-173 Unterschrift (munder)
-174 Überschrift (mover)
-175 Klammern (mrow)
-176 Vierfachindex (mmultiscripts)
-177 Matrix (mtable)
-178 Formular
-179 Neues Formular (form)
-180 Knopf (button)
-181 Ankreuzkästchen (checkbox)
-182 Feld für Dateiname (file)
-183 Verborgenes Feld (hidden)
-184 Bild (image)
-185 Kennwortfeld (password)
-186 Auswahlknopf (radio)
-187 Zurücksetzen (reset)
-188 Absenden (submit)
-189 Eingabezeile (input)
-190 Feldgruppe (fieldset)
-191 Feldbeschriftung (label)
-192 Menü (option)
-193 Untermenü (optgroup)
-194 Eingabefeld (textarea)
-195 Objekt
-196 Objekt (object)
-197 Parameter (param)
-198 Bildbereich
-199 Abbildung einfügen
-200 Kreis (area)
-201 Polygon (area)
-202 Rechteck (area)
-203 &Struktur
-204 Inline-Style (style)
-205 Kommentar
-206 Basisadresse (base)
-207 Meta-Information (meta)
-208 Verweis (link)
-209 Inline-Script (script)
-210 Skripalternative (noscript)
-211 Bild (img)...
-212 Ábschnitt (div)
-213 Formatierter Text (pre)
-214 Autorenadresse (address)
-215 Horizontale Linie (hr)
-216 Zeilenumbruch (br)
+145 Bild (img)...
+146 Horizontale Linie (hr)
+147 Zeilenumbruch (br)
+148 Tabelle
+149 Neue Tabelle (table)
+150 Überschrift (caption)
+151 Spaltengruppe (colgroup)
+152 Spalte (col)
+153 Kopf (thead)
+154 Körper (tbody)
+155 Fußzeile (tfoot)
+156 Umwandeln in Datenzelle (td)
+157 Umwandeln in Titelzelle (th)
+158 &Konstrukte
+159 Neue Formel (math)
+160 Text (mtext)
+161 Bezeichner (mi)
+162 Zahl (mn)
+163 Operator (mo)
+164 Leerzeichen (mspace)
+165 Zeichen (&xxx;)
+166 Unsichtbare Multiplikation
+167 Angewendete Funktion
+168 Wurzel (mroot)
+169 Quadratwurzel (msqrt)
+170 Einschluß (menclose)
+171 Bruch (mfrac)
+172 Index und Exponent (msubsup)
+173 Index (msub)
+174 Exponent (msup)
+175 Unter- und Überschrift (munderover)
+176 Unterschrift (munder)
+177 Überschrift (mover)
+178 Klammern (mrow)
+179 Vierfachindex (mmultiscripts)
+180 Matrix (mtable)
+181 Formular
+182 Neues Formular (form)
+183 Knopf (button)
+184 Ankreuzkästchen (checkbox)
+185 Feld für Dateiname (file)
+186 Verborgenes Feld (hidden)
+187 Bild (image)
+188 Kennwortfeld (password)
+189 Auswahlknopf (radio)
+190 Zurücksetzen (reset)
+191 Absenden (submit)
+192 Eingabezeile (input)
+193 Feldgruppe (fieldset)
+194 Feldbeschriftung (label)
+195 Menü (option)
+196 Untermenü (optgroup)
+197 Eingabefeld (textarea)
+198 Objekt
+199 Objekt (object)
+200 Parameter (param)
+201 Bildbereich
+202 Abbildung einfügen
+203 Kreis (area)
+204 Polygon (area)
+205 Rechteck (area)
+206 &Struktur
+207 Inline-Style (style)
+208 Kommentar
+209 Basisadresse (base)
+210 Meta-Information (meta)
+211 Verweis (link)
+212 Inline-Script (script)
+213 Skripalternative (noscript)
+214 Ábschnitt (div)
+215 Formatierter Text (pre)
+216 Autorenadresse (address)
 217 Eingerücktes Zitat (blockquote)
 218 Inline-Frame (iframe)
 219 Ruby
-220 CSS &Stil
-221 **Align
-222 **Left
-223 **Center
-224 **Right
-225 **Justify
-226 **Line spacing
-227 **Single
-228 **Half
-229 **Double
-230 **Indent
-231 **Increase
-232 **Decrease
+220 **Align
+221 **Left
+222 **Center
+223 **Right
+224 **Justify
+225 **Line spacing
+226 **Single
+227 **Half
+228 **Double
+229 **Indent
+230 **Increase
+231 **Decrease
+232 CSS &Stil
 233 Regel erzeugen...
 234 Zugewiesenes Format anzeigen...
 235 Verknüpfen...
@@ -248,7 +248,7 @@
 246 Id hinzufügen/entfernen...
 247 Rechtschreibprüfung...
 248 Transformieren...
-249 Tabelle
+249 **Edit table
 250 Zusammenfügen die Zellen
 251 Zusammenfügen mit rechter Zelle
 252 Zusammenfügen mit der Zelle darunter

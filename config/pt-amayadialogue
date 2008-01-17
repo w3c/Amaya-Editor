@@ -144,94 +144,94 @@
 142 Expoente (sup)
 143 Citação (q)
 144 Sobrepor BiDi (bdo)
-145 Tabela
-146 tabela
-147 Legenda (caption)
-148 Grupo de colunas (colgroup)
-149 Coluna (col)
-150 Cabeçalho (thead)
-151 Corpo (tbody)
-152 Rodapé (tfoot)
-153 **Change to Data cell (td)
-154 **Change to Heading cell (th)
-155 **&Constructions
-156 Nova fórmula (math)
-157 Texto puro (mtext)
-158 Identificador (mi)
-159 Número (mn)
-160 Operador (mo)
-161 Espaço (mspace)
-162 Carácter (&xxx;)
-163 Multiplicação Invisível (InvisibleTimes)
-164 Aplicar função (ApplyFunction)
-165 Raiz (mroot)
-166 Raiz quadrada (msqrt)
-167 Englobar (menclose)
-168 Fração (mfrac)
-169 Índice e Expoente (msubsup)
-170 Índice (msub)
-171 Expoente (msup)
-172 Sob e sobre (munderover)
-173 Sob (munder)
-174 Sobre (mover)
-175 Parêntesis (mrow)
-176 Multiscripts (mmultiscripts)
-177 Matriz (mtable)
-178 Formulário
-179 Formulário
-180 Botão (input)
-181 Caixa de verificação (Checkbox) (input)
-182 Seletor de arquivo (input)
-183 Oculto (input)
-184 Imagem (input)...
-185 Senha (password) (input)
-186 Botão Rádio (input)
-187 Reinicialização (reset) (input)
-188 Submeter (input)
-189 Texto (input)
-190 Grupo de campos (fieldset)
-191 Etiqueta (label)
-192 Menu (option)
-193 Submenu (optgroup)
-194 Área de texto (textarea)
-195 Objeto
-196 objeto
-197 Parâmetro (param)
-198 **Map area
-199 **Insert a map
-200 Círculo (area)
-201 Polígono (area)
-202 Retângulo (area)
-203 &Estrutura
-204 estilo
-205 Comentário
-206 base
-207 meta
-208 enlace (link)
-209 script
-210 noscript
-211 Imagem (img)...
-212 Divisão (div)
-213 Preformatado (pre)
-214 endereço
-215 Linha horizontal (hr)
-216 Quebra de linha (br)
+145 Imagem (img)...
+146 Linha horizontal (hr)
+147 Quebra de linha (br)
+148 Tabela
+149 tabela
+150 Legenda (caption)
+151 Grupo de colunas (colgroup)
+152 Coluna (col)
+153 Cabeçalho (thead)
+154 Corpo (tbody)
+155 Rodapé (tfoot)
+156 **Change to Data cell (td)
+157 **Change to Heading cell (th)
+158 **&Constructions
+159 Nova fórmula (math)
+160 Texto puro (mtext)
+161 Identificador (mi)
+162 Número (mn)
+163 Operador (mo)
+164 Espaço (mspace)
+165 Carácter (&xxx;)
+166 Multiplicação Invisível (InvisibleTimes)
+167 Aplicar função (ApplyFunction)
+168 Raiz (mroot)
+169 Raiz quadrada (msqrt)
+170 Englobar (menclose)
+171 Fração (mfrac)
+172 Índice e Expoente (msubsup)
+173 Índice (msub)
+174 Expoente (msup)
+175 Sob e sobre (munderover)
+176 Sob (munder)
+177 Sobre (mover)
+178 Parêntesis (mrow)
+179 Multiscripts (mmultiscripts)
+180 Matriz (mtable)
+181 Formulário
+182 Formulário
+183 Botão (input)
+184 Caixa de verificação (Checkbox) (input)
+185 Seletor de arquivo (input)
+186 Oculto (input)
+187 Imagem (input)...
+188 Senha (password) (input)
+189 Botão Rádio (input)
+190 Reinicialização (reset) (input)
+191 Submeter (input)
+192 Texto (input)
+193 Grupo de campos (fieldset)
+194 Etiqueta (label)
+195 Menu (option)
+196 Submenu (optgroup)
+197 Área de texto (textarea)
+198 Objeto
+199 objeto
+200 Parâmetro (param)
+201 **Map area
+202 **Insert a map
+203 Círculo (area)
+204 Polígono (area)
+205 Retângulo (area)
+206 &Estrutura
+207 estilo
+208 Comentário
+209 base
+210 meta
+211 enlace (link)
+212 script
+213 noscript
+214 Divisão (div)
+215 Preformatado (pre)
+216 endereço
 217 Citação (blockquote)
 218 Quadro em linha (iframe)
 219 rubi
-220 **&Style editor...
-221 **Align
-222 **Left
-223 **Center
-224 **Right
-225 **Justify
-226 **Line spacing
-227 **Single
-228 **Half
-229 **Double
-230 **Indent
-231 **Increase
-232 **Decrease
+220 **Align
+221 **Left
+222 **Center
+223 **Right
+224 **Justify
+225 **Line spacing
+226 **Single
+227 **Half
+228 **Double
+229 **Indent
+230 **Increase
+231 **Decrease
+232 **&Style editor...
 233 Criar regra...
 234 **Show applied style...
 235 Ligar...
@@ -248,7 +248,7 @@
 246 Adicionar/Remover IDs...
 247 Verificar ortografia...
 248 Transformar...
-249 tabela
+249 **Edit table
 250 **Merge cells
 251 **Join with the cell at the right
 252 **Join with the cell below

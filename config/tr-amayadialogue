@@ -144,94 +144,94 @@
 142 Üst (sup)
 143 Alıntılama (q)
 144 BiDi (bdo)
-145 Tablo
-146 table
-147 Altyazi (caption)
-148 colgroup
-149 col ……..
-150 thead……
-151 tbody ……..
-152 tfoot………..
-153 **Change to Data cell (td)
-154 **Change to Heading cell (th)
-155 **&Constructions
-156 Yeni formül (math)
-157 Düz yazı (mtext)
-158 Teşhis eden (mi)
-159 Numara (mn)
-160 Oparatör (mo)
-161 Boşluk (mspace)
-162 Karakter (&xxx;)
-163 Kayip zaman
-164 Fonksiyonu onayla
-165 Kök (mroot)
-166 Karekök (msqrt)
-167 Kapsamak (menclose)
-168 Kesir (mfrac)
-169 Alt ve üstyazı (msubsup)
-170 altyazı (msub)
-171 üstyazı (msup)
-172 alt ve üst (munderover)
-173 alt (munder)
-174 üst (mover)
-175 Parantezler (mrow)
-176 Multiscripts (mmultiscripts)
-177 Matris (mtable)
-178 Form
-179 Form (form)
-180 Düğme (giriş = input)
-181 Değiştir (input)
-182 Dosya seçili (input)
-183 Gizli (input)
-184 Görüntü (input)...
-185 şifre(input)(sifre)
-186 Radio düğmesi (input)
-187 Sıfırlamak (input)
-188 Onayla (input)
-189 Metin girişi (input)
-190 fieldset
-191 label
-192 Seçenek (option)
-193 Alt-menü
-194 Metin alanı (textarea)
-195 Nesne
-196 Nesne (object)
-197 Parametre (param)
-198 **Map area
-199 **Insert a map
-200 Daire (area)
-201 Çokgen (area)
-202 Dikdörtgen (area)
-203 &Yapı
-204 Dizayn
-205 Yorum
-206 Temel
-207 meta
-208 Bağlantı (Link)
-209 script
-210 noscript (Script yok)
-211 Görüntü (img)...
-212 Bölme (div)
-213 Tekrar sekillendirilmi (pre)
-214 Address
-215 Yatay çizgi (hr)
-216 Kesme (br)
+145 Görüntü (img)...
+146 Yatay çizgi (hr)
+147 Kesme (br)
+148 Tablo
+149 table
+150 Altyazi (caption)
+151 colgroup
+152 col ……..
+153 thead……
+154 tbody ……..
+155 tfoot………..
+156 **Change to Data cell (td)
+157 **Change to Heading cell (th)
+158 **&Constructions
+159 Yeni formül (math)
+160 Düz yazı (mtext)
+161 Teşhis eden (mi)
+162 Numara (mn)
+163 Oparatör (mo)
+164 Boşluk (mspace)
+165 Karakter (&xxx;)
+166 Kayip zaman
+167 Fonksiyonu onayla
+168 Kök (mroot)
+169 Karekök (msqrt)
+170 Kapsamak (menclose)
+171 Kesir (mfrac)
+172 Alt ve üstyazı (msubsup)
+173 altyazı (msub)
+174 üstyazı (msup)
+175 alt ve üst (munderover)
+176 alt (munder)
+177 üst (mover)
+178 Parantezler (mrow)
+179 Multiscripts (mmultiscripts)
+180 Matris (mtable)
+181 Form
+182 Form (form)
+183 Düğme (giriş = input)
+184 Değiştir (input)
+185 Dosya seçili (input)
+186 Gizli (input)
+187 Görüntü (input)...
+188 şifre(input)(sifre)
+189 Radio düğmesi (input)
+190 Sıfırlamak (input)
+191 Onayla (input)
+192 Metin girişi (input)
+193 fieldset
+194 label
+195 Seçenek (option)
+196 Alt-menü
+197 Metin alanı (textarea)
+198 Nesne
+199 Nesne (object)
+200 Parametre (param)
+201 **Map area
+202 **Insert a map
+203 Daire (area)
+204 Çokgen (area)
+205 Dikdörtgen (area)
+206 &Yapı
+207 Dizayn
+208 Yorum
+209 Temel
+210 meta
+211 Bağlantı (Link)
+212 script
+213 noscript (Script yok)
+214 Bölme (div)
+215 Tekrar sekillendirilmi (pre)
+216 Address
 217 Bloğu aktar (blockquote)
 218 çizgili çerçeve (iframe)
 219 ruby
-220 **&Style editor...
-221 **Align
-222 **Left
-223 **Center
-224 **Right
-225 **Justify
-226 **Line spacing
-227 **Single
-228 **Half
-229 **Double
-230 **Indent
-231 **Increase
-232 **Decrease
+220 **Align
+221 **Left
+222 **Center
+223 **Right
+224 **Justify
+225 **Line spacing
+226 **Single
+227 **Half
+228 **Double
+229 **Indent
+230 **Increase
+231 **Decrease
+232 **&Style editor...
 233 Kural yarat...
 234 **Show applied style...
 235 Bağlantı
@@ -248,7 +248,7 @@
 246 IDs ekle/sil
 247 Yazım hataları ara...
 248 Dönüştür
-249 Table
+249 **Edit table
 250 **Merge cells
 251 **Join with the cell at the right
 252 **Join with the cell below

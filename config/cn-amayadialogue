@@ -144,94 +144,94 @@
 142 上标 (sup)
 143 Quotation 引用 (q)
 144 文字反排 (bdo)
-145 TABLE 表格
-146 table
-147 caption
-148 colgroup
-149 col
-150 thead
-151 tbody
-152 tfoot
-153 改为数据单元格 (td)
-154 改为表头单元格 (th)
-155 构架(&C)
-156 新建数学公式 (math)
-157 普通文本 (mtext)
-158 识别符 (mi)
-159 数字 (mn)
-160 算符 (mo)
-161 空格 (mspace)
-162 特殊字符 (&xxx;)
-163 不可见次数
-164 采用函数
-165 根 (mroot)
-166 平方根 (msqrt)
-167 封装 (menclose)
-168 分数 (mfrac)
-169 上标下标 (msubsup)
-170 下标 (msub)
-171 上标 (msup)
-172 顶部底部标记 (munderover)
-173 底部标记 (munder)
-174 顶部标记 (mover)
-175 括号 (mrow)
-176 多重标记 (mmultiscripts)
-177 新建矩阵 (mtable)
-178 FORM 表单
-179 插入 FORM 表单
-180 Button (input)
-181 Checkbox (input)
-182 File selector (input)
-183 Hidden (input)
-184 Image (input)...
-185 Password (input)
-186 Radio (input)
-187 Reset (input)
-188 Submit (input)
-189 Text (input)
-190 fieldset
-191 label
-192 Menu (option)
-193 Submenu (optgroup)
-194 textarea
-195 OBJECT 对象
-196 object
-197 Parameter (param)
-198 MAP 区域
-199 插入 MAP
-200 圆形区域
-201 多边形区域
-202 矩形区域
-203 框架(&S)
-204 style
-205 Comment
-206 base
-207 meta
-208 link
-209 script
-210 noscript
-211 图片 (img)...
-212 层 (div)
-213 预格式化 (pre)
-214 ADDRESS (address)
-215 水平标尺 (hr)
-216 换行 (br)
+145 图片 (img)...
+146 水平标尺 (hr)
+147 换行 (br)
+148 TABLE 表格
+149 table
+150 caption
+151 colgroup
+152 col
+153 thead
+154 tbody
+155 tfoot
+156 改为数据单元格 (td)
+157 改为表头单元格 (th)
+158 构架(&C)
+159 新建数学公式 (math)
+160 普通文本 (mtext)
+161 识别符 (mi)
+162 数字 (mn)
+163 算符 (mo)
+164 空格 (mspace)
+165 特殊字符 (&xxx;)
+166 不可见次数
+167 采用函数
+168 根 (mroot)
+169 平方根 (msqrt)
+170 封装 (menclose)
+171 分数 (mfrac)
+172 上标下标 (msubsup)
+173 下标 (msub)
+174 上标 (msup)
+175 顶部底部标记 (munderover)
+176 底部标记 (munder)
+177 顶部标记 (mover)
+178 括号 (mrow)
+179 多重标记 (mmultiscripts)
+180 新建矩阵 (mtable)
+181 FORM 表单
+182 插入 FORM 表单
+183 Button (input)
+184 Checkbox (input)
+185 File selector (input)
+186 Hidden (input)
+187 Image (input)...
+188 Password (input)
+189 Radio (input)
+190 Reset (input)
+191 Submit (input)
+192 Text (input)
+193 fieldset
+194 label
+195 Menu (option)
+196 Submenu (optgroup)
+197 textarea
+198 OBJECT 对象
+199 object
+200 Parameter (param)
+201 MAP 区域
+202 插入 MAP
+203 圆形区域
+204 多边形区域
+205 矩形区域
+206 框架(&S)
+207 style
+208 Comment
+209 base
+210 meta
+211 link
+212 script
+213 noscript
+214 层 (div)
+215 预格式化 (pre)
+216 ADDRESS (address)
 217 区域引用 (blockquote)
 218 内嵌 frame (iframe)
 219 ruby
-220 CSS样式(&S)...
-221 **Align
-222 **Left
-223 **Center
-224 **Right
-225 **Justify
-226 **Line spacing
-227 **Single
-228 **Half
-229 **Double
-230 **Indent
-231 **Increase
-232 **Decrease
+220 **Align
+221 **Left
+222 **Center
+223 **Right
+224 **Justify
+225 **Line spacing
+226 **Single
+227 **Half
+228 **Double
+229 **Indent
+230 **Increase
+231 **Decrease
+232 CSS样式(&S)...
 233 创建规则(&R)...
 234 显示已应用的样式...
 235 链接(&K)...
@@ -248,7 +248,7 @@
 246 添加/删除 ID(&A)...
 247 拼写检查(&K)...
 248 转换(&M)...
-249 Table
+249 **Edit table
 250 **Merge cells
 251 与右侧单元格合并
 252 与下方单元格合并

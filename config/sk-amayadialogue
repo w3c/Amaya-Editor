@@ -144,94 +144,94 @@
 142 Horný index (sup)
 143 Krátky úryvok (q)
 144 Smer textu (bdo)
-145 Tabuľka
-146 Tabuľka (table)
-147 Menovka (caption)
-148 Zoskupenie stĺpcov (colgroup)
-149 Stĺpce (col)
-150 Hlavička tabuľky (thead)
-151 Telo tabuľky (tbody)
-152 Päta tabuľky (tfoot)
-153 Zmeniť na bunku s dátami (dt)
-154 Zmeniť na bunku s nadpisom (th)
-155 &Konštrukcie
-156 Nový vzorec (math)
-157 Text (mtext)
-158 Identifikátor (mi)
-159 Číslo (mn)
-160 Operátor (mo)
-161 Medzera (mspace)
-162 Znaky (&xxx;)
-163 Neviditeľný multiplikátor (InvisibleTimes)
-164 Aplikovanie funkcie (ApplyFunction)
-165 Odmocnina (mroot)
-166 Druhá odmocnina (msqrt)
-167 Uzatvorenie (menclose)
-168 Zlomok (mfrac)
-169 Horný a dolný index (msubsup)
-170 Dolný index(msub)
-171 Horný index (msup)
-172 Horná a dolná medza (munderover)
-173 Horná medza (munder)
-174 Dolná medza (mover)
-175 Zátvorky (mrow)
-176 Multi index (mmultiscripts)
-177 Nová matica (mtable)
-178 Formulár
-179 Vložiť formulár (form)
-180 Tlačidlo (input)
-181 Začiarkávacie políčko (input)
-182 Výber súboru (input)
-183 Skryté pole (input)
-184 Obrázok (input)
-185 Heslo (input)
-186 Prepínacie políčko (input)
-187 Tlačidlo Obnoviť (input)
-188 Tlačidlo Odoslať (input)
-189 Textové pole (input)
-190 Zoskupenie polí (fieldset)
-191 Menovka (label)
-192 Rozbaľovacie pole (option)
-193 Zoskupenie v roz. poli (optgroup)
-194 Textová oblasť (textarea)
-195 Objekt
-196 Objekt (object)
-197 Parameter (param)
-198 Oblasť obrázka
-199 Vložiť oblasť (map)
-200 Kruhová oblasť (area)
-201 Mnohouholníková oblasť (area)
-202 Obdĺžnikova oblasť (area)
-203 &Štruktúra
-204 Vložiť CSS pravidlá (style)
-205 Poznámka
-206 Základ pre relatívne odkazy (base)
-207 Vložiť meta značku (meta)
-208 Vložiť prepojenie (link)
-209 Vložiť skript (script)
-210 Alternatíva pre skript (noscript)
-211 Obrázok (img)
-212 Oddelenie, vrstva (div)
-213 Predformátovaný text (pre)
-214 Adresa (address)
-215 Vodorovný oddelovač (hr)
-216 Zalomenie riadka (br)
+145 Obrázok (img)
+146 Vodorovný oddelovač (hr)
+147 Zalomenie riadka (br)
+148 Tabuľka
+149 Tabuľka (table)
+150 Menovka (caption)
+151 Zoskupenie stĺpcov (colgroup)
+152 Stĺpce (col)
+153 Hlavička tabuľky (thead)
+154 Telo tabuľky (tbody)
+155 Päta tabuľky (tfoot)
+156 Zmeniť na bunku s dátami (dt)
+157 Zmeniť na bunku s nadpisom (th)
+158 &Konštrukcie
+159 Nový vzorec (math)
+160 Text (mtext)
+161 Identifikátor (mi)
+162 Číslo (mn)
+163 Operátor (mo)
+164 Medzera (mspace)
+165 Znaky (&xxx;)
+166 Neviditeľný multiplikátor (InvisibleTimes)
+167 Aplikovanie funkcie (ApplyFunction)
+168 Odmocnina (mroot)
+169 Druhá odmocnina (msqrt)
+170 Uzatvorenie (menclose)
+171 Zlomok (mfrac)
+172 Horný a dolný index (msubsup)
+173 Dolný index(msub)
+174 Horný index (msup)
+175 Horná a dolná medza (munderover)
+176 Horná medza (munder)
+177 Dolná medza (mover)
+178 Zátvorky (mrow)
+179 Multi index (mmultiscripts)
+180 Nová matica (mtable)
+181 Formulár
+182 Vložiť formulár (form)
+183 Tlačidlo (input)
+184 Začiarkávacie políčko (input)
+185 Výber súboru (input)
+186 Skryté pole (input)
+187 Obrázok (input)
+188 Heslo (input)
+189 Prepínacie políčko (input)
+190 Tlačidlo Obnoviť (input)
+191 Tlačidlo Odoslať (input)
+192 Textové pole (input)
+193 Zoskupenie polí (fieldset)
+194 Menovka (label)
+195 Rozbaľovacie pole (option)
+196 Zoskupenie v roz. poli (optgroup)
+197 Textová oblasť (textarea)
+198 Objekt
+199 Objekt (object)
+200 Parameter (param)
+201 Oblasť obrázka
+202 Vložiť oblasť (map)
+203 Kruhová oblasť (area)
+204 Mnohouholníková oblasť (area)
+205 Obdĺžnikova oblasť (area)
+206 &Štruktúra
+207 Vložiť CSS pravidlá (style)
+208 Poznámka
+209 Základ pre relatívne odkazy (base)
+210 Vložiť meta značku (meta)
+211 Vložiť prepojenie (link)
+212 Vložiť skript (script)
+213 Alternatíva pre skript (noscript)
+214 Oddelenie, vrstva (div)
+215 Predformátovaný text (pre)
+216 Adresa (address)
 217 Úryvok (blockquote)
 218 Plávajúci rámec (iframe)
 219 Ruby poznámka (ruby)
-220 CSS &pravidlá...
-221 **Align
-222 **Left
-223 **Center
-224 **Right
-225 **Justify
-226 **Line spacing
-227 **Single
-228 **Half
-229 **Double
-230 **Indent
-231 **Increase
-232 **Decrease
+220 **Align
+221 **Left
+222 **Center
+223 **Right
+224 **Justify
+225 **Line spacing
+226 **Single
+227 **Half
+228 **Double
+229 **Indent
+230 **Increase
+231 **Decrease
+232 CSS &pravidlá...
 233 Vytvoriť &pravidlo...
 234 Zobraziť použité štýly...
 235 P&ripojiť súbor s CSS...
@@ -248,7 +248,7 @@
 246 &Pridať/odstrániť ID...
 247 Kontrola pravopi&su
 248 T&ransformovať
-249 Tabuľka
+249 **Edit table
 250 Zlúčiť
 251 Zlúčiť s pravou bunkou
 252 Zlúčiť s dolnou bunkou

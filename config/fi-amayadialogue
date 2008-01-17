@@ -144,94 +144,94 @@
 142 Yläindeksi (sup)
 143 Lainaus/Siteeraus (q)
 144 BiDi syrjäyttävänä (bdo)
-145 Taulukko
-146 taulukko
-147 nimike
-148 pystyriviryhmä
-149 pystyrivi
-150 Taulukon otsikko
-151 Taulukon sisältö
-152 Taulukon alaotsikko
-153 **Change to Data cell (td)
-154 **Change to Heading cell (th)
-155 **&Constructions
-156 Uusi kaava (math)
-157 Teksti (mtext)
-158 Tunniste (mi)
-159 Numero (mn)
-160 Operaattori (mo)
-161 Välilyönti (mspace)
-162 Merkki (&xxx;)
-163 InvisibleTimes
-164 Käytä funktiota
-165 Juuri (mroot)
-166 Neliöjuuri (msqrt)
-167 Sisällytä (menclose)
-168 Murtoluku (mfrac)
-169 Ala- ja yläindeksi (msubsup)
-170 Alaindeksi (msub)
-171 Yläindeksi (msup)
-172 Ylle ja alle (munderover)
-173 Alle (munder)
-174 Yli (mover)
-175 Sulkeet (mrow)
-176 Multiscript (mmultiscripts)
-177 Matriisi (mtable)
-178 Lomake
-179 lomake
-180 Painike (input)
-181 Valintalaatikko (input)
-182 Tiedosto valikko (input)
-183 Piilotettu (input)
-184 Kuva (input)...
-185 Salasana (input)
-186 Pyöreä valintalaatikko (input)
-187 Tyhjennä (input)
-188 Lähetä (input)
-189 Teksti (input)
-190 kenttäasetus
-191 nimike
-192 Valikko (option)
-193 Alavalikko (optgroup)
-194 tekstialue
-195 Objekti
-196 objekti
-197 Parametri (param)
-198 **Map area
-199 **Insert a map
-200 Ympyrä (area)
-201 Monikulmio (area)
-202 Nelikulmio (area)
-203 &Rakenne
-204 tyyli
-205 Merkintä
-206 perus
-207 meta
-208 linkki
-209 skripti
-210 ei skriptiä
-211 Kuva (img)...
-212 Tyhjä rivi (div)
-213 Valmiiksi muotoiltu (pre)
-214 osoite
-215 Vaakaviiva (hr)
-216 Rivinvaihto (br)
+145 Kuva (img)...
+146 Vaakaviiva (hr)
+147 Rivinvaihto (br)
+148 Taulukko
+149 taulukko
+150 nimike
+151 pystyriviryhmä
+152 pystyrivi
+153 Taulukon otsikko
+154 Taulukon sisältö
+155 Taulukon alaotsikko
+156 **Change to Data cell (td)
+157 **Change to Heading cell (th)
+158 **&Constructions
+159 Uusi kaava (math)
+160 Teksti (mtext)
+161 Tunniste (mi)
+162 Numero (mn)
+163 Operaattori (mo)
+164 Välilyönti (mspace)
+165 Merkki (&xxx;)
+166 InvisibleTimes
+167 Käytä funktiota
+168 Juuri (mroot)
+169 Neliöjuuri (msqrt)
+170 Sisällytä (menclose)
+171 Murtoluku (mfrac)
+172 Ala- ja yläindeksi (msubsup)
+173 Alaindeksi (msub)
+174 Yläindeksi (msup)
+175 Ylle ja alle (munderover)
+176 Alle (munder)
+177 Yli (mover)
+178 Sulkeet (mrow)
+179 Multiscript (mmultiscripts)
+180 Matriisi (mtable)
+181 Lomake
+182 lomake
+183 Painike (input)
+184 Valintalaatikko (input)
+185 Tiedosto valikko (input)
+186 Piilotettu (input)
+187 Kuva (input)...
+188 Salasana (input)
+189 Pyöreä valintalaatikko (input)
+190 Tyhjennä (input)
+191 Lähetä (input)
+192 Teksti (input)
+193 kenttäasetus
+194 nimike
+195 Valikko (option)
+196 Alavalikko (optgroup)
+197 tekstialue
+198 Objekti
+199 objekti
+200 Parametri (param)
+201 **Map area
+202 **Insert a map
+203 Ympyrä (area)
+204 Monikulmio (area)
+205 Nelikulmio (area)
+206 &Rakenne
+207 tyyli
+208 Merkintä
+209 perus
+210 meta
+211 linkki
+212 skripti
+213 ei skriptiä
+214 Tyhjä rivi (div)
+215 Valmiiksi muotoiltu (pre)
+216 osoite
 217 sisennetty kappale
 218 Sisäinen lomake (iframe)
 219 ruby
-220 **&Style editor...
-221 **Align
-222 **Left
-223 **Center
-224 **Right
-225 **Justify
-226 **Line spacing
-227 **Single
-228 **Half
-229 **Double
-230 **Indent
-231 **Increase
-232 **Decrease
+220 **Align
+221 **Left
+222 **Center
+223 **Right
+224 **Justify
+225 **Line spacing
+226 **Single
+227 **Half
+228 **Double
+229 **Indent
+230 **Increase
+231 **Decrease
+232 **&Style editor...
 233 Tee sääntö...
 234 **Show applied style...
 235 Linkki...
@@ -248,7 +248,7 @@
 246 Lisää/Poista elementti...
 247 Tarkista oikeinkirjoitus...
 248 Muunna...
-249 taulukko
+249 **Edit table
 250 **Merge cells
 251 **Join with the cell at the right
 252 **Join with the cell below

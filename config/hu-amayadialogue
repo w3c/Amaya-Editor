@@ -144,94 +144,94 @@
 142 &Felső index (sup)
 143 &Idézet (q)
 144 &Kétirányúság felülbírálása (bdo)
-145 &Táblázat
-146 &Táblázat (table)
-147 Táblázat&név (caption)
-148 Oszlop&csoport (colgroup)
-149 &Oszlop (col)
-150 Táblázat&fejléc (thead)
-151 Táblázat &szöveg (tbody)
-152 Táblázat&lábléc (tfoot)
-153 &Adatcellává tétel (td)
-154 &Fejléccé tétel (th)
-155 &Szerkezetek
-156 Új &képlet (math)
-157 &Közönséges szöveg (mtext)
-158 &Azonosító (mi)
-159 &Szám (mn)
-160 &Műveleti jel (mo)
-161 &Szóköz (mspace)
-162 &Karakter (&xxx;)
-163 &InvisibleTimes
-164 &ApplyFunction
-165 &Gyök (mroot)
-166 &Négyzetgyök (msqrt)
-167 &Enclose (menclose)
-168 &Tört (mfrac)
-169 Alsó és felső &index (msubsup)
-170 &Alsó index (msub)
-171 &Felső index (msup)
-172 &Alá és fölé (munderover)
-173 &Alá (munder)
-174 &Fölé (mover)
-175 &Zárójel (mrow)
-176 &Multiscripts (mmultiscripts)
-177 Új &mátrix (mtable)
-178 &Űrlap
-179 Űrlap beillesztése
-180 Gomb (input)
-181 Jelölőnégyzet (input)
-182 Fájlválasztó (input)
-183 Rejtett (input)
-184 Kép (input)...
-185 Jelszó (input)
-186 Választógomb (input)
-187 Alaphelyzet (input)
-188 Küldés (input)
-189 Szöveg (input)
-190 Mező (fieldset)
-191 Címke (label)
-192 Menü (option)
-193 Almenü (optgroup)
-194 Szövegmező (textarea)
-195 &Objektum
-196 Objektum (object)
-197 Paraméter (param)
-198 T&érkép terület
-199 Térkép &beillesztése
-200 &Kör
-201 &Sokszög
-202 &Téglalap
-203 &Szerkezet
-204 &Stílus (style)
-205 &Megjegyzés
-206 &Alap (base)
-207 &meta
-208 &Kapocs (link)
-209 &script
-210 &noscript
-211 &Kép (img)...
-212 Fel&osztás (div)
-213 &Előformázott (pre)
-214 &Cím (address)
-215 &Vízszintes vonal (hr)
-216 &Sortörés (br)
+145 &Kép (img)...
+146 &Vízszintes vonal (hr)
+147 &Sortörés (br)
+148 &Táblázat
+149 &Táblázat (table)
+150 Táblázat&név (caption)
+151 Oszlop&csoport (colgroup)
+152 &Oszlop (col)
+153 Táblázat&fejléc (thead)
+154 Táblázat &szöveg (tbody)
+155 Táblázat&lábléc (tfoot)
+156 &Adatcellává tétel (td)
+157 &Fejléccé tétel (th)
+158 &Szerkezetek
+159 Új &képlet (math)
+160 &Közönséges szöveg (mtext)
+161 &Azonosító (mi)
+162 &Szám (mn)
+163 &Műveleti jel (mo)
+164 &Szóköz (mspace)
+165 &Karakter (&xxx;)
+166 &InvisibleTimes
+167 &ApplyFunction
+168 &Gyök (mroot)
+169 &Négyzetgyök (msqrt)
+170 &Enclose (menclose)
+171 &Tört (mfrac)
+172 Alsó és felső &index (msubsup)
+173 &Alsó index (msub)
+174 &Felső index (msup)
+175 &Alá és fölé (munderover)
+176 &Alá (munder)
+177 &Fölé (mover)
+178 &Zárójel (mrow)
+179 &Multiscripts (mmultiscripts)
+180 Új &mátrix (mtable)
+181 &Űrlap
+182 Űrlap beillesztése
+183 Gomb (input)
+184 Jelölőnégyzet (input)
+185 Fájlválasztó (input)
+186 Rejtett (input)
+187 Kép (input)...
+188 Jelszó (input)
+189 Választógomb (input)
+190 Alaphelyzet (input)
+191 Küldés (input)
+192 Szöveg (input)
+193 Mező (fieldset)
+194 Címke (label)
+195 Menü (option)
+196 Almenü (optgroup)
+197 Szövegmező (textarea)
+198 &Objektum
+199 Objektum (object)
+200 Paraméter (param)
+201 T&érkép terület
+202 Térkép &beillesztése
+203 &Kör
+204 &Sokszög
+205 &Téglalap
+206 &Szerkezet
+207 &Stílus (style)
+208 &Megjegyzés
+209 &Alap (base)
+210 &meta
+211 &Kapocs (link)
+212 &script
+213 &noscript
+214 Fel&osztás (div)
+215 &Előformázott (pre)
+216 &Cím (address)
 217 &Blokkidézet (blockquote)
 218 &Sorbeli keret (iframe)
 219 &Ruby
-220 CSS &Stílus...
-221 **Align
-222 **Left
-223 **Center
-224 **Right
-225 **Justify
-226 **Line spacing
-227 **Single
-228 **Half
-229 **Double
-230 **Indent
-231 **Increase
-232 **Decrease
+220 **Align
+221 **Left
+222 **Center
+223 **Right
+224 **Justify
+225 **Line spacing
+226 **Single
+227 **Half
+228 **Double
+229 **Indent
+230 **Increase
+231 **Decrease
+232 CSS &Stílus...
 233 &Szabály létrehozása...
 234 &Alkalmazott stílusok mutatása...
 235 &Kapocs...
@@ -248,7 +248,7 @@
 246 &Azonosítók (id) hozzáadása/törlése...
 247 Szó&elemző...
 248 &Átalakítás...
-249 Táblázat
+249 **Edit table
 250 Egyesítés
 251 Egyesítés a &jobbra lévő cellával
 252 Egyesítés az &alatta lévő cellával
