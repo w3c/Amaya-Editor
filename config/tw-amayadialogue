@@ -147,189 +147,190 @@
 145 圖片 (img)...
 146 水平標尺 (hr)
 147 換行 (br)
-148 TABLE 表格
+148 預格式化 (pre)
 149 table
-150 caption
-151 colgroup
-152 col
-153 thead
-154 tbody
-155 tfoot
-156 改為數據單元格 (td)
-157 改為表頭單元格 (th)
-158 構架(&C)
-159 新建數學公式 (math)
-160 普通文本 (mtext)
-161 識別符 (mi)
-162 數字 (mn)
-163 算符 (mo)
-164 空格 (mspace)
-165 特殊字符 (&xxx;)
-166 不可見次數
-167 采用函數
-168 根 (mroot)
-169 平方根 (msqrt)
-170 封裝 (menclose)
-171 分數 (mfrac)
-172 上標下標 (msubsup)
-173 下標 (msub)
-174 上標 (msup)
-175 頂部底部標記 (munderover)
-176 底部標記 (munder)
-177 頂部標記 (mover)
-178 括號 (mrow)
-179 多重標記 (mmultiscripts)
-180 新建矩陣 (mtable)
-181 FORM 表單
-182 插入 FORM 表單
-183 Button (input)
-184 Checkbox (input)
-185 File selector (input)
-186 Hidden (input)
-187 Image (input)...
-188 Password (input)
-189 Radio (input)
-190 Reset (input)
-191 Submit (input)
-192 Text (input)
-193 fieldset
-194 label
-195 Menu (option)
-196 Submenu (optgroup)
-197 textarea
-198 OBJECT 對象
-199 object
-200 Parameter (param)
-201 MAP 區域
-202 插入 MAP
-203 圓形區域
-204 多邊形區域
-205 矩形區域
-206 框架(&S)
-207 style
-208 Comment
-209 base
-210 meta
-211 link
-212 script
-213 noscript
-214 層 (div)
-215 預格式化 (pre)
-216 ADDRESS (address)
-217 區域引用 (blockquote)
-218 內嵌 frame (iframe)
-219 ruby
-220 **Align
-221 **Left
-222 **Center
-223 **Right
-224 **Justify
-225 **Line spacing
-226 **Single
-227 **Half
-228 **Double
-229 **Indent
-230 **Increase
-231 **Decrease
-232 CSS樣式(&S)...
-233 創建規則(&R)...
-234 顯示已應用的樣式...
-235 鏈接(&K)...
-236 打開(&N)...
-237 禁用(&D)...
-238 啟用(&E)...
-239 移除(&V)...
-240 復制地址
-241 粘貼地址
-242 鏈接到上個目標(&L)
-243 創建或更改鏈接(&C)...
-244 創建目標(&T)
-245 刪除 anchor(&D)
-246 添加/刪除 ID(&A)...
-247 拼寫檢查(&K)...
-248 轉換(&M)...
-249 **Edit table
-250 **Merge cells
-251 與右側單元格合并
-252 與下方單元格合并
-253 收縮水平范圍
-254 收縮垂直范圍
-255 選擇該行
-256 插入新行
-257 附加一行
-258 選擇該列
-259 插入新列
-260 附加一列
-261 粘貼在前
-262 粘貼在后
-263 更改標題...
-264 改變文檔類型
-265 刪除doctype聲明
-266 添加doctype聲明
-267 改為 XHTML 1.1
-268 改為 XHTML 1.0 Transitional
-269 改為 XHTML 1.0 Strict
-270 改為 XHTML 1.0 Basic
-271 改為 HTML 4.01 Transitional
-272 改為 HTML 4.01 Strict
-273 區域統計(&S)
-274 生成內容列表(&G)
-275 制作書籍(&M)
-276 插入時間戳
-277 **Graphics
-278 顯示圖形庫
-279 添加選中圖形
-280 注釋
-281 為選擇區作注釋
-282 為文檔作注釋
-283 移動到選擇區
-284 存儲選擇區為 XPointer(&X)
-285 移動到已存儲的 XPointer
-286 答復注釋
-287 提交到服務器
-288 刪除
-289 載入
-290 自定義查詢...
-291 本地過濾器...
-292 協作(&O)
-293 鎖定資源...
-294 取消鎖定資源...
-295 查看資源屬性...
-296 復制鎖定信息...
-297 鎖定了嗎?
-298 &Javascript/DOM
-299 **Enable/Disable
-300 **Execute a command
-301 **Execute an external script
-302 **Add an external script
-303 **Insert a script
-304 關于 Amaya
-305 關于 Amaya at W3C
-306 索引
-307 Browsing
-308 Views
-309 Selecting
-310 Document
-311 Creating elements
-312 Attributes
-313 Characters
-314 **Templates
-315 Restructuring
-316 Links
-317 Tables
-318 Image maps
-319 Math
-320 Graphics
-321 XML support
-322 Style sheets
-323 Searching
-324 Spell Checking
-325 Publishing
-326 協作
-327 Printing
-328 Numbering
-329 Making books
-330 Annotations
-331 Configuring
-332 ShortCuts
-333 Accessibility in Amaya
+150 TABLE 表格
+151 table
+152 caption
+153 colgroup
+154 col
+155 thead
+156 tbody
+157 tfoot
+158 改為數據單元格 (td)
+159 改為表頭單元格 (th)
+160 構架(&C)
+161 新建數學公式 (math)
+162 普通文本 (mtext)
+163 識別符 (mi)
+164 數字 (mn)
+165 算符 (mo)
+166 空格 (mspace)
+167 特殊字符 (&xxx;)
+168 不可見次數
+169 采用函數
+170 根 (mroot)
+171 平方根 (msqrt)
+172 封裝 (menclose)
+173 分數 (mfrac)
+174 上標下標 (msubsup)
+175 下標 (msub)
+176 上標 (msup)
+177 頂部底部標記 (munderover)
+178 底部標記 (munder)
+179 頂部標記 (mover)
+180 括號 (mrow)
+181 多重標記 (mmultiscripts)
+182 新建矩陣 (mtable)
+183 FORM 表單
+184 插入 FORM 表單
+185 Button (input)
+186 Checkbox (input)
+187 File selector (input)
+188 Hidden (input)
+189 Image (input)...
+190 Password (input)
+191 Radio (input)
+192 Reset (input)
+193 Submit (input)
+194 Text (input)
+195 fieldset
+196 label
+197 Menu (option)
+198 Submenu (optgroup)
+199 textarea
+200 OBJECT 對象
+201 object
+202 Parameter (param)
+203 MAP 區域
+204 插入 MAP
+205 圓形區域
+206 多邊形區域
+207 矩形區域
+208 框架(&S)
+209 style
+210 Comment
+211 base
+212 meta
+213 link
+214 script
+215 noscript
+216 層 (div)
+217 ADDRESS (address)
+218 區域引用 (blockquote)
+219 內嵌 frame (iframe)
+220 ruby
+221 **Align
+222 **Left
+223 **Center
+224 **Right
+225 **Justify
+226 **Line spacing
+227 **Single
+228 **Half
+229 **Double
+230 **Indent
+231 **Increase
+232 **Decrease
+233 CSS樣式(&S)...
+234 創建規則(&R)...
+235 顯示已應用的樣式...
+236 鏈接(&K)...
+237 打開(&N)...
+238 禁用(&D)...
+239 啟用(&E)...
+240 移除(&V)...
+241 復制地址
+242 粘貼地址
+243 鏈接到上個目標(&L)
+244 創建或更改鏈接(&C)...
+245 創建目標(&T)
+246 刪除 anchor(&D)
+247 添加/刪除 ID(&A)...
+248 拼寫檢查(&K)...
+249 轉換(&M)...
+250 **Edit table
+251 **Merge cells
+252 與右側單元格合并
+253 與下方單元格合并
+254 收縮水平范圍
+255 收縮垂直范圍
+256 選擇該行
+257 插入新行
+258 附加一行
+259 選擇該列
+260 插入新列
+261 附加一列
+262 粘貼在前
+263 粘貼在后
+264 更改標題...
+265 改變文檔類型
+266 刪除doctype聲明
+267 添加doctype聲明
+268 改為 XHTML 1.1
+269 改為 XHTML 1.0 Transitional
+270 改為 XHTML 1.0 Strict
+271 改為 XHTML 1.0 Basic
+272 改為 HTML 4.01 Transitional
+273 改為 HTML 4.01 Strict
+274 區域統計(&S)
+275 生成內容列表(&G)
+276 制作書籍(&M)
+277 插入時間戳
+278 **Graphics
+279 顯示圖形庫
+280 添加選中圖形
+281 注釋
+282 為選擇區作注釋
+283 為文檔作注釋
+284 移動到選擇區
+285 存儲選擇區為 XPointer(&X)
+286 移動到已存儲的 XPointer
+287 答復注釋
+288 提交到服務器
+289 刪除
+290 載入
+291 自定義查詢...
+292 本地過濾器...
+293 協作(&O)
+294 鎖定資源...
+295 取消鎖定資源...
+296 查看資源屬性...
+297 復制鎖定信息...
+298 鎖定了嗎?
+299 &Javascript/DOM
+300 **Enable/Disable
+301 **Execute a command
+302 **Execute an external script
+303 **Add an external script
+304 **Insert a script
+305 關于 Amaya
+306 關于 Amaya at W3C
+307 索引
+308 Browsing
+309 Views
+310 Selecting
+311 Document
+312 Creating elements
+313 Attributes
+314 Characters
+315 **Templates
+316 Restructuring
+317 Links
+318 Tables
+319 Image maps
+320 Math
+321 Graphics
+322 XML support
+323 Style sheets
+324 Searching
+325 Spell Checking
+326 Publishing
+327 協作
+328 Printing
+329 Numbering
+330 Making books
+331 Annotations
+332 Configuring
+333 ShortCuts
+334 Accessibility in Amaya
