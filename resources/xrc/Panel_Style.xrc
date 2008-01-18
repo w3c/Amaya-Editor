@@ -38,13 +38,12 @@
           <object class="sizeritem">
             <object class="unknown" name="wxID_PANEL_CSS_COLOR">
               <size>16,16</size>
-              <tooltip>*Apply text color*</tooltip>
             </object>
             <flag>wxALIGN_CENTRE_VERTICAL</flag>
             <border>0</border>
           </object>
           <object class="spacer">
-            <size>4,0</size>
+            <size>2,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxBitmapButton" name="wxID_BUTTON_TEXTCOLOR">
@@ -60,13 +59,12 @@
           <object class="sizeritem">
             <object class="unknown" name="wxID_PANEL_CSS_BK_COLOR">
               <size>16,16</size>
-              <tooltip>*Apply text color*</tooltip>
             </object>
             <flag>wxALIGN_CENTRE_VERTICAL</flag>
             <border>0</border>
           </object>
           <object class="spacer">
-            <size>4,0</size>
+            <size>2,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxBitmapButton" name="wxID_BUTTON_BKCOLOR">
@@ -80,12 +78,9 @@
         </object>
         <border>0</border>
       </object>
-      
       <object class="spacer">
         <size>0,10</size>
       </object>
-      
-      
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <orient>wxVERTICAL</orient>

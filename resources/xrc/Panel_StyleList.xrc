@@ -18,7 +18,7 @@
               <tooltip>*Ajouter une CSS*</tooltip>
             </object>
             <flag>wxALL</flag>
-            <border>4</border>
+            <border>2</border>
           </object>
           <object class="sizeritem">
             <object class="wxBitmapButton" name="wxID_BUTTON_DEL_CSS">
@@ -27,7 +27,7 @@
               <style>wxBU_AUTODRAW</style>
             </object>
             <flag>wxALL</flag>
-            <border>4</border>
+            <border>2</border>
           </object>
           <object class="sizeritem">
             <object class="wxStaticLine">
@@ -42,7 +42,7 @@
               <tooltip>*Activer une CSS*</tooltip>
             </object>
             <flag>wxALL</flag>
-            <border>4</border>
+            <border>2</border>
           </object>
           <object class="sizeritem">
             <object class="wxBitmapButton" name="wxID_BUTTON_DESACTIVE_CSS">
@@ -50,7 +50,7 @@
               <tooltip>*Desactiver une CSS*</tooltip>
             </object>
             <flag>wxALL</flag>
-            <border>4</border>
+            <border>2</border>
           </object>
           <object class="sizeritem">
             <object class="wxStaticLine">
@@ -65,7 +65,7 @@
               <tooltip>*Affichar la CSS*</tooltip>
             </object>
             <flag>wxALL</flag>
-            <border>4</border>
+            <border>2</border>
           </object>
           <orient>wxHORIZONTAL</orient>
         </object>
