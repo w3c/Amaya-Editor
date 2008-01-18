@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2667,8 +2667,8 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb, pBlock;
   PtrBox              pBox, pSelBox, box;
-  ViewSelection      *pViewSel;
-  ViewSelection      *pViewSelEnd;
+  ViewSelection      *pViewSel, *pViewSelEnd;
+  PtrLine             pLine;
   ViewFrame          *pFrame;
   SpecFont            font;
   LeafType            nat;
@@ -2997,10 +2997,16 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                   else
                                     {
                                       xDelta = - BoxCharacterWidth (c, variant, font);
+                                      if (pViewSel->VsLine)
+                                        {
+                                          // check if the previous box is in the same line
+                                          pLine = pViewSel->VsLine;
+                                          if (pLine->LiFirstBox == pViewSel->VsBox ||
+                                              pLine->LiFirstPiece == pViewSel->VsBox)
+                                            pViewSel->VsLine = pLine->LiPrevious;
+                                        }
                                       pViewSel->VsBox = pSelBox;
                                       pViewSel->VsIndBox = pSelBox->BxNChars;
-                                      if (pViewSel->VsLine)
-                                        pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
                                       pViewSelEnd->VsBox = pSelBox;
                                       pViewSelEnd->VsIndBox = pViewSel->VsIndBox;
                                       pViewSelEnd->VsLine = pViewSel->VsLine;
@@ -3009,8 +3015,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                   /* update the redisplayed area */
                                   DefBoxRegion (frame, pSelBox, xx, xx, -1, -1);
                                 }
-                              else if ((previousChars > pSelBox->BxNChars ||
-                                        previousChars == 0) &&
+                              else if ((previousChars > pSelBox->BxNChars || previousChars == 0) &&
                                        c == SPACE)
                                 {
                                   /* removing a space between two boxes */
@@ -3184,9 +3189,15 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                   /* Si la selection est en debut de boite  */
                                   /* on force la reevaluation du bloc de    */
                                   /* lignes a partir de la boite precedente */
-                                  pSelBox = pSelBox->BxPrevious;
-                                  if (pViewSel->VsLine != NULL)
-                                    pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
+                                   if (pViewSel->VsLine)
+                                    {
+                                      // check if the previous box is in the same line
+                                      pLine = pViewSel->VsLine;
+                                      if (pLine->LiFirstBox == pSelBox ||
+                                          pLine->LiFirstPiece == pSelBox)
+                                        pViewSel->VsLine = pLine->LiPrevious;
+                                    }
+                                 pSelBox = pSelBox->BxPrevious;
                                 }
                               else
                                 UpdateViewSelMarks (frame, xDelta, spacesDelta,
