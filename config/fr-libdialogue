@@ -45,8 +45,8 @@
 43 Fermer
 44 Répertoires
 45 Le document %s existe déjà. Voulez-vous l'écraser ?
-46 Bouton gauche change la couleur du texte
-47 Bouton milieu ou droit change la couleur du fond
+46 Appliquer la couleur du texte
+47 Appliquer la couleur du fond
 48 Police
 49 Normal
 50 Gras
@@ -84,7 +84,7 @@
 82 Après la sélection
 83 Dans tout le document
 84 Sauter
-85 Couleurs par défaut
+85 Pas de couleur
 86 avant de le fermer
 87 Fermer un document
 88 Symboles mathématiques
@@ -137,127 +137,121 @@
 135 Impossible de créer "%s"
 136 Surligné
 137 Format de document
-138 Événements
-139 Retirer l'attribut
-140 Bouton gauche change la couleur de sélection
-141 Bouton milieu ou droit change la couleur du curseur
-142 Autres ...
-143 Actualiser
-144 Couleur
-145 Couleur de l'arrière-plan
-146 Couleur du texte
-147 Séléctionner une structure XML générique
-148 Où corriger
-149 Chercher/Suivant
-150 Remplacer (+ dic)
-151 Remplacer
-152 Autre langue
-153 Apprendre
-154 incluant les caractères :
-155 Corriger...
-156 en chiffres romains
-157 Ignorer les mots
-158 en lettres capitales
-159 incluant des chiffres
-160 Erreur dans le fichier des paramètres
-161 Absence de fichier clavier
-162 Impossible d\'enregistrer le dictionnaire du document
-163 Mot "%s" incorrect refusé dans ce dictionnaire
-164 Mot "%s" ajouté dans le dictionnaire du document
-165 Correction terminée
-166 Correction interrompue
-167 Sélectionnez un document
-168 Sauvegarde du dictionnaire "%s"
-169 Pas disponible dans cette version
-170 Activer/Desactiver palette
-171 Outils
-172 Cet attribut est obligatoire, il ne peut pas être supprimé
-173 Actualiser
-174 Aligner à gauche
-175 Aligner à droite
-176 Centrer
-177 Justifier
-178 Appliquer classe
-179 Sélectionner une classe ou une pseudo-classe
-180 Sélectionner
-181 Abandonner
-182 Maths
-183 Divers
-184 Relations binaires
-185 Relations binaires de négation
-186 Opérateurs
-187 Alphabet grec (majuscules)
-188 Flèches
-189 Caractères spéciaux
-190 Interrompre le chargement
-191 Document précédent
-192 Document suivant
-193 Recharger
-194 Enregistrer
-195 Enregistrer tout
-196 Nouveau document XHTML
-197 Ouvrir
-198 Imprimer
-199 Chercher
-200 Page personnelle
-201 Mise en évidence Oui/Non
-202 Important Oui/Non
-203 Code Oui/Non
-204 Ajouter/Remplacer une image
-205 Titre niveau 1
-206 Titre niveau 2
-207 Titre niveau 3
-208 Titre niveau 4
-209 Paragraphe
-210 Liste
-211 Liste numérotée
-212 Liste de définitions
-213 Lien
-214 Tableau
-215 Etes vous certain de vouloir fermer %d onglets?
-216 M'avertir quand je ferme plusieurs onglets
-217 Fermer les onglets
-218 Aucune erreur détectée
-219 Montrer les erreurs
-220 Boîtes
-221 Division
-222 Cible
-223 Texte inséré Oui/Non
-224 Texte supprimé Oui/Non
-225 Indice Oui/Non
-226 Exposant Oui/Non
-227 Terme
-228 Définition
-229 Objet
-230 Style
-231 Fichiers
-232 Partager/étendre en horizontal
-233 Partager/étendre verticalement
-234 Montrer/cacher les outils
-235 Défaire
-236 Refaire
-237 Couper
-238 Copier
-239 Coller
-240 Vérifier orthographe
-241 Constructions diverses
-242 Relations, ordre et logique
-243 Ensembles et fonctions
-244 Arithmétique, opérations, complexes et constantes
-245 Analyse, algèbre linéaire et statistiques
-246 Trigonométrie et logarithmes
-247 Grossir
-248 Réduire
-249 Thème
-250 XML
-251 Texte
-252 Pas de document récent
-253 Cliquer sur un élément pour le sélectionner
-254 Cliquer pour changer de mode d'édition
-255 Fusionner les cellules
-256 Réduire extension horizontale
-257 Réduire extension verticale
-258 Insérer une ligne
-259 Ajouter une ligne
-260 Insérer une colonne
-261 Ajouter une colonne
+138 Retirer l'attribut
+139 Sélectionner une couleur de fond
+140 Sélectionner une couleur du texte
+141 Séléctionner une structure XML générique
+142 Où corriger
+143 Chercher/Suivant
+144 Remplacer (+ dic)
+145 Remplacer
+146 Autre langue
+147 Apprendre
+148 incluant les caractères :
+149 Corriger...
+150 en chiffres romains
+151 Ignorer les mots
+152 en lettres capitales
+153 incluant des chiffres
+154 Erreur dans le fichier des paramètres
+155 Absence de fichier clavier
+156 Impossible d\'enregistrer le dictionnaire du document
+157 Mot "%s" incorrect refusé dans ce dictionnaire
+158 Mot "%s" ajouté dans le dictionnaire du document
+159 Correction terminée
+160 Correction interrompue
+161 Sélectionnez un document
+162 Sauvegarde du dictionnaire "%s"
+163 Pas disponible dans cette version
+164 Activer/Desactiver palette
+165 Outils
+166 Cet attribut est obligatoire, il ne peut pas être supprimé
+167 Actualiser
+168 Aligner à gauche
+169 Aligner à droite
+170 Centrer
+171 Justifier
+172 Appliquer classe
+173 Sélectionner une classe ou une pseudo-classe
+174 Sélectionner
+175 Abandonner
+176 Maths
+177 Divers
+178 Relations binaires
+179 Relations binaires de négation
+180 Opérateurs
+181 Alphabet grec (majuscules)
+182 Flèches
+183 Caractères spéciaux
+184 Interrompre le chargement
+185 Document précédent
+186 Document suivant
+187 Recharger
+188 Enregistrer
+189 Enregistrer tout
+190 Nouveau document XHTML
+191 Ouvrir
+192 Imprimer
+193 Chercher
+194 Page personnelle
+195 Mise en évidence Oui/Non
+196 Important Oui/Non
+197 Code Oui/Non
+198 Ajouter/Remplacer une image
+199 Titre niveau 1
+200 Titre niveau 2
+201 Titre niveau 3
+202 Titre niveau 4
+203 Paragraphe
+204 Liste
+205 Liste numérotée
+206 Liste de définitions
+207 Lien
+208 Tableau
+209 Etes vous certain de vouloir fermer %d onglets?
+210 M'avertir quand je ferme plusieurs onglets
+211 Fermer les onglets
+212 Aucune erreur détectée
+213 Montrer les erreurs
+214 Boîtes
+215 Division
+216 Cible
+217 Texte inséré Oui/Non
+218 Texte supprimé Oui/Non
+219 Indice Oui/Non
+220 Exposant Oui/Non
+221 Terme
+222 Définition
+223 Objet
+224 Style
+225 Fichiers
+226 Partager/étendre en horizontal
+227 Partager/étendre verticalement
+228 Montrer/cacher les outils
+229 Défaire
+230 Refaire
+231 Couper
+232 Copier
+233 Coller
+234 Vérifier orthographe
+235 Constructions diverses
+236 Relations, ordre et logique
+237 Ensembles et fonctions
+238 Arithmétique, opérations, complexes et constantes
+239 Analyse, algèbre linéaire et statistiques
+240 Trigonométrie et logarithmes
+241 Grossir
+242 Réduire
+243 Thème
+244 XML
+245 Texte
+246 Pas de document récent
+247 Cliquer sur un élément pour le sélectionner
+248 Cliquer pour changer de mode d'édition
+249 Fusionner les cellules
+250 Réduire extension horizontale
+251 Réduire extension verticale
+252 Insérer une ligne
+253 Ajouter une ligne
+254 Insérer une colonne
+255 Ajouter une colonne

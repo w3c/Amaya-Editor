@@ -45,8 +45,8 @@
 43 Cerrar
 44 Directorios
 45 El documento %s ya existe. ¿Quiere sobreescribirlo?
-46 El botón izquierdo fija el color del texto
-47 El botón derecho o el central fijan el color del fondo
+46 **Set the text color
+47 **Set the background color
 48 Familia de fuente
 49 Normal
 50 Negrita
@@ -84,7 +84,7 @@
 82 Tras la selección
 83 En todo el documento
 84 No reemplazar
-85 Colores por omisión
+85 **No color
 86 antes de cerrarlo
 87 Cerrar un documento
 88 Símbolos matemáticos
@@ -137,127 +137,121 @@
 135 No puedo crear "%s"
 136 Suprarayado
 137 Formato de documento
-138 Eventos
-139 Eliminar atributo
-140 El botón izquierdo fija el color del texto de la selección
-141 El botón derecho o el central fijan el color del fondo de la selección
-142 Más ...
-143 Obtener
-144 Color
-145 Color del fondo
-146 Color del texto
-147 Seleccione una estructura genérica
-148 Comprobar
-149 Buscar/Saltar
-150 Reemplazar (+ dic)
-151 Reemplazar y siguiente
-152 Otro idioma
-153 Agregar
-154 Palabras que contengan:
-155 Revisar ortografía:
-156 Números romanos
-157 Ignorar
-158 Palabras en mayúsculas
-159 Palabras con dígitos
-160 Error en archivo de parámetro
-161 No hay archivo de teclado
-162 No puedo guardar el diccionario del documento
-163 Palabra incorrecta "%s" rechazada en este diccionario
-164 Palabra "%s" añadida al diccionario del documento
-165 Fin de la corrección ortográfica
-166 Corrección ortográfica abortada
-167 Por favor, seleccione un documento
-168 Diccionario del documento guardado: %s
-169 No disponible en esta versión
-170 Activar/Desactivar paleta
-171 Herramientas
-172 Atributo obligatorio, no puede eliminarse
-173 Actualizar
-174 Izquierda
-175 Derecha
-176 Centrado
-177 Justificado
-178 Aplicar clase
-179 Seleccionar una clase o seudo-clase
-180 Seleccionar
-181 Descartar
-182 MathML
-183 Miscelánea
-184 Relaciones binarias
-185 Relaciones de negación binarias
-186 Operadores
-187 Alfabeto griego (mayúsculas)
-188 Flechas
-189 Caracteres especiales
-190 Detener
-191 Atrás
-192 Adelante
-193 Actualizar
-194 Guardar
-195 Guardar todo
-196 Nuevo documento XHTML
-197 Abrir documento
-198 Imprimir
-199 Buscar
-200 Inicio
-201 Énfasis On/Off
-202 Enérgico (strong) On/Off
-203 Código (code) On/Off
-204 Imagen
-205 Cabecera nivel 1
-206 Cabecera nivel 2
-207 Cabecera nivel 3
-208 Cabecera nivel 4
-209 Párrafo
-210 Lista no ordenada (ul)
-211 Lista ordenada (ol)
-212 Lista de definición (dl)
-213 Enlace
-214 Tabla
-215 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
-216 Avisarme cuando intente cerrar múltiples pestañas
-217 Cerrar pestañas
-218 Ningún error detectado
-219 Mostrar errores sintácticos
-220 Cajas
-221 División
-222 Destino
-223 Inserción (ins) On/Off
-224 Borrado (del) On/Off
-225 Subíndice (sub) On/Off
-226 Superíndice (sup) On/Off
-227 Término
-228 Definición
-229 Objeto
-230 Estilo
-231 Archivos
-232 Dividir horizontalmente
-233 Dividir vista verticalmente
-234 Ventana de herramientas
-235 Deshacer
-236 Rehacer
-237 Cortar
-238 Copiar
-239 Pegar
-240 Revisar ortografía
-241 Varios
-242 Relaciones, orden y lógica
-243 Conjuntos y funciones
-244 Aritmética, operaciones, complejos y constantes
-245 Análisis, álgebra lineal y estadística
-246 Trigonometría y logaritmos
-247 &Aumentar tamaño de texto
-248 &Reducir tamaño de texto
-249 Tema
-250 XML
-251 Texto
-252 No hay documentos recientes
-253 Haga clic en un elemento para seleccionarlo
-254 Haga clic para cambiar el modo de edición
-255 Unir
-256 Reducir extensión horizontal
-257 Reducir extensión vertical
-258 Insertar fila delante
-259 Añadir fila detrás
-260 Insertar columna delante
-261 Añadir columna detrás
+138 Eliminar atributo
+139 Seleccionar un color del fondo
+140 Seleccionar un color del texto
+141 Seleccione una estructura genérica
+142 Comprobar
+143 Buscar/Saltar
+144 Reemplazar (+ dic)
+145 Reemplazar y siguiente
+146 Otro idioma
+147 Agregar
+148 Palabras que contengan:
+149 Revisar ortografía:
+150 Números romanos
+151 Ignorar
+152 Palabras en mayúsculas
+153 Palabras con dígitos
+154 Error en archivo de parámetro
+155 No hay archivo de teclado
+156 No puedo guardar el diccionario del documento
+157 Palabra incorrecta "%s" rechazada en este diccionario
+158 Palabra "%s" añadida al diccionario del documento
+159 Fin de la corrección ortográfica
+160 Corrección ortográfica abortada
+161 Por favor, seleccione un documento
+162 Diccionario del documento guardado: %s
+163 No disponible en esta versión
+164 Activar/Desactivar paleta
+165 Herramientas
+166 Atributo obligatorio, no puede eliminarse
+167 Actualizar
+168 Izquierda
+169 Derecha
+170 Centrado
+171 Justificado
+172 Aplicar clase
+173 Seleccionar una clase o seudo-clase
+174 Seleccionar
+175 Descartar
+176 MathML
+177 Miscelánea
+178 Relaciones binarias
+179 Relaciones de negación binarias
+180 Operadores
+181 Alfabeto griego (mayúsculas)
+182 Flechas
+183 Caracteres especiales
+184 Detener
+185 Atrás
+186 Adelante
+187 Actualizar
+188 Guardar
+189 Guardar todo
+190 Nuevo documento XHTML
+191 Abrir documento
+192 Imprimir
+193 Buscar
+194 Inicio
+195 Énfasis On/Off
+196 Enérgico (strong) On/Off
+197 Código (code) On/Off
+198 Imagen
+199 Cabecera nivel 1
+200 Cabecera nivel 2
+201 Cabecera nivel 3
+202 Cabecera nivel 4
+203 Párrafo
+204 Lista no ordenada (ul)
+205 Lista ordenada (ol)
+206 Lista de definición (dl)
+207 Enlace
+208 Tabla
+209 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
+210 Avisarme cuando intente cerrar múltiples pestañas
+211 Cerrar pestañas
+212 Ningún error detectado
+213 Mostrar errores sintácticos
+214 Cajas
+215 División
+216 Destino
+217 Inserción (ins) On/Off
+218 Borrado (del) On/Off
+219 Subíndice (sub) On/Off
+220 Superíndice (sup) On/Off
+221 Término
+222 Definición
+223 Objeto
+224 Estilo
+225 Archivos
+226 Dividir horizontalmente
+227 Dividir vista verticalmente
+228 Ventana de herramientas
+229 Deshacer
+230 Rehacer
+231 Cortar
+232 Copiar
+233 Pegar
+234 Revisar ortografía
+235 Varios
+236 Relaciones, orden y lógica
+237 Conjuntos y funciones
+238 Aritmética, operaciones, complejos y constantes
+239 Análisis, álgebra lineal y estadística
+240 Trigonometría y logaritmos
+241 &Aumentar tamaño de texto
+242 &Reducir tamaño de texto
+243 Tema
+244 XML
+245 Texto
+246 No hay documentos recientes
+247 Haga clic en un elemento para seleccionarlo
+248 Haga clic para cambiar el modo de edición
+249 Unir
+250 Reducir extensión horizontal
+251 Reducir extensión vertical
+252 Insertar fila delante
+253 Añadir fila detrás
+254 Insertar columna delante
+255 Añadir columna detrás

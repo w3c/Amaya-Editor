@@ -2704,7 +2704,7 @@ void FocusChanged (Document doc)
         return;
     }
 
-  UpdateStyleList (doc);
+  UpdateStyleList (doc, 1);
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] && DocumentSource[i] != doc &&
         DocumentTypes[i] == docLog)
@@ -2947,8 +2947,8 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       TtaSetItemOff (doc, 1, Types, BTHead);
       TtaSetItemOff (doc, 1, Types, BTBody);
       TtaSetItemOff (doc, 1, Types, BTFoot);
-      TtaSetItemOff (doc, 1, Types, BDataCell);
-      TtaSetItemOff (doc, 1, Types, BHeadingCell);
+      TtaSetItemOff (doc, 1, Tools, BDataCell);
+      TtaSetItemOff (doc, 1, Tools, BHeadingCell);
     }
   if ((!withinTable || !inMath) && MTableMenuActive)
     MTableMenuActive = FALSE;
@@ -2962,8 +2962,8 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       TtaSetItemOn (doc, 1, Types, BTHead);
       TtaSetItemOn (doc, 1, Types, BTBody);
       TtaSetItemOn (doc, 1, Types, BTFoot);
-      TtaSetItemOn (doc, 1, Types, BDataCell);
-      TtaSetItemOn (doc, 1, Types, BHeadingCell);
+      TtaSetItemOn (doc, 1, Tools, BDataCell);
+      TtaSetItemOn (doc, 1, Tools, BHeadingCell);
     }
   if (withinTable && inMath && !MTableMenuActive)
       MTableMenuActive = TRUE;
@@ -3016,8 +3016,8 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       if (CanMergeSelectedCells (doc))
         {
           TtaSetItemOn (doc, 1, Tools, BCellMerge);
-              TtaSetItemOff (doc, 1, Tools, BCellHExtend);
-              TtaSetItemOff (doc, 1, Tools, BCellVExtend);
+          TtaSetItemOff (doc, 1, Tools, BCellHExtend);
+          TtaSetItemOff (doc, 1, Tools, BCellVExtend);
         }
       else
         {

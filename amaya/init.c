@@ -646,8 +646,8 @@ void SetTableMenuOff (Document doc, View view)
   TtaSetItemOff (doc, view, Types, BTHead);
   TtaSetItemOff (doc, view, Types, BTBody);
   TtaSetItemOff (doc, view, Types, BTFoot);
-  TtaSetItemOff (doc, view, Types, BDataCell);
-  TtaSetItemOff (doc, view, Types, BHeadingCell);
+  TtaSetItemOff (doc, view, Tools, BDataCell);
+  TtaSetItemOff (doc, view, Tools, BHeadingCell);
   TtaSetItemOff (doc, view, Types, BCellMerge);
   TtaSetItemOff (doc, view, Tools, BCellHExtend);
   TtaSetItemOff (doc, view, Tools, BCellVExtend);
@@ -677,8 +677,8 @@ void SetTableMenuOn (Document doc, View view)
       TtaSetItemOn (doc, view, Types, BTHead);
       TtaSetItemOn (doc, view, Types, BTBody);
       TtaSetItemOn (doc, view, Types, BTFoot);
-      TtaSetItemOn (doc, view, Types, BDataCell);
-      TtaSetItemOn (doc, view, Types, BHeadingCell);
+      TtaSetItemOn (doc, view, Tools, BDataCell);
+      TtaSetItemOn (doc, view, Tools, BHeadingCell);
     }
   else
     {
@@ -688,8 +688,8 @@ void SetTableMenuOn (Document doc, View view)
       TtaSetItemOff (doc, view, Types, BTHead);
       TtaSetItemOff (doc, view, Types, BTBody);
       TtaSetItemOff (doc, view, Types, BTFoot);
-      TtaSetItemOff (doc, view, Types, BDataCell);
-      TtaSetItemOff (doc, view, Types, BHeadingCell);
+      TtaSetItemOff (doc, view, Tools, BDataCell);
+      TtaSetItemOff (doc, view, Tools, BHeadingCell);
     }
   if (TableMenuActive || MTableMenuActive)
     {

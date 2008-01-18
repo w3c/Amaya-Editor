@@ -238,7 +238,6 @@ EDITOR_OBJ = \
 	dialogue/base64.o \
 	dialogue/browser.o \
 	dialogue/closedoc.o \
-	dialogue/colors.o \
 	dialogue/context.o \
 	dialogue/creationmenu.o \
 	dialogue/dialogapi.o \

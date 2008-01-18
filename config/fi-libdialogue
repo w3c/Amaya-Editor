@@ -45,8 +45,8 @@
 43 Valmis
 44 Hakemistot
 45 Dokumentti %s on jo olemassa. Korvataanko?
-46 Vasen näppäin asettaa tekstin värin
-47 Keskimmäinen tai oikea näppäin asettaa taustavärin
+46 **Set the text color
+47 **Set the background color
 48 Fonttiperhe
 49 Normaali
 50 Lihavoitu
@@ -84,7 +84,7 @@
 82 Valinnan jälkeen
 83 Koko dokumentissa
 84 Älä korvaa
-85 Oletusvärit
+85 **No color
 86 ennen sen sulkemista
 87 Sulje dokumentti
 88 Matemaattiset symbolit
@@ -137,127 +137,121 @@
 135 Ei voi luoda "%s"
 136 Yliviivaa
 137 Dokumentin muoto
-138 Tapahtumat
-139 Poista määritys
-140 Hiiren vasen näppäin asettaa valintavärin
-141 Hiiren keskimmäinen tai oikea näppäin asettaa caret värin
-142 Lisää ...
-143 Hae
-144 Väri
-145 **Background color
-146 **Text color
-147 **Select a generic XML structure
-148 Tarkistetaan
-149 Etsi/Hylkää
-150 Korvaa (+ dic)
-151 Korvaa ja seuraava
-152 Toinen kieli
-153 Hylkää (+ dic)
-154 sanat, joissa:
-155 Oikeinkirjoituksen tarkistus ...
-156 Roomalaiset numerot
-157 Ohita
-158 sanat, joissa kaikki isolla
-159 sanat, joissa numeroita
-160 Parametritiedosto virhe
-161 Ei näppäimistötiedostoa
-162 Dokumentin sanastoa ei voi tallentaa
-163 Kelpaamaton sana "%s", ei ole hyväksytty tässä sanastossa
-164 Sana "%s" lisätty dokumentin sanastoon
-165 Oikeinkirjoitustarkistus valmis!
-166 Oikeinkirjoitustarkistus keskeytetty!
-167 Valitse dokumentti
-168 Dokumentin sanasto tallennettu: %s
-169 **Not available in this version
-170 **Enable/Disable palette
-171 **Tools
-172 **Mandatory attribute, it can't be removed
-173 **Refresh
-174 **Align left
-175 **Align right
-176 **Center
-177 **Justify
-178 Käytä luokkaa
-179 Valitse luokka tai valeluokka
-180 Valitse
-181 **Discard
-182 Matematiikka
-183 **Misc
-184 **Binary relations
-185 **Binary relations of negation
-186 **Operators
-187 **Greek alphabet (capital)
-188 **Arrows
-189 **Special characters
-190 Keskeytä tiedonsiirto
-191 Edellinen dokumentti
-192 Seuraava dokumentti
-193 Päivitä
-194 Tallenna
-195 Tallenna
-196 Uusi XHTML dokumentti
-197 Avaa dokumentti
-198 Tulosta
-199 Etsi
-200 Aloitussivu
-201 Korosta On/Off
-202 Lihavoi On/Off
-203 Koodi On/Off
-204 Syötä kuva
-205 Otsikkokoko 1
-206 Otsikkokoko 2
-207 Otsikkokoko 3
-208 Otsikkokoko 4
-209 Pykälä
-210 Pisteellinen luettelo
-211 Numeroituluettelo
-212 Määrittelyluettelo
-213 Linkki
-214 Taulukko
-215 **You are about to close %d open tabs. Are you sure you want to continue?
-216 **Warn me when I attempt to close multiple tabs
-217 **Close tabs
-218 **No error detected
-219 Näytä käännösvirheet
-220 **Boxes
-221 Tyhjä rivi
-222 Kohde
-223 Lisäys On/Off
-224 Poisto On/Off
-225 Alaindeksi On/Off
-226 Yläindeksi On/Off
-227 Lopetus
-228 Määrittely
-229 Objekti
-230 **Style
-231 Tiedostoja
-232 **Horizontal split/unsplit
-233 **Vertical split/unsplit
-234 **Show/hide tools
-235 Kumoa
-236 Tee uudelleen
-237 Leikkaa
-238 Kopioi
-239 Liitä
-240 Tarkista oikeinkirjoitus
-241 **Various constructs
-242 **Relations, orders and logic
-243 **Sets and functions
-244 **Arithmetic, operations, complexes and constants
-245 **Analysis, linear algebra and statistic
-246 **Trigonometry and logarithms
-247 Lähennä
-248 Loitonna
-249 **Theme
-250 XML
-251 Teksti
-252 **No recent document
-253 **Click an element to select it
-254 **Click to change the editing mode
-255 **Merge cells
-256 **Shrink horizontal extend
-257 **Shrink vertical extend
-258 **Insert a row
-259 **Append a row
-260 **Insert a column
-261 **Append a column
+138 Poista määritys
+139 **Select a background color
+140 **Select a text color
+141 **Select a generic XML structure
+142 Tarkistetaan
+143 Etsi/Hylkää
+144 Korvaa (+ dic)
+145 Korvaa ja seuraava
+146 Toinen kieli
+147 Hylkää (+ dic)
+148 sanat, joissa:
+149 Oikeinkirjoituksen tarkistus ...
+150 Roomalaiset numerot
+151 Ohita
+152 sanat, joissa kaikki isolla
+153 sanat, joissa numeroita
+154 Parametritiedosto virhe
+155 Ei näppäimistötiedostoa
+156 Dokumentin sanastoa ei voi tallentaa
+157 Kelpaamaton sana "%s", ei ole hyväksytty tässä sanastossa
+158 Sana "%s" lisätty dokumentin sanastoon
+159 Oikeinkirjoitustarkistus valmis!
+160 Oikeinkirjoitustarkistus keskeytetty!
+161 Valitse dokumentti
+162 Dokumentin sanasto tallennettu: %s
+163 **Not available in this version
+164 **Enable/Disable palette
+165 **Tools
+166 **Mandatory attribute, it can't be removed
+167 **Refresh
+168 **Align left
+169 **Align right
+170 **Center
+171 **Justify
+172 Käytä luokkaa
+173 Valitse luokka tai valeluokka
+174 Valitse
+175 **Discard
+176 Matematiikka
+177 **Misc
+178 **Binary relations
+179 **Binary relations of negation
+180 **Operators
+181 **Greek alphabet (capital)
+182 **Arrows
+183 **Special characters
+184 Keskeytä tiedonsiirto
+185 Edellinen dokumentti
+186 Seuraava dokumentti
+187 Päivitä
+188 Tallenna
+189 Tallenna
+190 Uusi XHTML dokumentti
+191 Avaa dokumentti
+192 Tulosta
+193 Etsi
+194 Aloitussivu
+195 Korosta On/Off
+196 Lihavoi On/Off
+197 Koodi On/Off
+198 Syötä kuva
+199 Otsikkokoko 1
+200 Otsikkokoko 2
+201 Otsikkokoko 3
+202 Otsikkokoko 4
+203 Pykälä
+204 Pisteellinen luettelo
+205 Numeroituluettelo
+206 Määrittelyluettelo
+207 Linkki
+208 Taulukko
+209 **You are about to close %d open tabs. Are you sure you want to continue?
+210 **Warn me when I attempt to close multiple tabs
+211 **Close tabs
+212 **No error detected
+213 Näytä käännösvirheet
+214 **Boxes
+215 Tyhjä rivi
+216 Kohde
+217 Lisäys On/Off
+218 Poisto On/Off
+219 Alaindeksi On/Off
+220 Yläindeksi On/Off
+221 Lopetus
+222 Määrittely
+223 Objekti
+224 **Style
+225 Tiedostoja
+226 **Horizontal split/unsplit
+227 **Vertical split/unsplit
+228 **Show/hide tools
+229 Kumoa
+230 Tee uudelleen
+231 Leikkaa
+232 Kopioi
+233 Liitä
+234 Tarkista oikeinkirjoitus
+235 **Various constructs
+236 **Relations, orders and logic
+237 **Sets and functions
+238 **Arithmetic, operations, complexes and constants
+239 **Analysis, linear algebra and statistic
+240 **Trigonometry and logarithms
+241 Lähennä
+242 Loitonna
+243 **Theme
+244 XML
+245 Teksti
+246 **No recent document
+247 **Click an element to select it
+248 **Click to change the editing mode
+249 **Merge cells
+250 **Shrink horizontal extend
+251 **Shrink vertical extend
+252 **Insert a row
+253 **Append a row
+254 **Insert a column
+255 **Append a column

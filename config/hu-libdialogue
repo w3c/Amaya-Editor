@@ -45,8 +45,8 @@
 43 Bezár
 44 Mappák
 45 A dokumentum (%s) már létezik. Felülírjuk?
-46 A bal egérgomb a szöveg színét adja meg
-47 A középső vagy jobb egérgomb a háttérszínt adja meg
+46 **Set the text color
+47 **Set the background color
 48 Betűkészlet
 49 Normál
 50 Félkövér
@@ -84,7 +84,7 @@
 82 Kijelölés után
 83 A teljes dokumentumban
 84 Ne cseréljen
-85 Alapszínek
+85 **No color
 86 bezárás előtt
 87 Dokumentum bezárása
 88 Matematikai szimbólumok
@@ -137,127 +137,121 @@
 135 "%s" nem hozható létre
 136 Felülvonás
 137 Dokumentum formátum
-138 Események
-139 Attribútum eltávolítása
-140 A bal egérgomb a kijelölés színét adja meg
-141 A középső vagy jobb egérgomb a caret adja meg
-142 Egyéb...
-143 Get
-144 Szín
-145 Háttérszín
-146 Szín
-147 Adjon meg egy általános XML szerkezetet
-148 Ellenőrzés
-149 Keresés/Kihagyás
-150 Csere (+ dic)
-151 Csere és következő
-152 Másik nyelv
-153 Kihagyás (+ dic)
-154 words containing:
-155 Szóellenőrző...
-156 Római számok
-157 Kihagy
-158 csupa nagybetűs szavak
-159 számokat tartalmazó szavak
-160 Parameter fájl hiba
-161 Nincs billentyűzet fájl
-162 A dokumentum szótár nem menthető
-163 Ezt az érvénytelen szót (%s) elutasította a szótár
-164 Szó (%s) hozzáadva a dokumentum szótárhoz
-165 Szóellenőrzés vége
-166 Szóellenőrzés megszakadt
-167 Adjon meg egy dokumentumot
-168 Dokumentum szótár mentve: %s
-169 Ebben a változatban nem elérhető
-170 Dokkoló rögzítése/úsztatása
-171 Eszközök
-172 Kötelező attribútum, nem távolítható el
-173 Frissítés
-174 Balra zárt
-175 Jobbra zárt
-176 Középre zárt
-177 Sorkizárt
-178 Osztály alkalmazása
-179 Adja meg az osztályt vagy álosztályt
-180 Kijelöl
-181 Kihagy
-182 Matematika
-183 Egyéb
-184 Bináris műveletek
-185 Bináris műveletek vagy negálás
-186 Máveletek
-187 Görög ábécé (nagybetűs)
-188 Nyilak
-189 Különleges karakterek
-190 Átvitel megszakítása
-191 Előző dokumentum
-192 Következő dokumentum
-193 Újratöltés
-194 Mentés
-195 Mentés
-196 Új XHTML dokumentum...
-197 Dokumentum megnyitása
-198 Nyomtatás
-199 Keresés
-200 Kezdőlap
-201 Hangsúlyozott On/Off
-202 Vastag On/Off
-203 Kód On/Off
-204 Kép beillesztése
-205 1. szint
-206 2. szint
-207 3. szint
-208 4. szint
-209 &Bekezdés
-210 Listajeles lista
-211 Számozott lista
-212 Meghatározás lista
-213 Kapocs
-214 Táblázat
-215 %d lap bezárására készül. Valóban folytatni kívánja?
-216 Figyelmeztessen több lap bezárásakor
-217 Lapok bezárása
-218 Nincs hiba
-219 Elemzési hibák mutatása
-220 Dobozok
-221 Felosztás
-222 Létrehozása
-223 &Beillesztés On/Off
-224 &Törlés On/Off
-225 &Alsó index On/Off
-226 Felső index On/Off
-227 Szócikk
-228 Meghatározás
-229 Objektum
-230 Stílus
-231 Fájl
-232 Vízszintes felosztás
-233 Függőleges felosztás
-234 Eszközsor mutatása
-235 Visszavon
-236 Újra
-237 Kivágás
-238 Másolás
-239 Beillesztés
-240 Szóelemző
-241 Különböző szerkezetek
-242 Relációk, rendek és logika
-243 Halmazok és függvények
-244 Számelmélet, műveletek, komplexek és állandók
-245 Analízis, lineáris algebra és statisztika
-246 Trigonometria és logaritmusok
-247 Nagyítás
-248 Kicsinyítés
-249 Téma
-250 XML
-251 Szöveg
-252 Nincs korábbi dokumentum
-253 Elem kijelölése kattintással
-254 Szerkesztési mód váltása kattintással
-255 Egyesítés
-256 Shrink &horizontal extend
-257 Shrink &vertical extend
-258 Sor &beillesztése
-259 Sor &hozzáadása
-260 Oszlop be&illesztése
-261 Oszlop hozzá&adása
+138 Attribútum eltávolítása
+139 Háttérszín
+140 Szín
+141 Adjon meg egy általános XML szerkezetet
+142 Ellenőrzés
+143 Keresés/Kihagyás
+144 Csere (+ dic)
+145 Csere és következő
+146 Másik nyelv
+147 Kihagyás (+ dic)
+148 words containing:
+149 Szóellenőrző...
+150 Római számok
+151 Kihagy
+152 csupa nagybetűs szavak
+153 számokat tartalmazó szavak
+154 Parameter fájl hiba
+155 Nincs billentyűzet fájl
+156 A dokumentum szótár nem menthető
+157 Ezt az érvénytelen szót (%s) elutasította a szótár
+158 Szó (%s) hozzáadva a dokumentum szótárhoz
+159 Szóellenőrzés vége
+160 Szóellenőrzés megszakadt
+161 Adjon meg egy dokumentumot
+162 Dokumentum szótár mentve: %s
+163 Ebben a változatban nem elérhető
+164 Dokkoló rögzítése/úsztatása
+165 Eszközök
+166 Kötelező attribútum, nem távolítható el
+167 Frissítés
+168 Balra zárt
+169 Jobbra zárt
+170 Középre zárt
+171 Sorkizárt
+172 Osztály alkalmazása
+173 Adja meg az osztályt vagy álosztályt
+174 Kijelöl
+175 Kihagy
+176 Matematika
+177 Egyéb
+178 Bináris műveletek
+179 Bináris műveletek vagy negálás
+180 Máveletek
+181 Görög ábécé (nagybetűs)
+182 Nyilak
+183 Különleges karakterek
+184 Átvitel megszakítása
+185 Előző dokumentum
+186 Következő dokumentum
+187 Újratöltés
+188 Mentés
+189 Mentés
+190 Új XHTML dokumentum...
+191 Dokumentum megnyitása
+192 Nyomtatás
+193 Keresés
+194 Kezdőlap
+195 Hangsúlyozott On/Off
+196 Vastag On/Off
+197 Kód On/Off
+198 Kép beillesztése
+199 1. szint
+200 2. szint
+201 3. szint
+202 4. szint
+203 &Bekezdés
+204 Listajeles lista
+205 Számozott lista
+206 Meghatározás lista
+207 Kapocs
+208 Táblázat
+209 %d lap bezárására készül. Valóban folytatni kívánja?
+210 Figyelmeztessen több lap bezárásakor
+211 Lapok bezárása
+212 Nincs hiba
+213 Elemzési hibák mutatása
+214 Dobozok
+215 Felosztás
+216 Létrehozása
+217 &Beillesztés On/Off
+218 &Törlés On/Off
+219 &Alsó index On/Off
+220 Felső index On/Off
+221 Szócikk
+222 Meghatározás
+223 Objektum
+224 Stílus
+225 Fájl
+226 Vízszintes felosztás
+227 Függőleges felosztás
+228 Eszközsor mutatása
+229 Visszavon
+230 Újra
+231 Kivágás
+232 Másolás
+233 Beillesztés
+234 Szóelemző
+235 Különböző szerkezetek
+236 Relációk, rendek és logika
+237 Halmazok és függvények
+238 Számelmélet, műveletek, komplexek és állandók
+239 Analízis, lineáris algebra és statisztika
+240 Trigonometria és logaritmusok
+241 Nagyítás
+242 Kicsinyítés
+243 Téma
+244 XML
+245 Szöveg
+246 Nincs korábbi dokumentum
+247 Elem kijelölése kattintással
+248 Szerkesztési mód váltása kattintással
+249 Egyesítés
+250 Shrink &horizontal extend
+251 Shrink &vertical extend
+252 Sor &beillesztése
+253 Sor &hozzáadása
+254 Oszlop be&illesztése
+255 Oszlop hozzá&adása

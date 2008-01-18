@@ -67,7 +67,7 @@ static ThotBool     OldBuffer = FALSE;
 /*----------------------------------------------------------------------
   UpdateStyleList
   ----------------------------------------------------------------------*/
-void UpdateStyleList (Document doc)
+void UpdateStyleList (Document doc, View view)
 {
 #ifdef _WX
   AmayaParams p;
@@ -128,7 +128,7 @@ static void RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
 
   /* remove all the specific presentation rules applied to the element */
   TtaCleanElementPresentation (el, doc);
-  UpdateStyleList (doc);
+  UpdateStyleList (doc, 1);
 }
 
 
@@ -713,7 +713,7 @@ static void ApplyStyleChange (Element el, Document doc)
   /* Apply new style rules */
   EnableStyleElement (doc, el);
   TtaSetDisplayMode (doc, dispMode);
-  UpdateStyleList (doc);
+  UpdateStyleList (doc, 1);
 }
 
 /*----------------------------------------------------------------------
@@ -904,10 +904,37 @@ void ChangeTheme (const char *theme)
     }
 #ifdef _WX
   TtaRedirectFocus();
-  UpdateStyleList (doc);
+  UpdateStyleList (doc, 1);
 #endif /* _WX */
 }
 
+
+/*----------------------------------------------------------------------
+  DoClassicTheme
+  Apply color style
+  ----------------------------------------------------------------------*/
+void DoClassicTheme (Document doc, View view)
+{
+  ChangeTheme ("Classic");
+}
+
+/*----------------------------------------------------------------------
+  DoModernTheme
+  Apply color style
+  ----------------------------------------------------------------------*/
+void DoModernTheme (Document doc, View view)
+{
+  ChangeTheme ("Modern");
+}
+
+/*----------------------------------------------------------------------
+  DoNoTheme
+  Remove color style
+  ----------------------------------------------------------------------*/
+void DoNoTheme (Document doc, View view)
+{
+  ChangeTheme ("Standard");
+}
 
 /*----------------------------------------------------------------------
   UpdateStylePost : attribute Style has been updated or created.  

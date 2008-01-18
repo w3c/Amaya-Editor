@@ -388,7 +388,7 @@ void RemoveLink (Element el, Document doc)
 ThotBool DeleteLink (NotifyElement *event)
 {
   RemoveLink (event->element, event->document);
-  UpdateStyleList (event->document);
+  UpdateStyleList (event->document, 1);
   return FALSE;		/* let Thot perform normal operation */
 }
 
@@ -1632,7 +1632,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
                   TtaSetTextContent (element, (unsigned char *)buffer, Latin_Script, doc);
                   
                   /* Query update Style List tool panel. */
-                  UpdateStyleList (doc);
+                  UpdateStyleList (doc, 1);
                 }
             }
         }
@@ -1716,7 +1716,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
           TtaRegisterAttributeCreate (attr, element, doc);
         
         /* Query update Style List tool panel. */
-        UpdateStyleList (doc);
+        UpdateStyleList (doc, 1);
       }
   if (AttrHREFundoable)
     {

@@ -251,7 +251,7 @@
 249 Annotazione cancellata!
 250 Non posso caricare l'indice delle annotazioni
 251 Errore
-252 Seleziona un Charset
+252 Seleziona un charset
 253 Seleziona un tipo MIME
 254 Cambia Charset
 255 Cambia tipo MIME
@@ -465,9 +465,10 @@
 462 Grandezza
 463 Posizione
 464 Modalità di editing XML
-465 **CSS list
-466 **Add a CSS ...
-467 **Remove selected CSS
-468 **Active selected CSS
-469 **Disactive selected CSS
-470 **Open selected CSS
+465 **List of style sheets
+466 **Add a style sheet...
+467 **Remove selected style sheets
+468 **Activate selected style sheets
+469 **Desactivate selected style sheets
+470 **Open selected style sheets
+471 Profilo Amaya:

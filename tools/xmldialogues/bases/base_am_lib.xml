@@ -753,36 +753,13 @@
 	<message xml:lang="sk">Dokument %s už existuje. Chcete ho nahradiť?</message>
 </label>
 <label define="TMSG_BUTTON_1">
-	<message xml:lang="en">Left button sets the text color</message>
-	<message xml:lang="fr">Bouton gauche change la couleur du texte</message>
+	<message xml:lang="en">Set the text color</message>
+	<message xml:lang="fr">Appliquer la couleur du texte</message>
 	<message xml:lang="de">Maustaste 1 setzt die Textfarbe</message>
-	<message xml:lang="it">Il pulsante sinistro cambia il colore del testo</message>
-	<message xml:lang="tr">Sol duğme tuş yazı rengini ayarlar</message>
-	<message xml:lang="es">El botón izquierdo fija el color del texto</message>
-	<message xml:lang="pt">O botão esquerdo fixa a cor do texto</message>
-	<message xml:lang="fi">Vasen näppäin asettaa tekstin värin</message>
-	<message xml:lang="ru">Левая кнопка устанавливает цвет текста</message>
-	<message xml:lang="hu">A bal egérgomb a szöveg színét adja meg</message>
-	<message xml:lang="ka">მარცხენა ღილაკით ტექსტის ფერი მიეთითება</message>
-	<message xml:lang="cn">鼠标左键设置文本颜色</message>
-	<message xml:lang="tw">鼠標左鍵設置文本顏色</message>
-	<message xml:lang="sk">Ľavým tlačidlom nastavíte farbu textu</message>
 </label>
 <label define="TMSG_BUTTON_2">
-	<message xml:lang="en">Middle or Right button sets the background color</message>
-	<message xml:lang="fr">Bouton milieu ou droit change la couleur du fond</message>
-	<message xml:lang="de">Maustaste 2 oder 3 setzt die Hintergrundfarbe</message>
-	<message xml:lang="it">Il pulsante centrale e quello destro cambiano il colore dello sfondo</message>
-	<message xml:lang="tr">Orta veya sağ tuş arkaplan rengini ayarlar</message>
-	<message xml:lang="es">El botón derecho o el central fijan el color del fondo</message>
-	<message xml:lang="pt">O botão do meio ou da direita fixa a cor de fundo</message>
-	<message xml:lang="fi">Keskimmäinen tai oikea näppäin asettaa taustavärin</message>
-	<message xml:lang="ru">Средняя или правая кнопка устанавливает цвет фона</message>
-	<message xml:lang="hu">A középső vagy jobb egérgomb a háttérszínt adja meg</message>
-	<message xml:lang="ka">შუა და მარჯვენა ღილაკით ფონის ფერი მიეთითება</message>
-	<message xml:lang="cn">鼠标中键或右键设置背景颜色</message>
-	<message xml:lang="tw">鼠標中鍵或右鍵設置背景顏色</message>
-	<message xml:lang="sk">Stredným alebo pravým tlačidlom nastavíte farbu pozadia</message>
+	<message xml:lang="en">Set the background color</message>
+	<message xml:lang="fr">Appliquer la couleur du fond</message>
 </label>
 <label define="TMSG_FONT_FAMILY">
 	<message xml:lang="en">Font family</message>
@@ -1345,20 +1322,8 @@
 	<message xml:lang="sk">Nenahrádzať</message>
 </label>
 <label define="TMSG_STD_COLORS">
-	<message xml:lang="en">Default colors</message>
-	<message xml:lang="fr">Couleurs par défaut</message>
-	<message xml:lang="de">Standardfarbe</message>
-	<message xml:lang="it">Colori di default</message>
-	<message xml:lang="tr">Öntanımlı renkler</message>
-	<message xml:lang="es">Colores por omisión</message>
-	<message xml:lang="pt">Cores padrão</message>
-	<message xml:lang="fi">Oletusvärit</message>
-	<message xml:lang="ru">Цвета принятые по умолчанию</message>
-	<message xml:lang="hu">Alapszínek</message>
-	<message xml:lang="ka">საწყისი ფერები</message>
-	<message xml:lang="cn">默认颜色</message>
-	<message xml:lang="tw">默認顏色</message>
-	<message xml:lang="sk">Pôvodné farby</message>
+	<message xml:lang="en">No color</message>
+	<message xml:lang="fr">Pas de couleur</message>
 </label>
 <label define="TMSG_BEFORE_CLOSING">
 	<message xml:lang="en">before closing it</message>
@@ -1537,7 +1502,7 @@
 	<message xml:lang="sk">Obrázok</message>
 </label>
 <label define="TMSG_EL_TYPE">
-	<message xml:lang="en">XML Elements</message>
+	<message xml:lang="en">XML elements</message>
 	<message xml:lang="fr">Eléments XML</message>
 	<message xml:lang="de">Elemente XML</message>
 	<message xml:lang="it">Elementi XML</message>
@@ -2192,22 +2157,6 @@
 	<message xml:lang="tw">文檔格式</message>
 	<message xml:lang="sk">Formát dokumentu</message>
 </label>
-<label define="TMSG_EVENTS">
-	<message xml:lang="en">Events</message>
-	<message xml:lang="fr">Événements</message>
-	<message xml:lang="de">Ereignisse (Events)</message>
-	<message xml:lang="it">Eventi</message>
-	<message xml:lang="es">Eventos</message>
-	<message xml:lang="pt">Eventos</message>
-	<message xml:lang="fi">Tapahtumat</message>
-	<message xml:lang="tr">Olaylar</message>
-	<message xml:lang="ru">События</message>
-	<message xml:lang="hu">Események</message>
-	<message xml:lang="ka">მოვლენები</message>
-	<message xml:lang="cn">事件</message>
-	<message xml:lang="tw">事件</message>
-	<message xml:lang="sk">Udalosti</message>
-</label>
 <label define="TMSG_DEL_ATTR">
 	<message xml:lang="en">Remove attribute</message>
 	<message xml:lang="fr">Retirer l'attribut</message>
@@ -2224,92 +2173,12 @@
 	<message xml:lang="tw">移除屬性</message>
 	<message xml:lang="sk">Odstániť atribút</message>
 </label>
-<label define="TMSG_CPBUTTON_1">
-	<message xml:lang="en">Left button sets the selection color</message>
-	<message xml:lang="fr">Bouton gauche change la couleur de sélection</message>
-	<message xml:lang="de">Linke Maustaste: Farbe für markierten Text</message>
-	<message xml:lang="it">Il tasto di sinistra setta il colore della selezione</message>
-	<message xml:lang="es">El botón izquierdo fija el color del texto de la selección</message>
-	<message xml:lang="pt">Botão esquerdo fixa a cor da seleção</message>
-	<message xml:lang="fi">Hiiren vasen näppäin asettaa valintavärin</message>
-	<message xml:lang="tr">Sol düğme seçilin rengini değiştiriyor</message>
-	<message xml:lang="ru">Левая кнопка устанавливает выбранный цвет</message>
-	<message xml:lang="hu">A bal egérgomb a kijelölés színét adja meg</message>
-	<message xml:lang="ka">მარცხენა ღილაკით მონიშნულის ფერი მიეთითება</message>
-	<message xml:lang="cn">左键设置所选区域颜色</message>
-	<message xml:lang="tw">左鍵設置所選區域顏色</message>
-	<message xml:lang="sk">Ľavým tlačidlom nastavíte farbu výberu</message>
-</label>
-<label define="TMSG_CPBUTTON_2">
-	<message xml:lang="en">Middle or Right button sets the caret color</message>
-	<message xml:lang="fr">Bouton milieu ou droit change la couleur du curseur</message>
-	<message xml:lang="de">Mittlere oder rechte Maustaste: Cursorfarbe</message>
-	<message xml:lang="it">l tasto centrale o di destra setta il colore del cursore</message>
-	<message xml:lang="es">El botón derecho o el central fijan el color del fondo de la selección</message>
-	<message xml:lang="pt">Botão do meio ou da direita fixa a cor do cursor</message>
-	<message xml:lang="fi">Hiiren keskimmäinen tai oikea näppäin asettaa caret värin</message>
-	<message xml:lang="tr">Orta ve sağ düğme kürsör\'ün rengini değiştiriyor</message>
-	<message xml:lang="ru">Средняя и правая кнопка устанавливает цвет символа места вставки "^"</message>
-	<message xml:lang="hu">A középső vagy jobb egérgomb a caret adja meg</message>
-	<message xml:lang="ka">შუა ან მარჯვენა ღილაკით &quot;^&quot; სიმბოლოს ფერი მიეთითება</message>
-	<message xml:lang="cn">中键或右键设置脱字符的颜色</message>
-	<message xml:lang="tw">中鍵或右鍵設置脫字符的顏色</message>
-	<message xml:lang="sk">Stredným alebo pravým tlačidlom nastavíte farbu bez označenia</message>
-</label>
-<label define="TMSG_CPMOREBUTTON">
-	<message xml:lang="en">More ...</message>
-	<message xml:lang="fr">Autres ...</message>
-	<message xml:lang="de">Weiter ...</message>
-	<message xml:lang="it">Encora ...</message>
-	<message xml:lang="es">Más ...</message>
-	<message xml:lang="pt">Mais ...</message>
-	<message xml:lang="fi">Lisää ...</message>
-	<message xml:lang="tr">Diğer...</message>
-	<message xml:lang="ru">Больше ...</message>
-	<message xml:lang="hu">Egyéb...</message>
-	<message xml:lang="ka">დამატებით ...</message>
-	<message xml:lang="cn">更多 ...</message>
-	<message xml:lang="tw">更多 ...</message>
-	<message xml:lang="sk">Ďalej ...</message>
-</label>
-<label define="TMSG_CPGETBUTTON">
-	<message xml:lang="en">Get</message>
-	<message xml:lang="fr">Actualiser</message>
-	<message xml:lang="de">Holen</message>
-	<message xml:lang="it">Usa colori</message>
-	<message xml:lang="es">Obtener</message>
-	<message xml:lang="pt">Comece</message>
-	<message xml:lang="fi">Hae</message>
-	<message xml:lang="tr">Yenilendir</message>
-	<message xml:lang="ru">Получить</message>
-	<message xml:lang="hu">Get</message>
-	<message xml:lang="ka">მიღება</message>
-	<message xml:lang="cn">Get</message>
-	<message xml:lang="tw">Get</message>
-	<message xml:lang="sk">Získať</message>
-</label>
-<label define="TMSG_CPCOLORBUTTON">
-	<message xml:lang="en">Color</message>
-	<message xml:lang="fr">Couleur</message>
-	<message xml:lang="de">Farbe</message>
-	<message xml:lang="it">Colore</message>
-	<message xml:lang="es">Color</message>
-	<message xml:lang="pt">Cor</message>
-	<message xml:lang="fi">Väri</message>
-	<message xml:lang="tr">Renk</message>
-	<message xml:lang="ru">Цвет</message>
-	<message xml:lang="hu">Szín</message>
-	<message xml:lang="ka">ფერი</message>
-	<message xml:lang="cn">颜色</message>
-	<message xml:lang="tw">顏色</message>
-	<message xml:lang="sk">Farba</message>
-</label>
 <label define="TMSG_CPCOLORBG">
-	<message xml:lang="en">Background color</message>
-	<message xml:lang="fr">Couleur de l'arrière-plan</message>
-	<message xml:lang="es">Color del fondo</message>
-	<message xml:lang="de">Hintergrundfarbe</message>
-	<message xml:lang="it">Colore di sfondo</message>
+	<message xml:lang="en">Select a background color</message>
+	<message xml:lang="fr">Sélectionner une couleur de fond</message>
+	<message xml:lang="es">Seleccionar un color del fondo</message>
+	<message xml:lang="de">Hintergrundfarbe wählen</message>
+	<message xml:lang="it">Seleziona un colore di sfondo</message>
 	<message xml:lang="ru">Цвет фона</message>
 	<message xml:lang="hu">Háttérszín</message>
 	<message xml:lang="ka">ფონის ფერი</message>
@@ -2318,11 +2187,11 @@
 	<message xml:lang="sk">Farba pozadia</message>
 </label>
 <label define="TMSG_CPCOLORFG">
-	<message xml:lang="en">Text color</message>
-	<message xml:lang="fr">Couleur du texte</message>
-	<message xml:lang="es">Color del texto</message>
-	<message xml:lang="de">Vordergrundfarbe</message>
-	<message xml:lang="it">Colore per il testo</message>
+	<message xml:lang="en">Select a text color</message>
+	<message xml:lang="fr">Sélectionner une couleur du texte</message>
+	<message xml:lang="es">Seleccionar un color del texto</message>
+	<message xml:lang="de">Vordergrundfarbe wählen</message>
+	<message xml:lang="it">Seleziona un colore per il testo</message>
 	<message xml:lang="ru">Цвет текста документа</message>
 	<message xml:lang="hu">Szín</message>
 	<message xml:lang="ka">ტექსტის ფერი</message>
@@ -3830,12 +3699,12 @@
   <message xml:lang="sk">Zmenšiť veľkosť textu</message>
 </label>
 <label define="TMSG_THEME">
-  <message xml:lang="en">Theme</message>
-  <message xml:lang="es">Tema</message>
-  <message xml:lang="fr">Thème</message>
+<message xml:lang="en">Theme</message>
+<message xml:lang="es">Tema</message>
+<message xml:lang="fr">Thème</message>
 <message xml:lang="de">Thema</message>
 <message xml:lang="hu">Téma</message>
-	<message xml:lang="it">Tema</message>
+<message xml:lang="it">Tema</message>
 </label>
 <label define="TMSG_INSERT_MODE_XML">
 	<message xml:lang="en">XML</message>

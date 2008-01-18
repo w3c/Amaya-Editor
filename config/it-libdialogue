@@ -45,8 +45,8 @@
 43 Chiudi
 44 Directory
 45 Il documento %s esiste già. Vuoi sovrascriverlo?
-46 Il pulsante sinistro cambia il colore del testo
-47 Il pulsante centrale e quello destro cambiano il colore dello sfondo
+46 **Set the text color
+47 **Set the background color
 48 Famiglia
 49 Normale
 50 Grassetto
@@ -84,7 +84,7 @@
 82 Dopo la selezione
 83 L\'intero documento
 84 Non rimpiazzare
-85 Colori di default
+85 **No color
 86 prima di chiuderlo
 87 Chiudi un documento
 88 Simboli matematici
@@ -137,127 +137,121 @@
 135 Impossibile creare "%s"
 136 Soprassegnato
 137 Formato del documento
-138 Eventi
-139 Rimuovi l\'attributo
-140 Il tasto di sinistra setta il colore della selezione
-141 l tasto centrale o di destra setta il colore del cursore
-142 Encora ...
-143 Usa colori
-144 Colore
-145 Colore di sfondo
-146 Colore per il testo
-147 Scegli una struttura XML generica
-148 Controlla
-149 Cerca
-150 Sostituisci (+ diz)
-151 Sostituisci e continua
-152 Altra lingua
-153 Aggiungi
-154 parole contenenti:
-155 Controllo ortografico...
-156 numerali romani
-157 Ignora
-158 parole tutte maiuscole
-159 parole contenenti cifre
-160 Errore nel file dei parametri
-161 Il file della tastiera non esiste
-162 Impossibile salvare il dizionario del documento
-163 Parola scorretta "%s" rifiutata in questo dizionario
-164 Parola "%s" aggiunta nel dizionario del documento
-165 Fine controllo ortografico
-166 Controllo ortografico interrotto
-167 Seleziona un documento
-168 Dizionario del documento salvato: %s
-169 Non disponibile in questa versione
-170 Abilita/Disabilita la paletta colori
-171 Strumenti
-172 Attributo obbligatorio, non si pu rimuovere
-173 Aggiorna
-174 Sinistra
-175 Destra
-176 Centro
-177 Giustifica
-178 Applica la classe
-179 Seleziona una classe o una pseudoclasse
-180 Seleziona
-181 Elimina
-182 Formule matematiche
-183 Varie
-184 Relazioni binarie
-185 Relazioni binarie di negazione
-186 Operatori
-187 Alfabeto greco (maiuscolo)
-188 Frecce
-189 Caratteri speciali
-190 Interrompi trasferimento
-191 Documento precedente
-192 Documento successivo
-193 Ricarica
-194 Salvare
-195 Salvare
-196 Nuovo documento XHTML
-197 Apri documento
-198 Stampa
-199 Cerca
-200 Home
-201 Enfasi (em) On/Off
-202 Forte On/Off
-203 Codice On/Off
-204 Inserisci immagine
-205 Intestazione di livello 1
-206 Intestazione di livello 2
-207 Intestazione di livello 3
-208 Intestazione di livello 4
-209 Paragrafo
-210 Lista puntata
-211 Lista numerata
-212 Lista di definizioni
-213 Collegamento
-214 Tabella
-215 Stai per chiudere %d tab aperti. Vuoi proprio proseguire?
-216 Avvisami quando cerco di chiudere pi tab
-217 Chiudi tab
-218 Nessun errore trovato
-219 Mostra le errore
-220 Box
-221 Divisione
-222 Obiettivo
-223 Inserzione On/Off
-224 Cancellazione On/Off
-225 Pedice On/Off
-226 Indice On/Off
-227 Termine
-228 Definizione
-229 Oggetto
-230 Style
-231 Files
-232 Dividi la vista in orizzontale
-233 Dividi la vista in verticale
-234 Mostra strumenti
-235 Ritratta
-236 Rifai
-237 Taglia
-238 Copia
-239 Incolla
-240 Controllo ortografico
-241 Costrutti vari
-242 Relazioni, ordine e logica
-243 Insiemi e funzioni
-244 Arihmetica, operazioni, complessi e costanti
-245 Analisi, algebra lineare e statistica
-246 Trigonometria e logaritmi
-247 Ingrandisci
-248 Rimpicciolisci
-249 Tema
-250 XML
-251 Testo
-252 Nessun documento recente
-253 Click su un elemento per selezionarlo
-254 Click per modificare il modo editing
-255 Unisci
-256 Riduci l'estensione orizzontale
-257 Riduci l'estensione verticale
-258 Inserisci una riga
-259 Aggiungi una riga
-260 Inserisci una colonna
-261 Aggiungi una colonna
+138 Rimuovi l\'attributo
+139 Seleziona un colore di sfondo
+140 Seleziona un colore per il testo
+141 Scegli una struttura XML generica
+142 Controlla
+143 Cerca
+144 Sostituisci (+ diz)
+145 Sostituisci e continua
+146 Altra lingua
+147 Aggiungi
+148 parole contenenti:
+149 Controllo ortografico...
+150 numerali romani
+151 Ignora
+152 parole tutte maiuscole
+153 parole contenenti cifre
+154 Errore nel file dei parametri
+155 Il file della tastiera non esiste
+156 Impossibile salvare il dizionario del documento
+157 Parola scorretta "%s" rifiutata in questo dizionario
+158 Parola "%s" aggiunta nel dizionario del documento
+159 Fine controllo ortografico
+160 Controllo ortografico interrotto
+161 Seleziona un documento
+162 Dizionario del documento salvato: %s
+163 Non disponibile in questa versione
+164 Abilita/Disabilita la paletta colori
+165 Strumenti
+166 Attributo obbligatorio, non si pu rimuovere
+167 Aggiorna
+168 Sinistra
+169 Destra
+170 Centro
+171 Giustifica
+172 Applica la classe
+173 Seleziona una classe o una pseudoclasse
+174 Seleziona
+175 Elimina
+176 Formule matematiche
+177 Varie
+178 Relazioni binarie
+179 Relazioni binarie di negazione
+180 Operatori
+181 Alfabeto greco (maiuscolo)
+182 Frecce
+183 Caratteri speciali
+184 Interrompi trasferimento
+185 Documento precedente
+186 Documento successivo
+187 Ricarica
+188 Salvare
+189 Salvare
+190 Nuovo documento XHTML
+191 Apri documento
+192 Stampa
+193 Cerca
+194 Home
+195 Enfasi (em) On/Off
+196 Forte On/Off
+197 Codice On/Off
+198 Inserisci immagine
+199 Intestazione di livello 1
+200 Intestazione di livello 2
+201 Intestazione di livello 3
+202 Intestazione di livello 4
+203 Paragrafo
+204 Lista puntata
+205 Lista numerata
+206 Lista di definizioni
+207 Collegamento
+208 Tabella
+209 Stai per chiudere %d tab aperti. Vuoi proprio proseguire?
+210 Avvisami quando cerco di chiudere pi tab
+211 Chiudi tab
+212 Nessun errore trovato
+213 Mostra le errore
+214 Box
+215 Divisione
+216 Obiettivo
+217 Inserzione On/Off
+218 Cancellazione On/Off
+219 Pedice On/Off
+220 Indice On/Off
+221 Termine
+222 Definizione
+223 Oggetto
+224 Style
+225 Files
+226 Dividi la vista in orizzontale
+227 Dividi la vista in verticale
+228 Mostra strumenti
+229 Ritratta
+230 Rifai
+231 Taglia
+232 Copia
+233 Incolla
+234 Controllo ortografico
+235 Costrutti vari
+236 Relazioni, ordine e logica
+237 Insiemi e funzioni
+238 Arihmetica, operazioni, complessi e costanti
+239 Analisi, algebra lineare e statistica
+240 Trigonometria e logaritmi
+241 Ingrandisci
+242 Rimpicciolisci
+243 Tema
+244 XML
+245 Testo
+246 Nessun documento recente
+247 Click su un elemento per selezionarlo
+248 Click per modificare il modo editing
+249 Unisci
+250 Riduci l'estensione orizzontale
+251 Riduci l'estensione verticale
+252 Inserisci una riga
+253 Aggiungi una riga
+254 Inserisci una colonna
+255 Aggiungi una colonna

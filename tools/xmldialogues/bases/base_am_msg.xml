@@ -3985,13 +3985,13 @@
 	<message xml:lang="sk">Chyba</message>
 </label>
 <label define="AM_SELECT_CHARSET">
-	<message xml:lang="en">Select a Charset</message>
+	<message xml:lang="en">Select a charset</message>
 	<message xml:lang="fr">Sélectionner un codage</message>
-	<message xml:lang="it">Seleziona un Charset</message>
+	<message xml:lang="it">Seleziona un charset</message>
 	<message xml:lang="de">Zeichenkodierung wählen</message>
-	<message xml:lang="es">Seleccionar un Charset</message>
-	<message xml:lang="pt">Selecionar um Charset</message>
-	<message xml:lang="fi">Valitse Charset</message>
+	<message xml:lang="es">Seleccionar un charset</message>
+	<message xml:lang="pt">Selecionar um charset</message>
+	<message xml:lang="fi">Valitse charset</message>
 	<message xml:lang="tr">Charset seçin</message>
 	<message xml:lang="ru">Выбрать кодировку символов</message>
 	<message xml:lang="hu">Adja meg a karakter kódolást</message>
@@ -4017,7 +4017,7 @@
 	<message xml:lang="sk">Vybrať MIME typ</message>
 </label>
 <label define="AM_CHANGE_CHARSET">
-	<message xml:lang="en">Change Charset</message>
+	<message xml:lang="en">Change charset</message>
 	<message xml:lang="fr">Changer le codage</message>
 	<message xml:lang="it">Cambia Charset</message>
 	<message xml:lang="de">Zeichenkodierung ändern</message>
@@ -4072,7 +4072,7 @@
 	<message xml:lang="es">Este tipo de documento no soporta juegos de caracteres</message>
 	<message xml:lang="pt">este tipo de documento não suporta conjuntos de caracteres (charsets)</message>
 	<message xml:lang="fi">Tämä dokumenttityyppi ei tue charset:iä</message>
-	<message xml:lang="tr">Bu tip belgenin Charset\'i yoktur</message>
+	<message xml:lang="tr">Bu tip belgenin charset\'i yoktur</message>
 	<message xml:lang="ru">Документ этого типа не поддерживает кодировку</message>
 	<message xml:lang="hu">Ez a dokumentumtípus nem támogatja a karakterkészleteteket</message>
 	<message xml:lang="ka">ასეთე დოკუმენტები კოდერებას ვერ ითვალისწინებენ</message>
@@ -6526,7 +6526,7 @@
 	<message xml:lang="hu">Weblapok</message>
 </label>
 <label define="AM_PASSWORDS_EMPTY">
-	<message xml:lang="en">Remove All</message>
+	<message xml:lang="en">Remove all</message>
 	<message xml:lang="es">Eliminar todo</message>
 	<message xml:lang="fr">Tout effacer</message>
 	<message xml:lang="sk">Odstrániť všetky</message>
@@ -6706,28 +6706,43 @@
 	<message xml:lang="it">Modalità di editing XML</message>
 </label>
 <label define="AM_PANEL_STYLE_LIST">
-	<message xml:lang="en">CSS list</message>
-	<message xml:lang="fr">Liste des CSS</message>
+	<message xml:lang="en">List of style sheets</message>
+	<message xml:lang="fr">Liste des styles</message>
 </label>
 <label define="AM_PANEL_CSS_ADD">
-	<message xml:lang="en">Add a CSS ...</message>
-	<message xml:lang="fr">Ajouter une CSS ...</message>
+	<message xml:lang="en">Add a style sheet...</message>
+	<message xml:lang="fr">Ajouter une feuille de style...</message>
 </label>
 <label define="AM_PANEL_CSS_REM">
-	<message xml:lang="en">Remove selected CSS</message>
-	<message xml:lang="fr">Retirer les CSS sélectionnées</message>
+	<message xml:lang="en">Remove selected style sheets</message>
+	<message xml:lang="fr">Retirer les styles sélectionnées</message>
 </label>
 <label define="AM_PANEL_CSS_ACTIVE">
-	<message xml:lang="en">Active selected CSS</message>
-	<message xml:lang="fr">Activer les CSS sélectionnées</message>
+	<message xml:lang="en">Activate selected style sheets</message>
+	<message xml:lang="fr">Activer les feuilles de style sélectionnées</message>
 </label>
 <label define="AM_PANEL_CSS_DISACTIVE">
-	<message xml:lang="en">Disactive selected CSS</message>
-	<message xml:lang="fr">Désactiver les CSS sélectionnées</message>
+	<message xml:lang="en">Desactivate selected style sheets</message>
+	<message xml:lang="fr">Désactiver les feuilles de style sélectionnées</message>
 </label>
 <label define="AM_PANEL_CSS_OPEN">
-	<message xml:lang="en">Open selected CSS</message>
-	<message xml:lang="fr">Ouvre les CSS sélectionnées</message>
+	<message xml:lang="en">Open selected style sheets</message>
+	<message xml:lang="fr">Ouvir les feuilles de style sélectionnées</message>
+</label>
+<label define="AM_PROFILE">
+	<message xml:lang="en">Amaya profile:</message>
+	<message xml:lang="fr">Profil Amaya :</message>
+	<message xml:lang="it">Profilo Amaya:</message>
+	<message xml:lang="de">Amaya typ:</message>
+	<message xml:lang="es">Perfil de Amaya:</message>
+	<message xml:lang="pt">Perfil del Amaya:</message>
+	<message xml:lang="fi">Amaya profiili:</message>
+	<message xml:lang="tr">Amaya profili:</message>
+	<message xml:lang="ru">Тип Amaya:</message>
+	<message xml:lang="hu">Amaya profile:</message>
+	<message xml:lang="cn">Amaya profile:</message>
+	<message xml:lang="tw">Amaya profile:</message>
+	<message xml:lang="sk">Profil Amaya:</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

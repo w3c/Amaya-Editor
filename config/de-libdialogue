@@ -46,7 +46,7 @@
 44 Verzeichnisse
 45 %s existiert bereits. Überschreiben?
 46 Maustaste 1 setzt die Textfarbe
-47 Maustaste 2 oder 3 setzt die Hintergrundfarbe
+47 **Set the background color
 48 Familie
 49 Normal
 50 Fett
@@ -84,7 +84,7 @@
 82 Unterhalb der Markierung
 83 Im gesamten Dokument
 84 Überspringen
-85 Standardfarbe
+85 **No color
 86 vorher speichern?
 87 Dokument schließen
 88 Formelsatz
@@ -137,127 +137,121 @@
 135 Kann "%s" nicht erzeugen
 136 Überstrichen
 137 Format
-138 Ereignisse (Events)
-139 Löschen
-140 Linke Maustaste: Farbe für markierten Text
-141 Mittlere oder rechte Maustaste: Cursorfarbe
-142 Weiter ...
-143 Holen
-144 Farbe
-145 Hintergrundfarbe
-146 Vordergrundfarbe
-147 Wählen Sie eine generische XML-Struktur
-148 Überprüfe
-149 Suchen
-150 Ersetzen (PW)
-151 Ersetzen
-152 Sprache
-153 Lernen
-154 Worte mit
-155 Rechtschreibprüfung
-156 Römische Zahlen
-157 Ignorieren
-158 Worte in Großbuchstaben
-159 Worte mit Ziffern
-160 Fehler in der Parameterdatei
-161 Tastaturdatei fehlt
-162 Kann das Dokumentwörterbuch nicht speichern
-163 Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen
-164 Wort "%s" zum Dokumentwörterbuch hinzugefügt
-165 Rechtschreibprüfung beendet
-166 Rechtschreibprüfung abgebrochen
-167 Bitte ein Dokument auswählen
-168 Dokumentwörterbuch unter %s gespeichert
-169 In dieser Version nicht verfügbar
-170 Palette aktivieren/deaktivieren
-171 Hilfsmittel
-172 Obligatorisches Attribut, kann nicht entfernt werden
-173 Erneuern
-174 Links
-175 Rechts
-176 Zur Mitte flanken
-177 Gerechtfertigt
-178 Klasse übernehnem
-179 Klasse oder Pseudoklasse wählen
-180 Auswählen
-181 Verwerfen
-182 Formel
-183 Verschiedene
-184 Binäre Relationen
-185 Binäre negierte Relationen
-186 Operatoren
-187 Griechisches Alphabet (Großbuchstaben)
-188 Pfeile
-189 Sonderzeichen
-190 Stop
-191 Zurück
-192 Vorwärts
-193 Aktualisieren
-194 Speichern
-195 Speichern
-196 XHTML
-197 Öffnen
-198 Drucken
-199 Suchen/Ersetzen
-200 Startseite
-201 Betont On/Off
-202 Hervorgehoben On/Off
-203 Code On/Off
-204 Bild
-205 Überschrift Ebene 1
-206 Überschrift Ebene 2
-207 Überschrift Ebene 3
-208 Überschrift Ebene 4
-209 Absatz
-210 Ungeordnete Liste
-211 Geordnete Liste
-212 Definitionsliste
-213 Verweis
-214 Tabelle
-215 Sie sind dabei, %d geöffnete Seiten zu schließen. Sind Sie sicher, dass Sie fortfahren möchten?
-216 Warnung anzeigen, wenn mehrere Seiten geschlossen werden sollen
-217 Seiten schließen
-218 Kein Fehler gefunden
-219 Parserfehler anzeigen
-220 Umrisse
-221 Ábschnitt
-222 Erzeugen
-223 Eingefügter Text On/Off
-224 Gelöschter Text On/Off
-225 Tiefgestellt On/Off
-226 Hochgestellt On/Off
-227 Begriff
-228 Definition
-229 Objekt
-230 Stil
-231 Durchsuchen
-232 Ansicht horizontal teilen
-233 Ansicht vertikal teilen
-234 Hilfsmittel anzeigen
-235 Rückgängig
-236 Erneut
-237 Ausschneiden
-238 Kopieren
-239 Einfügen
-240 Rechtschreibprüfung
-241 Verschiedene Konstruktionen
-242 Abhängigkeiten, Aufträge und Verknüpfungssteuerungen
-243 Datensätze und Funktionen
-244 arithmetisch, Abläufe, Verzweigungen und Konstante
-245 Analyse, lineare Algebra und Statistik
-246 Trigonometrie und Logarithmen
-247 Schrift vergrößern
-248 Schrift verkleinern
-249 Thema
-250 XML
-251 Text
-252 Keine neuen Dokumente
-253 Klicken Sie auf ein Element um es auszuwählen
-254 Klicken Sie um den Editmodus zu wechseln
-255 Zusammenfügen die Zellen
-256 Verkleinern der Breite
-257 Verkleinern der Breite
-258 Zeile einfügen (davor)
-259 Zeile inzufügen (danach)
-260 Spalte einfügen (davor)
-261 Spalte inzufügen (danach)
+138 Löschen
+139 Hintergrundfarbe wählen
+140 Vordergrundfarbe wählen
+141 Wählen Sie eine generische XML-Struktur
+142 Überprüfe
+143 Suchen
+144 Ersetzen (PW)
+145 Ersetzen
+146 Sprache
+147 Lernen
+148 Worte mit
+149 Rechtschreibprüfung
+150 Römische Zahlen
+151 Ignorieren
+152 Worte in Großbuchstaben
+153 Worte mit Ziffern
+154 Fehler in der Parameterdatei
+155 Tastaturdatei fehlt
+156 Kann das Dokumentwörterbuch nicht speichern
+157 Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen
+158 Wort "%s" zum Dokumentwörterbuch hinzugefügt
+159 Rechtschreibprüfung beendet
+160 Rechtschreibprüfung abgebrochen
+161 Bitte ein Dokument auswählen
+162 Dokumentwörterbuch unter %s gespeichert
+163 In dieser Version nicht verfügbar
+164 Palette aktivieren/deaktivieren
+165 Hilfsmittel
+166 Obligatorisches Attribut, kann nicht entfernt werden
+167 Erneuern
+168 Links
+169 Rechts
+170 Zur Mitte flanken
+171 Gerechtfertigt
+172 Klasse übernehnem
+173 Klasse oder Pseudoklasse wählen
+174 Auswählen
+175 Verwerfen
+176 Formel
+177 Verschiedene
+178 Binäre Relationen
+179 Binäre negierte Relationen
+180 Operatoren
+181 Griechisches Alphabet (Großbuchstaben)
+182 Pfeile
+183 Sonderzeichen
+184 Stop
+185 Zurück
+186 Vorwärts
+187 Aktualisieren
+188 Speichern
+189 Speichern
+190 XHTML
+191 Öffnen
+192 Drucken
+193 Suchen/Ersetzen
+194 Startseite
+195 Betont On/Off
+196 Hervorgehoben On/Off
+197 Code On/Off
+198 Bild
+199 Überschrift Ebene 1
+200 Überschrift Ebene 2
+201 Überschrift Ebene 3
+202 Überschrift Ebene 4
+203 Absatz
+204 Ungeordnete Liste
+205 Geordnete Liste
+206 Definitionsliste
+207 Verweis
+208 Tabelle
+209 Sie sind dabei, %d geöffnete Seiten zu schließen. Sind Sie sicher, dass Sie fortfahren möchten?
+210 Warnung anzeigen, wenn mehrere Seiten geschlossen werden sollen
+211 Seiten schließen
+212 Kein Fehler gefunden
+213 Parserfehler anzeigen
+214 Umrisse
+215 Ábschnitt
+216 Erzeugen
+217 Eingefügter Text On/Off
+218 Gelöschter Text On/Off
+219 Tiefgestellt On/Off
+220 Hochgestellt On/Off
+221 Begriff
+222 Definition
+223 Objekt
+224 Stil
+225 Durchsuchen
+226 Ansicht horizontal teilen
+227 Ansicht vertikal teilen
+228 Hilfsmittel anzeigen
+229 Rückgängig
+230 Erneut
+231 Ausschneiden
+232 Kopieren
+233 Einfügen
+234 Rechtschreibprüfung
+235 Verschiedene Konstruktionen
+236 Abhängigkeiten, Aufträge und Verknüpfungssteuerungen
+237 Datensätze und Funktionen
+238 arithmetisch, Abläufe, Verzweigungen und Konstante
+239 Analyse, lineare Algebra und Statistik
+240 Trigonometrie und Logarithmen
+241 Schrift vergrößern
+242 Schrift verkleinern
+243 Thema
+244 XML
+245 Text
+246 Keine neuen Dokumente
+247 Klicken Sie auf ein Element um es auszuwählen
+248 Klicken Sie um den Editmodus zu wechseln
+249 Zusammenfügen die Zellen
+250 Verkleinern der Breite
+251 Verkleinern der Breite
+252 Zeile einfügen (davor)
+253 Zeile inzufügen (danach)
+254 Spalte einfügen (davor)
+255 Spalte inzufügen (danach)

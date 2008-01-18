@@ -6067,7 +6067,7 @@ void StartXmlParser (Document doc, char *fileName,
              selector in the User style sheet */
           LoadUserStyleSheet (doc);
           TtaSetDisplayMode (doc, DisplayImmediately);
-          UpdateStyleList (doc);
+          UpdateStyleList (doc, 1);
         }
 
       /* Check the Thot abstract tree against the structure schema. */

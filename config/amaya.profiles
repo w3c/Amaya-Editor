@@ -752,6 +752,13 @@ ShowAppliedStyle
 
 [css-style-lite]
 +css-browsing
+&DoClassicTheme
+&DoModernTheme
+&DoNoTheme
+&DoSelectColor
+&DoRemoveColor
+&DoSelectBgColor
+&DoRemoveBgColor
 &DoLeftAlign
 &DoCenter
 &DoRightAlign

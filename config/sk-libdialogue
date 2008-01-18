@@ -45,8 +45,8 @@
 43 Zatvoriť
 44 Priečinky
 45 Dokument %s už existuje. Chcete ho nahradiť?
-46 Ľavým tlačidlom nastavíte farbu textu
-47 Stredným alebo pravým tlačidlom nastavíte farbu pozadia
+46 **Set the text color
+47 **Set the background color
 48 Rodina písma
 49 Normálne
 50 Tučné
@@ -84,7 +84,7 @@
 82 Za výberom
 83 V celom dokumente
 84 Nenahrádzať
-85 Pôvodné farby
+85 **No color
 86 pred zatvorením
 87 Zatvoriť dokumetn
 88 Matematické symboly
@@ -137,127 +137,121 @@
 135 Nedá sa vytvoriť "%s"
 136 Pruh nad
 137 Formát dokumentu
-138 Udalosti
-139 Odstániť atribút
-140 Ľavým tlačidlom nastavíte farbu výberu
-141 Stredným alebo pravým tlačidlom nastavíte farbu bez označenia
-142 Ďalej ...
-143 Získať
-144 Farba
-145 Farba pozadia
-146 Farba popredia
-147 Vybrať základnú štruktúru XML
-148 Kontrola
-149 Hľadať/Preskočiť
-150 Nahradiť (+ slovník)
-151 Nahradiť a nájsť ďalšie
-152 Iný jazyk
-153 Pridať do slovníka
-154 slová obsahujúce:
-155 Kontrola pravopisu ...
-156 Rímske čísla
-157 Ignorovať
-158 slová napísané VEĽKÝMI písmenami
-159 slová s číslami
-160 Chyba súboru s parametrami
-161 Neexistuje súbor klávesnice
-162 Slovník sa nedá uložiť
-163 Nesprávne slovo "%s" bolo zamietnuté v tomto slovníku
-164 Slovo "%s" bolo pridané do slovníka
-165 Koniec kontroly pravopisu
-166 Kontrola pravopisu prerušená
-167 Prosím vyberte dokument
-168 Slovník bol uložený
-169 Nie je prístupné v tejto verzii
-170 Vysunúť/zasunúť nástrojovú lištu
-171 Nástroje
-172 Toto je povinný atribút, ktorý nemôže byť odstránený
-173 Obnoviť
-174 Doľava
-175 Doprava
-176 Centrovať
-177 Do bloku
-178 Aplikovať triedu (class)
-179 Vyberte triedu alebo pseudotriedu
-180 Vybrať
-181 Skartovať
-182 Vzorce
-183 Rôzne
-184 Relačné operátory
-185 Negované relačné operátory
-186 Operátory
-187 Grácka abeceda (veľké)
-188 Šipky
-189 Špeciálne znaky
-190 Prerušiť prenos
-191 Predchádzajúci dokument
-192 Nasledujúci dokument
-193 Načítať najnovšiu verziu stránky
-194 Uložiť
-195 Uložiť
-196 Nový XHTML dokument
-197 Otvoriť dokument
-198 Tlačiť
-199 Hľadať
-200 Prejsť na domovskú stránku
-201 Zvýrazniť On/Off
-202 Silno zvýrazniť On/Off
-203 Zdrojový kód On/Off
-204 Obrázok (img)
-205 Nadpis úrovne 1
-206 Nadpis úrovne 2
-207 Nadpis úrovne 3
-208 Nadpis úrovne 4
-209 Odsek
-210 Odrážky (ul)
-211 Číslovanie (ol)
-212 Zoznam definícií (dl)
-213 Hypertextový odkaz
-214 Tabuľka (table)
-215 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
-216 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
-217 Zatvoriť karty
-218 Žiadne chyby neboli nájdené
-219 Zobraziť nájdené chyby
-220 Kolónky
-221 Oddelenie, vrstva (div)
-222 Záložka
-223 Novovložený text On/Off
-224 Text na odstránenie On/Off
-225 Dolný index On/Off
-226 Horný index On/Off
-227 Termín (dt)
-228 Definícia termínu (dd)
-229 Objekt (object)
-230 Pravidlá
-231 Súbor
-232 Rozdeliť okno horizontálne
-233 Rozdeliť okno vertikálne
-234 Zobraziť/skryť nástroje
-235 Späť
-236 Opakovať
-237 Vystrihnúť
-238 Kopírovať
-239 Prilepiť
-240 Kontrola pravopisu
-241 **Various constructs
-242 **Relations, orders and logic
-243 **Sets and functions
-244 **Arithmetic, operations, complexes and constants
-245 **Analysis, linear algebra and statistic
-246 **Trigonometry and logarithms
-247 Zväčšiť veľkosť textu
-248 Zmenšiť veľkosť textu
-249 **Theme
-250 XML
-251 Textové
-252 **No recent document
-253 **Click an element to select it
-254 **Click to change the editing mode
-255 Zlúčiť
-256 Rozdeliť bunky horizontálne
-257 Rozdeliť bunky vertikálne
-258 Vložiť riadok nad
-259 Vložiť riadok pod
-260 Vložiť stĺpec vľavo
-261 Vložiť stĺpec vpravo
+138 Odstániť atribút
+139 Farba pozadia
+140 Farba popredia
+141 Vybrať základnú štruktúru XML
+142 Kontrola
+143 Hľadať/Preskočiť
+144 Nahradiť (+ slovník)
+145 Nahradiť a nájsť ďalšie
+146 Iný jazyk
+147 Pridať do slovníka
+148 slová obsahujúce:
+149 Kontrola pravopisu ...
+150 Rímske čísla
+151 Ignorovať
+152 slová napísané VEĽKÝMI písmenami
+153 slová s číslami
+154 Chyba súboru s parametrami
+155 Neexistuje súbor klávesnice
+156 Slovník sa nedá uložiť
+157 Nesprávne slovo "%s" bolo zamietnuté v tomto slovníku
+158 Slovo "%s" bolo pridané do slovníka
+159 Koniec kontroly pravopisu
+160 Kontrola pravopisu prerušená
+161 Prosím vyberte dokument
+162 Slovník bol uložený
+163 Nie je prístupné v tejto verzii
+164 Vysunúť/zasunúť nástrojovú lištu
+165 Nástroje
+166 Toto je povinný atribút, ktorý nemôže byť odstránený
+167 Obnoviť
+168 Doľava
+169 Doprava
+170 Centrovať
+171 Do bloku
+172 Aplikovať triedu (class)
+173 Vyberte triedu alebo pseudotriedu
+174 Vybrať
+175 Skartovať
+176 Vzorce
+177 Rôzne
+178 Relačné operátory
+179 Negované relačné operátory
+180 Operátory
+181 Grácka abeceda (veľké)
+182 Šipky
+183 Špeciálne znaky
+184 Prerušiť prenos
+185 Predchádzajúci dokument
+186 Nasledujúci dokument
+187 Načítať najnovšiu verziu stránky
+188 Uložiť
+189 Uložiť
+190 Nový XHTML dokument
+191 Otvoriť dokument
+192 Tlačiť
+193 Hľadať
+194 Prejsť na domovskú stránku
+195 Zvýrazniť On/Off
+196 Silno zvýrazniť On/Off
+197 Zdrojový kód On/Off
+198 Obrázok (img)
+199 Nadpis úrovne 1
+200 Nadpis úrovne 2
+201 Nadpis úrovne 3
+202 Nadpis úrovne 4
+203 Odsek
+204 Odrážky (ul)
+205 Číslovanie (ol)
+206 Zoznam definícií (dl)
+207 Hypertextový odkaz
+208 Tabuľka (table)
+209 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
+210 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
+211 Zatvoriť karty
+212 Žiadne chyby neboli nájdené
+213 Zobraziť nájdené chyby
+214 Kolónky
+215 Oddelenie, vrstva (div)
+216 Záložka
+217 Novovložený text On/Off
+218 Text na odstránenie On/Off
+219 Dolný index On/Off
+220 Horný index On/Off
+221 Termín (dt)
+222 Definícia termínu (dd)
+223 Objekt (object)
+224 Pravidlá
+225 Súbor
+226 Rozdeliť okno horizontálne
+227 Rozdeliť okno vertikálne
+228 Zobraziť/skryť nástroje
+229 Späť
+230 Opakovať
+231 Vystrihnúť
+232 Kopírovať
+233 Prilepiť
+234 Kontrola pravopisu
+235 **Various constructs
+236 **Relations, orders and logic
+237 **Sets and functions
+238 **Arithmetic, operations, complexes and constants
+239 **Analysis, linear algebra and statistic
+240 **Trigonometry and logarithms
+241 Zväčšiť veľkosť textu
+242 Zmenšiť veľkosť textu
+243 **Theme
+244 XML
+245 Textové
+246 **No recent document
+247 **Click an element to select it
+248 **Click to change the editing mode
+249 Zlúčiť
+250 Rozdeliť bunky horizontálne
+251 Rozdeliť bunky vertikálne
+252 Vložiť riadok nad
+253 Vložiť riadok pod
+254 Vložiť stĺpec vľavo
+255 Vložiť stĺpec vpravo

@@ -1764,7 +1764,7 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
             {
               LoadStyleSheet (buff, doc, el, NULL, NULL, media, FALSE);
               TtaFreeMemory (buff);
-              UpdateStyleList (doc);
+              UpdateStyleList (doc, 1);
             }
           TtaFreeMemory (utf8path);
         }
@@ -5238,7 +5238,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
     }
   if (DocumentTypes[doc] != docSource)
     // clean up the list of css files
-    UpdateStyleList (doc);
+    UpdateStyleList (doc, 1);
 }
 
 /*----------------------------------------------------------------------
@@ -7416,7 +7416,7 @@ void StartParser (Document doc, char *fileName,
           if (!external_doc)
             {
             LoadUserStyleSheet (doc);
-            UpdateStyleList (doc);
+            UpdateStyleList (doc, 1);
             }
         }
 

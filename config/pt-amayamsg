@@ -251,7 +251,7 @@
 249 Anotação suprimida!
 250 Carregamento do índice de anotação falhou
 251 Erro
-252 Selecionar um Charset
+252 Selecionar um charset
 253 Selecionar o tipo MIME
 254 Mudar Charset
 255 Mudar o tipo MIME
@@ -444,7 +444,7 @@
 442 **Do you want Amaya to remember this password?
 443 **Remember passwords for sites
 444 **Sites
-445 **Remove All
+445 **Remove all
 446 **An error occured during the building of the javascript/DOM objects
 447 **A script is still running but will be aborted as soon as possible. Please try later.
 448 **Javascript/DOM can not be enabled in this view.
@@ -464,9 +464,10 @@
 462 **Size
 463 **Position
 464 **XML editing mode
-465 **CSS list
-466 **Add a CSS ...
-467 **Remove selected CSS
-468 **Active selected CSS
-469 **Disactive selected CSS
-470 **Open selected CSS
+465 **List of style sheets
+466 **Add a style sheet...
+467 **Remove selected style sheets
+468 **Activate selected style sheets
+469 **Desactivate selected style sheets
+470 **Open selected style sheets
+471 Perfil del Amaya:

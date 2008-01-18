@@ -464,9 +464,10 @@
 462 **Size
 463 **Position
 464 **XML editing mode
-465 **CSS list
-466 **Add a CSS ...
-467 **Remove selected CSS
-468 **Active selected CSS
-469 **Disactive selected CSS
-470 **Open selected CSS
+465 **List of style sheets
+466 **Add a style sheet...
+467 **Remove selected style sheets
+468 **Activate selected style sheets
+469 **Desactivate selected style sheets
+470 **Open selected style sheets
+471 Profil Amaya:

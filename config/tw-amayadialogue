@@ -50,7 +50,7 @@
 48 前進(&F)
 49 保存(&S)
 50 另存為(&A)...
-51 **Save All
+51 **Save all
 52 同步(&Y)
 53 **Send by mail ...
 54 打印設置(&U)...
@@ -80,7 +80,7 @@
 78 刪除(&D)
 79 插入(&I)
 80 附加(&A)
-81 **Select All
+81 **Select all
 82 跳轉
 83 父元素
 84 第一個子元素
@@ -149,7 +149,7 @@
 147 換行 (br)
 148 預格式化 (pre)
 149 table
-150 TABLE 表格
+150 Table
 151 table
 152 caption
 153 colgroup
@@ -157,180 +157,190 @@
 155 thead
 156 tbody
 157 tfoot
-158 改為數據單元格 (td)
-159 改為表頭單元格 (th)
-160 構架(&C)
-161 新建數學公式 (math)
-162 普通文本 (mtext)
-163 識別符 (mi)
-164 數字 (mn)
-165 算符 (mo)
-166 空格 (mspace)
-167 特殊字符 (&xxx;)
-168 不可見次數
-169 采用函數
-170 根 (mroot)
-171 平方根 (msqrt)
-172 封裝 (menclose)
-173 分數 (mfrac)
-174 上標下標 (msubsup)
-175 下標 (msub)
-176 上標 (msup)
-177 頂部底部標記 (munderover)
-178 底部標記 (munder)
-179 頂部標記 (mover)
-180 括號 (mrow)
-181 多重標記 (mmultiscripts)
-182 新建矩陣 (mtable)
-183 FORM 表單
-184 插入 FORM 表單
-185 Button (input)
-186 Checkbox (input)
-187 File selector (input)
-188 Hidden (input)
-189 Image (input)...
-190 Password (input)
-191 Radio (input)
-192 Reset (input)
-193 Submit (input)
-194 Text (input)
-195 fieldset
-196 label
-197 Menu (option)
-198 Submenu (optgroup)
-199 textarea
-200 OBJECT 對象
-201 object
-202 Parameter (param)
-203 MAP 區域
-204 插入 MAP
-205 圓形區域
-206 多邊形區域
-207 矩形區域
-208 框架(&S)
-209 style
-210 Comment
-211 base
-212 meta
-213 link
-214 script
-215 noscript
-216 層 (div)
-217 ADDRESS (address)
-218 區域引用 (blockquote)
-219 內嵌 frame (iframe)
-220 ruby
-221 **Align
-222 **Left
-223 **Center
-224 **Right
-225 **Justify
-226 **Line spacing
-227 **Single
-228 **Half
-229 **Double
-230 **Indent
-231 **Increase
-232 **Decrease
-233 CSS樣式(&S)...
-234 創建規則(&R)...
-235 顯示已應用的樣式...
-236 鏈接(&K)...
-237 打開(&N)...
-238 禁用(&D)...
-239 啟用(&E)...
-240 移除(&V)...
-241 復制地址
-242 粘貼地址
-243 鏈接到上個目標(&L)
-244 創建或更改鏈接(&C)...
-245 創建目標(&T)
-246 刪除 anchor(&D)
-247 添加/刪除 ID(&A)...
-248 拼寫檢查(&K)...
-249 轉換(&M)...
-250 **Edit table
-251 **Merge cells
-252 與右側單元格合并
-253 與下方單元格合并
-254 收縮水平范圍
-255 收縮垂直范圍
-256 選擇該行
-257 插入新行
-258 附加一行
-259 選擇該列
-260 插入新列
-261 附加一列
-262 粘貼在前
-263 粘貼在后
-264 更改標題...
-265 改變文檔類型
-266 刪除doctype聲明
-267 添加doctype聲明
-268 改為 XHTML 1.1
-269 改為 XHTML 1.0 Transitional
-270 改為 XHTML 1.0 Strict
-271 改為 XHTML 1.0 Basic
-272 改為 HTML 4.01 Transitional
-273 改為 HTML 4.01 Strict
-274 區域統計(&S)
-275 生成內容列表(&G)
-276 制作書籍(&M)
-277 插入時間戳
-278 **Graphics
-279 顯示圖形庫
-280 添加選中圖形
-281 注釋
-282 為選擇區作注釋
-283 為文檔作注釋
-284 移動到選擇區
-285 存儲選擇區為 XPointer(&X)
-286 移動到已存儲的 XPointer
-287 答復注釋
-288 提交到服務器
-289 刪除
-290 載入
-291 自定義查詢...
-292 本地過濾器...
-293 協作(&O)
-294 鎖定資源...
-295 取消鎖定資源...
-296 查看資源屬性...
-297 復制鎖定信息...
-298 鎖定了嗎?
-299 &Javascript/DOM
-300 **Enable/Disable
-301 **Execute a command
-302 **Execute an external script
-303 **Add an external script
-304 **Insert a script
-305 關于 Amaya
-306 關于 Amaya at W3C
-307 索引
-308 Browsing
-309 Views
-310 Selecting
-311 Document
-312 Creating elements
-313 Attributes
-314 Characters
-315 **Templates
-316 Restructuring
-317 Links
-318 Tables
-319 Image maps
-320 Math
-321 Graphics
-322 XML support
-323 Style sheets
-324 Searching
-325 Spell Checking
-326 Publishing
-327 協作
-328 Printing
-329 Numbering
-330 Making books
-331 Annotations
-332 Configuring
-333 ShortCuts
-334 Accessibility in Amaya
+158 &Math
+159 新建數學公式 (math)
+160 普通文本 (mtext)
+161 識別符 (mi)
+162 數字 (mn)
+163 算符 (mo)
+164 空格 (mspace)
+165 特殊字符 (&xxx;)
+166 不可見次數
+167 采用函數
+168 根 (mroot)
+169 平方根 (msqrt)
+170 封裝 (menclose)
+171 分數 (mfrac)
+172 上標下標 (msubsup)
+173 下標 (msub)
+174 上標 (msup)
+175 頂部底部標記 (munderover)
+176 底部標記 (munder)
+177 頂部標記 (mover)
+178 括號 (mrow)
+179 多重標記 (mmultiscripts)
+180 新建矩陣 (mtable)
+181 FORM 表單
+182 插入 FORM 表單
+183 Button (input)
+184 Checkbox (input)
+185 File selector (input)
+186 Hidden (input)
+187 Image (input)...
+188 Password (input)
+189 Radio (input)
+190 Reset (input)
+191 Submit (input)
+192 Text (input)
+193 fieldset
+194 label
+195 Menu (option)
+196 Submenu (optgroup)
+197 textarea
+198 OBJECT 對象
+199 object
+200 Parameter (param)
+201 MAP 區域
+202 插入 MAP
+203 圓形區域
+204 多邊形區域
+205 矩形區域
+206 框架
+207 style
+208 Comment
+209 base
+210 meta
+211 link
+212 script
+213 noscript
+214 層 (div)
+215 ADDRESS (address)
+216 區域引用 (blockquote)
+217 內嵌 frame (iframe)
+218 ruby
+219 **Theme
+220 **Classic
+221 **Modern
+222 **No theme
+223 前景色
+224 前景色
+225 **No color
+226 **Background color
+227 背景色
+228 **No color
+229 **Align
+230 **Left
+231 **Center
+232 **Right
+233 **Justify
+234 **Line spacing
+235 **Single
+236 **Half
+237 **Double
+238 **Indent
+239 **Increase
+240 **Decrease
+241 CSS樣式(&S)...
+242 創建規則(&R)...
+243 顯示已應用的樣式...
+244 鏈接(&K)...
+245 打開(&N)...
+246 禁用(&D)...
+247 啟用(&E)...
+248 移除(&V)...
+249 復制地址
+250 粘貼地址
+251 鏈接到上個目標(&L)
+252 創建或更改鏈接(&C)...
+253 創建目標(&T)
+254 刪除 anchor(&D)
+255 添加/刪除 ID(&A)...
+256 拼寫檢查(&K)...
+257 轉換(&M)...
+258 **Edit table
+259 改為數據單元格
+260 改為表頭單元格
+261 **Merge cells
+262 與右側單元格合并
+263 與下方單元格合并
+264 收縮水平范圍
+265 收縮垂直范圍
+266 選擇該行
+267 插入新行
+268 附加一行
+269 選擇該列
+270 插入新列
+271 附加一列
+272 粘貼在前
+273 粘貼在后
+274 更改標題...
+275 改變文檔類型
+276 刪除doctype聲明
+277 添加doctype聲明
+278 改為 XHTML 1.1
+279 改為 XHTML 1.0 Transitional
+280 改為 XHTML 1.0 Strict
+281 改為 XHTML 1.0 Basic
+282 改為 HTML 4.01 Transitional
+283 改為 HTML 4.01 Strict
+284 區域統計(&S)
+285 生成內容列表(&G)
+286 制作書籍(&M)
+287 插入時間戳
+288 **Graphics
+289 顯示圖形庫
+290 添加選中圖形
+291 注釋
+292 為選擇區作注釋
+293 為文檔作注釋
+294 移動到選擇區
+295 存儲選擇區為 XPointer(&X)
+296 移動到已存儲的 XPointer
+297 答復注釋
+298 提交到服務器
+299 刪除
+300 載入
+301 自定義查詢...
+302 本地過濾器...
+303 協作(&O)
+304 鎖定資源...
+305 取消鎖定資源...
+306 查看資源屬性...
+307 復制鎖定信息...
+308 鎖定了嗎?
+309 &Javascript/DOM
+310 **Enable/Disable
+311 **Execute a command
+312 **Execute an external script
+313 **Add an external script
+314 **Insert a script
+315 關于 Amaya
+316 關于 Amaya at W3C
+317 索引
+318 Browsing
+319 Views
+320 Selecting
+321 Document
+322 Creating elements
+323 Attributes
+324 Characters
+325 **Templates
+326 Restructuring
+327 Links
+328 Tables
+329 Image maps
+330 Math
+331 Graphics
+332 XML support
+333 Style sheets
+334 Searching
+335 Spell Checking
+336 Publishing
+337 協作
+338 Printing
+339 Numbering
+340 Making books
+341 Annotations
+342 Configuring
+343 ShortCuts
+344 Accessibility in Amaya

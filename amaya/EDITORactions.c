@@ -678,7 +678,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
 #ifdef _WX
   // set the default icon
   TtaSetPageIcon (doc, 1, NULL);
-  UpdateStyleList (doc);
+  UpdateStyleList (doc, 1);
 #endif /* _WX */
   UpdateEditorMenus (doc);
 }
@@ -917,7 +917,7 @@ void NotFoundDoc (char *url, Document doc)
   UpdateDoctypeMenu (doc);
   /* the document should be saved */
   TtaSetDocumentUnmodified (doc);
-  UpdateStyleList (doc);
+  UpdateStyleList (doc, 1);
   UpdateEditorMenus (doc);
   TtaSetAccessRight (root, ReadOnly, doc);
 }

@@ -6,7 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void UpdateStyleList ( Document doc );
+extern void UpdateStyleList ( Document doc,
+                              View view );
 extern char *UpdateCSSURLs ( Document doc,
                              char *oldpath,
                              char *newpath,
@@ -29,6 +30,12 @@ extern void DeleteStyleElement ( Document doc,
 extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern void StyleChanged ( NotifyOnTarget *event );
 extern void ChangeTheme ( const char *theme );
+extern void DoClassicTheme ( Document doc,
+                             View view );
+extern void DoModernTheme ( Document doc,
+                            View view );
+extern void DoNoTheme ( Document doc,
+                        View view );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void SetStyleString ( Document doc,
                              Element el,
@@ -53,7 +60,8 @@ extern void StyleCallbackDialogue ( int ref,
 
 #else /* __STDC__ */
 
-extern void UpdateStyleList ( Document doc );
+extern void UpdateStyleList ( Document doc,
+                                View view );
 extern char *UpdateCSSURLs ( Document doc,
                                char *oldpath,
                                char *newpath,
@@ -76,6 +84,12 @@ extern void DeleteStyleElement ( Document doc,
 extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern void StyleChanged ( NotifyOnTarget *event );
 extern void ChangeTheme ( const char *theme );
+extern void DoClassicTheme ( Document doc,
+                               View view );
+extern void DoModernTheme ( Document doc,
+                              View view );
+extern void DoNoTheme ( Document doc,
+                          View view );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void SetStyleString ( Document doc,
                                Element el,

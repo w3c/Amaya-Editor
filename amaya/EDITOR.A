@@ -195,9 +195,6 @@ MENUS
 	Types.Table button:BTHead -> CreateTHead;
 	Types.Table button:BTBody -> CreateTBody;
 	Types.Table button:BTFoot -> CreateTFoot;
-	Types.Table Separator;
-	Types.Table button:BDataCell -> ChangeToDataCell;
-	Types.Table button:BHeadingCell -> ChangeToHeadingCell;
 
   Types.MathConstruct button:BDisplayMath -> CreateMath icon:MATHML_Bmath.png;
   Types.MathConstruct button:BMText -> CreateMTEXT;
@@ -262,6 +259,13 @@ MENUS
 	Types button:BIFrame -> CreateIFrame;
 	Types button:BRuby -> CreateRuby;
 
+  Style.ThemeMenu button:BClassic -> DoClassicTheme;
+  Style.ThemeMenu button:BModern -> DoModernTheme;
+  Style.ThemeMenu button:BNoTheme -> DoNoTheme;
+  Style.TextColorMenu button:BSelectColor -> DoSelectColor;
+  Style.TextColorMenu button:BRemoveColor -> DoRemoveColor;
+  Style.BgColorMenu button:BSelectBgColor -> DoSelectBgColor;
+  Style.BgColorMenu button:BRemoveBgColor -> DoRemoveBgColor;
   Style.Align button:BLeftAlign -> DoLeftAlign icon:CSS_left.png;
   Style.Align button:BAlignCenter -> DoCenter icon:CSS_center.png;
   Style.Align button:BRightAlign -> DoRightAlign icon:CSS_right.png;
@@ -293,6 +297,8 @@ MENUS
 
 	Tools button:BSpellCheck -> SpellCheck icon:spellcheck.png;
 	Tools button:BTransform -> TransformType;
+	Tools.TableE button:BDataCell -> ChangeToDataCell;
+	Tools.TableE button:BHeadingCell -> ChangeToHeadingCell;
 	Tools.TableE button:BCellMerge -> MergeSelectedCells icon:Table_merge.png;
 	Tools.TableE button:BCellHExtend -> CellHorizExtend icon:Table_right.png;
 	Tools.TableE button:BCellVExtend -> CellVertExtend icon:Table_bottom.png;

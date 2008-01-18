@@ -464,9 +464,10 @@
 462 Dimension
 463 Position
 464 Mode d'édition XML
-465 Liste des CSS
-466 Ajouter une CSS ...
-467 Retirer les CSS sélectionnées
-468 Activer les CSS sélectionnées
-469 Désactiver les CSS sélectionnées
-470 Ouvre les CSS sélectionnées
+465 Liste des styles
+466 Ajouter une feuille de style...
+467 Retirer les styles sélectionnées
+468 Activer les feuilles de style sélectionnées
+469 Désactiver les feuilles de style sélectionnées
+470 Ouvir les feuilles de style sélectionnées
+471 Profil Amaya :

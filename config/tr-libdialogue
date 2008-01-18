@@ -45,8 +45,8 @@
 43 Tamam
 44 Dizinleri
 45 %s belgesi zaten var, üzerine yazmak ister misiniz?
-46 Sol duğme tuş yazı rengini ayarlar
-47 Orta veya sağ tuş arkaplan rengini ayarlar
+46 **Set the text color
+47 **Set the background color
 48 Yazıtipi ailesi
 49 Normal
 50 Kalın
@@ -84,7 +84,7 @@
 82 Seçimden sonra
 83 Tüm belgede
 84 Değiştirme
-85 Öntanımlı renkler
+85 **No color
 86 kapamadan önce
 87 Belgeyi kapa
 88 Matematik sembolleri
@@ -137,127 +137,121 @@
 135 "%s" yaratılamadı
 136 Üstçizgi
 137 Dokümanın forması
-138 Olaylar
-139 Özeliği sil
-140 Sol düğme seçilin rengini değiştiriyor
-141 Orta ve sağ düğme kürsör\'ün rengini değiştiriyor
-142 Diğer...
-143 Yenilendir
-144 Renk
-145 **Background color
-146 **Text color
-147 **Select a generic XML structure
-148 Kontrol ediliyor
-149 Atla ve sonraki
-150 Değiştir (+ sözlük)
-151 Değiştir
-152 Başka dil
-153 Atla (+ sözlük)
-154 Karakterleri içeren:
-155 Yazım hataları düzelt...
-156 Roma rakamları
-157 Aldırma
-158 Hepsi büyük harf olan sözcükler
-159 Rakam içeren sözcükler
-160 Parametre dosya hatası
-161 Tuştakımı dosyası yok
-162 Belge sözlüğü kaydedilemiyor
-163 Yanlış sözcük "%s" bu sözlükte kabul edilmiyor
-164 "%s" sözcüğü belge sözlüğüne eklendi
-165 Yazım hataları arama sonu
-166 Yazım hatası araması iptal edildi
-167 Lütfen bir belge seçin
-168 Belge sözlüğü kaydedildi: %s
-169 **Not available in this version
-170 **Enable/Disable palette
-171 **Tools
-172 **Mandatory attribute, it can't be removed
-173 **Refresh
-174 **Align left
-175 **Align right
-176 **Center
-177 **Justify
-178 Sınıf uygula
-179 Sınıf seçimi
-180 Sınıf seçimi
-181 **Discard
-182 Matematik
-183 **Misc
-184 **Binary relations
-185 **Binary relations of negation
-186 **Operators
-187 **Greek alphabet (capital)
-188 **Arrows
-189 **Special characters
-190 Aktarımı kes
-191 Önceki belge
-192 Sonraki belge
-193 Yeniden yükle
-194 Kaydet
-195 Kaydet
-196 Yeni XHTML dosyası
-197 Belge aç
-198 Yazdır
-199 Ara
-200 Özel sayfa
-201 Vurgu On/Off
-202 Kuvvetli On/Off
-203 Kod On/Off
-204 Görüntü ekle
-205 Başlık 1
-206 Başlık 2
-207 Başlık 3
-208 Başlık 4
-209 Paragraf
-210 Liste
-211 Numaralı liste
-212 Tanım listesi
-213 Bağlantı
-214 Tablo
-215 **You are about to close %d open tabs. Are you sure you want to continue?
-216 **Warn me when I attempt to close multiple tabs
-217 **Close tabs
-218 **No error detected
-219 Pars hatalarını göster
-220 **Boxes
-221 Bölme
-222 Yarat
-223 Araya Koy On/Off
-224 Sil On/Off
-225 Alt On/Off
-226 Üst On/Off
-227 Terim
-228 Tanım
-229 Nesne
-230 **Style
-231 Dosyası
-232 **Horizontal split/unsplit
-233 **Vertical split/unsplit
-234 **Show/hide tools
-235 Geri al
-236 Iileri al
-237 Kes
-238 Kopyala
-239 Yapıştır
-240 Yazım hataları ara
-241 **Various constructs
-242 **Relations, orders and logic
-243 **Sets and functions
-244 **Arithmetic, operations, complexes and constants
-245 **Analysis, linear algebra and statistic
-246 **Trigonometry and logarithms
-247 Uzaklaştır
-248 Harita alanlarını göster
-249 **Theme
-250 XML
-251 Text
-252 **No recent document
-253 **Click an element to select it
-254 **Click to change the editing mode
-255 **Merge cells
-256 **Shrink horizontal extend
-257 **Shrink vertical extend
-258 **Insert a row
-259 **Append a row
-260 **Insert a column
-261 **Append a column
+138 Özeliği sil
+139 **Select a background color
+140 **Select a text color
+141 **Select a generic XML structure
+142 Kontrol ediliyor
+143 Atla ve sonraki
+144 Değiştir (+ sözlük)
+145 Değiştir
+146 Başka dil
+147 Atla (+ sözlük)
+148 Karakterleri içeren:
+149 Yazım hataları düzelt...
+150 Roma rakamları
+151 Aldırma
+152 Hepsi büyük harf olan sözcükler
+153 Rakam içeren sözcükler
+154 Parametre dosya hatası
+155 Tuştakımı dosyası yok
+156 Belge sözlüğü kaydedilemiyor
+157 Yanlış sözcük "%s" bu sözlükte kabul edilmiyor
+158 "%s" sözcüğü belge sözlüğüne eklendi
+159 Yazım hataları arama sonu
+160 Yazım hatası araması iptal edildi
+161 Lütfen bir belge seçin
+162 Belge sözlüğü kaydedildi: %s
+163 **Not available in this version
+164 **Enable/Disable palette
+165 **Tools
+166 **Mandatory attribute, it can't be removed
+167 **Refresh
+168 **Align left
+169 **Align right
+170 **Center
+171 **Justify
+172 Sınıf uygula
+173 Sınıf seçimi
+174 Sınıf seçimi
+175 **Discard
+176 Matematik
+177 **Misc
+178 **Binary relations
+179 **Binary relations of negation
+180 **Operators
+181 **Greek alphabet (capital)
+182 **Arrows
+183 **Special characters
+184 Aktarımı kes
+185 Önceki belge
+186 Sonraki belge
+187 Yeniden yükle
+188 Kaydet
+189 Kaydet
+190 Yeni XHTML dosyası
+191 Belge aç
+192 Yazdır
+193 Ara
+194 Özel sayfa
+195 Vurgu On/Off
+196 Kuvvetli On/Off
+197 Kod On/Off
+198 Görüntü ekle
+199 Başlık 1
+200 Başlık 2
+201 Başlık 3
+202 Başlık 4
+203 Paragraf
+204 Liste
+205 Numaralı liste
+206 Tanım listesi
+207 Bağlantı
+208 Tablo
+209 **You are about to close %d open tabs. Are you sure you want to continue?
+210 **Warn me when I attempt to close multiple tabs
+211 **Close tabs
+212 **No error detected
+213 Pars hatalarını göster
+214 **Boxes
+215 Bölme
+216 Yarat
+217 Araya Koy On/Off
+218 Sil On/Off
+219 Alt On/Off
+220 Üst On/Off
+221 Terim
+222 Tanım
+223 Nesne
+224 **Style
+225 Dosyası
+226 **Horizontal split/unsplit
+227 **Vertical split/unsplit
+228 **Show/hide tools
+229 Geri al
+230 Iileri al
+231 Kes
+232 Kopyala
+233 Yapıştır
+234 Yazım hataları ara
+235 **Various constructs
+236 **Relations, orders and logic
+237 **Sets and functions
+238 **Arithmetic, operations, complexes and constants
+239 **Analysis, linear algebra and statistic
+240 **Trigonometry and logarithms
+241 Uzaklaştır
+242 Harita alanlarını göster
+243 **Theme
+244 XML
+245 Text
+246 **No recent document
+247 **Click an element to select it
+248 **Click to change the editing mode
+249 **Merge cells
+250 **Shrink horizontal extend
+251 **Shrink vertical extend
+252 **Insert a row
+253 **Append a row
+254 **Insert a column
+255 **Append a column
