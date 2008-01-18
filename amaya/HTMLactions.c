@@ -2985,6 +2985,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
     }
   else
     {
+      TtaSetItemOff (doc, 1, Tools, BCellMerge);
       TtaSetItemOff (doc, 1, Tools, BCellHExtend);
       TtaSetItemOff (doc, 1, Tools, BCellVExtend);
       TtaSetItemOff (doc, 1, Tools, BCellHShrink);

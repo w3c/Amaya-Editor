@@ -648,7 +648,7 @@ void SetTableMenuOff (Document doc, View view)
   TtaSetItemOff (doc, view, Types, BTFoot);
   TtaSetItemOff (doc, view, Tools, BDataCell);
   TtaSetItemOff (doc, view, Tools, BHeadingCell);
-  TtaSetItemOff (doc, view, Types, BCellMerge);
+  TtaSetItemOff (doc, view, Tools, BCellMerge);
   TtaSetItemOff (doc, view, Tools, BCellHExtend);
   TtaSetItemOff (doc, view, Tools, BCellVExtend);
   TtaSetItemOff (doc, view, Tools, BCellHShrink);
