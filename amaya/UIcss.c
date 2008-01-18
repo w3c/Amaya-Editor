@@ -1024,6 +1024,11 @@ void MakeOpenCSS(Document doc, PInfoPtr pInfo)
   css = GetCSSFromInfo(doc, pInfo);
   if(css)
     {
+      if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
+        {
+          ShowSource (doc, 1);
+          return;
+        }
       DontReplaceOldDoc = TRUE;
       if(!css->url)
         GetAmayaDoc (css->localName, NULL, doc, doc, CE_CSS, TRUE, NULL, NULL);

@@ -4499,6 +4499,8 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   if (W3Loading && W3Loading == doc)
     return (0);
   /* Extract parameters if necessary */
+  if (urlname == 0)
+    return (0);
   if (strlen (urlname) > MAX_LENGTH - 1) 
     {
       sprintf (lg_uri, "%d", MAX_LENGTH);

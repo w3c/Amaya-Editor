@@ -130,7 +130,7 @@ void StyleListToolPanel::Update(Document doc)
           pInfo = css->infos[doc];
           while (pInfo)
             {
-              if(pInfo)
+              if (pInfo)
                 {
                   if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
                     ptr = localname;
@@ -165,12 +165,12 @@ void StyleListToolPanel::OnCheckSheet(wxCommandEvent& event)
   if(item!=wxNOT_FOUND)
     {
       PInfoPtr pInfo = m_map[item];
-      if(pInfo)
+      if (pInfo)
         {
-          if(m_list->IsChecked(item))
-            MakeEnableCSS(m_doc, pInfo);
+          if (m_list->IsChecked(item))
+            MakeEnableCSS (m_doc, pInfo);
           else
-            MakeDisableCSS(m_doc, pInfo);
+            MakeDisableCSS (m_doc, pInfo);
         }
     }  
 }
@@ -196,9 +196,9 @@ void StyleListToolPanel::OnAddSheet(wxCommandEvent& event)
 void StyleListToolPanel::OnRemSheet(wxCommandEvent& event)
 {
   wxArrayPtrVoid infos;
-  wxArrayInt selections;
-  Document   doc;
-  int        view;
+  wxArrayInt     selections;
+  Document       doc;
+  int            view;
 
   TtaGetActiveView (&doc, &view);
   if (doc == 0 ||
@@ -207,17 +207,17 @@ void StyleListToolPanel::OnRemSheet(wxCommandEvent& event)
     return;
 
   int i, nb = m_list->GetSelections(selections);
-  for (i=0; i<nb; i++)
+  for (i = 0; i < nb; i++)
     {
       int item = selections[i];
-      if(item!=wxNOT_FOUND)
+      if (item!=wxNOT_FOUND)
         {
           PInfoPtr pInfo = m_map[item];
-          if(pInfo)
+          if (pInfo)
             infos.Add(pInfo);
         }
     }
-  for(i=0; i<(int)infos.GetCount(); i++)
+  for (i = 0; i < (int)infos.GetCount(); i++)
     MakeRemoveCSS(m_doc, (PInfoPtr)infos[i]);
   
   Update(m_doc);
@@ -237,13 +237,13 @@ void StyleListToolPanel::OnActivateSheet(wxCommandEvent& event)
       DocumentTypes[doc] == docText)
     return;
   int i, nb = m_list->GetSelections(selections);
-  for (i=0; i<nb; i++)
+  for (i = 0; i < nb; i++)
     {
       int item = selections[i];
-      if(item!=wxNOT_FOUND)
+      if (item!=wxNOT_FOUND)
         {
           PInfoPtr pInfo = m_map[item];
-          if(pInfo)
+          if (pInfo)
             MakeEnableCSS(m_doc, pInfo);
         }
     }
@@ -264,14 +264,14 @@ void StyleListToolPanel::OnDesactivateSheet(wxCommandEvent& event)
       DocumentTypes[doc] == docText)
     return;
   int i, nb = m_list->GetSelections(selections);
-  for (i=0; i<nb; i++)
+  for (i = 0; i < nb; i++)
     {
       int item = selections[i];
-      if(item!=wxNOT_FOUND)
+      if (item != wxNOT_FOUND)
         {
           PInfoPtr pInfo = m_map[item];
-          if(pInfo)
-            MakeDisableCSS(m_doc, pInfo);
+          if (pInfo)
+            MakeDisableCSS (m_doc, pInfo);
         }
     }
   Update(m_doc);
@@ -282,20 +282,25 @@ void StyleListToolPanel::OnDesactivateSheet(wxCommandEvent& event)
 void StyleListToolPanel::OnShowSheet(wxCommandEvent& event)
 {
   wxArrayPtrVoid infos;
-  wxArrayInt selections;
+  wxArrayInt     selections;
+  Document       doc;
+  int            view;
+
+  TtaGetActiveView (&doc, &view);
 
   int i, nb = m_list->GetSelections(selections);
-  for (i=0; i<nb; i++)
+  for (i = 0; i < nb; i++)
     {
       int item = selections[i];
-      if(item!=wxNOT_FOUND)
+      if (item != wxNOT_FOUND)
         {
           PInfoPtr pInfo = m_map[item];
-          if(pInfo)
-            infos.Add(pInfo);
+          if (pInfo &&
+              (DocumentTypes[doc] != docSource || pInfo->PiCategory == CSS_DOCUMENT_STYLE))
+            infos.Add (pInfo);
         }
     }
-  for(i=0; i<(int)infos.GetCount(); i++)
+  for (i = 0; i < (int)infos.GetCount(); i++)
     MakeOpenCSS(m_doc, (PInfoPtr)infos[i]);
 }
 
