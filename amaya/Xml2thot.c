@@ -1065,22 +1065,23 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
       if (ancestor != NULL)
         {
           elType = TtaGetElementType (ancestor);
-          
           if (XhtmlCannotContainText (elType) &&
               !XmlWithinStack (HTML_EL_Option_Menu, XhtmlParserCtxt->XMLSSchema))
             {
-	      profile = TtaGetDocumentProfile (XMLcontext.doc);
-	      if ((profile == L_Basic || profile == L_Strict) && (!IsBlockElementType (elType)))
-		{
-		  sprintf ((char *)msgBuffer, 
-			   "Element <%s> not allowed outside a block Element - <p> forced", typeName);
-		  XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
-		  newElType.ElTypeNum = HTML_EL_Paragraph;
-		}
-	      else
-		{
-		  newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-		}
+              profile = TtaGetDocumentProfile (XMLcontext.doc);
+              if ((profile == L_Basic || profile == L_Strict) &&
+                  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+                  elType.ElTypeNum == HTML_EL_BODY)
+                {
+                  sprintf ((char *)msgBuffer, 
+                           "Element <%s> not allowed outside a block Element - <p> forced", typeName);
+                  XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+                  newElType.ElTypeNum = HTML_EL_Paragraph;
+                }
+              else
+                {
+                  newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+                }
               /* Element ancestor cannot contain text directly. Create a */
               /* Pseudo_paragraph element as the parent of the text element */
               newElType.ElSSchema = XhtmlParserCtxt->XMLSSchema;
