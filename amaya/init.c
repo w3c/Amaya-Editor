@@ -2538,7 +2538,7 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
       }
 
   /* Removes all CSS informations linked with the document */
-  RemoveDocCSSs (doc);  
+  RemoveDocCSSs (doc, FALSE);  
   /* Free access keys table */
   TtaRemoveDocAccessKeys (doc);
   if (asHTML)
@@ -2609,7 +2609,7 @@ void ParseAsHTML (Document doc, View view)
   localFile = GetLocalPath (doc, DocumentURLs[doc]);
   TtaExtractName (localFile, s, documentname);
   /* Removes all CSS informations linked with the document */
-  RemoveDocCSSs (doc);  
+  RemoveDocCSSs (doc, FALSE);  
   /* Free access keys table */
   TtaRemoveDocAccessKeys (doc);
   // ignore the XML format

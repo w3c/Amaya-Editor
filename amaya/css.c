@@ -189,7 +189,7 @@ void AttrMediaChanged (NotifyAttribute *event)
             {
               if (dispMode != NoComputedDisplay)
                 TtaSetDisplayMode (doc, NoComputedDisplay);
-              UnlinkCSS (css, doc, el, TRUE, FALSE);
+              UnlinkCSS (css, doc, el, TRUE, FALSE, TRUE);
               /* restore the display mode */
               if (dispMode != NoComputedDisplay)
                 TtaSetDisplayMode (doc, dispMode);
@@ -673,12 +673,12 @@ CSSInfoPtr SearchCSS (Document doc, char *url, Element link, PInfoPtr *info)
   UnlinkCSS the CSS is no longer applied to this document and if the
   parameter removed is TRUE, the link is cut.
   If this CSS is no longer used the context and attached information
-  are freed.
+  are freed except if clearCSS is FALSE.
   The parameter link specifies the link.
   Return FALSE when the css context is freed.
   ----------------------------------------------------------------------*/
 ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
-                    ThotBool disabled, ThotBool removed)
+                    ThotBool disabled, ThotBool removed, ThotBool clearCSS)
 {
   CSSInfoPtr          prev;
   PInfoPtr            pInfo, prevInfo;
@@ -767,7 +767,7 @@ ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
           used = (css->infos[i] != NULL);
           i++;
         }
-      if (!used)
+      if (!used && clearCSS)
         {
           /* remove the local copy of the CSS file */
           if (!TtaIsPrinting ())
@@ -795,23 +795,28 @@ ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
 
 /*----------------------------------------------------------------------
   RemoveDocCSSs removes all CSS information linked with the document.
+  The parameter removed is false when the document will be reloaded 
   ----------------------------------------------------------------------*/
-void RemoveDocCSSs (Document doc)
+void RemoveDocCSSs (Document doc, ThotBool removed)
 {
-  CSSInfoPtr          css, next;
+  CSSInfoPtr      css, next;
+  PInfoPtr        pInfo, pNext;
  
   css = CSSList;
   while (css)
     {
       next = css->NextCSS;
-      while (css && css->infos[doc])
+      pInfo = css->infos[doc];
+      while (css && pInfo)
         {
-          if (!UnlinkCSS (css, doc, css->infos[doc]->PiLink, TRUE, TRUE))
+          pNext = pInfo->PiNext;
+          if (!UnlinkCSS (css, doc, css->infos[doc]->PiLink, TRUE, TRUE, removed))
             css = NULL;
+          pInfo = pNext;
         }
       if (css && css->doc == doc)
         /* the document displays the CSS file itself */
-        UnlinkCSS (css, doc, NULL, TRUE, TRUE);
+        UnlinkCSS (css, doc, NULL, TRUE, TRUE, removed);
       /* look at the next CSS context */
       css = next;
     }
@@ -885,7 +890,7 @@ void RemoveStyle (char *url, Document doc, ThotBool disabled,
         TtaSetDisplayMode (doc, NoComputedDisplay);
       if (pInfo)
         link = pInfo->PiLink;
-      UnlinkCSS (css, doc, link, disabled, removed);
+      UnlinkCSS (css, doc, link, disabled, removed, TRUE);
       /* Restore the display mode */
       if (dispMode != NoComputedDisplay)
         TtaSetDisplayMode (doc, dispMode);

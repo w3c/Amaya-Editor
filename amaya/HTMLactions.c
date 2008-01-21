@@ -2784,7 +2784,7 @@ void FreeDocumentResource (Document doc)
         {
           /* switch off the button Show Log file */
           TtaSetItemOff (doc, 1, Tools, BShowLogFile);
-          RemoveDocCSSs (doc);
+          RemoveDocCSSs (doc, TRUE);
           /* free access keys table */
           TtaRemoveDocAccessKeys (doc);
           if (!Synchronizing && DocumentSource[doc])

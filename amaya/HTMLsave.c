@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1800,7 +1800,7 @@ void RestartParser (Document doc, char *localFile,
     DocumentMeta[doc]->xmlformat = FALSE;
 
   /* Removes all CSS informations linked with the document */
-  RemoveDocCSSs (doc);  
+  RemoveDocCSSs (doc, FALSE);  
   /* Clear all editing operations registered in the editing history of the
      document */
   TtaClearUndoHistory (doc);
@@ -3868,7 +3868,7 @@ static void UpdateCss (Document doc, ThotBool src_is_local,
                     }
                 }
               // update the link
-              UnlinkCSS (css, doc, el, TRUE, TRUE);
+              UnlinkCSS (css, doc, el, TRUE, TRUE, TRUE);
               cssnew = AddCSS (0, doc, category, media, url, localname, el);
               if (index < 20)
                 // this css entry is already managed

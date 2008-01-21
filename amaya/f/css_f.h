@@ -32,8 +32,10 @@ extern ThotBool UnlinkCSS ( CSSInfoPtr css,
                             Document doc,
                             Element link,
                             ThotBool disabled,
+                            ThotBool removed,
+                            ThotBool clearCSS );
+extern void RemoveDocCSSs ( Document doc,
                             ThotBool removed );
-extern void RemoveDocCSSs ( Document doc );
 extern void RemoveStyle ( char *url,
                           Document doc,
                           ThotBool disabled,
@@ -78,8 +80,10 @@ extern ThotBool UnlinkCSS ( CSSInfoPtr css,
                               Document doc,
                               Element link,
                               ThotBool disabled,
+                              ThotBool removed,
+                              ThotBool clearCSS );
+extern void RemoveDocCSSs ( Document doc,
                               ThotBool removed );
-extern void RemoveDocCSSs ( Document doc );
 extern void RemoveStyle ( char *url,
                             Document doc,
                             ThotBool disabled,
