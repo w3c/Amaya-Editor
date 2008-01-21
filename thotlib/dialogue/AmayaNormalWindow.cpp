@@ -587,7 +587,7 @@ void AmayaNormalWindow::RefreshShowToolBarToggleMenu(int toolbarID)
   int itemID    = WindowTable[window_id].MenuItemShowToolBar[toolbarID];
   int action    = FindMenuActionFromMenuItemID(NULL, itemID);
   ThotBool on   = IsToolBarShown(toolbarID);
-    
+
   while ( action >= 0 && doc_id < MAX_DOCUMENTS )
     {
       if (LoadedDocument[doc_id-1])

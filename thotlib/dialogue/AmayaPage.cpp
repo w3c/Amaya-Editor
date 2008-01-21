@@ -541,8 +541,11 @@ AmayaFrame * AmayaSplittablePage::AttachFrame( AmayaFrame * p_frame, int positio
 AmayaFrame * AmayaSplittablePage::DetachFrame( int position )
 {
   // Select the right frame : top or bottom
-  AmayaFrame ** pp_frame_container = NULL;
-  AmayaFrame * p_other_frame = NULL;
+  AmayaFrame **pp_frame_container = NULL;
+  AmayaFrame  *p_other_frame = NULL, *oldframe;
+  int          active_frame_position;
+  bool         isUnsplited;
+
   switch (position)
     {
     case 1:
@@ -558,17 +561,15 @@ AmayaFrame * AmayaSplittablePage::DetachFrame( int position )
       break;
     }
 
-  AmayaFrame * oldframe = *pp_frame_container;
-
+  oldframe = *pp_frame_container;
   if (oldframe == NULL)
     return NULL;
 
-  bool isUnsplited = m_pSplitterWindow->Unsplit( oldframe );
+  isUnsplited = m_pSplitterWindow->Unsplit (oldframe);
   if (!isUnsplited)
     {
       // The frame is alone and can't be unsplit
       // => replace it with a dummy panel
-//      m_DummyPanel = new wxPanel( m_pSplitterWindow );
       m_DummyPanel->Show();
 #ifdef __WXDEBUG__
       bool isReplaced = m_pSplitterWindow->ReplaceWindow( oldframe, m_DummyPanel );
@@ -577,27 +578,24 @@ AmayaFrame * AmayaSplittablePage::DetachFrame( int position )
       m_pSplitterWindow->ReplaceWindow( oldframe, m_DummyPanel );
 #endif /* __WXDEBUG__ */
     }
-
   if (oldframe)
     oldframe->SetActive( FALSE );
 
   *pp_frame_container = NULL;
-
   // This frame is not anymore active
   // activate the other frame
-  int active_frame_position = 1;
-  while ( !GetFrame( active_frame_position ) && active_frame_position <= MAX_MULTI_FRAME )
+  active_frame_position = 1;
+  while (!GetFrame( active_frame_position ) && active_frame_position <= MAX_MULTI_FRAME )
     active_frame_position++;
   if ( active_frame_position <= MAX_MULTI_FRAME )
     {
       // there is another frame
       // so activate it
-      AmayaFrame * p_frame = GetFrame( active_frame_position );
+      AmayaFrame * p_frame = GetFrame(active_frame_position );
       SetActiveFrame( p_frame );
-      if ( GetActiveFrame() )
-	GetActiveFrame()->SetActive( TRUE );
-      else
-	wxASSERT(FALSE);
+      p_other_frame = GetActiveFrame();
+      if (p_other_frame != p_frame)
+        p_other_frame->SetActive( TRUE );
     }
   else
     {
@@ -623,7 +621,6 @@ AmayaFrame * AmayaSplittablePage::DetachFrame( int position )
   // the master frame is the on which control the urlbar, buttons (TODO : and menus)
   if ( !m_pTopFrame && !m_pBottomFrame )
     SetMasterFrameId(-1);
-
   return oldframe;
 }
 
@@ -1024,6 +1021,14 @@ void AmayaSplittablePage::SetActiveFrame( const AmayaFrame * p_frame )
     m_ActiveFrame = 2;
   else
     m_ActiveFrame = 1;
+
+  // update css list
+  AmayaFrame *n_frame = GetFrame(1);
+  if (n_frame)
+    {
+      Document    document = FrameTable[n_frame->GetFrameId()].FrDoc;
+      TtaExecuteMenuAction ("UpdateStyleList", document, 1, TRUE);
+    }
 }
 
 /*----------------------------------------------------------------------
