@@ -427,6 +427,10 @@ AMAYA_END_TOOLBAR_DEF_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaMathMLToolBar, AmayaBaseToolBar)
 
+BEGIN_EVENT_TABLE(AmayaMathMLToolBar, AmayaBaseToolBar)
+  EVT_UPDATE_UI(wxID_ANY, AmayaMathMLToolBar::OnUpdate)
+END_EVENT_TABLE()
+
 /*----------------------------------------------------------------------
 -----------------------------------------------------------------------*/
 AmayaMathMLToolBar::AmayaMathMLToolBar():
@@ -435,12 +439,23 @@ AmayaMathMLToolBar::AmayaMathMLToolBar():
   // Overload std map, use a static math for all MathMl toolbars
   m_map = &s_mymap;
   
+  ShowAllTools(true);
+  
   if(!s_isinit)
     {
       Add(AmayaMathMLToolBarToolDef);
       s_isinit = true;
     }
 }
+
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
+void AmayaMathMLToolBar::OnUpdate(wxUpdateUIEvent& event)
+{
+   event.Enable(true);
+}
+
+
 
 
 /*----------------------------------------------------------------------

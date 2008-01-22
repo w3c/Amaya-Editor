@@ -77,9 +77,14 @@ protected:
   void OnTool(wxCommandEvent& event);
   
   void OnUpdate(wxUpdateUIEvent& event);
+  
+  void ShowAllTools(bool show){m_bShowAllTools = show;}
+  
 private:
+  bool    m_bShowAllTools;
   AmayaToolBarToolDefHashMap  m_mymap;
 };
+
 
 
 class AmayaToolBarEditing : public AmayaBaseToolBar

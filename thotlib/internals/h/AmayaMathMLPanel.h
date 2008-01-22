@@ -56,10 +56,13 @@ protected:
 class AmayaMathMLToolBar : public AmayaBaseToolBar
 {
   DECLARE_DYNAMIC_CLASS(AmayaMathMLToolBar)
+  DECLARE_EVENT_TABLE()
 public:
   AmayaMathMLToolBar();
-
+  
 private:
+  void OnUpdate(wxUpdateUIEvent& event);
+
   static AmayaToolBarToolDefHashMap s_mymap;
   static bool s_isinit;
 };

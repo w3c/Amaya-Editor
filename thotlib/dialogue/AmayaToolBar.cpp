@@ -54,6 +54,7 @@ END_EVENT_TABLE()
  -----------------------------------------------------------------------*/
 AmayaBaseToolBar::AmayaBaseToolBar():
 wxToolBar(),
+m_bShowAllTools(false),
 m_map(&m_mymap)
 {
   
@@ -107,26 +108,27 @@ bool AmayaBaseToolBar::Realize()
          TtaGetMessage(it->second->tooltip_categ,it->second->tooltip_msg)));
   }
   
-  // Prof_BelongTable()
-
-  wxToolBarToolsList::iterator iter;
-  for (iter = m_tools.begin(); iter != m_tools.end(); ++iter)
-  {
-    wxToolBarToolBase *current = *iter;
-    if(current)
+  if(!m_bShowAllTools)
+    {
+      wxToolBarToolsList::iterator iter;
+      for (iter = m_tools.begin(); iter != m_tools.end(); ++iter)
       {
-        AmayaToolBarToolDefHashMap::iterator iter = m_map->find(current->GetId()); 
-        AmayaToolBarToolDef* def = iter!=m_map->end()?iter->second:NULL; 
-        if (def && def->action != NULL && def->action[0] != 0)
+        wxToolBarToolBase *current = *iter;
+        if(current)
           {
-            if(!Prof_BelongTable(def->action))
+            AmayaToolBarToolDefHashMap::iterator iter = m_map->find(current->GetId()); 
+            AmayaToolBarToolDef* def = iter!=m_map->end()?iter->second:NULL; 
+            if (def && def->action != NULL && def->action[0] != 0)
               {
-                arr.Add(current->GetId());
-              }
-          }        
+                if(!Prof_BelongTable(def->action))
+                  {
+                    arr.Add(current->GetId());
+                  }
+              }        
+          }
       }
-  }
-  
+    }
+
   if(!wxToolBar::Realize())
     return false;
   
@@ -170,6 +172,8 @@ void AmayaBaseToolBar::OnUpdate(wxUpdateUIEvent& event)
   else
     event.Enable(true);
 }
+
+
 
 
 
