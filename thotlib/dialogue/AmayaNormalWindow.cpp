@@ -58,11 +58,11 @@
 
 #include "AmayaAttributePanel.h"
 #include "AmayaApplyClassPanel.h"
+#include "AmayaStylePanel.h"
 #include "AmayaMathMLPanel.h"
 #include "AmayaXHTMLPanel.h"
 #include "AmayaExplorerPanel.h"
 #include "AmayaXMLPanel.h"
-#include "AmayaStylePanel.h"
 #include "AmayaSpeCharPanel.h"
 
 #include "AmayaClassicWindow.h"
@@ -192,9 +192,10 @@ void AmayaNormalWindow::CleanUp()
 void AmayaNormalWindow::RegisterThotToolPanels()
 {
   TtaSetEnvString("CLASSIC_PANEL_ORDER",
-      "AmayaExplorerToolPanel;AmayaXHTMLToolPanel;AmayaAttributeToolPanel;AmayaStyleToolPanel;"
-      "AmayaApplyClassToolPanel;AmayaMathMLToolPanel;AmayaSpeCharToolPanel;AmayaXMLToolPanel",
-      FALSE);
+		  "AmayaExplorerToolPanel;AmayaXHTMLToolPanel;AmayaAttributeToolPanel;"
+                  "AmayaStyleToolPanel;StyleListToolPanel;AmayaApplyClassToolPanel;"
+                  "AmayaMathMLToolPanel;AmayaSpeCharToolPanel;AmayaXMLToolPanel",
+                   FALSE);
   RegisterToolPanelClass(CLASSINFO(AmayaExplorerToolPanel));
   RegisterToolPanelClass(CLASSINFO(AmayaXHTMLToolPanel));
   RegisterToolPanelClass(CLASSINFO(AmayaAttributeToolPanel));
