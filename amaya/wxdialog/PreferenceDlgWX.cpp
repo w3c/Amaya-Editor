@@ -294,6 +294,7 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetString(2,TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_NONE)) );
 
   XRCCTRL(*this, "wxID_LABEL_TOOLPANEL_ALIGN", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_TOOLPANEL_ALIGN)) );
+  XRCCTRL(*this, "wxID_LABEL_PROFILE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PROFILE)) );
   
   /* tooltip of color buttons */
   XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
@@ -324,6 +325,7 @@ void PreferenceDlgWX::SetupLabelDialog_General()
 void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
 {
   wxString        value;
+  char           *prof;
 
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetValue( TtaConvMessageToWX(prop.HomePage) );
   XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSpinCtrl)->SetValue( prop.Zoom );
@@ -371,6 +373,13 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
     value = _T("zh-")+TtaConvMessageToWX(prop.DialogueLang)+_T(" (Traditional Chinese)");
   else
     value = TtaConvMessageToWX(prop.DialogueLang);
+
+  prof = TtaGetEnvString ("CURRENT_PROFILE");
+  if (prof)
+    XRCCTRL(*this, "wxID_CHOICE_PROFILE", wxChoice)->SetStringSelection(TtaConvMessageToWX(prof));
+  else
+    XRCCTRL(*this, "wxID_CHOICE_PROFILE", wxChoice)->SetStringSelection(TtaConvMessageToWX("Advanced"));
+
   XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->SetStringSelection( value );
 #if defined(_WINDOWS) || defined(_MACOS)
   // select the string

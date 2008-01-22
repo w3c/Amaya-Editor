@@ -666,10 +666,9 @@ int Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
 void Prof_InitTable (char *profile)
 {
   FILE               *profFile;
-  char               *ptr;
+  char               *ptr, *prof;
   char                buffer[MAX_LENGTH];
   int                 i, j;
-  ThotBool            amaya_lite = FALSE;
   
   /* open the profile file */
   ptr = TtaGetEnvString ("Profiles_File");
@@ -695,9 +694,27 @@ void Prof_InitTable (char *profile)
               else
                 strcpy (UserProfile, profile);
             }
-          TtaGetEnvBoolean ("AMAYA_LITE", &amaya_lite);
-          if(amaya_lite)
-            strcat (UserProfile, "_Lite");
+
+          prof = TtaGetEnvString ("CURRENT_PROFILE");
+          ptr = NULL;
+          if (prof)
+            ptr = strstr (prof, "Lite");
+          if (ptr)
+            {
+              strcat (UserProfile, "_Lite");
+              i = 0;
+              do
+                {
+                  ptr = strstr (ptr, "+");
+                  i++;
+                }
+              while (ptr);
+              if (i > 1)
+                {
+                   sprintf (buffer, "%d", i);
+                   strcat (UserProfile, buffer);
+                }
+             }
 
           /* Fill a profile and module tables */
           while (fgets (ProfileBuff, sizeof (ProfileBuff), profFile))
@@ -708,12 +725,9 @@ void Prof_InitTable (char *profile)
                 ProcessDefinition (ProfileBuff);
             }
           TtaReadClose (profFile);
-
         }
     }
 
-  
-  
   
   /* All functions are available when:
    * - the profiles file doesn't exist

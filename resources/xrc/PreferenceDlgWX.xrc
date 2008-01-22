@@ -239,11 +239,11 @@
           <object class="sizeritem">
             <object class="wxChoice" name="wxID_CHOICE_PROFILE">
               <content>
-                <item>Light</item>
-                <item>Light+Math</item>
-                <item>Web</item>
-                <item>Web+Math</item>
-                <item>Complete</item>
+                <item>Lite</item>
+                <item>Lite+Math</item>
+                <item>Lite+Math+Web</item>
+                <item>Lite+Math+Web+CSS</item>
+                <item>Advanced</item>
               </content>
             </object>
             <option>1</option>

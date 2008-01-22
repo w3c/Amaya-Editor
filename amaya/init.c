@@ -6359,6 +6359,7 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvString ("DOCUMENT_CHARSET", "iso-8859-1", FALSE);
   TtaSetEnvString ("LOCAL_HTML_DOCTYPE_1", "", FALSE);
   TtaSetEnvString ("LOCAL_HTML_DOCTYPE_2", "", FALSE);
+  TtaSetEnvString ("CURRENT_PROFILE", "Advanced", FALSE);
   TtaSetEnvBoolean ("SHOW_MAP_AREAS", FALSE, FALSE);
   TtaSetEnvBoolean ("SHOW_TARGET", FALSE, FALSE);
   TtaSetEnvBoolean ("LOAD_IMAGES", TRUE, FALSE);
@@ -6370,7 +6371,6 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvBoolean ("EDIT_SRC_TEMPLATE", FALSE, FALSE);
   TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", TRUE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL", TRUE, FALSE);
-  TtaSetEnvBoolean ("AMAYA_LITE", FALSE, FALSE);
   TtaSetEnvBoolean("BROWSE_TOOLBAR", TRUE, FALSE);
   TtaSetEnvBoolean("EDIT_TOOLBAR", TRUE, FALSE);
   TtaSetEnvBoolean ("XML_EDIT_MODE", FALSE, FALSE);
