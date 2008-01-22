@@ -1354,7 +1354,7 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                                           else
                                             {
                                               done = FALSE;
-                                              if (parse)
+                                              if (parse && replace)
                                                 {
                                                   // remove style rules
                                                   lg = TtaGetTextAttributeLength (newAttr) + 1;
@@ -1365,7 +1365,7 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                                                   // CSS properties should be ended by ;
                                                   name = TtaStrdup (data);
                                                 }
-                                              else
+                                              else if (!parse)
                                                 {
                                                   // several class names
                                                   lg = TtaGetTextAttributeLength (newAttr);
@@ -1405,6 +1405,8 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                                                   else
                                                     name = TtaStrdup (data);
                                                 }
+                                              else
+                                                name = TtaStrdup (data);
                                               if (!done)
                                                 {
                                                   if (name[0] == EOS)

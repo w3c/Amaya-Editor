@@ -1078,7 +1078,7 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
   int             viewSch;
   int             view, d;
   ThotPictInfo   *image;
-  ThotBool	      done, enclosed, complete;
+  ThotBool	      found, enclosed, complete;
 
   enclosed = FALSE;
   /* do nothing if the document no longer exists */
@@ -1106,7 +1106,7 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
           {
             /* process each presentation rule */
             pCurrentRule = pRule;
-            done = FALSE;
+            found = FALSE;
             if (pCurrentRule)
               {
                 ruleType = pCurrentRule->PrType;
@@ -1126,7 +1126,7 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
                           }
                         else
                           pPage = CreateSibling (pDoc, pEl, TRUE, TRUE, PageBreak + 1, pEl->ElStructSchema, FALSE);
-                        done = TRUE;
+                        found = TRUE;
                       }
                     else
                       {
@@ -1135,15 +1135,15 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
                                              pCurrentRule->PrPresFunction, TRUE, &pAttr);
                         if (pRP == pCurrentRule || remove)
                           {
-                            done = TRUE;
-                            if (remove && ruleType == PtFunction &&
+                            found = TRUE;
+                            if (remove &&
+                                (ruleType == PtFunction || ruleType == PtListStyleImage) &&
                                 pAb->AbLeafType == LtCompound)
-                              /* remove a PtFunction rule */
-                              RemoveFunctionPRule (pCurrentRule, pAb, pDoc);
-                            else if (pRP != NULL)
                               {
-                                if (remove && ruleType == PtListStyleImage &&
-                                    pAb->AbLeafType == LtCompound &&
+                                if (ruleType == PtFunction)
+                                /* remove a PtFunction rule */
+                                  RemoveFunctionPRule (pCurrentRule, pAb, pDoc);
+                                if (ruleType == PtListStyleImage &&
                                     pAb->AbPictListStyle)
                                   {
                                     image = (ThotPictInfo *)pAb->AbPictListStyle;
@@ -1152,8 +1152,11 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
                                     TtaFreeMemory (pAb->AbPictListStyle);
                                     pAb->AbPictListStyle = NULL;
                                   }
-                                ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
+                                if (pRP && pRP != pCurrentRule)
+                                  ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
                               }
+                            else if (pRP && (!remove || pRP != pCurrentRule))
+                                ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
                             else if (remove && pAb->AbLeafType == LtCompound &&
                                      pAb->AbPositioning)
                               {
@@ -1196,7 +1199,7 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
                       }
                   }
               }
-            if (done)
+            if (found)
               {
                 /* update abstract image and redisplay */
                 AbstractImageUpdated (pDoc);
@@ -1311,7 +1314,7 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
               {
                 /* process each presentation rule */
                 pCurrentRule = pRule;
-                if (pCurrentRule != NULL)
+                if (pCurrentRule)
                   {
                     ruleType = pCurrentRule->PrType;
                     found = FALSE;    /* indicate if a rule has been applied */
@@ -1326,12 +1329,12 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
                           {
                             /* apply a new rule */
                             found = TRUE;
-                            if (remove && (ruleType == PtFunction ||
-                                           ruleType == PtListStyleImage) &&
+                            if (remove &&
+                                (ruleType == PtFunction || ruleType == PtListStyleImage) &&
                                 pAb->AbLeafType == LtCompound)
                               {
-                                /* remove a PtFunction rule */
                                 if (ruleType == PtFunction)
+                                /* remove a PtFunction rule */
                                   RemoveFunctionPRule (pCurrentRule, pAb, pDoc);
                                 if (ruleType == PtListStyleImage &&
                                     pAb->AbPictListStyle)
@@ -1343,8 +1346,7 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
                                     pAb->AbPictListStyle = NULL;
                                   }
                                 if (pRP && pRP != pCurrentRule)
-                                  ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP,
-                                                          pSPR);
+                                  ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
                               }
                             else if (pRP && (!remove || pRP != pCurrentRule))
                               ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);

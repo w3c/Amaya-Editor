@@ -1,12 +1,12 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Ce module effectue la creation des images abstraites
+ * This module generates abstract boxes
  *
  * Authors: V. Quint (INRIA)
  *          C. Roisin (INRIA) - Columns and pages
