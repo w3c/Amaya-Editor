@@ -54,8 +54,8 @@ END_EVENT_TABLE()
  -----------------------------------------------------------------------*/
 AmayaBaseToolBar::AmayaBaseToolBar():
 wxToolBar(),
-m_bShowAllTools(false),
-m_map(&m_mymap)
+m_map(&m_mymap),
+m_bShowAllTools(false)
 {
   
 }
