@@ -233,114 +233,117 @@
 231 **Center
 232 **Right
 233 **Justify
-234 **Line spacing
-235 **Single
-236 **Half
-237 **Double
-238 **Indent
-239 **Increase
-240 **Decrease
-241 &Style...
-242 Crea una regola...
-243 Mostra lo stile applicato...
-244 Collegamento...
-245 Apri...
-246 Disabilita...
-247 Abilita...
-248 Rimuovi...
-249 Copia URL
-250 Incolla URL
-251 Collega al precedente obiettivo
-252 Crea o cambia collegamento...
-253 Crea obiettivo
-254 Cancella ancora
-255 Aggiungi/Togli ID...
-256 Controllo ortografico...
-257 Trasforma...
-258 **Edit table
-259 Cambia la cella a data
-260 Cambia la cella a intestazione
-261 Unisci
-262 Unisci la cella a quella di destra
-263 Unisci la cella a quella sotto
-264 Riduci l'estensione orizzontale
-265 Riduci l'estensione verticale
-266 Seleziona la riga
-267 Inserisci una riga
-268 Aggiungi una riga
-269 Seleziona la colonna
-270 Inserisci una colonna
-271 Aggiungi una colonna
-272 Incolla prima
-273 Incolla dopo
-274 Cambia Titolo...
-275 Cambia/Crea doctype
-276 Elimina doctype
-277 Aggiungi un doctype
-278 Cambia/Crea doctype XHTML 1.1
-279 Cambia/Crea doctype XHTML 1.0 Transitional
-280 Cambia/Crea doctype XHTML 1.0 Strict
-281 Cambia/Crea doctype XHTML 1.0 Basic
-282 Cambia/Crea doctype HTML 4.01 Transitional
-283 Cambia/Crea doctype HTML 4.01 Strict
-284 Numerazione delle sezioni
-285 Genera Indice
-286 Crea libro
-287 Inserisci timestamp
-288 **Graphics
-289 Mostri librería SVG
-290 Aggiunga nella librería SVG
-291 A&nnotazioni
-292 Annota la selezione
-293 Annota il documento
-294 Muovi sulla selezione
-295 Salva la selezione come XPointer
-296 Muovi sull'Xpointer memorizzato
-297 Rispondi all'annotazione
-298 Registra
-299 Elimina
-300 Carica
-301 Personalizza la richiesta
-302 Filtro locale...
-303 &Cooperazione
-304 Lock resource...
-305 Unlock resource...
-306 Informazioni per il lock...
-307 Copia delle informazioni per il lock...
-308 Lock?
-309 &Javascript/DOM
-310 Attiva/Disattiva
-311 Esegui un comando
-312 Esegui un comando
-313 Aggiungi uno script esterno
-314 Inserisci uno script
-315 Informazioni su Amaya
-316 Informazioni su Amaya al W3C
-317 Indice
-318 Navigazione
-319 Viste
-320 Selezione
-321 Documento
-322 Creazione elementi
-323 Attributi
-324 Caratteri
-325 Modelli
-326 Ristrutturazione
-327 Collegamenti
-328 Tabelle
-329 Zone attive
-330 Matematica
-331 Graphics
-332 Supporto XML
-333 Fogli di stile
-334 Ricerca
-335 Controllo ortografico
-336 Pubblicazione
-337 Cooperazione
-338 Stampa
-339 Numerazione
-340 Creare un libro
-341 Annotazioni
-342 Configurazione
-343 Scelte rapide
-344 Accessibilità in Amaya
+234 **Default
+235 **Line spacing
+236 **Single
+237 **Half
+238 **Double
+239 **Default
+240 **Indent
+241 **Increase
+242 **Decrease
+243 **Default
+244 &Style...
+245 Crea una regola...
+246 Mostra lo stile applicato...
+247 Collegamento...
+248 Apri...
+249 Disabilita...
+250 Abilita...
+251 Rimuovi...
+252 Copia URL
+253 Incolla URL
+254 Collega al precedente obiettivo
+255 Crea o cambia collegamento...
+256 Crea obiettivo
+257 Cancella ancora
+258 Aggiungi/Togli ID...
+259 Controllo ortografico...
+260 Trasforma...
+261 **Edit table
+262 Cambia la cella a data
+263 Cambia la cella a intestazione
+264 Unisci
+265 Unisci la cella a quella di destra
+266 Unisci la cella a quella sotto
+267 Riduci l'estensione orizzontale
+268 Riduci l'estensione verticale
+269 Seleziona la riga
+270 Inserisci una riga
+271 Aggiungi una riga
+272 Seleziona la colonna
+273 Inserisci una colonna
+274 Aggiungi una colonna
+275 Incolla prima
+276 Incolla dopo
+277 Cambia Titolo...
+278 Cambia/Crea doctype
+279 Elimina doctype
+280 Aggiungi un doctype
+281 Cambia/Crea doctype XHTML 1.1
+282 Cambia/Crea doctype XHTML 1.0 Transitional
+283 Cambia/Crea doctype XHTML 1.0 Strict
+284 Cambia/Crea doctype XHTML 1.0 Basic
+285 Cambia/Crea doctype HTML 4.01 Transitional
+286 Cambia/Crea doctype HTML 4.01 Strict
+287 Numerazione delle sezioni
+288 Genera Indice
+289 Crea libro
+290 Inserisci timestamp
+291 **Graphics
+292 Mostri librería SVG
+293 Aggiunga nella librería SVG
+294 A&nnotazioni
+295 Annota la selezione
+296 Annota il documento
+297 Muovi sulla selezione
+298 Salva la selezione come XPointer
+299 Muovi sull'Xpointer memorizzato
+300 Rispondi all'annotazione
+301 Registra
+302 Elimina
+303 Carica
+304 Personalizza la richiesta
+305 Filtro locale...
+306 &Cooperazione
+307 Lock resource...
+308 Unlock resource...
+309 Informazioni per il lock...
+310 Copia delle informazioni per il lock...
+311 Lock?
+312 &Javascript/DOM
+313 Attiva/Disattiva
+314 Esegui un comando
+315 Esegui un comando
+316 Aggiungi uno script esterno
+317 Inserisci uno script
+318 Informazioni su Amaya
+319 Informazioni su Amaya al W3C
+320 Indice
+321 Navigazione
+322 Viste
+323 Selezione
+324 Documento
+325 Creazione elementi
+326 Attributi
+327 Caratteri
+328 Modelli
+329 Ristrutturazione
+330 Collegamenti
+331 Tabelle
+332 Zone attive
+333 Matematica
+334 Graphics
+335 Supporto XML
+336 Fogli di stile
+337 Ricerca
+338 Controllo ortografico
+339 Pubblicazione
+340 Cooperazione
+341 Stampa
+342 Numerazione
+343 Creare un libro
+344 Annotazioni
+345 Configurazione
+346 Scelte rapide
+347 Accessibilità in Amaya

@@ -391,7 +391,7 @@ ShowBrowsingBar
 +bdi-text-module
 +clientside-module
 +css-style
-#+davbase
++davbase
 +hypertext-module
 +image-module
 +list-module
@@ -763,11 +763,14 @@ ShowAppliedStyle
 &DoCenter
 &DoRightAlign
 &DoJustify
+&DoRemoveAlign
 &LineSpacingSingle
 &LineSpacingHalf
 &LineSpacingDouble
+&DoRemoveLineSpacing
 &MarginLeftIncrease
 &MarginLeftDecrease
+&DoRemoveMargin
 
 ########### OPTIONAL MODULES
 [config]

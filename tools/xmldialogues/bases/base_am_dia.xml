@@ -3233,6 +3233,10 @@
 <message xml:lang="en">Justify</message>
 <message xml:lang="fr">Justifié</message>
 </label>
+<label define="BRemoveAlign">
+<message xml:lang="en">Default</message>
+<message xml:lang="fr">Défaut</message>
+</label>
 <label define="BLineSpacing">
 <message xml:lang="en">Line spacing</message>
 <message xml:lang="fr">Espacement de ligne</message>
@@ -3249,6 +3253,10 @@
 <message xml:lang="en">Double</message>
 <message xml:lang="fr">Double</message>
 </label>
+<label define="BRemoveLineSpacing">
+<message xml:lang="en">Default</message>
+<message xml:lang="fr">Défaut</message>
+</label>
 <label define="Indent">
 <message xml:lang="en">Indent</message>
 <message xml:lang="fr">Indentation</message>
@@ -3260,6 +3268,10 @@
 <label define="BDecrease">
 <message xml:lang="en">Decrease</message>
 <message xml:lang="fr">Diminuer</message>
+</label>
+<label define="BRemoveMargin">
+<message xml:lang="en">Default</message>
+<message xml:lang="fr">Défaut</message>
 </label>
 <label define="BCSSStyle">
 <message xml:lang="en">&amp;Style editor...</message>

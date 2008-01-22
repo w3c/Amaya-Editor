@@ -31,6 +31,8 @@ extern void DoSelectColor ( Document doc,
                             View view );
 extern void DoSelectBgColor ( Document doc,
                               View view );
+extern void RemoveSpecificStyle ( Document doc,
+                                  char *cssproperty );
 extern void DoRemoveColor ( Document doc,
                             View view );
 extern void DoRemoveBgColor ( Document doc,
@@ -43,16 +45,22 @@ extern void DoCenter ( Document doc,
                        View view );
 extern void DoJustify ( Document doc,
                         View view );
+extern void DoRemoveAlign ( Document doc,
+                            View view );
 extern void LineSpacingSingle ( Document doc,
                                 View view );
 extern void LineSpacingHalf ( Document doc,
                               View view );
 extern void LineSpacingDouble ( Document doc,
                                 View view );
+extern void DoRemoveLineSpacing ( Document doc,
+                                  View view );
 extern void MarginLeftIncrease ( Document doc,
                                  View view );
 extern void MarginLeftDecrease ( Document doc,
                                  View view );
+extern void DoRemoveMargin ( Document doc,
+                             View view );
 extern void MakeDisableCSS ( Document doc,
                              PInfoPtr pInfo );
 extern void MakeEnableCSS ( Document doc,
@@ -105,6 +113,8 @@ extern void DoSelectColor ( Document doc,
                               View view );
 extern void DoSelectBgColor ( Document doc,
                                 View view );
+extern void RemoveSpecificStyle ( Document doc,
+                                    char *cssproperty );
 extern void DoRemoveColor ( Document doc,
                               View view );
 extern void DoRemoveBgColor ( Document doc,
@@ -117,16 +127,22 @@ extern void DoCenter ( Document doc,
                          View view );
 extern void DoJustify ( Document doc,
                           View view );
+extern void DoRemoveAlign ( Document doc,
+                              View view );
 extern void LineSpacingSingle ( Document doc,
                                   View view );
 extern void LineSpacingHalf ( Document doc,
                                 View view );
 extern void LineSpacingDouble ( Document doc,
                                   View view );
+extern void DoRemoveLineSpacing ( Document doc,
+                                    View view );
 extern void MarginLeftIncrease ( Document doc,
                                    View view );
 extern void MarginLeftDecrease ( Document doc,
                                    View view );
+extern void DoRemoveMargin ( Document doc,
+                               View view );
 extern void MakeDisableCSS ( Document doc,
                                PInfoPtr pInfo );
 extern void MakeEnableCSS ( Document doc,

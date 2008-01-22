@@ -233,114 +233,117 @@
 231 **Center
 232 **Right
 233 **Justify
-234 **Line spacing
-235 **Single
-236 **Half
-237 **Double
-238 **Indent
-239 **Increase
-240 **Decrease
-241 **&Style editor...
-242 Tee sääntö...
-243 **Show applied style...
-244 Linkki...
-245 Avaa...
-246 Poista käytöstä...
-247 Ota käyttöön...
-248 Poista...
-249 **Copy location
-250 **Paste location
-251 Linkki edelliseen kohteeseen
-252 Luo tai muuta linkki...
-253 Luo kohde
-254 Poista linkki
-255 Lisää/Poista elementti...
-256 Tarkista oikeinkirjoitus...
-257 Muunna...
-258 **Edit table
-259 **Change to data cell
-260 **Change to heading cell
-261 **Merge cells
-262 **Join with the cell at the right
-263 **Join with the cell below
-264 **Shrink horizontal extend
-265 **Shrink vertical extend
-266 **Select the row
-267 **Insert a row
-268 **Append a row
-269 **Select the column
-270 **Insert a column
-271 **Append a column
-272 **Paste before
-273 **Paste after
-274 Muuta otsake...
-275 Muuta tyyppi
-276 Poista tyyppi
-277 **Add a doctype
-278 Aseta tyypiksi XHTML 1.1
-279 **Change to XHTML 1.0 Transitional
-280 Aseta tyypiksi XHTML 1.0 Strict
-281 Aseta tyypiksi XHTML 1.0 Basic
-282 Aseta tyypiksi HTML 4.01 Transitional
-283 Aseta tyypiksi HTML 4.01 Strict
-284 Osien numerointi
-285 **&Add/Update Table of contents
-286 Valmista kooste
-287 **Insert time stamp
-288 **Graphics
-289 **Show SVG library
-290 **Add to SVG library
-291 Mer&kinnät
-292 Valinnan lisätiedot
-293 Dokumentin lisätiedot
-294 Siirrä valintaan
-295 Tallenna valinta XPointer:iin
-296 Siirrä XPointer:iin
-297 Vastaa merkintään
-298 Lähetä palvelimelle
-299 Poista
-300 Lataa
-301 Mukauta tiedustelu...
-302 Paikalliset rajoitukset...
-303 Yht&eistyö
-304 Lukitse objekti...
-305 Vapauta objekti...
-306 Näytä objektin ominaisuudet...
-307 Kopioi lukitustiedot...
-308 Lukittu?
-309 &Javascript/DOM
-310 **Enable/Disable
-311 **Execute a command
-312 **Execute an external script
-313 **Add an external script
-314 **Insert a script
-315 Tietoja Amayasta
-316 Lisätietoa Amayasta W3C:ssä
-317 Hakemisto
-318 Selaaminen
-319 Näkymät
-320 Valinta
-321 Dokumentti
-322 Elementtien luominen
-323 Asetukset
-324 Fontit
-325 **Templates
-326 Rakenteen muunto
-327 Linkit
-328 Taulukot
-329 Kuvakartat
-330 Matematiikka
-331 Grafiikka
-332 XML-tuki
-333 Tyylitiedostot
-334 Etsiminen
-335 Oikeinkirjoituksen tarkastus
-336 Julkaisu
-337 Yhteistyö
-338 Tulostus
-339 Numerointi
-340 Koosteen valmistus
-341 Merkinnät
-342 Asetuksien määritys
-343 Näppäinkomennot
-344 Amayan helppokäyttötoiminnot
+234 **Default
+235 **Line spacing
+236 **Single
+237 **Half
+238 **Double
+239 **Default
+240 **Indent
+241 **Increase
+242 **Decrease
+243 **Default
+244 **&Style editor...
+245 Tee sääntö...
+246 **Show applied style...
+247 Linkki...
+248 Avaa...
+249 Poista käytöstä...
+250 Ota käyttöön...
+251 Poista...
+252 **Copy location
+253 **Paste location
+254 Linkki edelliseen kohteeseen
+255 Luo tai muuta linkki...
+256 Luo kohde
+257 Poista linkki
+258 Lisää/Poista elementti...
+259 Tarkista oikeinkirjoitus...
+260 Muunna...
+261 **Edit table
+262 **Change to data cell
+263 **Change to heading cell
+264 **Merge cells
+265 **Join with the cell at the right
+266 **Join with the cell below
+267 **Shrink horizontal extend
+268 **Shrink vertical extend
+269 **Select the row
+270 **Insert a row
+271 **Append a row
+272 **Select the column
+273 **Insert a column
+274 **Append a column
+275 **Paste before
+276 **Paste after
+277 Muuta otsake...
+278 Muuta tyyppi
+279 Poista tyyppi
+280 **Add a doctype
+281 Aseta tyypiksi XHTML 1.1
+282 **Change to XHTML 1.0 Transitional
+283 Aseta tyypiksi XHTML 1.0 Strict
+284 Aseta tyypiksi XHTML 1.0 Basic
+285 Aseta tyypiksi HTML 4.01 Transitional
+286 Aseta tyypiksi HTML 4.01 Strict
+287 Osien numerointi
+288 **&Add/Update Table of contents
+289 Valmista kooste
+290 **Insert time stamp
+291 **Graphics
+292 **Show SVG library
+293 **Add to SVG library
+294 Mer&kinnät
+295 Valinnan lisätiedot
+296 Dokumentin lisätiedot
+297 Siirrä valintaan
+298 Tallenna valinta XPointer:iin
+299 Siirrä XPointer:iin
+300 Vastaa merkintään
+301 Lähetä palvelimelle
+302 Poista
+303 Lataa
+304 Mukauta tiedustelu...
+305 Paikalliset rajoitukset...
+306 Yht&eistyö
+307 Lukitse objekti...
+308 Vapauta objekti...
+309 Näytä objektin ominaisuudet...
+310 Kopioi lukitustiedot...
+311 Lukittu?
+312 &Javascript/DOM
+313 **Enable/Disable
+314 **Execute a command
+315 **Execute an external script
+316 **Add an external script
+317 **Insert a script
+318 Tietoja Amayasta
+319 Lisätietoa Amayasta W3C:ssä
+320 Hakemisto
+321 Selaaminen
+322 Näkymät
+323 Valinta
+324 Dokumentti
+325 Elementtien luominen
+326 Asetukset
+327 Fontit
+328 **Templates
+329 Rakenteen muunto
+330 Linkit
+331 Taulukot
+332 Kuvakartat
+333 Matematiikka
+334 Grafiikka
+335 XML-tuki
+336 Tyylitiedostot
+337 Etsiminen
+338 Oikeinkirjoituksen tarkastus
+339 Julkaisu
+340 Yhteistyö
+341 Tulostus
+342 Numerointi
+343 Koosteen valmistus
+344 Merkinnät
+345 Asetuksien määritys
+346 Näppäinkomennot
+347 Amayan helppokäyttötoiminnot

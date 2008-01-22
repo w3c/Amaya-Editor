@@ -233,114 +233,117 @@
 231 **Center
 232 **Right
 233 **Justify
-234 **Line spacing
-235 **Single
-236 **Half
-237 **Double
-238 **Indent
-239 **Increase
-240 **Decrease
-241 &Estilo...
-242 Crear &regla...
-243 &Mostrar estilo aplicado...
-244 &Enlazar hoja de estilo...
-245 &Abrir hoja de estilo enlazada...
-246 &Desactivar hoja de estilo enlazada...
-247 Acti&var hoja de estilo enlazada...
-248 &Borrar enlace a hoja de estilo...
-249 Copiar localización
-250 Pegar localización
-251 Enlazar último destino &creado
-252 Crear o cambiar &enlace...
-253 Crear &destino (a / id)
-254 &Borrar ancla (a)
-255 &Crear/Borrar atributos id...
-256 &Revisar ortografía...
-257 &Transformar...
-258 **Edit table
-259 Cambiar a celda de datos
-260 Cambiar a celda de cabecera
-261 Unir
-262 Unir con celda derecha
-263 Unir con celda inferior
-264 Reducir extensión horizontal
-265 Reducir extensión vertical
-266 Seleccionar fila
-267 Insertar fila delante
-268 Añadir fila detrás
-269 Seleccionar columna
-270 Insertar columna delante
-271 Añadir columna detrás
-272 Pegar delante
-273 Pegar detrás
-274 Título (title) ...
-275 Cambiar doct&ype
-276 &Borrar doctype
-277 Añadir doctype
-278 Cambiar a XHTML 1.1
-279 Cambiar a XHTML 1.0 Transitional
-280 Cambiar a XHTML 1.0 &Strict
-281 Cambiar a XHTML 1.0 Basic
-282 Cambiar a HTML 4.01 Transitional
-283 Cambiar a HTML 4.01 Strict
-284 &Numerar encabezados
-285 &Generar índice de materias
-286 &Hacer libro
-287 Insertar fecha y hora actual
-288 **Graphics
-289 &Ver Biblioteca SVG
-290 &Añadir a la Biblioteca SVG
-291 A&notaciones
-292 Anotar &selección
-293 Anotar &documento
-294 &Mover a selección
-295 Guardar selección como &XPointer
-296 Mover a &XPointer guardado
-297 &Responder a anotación
-298 &Enviar al servidor
-299 &Borrar
-300 &Cargar
-301 &Personalizar consulta...
-302 &Filtro local...
-303 &Cooperación
-304 Bloquear recurso
-305 Desbloquear recurso...
-306 Ver propiedades del recurso...
-307 Copiar información de bloqueo
-308 ¿Bloqueado?
-309 &Javascript/DOM
-310 Activar/Desactivar
-311 Ejecutar un comando
-312 Ejecutar un script externo
-313 Añadir un script externo
-314 Insertar un script
-315 Acerca de Amaya
-316 Página web de Amaya en el W3C
-317 Índice
-318 Navegar
-319 Vistas
-320 Seleccionar
-321 Documentos
-322 Crear elementos
-323 Atributos
-324 Caracteres
-325 Modelos
-326 Reestructurar
-327 Enlaces
-328 Tablas
-329 Mapas de imagen
-330 MathML
-331 Gráficos
-332 Soporte XML
-333 Hojas de estilo
-334 Buscar
-335 Revisar ortografía
-336 Publicar
-337 Cooperación
-338 Imprimir
-339 Numerar
-340 Hacer libros
-341 Anotaciones
-342 Configurar
-343 Atajos de teclado
-344 Accesibilidad
+234 **Default
+235 **Line spacing
+236 **Single
+237 **Half
+238 **Double
+239 **Default
+240 **Indent
+241 **Increase
+242 **Decrease
+243 **Default
+244 &Estilo...
+245 Crear &regla...
+246 &Mostrar estilo aplicado...
+247 &Enlazar hoja de estilo...
+248 &Abrir hoja de estilo enlazada...
+249 &Desactivar hoja de estilo enlazada...
+250 Acti&var hoja de estilo enlazada...
+251 &Borrar enlace a hoja de estilo...
+252 Copiar localización
+253 Pegar localización
+254 Enlazar último destino &creado
+255 Crear o cambiar &enlace...
+256 Crear &destino (a / id)
+257 &Borrar ancla (a)
+258 &Crear/Borrar atributos id...
+259 &Revisar ortografía...
+260 &Transformar...
+261 **Edit table
+262 Cambiar a celda de datos
+263 Cambiar a celda de cabecera
+264 Unir
+265 Unir con celda derecha
+266 Unir con celda inferior
+267 Reducir extensión horizontal
+268 Reducir extensión vertical
+269 Seleccionar fila
+270 Insertar fila delante
+271 Añadir fila detrás
+272 Seleccionar columna
+273 Insertar columna delante
+274 Añadir columna detrás
+275 Pegar delante
+276 Pegar detrás
+277 Título (title) ...
+278 Cambiar doct&ype
+279 &Borrar doctype
+280 Añadir doctype
+281 Cambiar a XHTML 1.1
+282 Cambiar a XHTML 1.0 Transitional
+283 Cambiar a XHTML 1.0 &Strict
+284 Cambiar a XHTML 1.0 Basic
+285 Cambiar a HTML 4.01 Transitional
+286 Cambiar a HTML 4.01 Strict
+287 &Numerar encabezados
+288 &Generar índice de materias
+289 &Hacer libro
+290 Insertar fecha y hora actual
+291 **Graphics
+292 &Ver Biblioteca SVG
+293 &Añadir a la Biblioteca SVG
+294 A&notaciones
+295 Anotar &selección
+296 Anotar &documento
+297 &Mover a selección
+298 Guardar selección como &XPointer
+299 Mover a &XPointer guardado
+300 &Responder a anotación
+301 &Enviar al servidor
+302 &Borrar
+303 &Cargar
+304 &Personalizar consulta...
+305 &Filtro local...
+306 &Cooperación
+307 Bloquear recurso
+308 Desbloquear recurso...
+309 Ver propiedades del recurso...
+310 Copiar información de bloqueo
+311 ¿Bloqueado?
+312 &Javascript/DOM
+313 Activar/Desactivar
+314 Ejecutar un comando
+315 Ejecutar un script externo
+316 Añadir un script externo
+317 Insertar un script
+318 Acerca de Amaya
+319 Página web de Amaya en el W3C
+320 Índice
+321 Navegar
+322 Vistas
+323 Seleccionar
+324 Documentos
+325 Crear elementos
+326 Atributos
+327 Caracteres
+328 Modelos
+329 Reestructurar
+330 Enlaces
+331 Tablas
+332 Mapas de imagen
+333 MathML
+334 Gráficos
+335 Soporte XML
+336 Hojas de estilo
+337 Buscar
+338 Revisar ortografía
+339 Publicar
+340 Cooperación
+341 Imprimir
+342 Numerar
+343 Hacer libros
+344 Anotaciones
+345 Configurar
+346 Atajos de teclado
+347 Accesibilidad

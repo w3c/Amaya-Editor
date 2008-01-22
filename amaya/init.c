@@ -53,14 +53,13 @@
 #include "AmayaWindowIterator.h"
 #include "AmayaParams.h"
 #include "Elemlist.h"
-  
-#include "wxdialog/StyleListToolPanel.h"
-
+  #include "wxdialog/StyleListToolPanel.h"
 #include "javascript_f.h"
 extern XmlEntity *pMathEntityTable;
-
 #include "appdialogue_wx.h"
 
+int  Current_Color = -1;
+int  Current_BackgroundColor = -1;
 static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
 static int          NewDocType = 0;

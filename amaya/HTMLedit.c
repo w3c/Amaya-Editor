@@ -551,10 +551,11 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
       buffer = (char *)TtaGetMemory (lg + strlen (data) + 2);
       TtaGiveTextAttributeValue (attr, buffer, &lg);
       *property = EOS;
+      lg = strlen (data);
       margin = !strcmp (data, "margin-left");
       start = strstr (buffer, data);
-      if (start && start != buffer && start[-1] != SPACE && start[-1] != ';' &&
-          start[strlen (data)] != ':')
+      if (start &&
+          (start != buffer || start[-1] != SPACE || start[-1] != ';' || start[lg] != ':'))
         start = NULL;
       *property = ':';
       if (start)
@@ -629,14 +630,14 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
   Attribute       newAttr, attr;
   AttributeType   attrType;
   Document        doc;
-  int             i, j, firstchar, lastchar, lg, min, max;
-  char           *name;
   Language        lang;
   CHAR_T         *buffer;
   DisplayMode     dispMode;
   ThotBool	      doit, split, before, charlevel, inside, done, removed;
   ThotBool        lastChanged, parse, open, selpos, isPict = FALSE, skip;
   SSchema         templateSSchema;
+  int             i, j, firstchar, lastchar, lg, min, max;
+  char           *name;
 
   doc = TtaGetSelectedDocument();
   done = FALSE;
@@ -654,7 +655,13 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
           /* give current position */
           TtaGiveFirstSelectedElement (doc, &firstSel, &firstchar, &i);
           TtaGiveLastSelectedElement (doc, &lastSel, &j, &lastchar);
-          
+          if (TtaIsReadOnly (firstSel))
+            {
+              /* the selected element is read-only */
+              TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_READONLY);
+              return;
+            }
+         
 #ifdef TEMPLATES
           /* Verify if template allow this element.*/
           templateSSchema = TtaGetSSchema ("Template", doc);
@@ -663,11 +670,11 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
               parent = GetFirstTemplateParentElement(firstSel);
               elType.ElSSchema = TtaGetSSchema ("HTML", doc);
               elType.ElTypeNum = eType;
-              if(parent)
+              if (parent)
                 {
                   parentType = TtaGetElementType(parent);
-                  if(parentType.ElSSchema == templateSSchema &&
-                     parentType.ElTypeNum==Template_EL_bag)
+                  if (parentType.ElSSchema == templateSSchema &&
+                      parentType.ElTypeNum==Template_EL_bag)
                     {
                       if (!Template_CanInsertElementInBagElement(doc, elType, parent))
                         {
@@ -679,12 +686,6 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
             }
 #endif /* TEMPLATES */
           
-          if (TtaIsReadOnly (firstSel))
-            {
-              /* the selected element is read-only */
-              TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_READONLY);
-              return;
-            }
           /* register this element in the editing history */
           elType = TtaGetElementType (firstSel);
           newType.ElSSchema = elType.ElSSchema;
@@ -746,7 +747,8 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
               TtaClearViewSelections ();
               /* Need to force a redisplay */
               dispMode = TtaGetDisplayMode (doc);
-              TtaSetDisplayMode (doc, DeferredDisplay);
+              if (dispMode == DisplayImmediately)
+                TtaSetDisplayMode (doc, DeferredDisplay);
               in_line = NULL;
               el = firstSel;
               parent = NULL;
@@ -1360,7 +1362,7 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                                                   lg = TtaGetTextAttributeLength (newAttr) + 1;
                                                   name = (char *)TtaGetMemory (lg);
                                                   TtaGiveTextAttributeValue (newAttr, name, &lg);
-                                                  ParseHTMLSpecificStyle (child, name, doc, 1000, TRUE);
+                                                  ParseHTMLSpecificStyle (child, name, doc, 2000, TRUE);
                                                   TtaFreeMemory (name);
                                                   // CSS properties should be ended by ;
                                                   name = TtaStrdup (data);
@@ -1552,7 +1554,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
             SetXLinkTypeSimple (element, doc, AttrHREFundoable);
         }
       attr = TtaGetAttribute (element, attrType);
-      if (attr == 0)
+      if (attr == NULL)
         {
           /* create an attribute HREF for the element */
           attr = TtaNewAttribute (attrType);

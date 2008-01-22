@@ -13,6 +13,7 @@
 
 #ifdef _WX
 #include "wx/wx.h"
+#include "wx/colordlg.h"
 #endif /* _WX */
 
 /* nItagetMecluded headerfiles */
@@ -697,6 +698,7 @@ void GenerateStyle (char * data , ThotBool add)
   Attribute           attr = NULL;
   char                 *value;
   int                 doc, i, j, len;
+  ThotBool            open;
 
   doc = TtaGetSelectedDocument();
   if (doc == 0)
@@ -724,7 +726,9 @@ void GenerateStyle (char * data , ThotBool add)
       if (attr)
         {
           // the attribute is now empty
-          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+          open = !TtaHasUndoSequence (doc);
+          if (open)
+            TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
           // remove style rules
           len = TtaGetTextAttributeLength (attr);
           value = (char *)TtaGetMemory (len);
@@ -737,7 +741,8 @@ void GenerateStyle (char * data , ThotBool add)
           TtaSelectElement (doc, firstC);
           if (lastC != firstC)
             TtaExtendSelection (doc, lastC, TtaGetElementVolume (lastC) + 1);
-          TtaCloseUndoSequence (doc);
+          if (open)
+            TtaCloseUndoSequence (doc);
         }
       //else
       //  TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
@@ -812,6 +817,7 @@ void DoStyleColor (char *color)
   int                 firstChar, lastChar, i;
   int                 col, bg_col, new_col;
   unsigned short      red, green, blue;
+  DisplayMode         dispMode;
   ThotBool            open = FALSE, before, isBg;
 
   doc = TtaGetSelectedDocument();
@@ -835,6 +841,10 @@ void DoStyleColor (char *color)
     // do nothing
     return;
 
+  /* Need to force a redisplay */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
   if ( TtaIsSelectionEmpty ())
     {
       parent = TtaGetParent (first);
@@ -856,7 +866,9 @@ void DoStyleColor (char *color)
             }
           if (open)
             {
-              TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+              open = !TtaHasUndoSequence (doc);
+              if (open)
+                TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
               el = TtaNewElement (doc, elType);
               TtaInsertSibling (el, parent, before, doc);
               TtaSelectElement (doc, el);
@@ -870,6 +882,8 @@ void DoStyleColor (char *color)
     GenerateStyle (color, TRUE);
   if (open)
     TtaCloseUndoSequence (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
@@ -878,6 +892,40 @@ void DoStyleColor (char *color)
   ----------------------------------------------------------------------*/
 void DoSelectColor (Document doc, View view)
 {
+  wxColour            c;
+  wxColourData        colour_data;
+  char                color_string[100];
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+
+  if (!TtaGetDocumentAccessMode (doc))
+    /* document is ReadOnly */
+    return;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+    return;
+#ifdef IV
+  Element             first;
+  int                 color, bg_col, firstChar, lastChar;
+  TtaGiveFirstSelectedElement (doc, &first, &firstChar, &lastChar);
+  TtaGiveBoxColors (first, doc, 1, &color, &bg_col);
+  TtaGiveThotRGB (color, &red, &green, &blue);
+#endif
+  if (Current_Color != -1)
+    TtaGiveThotRGB (Current_Color, &red, &green, &blue);
+  else
+    TtaGiveThotRGB (0, &red, &green, &blue);
+
+  colour_data.SetColour( wxColour( red, green, blue ) );
+  wxColourDialog dialog (NULL, &colour_data);
+  if (dialog.ShowModal() == wxID_OK)
+    {
+      colour_data = dialog.GetColourData();
+      c = colour_data.GetColour();
+      Current_Color = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
+      sprintf( color_string, "color:#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
+      DoStyleColor (color_string);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -886,6 +934,161 @@ void DoSelectColor (Document doc, View view)
   ----------------------------------------------------------------------*/
 void DoSelectBgColor (Document doc, View view)
 {
+  wxColour            c;
+  wxColourData        colour_data;
+  char                color_string[100];
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+
+  if (!TtaGetDocumentAccessMode (doc))
+    /* document is ReadOnly */
+    return;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+    return;
+#ifdef IV
+  Element             first;
+  int                 color, bg_col, firstChar, lastChar;
+  TtaGiveFirstSelectedElement (doc, &first, &firstChar, &lastChar);
+  TtaGiveBoxColors (first, doc, 1, &color, &bg_col);
+  TtaGiveThotRGB (bg_col, &red, &green, &blue);
+#endif
+  if (Current_BackgroundColor != -1)
+    TtaGiveThotRGB (Current_BackgroundColor, &red, &green, &blue);
+  else
+    TtaGiveThotRGB (0, &red, &green, &blue);
+    
+  colour_data.SetColour( wxColour( red, green, blue ) );
+  wxColourDialog dialog (NULL, &colour_data);
+  if (dialog.ShowModal() == wxID_OK)
+    {
+      colour_data = dialog.GetColourData();
+      c = colour_data.GetColour();
+      Current_BackgroundColor = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
+      sprintf( color_string, "background-color:#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
+      DoStyleColor (color_string);
+    }
+}
+
+/*----------------------------------------------------------------------
+  CleanUpAttribute removes the CSS rule (data) form the attribute value
+  Return TRUE if the value is now empty
+  -----------------------------------------------------------------------*/
+static void CleanUpAttribute (Attribute attr, char *data, Element el, Document doc)
+{
+  char     *buffer, *property, *start, *stop, *ptr;
+  int       lg;
+
+  property = TtaStrdup (data);
+  if (property == NULL)
+    return;
+  ptr = strstr (property, ":");
+  lg = TtaGetTextAttributeLength (attr);
+  if (lg && ptr)
+    {
+      // look for the property in the initial string
+      buffer = (char *)TtaGetMemory (lg + 2);
+      TtaGiveTextAttributeValue (attr, buffer, &lg);
+      *ptr = EOS;
+      start = strstr (buffer, property);
+      lg = strlen(property); // property length
+      if (start && start != buffer && start[-1] != SPACE && start[-1] != ';' &&
+          start[lg] != ':')
+        start = NULL;
+      if (start)
+        {
+          stop = start;
+          while (*stop != EOS && *stop != ';')
+            stop++;
+          while (*stop != EOS)
+            {
+              stop++;
+              *start = *stop;
+              start++;
+            }
+          *start = EOS;
+          if (buffer[0] == EOS)
+            {
+              Element firstC, lastC;
+              // the attribute is now empty
+              TtaRegisterAttributeDelete (attr, el, doc);
+              TtaRemoveAttribute (el, attr, doc);
+              DeleteSpanIfNoAttr (el, doc, &firstC, &lastC);
+            }
+          else
+            {
+              TtaRegisterAttributeReplace (attr, el, doc);
+              TtaSetAttributeText (attr, buffer, el, doc);
+            }
+          // unapply the CSS property
+          ParseHTMLSpecificStyle (el, data, doc, 2000, TRUE);
+          TtaSetDocumentModified (doc);
+        }
+      TtaFreeMemory (buffer);
+    }
+  TtaFreeMemory (property);
+}
+
+/*----------------------------------------------------------------------
+  DoRemoveColor
+  Remove color style
+  ----------------------------------------------------------------------*/
+void RemoveSpecificStyle (Document doc, char *cssproperty)
+{
+  Element         el;
+  ElementType	    elType;
+  Attribute       attr;
+  AttributeType   attrType;
+  int             firstChar, lastChar;
+  char           *name;
+  DisplayMode     dispMode;
+  ThotBool        open = FALSE;
+
+  if (!TtaGetDocumentAccessMode (doc))
+    /* document is ReadOnly */
+    return;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+    return;
+
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  if (TtaIsReadOnly (el))
+    {
+      /* the selected element is read-only */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_READONLY);
+      return;
+    }
+
+  /* Need to force a redisplay */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+  open = TtaHasUndoSequence (doc);
+  if (!open)
+    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+  while (el)
+    {
+      // get the style attribute
+      elType = TtaGetElementType (el);
+      attrType.AttrSSchema = elType.ElSSchema;
+      name = TtaGetSSchemaName (elType.ElSSchema);
+      if (!strcmp (name, "HTML"))
+        attrType.AttrTypeNum =  HTML_ATTR_Style_;
+#ifdef _SVG
+      else if (!strcmp (name, "SVG"))
+        attrType.AttrTypeNum = SVG_ATTR_style_;
+#endif /* _SVG */
+      else if (!strcmp (name, "MathML"))
+        attrType.AttrTypeNum = MathML_ATTR_style_;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+        CleanUpAttribute (attr, cssproperty, el, doc);
+      // next element within the selection
+      TtaGiveNextSelectedElement (doc, &el, &firstChar, &lastChar);
+    }
+  if (open)
+    TtaCloseUndoSequence (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
@@ -894,6 +1097,7 @@ void DoSelectBgColor (Document doc, View view)
   ----------------------------------------------------------------------*/
 void DoRemoveColor (Document doc, View view)
 {
+  RemoveSpecificStyle (doc, "color: black");
 }
 
 /*----------------------------------------------------------------------
@@ -902,6 +1106,7 @@ void DoRemoveColor (Document doc, View view)
   ----------------------------------------------------------------------*/
 void DoRemoveBgColor (Document doc, View view)
 {
+  RemoveSpecificStyle (doc, "background-color: white");
 }
 
 /*----------------------------------------------------------------------
@@ -944,6 +1149,16 @@ void DoJustify (Document doc, View view)
     GenerateStyle ("text-align:justify;", TRUE);
 }
 
+
+/*----------------------------------------------------------------------
+  DoRemoveAlign
+  Remove alignment
+  ----------------------------------------------------------------------*/
+void DoRemoveAlign (Document doc, View view)
+{
+  RemoveSpecificStyle (doc, "text-align: left");
+}
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void LineSpacingSingle (Document doc, View view)
@@ -969,6 +1184,15 @@ void LineSpacingDouble (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  DoRemoveLineSpacing
+  Remove line spacing
+  ----------------------------------------------------------------------*/
+void DoRemoveLineSpacing (Document doc, View view)
+{
+  RemoveSpecificStyle (doc, "line-height:1em");
+}
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void MarginLeftIncrease (Document doc, View view)
 {
@@ -982,6 +1206,15 @@ void MarginLeftDecrease (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
     GenerateStyle ("margin-left:0;", TRUE);
+}
+
+/*----------------------------------------------------------------------
+  DoRemove Margin
+  Remove margin
+  ----------------------------------------------------------------------*/
+void DoRemoveMargin (Document doc, View view)
+{
+  RemoveSpecificStyle (doc, "margin-left:0");
 }
 
 /*----------------------------------------------------------------------
@@ -1074,8 +1307,8 @@ void MakeOpenCSS(Document doc, PInfoPtr pInfo)
 void MakeRemoveCSS(Document doc, PInfoPtr pInfo)
 {
   CSSInfoPtr css;
-  Element    el, firstSel, lastSel;
-  int        j, firstChar, lastChar;
+  Element    el;
+  ThotBool   open;
   
   /* remove the link to this file */
   if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
@@ -1087,18 +1320,14 @@ void MakeRemoveCSS(Document doc, PInfoPtr pInfo)
       /* look for the element LINK */
       el = pInfo->PiLink;
       RemoveLink (el, doc);
-      /* give current position */
-      TtaGiveFirstSelectedElement (doc,
-                                   &firstSel,
-                                   &firstChar, &j);
-      TtaGiveLastSelectedElement (doc,
-                                  &lastSel, &j, &lastChar);
       /* register this element in the editing history */
-      TtaOpenUndoSequence (doc, firstSel,
-                           lastSel, firstChar, lastChar);
+      open = TtaHasUndoSequence (doc);
+      if (!open)
+        TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       TtaRegisterElementDelete (el, doc);
       TtaDeleteTree (el, doc);
-      TtaCloseUndoSequence (doc);
+      if (!open)
+        TtaCloseUndoSequence (doc);
       TtaSetDocumentModified (doc);
     }
 }

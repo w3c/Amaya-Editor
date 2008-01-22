@@ -270,11 +270,14 @@ MENUS
   Style.Align button:BAlignCenter -> DoCenter icon:CSS_center.png;
   Style.Align button:BRightAlign -> DoRightAlign icon:CSS_right.png;
   Style.Align button:BJustify -> DoJustify icon:CSS_justify.png;
+  Style.Align button:BRemoveAlign -> DoRemoveAlign;
   Style.LineSpacing button:BLineSpacingSingle -> LineSpacingSingle icon:CSS_s_line.png;
   Style.LineSpacing button:BLineSpacingHalf -> LineSpacingHalf icon:CSS_h_line.png;
   Style.LineSpacing button:BLineSpacingDouble -> LineSpacingDouble icon:CSS_d_line.png;
+  Style.LineSpacing button:BRemoveLineSpacing-> DoRemoveLineSpacing;
   Style.Indent  button:BIncrease -> MarginLeftIncrease icon:CSS_indent.png;
   Style.Indent  button:BDecrease -> MarginLeftDecrease icon:CSS_noindent.png;
+  Style.Indent  button:BRemoveMargin -> DoRemoveMargin;
   Style Separator;
   Style button:BCSSStyle -> SetCSSStyle icon:css.png;
 	Style button:BCreateClass -> CreateClass;

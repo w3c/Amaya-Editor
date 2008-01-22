@@ -836,6 +836,7 @@ void ChangeTheme (const char *theme)
             {
               // cannot change the content type
               TtaCloseUndoSequence (doc);
+              TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_READONLY);
               content = NULL;
             }
           if (content)

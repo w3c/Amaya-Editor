@@ -7645,7 +7645,10 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
     }
 
   /* register parsed CSS file and the document to which CSS are to be applied */
-  ParsedDoc = docRef;
+  if (DocumentMeta[docRef] == NULL || DocumentMeta[docRef]->method != CE_MAKEBOOK)
+    ParsedDoc = docRef;
+  else
+    ParsedDoc = 0;
   /* clean up the list of classes */
   TtaFreeMemory (refcss->class_list);
   refcss->class_list = NULL;

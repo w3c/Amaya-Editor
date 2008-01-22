@@ -43,8 +43,6 @@ extern void ChangeTheme (const char *theme);
 // AmayaStyleToolPanel
 //
 //
-static int  Current_Color = -1;
-static int  Current_BackgroundColor = -1;
 
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaStyleToolDef)

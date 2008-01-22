@@ -210,17 +210,21 @@ void StyleListToolPanel::OnRemSheet(wxCommandEvent& event)
   for (i = 0; i < nb; i++)
     {
       int item = selections[i];
-      if (item!=wxNOT_FOUND)
+      if (item != wxNOT_FOUND)
         {
           PInfoPtr pInfo = m_map[item];
-          if (pInfo)
+          if (pInfo && pInfo->PiCategory != CSS_DOCUMENT_STYLE)
             infos.Add(pInfo);
         }
     }
   for (i = 0; i < (int)infos.GetCount(); i++)
-    MakeRemoveCSS(m_doc, (PInfoPtr)infos[i]);
-  
-  Update(m_doc);
+    {
+      /* register this element in the editing history */
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+      MakeRemoveCSS(m_doc, (PInfoPtr)infos[i]);
+      TtaCloseUndoSequence (doc);
+    }
+  Update (m_doc);
 }
 
 /*----------------------------------------------------------------------
@@ -240,7 +244,7 @@ void StyleListToolPanel::OnActivateSheet(wxCommandEvent& event)
   for (i = 0; i < nb; i++)
     {
       int item = selections[i];
-      if (item!=wxNOT_FOUND)
+      if (item != wxNOT_FOUND)
         {
           PInfoPtr pInfo = m_map[item];
           if (pInfo)

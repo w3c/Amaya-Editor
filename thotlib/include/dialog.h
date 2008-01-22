@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2005
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -9,7 +9,9 @@
 #define _DIALOG_H_
 
 #if defined(_WX) && !defined(NODISPLAY)
-extern int WX_SearchResult; /* 0 if ok, 1 if no replace, 2 if not found */
+extern int WX_SearchResult;         /* 0 if ok, 1 if no replace, 2 if not found */
+extern int Current_Color;           // export the panel Color
+extern int Current_BackgroundColor; // export the panel Background Color
 #endif /* _WX */
 
 
