@@ -1874,8 +1874,8 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
   AttributeType       attrType;
   char               *buffer = NULL, *name;
   int                 length;
+  ThotBool            isHTML, created = FALSE;
 
-  ThotBool            isHTML;
   if (clickFirst)
     {
       /* ask the user to select target document and target anchor */
@@ -1916,7 +1916,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
   AttrHREFelement = el;
   AttrHREFdocument = doc;
   AttrHREFundoable = withUndo;
-  if ((clickFirst) && (doc != targetDoc || TargetName != NULL))
+  if (clickFirst && (doc != targetDoc || TargetName != NULL))
     /* the user has clicked another document or a target element */
     /* create the attribute HREF or CITE */
     SetREFattribute (el, doc, TargetDocumentURL, TargetName);
@@ -1978,8 +1978,6 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
       TtaExtractName (DocumentURLs[doc], DirectoryName, DocumentName);
 
 #ifdef _WX
-      ThotBool created = FALSE;
-	
       if (LinkAsXmlCSS || LinkAsCSS)
         /* select a CSS file */
         created = CreateHRefDlgWX (BaseDialog + AttrHREFForm,
@@ -1993,28 +1991,28 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
                                    AttrHREFvalue,
                                    doc, docJavascript);
       else
-	  {
+        {
 #ifdef IV
-		if (AttrHREFvalue[0] == EOS &&
-			((TargetDocumentURL && TargetDocumentURL[0] != EOS) ||
-			(TargetName && TargetName[0] != EOS)))
-		{
-          // by default propose the last created target
-		  if (TargetDocumentURL && strcmp (TargetDocumentURL, DocumentURLs[doc]))
-            strcpy (AttrHREFvalue, TargetDocumentURL);
-		  if (TargetName && TargetName[0] != EOS)
-		  {
-          strcat (AttrHREFvalue, "#");
-		  strcat (AttrHREFvalue, TargetName);
-		  }
-		}
+          if (AttrHREFvalue[0] == EOS &&
+              ((TargetDocumentURL && TargetDocumentURL[0] != EOS) ||
+               (TargetName && TargetName[0] != EOS)))
+            {
+              // by default propose the last created target
+              if (TargetDocumentURL && strcmp (TargetDocumentURL, DocumentURLs[doc]))
+                strcpy (AttrHREFvalue, TargetDocumentURL);
+              if (TargetName && TargetName[0] != EOS)
+                {
+                  strcat (AttrHREFvalue, "#");
+                  strcat (AttrHREFvalue, TargetName);
+                }
+            }
 #endif
-        /* select any file */
-        created = CreateHRefDlgWX (BaseDialog + AttrHREFForm,
-                                   TtaGetViewFrame (doc, 1), URL_list,
-                                   AttrHREFvalue,
-                                   doc, docText);
-	  }
+          /* select any file */
+          created = CreateHRefDlgWX (BaseDialog + AttrHREFForm,
+                                     TtaGetViewFrame (doc, 1), URL_list,
+                                     AttrHREFvalue,
+                                     doc, docText);
+        }
       if (created)
         {
           TtaSetDialoguePosition ();
