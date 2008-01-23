@@ -37,7 +37,7 @@
 #-------------------- User Profiles ------------------------------------------
 ################# AMAYA EDITOR
 <Editor>
-+browsing-lite
++browsing_lite
 +edit
 +web-module
 #+javascript_dom
