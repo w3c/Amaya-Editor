@@ -5550,8 +5550,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
             /* create an attribute HREF for the Link_Anchor */
             SetREFattribute (AttrHREFelement, AttrHREFdocument,
                              AttrHREFvalue, NULL);
-	  else
-	    DoDeleteAnchor (AttrHREFdocument, 1, TRUE);
+          else
+            {
+              DoDeleteAnchor (AttrHREFdocument, 1, TRUE);
+              IsNewAnchor = FALSE;
+              LinkAsCSS = FALSE;
+              LinkAsXmlCSS = FALSE;
+              LinkAsJavascript = FALSE;
+            }
           TtaDestroyDialogue (BaseDialog + AttrHREFForm);
           TtaDestroyDialogue (BaseDialog + FileBrowserForm);
         }
@@ -5584,8 +5590,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
             LinkAsXmlCSS = FALSE;
             LinkAsJavascript = FALSE;
             /* remove the link if it was just created */
-            //TtaCancelLastRegisteredSequence (AttrHREFdocument);
-            DoDeleteAnchor (AttrHREFdocument, 1, FALSE);
+            //DoDeleteAnchor (AttrHREFdocument, 1, FALSE);
             TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
           }
       break;
