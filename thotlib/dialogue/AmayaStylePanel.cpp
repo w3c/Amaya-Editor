@@ -44,6 +44,7 @@ extern void ChangeTheme (const char *theme);
 //
 //
 
+
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaStyleToolDef)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_CSS_LEFT",    "DoLeftAlign", LIB, TMSG_FORMATLEFT)
@@ -206,6 +207,7 @@ void AmayaStyleToolPanel::GenerateFontColour(wxColour c)
 {
   char     color_string[100];
   int      color;
+
   color = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
   if (color != Current_Color)
     Current_Color = color;
@@ -232,15 +234,13 @@ void AmayaStyleToolPanel::OnColorFontPalette( AmayaColorButtonEvent& event )
   GenerateFontColour(event.GetColour());
 }
 
-
-
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::GenerateBackgroundColour(wxColour c)
 {
   char     color_string[100];
   int      color;
+
   color = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
   if (color != Current_BackgroundColor)
     Current_BackgroundColor = color;
@@ -264,7 +264,31 @@ void AmayaStyleToolPanel::OnColorBackgroundPalette( AmayaColorButtonEvent& event
   GenerateBackgroundColour(event.GetColour());  
 }
 
+/*----------------------------------------------------------------------
+  SendDataToPanel refresh the attribute list or show the value panels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::SendDataToPanel( AmayaParams& p )
+{
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+  wxColour            col;
 
+  if (Current_Color != -1)
+    {
+      TtaGiveThotRGB (Current_Color, &red, &green, &blue);
+      col = wxColour ( red, green, blue );
+      XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", AmayaColorButton)->SetColour( col );
+    }
+  if (Current_BackgroundColor != -1)
+    {
+      TtaGiveThotRGB (Current_BackgroundColor, &red, &green, &blue);
+      col = wxColour ( red, green, blue );
+      XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->SetColour( col );  
+    }
+}
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared

@@ -230,17 +230,20 @@ static PtrProCtl AddProfile (char *name)
 {
   PtrProCtl     new_ = NULL;
 
-  /* Register the new profile */
-  if (NbProfiles == 0)
+  if (!strcmp (name, UserProfile))
     {
-      ProfileTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
-      memset (ProfileTable, 0, sizeof (Profile_Ctl));
+      /* Register the new profile */
+      if (NbProfiles == 0)
+        {
+          ProfileTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
+          memset (ProfileTable, 0, sizeof (Profile_Ctl));
+        }
+       new_ = AddInTable (name, TRUE, FALSE, FALSE, NULL, NbProfiles, ProfileTable);
+       NbProfiles++;
+       /* store the context of the user profile */
+       if (UserProfContext == NULL)
+         UserProfContext = new_;
     }
-  new_ = AddInTable (name, TRUE, FALSE, FALSE, NULL, NbProfiles, ProfileTable);
-  NbProfiles++;
-  /* store the context of the user profile */
-  if (UserProfContext == NULL && !strcmp (name, UserProfile))
-    UserProfContext = new_;
   return new_;
 }
 

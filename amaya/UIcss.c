@@ -886,6 +886,20 @@ void DoStyleColor (char *color)
     TtaSetDisplayMode (doc, dispMode);
 }
 
+
+/*----------------------------------------------------------------------
+  UpdateStylePanel
+  ----------------------------------------------------------------------*/
+void UpdateStylePanel (Document doc, View view)
+{
+#ifdef _WX
+  AmayaParams p;
+
+  p.param1 = doc;
+  TtaSendDataToPanel (WXAMAYA_PANEL_STYLE, p );
+#endif /* _WX */
+}
+
 /*----------------------------------------------------------------------
   DoSelectColor
   Apply color style
@@ -926,6 +940,7 @@ void DoSelectColor (Document doc, View view)
       sprintf( color_string, "color:#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
       DoStyleColor (color_string);
     }
+  UpdateStylePanel (doc, view);
 }
 
 /*----------------------------------------------------------------------
@@ -968,6 +983,7 @@ void DoSelectBgColor (Document doc, View view)
       sprintf( color_string, "background-color:#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
       DoStyleColor (color_string);
     }
+  UpdateStylePanel (doc, view);
 }
 
 /*----------------------------------------------------------------------

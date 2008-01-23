@@ -12,6 +12,7 @@
 extern int WX_SearchResult;         /* 0 if ok, 1 if no replace, 2 if not found */
 extern int Current_Color;           // export the panel Color
 extern int Current_BackgroundColor; // export the panel Background Color
+extern int SaveAUI_DECORATION;     // control the AUI_DECORATION
 #endif /* _WX */
 
 

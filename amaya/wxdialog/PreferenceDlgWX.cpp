@@ -406,8 +406,10 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
 {
   wxString        value;
   Prop_General    prop;
-  memset( &prop, 0, sizeof(Prop_General) );
+  char           *prof;
+  char            buffer[MAX_LENGTH];
 
+  memset( &prop, 0, sizeof(Prop_General) );
   value = XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->GetValue();
   strcpy( prop.HomePage, (const char*)value.mb_str(wxConvUTF8) );
 
@@ -424,16 +426,29 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   prop.AccesskeyMod = XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->GetSelection();
 
   value = XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->GetStringSelection();
-  char buffer[MAX_LENGTH];
-  strcpy(buffer, (const char*)value.mb_str(wxConvUTF8) );
+  strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
   if (!strncmp (buffer, "zh", 2))
-    strncpy( prop.DialogueLang, &buffer[3], 2 );
+    strncpy ( prop.DialogueLang, &buffer[3], 2 );
   else
-    strncpy( prop.DialogueLang, buffer, 2 );
+    strncpy ( prop.DialogueLang, buffer, 2 );
   prop.DialogueLang[2] = EOS;
-
   prop.ToolPanelLayout = XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->GetSelection();
-  
+
+  // detect if the Amaya profile changes
+  buffer[0] == EOS;
+  value = XRCCTRL(*this, "wxID_CHOICE_PROFILE", wxChoice)->GetStringSelection();
+  if (!value.IsEmpty())
+    {
+      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
+      prof = TtaGetEnvString ("CURRENT_PROFILE");
+      if (prof == NULL || strcmp (prof, buffer))
+        {
+          // change the Amaya profile
+          TtaSetEnvString ("CURRENT_PROFILE", buffer, TRUE);
+          // Avoid to save previous "AUI_DECORATION"
+          SaveAUI_DECORATION = 0;
+        }
+    }
   return prop;
 }
 

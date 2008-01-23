@@ -198,8 +198,6 @@ void AmayaAdvancedWindow::LoadConfig()
     m_manager.AddPane(GetToolBarEditing(), wxAuiPaneInfo().
                   Name(wxT("Edition")).Caption(wxT("Edition")).ToolbarPane().Top().
                   Gripper(false).Row(1).Floatable(false).PaneBorder(false));
-
-  
   
   m_manager.Update();
 
@@ -267,7 +265,7 @@ void AmayaAdvancedWindow::SaveConfig()
   
   // Save tool states and positions.
   AmayaAdvanceToolPanelMap::iterator it;
-  for(it = m_panels.begin(); it!=m_panels.end(); ++it )
+  for (it = m_panels.begin(); it != m_panels.end(); ++it )
   {
     if(it->second)
       {
@@ -304,14 +302,17 @@ void AmayaAdvancedWindow::SaveConfig()
   str = m_manager.SavePerspective();
   wxStringTokenizer tkz(str, wxT("|"));
   str = wxT("");
-  while ( tkz.HasMoreTokens() )
-  {
-    wxString token = tkz.GetNextToken();
-    if(token.Find(wxT("name="))==wxNOT_FOUND)
-      str += wxT("|") + token;
-  }
-  if(str[0]==wxT('|'))
-    str.Remove(0, 1);
+  if (SaveAUI_DECORATION)
+    {
+      while (tkz.HasMoreTokens())
+        {
+          wxString token = tkz.GetNextToken();
+          if(token.Find(wxT("name="))==wxNOT_FOUND)
+            str += wxT("|") + token;
+        }
+      if (str[0]==wxT('|'))
+        str.Remove(0, 1);
+    }
   TtaSetEnvString("AUI_DECORATION", (char*)(const char*)str.mb_str(wxConvUTF8), TRUE);
 
   // Commit config

@@ -50,7 +50,7 @@ protected:
 
   void OnChooseBackgroundColor(wxCommandEvent& event);
   void OnColorBackgroundPalette( AmayaColorButtonEvent& event );
-
+  void SendDataToPanel( AmayaParams& p );
   
   void OnThemeChange( wxCommandEvent& event );
 

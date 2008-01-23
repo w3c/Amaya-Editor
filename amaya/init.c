@@ -60,6 +60,7 @@ extern XmlEntity *pMathEntityTable;
 
 int  Current_Color = -1;
 int  Current_BackgroundColor = -1;
+int  SaveAUI_DECORATION = 1;
 static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
 static int          NewDocType = 0;
@@ -5586,9 +5587,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
         /* Cancel button */
         if (IsNewAnchor)
           {
-            LinkAsCSS = FALSE;
-            LinkAsXmlCSS = FALSE;
-            LinkAsJavascript = FALSE;
             /* remove the link if it was just created */
             //DoDeleteAnchor (AttrHREFdocument, 1, FALSE);
             TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
@@ -6364,7 +6362,16 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvString ("DOCUMENT_CHARSET", "iso-8859-1", FALSE);
   TtaSetEnvString ("LOCAL_HTML_DOCTYPE_1", "", FALSE);
   TtaSetEnvString ("LOCAL_HTML_DOCTYPE_2", "", FALSE);
-  TtaSetEnvString ("CURRENT_PROFILE", "Advanced", FALSE);
+  /* check if an Amaya profile is set */
+  ptr = TtaGetEnvString ("CURRENT_PROFILE");
+  if (ptr == NULL)
+    {
+      TtaSetEnvString ("CURRENT_PROFILE", "Advanced", FALSE);
+          // Avoid to save previous "AUI_DECORATION"
+      SaveAUI_DECORATION = 0;
+    }
+  else
+    ptr = NULL;
   TtaSetEnvBoolean ("SHOW_MAP_AREAS", FALSE, FALSE);
   TtaSetEnvBoolean ("SHOW_TARGET", FALSE, FALSE);
   TtaSetEnvBoolean ("LOAD_IMAGES", TRUE, FALSE);
