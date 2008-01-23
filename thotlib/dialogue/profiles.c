@@ -708,7 +708,7 @@ void Prof_InitTable (char *profile)
               i = 0;
               do
                 {
-                  ptr = strstr (ptr, "+");
+                  ptr = strstr (++ptr, "+");
                   i++;
                 }
               while (ptr);

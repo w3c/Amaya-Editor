@@ -349,7 +349,7 @@ HelpXml
 
 ######### advanced-edit
 [advanced-edit]
-+math
++maths
 +tables
 &CreateMath
 &TransformType
@@ -358,6 +358,8 @@ TtcChildElement
 TtcPreviousElement
 TtcNextElement
 HelpChanging
+HelpTables
+HelpMath
 *AmayaMathMLToolPanel
 
 ######### doctype
@@ -588,7 +590,6 @@ SelectColumn
 &CreateCol
 &CreateTHead
 &CreateTFoot
-HelpTables
 
 ################# MATHML
 [maths]
@@ -615,7 +616,6 @@ HelpTables
 &CreateMROW
 &CreateMMULTISCRIPTS
 &CreateMTABLE
-&PHelpMath
 
 ################# SVG
 [svg]
