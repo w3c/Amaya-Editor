@@ -3550,9 +3550,11 @@ void MergeSelectedCells (Document doc, View view)
     }
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
- if (dispMode == DisplayImmediately)
+  if (nrow != rowspan || ncol != colspan)
+    TtaSelectElement (doc, firstCell);
+  if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
- UpdateContextSensitiveMenus (doc, view);
+  UpdateContextSensitiveMenus (doc, view);
 }
 
 /*----------------------------------------------------------------------

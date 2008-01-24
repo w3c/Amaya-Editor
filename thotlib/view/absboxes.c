@@ -284,6 +284,8 @@ void                FreeAbEl (PtrElement pEl, PtrDocument pDoc)
               {
                 pAbbNext = pAbb->AbNext;
                 FreeAbView (pAbb, pDoc->DocViewFrame[v]);
+                if (pDoc->DocViewModifiedAb[v] == pAbb)
+                  pDoc->DocViewModifiedAb[v] = NULL;
                 pAbb = pAbbNext;
               }
           }
