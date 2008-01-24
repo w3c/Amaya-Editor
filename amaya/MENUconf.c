@@ -2576,10 +2576,6 @@ void GetDefaultTemplatesConf ()
 static void TemplatesCallbackDialog (int ref, int typedata, char *data)
 {
   intptr_t  val;
-#ifdef AMAYA_DEBUG
-  printf("TemplatesCallbackDialog : %d %d (%d)\n", ref, ref-TemplatesBase,
-         (int)data);
-#endif /* AMAYA_DEBUG */
   if (ref==-1)
     {
     }
@@ -2665,10 +2661,7 @@ void GetDefaultPasswordsConf ()
 static void PasswordsCallbackDialog (int ref, int typedata, char *data)
 {
   intptr_t  val;
-#ifdef AMAYA_DEBUG
-  printf("PasswordsCallbackDialog : %d %d (%d)\n", ref, ref-PasswordsBase,
-         (int)data);
-#endif /* AMAYA_DEBUG */
+
   if (ref==-1)
     {
     }
