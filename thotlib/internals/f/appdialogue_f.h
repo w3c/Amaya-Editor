@@ -22,11 +22,13 @@ extern void TtaExecuteMenuActionFromActionId ( int action_id,
                                                Document doc,
                                                View view,
                                                ThotBool force );
+extern void TteZeroMenu ( void );
+extern ThotBool TtaIsActionActive ( char *name,
+                                    Document doc );
 extern void TtaExecuteMenuAction ( const char *actionName,
                                    Document doc,
                                    View view,
                                    ThotBool force );
-extern void TteZeroMenu ( void );
 extern void TteAddMenu ( int view,
                          int menuID,
                          int itemsNumber,
@@ -125,11 +127,13 @@ extern void TtaExecuteMenuActionFromActionId ( int action_id,
                                                  Document doc,
                                                  View view,
                                                  ThotBool force );
+extern void TteZeroMenu ( void );
+extern ThotBool TtaIsActionActive ( char *name,
+                                      Document doc );
 extern void TtaExecuteMenuAction ( const char *actionName,
                                      Document doc,
                                      View view,
                                      ThotBool force );
-extern void TteZeroMenu ( void );
 extern void TteAddMenu ( int view,
                            int menuID,
                            int itemsNumber,

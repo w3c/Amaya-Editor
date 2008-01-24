@@ -438,7 +438,7 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   prop.ToolPanelLayout = XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->GetSelection();
 
   // detect if the Amaya profile changes
-  buffer[0] == EOS;
+  buffer[0] = EOS;
   value = XRCCTRL(*this, "wxID_CHOICE_PROFILE", wxChoice)->GetStringSelection();
   if (!value.IsEmpty())
     {

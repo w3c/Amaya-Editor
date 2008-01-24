@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 2002-2007
+ *  (c) COPYRIGHT INRIA and W3C, 2002-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -3721,12 +3721,9 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
             TtaSetDisplayMode (event->document, NoComputedDisplay);
             TtaSetDisplayMode (event->document, DisplayImmediately);
             TtaSetDisplayMode (event->document, dp);
-		  
-            /*****		  
-            TtcGetPaletteColors (&fgcolor,
-                                 &bgcolor,
-                                 TRUE);
-            ****/
+            /*****	TtcGetPaletteColors (&fgcolor, &bgcolor, TRUE); ****/
+            fgcolor = Current_Color;
+            bgcolor = Current_BackgroundColor;
             /* force a redisplay after letting the user choose ending color */
             dp = TtaGetDisplayMode (event->document);
             TtaSetDisplayMode (event->document, NoComputedDisplay);
@@ -4295,10 +4292,9 @@ static void Define_color_anim (NotifyElement *event)
                 TtaGetMessage (AMAYA, AM_SVGANIM_COLOR_HINT1), NULL);
 
   /* get starting color values */
-  /******
-  TtcGetPaletteColors (&(dt[basedoc].fgcolor_start),
-                       &(dt[basedoc].bgcolor_start), TRUE);
-  *****/
+  /*****	TtcGetPaletteColors (&fgcolor, &bgcolor, TRUE); ****/
+  dt[basedoc].fgcolor_start = Current_Color;
+  dt[basedoc].bgcolor_start = Current_BackgroundColor;
   /* get "from" value */
   presRuleX = TtaGetPRule (dt[basedoc].slider, PRHorizPos);
   if (presRuleX)

@@ -51,6 +51,7 @@ CopyLocation
 <Editor_Lite>
 +browsing_lite
 +edit_lite
+&SingleCreateTable
 &SingleNewXHTML
 
 ################# AMAYA Lite+Math
@@ -58,6 +59,7 @@ CopyLocation
 +browsing_lite
 +edit_lite
 +advanced-edit
+&SingleCreateTable
 &SingleNewXHTML
 *AmayaAttributeToolPanel
 
@@ -75,6 +77,7 @@ CopyLocation
 +forms
 +link-module
 FullScreen
+&SingleCreateTable
 &SingleNewXHTML
 *AmayaAttributeToolPanel
 
@@ -93,6 +96,7 @@ FullScreen
 +link-module
 FullScreen
 +css-style
+&SingleCreateTable
 &SetCSSStyle
 &Synchronize
 &NewXHTML
@@ -160,7 +164,6 @@ HelpAtW3C
 +script-module
 +struct-module
 +svg
-+tables
 +text-module
 
 ################# XHTML-BASIC
@@ -256,7 +259,6 @@ DAVLockDocument
 +config
 +print
 +views
-FollowTheLink
 FollowTheLinkNewWin
 FollowTheLinkNewTab
 ZoomIn
@@ -290,7 +292,6 @@ SendByMail
 +presentation-lite
 +spell
 +templates
-&SingleCreateTable
 +table-edit
 HelpDocument
 HelpTemplating
@@ -336,6 +337,7 @@ ShowEditingBar
 +ruby
 +script-module
 +svg
++tables
 &CreateBase
 &SetCSSStyle
 HelpXml
@@ -350,7 +352,6 @@ HelpXml
 ######### advanced-edit
 [advanced-edit]
 +maths
-+tables
 &CreateMath
 &TransformType
 TtcParentElement
@@ -380,6 +381,7 @@ GotoPreviousHTML
 GotoNextHTML
 HelpBrowsing
 StopTransfer
+FollowTheLink
 ReadAsUTF_8
 ReadAsISO_8859_1
 ReadAsISO_8859_15
@@ -563,6 +565,7 @@ HelpImageMaps
 &ChangeToHeadingCell
 
 [table-edit]
+&DoCreateTable
 &CellVertExtend
 &CellHorizExtend
 &CellVertShrink

@@ -551,6 +551,29 @@ void TtaExecuteMenuActionFromActionId (int action_id, Document doc,
 }
 
 /*----------------------------------------------------------------------
+  TteZeroMenu signale qu'il n'y a pas de menu dans ce type de        
+  fenentre.                                                       
+  ----------------------------------------------------------------------*/
+void TteZeroMenu ()
+{
+}
+
+/*----------------------------------------------------------------------
+  TtaIsActionActive
+  Returns TRUE if the function is available for that document
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsActionActive (char *name, Document doc)
+{
+  int      result = 0;
+
+  if (doc == 0 || name == NULL ||  LoadedDocument[doc - 1])
+    TtaError (ERR_invalid_parameter);
+  else
+    result = Prof_BelongDoctype (name, LoadedDocument[doc]->DocProfile, FALSE);
+  return (result != 0);
+}
+
+/*----------------------------------------------------------------------
   TtaExecuteMenuAction execute the corresponding menu action.
   ----------------------------------------------------------------------*/
 void TtaExecuteMenuAction (const char *actionName, Document doc, View view,
@@ -566,15 +589,6 @@ void TtaExecuteMenuAction (const char *actionName, Document doc, View view,
       action_id = FindMenuAction (actionName);
       TtaExecuteMenuActionFromActionId (action_id, doc, view, force);
     }
-}
-
-
-/*----------------------------------------------------------------------
-  TteZeroMenu signale qu'il n'y a pas de menu dans ce type de        
-  fenentre.                                                       
-  ----------------------------------------------------------------------*/
-void TteZeroMenu ()
-{
 }
 
 

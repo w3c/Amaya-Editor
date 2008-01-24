@@ -126,6 +126,8 @@ extern void CreateTable ( Document doc,
                           View view );
 extern void SingleCreateTable ( Document doc,
                                 View view );
+extern void DoCreateTable ( Document doc,
+                            View view );
 extern void CreateCaption ( Document doc,
                             View view );
 extern void CreateColgroup ( Document doc,
@@ -394,6 +396,8 @@ extern void CreateTable ( Document doc,
                             View view );
 extern void SingleCreateTable ( Document doc,
                                   View view );
+extern void DoCreateTable ( Document doc,
+                              View view );
 extern void CreateCaption ( Document doc,
                               View view );
 extern void CreateColgroup ( Document doc,

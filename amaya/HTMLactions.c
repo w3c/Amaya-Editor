@@ -1810,7 +1810,7 @@ static ThotBool ActivateElement (Element element, Document document)
   Element             anchor, elFound;
   ElementType         elType, elType1;
   char               *name;
-  ThotBool	       ok, isHTML, isXLink, isSVG;
+  ThotBool	          ok, isHTML, isXLink, isSVG;
 
   elType = TtaGetElementType (element);
   name = TtaGetSSchemaName(elType.ElSSchema);
@@ -1949,7 +1949,15 @@ static ThotBool ActivateElement (Element element, Document document)
   anchor = SearchAnchor (document, element, &HrefAttr, FALSE);
 
   if (anchor && HrefAttr)
-    return (Do_follow_link (anchor, element, HrefAttr, document));
+    {
+      // open in new tab if the back function is available
+      if (!TtaIsActionActive ("GotoPreviousHTML", document))
+        {
+          DontReplaceOldDoc = TRUE;
+          InNewWindow       = FALSE;
+        }
+      return (Do_follow_link (anchor, element, HrefAttr, document));
+    }
   else
     return FALSE;
 }
@@ -1960,9 +1968,9 @@ static ThotBool ActivateElement (Element element, Document document)
   ----------------------------------------------------------------------*/
 ThotBool CanFollowTheLink (Document document)
 {
-  if(Right_ClikedElement && TtaGetDocument(Right_ClikedElement)==document)
+  if (Right_ClikedElement && TtaGetDocument(Right_ClikedElement)==document)
     {
-      if(WithinLinkElement(Right_ClikedElement, document))
+      if (WithinLinkElement(Right_ClikedElement, document))
         return TRUE;
     }
   return FALSE;

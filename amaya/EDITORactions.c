@@ -2436,8 +2436,18 @@ void CreateTable (Document doc, View view)
 
 /*----------------------------------------------------------------------
   SingleCreateTable
+  Function used in Lite profiles
   ----------------------------------------------------------------------*/
 void SingleCreateTable (Document doc, View view)
+{
+  CreateTable (doc, view);
+}
+
+/*----------------------------------------------------------------------
+  DoCreateTable
+  Function attached to the table button
+  ----------------------------------------------------------------------*/
+void DoCreateTable (Document doc, View view)
 {
   CreateTable (doc, view);
 }

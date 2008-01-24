@@ -27,6 +27,8 @@ extern char *CssToPrint ( Document doc,
 extern void GenerateStyle ( char * data,
                             ThotBool add );
 extern void DoStyleColor ( char *color );
+extern void UpdateStylePanel ( Document doc,
+                               View view );
 extern void DoSelectColor ( Document doc,
                             View view );
 extern void DoSelectBgColor ( Document doc,
@@ -109,6 +111,8 @@ extern char *CssToPrint ( Document doc,
 extern void GenerateStyle ( char * data,
                               ThotBool add );
 extern void DoStyleColor ( char *color );
+extern void UpdateStylePanel ( Document doc,
+                                 View view );
 extern void DoSelectColor ( Document doc,
                               View view );
 extern void DoSelectBgColor ( Document doc,

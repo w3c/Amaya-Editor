@@ -602,7 +602,7 @@ ThotBool Prof_BelongTable (const char *name)
   ----------------------------------------------------------------------*/
 int Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
 {
-  int              left, right, middle, i;
+  int     left, right, middle, i;
 
   if (NbFunctions == 0 || docProfile == 0 || name == NULL)
     /* no specific profile */
@@ -661,7 +661,6 @@ int Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
     }
   return -1;
 }
-
 
 /*-----------------------------------------------------------------------
   Prof_InitTable: Seek the current profile file and init tables

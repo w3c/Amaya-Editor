@@ -32,6 +32,12 @@ enum DButtons
 #ifndef __CEXTRACT__
 
 /*----------------------------------------------------------------------
+  TtaIsActionActive
+  Returns TRUE if the function is available for that document
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsActionActive (char *name, Document doc);
+
+/*----------------------------------------------------------------------
    TtaNewPulldown cre'e un pull-down menu :                           
    Le parame`tre ref donne la re'fe'rence pour l'application.         
    Le parame`tre parent identifie le widget pe`re du pull-down menu.  
