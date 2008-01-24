@@ -121,6 +121,7 @@ protected:
   wxComboBox              *m_pComboBox;         // URL combo box
   
   wxArrayString           m_URLs;
+  wxString                m_enteredURL; // Setted URL, used when no combo is create (amaya lite). 
 
   static int s_normalWindowCount;   
 

@@ -476,6 +476,9 @@ void AmayaNormalWindow::SetURL ( const wxString & new_url )
 #ifdef _MACOS
   UpdateFrameUrl = FALSE;
 #endif /* _MACOS */
+  
+  m_enteredURL = new_url;
+  
   if(m_pComboBox)
     {
       if (m_pComboBox->FindString(new_url) == wxNOT_FOUND)
@@ -720,7 +723,7 @@ void AmayaNormalWindow::OnURLText( wxCommandEvent& event )
 #endif /* _MACOS */
     {
       AmayaFrame * p_frame = GetActiveFrame();
-      if (p_frame)
+      if (p_frame && m_pComboBox)
         p_frame->UpdateFrameURL(m_pComboBox->GetValue());
       event.Skip();
     }
@@ -759,21 +762,26 @@ void AmayaNormalWindow::GotoSelectedURL()
   if (pDoc && pDoc->Call_Text)
     {
       char buffer[2048];
-      strcpy(buffer, (m_pComboBox->GetValue()).Trim(TRUE).Trim(FALSE).mb_str(wxConvUTF8));
+      
+      if(m_pComboBox)
+        strcpy(buffer, (m_pComboBox->GetValue()).Trim(TRUE).Trim(FALSE).mb_str(wxConvUTF8));
+      else
+        strcpy(buffer, m_enteredURL.Trim(TRUE).Trim(FALSE).mb_str(wxConvUTF8));
+      
 // patch to go-round a bug on Windows (TEXT_ENTER event called twice)
 #ifdef _WINDOWS
-    if (isBufUrl == FALSE)
-    {
-      isBufUrl = TRUE;
-        (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
-       strcpy (BufUrl, buffer);
-      isBufUrl = FALSE;
-    }
-    else if (strcmp (buffer, BufUrl) != 0)
-    {
-        (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
-       strcpy (BufUrl, buffer);
-    }
+        if (isBufUrl == FALSE)
+        {
+          isBufUrl = TRUE;
+            (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+           strcpy (BufUrl, buffer);
+          isBufUrl = FALSE;
+        }
+        else if (strcmp (buffer, BufUrl) != 0)
+        {
+            (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+           strcpy (BufUrl, buffer);
+        }
 #else /* _WINDOWS */
         (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
 #endif /* _WINDOWS */
