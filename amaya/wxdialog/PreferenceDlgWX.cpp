@@ -295,7 +295,10 @@ void PreferenceDlgWX::SetupLabelDialog_General()
 
   XRCCTRL(*this, "wxID_LABEL_TOOLPANEL_ALIGN", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_TOOLPANEL_ALIGN)) );
   XRCCTRL(*this, "wxID_LABEL_PROFILE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PROFILE)) );
-  
+  XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PROFILE_CHANGE) ));
+  XRCCTRL(*this, "wxID_CHOICE_PROFILE", wxChoice)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PROFILE_CHANGE) ));
+  XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PROFILE_CHANGE) ));
+ 
   /* tooltip of color buttons */
   XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
   XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));

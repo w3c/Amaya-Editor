@@ -13,7 +13,9 @@
             <object class="wxStaticText" name="wxID_LABEL">
               <label>*Get the Image name*</label>
             </object>
+            <option>0</option>
             <flag>wxALL|wxEXPAND</flag>
+            <border>10</border>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
