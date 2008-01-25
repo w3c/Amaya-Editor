@@ -756,10 +756,14 @@
 	<message xml:lang="en">Set the text color</message>
 	<message xml:lang="fr">Appliquer la couleur du texte</message>
 	<message xml:lang="de">Maustaste 1 setzt die Textfarbe</message>
+<message xml:lang="es">Establecer el color del texto</message>
+<message xml:lang="it">Impostare il colore del testo</message>
 </label>
 <label define="TMSG_BUTTON_2">
 	<message xml:lang="en">Set the background color</message>
 	<message xml:lang="fr">Appliquer la couleur du fond</message>
+<message xml:lang="es">Establecer el color de fondo</message>
+<message xml:lang="it">Impostare il colore dello sfondo</message>
 </label>
 <label define="TMSG_FONT_FAMILY">
 	<message xml:lang="en">Font family</message>

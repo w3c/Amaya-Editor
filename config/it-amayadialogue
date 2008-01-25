@@ -8,7 +8,7 @@
 6 &Stile
 7 &Collegamenti
 8 Attributi
-9 **Tools
+9 Strumenti
 10 A&iuto
 11 Nuovo tab
 12 Nuovo &documento...
@@ -219,30 +219,30 @@
 217 Cornice (iframe)
 218 ruby
 219 Tema
-220 **Classic
-221 **Modern
-222 **No theme
+220 Classico
+221 Moderno
+222 Senza tema
 223 Colore per il testo
-224 Seleziona un colore per il testo
-225 **No color
+224 Seleziona un colore per il testo...
+225 Senza colore
 226 Colore di sfondo
-227 Seleziona un colore di sfondo
-228 **No color
-229 **Align
-230 **Left
-231 **Center
-232 **Right
-233 **Justify
-234 **Default
-235 **Line spacing
-236 **Single
-237 **Half
-238 **Double
-239 **Default
-240 **Indent
-241 **Increase
-242 **Decrease
-243 **Default
+227 Seleziona un colore di sfondo...
+228 Senza colore
+229 Allineamento
+230 Sinistra
+231 Centrato
+232 Destra
+233 Giustificato
+234 Default
+235 Interlinea
+236 Singola
+237 Mezza
+238 Doppia
+239 Default
+240 Indentazione
+241 Incrementa
+242 Decrementa
+243 Default
 244 &Style...
 245 Crea una regola...
 246 Mostra lo stile applicato...
@@ -260,7 +260,7 @@
 258 Aggiungi/Togli ID...
 259 Controllo ortografico...
 260 Trasforma...
-261 **Edit table
+261 Modifica tabella
 262 Cambia la cella a data
 263 Cambia la cella a intestazione
 264 Unisci
@@ -290,7 +290,7 @@
 288 Genera Indice
 289 Crea libro
 290 Inserisci timestamp
-291 **Graphics
+291 Grafica
 292 Mostri librería SVG
 293 Aggiunga nella librería SVG
 294 A&nnotazioni

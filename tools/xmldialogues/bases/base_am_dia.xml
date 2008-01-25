@@ -152,6 +152,8 @@
 <label define="Tools">
 <message xml:lang="en">Tools</message>
 <message xml:lang="fr">Outils</message>
+<message xml:lang="es">Herramientas</message>
+<message xml:lang="it">Strumenti</message>
 </label>
 <label define="Help_">
 <message xml:lang="en">&amp;Help</message>
@@ -3148,14 +3150,20 @@
 <label define="BClassic">
 <message xml:lang="en">Classic</message>
 <message xml:lang="fr">Classic</message>
+<message xml:lang="es">Clásico</message>
+<message xml:lang="it">Classico</message>
 </label>
 <label define="BModern">
 <message xml:lang="en">Modern</message>
 <message xml:lang="fr">Modern</message>
+<message xml:lang="es">Moderno</message>
+<message xml:lang="it">Moderno</message>
 </label>
 <label define="BNoTheme">
 <message xml:lang="en">No theme</message>
 <message xml:lang="fr">Pas de thème</message>
+<message xml:lang="es">Sin tema</message>
+<message xml:lang="it">Senza tema</message>
 </label>
 <label define="TextColorMenu">
 <message xml:lang="en">Text color</message>
@@ -3170,21 +3178,23 @@
 	<message xml:lang="sk">Farba popredia</message>
 </label>
 <label define="BSelectColor">
-	<message xml:lang="en">Select a text color</message>
-	<message xml:lang="fr">Sélectionner une couleur du texte</message>
-	<message xml:lang="es">Seleccionar un color del texto</message>
-	<message xml:lang="de">Vordergrundfarbe wählen</message>
-	<message xml:lang="it">Seleziona un colore per il testo</message>
-	<message xml:lang="ru">Цвет текста документа</message>
-	<message xml:lang="hu">Szín</message>
-	<message xml:lang="ka">ტექსტის ფერი</message>
-	<message xml:lang="cn">前景色</message>
-	<message xml:lang="tw">前景色</message>
-	<message xml:lang="sk">Popredia</message>
+	<message xml:lang="en">Select a text color...</message>
+	<message xml:lang="fr">Sélectionner une couleur du texte...</message>
+	<message xml:lang="es">Seleccionar un color del texto...</message>
+	<message xml:lang="de">Vordergrundfarbe wählen...</message>
+	<message xml:lang="it">Seleziona un colore per il testo...</message>
+	<message xml:lang="ru">Цвет текста документа...</message>
+	<message xml:lang="hu">Szín...</message>
+	<message xml:lang="ka">ტექსტის ფერი...</message>
+	<message xml:lang="cn">前景色...</message>
+	<message xml:lang="tw">前景色...</message>
+	<message xml:lang="sk">Popredia...</message>
 </label>
 <label define="BRemoveColor">
 <message xml:lang="en">No color</message>
 <message xml:lang="fr">Pas de couleur</message>
+<message xml:lang="es">Color no definido</message>
+<message xml:lang="it">Senza colore</message>
 </label>
 <label define="BgColorMenu">
 	<message xml:lang="en">Background color</message>
@@ -3197,81 +3207,113 @@
 	<message xml:lang="sk">Pozadia</message>
 </label>
 <label define="BSelectBgColor">
-	<message xml:lang="en">Select a background color</message>
-	<message xml:lang="fr">Sélectionner une couleur de fond</message>
-	<message xml:lang="es">Seleccionar un color del fondo</message>
-	<message xml:lang="de">Hintergrundfarbe wählen</message>
-	<message xml:lang="it">Seleziona un colore di sfondo</message>
-	<message xml:lang="ru">Цвет фона</message>
-	<message xml:lang="hu">Háttérszín</message>
-	<message xml:lang="ka">ფონის ფერი</message>
-	<message xml:lang="cn">背景色</message>
-	<message xml:lang="tw">背景色</message>
-	<message xml:lang="sk">Farba pozadia</message>
+	<message xml:lang="en">Select a background color...</message>
+	<message xml:lang="fr">Sélectionner une couleur de fond...</message>
+	<message xml:lang="es">Seleccionar un color del fondo...</message>
+	<message xml:lang="de">Hintergrundfarbe wählen...</message>
+	<message xml:lang="it">Seleziona un colore di sfondo...</message>
+	<message xml:lang="ru">Цвет фона...</message>
+	<message xml:lang="hu">Háttérszín...</message>
+	<message xml:lang="ka">ფონის ფერი...</message>
+	<message xml:lang="cn">背景色...</message>
+	<message xml:lang="tw">背景色...</message>
+	<message xml:lang="sk">Farba pozadia...</message>
 </label>
 <label define="BRemoveBgColor">
 <message xml:lang="en">No color</message>
 <message xml:lang="fr">Pas de couleur</message>
+<message xml:lang="es">Color no definido</message>
+<message xml:lang="it">Senza colore</message>
 </label>
 <label define="Align">
 <message xml:lang="en">Align</message>
 <message xml:lang="fr">Alignement</message>
+<message xml:lang="es">Alineación</message>
+<message xml:lang="it">Allineamento</message>
 </label>
 <label define="BLeftAlign">
 <message xml:lang="en">Left</message>
 <message xml:lang="fr">A gauche</message>
+<message xml:lang="es">Izquierda</message>
+<message xml:lang="it">Sinistra</message>
 </label>
 <label define="BAlignCenter">
 <message xml:lang="en">Center</message>
 <message xml:lang="fr">Centré</message>
+<message xml:lang="es">Centrado</message>
+<message xml:lang="it">Centrato</message>
 </label>
 <label define="BRightAlign">
 <message xml:lang="en">Right</message>
 <message xml:lang="fr">A droite</message>
+<message xml:lang="es">Derecha</message>
+<message xml:lang="it">Destra</message>
 </label>
 <label define="BJustify">
 <message xml:lang="en">Justify</message>
 <message xml:lang="fr">Justifié</message>
+<message xml:lang="es">Justificado</message>
+<message xml:lang="it">Giustificato</message>
 </label>
 <label define="BRemoveAlign">
 <message xml:lang="en">Default</message>
 <message xml:lang="fr">Défaut</message>
+<message xml:lang="es">Predeterminado</message>
+<message xml:lang="it">Default</message>
 </label>
 <label define="BLineSpacing">
 <message xml:lang="en">Line spacing</message>
 <message xml:lang="fr">Espacement de ligne</message>
+<message xml:lang="es">Interlineado</message>
+<message xml:lang="it">Interlinea</message>
 </label>
 <label define="BLineSpacingSingle">
 <message xml:lang="en">Single</message>
 <message xml:lang="fr">Simple</message>
+<message xml:lang="es">Sencillo</message>
+<message xml:lang="it">Singola</message>
 </label>
 <label define="BLineSpacingHalf">
 <message xml:lang="en">Half</message>
 <message xml:lang="fr">Moitié</message>
+<message xml:lang="es">Medio</message>
+<message xml:lang="it">Mezza</message>
 </label>
 <label define="BLineSpacingDouble">
 <message xml:lang="en">Double</message>
 <message xml:lang="fr">Double</message>
+<message xml:lang="es">Doble</message>
+<message xml:lang="it">Doppia</message>
 </label>
 <label define="BRemoveLineSpacing">
 <message xml:lang="en">Default</message>
 <message xml:lang="fr">Défaut</message>
+<message xml:lang="es">Predeterminado</message>
+<message xml:lang="it">Default</message>
 </label>
 <label define="Indent">
 <message xml:lang="en">Indent</message>
 <message xml:lang="fr">Indentation</message>
+<message xml:lang="es">Sangría</message>
+<message xml:lang="it">Indentazione</message>
 </label>
 <label define="BIncrease">
 <message xml:lang="en">Increase</message>
 <message xml:lang="fr">Augmenter</message>
+<message xml:lang="es">Aumentar</message>
+<message xml:lang="it">Incrementa</message>
 </label>
 <label define="BDecrease">
 <message xml:lang="en">Decrease</message>
 <message xml:lang="fr">Diminuer</message>
+<message xml:lang="es">Reducir</message>
+<message xml:lang="it">Decrementa</message>
 </label>
 <label define="BRemoveMargin">
 <message xml:lang="en">Default</message>
 <message xml:lang="fr">Défaut</message>
+<message xml:lang="es">Predeterminado</message>
+<message xml:lang="it">Default</message>
 </label>
 <label define="BCSSStyle">
 <message xml:lang="en">&amp;Style editor...</message>
@@ -3518,6 +3560,8 @@
 <label define="TableE">
 <message xml:lang="en">Edit table</message>
 <message xml:lang="fr">Editer la table</message>
+<message xml:lang="es">Editar tabla</message>
+<message xml:lang="it">Modifica tabella</message>
 </label>
 <label define="BDataCell">
 <message xml:lang="en">Change to data cell</message>
@@ -3899,6 +3943,8 @@
 <label define="Graphics">
 <message xml:lang="en">Graphics</message>
 <message xml:lang="fr">Graphiques</message>
+<message xml:lang="es">Gráficos</message>
+<message xml:lang="it">Grafica</message>
 </label>
 <label define="BShowLibrary">
 <message xml:lang="en">Show SVG library</message>
