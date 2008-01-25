@@ -1158,15 +1158,15 @@ ThotWindow TtaGetThotWindow (int frame)
   ----------------------------------------------------------------------*/
 void SetCursorWatch (int thotThotWindowid)
 {
-  ::wxBeginBusyCursor();
+//  ::wxBeginBusyCursor();
 }
 
 /*----------------------------------------------------------------------
   ResetCursorWatch enleve le curseur "montre".                 
   ----------------------------------------------------------------------*/
 void ResetCursorWatch (int thotThotWindowid)
-{  
-  ::wxEndBusyCursor();
+{
+//  ::wxEndBusyCursor();
 }
 
 /*----------------------------------------------------------------------
