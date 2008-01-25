@@ -507,8 +507,9 @@ void AmayaAdvancedWindow::ShowToolPanels()
   for(it = m_panels.begin(); it!=m_panels.end(); ++it )
   {
     wxAuiPaneInfo& pane = m_manager.GetPane(it->second);
-    if(it->second->IsShown())
-      pane.Show();
+    if(it->second)
+      if(it->second->IsShown())
+        pane.Show();
   }
   m_manager.LoadPerspective(m_strPanelPerspective);
 //  m_manager.Update();
