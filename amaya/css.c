@@ -767,7 +767,8 @@ ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
           used = (css->infos[i] != NULL);
           i++;
         }
-      if (!used && clearCSS)
+      /* If css->import, unlink it if not used */
+      if ((!used) && (clearCSS || css->import))
         {
           /* remove the local copy of the CSS file */
           if (!TtaIsPrinting ())
