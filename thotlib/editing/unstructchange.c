@@ -2005,7 +2005,7 @@ void TtcCreateElement (Document doc, View view)
                 {
                   specialBreak = TRUE;
                   pElReplicate = pE;
-                  pListEl = pE->ElParent;
+                  pListEl = ParentNotTemplate(pE);
                 }
             }
 
@@ -2052,7 +2052,7 @@ void TtcCreateElement (Document doc, View view)
             {
               if (lastEl->ElParent &&
                   GetElementConstruct (lastEl->ElParent, &nComp) == CsAny)
-                pListEl = lastEl->ElParent;
+                pListEl = ParentNotTemplate(lastEl);
               else
                 {
                   pAncest = lastEl;
@@ -2073,9 +2073,9 @@ void TtcCreateElement (Document doc, View view)
                                          pListEl->ElTypeNumber,
                                          pListEl->ElStructSchema))
                     {
-                      if (pListEl->ElParent &&
-                          GetElementConstruct (pListEl->ElParent, &nComp) == CsAny)
-                        pListEl = pListEl->ElParent;
+                      pE1 = ParentNotTemplate(pListEl);
+                      if (pE1 && GetElementConstruct (pE1, &nComp) == CsAny)
+                        pListEl = pE1;
                       else
                         {
                           pAncest = pListEl;
@@ -2097,7 +2097,7 @@ void TtcCreateElement (Document doc, View view)
                   if (pListEl != NULL)
                     {
                       if (lastEl->ElTerminal &&
-                          pListEl == lastEl->ElParent &&
+                          pListEl == ParentNotTemplate(lastEl) &&
                           (lastEl->ElNext == NULL || selBegin) &&
                           !TypeHasException (ExcReturnCreateWithin,
                                              pListEl->ElTypeNumber,
