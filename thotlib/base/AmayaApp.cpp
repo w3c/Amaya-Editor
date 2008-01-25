@@ -300,6 +300,9 @@ bool AmayaApp::OnInit()
   // fill the icons list
   SetupDocumentIconList();
   
+  // All wx id between 1000 and 2000 are reserved to contextual menu.
+  wxRegisterId(2000);
+  
   /* Register all default thot tool panels. */
   AmayaNormalWindow::RegisterThotToolPanels();
   
