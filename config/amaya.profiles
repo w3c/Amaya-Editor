@@ -44,6 +44,7 @@
 #+javascript_dom
 MenuShowLogFile
 FullScreen
+ShowAlternate
 SplitHorizontally
 SplitVertically
 CopyLocation
