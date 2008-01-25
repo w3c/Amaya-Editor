@@ -467,18 +467,21 @@ void UpdateStyleSheet (char *url, char *tempdoc)
                                   /* the CSS parser detected an error */
                                   TtaWriteClose (ErrFile);
                                   ErrFile = NULL;
-                                  TtaSetItemOn (doc, 1, Views, BShowLogFile);
+                                  UpdateLogFile (doc, TRUE);
                                   if (ParsedCSS)
                                     {
                                       TtaWriteClose (CSSErrFile);
                                       CSSErrFile = NULL;
-                                      TtaSetItemOn (ParsedCSS, 1, Views, BShowLogFile);
+                                      UpdateLogFile (ParsedCSS, TRUE);
                                     }
                                   CSSErrorsFound = FALSE;
                                   InitInfo ("", TtaGetMessage (AMAYA, AM_CSS_ERROR));
                                 }
                               else
-                                TtaSetItemOff (doc, 1, Views, BShowLogFile);
+                                {
+                                  UpdateLogFile (doc, FALSE);
+                                  UpdateLogFile (ParsedCSS, FALSE);
+                                }
                               /* Restore the display mode */
                               if (dispMode == DisplayImmediately)
                                 TtaSetDisplayMode (doc, dispMode);

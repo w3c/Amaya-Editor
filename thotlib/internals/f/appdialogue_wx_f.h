@@ -22,8 +22,8 @@ extern void TtaRefreshTopMenuStats ( int doc_id,
 extern void TtaRefreshMenuItemStats ( int doc_id,
                                       void * context,
                                       int menu_item_id );
-extern void TtaRefreshStatusBarStats ( int changed_action_id,
-                                       Document doc_id );
+extern void TtaToggleLogError ( Document doc_id,
+                                ThotBool enable );
 extern int TtaMakeFrame ( const char * schema_name,
                           int schView,
                           Document doc_id,
@@ -118,8 +118,8 @@ extern void TtaRefreshTopMenuStats ( int doc_id,
 extern void TtaRefreshMenuItemStats ( int doc_id,
                                         void * context,
                                         int menu_item_id );
-extern void TtaRefreshStatusBarStats ( int changed_action_id,
-                                         Document doc_id );
+extern void TtaToggleLogError ( Document doc_id,
+                                  ThotBool enable );
 extern int TtaMakeFrame ( const char * schema_name,
                             int schView,
                             Document doc_id,

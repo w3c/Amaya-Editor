@@ -141,7 +141,7 @@ MENUS
 	Views toggle:TSplitVertically -> SplitVertically;
 	Views Separator;
 	Views button:BDocInfo -> DocumentInfo;
-	Views button:BShowLogFile -> ShowLogFile;
+	Views button:BShowLogFile -> MenuShowLogFile;
 	Views Separator;
 	Views button:BFullScreen -> FullScreen;
 	Views toggle:TZoomIn -> ZoomIn;
@@ -410,6 +410,7 @@ FUNCTIONS
   HideVSplitToggle,
   UpdateContextSensitiveMenus,
   UpdateStyleList,
+  ShowLogFile,
   CreateMIntegral,
   CreateMSum,
   CreateMOVERARROW,

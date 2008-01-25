@@ -3,7 +3,7 @@
  */
 
 /*
- * Handle windows and menu bars of Thot applications
+ * Handle windows and menu bars
  *
  * Authors: I. Vatton (INRIA), S. Gully (INRIA)
  *
@@ -566,10 +566,10 @@ ThotBool TtaIsActionActive (char *name, Document doc)
 {
   int      result = 0;
 
-  if (doc == 0 || name == NULL ||  LoadedDocument[doc - 1])
+  if (doc == 0 || name == NULL ||  LoadedDocument[doc - 1] == NULL)
     TtaError (ERR_invalid_parameter);
   else
-    result = Prof_BelongDoctype (name, LoadedDocument[doc]->DocProfile, FALSE);
+    result = Prof_BelongDoctype (name, LoadedDocument[doc -1]->DocProfile, FALSE);
   return (result != 0);
 }
 
@@ -1235,7 +1235,7 @@ void SwitchUndo (PtrDocument pDoc, ThotBool on)
           TtaRefreshMenuItemStats( document, NULL, item_id );
         }
     }
-} 
+}
 
 /*----------------------------------------------------------------------
   SwitchRedo enables (on=TRUE) or disables (on=FALSE) the Redo

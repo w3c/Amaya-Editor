@@ -402,6 +402,8 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev);
   ----------------------------------------------------------------------*/
 extern void TtaHandleOneEvent (ThotEvent *ev);
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 extern int TtaXLookupString (ThotKeyEvent *event, char *buffer, int nbytes,
 			     ThotKeySym *keysym, ThotComposeStatus *status);
 
@@ -426,6 +428,12 @@ extern void TtaUpdateMenus (Document doc, View view, ThotBool RO);
   or all menus (menu_id = -1)
   ----------------------------------------------------------------------*/
 extern void TtaRefreshTopMenuStats(Document doc, int menu_id );
+
+
+/*----------------------------------------------------------------------
+  TtaToggleLogError enables/disables the logerror button
+  ----------------------------------------------------------------------*/
+extern void TtaToggleLogError (Document doc_id, ThotBool enable);
 
 /*----------------------------------------------------------------------
   TtaRefreshMenuItemStats enable/disable, toggle/untoggle menu items

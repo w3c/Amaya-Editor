@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) INRIA 1996-2008
+ */
+
+/*
+ * Handle WX windows and menu bars
+ *
+ * Authors: I. Vatton (INRIA), S. Gully (INRIA)
+ *
+ */
 
 #include "wx/wx.h"
 #include "wx/bmpbuttn.h"
@@ -605,9 +615,6 @@ void TtaRefreshMenuItemStats( int doc_id, void * context, int menu_item_id )
               item_toggle = MenuActionList[item_action].ActionToggle[doc_id];	      
               p_menu_item->Check(item_toggle);
             }
-          
-          /* refresh the corresponding statusbar tool */
-          TtaRefreshStatusBarStats( item_action, doc_id );
         }
       return;
     }
@@ -640,8 +647,6 @@ void TtaRefreshMenuItemStats( int doc_id, void * context, int menu_item_id )
                   p_menu_bar->Enable(item_id, false);
 #endif /* _MACOS */
               p_menu_bar->Enable(item_id, (bool)item_enable);
-              /* refresh the corresponding statusbar tool */
-              TtaRefreshStatusBarStats( item_action, doc_id );
               break;
               
             case 'T': /* a toggle menu item (checkbox) */
@@ -650,8 +655,6 @@ void TtaRefreshMenuItemStats( int doc_id, void * context, int menu_item_id )
               item_toggle  = MenuActionList[item_action].ActionToggle[doc_id];
               p_menu_bar->Check(item_id, (bool)item_toggle);
               p_menu_bar->Enable(item_id, (bool)item_enable);
-              /* refresh the corresponding statusbar tool */
-              TtaRefreshStatusBarStats( item_action, doc_id );
               break;
               
             case 'M': /* a submenu */
@@ -675,20 +678,17 @@ void TtaRefreshMenuItemStats( int doc_id, void * context, int menu_item_id )
 }
 
 
-
 /*----------------------------------------------------------------------
-  TtaRefreshStatusBarStats enable/disable, toggle/untoggle statusbar
-  items widgets for the given doc
-  (there is only logerror button)
+  TtaToggleLogError enables/disables the logerror button
   ----------------------------------------------------------------------*/
-void TtaRefreshStatusBarStats( int changed_action_id, Document doc_id)
+void TtaToggleLogError (Document doc_id, ThotBool enable)
 {
-  int            window_id = TtaGetDocumentWindowId( doc_id, -1 );
-  AmayaWindow *   p_window = TtaGetWindowFromId(window_id);
-  wxASSERT(p_window);
-  AmayaStatusBar * p_sbar = p_window->GetStatusBar();
-  ThotBool   action_enable = FALSE;
+  int             window_id = TtaGetDocumentWindowId( doc_id, -1 );
+  AmayaWindow    *p_window = TtaGetWindowFromId(window_id);
+  AmayaStatusBar *p_sbar = NULL;
 
+  if (p_window)
+    p_sbar = p_window->GetStatusBar();
   /* do nothing if there is no sbar: it's the case of
      AmayaSimpleWindow (log, show apply style ...)*/
   if(!p_sbar)
@@ -698,14 +698,12 @@ void TtaRefreshStatusBarStats( int changed_action_id, Document doc_id)
   if ( g_logerror_action_id == -1 )
     g_logerror_action_id = FindMenuAction("ShowLogFile");
 
-  /* refresh the specified tool */
-  if (changed_action_id == g_logerror_action_id)
+  if (g_logerror_action_id)
     {
-      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
-      p_sbar->EnableLogError(action_enable);
+      MenuActionList[g_logerror_action_id].ActionActive[doc_id] = enable;
+      p_sbar->EnableLogError(enable);
     }
 }
-
 
 /*----------------------------------------------------------------------
   TtaMakeFrame create a frame (view container)

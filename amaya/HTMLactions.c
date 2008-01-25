@@ -2687,9 +2687,7 @@ void CloseLogs (Document doc)
             RemoveParsingErrors (i);
             if (DocumentTypes[i] != docLog)
               /* switch off the button Show Log file */
-              TtaSetItemOff (doc, 1, Tools, BShowLogFile);
-            if (DocumentSource[doc])
-              TtaSetItemOff (DocumentSource[doc], 1, Tools, BShowLogFile);
+              UpdateLogFile (doc, FALSE);
             DocumentSource[i] = 0;
             /* restore the default document type */
             DocumentTypes[i] = docFree;
@@ -2745,7 +2743,7 @@ void FreeDocumentResource (Document doc)
   if (doc == 0)
     return;
 
-  TtaSetItemOff (doc, 1, Tools, BShowLogFile);
+  UpdateLogFile (doc, FALSE);
   /* unmap the Save as form */
   TtaDestroyDialogue (BaseDialog + SaveForm);
   if (doc == ParsedDoc)
@@ -2791,7 +2789,7 @@ void FreeDocumentResource (Document doc)
       else
         {
           /* switch off the button Show Log file */
-          TtaSetItemOff (doc, 1, Tools, BShowLogFile);
+          UpdateLogFile (doc, FALSE);
           RemoveDocCSSs (doc, TRUE);
           /* free access keys table */
           TtaRemoveDocAccessKeys (doc);

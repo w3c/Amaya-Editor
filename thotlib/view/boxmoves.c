@@ -2099,8 +2099,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                   pAb->AbWidth.DimUnit == UnPercent)
                 LoadPicture (frame, pBox, (ThotPictInfo *) (pAb->AbPictBackground));
             }
-          else if (pBox->BxMaxWidth < pBox->BxWidth)
-            pBox->BxMaxWidth = pBox->BxWidth;
+          //else if (pBox->BxMaxWidth < pBox->BxWidth)
+          //  pBox->BxMaxWidth = pBox->BxWidth;
 
           /* Moving sibling boxes and the parent? */
           pPosRel = pBox->BxPosRelations;

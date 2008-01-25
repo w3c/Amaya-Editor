@@ -40,8 +40,9 @@
 +browsing_lite
 +edit
 +web-module
++annot-module
 #+javascript_dom
-ShowLogFile
+MenuShowLogFile
 FullScreen
 SplitHorizontally
 SplitVertically
@@ -280,6 +281,7 @@ AmayaClose
 TtcCopySelection
 TtcSearchText
 SendByMail
+ShowLogFile
 
 ########### EDITING_Lite
 [edit_lite]

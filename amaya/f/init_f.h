@@ -30,9 +30,13 @@ extern void SetTableMenuOn ( Document doc,
 extern void UpdateEditorMenus ( Document doc );
 extern void ShowLogFile ( Document doc,
                           View view );
+extern void MenuShowLogFile ( Document doc,
+                              View view );
 extern ThotBool OpenParsingErrors ( Document document );
 extern void RemoveParsingErrors ( Document document );
 extern void CleanUpParsingErrors ( void );
+extern void UpdateLogFile ( Document doc,
+                            ThotBool enable );
 extern void CheckParsingErrors ( Document doc );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
@@ -252,9 +256,13 @@ extern void SetTableMenuOn ( Document doc,
 extern void UpdateEditorMenus ( Document doc );
 extern void ShowLogFile ( Document doc,
                             View view );
+extern void MenuShowLogFile ( Document doc,
+                                View view );
 extern ThotBool OpenParsingErrors ( Document document );
 extern void RemoveParsingErrors ( Document document );
 extern void CleanUpParsingErrors ( void );
+extern void UpdateLogFile ( Document doc,
+                              ThotBool enable );
 extern void CheckParsingErrors ( Document doc );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,

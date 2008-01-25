@@ -91,6 +91,11 @@ CSS.</p>
 <div class="body">
 <p>Le saviez-vous ?</p>
 <dl>
+  <dt>Choisisser votre profil</dt>
+    <dd>4 profils différents sont fournis pour adapter l'ensemble des menus
+      et des barres d'outils à votre usage. En même temps, les panneaux
+      d'outils peuvent être affichés à gauche ou à droite ou à votre
+      convenance pour chaque panneau (voir les Préférences).</dd>
   <dt>Amaya est un éditeur structuré</dt>
     <dd>Avec la touche F2 ou Escape vous pouvez sélectionner la structure
       englobante, ainsi les fonctions d'édition (copier, coller, attributs,
@@ -108,7 +113,7 @@ CSS.</p>
   <dt>Amaya offre des commandes avancées</dt>
     <dd>Comme la numérotation des sections, la génération d'une table des
       matières, l'insertion d'une date de mis à jour, la transformation de
-      structure (voir Edition &gt; Transformer).</dd>
+      structure (voir Outils &gt; Transformer).</dd>
   <dt></dt>
 </dl>
 

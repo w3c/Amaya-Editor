@@ -1527,43 +1527,13 @@ void TtcStandardGeometry (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcStandardPresentation (Document document, View view)
 {
-#ifdef _GTK
-  int                 i;
-  char                string[200];
-#endif /* _GTK */
   PtrDocument         pDoc;
 
   pDoc = LoadedDocument[document - 1];
   ResetPresentMenus ();
 
-#ifdef _GTK
-  /* formulaire presentation standard */
-  TtaNewSheet (NumFormPresentStandard, TtaGetViewFrame (document, view), 
-               TtaGetMessage (LIB, TMSG_STD_PRES),
-               1, TtaGetMessage (LIB, TMSG_APPLY), TRUE, 1, 'L', D_DONE);
-
-  /* choix multiple presentation standard */
-  i = 0;
-  sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_CHAR));
-  i += strlen (&string[i]) + 1;
-  sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GRAPHICS));
-  i += strlen (&string[i]) + 1;
-  sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_COLORS));
-  i += strlen (&string[i]) + 1;
-  sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_FORMAT));
-  i += strlen (&string[i]) + 1;
-  sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GEOMETRY));
-
-  TtaNewToggleMenu (NumMenuPresentStandard, NumFormPresentStandard,
-                    TtaGetMessage (LIB, TMSG_STD_PRES), 5, string, NULL, TRUE);
-  /* annule toutes les options du choix multiple Presentation standard */
-  TtaSetToggleMenu (NumMenuPresentStandard, -1, FALSE);
-#endif /* _GTK */
   /* active le formulaire "Presentation standard" */
   DocModPresent = pDoc;
-#ifdef _GTK
-  TtaShowDialogue (NumFormPresentStandard, TRUE);
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
