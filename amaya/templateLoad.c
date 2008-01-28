@@ -343,6 +343,7 @@ void LoadTemplate (Document doc, char* templatename)
           
           DoInstanceTemplate (ctx->templatePath);
           DocumentTypes[ctx->newdoc] = docTemplate;
+          TtaSetDocumentUnmodified (ctx->newdoc);
         }
       TtaFreeMemory(ctx->templatePath);
       TtaFreeMemory(ctx);
