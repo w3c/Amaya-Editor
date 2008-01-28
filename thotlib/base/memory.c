@@ -972,6 +972,7 @@ void GetAbstractBox (PtrAbstractBox *pAb)
   ----------------------------------------------------------------------*/
 void FreeAbstractBox (PtrAbstractBox pAb)
 {
+  PtrAbstractBox nextAb;
   ThotPictInfo *image;
 
   if (pAb->AbLeafType == LtCompound)
@@ -1003,6 +1004,20 @@ void FreeAbstractBox (PtrAbstractBox pAb)
 #ifdef DEBUG_MEMORY
   TtaFreeMemory (pAb);
 #else
+#ifdef AMAYA_DEBUG
+      // check double free
+      nextAb = PtFree_AbsBox;
+      while (nextAb)
+        {
+        if (nextAb == pAb)
+          {
+            // double free detected
+            printf ("Double free of an abstract box");
+            nextAb = NULL; // force a crash
+          }
+        nextAb = nextAb->AbNext;
+        }
+#endif
   pAb->AbElement = NULL;
   pAb->AbEnclosing = NULL;
   if (pAb->AbPrevious)
@@ -1971,7 +1986,7 @@ PtrBox FreeBox (PtrBox pBox)
   PtrPosRelations     nepos;
   PtrDimRelations     pDimRel;
   PtrDimRelations     nedim;
-  PtrBox              nextBox;
+  PtrBox              nextBox, nBox;
 
   /* get next child */
   if (pBox->BxType == BoSplit ||
@@ -2014,6 +2029,20 @@ PtrBox FreeBox (PtrBox pBox)
 #else
   if (pBox)
     {
+#ifdef AMAYA_DEBUG
+      // check double free
+      nBox = PtFree_Box;
+      while (nBox)
+        {
+        if (nBox == pBox)
+          {
+            // double free detected
+            printf ("Double free of a box");
+            nBox = NULL; // force a crash
+          }
+        nBox = nBox->BxNexChild;
+        }
+#endif
       /* Don't use BxNext field because it's used when removing break lines */
       pBox->BxNexChild = PtFree_Box;
       pBox->BxType = BoComplete;
