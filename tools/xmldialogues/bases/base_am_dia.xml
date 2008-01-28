@@ -154,6 +154,7 @@
 <message xml:lang="fr">Outils</message>
 <message xml:lang="es">Herramientas</message>
 <message xml:lang="it">Strumenti</message>
+<message xml:lang="de">Extras</message>
 </label>
 <label define="Help_">
 <message xml:lang="en">&amp;Help</message>
@@ -3152,18 +3153,21 @@
 <message xml:lang="fr">Classic</message>
 <message xml:lang="es">Clásico</message>
 <message xml:lang="it">Classico</message>
+<message xml:lang="de">Klassisch</message>
 </label>
 <label define="BModern">
 <message xml:lang="en">Modern</message>
 <message xml:lang="fr">Modern</message>
 <message xml:lang="es">Moderno</message>
 <message xml:lang="it">Moderno</message>
+<message xml:lang="de">Modern</message>
 </label>
 <label define="BNoTheme">
 <message xml:lang="en">No theme</message>
 <message xml:lang="fr">Pas de thème</message>
 <message xml:lang="es">Sin tema</message>
 <message xml:lang="it">Senza tema</message>
+<message xml:lang="de">Kein Motiv</message>
 </label>
 <label define="TextColorMenu">
 <message xml:lang="en">Text color</message>
@@ -3195,6 +3199,7 @@
 <message xml:lang="fr">Pas de couleur</message>
 <message xml:lang="es">Color no definido</message>
 <message xml:lang="it">Senza colore</message>
+<message xml:lang="de">Keine Farbe</message>
 </label>
 <label define="BgColorMenu">
 	<message xml:lang="en">Background color</message>
@@ -3224,96 +3229,112 @@
 <message xml:lang="fr">Pas de couleur</message>
 <message xml:lang="es">Color no definido</message>
 <message xml:lang="it">Senza colore</message>
+<message xml:lang="de">Keine Farbe</message>
 </label>
 <label define="Align">
 <message xml:lang="en">Align</message>
 <message xml:lang="fr">Alignement</message>
 <message xml:lang="es">Alineación</message>
 <message xml:lang="it">Allineamento</message>
+<message xml:lang="de">Ausrichten</message>
 </label>
 <label define="BLeftAlign">
 <message xml:lang="en">Left</message>
 <message xml:lang="fr">A gauche</message>
 <message xml:lang="es">Izquierda</message>
 <message xml:lang="it">Sinistra</message>
+<message xml:lang="de">Linksbündig</message>
 </label>
 <label define="BAlignCenter">
 <message xml:lang="en">Center</message>
 <message xml:lang="fr">Centré</message>
 <message xml:lang="es">Centrado</message>
 <message xml:lang="it">Centrato</message>
+<message xml:lang="de">Mittig</message>
 </label>
 <label define="BRightAlign">
 <message xml:lang="en">Right</message>
 <message xml:lang="fr">A droite</message>
 <message xml:lang="es">Derecha</message>
 <message xml:lang="it">Destra</message>
+<message xml:lang="de">Rechtsbündig</message>
 </label>
 <label define="BJustify">
 <message xml:lang="en">Justify</message>
 <message xml:lang="fr">Justifié</message>
 <message xml:lang="es">Justificado</message>
 <message xml:lang="it">Giustificato</message>
+<message xml:lang="de">Blocksatz</message>
 </label>
 <label define="BRemoveAlign">
 <message xml:lang="en">Default</message>
 <message xml:lang="fr">Défaut</message>
 <message xml:lang="es">Predeterminado</message>
 <message xml:lang="it">Default</message>
+<message xml:lang="de">Voreinstellung</message>
 </label>
 <label define="BLineSpacing">
 <message xml:lang="en">Line spacing</message>
 <message xml:lang="fr">Espacement de ligne</message>
 <message xml:lang="es">Interlineado</message>
 <message xml:lang="it">Interlinea</message>
+<message xml:lang="de">Zeilenmaß</message>
 </label>
 <label define="BLineSpacingSingle">
 <message xml:lang="en">Single</message>
 <message xml:lang="fr">Simple</message>
 <message xml:lang="es">Sencillo</message>
 <message xml:lang="it">Singola</message>
+<message xml:lang="de">Einfach</message>
 </label>
 <label define="BLineSpacingHalf">
 <message xml:lang="en">Half</message>
 <message xml:lang="fr">Moitié</message>
 <message xml:lang="es">Medio</message>
 <message xml:lang="it">Mezza</message>
+<message xml:lang="de">Halb</message>
 </label>
 <label define="BLineSpacingDouble">
 <message xml:lang="en">Double</message>
 <message xml:lang="fr">Double</message>
 <message xml:lang="es">Doble</message>
 <message xml:lang="it">Doppia</message>
+<message xml:lang="de">Doppelt</message>
 </label>
 <label define="BRemoveLineSpacing">
 <message xml:lang="en">Default</message>
 <message xml:lang="fr">Défaut</message>
 <message xml:lang="es">Predeterminado</message>
 <message xml:lang="it">Default</message>
+<message xml:lang="de">Voreinstellung</message>
 </label>
 <label define="Indent">
 <message xml:lang="en">Indent</message>
 <message xml:lang="fr">Indentation</message>
 <message xml:lang="es">Sangría</message>
 <message xml:lang="it">Indentazione</message>
+<message xml:lang="de">Zeileneinzug</message>
 </label>
 <label define="BIncrease">
 <message xml:lang="en">Increase</message>
 <message xml:lang="fr">Augmenter</message>
 <message xml:lang="es">Aumentar</message>
 <message xml:lang="it">Incrementa</message>
+<message xml:lang="de">Einrücken</message>
 </label>
 <label define="BDecrease">
 <message xml:lang="en">Decrease</message>
 <message xml:lang="fr">Diminuer</message>
 <message xml:lang="es">Reducir</message>
 <message xml:lang="it">Decrementa</message>
+<message xml:lang="de">Ausrücken</message>
 </label>
 <label define="BRemoveMargin">
 <message xml:lang="en">Default</message>
 <message xml:lang="fr">Défaut</message>
 <message xml:lang="es">Predeterminado</message>
 <message xml:lang="it">Default</message>
+<message xml:lang="de">Voreinstellung</message>
 </label>
 <label define="BCSSStyle">
 <message xml:lang="en">&amp;Style editor...</message>
@@ -3321,7 +3342,7 @@
 <message xml:lang="it">&amp;Style...</message>
 <message xml:lang="es">&amp;Estilo...</message>
 <message xml:lang="hu">CSS &amp;Stílus...</message>
-<message xml:lang="de">CSS &amp;Stil</message>
+<message xml:lang="de">&amp;Stil editieren</message>
 <message xml:lang="ka">CSS style...</message>
 <message xml:lang="ru">Настройка каскадной таблицы стиля CSS...</message>
 <message xml:lang="cn">CSS样式(&amp;S)...</message>
@@ -3562,6 +3583,7 @@
 <message xml:lang="fr">Editer la table</message>
 <message xml:lang="es">Editar tabla</message>
 <message xml:lang="it">Modifica tabella</message>
+<message xml:lang="de">Tabelle editieren</message>
 </label>
 <label define="BDataCell">
 <message xml:lang="en">Change to data cell</message>
@@ -3945,6 +3967,7 @@
 <message xml:lang="fr">Graphiques</message>
 <message xml:lang="es">Gráficos</message>
 <message xml:lang="it">Grafica</message>
+<message xml:lang="de">Grafiken</message>
 </label>
 <label define="BShowLibrary">
 <message xml:lang="en">Show SVG library</message>
@@ -4530,7 +4553,7 @@
 <message xml:lang="en">Graphics</message>
 <message xml:lang="fr">Graphiques</message>
 <message xml:lang="es">Gráficos</message>
-<message xml:lang="de">SVG</message>
+<message xml:lang="de">Grafiken</message>
 <message xml:lang="it">Graphics</message>
 <message xml:lang="pt">Gráficos</message>
 <message xml:lang="fi">Grafiikka</message>
