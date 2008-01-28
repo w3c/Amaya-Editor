@@ -4757,8 +4757,10 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 
           if (method == CE_FORM_POST)
             mode = mode | AMAYA_FORM_POST | AMAYA_NOCACHE;
-          else if (method == CE_MAKEBOOK || method == CE_TEMPLATE)
+          else if (method == CE_MAKEBOOK)
             mode = AMAYA_ASYNC;
+          else if (method == CE_TEMPLATE)
+            mode = AMAYA_SYNC;
 
           // for new created template instances, the temporary file is parsed
           if (method != CE_INSTANCE && IsW3Path (initial_url))

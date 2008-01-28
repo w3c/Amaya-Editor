@@ -74,7 +74,7 @@
 </svg>
 </div>
 
-<h1>Willkommen bei Amaya 9.99</h1>
+<h1>Willkommen bei Amaya 10</h1>
 
 <p>Amaya ist ein Web-Client, der sowohl als Browser als auch als
 Autorenwerkzeug dient. Amaya wurde vom <a href="http://www.w3.org/">W3C</a>
@@ -91,6 +91,12 @@ Sheets gestalten.</p>
 <div class="body">
 <p>Haben Sie schon gewusst?</p>
 <dl>
+  <dt>Wählen sie Ihr Profil</dt>
+    <dd><p>4 verschiedene Amayaprofile sind vorhanden um die Menüeinträge und
+      Werkzeugleisten Ihren Wünschen anzupassen. Dabei kann jede
+      Werkzeugtafel links, rechts oder benutzerdefiniert positioniert werden
+      (vgl. Einstellungen).</p>
+    </dd>
   <dt>Amaya ist ein Struktureditor</dt>
     <dd>Mit der F2-Taste (oder Escape) können Sie eine Teilstruktur
       auswählen. Editierfunktionen (kopieren, einfügen, Attribute bearbeiten,

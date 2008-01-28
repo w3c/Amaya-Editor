@@ -1,3 +1,10 @@
+/*
+ *
+ *  COPYRIGHT INRIA and W3C, 1996-2008
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 #include "templates.h"
 
 #include "thot_sys.h"
@@ -28,9 +35,10 @@
 typedef struct _TemplateCtxt
 {
   char           *templatePath;
-  ThotBool        isloaded;
-  Document        newdoc;
-  XTigerTemplate  t;
+  Document        newdoc;     // the template document entry
+  XTigerTemplate  t;          // the template descriptor
+  int             docLoading; // get in memory the loading document
+  ThotBool        isloaded;   // true when the template is loaded
 } TemplateCtxt;
 #endif
 
@@ -257,6 +265,8 @@ static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
       ctx->newdoc   = newdoc;
     }
   ctx->isloaded = TRUE;
+      // restore the loading document
+  W3Loading = ctx->docLoading;
 }
 #endif /* TEMPLATES */
 
@@ -292,6 +302,9 @@ void LoadTemplate (Document doc, char* templatename)
       ctx->templatePath	= TtaStrdup (templatename);
       ctx->isloaded = FALSE;
       ctx->t = NULL;
+      // the current loading document changes and should be restored
+      ctx->docLoading = W3Loading;
+      W3Loading = 0;
       newdoc = GetAmayaDoc (templatename, NULL, 0, 0, CE_TEMPLATE, FALSE, 
                             (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
                             (void *) ctx);

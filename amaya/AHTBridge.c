@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -249,8 +249,7 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
     }
 
   /* we erase the context if we're dealing with an asynchronous request */
-  if ((me->mode & AMAYA_ASYNC)
-      || (me->mode & AMAYA_IASYNC))
+  if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
     {
       Document doc = me->docid;
       me->reqStatus = HT_END;

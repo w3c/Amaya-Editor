@@ -713,6 +713,7 @@ static void ApplyStyleChange (Element el, Document doc)
   /* Apply new style rules */
   EnableStyleElement (doc, el);
   TtaSetDisplayMode (doc, dispMode);
+  TtaSetDocumentModified (doc);
   UpdateStyleList (doc, 1);
 }
 
