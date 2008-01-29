@@ -1277,7 +1277,7 @@ ThotBool IsTemplateElement (Element elem)
 
   elType = TtaGetElementType(elem);
   if (elType.ElSSchema)
-    return (strcmp(TtaGetSSchemaName(elType.ElSSchema) , "Template") != 0);
+    return (strcmp(TtaGetSSchemaName(elType.ElSSchema) , "Template") == 0);
 #endif /* TEMPLATES */
   return FALSE;
 }
