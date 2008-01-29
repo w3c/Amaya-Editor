@@ -63,6 +63,7 @@ CopyLocation
 +advanced-edit
 &SingleCreateTable
 &SingleNewXHTML
+HelpAttributes
 *AmayaAttributeToolPanel
 
 ################# AMAYA Lite+Math+Web
@@ -81,6 +82,7 @@ CopyLocation
 FullScreen
 &SingleCreateTable
 &SingleNewXHTML
+HelpAttributes
 *AmayaAttributeToolPanel
 
 ################# AMAYA Lite+Math+Web+CSS
@@ -103,6 +105,7 @@ FullScreen
 &Synchronize
 &NewXHTML
 &NewCss
+HelpAttributes
 *AmayaAttributeToolPanel
 
 ################# AMAYA BROWSER
@@ -315,6 +318,7 @@ ShowEditingBar
 *AmayaToolBarEditing
 *AmayaXHTMLToolPanel
 *AmayaStyleToolPanel
+*AmayaExplorerToolPanel
 *AmayaSpeCharToolPanel
 
 ########### EDITING
@@ -349,6 +353,7 @@ HelpXml
 #&NewSVG
 &NewCss
 &Synchronize
+HelpAttributes
 *AmayaAttributeToolPanel
 *AmayaXMLToolPanel
 
@@ -413,7 +418,6 @@ CopyLocation
 ShowTargets
 ShowBrowsingBar
 *AmayaToolBarBrowsing
-*AmayaExplorerToolPanel
 
 ######### VIEWS
 [views]
