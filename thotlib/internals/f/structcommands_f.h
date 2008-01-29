@@ -20,6 +20,8 @@ extern ThotBool SendEventSubTree ( APPevent AppEvent,
                                    ThotBool inTable,
                                    ThotBool inRow );
 extern void FreeSavedElements ( void );
+extern ThotBool TtaIsColumnSaved ( Document document );
+extern ThotBool TtaIsRowSaved ( Document document );
 extern void CopyCommand ( void );
 extern PtrElement NextNotPage ( PtrElement pEl,
                                 ThotBool sibling );
@@ -63,6 +65,8 @@ extern ThotBool SendEventSubTree ( APPevent AppEvent,
                                      ThotBool inTable,
                                      ThotBool inRow );
 extern void FreeSavedElements ( void );
+extern ThotBool TtaIsColumnSaved ( Document document );
+extern ThotBool TtaIsRowSaved ( Document document );
 extern void CopyCommand ( void );
 extern PtrElement NextNotPage ( PtrElement pEl,
                                   ThotBool sibling );

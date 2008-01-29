@@ -1968,9 +1968,9 @@ static ThotBool ActivateElement (Element element, Document document)
   ----------------------------------------------------------------------*/
 ThotBool CanFollowTheLink (Document document)
 {
-  if (Right_ClikedElement && TtaGetDocument(Right_ClikedElement)==document)
+  if (Right_ClikedElement && TtaGetDocument(Right_ClikedElement) == document)
     {
-      if (WithinLinkElement(Right_ClikedElement, document))
+      if (WithinLinkElement (Right_ClikedElement, document))
         return TRUE;
     }
   return FALSE;
@@ -2516,16 +2516,17 @@ ThotBool SimpleLClick (NotifyElement *event)
 ThotBool SimpleRClick (NotifyElement *event)
 {
 #ifdef _WX
+  ElementType         elType;
+
   Right_ClikedElement = event->element;
-  /* don't let Thot perform normal operation if there is an activation */
+#ifdef TEMPLATES
+  elType = TtaGetElementType (Right_ClikedElement);
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template") &&
+      elType.ElTypeNum == Template_EL_repeat)
+    TtaSelectElement (event->document, Right_ClikedElement);
+#endif /* _TEMPLATES */
+  /* let Thot perform normal operation */
   return FALSE;
-#else /* _WX */
-  ThotBool done;
-  
-  DontReplaceOldDoc = TRUE;
-  done = ActivateElement (event->element, event->document);
-  DontReplaceOldDoc = FALSE;
-  return done;
 #endif /* _WX*/
 }
 
@@ -2900,7 +2901,7 @@ static ThotBool IsSelInElement (Element firstSel, Element lastSel, ElementType e
 void UpdateContextSensitiveMenus (Document doc, View view)
 {
   ElementType         elType, elTypeFirst, elTypeLast;
-  Element             firstSel, lastSel;
+  Element             firstSel, lastSel, table;
   SSchema             sch;
   int                 firstChar, lastChar;
   ThotBool            newSelInElem, withHTML, withinTable, inMath;
@@ -2926,7 +2927,8 @@ void UpdateContextSensitiveMenus (Document doc, View view)
         /* the current selection starts with a MathML element */
         {
           elType.ElTypeNum = MathML_EL_MTABLE;
-          withinTable = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
+          table = TtaGetExactTypedAncestor (firstSel, elType);
+          withinTable = (table != NULL && !TtaIsReadOnly (table));
           if (withinTable)
             {
               elType.ElTypeNum = MathML_EL_RowLabel;
@@ -2939,7 +2941,8 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       if (sch && !withinTable)
         {
           elType.ElTypeNum = HTML_EL_Table_;
-          withinTable = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
+          table = TtaGetExactTypedAncestor (firstSel, elType);
+          withinTable = (table != NULL && !TtaIsReadOnly (table));
         }
     }
 
@@ -3005,10 +3008,15 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       TtaSetItemOff (doc, 1, Tools, BPasteBefore);
       TtaSetItemOff (doc, 1, Tools, BPasteAfter);
     }
-  if (withinTable && TtaIsColumnRowSelected (doc))
+  if (withinTable && (TtaIsColumnSaved (doc) || TtaIsRowSaved (doc)))
     {
       TtaSetItemOn (doc, 1, Tools, BPasteBefore);
       TtaSetItemOn (doc, 1, Tools, BPasteAfter);
+    }
+  else
+    {
+      TtaSetItemOff (doc, 1, Tools, BPasteBefore);
+      TtaSetItemOff (doc, 1, Tools, BPasteAfter);
     }
   if (withinTable)
     {

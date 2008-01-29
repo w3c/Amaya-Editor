@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -25,6 +25,7 @@
 
 #include "applicationapi_f.h"
 #include "displayview_f.h"
+#include "exceptions_f.h"
 #include "structselect_f.h"
 #include "thotmsg_f.h"
 #include "viewapi_f.h"
@@ -61,21 +62,20 @@ Attribute TtaGetSelectedAttribute ()
 }
 
 /*----------------------------------------------------------------------
-  TtaIsColumnRowSaved answers TRUE if there is a column or a row in
-  the Thot Clicboard.
+  TtaIsColumnRowSelected answers TRUE if there is a column or a row
   ----------------------------------------------------------------------*/
 ThotBool TtaIsColumnRowSelected (Document document)
 {
   PtrDocument         docsel;
-  PtrElement          firstSelection, lastSelection;
+  PtrElement          first, last;
   int                 firstChar, lastChar;
 
-  if (!GetCurrentSelection (&docsel, &firstSelection, &lastSelection,
-                            &firstChar, &lastChar))
+  if (!GetCurrentSelection (&docsel, &first, &last, &firstChar, &lastChar))
     return (FALSE);
   else if (LoadedDocument[document - 1] != docsel)
     return (FALSE);
-  else if (WholeColumnSaved || TableRowsSaved)
+  else if (WholeColumnSelected ||
+           TypeHasException (ExcIsRow, first->ElTypeNumber, first->ElStructSchema))
     return (TRUE);
   else
     return (FALSE);

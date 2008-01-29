@@ -3966,6 +3966,19 @@ void PasteBefore (Document doc, View view)
   if (cell)
     {
       /* move the selection at the beginning of the cell */
+      if (TtaIsRowSaved (doc))
+        {
+          // move to the selection to the first cell in the row
+          do
+            {
+              el = cell;
+              TtaPreviousSibling (&el);
+              if (el)
+                cell = el;
+            }
+          while (el);
+        }
+      // move to the selection to the beginning of the cell
       child = cell;
       while (child)
         {

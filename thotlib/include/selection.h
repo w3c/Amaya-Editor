@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2005
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -26,10 +26,22 @@ extern ThotBool TtaIsDocumentSelected (Document document);
 
 
 /*----------------------------------------------------------------------
-  TtaIsColumnRowSaved answers TRUE if there is a column or a row in
+  TtaIsColumnRowSelected answers TRUE if there is a column or a row in
   the Thot Clicboard.
   ----------------------------------------------------------------------*/
 extern ThotBool TtaIsColumnRowSelected (Document document);
+
+/*----------------------------------------------------------------------
+  TtaIsColumnRowSaved answers TRUE if there is a column or a row in
+  the Thot Clipboard.
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsColumnSaved (Document document);
+
+/*----------------------------------------------------------------------
+  TtaIsColumnRowSaved answers TRUE if there is a column or a row in
+  the Thot Clipboard.
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsRowSaved (Document document);
 
 /*----------------------------------------------------------------------
   TtaSelectWord selects the word around the current point in an element

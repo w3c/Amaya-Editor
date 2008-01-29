@@ -712,6 +712,48 @@ void FreeSavedElements ()
 }
 
 /*----------------------------------------------------------------------
+  TtaIsColumnRowSaved answers TRUE if there is a column or a row in
+  the Thot Clipboard.
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsColumnSaved (Document document)
+{
+  PtrDocument         docsel;
+  PtrElement          firstSelection, lastSelection;
+  int                 firstChar, lastChar;
+
+  if (!GetCurrentSelection (&docsel, &firstSelection, &lastSelection,
+                            &firstChar, &lastChar))
+    return (FALSE);
+  else if (LoadedDocument[document - 1] != docsel)
+    return (FALSE);
+  else if (WholeColumnSaved)
+    return (TRUE);
+  else
+    return (FALSE);
+}
+
+/*----------------------------------------------------------------------
+  TtaIsColumnRowSaved answers TRUE if there is a column or a row in
+  the Thot Clipboard.
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsRowSaved (Document document)
+{
+  PtrDocument         docsel;
+  PtrElement          firstSelection, lastSelection;
+  int                 firstChar, lastChar;
+
+  if (!GetCurrentSelection (&docsel, &firstSelection, &lastSelection,
+                            &firstChar, &lastChar))
+    return (FALSE);
+  else if (LoadedDocument[document - 1] != docsel)
+    return (FALSE);
+  else if (TableRowsSaved)
+    return (TRUE);
+  else
+    return (FALSE);
+}
+
+/*----------------------------------------------------------------------
   RegSSchemaDescent
   Check all descendants of element pEl and if their structure schema
   is not the same as their parent, register their schema.
@@ -788,8 +830,7 @@ static void SaveElement (PtrElement pEl, PtrElement pParent, int doc,
       /* notify the application that a cell of a whole row or a whole
          column is saved */
       if (CopyCellFunction &&
-          TypeHasException (ExcIsCell, pEl->ElTypeNumber,
-                            pEl->ElStructSchema) &&
+          TypeHasException (ExcIsCell, pEl->ElTypeNumber, pEl->ElStructSchema) &&
           WholeColumnSaved)
         (*(Proc3)CopyCellFunction) ((void*)pEl, (void*)doc, (void*)TableRowsSaved);
       else if (CopyCellFunction &&
