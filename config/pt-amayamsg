@@ -87,9 +87,9 @@
 85 Desabilitar CSS
 86 Habilitar CSS
 87 Remover CSS
-88 Editor/navegador do W3C para a Web
+88 Editor/navegador do W3C para a web
 89 (envie questões para www-amaya@w3.org)
-90 Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)
+90 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
 91 w3.org/Amaya/
 92 Não é possível tratar URLs com mais de %s caracteres
 93 Somente o tipo padrão é permitido

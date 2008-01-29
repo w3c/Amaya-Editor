@@ -27,7 +27,7 @@
 25 Obiettivo non valido
 26 Indirizzo
 27 Titolo
-28 Cambia Titolo
+28 Cambia titolo
 29 Documento modificato - salvare?
 30 Redirezione durante il caricamento di %s
 31 Ho rilevato troppe redirezioni
@@ -87,9 +87,9 @@
 85 Disabilita CSS
 86 Abilita CSS
 87 Rimuovi CSS
-88 il editor/browser del W3C
+88 Il editor/browser del W3C
 89 (scrivere a www-amaya@w3.org per informazioni)
-90 Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)
+90 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
 91 w3.org/Amaya/
 92 Impossibile gestire URL composti da piú di %s caratteri
 93 consentito il solo tipo di default

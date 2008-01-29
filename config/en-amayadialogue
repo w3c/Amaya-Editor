@@ -276,8 +276,8 @@
 274 Append a column
 275 Paste before
 276 Paste after
-277 Change Title...
-278 Change Doctype
+277 Change title...
+278 Change doctype
 279 Remove the doctype
 280 Add a doctype
 281 Change to XHTML 1.1
@@ -287,7 +287,7 @@
 285 Change to HTML 4.01 Transitional
 286 Change to HTML 4.01 Strict
 287 &Section numbering
-288 &Add/Update Table of contents
+288 &Add/Update table of contents
 289 &Make book
 290 Insert time stamp
 291 Graphics
@@ -337,7 +337,7 @@
 335 XML support
 336 Style sheets
 337 Searching
-338 Spell Checking
+338 Spell checking
 339 Publishing
 340 Cooperation
 341 Printing
@@ -345,5 +345,5 @@
 343 Making books
 344 Annotations
 345 Configuring
-346 ShortCuts
+346 Shortcuts
 347 Accessibility in Amaya

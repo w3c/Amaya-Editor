@@ -87,9 +87,9 @@
 85 Désactiver CSS
 86 Réactiver CSS
 87 Retirer CSS
-88 le navigateur/éditeur du W3C
+88 Le navigateur/éditeur du W3C
 89 (envoyez vos questions à www-amaya@w3.org)
-90 Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio), tous droits réservés.
+90 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio), tous droits réservés.
 91 w3.org/Amaya/
 92 Erreur interne : URL de longueur supérieure à %s caractères
 93 Seul le type par défaut est autorisé

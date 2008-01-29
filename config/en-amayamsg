@@ -27,7 +27,7 @@
 25 Invalid target
 26 Insert the URI or browse
 27 Title
-28 Change Title
+28 Change title
 29 Document modified - Do you want to save it?
 30 Redirection fetching of %s
 31 Too many redirections detected
@@ -39,8 +39,8 @@
 37 Waiting for connection
 38 Contacting %s
 39 Looking up %s
-40 Unknown Status
-41 Authentication Dialogue
+40 Unknown status
+41 Authentication dialogue
 42 Please authenticate for
 43 Authorization failure for %s
 44 %s loaded but no data is available
@@ -77,7 +77,7 @@
 75 Saving will save following images too?
 76 Failed to save to URL
 77 Save to disk ?
-78 Copy Images
+78 Copy images
 79 Transform URLs
 80 Document location
 81 Images directory
@@ -87,11 +87,11 @@
 85 Disable CSS
 86 Enable CSS
 87 Remove CSS
-88 W3C's editor/browser for the Web
+88 W3C's editor/browser for the web
 89 (mail issues to www-amaya@w3.org)
-90 Copyright  ©  1994-2007 INRIA and W3C® (MIT, ERCIM, Keio), All Rights Reserved.
-90 Copyright  Â©  1994-2007 INRIA et W3CÂ® (MIT, ERCIM, Keio)
-90 Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)
+90 Copyright  ©  1994-%s INRIA and W3C® (MIT, ERCIM, Keio), All Rights Reserved.
+90 Copyright  Â©  1994-%s INRIA et W3CÂ® (MIT, ERCIM, Keio)
+90 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
 91 w3.org/Amaya/
 91 w3.org/Amaya/
 91 w3.org/Amaya/

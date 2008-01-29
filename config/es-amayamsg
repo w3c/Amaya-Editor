@@ -89,7 +89,7 @@
 87 Borrar enlace a hoja de estilo
 88 Editor/Navegador web del W3C
 89 (enviar sugerencias a www-amaya@w3.org)
-90 Copyright  ©  1994-2007 INRIA and W3C® (MIT, ERCIM, Keio), Todos los derechos reservados.
+90 Copyright  ©  1994-%s INRIA and W3C® (MIT, ERCIM, Keio), Todos los derechos reservados.
 91 w3.org/Amaya/
 92 No puedo gestionar URL con más de %s caracteres
 93 Sólo se permite el tipo por omisión

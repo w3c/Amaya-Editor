@@ -89,7 +89,7 @@
 87 移除 CSS 样式表
 88 W3C的网页编辑器/浏览器
 89 (mail issues to www-amaya@w3.org)
-90 Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)
+90 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
 91 w3.org/Amaya/
 92 无法提交超过 %s 个字符的 URL
 93 只允许默认类型

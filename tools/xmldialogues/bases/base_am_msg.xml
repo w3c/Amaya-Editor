@@ -462,10 +462,10 @@
 	<message xml:lang="sk">Názov</message>
 </label>
 <label define="AM_CHANGE_TITLE">
-	<message xml:lang="en">Change Title</message>
+	<message xml:lang="en">Change title</message>
 	<message xml:lang="fr">Changer le titre</message>
 	<message xml:lang="de">Titel ändern</message>
-	<message xml:lang="it">Cambia Titolo</message>
+	<message xml:lang="it">Cambia titolo</message>
 	<message xml:lang="es">Título (title)</message>
 	<message xml:lang="pt">Mudar título</message>
 	<message xml:lang="fi">Muuta otsake</message>
@@ -605,7 +605,7 @@
 <label define="AM_WAITING_FOR_CONNECTION">
 	<message xml:lang="en">Waiting for connection</message>
 	<message xml:lang="fr">En attente d'une connexion</message>
-	<message xml:lang="de">Warte auf Verbindung</message>
+	<message xml:lang="de">Warte auf verbindung</message>
 	<message xml:lang="it">In attesa della connessione</message>
 	<message xml:lang="tr">Bağlantı bekleniyor</message>
 	<message xml:lang="es">Esperando conexión</message>
@@ -651,7 +651,7 @@
 	<message xml:lang="sk">Hľadanie %s</message>
 </label>
 <label define="AM_UNKNOWN_STATUS">
-	<message xml:lang="en">Unknown Status</message>
+	<message xml:lang="en">Unknown status</message>
 	<message xml:lang="fr">Statut inconnu</message>
 	<message xml:lang="de">Unbekannter Status</message>
 	<message xml:lang="it">Stato sconosciuto</message>
@@ -667,7 +667,7 @@
 	<message xml:lang="sk">Neznámy stav</message>
 </label>
 <label define="AM_GET_AUTHENTICATION">
-	<message xml:lang="en">Authentication Dialogue</message>
+	<message xml:lang="en">Authentication dialogue</message>
 	<message xml:lang="fr">Dialogue d'authentification</message>
 	<message xml:lang="de">Anmeldung</message>
 	<message xml:lang="it">Dialogo di autenticazione</message>
@@ -1257,7 +1257,7 @@
 	<message xml:lang="sk">Uložiť na disk ?</message>
 </label>
 <label define="AM_BCOPY_IMAGES">
-	<message xml:lang="en">Copy Images</message>
+	<message xml:lang="en">Copy images</message>
 	<message xml:lang="fr">Copier les images</message>
 	<message xml:lang="de">Bilder kopieren</message>
 	<message xml:lang="it">Copia immagini</message>
@@ -1417,13 +1417,13 @@
 	<message xml:lang="sk">Odstrániť CSS pravidlá</message>
 </label>
 <label define="AM_ABOUT1">
-	<message xml:lang="en">W3C's editor/browser for the Web</message>
-	<message xml:lang="fr">le navigateur/éditeur du W3C</message>
-	<message xml:lang="de">Der W3C Browser und Editor für das Web</message>
-	<message xml:lang="it">il editor/browser del W3C</message>
+	<message xml:lang="en">W3C's editor/browser for the web</message>
+	<message xml:lang="fr">Le navigateur/éditeur du W3C</message>
+	<message xml:lang="de">Der W3C Browser und Editor für das web</message>
+	<message xml:lang="it">Il editor/browser del W3C</message>
 	<message xml:lang="tr">W3C için tarayıcı ve belge düzenleyici</message>
 	<message xml:lang="es">Editor/Navegador web del W3C</message>
-	<message xml:lang="pt">Editor/navegador do W3C para a Web</message>
+	<message xml:lang="pt">Editor/navegador do W3C para a web</message>
 	<message xml:lang="fi">W3C:n Internetin muokkain/selain</message>
 	<message xml:lang="ru">Редактор/браузер от W3C's</message>
 	<message xml:lang="hu">W3C Web szerkesztő/böngészője</message>
@@ -1449,21 +1449,21 @@
 	<message xml:lang="sk">(problémy posielať na www-amaya@w3.org)</message>
 </label>
 <label define="AM_ABOUT_COPYRIGHT">
-	<message xml:lang="en">Copyright  ©  1994-2007 INRIA and W3C® (MIT, ERCIM, Keio), All Rights Reserved.</message>
-	<message xml:lang="es">Copyright  ©  1994-2007 INRIA and W3C® (MIT, ERCIM, Keio), Todos los derechos reservados.</message>
-	<message xml:lang="fr">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio), tous droits réservés.</message>
-	<message xml:lang="de">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="it">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="tr">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="pt">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="fi">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="ru">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="hu">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="ka">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="cn">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="tk">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="en">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="sk">Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="en">Copyright  ©  1994-%s INRIA and W3C® (MIT, ERCIM, Keio), All Rights Reserved.</message>
+	<message xml:lang="es">Copyright  ©  1994-%s INRIA and W3C® (MIT, ERCIM, Keio), Todos los derechos reservados.</message>
+	<message xml:lang="fr">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio), tous droits réservés.</message>
+	<message xml:lang="de">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="it">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="tr">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="pt">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="fi">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="ru">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="hu">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="ka">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="cn">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="tk">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="en">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="sk">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
 </label>
 <label define="AM_ABOUT_WEBSITE">
 	<message xml:lang="en">w3.org/Amaya/</message>

@@ -89,7 +89,7 @@
 87 CSS eltávolítása
 88 W3C Web szerkesztő/böngészője
 89 (küldje el emailben a www-amaya@w3.org címre)
-90 Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)
+90 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
 91 w3.org/Amaya/
 92 %s karakternél hosszabb URL-ek nem kezelhetők
 93 Csak az alaptípus támogatott

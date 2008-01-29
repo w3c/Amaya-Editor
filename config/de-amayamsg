@@ -36,7 +36,7 @@
 34 Warte auf freien Socket
 35 Lade: %s
 36 Schreibe: %s
-37 Warte auf Verbindung
+37 Warte auf verbindung
 38 Kontaktiere: %s
 39 Suche: %s
 40 Unbekannter Status
@@ -87,9 +87,9 @@
 85 Deaktivieren CSS
 86 Aktivieren CSS
 87 Entfernen CSS
-88 Der W3C Browser und Editor für das Web
+88 Der W3C Browser und Editor für das web
 89 (Probleme an www-amaya@w3.org senden)
-90 Copyright  ©  1994-2007 INRIA et W3C® (MIT, ERCIM, Keio)
+90 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
 91 w3.org/Amaya/
 92 URI länger als %s Zeichen werden zur Zeit nicht unterstützt
 93 Nur Standardtyp erlaubt
