@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -16,11 +16,13 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "frame.h"
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "select_tv.h"
 #include "units_tv.h"
+#include "frame_tv.h"
 
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
@@ -2275,6 +2277,7 @@ static ThotBool IsFloatSet (PtrBox box, PtrBox floatBox, PtrBox pBlock)
   Work with absolute positions when xAbs and yAbs are TRUE.
   When the parameter extensibleBlock is TRUE, it doesn't take into account
   the current max with.
+  The parameter onlySpace is TRUE when the cut is possible only on a space.
   Returns:
   - the minimum width of the line (the larger word).
   - full = TRUE if the line is full.
@@ -2285,16 +2288,14 @@ static ThotBool IsFloatSet (PtrBox box, PtrBox floatBox, PtrBox pBlock)
 static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                      PtrAbstractBox pRootAb, int maxWidth,
                      ThotBool extensibleBlock, ThotBool xAbs, ThotBool yAbs,
-                     ThotBool notComplete, ThotBool *full, ThotBool *adjust,
-                     ThotBool *breakLine, int frame, int indent,
+                     ThotBool notComplete, ThotBool onlySpace, ThotBool *full,
+                     ThotBool *adjust, ThotBool *breakLine, int frame, int indent,
                      int top, int bottom, int left, int right,
                      PtrBox *floatL, PtrBox *floatR)
 {
   PtrTextBuffer       pNewBuff;
   PtrAbstractBox      pAbRef;
-  PtrBox              pBox;
-  PtrBox              pNextBox;
-  PtrBox              lastbox;
+  PtrBox              pBox, pNextBox, lastbox;
   int                 ascent, descent, line_spaces;
   int                 width, breakWidth, w;
   int                 boxLength, nSpaces;
@@ -2543,7 +2544,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   /* handle a new floating box and rebuild the line */
                   return SetFloat (lastbox, pBlock, pLine, pRootAb,
                                    maxWidth, extensibleBlock, xAbs, yAbs,
-                                   notComplete, full, adjust, breakLine,
+                                   notComplete, onlySpace, full, adjust, breakLine,
                                    frame, indent, top, bottom, left, right,
                                    floatL, floatR);
                 }
@@ -2610,9 +2611,12 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     pBox = pNextBox;
                 }
             }
-          else if (pNextBox->BxWidth + xi <= pLine->LiXMax)
-            {
-              /* the whole box can be inserted in the line */
+          else if (pNextBox->BxWidth + xi <= pLine->LiXMax ||
+                   (onlySpace && line_spaces == 0 &&
+                   (pNextBox->BxAbstractBox->AbLeafType != LtText ||
+                    pNextBox->BxNSpaces == 0)))
+             {
+               /* the whole box can or must be inserted in the line */
               if (pNextBox->BxType == BoBlock ||
                   pNextBox->BxType == BoFloatBlock ||
                   pNextBox->BxType == BoCellBlock||
@@ -2639,6 +2643,13 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   xi += pNextBox->BxWidth;
                   line_spaces += pNextBox->BxNSpaces;
                 }
+              // check minwidth and maxwidth values
+               if (onlySpace && line_spaces == 0)
+                 {
+                   if (pLine->LiXMax < xi)
+                     pLine->LiXMax = xi;
+                   minWidth = xi;
+                 }
 
               if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
                   pNextBox->BxNexChild)
@@ -2688,7 +2699,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
 #endif
                 }
             }
-          else
+         else
             {
               /* We need to split that box or a previous one */
               toCut = TRUE;
@@ -3236,7 +3247,7 @@ static void MoveFloatingBoxes (PtrBox pBlock, int y, int delta, int frame)
   ----------------------------------------------------------------------*/
 int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
               int maxWidth, ThotBool extensibleBlock, ThotBool xAbs, ThotBool yAbs,
-              ThotBool notComplete, ThotBool *full, ThotBool *adjust,
+              ThotBool notComplete, ThotBool onlySpace, ThotBool *full, ThotBool *adjust,
               ThotBool *breakLine, int frame, int indent,
               int top, int bottom, int left, int right,
               PtrBox *floatL, PtrBox *floatR)
@@ -3402,7 +3413,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   pNextBox = GetNextBox (box->BxAbstractBox, frame);
   ret=  FillLine (pLine, pNextBox, pBlock, pRootAb, maxWidth,
                   extensibleBlock, xAbs, yAbs,
-                  notComplete, full, adjust, breakLine, frame, indent,
+                  notComplete, onlySpace, full, adjust, breakLine, frame, indent,
                   top, bottom, left, right, floatL, floatR);
   /* integrate information about previous inserted boxes */
   if (h > pLine->LiHeight)
@@ -3675,7 +3686,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 top, left, right, bottom, spacing;
   int                 l, r;
   ThotBool            toAdjust, breakLine, isExtraFlow;
-  ThotBool            xAbs, yAbs, extensibleBox;
+  ThotBool            xAbs, yAbs, extensibleBox, onlySpace = FALSE;
   ThotBool            full, still, standard, isFloat;
 
   /* avoid any cycle */
@@ -3738,7 +3749,11 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
             r += pParent->AbBox->BxRMargin + pParent->AbBox->BxRBorder + pParent->AbBox->BxRPadding;
           }
         }
-      pCell = GetParentCell (pBox);
+      // the specific management of cells concerns only formatted views
+      if (FrameTable[frame].FrView == 1)
+        pCell = GetParentCell (pBox);
+      else
+        pCell = NULL;
       if (pAb->AbWidth.DimUnit == UnAuto && (isFloat || isExtraFlow))
         {
           if (pParent && pParent->AbBox &&
@@ -3757,14 +3772,20 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
              /* manage this box as an extensible box but it's not */
              maxWidth = 30 * DOT_PER_INCH;
           else
+            {
             /* keep the box width */
             maxWidth = pParent->AbBox->BxW - left - right - l - r;
+            onlySpace = (pCell != NULL);
+            }
         }
       else
         {
           if (pCell && pCell->AbBox)
-            /* keep the box width */
-            maxWidth = pCell->AbBox->BxW - left - right;
+            {
+              /* keep the box width */
+              maxWidth = pCell->AbBox->BxW - left - right;
+              onlySpace = TRUE;
+            }
           else
             /* manage this box as an extensible box but it's not*/
             maxWidth = 30 * DOT_PER_INCH;
@@ -3969,7 +3990,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
           /* Fill the line */
           minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, maxWidth,
                                extensibleBox,
-                               xAbs, yAbs, pAb->AbTruncatedTail,
+                               xAbs, yAbs, pAb->AbTruncatedTail, onlySpace,
                                &full, &toAdjust, &breakLine, frame,
                                indent, top, bottom, left, right,
                                &floatL, &floatR);
