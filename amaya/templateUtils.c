@@ -221,11 +221,14 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
   if(IsTemplateInstanceDocument(event->document))
     {
       /* Prevent if attribute's element is not a descendant of xt:use */
+      /* Dont prevent if descendant of xt:bag. */
       parent = event->element;
       elem = GetFirstTemplateParentElement(parent);
       if(!elem)
         return TRUE;
       elType     = TtaGetElementType(elem);
+      if(elType.ElTypeNum==Template_EL_bag)
+        return FALSE;
       if(elType.ElTypeNum!=Template_EL_useSimple)
         return TRUE;
 

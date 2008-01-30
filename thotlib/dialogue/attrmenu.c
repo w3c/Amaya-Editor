@@ -683,17 +683,6 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
 
   DLList_Sort(list, (Container_CompareFunction) CompareAttrList);
   
-  if(AttributeFilterProcedure)
-    ITERATOR_FOREACH(iter, DLListNode, node)
-      {
-        attrElem = (PtrAttrListElem)node->elem;
-        if(attrElem)
-          AttributeFilterProcedure((Element)firstSel, IdentDocument(pDoc),
-            (SSchema)attrElem->pSS,
-            attrElem->num,
-            &attrElem->restr);
-      }
-  
   TtaFreeMemory(iter);
   return list;
 }
