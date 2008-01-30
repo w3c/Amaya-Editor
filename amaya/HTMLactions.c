@@ -103,7 +103,6 @@ static Attribute    HighLightAttribute = NULL;
 static ThotBool     Follow_exclusive = FALSE;
 static ThotBool     Refresh_exclusive = FALSE;
 static ThotBool     SelectionChanging = FALSE;
-static Element      Right_ClikedElement = NULL;
 
 /*----------------------------------------------------------------------
   CharNum_IN_Line
@@ -2517,13 +2516,39 @@ ThotBool SimpleRClick (NotifyElement *event)
 {
 #ifdef _WX
   ElementType         elType;
+  Element             el;
 
   Right_ClikedElement = event->element;
 #ifdef TEMPLATES
   elType = TtaGetElementType (Right_ClikedElement);
-  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template") &&
-      elType.ElTypeNum == Template_EL_repeat)
-    TtaSelectElement (event->document, Right_ClikedElement);
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+    {
+      if (elType.ElTypeNum == Template_EL_repeat ||
+          elType.ElTypeNum == Template_EL_bag)
+        {
+          el = TtaGetFirstChild (Right_ClikedElement);
+          if (el)
+            Right_ClikedElement = el;
+        }
+      else
+        {
+          /* select the following use element in the repeat */
+           el = TtaGetParent (Right_ClikedElement);
+           if (el)
+             {
+               elType = TtaGetElementType (el);
+               if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template") &&
+                   elType.ElTypeNum == Template_EL_repeat)
+                 {
+                   el = Right_ClikedElement;
+                   TtaNextSibling (&el);
+                   if (el)
+                     Right_ClikedElement = el;
+                 }
+             }
+        }
+      TtaSelectElement (event->document, Right_ClikedElement);
+    }
 #endif /* _TEMPLATES */
   /* let Thot perform normal operation */
   return FALSE;
@@ -4412,4 +4437,3 @@ void CopyLocation (Document doc, View view)
 void PasteLocation (Document doc, View view)
 {
 }
-

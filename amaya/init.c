@@ -34,6 +34,7 @@
 #include "insertelem_f.h"
 
 #ifdef TEMPLATES
+#include "Template.h"
 #include "templates.h"
 #include "templates_f.h"
 #include "templateDeclarations_f.h"
@@ -133,8 +134,6 @@ static int          Loading_method = CE_INIT;
 extern void InitMathML ();
 extern void InitTemplates ();
 
-static int AmayaPopupDocContextMenu(int document, int window, wxWindow* win, int x, int y);
-
 typedef enum
   {
     OpenDocBrowser,
@@ -143,6 +142,160 @@ typedef enum
   } TypeBrowserFile;
 TypeBrowserFile WidgetParent;
 
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, int y)
+{
+  wxMenu     *p_menu = TtaGetDocContextMenu ( window );
+
+  if (p_menu && doc)
+    {
+      ThotBool noLink = !CanFollowTheLink(doc);
+      
+#ifdef TEMPLATES
+      ElementType     elType, parentType;
+      DLList          list;
+      ForwardIterator iter;
+      Element         el, last, prev, parent;
+      DLListNode      node;
+      int             i, firstChar, lastChar, id = 1000;
+      wxMenuItem     *itemTemplateInsert = NULL,
+                     *itemTemplateAppend = NULL,
+                     *oldInsert = NULL,
+                     *oldAppend = NULL;
+      wxMenu         *menuTemplateInsert = NULL,
+                     *menuTemplateAppend = NULL;
+      ThotBool        bTemplate = IsTemplateInstanceDocument(doc);
+      ThotBool        do_insert = TRUE, do_append = TRUE;
+
+#endif /* TEMPLATES */
+      
+      wxMenuItem* items[4];
+      if (noLink)
+        {
+          // Remove link menu items (open in ...)
+          items[0] = p_menu->Remove(p_menu->FindItemByPosition(0));
+          items[1] = p_menu->Remove(p_menu->FindItemByPosition(0));
+          items[2] = p_menu->Remove(p_menu->FindItemByPosition(0));
+          items[3] = p_menu->Remove(p_menu->FindItemByPosition(0));
+        }
+
+#ifdef TEMPLATES
+      TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+      TtaGiveLastSelectedElement (doc, &last, &i, &lastChar);
+      if (el && el == last && bTemplate)
+        {
+          // only one element selected
+          elType = TtaGetElementType (el);
+          parent = TtaGetParent (el);
+          parentType = TtaGetElementType (parent);
+          if (parent == NULL || TtaIsReadOnly (parent))
+            do_insert = do_append = FALSE;
+          else if (!strcmp (TtaGetSSchemaName (parentType.ElSSchema), "Template") &&
+                   parentType.ElTypeNum == Template_EL_useSimple)
+            do_insert = do_append = FALSE;
+          else if (TtaIsLeaf (elType))
+            {
+              if ((firstChar == 0 && lastChar == 0) || lastChar >= TtaGetElementVolume(el))
+                // check the end of the enclosing element
+                TtaNextSibling (&last);
+              prev = el;
+              if ((firstChar == 0 && lastChar == 0) || (firstChar == 1 && lastChar == 0))
+                // check the beginning of the enclosing element
+                TtaPreviousSibling (&prev);
+              do_insert = (prev == NULL);
+              do_append = (last == NULL);
+            }
+
+          if (do_insert || do_append)
+            {
+              // prepare insert and apppend submenus
+              menuTemplateInsert = new wxMenu;
+              menuTemplateAppend = new wxMenu;
+              list = InsertableElement_ComputeList (doc, el);
+              iter = DLList_GetForwardIterator (list);
+              ITERATOR_FOREACH (iter, DLListNode, node)
+                {
+                  ElemListElement elem = (ElemListElement)node->elem;
+                  if (elem)
+                    {
+                      wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
+                      menuTemplateInsert->Append(id, str);
+                      menuTemplateAppend->Append(100 + id++, str);
+                    }
+                }
+              // remove standard menu entries
+              oldAppend = p_menu->Remove (p_menu->FindItemByPosition(p_menu->GetMenuItemCount()-1));
+              oldInsert = p_menu->Remove (p_menu->FindItemByPosition(p_menu->GetMenuItemCount()-1));
+              // new insert entry
+              if (do_insert)
+                {
+                  itemTemplateInsert = new wxMenuItem (p_menu, oldInsert->GetId(), oldInsert->GetLabel(),
+                                                       wxT(""), wxITEM_NORMAL, menuTemplateInsert);
+                  itemTemplateInsert->SetBitmap(oldInsert->GetBitmap());
+                  p_menu->Append(itemTemplateInsert);
+                }
+              else if (oldInsert)
+                p_menu->Append(oldInsert);
+
+              // new append entry
+               if (do_append)
+                {
+                  itemTemplateAppend = new wxMenuItem(p_menu, oldAppend->GetId(), oldAppend->GetLabel(),
+                                                  wxT(""), wxITEM_NORMAL, menuTemplateAppend); 
+                  itemTemplateAppend->SetBitmap(oldAppend->GetBitmap());
+                  p_menu->Append(itemTemplateAppend);
+                }
+              else if (oldAppend)
+                p_menu->Append(oldAppend);
+            }
+          TtaResetEnumContextMenu();
+        }
+#endif /* TEMPLATES */
+      // display the popup menu
+      win->PopupMenu (p_menu, win->ScreenToClient(wxPoint(x, y)));
+#ifdef TEMPLATES
+      // manage the selected entry
+      if (itemTemplateInsert || itemTemplateAppend)
+        {
+          id = TtaGetEnumContextMenu();
+          if(id!=-1)
+            {
+              id -= 1000;
+              DLListNode node = DLList_GetElement(list, id<100?id:id-100);
+              if(node && node->elem)
+                  InsertableElement_QueryInsertElement((ElemListElement)node->elem, id<100);
+            }
+          DLList_Destroy(list);
+          // destroy submenus or remove entries
+          if (itemTemplateAppend)
+              p_menu->Destroy(itemTemplateAppend);
+          else if (oldAppend)
+            p_menu->Remove (oldAppend);
+          if (itemTemplateInsert)
+            p_menu->Destroy(itemTemplateInsert);
+          if (oldInsert)
+            p_menu->Remove (oldInsert);
+          // reattach standard menu entries
+          if (oldInsert)
+            p_menu->Append(oldInsert);
+          if (oldAppend)
+            p_menu->Append(oldAppend);
+        }
+#endif /* TEMPLATES */
+
+      if (noLink)
+        {
+          // Reinsert link menu items (open in ...)
+          p_menu->Prepend(items[3]);
+          p_menu->Prepend(items[2]);
+          p_menu->Prepend(items[1]);
+          p_menu->Prepend(items[0]);
+        }
+    }
+  return -1;
+}
 
 /*----------------------------------------------------------------------
   DocumentMetaDataAlloc
@@ -6326,6 +6479,8 @@ void InitAmaya (NotifyEvent * event)
   LinkAsXmlCSS = FALSE;
   LinkAsJavascript = FALSE;
   ImgPosition = 0;
+  AttrHREFelement = NULL;
+  Right_ClikedElement = NULL;
 
   /* init transformation callback */
   TtaSetTransformCallback ((Func2) TransformIntoType);
@@ -7568,113 +7723,6 @@ char* CreateTempDirectory(const char* name)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, int y)
-{
-  wxMenu * p_menu = TtaGetDocContextMenu ( window );
-  if(p_menu && doc)
-    {
-      ThotBool bLink = !CanFollowTheLink(doc);
-      
-#ifdef TEMPLATES
-      ThotBool        bTemplate = IsTemplateInstanceDocument(doc);
-      DLList          list;
-      ForwardIterator iter;
-      Element         el;
-      DLListNode      node;
-      int             firstChar, lastChar, id=1000;
-      wxMenuItem     *itemTemplateInsert = NULL,
-                     *itemTemplateAppend = NULL,
-                     *oldInsert = NULL,
-                     *oldAppend = NULL;
-      wxMenu         *menuTemplateInsert = NULL,
-                     *menuTemplateAppend = NULL;
-
-#endif /* TEMPLATES */
-      
-      wxMenuItem* items[4];
-      if(bLink)
-        {
-          // Remove link menu items (open in ...)
-          items[0] = p_menu->Remove(p_menu->FindItemByPosition(0));
-          items[1] = p_menu->Remove(p_menu->FindItemByPosition(0));
-          items[2] = p_menu->Remove(p_menu->FindItemByPosition(0));
-          items[3] = p_menu->Remove(p_menu->FindItemByPosition(0));
-        }
-
-#ifdef TEMPLATES
-      if(bTemplate)
-        {
-          TtaGiveFirstSelectedElement(doc, &el, &firstChar, &lastChar);
-          
-          if(el && !TtaIsLeaf(TtaGetElementType(el)))
-            {
-              menuTemplateInsert = new wxMenu;
-              menuTemplateAppend = new wxMenu;
-              list = InsertableElement_ComputeList(doc, el);
-              iter = DLList_GetForwardIterator(list);
-              ITERATOR_FOREACH(iter, DLListNode, node)
-                {
-                  ElemListElement elem = (ElemListElement)node->elem;
-                  if (elem)
-                    {
-                      wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
-                      menuTemplateInsert->Append(id, str);
-                      menuTemplateAppend->Append(100 + id++, str);
-                    }
-                }
-              oldAppend = p_menu->Remove(p_menu->FindItemByPosition(p_menu->GetMenuItemCount()-1));
-              oldInsert = p_menu->Remove(p_menu->FindItemByPosition(p_menu->GetMenuItemCount()-1));
-              
-              itemTemplateInsert = new wxMenuItem(p_menu, oldInsert->GetId(), oldInsert->GetLabel(), wxT(""), wxITEM_NORMAL, menuTemplateInsert);
-              itemTemplateInsert->SetBitmap(oldInsert->GetBitmap());
-              p_menu->Append(itemTemplateInsert);
-              
-              itemTemplateAppend = new wxMenuItem(p_menu, oldAppend->GetId(), oldAppend->GetLabel(), wxT(""), wxITEM_NORMAL, menuTemplateAppend); 
-              itemTemplateAppend->SetBitmap(oldAppend->GetBitmap());
-              p_menu->Append(itemTemplateAppend);
-            }
-          TtaResetEnumContextMenu();
-        }
-#endif /* TEMPLATES */
-      
-      win->PopupMenu (p_menu, win->ScreenToClient(wxPoint(x, y)));
-
-#ifdef TEMPLATES
-      if(itemTemplateInsert)
-        {
-          id = TtaGetEnumContextMenu();
-          if(id!=-1)
-            {
-              id -= 1000;
-              DLListNode node = DLList_GetElement(list, id<100?id:id-100);
-              if(node && node->elem)
-                  InsertableElement_QueryInsertElement((ElemListElement)node->elem, id<100);
-            }
-          DLList_Destroy(list);
-          p_menu->Destroy(itemTemplateInsert);
-          p_menu->Destroy(itemTemplateAppend);
-          p_menu->Append(oldInsert);
-          p_menu->Append(oldAppend);
-          
-        }
-#endif /* TEMPLATES */
-
-      
-      if(bLink)
-        {
-          // Reinsert link menu items (open in ...)
-          p_menu->Prepend(items[3]);
-          p_menu->Prepend(items[2]);
-          p_menu->Prepend(items[1]);
-          p_menu->Prepend(items[0]);
-        }
-    }
-  return -1;
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
 int ChooseDocumentPage(Document doc)
 {
   switch(DocumentTypes[doc])
@@ -7687,7 +7735,5 @@ int ChooseDocumentPage(Document doc)
       return WXAMAYAPAGE_SPLITTABLE;
     default :
       return WXAMAYAPAGE_SIMPLE;
-      
   }
-};
-
+}

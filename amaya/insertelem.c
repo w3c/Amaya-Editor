@@ -1,6 +1,6 @@
 /*
  *
- *  COPYRIGHT INRIA and W3C, 1996-2007
+ *  COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -197,14 +197,13 @@ static void FillInsertableElementFromElemAttribute (XTigerTemplate t,
                                                     Element elem, Element refelem,
                                                     int attrib, DLList list, int level)
 {
-  ElementType     type = TtaGetElementType(elem);
-  AttributeType   attributeType = {type.ElSSchema, attrib};
+  ElementType     elType = TtaGetElementType(elem);
+  AttributeType   attributeType = {elType.ElSSchema, attrib};
   Attribute       att = TtaGetAttribute (elem, attributeType);
   int             size = TtaGetTextAttributeLength (att);
   char*           types = (char *) TtaGetMemory (size+1); 
 
   TtaGiveTextAttributeValue (att, types, &size);
-  
   HashMap         basemap = KeywordHashMap_CreateFromList(NULL, -1, types);
   HashMap         map     = Template_ExpandHashMapTypes(t, basemap);
   ForwardIterator iter;
@@ -245,74 +244,55 @@ static int SortInsertableElemList(ElemListElement elem1 ,ElemListElement elem2)
   Fill an element list with all insertable elements (base element or
   XTiger comonent).
   ----------------------------------------------------------------------*/
-void FillInsertableElemList (Document doc, Element elem, DLList list)
+void FillInsertableElemList (Document doc, Element el, DLList list)
 {
-  ElementType      type;
-  Element          parent;
 #ifdef TEMPLATES
-  Element          child;
-  ElementType      childType;
+  Element          child, elem;
+  ElementType      elType, childType;
   XTigerTemplate   t;
-  ThotBool         haveAncestorBag = FALSE;
+  ThotBool         haveAncestor = FALSE;
 #endif/* TEMPLATES */
   int level;
   ThotBool cont = TRUE;
 
   if (elem)
-  {
-    if (doc==0)
+    {
+    if (doc == 0)
       doc = TtaGetDocument(elem);
 
 #ifdef TEMPLATES
     t = GetXTigerTemplate(DocumentMeta[doc]->template_url);
-
-    if (!IsTemplateElement(elem))
-      elem = GetFirstTemplateParentElement(elem);
-
-    // Search for first xt:bag ancestor.
-    parent = elem;
-    while (parent!= NULL && cont)
-      {
-        type = TtaGetElementType(parent);
-        if (type.ElTypeNum == Template_EL_bag)
-          {
-            haveAncestorBag = TRUE;
-            cont = FALSE;
-          }
-        parent = GetFirstTemplateParentElement(parent);
-      }
-
     level = 0;
     cont = TRUE;
-
+    elem = el;
     // Process for each ancestor.
-    while (elem!=NULL && cont)
+    while (elem && cont)
     {
-      type = TtaGetElementType(elem);
-      switch(type.ElTypeNum)
+      elType = TtaGetElementType (elem);
+      switch (elType.ElTypeNum)
         {
         case Template_EL_repeat:
           child = TtaGetFirstChild(elem);
           childType = TtaGetElementType(child);
-          switch(childType.ElTypeNum)
+          switch (childType.ElTypeNum)
           {
             case Template_EL_useEl:
             case Template_EL_useSimple:
             case Template_EL_bag:
-              FillInsertableElementFromElemAttribute(t, child, elem,
+              FillInsertableElementFromElemAttribute(t, el, elem,
                                                      Template_ATTR_types, list, level);
               break;
             default:
               break;
           }
-          cont = FALSE; //haveAncestorBag;
+          cont = FALSE;
           break;
         case Template_EL_useEl:
           // Fill for xt:use only if have no child.
           if (TtaGetFirstChild(elem)==NULL){
-            FillInsertableElementFromElemAttribute(t, elem, elem,
+            FillInsertableElementFromElemAttribute(t, el, elem,
                                                    Template_ATTR_types, list, level);
-            cont = FALSE; //haveAncestorBag;
+            cont = FALSE;
           }
           break;
         case Template_EL_bag:
@@ -321,11 +301,11 @@ void FillInsertableElemList (Document doc, Element elem, DLList list)
           cont = FALSE;
           break;
         }
-      elem = GetFirstTemplateParentElement(elem);
+      elem = GetFirstTemplateParentElement (elem);
       level ++;
     }
 #endif/* TEMPLATES */
-  }
+    }
   DLList_Sort(list, (Container_CompareFunction)SortInsertableElemList);
 }
 

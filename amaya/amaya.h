@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -449,6 +449,7 @@ THOT_EXPORT Document   SelectionDoc;
 THOT_EXPORT Document   W3Loading; /* the document being loaded */
 THOT_EXPORT Document   BackupDocument; /* the current backup */
 THOT_EXPORT Element    AttrHREFelement;
+THOT_EXPORT Element    Right_ClikedElement;
 
 THOT_EXPORT FILE      *ErrFile;
 THOT_EXPORT FILE      *CSSErrFile;
