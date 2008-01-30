@@ -211,44 +211,52 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
           if (do_insert || do_append)
             {
               // prepare insert and apppend submenus
-              menuTemplateInsert = new wxMenu;
-              menuTemplateAppend = new wxMenu;
               list = InsertableElement_ComputeList (doc, el);
-              iter = DLList_GetForwardIterator (list);
-              ITERATOR_FOREACH (iter, DLListNode, node)
+              if(DLList_GetSize(list)!=0)
                 {
-                  ElemListElement elem = (ElemListElement)node->elem;
-                  if (elem)
-                    {
-                      wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
-                      menuTemplateInsert->Append(id, str);
-                      menuTemplateAppend->Append(100 + id++, str);
-                    }
-                }
-              // remove standard menu entries
-              oldAppend = p_menu->Remove (p_menu->FindItemByPosition(p_menu->GetMenuItemCount()-1));
-              oldInsert = p_menu->Remove (p_menu->FindItemByPosition(p_menu->GetMenuItemCount()-1));
-              // new insert entry
-              if (do_insert)
-                {
-                  itemTemplateInsert = new wxMenuItem (p_menu, oldInsert->GetId(), oldInsert->GetLabel(),
-                                                       wxT(""), wxITEM_NORMAL, menuTemplateInsert);
-                  itemTemplateInsert->SetBitmap(oldInsert->GetBitmap());
-                  p_menu->Append(itemTemplateInsert);
-                }
-              else if (oldInsert)
-                p_menu->Append(oldInsert);
+                  menuTemplateInsert = new wxMenu;
+                  menuTemplateAppend = new wxMenu;
 
-              // new append entry
-               if (do_append)
-                {
-                  itemTemplateAppend = new wxMenuItem(p_menu, oldAppend->GetId(), oldAppend->GetLabel(),
-                                                  wxT(""), wxITEM_NORMAL, menuTemplateAppend); 
-                  itemTemplateAppend->SetBitmap(oldAppend->GetBitmap());
-                  p_menu->Append(itemTemplateAppend);
+                  iter = DLList_GetForwardIterator (list);
+                  ITERATOR_FOREACH (iter, DLListNode, node)
+                    {
+                      ElemListElement elem = (ElemListElement)node->elem;
+                      if (elem)
+                        {
+                          wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
+                          menuTemplateInsert->Append(id, str);
+                          menuTemplateAppend->Append(100 + id++, str);
+                        }
+                    }
+
+                  // remove standard menu entries
+                  oldAppend = p_menu->Remove (p_menu->FindItemByPosition(p_menu->GetMenuItemCount()-1));
+                  oldInsert = p_menu->Remove (p_menu->FindItemByPosition(p_menu->GetMenuItemCount()-1));
+                  // new insert entry
+                  if (do_insert)
+                    {
+                      itemTemplateInsert = new wxMenuItem (p_menu, oldInsert->GetId(), oldInsert->GetLabel(),
+                                                           wxT(""), wxITEM_NORMAL, menuTemplateInsert);
+                      itemTemplateInsert->SetBitmap(oldInsert->GetBitmap());
+                      p_menu->Append(itemTemplateInsert);
+                    }
+                  else if (oldInsert)
+                    p_menu->Append(oldInsert);
+
+                  // new append entry
+                   if (do_append)
+                    {
+                      itemTemplateAppend = new wxMenuItem(p_menu, oldAppend->GetId(), oldAppend->GetLabel(),
+                                                      wxT(""), wxITEM_NORMAL, menuTemplateAppend); 
+                      itemTemplateAppend->SetBitmap(oldAppend->GetBitmap());
+                      p_menu->Append(itemTemplateAppend);
+                    }
+                  else if (oldAppend)
+                    p_menu->Append(oldAppend);
+                  
                 }
-              else if (oldAppend)
-                p_menu->Append(oldAppend);
+              else
+                  do_insert = do_append = FALSE;
             }
           TtaResetEnumContextMenu();
         }
@@ -275,7 +283,7 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
             p_menu->Remove (oldAppend);
           if (itemTemplateInsert)
             p_menu->Destroy(itemTemplateInsert);
-          if (oldInsert)
+          else if (oldInsert)
             p_menu->Remove (oldInsert);
           // reattach standard menu entries
           if (oldInsert)
