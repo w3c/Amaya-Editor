@@ -5,6 +5,7 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxCheckListBox" name="wxID_CHECKLIST_CSS">
+          <size>196,80</size>
           <style>wxLB_EXTENDED</style>
         </object>
         <option>1</option>
