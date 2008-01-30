@@ -232,6 +232,17 @@ void LocateSelectionInView (int frame, int x, int y, int button)
                   IsParentBox (pBox, pViewSel->VsBox))
                 pBox = GetClickedLeafBox (frame, x, y, &pFlow);
             }
+          else if (pBox && pBox->BxAbstractBox && FrameTable[frame].FrView == 1)
+            {
+              pEl = pBox->BxAbstractBox->AbElement;
+              if (pEl)
+                pEl = pEl->ElParent;
+              if (pEl && pEl->ElPrevious &&
+                  TypeHasException (ExcIsBreak, pEl->ElTypeNumber, pEl->ElStructSchema) &&
+                  !TypeHasException (ExcIsBreak, pEl->ElPrevious->ElTypeNumber, pEl->ElPrevious->ElStructSchema))
+                pBox = pBox->BxPrevious;
+            }
+
           if (pBox)
             {
 #ifndef _GL

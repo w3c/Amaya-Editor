@@ -329,7 +329,7 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                   if (d < dist ||
                       (d == dist &&
                        (pSelBox == NULL ||
-                        pSelBox->BxAbstractBox->AbDepth >= pBox->BxAbstractBox->AbDepth)))
+                        pSelBox->BxAbstractBox->AbDepth >= pAb->AbDepth)))
                     {
                       dist = d;
                       pSelBox = pBox;
