@@ -32,9 +32,9 @@
               <bitmap>../icons/16x16/refresh.png</bitmap>
               <tooltip>*ReFresh*</tooltip>
             </object>
-            <option>1</option>
-            <flag>wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
-          </object>
+             <flag>wxALIGN_CENTRE_VERTICAL</flag>
+             <border>4</border>
+         </object>
         </object>
         <option>0</option>
         <flag>wxTOP|wxEXPAND</flag>
