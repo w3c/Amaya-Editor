@@ -2125,6 +2125,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
       isExtraFlow = ExtraFlow (pBox, frame);
       if (isExtraFlow)
         {
+          pParentAb = GetEnclosingViewport (pAb);
+          if (pParentAb == NULL)
+            pParentAb = ViewFrameTable[frame -1].FrAbstractBox;
           if (horizRef)
             {
               if (pAb->AbWidth.DimUnit != UnAuto &&
@@ -2150,9 +2153,6 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                        (pAb->AbWidth.DimAbRef == pParentAb ||
                         pAb->AbWidth.DimUnit == UnAuto))
                 {
-                  pParentAb = GetEnclosingViewport (pAb);
-                  if (pParentAb == NULL)
-                    pParentAb = ViewFrameTable[frame -1].FrAbstractBox;
                   pAb->AbWidth.DimAbRef = pParentAb;
                   pAb->AbWidth.DimIsPosition = FALSE;
                   pAb->AbWidth.DimValue = 0;
@@ -2166,9 +2166,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
           if (!horizRef)
             {
               if (pos->PnTopUnit != UnAuto &&
-                       pos->PnTopUnit != UnUndefined &&
-                       pos->PnBottomUnit != UnAuto &&
-                       pos->PnBottomUnit != UnUndefined)
+                  pos->PnTopUnit != UnUndefined &&
+                  pos->PnBottomUnit != UnAuto &&
+                  pos->PnBottomUnit != UnUndefined)
                 {
                   /* inherit from an enclosing box */
                   pAb->AbHeight.DimIsPosition = FALSE;
@@ -2181,9 +2181,6 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
               else if (!pAb->AbHeight.DimIsPosition &&
                        pAb->AbHeight.DimAbRef == pParentAb)
                 {
-                  pParentAb = GetEnclosingViewport (pAb);
-                  if (pParentAb == NULL)
-                    pParentAb = ViewFrameTable[frame -1].FrAbstractBox;
                   pAb->AbHeight.DimAbRef = pParentAb;
                   pAb->AbHeight.DimIsPosition = FALSE;
                 }
