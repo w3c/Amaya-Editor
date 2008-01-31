@@ -449,7 +449,7 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
           // change the Amaya profile
           TtaSetEnvString ("CURRENT_PROFILE", buffer, TRUE);
           // Avoid to save previous "AUI_DECORATION"
-          SaveAUI_DECORATION = 0;
+          SavePANEL_PREFERENCES = 0;
         }
     }
   return prop;

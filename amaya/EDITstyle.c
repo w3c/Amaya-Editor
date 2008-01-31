@@ -766,7 +766,7 @@ void ChangeTheme (const char *theme)
   TtaGetActiveView (&doc, &view);
   if (doc == 0 || theme == NULL)
     return;
-  if (DocumentTypes[doc] == docSource)
+  if (doc != TtaGetSelectedDocument () && DocumentTypes[doc] == docSource)
     doc = GetDocFromSource (doc);
   if (doc && DocumentTypes[doc] == docHTML)
     {

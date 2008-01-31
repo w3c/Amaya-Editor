@@ -9,7 +9,7 @@
 extern void InsertableElement_Init ( void );
 extern void InsertableElement_Final ( void );
 extern void FillInsertableElemList ( Document doc,
-                                     Element elem,
+                                     Element el,
                                      DLList list );
 extern DLList InsertableElement_GetList ( Document doc );
 extern DLList InsertableElement_Update ( Document doc,
@@ -27,7 +27,7 @@ extern void InsertableElement_QueryInsertElement ( ElemListElement elem,
 extern void InsertableElement_Init ( void );
 extern void InsertableElement_Final ( void );
 extern void FillInsertableElemList ( Document doc,
-                                       Element elem,
+                                       Element el,
                                        DLList list );
 extern DLList InsertableElement_GetList ( Document doc );
 extern DLList InsertableElement_Update ( Document doc,

@@ -302,7 +302,7 @@ void AmayaAdvancedWindow::SaveConfig()
   str = m_manager.SavePerspective();
   wxStringTokenizer tkz(str, wxT("|"));
   str = wxT("");
-  if (SaveAUI_DECORATION)
+  if (SavePANEL_PREFERENCES)
     {
       while (tkz.HasMoreTokens())
         {

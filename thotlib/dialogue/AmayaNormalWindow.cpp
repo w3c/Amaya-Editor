@@ -261,14 +261,29 @@ void AmayaNormalWindow::LoadConfig()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::SaveConfig()
 {
-  if (IsToolBarShown(0))
-    TtaSetEnvBoolean("BROWSE_TOOLBAR", TRUE, TRUE);
+  if (SavePANEL_PREFERENCES)
+    {
+      if (IsToolBarShown(0))
+        TtaSetEnvBoolean("BROWSE_TOOLBAR", TRUE, TRUE);
+      else
+        TtaSetEnvBoolean("BROWSE_TOOLBAR", FALSE, TRUE);
+      if (IsToolBarShown(1))
+        TtaSetEnvBoolean("EDIT_TOOLBAR", TRUE, TRUE);
+      else
+        TtaSetEnvBoolean("EDIT_TOOLBAR", FALSE, TRUE);
+    }
   else
-    TtaSetEnvBoolean("BROWSE_TOOLBAR", FALSE, TRUE);
-  if (IsToolBarShown(1))
-    TtaSetEnvBoolean("EDIT_TOOLBAR", TRUE, TRUE);
-  else
-    TtaSetEnvBoolean("EDIT_TOOLBAR", FALSE, TRUE);
+    {
+      // by default display all available toolbars
+      TtaSetEnvBoolean("BROWSE_TOOLBAR", TRUE, TRUE);
+      TtaSetEnvBoolean("EDIT_TOOLBAR", TRUE, TRUE);
+      // and set the default order
+      TtaSetEnvString("CLASSIC_PANEL_ORDER",
+                      "AmayaXHTMLToolPanel;AmayaAttributeToolPanel;AmayaStyleToolPanel;"
+                      "StyleListToolPanel;AmayaApplyClassToolPanel;AmayaExplorerToolPanel;"
+                      "AmayaMathMLToolPanel;AmayaSpeCharToolPanel;AmayaXMLToolPanel",
+                      TRUE);
+    }
   AmayaWindow::SaveConfig();
 }
 
