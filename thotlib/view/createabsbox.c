@@ -5210,7 +5210,9 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
         if ((pRule->PrViewNum == viewSch || pRule->PrType == PtPictInfo) &&
             DoesViewExist (pEl, pDoc, viewNb))
           {
-            if (viewSch != 1 || pRule->PrType == PtFunction)
+            if (viewSch != 1 ||
+                (pRule->PrType == PtFunction &&
+                 pRule->PrPresFunction != FnBackgroundPicture))
               {
                 if (fileDescriptor)
                   DisplayPRule (pRule, fileDescriptor, pEl, pSchP, 0);
