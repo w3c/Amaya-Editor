@@ -118,7 +118,7 @@ m_dataType(slot.m_dataType)
 wxMimeSlot::wxMimeSlot(const wxString& contentType, const wxString& data):
 wxObject(),
 m_contentType(contentType),
-m_transfertEncoding(wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE),
+m_transfertEncoding(wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64/*wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE*/),
 m_dataType(wxMimeSlotContentText),
 m_textContent(data)
 {
@@ -148,7 +148,7 @@ m_dataType(wxMimeSlotContentFile)
 
     if(contentType==wxT("text/plain") || contentType==wxT("text/html"))
     {
-      m_transfertEncoding = wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE;
+      m_transfertEncoding = wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64/*wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE*/;
     }
 }
 
@@ -269,7 +269,13 @@ bool wxMimeSlot::Write(wxOutputStream& out)const
             {
                 case wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE:
                 {
-                    wxFileInputStream file(m_fileContent.filename.GetFullPath());
+                  wxFile f(m_fileContent.filename.GetFullPath());
+                  if(f.IsOpened())
+                    printf("file (qp) %s opened\n", (const char*)m_fileContent.filename.GetFullPath().mb_str(wxConvLibc));
+                  else
+                    printf("file (qp) %s not opened\n", (const char*)m_fileContent.filename.GetFullPath().mb_str(wxConvLibc));
+                  
+                    wxFileInputStream file(f);
                     wxQuotedPrintableOutputStream qp(out);
                     qp.Write(file);
                     qp.Close();
@@ -277,16 +283,18 @@ bool wxMimeSlot::Write(wxOutputStream& out)const
                 }
                 case wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64:
                 {
-//                    wxStringOutputStream out;
-                    wxFileInputStream file(m_fileContent.filename.GetFullPath());
+                  wxFile f(m_fileContent.filename.GetFullPath());
+                  if(f.IsOpened())
+                    printf("file (b64) %s opened\n", (const char*)m_fileContent.filename.GetFullPath().mb_str(wxConvLibc));
+                  else
+                    printf("file (b64) %s not opened\n", (const char*)m_fileContent.filename.GetFullPath().mb_str(wxConvLibc));
+
+                    wxFileInputStream file(f);
                     wxEndOfLineOutputStream eol(out);
                     wxBase64EncOutputStream base64(eol);
                     base64.Write(file);
                     base64.Close();
                     eol.Close();
-//                    
-//                    printf(">> %s :\n%s\n-----\n", (const char*)m_fileContent.filename.GetFullPath().mb_str(wxConvLibc),
-//                                                  (const char*) out.GetString().mb_str(wxConvLibc));
                     break;
                 }
                 default:
@@ -699,15 +707,8 @@ bool wxEmailMessage::Write(wxOutputStream& out)
     else
     {
         m_alternatives.SetMessage(wxT("This is a multi-part message in MIME format."));
-        if(m_alternatives.IsEmpty())
-        {
-            m_attachements.Prepend(wxT("text/plain"), m_text);
-        }
-        else
-        {
-            m_alternatives.Prepend(wxT("text/plain"), m_text);
-            m_attachements.Prepend(&m_alternatives);
-        }
+        m_alternatives.Prepend(wxT("text/plain"), m_text);
+        m_attachements.Prepend(&m_alternatives);
         
         msg = wxT("MIME-version: 1.0\r\n");
         out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
@@ -803,6 +804,24 @@ bool wxSMTP::SendContent(wxEmailMessage& message)
 
     m_error = GetResponseCode(SendCommand(wxT(".\r\n")));
     return m_error==250;
+  
+//  wxString path;
+//  path = wxFileName::CreateTempFileName(wxT("amayamail"));
+//  if(!path.IsEmpty())
+//    {
+//      printf("amayamail : %s\n", (const char*)path.mb_str(wxConvLibc));
+//      
+//      wxFileOutputStream stm(path);
+//      if(stm.IsOk())
+//        {
+//          message.Write(stm);
+//        }
+//      else
+//        printf("cant open temp file.\n");
+//    }
+//  else
+//    printf("cant create temp file\n");
+//  return true;
 }
 
 bool wxSMTP::SendMail(wxEmailMessage& message)

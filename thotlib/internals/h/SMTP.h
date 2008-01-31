@@ -4,11 +4,13 @@
 #define SMTP_H_
 
 
-#include <wx/filename.h>
-#include <wx/socket.h>
-#include <wx/hashmap.h>
-#include <wx/filename.h>
-#include <wx/stream.h>
+#include "wx/filename.h"
+#include "wx/socket.h"
+#include "wx/hashmap.h"
+#include "wx/file.h"
+#include "wx/filename.h"
+#include "wx/stream.h"
+
 
 /**
  * Quoted-printable encoder output stream
@@ -233,6 +235,9 @@ protected:
     wxArrayString m_extraHeaders;
     wxMultipartMimeContainer m_attachements;
     wxMultipartMimeContainer m_alternatives;
+
+    wxFile    m_tempFile; /* Temporary stored mail content. */
+    
 public:
     wxEmailMessage(const wxString& subject, const wxString& text, const wxString& from);
     virtual ~wxEmailMessage(){}
