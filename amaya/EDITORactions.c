@@ -4799,7 +4799,9 @@ void  CreateOrChangeLink (Document doc, View view)
   if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */
     return;
-
+  if (DocumentTypes[doc] == docSource || DocumentTypes[doc] == docCSS ||
+      DocumentTypes[doc] == docText)
+    return;
   UseLastTarget = FALSE;
   TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
   if (TtaIsReadOnly (el))

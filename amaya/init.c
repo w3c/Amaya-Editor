@@ -910,12 +910,15 @@ void UpdateEditorMenus (Document doc)
       TtaSetItemOn (doc, 1, Style, BShowAppliedStyle);
 
   /* update specific menu entries */
-  if (DocumentTypes[doc] == docCSS)
+  if (DocumentTypes[doc] == docCSS || DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docText)
     {
       TtaSetMenuOff (doc, 1, Types);
       TtaSetMenuOff (doc, 1, Tools);
       TtaSetMenuOff (doc, 1, Links);
-      TtaSetItemOff (doc, 1, File, BSynchro);
+      TtaSetItemOff (doc, 1, Views, TShowMapAreas);
+      TtaSetItemOff (doc, 1, Views, TShowTargets);
+      TtaSetMenuOff (doc, 1, Style);
     }
   else if (DocumentTypes[doc] == docHTML)
     TtaSetMenuOn (doc, 1, Types);
@@ -4081,14 +4084,17 @@ void ShowSource (Document doc, View view)
           DocumentMeta[sourceDoc]->xmlformat = FALSE;
           DocumentMeta[sourceDoc]->compound = FALSE;
           /* copy the MIME type, charset, and content location */
-          if (DocumentMeta[doc]->content_type)
-            DocumentMeta[sourceDoc]->content_type = TtaStrdup (DocumentMeta[doc]->content_type);
-          if (DocumentMeta[doc]->charset)
-            DocumentMeta[sourceDoc]->charset = TtaStrdup (DocumentMeta[doc]->charset);
-          if (DocumentMeta[doc]->content_location)
-            DocumentMeta[sourceDoc]->content_location = TtaStrdup (DocumentMeta[doc]->content_location);
-          if (DocumentMeta[doc]->full_content_location)
-            DocumentMeta[sourceDoc]->full_content_location = TtaStrdup (DocumentMeta[doc]->full_content_location);
+          if (DocumentMeta[doc])
+            {
+              if (DocumentMeta[doc]->content_type)
+                DocumentMeta[sourceDoc]->content_type = TtaStrdup (DocumentMeta[doc]->content_type);
+              if (DocumentMeta[doc]->charset)
+                DocumentMeta[sourceDoc]->charset = TtaStrdup (DocumentMeta[doc]->charset);
+              if (DocumentMeta[doc]->content_location)
+                DocumentMeta[sourceDoc]->content_location = TtaStrdup (DocumentMeta[doc]->content_location);
+              if (DocumentMeta[doc]->full_content_location)
+                DocumentMeta[sourceDoc]->full_content_location = TtaStrdup (DocumentMeta[doc]->full_content_location);
+            }
           DocumentTypes[sourceDoc] = docSource;
           charset = TtaGetDocumentCharset (doc);
           if (charset == UNDEFINED_CHARSET)

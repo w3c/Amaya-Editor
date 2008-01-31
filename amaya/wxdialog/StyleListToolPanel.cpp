@@ -300,7 +300,7 @@ void StyleListToolPanel::OnShowSheet(wxCommandEvent& event)
         {
           PInfoPtr pInfo = m_map[item];
           if (pInfo &&
-              (DocumentTypes[doc] != docSource || pInfo->PiCategory == CSS_DOCUMENT_STYLE))
+              (DocumentTypes[doc] != docSource || pInfo->PiCategory != CSS_DOCUMENT_STYLE))
             infos.Add (pInfo);
         }
     }

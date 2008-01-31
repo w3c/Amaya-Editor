@@ -42,12 +42,11 @@
 +web-module
 +annot-module
 #+javascript_dom
+&CreateBase
 MenuShowLogFile
 FullScreen
 ShowAlternate
-SplitHorizontally
-SplitVertically
-CopyLocation
++xml-display
 
 ################# AMAYA Lite
 <Editor_Lite>
@@ -123,7 +122,6 @@ HelpAtW3C
 # Give the list of active functions
 ################# XHTML-TRANSITIONAL
 {XHTML Transitional}
-+base-module
 +bdi-text-module
 +clientside-module
 +attr-style
@@ -139,6 +137,7 @@ HelpAtW3C
 +presentation-module
 +maths
 +tables
+&CreateBase
 &CreateMath
 +object-module
 +script-module
@@ -146,10 +145,11 @@ HelpAtW3C
 +svg
 +tables
 +text-module
++css-style-lite
++xml-display
 
 ################# XHTML-STRICT
 {XHTML 1.0 Strict}
-+base-module
 +bdi-text-module
 +clientside-module
 +attr-style
@@ -164,12 +164,15 @@ HelpAtW3C
 +presentation-module
 +maths
 +tables
+&CreateBase
 &CreateMath
 +object-module
 +script-module
 +struct-module
 +svg
 +text-module
++css-style-lite
++xml-display
 
 ################# XHTML-BASIC
 {XHTML Basic}
@@ -182,10 +185,11 @@ HelpAtW3C
 +object-module
 +struct-module
 +text-module
++css-style-lite
++xml-display
 
 ################# XHTML1.1
 {XHTML 1.1}
-+base-module
 +bdi-text-module
 +clientside-module
 +attr-style
@@ -199,6 +203,7 @@ HelpAtW3C
 +meta-module
 +presentation-module
 +maths
+&CreateBase
 &CreateMath
 +tables
 +object-module
@@ -207,18 +212,24 @@ HelpAtW3C
 +tables
 +text-module
 +ruby
++css-style-lite
++xml-display
 
 ################# MathML
 {MathML}
 +basic-style
 +hypertext-module
 +maths
++css-style
++xml-display
 
 ################# SVG
 {SVG}
 +basic-style
 +hypertext-module
 +maths
++css-style-lite
++xml-display
 
 ################# Annot
 {Annot}
@@ -243,6 +254,7 @@ HelpAtW3C
 +svg
 +tables
 +text-module
++css-style-lite
 +annot-annot
 
 
@@ -421,7 +433,6 @@ ShowBrowsingBar
 
 ######### VIEWS
 [views]
-HelpViews
 ShowLinks
 ShowSource
 ShowStructure
@@ -430,6 +441,7 @@ ShowToC
 #ShowTimeLineWindow
 ShowPanel
 TtcCloseView
+HelpViews
 HelpAmaya
 HelpAtW3C
 HelpIndex
@@ -727,3 +739,15 @@ ReplyToAnnotation
 #MoveAnnotationXPtr
 #XPointer_bufferStore
 
+[xml-display]
+ShowLinks
+ShowTargets
+ShowSource
+ShowStructure
+#ShowFormatted
+ShowToC
+#ShowTimeLineWindow
+ShowAlternate
+SplitHorizontally
+SplitVertically
+CopyLocation
