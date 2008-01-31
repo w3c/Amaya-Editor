@@ -1541,3 +1541,17 @@ const char * TtaGetAppDate()
 {
   return __DATE__;
 }
+
+/*----------------------------------------------------------------------
+  This function returns the app year
+  ----------------------------------------------------------------------*/
+const char * TtaGetAppYear()
+{
+  static char date[] = __DATE__;
+  char* s = date;
+  
+  s = strchr(s, ' ');
+  s = strchr(s+1, ' ');
+  
+  return s+1;
+}

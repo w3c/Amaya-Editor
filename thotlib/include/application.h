@@ -77,8 +77,14 @@ const char * TtaGetAppName();
   This function returns the app date
   (it was : #define HTAppDate     __DATE__ )
   ----------------------------------------------------------------------*/
-     const char * TtaGetAppDate();
+const char * TtaGetAppDate();
 
+/*----------------------------------------------------------------------
+  This function returns the app year
+  ----------------------------------------------------------------------*/
+const char * TtaGetAppYear();
+
+     
 /*----------------------------------------------------------------------
   TtaUseDotForFloat returns TRUE if floats take the form xx.yy
  ----------------------------------------------------------------------*/

@@ -747,6 +747,8 @@ void HelpAmaya (Document document, View view)
 {
   char  localname[MAX_LENGTH];
   char *s = TtaGetEnvString ("THOTDIR");
+  wxString str;
+  
 #ifdef AMAYA_CRASH
   /* force amaya to crash : activate AMAYA_CRASH flag only for debug */
   memset(0,0,10);
@@ -876,7 +878,9 @@ void HelpAmaya (Document document, View view)
   info.SetName(TtaConvMessageToWX(TtaGetAppName()));
   info.SetVersion(TtaConvMessageToWX(TtaGetAppVersion()) + wxT(" (") + TtaConvMessageToWX(TtaGetAppDate()) + wxT(")"));
   info.SetDescription(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT1)));
-  info.SetCopyright(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT_COPYRIGHT)));
+  str = TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT_COPYRIGHT));
+  str.Replace(wxT("%s"), TtaConvMessageToWX(TtaGetAppYear()));
+  info.SetCopyright(str);
 // Dont work :
 //  info.SetWebSite(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT_WEBSITE)));
   info.SetIcon(icon);
