@@ -2300,7 +2300,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
   int                 width, breakWidth, w;
   int                 boxLength, nSpaces;
   int                 newIndex, wordWidth;
-  int                 xi, val;
+  int                 xi, val, cutwidth;
   int                 maxLength, minWidth;
   int                 t, b, l, r;
   ThotBool            still, toCut, found, hyphenate;
@@ -2714,7 +2714,8 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
       /* compare different word widths */
       if (minWidth < wordWidth)
         minWidth = wordWidth;
-      wordWidth = 0;
+      if (!toCut)
+        wordWidth = 0;
     }
 
   if (toCut)
@@ -2786,7 +2787,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
         {
           /* There is a previous box in the line */
           if (!pNextBox->BxAbstractBox->AbElement->ElTerminal &&
-              pNextBox->BxWidth == pLine->LiXMax)
+              pNextBox->BxWidth == pLine->LiXMax && !onlySpace)
             {
               /* cut before that box */
               toCut = FALSE;
@@ -2800,7 +2801,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
               GetExtraMargins (pNextBox, NULL, frame, &t, &b, &l, &r);
               pBox = pNextBox;
               if (BreakMainBox (pLine, pNextBox, maxLength, l, r, line_spaces,
-                                hyphenate,  pRootAb, FALSE))
+                                hyphenate, pRootAb, FALSE))
                 {
                   if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
                       pNextBox->BxNexChild)
@@ -2812,14 +2813,18 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                       else
                         pBox = pNextBox;
                     }
+                  toCut = FALSE;
                 }
-              else if (pBox->BxType == BoScript &&
-                       pBox != pBox->BxAbstractBox->AbBox->BxNexChild &&
-                       pBox->BxPrevious)
-                pBox = pBox->BxPrevious;
               else
-                pBox = GetPreviousBox (pNextBox->BxAbstractBox, frame);
-              toCut = FALSE;
+                {
+                  if (pBox->BxType == BoScript &&
+                      pBox != pBox->BxAbstractBox->AbBox->BxNexChild &&
+                      pBox->BxPrevious)
+                    pBox = pBox->BxPrevious;
+                  else
+                    pBox = GetPreviousBox (pNextBox->BxAbstractBox, frame);
+                  toCut = TRUE;
+                }
             }
 
           lastbox = pNextBox;
@@ -2854,20 +2859,24 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   pNextBox->BxAbstractBox->AbAcceptLineBreak &&
                   pNextBox->BxNSpaces != 0)
                 {
+                  if (onlySpace)
+                    cutwidth = pNextBox->BxW - 3;
+                  else
+                    cutwidth = pNextBox->BxW - 1;
                   /* break on the last space of the box*/
                   GetExtraMargins (pNextBox, NULL, frame, &t, &b, &l, &r);
                   if (pNextBox->BxType == BoPiece ||
                       pNextBox->BxType == BoDotted ||
                       pNextBox->BxType == BoScript)
                     {
-                      BreakPieceOfBox (pLine, pNextBox, pNextBox->BxW - 1, l, r, line_spaces,
+                      BreakPieceOfBox (pLine, pNextBox, cutwidth, l, r, line_spaces,
                                        hyphenate, pRootAb);
                       pBox = pNextBox;
                       toCut = FALSE;
                     }
                   else
                     {
-                      BreakMainBox (pLine, pNextBox, pNextBox->BxW - 1, l, r, line_spaces,
+                      BreakMainBox (pLine, pNextBox, cutwidth, l, r, line_spaces,
                                     hyphenate, pRootAb, FALSE);
                       /* take the first child of a main box */
                       pBox = pNextBox->BxNexChild;
@@ -3686,7 +3695,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 top, left, right, bottom, spacing;
   int                 l, r;
   ThotBool            toAdjust, breakLine, isExtraFlow;
-  ThotBool            xAbs, yAbs, extensibleBox, onlySpace = FALSE;
+  ThotBool            xAbs, yAbs, extensibleBox, onlySpace = TRUE;
   ThotBool            full, still, standard, isFloat;
 
   /* avoid any cycle */

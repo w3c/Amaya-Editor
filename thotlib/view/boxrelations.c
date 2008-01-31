@@ -2125,11 +2125,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
       isExtraFlow = ExtraFlow (pBox, frame);
       if (isExtraFlow)
         {
-          pParentAb = GetEnclosingViewport (pAb);
-          if (pParentAb == NULL)
-            pParentAb = ViewFrameTable[frame -1].FrAbstractBox;
           if (horizRef)
             {
+              if (HorizExtraAbFlow (pAb, frame))
+                {
+                  pParentAb = GetEnclosingViewport (pAb);
+                  if (pParentAb == NULL)
+                    pParentAb = ViewFrameTable[frame -1].FrAbstractBox;
+                }
               if (pAb->AbWidth.DimUnit != UnAuto &&
                    !pAb->AbWidth.DimIsPosition &&
                   (pAb->AbWidth.DimAbRef || pAb->AbWidth.DimValue != -1))
@@ -2150,7 +2153,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   return FALSE;
                 }
               else if (!pAb->AbWidth.DimIsPosition &&
-                       (pAb->AbWidth.DimAbRef == pParentAb ||
+                       (pAb->AbWidth.DimAbRef == pAb->AbEnclosing ||
                         pAb->AbWidth.DimUnit == UnAuto))
                 {
                   pAb->AbWidth.DimAbRef = pParentAb;
@@ -2165,6 +2168,12 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
             }
           if (!horizRef)
             {
+              if (VertExtraAbFlow (pAb, frame))
+                {
+                  pParentAb = GetEnclosingViewport (pAb);
+                  if (pParentAb == NULL)
+                    pParentAb = ViewFrameTable[frame -1].FrAbstractBox;
+                }
               if (pos->PnTopUnit != UnAuto &&
                   pos->PnTopUnit != UnUndefined &&
                   pos->PnBottomUnit != UnAuto &&
@@ -2179,7 +2188,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   return FALSE;
                 }
               else if (!pAb->AbHeight.DimIsPosition &&
-                       pAb->AbHeight.DimAbRef == pParentAb)
+                       pAb->AbHeight.DimAbRef == pAb->AbEnclosing)
                 {
                   pAb->AbHeight.DimAbRef = pParentAb;
                   pAb->AbHeight.DimIsPosition = FALSE;
