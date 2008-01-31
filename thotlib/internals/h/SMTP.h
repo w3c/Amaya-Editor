@@ -115,7 +115,7 @@ public:
     wxMimeSlot(wxMultipartMimeContainer* mime);
     virtual ~wxMimeSlot();
     
-    virtual bool Write(wxOutputStream& out)const;
+    virtual bool Write(wxOutputStream& out, bool bInline = false)const;
     virtual wxMimeContentTransfertEncoding GetAutoContentTransfertEncoding()const;
 
     void SetContentType(const wxString& contentType){m_contentType = contentType;}

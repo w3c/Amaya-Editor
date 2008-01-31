@@ -167,7 +167,7 @@ wxMimeSlot::~wxMimeSlot()
 {
 }
 
-bool wxMimeSlot::Write(wxOutputStream& out)const
+bool wxMimeSlot::Write(wxOutputStream& out, bool bInline)const
 {
     if(m_dataType==wxMimeSlotContentMime)
         return m_mimeContent->Write(out);
@@ -183,7 +183,7 @@ bool wxMimeSlot::Write(wxOutputStream& out)const
     if(!iter->second.IsEmpty())
       msg << wxT("=") << iter->second;
   }
-    if(m_dataType==wxMimeSlotContentFile)
+    if(m_dataType==wxMimeSlotContentFile && !bInline)
     {
         msg << wxT("; name=\"") << m_fileContent.sendpath << wxT("\"");
     }
@@ -420,6 +420,7 @@ wxString wxMultipartMimeContainer::GenerateBoundary()const
 
 bool wxMultipartMimeContainer::Write(wxOutputStream& out)const
 {
+    bool bInline = (m_contentType==wxMIMETYPE_MULTIPART_ALTERNATIVE); 
     wxString msg;
     
     // Bufferize the header
@@ -446,7 +447,7 @@ bool wxMultipartMimeContainer::Write(wxOutputStream& out)const
         msg = wxT("--") + boundary + wxT("\r\n");
         out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
         wxMimeSlot* slot = (wxMimeSlot*) node->GetData();
-        slot->Write(out);
+        slot->Write(out, bInline);
         msg = wxT("\r\n");
         out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
     }
@@ -687,7 +688,8 @@ bool wxEmailMessage::Write(wxOutputStream& out)
         }
         else
         {
-            m_alternatives.Prepend(wxT("text/plain"), m_text);
+            if(!m_text.IsEmpty())
+              m_alternatives.Prepend(wxT("text/plain"), m_text);
             m_alternatives.SetMessage(wxT("This is a multi-part message in MIME format."));
             msg << wxT("MIME-version: 1.0\r\n");
             out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
@@ -697,7 +699,8 @@ bool wxEmailMessage::Write(wxOutputStream& out)
     else
     {
         m_alternatives.SetMessage(wxT("This is a multi-part message in MIME format."));
-        m_alternatives.Prepend(wxT("text/plain"), m_text);
+        if(!m_text.IsEmpty())
+          m_alternatives.Prepend(wxT("text/plain"), m_text);
         m_attachements.Prepend(&m_alternatives);
         
         msg = wxT("MIME-version: 1.0\r\n");
