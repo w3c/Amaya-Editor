@@ -269,12 +269,7 @@ bool wxMimeSlot::Write(wxOutputStream& out)const
             {
                 case wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE:
                 {
-                  wxFile f(m_fileContent.filename.GetFullPath());
-                  if(f.IsOpened())
-                    printf("file (qp) %s opened\n", (const char*)m_fileContent.filename.GetFullPath().mb_str(wxConvLibc));
-                  else
-                    printf("file (qp) %s not opened\n", (const char*)m_fileContent.filename.GetFullPath().mb_str(wxConvLibc));
-                  
+                    wxFile f(m_fileContent.filename.GetFullPath());
                     wxFileInputStream file(f);
                     wxQuotedPrintableOutputStream qp(out);
                     qp.Write(file);
@@ -283,12 +278,7 @@ bool wxMimeSlot::Write(wxOutputStream& out)const
                 }
                 case wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64:
                 {
-                  wxFile f(m_fileContent.filename.GetFullPath());
-                  if(f.IsOpened())
-                    printf("file (b64) %s opened\n", (const char*)m_fileContent.filename.GetFullPath().mb_str(wxConvLibc));
-                  else
-                    printf("file (b64) %s not opened\n", (const char*)m_fileContent.filename.GetFullPath().mb_str(wxConvLibc));
-
+                    wxFile f(m_fileContent.filename.GetFullPath());
                     wxFileInputStream file(f);
                     wxEndOfLineOutputStream eol(out);
                     wxBase64EncOutputStream base64(eol);
