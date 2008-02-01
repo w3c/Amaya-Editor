@@ -243,6 +243,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaStylePanel.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaTipOfTheDay.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaToolBar.cpp
 # End Source File
 # Begin Source File
