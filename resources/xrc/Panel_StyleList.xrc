@@ -6,7 +6,7 @@
       <object class="sizeritem">
         <object class="wxCheckListBox" name="wxID_CHECKLIST_CSS">
           <size>196,80</size>
-          <style>wxLB_EXTENDED</style>
+          <style>wxLB_EXTENDED|wxLB_HSCROLL</style>
         </object>
         <option>1</option>
         <flag>wxEXPAND</flag>

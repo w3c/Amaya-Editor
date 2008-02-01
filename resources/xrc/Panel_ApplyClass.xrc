@@ -7,6 +7,7 @@
         <object class="wxListBox" name="wxID_LIST_APPLYCLASS">
           <content/>
           <size>196,100</size>
+          <style>wxLB_HSCROLL</style>
           <tooltip>*Select a class or a pseudo-class*</tooltip>
         </object>
         <option>1</option>
