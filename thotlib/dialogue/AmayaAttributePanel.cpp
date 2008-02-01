@@ -186,17 +186,17 @@ void AmayaAttributeToolPanel::UpdateListColumnWidth()
   // Resize columns.
   long sz0, sz1;
   m_pAttrList->Freeze();
-  m_pAttrList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+  // m_pAttrList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
   m_pAttrList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
-  sz0 = m_pAttrList->GetColumnWidth(0);
+  // sz0 = m_pAttrList->GetColumnWidth(0);
   sz1 = m_pAttrList->GetColumnWidth(1);
-  m_pAttrList->SetColumnWidth(0, wxLIST_AUTOSIZE);
+  // m_pAttrList->SetColumnWidth(0, wxLIST_AUTOSIZE);
   m_pAttrList->SetColumnWidth(1, wxLIST_AUTOSIZE);
-  if(sz0 > m_pAttrList->GetColumnWidth(0))
-    m_pAttrList->SetColumnWidth(0, sz0);
+  // if(sz0 > m_pAttrList->GetColumnWidth(0))
+  //   m_pAttrList->SetColumnWidth(0, sz0);
   if(sz1 > m_pAttrList->GetColumnWidth(1))
     m_pAttrList->SetColumnWidth(1, sz1);
-    m_pAttrList->Thaw();
+  m_pAttrList->Thaw();
 }
 
 /*----------------------------------------------------------------------
