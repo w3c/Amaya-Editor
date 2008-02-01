@@ -28,10 +28,10 @@ extern ThotBool DeleteLink ( NotifyElement *event );
 extern ThotBool CheckMandatory ( NotifyAttribute *event );
 extern void AttributeChange ( int aType,
                               char * data );
-extern void GenerateInlineElement ( int eType,
-                                    int aType,
-                                    char * data,
-                                    ThotBool replace );
+extern ThotBool GenerateInlineElement ( int eType,
+                                        int aType,
+                                        char * data,
+                                        ThotBool replace );
 extern void SetREFattribute ( Element element,
                               Document doc,
                               char *targetURL,
@@ -177,10 +177,10 @@ extern ThotBool DeleteLink ( NotifyElement *event );
 extern ThotBool CheckMandatory ( NotifyAttribute *event );
 extern void AttributeChange ( int aType,
                                 char * data );
-extern void GenerateInlineElement ( int eType,
-                                      int aType,
-                                      char * data,
-                                      ThotBool replace );
+extern ThotBool GenerateInlineElement ( int eType,
+                                          int aType,
+                                          char * data,
+                                          ThotBool replace );
 extern void SetREFattribute ( Element element,
                                 Document doc,
                                 char *targetURL,
