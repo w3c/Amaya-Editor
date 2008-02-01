@@ -120,6 +120,7 @@ typedef struct Prop_General_t
   ThotBool S_Shortcuts;
   ThotBool S_Templates;
   ThotBool WarnCTab;
+  ThotBool ShowTipsStartup;
   int      ToolPanelLayout; /* 0=left, 1=right, 2=free */
 } Prop_General;
 

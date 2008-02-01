@@ -120,7 +120,8 @@
                     <item>sk (Slovak)</item>
                     <item>tr (Turkish)</item>
                     <item>zh-cn (Simplified Chinese)</item>
-                    <item>zh-tw (Traditional Chinese)</item></content>
+                    <item>zh-tw (Traditional Chinese)</item>
+                  </content>
                 </object>
                 <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
                 <border>5</border>
@@ -248,6 +249,11 @@
               <object class="sizeritem">
                 <object class="wxCheckBox" name="wxID_CHECK_WARNCTAB">
                   <label>*Avertir quand plusieurs onglets sont fermes*</label>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxCheckBox" name="wxID_CHECK_TIPOFTHEDAY">
+                  <label>*Afficher les TipOfTheDay au démarrage*</label>
                 </object>
               </object>
             </object>
@@ -552,7 +558,7 @@
           </object>
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_VALUE_REDIRECT">
-              <value></value>
+              <value/>
             </object>
             <option>0</option>
             <flag>wxALL|wxEXPAND</flag>
@@ -1351,7 +1357,7 @@
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_VALUE_EMAIL_SERVER_ADDRESS">
               <size>200,-1</size>
-              <style></style>
+              <style/>
             </object>
             <option>1</option>
             <flag>wxALL</flag>
@@ -1407,7 +1413,7 @@
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_VALUE_EMAIL_FROM_ADDRESS">
               <size>200,-1</size>
-              <style></style>
+              <style/>
             </object>
             <option>1</option>
             <flag>wxALL</flag>

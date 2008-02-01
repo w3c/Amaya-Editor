@@ -980,6 +980,7 @@ void GetGeneralConf (void)
   TtaGetEnvBoolean ("INSERT_NBSP", &(GProp_General.S_NBSP));
   TtaGetEnvBoolean ("SHOW_SEQUENCES", &(GProp_General.S_Shortcuts));
   TtaGetEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", &(GProp_General.WarnCTab));
+  TtaGetEnvBoolean ("TIP_OF_THE_DAY_STARTUP", &(GProp_General.ShowTipsStartup));
   GetEnvString ("HOME_PAGE", GProp_General.HomePage);
   GetEnvString ("LANG", GProp_General.DialogueLang);
   GetEnvString ("ACCESSKEY_MOD", ptr);
@@ -1109,6 +1110,7 @@ void SetGeneralConf (void)
   TtaSetEnvBoolean ("XML_EDIT_MODE", GProp_General.XMLEdit, TRUE);
   TtaSetEnvBoolean ("PASTE_LINE_BY_LINE", GProp_General.PasteLineByLine, TRUE);
   TtaSetEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", GProp_General.WarnCTab, TRUE);
+  TtaSetEnvBoolean ("TIP_OF_THE_DAY_STARTUP", GProp_General.ShowTipsStartup, TRUE);
   /* wx use its own callbacks and use only the boolean value : S_AutoSave */
   if (GProp_General.S_AutoSave)
     AutoSave_Interval = DEF_SAVE_INTVL;
@@ -1200,6 +1202,8 @@ void GetDefaultGeneralConf ()
   GProp_General.S_Shortcuts = TRUE;
 #endif /* _MACOS */
   TtaGetDefEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", &(GProp_General.WarnCTab));
+  TtaGetDefEnvBoolean ("TIP_OF_THE_DAY_STARTUP", &(GProp_General.ShowTipsStartup));
+  
   GetDefEnvString ("HOME_PAGE", GProp_General.HomePage);
   GetDefEnvString ("LANG", GProp_General.DialogueLang);
   GetDefEnvString ("ACCESSKEY_MOD", ptr);

@@ -6762,6 +6762,10 @@
 	<message xml:lang="tw">Amaya profile:</message>
 	<message xml:lang="sk">Profil Amaya:</message>
 </label>
+<label define="AM_SHOW_TIPS_STARTUP">
+	<message xml:lang="en">Show "Tip of the day" at startup</message>
+	<message xml:lang="fr">Afficher le "Conseil du jour" au démarrage</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>
