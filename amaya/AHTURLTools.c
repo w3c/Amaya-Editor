@@ -1911,7 +1911,7 @@ char   *AmayaParseUrl (const char *aName, char *relatedName, int wanted)
   char       rel[MAX_LENGTH];
   char      *p, *access;
   HTURI      given, related;
-  int        len;
+  int        len, l;
   char       used_sep;
   char      *used_str;
 
@@ -1978,65 +1978,117 @@ char   *AmayaParseUrl (const char *aName, char *relatedName, int wanted)
         related.fragment = 0;
       }
   
+  len = MAX_LENGTH - 1 - strlen (result);
   if (wanted & AMAYA_PARSE_PATH)
     {
       if (given.absolute)
         {
           /* All is given */
           if (wanted & AMAYA_PARSE_PUNCTUATION)
-            strcat (result, used_str);
-          strcat (result, given.absolute);
+            {
+              strcat (result, used_str);
+              len--;
+            }
+          l = strlen (given.absolute);
+          if (l <= len)
+            {
+              strcat (result, given.absolute);
+              len -= l;
+            }
         }
       else if (related.absolute)
         {
           /* Adopt path not name */
           strcat (result, used_str);
-          strcat (result, related.absolute);
+          len--;
+          l = strlen (related.absolute);
+          if (l <= len)
+            {
+              strcat (result, related.absolute);
+              len -= l;
+            }
           if (given.relative)
             {
               /* Search part? */
               p = strchr (result, '?');
               if (!p)
-                p=result+strlen(result)-1;
-              for (; *p!=used_sep; p--);	/* last / */
+                p = result + strlen(result) - 1;
+              for (; *p != used_sep; p--);	/* last / */
               /* Remove filename */
-              p[1]=0;
+              p[1] = EOS;
               /* Add given one */
-              strcat (result, given.relative);
-            }
+              l = strlen (given.relative);
+              if (l <= len)
+                {
+                  strcat (result, given.relative);
+                  len -= l;
+                }
+           }
         }
       else if (given.relative)
+        {
         /* what we've got */
-        strcat (result, given.relative);
+          l = strlen (given.relative);
+          if (l <= len)
+            {
+              strcat (result, given.relative);
+              len -= l;
+            }
+        }
       else if (related.relative)
-        strcat (result, related.relative);
+        {
+          l = strlen (related.relative);
+          if (l <= len)
+            {
+              strcat (result, related.relative);
+              len -= l;
+            }
+        }
       else
-        /* No inheritance */
-        strcat (result, used_str);
+        {
+          /* No inheritance */
+          strcat (result, used_str);
+          len--;
+        }
     }
   
   if (wanted & AMAYA_PARSE_ANCHOR)
-    if (given.fragment || related.fragment)
+    if (len && (given.fragment || related.fragment))
       {
         if (given.absolute && given.fragment)
           {
             /*Fixes for relURLs...*/
             if (wanted & AMAYA_PARSE_PUNCTUATION)
-              strcat (result, "#");
-            strcat (result, given.fragment); 
+              {
+                strcat (result, "#");
+                len --;
+              }
+                l = strlen (given.fragment);
+                if (l <= len)
+                  strcat (result, given.fragment);
           }
-        else if (!(given.absolute) && !(given.fragment))
-          strcat (result, "");
-        else
+        else if (given.absolute || given.fragment)
           {
             if (wanted & AMAYA_PARSE_PUNCTUATION)
-              strcat (result, "#");
-            strcat (result, given.fragment ? given.fragment : related.fragment); 
+              {
+                strcat (result, "#");
+                len--;
+              }
+            if (given.fragment)
+              {
+                l = strlen (given.fragment);
+                if (l <= len)
+                  strcat (result, given.fragment);
+               }
+            else
+              {
+                l = strlen (given.fragment);
+                if (l <= len)
+                  strcat (result, related.fragment);
+              }
           }
       }
-  len = strlen (result);
-  if ((return_value = (char *)TtaGetMemory (len + 1)) != NULL)
-    strcpy (return_value, result);
+  return_value = TtaStrdup (result);
   return (return_value);		/* exactly the right length */
 }
 
