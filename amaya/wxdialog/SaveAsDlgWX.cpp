@@ -76,7 +76,8 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
     {
       if ( p_page == p_notebook->GetPage(page_id))
         {
-          if ( doc_type == docSource || doc_type == docCSS ||  doc_type == docText)
+          if ( doc_type == docSource || doc_type == docCSS ||
+               doc_type == docText || doc_type == docImage)
             p_notebook->DeletePage(page_id);
           else
             p_notebook->SetPageText (page_id,
@@ -89,7 +90,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
     }
 
   // Document format radio box
-  if ( doc_type == docSource || doc_type == docCSS ||  doc_type == docText)
+  if ( doc_type == docSource || doc_type == docCSS ||  doc_type == docText ||  doc_type == docImage)
     {
       // now hide unused field
       p_obj = XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox);

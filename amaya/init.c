@@ -906,14 +906,15 @@ void UpdateEditorMenus (Document doc)
   profile = TtaGetDocumentProfile (doc);
   isXhtml11 = (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat &&
                profile != L_Strict && profile != L_Basic);
-  if (DocumentTypes[doc] == docCSS || DocumentTypes[doc] == docText)
+  if (DocumentTypes[doc] == docCSS || DocumentTypes[doc] == docText ||
+      DocumentTypes[doc] == docImage)
       TtaSetItemOff (doc, 1, Style, BShowAppliedStyle);
   else
       TtaSetItemOn (doc, 1, Style, BShowAppliedStyle);
 
   /* update specific menu entries */
   if (DocumentTypes[doc] == docCSS || DocumentTypes[doc] == docSource ||
-      DocumentTypes[doc] == docText)
+      DocumentTypes[doc] == docText || DocumentTypes[doc] == docImage)
     {
       TtaSetMenuOff (doc, 1, Types);
       TtaSetMenuOff (doc, 1, Tools);
@@ -927,93 +928,107 @@ void UpdateEditorMenus (Document doc)
 
   /* Update the doctype menu */
   UpdateDoctypeMenu (doc);
-  /* structure information is active only in the structure view */
-  if (profile == L_Basic)
+  if (DocumentTypes[doc] == docImage)
     {
-      TtaSetItemOff (doc, 1, Types, BStyle);
-      TtaSetItemOff (doc, 1, Types, BScript);
-      TtaSetItemOff (doc, 1, Types, BNoScript);
+      // it's not actually a HTML document
+      TtaSetItemOff (doc, 1, Views, BShowStructure);
+      TtaSetItemOff (doc, 1, Views, BShowSource);
+      TtaSetItemOff (doc, 1, Views, BShowFormatted);
+      TtaSetItemOff (doc, 1, Views, BShowLinks);
+      TtaSetItemOff (doc, 1, Views, BShowAlternate);
+      TtaSetItemOff (doc, 1, Views, BShowToC);
+      TtaSetItemOff (doc, 1, Views, TSplitHorizontally);
+      TtaSetItemOff (doc, 1, Views, TSplitVertically);
     }
-  else
+  else if (DocumentTypes[doc] == docHTML)
     {
-      TtaSetItemOn (doc, 1, Types, BStyle);
-      TtaSetItemOn (doc, 1, Types, BScript);
-      TtaSetItemOn (doc, 1, Types, BNoScript);
-    }
-  /* invalid all table edits as long as the selection is out of a table */
-  if (TtaIsDocumentSelected (doc))
-    SetTableMenuOn (doc, 1);
-  else
-    SetTableMenuOff (doc, 1);
-
-  if (DocumentTypes[doc] == docHTML ||
-      DocumentTypes[doc] == docAnnot ||
-      DocumentTypes[doc] == docSVG ||
-      DocumentTypes[doc] == docMath ||
-      DocumentTypes[doc] == docXml ||
-      DocumentTypes[doc] == docImage)
-    {
-      TtaSetItemOn (doc, 1, Tools, BSpellCheck);
-      TtaSetMenuOn (doc, 1, Style);
-      if (DocumentTypes[doc] == docMath)
-        TtaSetItemOn (doc, 1, Tools, BTransform);
+      /* structure information is active only in the structure view */
+      if (profile == L_Basic)
+        {
+          TtaSetItemOff (doc, 1, Types, BStyle);
+          TtaSetItemOff (doc, 1, Types, BScript);
+          TtaSetItemOff (doc, 1, Types, BNoScript);
+        }
       else
         {
-          if (DocumentTypes[doc] == docHTML)
+          TtaSetItemOn (doc, 1, Types, BStyle);
+          TtaSetItemOn (doc, 1, Types, BScript);
+          TtaSetItemOn (doc, 1, Types, BNoScript);
+        }
+      /* invalid all table edits as long as the selection is out of a table */
+      if (TtaIsDocumentSelected (doc))
+        SetTableMenuOn (doc, 1);
+      else
+        SetTableMenuOff (doc, 1);
+    
+      if (DocumentTypes[doc] == docHTML ||
+          DocumentTypes[doc] == docAnnot ||
+          DocumentTypes[doc] == docSVG ||
+          DocumentTypes[doc] == docMath ||
+          DocumentTypes[doc] == docXml ||
+          DocumentTypes[doc] == docImage)
+        {
+          TtaSetItemOn (doc, 1, Tools, BSpellCheck);
+          TtaSetMenuOn (doc, 1, Style);
+          if (DocumentTypes[doc] == docMath)
             TtaSetItemOn (doc, 1, Tools, BTransform);
-          TtaSetMenuOn (doc, 1, Types);
-          TtaSetMenuOn (doc, 1, Links);
-
-        }
-
-      view = TtaGetViewFromName (doc, "Structure_view");
-      if (view != 0 && TtaIsViewOpen (doc, view))
-        {
-          /* update specific menu entries */
-          TtaSetItemOn (doc, view, Edit_, BCut);
-          TtaSetItemOn (doc, view, Edit_, BPaste);
-          TtaSetItemOn (doc, view, Edit_, BClear);
-          TtaSetItemOn (doc, view, Tools, BSpellCheck);
-          TtaSetItemOn (doc, view, Tools, BTransform);
-          if (DocumentTypes[doc] != docMath)
-            TtaSetMenuOn (doc, view, Types);
-        }
-      view = TtaGetViewFromName (doc, "Alternate_view");
-      if (view != 0 && TtaIsViewOpen (doc, view))
-        {
-          /* update specific menu entries */
-          TtaSetItemOn (doc, view, Edit_, BCut);
-          TtaSetItemOn (doc, view, Edit_, BPaste);
-          TtaSetItemOn (doc, view, Edit_, BClear);
-          TtaSetItemOn (doc, view, Tools, BSpellCheck);
-        }
-      view = TtaGetViewFromName (doc, "Links_view");
-      if (view != 0 && TtaIsViewOpen (doc, view))
-        {
-          /* update specific menu entries */
-          TtaSetItemOn (doc, view, Edit_, BCut);
-          TtaSetItemOn (doc, view, Edit_, BPaste);
-          TtaSetItemOn (doc, view, Edit_, BClear);
-          TtaSetItemOn (doc, view, Tools, BSpellCheck);
-          TtaSetItemOn (doc, view, Tools, BTransform);
-          if (DocumentTypes[doc] != docMath)
-            TtaSetMenuOn (doc, view, Types);
-        }
-      view = TtaGetViewFromName (doc, "Table_of_contents");
-      if (view != 0 && TtaIsViewOpen (doc, view))
-        {
-          /* update specific menu entries */
-          TtaSetItemOn (doc, view, Edit_, BCut);
-          TtaSetItemOn (doc, view, Edit_, BPaste);
-          TtaSetItemOn (doc, view, Edit_, BClear);
-          TtaSetItemOn (doc, view, Tools, BSpellCheck);
-          TtaSetItemOn (doc, view, Tools, BTransform);
+          else
+            {
+              if (DocumentTypes[doc] == docHTML)
+                TtaSetItemOn (doc, 1, Tools, BTransform);
+              TtaSetMenuOn (doc, 1, Types);
+              TtaSetMenuOn (doc, 1, Links);
+          
+            }
+        
+          view = TtaGetViewFromName (doc, "Structure_view");
+          if (view != 0 && TtaIsViewOpen (doc, view))
+            {
+              /* update specific menu entries */
+              TtaSetItemOn (doc, view, Edit_, BCut);
+              TtaSetItemOn (doc, view, Edit_, BPaste);
+              TtaSetItemOn (doc, view, Edit_, BClear);
+              TtaSetItemOn (doc, view, Tools, BSpellCheck);
+              TtaSetItemOn (doc, view, Tools, BTransform);
+              if (DocumentTypes[doc] != docMath)
+                TtaSetMenuOn (doc, view, Types);
+            }
+          view = TtaGetViewFromName (doc, "Alternate_view");
+          if (view != 0 && TtaIsViewOpen (doc, view))
+            {
+              /* update specific menu entries */
+              TtaSetItemOn (doc, view, Edit_, BCut);
+              TtaSetItemOn (doc, view, Edit_, BPaste);
+              TtaSetItemOn (doc, view, Edit_, BClear);
+              TtaSetItemOn (doc, view, Tools, BSpellCheck);
+            }
+          view = TtaGetViewFromName (doc, "Links_view");
+          if (view != 0 && TtaIsViewOpen (doc, view))
+            {
+              /* update specific menu entries */
+              TtaSetItemOn (doc, view, Edit_, BCut);
+              TtaSetItemOn (doc, view, Edit_, BPaste);
+              TtaSetItemOn (doc, view, Edit_, BClear);
+              TtaSetItemOn (doc, view, Tools, BSpellCheck);
+              TtaSetItemOn (doc, view, Tools, BTransform);
+              if (DocumentTypes[doc] != docMath)
+                TtaSetMenuOn (doc, view, Types);
+            }
+          view = TtaGetViewFromName (doc, "Table_of_contents");
+          if (view != 0 && TtaIsViewOpen (doc, view))
+            {
+              /* update specific menu entries */
+              TtaSetItemOn (doc, view, Edit_, BCut);
+              TtaSetItemOn (doc, view, Edit_, BPaste);
+              TtaSetItemOn (doc, view, Edit_, BClear);
+              TtaSetItemOn (doc, view, Tools, BSpellCheck);
+              TtaSetItemOn (doc, view, Tools, BTransform);
+            }
         }
     }
-
 #ifdef _JAVA
-  /* Update the javascript menus */
-  UpdateJavascriptMenus ();
+    /* Update the javascript menus */
+    UpdateJavascriptMenus ();
 #endif /* _JAVA */
   TtaRefreshTopMenuStats (doc, -1);
 }
@@ -4138,7 +4153,11 @@ void ShowSource (Document doc, View view)
                 TtaSetAccessRight (root, ReadOnly, sourceDoc);
             }
 #endif /* TEMPLATES */
-
+          if (DocumentTypes[doc] == docImage)
+            {
+              root = TtaGetRootElement (sourceDoc);
+              TtaSetAccessRight (root, ReadOnly, doc);
+            }
           /* update back/forward buttons */
           if (HasPreviousDoc (doc))
             SetArrowButton (DocumentSource[doc], TRUE, TRUE);
