@@ -555,7 +555,8 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
       margin = !strcmp (data, "margin-left");
       start = strstr (buffer, data);
       if (start &&
-          (start != buffer || start[-1] != SPACE || start[-1] != ';' || start[lg] != ':'))
+          (start != buffer || start[-1] != SPACE || start[-1] != ';') &&
+		  start[lg] != ':')
         start = NULL;
       *property = ':';
       if (start)
