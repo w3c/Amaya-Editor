@@ -6693,6 +6693,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
               while (*selector != EOS && *selector != ']' &&
                      *selector != '=' && *selector != '~' &&
                      *selector != '|' && *selector != '^' &&
+                      *selector != '$' &&  *selector != '*' &&
                      !TtaIsBlank (selector))
                 *cur++ = *selector++;
               /* close the word (attribute name) */
@@ -6733,8 +6734,12 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                       attrmatch[0] = Txtword;
                       selector++;
                     }
-                  else if (*selector == '|')
+                  else if (*selector == '|' || *selector == '$' || *selector == '*')
                     {
+                      if (*selector == '$')
+                        CSSPrintError ("Warning: \"$=\" is CSS3 syntax", NULL);
+                      if (*selector == '*')
+                        CSSPrintError ("Warning: \"*=\" is CSS3 syntax", NULL);
                       attrmatch[0] = Txtsubstring;
                       selector++;
                     }
