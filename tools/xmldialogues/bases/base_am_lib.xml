@@ -3851,6 +3851,23 @@
 <message xml:lang="tw">附加一列</message>
 <message xml:lang="sk">Vložiť stĺpec vpravo</message></label>
 
+<label define="TIP_DIALOG_TITLE">
+<message xml:lang="en">Tip of the day</message>
+<message xml:lang="fr">Conseil du jour</message>
+</label>
+<label define="TIP_DIALOG_STARTUP">
+<message xml:lang="en">Show tip at startup</message>
+<message xml:lang="fr">Voir les conseils au démarrage</message>
+</label>
+<label define="TIP_DIALOG_NEXT_TIP">
+<message xml:lang="en">Next tip</message>
+<message xml:lang="fr">Conseil suivant</message>
+</label>
+<label define="TIP_DIALOG_DID_YOU_KNOW">
+<message xml:lang="en">Did you know...</message>
+<message xml:lang="fr">Saviez vous...</message>
+</label>
+
 <label define="TIP_AMAYA_PROFILES">
 <message xml:lang="en">Amaya can be adapted to user's preferences: 4 different Amaya profiles are provided to adapt the set of menu entries and panels to your usage.</message>
 <message xml:lang="fr">4 profils différents sont fournis pour adapter l'ensemble des menus et des barres d'outils à votre usage.</message>

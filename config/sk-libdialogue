@@ -255,14 +255,18 @@
 253 Vložiť riadok pod
 254 Vložiť stĺpec vľavo
 255 Vložiť stĺpec vpravo
-256 **Amaya can be adapted to user's preferences: 4 different Amaya profiles are provided to adapt the set of menu entries and panels to your usage.
-257 **Panels can be displayed on the left or on the right or customized for each panel (see Preferences).
-258 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to the right element.
-259 **You can drag the document tab to split notebook to view two or more documents at same time.
-260 **In customizable mode, you can drag panels to change their places or to make them floating.
-261 **In customizable mode, you can move panels in two or more columns at each side.
-262 **You can switch editing mode (Text/XML) by clicking the little button in status bar at bottom right.
-263 **You can show errors by clicking the red button in the status bar at bottom right.
-264 **You can select ancestor element by clicking it in the path control in the status bar at bottom left.
-265 **You can easily switch of document with the dedicated menu by clicking the little arrow at right of document tabs.
-266 **
+256 **Tip of the day
+257 **Show tip at startup
+258 **Next tip
+259 **Did you know...
+260 **Amaya can be adapted to user's preferences: 4 different Amaya profiles are provided to adapt the set of menu entries and panels to your usage.
+261 **Panels can be displayed on the left or on the right or customized for each panel (see Preferences).
+262 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to the right element.
+263 **You can drag the document tab to split notebook to view two or more documents at same time.
+264 **In customizable mode, you can drag panels to change their places or to make them floating.
+265 **In customizable mode, you can move panels in two or more columns at each side.
+266 **You can switch editing mode (Text/XML) by clicking the little button in status bar at bottom right.
+267 **You can show errors by clicking the red button in the status bar at bottom right.
+268 **You can select ancestor element by clicking it in the path control in the status bar at bottom left.
+269 **You can easily switch of document with the dedicated menu by clicking the little arrow at right of document tabs.
+270 **
