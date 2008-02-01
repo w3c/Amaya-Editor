@@ -74,7 +74,7 @@
 </svg>
 </div>
 
-<h1>Bienvenue à Amaya 9.99</h1>
+<h1>Bienvenue à Amaya 10</h1>
 
 <p>Amaya est un client Web qui sert à la fois de navigateur et d'outil
 d'édition. Il a été conçu par le <a href="http://www.w3.org/">W3C</a> et l'<a
@@ -91,7 +91,7 @@ CSS.</p>
 <div class="body">
 <p>Le saviez-vous ?</p>
 <dl>
-  <dt>Choisisser votre profil</dt>
+  <dt>Choisissez votre profil</dt>
     <dd>4 profils différents sont fournis pour adapter l'ensemble des menus
       et des barres d'outils à votre usage. En même temps, les panneaux
       d'outils peuvent être affichés à gauche ou à droite ou à votre
