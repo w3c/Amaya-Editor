@@ -19,7 +19,7 @@
 
 #ifndef __STYLE_H__
 #define __STYLE_H__
-#define MAX_ANCESTORS 10
+#define MAX_ANCESTORS 15
 
 struct unit_def
 {
