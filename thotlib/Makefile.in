@@ -228,6 +228,7 @@ EDITOR_OBJ = \
 	dialogue/AmayaSpeCharPanel.o \
 	dialogue/AmayaStatsThread.o \
 	dialogue/AmayaPathControl.o \
+  dialogue/AmayaTipOfTheDay.o \
 	dialogue/appdialogue_wx.o \
 	dialogue/callback.o\
 	dialogue/callbackinit.o \

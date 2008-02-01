@@ -33,6 +33,8 @@
 #include "Elemlist.h"
 #include "insertelem_f.h"
 
+#include "tips.h"
+
 #ifdef TEMPLATES
 #include "Template.h"
 #include "templates.h"
@@ -6750,6 +6752,11 @@ void InitAmaya (NotifyEvent * event)
   p.param1 = 1; /* init action */
   p.param2 = (void*)pMathEntityTable;
   TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
+  
+  /* Show TipOfTheDay dialog. */
+  TtaSetEnvBoolean("TIP_OF_THE_DAY_STARTUP", TRUE, FALSE);
+  if(TtaShowTipOfTheDayAtStartup())
+    TtaShowTipOfTheDay();
 }
 
 /*----------------------------------------------------------------------
