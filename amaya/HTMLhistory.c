@@ -18,6 +18,7 @@
 #include "helpmenu.h"
 #include "css.h"
 #include "MENUconf.h"
+#include "tips.h"
 
 #include "AHTURLTools_f.h"
 #include "HTMLhistory_f.h"
@@ -1198,6 +1199,18 @@ void HelpAccess (Document document, View view)
 {
   DisplayHelp (document, ACCESS);
 }
+
+/*----------------------------------------------------------------------
+  Typ of the day
+  -----------------------------------------------------------------------*/
+void TipOfTheDay (Document document, View view)
+{
+  TtaShowTipOfTheDay();
+}
+
+
+
+
 
 /*----------------------  Password Manager -----------------------------*/
 

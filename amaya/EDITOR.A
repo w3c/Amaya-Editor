@@ -391,6 +391,8 @@ MENUS
 	Help_ button:BHelpConfigure -> HelpConfigure;
 	Help_ button:BHelpShortCuts -> HelpShortCuts;
 	Help_ button:BHelpAccess -> HelpAccess;
+	Help_ Separator;
+	Help_ button:BTipOfTheDay -> TipOfTheDay;
 	END;
 
 FUNCTIONS

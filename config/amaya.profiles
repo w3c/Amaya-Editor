@@ -118,6 +118,7 @@ HelpAttributes
 HelpAmaya
 HelpAtW3C
 
+
 #-------------------- Document Profiles -------------------------------------
 # Give the list of active functions
 ################# XHTML-TRANSITIONAL
@@ -448,6 +449,7 @@ HelpIndex
 HelpSearching
 HelpSelecting
 HelpLocal
+TipOfTheDay
 
 ########### PRINTING
 [print]

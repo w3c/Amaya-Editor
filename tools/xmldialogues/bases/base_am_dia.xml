@@ -4730,4 +4730,7 @@
 <message xml:lang="cn">Accessibility in Amaya</message>
 <message xml:lang="tw">Accessibility in Amaya</message>
 <message xml:lang="sk">Zjednodušenie ovládania</message></label>
+<label define="BTipOfTheDay">
+<message xml:lang="en">Tip of the day...</message>
+<message xml:lang="fr">Conseil du jour...</message></label>
 <label define="MAX_EDITOR_LABEL"></label></messages></base>
