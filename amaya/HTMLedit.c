@@ -622,7 +622,7 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
   If the selection is within a style element and the element type is
   a span adds the data into the style element.
   -----------------------------------------------------------------------*/
-void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
+ThotBool GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
 {
   Element         el, firstSel, lastSel, next, in_line, sibling, child;
   Element         last, parent, enclose, selected;
@@ -659,7 +659,7 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
             {
               /* the selected element is read-only */
               TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_READONLY);
-              return;
+              return FALSE;
             }
          
 #ifdef TEMPLATES
@@ -679,7 +679,7 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
                       if (!Template_CanInsertElementInBagElement(doc, elType, parent))
                         {
                           TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
-                          return;
+                          return FALSE;
                         }
                     }
                 }
@@ -1476,6 +1476,7 @@ void GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
             }
         }
     }
+  return done;
   //if (!done)
   //  TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
 }
@@ -2491,25 +2492,42 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
           TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
           if (createLink)
             {
-              GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_HREF_, "", TRUE);
-              // get the created anchor
-              TtaGiveFirstSelectedElement (doc, &anchor, &firstChar, &i);
-              if (anchor)
+              if(GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_HREF_, "", TRUE))
                 {
-                  elType = TtaGetElementType (anchor);
-                  s = TtaGetSSchemaName (elType.ElSSchema);
-                  while (anchor &&
-                         (elType.ElTypeNum != HTML_EL_Anchor || strcmp (s, "HTML")) &&
-                         (elType.ElTypeNum != SVG_EL_a || strcmp (s, "SVG")))
-                  {
-                    anchor = TtaGetParent (anchor);
-                    elType = TtaGetElementType (anchor);
-                    s = TtaGetSSchemaName (elType.ElSSchema);
-                  }
+                  // get the created anchor
+                  TtaGiveFirstSelectedElement (doc, &anchor, &firstChar, &i);
+                  if (anchor)
+                    {
+                      elType = TtaGetElementType (anchor);
+                      s = TtaGetSSchemaName (elType.ElSSchema);
+                      while (anchor &&
+                             (elType.ElTypeNum != HTML_EL_Anchor || strcmp (s, "HTML")) &&
+                             (elType.ElTypeNum != SVG_EL_a || strcmp (s, "SVG")))
+                      {
+                        anchor = TtaGetParent (anchor);
+                        elType = TtaGetElementType (anchor);
+                        s = TtaGetSSchemaName (elType.ElSSchema);
+                      }
+                    }
+                }
+              else
+                {
+                  /* ask Thot to display changes made in the document */
+                  TtaSetDisplayMode (doc, dispMode);
+                  TtaCloseUndoSequence (doc);
+                  return;
                 }
             }
           else
-            GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_ID, "", TRUE);
+            {
+              if(!GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_ID, "", TRUE))
+                {
+                  /* ask Thot to display changes made in the document */
+                  TtaSetDisplayMode (doc, dispMode);
+                  TtaCloseUndoSequence (doc);
+                  return;
+                }
+            }
         }
     }
 
