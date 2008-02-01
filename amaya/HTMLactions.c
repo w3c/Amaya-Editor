@@ -3760,7 +3760,9 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
               // display the char index
               sprintf (message, "Character: %d", index);
               TtaSetStatus (doc, 1, message, NULL);
+#ifndef _MACOS
               TtaRaiseView (doc, 1);
+#endif /* _MACOS */
             }
         }
       else
