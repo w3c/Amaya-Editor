@@ -3598,7 +3598,7 @@ Document LoadDocument (Document doc, char *pathname,
           docType == docMath)
         plainText = FALSE;
       else
-        plainText = (docProfile == L_Other || docProfile == L_CSS);
+        plainText = (docProfile == L_Other || docProfile == L_CSS || docProfile == L_TEXT);
     
 #ifdef BOOKMARKS
       if (docType == docBookmark)
