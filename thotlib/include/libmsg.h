@@ -258,6 +258,17 @@
 #define CreateRowA		253
 #define CreateColumnB		254
 #define CreateColumnA		255
-#define TMSG_LIB_MSG_MAX		256
+#define TIP_AMAYA_PROFILES		256
+#define TIP_PANEL_MODES		257
+#define TIP_PARENT_SELECTION		258
+#define TIP_SPLIT_NOTEBOOK		259
+#define TIP_MOVE_PANELS		260
+#define TIP_MANY_COLUMNS		261
+#define TIP_EDITING_MODE		262
+#define TIP_ERROR_BUTTON		263
+#define TIP_PATH_CONTROL		264
+#define TIP_DOCUMENT_LIST_MENU		265
+#define TIP_		266
+#define TMSG_LIB_MSG_MAX		267
 
 #endif

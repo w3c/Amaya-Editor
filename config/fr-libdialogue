@@ -255,3 +255,14 @@
 253 Ajouter une ligne
 254 Insérer une colonne
 255 Ajouter une colonne
+256 4 profils différents sont fournis pour adapter l'ensemble des menus et des barres d'outils à votre usage.
+257 Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance pour chaque panneau (voir les Préférences).
+258 Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, ainsi les fonctions d'édition (copier, coller, attributs, etc.) s'appliqueront à ces éléments structurés.
+259 Vous pouvez déplacer l'onglet d'un document pour scinder les vues pour afficher plusieurs documents en même temps.
+260 En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les changer de places ou les rendre flottants.
+261 En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les placer en plusieurs colonnes de chaque coté.
+262 Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton dans la barre de status en bas à droite.
+263 Vous pouvez afficher les erreurs en cliquant sur le bouton rouge dans la barre de status en bas à droite.
+264 Vous pouvez sélectionner un élément ancêtre en cliquant sur son nom dans le contrôle de chemin dans la barre de status en bas à gauche.
+265 Vous pouvez rapidement changer de document en le sélectionnant dans le menu dédié en cliquant sur la flèche à droite des onglets.
+266 
