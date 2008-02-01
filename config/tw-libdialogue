@@ -259,14 +259,14 @@
 257 **Show tip at startup
 258 **Next tip
 259 **Did you know...
-260 **Amaya can be adapted to user's preferences: 4 different Amaya profiles are provided to adapt the set of menu entries and panels to your usage.
-261 **Panels can be displayed on the left or on the right or customized for each panel (see Preferences).
-262 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to the right element.
-263 **You can drag the document tab to split notebook to view two or more documents at same time.
-264 **In customizable mode, you can drag panels to change their places or to make them floating.
-265 **In customizable mode, you can move panels in two or more columns at each side.
-266 **You can switch editing mode (Text/XML) by clicking the little button in status bar at bottom right.
-267 **You can show errors by clicking the red button in the status bar at bottom right.
-268 **You can select ancestor element by clicking it in the path control in the status bar at bottom left.
-269 **You can easily switch of document with the dedicated menu by clicking the little arrow at right of document tabs.
+260 **Amaya can be adapted to your usage: four different profiles are provided with different set of menu entries and panels. See Preferences.
+261 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
+262 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
+263 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
+264 **With the customizable mode, you can drag panels to change their order or to make them floating.
+265 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
+266 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
+267 **When there is red button in the status bar, you can show errors by clicking on it.
+268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
+269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
 270 **

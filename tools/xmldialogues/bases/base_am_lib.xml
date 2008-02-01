@@ -3869,44 +3869,44 @@
 </label>
 
 <label define="TIP_AMAYA_PROFILES">
-<message xml:lang="en">Amaya can be adapted to user's preferences: 4 different Amaya profiles are provided to adapt the set of menu entries and panels to your usage.</message>
-<message xml:lang="fr">4 profils différents sont fournis pour adapter l'ensemble des menus et des barres d'outils à votre usage.</message>
+<message xml:lang="en">Amaya can be adapted to your usage: four different profiles are provided with different set of menu entries and panels. See Preferences.</message>
+<message xml:lang="fr">Amaya s'adapte à votre usage : quatre profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.</message>
 </label>
 <label define="TIP_PANEL_MODES">
-<message xml:lang="en">Panels can be displayed on the left or on the right or customized for each panel (see Preferences).</message>
-<message xml:lang="fr">Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance pour chaque panneau (voir les Préférences).</message>
+<message xml:lang="en">Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.</message>
+<message xml:lang="fr">Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance panneau par panneau. Voir les Préférences.</message>
 </label>
 <label define="TIP_PARENT_SELECTION">
-<message xml:lang="en">With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to the right element.</message>
-<message xml:lang="fr">Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, ainsi les fonctions d'édition (copier, coller, attributs, etc.) s'appliqueront à ces éléments structurés.</message>
+<message xml:lang="en">With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.</message>
+<message xml:lang="fr">Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, pour appliquer les fonctions d'édition (copier, coller, attributs, etc.) à ces éléments.</message>
 </label>
 <label define="TIP_SPLIT_NOTEBOOK">
-<message xml:lang="en">You can drag the document tab to split notebook to view two or more documents at same time.</message>
-<message xml:lang="fr">Vous pouvez déplacer l'onglet d'un document pour scinder les vues pour afficher plusieurs documents en même temps.</message>
+<message xml:lang="en">You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.</message>
+<message xml:lang="fr">Vous pouvez afficher deux documents côte à côte dans la même fenêtre en déplaçant un onglet de document sur un bord du document affiché.</message>
 </label>
 <label define="TIP_MOVE_PANELS">
-<message xml:lang="en">In customizable mode, you can drag panels to change their places or to make them floating.</message>
-<message xml:lang="fr">En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les changer de places ou les rendre flottants.</message>
+<message xml:lang="en">With the customizable mode, you can drag panels to change their order or to make them floating.</message>
+<message xml:lang="fr">En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les changer l'ordre ou les rendre flottants.</message>
 </label>
 <label define="TIP_MANY_COLUMNS">
-<message xml:lang="en">In customizable mode, you can move panels in two or more columns at each side.</message>
-<message xml:lang="fr">En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les placer en plusieurs colonnes de chaque coté.</message>
+<message xml:lang="en">With the customizable mode, you can generate several panels bars on each side by dragging panels.</message>
+<message xml:lang="fr">En mode paramétrable, vous pouvez engendrer plusieurs barres d'outils de chaque côté en déplaçant les panneaux d'outils.</message>
 </label>
 <label define="TIP_EDITING_MODE">
-<message xml:lang="en">You can switch editing mode (Text/XML) by clicking the little button in status bar at bottom right.</message>
-<message xml:lang="fr">Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton dans la barre de status en bas à droite.</message>
+<message xml:lang="en">You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.</message>
+<message xml:lang="fr">Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton correspondant dans la barre d'état.</message>
 </label>
 <label define="TIP_ERROR_BUTTON">
-<message xml:lang="en">You can show errors by clicking the red button in the status bar at bottom right.</message>
-<message xml:lang="fr">Vous pouvez afficher les erreurs en cliquant sur le bouton rouge dans la barre de status en bas à droite.</message>
+<message xml:lang="en">When there is red button in the status bar, you can show errors by clicking on it.</message>
+<message xml:lang="fr">Quand il y a un bouton rouge dans la barre d'état, vous pouvez afficher les erreurs en cliquant dessus.</message>
 </label>
 <label define="TIP_PATH_CONTROL">
-<message xml:lang="en">You can select ancestor element by clicking it in the path control in the status bar at bottom left.</message>
-<message xml:lang="fr">Vous pouvez sélectionner un élément ancêtre en cliquant sur son nom dans le contrôle de chemin dans la barre de status en bas à gauche.</message>
+<message xml:lang="en">You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.</message>
+<message xml:lang="fr">Vous pouvez sélectionner un ancêtre de la sélection courante en cliquant sur son nom dans le chemin dans la barre d'état.</message>
 </label>
 <label define="TIP_DOCUMENT_LIST_MENU">
-<message xml:lang="en">You can easily switch of document with the dedicated menu by clicking the little arrow at right of document tabs.</message>
-<message xml:lang="fr">Vous pouvez rapidement changer de document en le sélectionnant dans le menu dédié en cliquant sur la flèche à droite des onglets.</message>
+<message xml:lang="en">You can move to another tab with the menu displayed by the arrow button at right of document tabs.</message>
+<message xml:lang="fr">Vous pouvez changer d'onglet avec le menu affiché par le bouton flèche à droite des onglets.</message>
 </label>
 
 <label define="TIP_">

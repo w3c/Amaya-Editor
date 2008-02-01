@@ -259,14 +259,14 @@
 257 Voir les conseils au démarrage
 258 Conseil suivant
 259 Saviez vous...
-260 4 profils différents sont fournis pour adapter l'ensemble des menus et des barres d'outils à votre usage.
-261 Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance pour chaque panneau (voir les Préférences).
-262 Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, ainsi les fonctions d'édition (copier, coller, attributs, etc.) s'appliqueront à ces éléments structurés.
-263 Vous pouvez déplacer l'onglet d'un document pour scinder les vues pour afficher plusieurs documents en même temps.
-264 En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les changer de places ou les rendre flottants.
-265 En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les placer en plusieurs colonnes de chaque coté.
-266 Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton dans la barre de status en bas à droite.
-267 Vous pouvez afficher les erreurs en cliquant sur le bouton rouge dans la barre de status en bas à droite.
-268 Vous pouvez sélectionner un élément ancêtre en cliquant sur son nom dans le contrôle de chemin dans la barre de status en bas à gauche.
-269 Vous pouvez rapidement changer de document en le sélectionnant dans le menu dédié en cliquant sur la flèche à droite des onglets.
+260 Amaya s'adapte à votre usage : quatre profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.
+261 Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance panneau par panneau. Voir les Préférences.
+262 Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, pour appliquer les fonctions d'édition (copier, coller, attributs, etc.) à ces éléments.
+263 Vous pouvez afficher deux documents côte à côte dans la même fenêtre en déplaçant un onglet de document sur un bord du document affiché.
+264 En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les changer l'ordre ou les rendre flottants.
+265 En mode paramétrable, vous pouvez engendrer plusieurs barres d'outils de chaque côté en déplaçant les panneaux d'outils.
+266 Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton correspondant dans la barre d'état.
+267 Quand il y a un bouton rouge dans la barre d'état, vous pouvez afficher les erreurs en cliquant dessus.
+268 Vous pouvez sélectionner un ancêtre de la sélection courante en cliquant sur son nom dans le chemin dans la barre d'état.
+269 Vous pouvez changer d'onglet avec le menu affiché par le bouton flèche à droite des onglets.
 270 
