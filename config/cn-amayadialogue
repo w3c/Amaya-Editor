@@ -46,18 +46,18 @@
 44 Japanese (ISO-2022-JP)
 45 Japanese (EUC-JP)
 46 Japanese (Shift-JIS)
-47 后退(&B)
-48 前进(&F)
-49 保存(&S)
-50 另存为(&A)...
+47 后退
+48 前进
+49 保存
+50 另存为 ...
 51 **Save all
-52 同步(&Y)
+52 同步
 53 **Send by mail ...
-54 打印设置(&U)...
-55 打印(&P)
-56 关闭标签(&C)
-57 关闭窗口(&W)
-58 退出(&X)
+54 打印设置...
+55 打印
+56 关闭标签
+57 关闭窗口
+58 退出
 59 **New tab
 60 **Refresh tab
 61 **Refresh all tabs

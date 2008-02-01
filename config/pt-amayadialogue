@@ -46,18 +46,18 @@
 44 Japanese (ISO-2022-JP)
 45 Japanese (EUC-JP)
 46 Japanese (Shift-JIS)
-47 Voltar(&B)
-48 Avançar(&F)
+47 Voltar
+48 Avançar
 49 &Salvar
 50 S&alvar como...
 51 **Save all
-52 Sincronizar(&Y)
+52 Sincronizar
 53 **Send by mail ...
 54 Config&urar e imprimir...
 55 Im&primir
 56 **&Close tab
-57 Fechar janela(&W)
-58 Sair de Amaya(&X)
+57 Fechar janela
+58 Sair de Amaya
 59 **New tab
 60 **Refresh tab
 61 **Refresh all tabs
@@ -104,7 +104,7 @@
 102 **Split view vertically
 103 &Info sobre documento
 104 Exibir erros de gramática (parsing)
-105 **&Fullscreen
+105 **&Full screen
 106 Ampliar (Zoom in)
 107 Reduzir (Zoom out)
 108 Parágrafo (p)

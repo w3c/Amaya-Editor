@@ -46,18 +46,18 @@
 44 Japanese (ISO-2022-JP)
 45 Japanese (EUC-JP)
 46 Japanese (Shift-JIS)
-47 Takaisin(&B)
-48 Eteenpäin(&F)
-49 Tallenna(&S)
+47 Takaisin
+48 Eteenpäin
+49 Tallenna
 50 T&allenna nimellä...
 51 **Save all
-52 Päivitä(&Y)
+52 Päivitä
 53 **Send by mail ...
 54 T&ulostusasetukset...
-55 Tulosta(&P)
+55 Tulosta
 56 **&Close tab
-57 Sulje ikkuna(&W)
-58 Sulje Amaya(&X)
+57 Sulje ikkuna
+58 Sulje Amaya
 59 **New tab
 60 **Refresh tab
 61 **Refresh all tabs
@@ -104,7 +104,7 @@
 102 **Split view vertically
 103 T&ietoja dokumentista
 104 Näytä käännösvirheet
-105 **&Fullscreen
+105 **&Full screen
 106 Lähennä
 107 Loitonna
 108 Pykälä (p)
