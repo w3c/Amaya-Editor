@@ -385,10 +385,12 @@ static char *SkipValue (char *msg, char *ptr)
     }
   /* print the skipped property */
   c = *ptr;
-  *ptr = EOS;
+  if (c != EOS)
+    *ptr = EOS;
   if (msg && *deb != EOS && *deb != ',')
     CSSPrintError (msg, deb);
-  *ptr = c;
+  if (c != EOS)
+    *ptr = c;
   return (ptr);
 }
 
