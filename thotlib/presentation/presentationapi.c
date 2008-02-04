@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2446,8 +2446,8 @@ int TtaGetDepth (Element element, Document document, View view)
   document: the document of interest.
   view: the view.
   Return parameters:
-  color the thot
-  bg_color
+  color the thot color
+  bg_color the thot background color
   ----------------------------------------------------------------------*/
 void TtaGiveBoxColors (Element element, Document document, View view,
                        int *color, int *bg_color)
@@ -2478,6 +2478,55 @@ void TtaGiveBoxColors (Element element, Document document, View view,
             {
               *color = pAb->AbForeground;
               *bg_color = pAb->AbBackground;
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaGiveBoxFontInfo
+  Returns the font description of the box corresponding to an
+  element in a given view.
+  Parameters:
+  element: the element of interest.
+  document: the document of interest.
+  view: the view.
+  Return parameters:
+  size the font size value
+  unit the unit of the font size
+  family the font family
+  ----------------------------------------------------------------------*/
+void TtaGiveBoxFontInfo (Element element, Document document, View view,
+                         int *size, TypeUnit *unit, int *family)
+{
+  PtrAbstractBox      pAb;
+  int                 frame;
+
+  UserErrorCode = 0;
+  *size = -1;
+  *unit = UnPixel;
+  *family = 1;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  /* verifies the parameter document */
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is correct */
+    {
+      frame = GetWindowNumber (document, view);
+      if (frame != 0)
+        {
+          pAb = AbsBoxOfEl ((PtrElement) element, view);
+          if (pAb == NULL || pAb->AbBox == NULL)
+            TtaError (ERR_element_has_no_box);
+          else
+            {
+              *size = pAb->AbSize;
+              *unit = pAb->AbSizeUnit;
+              *family = pAb->AbFont;
             }
         }
     }

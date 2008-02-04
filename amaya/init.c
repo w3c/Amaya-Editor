@@ -64,6 +64,8 @@ extern XmlEntity *pMathEntityTable;
 int  Current_Color = -1;
 int  Current_BackgroundColor = -1;
 int  SavePANEL_PREFERENCES = 1;
+int  Current_FontFamily = 1;
+int  Current_FontSize = 12;
 static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
 static int          NewDocType = 0;

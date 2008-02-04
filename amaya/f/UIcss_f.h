@@ -29,6 +29,10 @@ extern void GenerateStyle ( char * data,
 extern void DoStyleColor ( char *color );
 extern void UpdateStylePanel ( Document doc,
                                View view );
+extern void DoSelectFontSize ( Document doc,
+                               View view );
+extern void DoSelectFontFamilly ( Document doc,
+                                  View view );
 extern void DoSelectColor ( Document doc,
                             View view );
 extern void DoSelectBgColor ( Document doc,
@@ -113,6 +117,10 @@ extern void GenerateStyle ( char * data,
 extern void DoStyleColor ( char *color );
 extern void UpdateStylePanel ( Document doc,
                                  View view );
+extern void DoSelectFontSize ( Document doc,
+                                 View view );
+extern void DoSelectFontFamilly ( Document doc,
+                                    View view );
 extern void DoSelectColor ( Document doc,
                               View view );
 extern void DoSelectBgColor ( Document doc,

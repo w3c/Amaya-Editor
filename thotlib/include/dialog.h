@@ -12,7 +12,9 @@
 extern int WX_SearchResult;         /* 0 if ok, 1 if no replace, 2 if not found */
 extern int Current_Color;           // export the panel Color
 extern int Current_BackgroundColor; // export the panel Background Color
-extern int SavePANEL_PREFERENCES;   // control the AUI_DECORATION
+extern int Current_FontFamily;      // export the panel Font family
+extern int Current_FontSize;        // export the panel Font size
+extern int SavePANEL_PREFERENCES;   // say if panel preferences are saved
 #endif /* _WX */
 
 

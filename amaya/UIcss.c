@@ -808,20 +808,66 @@ static ThotBool GetEnclosingBlock (Document doc)
 }
 
 /*----------------------------------------------------------------------
+  NewSpanElement
+  Apply color style
+  ----------------------------------------------------------------------*/
+static Element NewSpanElement (Document doc, ThotBool *open)
+{
+  Element             first, parent, el = NULL;
+  ElementType         elType;
+  int                 firstChar, lastChar, i;
+  ThotBool            before = FALSE;
+
+  *open = FALSE;
+  if ( TtaIsSelectionEmpty ())
+    {
+      TtaGiveFirstSelectedElement (doc, &first, &firstChar, &lastChar);
+      parent = TtaGetParent (first);
+      elType = TtaGetElementType (parent);
+      i =  TtaGetElementVolume (first);
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+          elType.ElTypeNum == HTML_EL_Span)
+        {
+          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+          if (firstChar == 1 && lastChar == 0 && first == TtaGetFirstChild (parent))
+            {
+              *open = TRUE;
+              before = TRUE;
+            }
+          else if  (lastChar >= i && first == TtaGetLastChild (parent))
+            {
+              *open = TRUE;
+              before = FALSE;
+            }
+
+          if (*open)
+            {
+              *open = !TtaHasUndoSequence (doc);
+              if (*open)
+                TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+              el = TtaNewElement (doc, elType);
+              TtaInsertSibling (el, parent, before, doc);
+              TtaSelectElement (doc, el);
+              TtaRegisterElementCreate (el, doc);
+            }
+        }
+    }
+  return el;
+}
+
+/*----------------------------------------------------------------------
   DoStyleColor
   Apply color style
   ----------------------------------------------------------------------*/
 void DoStyleColor (char *color)
 {
-  Element             first, parent, el = NULL;
-  ElementType         elType;
   Document            doc;
+  Element             el = NULL;
   char               *ptr;
-  int                 firstChar, lastChar, i;
-  int                 col, bg_col, new_col;
+  int                 col, bg_col, new_col, firstChar, lastChar;
   unsigned short      red, green, blue;
   DisplayMode         dispMode;
-  ThotBool            open = FALSE, before, isBg;
+  ThotBool            open = FALSE, isBg;
 
   doc = TtaGetSelectedDocument();
   if (!TtaGetDocumentAccessMode (doc) || color == NULL)
@@ -838,8 +884,8 @@ void DoStyleColor (char *color)
   new_col = TtaGetThotColor (red, green, blue);
 
   // check the current color
-  TtaGiveFirstSelectedElement (doc, &first, &firstChar, &lastChar);
-  TtaGiveBoxColors (first, doc, 1, &col, &bg_col);
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
   if ((isBg && new_col == bg_col) || new_col == col)
     // do nothing
     return;
@@ -848,39 +894,9 @@ void DoStyleColor (char *color)
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
-  if ( TtaIsSelectionEmpty ())
-    {
-      parent = TtaGetParent (first);
-      elType = TtaGetElementType (parent);
-      i =  TtaGetElementVolume (first);
-      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
-          elType.ElTypeNum == HTML_EL_Span)
-        {
-          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-          if (firstChar == 1 && lastChar == 0 && first == TtaGetFirstChild (parent))
-            {
-              open = TRUE;
-              before = TRUE;
-            }
-          else if  (lastChar >= i && first == TtaGetLastChild (parent))
-            {
-              open = TRUE;
-              before = FALSE;
-            }
-          if (open)
-            {
-              open = !TtaHasUndoSequence (doc);
-              if (open)
-                TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-              el = TtaNewElement (doc, elType);
-              TtaInsertSibling (el, parent, before, doc);
-              TtaSelectElement (doc, el);
-              TtaRegisterElementCreate (el, doc);
-              TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
-            }
-        }
-    }
-
+  el = NewSpanElement (doc, &open);
+  if (el)
+     TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
   if ((isBg && new_col == bg_col) || new_col != col)
     GenerateStyle (color, TRUE);
   if (open)
@@ -904,6 +920,100 @@ void UpdateStylePanel (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  DoSelectFontSize
+  Apply color style
+  ----------------------------------------------------------------------*/
+void DoSelectFontSize (Document doc, View view)
+{
+  Element             el = NULL;
+  DisplayMode         dispMode;
+  TypeUnit            unit;
+  char                font_string[100];
+  int                 firstChar, lastChar;
+  int                 size, family;
+  ThotBool            open = FALSE;
+
+  doc = TtaGetSelectedDocument();
+  if (!TtaGetDocumentAccessMode (doc))
+    /* document is ReadOnly */
+    return;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+    return;
+
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  TtaGiveBoxFontInfo (el, doc, 1, &size, &unit, &family);
+  if (el && size != -1 && (size != Current_FontSize || unit != UnPoint))
+    {
+      /* Need to force a redisplay */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, DeferredDisplay);
+      el = NewSpanElement (doc, &open);
+      if (el)
+        {
+          Current_FontSize = size;
+          sprintf (font_string, "font-size: %dpt", size);
+          GenerateStyle (font_string, TRUE);
+        }
+      if (open)
+        TtaCloseUndoSequence (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, dispMode);
+    }
+}
+
+/*----------------------------------------------------------------------
+  DoSelectFontFamilly
+  Apply color style
+  ----------------------------------------------------------------------*/
+void DoSelectFontFamilly (Document doc, View view)
+{
+  Element             el = NULL;
+  DisplayMode         dispMode;
+  int                 firstChar, lastChar;
+  int                 size, family;
+  TypeUnit            unit;
+  ThotBool            open = FALSE;
+
+  doc = TtaGetSelectedDocument();
+  if (!TtaGetDocumentAccessMode (doc))
+    /* document is ReadOnly */
+    return;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+    return;
+
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  TtaGiveBoxFontInfo (el, doc, 1, &size, &unit, &family);
+  if (el && size != -1)
+    {
+      /* Need to force a redisplay */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, DeferredDisplay);
+      el = NewSpanElement (doc, &open);
+      if (el && size != -1 && family != Current_FontFamily)
+        {
+          Current_FontFamily = family;
+          switch (family)
+            {
+            case 2:
+              GenerateStyle ("font-family: Courier New,Courier,monospace", TRUE);
+              break;
+            case 3:
+              GenerateStyle ("font-family: Arial,Helvetica,sans-serif", TRUE);
+              break;
+            default:
+              GenerateStyle ("font-family: Times New Roman,Times,serif", TRUE);
+            }
+        }
+      if (open)
+        TtaCloseUndoSequence (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, dispMode);
+    }
+}
+
+/*----------------------------------------------------------------------
   DoSelectColor
   Apply color style
   ----------------------------------------------------------------------*/
@@ -921,13 +1031,7 @@ void DoSelectColor (Document doc, View view)
     return;
   if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
     return;
-#ifdef IV
-  Element             first;
-  int                 color, bg_col, firstChar, lastChar;
-  TtaGiveFirstSelectedElement (doc, &first, &firstChar, &lastChar);
-  TtaGiveBoxColors (first, doc, 1, &color, &bg_col);
-  TtaGiveThotRGB (color, &red, &green, &blue);
-#endif
+
   if (Current_Color != -1)
     TtaGiveThotRGB (Current_Color, &red, &green, &blue);
   else
@@ -964,13 +1068,7 @@ void DoSelectBgColor (Document doc, View view)
     return;
   if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
     return;
-#ifdef IV
-  Element             first;
-  int                 color, bg_col, firstChar, lastChar;
-  TtaGiveFirstSelectedElement (doc, &first, &firstChar, &lastChar);
-  TtaGiveBoxColors (first, doc, 1, &color, &bg_col);
-  TtaGiveThotRGB (bg_col, &red, &green, &blue);
-#endif
+
   if (Current_BackgroundColor != -1)
     TtaGiveThotRGB (Current_BackgroundColor, &red, &green, &blue);
   else

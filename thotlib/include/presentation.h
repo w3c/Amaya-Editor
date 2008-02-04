@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2005
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -548,6 +548,23 @@ extern int TtaGetDepth (Element element, Document document, View view);
   ----------------------------------------------------------------------*/
 extern void TtaGiveBoxColors (Element element, Document document, View view,
                               int *color, int *bg_color);
+
+
+/*----------------------------------------------------------------------
+  TtaGiveBoxFontInfo
+  Returns the font description of the box corresponding to an
+  element in a given view.
+  Parameters:
+  element: the element of interest.
+  document: the document of interest.
+  view: the view.
+  Return parameters:
+  size the font size value
+  unit the unit of the font size
+  family the font family
+  ----------------------------------------------------------------------*/
+extern void TtaGiveBoxFontInfo (Element element, Document document, View view,
+                                int *size, TypeUnit *unit, int *family);
 
 /*----------------------------------------------------------------------
    TtaGiveBoxSize

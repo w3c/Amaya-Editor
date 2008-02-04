@@ -111,6 +111,7 @@ extern void UpdateScrollbars ( int frame );
 extern const char * TtaGetAppVersion ( void );
 extern const char * TtaGetAppName ( void );
 extern const char * TtaGetAppDate ( void );
+extern const char * TtaGetAppYear ( void );
 
 #else /* __STDC__ */
 
@@ -219,6 +220,7 @@ extern void UpdateScrollbars ( int frame );
 extern const char * TtaGetAppVersion ( void );
 extern const char * TtaGetAppName ( void );
 extern const char * TtaGetAppDate ( void );
+extern const char * TtaGetAppYear ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

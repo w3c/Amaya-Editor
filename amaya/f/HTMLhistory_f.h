@@ -99,6 +99,8 @@ extern void HelpShortCuts ( Document document,
                             View view );
 extern void HelpAccess ( Document document,
                          View view );
+extern void TipOfTheDay ( Document document,
+                          View view );
 extern Prop_Passwords_Site * GetFirtsPasswordsSite ( void );
 extern void UpdatePasswordsSiteList ( int i_site,
                                       const char *label_site );
@@ -226,6 +228,8 @@ extern void HelpShortCuts ( Document document,
                               View view );
 extern void HelpAccess ( Document document,
                            View view );
+extern void TipOfTheDay ( Document document,
+                            View view );
 extern Prop_Passwords_Site * GetFirtsPasswordsSite ( void );
 extern void UpdatePasswordsSiteList ( int i_site,
                                         const char *label_site );
