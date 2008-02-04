@@ -2330,16 +2330,26 @@ void DoTableCreation (Document doc)
       else
         /* replace the cell element by a data cell */
         TtaChangeTypeOfElement (cell, doc, HTML_EL_Data_cell);
-      child = TtaGetFirstLeaf (cell);
-      TtaSelectElement (doc, child);
-
-      while (NumberCols > 1)
+      if (cell)
         {
-          new_ = TtaNewTree (doc, elType, "");
-          TtaInsertSibling (new_, cell, FALSE, doc);
-          NumberCols--;
+          child = TtaGetFirstLeaf (cell);
+          if (child == cell)
+            /* create an empty Element as a child of the first cell */
+            {
+              elType.ElTypeNum = HTML_EL_Element;
+              child = TtaNewElement (doc, elType);
+              if (child)
+                TtaInsertFirstChild (&child, cell, doc);
+            }
+          TtaSelectElement (doc, child);
+          elType.ElTypeNum = HTML_EL_Data_cell;
+          while (NumberCols > 1)
+            {
+              new_ = TtaNewTree (doc, elType, "");
+              TtaInsertSibling (new_, cell, FALSE, doc);
+              NumberCols--;
+            }
         }
-      
       if (NumberRows > 1)
         {
           elType.ElTypeNum = HTML_EL_Table_row;
