@@ -1823,45 +1823,24 @@ static void CreateMathConstruct (int construct, ...)
       if (displayTableForm)
         /* ask the user about the number of rows and columns to be created */
         {
-          NumberRows = 2;
-          NumberCols = 2;
-#ifdef _WINGUI
-          CreateMatrixDlgWindow (NumberCols, NumberRows);
-#endif /* _WINGUI */
-#ifdef _WX
-          ThotBool created;
-          created = CreateCreateTableDlgWX (BaseDialog + TableForm,
-                                            TtaGetViewFrame (doc, 1),
-                                            NumberCols, NumberRows,
-                                            -1 /* no border defined */);
-          if (created)
-            {
-              TtaShowDialogue (BaseDialog + TableForm, FALSE);
-              /* wait for an answer */
-              TtaWaitShowDialogue ();
-            }
-#endif /* _WX */
-#ifdef _GTK
-          TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
-                      TtaGetMessage (1, BMatrix), TRUE, 1, 'L', D_CANCEL);
-          TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
-                            TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
-          TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,
-                            TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
-          TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
-          TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
-          TtaSetDialoguePosition ();
-          TtaShowDialogue (BaseDialog + TableForm, FALSE);
-          /* wait for an answer */
-          TtaWaitShowDialogue ();
-#endif /* _GTK */
-    
-          if (!UserAnswer || NumberRows == 0 || NumberCols == 0)
+          NumberCols = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_COLS), 2, 1);
+          if (NumberCols == 0)
             /* the user decided to abort the command */
             {
               TtaSetDisplayMode (doc, dispMode);
               TtaCloseUndoSequence (doc);
-              // remove the inserted math element
+              if (insertedMath)
+                TtaUndoNoRedo (doc);
+              va_end(varpos);
+              return;
+            }
+
+          NumberRows = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_ROWS), 2, 1);
+          if (NumberRows == 0)
+            /* the user decided to abort the command */
+            {
+              TtaSetDisplayMode (doc, dispMode);
+              TtaCloseUndoSequence (doc);
               if (insertedMath)
                 TtaUndoNoRedo (doc);
               va_end(varpos);

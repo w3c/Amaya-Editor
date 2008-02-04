@@ -85,7 +85,7 @@ HelpAttributes
 *AmayaAttributeToolPanel
 
 ################# AMAYA Lite+Math+Web+CSS
-<Editor_Lite3>
+<Editor_Lite4>
 +browsing_lite
 +web-module
 +edit_lite
@@ -93,16 +93,16 @@ HelpAttributes
 +doctype
 +clientside-module
 +presentation-module
-+hypertext-module
 +object-module
++hypertext-module
 +forms
 +link-module
-FullScreen
 +css-style
+FullScreen
 &SingleCreateTable
 &SetCSSStyle
 &Synchronize
-&NewXHTML
+&SingleNewXHTML
 &NewCss
 HelpAttributes
 *AmayaAttributeToolPanel
@@ -312,6 +312,7 @@ ShowLogFile
 +spell
 +templates
 +table-edit
+DoNewXHTML
 HelpDocument
 HelpTemplating
 HelpPublishing

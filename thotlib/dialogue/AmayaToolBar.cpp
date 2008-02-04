@@ -184,7 +184,7 @@ void AmayaBaseToolBar::OnUpdate(wxUpdateUIEvent& event)
 //
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaToolBarEditingToolDef)
-  AMAYA_TOOLBAR_DEF("wxID_TOOL_NEW",        "NewXHTML",       LIB, TMSG_BUTTON_NEW)
+  AMAYA_TOOLBAR_DEF("wxID_TOOL_NEW",        "DoNewXHTML",     LIB, TMSG_BUTTON_NEW)
   AMAYA_TOOLBAR_DEF("wxID_TOOL_OPEN",       "OpenDoc",        LIB, TMSG_BUTTON_OPEN)
   AMAYA_TOOLBAR_DEF("wxID_TOOL_SAVE",       "SaveDocument",   LIB, TMSG_BUTTON_SAVE)
   AMAYA_TOOLBAR_DEF("wxID_TOOL_SAVE_ALL",   "SaveAll",        LIB, TMSG_BUTTON_SAVE_ALL)

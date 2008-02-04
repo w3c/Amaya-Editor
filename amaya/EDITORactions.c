@@ -131,6 +131,15 @@ void SingleNewXHTML (Document doc, View view)
 {
   OpenNew (doc, view, docHTML, 0);
 }
+
+/*----------------------------------------------------------------------
+  DoNewXHTML: Create a new XHTML document
+  ----------------------------------------------------------------------*/
+void DoNewXHTML (Document doc, View view)
+{
+  OpenNew (doc, view, docHTML, 0);
+}
+
 /*----------------------------------------------------------------------
   NewXHTML: Create a new XHTML document
   ----------------------------------------------------------------------*/
