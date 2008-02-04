@@ -948,13 +948,9 @@ void DoSelectFontSize (Document doc, View view)
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, DeferredDisplay);
-      el = NewSpanElement (doc, &open);
-      if (el)
-        {
-          Current_FontSize = size;
-          sprintf (font_string, "font-size: %dpt", size);
-          GenerateStyle (font_string, TRUE);
-        }
+      NewSpanElement (doc, &open);
+      sprintf (font_string, "font-size: %dpt", Current_FontSize);
+      GenerateStyle (font_string, TRUE);
       if (open)
         TtaCloseUndoSequence (doc);
       if (dispMode == DisplayImmediately)
@@ -984,27 +980,23 @@ void DoSelectFontFamilly (Document doc, View view)
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
   TtaGiveBoxFontInfo (el, doc, 1, &size, &unit, &family);
-  if (el && size != -1)
+  if (el && size != -1 && family != Current_FontFamily)
     {
       /* Need to force a redisplay */
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, DeferredDisplay);
-      el = NewSpanElement (doc, &open);
-      if (el && size != -1 && family != Current_FontFamily)
+      NewSpanElement (doc, &open);
+      switch (Current_FontFamily)
         {
-          Current_FontFamily = family;
-          switch (family)
-            {
-            case 2:
-              GenerateStyle ("font-family: Courier New,Courier,monospace", TRUE);
-              break;
-            case 3:
-              GenerateStyle ("font-family: Arial,Helvetica,sans-serif", TRUE);
-              break;
-            default:
-              GenerateStyle ("font-family: Times New Roman,Times,serif", TRUE);
-            }
+        case 3:
+          GenerateStyle ("font-family: Courier New,Courier,monospace", TRUE);
+          break;
+        case 2:
+          GenerateStyle ("font-family: Arial,Helvetica,sans-serif", TRUE);
+          break;
+        default:
+          GenerateStyle ("font-family: Times New Roman,Times,serif", TRUE);
         }
       if (open)
         TtaCloseUndoSequence (doc);

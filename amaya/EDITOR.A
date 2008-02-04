@@ -406,6 +406,8 @@ FUNCTIONS
   AddNewModelIntoLibraryForm,
   ApplyClass,
   DoCreateTable,
+  DoSelectFontFamilly,
+  DoSelectFontSize,
   DoNewXHTML,
   ShowHSplitToggle,
   ShowVSplitToggle,

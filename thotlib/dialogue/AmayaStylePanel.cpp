@@ -4,6 +4,7 @@
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
 #include "wx/colordlg.h"
 #include "wx/clrpicker.h"
+#include "wx/valtext.h"
 
 
 #include "thot_gui.h"
@@ -35,6 +36,7 @@
 #include "AmayaStylePanel.h"
 #include "AmayaNormalWindow.h"
 #include "AmayaColorButton.h"
+
 
 extern void DoStyleColor (char * color);
 extern void ChangeTheme (const char *theme);
@@ -107,6 +109,10 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   XRCCTRL(*this, "wxID_THEME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_THEME)));
   SetColor (1);
   SetTheme ("Standard");
+
+  wxTextValidator valid(wxFILTER_NUMERIC);
+  XRCCTRL(*this,"wxID_COMBO_SIZE", wxComboBox)->SetValidator(valid);
+  
   return true;
 }
 
@@ -291,6 +297,51 @@ void AmayaStyleToolPanel::SendDataToPanel( AmayaParams& p )
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnChooseFontFamily(wxCommandEvent& event)
+{
+  int num = event.GetSelection()+1;
+  if(num==0)
+    num = 1;
+  
+  if(num!=Current_FontFamily)
+    {
+      Document doc;
+      View view;
+      
+      Current_FontFamily = (int)num;
+
+      TtaGiveActiveView( &doc, &view );
+      /* force the refresh */
+      if (doc > 0)
+        TtaExecuteMenuAction ("DoSelectFontFamilly", doc, view, TRUE);
+    }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnChooseFontSize(wxCommandEvent& event)
+{
+  long size;
+   if(!event.GetString().ToLong(&size))
+     size = 12;
+   if(size!=Current_FontSize)
+     {
+       Document doc;
+       View view;
+
+       Current_FontSize = (int)size;
+       
+       TtaGiveActiveView( &doc, &view );
+       /* force the refresh */
+       if (doc > 0)
+         TtaExecuteMenuAction ("DoSelectFontSize", doc, view, TRUE);
+     }
+
+}
+
+
+/*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
@@ -302,6 +353,11 @@ BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
   EVT_BUTTON(XRCID("wxID_BUTTON_BKCOLOR"), AmayaStyleToolPanel::OnChooseBackgroundColor)
 
   EVT_CHOICE(XRCID("wxID_PANEL_CSS_THEME"), AmayaStyleToolPanel::OnThemeChange)
+
+  EVT_CHOICE(XRCID("wxID_CHOICE_FAMILY"), AmayaStyleToolPanel::OnChooseFontFamily)
+  EVT_COMBOBOX(XRCID("wxID_COMBO_SIZE"), AmayaStyleToolPanel::OnChooseFontSize)
+  EVT_TEXT_ENTER(XRCID("wxID_COMBO_SIZE"), AmayaStyleToolPanel::OnChooseFontSize)
+
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

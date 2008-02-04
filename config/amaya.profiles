@@ -329,6 +329,8 @@ HelpAccess
 &TtcRedo
 &SelectAll
 ShowEditingBar
+&DoSelectFontFamilly
+&DoSelectFontSize
 *AmayaToolBarEditing
 *AmayaXHTMLToolPanel
 *AmayaStyleToolPanel

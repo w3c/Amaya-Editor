@@ -83,6 +83,66 @@
       </object>
       <object class="sizeritem">
         <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxChoice" name="wxID_CHOICE_FAMILY">
+              <size>108,-1</size>
+              <content>
+                <item>Times</item>
+                <item>Arial</item>
+                <item>Courier</item>
+              </content>
+              <selection>1</selection>
+            </object>
+            <option>1</option>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+          </object>
+          <object class="spacer">
+            <size>10,10</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxComboBox" name="wxID_COMBO_SIZE">
+              <size>60,-1</size>
+              <content>
+                <item>6</item>
+                <item>7</item>
+                <item>8</item>
+                <item>9</item>
+                <item>10</item>
+                <item>11</item>
+                <item>12</item>
+                <item>13</item>
+                <item>14</item>
+                <item>15</item>
+                <item>16</item>
+                <item>18</item>
+                <item>20</item>
+                <item>22</item>
+                <item>24</item>
+                <item>26</item>
+                <item>28</item>
+                <item>32</item>
+                <item>36</item>
+                <item>40</item>
+                <item>44</item>
+                <item>48</item>
+                <item>54</item>
+                <item>60</item>
+                <item>66</item>
+                <item>72</item>
+                <item>80</item>
+                <item>88</item>
+                <item>96</item>
+              </content>
+              <selection>6</selection>
+            </object>
+            <option>0</option>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+          </object>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxToolBar" name="wxID_TOOLBAR_CSS_1" subclass="AmayaBaseToolBar">
