@@ -3924,6 +3924,7 @@ static void SelColumns (PtrElement col1, PtrElement col2)
                                       pTable->ElStructSchema))
     pTable = pTable->ElParent;
   if (!pTable)
+    /* we are not in a table... */
     return;
   /* get the first row of the table */
   rowType = GetElemWithException (ExcIsRow, col1->ElStructSchema);
@@ -3933,7 +3934,9 @@ static void SelColumns (PtrElement col1, PtrElement col2)
     {
       pCell = GetCellInRow (pRow, col1, TRUE, &back);
       if (pCell && back > 0)
-        pCell = pCell->ElNext;
+        /* in this row the cell is a horizontally extended cell from a previous
+           column. skip it */
+        pCell = NULL;
       if (!pCell)
         pRow = NextRowInTable (pRow, pTable);
     }
@@ -3951,6 +3954,10 @@ static void SelColumns (PtrElement col1, PtrElement col2)
   do
     {
       pCell = GetCellInRow (pRow, col2, TRUE, &back);
+      if (pCell && back > 0)
+        /* in this row the cell is a horizontally extended cell from a previous
+           column. skip it */
+        pCell = NULL;
       if (!pCell)
         pRow = PreviousRowInTable (pRow, pTable);
     }
