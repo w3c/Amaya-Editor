@@ -2502,10 +2502,17 @@ static void MakeSelectionRectangle ()
                   /* does this cell extend beyound the last selected row? */
                   pRow = rowOfCell;
                   pR = pRow;
-                  /* span = 0 means "to the bottom of the table" */
+                  /* span = 0 means "to the bottom of the current tbody, thead
+                     or tfoot" */
                   for (i = 1; pR && (i < span || span == 0); i++)
                     {
-                      pR = NextRowInTable (pR, pTable);
+                      /* next sibling */
+                      pR = pR->ElNext;
+                      /* skip comments, PIs, etc. */
+                      while (pR &&
+                             !TypeHasException (ExcIsRow, pR->ElTypeNumber,
+                                                pR->ElStructSchema))
+                        pR = pR->ElNext;
                       if (pR)
                         pRow = pR;
                     }
