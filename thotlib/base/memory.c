@@ -972,7 +972,9 @@ void GetAbstractBox (PtrAbstractBox *pAb)
   ----------------------------------------------------------------------*/
 void FreeAbstractBox (PtrAbstractBox pAb)
 {
+#ifdef AMAYA_DEBUG
   PtrAbstractBox nextAb;
+#endif
   ThotPictInfo *image;
 
   if (pAb->AbLeafType == LtCompound)
@@ -1986,7 +1988,10 @@ PtrBox FreeBox (PtrBox pBox)
   PtrPosRelations     nepos;
   PtrDimRelations     pDimRel;
   PtrDimRelations     nedim;
-  PtrBox              nextBox, nBox;
+  PtrBox              nextBox;
+#ifdef AMAYA_DEBUG
+  PtrBox              nBox;
+#endif
 
   /* get next child */
   if (pBox->BxType == BoSplit ||
