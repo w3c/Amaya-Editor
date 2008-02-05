@@ -1549,7 +1549,7 @@ void CheckTable (Element table, Document doc)
       while (el)
         {
           elType = TtaGetElementType (el);
-          if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+          if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
             {
               // move down the template element
               temp_el = el;
