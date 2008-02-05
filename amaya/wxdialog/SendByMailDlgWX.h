@@ -47,13 +47,14 @@ public:
 
   void SetSendMode(int mode);
     
-  wxArrayString  GetRecipients()const;
-  void SetRecipients(const wxArrayString & rcpt);
-  
-  wxString GetRecipientList()const;
+  wxArrayString GetToRecipients()const{return m_toArray;}
+  wxArrayString GetCcRecipients()const{return m_ccArray;}
   
   void AddAddressToRecentList(const wxString& addr);
 
+  
+protected:
+  void AddRecipientLine();
 private:
   void UpdateMessageLabel();
 
@@ -68,9 +69,11 @@ private:
   void LoadRecentList();
   
   void OnCloseDialog(wxCommandEvent& event);
-  void OnGridCellChange(wxGridEvent& event);
+
   
-  void OnSize(wxSizeEvent& event);
+  
+  void OnDeleteRecipient(wxCommandEvent& event);
+  void OnChangeRecipientAddress(wxCommandEvent& event);
   
  // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
@@ -80,8 +83,28 @@ private:
   
   wxArrayString m_rcptArray;
   
-  wxGrid*     m_grid;
+  wxArrayString m_toArray, m_ccArray;
+  
+  
+  wxPanel* m_panel;
 };
+
+
+
+//-----------------------------------------------------------------------------
+// Class definition: RecipientPanel
+//-----------------------------------------------------------------------------
+class RecipientPanel : public wxPanel
+{
+  DECLARE_CLASS()
+public:
+  RecipientPanel(wxWindow* parent);
+  void AddDefaultRecipients(const wxArrayString& arr);
+  
+  wxString GetAddress()const;
+  int      GetType()const;
+};
+
 
 #endif  //__SENDBYMAILDLGWX_H__
 

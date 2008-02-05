@@ -24,14 +24,17 @@
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(SendByMailDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       SendByMailDlgWX::OnCancelButton)
-  EVT_UPDATE_UI(  wxID_OK,                    SendByMailDlgWX::OnUpdateSendButton)
+//  EVT_UPDATE_UI(  wxID_OK,                    SendByMailDlgWX::OnUpdateSendButton)
   EVT_RADIOBOX(   XRCID("wxID_RADIOBOX_SEND_CLASS"), SendByMailDlgWX::OnChangeMessageClass)
   
   EVT_BUTTON(wxID_OK,     SendByMailDlgWX::OnCloseDialog)
   EVT_BUTTON(wxID_CANCEL, SendByMailDlgWX::OnCloseDialog)
   
-  EVT_GRID_CMD_CELL_CHANGE(wxID_ANY, SendByMailDlgWX::OnGridCellChange)
-  EVT_SIZE(SendByMailDlgWX::OnSize)
+  EVT_BUTTON(XRCID("wxID_BUTTON_DEL"), SendByMailDlgWX::OnDeleteRecipient)
+  EVT_COMBOBOX(XRCID("wxID_RECIPIENT_ADDRESS"), SendByMailDlgWX::OnChangeRecipientAddress)
+  EVT_TEXT(XRCID("wxID_RECIPIENT_ADDRESS"), SendByMailDlgWX::OnChangeRecipientAddress)
+  EVT_TEXT_ENTER(XRCID("wxID_RECIPIENT_ADDRESS"), SendByMailDlgWX::OnChangeRecipientAddress)
+
 END_EVENT_TABLE()
 
 
@@ -43,30 +46,17 @@ END_EVENT_TABLE()
     + ps_file : postscript file
   ----------------------------------------------------------------------*/
 SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
-  AmayaDialog( parent, ref ),
-  m_grid(NULL)
+  AmayaDialog( parent, ref )
 {
   m_ref = ref;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SendByMailDlgWX"));
-  wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_EMAILS_SEND_BY_MAIL) );
-  SetTitle( wx_title );
 
-  wxPanel* panel = XRCCTRL(*this, "wxID_PANEL_MAIL_HEADER", wxPanel);
-  if(panel)
-    {
-      m_grid = new wxGrid(panel, wxID_ANY);
-      panel->GetSizer()->Prepend(m_grid, 1, wxEXPAND);
-      m_grid->CreateGrid(1, 1);
-      m_grid->SetRowLabelSize(0);
-      m_grid->SetDefaultColSize(2);
-      m_grid->SetColLabelValue(0, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_TO_)));
-      m_grid->SetColMinimalWidth(0, 300);
-      m_grid->SetColSize(0, m_grid->GetSize().x-20);
-      LoadRecentList();
-      m_grid->SetDefaultEditor(new wxGridCellChoiceEditor(m_rcptArray, true));
-      panel->GetSizer()->SetSizeHints( this );
-    }
+  SetTitle(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SEND_BY_MAIL)));
+
+  // TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_TO_)));
+
+  LoadRecentList();
   
   XRCCTRL(*this, "wxID_LABEL_SUBJECT",   wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SUBJECT_)) );
   XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SEND_AS_)) );
@@ -80,21 +70,15 @@ SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
 
   UpdateMessageLabel();
 
+  m_panel = new wxPanel(this, -1);
+  m_panel->SetSizer(new wxBoxSizer(wxVERTICAL));
+  AddRecipientLine();
+  GetSizer()->Prepend(m_panel, 0, wxEXPAND|wxALL, 4);
+
   Layout();
   SetAutoLayout( TRUE );
-  SetSize(600, 400);
+  SetSize(600, 480);
   GetSizer()->SetSizeHints( this );
-}
-
-/*----------------------------------------------------------------------
-  Called when a grid cell content was changed.
-  ----------------------------------------------------------------------*/
-void SendByMailDlgWX::OnGridCellChange(wxGridEvent& event)
-{
-  wxGrid* grid = (wxGrid*)event.GetEventObject();
-  if(event.GetRow()==grid->GetNumberRows()-1)
-    grid->AppendRows();
-  event.Skip();
 }
 
 /*----------------------------------------------------------------------
@@ -131,19 +115,20 @@ void SendByMailDlgWX::OnCancelButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SendByMailDlgWX::OnUpdateSendButton(wxUpdateUIEvent& event)
 {
-  if(m_grid && m_grid->GetNumberRows()>0)
-    {
-      int n;
-      for(n=0; n<m_grid->GetNumberRows(); n++)
-        {
-          if(!(m_grid->GetCellValue(n, 0).Trim().IsEmpty()))
-            {
-              event.Enable(true);
-              return;
-            }
-        }
-    }
-  event.Enable(false);
+// TODO :
+//  if(m_grid && m_grid->GetNumberRows()>0)
+//    {
+//      int n;
+//      for(n=0; n<m_grid->GetNumberRows(); n++)
+//        {
+//          if(!(m_grid->GetCellValue(n, 0).Trim().IsEmpty()))
+//            {
+//              event.Enable(true);
+//              return;
+//            }
+//        }
+//    }
+//  event.Enable(false);
 }
 
 /*----------------------------------------------------------------------
@@ -226,57 +211,6 @@ void SendByMailDlgWX::SetSendMode(int mode)
   XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->SetSelection(mode);
 }
 
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-wxArrayString  SendByMailDlgWX::GetRecipients()const
-{
-  wxArrayString arr;
-  int n;
-  for(n=0; n<m_grid->GetNumberRows(); n++)
-    {
-      wxString str = m_grid->GetCellValue(n, 0).Trim(); 
-      if(!str.IsEmpty())
-          arr.Add(str);
-    }
-  return arr;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void SendByMailDlgWX::SetRecipients(const wxArrayString & rcpt)
-{
-  m_grid->BeginBatch();
-  
-  unsigned int n;
-  for(n=0; n<rcpt.GetCount(); n++)
-    {
-      wxString str = rcpt[n].Trim();
-      if(!str.IsEmpty())
-        {
-          m_grid->AppendRows();
-          m_grid->SetCellValue(m_grid->GetNumberRows()-1, 0, str);
-        }
-    }
-  m_grid->EndBatch();
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-wxString SendByMailDlgWX::GetRecipientList()const
-{
-  wxString res;
-  int n;
-  for(n=0; n<m_grid->GetNumberRows(); n++)
-    {
-      wxString str = m_grid->GetCellValue(n, 0).Trim(); 
-      if(!str.IsEmpty())
-        res << wxT("|") << str;
-    }
-  res.Remove(0,1);
-  return res;
-}
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void SendByMailDlgWX::SaveRecentList()
@@ -314,25 +248,126 @@ void SendByMailDlgWX::OnCloseDialog(wxCommandEvent& event)
 {
   if(event.GetId()==wxID_OK)
     {
-      int n;
-      for(n=0; n<m_grid->GetNumberRows(); n++)
+      wxSizerItemList& list = m_panel->GetSizer()->GetChildren();
+      wxSizerItemList::compatibility_iterator iter;
+      for(iter=list.GetFirst(); iter; iter=iter->GetNext())
         {
-          wxString str = m_grid->GetCellValue(n, 0).Trim(); 
-          if(!str.IsEmpty())
-            AddAddressToRecentList(str);
-        }      
+          wxSizerItem* item = iter->GetData();
+          if(item)
+            {
+              RecipientPanel* panel = wxDynamicCast(item->GetWindow(), RecipientPanel);
+              if(panel)
+                {
+                  if(!panel->GetAddress().IsEmpty())
+                    {
+                      wxString str = panel->GetAddress();
+                      if(panel->GetType()==1)
+                        m_ccArray.Add(str);
+                      else
+                        m_toArray.Add(str);
+                      AddAddressToRecentList(str);
+                    }
+                }
+            }
+        }
     }
+
   SaveRecentList();
   event.Skip();
 }
 
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void SendByMailDlgWX::OnSize(wxSizeEvent& event)
+void SendByMailDlgWX::OnDeleteRecipient(wxCommandEvent& event)
 {
-  if(m_grid)
-    m_grid->SetColSize(0, m_grid->GetSize().x-20);
-  event.Skip();
+  wxWindow* win = wxDynamicCast(event.GetEventObject(), wxWindow);
+  if(win)
+    {
+      RecipientPanel* panel = wxDynamicCast(win->GetParent(), RecipientPanel);
+      if(panel)
+        {
+          m_panel->GetSizer()->Detach(panel);
+          delete panel;
+          
+          if(m_panel->GetSizer()->GetChildren().GetCount()==0)
+            AddRecipientLine();
+          Layout();
+        }
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void SendByMailDlgWX::AddRecipientLine()
+{
+  RecipientPanel* recipient;
+  recipient = new RecipientPanel(m_panel);
+  recipient->AddDefaultRecipients(m_rcptArray);
+  m_panel->GetSizer()->Add(recipient, 0, wxEXPAND|wxBOTTOM, 4);
+  Layout();
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void SendByMailDlgWX::OnChangeRecipientAddress(wxCommandEvent& event)
+{
+  wxSizerItemList& list = m_panel->GetSizer()->GetChildren();
+  wxSizerItemList::compatibility_iterator iter = list.GetLast();
+  if(iter)
+    {
+      wxSizerItem* item = iter->GetData();
+      if(item)
+        {
+          RecipientPanel* panel = wxDynamicCast(item->GetWindow(), RecipientPanel);
+          if(panel)
+            {
+              if(!panel->GetAddress().IsEmpty())
+                AddRecipientLine();
+            }
+        }
+    }
+
+}
+
+
+
+//
+//
+// RecipientPanel
+//
+//
+
+IMPLEMENT_CLASS(RecipientPanel, wxPanel)
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+RecipientPanel::RecipientPanel(wxWindow* parent):
+wxPanel()
+{
+  wxXmlResource::Get()->LoadPanel(this, parent, wxT("RecipientPanel"));
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void RecipientPanel::AddDefaultRecipients(const wxArrayString& arr)
+{
+  XRCCTRL(*this, "wxID_RECIPIENT_ADDRESS", wxComboBox)->Append(arr);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+wxString RecipientPanel::RecipientPanel::GetAddress()const
+{
+  return XRCCTRL(*this, "wxID_RECIPIENT_ADDRESS", wxComboBox)->GetValue();
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+int RecipientPanel::RecipientPanel::GetType()const
+{
+  return XRCCTRL(*this, "wxID_RECIPIENT_TYPE", wxChoice)->GetSelection();
 }
 
 #endif /* _WX */

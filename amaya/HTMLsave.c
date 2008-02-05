@@ -4622,7 +4622,7 @@ void SendByMail (Document document, View view)
       {
         TtaSetMailer(mail, appname);
         
-        arr = dlg.GetRecipients();
+        arr = dlg.GetToRecipients();
         for (i = 0; i < (int)arr.GetCount(); i++)
         {
           wxString rcpt = arr[i];
@@ -4630,6 +4630,17 @@ void SendByMail (Document document, View view)
           if (!rcpt.IsEmpty ())
             TtaAddEMailToRecipient (mail, (const char*) rcpt.mb_str(wxConvUTF8));
         }
+        
+        arr = dlg.GetCcRecipients();
+        for (i = 0; i < (int)arr.GetCount(); i++)
+        {
+          wxString rcpt = arr[i];
+          rcpt.Trim(true).Trim(false);
+          if (!rcpt.IsEmpty ())
+            TtaAddEMailCopyRecipient (mail, (const char*) rcpt.mb_str(wxConvUTF8));
+        }
+        
+        
         docPath = GetLocalPath (document, DocumentURLs[document]);
         docType = DocumentMeta[document]->content_type;
         docChar = DocumentMeta[document]->charset;

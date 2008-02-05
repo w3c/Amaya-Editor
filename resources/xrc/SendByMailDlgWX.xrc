@@ -1,93 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
   <object class="wxDialog" name="SendByMailDlgWX">
-    <title>*SendByMailDlgWX*</title>
-    <centered>1</centered>
-    <size>600,400</size>
-    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
+      
+      
       <object class="sizeritem">
-        <object class="wxSplitterWindow">
-          <object class="wxPanel" name="wxID_PANEL_MAIL_HEADER">
-            <object class="wxBoxSizer">
-              <orient>wxVERTICAL</orient>
-              <object class="sizeritem">
-                <object class="wxStaticLine"/>
-                <flag>wxALL|wxEXPAND</flag>
-                <border>4</border>
-              </object>
-              <object class="sizeritem">
-                <object class="wxBoxSizer">
-                  <orient>wxHORIZONTAL</orient>
-                  <object class="sizeritem">
-                    <object class="wxStaticText" name="wxID_LABEL_SUBJECT">
-                      <label>*Sujet :*</label>
-                    </object>
-                    <option>0</option>
-                    <flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL</flag>
-                    <border>4</border>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxTextCtrl" name="wxID_EDIT_SUBJECT"/>
-                    <option>1</option>
-                    <flag>wxALL|wxEXPAND</flag>
-                    <border>4</border>
-                  </object>
-                </object>
-                <flag>wxEXPAND</flag>
-              </object>
-              <object class="sizeritem">
-                <object class="wxRadioBox" name="wxID_RADIOBOX_SEND_CLASS">
-                  <label>*Envoyer en tant que :*</label>
-                  <content>
-                    <item>*Piece jointe*</item>
-                    <item>*Archive zip*</item>
-                    <item>*Contenu*</item>
-                    <item>*Ne pas envoyer*</item>
-                  </content>
-                  <dimension>4</dimension>
-                  <style>wxRA_SPECIFY_COLS</style>
-                </object>
-                <option>0</option>
-                <flag>wxALL|wxEXPAND</flag>
-                <border>4</border>
-              </object>
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_SUBJECT">
+              <label>*Sujet :*</label>
             </object>
+            <option>0</option>
+            <flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL</flag>
+            <border>4</border>
           </object>
-          <orientation>horizontal</orientation>
-          <sashpos>200</sashpos>
-          <minsize>92</minsize>
-          <object class="wxPanel" name="wxID_PANEL_MAIL_CONTENT">
-            <object class="wxBoxSizer">
-              <orient>wxVERTICAL</orient>
-              <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_LABEL_MESSAGE">
-                  <label>*Message :*</label>
-                </object>
-                <flag>wxALL</flag>
-                <border>4</border>
-              </object>
-              <object class="sizeritem">
-                <object class="wxTextCtrl" name="wxID_EDIT_MESSAGE">
-                  <style>wxTE_AUTO_SCROLL|wxTE_MULTILINE</style>
-                </object>
-                <option>1</option>
-                <flag>wxEXPAND</flag>
-              </object>
-            </object>
+          <object class="spacer">
+            <size>8,0</size>
           </object>
+          <object class="sizeritem">
+            <object class="wxTextCtrl" name="wxID_EDIT_SUBJECT"/>
+            <option>1</option>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>4</border>
+          </object>
+          <orient>wxHORIZONTAL</orient>
         </object>
-        <option>1</option>
-        <flag>wxALL|wxEXPAND</flag>
-        <border>4</border>
-        <minsize>400,400</minsize>
+        <option>0</option>
+        <flag>wxEXPAND</flag>
+      </object>
+      <object class="spacer">
+        <size>0,8</size>
       </object>
       <object class="sizeritem">
-        <option>0</option>
-        <flag>wxTOP|wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
+        <object class="wxStaticText" name="wxID_LABEL_MESSAGE">
+          <label>*Message :*</label>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <object class="wxTextCtrl" name="wxID_EDIT_MESSAGE">
+          <style>wxTE_AUTO_SCROLL|wxTE_MULTILINE</style>
+        </object>
+        <option>1</option>
+        <flag>wxEXPAND</flag>
+        <minsize>120,200</minsize>
+      </object>
+      <object class="spacer">
+        <size>0,8</size>
+      </object>
+      <object class="sizeritem">
+        <object class="wxRadioBox" name="wxID_RADIOBOX_SEND_CLASS">
+          <label>*Envoyer en tant que :*</label>
+          <dimension>4</dimension>
+          <content>
+            <item>*Piece jointe*</item>
+            <item>*Archive zip*</item>
+            <item>*Contenu*</item>
+            <item>*Ne pas envoyer*</item>
+          </content>
+          <dimension>4</dimension>
+          <style>wxRA_SPECIFY_COLS</style>
+        </object>
+        <flag>wxEXPAND</flag>
+      </object>
+      <object class="spacer">
+        <size>0,8</size>
+      </object>
+      <object class="sizeritem">
         <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_OK">
               <label>*Send*</label>
@@ -104,21 +84,41 @@
               <label>*Cancel*</label>
             </object>
           </object>
+          <orient>wxHORIZONTAL</orient>
         </object>
+        <flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTRE_VERTICAL</flag>
         <border>4</border>
-        <minsize/>
       </object>
     </object>
+    <size>600,520</size>
+    <title>*SendByMailDlgWX*</title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
   </object>
   <object class="wxPanel" name="RecipientPanel">
     <object class="wxBoxSizer">
       <orient>wxHORIZONTAL</orient>
       <object class="sizeritem">
-        <object class="wxChoice"/>
+        <object class="wxChoice" name="wxID_RECIPIENT_TYPE">
+          <size>72,-1</size>
+          <content>
+            <item>To:</item>
+            <item>Cc:</item>
+          </content>
+          <selection>0</selection>
+        </object>
+        <flag>wxALIGN_CENTRE_VERTICAL</flag>
+      </object>
+      <object class="spacer">
+        <size>8,0</size>
       </object>
       <object class="sizeritem">
-        <object class="wxComboBox"/>
+        <object class="wxComboBox" name="wxID_RECIPIENT_ADDRESS"/>
         <option>1</option>
+        <flag>wxALIGN_CENTRE_VERTICAL</flag>
+      </object>
+      <object class="spacer">
+        <size>8,0</size>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_BUTTON_DEL">
@@ -126,6 +126,7 @@
           <tooltip>*Supprimer*</tooltip>
           <style>wxBU_AUTODRAW</style>
         </object>
+        <flag>wxALIGN_CENTRE_VERTICAL</flag>
       </object>
     </object>
   </object>
