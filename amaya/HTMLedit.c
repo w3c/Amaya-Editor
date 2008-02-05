@@ -2586,10 +2586,10 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt,
                          ThotBool withUndo)
 {
-  ElementType	    elType;
+  ElementType	      elType;
   AttributeType     attrType, attrIDType;
   Attribute         attr, attrID = NULL;
-  Element	    image, elFound;
+  Element	          image, elFound;
   char             *value, *name;
   char              url[MAX_LENGTH];
   int               length, i;
@@ -4368,11 +4368,19 @@ void CreateTarget (Document doc, View view)
   ----------------------------------------------------------------------*/
 void UpdateAttrNAME (NotifyAttribute * event)
 {
-  if (DocumentMeta[event->document] &&
-      DocumentMeta[event->document]->xmlformat)
-    // check valid value
-    TtaIsValidID (event->attribute, TRUE);
-  else
+  ElementType         elType;
+
+  if (DocumentMeta[event->document] && DocumentMeta[event->document]->xmlformat)
+    {
+      // check valid value
+      elType = TtaGetElementType (event->element);
+      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+          (elType.ElTypeNum == HTML_EL_Anchor ||
+           elType.ElTypeNum == HTML_EL_MAP ||
+           elType.ElTypeNum == HTML_EL_map))
+        TtaIsValidID (event->attribute, TRUE);
+    }
+  //else
     MakeUniqueName (event->element, event->document, TRUE, TRUE);
 }
 

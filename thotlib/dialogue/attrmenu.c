@@ -1163,10 +1163,9 @@ void SetAttrValueToRange(PtrAttrListElem elem, intptr_t value)
   tmp = AttrListElem_GetName(elem);
   isACCESS = (!strcmp (tmp, "accesskey") &&
               !strcmp (elem->pSS->SsName, "HTML"));
+  //if (!strcmp (tmp, "name") && !strcmp (elem->pSS->SsName, "HTML"))
   isID = (!strcmp (tmp, "id") ||
-          !strcmp (tmp, "xml:id") ||
-          (!strcmp (tmp, "name") &&
-           !strcmp (elem->pSS->SsName, "HTML")));
+          !strcmp (tmp, "xml:id"));
   isCLASS = !strcmp (tmp, "class");
   isSpan = ((isID || isCLASS ||
              !strcmp (tmp, "style") || !strcmp (tmp, "lang")) &&
