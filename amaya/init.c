@@ -939,6 +939,12 @@ void UpdateEditorMenus (Document doc)
       TtaSetItemOff (doc, 1, Views, TSplitVertically);
       TtaSetMenuOff (doc, 1, Style);
     }
+  else if  (DocumentTypes[doc] == docXml)
+    {
+      TtaSetItemOff (doc, 1, Views, BShowAlternate);
+      TtaSetItemOff (doc, 1, Views, BShowToC);
+      TtaSetMenuOff (doc, 1, Style);
+    }
   else if (DocumentTypes[doc] == docHTML)
     {
       /* structure information is active only in the structure view */

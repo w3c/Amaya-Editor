@@ -29,6 +29,7 @@
 #ifdef _WX
 #include "wxdialogapi_f.h"
 #include "appdialogue_wx.h"
+
 #endif /* _WX */
 
 static int         CSScase;
@@ -760,7 +761,8 @@ static ThotBool GetEnclosingBlock (Document doc)
   ElementType	        elType;
   int                 i, j;
 
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docXml)
     return FALSE;
   TtaGiveFirstSelectedElement (doc, &first, &i, &j);
   if (first == NULL)
@@ -872,7 +874,8 @@ void DoStyleColor (char *color)
   if (!TtaGetDocumentAccessMode (doc) || color == NULL)
     /* document is ReadOnly */
     return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docXml)
     return;
   // new thot color
   ptr = strstr (color, "#");
@@ -936,7 +939,8 @@ void DoSelectFontSize (Document doc, View view)
   if (!TtaGetDocumentAccessMode (doc))
     /* document is ReadOnly */
     return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docXml)
     return;
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
@@ -974,7 +978,8 @@ void DoSelectFontFamilly (Document doc, View view)
   if (!TtaGetDocumentAccessMode (doc))
     /* document is ReadOnly */
     return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docXml)
     return;
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
@@ -1010,6 +1015,51 @@ void DoSelectFontFamilly (Document doc, View view)
   ----------------------------------------------------------------------*/
 void DoSelectFont (Document doc, View view)
 {
+  Element             el = NULL;
+  DisplayMode         dispMode;
+  int                 firstChar, lastChar;
+  int                 family, size;
+  ThotBool            open = FALSE;
+
+  if (!TtaGetDocumentAccessMode (doc))
+    /* document is ReadOnly */
+    return;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docXml)
+    return;
+
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  if (el)
+    {
+      family = Current_FontFamily;
+      size = Current_FontSize;
+      if (CreateFontDlgWX (TtaGetViewFrame (doc, view),
+                           TtaGetMessage(AMAYA,AM_CHOOSE_FONT),
+                           &family, &size))
+        {
+          open = TtaHasUndoSequence (doc);
+          if (!open)
+            TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+          /* Need to force a redisplay */
+          dispMode = TtaGetDisplayMode (doc);
+          if (dispMode == DisplayImmediately)
+            TtaSetDisplayMode (doc, DeferredDisplay);
+          if (Current_FontFamily != family)
+            {
+              Current_FontFamily = family;
+              DoSelectFontFamilly (doc, view);
+            }
+          if (Current_FontSize != size)
+            {
+              Current_FontSize = size;
+              DoSelectFontSize (doc, view);
+            }
+          if (dispMode == DisplayImmediately)
+            TtaSetDisplayMode (doc, dispMode);
+          if (!open)
+            TtaCloseUndoSequence (doc);
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1028,7 +1078,8 @@ void DoSelectColor (Document doc, View view)
   if (!TtaGetDocumentAccessMode (doc))
     /* document is ReadOnly */
     return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docXml)
     return;
 
   if (Current_Color != -1)
@@ -1065,7 +1116,8 @@ void DoSelectBgColor (Document doc, View view)
   if (!TtaGetDocumentAccessMode (doc))
     /* document is ReadOnly */
     return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docXml)
     return;
 
   if (Current_BackgroundColor != -1)
@@ -1088,16 +1140,17 @@ void DoSelectBgColor (Document doc, View view)
 
 /*----------------------------------------------------------------------
   CleanUpAttribute removes the CSS rule (data) from the attribute value
-  Return TRUE if the value is now empty
+  Return TRUE if the selection will change
   -----------------------------------------------------------------------*/
-static void CleanUpAttribute (Attribute attr, char *data, Element el, Document doc)
+static ThotBool CleanUpAttribute (Attribute attr, char *data, Element el, Document doc)
 {
   char     *buffer, *property, *start, *stop, *ptr;
   int       lg;
+  ThotBool  selChange = FALSE;
 
   property = TtaStrdup (data);
   if (property == NULL)
-    return;
+    return selChange;
   ptr = strstr (property, ":");
   lg = TtaGetTextAttributeLength (attr);
   if (lg && ptr)
@@ -1130,6 +1183,7 @@ static void CleanUpAttribute (Attribute attr, char *data, Element el, Document d
               TtaRegisterAttributeDelete (attr, el, doc);
               TtaRemoveAttribute (el, attr, doc);
               DeleteSpanIfNoAttr (el, doc, &firstC, &lastC);
+              selChange = TRUE;
             }
           else
             {
@@ -1143,35 +1197,38 @@ static void CleanUpAttribute (Attribute attr, char *data, Element el, Document d
       TtaFreeMemory (buffer);
     }
   TtaFreeMemory (property);
+  return selChange;
 }
 
 /*----------------------------------------------------------------------
-  DoRemoveColor
-  Remove color style
+  RemoveSpecificStyle
+  Remove a css property
   ----------------------------------------------------------------------*/
-void RemoveSpecificStyle (Document doc, char *cssproperty)
+ThotBool RemoveSpecificStyle (Document doc, char *cssproperty)
 {
-  Element         el;
+  Element         el, parent1, parent2;
   ElementType	    elType;
   Attribute       attr;
   AttributeType   attrType;
   int             firstChar, lastChar;
   char           *name;
   DisplayMode     dispMode;
-  ThotBool        open = FALSE;
+  ThotBool        open = FALSE, selChange = FALSE;
 
   if (!TtaGetDocumentAccessMode (doc))
     /* document is ReadOnly */
-    return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
-    return;
+    return selChange;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docXml)
+    return selChange;
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  parent1 = TtaGetParent (el);
   if (TtaIsReadOnly (el))
     {
       /* the selected element is read-only */
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_READONLY);
-      return;
+      return selChange;
     }
 
   /* Need to force a redisplay */
@@ -1185,6 +1242,7 @@ void RemoveSpecificStyle (Document doc, char *cssproperty)
     {
       // get the style attribute
       elType = TtaGetElementType (el);
+      parent2 = TtaGetParent (el);
       attrType.AttrSSchema = elType.ElSSchema;
       name = TtaGetSSchemaName (elType.ElSSchema);
       if (!strcmp (name, "HTML"))
@@ -1197,14 +1255,15 @@ void RemoveSpecificStyle (Document doc, char *cssproperty)
         attrType.AttrTypeNum = MathML_ATTR_style_;
       attr = TtaGetAttribute (el, attrType);
       if (attr)
-        CleanUpAttribute (attr, cssproperty, el, doc);
+        selChange = CleanUpAttribute (attr, cssproperty, el, doc);
       // next element within the selection
       TtaGiveNextSelectedElement (doc, &el, &firstChar, &lastChar);
     }
-  if (open)
+  if (!open)
     TtaCloseUndoSequence (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
+  return selChange;
 }
 
 /*----------------------------------------------------------------------
@@ -1231,7 +1290,7 @@ void DoRemoveBgColor (Document doc, View view)
   ----------------------------------------------------------------------*/
 void DoRemoveFont (Document doc, View view)
 {
-  Element             el = NULL;
+ Element             el = NULL;
   int                 firstChar, lastChar;
   int                 size = -1, family;
   TypeUnit            unit;
@@ -1240,7 +1299,8 @@ void DoRemoveFont (Document doc, View view)
   if (!TtaGetDocumentAccessMode (doc))
     /* document is ReadOnly */
     return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docXml)
     return;
 
   RemoveSpecificStyle (doc, "font-family: Times");
@@ -1248,7 +1308,6 @@ void DoRemoveFont (Document doc, View view)
   // update the style panel
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
   TtaGiveBoxFontInfo (el, doc, 1, &size, &unit, &family);
-#ifdef IV
   if (size != -1 &&
       (size != Current_FontSize || unit != UnPoint  || family != Current_FontFamily))
     {
@@ -1256,7 +1315,6 @@ void DoRemoveFont (Document doc, View view)
       Current_FontSize = size;
       UpdateStylePanel (doc, view);
     }
-#endif
 }
 
 /*----------------------------------------------------------------------

@@ -12,6 +12,15 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 
+//-----------------------------------------------------------------------------
+// Event table: connect the events to the handler functions to process them
+//-----------------------------------------------------------------------------
+BEGIN_EVENT_TABLE(FontDlgWX, wxDialog)
+  EVT_BUTTON(     XRCID("wxID_OK"),           FontDlgWX::OnOk )
+  EVT_BUTTON(     XRCID("wxID_CANCEL"),       FontDlgWX::OnCancel )
+END_EVENT_TABLE()
+
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 FontDlgWX::FontDlgWX(wxWindow* parent, const wxString& title):
@@ -21,10 +30,13 @@ FontDlgWX::FontDlgWX(wxWindow* parent, const wxString& title):
   
   SetTitle(title);
   XRCCTRL(*this,"wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CHOOSE_FONT) ));
-  
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_LIB_CONFIRM) ));
+   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
+ 
   wxTextValidator valid(wxFILTER_NUMERIC);
   XRCCTRL(*this,"wxID_COMBO_SIZE", wxComboBox)->SetValidator(valid);
-
+  // give focus to ...
+  XRCCTRL(*this, "wxID_CHOICE_FAMILY", wxChoice)->SetFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -60,7 +72,26 @@ void FontDlgWX::SetFontSize(int size)
   XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetValue(str);
 }
 
+/*----------------------------------------------------------------------
+  OnCancel called when the user clicks on cancel button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void FontDlgWX::OnCancel( wxCommandEvent& event )
+{
+  EndModal (wxID_CANCEL);
+}
 
+
+/*----------------------------------------------------------------------
+  OnOk called when the user clicks on cancel button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void FontDlgWX::OnOk( wxCommandEvent& event )
+{
+  EndModal (wxID_OK);
+}
 
 
 #endif /* _WX */

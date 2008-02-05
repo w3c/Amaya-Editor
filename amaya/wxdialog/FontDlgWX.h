@@ -23,6 +23,10 @@ public:
   
   void SetFontFamily(int family);
   void SetFontSize(int size);
+  void OnCancel( wxCommandEvent& event );
+  void OnOk( wxCommandEvent& event );
+
+  DECLARE_EVENT_TABLE()
 };
 
 

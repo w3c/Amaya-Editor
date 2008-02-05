@@ -1,14 +1,15 @@
 <?xml version="1.0" ?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxDialog">
+  <object class="wxDialog" name="FontDlgWX">
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxStaticText" name="wxID_LABEL">
           <label>*Select font family and size:*</label>
+          <size>180,-1</size>
         </object>
         <flag>wxALL</flag>
-        <border>2</border>
+        <border>5</border>
       </object>
       <object class="sizeritem">
         <object class="wxBoxSizer">
@@ -26,6 +27,9 @@
             <option>2</option>
             <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
             <border>2</border>
+          </object>
+          <object class="spacer">
+            <size>5,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxComboBox" name="wxID_COMBO_SIZE">
@@ -67,9 +71,12 @@
             <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
             <border>2</border>
           </object>
+          <object class="spacer">
+            <size>10,0</size>
+          </object>
         </object>
         <flag>wxALL|wxEXPAND</flag>
-        <border>2</border>
+        <border>5</border>
       </object>
       <object class="spacer">
         <size>0,10</size>
@@ -94,10 +101,11 @@
           <orient>wxHORIZONTAL</orient>
         </object>
         <option>1</option>
-        <flag>wxALL|wxALIGN_RIGHT</flag>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
         <border>2</border>
       </object>
     </object>
-    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+    <title></title>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxTAB_TRAVERSAL</style>
   </object>
 </resource>

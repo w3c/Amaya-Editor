@@ -101,6 +101,7 @@ else
   Fit();
   Refresh();
   SetAutoLayout( TRUE );
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetFocus();
 }
 
 /*----------------------------------------------------------------------

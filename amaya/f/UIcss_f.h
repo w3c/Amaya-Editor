@@ -39,8 +39,8 @@ extern void DoSelectColor ( Document doc,
                             View view );
 extern void DoSelectBgColor ( Document doc,
                               View view );
-extern void RemoveSpecificStyle ( Document doc,
-                                  char *cssproperty );
+extern ThotBool RemoveSpecificStyle ( Document doc,
+                                      char *cssproperty );
 extern void DoRemoveColor ( Document doc,
                             View view );
 extern void DoRemoveBgColor ( Document doc,
@@ -131,8 +131,8 @@ extern void DoSelectColor ( Document doc,
                               View view );
 extern void DoSelectBgColor ( Document doc,
                                 View view );
-extern void RemoveSpecificStyle ( Document doc,
-                                    char *cssproperty );
+extern ThotBool RemoveSpecificStyle ( Document doc,
+                                        char *cssproperty );
 extern void DoRemoveColor ( Document doc,
                               View view );
 extern void DoRemoveBgColor ( Document doc,

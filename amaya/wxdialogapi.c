@@ -1269,15 +1269,16 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
   ----------------------------------------------------------------------*/
 ThotBool CreateFontDlgWX(ThotWindow parent, const char *title, int* family, int* size)
 {
-  if(family && size)
+  if (family && size)
     {
       wxString wx_title = TtaConvMessageToWX(title);
-      FontDlgWX dlg(parent, wx_title);
-      if(*family>0)
+      FontDlgWX dlg (parent, wx_title);
+      // manage the return of the modal dialog
+      if (*family > 0)
         dlg.SetFontFamily(*family-1);
-      if(*size>0)
+      if(*size > 0)
         dlg.SetFontSize(*size);
-      if(dlg.ShowModal()==wxID_OK)
+      if (dlg.ShowModal()==wxID_OK)
         {
           *family = dlg.GetFontFamily();
           *size = dlg.GetFontSize();
