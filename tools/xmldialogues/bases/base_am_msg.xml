@@ -6766,6 +6766,10 @@
 	<message xml:lang="en">Show "Tip of the day" at startup</message>
 	<message xml:lang="fr">Afficher le "Conseil du jour" au démarrage</message>
 </label>
+<label define="AM_CHOOSE_FONT">
+	<message xml:lang="en">Choose font family and size:</message>
+	<message xml:lang="fr">Choisissez la famille et la taille de la police:</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

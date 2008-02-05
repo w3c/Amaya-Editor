@@ -21,6 +21,7 @@
   #include "wxdialog/CheckedListDlgWX.h"
   #include "wxdialog/CreateTableDlgWX.h"
   #include "wxdialog/DocInfoDlgWX.h"
+  #include "wxdialog/FontDlgWX.h"
   #include "wxdialog/HRefDlgWX.h"
   #include "wxdialog/ImageDlgWX.h"
   #include "wxdialog/InitConfirmDlgWX.h"
@@ -1260,5 +1261,29 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
     }
   
   return TRUE;
+}
+
+
+/*----------------------------------------------------------------------
+  CreateFontDlgWX
+  ----------------------------------------------------------------------*/
+ThotBool CreateFontDlgWX(ThotWindow parent, const char *title, int* family, int* size)
+{
+  if(family && size)
+    {
+      wxString wx_title = TtaConvMessageToWX(title);
+      FontDlgWX dlg(parent, wx_title);
+      if(*family>0)
+        dlg.SetFontFamily(*family-1);
+      if(*size>0)
+        dlg.SetFontSize(*size);
+      if(dlg.ShowModal()==wxID_OK)
+        {
+          *family = dlg.GetFontFamily();
+          *size = dlg.GetFontSize();
+          return TRUE;
+        }
+    }
+  return FALSE;
 }
 

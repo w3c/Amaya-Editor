@@ -151,6 +151,10 @@ extern ThotBool CreateNumDlgWX ( int ref,
                                  const char *title,
                                  const char *label,
                                  int value );
+extern ThotBool CreateFontDlgWX ( ThotWindow parent,
+                                  const char *title,
+                                  int* family,
+                                  int* size );
 
 #else /* __STDC__ */
 
@@ -299,6 +303,10 @@ extern ThotBool CreateNumDlgWX ( int ref,
                                    const char *title,
                                    const char *label,
                                    int value );
+extern ThotBool CreateFontDlgWX ( ThotWindow parent,
+                                    const char *title,
+                                    int* family,
+                                    int* size );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

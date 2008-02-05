@@ -1,0 +1,103 @@
+<?xml version="1.0" ?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxStaticText" name="wxID_LABEL">
+          <label>*Select font family and size:*</label>
+        </object>
+        <flag>wxALL</flag>
+        <border>2</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxChoice" name="wxID_CHOICE_FAMILY">
+              <size>108,-1</size>
+              <content>
+                <item>Times</item>
+                <item>Arial</item>
+                <item>Courier</item>
+              </content>
+              <selection>1</selection>
+            </object>
+            <option>2</option>
+            <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
+            <border>2</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxComboBox" name="wxID_COMBO_SIZE">
+              <size>60,-1</size>
+              <content>
+                <item>6</item>
+                <item>7</item>
+                <item>8</item>
+                <item>9</item>
+                <item>10</item>
+                <item>11</item>
+                <item>12</item>
+                <item>13</item>
+                <item>14</item>
+                <item>15</item>
+                <item>16</item>
+                <item>18</item>
+                <item>20</item>
+                <item>22</item>
+                <item>24</item>
+                <item>26</item>
+                <item>28</item>
+                <item>32</item>
+                <item>36</item>
+                <item>40</item>
+                <item>44</item>
+                <item>48</item>
+                <item>54</item>
+                <item>60</item>
+                <item>66</item>
+                <item>72</item>
+                <item>80</item>
+                <item>88</item>
+                <item>96</item>
+              </content>
+              <selection>6</selection>
+            </object>
+            <option>1</option>
+            <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
+            <border>2</border>
+          </object>
+        </object>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>2</border>
+      </object>
+      <object class="spacer">
+        <size>0,10</size>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_OK">
+              <label>OK</label>
+              <default>1</default>
+            </object>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>CANCEL</label>
+            </object>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+          <orient>wxHORIZONTAL</orient>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxALIGN_RIGHT</flag>
+        <border>2</border>
+      </object>
+    </object>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+  </object>
+</resource>

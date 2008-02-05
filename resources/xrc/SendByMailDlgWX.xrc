@@ -106,7 +106,26 @@
           </object>
         </object>
         <border>4</border>
-        <minsize></minsize>
+        <minsize/>
+      </object>
+    </object>
+  </object>
+  <object class="wxPanel" name="RecipientPanel">
+    <object class="wxBoxSizer">
+      <orient>wxHORIZONTAL</orient>
+      <object class="sizeritem">
+        <object class="wxChoice"/>
+      </object>
+      <object class="sizeritem">
+        <object class="wxComboBox"/>
+        <option>1</option>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBitmapButton" name="wxID_BUTTON_DEL">
+          <bitmap>../icons/16x16/cancel.png</bitmap>
+          <tooltip>*Supprimer*</tooltip>
+          <style>wxBU_AUTODRAW</style>
+        </object>
       </object>
     </object>
   </object>

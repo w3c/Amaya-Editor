@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern void InitDocHistory ( Document doc );
 extern void FreeDocHistory ( void );
 extern Element ElementAtPosition ( Document doc,
@@ -134,7 +133,6 @@ extern int EncodeBuf ( char *inbuf,
                        ThotBool opt );
 
 #else /* __STDC__ */
-
 extern void InitDocHistory ( Document doc );
 extern void FreeDocHistory ( void );
 extern Element ElementAtPosition ( Document doc,
