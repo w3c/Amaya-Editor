@@ -464,12 +464,12 @@
 462 Méret
 463 Helyzet
 464 XML szerkesztési mód
-465 **List of style sheets
-466 **Add a style sheet...
-467 **Remove selected style sheets
-468 **Activate selected style sheets
-469 **Desactivate selected style sheets
-470 **Open selected style sheets
+465 Stíluslapok listája
+466 Stíluslap hozzáadása...
+467 Kijelölt stíluslapok eltávolítása
+468 Kijelölt stíluslapok aktiválása
+469 Kijelölt stíluslapok deaktiválása
+470 Kijelölt stíluslapok megnyitása
 471 Amaya profile:
 472 **Show "Tip of the day" at startup
 473 **Choose font family and size:

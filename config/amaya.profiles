@@ -617,6 +617,8 @@ SelectColumn
 &CreateCol
 &CreateTHead
 &CreateTFoot
+&ChangeToDataCell
+&ChangeToHeadingCell
 
 ################# MATHML
 [maths]
@@ -747,8 +749,8 @@ ReplyToAnnotation
 [xml-display]
 ShowLinks
 ShowTargets
-ShowSource
-ShowStructure
+#ShowSource
+#ShowStructure
 #ShowFormatted
 ShowToC
 #ShowTimeLineWindow

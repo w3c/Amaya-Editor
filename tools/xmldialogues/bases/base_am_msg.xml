@@ -6711,13 +6711,15 @@
 <message xml:lang="es">Lista de hojas de estilo</message>
 <message xml:lang="it">Elenco dei fogli di stile</message>
 <message xml:lang="de">Liste der Dokumentenvorlagen</message>
+<message xml:lang="hu">Stíluslapok listája</message>
 </label>
 <label define="AM_PANEL_CSS_ADD">
 	<message xml:lang="en">Add a style sheet...</message>
 	<message xml:lang="fr">Ajouter une feuille de style...</message>
 <message xml:lang="es">Añadir hoja de estilo ...</message>
 <message xml:lang="it">Aggiungi un foglio di stile...</message>
-<message xml:lang="de">Eine Dokumentenvorlage hinzufügen</message>
+<message xml:lang="de">Eine Dokumentenvorlage hinzufügen...</message>
+<message xml:lang="hu">Stíluslap hozzáadása...</message>
 </label>
 <label define="AM_PANEL_CSS_REM">
 	<message xml:lang="en">Remove selected style sheets</message>
@@ -6725,6 +6727,7 @@
 <message xml:lang="es">Eliminar hojas de estilo seleccionadas</message>
 <message xml:lang="it">Rimuovi il foglio di stile selezionato</message>
 <message xml:lang="de">Die ausgewählte Vorlage löschen</message>
+<message xml:lang="hu">Kijelölt stíluslapok eltávolítása</message>
 </label>
 <label define="AM_PANEL_CSS_ACTIVE">
 	<message xml:lang="en">Activate selected style sheets</message>
@@ -6732,6 +6735,7 @@
 <message xml:lang="es">Activar hojas de estilo seleccionadas</message>
 <message xml:lang="it">Attiva il foglio di stile selezionato</message>
 <message xml:lang="de">Die ausgewählte Vorlage aktivieren</message>
+<message xml:lang="hu">Kijelölt stíluslapok aktiválása</message>
 </label>
 <label define="AM_PANEL_CSS_DISACTIVE">
 	<message xml:lang="en">Desactivate selected style sheets</message>
@@ -6739,6 +6743,7 @@
 <message xml:lang="es">Desactivar hojas de estilo seleccionadas</message>
 <message xml:lang="it">Disattiva il foglio di stile selezionato</message>
 <message xml:lang="de">Die ausgewählte Vorlage ausschalten</message>
+<message xml:lang="hu">Kijelölt stíluslapok deaktiválása</message>
 </label>
 <label define="AM_PANEL_CSS_OPEN">
 	<message xml:lang="en">Open selected style sheets</message>
@@ -6746,6 +6751,7 @@
 <message xml:lang="es">Abrir hojas de estilo selecc</message>
 <message xml:lang="it">Apri il foglio di stile selezionato</message>
 <message xml:lang="de">Die ausgewählte Vorlage öffnen</message>
+<message xml:lang="hu">Kijelölt stíluslapok megnyitása</message>
 </label>
 <label define="AM_PROFILE">
 	<message xml:lang="en">Amaya profile:</message>

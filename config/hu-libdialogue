@@ -45,8 +45,8 @@
 43 Bezár
 44 Mappák
 45 A dokumentum (%s) már létezik. Felülírjuk?
-46 **Set the text color
-47 **Set the background color
+46 Szöveg színének beállítása
+47 Háttér színének beállítása
 48 Betűkészlet
 49 Normál
 50 Félkövér
@@ -57,7 +57,7 @@
 55 Normál
 56 Aláhúzott
 57 Áthúzott
-58 Betáméret (pt)
+58 Betáméret
 59 Behúzás csökkentése
 60 Egyes sortávolság
 61 Közepes sortávolság

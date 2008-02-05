@@ -759,6 +759,7 @@
 <message xml:lang="es">Establecer el color del texto</message>
 <message xml:lang="it">Impostare il colore del testo</message>
 <message xml:lang="de">Textfarbe einstellen</message>
+<message xml:lang="hu">Szöveg színének beállítása</message>
 </label>
 <label define="TMSG_BUTTON_2">
 	<message xml:lang="en">Set the background color</message>
@@ -766,6 +767,7 @@
 <message xml:lang="es">Establecer el color de fondo</message>
 <message xml:lang="it">Impostare il colore dello sfondo</message>
 <message xml:lang="de">Hintergrundfarbe einstellen</message>
+<message xml:lang="hu">Háttér színének beállítása</message>
 </label>
 <label define="TMSG_FONT_FAMILY">
 	<message xml:lang="en">Font family</message>
@@ -928,19 +930,19 @@
 	<message xml:lang="sk">Prečiarknuté</message>
 </label>
 <label define="TMSG_BODY_SIZE_PTS">
-	<message xml:lang="en">Body size (pt)</message>
-	<message xml:lang="fr">Corps (pt)</message>
-	<message xml:lang="de">Größe (pt)</message>
-	<message xml:lang="it">Dimensione (pt)</message>
-	<message xml:lang="tr">Body boyu (pt)</message>
-	<message xml:lang="es">Tamaño del cuerpo (pt)</message>
-	<message xml:lang="pt">Tamanho do corpo (pt)</message>
-	<message xml:lang="fi">Kappalekoko (pt)</message>
-	<message xml:lang="ru">Размер шрифта (п.)</message>
-	<message xml:lang="hu">Betáméret (pt)</message>
-	<message xml:lang="ka">შრიფტის ზომა (pt)</message>
-	<message xml:lang="cn">大小 (pt)</message>
-	<message xml:lang="tw">大小 (pt)</message>
+	<message xml:lang="en">Size</message>
+	<message xml:lang="fr">Taille</message>
+	<message xml:lang="de">Größe</message>
+	<message xml:lang="it">Dimensione</message>
+	<message xml:lang="tr">Boyu</message>
+	<message xml:lang="es">Tamaño</message>
+	<message xml:lang="pt">Tamanho</message>
+	<message xml:lang="fi">Kappalekoko</message>
+	<message xml:lang="ru">Размер шрифта</message>
+	<message xml:lang="hu">Betáméret</message>
+	<message xml:lang="ka">შრიფტის ზომა </message>
+	<message xml:lang="cn">大小 </message>
+	<message xml:lang="tw">大小 </message>
 	<message xml:lang="sk">Veľkosť písmen (v bodoch)</message>
 </label>
 <label define="TMSG_NOINDENT">

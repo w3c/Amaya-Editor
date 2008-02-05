@@ -915,6 +915,12 @@ void UpdateEditorMenus (Document doc)
       TtaSetItemOn (doc, 1, Style, BShowAppliedStyle);
 
   /* update specific menu entries */
+  if (DocumentTypes[doc] == docHTML)
+    TtaSetMenuOn (doc, 1, Types);
+
+  /* Update the doctype menu */
+  UpdateDoctypeMenu (doc);
+
   if (DocumentTypes[doc] == docCSS || DocumentTypes[doc] == docSource ||
       DocumentTypes[doc] == docText || DocumentTypes[doc] == docImage)
     {
@@ -923,16 +929,6 @@ void UpdateEditorMenus (Document doc)
       TtaSetMenuOff (doc, 1, Links);
       TtaSetItemOff (doc, 1, Views, TShowMapAreas);
       TtaSetItemOff (doc, 1, Views, TShowTargets);
-      TtaSetMenuOff (doc, 1, Style);
-    }
-  else if (DocumentTypes[doc] == docHTML)
-    TtaSetMenuOn (doc, 1, Types);
-
-  /* Update the doctype menu */
-  UpdateDoctypeMenu (doc);
-  if (DocumentTypes[doc] == docImage)
-    {
-      // it's not actually a HTML document
       TtaSetItemOff (doc, 1, Views, BShowStructure);
       TtaSetItemOff (doc, 1, Views, BShowSource);
       TtaSetItemOff (doc, 1, Views, BShowFormatted);
@@ -941,6 +937,7 @@ void UpdateEditorMenus (Document doc)
       TtaSetItemOff (doc, 1, Views, BShowToC);
       TtaSetItemOff (doc, 1, Views, TSplitHorizontally);
       TtaSetItemOff (doc, 1, Views, TSplitVertically);
+      TtaSetMenuOff (doc, 1, Style);
     }
   else if (DocumentTypes[doc] == docHTML)
     {

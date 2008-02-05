@@ -4,11 +4,11 @@
 2 Context
 3 S&zerkesztés
 4 &Nézet
-5 Be&szúrás
+5 &Beszúrás
 6 S&tílus
 7 Ka&pcsok
 8 Attribútumok
-9 **Tools
+9 &Eszközök
 10 &Súgó
 11 Új fül
 12 Új &dokumentum...
@@ -219,30 +219,30 @@
 217 &Sorbeli keret (iframe)
 218 &Ruby
 219 Téma
-220 **Classic
-221 **Modern
-222 **No theme
+220 Klasszikus
+221 Modern
+222 Téma nélkül
 223 Szín
 224 Szín...
-225 **No color
+225 Szín nélkül
 226 Háttérszín
 227 Háttérszín...
-228 **No color
-229 **Align
-230 **Left
-231 **Center
-232 **Right
-233 **Justify
-234 **Default
-235 **Line spacing
-236 **Single
-237 **Half
-238 **Double
-239 **Default
-240 **Indent
-241 **Increase
-242 **Decrease
-243 **Default
+228 Szín nélkül
+229 Igazítás
+230 
+231 Középre
+232 Jobbra
+233 Sorkizárt
+234 
+235 Sortávolság
+236 Egyszeres
+237 Fél
+238 Kétszeres
+239 Alapérték
+240 Behúzás
+241 Növel
+242 Csökkent
+243 
 244 CSS &Stílus...
 245 &Szabály létrehozása...
 246 &Alkalmazott stílusok mutatása...
@@ -260,7 +260,7 @@
 258 &Azonosítók (id) hozzáadása/törlése...
 259 Szó&elemző...
 260 &Átalakítás...
-261 **Edit table
+261 
 262 &Adatcellává tétel
 263 &Fejléccé tétel
 264 Egyesítés
@@ -290,7 +290,7 @@
 288 &Tartalomjegyzék létrehozása
 289 &Kötet létrehozása
 290 Időbélyeg beilesztése
-291 **Graphics
+291 
 292 &Képtár mutatása
 293 Kijelölt kép &beillesztése
 294 &Jegyzetek
