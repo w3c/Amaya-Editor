@@ -122,13 +122,13 @@ void TtaUpdateEditorColors (void)
 {
   ThotBool  found;
 
+  /* selection colors */
+  found = FindColor ("FgSelectColor", "White", &White_Color);
+  found = FindColor ("BgSelectColor", "#008BB2", &Black_Color);
   /* background color */
   found = FindColor ("BackgroundColor", "LightGrey1", &White_Color);
   /* drawing color */
   found = FindColor ("ForegroundColor", "Black", &Black_Color);
-  /* selection colors */
-  found = FindColor ("FgSelectColor", "White", &White_Color);
-  found = FindColor ("BgSelectColor", "#008BB2", &Black_Color);
   /* The reference color */
   found = FindColor ("ActiveBoxColor", "Red", &(Box_Color));
   /* color for read-only sections */
