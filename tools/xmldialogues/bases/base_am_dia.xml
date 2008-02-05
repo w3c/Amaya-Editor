@@ -61,7 +61,8 @@
 <message xml:lang="ka">კონტექსტი</message>
 <message xml:lang="cn">上下文</message>
 <message xml:lang="tw">上下文</message>
-<message xml:lang="sk">Kontext</message></label>
+<message xml:lang="sk">Kontext</message>
+</label>
 <label define="Edit_">
 <message xml:lang="en">&amp;Edit</message>
 <message xml:lang="fr">&amp;Édition</message>
@@ -76,7 +77,8 @@
 <message xml:lang="ka">&amp;რედაქტირება</message>
 <message xml:lang="cn">编辑(&amp;E)</message>
 <message xml:lang="tw">編輯(&amp;E)</message>
-<message xml:lang="sk">&amp;Upraviť</message></label>
+<message xml:lang="sk">&amp;Upraviť</message>
+</label>
 <label define="Views">
 <message xml:lang="en">&amp;Views</message>
 <message xml:lang="fr">&amp;Affichage</message>
@@ -91,7 +93,8 @@
 <message xml:lang="ka">ხედი</message>
 <message xml:lang="cn">视图(&amp;V)</message>
 <message xml:lang="tw">視圖(&amp;V)</message>
-<message xml:lang="sk">&amp;Zobrazenia</message></label>
+<message xml:lang="sk">&amp;Zobrazenia</message>
+</label>
 <label define="Types">
 <message xml:lang="en">&amp;Insert</message>
 <message xml:lang="fr">&amp;Insertion</message>
@@ -1335,7 +1338,7 @@
 <message xml:lang="it">Mostra sorgente</message>
 <message xml:lang="de">Quelltext</message>
 <message xml:lang="es">Código &amp;fuente</message>
-<message xml:lang="pt">Exibir fonte</message>
+<message xml:lang="pt">Exibir source</message>
 <message xml:lang="fi">Näytä lähdekoodi</message>
 <message xml:lang="tr">kaynak göster</message>
 <message xml:lang="ru">Показать представление Исходный код</message>
@@ -3332,7 +3335,22 @@
 <message xml:lang="es">Predeterminado</message>
 <message xml:lang="it">Default</message>
 <message xml:lang="de">Voreinstellung</message>
-<message xml:lang="hu"></message>Alapérték</label>
+<message xml:lang="hu">Alapérték</message>Alapérték</label>
+<label define="FontStyle">
+	<message xml:lang="en">Character font</message>
+	<message xml:lang="fr">Police de caractères</message>
+</label>
+<label define="BSelectFont">
+<message xml:lang="en">Select a font...</message>
+<message xml:lang="fr">Choisir une police de caractères...</message>
+</label>
+<label define="BRemoveFont">
+<message xml:lang="en">Default</message>
+<message xml:lang="fr">Défaut</message>
+<message xml:lang="es">Predeterminado</message>
+<message xml:lang="it">Default</message>
+<message xml:lang="de">Voreinstellung</message>
+<message xml:lang="hu">Alapérték</message>Alapérték</label>
 <label define="BCSSStyle">
 <message xml:lang="en">&amp;Style editor...</message>
 <message xml:lang="fr">Editeur de &amp;style...</message>

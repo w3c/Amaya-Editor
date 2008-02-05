@@ -243,108 +243,111 @@
 241 Augmenter
 242 Diminuer
 243 Défaut
-244 Editeur de &style...
-245 Créer une &règle...
-246 Montrer le style appliqué...
-247 &Ajouter...
-248 O&uvrir...
-249 &Désactiver...
-250 R&éactiver...
-251 Re&tirer...
-252 Copier l'adresse
-253 Coller l'adresse
-254 &Lier à la cible créée
-255 &Créer/changer un lien...
-256 Créer une ci&ble
-257 &Supprimer le lien ou la cible
-258 &Ajouter/Retirer des attributs ID...
-259 Vérifier &orthographe...
-260 Transfor&mer...
-261 Editer la table
-262 Changer en cellule
-263 Changer en cellule titre
-264 Fusionner les cellules
-265 Joindre avec la cellule de droite
-266 Joindre avec la cellule au-dessous
-267 Réduire extension horizontale
-268 Réduire extension verticale
-269 Sélectionner la ligne
-270 Insérer une ligne
-271 Ajouter une ligne
-272 Sélectionner la colonne
-273 Insérer une colonne
-274 Ajouter une colonne
-275 Coller avant
-276 Coller après
-277 Changer le titre...
-278 Changer le doctype
-279 Supprimer le doctype
-280 Ajouter un doctype
-281 Changer pour XHTML 1.1
-282 Changer pour XHTML 1.0 Transitional
-283 Changer pour XHTML 1.0 Strict
-284 Changer pour XHTML 1.0 Basic
-285 Changer pour HTML 4.01 Transitional
-286 Changer pour HTML 4.01 Strict
-287 &Numéroter les sections
-288 &Ajouter/Actualiser la table des matières
-289 &Construire un livre
-290 Insérer la date de mise à jour
-291 Graphiques
-292 Montrer la librairie SVG
-293 Ajouter à la librairie SVG
-294 A&nnotations
-295 Annoter la sélection
-296 Annoter le document
-297 Déplacer sur la sélection
-298 Enregistrer la sélection comme &XPointer
-299 Déplacer sur le XPointer enregistré
-300 Répondre à l'annotation
-301 Enregister sur le serveur
-302 Supprimer
-303 Charger annotations
-304 Personnaliser la requête...
-305 Filtrer local...
-306 C&oopération
-307 Verrouiller la ressource...
-308 Déverrouiller la ressource...
-309 Visualiser les propriétés de la ressource...
-310 Copier les informations du verrou...
-311 Verrouillé ?
-312 &Javascript/DOM
-313 Activer/Désactiver
-314 Exécuter une commande
-315 Exécuter un script externe
-316 Ajouter un script externe
-317 Inserer un script
-318 À propos de Amaya
-319 À propos d'Amaya au W3C
-320 Index
-321 Navigation
-322 Vues
-323 Sélection
-324 Documents
-325 Création d'éléments
-326 Attributs
-327 Caractères
-328 Modèles
-329 Restructuration
-330 Liens
-331 Tableaux
-332 Zones actives
-333 Math
-334 Graphiques
-335 Support XML
-336 Feuilles de style
-337 Recherche
-338 Vérification orthographique
-339 Enregistrement
-340 Coopération
-341 Impression
-342 Numérotation
-343 Construction de livre
-344 Annotations
-345 Configuration
-346 Raccourcis clavier
-347 Accessibilité d'Amaya
-348 Conseil du jour...
+244 Police de caractères
+245 Choisir une police de caractères...
+246 Défaut
+247 Editeur de &style...
+248 Créer une &règle...
+249 Montrer le style appliqué...
+250 &Ajouter...
+251 O&uvrir...
+252 &Désactiver...
+253 R&éactiver...
+254 Re&tirer...
+255 Copier l'adresse
+256 Coller l'adresse
+257 &Lier à la cible créée
+258 &Créer/changer un lien...
+259 Créer une ci&ble
+260 &Supprimer le lien ou la cible
+261 &Ajouter/Retirer des attributs ID...
+262 Vérifier &orthographe...
+263 Transfor&mer...
+264 Editer la table
+265 Changer en cellule
+266 Changer en cellule titre
+267 Fusionner les cellules
+268 Joindre avec la cellule de droite
+269 Joindre avec la cellule au-dessous
+270 Réduire extension horizontale
+271 Réduire extension verticale
+272 Sélectionner la ligne
+273 Insérer une ligne
+274 Ajouter une ligne
+275 Sélectionner la colonne
+276 Insérer une colonne
+277 Ajouter une colonne
+278 Coller avant
+279 Coller après
+280 Changer le titre...
+281 Changer le doctype
+282 Supprimer le doctype
+283 Ajouter un doctype
+284 Changer pour XHTML 1.1
+285 Changer pour XHTML 1.0 Transitional
+286 Changer pour XHTML 1.0 Strict
+287 Changer pour XHTML 1.0 Basic
+288 Changer pour HTML 4.01 Transitional
+289 Changer pour HTML 4.01 Strict
+290 &Numéroter les sections
+291 &Ajouter/Actualiser la table des matières
+292 &Construire un livre
+293 Insérer la date de mise à jour
+294 Graphiques
+295 Montrer la librairie SVG
+296 Ajouter à la librairie SVG
+297 A&nnotations
+298 Annoter la sélection
+299 Annoter le document
+300 Déplacer sur la sélection
+301 Enregistrer la sélection comme &XPointer
+302 Déplacer sur le XPointer enregistré
+303 Répondre à l'annotation
+304 Enregister sur le serveur
+305 Supprimer
+306 Charger annotations
+307 Personnaliser la requête...
+308 Filtrer local...
+309 C&oopération
+310 Verrouiller la ressource...
+311 Déverrouiller la ressource...
+312 Visualiser les propriétés de la ressource...
+313 Copier les informations du verrou...
+314 Verrouillé ?
+315 &Javascript/DOM
+316 Activer/Désactiver
+317 Exécuter une commande
+318 Exécuter un script externe
+319 Ajouter un script externe
+320 Inserer un script
+321 À propos de Amaya
+322 À propos d'Amaya au W3C
+323 Index
+324 Navigation
+325 Vues
+326 Sélection
+327 Documents
+328 Création d'éléments
+329 Attributs
+330 Caractères
+331 Modèles
+332 Restructuration
+333 Liens
+334 Tableaux
+335 Zones actives
+336 Math
+337 Graphiques
+338 Support XML
+339 Feuilles de style
+340 Recherche
+341 Vérification orthographique
+342 Enregistrement
+343 Coopération
+344 Impression
+345 Numérotation
+346 Construction de livre
+347 Annotations
+348 Configuration
+349 Raccourcis clavier
+350 Accessibilité d'Amaya
+351 Conseil du jour...

@@ -96,7 +96,7 @@
 94 Exibir destinos
 95 **Show &formatted view
 96 Exibir estrutura
-97 Exibir fonte
+97 Exibir source
 98 Exibir enlaces (links)
 99 Exibir alternativa
 100 Exibir índice de conteúdos
@@ -243,108 +243,111 @@
 241 **Increase
 242 **Decrease
 243 **Default
-244 **&Style editor...
-245 Criar regra...
-246 **Show applied style...
-247 Ligar...
-248 Abrir...
-249 Desabilitar...
-250 Habilitar...
-251 Remover...
-252 **Copy location
-253 **Paste location
-254 Ligar ao destino precedente
-255 Criar ou mudar enlace (link)...
-256 Create destino
-257 Apagar âncora
-258 Adicionar/Remover IDs...
-259 Verificar ortografia...
-260 Transformar...
-261 **Edit table
-262 **Change to data cell
-263 **Change to heading cell
-264 **Merge cells
-265 **Join with the cell at the right
-266 **Join with the cell below
-267 **Shrink horizontal extend
-268 **Shrink vertical extend
-269 **Select the row
-270 **Insert a row
-271 **Append a row
-272 **Select the column
-273 **Insert a column
-274 **Append a column
-275 **Paste before
-276 **Paste after
-277 Mudar título...
-278 Alterar document type
-279 Remover doctype
-280 **Add a doctype
-281 Alterar doctype para XHTML 1.1
-282 Modificar/Criar doctype XHTML 1.0
-283 Alterar doctype para XHTML 1.0 Strict
-284 Alterar doctype para XHTML 1.0 Basic
-285 Alterar doctype para HTML 4.01 Transitional
-286 Alterar doctype para HTML 4.01 Strict
-287 Numeração de seção
-288 **&Add/Update table of contents
-289 Construir livro
-290 **Insert time stamp
-291 **Graphics
-292 **Show SVG library
-293 **Add to SVG library
-294 A&notações
-295 Anotar seleção
-296 Anotar documento
-297 Mover até a seleção
-298 Salvar seleção como XPointer
-299 Mover para o XPointer memorizado
-300 Responder à anotação
-301 Registrar
-302 Apagar
-303 Carregar
-304 Personalizar consulta...
-305 Filtro local...
-306 &Cooperação
-307 Travar o recurso
-308 Destravar o recurso
-309 Exibir as propriedades do recurso
-310 Copiar a informação da trava...
-311 Travado?
-312 &Javascript/DOM
-313 **Enable/Disable
-314 **Execute a command
-315 **Execute an external script
-316 **Add an external script
-317 **Insert a script
-318 Sobre Amaya
-319 Sobre Amaya no W3C
-320 Índice
-321 Navegar
-322 Vistas
-323 Selecionar
-324 Documento
-325 Criar elementos
-326 Atributos
-327 Caracteres
-328 **Templates
-329 Reestruturar
-330 Enlaces
-331 Tabelas
-332 Mapas de Imagem
-333 Matemática
-334 Gráficos
-335 Suporte à XML
-336 Folhas de estilo
-337 Achar...
-338 Verificar ortografia
-339 Publicar
-340 Cooperação
-341 Imprimir
-342 Numberar
-343 Criar livros
-344 Anotações
-345 Configurar
-346 Atalhos
-347 Accessibilidade em Amaya
-348 **Tip of the day...
+244 **Character font
+245 **Select a font...
+246 **Default
+247 **&Style editor...
+248 Criar regra...
+249 **Show applied style...
+250 Ligar...
+251 Abrir...
+252 Desabilitar...
+253 Habilitar...
+254 Remover...
+255 **Copy location
+256 **Paste location
+257 Ligar ao destino precedente
+258 Criar ou mudar enlace (link)...
+259 Create destino
+260 Apagar âncora
+261 Adicionar/Remover IDs...
+262 Verificar ortografia...
+263 Transformar...
+264 **Edit table
+265 **Change to data cell
+266 **Change to heading cell
+267 **Merge cells
+268 **Join with the cell at the right
+269 **Join with the cell below
+270 **Shrink horizontal extend
+271 **Shrink vertical extend
+272 **Select the row
+273 **Insert a row
+274 **Append a row
+275 **Select the column
+276 **Insert a column
+277 **Append a column
+278 **Paste before
+279 **Paste after
+280 Mudar título...
+281 Alterar document type
+282 Remover doctype
+283 **Add a doctype
+284 Alterar doctype para XHTML 1.1
+285 Modificar/Criar doctype XHTML 1.0
+286 Alterar doctype para XHTML 1.0 Strict
+287 Alterar doctype para XHTML 1.0 Basic
+288 Alterar doctype para HTML 4.01 Transitional
+289 Alterar doctype para HTML 4.01 Strict
+290 Numeração de seção
+291 **&Add/Update table of contents
+292 Construir livro
+293 **Insert time stamp
+294 **Graphics
+295 **Show SVG library
+296 **Add to SVG library
+297 A&notações
+298 Anotar seleção
+299 Anotar documento
+300 Mover até a seleção
+301 Salvar seleção como XPointer
+302 Mover para o XPointer memorizado
+303 Responder à anotação
+304 Registrar
+305 Apagar
+306 Carregar
+307 Personalizar consulta...
+308 Filtro local...
+309 &Cooperação
+310 Travar o recurso
+311 Destravar o recurso
+312 Exibir as propriedades do recurso
+313 Copiar a informação da trava...
+314 Travado?
+315 &Javascript/DOM
+316 **Enable/Disable
+317 **Execute a command
+318 **Execute an external script
+319 **Add an external script
+320 **Insert a script
+321 Sobre Amaya
+322 Sobre Amaya no W3C
+323 Índice
+324 Navegar
+325 Vistas
+326 Selecionar
+327 Documento
+328 Criar elementos
+329 Atributos
+330 Caracteres
+331 **Templates
+332 Reestruturar
+333 Enlaces
+334 Tabelas
+335 Mapas de Imagem
+336 Matemática
+337 Gráficos
+338 Suporte à XML
+339 Folhas de estilo
+340 Achar...
+341 Verificar ortografia
+342 Publicar
+343 Cooperação
+344 Imprimir
+345 Numberar
+346 Criar livros
+347 Anotações
+348 Configurar
+349 Atalhos
+350 Accessibilidade em Amaya
+351 **Tip of the day...

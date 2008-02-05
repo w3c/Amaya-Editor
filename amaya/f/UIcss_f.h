@@ -33,6 +33,8 @@ extern void DoSelectFontSize ( Document doc,
                                View view );
 extern void DoSelectFontFamilly ( Document doc,
                                   View view );
+extern void DoSelectFont ( Document doc,
+                           View view );
 extern void DoSelectColor ( Document doc,
                             View view );
 extern void DoSelectBgColor ( Document doc,
@@ -43,6 +45,8 @@ extern void DoRemoveColor ( Document doc,
                             View view );
 extern void DoRemoveBgColor ( Document doc,
                               View view );
+extern void DoRemoveFont ( Document doc,
+                           View view );
 extern void DoLeftAlign ( Document doc,
                           View view );
 extern void DoRightAlign ( Document doc,
@@ -121,6 +125,8 @@ extern void DoSelectFontSize ( Document doc,
                                  View view );
 extern void DoSelectFontFamilly ( Document doc,
                                     View view );
+extern void DoSelectFont ( Document doc,
+                             View view );
 extern void DoSelectColor ( Document doc,
                               View view );
 extern void DoSelectBgColor ( Document doc,
@@ -131,6 +137,8 @@ extern void DoRemoveColor ( Document doc,
                               View view );
 extern void DoRemoveBgColor ( Document doc,
                                 View view );
+extern void DoRemoveFont ( Document doc,
+                             View view );
 extern void DoLeftAlign ( Document doc,
                             View view );
 extern void DoRightAlign ( Document doc,

@@ -107,6 +107,9 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   XRCCTRL(*this, "wxID_BUTTON_BKCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORBG)));
   
   XRCCTRL(*this, "wxID_THEME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_THEME)));
+  XRCCTRL(*this, "wxID_CHOICE_FAMILY", wxChoice)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_FONT_FAMILY)));
+  
+  XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_BODY_SIZE_PTS)));
   SetColor (1);
   SetTheme ("Standard");
 
@@ -281,6 +284,7 @@ void AmayaStyleToolPanel::SendDataToPanel( AmayaParams& p )
   unsigned short      green;
   unsigned short      blue;
   wxColour            col;
+  char                string_size[50];
 
   if (Current_Color != -1)
     {
@@ -294,17 +298,36 @@ void AmayaStyleToolPanel::SendDataToPanel( AmayaParams& p )
       col = wxColour ( red, green, blue );
       XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->SetColour( col );  
     }
+  if (Current_FontFamily > 0)
+    {
+      switch (Current_FontFamily)
+        {
+        case 3:
+          XRCCTRL(*this, "wxID_CHOICE_FAMILY", wxChoice)->SetStringSelection(TtaConvMessageToWX("Courier"));
+          break;
+        case 2:
+          XRCCTRL(*this, "wxID_CHOICE_FAMILY", wxChoice)->SetStringSelection(TtaConvMessageToWX("Arial"));
+          break;
+        default:
+          XRCCTRL(*this, "wxID_CHOICE_FAMILY", wxChoice)->SetStringSelection(TtaConvMessageToWX("Times"));
+        }
+    }
+  if (Current_FontSize > 0)
+    {
+      sprintf (string_size, "%d", Current_FontSize);
+      XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetValue(TtaConvMessageToWX(string_size));
+    }
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::OnChooseFontFamily(wxCommandEvent& event)
 {
-  int num = event.GetSelection()+1;
-  if(num==0)
+  int num = event.GetSelection() + 1;
+
+  if (num == 0)
     num = 1;
-  
-  if(num!=Current_FontFamily)
+  if (num != Current_FontFamily)
     {
       Document doc;
       View view;
@@ -323,15 +346,15 @@ void AmayaStyleToolPanel::OnChooseFontFamily(wxCommandEvent& event)
 void AmayaStyleToolPanel::OnChooseFontSize(wxCommandEvent& event)
 {
   long size;
-   if(!event.GetString().ToLong(&size))
+
+   if (!event.GetString().ToLong(&size))
      size = 12;
-   if(size!=Current_FontSize)
+   if (size != Current_FontSize)
      {
        Document doc;
        View view;
 
        Current_FontSize = (int)size;
-       
        TtaGiveActiveView( &doc, &view );
        /* force the refresh */
        if (doc > 0)

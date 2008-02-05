@@ -29,7 +29,6 @@
 #ifdef _WX
 #include "wxdialogapi_f.h"
 #include "appdialogue_wx.h"
-
 #endif /* _WX */
 
 static int         CSScase;
@@ -921,7 +920,7 @@ void UpdateStylePanel (Document doc, View view)
 
 /*----------------------------------------------------------------------
   DoSelectFontSize
-  Apply color style
+  Change the font size of the selection
   ----------------------------------------------------------------------*/
 void DoSelectFontSize (Document doc, View view)
 {
@@ -960,7 +959,7 @@ void DoSelectFontSize (Document doc, View view)
 
 /*----------------------------------------------------------------------
   DoSelectFontFamilly
-  Apply color style
+  Change the font family of the selection
   ----------------------------------------------------------------------*/
 void DoSelectFontFamilly (Document doc, View view)
 {
@@ -1003,6 +1002,14 @@ void DoSelectFontFamilly (Document doc, View view)
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, dispMode);
     }
+}
+
+/*----------------------------------------------------------------------
+  DoSelectFont
+  Change the font family and/or the font size of the selection
+  ----------------------------------------------------------------------*/
+void DoSelectFont (Document doc, View view)
+{
 }
 
 /*----------------------------------------------------------------------
@@ -1080,7 +1087,7 @@ void DoSelectBgColor (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  CleanUpAttribute removes the CSS rule (data) form the attribute value
+  CleanUpAttribute removes the CSS rule (data) from the attribute value
   Return TRUE if the value is now empty
   -----------------------------------------------------------------------*/
 static void CleanUpAttribute (Attribute attr, char *data, Element el, Document doc)
@@ -1216,6 +1223,40 @@ void DoRemoveColor (Document doc, View view)
 void DoRemoveBgColor (Document doc, View view)
 {
   RemoveSpecificStyle (doc, "background-color: white");
+}
+
+/*----------------------------------------------------------------------
+  DoRemoveFont
+  Remove the font family and/or the font size of the selection
+  ----------------------------------------------------------------------*/
+void DoRemoveFont (Document doc, View view)
+{
+  Element             el = NULL;
+  int                 firstChar, lastChar;
+  int                 size = -1, family;
+  TypeUnit            unit;
+
+  doc = TtaGetSelectedDocument();
+  if (!TtaGetDocumentAccessMode (doc))
+    /* document is ReadOnly */
+    return;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource)
+    return;
+
+  RemoveSpecificStyle (doc, "font-family: Times");
+  RemoveSpecificStyle (doc, "font-size: 12pt");
+  // update the style panel
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  TtaGiveBoxFontInfo (el, doc, 1, &size, &unit, &family);
+#ifdef IV
+  if (size != -1 &&
+      (size != Current_FontSize || unit != UnPoint  || family != Current_FontFamily))
+    {
+      Current_FontFamily = family;
+      Current_FontSize = size;
+      UpdateStylePanel (doc, view);
+    }
+#endif
 }
 
 /*----------------------------------------------------------------------

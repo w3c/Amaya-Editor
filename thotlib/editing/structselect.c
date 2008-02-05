@@ -11,6 +11,10 @@
  * Authors: V. Quint, I. Vatton (INRIA)
  *
  */
+#ifdef _WX
+#include "wx/wx.h"
+#include "wx/colordlg.h"
+#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -21,6 +25,11 @@
 #include "libmsg.h"
 #include "message.h"
 #include "appdialogue.h"
+#ifdef _WX
+#include "paneltypes_wx.h"
+#include "dialog.h"
+#include "appdialogue_wx.h"
+#endif /* _WX */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -34,12 +43,14 @@
 #include "applicationapi_f.h"
 #include "boxselection_f.h"
 #include "callback_f.h"
+#include "changepresent_f.h"
 #include "checkermenu_f.h"
 #include "config_f.h"
 #include "createabsbox_f.h"
 #include "displayselect_f.h"
 #include "displayview_f.h"
 #include "exceptions_f.h"
+#include "font_f.h"
 #include "frame_f.h"
 #include "keyboards_f.h"
 #include "scroll_f.h"
@@ -1864,6 +1875,51 @@ void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar,
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void DecorationAfterSeletion (ThotBool withPath)
+{
+#ifdef _WX
+  AmayaParams         p;
+  PtrAbstractBox      pAb = NULL;
+  int                 doc;
+  int                 size, family, val;
+  TypeUnit            unit;
+
+  if (SelectedDocument == NULL)
+    return;
+
+  doc = IdentDocument (SelectedDocument);
+  if (FirstSelectedElement && FirstSelectedElement->ElStructSchema &&
+      strcmp (FirstSelectedElement->ElStructSchema->SsName, "TextFile"))
+    {
+      // update the current font
+      TtaGiveBoxFontInfo ((Element)FirstSelectedElement, doc, 1,
+                          &size, &unit, &family);
+      pAb = AbsBoxOfEl (FirstSelectedElement, 1);
+     if (size > 0 && pAb)
+        {
+          if (unit == UnPoint)
+            Current_FontSize = size;
+          else
+            {
+              if (unit != UnPixel)
+                val = PixelValue (size, unit, pAb, 0);
+              else
+                val = size;
+              Current_FontSize = LogicalValue (size, UnPoint, pAb, 0);
+            }
+        }
+      Current_FontFamily = family;
+      p.param1 = doc;
+      TtaSendDataToPanel (WXAMAYA_PANEL_STYLE, p );
+    }
+  if (withPath)
+    // update the status bar
+    TtaSetStatusSelectedElement (doc, 1, (Element) FirstSelectedElement);
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
   SelectStringOrPosition
 
   Set the current selection to the string beginning at position firstChar
@@ -1982,9 +2038,8 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
                 if (ThotLocalActions[T_chsplit] != NULL)
                   (*(Proc1)ThotLocalActions[T_chsplit]) ((void *)pDoc);
 #ifdef _WX
-          // update the status bar
-          TtaSetStatusSelectedElement (IdentDocument (pDoc), 1,
-                                       (Element) FirstSelectedElement);
+          // update the status bar and style panel
+          DecorationAfterSeletion (TRUE);
 #endif /* _WX */
         }
     }
@@ -2197,10 +2252,7 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin,
             (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
         }
 #ifdef _WX
-      if (withPath)
-        // update the status bar
-        TtaSetStatusSelectedElement (IdentDocument (pDoc), 1,
-                                     (Element) FirstSelectedElement);
+      DecorationAfterSeletion (withPath);
 #endif /* _WX */
     }
 }

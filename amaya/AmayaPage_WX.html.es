@@ -92,10 +92,10 @@ de estilo en Cascada (CSS).</p>
 <p>¿Sabía que...?</p>
 <dl>
   <dt>Elija su perfil</dt>
-    <dd><p>Amaya pone a su disposición cuatro perfiles distintos que adaptan
-      los menús y barras de herramientas a sus necesidades. En cualquier
-      perfil, los paneles de herramientas se pueden personalizar y mostrar a
-      derecha o izquierda (véase Preferencias).</p>
+    <dd><p>Amaya pone a su disposición 5 perfiles distintos que adaptan los
+      menús y barras de herramientas a sus necesidades. En cualquier perfil,
+      los paneles de herramientas se pueden personalizar y mostrar a derecha
+      o izquierda (véase Preferencias).</p>
     </dd>
   <dt>Amaya es un editor estructurado</dt>
     <dd>Al pulsar la tecla F2 (o Escape), se selecciona la estructura de

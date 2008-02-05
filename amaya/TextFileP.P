@@ -59,94 +59,94 @@ BOXES
 { ---- Pages ---- }
 #ifdef PAGE
   URLhead:
-	BEGIN
-	Background: White;
-	Foreground: Black;
-	Fillpattern: nopattern;
-	Underline: NoUnderline;
-	Copy (Document_URL);
-	Adjust: Left;
-	HorizPos: Left = Previous PAGE_BREAK . Left;
-	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
-	Width: Enclosed . Width;
-	Height:   1.2 cm;
-	Size: 8 pt;
-	Font: times;
-	Style: Roman;	
-	Weight: Normal;
-	END;
+        BEGIN
+        Background: White;
+        Foreground: Black;
+        Fillpattern: nopattern;
+        Underline: NoUnderline;
+        Copy (Document_URL);
+        Adjust: Left;
+        HorizPos: Left = Previous PAGE_BREAK . Left;
+        VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
+        Width: Enclosed . Width;
+        Height:   1.2 cm;
+        Size: 8 pt;
+        Font: times;
+        Style: Roman;
+        Weight: Normal;
+        END;
 
   Spacehead:
-	BEGIN
-	Background: White;
-	Foreground: Black;
-	Fillpattern: nopattern;
-	Underline: NoUnderline;
-	Content: Text ' ';
-	Adjust: Left;
-	HorizPos: Left = Previous PAGE_BREAK . Left;
-	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
-	Height:   1.2 cm;
-	Size: 8 pt;
-	Font: times;
-	Style: Roman;
-	Weight: Normal;
-	END;
+        BEGIN
+        Background: White;
+        Foreground: Black;
+        Fillpattern: nopattern;
+        Underline: NoUnderline;
+        Content: Text ' ';
+        Adjust: Left;
+        HorizPos: Left = Previous PAGE_BREAK . Left;
+        VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
+        Height:   1.2 cm;
+        Size: 8 pt;
+        Font: times;
+        Style: Roman;
+        Weight: Normal;
+        END;
 
   PageNum:
-	BEGIN
-	Background: White;
-	Foreground: Black;
-	Fillpattern: nopattern;
-	Underline: NoUnderline;
-	Content: (Value (PageCounter, Arabic));
-	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
-	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
-	Height:   1.6 cm;
-	Width: Enclosed .Width;
-	Size: 11 pt;
-	Font: times;
-	Style: Roman;
-	Weight: Normal;
-	END;
+        BEGIN
+        Background: White;
+        Foreground: Black;
+        Fillpattern: nopattern;
+        Underline: NoUnderline;
+        Content: (Value (PageCounter, Arabic));
+        VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
+        HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
+        Height:   1.6 cm;
+        Width: Enclosed .Width;
+        Size: 11 pt;
+        Font: times;
+        Style: Roman;
+        Weight: Normal;
+        END;
 
   BottomSpace:
-	BEGIN
-	Background: White;
-	Foreground: Black;
-	FillPattern: backgroundcolor;
-	Height: 1.4 cm;
-	Width: 1 pt;
-	Underline: NoUnderline;
-	VertPos: Bottom = Next PAGE_BREAK . Top;
-	HorizPos: Left = Next PAGE_BREAK . Left;
-	Content: (Graphics ' ');
-	END;
+        BEGIN
+        Background: White;
+        Foreground: Black;
+        FillPattern: backgroundcolor;
+        Height: 1.4 cm;
+        Width: 1 pt;
+        Underline: NoUnderline;
+        VertPos: Bottom = Next PAGE_BREAK . Top;
+        HorizPos: Left = Next PAGE_BREAK . Left;
+        Content: (Graphics ' ');
+        END;
 
   ThePage:
-	BEGIN
-	Background: White;
-	Foreground: Black;
-	FillPattern: backgroundcolor;
-	ShowBox;
+        BEGIN
+        Background: White;
+        Foreground: Black;
+        FillPattern: backgroundcolor;
+        ShowBox;
 #ifdef US_PAPER
-	Width: 16.2 cm;
-	Height: 23.8 cm;
-	VertPos: Top = Enclosing . Top + 1.7 cm;
-	HorizPos: Left = Enclosing . Left + 2.7 cm;
+        Width: 16.2 cm;
+        Height: 23.8 cm;
+        VertPos: Top = Enclosing . Top + 1.7 cm;
+        HorizPos: Left = Enclosing . Left + 2.7 cm;
 #else
-	Width: 15.6 cm;
-	Height: 25.9 cm;
-	VertPos: Top = Enclosing . Top + 1.7 cm;
-	HorizPos: Left = Enclosing . Left + 2.7 cm;
+        Width: 15.6 cm;
+        Height: 25.9 cm;
+        VertPos: Top = Enclosing . Top + 1.7 cm;
+        HorizPos: Left = Enclosing . Left + 2.7 cm;
 #endif
-	CreateAfter (Spacehead);
-	if PrintURL
-	   CreateAfter (URLhead);
-	if NOT One(PageCounter) CreateBefore (PageNum);
-	IF Not One(PageCounter) CreateBefore (BottomSpace);
-	Underline: NoUnderline;
-	END;
+        CreateAfter (Spacehead);
+        if PrintURL
+           CreateAfter (URLhead);
+        if NOT One(PageCounter) CreateBefore (PageNum);
+        IF Not One(PageCounter) CreateBefore (BottomSpace);
+        Underline: NoUnderline;
+        END;
 #else
 
   IndexBox: BEGIN
@@ -160,110 +160,109 @@ BOXES
         END;
 
   LineNum:
-	BEGIN
-	Foreground: LINE_NUMBER_Color;
-	Content: (Value (LineCounter, Arabic));
-	END;
+        BEGIN
+        Foreground: LINE_NUMBER_Color;
+        Content: (Value (LineCounter, Arabic));
+        END;
 
 #endif
 
 RULES
 
   Document: BEGIN
-	Font: Courier;
-	Style: Roman;
-	Weight: Normal;
-	Adjust: Left;
+        Font: Courier;
+        Style: Roman;
+        Weight: Normal;
+        Adjust: Left;
 #ifdef PAGE
-	Size: 10 pt;
-	Width: Enclosing . Width;
+        Size: 10 pt;
+        Width: Enclosing . Width;
 #else
-	Size: 11 pt;
-	Width: Enclosed . Width;
+        Size: 11 pt;
+        Width: Enclosed . Width;
         PaddingBottom: 3 cm;
 #endif
-	Vertpos: Top = Enclosing . Top;
-	Indent: 0;
-	LineSpacing: 1;
-	END;
+        Vertpos: Top = Enclosing . Top;
+        Indent: 0;
+        LineSpacing: 1;
+        END;
 
   TextFile: BEGIN
 #ifdef PAGE
-	Page(ThePage);
+        Page(ThePage);
         Width: Enclosing . Width;
-	{Foreground: Black;}
 #else
-	Width: Enclosed . Width;
-	HorizPos: Left = Enclosing . Left + 0.7;
+        Width: Enclosed . Width;
+        HorizPos: Left = Enclosing . Left + 0.7;
 #endif
         VertPos: Top = Enclosing . Top;
-	END;
+        END;
 
-  Document_URL:	BEGIN
-	Visibility: 1;
-	END;
+  Document_URL:        BEGIN
+        Visibility: 1;
+        END;
 
   BODY: BEGIN
 #ifdef PAGE
-	HorizPos: Left = Enclosing . Left;
-	Width: Enclosing . Width;
+        HorizPos: Left = Enclosing . Left;
+        Width: Enclosing . Width;
 #else
-	MarginRight: 1 em;
-	MarginBottom: 1 em;
-	HorizPos: Left = Enclosing . Left;
-	Width: Enclosed . Width;
+        MarginRight: 1 em;
+        MarginBottom: 1 em;
+        HorizPos: Left = Enclosing . Left;
+        Width: Enclosed . Width;
 #endif
-	END;
+        END;
 
   Line\240: BEGIN
-	LineBreak: Yes;
-	Line;
+        LineBreak: Yes;
+        Line;
 #ifdef PAGE
-	Width: Enclosing . Width;
+        Width: Enclosing . Width;
 #else
-	Width: Enclosed . Width;
+        Width: Enclosed . Width;
 #endif
-	END;
+        END;
 
   TEXT_UNIT :
-	BEGIN
-	HorizPos: Left = Previous AnyElem . Right;
-	VertPos: HRef = Previous . HRef;
-	Width: Enclosed . Width;
-	END;
+        BEGIN
+        HorizPos: Left = Previous AnyElem . Right;
+        VertPos: HRef = Previous . HRef;
+        Width: Enclosed . Width;
+        END;
 
  SYMBOL_UNIT:
-	BEGIN
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
-	END;
+        BEGIN
+        HorizPos: Left = Previous . Right;
+        VertPos: HRef = Previous . HRef;
+        END;
 
 ATTRIBUTES
 
 #ifndef PAGE
   Source (Line\240):
-	BEGIN
-	CreateBefore (LineNum);
-	VertPos: HRef = Previous LineNum . HRef;
-	HorizPos: Left = Enclosing . Left + 3;
-	END;
+        BEGIN
+        CreateBefore (LineNum);
+        VertPos: HRef = Previous LineNum . HRef;
+        HorizPos: Left = Enclosing . Left + 3;
+        END;
 
   Highlight:
-	CreateFirst (IndexBox);
+        CreateFirst (IndexBox);
 
   IsLink:
-	Foreground: LINK_Color;
+        Foreground: LINK_Color;
   IsMarkup:
-	Foreground: MARKUP_Color;
+        Foreground: MARKUP_Color;
   IsTag:
-	BEGIN
-	Style: Bold;
-	Foreground: MARKUP_Color;
-	END;
+        BEGIN
+        Style: Bold;
+        Foreground: MARKUP_Color;
+        END;
   IsString:
-	Foreground: ATTRVALUE_Color;
+        Foreground: ATTRVALUE_Color;
   IsComment:
-	Foreground: COMMENT_Color;
+        Foreground: COMMENT_Color;
 #endif
 
 END

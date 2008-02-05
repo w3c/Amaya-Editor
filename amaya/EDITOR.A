@@ -278,6 +278,8 @@ MENUS
   Style.Indent  button:BIncrease -> MarginLeftIncrease icon:CSS_indent.png;
   Style.Indent  button:BDecrease -> MarginLeftDecrease icon:CSS_noindent.png;
   Style.Indent  button:BRemoveMargin -> DoRemoveMargin;
+  Style.FontStyle  button:BSelectFont -> DoSelectFont;
+  Style.FontStyle  button:BRemoveFont -> DoRemoveFont;
   Style Separator;
   Style button:BCSSStyle -> SetCSSStyle icon:css.png;
 	Style button:BCreateClass -> CreateClass;

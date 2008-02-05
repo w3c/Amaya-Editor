@@ -3871,8 +3871,8 @@
 </label>
 
 <label define="TIP_AMAYA_PROFILES">
-<message xml:lang="en">Amaya can be adapted to your usage: four different profiles are provided with different set of menu entries and panels. See Preferences.</message>
-<message xml:lang="fr">Amaya s'adapte à votre usage : quatre profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.</message>
+<message xml:lang="en">Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.</message>
+<message xml:lang="fr">Amaya s'adapte à votre usage : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.</message>
 </label>
 <label define="TIP_PANEL_MODES">
 <message xml:lang="en">Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.</message>

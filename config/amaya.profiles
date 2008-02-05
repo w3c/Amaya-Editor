@@ -703,6 +703,8 @@ ShowAppliedStyle
 &MarginLeftIncrease
 &MarginLeftDecrease
 &DoRemoveMargin
+&DoSelectFont
+&DoRemoveFont
 
 ########### OPTIONAL MODULES
 [config]
