@@ -1098,11 +1098,9 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
       CheckIconLink (el, doc, htmlSchema);
       break;
        
-    case HTML_EL_Data_cell:
-    case HTML_EL_Heading_cell:
     case HTML_EL_List_Item:
     case HTML_EL_Definition:
-      /* insert a pseudo paragraph into empty cells or list items */
+      /* insert a pseudo paragraph into empty list items */
       child = TtaGetFirstChild (el);
       if (child == NULL)
         {
@@ -1111,23 +1109,32 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
           if (child != NULL)
             TtaInsertFirstChild (&child, el, doc);
         }
-      if (elType.ElTypeNum == HTML_EL_Data_cell ||
-          elType.ElTypeNum == HTML_EL_Heading_cell)
-        /* detect whether we are parsing a whole table or just a cell */
+      break;
+
+    case HTML_EL_Data_cell:
+    case HTML_EL_Heading_cell:
+      /* insert an Element into empty table cell */
+      child = TtaGetFirstChild (el);
+      if (child == NULL)
         {
-          if (DocumentMeta[doc]->xmlformat)
-            {
-              if (IsWithinXmlTable ())
-                NewCell (el, doc, FALSE, FALSE, FALSE);
-            }
-          else
-            {
-              if (IsWithinHtmlTable ())
-                NewCell (el, doc, FALSE, FALSE, FALSE);
-            }
+          elType.ElTypeNum = HTML_EL_Element;
+          child = TtaNewElement (doc, elType);
+          if (child)
+            TtaInsertFirstChild (&child, el, doc);
+        }
+      /* detect whether we are parsing a whole table or just a cell */
+      if (DocumentMeta[doc]->xmlformat)
+        {
+          if (IsWithinXmlTable ())
+            NewCell (el, doc, FALSE, FALSE, FALSE);
+        }
+      else
+        {
+          if (IsWithinHtmlTable ())
+            NewCell (el, doc, FALSE, FALSE, FALSE);
         }
       break;
-       
+
     case HTML_EL_Table_:
       CheckTable (el, doc);
       SubWithinTable ();
