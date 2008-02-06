@@ -6352,7 +6352,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   ElementType        elType;
   PSchema            tsch;
   AttributeType      attrType;
-  char              *deb, *cur, *sel, *next, c;
+  char              *deb, *cur, *sel, *next, *limit, c;
   char              *schemaName, *mappedName, *saveURL;
   char              *names[MAX_ANCESTORS];
   ThotBool           pseudoFirstChild[MAX_ANCESTORS];
@@ -6375,6 +6375,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 
   sel = ctxt->sel;
   sel[0] = EOS;
+  // get the limit of the string
+  limit = &sel[MAX_ANCESTORS * 50 -1];
+  *limit = EOS;
   specificity = 0;
   for (i = 0; i < MAX_ANCESTORS; i++)
     {
@@ -6420,7 +6423,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
              *selector != '.' && *selector != ':' &&
              *selector != '#' && *selector != '[' &&
              *selector != '>' && *selector != '+' &&
-             !TtaIsBlank (selector))
+             !TtaIsBlank (selector) && cur < limit)
         *cur++ = *selector++;
       *cur++ = EOS; /* close the first string  in sel[] */
       noname = TRUE;
@@ -6465,7 +6468,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                      *selector != '#' && *selector != '[' &&
                      *selector != EOS && *selector != ',' &&
                      *selector != '+' && *selector != '>' &&
-                     !TtaIsBlank (selector))
+                     !TtaIsBlank (selector) && cur < limit)
                 {
                   if (*selector == '\\')
                     {
@@ -6525,7 +6528,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                      *selector != '#' && *selector != '[' &&
                      *selector != EOS && *selector != ',' &&
                      *selector != '+' && *selector != '>' &&
-                     !TtaIsBlank (selector))
+                     !TtaIsBlank (selector) && cur < limit)
                 *cur++ = *selector++;
               /* close the word */
               *cur++ = EOS;
@@ -6651,7 +6654,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                      *selector != '#' && *selector != '[' &&
                      *selector != '+' && *selector != '>' &&
                      *selector != EOS && *selector != ',' &&
-                     !TtaIsBlank (selector))
+                     !TtaIsBlank (selector) && cur < limit)
                 *cur++ = *selector++;
               /* close the word */
               *cur++ = EOS;
@@ -6696,7 +6699,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                      *selector != '=' && *selector != '~' &&
                      *selector != '|' && *selector != '^' &&
                       *selector != '$' &&  *selector != '*' &&
-                     !TtaIsBlank (selector))
+                     !TtaIsBlank (selector) && cur < limit)
                 *cur++ = *selector++;
               /* close the word (attribute name) */
               *cur++ = EOS;
@@ -6767,7 +6770,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                       selector++;
                     }
                   deb = cur;
-                  while ((quoted &&
+                  while ((quoted && cur < limit &&
                           (*selector != '"' ||
                            (*selector == '"' && selector[-1] == '\\'))) ||
                          (!quoted && *selector != ']'))
@@ -6829,7 +6832,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                      *selector != '#' && *selector != '[' &&
                      *selector != EOS && *selector != ',' &&
                      *selector != '+' && *selector != '>' &&
-                     !TtaIsBlank (selector))
+                     !TtaIsBlank (selector) && cur < limit)
                 *cur++ = *selector++;
               /* close the word */
               *cur++ = EOS;
@@ -7327,7 +7330,7 @@ static void ParseStyleDeclaration (Element el, char *cssRule, Document doc,
   decl_end++;
   cssRule = decl_end;
   decl_end = &cssRule[strlen (cssRule) - 1];
-  if (*decl_end != '{')
+  if (*decl_end != '{' && *decl_end != EOS)
     *decl_end = EOS;
   /*
    * parse the style attribute string and install the corresponding

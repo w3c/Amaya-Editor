@@ -943,7 +943,7 @@ void UpdateEditorMenus (Document doc)
     {
       TtaSetItemOff (doc, 1, Views, BShowAlternate);
       TtaSetItemOff (doc, 1, Views, BShowToC);
-      TtaSetMenuOff (doc, 1, Style);
+      //TtaSetMenuOff (doc, 1, Style);
     }
   else if (DocumentTypes[doc] == docHTML)
     {

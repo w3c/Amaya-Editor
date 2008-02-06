@@ -1037,8 +1037,8 @@ void DoSelectFont (Document doc, View view)
                            TtaGetMessage(AMAYA,AM_CHOOSE_FONT),
                            &family, &size))
         {
-          open = TtaHasUndoSequence (doc);
-          if (!open)
+          open = !TtaHasUndoSequence (doc);
+          if (open)
             TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
           /* Need to force a redisplay */
           dispMode = TtaGetDisplayMode (doc);
@@ -1056,7 +1056,7 @@ void DoSelectFont (Document doc, View view)
             }
           if (dispMode == DisplayImmediately)
             TtaSetDisplayMode (doc, dispMode);
-          if (!open)
+          if (open)
             TtaCloseUndoSequence (doc);
         }
     }
@@ -1235,8 +1235,8 @@ ThotBool RemoveSpecificStyle (Document doc, char *cssproperty)
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
-  open = TtaHasUndoSequence (doc);
-  if (!open)
+  open = !TtaHasUndoSequence (doc);
+  if (open)
     TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   while (el)
     {
@@ -1259,7 +1259,7 @@ ThotBool RemoveSpecificStyle (Document doc, char *cssproperty)
       // next element within the selection
       TtaGiveNextSelectedElement (doc, &el, &firstChar, &lastChar);
     }
-  if (!open)
+  if (open)
     TtaCloseUndoSequence (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
@@ -1529,12 +1529,12 @@ void MakeRemoveCSS(Document doc, PInfoPtr pInfo)
       el = pInfo->PiLink;
       RemoveLink (el, doc);
       /* register this element in the editing history */
-      open = TtaHasUndoSequence (doc);
-      if (!open)
+      open = !TtaHasUndoSequence (doc);
+      if (open)
         TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       TtaRegisterElementDelete (el, doc);
       TtaDeleteTree (el, doc);
-      if (!open)
+      if (open)
         TtaCloseUndoSequence (doc);
       TtaSetDocumentModified (doc);
     }
