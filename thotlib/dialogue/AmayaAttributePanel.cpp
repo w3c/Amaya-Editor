@@ -184,8 +184,7 @@ void AmayaAttributeToolPanel::RedirectFocusToEditableControl()
 void AmayaAttributeToolPanel::UpdateListColumnWidth()
 {
   // Resize columns.
-  long sz0, sz1, user0;
-  // long min0 = 70;
+  long sz0, sz1;
 
   m_pAttrList->Freeze();
 
@@ -194,14 +193,6 @@ void AmayaAttributeToolPanel::UpdateListColumnWidth()
   // m_pAttrList->SetColumnWidth(0, wxLIST_AUTOSIZE);
   // if(sz0 > m_pAttrList->GetColumnWidth(0))
   //   m_pAttrList->SetColumnWidth(0, sz0);
-
-  /*
-  user0 = m_pAttrList->GetColumnWidth(0);
-  if(user0 < min0)
-    m_pAttrList->SetColumnWidth(0, min0);
-  else
-    m_pAttrList->SetColumnWidth(0, user0);
-  */
 
   m_pAttrList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
   sz1 = m_pAttrList->GetColumnWidth(1);
