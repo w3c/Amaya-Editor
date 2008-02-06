@@ -3107,6 +3107,7 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
                                   ThotBool updateWidth, int *height)
 {
   PtrFloat            pfloat;
+  PtrBox              box;
   int                 y, x, x1, x2, w;
   int                 t = 0, b = 0, l = 0, r = 0;
   ThotBool            extensibleblock;
@@ -3132,34 +3133,36 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   pfloat = pBlock->BxLeftFloat;
   while (pfloat && pfloat->FlBox)
     {
-      if (pfloat->FlBox->BxType == BoFloatBlock && pfloat->FlBox->BxContentWidth)
-        w = pfloat->FlBox->BxMaxWidth;
+      box = pfloat->FlBox;
+      if (box->BxType == BoFloatBlock && box->BxContentWidth)
+        w = box->BxMaxWidth + box->BxLMargin + box->BxLBorder + box->BxLPadding + box->BxRMargin + box->BxRBorder + box->BxRPadding;
       else
-        w = pfloat->FlBox->BxWidth;
-      if (pfloat->FlBox->BxXOrg + w - x > x1)
+        w = box->BxWidth;
+      if (box->BxXOrg + w - x > x1)
         /* float change the minimum width of the block */
-        x1 = pfloat->FlBox->BxXOrg + w - x;
-      if (pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y > *height)
+        x1 = box->BxXOrg + w - x;
+      if (box->BxYOrg + box->BxHeight - y > *height)
         /* float change the height of the block */
-        *height = pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y;
+        *height = box->BxYOrg + box->BxHeight - y;
       pfloat = pfloat->FlNext;
     }
 
   pfloat = pBlock->BxRightFloat;
   while (pfloat && pfloat->FlBox)
     {
-      if (pfloat->FlBox->BxType == BoFloatBlock && pfloat->FlBox->BxContentWidth)
-        w = pfloat->FlBox->BxMaxWidth;
+      box = pfloat->FlBox;
+      if (box->BxType == BoFloatBlock && box->BxContentWidth)
+        w = box->BxMaxWidth + box->BxLMargin + box->BxLBorder + box->BxLPadding + box->BxRMargin + box->BxRBorder + box->BxRPadding;
       else
-        w = pfloat->FlBox->BxWidth;
-      //if (pBlock->BxW - pfloat->FlBox->BxXOrg - x > x2)
-      //  x2 = pBlock->BxW - pfloat->FlBox->BxXOrg - x;
-      if (pfloat->FlBox->BxXOrg + w > x + pBlock->BxW + x2)
+        w = box->BxWidth;
+      //if (pBlock->BxW - box->BxXOrg - x > x2)
+      //  x2 = pBlock->BxW - box->BxXOrg - x;
+      if (box->BxXOrg + w > x + pBlock->BxMaxWidth + x2)
         /* float change the minimum width of the block */
-        x2 = pfloat->FlBox->BxXOrg + w - x - pBlock->BxW;
-      if (pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y > *height)
+        x2 = box->BxXOrg + w - x - pBlock->BxMaxWidth;
+      if (box->BxYOrg + box->BxHeight - y > *height)
         /* float change the height of the block */
-        *height = pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y;
+        *height = box->BxYOrg + box->BxHeight - y;
       pfloat = pfloat->FlNext;
     }
   if (extensibleblock)
@@ -3321,7 +3324,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if  (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight &&
        y + box->BxHeight >= boxPrevR->BxYOrg)
     /* can be inserted next to this previous float ? */
-    w = boxPrevR->BxXOrg - x;
+    w = boxPrevR->BxXOrg;
   if  (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
        y + box->BxHeight > boxPrevL->BxYOrg)
     /* can be inserted next to this previous float ? */
