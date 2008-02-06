@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2855,6 +2855,7 @@ void RemoveNamespaceDeclaration (PtrDocument pDoc, PtrElement element)
                             prevUri->NsNextUriDecl = uriDecl->NsNextUriDecl;
                           else
                             pDoc->DocNsUriDecl = uriDecl->NsNextUriDecl;
+                          TtaFreeMemory (uriDecl->NsUriName);
                           TtaFreeMemory (uriDecl);
                         }
                     }

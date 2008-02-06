@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 2000-2007
+ *  (c) COPYRIGHT INRIA and W3C, 2000-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -743,6 +743,7 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len,
       StrACat (&xpath_expr, buffer);
       if (mode & SEL_START_POINT || mode & SEL_END_POINT)
         StrACat (&xpath_expr, ")");
+      TtaFreeMemory (buffer);
     }
 
   return (xpath_expr);
