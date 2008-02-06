@@ -85,189 +85,187 @@
 82 Unterhalb der Markierung
 83 Im gesamten Dokument
 84 Überspringen
-85 **No color
-86 vorher speichern?
-87 Dokument schließen
-88 Formelsatz
-89 Grafik
-90 Lateinisches Alphabet
-91 Griechiches Alphabet
-92 Speichern
-93 Text
-94 Zeichnung
-95 Symbol
-96 Bild
-97 Elemente XML
-98 nach
-99 vor
-100 um
+85 vorher speichern?
+86 Dokument schließen
+87 Formelsatz
+88 Grafik
+89 Lateinisches Alphabet
+90 Griechiches Alphabet
+91 Speichern
+92 Text
+93 Zeichnung
+94 Symbol
+95 Bild
+96 Elemente XML
+97 nach
+98 vor
+99 um
+100 Einfügen
 101 Einfügen
-102 Einfügen
-103 Erzeugen
-104 Einfügen
-105 Seitenumbruch
-106 Sprache des Elements
-107 Sprachvoreinstellung:
-108 Suche beendet
-109 Suche in
-110 Suche
-111 Schreibgeschütztes Dokument
-112 Suche beendet
-113 Standardzeichensatz
-114 Standardgrafik
-115 Standardformat
-116 Standardgeometrie
-117 pt
-118 Linienart
-119 Linienstärke
-120 Füllmuster
-121 Teilen
-122 Objekttyp
-123 Gehe zu Seite Nr.:
-124 egal
-125 Attribut suchen
-126 Suche nach Typ
-127 Dokumenttyp
-128 Attribut
-129 Wert
-130 Wert des Attributs
-131 Unbekanntes Attribut
-132 Abbrechen
-133 Fehler in der PostScript-Erkennung
-134 Auftrag vom Druckspooler "%s" zurückgewiesen
-135 Kann "%s" nicht erzeugen
-136 Überstrichen
-137 Format
-138 Löschen
-139 Hintergrundfarbe wählen
-140 Vordergrundfarbe wählen
-141 Wählen Sie eine generische XML-Struktur
-142 Überprüfe
-143 Suchen
-144 Ersetzen (PW)
-145 Ersetzen
-146 Sprache
-147 Lernen
-148 Worte mit
-149 Rechtschreibprüfung
-150 Römische Zahlen
-151 Ignorieren
-152 Worte in Großbuchstaben
-153 Worte mit Ziffern
-154 Fehler in der Parameterdatei
-155 Tastaturdatei fehlt
-156 Kann das Dokumentwörterbuch nicht speichern
-157 Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen
-158 Wort "%s" zum Dokumentwörterbuch hinzugefügt
-159 Rechtschreibprüfung beendet
-160 Rechtschreibprüfung abgebrochen
-161 Bitte ein Dokument auswählen
-162 Dokumentwörterbuch unter %s gespeichert
-163 In dieser Version nicht verfügbar
-164 Palette aktivieren/deaktivieren
-165 Hilfsmittel
-166 Obligatorisches Attribut, kann nicht entfernt werden
-167 Erneuern
-168 Links
-169 Rechts
-170 Zur Mitte flanken
-171 Gerechtfertigt
-172 Klasse übernehnem
-173 Klasse oder Pseudoklasse wählen
-174 Auswählen
-175 Verwerfen
-176 Formel
-177 Verschiedene
-178 Binäre Relationen
-179 Binäre negierte Relationen
-180 Operatoren
-181 Griechisches Alphabet (Großbuchstaben)
-182 Pfeile
-183 Sonderzeichen
-184 Stop
-185 Zurück
-186 Vorwärts
-187 Aktualisieren
+102 Erzeugen
+103 Einfügen
+104 Seitenumbruch
+105 Sprache des Elements
+106 Sprachvoreinstellung:
+107 Suche beendet
+108 Suche in
+109 Suche
+110 Schreibgeschütztes Dokument
+111 Suche beendet
+112 Standardzeichensatz
+113 Standardgrafik
+114 Standardformat
+115 Standardgeometrie
+116 pt
+117 Linienart
+118 Linienstärke
+119 Füllmuster
+120 Teilen
+121 Objekttyp
+122 Gehe zu Seite Nr.:
+123 egal
+124 Attribut suchen
+125 Suche nach Typ
+126 Dokumenttyp
+127 Attribut
+128 Wert
+129 Wert des Attributs
+130 Unbekanntes Attribut
+131 Abbrechen
+132 Fehler in der PostScript-Erkennung
+133 Auftrag vom Druckspooler "%s" zurückgewiesen
+134 Kann "%s" nicht erzeugen
+135 Überstrichen
+136 Format
+137 Löschen
+138 Hintergrundfarbe wählen
+139 Vordergrundfarbe wählen
+140 Wählen Sie eine generische XML-Struktur
+141 Überprüfe
+142 Suchen
+143 Ersetzen (PW)
+144 Ersetzen
+145 Sprache
+146 Lernen
+147 Worte mit
+148 Rechtschreibprüfung
+149 Römische Zahlen
+150 Ignorieren
+151 Worte in Großbuchstaben
+152 Worte mit Ziffern
+153 Fehler in der Parameterdatei
+154 Tastaturdatei fehlt
+155 Kann das Dokumentwörterbuch nicht speichern
+156 Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen
+157 Wort "%s" zum Dokumentwörterbuch hinzugefügt
+158 Rechtschreibprüfung beendet
+159 Rechtschreibprüfung abgebrochen
+160 Bitte ein Dokument auswählen
+161 Dokumentwörterbuch unter %s gespeichert
+162 In dieser Version nicht verfügbar
+163 Palette aktivieren/deaktivieren
+164 Hilfsmittel
+165 Obligatorisches Attribut, kann nicht entfernt werden
+166 Erneuern
+167 Links
+168 Rechts
+169 Zur Mitte flanken
+170 Gerechtfertigt
+171 Klasse übernehnem
+172 Klasse oder Pseudoklasse wählen
+173 Auswählen
+174 Verwerfen
+175 Formel
+176 Verschiedene
+177 Binäre Relationen
+178 Binäre negierte Relationen
+179 Operatoren
+180 Griechisches Alphabet (Großbuchstaben)
+181 Pfeile
+182 Sonderzeichen
+183 Stop
+184 Zurück
+185 Vorwärts
+186 Aktualisieren
+187 Speichern
 188 Speichern
-189 Speichern
-190 XHTML
-191 Öffnen
-192 Drucken
-193 Suchen/Ersetzen
-194 Startseite
-195 Betont On/Off
-196 Hervorgehoben On/Off
-197 Code On/Off
-198 Bild
-199 Überschrift Ebene 1
-200 Überschrift Ebene 2
-201 Überschrift Ebene 3
-202 Überschrift Ebene 4
-203 Absatz
-204 Ungeordnete Liste
-205 Geordnete Liste
-206 Definitionsliste
-207 Verweis
-208 Tabelle
-209 Sie sind dabei, %d geöffnete Seiten zu schließen. Sind Sie sicher, dass Sie fortfahren möchten?
-210 Warnung anzeigen, wenn mehrere Seiten geschlossen werden sollen
-211 Seiten schließen
-212 Kein Fehler gefunden
-213 Parserfehler anzeigen
-214 Umrisse
-215 Ábschnitt
-216 Erzeugen
-217 Eingefügter Text On/Off
-218 Gelöschter Text On/Off
-219 Tiefgestellt On/Off
-220 Hochgestellt On/Off
-221 Begriff
-222 Definition
-223 Objekt
-224 Stil
-225 Durchsuchen
-226 Ansicht horizontal teilen
-227 Ansicht vertikal teilen
-228 Hilfsmittel anzeigen
-229 Rückgängig
-230 Erneut
-231 Ausschneiden
-232 Kopieren
-233 Einfügen
-234 Rechtschreibprüfung
-235 Verschiedene Konstruktionen
-236 Abhängigkeiten, Aufträge und Verknüpfungssteuerungen
-237 Datensätze und Funktionen
-238 arithmetisch, Abläufe, Verzweigungen und Konstante
-239 Analyse, lineare Algebra und Statistik
-240 Trigonometrie und Logarithmen
-241 Schrift vergrößern
-242 Schrift verkleinern
-243 Thema
-244 XML
-245 Text
-246 Keine neuen Dokumente
-247 Klicken Sie auf ein Element um es auszuwählen
-248 Klicken Sie um den Editmodus zu wechseln
-249 Zusammenfügen die Zellen
+189 XHTML
+190 Öffnen
+191 Drucken
+192 Suchen/Ersetzen
+193 Startseite
+194 Betont On/Off
+195 Hervorgehoben On/Off
+196 Code On/Off
+197 Bild
+198 Überschrift Ebene 1
+199 Überschrift Ebene 2
+200 Überschrift Ebene 3
+201 Überschrift Ebene 4
+202 Absatz
+203 Ungeordnete Liste
+204 Geordnete Liste
+205 Definitionsliste
+206 Verweis
+207 Tabelle
+208 Sie sind dabei, %d geöffnete Seiten zu schließen. Sind Sie sicher, dass Sie fortfahren möchten?
+209 Warnung anzeigen, wenn mehrere Seiten geschlossen werden sollen
+210 Seiten schließen
+211 Kein Fehler gefunden
+212 Parserfehler anzeigen
+213 Umrisse
+214 Ábschnitt
+215 Erzeugen
+216 Eingefügter Text On/Off
+217 Gelöschter Text On/Off
+218 Tiefgestellt On/Off
+219 Hochgestellt On/Off
+220 Begriff
+221 Definition
+222 Objekt
+223 Stil
+224 Durchsuchen
+225 Ansicht horizontal teilen
+226 Ansicht vertikal teilen
+227 Hilfsmittel anzeigen
+228 Rückgängig
+229 Erneut
+230 Ausschneiden
+231 Kopieren
+232 Einfügen
+233 Rechtschreibprüfung
+234 Verschiedene Konstruktionen
+235 Abhängigkeiten, Aufträge und Verknüpfungssteuerungen
+236 Datensätze und Funktionen
+237 arithmetisch, Abläufe, Verzweigungen und Konstante
+238 Analyse, lineare Algebra und Statistik
+239 Trigonometrie und Logarithmen
+240 Schrift vergrößern
+241 Schrift verkleinern
+242 Thema
+243 XML
+244 Text
+245 Keine neuen Dokumente
+246 Klicken Sie auf ein Element um es auszuwählen
+247 Klicken Sie um den Editmodus zu wechseln
+248 Zusammenfügen die Zellen
+249 Verkleinern der Breite
 250 Verkleinern der Breite
-251 Verkleinern der Breite
-252 Zeile einfügen (davor)
-253 Zeile inzufügen (danach)
-254 Spalte einfügen (davor)
-255 Spalte inzufügen (danach)
-256 **Tip of the day
-257 **Show tip at startup
-258 **Next tip
-259 **Did you know...
-260 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
-261 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
-262 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
-263 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
-264 **With the customizable mode, you can drag panels to change their order or to make them floating.
-265 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
-266 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
-267 **When there is red button in the status bar, you can show errors by clicking on it.
-268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
-269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
-270 **
+251 Zeile einfügen (davor)
+252 Zeile inzufügen (danach)
+253 Spalte einfügen (davor)
+254 Spalte inzufügen (danach)
+255 **Tip of the day
+256 **Show tip at startup
+257 **Next tip
+258 Haben Sie schon gewusst?
+259 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
+260 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
+261 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
+262 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
+263 **With the customizable mode, you can drag panels to change their order or to make them floating.
+264 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
+265 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
+266 **When there is red button in the status bar, you can show errors by clicking on it.
+267 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
+268 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.

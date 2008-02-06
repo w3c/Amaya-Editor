@@ -84,189 +84,187 @@
 82 Za výberom
 83 V celom dokumente
 84 Nenahrádzať
-85 **No color
-86 pred zatvorením
-87 Zatvoriť dokumetn
-88 Matematické symboly
-89 Grafika
-90 Latinská abeceda
-91 Grécka abeceda
-92 Uložiť
-93 Text
-94 Grafika
-95 Symbol
-96 Obrázok
-97 XML
-98 za
-99 pred
-100 okolo
-101 Zahrnúť
-102 Prilepiť
-103 vytvoriť
-104 Vložiť
-105 Koniec strany
-106 Jazyk prvku
-107 Prevzatý jazyk:
-108 Nenájdené
-109 Hľadať v
-110 Hľadať
-111 Prvok iba na čítanie
-112 Nie je čo nahrádzať
-113 Štandardné znaky
-114 Štandardná grafika
-115 Štandardný formát
-116 Štandardné rozmery
-117 body
-118 Štýl riadkov
-119 Šírka riadka
-120 Vzor výplne
-121 Rozdeliť
-122 Typ objektu
-123 Prejsť na stranu číslo:
-124 Ľubovoľný
-125 Hľadať atribút
-126 Hľadať typ
-127 Prirodzený
-128 Atríbútu
-129 Hodnota
-130 Hodnota atríbútu
-131 Neznámy atribút
-132 Zrušiť
-133 Chyba v PostScriptovom preklade
-134 Príkaz odmietnutý tlačiarňou "%s"
-135 Nedá sa vytvoriť "%s"
-136 Pruh nad
-137 Formát dokumentu
-138 Odstániť atribút
-139 Farba pozadia
-140 Farba popredia
-141 Vybrať základnú štruktúru XML
-142 Kontrola
-143 Hľadať/Preskočiť
-144 Nahradiť (+ slovník)
-145 Nahradiť a nájsť ďalšie
-146 Iný jazyk
-147 Pridať do slovníka
-148 slová obsahujúce:
-149 Kontrola pravopisu ...
-150 Rímske čísla
-151 Ignorovať
-152 slová napísané VEĽKÝMI písmenami
-153 slová s číslami
-154 Chyba súboru s parametrami
-155 Neexistuje súbor klávesnice
-156 Slovník sa nedá uložiť
-157 Nesprávne slovo "%s" bolo zamietnuté v tomto slovníku
-158 Slovo "%s" bolo pridané do slovníka
-159 Koniec kontroly pravopisu
-160 Kontrola pravopisu prerušená
-161 Prosím vyberte dokument
-162 Slovník bol uložený
-163 Nie je prístupné v tejto verzii
-164 Vysunúť/zasunúť nástrojovú lištu
-165 Nástroje
-166 Toto je povinný atribút, ktorý nemôže byť odstránený
-167 Obnoviť
-168 Doľava
-169 Doprava
-170 Centrovať
-171 Do bloku
-172 Aplikovať triedu (class)
-173 Vyberte triedu alebo pseudotriedu
-174 Vybrať
-175 Skartovať
-176 Vzorce
-177 Rôzne
-178 Relačné operátory
-179 Negované relačné operátory
-180 Operátory
-181 Grácka abeceda (veľké)
-182 Šipky
-183 Špeciálne znaky
-184 Prerušiť prenos
-185 Predchádzajúci dokument
-186 Nasledujúci dokument
-187 Načítať najnovšiu verziu stránky
+85 pred zatvorením
+86 Zatvoriť dokumetn
+87 Matematické symboly
+88 Grafika
+89 Latinská abeceda
+90 Grécka abeceda
+91 Uložiť
+92 Text
+93 Grafika
+94 Symbol
+95 Obrázok
+96 XML
+97 za
+98 pred
+99 okolo
+100 Zahrnúť
+101 Prilepiť
+102 vytvoriť
+103 Vložiť
+104 Koniec strany
+105 Jazyk prvku
+106 Prevzatý jazyk:
+107 Nenájdené
+108 Hľadať v
+109 Hľadať
+110 Prvok iba na čítanie
+111 Nie je čo nahrádzať
+112 Štandardné znaky
+113 Štandardná grafika
+114 Štandardný formát
+115 Štandardné rozmery
+116 body
+117 Štýl riadkov
+118 Šírka riadka
+119 Vzor výplne
+120 Rozdeliť
+121 Typ objektu
+122 Prejsť na stranu číslo:
+123 Ľubovoľný
+124 Hľadať atribút
+125 Hľadať typ
+126 Prirodzený
+127 Atríbútu
+128 Hodnota
+129 Hodnota atríbútu
+130 Neznámy atribút
+131 Zrušiť
+132 Chyba v PostScriptovom preklade
+133 Príkaz odmietnutý tlačiarňou "%s"
+134 Nedá sa vytvoriť "%s"
+135 Pruh nad
+136 Formát dokumentu
+137 Odstániť atribút
+138 Farba pozadia
+139 Farba popredia
+140 Vybrať základnú štruktúru XML
+141 Kontrola
+142 Hľadať/Preskočiť
+143 Nahradiť (+ slovník)
+144 Nahradiť a nájsť ďalšie
+145 Iný jazyk
+146 Pridať do slovníka
+147 slová obsahujúce:
+148 Kontrola pravopisu ...
+149 Rímske čísla
+150 Ignorovať
+151 slová napísané VEĽKÝMI písmenami
+152 slová s číslami
+153 Chyba súboru s parametrami
+154 Neexistuje súbor klávesnice
+155 Slovník sa nedá uložiť
+156 Nesprávne slovo "%s" bolo zamietnuté v tomto slovníku
+157 Slovo "%s" bolo pridané do slovníka
+158 Koniec kontroly pravopisu
+159 Kontrola pravopisu prerušená
+160 Prosím vyberte dokument
+161 Slovník bol uložený
+162 Nie je prístupné v tejto verzii
+163 Vysunúť/zasunúť nástrojovú lištu
+164 Nástroje
+165 Toto je povinný atribút, ktorý nemôže byť odstránený
+166 Obnoviť
+167 Doľava
+168 Doprava
+169 Centrovať
+170 Do bloku
+171 Aplikovať triedu (class)
+172 Vyberte triedu alebo pseudotriedu
+173 Vybrať
+174 Skartovať
+175 Vzorce
+176 Rôzne
+177 Relačné operátory
+178 Negované relačné operátory
+179 Operátory
+180 Grácka abeceda (veľké)
+181 Šipky
+182 Špeciálne znaky
+183 Prerušiť prenos
+184 Predchádzajúci dokument
+185 Nasledujúci dokument
+186 Načítať najnovšiu verziu stránky
+187 Uložiť
 188 Uložiť
-189 Uložiť
-190 Nový XHTML dokument
-191 Otvoriť dokument
-192 Tlačiť
-193 Hľadať
-194 Prejsť na domovskú stránku
-195 Zvýrazniť On/Off
-196 Silno zvýrazniť On/Off
-197 Zdrojový kód On/Off
-198 Obrázok (img)
-199 Nadpis úrovne 1
-200 Nadpis úrovne 2
-201 Nadpis úrovne 3
-202 Nadpis úrovne 4
-203 Odsek
-204 Odrážky (ul)
-205 Číslovanie (ol)
-206 Zoznam definícií (dl)
-207 Hypertextový odkaz
-208 Tabuľka (table)
-209 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
-210 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
-211 Zatvoriť karty
-212 Žiadne chyby neboli nájdené
-213 Zobraziť nájdené chyby
-214 Kolónky
-215 Oddelenie, vrstva (div)
-216 Záložka
-217 Novovložený text On/Off
-218 Text na odstránenie On/Off
-219 Dolný index On/Off
-220 Horný index On/Off
-221 Termín (dt)
-222 Definícia termínu (dd)
-223 Objekt (object)
-224 Pravidlá
-225 Súbor
-226 Rozdeliť okno horizontálne
-227 Rozdeliť okno vertikálne
-228 Zobraziť/skryť nástroje
-229 Späť
-230 Opakovať
-231 Vystrihnúť
-232 Kopírovať
-233 Prilepiť
-234 Kontrola pravopisu
-235 **Various constructs
-236 **Relations, orders and logic
-237 **Sets and functions
-238 **Arithmetic, operations, complexes and constants
-239 **Analysis, linear algebra and statistic
-240 **Trigonometry and logarithms
-241 Zväčšiť veľkosť textu
-242 Zmenšiť veľkosť textu
-243 **Theme
-244 XML
-245 Textové
-246 **No recent document
-247 **Click an element to select it
-248 **Click to change the editing mode
-249 Zlúčiť
-250 Rozdeliť bunky horizontálne
-251 Rozdeliť bunky vertikálne
-252 Vložiť riadok nad
-253 Vložiť riadok pod
-254 Vložiť stĺpec vľavo
-255 Vložiť stĺpec vpravo
-256 **Tip of the day
-257 **Show tip at startup
-258 **Next tip
-259 **Did you know...
-260 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
-261 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
-262 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
-263 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
-264 **With the customizable mode, you can drag panels to change their order or to make them floating.
-265 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
-266 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
-267 **When there is red button in the status bar, you can show errors by clicking on it.
-268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
-269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
-270 **
+189 Nový XHTML dokument
+190 Otvoriť dokument
+191 Tlačiť
+192 Hľadať
+193 Prejsť na domovskú stránku
+194 Zvýrazniť On/Off
+195 Silno zvýrazniť On/Off
+196 Zdrojový kód On/Off
+197 Obrázok (img)
+198 Nadpis úrovne 1
+199 Nadpis úrovne 2
+200 Nadpis úrovne 3
+201 Nadpis úrovne 4
+202 Odsek
+203 Odrážky (ul)
+204 Číslovanie (ol)
+205 Zoznam definícií (dl)
+206 Hypertextový odkaz
+207 Tabuľka (table)
+208 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
+209 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
+210 Zatvoriť karty
+211 Žiadne chyby neboli nájdené
+212 Zobraziť nájdené chyby
+213 Kolónky
+214 Oddelenie, vrstva (div)
+215 Záložka
+216 Novovložený text On/Off
+217 Text na odstránenie On/Off
+218 Dolný index On/Off
+219 Horný index On/Off
+220 Termín (dt)
+221 Definícia termínu (dd)
+222 Objekt (object)
+223 Pravidlá
+224 Súbor
+225 Rozdeliť okno horizontálne
+226 Rozdeliť okno vertikálne
+227 Zobraziť/skryť nástroje
+228 Späť
+229 Opakovať
+230 Vystrihnúť
+231 Kopírovať
+232 Prilepiť
+233 Kontrola pravopisu
+234 **Various constructs
+235 **Relations, orders and logic
+236 **Sets and functions
+237 **Arithmetic, operations, complexes and constants
+238 **Analysis, linear algebra and statistic
+239 **Trigonometry and logarithms
+240 Zväčšiť veľkosť textu
+241 Zmenšiť veľkosť textu
+242 **Theme
+243 XML
+244 Textové
+245 **No recent document
+246 **Click an element to select it
+247 **Click to change the editing mode
+248 Zlúčiť
+249 Rozdeliť bunky horizontálne
+250 Rozdeliť bunky vertikálne
+251 Vložiť riadok nad
+252 Vložiť riadok pod
+253 Vložiť stĺpec vľavo
+254 Vložiť stĺpec vpravo
+255 **Tip of the day
+256 **Show tip at startup
+257 **Next tip
+258 **Did you know...
+259 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
+260 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
+261 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
+262 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
+263 **With the customizable mode, you can drag panels to change their order or to make them floating.
+264 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
+265 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
+266 **When there is red button in the status bar, you can show errors by clicking on it.
+267 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
+268 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.

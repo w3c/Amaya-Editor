@@ -84,189 +84,187 @@
 82 Tras la selección
 83 En todo el documento
 84 No reemplazar
-85 **No color
-86 antes de cerrarlo
-87 Cerrar un documento
-88 Símbolos matemáticos
-89 Gráficos
-90 Alfabeto latino
-91 Alfabeto griego
-92 Guardar
-93 Texto
-94 Gráfico
-95 Símbolo
-96 Imagen
-97 Elementos XML
-98 después
-99 antes
-100 alrededor
-101 Incluir
-102 Pegar
-103 para crear
-104 Insertar
-105 Salto de página
-106 Idioma del elemento
-107 Idioma heredado:
-108 No encontrado
-109 Buscar en
-110 Buscar
-111 Elemento de sólo lectura
-112 Nada que sustituir
-113 Caracteres estándar
-114 Gráficos estándar
-115 Formato estándar
-116 Geometría estándar
-117 pt
-118 Estilo de línea
-119 Grosor de línea
-120 Patrón de relleno
-121 Dividir
-122 Tipo de objeto
-123 Ir a página número:
-124 Cualquiera
-125 Atributo a buscar
-126 Tipo a buscar
-127 Natures
-128 Atributo
-129 Valores
-130 Valores de atributo
-131 Atributo desconocido
-132 Cancelar
-133 Error en traducción PostScript
-134 Orden rechazada por el spooler "%s"
-135 No puedo crear "%s"
-136 Suprarayado
-137 Formato de documento
-138 Eliminar atributo
-139 Seleccionar un color del fondo
-140 Seleccionar un color del texto
-141 Seleccione una estructura genérica
-142 Comprobar
-143 Buscar/Saltar
-144 Reemplazar (+ dic)
-145 Reemplazar y siguiente
-146 Otro idioma
-147 Agregar
-148 Palabras que contengan:
-149 Revisar ortografía:
-150 Números romanos
-151 Ignorar
-152 Palabras en mayúsculas
-153 Palabras con dígitos
-154 Error en archivo de parámetro
-155 No hay archivo de teclado
-156 No puedo guardar el diccionario del documento
-157 Palabra incorrecta "%s" rechazada en este diccionario
-158 Palabra "%s" añadida al diccionario del documento
-159 Fin de la corrección ortográfica
-160 Corrección ortográfica abortada
-161 Por favor, seleccione un documento
-162 Diccionario del documento guardado: %s
-163 No disponible en esta versión
-164 Activar/Desactivar paleta
-165 Herramientas
-166 Atributo obligatorio, no puede eliminarse
-167 Actualizar
-168 Izquierda
-169 Derecha
-170 Centrado
-171 Justificado
-172 Aplicar clase
-173 Seleccionar una clase o seudo-clase
-174 Seleccionar
-175 Descartar
-176 MathML
-177 Miscelánea
-178 Relaciones binarias
-179 Relaciones de negación binarias
-180 Operadores
-181 Alfabeto griego (mayúsculas)
-182 Flechas
-183 Caracteres especiales
-184 Detener
-185 Atrás
-186 Adelante
-187 Actualizar
-188 Guardar
-189 Guardar todo
-190 Nuevo documento XHTML
-191 Abrir documento
-192 Imprimir
-193 Buscar
-194 Inicio
-195 Énfasis On/Off
-196 Enérgico (strong) On/Off
-197 Código (code) On/Off
-198 Imagen
-199 Cabecera nivel 1
-200 Cabecera nivel 2
-201 Cabecera nivel 3
-202 Cabecera nivel 4
-203 Párrafo
-204 Lista no ordenada (ul)
-205 Lista ordenada (ol)
-206 Lista de definición (dl)
-207 Enlace
-208 Tabla
-209 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
-210 Avisarme cuando intente cerrar múltiples pestañas
-211 Cerrar pestañas
-212 Ningún error detectado
-213 Mostrar errores sintácticos
-214 Cajas
-215 División
-216 Destino
-217 Inserción (ins) On/Off
-218 Borrado (del) On/Off
-219 Subíndice (sub) On/Off
-220 Superíndice (sup) On/Off
-221 Término
-222 Definición
-223 Objeto
-224 Estilo
-225 Archivos
-226 Dividir horizontalmente
-227 Dividir vista verticalmente
-228 Ventana de herramientas
-229 Deshacer
-230 Rehacer
-231 Cortar
-232 Copiar
-233 Pegar
-234 Revisar ortografía
-235 Varios
-236 Relaciones, orden y lógica
-237 Conjuntos y funciones
-238 Aritmética, operaciones, complejos y constantes
-239 Análisis, álgebra lineal y estadística
-240 Trigonometría y logaritmos
-241 &Aumentar tamaño de texto
-242 &Reducir tamaño de texto
-243 Tema
-244 XML
-245 Texto
-246 No hay documentos recientes
-247 Haga clic en un elemento para seleccionarlo
-248 Haga clic para cambiar el modo de edición
-249 Unir
-250 Reducir extensión horizontal
-251 Reducir extensión vertical
-252 Insertar fila delante
-253 Añadir fila detrás
-254 Insertar columna delante
-255 Añadir columna detrás
-256 **Tip of the day
-257 **Show tip at startup
-258 **Next tip
-259 **Did you know...
-260 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
-261 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
-262 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
-263 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
-264 **With the customizable mode, you can drag panels to change their order or to make them floating.
-265 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
-266 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
-267 **When there is red button in the status bar, you can show errors by clicking on it.
-268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
-269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
-270 **
+85 antes de cerrarlo
+86 Cerrar un documento
+87 Símbolos matemáticos
+88 Gráficos
+89 Alfabeto latino
+90 Alfabeto griego
+91 Guardar
+92 Texto
+93 Gráfico
+94 Símbolo
+95 Imagen
+96 Elementos XML
+97 después
+98 antes
+99 alrededor
+100 Incluir
+101 Pegar
+102 para crear
+103 Insertar
+104 Salto de página
+105 Idioma del elemento
+106 Idioma heredado:
+107 No encontrado
+108 Buscar en
+109 Buscar
+110 Elemento de sólo lectura
+111 Nada que sustituir
+112 Caracteres estándar
+113 Gráficos estándar
+114 Formato estándar
+115 Geometría estándar
+116 pt
+117 Estilo de línea
+118 Grosor de línea
+119 Patrón de relleno
+120 Dividir
+121 Tipo de objeto
+122 Ir a página número:
+123 Cualquiera
+124 Atributo a buscar
+125 Tipo a buscar
+126 Natures
+127 Atributo
+128 Valores
+129 Valores de atributo
+130 Atributo desconocido
+131 Cancelar
+132 Error en traducción PostScript
+133 Orden rechazada por el spooler "%s"
+134 No puedo crear "%s"
+135 Suprarayado
+136 Formato de documento
+137 Eliminar atributo
+138 Seleccionar un color del fondo
+139 Seleccionar un color del texto
+140 Seleccione una estructura genérica
+141 Comprobar
+142 Buscar/Saltar
+143 Reemplazar (+ dic)
+144 Reemplazar y siguiente
+145 Otro idioma
+146 Agregar
+147 Palabras que contengan:
+148 Revisar ortografía:
+149 Números romanos
+150 Ignorar
+151 Palabras en mayúsculas
+152 Palabras con dígitos
+153 Error en archivo de parámetro
+154 No hay archivo de teclado
+155 No puedo guardar el diccionario del documento
+156 Palabra incorrecta "%s" rechazada en este diccionario
+157 Palabra "%s" añadida al diccionario del documento
+158 Fin de la corrección ortográfica
+159 Corrección ortográfica abortada
+160 Por favor, seleccione un documento
+161 Diccionario del documento guardado: %s
+162 No disponible en esta versión
+163 Activar/Desactivar paleta
+164 Herramientas
+165 Atributo obligatorio, no puede eliminarse
+166 Actualizar
+167 Izquierda
+168 Derecha
+169 Centrado
+170 Justificado
+171 Aplicar clase
+172 Seleccionar una clase o seudo-clase
+173 Seleccionar
+174 Descartar
+175 MathML
+176 Miscelánea
+177 Relaciones binarias
+178 Relaciones de negación binarias
+179 Operadores
+180 Alfabeto griego (mayúsculas)
+181 Flechas
+182 Caracteres especiales
+183 Detener
+184 Atrás
+185 Adelante
+186 Actualizar
+187 Guardar
+188 Guardar todo
+189 Nuevo documento XHTML
+190 Abrir documento
+191 Imprimir
+192 Buscar
+193 Inicio
+194 Énfasis On/Off
+195 Enérgico (strong) On/Off
+196 Código (code) On/Off
+197 Imagen
+198 Cabecera nivel 1
+199 Cabecera nivel 2
+200 Cabecera nivel 3
+201 Cabecera nivel 4
+202 Párrafo
+203 Lista no ordenada (ul)
+204 Lista ordenada (ol)
+205 Lista de definición (dl)
+206 Enlace
+207 Tabla
+208 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
+209 Avisarme cuando intente cerrar múltiples pestañas
+210 Cerrar pestañas
+211 Ningún error detectado
+212 Mostrar errores sintácticos
+213 Cajas
+214 División
+215 Destino
+216 Inserción (ins) On/Off
+217 Borrado (del) On/Off
+218 Subíndice (sub) On/Off
+219 Superíndice (sup) On/Off
+220 Término
+221 Definición
+222 Objeto
+223 Estilo
+224 Archivos
+225 Dividir horizontalmente
+226 Dividir vista verticalmente
+227 Ventana de herramientas
+228 Deshacer
+229 Rehacer
+230 Cortar
+231 Copiar
+232 Pegar
+233 Revisar ortografía
+234 Varios
+235 Relaciones, orden y lógica
+236 Conjuntos y funciones
+237 Aritmética, operaciones, complejos y constantes
+238 Análisis, álgebra lineal y estadística
+239 Trigonometría y logaritmos
+240 &Aumentar tamaño de texto
+241 &Reducir tamaño de texto
+242 Tema
+243 XML
+244 Texto
+245 No hay documentos recientes
+246 Haga clic en un elemento para seleccionarlo
+247 Haga clic para cambiar el modo de edición
+248 Unir
+249 Reducir extensión horizontal
+250 Reducir extensión vertical
+251 Insertar fila delante
+252 Añadir fila detrás
+253 Insertar columna delante
+254 Añadir columna detrás
+255 **Tip of the day
+256 **Show tip at startup
+257 **Next tip
+258 ¿Sabía que...?
+259 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
+260 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
+261 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
+262 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
+263 **With the customizable mode, you can drag panels to change their order or to make them floating.
+264 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
+265 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
+266 **When there is red button in the status bar, you can show errors by clicking on it.
+267 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
+268 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.

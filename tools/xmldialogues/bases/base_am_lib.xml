@@ -1329,10 +1329,6 @@
 	<message xml:lang="tw">不替換</message>
 	<message xml:lang="sk">Nenahrádzať</message>
 </label>
-<label define="TMSG_STD_COLORS">
-	<message xml:lang="en">No color</message>
-	<message xml:lang="fr">Pas de couleur</message>
-</label>
 <label define="TMSG_BEFORE_CLOSING">
 	<message xml:lang="en">before closing it</message>
 	<message xml:lang="fr">avant de le fermer</message>
@@ -3868,8 +3864,9 @@
 <label define="TIP_DIALOG_DID_YOU_KNOW">
 <message xml:lang="en">Did you know...</message>
 <message xml:lang="fr">Saviez vous...</message>
+<message xml:lang="es">¿Sabía que...?</message>
+<message xml:lang="de">Haben Sie schon gewusst?</message>
 </label>
-
 <label define="TIP_AMAYA_PROFILES">
 <message xml:lang="en">Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.</message>
 <message xml:lang="fr">Amaya s'adapte à votre usage : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.</message>
@@ -3910,12 +3907,6 @@
 <message xml:lang="en">You can move to another tab with the menu displayed by the arrow button at right of document tabs.</message>
 <message xml:lang="fr">Vous pouvez changer d'onglet avec le menu affiché par le bouton flèche à droite des onglets.</message>
 </label>
-
-<label define="TIP_">
-<message xml:lang="en"></message>
-<message xml:lang="fr"></message>
-</label>
-
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

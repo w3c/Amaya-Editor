@@ -84,189 +84,187 @@
 82 **After selection
 83 **In the whole document
 84 **Do not replace
-85 **No color
-86 **before closing it
-87 **Close a document
-88 **Math symbols
-89 **Graphics
-90 **Latin alphabet
-91 **Greek alphabet
-92 **Save
-93 **Text
-94 **Graphic
-95 **Symbol
-96 **Image
-97 **XML elements
-98 **after
-99 **before
-100 **around
-101 **Include
-102 **Paste
-103 **to create
-104 **Insert
-105 **Page break
-106 **Language of element
-107 **Inherited language:
-108 **Not found
-109 **Search in
-110 **Search
-111 **Read only element
-112 **Nothing to replace
-113 **Standard characters
-114 **Standard graphics
-115 **Standard format
-116 **Standard geometry
-117 **pt
-118 **Line style
-119 **Line weight
-120 **Fill pattern
-121 **Split
-122 **Object type
-123 **Goto page number:
-124 **Any
-125 **Attribute to search
-126 **Type to search
-127 **Natures
-128 **Attribute
-129 **Value
-130 **Attribute value
-131 **Unknown attribute
-132 **Cancel
-133 **Error in PostScript translation
-134 **Command refused by the spooler "%s"
-135 **Cannot create "%s"
-136 **Overline
-137 **Document format
-138 **Remove attribute
-139 **Select a background color
-140 **Select a text color
-141 **Select a generic XML structure
-142 **Checking
-143 **Search/Skip
-144 **Replace (+ dic)
-145 **Replace and next
-146 **Other language
-147 **Learn
-148 **words containing:
-149 **Spell checking ...
-150 **Roman numerals
-151 **Ignore
-152 **words that are all caps
-153 **words with digits
-154 **Parameter file error
-155 **No keyboard file
-156 **Cannot save the document dictionary
-157 **Incorrect word "%s" refused in this dictionary
-158 **Word "%s" added in the document dictionary
-159 **End of spell checking
-160 **Spell checking aborted
-161 **Please select a document
-162 **Document dictionary saved: %s
-163 **Not available in this version
-164 **Enable/Disable palette
-165 **Tools
-166 **Mandatory attribute, it can't be removed
-167 **Refresh
-168 **Align left
-169 **Align right
-170 **Center
-171 **Justify
-172 **Apply class
-173 **Select a class or a pseudo-class
-174 **Select
-175 **Discard
-176 **Math
-177 **Misc
-178 **Binary relations
-179 **Binary relations of negation
-180 **Operators
-181 **Greek alphabet (capital)
-182 **Arrows
-183 **Special characters
-184 **Interrupt transfer
-185 **Previous document
-186 **Next document
-187 **Reload
-188 **Save
-189 **Save All
-190 **New XHTML document
-191 **Open document
-192 **Print
-193 **Find
-194 **Home
-195 **Emphasis On/Off
-196 **Strong On/Off
-197 **Code On/Off
-198 **Insert/Replace image
-199 **Heading level 1
-200 **Heading level 2
-201 **Heading level 3
-202 **Heading level 4
-203 **Paragraph
-204 **Bulleted list
-205 **Numbered list
-206 **Definition list
-207 **Link
-208 **Table
-209 **You are about to close %d open tabs. Are you sure you want to continue?
-210 **Warn me when I attempt to close multiple tabs
-211 **Close tabs
-212 **No error detected
-213 **Show parsing errors
-214 **Boxes
-215 **Division
-216 **Target
-217 **Inserted text On/Off
-218 **Deleted text On/Off
-219 **Subscript On/Off
-220 **Superscript On/Off
-221 **Term
-222 **Definition
-223 **Object
-224 **Style
-225 **Files
-226 **Horizontal split/unsplit
-227 **Vertical split/unsplit
-228 **Show/hide tools
-229 **Undo
-230 **Redo
-231 **Cut
-232 **Copy
-233 **Paste
-234 **Check spelling
-235 **Various constructs
-236 **Relations, orders and logic
-237 **Sets and functions
-238 **Arithmetic, operations, complexes and constants
-239 **Analysis, linear algebra and statistic
-240 **Trigonometry and logarithms
-241 **Zoom in
-242 **Zoom out
-243 **Theme
-244 **XML
-245 **Text
-246 **No recent document
-247 **Click an element to select it
-248 **Click to change the editing mode
-249 **Merge cells
-250 **Shrink horizontal extend
-251 **Shrink vertical extend
-252 **Insert a row
-253 **Append a row
-254 **Insert a column
-255 **Append a column
-256 **Tip of the day
-257 **Show tip at startup
-258 **Next tip
-259 **Did you know...
-260 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
-261 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
-262 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
-263 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
-264 **With the customizable mode, you can drag panels to change their order or to make them floating.
-265 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
-266 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
-267 **When there is red button in the status bar, you can show errors by clicking on it.
-268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
-269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
-270 **
+85 **before closing it
+86 **Close a document
+87 **Math symbols
+88 **Graphics
+89 **Latin alphabet
+90 **Greek alphabet
+91 **Save
+92 **Text
+93 **Graphic
+94 **Symbol
+95 **Image
+96 **XML elements
+97 **after
+98 **before
+99 **around
+100 **Include
+101 **Paste
+102 **to create
+103 **Insert
+104 **Page break
+105 **Language of element
+106 **Inherited language:
+107 **Not found
+108 **Search in
+109 **Search
+110 **Read only element
+111 **Nothing to replace
+112 **Standard characters
+113 **Standard graphics
+114 **Standard format
+115 **Standard geometry
+116 **pt
+117 **Line style
+118 **Line weight
+119 **Fill pattern
+120 **Split
+121 **Object type
+122 **Goto page number:
+123 **Any
+124 **Attribute to search
+125 **Type to search
+126 **Natures
+127 **Attribute
+128 **Value
+129 **Attribute value
+130 **Unknown attribute
+131 **Cancel
+132 **Error in PostScript translation
+133 **Command refused by the spooler "%s"
+134 **Cannot create "%s"
+135 **Overline
+136 **Document format
+137 **Remove attribute
+138 **Select a background color
+139 **Select a text color
+140 **Select a generic XML structure
+141 **Checking
+142 **Search/Skip
+143 **Replace (+ dic)
+144 **Replace and next
+145 **Other language
+146 **Learn
+147 **words containing:
+148 **Spell checking ...
+149 **Roman numerals
+150 **Ignore
+151 **words that are all caps
+152 **words with digits
+153 **Parameter file error
+154 **No keyboard file
+155 **Cannot save the document dictionary
+156 **Incorrect word "%s" refused in this dictionary
+157 **Word "%s" added in the document dictionary
+158 **End of spell checking
+159 **Spell checking aborted
+160 **Please select a document
+161 **Document dictionary saved: %s
+162 **Not available in this version
+163 **Enable/Disable palette
+164 **Tools
+165 **Mandatory attribute, it can't be removed
+166 **Refresh
+167 **Align left
+168 **Align right
+169 **Center
+170 **Justify
+171 **Apply class
+172 **Select a class or a pseudo-class
+173 **Select
+174 **Discard
+175 **Math
+176 **Misc
+177 **Binary relations
+178 **Binary relations of negation
+179 **Operators
+180 **Greek alphabet (capital)
+181 **Arrows
+182 **Special characters
+183 **Interrupt transfer
+184 **Previous document
+185 **Next document
+186 **Reload
+187 **Save
+188 **Save All
+189 **New XHTML document
+190 **Open document
+191 **Print
+192 **Find
+193 **Home
+194 **Emphasis On/Off
+195 **Strong On/Off
+196 **Code On/Off
+197 **Insert/Replace image
+198 **Heading level 1
+199 **Heading level 2
+200 **Heading level 3
+201 **Heading level 4
+202 **Paragraph
+203 **Bulleted list
+204 **Numbered list
+205 **Definition list
+206 **Link
+207 **Table
+208 **You are about to close %d open tabs. Are you sure you want to continue?
+209 **Warn me when I attempt to close multiple tabs
+210 **Close tabs
+211 **No error detected
+212 **Show parsing errors
+213 **Boxes
+214 **Division
+215 **Target
+216 **Inserted text On/Off
+217 **Deleted text On/Off
+218 **Subscript On/Off
+219 **Superscript On/Off
+220 **Term
+221 **Definition
+222 **Object
+223 **Style
+224 **Files
+225 **Horizontal split/unsplit
+226 **Vertical split/unsplit
+227 **Show/hide tools
+228 **Undo
+229 **Redo
+230 **Cut
+231 **Copy
+232 **Paste
+233 **Check spelling
+234 **Various constructs
+235 **Relations, orders and logic
+236 **Sets and functions
+237 **Arithmetic, operations, complexes and constants
+238 **Analysis, linear algebra and statistic
+239 **Trigonometry and logarithms
+240 **Zoom in
+241 **Zoom out
+242 **Theme
+243 **XML
+244 **Text
+245 **No recent document
+246 **Click an element to select it
+247 **Click to change the editing mode
+248 **Merge cells
+249 **Shrink horizontal extend
+250 **Shrink vertical extend
+251 **Insert a row
+252 **Append a row
+253 **Insert a column
+254 **Append a column
+255 **Tip of the day
+256 **Show tip at startup
+257 **Next tip
+258 **Did you know...
+259 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
+260 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
+261 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
+262 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
+263 **With the customizable mode, you can drag panels to change their order or to make them floating.
+264 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
+265 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
+266 **When there is red button in the status bar, you can show errors by clicking on it.
+267 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
+268 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.

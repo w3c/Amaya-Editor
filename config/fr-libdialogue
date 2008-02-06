@@ -84,189 +84,187 @@
 82 Après la sélection
 83 Dans tout le document
 84 Sauter
-85 Pas de couleur
-86 avant de le fermer
-87 Fermer un document
-88 Symboles mathématiques
-89 Graphiques
-90 Alphabet latin
-91 Alphabet grec
-92 Enregistrer
-93 Texte
-94 Graphique
-95 Symbole
-96 Image
-97 Eléments XML
-98 après
-99 avant
-100 autour
-101 Inclure
-102 Coller
-103 à créer
-104 Insérer
-105 Saut de page
-106 Langue de l'élément
-107 Langue héritée :
-108 Pas trouvé
-109 Recherche dans
-110 Recherche
-111 Elément en lecture seule
-112 Plus de remplacements
-113 Caractères standard
-114 Graphiques standard
-115 Format standard
-116 Géométrie standard
-117 pt
-118 Style des traits
-119 Epaisseur des traits
-120 Motif de remplissage
-121 Diviser
-122 Type d'objet
-123 Aller page numéro :
-124 any
-125 Attribut à chercher
-126 Type à chercher
-127 Natures
-128 Attribut
-129 Valeur
-130 Valeur de l'attribut
-131 Attribut inconnu
-132 Annuler
-133 Erreur dans la traduction en PostScript
-134 Commande refusée par le spooler "%s"
-135 Impossible de créer "%s"
-136 Surligné
-137 Format de document
-138 Retirer l'attribut
-139 Sélectionner une couleur de fond
-140 Sélectionner une couleur du texte
-141 Séléctionner une structure XML générique
-142 Où corriger
-143 Chercher/Suivant
-144 Remplacer (+ dic)
-145 Remplacer
-146 Autre langue
-147 Apprendre
-148 incluant les caractères :
-149 Corriger...
-150 en chiffres romains
-151 Ignorer les mots
-152 en lettres capitales
-153 incluant des chiffres
-154 Erreur dans le fichier des paramètres
-155 Absence de fichier clavier
-156 Impossible d\'enregistrer le dictionnaire du document
-157 Mot "%s" incorrect refusé dans ce dictionnaire
-158 Mot "%s" ajouté dans le dictionnaire du document
-159 Correction terminée
-160 Correction interrompue
-161 Sélectionnez un document
-162 Sauvegarde du dictionnaire "%s"
-163 Pas disponible dans cette version
-164 Activer/Desactiver palette
-165 Outils
-166 Cet attribut est obligatoire, il ne peut pas être supprimé
-167 Actualiser
-168 Aligner à gauche
-169 Aligner à droite
-170 Centrer
-171 Justifier
-172 Appliquer classe
-173 Sélectionner une classe ou une pseudo-classe
-174 Sélectionner
-175 Abandonner
-176 Maths
-177 Divers
-178 Relations binaires
-179 Relations binaires de négation
-180 Opérateurs
-181 Alphabet grec (majuscules)
-182 Flèches
-183 Caractères spéciaux
-184 Interrompre le chargement
-185 Document précédent
-186 Document suivant
-187 Recharger
-188 Enregistrer
-189 Enregistrer tout
-190 Nouveau document XHTML
-191 Ouvrir
-192 Imprimer
-193 Chercher
-194 Page personnelle
-195 Mise en évidence Oui/Non
-196 Important Oui/Non
-197 Code Oui/Non
-198 Ajouter/Remplacer une image
-199 Titre niveau 1
-200 Titre niveau 2
-201 Titre niveau 3
-202 Titre niveau 4
-203 Paragraphe
-204 Liste
-205 Liste numérotée
-206 Liste de définitions
-207 Lien
-208 Tableau
-209 Etes vous certain de vouloir fermer %d onglets?
-210 M'avertir quand je ferme plusieurs onglets
-211 Fermer les onglets
-212 Aucune erreur détectée
-213 Montrer les erreurs
-214 Boîtes
-215 Division
-216 Cible
-217 Texte inséré Oui/Non
-218 Texte supprimé Oui/Non
-219 Indice Oui/Non
-220 Exposant Oui/Non
-221 Terme
-222 Définition
-223 Objet
-224 Style
-225 Fichiers
-226 Partager/étendre en horizontal
-227 Partager/étendre verticalement
-228 Montrer/cacher les outils
-229 Défaire
-230 Refaire
-231 Couper
-232 Copier
-233 Coller
-234 Vérifier orthographe
-235 Constructions diverses
-236 Relations, ordre et logique
-237 Ensembles et fonctions
-238 Arithmétique, opérations, complexes et constantes
-239 Analyse, algèbre linéaire et statistiques
-240 Trigonométrie et logarithmes
-241 Grossir
-242 Réduire
-243 Thème
-244 XML
-245 Texte
-246 Pas de document récent
-247 Cliquer sur un élément pour le sélectionner
-248 Cliquer pour changer de mode d'édition
-249 Fusionner les cellules
-250 Réduire extension horizontale
-251 Réduire extension verticale
-252 Insérer une ligne
-253 Ajouter une ligne
-254 Insérer une colonne
-255 Ajouter une colonne
-256 Conseil du jour
-257 Voir les conseils au démarrage
-258 Conseil suivant
-259 Saviez vous...
-260 Amaya s'adapte à votre usage : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.
-261 Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance panneau par panneau. Voir les Préférences.
-262 Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, pour appliquer les fonctions d'édition (copier, coller, attributs, etc.) à ces éléments.
-263 Vous pouvez afficher deux documents côte à côte dans la même fenêtre en déplaçant un onglet de document sur un bord du document affiché.
-264 En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les changer l'ordre ou les rendre flottants.
-265 En mode paramétrable, vous pouvez engendrer plusieurs barres d'outils de chaque côté en déplaçant les panneaux d'outils.
-266 Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton correspondant dans la barre d'état.
-267 Quand il y a un bouton rouge dans la barre d'état, vous pouvez afficher les erreurs en cliquant dessus.
-268 Vous pouvez sélectionner un ancêtre de la sélection courante en cliquant sur son nom dans le chemin dans la barre d'état.
-269 Vous pouvez changer d'onglet avec le menu affiché par le bouton flèche à droite des onglets.
-270 
+85 avant de le fermer
+86 Fermer un document
+87 Symboles mathématiques
+88 Graphiques
+89 Alphabet latin
+90 Alphabet grec
+91 Enregistrer
+92 Texte
+93 Graphique
+94 Symbole
+95 Image
+96 Eléments XML
+97 après
+98 avant
+99 autour
+100 Inclure
+101 Coller
+102 à créer
+103 Insérer
+104 Saut de page
+105 Langue de l'élément
+106 Langue héritée :
+107 Pas trouvé
+108 Recherche dans
+109 Recherche
+110 Elément en lecture seule
+111 Plus de remplacements
+112 Caractères standard
+113 Graphiques standard
+114 Format standard
+115 Géométrie standard
+116 pt
+117 Style des traits
+118 Epaisseur des traits
+119 Motif de remplissage
+120 Diviser
+121 Type d'objet
+122 Aller page numéro :
+123 any
+124 Attribut à chercher
+125 Type à chercher
+126 Natures
+127 Attribut
+128 Valeur
+129 Valeur de l'attribut
+130 Attribut inconnu
+131 Annuler
+132 Erreur dans la traduction en PostScript
+133 Commande refusée par le spooler "%s"
+134 Impossible de créer "%s"
+135 Surligné
+136 Format de document
+137 Retirer l'attribut
+138 Sélectionner une couleur de fond
+139 Sélectionner une couleur du texte
+140 Séléctionner une structure XML générique
+141 Où corriger
+142 Chercher/Suivant
+143 Remplacer (+ dic)
+144 Remplacer
+145 Autre langue
+146 Apprendre
+147 incluant les caractères :
+148 Corriger...
+149 en chiffres romains
+150 Ignorer les mots
+151 en lettres capitales
+152 incluant des chiffres
+153 Erreur dans le fichier des paramètres
+154 Absence de fichier clavier
+155 Impossible d\'enregistrer le dictionnaire du document
+156 Mot "%s" incorrect refusé dans ce dictionnaire
+157 Mot "%s" ajouté dans le dictionnaire du document
+158 Correction terminée
+159 Correction interrompue
+160 Sélectionnez un document
+161 Sauvegarde du dictionnaire "%s"
+162 Pas disponible dans cette version
+163 Activer/Desactiver palette
+164 Outils
+165 Cet attribut est obligatoire, il ne peut pas être supprimé
+166 Actualiser
+167 Aligner à gauche
+168 Aligner à droite
+169 Centrer
+170 Justifier
+171 Appliquer classe
+172 Sélectionner une classe ou une pseudo-classe
+173 Sélectionner
+174 Abandonner
+175 Maths
+176 Divers
+177 Relations binaires
+178 Relations binaires de négation
+179 Opérateurs
+180 Alphabet grec (majuscules)
+181 Flèches
+182 Caractères spéciaux
+183 Interrompre le chargement
+184 Document précédent
+185 Document suivant
+186 Recharger
+187 Enregistrer
+188 Enregistrer tout
+189 Nouveau document XHTML
+190 Ouvrir
+191 Imprimer
+192 Chercher
+193 Page personnelle
+194 Mise en évidence Oui/Non
+195 Important Oui/Non
+196 Code Oui/Non
+197 Ajouter/Remplacer une image
+198 Titre niveau 1
+199 Titre niveau 2
+200 Titre niveau 3
+201 Titre niveau 4
+202 Paragraphe
+203 Liste
+204 Liste numérotée
+205 Liste de définitions
+206 Lien
+207 Tableau
+208 Etes vous certain de vouloir fermer %d onglets?
+209 M'avertir quand je ferme plusieurs onglets
+210 Fermer les onglets
+211 Aucune erreur détectée
+212 Montrer les erreurs
+213 Boîtes
+214 Division
+215 Cible
+216 Texte inséré Oui/Non
+217 Texte supprimé Oui/Non
+218 Indice Oui/Non
+219 Exposant Oui/Non
+220 Terme
+221 Définition
+222 Objet
+223 Style
+224 Fichiers
+225 Partager/étendre en horizontal
+226 Partager/étendre verticalement
+227 Montrer/cacher les outils
+228 Défaire
+229 Refaire
+230 Couper
+231 Copier
+232 Coller
+233 Vérifier orthographe
+234 Constructions diverses
+235 Relations, ordre et logique
+236 Ensembles et fonctions
+237 Arithmétique, opérations, complexes et constantes
+238 Analyse, algèbre linéaire et statistiques
+239 Trigonométrie et logarithmes
+240 Grossir
+241 Réduire
+242 Thème
+243 XML
+244 Texte
+245 Pas de document récent
+246 Cliquer sur un élément pour le sélectionner
+247 Cliquer pour changer de mode d'édition
+248 Fusionner les cellules
+249 Réduire extension horizontale
+250 Réduire extension verticale
+251 Insérer une ligne
+252 Ajouter une ligne
+253 Insérer une colonne
+254 Ajouter une colonne
+255 Conseil du jour
+256 Voir les conseils au démarrage
+257 Conseil suivant
+258 Saviez vous...
+259 Amaya s'adapte à votre usage : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.
+260 Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance panneau par panneau. Voir les Préférences.
+261 Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, pour appliquer les fonctions d'édition (copier, coller, attributs, etc.) à ces éléments.
+262 Vous pouvez afficher deux documents côte à côte dans la même fenêtre en déplaçant un onglet de document sur un bord du document affiché.
+263 En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les changer l'ordre ou les rendre flottants.
+264 En mode paramétrable, vous pouvez engendrer plusieurs barres d'outils de chaque côté en déplaçant les panneaux d'outils.
+265 Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton correspondant dans la barre d'état.
+266 Quand il y a un bouton rouge dans la barre d'état, vous pouvez afficher les erreurs en cliquant dessus.
+267 Vous pouvez sélectionner un ancêtre de la sélection courante en cliquant sur son nom dans le chemin dans la barre d'état.
+268 Vous pouvez changer d'onglet avec le menu affiché par le bouton flèche à droite des onglets.

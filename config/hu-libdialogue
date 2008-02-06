@@ -84,189 +84,187 @@
 82 Kijelölés után
 83 A teljes dokumentumban
 84 Ne cseréljen
-85 **No color
-86 bezárás előtt
-87 Dokumentum bezárása
-88 Matematikai szimbólumok
-89 Grafika
-90 Latin ábécé
-91 Görög ábécé
-92 Mentés
-93 Szöveg
-94 Grafika
-95 szimbólum
-96 Kép
-97 XML
-98 után
-99 előtt
-100 körül
-101 Include
-102 Beilleszt
-103 létrehozni
-104 Beilleszt
-105 Lapdobás
-106 Nyelvi elem
-107 Örökölt nyelv:
-108 nem található
-109 Keresés helye
-110 Keresés
-111 Csak olvasható elem
-112 Nincs mit cserélni
-113 Szabványos karakterek
-114 Szabványos grafika
-115 Szabványos formátum
-116 Szabványos elhelyezkedés
-117 pt
-118 Sor stílus
-119 Sor magasság
-120 Kitöltési mintázat
-121 Osztás
-122 Objektum típus
-123 Ugrás oldalszámra:
-124 Bármely
-125 Keresendő attribútum
-126 Keresendő típus
-127 Natures
-128 Attribútum
-129 Érték
-130 Attribútum érték
-131 Ismeretlen attribútum
-132 Mégsem
-133 HIba a PostScript fordításban
-134 A parancsot visszautasította a sorkezelő "%s"
-135 "%s" nem hozható létre
-136 Felülvonás
-137 Dokumentum formátum
-138 Attribútum eltávolítása
-139 Háttérszín
-140 Szín
-141 Adjon meg egy általános XML szerkezetet
-142 Ellenőrzés
-143 Keresés/Kihagyás
-144 Csere (+ dic)
-145 Csere és következő
-146 Másik nyelv
-147 Kihagyás (+ dic)
-148 words containing:
-149 Szóellenőrző...
-150 Római számok
-151 Kihagy
-152 csupa nagybetűs szavak
-153 számokat tartalmazó szavak
-154 Parameter fájl hiba
-155 Nincs billentyűzet fájl
-156 A dokumentum szótár nem menthető
-157 Ezt az érvénytelen szót (%s) elutasította a szótár
-158 Szó (%s) hozzáadva a dokumentum szótárhoz
-159 Szóellenőrzés vége
-160 Szóellenőrzés megszakadt
-161 Adjon meg egy dokumentumot
-162 Dokumentum szótár mentve: %s
-163 Ebben a változatban nem elérhető
-164 Dokkoló rögzítése/úsztatása
-165 Eszközök
-166 Kötelező attribútum, nem távolítható el
-167 Frissítés
-168 Balra zárt
-169 Jobbra zárt
-170 Középre zárt
-171 Sorkizárt
-172 Osztály alkalmazása
-173 Adja meg az osztályt vagy álosztályt
-174 Kijelöl
-175 Kihagy
-176 Matematika
-177 Egyéb
-178 Bináris műveletek
-179 Bináris műveletek vagy negálás
-180 Máveletek
-181 Görög ábécé (nagybetűs)
-182 Nyilak
-183 Különleges karakterek
-184 Átvitel megszakítása
-185 Előző dokumentum
-186 Következő dokumentum
-187 Újratöltés
+85 bezárás előtt
+86 Dokumentum bezárása
+87 Matematikai szimbólumok
+88 Grafika
+89 Latin ábécé
+90 Görög ábécé
+91 Mentés
+92 Szöveg
+93 Grafika
+94 szimbólum
+95 Kép
+96 XML
+97 után
+98 előtt
+99 körül
+100 Include
+101 Beilleszt
+102 létrehozni
+103 Beilleszt
+104 Lapdobás
+105 Nyelvi elem
+106 Örökölt nyelv:
+107 nem található
+108 Keresés helye
+109 Keresés
+110 Csak olvasható elem
+111 Nincs mit cserélni
+112 Szabványos karakterek
+113 Szabványos grafika
+114 Szabványos formátum
+115 Szabványos elhelyezkedés
+116 pt
+117 Sor stílus
+118 Sor magasság
+119 Kitöltési mintázat
+120 Osztás
+121 Objektum típus
+122 Ugrás oldalszámra:
+123 Bármely
+124 Keresendő attribútum
+125 Keresendő típus
+126 Natures
+127 Attribútum
+128 Érték
+129 Attribútum érték
+130 Ismeretlen attribútum
+131 Mégsem
+132 HIba a PostScript fordításban
+133 A parancsot visszautasította a sorkezelő "%s"
+134 "%s" nem hozható létre
+135 Felülvonás
+136 Dokumentum formátum
+137 Attribútum eltávolítása
+138 Háttérszín
+139 Szín
+140 Adjon meg egy általános XML szerkezetet
+141 Ellenőrzés
+142 Keresés/Kihagyás
+143 Csere (+ dic)
+144 Csere és következő
+145 Másik nyelv
+146 Kihagyás (+ dic)
+147 words containing:
+148 Szóellenőrző...
+149 Római számok
+150 Kihagy
+151 csupa nagybetűs szavak
+152 számokat tartalmazó szavak
+153 Parameter fájl hiba
+154 Nincs billentyűzet fájl
+155 A dokumentum szótár nem menthető
+156 Ezt az érvénytelen szót (%s) elutasította a szótár
+157 Szó (%s) hozzáadva a dokumentum szótárhoz
+158 Szóellenőrzés vége
+159 Szóellenőrzés megszakadt
+160 Adjon meg egy dokumentumot
+161 Dokumentum szótár mentve: %s
+162 Ebben a változatban nem elérhető
+163 Dokkoló rögzítése/úsztatása
+164 Eszközök
+165 Kötelező attribútum, nem távolítható el
+166 Frissítés
+167 Balra zárt
+168 Jobbra zárt
+169 Középre zárt
+170 Sorkizárt
+171 Osztály alkalmazása
+172 Adja meg az osztályt vagy álosztályt
+173 Kijelöl
+174 Kihagy
+175 Matematika
+176 Egyéb
+177 Bináris műveletek
+178 Bináris műveletek vagy negálás
+179 Máveletek
+180 Görög ábécé (nagybetűs)
+181 Nyilak
+182 Különleges karakterek
+183 Átvitel megszakítása
+184 Előző dokumentum
+185 Következő dokumentum
+186 Újratöltés
+187 Mentés
 188 Mentés
-189 Mentés
-190 Új XHTML dokumentum...
-191 Dokumentum megnyitása
-192 Nyomtatás
-193 Keresés
-194 Kezdőlap
-195 Hangsúlyozott On/Off
-196 Vastag On/Off
-197 Kód On/Off
-198 Kép beillesztése
-199 1. szint
-200 2. szint
-201 3. szint
-202 4. szint
-203 &Bekezdés
-204 Listajeles lista
-205 Számozott lista
-206 Meghatározás lista
-207 Kapocs
-208 Táblázat
-209 %d lap bezárására készül. Valóban folytatni kívánja?
-210 Figyelmeztessen több lap bezárásakor
-211 Lapok bezárása
-212 Nincs hiba
-213 Elemzési hibák mutatása
-214 Dobozok
-215 Felosztás
-216 Létrehozása
-217 &Beillesztés On/Off
-218 &Törlés On/Off
-219 &Alsó index On/Off
-220 Felső index On/Off
-221 Szócikk
-222 Meghatározás
-223 Objektum
-224 Stílus
-225 Fájl
-226 Vízszintes felosztás
-227 Függőleges felosztás
-228 Eszközsor mutatása
-229 Visszavon
-230 Újra
-231 Kivágás
-232 Másolás
-233 Beillesztés
-234 Szóelemző
-235 Különböző szerkezetek
-236 Relációk, rendek és logika
-237 Halmazok és függvények
-238 Számelmélet, műveletek, komplexek és állandók
-239 Analízis, lineáris algebra és statisztika
-240 Trigonometria és logaritmusok
-241 Nagyítás
-242 Kicsinyítés
-243 Téma
-244 XML
-245 Szöveg
-246 Nincs korábbi dokumentum
-247 Elem kijelölése kattintással
-248 Szerkesztési mód váltása kattintással
-249 Egyesítés
-250 Shrink &horizontal extend
-251 Shrink &vertical extend
-252 Sor &beillesztése
-253 Sor &hozzáadása
-254 Oszlop be&illesztése
-255 Oszlop hozzá&adása
-256 **Tip of the day
-257 **Show tip at startup
-258 **Next tip
-259 **Did you know...
-260 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
-261 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
-262 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
-263 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
-264 **With the customizable mode, you can drag panels to change their order or to make them floating.
-265 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
-266 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
-267 **When there is red button in the status bar, you can show errors by clicking on it.
-268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
-269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
-270 **
+189 Új XHTML dokumentum...
+190 Dokumentum megnyitása
+191 Nyomtatás
+192 Keresés
+193 Kezdőlap
+194 Hangsúlyozott On/Off
+195 Vastag On/Off
+196 Kód On/Off
+197 Kép beillesztése
+198 1. szint
+199 2. szint
+200 3. szint
+201 4. szint
+202 &Bekezdés
+203 Listajeles lista
+204 Számozott lista
+205 Meghatározás lista
+206 Kapocs
+207 Táblázat
+208 %d lap bezárására készül. Valóban folytatni kívánja?
+209 Figyelmeztessen több lap bezárásakor
+210 Lapok bezárása
+211 Nincs hiba
+212 Elemzési hibák mutatása
+213 Dobozok
+214 Felosztás
+215 Létrehozása
+216 &Beillesztés On/Off
+217 &Törlés On/Off
+218 &Alsó index On/Off
+219 Felső index On/Off
+220 Szócikk
+221 Meghatározás
+222 Objektum
+223 Stílus
+224 Fájl
+225 Vízszintes felosztás
+226 Függőleges felosztás
+227 Eszközsor mutatása
+228 Visszavon
+229 Újra
+230 Kivágás
+231 Másolás
+232 Beillesztés
+233 Szóelemző
+234 Különböző szerkezetek
+235 Relációk, rendek és logika
+236 Halmazok és függvények
+237 Számelmélet, műveletek, komplexek és állandók
+238 Analízis, lineáris algebra és statisztika
+239 Trigonometria és logaritmusok
+240 Nagyítás
+241 Kicsinyítés
+242 Téma
+243 XML
+244 Szöveg
+245 Nincs korábbi dokumentum
+246 Elem kijelölése kattintással
+247 Szerkesztési mód váltása kattintással
+248 Egyesítés
+249 Shrink &horizontal extend
+250 Shrink &vertical extend
+251 Sor &beillesztése
+252 Sor &hozzáadása
+253 Oszlop be&illesztése
+254 Oszlop hozzá&adása
+255 **Tip of the day
+256 **Show tip at startup
+257 **Next tip
+258 **Did you know...
+259 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
+260 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
+261 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
+262 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
+263 **With the customizable mode, you can drag panels to change their order or to make them floating.
+264 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
+265 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
+266 **When there is red button in the status bar, you can show errors by clicking on it.
+267 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
+268 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.

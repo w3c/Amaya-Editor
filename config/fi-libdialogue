@@ -84,189 +84,187 @@
 82 Valinnan jälkeen
 83 Koko dokumentissa
 84 Älä korvaa
-85 **No color
-86 ennen sen sulkemista
-87 Sulje dokumentti
-88 Matemaattiset symbolit
-89 Grafiikka
-90 Latinalaiset aakkoset
-91 Kreikkalaiset aakkoset
-92 Tallenna
-93 Tekstiä
-94 Grafiikkaa
-95 Symboli
-96 Kuva
-97 XML
-98 jälkeen
-99 ennen
-100 ympärillä
-101 Sisällytä
-102 Liitä
-103 luoda
-104 Sisällytä
-105 Katkaise sivu
-106 Elementin kieli
-107 Peritty kieli:
-108 Ei löydy
-109 Etsi tässä
-110 Etsi
-111 Vain lukuelementti
-112 Ei korvattavaa
-113 Vakiomerkit
-114 Vakiografiikka
-115 Vakiomuoto
-116 Vakiogeometria
-117 pt
-118 Viivatyyli
-119 Viivapaksuus
-120 Täyttökuvio
-121 Jaa
-122 Elementtityyppi
-123 Siirry sivulle:
-124 Mikä tahansa
-125 Määre etsintään
-126 Tyyppi etsintään
-127 Luonteet
-128 Määreen
-129 Arvo
-130 Määreen arvo
-131 Tuntematon määre
-132 Peruuta
-133 Virhe PostScript käännöksessä
-134 Kirjoitinajuri hylkäsi komennon "%s"
-135 Ei voi luoda "%s"
-136 Yliviivaa
-137 Dokumentin muoto
-138 Poista määritys
-139 **Select a background color
-140 **Select a text color
-141 **Select a generic XML structure
-142 Tarkistetaan
-143 Etsi/Hylkää
-144 Korvaa (+ dic)
-145 Korvaa ja seuraava
-146 Toinen kieli
-147 Hylkää (+ dic)
-148 sanat, joissa:
-149 Oikeinkirjoituksen tarkistus ...
-150 Roomalaiset numerot
-151 Ohita
-152 sanat, joissa kaikki isolla
-153 sanat, joissa numeroita
-154 Parametritiedosto virhe
-155 Ei näppäimistötiedostoa
-156 Dokumentin sanastoa ei voi tallentaa
-157 Kelpaamaton sana "%s", ei ole hyväksytty tässä sanastossa
-158 Sana "%s" lisätty dokumentin sanastoon
-159 Oikeinkirjoitustarkistus valmis!
-160 Oikeinkirjoitustarkistus keskeytetty!
-161 Valitse dokumentti
-162 Dokumentin sanasto tallennettu: %s
-163 **Not available in this version
-164 **Enable/Disable palette
-165 **Tools
-166 **Mandatory attribute, it can't be removed
-167 **Refresh
-168 **Align left
-169 **Align right
-170 **Center
-171 **Justify
-172 Käytä luokkaa
-173 Valitse luokka tai valeluokka
-174 Valitse
-175 **Discard
-176 Matematiikka
-177 **Misc
-178 **Binary relations
-179 **Binary relations of negation
-180 **Operators
-181 **Greek alphabet (capital)
-182 **Arrows
-183 **Special characters
-184 Keskeytä tiedonsiirto
-185 Edellinen dokumentti
-186 Seuraava dokumentti
-187 Päivitä
+85 ennen sen sulkemista
+86 Sulje dokumentti
+87 Matemaattiset symbolit
+88 Grafiikka
+89 Latinalaiset aakkoset
+90 Kreikkalaiset aakkoset
+91 Tallenna
+92 Tekstiä
+93 Grafiikkaa
+94 Symboli
+95 Kuva
+96 XML
+97 jälkeen
+98 ennen
+99 ympärillä
+100 Sisällytä
+101 Liitä
+102 luoda
+103 Sisällytä
+104 Katkaise sivu
+105 Elementin kieli
+106 Peritty kieli:
+107 Ei löydy
+108 Etsi tässä
+109 Etsi
+110 Vain lukuelementti
+111 Ei korvattavaa
+112 Vakiomerkit
+113 Vakiografiikka
+114 Vakiomuoto
+115 Vakiogeometria
+116 pt
+117 Viivatyyli
+118 Viivapaksuus
+119 Täyttökuvio
+120 Jaa
+121 Elementtityyppi
+122 Siirry sivulle:
+123 Mikä tahansa
+124 Määre etsintään
+125 Tyyppi etsintään
+126 Luonteet
+127 Määreen
+128 Arvo
+129 Määreen arvo
+130 Tuntematon määre
+131 Peruuta
+132 Virhe PostScript käännöksessä
+133 Kirjoitinajuri hylkäsi komennon "%s"
+134 Ei voi luoda "%s"
+135 Yliviivaa
+136 Dokumentin muoto
+137 Poista määritys
+138 **Select a background color
+139 **Select a text color
+140 **Select a generic XML structure
+141 Tarkistetaan
+142 Etsi/Hylkää
+143 Korvaa (+ dic)
+144 Korvaa ja seuraava
+145 Toinen kieli
+146 Hylkää (+ dic)
+147 sanat, joissa:
+148 Oikeinkirjoituksen tarkistus ...
+149 Roomalaiset numerot
+150 Ohita
+151 sanat, joissa kaikki isolla
+152 sanat, joissa numeroita
+153 Parametritiedosto virhe
+154 Ei näppäimistötiedostoa
+155 Dokumentin sanastoa ei voi tallentaa
+156 Kelpaamaton sana "%s", ei ole hyväksytty tässä sanastossa
+157 Sana "%s" lisätty dokumentin sanastoon
+158 Oikeinkirjoitustarkistus valmis!
+159 Oikeinkirjoitustarkistus keskeytetty!
+160 Valitse dokumentti
+161 Dokumentin sanasto tallennettu: %s
+162 **Not available in this version
+163 **Enable/Disable palette
+164 **Tools
+165 **Mandatory attribute, it can't be removed
+166 **Refresh
+167 **Align left
+168 **Align right
+169 **Center
+170 **Justify
+171 Käytä luokkaa
+172 Valitse luokka tai valeluokka
+173 Valitse
+174 **Discard
+175 Matematiikka
+176 **Misc
+177 **Binary relations
+178 **Binary relations of negation
+179 **Operators
+180 **Greek alphabet (capital)
+181 **Arrows
+182 **Special characters
+183 Keskeytä tiedonsiirto
+184 Edellinen dokumentti
+185 Seuraava dokumentti
+186 Päivitä
+187 Tallenna
 188 Tallenna
-189 Tallenna
-190 Uusi XHTML dokumentti
-191 Avaa dokumentti
-192 Tulosta
-193 Etsi
-194 Aloitussivu
-195 Korosta On/Off
-196 Lihavoi On/Off
-197 Koodi On/Off
-198 Syötä kuva
-199 Otsikkokoko 1
-200 Otsikkokoko 2
-201 Otsikkokoko 3
-202 Otsikkokoko 4
-203 Pykälä
-204 Pisteellinen luettelo
-205 Numeroituluettelo
-206 Määrittelyluettelo
-207 Linkki
-208 Taulukko
-209 **You are about to close %d open tabs. Are you sure you want to continue?
-210 **Warn me when I attempt to close multiple tabs
-211 **Close tabs
-212 **No error detected
-213 Näytä käännösvirheet
-214 **Boxes
-215 Tyhjä rivi
-216 Kohde
-217 Lisäys On/Off
-218 Poisto On/Off
-219 Alaindeksi On/Off
-220 Yläindeksi On/Off
-221 Lopetus
-222 Määrittely
-223 Objekti
-224 **Style
-225 Tiedostoja
-226 **Horizontal split/unsplit
-227 **Vertical split/unsplit
-228 **Show/hide tools
-229 Kumoa
-230 Tee uudelleen
-231 Leikkaa
-232 Kopioi
-233 Liitä
-234 Tarkista oikeinkirjoitus
-235 **Various constructs
-236 **Relations, orders and logic
-237 **Sets and functions
-238 **Arithmetic, operations, complexes and constants
-239 **Analysis, linear algebra and statistic
-240 **Trigonometry and logarithms
-241 Lähennä
-242 Loitonna
-243 **Theme
-244 XML
-245 Teksti
-246 **No recent document
-247 **Click an element to select it
-248 **Click to change the editing mode
-249 **Merge cells
-250 **Shrink horizontal extend
-251 **Shrink vertical extend
-252 **Insert a row
-253 **Append a row
-254 **Insert a column
-255 **Append a column
-256 **Tip of the day
-257 **Show tip at startup
-258 **Next tip
-259 **Did you know...
-260 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
-261 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
-262 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
-263 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
-264 **With the customizable mode, you can drag panels to change their order or to make them floating.
-265 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
-266 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
-267 **When there is red button in the status bar, you can show errors by clicking on it.
-268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
-269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
-270 **
+189 Uusi XHTML dokumentti
+190 Avaa dokumentti
+191 Tulosta
+192 Etsi
+193 Aloitussivu
+194 Korosta On/Off
+195 Lihavoi On/Off
+196 Koodi On/Off
+197 Syötä kuva
+198 Otsikkokoko 1
+199 Otsikkokoko 2
+200 Otsikkokoko 3
+201 Otsikkokoko 4
+202 Pykälä
+203 Pisteellinen luettelo
+204 Numeroituluettelo
+205 Määrittelyluettelo
+206 Linkki
+207 Taulukko
+208 **You are about to close %d open tabs. Are you sure you want to continue?
+209 **Warn me when I attempt to close multiple tabs
+210 **Close tabs
+211 **No error detected
+212 Näytä käännösvirheet
+213 **Boxes
+214 Tyhjä rivi
+215 Kohde
+216 Lisäys On/Off
+217 Poisto On/Off
+218 Alaindeksi On/Off
+219 Yläindeksi On/Off
+220 Lopetus
+221 Määrittely
+222 Objekti
+223 **Style
+224 Tiedostoja
+225 **Horizontal split/unsplit
+226 **Vertical split/unsplit
+227 **Show/hide tools
+228 Kumoa
+229 Tee uudelleen
+230 Leikkaa
+231 Kopioi
+232 Liitä
+233 Tarkista oikeinkirjoitus
+234 **Various constructs
+235 **Relations, orders and logic
+236 **Sets and functions
+237 **Arithmetic, operations, complexes and constants
+238 **Analysis, linear algebra and statistic
+239 **Trigonometry and logarithms
+240 Lähennä
+241 Loitonna
+242 **Theme
+243 XML
+244 Teksti
+245 **No recent document
+246 **Click an element to select it
+247 **Click to change the editing mode
+248 **Merge cells
+249 **Shrink horizontal extend
+250 **Shrink vertical extend
+251 **Insert a row
+252 **Append a row
+253 **Insert a column
+254 **Append a column
+255 **Tip of the day
+256 **Show tip at startup
+257 **Next tip
+258 **Did you know...
+259 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
+260 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
+261 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
+262 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
+263 **With the customizable mode, you can drag panels to change their order or to make them floating.
+264 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
+265 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
+266 **When there is red button in the status bar, you can show errors by clicking on it.
+267 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
+268 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.

@@ -84,189 +84,187 @@
 82 選定區域后
 83 整個文檔
 84 不替換
-85 **No color
-86 關閉前
-87 關閉文檔
-88 數學符號
-89 圖形
-90 拉丁文字母表
-91 希臘文字母表
-92 保存
-93 文本
-94 圖形
-95 符號
-96 圖片
-97 XML
-98 后
-99 前
-100 外
-101 包含
-102 粘貼
-103 創建
-104 插入
-105 分頁符
-106 元素語言
-107 繼承語言:
-108 未發現
+85 關閉前
+86 關閉文檔
+87 數學符號
+88 圖形
+89 拉丁文字母表
+90 希臘文字母表
+91 保存
+92 文本
+93 圖形
+94 符號
+95 圖片
+96 XML
+97 后
+98 前
+99 外
+100 包含
+101 粘貼
+102 創建
+103 插入
+104 分頁符
+105 元素語言
+106 繼承語言:
+107 未發現
+108 搜索
 109 搜索
-110 搜索
-111 只讀元素
-112 未替換
-113 標準字符
-114 標準圖形
-115 標準格式
-116 Standard geometry
-117 pt
-118 樣式
-119 粗度
-120 填充樣式
-121 分割
-122 對象類型
-123 跳轉到:
-124 任意
-125 搜索屬性
-126 搜索類型
-127 Natures
-128 屬性
-129 值
-130 屬性值
-131 為之屬性
-132 取消
-133 轉換為 PostScript 時發生錯誤
-134 命令被拒絕 "%s"
-135 無法創建 "%s"
-136 Overline
-137 文檔格式
-138 移除屬性
-139 背景色
-140 前景色
-141 選擇一般性 XML 框架
-142 檢查
-143 查找/跳過
-144 替換 (+ dic)
-145 更正并查找寫一個
-146 其他語言
-147 學習
-148 包含詞語:
-149 拼寫檢查 ...
-150 羅馬數字
-151 忽略
-152 全為大寫的詞語
-153 含數字的詞語
-154 參數文件錯誤
-155 無鍵盤文件
-156 無法保存文檔字典
-157 錯誤詞語 "%s" 已被本字典拒絕
-158 詞語 "%s" 已加入字典
-159 拼寫檢查完成
-160 拼寫檢查已終止
-161 請選擇文檔
-162 文檔字典已保存: %s
-163 此版本尚未提供此功能
-164 啟用/禁用小面板
-165 工具
-166 無法移出強制性屬性
-167 刷新
-168 左
-169 中
-170 右
-171 對齊
-172 應用 class
-173 選擇一個 class 或 pseudo-class
-174 選擇
-175 放棄
-176 Maths
-177 雜項
-178 二元關系
-179 負二元關系
-180 算符
-181 希臘字母(大寫)
-182 鍵頭
-183 特殊字符
-184 終止傳輸
-185 上一文檔
-186 下一文檔
-187 重新載入
+110 只讀元素
+111 未替換
+112 標準字符
+113 標準圖形
+114 標準格式
+115 Standard geometry
+116 pt
+117 樣式
+118 粗度
+119 填充樣式
+120 分割
+121 對象類型
+122 跳轉到:
+123 任意
+124 搜索屬性
+125 搜索類型
+126 Natures
+127 屬性
+128 值
+129 屬性值
+130 為之屬性
+131 取消
+132 轉換為 PostScript 時發生錯誤
+133 命令被拒絕 "%s"
+134 無法創建 "%s"
+135 Overline
+136 文檔格式
+137 移除屬性
+138 背景色
+139 前景色
+140 選擇一般性 XML 框架
+141 檢查
+142 查找/跳過
+143 替換 (+ dic)
+144 更正并查找寫一個
+145 其他語言
+146 學習
+147 包含詞語:
+148 拼寫檢查 ...
+149 羅馬數字
+150 忽略
+151 全為大寫的詞語
+152 含數字的詞語
+153 參數文件錯誤
+154 無鍵盤文件
+155 無法保存文檔字典
+156 錯誤詞語 "%s" 已被本字典拒絕
+157 詞語 "%s" 已加入字典
+158 拼寫檢查完成
+159 拼寫檢查已終止
+160 請選擇文檔
+161 文檔字典已保存: %s
+162 此版本尚未提供此功能
+163 啟用/禁用小面板
+164 工具
+165 無法移出強制性屬性
+166 刷新
+167 左
+168 中
+169 右
+170 對齊
+171 應用 class
+172 選擇一個 class 或 pseudo-class
+173 選擇
+174 放棄
+175 Maths
+176 雜項
+177 二元關系
+178 負二元關系
+179 算符
+180 希臘字母(大寫)
+181 鍵頭
+182 特殊字符
+183 終止傳輸
+184 上一文檔
+185 下一文檔
+186 重新載入
+187 保存
 188 保存
-189 保存
-190 新建 XHTML 文檔
-191 打開文檔
-192 打印
-193 搜索
-194 主頁
-195 強調 On/Off
-196 加強 On/Off
-197 代碼 On/Off
-198 插入圖片
-199 標題1
-200 標題2
-201 標題3
-202 標題4
-203 段落
-204 無序列表
-205 有序列表
-206 定義性列表
-207 鏈接
-208 表格
-209 正要關閉%d個標簽頁,確定要這么做嗎?
-210 關閉多個標簽頁的時候顯示警告
-211 關閉標簽
-212 沒有檢測到錯誤
-213 顯示解析錯誤
-214 表格
-215 Div層
-216 目標
-217 插入 On/Off
-218 刪除 On/Off
-219 橋表 On/Off
-220 上標 On/Off
-221 條目
-222 說明
-223 Object
-224 樣式
-225 文件
-226 水平排列視圖
-227 垂直排列視圖
-228 顯示工具欄
-229 撤銷
-230 重做
-231 剪切
-232 復制
-233 粘貼
-234 拼寫檢查
-235 **Various constructs
-236 **Relations, orders and logic
-237 **Sets and functions
-238 **Arithmetic, operations, complexes and constants
-239 **Analysis, linear algebra and statistic
-240 **Trigonometry and logarithms
-241 放大
-242 縮小
-243 **Theme
-244 XML
-245 Text
-246 **No recent document
-247 **Click an element to select it
-248 **Click to change the editing mode
-249 **Merge cells
-250 收縮水平范圍
-251 收縮垂直范圍
-252 插入新行
-253 附加一行
-254 插入新列
-255 附加一列
-256 **Tip of the day
-257 **Show tip at startup
-258 **Next tip
-259 **Did you know...
-260 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
-261 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
-262 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
-263 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
-264 **With the customizable mode, you can drag panels to change their order or to make them floating.
-265 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
-266 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
-267 **When there is red button in the status bar, you can show errors by clicking on it.
-268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
-269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
-270 **
+189 新建 XHTML 文檔
+190 打開文檔
+191 打印
+192 搜索
+193 主頁
+194 強調 On/Off
+195 加強 On/Off
+196 代碼 On/Off
+197 插入圖片
+198 標題1
+199 標題2
+200 標題3
+201 標題4
+202 段落
+203 無序列表
+204 有序列表
+205 定義性列表
+206 鏈接
+207 表格
+208 正要關閉%d個標簽頁,確定要這么做嗎?
+209 關閉多個標簽頁的時候顯示警告
+210 關閉標簽
+211 沒有檢測到錯誤
+212 顯示解析錯誤
+213 表格
+214 Div層
+215 目標
+216 插入 On/Off
+217 刪除 On/Off
+218 橋表 On/Off
+219 上標 On/Off
+220 條目
+221 說明
+222 Object
+223 樣式
+224 文件
+225 水平排列視圖
+226 垂直排列視圖
+227 顯示工具欄
+228 撤銷
+229 重做
+230 剪切
+231 復制
+232 粘貼
+233 拼寫檢查
+234 **Various constructs
+235 **Relations, orders and logic
+236 **Sets and functions
+237 **Arithmetic, operations, complexes and constants
+238 **Analysis, linear algebra and statistic
+239 **Trigonometry and logarithms
+240 放大
+241 縮小
+242 **Theme
+243 XML
+244 Text
+245 **No recent document
+246 **Click an element to select it
+247 **Click to change the editing mode
+248 **Merge cells
+249 收縮水平范圍
+250 收縮垂直范圍
+251 插入新行
+252 附加一行
+253 插入新列
+254 附加一列
+255 **Tip of the day
+256 **Show tip at startup
+257 **Next tip
+258 **Did you know...
+259 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
+260 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
+261 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
+262 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
+263 **With the customizable mode, you can drag panels to change their order or to make them floating.
+264 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
+265 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
+266 **When there is red button in the status bar, you can show errors by clicking on it.
+267 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
+268 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
