@@ -276,15 +276,6 @@ void UnloadDocument (PtrDocument * pDoc)
           FreeAll ();
         }
 #ifndef NODISPLAY
-      /* check if the last open document is closed */
-      d = 0;
-      while (d < MAX_DOCUMENTS - 1)
-        {
-          if (LoadedDocument[d])
-            return;
-          else
-            d++;
-        }
       ShowReturn = 0;
 #endif /* NODISPLAY */
     }

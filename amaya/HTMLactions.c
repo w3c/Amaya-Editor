@@ -2893,7 +2893,7 @@ void DocumentClosed (NotifyDialog * event)
       SetTableMenuOff (doc, 1);
     }
   FreeDocumentResource (event->document);
-  CleanUpParsingErrors ();  
+  CleanUpParsingErrors ();
 }
 
 /*----------------------------------------------------------------------

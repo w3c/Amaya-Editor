@@ -2217,11 +2217,6 @@ static void RestoreDefaultGeometryConf (void)
 static void SetEnvCurrentGeometry (int doc, const char * view_name)
 {
   /* only do the processing if the document exists */
-#ifndef _WX
-  if (doc &&
-      DocumentTypes[doc] == docSource)
-    SetEnvGeom ("Source_view", doc);
-#endif /* _WX */
   if (doc &&
       DocumentURLs[doc] != NULL &&
       DocumentTypes[doc] != docSource &&
@@ -2234,20 +2229,10 @@ static void SetEnvCurrentGeometry (int doc, const char * view_name)
             SetEnvGeom ("Annot_Formatted_view", doc);
           else if (DocumentTypes[doc] == docBookmark)
             SetEnvGeom ("Topics_Formatted_view", doc);
+          else if (DocumentMeta[doc]->method == CE_HELP)
+            SetEnvGeom ("Help_Formatted_view", doc);
           else
-            {
-#ifdef _WX
-              SetEnvGeom ("Wx_Window", doc);
-#else /* _WX */
-              SetEnvGeom ("Formatted_view", doc);
-              SetEnvGeom ("Structure_view", doc);
-              SetEnvGeom ("Alternate_view", doc);
-              SetEnvGeom ("Links_view", doc);
-              SetEnvGeom ("Table_of_contents", doc);
-              if (DocumentSource[doc])
-                SetEnvGeom ("Source_view", DocumentSource[doc]);
-#endif /* _WX */
-            }
+            SetEnvGeom ("Wx_Window", doc);
         }
       else
         SetEnvGeom (view_name, doc);

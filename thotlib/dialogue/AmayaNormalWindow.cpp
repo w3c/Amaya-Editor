@@ -96,9 +96,9 @@ AmayaNormalWindow* AmayaNormalWindow::CreateNormalWindow(wxWindow * parent, wxWi
   ThotBool b;
   TtaGetEnvBoolean("ADVANCE_USER_INTERFACE", &b);
 
-  if(kind==WXAMAYAWINDOW_HELP)
+  if (kind == WXAMAYAWINDOW_HELP)
     return new AmayaHelpWindow(parent, id, pos, size, kind);
-  else if(b)
+  else if (b)
     return new AmayaAdvancedWindow(parent, id, pos, size, kind);
   else
     return new AmayaClassicWindow(parent, id, pos, size, kind);  
@@ -127,7 +127,8 @@ m_pComboBox(NULL)
 {
   m_haveTBEditing = Prof_ShowGUI("AmayaToolBarEditing");
   m_haveTBBrowsing = Prof_ShowGUI("AmayaToolBarBrowsing");
-  s_normalWindowCount++;
+  if (kind != WXAMAYAWINDOW_HELP && kind != WXAMAYAWINDOW_ANNOT)
+    s_normalWindowCount++;
 }
 
 /*----------------------------------------------------------------------
@@ -137,7 +138,9 @@ m_pComboBox(NULL)
  -----------------------------------------------------------------------*/
 AmayaNormalWindow::~AmayaNormalWindow()
 {
-  s_normalWindowCount--;
+  int kind = GetKind();
+  if (kind != WXAMAYAWINDOW_HELP && kind != WXAMAYAWINDOW_ANNOT)
+    s_normalWindowCount--;
 }
 
 
@@ -180,7 +183,7 @@ void AmayaNormalWindow::CreateMenuBar()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::CleanUp()
 {
-  if(GetPageCount() == 0)
+  if (GetPageCount() == 0)
     Close();
 }
 

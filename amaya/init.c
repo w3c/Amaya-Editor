@@ -7105,7 +7105,11 @@ void CheckAmayaClosed ()
 
   /* is it the last loaded document ? */
   i = 1;
-  while (i < DocumentTableLength && DocumentURLs[i] == NULL)
+  while (i < DocumentTableLength &&
+         (DocumentURLs[i] == NULL ||
+          DocumentMeta[i] == NULL ||
+          DocumentMeta[i]->isTemplate ||
+          DocumentMeta[i]->method == CE_HELP))
     i++;
   
   if (i == DocumentTableLength)
