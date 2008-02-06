@@ -3,8 +3,6 @@
   <object class="wxDialog" name="SendByMailDlgWX">
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
-      
-      
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <object class="sizeritem">
@@ -39,11 +37,11 @@
       </object>
       <object class="sizeritem">
         <object class="wxTextCtrl" name="wxID_EDIT_MESSAGE">
+          <size>120,120</size>
           <style>wxTE_AUTO_SCROLL|wxTE_MULTILINE</style>
         </object>
         <option>1</option>
         <flag>wxEXPAND</flag>
-        <minsize>120,200</minsize>
       </object>
       <object class="spacer">
         <size>0,8</size>
@@ -58,8 +56,9 @@
             <item>*Contenu*</item>
             <item>*Ne pas envoyer*</item>
           </content>
+          <selection>0</selection>
           <dimension>4</dimension>
-          <style>wxRA_SPECIFY_COLS</style>
+          <style>wxRA_SPECIFY_COLS|wxWANTS_CHARS</style>
         </object>
         <flag>wxEXPAND</flag>
       </object>
@@ -73,16 +72,17 @@
               <label>*Send*</label>
               <default>1</default>
             </object>
-            <flag>wxALL</flag>
+            <border>5</border>
           </object>
           <object class="spacer">
             <size>5,0</size>
           </object>
           <object class="sizeritem">
-            <flag>wxALL</flag>
             <object class="wxButton" name="wxID_CANCEL">
               <label>*Cancel*</label>
+              <default>0</default>
             </object>
+            <border>5</border>
           </object>
           <orient>wxHORIZONTAL</orient>
         </object>
@@ -113,7 +113,9 @@
         <size>8,0</size>
       </object>
       <object class="sizeritem">
-        <object class="wxComboBox" name="wxID_RECIPIENT_ADDRESS"/>
+        <object class="wxComboBox" name="wxID_RECIPIENT_ADDRESS">
+          <content/>
+        </object>
         <option>1</option>
         <flag>wxALIGN_CENTRE_VERTICAL</flag>
       </object>
@@ -129,5 +131,6 @@
         <flag>wxALIGN_CENTRE_VERTICAL</flag>
       </object>
     </object>
+    <style>wxTAB_TRAVERSAL</style>
   </object>
 </resource>
