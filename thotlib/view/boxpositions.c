@@ -943,7 +943,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
         pChildAb = pChildAb->AbNext;
       }
 
-  if (x &&
+  if (x && x_move &&
       (pBox->BxType == BoBlock ||
        pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock))
     {
