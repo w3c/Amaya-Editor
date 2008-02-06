@@ -264,6 +264,9 @@ void AmayaNormalWindow::LoadConfig()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::SaveConfig()
 {
+  int kind = GetKind();
+  if (kind == WXAMAYAWINDOW_HELP || kind == WXAMAYAWINDOW_ANNOT)
+    return; // don't save any preference
   if (SavePANEL_PREFERENCES)
     {
       if (IsToolBarShown(0))
