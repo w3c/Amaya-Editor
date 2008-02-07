@@ -6771,10 +6771,14 @@
 <label define="AM_SHOW_TIPS_STARTUP">
 	<message xml:lang="en">Show "Tip of the day" at startup</message>
 	<message xml:lang="fr">Afficher le "Conseil du jour" au démarrage</message>
+<message xml:lang="es">Mostrar "Sugerencia del día" al iniciar el programa</message>
+<message xml:lang="de">"Tip des Tages" bei Programmstart anzeigen</message>
 </label>
 <label define="AM_CHOOSE_FONT">
 	<message xml:lang="en">Choose font family and size:</message>
-	<message xml:lang="fr">Choisissez la famille et la taille de la police:</message>
+	<message xml:lang="fr">Choisissez la police de caractères :</message>
+<message xml:lang="es">Elija Fuente y tamaño:</message>
+<message xml:lang="de">Schriftart - und Größe wählen:</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

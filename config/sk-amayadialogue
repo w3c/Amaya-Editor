@@ -4,7 +4,7 @@
 2 Kontext
 3 &Upraviť
 4 &Zobrazenia
-5 Vložiť pred
+5 Vložiť
 6 Š&týl
 7 P&repojenia
 8 Atribúty
@@ -228,7 +228,7 @@
 226 Pozadia
 227 Farba pozadia...
 228 **No color
-229 **Align
+229 **Alignment
 230 **Left
 231 **Center
 232 **Right
@@ -243,111 +243,112 @@
 241 **Increase
 242 **Decrease
 243 **Default
-244 **Character font
+244 Znaky
 245 **Select a font...
 246 **Default
 247 CSS &pravidlá...
 248 Vytvoriť &pravidlo...
 249 Zobraziť použité štýly...
-250 P&ripojiť súbor s CSS...
-251 &Otvoriť súbor s CSS...
-252 &Vypnuť CSS pravidlá...
-253 &Zapnúť CSS pravidlá...
-254 O&strániť súbor s CSS...
-255 Kopírovať adresu odkazu
-256 Prilepiť adresu odkazu
-257 &Prepojiť s predošlou záložkou
-258 &Vytvoriť alebo zmeniť odkaz...
-259 Vytvoriť &záložku
-260 O&dstrániť odkaz/záložku
-261 &Pridať/odstrániť ID...
-262 Kontrola pravopi&su
-263 T&ransformovať
-264 **Edit table
-265 Zmeniť na bunku s dátami
-266 Zmeniť na bunku s nadpisom
-267 Zlúčiť
-268 Zlúčiť s pravou bunkou
-269 Zlúčiť s dolnou bunkou
-270 Rozdeliť bunky horizontálne
-271 Rozdeliť bunky vertikálne
-272 Označiť riadok
-273 Vložiť riadok nad
-274 Vložiť riadok pod
-275 Označiť stĺpec
-276 Vložiť stĺpec vľavo
-277 Vložiť stĺpec vpravo
-278 Prilepiť pred
-279 Prilepiť za
-280 Zmeniť názov (title)
-281 Zmeniť typ dokumentu
-282 Odstrániť označenie dokumentu
-283 Pridať označenie dokumentu
-284 Zmeniť na XHTML 1.1
-285 Zmeniť na XHTML 1.0 Transitional
-286 Zmeniť na XHTML 1.0 Strict
-287 Zmeniť na XHTML 1.0 Basic
-288 Zmeniť na HTML 4.01 Transitional
-289 Zmeniť na HTML 4.01 Strict
-290 &Očíslovať podkapitoly
-291 &Vytvoriť obsah
-292 &Zostaviť knihu
-293 Vložiť dnešný dátum
-294 **Graphics
-295 Zobraziť SVG knižnicu
-296 Pridať do SVG knižnice
-297 &Komentáre
-298 Okomentovať výber
-299 Okomentovať dokument
-300 Presunúť k výberu
-301 Uložiť výber ako &XPointer
-302 Presunúť k uloženému XPointeru
-303 Reagovať na komentár
-304 Odoslať na server
-305 Odstrániť komentár
-306 Nahrať komentár
-307 Zadefinovať požiadavku...
-308 Filtrovať komentáre...
-309 Sp&olupráca
-310 Uzamknúť zdrojový súbor...
-311 Odomknúť zdrojový súbor...
-312 Zobraziť vlastnosti zdroja...
-313 Kopírovať informácie o uzamknutí...
-314 Zamknutý?
-315 &Javascript/DOM
-316 **Enable/Disable
-317 **Execute a command
-318 **Execute an external script
-319 **Add an external script
-320 **Insert a script
-321 O programe Amaya
-322 Domoská stránka programu Amaya
-323 Témy pomocníka
-324 Prehliadanie
-325 Zobrazenia
-326 Označovanie
-327 Vytváranie dokumentu
-328 Vkladanie prvkov
-329 Atribúty
-330 Vkladanie znakov
-331 Šablóny
-332 Úprava dokumentu
-333 Prepojenia
-334 Tabuľky
-335 Oblasti obrázkov
-336 Vzorce
-337 Úprava SVG grafiky
-338 XML podpora
-339 Kaskádové štýly
-340 Vyhľadávanie
-341 Kontrola pravopisu
-342 Publikovanie
-343 Spolupráca
-344 Tlač
-345 Číslovanie podkapitol
-346 Vytváranie kníh
-347 Komentáre
-348 Nastavenia programu
-349 Klávesové skratky
-350 Zjednodušenie ovládania
-351 **Tip of the day...
+250 Kaskádové štýly
+251 Pripojiť súbor s CSS...
+252 Otvoriť súbor s CSS...
+253 Vypnuť CSS pravidlá...
+254 &Zapnúť CSS pravidlá...
+255 Ostrániť súbor s CSS...
+256 Kopírovať adresu odkazu
+257 Prilepiť adresu odkazu
+258 &Prepojiť s predošlou záložkou
+259 &Vytvoriť alebo zmeniť odkaz...
+260 Vytvoriť &záložku
+261 O&dstrániť odkaz/záložku
+262 &Pridať/odstrániť ID...
+263 Kontrola pravopi&su
+264 T&ransformovať
+265 **Edit table
+266 Zmeniť na bunku s dátami
+267 Zmeniť na bunku s nadpisom
+268 Zlúčiť
+269 Zlúčiť s pravou bunkou
+270 Zlúčiť s dolnou bunkou
+271 Rozdeliť bunky horizontálne
+272 Rozdeliť bunky vertikálne
+273 Označiť riadok
+274 Vložiť riadok nad
+275 Vložiť riadok pod
+276 Označiť stĺpec
+277 Vložiť stĺpec vľavo
+278 Vložiť stĺpec vpravo
+279 Prilepiť pred
+280 Prilepiť za
+281 Zmeniť názov (title)
+282 Zmeniť typ dokumentu
+283 Odstrániť označenie dokumentu
+284 Pridať označenie dokumentu
+285 Zmeniť na XHTML 1.1
+286 Zmeniť na XHTML 1.0 Transitional
+287 Zmeniť na XHTML 1.0 Strict
+288 Zmeniť na XHTML 1.0 Basic
+289 Zmeniť na HTML 4.01 Transitional
+290 Zmeniť na HTML 4.01 Strict
+291 &Očíslovať podkapitoly
+292 &Vytvoriť obsah
+293 &Zostaviť knihu
+294 Vložiť dnešný dátum
+295 **Graphics
+296 Zobraziť SVG knižnicu
+297 Pridať do SVG knižnice
+298 &Komentáre
+299 Okomentovať výber
+300 Okomentovať dokument
+301 Presunúť k výberu
+302 Uložiť výber ako &XPointer
+303 Presunúť k uloženému XPointeru
+304 Reagovať na komentár
+305 Odoslať na server
+306 Odstrániť komentár
+307 Nahrať komentár
+308 Zadefinovať požiadavku...
+309 Filtrovať komentáre...
+310 Sp&olupráca
+311 Uzamknúť zdrojový súbor...
+312 Odomknúť zdrojový súbor...
+313 Zobraziť vlastnosti zdroja...
+314 Kopírovať informácie o uzamknutí...
+315 Zamknutý?
+316 &Javascript/DOM
+317 **Enable/Disable
+318 **Execute a command
+319 **Execute an external script
+320 **Add an external script
+321 **Insert a script
+322 O programe Amaya
+323 Domoská stránka programu Amaya
+324 Témy pomocníka
+325 Prehliadanie
+326 Zobrazenia
+327 Označovanie
+328 Vytváranie dokumentu
+329 Vkladanie prvkov
+330 Atribúty
+331 Vkladanie znakov
+332 Šablóny
+333 Úprava dokumentu
+334 Prepojenia
+335 Tabuľky
+336 Oblasti obrázkov
+337 Vzorce
+338 Úprava SVG grafiky
+339 XML podpora
+340 Kaskádové štýly
+341 Vyhľadávanie
+342 Kontrola pravopisu
+343 Publikovanie
+344 Spolupráca
+345 Tlač
+346 Číslovanie podkapitol
+347 Vytváranie kníh
+348 Komentáre
+349 Nastavenia programu
+350 Klávesové skratky
+351 Zjednodušenie ovládania
+352 **Tip of the day...

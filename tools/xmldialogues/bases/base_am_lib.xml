@@ -3852,14 +3852,20 @@
 <label define="TIP_DIALOG_TITLE">
 <message xml:lang="en">Tip of the day</message>
 <message xml:lang="fr">Conseil du jour</message>
+<message xml:lang="es">Sugerencia del día</message>
+<message xml:lang="de">Tip des Tages</message>
 </label>
 <label define="TIP_DIALOG_STARTUP">
 <message xml:lang="en">Show tip at startup</message>
 <message xml:lang="fr">Voir les conseils au démarrage</message>
+<message xml:lang="es">Mostrar sugerencia al iniciar el programa</message>
+<message xml:lang="de">Tips bei Programmstart anzeigen</message>
 </label>
 <label define="TIP_DIALOG_NEXT_TIP">
 <message xml:lang="en">Next tip</message>
 <message xml:lang="fr">Conseil suivant</message>
+<message xml:lang="es">Siguiente sugerencia</message>
+<message xml:lang="de">Nächster Tip</message>
 </label>
 <label define="TIP_DIALOG_DID_YOU_KNOW">
 <message xml:lang="en">Did you know...</message>
@@ -3870,42 +3876,62 @@
 <label define="TIP_AMAYA_PROFILES">
 <message xml:lang="en">Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.</message>
 <message xml:lang="fr">Amaya s'adapte à votre usage : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.</message>
+<message xml:lang="es">Amaya puede adaptarse a sus necesidades: incorpora cinco perfiles distintos con diferentes opciones de menús y paneles. Véase el menú Editar > Preferencias.</message>
+<message xml:lang="de">Amaya kann auf Ihre Bedürfnisse angepasst werden: fünf verschiedene Profile mit verschiedenen Kombinationen von Menu Einträgen und Bedienelementen. Für weitere Informationen werfen Sie bitte einen Blick in die Einstellungen.</message>
 </label>
 <label define="TIP_PANEL_MODES">
 <message xml:lang="en">Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.</message>
 <message xml:lang="fr">Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance panneau par panneau. Voir les Préférences.</message>
+<message xml:lang="es">Las ventanas de herramientas pueden mostrarse todas juntas a izquierda o derecha o por separado de forma personalizada. Véase el menú Editar > Preferencias.</message>
+<message xml:lang="de">Bedienelemente können links, rechts oder benutzerdefiniert angezeigt werden. Siehe Einstellungen.</message>
 </label>
 <label define="TIP_PARENT_SELECTION">
 <message xml:lang="en">With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.</message>
 <message xml:lang="fr">Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, pour appliquer les fonctions d'édition (copier, coller, attributs, etc.) à ces éléments.</message>
+<message xml:lang="es">Con la tecla F2 o Escape se puede seleccionar el elemento padre del elemento seleccionado para aplicarle funciones de edición (copiar, pegar, atributos, etc).</message>
+<message xml:lang="de">Mit F2 oder der Escape Taste können Sie das Elternelement in der Struktur auswählen und Editier Funktionen (kopieren, einfügen,Attribute usw.) auf dieses Element anzuwenden.</message>
 </label>
 <label define="TIP_SPLIT_NOTEBOOK">
 <message xml:lang="en">You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.</message>
 <message xml:lang="fr">Vous pouvez afficher deux documents côte à côte dans la même fenêtre en déplaçant un onglet de document sur un bord du document affiché.</message>
+<message xml:lang="es">Puede mostrar dos o más documentos simultáneamente arrastrando la pestaña de un documento a uno de los bordes del documento visible.</message>
+<message xml:lang="de">Sie können zwei Dokumente nebeneinander im Fenster darstellen indem Sie ein Dokumenten-Tab an die Begrenzung des dargestellten Dokumentes ziehen.</message>
 </label>
 <label define="TIP_MOVE_PANELS">
 <message xml:lang="en">With the customizable mode, you can drag panels to change their order or to make them floating.</message>
 <message xml:lang="fr">En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les changer l'ordre ou les rendre flottants.</message>
+<message xml:lang="es">En el modo Personalizable, puede arrastrar los paneles de herramientas para cambiar su orden o mantenerlos flotantes.</message>
+<message xml:lang="de">Im benutzerdefinierten Modus können Sie Bedienelemente verschieben um ihre Anordnung zu verändern oder um sie frei zu platzieren.</message>
 </label>
 <label define="TIP_MANY_COLUMNS">
 <message xml:lang="en">With the customizable mode, you can generate several panels bars on each side by dragging panels.</message>
 <message xml:lang="fr">En mode paramétrable, vous pouvez engendrer plusieurs barres d'outils de chaque côté en déplaçant les panneaux d'outils.</message>
+<message xml:lang="es">En el modo Personalizable, puede colocar los paneles de herramientas uno al lado del otro vertical u horizontalmente.</message>
+<message xml:lang="de">Im benutzerdefinierten Modus können Sie können Sie durch das Verschieben von Bedienelementen auf beiden Seiten Leisten mit Bedienelementen erstellen.</message>
 </label>
 <label define="TIP_EDITING_MODE">
 <message xml:lang="en">You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.</message>
 <message xml:lang="fr">Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton correspondant dans la barre d'état.</message>
+<message xml:lang="es">Puede cambiar el modo de edición (Texto/XML) haciendo clic en el botón situado en la parte derecha de la barra de estado.</message>
+<message xml:lang="de">ie können zwischen den Editiermodi (Text/XML) wechseln indem Sie auf das entsprechende Bedienfeld in der Statusleiste klicken.</message>
 </label>
 <label define="TIP_ERROR_BUTTON">
 <message xml:lang="en">When there is red button in the status bar, you can show errors by clicking on it.</message>
 <message xml:lang="fr">Quand il y a un bouton rouge dans la barre d'état, vous pouvez afficher les erreurs en cliquant dessus.</message>
+<message xml:lang="es">Cuando se muestra un botón rojo en el extremo derecho de la barra de estado, puede ver los errores de la página haciendo clic en él.</message>
+<message xml:lang="de">Bemerken Sie einen roten Button in der Statusleiste können Sie sich mit einem Klick darauf Fehler im Dokument anzeigen lassen.</message>
 </label>
 <label define="TIP_PATH_CONTROL">
 <message xml:lang="en">You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.</message>
 <message xml:lang="fr">Vous pouvez sélectionner un ancêtre de la sélection courante en cliquant sur son nom dans le chemin dans la barre d'état.</message>
+<message xml:lang="es">Puede seleccionar directamente un elemento (o en sus elementos padres) haciendo clic en su nombre que se muestra en la ruta de control situada en la parte izquierda de la barra de estado.</message>
+<message xml:lang="de">Sie können Vorgängerelemente durch einen Klick auf deren Bezeichnung in der Pfadanzeige unten in der Statusleiste auswählen.</message>
 </label>
 <label define="TIP_DOCUMENT_LIST_MENU">
 <message xml:lang="en">You can move to another tab with the menu displayed by the arrow button at right of document tabs.</message>
 <message xml:lang="fr">Vous pouvez changer d'onglet avec le menu affiché par le bouton flèche à droite des onglets.</message>
+<message xml:lang="es">Puede cambiar de pestaña de documento mediante el menú que se despliega haciendo clic en el botón en forma de flecha situado en el extremo derecho de las pestañas de documentos.</message>
+<message xml:lang="de">Sie können zu einer anderen Registerkarte wechseln indem Sie auf das Pfeil-nach-unten Symbol rechts neben den Registerleisten klicken.</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>

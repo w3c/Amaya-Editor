@@ -46,7 +46,11 @@
 MenuShowLogFile
 FullScreen
 ShowAlternate
-+xml-display
+ShowLinks
+ShowTargets
+SplitHorizontally
+SplitVertically
+CopyLocation
 
 ################# AMAYA Lite
 <Editor_Lite>
@@ -146,8 +150,7 @@ HelpAtW3C
 +svg
 +tables
 +text-module
-+css-style-lite
-+xml-display
++css-style
 
 ################# XHTML-STRICT
 {XHTML 1.0 Strict}
@@ -172,8 +175,7 @@ HelpAtW3C
 +struct-module
 +svg
 +text-module
-+css-style-lite
-+xml-display
++css-style
 
 ################# XHTML-BASIC
 {XHTML Basic}
@@ -186,8 +188,7 @@ HelpAtW3C
 +object-module
 +struct-module
 +text-module
-+css-style-lite
-+xml-display
++css-style
 
 ################# XHTML1.1
 {XHTML 1.1}
@@ -213,8 +214,7 @@ HelpAtW3C
 +tables
 +text-module
 +ruby
-+css-style-lite
-+xml-display
++css-style
 
 ################# MathML
 {MathML}
@@ -222,15 +222,13 @@ HelpAtW3C
 +hypertext-module
 +maths
 +css-style
-+xml-display
 
 ################# SVG
 {SVG}
 +basic-style
 +hypertext-module
 +maths
-+css-style-lite
-+xml-display
++css-style
 
 ################# Annot
 {Annot}
@@ -440,8 +438,8 @@ ShowBrowsingBar
 ShowLinks
 ShowSource
 ShowStructure
-#ShowFormatted
 ShowToC
+#ShowFormatted
 #ShowTimeLineWindow
 ShowPanel
 TtcCloseView
@@ -679,9 +677,12 @@ HelpStyleSheets
 [css-style]
 +css-style-lite
 +css-browsing
+&LinkCSS
+OpenCSS
+DisableCSS
+EnableCSS
+&RemoveCSS
 ShowAppliedStyle
-#&LinkCSS
-#&RemoveCSS
 
 [css-style-lite]
 &DoClassicTheme
@@ -747,16 +748,3 @@ ReplyToAnnotation
 #MoveAnnotationSel
 #MoveAnnotationXPtr
 #XPointer_bufferStore
-
-[xml-display]
-ShowLinks
-ShowTargets
-#ShowSource
-#ShowStructure
-#ShowFormatted
-ShowToC
-#ShowTimeLineWindow
-ShowAlternate
-SplitHorizontally
-SplitVertically
-CopyLocation

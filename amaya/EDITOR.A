@@ -284,11 +284,11 @@ MENUS
   Style button:BCSSStyle -> SetCSSStyle icon:css.png;
 	Style button:BCreateClass -> CreateClass;
 	Style button:BShowAppliedStyle -> ShowAppliedStyle;
-	Style button:BLinkCSS -> LinkCSS;
-	Style button:BOpenCSS -> OpenCSS;
-	Style button:BDisableCSS -> DisableCSS;
-	Style button:BEnableCSS -> EnableCSS;
-	Style button:BRemoveCSS -> RemoveCSS;
+	Style.StyleSheets button:BLinkCSS -> LinkCSS;
+	Style.StyleSheets button:BOpenCSS -> OpenCSS;
+	Style.StyleSheets button:BDisableCSS -> DisableCSS;
+	Style.StyleSheets button:BEnableCSS -> EnableCSS;
+	Style.StyleSheets button:BRemoveCSS -> RemoveCSS;
 
 	Links button:BCopyLocation -> CopyLocation;
 	Links button:BPasteLocation -> PasteLocation;

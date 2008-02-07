@@ -228,7 +228,7 @@
 226 **Background color
 227 **Select a background color...
 228 **No color
-229 **Align
+229 **Alignment
 230 **Left
 231 **Center
 232 **Right
@@ -243,111 +243,112 @@
 241 **Increase
 242 **Decrease
 243 **Default
-244 **Character font
+244 Karakter
 245 **Select a font...
 246 **Default
 247 **&Style editor...
 248 Kural yarat...
 249 **Show applied style...
-250 Bağlantı
-251 Aç
-252 Olumsuzla
-253 Olumla
-254 Sil
-255 **Copy location
-256 **Paste location
-257 Önceki hedefe bağlantı
-258 Baglantı yarat...
-259 Hedef yarat
-260 tanımı sil
-261 IDs ekle/sil
-262 Yazım hataları ara...
-263 Dönüştür
-264 **Edit table
-265 **Change to data cell
-266 **Change to heading cell
-267 **Merge cells
-268 **Join with the cell at the right
-269 **Join with the cell below
-270 **Shrink horizontal extend
-271 **Shrink vertical extend
-272 **Select the row
-273 **Insert a row
-274 **Append a row
-275 **Select the column
-276 **Insert a column
-277 **Append a column
-278 **Paste before
-279 **Paste after
-280 Başlığı değiştir
-281 Doctype\'bı düzenle
-282 doctype\'bı sil
-283 **Add a doctype
-284 XHTML 1.1 doctype
-285 XHTML 1.0 Transitional doctype
-286 XHTML 1.0 Strict doctype
-287 XHTML 1.0 Basic doctype
-288 HTML 4.01 Transitional doctype
-289 HTML 4.01 Strict doctype
-290 Bölüm numaralandırması
-291 **&Add/Update table of contents
-292 Kitap yap
-293 **Insert time stamp
-294 **Graphics
-295 SVG kütüphanesini göster
-296 SVG kütüphanesine seçili alanı ekle
-297 &Eklemeler
-298 Seçili alan ekleme
-299 Doküman eklemek
-300 Seçili alanı taşı
-301 seçilen alanı XPointer gibi kaydet
-302 Xpointer\'daki birikenleri taşı
-303 Tekrar ekle
-304 Server\'e kaydet
-305 Sil
-306 Yükle
-307 Kişisel ayarlama...
-308 Sabit filitre...
-309 &Birlikte çalışmak
-310 Tekrar okumayı kitle...
-311 Tekrar okumayı kilidi aç...
-312 Tekrar okuma ayarlarını göster...
-313 kilitli bilgileri kopyala...
-314 kitli mi?
-315 &Javascript/DOM
-316 **Enable/Disable
-317 **Execute a command
-318 **Execute an external script
-319 **Add an external script
-320 **Insert a script
-321 Amaya hakkında
-322 W3C deki Amaya hakkında
-323 Içerik
-324 Tarama
-325 Görünümler
-326 Seç
-327 Döküman
-328 Yarat
-329 Tarz tanımları
-330 karakterler
-331 **Templates
-332 Yeniden yapılandırma
-333 Bağlantılar
-334 Tablolar
-335 Aktif alan
-336 Matematik
-337 Grafik
-338 XML desteği
-339 Görüntü haritaları
-340 Yazı hataları arama
-341 Yazı hataları düzeltmek
-342 Bastırma
-343 Birlikte çalışmak
-344 Sayfa yerleştirme
-345 Numaralandır
-346 Kitap oluşturma
-347 Not ekleme
-348 Yapılandırması
-349 Kısalmalar
-350 Amaya\'ya ulaşmak
-351 **Tip of the day...
+250 Görüntü haritaları
+251 Bağlantı
+252 Aç
+253 Olumsuzla
+254 Olumla
+255 Sil
+256 **Copy location
+257 **Paste location
+258 Önceki hedefe bağlantı
+259 Baglantı yarat...
+260 Hedef yarat
+261 tanımı sil
+262 IDs ekle/sil
+263 Yazım hataları ara...
+264 Dönüştür
+265 **Edit table
+266 **Change to data cell
+267 **Change to heading cell
+268 **Merge cells
+269 **Join with the cell at the right
+270 **Join with the cell below
+271 **Shrink horizontal extend
+272 **Shrink vertical extend
+273 **Select the row
+274 **Insert a row
+275 **Append a row
+276 **Select the column
+277 **Insert a column
+278 **Append a column
+279 **Paste before
+280 **Paste after
+281 Başlığı değiştir
+282 Doctype\'bı düzenle
+283 doctype\'bı sil
+284 **Add a doctype
+285 XHTML 1.1 doctype
+286 XHTML 1.0 Transitional doctype
+287 XHTML 1.0 Strict doctype
+288 XHTML 1.0 Basic doctype
+289 HTML 4.01 Transitional doctype
+290 HTML 4.01 Strict doctype
+291 Bölüm numaralandırması
+292 **&Add/Update table of contents
+293 Kitap yap
+294 **Insert time stamp
+295 **Graphics
+296 SVG kütüphanesini göster
+297 SVG kütüphanesine seçili alanı ekle
+298 &Eklemeler
+299 Seçili alan ekleme
+300 Doküman eklemek
+301 Seçili alanı taşı
+302 seçilen alanı XPointer gibi kaydet
+303 Xpointer\'daki birikenleri taşı
+304 Tekrar ekle
+305 Server\'e kaydet
+306 Sil
+307 Yükle
+308 Kişisel ayarlama...
+309 Sabit filitre...
+310 &Birlikte çalışmak
+311 Tekrar okumayı kitle...
+312 Tekrar okumayı kilidi aç...
+313 Tekrar okuma ayarlarını göster...
+314 kilitli bilgileri kopyala...
+315 kitli mi?
+316 &Javascript/DOM
+317 **Enable/Disable
+318 **Execute a command
+319 **Execute an external script
+320 **Add an external script
+321 **Insert a script
+322 Amaya hakkında
+323 W3C deki Amaya hakkında
+324 Içerik
+325 Tarama
+326 Görünümler
+327 Seç
+328 Döküman
+329 Yarat
+330 Tarz tanımları
+331 karakterler
+332 **Templates
+333 Yeniden yapılandırma
+334 Bağlantılar
+335 Tablolar
+336 Aktif alan
+337 Matematik
+338 Grafik
+339 XML desteği
+340 Görüntü haritaları
+341 Yazı hataları arama
+342 Yazı hataları düzeltmek
+343 Bastırma
+344 Birlikte çalışmak
+345 Sayfa yerleştirme
+346 Numaralandır
+347 Kitap oluşturma
+348 Not ekleme
+349 Yapılandırması
+350 Kısalmalar
+351 Amaya\'ya ulaşmak
+352 **Tip of the day...

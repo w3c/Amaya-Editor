@@ -929,14 +929,17 @@ void UpdateEditorMenus (Document doc)
       TtaSetMenuOff (doc, 1, Links);
       TtaSetItemOff (doc, 1, Views, TShowMapAreas);
       TtaSetItemOff (doc, 1, Views, TShowTargets);
-      TtaSetItemOff (doc, 1, Views, BShowStructure);
       TtaSetItemOff (doc, 1, Views, BShowSource);
-      TtaSetItemOff (doc, 1, Views, BShowFormatted);
-      TtaSetItemOff (doc, 1, Views, BShowLinks);
-      TtaSetItemOff (doc, 1, Views, BShowAlternate);
-      TtaSetItemOff (doc, 1, Views, BShowToC);
-      TtaSetItemOff (doc, 1, Views, TSplitHorizontally);
-      TtaSetItemOff (doc, 1, Views, TSplitVertically);
+      if (DocumentTypes[doc] != docSource)
+        {
+          TtaSetItemOff (doc, 1, Views, BShowStructure);
+          TtaSetItemOff (doc, 1, Views, BShowFormatted);
+          TtaSetItemOff (doc, 1, Views, BShowLinks);
+          TtaSetItemOff (doc, 1, Views, BShowAlternate);
+          TtaSetItemOff (doc, 1, Views, BShowToC);
+          TtaSetItemOff (doc, 1, Views, TSplitHorizontally);
+          TtaSetItemOff (doc, 1, Views, TSplitVertically);
+        }
       TtaSetMenuOff (doc, 1, Style);
     }
   else if  (DocumentTypes[doc] == docXml)

@@ -255,17 +255,17 @@
 252 Zeile inzufügen (danach)
 253 Spalte einfügen (davor)
 254 Spalte inzufügen (danach)
-255 **Tip of the day
-256 **Show tip at startup
-257 **Next tip
+255 Tip des Tages
+256 Tips bei Programmstart anzeigen
+257 Nächster Tip
 258 Haben Sie schon gewusst?
-259 **Amaya can be adapted to your usage: five different profiles are provided with different set of menu entries and panels. See Preferences.
-260 **Panels can be displayed on the left or on the right or customized panel by panel. See Preferences.
-261 **With the F2 or Escape key you can select the parent element in the structure, to apply editing functions (copy, paste, attributes, etc.) to these elements.
-262 **You can display two documents side by side in the window by dragging a document tab to a border of the displayed document.
-263 **With the customizable mode, you can drag panels to change their order or to make them floating.
-264 **With the customizable mode, you can generate several panels bars on each side by dragging panels.
-265 **You can switch the editing mode (Text/XML) by clicking on the corresponding button in status bar.
-266 **When there is red button in the status bar, you can show errors by clicking on it.
-267 **You can select an ancestor of the current selection by clicking on its name on the path control displayed in the status bar.
-268 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
+259 Amaya kann auf Ihre Bedürfnisse angepasst werden: fünf verschiedene Profile mit verschiedenen Kombinationen von Menu Einträgen und Bedienelementen. Für weitere Informationen werfen Sie bitte einen Blick in die Einstellungen.
+260 Bedienelemente können links, rechts oder benutzerdefiniert angezeigt werden. Siehe Einstellungen.
+261 Mit F2 oder der Escape Taste können Sie das Elternelement in der Struktur auswählen und Editier Funktionen (kopieren, einfügen,Attribute usw.) auf dieses Element anzuwenden.
+262 Sie können zwei Dokumente nebeneinander im Fenster darstellen indem Sie ein Dokumenten-Tab an die Begrenzung des dargestellten Dokumentes ziehen.
+263 Im benutzerdefinierten Modus können Sie Bedienelemente verschieben um ihre Anordnung zu verändern oder um sie frei zu platzieren.
+264 Im benutzerdefinierten Modus können Sie können Sie durch das Verschieben von Bedienelementen auf beiden Seiten Leisten mit Bedienelementen erstellen.
+265 ie können zwischen den Editiermodi (Text/XML) wechseln indem Sie auf das entsprechende Bedienfeld in der Statusleiste klicken.
+266 Bemerken Sie einen roten Button in der Statusleiste können Sie sich mit einem Klick darauf Fehler im Dokument anzeigen lassen.
+267 Sie können Vorgängerelemente durch einen Klick auf deren Bezeichnung in der Pfadanzeige unten in der Statusleiste auswählen.
+268 Sie können zu einer anderen Registerkarte wechseln indem Sie auf das Pfeil-nach-unten Symbol rechts neben den Registerleisten klicken.
