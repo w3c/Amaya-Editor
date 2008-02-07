@@ -4083,7 +4083,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
               pAb->AbAdjust == AlignJustify)
             {
               box = pLine->LiFirstBox;
-              if (box == pLine->LiLastBox &&
+              if (box && box == pLine->LiLastBox &&
                   box->BxAbstractBox &&
                   box->BxAbstractBox->AbLeafType == LtCompound &&
                   box->BxAbstractBox->AbFloat == 'N' &&
