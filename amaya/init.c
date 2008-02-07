@@ -5807,8 +5807,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
         if (IsNewAnchor)
           {
             /* remove the link if it was just created */
-            //DoDeleteAnchor (AttrHREFdocument, 1, FALSE);
-            TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
+            TtaCloseUndoSequence (AttrHREFdocument);
+            TtaUndoNoRedo (AttrHREFdocument);
           }
       break;
 

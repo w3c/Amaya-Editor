@@ -1908,11 +1908,11 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
           SetTargetContent (0, NULL);
         }
 
-      if (clickFirst)
+      /*if (clickFirst)
         {
           TtaDestroyDialogue (BaseDialog + AttrHREFForm);
           TtaDestroyDialogue (BaseDialog + FileBrowserForm);
-        }
+          }*/
     }
    
   AttrHREFelement = el;
