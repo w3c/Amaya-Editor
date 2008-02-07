@@ -4317,6 +4317,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
             /* to a remote URL. */
             ok = SaveDocumentThroughNet (doc, 1, documentFile, TRUE,
                                          CopyImages, FALSE);
+          RemoveTemplate = FALSE;
         }
 
       /* restore original display mode */
