@@ -1980,9 +1980,8 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
               (pAb->AbLeafType == LtText ||
                (pAb->AbLeafType == LtCompound &&
                 (pAb->AbWidth.DimUnit == UnPercent ||
-                 (pAbRef &&
-                  (pAbRef == pBlock->BxAbstractBox ||
-                   pAbRef->AbBox->BxType == BoGhost))))));
+                 (pAbRef && (pAbRef == pBlock->BxAbstractBox ||
+                             pAbRef->AbBox->BxType == BoGhost))))));
   if (!variable && pBox && pAb &&
       (pBlock->BxType == BoFloatBlock || pBlock->BxType == BoCellBlock) &&
       pBox->BxType == BoBlock &&
@@ -2000,15 +1999,19 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
     {
       width = pBox->BxMinWidth;
       if (width == 0)
+        {
         if (pBox->BxW > MIN_SPACE)
           width = MIN_SPACE + lbmp + rbmp;
         else
           width = pBox->BxW + lbmp + rbmp;
+        }
     }
   else if (pBox->BxType == BoTable)
-    width = pBox->BxMinWidth;
+    width = pBox->BxMinWidth + lbmp + rbmp;
   else if (!variable || pBox->BxW < MIN_SPACE)
     width = pBox->BxW + lbmp + rbmp;
+  else if (pBox->BxMinWidth)
+    width = pBox->BxMinWidth + lbmp + rbmp;
   else
     width = lbmp + rbmp + MIN_SPACE;
 
@@ -3108,6 +3111,7 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
 {
   PtrFloat            pfloat;
   PtrBox              box;
+  PtrAbstractBox      pAb;
   int                 y, x, x1, x2, w;
   int                 t = 0, b = 0, l = 0, r = 0;
   ThotBool            extensibleblock;
@@ -3185,6 +3189,25 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
       if (pBlock->BxMinWidth < x1)
         pBlock->BxMinWidth = x1;
       pBlock->BxMaxWidth += x1;
+
+      // transmit min and max to enclosing not block of line boxes
+      pAb = pBlock->BxAbstractBox;
+      while (pAb && pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
+        {
+          pAb = pAb->AbEnclosing;
+          box = pAb->AbBox;
+          if (box->BxType == BoFloatGhost || box->BxType == BoBlock ||
+              box->BxType == BoFloatBlock || box->BxType == BoCellBlock ||
+              box->BxType == BoTable)
+            pAb = NULL;
+          else
+            {
+              if (box->BxMinWidth < pBlock->BxMinWidth)
+                box->BxMinWidth = pBlock->BxMinWidth;
+              if (box->BxMaxWidth < pBlock->BxMaxWidth)
+                box->BxMaxWidth = pBlock->BxMaxWidth;
+            }
+        }
     }
 }
 
@@ -4193,7 +4216,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);
   // return the full height
   *height = *height + top + spacing + bottom;
- 
   /* restore the value */
   pBox->BxCycles--;
 }
