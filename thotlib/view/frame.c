@@ -697,7 +697,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       setWindow = (view == 1 &&
                    (pAb->AbEnclosing == NULL || /* document */
                     pAb->AbEnclosing->AbEnclosing == NULL || /* html */
-                    (!pAb->AbEnclosing->AbEnclosing->AbFillBox &&
+                    (!pAb->AbEnclosing->AbFillBox &&
                      pAb->AbEnclosing->AbEnclosing->AbEnclosing == NULL)) /* body */);
     }
 
