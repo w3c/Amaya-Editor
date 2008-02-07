@@ -104,8 +104,7 @@ char *SkipBlanksAndComments (char *ptr)
         NewLineSkipped++;
       ptr++;
     }
-  while (ptr[0] == '/' &&
-         ptr[1] == '*')
+  while (ptr[0] == '/' && ptr[1] == '*')
     {
       /* look for the end of the comment */
       ptr = &ptr[2];
@@ -7729,7 +7728,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
               break;
             case '/':
               if (!quoted && !s_quoted && CSSindex > 1 && CSScomment != MAX_CSS_LENGTH &&
-                  CSSbuffer[CSSindex - 1] == '*')
+                  CSSbuffer[CSSindex - 1] == '*' && CSSindex != CSScomment + 2)
                 {
                   while (CSSindex > 0 && CSSindex >= CSScomment)
                     {
