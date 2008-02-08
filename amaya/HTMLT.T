@@ -1069,9 +1069,9 @@ RULES
 	Create Attributes;
 	Remove;
 #ifdef XML
-	Create ' />';
+	Create ' />\12';
 #else
-	Create '>';
+	Create '>\12';
 #endif
 	END;
 
