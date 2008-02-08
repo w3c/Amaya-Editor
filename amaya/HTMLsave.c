@@ -1095,6 +1095,7 @@ void SaveDocumentAs (Document doc, View view)
     }
 
   /* display the dialog box */
+  RemoveTemplate = FALSE; // don't remove template elements
   InitSaveForm (doc, 1, tempname);
 }
    
@@ -2819,6 +2820,7 @@ void SaveDocument (Document doc, View view)
       return;
     }
   SavingDocument = doc;
+  RemoveTemplate = FALSE; // don't remove template elements
   ok = FALSE;
   /* attempt to save through network if possible */
   strcpy (tempname, DocumentURLs[doc]);
@@ -3155,6 +3157,7 @@ static ThotBool  AutoSaveDocument (Document doc, View view, char *local_url)
 
   /* the suffix determines the output format */
   SaveAsXML = IsXMLName (tempname) || DocumentMeta[doc]->xmlformat;
+  RemoveTemplate = FALSE; // don't remove template elements
   /* We automatically save a HTML document as a XML one 
      when we have a xhtml profile */
   if (!SaveAsXML &&
@@ -4317,7 +4320,6 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
             /* to a remote URL. */
             ok = SaveDocumentThroughNet (doc, 1, documentFile, TRUE,
                                          CopyImages, FALSE);
-          RemoveTemplate = FALSE;
         }
 
       /* restore original display mode */
@@ -4540,7 +4542,8 @@ ThotBool SaveTempCopy (Document doc, const char* dstdir, char** filename)
   CopyCss    = FALSE;
   UpdateURLs = TRUE; // just copy local resources
   SaveAsXML = DocumentMeta[doc]->xmlformat;
-  SaveAsText = FALSE; // don'n generate text from HTML
+  SaveAsText = FALSE; // don't generate text from HTML
+  RemoveTemplate = FALSE; // don't remove template elements
   TextFormat = (DocumentTypes[doc] == docText ||
                 DocumentTypes[doc] == docCSS ||
                 DocumentTypes[doc] == docSource);
