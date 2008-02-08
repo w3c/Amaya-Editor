@@ -358,14 +358,14 @@ void RecipientPanel::AddDefaultRecipients(const wxArrayString& arr)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-wxString RecipientPanel::RecipientPanel::GetAddress()const
+wxString RecipientPanel::GetAddress()const
 {
   return XRCCTRL(*this, "wxID_RECIPIENT_ADDRESS", wxComboBox)->GetValue();
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-int RecipientPanel::RecipientPanel::GetType()const
+int RecipientPanel::GetType()const
 {
   return XRCCTRL(*this, "wxID_RECIPIENT_TYPE", wxChoice)->GetSelection();
 }

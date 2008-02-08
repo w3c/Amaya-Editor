@@ -60,7 +60,7 @@ int FontDlgWX::GetFontSize()const
   ----------------------------------------------------------------------*/
 void FontDlgWX::SetFontFamily(int family)
 {
-  return XRCCTRL(*this, "wxID_CHOICE_FAMILY", wxChoice)->SetSelection(family);  
+  XRCCTRL(*this, "wxID_CHOICE_FAMILY", wxChoice)->SetSelection(family);  
 }
 
 /*----------------------------------------------------------------------
