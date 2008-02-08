@@ -260,7 +260,7 @@
 258 Per usare questa opzione, il target deve essere un'URL HTTP
 259 Errore: MIME type non valido
 260 Sconosciuto
-261 I stili sono ignorati - vedi File > Mostra le errore
+261 I stili sono ignorati - vedi Mostra le errore
 262 Questo documento è già caricato in un'altra finestra
 263 Salvare questa istanza può fare perdere degli aggiornamenti
 264 Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi
@@ -311,7 +311,7 @@
 309 Copia la selezione
 310 Riferisciti alla selezione
 311 Aggiungi un nuovo modello alla libreria
-312 URL del nuovo file SVG ...
+312 URL del nuovo  SVG ...
 313 Titolo della libreria
 314 URL per la libreria
 315 Crea libreria

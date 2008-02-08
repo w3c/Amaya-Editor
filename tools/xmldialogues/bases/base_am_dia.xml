@@ -3357,6 +3357,7 @@
 <message xml:lang="fr">Choisir une police de caractères...</message>
 <message xml:lang="es">Seleccionar Fuente...</message>
 <message xml:lang="de">Schriftart wählen...</message>
+<message xml:lang="it">Selezionare un tipo di carattere...</message>
 </label>
 <label define="BRemoveFont">
 <message xml:lang="en">Default</message>
@@ -4810,6 +4811,7 @@
 <message xml:lang="fr">Conseil du jour...</message>
 <message xml:lang="es">Sugerencia del día...</message>
 <message xml:lang="de">Tip des Tages...</message>
+<message xml:lang="it">Suggerimenti del giorno...</message>
 </label>
 <label define="MAX_EDITOR_LABEL">
 </label>

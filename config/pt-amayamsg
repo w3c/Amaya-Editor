@@ -260,7 +260,7 @@
 258 O destino deve ser uma URL HTTP para usar esta opção
 259 Erro: tipo MIME inválido
 260 Desconhecido
-261 Estilos ignorados -veja Arquivo > Exibir erros de gramática (parsing)
+261 Estilos ignorados -veja Exibir erros de gramática (parsing)
 262 Este documento já está carregado em outra Janela
 263 Salvar esta instância pode causar um problema de perda de atualização
 264 **Adding or changing the doctype will remove some elements or attributes
@@ -311,7 +311,7 @@
 309 **Copy selection
 310 **Refer to selection
 311 **Add new model into library
-312 **URL of the new SVG file ...
+312 **URL of the new SVG  ...
 313 **Library title
 314 **Library URL
 315 **Create library

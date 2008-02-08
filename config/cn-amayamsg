@@ -260,7 +260,7 @@
 258 The target must be an HTTP URL to use this option
 259 错误: 无效 MIME 类型
 260 未知
-261 Styles are ignored - see File > Show parsing errors
+261 Styles are ignored - see Show parsing errors
 262 This document is already loaded in another Window
 263 Saving that instance may cause a lost update problem
 264 Adding or changing the doctype will remove some elements or attributes
@@ -311,7 +311,7 @@
 309 Copy selection
 310 Refer to selection
 311 向 library 添加新的模型
-312 URL of the new SVG file ...
+312 URL of the new SVG  ...
 313 Library 标题
 314 Library URL
 315 创建 library

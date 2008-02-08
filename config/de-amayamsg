@@ -260,7 +260,7 @@
 258 Diese Option kann nur mit einem HTTP URI Ziel verwendet werden
 259 Fehler: ungültiger MIME-Typ
 260 Unbekannt
-261 Formatvorlagen wurden ignoriert - siehe Datei > Parserfehler anzeigen
+261 Formatvorlagen wurden ignoriert - siehe Parserfehler anzeigen
 262 Dieses Dokument wird bereits in einem anderen Fenster angezeigt
 263 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
 264 Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren

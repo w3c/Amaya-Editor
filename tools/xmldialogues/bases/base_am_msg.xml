@@ -4129,20 +4129,20 @@
 	<message xml:lang="sk">Neznámy</message>
 </label>
 <label define="AM_CSS_ERROR">
-	<message xml:lang="en">Styles are ignored - see File &gt; Show parsing errors</message>
-	<message xml:lang="fr">Styles ignorés - voir Fichier &gt; Montrer les erreurs</message>
-	<message xml:lang="it">I stili sono ignorati - vedi File &gt; Mostra le errore</message>
-	<message xml:lang="de">Formatvorlagen wurden ignoriert - siehe Datei &gt; Parserfehler anzeigen</message>
-	<message xml:lang="es">Se ignoran los estilos - vea Archivo &gt; Mostrar errores sintácticos</message>
-	<message xml:lang="pt">Estilos ignorados -veja Arquivo &gt; Exibir erros de gramática (parsing)</message>
-	<message xml:lang="fi">Tyylit ohitetaan - katso Tiedosto &gt; Näytä käännösvirheet</message>
-	<message xml:lang="tr">Dizayn bilinmiyor - Görünümler &gt; Hataları göster bakın</message>
-	<message xml:lang="ru">Стили проигнорированы. Выберите пункт меню Файл/Показать разбор ошибок.</message>
-	<message xml:lang="hu">A stílusok figyelmen kívül hagyva - lásd: Fájl &gt; Elemzési hibák mutatása</message>
-	<message xml:lang="ka">სტილები იგნორირებულია - იხილეთ ხედები &gt; გაცრილი შეცდომების ჩვენება</message>
-	<message xml:lang="cn">Styles are ignored - see File &gt; Show parsing errors</message>
-	<message xml:lang="tw">Styles are ignored - see File &gt; Show parsing errors</message>
-	<message xml:lang="sk">Štýly sú ignorované - pozri Súbor &gt; Skontrolovať chyby</message>
+	<message xml:lang="en">Styles are ignored - see Show parsing errors</message>
+	<message xml:lang="fr">Styles ignorés - voir Montrer les erreurs</message>
+	<message xml:lang="it">I stili sono ignorati - vedi Mostra le errore</message>
+	<message xml:lang="de">Formatvorlagen wurden ignoriert - siehe Parserfehler anzeigen</message>
+	<message xml:lang="es">Se ignoran los estilos - vea Mostrar errores sintácticos</message>
+	<message xml:lang="pt">Estilos ignorados -veja Exibir erros de gramática (parsing)</message>
+	<message xml:lang="fi">Tyylit ohitetaan - katso Näytä käännösvirheet</message>
+	<message xml:lang="tr">Dizayn bilinmiyor - Hataları göster bakın</message>
+	<message xml:lang="ru">Стили проигнорированы. Выберите пункт меню Показать разбор ошибок.</message>
+	<message xml:lang="hu">A stílusok figyelmen kívül hagyva - lásd: Elemzési hibák mutatása</message>
+	<message xml:lang="ka">სტილები იგნორირებულია - იხილეთ გაცრილი შეცდომების ჩვენება</message>
+	<message xml:lang="cn">Styles are ignored - see Show parsing errors</message>
+	<message xml:lang="tw">Styles are ignored - see Show parsing errors</message>
+	<message xml:lang="sk">Štýly sú ignorované - pozri Skontrolovať chyby</message>
 </label>
 <label define="AM_DOUBLE_LOAD">
 	<message xml:lang="en">This document is already loaded in another Window</message>
@@ -4929,19 +4929,19 @@
 	<message xml:lang="tw">向 library 添加新的模型</message>
 	<message xml:lang="sk">Pridať nový model do knižnice</message>
 </label>
-<label define="AM_SVGLIB_CREATE_NEW_SVG_FILE">
-	<message xml:lang="en">URL of the new SVG file ...</message>
+<label define="AM_SVGLIB_CREATE_NEW_SVG_">
+	<message xml:lang="en">URL of the new SVG  ...</message>
 	<message xml:lang="fr">URL du nouveau fichier SVG ...</message>
 	<message xml:lang="de">URL der neuen SVG-Datei ...</message>
 	<message xml:lang="fi">Uuden SVG-tiedoston URL...</message>
-	<message xml:lang="it">URL del nuovo file SVG ...</message>
+	<message xml:lang="it">URL del nuovo  SVG ...</message>
 	<message xml:lang="es">URL del nuevo archivo SVG...</message>
 	<message xml:lang="tr">Yeni SVG dosyasının URL\'i...</message>
 	<message xml:lang="ru">URL нового SVG файла...</message>
 	<message xml:lang="hu">Az új SVG fájl URL-je...</message>
 	<message xml:lang="ka">ახალი SVG ფაილის მისამართი ...</message>
-	<message xml:lang="cn">URL of the new SVG file ...</message>
-	<message xml:lang="tw">URL of the new SVG file ...</message>
+	<message xml:lang="cn">URL of the new SVG  ...</message>
+	<message xml:lang="tw">URL of the new SVG  ...</message>
 	<message xml:lang="sk">URL Nového SVG súboru ...</message>
 </label>
 <label define="AM_SVGLIB_CATALOGUE_TITLE">
