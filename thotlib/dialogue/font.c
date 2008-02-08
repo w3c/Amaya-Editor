@@ -661,7 +661,10 @@ int BoxCharacterWidth (CHAR_T c, int variant, SpecFont specfont)
 
   if (SpecialCharBoxWidth (c))
     return 1;
-  car = GetFontAndIndexFromSpec (c, specfont, variant, &font);
+  if (specfont)
+    car = GetFontAndIndexFromSpec (c, specfont, variant, &font);
+  else
+    font = NULL;
   if (font == NULL)
     return 6;
   else
@@ -796,17 +799,21 @@ int BoxFontHeight (SpecFont specfont, char code)
 {
   ThotFont        font;
   int             car, h = 0;
-  if (code == 'A' && specfont->Font_6) /* Arabic */
-    h = FontHeight (specfont->Font_6);
-  else if (code == 'G' && specfont->Font_7) /* Graphic */
-    h = FontHeight (specfont->Font_7);
-  else if (code == 'H' && specfont->Font_8) /* Hebrew */
-    h = FontHeight (specfont->Font_8);
-  else if (code == 'Z' && specfont->Font_17) /* Unicode */
-    h = FontHeight (specfont->Font_17);
-  else if (specfont->Font_1)
-    h = FontHeight (specfont->Font_1);
-  if (h == 0)
+
+  if (specfont)
+    {
+      if (code == 'A' && specfont->Font_6) /* Arabic */
+        h = FontHeight (specfont->Font_6);
+      else if (code == 'G' && specfont->Font_7) /* Graphic */
+        h = FontHeight (specfont->Font_7);
+      else if (code == 'H' && specfont->Font_8) /* Hebrew */
+        h = FontHeight (specfont->Font_8);
+      else if (code == 'Z' && specfont->Font_17) /* Unicode */
+        h = FontHeight (specfont->Font_17);
+      else if (specfont->Font_1)
+        h = FontHeight (specfont->Font_1);
+    }
+  if (h == 0 && specfont)
     {
       car = GetFontAndIndexFromSpec (120, specfont, 1, &font);
       h = FontHeight (font);
@@ -1704,9 +1711,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
   if (c == EOS)
     c = ref_c;
   car = EOS;
-  size = fontset->FontSize;
   if (fontset)
     {
+      size = fontset->FontSize;
       if (c == EOL || c == BREAK_LINE ||
           c == SPACE || c == TAB ||
           c == NEW_LINE || c == UNBREAKABLE_SPACE ||

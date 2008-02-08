@@ -3488,6 +3488,8 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
   if (pBox && pBox->BxAbstractBox)
     {
       pAb = pBox->BxAbstractBox;
+      if (pAb && pAb->AbNew)
+        return;
       /* check if the abstract box will be deleted */
       if (!removed)
         removed = pAb->AbDead;

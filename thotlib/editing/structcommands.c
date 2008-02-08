@@ -1253,8 +1253,9 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
   NotifyElement       notifyEl;
   int                 firstChar, lastChar, nextChar, NSiblings, last, i;
   int                 firstCharInit, lastCharInit, prevDepth, nextDepth;
-  ThotBool            oneAtLeast, cutPage, stop, pageSelected, cutAll;
-  ThotBool            recorded, lock, fakeCell, pEfake, ok, selNext;
+  ThotBool            oneAtLeast, cutPage, stop, pageSelected, cutAll,
+                      recorded, lock, fakeCell, pEfake, ok, selNext,
+                      mergeBlocks;
 
   pPrev = NULL;
   pNext = NULL;
@@ -1268,7 +1269,7 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
   cellCleared = NULL;
   pParentEl = NULL;
   selNext = FALSE;
-  /* y-a-t'il uneis there a current selection? */
+  /* is there a current selection? */
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
                             &lastChar))
     /* no selection */
@@ -1379,7 +1380,7 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
         }
     }
 
-  /* don't remove the root element or an isolated cell or a mandatory element,
+  /* don't delete the root element or an isolated cell or a mandatory element,
      but remove its contents */
   stop = FALSE;
   do
@@ -1508,6 +1509,30 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
                     pAncestorNext[i] = pNext->ElNext;
                 }
             }
+        }
+    }
+
+  mergeBlocks = FALSE;
+  if (!IsXMLEditMode ())
+    /* we are in text mode. check whether the elements to be deleted cross
+       a block boundary */
+    {
+      pE = firstSel;
+      while (pE && !TypeHasException (ExcParagraphBreak, pE->ElTypeNumber,
+                                      pE->ElStructSchema))
+        pE = pE->ElParent;
+      if (pE && pE != firstSel)
+        /* the first element is within a block element */
+        {
+          pF = lastSel;
+          while (pF && !TypeHasException (ExcParagraphBreak, pF->ElTypeNumber,
+                                          pF->ElStructSchema))
+            pF = pF->ElParent;
+          if (pF && pF != lastSel && pF != pE)
+            /* the last element is within another block element. We will
+               try to merge these block elements, after the deletion of the
+               current selection */
+            mergeBlocks = TRUE;
         }
     }
 
@@ -1787,9 +1812,6 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
       CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
     }
 
-  if (!replace)
-    CloseHistorySequence (pSelDoc);
- 
   /* les elements a couper ont ete coupe's. Verifie que les elements
      suivant et precedent n'ont pas ete detruits par les actions
      declanchees par les evenements TteElemDelete. Cherche d'abord le
@@ -1843,6 +1865,17 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
         }
     }
 
+  /* in text mode, merge blocks if the deleted elements were crossing
+     block boudaries */
+  if (mergeBlocks)
+    {
+      AbstractImageUpdated (pSelDoc);
+      DeleteNextChar (1, pAncestorPrev[0], FALSE);
+    } 
+
+  if (!replace)
+    CloseHistorySequence (pSelDoc);
+ 
   /* reaffiche les paves qui copient les elements detruits */
   if (oneAtLeast)
     {
