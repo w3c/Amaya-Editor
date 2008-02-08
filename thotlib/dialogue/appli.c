@@ -1330,6 +1330,8 @@ void ChangeSelFrame (int frame)
       TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
       TtaRefreshElementMenu (doc, 1);
       UpdateAttrMenu (LoadedDocument[doc-1], TRUE);
+      // update the show errors
+      TtaExecuteMenuAction ("UpdateShowError", doc, 1, FALSE);
       
       /* the active frame changed so update the application focus */
       TtaRedirectFocus();

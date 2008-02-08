@@ -1950,7 +1950,9 @@ static ThotBool ActivateElement (Element element, Document document)
   if (anchor && HrefAttr)
     {
       // open in new tab if the back function is available
-      if (!TtaIsActionActive ("GotoPreviousHTML", document))
+      if ((DocumentMeta[document] &&
+          DocumentMeta[document]->method == CE_HELP) ||
+          !TtaIsActionActive ("GotoPreviousHTML", document))
         {
           DontReplaceOldDoc = TRUE;
           InNewWindow       = FALSE;

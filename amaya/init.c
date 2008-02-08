@@ -1048,7 +1048,7 @@ void UpdateEditorMenus (Document doc)
   -----------------------------------------------------------------------*/
 void ShowLogFile (Document doc, View view)
 {
-  char     fileName[200];
+  char     fileName[500];
   int      newdoc;
 
   if (DocumentTypes[doc] == docSource)
@@ -1164,6 +1164,26 @@ void UpdateLogFile (Document doc, ThotBool enable)
         TtaSetItemOn (DocumentSource[doc], 1, Views, BShowLogFile);
       else
         TtaSetItemOff (DocumentSource[doc], 1, Views, BShowLogFile);
+    }
+}
+
+/*----------------------------------------------------------------------
+  UpdateShowError the logerror button and the menu entry
+  ----------------------------------------------------------------------*/
+void UpdateShowError (Document doc, View view)
+{
+  char     fileName[500];
+
+  if (DocumentTypes[doc] == docSource)
+    doc = GetDocFromSource (doc);
+  if (doc)
+    {
+      sprintf (fileName, "%s%c%d%cPARSING.ERR",
+               TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+      if (TtaFileExist (fileName))
+        UpdateLogFile (doc, TRUE);
+      else
+        UpdateLogFile (doc, FALSE);
     }
 }
 

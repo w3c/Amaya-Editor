@@ -405,6 +405,7 @@ FUNCTIONS
   StopTransfer,
   GoToHome,
   ShowLibrary,
+  UpdateShowError,
   AddNewModelIntoLibraryForm,
   ApplyClass,
   DoCreateTable,
