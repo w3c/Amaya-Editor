@@ -2031,6 +2031,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
           toMove = TRUE;
           if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
             toMove = (pAb->AbEnclosing->AbBox->BxType != BoGhost &&
+                      pAb->AbEnclosing->AbBox->BxType != BoFloatGhost &&
                       pAb->AbEnclosing->AbBox->BxType != BoBlock &&
                       pAb->AbEnclosing->AbBox->BxType != BoFloatBlock &&
                       pAb->AbEnclosing->AbBox->BxType != BoCellBlock);
