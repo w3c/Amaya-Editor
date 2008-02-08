@@ -5427,10 +5427,23 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                             {
                                               ptr = strstr (&buffer[i], "1.1");
                                               if (ptr && ptr < end)
-                                                *docProfile = L_Xhtml11;
-                                              ptr = strstr (&buffer[i], "plus MathML");
-                                              if (ptr && ptr < end)
-                                                *useMath = TRUE;
+						{
+						  ptr = strstr (&buffer[i], "svg:svg");
+						  if (ptr && ptr < end)
+						    {
+						      *thotType = docSVG;
+						      *isXML = TRUE;
+						      *isknown = TRUE;
+						      *docProfile = L_SVG;
+						    }
+						  else
+						    {
+						      *docProfile = L_Xhtml11;
+						      ptr = strstr (&buffer[i], "plus MathML");
+						      if (ptr && ptr < end)
+							*useMath = TRUE;
+						    }
+						}
                                             }
                                         }
                                     }
