@@ -2,12 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <title>Welcome to Amaya</title>
+  <title>Bienvenido a Amaya</title>
   <meta name="generator" content="amaya 9.52, see http://www.w3.org/Amaya/" />
   <link href="amaya.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="en" lang="en">
+
+<div id="header">
+<ul id="links">
+  <li><a href="http://www.w3.org/Amaya">Web Site</a></li>
+  <li><a href="http://www.w3.org">W3C</a></li>
+  <li><a href="http://www.inria.fr">INRIA</a></li>
+  <li><a
+  href="http://wam.inrialpes.fr/software/amaya/index.fr.html">WAM</a></li>
+</ul>
+<h1 id="title">Amaya [10.0]</h1>
+</div>
 
 <div id="logo">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.0" height="150px"
@@ -74,22 +85,114 @@
 </svg>
 </div>
 
-<h1>Bienvenido a Amaya 10</h1>
-
+<div id="intro" class="section">
 <p>Amaya es un cliente Web que actúa como navegador y como editor. Ha sido
 diseñado por el <a href="http://www.w3.org/">W3C</a> y el <a
 href="http://www.inria.fr/">INRIA</a> con el principal objetivo de demostrar
 nuevas tecnologías Web y ayudar a los usuarios a producir páginas Web
-válidas.<br />
-Con Amaya se pueden manipular páginas Web complejas, con formularios, tablas
+válidas.</p>
+<p>Con Amaya se pueden manipular páginas Web complejas, con formularios, tablas
 y las características más avanzadas del <acronym
 title="Hypertext Markup Language">XHTML</acronym>. Se pueden crear y editar
 <a href="../doc/WX/Math.html">expresiones matemáticas</a> complejas dentro de
 las páginas Web. Se pueden asociar estilos a los documentos mediantes Hojas
 de estilo en Cascada (CSS).</p>
+</div>
 
 <div class="body">
-<p>¿Sabía que...?</p>
+
+<div class="column">
+
+<div class="section">
+<h2>Main news</h2>
+
+<p>News from version 9.55 :</p>
+<ul>
+  <li>Menu reorganization</li>
+  <li>Direct access to style</li>
+  <li>Contextual menu</li>
+  <li>User profiles</li>
+  <li>Advanced table edition</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Advanced features</h2>
+
+<p>Embedded MathML and SVG:</p>
+
+<p><svg xmlns="http://www.w3.org/2000/svg" height="250" width="250">
+  <g transform="matrix(0.707107,-0.707107,0.707107,0.707107,0,150)">
+    <rect style="stroke:#50ff50;stroke-width:3px;fill:#aaffaa;" width="200"
+          height="100"/>
+    <path
+          d="M 44.727272,21.090909 L 36.359858,29.587325 L 40.292606,40.845041 L 28.432844,39.600562 L 22.083235,49.69438 L 15.661767,39.646124 L 3.8111859,40.975193 L 7.6635087,29.689702 L -0.76431515,21.253205 L 10.460921,17.228684 L 11.802177,5.3794762 L 21.947495,11.646471 L 32.047838,5.3072476 L 33.473606,17.146584 L 44.727272,21.090909 z "
+          transform="translate(150,40)"
+          style="stroke:#ffaa00;stroke-width:1px;fill:#ffff00;"/>
+    <path
+          d="M 50.363636,43.81818 C 50.090154,43.025081 51.297791,43.058245 51.681818,43.363636 C 52.722508,44.191224 52.181922,45.777285 51.272725,46.454544 C 49.646384,47.666002 47.379434,46.796331 46.40909,45.181813 C 44.98507,42.812444 46.220462,39.785248 48.545459,38.545452 C 51.644314,36.892997 55.454153,38.507192 56.954547,41.545458 C 58.842639,45.368806 56.844001,49.970617 53.090902,51.727273 C 48.545397,53.854818 43.146815,51.468849 41.136361,46.999991 C 38.767111,41.733596 41.542078,35.535434 46.727281,33.272723 C 52.713804,30.660333 59.713334,33.825342 62.227275,39.727281 C 65.083776,46.433439 61.528027,54.235551 54.909079,57.000002 C 47.483621,60.101298 38.878068,56.15432 35.863632,48.818168 C 32.517038,40.673649 36.8556,31.26402 44.909104,27.999994"
+          transform="translate(-5,30)"
+          style="fill:none;stroke:#000000;stroke-width:1px;"/>
+    <path
+          d="M 43.454546 30.272728 A 16.454546 7.3636365 0 1 1  10.545454,30.272728 A 16.454546 7.3636365 0 1 1  43.454546 30.272728 z"
+          style="stroke:#ff0000;stroke-width:3px;fill:#ffaaaa;"
+          transform="translate(70,40)"/>
+    <switch>
+      <foreignObject width="200" height="100">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mstyle mathcolor="#000080;">
+            <mrow>
+              <mi>&#x393;</mi>
+              <mo>&#x2061;</mo>
+              <mrow>
+                <mo>(</mo>
+                <mi>x</mi>
+                <mo>)</mo>
+              </mrow>
+            </mrow>
+            <mo>=</mo>
+            <mrow>
+              <msubsup>
+                <mo>&#x222b;</mo>
+                <mn>0</mn>
+                <mrow>
+                  <mo>+</mo>
+                  <mi>&#x221e;</mi>
+                </mrow>
+              </msubsup>
+              <msup>
+                <mi>t</mi>
+                <mrow>
+                  <mi>x</mi>
+                  <mo>&#x2212;</mo>
+                  <mn>1</mn>
+                </mrow>
+              </msup>
+              <msup>
+                <mi>&#x2147;</mi>
+                <mrow>
+                  <mo>&#x2212;</mo>
+                  <mi>t</mi>
+                </mrow>
+              </msup>
+              <mrow>
+                <mo>&#x2146;</mo>
+                <mi>t</mi>
+              </mrow>
+            </mrow>
+          </mstyle>
+        </math> </foreignObject>
+    </switch>
+  </g>
+</svg>
+ </p>
+</div>
+</div>
+
+<div class="main">
+
+<div class="section">
+<h2>¿Sabía que...?</h2>
 <dl>
   <dt>Elija su perfil</dt>
     <dd><p>Amaya pone a su disposición 5 perfiles distintos que adaptan los
@@ -118,8 +221,10 @@ de estilo en Cascada (CSS).</p>
       estructuras</dd>
 </dl>
 </div>
+</div>
+</div>
 
-<p class="bottom">Se concede permiso para utilizar, copiar, modificar y
+<p class="bottom section">Se concede permiso para utilizar, copiar, modificar y
 distribuir este programa y su documentación, para cualquier fin y sin cargas
 ni regalías, siempre que el texto completo de la <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html"><acronym

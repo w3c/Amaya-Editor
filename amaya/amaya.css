@@ -1,68 +1,47 @@
 /* This is the Welcome CSS file */
+
+
 body {
  font-family: helvetica, arial, sans-serif;
+ font-size: 10pt;
  color: black;
- background-color: #F6F6F6;
+ background: url("top.png") repeat-x white /*#F6F6F6*/;
+ margin: 0 2em 0 2em;
+ padding: 0 1em 1em 1em;
 }
+
+div {
+ margin: 0;
+ padding: 0;
+ border: 0;
+}
+
+p {
+ text-align: justify;
+ text-indent: 0.5em;
+}
+
+ul {
+    list-style-image: url("bullet.png");
+}
+
 h1 {
  font-size: 200%;
  font-weight: bold;
  font-style: italic;
- color: #488B9B;
+ color: #1B319D;
  margin-bottom: 0;
 }
+
 h2 {
- margin-top: 0; margin-bottom: .4em;
- font-style:italic;  color: #488B9B;
-}
-h3 {
- float:left;
- width: 30%;
- text-align: right;
- border: solid 1px #488B9B; 
- padding: 4px;
- margin-top: 0;
- margin-bottom: .2em;
- color: #488B9B;
-}
-
-p {
- margin-top: 0;
- margin-bottom: 2em;
-}
-
-div p, div ul, div ol {
- margin-left: 35%;
- margin-bottom: 0;
-}
-
-div {
- margin-top: 0;
- margin-bottom: 2em;
- margin-right: 0.5em;
-}
-
-div div {
- margin-top: 0;
- margin-right: 0;
-}
-
-strong {
- color: #488B9B
-}
-
-.button {
- border: solid 1px #488B9B;
- padding: 4px
-;}
-
-.buttonbar {
- text-align: center;
- margin-top: 1.5em;
-}
-
-.pink {
- color: #dc5b53;
+ margin: 0 0 0.4em 0;
+ padding: 0.3em;
+ border: 0;
+ border-bottom: 1px solid #62698C;
+ border-right: 1px solid #62698C;
+ font-style:italic;
+ color: #1B319D;
+ background: url("title.png") left bottom no-repeat;
 }
 
 a:link {
@@ -75,39 +54,108 @@ a:visited {
  font-weight: bold;
 }
 
-div.body {
-  clear: left;
-  margin-top: 0;
-  margin-left:auto;
-}
-
-div.body p {
-  margin: 0;
-}
-
 dl {
   margin: 0;
 }
 
 dt {
-  color: #488B9B;
-  clear: left;
-  margin-top: 20px;
+  color: #1B319D;
+  margin-top: 0.5em;
   text-align: left;
 }
 
 dd {
   margin-top: 0;
-  padding-left: 40px;
-  font-size: 80%;
+  padding-left: 1em;
+  text-align: justify;
+  text-indent: 0.5em;
 }
 
 .bottom {
-  font-size: 80%;
   clear: both:
 }
 
-#logo {
+
+
+ul#links {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 0 0 1em;
+  margin: 24px 3em 0 0;
+  height: 58px;
+  list-style: none;
+  background: url("menu.png") repeat-x bottom;
+}
+
+ul#links li {
+  display: inline;
   float: left;
+  margin: 0;
+  padding: 1em 1em 0 4px;
+  text-align: center;
+  background: url("title.png") no-repeat bottom left;
+}
+
+ul#links li a {
+  color: white;
+  margin: 0;
+  padding: 4px;
+}
+
+div#logo {
+  float: right;
+  clear: right;
+  margin: 0;
+  padding: 0;
+}
+
+div#header {
+  margin: 0;
+  padding: 0;
+}
+
+div#header p {
+  text-align: justify;
+  text-indent: 1em;
+  margin: 0;
+  padding: 0;
+}
+
+div.body {
+  margin: 0;
+  padding: 0;
+  clear: both;
+}
+
+div.main {
+  width: 100%;
+  margin: 0;
+  padding: 0 0 0 1em;
+}
+
+div.column {
+  float: left;
+  clear: both;
+  width: 40%;
+  margin: 0;
+  padding: 0 1em 0 0;
+}
+
+h1#title {
+ color: white;
+ font-size: 300%;
+ font-weight: bold;
+ font-style: italic;
+ background: url("title.png") no-repeat bottom left;
+ margin: 0.5em;
+ padding: 8px;
+ clear: both;
+}
+
+.section {
+  background: #FAFAFE;
+  padding: 0.5em;
+  margin: 0.5em 0;
 }
 
