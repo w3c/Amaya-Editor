@@ -555,7 +555,13 @@ static void ValidateCacheConf (void)
      protect against a bad "user" default value */
   change += RemoveLastDirSep (GProp_Cache.CacheDirectory);
   /* n.b., this variable may be empty */
+
+#ifdef _WINDOWS
+  change += NormalizeDirName (GProp_Cache.CacheDirectory, "\\libwww-cache");
+#else /* _WINDOWS */
   change += NormalizeDirName (GProp_Cache.CacheDirectory, "/libwww-cache");
+#endif /* _WINDOWS */
+
   if (change)
   TtaSetTextForm (CacheBase + mCacheDirectory, GProp_Cache.CacheDirectory);
 }
