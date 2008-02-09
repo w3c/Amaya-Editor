@@ -5435,6 +5435,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 						      *isXML = TRUE;
 						      *isknown = TRUE;
 						      *docProfile = L_SVG;
+						      *useMath = TRUE;
 						    }
 						  else
 						    {
