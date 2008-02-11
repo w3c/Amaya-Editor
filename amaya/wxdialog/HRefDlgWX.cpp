@@ -88,15 +88,12 @@ HRefDlgWX::HRefDlgWX( int ref, wxWindow* parent, const wxString & title,
 HRefDlgWX::~HRefDlgWX()
 {
   /* do not call this one because it cancel the link creation */
-  if (Waiting)
+  if (Waiting == 1)
     {
       Waiting = 0;
       ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
       m_doc = 0;
     }
-  else
-    // clean up the dialog context
-    TtaDestroyDialogue( MyRef );
 }
 
 /*----------------------------------------------------------------------
@@ -203,8 +200,11 @@ void HRefDlgWX::OnCancel( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void HRefDlgWX::OnClick( wxCommandEvent& event )
 {
+  Waiting = 2;
+  // no cancel  must be generated
   ThotCallback (MyRef, INTEGER_DATA, (char*) 3);
-  //TtaDestroyDialogue( MyRef );
+  // the dialog could be redisplayed
+  Waiting = 1;
 }
 
 /*----------------------------------------------------------------------
