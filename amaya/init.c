@@ -942,95 +942,108 @@ void UpdateEditorMenus (Document doc)
         }
       TtaSetMenuOff (doc, 1, Style);
     }
-  else if  (DocumentTypes[doc] == docXml)
+  else
     {
-      TtaSetItemOff (doc, 1, Views, BShowAlternate);
-      TtaSetItemOff (doc, 1, Views, BShowToC);
-      //TtaSetMenuOff (doc, 1, Style);
-    }
-  else if (DocumentTypes[doc] == docHTML)
-    {
-      /* structure information is active only in the structure view */
-      if (profile == L_Basic)
+      TtaSetItemOn (doc, 1, Views, TShowTargets);
+      TtaSetItemOn (doc, 1, Views, BShowSource);
+      TtaSetItemOn (doc, 1, Views, BShowStructure);
+      TtaSetItemOn (doc, 1, Views, BShowFormatted);
+      TtaSetItemOn (doc, 1, Views, TSplitHorizontally);
+      TtaSetItemOn (doc, 1, Views, TSplitVertically);
+      if  (DocumentTypes[doc] == docXml)
         {
-          TtaSetItemOff (doc, 1, Types, BStyle);
-          TtaSetItemOff (doc, 1, Types, BScript);
-          TtaSetItemOff (doc, 1, Types, BNoScript);
+          TtaSetItemOff (doc, 1, Views, BShowAlternate);
+          TtaSetItemOff (doc, 1, Views, BShowToC);
+          //TtaSetMenuOff (doc, 1, Style);
         }
-      else
+      else if (DocumentTypes[doc] == docHTML)
         {
-          TtaSetItemOn (doc, 1, Types, BStyle);
-          TtaSetItemOn (doc, 1, Types, BScript);
-          TtaSetItemOn (doc, 1, Types, BNoScript);
-        }
-      /* invalid all table edits as long as the selection is out of a table */
-      if (TtaIsDocumentSelected (doc))
-        SetTableMenuOn (doc, 1);
-      else
-        SetTableMenuOff (doc, 1);
-    
-      if (DocumentTypes[doc] == docHTML ||
-          DocumentTypes[doc] == docAnnot ||
-          DocumentTypes[doc] == docSVG ||
-          DocumentTypes[doc] == docMath ||
-          DocumentTypes[doc] == docXml ||
-          DocumentTypes[doc] == docImage)
-        {
-          TtaSetItemOn (doc, 1, Tools, BSpellCheck);
-          TtaSetMenuOn (doc, 1, Style);
-          if (DocumentTypes[doc] == docMath)
-            TtaSetItemOn (doc, 1, Tools, BTransform);
+          TtaSetItemOn (doc, 1, Views, TShowMapAreas);
+          TtaSetItemOn (doc, 1, Views, BShowLinks);
+          TtaSetItemOn (doc, 1, Views, BShowAlternate);
+          TtaSetItemOn (doc, 1, Views, BShowToC);
+          /* structure information is active only in the structure view */
+          if (profile == L_Basic)
+            {
+              TtaSetItemOff (doc, 1, Types, BStyle);
+              TtaSetItemOff (doc, 1, Types, BScript);
+              TtaSetItemOff (doc, 1, Types, BNoScript);
+            }
           else
             {
-              if (DocumentTypes[doc] == docHTML)
+              TtaSetItemOn (doc, 1, Types, BStyle);
+              TtaSetItemOn (doc, 1, Types, BScript);
+              TtaSetItemOn (doc, 1, Types, BNoScript);
+            }
+          /* invalid all table edits as long as the selection is out of a table */
+          if (TtaIsDocumentSelected (doc))
+            SetTableMenuOn (doc, 1);
+          else
+            SetTableMenuOff (doc, 1);
+    
+          if (DocumentTypes[doc] == docHTML ||
+              DocumentTypes[doc] == docAnnot ||
+              DocumentTypes[doc] == docSVG ||
+              DocumentTypes[doc] == docMath ||
+              DocumentTypes[doc] == docXml ||
+              DocumentTypes[doc] == docImage)
+            {
+              TtaSetItemOn (doc, 1, Tools, BSpellCheck);
+              TtaSetMenuOn (doc, 1, Style);
+              if (DocumentTypes[doc] == docMath)
                 TtaSetItemOn (doc, 1, Tools, BTransform);
-              TtaSetMenuOn (doc, 1, Types);
-              TtaSetMenuOn (doc, 1, Links);
+              else
+                {
+                  if (DocumentTypes[doc] == docHTML)
+                    TtaSetItemOn (doc, 1, Tools, BTransform);
+                  TtaSetMenuOn (doc, 1, Types);
+                  TtaSetMenuOn (doc, 1, Links);
           
-            }
+                }
         
-          view = TtaGetViewFromName (doc, "Structure_view");
-          if (view != 0 && TtaIsViewOpen (doc, view))
-            {
-              /* update specific menu entries */
-              TtaSetItemOn (doc, view, Edit_, BCut);
-              TtaSetItemOn (doc, view, Edit_, BPaste);
-              TtaSetItemOn (doc, view, Edit_, BClear);
-              TtaSetItemOn (doc, view, Tools, BSpellCheck);
-              TtaSetItemOn (doc, view, Tools, BTransform);
-              if (DocumentTypes[doc] != docMath)
-                TtaSetMenuOn (doc, view, Types);
-            }
-          view = TtaGetViewFromName (doc, "Alternate_view");
-          if (view != 0 && TtaIsViewOpen (doc, view))
-            {
-              /* update specific menu entries */
-              TtaSetItemOn (doc, view, Edit_, BCut);
-              TtaSetItemOn (doc, view, Edit_, BPaste);
-              TtaSetItemOn (doc, view, Edit_, BClear);
-              TtaSetItemOn (doc, view, Tools, BSpellCheck);
-            }
-          view = TtaGetViewFromName (doc, "Links_view");
-          if (view != 0 && TtaIsViewOpen (doc, view))
-            {
-              /* update specific menu entries */
-              TtaSetItemOn (doc, view, Edit_, BCut);
-              TtaSetItemOn (doc, view, Edit_, BPaste);
-              TtaSetItemOn (doc, view, Edit_, BClear);
-              TtaSetItemOn (doc, view, Tools, BSpellCheck);
-              TtaSetItemOn (doc, view, Tools, BTransform);
-              if (DocumentTypes[doc] != docMath)
-                TtaSetMenuOn (doc, view, Types);
-            }
-          view = TtaGetViewFromName (doc, "Table_of_contents");
-          if (view != 0 && TtaIsViewOpen (doc, view))
-            {
-              /* update specific menu entries */
-              TtaSetItemOn (doc, view, Edit_, BCut);
-              TtaSetItemOn (doc, view, Edit_, BPaste);
-              TtaSetItemOn (doc, view, Edit_, BClear);
-              TtaSetItemOn (doc, view, Tools, BSpellCheck);
-              TtaSetItemOn (doc, view, Tools, BTransform);
+              view = TtaGetViewFromName (doc, "Structure_view");
+              if (view != 0 && TtaIsViewOpen (doc, view))
+                {
+                  /* update specific menu entries */
+                  TtaSetItemOn (doc, view, Edit_, BCut);
+                  TtaSetItemOn (doc, view, Edit_, BPaste);
+                  TtaSetItemOn (doc, view, Edit_, BClear);
+                  TtaSetItemOn (doc, view, Tools, BSpellCheck);
+                  TtaSetItemOn (doc, view, Tools, BTransform);
+                  if (DocumentTypes[doc] != docMath)
+                    TtaSetMenuOn (doc, view, Types);
+                }
+              view = TtaGetViewFromName (doc, "Alternate_view");
+              if (view != 0 && TtaIsViewOpen (doc, view))
+                {
+                  /* update specific menu entries */
+                  TtaSetItemOn (doc, view, Edit_, BCut);
+                  TtaSetItemOn (doc, view, Edit_, BPaste);
+                  TtaSetItemOn (doc, view, Edit_, BClear);
+                  TtaSetItemOn (doc, view, Tools, BSpellCheck);
+                }
+              view = TtaGetViewFromName (doc, "Links_view");
+              if (view != 0 && TtaIsViewOpen (doc, view))
+                {
+                  /* update specific menu entries */
+                  TtaSetItemOn (doc, view, Edit_, BCut);
+                  TtaSetItemOn (doc, view, Edit_, BPaste);
+                  TtaSetItemOn (doc, view, Edit_, BClear);
+                  TtaSetItemOn (doc, view, Tools, BSpellCheck);
+                  TtaSetItemOn (doc, view, Tools, BTransform);
+                  if (DocumentTypes[doc] != docMath)
+                    TtaSetMenuOn (doc, view, Types);
+                }
+              view = TtaGetViewFromName (doc, "Table_of_contents");
+              if (view != 0 && TtaIsViewOpen (doc, view))
+                {
+                  /* update specific menu entries */
+                  TtaSetItemOn (doc, view, Edit_, BCut);
+                  TtaSetItemOn (doc, view, Edit_, BPaste);
+                  TtaSetItemOn (doc, view, Edit_, BClear);
+                  TtaSetItemOn (doc, view, Tools, BSpellCheck);
+                  TtaSetItemOn (doc, view, Tools, BTransform);
+                }
             }
         }
     }

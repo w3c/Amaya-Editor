@@ -14,9 +14,8 @@
 <ul id="links">
   <li><a href="http://www.w3.org/Amaya">Web Site</a></li>
   <li><a href="http://www.w3.org">W3C</a></li>
-  <li><a href="http://www.inria.fr">INRIA</a></li>
-  <li><a
-  href="http://wam.inrialpes.fr/software/amaya/index.fr.html">WAM</a></li>
+  <li><a href="http://wam.inrialpes.fr/index.en.html">INRIA</a></li>
+  <li><a href="http://palette.ercim.org/">Palette</a></li>
 </ul>
 
 <h1 id="title">Amaya [10.0]</h1>

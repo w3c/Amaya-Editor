@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="pmathml.xsl"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -13,10 +14,10 @@
 <ul id="links">
   <li><a href="http://www.w3.org/Amaya">Web Site</a></li>
   <li><a href="http://www.w3.org">W3C</a></li>
-  <li><a href="http://www.inria.fr">INRIA</a></li>
-  <li><a
-  href="http://wam.inrialpes.fr/software/amaya/index.fr.html">WAM</a></li>
+  <li><a href="http://wam.inrialpes.fr/index.en.html">INRIA</a></li>
+  <li><a href="http://palette.ercim.org/">Palette</a></li>
 </ul>
+
 <h1 id="title">Amaya [10.0]</h1>
 </div>
 
@@ -91,8 +92,9 @@ diseñado por el <a href="http://www.w3.org/">W3C</a> y el <a
 href="http://www.inria.fr/">INRIA</a> con el principal objetivo de demostrar
 nuevas tecnologías Web y ayudar a los usuarios a producir páginas Web
 válidas.</p>
-<p>Con Amaya se pueden manipular páginas Web complejas, con formularios, tablas
-y las características más avanzadas del <acronym
+
+<p>Con Amaya se pueden manipular páginas Web complejas, con formularios,
+tablas y las características más avanzadas del <acronym
 title="Hypertext Markup Language">XHTML</acronym>. Se pueden crear y editar
 <a href="../doc/WX/Math.html">expresiones matemáticas</a> complejas dentro de
 las páginas Web. Se pueden asociar estilos a los documentos mediantes Hojas
@@ -224,9 +226,9 @@ de estilo en Cascada (CSS).</p>
 </div>
 </div>
 
-<p class="bottom section">Se concede permiso para utilizar, copiar, modificar y
-distribuir este programa y su documentación, para cualquier fin y sin cargas
-ni regalías, siempre que el texto completo de la <a
+<p class="bottom section">Se concede permiso para utilizar, copiar, modificar
+y distribuir este programa y su documentación, para cualquier fin y sin
+cargas ni regalías, siempre que el texto completo de la <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html"><acronym
 title="Massachusetts Institute of Technology">licencia MIT</acronym> e
 INRIA</a> se incluya en <strong>todas</strong> las copias del programa y de

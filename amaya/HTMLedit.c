@@ -1907,21 +1907,21 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
           targetDoc = doc;
           SetTargetContent (0, NULL);
         }
-
-      /*if (clickFirst)
-        {
-          TtaDestroyDialogue (BaseDialog + AttrHREFForm);
-          TtaDestroyDialogue (BaseDialog + FileBrowserForm);
-          }*/
     }
    
   AttrHREFelement = el;
   AttrHREFdocument = doc;
   AttrHREFundoable = withUndo;
   if (clickFirst && (doc != targetDoc || TargetName != NULL))
-    /* the user has clicked another document or a target element */
-    /* create the attribute HREF or CITE */
-    SetREFattribute (el, doc, TargetDocumentURL, TargetName);
+    {
+      /* the user has clicked another document or a target element */
+      /* create the attribute HREF or CITE */
+      SetREFattribute (el, doc, TargetDocumentURL, TargetName);
+      TtaDestroyDialogue (BaseDialog + AttrHREFForm);
+      //#ifndef _MACOS
+      TtaRaiseView (doc, 1);
+      //#endif /* _MACOS */
+    }
   else
     /* the user has clicked the same document: pop up a dialogue box
        to allow the user to type the target URI */
