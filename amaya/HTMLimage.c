@@ -817,6 +817,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
   char               *ptr;
   char               *dir, *name;
   char               *prefix;
+  int                 i, j;
   ThotBool            oldStructureChecking;
 
   /* restore the context */
@@ -847,12 +848,20 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
       if (desc->tempfile)
         TtaFreeMemory (desc->tempfile);
       tempfile = (char *)TtaGetMemory (MAX_LENGTH);
-      strcpy (tempfile, desc->localName);
+      strncpy (tempfile, desc->localName, MAX_LENGTH-1);
+      tempfile[MAX_LENGTH-1] = EOS;
       /* If this is an image document, point to the correct files */
       if (DocumentTypes[doc] == docImage)
         {
           SetContainerImageName (tempfile);
           desc->tempfile = tempfile;
+        }
+      else if (status < 0)
+        {
+          // load error
+          TtaFileUnlink (outputfile);
+          TtaFreeMemory (tempfile);
+          desc->tempfile = NULL;
         }
       else
         {
@@ -868,8 +877,19 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
             {
               prefix = ptr;
               ptr = strchr (prefix, '.');
-              if (ptr) 
-                *ptr = EOS;
+              if (ptr)
+                {
+                  // add the suffix (x.png differs to x.gif)
+                  i = strlen (ptr);
+                  if (i > 4)
+                    i = 4;
+                  for (j = 0; j < i; j++)
+                    {
+                      ptr[j] = ptr[j+1];
+                      ptr += strlen (ptr);
+                    }
+                  ptr[j] = EOS;
+                }
             }
           else
             prefix = "";
@@ -883,15 +903,6 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
             /* change the tempfile name */
             sprintf (desc->tempfile, "%s", outputfile); 
         }
-
-      /* save pathname */
-      /* That could make confusion if the image is redirected:
-         the registered name is not the original name
-         TtaFreeMemory (desc->originalName);
-         pathname = urlName;
-         desc->originalName = TtaGetMemory (strlen (pathname) + 1);
-         strcpy (desc->originalName, pathname);
-      */
 
       /* update desc->status in order to alert DisplayImage if the
          image was not found */	
@@ -933,6 +944,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
               elType = TtaGetElementType (ctxEl->currentElement);
               name = TtaGetSSchemaName (elType.ElSSchema);
               if ((strcmp (name, "HTML") == 0 &&
+                   desc->status == IMAGE_LOADED &&
                    (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
                     elType.ElTypeNum == HTML_EL_Embed_ ||
                     elType.ElTypeNum == HTML_EL_Object ||
