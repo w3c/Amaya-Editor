@@ -2009,9 +2009,9 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
   else if (pBox->BxType == BoTable)
     width = pBox->BxMinWidth + lbmp + rbmp;
   else if (!variable || pBox->BxW < MIN_SPACE)
-    width = pBox->BxW + lbmp + rbmp;
+    width = pBox->BxW /*+ lbmp + rbmp*/;
   else if (pBox->BxMinWidth)
-    width = pBox->BxMinWidth + lbmp + rbmp;
+    width = pBox->BxMinWidth /*+ lbmp + rbmp*/;
   else
     width = lbmp + rbmp + MIN_SPACE;
 
@@ -3139,9 +3139,11 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
     {
       box = pfloat->FlBox;
       if (box->BxType == BoFloatBlock && box->BxContentWidth)
-        w = box->BxMaxWidth + box->BxLMargin + box->BxLBorder + box->BxLPadding + box->BxRMargin + box->BxRBorder + box->BxRPadding;
+        w = box->BxMaxWidth + box->BxLMargin + box->BxLBorder + box->BxLPadding + box->BxRBorder + box->BxRPadding;
       else
-        w = box->BxWidth;
+        w = box->BxWidth - box->BxRMargin;
+      if (box->BxRMargin < 0)
+        w += box->BxRMargin;
       if (box->BxXOrg + w - x > x1)
         /* float change the minimum width of the block */
         x1 = box->BxXOrg + w - x;
@@ -3156,11 +3158,11 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
     {
       box = pfloat->FlBox;
       if (box->BxType == BoFloatBlock && box->BxContentWidth)
-        w = box->BxMaxWidth + box->BxLMargin + box->BxLBorder + box->BxLPadding + box->BxRMargin + box->BxRBorder + box->BxRPadding;
+        w = box->BxMaxWidth + box->BxLBorder + box->BxLPadding + box->BxRMargin + box->BxRBorder + box->BxRPadding;
       else
-        w = box->BxWidth;
-      //if (pBlock->BxW - box->BxXOrg - x > x2)
-      //  x2 = pBlock->BxW - box->BxXOrg - x;
+        w = box->BxWidth - box->BxLMargin;
+      if (box->BxLMargin < 0)
+        w += box->BxLMargin;
       if (box->BxXOrg + w > x + pBlock->BxMaxWidth + x2)
         /* float change the minimum width of the block */
         x2 = box->BxXOrg + w - x - pBlock->BxMaxWidth;
@@ -3198,7 +3200,9 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
           box = pAb->AbBox;
           if (box->BxType == BoFloatGhost || box->BxType == BoBlock ||
               box->BxType == BoFloatBlock || box->BxType == BoCellBlock ||
-              box->BxType == BoTable)
+              box->BxType == BoTable ||
+              (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimUnit != UnPercent))
+            // don't change the min and max width of that box
             pAb = NULL;
           else
             {
@@ -3333,8 +3337,8 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
         }
       y = orgY;
       y += pLine->LiYOrg;
-      //if (pLine->LiRealLength > 0)
-        /* it must be displayed under the current line */
+      //if (pLine->LiRealLength > 0 && box->BxAbstractBox->AbFloat == 'L')
+      /* it must be displayed under the current line */
       //  y += pLine->LiHeight;
       w = pBlock->BxW;
     }
@@ -3866,7 +3870,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
     {
       /* Build all the block of lines */
       /* reset the value of the width without wrapping */
-      if (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimUnit != UnPercent)
+      if (extensibleBox || pBox->BxShrink ||
+          (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimUnit != UnPercent))
         pBox->BxMaxWidth = 0;
       pBox->BxMinWidth = 0;
       /* look for the first included box */
@@ -4196,6 +4201,15 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
     left -= pBox->BxLMargin;
   if (pBox->BxRMargin < 0)
     right -= pBox->BxRMargin;
+  
+  // first compute min and max width
+  if (extensibleBox || pBox->BxShrink)
+    pBox->BxW = pBox->BxMaxWidth;
+  pBox->BxMinWidth += left + right;
+  pBox->BxMaxWidth += left + right;
+  UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);
+
+  // if needed restore the previous width to apply right update
   if (extensibleBox)
     {
       // Restore the previous width
@@ -4210,12 +4224,10 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
         }
     }
   else if (pBox->BxShrink)
+    {
       // Restore the previous width
       pBox->BxW = width;
-    
-  pBox->BxMinWidth += left + right;
-  pBox->BxMaxWidth += left + right;
-  UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);
+    }
   // return the full height
   *height = *height + top + spacing + bottom;
   /* restore the value */
@@ -4636,7 +4648,7 @@ ThotBool RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
       if (extensibleBox)
         /* it's an extensible block of lines */
         width = pBox->BxMaxWidth;
-      else if (pBox->BxMinWidth > pBox->BxWidth)
+      else if (pBox->BxMinWidth > pBox->BxW)
         {
           width = pBox->BxMinWidth;
           if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox &&
