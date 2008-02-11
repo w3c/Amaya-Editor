@@ -3358,6 +3358,7 @@
 <message xml:lang="es">Seleccionar Fuente...</message>
 <message xml:lang="de">Schriftart wählen...</message>
 <message xml:lang="it">Selezionare un tipo di carattere...</message>
+<message xml:lang="hu">Válasszon betűkészletet...</message>
 </label>
 <label define="BRemoveFont">
 <message xml:lang="en">Default</message>
@@ -3365,7 +3366,8 @@
 <message xml:lang="es">Predeterminado</message>
 <message xml:lang="it">Default</message>
 <message xml:lang="de">Voreinstellung</message>
-<message xml:lang="hu">Alapérték</message>Alapérték</label>
+<message xml:lang="hu">Alapérték</message>
+</label>
 <label define="BCSSStyle">
 <message xml:lang="en">&amp;Style editor...</message>
 <message xml:lang="fr">Editeur de &amp;style...</message>
@@ -4812,6 +4814,7 @@
 <message xml:lang="es">Sugerencia del día...</message>
 <message xml:lang="de">Tip des Tages...</message>
 <message xml:lang="it">Suggerimenti del giorno...</message>
+<message xml:lang="hu">A nap tippje</message>
 </label>
 <label define="MAX_EDITOR_LABEL">
 </label>
