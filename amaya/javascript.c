@@ -199,6 +199,7 @@ void Execute_ACommand(Document document, View view)
 {
   jsval rval;
   char *rchar = NULL;
+  int i, j;
 
   if(ContinueScript)
     {
@@ -221,12 +222,17 @@ void Execute_ACommand(Document document, View view)
       /* Execute the command and put its returned value to the status bar */
       JS_EvaluateScript(gcx, gobj, JavascriptPromptValue, strlen(JavascriptPromptValue) , DocumentURLs[jsdocument], 0, &rval);
 
-      if(JSVAL_IS_VOID(rval))
+      if(!ContinueScript || JSVAL_IS_VOID(rval))
         TtaSetStatus (jsdocument, 1, TtaGetMessage(AMAYA, AM_JAVASCRIPT_NO_RETURNED_VALUE), NULL);
       else
         {
           rchar = jsval_to_string(gcx, rval);
-          /* TODO: handle returned value with \n */
+          j = strlen(rchar);
+
+          /* Replace end-of-line characters by vertical bars */
+          for(i = 0; i < j; i++)
+            if(rchar[i] == '\n')rchar[i] = '|';
+
           TtaSetStatus (jsdocument, 1, TtaGetMessage(AMAYA, AM_JAVASCRIPT_RETURNED_VALUE), rchar);
         }
 #endif /* _WX */
