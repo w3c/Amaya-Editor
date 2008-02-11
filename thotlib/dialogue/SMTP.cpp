@@ -23,59 +23,130 @@
 
 wxQuotedPrintableOutputStream::wxQuotedPrintableOutputStream(wxOutputStream& stream):
 wxFilterOutputStream(stream),
-m_offset(0)
+m_pos(0)
 {
 }
 
 bool wxQuotedPrintableOutputStream::Close()
 {
-    return wxFilterOutputStream::Close();
+  if(m_pos>0)
+    {
+      GetFilterOutputStream()->Write(m_buffer, m_pos);
+      m_pos = 0;
+    }
+  return wxFilterOutputStream::Close();
+}
+
+void wxQuotedPrintableOutputStream::FlushBuffer()
+{
+  if(m_pos>=3 && m_buffer[m_pos-2]=='\r' && m_buffer[m_pos-1]=='\n')
+    {
+      // Trap CRLF
+    if(m_buffer[m_pos-3]==' ')
+      {
+        // Penultimate character is space, must escape it.
+        m_buffer[m_pos-3] = '=';
+        m_buffer[m_pos-2] = '2';
+        m_buffer[m_pos-1] = '0';
+        m_buffer[m_pos++] = '\r';
+        m_buffer[m_pos++] = '\n';
+      }
+    else if(m_buffer[m_pos-1]=='\t')
+      {
+        // Penultimate character is tab, must escape it.        
+        m_buffer[m_pos-3] = '=';
+        m_buffer[m_pos-2] = '0';
+        m_buffer[m_pos-1] = '9';
+        m_buffer[m_pos++] = '\r';
+        m_buffer[m_pos++] = '\n';
+      }
+
+    }
+  else if(m_pos>=2 && (m_buffer[m_pos-1]=='\r'||m_buffer[m_pos-1]=='\n'))
+    {
+      // Trap CR or LF
+      char c = m_buffer[m_pos-1];
+      if(m_buffer[m_pos-2]==' ')
+        {
+          // Penultimate character is space, must escape it.
+          m_buffer[m_pos-2] = '=';
+          m_buffer[m_pos-1] = '2';
+          m_buffer[m_pos++] = '0';
+          m_buffer[m_pos++] = c;
+        }
+      else if(m_buffer[m_pos-1]=='\t')
+        {
+          // Penultimate character is tab, must escape it.        
+          m_buffer[m_pos-2] = '=';
+          m_buffer[m_pos-1] = '0';
+          m_buffer[m_pos++] = '9';
+          m_buffer[m_pos++] = c;
+        }
+    }
+  else if(m_pos>=1)
+    {
+      if(m_buffer[m_pos-1]==' ')
+        {
+          // Last character is space, must escape it.
+          m_buffer[m_pos-1] = '=';
+          m_buffer[m_pos++] = '2';
+          m_buffer[m_pos++] = '0';
+        }
+      else if(m_buffer[m_pos-1]=='\t')
+        {
+          // Last character is tab, must escape it.        
+          m_buffer[m_pos-1] = '=';
+          m_buffer[m_pos++] = '0';
+          m_buffer[m_pos++] = '9';
+        }
+      m_buffer[m_pos++] = '=';
+      m_buffer[m_pos++] = '\r';
+      m_buffer[m_pos++] = '\n';
+    }
+  
+  GetFilterOutputStream()->Write(m_buffer, m_pos);
+  m_pos = 0;
 }
 
 size_t wxQuotedPrintableOutputStream::OnSysWrite(const void *buffer, size_t size)
 {
-    wxString out;
+  const char *in = (const char*)buffer;
+  int pos = 0;
+  char c;
   
-    wxStringTokenizer tkz(wxString((const char*)buffer, *wxConvCurrent, size), wxT("\n"));
-    while(tkz.HasMoreTokens())
+  while(pos<(int)size)
     {
-        wxString line = tkz.GetNextToken();
-        wxString newpara;
-        // Remove '\r' ending character.
-        if(line.Last()==wxT('\r'))
-            line.RemoveLast();
-        
-        // Process each character of the line.
-        for(int j=0; j<(int)line.Len(); j++)
-        {
-            wxChar c = line[j];
-            wxString newc;
-            // Convert char if needed
-            if(c<32 || c==61 || c>126)
-            {
-                newc.Printf(wxT("=%02X"), c);
-            }
-            else
-                newc = c;
+      // Verify buffer size and flush if needed.
+      if(m_pos>=(76-6))
+        FlushBuffer();
 
-            // Truncate if needed
-            if(m_offset+newc.Length()>76)
-            {
-                out << newpara << wxT("=\r\n");
-                newpara.Empty();
-                m_offset = 0;
-            }
-            newpara += newc;
-            m_offset += newc.Length();
-        }
-        m_offset = newpara.Length();
-        if(!line.IsEmpty())
+      c = in[pos];
+      if(c=='\r'||c=='\n')
         {
-            out << newpara << wxT("\r\n");
+          m_buffer[m_pos++] = c;
+          FlushBuffer(); // Force flush to dump line.
         }
+      else if( c==61 )
+        {
+          // '=' symbol, must escape it.
+          m_buffer[m_pos++] = '=';
+          m_buffer[m_pos++] = '3';
+          m_buffer[m_pos++] = 'D';
+        }
+      else if( (c>=33 && c<=126 /*&& c!=61*/) || c==9 || c==32)
+        {
+          // Allowed character.
+          m_buffer[m_pos++] = c;
+        }
+      else
+        {
+          short s = (short)(unsigned char)c;
+          sprintf(m_buffer+m_pos, "=%02hX", s);
+          m_pos += 3;
+        }
+      pos++;
     }
-    GetFilterOutputStream()->Write((const char*) out.mb_str(wxConvLibc), out.Length()); 
-    return size;
+  return size;
 }
 
 //==========================================================================
@@ -118,7 +189,7 @@ m_dataType(slot.m_dataType)
 wxMimeSlot::wxMimeSlot(const wxString& contentType, const wxString& data):
 wxObject(),
 m_contentType(contentType),
-m_transfertEncoding(wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64/*wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE*/),
+m_transfertEncoding(/*wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64*/wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE),
 m_dataType(wxMimeSlotContentText),
 m_textContent(data)
 {
@@ -148,7 +219,7 @@ m_dataType(wxMimeSlotContentFile)
 
     if(contentType==wxT("text/plain") || contentType==wxT("text/html"))
     {
-      m_transfertEncoding = wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64/*wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE*/;
+      m_transfertEncoding = /*wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64*/wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE;
     }
 }
 
@@ -439,8 +510,7 @@ bool wxMultipartMimeContainer::Write(wxOutputStream& out)const
     msg << wxT("\r\n") << m_message << wxT("\r\n");
     // Flush the header.
     out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
-    
-    
+
     // Stream the content.
     for(wxNode* node=GetFirst(); node; node=node->GetNext())
     {

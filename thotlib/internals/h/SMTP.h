@@ -17,8 +17,13 @@
  */
 class wxQuotedPrintableOutputStream : public wxFilterOutputStream{
 protected:
-    int m_offset;
+    char m_buffer[76+2+1];
+    int  m_pos;
+  
     virtual size_t OnSysWrite(const void *buffer, size_t size);
+    
+    void FlushBuffer();
+    
 public:
     wxQuotedPrintableOutputStream(wxOutputStream& stream);
     virtual ~wxQuotedPrintableOutputStream(){Close();}
