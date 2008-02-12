@@ -301,7 +301,7 @@ void InitAmayaDefEnv (void)
   /* set up the default annotation user name */
   if (!_GetSysUserName (username))
     username[0] = EOS;
-  // keep local encoding
+  // set the user name
   TtaSetDefEnvString ("ANNOT_USER", username, FALSE);
 
   /* reset remote annotations autoload ?*/

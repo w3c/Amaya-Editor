@@ -927,6 +927,7 @@ void HelpAtW3C (Document document, View view)
 void HelpLocal (Document doc, View view)
 {
   Document    document;
+  Element     root;
   char        localname[MAX_LENGTH];
   char       *s, *lang;
 
@@ -943,6 +944,9 @@ void HelpLocal (Document doc, View view)
   LoadDefaultOpeningLocation (TRUE); // in new frame
   document = GetAmayaDoc (localname, NULL, doc, doc, CE_HELP,
                           FALSE, NULL, NULL);
+  /* Set the Help document in ReadOnly mode */
+  root = TtaGetMainRoot (document);
+  TtaSetAccessRight (root, ReadOnly, document);
   InitDocHistory (document);
 }
 
@@ -952,10 +956,10 @@ void HelpLocal (Document doc, View view)
 static void DisplayHelp (int doc, int index)
 {
   Document    document;
+  Element     root;
   char        localname[MAX_LENGTH];
   char       *s, *lang;
   char       *helpdir;
-  Element     root;
 
   helpdir = "WX";
   lang = TtaGetVarLANG ();

@@ -1947,10 +1947,10 @@ void GoToHome (Document doc, View view)
   else
     strcpy (LastURLName, s);
 
-  if (doc == 0 || CanReplaceCurrentDocument (doc, view))
+  //if (doc == 0 || CanReplaceCurrentDocument (doc, view))
     {
       /* load the HOME document */
-      DontReplaceOldDoc = FALSE;
+      DontReplaceOldDoc = TRUE;
       CurrentDocument = doc;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
     }
@@ -4471,7 +4471,7 @@ ThotBool ViewToClose (NotifyDialog *event)
 void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfile,
                            char *proxyName, AHTHeaders *http_headers, void * context)
 {
-  Element             elFound;
+  Element             elFound, root;
   Document            doc;
   Document            res;
   AmayaDoc_context   *ctx;
@@ -4575,6 +4575,12 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
                                                       NULL);
               else
                 {
+                  if (method == CE_HELP)
+                    {
+                      // make it read only
+                      root = TtaGetRootElement (newdoc);
+                      TtaSetAccessRight (root, ReadOnly, newdoc);
+                    }
                   // set the default icon
                   TtaSetPageIcon (newdoc, 1, NULL);
                   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
@@ -6619,6 +6625,12 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvString ("DOCUMENT_CHARSET", "iso-8859-1", FALSE);
   TtaSetEnvString ("LOCAL_HTML_DOCTYPE_1", "", FALSE);
   TtaSetEnvString ("LOCAL_HTML_DOCTYPE_2", "", FALSE);
+  // set the default access mode
+#ifdef _MACOS
+  TtaSetEnvString ("ACCESSKEY_MOD", "Ctrl", FALSE);
+#else /* _MACOS */
+  TtaSetEnvString ("ACCESSKEY_MOD", "Alt", FALSE);
+#endif /* _MACOS */
   /* check if an Amaya profile is set */
   ptr = TtaGetEnvString ("CURRENT_PROFILE");
   if (ptr == NULL)
