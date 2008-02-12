@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -59,66 +59,67 @@ editing functions are available.</p>
 
 <h3 id="Activating1">Activating a Link</h3>
 
-<p>Links are usually displayed as blue. Because Amaya is both a browser and
+<p>Links are usually displayed in blue. Because Amaya is both a browser and
 an editor, you get different results when you single-click, double-click, or
 right-click a link.</p>
 <ul>
   <li><kbd>Single-click</kbd> a link to move the cursor to that position in
     the document. The status bar displays the expanded URI of the link. You
     can now edit the content of the link.</li>
-  <li><kbd>Double-click</kbd> a link to activate the link and go to its
-    target. The document retrieved by this operation replaces the current
-    document in the same tab as the original document. If the original
-    document was modified and has not yet been saved, a "Lose all
-    modifications" prompt displays. It allows you to save the changes you
-    have made before the original document is replaced.</li>
+  <li><kbd>Double-click</kbd> a link to activate it and skip to its target.
+    The document retrieved by this operation replaces the current document in
+    the same tab as the original document. If the original document was
+    modified and has not been saved yet, a dialog box is displayed. It allows
+    you to save the changes you have made before replacing the original
+    document.</li>
   <li><kbd>Right-click</kbd> a link (or <kbd>Cmd + Single-click</kbd> on
     MacOS X) to activate the link and open the target document in a new tab
-    or a new window. The original document remains open in the first tab. You
-    can choose to open the target document in a new tab or a new window by
-    setting the corresponding option in the <strong>Browsing
-    Preferences</strong> dialog under the <strong>Preferences</strong>
-  menu.</li>
+    or a new window (a pop-up menu allows you to choose).</li>
 </ul>
 
-<p class="Note">This behavior can be changed through the <strong>Browsing
-Preferences</strong> dialog under the <strong>Preferences</strong> menu. By
-changing the <strong>Double click activates link</strong> option, you can
+<p class="Note">This behavior can be changed through the
+<strong>Browsing</strong> tab under the <strong>Preferences</strong> dialog.
+By changing the option <strong>Double click activates link</strong>, you can
 browse documents with a single click as you would in a traditional Web
-browser. However, you will not be able to edit a link by clicking within
-it.<br />
-Other browsing preferences like the loading of images and the application of
-CSS can be controled in the <strong>Browsing Preferences</strong> <a
+browser. However, you will not be able to edit the content of a link by
+clicking it, but you can move the cursor within a link with the arrow
+keys.<br />
+Other browsing preferences such as whether images should be loaded or not,
+whether CSS style sheets should be applied or not, can be set in the
+<strong>Browsing Preferences</strong> <a
 href="Configure.html#Browsing">dialog</a>.</p>
 
-<p>You can also use the keyboard to choose links and to activate them. Key
+<p>You can also use the keyboard to select links and to activate them. Key
 <kbd>Tab</kbd> allows you to move to the next link or form field in the
 document. <kbd>Shift Tab</kbd> allows you to move to the previous link or
-form field. <kbd>Alt &darr;</kbd>activates the current link. You can choose
+form field. <kbd>Alt &darr;</kbd> activates the current link. You can choose
 <a href="ShortCuts.html">other keys</a> to perform these commands.</p>
 
 <h3 id="Access">Access Keys</h3>
 
 <p>Access keys provide shortcuts for moving the cursor to a form field, an
-area, or a link. Such access can be crucial to people with motor
+area, or a link. This kind of access is crucial to people with motor
 disabilities, but there are other conditions where it could be necessary or
 useful.</p>
 
 <p>When developing a web document, you can associate the
-<code>accesskey</code> attribute with the following elements: <code>A</code>,
-<code>AREA</code>, <code>BUTTON</code>, <code>INPUT</code>,
-<code>LABEL</code>, <code>LEGEND</code>, and <code>TEXTAREA</code>.</p>
+<code>accesskey</code> attribute with the following elements: <code>a</code>,
+<code>area</code>, <code>button</code>, <code>input</code>,
+<code>label</code>, <code>legend</code>, and <code>textarea</code>.</p>
 
 <p>For example, if you associate the <code>accesskey</code> attribute with a
 link in a document using <code>accesskey="n"</code> or
-<code>accesskey="N"</code>, the command <kbd>Alt accesskey</kbd> (<kbd>Alt
-n</kbd> or <kbd>Alt N</kbd>) will activate that link. If you associate the
+<code>accesskey="N"</code>, command <kbd>Alt accesskey</kbd> (<kbd>Alt
+n</kbd> or <kbd>Alt N</kbd>) will activate that link (on MacOS X, use
+<kbd>Ctrl</kbd> instead if <kbd>Alt</kbd>). If you associate the
 <code>accesskey</code> attribute to a form element, pressing <kbd>Alt
 accesskey</kbd> moves the focus to that element (or to the following element
-if associated with a <code>LABEL</code> and <code>LEGEND</code> element).</p>
+if associated with a <code>label</code> or <code>legend</code> element).</p>
 
-<p>Access keys overwrite Amaya shortcuts. For example, the Amaya Help pages
-declare these access keys:</p>
+<p>Access keys overwrite Amaya shortcuts, but not the system shortcuts
+(menus, for instance).</p>
+
+<p>As an example, these Help pages declare the following access keys:</p>
 <ul>
   <li>"n" for going to the next page</li>
   <li>"p" for going to the previous page</li>
@@ -126,28 +127,29 @@ declare these access keys:</p>
 </ul>
 
 <p>If you have assigned the shortcut <kbd>Alt-p</kbd> to an Amaya command,
-this shortcut won't be accessible when the Amaya Help pages are displayed.</p>
+this shortcut won't be work in an Amaya Help pages; it will display the
+previous page instead.</p>
 
 <p>By default, Amaya uses the <kbd>Alt</kbd> key as the modifier for access
-keys. However, you can change this default using
+keys (<kbd>Ctrl</kbd> on MacOS X). However, you can change this default using
 the<strong></strong><strong>Edit&gt;Preferences&gt;General</strong> dialog
-box. You can choose the <kbd>Control</kbd> key instead of the <kbd>Alt</kbd>
-key for a modifier, or you can disable the access keys handler.</p>
+box. You can choose the <kbd>Ctrl</kbd> key instead of the <kbd>Alt</kbd> key
+for a modifier, or you can disable the access key mechanism.</p>
 
 <h3 id="Target">Target Anchors</h3>
 
-<p>Targets are elements that have been given an <code>ID</code> attribute or
-anchors (element <strong>a</strong>) that have been given a <code>name</code>
+<p>Targets are elements that have been given an <code>id</code> attribute or
+anchors (element <code>a</code>) that have been given a <code>name</code>
 attribute. They identify possible targets for links.</p>
 
-<p>So that you can easily recognize targets and set links to them, you can
-turn on the display of target icons <img src="../images/target.gif"
-alt="Target icon" /> . These icons are not part of the document and can be
+<p>You can easily recognize targets and set links to them: Amaya allows you
+to display target icons <img src="../images/target.gif" alt="Target icon" />
+in front of all targets. These icons are not part of the document and can be
 displayed or hidden in two ways:</p>
 <ul>
   <li>Choosing <strong>Show targets</strong> from the <strong>Views</strong>
     menu.</li>
-  <li>Using default keyboard commands (<kbd>Ctrl u Ctrl t</kbd>).</li>
+  <li>Using the default keyboard command (<kbd>Ctrl u Ctrl t</kbd>).</li>
 </ul>
 
 <h3 id="Opening">Opening Documents</h3>

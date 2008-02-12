@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -71,18 +71,16 @@ double-clic, ou un clic-droit sur un lien.</p>
     affiche l'URI complète du lien dans la barre d'état en bas de la
   fenêtre.</li>
   <li>Un <kbd>double-clic</kbd> active le lien et se place sur la cible. Le
-    document cible remplace le document courant dans le même onglet.</li>
+    document cible remplace le document courant dans le même onglet. Si le
+    document initial a été modifié mais pas sauvé, un dialogue s'affiche pour
+    pouvoir sauver ce document avant qu'il disparaisse.</li>
   <li>Un <kbd>clic-droit</kbd> (ou <kbd>Cmd + simple-clic</kbd> sur MacOS X)
     active le lien et ouvre le document cible dans un nouvel onglet ou une
-    nouvelle fenêtre. Le document origine reste ouvert dans le premier
-    onglet. Vous pouvez choisir d'ouvrir le document cible dans un nouvel
-    onglet ou une nouvelle fenêtre en mettant l'option correspondante dans
-    les Préférences de Navigation (voir le menu <strong>Editer &gt;
-    Préférences</strong>).</li>
+    nouvelle fenêtre (un menu s'affiche pour vous offrir ce choix).</li>
 </ul>
 
-<p>Ce comportement par défaut peut être modifié, ainsi que d'autres
-paramètres, par l'intermédiaire du menu
+<p class="Note">Ce comportement par défaut peut être modifié, ainsi que
+d'autres paramètres, par l'intermédiaire du menu
 <strong>Édition/Préférences/Navigation</strong>. En modifiant "Cliquer deux
 fois pour suivre un lien", vous pourrez naviguer de document en document à
 l'aide d'un simple-clic. Dans ce cas, vous ne pouvez pas mettre aisément le
@@ -98,34 +96,30 @@ précède dans le document. La commande <kbd>Alt &darr;</kbd> vous permet
 d'activer le lien courant. Vous pouvez <a href="ShortCuts.html.fr">choisir
 d'autres touches</a> ou combinaisons de touches pour toutes ces commandes.</p>
 
-<p>Le document chargé par l'activation d'un lien <em>remplace</em> le
-document courant dans la même fenêtre. Si le document courant a été modifié
-et n'a pas encore été sauvegardé, Amaya affiche un dialogue qui demande si
-vous acceptez de perdre les modifications ou si vous souhaitez sauver le
-document avant de suivre le lien.</p>
-
-<p>Un clic avec le bouton droit de la souris (cela marche aussi avec le
-bouton du milieu sur Windows) <em>ouvre</em> le document cible dans un autre
-onglet ou une autre fenêtre, selon l'option choisie dans les préférences
-(<strong>Édition/Préférences/Navigation</strong>).</p>
-
 <h3 id="rapides"><a name="Access">Accès rapides</a></h3>
 
 <p>L'auteur d'une page HTML peut associer un attribut <code>accesskey</code>
-à un champ de formulaire, une zone activable, ou un lien. Les éléments
-suivants supportent cet attribut : A, AREA, BUTTON, INPUT, LABEL, LEGEND, et
-TEXTAREA. Ceci est important pour les utilisateurs qui ne peuvent manipuler
-une souris, mais il y a d'autres conditions où c'est nécessaire ou utile.</p>
+aux champs de formulaire, aux zones activables, ou aux liens. Plus
+précisément, les éléments suivants acceptent cet attribut : <code>a</code>,
+<code>area</code>, <code>button</code>, <code>input</code>,
+<code>label</code>, <code>legend</code>, et <code>textarea</code>.</p>
 
 <p>Si l'auteur du document a associé un attribut <code>accesskey</code> à un
-lien (par exemple <code>accesskey="a"</code>) dans un document, la commande
-<strong>Alt accesskey</strong> (par exemple Alt a) va activer le lien. Quand
-elle est associée à un élément de formulaire, la commande <strong>Alt
-accesskey</strong> donne le focus à cet élément (ou l'élément qui suit dans
-le cas de LABEL et LEGEND).</p>
+lien (par exemple <code>accesskey="l"</code>) dans un document, la commande
+<strong>Alt accesskey</strong> (dans cet exemple <strong>Alt l</strong>)
+active le lien (sur MacOS X, la touche <strong>Ctrl</strong> est utilisée à
+la place de <strong>Alt</strong>). Quand elle est associée à un élément de
+formulaire, la commande <strong>Alt accesskey</strong> donne le focus à cet
+élément (ou l'élément qui suit dans le cas de <code>label</code> et
+<code>legend</code>). Ceci est important pour les utilisateurs qui ne peuvent
+pas manipuler une souris, mais il y a d'autres conditions où c'est nécessaire
+ou utile.</p>
 
-<p>Les accès rapides supplantent les raccourcis clavier de Amaya. Par exemple
-les pages d'Aide déclarent les accès rapides :</p>
+<p>Les accès rapides supplantent les raccourcis clavier de Amaya, mais pas
+ceux du système. Les raccourcis des menus, notamment, sont prioritaires.</p>
+
+<p>À titre d'exemple ces pages d'Aide déclarent les accès rapides
+suivants :</p>
 <ul>
   <li>"n" pour aller à la page d'aide suivante,</li>
   <li>"p" pour aller à la page d'aide précédente,</li>
@@ -136,12 +130,12 @@ les pages d'Aide déclarent les accès rapides :</p>
 d'édition de Amaya, ce raccourci clavier ne sera pas utilisable quand les
 pages d'aide sont affichées.</p>
 
-<p>Par défaut la touche de modification utilisée pour les accès rapides est
-<strong>Alt</strong>. Le menu de préférences
-<strong>Éditer/Préférences/Général</strong> permet de changer cela.
-L'utilisateur peut utiliser la touche <strong>Control</strong> au lieu de
-<strong>Alt</strong> et peut décider de désactiver le mécanisme des accès
-rapides.</p>
+<p>Par défaut la touche utilisée pour les accès rapides est
+<strong>Alt</strong> (<strong>Ctrl</strong> sur MacOS X). Le menu de
+préférences <strong>Éditer/Préférences/Général</strong> permet de changer
+cela. Vous pouvez utiliser la touche <strong>Ctrl</strong> au lieu de
+<strong>Alt</strong>. Vous pouvez aussi désactiver le mécanisme des accès
+rapides fondés sur <code>accesskey</code>.</p>
 
 <h3 id="Ancres"><a name="L515">Ancres cibles</a></h3>
 
@@ -149,18 +143,18 @@ rapides.</p>
 de cible <a name="target"><img src="../images/target.gif" alt=" target "
 /></a>. Ces icônes ne font pas partie du document et peuvent être soit
 visualisées soit cachées juste en modifiant le statut <strong>Montrer les
-cibles</strong> de l'onglet courant, qui est une option du menu
+cibles</strong> du document courant, qui est une option du menu
 <strong>Vues</strong>. Par défaut la commande au clavier est <kbd>Ctrl u Ctrl
 t</kbd>.</p>
 
 <p>Ces icônes sont associées aux <em>éléments cibles</em>, c'est-à-dire aux
-éléments, quel que soit leur type, qui ont un attribut <code>ID</code> , ou
-aux <em>ancres cibles</em>, c'est-à-dire aux éléments <strong>a</strong> qui
-ont un attribut <code>name</code>. Elles identifient les cibles possibles
-pour les liens hypertexte. Ces icônes sont destinées à rendre la création de
-liens plus facile. En effet, le fait de pouvoir reconnaître rapidement la
-cible possible d'un lien, permet de <a href="Links.html.fr#L245">créer des
-liens</a> plus vite.</p>
+éléments, quel que soit leur type, qui ont un attribut <code>id</code> , ou
+aux <em>ancres cibles</em>, c'est-à-dire aux éléments <code>a</code> qui ont
+un attribut <code>name</code>. Elles identifient les cibles possibles pour
+les liens. Ces icônes sont destinées à rendre la création de liens plus
+facile. En effet, le fait de pouvoir reconnaître rapidement la cible possible
+d'un lien, permet de <a href="Links.html.fr#L245">créer des liens</a> plus
+vite.</p>
 
 <h3 id="Ouverture"><a name="Opening">Ouvrir un document</a></h3>
 

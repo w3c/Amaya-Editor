@@ -3,14 +3,14 @@
 <head>
   <title>Créer des éléments</title>
   <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="en" lang="en">
 
 <div>
-<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" /> 
 
 <p class="nav"><a href="../Manual.html.fr#There"><img alt="top" border="0"
 src="../../../resources/icons/misc/up.png" /></a> <a
@@ -19,7 +19,7 @@ src="../../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Information">
-<h1>Types information dans HTML</h1>
+<h1>Types d'information dans HTML</h1>
 
 <p>HTML 4.0 (Strict) fournit des éléments pour désigner certains types
 "information". Bien qu'il existe une présentation par défaut de chaque type
@@ -32,7 +32,7 @@ par les éléments HTML sont :</p>
     <dd>Il y a six niveaux d'en-tête dans HTML, qui doivent être utilisés
       pour marquer les en-têtes de page ou de sujet selon leur
     importance.</dd>
-    <dd>HTML fournit deux types de listes simples :
+    <dd>HTML fournit deux types de listes simples : 
       <ol>
         <li>Listes numérotées ( comme celle-ci)</li>
         <li>Listes non ordonnées.</li>

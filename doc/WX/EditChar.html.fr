@@ -23,7 +23,7 @@ src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
 <div id="Keyboard">
-<h3>Saisie de caractères</h3>
+<h3>Saisir du texte</h3>
 
 <p>Pour les caractères ISO-latin qui ne sont pas directement disponibles
 depuis le clavier, Amaya utilise le support standard fournit par le

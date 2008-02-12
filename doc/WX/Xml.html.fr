@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Xml Support</title>
@@ -13,20 +13,17 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
-
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Animation.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" />
-</a> <a href="Manual.html.fr" accesskey="t"><img alt="top"
-src="../../resources/icons/misc/up.png" />
-</a> <a href="StyleSheets.html.fr" accesskey="n"><img
-src="../../resources/icons/misc/right.png" alt="next" />
-</a></p>
+src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
+<a href="StyleSheets.html.fr" accesskey="n"><img
+src="../../resources/icons/misc/right.png" alt="next" /> </a></p>
 </div>
 
 <div id="page_body">
-<h1>Support XML</h1>
+<h1>Support XML générique</h1>
 
 <p>Amaya permet de lire et d'afficher n'importe quel document XML
 bien-formé.</p>

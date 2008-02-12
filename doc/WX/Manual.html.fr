@@ -25,13 +25,13 @@ body {background-color: #FFFFFF}</style>
 exhaustif, son but est simplement d'aider les utilisateurs à découvrir les
 principales caractéristiques du logiciel. Ce document est organisé comme un
 livre. Vous pouvez utiliser la commande "<a
-href="MakeBook.html.fr#L1065">XHTML &gt; Construire un livre</a>" pour
+href="MakeBook.html.fr#L1065">Outils &gt; Construire un livre</a>" pour
 assembler et imprimer la totalité du manuel.</p>
 
 <p>Beaucoup de commandes d'<strong>Amaya</strong> sont identiques à celles
-fournies par les éditeurs et les outils classiques. Elles ne sont pas
-présentées ici. Seuls les aspects spécifiques d'<strong>Amaya</strong> sont
-décrits.</p>
+fournies par les éditeurs et les outils de traitement de texte classiques.
+Elles ne sont pas présentées ici. Seuls les aspects spécifiques
+d'<strong>Amaya</strong> sont décrits.</p>
 <hr />
 
 <p>Chaque section suivante décrit brièvement comment utiliser une fonction
@@ -46,8 +46,8 @@ spécifique d'Amaya :</p>
     éléments</a></li>
   <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Éditer des
     attributs</a></li>
-  <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Saisie de
-    caractères</a></li>
+  <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Saisir du
+  texte</a></li>
   <li><a href="HTML.html.fr#HTML">Les élements HTML</a></li>
   <li><a href="Templates.html.fr#modèles">Éditer avec des modèles</a></li>
   <li><a rel="Chapter" href="Changing.html.fr#Changing">Éditer la structure
@@ -60,9 +60,9 @@ spécifique d'Amaya :</p>
     des zones actives</a></li>
   <li><a href="Math.html.fr#Math" rel="Chapter">Éditer des
   mathématiques</a></li>
-  <li><a href="SVG.html.fr#Graphics" rel="Chapter">Édition des
+  <li><a href="SVG.html.fr#Graphics" rel="Chapter">Éditer des
   graphiques</a></li>
-  <li><a href="Xml.html.fr#XML" rev="Chapter">Support Xml générique</a></li>
+  <li><a href="Xml.html.fr#XML" rev="Chapter">Support XML générique</a></li>
   <li><a rel="Chapter" href="StyleSheets.html.fr#Style">Les feuilles de
     style</a></li>
   <li><a rel="Chapter" href="Searching.html.fr#Searching">Rechercher et
@@ -91,16 +91,16 @@ des raccourcis clavier.</p>
 
 <p>La page sur <a href="Access.html.fr#Access" rel="Chapter">l'Accessibilité
 dans Amaya</a> décrit les fonctionnalités d'accessibilité d'Amaya, et
-explique comment l'utiliser pour produire des pages utilisables aussi bien
+explique comment les utiliser pour produire des pages utilisables aussi bien
 par les gens qui ont des handicaps que par ceux qui n'en ont pas.</p>
 <hr />
 
 <p><a name="There" id="There">Il y a également une brève introduction qui
 décrit quelques éléments HTML (comme les en-têtes, les listes, les citations)
-et comment les utiliser.</a></p>
+et explique comment les utiliser.</a></p>
 <ul>
   <li><a href="HTML-elements/infoTypes.html.fr#Information"
-    rel="Chapter">Types information dans HTML</a></li>
+    rel="Chapter">Types d'information dans HTML</a></li>
   <li><a href="HTML-elements/structure.html.fr#HTML" rel="Chapter">Structure
     du document HTML</a></li>
   <li><a href="HTML-elements/headings.html.fr#Heading" rel="Chapter">Éléments
@@ -110,15 +110,15 @@ et comment les utiliser.</a></p>
   <li><a href="HTML-elements/address.html.fr#About" rel="Chapter">A propos de
     l'auteur</a></li>
   <li><a href="HTML-elements/inline.html.fr#Inline3"
-    rel="Chapter">Définitions en ligne, citations, sample code, insertions et
-    suppressions, abréviations, etc</a></li>
+    rel="Chapter">Définitions en ligne, citations, code, insertions et
+    suppressions, abréviations, etc.</a></li>
   <li><a href="HTML-elements/40styling.html.fr#Character"
-    rel="Chapter">Éléments style de HTML (ce qu'il ne faut pas faire et ce
+    rel="Chapter">Éléments de style de HTML (ce qu'il ne faut pas faire et ce
     qui doit être fait...)</a></li>
 </ul>
 <hr />
 
-<p class="policyfooter"><small>Copyright  ©  1994-2007 <a
+<p class="policyfooter"><small>Copyright  ©  1994-2008 <a
 href="http://www.inria.fr/">INRIA</a> and <a
 href="http://www.w3.org/">W3C</a><sup>®</sup> (<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a
