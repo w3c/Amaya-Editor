@@ -1917,6 +1917,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
       /* the user has clicked another document or a target element */
       /* create the attribute HREF or CITE */
       SetREFattribute (el, doc, TargetDocumentURL, TargetName);
+      IsNewAnchor = FALSE;
       TtaDestroyDialogue (BaseDialog + AttrHREFForm);
       //#ifndef _MACOS
       TtaRaiseView (doc, 1);
