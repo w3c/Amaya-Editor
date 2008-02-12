@@ -103,6 +103,7 @@ static Attribute    HighLightAttribute = NULL;
 static ThotBool     Follow_exclusive = FALSE;
 static ThotBool     Refresh_exclusive = FALSE;
 static ThotBool     SelectionChanging = FALSE;
+static ThotBool     GoToSection = FALSE;
 
 /*----------------------------------------------------------------------
   CharNum_IN_Line
@@ -2737,7 +2738,8 @@ void FocusChanged (Document doc)
         // Amaya is creating the source view of the current document
         return;
     }
-
+  if (GoToSection)
+    return;
   UpdateStyleList (doc, 1);
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] && DocumentSource[i] != doc &&
@@ -3708,6 +3710,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
   char                message[50];
   int                 i, len;
 
+  GoToSection = TRUE; // protect against a document close
   if (line)
     {
       /* open the source file */
@@ -3771,6 +3774,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
       else
         TtaSetStatus (doc, 1, "   ", NULL);
     }
+  GoToSection = FALSE;
 }
 
 /*----------------------------------------------------------------------
