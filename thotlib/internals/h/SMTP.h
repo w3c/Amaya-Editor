@@ -88,6 +88,33 @@ typedef struct{
 
 
 /**
+ * Byte counter stream.
+ * \see wx 
+ */
+class wxByteCounterOutputStream : public wxOutputStream
+{
+public:
+  wxByteCounterOutputStream();
+
+    bool Ok() const { return IsOk(); }
+    bool IsOk() const { return true; }
+
+    unsigned long GetCount(unsigned char c)const{return m_table[c];}
+    unsigned long GetCount()const{return m_count;}
+    
+protected:
+    virtual size_t OnSysWrite(const void *buffer, size_t size);
+    virtual wxFileOffset OnSysSeek(wxFileOffset pos, wxSeekMode mode);
+    virtual wxFileOffset OnSysTell() const;
+
+    unsigned long m_table[256];
+    unsigned long m_count;
+
+    DECLARE_NO_COPY_CLASS(wxByteCounterOutputStream)
+};
+
+
+/**
  * MIME slot.
  */
 class wxMimeSlot : public wxObject
@@ -311,6 +338,11 @@ public:
      * Write the message to a stream.
      */
     virtual bool Write(wxOutputStream& out);
+    
+    /**
+     * QEncode a text.
+     */ 
+    static wxString QEncode(const wxString& str);
 };
 
 enum wxSMTP_STEP
