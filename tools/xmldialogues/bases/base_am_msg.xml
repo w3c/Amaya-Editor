@@ -3737,9 +3737,9 @@
 	<message xml:lang="sk">Ignorovať</message>
 </label>
 <label define="AM_TOOLPANEL_ALIGN">
-	<message xml:lang="en">Tool panel bar alignment: </message>
+	<message xml:lang="en">Panel bar position: </message>
 	<message xml:lang="es">Posición de la ventana de herramientas:</message>
-	<message xml:lang="fr">Aligner les panneaux d'outils :</message>
+	<message xml:lang="fr">Position des panneaux d'outils :</message>
 	<message xml:lang="de">Werkzeugleiste ausrichten</message>
 	<message xml:lang="hu">Eszközsor igazítása:</message>
 	<message xml:lang="it">Allineamento della barra degli strumenti:</message>
