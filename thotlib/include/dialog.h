@@ -39,6 +39,13 @@ enum DButtons
   ----------------------------------------------------------------------*/
 extern ThotBool TtaIsActionActive (char *name, Document doc);
 
+
+/*----------------------------------------------------------------------
+  TtaIsActionAvailable
+  Returns TRUE if the function is available
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsActionAvailable (char *name);
+
 /*----------------------------------------------------------------------
    TtaNewPulldown cre'e un pull-down menu :                           
    Le parame`tre ref donne la re'fe'rence pour l'application.         

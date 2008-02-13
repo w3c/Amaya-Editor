@@ -25,6 +25,7 @@ extern void TtaExecuteMenuActionFromActionId ( int action_id,
 extern void TteZeroMenu ( void );
 extern ThotBool TtaIsActionActive ( char *name,
                                     Document doc );
+extern ThotBool TtaIsActionAvailable ( char *name );
 extern void TtaExecuteMenuAction ( const char *actionName,
                                    Document doc,
                                    View view,
@@ -130,6 +131,7 @@ extern void TtaExecuteMenuActionFromActionId ( int action_id,
 extern void TteZeroMenu ( void );
 extern ThotBool TtaIsActionActive ( char *name,
                                       Document doc );
+extern ThotBool TtaIsActionAvailable ( char *name );
 extern void TtaExecuteMenuAction ( const char *actionName,
                                      Document doc,
                                      View view,

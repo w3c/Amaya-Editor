@@ -1644,7 +1644,7 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
                   TtaFreeMemory (s);
                 }
             }
-           
+
           if (method != CE_RELATIVE || DontReplaceOldDoc ||
               CanReplaceCurrentDocument (doc, 1))
             {
@@ -1953,7 +1953,7 @@ static ThotBool ActivateElement (Element element, Document document)
       // open in new tab if the back function is available
       if ((DocumentMeta[document] &&
           DocumentMeta[document]->method == CE_HELP) ||
-          !TtaIsActionActive ("GotoPreviousHTML", document))
+          !TtaIsActionAvailable ("GotoPreviousHTML"))
         {
           DontReplaceOldDoc = TRUE;
           InNewWindow       = FALSE;

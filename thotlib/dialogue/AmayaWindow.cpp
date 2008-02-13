@@ -551,8 +551,10 @@ void AmayaWindow::OnAmayaAction( wxCommandEvent& event )
   
   int action_id = event.GetId();
   int doc       = event.GetExtraLong();
-  int view      = event.GetInt();  
-  TtaExecuteMenuActionFromActionId(action_id, doc, view, FALSE);
+  int view      = event.GetInt();
+
+  if (LoadedDocument[doc-1] != NULL)
+    TtaExecuteMenuActionFromActionId(action_id, doc, view, FALSE);
 }
 
 /*----------------------------------------------------------------------

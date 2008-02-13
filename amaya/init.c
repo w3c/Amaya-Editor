@@ -4086,6 +4086,8 @@ void ShowSource (Document doc, View view)
     return;
   if (!strcmp (DocumentURLs[doc], "empty"))
     return;
+  if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_HELP)
+    return;
   if (DocumentSource[doc])
     /* the source code of this document is already shown */
     /* raise its window */
@@ -4272,6 +4274,8 @@ void ShowStructure (Document doc, View view)
 
   if (!strcmp (DocumentURLs[doc], "empty"))
     return;
+  if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_HELP)
+    return;
   if (DocumentTypes[doc] == docSource)
     /* work on the formatted document */
     doc = GetDocFromSource (doc);
@@ -4302,6 +4306,8 @@ void ShowAlternate (Document doc, View view)
   int                 x, y, w, h;
 
   if (!strcmp (DocumentURLs[doc], "empty"))
+    return;
+  if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_HELP)
     return;
   if (DocumentTypes[doc] == docSource)
     /* work on the formatted document */
@@ -4338,6 +4344,8 @@ void ShowLinks (Document doc, View view)
 
   if (!strcmp (DocumentURLs[doc], "empty"))
     return;
+  if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_HELP)
+    return;
   if (DocumentTypes[doc] == docSource)
     /* work on the formatted document */
     doc = GetDocFromSource (doc);
@@ -4372,6 +4380,8 @@ void ShowToC (Document doc, View view)
   int                 x, y, w, h;
 
   if (!strcmp (DocumentURLs[doc], "empty"))
+    return;
+  if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_HELP)
     return;
   if (DocumentTypes[doc] == docSource)
     /* work on the formatted document */
@@ -4596,7 +4606,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
             }
           /* check parsing errors */
           if (DocumentTypes[newdoc] == docLog ||
-              method == CE_MAKEBOOK || method == CE_TEMPLATE)
+              method == CE_MAKEBOOK || method == CE_TEMPLATE || method == CE_HELP)
             CleanUpParsingErrors ();
           else
             CheckParsingErrors (newdoc);
@@ -4785,6 +4795,11 @@ Document GetAmayaDoc (char *urlname, char *form_data,
     NormalizeURL (urlname, baseDoc, initial_url, documentname, NULL);
   else
     NormalizeURL (urlname, 0, initial_url, documentname, NULL);
+
+  // check if the page is displayed in the help window
+  if (DocumentMeta[baseDoc] && DocumentMeta[baseDoc]->method == CE_HELP)
+    method = CE_HELP;
+
   /* check the document suffix */
   if (IsMathMLName (documentname))
     docType = docMath;

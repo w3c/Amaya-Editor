@@ -574,6 +574,18 @@ ThotBool TtaIsActionActive (char *name, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  TtaIsActionAvailable
+  Returns TRUE if the function is available
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsActionAvailable (char *name)
+{
+  int      result = 0;
+
+  result = Prof_BelongTable (name);
+  return (result != 0);
+}
+
+/*----------------------------------------------------------------------
   TtaExecuteMenuAction execute the corresponding menu action.
   ----------------------------------------------------------------------*/
 void TtaExecuteMenuAction (const char *actionName, Document doc, View view,
