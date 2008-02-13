@@ -932,8 +932,22 @@ bool wxSMTP::SendFrom(const wxString& addr)
 
 bool wxSMTP::SendTo(const wxString& addr)
 {
+    wxString a;
+    int pos1, pos2;
     m_errorStep = wxSMTP_STEP_RECIPIENT;
-    m_error = GetResponseCode(SendCommand(wxT("RCPT TO: <")+addr+wxT(">")));
+    pos1 = addr.Find(wxT('<'), true);
+    pos2 = addr.Find(wxT('>'), true);
+    if(pos1!=wxNOT_FOUND && pos2!=wxNOT_FOUND && pos1<pos2)
+      {
+        a = addr.Mid(pos1+1, pos2-pos1-1);
+      }
+    else if(pos1!=wxNOT_FOUND && (pos2!=wxNOT_FOUND || pos1>pos2))
+      {
+        a = addr.Mid(pos1+1);
+      }
+    else
+      a = addr;
+    m_error = GetResponseCode(SendCommand(wxT("RCPT TO: <")+a+wxT(">")));
     return m_error==250;
 }
 
