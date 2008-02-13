@@ -13,7 +13,7 @@
 <body xml:lang="en" lang="en">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
 
 <p class="nav"><a href="StyleSheets.html.fr" accesskey="p"><img
 alt="previous" src="../../resources/icons/misc/left.png" /></a> <a

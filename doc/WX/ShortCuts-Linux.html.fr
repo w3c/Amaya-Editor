@@ -19,7 +19,7 @@ tr.menu    { font-weight: bold; margin-top: 10px; }</style>
 <body xml:lang="fr" lang="fr">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo"
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /></div>
 
 <div id="page_body">
