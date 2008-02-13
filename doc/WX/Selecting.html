@@ -49,19 +49,19 @@ the first selected element at the bottom of the window, preceded by the types
 of the enclosing elements in the structure. This may be helpful when the
 document structure is complex.</p>
 
-<p>For example, selecting a word in this sentence means that the status bar
-reads</p>
+<p>For example, selecting a word in this sentence displays the following
+message in the status bar:</p>
 
-<p><samp>html/body/div/p</samp></p>
+<p><samp>html&gt;body&gt;div&gt;p</samp></p>
 
-<p>meaning that the thing selected is some text within a <code>p</code>
-element, which is within a <code>div</code> element in the <code>body</code>
-of the <code>html</code> document.</p>
+<p>meaning that the thing selected is within a <code>p</code> element, which
+is within a <code>div</code> element in the <code>body</code> of the
+<code>html</code> document.</p>
 
 <p>Selecting <strong>this structure element</strong> (for example click on
-the word structure, then press <kbd>F2</kbd> gives</p>
+the word structure, then press <kbd>F2</kbd>) displays</p>
 
-<p><samp>html/body/div/p/strong</samp></p>
+<p><samp>html&gt;body&gt;div&gt;p&gt;strong</samp></p>
 
 <h3 id="Selecting1">Selecting with the Mouse</h3>
 <ul>
@@ -71,32 +71,33 @@ the word structure, then press <kbd>F2</kbd> gives</p>
     button, move the mouse, and release the button when the desired text is
     selected.<br />
   </li>
-  <li>To select an entire word, double-click on any character of a word.<br />
+  <li>To select an entire word, double-click on any character of the word.<br
+    />
   </li>
-  <li>To select a whole element such as a list item, click its bullet or
+  <li>To select a whole element such as this list item, click its bullet or
     number.<br />
   </li>
   <li>To extend the selection, click with the left mouse button while holding
-    down the <code>Shift</code> key.</li>
+    down the <kbd>Shift</kbd> key.</li>
   <li>To select a structure element, click within the element you want and
     then select the desired structure level via the keyboard as described
     below</li>
 </ul>
 
-<h3 id="Selecting5">Selecting with the path of the status bar</h3>
+<h3 id="Selecting5">Selecting with the status bar</h3>
 <ul>
   <li>To set the insertion point, click with the left mouse button.<br />
   </li>
-  <li>Click on a path element to select an ancestor (and everything in
-    them).<br />
-    In previous example, when cliking on the div element, the enclosing
-    division is selected 
-    <p><samp>html/body/<span style="color: #ff0000;">div</span>/p/strong<br />
+  <li>Click in the status bar (at the bottom of the window) on a path element
+    to select an ancestor (and everything in them).<br />
+    In the previous example, when cliking on <code>div</code> in the status
+    bar, the enclosing division is selected 
+    <p><samp>html&gt;body&gt;<span
+    style="color: #ff0000;">div</span>&gt;p&gt;strong<br />
     </samp></p>
   </li>
-  <li>When the selection is changed this way, the path is not updated and the
-    user may adjust the final selection on any enclosing or child
-  element.</li>
+  <li>When the selection is changed this way, the path is not updated and you
+    may adjust the final selection on any enclosing or child element.</li>
 </ul>
 
 <h3 id="Selecting2">Selecting with the Keyboard</h3>

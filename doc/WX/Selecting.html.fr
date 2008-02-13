@@ -50,7 +50,7 @@ Cela peut être utile quand la structure du document est complexe.</p>
 <p>Par exemple, la sélection d'un mot dans cette phrase visualise la
 sélection :</p>
 
-<p><samp style="color: #B20000">html/body/div/p</samp></p>
+<p><samp style="color: #B20000">html&gt;body&gt;div&gt;p</samp></p>
 
 <p>ce qui signifie que ce qui est sélectionné est du texte dans un élément
 <code>p</code> qui est dans une division (<code>div</code>), elle-même dans
@@ -59,7 +59,7 @@ le corps (<code>body</code>) du document <code>html</code>.</p>
 <p>La sélection de <strong>cet élément de structure</strong> (par exemple
 cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
 
-<p><samp style="color: #B20000">html/body/div/p/strong</samp></p>
+<p><samp style="color: #B20000">html&gt;body&gt;div&gt;p&gt;strong</samp></p>
 
 <h3 id="L94">Sélectionner avec la souris</h3>
 <ul>
@@ -70,29 +70,31 @@ cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
     désirée a été sélectionnée.</li>
   <li>Pour sélectionner un mot entier, double-cliquez sur un caractère du
   mot.</li>
-  <li>Pour sélectionner un élément entier, comme un item de liste, cliquez
+  <li>Pour sélectionner un élément entier, comme cet item de liste, cliquez
     sur sa puce ou sur son numéro.</li>
   <li>Pour étendre la sélection, cliquez sur le bouton gauche de la souris en
-    combinaison avec la touche Shift.</li>
+    combinaison avec la touche <kbd>Shift</kbd>.</li>
   <li>Pour sélectionner un élément de structure, sélectionnez n'importe quel
     caractère de l'élément puis sélectionnez le niveau de structure désiré
     avec le clavier comme décrit plus bas.</li>
 </ul>
 
-<h3 id="L302">Sélectionner avec le chemin de la barre d'état</h3>
+<h3 id="L302">Sélectionner avec la barre d'état</h3>
 <ul>
   <li>Pour placer le point d'insertion, cliquez avec le bouton gauche de la
-    souris.</li>
-  <li>Cliquez sur un élément du chemin pour sélectionner un ancêtre (et tout
-    son contenu).<br />
-    Par exemple en cliquant sur l'élément div, la division englobante sera
+    souris dans un élément du document.</li>
+  <li>Cliquez sur un élément du chemin affiché dans la barre d'état, en bas
+    de la fenêtre. Cela sélectionne un élément ancêtre (et tout son
+    contenu).<br />
+    Par exemple en cliquant sur <code>div</code>, la division englobante sera
     sélectionnée 
-    <p><samp>html/body/<span style="color: #ff0000;">div</span>/p/strong<br />
+    <p><samp>html&gt;body&gt;<span
+    style="color: #ff0000;">div</span>&gt;p&gt;strong<br />
     </samp></p>
   </li>
   <li>Quand la sélection est ainsi modifiée, le chemin n'est pas mis à jour
-    pour que l'utilisateur puisse ajuster la sélection sur un ancêtre ou un
-    fils.</li>
+    pour que vous puissiez ajuster la sélection sur un ancêtre ou un
+    descendant.</li>
 </ul>
 
 <h3 id="L115">Sélectionner avec le clavier</h3>

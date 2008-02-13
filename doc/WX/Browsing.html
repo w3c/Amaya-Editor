@@ -71,7 +71,12 @@ right-click a link.</p>
     the same tab as the original document. If the original document was
     modified and has not been saved yet, a dialog box is displayed. It allows
     you to save the changes you have made before replacing the original
-    document.</li>
+    document.
+    <p class="Note">If you have chosen a <a
+    href="Configure.html#Profile">profile</a> without the navigation feature,
+    or if you are in help pages, the retrieved document is displayed in a new
+    tab.</p>
+  </li>
   <li><kbd>Right-click</kbd> a link (or <kbd>Cmd + Single-click</kbd> on
     MacOS X) to activate the link and open the target document in a new tab
     or a new window (a pop-up menu allows you to choose).</li>
@@ -154,7 +159,7 @@ displayed or hidden in two ways:</p>
 
 <h3 id="Opening">Opening Documents</h3>
 
-<p>You can open both local or remote documents in several different ways:</p>
+<p>You can open local and remote documents in several ways:</p>
 <dl>
   <dt>File menu</dt>
     <dd><ol>
@@ -162,12 +167,12 @@ displayed or hidden in two ways:</p>
           <strong>File</strong> menu. 
           <p class="Note"><strong>Note:</strong> You can alternately use a
           keyboard shortcut to open a document. Press <kbd>Ctrl o ctrl
-          o</kbd>. You can also right-click the tab of any open document.</p>
+          o</kbd>.</p>
         </li>
         <li>In the <strong>Open document</strong> dialog, type the full path
           or URI of the file you want to open, or use the
-          <strong>File</strong> or <strong>Directory</strong> buttons to open
-          a file selection dialog. 
+          <strong>Browse</strong> button (a file icon) to open a file
+          selection dialog. 
           <p class="Note"><strong>Note:</strong> You can also click the
           button on the right side of the address field to display the list
           of the documents you have opened recently. You can then select an
@@ -180,22 +185,22 @@ displayed or hidden in two ways:</p>
       specifying the name of a file that does not exist.</p>
     </dd>
   <dt>Files explorer</dt>
-    <dd>A files explorer is displayed at the top of Tools window. This tool
-      gives access to all local directories. A simple click allows one to
-      open or close a directory and a double click on a file name opens the
-      corresponding document.</dd>
+    <dd>A file explorer may be displayed in Tools window with <strong>Views /
+      Show toolbars / Files</strong>. This tool gives access to all local
+      directories. A simple click allows you to open or close a directory and
+      a double click on a file name opens the corresponding document.</dd>
   <dt>Document address field</dt>
     <dd>The address of the current document is displayed at the top of the
       window. Edit this address to specify the file name or the URI of the
-      document you want to open and press <strong>ENTER</strong>. 
+      document you want to open and press <kbd>Enter</kbd>. 
       <p>You can also create a new document by typing the name of a document
       that does not exist yet.</p>
-      <p class="Note"><strong>Note:</strong> You can also click the button on
-      the right side of the document address field to display the list of the
+      <p class="Note"><strong>Note:</strong> You can click the button on the
+      right side of the document address field to display the list of the
       documents you have opened recently. You can then select an address in
       this list to open the corresponding document.</p>
     </dd>
-  <dt>Hypertext links</dt>
+  <dt>Links</dt>
     <dd>By <a href="#Activating1">activating a link</a> you load the target
       document.</dd>
 </dl>
@@ -207,19 +212,17 @@ displayed or hidden in two ways:</p>
   <li>Amaya reads HTML documents by default as <a
     href="EditChar.html">ISO-Latin-1</a> files. If an author does not provide
     information about the character set (charset) in the HTTP header or in a
-    META element, Amaya considers an HTML document to be encoded in
-    ISO-Latin-1. 
-    <p></p>
-  </li>
+    <code>meta</code> element, Amaya considers an HTML document to be encoded
+    in ISO-Latin-1.</li>
   <li>Amaya reads XHTML documents by default as UTF-8 files. If an author
     does not provide information about the charset in the HTTP header, in the
-    XML declaration, or in a META element, Amaya considers an XHTML document
-    to be encoded in UTF-8.</li>
+    XML declaration, or in a <code>meta</code> element, Amaya considers an
+    XHTML document to be encoded in UTF-8.</li>
 </ul>
 
 <p>Because the default charset is different for HTML and XHTML documents,
 authors often create documents using the incorrect charset. For example,
-consider an XHTML document that uses ISO-Latin-1 but does not provide
+consider an XHTML document that uses ISO Latin-1 but does not provide
 information about the charset. When the XML parser analyzing the document
 encounters a character that does not match a valid UTF-8 character, the
 document is considered to be not well formed. Parsing stops and Amaya
@@ -229,14 +232,14 @@ Amaya displays the detected errors.</p>
 
 <h3 id="Moving">Moving Backward and Forward</h3>
 
-<p>Amaya creates a history list to keep track of the pages you have viewed in
-the current session. You can move backward or forward through pages in the
-history list in several ways:</p>
+<p>Like most web browsers Amaya creates a history to keep track of the pages
+you have viewed in the current session. You can move backward or forward
+through pages in the history in several ways:</p>
 
 <table border="1" cellspacing="2" cellpadding="2">
   <tbody>
     <tr>
-      <td>File menu</td>
+      <td><strong>File</strong> menu</td>
       <td>Choose <strong>Back</strong> from the <strong>File</strong> menu to
         view the previous page. 
 
@@ -252,7 +255,7 @@ history list in several ways:</p>
       </td>
     </tr>
     <tr>
-      <td>Button bar</td>
+      <td>Navigation bar</td>
       <td>Click the <img alt="Back "
         src="../../resources/icons/22x22/back.png" align="middle" /> button
         to view the previous page. 
@@ -267,6 +270,10 @@ history list in several ways:</p>
 
 <p>Note that each tab has a separate history.</p>
 
+<p class="Note">If you have chosen a <a
+href="Configure.html#Profile">profile</a> without the navigation feature, or
+if you are in help pages, these commands are not available.</p>
+
 <h3 id="Reloading">Reloading a page</h3>
 
 <p>Documents can be reloaded by:</p>
@@ -276,14 +283,18 @@ history list in several ways:</p>
   <li>Using the shortcut <kbd>Ctrl r</kbd>.</li>
   <li>Clicking the <strong>Reload</strong> button <img
     src="../../resources/icons/22x22/reload.png" alt="reload" align="middle"
-    /> on the button bar.</li>
+    /> on the navigation bar.</li>
 </ul>
+
+<p class="Note">If you have chosen a <a
+href="Configure.html#Profile">profile</a> without the navigation feature, or
+if you are in help pages, this command is not available.</p>
 
 <h2 id="Using">Using forms</h2>
 
-<p>As Amaya is a browser/editor, some of the widgets associated with HTML
-form elements are different from those you are used to in browsers. This
-section mentions the most notable differences.</p>
+<p>As Amaya is an editor, some of the widgets associated with HTML form
+elements are different from those you are used to in browsers. This section
+mentions the most notable differences.</p>
 
 <h3 id="Simple">Simple menus</h3>
 
@@ -295,19 +306,19 @@ section mentions the most notable differences.</p>
   <option>banana</option>
   <option>strawberry</option>
 </select>
- , you have to click twice on the entry ("apple" here). This will result in a
-popup widget appearing showing all the entries. The widget supports a user
-interaction both with the keyboard as well as with the mouse.</p>
+ , you have to click twice on the current entry ("apple" here). This will
+result in a popup widget showing all the entries. The widget can then be used
+both with the keyboard and with the mouse.</p>
 
 <p>With the keyboard, you must first select an entry using the arrow keys.
-Pressing the <strong>Enter</strong> key validates the choice. You can abort
-the action of this widget by pressing the <code>Esc</code> key anytime.</p>
+Pressing the <kbd>Enter</kbd> key validates the choice. You can abort by
+pressing the <kbd>Esc</kbd> key at anytime.</p>
 
 <p>With the mouse, there are two kinds of behavior. A single click allows you
 to select an entry, whereas a double click on an entry means that you want to
-activate the selection. To abort the action of the widget, you just need to
-click in any area outside of the pop-up widget. With very long menus, you can
-also use the scroll bar to quickly navigate thru the widget entries.</p>
+activate this entry. To abort, you just need to click in any area outside of
+the pop-up widget. With very long menus, you can also use the scroll bar to
+quickly navigate through the entries.</p>
 
 <h3 id="Menus">Menus with multiple selections</h3>
 
@@ -315,16 +326,14 @@ also use the scroll bar to quickly navigate thru the widget entries.</p>
 <select name="fruit" multiple="multiple">
   <option>apple</option>
   <option>orange</option>
-  <option selected="selected">lemon</option>
+  <option>lemon</option>
   <option selected="selected">banana</option>
-  <option>strawberry</option>
+  <option selected="selected">strawberry</option>
 </select>
- allow multiple entries to be selected simultaneously. The behavior of this
-widget is similar to the single selection one. That is, the widget supports
-only one toggle of a selection state at the time. You need to invoke it as
-many times as toggle changes you need. When the widget is activated, it shows
-the current state of selections. As before, you can abort the widget by using
-either the <code>Esc</code> key or clicking elsewhere.</p>
+ allow multiple entries to be selected simultaneously. This widget behaves
+much like a <a href="#Simple">simple menu</a>. When the widget is activated,
+it shows the current state of selections. You can abort by using either the
+<kbd>Esc</kbd> key or by clicking elsewhere.</p>
 </div>
 </body>
 </html>

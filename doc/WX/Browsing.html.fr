@@ -73,7 +73,12 @@ double-clic, ou un clic-droit sur un lien.</p>
   <li>Un <kbd>double-clic</kbd> active le lien et se place sur la cible. Le
     document cible remplace le document courant dans le même onglet. Si le
     document initial a été modifié mais pas sauvé, un dialogue s'affiche pour
-    pouvoir sauver ce document avant qu'il disparaisse.</li>
+    pouvoir sauver ce document avant qu'il disparaisse. 
+    <p class="Note">Si vous avez choisi un <a
+    href="Configure.html.fr#Profile">profil</a> sans navigation, ou si vous
+    êtes dans les pages d'aide, le document cible s'ouvre dans un nouvel
+    onglet.</p>
+  </li>
   <li>Un <kbd>clic-droit</kbd> (ou <kbd>Cmd + simple-clic</kbd> sur MacOS X)
     active le lien et ouvre le document cible dans un nouvel onglet ou une
     nouvelle fenêtre (un menu s'affiche pour vous offrir ce choix).</li>
@@ -164,60 +169,64 @@ vite.</p>
   <dt>Menu Fichier</dt>
     <dd><p>L'entrée <strong>Ouvrir</strong> du menu <strong>Fichier</strong>
       vous permet d'ouvrir un nouveau document. La commande clavier par
-      défaut est <kbd>Ctrl o Ctrl o</kbd> . Vous pouvez aussi cliquer avec le
-      bouton droit de la souris sur l'onglet d'un document ouvert et choisir
-      l'entrée <strong>Ouvrir</strong> du menu qui s'affiche. Cette commande
-      fait apparaître une boîte de dialogue dans laquelle vous pouvez entrer
-      un nom de fichier local ou une URI. Vous pouvez également choisir un
-      fichier en utilisant les sélecteurs de fichiers locaux disponibles en
-      haut de cette boîte de dialogue.</p>
-      <p>Quand le document est correctement spécifié, cliquez sur le bouton
-      <strong>Ouvrir</strong>.</p>
-      <p>Cette commande peut aussi être utilisée pour créer un nouveau
-      document local, en spécifiant le nom d'un fichier qui n'existe pas
-      encore.</p>
+      défaut est <kbd>Ctrl o Ctrl o</kbd> . Cette commande fait apparaître
+      une boîte de dialogue dans laquelle vous pouvez entrer un nom de
+      fichier local ou une URI. Vous pouvez également choisir un fichier en
+      utilisant le sélecteur de fichiers locaux (cliquez sur l'icone de
+      fichier en haut à droite de cette boîte de dialogue).</p>
+    </dd>
+    <dd>Quand le document est correctement spécifié, cliquez sur le bouton
+      <strong>Ouvrir</strong>. 
+      <p>Vous pouvez aussi utiliser le bouton à droite de la zone de saisie
+      du nom de fichier. Il affiche la liste des fichiers ouverts récemment
+      avec Amaya. Chosissez dans cette liste celui que vous voulez ouvrir.</p>
+      <p>La commande <strong>Ouvrir</strong> peut aussi être utilisée pour
+      créer un nouveau document local, en spécifiant le nom d'un fichier qui
+      n'existe pas encore.</p>
     </dd>
   <dt>Explorateur de fichiers</dt>
-    <dd>Un explorateur de fichiers est affiché en haut de la fenêtre
-      d'Outils. Cet outil donne accès à tous les répertoires locaux. Un
-      simple clic permet d'ouvrir ou de fermer un répertoire et un double
+    <dd>Un explorateur de fichiers peut être affiché dans la fenêtre d'Outils
+      par la commande <strong>Affichage / Barres d'outils /
+      Fichiers</strong>. Cet outil donne accès à tous les répertoires locaux.
+      Un simple clic permet d'ouvrir ou de fermer un répertoire et un double
       clic sur un nom de fichier ouvre le document correspondant.</dd>
   <dt>Adresse du document courant</dt>
     <dd>Une zone affiche en haut de la fenêtre le nom du fichier ou l'URI du
       document courant. Vous pouvez saisir le nom d'un autre document (local
       ou distant) qui va être affiché à la place du document courant. Tapez
-      sur la touche Enter quand le curseur se trouve dans cette zone pour
-      activer le chargement du document. Cette commande peut aussi être
-      utilisée pour créer un nouveau document local, en entrant le nom d'un
-      fichier qui n'existe pas encore. 
+      sur la touche <kbd>Enter</kbd> quand le curseur se trouve dans cette
+      zone pour activer le chargement du document. Cette commande peut aussi
+      être utilisée pour créer un nouveau document local, en entrant le nom
+      d'un fichier qui n'existe pas encore. 
       <p>Le bouton à la droite de cette zone affiche la liste des derniers
       documents chargés. Vous pouvez choisir un document dans cette liste. Ce
       document vient alors remplacer le document courant.</p>
     </dd>
-  <dt>Liens hypertexte</dt>
+  <dt>Liens</dt>
     <dd>En <a href="#Activating">activant un lien</a> vous chargez le
       document correspondant.</dd>
 </dl>
 
 <p><strong>Note sur le codage des caractères</strong></p>
 
-<p>Les documents HTML sont chargés par défaut comme des fichiers ISO-latin-1.
-Sans information sur le "charset" dans l'en-tête HTTP ou dans un élément
-META, un document HTML est considéré comme codé en ISO-latin-1. Les documents
-XML (y compris XHTML) sont lus par défaut comme des fichiers UTF 8. Quand il
-n'y a pas d'information sur le "charset" dans l'en-tête HTTP, dans la
-déclaration XML, ou dans un élément META, un document XML est considéré comme
+<p>Les documents HTML sont chargés par défaut comme des fichiers <a
+href="EditChar.html.fr">ISO-latin-1</a>. Sans information sur le "charset"
+dans l'en-tête HTTP ou dans un élément <code>meta</code>, un document HTML
+est considéré comme codé en ISO-latin-1. Les documents XML (y compris XHTML)
+sont lus par défaut comme des fichiers UTF 8. Quand il n'y a pas
+d'information sur le "charset" dans l'en-tête HTTP, dans la déclaration XML,
+ou dans un élément <code>meta</code>, un document XML est considéré comme
 codé en UTF 8. Comme les codages par défaut de HTML et de XML sont
 différents, il arrive souvent que des auteurs aient créé des documents XML
 codés en ISO-latin-1 qui ne fournissent pas d'informations explicites sur
-leur codage. Dès qu'un caractère analysé par Amaya ne correspond pas à un
-caractère UTF 8 valide (cela doit arriver si le document est codé en
-ISO-latin-1 mais lu comme un fichier UTF 8), le document est considéré comme
-incorrect: le traitement s'arrête et un message d'erreur est affiché. Ce
-message propose soit de recharger le document comme un document HTML, soit de
-montrer les erreurs. Dans le premier cas, le document est rechargé avec le
-"charset" correspondant à l'ISO-latin-1. Le document est maintenant considéré
-comme modifié (un charset a été ajouté) et peut être sauvé.</p>
+leur codage. Si un caractère analysé par Amaya ne correspond pas à un
+caractère UTF 8 valide (cela arrive si le document est codé en ISO-latin-1
+mais lu comme un fichier UTF 8), le document est considéré comme incorrect:
+le traitement s'arrête et un message d'erreur est affiché. Ce message propose
+soit de recharger le document comme un document HTML, soit de montrer les
+erreurs. Dans le premier cas, le document est rechargé avec le "charset"
+correspondant à l'ISO-latin-1. Le document est maintenant considéré comme
+modifié (un charset a été ajouté) et peut être sauvé.</p>
 
 <p><a name="entite" id="entite"><strong>Amaya</strong> interprète les entités
 caractères</a>. Quand il ne dispose pas du caractère correspondant, il
@@ -225,7 +234,7 @@ affiche un '?' (ou il affiche le nom de l'entité lorsqu'elle figure dans un
 attribut ou quand elle est inconnue). Lorsque le document est sauvé, ces
 entités caractères sont restaurées, sauf si le document est codé en ISO
 Latin-1 et que l'entité correspond à un caractère ISO Latin-1. Dans ce cas
-c'est simplement le code ISO Latin 1 du caractère qui est sauvé. Si le
+c'est simplement le code ISO Latin-1 du caractère qui est sauvé. Si le
 document est codé en ASCII, Amaya convertit en entités les caractères ISO
 Latin-1 qui n'existent pas en ASCII.</p>
 
@@ -239,7 +248,7 @@ chargées :</p>
       (<strong>Suivant</strong>) ou reculer (<strong>Précédent</strong>) dans
       l'historique. Les raccourcis clavier sont par défaut respectivement
       <kbd>Alt &lt;-</kbd> et <kbd>Alt -&gt;</kbd>.</dd>
-  <dt>Barre des boutons</dt>
+  <dt>Barre de navigation</dt>
     <dd>Deux boutons : <img alt="Back "
       src="../../resources/icons/22x22/back.png" align="middle" /> et <img
       alt="Forward " src="../../resources/icons/22x22/forward.png"
@@ -249,13 +258,21 @@ chargées :</p>
 
 <p>Notez que chaque onglet a son propre historique.</p>
 
+<p class="Note">Si vous avez choisi un <a
+href="Configure.html.fr#Profile">profil</a> sans navigation, ou si vous êtes
+dans les pages d'aide, ces commandes ne sont pas disponibles.</p>
+
 <h3 id="Recharger"><a name="Reloading">Recharger une page</a></h3>
 
 <p>Les documents peuvent être rechargés en utilisant l'option
 <strong>Recharger le document</strong> du menu <strong>Fichier</strong>, le
 raccourci clavier <kbd>Ctrl r</kbd>, ou le bouton <img
 src="../../resources/icons/22x22/reload.png" alt="reload" align="middle" />
-de la barre des boutons.</p>
+de la barre de navigation.</p>
+
+<p class="Note">Si vous avez choisi un <a
+href="Configure.html.fr#Profile">profil</a> sans navigation, ou si vous êtes
+dans les pages d'aide, cette commande n'est pas disponible.</p>
 
 <h3 id="Contr"><a name="Keyboard">Commandes au clavier</a></h3>
 
@@ -284,7 +301,7 @@ de raccourcis clavier à la Emacs.</p>
 <h2 id="Utiliser"><a name="form" id="form">Utiliser les formulaires</a></h2>
 
 <p>Certains widgets utilisés par Amaya dans les formulaires HTML (les
-éléments <strong>form</strong>) sont différents de ceux utilisés dans les
+éléments <code>form</code>) sont différents de ceux utilisés dans les
 navigateurs courants. Cela vient du fait qu'Amaya doit permettre à la fois la
 création et l'utilisation des formulaires. Cette section indique les
 différences les plus significatives.</p>
@@ -292,9 +309,11 @@ différences les plus significatives.</p>
 <h3 id="Menus">Menus simples</h3>
 
 <p>Pour utiliser un menu comme celui qui suit ce paragraphe, il faut cliquer
-deux fois sur l'entrée affichée (ici, "pomme") ou sur le bouton à droite.
-Cela fait apparaître un popup listant toutes les entrées du menu. Ce popup
-est ensuite utilisable avec le clavier ou avec la souris.</p>
+deux fois sur l'entrée affichée (ici, "pomme") ou sur le bouton à droite. On
+peut aussi utiliser la touche <kbd>Tab</kbd> pour se positionner sur le menu,
+puis la combinaison <kbd>Alt &uarr;</kbd> pour l'activer. Cela fait
+apparaître la liste de toutes les entrées du menu. Cette liste est ensuite
+utilisable avec la souris ou avec le clavier.</p>
 
 <form action="null">
 
@@ -308,33 +327,32 @@ est ensuite utilisable avec le clavier ou avec la souris.</p>
    </form>
 
 <p>Avec le clavier, passez d'une entrée à l'autre avec les touches flèches
-puis sélectionnez l'entrée courante avec la touche <strong>Enter</strong>.
-Vous pouvez annuler l'action de ce popup en appuyant sur la touche
-<code>Esc</code> à n'importe quel moment.</p>
+(<kbd>&uarr;</kbd>, <kbd>&darr;</kbd>) puis sélectionnez l'entrée courante
+avec la touche <kbd>Enter</kbd>. Vous pouvez annuler toute action en appuyant
+sur la touche <kbd>Esc</kbd> à n'importe quel moment.</p>
 
 <p>Avec la souris, il y a deux types de comportement. Un simple clic permet
 de sélectionner une entrée tandis qu'un double clic sur une entrée signifie
 que vous voulez activer cette entrée. Avec les menus très longs, vous pouvez
 utiliser l'ascenseur pour vous déplacer rapidement dans la liste des entrées.
-Pour annuler l'action du popup, vous devez cliquer n'inporte où en dehors du
-popup.</p>
+Pour annuler, vous devez cliquer n'inporte où en dehors de la liste
+affichée.</p>
 
 <h3 id="Menus1">Menus à sélection multiple</h3>
 
 <p>Certains menus, comme celui qui suit ce paragraphe, autorisent la
 sélection de plusieurs entrées. Leur comportement est similaire à celui d'un
-menu simple mais le fait d'agir sur une entrée avec la touche
-<strong>Enter</strong> ou en cliquant avec la souris fait basculer l'état de
-cette entrée : si elle était sélectionnée elle ne l'est plus et
-inversement.</p>
+menu simple mais le fait d'agir sur une entrée en cliquant avec la souris
+fait basculer l'état de cette entrée : si elle était sélectionnée elle ne
+l'est plus et inversement.</p>
 
 <form action="null">
 
   <select name="fruit" multiple="multiple">
-    <option>pomme</option>
+    <option selected="selected">pomme</option>
     <option>orange</option>
     <option selected="selected">citron</option>
-    <option selected="selected">banane</option>
+    <option>banane</option>
     <option>fraise</option>
   </select>
    </form>

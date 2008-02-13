@@ -41,6 +41,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
     <ul>
       <li><a href="#rences">Les préférences générales</a> 
         <ul>
+          <li><a href="#Profile">Profils</a></li>
           <li><a href="#Options">Options</a></li>
           <li><a href="#Polices"><strong>Polices de caractères et
             langue</strong></a></li>
@@ -349,6 +350,17 @@ href="http://www.w3.org"><code>http://www.w3.org</code></a>.</p>
 <p class="Note"><strong>Note :</strong> Un URI complet doit être utilisé.<br
 />
 </p>
+
+<h5 id="Profile">Profils</h5>
+
+<p>Amaya peut être configuré pour présenter un ensemble de fonctionalités
+plus ou moins étendu et l'interface utilisateur correspondante. L'ensemble
+des fonctionalités disponibles à un instant donné est appelé un
+<em>profil</em>.</p>
+
+<p>Un menu dans les préférence générales permet de choisir un profil. Le
+profil choisi ne s'applique pas immédiatement, mais seulement au prochain
+démarrage d'Amaya.</p>
 
 <h5 id="Options">Options</h5>
 
