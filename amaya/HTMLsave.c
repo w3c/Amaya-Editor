@@ -4677,7 +4677,7 @@ void SendByMail (Document document, View view)
               {
                 wxFileName zipname(TtaConvMessageToWX(docPath) + wxT(".zip"));
                 
-                TtaAddEMailAttachmentFileAlternativeName(mail, "",
+                TtaAddEMailAttachmentFileAlternativeName(mail, "application/zip",
                                      (const char*)zip.mb_str(wxConvUTF8),
                                      (const char*)zipname.GetFullName().mb_str(wxConvUTF8));
               }

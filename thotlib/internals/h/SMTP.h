@@ -81,6 +81,7 @@ typedef struct{
     size_t size;
     void* data;
 } wxMimeSlot_BinaryContent;
+
 typedef struct{
     wxFileName filename;
     wxString   sendpath;
