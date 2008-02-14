@@ -19,7 +19,7 @@
 17 %s
 18 kevés a memória
 19 *** Amaya: helyreállíthatatlan hiba ***
-20 A mádosult dokumentums, ha van, mentése
+20 A módosult dokumentumok (ha van) mentése
 21 Érvénytelen .TRA fájl: %s
 22 %s érvénytelen testvére ennek: %s (%s)
 23 %s érvénytelen utóda ennek az elődnek: %s (%s)
@@ -57,7 +57,7 @@
 55 Normál
 56 Aláhúzott
 57 Áthúzott
-58 Betáméret
+58 Betűméret
 59 Behúzás csökkentése
 60 Egyes sortávolság
 61 Közepes sortávolság
@@ -146,10 +146,10 @@
 144 Csere és következő
 145 Másik nyelv
 146 Kihagyás (+ dic)
-147 words containing:
+147 ha tartalmazza:
 148 Szóellenőrző...
-149 Római számok
-150 Kihagy
+149 római számok
+150 Kihagyandó
 151 csupa nagybetűs szavak
 152 számokat tartalmazó szavak
 153 Parameter fájl hiba
@@ -178,7 +178,7 @@
 176 Egyéb
 177 Bináris műveletek
 178 Bináris műveletek vagy negálás
-179 Máveletek
+179 Műveletek
 180 Görög ábécé (nagybetűs)
 181 Nyilak
 182 Különleges karakterek
@@ -214,7 +214,7 @@
 212 Elemzési hibák mutatása
 213 Dobozok
 214 Felosztás
-215 Létrehozása
+215 Célpont
 216 &Beillesztés On/Off
 217 &Törlés On/Off
 218 &Alsó index On/Off
@@ -227,7 +227,7 @@
 225 Vízszintes felosztás
 226 Függőleges felosztás
 227 Eszközsor mutatása
-228 Visszavon
+228 Visszavonás
 229 Újra
 230 Kivágás
 231 Másolás
@@ -263,7 +263,7 @@
 261 Az F2 vagy Esc billentyűvel kijelölhetjük a szerkezeti elem elődelemét, amivel ezután szerkesztési műveletek (másolás, beillesztés, tulajdonságok stb.) végezhetők.
 262 Két dokumentumot egymás mellé vagy alá helyezhetünk, ha az egyiket fülénél fogva a nyitva lévő másik dokumentum keretéhez húzzuk.
 263 Egyedi módban a panelek húzásásal megváltoztatható a sorrendjük, vagy lebegővé tehetők.
-264 > panels bars on each side by dragging panels.Egyedi módban mindkét oldalon több paneltárat is készíthetünk a panelek húzásával.
+264 Egyedi módban mindkét oldalon több paneltárat is készíthetünk a panelek húzásával.
 265 A szerkesztési mód (Szöveg/XML) váltása az állapotsorban lévő hasonló feliratú gombra kattintva is lehetséges.
 266 Ha az állapotsorban piros gomb látható, rákattintva megkapjuk a hibákat.
 267 Kijelölhetjük az aktuális kijelölés valamely elődelemét, ha az állapotsorban annak a nevére kattintunk.

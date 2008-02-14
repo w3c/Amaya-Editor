@@ -198,9 +198,9 @@
 196 Language Negotiation
 197 Jegyzetek
 198 Kapocs
-199 Annotation and bookmark user
-200 Annotation post server
-201 Annotation servers
+199 Felhasználó a jegyzetekhez és könyvjelzőkhöz
+200 Jegyzet fogadó kiszolgálója
+201 Jegyzet kiszolgálók
 202 Helyi jegyzetek önműködő betöltése
 203 Távoli jegyzetek önműködő betöltése
 204 Minden indításkor a távoli jegyzetek önműködő betöltésének tiltása (szétkapcsolt munkához)
@@ -292,11 +292,11 @@
 290 A kérés sikertelen! Ok: %s
 291 Újra próbálja?
 292 WebDAV
-293 User's Personal Reference (URL)
+293 User's personal reference (URL)
 294 User's WebDAV erőforrás listája (URL URL)
 295 Zárolás mélysége
 296 végtelen
-297 Zárolás időkorlát
+297 Zárolás időkorlátja
 298 Végtelen
 299 Egyéb (másodperc)
 300 Zárolás hatóköre

@@ -2245,7 +2245,7 @@
 <message xml:lang="de">&amp;Math</message>
 <message xml:lang="es">&amp;Math</message>
 <message xml:lang="ru">&amp;Math</message>
-<message xml:lang="hu">&amp;Math</message>
+<message xml:lang="hu">&amp;Matematika</message>
 <message xml:lang="ka">&amp;Math</message>
 <message xml:lang="cn">&amp;Math</message>
 <message xml:lang="tw">&amp;Math</message>
@@ -3373,7 +3373,7 @@
 <message xml:lang="fr">Editeur de &amp;style...</message>
 <message xml:lang="it">&amp;Style...</message>
 <message xml:lang="es">&amp;Estilo...</message>
-<message xml:lang="hu">CSS &amp;Stílus...</message>
+<message xml:lang="hu">CSS &amp;stílus...</message>
 <message xml:lang="de">&amp;Stil editieren</message>
 <message xml:lang="ka">CSS style...</message>
 <message xml:lang="ru">Настройка каскадной таблицы стиля CSS...</message>

@@ -349,7 +349,7 @@
 	<message xml:lang="pt">Quaisquer documentos modificados serão salvos</message>
 	<message xml:lang="fi">muokatut dokumentit, jos on, tallennetaan</message>
 	<message xml:lang="ru">если имеются изменённые документы, они будут сохранены</message>
-	<message xml:lang="hu">A mádosult dokumentums, ha van, mentése</message>
+	<message xml:lang="hu">A módosult dokumentumok (ha van) mentése</message>
 	<message xml:lang="ka">თუ შეცვლილი დოკუმენტები არსებობს, ისინი შეინახება</message>
 	<message xml:lang="cn">所有被更改的文档将被保存</message>
 	<message xml:lang="tw">所有被更改的文檔將被保存</message>
@@ -939,7 +939,7 @@
 	<message xml:lang="pt">Tamanho</message>
 	<message xml:lang="fi">Kappalekoko</message>
 	<message xml:lang="ru">Размер шрифта</message>
-	<message xml:lang="hu">Betáméret</message>
+	<message xml:lang="hu">Betűméret</message>
 	<message xml:lang="ka">შრიფტის ზომა </message>
 	<message xml:lang="cn">大小 </message>
 	<message xml:lang="tw">大小 </message>
@@ -2322,7 +2322,7 @@
 	<message xml:lang="pt">Palavras contendo:</message>
 	<message xml:lang="fi">sanat, joissa:</message>
 	<message xml:lang="ru">слова содержащие:</message>
-	<message xml:lang="hu">words containing:</message>
+	<message xml:lang="hu">ha tartalmazza:</message>
 	<message xml:lang="ka">სიტყვები, რომლებიც შეიცავენ:</message>
 	<message xml:lang="cn">包含词语:</message>
 	<message xml:lang="tw">包含詞語:</message>
@@ -2354,7 +2354,7 @@
 	<message xml:lang="pt">Numerais romanos</message>
 	<message xml:lang="fi">Roomalaiset numerot</message>
 	<message xml:lang="ru">римские цифры</message>
-	<message xml:lang="hu">Római számok</message>
+	<message xml:lang="hu">római számok</message>
 	<message xml:lang="ka">რომაული ციფრები</message>
 	<message xml:lang="cn">罗马数字</message>
 	<message xml:lang="tw">羅馬數字</message>
@@ -2370,7 +2370,7 @@
 	<message xml:lang="pt">Ignorar</message>
 	<message xml:lang="fi">Ohita</message>
 	<message xml:lang="ru">Игнорировать</message>
-	<message xml:lang="hu">Kihagy</message>
+	<message xml:lang="hu">Kihagyandó</message>
 	<message xml:lang="ka">იგნორირება</message>
 	<message xml:lang="cn">忽略</message>
 	<message xml:lang="tw">忽略</message>
@@ -2791,7 +2791,7 @@
 	<message xml:lang="de">Operatoren</message>
 	<message xml:lang="it">Operatori</message>
 	<message xml:lang="ru">Операторы</message>
-	<message xml:lang="hu">Máveletek</message>
+	<message xml:lang="hu">Műveletek</message>
 	<message xml:lang="ka">ოპერატორები</message>
 	<message xml:lang="cn">算符</message>
 	<message xml:lang="tw">算符</message>
@@ -3341,7 +3341,7 @@
 	<message xml:lang="pt">Destino</message>
 	<message xml:lang="fi">Kohde</message>
 	<message xml:lang="ru">Цель</message>
-	<message xml:lang="hu">Létrehozása</message>
+	<message xml:lang="hu">Célpont</message>
 	<message xml:lang="cn">目标</message>
 	<message xml:lang="tw">目標</message>
 	<message xml:lang="sk">Záložka</message>
@@ -3536,7 +3536,7 @@
 	<message xml:lang="fi">Kumoa</message>
 	<message xml:lang="tr">Geri al</message>
 	<message xml:lang="ru">Отменить</message>
-	<message xml:lang="hu">Visszavon</message>
+	<message xml:lang="hu">Visszavonás</message>
 	<message xml:lang="ka">დაბრუნება</message>
 	<message xml:lang="cn">撤销</message>
 	<message xml:lang="tw">撤銷</message>

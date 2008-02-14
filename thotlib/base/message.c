@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -41,6 +41,7 @@ TabMsg;
 static PtrTabMsg       FirstTableMsg = NULL;
 static unsigned char * EmptyMsg = (unsigned char *)"";
 static unsigned char   result[MAX_TXT_LEN];
+static char            Dial_lan[3] = {EOS, EOS, EOS};
 #include "dialogapi_f.h"
 #include "memory_f.h"
 #include "message_f.h"
@@ -154,7 +155,16 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
   int                 num;
 
   /* contruction du nom $THOTDIR/bin/$LANG-msgName */
-  lan = TtaGetVarLANG ();
+  if (Dial_lan[0] == EOS)
+    {
+      // save the requested langage
+      lan = TtaGetVarLANG ();
+      if (lan)
+        strncpy (Dial_lan, lan, 3);
+      Dial_lan[2] = EOS;
+    }
+  else
+    lan = Dial_lan;
   strcpy (fileName, lan);
   fileName[2] = '-';
   strcpy (&fileName[3], msgName);
@@ -165,9 +175,9 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
       /* force the english version */
       fileName[0] = 'e';
       fileName[1] = 'n';
+      SearchFile (fileName, 2, pBuffer);
+      file = TtaReadOpen (pBuffer); 
     }
-  SearchFile (fileName, 2, pBuffer);
-  file = TtaReadOpen (pBuffer); 
   if (file == NULL)
     {
       printf ("WARNING: cannot open file %s\n", pBuffer);
@@ -244,7 +254,7 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
           /* now we convert every strings to UTF-8 (DialogCharset) */
           if (encoding == DialogCharset)
             {
-              /* string source is allready in utf8 so no need to convert */
+              /* string source is already in utf8 so no need to convert */
               currenttable->TabMessages[num] = s;
             }
           else

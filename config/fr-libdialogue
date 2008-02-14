@@ -258,13 +258,13 @@
 256 Voir les conseils au démarrage
 257 Conseil suivant
 258 Saviez vous...
-259 Amaya s'adapte à votre usage : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.
+259 Amaya s'adapte à vos besoins : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.
 260 Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance panneau par panneau. Voir les Préférences.
 261 Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, pour appliquer les fonctions d'édition (copier, coller, attributs, etc.) à ces éléments.
 262 Vous pouvez afficher deux documents côte à côte dans la même fenêtre en déplaçant un onglet de document sur un bord du document affiché.
-263 En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour les changer l'ordre ou les rendre flottants.
-264 En mode paramétrable, vous pouvez engendrer plusieurs barres d'outils de chaque côté en déplaçant les panneaux d'outils.
-265 Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton correspondant dans la barre d'état.
-266 Quand il y a un bouton rouge dans la barre d'état, vous pouvez afficher les erreurs en cliquant dessus.
-267 Vous pouvez sélectionner un ancêtre de la sélection courante en cliquant sur son nom dans le chemin dans la barre d'état.
+263 En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour en changer l'ordre ou les rendre flottants.
+264 En mode paramétrable, vous pouvez placer plusieurs barres d'outils de chaque côté de la fenêtre en déplaçant les panneaux d'outils.
+265 Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton correspondant dans le coin inférieur droit.
+266 Quand il y a un bouton rouge dans le coin inférieur droit, vous pouvez afficher les erreurs en cliquant dessus.
+267 Vous pouvez sélectionner un ancêtre de la sélection courante en cliquant sur son nom dans le chemin affiché en bas de la fenêtre.
 268 Vous pouvez changer d'onglet avec le menu affiché par le bouton flèche à droite des onglets.

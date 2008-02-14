@@ -3190,7 +3190,7 @@
 	<message xml:lang="fi">Käyttäjän huomautukset</message>
 	<message xml:lang="tr">Kullanıyıcı ismi</message>
 	<message xml:lang="ru">Автор аннотации и закладки</message>
-	<message xml:lang="hu">Annotation and bookmark user</message>
+	<message xml:lang="hu">Felhasználó a jegyzetekhez és könyvjelzőkhöz</message>
 	<message xml:lang="ka">ანოტაციისა და სანიშნის მომხმარებელი</message>
 	<message xml:lang="cn">注释和书签作者</message>
 	<message xml:lang="tw">注釋和書簽作者</message>
@@ -3206,7 +3206,7 @@
 	<message xml:lang="fi">Postipalvelimen huomautukset</message>
 	<message xml:lang="tr">Dağıtım servörü</message>
 	<message xml:lang="ru">Сервер публикации аннотации (post)</message>
-	<message xml:lang="hu">Annotation post server</message>
+	<message xml:lang="hu">Jegyzet fogadó kiszolgálója</message>
 	<message xml:lang="ka">ანოტაციების საფოსტო (post) სერვერი</message>
 	<message xml:lang="cn">注释提交服务器</message>
 	<message xml:lang="tw">注釋提交服務器</message>
@@ -3222,7 +3222,7 @@
 	<message xml:lang="fi">Palvelimien merkinnät</message>
 	<message xml:lang="tr">Not servörü</message>
 	<message xml:lang="ru">Сервера аннотации</message>
-	<message xml:lang="hu">Annotation servers</message>
+	<message xml:lang="hu">Jegyzet kiszolgálók</message>
 	<message xml:lang="ka">ანოტაციების სერვერი</message>
 	<message xml:lang="cn">注释服务器</message>
 	<message xml:lang="tw">注釋服務器</message>
@@ -4641,7 +4641,7 @@
 	<message xml:lang="es">Referencia Personal del Usuario (URL):</message>
 	<message xml:lang="tr">Kullanıyıcının özel referansı (URL)</message>
 	<message xml:lang="ru">Персональная ссылка пользователя (URL)</message>
-	<message xml:lang="hu">User's Personal Reference (URL)</message>
+	<message xml:lang="hu">User's personal reference (URL)</message>
 	<message xml:lang="ka">მონაწილის პერსონალური დამოწმება (URL)</message>
 	<message xml:lang="cn">用户个人参考 (URL)</message>
 	<message xml:lang="tw">用戶個人參考 (URL)</message>
@@ -4705,7 +4705,7 @@
 	<message xml:lang="es">Bloqueo terminado</message>
 	<message xml:lang="tr">Bitiş süresi</message>
 	<message xml:lang="ru">Длительность блокировки</message>
-	<message xml:lang="hu">Zárolás időkorlát</message>
+	<message xml:lang="hu">Zárolás időkorlátja</message>
 	<message xml:lang="ka">დაბლოკვის დაყოვნების ვადა</message>
 	<message xml:lang="cn">锁定超时</message>
 	<message xml:lang="tw">鎖定超時</message>
