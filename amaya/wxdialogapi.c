@@ -546,7 +546,7 @@ ThotBool CreateSearchDlgWX (int ref, ThotWindow parent,  char* caption,
   wxString wx_replace = TtaConvMessageToWX( replace );
 
   SearchDlgWX * p_dlg = new SearchDlgWX( ref,
-					 parent,
+					 NULL,
 					 wx_caption,
 					 wx_searched,
 					 wx_replace,
