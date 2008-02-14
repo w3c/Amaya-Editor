@@ -11,10 +11,10 @@ extern ThotBool APPgraphicModify ( PtrElement pEl,
                                    int frame,
                                    ThotBool pre,
                                    ThotBool openclose );
-extern void LocateSelectionInView ( int frame,
-                                    int x,
-                                    int y,
-                                    int button );
+extern ThotBool LocateSelectionInView ( int frame,
+                                        int x,
+                                        int y,
+                                        int button );
 extern ThotPoint *BuildPolygonForPath ( PtrPathSeg pPa,
                                         int frame,
                                         int* npoints,
@@ -69,10 +69,10 @@ extern ThotBool APPgraphicModify ( PtrElement pEl,
                                      int frame,
                                      ThotBool pre,
                                      ThotBool openclose );
-extern void LocateSelectionInView ( int frame,
-                                      int x,
-                                      int y,
-                                      int button );
+extern ThotBool LocateSelectionInView ( int frame,
+                                          int x,
+                                          int y,
+                                          int button );
 extern ThotPoint *BuildPolygonForPath ( PtrPathSeg pPa,
                                           int frame,
                                           int* npoints,

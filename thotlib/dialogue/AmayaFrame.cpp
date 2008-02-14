@@ -23,6 +23,7 @@
 #include "appdialogue_wx.h"
 #include "logdebug.h"
 #include "message_wx.h"
+#include "content.h"
 
 #ifdef _GL
   #include "glwindowdisplay.h"
@@ -142,9 +143,11 @@ AmayaFrame::~AmayaFrame()
   */
   // it's possible to fall here if a frame is a child of a page but is not deleted
   // then if the page is closed, the frame is deleted by wxWidgets because the frame is a child of the page.
-  // it's important to free the corresponding frame context
-  //DestroyFrame( m_FrameId );
+  m_pCanvas = NULL;
+
   int frame_id = GetFrameId();
+  TtaNoPlay (frame_id);
+  // it's important to free the corresponding frame context
   FrameTable[frame_id].WdFrame = NULL;
   VscrollShown[frame_id] = FALSE;
   HscrollShown[frame_id] = FALSE;
@@ -157,8 +160,9 @@ AmayaCanvas * AmayaFrame::CreateDrawingArea()
   AmayaCanvas * p_canvas = NULL;
 
 #ifdef _GL
-
-#ifndef _NOSHARELIST
+#ifdef _NOSHARELIST
+  p_canvas = new AmayaCanvas( this, this );
+#else /*_NOSHARELIST*/
   // If opengl is used then try to share the context
   if ( GetSharedContext () == -1/* || GetSharedContext () == m_FrameId */)
     {
@@ -174,16 +178,8 @@ AmayaCanvas * AmayaFrame::CreateDrawingArea()
       // create the new canvas with the opengl shared context
       p_canvas = new AmayaCanvas( this, this, p_SharedContext );
     }
-#endif /*_NOSHARELIST*/
-
-#ifdef _NOSHARELIST
-  p_canvas = new AmayaCanvas( this, this );
 #endif /* _NOSHARELIST */
-
-#else /* _GL */
-  p_canvas = new AmayaCanvas( this, this );
 #endif /* _GL */
-
   return p_canvas;
 }
 
@@ -206,7 +202,7 @@ void AmayaFrame::ReplaceDrawingArea( AmayaCanvas * p_new_canvas )
   m_pCanvas = p_new_canvas;
 
   // add the new canvas and old scrollbar to the sizer
-  m_pHSizer->Add( m_pCanvas,     1, wxEXPAND );
+  m_pHSizer->Add( m_pCanvas, 1, wxEXPAND );
   if (m_pScrollBarV)
     m_pHSizer->Add( m_pScrollBarV, 0, wxEXPAND );
   m_pHSizer->Layout();
@@ -392,7 +388,7 @@ bool AmayaFrame::SwapBuffers()
       return FALSE;
     }
 }
-#endif // #ifdef _GL
+#endif /* _GL */
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaFrame
@@ -628,6 +624,7 @@ void AmayaFrame::OnClose(wxCloseEvent& event)
 
   PtrDocument         pDoc;
   int                 view;
+
   GetDocAndView (m_FrameId, &pDoc, &view);
   /** \todo See what follow : */
   CloseView (pDoc, view);
@@ -708,7 +705,8 @@ void AmayaFrame::RaiseFrame()
   AmayaWindow * p_window = GetWindowParent();
   if ( !p_window )
     return;
-  
+  if (!m_pCanvas)
+    return;
   int kind = p_window->GetKind();
   if ( kind == WXAMAYAWINDOW_NORMAL ||
        kind == WXAMAYAWINDOW_ANNOT ||
@@ -785,9 +783,9 @@ void AmayaFrame::FreeFrame()
 
   // the frame is destroyed so it hs no more page parent
   SetPageParent( NULL );
-
-  memset(&FrameTable[GetFrameId()], 0, sizeof(Frame_Ctl));
-
+  int frame = GetFrameId();
+  TtaNoPlay (frame);
+  memset(&FrameTable[frame], 0, sizeof(Frame_Ctl));
   Destroy();
 }
 

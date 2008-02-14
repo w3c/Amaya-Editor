@@ -848,7 +848,8 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
              * because LocateSelectionInView will handle gui events (keyup) and Selecting variable
              * will not be unset => cause a infinit selection ! */
             Selecting = TRUE;
-            LocateSelectionInView (frame, ClickX, ClickY, 2);
+            if (LocateSelectionInView (frame, ClickX, ClickY, 2))
+              return FALSE;
           }
       }
       break;
@@ -865,7 +866,8 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
             ClickFrame = frame;
             ClickX = x;
             ClickY = y;
-            LocateSelectionInView (frame, ClickX, ClickY, 5);	     
+            if (LocateSelectionInView (frame, ClickX, ClickY, 5))
+              return FALSE;
           }
       }
       break;
@@ -884,7 +886,8 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
             ClickFrame = frame;
             ClickX = x;
             ClickY = y;
-            LocateSelectionInView (frame, ClickX, ClickY, 6);
+            if (LocateSelectionInView (frame, ClickX, ClickY, 6))
+              return FALSE;
           }
       }
       break;
@@ -926,7 +929,8 @@ ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
       ClickFrame = frame;
       ClickX = x;
       ClickY = y;
-      LocateSelectionInView (frame, ClickX, ClickY, 4);
+      if (LocateSelectionInView (frame, ClickX, ClickY, 4))
+        return FALSE;
       // SG: j'ai commente la ligne suivante car si le document est modifie 
       // et qu'on desire suivre un lien, un evenement keyup est generer
       // et tue le dialogue qui demande si on veut sauver.

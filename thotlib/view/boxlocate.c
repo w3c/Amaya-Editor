@@ -178,8 +178,9 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
   5 -> click with the middle button
   6 -> click with the right button
   7 -> reset the selection without notification
+// return TRUE if the event is already managed
   ----------------------------------------------------------------------*/
-void LocateSelectionInView (int frame, int x, int y, int button)
+ThotBool LocateSelectionInView (int frame, int x, int y, int button)
 {
   PtrBox              pBox;
   PtrElement          pEl = NULL, firstEl;
@@ -328,14 +329,14 @@ void LocateSelectionInView (int frame, int x, int y, int button)
                   /* Extension of selection */
                   if (SkipClickEvent)
                     /* the application asks Thot to do nothing */
-                    return;
+                    return SkipClickEvent;
                   ChangeSelection (frame, pAb, nChars, TRUE, left, FALSE, FALSE);
                   break;
                 case 1:
                   /* Extension of selection */
                   if (SkipClickEvent)
                     /* the application asks Thot to do nothing */
-                    return;
+                    return SkipClickEvent;
                   ChangeSelection (frame, pAb, nChars, TRUE, left, FALSE, TRUE);
                   break;
                 case 2:
@@ -344,7 +345,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
                   SkipClickEvent = NotifyClick (TteElemLClick, TRUE, el, doc);
                   if (SkipClickEvent)
                     /* the application asks Thot to do nothing */
-                    return;
+                    return SkipClickEvent;
                   ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
                   // the document can be reloaded
                   pAb = pFrame->FrAbstractBox;
@@ -366,7 +367,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
                 case 4:
                   if (SkipClickEvent)
                     /* the application asks Thot to do nothing */
-                    return;
+                    return SkipClickEvent;
                   /* check if the curseur is within the box */
                   if ((x >= xOrg && x <= xOrg + width &&
                        y >= yOrg && y <= yOrg + height) ||
@@ -376,7 +377,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
                       el = pAb->AbElement;
                       if (NotifyClick (TteElemClick, TRUE, el, doc))
                         /* the application asks Thot to do nothing */
-                        return;
+                        return TRUE;
                       /* send event TteElemClick.Post to the application */
                       NotifyClick (TteElemClick, FALSE, el, doc);
                     }
@@ -390,7 +391,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
                       el = pAb->AbElement;
                       if (NotifyClick (TteElemMClick, TRUE, el, doc))
                         /* the application asks Thot to do nothing */
-                        return;
+                        return TRUE;
                     }
 #if defined(_UNIX) && !defined(_MACOS)
                   if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
@@ -408,7 +409,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
                       el = pAb->AbElement;
                       if (NotifyClick (TteElemRClick, TRUE, el, doc))
                         /* the application asks Thot to do nothing */
-                        return;
+                        return TRUE;
                     }
                   TtaSetDialoguePosition ();
                   if (ThotLocalActions[T_insertpaste] != NULL)
@@ -424,12 +425,13 @@ void LocateSelectionInView (int frame, int x, int y, int button)
                   break;
                 case 7: /* reset the previous selection */
                   ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
-                  return;
+                  break;
                 default: break;
                 }
             }
         }
     }
+  return FALSE;
 }
 
 

@@ -132,7 +132,7 @@ void PrintBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 void PrintBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax);
 ThotBool GL_Printing ();
 
-void TtaChangePlay (int frame);
+void TtaChangePlay (int frame, ThotBool status);
 double ComputeThotCurrentTime (int frame);
 ThotBool GL_Err ();
 void update_bg_colorGTK (int frame, int color);

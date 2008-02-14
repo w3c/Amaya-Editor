@@ -306,19 +306,22 @@ void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
     thot_mod_mask |= THOT_MOD_SHIFT;
 
   TTALOGDEBUG_0( TTA_LOG_DRAW, _T("AmayaCanvas - wxEVT_LEFT_UP || wxEVT_MIDDLE_UP || wxEVT_RIGHT_UP") );
-
-  m_IsMouseSelecting = false;
-  m_MouseMoveTimer.Stop();
+  if (m_IsMouseSelecting)
+    {
+      m_IsMouseSelecting = false;
+      m_MouseMoveTimer.Stop();
   
-  FrameButtonUpCallback( frame,
-                         event.GetButton(),
-                         thot_mod_mask,
-                         event.GetX(), event.GetY() );
-
-  // force the focus when clicking on the canvas because the focus is locked on panel buttons
-  TtaRedirectFocus();
-  
-  event.Skip();
+      if (!FrameButtonUpCallback( frame, event.GetButton(),
+                             thot_mod_mask,
+                                 event.GetX(), event.GetY() ))
+        event.Skip(false);
+      else
+        event.Skip();
+      // force the focus when clicking on the canvas because the focus is locked on panel buttons
+      TtaRedirectFocus();
+    }
+  else
+    event.Skip();
 }
 
 /*----------------------------------------------------------------------
@@ -378,7 +381,7 @@ void AmayaCanvas::OnIdle( wxIdleEvent& event )
   // idle events are no more used for animation. 
   // animation is managed by a timer
 #if 0
-  // Do not treat this event if the canvas is not active (hiden)
+  // Do not treat this event if the canvas is not active (hidden)
   if (!IsParentFrameActive())
     {
       event.Skip();

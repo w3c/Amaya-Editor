@@ -389,18 +389,19 @@ void AmayaWindow::OnIdle( wxIdleEvent& event )
   // it can not be procced in OnActivate callback because the wxWindow::FindFocus is allways NULL (bug)
   if (m_MustCheckFocusIsNotLost)
     {
-      wxWindow *       p_win_focus         = wxWindow::FindFocus();
+      wxWindow *p_win_focus = wxWindow::FindFocus();
       if (p_win_focus)
-        TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("AmayaWindow::OnIdle - focus = %s"), p_win_focus->GetClassInfo()->GetClassName())
-          else
-            {
-              TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("AmayaWindow::OnIdle - no focus"));
+        TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("AmayaWindow::OnIdle - focus = %s"),
+                       p_win_focus->GetClassInfo()->GetClassName())
+      else
+        {
+          TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("AmayaWindow::OnIdle - no focus"));
 #ifndef _MACOS
-              TtaRedirectFocus();
+          TtaRedirectFocus();
 #else /* _MACOS */
-              TtaCheckLostFocus();
+          TtaCheckLostFocus();
 #endif /* _MACOS */
-            }
+        }
       m_MustCheckFocusIsNotLost = false;
     }
 

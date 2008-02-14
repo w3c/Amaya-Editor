@@ -464,17 +464,14 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
       s_windowFocus = focus;
       
       wxString msg;
-      msg.Printf(
 #ifdef __WXMSW__
-                _T("Focus: %s, HWND = %08x"),
+      msg.Printf(_T("Focus: %s, HWND = %08x"),
+                 s_windowFocus->GetClassInfo()->GetClassName(),
+                 (unsigned int) s_windowFocus->GetHWND());
 #else
-                _T("Focus: %s"),
+      msg.Printf(_T("Focus: %s"),
+                 s_windowFocus->GetClassInfo()->GetClassName());
 #endif
-                s_windowFocus->GetClassInfo()->GetClassName()
-#ifdef __WXMSW__
-                , (unsigned int) s_windowFocus->GetHWND()
-#endif
-		);
       TTALOGDEBUG_0( TTA_LOG_FOCUS, msg );
     }
 #endif /* DEBUG_FOCUS */
