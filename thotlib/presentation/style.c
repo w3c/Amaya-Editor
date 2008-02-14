@@ -722,6 +722,9 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
   int                 i, j, val;
   unsigned int        match;
 
+  if(tsch->PsAttrPRule==NULL)
+    return NULL;
+  
   /* select the right attribute */
   attrs = tsch->PsAttrPRule->AttrPres[attrType - 1];
   *attrblock = NULL;
