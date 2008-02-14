@@ -53,6 +53,9 @@ extern void InitFormAnswer ( Document document,
                              int i_auth );
 extern void InitInfo ( char *label,
                        char *info );
+extern void InitAlert ( Document document,
+                        View view,
+                        char *label );
 extern void ConfirmError ( Document document,
                            View view,
                            char *label,
@@ -281,6 +284,9 @@ extern void InitFormAnswer ( Document document,
                                int i_auth );
 extern void InitInfo ( char *label,
                          char *info );
+extern void InitAlert ( Document document,
+                          View view,
+                          char *label );
 extern void ConfirmError ( Document document,
                              View view,
                              char *label,

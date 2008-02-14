@@ -1586,6 +1586,31 @@ void InitInfo (char *label, char *info)
 }
 
 /*----------------------------------------------------------------------
+  InitAlert
+  Displays a non-modal window for the "window.alert()" javascript function
+  ----------------------------------------------------------------------*/
+void InitAlert(Document document, View view, char *label)
+{
+#ifdef _JAVA
+  ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
+                                             TtaGetViewFrame (document, view),
+                                             "Alert", NULL, NULL,
+                                             label, NULL, NULL);
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+    }
+
+  /* remove the critic section */
+  CriticConfirm = FALSE;
+#endif /* _JAVA */
+}
+
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void ConfirmError (Document document, View view, char *label,
                    char *extrabutton, char *confirmbutton)

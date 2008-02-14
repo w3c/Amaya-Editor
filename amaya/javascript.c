@@ -517,7 +517,6 @@ void StopJavascript (Document doc)
   if(doc == jsdocument)
     {
       /* Destroy alert, confirm, "enter a command" and prompt */
-      /* TODO:alert */
       if(ConfirmDialog)TtaDestroyDialogue (BaseDialog + ConfirmForm);
       TtaDestroyDialogue (BaseDialog + JavascriptPromptForm);
 
@@ -1474,8 +1473,11 @@ static JSBool window_alert(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
   else
     {
       msg = jsval_to_string(cx, *argv);
-      /* TODO: make a non-modal window, to allow javascript engine to be switch OFF */
-      TtaDisplayMessage(INFO, msg);
+
+      ConfirmDialog = TRUE;
+      /* Display a non-modal window, to allow javascript engine to be switch OFF */
+      InitAlert(jsdocument, jsview, msg);
+      ConfirmDialog = FALSE;
 
       return jsContinueScript();
     }
