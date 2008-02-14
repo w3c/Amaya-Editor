@@ -1316,9 +1316,10 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 void ChangeSelFrame (int frame)
 {
   Document            doc, olddoc;
+  PtrDocument         docsel;
+  PtrElement          first, last;
   View                view;
-  int                 oldframe;
-  AmayaParams         params;
+  int                 oldframe, firstChar, lastChar;
 
   if (ActiveFrame != frame)
     {
@@ -1341,7 +1342,11 @@ void ChangeSelFrame (int frame)
       UpdateAttrMenu (LoadedDocument[doc-1], TRUE);
       // update the show errors
       TtaExecuteMenuAction ("UpdateShowError", doc, 1, FALSE);
-      
+      GetCurrentSelection (&docsel, &first, &last, &firstChar, &lastChar);
+      if (LoadedDocument[doc-1] != docsel)
+        TtaSetStatusSelectedElement (doc, 1, NULL);
+      else
+        TtaSetStatusSelectedElement (doc, 1, (Element)first);
       /* the active frame changed so update the application focus */
       TtaRedirectFocus();
     }
