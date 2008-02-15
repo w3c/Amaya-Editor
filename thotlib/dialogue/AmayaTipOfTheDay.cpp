@@ -1,6 +1,7 @@
 #ifdef _WX
 
 #include "wx/wx.h"
+#include "wx/xrc/xmlres.h"              // XRC XML resouces
 #include "wx/tipdlg.h"
 #include "wx/artprov.h"
 
@@ -81,7 +82,7 @@ wxString AmayaTipProvider::GetTip()
 static const int wxID_NEXT_TIP = 32000;  // whatever
 
 BEGIN_EVENT_TABLE(AmayaTipDialog, wxDialog)
-    EVT_BUTTON(wxID_NEXT_TIP, AmayaTipDialog::OnNextTip)
+    EVT_BUTTON(XRCID("wxID_TIP_NEXT"), AmayaTipDialog::OnNextTip)
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -97,13 +98,13 @@ AmayaTipDialog::AmayaTipDialog(wxWindow *parent,
     m_tipProvider = tipProvider;
 
     // 1) create all controls in tab order
-    wxButton *btnClose = new wxButton(this, wxID_CLOSE);
-    SetAffirmativeId(wxID_CLOSE);
+    wxButton *btnClose = new wxButton(this, XRCID("wxID_TIP_CLOSE"), TtaConvMessageToWX(TtaGetMessage(LIB, TIP_DIALOG_TIP_CLOSE)));
+    SetAffirmativeId(XRCID("wxID_TIP_CLOSE"));
 
     m_checkbox = new wxCheckBox(this, wxID_ANY, TtaConvMessageToWX(TtaGetMessage(LIB, TIP_DIALOG_STARTUP)));
     m_checkbox->SetValue(showAtStartup);
 
-    wxButton *btnNext = new wxButton(this, wxID_NEXT_TIP, TtaConvMessageToWX(TtaGetMessage(LIB, TIP_DIALOG_NEXT_TIP)));
+    wxButton *btnNext = new wxButton(this, XRCID("wxID_TIP_NEXT"), TtaConvMessageToWX(TtaGetMessage(LIB, TIP_DIALOG_NEXT_TIP)));
 
     wxStaticText *text = new wxStaticText(this, wxID_ANY, TtaConvMessageToWX(TtaGetMessage(LIB, TIP_DIALOG_DID_YOU_KNOW)));
 

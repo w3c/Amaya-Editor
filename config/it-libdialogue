@@ -258,13 +258,14 @@
 256 Visualizza il suggerimento all'avvio
 257 Prossimo suggerimento
 258 Sapevi che...
-259 Amaya può adattarsi al tuo uso: ci sono cinque diversi profili con un insieme differente di voci di menu e pannelli. Vedi Preferenze.
-260 I panelli possono essere visualizzati a sinistra o a destra o personalizzati pannello per pannello. Vedi Preferenze.
-261 Con il tasto F2 o Escape si può selezionare l'elemento genitore nella struttura, per applicare a questi elementi le funzioni di editing (copia, incolla, attributi, etc.).
-262 Si possono visualizzare due documenti uno accanto all'altro nella finestra trascinando il tab del documento al margine del documento visualizzato.
-263 Con il modo personalizzato, si può trascinare i pannelli per cambiare il loro ordine o per renderli mobili.
-264 Con il modo personalizzato, si possono generare diverse barre di pannelli su ogni lato trascinando pannelli.
-265 Si può cambiare il modo di editing (Text/XML) cliccando sul corrispondente pulsante nella barra di stato.
-266 Quando c'è un pulsante rosso nella barra di stato, si possono vedere gli errori cliccandoci sopra .
-267 Si può selezionare un antenato della selezione corrente clicccando sul suo nome nel path di controllo visualizzato nella barra di stato.
-268 Ci si può muovere in un altro tab con il menu visualizzato dal pulsante freccia alla destra dei tab del documento.
+259 **Close
+260 Amaya può adattarsi al tuo uso: ci sono cinque diversi profili con un insieme differente di voci di menu e pannelli. Vedi Preferenze.
+261 I panelli possono essere visualizzati a sinistra o a destra o personalizzati pannello per pannello. Vedi Preferenze.
+262 Con il tasto F2 o Escape si può selezionare l'elemento genitore nella struttura, per applicare a questi elementi le funzioni di editing (copia, incolla, attributi, etc.).
+263 Si possono visualizzare due documenti uno accanto all'altro nella finestra trascinando il tab del documento al margine del documento visualizzato.
+264 Con il modo personalizzato, si può trascinare i pannelli per cambiare il loro ordine o per renderli mobili.
+265 Con il modo personalizzato, si possono generare diverse barre di pannelli su ogni lato trascinando pannelli.
+266 Si può cambiare il modo di editing (Text/XML) cliccando sul corrispondente pulsante nella barra di stato.
+267 Quando c'è un pulsante rosso nella barra di stato, si possono vedere gli errori cliccandoci sopra .
+268 Si può selezionare un antenato della selezione corrente clicccando sul suo nome nel path di controllo visualizzato nella barra di stato.
+269 Ci si può muovere in un altro tab con il menu visualizzato dal pulsante freccia alla destra dei tab del documento.

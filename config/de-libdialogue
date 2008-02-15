@@ -259,13 +259,14 @@
 256 Tips bei Programmstart anzeigen
 257 Nächster Tip
 258 Haben Sie schon gewusst?
-259 Amaya kann auf Ihre Bedürfnisse angepasst werden: fünf verschiedene Profile mit verschiedenen Kombinationen von Menu Einträgen und Bedienelementen. Für weitere Informationen werfen Sie bitte einen Blick in die Einstellungen.
-260 Bedienelemente können links, rechts oder benutzerdefiniert angezeigt werden. Siehe Einstellungen.
-261 Mit F2 oder der Escape Taste können Sie das Elternelement in der Struktur auswählen und Editier Funktionen (kopieren, einfügen,Attribute usw.) auf dieses Element anzuwenden.
-262 Sie können zwei Dokumente nebeneinander im Fenster darstellen indem Sie ein Dokumenten-Tab an die Begrenzung des dargestellten Dokumentes ziehen.
-263 Im benutzerdefinierten Modus können Sie Bedienelemente verschieben um ihre Anordnung zu verändern oder um sie frei zu platzieren.
-264 Im benutzerdefinierten Modus können Sie können Sie durch das Verschieben von Bedienelementen auf beiden Seiten Leisten mit Bedienelementen erstellen.
-265 Sie können zwischen den Editiermodi (Text/XML) wechseln indem Sie auf das entsprechende Bedienfeld in der Statusleiste klicken.
-266 Bemerken Sie einen roten Button in der Statusleiste können Sie sich mit einem Klick darauf Fehler im Dokument anzeigen lassen.
-267 Sie können Vorgängerelemente durch einen Klick auf deren Bezeichnung in der Pfadanzeige unten in der Statusleiste auswählen.
-268 Sie können zu einer anderen Registerkarte wechseln indem Sie auf das Pfeil-nach-unten Symbol rechts neben den Registerleisten klicken.
+259 **Close
+260 Amaya kann auf Ihre Bedürfnisse angepasst werden: fünf verschiedene Profile mit verschiedenen Kombinationen von Menu Einträgen und Bedienelementen. Für weitere Informationen werfen Sie bitte einen Blick in die Einstellungen.
+261 Bedienelemente können links, rechts oder benutzerdefiniert angezeigt werden. Siehe Einstellungen.
+262 Mit F2 oder der Escape Taste können Sie das Elternelement in der Struktur auswählen und Editier Funktionen (kopieren, einfügen,Attribute usw.) auf dieses Element anzuwenden.
+263 Sie können zwei Dokumente nebeneinander im Fenster darstellen indem Sie ein Dokumenten-Tab an die Begrenzung des dargestellten Dokumentes ziehen.
+264 Im benutzerdefinierten Modus können Sie Bedienelemente verschieben um ihre Anordnung zu verändern oder um sie frei zu platzieren.
+265 Im benutzerdefinierten Modus können Sie können Sie durch das Verschieben von Bedienelementen auf beiden Seiten Leisten mit Bedienelementen erstellen.
+266 Sie können zwischen den Editiermodi (Text/XML) wechseln indem Sie auf das entsprechende Bedienfeld in der Statusleiste klicken.
+267 Bemerken Sie einen roten Button in der Statusleiste können Sie sich mit einem Klick darauf Fehler im Dokument anzeigen lassen.
+268 Sie können Vorgängerelemente durch einen Klick auf deren Bezeichnung in der Pfadanzeige unten in der Statusleiste auswählen.
+269 Sie können zu einer anderen Registerkarte wechseln indem Sie auf das Pfeil-nach-unten Symbol rechts neben den Registerleisten klicken.

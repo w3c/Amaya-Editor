@@ -3881,6 +3881,10 @@
 <message xml:lang="it">Sapevi che...</message>
 <message xml:lang="hu">Tudta-e..</message>
 </label>
+<label define="TIP_DIALOG_TIP_CLOSE">
+<message xml:lang="en">Close</message>
+<message xml:lang="fr">Fermer</message>
+</label>
 <label define="TIP_AMAYA_PROFILES">
 <message xml:lang="en">Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.</message>
 <message xml:lang="fr">Amaya s'adapte à vos besoins : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.</message>

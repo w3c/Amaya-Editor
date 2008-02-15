@@ -258,13 +258,14 @@
 256 Mostrar sugerencia al iniciar el programa
 257 Siguiente sugerencia
 258 ¿Sabía que...?
-259 Amaya puede adaptarse a sus necesidades: incorpora cinco perfiles distintos con diferentes opciones de menús y paneles. Véase el menú Editar > Preferencias.
-260 Las ventanas de herramientas pueden mostrarse todas juntas a izquierda o derecha o por separado de forma personalizada. Véase el menú Editar > Preferencias.
-261 Con la tecla F2 o Escape se puede seleccionar el elemento padre del elemento seleccionado para aplicarle funciones de edición (copiar, pegar, atributos, etc).
-262 Puede mostrar dos o más documentos simultáneamente arrastrando la pestaña de un documento a uno de los bordes del documento visible.
-263 En el modo Personalizable, puede arrastrar los paneles de herramientas para cambiar su orden o mantenerlos flotantes.
-264 En el modo Personalizable, puede colocar los paneles de herramientas uno al lado del otro vertical u horizontalmente.
-265 Puede cambiar el modo de edición (Texto/XML) haciendo clic en el botón situado en la parte derecha de la barra de estado.
-266 Cuando se muestra un botón rojo en el extremo derecho de la barra de estado, puede ver los errores de la página haciendo clic en él.
-267 Puede seleccionar directamente un elemento (o en sus elementos padres) haciendo clic en su nombre que se muestra en la ruta de control situada en la parte izquierda de la barra de estado.
-268 Puede cambiar de pestaña de documento mediante el menú que se despliega haciendo clic en el botón en forma de flecha situado en el extremo derecho de las pestañas de documentos.
+259 **Close
+260 Amaya puede adaptarse a sus necesidades: incorpora cinco perfiles distintos con diferentes opciones de menús y paneles. Véase el menú Editar > Preferencias.
+261 Las ventanas de herramientas pueden mostrarse todas juntas a izquierda o derecha o por separado de forma personalizada. Véase el menú Editar > Preferencias.
+262 Con la tecla F2 o Escape se puede seleccionar el elemento padre del elemento seleccionado para aplicarle funciones de edición (copiar, pegar, atributos, etc).
+263 Puede mostrar dos o más documentos simultáneamente arrastrando la pestaña de un documento a uno de los bordes del documento visible.
+264 En el modo Personalizable, puede arrastrar los paneles de herramientas para cambiar su orden o mantenerlos flotantes.
+265 En el modo Personalizable, puede colocar los paneles de herramientas uno al lado del otro vertical u horizontalmente.
+266 Puede cambiar el modo de edición (Texto/XML) haciendo clic en el botón situado en la parte derecha de la barra de estado.
+267 Cuando se muestra un botón rojo en el extremo derecho de la barra de estado, puede ver los errores de la página haciendo clic en él.
+268 Puede seleccionar directamente un elemento (o en sus elementos padres) haciendo clic en su nombre que se muestra en la ruta de control situada en la parte izquierda de la barra de estado.
+269 Puede cambiar de pestaña de documento mediante el menú que se despliega haciendo clic en el botón en forma de flecha situado en el extremo derecho de las pestañas de documentos.
