@@ -1130,15 +1130,19 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
                           TtaWriteByte (pivFile, 'A');
                           break;
                         }
-                      PutBoolean (pivFile, pPa->PaNewSubpath);
-                      PutSign (pivFile, (ThotBool)(pPa->XStart >= 0));
-                      PutInteger (pivFile, abs (pPa->XStart));
-                      PutSign (pivFile, (ThotBool)(pPa->YStart >= 0));
-                      PutInteger (pivFile, abs (pPa->YStart));
-                      PutSign (pivFile, (ThotBool)(pPa->XEnd >= 0));
-                      PutInteger (pivFile, abs (pPa->XEnd));
-                      PutSign (pivFile, (ThotBool)(pPa->YEnd >= 0));
-                      PutInteger (pivFile, abs (pPa->YEnd));
+                      if (pPa->PaShape == PtLine || pPa->PaShape == PtCubicBezier ||
+                          pPa->PaShape == PtQuadraticBezier || pPa->PaShape == PtEllipticalArc)
+                        {
+                          PutBoolean (pivFile, pPa->PaNewSubpath);
+                          PutSign (pivFile, (ThotBool)(pPa->XStart >= 0));
+                          PutInteger (pivFile, abs (pPa->XStart));
+                          PutSign (pivFile, (ThotBool)(pPa->YStart >= 0));
+                          PutInteger (pivFile, abs (pPa->YStart));
+                          PutSign (pivFile, (ThotBool)(pPa->XEnd >= 0));
+                          PutInteger (pivFile, abs (pPa->XEnd));
+                          PutSign (pivFile, (ThotBool)(pPa->YEnd >= 0));
+                          PutInteger (pivFile, abs (pPa->YEnd));
+                        }
                       switch (pPa->PaShape)
                         {
                         case PtLine:

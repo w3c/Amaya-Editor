@@ -2626,6 +2626,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
           TtaExportDocument (doc, tempdoc, "TextFileT");
           TtaExtractName (tempdoc, tempdir, docname);
+          RemoveParsingErrors (doc);
           /* reapply the CSS to relative documents */
           UpdateStyleSheet (DocumentURLs[doc], tempdoc);
           if (otherDoc)

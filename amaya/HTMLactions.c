@@ -2704,6 +2704,7 @@ void CloseLogs (Document doc)
   /* are there log documents linked to this document? */
   if (doc)
     {
+      RemoveParsingErrors (doc);
       for (i = 1; i < DocumentTableLength; i++)
         if (DocumentURLs[i] && DocumentSource[i] == doc &&
             DocumentTypes[i] == docLog)
@@ -2713,7 +2714,6 @@ void CloseLogs (Document doc)
             TtaCloseDocument (i);
             TtaFreeMemory (DocumentURLs[i]);
             DocumentURLs[i] = NULL;
-            RemoveParsingErrors (i);
             if (DocumentTypes[i] != docLog)
               /* switch off the button Show Log file */
               UpdateLogFile (doc, FALSE);

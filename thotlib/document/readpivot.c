@@ -2543,9 +2543,9 @@ PtrElement ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc,
                                               pPa->Sweep = b2;
                                             }
                                           break;
-                                        default:
+                                          /*default:
                                           PivotError (pivFile,
-                                                      "PivotError: Path 2");
+                                          "PivotError: Path 2");*/
                                           break;
                                         }
                                       /* lit l'octet qui suit (type d'element de

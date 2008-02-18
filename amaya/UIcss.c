@@ -406,9 +406,7 @@ void UpdateStyleSheet (char *url, char *tempdoc)
       if (url && ((css->url && !strcmp (url, css->url)) ||
                   (css->localName && !strcmp (url, css->localName))))
         {
-          /* an external CSS */
-          found = FALSE;
-          /* update the copy in .amaya/0 */
+          /* an external CSS: update the copy in .amaya/0 */
           if (css->localName && tempdoc)
             TtaFileCopy (tempdoc, css->localName);
           doc = 1;
@@ -442,6 +440,7 @@ void UpdateStyleSheet (char *url, char *tempdoc)
                           /* invalidate current logs */
                           CloseLogs (doc);
                           CloseLogs (ParsedCSS);
+                          found = TRUE; // the css file is almost parsed
                           if (refcss && refcss->infos[doc])
                             {
                               refInfo = refcss->infos[doc];
@@ -497,6 +496,10 @@ void UpdateStyleSheet (char *url, char *tempdoc)
                 }
               doc++;
             }
+        }
+      if (!found)
+        {
+          CloseLogs (ParsedCSS);
         }
       css = css->NextCSS;
     }
