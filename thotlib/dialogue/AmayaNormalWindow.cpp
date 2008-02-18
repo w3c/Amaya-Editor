@@ -728,7 +728,7 @@ void AmayaNormalWindow::RefreshShowToolPanelToggleMenu()
   -----------------------------------------------------------------------*/
 void AmayaNormalWindow::OnURLSelected( wxCommandEvent& event )
 {
-  GotoSelectedURL();
+  GotoSelectedURL (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -759,7 +759,7 @@ void AmayaNormalWindow::OnURLText( wxCommandEvent& event )
 void AmayaNormalWindow::OnURLTextEnter( wxCommandEvent& event )
 {
    // TtaDisplayMessage (INFO, buffer);
-  GotoSelectedURL();
+  GotoSelectedURL (FALSE);
   // do not skip this event because we don't want to propagate this event
   // event.Skip();
 }
@@ -769,7 +769,7 @@ void AmayaNormalWindow::OnURLTextEnter( wxCommandEvent& event )
  *      Method:  GotoSelectedURL
  * Description:  validate the selection
   -----------------------------------------------------------------------*/
-void AmayaNormalWindow::GotoSelectedURL()
+void AmayaNormalWindow::GotoSelectedURL(ThotBool noreplace)
 {
   Document doc;
   View     view;
@@ -794,17 +794,17 @@ void AmayaNormalWindow::GotoSelectedURL()
         if (isBufUrl == FALSE)
         {
           isBufUrl = TRUE;
-            (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+            (*(Proc4)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer,  (void *)noreplace);
            strcpy (BufUrl, buffer);
           isBufUrl = FALSE;
         }
         else if (strcmp (buffer, BufUrl) != 0)
         {
-            (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+            (*(Proc4)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer,  (void *)noreplace);
            strcpy (BufUrl, buffer);
         }
 #else /* _WINDOWS */
-        (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+        (*(Proc4)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer,  (void *)noreplace);
 #endif /* _WINDOWS */
     }
 }
@@ -946,7 +946,7 @@ void AmayaNormalWindow::OnRecentDocMenu(wxCommandEvent& event)
       if(str)
         {
           SetURL(str);
-          GotoSelectedURL();
+          GotoSelectedURL (TRUE);
         }
     }
 }

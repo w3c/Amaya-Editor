@@ -68,7 +68,7 @@ class AmayaNormalWindow : public AmayaWindow
   virtual void     AppendURL ( const wxString & new_url );
   virtual void     EmptyURLBar();
   
-  void     GotoSelectedURL();
+  void     GotoSelectedURL(ThotBool noreplace);
   virtual void RefreshShowToolPanelToggleMenu();
   
   virtual bool AttachPage( int position, AmayaPage * p_page );

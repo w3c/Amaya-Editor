@@ -1443,7 +1443,7 @@ static ThotBool  CompleteUrl(char **url)
   The Address text field in a document window has been modified by the user
   Load the corresponding document in that window.
   ----------------------------------------------------------------------*/
-static void TextURL (Document doc, View view, char *text)
+static void TextURL (Document doc, View view, char *text, intptr_t noreplace)
 {
   char             *s = NULL;
   char             *url;
@@ -1492,7 +1492,7 @@ static void TextURL (Document doc, View view, char *text)
         CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
 
       TtaFreeMemory (s);
-      DontReplaceOldDoc = FALSE;
+      DontReplaceOldDoc = (noreplace != 0);
       NewFile = FALSE;
       CurrentDocument = doc;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
