@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -12,16 +12,14 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
-
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Selecting.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" />
-</a> <a href="Manual.html.fr" accesskey="t"><img alt="top"
-src="../../resources/icons/misc/up.png" />
-</a> <a href="Document.html.fr" accesskey="n"><img alt="next"
-src="../../resources/icons/misc/right.png" />
-</a></p>
+src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
+<a href="Document.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
 <div id="Views">
@@ -52,7 +50,7 @@ travers un document.</p>
       montre l'étendue de l'élément. Les parties visualisées en noir peuvent
       être éditées directement , en cliquant et en tapant. Les parties
       visualisées en bleu peuvent être modifiées uniquement par
-      l'intermédiaire des commandes d'édition.
+      l'intermédiaire des commandes d'édition. 
       <p>La vue structure montre tous les élément du document, même ceux qui
       ne sont pas affichés dans la vue formatée comme les commentaires, le
       type du document (doctype), les instructions de traitement ou les
@@ -61,7 +59,7 @@ travers un document.</p>
       l'auteur lorsqu'un élément est défini dans un espace de noms différent
       de celui de son père.</p>
     </dd>
-  <dt>Vue alternée</dt>
+  <dt>Vue alternée (non disponible dans le profil Lite)</dt>
     <dd>Cette vue vous permet de voir à quoi ressemble le document quand il
       est visualisé par un navigateur en mode texte. Elle est utile pour
       vérifier l'accessibilité de vos documents.</dd>
@@ -98,16 +96,6 @@ correspondante :</p>
       <td
       style="border-top:solid 1.5pt; border-left:none;border-bottom:solid 1.5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt"><p
         class="TableTitle"><strong>Raccourci clavier</strong></p>
-      </td>
-    </tr>
-    <tr>
-      <td
-      style="border-top:none; border-left:none; border-bottom:solid .5pt; border-right: none; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Montrer la vue formatée</p>
-      </td>
-      <td
-      style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><kbd>Ctrl u Ctrl f</kbd></p>
       </td>
     </tr>
     <tr>
@@ -163,20 +151,16 @@ correspondante :</p>
   </tbody>
 </table>
 
-<p class="Note"><strong>Astuce 1 :</strong> vous pouvez ouvrir rapidement la
-vue source (ou la dernière vue active) en cliquant à la souris sur le boutton
-rouge en bas (partage horizontal) ou à droite (partage vertical) de votre
-document.</p>
-
-<p class="Note"><strong>Astuce 2</strong> : Les commandes <strong>Montrer
-...</strong> du menu <strong>Vues</strong> peuvent être également utilisées
-pour redonner le focus clavier à une vue.</p>
+<p class="Note"><strong>Astuce :</strong> vous pouvez ouvrir rapidement la
+vue source (ou la dernière vue active) en cliquant à la souris sur le barre
+rouge en bas (Partager/étendre en horizontal) ou à droite (Partager/étendre
+en  vertical) de votre document.</p>
 
 <h3>Fermer une vue</h3>
 
-<p>Pour fermer une vue choisissez la commande <strong>Partager la vue
-horizontalement</strong> ou <strong>Partager la vue verticalement</strong> du
-menu <strong>Vues</strong>. Une autre façon de fermer une vue est de
+<p>Pour fermer une vue choisissez la commande <strong>Partager
+horizontalement</strong> ou <strong>Partager verticalement</strong> du menu
+<strong>Affichage</strong>. Une autre façon de fermer une vue est de
 double-cliquer sur la ligne rouge en bas ou à droite de votre page.</p>
 
 <p>Vous pouvez aussi fermer l'onglet (menu <strong>Fichier</strong> ou clic

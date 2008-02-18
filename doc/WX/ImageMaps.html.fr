@@ -100,7 +100,7 @@ courant) à une image.</p>
 
 <p>Afin de donner une idée de comment une page sans les images doit être
 présentée, Amaya fournit une option <strong>Montrer la vue alternée</strong>
-dans le menu <strong>Vues</strong>. Dans le cas d'un navigateur oral, la <a
+dans le menu <strong>Affichage</strong>. Dans le cas d'un navigateur oral, la <a
 href="Views.html.fr#Alternate">vue alternée</a> pourrait être simplement lue
 à voix haute. Sans des textes de remplacement pour les images, de nombreuses
 pages deviendraient difficiles voire impossibles à naviguer, et les
@@ -120,11 +120,11 @@ actives :</p>
 <p class="ProcedureCaption">Pour visualiser les zones existantes</p>
 <ul>
   <li>Choisissez <strong>Montrer les zones actives</strong> du menu
-    <strong>Vues</strong>.<br />
+    <strong>Affichage</strong>.<br />
 
     <p class="Note"><strong>Note</strong> : Vous pouvez aussi visualiser les
-    zones actives depuis le clavier par la séquence <kbd>Ctrl v Ctrl
-    t</kbd>.</p>
+    zones actives depuis le clavier par la séquence <kbd>Ctrl u Ctrl
+    m</kbd>.</p>
   </li>
 </ul>
 </div>

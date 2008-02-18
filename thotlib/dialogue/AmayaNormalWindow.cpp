@@ -728,7 +728,7 @@ void AmayaNormalWindow::RefreshShowToolPanelToggleMenu()
   -----------------------------------------------------------------------*/
 void AmayaNormalWindow::OnURLSelected( wxCommandEvent& event )
 {
-  GotoSelectedURL (FALSE);
+  GotoSelectedURL (TRUE);
 }
 
 /*----------------------------------------------------------------------

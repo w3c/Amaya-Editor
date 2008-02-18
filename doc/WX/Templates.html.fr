@@ -136,7 +136,7 @@ forme de cadres colorés qui englobent les éléments XHTML.</p>
 
 <p>Les éléments XTiger peuvent aussi être vus dans la vue structure. Ouvrez
 cette vue avec l'entrée <strong>Montrer la structure</strong> dans le menu
-<strong>Vues</strong>. Dans la vue structure, les éléments XTiger sont
+<strong>Affichage</strong>. Dans la vue structure, les éléments XTiger sont
 affichés en vert, alors que les éléments XHTML sont affichés en bleu. Les
 éléments XTiger sont aussi montrés dans la vue source, mais sans couleur
 spéciale.</p>

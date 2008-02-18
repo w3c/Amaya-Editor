@@ -169,7 +169,7 @@ Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
       <td>Ctrl Enter</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu Vues</td>
+      <td colspan="2">Menu Affichage</td>
     </tr>
     <tr>
       <td>Montrer outils</td>
@@ -883,7 +883,7 @@ Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
       <td>Ctrl l Ctrl d</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu Vues</td>
+      <td colspan="2">Menu Affichage</td>
     </tr>
     <tr>
       <td>Montrer les zones active</td>

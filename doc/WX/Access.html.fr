@@ -85,10 +85,10 @@ l'exception la saisie de texte) sans utiliser le clavier.</p>
 <p>Les caractéristiques d'accessibilité dans la version courante incluent
 :</p>
 <ul>
-  <li>Les Vues alternée, liens, structure et table des matières peuvent être
-    naviguées et éditées, et sont en synchronisation avec la vue
+  <li>Les vues liens, structure et table des matières peuvent être
+    utilisées pour naviguer dans le document. Elles sont synchronées avec la vue
   formatée.</li>
-  <li>Editer la source.</li>
+  <li>Editer le code source.</li>
   <li>Ajouter, supprimer et éditer dynamiquement plusieurs feuilles de style,
     incluant une feuille de style.</li>
   <li>Les accès rapides et l'activation des commandes au clavier, des liens

@@ -265,15 +265,15 @@ HTML</a></h3>
 
 <p>HTML définit certains éléments de niveau de caractère qui permettent
 d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
-<strong>XHTML</strong> permettent de manier ces éléments HTML.</p>
+<strong>Insertion</strong> permettent d'éditer ces éléments HTML.</p>
 
 <h4 id="Types">Eléments type information</h4>
 
 <p>La commande<strong>Types information</strong> du menu
-<strong>XHTML</strong> présente un sous-menu offrant un choix d'éléments HTML
+<strong>Insertion</strong> présente un sous-menu offrant un choix d'éléments HTML
 qui définissent des styles abstraits.</p>
 
-<p class="ProcedureCaption">Pour appliquer un des Eléments type
+<p class="ProcedureCaption">Pour appliquer un des éléments type
 information :</p>
 <ol>
   <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
@@ -283,7 +283,7 @@ information :</p>
   </li>
 </ol>
 
-<p>Cinq de ces éléments sont également disponibles dans l'outil XHTML :
+<p>Cinq de ces éléments sont également disponibles dans l'outil Eléments :
 <em>em</em> (<img src="../../resources/icons/16x16/XHTML_I.png"
 alt="Bouton Mise en evidence" /> ), <strong>stong</strong> (<img
 src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" /> ),
@@ -296,9 +296,9 @@ alt="Bouton Suppression" src="../../resources/icons/16x16/XHTML_del.png" />
 <h4 id="L895">Eléments caractères</h4>
 
 <p>La commande <strong>Éléments caractères</strong> du menu
-<strong>XHTML</strong> offre un autre menu changeant le style du texte.</p>
+<strong>Insertion</strong> offre un autre menu changeant le style du texte.</p>
 
-<p class="ProcedureCaption">Pour appliquer un des Eléments caractères :</p>
+<p class="ProcedureCaption">Pour appliquer un des éléments caractères :</p>
 <ol>
   <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
   <li>Choisissez une commande dans ce menu <strong>Eléments
@@ -307,7 +307,7 @@ alt="Bouton Suppression" src="../../resources/icons/16x16/XHTML_del.png" />
   </li>
 </ol>
 
-<p>Deux de ces éléments sont également disponibles dans l'outil XHTML : sup
+<p>Deux de ces éléments sont également disponibles dans l'outil Elément : sup
 (<img alt="Bouton Exposant" src="../../resources/icons/16x16/XHTML_sup.png"
 /> ), sub (<img alt="Bouton Indice"
 src="../../resources/icons/16x16/XHTML_sub.png" /> ).</p>
@@ -323,7 +323,7 @@ caractères</strong> s'annulent si elles sont appliquées de nouveau.</p>
   <li>Sélectionnez l'élément que vous voulez supprimer.</li>
   <li>Appliquez de nouveau la commande du sous-menu <strong>Types
     information</strong> ou <strong>Eléments caractères</strong> du menu
-    <strong>XHTML</strong>, ou dans l'outil XHTML : <em>em</em> (<img
+    <strong>Insertion</strong>, ou dans l'outil Eléments : <em>em</em> (<img
     src="../../resources/icons/16x16/XHTML_I.png"
     alt="Bouton Mise en evidence" /> ), <strong>strong</strong> (<img
     src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />

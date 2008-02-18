@@ -55,7 +55,7 @@ ajoutées pour une manipulation plus confortable.</p>
   <li>Cliquez sur le bouton table <img
     src="../../resources/icons/16x16/XHTML_Table.png" alt="Table button"
      /> ou sélectionnez l'entrée <strong>Table</strong> du menu
-    <strong>XHTML</strong>, Amaya affiche une boîte de dialogue.</li>
+    <strong>Insertion</strong>, Amaya affiche une boîte de dialogue.</li>
   <li>Spécifiez le nombre initial de lignes et de colonnes pour la nouvelle
     table, ainsi que l'épaisseur de sa bordure.</li>
   <li>Cliquez sur le bouton <strong>Confirmer</strong>. Amaya crée une table
@@ -75,11 +75,11 @@ ajoutées pour une manipulation plus confortable.</p>
 <ul>
   <li>Pour créer une nouvelle colonne à gauche d'une cellule existante,
     choisissez <strong>Insérer une colonne</strong> dans le sous-menu
-    <strong>Table</strong> du menu <strong>XHTML</strong> ou tapez <kbd>Ctrl
+    <strong>Table</strong> du menu <strong>Insertion</strong> ou tapez <kbd>Ctrl
     t Ctrl b</kbd>.</li>
   <li>Pour créer une nouvelle colonne à droite d'une cellule existante,
     choisissez <strong>Ajouter une colonne</strong> dans le sous-menu
-    <strong>Table</strong> du menu <strong>XHTML</strong>, ou tapez
+    <strong>Table</strong> du menu <strong>Insertion</strong>, ou tapez
     <kbd>Ctrl t Ctrl a</kbd>.</li>
 </ul>
 
@@ -99,7 +99,7 @@ colonne.</p>
 <p>Il y a deux méthodes pour sélectionner une colonne :</p>
 <ol>
   <li>Utilisez l'entrée <strong>Sélectionner la colonne</strong> dans le
-    sous-menu <strong>XHTML/Table</strong> (<kbd>Ctrl t Ctrl c</kbd>).</li>
+    sous-menu <strong>Insertion/Table</strong> (<kbd>Ctrl t Ctrl c</kbd>).</li>
   <li>Vous pouvez aussi étendre la sélection verticalement sur au moins deux
     cellules de la même colonne (Cell 1.1 à Cell 2.1 dans l'exemple
     ci-dessous) puis pressez deux fois <kbd>F2</kbd> pour sélectionner la
@@ -135,7 +135,7 @@ permettent de coller un colonne :</p>
       <li>Sélectionnez le début d'une cellule et activez la commande coller
         (<kbd>Ctrl v</kbd>),</li>
       <li>Vous pouvez aussi utiliser l'entrée <strong>Coller avant</strong>
-        du sous-menu <strong>XHTML/Table</strong> (<kbd>Ctrl t Ctrl
+        du sous-menu <strong>Insertion/Table</strong> (<kbd>Ctrl t Ctrl
         p</kbd>).</li>
     </ul>
   </li>
@@ -144,7 +144,7 @@ permettent de coller un colonne :</p>
       <li>Sélectionnez la fin d'une cellule et activez la commande coller
         (<kbd>Ctrl v</kbd>),</li>
       <li>Vous pouvez aussi utiliser l'entrée <strong>Coller après</strong>
-        du sous-menu <strong>XHTML/Table</strong> (<kbd>Ctrl t Ctrl
+        du sous-menu <strong>Insertion/Table</strong> (<kbd>Ctrl t Ctrl
         v</kbd>).</li>
     </ul>
   </li>
@@ -157,10 +157,10 @@ une table :</p>
 <ul>
   <li>Pour créer une ligne avant une ligne existante, utilisez l'entrée
     <strong>Insérer une ligne</strong> du sous-menu
-    <strong>XHTML/Table</strong> (<kbd>Ctrl t Ctrl i</kbd>).</li>
+    <strong>Insertion/Table</strong> (<kbd>Ctrl t Ctrl i</kbd>).</li>
   <li>Pour ajouter une nouvelle ligne après une ligne existante, utilisez
     l'entrée <strong>Ajouter une ligne</strong> du sous-menu
-    <strong>XHTML/Table</strong> (<kbd>Ctrl t Ctrl n</kbd>).</li>
+    <strong>Insertion/Table</strong> (<kbd>Ctrl t Ctrl n</kbd>).</li>
 </ul>
 
 <p>Une autre méthode consiste à sélectionner une ligne complète (utilisez la
@@ -175,7 +175,7 @@ copier, la couper ou la coller.</p>
 <p>Pour sélectionner une ligne de table deux méthodes sont disponibles :</p>
 <ol>
   <li>Uitlisez l'entrée <strong>Sélectionner la ligne</strong> dans le
-    sous-menu <strong>XHTML/Table</strong> (<kbd>Ctrl t Ctrl r</kbd>).</li>
+    sous-menu <strong>Insertion/Table</strong> (<kbd>Ctrl t Ctrl r</kbd>).</li>
   <li>Vous pouvez aussi mettre la sélection dans une cellule de la ligne puis
     utiliser la touche <kbd>F2</kbd>.</li>
 </ol>
@@ -190,7 +190,7 @@ couper avec les commandes habituelles.</p>
       <li>soit on sélectionne le début d'une ligne et on active la commande
         coller (<kbd>Ctrl v</kbd>),</li>
       <li>soit on utilise l'entrée <strong>Coller avant</strong> du sous-menu
-        <strong>XHTML/Table</strong> (<kbd>Ctrl t Ctrl p</kbd>).</li>
+        <strong>Insertion/Table</strong> (<kbd>Ctrl t Ctrl p</kbd>).</li>
     </ul>
   </li>
   <li>Pour coller la ligne après une autre ligne
@@ -198,7 +198,7 @@ couper avec les commandes habituelles.</p>
       <li>soit on sélectionne la fin d'une ligne et on active la commande
         coller (<kbd>Ctrl v</kbd>),</li>
       <li>soit on utilise l'entrée <strong>Coller après</strong> du sous-menu
-        <strong>XHTML/Table</strong> (<kbd>Ctrl t Ctrl v</kbd>).</li>
+        <strong>Insertion/Table</strong> (<kbd>Ctrl t Ctrl v</kbd>).</li>
     </ul>
   </li>
 </ol>
@@ -209,11 +209,11 @@ couper avec les commandes habituelles.</p>
 extensions de cellules :</p>
 <ul>
   <li><strong>Joindre avec la cellule à droite</strong> dans le sous-menu
-    <strong>XHTML/Table</strong> (<kbd>Ctrl t Ctrl e</kbd>) étend la
+    <strong>Insertion/Table</strong> (<kbd>Ctrl t Ctrl e</kbd>) étend la
     cellule d'une position à droite et fusionne le contenu des deux
   cellules.</li>
   <li><strong>Joindre avec la cellule au-dessous</strong> dans le sous-menu
-    <strong>XHTML/Table</strong> (<kbd>Ctrl t Ctrl j</kbd>) étend la
+    <strong>Insertion/Table</strong> (<kbd>Ctrl t Ctrl j</kbd>) étend la
     cellule d'une position vers le bas et fusionne le contenu des deux
     cellules.</li>
   <li><strong>Réduire extension horizontale</strong> (<kbd>Ctrl t Ctrl
@@ -233,11 +233,11 @@ href="Attributes.html.fr">attributs</a> <code>colspan</code> et
   <li>Pour créer un nouveau corps de table en dessous d'un corps de table
     existant, il faut placer le curseur à la fin de la dernière cellule de la
     dernière ligne du corps de table et sélectionner l'entrée <strong>Corps
-    (tbody)</strong> dans le sous-menu <strong>XHTML/Table</strong>.</li>
+    (tbody)</strong> dans le sous-menu <strong>Insertion/Table</strong>.</li>
   <li>Pour créer un nouveau corps de table au-dessus d'une ligne existante,
     il faut placer le curseur au début de la première cellule de la ligne et
     sélectionner l'entrée <strong>Corps (tbody)</strong> dans le sous-menu
-    <strong>XHTML/Table</strong>.</li>
+    <strong>Insertion/Table</strong>.</li>
 </ol>
 
 <p>De nouveaux corps de table peuvent aussi être créés avec la touche <a
@@ -253,7 +253,7 @@ table</a></h3>
 cellules de la table. Pour cette raison, Amaya pourrait mal comprendre vos
 intentions quand vous choisissez un type d'élément (par exemple en cliquant
 les boutons H1, H2, etc. ou en sélectionnant une entrée dans le menu
-<strong>XHTML</strong>) pendant qu'un composant de la table est sélectionné.
+<strong>Insertion</strong>) pendant qu'un composant de la table est sélectionné.
 Quand vous voulez créer un élément après une table, vous devez sélectionner
 la table entière (contrôlez la sélection courante dans la ligne du bas de la
 fenêtre) et taper la touche Enter. Amaya engendrera un paragraphe après la

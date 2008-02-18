@@ -12,7 +12,8 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Browsing.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -50,7 +51,7 @@ Cela peut être utile quand la structure du document est complexe.</p>
 <p>Par exemple, la sélection d'un mot dans cette phrase visualise la
 sélection :</p>
 
-<p><samp style="color: #B20000">html&gt;body&gt;div&gt;p</samp></p>
+<p><code>html&gt;body&gt;div&gt;p</code></p>
 
 <p>ce qui signifie que ce qui est sélectionné est du texte dans un élément
 <code>p</code> qui est dans une division (<code>div</code>), elle-même dans
@@ -59,7 +60,7 @@ le corps (<code>body</code>) du document <code>html</code>.</p>
 <p>La sélection de <strong>cet élément de structure</strong> (par exemple
 cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
 
-<p><samp style="color: #B20000">html&gt;body&gt;div&gt;p&gt;strong</samp></p>
+<p><code>html&gt;body&gt;div&gt;p&gt;strong</code></p>
 
 <h3 id="L94">Sélectionner avec la souris</h3>
 <ul>

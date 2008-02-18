@@ -108,14 +108,13 @@ Amaya n'a pas de support pour les langages de script.</p>
 <h3 id="barre">La barre de menu</h3>
 <ul>
   <li>Fichier : création de documents, navigation, impression, fermeture.</li>
-  <li>Edition : édition de base, recherche/remplacement, correction
-    orthographique, paramétrage (menu Amaya sous Mac OSX).</li>
-  <li>XHTML : création/remplacement d'éléments (X)HTML.</li>
-  <li>XML : création d'éléments XML.</li>
+  <li>Edition : édition de base, recherche/remplacement, paramétrage (menu Amaya
+      sous Mac OSX).</li>
+  <li>Affichage : gestion des différentes vues du document.</li>
+  <li>Insertion : création/remplacement d'éléments HTML et XML.</li>
   <li>Liens : création et destruction des liens.</li>
-  <li>Vues : gestion des différentes vues du document.</li>
-  <li>Style : gestion du style CSS.</li>
-  <li>Annotations : création, destruction d'annotations.</li>
+  <li>Format: gestion du style CSS.</li>
+  <li>Outils : correction orthographique, création, destruction d'annotations.</li>
   <li>Aide : donne accès au manuel en ligne.</li>
 </ul>
 
@@ -672,9 +671,9 @@ relative qui permet d'aller du document source au document cible.</p>
 cible particulier d'un document édité par Amaya, il faut d'abord demander la
 visualisation des cibles <a id="target"><img src="../images/target.gif"
 alt=" target " /></a> dans le document concerné en activant l'entrée
-<strong>Montrer les cibles</strong> du menu <strong>Vues</strong> ou ouvrant
+<strong>Montrer les cibles</strong> du menu <strong>Affichage</strong> ou ouvrant
 la vue des liens (entrée <strong>Montrer les liens</strong> du menu
-<strong>Vues</strong>). Ensuite :</p>
+<strong>Affichage</strong>). Ensuite :</p>
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On clique sur le bouton <img alt="Link "

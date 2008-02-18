@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <title>Changer la structure</title>
+  <title>Créer des documents</title>
   <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -12,7 +12,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Views.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html.fr"
@@ -27,9 +28,12 @@ src="../../resources/icons/misc/right.png" /> </a></p>
 <p>Amaya vous permet ce créer de nouveaux documents locaux ou distants. Trois
 types de documents sont disponibles :</p>
 <ul>
-  <li><a href="HTML.html.fr">XHTML</a>, texte et hypertexte</li>
-  <li><a href="Math.html.fr#Math">MathML</a>, expressions mathématiques</li>
-  <li><a href="StyleSheets.html.fr">CSS</a>, feuille de style</li>
+  <li><a href="HTML.html.fr">Nouveau document</a>, pour saisir une page de
+    texte, avec des liens ou des formules, etc.</li>
+  <li><a href="Math.html.fr#Math">Nouvelle formule</a>, pour créer une
+    expression mathématique isolée</li>
+  <li><a href="StyleSheets.html.fr">Nouvelle feuille de style</a>, pour créer
+    une feuille de style CSS</li>
 </ul>
 
 <p class="ProcedureCaption">Pour créer un document :</p>
@@ -44,11 +48,16 @@ types de documents sont disponibles :</p>
     courant, nouvel onglet ou nouvelle fenêtre.</li>
   <li>Quand un nouveau document XHTML est créé : 
     <ul>
-      <li>Le <strong>Titre</strong> du document est demandé. Ce titre pourra
-        être modifié ultérieurement.</li>
+      <li>Le <strong>Titre</strong> du document est demandé. Si vous ne
+        donnez pas de titre, Amaya va en engendrer un par défaut et va
+        réafficher le dialogue pour que vous puissiez confirmer ce choix.</li>
+      <li>Si vous prévoyez d'utiliser un modèle, cliquez sur le bouton
+        <strong>A partir du modèle</strong> et sélectionnez un des modèles
+        proposés.</li>
       <li>Il est possible de spécifier le <strong>Profil du document</strong>
         créé (XHTML Transitional, XHTML 1.1, XHTML strict, XHTML basic, HTML
-        transitional, Compound document). 
+        transitional, Compound document).  Vous pouvez laisser Amaya choisir
+        pour vous.
         <p>Si vous prévoyez de créer un document XHTML composé (Compound
         document) incluant des éléments soit MathML soit SVG, il est
         recommandé de créer un fichier avec un suffixe <code>.xml</code>.</p>
@@ -56,15 +65,14 @@ types de documents sont disponibles :</p>
     </ul>
   </li>
   <li>Sélectionnez un <strong>Codage</strong> pour encoder le texte du
-    document. Attention, ce <strong>Codage</strong> doit être choisi en
-    accord avec le serveur Web qui va servir ce document.<br />
+    document. Attention si vous prévoyez de publier le document sur un
+    serveur, ce <strong>Codage</strong> doit être choisi en accord avec le
+    serveur Web qui va délivrer le document.<br />
     Habituellement les pages <code>.html</code> sont servies avec
     <code>iso-8859-1</code> and les pages <code>.xml</code> sont servies avec
     <code>utf-8</code>.</li>
-  <li>Confirmez avec le bouton <strong>Ouvrir</strong>. Amaya ouvre le
-    document spécifié. Si ce document existe déjà, sa version courante est
-    chargée sinon, Amaya créé un nouveau document contenant l'élément racine
-    correspondant au type choisi.</li>
+  <li>Confirmez avec le bouton <strong>Créer</strong>. Amaya crée un nouveau
+    document contenant l'élément racine correspondant au type choisi.</li>
 </ol>
 
 <p></p>

@@ -176,7 +176,7 @@ créer une table).</p>
       <td>Ctrl Enter</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu Vues</td>
+      <td colspan="2">Menu Affichage</td>
     </tr>
     <tr>
       <td>Montrer outils</td>
@@ -890,7 +890,7 @@ créer une table).</p>
       <td>Ctrl l Ctrl d</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu Vues</td>
+      <td colspan="2">Menu Affichage</td>
     </tr>
     <tr>
       <td>Montrer les zones active</td>

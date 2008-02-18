@@ -6,7 +6,7 @@
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <meta name="GENERATOR" content="amaya 8.8.51, see http://www.w3.org/Amaya/"
   />
-  <title>Editing Documents in Amaya</title>
+  <title>Creating documents</title>
   <style type="text/css">
 
  </style>
@@ -16,7 +16,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Views.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
@@ -31,9 +32,11 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <p>Amaya allows you to create both local or remote documents. Three types of
 documents are available:</p>
 <ul>
-  <li><a href="HTML.html">XHTML</a></li>
-  <li><a href="Math.html">MathML</a></li>
-  <li><a href="StyleSheets.html">CSS</a></li>
+  <li><a href="HTML.html">New document</a>, to create a document including
+    text, links, formulae, etc.</li>
+  <li><a href="Math.html">New formula</a>, to create a single formula</li>
+  <li><a href="StyleSheets.html">New style sheet</a>, to create a CSS style
+    sheet</li>
 </ul>
 
 <p class="ProcedureCaption">To create a document:</p>
@@ -45,27 +48,35 @@ documents are available:</p>
     can use the file browser to find a local directory.</li>
   <li>Choose the location of the new document : Replace current, In new tab
     or In new Window.</li>
-  <li>If you are creating a new XHTML document:
+  <li>If you are creating a new XHTML document: 
     <ul>
-      <li>The <strong>Title</strong> of this new document is requested. It
-        could be changed later.</li>
-      <li>You may specify the <strong>Document profile</strong> of the new
-        created document (XHTML Transitional, XHTML 1.1, XHTML strict, XHTML
-        basic, HTML transitional, Compound document).
+      <li>The <strong>Title</strong> of this new document is requested. If
+        you don't give a title, Amaya will generate a default one and will
+        redisplay the dialog box to let you confirm its choice.</li>
+      <li>If you plan to use a template, click the <strong>From
+        template</strong> toggle and select one of the proposed
+      templates.</li>
+      <li>If you don't plan to use a template, you may specify the
+        <strong>Document profile</strong> of the new created document (XHTML
+        Transitional, XHTML 1.1, XHTML strict, XHTML basic, HTML
+        transitional, Compound document).  You may use the default profile
+        selected by Amaya.
         <p>If you plan to create a XHTML document including either MathML or
         SVG elements (Compound document), it is recommended to create a
         document file with a <code>.xml</code> suffix.</p>
       </li>
     </ul>
   </li>
-  <li>Select a <strong>charset</strong> to encode strings of the document.
-    Pay attention, this <strong>charset</strong> should be selected in
-    accordance with the Web server that will serve the document.<br />
+  <li>You may select a <strong>charset</strong> to encode strings of the
+    document. Pay attention, if you plan to publish your document on a
+    server,  this <strong>charset</strong> should be selected in accordance
+    with the Web server that will serve the document (contact your web
+    master).<br />
     By default <code>.html</code> pages are served with
     <code>iso-8859-1</code> and <code>.xml</code> pages are served with
     <code>utf-8</code>.</li>
-  <li>Click <strong>Open</strong>. A new document opens, and a root element
-    is created.</li>
+  <li>Click <strong>Create</strong>. The new document is open, and a root
+    element is created.</li>
 </ol>
 </div>
 </body>

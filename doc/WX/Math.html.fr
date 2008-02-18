@@ -1097,7 +1097,7 @@ xmlns="http://www.w3.org/1998/Math/MathML">
 
 <p>Toutes les fois qu'un document contient des éléments MathML, la
 sélection de l'article <a href="Views.html.fr#Structure">Montrer la
-structure</a> du menu <strong>Vues</strong> ouvre la vue Structure qui montre
+structure</a> du menu <strong>Affichage</strong> ouvre la vue Structure qui montre
 la structure principale du document HTML. Dans cette vue, les éléments
 MathML et leur contenu effectif sont affichés.</p>
 

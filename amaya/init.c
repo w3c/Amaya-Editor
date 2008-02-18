@@ -1492,7 +1492,11 @@ static void TextURL (Document doc, View view, char *text, intptr_t noreplace)
         CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
 
       TtaFreeMemory (s);
-      DontReplaceOldDoc = (noreplace != 0);
+      if (noreplace != 0)
+        //ask the user choice
+        LoadDefaultOpeningLocation (TRUE);
+      else
+        DontReplaceOldDoc = FALSE;
       NewFile = FALSE;
       CurrentDocument = doc;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);

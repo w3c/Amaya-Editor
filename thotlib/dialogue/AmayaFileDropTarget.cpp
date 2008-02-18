@@ -70,7 +70,7 @@ bool AmayaFileDropTarget::OnDropFiles( wxCoord x, wxCoord y, const wxArrayString
     strcpy (buffer, (const char*)filenames[0].mb_str(wxConvUTF8));
     
     if (pDoc->Call_Text)
-      (*(Proc4)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer, FALSE);
+      (*(Proc4)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer, (void *)TRUE);
   }
   return true;
 }

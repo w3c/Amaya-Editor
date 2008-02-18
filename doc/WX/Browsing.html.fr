@@ -149,7 +149,7 @@ de cible <a name="target"><img src="../images/target.gif" alt=" target "
 /></a>. Ces icônes ne font pas partie du document et peuvent être soit
 visualisées soit cachées juste en modifiant le statut <strong>Montrer les
 cibles</strong> du document courant, qui est une option du menu
-<strong>Vues</strong>. Par défaut la commande au clavier est <kbd>Ctrl u Ctrl
+<strong>Affichage</strong>. Par défaut la commande au clavier est <kbd>Ctrl u Ctrl
 t</kbd>.</p>
 
 <p>Ces icônes sont associées aux <em>éléments cibles</em>, c'est-à-dire aux

@@ -188,7 +188,7 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td>Cmd Return</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu Vues</td>
+      <td colspan="2">Menu Affichage</td>
     </tr>
     <tr>
       <td>Montrer outils</td>
