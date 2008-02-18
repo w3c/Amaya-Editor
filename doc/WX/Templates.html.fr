@@ -13,7 +13,8 @@
 <body>
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="HTML.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -104,9 +105,9 @@ cette liste.</p>
 <h3 id="Creating">Créer une instance de document</h3>
 
 <p>Pour créer un nouveau document instance depuis un modèle, utilisez
-l'entrée <strong>Nouveau &gt; A partir d'un modèle</strong> du menu Fichier.
-Une boîte de dialogue va s'afficher dans laquelle vous pouvez
-sélectionner :</p>
+l'entrée <strong>Nouveau &gt; Nouveau document</strong> du menu Fichier. Un
+<a href="Document.html.fr">dialogue</a> va s'afficher dans laquelle vous
+pouvez sélectionner :</p>
 <ul>
   <li>Le modèle, soit en sélectionnant dans la liste des modèles enregistrés
     ou en tapant l'URI ou le nom du fichier du modèle qui n'est pas dans la
