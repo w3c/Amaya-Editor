@@ -945,6 +945,77 @@ static int IsThotDir (CONST char *path)
 }
 
 
+#ifdef _WINGUI
+#ifndef __GNUC__
+/*----------------------------------------------------------------------
+  WINReg_get - simulates getenv in the WIN32 registry
+  looks for <env> in HKEY_CURRENT_USER\Software\Amaya\<var>
+  ----------------------------------------------------------------------*/
+static char *WINReg_get (CONST char *env)
+{
+  char           textKey[MAX_PATH];
+  HKEY           hKey;
+  DWORD          type;
+  LONG           success;
+  DWORD          retLen = sizeof (EnVar);
+
+  sprintf (textKey, "Software\\%s\\%s", AppNameW, env);    
+  success = RegOpenKeyEx (HKEY_CURRENT_USER, textKey, 0, KEY_ALL_ACCESS, &hKey);
+  if (success == ERROR_SUCCESS)
+    {
+      success = RegQueryValueEx (hKey, NULL, NULL, &type, (LPVOID)EnVar, &retLen);
+      RegCloseKey (hKey);
+    }
+  return (success == ERROR_SUCCESS) ? EnVar : NULL;
+}
+
+/*----------------------------------------------------------------------
+  WINReg_set - stores a value in the WIN32 registry           
+   
+  stores <key, value> in                                                 
+  HKEY_CURRENT_USER\Software\app-name\<key>                                      
+  ----------------------------------------------------------------------*/
+static ThotBool WINReg_set (CONST char *key, CONST char *value)
+{
+  char             textKey[MAX_PATH];
+  HKEY             hKey;
+  LONG             success;
+  char             protValue[MAX_PATH];
+  DWORD            protValueLen = sizeof (protValue);
+  DWORD            dwDisposition;
+ 
+  /* protect against values bigger than what we can write in
+     the registry */
+  strncpy (protValue, value, protValueLen - 1);
+  protValue[protValueLen-1] = EOS;
+  sprintf (textKey,"Software\\%s\\%s", AppNameW, key);
+  success = RegCreateKeyEx (HKEY_CURRENT_USER, textKey, 0,
+                            "", REG_OPTION_VOLATILE, KEY_ALL_ACCESS,
+                            NULL, &hKey, &dwDisposition);  
+  if (success == ERROR_SUCCESS)
+    /* create the userBase entry */
+    {
+      success = RegSetValueEx (hKey, NULL, 0, REG_SZ, (LPVOID)protValue,
+                               protValueLen);
+      RegCloseKey (hKey);
+    }
+  return (success == ERROR_SUCCESS) ? TRUE : FALSE;
+}
+
+/*----------------------------------------------------------------------
+  WINIni_get - simulates getenv in the Windows/Amaya.ini file     
+  ----------------------------------------------------------------------*/
+static char *WINIni_get (CONST char *env)
+{
+  DWORD               res;
+
+  res = GetPrivateProfileString ("Amaya", env, "", EnVar, sizeof (EnVar),
+                                 "Amaya.ini");
+  return res ? EnVar : NULL;
+}
+#endif
+#endif /* _WINGUI */
+
 /*----------------------------------------------------------------------
   TtaSaveAppRegistry : Save the Registry in the THOT_RC_FILENAME located
   in the user's directory.
@@ -1159,6 +1230,14 @@ void TtaInitializeAppRegistry (char *appArgv0)
   char       *dir_end = NULL;
   char       *appName; 
   char       *ptr;
+#ifdef _WINGUI
+  /* name in Windows NT 4 is 20 chars */
+  char        username[MAX_LENGTH];
+  char        windir[MAX_PATH+1];
+  DWORD       dwSize;
+  ThotBool    status;
+  char       *ptr2, *ptr3;
+#endif /* _WINGUI */
 #ifdef _UNIX
   struct stat stat_buf;
   char        c_execname[MAX_LENGTH];
@@ -1189,8 +1268,12 @@ void TtaInitializeAppRegistry (char *appArgv0)
    */
   if (appArgv0 == NULL || *appArgv0 == EOS)
     {
+#ifdef _WINGUI
+      MessageBox (NULL, "TtaInitializeAppRegistry called with invalid argv[0] value", "Amaya", MB_OK);
+#else  /* _WINGUI */
       fprintf (stderr, "TtaInitializeAppRegistry called with invalid argv[0] value\n");
-      ThotExit (1);
+#endif /* _WINGUI */
+       ThotExit (1);
     }
   /*
    * We are looking for the absolute pathname to the binary of the
@@ -1448,6 +1531,115 @@ void TtaInitializeAppRegistry (char *appArgv0)
 
   if (app_home[0] == EOS && amaya_exe)
     {
+#ifdef _WINGUI
+      /* compute the default app_home value from the username and thotdir */
+      dwSize = sizeof (username);
+      status = GetUserName (username, &dwSize);
+      if (status)
+        {
+          if (strchr (username, '*'))
+            /* don't use a username that include stars */
+            ptr = WIN_DEF_USERNAME;
+          else
+            ptr = username;
+        }
+      else
+        /* under win95, there may be no user name */
+        ptr = WIN_DEF_USERNAME;
+
+      /* Define the app_home directory */
+      if (IS_NT)
+        /* winnt: apphome is windowsdir\profiles\username\appname */
+        {
+          typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
+                                                                           LPTSTR lpProfileDir,
+                                                                           LPDWORD lpcchSize
+                                                                           );
+          HMODULE                  g_hUserEnvLib          = NULL;
+          LPFNGETPROFILESDIRECTORY GetProfilesDirectory   = NULL;
+
+          windir[0] = EOS;
+          g_hUserEnvLib = LoadLibrary ("userenv.dll");
+          if (g_hUserEnvLib)
+            {
+              GetProfilesDirectory =
+                (LPFNGETPROFILESDIRECTORY) GetProcAddress (g_hUserEnvLib,
+                                                           "GetProfilesDirectoryA");
+              dwSize = MAX_PATH;
+              GetProfilesDirectory (windir, &dwSize);
+            }
+          if (windir[0] == EOS)
+            GetWindowsDirectory (windir, dwSize);
+
+          /* Check if a previous app_home directory existed.
+             If yes use it, else we try to create it using new conventions. */
+          /* Windows NT convention */
+          sprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppNameW);
+          ptr2 = getenv ("HOMEDRIVE");
+          if (!TtaDirExists (app_home))
+            {
+              sprintf (app_home, "%s\\%s\\%s", windir, ptr, AppNameW);
+              if (!TtaDirExists (app_home))
+                app_home[0] = EOS;
+            }
+          if (app_home[0] == EOS)
+            {
+              /* use the HOMEDRIVE and HOMEPATH environment variables first */
+              ptr3 = getenv ("HOMEPATH");
+              if (ptr2 && *ptr2 && ptr3)
+                {
+                  sprintf (app_home, "%s%s\\%s", ptr2, ptr3, AppNameW);
+                  if (!TtaDirExists (app_home))
+                    app_home[0] = EOS;
+                }
+            }
+          if (app_home[0] == EOS)
+            {
+              sprintf (app_home, "%s\\%s\\%s", windir, ptr, AppNameW);
+              if (!TtaMakeDirectory (app_home))
+                {
+                  /* another possible Windows 2000/XP convention */
+                  sprintf (app_home, "%s\\Documents and Settings\\%s\\%s",
+                           ptr2, ptr, AppNameW);
+                  if (!TtaMakeDirectory (app_home))
+                    app_home[0] = EOS;
+                }
+            }
+
+          /* At this point app_home has a value if the directory existed.
+             Otherwise, we'll try to create a new one */
+          if (app_home[0] == EOS)
+            {
+              /* try to use one of the system home dirs */
+              /* the Windows 2000/XP convention */
+              if (ptr2 && *ptr2 && ptr3)
+                sprintf (app_home, "%s%s", ptr2, ptr3);
+              else
+                sprintf (app_home, "%s\\Documents and Settings\\%s",
+                         windir, ptr);
+
+              if (!TtaDirExists (app_home))
+                /* the Windows NT convention */
+                sprintf (app_home, "%s\\profiles\\%s", windir, ptr);
+
+              /* add the end suffix */
+              strcat (app_home, "\\");
+              strcat (app_home, AppNameW);
+              if (!TtaMakeDirectory (app_home))
+                app_home[0] = EOS;
+            }
+        }
+
+      if (app_home[0] == EOS)
+        {
+          /* win95: apphome is  thotdir\users\username */
+          sprintf (app_home, "%s\\%s", execname, WIN_USERS_HOME_DIR);
+          TtaMakeDirectory (app_home);
+          sprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);
+          TtaMakeDirectory (app_home);
+        }
+
+#else /* _WINGUI */
 #ifdef _UNIX
       ptr = getenv ("HOME");
 #ifdef _MACOS
@@ -1473,7 +1665,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #endif /* _WX && _WINDOWS */
 
 #endif /* _UNIX */
-    }
+#endif /*_WINGUI */
+     }
 
   /* get the app_home again from the registry, as the user may have
      overriden it using the global configuration files */
