@@ -260,11 +260,6 @@ ThotBool GL_DrawAll ()
 
   if (!FrameUpdating)
     {
-#ifdef _WX
-#ifndef _MACOS
-      TtaHandlePendingEvents();
-#endif
-#endif /* _WX */
       FrameUpdating = TRUE;     
       if (!frame_animating)
         {	  
@@ -336,6 +331,12 @@ ThotBool GL_DrawAll ()
                     }
                 }
             }
+#ifdef _WX
+#ifndef _MACOS
+          //if (was_animation)
+          //  TtaHandlePendingEvents();
+#endif
+#endif /* _WX */
 
           /* stop the animation timer if there is no animated frame */
           if (nb_animated_frame == 0)
