@@ -25,14 +25,14 @@ src="../../resources/icons/misc/right.png" /> </a></p>
 <div class="toc">
 <ul>
   <li><a href="#L1103">Edition des <span xml:lang="fr"
-    lang="fr">éléments</span></a>
+    lang="fr">éléments</span></a> 
     <ul>
       <li><a href="#Modes">Modes d'édition</a></li>
       <li><a href="#Boutons">Boutons et menus</a></li>
       <li><a href="#Point">Point d'insertion</a></li>
       <li><a href="#Sous-menu">Sous-menu Eléments cachés</a></li>
       <li><a href="#L1179">Eléments créés automatiquement</a></li>
-      <li><a href="#touche">La touche Enter (ou Return)</a>
+      <li><a href="#touche">La touche Enter (ou Return)</a> 
         <ul>
           <li><a href="#end-anchor">Sortir des ancres, des éléments en-ligne,
             etc.</a></li>
@@ -45,7 +45,6 @@ src="../../resources/icons/misc/right.png" /> </a></p>
       <li><a href="#touches">Les touches Delete et Backspace</a></li>
       <li><a href="#Changer">Changer le titre du document</a></li>
       <li><a href="#date">Insérer la date de mise à jour</a></li>
-      <li><a href="#Traitement">Traitement des espaces</a></li>
     </ul>
   </li>
 </ul>
@@ -207,7 +206,7 @@ division, la touche <kbd>Enter</kbd> crée une nouvelle ligne dans le
 <p>Dans certains cas le comportement de la touche <kbd>Enter</kbd> dépend du
 mode d'édition courant :</p>
 <ul>
-  <li>Mode XML
+  <li>Mode XML 
     <p>Pour créer un paragraphe après un <code>pre</code> ou une division
     après un <code>div</code>, vous devez sélectionner le <code>pre</code> ou
     le <code>div</code> en entier avec la touche <kbd>F2</kbd> et presser la
@@ -219,7 +218,7 @@ mode d'édition courant :</p>
     ou <code>li</code> après.<br />
     </p>
   </li>
-  <li>Mode Texte
+  <li>Mode Texte 
     <p>Quand le curseur est au début ou à la fin d'un item de liste
     (<code>li</code>), un nouvel item de liste frère et de même type est
     créé, au lieu d'un nouveau paragraphe dans l'item de liste. De plus, dans
@@ -376,13 +375,13 @@ créée immédiatement après le nouveau terme.</p>
 <p>Le comportement des touches <kbd>Delete</kbd> et <kbd>Backspace</kbd>
 dépend de mode d'édition courant :</p>
 <ul>
-  <li>Mode XML :
+  <li>Mode XML : 
     <p>Si le point d'insertion se trouve au début ou à la fin de n'importe
     quel type d'élément et que la touche <kbd>Delete</kbd> ou
     <kbd>Backspace</kbd> est pressée, tout le contenu de l'élément voisin
     suivant (resp. précédent) est ajouté au contenu du premier élément.</p>
   </li>
-  <li>Mode Texte :
+  <li>Mode Texte : 
     <p>Si le point d'insertion se trouve au début ou à la fin d'un élément
     <em>bloc</em> et que la touche <kbd>Delete</kbd> ou <kbd>Backspace</kbd>
     est pressée, tout le contenu de l'élément voisin suivant (resp.
@@ -415,64 +414,6 @@ Préférences.</p>
 <p>Une fois cette date insérée, Amaya la met automatiquement à jour chaque
 fois que le document est sauvé et maintenir ainsi la dernière date de mise à
 jour.</p>
-
-<h3 id="Traitement"><a>Traitement des espaces</a></h3>
-
-<p>Pour les documents XHTML, <a href="Math.html.fr#Math">MathML</a>, <a
-href="SVG.html.fr">SVG</a> et pour les éléments MathML ou SVG inclus dans des
-documents XHTML, Amaya supprime les <strong>blancs non significatifs</strong>
-au chargement, sauf s'ils sont explicitement préservés.</p>
-
-<p>Sont appelés blancs non significatifs:</p>
-<ul>
-  <li>les caractères de fin de ligne (#xD et #xA),</li>
-  <li>les caractères de tabulation (#x9),</li>
-  <li>les blancs de début d'un élément,</li>
-  <li>les blancs de fin d'un élément,</li>
-  <li>les blancs contigus (un seul blanc est alors préservé).</li>
-</ul>
-
-<p>L'auteur d'un document peut vouloir spécifier son intention de préserver
-tous les caractères pour certains éléments. Pour cela, il peut utiliser
-l'attribut <code>xml:space</code> ou l'élément <code>pre</code> (ce dernier
-pour des documents XHTML uniquement). Deux valeurs sont possibles pour
-l'attribut <code>xml:space</code> : "<code>default</code>" et
-"<code>preserve</code>".</p>
-<ul>
-  <li>La valeur "<code>default</code>" applique le traitement des blancs par
-    défaut défini pour la DTD du document. </li>
-  <li>La valeur "<code>preserve</code>" indique à Amaya de préserver tous les
-    caractères, à l'exception du premier caractère qui suit immédiatement la
-    balise de fin de l'élément portant cet attribut. </li>
-</ul>
-
-<p>L'attribut <code>xml:space</code> s'applique à tous les éléments à
-l'intérieur du contenu de l'élément porteur de la déclaration, à moins qu'il
-ne soit annulé par l'apparition d'un autre attribut <code>xml:space</code>.
-Concernant la DTD XHTML, l'élément <code>pre</code> induit le même
-comportement que l'attribut xml:space avec la valeur "preserve".</p>
-
-<p>Le traitement des blancs est appliqué par Amaya lors du chargement d'un
-document et lors de l'édition de celui-ci. Par exemple, le code source
-suivant:</p>
-<pre>&lt;p&gt;Amaya supprime les&lt;strong&gt; blancs non 
-significatifs &lt;/strong&gt;au chargement&lt;/p&gt;</pre>
-
-<p>donnera:</p>
-<pre> Amaya supprime les<strong>blancs non significatif</strong><strong>s</strong>au chargement</pre>
-
-<p>car les blancs de début et de fin de l'élément <code>strong</code> sont
-considérés comme non significatifs et sont donc supprimés. La forme correcte
-aurait été:</p>
-<pre> &lt;p&gt;Amaya supprime les &lt;strong&gt;blancs non 
-significatifs&lt;/strong&gt; au chargement&lt;/p&gt;</pre>
-
-<p class="Note">Dans Amaya, le traitement par défaut supprime les blancs non
-significatifs.<br />
-Il est possible de demander de "Garder les espaces multiples" dans le
-dialogue des <a href="Configure.html.fr#Enable">Préférences</a>. Dans ce cas,
-Amaya va remplacer les blancs non significatifs amenés à disparaître par des
-blancs non sécables.</p>
 
 <p></p>
 </div>

@@ -13,7 +13,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Attributes.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html"
@@ -23,15 +24,15 @@ src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
 <div id="page_body">
-<h2>Entering Characters</h2>
+<h2>Entering characters</h2>
 
 <p>To enter ISO-Latin characters that are not directly available from the
 keyboard, Amaya uses the standard support provided by the Operating System.
 An optional multi-key support is also provided for Motif versions and Windows
 versions.</p>
 
-<p>Amaya provides a mechanism for assigning <a href="ShortCuts.html">Keyboard
-Shortcuts</a> to characters that are not directly available from the
+<p>Amaya provides a mechanism for assigning <a href="ShortCuts.html">keyboard
+shortcuts</a> to characters that are not directly available from the
 keyboard. Some of them are pre-defined:</p>
 <ul>
   <li>To enter a non-breaking space, press <kbd>Ctrl space</kbd><br />
@@ -49,7 +50,7 @@ keyboard. Some of them are pre-defined:</p>
 <p>See the description of the standard input method: Standard multi-key for
 Unix and Mac OS X versions.</p>
 
-<h3>About Unix Standard Multi-key Support</h3>
+<h3>About Unix standard multi-key support</h3>
 
 <p>If an ISO-Latin character is unavailable on the standard keyboard, you can
 insert the character by pressing the special <code>Compose</code> key
@@ -57,8 +58,8 @@ followed by a sequence of two other keys. See the table below for the keys
 used to insert various ISO-Latin characters. Note that in Amaya, you can
 switch the position of the first key and the second one.</p>
 
-<p>If your keyboard doesn't contain the <code>Compose</code> key, you can
-attach it to an existing key such as <code>Alt-Gr</code> with the following
+<p>If your keyboard doesn't contain the <kbd>Compose</kbd> key, you can
+attach it to an existing key such as <kbd>Alt-Gr</kbd> with the following
 <code>xmodmap</code> command:</p>
 
 <p><code>keycode 113 = Multi_key</code></p>
@@ -69,11 +70,11 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
 <table border="1" summary="Latin-1 sequences">
   <tbody style="background-color: #EFFFC1">
     <tr style="background-color: #FFCB69">
-      <td>Nom</td>
+      <td>Name</td>
       <td>Code</td>
-      <td>Première/Seconde touche</td>
-      <td>Seconde/Première Touche</td>
-      <td>Sortie</td>
+      <td>First key</td>
+      <td>Second key</td>
+      <td>Output</td>
     </tr>
     <tr>
       <td class="name">AElig</td>
@@ -708,7 +709,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
   </tbody>
 </table>
 
-<h3><a>How to type accented charaters on Mac OS X</a></h3>
+<h3><a>How to type accented characters on Mac OS X</a></h3>
 
 <p>With an international US keyboard, entering accented characters is done
 with the <strong>Option</strong> key (aka <strong>Alt</strong> key) as
@@ -722,7 +723,7 @@ follow:</p>
   <li>The letter &ldquo;c&rdquo; with a cedilla (ç): Option + c.</li>
 </ul>
 
-<h3>About White Space Handling</h3>
+<h3 id="About">About white space handling</h3>
 
 <p>Amaya removes insignificant white-space characters when it loads a
 document unless they must be explicitly preserved. This is true for XHTML,
@@ -739,7 +740,7 @@ HTML document,</p>
 </ul>
 
 <p>To preserve all the characters for some elements, use the
-<code>xml:space</code> attribute or the <code>PRE</code> element (only valid
+<code>xml:space</code> attribute or the <code>pre</code> element (only valid
 for XHTML documents). The possible values for the <code>xml:space</code>
 attribute are <code>default</code> and <code>preserve</code>.</p>
 <ul>
@@ -756,10 +757,10 @@ attribute are <code>default</code> and <code>preserve</code>.</p>
 </ul>
 
 <p>You apply the <code>xml:space</code> attribute to all elements within the
-content of the element where it is specified, unless it is overriden with
+content of the element where it is specified, unless it is overridden with
 another instance of the <code>xml:space</code> attribute.</p>
 
-<p>In an XHTML DTD, the <code>PRE</code> element causes the same behavior as
+<p>In an XHTML DTD, the <code>pre</code> element causes the same behavior as
 the <code>xml:space</code> attribute with the value <code>preserve</code>.</p>
 
 <p>Amaya applies white space handling when it loads a document, not during

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -12,7 +12,8 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Changing.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -50,8 +51,10 @@ vous devez tout d'abord la transformer en ancre cible.</p>
 <ol>
   <li>Sélectionnez la chaîne de caractère appropriée avec la souris.</li>
   <li>Choisissez <strong>Créer cible</strong> dans le menu
-    <strong>Liens</strong>. Le texte ainsi sélectionné est désormais une
-    cible.
+    <strong>Liens</strong> ou le bouton <img alt="image"
+    src="../../resources/icons/16x16/XHTML_Target.png" width="16" height="16"
+    /> dans l'outil <strong>Eléments</strong>. Le texte ainsi sélectionné est
+    désormais une cible. 
     <p>Si vous avez fixé le statut "Montrer les cibles" à votre vue formatée
     courante, le texte sera précédé d'une icône cible <img
     src="../images/target.gif" alt=" target " />. Dans la vue liens, les
@@ -59,7 +62,7 @@ vous devez tout d'abord la transformer en ancre cible.</p>
     (il n'existe pas d'option pour montrer ou cacher les icônes cibles).</p>
   </li>
   <li>Quand une ancre cible est créée, Amaya génère automatiquement la valeur
-    de l'attribut <strong>Name</strong> :
+    de l'attribut <code>name</code> : 
     <ul>
       <li>En extrayant un mot de plus de 3 caractères depuis le contenu de
         l'ancre<br />
@@ -72,15 +75,15 @@ vous devez tout d'abord la transformer en ancre cible.</p>
 </ol>
 
 <p class="ProcedureNote"><strong>Note:</strong>   Si vous voulez ensuite
-créer un lien vers cette ancre cible, choisissez <strong>Lier la cible
+créer un lien vers cette ancre cible, choisissez <strong>Lier à la cible
 créée</strong> dans le menu <strong>Liens</strong> après avoir sélectionné
 l'origine du lien à créer.</p>
 
 <h3 id="L1188"><a name="target1">Créer un élément cible</a></h3>
 
 <p>En HTML 4.0, un élément peut être utilisé comme une cible de liens. Un
-élément cible est un élément tapé qui possède un attribut ID qui est
-référencé par un lien (une ancre source). Avant de créer un lien à un tel
+élément cible est un élément tapé qui possède un attribut i<code></code>d qui
+est référencé par un lien (une ancre source). Avant de créer un lien à un tel
 élément, vous devez tout d'abord le transformer en élément cible.</p>
 
 <p class="ProcedureCaption">Pour créer un élément cible :</p>
@@ -89,8 +92,11 @@ référencé par un lien (une ancre source). Avant de créer un lien à un tel
     utiliser la touche <kbd>F2</kbd> afin de sélectionner l'élément
   entier.</li>
   <li>Choisissez <strong>Créer cible</strong> dans le menu
-    <strong>Liens</strong>. L'élément sélectionné a maintenant un attribut ID
-    qui en fait désormais une cible possible.
+    <strong>Liens</strong> ou le bouton <img alt="image"
+    src="../../resources/icons/16x16/XHTML_Target.png" width="16" height="16"
+    /> dans l'outil <strong>Eléments</strong>. L'élément sélectionné a
+    maintenant un attribut <code>id</code> qui en fait désormais une cible
+    possible. 
     <p>Si vous avez fixé le statut "Montrer les cibles" à votre vue formatée
     courante, le texte sera précédé d'une icône cible <img
     src="../images/target.gif" alt=" target " />. Dans la vue liens, les
@@ -99,7 +105,7 @@ référencé par un lien (une ancre source). Avant de créer un lien à un tel
     </p>
   </li>
   <li>Quand un élément cible est créé, Amaya génère automatiquement la valeur
-    de l'attribut <strong>ID</strong> :
+    de l'attribut <code>id</code> : 
     <ul>
       <li>En extrayant un mot de plus de 3 caractères depuis le contenu de
         l'ancre<br />
@@ -108,23 +114,19 @@ référencé par un lien (une ancre source). Avant de créer un lien à un tel
     </ul>
     <p>Dans les deux cas, Amaya garanti que la valeur générée est valide et
     unique dans le document.</p>
-    <p>Note : Il est également possible de créer directement l'attribut ID en
-    utilisant le menu Attributs quand l'élément est sélectionné, soit dans la
-    vue liens soit dans la vue structure. Quand la valeur a été entrée, Amaya
-    vérifie la valeur et la change si elle est déjà utilisée pour un autre
-    attribut NAME ou ID dans le même document.</p>
   </li>
 </ol>
 
 <p class="Note"><strong>Note</strong> : Il est également possible de créer
-directement l'attribut ID en utilisant la liste des <strong><a
+directement l'attribut <code>id</code> en utilisant la liste des <strong><a
 href="Attributes.html.fr#Attributes">Attributs</a></strong> quand l'élément
 est sélectionné, soit dans la vue liens soit dans la vue structure. Quand la
 valeur a été entrée, Amaya vérifie la valeur et la change si elle est déjà
-utilisée pour un autre attribut NAME ou ID dans le même document.</p>
+utilisée pour un autre attribut <code>name</code> ou <code>id</code> dans le
+même document.</p>
 
 <p class="ProcedureNote"><strong>Note:</strong>   Si vous voulez ensuite
-créer un lien vers cet élément cible, choisissez <strong>Lier la cible
+créer un lien vers cet élément cible, choisissez <strong>Lier à la cible
 créée</strong> dans le menu <strong>Liens</strong> après avoir sélectionné
 l'origine du lien à créer.</p>
 
@@ -136,10 +138,10 @@ autre document :</p>
   <li>Sélectionnez (par clic et drag ou au clavier) le contenu de l'ancre à
     créer.</li>
   <li>Cliquez sur le bouton <img alt="Link "
-    src="../../resources/icons/16x16/XHTML_Link.png" />, choisissez
+    src="../../resources/icons/16x16/XHTML_Link.png" />, ou choisissez
     <strong>Créer/changer lien</strong> du menu <strong>Liens</strong>, ou
     encore utilisez le raccourci clavier (par défaut <kbd>Ctrl l Ctrl
-    l</kbd>).
+    l</kbd>). 
     <ul>
       <li>Si le document cible est visualisé dans une autre fenêtre d'Amaya ,
         cliquez sur le bouton <strong>Clic</strong> puis n'importe où dans le
@@ -150,8 +152,8 @@ autre document :</p>
       <li>Si le document cible est local vous pouvez utiliser le bouton
         <strong>Parcourir</strong> pour le sélectionner.</li>
       <li>Sinon entrez l'URI (comme http://www.w3.org) du document cible et
-        taper sur la touche <strong>Enter ou Return</strong> pour confirmer.
-        Le lien est créé.</li>
+        taper sur la touche <kbd>Enter</kbd> ou <kbd>Return</kbd> pour
+        confirmer. Le lien est créé.</li>
     </ul>
   </li>
 </ol>
@@ -167,23 +169,24 @@ un élément cible dans le même document :</p>
     src="../../resources/icons/16x16/XHTML_Link.png" />, choisissez
     <strong>Créer/changer lien</strong> du menu <strong>Liens</strong>, ou
     encore utilisez le raccourci clavier (par défaut <kbd>Ctrl l Ctrl
-    l</kbd>).
+    l</kbd>). 
     <ul>
       <li>Si la cible est visualisée (vous pouvez scroller pour la
         visualiser), cliquez sur le bouton <strong>Clic</strong> puis cliquez
         l'icône cible <img src="../images/target.gif" alt=" target " />. Le
         lien est créé.</li>
       <li>Sinon entrez l'URI (comme #name) du document cible et taper sur la
-        touche <strong>Enter ou Return</strong> pour confirmer. Le lien est
-        créé.</li>
+        touche <kbd>Enter</kbd> ou <kbd>Return</kbd> pour confirmer. Le lien
+        est créé.</li>
     </ul>
   </li>
 </ol>
 
 <p class="ProcedureNote"><strong>Note:</strong>   Si vous avez créé l'ancre
-ou l'élément cible récemment, inutile d'effectuer l'étape 2. Chosissez plutôt
-<strong>Lier la cible créée</strong> dans le menu <strong>Liens</strong> : la
-cible du nouveau lien sera la dernière cible que vous avez créée.</p>
+ou l'élément cible récemment, inutile d'effectuer l'étape 2. Choisissez
+plutôt <strong>Lier à la cible créée</strong> dans le menu
+<strong>Liens</strong> : la cible du nouveau lien sera la dernière cible que
+vous avez créée.</p>
 
 <h3 id="Copier">Copier l'adresse de la cible</h3>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -9,10 +9,11 @@
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="EditChar.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -23,10 +24,16 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <div class="toc">
 <ul>
-  <li><a href="#Editer">Editer la structure du document</a>
+  <li><a href="#Editer">Changer la structure du document</a>
     <ul>
       <li><a href="#Changer">Changer le type de l'élément</a></li>
-      <li><a href="#commande">La commande Transformer</a></li>
+      <li><a href="#commande">La commande transformer</a>
+        <ul>
+          <li><a href="#Transforma">Transformations disponibles</a></li>
+          <li><a href="#Utilisatio">Utilisation de la commande
+          Transformer</a></li>
+        </ul>
+      </li>
       <li><a href="#division">Insérer une division</a></li>
       <li><a href="#Fusionner">Fusionner des éléments</a></li>
     </ul>
@@ -35,36 +42,38 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Changing">
-<h2 id="Editer">Editer la structure du document</h2>
+<h2 id="Editer">Changer la structure du document</h2>
 
 <h3 id="Changer"><a name="L653">Changer le type de l'élément</a></h3>
 
 <p>Pour changer le type d'un élément existant, <a
 href="Selecting.html.fr">sélectionnez-le</a> et choisissez le nouveau type
-soit dans les menus <strong>XHTML</strong> ou <strong>XML</strong>, soit dans
-la palette XHTML. Vous pouvez ainsi par exemple changer une liste numérotée
-en une liste non numérotée, ou un paragraphe en un titre ou une liste.</p>
+soit dans le menu <strong>Insérer</strong>, soit dans l'outil
+<strong>Elément</strong>.s Vous pouvez ainsi par exemple changer une liste
+numérotée (<code>ol</code>) en une liste non numérotée (<code>ul</code>), ou
+un paragraphe en un titre ou une liste.</p>
 
 <p>Les types d'élément offerts par les sous-menus <strong>Types
 d'information</strong> et <strong>Éléments caractères</strong> du menu
-<strong>XHTML</strong> fonctionnent comme des bascules. Si on sélectionne une
-simple chaîne de caractères et qu'on active une entrée de ces sous-menus, la
-chaîne sélectionnée prend le type choisi. Si au contraire on sélectionne un
-élément ayant un de ces types et qu'on active l'entrée correspondante,
+<strong>Insérer</strong> fonctionnent comme des bascules. Si on sélectionne
+une simple chaîne de caractères et qu'on active une entrée de ces sous-menus,
+la chaîne sélectionnée prend le type choisi. Si au contraire on sélectionne
+un élément ayant un de ces types et qu'on active l'entrée correspondante,
 l'élément est retiré, mais son contenu subsiste.</p>
 
 <p>Pour sélectionner un élément entier, placez le point d'insertion n'importe
-où à l'intérieur et appuyez sur <a href="Selecting.html.fr#Selecting1">la
-touche <kbd>F2</kbd>.</a></p>
+où à l'intérieur et appuyez sur la touche <kbd>F2</kbd>.</p>
 
-<h3 id="commande"><a name="L141">La commande Transformer</a></h3>
+<h3 id="commande"><a name="L141">La commande transformer</a></h3>
 
-<p>La commande <strong>Transformer</strong> du menu <strong>Edition</strong>
+<p>La commande <strong>Transformer</strong> du menu <strong>Outils</strong>
 accomplit des transformations de structure complexes. Cette commande est
 basée sur un langage de transformation de structure qui spécifie comment un
 modèle structural donné doit être transformé en différentes structures.
 Ainsi, il est possible de transformer des listes emboîtées en table et
 inversement.</p>
+
+<h4 id="Transforma">Transformations disponibles</h4>
 
 <p>Les transformations disponibles sont définies dans le fichier
 <code>Amaya/amaya/HTML.trans</code>. Référez-vous au document <a
@@ -73,7 +82,10 @@ description du langage dans lequel les règles de transformation sont
 écrites.</p>
 
 <p>Des transformations supplémentaires peuvent être spécifiées dans le
-fichier HTML.trans. Certaines sont fournies en tant qu'exemples.</p>
+fichier <code>HTML.trans</code>. Certaines sont fournies en tant
+qu'exemples.</p>
+
+<h4 id="Utilisatio">Utilisation de la commande Transformer</h4>
 
 <p>La commande <strong>Transformer</strong> affiche un menu qui donne la
 liste de toutes les transformations qui peuvent être appliquées à la
@@ -85,7 +97,7 @@ menu.</p>
 <p>Il est possible de grouper une série de paragraphes, titres, listes,
 tables, etc. à l'intérieur d'une division. Pour cela, il faut sélectionner
 les éléments à grouper puis activer l'entrée <strong>Division</strong> du
-menu <strong>XHTML</strong>.</p>
+menu <strong>Insérer</strong>.</p>
 
 <h3 id="Fusionner"><a name="Back">Fusionner des éléments</a></h3>
 
@@ -93,9 +105,9 @@ menu <strong>XHTML</strong>.</p>
 même niveau dans la structure du document. La fusion s'effectue à l'aide des
 touches <kbd>Backspace</kbd> et <kbd>Delete</kbd>. Quand le point d'insertion
 est à la fin d'un élément, utilisez la touche <kbd>Delete</kbd>. Quand il est
-au début, utilisez la touche <code>Backspace</code>. Dans les deux cas, ces
-touches n'effacent aucun caractère. Elles fusionnent simplement les éléments
-séparés par une limite de structure.</p>
+au début, utilisez la touche <code><kbd>Backspace</kbd></code>. Dans les deux
+cas, ces touches n'effacent aucun caractère. Elles fusionnent simplement les
+éléments séparés par une limite de structure.</p>
 
 <p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux
 touches effacent comme d'habitude le caractère suivant ou le caractère

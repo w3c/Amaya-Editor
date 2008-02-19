@@ -12,7 +12,8 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Creating.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -22,12 +23,27 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Attributes">
+
+<div class="toc">
+<ul>
+  <li><a href="#Editer">Editer des attributs</a>
+    <ul>
+      <li><a href="#Editer1">Editer des attributs par le biais de l'outil
+        Attributs</a></li>
+      <li><a href="#Editer2">Editer des attributs dans la vue
+      structure</a></li>
+      <li><a href="#Copier">Copier des attributs</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
 <h2 id="Editer">Editer des attributs</h2>
 
 <p>Il y a deux manières d'éditer des attributs :</p>
 <ul>
   <li>En utilisant l'outil <strong>Attributs</strong></li>
-  <li>Directement dans la Vue structure</li>
+  <li>Directement dans la vue structure</li>
 </ul>
 
 <h3 id="Editer1"><a name="L1073">Editer des attributs par le biais de l'outil
@@ -40,20 +56,21 @@ attribut. Il présente :</p>
   <li>La liste des attributs déjà appliqués au premier élément sélectionné et
     leur valeur courante. Les attributs obligatoires sont affichés en rouge
     et ne peuvent pas être détruits.</li>
-  <li>En dessous, la liste de tous les attributs qui peuvent s'appliquer.</li>
+  <li>En dessous, un menu déroulant donne accès à la liste de tous les
+    attributs qui peuvent s'appliquer.</li>
 </ul>
 
 <p class="ProcedureCaption">Pour insérer un attribut :</p>
 <ol>
   <li>Sélectionnez d'abord l'élément approprié. Vous devez sélectionner
     l'élément entier et pas seulement un caractère à l'intérieur de
-    l'élément. Pour cela, utilisez la touche F2 .</li>
+    l'élément. Pour cela, utilisez la touche <kbd>F2</kbd> .</li>
   <li>Une fois l'élément sélectionné, sélectionnez l'attribut dans la liste
     Insérer. Ce<span class=""></span>t attribut est maintenant activé.</li>
-  <li>Pour les attributs bouléens ( comme <strong>ismap</strong> pour une
-    image), la commande est terminée.</li>
-  <li>Pour les attributs à valeur énumérée (comme <strong>lang</strong>),
-    vous devez choisir une valeur dans la liste des valeurs possibles.</li>
+  <li>Pour les attributs booléens ( comme <code>ismap</code> pour une image),
+    la commande est terminée.</li>
+  <li>Pour les attributs à valeur énumérée (comme <code>lang</code>), vous
+    devez choisir une valeur dans la liste des valeurs possibles.</li>
   <li>Pour les autres attributs, vous devez taper la valeur puis confirmez
     soit avec la touche <kbd>Enter</kbd>, soit avec le bouton appliquer (<img
     alt="ok" src="../../resources/icons/16x16/ok.png" />).</li>
@@ -64,12 +81,12 @@ attribut :</p>
 <ol>
   <li>Sélectionnez d'abord l'élément approprié. Vous devez sélectionner
     l'élément entier et pas seulement un caractère à l'intérieur de
-    l'élément. Pour cela, utilisez la touche F2 .</li>
+    l'élément. Pour cela, utilisez la touche <kbd>F2</kbd> .</li>
   <li>Une fois l'élément sélectionné avec cet attribut actif, cliquez sur le
     nom de l'attribut pour afficher le formulaire d'édition de la valeur
     courante.</li>
-  <li>Pour les attributs à valeur énumérée ( comme <strong>lang</strong>),
-    Amaya affiche : 
+  <li>Pour les attributs à valeur énumérée ( comme <code>lang</code>), Amaya
+    affiche : 
     <ul>
       <li>Une liste déroulante donnant la liste des valeurs possibles.</li>
       <li>Un bouton supprimer (<img alt="supprimer"
@@ -77,7 +94,7 @@ attribut :</p>
         retirer l'attribut.</li>
     </ul>
   </li>
-  <li>Pour les attributs à valeur libre (comme <strong>href</strong> pour une
+  <li>Pour les attributs à valeur libre (comme <code>href</code> pour une
     ancre), Amaya affiche : 
     <ul>
       <li>Une boîte de saisie pour insérer la valeur.</li>
@@ -96,7 +113,7 @@ attribut :</p>
 <ol>
   <li>Sélectionnez d'abord l'élément approprié. Vous devez sélectionner
     l'élément entier et pas seulement un caractère à l'intérieur de
-    l'élément. Pour cela, utilisez la touche F2 .</li>
+    l'élément. Pour cela, utilisez la touche <kbd>F2</kbd> .</li>
   <li>Une fois l'élément sélectionné avec cet attribut actif, cliquez sur le
     nom de l'attribut pour afficher le formulaire d'édition de la valeur
     courante.</li>
@@ -108,7 +125,7 @@ attribut :</p>
 <h3 id="Editer2"><a name="Editing" id="Editing">Editer des attributs dans la
 vue structure</a></h3>
 
-<p>Tous les attributs sont affichés dans la Vue structure. Les attributs
+<p>Tous les attributs sont affichés dans la vue structure. Les attributs
 peuvent être affichés en bleu ou en rose. Quand un attribut est affiché en
 bleu, vous pouvez seulement le modifier avec l'outil
 <strong>Attributs</strong>. Ceci assure que seules des valeurs correctes
@@ -119,11 +136,11 @@ soient choisies.</p>
   <li>Vous pouvez cliquez dans la valeur (affichée en rose) et éditer la
     valeur comme n'importe quelle autre chaîne de caractères.</li>
   <li>Pour sélectionner la valeur entière l'attribut, vous pouvez cliquer
-    dans la valeur puis presser la touche <code>F2</code>.</li>
+    dans la valeur puis presser la touche <code><kbd>F2</kbd></code>.</li>
   <li>Pour retirer l'attribut, vous pouvez sélectionner la valeur entière,
-    puis presser deux la touche <code>Delete</code>. Le premier
-    <code>Delete</code> va retirer la valeur de l'attribut et le second va
-    détruire l'attribut.</li>
+    puis presser deux la touche <code><kbd>Delete</kbd></code>. Le premier
+    <code><kbd>Delete</kbd></code> va retirer la valeur de l'attribut et le
+    second va détruire l'attribut.</li>
 </ul>
 
 <h3 id="Copier"><a name="Copying">Copier des attributs</a></h3>

@@ -27,14 +27,14 @@ src="../../resources/icons/misc/right.png" /> </a></p>
 
 <div class="toc">
 <ul>
-  <li><a href="#Creating">Editing elements</a>
+  <li><a href="#Creating">Editing elements</a> 
     <ul>
       <li><a href="#Editing">Editing modes</a></li>
       <li><a href="#Buttons">Buttons and menus</a></li>
       <li><a href="#Insertion">Insertion point</a></li>
       <li><a href="#Structure">Hidden elements submenu</a></li>
       <li><a href="#Generated">Generated elements</a></li>
-      <li><a href="#Enter">The Enter (or Return) key</a>
+      <li><a href="#Enter">The Enter (or Return) key</a> 
         <ul>
           <li><a href="#Exiting">Exiting anchors, inline elements,
           etc.</a></li>
@@ -44,7 +44,6 @@ src="../../resources/icons/misc/right.png" /> </a></p>
       <li><a href="#Delete">The Delete and Backspace keys</a></li>
       <li><a href="#Changing">Changing the document title</a></li>
       <li><a href="#Insert">Insert time stamp</a></li>
-      <li><a href="#About">About white space handling</a></li>
     </ul>
   </li>
 </ul>
@@ -360,81 +359,6 @@ European format (DD-MM-YYYY). The date format is fixed by the
 
 <p>Once the date is inserted, Amaya automatically updates it each times the
 document is saved and so maintains the last update date.</p>
-
-<h3 id="About">About white space handling</h3>
-
-<p>Amaya removes insignificant white-space characters when it loads a
-document unless they must be explicitly preserved. This is true for XHTML,
-MathML, and SVG documents, as well as MathML or SVG elements included in a
-HTML document,</p>
-
-<p>The following are considered as insignificant white-space characters:</p>
-<ul>
-  <li>End of line characters (<code>#xD</code> and <code>#xA</code>)</li>
-  <li>Tab characters (<code>#X9</code>)</li>
-  <li>Leading spaces of an element</li>
-  <li>Trailing spaces of an element</li>
-  <li>Contiguous spaces (one space is preserved)</li>
-</ul>
-
-<p>To preserve all the characters for some elements, use the
-<code>xml:space</code> attribute or the <code>PRE</code> element (only valid
-for XHTML documents). The possible values for the <code>xml:space</code>
-attribute are <code>default</code> and <code>preserve</code>.</p>
-<ul>
-  <li>The value <code>default</code> means that an applications' default
-    white-space treatment is acceptable for these elements. In Amaya, the
-    default treatment removes the insignificant white-space characters for
-    all supported DTDs (see above). </li>
-  <li>The value <code>preserve</code> indicates that applications will
-    preserve all the characters, except the first one that immediately
-    follows the end tag of the element where it is specified, if that element
-    is an end of line.</li>
-</ul>
-
-<p>You apply the <code>xml:space</code> attribute to all elements within the
-content of the element where it is specified, unless it is overridden with
-another instance of the <code>xml:space</code> attribute.</p>
-
-<p>In an XHTML DTD, the <code>PRE</code> element causes the same behavior as
-the <code>xml:space</code> attribute with the value <code>preserve</code>.</p>
-
-<p>Amaya applies white space handling when it loads a document, not during
-editing. A consequence is that if you type insignificant white-space
-characters, they will be visible and saved but will be removed the next time
-the document is loaded. For example, the following source code:</p>
-
-<p><code>&lt;p&gt;Amaya removes the &lt;strong&gt; insignificant white-space
-&lt;/strong&gt;when it loads ...&lt;/p&gt;</code></p>
-
-<p>displays as follows during editing:</p>
-
-<p><code>Amaya removes the <strong>insignificant white-space</strong> when it
-loads...</code></p>
-
-<p>The text will be saved with that syntax. However, the next time the
-document is loaded, the text will display as:</p>
-
-<p><code>Amaya removes the<strong>insignificant white-space</strong>when it
-loads...</code></p>
-
-<p>because the leading and trailing spaces of the element
-<code>&lt;strong&gt;</code> are considered to be insignificant and are
-removed.</p>
-
-<p>The correct source code would be:</p>
-
-<p><code>&lt;p&gt;Amaya removes the &lt;strong&gt;insignificant
-white-space&lt;/strong&gt; when it loads ...&lt;/p&gt;</code></p>
-
-<p class="Note">By default Amaya removes insignificant white-space
-characters.<br />
-It is possible to request to "Keep multiple spaces" in <a
-href="Configure.html#Keep">Preference</a> dialog. In this case, Amaya will
-replace insignificant white-space characters it should to remove by no-break
-spaces.</p>
-
-<p></p>
 
 <p></p>
 </div>

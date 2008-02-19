@@ -9,24 +9,14 @@
 </head>
 
 <body lang="fr">
-
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td><p><img border="0" alt="W3C" src="../images/w3c_home"> <img
-        border="0" alt="Amaya" src="../../resources/icons/22x22/logo.png">
-        </p>
-      </td>
-      <td><p align="right"><a href="EditChar.html.fr"><img alt="previous"
-        src="../../resources/icons/misc/left.png"> </a><a
-        href="Manual.html"><img alt="top" border="0"
-        src="../../resources/icons/misc/up.png"> </a> <a
-        href="Templates.html.fr"><img alt="next" border="0"
-        src="../../resources/icons/misc/right.png"> </a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+Amaya<img border="0" alt="logo" src="../../resources/icons/22x22/logo.png"> </p>
+<p class="nav"><a href="EditChar.html.fr"><img alt="previous"
+src="../../resources/icons/misc/left.png"> </a><a href="Manual.html"><img
+alt="top" border="0" src="../../resources/icons/misc/up.png"> </a> <a
+href="Templates.html.fr"><img alt="next" border="0"
+src="../../resources/icons/misc/right.png"> </a></p>
+</div>
 
 <div id="HTML">
 <h1>Les &eacute;l&eacute;ments HTML</h1>

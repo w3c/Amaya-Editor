@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -14,7 +14,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Changing.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
@@ -25,13 +26,14 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <div class="toc">
 <ul>
-  <li><a href="#Linking">Linking</a>
+  <li><a href="#Linking">Create or change links and anchors</a>
     <ul>
-      <li><a href="#Creating">Creating a Target Anchor</a></li>
-      <li><a href="#Creating1">Creating a Target Element</a></li>
-      <li><a href="#Creating2">Creating an External Link</a></li>
+      <li><a href="#Creating">Creating a target anchor</a></li>
+      <li><a href="#Creating1">Creating a target element</a></li>
+      <li><a href="#Creating2">Creating an external link</a></li>
       <li><a href="#Creating3">Creating an Internal Link</a></li>
-      <li><a href="#Changing">Changing a Link</a></li>
+      <li><a href="#Copying">Copying a target location</a></li>
+      <li><a href="#Changing">Changing a link</a></li>
       <li><a href="#Removing">Removing a Link or a Target Anchor</a></li>
     </ul>
   </li>
@@ -39,9 +41,9 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2 id="Linking">Linking</h2>
+<h2 id="Linking">Create or change links and anchors</h2>
 
-<h3 id="Creating">Creating a Target Anchor</h3>
+<h3 id="Creating">Creating a target anchor</h3>
 
 <p>A target anchor is a piece of text that is referred to by a link (a source
 anchor). Before creating a link to a text string, you must first turn it into
@@ -50,15 +52,18 @@ a target anchor.</p>
 <p class="ProcedureCaption">To create a target anchor:</p>
 <ol>
   <li>Click and drag to select the appropriate text string.</li>
-  <li>Choose <strong>Create Target</strong> from the <strong>Links</strong>
-    menu<strong>.</strong> The selected text is now a target.
-    <p>In Formatted view, if <strong>Show Targets</strong> is turned on, the
+  <li>Choose <strong>Create target</strong> from the <strong>Links</strong>
+    menu or the <img alt="target"
+    src="../../resources/icons/16x16/XHTML_Target.png" width="16" height="16"
+    /> button in the <strong>Elements</strong> tool. The selected text is now
+    a target. 
+    <p>In Formatted view, if <strong>Show targets</strong> is turned on, the
     target text is preceded by an icon <img src="../images/target.gif"
     alt=" target " />. In the Links view, icons that identify target anchors
     are always displayed.</p>
   </li>
   <li>When a target anchor is created, Amaya automatically generates the
-    attribute <code>Name</code> value by:
+    attribute <code>name</code> value by: 
     <ul>
       <li>Extracting a word longer than 3 characters from the anchor text.<br
         />
@@ -74,10 +79,10 @@ a target anchor.</p>
 link to the last target anchor you have created, choose <strong>Link to
 previous target</strong> from the <strong>Links</strong> menu.</p>
 
-<h3 id="Creating1">Creating a Target Element</h3>
+<h3 id="Creating1">Creating a target element</h3>
 
 <p>In HTML 4.0, an element can be used as a link target. A target element is
-a typed element with an <code>ID</code> attribute to which the link refers (a
+a typed element with an <code>id</code> attribute to which the link refers (a
 source anchor). Before creating a link to such an element, you must first
 turn it into a target element.</p>
 
@@ -86,17 +91,19 @@ turn it into a target element.</p>
   <li>Click and drag to select a character string within the element, then
     press the <kbd>F2</kbd> key to select the entire element.</li>
   <li>Open the <strong>Links</strong> menu and select <strong>Create
-    Target.</strong> The selected element now has an ID attribute that
-    identifies it as a target element. Amaya automatically generates a unique
-    <code>ID</code> value.
-    <p>In Formatted view, if <strong>Show Targets</strong> is turned on, the
+    target</strong>  or the <img alt="target"
+    src="../../resources/icons/16x16/XHTML_Target.png" width="16" height="16"
+    /> button in the <strong>Elements</strong> tool. The selected element now
+    has an <code>id</code> attribute that identifies it as a target element.
+    Amaya automatically generates a unique <code>id</code> value. 
+    <p>In Formatted view, if <strong>Show targets</strong> is turned on, the
     target element is preceded by an icon <img src="../images/target.gif"
     alt=" target " />. In the Links view, icons that identify target anchors
     are always displayed.<br />
     </p>
   </li>
   <li>When a target element is created, Amaya automatically generates the
-    <code>ID</code> attribute value by:
+    <code>ID</code> attribute value by: 
     <ul>
       <li>Extracting a word longer than 3 characters from the anchor text.<br
         />
@@ -109,17 +116,17 @@ turn it into a target element.</p>
 </ol>
 
 <p class="ProcedureNote"><strong>Note:   </strong>You can also directly
-create the <code>ID</code> attribute by selecting the element and using the
+create the <code>id</code> attribute by selecting the element and using the
 <strong><a href="Attributes.html#page_body">Attributes</a></strong> list.
 When you enter an attribute value, Amaya checks it for uniqueness, and
-changes the value if it is already used by another <code>NAME</code> or
-<code>ID</code> attribute in the same document.</p>
+changes the value if it is already used by another <code>name</code> or
+<code>id</code> attribute in the same document.</p>
 
 <p class="ProcedureNote"><strong>Note:</strong>   If you want to create a
 link to the last target element you have created, choose <strong>Link to
 previous target</strong> from the <strong>Links</strong> menu.</p>
 
-<h3 id="Creating2">Creating an External Link</h3>
+<h3 id="Creating2">Creating an external link</h3>
 
 <p class="ProcedureCaption">To create an anchor that is a link to another
 document:</p>
@@ -129,7 +136,7 @@ document:</p>
   <li>Click the <strong>Link</strong> button <img alt="Link "
     src="../../resources/icons/16x16/XHTML_Link.png" />, or select the entry
     "<strong>Create or change link</strong>" in the <strong>Links</strong>
-    menu, or use the shortcuts <kbd>Ctrl l Ctrl l</kbd>.
+    menu, or use the shortcuts <kbd>Ctrl l Ctrl l</kbd>. 
     <ul>
       <li>If the target document is displayed in another Amaya window and you
         want to select it by click, click the <strong>Click</strong> button
@@ -156,7 +163,7 @@ element in the same document or in another document:</p>
   <li>Click the <strong>Link</strong> button <img alt="Link "
     src="../../resources/icons/16x16/XHTML_Link.png" />, or select the entry
     "<strong>Create or change link</strong>" in the <strong>Links</strong>
-    menu, or use the shortcuts <kbd>Ctrl l Ctrl l</kbd>.
+    menu, or use the shortcuts <kbd>Ctrl l Ctrl l</kbd>. 
     <ul>
       <li>If the target is displayed (you may scroll to display it), click
         the <strong>Click</strong> button then click the target icon <img
@@ -172,14 +179,14 @@ target anchor or target element recently, instead of step 2 above, select
 <strong>Link to previous target</strong> in the <strong>Links</strong> menu:
 the last target you have created will become the target of the new link.</p>
 
-<h3>Copying a Target location</h3>
+<h3 id="Copying">Copying a target location</h3>
 
 <p>The Copy location command registers the location (URI) of the selected
 target into the system clipboard. If no target is selected, the current
 document URL is registered. This location can be so pasted into a dialog form
 or into another external application.</p>
 
-<h3 id="Changing">Changing a Link</h3>
+<h3 id="Changing">Changing a link</h3>
 
 <p>Use this procedure to change the target of a link without changing its
 anchor.</p>
@@ -196,7 +203,7 @@ anchor.</p>
 </ol>
 
 <p class="ProcedureNote"><b>Note:  </b>You can also manually edit the
-<code>HREF</code> attribute of the anchor either in the Structure view or in
+<code>href</code> attribute of the anchor either in the Structure view or in
 the Links view, or use the <strong>Attributes</strong> list.</p>
 
 <h3 id="Removing">Removing a Link or a Target Anchor</h3>
@@ -206,7 +213,7 @@ menu removes the anchor enclosing the cursor location.</p>
 
 <p>To use this command, put the selection or the insertion point anywhere
 within the anchor to be removed (it's not necessary to select the whole
-anchor), and choose <strong>Delete Anchor</strong>. The anchor is removed,
+anchor), and choose <strong>Delete anchor</strong>. The anchor is removed,
 but its content remains.</p>
 </div>
 </body>
