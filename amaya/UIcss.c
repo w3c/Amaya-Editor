@@ -412,6 +412,11 @@ void UpdateStyleSheet (char *url, char *tempdoc)
           doc = 1;
           /* current parsed CSS file */
           ParsedCSS = css->doc;
+          if (ParsedCSS)
+            {
+              RemoveParsingErrors (ParsedCSS);
+              CloseLogs (ParsedCSS);
+            }
           while (doc < DocumentTableLength)
             {
               /* don't manage a document used by make book */
@@ -438,8 +443,8 @@ void UpdateStyleSheet (char *url, char *tempdoc)
                           if (dispMode == DisplayImmediately)
                             TtaSetDisplayMode (doc, NoComputedDisplay);
                           /* invalidate current logs */
+                          RemoveParsingErrors (doc);
                           CloseLogs (doc);
-                          CloseLogs (ParsedCSS);
                           found = TRUE; // the css file is almost parsed
                           if (refcss && refcss->infos[doc])
                             {
