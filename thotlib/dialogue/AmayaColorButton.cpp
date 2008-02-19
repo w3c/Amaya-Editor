@@ -44,17 +44,23 @@ BEGIN_EVENT_TABLE(AmayaColorButton, wxControl)
 END_EVENT_TABLE()
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaColorButton::AmayaColorButton():
 wxControl()
 {
   
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaColorButton::~AmayaColorButton()
 {
   
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaColorButton::AmayaColorButton(wxWindow* parent, wxWindowID id, const wxColour& col,
     const wxPoint& pos, const wxSize& size, long style, const wxString& name):
 wxControl(parent, id, pos, size, style, wxDefaultValidator, name)
@@ -62,6 +68,8 @@ wxControl(parent, id, pos, size, style, wxDefaultValidator, name)
   SetMinSize(wxSize(16,16));
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaColorButton::Create(wxWindow* parent, wxWindowID id, const wxColour& col,
      const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 {
@@ -69,17 +77,23 @@ bool AmayaColorButton::Create(wxWindow* parent, wxWindowID id, const wxColour& c
   return wxControl::Create(parent, id, pos, size, style, wxDefaultValidator, name);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 wxColour AmayaColorButton::GetColour()const
 {
   return GetBackgroundColour();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaColorButton::SetColour(const wxColour& col)
 {
   SetBackgroundColour(col);
   Refresh();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 wxColour AmayaColorButton::ChooseColour()
 {
   wxColourDialog dialog (this, &s_colData);
@@ -87,10 +101,14 @@ wxColour AmayaColorButton::ChooseColour()
     {
       s_colData = dialog.GetColourData();
       SetColour(s_colData.GetColour());
+      return GetColour();
     }
-  return GetColour();
+  else
+    return wxNullColour;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaColorButton::OnLeftButtonDown(wxMouseEvent& event)
 {
   wxColour col = GetColour();
@@ -111,18 +129,24 @@ void AmayaColorButton::OnLeftButtonDown(wxMouseEvent& event)
 
 DEFINE_EVENT_TYPE(AMAYA_COLOR_CHANGED)
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaColorButtonEvent::AmayaColorButtonEvent(const wxColour& col, wxEventType commandType, int winid):
   wxCommandEvent(commandType, winid),
   m_col(col)
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaColorButtonEvent::AmayaColorButtonEvent(const AmayaColorButtonEvent& event):
   wxCommandEvent(event),
   m_col(event.m_col)
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaColorButtonEvent::~AmayaColorButtonEvent()
 {  
 }

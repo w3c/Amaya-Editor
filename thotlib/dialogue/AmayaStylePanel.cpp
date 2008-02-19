@@ -230,7 +230,11 @@ void AmayaStyleToolPanel::GenerateFontColour(wxColour c)
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::OnChooseFontColor(wxCommandEvent& event)
 {
-  GenerateFontColour(XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", AmayaColorButton)->ChooseColour());  
+  wxColour c;
+
+  c = XRCCTRL(*this, "wxID_PANEL_CSS__COLOR", AmayaColorButton)->ChooseColour();
+  if (c != wxNullColour)
+    GenerateFontColour(c);  
 }
 
 /*----------------------------------------------------------------------
@@ -263,7 +267,11 @@ void AmayaStyleToolPanel::GenerateBackgroundColour(wxColour c)
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::OnChooseBackgroundColor(wxCommandEvent& event)
 {
-  GenerateBackgroundColour(XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->ChooseColour());    
+  wxColour c;
+
+  c = XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->ChooseColour();
+  if (c != wxNullColour)
+    GenerateBackgroundColour(c);    
 }
 
 /*----------------------------------------------------------------------
