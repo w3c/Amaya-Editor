@@ -1094,7 +1094,7 @@ xmlns="http://www.w3.org/1998/Math/MathML">
 
 <p>Généralement, vous combinerez les deux méthodes.</p>
 
-<h4 id="Vue">Vue Structure</h4>
+<h4 id="Vue">Vue structure</h4>
 
 <p>Toutes les fois qu'un document contient des éléments MathML, la
 sélection de l'article <a href="Views.html.fr#Structure">Montrer la
@@ -1196,8 +1196,7 @@ en tête du document. Ce doctype n'est pas obligatoire mais il est utile :</p>
 
 <p>Malheureusement, ce doctype n'est pas supporté par beaucoup de browsers.
 Il peut donc être nécessaire de le supprimer avec la commande
-<strong>Fichier&gt;Changer le type du document&gt;Supprimer le
-doctype</strong>.</p>
+<strong>Outils/Changer le doctype/Supprimer le doctype</strong>.</p>
 
 <p>IE utilise la feuille de transformation <code>pmathml.xsl</code> et un
 plugin pour afficher le code MathML inclus. Amaya ajoute automatiquement le

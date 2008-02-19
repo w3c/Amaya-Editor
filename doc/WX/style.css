@@ -45,10 +45,11 @@ div + div {
     border-bottom: thin solid;
     }
 
-  .nav {
+  p.nav {
     /*float: right;*/
     text-align: right;
     display: block;
+    margin: 0;
     }
 
   .logo {
