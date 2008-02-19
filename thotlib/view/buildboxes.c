@@ -5341,7 +5341,7 @@ static void NewConcreteImage (int frame, Document doc)
   int                 c1;
   int                 cN;
   int                 h;
-  ThotBool            unique;
+  ThotBool            caret;
   ThotBool            lock = TRUE;
 
 
@@ -5387,7 +5387,7 @@ static void NewConcreteImage (int frame, Document doc)
         }
       else
         pvN = NULL;
-      unique = pFrame->FrSelectOneBox;
+      caret = pFrame->FrSelectOneBox;
 
       /* On libere de la hierarchie avant recreation */
       pAb = pFrame->FrAbstractBox;
@@ -5408,8 +5408,8 @@ static void NewConcreteImage (int frame, Document doc)
       pFrame->FrXOrg = x;
       pFrame->FrYOrg = y;
       /* On restaure la selection courante dans la fenetre */
-      if (unique)
-        InsertViewSelMarks (frame, pv1, c1, cN, TRUE, TRUE, unique);
+      if (caret)
+        InsertViewSelMarks (frame, pv1, c1, cN, TRUE, TRUE, caret);
       /* La selection porte sur plusieurs paves */
       else
         {
@@ -5529,8 +5529,13 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
               pFrame->FrYOrg = 0;
               pFrame->FrAbstractBox = pAb;
               pFrame->FrSelectOneBox = FALSE;
+              pFrame->FrSelectOnePosition = FALSE;
               pFrame->FrSelectionBegin.VsBox = NULL;
+              pFrame->FrSelectionBegin.VsLine = NULL;
+              pFrame->FrSelectionBegin.VsBuffer = NULL;
               pFrame->FrSelectionEnd.VsBox = NULL;
+              pFrame->FrSelectionEnd.VsLine = NULL;
+              pFrame->FrSelectionEnd.VsBuffer = NULL;
               pFrame->FrSelectShown = FALSE;
               pFrame->FrReady = TRUE;
               pFrame->FrFlow = NULL;

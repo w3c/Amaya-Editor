@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -879,9 +879,8 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
   ThotBool            stop;
   PtrTransform        Trans;
 
-  /* on ecrit effectivement la forme pivot de l'element */
   pEl1 = *pEl;
-  /* ecrit la marque de type */
+  /* write the element type */
   TtaWriteByte (pivFile, (char) C_PIV_TYPE);
   /* ecrit le numero de la regle definissant le type */
   PutShort (pivFile, pEl1->ElTypeNumber);
@@ -940,8 +939,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 
   /*****TO BE CHANGED**** */
   /* write a specific rule for each picture element */
-  if (pEl1->ElTerminal && pEl1->ElLeafType == LtPicture &&
-      pEl1->ElPictInfo)
+  if (pEl1->ElTerminal && pEl1->ElLeafType == LtPicture && pEl1->ElPictInfo)
     {
       /* write the rule mark */
       TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
@@ -987,11 +985,12 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
       PutPresRule (pivFile, pPRule);
       pPRule = pPRule->PrNextPRule;
     }
+
   /* ecrit le contenu de l'element */
+  pSS = pEl1->ElStructSchema;
   if (pEl1->ElSource == NULL)
     /* on n'ecrit pas le contenu d'un element inclus */
     {
-      pSS = pEl1->ElStructSchema;
       if (pEl1->ElTerminal)
         {
           /* feuille terminale: on ecrit son contenu entre C_PIV_BEGIN et
@@ -1233,59 +1232,61 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
                 TtaWriteByte (pivFile, (char) C_PIV_END);
             }
         }
-      else
-        /* ce n'est pas un element terminal */
-        if (subTree)
-          /* on veut ecrire les fils de l'element */
-          {
-            /* ecrit une marque de debut */
-            TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
-            pChild = pEl1->ElFirstChild;
-            /* ecrit successivement la representation pivot de tous */
-            /* les fils de l'element */
-            while (pChild != NULL)
-              {
-                /* envoie l'evenement ElemSave.Pre a l'application, si */
-                /* elle le demande */
-                notifyEl.event = TteElemSave;
-                notifyEl.document = (Document) IdentDocument (pDoc);
-                notifyEl.element = (Element) pChild;
-                notifyEl.info = 0; /* not sent by undo */
-                notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
-                notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
-                notifyEl.position = 0;
-                if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-                  /* l'application accepte que Thot sauve l'element */
-                  {
-                    /* Ecrit d'abord le numero de la structure generique */
-                    /* s'il y a changement de schema de structure par */
-                    /* rapport au pere */
-                    if (pEl1->ElStructSchema != pChild->ElStructSchema)
-                      WriteNatureNumber (pChild->ElStructSchema, pivFile,pDoc);
-                    /* Ecrit un element fils */
-                    Externalise (pivFile, &pChild, pDoc, subTree);
-                    /* envoie l'evenement ElemSave.Post a l'application, si*/
-                    /* elle le demande */
-                    notifyEl.event = TteElemSave;
-                    notifyEl.document = (Document) IdentDocument (pDoc);
-                    notifyEl.element = (Element) pChild;
-                    notifyEl.info = 0; /* not sent by undo */
-                    notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
-                    notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
-                    notifyEl.position = 0;
-                    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-                  }
-                /* passe au fils suivant */
-                pChild = pChild->ElNext;
-              }
-            /* ecrit une marque de fin */
-            TtaWriteByte (pivFile, (char) C_PIV_END);
-          }
+      else if (subTree && pSS && strcmp (pSS->SsName, "SVG"))
+        {
+          /* write the subtree of the element */
+          // for the moment don't export SVG elements
+          // in the future a picture should be generated
+
+          /* ecrit une marque de debut */
+          TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
+          pChild = pEl1->ElFirstChild;
+          /* ecrit successivement la representation pivot de tous */
+          /* les fils de l'element */
+          while (pChild != NULL)
+            {
+              /* envoie l'evenement ElemSave.Pre a l'application, si */
+              /* elle le demande */
+              notifyEl.event = TteElemSave;
+              notifyEl.document = (Document) IdentDocument (pDoc);
+              notifyEl.element = (Element) pChild;
+              notifyEl.info = 0; /* not sent by undo */
+              notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
+              notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
+              notifyEl.position = 0;
+              if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+                /* l'application accepte que Thot sauve l'element */
+                {
+                  /* Ecrit d'abord le numero de la structure generique */
+                  /* s'il y a changement de schema de structure par */
+                  /* rapport au pere */
+                  if (pEl1->ElStructSchema != pChild->ElStructSchema)
+                    WriteNatureNumber (pChild->ElStructSchema, pivFile,pDoc);
+                  /* Ecrit un element fils */
+                  Externalise (pivFile, &pChild, pDoc, subTree);
+                  /* envoie l'evenement ElemSave.Post a l'application, si*/
+                  /* elle le demande */
+                  notifyEl.event = TteElemSave;
+                  notifyEl.document = (Document) IdentDocument (pDoc);
+                  notifyEl.element = (Element) pChild;
+                  notifyEl.info = 0; /* not sent by undo */
+                  notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
+                  notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
+                  notifyEl.position = 0;
+                  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+                }
+              /* passe au fils suivant */
+              pChild = pChild->ElNext;
+            }
+          /* ecrit une marque de fin */
+          TtaWriteByte (pivFile, (char) C_PIV_END);
+        }
     }
 }
 
 /*----------------------------------------------------------------------
-  PutString								  ----------------------------------------------------------------------*/
+  PutString
+ ----------------------------------------------------------------------*/
 static void PutString (BinFile pivFile, char* s)
 {
   int                 j;
