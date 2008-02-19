@@ -12,7 +12,8 @@
 <body xml:lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="HTML.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -66,8 +67,8 @@ logiciels.</p>
 href="Selecting.html.fr#Selecting">placer le point d'insertion</a> à
 l'endroit où vous voulez insérer l'expression, puis de cliquer sur le
 bouton <strong>Math</strong> (le premier bouton de la palette Math) ou de
-sélectionner l'entrée <strong>Nouvelle formule</strong> du menu
-<strong>XML</strong>. Voici des exemples avec une formule insérée
+sélectionner l'entrée <strong>Insérer une formule</strong> du menu
+<strong>Insérer</strong>. Voici des exemples avec une formule insérée
 directement dans le document XHTML ou à l'intérieur d'une image SVG :</p>
 
 <p><math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -180,12 +181,12 @@ directement dans le document XHTML ou à l'intérieur d'une image SVG :</p>
 
 <h4 id="XMLMenu">Le menu XML</h4>
 
-<p>Le menu <strong>XML/Eléments math de base</strong> contient des
-éléments non disponibles dans la palette. Les premiers éléments créent
-un nouvel élément d'un type donné à l'intérieur d'une expression
-mathématique : Texte (<code>mtext</code>), Identificateur (<code>mi</code>),
-Nombre (<code>mn</code>), Opérateur (<code>mo</code>). Ces commandes peuvent
-aussi changer le type d'un élément seul ou d'une séquence d'éléments.</p>
+<p>Le sous-menu <strong>Insertion/Math</strong> contient des éléments non
+disponibles dans la palette. Les premiers éléments créent un nouvel
+élément d'un type donné à l'intérieur d'une expression mathématique :
+Texte (<code>mtext</code>), Identificateur (<code>mi</code>), Nombre
+(<code>mn</code>), Opérateur (<code>mo</code>). Ces commandes peuvent aussi
+changer le type d'un élément seul ou d'une séquence d'éléments.</p>
 
 <p>La commande suivante, Espace (<code>mspace</code>), vous permet d'ajouter
 un espace dans une formule. Pour changer sa taille, vous devez modifier
@@ -202,7 +203,7 @@ le caractère grec α).</p>
 utilisés pour entrer les caractères invisibles correspondants. Voir la
 section sur les <a href="#Speciaux">caractères spéciaux</a>.</p>
 
-<p>Le menu <strong>XML/Constructions math</strong> vous permet de créer de
+<p>Le sous-menu <strong>Insertion/Math</strong> vous permet de créer de
 nouvelles constructions à l'intérieur d'une formule. Si le point
 d'insertion n'est pas dans une formule, un élément Math est d'abord créé
 pour accepter la nouvelle construction. Les constructions disponibles
@@ -323,8 +324,8 @@ sont :</p>
     </math></li>
 </ul>
 
-<p>Enfin, le menu <strong>XML/Matrices</strong> vous permet de créer et
-éditer des tableaux MathML : <math
+<p>Enfin, l'entrée <strong>Nouvelle matrice</strong> vous permet de créer
+et éditer des tableaux MathML : <math
 xmlns="http://www.w3.org/1998/Math/MathML">
   <mtable>
     <mtr>
@@ -1097,9 +1098,9 @@ xmlns="http://www.w3.org/1998/Math/MathML">
 
 <p>Toutes les fois qu'un document contient des éléments MathML, la
 sélection de l'article <a href="Views.html.fr#Structure">Montrer la
-structure</a> du menu <strong>Affichage</strong> ouvre la vue Structure qui montre
-la structure principale du document HTML. Dans cette vue, les éléments
-MathML et leur contenu effectif sont affichés.</p>
+structure</a> du menu <strong>Affichage</strong> ouvre la vue Structure qui
+montre la structure principale du document HTML. Dans cette vue, les
+éléments MathML et leur contenu effectif sont affichés.</p>
 
 <p>Vous pouvez éditer des expressions mathématiques aussi bien dans la vue
 principale que dans la vue Structure. La vue Structure est particulièrement

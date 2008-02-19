@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Images et Zones actives</title>
@@ -12,7 +12,8 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Tables.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -23,7 +24,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <div class="toc">
 <ul>
-  <li><a href="#Images">Images et Zones actives</a>
+  <li><a href="#Images">Images et zones actives</a> 
     <ul>
       <li><a href="#Ajouter">Ajouter une image</a></li>
       <li><a href="#Remplacer">Remplacer une image</a></li>
@@ -36,17 +37,17 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Client-sid">
-<h2 id="Images"><a name="L1013">Images et Zones actives</a></h2>
+<h2 id="Images"><a name="L1013">Images et zones actives</a></h2>
 
 <h3 id="Ajouter"><a name="Adding">Ajouter une image</a></h3>
 
 <p>Pour insérer une image, choisissez l'entrée <strong>Image</strong> depuis
-le menu <strong>XHTML</strong> ou cliquez sur le bouton <img alt="Image "
+le menu <strong>Insérer</strong> ou cliquez sur le bouton <img alt="Image "
 src="../../resources/icons/16x16/XHTML_Image.png" longdesc="longdesc.htm" />
-(ou encore utilisez le raccourci clavier <kbd>Ctrl h Ctrl i</kbd>). Ceci
-fait apparaître une boîte de dialogue qui vous permet de rentrer le nom du
-fichier et le <a href="#Alternative">texte de remplacement</a> (Attribut
-<strong>Alt</strong>) de l'image désirée.</p>
+(ou encore utilisez le raccourci clavier <kbd>Ctrl h Ctrl i</kbd>). Ceci fait
+apparaître une boîte de dialogue qui vous permet de rentrer le nom du fichier
+et le <a href="#Alternative">texte de remplacement</a> (Attribut
+<code>alt</code>) de l'image désirée.</p>
 
 <p class="Note"><strong>Note</strong>: le texte de remplacement est
 obligatoire. Vous devez saisir un texte dans le champ correspondant.</p>
@@ -59,7 +60,7 @@ correspondent à votre critère.</p>
 <p>Si vous souhaitez fournir une longue description (par exemple si votre
 image présente une information complexe) vous devriez la faire dans un
 document séparé et la relier en donnant l'URI comme un descripteur long
-(<strong>longdesc</strong>), également disponible dans la liste des
+(<code>longdesc</code>), également disponible dans la liste des
 <strong>Attributs</strong>.</p>
 
 <h3 id="Remplacer">Remplacer une image</h3>
@@ -93,18 +94,18 @@ de substitution.</p>
 
 <p>Dans les cas où l'image transporte une information importante qui n'est
 pas disponible depuis le texte du document, vous devez fournir une
-description de l'information. L'option <strong>longdesc</strong> dans la
-liste des <strong>Attributs</strong> vous permet de relier une description
-(qui est un URI - un document séparé, ou une partie nommée du document
-courant) à une image.</p>
+description de l'information. L'option <code>longdesc</code> dans la liste
+des <strong>Attributs</strong> vous permet de relier une description (qui est
+un URI - un document séparé, ou une partie nommée du document courant) à une
+image.</p>
 
 <p>Afin de donner une idée de comment une page sans les images doit être
 présentée, Amaya fournit une option <strong>Montrer la vue alternée</strong>
-dans le menu <strong>Affichage</strong>. Dans le cas d'un navigateur oral, la <a
-href="Views.html.fr#Alternate">vue alternée</a> pourrait être simplement lue
-à voix haute. Sans des textes de remplacement pour les images, de nombreuses
-pages deviendraient difficiles voire impossibles à naviguer, et les
-utilisateurs seraient condamnés à trouver "leur chemin dans le noir".</p>
+dans le menu <strong>Affichage</strong>. Dans le cas d'un navigateur oral, la
+<a href="Views.html.fr#Alternate">vue alternée</a> pourrait être simplement
+lue à voix haute. Sans des textes de remplacement pour les images, de
+nombreuses pages deviendraient difficiles voire impossibles à naviguer, et
+les utilisateurs seraient condamnés à trouver "leur chemin dans le noir".</p>
 
 <h3 id="Utiliser"><a name="Using">Utiliser des zones actives</a></h3>
 

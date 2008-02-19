@@ -105,9 +105,9 @@ cette liste.</p>
 <h3 id="Creating">Créer une instance de document</h3>
 
 <p>Pour créer un nouveau document instance depuis un modèle, utilisez
-l'entrée <strong>Nouveau &gt; Nouveau document</strong> du menu Fichier. Un
-<a href="Document.html.fr">dialogue</a> va s'afficher dans laquelle vous
-pouvez sélectionner :</p>
+l'entrée <strong>Nouveau &gt; Nouveau document</strong> du menu
+<strong>Fichier</strong>. Un <a href="Document.html.fr">dialogue</a> va
+s'afficher dans laquelle vous pouvez sélectionner :</p>
 <ul>
   <li>Le modèle, soit en sélectionnant dans la liste des modèles enregistrés
     ou en tapant l'URI ou le nom du fichier du modèle qui n'est pas dans la
@@ -154,9 +154,10 @@ attaché à ces éléments, comme déclaré dans le modèle.</p>
 
 <h3 id="Editing">Editer un document instance</h3>
 
-<p>L'édition n'est autorisée que dans les éléments repeat, option, use, et
-bag, c'est a dire dans les boîtes colorées hachurées. Le reste du document
-est la partie figée du modèle et ne peut pas être modifié.</p>
+<p>L'édition n'est autorisée que dans les éléments <code>repeat</code>,
+<code>option</code>, <code>use</code>, et <code>bag</code>, c'est a dire dans
+les boîtes colorées hachurées. Le reste du document est la partie figée du
+modèle et ne peut pas être modifié.</p>
 
 <h4 id="Editing1">Edition dans un élément <code>repeat</code></h4>
 
@@ -174,16 +175,16 @@ menu ne contient qu'une seule entrée, pour clairement informer de ce qui va
 
 <p>Une autre façon de créer des occurrences de la structure répétée est de
 sélectionner une occurrence existante, ou d'ajouter un point d'insertion à la
-fin d'une occurrence, et d'appuyer sur la touche t<kbd>Enter</kbd>. Une
+fin d'une occurrence, et d'appuyer sur la touche <kbd>Enter</kbd>. Une
 nouvelle instance de la structure répétée est ainsi créée, à condition que le
 nombre maximum d'occurrences de la structure répétée ne soit pas atteint. La
 nouvelle occurrence créée est alors du même type que l'occurrence
 sélectionnée quand on a appuyé sur la touche nter<kbd>Enter</kbd>.</p>
 
 <p>Quand une occurrence existante est vide ou complètement sélectionnée et
-que la touche Backspace ou Delete est pressée, l'élément est détruit, à
-condition que le nombre minimum d'occurrences de la structure répétée ne soit
-pas atteint.</p>
+que la touche <kbd>Backspace</kbd> ou <kbd>Delete</kbd> est pressée,
+l'élément est détruit, à condition que le nombre minimum d'occurrences de la
+structure répétée ne soit pas atteint.</p>
 
 <h4 id="Editing2">Edition dans un élément <code>option</code></h4>
 
@@ -209,16 +210,14 @@ choisi, la structure correspondante est engendrée et vous pouvez librement
 quel nombre d'éléments des types spécifiés par le modèle. Quand vous voulez
 insérer un élément XHTML, faite le de façon habituelle à condition que le
 modèle autorise ce type d'élément. Il se peut que des éléments ne soient pas
-autorisés. Ces éléments sont alors grisés dans les menus (dans la version
-actuelle, cette fonctionnalité n'est pas implémentée, mais les éléments
-interdits ne sont pas créés).</p>
+autorisés. Les éléments autorisés sont proposés dans les sous-menus
+<strong>Insérer</strong> et <strong>Ajouter</strong> du menu contextuel.</p>
 
-<p>Les modèles introduisent de nouvelles structures (appelées composants)
-construites à partir d'éléments XHTML. L'outil <strong>Eléments XML</strong>
-liste ces composants et permet de les insérer dans les bags (boîtes vertes).
-Pour insérer un composant à la position courante, sélectionnez son nom dans
-l'outil et appuyez sur le bouton Appliquer. Vous pouvez aussi faire un
-double-clic sur le nom.</p>
+<p>Les modèles introduisent de nouvelles structures (appelées
+<em>composants</em>) construites à partir d'éléments XHTML. Les
+<em>composants</em> du modèle disponibles sont aaussi proposés dans les
+sous-menus <strong>Insérer</strong> et <strong>Ajouter</strong> du menu
+contextuel.</p>
 </div>
 </body>
 </html>
