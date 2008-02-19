@@ -15,7 +15,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Templates.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html"
@@ -26,40 +27,59 @@ src="../../resources/icons/misc/right.png" /> </a></p>
 
 <div class="toc">
 <ul>
-  <li><a href="#Creating">Creating Elements</a> 
+  <li><a href="#Creating">Editing elements</a>
     <ul>
-      <li><a href="#Buttons">Buttons and Menus</a></li>
-      <li><a href="#Insertion">Insertion points</a></li>
-      <li><a href="#Element">Element Locations</a></li>
-      <li><a href="#Structure">Structure submenu</a></li>
+      <li><a href="#Editing">Editing modes</a></li>
+      <li><a href="#Buttons">Buttons and menus</a></li>
+      <li><a href="#Insertion">Insertion point</a></li>
+      <li><a href="#Structure">Hidden elements submenu</a></li>
       <li><a href="#Generated">Generated elements</a></li>
-      <li><a href="#Enter">The Enter (or Return) Key</a> 
+      <li><a href="#Enter">The Enter (or Return) key</a>
         <ul>
-          <li><a href="#Exiting">Exiting Anchors, Styled Character Strings,
-            etc.</a></li>
-          <li><a href="#Creating1">Creating Nested Structures</a></li>
+          <li><a href="#Exiting">Exiting anchors, inline elements,
+          etc.</a></li>
+          <li><a href="#Creating1">Creating nested structures</a></li>
         </ul>
       </li>
-      <li><a href="#Changing">Changing the Document Title</a></li>
+      <li><a href="#Delete">The Delete and Backspace keys</a></li>
+      <li><a href="#Changing">Changing the document title</a></li>
       <li><a href="#Insert">Insert time stamp</a></li>
-      <li><a href="#About">About White Space Handling</a></li>
+      <li><a href="#About">About white space handling</a></li>
     </ul>
   </li>
 </ul>
 </div>
 
 <div id="page_body">
-<h2 id="Creating">Creating Elements</h2>
+<h2 id="Creating">Editing elements</h2>
 
-<h3 id="Buttons">Buttons and Menus</h3>
+<h3 id="Editing">Editing modes</h3>
 
-<p>The commands on the <strong>XHTML</strong> and <strong>XML</strong> menus,
-and the corresponding buttons in the XHTML palette, let you create new
-elements at the insertion point within the document. To use the commands from
-the <strong>XHTML</strong> and <strong>XML</strong> menus, place the cursor
+<p>Amaya implements two editing modes:</p>
+<ul>
+  <li>The <em>XML mode</em> is very efficient for manipulating different
+    types of XML structures, but it requires from the user a good knowledge
+    of the document structure. The simple manipulations performed through a
+    few keystrokes in the XML mode are generic: they can be performed for any
+    type of element from any XML vocabulary, whatever their semantics. It
+    works well with HTML text, but also with MathML equations or SVG
+  drawings.</li>
+  <li>The <em>Text mode</em> allows users to handle HTML elements in the same
+    way as in a word processor. That mode doesn't apply to other XML
+    vocabulary.</li>
+</ul>
+
+<p>The user can easily switch the current editing mode (Text/XML) by clicking
+on the corresponding button in the bottom right corner.</p>
+
+<h3 id="Buttons">Buttons and menus</h3>
+
+<p>Entries of the <strong>Insert</strong> menu, and the corresponding buttons
+in the <strong>Elements</strong> tool, let you create new elements at the
+insertion point within the document. To use these commands, place the cursor
 at the desired position and choose the element type.</p>
 
-<p>The XHTML palette provides direct access to:</p>
+<p>The <strong>Elements</strong> tool provides direct access to:</p>
 <ul>
   <li>insert (or replace the current selection by) a set of XHTML elements:
     division (<img alt="Division button"
@@ -102,43 +122,44 @@ at the desired position and choose the element type.</p>
     src="../../resources/icons/16x16/XHTML_sub.png" /> ).</li>
 </ul>
 
-<p>For more information <a href="HTML.html">see the list of all HTML 4.0
-elements</a>.</p>
+<p class="Note">Note: With the Lite Amaya profile, only a subset of buttons
+and menu entries are available.</p>
 
-<h3 id="Insertion">Insertion points</h3>
+<p>For more information about elements <a href="HTML.html">see the list of
+all HTML 4.0 elements</a>.</p>
+
+<h3 id="Insertion">Insertion point</h3>
 
 <p>When creating new elements, it is important to select an <em>insertion
 point</em>, not some text nor a single character: if the current selection is
 not empty, Amaya tries to <a href="Changing.html">transform</a> the selected
 part into the element type chosen.</p>
 
-<h3 id="Element">Element Locations</h3>
-
 <p>Sometimes elements cannot be created at the chosen location because of the
 constraints imposed by the HTML language. Amaya then tries to create the
 element at the closest valid position. For example, if the insertion point is
-at the end of the last line of a paragraph when you click on the Heading 2
+at the end of the last line of a paragraph when you click on the heading
 button <img src="../../resources/icons/16x16/XHTML_H2.png" alt="H2 Button" />
 , Amaya creates the new heading after the paragraph.</p>
 
 <p>In some other cases, Amaya changes the existing structure for creating the
 desired element at a valid position. If the insertion point is somewhere
-within a list item (<kbd>li</kbd>) when you create a heading, the item and
-its enclosing list are automatically split, in order to create the requested
-heading at the chosen position and to comply with the HTML DTD.</p>
+within a list item (<code>li</code>) when you create a heading button <img
+src="../../resources/icons/16x16/XHTML_H2.png" alt="H2 Button" />, the item
+and its enclosing list are automatically split, in order to create the
+requested heading at the chosen position and to comply with the HTML.</p>
 
-<h3 id="Structure">Structure submenu</h3>
+<h3 id="Structure">Hidden elements submenu</h3>
 
 <p>To create elements in the document <code>head</code>, use the
-<strong>XHTML/Structure</strong> submenu. This menu is enabled only when the
-selection is in the <code>head</code> of the document. The <code>head</code>
-is displayed only in the <a href="Views.html">Structure view</a>. This view
-should then be open. Put the cursor at the desired position and choose the
-element type from the <strong>Structure</strong> submenu.</p>
+<strong>Insert/Hidden elements</strong> submenu. These elements are displayed
+only in the <a href="Views.html">structure view</a>. This view should then be
+open. Put the cursor at the desired position and choose the element type from
+the <strong>Hidden elements</strong> submenu.</p>
 
-<p>The <strong>Structure</strong> submenu also enables you to create
-comments. Comments are shown only in the Structure view, but they can be
-inserted at any position in the document.</p>
+<p>The <strong>Hidden elements</strong> submenu also enables you to create
+comments. Comments are shown only in the <a href="Views.html">structure
+view</a>, but they can be inserted at any position in the document.</p>
 
 <h3 id="Generated">Generated elements</h3>
 
@@ -147,64 +168,105 @@ types. For instance, a table usually contains a caption
 (<code>caption</code>), several rows (<code>tr</code>), and several cells
 (<code>td</code> or <code>th</code>) in each row.</p>
 
-<p>When Amaya creates such elements, it also creates their components. A
-table is created with a caption and a few rows containing several cells. The
-insertion point is placed automatically in the first of these components. You
-can enter the content of that component immediately or later. You can move to
-the next (empty) component with the mouse or with the arrow keys.</p>
+<p>When Amaya creates such elements, it also creates their components. To
+create a table Amaya displays  a dialog that lets you choose to create it
+with or without a caption, the number of rows and columns you want and other
+presentation options. The insertion point is placed automatically in the
+first generated cell. You can enter the content of that component immediately
+or later. You can move to the next (empty) component with the mouse or with
+the arrow keys.</p>
 
 <p>HTML defines inline elements that allow you to attach style to character
 strings. See <a href="StyleSheets.html#Creating2">Creating HTML Style
 Elements</a> to create such elements.</p>
 
-<h3 id="Enter">The Enter (or Return) Key</h3>
+<h3 id="Enter">The Enter (or Return) key</h3>
 
 <p>When you are writing a new document or a new part in a document, you can
-create elements sequentially by pressing the <strong>Enter</strong> (or
-<strong>Return</strong>) key. The current element is terminated and a new one
-is created immediately after.</p>
+create elements sequentially by pressing the <kbd>Enter</kbd> key. The
+current element is terminated and a new one according to the DTD is created
+immediately after.</p>
 
-<p>Most often, the new element created is simply a paragraph, whatever the
-type of the previous element. You can change the element type by selecting
-the desired type from the <strong>XHTML</strong> menu or by clicking the
-corresponding button in the XHTML palette. You can also keep typing and <a
-href="Changing.html#Changing">change the element type</a> later on.</p>
+<p>When the cursor is at the end of a <code>pre</code>formatted or a division
+element, hitting the <kbd>Enter</kbd> key creates a new line in the
+<code>pre</code> or a new paragraph in the <code>div</code>. </p>
 
-<p>When the cursor is at the end of a <code>pre</code>formatted element,
-hitting the Enter key creates a new line in the <code>pre</code>. To create
-another element, say a paragraph, after the <code>pre</code>, you have to
-select the whole <code>pre</code> element with the <kbd>F2</kbd> key and to
-press Enter.</p>
+<p>In some cases the behaviour of the <kbd>Enter</kbd> key depends on the
+current editing mode:</p>
+<ul>
+  <li>XML mode: 
+    <p>To create a paragraph after the <code>pre</code> or a division after
+    the <code>div</code>, you have to select the whole <code>pre</code> or
+    <code>div</code> element with the <kbd>F2</kbd> key and to press
+    <kbd>Enter</kbd>. In the same way, you can create a new paragraph after a
+    table by selecting the whole table and pressing <kbd>Enter</kbd>.</p>
+    <p>When a whole element like <code>h2</code> or <code>li</code> is
+    selected the <kbd>Enter</kbd> key creates a new <code>h2</code> or
+    <code>li</code> after.<br />
+    <br />
+    </p>
+  </li>
+  <li>Text mode: 
+    <p>When the cursor is at the beginning or at the end of a list item
+    (<code>li</code>), a new sibling list item element of same type is
+    created, instead of a new paragraph within the list item. In addition, in
+    an empty list item, the <kbd>Enter</kbd> key creates a paragraph that
+    breaks the list.</p>
+    <p>When the cursor is  within elements such as <code>p</code>,
+    <code>address</code>, <code>dt</code>, <code>h1</code>, <code>h2</code>,
+    etc. (they are called <em>block</em> elements)  the <kbd>Enter</kbd> key
+    splits the element into two sibling elements of same type.</p>
+    <p>When the insertion point is in HTML elements such as
+    <code>strong</code>, <code>em</code>, <code>code</code>,
+    <code>span</code>, <code>a</code>, etc. (they are called <em>inline</em>
+    elements), the <kbd>Enter</kbd> key splits the <em>inline</em> element
+    and the event is transmitted to the parent element. As <em>inline</em>
+    elements may be nested in a HTML structure, the split may happen at
+    several levels, until the event reaches a block or list item element,
+    which processes the event as explained above.</p>
+    <p>When the <kbd>Enter</kbd> key is hit at the beginning or at the end of
+    a <em>block</em> element, a new paragraph (<code>p</code> element) is
+    created, whatever the type of the current <em>block</em> element.</p>
+  </li>
+</ul>
 
-<p>In the same way, you can create a new paragraph after a table by selecting
-the whole table and pressing Enter.</p>
+<p>When the new element created is simply a paragraph, you can change the
+element type by selecting the desired type from the <strong>Insert</strong>
+menu or by clicking the corresponding button in the <strong>Element</strong>
+tool. You can also keep typing and <a href="Changing.html#Changing">change
+the element type</a> later on.</p>
 
-<p>When a whole element like <code>h2</code> or <code>li</code> is selected
-the Enter key creates a new <code>h2</code> or <code>li</code> after.</p>
+<h4 id="Exiting">Exiting anchors, inline elements, etc.</h4>
 
-<h4 id="Exiting">Exiting Anchors, Styled Character Strings, etc.</h4>
+<p>When a paragraph or another block of text is terminated by an anchor or a
+character string in bold, italic or other such <em>inline</em> element,
+moving the insertion point to the end and typing new text appends characters
+to the anchor or the <em>inline</em> element.</p>
+<dl>
+  <dt>In XML mode only</dt>
+    <dd>To exit an inline element and enter plain text:, move the cursor to
+      the end of the anchor or style element, and then press <kbd>Enter</kbd>
+      and continue typing after the element.</dd>
+    <dd>The same method can be used to enter plain text at the beginning of a
+      block starting with an <em>inline</em> element. Move the cursor to the
+      beginning of the anchor or style element, and then press
+      <kbd>Enter</kbd> and continue typing before the element.</dd>
+  <dt>In Text and XML mode</dt>
+    <dd>All <strong>Information type</strong> and <strong>Character
+      elements</strong> can be set On/Off with the same command or button of
+      the <strong>Elements</strong> tool.</dd>
+    <dd>The <strong>Insert</strong> or <strong>Append</strong> commands of
+      the <strong>Edit</strong> menu or contextual menu can be used to insert
+      before the beginning or after the end of the <em>inline</em>
+    element.</dd>
+</dl>
 
-<p>When a paragraph or another block of text is styled terminated by an
-anchor or a character string in bold, italic or other such style moving the
-insertion point to the end and typing new text appends characters to the
-anchor or the styled string.</p>
+<h4 id="Creating1">Creating nested structures</h4>
 
-<p>To exit an anchor or styled element and enter plain text:</p>
-<ol>
-  <li>Move the cursor to the end of the anchor or style element, and then
-    press <b>Enter</b> and continue typing after the element.</li>
-  <li>The same method can be used to enter plain text at the beginning of a
-    block starting with an anchor or styled characters. Move the cursor to
-    the beginning of the anchor or style element, and then press <b>Enter</b>
-    and continue typing before the element.</li>
-</ol>
-
-<h4 id="Creating1">Creating Nested Structures</h4>
-
-<p>When the insertion point is in an empty element, pressing the Enter key
-replaces that element by another empty element at the next higher level in
-the document structure. This feature allows you to create complex, nested
-structures very quickly.</p>
+<p>When the insertion point is in an empty element, pressing the
+<kbd>Enter</kbd> key replaces that element by another empty element at the
+next higher level in the document structure. This feature allows you to
+create complex, nested structures very quickly.</p>
 
 <p>As an example, consider the following structure:</p>
 <ol>
@@ -225,50 +287,73 @@ structures very quickly.</p>
   <li>Click the <strong>Numbered List</strong> button <img
     alt="Numbered List " src="../../resources/icons/16x16/XHTML_Num.png" />
     to create the first item in the list.</li>
-  <li>Type in the list item text, and press the <strong>Enter</strong> key
-    once. Amaya creates a new paragraph within the list item.</li>
-  <li>Type the paragraph text, and press the <strong>Enter</strong> key
-    twice. The first <strong>Enter</strong> creates another paragraph
-    element, but the second <strong>Enter</strong> removes that paragraph and
-    creates a second bullet list item in the original list.</li>
+  <li>Type in the list item text, and press the <kbd>Enter</kbd> key once.
+    Amaya creates a new paragraph within the list item.</li>
+  <li>Type the paragraph text, and press the <kbd>Enter</kbd> key twice. The
+    first <kbd>Enter</kbd> creates another paragraph element, but the second
+    <kbd>Enter</kbd> removes that paragraph and creates a second bullet list
+    item in the original list.</li>
   <li>Type the second list item.</li>
   <li>Click the <strong>Numbered List</strong> button <img
     alt="Numbered List " src="../../resources/icons/16x16/XHTML_Num.png" />
     to create a new list. The new list is automatically nested within the
     first list.</li>
   <li>Type the text for the first item in the new list, and press the
-    <strong>Enter</strong> key twice to create a new item in the nested
-  list.</li>
-  <li>Type the text for the second list item, and press the
-    <strong>Enter</strong> key four times to create a new list item in the
-    original list.</li>
-  <li>Type the final list item, and then press the <strong>Enter</strong> key
-    three times to close the original list and start a new paragraph.</li>
+    <kbd>Enter</kbd> key twice to create a new item in the nested list.</li>
+  <li>Type the text for the second list item, and press the <kbd>Enter</kbd>
+    key four times to create a new list item in the original list.</li>
+  <li>Type the final list item, and then press the <kbd>Enter</kbd> key three
+    times to close the original list and start a new paragraph.</li>
 </ol>
 
-<p>The <strong>Enter</strong> key works in the same way when the insertion
-point is at the beginning of an element, but it creates new elements before
-the current element. For example, to add a list item between the first two
-items in the above structure, place the cursor at the beginning of the second
-list item, and press the <strong>Enter</strong> key twice.</p>
+<p>The <kbd>Enter</kbd> key works in the same way when the insertion point is
+at the beginning of an element, but it creates new elements before the
+current element. For example, to add a list item between the first two items
+in the above structure, place the cursor at the beginning of the second list
+item, and press the <kbd>Enter</kbd> key twice.</p>
 
-<p class="Note"><b>Note</b>:  This use of the <strong>Enter</strong> key does
-not apply only to lists and paragraphs, but to all elements.</p>
+<p class="Note"><b>Note</b>:  In XML mode, this use of the <kbd>Enter</kbd>
+key does not apply only to lists and paragraphs, but to all elements.</p>
 
-<h3 id="Changing">Changing the Document Title</h3>
+<h3 id="Delete">The Delete and Backspace keys</h3>
+
+<p>The behaviour of the <kbd>Delete</kbd> and <kbd>Backspace</kbd> keys
+depends on the current editing mode:</p>
+<ul>
+  <li>XML mode: 
+    <p>If the insertion point is at the beginning or at the end of any type
+    of element and the <kbd>Delete</kbd> or <kbd>Backspace</kbd> key is hit,
+    the whole content of the next (resp. previous) sibling element is merged
+    with the content of the first element.</p>
+  </li>
+  <li>Text mode: 
+    <p>If the insertion point is at the beginning or at the end of a
+    <em>block</em> element and the <kbd>Delete</kbd> or <kbd>Backspace</kbd>
+    key is hit, the whole content of the next (resp. previous) sibling
+    element is merged with the content of the current <em>block</em>
+    element.</p>
+    <p>When the insertion point is in <em>inline</em> elements the
+    <kbd>Backspace</kbd> and <kbd>Delete</kbd> keys only delete characters,
+    crossing <em>inline</em> element boundaries without any action on the
+    structure. However, when an <em>inline</em> element becomes empty by
+    deletions, it is itself deleted.</p>
+  </li>
+</ul>
+
+<h3 id="Changing">Changing the document title</h3>
 
 <p class="ProcedureCaption">To edit the document title:</p>
 <ul>
-  <li>Open the <strong>XHTML</strong> menu and choose <strong>Change
-    Title</strong>.</li>
+  <li>Open the <strong>Tools</strong> menu and choose <strong>Change
+    title</strong>.</li>
 </ul>
 
 <p class="Note" style="text-indent: 15pt"><b>Note:</b>    <br />
-You can also edit the document title from the Structure view.</p>
+You can also edit the document title from the structure view.</p>
 
 <h3 id="Insert">Insert time stamp</h3>
 
-<p>The <strong>XHTML/Insert time stamp</strong> menu entry allows you to
+<p>The <strong>Tools/Insert time stamp</strong> menu entry allows you to
 insert the current date either in the ISO format (YYY-MM-DD) or in the
 European format (DD-MM-YYYY). The date format is fixed by the
 <strong>Preference</strong> menu.</p>
@@ -276,7 +361,7 @@ European format (DD-MM-YYYY). The date format is fixed by the
 <p>Once the date is inserted, Amaya automatically updates it each times the
 document is saved and so maintains the last update date.</p>
 
-<h3 id="About">About White Space Handling</h3>
+<h3 id="About">About white space handling</h3>
 
 <p>Amaya removes insignificant white-space characters when it loads a
 document unless they must be explicitly preserved. This is true for XHTML,
@@ -308,7 +393,7 @@ attribute are <code>default</code> and <code>preserve</code>.</p>
 </ul>
 
 <p>You apply the <code>xml:space</code> attribute to all elements within the
-content of the element where it is specified, unless it is overriden with
+content of the element where it is specified, unless it is overridden with
 another instance of the <code>xml:space</code> attribute.</p>
 
 <p>In an XHTML DTD, the <code>PRE</code> element causes the same behavior as
@@ -344,9 +429,9 @@ white-space&lt;/strong&gt; when it loads ...&lt;/p&gt;</code></p>
 
 <p class="Note">By default Amaya removes insignificant white-space
 characters.<br />
-It is possible to resquest to "Keep multiple spaces" in <a
+It is possible to request to "Keep multiple spaces" in <a
 href="Configure.html#Keep">Preference</a> dialog. In this case, Amaya will
-remplace insignificant white-space characters it should to remove by no-break
+replace insignificant white-space characters it should to remove by no-break
 spaces.</p>
 
 <p></p>
