@@ -255,10 +255,10 @@ void FillInsertableElemList (Document doc, Element el, DLList list)
   int level;
   ThotBool cont = TRUE;
 
-  if (elem)
+  if (el)
     {
     if (doc == 0)
-      doc = TtaGetDocument(elem);
+      doc = TtaGetDocument(el);
 
 #ifdef TEMPLATES
     t = GetXTigerTemplate(DocumentMeta[doc]->template_url);
