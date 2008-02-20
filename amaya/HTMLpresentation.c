@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -496,6 +496,8 @@ ThotBool ChangePRule (NotifyPresentation *event)
   presType = event->pRuleType;
   presRule = event->pRule;
   elType = TtaGetElementType (el);
+  parentType.ElSSchema = NULL;
+  parentType.ElTypeNum = 0;
   ret = FALSE;
   HTMLschema = TtaGetSSchema ("HTML", doc);
 
@@ -744,6 +746,7 @@ void AttrLangDeleted (NotifyAttribute *event)
 
   elem = event->element;
   elType = TtaGetElementType (elem);
+  attrType.AttrTypeNum = 0;
   /* if the element is a SPAN without any other attribute, remove the SPAN
      element */
   if (event->info == 0 &&
@@ -784,6 +787,7 @@ void AttrLangCreated (NotifyAttribute *event)
 
   elem = event->element;
   elType = TtaGetElementType (elem);
+  attrType.AttrTypeNum = 0;
   len = ATTRLEN - 1;
   TtaGiveTextAttributeValue (event->attribute, value, &len);
   if (strcasecmp(value, "Symbol") == 0)
@@ -831,6 +835,7 @@ ThotBool AttrLangModified (NotifyAttribute *event)
   Attribute	attr;
 
   elem = event->element;
+  attrType.AttrTypeNum = 0;
   /* if it's the root (HTML, SVG, MathML) element, create a RealLang
      attribute */
   if (elem == TtaGetRootElement (event->document))
@@ -868,6 +873,7 @@ ThotBool AttrLangShouldBeDeleted (NotifyAttribute *event)
   Attribute	attr;
 
   elem = event->element;
+  attrType.AttrTypeNum = 0;
   /* if it's the root (HTML) element, delete the RealLang attribute */
   if (elem == TtaGetRootElement (event->document))
     /* it's the root element */

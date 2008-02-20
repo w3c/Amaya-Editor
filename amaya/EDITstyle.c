@@ -142,7 +142,7 @@ static void RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
   ----------------------------------------------------------------------*/
 static char *UpdateCSSImport (char *oldpath, char *newpath, char **styleString)
 {
-  char               *b, *e, *newString, *oldptr, *sString;
+  char               *b, *e = NULL, *newString, *oldptr, *sString;
   char                old_url[MAX_LENGTH];
   char                tempname[MAX_LENGTH];
   char                cssname[MAX_LENGTH];
@@ -1347,6 +1347,10 @@ static void UpdateClass (Document doc)
   ThotBool            found, empty, insertNewLine, ok;
 
   elType = TtaGetElementType (ClassReference);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = 0;
+  attrTypeT.AttrSSchema = elType.ElSSchema;
+  attrTypeT.AttrTypeNum = 0;
   GIType (CurrentClass, &selType, doc);
   if (selType.ElTypeNum != elType.ElTypeNum && selType.ElTypeNum != 0)
     {

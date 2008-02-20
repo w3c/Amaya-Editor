@@ -1053,6 +1053,8 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
   attr = NULL;
   FetchImage_ctx = NULL;
   update = FALSE;
+  attrType2.AttrSSchema = NULL;
+  attrType2.AttrTypeNum = 0;
   ret = TRUE;
   if (el || extra)
     {

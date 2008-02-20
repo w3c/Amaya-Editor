@@ -575,13 +575,18 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
 
   /* Handle style elements */
   elType = TtaGetElementType (root);
+  searchedType1.ElSSchema = elType.ElSSchema;
+  searchedType2.ElSSchema = elType.ElSSchema;
+  searchedType3.ElSSchema = elType.ElSSchema;
+  searchedType4.ElSSchema = elType.ElSSchema;
+  searchedType5.ElSSchema = elType.ElSSchema;
+  searchedType1.ElTypeNum = 0;
+  searchedType2.ElTypeNum = 0;
+  searchedType3.ElTypeNum = 0;
+  searchedType4.ElTypeNum = 0;
+  searchedType5.ElTypeNum = 0;
   if (elType.ElSSchema == XHTMLSSchema || elType.ElSSchema == SVGSSchema)
     {
-      searchedType1.ElSSchema = elType.ElSSchema;
-      searchedType2.ElSSchema = elType.ElSSchema;
-      searchedType3.ElSSchema = elType.ElSSchema;
-      searchedType4.ElSSchema = elType.ElSSchema;
-      searchedType5.ElSSchema = elType.ElSSchema;
       if (elType.ElSSchema == XHTMLSSchema)
         {
           searchedType1.ElTypeNum = HTML_EL_STYLE_;
@@ -1120,6 +1125,7 @@ char *UpdateDocumentCharset (Document doc)
   charsetname = (char *)TtaGetMemory (MAX_CHARSET_LEN);
   charsetname[0] = EOS;
   charset = TtaGetDocumentCharset (doc);
+  attrType.AttrTypeNum = 0;
   if (charset != UNDEFINED_CHARSET ||
       DocumentTypes[doc] == docMath ||
       DocumentTypes[doc] == docSVG)

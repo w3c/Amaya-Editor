@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1754,7 +1754,7 @@ void DrawPath (int frame, int thick, int style, int x, int y,
                               x2, y2, 
                               cx1, cy1,
                               fmod ((double)pPa->XAxisRotation, 360), 
-                              (double)pPa->LargeArc, pPa->Sweep,
+                              (int)pPa->LargeArc, pPa->Sweep,
                               mesh);
               MeshNewPoint (x2, y2, mesh);
               break;

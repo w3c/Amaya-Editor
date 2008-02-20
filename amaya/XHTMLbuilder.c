@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -345,6 +345,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 
   elType = TtaGetElementType (el);
   htmlSchema = elType.ElSSchema;
+  childType.ElSSchema = NULL;
   isInline = IsXMLElementInline (elType, doc);
   newElType.ElSSchema = elType.ElSSchema;
 

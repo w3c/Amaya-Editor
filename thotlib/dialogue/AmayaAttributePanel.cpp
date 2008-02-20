@@ -184,7 +184,7 @@ void AmayaAttributeToolPanel::RedirectFocusToEditableControl()
 void AmayaAttributeToolPanel::UpdateListColumnWidth()
 {
   // Resize columns.
-  long sz0, sz1;
+  long sz1;
 
   m_pAttrList->Freeze();
 

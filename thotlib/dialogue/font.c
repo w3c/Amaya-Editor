@@ -657,7 +657,7 @@ int SpecialCharBoxWidth (CHAR_T c)
 int BoxCharacterWidth (CHAR_T c, int variant, SpecFont specfont)
 {
   ThotFont        font;
-  int             car;
+  int             car = 6;
 
   if (SpecialCharBoxWidth (c))
     return 1;

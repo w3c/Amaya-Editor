@@ -810,7 +810,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
                                       GenericContext ctxt, int att)
 {
-  AttributePres      *attrs, *new_;
+  AttributePres      *attrs = NULL, *new_;
   PtrSSchema          pSS;
   PtrPRule           *ppRule;
   char               *attrVal;

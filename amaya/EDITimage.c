@@ -174,6 +174,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
     }
   div = NULL;
   elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     /* not within an HTML element. Nothing to do */
     return;

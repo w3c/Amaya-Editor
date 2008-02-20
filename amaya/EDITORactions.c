@@ -194,7 +194,9 @@ void CreateDoctype (Document doc, Element doctype, int profile,
   docEl = TtaGetMainRoot (doc);
   elType = TtaGetElementType (docEl);
   lineType.ElSSchema = elType.ElSSchema;
+  lineType.ElTypeNum = 0;
   piType.ElSSchema = elType.ElSSchema;
+  piType.ElTypeNum = 0;
   name = TtaGetSSchemaName (elType.ElSSchema);
   /* Add the new doctype */
   if (profile == L_Basic || profile == L_Strict ||
@@ -1484,6 +1486,8 @@ void CreateDate (Document doc, View view)
     /* the document is in ReadOnly mode */
     return;
   TtaGiveFirstSelectedElement (doc, &el, &first, &last);
+  elType.ElTypeNum = 0;
+  elType.ElSSchema = NULL;
   if (el == NULL)
     /* no selection */
     TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);

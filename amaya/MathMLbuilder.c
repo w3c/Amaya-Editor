@@ -867,6 +867,8 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
     return;
   child = TtaGetFirstChild (el);
   textEl = NULL;
+  siblingType.ElTypeNum = 0;
+  siblingType.ElSSchema = NULL;
   if (child)
     {
       elType = TtaGetElementType (child);
@@ -1662,6 +1664,8 @@ static void BuildMultiscript (Element elMMULTISCRIPT, Document doc)
   MathMLSSchema = GetMathMLSSchema (doc);
   elTypeGroup.ElSSchema = MathMLSSchema;
   elTypePair.ElSSchema = MathMLSSchema;
+  elTypeGroup.ElTypeNum = 0;
+  elTypePair.ElTypeNum = 0;
   elTypeScript.ElSSchema = MathMLSSchema;
 
   /* process all children of the MMULTISCRIPT element */
@@ -2604,6 +2608,8 @@ static void      TransformMFENCED (Element el, Document doc)
   child = TtaGetFirstChild (el);
   if (child != NULL)
     elType = TtaGetElementType (child);
+  else
+    elType.ElTypeNum = 0;
   if (child != NULL && elType.ElTypeNum == MathML_EL_OpeningFence)
     /* The first child of this MFENCED element is an OpeningFence.
        This MFENCED expression has already been transformed, possibly

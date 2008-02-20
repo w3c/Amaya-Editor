@@ -633,6 +633,7 @@ static void CreateCellsInRowGroup (Element group, Element prevCol,
   ThotBool         span;
 
   row = TtaGetFirstChild (group);
+  elType.ElTypeNum = 0;
   /* skip the first elements that are now rows */
   if (row)
     elType = TtaGetElementType (row);
@@ -2583,6 +2584,8 @@ ThotBool DeleteTBody (NotifyElement * event)
   el = event->element;
   // skip siblings that are not tbody elements
   sibling = el;
+  elType.ElSSchema = NULL;
+  elType.ElTypeNum = 0;
   TtaNextSibling (&sibling);
   if (sibling)
     elType = TtaGetElementType (sibling);

@@ -987,7 +987,7 @@ void NewContent (PtrAbstractBox pAb)
             {
             case AtNumAttr:
               CopyBuffer2MBs (pAb->AbText, 0, text, 9);
-              sscanf ((char*)text, "%d", &pNewAttr->AeAttrValue);
+              sscanf ((char*)text, "%d", (int *)&pNewAttr->AeAttrValue);
               break;
             case AtTextAttr:
               if (pNewAttr->AeAttrText == NULL)

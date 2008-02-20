@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -612,6 +612,8 @@ void PasteCommand ()
   pColHead = pRow = pNextRow = pTable = pRealCol = NULL;
   if (FirstSavedElement == NULL)
     return;
+  cellType.ElTypeNum = 0;
+  cellType.ElSSchema = NULL;
   if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     {
       /* cannot paste within a read only document */

@@ -5615,7 +5615,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
   PtrAttribute        pAttr;
   RuleQueue           queue;
   Cascade             casc;
-  AllRules*           rulesPseudo;
+  AllRules*           rulesPseudo = NULL;
   int                 vis, typePres = 0;
   int                 viewSch;
   int                 index;

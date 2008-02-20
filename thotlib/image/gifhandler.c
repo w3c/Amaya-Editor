@@ -1,6 +1,6 @@
 /* 
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -23,7 +23,7 @@
 #include "winsys.h"
 #endif /* _WINGUI */
 
-#include "xpm.h"
+//#include "xpm.h"
 #include "thotcolor.h"
 
 #define THOT_EXPORT extern

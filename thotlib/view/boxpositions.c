@@ -583,7 +583,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
   int                 x, y, i;
   ThotBool            ghost, notEmpty;
   ThotBool            newX, newY;
-  ThotBool            x_move, y_move;
+  ThotBool            x_move = FALSE, y_move = FALSE;
   ThotBool            checkWidth, checkHeight;
 
   /* Origine de la boite du pave le plus englobant */

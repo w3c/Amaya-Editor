@@ -184,6 +184,13 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
           items[2] = p_menu->Remove(p_menu->FindItemByPosition(0));
           items[3] = p_menu->Remove(p_menu->FindItemByPosition(0));
         }
+      else
+	{
+          items[0] = NULL;
+          items[1] = NULL;
+          items[2] = NULL;
+          items[3] = NULL;
+	}
 
 #ifdef TEMPLATES
       TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
@@ -4510,7 +4517,7 @@ ThotBool ViewToClose (NotifyDialog *event)
 void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfile,
                            char *proxyName, AHTHeaders *http_headers, void * context)
 {
-  Element             elFound, root;
+  Element             elFound = NULL, root;
   Document            doc;
   Document            res;
   AmayaDoc_context   *ctx;

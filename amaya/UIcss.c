@@ -1232,6 +1232,7 @@ ThotBool RemoveSpecificStyle (Document doc, char *cssproperty)
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
   parent1 = TtaGetParent (el);
+  attrType.AttrTypeNum = 0;
   if (TtaIsReadOnly (el))
     {
       /* the selected element is read-only */

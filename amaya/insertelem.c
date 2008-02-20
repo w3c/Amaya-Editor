@@ -250,7 +250,6 @@ void FillInsertableElemList (Document doc, Element el, DLList list)
   Element          child, elem;
   ElementType      elType, childType;
   XTigerTemplate   t;
-  ThotBool         haveAncestor = FALSE;
 #endif/* TEMPLATES */
   int level;
   ThotBool cont = TRUE;

@@ -1818,10 +1818,11 @@ static void ApplyTransformation (strMatch *sm, Document doc)
   strMatchChildren    *child;
   int                  length, error;
   char                 buf [MAX_LENGTH], *name;
-  ThotBool             res, selectionDone, found;
+  ThotBool             res, selectionDone = FALSE, found;
 
   res = FALSE;
   idfCounter = 1;
+  attrType.AttrTypeNum = 0;
   if (sm->MatchChildren)
     {
       stack = (strGenStack *) TtaGetMemory (sizeof (strGenStack));

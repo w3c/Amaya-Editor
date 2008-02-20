@@ -78,6 +78,7 @@ int GetBoxDistance (PtrBox pBox, PtrFlow pFlow, int xRef, int yRef,
   int                 s, l, r, t, b;
 
   *matchCell = NULL;
+  b = t = r = l = 0;
   if (pBox == NULL || pBox->BxAbstractBox == NULL ||
       FrameTable[frame].FrDoc == 0)
     return MAX_DISTANCE;
