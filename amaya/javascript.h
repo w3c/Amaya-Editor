@@ -148,7 +148,7 @@ enum properties_names
  NODELIST_LENGTH
 
  /* Put here methods that use the ObjectWithInfo function to create their PrivateData */
- , GETELEMENTSBYTAGNAME,
+  , GETELEMENTSBYTAGNAME,
 };
 
 /*----------------------------------------------------------------------
@@ -555,7 +555,7 @@ static JSBool NamedNodeMap_item(JSContext *cx, JSObject *obj, uintN argc, jsval 
 static JSFunctionSpec NamedNodeMap_functions[] =
 {
   {"getNamedItem"                 , NamedNodeMap_getNamedItem           ,        1},
-  {"setNamedItem"                 , NamedNodeMap_setNamedItem           ,        1},
+  {"setNamedItem"                 , NamedNodeMap_setNamedItem           ,        2},
   /*  {"removeNamedItem"              , NamedNodeMap_removeNamedItem        ,        1},
   {"item"                         , NamedNodeMap_item                   ,        1},*/
   {0}

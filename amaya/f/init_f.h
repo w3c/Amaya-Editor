@@ -34,6 +34,7 @@ extern void MenuShowLogFile ( Document doc,
                               View view );
 extern ThotBool OpenParsingErrors ( Document document );
 extern void RemoveParsingErrors ( Document document );
+extern ThotBool HasParsingErrors ( Document document );
 extern void CleanUpParsingErrors ( void );
 extern void UpdateLogFile ( Document doc,
                             ThotBool enable );
@@ -265,6 +266,7 @@ extern void MenuShowLogFile ( Document doc,
                                 View view );
 extern ThotBool OpenParsingErrors ( Document document );
 extern void RemoveParsingErrors ( Document document );
+extern ThotBool HasParsingErrors ( Document document );
 extern void CleanUpParsingErrors ( void );
 extern void UpdateLogFile ( Document doc,
                               ThotBool enable );

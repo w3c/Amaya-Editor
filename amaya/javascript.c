@@ -18,9 +18,8 @@
  *                 Structure of the javascript tree
  *
  * The object at top level is the "global object". There is no
- * W3C-standard that defines what are its direct children but
- * the organization in Amaya has been chosen to be compatible
- * with the one of usual browsers:
+ * W3C-standard that defines what are its direct children but 
+ * the usual organization is often referred as "DOM 0":
  *
  *  Window (global object)
  *    |
@@ -34,15 +33,12 @@
  *    |
  *    |_ Document
  *
- * (A detailled description can be found at
- *         http://www.w3schools.com/js/js_obj_htmldom.asp)
+ * (See also http://www.w3schools.com/js/js_obj_htmldom.asp
+ *      or http://developer.mozilla.org/en/docs/DOM:window)
  * 
- * Actually, the global object has no name. Nevertheless, it
- * has a property "window" that returns itself, so everything
- * happens as if it was its name. This has consequences on the
- * javascript syntax: for example, if you want to call the
- * function confirm(), you can do confirm(), window.confirm()
- * or even window.window.window.window.confirm()
+ * Actually, the global object has no name but a "window"
+ * property that returns itself. This is described
+ * at http://developer.mozilla.org/en/docs/DOM:window.window
  *
  * Navigator, Screen, History and Location are objects that allow
  * to access general informations about supported features and
@@ -156,7 +152,7 @@ static jsval ObjectWithInfo(JSContext *cx, JSObject *obj, JSClass *jsclass, int 
 /* Other functions used by the DOM interface */
 static ThotBool IsElementNode(Element element);
 static Element NextTypedNodeElement (ElementType elType, Element Tree, Element Start);
-static int GetNodeType(JSObject *obj);
+static int GetNodeType(JSContext *cx, JSObject *obj);
 static jsval GetNodeName(JSContext *cx, JSObject *obj);
 static jsval GetNodeValue(JSContext *cx, JSObject *obj);
 
@@ -310,6 +306,7 @@ void UpdateJavascriptMenus ()
   CheckInitJavascript
   - Check if no script is running
   - Check the View
+  - Check Parsing Errors
   - Check if the document is saved
   - Call InitJavascript
   - Check whether an error occured
@@ -330,7 +327,12 @@ ThotBool CheckInitJavascript(Document doc, View view)
       return FALSE;
     }
 
-  /* TODO: check if there is no error in the xml source before executing a script. */
+  if(HasParsingErrors(doc))
+    {
+      /* Check whether the document contains no error */
+      TtaDisplayMessage(FATAL, TtaGetMessage(AMAYA, AM_XML_RETRY));
+      return FALSE;
+    }
 
   if(TtaIsDocumentModified (doc))
     {
@@ -915,6 +917,8 @@ static jsval ObjectWithInfo(JSContext *cx, JSObject *obj, JSClass *jsclass, int 
   PrivateData *info;
   char *s;
 
+  return JSVAL_NULL;
+
   if(name_id == GETELEMENTSBYTAGNAME && JSVAL_IS_VOID(argv[0]))return JSVAL_NULL;
 
   /* Create the object and its private data */
@@ -1021,23 +1025,21 @@ static Element NextTypedNodeElement (ElementType elType, Element Tree, Element S
   GetNodeType
   return the type of a javascript object representing a node
   -----------------------------------------------------------------------*/
-static int GetNodeType(JSObject *obj)
+static int GetNodeType(JSContext *cx, JSObject *obj)
 {
-  char *text = (char *)(((JSClass *)JS_GetClass(obj))->name);
-
-  if(!strcmp((&Element_class)->name, text))return ELEMENT_NODE;
-  if(!strcmp((&Attr_class)->name, text))return ATTRIBUTE_NODE;
-  if(!strcmp((&Text_class)->name, text))return TEXT_NODE;
-  if(!strcmp((&CDATASection_class)->name, text))return CDATA_SECTION_NODE;
-  if(!strcmp((&EntityReference_class)->name, text))return ENTITY_REFERENCE_NODE;
-  if(!strcmp((&Entity_class)->name, text))return ENTITY_NODE;
-  if(!strcmp((&ProcessingInstruction_class)->name, text))return PROCESSING_INSTRUCTION_NODE;
-  if(!strcmp((&Comment_class)->name, text))return COMMENT_NODE;
-  if(!strcmp((&Document_class)->name, text))return DOCUMENT_NODE;
-  if(!strcmp((&DocumentType_class)->name, text))return DOCUMENT_TYPE_NODE;
-  if(!strcmp((&DocumentFragment_class)->name, text))return DOCUMENT_FRAGMENT_NODE;
-  if(!strcmp((&Notation_class)->name, text))return NOTATION_NODE;
-
+  if(JS_InstanceOf(cx, obj, &Element_class, NULL))return ELEMENT_NODE;
+  if(JS_InstanceOf(cx, obj, &Attr_class, NULL))return ATTRIBUTE_NODE;
+  if(JS_InstanceOf(cx, obj, &Text_class, NULL))return TEXT_NODE;
+  if(JS_InstanceOf(cx, obj, &CDATASection_class, NULL))return CDATA_SECTION_NODE;
+  if(JS_InstanceOf(cx, obj, &EntityReference_class, NULL))return ENTITY_REFERENCE_NODE; 
+  if(JS_InstanceOf(cx, obj, &Entity_class, NULL))return ENTITY_NODE; 
+  if(JS_InstanceOf(cx, obj, &ProcessingInstruction_class, NULL))return PROCESSING_INSTRUCTION_NODE;
+  if(JS_InstanceOf(cx, obj, &Comment_class, NULL))return COMMENT_NODE;
+  if(JS_InstanceOf(cx, obj, &Document_class, NULL))return DOCUMENT_NODE;
+  if(JS_InstanceOf(cx, obj, &DocumentType_class, NULL))return DOCUMENT_TYPE_NODE;
+  if(JS_InstanceOf(cx, obj, &DocumentFragment_class, NULL))return DOCUMENT_FRAGMENT_NODE;
+  if(JS_InstanceOf(cx, obj, &Notation_class, NULL))return NOTATION_NODE;
+  
   /* unknown type of node */
   return 0;
 }
@@ -1050,7 +1052,7 @@ static jsval GetNodeName(JSContext *cx, JSObject *obj)
 {
   Element element;
 
-  switch(GetNodeType(obj))
+  switch(GetNodeType(cx, obj))
     {
     case ELEMENT_NODE:
       element = (Element)JS_GetPrivate(cx, obj);
@@ -1103,7 +1105,7 @@ static jsval GetNodeValue(JSContext *cx, JSObject *obj)
   int len;
   Language	lang;
 
-  switch(GetNodeType(obj))
+  switch(GetNodeType(cx, obj))
     {
     case ATTRIBUTE_NODE:
       attr = (Attribute)JS_GetPrivate(cx, obj);
@@ -1273,9 +1275,13 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
           break;
 
         case LOCATION_HREF:
-        case LOCATION_HASH:
-          /* TODO: for href, return the complete url (with #xxx) */
+          /* TODO: return the complete url (with #xxx) */
           *vp = string_to_jsval(cx, DocumentURLs[jsdocument]);
+          break;
+
+        case LOCATION_HASH:
+          /* TODO : return the part of the url after the # */
+          *vp = JSVAL_NULL;
           break;
 
         case LOCATION_PATHNAME:
@@ -1320,7 +1326,7 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
           break;
 
         case NODE_NODETYPE:
-          *vp = INT_TO_JSVAL(GetNodeType(obj));
+          *vp = INT_TO_JSVAL(GetNodeType(cx, obj));
           break;
 
         case NODE_NODENAME:
@@ -1332,7 +1338,7 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
           break;
 
         case NODE_ATTRIBUTES:
-          if(GetNodeType(obj) == ELEMENT_NODE)
+          if(GetNodeType(cx, obj) == ELEMENT_NODE)
             *vp = ObjectWithInfo(cx, obj, &NamedNodeMap_class, NODE_ATTRIBUTES, NULL);
           else *vp = JSVAL_NULL;
           break;
@@ -1342,7 +1348,7 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
           break;
 
         case NODE_PARENTNODE:
-          switch(GetNodeType(obj))
+          switch(GetNodeType(cx, obj))
             {
             case ATTRIBUTE_NODE:
             case ENTITY_NODE:
@@ -1359,7 +1365,7 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
           break;
 
         case NODE_FIRSTCHILD:
-          if(GetNodeType(obj) == ATTRIBUTE_NODE)
+          if(GetNodeType(cx, obj) == ATTRIBUTE_NODE)
             {
               /* TODO */
               *vp = JSVAL_NULL;
@@ -1367,13 +1373,14 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
           else
             {
               element = (Element)JS_GetPrivate(cx, obj);
+         *vp = JSVAL_NULL;
               element = TtaGetFirstChild(element);
               *vp = Element_to_jsval(cx, element);
             }
           break;
 
         case NODE_LASTCHILD:
-          if(GetNodeType(obj) == ATTRIBUTE_NODE)
+          if(GetNodeType(cx, obj) == ATTRIBUTE_NODE)
             {
               /* TODO */
               *vp = JSVAL_NULL;
@@ -1387,7 +1394,7 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
           break;
 
         case NODE_PREVIOUSSIBLING:
-          if(GetNodeType(obj) == ATTRIBUTE_NODE)
+          if(GetNodeType(cx, obj) == ATTRIBUTE_NODE)
             *vp = JSVAL_NULL;
           else
             {
@@ -1570,8 +1577,6 @@ static JSBool history_forward(JSContext *cx, JSObject *obj, uintN argc, jsval *a
 /*----------------------------------------------------------------------
   Object Location
   -----------------------------------------------------------------------*/
-/* TODO: search what is the difference between assign and replace... */
-
 static JSBool location_assign(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
   char *urlname = jsval_to_string(cx, *argv);
@@ -1588,7 +1593,7 @@ static JSBool location_replace(JSContext *cx, JSObject *obj, uintN argc, jsval *
   char *urlname = jsval_to_string(cx, *argv);
   if(urlname)
     {
-      GetAmayaDoc (urlname, NULL, jsdocument, jsdocument, CE_ABSOLUTE, TRUE, NULL, NULL);
+      GetAmayaDoc (urlname, NULL, jsdocument, jsdocument, CE_ABSOLUTE, FALSE, NULL, NULL);
       return JS_FALSE;
     }
   return jsContinueScript();

@@ -1143,6 +1143,18 @@ void RemoveParsingErrors (Document document)
 }
 
 /*----------------------------------------------------------------------
+  HasParsingErrors 
+  ----------------------------------------------------------------------*/
+ThotBool HasParsingErrors (Document document)
+{
+   char       htmlErrFile[200];
+  
+  sprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
+           TempFileDirectory, DIR_SEP, document, DIR_SEP);
+      return TtaFileExist (htmlErrFile);
+}
+
+/*----------------------------------------------------------------------
   CleanUpParsingErrors
   Initialize the 'PARSING.ERR' file and the related global variables
   ----------------------------------------------------------------------*/
@@ -1225,6 +1237,12 @@ void CheckParsingErrors (Document doc)
   CriticCheckError = TRUE;
   CloseLogs (doc);
   closeLog = TRUE;
+
+#ifdef _JAVA
+  /* The document contains error : switch OFF the Javascipt/DOM */
+  if(BADMimeType || ErrFile)
+    StopJavascript(doc);
+#endif /* _JAVA */
 
   if (BADMimeType)
     {
@@ -1335,7 +1353,6 @@ void CheckParsingErrors (Document doc)
     }
   CriticCheckError = FALSE;
 }
-
 
 /*----------------------------------------------------------------------
   UpdateTransfer updates the status of the current transfer
