@@ -27,7 +27,9 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2>Creating new Documents</h2>
+<h2>Documents management</h2>
+
+<h3>Creating a new document</h3>
 
 <p>Amaya allows you to create both local or remote documents. Three types of
 documents are available:</p>
@@ -79,6 +81,81 @@ documents are available:</p>
   <li>Click <strong>Create</strong>. The new document is open, and a root
     element is created.</li>
 </ol>
+
+<h3 id="Opening">Opening a document</h3>
+
+<p>You can open local and remote documents in several ways:</p>
+<dl>
+  <dt>File menu</dt>
+    <dd><ol>
+        <li>Choose <strong>Open document</strong> from the
+          <strong>File</strong> menu. 
+          <p class="Note"><strong>Note:</strong> You can alternately use a
+          keyboard shortcut to open a document. Press <kbd>Ctrl o ctrl
+          o</kbd>.</p>
+        </li>
+        <li>In the <strong>Open document</strong> dialog, type the full path
+          or URI of the file you want to open, or use the
+          <strong>Browse</strong> button (a file icon) to open a file
+          selection dialog. 
+          <p class="Note"><strong>Note:</strong> You can also click the
+          button on the right side of the address field to display the list
+          of the documents you have opened recently. You can then select an
+          address in this list to open the corresponding document.</p>
+        </li>
+        <li>When the document is correctly specified, click
+          <strong>Open.</strong></li>
+      </ol>
+      <p>You can also use these steps to create a new local document, by
+      specifying the name of a file that does not exist.</p>
+    </dd>
+  <dt>Files explorer</dt>
+    <dd>A file explorer may be displayed in Tools window with <strong>Views /
+      Show toolbars / Files</strong>. This tool gives access to all local
+      directories. A simple click allows you to open or close a directory and
+      a double click on a file name opens the corresponding document.</dd>
+  <dt>Document address field</dt>
+    <dd>The address of the current document is displayed at the top of the
+      window. Edit this address to specify the file name or the URI of the
+      document you want to open and press <kbd>Enter</kbd>. 
+      <p>You can also create a new document by typing the name of a document
+      that does not exist yet.</p>
+      <p class="Note"><strong>Note:</strong> You can click the button on the
+      right side of the document address field to display the list of the
+      documents you have opened recently. You can then select an address in
+      this list to open the corresponding document.</p>
+    </dd>
+  <dt>Links</dt>
+    <dd>By <a href="Browsing.html#Activating1">activating a link</a> you load
+      the target document.</dd>
+</dl>
+
+<p><strong>Note about character sets</strong></p>
+
+<p>Amaya reads HTML and XHTML documents differently:</p>
+<ul>
+  <li>Amaya reads HTML documents by default as <a
+    href="EditChar.html">ISO-Latin-1</a> files. If an author does not provide
+    information about the character set (charset) in the HTTP header or in a
+    <code>meta</code> element, Amaya considers an HTML document to be encoded
+    in ISO-Latin-1.</li>
+  <li>Amaya reads XHTML documents by default as UTF-8 files. If an author
+    does not provide information about the charset in the HTTP header, in the
+    XML declaration, or in a <code>meta</code> element, Amaya considers an
+    XHTML document to be encoded in UTF-8.</li>
+</ul>
+
+<p>Because the default charset is different for HTML and XHTML documents,
+authors often create documents using the incorrect charset. For example,
+consider an XHTML document that uses ISO Latin-1 but does not provide
+information about the charset. When the XML parser analyzing the document
+encounters a character that does not match a valid UTF-8 character, the
+document is considered to be not well formed. Parsing stops and Amaya
+displays an error message that proposes either to reload the document as an
+HTML document or to show parsing errors. If show parsing errors is selected,
+Amaya displays the detected errors.</p>
+
+<p></p>
 </div>
 </body>
 </html>

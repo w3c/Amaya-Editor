@@ -12,7 +12,11 @@ body {background-color: #FFFFFF}</style>
 </head>
 
 <body xml:lang="fr" lang="fr">
-<h1>Manuel d'utilisation d'Amaya</h1>
+
+<div>
+Manuel d'utilisation d'Amaya</div>
+
+<div>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
@@ -21,17 +25,20 @@ body {background-color: #FFFFFF}</style>
       Carcone</dd>
 </dl>
 
-<p>Ce manuel présente l'interface utilisateur d'Amaya. Il n'est pas
-exhaustif, son but est simplement d'aider les utilisateurs à découvrir les
-principales caractéristiques du logiciel. Ce document est organisé comme un
-livre. Vous pouvez utiliser la commande "<a
-href="MakeBook.html.fr#L1065">Outils &gt; Construire un livre</a>" pour
+<p>Ce manuel présente l'interface utilisateur d'Amaya. L'interface
+utilisateur sur votre machine peut-être un peu différente puisqu'elle dépend
+de la plateforme et la configuration choisie. Ce manuel n'est pas exhaustif,
+son but est simplement d'aider les utilisateurs à découvrir les principales
+caractéristiques du logiciel.</p>
+
+<p>Ce document est organisé comme un livre. Vous pouvez utiliser la commande
+<a href="MakeBook.html.fr#L1065">Outils/Construire un livre</a> pour
 assembler et imprimer la totalité du manuel.</p>
 
 <p>Beaucoup de commandes d'<strong>Amaya</strong> sont identiques à celles
-fournies par les éditeurs et les outils de traitement de texte classiques.
-Elles ne sont pas présentées ici. Seuls les aspects spécifiques
-d'<strong>Amaya</strong> sont décrits.</p>
+fournies par les traitements de texte classiques. Elles ne sont pas
+présentées ici. Seuls les aspects spécifiques d'<strong>Amaya</strong> sont
+décrits.</p>
 <hr />
 
 <p>Chaque section suivante décrit brièvement comment utiliser une fonction
@@ -137,5 +144,6 @@ href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Public">public</
 and <a
 href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Members">Member</a>
 privacy statements.</small></p>
+</div>
 </body>
 </html>

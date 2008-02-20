@@ -16,7 +16,7 @@
 Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /> 
 
-<p class="nav"><a href="EditChar.html.fr" accesskey="p"><img alt="previous"
+<p class="nav"><a href="Attributes.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html.fr"
 accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
 <a href="Templates.html.fr" accesskey="n"><img alt="next"
@@ -41,8 +41,8 @@ certains caractères non disponibles au clavier comme :</p>
   <li>Pour obtenir un &euro; (euro), vous pouvez taper <kbd>Alt e</kbd></li>
   <li>Pour obtenir un &oelig; (oelig), vous pouvez taper <kbd>Ctrl o
   e</kbd></li>
-  <li>Pour obtenir un &OElig; (OElig), vous pouvez taper <kbd>Ctrl Shift
-    O E</kbd></li>
+  <li>Pour obtenir un &OElig; (OElig), vous pouvez taper <kbd>Ctrl Shift O
+    E</kbd></li>
   <li>Pour obtenir un «, vous pouvez taper <kbd>Ctrl [</kbd></li>
   <li>Pour obtenir un », vous pouvez taper <kbd>Ctrl ]</kbd></li>
   <li>Pour obtenir un ­ (hyphen), vous pouvez taper <kbd>Ctrl h -</kbd></li>

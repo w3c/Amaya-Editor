@@ -13,7 +13,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Manual.html" accesskey="t"><img alt=""
 src="../../resources/icons/misc/up.png" /> </a> <a href="Selecting.html"
@@ -23,17 +24,16 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
 
 <div class="toc">
 <ul>
-  <li><a href="#Browsing">Browsing with Amaya</a> 
+  <li><a href="#Browsing">Browsing with Amaya</a>
     <ul>
       <li><a href="#Activating1">Activating a Link</a></li>
       <li><a href="#Access">Access Keys</a></li>
       <li><a href="#Target">Target Anchors</a></li>
-      <li><a href="#Opening">Opening Documents</a></li>
       <li><a href="#Moving">Moving Backward and Forward</a></li>
       <li><a href="#Reloading">Reloading a page</a></li>
     </ul>
   </li>
-  <li><a href="#Using">Using forms</a> 
+  <li><a href="#Using">Using forms</a>
     <ul>
       <li><a href="#Simple">Simple menus</a></li>
       <li><a href="#Menus">Menus with multiple selections</a></li>
@@ -71,7 +71,7 @@ right-click a link.</p>
     the same tab as the original document. If the original document was
     modified and has not been saved yet, a dialog box is displayed. It allows
     you to save the changes you have made before replacing the original
-    document.
+    document. 
     <p class="Note">If you have chosen a <a
     href="Configure.html#Profile">profile</a> without the navigation feature,
     or if you are in help pages, the retrieved document is displayed in a new
@@ -156,79 +156,6 @@ displayed or hidden in two ways:</p>
     menu.</li>
   <li>Using the default keyboard command (<kbd>Ctrl u Ctrl t</kbd>).</li>
 </ul>
-
-<h3 id="Opening">Opening Documents</h3>
-
-<p>You can open local and remote documents in several ways:</p>
-<dl>
-  <dt>File menu</dt>
-    <dd><ol>
-        <li>Choose <strong>Open document</strong> from the
-          <strong>File</strong> menu. 
-          <p class="Note"><strong>Note:</strong> You can alternately use a
-          keyboard shortcut to open a document. Press <kbd>Ctrl o ctrl
-          o</kbd>.</p>
-        </li>
-        <li>In the <strong>Open document</strong> dialog, type the full path
-          or URI of the file you want to open, or use the
-          <strong>Browse</strong> button (a file icon) to open a file
-          selection dialog. 
-          <p class="Note"><strong>Note:</strong> You can also click the
-          button on the right side of the address field to display the list
-          of the documents you have opened recently. You can then select an
-          address in this list to open the corresponding document.</p>
-        </li>
-        <li>When the document is correctly specified, click
-          <strong>Open.</strong></li>
-      </ol>
-      <p>You can also use these steps to create a new local document, by
-      specifying the name of a file that does not exist.</p>
-    </dd>
-  <dt>Files explorer</dt>
-    <dd>A file explorer may be displayed in Tools window with <strong>Views /
-      Show toolbars / Files</strong>. This tool gives access to all local
-      directories. A simple click allows you to open or close a directory and
-      a double click on a file name opens the corresponding document.</dd>
-  <dt>Document address field</dt>
-    <dd>The address of the current document is displayed at the top of the
-      window. Edit this address to specify the file name or the URI of the
-      document you want to open and press <kbd>Enter</kbd>. 
-      <p>You can also create a new document by typing the name of a document
-      that does not exist yet.</p>
-      <p class="Note"><strong>Note:</strong> You can click the button on the
-      right side of the document address field to display the list of the
-      documents you have opened recently. You can then select an address in
-      this list to open the corresponding document.</p>
-    </dd>
-  <dt>Links</dt>
-    <dd>By <a href="#Activating1">activating a link</a> you load the target
-      document.</dd>
-</dl>
-
-<p><strong>Note about character sets</strong></p>
-
-<p>Amaya reads HTML and XHTML documents differently:</p>
-<ul>
-  <li>Amaya reads HTML documents by default as <a
-    href="EditChar.html">ISO-Latin-1</a> files. If an author does not provide
-    information about the character set (charset) in the HTTP header or in a
-    <code>meta</code> element, Amaya considers an HTML document to be encoded
-    in ISO-Latin-1.</li>
-  <li>Amaya reads XHTML documents by default as UTF-8 files. If an author
-    does not provide information about the charset in the HTTP header, in the
-    XML declaration, or in a <code>meta</code> element, Amaya considers an
-    XHTML document to be encoded in UTF-8.</li>
-</ul>
-
-<p>Because the default charset is different for HTML and XHTML documents,
-authors often create documents using the incorrect charset. For example,
-consider an XHTML document that uses ISO Latin-1 but does not provide
-information about the charset. When the XML parser analyzing the document
-encounters a character that does not match a valid UTF-8 character, the
-document is considered to be not well formed. Parsing stops and Amaya
-displays an error message that proposes either to reload the document as an
-HTML document or to show parsing errors. If show parsing errors is selected,
-Amaya displays the detected errors.</p>
 
 <h3 id="Moving">Moving Backward and Forward</h3>
 

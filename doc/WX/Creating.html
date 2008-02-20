@@ -18,7 +18,7 @@
 Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /> 
 
-<p class="nav"><a href="Templates.html" accesskey="p"><img alt="previous"
+<p class="nav"><a href="Document.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html"
 accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
 <a href="Attributes.html" accesskey="n"><img alt="next"
@@ -317,26 +317,18 @@ key does not apply only to lists and paragraphs, but to all elements.</p>
 <h3 id="Delete">The Delete and Backspace keys</h3>
 
 <p>The behaviour of the <kbd>Delete</kbd> and <kbd>Backspace</kbd> keys
-depends on the current editing mode:</p>
+doesn't depend on the editing mode.</p>
 <ul>
-  <li>XML mode: 
-    <p>If the insertion point is at the beginning or at the end of any type
-    of element and the <kbd>Delete</kbd> or <kbd>Backspace</kbd> key is hit,
-    the whole content of the next (resp. previous) sibling element is merged
-    with the content of the first element.</p>
-  </li>
-  <li>Text mode: 
-    <p>If the insertion point is at the beginning or at the end of a
+  <li>If the insertion point is at the beginning or at the end of a
     <em>block</em> element and the <kbd>Delete</kbd> or <kbd>Backspace</kbd>
     key is hit, the whole content of the next (resp. previous) sibling
-    element is merged with the content of the current <em>block</em>
-    element.</p>
-    <p>When the insertion point is in <em>inline</em> elements the
+    element is merged with the content of the  element that includes the
+    insert point.</li>
+  <li>When the insertion point is in <em>inline</em> elements the
     <kbd>Backspace</kbd> and <kbd>Delete</kbd> keys only delete characters,
     crossing <em>inline</em> element boundaries without any action on the
     structure. However, when an <em>inline</em> element becomes empty by
-    deletions, it is itself deleted.</p>
-  </li>
+    deletions, it is itself deleted.</li>
 </ul>
 
 <h3 id="Changing">Changing the document title</h3>

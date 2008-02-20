@@ -15,7 +15,7 @@
 Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /> 
 
-<p class="nav"><a href="Templates.html.fr" accesskey="p"><img alt="previous"
+<p class="nav"><a href="Document.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html.fr"
 accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
 <a href="Attributes.html.fr" accesskey="n"><img alt="next"
@@ -372,26 +372,22 @@ créée immédiatement après le nouveau terme.</p>
 
 <h3 id="touches">Les touches Delete et Backspace</h3>
 
-<p>Le comportement des touches <kbd>Delete</kbd> et <kbd>Backspace</kbd>
-dépend de mode d'édition courant :</p>
+<p>Le comportement des touches <kbd>Delete</kbd> et <kbd>Backspace</kbd> ne
+dépend pas du mode d'édition:</p>
 <ul>
-  <li>Mode XML : 
-    <p>Si le point d'insertion se trouve au début ou à la fin de n'importe
-    quel type d'élément et que la touche <kbd>Delete</kbd> ou
-    <kbd>Backspace</kbd> est pressée, tout le contenu de l'élément voisin
-    suivant (resp. précédent) est ajouté au contenu du premier élément.</p>
-  </li>
-  <li>Mode Texte : 
-    <p>Si le point d'insertion se trouve au début ou à la fin d'un élément
-    <em>bloc</em> et que la touche <kbd>Delete</kbd> ou <kbd>Backspace</kbd>
-    est pressée, tout le contenu de l'élément voisin suivant (resp.
-    précédent) est ajouté au contenu de l'élément <em>bloc</em> courant.</p>
-    <p>Si le point d'insertion se trouve dans un élément en-ligne,  les
-    touches <kbd>Delete</kbd> et <kbd>Backspace</kbd> détruisent seulement
-    les caractères, en traversant les limites d'éléments <em>en-ligne</em>
-    sans aucun effet sur la structure. Cependant, quand un élément
-    <em>en-ligne</em> devient vide, il est lui-même détruit.</p>
-  </li>
+  <li>Si le point d'insertion se trouve au début ou à la fin d'un élément
+    <em>bloc</em> (un élément comme <code>p</code>, <code>address</code>,
+    <code>dt</code>, <code>h1</code>, <code>h2</code>, etc.) et que la touche
+    <kbd>Delete</kbd> ou <kbd>Backspace</kbd> est pressée, tout le contenu de
+    l'élément voisin suivant (resp. précédent) est ajouté au contenu de
+    l'élément contenant le point d'insertion.</li>
+  <li>Si le point d'insertion se trouve dans un élément en-ligne (un élément
+    HTML comme <code>strong</code>, <code>em</code>, <code>code</code>,
+    <code>span</code>, <code>a</code>, etc.),  les touches <kbd>Delete</kbd>
+    et <kbd>Backspace</kbd> détruisent seulement les caractères, en
+    traversant les limites d'éléments <em>en-ligne</em> sans aucun effet sur
+    la structure. Cependant, quand un élément <em>en-ligne</em> devient vide,
+    il est lui-même détruit.</li>
 </ul>
 
 <h3 id="Changer"><a name="Changing" id="Changing">Changer le titre du

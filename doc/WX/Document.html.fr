@@ -23,7 +23,11 @@ src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
 <div id="Changing" xml:lang="fr" lang="fr">
-<h2>Créer des documents</h2>
+<p></p>
+
+<h2 id="L50">Gestion des documents</h2>
+
+<h3>Créer un document</h3>
 
 <p>Amaya vous permet ce créer de nouveaux documents locaux ou distants. Trois
 types de documents sont disponibles :</p>
@@ -76,6 +80,84 @@ types de documents sont disponibles :</p>
   <li>Confirmez avec le bouton <strong>Créer</strong>. Amaya crée un nouveau
     document contenant l'élément racine correspondant au type choisi.</li>
 </ol>
+
+<h3 id="Ouverture"><a name="Opening" id="Opening">Ouvrir un document</a></h3>
+
+<p>Vous pouvez ouvrir des documents locaux ou distants de différentes façons
+:</p>
+<dl>
+  <dt>Menu Fichier</dt>
+    <dd>L'entrée <strong>Ouvrir</strong> du menu <strong>Fichier</strong>
+      vous permet d'ouvrir un nouveau document. La commande clavier par
+      défaut est <kbd>Ctrl o Ctrl o</kbd> . Cette commande fait apparaître
+      une boîte de dialogue dans laquelle vous pouvez entrer un nom de
+      fichier local ou une URI. Vous pouvez également choisir un fichier en
+      utilisant le sélecteur de fichiers locaux (cliquez sur l'icone de
+      fichier en haut à droite de cette boîte de dialogue).</dd>
+    <dd>Quand le document est correctement spécifié, cliquez sur le bouton
+      <strong>Ouvrir</strong>. 
+      <p>Vous pouvez aussi utiliser le bouton à droite de la zone de saisie
+      du nom de fichier. Il affiche la liste des fichiers ouverts récemment
+      avec Amaya. Chosissez dans cette liste celui que vous voulez ouvrir.</p>
+      <p>La commande <strong>Ouvrir</strong> peut aussi être utilisée pour
+      créer un nouveau document local, en spécifiant le nom d'un fichier qui
+      n'existe pas encore.</p>
+    </dd>
+  <dt>Explorateur de fichiers</dt>
+    <dd>Un explorateur de fichiers peut être affiché dans la fenêtre d'Outils
+      par la commande <strong>Affichage / Barres d'outils /
+      Fichiers</strong>. Cet outil donne accès à tous les répertoires locaux.
+      Un simple clic permet d'ouvrir ou de fermer un répertoire et un double
+      clic sur un nom de fichier ouvre le document correspondant.</dd>
+  <dt>Adresse du document courant</dt>
+    <dd>Une zone affiche en haut de la fenêtre le nom du fichier ou l'URI du
+      document courant. Vous pouvez saisir le nom d'un autre document (local
+      ou distant) qui va être affiché à la place du document courant. Tapez
+      sur la touche <kbd>Enter</kbd> quand le curseur se trouve dans cette
+      zone pour activer le chargement du document. Cette commande peut aussi
+      être utilisée pour créer un nouveau document local, en entrant le nom
+      d'un fichier qui n'existe pas encore. 
+      <p>Le bouton à la droite de cette zone affiche la liste des derniers
+      documents chargés. Vous pouvez choisir un document dans cette liste. Ce
+      document vient alors remplacer le document courant.</p>
+    </dd>
+  <dt>Liens</dt>
+    <dd>En <a href="Browsing.html.fr#Activating">activant un lien</a> vous
+      chargez le document correspondant.</dd>
+</dl>
+
+<p><strong>Note sur le codage des caractères</strong></p>
+
+<p>Les documents HTML sont chargés par défaut comme des fichiers <a
+href="EditChar.html.fr">ISO-latin-1</a>. Sans information sur le "charset"
+dans l'en-tête HTTP ou dans un élément <code>meta</code>, un document HTML
+est considéré comme codé en ISO-latin-1. Les documents XML (y compris XHTML)
+sont lus par défaut comme des fichiers UTF 8. Quand il n'y a pas
+d'information sur le "charset" dans l'en-tête HTTP, dans la déclaration XML,
+ou dans un élément <code>meta</code>, un document XML est considéré comme
+codé en UTF 8. Comme les codages par défaut de HTML et de XML sont
+différents, il arrive souvent que des auteurs aient créé des documents XML
+codés en ISO-latin-1 qui ne fournissent pas d'informations explicites sur
+leur codage. Si un caractère analysé par Amaya ne correspond pas à un
+caractère UTF 8 valide (cela arrive si le document est codé en ISO-latin-1
+mais lu comme un fichier UTF 8), le document est considéré comme incorrect:
+le traitement s'arrête et un message d'erreur est affiché. Ce message propose
+soit de recharger le document comme un document HTML, soit de montrer les
+erreurs. Dans le premier cas, le document est rechargé avec le "charset"
+correspondant à l'ISO-latin-1. Le document est maintenant considéré comme
+modifié (un charset a été ajouté) et peut être sauvé.</p>
+
+<p><a name="entite" id="entite"><strong>Amaya</strong> interprète les entités
+caractères</a>. Quand il ne dispose pas du caractère correspondant, il
+affiche un '?' (ou il affiche le nom de l'entité lorsqu'elle figure dans un
+attribut ou quand elle est inconnue). Lorsque le document est sauvé, ces
+entités caractères sont restaurées, sauf si le document est codé en ISO
+Latin-1 et que l'entité correspond à un caractère ISO Latin-1. Dans ce cas
+c'est simplement le code ISO Latin-1 du caractère qui est sauvé. Si le
+document est codé en ASCII, Amaya convertit en entités les caractères ISO
+Latin-1 qui n'existent pas en ASCII.</p>
+
+<p></p>
 
 <p></p>
 </div>
