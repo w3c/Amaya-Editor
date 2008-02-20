@@ -93,10 +93,20 @@ int GetBoxDistance (PtrBox pBox, PtrFlow pFlow, int xRef, int yRef,
   xcell = ycell = 0;
   wcell = hcell = MAX_DISTANCE;
 #ifdef _GL
-  x = pBox->BxClipX;
-  y = pBox->BxClipY;
-  width = pBox->BxClipW;
-  height = pBox->BxClipH;
+  if (pBox->BxBoundinBoxComputed)
+    {
+      x = pBox->BxClipX;
+      y = pBox->BxClipY;
+      width = pBox->BxClipW;
+      height = pBox->BxClipH;
+    }
+  else
+    {
+      x = pBox->BxXOrg - ViewFrameTable[frame-1].FrXOrg;
+      y = pBox->BxYOrg - ViewFrameTable[frame-1].FrYOrg;
+      width = pBox->BxW;
+      height = pBox->BxH;
+    }
   if (pCell && pCell->AbBox)
     {
       // get the current cell spacing

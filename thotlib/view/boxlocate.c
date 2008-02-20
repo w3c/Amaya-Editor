@@ -1925,16 +1925,13 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow)
               else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
                 /* glitch for the root symbol */
                 d = GetShapeDistance (xRef, yRef, pBox, 1, frame);
-              else if ((pAb->AbLeafType == LtText ||
-                        pAb->AbLeafType == LtSymbol ||
-                        pAb->AbLeafType == LtPicture ||
+              else if (pAb->AbLeafType == LtText ||
+                       pAb->AbLeafType == LtSymbol ||
+                       pAb->AbLeafType == LtPicture ||
                         /* empty or compound box */
-                        (pAb->AbLeafType == LtCompound && pAb->AbVolume == 0)) 
-#ifdef _GL
-                       && (pBox->BxBoundinBoxComputed || 
-                           pBox->BxType == BoBlock || pBox->BxNChars == 0)
-#endif /* _GL */
-                       )
+                       (pAb->AbLeafType == LtCompound &&
+                        (pAb->AbVolume == 0 || 
+                         pBox->BxType == BoBlock || pBox->BxNChars == 0)))
                 d = GetBoxDistance (pBox, *pFlow, xRef, yRef, Y_RATIO, frame, &matchCell);
               else
                 d = max + 1;
