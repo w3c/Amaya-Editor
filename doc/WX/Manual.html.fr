@@ -41,6 +41,50 @@ présentées ici. Seuls les aspects spécifiques d'<strong>Amaya</strong> sont
 décrits.</p>
 <hr />
 <ul>
+  <li><a href="Browsing.html.fr#Naviguer">Naviguer avec Amaya</a> 
+    <ul>
+      <li><a href="Browsing.html.fr#Activer">Activer un lien, parcourir les
+        liens</a></li>
+      <li><a href="Browsing.html.fr#rapides">Accès rapides</a></li>
+      <li><a href="Browsing.html.fr#Ancres">Ancres cibles</a></li>
+      <li><a href="Browsing.html.fr#Aller">Aller en arrière et en
+      avant</a></li>
+      <li><a href="Browsing.html.fr#Recharger">Recharger une page</a></li>
+      <li><a href="Browsing.html.fr#Contr">Commandes au clavier</a></li>
+    </ul>
+  </li>
+  <li><a href="Browsing.html.fr#Utiliser">Utiliser les formulaires</a> 
+    <ul>
+      <li><a href="Browsing.html.fr#Menus">Menus simples</a></li>
+      <li><a href="Browsing.html.fr#Menus1">Menus à sélection
+      multiple</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li><a href="Selecting.html.fr#L58">Sélectionner</a> 
+    <ul>
+      <li><a href="Selecting.html.fr#L94">Sélectionner avec la souris</a></li>
+      <li><a href="Selecting.html.fr#L302">Sélectionner dans la barre
+        d'état</a></li>
+      <li><a href="Selecting.html.fr#L115">Sélectionner avec le
+      clavier</a></li>
+      <li><a href="Selecting.html.fr#L227">Sélectionner des images</a></li>
+      <li><a href="Selecting.html.fr#L252">Sélectionner dans la vue
+        structure</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li><a href="Views.html.fr#Vues">Vues d'un document</a>
+    <ul>
+      <li><a href="Views.html.fr#Ouvrir">Ouvrir une vue</a></li>
+      <li><a href="Views.html.fr#Fermer">Fermer une vue</a></li>
+      <li><a href="Views.html.fr#Utiliser">Utiliser les vues</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
   <li><a href="Document.html.fr#L50">Gestion des documents</a>
     <ul>
       <li><a href="Document.html.fr#L54">Créer un document</a></li>
@@ -98,6 +142,31 @@ décrits.</p>
         sous Mac OS X</a></li>
       <li><a href="EditChar.html.fr#Traitement">Traitement des
       espaces</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li><a href="Templates.html.fr#Templates">Les modèles dans Amaya</a> 
+    <ul>
+      <li><a href="Templates.html.fr#What">Qu'est-ce qu'un modèle ?</a></li>
+      <li><a href="Templates.html.fr#Selecting">Sélectionner un
+      modèle</a></li>
+      <li><a href="Templates.html.fr#Creating">Créer une instance de
+        document</a></li>
+      <li><a href="Templates.html.fr#Visualizin">Visualisation des éléments
+        du modèle</a></li>
+      <li><a href="Templates.html.fr#Editing">Editer un document instance</a> 
+        <ul>
+          <li><a href="Templates.html.fr#Editing1">Edition dans un élément
+            <code>repeat</code></a></li>
+          <li><a href="Templates.html.fr#Editing2">Edition dans un élément
+            <code>option</code></a></li>
+          <li><a href="Templates.html.fr#Editing3">Edition dans un élément
+            <code>use</code></a></li>
+          <li><a href="Templates.html.fr#Editing4">Edition dans un élément
+            <code>bag</code></a></li>
+        </ul>
+      </li>
     </ul>
   </li>
 </ul>
@@ -170,25 +239,21 @@ décrits.</p>
 <hr />
 
 <p><a name="There" id="There">Il y a également une brève introduction qui
-décrit quelques éléments HTML (comme les en-têtes, les listes, les citations)
-et explique comment les utiliser.</a></p>
+décrit les éléments HTML et explique comment les utiliser.</a></p>
 <ul>
-  <li><a href="HTML-elements/infoTypes.html.fr#Information"
-    rel="Chapter">Types d'information dans HTML</a></li>
-  <li><a href="HTML-elements/structure.html.fr#HTML" rel="Chapter">Structure
-    du document HTML</a></li>
-  <li><a href="HTML-elements/headings.html.fr#Heading" rel="Chapter">Éléments
-    d'en-tête</a></li>
-  <li><a href="HTML-elements/lists.html.fr#List" rel="Chapter">Éléments d'une
-    liste</a></li>
-  <li><a href="HTML-elements/address.html.fr#About" rel="Chapter">A propos de
-    l'auteur</a></li>
-  <li><a href="HTML-elements/inline.html.fr#Inline3"
-    rel="Chapter">Définitions en ligne, citations, code, insertions et
-    suppressions, abréviations, etc.</a></li>
-  <li><a href="HTML-elements/40styling.html.fr#Character"
-    rel="Chapter">Éléments de style de HTML (ce qu'il ne faut pas faire et ce
-    qui doit être fait...)</a></li>
+  <li><a href="HTML-elements/infoTypes.html.fr#Information">Types
+    d'information dans HTML</a></li>
+  <li><a href="HTML-elements/structure.html.fr#HTML">Structure du document
+    HTML</a></li>
+  <li><a href="HTML-elements/headings.html.fr#Heading">Éléments
+  d'en-tête</a></li>
+  <li><a href="HTML-elements/lists.html.fr#List">Éléments d'une liste</a></li>
+  <li><a href="HTML-elements/address.html.fr#About">A propos de
+  l'auteur</a></li>
+  <li><a href="HTML-elements/inline.html.fr#Inline3">Définitions en ligne,
+    citations, code, insertions et suppressions, abréviations, etc.</a></li>
+  <li><a href="HTML-elements/40styling.html.fr#Character">Éléments de style
+    de HTML (ce qu'il ne faut pas faire et ce qui doit être fait...)</a></li>
 </ul>
 <hr />
 

@@ -22,20 +22,6 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#L58">Sélectionner</a>
-    <ul>
-      <li><a href="#L94">Sélectionner avec la souris</a></li>
-      <li><a href="#L302">Sélectionner dans la barre d'état</a></li>
-      <li><a href="#L115">Sélectionner avec le clavier</a></li>
-      <li><a href="#L227">Sélectionner des images</a></li>
-      <li><a href="#L252">Sélectionner dans la vue structure</a></li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="Selecting">
 <h2 id="L58">Sélectionner</h2>
 

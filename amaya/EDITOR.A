@@ -197,6 +197,7 @@ MENUS
 	Types.Table button:BTFoot -> CreateTFoot;
 
   Types.MathConstruct button:BDisplayMath -> CreateMath icon:MATHML_Bmath.png;
+  Types.MathConstruct Separator;
   Types.MathConstruct button:BMText -> CreateMTEXT;
   Types.MathConstruct button:BMIdentifier -> CreateMI;
   Types.MathConstruct button:BMNumber -> CreateMN;

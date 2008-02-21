@@ -15,7 +15,7 @@
 Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /> 
 
-<p class="nav"><a href="EditChar.html.fr" accesskey="p"><img alt="previous"
+<p class="nav"><a href="Templates.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
 accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 <a href="Links.html.fr" accesskey="n"><img alt="next"

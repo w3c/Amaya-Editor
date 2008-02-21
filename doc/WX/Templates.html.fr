@@ -23,31 +23,6 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#Templates">Les modèles dans Amaya</a> 
-    <ul>
-      <li><a href="#What">Qu'est-ce qu'un modèle ?</a></li>
-      <li><a href="#Selecting">Sélectionner un modèle</a></li>
-      <li><a href="#Creating">Créer une instance de document</a></li>
-      <li><a href="#Visualizin">Visualisation des éléments du modèle</a></li>
-      <li><a href="#Editing">Editer un document instance</a> 
-        <ul>
-          <li><a href="#Editing1">Edition dans un élément
-            <code>repeat</code></a></li>
-          <li><a href="#Editing2">Edition dans un élément
-            <code>option</code></a></li>
-          <li><a href="#Editing3">Edition dans un élément
-          <code>use</code></a></li>
-          <li><a href="#Editing4">Edition dans un élément
-          <code>bag</code></a></li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="modèles">
 <h2 id="Templates">Les modèles dans Amaya</h2>
 

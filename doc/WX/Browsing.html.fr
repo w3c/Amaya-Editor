@@ -21,27 +21,6 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
 /></a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#Naviguer">Naviguer avec Amaya</a> 
-    <ul>
-      <li><a href="#Activer">Activer un lien, parcourir les liens</a></li>
-      <li><a href="#rapides">Accès rapides</a></li>
-      <li><a href="#Ancres">Ancres cibles</a></li>
-      <li><a href="#Aller">Aller en arrière et en avant</a></li>
-      <li><a href="#Recharger">Recharger une page</a></li>
-      <li><a href="#Contr">Commandes au clavier</a></li>
-    </ul>
-  </li>
-  <li><a href="#Utiliser">Utiliser les formulaires</a> 
-    <ul>
-      <li><a href="#Menus">Menus simples</a></li>
-      <li><a href="#Menus1">Menus à sélection multiple</a></li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="Browsing" xml:lang="fr" lang="fr">
 <h2 id="Naviguer">Naviguer avec Amaya</h2>
 
