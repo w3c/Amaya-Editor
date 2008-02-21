@@ -90,7 +90,7 @@
 
 <div id="intro" class="section">
 <p>Avec la version 10, Amaya offre une interface utilisateur complètement
-repensée et nombreuses possibilités nouvelles.</p>
+repensée et de nombreuses possibilités nouvelles.</p>
 
 <p>Amaya est un client Web qui sert à la fois de navigateur et d'outil
 d'édition. Il a été conçu par le <a href="http://www.w3.org/">W3C</a> et l'<a
@@ -101,8 +101,8 @@ href="http://palette.ercim.org/">Palette</a>, Amaya 10 offre une nouvelle
 interface utilisateur et l'édition guidée par des modèles.</p>
 
 <p>Avec Amaya, vous pouvez manipuler des pages Web contenant des formulaires,
-des tables et les caractéristiques les plus avancées de XHTML. Vous pouvez
-créer et éditer des <a dir="ltr" xml:lang="fr" lang="fr"
+des tables et exploitant les caractéristiques les plus avancées de XHTML.
+Vous pouvez créer et éditer des <a dir="ltr" xml:lang="fr" lang="fr"
 href="../doc/WX/Math.html.fr">expressions mathématiques</a> dans les pages
 Web. Vous pouvez présenter vos documents à l'aide de <a
 href="http://www.w3.org/Style/CSS/">feuilles de style CSS</a>.</p>
@@ -115,7 +115,7 @@ href="http://www.w3.org/Style/CSS/">feuilles de style CSS</a>.</p>
 <div class="section">
 <h2>Principales nouveautés</h2>
 
-<p>Sont parus depuis la version 9.55 :</p>
+<p>Depuis la version 9.55 :</p>
 <ul>
   <li>Nouvelle l'interface utilisateur</li>
   <li>Accès direct au style</li>
@@ -128,7 +128,7 @@ href="http://www.w3.org/Style/CSS/">feuilles de style CSS</a>.</p>
 <div class="section">
 <h2>Fonctions avancées</h2>
 
-<p>MathML et SVG imbriqués :</p>
+<p>XHTML, MathML et SVG imbriqués :</p>
 
 <p><svg xmlns="http://www.w3.org/2000/svg" height="250" width="250">
   <g transform="matrix(0.707107,-0.707107,0.707107,0.707107,0,150)">
@@ -206,12 +206,12 @@ href="http://www.w3.org/Style/CSS/">feuilles de style CSS</a>.</p>
   <dt>Choisissez votre profil</dt>
     <dd>Cinq profils d'édition différents sont fournis pour adapter
       l'ensemble des menus et des outils à votre propre usage. De plus, les
-      panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre
+      panneaux d'outils peuvent être affichés à gauche ou à droite, à votre
       convenance pour chaque panneau (voir les Préférences).</dd>
   <dt>Amaya est un éditeur structuré</dt>
-    <dd>Avec la touche F2 ou Escape vous pouvez sélectionner l'élément
-      englobant dans la structure du document, pour appliquer les fonctions
-      d'édition (copier, coller, attributs, etc.) au bon élément.</dd>
+    <dd>Avec la touche F2 ou Esc vous pouvez sélectionner l'élément englobant
+      dans la structure du document, pour appliquer les fonctions d'édition
+      (copier, coller, attributs, etc.) au bon élément.</dd>
   <dt>Un document peut être édité à travers plusieurs vues synchronisées</dt>
     <dd>Le menu Vues vous permet d'ouvrir les vues Structure, Source, Liens,
       etc. Un double clic sur la ligne en bas ou à droite du document ouvre
