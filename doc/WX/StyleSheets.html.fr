@@ -29,12 +29,12 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <p>Le menu <strong>Format</strong> vous permet de changer l'apparence de vos
 documents en utilisant les cascades des feuilles de style (CSS).</p>
 
-<h3>Appliquer un thème</h3>
+<h3 id="Appliquer">Appliquer un thème</h3>
 
 <p>Amaya fournit par défaut deux thèmes (Classique, Moderne) qui vous
 permettent de changer globalement la présentation de votre document.</p>
 
-<h3>Appliquer du style spécifique</h3>
+<h3 id="Appliquer1">Appliquer du style spécifique</h3>
 
 <h3 id="Associer">Associer une classe à un élément</h3>
 

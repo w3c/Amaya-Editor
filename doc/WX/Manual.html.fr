@@ -278,6 +278,41 @@ décrits.</p>
     </ul>
   </li>
 </ul>
+<ul>
+  <li><a href="StyleSheets.html.fr#Cascades">Appliquer du style à un
+    document</a>
+    <ul>
+      <li><a href="StyleSheets.html.fr#Appliquer">Appliquer un thème</a></li>
+      <li><a href="StyleSheets.html.fr#Appliquer1">Appliquer du style
+        spécifique</a></li>
+      <li><a href="StyleSheets.html.fr#Associer">Associer une classe à un
+        élément</a></li>
+      <li><a href="StyleSheets.html.fr#L613">Créer des éléments de style
+        HTML</a>
+        <ul>
+          <li><a href="StyleSheets.html.fr#Types">Eléments type
+            information</a></li>
+          <li><a href="StyleSheets.html.fr#L895">Eléments caractères</a></li>
+          <li><a href="StyleSheets.html.fr#Supprimer">Supprimer un élément
+            type information ou charactères</a></li>
+        </ul>
+      </li>
+      <li><a href="StyleSheets.html.fr#L2881">Utiliser l'éditeur de
+      style</a></li>
+      <li><a href="StyleSheets.html.fr#feuilles1">Les feuilles de style CSS
+        externes et utilisateur</a>
+        <ul>
+          <li><a href="StyleSheets.html.fr#L90">Gérer des feuilles de style
+            CSS externes</a></li>
+        </ul>
+      </li>
+      <li><a href="StyleSheets.html.fr#Visualiser">Visualiser le style
+        appliqué</a></li>
+      <li><a href="StyleSheets.html.fr#L554">Créer un style générique pour un
+        élément ou une classe</a></li>
+    </ul>
+  </li>
+</ul>
 
 <p></p>
 <hr />
