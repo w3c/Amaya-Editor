@@ -21,7 +21,7 @@ src="../../resources/icons/misc/right.png"> </a></p>
 </div>
 
 <div id="HTML">
-<h1>Les &eacute;l&eacute;ments HTML</h1>
+<h2 id="ments">Les &eacute;l&eacute;ments HTML</h2>
 
 <p>Amaya reconna&icirc;t tous les &eacute;l&eacute;ments de HTML 4.0, mais ne
 produit que les &eacute;l&eacute;ments non d&eacute;pr&eacute;ci&eacute;s. La

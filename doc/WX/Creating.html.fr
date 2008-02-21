@@ -22,34 +22,6 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
 src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#L1103">Edition des <span xml:lang="fr"
-    lang="fr">éléments</span></a> 
-    <ul>
-      <li><a href="#Modes">Modes d'édition</a></li>
-      <li><a href="#Boutons">Boutons et menus</a></li>
-      <li><a href="#Point">Point d'insertion</a></li>
-      <li><a href="#Sous-menu">Sous-menu Eléments cachés</a></li>
-      <li><a href="#L1179">Eléments créés automatiquement</a></li>
-      <li><a href="#touche">La touche Enter (ou Return)</a> 
-        <ul>
-          <li><a href="#end-anchor">Sortir des ancres, des éléments en-ligne,
-            etc.</a></li>
-          <li><a href="#multi-enter">Création de structures
-          imbriquées</a></li>
-          <li><a href="#edit-dl">Editer les listes de définitions
-            (dl/dt/dd)</a></li>
-        </ul>
-      </li>
-      <li><a href="#touches">Les touches Delete et Backspace</a></li>
-      <li><a href="#Changer">Changer le titre du document</a></li>
-      <li><a href="#date">Insérer la date de mise à jour</a></li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="Creating">
 <h2 id="L1103">Edition des <span xml:lang="fr" lang="fr">éléments</span></h2>
 

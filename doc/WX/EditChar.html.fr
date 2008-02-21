@@ -24,7 +24,7 @@ src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
 <div id="Keyboard">
-<h3>Saisir du texte</h3>
+<h2 id="Saisir">Saisir du texte</h2>
 
 <p>Pour les caractères ISO-latin qui ne sont pas directement disponibles
 depuis le clavier, Amaya utilise le support standard fournit par le
@@ -51,8 +51,8 @@ certains caractères non disponibles au clavier comme :</p>
 <p>On donne une description de la méthode multi-touches standard des versions
 Unix et celle du système Mac OS X</p>
 
-<h3><a name="Standard">Le support multi-touches standard des versions
-Unix</a></h3>
+<h3 id="support"><a name="Standard">Le support multi-touches standard des
+versions Unix</a></h3>
 
 <p>Pour les caractères ISO-Latin indisponibles sur le clavier standard, il
 existe normalement une méthode qui insère ce caractère par une séquence de
@@ -716,7 +716,7 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
 </table>
 
 <div id="Creating1">
-<h3><a>Saisie de caractères accentués sous Mac OS X</a></h3>
+<h3 id="Saisie"><a>Saisie de caractères accentués sous Mac OS X</a></h3>
 
 <p>Avec un clavier US (qwerty), la saisie de caractères accentués sous la
 version Mac OS X se fait de la manière suivante:</p>

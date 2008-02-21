@@ -22,24 +22,6 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#Editer">Edition des tables</a> 
-    <ul>
-      <li><a href="#L62">Créer une nouvelle table</a></li>
-      <li><a href="#Ajouter">Ajouter une colonne</a></li>
-      <li><a href="#L143">Détruire, copier, coller une colonne</a></li>
-      <li><a href="#Ajouter1">Ajouter une ligne</a></li>
-      <li><a href="#L301">Détruire, copier, coller une ligne</a></li>
-      <li><a href="#Cellules">Cellules étendues</a></li>
-      <li><a href="#Ajouter2">Ajouter un nouveau corps de table
-      (tbody)</a></li>
-      <li><a href="#Ajouter3">Ajouter quelque chose après une table</a></li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="Editing">
 <h2 id="Editer">Edition des tables</h2>
 
@@ -289,7 +271,7 @@ table</a></h3>
 <p>De nombreux types d'élément peuvent être inclus à l'intérieur des cellules
 de la table. En cliquant un bouton de l'outil <strong>Eléments</strong>, ou
 en sélectionnant une entrée dans le menu <strong>Insertion,</strong> Amaya va
-essayer d'insérer l'élément choisi  dans la cellule qui inclut le point
+essayer d'insérer l'élément choisi dans la cellule qui inclut le point
 d'insertion.</p>
 
 <p>Pour contourner ce problème dans le <a href="Creating.html.fr">mode

@@ -22,20 +22,6 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#Images">Images et zones actives</a> 
-    <ul>
-      <li><a href="#Ajouter">Ajouter une image</a></li>
-      <li><a href="#Remplacer">Remplacer une image</a></li>
-      <li><a href="#Texte">Texte de remplacement et descriptions
-      longues</a></li>
-      <li><a href="#Utiliser">Utiliser des zones actives</a></li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="Client-sid">
 <h2 id="Images"><a name="L1013">Images et zones actives</a></h2>
 

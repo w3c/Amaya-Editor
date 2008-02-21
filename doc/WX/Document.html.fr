@@ -27,7 +27,7 @@ src="../../resources/icons/misc/right.png" /> </a></p>
 
 <h2 id="L50">Gestion des documents</h2>
 
-<h3>Créer un document</h3>
+<h3 id="L54">Créer un document</h3>
 
 <p>Amaya vous permet ce créer de nouveaux documents locaux ou distants. Trois
 types de documents sont disponibles :</p>

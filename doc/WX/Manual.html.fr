@@ -40,66 +40,133 @@ fournies par les traitements de texte classiques. Elles ne sont pas
 présentées ici. Seuls les aspects spécifiques d'<strong>Amaya</strong> sont
 décrits.</p>
 <hr />
-
-<p>Chaque section suivante décrit brièvement comment utiliser une fonction
-spécifique d'Amaya :</p>
 <ul>
-  <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer avec
-    Amaya</a></li>
-  <li><a rel="Chapter" href="Selecting.html.fr#Selecting">Sélection</a></li>
-  <li><a rel="Chapter" href="Views.html.fr#Views">Afficher des vues</a></li>
-  <li><a href="Document.html.fr#Changing">Éditer des documents</a></li>
-  <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer de nouveaux
-    éléments</a></li>
-  <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Éditer des
-    attributs</a></li>
-  <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Saisir du
-  texte</a></li>
-  <li><a href="HTML.html.fr#HTML">Les élements HTML</a></li>
-  <li><a href="Templates.html.fr#modèles">Éditer avec des modèles</a></li>
-  <li><a rel="Chapter" href="Changing.html.fr#Changing">Éditer la structure
-    du document</a></li>
-  <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et modifier des
-    liens et des ancres</a></li>
-  <li><a rel="Chapter" href="Tables.html.fr#Editing">Éditer des
-  tables</a></li>
-  <li><a rel="Chapter" href="ImageMaps.html.fr#Client-sid">Créer et utiliser
-    des zones actives</a></li>
-  <li><a href="Math.html.fr#Math" rel="Chapter">Éditer des
-  mathématiques</a></li>
-  <li><a href="SVG.html.fr#Graphics" rel="Chapter">Éditer des
-  graphiques</a></li>
-  <li><a href="Xml.html.fr#XML" rev="Chapter">Support XML générique</a></li>
-  <li><a rel="Chapter" href="StyleSheets.html.fr#Style">Les feuilles de
-    style</a></li>
-  <li><a rel="Chapter" href="Searching.html.fr#Searching">Rechercher et
-    remplacer du texte</a></li>
-  <li><a rel="Chapter" href="SpellChecking.html.fr#Spell">Vérifier
-    l'orthographe</a></li>
-  <li><a rel="Chapter" href="Publishing.html.fr#Saving">Sauver et publier des
-    documents</a></li>
-  <li><a rel="Chapter" href="Printing.html.fr#Printing">Imprimer des
-    documents</a></li>
-  <li><a rel="Chapter" href="Numbering.html.fr#Section">Numéroter les
-    sections</a></li>
-  <li><a rel="Chapter" href="MakeBook.html.fr#Assembling">Assembler des
-    collections de document</a></li>
-  <li><a rel="Chapter" href="Annotations.html.fr#Annotations">Les annotations
-    dans Amaya</a></li>
+  <li><a href="Document.html.fr#L50">Gestion des documents</a>
+    <ul>
+      <li><a href="Document.html.fr#L54">Créer un document</a></li>
+      <li><a href="Document.html.fr#Ouverture">Ouvrir un document</a></li>
+    </ul>
+  </li>
 </ul>
-
-<p>La section <a href="Configure.html.fr#Configuring"
-rel="Chapter">Configurer Amaya</a> explique comment modifier les options par
-defaut.</p>
-
-<p>La section <a href="ShortCuts.html.fr#page_body" rel="Chapter">Les
-raccourcis clavier dans Amaya</a> explique comment est construite la liste
-des raccourcis clavier.</p>
-
-<p>La page sur <a href="Access.html.fr#Access" rel="Chapter">l'Accessibilité
-dans Amaya</a> décrit les fonctionnalités d'accessibilité d'Amaya, et
-explique comment les utiliser pour produire des pages utilisables aussi bien
-par les gens qui ont des handicaps que par ceux qui n'en ont pas.</p>
+<ul>
+  <li><a href="Creating.html.fr#L1103">Edition des <span xml:lang="fr"
+    lang="fr">éléments</span></a> 
+    <ul>
+      <li><a href="Creating.html.fr#Modes">Modes d'édition</a></li>
+      <li><a href="Creating.html.fr#Boutons">Boutons et menus</a></li>
+      <li><a href="Creating.html.fr#Point">Point d'insertion</a></li>
+      <li><a href="Creating.html.fr#Sous-menu">Sous-menu Eléments
+      cachés</a></li>
+      <li><a href="Creating.html.fr#L1179">Eléments créés
+      automatiquement</a></li>
+      <li><a href="Creating.html.fr#touche">La touche Enter (ou Return)</a> 
+        <ul>
+          <li><a href="Creating.html.fr#end-anchor">Sortir des ancres, des
+            éléments en-ligne, etc.</a></li>
+          <li><a href="Creating.html.fr#multi-enter">Création de structures
+            imbriquées</a></li>
+          <li><a href="Creating.html.fr#edit-dl">Editer les listes de
+            définitions (dl/dt/dd)</a></li>
+        </ul>
+      </li>
+      <li><a href="Creating.html.fr#touches">Les touches Delete et
+        Backspace</a></li>
+      <li><a href="Creating.html.fr#Changer">Changer le titre du
+      document</a></li>
+      <li><a href="Creating.html.fr#date">Insérer la date de mise à
+      jour</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li><a href="Attributes.html.fr#Editer">Editer des attributs</a> 
+    <ul>
+      <li><a href="Attributes.html.fr#Editer1">Editer des attributs par le
+        biais de l'outil Attributs</a></li>
+      <li><a href="Attributes.html.fr#Editer2">Editer des attributs dans la
+        vue structure</a></li>
+      <li><a href="Attributes.html.fr#Copier">Copier des attributs</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li><a href="EditChar.html.fr#Saisir">Saisir du texte</a>
+    <ul>
+      <li><a href="EditChar.html.fr#support">Le support multi-touches
+        standard des versions Unix</a></li>
+      <li><a href="EditChar.html.fr#Saisie">Saisie de caractères accentués
+        sous Mac OS X</a></li>
+      <li><a href="EditChar.html.fr#Traitement">Traitement des
+      espaces</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li><a href="Changing.html.fr#Editer">Changer la structure du document</a> 
+    <ul>
+      <li><a href="Changing.html.fr#Changer">Changer le type de
+      l'élément</a></li>
+      <li><a href="Changing.html.fr#commande">La commande transformer</a> 
+        <ul>
+          <li><a href="Changing.html.fr#Transforma">Transformations
+            disponibles</a></li>
+          <li><a href="Changing.html.fr#Utilisatio">Utilisation de la
+            commande Transformer</a></li>
+        </ul>
+      </li>
+      <li><a href="Changing.html.fr#division">Insérer une division</a></li>
+      <li><a href="Changing.html.fr#Fusionner">Fusionner des éléments</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li><a href="Links.html.fr#L1140">Créer et modifier des liens et des
+    ancres</a> 
+    <ul>
+      <li><a href="Links.html.fr#L1142">Créer une ancre cible</a></li>
+      <li><a href="Links.html.fr#L1188">Créer un élément cible</a></li>
+      <li><a href="Links.html.fr#L1247">Créer un lien externe</a></li>
+      <li><a href="Links.html.fr#L1290">Créer un lien interne</a></li>
+      <li><a href="Links.html.fr#Copier">Copier l'adresse de la cible</a></li>
+      <li><a href="Links.html.fr#Changer">Changer un lien</a></li>
+      <li><a href="Links.html.fr#Supprimer">Supprimer un lien ou une ancre
+        cible</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li><a href="Tables.html.fr#Editer">Edition des tables</a> 
+    <ul>
+      <li><a href="Tables.html.fr#L62">Créer une nouvelle table</a></li>
+      <li><a href="Tables.html.fr#Ajouter">Ajouter une colonne</a></li>
+      <li><a href="Tables.html.fr#L143">Détruire, copier, coller une
+        colonne</a></li>
+      <li><a href="Tables.html.fr#Ajouter1">Ajouter une ligne</a></li>
+      <li><a href="Tables.html.fr#L301">Détruire, copier, coller une
+      ligne</a></li>
+      <li><a href="Tables.html.fr#Cellules">Cellules étendues</a></li>
+      <li><a href="Tables.html.fr#Ajouter2">Ajouter un nouveau corps de table
+        (tbody)</a></li>
+      <li><a href="Tables.html.fr#Ajouter3">Ajouter quelque chose après une
+        table</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li><a href="ImageMaps.html.fr#Images">Images et zones actives</a> 
+    <ul>
+      <li><a href="ImageMaps.html.fr#Ajouter">Ajouter une image</a></li>
+      <li><a href="ImageMaps.html.fr#Remplacer">Remplacer une image</a></li>
+      <li><a href="ImageMaps.html.fr#Texte">Texte de remplacement et
+        descriptions longues</a></li>
+      <li><a href="ImageMaps.html.fr#Utiliser">Utiliser des zones
+      actives</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li><a href="HTML.html.fr#ments">Les éléments HTML</a></li>
+</ul>
 <hr />
 
 <p><a name="There" id="There">Il y a également une brève introduction qui

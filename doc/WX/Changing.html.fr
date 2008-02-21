@@ -22,25 +22,6 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#Editer">Changer la structure du document</a>
-    <ul>
-      <li><a href="#Changer">Changer le type de l'élément</a></li>
-      <li><a href="#commande">La commande transformer</a>
-        <ul>
-          <li><a href="#Transforma">Transformations disponibles</a></li>
-          <li><a href="#Utilisatio">Utilisation de la commande
-          Transformer</a></li>
-        </ul>
-      </li>
-      <li><a href="#division">Insérer une division</a></li>
-      <li><a href="#Fusionner">Fusionner des éléments</a></li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="Changing">
 <h2 id="Editer">Changer la structure du document</h2>
 

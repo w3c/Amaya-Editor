@@ -22,22 +22,6 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#L1140">Créer et modifier des liens et des ancres</a>
-    <ul>
-      <li><a href="#L1142">Créer une ancre cible</a></li>
-      <li><a href="#L1188">Créer un élément cible</a></li>
-      <li><a href="#L1247">Créer un lien externe</a></li>
-      <li><a href="#L1290">Créer un lien interne</a></li>
-      <li><a href="#Copier">Copier l'adresse de la cible</a></li>
-      <li><a href="#Changer">Changer un lien</a></li>
-      <li><a href="#Supprimer">Supprimer un lien ou une ancre cible</a></li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="Creating">
 <h2 id="L1140">Créer et modifier des liens et des ancres</h2>
 

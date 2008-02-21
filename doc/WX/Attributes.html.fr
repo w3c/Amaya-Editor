@@ -23,21 +23,6 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Attributes">
-
-<div class="toc">
-<ul>
-  <li><a href="#Editer">Editer des attributs</a>
-    <ul>
-      <li><a href="#Editer1">Editer des attributs par le biais de l'outil
-        Attributs</a></li>
-      <li><a href="#Editer2">Editer des attributs dans la vue
-      structure</a></li>
-      <li><a href="#Copier">Copier des attributs</a></li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <h2 id="Editer">Editer des attributs</h2>
 
 <p>Il y a deux manières d'éditer des attributs :</p>
