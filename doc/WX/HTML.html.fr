@@ -9,8 +9,10 @@
 </head>
 
 <body lang="fr">
+
 <div>
-Amaya<img border="0" alt="logo" src="../../resources/icons/22x22/logo.png"> </p>
+Amaya<img border="0" alt="logo" src="../../resources/icons/22x22/logo.png"> 
+
 <p class="nav"><a href="ImageMaps.html.fr"><img alt="previous"
 src="../../resources/icons/misc/left.png"> </a><a href="Manual.html"><img
 alt="top" border="0" src="../../resources/icons/misc/up.png"> </a> <a
@@ -26,7 +28,7 @@ produit que les &eacute;l&eacute;ments non d&eacute;pr&eacute;ci&eacute;s. La
 liste qui suit donne les &eacute;l&eacute;ments qui peuvent &ecirc;tre
 produits avec Amaya. Chaque lien pointe sur la sp&eacute;cification de HTML.
 L'utilisateur peut aussi consulter quelques <a
-href="HTML-elements/infoTypes.html">Informations sur les
+href="HTML-elements/infoTypes.html.fr">Informations sur les
 &eacute;l&eacute;ments HTML</a>.</p>
 <dl>
   <dt><a

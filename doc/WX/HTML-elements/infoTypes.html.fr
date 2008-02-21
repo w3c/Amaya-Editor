@@ -10,7 +10,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" /> 
+Amaya<img border="0" alt="Amaya"
+src="../../../resources/icons/22x22/logo.png" /> 
 
 <p class="nav"><a href="../Manual.html.fr#There"><img alt="top" border="0"
 src="../../../resources/icons/misc/up.png" /></a> <a
@@ -24,7 +25,7 @@ src="../../../resources/icons/misc/right.png" /></a></p>
 <p>HTML 4.0 (Strict) fournit des éléments pour désigner certains types
 "information". Bien qu'il existe une présentation par défaut de chaque type
 d'élément, il est possible d'utiliser les <a
-href="../StyleSheets.html">Feuilles de style</a> pour changer la présentation
+href="../StyleSheets.html">feuilles de style</a> pour changer la présentation
 de n'importe quel élément. Les types information qui peuvent être représentés
 par les éléments HTML sont :</p>
 <dl>
