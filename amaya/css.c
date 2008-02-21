@@ -811,13 +811,13 @@ void RemoveDocCSSs (Document doc, ThotBool removed)
       while (css && pInfo)
         {
           pNext = pInfo->PiNext;
-          if (!UnlinkCSS (css, doc, css->infos[doc]->PiLink, TRUE, TRUE, removed))
+          if (!UnlinkCSS (css, doc, css->infos[doc]->PiLink, TRUE, removed, TRUE))
             css = NULL;
           pInfo = pNext;
         }
       if (css && css->doc == doc)
         /* the document displays the CSS file itself */
-        UnlinkCSS (css, doc, NULL, TRUE, TRUE, removed);
+        UnlinkCSS (css, doc, NULL, TRUE, removed, TRUE);
       /* look at the next CSS context */
       css = next;
     }

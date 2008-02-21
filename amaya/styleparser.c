@@ -2166,16 +2166,18 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
   CSSImageCallbackPtr        callblock;
   Element                    el;
   PSchema                    tsch;
+  PInfoPtr                   pInfo;
   CSSInfoPtr                 css;
   PresentationContext        ctxt;
   PresentationValue          image;
   PresentationValue          value;
+  ThotBool                   found;
 
   callblock = (CSSImageCallbackPtr) extra;
   if (callblock == NULL)
     return;
 
-  css = NULL;
+  css = callblock->css;
   el = callblock->el;
   tsch = callblock->tsch;
   ctxt = callblock->ctxt;
@@ -2197,8 +2199,24 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
       while (css && css != callblock->css)
         css = css->NextCSS;
       if (css == NULL)
+        // the presentation schema doesn't exist anymore
         tsch = NULL;
     }
+
+  if (tsch && css && ctxt && ctxt->doc)
+    {
+      // check if the presentation schema is still there
+      pInfo = css->infos[ctxt->doc];
+      found = FALSE;
+      while (!found && pInfo)
+        {
+          found = (pInfo->PiSchemas && tsch == pInfo->PiSchemas->PiPSchema);
+          pInfo = pInfo->PiNext;
+        }
+      if (!found)
+        tsch = NULL;
+   }
+
   if (el || tsch)
     {
       /* Ok the image was fetched */
