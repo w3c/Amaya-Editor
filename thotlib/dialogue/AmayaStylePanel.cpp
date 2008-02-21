@@ -232,7 +232,7 @@ void AmayaStyleToolPanel::OnChooseFontColor(wxCommandEvent& event)
 {
   wxColour c;
 
-  c = XRCCTRL(*this, "wxID_PANEL_CSS__COLOR", AmayaColorButton)->ChooseColour();
+  c = XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", AmayaColorButton)->ChooseColour();
   if (c != wxNullColour)
     GenerateFontColour(c);  
 }
