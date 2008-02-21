@@ -294,8 +294,8 @@
   ul, ol, dl, p, pre, hr {
     border-top: 0pt none;
     border-bottom: 0pt none;
-    margin-top: 0.75em;
-    margin-bottom: 0.75em;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
     padding-top: 0pt;
     padding-bottom: 0pt;
     }

@@ -642,6 +642,7 @@ SelectColumn
 &CreateMUNDER
 &CreateMOVER
 &CreateMROW
+&CreateMPARENTHESIS
 &CreateMMULTISCRIPTS
 &CreateMTABLE
 

@@ -236,6 +236,39 @@ décrits.</p>
 <ul>
   <li><a href="HTML.html.fr#ments">Les éléments HTML</a></li>
 </ul>
+<ul>
+  <li><a href="Math.html.fr#Editer">Editer des mathématiques</a>
+    <ul>
+      <li><a href="Math.html.fr#L57">Créer une formule mathématique</a>
+        <ul>
+          <li><a href="Math.html.fr#Nouvelle">Nouvelle formule</a></li>
+          <li><a href="Math.html.fr#XMLMenu">Le sous-menu Math</a></li>
+          <li><a href="Math.html.fr#Palette">La palette Math</a></li>
+          <li><a href="Math.html.fr#Clavier">Entrer des constructions à
+            partir du clavier</a></li>
+        </ul>
+      </li>
+      <li><a href="Math.html.fr#Options">Options d'éditions avancées</a>
+        <ul>
+          <li><a href="Math.html.fr#Caracteres">Entrer des caractères</a></li>
+          <li><a href="Math.html.fr#Row">La construction row </a></li>
+          <li><a href="Math.html.fr#Espacement">Espacement</a></li>
+          <li><a href="Math.html.fr#Speciaux">Caractères spéciaux</a></li>
+          <li><a href="Math.html.fr#Structure">Editer la structure</a></li>
+          <li><a href="Math.html.fr#Vue">Vue structure</a></li>
+          <li><a href="Math.html.fr#liens">Les liens dans MathML</a></li>
+        </ul>
+      </li>
+      <li><a href="Math.html.fr#plus">Un peu plus à propos de MathML</a>
+        <ul>
+          <li><a href="Math.html.fr#Compatib">Compatibilité des
+            navigateurs</a></li>
+          <li><a href="Math.html.fr#Limites">Limites courantes</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 <hr />
 
 <p><a name="There" id="There">Il y a également une brève introduction qui

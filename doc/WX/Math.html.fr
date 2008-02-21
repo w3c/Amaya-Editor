@@ -23,7 +23,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2>Editer des mathématiques</h2>
+<h2 id="Editer">Editer des mathématiques</h2>
 
 <p>La possibilité d'inclure des expressions mathématiques est vraiment
 importante pour les scientifiques. Certains formats informatiques, tels que
@@ -33,8 +33,8 @@ de formules mathématiques dans les pages web est beaucoup plus difficile. On
 utilise généralement des images produites à partir de sources LaTeX : on
 obtient un temps de chargement plus long, une mise en page inadaptée au
 texte environnant, une mauvaise qualité d'impression... De plus, Internet
-est censé être un moyen universel de partage de l'information et un
-language plus puissant que LaTeX est requis pour que les formules soient
+est censé être un moyen universel de partage de l'information et un langage
+plus puissant que LaTeX est requis pour que les formules soient
 compréhensibles par des synthétiseurs vocaux (pour les malvoyants), des
 logiciels mathématiques, des moteurs de recherche...</p>
 
@@ -53,7 +53,7 @@ comportent pas de la même manière envers le MathML : regardez la section
 sur la <a href="#Compatib">compatibilité des navigateurs</a> pour plus
 d'informations.</p>
 
-<h3>Créer une formule mathématique</h3>
+<h3 id="L57">Créer une formule mathématique</h3>
 
 <h4 id="Nouvelle">Nouvelle formule</h4>
 
@@ -67,9 +67,10 @@ logiciels.</p>
 href="Selecting.html.fr#Selecting">placer le point d'insertion</a> à
 l'endroit où vous voulez insérer l'expression, puis de cliquer sur le
 bouton <strong>Math</strong> (le premier bouton de la palette Math) ou de
-sélectionner l'entrée <strong>Insérer une formule</strong> du menu
-<strong>Insérer</strong>. Voici des exemples avec une formule insérée
-directement dans le document XHTML ou à l'intérieur d'une image SVG :</p>
+sélectionner l'entrée <strong>Insérer une formule</strong> du sous-menu
+<strong>Insertion/Math</strong>. Voici des exemples avec une formule
+insérée directement dans le document XHTML ou à l'intérieur d'une image
+SVG :</p>
 
 <p><math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
@@ -179,35 +180,37 @@ directement dans le document XHTML ou à l'intérieur d'une image SVG :</p>
 </svg:svg>
  </p>
 
-<h4 id="XMLMenu">Le menu XML</h4>
+<h4 id="XMLMenu">Le sous-menu Math</h4>
 
-<p>Le sous-menu <strong>Insertion/Math</strong> contient des éléments non
-disponibles dans la palette. Les premiers éléments créent un nouvel
-élément d'un type donné à l'intérieur d'une expression mathématique :
-Texte (<code>mtext</code>), Identificateur (<code>mi</code>), Nombre
-(<code>mn</code>), Opérateur (<code>mo</code>). Ces commandes peuvent aussi
-changer le type d'un élément seul ou d'une séquence d'éléments.</p>
+<p>Le sous-menu <strong>Insertion/Math</strong> contient les éléments de
+présentation définis  dans MathML.</p>
+<ul>
+  <li>Les premiers éléments créent un nouvel élément d'un type donné à
+    l'intérieur d'une expression mathématique : <strong>Texte
+    (mtext)</strong>, <strong>Identificateur (mi)</strong>, <strong>Nombre
+    (mn)</strong>, <strong>Opérateur (mo)</strong>. Ces commandes peuvent
+    aussi changer le type d'un élément seul ou d'une séquence
+  d'éléments.</li>
+  <li>La commande suivante, <strong>Espace (mspace)</strong>, vous permet
+    d'ajouter un espace dans une formule. Pour changer sa taille, vous devez
+    modifier l'attribut <code>width</code>. Voir la section sur l'<a
+    href="#Espacement">espacement</a>.</li>
+  <li>La commande <strong>Caractère (<code>&amp;xxx;</code>)</strong> vous
+    permet d'entrer un caractère qui n'est pas disponible sur le clavier.
+    Elle affiche une boîte de dialogue dans laquelle vous devez entrer le
+    nom du caractère (par exemple <code>alpha</code> pour le caractère grec
+    α).</li>
+  <li>Les deux dernières commandes <strong>InvisibleTimes</strong> and
+    <strong>ApplyFunction</strong> sont utilisés pour entrer les caractères
+    invisibles correspondants. Voir la section sur les <a
+    href="#Speciaux">caractères spéciaux</a>.</li>
+</ul>
 
-<p>La commande suivante, Espace (<code>mspace</code>), vous permet d'ajouter
-un espace dans une formule. Pour changer sa taille, vous devez modifier
-l'attribut <strong>width</strong>. Voir la section sur l'<a
-href="#Espacement">Espacement</a>.</p>
-
-<p>Ces éléments sont suivis de la commande Caractère
-(<code>&amp;xxx;</code>) qui vous permet d'entrer un caractère qui n'est pas
-disponible sur le clavier. Elle affiche une boîte de dialogue dans laquelle
-vous devez entrer le nom du caractère (par exemple <code>alpha</code> pour
-le caractère grec α).</p>
-
-<p>Les deux dernières commandes InvisibleTimes and ApplyFunction sont
-utilisés pour entrer les caractères invisibles correspondants. Voir la
-section sur les <a href="#Speciaux">caractères spéciaux</a>.</p>
-
-<p>Le sous-menu <strong>Insertion/Math</strong> vous permet de créer de
-nouvelles constructions à l'intérieur d'une formule. Si le point
-d'insertion n'est pas dans une formule, un élément Math est d'abord créé
-pour accepter la nouvelle construction. Les constructions disponibles
-sont :</p>
+<p>Les entrées suivantes du sous-menu <strong>Insertion/Math</strong> vous
+permettent de créer de nouvelles constructions à l'intérieur d'une
+formule. Si le point d'insertion n'est pas dans une formule, un élément
+Math est d'abord créé pour accepter la nouvelle construction. Les
+constructions disponibles sont :</p>
 <ul>
   <li>Racine (<code>mroot</code> dans MathML) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
@@ -322,50 +325,49 @@ sont :</p>
         <mi>l</mi>
       </mmultiscripts>
     </math></li>
+  <li>Enfin, l'entrée <strong>Nouvelle matrice (mtable)</strong> vous permet
+    de créer et éditer des tableaux MathML : <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mi>a</mi>
+          </mtd>
+          <mtd>
+            <mi>b</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi>c</mi>
+          </mtd>
+          <mtd>
+            <mi>d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>
+    <p>Vous devez alors choisir le nombre de lignes et de colonnes désirées
+    et tableau vide est créée à la position courante. Il se manipule comme
+    <a href="Tables.html.fr">les tableaux HTML</a> grâce aux commandes
+    disponibles dans le sous-menu <strong>Outils/Editer la table</strong>.</p>
+  </li>
 </ul>
 
-<p>Enfin, l'entrée <strong>Nouvelle matrice</strong> vous permet de créer
-et éditer des tableaux MathML : <math
-xmlns="http://www.w3.org/1998/Math/MathML">
-  <mtable>
-    <mtr>
-      <mtd>
-        <mi>a</mi>
-      </mtd>
-      <mtd>
-        <mi>b</mi>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd>
-        <mi>c</mi>
-      </mtd>
-      <mtd>
-        <mi>d</mi>
-      </mtd>
-    </mtr>
-  </mtable>
-</math></p>
+<h4 id="Palette">La palette Math</h4>
 
-<p>Vous devez alors choisir le nombre de lignes et de colonnes désirées et
-tableau vide est créée à la position courante. Il se manipule comme <a
-href="Tables.html.fr">les tableaux HTML</a> grâce aux commandes disponibles
-dans le menu <strong>XML/Matrices</strong>.</p>
-
-<h4 id="Palette">La palette MathML</h4>
-
-<p>Cliquer sur un boutton de la palette Math insert la construction
-mathématique représentée sur son icône. Les parties en noires sont
-vraiement insérée, les parties en rouge représentent des cases à
-compléter, les parties en bleues sont demandées par le biais d'une fenêtre
-de dialogue. Les parties en vertes sont simplement des informations
+<p>Cliquer sur un bouton de la palette <strong>Math</strong> insère la
+construction mathématique représentée sur son icône. Les parties en
+noires sont vraiment insérée, les parties en rouge représentent des cases
+à compléter, les parties en bleues sont demandées par le biais d'une
+fenêtre de dialogue. Les parties en vertes sont simplement des informations
 supplémentaires qui ne sont pas insérées.</p>
 
 <p>La palette contient toutes les constructions décrites dans le MathML de
 contenu (mais le code produit est un équivalent en MathML de présentation,
 voir la section sur les <a href="#Limites">limites courantes</a>) et même
 plus. Vous pouvez aussi enregistrer vos propres constructions dans un fichier
-mml pour les utiliser ultérieument. Les 6 onglets sont :</p>
+mml pour les utiliser ultérieurement. Les 6 onglets sont :</p>
 <ol>
   <li><ul>
       <li>Constructions diverses 
@@ -680,21 +682,19 @@ mml pour les utiliser ultérieument. Les 6 onglets sont :</p>
       <li>statistique : moyenne, sdev, variance, médiane, mode, moment</li>
     </ul>
   </li>
-  <li>fonctions élémentaires classiques (trigonometriques,
+  <li>fonctions élémentaires classiques (trigonométriques,
   réciproques...)</li>
 </ol>
 
 <h4 id="Clavier">Entrer des constructions à partir du clavier</h4>
 
-<p>Vous n'êtes pas obligé d'utiliser un menu ou la palette
-<strong>Math</strong> pour créer et éditer des expressions mathématiques.
-Vous pouvez entrer des constructions mathématiques directement à partir du
-clavier puisque que chaque entrée du menu a un équivalent sur le clavier
-(les raccourcis sont indiqués dans les menus). Voir les <a
-href="ShortCuts.html.fr">raccourcis</a> clavier courant pour les versions
-Linux, Mac OS X, et Windows. Vous pouvez rentrer des lettres grecques via les
-raccourcis suivants: (Ctrl) g (Ctrl) [lettre] et (Ctrl + Shift) G (Ctrl +
-Shift) [lettre]. </p>
+<p>Vous n'êtes pas obligé d'utiliser le sous-menu <strong>Math</strong> ou
+la <strong>palette Math</strong> pour créer et éditer des expressions
+mathématiques. Vous pouvez entrer des constructions mathématiques
+directement à partir du clavier puisque que chaque entrée du menu a un
+équivalent sur le clavier (les raccourcis sont indiqués dans les menus).
+Voir les <a href="ShortCuts.html.fr">raccourcis</a> clavier courant pour les
+versions Linux, Mac OS X, et Windows.</p>
 
 <p>Vous pouvez aussi utiliser les touches directionelles (flèches) pour
 faire passer le point d'insertion d'une construction à une autre. En
@@ -705,7 +705,7 @@ dénominateur. En outre, si vous utilisez la flèche vers la droite à
 l'intérieur d'une construction non encore complétée, le point d'insertion
 est directement déplacé à la case vide la plus proche.</p>
 
-<h3>Options d'éditions avancées</h3>
+<h3 id="Options">Options d'éditions avancées</h3>
 
 <h4 id="Caracteres">Entrer des caractères</h4>
 
@@ -727,12 +727,12 @@ xmlns="http://www.w3.org/1998/Math/MathML">
 </math></p>
 <ol>
   <li>si vous n'êtes pas dans une expression mathématique, cliquer d'abord
-    sur l'entrée Nouvelle formule du menu <strong>XML</strong> ou sur le
-    bouton <strong>Math</strong> de la palette.</li>
+    sur l'entrée <strong>Insérer une formule</strong> du sous-menu
+    <strong>Insertion/Math</strong>.</li>
   <li>taper cette séquence de 6 caractères : <code>x=2a+b</code></li>
 </ol>
 
-<p>Vous pouvez vérifier dans le <a href="#Vue">vue Structure</a> ou source
+<p>Vous pouvez vérifier dans le <a href="#Vue">vue structure</a> ou source
 la structure générée par Amaya :</p>
 
 <p><code>&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;</code>
@@ -740,15 +740,17 @@ la structure générée par Amaya :</p>
 
 <p>Si le résultat ne correspond pas exactement à ce que vous vouliez, il
 suffit de sélectionner les caractères mal interprétés et de changer leur
-type avec l'une des commandes Texte (mtext), Identificateur (mi), Nombre(mn),
-Opérateur (mo) du menu <strong>XML/Math</strong>.</p>
+type avec l'une des commandes <strong>Texte (mtext)</strong>,
+<strong>Identificateur (mi)</strong>, <strong>Nombre(mn)</strong>,
+<strong>Opérateur (mo)</strong>.</p>
 
 <h4 id="Row">La construction row </h4>
 
-<p>La construction row de la palette est équivalente aux accolades en LaTeX
-: elle vous permet de donner des informations sur la façon dont les
-différentes parties d'une formule sont liées entre elles. Elle n'apparait
-pas à l'écran mais peut avoir un effet indirect sur le rendu.</p>
+<p>La construction <code>row</code> de la palette est équivalente aux
+accolades en LaTeX : elle vous permet de donner des informations sur la
+façon dont les différentes parties d'une formule sont liées entre elles.
+Elle n'apparaît pas à l'écran mais peut avoir un effet indirect sur le
+rendu.</p>
 
 <p>Par exemple, si vous créez des parenthèses, comme dans l'expression
 suivante :</p>
@@ -781,22 +783,24 @@ suivante :</p>
   </mfrac>
 </math></p>
 
-<p>Ici, le (x) doit être contenu dans un element <code>mrow</code>. Vous
-pouvez corriger le problème en sélectionnant la partie de la formule puis
-en cliquant sur la construction row. Vous pouvez aussi directement obtenir le
-<code>mrow</code> souhaité en utilisant la commande Parenthèses du menu
-XML/Math ou de la palette.</p>
+<p>Ici, le <code>(x)</code> doit être contenu dans un élément
+<code>mrow</code>. Vous pouvez corriger le problème en sélectionnant la
+partie de la formule puis en cliquant sur la construction row. Vous pouvez
+aussi directement obtenir le <code>mrow</code> souhaité en utilisant la
+commande <strong>Parenthèses</strong> du menu
+<strong>Insertion/Math</strong> ou le bouton de la palette.</p>
 
 <h4 id="Espacement">Espacement</h4>
 
 <p>Amaya gère les espacements à l'intérieur des expressions
 mathématiques, mais vous avez parfois besoin d'ajouter d'autres espaces.
 Déplacez le curseur à l'endroit où vous voulez insérer un espace et
-choisissez <strong>Eléments math de base/Espace (mspace)</strong> dans le
-menu <strong>XML</strong>. Ceci créer un espace horizontal par défaut. Vous
-pouvez alors changer son attribut <strong>width</strong> pour ajuster sa
-taille ou ajouter d'autres attributs (height, depth, linebreak) pour changer
-l'espacement vertical. Voir la <a
+choisissez <strong>Espace (mspace)</strong> dans le sous-menu
+<strong>Insertion/Math</strong>. Ceci créer un espace horizontal par
+défaut. Vous pouvez alors changer son attribut <code>width</code> pour
+ajuster sa taille ou ajouter d'autres attributs (<code>height</code>,
+<code>depth</code>, <code>linebreak</code>) pour changer l'espacement
+vertical. Voir la <a
 href="http://www.w3.org/TR/MathML2/chapter3.html#N9197">spécification
 MathML</a> pour plus de détails.</p>
 
@@ -804,16 +808,16 @@ MathML</a> pour plus de détails.</p>
 
 <p>Pour entrer les caractères et symboles mathématiques qui ne sont pas
 disponibles au clavier, vous pouvez utiliser la commande <a
-href="#Caracteres">Caractères</a> du menu <strong>XML/Eléments math de
-base</strong>. Tapez le nom du caractère (la liste des noms est disponible
-dans la <a
+href="#Caracteres">Caractères</a> du sous-menu
+<strong>Insertion/Math</strong>. Tapez le nom du caractère (la liste des
+noms est disponible dans la <a
 href="http://www.w3.org/TR/2003/REC-MathML2-20031021/byalpha.html">spécification
 MathML</a>). Au lieu du nom, vous pouvez entrer la valeur Unicode du
 caractère. Pour entrer cette valeur en décimal, commencez par '#'. Pour
 l'entrer en hexadécimal, commencez par '#x'. Pour accélérer la frappe,
 vous pouvez entrer directement une valeur hexadécimal, sans la faire
 précéder de '#x', mais cela peut donner une ambiguïté (comme 'af', par
-exemple). En cas d'ambiguïté, la alpes saisie est interprétée comme un
+exemple). En cas d'ambiguïté, la chaîne saisie est interprétée comme un
 nom de caractère.</p>
 
 <p>Vous pouvez aussi utiliser la palette <strong>Caractères
@@ -826,8 +830,8 @@ document à l'aide du bouton voisin.</p>
 <p>En outre, la spécification MathML dit d'ajouter des caractères
 invisibles pour que la lecture de la formule soit plus facile pour les
 synthétiseurs vocaux. Ils sont automatiquement insérés dans les
-contructions de la palette mais parfois vous devez le faire vous même. Vous
-pouvez utiliser le <strong>menu XML</strong> ou des <a
+constructions de la palette mais parfois vous devez le faire vous même. Vous
+pouvez utiliser le sous-menu <strong>Insertion/Math</strong> ou des <a
 href="ShortCuts.html.fr">raccourcis</a>. Les trois caractères invisibles
 sont :</p>
 <ol>
@@ -863,14 +867,16 @@ sont :</p>
 <p>Si vous voulez changer la structure d'une expression existante, pour
 ajouter par exemple un exposant ou mettre des parenthèses autour d'une
 expression, il suffit de sélectionner dans le document l'expression à
-transformer et d'entrer la nouvelle expression avec la palette Math, le menu
-<strong>XML/Constructions math</strong> ou le <a href="#Clavier">clavier</a>.
-Vous pouvez également utiliser la commande <strong>Transformer</strong> du
-menu <strong>Edition</strong>. Sélectionnez l'expression que vous voulez
+transformer et d'entrer la nouvelle expression avec la palette
+<strong>Math</strong>, le sous-menu <strong>Insertion/Math</strong> ou le <a
+href="#Clavier">clavier</a>.</p>
+
+<p>Vous pouvez également utiliser la commande <strong>Transformer</strong>
+du menu <strong>Outils</strong>. Sélectionnez l'expression que vous voulez
 transformer et la commande <strong>Transformer</strong> affichera un menu
 avec tous les changements possibles. Pour les constructions qui ne font pas
 parties du balisage de présentation MathMP (i.e. seulement disponibles à
-partir de la palette) cliquer sur le bouton déplaçera l'expression
+partir de la palette) cliquer sur le bouton déplacera l'expression
 sélectionnée dans la case vide la plus naturelle.</p>
 
 <p>Éditer la structure est utile pour garder une structure récursive même
@@ -1162,15 +1168,17 @@ W3C :</p>
 fait apparaître la page d'accueil du W3C.</p>
 
 <p>Pour créer un tel lien, il suffit de sélectionner une expression (la
-fraction dans l'exemple ci-dessus), de cliquer sur le bouton Lien de la
-palette XHTML (ou de sélectionner l'entrée "Créer/changer lien" du menu
-Liens), et de cliquer sur la cible désirée. Si la cible est une expression
-dans une formule, vous devez d'abord faire de cette expression une cible. Il
-suffit de sélectionner l'expression ainsi que l'entrée "Créer cible" du
-menu Liens. Ceci crée un attribut <code>id</code> pour l'expression
-cible.</p>
+fraction dans l'exemple ci-dessus), de cliquer sur le bouton <img alt="Link"
+src="../../resources/icons/16x16/XHTML_Link.png" width="16" height="16" /> de
+l'outil <strong>Eléments</strong>, ou de sélectionner l'entrée
+<strong>Créer/changer</strong> lien du menu <strong>Liens</strong>, et de
+cliquer sur la cible désirée. Si la cible est une expression dans une
+formule, vous devez d'abord faire de cette expression une cible. Il suffit de
+sélectionner l'expression ainsi que l'entrée <strong>Créer cible</strong>
+du menu <strong>Liens</strong>. Ceci crée un attribut <code>id</code> pour
+l'expression cible.</p>
 
-<h3>Un peu plus à propos de MathML</h3>
+<h3 id="plus">Un peu plus à propos de MathML</h3>
 
 <h4 id="Compatib">Compatibilité des navigateurs</h4>
 
