@@ -269,6 +269,21 @@ décrits.</p>
     </ul>
   </li>
 </ul>
+<ul>
+  <li><a href="SVG.html.fr#Editer">Editer des graphiques SVG</a></li>
+</ul>
+<ul>
+  <li><a href="Xml.html.fr#Support">Support XML générique</a>
+    <ul>
+      <li><a href="Xml.html.fr#Chargement">Chargement de document XML</a></li>
+      <li><a href="Xml.html.fr#Utilsation">Utilsation du style dans
+      XML</a></li>
+      <li><a href="Xml.html.fr#Edition">Edition de documents XML</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p></p>
 <hr />
 
 <p><a name="There" id="There">Il y a également une brève introduction qui

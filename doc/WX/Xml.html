@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -14,7 +14,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="SVG.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
@@ -24,9 +25,9 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2>XML Support</h2>
+<h2 id="Support">XML Support</h2>
 
-<h3>Loading XML documents</h3>
+<h3 id="Loading">Loading XML documents</h3>
 
 <p>Amaya can display any well formed XML document and associate a CSS
 stylesheet with these documents.</p>
@@ -38,26 +39,25 @@ associated DTD, it can't verify the validity of any XML document and can't
 get specific information about elements and attributes and about their
 organization within the document.</p>
 
-<h3>Using Style in XML</h3>
+<h3 id="Using">Using style in XML</h3>
 
 <p>If the document is associated to a DTD that Amaya does not understand, the
 content of the document will be formatted and displayed in a way that
 reflects the structure of the document. If there is no style indication, the
 content of each element will be shown as a <strong>block</strong>. However,
 for clarity, the elements that have at least one child of type "Text" are
-considered to be of type <strong>inline</strong> and displayed accordingly.
-Amaya can use associate a CSS style sheet. You can also modify the
-presentation of the document if you associate a CSS style sheet to it by
-means of a <strong><a
+considered to be of type <em>inline</em> and displayed accordingly. Amaya can
+use associate a CSS style sheet. You can also modify the presentation of the
+document if you associate a CSS style sheet to it by means of a <strong><a
 href="http://www.w3.org/1999/06/REC-xml-stylesheet-19990629/">xml-stylesheet
 PI</a></strong> (processing instruction) statement.</p>
 
-<h3>Editing XML documents</h3>
+<h3 id="Editing">Editing XML documents</h3>
 
 <p>The edition of generic XML documents in Amaya is still experimental. For
 the supported samples (XHTML, SVG, MathML), the edition follows the same
 rules as for the corresponding document type. For the other elements, only
-the <strong>Return</strong> command is available in this version :</p>
+the <kbd>Enter</kbd> command is available in this version :</p>
 <ul>
   <li>If the selection is within an element, Amaya cuts the selected element
     and creates a new element with the same type next to it.</li>
@@ -67,9 +67,9 @@ the <strong>Return</strong> command is available in this version :</p>
     same type for the parent of the selected element.</li>
 </ul>
 
-<p>You can also edit your XML documents in the <strong>Source View</strong>
+<p>You can also edit your XML documents in the <strong>Source view</strong>
 and use the <strong>Resynchronize</strong> command. Your modifications are
-then reported in the <strong>Formatted view.</strong></p>
+then reported in the formatted view.</p>
 </div>
 </body>
 </html>
