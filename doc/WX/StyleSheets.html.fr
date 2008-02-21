@@ -13,7 +13,8 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Xml.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -22,46 +23,162 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#L2881">Créer des propriétés CSS</a></li>
-  <li><a href="#feuilles1">Les feuilles de style CSS externes et
-    utilisateur</a> 
-    <ul>
-      <li><a href="#L90">Gérer des feuilles de style CSS externes</a></li>
-    </ul>
-  </li>
-  <li><a href="#Visualiser">Visualiser le style appliqué</a></li>
-  <li><a href="#Associer">Associer une classe à un élément</a></li>
-  <li><a href="#L554">Créer un style générique pour un élément ou une
-    classe</a></li>
-  <li><a href="#L613">Créer des éléments de style HTML</a> 
-    <ul>
-      <li><a href="#Types">Eléments type information</a></li>
-      <li><a href="#L895">Eléments caractère</a></li>
-      <li><a href="#Supprimer">Supprimer un élément style</a></li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="Style">
-<h2 id="Cascades"><a name="L1023" id="L1023">Cascades des feuilles de style
-(CSS)</a></h2>
+<h2 id="Cascades">Appliquer du style à un document</h2>
 
-<p>Le menu <strong>Style</strong> vous permet de changer l'apparence de vos
+<p>Le menu <strong>Format</strong> vous permet de changer l'apparence de vos
 documents en utilisant les cascades des feuilles de style (CSS).</p>
 
-<h3 id="L2881">Créer des propriétés CSS</h3>
+<h3>Appliquer un thème</h3>
 
-<p>L'entrée <strong>Style CSS</strong> du menu <strong>Style</strong>, ou le
-bouton <img alt="couleur" src="../../resources/icons/16x16/colorize.png" />,
-permet d'engendrer une liste de propriétés CSS. Cette entrée de menu affiche
-une boite de dialogue avec 4 différents onglets: Caractères, Couleurs,
-Boites, Format.</p>
+<p>Amaya fournit par défaut deux thèmes (Classique, Moderne) qui vous
+permettent de changer globalement la présentation de votre document.</p>
+
+<h3>Appliquer du style spécifique</h3>
+
+<h3 id="Associer">Associer une classe à un élément</h3>
+
+<p>Toutes les classes disponibles pour un document sont listées dans l'outil
+<strong>Appliquer classe</strong>.</p>
+
+<p class="ProcedureCaption">Pour appliquer une classe à un élément :</p>
+<ol>
+  <li>Choisissez la bonne entrée dans l'outil <strong>Appliquer
+    classe</strong>.</li>
+  <li>Si vous voulez sélectionner la classe appliquée à un autre élément,
+    vous devez sélectionner cet élément, puis cliquer sur le bouton <img
+    alt="Refresh" src="../../resources/icons/16x16/refresh.png" /> . La liste
+    d'<strong>Appliquer classe</strong> est mise à jour et la classe
+    appliquée est sélectionnée.</li>
+  <li>Sélectionnez un fragment de texte ou un élément.<br />
+    Pour sélectionner un élément, vous devez cliquer dans l'élément, puis
+    utiliser la touche <kbd>F2</kbd> jusqu'à ce que la ligne en bas de la
+    fenêtre affiche son type en première position.</li>
+  <li>Cliquer sur le bouton <img alt="ok"
+    src="../../resources/icons/16x16/ok.png" /> pour appliquer la classe à la
+    sélection courante.<br />
+    Si un fragment de texte est sélectionné, Amaya engendrera un élément
+    <code>span</code> pour englober le texte courant et l'attribut
+    <code>class</code> sera attaché à ce nouvel élément
+  <code>span</code>.</li>
+</ol>
+
+<p>Pour associer une classe ( attribut <code>class</code>) à un élément, vous
+pouvez également utiliser l'outil <a
+href="Attributes.html.fr#L1073"><strong>Attributs</strong></a>. Cet outil
+Attributs permet aussi de retirer l'attribut <code>class</code> d'un élément
+ou de le modifier (l'attribut <code>class</code> se manipule comme un autre
+attribut).</p>
+
+<p class="ProcedureCaption">Pour retirer la classe d'un élément :</p>
+<ul>
+  <li>Vous pouvez éditer l'attribut <code>class</code> dans l'outils
+    <strong>Attributs</strong>. 
+    <p>Quand l'élément est sélectionné, vous cliquez sur le [X] de l'entrée
+    pour supprimer l'attribut <strong>class</strong>, ou vous cliquez sur
+    l'entrée et éditez sa valeur puis confirmez avec le bouton appliquer
+    (<img alt="ok" src="../../resources/icons/16x16/ok.png" /> ).</p>
+  </li>
+  <li>Vous pouvez aussi retirer ou éditer l'attribut <strong>class</strong>
+    dans la vue structure. 
+    <p>Pour retirer l'attribut <strong>class</strong>, vous cliquez dans la
+    valeur, <code>F2</code> pour sélectionner la valeur entière, puis deux
+    <code>Delete</code> pour détruire l'attribut.</p>
+    <p></p>
+  </li>
+</ul>
+
+<h3 id="L613"><a name="L1371" id="L1371">Créer des éléments de style
+HTML</a></h3>
+
+<p>HTML définit certains éléments de niveau de caractère qui permettent
+d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
+<strong>Insertion</strong> permettent d'éditer ces éléments HTML.</p>
+
+<h4 id="Types">Eléments type information</h4>
+
+<p>La commande<strong>Types information</strong> du menu
+<strong>Insertion</strong> présente un sous-menu offrant un choix d'éléments
+HTML qui définissent des styles abstraits.</p>
+
+<p class="ProcedureCaption">Pour appliquer un des éléments type
+information :</p>
+<ol>
+  <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
+  <li>Choisissez une commande dans ce menu <strong>Types
+    information</strong>. 
+    <p>La chaîne de caractères sélectionnée reçoit le style correspondant.</p>
+  </li>
+</ol>
+
+<p>Cinq de ces éléments sont également disponibles dans l'outil Eléments :
+<em>em</em> (<img src="../../resources/icons/16x16/XHTML_I.png"
+alt="Bouton Mise en evidence" /> ), <strong>stong</strong> (<img
+src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" /> ),
+<code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
+alt="Bouton Code" /> ), <ins>ins</ins> (<img alt="Bouton Insertion"
+src="../../resources/icons/16x16/XHTML_ins.png" /> ), <del>del</del> (<img
+alt="Bouton Suppression" src="../../resources/icons/16x16/XHTML_del.png" />
+).</p>
+
+<h4 id="L895">Eléments caractères</h4>
+
+<p>La commande <strong>Éléments caractères</strong> du menu
+<strong>Insertion</strong> offre un autre menu changeant le style du
+texte.</p>
+
+<p class="ProcedureCaption">Pour appliquer un des éléments caractères :</p>
+<ol>
+  <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
+  <li>Choisissez une commande dans ce menu <strong>Eléments
+    caractères</strong>. 
+    <p>La chaîne de caractères sélectionnée reçoit le style correspondant.</p>
+  </li>
+</ol>
+
+<p>Deux de ces éléments sont également disponibles dans l'outil Elément : sup
+(<img alt="Bouton Exposant" src="../../resources/icons/16x16/XHTML_sup.png"
+/> ), sub (<img alt="Bouton Indice"
+src="../../resources/icons/16x16/XHTML_sub.png" /> ).</p>
+
+<h4 id="Supprimer">Supprimer un élément type information ou charactères</h4>
+
+<p>Toutes les commandes des sous-menus <strong>Types</strong>
+<strong>information</strong> et <cite></cite><strong>Éléments
+caractères</strong> s'annulent si elles sont appliquées de nouveau.</p>
+
+<p class="ProcedureCaption">Pour supprimer un élément style :</p>
+<ol>
+  <li>Sélectionnez l'élément que vous voulez supprimer.</li>
+  <li>Appliquez de nouveau la commande du sous-menu <strong>Types
+    information</strong> ou <strong>Eléments caractères</strong> du menu
+    <strong>Insertion</strong>, ou dans l'outil Eléments : <em>em</em> (<img
+    src="../../resources/icons/16x16/XHTML_I.png"
+    alt="Bouton Mise en evidence" /> ), <strong>strong</strong> (<img
+    src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />
+    ), <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
+    alt="Bouton Code" /> ), <ins>ins</ins> (<img alt="Bouton Insertion"
+    src="../../resources/icons/16x16/XHTML_ins.png" /> ), <del>del</del>
+    (<img alt="Bouton Suppression"
+    src="../../resources/icons/16x16/XHTML_del.png" /> ), sup (<img
+    alt="Bouton Exposant" src="../../resources/icons/16x16/XHTML_sup.png" />
+    ), sub (<img alt="Bouton Indice"
+    src="../../resources/icons/16x16/XHTML_sub.png" /> ).</li>
+</ol>
+
+<h3 id="L2881">Utiliser l'éditeur de style</h3>
+
+<p class="Note"><strong>Note :</strong> L'éditeur de style n.est pas
+disponible dans la version Lite d'Amaya</p>
+
+<p>L'entrée <strong>Style CSS</strong> du menu <strong>Format</strong>, ou le
+bouton <img alt="css" src="../../resources/icons/22x22/css.png" />, permet
+d'engendrer une liste de propriétés CSS. Cette entrée de menu affiche une
+boite de dialogue avec 4 différents onglets: Caractères, Couleurs, Boites,
+Format.</p>
 
 <p>Quand l'utilisateur a positionne un ensemble de propriétés, il peut
-<strong>appliquer</strong> ces propriétés à la sélection courante :</p>
+<strong>Appliquer</strong> ces propriétés à la sélection courante :</p>
 <ul>
   <li>Si la sélection se trouve dans une vue formatée, Amaya engendrera des
     éléments span avec un attribut style ou un attribut style sur l'élément
@@ -85,10 +202,10 @@ la même feuille de style s'applique à plusieurs documents affichés, Amaya ne
 charge qu'une seule instance de la feuille de style.</p>
 
 <p>L'utilisateur peut définir une feuille de style spécifique qui s'applique
-à tous les documents chargés. Cette feuille de style est appelée
-<strong>Feuille de Style Utilisateur</strong>. c'est le fichier local
-<strong>amaya.css</strong> conservé dans l'environnement de l'utilisateur (le
-<a href="Configure.html.fr#AmayaHome">répertoire d'AmayaHome</a>).</p>
+à tous les documents chargés. Cette feuille de style est appelée <em>feuille
+de style utilisateur</em>. c'est le fichier local <strong>amaya.css</strong>
+conservé dans l'environnement de l'utilisateur (le <a
+href="Configure.html.fr#AmayaHome">répertoire d'AmayaHome</a>).</p>
 
 <p>Par exemple si vous préférez afficher les document en Helvetica et
 imprimer avec une police de caractères de petite taille, vous pouvez créer
@@ -103,7 +220,7 @@ votre feuille de style utilisateur avec les règles CSS suivantes :</p>
 <h4 id="L90"><a name="Managing">Gérer des feuilles de style CSS
 externes</a></h4>
 
-<p>Le menu <strong>Style</strong> donne accès à une série de commandes qui
+<p>Le menu <strong>Format</strong> donne accès à une série de commandes qui
 permettent de contrôler les feuilles de style CSS externes et de
 l'utilisateur :</p>
 <ul>
@@ -171,57 +288,6 @@ modifie la sélection en sélectionnant dans le chemin de la barre d'état
 affiché en bas de la fenêtre, les propriétés CSS appliquées sont aussi mises
 à jour.</p>
 
-<h3 id="Associer">Associer une classe à un élément</h3>
-
-<p>Toutes les classes disponibles pour un document sont listées dans l'outil
-<strong>Appliquer classe</strong>.</p>
-
-<p class="ProcedureCaption">Pour appliquer une classe à un élément :</p>
-<ol>
-  <li>Choisissez la bonne entrée dans l'outil <strong>Appliquer
-    classe</strong>.</li>
-  <li>Si vous voulez sélectionner la classe appliquée à un autre élément,
-    vous devez sélectionner cet élément, puis cliquer sur le bouton <img
-    alt="Refresh" src="../../resources/icons/16x16/refresh.png" /> . La liste
-    d'<strong>Appliquer classe</strong> est mise à jour et la classe
-    appliquée est sélectionnée.</li>
-  <li>Sélectionnez un fragment de texte ou un élément.<br />
-    Pour sélectionner un élément, vous devez cliquer dans l'élément, puis
-    utiliser la touche F2 jusqu'à ce que la ligne en bas de la fenêtre
-    affiche son type en première position.</li>
-  <li>Cliquer sur le bouton <img alt="ok"
-    src="../../resources/icons/16x16/ok.png" /> pour appliquer la classe à la
-    sélection courante.<br />
-    Si un fragment de texte est sélectionné, Amaya engendrera un élément
-    <strong>span</strong> pour englober le texte courant et l'attribut
-    <strong>class</strong> sera attaché à ce nouvel élément
-    <strong>span</strong>.</li>
-</ol>
-
-<p>Pour associer une classe ( attribut <strong>class</strong>) à un élément,
-vous pouvez également utiliser l'outil <a
-href="Attributes.html.fr#L1073"><strong>Attributs</strong></a>. Cet outil
-Attributs permet aussi de retirer l'attribut <strong>class</strong> d'un
-élément ou de le modifier (l'attribut <strong>class</strong> se manipule
-comme un autre attribut).</p>
-
-<p class="ProcedureCaption">Pour retirer la classe d'un élément :</p>
-<ul>
-  <li>Vous pouvez éditer l'attribut <strong>class</strong> dans l'outils
-    <strong>Attributs</strong>. 
-    <p>Quand l'élément est sélectionné, vous cliquez sur le [X] de l'entrée
-    pour supprimer l'attribut <strong>class</strong>, ou vous cliquez sur
-    l'entrée et éditez sa valeur puis confirmez avec le bouton appliquer
-    (<img alt="ok" src="../../resources/icons/16x16/ok.png" /> ).</p>
-  </li>
-  <li>Vous pouvez aussi retirer ou éditer l'attribut <strong>class</strong>
-    dans la vue structure. 
-    <p>Pour retirer l'attribut <strong>class</strong>, vous cliquez dans la
-    valeur, <code>F2</code> pour sélectionner la valeur entière, puis deux
-    <code>Delete</code> pour détruire l'attribut.</p>
-  </li>
-</ul>
-
 <h3 id="L554">Créer un style générique pour un élément ou une classe</h3>
 
 <p>Quand un attribut <strong>style</strong> a été associé à un élément, vous
@@ -239,7 +305,7 @@ une classe :</p>
     <p></p>
   </li>
   <li>Choisissez <strong>Créer une règle</strong> depuis le menu
-    <strong>Style</strong>. Une boîte de dialogue surgit et visualise une
+    <strong>Format</strong>. Une boîte de dialogue surgit et visualise une
     liste de sélecteurs CSS. Cette liste inclus toutes les classes qui sont
     définies pour le document courant (y compris les classes définies par les
     feuilles de style liées au document), ainsi que le type de l'élément
@@ -259,83 +325,6 @@ une classe :</p>
 <p>Quand vous avez créé une nouvelles classes avec la commande <strong>Créer
 une règle</strong>, cette classe est automatiquement ajoutée à la liste de
 l'outil <strong>Appliquer une classe</strong>.</p>
-
-<h3 id="L613"><a name="L1371" id="L1371">Créer des éléments de style
-HTML</a></h3>
-
-<p>HTML définit certains éléments de niveau de caractère qui permettent
-d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
-<strong>Insertion</strong> permettent d'éditer ces éléments HTML.</p>
-
-<h4 id="Types">Eléments type information</h4>
-
-<p>La commande<strong>Types information</strong> du menu
-<strong>Insertion</strong> présente un sous-menu offrant un choix d'éléments HTML
-qui définissent des styles abstraits.</p>
-
-<p class="ProcedureCaption">Pour appliquer un des éléments type
-information :</p>
-<ol>
-  <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
-  <li>Choisissez une commande dans ce menu <strong>Types
-    information</strong>. 
-    <p>La chaîne de caractères sélectionnée reçoit le style correspondant.</p>
-  </li>
-</ol>
-
-<p>Cinq de ces éléments sont également disponibles dans l'outil Eléments :
-<em>em</em> (<img src="../../resources/icons/16x16/XHTML_I.png"
-alt="Bouton Mise en evidence" /> ), <strong>stong</strong> (<img
-src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" /> ),
-<code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
-alt="Bouton Code" /> ), <ins>ins</ins> (<img alt="Bouton Insertion"
-src="../../resources/icons/16x16/XHTML_ins.png" /> ), <del>del</del> (<img
-alt="Bouton Suppression" src="../../resources/icons/16x16/XHTML_del.png" />
-).</p>
-
-<h4 id="L895">Eléments caractères</h4>
-
-<p>La commande <strong>Éléments caractères</strong> du menu
-<strong>Insertion</strong> offre un autre menu changeant le style du texte.</p>
-
-<p class="ProcedureCaption">Pour appliquer un des éléments caractères :</p>
-<ol>
-  <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
-  <li>Choisissez une commande dans ce menu <strong>Eléments
-    caractères</strong>. 
-    <p>La chaîne de caractères sélectionnée reçoit le style correspondant.</p>
-  </li>
-</ol>
-
-<p>Deux de ces éléments sont également disponibles dans l'outil Elément : sup
-(<img alt="Bouton Exposant" src="../../resources/icons/16x16/XHTML_sup.png"
-/> ), sub (<img alt="Bouton Indice"
-src="../../resources/icons/16x16/XHTML_sub.png" /> ).</p>
-
-<h4 id="Supprimer">Supprimer un élément type information ou charactères</h4>
-
-<p>Toutes les commandes des sous-menus <strong>Types</strong>
-<strong>information</strong> et <cite></cite><strong>Éléments
-caractères</strong> s'annulent si elles sont appliquées de nouveau.</p>
-
-<p class="ProcedureCaption">Pour supprimer un élément style :</p>
-<ol>
-  <li>Sélectionnez l'élément que vous voulez supprimer.</li>
-  <li>Appliquez de nouveau la commande du sous-menu <strong>Types
-    information</strong> ou <strong>Eléments caractères</strong> du menu
-    <strong>Insertion</strong>, ou dans l'outil Eléments : <em>em</em> (<img
-    src="../../resources/icons/16x16/XHTML_I.png"
-    alt="Bouton Mise en evidence" /> ), <strong>strong</strong> (<img
-    src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />
-    ), <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
-    alt="Bouton Code" /> ), <ins>ins</ins> (<img alt="Bouton Insertion"
-    src="../../resources/icons/16x16/XHTML_ins.png" /> ), <del>del</del>
-    (<img alt="Bouton Suppression"
-    src="../../resources/icons/16x16/XHTML_del.png" /> ), sup (<img
-    alt="Bouton Exposant" src="../../resources/icons/16x16/XHTML_sup.png" />
-    ), sub (<img alt="Bouton Indice"
-    src="../../resources/icons/16x16/XHTML_sub.png" /> ).</li>
-</ol>
 </div>
 </body>
 </html>
