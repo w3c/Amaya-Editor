@@ -26,14 +26,13 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <div class="toc">
 <ul>
-  <li><a href="#Selecting">Selecting</a> 
+  <li><a href="#Selecting">Selecting</a>
     <ul>
-      <li><a href="#Selecting1">Selecting with the Mouse</a></li>
-      <li><a href="#Selecting5">Selecting with the path of the status
-      bar</a></li>
-      <li><a href="#Selecting2">Selecting with the Keyboard</a></li>
-      <li><a href="#Selecting3">Selecting Images</a></li>
-      <li><a href="#Selecting4">Selecting in the Structure View</a></li>
+      <li><a href="#Selecting1">Selecting with the mouse</a></li>
+      <li><a href="#Selecting5">Selecting in the status bar</a></li>
+      <li><a href="#Selecting2">Selecting with the keyboard</a></li>
+      <li><a href="#Selecting3">Selecting images</a></li>
+      <li><a href="#Selecting4">Selecting in the structure view</a></li>
     </ul>
   </li>
 </ul>
@@ -53,18 +52,19 @@ document structure is complex.</p>
 <p>For example, selecting a word in this sentence displays the following
 message in the status bar:</p>
 
-<p><code>html&gt;body&gt;div&gt;p</code></p>
+<p><code>html &gt; body &gt; div &gt; p</code></p>
 
-<p>meaning that the thing selected is within a <code>p</code> element, which
-is within a <code>div</code> element in the <code>body</code> of the
-<code>html</code> document.</p>
+<p>meaning that the selection is within a <code>p</code> element, which is
+within a <code>div</code> element in the <code>body</code> of the
+<code>html</code> document. This sequence of element names is called a
+path.</p>
 
-<p>Selecting <strong>that structure element</strong> (for example click on
-the word "structure", then press <kbd>F2</kbd>) displays</p>
+<p>Selecting <strong>this character string</strong> (for example click on the
+word "character") displays</p>
 
-<p><code>html&gt;body&gt;div&gt;p&gt;strong</code></p>
+<p><code>html &gt; body &gt; div &gt; p &gt; strong</code></p>
 
-<h3 id="Selecting1">Selecting with the Mouse</h3>
+<h3 id="Selecting1">Selecting with the mouse</h3>
 <ul>
   <li>To set the insertion point, click with the left mouse button.<br />
   </li>
@@ -81,34 +81,34 @@ the word "structure", then press <kbd>F2</kbd>) displays</p>
   <li>To extend the selection, click with the left mouse button while holding
     down the <kbd>Shift</kbd> key.</li>
   <li>To select a structure element, click within the element you want and
-    then select the desired structure level via the keyboard as described
-    below</li>
+    then select the desired structure level via the keyboard as described <a
+    href="#Selecting2">below</a></li>
 </ul>
 
-<h3 id="Selecting5">Selecting with the status bar</h3>
+<h3 id="Selecting5">Selecting in the status bar</h3>
 <ul>
   <li>To set the insertion point, click with the left mouse button.<br />
   </li>
-  <li>Click in the status bar (at the bottom of the window) on a path element
-    to select an ancestor (and everything in them).<br />
+  <li>Click in the status bar (at the bottom of the window) on an element
+    name to select an ancestor (and everything in it).<br />
     In the previous example, when cliking on <code>div</code> in the status
     bar, the enclosing division is selected 
-    <p><samp>html&gt;body&gt;<span
-    style="color: #ff0000;">div</span>&gt;p&gt;strong<br />
+    <p><samp>html &gt; body &gt; <span style="color: #ff0000;">div</span>
+    &gt; p &gt; strong<br />
     </samp></p>
   </li>
   <li>When the selection is changed this way, the path is not updated and you
-    may adjust the final selection on any enclosing or child element.</li>
+    may adjust the final selection on any ancestor or descendant element.</li>
 </ul>
 
-<h3 id="Selecting2">Selecting with the Keyboard</h3>
+<h3 id="Selecting2">Selecting with the keyboard</h3>
 
 <p class="ProcedureCaption">Selecting a structure element</p>
 <ul>
   <li>Press the <kbd>F2</kbd> key to select the parent element in the
     document structure. Press that key several times to select ancestors (and
     everything in them) up the structure towards the root.</li>
-  <li>Press <kbd>Shift F2</kbd> to select the first child of the current
+  <li>Press <kbd>Shift-F2</kbd> to select the first child of the current
     element.</li>
   <li>Press <kbd>F4</kbd> to select the next element at the same level
     (sibling), or at the level of the parent element if there is no next
@@ -125,36 +125,30 @@ the word "structure", then press <kbd>F2</kbd>) displays</p>
   window.</li>
   <li>To move the insertion point to the beginning or the end of the line,
     use keys <kbd>Home</kbd> and <kbd>End</kbd> respectively.</li>
-  <li>To move the insertion point to the beginning of the previous ou next
-    word, use keys <kbd>Control-Left</kbd> et <kbd>Control-Right</kbd>.</li>
+  <li>To move the insertion point to the beginning of the previous or next
+    word, use keys <kbd>Ctrl-&larr;</kbd> and <kbd>Ctrl-&rarr;</kbd>.</li>
 </ul>
 
 <p class="ProcedureCaption">Extending/shrinking the selection</p>
 <ul>
-  <li>To extend or shrink the current selection, use the Shift key together
-    with the arrow keys (<kbd>Shift-Left</kbd>, <kbd>Shift-Right</kbd>,
-    <kbd>Shift-Up</kbd>, <kbd>Shift-Down</kbd>).</li>
-  <li>To extend the selection to the current word, use <kbd>Alt-Enter</kbd>.
-    If the current selection is within a link, this command <a
-    href="Browsing.html#Activating1">activates the link</a> instead of
-    selecting the word.</li>
+  <li>To extend or shrink the current selection, use the <kbd>Shift</kbd> key
+    together with the arrow keys (<kbd>Shift-&larr;</kbd>,
+    <kbd>Shift-&rarr;</kbd>, <kbd>Shift-&uarr;</kbd>,
+    <kbd>Shift-&darr;</kbd>).</li>
   <li>To extend the current selection to the beginning of the previous word
-    or to the end of the next word, use <kbd>Shift-Control-Left</kbd> and
-    <kbd>Shift-Control-Right</kbd>.</li>
+    or to the end of the next word, use <kbd>Shift-Ctrl-&larr;</kbd> and
+    <kbd>Shift-Ctrl-&rarr;</kbd>.</li>
 </ul>
 
 <p class="ProcedureCaption">Moving across the document</p>
 <ul>
-  <li>To scroll the document one line up or down, use <kbd>Control-Up</kbd>
-    and <kbd>Control-Down</kbd>.</li>
+  <li>To scroll the document one line up or down, use <kbd>Ctrl-&uarr;</kbd>
+    and <kbd>Ctrl-&darr;</kbd>.</li>
   <li>To skip to the befinning or the end of the document, use
-    <kbd>Control-Home</kbd> and <kbd>Control-End</kbd>.</li>
+    <kbd>Ctrl-Home</kbd> and <kbd>Ctrl-End</kbd>.</li>
 </ul>
 
-<h3 id="Selecting3">Selecting Images</h3>
-
-<p>Use the following procedures to select an image, or to move the cursor to
-left or right of an image</p>
+<h3 id="Selecting3">Selecting images</h3>
 
 <p class="ProcedureCaption">To select an entire image:</p>
 <ol>
@@ -165,8 +159,8 @@ left or right of an image</p>
     element along with all its attributes.</li>
 </ol>
 
-<p class="ProcedureCaption">To place the cursor to the left or right of the
-image:</p>
+<p class="ProcedureCaption">To place the cursor to the left or to the right
+of an image:</p>
 <ul>
   <li>Click the left part of an image to move the cursor to the left edge of
     that image. This enables you to type text before the image.</li>
@@ -175,15 +169,14 @@ image:</p>
 </ul>
 
 <p class="ProcedureNote"><strong>Note:</strong>    When using the arrow keys,
-the cursor moves from one side of the image, to the image itself (selecting
-it), and then to the other side.</p>
+the cursor moves to one side of the image, and then to the other side.</p>
 
-<h3 id="Selecting4">Selecting in the Structure View</h3>
+<h3 id="Selecting4">Selecting in the structure view</h3>
 
-<p>The <a href="Views.html">structure view</a> is especially convenient for
+<p>The <a href="Views.html">Structure view</a> is especially convenient for
 quickly selecting large elements or groups of elements within a document.</p>
 
-<p class="ProcedureCaption">To select an element:</p>
+<p class="ProcedureCaption">To select an element in the Structure view:</p>
 <ul>
   <li>There are three ways to select a large element like a complex table or
     a long list with a single click: Click the blue label that represents the
@@ -191,18 +184,18 @@ quickly selecting large elements or groups of elements within a document.</p>
     vertical line associated with that element.</li>
 </ul>
 
-<p class="ProcedureCaption">To select a text character or text string:</p>
+<p class="ProcedureCaption">To select a character or a text string:</p>
 <ul>
-  <li>Click a text character in the Structure view to select only that
-    character. To select a text string, click and drag across the text.</li>
+  <li>Click a character in the Structure view to select only that character.
+    To select a text string, click and drag across the text.</li>
 </ul>
 
 <p class="ProcedureCaption">To select an attribute value:</p>
 <ul>
-  <li>In Structure view, attribute values that can be edited from the
+  <li>In the Structure view, attribute values that can be edited from the
     keyboard are displayed in purple. Click and drag across the attribute
-    value to select it. You cannot extend this type of text selection outside
-    the attribute value, but you can edit the value.</li>
+    value to select it. You cannot extend this text selection outside the
+    attribute value, but you can edit the value.</li>
 </ul>
 
 <p></p>

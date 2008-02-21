@@ -24,16 +24,16 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
 
 <div class="toc">
 <ul>
-  <li><a href="#Browsing">Browsing with Amaya</a>
+  <li><a href="#Browsing">Browsing with Amaya</a> 
     <ul>
-      <li><a href="#Activating1">Activating a Link</a></li>
-      <li><a href="#Access">Access Keys</a></li>
-      <li><a href="#Target">Target Anchors</a></li>
-      <li><a href="#Moving">Moving Backward and Forward</a></li>
+      <li><a href="#Activating1">Activating a link</a></li>
+      <li><a href="#Access">Access keys</a></li>
+      <li><a href="#Target">Target anchors</a></li>
+      <li><a href="#Moving">Moving backward and forward</a></li>
       <li><a href="#Reloading">Reloading a page</a></li>
     </ul>
   </li>
-  <li><a href="#Using">Using forms</a>
+  <li><a href="#Using">Using forms</a> 
     <ul>
       <li><a href="#Simple">Simple menus</a></li>
       <li><a href="#Menus">Menus with multiple selections</a></li>
@@ -48,20 +48,19 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
 <p>Amaya is mainly an editor with browsing capabilities. It allows you to
 edit and browse Web documents simultaneously. Browsing with Amaya is similar
 to browsing with other Web browsers except for <a
-href="#Activating">activating a Link</a> and <a href="#Using">using
+href="#Activating1">activating a link</a> and <a href="#Using">using
 forms</a>.</p>
 
-<p>Amaya allows you to to display and edit HTML documents as well as some XML
+<p>Amaya allows you to display and edit HTML documents as well as some XML
 document types: XHTML, MathML (mathematical expressions) and SVG (gaphics).
 It also allows you to access other XML document types and to display their
-content according to attached CSS style sheets. For these XML documents some
+content according to their CSS style sheets. For these XML documents some
 editing functions are available.</p>
 
-<h3 id="Activating1">Activating a Link</h3>
+<h3 id="Activating1">Activating a link</h3>
 
-<p>Links are usually displayed in blue. Because Amaya is both a browser and
-an editor, you get different results when you single-click, double-click, or
-right-click a link.</p>
+<p>Because Amaya is both a browser and an editor, you get different results
+when you single-click, double-click, or right-click a link.</p>
 <ul>
   <li><kbd>Single-click</kbd> a link to move the cursor to that position in
     the document. The status bar displays the expanded URI of the link. You
@@ -82,13 +81,13 @@ right-click a link.</p>
     or a new window (a pop-up menu allows you to choose).</li>
 </ul>
 
-<p class="Note">This behavior can be changed through the
-<strong>Browsing</strong> tab under the <strong>Preferences</strong> dialog.
-By changing the option <strong>Double click activates link</strong>, you can
-browse documents with a single click as you would in a traditional Web
-browser. However, you will not be able to edit the content of a link by
-clicking it, but you can move the cursor within a link with the arrow
-keys.<br />
+<p class="Note">This behavior can be changed through the <strong><a
+href="Configure.html#Browsing">Browsing</a></strong> tab under the
+<strong>Preferences</strong> dialog. By changing option <strong>Double click
+activates link</strong>, you can browse documents with a single click as you
+would in a traditional Web browser. You will then not be able to edit the
+content of a link by clicking it, but you can move the cursor within a link
+with the arrow keys.<br />
 Other browsing preferences such as whether images should be loaded or not,
 whether CSS style sheets should be applied or not, can be set in the
 <strong>Browsing Preferences</strong> <a
@@ -100,7 +99,7 @@ document. <kbd>Shift Tab</kbd> allows you to move to the previous link or
 form field. <kbd>Alt &darr;</kbd> activates the current link. You can choose
 <a href="ShortCuts.html">other keys</a> to perform these commands.</p>
 
-<h3 id="Access">Access Keys</h3>
+<h3 id="Access">Access keys</h3>
 
 <p>Access keys provide shortcuts for moving the cursor to a form field, an
 area, or a link. This kind of access is crucial to people with motor
@@ -114,15 +113,16 @@ useful.</p>
 
 <p>For example, if you associate the <code>accesskey</code> attribute with a
 link in a document using <code>accesskey="n"</code> or
-<code>accesskey="N"</code>, command <kbd>Alt accesskey</kbd> (<kbd>Alt
-n</kbd> or <kbd>Alt N</kbd>) will activate that link (on MacOS X, use
-<kbd>Ctrl</kbd> instead if <kbd>Alt</kbd>). If you associate the
-<code>accesskey</code> attribute to a form element, pressing <kbd>Alt
-accesskey</kbd> moves the focus to that element (or to the following element
-if associated with a <code>label</code> or <code>legend</code> element).</p>
+<code>accesskey="N"</code>, command <kbd>Alt-accesskey</kbd>
+(<kbd>Alt-n</kbd> or <kbd>Alt-N</kbd> in this example) will activate that
+link (on MacOS X, use <kbd>Ctrl</kbd> instead of <kbd>Alt</kbd>). If the
+<code>accesskey</code> attribute is associated to a form element, pressing
+<kbd>Alt-accesskey</kbd> moves the focus to that element (or to the following
+element if associated with a <code>label</code> or <code>legend</code>
+element).</p>
 
 <p>Access keys overwrite Amaya shortcuts, but not the system shortcuts
-(menus, for instance).</p>
+(shortcuts for menus, for instance).</p>
 
 <p>As an example, these Help pages declare the following access keys:</p>
 <ul>
@@ -131,19 +131,19 @@ if associated with a <code>label</code> or <code>legend</code> element).</p>
   <li>"t" for the table of contents</li>
 </ul>
 
-<p>If you have assigned the shortcut <kbd>Alt-p</kbd> to an Amaya command,
-this shortcut won't be work in an Amaya Help pages; it will display the
-previous page instead.</p>
+<p>So, if you have assigned shortcut <kbd>Alt-p</kbd> to an Amaya command,
+this shortcut won't work in a Help page; it will display the previous page
+instead.</p>
 
 <p>By default, Amaya uses the <kbd>Alt</kbd> key as the modifier for access
-keys (<kbd>Ctrl</kbd> on MacOS X). However, you can change this default using
-the<strong></strong><strong>Edit&gt;Preferences&gt;General</strong> dialog
-box. You can choose the <kbd>Ctrl</kbd> key instead of the <kbd>Alt</kbd> key
-for a modifier, or you can disable the access key mechanism.</p>
+keys (<kbd>Ctrl</kbd> on MacOS X). However, you can change this modifier
+using the<strong></strong><strong>Preferences/General</strong> dialog box.
+You can choose the <kbd>Ctrl</kbd> key instead of the <kbd>Alt</kbd> key for
+a modifier, or you can disable the access key mechanism.</p>
 
-<h3 id="Target">Target Anchors</h3>
+<h3 id="Target">Target anchors</h3>
 
-<p>Targets are elements that have been given an <code>id</code> attribute or
+<p>Targets are elements that have been given an <code>id</code> attribute, or
 anchors (element <code>a</code>) that have been given a <code>name</code>
 attribute. They identify possible targets for links.</p>
 
@@ -154,14 +154,14 @@ displayed or hidden in two ways:</p>
 <ul>
   <li>Choosing <strong>Show targets</strong> from the <strong>Views</strong>
     menu.</li>
-  <li>Using the default keyboard command (<kbd>Ctrl u Ctrl t</kbd>).</li>
+  <li>Using the default keyboard command (<kbd>Ctrl-u Ctrl-t</kbd>).</li>
 </ul>
 
-<h3 id="Moving">Moving Backward and Forward</h3>
+<h3 id="Moving">Moving backward and forward</h3>
 
-<p>Like most web browsers Amaya creates a history to keep track of the pages
-you have viewed in the current session. You can move backward or forward
-through pages in the history in several ways:</p>
+<p>Like most web browsers Amaya maintains a log to keep track of the pages
+you have visited during the current session. You can move backward or forward
+through pages in this log in several ways:</p>
 
 <table border="1" cellspacing="2" cellpadding="2">
   <tbody>
@@ -176,18 +176,18 @@ through pages in the history in several ways:</p>
     </tr>
     <tr>
       <td>Keyboard shortcuts</td>
-      <td><p>Press <kbd>Alt &lt;-</kbd> to view the previous page.</p>
+      <td><p>Press <kbd>Alt-&larr;</kbd> to view the previous page.</p>
 
-        <p>Press <kbd>Alt -&gt;</kbd> to view the next page.</p>
+        <p>Press <kbd>Alt-&rarr;</kbd> to view the next page.</p>
       </td>
     </tr>
     <tr>
       <td>Navigation bar</td>
-      <td>Click the <img alt="Back "
+      <td>Click the back <img alt="Back "
         src="../../resources/icons/22x22/back.png" align="middle" /> button
         to view the previous page. 
 
-        <p>Click the <img alt="Forward "
+        <p>Click the forward <img alt="Forward "
         src="../../resources/icons/22x22/forward.png" align="middle" />
         button to view the next page.</p>
       </td>
@@ -195,7 +195,7 @@ through pages in the history in several ways:</p>
   </tbody>
 </table>
 
-<p>Note that each tab has a separate history.</p>
+<p>Note that each tab has a separate log.</p>
 
 <p class="Note">If you have chosen a <a
 href="Configure.html#Profile">profile</a> without the navigation feature, or
@@ -207,7 +207,7 @@ if you are in help pages, these commands are not available.</p>
 <ul>
   <li>Choosing <strong>Reload document</strong> from the
     <strong>File</strong> menu.</li>
-  <li>Using the shortcut <kbd>Ctrl r</kbd>.</li>
+  <li>Using the shortcut <kbd>Ctrl-r</kbd>.</li>
   <li>Clicking the <strong>Reload</strong> button <img
     src="../../resources/icons/22x22/reload.png" alt="reload" align="middle"
     /> on the navigation bar.</li>
@@ -238,13 +238,13 @@ result in a popup widget showing all the entries. The widget can then be used
 both with the keyboard and with the mouse.</p>
 
 <p>With the keyboard, you must first select an entry using the arrow keys.
-Pressing the <kbd>Enter</kbd> key validates the choice. You can abort by
+Pressing the <kbd>Enter</kbd> key validates your choice. You can abort by
 pressing the <kbd>Esc</kbd> key at anytime.</p>
 
 <p>With the mouse, there are two kinds of behavior. A single click allows you
 to select an entry, whereas a double click on an entry means that you want to
-activate this entry. To abort, you just need to click in any area outside of
-the pop-up widget. With very long menus, you can also use the scroll bar to
+activate this entry. To abort, you just need to click anywhere outside of the
+pop-up widget. With very long menus, you can also use the scroll bar to
 quickly navigate through the entries.</p>
 
 <h3 id="Menus">Menus with multiple selections</h3>
@@ -259,7 +259,7 @@ quickly navigate through the entries.</p>
 </select>
  allow multiple entries to be selected simultaneously. This widget behaves
 much like a <a href="#Simple">simple menu</a>. When the widget is activated,
-it shows the current state of selections. You can abort by using either the
+it shows the current state of selection. You can abort by using either the
 <kbd>Esc</kbd> key or by clicking elsewhere.</p>
 </div>
 </body>

@@ -27,16 +27,17 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2>Documents management</h2>
+<h2>Document management</h2>
 
 <h3>Creating a new document</h3>
 
-<p>Amaya allows you to create both local or remote documents. Three types of
+<p>Amaya allows you to create both local and remote documents. Three types of
 documents are available:</p>
 <ul>
   <li><a href="HTML.html">New document</a>, to create a document including
     text, links, formulae, etc.</li>
-  <li><a href="Math.html">New formula</a>, to create a single formula</li>
+  <li><a href="Math.html">New formula</a>, to create a single mathematical
+    formula</li>
   <li><a href="StyleSheets.html">New style sheet</a>, to create a CSS style
     sheet</li>
 </ul>
@@ -44,7 +45,7 @@ documents are available:</p>
 <p class="ProcedureCaption">To create a document:</p>
 <ol>
   <li>Choose <strong>New</strong> from the <strong>File</strong> menu, and
-    then select the file type that you want to create.</li>
+    then select the file type you want to create.</li>
   <li>At the prompt, type the URI or the local path name of the new document
     (a default name is assigned to the document if no name is specified). You
     can use the file browser to find a local directory.</li>
@@ -52,25 +53,27 @@ documents are available:</p>
     or In new Window.</li>
   <li>If you are creating a new XHTML document: 
     <ul>
-      <li>The <strong>Title</strong> of this new document is requested. If
-        you don't give a title, Amaya will generate a default one and will
+      <li>The <strong>Title</strong> of the new document is requested. If you
+        do not provide a title, Amaya will generate a default title and will
         redisplay the dialog box to let you confirm its choice.</li>
       <li>If you plan to use a <a href="Templates.html">template</a>, click
         the <strong>From template</strong> toggle and select a template,
         either by selecting in the list of registered templates or by typing
-        the URI or file name of a template that is not in the list.</li>
-      <li>If you don't plan to use a template, you may specify the
-        <strong>Document profile</strong> of the new created document (XHTML
+        the URI or file name of a template that is not in the list. To update
+        the list of available templates, see
+        <strong>Preferences/Templates</strong></li>
+      <li>If you do not want to use a template, you may specify the
+        <strong>Document profile</strong> of the new document (XHTML
         Transitional, XHTML 1.1, XHTML strict, XHTML basic, HTML
         transitional, Compound document).  You may use the default profile
-        selected by Amaya. 
-        <p>If you plan to create a XHTML document including either MathML or
+        proposed by Amaya. 
+        <p>If you want to create a XHTML document including either MathML or
         SVG elements (Compound document), it is recommended to create a
         document file with a <code>.xml</code> suffix.</p>
       </li>
     </ul>
   </li>
-  <li>You may select a <strong>charset</strong> to encode strings of the
+  <li>You may select a <strong>charset</strong> to encode strings in the
     document. Pay attention, if you plan to publish your document on a
     server,  this <strong>charset</strong> should be selected in accordance
     with the Web server that will serve the document (contact your web

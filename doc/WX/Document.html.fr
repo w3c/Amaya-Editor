@@ -59,14 +59,15 @@ types de documents sont disponibles :</p>
         modèle</a>, cliquez sur le bouton <strong>A partir du modèle</strong>
         et sélectionnez un des modèles, soit en sélectionnant dans la liste
         des modèles enregistrés ou en tapant l'URI ou le nom du fichier du
-        modèle qui n'est pas dans la liste.</li>
+        modèle qui n'est pas dans la liste. Vous pouvez mettre à jour la
+        liste des modèles dans <strong>Préférences/Modèles</strong></li>
       <li>Il est possible de spécifier le <strong>Profil du document</strong>
         créé (XHTML Transitional, XHTML 1.1, XHTML strict, XHTML basic, HTML
         transitional, Compound document).  Vous pouvez laisser Amaya choisir
         pour vous. 
         <p>Si vous prévoyez de créer un document XHTML composé (Compound
-        document) incluant des éléments soit MathML soit SVG, il est
-        recommandé de créer un fichier avec un suffixe <code>.xml</code>.</p>
+        document) incluant des éléments MathML ou SVG, il est recommandé de
+        créer un fichier avec un suffixe <code>.xml</code>.</p>
       </li>
     </ul>
   </li>
@@ -89,7 +90,7 @@ types de documents sont disponibles :</p>
   <dt>Menu Fichier</dt>
     <dd>L'entrée <strong>Ouvrir</strong> du menu <strong>Fichier</strong>
       vous permet d'ouvrir un nouveau document. La commande clavier par
-      défaut est <kbd>Ctrl o Ctrl o</kbd> . Cette commande fait apparaître
+      défaut est <kbd>Ctrl-o Ctrl-o</kbd> . Cette commande fait apparaître
       une boîte de dialogue dans laquelle vous pouvez entrer un nom de
       fichier local ou une URI. Vous pouvez également choisir un fichier en
       utilisant le sélecteur de fichiers locaux (cliquez sur l'icone de
@@ -113,7 +114,7 @@ types de documents sont disponibles :</p>
     <dd>Une zone affiche en haut de la fenêtre le nom du fichier ou l'URI du
       document courant. Vous pouvez saisir le nom d'un autre document (local
       ou distant) qui va être affiché à la place du document courant. Tapez
-      sur la touche <kbd>Enter</kbd> quand le curseur se trouve dans cette
+      sur la touche <kbd>Entrée</kbd> quand le curseur se trouve dans cette
       zone pour activer le chargement du document. Cette commande peut aussi
       être utilisée pour créer un nouveau document local, en entrant le nom
       d'un fichier qui n'existe pas encore. 

@@ -24,11 +24,10 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <div class="toc">
 <ul>
-  <li><a href="#L58">Sélectionner</a> 
+  <li><a href="#L58">Sélectionner</a>
     <ul>
       <li><a href="#L94">Sélectionner avec la souris</a></li>
-      <li><a href="#L302">Sélectionner avec le chemin de la barre
-      d'état</a></li>
+      <li><a href="#L302">Sélectionner dans la barre d'état</a></li>
       <li><a href="#L115">Sélectionner avec le clavier</a></li>
       <li><a href="#L227">Sélectionner des images</a></li>
       <li><a href="#L252">Sélectionner dans la vue structure</a></li>
@@ -51,16 +50,17 @@ Cela peut être utile quand la structure du document est complexe.</p>
 <p>Par exemple, la sélection d'un mot dans cette phrase visualise la
 sélection :</p>
 
-<p><code>html&gt;body&gt;div&gt;p</code></p>
+<p><code>html &gt; body &gt; div &gt; p</code></p>
 
 <p>ce qui signifie que ce qui est sélectionné est du texte dans un élément
 <code>p</code> qui est dans une division (<code>div</code>), elle-même dans
-le corps (<code>body</code>) du document <code>html</code>.</p>
+le corps (<code>body</code>) du document <code>html</code>. Cette séquence de
+noms d'élément est appelée un chemin.</p>
 
 <p>La sélection de <strong>cet élément de structure</strong> (par exemple
-cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
+cliquez sur le mot « structure ») donne :</p>
 
-<p><code>html&gt;body&gt;div&gt;p&gt;strong</code></p>
+<p><code>html &gt; body &gt; div &gt; p &gt; strong</code></p>
 
 <h3 id="L94">Sélectionner avec la souris</h3>
 <ul>
@@ -74,13 +74,13 @@ cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
   <li>Pour sélectionner un élément entier, comme cet item de liste, cliquez
     sur sa puce ou sur son numéro.</li>
   <li>Pour étendre la sélection, cliquez sur le bouton gauche de la souris en
-    combinaison avec la touche <kbd>Shift</kbd>.</li>
+    combinaison avec la touche <kbd>Maj</kbd>.</li>
   <li>Pour sélectionner un élément de structure, sélectionnez n'importe quel
     caractère de l'élément puis sélectionnez le niveau de structure désiré
-    avec le clavier comme décrit plus bas.</li>
+    avec le clavier comme décrit <a href="#L115">plus bas</a>.</li>
 </ul>
 
-<h3 id="L302">Sélectionner avec la barre d'état</h3>
+<h3 id="L302">Sélectionner dans la barre d'état</h3>
 <ul>
   <li>Pour placer le point d'insertion, cliquez avec le bouton gauche de la
     souris dans un élément du document.</li>
@@ -89,8 +89,8 @@ cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
     contenu).<br />
     Par exemple en cliquant sur <code>div</code>, la division englobante sera
     sélectionnée 
-    <p><samp>html&gt;body&gt;<span
-    style="color: #ff0000;">div</span>&gt;p&gt;strong<br />
+    <p><samp>html &gt; body &gt; <span style="color: #ff0000;">div</span>
+    &gt; p &gt; strong<br />
     </samp></p>
   </li>
   <li>Quand la sélection est ainsi modifiée, le chemin n'est pas mis à jour
@@ -105,14 +105,14 @@ cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
   <li>Pressez la touche <kbd>F2</kbd> pour sélectionner l'élément parent dans
     la structure du document. Presser cette touche plusieurs fois pour
     sélectionner les elements ascendants, et ce jusqu'à la racine.</li>
-  <li>Pressez <kbd>Shift-F2</kbd> pour sélectionner le premier élément
+  <li>Pressez <kbd>Maj-F2</kbd> pour sélectionner le premier élément
   fils.</li>
   <li>Pressez <kbd>F4</kbd> pour sélectionner l'élément suivant au même
     niveau, ou au niveau du parent s'il n'y a pas d'élément suivant pour
     l'élément courant.</li>
-  <li>Pressez <kbd>Shift-F4</kbd> pour sélectionner l'élément précédent au
-    même niveau, ou au niveau du parent s'il n'y a pas d'élément précédent
-    pour l'élément courant.</li>
+  <li>Pressez <kbd>Maj-F4</kbd> pour sélectionner l'élément précédent au même
+    niveau, ou au niveau du parent s'il n'y a pas d'élément précédent pour
+    l'élément courant.</li>
 </ul>
 
 <p class="ProcedureCaption">Déplacer le point d'insertion</p>
@@ -122,34 +122,31 @@ cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
     la fenêtre du document, ces touches en mettent un en haut à gauche de la
     fenêtre.</li>
   <li>Pour déplacer le point d'insertion au début ou à la fin de la ligne où
-    il se trouve, utilisez les touches <kbd>Home</kbd> et <kbd>End</kbd>.</li>
+    il se trouve, utilisez les touches <kbd>Début</kbd> et
+  <kbd>Fin</kbd>.</li>
   <li>Pour déplacer le point d'insertion sur le début du mot qui précède ou
-    qui suit, utilisez les touches <kbd>Control-Left</kbd> et
-    <kbd>Control-Right</kbd>.</li>
+    qui suit, utilisez les touches <kbd>Ctrl-&rarr;</kbd> et
+    <kbd>Ctrl-&larr;</kbd>.</li>
 </ul>
 
 <p class="ProcedureCaption">Étendre/réduire la sélection</p>
 <ul>
   <li>Pour étendre ou réduire la sélection courante dans une des quatre
-    directions, utilisez la combinaison de la touche Shift avec une des
-    quatre touches de direction (<kbd>Shift-Left</kbd>,
-    <kbd>Shift-Right</kbd>, <kbd>Shift-Up</kbd>, et
-  <kbd>Shift-Down</kbd>).</li>
-  <li>Pour étendre la sélection au mot courant, utilisez la commande
-    <kbd>Alt-Enter</kbd>. Si la sélection est dans un lien, cette commande <a
-    href="Browsing.html.fr#Activating">activera le lien</a> au lieu de
-    sélectionner le mot courant.</li>
+    directions, utilisez la combinaison de la touche <kbd>Maj</kbd> avec une
+    des quatre touches de direction (<kbd>Maj-&larr;</kbd>,
+    <kbd>Maj-&rarr;</kbd>, <kbd>Maj-&uarr;</kbd>, et
+  <kbd>Maj-&darr;</kbd>).</li>
   <li>Pour étendre la sélection courante jusqu'au début du mot qui précède ou
-    jusqu'à la fin du mot qui suit, utilisez <kbd>Shift-Control-Left</kbd> ou
-    <kbd>Shift-Control-Right</kbd>.</li>
+    jusqu'à la fin du mot qui suit, utilisez <kbd>Maj-Ctrl-&larr;</kbd> ou
+    <kbd>Maj-Ctrl-&rarr;</kbd>.</li>
 </ul>
 
 <p class="ProcedureCaption">Déplacer le document</p>
 <ul>
   <li>Pour faire défiler le document d'une ligne vers le haut ou vers le bas,
-    utilisez <kbd>Control-Up</kbd> et <kbd>Control-Down</kbd>.</li>
+    utilisez <kbd>Ctrl-&uarr;</kbd> et <kbd>Ctrl-&darr;</kbd>.</li>
   <li>Pour sauter au début ou à la fin du document, utilisez
-    <kbd>Control-Home</kbd> et <kbd>Control-End</kbd>.</li>
+    <kbd>Ctrl-Début</kbd> et <kbd>Ctrl-Fin</kbd>.</li>
 </ul>
 
 <h3 id="L227"><a name="Selecting2" id="Selecting2">Sélectionner des
@@ -176,15 +173,15 @@ images</a></h3>
 </ul>
 
 <p class="Note"><strong>Note :</strong> Quand vous utilisez les touches de
-direction pour vous déplacer, le curseur se déplacera d'un côté de l'image
-vers l'image elle-même (en la sélectionnant) puis vers l'autre côté.</p>
+direction pour vous déplacer, le curseur se déplace d'abord sur un côté de
+l'image puis sur l'autre côté.</p>
 
 <h3 id="L252"><a name="Selecting1">Sélectionner dans la vue structure</a></h3>
 
-<p>La <a href="Views.html.fr">Vue structure</a> est particulièrement commode
+<p>La <a href="Views.html.fr">vue Structure</a> est particulièrement commode
 pour sélectionner rapidement de gros éléments ou des groupes d'éléments.</p>
 
-<p class="ProcedureCaption">Sélectionner un élément</p>
+<p class="ProcedureCaption">Sélectionner un élément dans la vue structure</p>
 <ul>
   <li>Il y a trois moyens de sélectionner un gros élément comme une table ou
     une longue liste : cliquez sur le nom bleu représentant l'élément, ou sur
@@ -193,7 +190,7 @@ pour sélectionner rapidement de gros éléments ou des groupes d'éléments.</p>
 
 <p class="ProcedureCaption">Sélectionner un caractère ou une chaîne</p>
 <ul>
-  <li>Cliquez sur un caractère noir dans la Vue structure pour sélectionner
+  <li>Cliquez sur un caractère noir dans la vue Structure pour sélectionner
     ce caractère. Draguez pour sélectionner une chaîne.</li>
 </ul>
 

@@ -23,7 +23,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
 
 <div class="toc">
 <ul>
-  <li><a href="#Naviguer">Naviguer avec Amaya</a>
+  <li><a href="#Naviguer">Naviguer avec Amaya</a> 
     <ul>
       <li><a href="#Activer">Activer un lien, parcourir les liens</a></li>
       <li><a href="#rapides">Accès rapides</a></li>
@@ -33,7 +33,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
       <li><a href="#Contr">Commandes au clavier</a></li>
     </ul>
   </li>
-  <li><a href="#Utiliser">Utiliser les formulaires</a>
+  <li><a href="#Utiliser">Utiliser les formulaires</a> 
     <ul>
       <li><a href="#Menus">Menus simples</a></li>
       <li><a href="#Menus1">Menus à sélection multiple</a></li>
@@ -62,9 +62,9 @@ sont disponibles.</p>
 <h3 id="Activer"><a name="Activating">Activer un lien, parcourir les
 liens</a></h3>
 
-<p>Les liens sont par défaut présentés en bleu. Comme <strong>Amaya</strong>
-est un éditeur, vous obtiendrez un résultat différent avec un simple-clic, un
-double-clic, ou un clic-droit sur un lien.</p>
+<p>Comme <strong>Amaya</strong> est un éditeur, vous obtiendrez un résultat
+différent avec un simple-clic, un double-clic, ou un clic-droit sur un
+lien.</p>
 <ul>
   <li>Un <kbd>simple-clic</kbd> place seulement le point d'insertion à
     l'intérieur du lien, pour que vous puissiez modifier le texte, et il
@@ -95,11 +95,12 @@ sélection étendue soit déplacer le point d'insertion à l'intérieur des liens
 
 <p>Il est également possible d'utiliser le clavier pour parcourir les liens
 et les activer. La touche <kbd>Tab</kbd>, vous permet de trouver le prochain
-lien ou élément de formulaire HTML dans le document. La commande <kbd>Shift
-Tab</kbd>, vous permet de trouver le lien ou élément de formulaire HTML qui
-précède dans le document. La commande <kbd>Alt &darr;</kbd> vous permet
-d'activer le lien courant. Vous pouvez <a href="ShortCuts.html.fr">choisir
-d'autres touches</a> ou combinaisons de touches pour toutes ces commandes.</p>
+lien ou élément de formulaire HTML dans le document. La commande
+<kbd>Maj-Tab</kbd>, vous permet de trouver le lien ou élément de formulaire
+HTML qui précède dans le document. La commande <kbd>Alt-&darr;</kbd> vous
+permet d'activer le lien courant. Vous pouvez <a
+href="ShortCuts.html.fr">choisir d'autres touches</a> ou combinaisons de
+touches pour toutes ces commandes.</p>
 
 <h3 id="rapides"><a name="Access">Accès rapides</a></h3>
 
@@ -111,14 +112,13 @@ précisément, les éléments suivants acceptent cet attribut : <code>a</code>,
 
 <p>Si l'auteur du document a associé un attribut <code>accesskey</code> à un
 lien (par exemple <code>accesskey="l"</code>) dans un document, la commande
-<strong>Alt accesskey</strong> (dans cet exemple <strong>Alt l</strong>)
-active le lien (sur MacOS X, la touche <strong>Ctrl</strong> est utilisée à
-la place de <strong>Alt</strong>). Quand elle est associée à un élément de
-formulaire, la commande <strong>Alt accesskey</strong> donne le focus à cet
-élément (ou l'élément qui suit dans le cas de <code>label</code> et
-<code>legend</code>). Ceci est important pour les utilisateurs qui ne peuvent
-pas manipuler une souris, mais il y a d'autres conditions où c'est nécessaire
-ou utile.</p>
+<kbd>Alt-accesskey</kbd> (dans cet exemple <kbd>Alt-l</kbd>) active le lien
+(sur MacOS X, la touche <kbd>Ctrl</kbd> est utilisée à la place de
+<kbd>Alt</kbd>). Quand elle est associée à un élément de formulaire, la
+commande <kbd>Alt-accesskey</kbd> donne le focus à cet élément (ou l'élément
+qui suit dans le cas de <code>label</code> et <code>legend</code>). Ceci est
+important pour les utilisateurs qui ne peuvent pas manipuler une souris, mais
+il y a d'autres conditions où c'est nécessaire ou utile.</p>
 
 <p>Les accès rapides supplantent les raccourcis clavier de Amaya, mais pas
 ceux du système. Les raccourcis des menus, notamment, sont prioritaires.</p>
@@ -131,16 +131,16 @@ suivants :</p>
   <li>"t" pour aller à la table des matières.</li>
 </ul>
 
-<p>Si vous avez associé un raccourci clavier <kbd>Alt p</kbd> à une commande
+<p>Si vous avez associé un raccourci clavier <kbd>Alt-p</kbd> à une commande
 d'édition de Amaya, ce raccourci clavier ne sera pas utilisable quand les
 pages d'aide sont affichées.</p>
 
-<p>Par défaut la touche utilisée pour les accès rapides est
-<strong>Alt</strong> (<strong>Ctrl</strong> sur MacOS X). Le menu de
-préférences <strong>Éditer/Préférences/Général</strong> permet de changer
-cela. Vous pouvez utiliser la touche <strong>Ctrl</strong> au lieu de
-<strong>Alt</strong>. Vous pouvez aussi désactiver le mécanisme des accès
-rapides fondés sur <code>accesskey</code>.</p>
+<p>Par défaut la touche utilisée pour les accès rapides est <kbd>Alt</kbd>
+(<kbd>Ctrl</kbd> sur MacOS X). Le menu de préférences
+<strong>Préférences/Général</strong> permet de changer cela. Vous pouvez
+utiliser la touche <kbd>Ctrl</kbd> au lieu de <kbd>Alt</kbd>. Vous pouvez
+aussi désactiver le mécanisme des accès rapides fondés sur
+<code>accesskey</code>.</p>
 
 <h3 id="Ancres"><a name="L515">Ancres cibles</a></h3>
 
@@ -149,8 +149,8 @@ de cible <a name="target"><img src="../images/target.gif" alt=" target "
 /></a>. Ces icônes ne font pas partie du document et peuvent être soit
 visualisées soit cachées juste en modifiant le statut <strong>Montrer les
 cibles</strong> du document courant, qui est une option du menu
-<strong>Affichage</strong>. Par défaut la commande au clavier est <kbd>Ctrl u
-Ctrl t</kbd>.</p>
+<strong>Affichage</strong>. Par défaut la commande au clavier est <kbd>Ctrl-u
+Ctrl-t</kbd>.</p>
 
 <p>Ces icônes sont associées aux <em>éléments cibles</em>, c'est-à-dire aux
 éléments, quel que soit leur type, qui ont un attribut <code>id</code> , ou
@@ -170,7 +170,7 @@ chargées :</p>
     <dd>Il y a des entrées dans le menu <strong>Fichier</strong> pour avancer
       (<strong>Suivant</strong>) ou reculer (<strong>Précédent</strong>) dans
       l'historique. Les raccourcis clavier sont par défaut respectivement
-      <kbd>Alt &lt;-</kbd> et <kbd>Alt -&gt;</kbd>.</dd>
+      <kbd>Alt-&larr;</kbd> et <kbd>Alt-&rarr;</kbd>.</dd>
   <dt>Barre de navigation</dt>
     <dd>Deux boutons : <img alt="Back "
       src="../../resources/icons/22x22/back.png" align="middle" /> et <img
@@ -189,7 +189,7 @@ dans les pages d'aide, ces commandes ne sont pas disponibles.</p>
 
 <p>Les documents peuvent être rechargés en utilisant l'option
 <strong>Recharger le document</strong> du menu <strong>Fichier</strong>, le
-raccourci clavier <kbd>Ctrl r</kbd>, ou le bouton <img
+raccourci clavier <kbd>Ctrl-r</kbd>, ou le bouton <img
 src="../../resources/icons/22x22/reload.png" alt="reload" align="middle" />
 de la barre de navigation.</p>
 
@@ -212,14 +212,13 @@ de raccourcis clavier à la Emacs.</p>
 
 <p>Quelques touches du clavier sont pré-affectées, comme :</p>
 <ul>
-  <li>La touche <strong>Enter</strong> dans un élément de formulaire
+  <li>La touche <kbd>Entrée</kbd> dans un élément de formulaire
     <code>input</code> (de type <code>text</code> ou <code>password</code>)
     soumet le formulaire correspondant.</li>
-  <li>La touche <strong>Tab</strong> dans un élément de formulaire déplace la
+  <li>La touche <kbd>Tab</kbd> dans un élément de formulaire déplace la
     sélection sur l'élément de formulaire suivant, ou saute au premier
     élément de formulaire du formulaire courant.</li>
 </ul>
-</div>
 
 <h2 id="Utiliser"><a name="form" id="form">Utiliser les formulaires</a></h2>
 
@@ -234,7 +233,7 @@ différences les plus significatives.</p>
 <p>Pour utiliser un menu comme celui qui suit ce paragraphe, il faut cliquer
 deux fois sur l'entrée affichée (ici, "pomme") ou sur le bouton à droite. On
 peut aussi utiliser la touche <kbd>Tab</kbd> pour se positionner sur le menu,
-puis la combinaison <kbd>Alt &uarr;</kbd> pour l'activer. Cela fait
+puis la combinaison <kbd>Alt-&uarr;</kbd> pour l'activer. Cela fait
 apparaître la liste de toutes les entrées du menu. Cette liste est ensuite
 utilisable avec la souris ou avec le clavier.</p>
 
@@ -251,8 +250,8 @@ utilisable avec la souris ou avec le clavier.</p>
 
 <p>Avec le clavier, passez d'une entrée à l'autre avec les touches flèches
 (<kbd>&uarr;</kbd>, <kbd>&darr;</kbd>) puis sélectionnez l'entrée courante
-avec la touche <kbd>Enter</kbd>. Vous pouvez annuler toute action en appuyant
-sur la touche <kbd>Esc</kbd> à n'importe quel moment.</p>
+avec la touche <kbd>Entrée</kbd>. Vous pouvez annuler toute action en
+appuyant sur la touche <kbd>Esc</kbd> à n'importe quel moment.</p>
 
 <p>Avec la souris, il y a deux types de comportement. Un simple clic permet
 de sélectionner une entrée tandis qu'un double clic sur une entrée signifie
@@ -279,5 +278,6 @@ l'est plus et inversement.</p>
     <option>fraise</option>
   </select>
    </form>
+</div>
 </body>
 </html>

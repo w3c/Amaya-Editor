@@ -35,13 +35,11 @@ travers un document.</p>
 <p>Six vues sont disponibles :</p>
 <dl>
   <dt>Vue formatée (défaut)</dt>
-    <dd>Ici vous voyez le document comme présenté dans les navigateurs
-      graphiques classiques. C'est une vue dynamique à manipulation directe,
-      dans le sens que, à n'importe quel moment, il montre les changements
-      que vous êtes en train d'effectuer sur le document. Cette propriété
-      diffère des autres éditeurs qui eux fournissent seulement des séries de
-      photos instantanées du document. Cette vue est toujours visible dans la
-      premiere partie de votre page.</dd>
+    <dd>Dans cette vue, vous voyez le document comme présenté dans les
+      navigateurs classiques. C'est une vue dynamique à manipulation directe,
+      qui montre à tout instant les changements que vous êtes en train
+      d'effectuer sur le document. Cette vue est toujours visible dans votre
+      page.</dd>
   <dt>Vue structure</dt>
     <dd>Cette vue montre la structure actuelle du document qui est en train
       d'être rédigée. Chaque élément est représenté par son nom d'étiquette,
@@ -54,10 +52,10 @@ travers un document.</p>
       <p>La vue structure montre tous les élément du document, même ceux qui
       ne sont pas affichés dans la vue formatée comme les commentaires, le
       type du document (doctype), les instructions de traitement ou les
-      éléments de la section <strong>head</strong>.</p>
+      éléments de la section <code>head</code>.</p>
       <p>Elle présente également l'adresse de l'espace de noms utilisé par
       l'auteur lorsqu'un élément est défini dans un espace de noms différent
-      de celui de son père.</p>
+      de celui de son parent.</p>
     </dd>
   <dt>Vue alternée (non disponible dans le profil Lite)</dt>
     <dd>Cette vue vous permet de voir à quoi ressemble le document quand il
@@ -65,26 +63,26 @@ travers un document.</p>
       vérifier l'accessibilité de vos documents.</dd>
   <dt>Vue liens</dt>
     <dd>Cette vue montre toutes les ancres d'un document (les ancres et leur
-      contenu). Vous pouvez vous focaliser dessus pour travailler sur les
-      liens hypertextes.</dd>
+      contenu). Vous pouvez vous focaliser sur cette vue pour travailler sur
+      les liens de votre document.</dd>
   <dt>Vue table des matières</dt>
-    <dd>Cette vue visualise tous les titres (éléments <kbd>Hn</kbd>) et
+    <dd>Cette vue visualise tous les titres (éléments <code>Hn</code>) et
       uniquement ces éléments. Si le document est bien structuré, elle
       visualise une vue synthétique du document.</dd>
   <dt>Vue source</dt>
     <dd>Ici vous voyez le code source actuel du document. Vous pouvez
-      l'utiliser pour éditer la syntaxe de votre document. (c'est la vue par
-      défaut qui est ouverte quand vous cliquez sur la bande rouge en bas de
+      l'utiliser pour éditer la syntaxe de votre document. (c'est la vue qui
+      est ouverte par défaut quand vous cliquez sur la bande rose en bas de
       votre document)</dd>
 </dl>
 
-<p>Vous pouvez ouvrir et fermer n'importe quelle vue, à n'importe quel
+<p>Vous pouvez ouvrir et fermer n'importe quelle vue à n'importe quel
 moment.</p>
 
 <h3>Ouvrir une vue</h3>
 
 <p>Pour ouvrir une vue, choisissez la commande <strong>Montrer ...</strong>
-correspondante :</p>
+correspondante dans le menu <strong>Affichage</strong> :</p>
 
 <table border="0" cellspacing="0" cellpadding="0" style="margin-left:.5in">
   <tbody>
@@ -105,7 +103,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><kbd>Ctrl u Ctrl s</kbd></p>
+        class="TableText"><kbd>Ctrl-u Ctrl-s</kbd></p>
       </td>
     </tr>
     <tr>
@@ -115,7 +113,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><kbd>Ctrl u Ctrl a</kbd></p>
+        class="TableText"><kbd>Ctrl-u Ctrl-a</kbd></p>
       </td>
     </tr>
     <tr>
@@ -125,7 +123,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><kbd>Ctrl u Ctrl l</kbd></p>
+        class="TableText"><kbd>Ctrl-u Ctrl-l</kbd></p>
       </td>
     </tr>
     <tr>
@@ -135,7 +133,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><kbd>Ctrl u Ctrl c</kbd></p>
+        class="TableText"><kbd>Ctrl-u Ctrl-c</kbd></p>
       </td>
     </tr>
     <tr>
@@ -145,7 +143,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid 1.5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><kbd>Ctrl u Ctrl o</kbd></p>
+        class="TableText"><kbd>Ctrl-u Ctrl-o</kbd></p>
       </td>
     </tr>
   </tbody>
@@ -153,7 +151,7 @@ correspondante :</p>
 
 <p class="Note"><strong>Astuce :</strong> vous pouvez ouvrir rapidement la
 vue source (ou la dernière vue active) en cliquant à la souris sur le barre
-rouge en bas (Partager/étendre en horizontal) ou à droite (Partager/étendre
+rose en bas (Partager/étendre en horizontal) ou à droite (Partager/étendre
 en  vertical) de votre document.</p>
 
 <h3>Fermer une vue</h3>
@@ -161,25 +159,24 @@ en  vertical) de votre document.</p>
 <p>Pour fermer une vue choisissez la commande <strong>Partager
 horizontalement</strong> ou <strong>Partager verticalement</strong> du menu
 <strong>Affichage</strong>. Une autre façon de fermer une vue est de
-double-cliquer sur la ligne rouge en bas ou à droite de votre page.</p>
+double-cliquer sur la ligne rose en bas ou à droite de votre page.</p>
 
-<p>Vous pouvez aussi fermer l'onglet (menu <strong>Fichier</strong> ou clic
-droit sur l'onglet, excepté pour la version Mac OSX) si vous voulez fermer
-votre document ainsi que toutes ses vues.</p>
+<p>Vous pouvez aussi fermer l'onglet (menu <strong>Fichier</strong> ou bouton
+Fermer de l'onglet, ou clic droit sur l'onglet, excepté pour la version Mac
+OSX) si vous voulez fermer votre document ainsi que toutes ses vues.</p>
 
 <h3>Utiliser les vues</h3>
 
 <p>Toutes les vues (exceptée la vue source) sont automatiquement
 <em>synchronisées</em> : chaque fois que vous sélectionnez quelques
-caractères ou éléments dans une vue, les autres vues du même document
-défilent automatiquement de telle sorte qu'on voit la même partie du
+caractères ou éléments dans une vue, les autres vues du même document se
+positionnent automatiquement de telle sorte qu'on voie la même partie du
 document.</p>
 
-<p>Vous pouvez rédiger le document dans n'importe quelle vue. Pour une
-sensibilité optimum quand vous tapez, les caractères entrés sont visualisés
-uniquement dans la vue où vous avez cliqué. Dès que vous activez une commande
-ou cliquez ailleurs, ces caractères sont également visualisés dans les autres
-vues.</p>
+<p>Vous pouvez rédiger le document dans n'importe quelle vue. Quand vous
+tapez du texte, les caractères entrés sont visualisés uniquement dans la vue
+où vous avez cliqué. Dès que vous activez une commande ou cliquez ailleurs,
+ces caractères sont également visualisés dans les autres vues.</p>
 
 <p>La sélection et les commandes d'édition agissent toujours sur l'arbre du
 document. Quand vous sélectionnez deux éléments dans une vue, la sélection
@@ -193,25 +190,25 @@ agissent sur la totalité de la sélection.</p>
 <p>La vue source se comporte différemment : vous devez demander la
 synchronisation explicitement, en utilisant la commande
 <strong>Synchroniser</strong> du menu <strong>Fichier</strong> ou bien en
-cliquant dans une autre vue ce qui aura pour effet d'effectuer la
-synchronisation. Quand vous avez effectué une série d'éditions dans la vue
+cliquant dans une autre vue, ce qui aura pour effet d'effectuer la
+synchronisation. Quand vous avez effectué une série d'opérations dans la vue
 source, vous devez entrer la commande <strong>Synchroniser</strong> depuis
 cette vue pour mettre à jour toutes les autres vues du document, ou bien tout
 simplement cliquer avec votre souris dans une autre vue. Inversement, quand
-vous avez effectué des changements dans une autre vue, entrez la commande
-<strong>Synchroniser</strong> pour mettre à jour la vue source ou bien
-cliquez simplement dans la vue source.</p>
+vous avez effectué des changements dans une autre vue, activez la commande
+<strong>Fichier/Synchroniser</strong> pour mettre à jour la vue source, ou
+bien cliquez simplement dans la vue source.</p>
 
 <p>Synchroniser un document depuis la Vue source fera re-valider le document
 par Amaya. Si des erreurs de balisage ont été introduites dans la vue source,
 Amaya tentera de les corriger du mieux qu'il pourra. Vous devriez vérifier le
 document dans la vue structure ou bien dans la vue formatée après avoir édité
-dans le source pour s'assurer que la synchronisation a effectué ce que vous
-attendiez.</p>
+dans le source pour vous assurer que la synchronisation a bien effectué ce
+que vous attendiez.</p>
 
 <p>Chaque fois que vous <a href="Publishing.html.fr#L1104">sauvez</a> un
 document, localement ou à distance, depuis la vue source ou depuis la vue
-formatée, une synchronisation s'effectue automatiquement : toutes les vues
+formatée, une synchronisation s'effectue automatiquement : toutes les vues
 reflètent l'état du document au moment où il est sauvé.</p>
 </div>
 </body>
