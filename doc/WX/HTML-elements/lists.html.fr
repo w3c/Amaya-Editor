@@ -3,14 +3,14 @@
 <head>
   <title>éléments d'une liste</title>
   <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="en" lang="en">
 
 <div>
-<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" /> 
 
 <p class="nav"><a href="headings.html.fr"><img alt="previous" border="0"
 src="../../../resources/icons/misc/left.png" /></a> <a
@@ -33,31 +33,31 @@ l'intérieur d'autres listes.</p>
   <dt>Liste de définitions</dt>
     <dd>C'est une liste de définitions. Elle contient des termes de
       définition (<code><a
-      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DT">DT</a></code>)
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DT">dt</a></code>)
       et des textes explicatifs (<code><a
-      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DD">DD</a></code>).</dd>
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DD">dd</a></code>).</dd>
     <dd>Un terme de définition peut être suivi par un nombre ou par des
       définitions.</dd>
   <dt>Liste ordonnée</dt>
-    <dd>Il y a trois types de liste :
+    <dd>Il y a trois types de liste : 
       <ol>
         <li>Liste ordonnée (<code><a
-          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-OL">OL</a></code>)</li>
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-OL">ol</a></code>)</li>
         <li>Liste non ordonnée (<code><a
           href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-UL"
-          name="UL" id="UL">UL</a></code>)</li>
+          name="UL" id="UL">ul</a></code>)</li>
         <li>Liste de définition (<code><a
-          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DL">DL</a></code>)</li>
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DL">dl</a></code>)</li>
       </ol>
     </dd>
   <dt>Liste non ordonnée</dt>
     <dd>Les listes ordonnées et les listes non ordonnées partagent quelques
-      caractéristiques :
+      caractéristiques : 
       <ul>
         <li>Ce sont des listes simples.</li>
         <li>Les deux types de liste ont des fils qui sont des items de liste
           (éléments <code><a
-          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-LI">LI</a></code>)</li>
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-LI">li</a></code>)</li>
       </ul>
     </dd>
 </dl>
@@ -68,12 +68,12 @@ src="../../../resources/icons/16x16/XHTML_Bullet.png" alt="Bulleted List" />,
 <img src="../../../resources/icons/16x16/XHTML_Num.png" alt="Numbered List"
 />, <img src="../../../resources/icons/16x16/XHTML_DL.png"
 alt="Definition List" />. Tous les types de liste peuvent être créés à partir
-du menu <strong>XHTML,</strong> ou en utilisant les raccourcis clavier. Les
-raccourcis clavier par défaut dans les systèmes Unix sont <kbd>Ctrl h Ctrl
-l</kbd> pour une liste ordonnée, <kbd>Ctrl h Ctrl n</kbd> pour une liste non
-ordonnée, et <kbd>Ctrl h Ctrl d</kbd> pour une liste de définitions.</p>
+du menu <strong>Insertion,</strong> ou en utilisant les raccourcis clavier.
+Les raccourcis clavier par défaut dans les systèmes Unix sont <kbd>Ctrl h
+Ctrl l</kbd> pour une liste ordonnée, <kbd>Ctrl h Ctrl n</kbd> pour une liste
+non ordonnée, et <kbd>Ctrl h Ctrl d</kbd> pour une liste de définitions.</p>
 
-<p><a href="../StyleSheets.html.fr">Les Feuilles de style</a> peuvent être
+<p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation des listes. Il est possible de changer
 le style des puces de liste, et de changer le style du texte, par exemple en
 utilisant une police de caractères différente pour les termes de définition

@@ -10,7 +10,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+Amaya<img border="0" alt="Amaya"
+src="../../../resources/icons/22x22/logo.png" /> 
 
 <p class="nav"><a href="inline.html.fr"><img alt="previous" border="0"
 src="../../../resources/icons/misc/left.png" /></a> <a
@@ -29,8 +30,8 @@ d'éléments structuraux ou par des feuilles de style quand cela est
 possible.</p>
 
 <p>Tous les éléments en question, à l'exeption de PRE, se trouvent dans le
-sous menu <strong>Eléments caractères</strong> du menu <strong>XHTML</strong>
-:</p>
+sous menu <strong>Eléments caractères</strong> du menu
+<strong>Insertion</strong> :</p>
 <dl>
   <dt><code>b</code> et <code>i</code></dt>
     <dd>Ceux-ci devraient être remplacés par les <a
@@ -40,11 +41,11 @@ sous menu <strong>Eléments caractères</strong> du menu <strong>XHTML</strong>
       des en-têtes, des termes à définir, ainsi que certains usages spéciaux,
       comme par exemple une citation, un fragment de code, etc. Si les
       éléments sont simplement utilisés pour obtenir une police de caractère
-      plus grasse, les <a href="../StyleSheets.html.fr">Feuilles de style</a>
+      plus grasse, les <a href="../StyleSheets.html.fr">feuilles de style</a>
       devraient être utilisées à la place.</dd>
   <dt><code>big</code> et <code>small</code></dt>
     <dd>En général, ces résultats devraient être obtenus avec les <a
-      href="../StyleSheets.html.fr">Feuilles de style</a>. Quand ils sont
+      href="../StyleSheets.html.fr">feuilles de style</a>. Quand ils sont
       utilisés pour marquer des types spécifiques d'information, comme la
       source d'une citation, un sample, computer input ou output, etc, les <a
       href="inline.html.fr">éléments HTML appropriés</a> devraient être
@@ -57,7 +58,7 @@ sous menu <strong>Eléments caractères</strong> du menu <strong>XHTML</strong>
       utilisé dès que possible.</dd>
   <dt><code>tt</code> et <code>pre</code></dt>
     <dd>Les auteurs doivent utiliser les <a
-      href="../StyleSheets.html.fr">Feuilles de style</a> pour obtenir ces
+      href="../StyleSheets.html.fr">feuilles de style</a> pour obtenir ces
       résultats.</dd>
 </dl>
 </div>

@@ -10,40 +10,38 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" /> 
 
 <p class="nav"><a href="structure.html.fr"><img alt="previous" border="0"
-src="../../../resources/icons/misc/left.png" />
-</a> <a href="../Manual.html.fr#There"><img alt="top" border="0"
-src="../../../resources/icons/misc/up.png" />
-</a> <a href="lists.html.fr"><img alt="next" border="0"
-src="../../../resources/icons/misc/right.png" />
-</a></p>
+src="../../../resources/icons/misc/left.png" /> </a> <a
+href="../Manual.html.fr#There"><img alt="top" border="0"
+src="../../../resources/icons/misc/up.png" /> </a> <a
+href="lists.html.fr"><img alt="next" border="0"
+src="../../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
 <div id="Heading">
 <h1>Éléments d'entête</h1>
 
 <p>HTML fournit 6 niveaux d'entête : <a
-href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-H1"><code>H1,
-H2, H3, H4, H5, and H6</code></a>. Ils devraient être utilisés pour marquer
+href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-H1"><code>h1,
+h2, h3, h4, h5, and h6</code></a>. Ils devraient être utilisés pour marquer
 les entêtes selon leur importance, <code>H1</code> étant le plus important.
-Les entêtes sont des éléments bloc, et peuvent êre uniquement créées comme
-les filles d'éléments qui ont un contenu de type bloc. Notez que pour les
-tables de données, il existe des éléments spéciaux pour marquer les
+Les entêtes sont des éléments <em>bloc</em>, et peuvent êre uniquement créées
+comme les filles d'éléments qui ont un contenu de type bloc. Notez que pour
+les tables de données, il existe des éléments spéciaux pour marquer les
 entêtes.</p>
 
 <p>Le premier des trois niveaux d'entête peut être créé depuis la barre
 d'outils en utilisant les icônes <img
-src="../../../resources/icons/16x16/XHTML_H1.png" alt="H1 button" />
-, <img src="../../../resources/icons/16x16/XHTML_H2.png" alt="H2 button" />
-, <img src="../../../resources/icons/16x16/XHTML_H3.png" alt="H3 button" />
-. Tous les niveaux d'entête peuvent être créés depuis le menu
-<strong>XHTML</strong>, ou en utilisant les raccourcis clavier. Les
+src="../../../resources/icons/16x16/XHTML_H1.png" alt="H1 button" /> , <img
+src="../../../resources/icons/16x16/XHTML_H2.png" alt="H2 button" /> , <img
+src="../../../resources/icons/16x16/XHTML_H3.png" alt="H3 button" /> . Tous
+les niveaux d'entête peuvent être créés depuis le menu
+<strong>Insertion</strong>, ou en utilisant les raccourcis clavier. Les
 raccourcis clavier sont par défaut <kbd>Ctrl h Ctrl 1</kbd> pour
-<code>H1</code>, <kbd>Ctrl h Ctrl 2</kbd> pour <code>H2</code>, et pareil
-jusqu'à <kbd>Ctrl h Ctrl 6</kbd> for <code>H6</code>.</p>
+<code>h1</code>, <kbd>Ctrl h Ctrl 2</kbd> pour <code>h2</code>, et pareil
+jusqu'à <kbd>Ctrl h Ctrl 6</kbd>  for <code>h6</code>.</p>
 
 <p>Il existe des styles d'entête par défaut dans la plupart des navigateurs
 pour donner une idée de leur importance relative, mais l'auteur peut

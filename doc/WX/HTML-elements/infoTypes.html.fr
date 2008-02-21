@@ -13,7 +13,7 @@
 Amaya<img border="0" alt="Amaya"
 src="../../../resources/icons/22x22/logo.png" /> 
 
-<p class="nav"><a href="../Manual.html.fr#There"><img alt="top" border="0"
+<p class="nav"><a href="../HTML.html.fr"><img alt="top" border="0"
 src="../../../resources/icons/misc/up.png" /></a> <a
 href="structure.html.fr"><img alt="next" border="0"
 src="../../../resources/icons/misc/right.png" /></a></p>
@@ -27,7 +27,7 @@ src="../../../resources/icons/misc/right.png" /></a></p>
 d'élément, il est possible d'utiliser les <a
 href="../StyleSheets.html">feuilles de style</a> pour changer la présentation
 de n'importe quel élément. Les types information qui peuvent être représentés
-par les éléments HTML sont :</p>
+par les éléments HTML sont :</p>
 <dl>
   <dt><a href="headings.html.fr">En-têtes</a></dt>
     <dd>Il y a six niveaux d'en-tête dans HTML, qui doivent être utilisés
@@ -57,7 +57,7 @@ par les éléments HTML sont :</p>
   <dt><a href="inline.html.fr#Inline">Citations</a></dt>
     <dd>Celles-ci peuvent être au niveau ligne ou bloc. Dans chaque cas, il
       est possible de noter la source de la citation en utilisant l'élément
-      CITE ou l'attribut CITE.</dd>
+      <code>cite</code> ou l'attribut <code>cite</code>.</dd>
   <dt><a href="inline.html.fr#Sample">Sample input, output, computer
   code</a></dt>
     <dd>Ces éléments correspondent à des exemples de <code>computer
@@ -69,11 +69,10 @@ par les éléments HTML sont :</p>
   <dt><a href="inline.html.fr#Inline2">Insertions et suppressions</a></dt>
     <dd>Il existe des éléments pour marquer le texte qui a été inséré, ou qui
       devrait être supprimé. <ins>(Cela est utile pour l'édition
-      collaborative )</ins></dd>
+      collaborative </ins> <del>historique du document</del>)</dd>
   <dt><a href="inline.html.fr#Emphasis">Mises en évidence</a></dt>
-  <dt>HTML fournit deux niveaux de mise en évidence :<em>mise en évidence
-  ordinaire</em> et <strong>mise en évidence forte.</strong></dt>
-  <dt></dt>
+    <dd>HTML fournit deux niveaux de mise en évidence :mise en évidence
+      ordinaire et mise en évidence forte.</dd>
 </dl>
 </div>
 </body>

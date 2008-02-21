@@ -3,14 +3,14 @@
 <head>
   <title>Structure du document HTML</title>
   <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="en" lang="en">
 
 <div>
-<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" /> 
 
 <p class="nav"><a href="infoTypes.html.fr"><img alt="previous" border="0"
 src="../../../resources/icons/misc/left.png" /></a> <a
@@ -33,17 +33,17 @@ blocs d'éléments.</p>
 division _ pour l'utiliser, sélectionnez la section que vous voulez assembler
 au groupe (en incluant son en-tête), puis sélectionnez l'option <a
 href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-DIV"
-name="DIV">Division (div)</a> du menu <strong>XHTML</strong> (ou utilisez le
-raccourci-clavier <kbd>Ctrl h Ctrl v</kbd> ).</p>
+name="DIV">Division (div)</a> du menu <strong>Insertion</strong> (ou utilisez
+le raccourci-clavier <kbd>Ctrl h Ctrl v</kbd> ).</p>
 
-<p>Il y a une structure spéciale dans HTML _ le lien, qui fait du Web une
+<p>Il y a une structure spéciale dans HTML, le lien, qui fait du Web une
 toile. Les informations sur <a href="../Links.html">comment créer un lien</a>
 et <a href="../Tables.html">comment créer des tables</a> sont fournies par la
 documentation du <a href="../Manual.html.fr">manuel d'utilisation.</a></p>
 
 <p>Une page normale HTML devrait inclure <a
 href="../Creating.html.fr#Changing">un titre,</a> <a
-href="headings.html.fr">une en-tête de niveau un</a>et <a
+href="headings.html.fr">une en-tête de niveau un</a> et <a
 href="address.html.fr">une adresse ou une information sur l'auteur.</a> Elle
 devrait également inclure des paragraphes, des listes, des images, des
 tables, et un contenu organisé en sous-sections avec différents niveaux

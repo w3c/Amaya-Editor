@@ -317,13 +317,5 @@ d&eacute;pr&eacute;ci&eacute;s dans HTML 4.0 (ils ne devraient plus
     <dd>Doit &ecirc;tre remplac&eacute; un <a href="StyleSheets.html">style
       CSS</a></dd>
 </dl>
-
-<p align="right"><a href="Manual.html"><img alt="top" border="0"
-src="../../resources/icons/misc/up.png"> </a> <a
-href="HTML-elements/infoTypes.html"><img alt="next" border="0"
-src="../../resources/icons/misc/right.png"> </a></p>
-<hr>
-
-<p></p>
 </body>
 </html>

@@ -10,7 +10,8 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+Amaya<img border="0" alt="Amaya"
+src="../../../resources/icons/22x22/logo.png" /> 
 
 <p class="nav"><a href="address.html.fr"><img alt="previous" border="0"
 src="../../../resources/icons/misc/left.png" /></a> <a
@@ -49,8 +50,8 @@ utiliser pour changer la présentation des définitions en ligne.</p>
 l'élément d'information "citation" - l'élément HTML <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>q</code></a>.
 Cet élément est sélectionné depuis le sous-menu <strong>Éléments
-caractères</strong> du menu <strong>XHTML</strong>, ou avec le raccourci
-clavier <code>Ctrl i Ctrl q</code>. Il est possible de donner l'URI de la
+caractères</strong> du menu <strong>Insertion</strong>, ou avec le raccourci
+clavier <kbd>Ctrl i Ctrl q</kbd>. Il est possible de donner l'URI de la
 source pour la citation, utilisant l'attribut <code>cite</code>.</p>
 
 <p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
@@ -74,10 +75,10 @@ href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-KBD"><code>kbd</code
 et <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SAMP"><code>samp</code></a>.
 Ces éléments sont trouvés à l'aide du sous-menu <strong>Types
-information</strong> du menu <strong>XHTML</strong>, et il existe des
-raccourcis clavier pour tous - <code>Ctrl i</code> suivi de <code>Ctrl
-t</code> pour code, <code>Ctrl v</code> pour variables, <code>Ctrl k</code>
-pour user input et <code>Ctrl m</code> pour sample output.</p>
+information</strong> du menu <strong>Insertion</strong>, et il existe des
+raccourcis clavier pour tous - <kbd>Ctrl i</kbd> suivi de <kbd>Ctrl t</kbd>
+pour code, <kbd>Ctrl v</kbd> pour variables, <kbd>Ctrl k</kbd> pour user
+input et <kbd>Ctrl m</kbd> pour sample output.</p>
 
 <p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation de ces éléments.</p>
@@ -92,16 +93,17 @@ href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR"><code>abbr</co
 et <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>acronym</code></a>
 disponibles dans le sous-menu <strong>Types information</strong> du menu
-<strong>XHTML</strong>. Pour unix, il y a également le raccourci <code>Ctrl i
-Ctrl y</code> pour les acronymes. Ceci permet la reconnaissance des
-différents types de systèmes. L'attribut <code>title</code> peut également
-être utilisé pour spécifier l'expansion de l'acronyme. Sélectionnez le texte
-à marquer, par exemple <acronym
-title="World Wide Web Consortium">W3C</acronym>, sélectionnez le menu Style,
-le sous-menu types information, et l'option acronyme. Puis sélectionnez
-l'élément entier (<kbd>touche Esc</kbd> sur Unix, <kbd>touche F2</kbd> sur
-Windows), ouvrez le menu Attributs, sélectionnez title, entrez <kbd>World
-Wide Web Consortium</kbd>, et appliquez le.</p>
+<strong>Insertion</strong>. Il y a également le raccourci <kbd>Ctrl i Ctrl
+y</kbd> pour les acronymes. Ceci permet la reconnaissance des différents
+types de systèmes. </p>
+
+<p>L'attribut <code>title</code> peut également être utilisé pour spécifier
+l'expansion de l'acronyme. Sélectionnez le texte à marquer, par exemple
+<acronym title="World Wide Web Consortium">W3C</acronym>, sélectionnez le
+menu Style, le sous-menu types information, et l'option acronyme. Puis
+sélectionnez l'élément entier (<kbd>touche Esc</kbd>  ou <kbd>F2</kbd>),
+ouvrez le menu Attributs, sélectionnez <strong>title</strong>, entrez
+<code>World Wide Web Consortium</code>, et appliquez le.</p>
 
 <p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation des acronymes ou des abréviations.</p>
@@ -115,8 +117,8 @@ href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
 name="DEL"><code>del</code></a> et <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>ins</code></a>
 sont disponibles dans le sous-menu <strong>Types information</strong> du menu
-<strong>XHTMLl</strong> pour marquer le texte qui devra être effacé ou qui a
-<ins>déjà</ins> été inséré.</p>
+<strong>Insertion</strong> pour marquer le texte qui devra être effacé ou qui
+a <ins>déjà</ins> été inséré.</p>
 
 <p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation des insertions et des suppressions.</p>
@@ -139,20 +141,20 @@ d'outils en utilisant les boutons <img
 src="../../../resources/icons/16x16/XHTML_I.png" alt="Emphasis" /> et <img
 src="../../../resources/icons/16x16/XHTML_B.png" alt="Strong" /> , ou depuis
 le formulaire du sous-menu <strong>Types information</strong> du menu
-<strong>XHTML</strong>. Il y a également des raccourcis clavier - <kbd>Ctrl i
-Cltr e</kbd> pour accentuer (parce que l'interprétation par défaut est
-souvent le texte en italique) et <kbd>Ctrl i Ctrl s</kbd> pour la mise en
-évidence renforcée (parce que l'interprétation par défaut est souvent le
-texte en gras). Si il y a une sélection courante, la mise en évidence lui est
-appliquée, autrement l'élément approprié est créé, en tant que fils de
+<strong>Insertion</strong>. Il y a également des raccourcis clavier -
+<kbd>Ctrl i Cltr e</kbd> pour accentuer (parce que l'interprétation par
+défaut est souvent le texte en italique) et <kbd>Ctrl i Ctrl s</kbd> pour la
+mise en évidence renforcée (parce que l'interprétation par défaut est souvent
+le texte en gras). Si il y a une sélection courante, la mise en évidence lui
+est appliquée, autrement l'élément approprié est créé, en tant que fils de
 l'élément courant.</p>
 
 <p>Les éléments de la mise en évidence sont sous forme de choix dans Amaya -
 pour désactiver une mise en évidence, sélectionnez l'élément et réappliquez
 la mise en évidence appropriée. Par exemple, placez le curseur quelque part
-sur un élément <code>strong</code>, utilisez la touche <kbd>F2</kbd>
-(Windows) ou la touche <kbd>Esc</kbd> (Unix) pour sélectionner l'élément, et
-ensuite utilisez le raccourci clavier, menu item, ou le bouton <img
+sur un élément <code>strong</code>, utilisez la touche <kbd>F2</kbd>  ou
+<kbd>Esc</kbd> pour sélectionner l'élément, et ensuite utilisez le raccourci
+clavier, menu item, ou le bouton <img
 src="../../../resources/icons/16x16/XHTML_B.png" alt="Strong" /> - l'élément
 <code>strong</code> sera désactivé.</p>
 
