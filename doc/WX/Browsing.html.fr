@@ -230,7 +230,7 @@ utilisable avec la souris ou avec le clavier.</p>
 <p>Avec le clavier, passez d'une entrée à l'autre avec les touches flèches
 (<kbd>&uarr;</kbd>, <kbd>&darr;</kbd>) puis sélectionnez l'entrée courante
 avec la touche <kbd>Entrée</kbd>. Vous pouvez annuler toute action en
-appuyant sur la touche <kbd>Esc</kbd> à n'importe quel moment.</p>
+appuyant sur la touche <kbd>Échap</kbd> à n'importe quel moment.</p>
 
 <p>Avec la souris, il y a deux types de comportement. Un simple clic permet
 de sélectionner une entrée tandis qu'un double clic sur une entrée signifie

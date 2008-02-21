@@ -31,10 +31,6 @@ de la plateforme et la configuration choisie. Ce manuel n'est pas exhaustif,
 son but est simplement d'aider les utilisateurs à découvrir les principales
 caractéristiques du logiciel.</p>
 
-<p>Ce document est organisé comme un livre. Vous pouvez utiliser la commande
-<a href="MakeBook.html.fr#L1065">Outils/Construire un livre</a> pour
-assembler et imprimer la totalité du manuel.</p>
-
 <p>Beaucoup de commandes d'<strong>Amaya</strong> sont identiques à celles
 fournies par les traitements de texte classiques. Elles ne sont pas
 présentées ici. Seuls les aspects spécifiques d'<strong>Amaya</strong> sont
@@ -76,7 +72,7 @@ décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Views.html.fr#Vues">Vues d'un document</a>
+  <li><a href="Views.html.fr#Vues">Vues d'un document</a> 
     <ul>
       <li><a href="Views.html.fr#Ouvrir">Ouvrir une vue</a></li>
       <li><a href="Views.html.fr#Fermer">Fermer une vue</a></li>
@@ -85,7 +81,7 @@ décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Document.html.fr#L50">Gestion des documents</a>
+  <li><a href="Document.html.fr#L50">Gestion des documents</a> 
     <ul>
       <li><a href="Document.html.fr#L54">Créer un document</a></li>
       <li><a href="Document.html.fr#Ouverture">Ouvrir un document</a></li>
@@ -103,7 +99,7 @@ décrits.</p>
       cachés</a></li>
       <li><a href="Creating.html.fr#L1179">Eléments créés
       automatiquement</a></li>
-      <li><a href="Creating.html.fr#touche">La touche Enter (ou Return)</a> 
+      <li><a href="Creating.html.fr#touche">La touche Entrée</a> 
         <ul>
           <li><a href="Creating.html.fr#end-anchor">Sortir des ancres, des
             éléments en-ligne, etc.</a></li>
@@ -113,8 +109,8 @@ décrits.</p>
             définitions (dl/dt/dd)</a></li>
         </ul>
       </li>
-      <li><a href="Creating.html.fr#touches">Les touches Delete et
-        Backspace</a></li>
+      <li><a href="Creating.html.fr#touches">Les touches Suppr et
+      Arrière</a></li>
       <li><a href="Creating.html.fr#Changer">Changer le titre du
       document</a></li>
       <li><a href="Creating.html.fr#date">Insérer la date de mise à
@@ -134,7 +130,7 @@ décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="EditChar.html.fr#Saisir">Saisir du texte</a>
+  <li><a href="EditChar.html.fr#Saisir">Saisir du texte</a> 
     <ul>
       <li><a href="EditChar.html.fr#support">Le support multi-touches
         standard des versions Unix</a></li>
@@ -237,9 +233,9 @@ décrits.</p>
   <li><a href="HTML.html.fr#ments">Les éléments HTML</a></li>
 </ul>
 <ul>
-  <li><a href="Math.html.fr#Editer">Editer des mathématiques</a>
+  <li><a href="Math.html.fr#Editer">Editer des mathématiques</a> 
     <ul>
-      <li><a href="Math.html.fr#L57">Créer une formule mathématique</a>
+      <li><a href="Math.html.fr#L57">Créer une formule mathématique</a> 
         <ul>
           <li><a href="Math.html.fr#Nouvelle">Nouvelle formule</a></li>
           <li><a href="Math.html.fr#XMLMenu">Le sous-menu Math</a></li>
@@ -248,7 +244,7 @@ décrits.</p>
             partir du clavier</a></li>
         </ul>
       </li>
-      <li><a href="Math.html.fr#Options">Options d'éditions avancées</a>
+      <li><a href="Math.html.fr#Options">Options d'éditions avancées</a> 
         <ul>
           <li><a href="Math.html.fr#Caracteres">Entrer des caractères</a></li>
           <li><a href="Math.html.fr#Row">La construction row </a></li>
@@ -259,7 +255,7 @@ décrits.</p>
           <li><a href="Math.html.fr#liens">Les liens dans MathML</a></li>
         </ul>
       </li>
-      <li><a href="Math.html.fr#plus">Un peu plus à propos de MathML</a>
+      <li><a href="Math.html.fr#plus">Un peu plus à propos de MathML</a> 
         <ul>
           <li><a href="Math.html.fr#Compatib">Compatibilité des
             navigateurs</a></li>
@@ -273,7 +269,7 @@ décrits.</p>
   <li><a href="SVG.html.fr#Editer">Editer des graphiques SVG</a></li>
 </ul>
 <ul>
-  <li><a href="Xml.html.fr#Support">Support XML générique</a>
+  <li><a href="Xml.html.fr#Support">Support XML générique</a> 
     <ul>
       <li><a href="Xml.html.fr#Chargement">Chargement de document XML</a></li>
       <li><a href="Xml.html.fr#Utilsation">Utilsation du style dans

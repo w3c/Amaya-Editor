@@ -94,33 +94,30 @@ documents are available:</p>
         <li>Choose <strong>Open document</strong> from the
           <strong>File</strong> menu. 
           <p class="Note"><strong>Note:</strong> You can alternately use a
-          keyboard shortcut to open a document. Press <kbd>Ctrl o ctrl
-          o</kbd>.</p>
+          keyboard shortcut to open a document. Press <kbd>Ctrl-o
+          ctrl-o</kbd>.</p>
         </li>
         <li>In the <strong>Open document</strong> dialog, type the full path
           or URI of the file you want to open, or use the
           <strong>Browse</strong> button (a file icon) to open a file
-          selection dialog. 
-          <p class="Note"><strong>Note:</strong> You can also click the
-          button on the right side of the address field to display the list
-          of the documents you have opened recently. You can then select an
-          address in this list to open the corresponding document.</p>
-        </li>
+          selection dialog. </li>
         <li>When the document is correctly specified, click
           <strong>Open.</strong></li>
       </ol>
       <p>You can also use these steps to create a new local document, by
       specifying the name of a file that does not exist.</p>
     </dd>
-  <dt>Files explorer</dt>
-    <dd>A file explorer may be displayed in Tools window with <strong>Views /
-      Show toolbars / Files</strong>. This tool gives access to all local
+  <dt>Files browser</dt>
+    <dd>A file browser may be displayed in the tools area with <strong>Views
+      / Show toolbars / Files</strong>. This tool gives access to all local
       directories. A simple click allows you to open or close a directory and
       a double click on a file name opens the corresponding document.</dd>
   <dt>Document address field</dt>
-    <dd>The address of the current document is displayed at the top of the
+    <dd>Note that this method works only if you have chosen a <a
+      href="Configure.html#Profile">profile</a> with the navigation feature.
+      <p>The address of the current document is displayed at the top of the
       window. Edit this address to specify the file name or the URI of the
-      document you want to open and press <kbd>Enter</kbd>. 
+      document you want to open and press <kbd>Enter</kbd>. </p>
       <p>You can also create a new document by typing the name of a document
       that does not exist yet.</p>
       <p class="Note"><strong>Note:</strong> You can click the button on the
@@ -152,10 +149,10 @@ documents are available:</p>
 authors often create documents using the incorrect charset. For example,
 consider an XHTML document that uses ISO Latin-1 but does not provide
 information about the charset. When the XML parser analyzing the document
-encounters a character that does not match a valid UTF-8 character, the
-document is considered to be not well formed. Parsing stops and Amaya
+encounters a sequence of bits that does not match a valid UTF-8 character,
+the document is considered to be not well formed. Parsing stops and Amaya
 displays an error message that proposes either to reload the document as an
-HTML document or to show parsing errors. If show parsing errors is selected,
+HTML document or to show parsing errors. If show parsing errors is chosen,
 Amaya displays the detected errors.</p>
 
 <p></p>

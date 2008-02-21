@@ -121,6 +121,9 @@ types de documents sont disponibles :</p>
       <p>Le bouton à la droite de cette zone affiche la liste des derniers
       documents chargés. Vous pouvez choisir un document dans cette liste. Ce
       document vient alors remplacer le document courant.</p>
+      <p>Notez que cette possibilité n'est offerte que si vous avez choisi un
+      <a href="Configure.html.fr#Profile">profil</a> incluant l'option
+      Navigation.</p>
     </dd>
   <dt>Liens</dt>
     <dd>En <a href="Browsing.html.fr#Activating">activant un lien</a> vous
