@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="GENERATOR" content="amaya 9.3.1, see http://www.w3.org/Amaya/"
@@ -15,7 +15,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Searching.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
@@ -25,48 +26,46 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2>Checking Spelling in Amaya</h2>
+<h2>Checking spelling in Amaya</h2>
 
-<p>Amaya provides a multilingual spell checker, and selects the appropriate
+<p>Amaya provides a multilingual spell checker and selects the appropriate
 language according to the <code>lang</code> attribute. The <code>lang</code>
 attribute can be associated with any element in a document, even with a
 single word, using the <a
 href="Attributes.html"><strong>Attributes</strong></a> tool.</p>
 
 <p>To spell check a document, choose <strong>Check spelling</strong> from the
-<strong>Edit</strong> menu.</p>
+<strong>Tools</strong> menu.</p>
 
-<h3>The Personal Dictionary</h3>
+<h3>The personal dictionary</h3>
 
 <p>When you register a new word, the spell checker creates or updates the
 <b>user's personal dictionary</b>. A user's personal dictionary is located in
 the <code>AmayaHome/dictionary.DCT</code> file. In read-write mode, the spell
-checker employs the user dictionary when reviewing all documents, in addition
-to the language-specific dictionaries. When you click the
-<strong>Learn</strong> button in the <strong>Spell checking</strong> dialog,
-the user dictionary is created, if does not already exists, and automatically
-updated by the spelling checker.</p>
+checker uses the user dictionary when checking all documents, in addition to
+the language-specific dictionaries. When you click the <strong>Learn</strong>
+button in the <strong>Spell checking</strong> dialog, the user dictionary is
+created, if does not already exists, and automatically updated by the
+spelling checker.</p>
 
-<h3>The Spell Check Dialog</h3>
+<h3>The spell check dialog</h3>
 
-<p>The <strong>Check spelling</strong> option on the <strong>Edit</strong>
-menu displays a dialog that enables you to choose parameters and interact
-with the spell checker. These parameters are defined below.</p>
+<p>The <strong>Tools / Check spelling</strong> command displays a dialog that
+enables you to choose parameters and interact with the spell checker.</p>
 <ul>
-  <li>The <strong>Spell Checking</strong> field displays incorrect words. The
-    list of proposed corrections is displayed in the selector field located
-    below the incorrect word. By default, Amaya selects the first proposed
-    correction. To select another correction, simply click it. The selected
-    correction is displayed below the selector field. This correction can be
-    directly edited on the dialog. The correction is made when you click the
-    <strong>Replace and next</strong> button.<br />
-    Note that you can perform the correction by double-clicking a proposed
-    correction.</li>
+  <li>The top left field displays an incorrect word. The list of proposed
+    corrections is displayed in the selector field located below the
+    incorrect word. By default, Amaya selects the first proposed correction.
+    To select another correction, simply click it. The selected correction is
+    displayed below the selector field. This correction can be edited on
+    there. The correction is made when you click the <strong>Replace and
+    next</strong> button.<br />
+    Note that you can also perform the correction by double-clicking a
+    proposed correction.</li>
   <li>The <strong>language</strong> in which the correction is made is
-    specified in the bottom left corner of the dialog. To change the
-    language, apply a <code>lang</code> attribute to the text with the
-    <strong>Attributes</strong> tool, and restart the spell-check
-  procedure.</li>
+    specified in the bottom left corner of the dialog. To change language,
+    apply a <code>lang</code> attribute to the text with the
+    <strong>Attributes</strong> tool, and restart the spell checker.</li>
   <li>The <strong>Ignore</strong> section tells the spell checker to ignore
     certain words, for example, words that contain only capital letters,
     words that contain digits, Roman numerals or words with special
@@ -76,7 +75,7 @@ with the spell checker. These parameters are defined below.</p>
     of document on which the checker will work.</li>
 </ul>
 
-<h3>Running the Spell Checker</h3>
+<h3>Running the spell checker</h3>
 
 <p>Before running the spell checker, make sure the current selection is in
 the document you want to check. For the spell checker, the source code is
@@ -93,17 +92,17 @@ spell checking" is displayed at the bottom of the dialog.</p>
 <p>When an incorrect word is detected, you can use a button on the dialog to
 perform the following operations:</p>
 <ul>
-  <li><strong>Search/Skip</strong>: Amaya considers the incorrect word as
-    acceptable. No change is made in the text or in the dictionaries. The
-    checker searches for the next error.</li>
+  <li><strong>Search/Skip</strong>: The incorrect word is acceptable. No
+    change is made in the text or in the dictionaries. The checker searches
+    for the next error.</li>
   <li><strong>Learn</strong>: Performs the same action as the
     <strong>Search/Skip</strong> button, except that the word considered
-    incorrect is added to the document dictionary, and the checker will
-    ignore any subsequent occurrence of this word.</li>
+    incorrect is added to the user's personal dictionary, and the checker
+    will ignore any subsequent occurrence of this word.</li>
   <li><strong>Replace and next</strong>: Amaya replaces the incorrect word
-    with the correct word (optionally edited by the user) and the checker
-    searches for the next error.</li>
-  <li><strong>Close</strong>: Amaya closes the dialog and stops spell
+    with the correct word (optionally edited) and the checker searches for
+    the next error.</li>
+  <li><strong>Close</strong>: Amaya closes the dialog box and stops spell
     checking. Previous corrections are not canceled.</li>
 </ul>
 </div>

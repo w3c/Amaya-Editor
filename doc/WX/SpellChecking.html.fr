@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Vérifier l'orthographe</title>
@@ -13,7 +13,8 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Searching.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -27,10 +28,10 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <p>Amaya est pourvu d'un vérificateur d'orthographe multilingue. Cet outil
 est invoqué par la commande <strong>Vérifier orthographe</strong> du menu
-<strong>Edition</strong>. L'attribut <code>lang</code> permet de sélectionner
-le bon dictionnaire. Vous pouvez associer cet attribut à n'importe quel
-élément dans un document, même à un seul mot. Utilisez pour cela l'outil
-<strong><a href="Attributes.html.fr#L1073">Attributs.</a></strong></p>
+<strong>Outils</strong>. L'attribut <code>lang</code> permet de choisir le
+bon dictionnaire. Vous pouvez associer cet attribut à n'importe quel élément
+dans un document, même à un seul mot. Utilisez pour cela l'outil <strong><a
+href="Attributes.html.fr#L1073">Attributs.</a></strong></p>
 
 <h3>Le dictionnaire personnel</h3>
 
@@ -39,22 +40,21 @@ personnel qui se trouve dans <code>AmayaHome/dictionary.DCT.</code>Ce
 dictionnaire est utilisé pour tous les documents, en supplément des
 dictionnaires des différentes langues. Il est créé, s'il n'existe pas déjà,
 et automatiquement mis à jour par le vérificateur d'orthographe lorsque la
-commande <strong>Apprend</strong> est activée (voir plus bas).</p>
+commande <strong>Apprendre</strong> est activée (voir plus bas).</p>
 
 <h3>Le dialogue Corriger</h3>
 
 <p>La commande <strong>Vérifier orthographe</strong> du menu
-<strong>Edition</strong> affiche une boîte de dialogue qui vous permet de
+<strong>Outils</strong> affiche une boîte de dialogue qui vous permet de
 choisir les paramètres de correction :</p>
 <ul>
-  <li>Le mot erroné est affiché dans la zone <strong>Corriger....</strong> La
-    liste des corrections proposées est affichée dans le sélecteur localisé
-    en-dessous du mot erroné. Par défaut, la première proposition de
-    correction est sélectionnée. Pour sélectionner une autre proposition,
-    cliquez simplement dessus. La proposition sélectionnée est affichée
-    en-dessous du sélecteur. Cette proposition peut être éditée. La
-    correction se fait une fois que vous avez cliqué sur le bouton
-    <strong>Remplacer</strong>.<br />
+  <li>Le mot erroné est affiché dans la zone en haut à gauche. La liste des
+    corrections proposées est affichée dans le sélecteur localisé en-dessous
+    du mot erroné. Par défaut, la première proposition de correction est
+    sélectionnée. Pour sélectionner une autre proposition, cliquez simplement
+    dessus. La proposition sélectionnée est affichée en-dessous du sélecteur.
+    Cette proposition peut être éditée. La correction se fait une fois que
+    vous avez cliqué sur le bouton <strong>Remplacer</strong>.<br />
     Notez que vous pouvez effectuer une correction simplement en
     double-cliquant une des corrections proposées.</li>
   <li>La langue dans laquelle se fait la correction est spécifiée dans le
@@ -63,17 +63,15 @@ choisir les paramètres de correction :</p>
     utilisant le menu <a
     href="Attributes.html.fr#Attributes"><strong>Attributs</strong></a>, puis
     de redémarrer la procédure de correction.</li>
-  <li>Plusieurs boutons dans le sous-menu <strong>Ignorer les mots</strong>
-    vous permettent d'ignorer certains mots : par exemple les mots
-    entièrement en lettres capitales, les mots incluant des chiffres, les
-    chiffres romains ou les mots contenant des caractères spéciaux indiqués
-    dans la liste voisine. Cette liste peut être modifiée par
-  l'utilisateur.</li>
-  <li>Le sous-menu <strong>Où corriger</strong>, similaire à celui de la
-    boîte de dialogue <strong><a
-    href="Searching.html.fr">Rechercher</a></strong>, vous permet de
-    spécifier la partie du document sur laquelle le vérificateur va
-    travailler.</li>
+  <li>Plusieurs boutons dans le menu <strong>Ignorer les mots</strong> vous
+    permettent d'ignorer certains mots : par exemple les mots entièrement en
+    lettres capitales, les mots incluant des chiffres, les chiffres romains
+    ou les mots contenant des caractères spéciaux indiqués dans la liste
+    voisine. Vous pouvez modifier cette liste.</li>
+  <li>Le menu <strong>Où corriger</strong>, similaire à celui de la boîte de
+    dialogue <strong><a href="Searching.html.fr">Rechercher</a></strong>,
+    vous permet de spécifier la partie du document sur laquelle le
+    vérificateur doit travailler.</li>
 </ul>
 
 <h3>Corriger un document</h3>
@@ -88,8 +86,8 @@ traité.</p>
 <p>Pour démarrer la correction, cliquez sur le bouton
 <strong>Chercher/Suivant</strong> en bas de la boîte de dialogue. Si une
 erreur est trouvée, le mot incorrect est sélectionné dans le document. Si
-aucune erreur n'est détectée, le message "Fin de correction" s'affiche dans
-la boîte de dialogue.</p>
+aucune erreur n'est détectée, le message "Correction terminée" s'affiche en
+bas de la boîte de dialogue.</p>
 
 <p>Lorsqu'un mot incorrect est détecté, vous pouvez utiliser un des boutons
 placés en bas de la boîte de dialogue afin d'exécuter l'une des opérations
@@ -98,15 +96,14 @@ suivantes :</p>
   <li><strong>Chercher/suivant</strong> : le mot considéré incorrect est
     acceptable. Aucun changement n'est effectué, ni dans le texte, ni dans le
     dictionnaire. Le vérificateur cherche l'erreur suivante.</li>
-  <li><strong>Apprend</strong> : même action que "Chercher/suivant" sauf que
-    le mot incorrect est ajouté au dictionnaire du document. Ainsi, le
-    vérificateur ignorera toute future occurrence à ce mot.</li>
+  <li><strong>Apprendre</strong> : même action que "Chercher/suivant" sauf
+    que le mot incorrect est ajouté à votre dictionnaire personnel. Ainsi, le
+    vérificateur ignorera toute future occurrence de ce mot.</li>
   <li><strong>Remplacer</strong> : le mot erroné est remplacé par le mot
-    correct (éventuellement changé ou modifié par l'utilisateur) et le
+    correct (que vous avez éventuellement changé ou modifié) et le
     vérificateur cherche l'erreur suivante.</li>
   <li><strong>Fermer</strong> : la boîte de dialogue disparaît et la
-    vérification est abandonnée. Les corrections précédentes ne sont pas
-    effacées.</li>
+    vérification est abandonnée. Les corrections effectuées subsistent.</li>
 </ul>
 </div>
 </body>
