@@ -48,7 +48,7 @@
 46 Indisponibilité momentanée de %s. Réessayez plus tard
 47 %s chargé
 48 Sauvegarde de %s
-49 Impossible de sauvegarder dans : %s
+49 Impossible d'enregistrer dans : %s
 50 French system error messages
 51 Une ancre ne peut pas contenir ces éléments
 52 Impossible de créer une ancre dans une ancre
@@ -63,7 +63,7 @@
 61 HTML.trans erreur de syntaxe ligne %s
 62 Maths
 63 Graphique
-64 Sauvegarder sous
+64 Enregistrer sous
 65 Authentification requise pour le domaine \'%s\' du serveur \'%s\'
 66 Domaine: %s
 67 Serveur: %s
@@ -76,7 +76,7 @@
 74 CSS
 75 Enregistrer aussi les images suivantes?
 76 Erreur de sauvegarde de l'URL
-77 Sauvegarder sur le disque ?
+77 Enregistrer sur le disque ?
 78 Copier les images
 79 Transformer les URL
 80 Adresse du document
@@ -115,7 +115,7 @@
 113 Cette opération n'est pas permise
 114 L'accès à %s requiert votre authentification
 115 Vérification ...
-116 La sauvegarde distante de %s a échouée, sauvegarder sur disque ?
+116 L'enregistrement distante de %s a échouée, enregistrer sur disque ?
 117 La sauvegarde distante de %s semble corrompue, ignorer ?
 118 URL %s redirigée sur %s, ignorer ?
 119 Le relecture de %s a échouée, ignorer ?

@@ -796,7 +796,7 @@
 </label>
 <label define="AM_CANNOT_SAVE">
 	<message xml:lang="en">Cannot save in: %s</message>
-	<message xml:lang="fr">Impossible de sauvegarder dans : %s</message>
+	<message xml:lang="fr">Impossible d'enregistrer dans : %s</message>
 	<message xml:lang="de">Kann nicht speichern unter %s</message>
 	<message xml:lang="it">Non posso salvare su %s</message>
 	<message xml:lang="tr">%s kaydedilemedi</message>
@@ -1036,7 +1036,7 @@
 </label>
 <label define="AM_SAVE_AS">
 	<message xml:lang="en">Save as</message>
-	<message xml:lang="fr">Sauvegarder sous</message>
+	<message xml:lang="fr">Enregistrer sous</message>
 	<message xml:lang="de">Speichern unter</message>
 	<message xml:lang="it">Salva con nome</message>
 	<message xml:lang="tr">İsimle kaydet</message>
@@ -1242,7 +1242,7 @@
 </label>
 <label define="AM_SAVE_DISK">
 	<message xml:lang="en">Save to disk ?</message>
-	<message xml:lang="fr">Sauvegarder sur le disque ?</message>
+	<message xml:lang="fr">Enregistrer sur le disque ?</message>
 	<message xml:lang="de">Speichern auf Festplatte?</message>
 	<message xml:lang="it">Salvo su disco ?</message>
 	<message xml:lang="tr">Diske kayıt?</message>
@@ -1865,7 +1865,7 @@
 </label>
 <label define="AM_SAVING_FAILED">
 	<message xml:lang="en">Saving to %s failed, Save to disk?</message>
-	<message xml:lang="fr">La sauvegarde distante de %s a échouée, sauvegarder sur disque ?</message>
+	<message xml:lang="fr">L'enregistrement distante de %s a échouée, enregistrer sur disque ?</message>
 	<message xml:lang="de">Speichern unter %s fehlerhaft, Speichern auf Festplatte?</message>
 	<message xml:lang="it">Il salvataggio su %s è fallito, salvo su disco?</message>
 	<message xml:lang="tr">%s\'e kaydedilemedi, Diske kaydedeyim mi?</message>
