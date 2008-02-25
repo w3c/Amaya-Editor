@@ -12,7 +12,8 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="SpellChecking.html.fr" accesskey="p"><img
 alt="previous" src="../../resources/icons/misc/left.png" /></a> <a
@@ -24,12 +25,13 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
 
 <div class="toc">
 <ul>
-  <li><a href="#Sauver2">Enregistrer et Publier des documents</a> 
+  <li><a href="#Sauver2">Enregistrer et publier des documents</a>
     <ul>
-      <li><a href="#commande">La commande Enregistrer</a></li>
-      <li><a href="#commande1">La commande Enregistrer sous</a></li>
-      <li><a href="#Saving1">Enregistrer et encodage de caractères
-      (charset)</a></li>
+      <li><a href="#commande">La commande enregistrer</a></li>
+      <li><a href="#SaveAll">La commande enregistrer tout</a></li>
+      <li><a href="#commande1">La commande enregistrer sous</a></li>
+      <li><a href="#Saving1">Enregistrement et encodage de caractères
+        (charset)</a></li>
       <li><a href="#Sauver1">Sauver le texte du document</a></li>
     </ul>
   </li>
@@ -37,110 +39,132 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
 </div>
 
 <div id="Saving">
-<h2 id="Sauver2"><a name="L1052">Enregistrer et Publier des documents</a></h2>
+<h2 id="Sauver2"><a name="L1052">Enregistrer et publier des documents</a></h2>
 
 <p>Amaya permet d'enregistrer les documents (X)HTML soit en format d'origine,
-soit en format texte. Les documents MathML et SVG sont sauvegardés dans leur
-format d'origine.</p>
+soit en format texte. Les documents MathML, SVG, XML, CSS sont sauvegardés
+dans leur format d'origine.</p>
 
-<p>Les sauvegardes distantes et locales peuvent être accéder de deux façons,
-grâce aux commandes <strong>Enregistrer</strong> et <strong>Enregistrer
-sous</strong>.</p>
+<p>Les sauvegardes distantes et locales peuvent être effectuées par les trois
+commandes <strong>Enregistrer</strong>, <strong>Enregistrer sous</strong> et
+<strong>Enregistrer tout</strong>.</p>
 
-<p>Cette section décrit les commandes du menu de publication. Il existe un
-nombre d'options de configuration que vous pouvez changer par l'intermédiaire
-du <a href="Configure.html.fr#Publishing">menu de configuration</a>.</p>
+<p>Il existe un certain nombre d'options de configuration que vous pouvez
+changer par l'intermédiaire du <a href="Configure.html.fr#Publishing">menu de
+configuration</a>.</p>
 
-<p><b>Amaya</b> ne fournit aucune vue d'ensemble de série de pages installées
-sur le serveur. Cependant il est possible d'enregistrer des fichiers d'un serveur
-comme des fichiers locaux grâce aux commandes <strong>Enregistrer</strong> et
-<strong>Enregistrer sous</strong>. Pendant ces opérations, Amaya tient compte des
-images présentes dans le document.</p>
+<p><strong><b>Amaya</b></strong> ne fournit pas de vue d'ensemble de pages
+installées sur un serveur. Cependant il est possible d'enregistrer des
+fichiers d'un serveur comme des fichiers locaux grâce à la commande
+<strong>Enregistrer sous</strong>. Pendant ces opérations, Amaya tient compte
+des images présentes dans le document, ainsi que des autres ressources
+associées au document (feuilles de style, scripts).</p>
 
-<h3 id="commande"><a name="L1517">La commande Enregistrer</a></h3>
+<h3 id="commande"><a name="L1517">La commande enregistrer</a></h3>
 
 <p>La commande Enregistrer peut être invoquée soit en choisissant
-<strong>Enregistrer</strong> depuis le menu <strong>Fichier</strong> (<kbd>Ctrl
-s</kbd>) ou bien en cliquant sur le bouton <img alt="floppy"
+<strong>Enregistrer</strong> depuis le menu <strong>Fichier</strong>
+(<kbd>Ctrl-s</kbd>) soit en cliquant sur le bouton <img alt="floppy"
 src="../../resources/icons/22x22/save.png" />. Cette commande sauve le
 document courant à son adresse d'origine. Si la réponse du serveur inclut
 l'en-tête HTTP <code>Content-Location</code>, la cible de la sauvegarde sera
 l'URL précisée par cet en-tête. Ceci est utile pour enlever les ambiguïtés
 induites par la négociation du contenu. Soient par exemple "report.html.fr"
 et "report.html.en" deux versions d'un même document, une écrite en français,
-l'autre en anglais. On utilisera l'URL virtuelle report.html pour référencer
-ce document. En fonction de la configuration du client, le serveur retournera
-soit l'un ou l'autre document lors de la consultation de l'URL report.html.
-Si le serveur supporte l'en-tête <code>Content-Location</code>, il indiquera
-dans celle-ci l'URL du document qu'il a actuellement servi, par exemple,
-report.html.fr. Dans ce cas, la sauvegarde du document sera faite vers cette
-URL en préférence de l'URL virtuel report.html.</p>
+l'autre en anglais. On utilisera l'URL virtuelle "report.html" pour
+référencer ce document. En fonction de la configuration du navigateur, le
+serveur retournera l'un ou l'autre document lors de la consultation de l'URL
+report.html. Si le serveur supporte l'en-tête <code>Content-Location</code>,
+il indiquera dans celle-ci l'URL du document qu'il a affectivement servi, par
+exemple, "report.html.fr". Dans ce cas, la sauvegarde du document sera faite
+vers cette URL plutôt que vers l'URL virtuel "report.html".</p>
 
 <p>Les images nouvellement ajoutées sont sauvées dans le même répertoire que
-celui du document et aucune confirmation n'est demandée, excepté si le nom du
-document est inconnu. Les serveurs permettent aux utilisateurs d'importer un
-document quand seul le nom du serveur ou le répertoire du serveur est donné.
-Cela est très utile au moment de la navigation, mais n'est pas supporté par
-la méthode "PUT". Dans ce cas, Amaya détecte que le nom du document manque et
-propose d'utiliser un nom par défaut pour répondre à la demande. Notez que
-l'utilisation de l'en-tête<code>Content-Location</code> permet de
-s'affranchir de ce problème.</p>
+celui du document et aucune confirmation n'est demandée, sauf si le nom du
+document est inconnu. Les serveurs permettent en effet d'accéder en lecture à
+un document quand seul le nom du serveur et le répertoire sont donnés. Cela
+est utile au moment de la navigation, mais n'est pas supporté par la méthode
+"PUT" du protocle HTTP. Dans ce cas, Amaya détecte que le nom du document
+manque et propose d'utiliser un nom par défaut. Notez que l'utilisation de
+l'en-tête <code>Content-Location</code> permet de s'affranchir de ce
+problème.</p>
 
-<p>Si quelqu'un a besoin d'enregistrer des images nouvellement ajoutées dans un
-autre endroit, la commande <strong>Enregistrer sous</strong> devra être utilisée
-à la place.</p>
+<p>Si vous voulez enregistrer des images nouvellement ajoutées dans un autre
+endroit que le document lui-même, utilisez la commande <strong>Enregistrer
+sous</strong>.</p>
 
-<h3 id="commande1"><a name="L1518">La commande Enregistrer sous</a></h3>
+<h3 id="SaveAll"><a>La commande enregistrer tout</a></h3>
+
+<p>La commande <strong>Enregistrer tout</strong> vous permet de sauvegarder
+d'un coup tous les documents ouverts dans Amaya que vous avez modifiés mais
+pas encore sauvés. Elle fonctionne comme la commande <strong>Sauver</strong>,
+mais pour tous ces documents au lieu du seul document courant.</p>
+
+<p>Cette commande peut être appelée par le menu <strong>Fichier</strong> ou
+par le bouton <img alt="floppy"
+src="../../resources/icons/22x22/save_all.png" /> de la barre des boutons.</p>
+
+<h3 id="commande1"><a name="L1518">La commande enregistrer sous</a></h3>
 
 <p>Le fait de sélectionner l'entrée <strong>Enregistrer sous</strong> dans le
-menu <strong>Fichier</strong> ouvre une boîte de dialogue qui vous permet d'enregistrer
-le document courant en changeant le format et à une adresse
+menu <strong>Fichier</strong> ouvre une boîte de dialogue qui vous permet
+d'enregistrer le document courant en changeant le format et à une adresse
 différente.</p>
 
 <p>Vous pouvez :</p>
 <ul>
-  <li>enregistrer le document seulement ou avec ses ressources (images, objets,
-    style, scripts) sur un disque local ou un serveur distant;</li>
+  <li>enregistrer le document seule ou avec ses ressources (images, objets,
+    style, scripts) sur un disque local ou un serveur web distant</li>
   <li>les images et les objets inclus peuvent être sauvés dans le répertoire
-    du document ou à une adresse différente;</li>
+    du document ou à une adresse différente</li>
   <li>le style (y compris les feuilles de style et les images importées) et
-    les scripts inclus peuvent être sauvés dans le répertoire du document ou
-    à une adresse différente;</li>
-  <li>toutes les URIs du document peuvent être mis à jour.</li>
+    les scripts liés au document peuvent être sauvés dans le répertoire du
+    document ou à une adresse différente</li>
+  <li>toutes les URIs du document peuvent être mis à jour pour tenir compte
+    de la nouvelles adresse du document et de ses resources associées.</li>
 </ul>
 
-<p>Les choix proposés dans la boîte de dialogue sont les suivants :</p>
+<p>La boîte de dialogue comporte deux onglets et deux boutond. Le premier
+onglet permet de chosir les options pour le document lui-même, le deuxième
+les options pour les resources associées (images, feuilles de style,
+scripts).</p>
+
+<p>L'onglet <strong>Document</strong> contient :</p>
 <ul>
-  <li>Le champ <strong>Où enregistrer</strong> indique l'adresse où le document
-    doit être sauvé. Ce peut être un fichier dans le système du fichier local
-    (par exemple "/pub/html/welcome.html") ou le nom d'un URI distante (par
-    exemple "http://www.w3.org/pub/Welcome.html"). 
-    <p class="Note"><strong>Notez</strong> que vous devrez donner le chemin
-    complet comme si il n'y avait aucun moyen de deviner le nom de
-    "http://www.w3.org/pub". Vous devrez également vous assurer que vous avez
-    le <strong>droit d'exécuter une méthode PUT</strong> dans le cas d'une
-    URI. Regardez la page <a
+  <li>Le champ <strong>Adresse du document</strong> indique l'adresse où le
+    document doit être sauvé. Ce peut être dans le système du fichier local
+    (par exemple "/pub/html/welcome.html") ou un URI distant (par exemple
+    "http://www.w3.org/pub/Welcome.html"). 
+    <p class="Note"><strong>Notez</strong> que vous devez donner le chemin
+    complet. Vous devrez également vous assurer que vous avez le droit
+    d'exécuter une méthode PUT dans le cas d'une URI. Regardez la page <a
     href="http://www.w3.org/Amaya/User/Put.html">configurez votre serveur
-    pour permettre la méthode PUT</a> ou demander à votre administrateur
+    pour permettre la méthode PUT</a> ou demandez à votre administrateur
     Web.</p>
   </li>
 </ul>
 <ul>
-  <li>Les indicateurs <strong>Transformer les URLs</strong>, <strong>Copier
-    les Images</strong> et <strong>Copier les ressources (styles et
-    scripts)</strong>
+  <li>Le menu <strong>Format de document</strong> propose le choix entre
+    <strong>HTML</strong>, <strong>XML</strong> (XHTML) et
+    <strong>Texte</strong> pour les documents HTML. Ce menu n'est pas proposé
+    quand on sauve un document SVG, MathML, CSS ou tout autre type que
+    (X)HTML. Par défaut Amaya conserve le format d'origine du document. 
+    <p>Le format Texte (<a href="#L1105">voir plus bas</a>) supprime les
+    balises HTML et produit du texte pur.</p>
+  </li>
+  <li>Le menu <strong>Options</strong> :
     <ul>
       <li>Le choix <strong>Transformer les URLs</strong> transforme toutes
         les URIs courantes en URIs relatives quand c'est possible. Bien sûr,
         si le document est sauvé dans un fichier local et si les URIs
-        pointent sur des fichiers lointains, les URIs resteront absolues.
-        Ceci assure que tous les liens dans le document restent corrects
-        après la copie.
+        pointent sur des fichiers distants, les URIs resteront absolues. Ceci
+        assure que tous les liens dans le document soient préservés par la
+        copie. 
         <p class="Note">Si vous sauvez le document localement pour le publier
-        par ftp parce que votre fournisseur d'accès ou Webmaster ne vous
-        permet pas d'utiliser la méthode PUT, vous devez désactiver cette
-        option pour ne pas altérer les liens calculés quand le document était
-        sur le serveur http.</p>
+        ensuite par ftp parce que votre fournisseur d'accès ou votre
+        Webmaster ne vous permet pas d'utiliser la méthode HTTP Put, vous
+        devez désactiver cette option pour ne pas altérer les liens calculés
+        quand le document était sur le serveur http.</p>
         <p></p>
       </li>
       <li>Le choix <strong>Copier les Images</strong> indique que les images
@@ -150,77 +174,73 @@ différente.</p>
         <p>Quand les images et les objets sont copiés, Amaya met à jour
         automatiquement tous les attributs <strong>src</strong> et
         <strong>data</strong> pour pointer vers les nouvelles adresses. Les
-        nouvelles adresses seront des URIs relatifs.</p>
+        nouvelles adresses sont des URIs relatifs.</p>
       </li>
       <li>Le choix <strong>Copier les ressources (styles et scripts)</strong>
-        indique que les styles (y compris les feuilles de style et les images
-        importées) et les scripts inclus dans le document doivent être copiés
-        avec le document à une nouvelle adresse. Vous devez garder ce bouton
-        actif, quand vous voulez engendrer une copie complète du document. 
+        indique que les feuilles de style (y compris les feuilles de style et
+        les images importées) et les scripts inclus dans le document doivent
+        être copiés avec le document à une nouvelle adresse. Vous devez
+        garder ce bouton actif, quand vous voulez engendrer une copie
+        complète du document. 
         <p>Quand ces ressources sont copiées, Amaya met à jour
         automatiquement tous les liens et processing instructions pour
-        pointer vers les nouvelles adresses. Les nouvelles adresses seront
-        des URIs relatifs.</p>
+        pointer vers les nouvelles adresses. Les nouvelles adresses sont des
+        URIs relatifs.</p>
       </li>
     </ul>
-  </li>
-  <li>Le <strong>Format de document</strong> propose le choix entre
-    <strong>HTML</strong>, <strong>XML</strong> (XHTML) et
-    <strong>Texte</strong> pour les documents HTML. Ce sous-menu n'est pas
-    proposé quand on sauve un document SVG, MathML, CSS ou tout autre type.
-    Par défaut Amaya conserve le format d'origine du document.
-    <p>Le format Texte (<a href="#L1105">voir plus bas</a>) supprime les
-    balises HTML et les remplace par des espaces, sauts de lignes, etc.</p>
   </li>
 </ul>
 <ul>
   <li>Le champ <strong>Charset</strong> permet de choisir l'encodage du
     document parmi la liste des encodages disponibles. Notez que cette option
-    n'est valable que pour les documents supportant la notion d'encodage,
+    n'est offerte que pour les documents supportant la notion d'encodage,
     tels que les fichiers HTML ou XML. Cette option est valable pour la
-    sauvegarde locale et distante d'un document.
-    <p class="Note">Très souvent le charset des documents Web est contrôlé
+    sauvegarde locale et distante d'un document. 
+    <p class="Note">Très souvent le charset des documents web est contrôlé
     par le serveur. Il dépend soit du suffixe du document (html, xml, xhtml,
     svg, mml), soit des instructions données dans le fichier
     <code>.htaccess</code>.</p>
   </li>
 </ul>
 <ul>
-  <li>Le champ <strong>MIME Type</strong> permet de changer le type MIME d'un
-    document lors d'une sauvegarde sur un serveur distant. En activant ce
-    bouton, un dialogue apparaîtra vous proposant un certain nombre de types
-    MIME. Vous pourrez également saisir un type MIME diffèrent de ceux qui
-    sont proposés.</li>
+  <li>Le champ <strong>Mime Type</strong> permet de changer le type MIME d'un
+    document lors d'une sauvegarde sur un serveur web distant. En activant ce
+    bouton, un menu apparaît vous proposant un certain nombre de types MIME.
+    Vous pouvez également saisir un type MIME différent de ceux qui sont
+    proposés.</li>
 </ul>
+
+<p>L'onglet <strong>Images, style et scripts</strong> contient :</p>
 <ul>
-  <li>Le champ <strong>Où enregistrer les images</strong> vous permet de donner le
-    répertoire où les images et les objets doivent être sauvés. Quand
-    <strong>Copier les Images</strong> est sélectionné, ce champ est
+  <li>Le champ <strong>Où enregistrer les images</strong> vous permet de
+    donner le répertoire où les images et les objets doivent être sauvés. Ce
+    répertoire peut être sur un serveur web distant. Quand l'option
+    <strong>Copier les Images</strong> est sélectionnée, ce champ est
     initialisé avec le nom du répertoire du document sauvé.</li>
   <li>Le champ <strong>Où enregistrer les ressources</strong> vous permet de
-    donner le répertoire où les styles et scripts doivent être sauvés. Quand
+    donner le répertoire où les styles et scripts doivent être sauvés. Ce
+    répertoire peut être sur un serveur web distant. Quand l'option
     <strong>Copier les ressources (styles et scripts)</strong> est
-    sélectionné, ce champ est initialisé avec le nom du répertoire du
+    sélectionnée, ce champ est initialisé avec le nom du répertoire du
     document sauvé.</li>
 </ul>
 
-<p>Ce dialogue inclut trois boutons :</p>
+<p>Cette boîte de dialogue contient deux boutons :</p>
 <ul>
-  <li>Le fait de cliquer sur <strong>Enregistrer</strong> débute le processus de
-    transformation du document et un événement demande confirmation dans les
-    deux cas suivants : 
-    <p class="Note">Pour enregistrer à distance, vérifiez que le proxy http n'est
-    pas mis, ou que le serveur proxy et le <a
+  <li>Le fait de cliquer sur <strong>Enregistrer</strong> débute le processus
+    d'enregistrement du document. Si vous avez choisi de suaver également
+    d'autres ressources, une liste de ces resources s'affiche et vous pouvez
+    en retirer certaines, qui ne seront pas enregistrées.
+    <p class="Note">Pour enregistrer à distance, vérifiez que le proxy http
+    n'est pas mis, ou que le serveur proxy et le <a
     href="http://www.w3.org/Amaya/User/Put.html">serveur cible sont
     configurés pour travailler avec la méthode PUT</a>.</p>
     <p></p>
   </li>
-  <li>Le bouton <strong>RAZ</strong> annule le contenu des champs "Où enregistrer
-    ...".</li>
   <li>Le bouton <strong>Annuler</strong> arrête la commande.</li>
 </ul>
 
-<h3 id="Saving1">Enregistrer et encodage de caractères (charset)</h3>
+<h3 id="Saving1">Enregistrement et encodage de caractères (charset)</h3>
 
 <p>Trois encodages standard sont considérés :</p>
 <ul>
@@ -242,11 +262,11 @@ nécessaire. XML offre deux telles représentations des caractères :</p>
 <ol>
   <li>Une référence caractère représente la position (en décimal ou
     hexadécimal) du caractère dans UCS. Par exemple, la lettre grecque
-    <em>alpha</em> est représentée comme <code>&amp;#x3b1;</code>
+    &alpha; (alpha) est représentée comme <code>&amp;#x3b1;</code>
     (hexadécimal) ou <code>&amp;#945;</code> (décimal)</li>
   <li>Une référence entité utilise un nom pour représenter un contenu (dans
-    ce cas un caractère). Par exemple la lettre grecque <em>alpha</em> peut
-    être représentée comme <code>&amp;alpha;</code></li>
+    ce cas un caractère). Par exemple la lettre grecque &alpha; est
+    représentée comme <code>&amp;alpha;</code></li>
 </ol>
 
 <p>Les références caractère peuvent être utilisées dans n'importe quel
@@ -259,38 +279,38 @@ Pratiquement. cela signifie que vous pouvez utiliser des références entité
 seulement si <code>le &lt;!DOCTYPE ...&gt;</code> est présent et référence
 une DTD qui définit les noms utilisés.</p>
 
-<p>Avec ceci en tête, il est plus facile de comprendre comment Amaya
-travaille. Par défaut, Amaya préserve l'encodage initial du document, c'est
+<p>Par défaut, Amaya préserve l'encodage initial du document, c'est
 l'encodage associé au document au chargement. Vous pouvez vérifier cet
-encodage avec la commande <strong>Fichier/Informations sur le
-document</strong> (champ Code de caractère). La commande Enregistrer sauve le
-document avec cet encodage, tandis que la commande <strong>Enregistrer
-sous</strong> vous permet de choisir un autre encodage (champ Charset).</p>
+encodage avec la commande <strong>Affichage/Info document</strong> (champ
+<strong>Codage</strong>). Les commandes <strong>Enregistrer</strong> et
+<strong>Enregistrer tout</strong> sauvent le document avec cet encodage,
+tandis que la commande <strong>Enregistrer sous</strong> vous permet de
+choisir un autre encodage (champ Charset).</p>
 
-<p>Quand un document est sauvé (commandes <strong>Sauve</strong>r ou
-<strong>Enregistrer sous</strong>) tous les caractères qui sont disponibles dans
-le jeu de caractères de l'encodage sont juste écrits en utilisant cet
-encodage. Seulement les autres caractères sont écrits en utilisant les
-références caractère ou entité. Le choix entre ces deux options est fait en
-accord avec le <code>doctype</code>. S'il y a un <code>doctype</code> qui
-référence une DTD qui définit un nom pour le caractère, une référence entité
-est utilisée (i.e. un nom), sinon Amaya engendre une référence caractère en
-hexadécimal.</p>
+<p>Quand un document est sauvé (commandes <strong>Enregistre</strong>r,
+<strong>Enregistrer tout</strong> ou <strong>Enregistrer sous</strong>) tous
+les caractères qui sont disponibles dans le jeu de caractères de l'encodage
+sont simplement écrits en utilisant cet encodage. Seules les autres
+caractères sont écrits en utilisant les références caractère ou entité. Le
+choix entre ces deux options est fait en accord avec le <code>doctype</code>.
+S'il y a un <code>doctype</code> qui référence une DTD qui définit un nom
+pour le caractère, une référence entité est utilisée (c'est-à-dire un nom),
+sinon Amaya engendre une référence caractère en hexadécimal.</p>
 
-<p class="Note">Note : la commande <strong>Fichier/Changer le type du
-document</strong> vous permet d'associer, de changer ou retirer le
-<code>doctype</code> à tout moment. Ceci vous permet d'engendrer soit des
-références caractère soit des références entité.</p>
+<p class="Note">Note : la commande <strong>Outils/Changer le doctype</strong>
+vous permet d'associer, de changer ou retirer le <code>doctype</code> à tout
+moment. Ceci vous permet de faire engendrer par Amaya soit des références
+caractère soit des références entité.</p>
 
-<h3 id="Sauver1"><a name="L1105">Sauver le texte du documents</a></h3>
+<h3 id="Sauver1"><a name="L1105">Sauver le texte du document</a></h3>
 
-<p>La commande <strong>Enregistrer sous</strong> du menu <strong>Fichier</strong>
-visualise une boîte de dialogue permettant de sauver le document courant dans
-des formats différents. Le bouton <strong>Texte</strong> du menu
-<strong>Format de document</strong> sauve le document sous forme de texte,
-dans un fichier local. Les balises HTML sont remplacées par des espaces,
-sauts de lignes, etc. La liste de toutes les URIs utilisées dans le document
-est listée dans ce fichier.</p>
+<p>La commande <strong>Enregistrer sous</strong> du menu
+<strong>Fichier</strong> visualise une boîte de dialogue permettant de sauver
+le document courant dans des formats différents. Le bouton
+<strong>Texte</strong> du menu <strong>Format de document</strong> sauve le
+document sous forme de texte. Les balises HTML sont remplacées par des
+espaces, sauts de lignes, etc. La liste de toutes les URIs utilisées dans le
+document est ajoutée à la fin de ce fichier.</p>
 </div>
 </body>
 </html>
