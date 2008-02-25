@@ -41,21 +41,22 @@ change the value of an existing attribute, or delete an attribute. It
 displays:</p>
 <ul>
   <li>The list of attributes already applied to the first selected element
-    and their current value. mandatory attributes are displayed in red and
+    and their current value. Mandatory attributes are displayed in red and
     cannot be removed.</li>
-  <li>Below, a combo box gives access to all attributes that may apply.</li>
+  <li>Below, a combo box labelled <strong>Insert</strong> provides the list
+    of all attributes that may be applied to the first selected element.</li>
 </ul>
 
-<p class="ProcedureCaption">To insert an attribute:</p>
+<p class="ProcedureCaption">To add an attribute to an element:</p>
 <ol>
   <li>Click within the element and press the <code><kbd>F2</kbd></code> key
-    to select the whole element.</li>
-  <li>When the element is selected, select the attribute name of the
-    attribute you want to add in the Insert list. This attribute is now
-    activated.</li>
+    to select the element of interest.</li>
+  <li>When the element is selected, choose in the <strong>Insert</strong>
+    combo box the attribute you want to add. This attribute is now
+  activated.</li>
   <li>For boolean attributes (such as <code>ismap</code> for an image), the
     command is finished.</li>
-  <li>For attributes with a limited set of values (such as
+  <li>For attributes with a limited set of predefined values (such as
     <code>lang</code>), you have to select a value in the list of possible
     values.</li>
   <li>For other attributes you have to edit the value, then confirm either
@@ -66,14 +67,14 @@ displays:</p>
 <p class="ProcedureCaption">To change the value of an attribute:</p>
 <ol>
   <li>Click within the element and press the <kbd><code>F2</code></kbd> key
-    to select the whole element.</li>
-  <li>Once the element is selected with this active attribute, click on the
-    entry name to display the editing form of this attribute value.</li>
-  <li>For attributes with a limited set of values (such as
+    to select the element of interest.</li>
+  <li>When the element is selected, click on the name of the attribute you
+    want to modify, to display the editing form of its value.</li>
+  <li>For attributes with a limited set of predefined values (such as
     <code>lang</code>), Amaya displays: 
     <ul>
       <li>A combo box giving the list of possible values. </li>
-      <li>A delete button (<img alt="remove"
+      <li>A button (<img alt="remove"
         src="../../resources/icons/16x16/cancel.png" />) to remove the
         attribute.</li>
     </ul>
@@ -84,20 +85,21 @@ displays:</p>
       <li>An input box to insert the value.</li>
       <li>An apply button (<img alt="ok"
         src="../../resources/icons/16x16/ok.png" />) to confirm the inserted
-        value. The <kbd>Enter</kbd> key also confirms the inserted value.</li>
-      <li>A delete button (<img alt="remove"
+        value. The <kbd>Enter</kbd> key can also be used to confirm the
+      value.</li>
+      <li>A button (<img alt="remove"
         src="../../resources/icons/16x16/cancel.png" />) to remove the
         attribute.</li>
     </ul>
   </li>
 </ol>
 
-<p class="ProcedureCaption">To remove an attribute:</p>
+<p class="ProcedureCaption">To remove an attribute from an element:</p>
 <ol>
   <li>Click within the element and press the <code><kbd>F2</kbd></code> key
-    to select the whole element.</li>
-  <li>Once the element is selected with this active attribute, click on the
-    entry name to display the editing form of this attribute value.</li>
+    to select the element of interest.</li>
+  <li>When the element is selected, click on the name of the attribute, to
+    display the editing form of its value.</li>
   <li>Click on the delete button (<img alt="remove"
     src="../../resources/icons/16x16/cancel.png" />) to remove the
   attribute.</li>
@@ -105,27 +107,27 @@ displays:</p>
 
 <h3 id="Editing2">Editing attributes in the structure view</h3>
 
-<p>All attributes are displayed in the structure view. Attributes may be
-displayed in blue or pink. When the attribute value is displayed in blue, you
-can only change it with the <strong>Attributes</strong> tool. This ensures
-that only one of the correct values is chosen.</p>
+<p>All attributes are displayed in the structure view. Attribute values may
+be displayed in blue or purple. When the value is displayed in blue, you can
+only change it with the <strong>Attributes</strong> tool. This ensures that
+only one of the predefined values is chosen.</p>
 
-<p>Attributes with a free value can be edited in the Structure View.</p>
+<p>Attributes with a free value can be edited in the structure view.</p>
 <ul>
-  <li>You can click within the attribute value (displayed in pink) and edit
+  <li>You can click within the attribute value (displayed in purple) and edit
     the value like any other character string.</li>
   <li>To select the whole value, you can click within the value then hit the
     <code><kbd>F2</kbd></code> key.</li>
   <li>To remove the attribute, you can select the whole value, then press the
     <code><kbd>Delete</kbd></code> key twice. The first
-    <code><kbd>Delete</kbd></code> will remove the attribute content and the
-    second will remove the attribute.</li>
+    <code><kbd>Delete</kbd></code> removes the attribute value and the second
+    removes the attribute itself.</li>
 </ul>
 
 <h3 id="Copying">Copying attributes</h3>
 
-<p>An attribute is not the same thing as element and an attribute cannot be
-copied by the <strong>Copy</strong>/<strong>Paste</strong> options on the
+<p>An attribute is not the same thing as an element, and an attribute can not
+be copied by the <strong>Copy</strong>/<strong>Paste</strong> entries on the
 <strong>Edit</strong> menu. Only a textual attribute value can be
 copied/pasted.</p>
 

@@ -28,8 +28,8 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <h2 id="Editing">Editing tables</h2>
 
 <p>Amaya does not contain a separate table editor. To Amaya, a table is
-simply a structure described by the HTML document type definition (DTD), like
-any other element, and it is edited as such. The same commands apply to
+simply a structure described by the (X)HTML document type definition (DTD),
+like any other element, and it is edited as such. The same commands apply to
 tables as to other HTML structures. However, a few specific commands have
 been added for more convenient manipulations.</p>
 
@@ -40,9 +40,10 @@ been added for more convenient manipulations.</p>
   <li>Move the cursor to the location in the document where you want to
     create the table.</li>
   <li>Click the <strong>Table</strong> button <img alt="(table)"
-    src="../../resources/icons/16x16/XHTML_Table.png" />, or choose
-    <strong>Table</strong> from the <strong>Insert</strong>
-    menu<strong>.</strong>The Table dialog displays.</li>
+    src="../../resources/icons/16x16/XHTML_Table.png" /> in the
+    <strong>Elements</strong> tool, or choose <strong>Table</strong> from the
+    <strong>Insert</strong> menu<strong>.</strong>The Table dialog
+  displays.</li>
   <li>Enter the initial number of rows and columns for the new table, and
     specify the border width, etc.</li>
   <li>Click the <strong>Confirm</strong> button. Amaya generates a graphical
@@ -52,7 +53,7 @@ been added for more convenient manipulations.</p>
     the appropriate text, image, etc. Use the arrow keys to navigate from one
     cell to another.</li>
   <li>You can also edit the text of the table caption, add it if not already
-    there, or remove i if it is not needed.</li>
+    there, or remove it if it is not needed.</li>
 </ol>
 
 <h3 id="Adding">Adding a new column</h3>
@@ -61,34 +62,36 @@ been added for more convenient manipulations.</p>
 <ol>
   <li>To create a new column to the left of an existing cell, select the
     <strong>Insert a column</strong> entry in the <strong>Tools/Edit
-    table</strong> submenu, or the button in the <strong>Elements</strong>
-    tool <img alt="button" src="../../resources/icons/16x16/Table_col.png"
-    width="16" height="16" />, or type <kbd>Ctrl t Ctrl b</kbd>.</li>
+    table</strong> submenu, or use the corresponding button in the
+    <strong>Elements</strong> tool <img alt="button"
+    src="../../resources/icons/16x16/Table_col.png" width="16" height="16"
+    />, or type <kbd>Ctrl-t Ctrl-b</kbd>.</li>
   <li>To create a new column to the right of an existing cell, select the
     <strong>Append a column</strong> entry in the <strong>Tools/Edit
-    table</strong> submenu, or the button in the <strong>Elements</strong>
-    tool <img alt="button" src="../../resources/icons/16x16/Table_col_a.png"
-    width="16" height="16" />, or type <kbd>Ctrl t Ctrl a</kbd>.</li>
+    table</strong> submenu, or use the corresponding button in the
+    <strong>Elements</strong> tool <img alt="button"
+    src="../../resources/icons/16x16/Table_col_a.png" width="16" height="16"
+    />, or type <kbd>Ctrl-t Ctrl-a</kbd>.</li>
 </ol>
 
-<p>In the <a href="Creating.html">XML mode</a>, a new column can also be
-easily added to a table using the <kbd>Enter</kbd> key. When a whole cell is
-selected (use <kbd>F2</kbd>), pressing the <kbd>Enter</kbd> key create a new
-cell and its corresponding column to the right of the selected cell.</p>
+<p>In <a href="Creating.html">XML mode</a>, a new column can also be added to
+a table using the <kbd>Enter</kbd> key. When a whole cell is selected (use
+<kbd>F2</kbd>), pressing the <kbd>Enter</kbd> key creates a new cell and its
+corresponding column to the right of the selected cell.</p>
 
 <h3 id="Removing">Removing, copying, pasting a column</h3>
 
 <p>When a whole column is selected, you can delete it, copy it, cut it and
-paste it before or after another column.</p>
+paste it before or after another column, in the same or in another table.</p>
 
 <p class="ProcedureCaption">To select a column:</p>
 <ol>
   <li>Use the <strong>Select column</strong> entry in the <strong>Tools/Edit
-    table</strong> submenu (<kbd>Ctrl t Ctrl c</kbd>).</li>
+    table</strong> submenu (<kbd>Ctrl-t Ctrl-c</kbd>).</li>
   <li>You can also start the selection in a cell and extend to another cell
     in the same column (for example start in Cell 1.2 and stop in Cell 2.2).
     Amaya changes to column selection mode. Hitting the <kbd>F2</kbd> key
-    twice extends the selection to the whole column.</li>
+    extends the selection to the whole column.</li>
 </ol>
 
 <table border="1" summary="table" style="width: 100%;">
@@ -118,12 +121,12 @@ cut it.</p>
 <ol>
   <li>To paste a column before an existing column, click at the beginning of
     a cell in the existing column and use item <strong>Paste before</strong>
-    of the <strong>Tools/Edit table</strong> submenu (<kbd>Ctrl t Ctrl
-    p</kbd>).</li>
+    of the <strong>Tools/Edit table</strong> submenu (<kbd>Ctrl-t
+    Ctrl-p</kbd>).</li>
   <li>To paste a column after an existing column, move the cursor to the end
     of a cell in the existing column and use item <strong>Paste
     after</strong> of the <strong>Tools/Edit table</strong> submenu
-    (<kbd>Ctrl t Ctrl v</kbd>).</li>
+    (<kbd>Ctrl-t Ctrl-v</kbd>).</li>
 </ol>
 
 <h3 id="Adding1">Adding a new row</h3>
@@ -132,32 +135,32 @@ cut it.</p>
 <ol>
   <li>To create a new row above an existing row, select <strong>Insert a
     row</strong> from the <strong>Tools/Edit table</strong> submenu
-    (<kbd>Ctrl t Ctrl i</kbd>), or the button in the
+    (<kbd>Ctrl-t Ctrl-i</kbd>), or the corresponding button in the
     <strong>Elements</strong> tool <img alt="button"
     src="../../resources/icons/16x16/Table_row.png" width="16" height="16"
   />.</li>
   <li>To create a new row below an existing row, select <strong>Append a
     row</strong> from the <strong>Tools/Edit table</strong> submenu
-    (<kbd>Ctrl t Ctrl n</kbd>), or the button in the
+    (<kbd>Ctrl t Ctrl n</kbd>), or the corresponding button in the
     <strong>Elements</strong> tool <img alt="button"
     src="../../resources/icons/16x16/Table_row_a.png" width="16" height="16"
     />.</li>
 </ol>
 
-<p>In the <a href="Creating.html">XML mode</a>, a new row can also be easily
+<p>In <a href="Creating.html">XML mode</a>, a new row can also be easily
 added to a table using the <kbd>Enter</kbd> key. When a whole row is selected
 (use key <kbd>F2</kbd> for that), pressing the <kbd>Enter</kbd> key create a
 new row after the selected row.</p>
 
 <h3 id="Removing1">Removing, copying, pasting a row</h3>
 
-<p>When a whole row is selected, it's possible to delete it, to copy (or to
-cut) it and to paste it.</p>
+<p>When a whole row is selected, it is possible to delete it, to copy it, to
+cut it and to paste it.</p>
 
 <p class="ProcedureCaption">To select a row:</p>
 <ol>
   <li>Use the <strong>Select row</strong> entry in the <strong>Tools/Edit
-    table</strong> submenu (<kbd>Ctrl t Ctrl r</kbd>).</li>
+    table</strong> submenu (<kbd>Ctrl-t Ctrl-r</kbd>).</li>
   <li>You can also start the selection in a cell. Hitting the <kbd>F2</kbd>
     key extends the selection to the enclosing row.</li>
 </ol>
@@ -169,42 +172,41 @@ the usual commands.</p>
 <ol>
   <li>To paste a row before an existing row, use the <strong>Paste
     before</strong> item of the <strong>Tools/Edit table</strong> submenu
-    (<kbd>Ctrl t Ctrl p</kbd>).</li>
+    (<kbd>Ctrl-t Ctrl-p</kbd>).</li>
   <li>To paste a row after an existing row, use the <strong>Paste
     after</strong> item of the <strong>Tools/Edit table</strong> submenu
-    (<kbd>Ctrl t Ctrl v</kbd>).</li>
+    (<kbd>Ctrl-t Ctrl-v</kbd>).</li>
 </ol>
 
 <h3 id="Extending">Extending a cell</h3>
 
-<p>To extend a cell, the best method is to select the set of cells to be
-merged by a drag and to call the <strong>Merge cells</strong> command in the
-<strong>Tools/Edit table</strong> submenu, or the button in the
-<strong>Elements</strong> tool <img alt="button"
+<p>To extend a cell, the simplest method is to select the set of cells to be
+merged by dragging and to call the <strong>Merge cells</strong> command in
+the <strong>Tools/Edit table</strong> submenu, or to click the corresponding
+button in the <strong>Elements</strong> tool <img alt="button"
 src="../../resources/icons/16x16/Table_merge.png" width="16" height="16"
 />.</p>
 
-<p>Four other specific commands allows you to extend or shrink a cell
-extending:</p>
+<p>Four other specific commands allow you to extend or shrink a cell:</p>
 <ul>
   <li>To extend a cell to the next cell at the right, select <strong>Join
     with the cell at the right</strong> in the <strong>Tools/Edit
-    table</strong> submenu (<kbd>Ctrl t Ctrl e</kbd>).</li>
-  <li>To extend a cell to the next below, select <strong>Join with the cell
-    below</strong> in the <strong>Tools/Edit table</strong> submenu
-    (<kbd>Ctrl t Ctrl j</kbd>).</li>
-  <li>To shrink the horizontal extension of the cell by one position, select
+    table</strong> submenu (<kbd>Ctrl-t Ctrl-e</kbd>).</li>
+  <li>To extend a cell to the next cell below, select <strong>Join with the
+    cell below</strong> in the <strong>Tools/Edit table</strong> submenu
+    (<kbd>Ctrl-t Ctrl-j</kbd>).</li>
+  <li>To shrink an horizontally extended cell by one column, select
     <strong>Shrink horizontal extend</strong> in the <strong>Tools/Edit
-    table</strong> submenu (<kbd>Ctrl t Ctrl s</kbd>), or the button in the
-    <strong>Elements</strong> tool <img alt="button"
-    src="../../resources/icons/16x16/Table_split_v.png" width="16"
-    height="16" />.</li>
-  <li>To shrink the vertical extension of the cell by one position, select
+    table</strong> submenu (<kbd>Ctrl-t Ctrl-s</kbd>), or click the
+    corresponding button in the <strong>Elements</strong> tool <img
+    alt="button" src="../../resources/icons/16x16/Table_split_v.png"
+    width="16" height="16" />.</li>
+  <li>To shrink a vertically extended cell by one position, select
     <strong>Shrink vertical extend</strong> in the <strong>Tools/Edit
-    table</strong> submenu (<kbd>Ctrl t Ctrl m</kbd>), or the button in the
-    <strong>Elements</strong> tool <img alt="button"
-    src="../../resources/icons/16x16/Table_split_h.png" width="16"
-    height="16" />.</li>
+    table</strong> submenu (<kbd>Ctrl-t Ctrl-m</kbd>), or click the
+    corresponding button in the <strong>Elements</strong> tool <img
+    alt="button" src="../../resources/icons/16x16/Table_split_h.png"
+    width="16" height="16" />.</li>
 </ul>
 
 <p>Cell extensions can be also changed by editing the <code>colspan</code>
@@ -212,7 +214,7 @@ and <code>rowspan</code> <a href="Attributes.html">attributes</a>.</p>
 
 <h3 id="Adding2">Adding a new table body (tbody)</h3>
 
-<p>Function not available in the Amaya Lite version.</p>
+<p>Function not available in the Amaya Lite profile.</p>
 <ul>
   <li>To create a new table body above an existing table body, click at the
     beginning of the first cell in the first row of the table body and select
@@ -224,28 +226,27 @@ and <code>rowspan</code> <a href="Attributes.html">attributes</a>.</p>
     <strong>Insert/Table</strong> submenu.</li>
 </ul>
 
-<p>In the <a href="Creating.html">XML mode</a>, new table bodies can also be
+<p>In <a href="Creating.html">XML mode</a>, new table bodies can also be
 easily added to a table using the <kbd>Enter</kbd> key. When a whole table
 body is selected (use <kbd>F2</kbd>), pressing the <kbd>Enter</kbd> key
 creates a new table body after the selected table body.</p>
 
-<p class="Note">Note: Amaya implements ML 4.0 tables. A table may include
-elements such as several table bodies (tb<a
+<p class="Note"><strong>Note</strong>: Amaya implements <a
 href="http://www.w3.org/TR/REC-html40">HTML 4.0</a> tables. A table may
-include elements such as several table bodies (<code>tbody</code>), table
-headings (<code>thead</code>), and table footers (<code>tfoot</code>).</p>
+include several table bodies (<code>tbody</code>), table headings
+(<code>thead</code>), and table footers (<code>tfoot</code>).</p>
 
 <h3 class="ProcedureCaption" id="Adding3">Adding something after a table</h3>
 
 <p>Many element types may be inserted within table cells. When you click a
 button in the <strong>Elements</strong> tool or you select an entry in the
 <strong>Insert</strong> menu, Amaya will try to insert the selected element
-into the cell that includes the insert point.</p>
+into the cell that contains the insert point.</p>
 
-<p>To solve that problem in the <a href="Creating.html">XML mode</a>, you can
+<p>To solve that problem in <a href="Creating.html">XML mode</a>, you can
 select the table element (use <kbd>F2</kbd>) and press the <kbd>Enter</kbd>
 key. Amaya creates a new paragraph after the selected table. This paragraph
-can be replaced by another element.</p>
+may be replaced by another element.</p>
 
 <p>Another method is to select the table element (use <kbd>F2</kbd>) and use
 the <strong>Append</strong> command in the <strong>Edit</strong> menu or in

@@ -41,40 +41,42 @@ attribut. Il présente :</p>
   <li>La liste des attributs déjà appliqués au premier élément sélectionné et
     leur valeur courante. Les attributs obligatoires sont affichés en rouge
     et ne peuvent pas être détruits.</li>
-  <li>En dessous, un menu déroulant donne accès à la liste de tous les
-    attributs qui peuvent s'appliquer.</li>
+  <li>En dessous, un menu déroulant étiqueté <strong>Insérer</strong> donne
+    accès à la liste de tous les attributs qui peuvent s'appliquer au premier
+    élément sélectionné.</li>
 </ul>
 
-<p class="ProcedureCaption">Pour insérer un attribut :</p>
+<p class="ProcedureCaption">Pour ajouter un attribut à un élément :</p>
 <ol>
   <li>Sélectionnez d'abord l'élément approprié. Vous devez sélectionner
     l'élément entier et pas seulement un caractère à l'intérieur de
     l'élément. Pour cela, utilisez la touche <kbd>F2</kbd> .</li>
-  <li>Une fois l'élément sélectionné, sélectionnez l'attribut dans la liste
-    Insérer. Ce<span class=""></span>t attribut est maintenant activé.</li>
+  <li>Une fois l'élément sélectionné, sélectionnez l'attribut dans le menu
+    <strong>Insérer</strong>. Ce<span class=""></span>t attribut est
+    maintenant activé.</li>
   <li>Pour les attributs booléens ( comme <code>ismap</code> pour une image),
     la commande est terminée.</li>
   <li>Pour les attributs à valeur énumérée (comme <code>lang</code>), vous
     devez choisir une valeur dans la liste des valeurs possibles.</li>
   <li>Pour les autres attributs, vous devez taper la valeur puis confirmez
-    soit avec la touche <kbd>Enter</kbd>, soit avec le bouton appliquer (<img
-    alt="ok" src="../../resources/icons/16x16/ok.png" />).</li>
+    soit avec la touche <kbd>Entrée</kbd>, soit avec le bouton appliquer
+    (<img alt="ok" src="../../resources/icons/16x16/ok.png" />).</li>
 </ol>
 
 <p class="ProcedureCaption" xml:lang="" lang="">Pour modifier la valeur d'un
 attribut :</p>
 <ol>
-  <li>Sélectionnez d'abord l'élément approprié. Vous devez sélectionner
-    l'élément entier et pas seulement un caractère à l'intérieur de
-    l'élément. Pour cela, utilisez la touche <kbd>F2</kbd> .</li>
-  <li>Une fois l'élément sélectionné avec cet attribut actif, cliquez sur le
-    nom de l'attribut pour afficher le formulaire d'édition de la valeur
+  <li>Sélectionnez d'abord l'élément. Vous devez sélectionner l'élément
+    entier et pas seulement un caractère à l'intérieur de l'élément. Pour
+    cela, utilisez la touche <kbd>F2</kbd> .</li>
+  <li>Une fois l'élément sélectionné, cliquez sur le nom de l'attribut que
+    vous voulez modifier, pour afficher le formulaire d'édition de la valeur
     courante.</li>
-  <li>Pour les attributs à valeur énumérée ( comme <code>lang</code>), Amaya
+  <li>Pour les attributs à valeur énumérée (comme <code>lang</code>), Amaya
     affiche : 
     <ul>
       <li>Une liste déroulante donnant la liste des valeurs possibles.</li>
-      <li>Un bouton supprimer (<img alt="supprimer"
+      <li>Un bouton (<img alt="supprimer"
         src="../../resources/icons/16x16/cancel.png" ismap="ismap" />) pour
         retirer l'attribut.</li>
     </ul>
@@ -85,23 +87,22 @@ attribut :</p>
       <li>Une boîte de saisie pour insérer la valeur.</li>
       <li>Un bouton appliquer (<img alt="ok"
         src="../../resources/icons/16x16/ok.png" />) pour confirmer la valeur
-        saisie. La touche <kbd>Enter</kbd> confirme aussi la valeur
-      saisie.</li>
-      <li>Un bouton supprimer (<img alt="supprimer"
+        saisie. La touche <kbd>Entrée</kbd> peut aussi servir à confirmer la
+        valeur saisie.</li>
+      <li>Un bouton (<img alt="supprimer"
         src="../../resources/icons/16x16/cancel.png" />) pour supprimer
         l'attribut.</li>
     </ul>
   </li>
 </ol>
 
-<p class="ProcedureCaption">Pour supprimer un attribut :</p>
+<p class="ProcedureCaption">Pour supprimer un attribut d'un élément :</p>
 <ol>
-  <li>Sélectionnez d'abord l'élément approprié. Vous devez sélectionner
-    l'élément entier et pas seulement un caractère à l'intérieur de
-    l'élément. Pour cela, utilisez la touche <kbd>F2</kbd> .</li>
-  <li>Une fois l'élément sélectionné avec cet attribut actif, cliquez sur le
-    nom de l'attribut pour afficher le formulaire d'édition de la valeur
-    courante.</li>
+  <li>Sélectionnez d'abord l'élément . Vous devez sélectionner l'élément
+    entier et pas seulement un caractère à l'intérieur de l'élément. Pour
+    cela, utilisez la touche <kbd>F2</kbd> .</li>
+  <li>Une fois l'élément sélectionné, cliquez sur le nom de l'attribut pour
+    afficher le formulaire d'édition de sa valeur.</li>
   <li>Cliquez sur le bouton supprimer (<img alt="supprimer"
     src="../../resources/icons/16x16/cancel.png" />) pour retirer
   l'attribut.</li>
@@ -111,29 +112,29 @@ attribut :</p>
 vue structure</a></h3>
 
 <p>Tous les attributs sont affichés dans la vue structure. Les attributs
-peuvent être affichés en bleu ou en rose. Quand un attribut est affiché en
+peuvent être affichés en bleu ou en violet. Quand un attribut est affiché en
 bleu, vous pouvez seulement le modifier avec l'outil
 <strong>Attributs</strong>. Ceci assure que seules des valeurs correctes
 soient choisies.</p>
 
 <p>Les attributs à valeur libre peuvent être édités dans la vue structure.</p>
 <ul>
-  <li>Vous pouvez cliquez dans la valeur (affichée en rose) et éditer la
+  <li>Vous pouvez cliquez dans la valeur (affichée en violet) et éditer la
     valeur comme n'importe quelle autre chaîne de caractères.</li>
-  <li>Pour sélectionner la valeur entière l'attribut, vous pouvez cliquer
+  <li>Pour sélectionner la valeur entière de l'attribut, vous pouvez cliquer
     dans la valeur puis presser la touche <code><kbd>F2</kbd></code>.</li>
-  <li>Pour retirer l'attribut, vous pouvez sélectionner la valeur entière,
-    puis presser deux la touche <code><kbd>Delete</kbd></code>. Le premier
-    <code><kbd>Delete</kbd></code> va retirer la valeur de l'attribut et le
-    second va détruire l'attribut.</li>
+  <li>Pour retirer l'attribut, vous pouvez sélectionner la valeur complète,
+    puis presser deux fois la touche <code><kbd>Suppr</kbd></code>. Le
+    premier <code><kbd>Suppr</kbd></code> retire la valeur de l'attribut et
+    le second détruit l'attribut lui-même.</li>
 </ul>
 
 <h3 id="Copier"><a name="Copying">Copier des attributs</a></h3>
 
-<p>Un attribut n'est pas la même chose qu'un élément et un attribut ne peut
+<p>Un attribut n'est pas la même chose qu'un élément, et un attribut ne peut
 pas être copié à l'aide des commandes
 <strong>Copier</strong>/<strong>Coller</strong> du menu
-<strong>Edition</strong>. Seule une valeur d'un attribut textuel peut
+<strong>Edition</strong>. Seule une valeur d'un attribut textuel peut être
 copiée/collée.</p>
 </div>
 </body>

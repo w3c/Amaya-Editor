@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -14,21 +14,14 @@
 
 <body xml:lang="en" lang="en">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td>Amaya<img alt="logo"
-        src="../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><p align="right"><a
-        href="editing_documents/about_merging_elements.html"
-        accesskey="p"><img alt="previous" src="../../resources/icons/misc/left.png" /></a> <a
-        href="Changing.html" accesskey="t"><img alt="top"
-        src="../../resources/icons/misc/up.png" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" /> 
+
+<p class="nav"><a href="editing_documents/about_merging_elements.html"
+accesskey="p"><img alt="previous" src="../../resources/icons/misc/left.png"
+/></a> <a href="Changing.html" accesskey="t"><img alt="top"
+src="../../resources/icons/misc/up.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h1>Using the HTML.trans File</h1>
@@ -171,7 +164,7 @@ Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
 <h2><a name="L235" id="L235">Examples</a></h2>
 <ul>
   <li>The first example merges several consecutive unnumbered lists (UL) into
-    an unique list.
+    an unique list. 
     <pre>Merge Lists: (ul{li+})+;
     { 
     li &gt; ul:li; 
@@ -184,7 +177,7 @@ Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
     there is no UL element in which the LI can be created. Therefore an UL is
     first created, then the rule can be applied.</p>
   </li>
-  <li>The second example transforms a definition list into a table.
+  <li>The second example transforms a definition list into a table. 
     <pre>Table: dl{(dt|dd)+}; 
    { 
    dt &gt; &lt;table border=1&gt;.tbody:tr.td; 
@@ -197,13 +190,13 @@ Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
       <li>Each dt involves the creation of a new row (tr) in the table
       body.</li>
       <li>Each dd involves the creation of a new cell (td) in the last
-        existing row of the table.
+        existing row of the table. 
         <p></p>
       </li>
     </ul>
   </li>
   <li>The third example removes a table element, keeping its content
-    unchanged but extracted from the table.
+    unchanged but extracted from the table. 
     <pre>Remove Table:
 table{?caption,?(body:*{(tr{(td{(?cell_content:*)+}|
                              th{(?cell_content:*)+}

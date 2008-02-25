@@ -33,28 +33,29 @@ vous devez tout d'abord la transformer en ancre cible.</p>
 
 <p class="ProcedureCaption">Pour créer une ancre cible :</p>
 <ol>
-  <li>Sélectionnez la chaîne de caractère appropriée avec la souris.</li>
-  <li>Choisissez <strong>Créer cible</strong> dans le menu
-    <strong>Liens</strong> ou le bouton <img alt="image"
+  <li>Sélectionnez la chaîne de caractère appropriée.</li>
+  <li>Choisissez <strong>Créer une cible</strong> dans le menu
+    <strong>Liens</strong> ou activez le bouton <img alt="image"
     src="../../resources/icons/16x16/XHTML_Target.png" width="16" height="16"
     /> dans l'outil <strong>Eléments</strong>. Le texte ainsi sélectionné est
     désormais une cible. 
-    <p>Si vous avez fixé le statut "Montrer les cibles" à votre vue formatée
-    courante, le texte sera précédé d'une icône cible <img
-    src="../images/target.gif" alt=" target " />. Dans la vue liens, les
-    icônes cibles qui identifient les ancres cibles sont toujours visualisées
-    (il n'existe pas d'option pour montrer ou cacher les icônes cibles).</p>
+    <p>Si vous avez activé <strong>Affichage/Montrer les cibles</strong>, le
+    texte sera précédé d'une icône cible <img src="../images/target.gif"
+    alt=" target " />. Dans la vue liens, les icônes cibles qui identifient
+    les ancres cibles sont toujours visualisées (il n'existe pas d'option
+    pour montrer ou cacher les icônes cibles dans cette vue).</p>
   </li>
   <li>Quand une ancre cible est créée, Amaya génère automatiquement la valeur
-    de l'attribut <code>name</code> : 
+    de son attribut <code>id</code> : 
     <ul>
       <li>En extrayant un mot de plus de 3 caractères depuis le contenu de
         l'ancre<br />
         ou</li>
-      <li>En générant un label.</li>
+      <li>En produisant un nombre.</li>
     </ul>
-    <p>Dans les deux cas, Amaya garanti que la valeur générée est unique dans
-    le document.</p>
+    <p>Dans les deux cas, Amaya garantit que la valeur générée est unique
+    dans le document. Mais vous pouvez <a href="Attributes.html.fr">changer
+    cette valeur</a>, comme celle de n'importe quel attribut.</p>
   </li>
 </ol>
 
@@ -72,9 +73,9 @@ est référencé par un lien (une ancre source). Avant de créer un lien à un tel
 
 <p class="ProcedureCaption">Pour créer un élément cible :</p>
 <ol>
-  <li>Sélectionnez la chaîne de caractère appropriée avec la souris puis
-    utiliser la touche <kbd>F2</kbd> afin de sélectionner l'élément
-  entier.</li>
+  <li>Sélectionnez dans l'élément puis utiliser la touche <kbd>F2</kbd> afin
+    de sélectionner l'élément entier. Le chemin de sélection en bas de la
+    fenêtre peut être utile pour sélectionner le bon élément.</li>
   <li>Choisissez <strong>Créer cible</strong> dans le menu
     <strong>Liens</strong> ou le bouton <img alt="image"
     src="../../resources/icons/16x16/XHTML_Target.png" width="16" height="16"
@@ -97,7 +98,9 @@ est référencé par un lien (une ancre source). Avant de créer un lien à un tel
       <li>En générant un label.</li>
     </ul>
     <p>Dans les deux cas, Amaya garanti que la valeur générée est valide et
-    unique dans le document.</p>
+    unique dans le document.  Mais vous pouvez <a
+    href="Attributes.html.fr">changer cette valeur</a>, comme celle de
+    n'importe quel attribut.</p>
   </li>
 </ol>
 
@@ -119,25 +122,24 @@ l'origine du lien à créer.</p>
 <p class="ProcedureCaption">Pour créer une ancre qui est un lien vers un
 autre document :</p>
 <ol>
-  <li>Sélectionnez (par clic et drag ou au clavier) le contenu de l'ancre à
-    créer.</li>
+  <li>Sélectionnez le contenu de l'ancre à créer.</li>
   <li>Cliquez sur le bouton <img alt="Link "
-    src="../../resources/icons/16x16/XHTML_Link.png" />, ou choisissez
-    <strong>Créer/changer lien</strong> du menu <strong>Liens</strong>, ou
-    encore utilisez le raccourci clavier (par défaut <kbd>Ctrl l Ctrl
-    l</kbd>). 
+    src="../../resources/icons/16x16/XHTML_Link.png" /> de l'outil
+    <strong>Eléments</strong>, ou choisissez <strong>Créer/changer un
+    lien</strong> du menu <strong>Liens</strong>, ou encore utilisez le
+    raccourci clavier (par défaut <kbd>Ctrl-l Ctrl-l</kbd>). 
     <ul>
-      <li>Si le document cible est visualisé dans une autre fenêtre d'Amaya ,
-        cliquez sur le bouton <strong>Clic</strong> puis n'importe où dans le
-        document cible. Le lien est créé.</li>
-      <li>Si le document cible est visualisé dans un autre onglet , cliquez
-        sur le bouton <strong>Clic</strong> puis changez d'onglet et cliquez
+      <li>Si le document cible est visualisé dans une autre fenêtre d'Amaya,
+        utilisez le bouton <strong>Clic</strong> puis cliquez n'importe où
+        dans le document cible. Le lien est créé.</li>
+      <li>Si le document cible est visualisé dans un autre onglet, utilisez
+        le bouton <strong>Clic</strong> puis changez d'onglet et cliquez
         n'importe où dans le document cible. Le lien est créé.</li>
       <li>Si le document cible est local vous pouvez utiliser le bouton
         <strong>Parcourir</strong> pour le sélectionner.</li>
       <li>Sinon entrez l'URI (comme http://www.w3.org) du document cible et
-        taper sur la touche <kbd>Enter</kbd> ou <kbd>Return</kbd> pour
-        confirmer. Le lien est créé.</li>
+        tapez sur la touche <kbd>Entrée</kbd> pour confirmer. Le lien est
+        créé.</li>
     </ul>
   </li>
 </ol>
@@ -145,23 +147,22 @@ autre document :</p>
 <h3 id="L1290">Créer un lien interne</h3>
 
 <p class="ProcedureCaption">Pour créer un lien vers une ancre cible ou vers
-un élément cible dans le même document :</p>
+un élément cible dans le même document ou dans un autre document :</p>
 <ol>
   <li>Sélectionnez (par clic et drag ou au clavier) le contenu de l'ancre à
     créer.</li>
   <li>Cliquez sur le bouton <img alt="Link "
-    src="../../resources/icons/16x16/XHTML_Link.png" />, choisissez
-    <strong>Créer/changer lien</strong> du menu <strong>Liens</strong>, ou
-    encore utilisez le raccourci clavier (par défaut <kbd>Ctrl l Ctrl
-    l</kbd>). 
+    src="../../resources/icons/16x16/XHTML_Link.png" /> de l'outil
+    <strong>Eléments</strong>, choisissez <strong>Créer/changer un
+    lien</strong> du menu <strong>Liens</strong>, ou encore utilisez le
+    raccourci clavier (par défaut <kbd>Ctrl-l Ctrl-l</kbd>). 
     <ul>
-      <li>Si la cible est visualisée (vous pouvez scroller pour la
-        visualiser), cliquez sur le bouton <strong>Clic</strong> puis cliquez
-        l'icône cible <img src="../images/target.gif" alt=" target " />. Le
-        lien est créé.</li>
-      <li>Sinon entrez l'URI (comme #name) du document cible et taper sur la
-        touche <kbd>Enter</kbd> ou <kbd>Return</kbd> pour confirmer. Le lien
-        est créé.</li>
+      <li>Si la cible est visualisée (vous pouvez faire défiler le document
+        pour la visualiser), activez sur le bouton <strong>Clic</strong> puis
+        cliquez l'icône cible <img src="../images/target.gif" alt=" target "
+        />. Le lien est créé.</li>
+      <li>Sinon entrez l'URI (comme #name) du document cible et tapez sur la
+        touche <kbd>Entrée</kbd> pour confirmer. Le lien est créé.</li>
     </ul>
   </li>
 </ol>
@@ -174,44 +175,45 @@ vous avez créée.</p>
 
 <h3 id="Copier">Copier l'adresse de la cible</h3>
 
-<p>La commande <strong>Copier l'adresse</strong> enregistre l'adresse (URI)
-de la cible sélectionnée dans le clipboard du système. Si aucune cible n'est
-sélectionnée, c'est l'adresse du document courant qui est enregistrée. Cette
-adresse peut ainsi être collée dans un formulaire ou dans une autre
+<p>La commande <strong>Liens/Copier l'adresse</strong> enregistre l'adresse
+(URI) de la cible sélectionnée dans le clipboard du système. Si aucune cible
+n'est sélectionnée, c'est l'adresse du document courant qui est enregistrée.
+Cette adresse peut ainsi être collée dans un formulaire ou dans une autre
 application externe.</p>
 
 <h3 id="Changer"><a name="Changing" id="Changing">Changer un lien</a></h3>
 
 <p>Utilisez cette procédure si vous voulez changer la cible du lien sans
-changer l'ancre</p>
+changer l'ancre.</p>
 
 <p class="ProcedureCaption">Pour changer un lien :</p>
 <ol>
   <li>Sélectionnez dans l'ancre.</li>
   <li>Cliquez sur le bouton <img alt="Link "
-    src="../../resources/icons/16x16/XHTML_Link.png" /> , choisissez
-    <strong>Créer/changer lien</strong> du menu <strong>Liens</strong>, ou
-    encore utilisez le raccourci clavier (par défaut <kbd>Ctrl l Ctrl
-    l</kbd>).</li>
-  <li>Désignez ensuite la nouvelle cible de l'ancre comme ci dessus.</li>
+    src="../../resources/icons/16x16/XHTML_Link.png" /> de l'outil
+    <strong>Eléments</strong>, ou choisissez <strong>Créer/changer un
+    lien</strong> du menu <strong>Liens</strong>, ou encore utilisez le
+    raccourci clavier (par défaut <kbd>Ctrl-l Ctrl-l</kbd>).</li>
+  <li>Désignez ensuite la nouvelle cible de l'ancre comme pour créer un
+  lien.</li>
 </ol>
 
 <p class="Note">Note : Pour changer la cible d'un lien, vous pouvez également
 éditer l'attribut <code>href</code>, soit directement dans la vue structure
-soit dans la vue liens, ou encore en utilisant la liste des
+soit dans la vue liens, ou encore en utilisant l'outil
 <strong>Attributs</strong>.</p>
 
 <h3 id="Supprimer"><a name="Removing" id="Removing">Supprimer un lien ou une
 ancre cible</a></h3>
 
-<p>La commande <strong>Détruire ancre</strong> du menu <strong>Liens</strong>
-détruit une l'ancre qui englobe la sélection courante.</p>
+<p>La commande <strong>Supprimer le lien ou la cible</strong> du menu
+<strong>Liens</strong> détruit l'ancre qui englobe la sélection courante.</p>
 
 <p>Pour utiliser cette commande, vous devez mettre la sélection ou le point
 d'insertion n'importe où à l'intérieur de l'ancre à détruire (vous n'avez pas
 besoin de sélectionner toute l'ancre, mais vous pouvez) et activer la
-commande <strong>Détruire ancre</strong>. L'ancre est détruite, mais son
-contenu reste.</p>
+commande <strong>Supprimer le lien ou la cible</strong>. L'ancre est
+détruite, mais son contenu reste.</p>
 </div>
 </body>
 </html>

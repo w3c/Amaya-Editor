@@ -26,46 +26,44 @@ src="../../resources/icons/misc/right.png" /> </a></p>
 <div id="page_body">
 <h2 id="Entering">Entering characters</h2>
 
-<p>To enter ISO-Latin characters that are not directly available from the
-keyboard, Amaya uses the standard support provided by the Operating System.
-An optional multi-key support is also provided for Motif versions and Windows
+<p>To enter characters that are not directly available from the keyboard,
+Amaya uses the standard services provided by the Operating System. An
+optional multi-key support is also provided for Motif and Windows
 versions.</p>
 
 <p>Amaya provides a mechanism for assigning <a href="ShortCuts.html">keyboard
 shortcuts</a> to characters that are not directly available from the
 keyboard. Some of them are pre-defined:</p>
 <ul>
-  <li>To enter a non-breaking space, press <kbd>Ctrl space</kbd><br />
-    This character will be saved as an entity (<span class="code"><span
-    style="font-size: 11.0pt;font-family:&#34;Courier New&#34;;"><code>&amp;nbsp;</code></span></span>)
-    and is displayed in the source view with the following colored character:
-    <span style="color: #008BB2">~</span></li>
-  <li>To enter a &oelig; (oelig), press <kbd>Ctrl o e</kbd></li>
-  <li>To enter a &OElig; (OElig), press <kbd>Ctrl Shift O E</kbd></li>
-  <li>To enter a «, press <kbd>Ctrl [</kbd></li>
-  <li>To enter a », press <kbd>Ctrl ]</kbd></li>
-  <li>To enter a ­ (hyphen), press <kbd>Ctrl h -</kbd></li>
+  <li>To enter a non-breaking space, press <kbd>Ctrl-space</kbd><br />
+    This character is displayed in the source view under the form of the
+    following colored character: <span style="color: #008BB2">~</span></li>
+  <li>To enter a &oelig; (oelig), press <kbd>Ctrl-o Ctrl-e</kbd></li>
+  <li>To enter a &OElig; (OElig), press <kbd>Ctrl-Shift-O
+  Ctrl-Shift-E</kbd></li>
+  <li>To enter a «, press <kbd>Ctrl-[</kbd></li>
+  <li>To enter a », press <kbd>Ctrl-]</kbd></li>
 </ul>
 
-<p>See the description of the standard input method: Standard multi-key for
-Unix and Mac OS X versions.</p>
+<p>The input methods <a href="#About1">for Unix</a> and <a href="#type">Mac
+OS X</a> are presented below.</p>
 
 <h3 id="About1">About Unix standard multi-key support</h3>
 
-<p>If an ISO-Latin character is unavailable on the standard keyboard, you can
-insert the character by pressing the special <code>Compose</code> key
-followed by a sequence of two other keys. See the table below for the keys
-used to insert various ISO-Latin characters. Note that in Amaya, you can
-switch the position of the first key and the second one.</p>
+<p>If a character is unavailable on the keyboard, you can insert the
+character by pressing the special <kbd>Compose</kbd> key followed by a
+sequence of two other keys. See the table below for the keys used to insert
+various characters. Note that in Amaya you can change the order of the two
+keys.</p>
 
-<p>If your keyboard doesn't contain the <kbd>Compose</kbd> key, you can
-attach it to an existing key such as <kbd>Alt-Gr</kbd> with the following
+<p>If your keyboard does not contain a <kbd>Compose</kbd> key, you can attach
+it to an existing key such as <kbd>Alt-Gr</kbd> with the following
 <code>xmodmap</code> command:</p>
 
 <p><code>keycode 113 = Multi_key</code></p>
 
-<p>You can place this command in the <code>$HOME/.Xmodmap</code> file (in
-Unix), and Amaya will apply it when you will launch your X server.</p>
+<p>You can place this command in the <code>$HOME/.Xmodmap</code> file, and
+Amaya will apply it when you will launch your X server.</p>
 
 <table border="1" summary="Latin-1 sequences">
   <tbody style="background-color: #EFFFC1">
@@ -373,8 +371,8 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
     <tr>
       <td class="name">deg</td>
       <td>176</td>
-      <td>accent circonflexe</td>
-      <td>0 (zéro)</td>
+      <td>^</td>
+      <td>0 (zero)</td>
       <td>°</td>
     </tr>
     <tr>
@@ -436,7 +434,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
     <tr>
       <td class="name">hyphen</td>
       <td>173</td>
-      <td>- (moins)</td>
+      <td>- (minus)</td>
       <td>-</td>
       <td>­</td>
     </tr>
@@ -464,28 +462,28 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
     <tr>
       <td class="name">iexcl</td>
       <td>161</td>
-      <td>! (exclam)</td>
+      <td>! </td>
       <td>!</td>
       <td>¡</td>
     </tr>
     <tr>
       <td class="name">iquest</td>
       <td>191</td>
-      <td>? (question)</td>
+      <td>?</td>
       <td>?</td>
       <td>¿</td>
     </tr>
     <tr>
       <td class="name">laquo</td>
       <td>171</td>
-      <td>&lt; (inférieur)</td>
+      <td>&lt; </td>
       <td>&lt;</td>
       <td>«</td>
     </tr>
     <tr>
       <td class="name">macr</td>
       <td>175</td>
-      <td>- (moins)</td>
+      <td>- (minus)</td>
       <td>circumflex</td>
       <td>¯</td>
     </tr>
@@ -513,7 +511,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
     <tr>
       <td class="name">not</td>
       <td>172</td>
-      <td>- (moins)</td>
+      <td>- (minus)</td>
       <td>comma</td>
       <td>¬</td>
     </tr>
@@ -584,7 +582,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       <td class="name">para</td>
       <td>182</td>
       <td>&lt;Shift&gt; P</td>
-      <td>! (exclam)</td>
+      <td>! </td>
       <td>¶</td>
     </tr>
     <tr>
@@ -604,7 +602,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
     <tr>
       <td class="name">raquo</td>
       <td>187</td>
-      <td>&gt; (supérieur)</td>
+      <td>&gt;</td>
       <td>&gt;</td>
       <td>»</td>
     </tr>
@@ -619,7 +617,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       <td class="name">sec</td>
       <td>167</td>
       <td>s</td>
-      <td>! (exclam)</td>
+      <td>! </td>
       <td>§</td>
     </tr>
     <tr>
@@ -711,87 +709,54 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
 
 <h3 id="type"><a>How to type accented characters on Mac OS X</a></h3>
 
-<p>With an international US keyboard, entering accented characters is done
-with the <strong>Option</strong> key (aka <strong>Alt</strong> key) as
-follow:</p>
+<p>With an international US keyboard (qwerty), accented characters are
+entered with the <kbd>Alt</kbd> key (aka <kbd>Option</kbd>  key) as
+follows:</p>
 <ul>
-  <li>Grave accent (`): Option + `, then the letter</li>
-  <li>Acute accent (´): Option + e, then the letter</li>
-  <li>Circumflex accent (&circ;): Option + i, then the letter</li>
-  <li>Tilde accent (&tilde;): Option + n, then the letter</li>
-  <li>Umlaut accent (¨): Option + u, then the letter</li>
-  <li>The letter &ldquo;c&rdquo; with a cedilla (ç): Option + c.</li>
+  <li>Acute accent (´): <kbd>alt-e</kbd>, then the letter</li>
+  <li>Grave accent (`): <kbd>alt-`</kbd>, then the letter</li>
+  <li>Circumflex accent (&circ;): <kbd>alt-i</kbd>, then the letter</li>
+  <li>Tilde accent (&tilde;): <kbd>alt-n</kbd>, then the letter</li>
+  <li>Umlaut accent (¨): <kbd>alt-u</kbd>, then the letter</li>
+  <li>The letter &ldquo;c&rdquo; with a cedilla (ç): <kbd>alt-c</kbd></li>
 </ul>
 
 <h3 id="About">About white space handling</h3>
 
-<p>Amaya removes insignificant white-space characters when it loads a
-document unless they must be explicitly preserved. This is true for XHTML,
-MathML, and SVG documents, as well as MathML or SVG elements included in a
-HTML document,</p>
+<p>As required by the HTML specification, Amaya removes insignificant
+white-space characters when it loads a document. This applies to (X)HTML,
+MathML, and SVG documents, as well as MathML and SVG elements included in a
+(X)HTML document,</p>
 
 <p>The following are considered as insignificant white-space characters:</p>
 <ul>
   <li>End of line characters (<code>#xD</code> and <code>#xA</code>)</li>
-  <li>Tab characters (<code>#X9</code>)</li>
+  <li>Tab characters (<code>#x9</code>)</li>
   <li>Leading spaces of an element</li>
   <li>Trailing spaces of an element</li>
   <li>Contiguous spaces (one space is preserved)</li>
 </ul>
 
-<p>To preserve all the characters for some elements, use the
-<code>xml:space</code> attribute or the <code>pre</code> element (only valid
-for XHTML documents). The possible values for the <code>xml:space</code>
+<p>To preserve all characters for some elements, use the
+<code>xml:space</code> attribute or the <code>pre</code> element (only in
+(X)HTML documents). The possible values for the <code>xml:space</code>
 attribute are <code>default</code> and <code>preserve</code>.</p>
 <ul>
-  <li>The value <code>default</code> means that an applications' default
-    white-space treatment is acceptable for these elements. In Amaya, the
-    default treatment removes the insignificant white-space characters for
-    all supported DTDs (see above). 
-    <p></p>
-  </li>
-  <li>The value <code>preserve</code> indicates that applications will
-    preserve all the characters, except the first one that immediately
-    follows the end tag of the element where it is specified, if that element
-    is an end of line.</li>
+  <li><code>default</code> means that an applications' default white-space
+    treatment is acceptable for these elements. In Amaya, the default
+    treatment removes the insignificant white-space characters for all
+    supported DTDs (see above). </li>
+  <li><code>preserve</code> indicates that applications must preserve all the
+    characters, except the first one that immediately follows the end tag of
+    the element where it is specified, if that element is an end of line.</li>
 </ul>
 
-<p>You apply the <code>xml:space</code> attribute to all elements within the
-content of the element where it is specified, unless it is overridden with
-another instance of the <code>xml:space</code> attribute.</p>
+<p>The <code>xml:space</code> attribute applies to all elements within the
+element where it is specified, unless it is overridden with another instance
+of <code>xml:space</code>.</p>
 
 <p>In an XHTML DTD, the <code>pre</code> element causes the same behavior as
 the <code>xml:space</code> attribute with the value <code>preserve</code>.</p>
-
-<p>Amaya applies white space handling when it loads a document, not during
-editing. A consequence is that if you type insignificant white-space
-characters, they will be visible and saved but will be removed the next time
-the document is loaded. For example, the following source code:</p>
-
-<p><code>&lt;p&gt;Amaya removes the &lt;strong&gt; insignificant white-space
-&lt;/strong&gt;when it loads ...&lt;/p&gt;</code></p>
-
-<p>displays as follows during editing:</p>
-
-<p><code>Amaya removes the <strong>insignificant white-space</strong> when it
-loads...</code></p>
-
-<p>The text will be saved with that syntax. However, the next time the
-document is loaded, the text will display as:</p>
-
-<p><code>Amaya removes the<strong>insignificant white-space</strong>when it
-loads...</code></p>
-
-<p>because the leading and trailing spaces of the element
-<code>&lt;strong&gt;</code> are considered to be insignificant and are
-removed.</p>
-
-<p>The correct source code would be:</p>
-
-<p><code>&lt;p&gt;Amaya removes the &lt;strong&gt;insignificant
-white-space&lt;/strong&gt; when it loads ...&lt;/p&gt;</code></p>
-
-<p></p>
 </div>
 </body>
 </html>

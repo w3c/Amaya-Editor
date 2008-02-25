@@ -35,14 +35,14 @@ format of the final documents is called the target language and must be an
 XML language.</p>
 
 <p>In a template, the skeleton document contains some statements, expressed
-in the XTiger (eXtensible Templates for Interactive Guided Editing of
-Resources) language, that specify how this minimal document can evolve and
-grow, while keeping in line with the intended type of the final document.
-Documents produced from this skeleton following the XTiger statements are
-called <em>instances</em> of the template. Some parts of the template may be
-frozen, if they have to appear in document instances as they are. Some parts
-may be changed when producing an instance document, some others may be added
-either freely or under some constraints.</p>
+in the XTiger language (eXtensible Templates for Interactive Guided Editing
+of Resources), that specify how this minimal document can evolve and grow,
+while keeping in line with the intended type of the final document. Documents
+produced from this skeleton following the XTiger statements are called
+<em>instances</em> of the template. Some parts of the template may be frozen,
+if they have to appear in document instances as they are. Some parts may be
+changed when producing an instance document, some others may be added either
+freely or under some constraints.</p>
 
 <p>The file containing a template must have a <code>.xtd</code> extension.</p>
 
@@ -61,20 +61,21 @@ href="http://www.w3.org/Amaya/Templates/">http://www.w3.org/Amaya/Templates/</a>
 <p>You are free to store templates anywhere, in your local file system or
 remotely.</p>
 
-<p>To ease selection among your favorite templates, there is a Templates
-section in the Preferences dialogue (<strong>Edit/Preferences</strong>). Use
-it to register the templates that Amaya will propose when you create a new
-document. When registering a local template, you can call a file browser with
-the browse button to locate and select the files to be added to the list. You
-can also enter the URI of remote templates in the input area below the list.
-Use the buttons on the right side of the list to remove a template or to
-change the order of templates in the list.</p>
+<p>To ease selection among your favorite templates, there is a
+<strong>Templates</strong> section in the Preferences dialogue
+(<strong>Edit/Preferences</strong>, or <strong>amaya/Preferences</strong>
+under Mac OS X). Use it to register the templates that Amaya proposes when
+you create a new document. When registering a local template, you can call a
+file browser with the browse button to locate and select the files to be
+added to the list. You can also enter the URI of remote templates in the
+input area below the list. Use the buttons on the right side of the list to
+remove a template or to change the order of templates in the list.</p>
 
 <p>Registering templates in this list is not mandatory. When you create a new
 document instance, you can also choose a template that is not in that
 list.</p>
 
-<h3 id="Creating">Creating a document instance</h3>
+<h3 id="Creating">Creating an instance document</h3>
 
 <p>To create a new document instance from a template, use entry
 <strong>New/New document</strong> in the <strong>File</strong> menu. It
@@ -99,7 +100,7 @@ under the form of colored frames that enclose XHTML elements.</p>
   <li>A <code>repeat</code> element is shown as a dashed purple box</li>
   <li>An <code>option</code> element is shown as a dashed yellow box</li>
   <li>The <code>attribute</code> element is not displayed in the main view,
-    as it only impacts the Attributes menu.</li>
+    as it only impacts the <strong>Attributes</strong> tool.</li>
 </ul>
 
 <p>The XTiger elements can also be seen in the structure view. Open this view
@@ -110,15 +111,14 @@ view, but with no special color.</p>
 
 <p>Another way to understand the nesting of XTiger elements with XHTML
 elements is the selection path displayed in the status bar or the window (at
-the bottom of the document window). There, you can see the list of all
-elements in the structure of the document from the root element to the
-current selection. It is updated every time the selection is changed. In this
-path, XTiger elements are displayed in green and XHTML elements in black. For
-XTiger elements, it is not the name of the element that is displayed there
-(use, bag, repeat, option) but the label of these elements, as declared in
-the template.</p>
+the bottom of the window). There, you can see the list of all elements in the
+structure of the document from the root element to the current selection. It
+is updated every time the selection is changed. In this path, XTiger elements
+are displayed in green and XHTML elements in black. For XTiger elements, it
+is not the name of the element that is displayed there (use, bag, repeat,
+option) but the label of these elements, as declared in the template.</p>
 
-<h3 id="Editing">Editing a document instance</h3>
+<h3 id="Editing">Editing an instance document</h3>
 
 <p>Editing is allowed only inside the <code>repeat</code>,
 <code>option</code>, <code>use</code>, and <code>bag</code> elements, i.e.
@@ -127,33 +127,33 @@ of the template and can not be modified.</p>
 
 <h4 id="Editing1">Editing in a <code>repeat</code> element</h4>
 
-<p>In a <code>repeat</code> box (purple), you can create a new instance of
-the repeated structure or you can delete one. This is controlled by the
-template, which may impose a minimum and/or a maximum number of occurrences
-of the repeated structure. When creating new occurrences of the repeated
-structure is allowed, click one of the purple '+' icons to create a new
-occurrence at that location. You get a pop up menu that tells you what can be
-inserted at that position. By clicking in that pop-up menu, you create a new
-occurrence of the corresponding type. In some cases the template offers only
-one type of occurrence. The pop-up menu then contains a single entry, to
-clearly state what will be created. If you click outside the menu, nothing is
-created.</p>
+<p>In a <code>repeat</code> box (purple), you can create new instances of the
+repeated structure or you can delete one. This is controlled by the template,
+which may impose a minimum and/or a maximum number of occurrences of the
+repeated structure. When creating new occurrences of the repeated structure
+is allowed, purple <span style="color:#ed00f3">+</span> icons are displayed
+at locations where you are allowed to create new occurrences. When you click
+on these icons, you get a pop-up menu that tells you what can be inserted at
+that position. By clicking in that pop-up menu, you create a new occurrence
+of the corresponding type. In some cases the template offers only one type of
+occurrence. The pop-up menu then contains a single entry, to clearly state
+what will be created. If you click outside the menu, nothing is created.</p>
 
 <p>Another way to create new occurrences of the repeated structure is to
 select an existing occurrence, or to put the caret at the end of an
 occurrence, and to press the <kbd>Enter</kbd> key. A new occurrence of the
 repeated structure is then created, provided the maximum number of
-occurrences is not reached. The type of the new occurrence is then the same
-as the one that was selected when pressing the <kbd>Enter</kbd> key.</p>
+occurrences is not reached yet. The type of the new occurrence is then the
+same as the one that was selected when pressing the <kbd>Enter</kbd> key.</p>
 
 <p>When an existing occurrence is empty or fully selected and the
 <kbd>Backspace</kbd> or <kbd>Delete</kbd> key is pressed, the element is
-deleted, provided the minimum number of occurrences is not reached.</p>
+deleted, provided the minimum number of occurrences is not reached yet.</p>
 
 <h4 id="Editing2">Editing in an <code>option</code> element</h4>
 
-<p><code>option</code> boxes (yellow) display a 'tick' icon in the top left
-corner. If the box is empty, clicking this icon creates the optional
+<p><code>option</code> boxes (yellow) display a yellow 'tick' icon in the top
+left corner. If the box is empty, clicking this icon creates the optional
 structure. If the optional structure is already present, this removes it.</p>
 
 <h4 id="Editing3">Editing in a <code>use</code> element</h4>
@@ -161,9 +161,9 @@ structure. If the optional structure is already present, this removes it.</p>
 <p>Most <code>use</code> elements (blue) allow you just to enter free text or
 to freely replace/edit existing text. Other <code>use</code> elements offer a
 choice between different types of elements that can be inserted at that
-position. In that case, a triangle icon is displayed in the top left corner
-of the box. By clicking this icon, you can select one of the allowed types
-through a pop-up menu. When you have chosen a type, the corresponding
+position. In that case, a blue triangle icon is displayed in the top left
+corner of the box. By clicking this icon, you can select one of the allowed
+types through a pop-up menu. When you have chosen a type, the corresponding
 structure is generated and you can freely edit its content.</p>
 
 <h4 id="Editing4">Editing in a <code>bag</code> element</h4>

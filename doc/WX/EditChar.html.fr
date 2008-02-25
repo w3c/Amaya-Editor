@@ -26,47 +26,44 @@ src="../../resources/icons/misc/right.png" /> </a></p>
 <div id="Keyboard">
 <h2 id="Saisir">Saisir du texte</h2>
 
-<p>Pour les caractères ISO-latin qui ne sont pas directement disponibles
-depuis le clavier, Amaya utilise le support standard fournit par le
-système.</p>
+<p>Pour les caractères qui ne sont pas directement disponibles depuis le
+clavier, Amaya utilise le support standard fourni par le système.</p>
 
 <p>Amaya fournit <a href="ShortCuts.html.fr">des raccourcis clavier</a> pour
 certains caractères non disponibles au clavier comme :</p>
 <ul>
-  <li>Pour obtenir un espace non sécable, vous pouvez taper <kbd>Ctrl
-    space</kbd>. Ce caractère sera <a href="Browsing.html.fr#entite">sauvé
-    comme une entité</a> (<code>&amp;nbsp;</code>) et est visualisé dans la
-    vue source avec le caractère coloré suivant : <span
-    style="color: #008BB2">~</span></li>
-  <li>Pour obtenir un &euro; (euro), vous pouvez taper <kbd>Alt e</kbd></li>
-  <li>Pour obtenir un &oelig; (oelig), vous pouvez taper <kbd>Ctrl o
-  e</kbd></li>
-  <li>Pour obtenir un &OElig; (OElig), vous pouvez taper <kbd>Ctrl Shift O
-    E</kbd></li>
-  <li>Pour obtenir un «, vous pouvez taper <kbd>Ctrl [</kbd></li>
-  <li>Pour obtenir un », vous pouvez taper <kbd>Ctrl ]</kbd></li>
-  <li>Pour obtenir un ­ (hyphen), vous pouvez taper <kbd>Ctrl h -</kbd></li>
+  <li>Pour obtenir un espace non sécable, vous pouvez taper
+    <kbd>Ctrl-espace</kbd>. Ce caractère est visualisé dans la vue source
+    avec le caractère coloré suivant : <span
+  style="color: #008BB2">~</span></li>
+  <li>Pour obtenir un &euro; (euro), vous pouvez taper <kbd>Alt-e</kbd></li>
+  <li>Pour obtenir un &oelig; (oelig), vous pouvez taper <kbd>Ctrl-o
+    Ctrl-e</kbd></li>
+  <li>Pour obtenir un &OElig; (OElig), vous pouvez taper <kbd>Ctrl-Shift-O
+    Ctrl-Shift-E</kbd></li>
+  <li>Pour obtenir un «, vous pouvez taper <kbd>Ctrl-[</kbd></li>
+  <li>Pour obtenir un », vous pouvez taper <kbd>Ctrl-]</kbd></li>
 </ul>
 
-<p>On donne une description de la méthode multi-touches standard des versions
-Unix et celle du système Mac OS X</p>
+<p>On donne ci-dessous une description des méthodes de saisie multi-touches
+<a href="#support">sous Unix</a> et <a href="#Saisie">sous Mac OS X</a></p>
 
 <h3 id="support"><a name="Standard">Le support multi-touches standard des
 versions Unix</a></h3>
 
-<p>Pour les caractères ISO-Latin indisponibles sur le clavier standard, il
-existe normalement une méthode qui insère ce caractère par une séquence de
-deux caractères disponibles précédés par la touche spéciale
-<strong>Composer</strong>. Sur Amaya il est possible d'inverser la première
-touche et la deuxième.</p>
+<p>les caractères indisponibles sur le clavier peuvent être insérés par une
+séquence de deux caractères disponibles précédés par la touche spéciale
+<kbd>Composer</kbd>. Amaya vous permet d'inverser l'ordre de ces deux
+caractères.</p>
 
-<p>Si la touche <strong>Composer</strong> n'existe pas vous pouvez l'attacher
-à une touche existante comme <strong>Alt-Gr</strong> par la commande
-<code>xmodmap</code> suivante :</p>
+<p>Si la touche <kbd>Composer</kbd> n'existe pas sur votre clavier, vous
+pouvez l'attacher à une touche existante comme <kbd>Alt-Gr</kbd> par la
+commande <code>xmodmap</code> suivante :</p>
 <pre>keycode 113 = Multi_key</pre>
 
-<p>Cette commande peut être rangée dans le fichier $HOME/.Xmodmap , ainsi
-elle pourra être appliquée dès qu'on lancera le serveur X.</p>
+<p>Cette commande peut être rangée dans le fichier
+<code>$HOME/.Xmodmap</code>. Elle sera appliquée dès que le serveur X sera
+lancé.</p>
 
 <table border="1" summary="Latin-1 sequences">
   <tbody style="background-color: #EFFFC1">
@@ -79,7 +76,7 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
       </td>
       <td><p>Deuxième touche</p>
       </td>
-      <td><p>Sortie</p>
+      <td><p>Résultat</p>
       </td>
     </tr>
     <tr>
@@ -625,7 +622,7 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">sec</td>
       <td>167</td>
       <td>s</td>
-      <td>! (exclam)</td>
+      <td>! </td>
       <td>§</td>
     </tr>
     <tr>
@@ -718,72 +715,61 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
 <div id="Creating1">
 <h3 id="Saisie"><a>Saisie de caractères accentués sous Mac OS X</a></h3>
 
-<p>Avec un clavier US (qwerty), la saisie de caractères accentués sous la
-version Mac OS X se fait de la manière suivante:</p>
+<p>Avec un clavier US (qwerty), la saisie de caractères accentués sous Mac OS
+X se fait de la manière suivante :</p>
 <ul>
-  <li>Pour un accent aigu: <strong>alt-e</strong> puis la lettre (donc pour
-    é: alt-e et e)</li>
-  <li>Pour un accent grave: <strong>alt-`</strong> puis la lettre</li>
-  <li>Pour un accent circonflexe: <strong>alt-i</strong> puis la lettre</li>
-  <li>Pour un tréma: <strong>alt-u</strong> puis la lettre</li>
-  <li>Pour un ç: <strong>alt-c</strong></li>
+  <li>Accent aigu : <kbd>alt-e</kbd> puis la lettre (donc pour é :
+    <kbd>alt-e</kbd> puis <kbd>e</kbd>)</li>
+  <li>Accent grave : <kbd>alt-`</kbd> puis la lettre</li>
+  <li>Accent circonflexe : <kbd>alt-i</kbd> puis la lettre</li>
+  <li>Tilda : <kbd>alt-n</kbd> puis la lettre</li>
+  <li>Tréma : <kbd>alt-u</kbd> puis la lettre</li>
+  <li>C cédille ç : <kbd>alt-c</kbd></li>
 </ul>
 
-<p>La touche <strong>alt</strong> est également appelée touche
-<strong>option</strong>.</p>
+<p>La touche <kbd>alt</kbd> est également appelée touche
+<kbd>option</kbd>.</p>
 
 <h3 id="Traitement">Traitement des espaces</h3>
 
-<p>Pour les documents XHTML, <a href="Math.html.fr#Math">MathML</a>, <a
+<p>Pour les documents (X)HTML, <a href="Math.html.fr#Math">MathML</a>, <a
 href="SVG.html.fr">SVG</a> et pour les éléments MathML ou SVG inclus dans des
-documents HTML, Amaya supprime les <strong>blancs non significatifs</strong>
-au chargement sauf s'ils doivent être explicitement préservés.</p>
+documents (X)HTML, Amaya supprime les <strong>blancs non
+significatifs</strong> au chargement du document.</p>
 
-<p>Sont appelés blancs non significatifs:</p>
+<p>Les blancs non significatifs sont :</p>
 <ul>
-  <li>les caractères de fin de ligne (#xD et (#xA),</li>
-  <li>les caractères de tabulation (#X9),</li>
-  <li>les blancs de début d'un élément,</li>
-  <li>les blancs de fin d'un élément,</li>
+  <li>les caractères de fin de ligne (<code>#xD</code> et
+  (<code>#xA</code>),</li>
+  <li>les caractères de tabulation (<code>#x9</code>),</li>
+  <li>les blancs de début d'élément,</li>
+  <li>les blancs de fin d'élément,</li>
   <li>les blancs contigus (un seul blanc est alors préservé).</li>
 </ul>
 
-<p>L'auteur d'un tel document peut vouloir spécifier son intention de
-préserver tous les caractères pour certains éléments. Pour cela, il peut
-utiliser l'attribut <code>xml:space</code> <strong></strong>ou l'élément
-<code>pre</code> (ce dernier pour des documents XHTML uniquement). Deux
-valeurs sont possibles pour l'attribut <code>xml:space</code> :
-"<code>defaul</code>t" et "<code>preserve</code>". La valeur
-"<code>default</code>" applique le traitement des blancs par défaut défini
-pour la DTD du document. Dans Amaya, le traitement par défaut supprime les
-blancs non significatif pour les DTD supportées (voir ci-dessus). La valeur
-"<code>preserve</code>" indique à Amaya de préserver tous les caractères, à
-l'exception du premier caractère qui suit immédiatement la fin de la balise
-de l'élément portant l'attribut si ce caractère est une fin de ligne.
-L'attribut <code>xml:space</code> s'applique à tous les éléments à
-l'intérieur du contenu de l'élément porteur de la déclaration, à moins qu'il
-ne soit annulé par l'apparition d'un autre attribut <code>xml:space</code>.
-Concernant la DTD XHTML, l'élément <code>pre</code> induit le même
-comportement que l'attribut xml:space avec la valeur "preserve".</p>
+<p>L'auteur d'un document peut vouloir spécifier son intention de préserver
+tous les caractères pour certains éléments. Pour cela, il peut utiliser
+l'attribut <code>xml:space</code> <strong></strong>ou l'élément
+<code>pre</code> (ce dernier pour des documents (X)HTML uniquement). Deux
+valeurs sont possibles pour l'attribut <code>xml:space</code></p>
+<ul>
+  <li><code>default</code> applique le traitement des blancs par défaut
+    défini pour la DTD du document. Dans Amaya, le traitement par défaut
+    supprime les blancs non significatif pour les DTD supportées (voir
+    ci-dessus)..</li>
+  <li><code>preserve</code> indique à Amaya de préserver tous les caractères,
+    à l'exception du premier caractère qui suit immédiatement la fin de la
+    balise de l'élément portant l'attribut si ce caractère est une fin de
+    ligne. </li>
+</ul>
 
-<p>Le traitement des blancs est appliqué par Amaya lors du chargement d'un
-document et lors de l'édition de celui-ci.. Par exemple, le code source
-suivant:</p>
-<pre><code>&lt;p&gt;Amaya supprime les&lt;strong&gt; blancs non 
-significatifs &lt;/strong&gt;au chargement&lt;/p&gt;</code></pre>
+<p>L'attribut <code>xml:space</code> s'applique à tous les éléments contenus
+dans l'élément porteur de l'attribut, à moins qu'il ne soit annulé par
+l'apparition d'un autre attribut <code>xml:space</code>.</p>
 
-<p>donnera à l'édition:</p>
-<pre><code>Amaya supprime les</code><strong><code> blancs non significatifs </code></strong><code>au chargement</code></pre>
-
-<p>et sera sauvegardé sous cette forme. Lors du prochain chargement de ce
-document, cette partie sera transformée en:</p>
-<pre><code>Amaya supprime les</code><code><strong>blancs non significatif</strong></code><code><strong>s</strong>au chargement</code></pre>
-
-<p>car les blancs de début et de fin de l'élément <code>strong</code> sont
-considérés comme non significatifs et sont donc supprimés. La forme correcte
-aurait été:</p>
-<pre><code>&lt;p&gt;Amaya supprime les &lt;strong&gt;blancs non 
-significatifs&lt;/strong&gt; au chargement&lt;/p&gt;</code></pre>
+<p>Dans la DTD XHTML, l'élément <code>pre</code> induit le même comportement
+que l'attribut <code>xml:space</code> avec la valeur
+<code>preserve</code>.</p>
 </div>
 </div>
 </body>

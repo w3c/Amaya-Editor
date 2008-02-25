@@ -29,7 +29,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 simplement une structure décrite par la DTD HTML, comme tous les autres
 éléments, et elle est éditée comme telle. Les commandes standard s'appliquent
 donc aux tables. Quelques commandes supplémentaires ont néanmoins été
-ajoutées pour une manipulation plus confortable.</p>
+ajoutées pour une manipulation plus aisée.</p>
 
 <h3 id="L62"><a name="Creating">Créer une nouvelle table</a></h3>
 <ol>
@@ -37,16 +37,17 @@ ajoutées pour une manipulation plus confortable.</p>
     créer une table.</li>
   <li>Cliquez sur le bouton table <img
     src="../../resources/icons/16x16/XHTML_Table.png" alt="Table button" />
-    ou sélectionnez l'entrée <strong>Table</strong> du menu
-    <strong>Insertion</strong>, Amaya affiche une boîte de dialogue.</li>
+    dans l'outil <strong>Eléments</strong> ou sélectionnez l'entrée
+    <strong>Table</strong> du menu <strong>Insertion</strong>. Amaya affiche
+    une boîte de dialogue.</li>
   <li>Spécifiez le nombre initial de lignes et de colonnes pour la nouvelle
     table, ainsi que l'épaisseur de sa bordure, etc.</li>
   <li>Cliquez sur le bouton <strong>Confirmer</strong>. Amaya crée une table
     vide.</li>
   <li>Le point d'insertion est automatiquement placé dans la première
     cellule. Vous pouvez rentrer son contenu immédiatement. </li>
-  <li>Pour entrer le contenu d'une cellule, cliquez insérez du texte, des
-    images et tout type d'élément..</li>
+  <li>Pour entrer le contenu d'une cellule, cliquez puis insérez du texte,
+    des images et tout type d'élément..</li>
   <li>Vous pouvez également éditer le texte de la légende de la table,
     l'ajouter si elle n'existe pas, ou la supprimer si elle n'est pas
     nécessaire.</li>
@@ -58,40 +59,40 @@ ajoutées pour une manipulation plus confortable.</p>
 <ul>
   <li>Pour créer une nouvelle colonne à gauche d'une cellule existante,
     choisissez <strong>Insérer une colonne</strong> dans le sous-menu
-    <strong>Outils/Editer la table</strong>, ou le bouton de l'outil
-    <strong>Eléments</strong> <img alt="bouton"
-    src="../../resources/icons/16x16/Table_col.png" width="16" height="16"
-    />, ou tapez <kbd>Ctrl t Ctrl b</kbd>.</li>
+    <strong>Outils/Editer la table</strong>, ou cliquez le bouton <img
+    alt="bouton" src="../../resources/icons/16x16/Table_col.png" width="16"
+    height="16" /> de l'outil <strong>Eléments</strong>, ou tapez <kbd>Ctrl-t
+    Ctrl-b</kbd>.</li>
   <li>Pour créer une nouvelle colonne à droite d'une cellule existante,
     choisissez <strong>Ajouter une colonne</strong> dans le sous-menu
-    <strong>Outils/Editer la table</strong>, ou le bouton de l'outil Eléments
-    <img alt="bouton" src="../../resources/icons/16x16/Table_col_a.png"
-    width="16" height="16" />, ou tapez <kbd>Ctrl t Ctrl a</kbd>.</li>
+    <strong>Outils/Editer la table</strong>, ou cliquez le bouton <img
+    alt="bouton" src="../../resources/icons/16x16/Table_col_a.png" width="16"
+    height="16" /> de l'outil Eléments, ou tapez <kbd>Ctrl-t
+  Ctrl-a</kbd>.</li>
 </ul>
 
 <p>Dans le <a href="Creating.html.fr">mode d'édition XML</a>, une nouvelle
-colonne peut aussi être créée simplement avec la touche
-<strong>Enter</strong>. Quand une cellule complète est sélectionnée (utilisez
-la touche <kbd>F2</kbd>), la touche <kbd>Enter</kbd> crée une nouvelle
-colonne après et la colonne de la cellule sélectionnée.</p>
+colonne peut aussi être créée simplement avec la touche <kbd>Entrée</kbd>.
+Quand une cellule complète est sélectionnée (utilisez la touche
+<kbd>F2</kbd>), la touche <kbd>Entrée</kbd> crée une nouvelle colonne après
+et la colonne de la cellule sélectionnée.</p>
 
 <h3 id="L143">Détruire, copier, coller une colonne</h3>
 
 <p>Lorsqu'une colonne entière est sélectionnée, il est possible de la
 détruire, de copier ou de la couper et de la coller avant ou après une autre
-colonne.</p>
+colonne, dans la même table ou dans une autre.</p>
 
 <p class="ProcedureCaption">Sélectionner une colonne</p>
 
 <p>Il y a deux méthodes pour sélectionner une colonne :</p>
 <ol>
   <li>Utilisez l'entrée <strong>Sélectionner la colonne</strong> dans le
-    sous-menu <strong>Outils/Editer la table</strong> (<kbd>Ctrl t Ctrl
-    c</kbd>).</li>
+    sous-menu <strong>Outils/Editer la table</strong> (<kbd>Ctrl-t
+    Ctrl-c</kbd>).</li>
   <li>Vous pouvez aussi étendre la sélection verticalement sur au moins deux
     cellules de la même colonne (Cell 1.1 à Cell 2.1 dans l'exemple
-    ci-dessous) puis pressez deux fois <kbd>F2</kbd> pour sélectionner la
-    colonne.</li>
+    ci-dessous) puis pressez <kbd>F2</kbd> pour sélectionner la colonne.</li>
 </ol>
 
 <table border="1" summary="table" style="width: 100%;">
@@ -121,19 +122,19 @@ permettent de coller un colonne :</p>
   <li>Pour coller une colonne avant une autre colonne 
     <ul>
       <li>Sélectionnez le début d'une cellule et activez la commande coller
-        (<kbd>Ctrl v</kbd>),</li>
+        (<kbd>Ctrl-v</kbd>),</li>
       <li>Vous pouvez aussi utiliser l'entrée <strong>Coller avant</strong>
-        du sous-menu <strong>Outils/Editer la table</strong> (<kbd>Ctrl t
-        Ctrl p</kbd>).</li>
+        du sous-menu <strong>Outils/Editer la table</strong> (<kbd>Ctrl-t
+        Ctrl-p</kbd>).</li>
     </ul>
   </li>
   <li>Pour coller une colonne après une autre colonne 
     <ul>
       <li>Sélectionnez la fin d'une cellule et activez la commande coller
-        (<kbd>Ctrl v</kbd>),</li>
+        (<kbd>Ctrl-v</kbd>),</li>
       <li>Vous pouvez aussi utiliser l'entrée <strong>Coller après</strong>
-        du sous-menu <strong>Outils/Editer la table</strong> (<kbd>Ctrl t
-        Ctrl v</kbd>).</li>
+        du sous-menu <strong>Outils/Editer la table</strong> (<kbd>Ctrl-t
+        Ctrl-v</kbd>).</li>
     </ul>
   </li>
 </ol>
@@ -145,21 +146,20 @@ une table :</p>
 <ul>
   <li>Pour créer une ligne avant une ligne existante, utilisez l'entrée
     <strong>Insérer une ligne</strong> du sous-menu <strong>Outils/Editer la
-    table</strong> (<kbd>Ctrl t Ctrl i</kbd>), ou le bouton de l'outil
-    <strong>Eléments</strong> <img alt="bouton"
-    src="../../resources/icons/16x16/Table_row.png" width="16" height="16"
-  />.</li>
+    table</strong> (<kbd>Ctrl-t Ctrl-i</kbd>), ou le bouton <img alt="bouton"
+    src="../../resources/icons/16x16/Table_row.png" width="16" height="16" />
+    de l'outil <strong>Eléments</strong>.</li>
   <li>Pour ajouter une nouvelle ligne après une ligne existante, utilisez
     l'entrée <strong>Ajouter une ligne</strong> du sous-menu
-    <strong>Outils/Editer la table</strong> (<kbd>Ctrl t Ctrl n</kbd>), ou le
-    bouton de l'outil <strong>Eléments</strong> <img alt="bouton"
+    <strong>Outils/Editer la table</strong> (<kbd>Ctrl-t Ctrl-n</kbd>), ou le
+    bouton <img alt="bouton"
     src="../../resources/icons/16x16/Table_row_a.png" width="16" height="16"
-    />.</li>
+    /> de l'outil <strong>Eléments</strong>.</li>
 </ul>
 
 <p>Dans le <a href="Creating.html.fr">mode d'édition XML</a>, une autre
 méthode consiste à sélectionner une ligne complète (utilisez la touche
-<kbd>F2</kbd>) puis à presser la touche <kbd>Enter</kbd> pour créer une
+<kbd>F2</kbd>) puis à presser la touche <kbd>Entrée</kbd> pour créer une
 nouvelle ligne après la ligne sélectionnée.</p>
 
 <h3 id="L301">Détruire, copier, coller une ligne</h3>
@@ -170,8 +170,8 @@ copier, la couper ou la coller.</p>
 <p>Pour sélectionner une ligne de table deux méthodes sont disponibles :</p>
 <ol>
   <li>Utilisez l'entrée <strong>Sélectionner la ligne</strong> dans le
-    sous-menu <strong>Outils/Editer la table</strong> (<kbd>Ctrl t Ctrl
-    r</kbd>).</li>
+    sous-menu <strong>Outils/Editer la table</strong> (<kbd>Ctrl-t
+    Ctrl-r</kbd>).</li>
   <li>Vous pouvez aussi mettre la sélection dans une cellule de la ligne puis
     utiliser la touche <kbd>F2</kbd>.</li>
 </ol>
@@ -183,55 +183,54 @@ couper avec les commandes habituelles.</p>
 <ol>
   <li>Pour coller la ligne avant une autre ligne 
     <ul>
-      <li>soit on sélectionne le début d'une ligne et on active la commande
-        coller (<kbd>Ctrl v</kbd>),</li>
-      <li>soit on utilise l'entrée <strong>Coller avant</strong> du sous-menu
-        <strong>Outils/Editer la table</strong> (<kbd>Ctrl t Ctrl
-      p</kbd>).</li>
+      <li>sélectionnez le début d'une ligne et activez la commande coller
+        (<kbd>Ctrl-v</kbd>),</li>
+      <li>ou utilisez l'entrée <strong>Coller avant</strong> du sous-menu
+        <strong>Outils/Editer la table</strong> (<kbd>Ctrl-t
+      Ctrl-p</kbd>).</li>
     </ul>
   </li>
   <li>Pour coller la ligne après une autre ligne 
     <ul>
-      <li>soit on sélectionne la fin d'une ligne et on active la commande
-        coller (<kbd>Ctrl v</kbd>),</li>
-      <li>soit on utilise l'entrée <strong>Coller après</strong> du sous-menu
-        <strong>Outils/Editer la table</strong> (<kbd>Ctrl t Ctrl
-      v</kbd>).</li>
+      <li>sélectionnez la fin d'une ligne et activez la commande coller
+        (<kbd>Ctrl-v</kbd>),</li>
+      <li>ou utilisez l'entrée <strong>Coller après</strong> du sous-menu
+        <strong>Outils/Editer la table</strong> (<kbd>Ctrl-t
+      Ctrl-v</kbd>).</li>
     </ul>
   </li>
 </ol>
 
-<h3 id="Cellules">Etendre une cellule</h3>
+<h3 id="Cellules">Étendre une cellule</h3>
 
 <p>Pour étendre une cellule, la méthode la plus pratique est de sélectionner
-l'ensemble des cellules à fusionner en draguant et d'utiliser la commande
+l'ensemble des cellules à fusionner, en draguant, puis d'utiliser la commande
 <strong>Fusionner les cellules</strong> dans le sous-menu
-<strong>Outils/Editer la table</strong>, ou le bouton de l'outil
-<strong>Eléments</strong> <img alt="bouton"
-src="../../resources/icons/16x16/Table_merge.png" width="16" height="16"
-/>.</p>
+<strong>Outils/Editer la table</strong>, ou le bouton <img alt="bouton"
+src="../../resources/icons/16x16/Table_merge.png" width="16" height="16" />
+de l'outil <strong>Elément</strong>.</p>
 
-<p>Quatre autres commandes spécifiques permettent d'étendre ou réduire
+<p>Quatre autres commandes spécifiques permettent d'étendre ou de réduire
 l'extension d'une cellule :</p>
 <ul>
-  <li><strong>Joindre avec la cellule à droite</strong> dans le sous-menu
-    <strong>Outils/Editer la table</strong> (<kbd>Ctrl t Ctrl e</kbd>) étend
-    la cellule d'une position à droite et fusionne le contenu des deux
+  <li><strong>Joindre avec la cellule de droite</strong> dans le sous-menu
+    <strong>Outils/Editer la table</strong> (<kbd>Ctrl-t Ctrl-e</kbd>) étend
+    la cellule d'une colonne à droite et fusionne le contenu des deux
     cellules.</li>
   <li><strong>Joindre avec la cellule au-dessous</strong> dans le sous-menu
-    <strong>Outils/Editer la table</strong> (<kbd>Ctrl t Ctrl j</kbd>) étend
-    la cellule d'une position vers le bas et fusionne le contenu des deux
+    <strong>Outils/Editer la table</strong> (<kbd>Ctrl-t Ctrl-j</kbd>) étend
+    la cellule d'une ligne vers le bas et fusionne le contenu des deux
     cellules.</li>
-  <li><strong>Réduire extension horizontale</strong> (<kbd>Ctrl t Ctrl
-    s</kbd>), ou le bouton de l'outil <strong>Eléments</strong> <img
-    alt="bouton" src="../../resources/icons/16x16/Table_split_v.png"
-    width="16" height="16" /> réduit l'extension horizontale de la cellule
-    d'une position et engendre une cellule vide.</li>
-  <li><strong>Réduire extension verticale</strong> (<kbd>Ctrl t Ctrl
-    m</kbd>), ou le bouton de l'outil <strong>Eléments</strong> <img
-    alt="bouton" src="../../resources/icons/16x16/Table_split_h.png"
-    width="16" height="16" /> réduit l'extension verticale de la cellule
-    d'une position et engendre une cellule vide.</li>
+  <li><strong>Réduire extension horizontale</strong> (<kbd>Ctrl-t
+    Ctrl-s</kbd>), ou le bouton <img alt="bouton"
+    src="../../resources/icons/16x16/Table_split_v.png" width="16"
+    height="16" /> de l'outil <strong>Eléments</strong>, réduit l'extension
+    horizontale de la cellule d'une colonne et engendre une cellule vide.</li>
+  <li><strong>Réduire extension verticale</strong> (<kbd>Ctrl-t
+    Ctrl-m</kbd>), ou le bouton <img alt="bouton"
+    src="../../resources/icons/16x16/Table_split_h.png" width="16"
+    height="16" /> de l'outil <strong>Eléments</strong> réduit l'extension
+    verticale de la cellule d'une ligne et engendre une cellule vide.</li>
 </ul>
 
 <p>On peut aussi éditer directement les <a
@@ -240,29 +239,30 @@ href="Attributes.html.fr">attributs</a> <code>colspan</code> et
 
 <h3 id="Ajouter2">Ajouter un nouveau corps de table (tbody)</h3>
 
-<p>Fonction non disponible dans la version Lite d'Amaya.</p>
+<p>Fonction non disponible dans le profil Lite d'Amaya.</p>
 <ul>
-  <li>Pour créer un nouveau corps de table en dessous d'un corps de table
-    existant, il faut placer le curseur à la fin de la dernière cellule de la
-    dernière ligne du corps de table et sélectionner l'entrée <strong>Corps
-    (tbody)</strong> dans le sous-menu <strong>Insertion/Table</strong>.</li>
-  <li>Pour créer un nouveau corps de table au-dessus d'une ligne existante,
-    il faut placer le curseur au début de la première cellule de la ligne et
-    sélectionner l'entrée <strong>Corps (tbody)</strong> dans le sous-menu
+  <li>Pour créer un nouveau corps de table (<code>tbody</code>) en dessous
+    d'un corps de table existant, il faut placer le curseur à la fin de la
+    dernière cellule de la dernière ligne du corps de table et sélectionner
+    l'entrée <strong>Corps (tbody)</strong> dans le sous-menu
     <strong>Insertion/Table</strong>.</li>
+  <li>Pour créer un nouveau corps de table au-dessus d'une ligne existante,
+    il faut placer le curseur au début de la première cellule de la première
+    ligne du corps de table et sélectionner l'entrée <strong>Corps
+    (tbody)</strong> dans le sous-menu <strong>Insertion/Table</strong>.</li>
 </ul>
 
 <p>Dans le <a href="Creating.html.fr">mode d'édition XML</a>, de nouveaux
-corps de table peuvent aussi être créés avec la touche <kbd>Enter</kbd>.
+corps de table peuvent aussi être créés avec la touche <kbd>Entrée</kbd>.
 Quand le corps de table entier est sélectionné (utilisez la touche
-<kbd>F2</kbd>), en tapant la touche <kbd>Enter</kbd> vous créez une nouveau
+<kbd>F2</kbd>), en tapant la touche <kbd>Entrée</kbd> vous créez une nouveau
 corps de table après le corps de table sélectionné.</p>
 
-<p class="Note">Notez que le modèle de table implémenté dans
-<strong><em>Amaya</em></strong> est le modèle de <a
-href="http://www.w3.org/TR/REC-html40">HTML 4.0</a>. Celui-ci comporte des
-éléments comme les corps multiples (<code><em>tbody</em></code>), des entêtes
-de table (<code><em>thead</em></code>) et des bas de table
+<p class="Note">Notez que le modèle de table implémenté dans Amaya est le
+modèle de <a href="http://www.w3.org/TR/REC-html40">HTML 4.0</a>. Celui-ci
+comporte des éléments comme les corps multiples
+(<code><em>tbody</em></code>), des entêtes de table
+(<code><em>thead</em></code>) et des bas de table
 (<code><em>tfoot</em></code>).</p>
 
 <h3 id="Ajouter3"><a name="Adding2">Ajouter quelque chose après une
@@ -271,14 +271,14 @@ table</a></h3>
 <p>De nombreux types d'élément peuvent être inclus à l'intérieur des cellules
 de la table. En cliquant un bouton de l'outil <strong>Eléments</strong>, ou
 en sélectionnant une entrée dans le menu <strong>Insertion,</strong> Amaya va
-essayer d'insérer l'élément choisi dans la cellule qui inclut le point
+essayer d'insérer l'élément choisi dans la cellule qui contient le point
 d'insertion.</p>
 
 <p>Pour contourner ce problème dans le <a href="Creating.html.fr">mode
-d'éditons XML</a>, vous pouvez sélectionner la table entière (use
-<kbd>F2</kbd>) et taper la touche <kbd>Enter</kbd>. Amaya engendrera un
-paragraphe après la table. Ce nouveau paragraphe peut être modifié si besoin
-est.</p>
+d'éditons XML</a>, vous pouvez sélectionner la table entière (utilisez la
+touche <kbd>F2</kbd>) et taper la touche <kbd>Entrée</kbd>. Amaya engendre
+alors un paragraphe après la table. Ce nouveau paragraphe peut être modifié
+si besoin est.</p>
 
 <p>La méthode générale consiste à sélectionner la table entière (use
 <kbd>F2</kbd>) et à utiliser la commande <strong>Ajouter</strong> du menu

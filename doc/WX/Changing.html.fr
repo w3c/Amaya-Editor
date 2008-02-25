@@ -30,7 +30,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <p>Pour changer le type d'un élément existant, <a
 href="Selecting.html.fr">sélectionnez-le</a> et choisissez le nouveau type
 soit dans le menu <strong>Insérer</strong>, soit dans l'outil
-<strong>Elément</strong>.s Vous pouvez ainsi par exemple changer une liste
+<strong>Eléments</strong>. Vous pouvez ainsi par exemple changer une liste
 numérotée (<code>ol</code>) en une liste non numérotée (<code>ul</code>), ou
 un paragraphe en un titre ou une liste.</p>
 
@@ -78,17 +78,19 @@ menu.</p>
 <p>Il est possible de grouper une série de paragraphes, titres, listes,
 tables, etc. à l'intérieur d'une division. Pour cela, il faut sélectionner
 les éléments à grouper puis activer l'entrée <strong>Division</strong> du
-menu <strong>Insérer</strong>.</p>
+menu <strong>Insérer</strong>, ou utiliser le bouton <img
+alt="Division button" src="../../resources/icons/16x16/XHTML_Div.png" /> de
+l'outil <strong>Éléments</strong>.</p>
 
 <h3 id="Fusionner"><a name="Back">Fusionner des éléments</a></h3>
 
 <p>Des éléments consécutifs peuvent être fusionnés, même s'ils ne sont pas au
 même niveau dans la structure du document. La fusion s'effectue à l'aide des
-touches <kbd>Backspace</kbd> et <kbd>Delete</kbd>. Quand le point d'insertion
-est à la fin d'un élément, utilisez la touche <kbd>Delete</kbd>. Quand il est
-au début, utilisez la touche <code><kbd>Backspace</kbd></code>. Dans les deux
+touches <kbd>Arrière</kbd> et <kbd>Suppr</kbd>. Quand le point d'insertion
+est à la fin d'un élément, utilisez la touche <kbd>Suppr</kbd>. Quand il est
+au début, utilisez la touche <code><kbd>Arrière</kbd></code>. Dans les deux
 cas, ces touches n'effacent aucun caractère. Elles fusionnent simplement les
-éléments séparés par une limite de structure.</p>
+éléments séparés par une frontière de structure.</p>
 
 <p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux
 touches effacent comme d'habitude le caractère suivant ou le caractère
