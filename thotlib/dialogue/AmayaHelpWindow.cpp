@@ -138,7 +138,7 @@ void AmayaHelpWindow::LoadConfig()
  -----------------------------------------------------------------------*/
 void AmayaHelpWindow::SaveConfig()
 {
-  AmayaNormalWindow::SaveConfig();
+  //AmayaNormalWindow::SaveConfig();
 }
 
 /*----------------------------------------------------------------------

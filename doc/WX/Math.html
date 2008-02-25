@@ -338,7 +338,7 @@ construct. The available constructs are:</p>
           </mtd>
         </mtr>
       </mtable>
-    </math>
+    </math> 
     <p>You must then choose the number of lines and columns in the new table
     through a dialog that pops up. You can manipulate it like a <a
     href="Tables.html">HTML table</a> through the commands available from the
@@ -1157,15 +1157,18 @@ target</strong> from the <strong>Links</strong> menu to create an
 
 <h4 id="Compatib">Browsers compatibility</h4>
 
-<p>Firefox or other Gecko-based browsers support MathML whereas Internet
-Explorer needs a plugin.</p>
+<p>Several browsers have a MathML support:</p>
+<ul>
+  <li>Internet Explorer with the MathPlayer plugin</li>
+  <li>Firefox and other Gecko-based browsers</li>
+  <li>Opera since version 9.5</li>
+</ul>
 
-<p>It is necessary to use the <code>.xml</code> suffix to make sure that
-XHTML document are managed as an XML format. Without this suffix some
-browsers don't display included mathematical expressions correctly.</p>
-
-<p>It's also recommended to use the <strong>utf-8</strong> charset for all
-XML documents.</p>
+<p>It is necessary to use the <code>.xml</code> suffix to be sure that XHTML
+documents are managed as XML. Without this suffix some browsers don't display
+correctly documents that include mathematical expressions. It's also
+recommended to use the <strong>utf-8</strong> charset for all XML
+documents.</p>
 
 <p>By default Amaya adds the XHTML 1.1 plus MathML 2.0 doctype at the
 beginning of the document. This doctype is not mandatory but it is useful:</p>
@@ -1209,8 +1212,8 @@ directory of the document.</p>
     (<code>class</code> and <code>style</code> attributes) and a MathML
     element can be the target of a link (<code>id</code>
     attribute).</span></span></li>
-  <li>Amaya uses the STIX font to render mathematical symbols, but currently
-    all are not supported.</li>
+  <li>Amaya uses the STIX fonts to render mathematical symbols, but currently
+    all the characters are not supported.</li>
 </ul>
 </div>
 </body>

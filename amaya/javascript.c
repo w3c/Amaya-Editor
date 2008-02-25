@@ -1373,7 +1373,6 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
           else
             {
               element = (Element)JS_GetPrivate(cx, obj);
-         *vp = JSVAL_NULL;
               element = TtaGetFirstChild(element);
               *vp = Element_to_jsval(cx, element);
             }

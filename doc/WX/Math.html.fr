@@ -346,7 +346,7 @@ constructions disponibles sont :</p>
           </mtd>
         </mtr>
       </mtable>
-    </math>
+    </math> 
     <p>Vous devez alors choisir le nombre de lignes et de colonnes désirées
     et tableau vide est créée à la position courante. Il se manipule comme
     <a href="Tables.html.fr">les tableaux HTML</a> grâce aux commandes
@@ -1182,15 +1182,19 @@ l'expression cible.</p>
 
 <h4 id="Compatib">Compatibilité des navigateurs</h4>
 
-<p>Firefox ou autres navigateurs basés sur Gecko supportent le MathML,
-tandis que Internet Explorer a besoin d'un plugin.</p>
+<p>Plusieurs navigateurs possèdent un support MathML :</p>
+<ul>
+  <li>Internet Explorer avec le plugin MathPlayer</li>
+  <li>Firefox et les autres navigateurs basés sur le moteur de rendu
+  Gecko</li>
+  <li>Opera depuis la version 9.5</li>
+</ul>
 
 <p>Il faut utiliser le suffixe <code>.xml</code> pour être sûr que tous les
-browsers traitent les documents XHTML comme du XML et donc affichent
-correctement les documents incluant des formules mathématiques.</p>
-
-<p>Il est aussi recommandé d'utiliser le charset <strong>utf-8</strong> pour
-les documents XML.</p>
+navigateurs traitent les documents XHTML comme du XML et donc affichent
+correctement les documents incluant des formules mathématiques. Il est aussi
+recommandé d'utiliser le charset <strong>utf-8</strong> pour les documents
+XML.</p>
 
 <p>Par défaut Amaya ajoute le doctype <code>XHTML 1.1 plus MathML 2.0</code>
 en tête du document. Ce doctype n'est pas obligatoire mais il est utile :</p>
@@ -1202,8 +1206,8 @@ en tête du document. Ce doctype n'est pas obligatoire mais il est utile :</p>
     seront codés comme tout autre caractère unicode.</li>
 </ul>
 
-<p>Malheureusement, ce doctype n'est pas supporté par beaucoup de browsers.
-Il peut donc être nécessaire de le supprimer avec la commande
+<p>Malheureusement, ce doctype n'est pas supporté par beaucoup de
+navigateurs. Il peut donc être nécessaire de le supprimer avec la commande
 <strong>Outils/Changer le doctype/Supprimer le doctype</strong>.</p>
 
 <p>IE utilise la feuille de transformation <code>pmathml.xsl</code> et un
