@@ -25,32 +25,16 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <div id="page_body">
 <h2 id="Editer">Editer des mathématiques</h2>
 
-<p>La possibilité d'inclure des expressions mathématiques est vraiment
-importante pour les scientifiques. Certains formats informatiques, tels que
-LaTeX, le permettent déjà pour les documents dont le but est d'être rendus
-de façon visuelle, en particulier d'être imprimée. Néanmoins, l'inclusion
-de formules mathématiques dans les pages web est beaucoup plus difficile. On
-utilise généralement des images produites à partir de sources LaTeX : on
-obtient un temps de chargement plus long, une mise en page inadaptée au
-texte environnant, une mauvaise qualité d'impression... De plus, Internet
-est censé être un moyen universel de partage de l'information et un langage
-plus puissant que LaTeX est requis pour que les formules soient
-compréhensibles par des synthétiseurs vocaux (pour les malvoyants), des
-logiciels mathématiques, des moteurs de recherche...</p>
-
-<p>Pour toutes ces raisons, le W3C a créé le <a
-href="http://www.w3.org/TR/MathML2/">MathML</a> (Mathematical Markup
-Language) et indique que, du fait de sa complexité, il ne devrait pas être
-édité à la main. Par conséquent, Amaya propose une interface Wysiwyg où
-les expressions mathématiques sont traitées comme des composants
-structurés, de la même manière que les éléments HTML. Vous pouvez donc
-manipuler les expressions mathématiques comme vous manipulez les autres
-parties des documents HTML. Toutes les commandes d'édition fournies par
-Amaya pour traiter le texte sont également utilisables pour les
+<p>Amaya propose une interface Wysiwyg où les expressions mathématiques <a
+href="http://www.w3.org/TR/MathML2/">MathML</a> sont traitées comme des
+composants structurés, de la même manière que les éléments (X)HTML. Vous
+pouvez donc manipuler les expressions mathématiques comme vous manipulez les
+autres parties des documents (X)HTML. Toutes les commandes d'édition
+fournies par Amaya pour traiter le texte sont également utilisables pour les
 mathématiques. Il y a quelques manipulations supplémentaires pour entrer
 des constructions mathématiques. Notez que les différents navigateurs ne se
-comportent pas de la même manière envers le MathML : regardez la section
-sur la <a href="#Compatib">compatibilité des navigateurs</a> pour plus
+comportent pas de la même manière envers MathML : regardez la section sur
+la <a href="#Compatib">compatibilité des navigateurs</a> pour plus
 d'informations.</p>
 
 <h3 id="L57">Créer une formule mathématique</h3>
@@ -61,7 +45,8 @@ d'informations.</p>
 incluses dans un document avec du texte, des tableaux, des images... pour
 cela vous devez créer un document XHTML. Sinon, vous pouvez créer un
 document MathML (mml) par exemple pour utiliser les formules dans d'autres
-logiciels.</p>
+logiciels. Pour cela, utilisez la commande <strong>Fichier / Nouveau /
+Nouvelle formule</strong> ou tapez <kbd>Ctrl-n Ctrl-m</kbd>.</p>
 
 <p>Pour créer une expression mathématique dans un document, il suffit de <a
 href="Selecting.html.fr#Selecting">placer le point d'insertion</a> à
@@ -114,7 +99,7 @@ SVG :</p>
   </mrow>
 </math></p>
 
-<p><svg:svg xmlns:svg="http://www.w3.org/2000/svg" height="250" width="250">
+<p><svg:svg xmlns:svg="http://www.w3.org/2000/svg" height="190" width="250">
   <svg:g transform="matrix(0.707107,-0.707107,0.707107,0.707107,0,150)">
     <svg:rect style="stroke:#50ff50;stroke-width:3px;fill:#aaffaa;"
           width="200" height="100"/>
@@ -183,7 +168,7 @@ SVG :</p>
 <h4 id="XMLMenu">Le sous-menu Math</h4>
 
 <p>Le sous-menu <strong>Insertion/Math</strong> contient les éléments de
-présentation définis  dans MathML.</p>
+présentation définis dans MathML.</p>
 <ul>
   <li>Les premiers éléments créent un nouvel élément d'un type donné à
     l'intérieur d'une expression mathématique : <strong>Texte
@@ -199,20 +184,22 @@ présentation définis  dans MathML.</p>
     permet d'entrer un caractère qui n'est pas disponible sur le clavier.
     Elle affiche une boîte de dialogue dans laquelle vous devez entrer le
     nom du caractère (par exemple <code>alpha</code> pour le caractère grec
-    α).</li>
-  <li>Les deux dernières commandes <strong>InvisibleTimes</strong> and
-    <strong>ApplyFunction</strong> sont utilisés pour entrer les caractères
-    invisibles correspondants. Voir la section sur les <a
+    α).<br />
+    Notez que vous pouvez aussi utiliser l'outil <strong>Caractères
+    spéciaux</strong>.</li>
+  <li>Les deux commandes suivantes, <strong>InvisibleTimes</strong> and
+    <strong>ApplyFunction</strong>, sont utilisés pour entrer les
+    caractères invisibles correspondants. Voir la section sur les <a
     href="#Speciaux">caractères spéciaux</a>.</li>
 </ul>
 
 <p>Les entrées suivantes du sous-menu <strong>Insertion/Math</strong> vous
 permettent de créer de nouvelles constructions à l'intérieur d'une
 formule. Si le point d'insertion n'est pas dans une formule, un élément
-Math est d'abord créé pour accepter la nouvelle construction. Les
-constructions disponibles sont :</p>
+<code>math</code> est d'abord créé pour accepter la nouvelle construction.
+Les constructions disponibles sont :</p>
 <ul>
-  <li>Racine (<code>mroot</code> dans MathML) : <math
+  <li>Racine (<code>mroot</code> dans MathML) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mroot>
         <mrow>
@@ -223,7 +210,7 @@ constructions disponibles sont :</p>
         <mn>3</mn>
       </mroot>
     </math></li>
-  <li>Racine carrée ( <code>msqrt)</code>: <math
+  <li>Racine carrée ( <code>msqrt</code>) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msqrt>
         <mrow>
@@ -233,13 +220,13 @@ constructions disponibles sont :</p>
         </mrow>
       </msqrt>
     </math></li>
-  <li>Englobe (<code>menclose)</code>: <math
+  <li>Englobe (<code>menclose</code>) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <menclose>
         <mn>1234</mn>
       </menclose>
     </math></li>
-  <li>Fraction (<code>mfrac)</code>: <math
+  <li>Fraction (<code>mfrac</code>) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mfrac>
         <mn>1</mn>
@@ -250,7 +237,7 @@ constructions disponibles sont :</p>
         </mrow>
       </mfrac>
     </math></li>
-  <li>Indice et exposant Expression (<code>msubsup)</code>: <math
+  <li>Indice et exposant Expression (<code>msubsup</code>) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msubsup>
         <mi>x</mi>
@@ -270,21 +257,21 @@ constructions disponibles sont :</p>
         </msubsup>
       </mrow>
     </math></li>
-  <li>Indice (<code>msub)</code>: <math
+  <li>Indice (<code>msub</code>) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msub>
         <mi>x</mi>
         <mi>i</mi>
       </msub>
     </math></li>
-  <li>Exposant (<code>msup)</code>: <math
+  <li>Exposant (<code>msup</code>) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msup>
         <mi>x</mi>
         <mi>n</mi>
       </msup>
     </math></li>
-  <li>Dessous et dessus (<code>munderover)</code>: <math
+  <li>Dessous et dessus (<code>munderover</code>) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
         <mo movablelimits="false">∑</mo>
@@ -296,14 +283,14 @@ constructions disponibles sont :</p>
         <mi>n</mi>
       </munderover>
     </math></li>
-  <li>Dessous (<code>munder)</code>: <math
+  <li>Dessous (<code>munder</code>) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
-        <mo></mo>
+        <mo>-</mo>
       </munder>
     </math></li>
-  <li>Dessus (<code>mover)</code>: <math
+  <li>Dessus (<code>mover</code>) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mi>x</mi>
@@ -314,7 +301,19 @@ constructions disponibles sont :</p>
         <mi>y</mi>
       </mrow>
     </math></li>
-  <li>Multi-scripts (<code>mmultiscripts)</code>: <math
+  <li>Parenthèses (<code>mrow</code>) : <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mi>a</mi>
+          <mo>+</mo>
+          <mi>b</mi>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </math></li>
+  <li>Multi-scripts (<code>mmultiscripts</code>) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mmultiscripts>
         <mi>X</mi>
@@ -348,8 +347,8 @@ constructions disponibles sont :</p>
       </mtable>
     </math> 
     <p>Vous devez alors choisir le nombre de lignes et de colonnes désirées
-    et tableau vide est créée à la position courante. Il se manipule comme
-    <a href="Tables.html.fr">les tableaux HTML</a> grâce aux commandes
+    et un tableau vide est créée à la position courante. Il se manipule
+    comme <a href="Tables.html.fr">les tableaux HTML</a> grâce aux commandes
     disponibles dans le sous-menu <strong>Outils/Editer la table</strong>.</p>
   </li>
 </ul>
@@ -357,10 +356,10 @@ constructions disponibles sont :</p>
 <h4 id="Palette">La palette Math</h4>
 
 <p>Cliquer sur un bouton de la palette <strong>Math</strong> insère la
-construction mathématique représentée sur son icône. Les parties en
-noires sont vraiment insérée, les parties en rouge représentent des cases
-à compléter, les parties en bleues sont demandées par le biais d'une
-fenêtre de dialogue. Les parties en vertes sont simplement des informations
+construction mathématique représentée par son icône. Les parties en noir
+sont vraiment insérée, les parties en rouge représentent des cases à
+compléter, les parties en bleu sont demandées explicitement dans une boîte
+de dialogue. Les parties en vert sont simplement des informations
 supplémentaires qui ne sont pas insérées.</p>
 
 <p>La palette contient toutes les constructions décrites dans le MathML de
@@ -703,7 +702,7 @@ la structure de l'expression mathématique. Par exemple, en fin de
 numérateur d'une fraction, la flèche droite fait passer au début du
 dénominateur. En outre, si vous utilisez la flèche vers la droite à
 l'intérieur d'une construction non encore complétée, le point d'insertion
-est directement déplacé à la case vide la plus proche.</p>
+est directement placé dans la case vide la plus proche.</p>
 
 <h3 id="Options">Options d'éditions avancées</h3>
 
@@ -729,7 +728,7 @@ xmlns="http://www.w3.org/1998/Math/MathML">
   <li>si vous n'êtes pas dans une expression mathématique, cliquer d'abord
     sur l'entrée <strong>Insérer une formule</strong> du sous-menu
     <strong>Insertion/Math</strong>.</li>
-  <li>taper cette séquence de 6 caractères : <code>x=2a+b</code></li>
+  <li>taper cette séquence de 6 caractères : <kbd>x=2a+b</kbd></li>
 </ol>
 
 <p>Vous pouvez vérifier dans le <a href="#Vue">vue structure</a> ou source
@@ -820,18 +819,17 @@ précéder de '#x', mais cela peut donner une ambiguïté (comme 'af', par
 exemple). En cas d'ambiguïté, la chaîne saisie est interprétée comme un
 nom de caractère.</p>
 
-<p>Vous pouvez aussi utiliser la palette <strong>Caractères
-spéciaux</strong> qui se trouve en-dessous de la palette Math. Les boutons
-de la partie supérieure de cette palette permettent de choisir un groupe de
-caractères qui sont alors disponibles dans le menu qui se trouve en-dessous.
-Choisissez le caractère voulu dans ce menu, puis insérez-le dans le
-document à l'aide du bouton voisin.</p>
+<p>Vous pouvez aussi utiliser l'outil <strong>Caractères spéciaux</strong>
+qui se trouve dans la zone des outils. La partie supérieure de cet outil est
+un menu qui vous permet de choisir un groupe de caractères qui sont alors
+disponibles dans le tableau qui se trouve en-dessous. Cliquez sur le
+caractère voulu dans ce tableau pour l'insérer dans le document.</p>
 
-<p>En outre, la spécification MathML dit d'ajouter des caractères
+<p>En outre, la spécification MathML recommande d'ajouter des caractères
 invisibles pour que la lecture de la formule soit plus facile pour les
-synthétiseurs vocaux. Ils sont automatiquement insérés dans les
-constructions de la palette mais parfois vous devez le faire vous même. Vous
-pouvez utiliser le sous-menu <strong>Insertion/Math</strong> ou des <a
+synthétiseurs vocaux. Ces caractères sont automatiquement insérés dans
+les constructions de la palette, mais parfois vous devez le faire vous-même.
+Vous pouvez utiliser le sous-menu <strong>Insertion/Math</strong> ou des <a
 href="ShortCuts.html.fr">raccourcis</a>. Les trois caractères invisibles
 sont :</p>
 <ol>
@@ -876,7 +874,7 @@ du menu <strong>Outils</strong>. Sélectionnez l'expression que vous voulez
 transformer et la commande <strong>Transformer</strong> affichera un menu
 avec tous les changements possibles. Pour les constructions qui ne font pas
 parties du balisage de présentation MathMP (i.e. seulement disponibles à
-partir de la palette) cliquer sur le bouton déplacera l'expression
+partir de la palette) cliquer sur le bouton mettra l'expression
 sélectionnée dans la case vide la plus naturelle.</p>
 
 <p>Éditer la structure est utile pour garder une structure récursive même
@@ -1217,7 +1215,7 @@ copie de cette feuille de transformation (<a
 href="http://www.w3.org/Math/XSL/pmathml.xsl">pmathml.xsl</a>) dans le
 répertoire local du document.</p>
 
-<h4 id="Limites">Limites courantes</h4>
+<h4 id="Limites">Limitations courantes</h4>
 <ul>
   <li>Amaya implémente seulement les <em>Balises de Présentation</em> de
     MathML 2.0, et non le <em>Balisage du Contenu</em>.</li>

@@ -27,7 +27,7 @@ src="../../resources/icons/misc/right.png"> </a></p>
 produit que les &eacute;l&eacute;ments non d&eacute;pr&eacute;ci&eacute;s. La
 liste qui suit donne les &eacute;l&eacute;ments qui peuvent &ecirc;tre
 produits avec Amaya. Chaque lien pointe sur la sp&eacute;cification de HTML.
-L'utilisateur peut aussi consulter quelques <a
+Vous pouvez aussi consulter quelques <a
 href="HTML-elements/infoTypes.html.fr">Informations sur les
 &eacute;l&eacute;ments HTML</a>.</p>
 <dl>
@@ -271,7 +271,6 @@ href="HTML-elements/infoTypes.html.fr">Informations sur les
   href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-VAR">var</a></dt>
     <dd>instance de variable ou argument de programme</dd>
 </dl>
-</div>
 
 <p>Amaya ne permet pas la cr&eacute;ation de frames.</p>
 <dl>
@@ -317,5 +316,6 @@ d&eacute;pr&eacute;ci&eacute;s dans HTML 4.0 (ils ne devraient plus
     <dd>Doit &ecirc;tre remplac&eacute; un <a href="StyleSheets.html">style
       CSS</a></dd>
 </dl>
+</div>
 </body>
 </html>

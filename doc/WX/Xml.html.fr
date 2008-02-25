@@ -28,11 +28,11 @@ src="../../resources/icons/misc/right.png" alt="next" /> </a></p>
 
 <h3 id="Chargement">Chargement de document XML</h3>
 
-<p>Amaya permet de lire et d'afficher n'importe quel document XML
-bien-formé.</p>
+<p>Amaya permet de lire et d'afficher n'importe quel document XML bien-formé,
+et de le formater si une feuille de style CSS est associée.</p>
 
 <p>Pour un document XML faisant référence à une DTD ou à un espace de noms
-non supporté (autre que XHTML, MathML et SVG), Amaya offre un support
+non supporté (autre que XHTML, MathML ou SVG), Amaya offre un support
 d'affichage et d'édition plus restreint. En effet, comme Amaya n'analyse pas
 la DTD associée, il ne peut vérifier la validité d'un tel document et n'a pas
 d'informations particulières sur les éléments, les attributs ainsi que sur
@@ -44,10 +44,10 @@ leur organisation dans le document.</p>
 structure qui reflète l'organisation du document et une vue formatée qui
 affiche le contenu des éléments. Sans autre indication de style, tous les
 éléments sont considérés comme <strong>blocs</strong>. Néanmoins, pour des
-raisons de lisibilité les éléments contenant au moins un fils de type "Text"
-sont considérés comme des éléments <em>en-ligne</em> et sont mis en ligne
-dans la vue formatée. Amaya permet également d'associer des feuilles de
-styles CSS pour ces documents par l'intermédiaire d'instructions de
+raisons de lisibilité les éléments contenant au moins une chaîne de
+caractères sont considérés comme des éléments <em>en-ligne</em> et sont mis
+en ligne dans la vue formatée. Amaya permet également d'associer des feuilles
+de styles CSS pour ces documents par l'intermédiaire d'instructions de
 traitement (<strong>PI</strong>) de type <a
 href="http://www.w3.org/1999/06/REC-xml-stylesheet-19990629 "><strong>xml-stylesheet</strong></a>.</p>
 
@@ -59,17 +59,17 @@ règles propres à chaque type. Pour les parties génériques, seule la commande
 <kbd>Entrée</kbd> est actuellement disponible :</p>
 <ul>
   <li>Si la sélection est à l'intérieur d'un élément, alors Amaya coupe
-    l'élément sélectionné et crée un élément de même type après.</li>
+    l'élément sélectionné.</li>
   <li>Si un élément non vide est complètement sélectionné, alors Amaya crée
     un élément vide de même type après la sélection.</li>
   <li>Si un élément vide est complètement sélectionné, alors Amaya crée un
     voisin de même type pour le parent de l'élément sélectionné.</li>
 </ul>
 
-<p>Vous pouvez également modifier des documents XML en utilisant le
-<strong>Vue source</strong> et en effectuant la commande
-<strong>Synchroniser</strong>. Vos modifications seront prises en compte dans
-la vue formatée.</p>
+<p>Vous pouvez également modifier des documents XML en utilisant la
+<strong>Vue source</strong> et en effectuant la commande <strong>Fichier /
+Synchroniser</strong>. Vos modifications seront prises en compte dans la vue
+formatée.</p>
 
 <p></p>
 </div>

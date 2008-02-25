@@ -30,7 +30,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <p>Pour insérer une image, choisissez l'entrée <strong>Image</strong> depuis
 le menu <strong>Insertion</strong> ou cliquez sur le bouton <img alt="Image "
 src="../../resources/icons/16x16/XHTML_Image.png" longdesc="longdesc.htm" />
-(ou encore utilisez le raccourci clavier <kbd>Ctrl h Ctrl i</kbd>). Ceci fait
+(ou encore utilisez le raccourci clavier <kbd>Ctrl-h Ctrl-i</kbd>). Ceci fait
 apparaître une boîte de dialogue qui vous permet de rentrer </p>
 <ul>
   <li>le nom du fichier, </li>
@@ -41,17 +41,17 @@ apparaître une boîte de dialogue qui vous permet de rentrer </p>
 </ul>
 
 <p class="Note"><strong>Note</strong>: le texte de remplacement est
-obligatoire. Vous devez saisir un texte dans le champ correspondant ou
-confirmer deux fois.</p>
+obligatoire. Vous devez saisir une brève description de l'image dans le champ
+correspondant ou confirmer deux fois.</p>
 
 <p>Pour faciliter la recherche d'un fichier image vous pouvez entrer une
-valeur de <strong>filtre</strong>, et utiliser le bouton
+valeur de <strong>filtre</strong> et utiliser le bouton
 <strong>filtre</strong>. Ainsi le dialogue listera seulement les fichiers qui
 correspondent à votre critère.</p>
 
 <p>Si vous souhaitez fournir une longue description (par exemple si votre
-image présente une information complexe) vous devriez la faire dans un
-document séparé et la relier en donnant l'URI comme un descripteur long
+image présente une information complexe) vous devez le faire dans un document
+séparé et le relier en donnant l'URI comme un descripteur long
 (<code>longdesc</code>), également disponible dans la liste des
 <strong>Attributs</strong>.</p>
 
@@ -66,18 +66,17 @@ l'image sélectionnée au lieu d'insérer une nouvelle image.</p>
 <h3 id="Texte"><a name="Alternative">Texte de remplacement et descriptions
 longues</a></h3>
 
-<p>Pour les éléments comme les images (et autres objets multimédia) vous
-devez fournir un texte de remplacement. Celui ci sera présenté, comme à
-l'habitude, à la place de l'image par un navigateur avec un système de sortie
-vocale, ou une visualisation en Braille (utilisé par de nombreux aveugles).
-Il est également courant que les utilisateurs ayant des connections de
-mauvaise qualité demandent la vue alternée, où le texte est transmis beaucoup
-plus vite que les images.</p>
+<p>Pour les éléments comme les images et autres objets multimédia, vous devez
+fournir un texte de remplacement. Celui-ci sera présenté, comme à l'habitude,
+à la place de l'image par un navigateur avec un système de sortie vocale, ou
+une transcription en Braille (utilisé par de nombreux aveugles). Il est
+également courant que les utilisateurs ayant des connections de mauvaise
+qualité demandent la vue alternée, le texte étant transmis beaucoup plus vite
+que les images.</p>
 
-<p>Le texte de remplacement devrait remplacer l'image en fonction. Par
-exemple, si l'image est utilisée pour fournir une icône de lien (c'est le cas
-de l'icône du W3C en haut de cette page) ainsi le titre de la page référencée
-serait un bon texte de remplacement.</p>
+<p>Le texte de remplacement remplace l'image dans toutes ses fonctions. Par
+exemple, si l'image est utilisée pour fournir une icône de lien, le titre de
+la page référencée serait un bon texte de remplacement.</p>
 
 <p>Il existe des cas où une image n'est utilisée que pour un effet visuel, et
 n'apporte aucune information supplémentaire à la page. Dans ce cas, il est
@@ -88,15 +87,15 @@ de substitution.</p>
 pas disponible depuis le texte du document, vous devez fournir une
 description de l'information. L'option <code>longdesc</code> dans la liste
 des <strong>Attributs</strong> vous permet de relier une description (qui est
-un URI - un document séparé, ou une partie nommée du document courant) à une
+l'URI d'un document séparé ou une partie nommée du document courant) à une
 image.</p>
 
-<p>Afin de donner une idée de comment une page sans les images doit être
-présentée, Amaya fournit une option <strong>Montrer la vue alternée</strong>
+<p>Pour donner une idée de la façon dont une page est présentée sans les
+images, Amaya fournit une option <strong>Montrer la vue alternée</strong>
 dans le menu <strong>Affichage</strong>. Dans le cas d'un navigateur oral, la
 <a href="Views.html.fr#Alternate">vue alternée</a> pourrait être simplement
 lue à voix haute. Sans des textes de remplacement pour les images, de
-nombreuses pages deviendraient difficiles voire impossibles à naviguer, et
+nombreuses pages deviendraient difficiles, voire impossibles, à naviguer, et
 les utilisateurs seraient condamnés à trouver "leur chemin dans le noir".</p>
 
 <h3 id="Utiliser"><a name="Using">Utiliser des zones actives</a></h3>
@@ -104,20 +103,21 @@ les utilisateurs seraient condamnés à trouver "leur chemin dans le noir".</p>
 <p><strong>Amaya</strong> vous donne la possibilité d'utiliser des zones
 actives :</p>
 
-<p class="ProcedureCaption">Pour activer une zone dans un plan</p>
+<p class="ProcedureCaption">Pour activer une zone d'une image</p>
 <ul>
-  <li>Double-cliquez sur la zone avec le bouton gauche de la souris. L'URI
-    attaché à cette zone est alors importé.</li>
+  <li>Double-cliquez sur la zone avec le bouton gauche de la souris.
+    L'information correspondant à l'URI attaché à cette zone est alors
+    affichée.</li>
 </ul>
 
-<p class="ProcedureCaption">Pour visualiser les zones existantes</p>
+<p class="ProcedureCaption">Pour visualiser les zones actives existantes</p>
 <ul>
   <li>Choisissez <strong>Montrer les zones actives</strong> du menu
     <strong>Affichage</strong>.<br />
 
     <p class="Note"><strong>Note</strong> : Vous pouvez aussi visualiser les
-    zones actives depuis le clavier par la séquence <kbd>Ctrl u Ctrl
-    m</kbd>.</p>
+    zones actives depuis le clavier par la séquence <kbd>Ctrl-u
+    Ctrl-m</kbd>.</p>
   </li>
 </ul>
 </div>

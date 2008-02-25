@@ -25,27 +25,14 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <div id="page_body">
 <h2 id="Editing">Editing mathematics</h2>
 
-<p>The possibility to include mathematical expressions is really important
-for scientists. Some computer formats, such as LaTeX, already allows it for
-documents whose purpose is being visually rendered, especially printed.
-Nevertheless, including mathematical formulae in web pages is much more
-difficult. People generally use images generated from LaTeX sources: they get
-a longer loading time, a layout not adapted with the rounded text, a bad
-print quality... Moreover, Internet is supposed to be a universal way to
-share informations and a more powerful mathematical language than LaTeX is
-required in order to make the formulae understandable by speech synthesizers
-(for visually impaired), mathematical softwares, search engines...</p>
-
-<p>For all these reasons, the W3C created the <a
-href="http://www.w3.org/TR/MathML2/">MathML</a> (Mathematical Markup
-Language) and indicates that, because of its complexity, it should not be
-edited by hand. Consequently, Amaya proposes a Wysiwyg interface where
-mathematical expressions are handled as structured components, in the same
-way as HTML elements. Therefore, you can manipulate math expressions in the
-same way you manipulate other parts of HTML documents. All editing commands
-provided by Amaya for handling text are also available for math. In addition,
-there are some other controls for entering mathematical constructs. Note that
-the different browsers don't behave in the same way with MathML: see the <a
+<p>Amaya proposes a Wysiwyg interface where <a
+href="http://www.w3.org/TR/MathML2/">MathML</a> mathematical expressions are
+handled as structured components, in the same way as (X)HTML elements.
+Therefore, you can manipulate math expressions in the same way you manipulate
+other parts of (X)HTML documents. All editing commands provided by Amaya for
+handling text are also available for math, but there are some additional
+controls for entering mathematical constructs. Note that the different
+browsers don't behave in the same way with MathML: see the <a
 href="#Compatib">browsers compatibility</a> section for more informations.</p>
 
 <h3 id="Creating">Creating mathematical formulae</h3>
@@ -55,14 +42,15 @@ href="#Compatib">browsers compatibility</a> section for more informations.</p>
 <p>Generally, mathematical formulae are not alone but included in a document
 with text, table, images... to do this, you have to create a XHTML document.
 Otherwise, you can create a MathML document (mml) for instance to use the
-formulae in other softwares.</p>
+formulae in other software tools. To do so, use command <strong>File / New /
+New formula</strong> or type <kbd>Ctrl-n Ctrl-m</kbd>.</p>
 
 <p>To create a new mathematical expression in a document, move the <a
 href="Selecting.html#Selecting">insertion point</a> to the position where you
 want to insert an expression, and then click the <strong>Math</strong> button
 (the first) from the Math palette, or choose <strong>Insert a
 formula</strong> from the <strong>Insert/Math</strong> submenu. Here are
-examples with a formula inserted directly in the XHTML document or inside a
+examples with a formula inserted directly in the XHTML document or inside an
 SVG image :</p>
 
 <p><math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -107,7 +95,7 @@ SVG image :</p>
   </mrow>
 </math></p>
 
-<p><svg:svg xmlns:svg="http://www.w3.org/2000/svg" height="250" width="250">
+<p><svg:svg xmlns:svg="http://www.w3.org/2000/svg" height="190" width="250">
   <svg:g transform="matrix(0.707107,-0.707107,0.707107,0.707107,0,150)">
     <svg:rect style="stroke:#50ff50;stroke-width:3px;fill:#aaffaa;"
           width="200" height="100"/>
@@ -184,13 +172,15 @@ elements.</p>
     (mo)</strong>. These commands can also change the type of a single
     element or a sequence of elements.</li>
   <li>The next command, <strong>Space (mspace)</strong>, allows you to add
-    space in a formula. To change its size, you have to modify its attribute.
-    See <a href="#Spacing">spacing</a>.</li>
+    space in a formula. To change its size, you have to modify its
+    <code>width</code> attribute. See <a href="#Spacing">spacing</a>.</li>
   <li>The next item, <strong>Character (&amp;xxx;)</strong>, enables you to
     enter a character that is not available on the keyboard. It displays a
     dialog where you have to enter the character name (for instance
-    <code>alpha</code> for the Greek character α).</li>
-  <li>The two last commands <strong>InvisibleTimes</strong> and
+    <code>alpha</code> for the Greek character α).<br />
+    Note that you can also use the Special characters tool (command
+    <strong>Views / Show/hide toolbars / Special characters</strong>).</li>
+  <li>The two next commands <strong>InvisibleTimes</strong> and
     <strong>ApplyFunction</strong> are used to enter the corresponding
     invisible characters. See the <a href="#Special">special characters</a>
     section.</li>
@@ -291,7 +281,7 @@ construct. The available constructs are:</p>
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
-        <mo></mo>
+        <mo>-</mo>
       </munder>
     </math></li>
   <li>Expression with overscript, <code>mover</code>: <math
@@ -303,6 +293,18 @@ construct. The available constructs are:</p>
           <mtext>maps to</mtext>
         </mover>
         <mi>y</mi>
+      </mrow>
+    </math></li>
+  <li>Expression within parentheses, <code>mrow</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mi>a</mi>
+          <mo>+</mo>
+          <mi>b</mi>
+        </mrow>
+        <mo>)</mo>
       </mrow>
     </math></li>
   <li>Expression with prescripts and tensor indices,
@@ -349,26 +351,25 @@ construct. The available constructs are:</p>
 <h4 id="Palette">The Math palette</h4>
 
 <p>Clicking on a button in the Math palette inserts the mathematical
-construction represented on its icon. Parts in black are really inserted,
-parts in red represent placeholder, parts in blue are asked thanks to a
-dialog. Green parts are simply additional informations that are not
+construct represented on its icon. Parts in black are really inserted, parts
+in red represent placeholder, parts in blue are asked through to a specific
+dialog. Green parts are simply additional information that are not
 inserted.</p>
 
-<p>The palette contains all constructions described in Content MathML (but
-the produced code is an equivalent in Presentation MathML, see the <a
+<p>The palette contains all constructs described in Content MathML (but the
+produced code is an equivalent in Presentation MathML, see the <a
 href="#Known">known issues</a> section) and even more. You can also save your
-own constructions in a mml file in order to use them latter. The 6 tabs are
-:</p>
+own constructs in a mml file in order to use them latter. The 6 tabs are :</p>
 <ol>
   <li><ul>
       <li>Various constructs 
         <ul>
           <li>new formula</li>
           <li><code>mrow</code>: used to group elements. See the section
-            about the <a href="#Row">row construction</a></li>
-          <li><code>mphantom</code>: hide a piece of formula, can be used for
-            alignment. The hidden parts can be viewed if you select the
-            formula : 
+            about the <a href="#Row">row construct</a></li>
+          <li><code>mphantom</code>: used to hide a piece of formula, can be
+            used for alignment. The hidden parts can be viewed if you select
+            the formula : 
             <p><math xmlns="http://www.w3.org/1998/Math/MathML">
               <mrow>
                 <mo>{</mo>
@@ -377,7 +378,7 @@ own constructions in a mml file in order to use them latter. The 6 tabs are
                     <mtr>
                       <mtd>
                         <mphantom>
-                          <mo>+</mo>
+                          <mo>−</mo>
                         </mphantom>
                         <mn>5</mn>
                         <mi>x</mi>
@@ -385,14 +386,14 @@ own constructions in a mml file in order to use them latter. The 6 tabs are
                         <mn>3</mn>
                         <mi>y</mi>
                         <mphantom>
-                          <mo>+</mo>
+                          <mo>−</mo>
                           <mn>0</mn>
                           <mi>z</mi>
                         </mphantom>
                         <mo>=</mo>
                         <mphantom>
-                          <mo>+</mo>
-                          <mn>0</mn>
+                          <mo>−</mo>
+                          <mn>11</mn>
                         </mphantom>
                       </mtd>
                     </mtr>
@@ -405,13 +406,13 @@ own constructions in a mml file in order to use them latter. The 6 tabs are
                         <mphantom>
                           <mn>0</mn>
                           <mi>y</mi>
-                          <mo>+</mo>
+                          <mo>−</mo>
                         </mphantom>
                         <mn>7</mn>
                         <mi>z</mi>
                         <mo>=</mo>
                         <mphantom>
-                          <mo>+</mo>
+                          <mo>−</mo>
                         </mphantom>
                         <mn>11</mn>
                       </mtd>
@@ -430,6 +431,9 @@ own constructions in a mml file in order to use them latter. The 6 tabs are
                         <mo>=</mo>
                         <mo>−</mo>
                         <mn>7</mn>
+                        <mphantom>
+                          <mn>0</mn>
+                        </mphantom>
                       </mtd>
                     </mtr>
                   </mtable>
@@ -689,8 +693,8 @@ one math construct to another. The right and left arrows move the insertion
 point according to the structure of the mathematical expression. For example,
 in a fraction when the insertion point is at the end of a numerator, the
 right arrow key moves the insertion point to the beginning of the
-denominator. Moreover if you use the right arrow in a not already completed
-construction, the insertion point is directly moved to the nearest
+denominator. Moreover if you use the right arrow to a construct that is not
+already completed, the insertion point is directly moved to the nearest
 placeholder.</p>
 
 <h3 id="Advanced">Advanced editing features</h3>
@@ -716,8 +720,8 @@ xmlns="http://www.w3.org/1998/Math/MathML">
 <ol>
   <li>If you are not in a mathematical expression, choose
     <strong><strong>Insert a formula</strong> from the
-    <strong>Insert/Math</strong></strong> submenu. </li>
-  <li>Type this sequence of 6 characters: <code>x=2a+b</code></li>
+    <strong>Insert/Math</strong></strong> submenu.</li>
+  <li>Type this sequence of 6 characters: <kbd>x=2a+b</kbd></li>
 </ol>
 
 <p>Use the Structure or Source view to display the following structure
@@ -731,12 +735,12 @@ were misinterpreted and change their type with one of the commands such as
 <strong>Number (mn)</strong>, <strong>Operator (mo)</strong> or <strong>Space
 (mspace)</strong>. </p>
 
-<h4 id="Row">The row construction</h4>
+<h4 id="Row">The row construct</h4>
 
-<p>The <code>row</code> construction from the palette is the equivalent of
-the braces in LaTeX: it allows you to give informations about how the
-different part of a formula are grouped together. It does not appear on the
-screen but have an indirect effect on the rendering.</p>
+<p>The <code>row</code> construct from the palette is the equivalent of the
+braces in LaTeX: it allows you to give informations about how the different
+part of a formula are grouped together. It does not appear on the screen but
+have an indirect effect on the rendering.</p>
 
 <p>For instance, when entering brackets as in the following expression:</p>
 
@@ -772,7 +776,7 @@ screen but have an indirect effect on the rendering.</p>
 
 <p>Here, the <code>(x)</code> must be contained in a <code>mrow</code>
 element. You can correct the problem by selecting this part of the formula
-and then clicking on the row construction. You can also directly get the
+and then clicking on the row construct. You can also directly get the
 expected <code>mrow</code> if you choose <strong>Parentheses</strong> from
 the <strong>Insert/Math</strong> submenu or select the button in the
 <strong>Math palette</strong>.</p>
@@ -803,17 +807,17 @@ the hexadecimal value without any leading '#x', but note that this may be
 ambiguous (like 'af', for instance). In case of ambiguity, the string is
 interpreted as a character name.</p>
 
-<p>You can also use the <strong>Special characters</strong> palette. The
-first two rows of buttons allow you to choose a group of characters, which
-are then available in the pull down below. Choose a character in the list and
-insert it in the formula by clicking the insertion button</p>
+<p>You can also use the <strong>Special characters</strong> tool. In this
+tool, the pull-down menu allows you to choose a group of characters, which
+are then available in the table below. Click a character in this table to
+insert it in the formula or anywhere else in the document.</p>
 
-<p>Also, the MathML specification says to add invisible characters in order
-to make easier the reading of formula by speech synthesizers. They are
-automatically inserted in constructions from the palette but sometimes you
-have to do it by yourself. You can use the <strong>Insert/Math</strong>
+<p>Also, the MathML specification recommends to add invisible characters in
+order to make it easier for a speech synthesizer to read a formula. These
+characters are automatically inserted from the palette, but sometimes you
+have to do it by yourself. You can then use the <strong>Insert/Math</strong>
 submenu or <a href="ShortCuts.html">shortcuts</a>. The three invisible
-characters are :</p>
+characters are:</p>
 <ol>
   <li>invisible times: <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mi>a</mi>
@@ -841,7 +845,7 @@ characters are :</p>
     </math></li>
 </ol>
 
-<h4 id="Structure">Changing the expression structure</h4>
+<h4 id="Structure">Changing the structure</h4>
 
 <p>You may want to change the structure of an existing expression, such as
 appending a superscript, putting parentheses around an expression, or turning
@@ -849,15 +853,15 @@ an expression into the numerator of a fraction. To do that, select the
 expression and enter the new construct with the <strong>Math</strong>
 palette, the <strong>Insert/Math</strong> submenu or the keyboard. </p>
 
-<p>You can also use <strong>Transform</strong> on the <strong>Tools</strong>
-menu. Select the expression you want to transform and
+<p>You can also use <strong>Transform</strong> from the
+<strong>Tools</strong> menu. Select the expression you want to transform and
 <strong>Transform</strong> will display a menu with all possible changes. For
 constructs that are not part of the Presentation MathML markup - i.e. only
-available from the palette - clicking on the button will move the selected
-expression in the more natural placeholder.</p>
+available from the palette - clicking on the button will put the selected
+expression in the most natural placeholder.</p>
 
-<p>Changing an expression structure is useful to keep a recursive structure
-even when you enter a formula linearly. For instance to enter <math
+<p>Changing an expression is useful to keep a recursive structure even when
+you enter a formula linearly. For instance to enter <math
 xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mrow>
@@ -1079,10 +1083,10 @@ xmlns="http://www.w3.org/1998/Math/MathML">
 
 <h4 id="Viewing">Viewing structure in MathML</h4>
 
-<p>MathML structure in a document can be viewed by choosing <strong>Show
+<p>A MathML structure in a document can be viewed by choosing <strong>Show
 Structure</strong> from the <strong>Views</strong> menu. Choosing this option
-opens the Structure view, which reveals the main structure of the document,
-the math elements, and their contents.</p>
+opens up the Structure view, which reveals the main structure of the
+document, the math elements, and their contents.</p>
 
 <p>Math expressions can be edited in the main view or in the structure
 view.</p>
@@ -1107,7 +1111,7 @@ root or after it.</p>
 </math></p>
 
 <p>Selecting (or checking) in the Structure view avoids any misselections.
-You can also check the status line at the bottom of the main window.</p>
+You can also check the status line at the bottom of the window.</p>
 
 <h4 id="Linking">Linking in MathML</h4>
 
@@ -1157,7 +1161,7 @@ target</strong> from the <strong>Links</strong> menu to create an
 
 <h4 id="Compatib">Browsers compatibility</h4>
 
-<p>Several browsers have a MathML support:</p>
+<p>Several browsers support MathML:</p>
 <ul>
   <li>Internet Explorer with the MathPlayer plugin</li>
   <li>Firefox and other Gecko-based browsers</li>
@@ -1165,8 +1169,8 @@ target</strong> from the <strong>Links</strong> menu to create an
 </ul>
 
 <p>It is necessary to use the <code>.xml</code> suffix to be sure that XHTML
-documents are managed as XML. Without this suffix some browsers don't display
-correctly documents that include mathematical expressions. It's also
+documents are managed as XML. Without this suffix some browsers do not display
+correctly documents that include mathematical expressions. It is also
 recommended to use the <strong>utf-8</strong> charset for all XML
 documents.</p>
 
@@ -1175,8 +1179,8 @@ beginning of the document. This doctype is not mandatory but it is useful:</p>
 <ul>
   <li>to validate the document,</li>
   <li>to generate alphanumerical entities (like &amp;int;) for mathematical
-    symbols in the source code. Else mathematical symbols are coded like any
-    other unicode character.</li>
+    symbols in the source code. Otherwise mathematical symbols are coded like
+    any other unicode character.</li>
 </ul>
 
 <p>Unfortunately, this doctype is not supported by many browsers. So it could
@@ -1186,34 +1190,34 @@ be necessary to remove this doctype with the Amaya command:
 <p>IE uses the <code>pmathml.xsl</code> transformation style sheet and a
 plugin to display the MathML code included in XHTML documents. Amaya adds
 automatically a link to that transformation style sheet, but the author must
-think to store a copy of this style sheet (<a
+store a copy of this style sheet (<a
 href="http://www.w3.org/Math/XSL/pmathml.xsl">pmathml.xsl</a>) in the local
 directory of the document.</p>
 
 <h4 id="Known">Known issues</h4>
 <ul>
-  <li>Amaya implements only the Presentation Tags from MathML 2.0, not the
-    Content Markup.</li>
-  <li>Some Presentation Tags are entirely available: <code>mglyph</code>,
-    <code>maction</code></li>
+  <li>Amaya implements only the Presentation part of MathML 2.0, not the
+    Content Markup part.</li>
+  <li>A few Presentation tags are not entirely available:
+    <code>mglyph</code>, <code>maction</code></li>
   <li>All presentation elements and attributes are available, but only the
     following attributes are rendered on the screen: <code>display, alttext,
     mathvariant, mathsize, mathcolor, mathbackground, fontsize, fontweight,
     fontstyle, fontfamily, color, linethickness, numalign, denomalign,
     bevelled, notation, lquote, rquote, lspace, rspace, largeop,
-    movablelimits, subscriptshift, superscriptshift, form,
-    width</code>(mspace only), <code>height</code> (mspace only),
-    <code>depth</code> (mspace only), <code>align, rowalign, columnalign,
-    frame, framespacing, displaystyle, side, rowspan, columnspan, rowspacing,
-    columnspacing, rowlines, columnlines</code>.</li>
+    movablelimits, subscriptshift, superscriptshift, form, width</code>
+    (mspace only), <code>height</code> (mspace only), <code>depth</code>
+    (mspace only), <code>align, rowalign, columnalign, frame, framespacing,
+    displaystyle, side, rowspan, columnspan, rowspacing, columnspacing,
+    rowlines, columnlines</code>.</li>
   <li><span><span>The <code>class</code>, <code>id</code>, and
     <code>style</code> attributes are available, with the same semantics as
-    in HTML: you can associate CSS styles with MathML elements
+    in (X)HTML: you can associate CSS styles with MathML elements
     (<code>class</code> and <code>style</code> attributes) and a MathML
     element can be the target of a link (<code>id</code>
     attribute).</span></span></li>
   <li>Amaya uses the STIX fonts to render mathematical symbols, but currently
-    all the characters are not supported.</li>
+    not all symbols are supported.</li>
 </ul>
 </div>
 </body>
