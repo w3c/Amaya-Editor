@@ -12,7 +12,8 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Annotations.html.fr" accesskey="p"><img
 alt="previous" src="../../resources/icons/misc/left.png" /> </a> <a
@@ -175,7 +176,7 @@ ci-dessous pour Windows et Mac OS X).</p>
   </tbody>
 </table>
 
-<h4 id="pertoire1"><a name="AmayaHome">Le répertoire AmayaHome</a></h4>
+<h4 id="pertoire1">Le répertoire AmayaHome</h4>
 
 <p>Amaya stocke les préférences de l'utilisateur ainsi que les autres
 fichiers de configuration de l'utilisateur dans un répertoire que nous

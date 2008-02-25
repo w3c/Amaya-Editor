@@ -29,19 +29,80 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <p>Le menu <strong>Format</strong> vous permet de changer l'apparence de vos
 documents en utilisant les cascades des feuilles de style (CSS).</p>
 
-<h3 id="Appliquer">Appliquer un thème</h3>
+<h3 id="Appliquer">Appliquer/Retirer un thème</h3>
 
 <p>Amaya fournit par défaut deux thèmes (Classique, Moderne) qui vous
-permettent de changer globalement la présentation de votre document.</p>
+permettent de changer globalement la présentation du document courant.</p>
+
+<p class="ProcedureCaption">Pour changer la présentation du document avec un
+thème  :</p>
+<ul>
+  <li>Sélectionnez l'entrée <strong>Classique</strong> ou
+    <strong>Moderne</strong> dans la liste des thèmes proposés pour l'outil
+    <strong>Style</strong>,</li>
+  <li>ou sélectionnez l'entrée <strong>Classique</strong> ou
+    <strong>Moderne</strong> dans le sous-menu
+  <strong>Format/Thème</strong>.</li>
+</ul>
+
+<p class="ProcedureCaption">Pour retirer le thème courant :</p>
+<ul>
+  <li>Sélectionnez l'entrée <strong>Pas de thème</strong> dans la liste des
+    thèmes proposés pour l'outil <strong>Style</strong>,</li>
+  <li>ou sélectionnez l'entrée <strong>Pas de thème</strong> dans le
+    sous-menu <strong>Format/Thème</strong>.</li>
+</ul>
+
+<p>Tous ces changements peuvent être défaits.</p>
+
+<p>Quand un thème est appliqué à un document, Amaya engendre un élément
+<code>style</code> dont le contenu vient des fichiers
+<code>Amaya/config/Classis.css</code> ou
+<code>Amaya/config/Modern.css</code>. L'utilisateur peut créer ses propres
+fichier Classic.css et Modern.css dans son répertoire <a
+href="Configure.html.fr#pertoire1">AmayaHome</a>.</p>
 
 <h3 id="Appliquer1">Appliquer du style spécifique</h3>
+
+<p>Certains styles comme la couleur du texte, la couleur de fond, la police
+de caractères, l'alignement, l'interligne, ou l'indentation peuvent  être
+appliqués à une portion de texte ou un élément complet avec l'outil
+<strong>Style</strong> ou les sous-menus correspondants du menu
+<strong>Format</strong>.</p>
+
+<p class="ProcedureCaption">Pour appliquer un style spécifique  :</p>
+<ol>
+  <li>Sélectionnez un fragment de texte ou un élément.<br />
+    Pour sélectionner un élément, vous devez cliquer dans l'élément, puis
+    utiliser la touche <kbd>F2</kbd> jusqu'à ce que la ligne en bas de la
+    fenêtre affiche son type en première position.</li>
+  <li>Choisissez la bonne entrée dans l'outil <strong>Style</strong> ou dans
+    le menu Format. 
+    <p>L'outil <strong>Style</strong> propose deux boutons pour la couleur du
+    texte et la couleur de fond : le premier permet d'appliquer la couleur
+    visualisée alors que le second permet de choisir et appliquer une autre
+    couleur.</p>
+    <p>Les entrées polices et taille de caractères sont les seules entrées
+    mises à jour quand la sélection change.</p>
+  </li>
+</ol>
+
+<p class="ProcedureCaption">Pour retirer un style spécifique :</p>
+<ul>
+  <li>L'outil <strong>Style</strong> permet pas de retirer le style
+    spécifique. Il faut donc utiliser les entrées <strong>Pas de
+    couleur</strong> ou <strong>Défaut</strong> des sous-menus du menu
+    <strong>Format</strong>.</li>
+  <li>Dans la version avancée d'Amaya, l'utilisateur peut directement <a
+    href="Attributes.html.fr">éditer l'attribut</a> <code>style</code>.</li>
+</ul>
 
 <h3 id="Associer">Associer une classe à un élément</h3>
 
 <p>Toutes les classes disponibles pour un document sont listées dans l'outil
 <strong>Appliquer classe</strong>.</p>
 
-<p class="ProcedureCaption">Pour appliquer une classe à un élément :</p>
+<p class="ProcedureCaption">Pour appliquer une classe à un élément  :</p>
 <ol>
   <li>Choisissez la bonne entrée dans l'outil <strong>Appliquer
     classe</strong>.</li>
@@ -70,20 +131,20 @@ Attributs permet aussi de retirer l'attribut <code>class</code> d'un élément
 ou de le modifier (l'attribut <code>class</code> se manipule comme un autre
 attribut).</p>
 
-<p class="ProcedureCaption">Pour retirer la classe d'un élément :</p>
+<p class="ProcedureCaption">Pour retirer la classe d'un élément  :</p>
 <ul>
   <li>Vous pouvez éditer l'attribut <code>class</code> dans l'outils
     <strong>Attributs</strong>. 
     <p>Quand l'élément est sélectionné, vous cliquez sur le [X] de l'entrée
-    pour supprimer l'attribut <strong>class</strong>, ou vous cliquez sur
+    pour supprimer l'attribut <code>class</code>, ou vous cliquez sur
     l'entrée et éditez sa valeur puis confirmez avec le bouton appliquer
     (<img alt="ok" src="../../resources/icons/16x16/ok.png" /> ).</p>
   </li>
-  <li>Vous pouvez aussi retirer ou éditer l'attribut <strong>class</strong>
-    dans la vue structure. 
-    <p>Pour retirer l'attribut <strong>class</strong>, vous cliquez dans la
-    valeur, <code>F2</code> pour sélectionner la valeur entière, puis deux
-    <code>Delete</code> pour détruire l'attribut.</p>
+  <li>Vous pouvez aussi retirer ou éditer l'attribut <code>class</code> dans
+    la vue structure. 
+    <p>Pour retirer l'attribut <code>class</code>, vous cliquez dans la
+    valeur, <code><kbd>F2</kbd></code> pour sélectionner la valeur entière,
+    puis deux <kbd>Suppr</kbd> pour détruire l'attribut.</p>
     <p></p>
   </li>
 </ul>
@@ -111,9 +172,10 @@ information :</p>
   </li>
 </ol>
 
-<p>Cinq de ces éléments sont également disponibles dans l'outil Eléments :
-<em>em</em> (<img src="../../resources/icons/16x16/XHTML_I.png"
-alt="Bouton Mise en evidence" /> ), <strong>stong</strong> (<img
+<p>Cinq de ces éléments sont également disponibles dans l'outil
+<strong>Eléments</strong> : <em>em</em> (<img
+src="../../resources/icons/16x16/XHTML_I.png" alt="Bouton Mise en evidence"
+/> ), <strong>stong</strong> (<img
 src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" /> ),
 <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
 alt="Bouton Code" /> ), <ins>ins</ins> (<img alt="Bouton Insertion"
@@ -136,10 +198,10 @@ texte.</p>
   </li>
 </ol>
 
-<p>Deux de ces éléments sont également disponibles dans l'outil Elément : sup
-(<img alt="Bouton Exposant" src="../../resources/icons/16x16/XHTML_sup.png"
-/> ), sub (<img alt="Bouton Indice"
-src="../../resources/icons/16x16/XHTML_sub.png" /> ).</p>
+<p>Deux de ces éléments sont également disponibles dans l'outil
+<strong>Eléments</strong> : sup (<img alt="Bouton Exposant"
+src="../../resources/icons/16x16/XHTML_sup.png" /> ), sub (<img
+alt="Bouton Indice" src="../../resources/icons/16x16/XHTML_sub.png" /> ).</p>
 
 <h4 id="Supprimer">Supprimer un élément type information ou charactères</h4>
 
@@ -152,8 +214,8 @@ caractères</strong> s'annulent si elles sont appliquées de nouveau.</p>
   <li>Sélectionnez l'élément que vous voulez supprimer.</li>
   <li>Appliquez de nouveau la commande du sous-menu <strong>Types
     information</strong> ou <strong>Eléments caractères</strong> du menu
-    <strong>Insertion</strong>, ou dans l'outil Eléments : <em>em</em> (<img
-    src="../../resources/icons/16x16/XHTML_I.png"
+    <strong>Insertion</strong>, ou dans l'outil <strong>Eléments</strong> :
+    <em>em</em> (<img src="../../resources/icons/16x16/XHTML_I.png"
     alt="Bouton Mise en evidence" /> ), <strong>strong</strong> (<img
     src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />
     ), <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
@@ -168,7 +230,7 @@ caractères</strong> s'annulent si elles sont appliquées de nouveau.</p>
 
 <h3 id="L2881">Utiliser l'éditeur de style</h3>
 
-<p class="Note"><strong>Note :</strong> L'éditeur de style n.est pas
+<p class="Note"><strong>Note :</strong> L'éditeur de style n'est pas
 disponible dans la version Lite d'Amaya</p>
 
 <p>L'entrée <strong>Style CSS</strong> du menu <strong>Format</strong>, ou le
@@ -181,18 +243,22 @@ Format.</p>
 <strong>Appliquer</strong> ces propriétés à la sélection courante :</p>
 <ul>
   <li>Si la sélection se trouve dans une vue formatée, Amaya engendrera des
-    éléments span avec un attribut style ou un attribut style sur l'élément
-    courant, ou bien une simple mise à jour de l'attribut style existant.</li>
+    éléments <code>span</code> avec un attribut style ou un attribut style
+    sur l'élément courant, ou bien une simple mise à jour de l'attribut style
+    existant.</li>
   <li>Si la sélection se trouve dans une vue source ou dans un fichier CSS,
     Amaya engendrera une chaîne de caractères à la position courante.</li>
 </ul>
 
 <p>Dans tous les cas, les adresses des images incluses dans la liste des
-propriétés (background-image, list-style-image) seront transformées en
-adresses relatives au document sélectionné.</p>
+propriétés (<code>background-image</code>, <code>list-style-image</code>)
+seront transformées en adresses relatives au document sélectionné.</p>
 
 <h3 id="feuilles1"><a name="feuilles">Les feuilles de style CSS externes et
 utilisateur</a></h3>
+
+<p class="Note"><strong>Note :</strong> Ces actions ne sont pas disponibles
+dans la version Lite d'Amaya</p>
 
 <p>Un document peut associer plusieurs feuilles de style externes qui sont
 chargées avec le document et lui sont appliquées.</p>
@@ -203,7 +269,7 @@ charge qu'une seule instance de la feuille de style.</p>
 
 <p>L'utilisateur peut définir une feuille de style spécifique qui s'applique
 à tous les documents chargés. Cette feuille de style est appelée <em>feuille
-de style utilisateur</em>. c'est le fichier local <strong>amaya.css</strong>
+de style utilisateur</em>. c'est le fichier local <code>amaya.css</code>
 conservé dans l'environnement de l'utilisateur (le <a
 href="Configure.html.fr#AmayaHome">répertoire d'AmayaHome</a>).</p>
 
@@ -237,8 +303,8 @@ l'utilisateur :</p>
       <li>Si la feuille CSS cible est locale vous pouvez utiliser le bouton
         <strong>Parcourir</strong> pour la sélectionner.</li>
       <li>Sinon entrez l'URI (comme http://www.w3.org/file.css) la feuille
-        CSS cible et taper sur la touche <strong>Enter ou Return</strong>
-        pour confirmer. Le lien est créé.</li>
+        CSS cible et taper sur la touche <kbd>Entrée</kbd> pour confirmer. Le
+        lien est créé.</li>
     </ul>
     <p></p>
   </li>
@@ -267,6 +333,10 @@ l'utilisateur :</p>
 l'utilisateur, mais les commandes <strong>Ajouter</strong> et
 <strong>Retirer</strong> concernent uniquement les feuilles de style
 externes.</p>
+
+<p>L'outil <strong>Liste des styles</strong> affiche la liste les feuilles de
+styles appliquées au document. En même temps, il permet d'ajouter/retirer,
+activer/désactiver, et ouvrir des feuilles de style.</p>
 
 <h3 id="Visualiser">Visualiser le style appliqué</h3>
 

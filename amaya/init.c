@@ -1500,7 +1500,8 @@ static void TextURL (Document doc, View view, char *text, intptr_t noreplace)
           TtaFreeMemory (s);
           return;
         }
-      if (!DontReplaceOldDoc && !CanReplaceCurrentDocument (doc, view))
+      if (noreplace == 0 &&
+          !DontReplaceOldDoc && !CanReplaceCurrentDocument (doc, view))
         {
           /* restore the previous value @@ */
           AddURLInCombobox (DocumentURLs[doc], NULL, FALSE);

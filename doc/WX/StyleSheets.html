@@ -23,17 +23,103 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
+
+<div class="toc">
+<ul>
+  <li><a href="#Cascading">Styling a document</a>
+    <ul>
+      <li><a href="#Applying">Applying/Removing a theme</a></li>
+      <li><a href="#Applying1">Applying specific style</a></li>
+      <li><a href="#Associatin">Associating a class to an element</a></li>
+      <li><a href="#Using">Using HTML style elements</a>
+        <ul>
+          <li><a href="#Informatio">Information type elements</a></li>
+          <li><a href="#Character">Character elements</a></li>
+          <li><a href="#Removing">Removing information type or character
+            elements</a></li>
+        </ul>
+      </li>
+      <li><a href="#Creating3">Using the style editor</a></li>
+      <li><a href="#About">About linking external and user style sheets</a>
+        <ul>
+          <li><a href="#Handling">Handling external CSS style sheets</a></li>
+        </ul>
+      </li>
+      <li><a href="#Showing">Showing applied style</a></li>
+      <li><a href="#Creating1">Creating a generic style for an element or a
+        class</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
 <h2 id="Cascading">Styling a document</h2>
 
 <p>The <strong>Format</strong> menu enables you to change the appearance of
 your documents using cascading style sheets (CSS)</p>
 
-<h3 id="Applying">Applying a theme</h3>
+<h3 id="Applying">Applying/Removing a theme</h3>
 
 <p>Amaya provides by default two different themes (Classic, Modern) that
-allow you to style a whole document.</p>
+allow you to style the current document.</p>
+
+<p class="ProcedureCaption">To change the document presentation with a
+theme:</p>
+<ul>
+  <li>Select the <strong>Classic</strong> or <strong>Modern</strong> entry in
+    the theme list proposed by the <strong>Style</strong> tool,</li>
+  <li>or select the <strong>Classic</strong> or <strong>Modern</strong> entry
+    in the <strong>Format/Theme</strong> submenu.</li>
+</ul>
+
+<p class="ProcedureCaption">To remove the current theme:</p>
+<ul>
+  <li>Select the <strong>No theme</strong> entry in the Theme list proposed
+    by the <strong>Style</strong> tool,</li>
+  <li>or select the <strong>No theme</strong> entry in the
+    <strong>Format/Theme</strong> submenu.</li>
+</ul>
+
+<p>All these changes can be undone.</p>
+
+<p>When a theme is applied to a document, Amaya generates a
+<code>style</code> element whose content comes from
+<code>Amaya/config/Classic.css</code> or <code>Amaya/config/Modern.css</code>
+files. The user can create his/her own <code>Classic.css</code> and
+<code>Modern.css</code> files in his/her <a
+href="Configure.html#AmayaHome">AmayaHome</a> directory. In that case, Amaya
+will use them instead of default <code>config</code> files.</p>
 
 <h3 id="Applying1">Applying specific style</h3>
+
+<p>Some styles like the color, background color, font, alignment, line
+spacing, or indent may be applied to a piece of text or a whole element using
+either the <strong>Style</strong> tool or the corresponding submenu of the
+<strong>Format</strong> menu.</p>
+
+<p class="ProcedureCaption">To apply a specific style:</p>
+<ol>
+  <li>Select a piece of text or an element.<br />
+    To select an element, you have to click within the element, then use the
+    <code><kbd>F2</kbd></code> key until the bottom line of the window
+    displays its type in first position. You can also use the structure view
+    to select it.</li>
+  <li>Choose the right entry within the <strong>Style</strong> tool or in the
+    <strong>Format</strong> menu. 
+    <p>The Style tool provides two buttons for the color and the background
+    color: the first one allows you to apply the current displayed color when
+    the second one allows you to select and apply another color.</p>
+  </li>
+</ol>
+
+<p class="ProcedureCaption">To remove a specific style:</p>
+<ul>
+  <li>The <strong>Style</strong> tool doesn't allow you to remove specific
+    style. That could be done with <strong>No color</strong> or
+    <strong>Default</strong> entries of <strong>Format</strong> submenus.</li>
+  <li>In the advanced Amaya version, the user may directly <a
+    href="Attributes.html">edit the attribute</a> <code>style</code>.</li>
+</ul>
 
 <h3 id="Associatin">Associating a class to an element</h3>
 
@@ -79,9 +165,8 @@ attribute is handled like any other attribute).</p>
   <li>You can also remove or edit the <code>class</code> attribute in the
     structure view. 
     <p>To remove the <code>class</code> attribute, you click in the value,
-    <code>F2</code> lets you select the whole value, then hit the
-    <code>Delete</code> key twice.</p>
-    <p></p>
+    <code><kbd>F2</kbd></code> lets you select the whole value, then hit the
+    <kbd>Delete</kbd> key twice.</p>
   </li>
 </ul>
 
@@ -104,12 +189,13 @@ define abstract styles.</p>
   </li>
 </ol>
 
-<p>Five of these Information elements are also available in the Elements
-tool: <em>emphasis</em> (<img src="../../resources/icons/16x16/XHTML_I.png"
-alt="Emphasis button" /> ), <strong>strong</strong> (<img
-src="../../resources/icons/16x16/XHTML_B.png" alt="Strong button" /> )
-<code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
-alt="Code button" /> ), <ins>insertion</ins> (<img alt="Insertion button"
+<p>Five of these Information elements are also available in the
+<strong>Elements</strong> tool: <em>emphasis</em> (<img
+src="../../resources/icons/16x16/XHTML_I.png" alt="Emphasis button" /> ),
+<strong>strong</strong> (<img src="../../resources/icons/16x16/XHTML_B.png"
+alt="Strong button" /> ) <code>code</code> (<img
+src="../../resources/icons/16x16/XHTML_T.png" alt="Code button" /> ),
+<ins>insertion</ins> (<img alt="Insertion button"
 src="../../resources/icons/16x16/XHTML_ins.png" /> ), and <del>deletion</del>
 (<img alt="Deletion button" src="../../resources/icons/16x16/XHTML_del.png"
 /> ).</p>
@@ -127,13 +213,13 @@ provides another set of style elements.</p>
   </li>
 </ol>
 
-<p>Two of these Character elements are also available in the Elements tool:
-<sup>superscript</sup> (<img alt="Superscript button"
-src="../../resources/icons/16x16/XHTML_sup.png" /> ), and
-<sub>subscript</sub> (<img alt="Subscript button"
+<p>Two of these Character elements are also available in the
+<strong>Elements</strong> tool: <sup>superscript</sup> (<img
+alt="Superscript button" src="../../resources/icons/16x16/XHTML_sup.png" />
+), and <sub>subscript</sub> (<img alt="Subscript button"
 src="../../resources/icons/16x16/XHTML_sub.png" /> ).</p>
 
-<h4 id="Removing">Removing information type or Character Elements</h4>
+<h4 id="Removing">Removing information type or character elements</h4>
 
 <p> All commands of the submenus <strong>Information type Elements</strong>
 and <strong>Character Elements</strong> are removed when you apply them
@@ -144,7 +230,7 @@ twice.</p>
   <li>Select within the element you want to remove.</li>
   <li>Reapply the command from the <strong>Information type</strong> or
     <strong>Character element</strong> submenu of the <strong>Insert</strong>
-    menu, or in the Elements tool: <em>emphasis</em> (<img
+    menu, or in the <strong>Elements</strong> tool: <em>emphasis</em> (<img
     src="../../resources/icons/16x16/XHTML_I.png" alt="Emphasis button" /> ),
     <strong>strong</strong> (<img
     src="../../resources/icons/16x16/XHTML_B.png" alt="Strong button" /> ),
@@ -183,10 +269,13 @@ to the current selection:</p>
 </ul>
 
 <p>In any case image paths included in the list of properties
-(background-image, list-style-image) are transformed into relative paths to
-the selected document.</p>
+(<code>background-image</code>, <code>list-style-image</code>) are
+transformed into relative paths to the selected document.</p>
 
 <h3 id="About">About linking external and user style sheets</h3>
+
+<p class="Note"><strong>Note:</strong> These actions are not available in
+Amaya Lite version</p>
 
 <p>A document can link to several external style sheets that are downloaded
 with the document and applied to it.</p>
@@ -260,6 +349,10 @@ you to control external and user's CSS style sheets.</p>
 style sheet, but the <strong>Link</strong> and <strong>Remove</strong>
 commands apply to only external CSS style sheets.</p>
 
+<p>The <strong>list of style sheets</strong> tool  displays the list of style
+sheets applied to the document. At the same times it lets you link/remove,
+disable/enable, and open style sheets.</p>
+
 <h3 id="Showing">Showing applied style</h3>
 
 <p>If there are a lot of style sheets attached to a document, it's difficult
@@ -277,8 +370,8 @@ enclosing elements. When the user changes the selection by clicking an
 element in the path of the status bar, displayed at the bottom of the window,
 CSS properties are updated too.</p>
 
-<h4 style="" id="Creating1">Creating a generic style for an element or a
-class</h4>
+<h3 style="" id="Creating1">Creating a generic style for an element or a
+class</h3>
 
 <p>When a <code>style</code> attribute is associated with an element, you can
 use that element as a model for creating or modifying a style rule by using
@@ -314,16 +407,6 @@ class:</p>
 <p>When a new class is created with the command <strong>Create Rule</strong>,
 this class is automatically added to the list of the <strong>Apply
 Class</strong> tool.</p>
-
-<h3 id="About1">About applying style using HTML elements</h3>
-
-<p>HTML provides some character-level elements so you can associate style
-with character strings. Two options on the <strong>Insert</strong> menu
-enable you to handle these HTML elements:</p>
-<ul>
-  <li>Information type</li>
-  <li>Character element</li>
-</ul>
 
 <p></p>
 </div>
