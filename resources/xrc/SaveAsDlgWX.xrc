@@ -79,9 +79,9 @@
                                   <object class="wxRadioBox" name="wxID_DOC_FORMAT">
                                     <label>*Document Format*</label>
                                     <content>
-                                      <item>HTML</item>
+                                      <item>XHTML</item>
                                       <item>XML</item>
-                                      <item>TEXT</item>
+                                      <item>simple texte</item>
                                     </content>
                                     <size>200,-1</size>
                                     <style>wxRA_SPECIFY_COLS</style>
