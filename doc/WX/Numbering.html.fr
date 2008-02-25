@@ -12,7 +12,8 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Printing.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -22,34 +23,37 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Section">
-<h2><a name="L1064">Numéroter les sections</a></h2>
+<h2 id="roter">Numéroter les sections</h2>
 
-<p>Les en-têtes de section (éléments <code>H2</code>à<code>H6</code>) peuvent
-être automatiquement numérotées pour refléter la structure du document.
-L'élément <code>H1</code> est supposé être le titre du document et il n'est
-pas numéroté. Toutes les autres en-têtes (<code>H2</code> à <code>H6</code>)
-reçoivent un numéro calculé en fonction de leur type et de leur position dans
-la structure du document. Ces numéros sont introduits dans le document et les
-numéros produits précédemment sont retirés chaque fois que la commande
-<strong>XHTML&gt;Numéroter les sections</strong> est appelée.</p>
+<p>Les en-têtes de section (éléments <code>h2</code> à <code>h6</code>)
+peuvent être automatiquement numérotées pour refléter la structure du
+document. </p>
 
-<h2>Engendrer la table des matières</h2>
+<p>L'élément <code>h1</code> est supposé être le titre du document et il
+n'est pas numéroté. Toutes les autres en-têtes (<code>h2</code> à
+<code>h6</code>) reçoivent un numéro calculé en fonction de leur type et de
+leur position dans la structure du document. Ces numéros sont introduits dans
+le document et les numéros produits précédemment sont retirés chaque fois que
+la commande <strong>Outils/Numéroter les sections</strong> est appelée.</p>
 
-<p>La commande <strong>XHTML&gt;Engendrer la table des matières</strong>
-collecte tous les élément <code>H2</code> à <code>H6</code> qui suivent pour
-engendrer une table des matières à la position courante. Elle remplace la
-version courante quand la sélection est dans une table des matières.</p>
+<h2 id="Engendrer">Engendrer la table des matières</h2>
+
+<p>La commande <strong>Outils/Ajouter-Actualiser la table des
+matières</strong> collecte tous les élément <code>H2</code> à <code>H6</code>
+qui suivent pour engendrer une table des matières à la position courante.
+Elle remplace la version courante quand la sélection est dans une table des
+matières.</p>
 
 <p>Cette commande ajoute :</p>
 <ul>
-  <li>Un attribut <code>id</code> à chaque élément <code>H2</code> à
-    <code>H6</code> qui n'a pas cet attribut.</li>
-  <li>Une division avec une valeur d'attribut <code>class</code> "toc" et une
-    cascade de listes non numérotées à la position courante.</li>
-  <li>Un item de liste pour chaque élément <code>H2</code> à <code>H6</code>
+  <li>Un attribut <code>id</code> à chaque élément <code>h2</code> à
+    <code>h6</code> qui n'a pas cet attribut.</li>
+  <li>Une division avec une valeur d'attribut <code>class</code> <em>toc</em>
+    et une cascade de listes non numérotées à la position courante.</li>
+  <li>Un item de liste pour chaque élément <code>h2</code> à <code>h6</code>
     incluant une lien vers l'élément correspondant. 
-    <p>Le contenu du lien est la copie du contenu de l'élément Hi. Si
-    l'élément Hi est numéroté, ce numéro est aussi copié.</p>
+    <p>Le contenu du lien est la copie du contenu de l'élément hi. Si
+    l'élément hi est numéroté, ce numéro est aussi copié.</p>
   </li>
 </ul>
 </div>

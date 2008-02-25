@@ -365,6 +365,11 @@ décrits.</p>
     </ul>
   </li>
 </ul>
+<ul>
+  <li><a href="Numbering.html.fr#roter">Numéroter les sections</a></li>
+  <li><a href="Numbering.html.fr#Engendrer">Engendrer la table des
+    matières</a></li>
+</ul>
 
 <p></p>
 <hr />
