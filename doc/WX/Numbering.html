@@ -34,26 +34,32 @@ automatically numbered to reflect the document structure. </p>
 <p>The <code>h1</code> element is supposed to be the document title and is
 not numbered. Other headings receive a number that is computed according to
 their type and their position in the document structure. These numbers are
-generated in the document itself and previous generated numbers are removed,
-each times the <strong>Tools/Section numbering</strong> command is called.</p>
+generated in the document itself and numbers that were generated previously
+are removed, every time the <strong>Tools/Section numbering</strong> command
+is called.</p>
 
 <h2 id="Table">Table of contents</h2>
 
-<p>The <strong>Tools/Add-Update table of contents</strong> command collects
-all following <code>H2</code> to <code>H6</code> elements in the document to
-generate a table of contents at the current position. It updates the current
-one if the selection is already a table of contents.</p>
+<p>Command <strong>Tools/Add-Update table of contents</strong> collects all
+<code>H2</code> to <code>H6</code> elements in the document following the
+current selection and generates a table of contents at the current position.
+It updates the current table of contents if the selection is already within a
+table of contents.</p>
 
 <p>This command adds:</p>
 <ul>
   <li>An <code>id</code> attribute to each <code>h2</code> to <code>h6</code>
-    element which doesn't have this attribute.</li>
-  <li>A division with a <em>toc</em> <code>class</code> attribute value and a
-    cascade of unnumbered lists at the current position.</li>
-  <li>A list item for each h2 to h6 element including a link which points to
-    the corresponding element. 
-    <p>The link element contents is a copy of the hi element. If the hi
-    element is numbered, this number is also copied.</p>
+    element which does not have this attribute.</li>
+  <li>A division (with a <code>class="toc"</code> attribute) that contains
+    nested unnumbered lists (<code>ul</code>) at the current position. You
+    can use the <code>class</code> attribute to set a particluar style to
+    your tables of contents.</li>
+  <li>A list item (<code>li</code>) for each <code>h2</code> to
+    <code>h6</code> element including a link which points to the
+    corresponding element in the document. 
+    <p>The link element contains a copy of the <code>h<em>n</em></code>
+    element. If the <code>h<em>n</em></code> element is numbered, this number
+    is also copied.</p>
   </li>
 </ul>
 </div>

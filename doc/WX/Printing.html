@@ -25,7 +25,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2 id="Printing">Printing Documents in Amaya</h2>
+<h2 id="Printing">Printing Documents</h2>
 
 <p>Amaya can print documents with or without CSS style sheets, on both Linux
 and Windows platforms.</p>
@@ -42,15 +42,17 @@ language.</p>
     parameters and options before printing.</li>
   <li><span class="Link0"><strong>Print</strong></span>
     (<strong>File/Print</strong>), which prints a document using the current
-    print configuration (defined using the Setup and Print command).</li>
+    print configuration (defined using the <strong>Setup and Print</strong>
+    command).</li>
   <li>The <img src="../../resources/icons/22x22/print.png" alt="Print Button"
     /> button on the button bar. On Linux platforms, this is a shortcut to
     the <strong>Print</strong> command. On Windows platforms, this is a
     shortcut to the <strong>Setup and Print</strong> command.</li>
 </ul>
 
-<p>For more information on printing with style sheets, see <span
-class="Link0">About Controlling Printing with CSS</span>.</p>
+<p>For more information on printing with style sheets, see section <span
+class="Link0"><a href="#About">About controlling printing with
+CSS</a></span>.</p>
 
 <h3 id="Using">Using the Print command</h3>
 
@@ -59,7 +61,7 @@ parameters or with the values previously set using <strong>Setup and
 print</strong>.</p>
 
 <p>On Windows platforms, the first time you launch the <strong>Print</strong>
-command, the standard Windows dialog is opened to verify that the default
+command, the standard Windows dialog is opened to check that the default
 printer is correct.</p>
 
 <h3 id="Using1">Using the Setup and print command</h3>
@@ -67,12 +69,12 @@ printer is correct.</p>
 <p>The <strong>Setup and print</strong> command allows you to change the
 printer and other options. Depending on your operating system, some
 parameters and options are reset to their default value when you browse
-another document. This effect depends on each platform.</p>
+another document.</p>
 
 <h4 id="Windows">On Windows platforms</h4>
 
 <p>On Windows platforms, the first time <strong>Setup and print</strong> is
-pressed, a dialog allows you to make some choices like:</p>
+activated, a dialog allows you to make some choices like:</p>
 <ul>
   <li>generate a table of contents for the document,</li>
   <li>generate a table of links for the document,</li>
@@ -87,7 +89,7 @@ printing parameters.</p>
 <h4 id="Linux">On Linux platforms</h4>
 
 <p>Under Linux, the <strong>Setup and print</strong> command allows you
-to :</p>
+to:</p>
 <ul>
   <li>set the paper format (A4 or US),</li>
   <li>set the orientation (portrait or landscape),</li>
@@ -98,23 +100,23 @@ to :</p>
 
 <p>In addition, you can:</p>
 <ul>
-  <li>select the manual paper feed,</li>
+  <li>select manual paper feed,</li>
   <li>generate a table of contents for the document,</li>
   <li>generate a table of links, which creates a number after each link in
-    the document that refers to an entry within the table of links and the
-    corresponding URL</li>
-  <li>print the document URL on each page,</li>
+    the document that refers to an entry in the table of links and the
+    corresponding URI</li>
+  <li>print the document URI on each page,</li>
   <li>print the document with or without style sheets.</li>
 </ul>
 
-<p>When the <strong>Print</strong> command is activated, the printing is done
-with standard options or previous selected options.</p>
+<p>When the <strong>Print</strong> command is activated, printing is done
+with the standard options or the options previous selected.</p>
 
 <h3 id="About">About controlling printing with CSS</h3>
 
 <p>Amaya does not print links as underlined. To make this happen, add the
 following line to your user style sheet (the <code>amaya.css</code> file,
-located in the <span class="Link0"><a
+located in your <span class="Link0"><a
 href="Configure.html#AmayaHome">AmayaHome directory</a></span>):</p>
 
 <p><code>@media print {a:link {text-decoration: underline} ... }</code></p>
