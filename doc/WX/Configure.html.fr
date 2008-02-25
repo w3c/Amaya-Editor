@@ -118,8 +118,7 @@ configuration</a></h3>
 <p>Amaya utilise un certain nombre de répertoires par défaut pour conserver
 les informations de configuration.</p>
 
-<h4 id="pertoire"><a name="L979">Le répertoire
-c<strong>onfig</strong></a></h4>
+<h4 id="pertoire">Le répertoire c<strong>onfig</strong></h4>
 
 <p>Amaya enregistre la plupart des valeurs par défaut et tous les messages de
 dialogue dans le répertoire config. Le répertoire parent est celui où Amaya a

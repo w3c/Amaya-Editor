@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Imprimer</title>
   <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Publishing.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -22,10 +23,12 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Printing">
-<h2><a name="L1062">Imprimer des documents</a></h2>
+<h2 id="Imprimer">Imprimer des documents</h2>
 
 <p>Amaya est capable d'imprimer des document avec ou sans feuilles de style
-CSS pour les plates-formes Linux et Windows. Pour Linux, il est uniquement
+CSS pour les plates-formes Linux et Windows. </p>
+
+<p class="Note"><strong>Important :</strong> Pour Linux, il est uniquement
 possible de générer une description PostScript, donc vous avez besoin d'une
 imprimante PostScript ou d'utiliser une application capable de traduire le
 PostScript en votre langage d'imprimante spécifique.</p>
@@ -43,18 +46,17 @@ PostScript en votre langage d'imprimante spécifique.</p>
     barre des boutons, est un raccourci de la commande
     <strong>Imprimer</strong> sur les plates-formes Linux. Sous Windows, ce
     bouton est le raccourci de la commande <strong>Paramétrer et
-    imprimer</strong>. C'est dû à un problème d'utilisation de DLLs sur
-    Windows 95.</li>
+    imprimer</strong>.</li>
 </ul>
 
-<h3><a name="commande">La commande Paramétrer et Imprimer</a></h3>
+<h3 id="commande">La commande Paramétrer et imprimer</h3>
 
 <p>Cette commande vous permet d'établir différents paramètres et options.
 Notez que certains paramètres et certaines options reprennent leur valeur par
 défaut quand vous ouvrez un autre document. Cette propriété dépend de la
 plate-forme.</p>
 
-<h4><a name="Stations">Plates-formes Linux</a></h4>
+<h4 id="Plates-for">Plates-formes Linux</h4>
 
 <p>Sous Linux, vous pouvez fixer les paramètres suivant :</p>
 <ul>
@@ -76,7 +78,7 @@ plate-forme.</p>
   <li>Sans feuilles de style</li>
 </ul>
 
-<h4><a name="L185">Plates-formes Windows</a></h4>
+<h4 id="Plates-for1">Plates-formes Windows</h4>
 
 <p>Sur les stations Windows, une boîte de dialogue vous proposera en premier
 lieu les options suivantes :</p>
@@ -90,10 +92,10 @@ lieu les options suivantes :</p>
 <p>Puis le dialogue standard de Windows vous laissera choisir les autres
 paramètres d'impression.</p>
 
-<h3><a name="commande1">La commande imprimer</a></h3>
+<h3 id="commande1">La commande imprimer</h3>
 Cette commande imprime le document courant avec le paramètre d'impression par
 défaut ou avec les valeurs précédemment fixées grâce à la commande
-<strong>Paramétrer et imprimer</strong>.
+<strong>Paramétrer et imprimer</strong>. 
 
 <p>Sur les stations Windows, la première fois que vous lancer la commande
 <strong>Imprimer</strong>, le dialogue standard de Windows sera visualisé et
@@ -101,21 +103,24 @@ vous laissera vérifier que l'imprimante par défaut est correcte. Les
 commandes <strong>Imprimer</strong> suivantes seront lancées sans aucun
 dialogue.</p>
 
-<h3><a name="L224">Contrôler l'impression avec les CSS</a></h3>
+<h3 id="Contr">Contrôler l'impression avec les CSS</h3>
 
 <p>Les liens ne sont pas soulignés à l'impression Pour ce faire, votre
 feuille de style utilisateur (fichier <code>amaya.css</code> dans votre <a
-href="Configure.html.fr#AmayaHome">répertoire Amaya home</a>) doit
+href="Configure.html.fr#pertoire1">répertoire AmayaHome</a>) doit
 contenir :</p>
 <pre>@media print {a:link {text-decoration: underline} ... }</pre>
 
 <p>Amaya supporte les propriétés de rupture de page CSS :
-"<strong>page-break-before: always</strong>". Quand cette propriété est
-attachée à un élément spécifique par un attribut <strong>style</strong>, elle
-génère une rupture de page avant l'élément spécifique. Quand cette propriété
-est attachée à un type d'élément à l'intérieur de l'élément style du document
-ou à l'intérieur de la feuille de style CSS externe, elle génère une rupture
-de page avant chaque cas de cet élément.</p>
+"<code>page-break-before: always</code>". Quand cette propriété est attachée
+à un élément spécifique par un attribut <code>style</code>, elle génère une
+rupture de page avant l'élément spécifique. Quand cette propriété est
+attachée à un type d'élément à l'intérieur de l'élément style du document ou
+à l'intérieur de la feuille de style CSS externe, elle génère une rupture de
+page avant chaque cas de cet élément.</p>
+
+<p class="Note"><strong>Note :</strong> Quelques propriétés CSS ne sont pas
+bien supportées par le processus d'impression.</p>
 </div>
 </body>
 </html>

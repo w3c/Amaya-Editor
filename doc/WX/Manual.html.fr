@@ -330,6 +330,41 @@ décrits.</p>
     </ul>
   </li>
 </ul>
+<ul>
+  <li><a href="Publishing.html.fr#Sauver2">Enregistrer et publier des
+    documents</a>
+    <ul>
+      <li><a href="Publishing.html.fr#commande">La commande
+      enregistrer</a></li>
+      <li><a href="Publishing.html.fr#SaveAll">La commande enregistrer
+        tout</a></li>
+      <li><a href="Publishing.html.fr#commande1">La commande enregistrer
+        sous</a></li>
+      <li><a href="Publishing.html.fr#Saving1">Enregistrement et encodage de
+        caractères (charset)</a></li>
+      <li><a href="Publishing.html.fr#Sauver1">Sauver le texte du
+      document</a></li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li><a href="Printing.html.fr#Imprimer">Imprimer des documents</a>
+    <ul>
+      <li><a href="Printing.html.fr#commande">La commande Paramétrer et
+        imprimer</a>
+        <ul>
+          <li><a href="Printing.html.fr#Plates-for">Plates-formes
+          Linux</a></li>
+          <li><a href="Printing.html.fr#Plates-for1">Plates-formes
+          Windows</a></li>
+        </ul>
+      </li>
+      <li><a href="Printing.html.fr#commande1">La commande imprimer</a></li>
+      <li><a href="Printing.html.fr#Contr">Contrôler l'impression avec les
+        CSS</a></li>
+    </ul>
+  </li>
+</ul>
 
 <p></p>
 <hr />

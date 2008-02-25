@@ -23,23 +23,8 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
 /></a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#Sauver2">Enregistrer et publier des documents</a>
-    <ul>
-      <li><a href="#commande">La commande enregistrer</a></li>
-      <li><a href="#SaveAll">La commande enregistrer tout</a></li>
-      <li><a href="#commande1">La commande enregistrer sous</a></li>
-      <li><a href="#Saving1">Enregistrement et encodage de caractères
-        (charset)</a></li>
-      <li><a href="#Sauver1">Sauver le texte du document</a></li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="Saving">
-<h2 id="Sauver2"><a name="L1052">Enregistrer et publier des documents</a></h2>
+<h2 id="Sauver2">Enregistrer et publier des documents</h2>
 
 <p>Amaya permet d'enregistrer les documents (X)HTML soit en format d'origine,
 soit en format texte. Les documents MathML, SVG, XML, CSS sont sauvegardés
@@ -60,7 +45,7 @@ fichiers d'un serveur comme des fichiers locaux grâce à la commande
 des images présentes dans le document, ainsi que des autres ressources
 associées au document (feuilles de style, scripts).</p>
 
-<h3 id="commande"><a name="L1517">La commande enregistrer</a></h3>
+<h3 id="commande">La commande enregistrer</h3>
 
 <p>La commande Enregistrer peut être invoquée soit en choisissant
 <strong>Enregistrer</strong> depuis le menu <strong>Fichier</strong>
@@ -93,7 +78,7 @@ problème.</p>
 endroit que le document lui-même, utilisez la commande <strong>Enregistrer
 sous</strong>.</p>
 
-<h3 id="SaveAll"><a>La commande enregistrer tout</a></h3>
+<h3 id="SaveAll">La commande enregistrer tout</h3>
 
 <p>La commande <strong>Enregistrer tout</strong> vous permet de sauvegarder
 d'un coup tous les documents ouverts dans Amaya que vous avez modifiés mais
@@ -104,7 +89,7 @@ mais pour tous ces documents au lieu du seul document courant.</p>
 par le bouton <img alt="floppy"
 src="../../resources/icons/22x22/save_all.png" /> de la barre des boutons.</p>
 
-<h3 id="commande1"><a name="L1518">La commande enregistrer sous</a></h3>
+<h3 id="commande1">La commande enregistrer sous</h3>
 
 <p>Le fait de sélectionner l'entrée <strong>Enregistrer sous</strong> dans le
 menu <strong>Fichier</strong> ouvre une boîte de dialogue qui vous permet
@@ -152,7 +137,7 @@ scripts).</p>
     <p>Le format Texte (<a href="#L1105">voir plus bas</a>) supprime les
     balises HTML et produit du texte pur.</p>
   </li>
-  <li>Le menu <strong>Options</strong> :
+  <li>Le menu <strong>Options</strong> : 
     <ul>
       <li>Le choix <strong>Transformer les URLs</strong> transforme toutes
         les URIs courantes en URIs relatives quand c'est possible. Bien sûr,
@@ -230,7 +215,7 @@ scripts).</p>
   <li>Le fait de cliquer sur <strong>Enregistrer</strong> débute le processus
     d'enregistrement du document. Si vous avez choisi de suaver également
     d'autres ressources, une liste de ces resources s'affiche et vous pouvez
-    en retirer certaines, qui ne seront pas enregistrées.
+    en retirer certaines, qui ne seront pas enregistrées. 
     <p class="Note">Pour enregistrer à distance, vérifiez que le proxy http
     n'est pas mis, ou que le serveur proxy et le <a
     href="http://www.w3.org/Amaya/User/Put.html">serveur cible sont
@@ -302,7 +287,7 @@ vous permet d'associer, de changer ou retirer le <code>doctype</code> à tout
 moment. Ceci vous permet de faire engendrer par Amaya soit des références
 caractère soit des références entité.</p>
 
-<h3 id="Sauver1"><a name="L1105">Sauver le texte du document</a></h3>
+<h3 id="Sauver1">Sauver le texte du document</h3>
 
 <p>La commande <strong>Enregistrer sous</strong> du menu
 <strong>Fichier</strong> visualise une boîte de dialogue permettant de sauver

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -14,7 +14,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="WebDAV.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
@@ -24,7 +25,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2>Printing Documents in Amaya</h2>
+<h2 id="Printing">Printing Documents in Amaya</h2>
 
 <p>Amaya can print documents with or without CSS style sheets, on both Linux
 and Windows platforms.</p>
@@ -36,42 +37,41 @@ language.</p>
 
 <p>You can print a document in three ways:</p>
 <ul>
-  <li><span class="Link0"><strong>Setup and Print</strong></span>
-    (<strong>File&gt; Setup and Print</strong>), which enables you to set
-    some parameters and options before printing.</li>
-  <li><span class="Link0"><strong>Print</strong></span> (<strong>File
-    &gt;Print</strong>), which prints a document using the current print
-    configuration (defined using the Setup and Print command).</li>
+  <li><span class="Link0"><strong>Setup and print</strong></span>
+    (<strong>File/Setup and print</strong>), which enables you to set some
+    parameters and options before printing.</li>
+  <li><span class="Link0"><strong>Print</strong></span>
+    (<strong>File/Print</strong>), which prints a document using the current
+    print configuration (defined using the Setup and Print command).</li>
   <li>The <img src="../../resources/icons/22x22/print.png" alt="Print Button"
     /> button on the button bar. On Linux platforms, this is a shortcut to
     the <strong>Print</strong> command. On Windows platforms, this is a
-    shortcut to the <strong>Setup and Print</strong> command, due to a
-    problem with the use of DLLs on Windows 95.</li>
+    shortcut to the <strong>Setup and Print</strong> command.</li>
 </ul>
 
 <p>For more information on printing with style sheets, see <span
 class="Link0">About Controlling Printing with CSS</span>.</p>
 
-<h3>Using the Setup and Print Command</h3>
-
-<p>The <strong>Setup and Print</strong> command allows you to change the
-printer and toc/page options. Depending on your operating system, some
-parameters and options are reset to their default value when you browse
-another document. This effect depends on each platform.</p>
-
-<h3>The Print Command</h3>
+<h3 id="Using">Using the Print command</h3>
 
 <p>This command prints the current document with the default printing
 parameters or with the values previously set using <strong>Setup and
-Print</strong>.</p>
+print</strong>.</p>
 
 <p>On Windows platforms, the first time you launch the <strong>Print</strong>
 command, the standard Windows dialog is opened to verify that the default
 printer is correct.</p>
 
-<h3>Printing on Windows Platforms</h3>
+<h3 id="Using1">Using the Setup and print command</h3>
 
-<p>On Windows platforms, the first time <strong>Setup and Print</strong> is
+<p>The <strong>Setup and print</strong> command allows you to change the
+printer and other options. Depending on your operating system, some
+parameters and options are reset to their default value when you browse
+another document. This effect depends on each platform.</p>
+
+<h4 id="Windows">On Windows platforms</h4>
+
+<p>On Windows platforms, the first time <strong>Setup and print</strong> is
 pressed, a dialog allows you to make some choices like:</p>
 <ul>
   <li>generate a table of contents for the document,</li>
@@ -81,19 +81,19 @@ pressed, a dialog allows you to make some choices like:</p>
 </ul>
 
 <p>The next times, or when the <strong>Print</strong> command is selected,
-the standard Windows dialog is opened, which allows you to choose the other
+the standard Windows dialog pops up, and allows you to choose the other
 printing parameters.</p>
 
-<h3>Printing on Linux Platforms</h3>
+<h4 id="Linux">On Linux platforms</h4>
 
-<p>Under Linux, the <strong>Setup and Print</strong> command allows you
+<p>Under Linux, the <strong>Setup and print</strong> command allows you
 to :</p>
 <ul>
   <li>set the paper format (A4 or US),</li>
   <li>set the orientation (portrait or landscape),</li>
   <li>choose the number of pages printed on the same sheet (1, 2, or 4 pages
     per sheet),</li>
-  <li>choose the output (postsrcipt file or printer).</li>
+  <li>choose the output (postscript file or printer).</li>
 </ul>
 
 <p>In addition, you can:</p>
@@ -107,23 +107,27 @@ to :</p>
   <li>print the document with or without style sheets.</li>
 </ul>
 
-<p>When the <strong>Print</strong> command is selected, the printing is done
+<p>When the <strong>Print</strong> command is activated, the printing is done
 with standard options or previous selected options.</p>
 
-<h3>About Controlling Printing with CSS</h3>
+<h3 id="About">About controlling printing with CSS</h3>
 
 <p>Amaya does not print links as underlined. To make this happen, add the
-following line to your user style sheet (amaya.css, located in the <span
-class="Link0">Amaya home directory</span>):</p>
+following line to your user style sheet (the <code>amaya.css</code> file,
+located in the <span class="Link0"><a
+href="Configure.html#AmayaHome">AmayaHome directory</a></span>):</p>
 
 <p><code>@media print {a:link {text-decoration: underline} ... }</code></p>
 
 <p>Amaya supports the CSS page break property <code>page-break-before:
-always</code>. When you attach this property to a specific element using an
-attribute style, Amaya generates a page break before that element. When you
-attach this property to an element type within the style element of the
-document or within an external CSS style sheet, Amaya generates a page break
-before each instance of that element.</p>
+always</code>. When you attach this property to a specific element using a
+<code>style</code> attribute, Amaya generates a page break before that
+element. When you attach this property to an element type within the style
+element of the document or within an external CSS style sheet, Amaya
+generates a page break before each instance of that element.</p>
+
+<p class="Note"><strong>Note:</strong> Some CSS properties are not well
+supported by the print process.</p>
 </div>
 </body>
 </html>
