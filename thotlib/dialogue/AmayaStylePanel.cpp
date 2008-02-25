@@ -106,11 +106,17 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORFG)));
   XRCCTRL(*this, "wxID_BUTTON_BKCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORBG)));
   
-  XRCCTRL(*this, "wxID_THEME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_THEME)));
   XRCCTRL(*this, "wxID_CHOICE_FAMILY", wxChoice)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_FONT_FAMILY)));
   
   XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_BODY_SIZE_PTS)));
   SetColor (1);
+
+  XRCCTRL(*this, "wxID_THEME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_THEME)));
+  wxChoice     *theme = XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice);
+  theme->Clear();
+  theme->Append (TtaConvMessageToWX(TtaGetMessage(LIB, NoTheme)));
+  theme->Append (TtaConvMessageToWX(TtaGetMessage(LIB, Classic)));
+  theme->Append (TtaConvMessageToWX(TtaGetMessage(LIB, Modern)));
   SetTheme ("Standard");
 
   wxTextValidator valid(wxFILTER_NUMERIC);
@@ -186,28 +192,40 @@ void AmayaStyleToolPanel::OnThemeChange( wxCommandEvent& event )
 {
   wxString  value;
   char      theme[100];
+  char    *s;
 
   value = XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->GetStringSelection();
   strcpy (theme, (const char*)value.mb_str(wxConvUTF8));
   CloseTextInsertion ();
-  if (!strcasecmp (theme, "No theme"))
+  s = TtaGetMessage(LIB, NoTheme);
+  if (s && !strcasecmp (theme, s))
     ChangeTheme ("Standard");
-  else if (!strcasecmp (theme, "classic"))
-    ChangeTheme ("Classic");
-  else if (!strcasecmp (theme, "modern"))
-    ChangeTheme ("Modern");
+  else
+    {
+      s = TtaGetMessage(LIB, Classic);
+      if (s && !strcasecmp (theme, s))
+        ChangeTheme ("Classic");
+      else
+        {
+          s = TtaGetMessage(LIB, Modern);
+          if (s && !strcasecmp (theme, s))
+            ChangeTheme ("Modern");
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::SetTheme(const char *theme)
 {
+  char    *s;
   if (!strcasecmp (theme, "Standard"))
-    XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->SetStringSelection(TtaConvMessageToWX("No theme"));
+    s = TtaGetMessage(LIB, NoTheme);
   else if (!strcasecmp (theme, "Classic"))
-    XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->SetStringSelection(TtaConvMessageToWX("Classic"));
+    s = TtaGetMessage(LIB, Classic);
   else if (!strcasecmp (theme, "Modern"))
-    XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->SetStringSelection(TtaConvMessageToWX("Modern"));
+    s = TtaGetMessage(LIB, Modern);
+  XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice)->SetStringSelection(TtaConvMessageToWX(s));
 }
 
 /*----------------------------------------------------------------------

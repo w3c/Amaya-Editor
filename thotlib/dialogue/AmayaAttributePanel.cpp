@@ -830,16 +830,22 @@ BEGIN_EVENT_TABLE(AmayaEnumAttributeSubpanel, AmayaAttributeSubpanel)
 END_EVENT_TABLE()
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaEnumAttributeSubpanel::AmayaEnumAttributeSubpanel():
 AmayaAttributeSubpanel(),
 m_pChoice(NULL)
 {  
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaEnumAttributeSubpanel::~AmayaEnumAttributeSubpanel()
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaEnumAttributeSubpanel::Create(wxWindow* parent, wxWindowID id)
 {
   wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent,
@@ -848,6 +854,8 @@ bool AmayaEnumAttributeSubpanel::Create(wxWindow* parent, wxWindowID id)
   return true;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaEnumAttributeSubpanel::SetAttrListElem(PtrAttrListElem elem)
 {
   TtAttribute      *pAttr;
@@ -1110,6 +1118,8 @@ END_EVENT_TABLE()
 
 wxArrayString AmayaLangAttributeSubpanel::s_arrLangs;
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaLangAttributeSubpanel::AmayaLangAttributeSubpanel():
 AmayaAttributeSubpanel(),
 m_pCombo(NULL),
@@ -1117,10 +1127,14 @@ m_pText(NULL)
 {  
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaLangAttributeSubpanel::~AmayaLangAttributeSubpanel()
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaLangAttributeSubpanel::Create(wxWindow* parent, wxWindowID id)
 {
   wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, 
@@ -1130,6 +1144,8 @@ bool AmayaLangAttributeSubpanel::Create(wxWindow* parent, wxWindowID id)
   return true;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaLangAttributeSubpanel::Initialize()
 {
   char                lang_list[MAX_TXT_LEN];
@@ -1139,8 +1155,8 @@ void AmayaLangAttributeSubpanel::Initialize()
     {
       // Fill the static array of languages.
       GetListOfLanguages (lang_list, MAX_TXT_LEN, NULL, &nbItem, &defItem);
-      i=0;
-      while(nbItem>0)
+      i = 0;
+      while (nbItem > 0)
         {
           s_arrLangs.Add(TtaConvMessageToWX(lang_list+i));
           i += strlen(lang_list+i)+1;
@@ -1149,6 +1165,8 @@ void AmayaLangAttributeSubpanel::Initialize()
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaLangAttributeSubpanel::SetAttrListElem(PtrAttrListElem elem)
 {
   Language            language;
@@ -1167,12 +1185,12 @@ bool AmayaLangAttributeSubpanel::SetAttrListElem(PtrAttrListElem elem)
     {
       /* Fill the wxChoice. */
       m_pCombo->Clear();
-      if(AttrListElem_IsEnum(elem))
+      if (AttrListElem_IsEnum(elem))
         {
           filter = TtaConvMessageToWX(elem->restr.RestrEnumVal);
-          for(i=0; i<(int)s_arrLangs.GetCount(); i++)
+          for (i=0; i < (int)s_arrLangs.GetCount(); i++)
             {
-              if(filter.Find(s_arrLangs[i])!=wxNOT_FOUND)
+              if (filter.Find(s_arrLangs[i])!=wxNOT_FOUND)
                 {
                   m_pCombo->Append(s_arrLangs[i]);
                 }
@@ -1217,12 +1235,16 @@ bool AmayaLangAttributeSubpanel::SetAttrListElem(PtrAttrListElem elem)
   return true;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 wxString AmayaLangAttributeSubpanel::GetStringValue()
 {
   return TtaConvMessageToWX(TtaGetLanguageCodeFromName((char*)
             (const char*)m_pCombo->GetStringSelection().mb_str(wxConvUTF8)));
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 intptr_t AmayaLangAttributeSubpanel::GetIntValue()
 {
   return (int)TtaGetLanguageIdFromName((char*)

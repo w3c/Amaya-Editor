@@ -272,6 +272,9 @@
 #define TIP_ERROR_BUTTON		267
 #define TIP_PATH_CONTROL		268
 #define TIP_DOCUMENT_LIST_MENU		269
-#define TMSG_LIB_MSG_MAX		270
+#define Classic		270
+#define Modern		271
+#define NoTheme		272
+#define TMSG_LIB_MSG_MAX		273
 
 #endif

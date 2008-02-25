@@ -3153,7 +3153,7 @@
 <message xml:lang="it">Tema</message></label>
 <label define="BClassic">
 <message xml:lang="en">Classic</message>
-<message xml:lang="fr">Classic</message>
+<message xml:lang="fr">Classique</message>
 <message xml:lang="es">Clásico</message>
 <message xml:lang="it">Classico</message>
 <message xml:lang="de">Klassisch</message>
@@ -3161,7 +3161,7 @@
 </label>
 <label define="BModern">
 <message xml:lang="en">Modern</message>
-<message xml:lang="fr">Modern</message>
+<message xml:lang="fr">Moderne</message>
 <message xml:lang="es">Moderno</message>
 <message xml:lang="it">Moderno</message>
 <message xml:lang="de">Modern</message>

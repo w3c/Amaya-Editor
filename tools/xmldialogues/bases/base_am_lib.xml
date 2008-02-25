@@ -3965,6 +3965,28 @@
 <message xml:lang="it">Ci si può muovere in un altro tab con il menu visualizzato dal pulsante freccia alla destra dei tab del documento.</message>
 <message xml:lang="hu">A dokumentumfüleken lévő nyíl gomb megnyásakor megjelenő menü segítségével átválthatunk másik fülre.</message>
 </label>
+<label define="Classic">
+<message xml:lang="en">Classic</message>
+<message xml:lang="fr">Classique</message>
+<message xml:lang="es">Clásico</message>
+<message xml:lang="it">Classico</message>
+<message xml:lang="de">Klassisch</message>
+<message xml:lang="hu">Klasszikus</message>
+</label>
+<label define="Modern">
+<message xml:lang="en">Modern</message>
+<message xml:lang="fr">Moderne</message>
+<message xml:lang="es">Moderno</message>
+<message xml:lang="it">Moderno</message>
+<message xml:lang="de">Modern</message>
+<message xml:lang="hu">Modern</message></label>
+<label define="NoTheme">
+<message xml:lang="en">No theme</message>
+<message xml:lang="fr">Pas de thème</message>
+<message xml:lang="es">Sin tema</message>
+<message xml:lang="it">Senza tema</message>
+<message xml:lang="de">Kein Motiv</message>
+<message xml:lang="hu">Téma nélkül</message></label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

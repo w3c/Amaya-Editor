@@ -5,8 +5,6 @@
   <title>Bienvenue à Amaya</title>
   <meta name="generator" content="amaya 9.52, see http://www.w3.org/Amaya/" />
   <link href="amaya.css" rel="stylesheet" type="text/css" />
-  <style type="text/css" title="Amaya theme">
-  </style>
 </head>
 
 <body xml:lang="fr" lang="fr">

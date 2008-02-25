@@ -886,6 +886,11 @@ void ChangeTheme (const char *theme)
                   TtaFreeMemory (buffer);
                   EnableStyleElement (doc, el);
                 }
+              else
+                {
+                  TtaRegisterElementDelete(el, doc);
+                  TtaDeleteTree (el, doc);
+                }
 
               // check if an error is found in the new string
               TtaCloseUndoSequence (doc);
