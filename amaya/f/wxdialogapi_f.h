@@ -89,6 +89,11 @@ extern ThotBool CreateCSSDlgWX ( int ref,
                                  char *title,
                                  int nb_item,
                                  char *items );
+extern void ShowNonSelListDlgWX ( ThotWindow parent,
+                                  char *title,
+                                  char* label,
+                                  char *button,
+                                  void* strings );
 extern ThotBool CreateListDlgWX ( int ref,
                                   int subref,
                                   ThotWindow parent,
@@ -241,6 +246,11 @@ extern ThotBool CreateCSSDlgWX ( int ref,
                                    char *title,
                                    int nb_item,
                                    char *items );
+extern void ShowNonSelListDlgWX ( ThotWindow parent,
+                                    char *title,
+                                    char* label,
+                                    char *button,
+                                    void* strings );
 extern ThotBool CreateListDlgWX ( int ref,
                                     int subref,
                                     ThotWindow parent,

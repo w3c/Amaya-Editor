@@ -61,7 +61,6 @@
 #include "AmayaQuickSplitButton.h"
 #include "AmayaStatusBar.h"
 
-
 IMPLEMENT_CLASS(AmayaAdvancedWindow, AmayaNormalWindow)
 
 #include "archives.h"

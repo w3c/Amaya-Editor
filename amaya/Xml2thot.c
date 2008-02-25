@@ -560,11 +560,11 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
   else
     {
       if (CSSErrorsFound && docURL2)
-	{
-	  fprintf (ErrFile, "\n*** Errors/warnings in %s\n", docURL2);
-	  TtaFreeMemory (docURL2);
-	  docURL2 = NULL;
-	}
+      	{
+      	  fprintf (ErrFile, "\n*** Errors/warnings in %s\n", docURL2);
+      	  TtaFreeMemory (docURL2);
+      	  docURL2 = NULL;
+      	}
     }
   
   switch (type)

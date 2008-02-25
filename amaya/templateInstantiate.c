@@ -666,6 +666,11 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
   char        currentType[MAX_LENGTH];
   Declaration decl;
   
+  static int off = 0;
+  off++;
+  
+  for(int i=0; i<off; i++)
+  
   if (t && el && doc)
     {
       elType = TtaGetElementType(el);
@@ -675,6 +680,7 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
             {
             case Template_EL_TEXT_UNIT:
               //TtaSetAccessRight( el, ReadWrite, doc);
+              off--;
               return;
             case Template_EL_useEl:
             case Template_EL_useSimple:
@@ -688,6 +694,7 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
                       case SimpleTypeNat:
                       case XmlElementNat:
                         TtaSetAccessRight (el, ReadWrite, doc);
+                        off--;
                         return;
                       default:
                         TtaSetAccessRight (el, ReadOnly, doc);
@@ -713,6 +720,7 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
           TtaNextSibling (&child);
         }
     }
+  off--;
 #endif /* TEMPLATES */
 }
 
@@ -951,6 +959,15 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
   if (!t || !el)
     return;
   
+//  static int off = 0;
+//  int i;
+//  off++;
+//  printf("ParseTemplate ");
+//  for(i=0; i<off; i++)
+//    printf(" ");
+//  DumpTemplateElement(el, doc);
+//  printf("\n");
+  
   name = TtaGetSSchemaName (elType.ElSSchema);
   if (!strcmp (name, "Template"))
     {
@@ -960,6 +977,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           //Remove it and all of its children
           TtaDeleteTree(el, doc);
           //We must stop searching into this tree
+//          off--;
           return;
           break;
         case Template_EL_component :
@@ -1032,6 +1050,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
       ParseTemplate (t, child, doc, loading);
       child = aux;
     }
+//  off--;
 #endif /* TEMPLATES */
 }
 

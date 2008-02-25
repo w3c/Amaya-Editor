@@ -12,7 +12,15 @@
 #include "init_f.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
+
 static int MyRef = 0;
+
+
+//
+//
+// ListDlgWX
+//
+//
 
 
 //-----------------------------------------------------------------------------
@@ -88,6 +96,42 @@ void ListDlgWX::OnOkButton( wxCommandEvent& event )
   returns:
   ----------------------------------------------------------------------*/
 void ListDlgWX::OnCancelButton( wxCommandEvent& event )
+{
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+}
+
+
+
+
+//
+//
+// NonSelListDlgWX
+//
+//
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+NonSelListDlgWX::NonSelListDlgWX(wxWindow* parent, const wxString & title,
+                const wxString & label,
+                const wxArrayString& items, const wxString& button ) :
+  wxDialog()
+{
+  wxXmlResource::Get()->LoadDialog(this, parent, wxT("ListDlgWX"));
+
+  // update dialog labels with given ones
+  SetTitle( title );
+  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( label );
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( button );
+  XRCCTRL(*this, "wxID_LIST", wxListBox)->Append( items );
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->Hide();
+  
+  Fit();
+  SetAutoLayout( TRUE );
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+NonSelListDlgWX::~NonSelListDlgWX()
 {
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }

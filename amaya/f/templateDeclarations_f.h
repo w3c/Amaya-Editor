@@ -36,6 +36,9 @@ extern Declaration Template_DeclareNewUnion ( XTigerTemplate t,
                                               const char* exclude );
 extern void Template_AddDeclaration ( XTigerTemplate t,
                                       Declaration dec );
+extern void Template_RemoveUnknownDeclaration ( XTigerTemplate t,
+                                                Declaration dec );
+extern void Template_MoveUnknownDeclarationToXmlElement ( XTigerTemplate t );
 extern Declaration Template_GetDeclaration ( const XTigerTemplate t,
                                              const char *name );
 extern Declaration Template_GetSimpleTypeDeclaration ( const XTigerTemplate t,
@@ -48,6 +51,11 @@ extern void Template_Close ( XTigerTemplate t );
 extern void Template_FillDeclarations ( XTigerTemplate t );
 extern void Template_AddLibraryDeclarations ( XTigerTemplate t,
                                               XTigerTemplate lib );
+extern void Template_AddError ( XTigerTemplate t,
+                                const char* format,
+                                ... );
+extern void Template_ShowErrors ( XTigerTemplate t );
+extern ThotBool Template_HasErrors ( XTigerTemplate t );
 extern void Template_PrintUnion ( Declaration dec,
                                   int indent,
                                   XTigerTemplate t,
@@ -131,6 +139,9 @@ extern Declaration Template_DeclareNewUnion ( XTigerTemplate t,
                                                 const char* exclude );
 extern void Template_AddDeclaration ( XTigerTemplate t,
                                         Declaration dec );
+extern void Template_RemoveUnknownDeclaration ( XTigerTemplate t,
+                                                  Declaration dec );
+extern void Template_MoveUnknownDeclarationToXmlElement ( XTigerTemplate t );
 extern Declaration Template_GetDeclaration ( const XTigerTemplate t,
                                                const char *name );
 extern Declaration Template_GetSimpleTypeDeclaration ( const XTigerTemplate t,
@@ -143,6 +154,11 @@ extern void Template_Close ( XTigerTemplate t );
 extern void Template_FillDeclarations ( XTigerTemplate t );
 extern void Template_AddLibraryDeclarations ( XTigerTemplate t,
                                                 XTigerTemplate lib );
+extern void Template_AddError ( XTigerTemplate t,
+                                  const char* format,
+                                  ... );
+extern void Template_ShowErrors ( XTigerTemplate t );
+extern ThotBool Template_HasErrors ( XTigerTemplate t );
 extern void Template_PrintUnion ( Declaration dec,
                                     int indent,
                                     XTigerTemplate t,

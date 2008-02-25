@@ -26,6 +26,9 @@
 #include "HTMLactions_f.h"
 #include "fetchHTMLname_f.h"
 #include "html2thot_f.h"
+#include "wxdialogapi_f.h"
+#include "message.h"
+
 
 #define UNION_ANY            "any"
 #define UNION_ANYCOMPONENT   "anyComponent"
@@ -120,9 +123,14 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath)
                                                 Declaration_Destroy, TRUE, -1);
   t->unions      = KeywordHashMap_Create((Container_DestroyElementFunction)
                                                 Declaration_Destroy, TRUE, -1);
+  t->unknowns    = KeywordHashMap_Create((Container_DestroyElementFunction)
+                                                Declaration_Destroy, TRUE, -1);
   t->doc = -1;
   t->users = 0;
   t->isPredefined = FALSE;
+  
+  t->errorList = DLList_Create();
+  t->errorList->destroyElement = (Container_DestroyElementFunction)TtaFreeMemory;
 
   HashMap_Set (Templates_Map, t->name, t);
   return t;
@@ -348,6 +356,9 @@ Declaration Declaration_Clone (Declaration dec)
         }
       TtaFreeMemory(iter);
       break;
+    case UnknownNat:
+      /* Do nothing. */
+      break;
     }
   
   return newdec;
@@ -389,6 +400,7 @@ void Declaration_Destroy (Declaration dec)
         dec->unionType.expanded = NULL;
       }
   }
+  /* Do nothing for UnknownNat */
   
   TtaFreeMemory (dec->name);
   dec->name = NULL;
@@ -527,6 +539,8 @@ void Declaration_CalcBlockLevel (Declaration dec)
             }
           TtaFreeMemory(iter);
           break;
+        case UnknownNat:
+          break; /* Not used. */
         }
     }
 #endif /* TEMPLATES */
@@ -636,7 +650,7 @@ Declaration Template_DeclareNewElement (const XTigerTemplate t, const char *name
   if (!t)
     return NULL;
 
-  Declaration dec = Declaration_Create (t, name, XmlElementNat);
+  Declaration dec = Declaration_Create (t, name, UnknownNat);
   dec->elementType.name = TtaStrdup(name);
   Template_AddDeclaration (t, dec);
   return dec;
@@ -651,7 +665,6 @@ Declaration Template_DeclareNewElement (const XTigerTemplate t, const char *name
   Add a declaration to a template for a new union.
   \note The created union has just declaration names (hashmap keys),
   the declarations must be filled after all loading process.
-  TODO Add a function to fill them.
   \param include Space-separated decl list string to include.  
   \param exclude Space-separated decl list string to exclude.  
   ----------------------------------------------------------------------*/
@@ -702,7 +715,7 @@ void Template_AddDeclaration (XTigerTemplate t, Declaration dec)
           HashMap_Set (t->unions, dec->name, dec);
           break;
         default:
-          //Impossible
+          HashMap_Set (t->unknowns, dec->name, dec);
           break;
         }
         dec->usedIn = t;
@@ -713,6 +726,51 @@ void Template_AddDeclaration (XTigerTemplate t, Declaration dec)
     }
 #endif /* TEMPLATES */
 }
+
+/*----------------------------------------------------------------------
+  Remove unknown declaration.
+  Usefull to replace it with a known declaration.
+  ----------------------------------------------------------------------*/
+void Template_RemoveUnknownDeclaration (XTigerTemplate t, Declaration dec)
+{
+#ifdef TEMPLATES
+  if (!t || !dec || dec->nature!=UnknownNat)
+    return;
+
+  HashMap_DestroyElement (t->unknowns, dec->name);
+#endif /* TEMPLATES */
+}
+
+
+/*----------------------------------------------------------------------
+  Move unknown declarations to XmlElementNat
+  ----------------------------------------------------------------------*/
+void Template_MoveUnknownDeclarationToXmlElement (XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  ForwardIterator iter;
+  HashMapNode     node;
+  Declaration     decl, old;
+
+  if (!t)
+    return;
+
+  iter = HashMap_GetForwardIterator(t->unknowns);
+  ITERATOR_FOREACH(iter, HashMapNode, node)
+    {
+      old = (Declaration) node->elem;
+      if (old)
+        {
+          decl = Declaration_Create (t, old->name, UnknownNat);
+          decl->elementType.name = TtaStrdup(old->name);
+          HashMap_Set (t->elements, decl->name, decl);
+        }
+    }
+  TtaFreeMemory(iter);
+  HashMap_Empty (t->unknowns);
+#endif /* TEMPLATES */
+}
+
 
 
 /*----------------------------------------------------------------------
@@ -734,6 +792,8 @@ Declaration Template_GetDeclaration (const XTigerTemplate t, const char *name)
   dec = (Declaration)HashMap_Get (t->elements, (void*)name);
   if (dec) return dec;
   dec = (Declaration)HashMap_Get (t->unions, (void*)name);
+  if (dec) return dec;
+  dec = (Declaration)HashMap_Get (t->unknowns, (void*)name);
   return dec;
 #else
   return NULL;
@@ -833,6 +893,14 @@ static void Template_Destroy (XTigerTemplate t)
   HashMap_Destroy(t->simpleTypes);
   t->simpleTypes = NULL;
 
+  //Cleaning the unknown types
+  HashMap_Destroy(t->unknowns);
+  t->unknowns = NULL;
+
+  //Clean error list
+  DLList_Destroy(t->errorList);
+  t->errorList = NULL;
+  
   //Freeing the document
   if (t->doc>0)
     {
@@ -948,7 +1016,6 @@ static void CopyDeclarationHashMapElements(HashMap src, HashMap dst, XTigerTempl
   HashMapNode      node, newnode;
   Declaration      newdecl;
   
-  
   iter = HashMap_GetForwardIterator(src);
   ITERATOR_FOREACH(iter, HashMapNode, node)
     {
@@ -982,9 +1049,52 @@ void Template_AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib)
   CopyDeclarationHashMapElements(lib->elements, t->elements, t);
   CopyDeclarationHashMapElements(lib->components, t->components, t);
   CopyDeclarationHashMapElements(lib->unions, t->unions, t);
+  // Do not copy unknown elements
 
 #endif /* TEMPLATES */
 }
+
+/*----------------------------------------------------------------------
+ * Add an error to the template list error.
+  ----------------------------------------------------------------------*/
+void Template_AddError(XTigerTemplate t, const char* format, ...)
+{
+  va_list ap;
+  va_start(ap, format);
+  char buffer[MAX_LENGTH];
+  
+  if(t)
+    {
+      vsnprintf(buffer, MAX_LENGTH, format, ap);
+      DLList_Append(t->errorList, TtaStrdup(buffer));
+    }
+  va_end(ap);
+}
+
+/*----------------------------------------------------------------------
+ * Show template errors if any
+  ----------------------------------------------------------------------*/
+void Template_ShowErrors(XTigerTemplate t)
+{
+  if(t && !DLList_IsEmpty(t->errorList))
+    {
+      ShowNonSelListDlgWX(NULL, t->name,
+          TtaGetMessage (AMAYA, AM_TEMPLATE_HAS_ERROR),
+          TtaGetMessage (AMAYA, AM_CLOSE), t->errorList);
+    }
+}
+
+/*----------------------------------------------------------------------
+ * Test if template has error(s)
+  ----------------------------------------------------------------------*/
+ThotBool Template_HasErrors(XTigerTemplate t)
+{
+  return !t || (t && !DLList_IsEmpty(t->errorList));
+}
+
+
+
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1221,6 +1331,20 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
           if (dec->declaredIn!=t)
             fprintf (file, " (declared in %s)", dec->declaredIn->name);
           Template_PrintUnion (dec, 1, t, file);
+        }
+      TtaFreeMemory(iter);  
+    }
+  
+  /* Unknowns : */
+  if (!HashMap_IsEmpty(t->unknowns))
+    {
+      fprintf (file, "\n\nUNKNWONS\n");
+      fprintf (file, "------------");
+      iter = HashMap_GetForwardIterator(t->unknowns);
+      ITERATOR_FOREACH(iter, HashMapNode, node)
+        {
+          dec = (Declaration) node->elem;
+          fprintf (file, "\n(%p) %s ", dec, dec->name);
         }
       TtaFreeMemory(iter);  
     }

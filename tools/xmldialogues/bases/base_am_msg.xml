@@ -6776,11 +6776,19 @@
 <message xml:lang="hu">A nap tippje" induláskor</message>
 </label>
 <label define="AM_CHOOSE_FONT">
-	<message xml:lang="en">Choose font family and size:</message>
-	<message xml:lang="fr">Choisissez la police de caractères :</message>
+<message xml:lang="en">Choose font family and size:</message>
+<message xml:lang="fr">Choisissez la police de caractères :</message>
 <message xml:lang="es">Elija Fuente y tamaño:</message>
 <message xml:lang="de">Schriftart - und Größe wählen:</message>
 <message xml:lang="hu">Válasszon betűkészletet és -méretet</message>
+</label>
+<label define="AM_TEMPLATE_HAS_ERROR">
+<message xml:lang="en">Template has error(s), it will not be used:</message>
+<message xml:lang="fr">Le modèle a des erreurs, il ne sera pas utilisé:</message>
+</label>
+<label define="AM_CLOSE">
+<message xml:lang="en">Close</message>
+<message xml:lang="fr">Fermer</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

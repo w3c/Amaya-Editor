@@ -26,8 +26,13 @@ struct _XTigerTemplate
   HashMap         elements;				//All element types declared in the document (KeywordHashMap<Declaration>)
   HashMap         components;			//All component types declared in the document (KeywordHashMap<Declaration>)
   HashMap         unions;				  //All union types declared in the document (KeywordHashMap<Declaration>)
+  HashMap         unknowns;       //All unknown declarations, used in template parsing,
+                                  // must be empty after parsing. (KeywordHashMap<Declaration>)
   Document        doc;            //Use to store component structures
   int             users;          //Number of documents using this template
+  
+  DLList          errorList;      //Error string list (DLList<char*>)
+                                  //  Used until new error system is written.
 };
 
 // Notes : 
@@ -41,7 +46,8 @@ typedef enum _TypeNature
   SimpleTypeNat,
   UnionNat,
   ComponentNat,
-  XmlElementNat
+  XmlElementNat,
+  UnknownNat
 } TypeNature;
 
 // XTiger simple type

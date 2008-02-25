@@ -28,6 +28,8 @@ extern ThotBool TemplateCanInsertFirstChild ( ElementType elementType,
                                               Element parent,
                                               Document document );
 extern ThotBool ValidateTemplateAttrInMenu ( NotifyAttribute * event );
+extern void DumpTemplateElement ( Element el,
+                                  Document doc );
 
 #else /* __STDC__ */
 
@@ -53,6 +55,8 @@ extern ThotBool TemplateCanInsertFirstChild ( ElementType elementType,
                                                 Element parent,
                                                 Document document );
 extern ThotBool ValidateTemplateAttrInMenu ( NotifyAttribute * event );
+extern void DumpTemplateElement ( Element el,
+                                    Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -390,9 +390,11 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
         return;
     }
 
-  LoadTemplate (0, templatename);
-  DontReplaceOldDoc = dontReplace;
-  CreateInstance (templatename, docname, doc);
+  if(LoadTemplate (0, templatename))
+    {
+      DontReplaceOldDoc = dontReplace;
+      CreateInstance (templatename, docname, doc);
+    }
 #endif /* TEMPLATES */
 }
 
@@ -1131,7 +1133,7 @@ void CheckTemplate (Document doc)
 {
 #ifdef TEMPLATES
   Element    root;
-
+  
   if (DocumentMeta[doc] && DocumentMeta[doc]->template_url)
     {
       XTigerTemplate   t;
@@ -1148,7 +1150,7 @@ void CheckTemplate (Document doc)
       else
         {
           // fix all access rights in the instance
-          Template_FixAccessRight (t, root, doc);
+//          Template_FixAccessRight (t, root, doc);
           TtaUpdateAccessRightInViews (doc, root);
         }
     }

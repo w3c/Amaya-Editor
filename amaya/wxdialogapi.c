@@ -15,6 +15,8 @@
 #include "init_f.h"
 #include "HTMLsave_f.h"
 #include "styleparser_f.h"
+#include "containers.h"
+
 
 #ifdef _WX
   #include "wxdialog/AuthentDlgWX.h"
@@ -792,6 +794,38 @@ ThotBool CreateCSSDlgWX (int ref, int subref, ThotWindow parent, char *title,
   return FALSE;
 #endif /* _WX */  
 }
+
+
+
+/*----------------------------------------------------------------------
+  ShowNonSelListDlgWX
+  ----------------------------------------------------------------------*/
+void ShowNonSelListDlgWX (ThotWindow parent, char *title, char* label, 
+                          char *button, void* strings)
+{
+#ifdef _WX
+  wxString      wx_title  = TtaConvMessageToWX( title );
+  wxString      wx_label  = TtaConvMessageToWX( label );
+  wxString      wx_button = TtaConvMessageToWX( button );
+  wxArrayString wx_items;
+  
+  ForwardIterator  iter = DLList_GetForwardIterator((DLList)strings);
+  DLListNode       node;
+  const char*      str;
+  
+  ITERATOR_FOREACH(iter, DLListNode, node)
+    {
+      str = (const char*)node->elem;
+      if(str)
+        wx_items.Add(TtaConvMessageToWX(str));
+    }
+  TtaFreeMemory(iter);
+
+  NonSelListDlgWX dlg(parent, wx_title, wx_label, wx_items, wx_button);
+  dlg.ShowModal();
+#endif /* _WX */  
+}
+
 
 
 

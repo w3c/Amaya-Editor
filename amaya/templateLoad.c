@@ -91,8 +91,10 @@ void Template_AddLibraryToImport (XTigerTemplate t, Element el)
 }
 
 /*----------------------------------------------------------------------
+ * Template_CheckTypesAttribute
+ * Check if declarations exist in a template and predeclare them if any.
   ----------------------------------------------------------------------*/
-void CheckTypesAttribute (XTigerTemplate t, Element el)
+void Template_CheckTypesAttribute (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
   char *types;
@@ -150,7 +152,8 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
   char        *name = NULL,
               *include = NULL,
               *exclude = NULL;
-  
+  Declaration old = NULL;
+
   if(!t)
     return;
 
@@ -165,7 +168,23 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
         case Template_EL_component:
           name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
           if(name && name[0])
-            Template_DeclareNewComponent (t, name, el);
+            {
+              old = Template_GetDeclaration(t, name);
+              if(old)
+                {
+                  if(old->nature==UnknownNat)
+                    {
+                      Template_RemoveUnknownDeclaration(t, old);
+                      Template_DeclareNewComponent (t, name, el);                      
+                    }
+                  else
+                    {
+                      Template_AddError(t, "Component '%s' has multiple definition.", name);
+                    }
+                }
+              else
+                Template_DeclareNewComponent (t, name, el);
+            }
           TtaFreeMemory (name);
           break;
         case Template_EL_union:
@@ -180,11 +199,11 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
           TtaFreeMemory (exclude);
           break;
         case Template_EL_bag:
-          CheckTypesAttribute (t, el);
+          Template_CheckTypesAttribute (t, el);
           break;
         case Template_EL_useEl:
         case Template_EL_useSimple:
-          CheckTypesAttribute (t, el);
+          Template_CheckTypesAttribute (t, el);
           break;
         default:
           break;
@@ -273,9 +292,10 @@ static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void LoadTemplate (Document doc, char* templatename)
+ThotBool LoadTemplate (Document doc, char* templatename)
 {
 #ifdef TEMPLATES
+  ThotBool         res = FALSE;
   Document         newdoc = 0;
   char            *s, *directory;
   unsigned int     size = strlen (templatename) + 1;
@@ -331,6 +351,7 @@ void LoadTemplate (Document doc, char* templatename)
           TtaFreeMemory(iter);
 
           Template_ParseDeclarations  (t, 0);
+          Template_MoveUnknownDeclarationToXmlElement(t);
           Template_FillDeclarations (t);
           
           Template_PreInstantiateComponents (t);
@@ -340,10 +361,17 @@ void LoadTemplate (Document doc, char* templatename)
 #ifdef AMAYA_DEBUG  
     printf("XTiger template %s loaded.\n", t->name);
 #endif /* AMAYA_DEBUG */
-          
-          DoInstanceTemplate (ctx->templatePath);
-          DocumentTypes[ctx->newdoc] = docTemplate;
-          TtaSetDocumentUnmodified (ctx->newdoc);
+          if(Template_HasErrors(t))
+            {
+              Template_ShowErrors(t);
+            }
+          else
+            {
+              DoInstanceTemplate (ctx->templatePath);
+              DocumentTypes[ctx->newdoc] = docTemplate;
+              TtaSetDocumentUnmodified (ctx->newdoc);
+              res = true;
+            }
         }
       TtaFreeMemory(ctx->templatePath);
       TtaFreeMemory(ctx);
@@ -352,6 +380,9 @@ void LoadTemplate (Document doc, char* templatename)
 #ifdef AMAYA_DEBUG  
   DumpAllDeclarations();
 #endif /* AMAYA_DEBUG */
+  return res;
+#else /* TEMPLATES */
+  return FALSE;
 #endif /* TEMPLATES */
 }
 

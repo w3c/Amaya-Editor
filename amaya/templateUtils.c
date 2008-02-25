@@ -9,6 +9,8 @@
 #include "Templatename.h"
 #include "templates_f.h"
 
+#include <stdarg.h>
+
 /*----------------------------------------------------------------------
 GetSchemaFromDocType: Returns the name of the schema corresponding to 
 a doc type.
@@ -354,4 +356,104 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
   else
 #endif /* TEMPLATES */
     return FALSE;
+}
+
+/*----------------------------------------------------------------------
+ * Dump template element
+  ----------------------------------------------------------------------*/
+void DumpTemplateElement(Element el, Document doc)
+{
+  ElementType elType;
+  SSchema     schema = TtaGetSSchema ("Template", doc);
+  char*       str;
+  if(el && doc)
+    {
+      elType = TtaGetElementType(el);
+      printf("%s", TtaGetElementTypeName(elType));
+      if(elType.ElSSchema==schema)
+        {
+          switch(elType.ElTypeNum)
+            {
+              case Template_EL_head:
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_version, NULL);
+                printf(" version=%s", str);
+                TtaFreeMemory(str);
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_templateVersion, NULL);
+                printf(" templateVersion=%s", str);
+                TtaFreeMemory(str);                
+                break;
+              case Template_EL_component:
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_name, NULL);
+                printf(" name=%s", str);
+                TtaFreeMemory(str);
+                break;
+              case Template_EL_union:
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_name, NULL);
+                printf(" name=%s", str);
+                TtaFreeMemory(str);
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_includeAt, NULL);
+                printf(" include=%s", str);
+                TtaFreeMemory(str);
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_exclude, NULL);
+                printf(" exclude=%s", str);
+                TtaFreeMemory(str);
+                break;
+              case Template_EL_import:
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_src, NULL);
+                printf(" src=%s", str);
+                TtaFreeMemory(str);
+                break;
+              case Template_EL_repeat:
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_title, NULL);
+                printf(" label=%s", str);
+                TtaFreeMemory(str);
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_minOccurs, NULL);
+                printf(" minOccurs=%s", str);
+                TtaFreeMemory(str);
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_maxOccurs, NULL);
+                printf(" maxOccurs=%s", str);
+                TtaFreeMemory(str);
+                break;
+              case Template_EL_option:
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_title, NULL);
+                printf(" label=%s", str);
+                TtaFreeMemory(str);
+                break;
+              case Template_EL_useSimple:
+              case Template_EL_useEl:
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_title, NULL);
+                printf(" label=%s", str);
+                TtaFreeMemory(str);
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_types, NULL);
+                printf(" types=%s", str);
+                TtaFreeMemory(str);
+                break;
+              case Template_EL_bag:
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_title, NULL);
+                printf(" label=%s", str);
+                TtaFreeMemory(str);
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_types, NULL);
+                printf(" types=%s", str);
+                TtaFreeMemory(str);
+                break;
+              case Template_EL_attribute:
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_ref_name, NULL);
+                printf(" name=%s", str);
+                TtaFreeMemory(str);
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_type, NULL);
+                printf(" type=%s", str);
+                TtaFreeMemory(str);
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_useAt, NULL);
+                printf(" use=%s", str);
+                TtaFreeMemory(str);
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_defaultAt, NULL);
+                printf(" default=%s", str);
+                TtaFreeMemory(str);
+                str = GetAttributeStringValueFromNum(el, Template_ATTR_fixed, NULL);
+                printf(" fixed=%s", str);
+                TtaFreeMemory(str);
+                break;
+            }
+        }
+    }
 }

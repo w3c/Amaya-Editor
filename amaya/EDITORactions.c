@@ -35,7 +35,6 @@
 #include "BMevent_f.h"
 #endif /* BOOKMARKS */
 
-#include "MENUconf.h"
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
@@ -58,11 +57,8 @@
 #include "SVGedit_f.h"
 #include "XHTMLbuilder_f.h"
 #include "wxdialogapi_f.h"
-
-#ifdef _WX
-#include "wxdialogapi_f.h"
 #include "appdialogue_wx.h"
-#endif /* _WX */
+
 
 #ifdef DAV
 #define WEBDAV_EXPORT extern
