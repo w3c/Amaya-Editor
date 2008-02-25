@@ -25,7 +25,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Searching">
-<h2><a name="L1042">Rechercher et remplacer du texte</a></h2>
+<h2 id="Rechercher">Rechercher et remplacer du texte</h2>
 
 <p>Vous pouvez rechercher et remplacer du texte par l'intermédiaire de la
 boîte de dialogue <strong>Rechercher</strong>. On appelle cette boîte soit en

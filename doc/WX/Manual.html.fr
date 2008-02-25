@@ -314,6 +314,22 @@ décrits.</p>
     </ul>
   </li>
 </ul>
+<ul>
+  <li><a href="Searching.html.fr#Rechercher">Rechercher et remplacer du
+    texte</a></li>
+</ul>
+<ul>
+  <li><a href="SpellChecking.html.fr#L47">Vérifier l'orthographe</a>
+    <ul>
+      <li><a href="SpellChecking.html.fr#dictionnai">Le dictionnaire
+        personnel</a></li>
+      <li><a href="SpellChecking.html.fr#dialogue">Le dialogue
+      Corriger</a></li>
+      <li><a href="SpellChecking.html.fr#Corriger">Corriger un
+      document</a></li>
+    </ul>
+  </li>
+</ul>
 
 <p></p>
 <hr />

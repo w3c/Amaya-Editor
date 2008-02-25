@@ -24,7 +24,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Spell">
-<h2><a name="L1063">Vérifier l'orthographe</a></h2>
+<h2 id="L47">Vérifier l'orthographe</h2>
 
 <p>Amaya est pourvu d'un vérificateur d'orthographe multilingue. Cet outil
 est invoqué par la commande <strong>Vérifier orthographe</strong> du menu
@@ -33,7 +33,7 @@ bon dictionnaire. Vous pouvez associer cet attribut à n'importe quel élément
 dans un document, même à un seul mot. Utilisez pour cela l'outil <strong><a
 href="Attributes.html.fr#L1073">Attributs.</a></strong></p>
 
-<h3>Le dictionnaire personnel</h3>
+<h3 id="dictionnai">Le dictionnaire personnel</h3>
 
 <p>Le vérificateur d'orthographe vous permet d'avoir votre dictionnaire
 personnel qui se trouve dans <code>AmayaHome/dictionary.DCT.</code>Ce
@@ -42,7 +42,7 @@ dictionnaires des différentes langues. Il est créé, s'il n'existe pas déjà,
 et automatiquement mis à jour par le vérificateur d'orthographe lorsque la
 commande <strong>Apprendre</strong> est activée (voir plus bas).</p>
 
-<h3>Le dialogue Corriger</h3>
+<h3 id="dialogue">Le dialogue Corriger</h3>
 
 <p>La commande <strong>Vérifier orthographe</strong> du menu
 <strong>Outils</strong> affiche une boîte de dialogue qui vous permet de
@@ -74,7 +74,7 @@ choisir les paramètres de correction :</p>
     vérificateur doit travailler.</li>
 </ul>
 
-<h3>Corriger un document</h3>
+<h3 id="Corriger">Corriger un document</h3>
 
 <p>Avant de lancer la correction orthographique, assurez-vous que la
 sélection courante est dans le document que vous voulez corriger. Le
