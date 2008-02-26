@@ -3,7 +3,6 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Raccourcis clavier pour Mac OS X</title>
   <style type="text/css">
 table      { margin-top: 10px; }
@@ -31,7 +30,6 @@ sélection), et des raccourcis utilisant des séquences (ex. Ctrl-t Ctrl-t pour
 créer une table).</p>
 
 <h3>Raccourcis standard</h3>
-</div>
 
 <table border="1">
   <caption></caption>
@@ -141,10 +139,6 @@ créer une table).</p>
       <td>Rechercher</td>
       <td>Ctrl F</td>
     </tr>
-    <tr>
-      <td>Vérifier orthographe</td>
-      <td>F7</td>
-    </tr>
     <tr class="menu">
       <td colspan="2">Navigation dans la structure</td>
     </tr>
@@ -165,17 +159,6 @@ créer une table).</p>
       <td>Shift F4</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu XHTML</td>
-    </tr>
-    <tr>
-      <td>Paragraphe</td>
-      <td>Shift Enter</td>
-    </tr>
-    <tr>
-      <td>Saut de ligne</td>
-      <td>Ctrl Enter</td>
-    </tr>
-    <tr class="menu">
       <td colspan="2">Menu Affichage</td>
     </tr>
     <tr>
@@ -194,10 +177,27 @@ créer une table).</p>
       <td>Réduire</td>
       <td>Ctrl -</td>
     </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Insertion</td>
+    </tr>
+    <tr>
+      <td>Paragraphe</td>
+      <td>Shift Enter</td>
+    </tr>
+    <tr>
+      <td>Saut de ligne</td>
+      <td>Ctrl Enter</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Outils</td>
+    </tr>
+    <tr>
+      <td>Vérifier orthographe</td>
+      <td>F7</td>
+    </tr>
   </tbody>
 </table>
 
-<div id="page_body1">
 <h3>Séquences de raccourcis</h3>
 
 <table border="1">
@@ -219,19 +219,46 @@ créer une table).</p>
       <td>Ctrl b Ctrl y</td>
     </tr>
     <tr class="menu">
-      <td>Menu Edition</td>
-      <td></td>
+      <td colspan="2">Menu Affichage</td>
     </tr>
     <tr>
-      <td>Transformer</td>
-      <td>Ctrl t Ctrl x</td>
+      <td>Montrer les zones active</td>
+      <td>Ctrl u Ctrl m</td>
+    </tr>
+    <tr>
+      <td>Montrer les cibles</td>
+      <td>Ctrl u Ctrl t</td>
+    </tr>
+    <tr>
+      <td>Montrer la structure</td>
+      <td>Ctrl u Ctrl s</td>
+    </tr>
+    <tr>
+      <td>Montrer le source</td>
+      <td>Ctrl u Ctrl o</td>
+    </tr>
+    <tr>
+      <td>Montrer les liens</td>
+      <td>Ctrl u Ctrl l</td>
+    </tr>
+    <tr>
+      <td>Montrer la vue alternée</td>
+      <td>Ctrl u Ctrl a</td>
+    </tr>
+    <tr>
+      <td>Montrer la table des matières</td>
+      <td>Ctrl u Ctrl c</td>
+    </tr>
+    <tr>
+      <td>Partager la vue horizontalement</td>
+      <td>Ctrl u Ctrl h</td>
+    </tr>
+    <tr>
+      <td>Partager la vue verticalement</td>
+      <td>Ctrl u Ctrl v</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu XHTML</td>
-    </tr>
-    <tr>
-      <td>Changer les titres</td>
-      <td>Ctrl h Ctrl t</td>
+      <td colspan="2">Menu Insertion</td>
     </tr>
     <tr>
       <td>Plan</td>
@@ -264,10 +291,6 @@ créer une table).</p>
     <tr>
       <td>Ruby</td>
       <td>Ctrl h Ctrl r</td>
-    </tr>
-    <tr>
-      <td>Engendrer la table des matières</td>
-      <td>Ctrl h Ctrl g</td>
     </tr>
     <tr>
       <td>Commentaire</td>
@@ -523,25 +546,10 @@ créer une table).</p>
       <td>Ctrl i Ctrl z</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu XML</td>
-    </tr>
-    <tr>
-      <td>Montrer la librairie graphique</td>
-      <td>Ctrl l Ctrl s</td>
-    </tr>
-    <tr>
-      <td>Ajouter le graphique sélectionné dans la librairie</td>
-      <td>Ctrl l Ctrl f</td>
-    </tr>
-    <tr>
-      <td>Commentaire</td>
-      <td>Ctrl h Ctrl c</td>
-    </tr>
-    <tr class="menu">
       <td colspan="2">Menu Math</td>
     </tr>
     <tr>
-      <td>Nouvelle formule</td>
+      <td>Insérer une formule</td>
       <td>Ctrl m Ctrl m</td>
     </tr>
     <tr>
@@ -890,46 +898,7 @@ créer une table).</p>
       <td>Ctrl l Ctrl d</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu Affichage</td>
-    </tr>
-    <tr>
-      <td>Montrer les zones active</td>
-      <td>Ctrl u Ctrl m</td>
-    </tr>
-    <tr>
-      <td>Montrer les cibles</td>
-      <td>Ctrl u Ctrl t</td>
-    </tr>
-    <tr>
-      <td>Montrer la structure</td>
-      <td>Ctrl u Ctrl s</td>
-    </tr>
-    <tr>
-      <td>Montrer le source</td>
-      <td>Ctrl u Ctrl o</td>
-    </tr>
-    <tr>
-      <td>Montrer les liens</td>
-      <td>Ctrl u Ctrl l</td>
-    </tr>
-    <tr>
-      <td>Montrer la vue alternée</td>
-      <td>Ctrl u Ctrl a</td>
-    </tr>
-    <tr>
-      <td>Montrer la table des matières</td>
-      <td>Ctrl u Ctrl c</td>
-    </tr>
-    <tr>
-      <td>Partager la vue horizontalement</td>
-      <td>Ctrl u Ctrl h</td>
-    </tr>
-    <tr>
-      <td>Partager la vue verticalement</td>
-      <td>Ctrl u Ctrl v</td>
-    </tr>
-    <tr class="menu">
-      <td colspan="2">Menu Style</td>
+      <td colspan="2">Menu Format</td>
     </tr>
     <tr>
       <td>Créer une règle</td>
@@ -950,6 +919,21 @@ créer une table).</p>
     <tr>
       <td>Retirer</td>
       <td>Ctrl i Ctrl r</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Outils</td>
+    </tr>
+    <tr>
+      <td>Transformer</td>
+      <td>Ctrl t Ctrl x</td>
+    </tr>
+    <tr>
+      <td>Changer le titre</td>
+      <td>Ctrl h Ctrl t</td>
+    </tr>
+    <tr>
+      <td>Engendrer la table des matières</td>
+      <td>Ctrl h Ctrl g</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu Annotations</td>
@@ -977,6 +961,17 @@ créer une table).</p>
     <tr>
       <td>Charger annotations</td>
       <td>Ctrl n Ctrl l</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Graphiques</td>
+    </tr>
+    <tr>
+      <td>Montrer la librairie graphique</td>
+      <td>Ctrl l Ctrl s</td>
+    </tr>
+    <tr>
+      <td>Ajouter le graphique sélectionné dans la librairie</td>
+      <td>Ctrl l Ctrl f</td>
     </tr>
   </tbody>
 </table>

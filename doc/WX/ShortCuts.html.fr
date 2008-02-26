@@ -23,7 +23,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2>Les raccourcis clavier</h2>
+<h2 id="raccourcis">Les raccourcis clavier</h2>
 
 <p>Il est utile de pouvoir invoquer les commandes des menus directement
 depuis le clavier. La boîte à outils de Thot fournit une facilité qui laisse

@@ -3,7 +3,6 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Raccourcis clavier pour Mac OS X</title>
   <style type="text/css">
 table      { margin-top: 10px; }
@@ -23,7 +22,7 @@ Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /></div>
 
 <div id="page_body">
-<h2>Raccourcis clavier d'Amaya pour Mac OS X</h2>
+<h2>Raccourcis clavier d'Amaya pour Mac OSX</h2>
 
 <p>Amaya définit deux types de raccourcis clavier : les raccourcis clavier
 utilisant les modifieurs standard d'Apple (ex. Cmd+C pour copier la
@@ -35,7 +34,6 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
 <strong>Préférences &gt; Général</strong> et relancer Amaya.</p>
 
 <h3>Raccourcis standard</h3>
-</div>
 
 <table border="1">
   <caption></caption>
@@ -69,11 +67,11 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     </tr>
     <tr>
       <td>Défilement vers le bas</td>
-      <td>Cmd Down Arrow</td>
+      <td>Cmd Down arrow</td>
     </tr>
     <tr>
       <td>Défilement vers le haut</td>
-      <td>Cmd Up Arrow</td>
+      <td>Cmd Up arrow</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu Fichier</td>
@@ -88,11 +86,11 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     </tr>
     <tr>
       <td>Précédent</td>
-      <td>Alt Left Arrow</td>
+      <td>Alt Left arrow</td>
     </tr>
     <tr>
       <td>Suivant</td>
-      <td>Alt Right Arrow</td>
+      <td>Alt Right arrow</td>
     </tr>
     <tr>
       <td>Enregistrer</td>
@@ -153,10 +151,6 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td>Rechercher</td>
       <td>Cmd F</td>
     </tr>
-    <tr>
-      <td>Vérifier orthographe</td>
-      <td>Cmd :</td>
-    </tr>
     <tr class="menu">
       <td colspan="2">Navigation dans la structure</td>
     </tr>
@@ -177,18 +171,7 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td>Shift F4   (or Shift Fn F4)</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu XHTML</td>
-    </tr>
-    <tr>
-      <td>Paragraphe</td>
-      <td>Cmd Shift Return</td>
-    </tr>
-    <tr>
-      <td>Saut de ligne</td>
-      <td>Cmd Return</td>
-    </tr>
-    <tr class="menu">
-      <td colspan="2">Menu Affichage</td>
+      <td colspan="2">Menu affichage</td>
     </tr>
     <tr>
       <td>Montrer outils</td>
@@ -238,10 +221,27 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td>Partager la vue verticalement</td>
       <td>Shift Cmd V</td>
     </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Insertion</td>
+    </tr>
+    <tr>
+      <td>Paragraphe</td>
+      <td>Cmd Shift Return</td>
+    </tr>
+    <tr>
+      <td>Saut de ligne</td>
+      <td>Cmd Return</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Outils</td>
+    </tr>
+    <tr>
+      <td>Vérifier orthographe</td>
+      <td>Cmd :</td>
+    </tr>
   </tbody>
 </table>
 
-<div id="page_body1">
 <h3>Séquences de raccourcis</h3>
 
 <table border="1">
@@ -252,18 +252,7 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td class="title">Raccourci</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu Edition</td>
-    </tr>
-    <tr>
-      <td>Transformer</td>
-      <td>Ctrl t Ctrl x</td>
-    </tr>
-    <tr class="menu">
-      <td colspan="2">Menu XHTML</td>
-    </tr>
-    <tr>
-      <td>Changer les titres</td>
-      <td>Ctrl h Ctrl t</td>
+      <td colspan="2">Menu Insertion</td>
     </tr>
     <tr>
       <td>Plan</td>
@@ -296,10 +285,6 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     <tr>
       <td>Ruby</td>
       <td>Ctrl h Ctrl r</td>
-    </tr>
-    <tr>
-      <td>Engendrer la table des matières</td>
-      <td>Ctrl h Ctrl g</td>
     </tr>
     <tr>
       <td>Commentaire</td>
@@ -426,7 +411,7 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td>Ctrl h Ctrl w</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu Table</td>
+      <td colspan="2">Menus Table et Editer la table</td>
     </tr>
     <tr>
       <td>Table</td>
@@ -555,25 +540,10 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td>Ctrl i Ctrl z</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu XML</td>
-    </tr>
-    <tr>
-      <td>Montrer la librairie graphique</td>
-      <td>Ctrl l Ctrl s</td>
-    </tr>
-    <tr>
-      <td>Ajouter le graphique sélectionné dans la librairie</td>
-      <td>Ctrl l Ctrl f</td>
-    </tr>
-    <tr>
-      <td>Commentaire</td>
-      <td>Ctrl h Ctrl c</td>
-    </tr>
-    <tr class="menu">
       <td colspan="2">Menu Math</td>
     </tr>
     <tr>
-      <td>Nouvelle formule</td>
+      <td>Insérer une formule</td>
       <td>Ctrl m Ctrl m</td>
     </tr>
     <tr>
@@ -922,7 +892,7 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td>Ctrl l Ctrl d</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu Style</td>
+      <td colspan="2">Menu Format</td>
     </tr>
     <tr>
       <td>Créer une règle</td>
@@ -943,6 +913,32 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     <tr>
       <td>Retirer</td>
       <td>Ctrl i Ctrl r</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Outils</td>
+    </tr>
+    <tr>
+      <td>Transformer</td>
+      <td>Ctrl t Ctrl x</td>
+    </tr>
+    <tr>
+      <td>Changer le titre</td>
+      <td>Ctrl h Ctrl t</td>
+    </tr>
+    <tr>
+      <td>Engendrer la table des matières</td>
+      <td>Ctrl h Ctrl g</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Graphiques</td>
+    </tr>
+    <tr>
+      <td>Montrer la librairie graphique</td>
+      <td>Ctrl l Ctrl s</td>
+    </tr>
+    <tr>
+      <td>Ajouter le graphique sélectionné dans la librairie</td>
+      <td>Ctrl l Ctrl f</td>
     </tr>
   </tbody>
 </table>

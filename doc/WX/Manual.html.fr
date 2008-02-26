@@ -415,6 +415,9 @@ aspects spécifiques d'Amaya sont décrits.</p>
     </ul>
   </li>
 </ul>
+<ul>
+  <li><a href="ShortCuts.html.fr#raccourcis">Les raccourcis clavier</a></li>
+</ul>
 
 <p></p>
 <hr />
