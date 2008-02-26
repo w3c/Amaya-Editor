@@ -23,7 +23,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Assembling">
-<h2 id="Assembler">Assembler des collections de document</h2>
+<h2 id="Assembler">Assembler des collections de documents</h2>
 
 <p>Pour activer cette fonctionnalité, choisissez l'entrée <strong>Construire
 un livre</strong> du menu <strong>Outils</strong>.</p>

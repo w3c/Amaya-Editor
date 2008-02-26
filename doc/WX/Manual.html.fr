@@ -31,13 +31,12 @@ de la plateforme et la configuration choisie. Ce manuel n'est pas exhaustif,
 son but est simplement d'aider les utilisateurs à découvrir les principales
 caractéristiques du logiciel.</p>
 
-<p>Beaucoup de commandes d'<strong>Amaya</strong> sont identiques à celles
-fournies par les traitements de texte classiques. Elles ne sont pas
-présentées ici. Seuls les aspects spécifiques d'<strong>Amaya</strong> sont
-décrits.</p>
+<p>Beaucoup de commandes d'Amaya sont identiques à celles fournies par les
+traitements de texte classiques. Elles ne sont pas présentées ici. Seuls les
+aspects spécifiques d'Amaya sont décrits.</p>
 <hr />
 <ul>
-  <li><a href="Browsing.html.fr#Naviguer">Naviguer avec Amaya</a> 
+  <li><a href="Browsing.html.fr#Naviguer">Naviguer</a> 
     <ul>
       <li><a href="Browsing.html.fr#Activer">Activer un lien, parcourir les
         liens</a></li>
@@ -142,7 +141,7 @@ décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Templates.html.fr#Templates">Les modèles dans Amaya</a> 
+  <li><a href="Templates.html.fr#Templates">Éditer avec des modèles</a>
     <ul>
       <li><a href="Templates.html.fr#What">Qu'est-ce qu'un modèle ?</a></li>
       <li><a href="Templates.html.fr#Selecting">Sélectionner un

@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <title>Utilisation des modèles XTiger dans Amaya</title>
+  <title>Éditer avec des modèles</title>
   <meta name="generator" content="amaya 9.53, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -24,7 +24,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="modèles">
-<h2 id="Templates">Les modèles dans Amaya</h2>
+<h2 id="Templates">Éditer avec des modèles</h2>
 
 <h3 id="What">Qu'est-ce qu'un modèle ?</h3>
 

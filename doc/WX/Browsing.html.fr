@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <title>Naviguer avec Amaya</title>
+  <title>Naviguer</title>
   <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -22,7 +22,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
 </div>
 
 <div id="Browsing" xml:lang="fr" lang="fr">
-<h2 id="Naviguer">Naviguer avec Amaya</h2>
+<h2 id="Naviguer">Naviguer</h2>
 
 <p><strong>Amaya</strong> est essentiellement un éditeur avec des capacités
 de navigation. Il vous permet de naviguer et d´éditer des documents
