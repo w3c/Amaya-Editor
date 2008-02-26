@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Accessibilité dans Amaya</title>
@@ -9,10 +9,11 @@
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="ShortCuts.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -21,23 +22,45 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png"
 </div>
 
 <div id="Access">
-<h2>Accessibilité dans Amaya</h2>
+<h2 id="Accessibil">Accessibilité</h2>
 
-<h3>Produire un contenu accessible</h3>
+<h3 id="Fonctions">Fonctions accessible</h3>
+
+<p>L'accessibilité pour les personnes handicapées s'améliore de version en
+version. Il est possible d'exécuter un grand nombre de fonctions sans
+utiliser une souris, et d'exécuter des fonctions d'édition (à l'exception la
+saisie de texte) sans utiliser le clavier.</p>
+
+<p>Les caractéristiques d'accessibilité dans la version courante incluent
+:</p>
+<ul>
+  <li>Les vues liens, structure, et table des matières peuvent être utilisées
+    pour naviguer dans le document. Elles sont synchronées avec la vue
+    formatée.</li>
+  <li>Editer le code source.</li>
+  <li>Ajouter, supprimer et éditer dynamiquement plusieurs feuilles de style,
+    incluant une feuille de style.</li>
+  <li>Les accès rapides et l'activation des commandes au clavier, des liens
+    et des contrôles de forme.</li>
+</ul>
+
+<h3 id="Produire">Produire un contenu accessible</h3>
 
 <p>Amaya peut être utilisé pour produire un contenu conforme au <a
 href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content Accessibility
 Guidelines</a> du W3C. Certaines caractéristiques, comme par exemple
-l'obligation d'avoir un attribut "alt" pour les images et les zones actives ,
-ont déjà été incluses (il est impossible d'ajouter une image tant qu'il n'y a
-pas de texte alterné). Amaya produit aussi automatiquement un balisage valide
-conforme au W3C. D'autres caractéristiques, comme les longues descriptions
-spécifiques et les légendes, doivent être effectuées par l'auteur à l'aide
-des attributs des menus ou des menus de structure.</p>
+l'obligation d'avoir un attribut <code>alt</code> pour les images et les
+zones actives , ont déjà été incluses (il est impossible d'ajouter une image
+tant qu'il n'y a pas de texte alterné).</p>
+
+<p>Amaya produit aussi automatiquement un balisage valide conforme au W3C.
+D'autres caractéristiques, comme les longues descriptions spécifiques et les
+légendes, doivent être effectuées par l'auteur à l'aide de l'outil
+<strong>Attributs</strong> ou de la vue structure.</p>
 
 <p>La documentation d'aide d'Amaya décrit <a
 href="HTML-elements/infoTypes.html.fr">comment utiliser quelques éléments
-individuels HTML</a>et inclue une aide en ligne sur comment assurer que les
+individuels HTML</a> et inclue une aide en ligne sur comment assurer que les
 pages produites soient accessibles. De plus, les guides en ligne plus
 complets sont les <a href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content
 Accessibility Guidelines</a> du W3C. Le <a href="http://www.w3.org/WAI">Web
@@ -48,7 +71,7 @@ pratiques qui sont :</p>
 <ul>
   <li><strong>Images &amp; animations.</strong> Utilisez l'attribut
     <code>alt</code> pour décrire la fonction de chaque optique.</li>
-  <li><strong>Zones actives.</strong> Utilisez le <code>MAP</code>
+  <li><strong>Zones actives.</strong> Utilisez l'élément <code>map</code>
     côté-client et le texte pour les zones sensibles.</li>
   <li><strong>Multimedia.</strong> Fournissez des légendes et des
     transcriptions audio, et des descriptions vidéo.</li>
@@ -69,31 +92,10 @@ pratiques qui sont :</p>
     Récapitulez.</li>
   <li><strong>Vérifier votre travail.</strong> Validez. Utilisez les outils,
     la liste de vérification, et les aides en ligne à <a
-    href="http://www.w3.org/TR/WAI-WEBCONTENT">http
-    ://www.w3.org/TR/WAI-WEBCONTENT</a>.</li>
+    href="http://www.w3.org/TR/WAI-WEBCONTENT">http://www.w3.org/TR/WAI-WEBCONTENT</a>.</li>
 </ul>
 
 <p></p>
-
-<h3>Accessibilité d' Amaya</h3>
-
-<p>L'accessibilité d'Amaya pour les gens ayant des incapacités s'améliore à
-chaque version. Il est maintenant possible d'exécuter un grand nombre de
-fonctions sans utiliser une souris, et d'exécuter des fonctions d'édition (à
-l'exception la saisie de texte) sans utiliser le clavier.</p>
-
-<p>Les caractéristiques d'accessibilité dans la version courante incluent
-:</p>
-<ul>
-  <li>Les vues liens, structure et table des matières peuvent être
-    utilisées pour naviguer dans le document. Elles sont synchronées avec la vue
-  formatée.</li>
-  <li>Editer le code source.</li>
-  <li>Ajouter, supprimer et éditer dynamiquement plusieurs feuilles de style,
-    incluant une feuille de style.</li>
-  <li>Les accès rapides et l'activation des commandes au clavier, des liens
-    et des contrôles de forme.</li>
-</ul>
 </div>
 </body>
 </html>
