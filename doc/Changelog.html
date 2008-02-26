@@ -24,88 +24,12 @@ src="http://www.w3.org/Amaya/Icons/doc48x.gif" alt="Doc" /></a></p>
 
 <p>This file lists bug fixes and new features introduced in the CVS version
 of Amaya since the last release (<a
-href="http://www.w3.org/Amaya/User/New.html">Amaya 9.55</a>).</p>
-
-<h3>New features</h3>
-<ul>
-  <li>Redesign of the user interface: new toolbars, palettes, panels</li>
-  <li>A contextual menu provides navigation and editing commands.<br />
-    Within a template instance, the contextual menu allows one to insert and
-    append template components</li>
-  <li>Tools can be displayed on the left, or on the right, or custumized tool
-    by tool</li>
-  <li>The default editing mode changes the behaviour of the Enter key 
-    <p>Enter within a block deletes the selected contents and breaks the
-    block at the current position. When a block element is selected
-    (&lt;p&gt;, &lt;div&gt;, table element), Enter deletes the current
-    selected element and generates a new instance.</p>
-    <p>The XML editing mode is more comfortable when editing nested
-    structures. A new option in Preferences dialog allows one to choose the
-    word processing mode (called Text mode) or the XML editing mode (called
-    XML). A button in the bottom line displays the current editing mode (text
-    or XML) and it allows one to switch the mode more quickly.</p>
-  </li>
-  <li>On/Off buttons or entries can be used to go in/out of an inline
-    element.<br />
-    For example you click strong, enter the strong text, then click strong to
-    close the element.</li>
-  <li>Insert and Append commands must be used to insert before and after the
-    selected structure element</li>
-  <li>First implementation of Amaya themes</li>
-  <li>Possibility to change tabs order or to display two documents side by
-    side</li>
-  <li>There is now an icon in each tab area to close it (not available on
-  mac)</li>
-  <li>The application now doesn't close when the last tab is closed</li>
-  <li><strong>New XHTML document</strong> allows one to create a simple
-    document or a template instance</li>
-  <li><strong>Save As</strong> allows one to save without template when the
-    document is a template instance</li>
-  <li>The <strong>File</strong> menu gives now access to the list of recent
-    open documents</li>
-  <li>There is now a command <strong>Select All</strong></li>
-  <li>Amaya proposes new options when a table, an image or an object are
-    created</li>
-  <li>The links view display all elements with an id attribute as they are
-    potential targets of a link</li>
-  <li>Class attributes are now displayed in the status bar</li>
-  <li>New management of the selection within tables</li>
-  <li>Reconfiguration of menus</li>
-  <li>Profiles for customization of the user interface</li>
-</ul>
-
-<h3>Bug fixes</h3>
-<ul>
-  <li>Set the environment variable G_SLICE="always-malloc" to prevent a crash
-    on new Linux platforms (the crash occurs as soon as a dialog is
-  displayed)</li>
-  <li>A reference to the current page now moves to the top of page</li>
-  <li>Amaya generated an explicit lang="en" attribute when an element of an
-    English document is copied and pasted into a French document</li>
-  <li>"Preserve Lines When Pasting" didn't work correctly in MacOS X</li>
-  <li>The Preferences dialog didn't display correctly</li>
-  <li>In dialogs, buttons that clear an URI are now displayed close to the
-  URI</li>
-  <li>It's now possible to delete a link with the Link dialog</li>
-  <li>Maps areas could be lost</li>
-  <li>The CSS parser now detects the BOM character</li>
-  <li>Large background images could crash the application on Windows</li>
-  <li>When changing or deleting the same attribute for several contiguous
-    elements, only the first element in the set has the change/deletion
-    applied.</li>
-  <li>Avoid several concurrent download of a document</li>
-  <li>Dialogs are now displayed at the current cursor position</li>
-  <li>Amaya didn't complain and could generate invalid markup for an Xhtml
-    Strict or Basic document when an &lt;img&gt; element was not inside a
-    block element.</li>
-  <li>On MacOS X, the menu items Copy/Cut/Paste were disabled after having
-    double-clicked a file in the file browser.</li>
-</ul>
+href="http://www.w3.org/Amaya/User/New.html">Amaya 10.0</a>).</p>
 
 <p></p>
 <hr />
 <address>
-  last revised Date: <!--$date=-->2008-01-25<!--$-->
+  last revised Date: <!--$date=-->2008-02-26<!--$-->
 
 </address>
 </body>
