@@ -80,7 +80,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Document.html.fr#L50">Gestion des documents</a> 
+  <li><a href="Document.html.fr#L50">Créer et ouvrir des documents</a> 
     <ul>
       <li><a href="Document.html.fr#L54">Créer un document</a></li>
       <li><a href="Document.html.fr#Ouverture">Ouvrir un document</a></li>
@@ -88,7 +88,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Creating.html.fr#L1103">Edition des <span xml:lang="fr"
+  <li><a href="Creating.html.fr#L1103">Créer les <span xml:lang="fr"
     lang="fr">éléments</span></a> 
     <ul>
       <li><a href="Creating.html.fr#Modes">Modes d'édition</a></li>
@@ -199,7 +199,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Tables.html.fr#Editer">Edition des tables</a> 
+  <li><a href="Tables.html.fr#Editer">Editer des tables</a> 
     <ul>
       <li><a href="Tables.html.fr#L62">Créer une nouvelle table</a></li>
       <li><a href="Tables.html.fr#Ajouter">Ajouter une colonne</a></li>
@@ -217,7 +217,8 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="ImageMaps.html.fr#Images">Images et zones actives</a> 
+  <li><a href="ImageMaps.html.fr#Images">Editer des images et zones
+    actives</a> 
     <ul>
       <li><a href="ImageMaps.html.fr#Ajouter">Ajouter une image</a></li>
       <li><a href="ImageMaps.html.fr#Remplacer">Remplacer une image</a></li>
@@ -374,7 +375,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
     document</a></li>
 </ul>
 <ul>
-  <li><a href="Annotations.html.fr#annotation">Les annotations</a> 
+  <li><a href="Annotations.html.fr#annotation">Annoter les documents</a>
     <ul>
       <li><a href="Annotations.html.fr#def">Qu'est-ce qu'une
       annotation ?</a></li>

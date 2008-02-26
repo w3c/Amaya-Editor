@@ -3,7 +3,7 @@
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-  <title>Images et Zones actives</title>
+  <title>Éditer des images et zones actives</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
@@ -23,7 +23,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Client-sid">
-<h2 id="Images"><a name="L1013">Images et zones actives</a></h2>
+<h2 id="Images"><a name="L1013">Éditer des images et zones actives</a></h2>
 
 <h3 id="Ajouter"><a name="Adding">Ajouter une image</a></h3>
 

@@ -3,7 +3,7 @@
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Annotations</title>
+  <title>Annoter les documents</title>
   <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
@@ -23,7 +23,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2 id="annotation">Les annotations</h2>
+<h2 id="annotation">Annoter les documents</h2>
 
 <h3 id="def">Qu'est-ce qu'une annotation ?</h3>
 
@@ -285,13 +285,13 @@ valeur "Issues". Voici un extrait du code source:</p>
 de l'élément parent qui possède l'attribut ID avec la valeur "Issues".
 L'utilisation de l'attribut ID permet à l'auteur du document de déplacer la
 totalité de cette section n'importe où dans le document sans avoir besoin de
-remettre à jour le Xpointer correspondant. Ce dernier de dépend pas des
+remettre à jour le XPointer correspondant. Ce dernier de dépend pas des
 éléments qui précèdent cette section.</p>
 
 <p>Une annotation est dite <strong>orpheline</strong> lorsqu'elle ne peut
-plus être rattachée au document, c'est à dire quand le Xpointer ne trouve
+plus être rattachée au document, c'est à dire quand le XPointer ne trouve
 plus l'élément correspondant dans la structure du document. Cela arrive
-notamment quand la structure est modifiée. Par exemple, le Xpointer précédent
+notamment quand la structure est modifiée. Par exemple, le XPointer précédent
 ne pourrait plus retrouver l'élément correspondant si l'on supprimait
 l'attribut ID de celui-ci. Amaya avertit l'utilisateur s'il détecte une
 annotation orpheline au chargement. Les annotations orphelines sont visibles
@@ -302,7 +302,7 @@ l'icône des annotations sur laquelle est superposé un point d'interrogation
 <p>Une annotation est dite <strong>trompeuse</strong> lorsqu'elle ne pointe
 pas sur la bonne partie du document. En reprenant notre exemple, nous pouvons
 créer une annotation trompeuse en intervertissant le premier et le second
-paragraphe. Le Xpointer continuera de pointer vers le second paragraphe bien
+paragraphe. Le XPointer continuera de pointer vers le second paragraphe bien
 qu'il devrait pointer désormais sur le premier. Ce problème est encore plus
 fréquent lorsque vous annotez un texte qui peut changer. Dans sa version
 actuelle, Amaya n'avertit pas l'utilisateur des annotations trompeuses. Une
@@ -323,7 +323,7 @@ annotations trompeuses en ajoutant un attribut ID au second paragraphe:</p>
 
 <p style="text-align: center"><code>xpointer(id("Amaya"))</code></p>
 
-<p>Ainsi, ce Xpointer pointera toujours sur le même paragraphe, sans se
+<p>Ainsi, ce XPointer pointera toujours sur le même paragraphe, sans se
 soucier de la position de celui-ci dans la structure du document.</p>
 </div>
 </body>
