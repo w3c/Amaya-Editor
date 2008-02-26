@@ -192,73 +192,37 @@ dans les <strong>Préférences/Annotations</strong>. La recherche sur un
 serveur d'annotations retourne toutes les annotations associées à un
 document.</p>
 
-<h3 id="Navigating">Activer des annotations</h3>
+<h3 id="Navigating">Les annotations dans la vue Liens</h3>
 
 <p>Les annotations apparaissent dans la vue <strong>Liens</strong> du
 document annoté (avec les autres liens définis dans ce document) et sont
-symbolisées par la même icône que dans la vue principale. La vue Liens montre
-toutes les annotations du document sans tenir compte du fait qu'elles aient
-été ou non cachées par le menu <strong>Filtrer</strong>. Comme dans la vue
-principale, un simple-clic sur l'icône met en évidence le partie annotée du
-document et un double-clic ouvre l'annotation. La figure ci-dessous montre un
-exemple de navigation d'un lien d'annotation vers un autre même si
-l'annotation ne peut être vue par tous les utilisateurs à cause d'une
-indisponibilité ou des caractéristiques du support utilisé.</p>
-
-<h3 id="Moving">Déplacer des annotations</h3>
-
-<p>Amaya vous permet également de déplacer une annotation vers un autre
-endroit du document, par exemple pour rattacher des <a
-href="Annotations.html#Issues1">annotations trompeuses ou orphelines</a>.
-Vous pouvez déplacer une annotation soit vers la sélection courante, soit
-vers la valeur d'un XPointer. Actuellement, on ne peut déplacer des
-annotations que dans le document où elles ont été créées.</p>
-
-<p>Pour déplacer une annotation vers la sélection courante, il faut d'abord
-ouvrir une fenêtre d'annotation et sélectionner une partie du document
-annoté. Puis, dans la fenêtre d'annotation, appeler le menu
-<strong>Annotations/Move to selection</strong>. Amaya déplace alors l'icône
-de l'annotation vers la partie sélectionnée et considère l'annotation comme
-modifiée. Pour rendre ce changement effectif, vous devrez l'enregistrer. De
-la même manière que pour la création, vous pouvez déplacer une annotation
-vers la position courante du curseur sans avoir besoin de faire la
-sélection.</p>
-
-<p>Vous pouvez aussi mémoriser la position où vous voulez déplacer une
-annotation, par exemple pour déplacer plusieurs annotations vers le même
-endroit ou pour se déplacer dans la fenêtre avant de faire la manipulation.
-Pour cela, faire la sélection (ou placer le curseur) à l'endroit désiré puis,
-utiliser le menu <strong>Annotations/Enregistrer la sélection comme
-XPointer</strong> pour créer un XPointer représentant cette sélection. Enfin,
-dans la fenêtre d'annotation, utiliser le menu <strong>Annotations/Déplacer
-sur le XPointer enregistré</strong> pour déplacer l'annotation à la nouvelle
-position. Comme précédemment, vous devrez enregistrer l'annotation pour
-rendre ce changement effectif.</p>
+symbolisées par la même icône que dans la vue principale. Comme dans la vue
+principale, un simple-clic sur l'icône met en évidence la partie annotée du
+document et un double-clic ouvre l'annotation.</p>
 
 <h3 id="Threads">Répondre aux annotations / fils de discussion</h3>
 
 <p>Les annotations peuvent être considérées comme des commentaires sur des
-documents. La commande <strong>Répondre à l'annotation</strong> élargit
-l'espace de travail collaboratif en permettant aux utilisateurs de répondre
-aux annotations des autres utilisateurs ainsi qu'aux autres réponses</p>
+documents. La commande <strong>Outils/Annotations/Répondre à
+l'annotation</strong> élargit l'espace de travail collaboratif en permettant
+aux utilisateurs de répondre aux annotations des autres utilisateurs ainsi
+qu'aux autres réponses</p>
 
-<p>L'utilisateur peut appeler cette commande depuis la fenêtre d'une
-annotation ou depuis la fenêtre d'une réponse. Une nouvelle fenêtre de
-réponse est alors ouverte. Les champs de cette fenêtre peuvent être édités de
-le même manière que ceux d'une fenêtre d'annotation (voir <a
-href="#Creating">Créer une annotation</a>).</p>
+<p>Vous pouvez appeler cette commande depuis la fenêtre d'une annotation ou
+depuis la fenêtre d'une réponse. Une nouvelle fenêtre de réponse est alors
+ouverte. Les champs de cette fenêtre peuvent être édités de le même manière
+que ceux d'une fenêtre d'annotation (voir <a href="#Creating">Créer une
+annotation</a>).</p>
 
-<p>Quand la réponse est terminée, l'utilisateur peut la poster sur un serveur
-par à la commande <strong>Enregistrer sur le serveur</strong> ou
+<p>Quand la réponse est terminée, vous pouvez la poster sur un serveur par la
+commande <strong>Outils/Annotations/Enregistrer sur le serveur</strong> ou
 l'enregistrer localement par la commande
 <strong>Fichier/Enregistrer</strong>. La commande
-<strong>Annotations/Détruire</strong> supprime la réponse.</p>
+<strong>Outils/Annotations/Supprimer</strong> supprime la réponse.</p>
 
-<p>Les réponses peuvent également être annotées comme n'importe quel document
-comme expliqué dans la section <a href="#Creating">Créer une
+<p>Les réponses peuvent également être annotées comme n'importe quel
+document, comme expliqué dans la section <a href="#Creating">Créer une
 annotation</a>.</p>
-
-<h2 id="Interface">Interface utilisateur</h2>
 
 <p>Toutes les réponses relatives à une même annotation sont affichées en
 dessous de celle-ci, dans une section "fil". Chaque élément du fil donne la
@@ -270,10 +234,10 @@ fenêtre de réponse est utilisée.</p>
 
 <h2 id="Probl">Problèmes connus: fils incomplets</h2>
 
-<p>Il n'y a pas encore de contrôle pour déterminer quelle réponse devrait
-être postée. Dans l'absolu, il ne devrait pas être possible de poster une
-réponse à une réponse sur un autre serveur que la réponse elle-même. De même,
-si vous supprimez une réponse vous devriez supprimer toutes les réponses se
+<p>Il n'y a pas de contrôle pour déterminer quelle réponse devrait être
+postée. Dans l'absolu, il ne devrait pas être possible de poster une réponse
+à une réponse sur un autre serveur que la réponse elle-même. De même, si vous
+supprimez une réponse vous devriez supprimer toutes les réponses se
 rapportant à l'annotation. Sans cela, vous pouvez avoir des fragments du fil
 qui ne peuvent être correctement rattachés à celui-ci. Par exemple, soit R1
 une réponse à l'annotation A1 et R2 une réponse à R1. Si vous postez R1 et

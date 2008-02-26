@@ -374,12 +374,12 @@ aspects spécifiques d'Amaya sont décrits.</p>
     document</a></li>
 </ul>
 <ul>
-  <li><a href="Annotations.html.fr#annotation">Les annotations</a>
+  <li><a href="Annotations.html.fr#annotation">Les annotations</a> 
     <ul>
       <li><a href="Annotations.html.fr#def">Qu'est-ce qu'une
       annotation ?</a></li>
       <li><a href="Annotations.html.fr#Local">Annotations locales et
-        distantes</a>
+        distantes</a> 
         <ul>
           <li><a href="Annotations.html.fr#Annotation">Annotations
             distantes</a></li>
@@ -392,17 +392,17 @@ aspects spécifiques d'Amaya sont décrits.</p>
       annotation</a></li>
       <li><a href="Annotations.html.fr#Loading">Charger et présenter les
         annotations</a></li>
-      <li><a href="Annotations.html.fr#Navigating">Activer des
-      annotations</a></li>
+      <li><a href="Annotations.html.fr#Navigating">Les annotations dans la
+        vue Liens</a></li>
       <li><a href="Annotations.html.fr#Threads">Répondre aux annotations /
-        fil de discussion</a>
+        fil de discussion</a> 
         <ul>
           <li><a href="Annotations.html.fr#Probl">Problèmes connus : fil
             incomplet</a></li>
         </ul>
       </li>
       <li><a href="Annotations.html.fr#Issues1">Problèmes relatifs aux
-        annotations et aux documents modifiés</a>
+        annotations et aux documents modifiés</a> 
         <ul>
           <li><a href="Annotations.html.fr#Annotation1">Annotations
             orphelines</a></li>
