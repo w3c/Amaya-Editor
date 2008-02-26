@@ -26,13 +26,12 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <h2 id="raccourcis">Les raccourcis clavier</h2>
 
 <p>Il est utile de pouvoir invoquer les commandes des menus directement
-depuis le clavier. La boîte à outils de Thot fournit une facilité qui laisse
-l'utilisateur accomplir ceci par le biais d'un fichier de raccourcis clavier
-(un fichier par plate-forme). Ces fichiers définissent une liste
+depuis le clavier. Vous pouvez accomplir ceci par un fichier de raccourcis
+clavier (un fichier par plate-forme). Ces fichiers définissent une liste
 d'associations entre une séquence au clavier et la commande correspondante
 invoquée. Ils sont stockés dans le répertoire Amaya/config :
 <code><code>amaya.keyboard</code></code> (Linux), amaya.kb (Windows) and
-<code>amaya.kb-mac</code>.</p>
+<code>amaya.kb-mac</code> (Mac OS X).</p>
 <ul>
   <li><a href="ShortCuts-Linux.html.fr">Liste des raccoucis clavier par
     défaut pour Linux</a></li>
@@ -42,7 +41,7 @@ invoquée. Ils sont stockés dans le répertoire Amaya/config :
     défaut pour Mac OS X</a></li>
 </ul>
 
-<p>Ces fichiers peuvent être modifiés pour définir vos propres raccourcis
+<p>Vous pouvez modifier ces fichiers pour définir vos propres raccourcis
 clavier. La syntaxe utilisée pour définir une association est :</p>
 
 <p><code>Directive = KeySeq ':' IdentCommand ;<br />
@@ -61,10 +60,9 @@ Entity = DecEntity / HexaEntity ; <br />
 DecEntity = '&amp;' '#' NUMBER ';' ; <br />
 HexaEntity = '&amp;' '#' 'x' HEXADECIMAL ';' ;</code>.</p>
 
-<p>La liste des commandes disponibles est (une liste plus à jour peut être
-trouvée dans les <a
-href="http://www.w3.org/Amaya/User/SourceDist.html">sources d'Amaya</a> :
-<code>Amaya/amaya/EDITOR.A</code>) :</p>
+<p>La liste des commandes disponibles est (une liste à jour peut être trouvée
+dans les <a href="http://www.w3.org/Amaya/User/SourceDist.html">sources
+d'Amaya</a> : <code>Amaya/amaya/EDITOR.A</code>) :</p>
 <ul>
   <li>Commandes de déplacement : 
     <ul>

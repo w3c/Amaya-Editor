@@ -30,8 +30,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
       <li><a href="#plusieurs">Une ou plusieurs instances d'Amaya</a></li>
       <li><a href="#propos">Répertoires de configuration</a>
         <ul>
-          <li><a href="#pertoire">Le répertoire
-          c<strong>onfig</strong></a></li>
+          <li><a href="#pertoire">Le répertoire config</a></li>
           <li><a href="#pertoire1">Le répertoire AmayaHome</a></li>
           <li><a href="#pertoire2">Le répertoire AmayaTemp</a></li>
         </ul>
@@ -42,8 +41,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
             <ul>
               <li><a href="#Profile">Profils</a></li>
               <li><a href="#Options">Options</a></li>
-              <li><a href="#Polices"><strong>Polices de caractères et
-                langue</strong></a></li>
+              <li><a href="#Polices">Polices de caractères et langue</a></li>
               <li><a href="#rapides">Accès rapides</a></li>
             </ul>
           </li>
@@ -66,7 +64,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
                 automatiques sur ces domaines</a></li>
             </ul>
           </li>
-          <li><a href="#L1595"><strong>Préférences de cache</strong></a>
+          <li><a href="#L1595">Préférences de cache</a>
             <ul>
               <li><a href="#Options3">Options</a></li>
               <li><a href="#L1701">Répertoire du cache</a></li>
@@ -123,7 +121,7 @@ modifié en forçant la variable d'environnement
 <p>Amaya utilise un certain nombre de répertoires par défaut pour conserver
 les informations de configuration.</p>
 
-<h4 id="pertoire">Le répertoire c<strong>onfig</strong></h4>
+<h4 id="pertoire">Le répertoire config</h4>
 
 <p>Amaya enregistre la plupart des valeurs par défaut et tous les messages de
 dialogue dans le répertoire config. Le répertoire parent est celui où Amaya a
@@ -400,7 +398,7 @@ href="Links.html.fr#L245">créer de nouveaux liens</a>. Cette option agit
 immédiatement sur toutes les vues formatées de documents. <br />
 </p>
 
-<h5 id="Polices"><strong>Polices de caractères et langue</strong></h5>
+<h5 id="Polices">Polices de caractères et langue</h5>
 
 <p><strong>Zoom caractères</strong>. Il est possible d'augmenter et de
 diminuer l'effet de zoom, fenêtre de document par fenêtre de document. Chaque
@@ -565,7 +563,7 @@ PUT en entrant le nom du domaine du serveur de publication. Vous pouvez
 spécifier un ou plusieurs domaines, chacun séparé d'un <em>espace</em>, par
 exemple, <code>www.w3.org groucho.marx.edu</code>.</p>
 
-<h4 id="L1595"><strong>Préférences de cache</strong></h4>
+<h4 id="L1595">Préférences de cache</h4>
 
 <p>Amaya fournit un cache par l'intermédiaire de la libwww. Par défaut, le
 cache est activé et est stocké dans le répertoire
