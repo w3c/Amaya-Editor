@@ -1,6 +1,7 @@
 #ifdef _WX
 
 #include "wxAmayaTimer.h"
+extern void TtaHandlePendingEvents ();
 
 IMPLEMENT_DYNAMIC_CLASS(wxAmayaTimer, wxTimer)
 
@@ -25,6 +26,7 @@ void wxAmayaTimer::Notify()
 {
   if (m_pCallback)
     (*m_pCallback)(m_pData);
+  TtaHandlePendingEvents();
 }
 
 #endif /* _WX */

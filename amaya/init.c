@@ -1500,8 +1500,13 @@ static void TextURL (Document doc, View view, char *text, intptr_t noreplace)
           TtaFreeMemory (s);
           return;
         }
-      if (noreplace == 0 &&
-          !DontReplaceOldDoc && !CanReplaceCurrentDocument (doc, view))
+
+      if (noreplace != 0)
+        //ask the user choice
+        LoadDefaultOpeningLocation (TRUE);
+      else
+        DontReplaceOldDoc = FALSE;
+      if (!DontReplaceOldDoc && !CanReplaceCurrentDocument (doc, view))
         {
           /* restore the previous value @@ */
           AddURLInCombobox (DocumentURLs[doc], NULL, FALSE);
@@ -1517,11 +1522,6 @@ static void TextURL (Document doc, View view, char *text, intptr_t noreplace)
         CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
 
       TtaFreeMemory (s);
-      if (noreplace != 0)
-        //ask the user choice
-        LoadDefaultOpeningLocation (TRUE);
-      else
-        DontReplaceOldDoc = FALSE;
       NewFile = FALSE;
       CurrentDocument = doc;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
