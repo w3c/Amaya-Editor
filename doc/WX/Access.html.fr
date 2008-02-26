@@ -35,7 +35,7 @@ saisie de texte) sans utiliser le clavier.</p>
 :</p>
 <ul>
   <li>Les vues liens, structure, et table des matières peuvent être utilisées
-    pour naviguer dans le document. Elles sont synchronées avec la vue
+    pour naviguer dans le document. Elles sont synchronisées avec la vue
     formatée.</li>
   <li>Editer le code source.</li>
   <li>Ajouter, supprimer et éditer dynamiquement plusieurs feuilles de style,
@@ -73,7 +73,7 @@ pratiques qui sont :</p>
     <code>alt</code> pour décrire la fonction de chaque optique.</li>
   <li><strong>Zones actives.</strong> Utilisez l'élément <code>map</code>
     côté-client et le texte pour les zones sensibles.</li>
-  <li><strong>Multimedia.</strong> Fournissez des légendes et des
+  <li><strong>Multimédia.</strong> Fournissez des légendes et des
     transcriptions audio, et des descriptions vidéo.</li>
   <li><strong>Liens hypertextes.</strong> Utilisez un texte qui a un sens
     même lorsqu'il est lu en-dehors du contexte. Par exemple, évitez "cliquer

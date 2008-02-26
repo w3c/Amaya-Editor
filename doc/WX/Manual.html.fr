@@ -375,7 +375,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
     document</a></li>
 </ul>
 <ul>
-  <li><a href="Annotations.html.fr#annotation">Annoter les documents</a>
+  <li><a href="Annotations.html.fr#annotation">Annoter les documents</a> 
     <ul>
       <li><a href="Annotations.html.fr#def">Qu'est-ce qu'une
       annotation ?</a></li>
@@ -418,6 +418,15 @@ aspects spécifiques d'Amaya sont décrits.</p>
 </ul>
 <ul>
   <li><a href="ShortCuts.html.fr#raccourcis">Les raccourcis clavier</a></li>
+</ul>
+<ul>
+  <li><a href="Access.html.fr#Accessibil">Accessibilité</a>
+    <ul>
+      <li><a href="Access.html.fr#Fonctions">Fonctions accessible</a></li>
+      <li><a href="Access.html.fr#Produire">Produire un contenu
+      accessible</a></li>
+    </ul>
+  </li>
 </ul>
 
 <p></p>
