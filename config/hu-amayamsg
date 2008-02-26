@@ -475,3 +475,4 @@
 473 Válasszon betűkészletet és -méretet
 474 **Template has error(s), it will not be used:
 475 **Close
+476 **Component '%s' has multiple definition.

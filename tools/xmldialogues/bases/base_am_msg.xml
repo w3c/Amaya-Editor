@@ -6790,6 +6790,10 @@
 <message xml:lang="en">Close</message>
 <message xml:lang="fr">Fermer</message>
 </label>
+<label define="AM_TEMPLATE_ERR_MULTICOMP">
+<message xml:lang="en">Component '%s' has multiple definition.</message>
+<message xml:lang="fr">Le composant '%s' a une définition multiple.</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

@@ -179,7 +179,7 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
                     }
                   else
                     {
-                      Template_AddError(t, "Component '%s' has multiple definition.", name);
+                      Template_AddError(t, TtaGetMessage(AMAYA, AM_TEMPLATE_ERR_MULTICOMP), name);
                     }
                 }
               else

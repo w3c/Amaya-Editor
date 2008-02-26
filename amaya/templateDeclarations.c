@@ -1089,7 +1089,7 @@ void Template_ShowErrors(XTigerTemplate t)
   ----------------------------------------------------------------------*/
 ThotBool Template_HasErrors(XTigerTemplate t)
 {
-  return !t || (t && !DLList_IsEmpty(t->errorList));
+  return t==NULL || (t!=NULL && !DLList_IsEmpty(t->errorList));
 }
 
 
