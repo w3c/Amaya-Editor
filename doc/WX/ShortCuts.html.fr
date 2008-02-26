@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Raccourcis clavier</title>
@@ -12,7 +12,8 @@
 <body xml:lang="en" lang="en">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Configure.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a><a href="Manual.html.fr"
@@ -22,16 +23,16 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2>Les raccourcis clavier dans Amaya</h2>
+<h2>Les raccourcis clavier</h2>
 
 <p>Il est utile de pouvoir invoquer les commandes des menus directement
 depuis le clavier. La boîte à outils de Thot fournit une facilité qui laisse
 l'utilisateur accomplir ceci par le biais d'un fichier de raccourcis clavier
 (un fichier par plate-forme). Ces fichiers définissent une liste
 d'associations entre une séquence au clavier et la commande correspondante
-invoquée. Ils sont stockés dans le répertoire <code>Amaya/config</code> :
-<code>amaya.keyboard</code> (Linux), <code>amaya.kb</code> (Windows) and
-amaya.kb-mac.</p>
+invoquée. Ils sont stockés dans le répertoire Amaya/config :
+<code><code>amaya.keyboard</code></code> (Linux), amaya.kb (Windows) and
+<code>amaya.kb-mac</code>.</p>
 <ul>
   <li><a href="ShortCuts-Linux.html.fr">Liste des raccoucis clavier par
     défaut pour Linux</a></li>
@@ -65,7 +66,7 @@ trouvée dans les <a
 href="http://www.w3.org/Amaya/User/SourceDist.html">sources d'Amaya</a> :
 <code>Amaya/amaya/EDITOR.A</code>) :</p>
 <ul>
-  <li>Commandes de déplacement :
+  <li>Commandes de déplacement : 
     <ul>
       <li><code>TtcNextChar</code>, <code>TtcPreviousChar</code> : déplace
         caractère par caractère.</li>
@@ -85,7 +86,7 @@ href="http://www.w3.org/Amaya/User/SourceDist.html">sources d'Amaya</a> :
         ligne en haut ou une ligne en bas.</li>
     </ul>
   </li>
-  <li>Commandes d'extension de la sélection :
+  <li>Commandes d'extension de la sélection : 
     <ul>
       <li><code>TtcNextSelChar</code>, <code>TtcPreviousSelChar</code> :
         sélectionne caractère par caractère.</li>
@@ -99,37 +100,38 @@ href="http://www.w3.org/Amaya/User/SourceDist.html">sources d'Amaya</a> :
     </ul>
   </li>
   <li>Une commande qui permet de suivre un lien ou d'activer un élément de
-    formulaire HTML (menu, bouton, etc.) :
+    formulaire HTML (menu, bouton, etc.) : 
     <p class="menuItems"><code>DoAction</code>.</p>
   </li>
   <li>Une commande qui permet de sauter au prochain (ou au premier s'il n'y a
-    pas de sélection) lien ou élément de formulaire HTML :
+    pas de sélection) lien ou élément de formulaire HTML : 
     <p><code>NextLinkOrFormElement</code>.</p>
   </li>
   <li>Une commande qui permet de sauter lien ou élément de formulaire HTML
-    précédent :
+    précédent : 
     <p><code>PreviousLinkOrFormElement</code>.</p>
   </li>
-  <li>Dans le menu Fichier :
-    <p><code>NewXHTML</code>, <code>NewXHTML</code>,
-    <code>NewMathML</code>, <code>NewSVG</code>, <code>NewCss</code>,
-    <code>OpenDoc</code>, <code>Reload</code>,
-    <code>GotoPreviousHTML</code>, <code>GotoNextHTML</code>,
-    <code>GoToHome</code>, <code>SaveDocument</code>,
-    <code>SaveDocumentAs</code>, <code>Synchronize</code>,
-    <code>ShowLogFile</code>, <code>SetupAndPrint</code>,
-    <code>PrintAs</code>, <code>CloseDocument</code>,
+  <li>Dans le menu Fichier : 
+    <p><code>NewXHTML</code>, <code>NewXHTML</code>, <code>NewMathML</code>,
+    <code>NewSVG</code>, <code>NewCss</code>, <code>OpenDoc</code>,
+    <code>Reload</code>, <code>GotoPreviousHTML</code>,
+    <code>GotoNextHTML</code>, <code>GoToHome</code>,
+    <code>SaveDocument</code>, <code>SaveDocumentAs</code>,
+    <code>Synchronize</code>, <code>ShowLogFile</code>,
+    <code>SetupAndPrint</code>, <code>PrintAs</code>,
+    <code>CloseDocument</code>,
     <code>AmayaCloseTab</code>,<code>AmayaCloseWindow</code>,
     <code>AmayaClose</code>.</p>
   </li>
-  <li>Dans le menu Édition :
+  <li>Dans le menu Édition : 
     <p><code>TtcUndo</code>, <code>TtcRedo</code>,
     <code>TtcCutSelection</code>, <code>TtcCopySelection</code>,
     <code>TtcPaste</code>, <code>TtcDeleteSelection</code>,
     <code>SetBrowserEditor</code>, <code>TtcSearchText</code>,
     <code>SpellCheck</code>, <code>TransformType</code>,
     <code>ConfigAmaya</code>.</p>
-  </li>  <li>Dans le menu <code>Affichage</code> :
+  </li>
+  <li>Dans le menu <code>Affichage</code> : 
     <p><code>ShowPanel</code>, <code>FullScreen</code>,
     <code>ShowMapAreas</code>, <code>ShowTargets</code>, <code>ZoomIn</code>,
     <code>ZoomOut</code>, <code>ShowFormatted</code>,
@@ -137,7 +139,7 @@ href="http://www.w3.org/Amaya/User/SourceDist.html">sources d'Amaya</a> :
     <code>ShowLinks</code>, <code>ShowToC</code>, <code>ShowSource</code>,
     <code>SplitHorizontally</code>, <code>SplitVertically</code>.</p>
   </li>
-  <li>Dans le menu Insertion :
+  <li>Dans le menu Insertion : 
     <ul>
       <li>Menu XHTML : <code>ChangeTitle</code>, <code>CreateAddress</code>
         <code>CreateParagraph</code>, <code>CreateImage</code>,
@@ -194,7 +196,7 @@ href="http://www.w3.org/Amaya/User/SourceDist.html">sources d'Amaya</a> :
         <code>CreateMTABLE</code></li>
     </ul>
   </li>
-  <li>Dans le menu <code>Format</code> :
+  <li>Dans le menu <code>Format</code> : 
     <p><code>TtcChangeCharacters</code>, <code>TtcChangeColors</code>,
     <code>TtcChangeFormat</code>, <code>ChangeBackgroundImage</code>,
     <code>CreateClass</code>, <code>ApplyClass</code>, <code>LinkCSS</code>,
@@ -203,18 +205,18 @@ href="http://www.w3.org/Amaya/User/SourceDist.html">sources d'Amaya</a> :
     <code>DoRightAlign</code>, <code>DoCenter</code>,
     <code>DoJustify</code>.</p>
   </li>
-  <li>Dans le menu <code>Liens</code> :
+  <li>Dans le menu <code>Liens</code> : 
     <p><code>LinkToPreviousTarget</code>, <code>CreateOrChangeLink</code>,
     <code>CreateTarget</code>, <code>DeleteAnchor</code>,
     <code>MakeID</code>.</p>
   </li>
-  <li>Dans le menu Outils:
+  <li>Dans le menu Outils: 
     <p><code>AnnotateSelection</code>, <code>AnnotateDocument</code>,
     <code>LoadAnnotations</code>, <code>PostAnnotation</code>,
     <code>DeleteAnnotation</code>, <code>FilterAnnot</code>,
     <code>ConfigAnnot</code>.</p>
   </li>
-  <li>Dans le menu <code>Aide</code> :
+  <li>Dans le menu <code>Aide</code> : 
     <p><code>HelpAmaya</code>, <code>HelpAtW3C</code>,
     <code>HelpBrowsing</code>, <code>HelpSelecting</code>,
     <code>HelpSearching</code>, <code>HelpViews</code>,

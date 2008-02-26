@@ -141,7 +141,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Templates.html.fr#Templates">Éditer avec des modèles</a>
+  <li><a href="Templates.html.fr#Templates">Éditer avec des modèles</a> 
     <ul>
       <li><a href="Templates.html.fr#What">Qu'est-ce qu'un modèle ?</a></li>
       <li><a href="Templates.html.fr#Selecting">Sélectionner un
@@ -372,6 +372,48 @@ aspects spécifiques d'Amaya sont décrits.</p>
 <ul>
   <li><a href="MakeBook.html.fr#Assembler">Assembler des collections de
     document</a></li>
+</ul>
+<ul>
+  <li><a href="Annotations.html.fr#annotation">Les annotations</a>
+    <ul>
+      <li><a href="Annotations.html.fr#def">Qu'est-ce qu'une
+      annotation ?</a></li>
+      <li><a href="Annotations.html.fr#Local">Annotations locales et
+        distantes</a>
+        <ul>
+          <li><a href="Annotations.html.fr#Annotation">Annotations
+            distantes</a></li>
+        </ul>
+      </li>
+      <li><a href="Annotations.html.fr#Creating">Créer une annotation</a></li>
+      <li><a href="Annotations.html.fr#Enregister">Enregister une
+        annotation</a></li>
+      <li><a href="Annotations.html.fr#Deleting1">Détruire une
+      annotation</a></li>
+      <li><a href="Annotations.html.fr#Loading">Charger et présenter les
+        annotations</a></li>
+      <li><a href="Annotations.html.fr#Navigating">Activer des
+      annotations</a></li>
+      <li><a href="Annotations.html.fr#Threads">Répondre aux annotations /
+        fil de discussion</a>
+        <ul>
+          <li><a href="Annotations.html.fr#Probl">Problèmes connus : fil
+            incomplet</a></li>
+        </ul>
+      </li>
+      <li><a href="Annotations.html.fr#Issues1">Problèmes relatifs aux
+        annotations et aux documents modifiés</a>
+        <ul>
+          <li><a href="Annotations.html.fr#Annotation1">Annotations
+            orphelines</a></li>
+          <li><a href="Annotations.html.fr#Annotation2">Annotations
+            trompeuses</a></li>
+          <li><a href="Annotations.html.fr#Comment">Comment éviter ces
+            problèmes ?</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
 </ul>
 
 <p></p>
