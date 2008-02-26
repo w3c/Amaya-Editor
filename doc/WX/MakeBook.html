@@ -26,69 +26,66 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <div id="page_body">
 <h2 id="Assembling">Assembling large document collections</h2>
 
-<p>The <strong>Make book</strong> command in the <strong>Tools</strong> menu
-is used to assemble large document collections into a single volume.</p>
-
 <p>Amaya enables you to handle document collections. Such a collection may,
-for example, represent a set of technical documentation made up of several
-web pages. </p>
+for example, represent a technical documentation made up of several web
+pages. The present manual is a document collection.</p>
 
-<p>One of the web pages contains the title of the entire documentation set
-(an <code>h1</code> element), an introduction (some other elements), and a
-list <code>ol</code> or <code>ul</code> whose items <code>li</code> contain
-links to each chapter. Chapters are separate documents that can have a
-similar structure.</p>
+<p>One of the web pages in the collection contains the title of the entire
+documentation (an <code>h1</code> element), an introduction (some other
+elements), and a list <code>ol</code> or <code>ul</code> whose items
+<code>li</code> contain links to each chapter. Chapters are separate
+documents that can have a similar structure.</p>
 
 <p>This organization is useful for browsing, but has several drawbacks when
-the entire documentation set must be printed. Amaya addresses this problem
-with the <strong>Make book</strong> command (<strong>Tools/Make
-book</strong>).</p>
+the entire documentation has to be printed.</p>
 
-<p>You use typed links for linking chapters, by associating an attribute
+<p>Amaya addresses this problem with the <strong>Tools/Make book</strong>
+command, which assembles a document collection into a single volume. You use
+typed links for linking chapters, by associating an attribute
 <code>rel="chapter"</code> or <code>rel="subdocument"</code> with the anchor
-that refers to a chapter (to do this, select the <code>a</code> element and
-use the <strong>Attributes</strong> panel).</p>
+that refers to a chapter (create a link and use the
+<strong>Attributes</strong> tool for the <code>rel</code> attribute).</p>
 
-<p>Each referred chapter or sub-document can be:</p>
+<p>Each referred chapter or sub-document may be:</p>
 <ul>
-  <li>an external document</li>
-  <li>a subset of a larger external document</li>
+  <li>a full external document,</li>
+  <li>a subset of a larger external document.</li>
 </ul>
 
 <p>To refer to a document subset, you usually define a <code>div</code>
-element to identify the part of the target document you want to include, and
-to link to this target element.</p>
+element to identify the part of the document you want to include, and you
+create a link to this <code>div</code> element.</p>
 
-<p>Then, when you activate the <strong>Make book</strong> command, all blocks
-(<code>li</code> elements in the above example) containing a typed link to a
-chapter will be replaced by the corresponding actual web pages (or web page
-subsets), and Amaya will display a unique document containing the whole
+<p>Then, when you activate the <strong>Tools/Make book</strong> command, all
+blocks (<code>li</code> elements in the above example) containing a typed
+link to a chapter will be replaced by the corresponding actual web pages (or
+a part of it), and Amaya will display a unique document containing the whole
 collection:</p>
 <ul>
-  <li>If the link refers to a web page, Amaya includes all the
-    <code>body</code> content of the target document.</li>
-  <li>If the link refers to a target element, Amaya includes this element
-    with its content.</li>
-  <li>If the link refers to a target anchor, Amaya includes the content of
-    the anchor, but not the anchor itself.</li>
+  <li>If the link refers to a web page as a whole, Amaya includes all the
+    content of the <code>body</code> element of the target document.</li>
+  <li>If the link refers to an element in a web page, Amaya includes this
+    element with its content.</li>
+  <li>If the link refers to a target anchor (<code>a</code> element), Amaya
+    includes the content of the anchor, but not the anchor itself.</li>
 </ul>
 
 <p>Before each replacement, the <strong>Make book</strong> command generates
 a new <code>div</code> element with an <code>id</code> attribute to clearly
-separate each added piece.</p>
+separate each included piece.</p>
 
-<p>Pieces of the new generated document can contain normal links, target
+<p>Pieces of the new generated document may contain normal links, target
 anchors, and target elements. During the <strong>Make book</strong>
 operation, Amaya ensures that each <code>name</code> and <code>id</code>
-attribute value remains unique in the new document. As needed, Amaya changes
-these values and updates any relative links.</p>
+attribute value remains unique in the new document. Amaya changes these
+values ss needed, and updates all relative links.</p>
 
-<p>At the same time, Amaya automatically updates external links from
-referring to an external document or document subset, to referring to the
-text that is now included. For example, if the link originally pointed to an
-external document, the link will now refer to the  <code>div</code> element
-generated by the <strong>Make book</strong> command. This ensures that the
-new unique document containing the whole collection and remains coherent.</p>
+<p>Amaya automatically transforms external links referring to external
+documents or to document parts, into internal links to the part that are now
+included. For example, if the link originally pointed to an external
+document, the link will now refer to the  <code>div</code> element generated
+by the <strong>Make book</strong> command. This ensures that all links are
+preserved in the new unique document containing the whole collection.</p>
 
 <p>This large document can then be numbered and printed with a complete table
 of contents and a list of all links.</p>

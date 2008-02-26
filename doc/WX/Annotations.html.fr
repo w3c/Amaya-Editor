@@ -28,12 +28,12 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <h3 id="def">Qu'est-ce qu'une annotation ?</h3>
 
 <p>Une annotation est un commentaire, une note, une explication ou tout autre
-remarque externe qui peut être attachée à un document web ou à une partie de
-celui-ci. Comme les annotations dans Amaya sont externes au document, il est
-possible d'annoter n'importe quel document du web, même sans avoir le droit
-de le modifier. D'un point de vue technique, une annotation peut être vue
-comme une méta-donnée puisqu'elle fournit une information supplémentaire sur
-une donnée existante. Dans Amaya, nous utilisons un <a
+remarque externe qui peut être attachée à un document web ou à une partie
+d'un document. Comme les annotations dans Amaya sont externes au document, il
+est possible d'annoter n'importe quel document du web, même sans avoir le
+droit de le modifier. D'un point de vue technique, une annotation peut être
+vue comme une méta-donnée puisqu'elle fournit une information supplémentaire
+sur une donnée existante. Amaya utilise un <a
 href="http://www.w3.org/2000/10/annotation-ns">schéma</a> <a
 href="http://www.w3.org/RDF/">RDF</a> pour décrire les annotations.</p>
 
@@ -42,18 +42,18 @@ plusieurs <em>serveur(s) d'annotations</em>. Lorsqu'un document est chargé,
 Amaya interroge chacun de ces serveurs et recherche les annotations relatives
 à ce document. Chaque annotation est ensuite représentée par l'icône suivante
 <img src="../images/annot.png" alt="Crayon representant une annotation" />
-qui est ajoutée au document. Lorsque l'utilisateur clique sur l'icône
-d'annotation, le passage annoté est mis en évidence. Si l'utilisateur
-double-clique sur l'icône alors le contenu de l'annotation ainsi que les
-autres méta-données lui sont présentées dans une nouvelle fenêtre.</p>
+qui est ajoutée au document. Lorsque vous cliquez sur l'icône, le passage
+annoté est mis en évidence. Si vous double-cliquez sur l'icône alors le
+contenu de l'annotation ainsi que les autres méta-données sont présentées
+dans une fenêtre séparée.</p>
 
 <p>Une annotation possède plusieurs propriétés :</p>
 <ul>
   <li>Point de stockage: dans le système de fichiers de l'utilisateur ou sur
-    un serveur d'annotations</li>
+    un serveur d'annotations.</li>
   <li>Etendue : l'annotation est associée à un document entier ou à une
-    fragment de celui-ci</li>
-  <li>Type de l'annotation: 'Annotation', 'Comment', 'Query', ...</li>
+    fragment de celui-ci.</li>
+  <li>Type de l'annotation: remarque, commentaire, question, ...</li>
 </ul>
 
 <h3 id="Local">Annotations locales et distantes</h3>
@@ -67,22 +67,22 @@ href="Configure.html.fr#pertoire1">AmayaHome</a>, dans un répertoire
 spécifique appelé <code>annotations</code> et peuvent être visualisées
 uniquement par leur auteur (selon les droits d'accès en fonction). </p>
 
-<p>Ce répertoire comporte trois sortes de fichiers:</p>
+<p>Ce répertoire comporte trois sortes de fichiers :</p>
 <ul>
-  <li><code>annot.index :</code> les URL associées aux fichiers dans lesquels
+  <li><code>annot.index</code> : les URL associées aux fichiers dans lesquels
     les méta-données des annotations sont sauvegardées.</li>
-  <li><code>index + random suffix :</code> un fichier contenant les
+  <li><code>index + random suffix</code> : un fichier contenant les
     méta-données d'une annotation relative à une URL. Les méta-données sont
-    spécifiées avec RDF.</li>
-  <li><code>annot + random suffix.html :</code> contient le corps de
+    spécifiées en RDF.</li>
+  <li><code>annot + random suffix.html</code> : contient le corps de
     l'annotation enregistrée en XHTML.</li>
 </ul>
 
-<p>Un utilisateur peut à tout moment transformer une <em>annotation
-locale</em> en une annotation partagée en utilisant l'entrée
-<strong>Enregistrer une annotation</strong> du sous-menu
-<strong>Outils/Annotations</strong>. Si cette commande réussit, l'annotation
-est supprimée localement et transférée sur un serveur d'annotations. </p>
+<p>Vous pouvez à tout moment transformer une annotation locale en une
+annotation partagée en utilisant l'entrée <strong>Enregistrer sur le
+serveur</strong> du sous-menu <strong>Outils/Annotations</strong>.
+L'annotation est supprimée localement et transférée sur un serveur
+d'annotations. </p>
 
 <h4 id="Annotation">Annotations distantes</h4>
 
@@ -102,13 +102,15 @@ HOWTO</a>".</p>
 paramètres dans les <strong>Préférences</strong> (voir la section <a
 href="Configure.html.fr#Configurat">Configuration des annotations</a>)</p>
 
-<p>La version courante d'Amaya supporte deux sortes d'annotations: celles qui
-s'appliquent sur le document entier et celles qui s'appliquent sur une partie
-ou une sélection du document.</p>
+<p>Amaya supporte deux sortes d'annotations : celles qui s'appliquent au
+document entier et celles qui s'appliquent à une position ou à une sélection
+du document.</p>
 <ul>
   <li>Pour annoter un document entier, sélectionnez l'entrée <strong>Annoter
     le document</strong> du sous-menu
   <strong>Outils/Annotations</strong>.</li>
+  <li>Pour annoter une position, placez le point d'insertion à cette position
+    et sélectionnez l'entrée <strong>Annoter la sélection</strong>.</li>
   <li>Pour annoter une partie, faire la sélection désirée et sélectionnez
     l'entrée <strong>Annoter la sélection</strong>.</li>
 </ul>
@@ -117,7 +119,7 @@ ou une sélection du document.</p>
 méta-données de l'annotation et un corps <strong>d</strong>'annotation
 vide.</p>
 
-<p>Les méta-données actuellement définies pour une annotation indiquent le
+<p>Les méta-données indiquent le <strong>titre</strong> de l'annotation, le
 <strong>nom de son auteur</strong>, le <strong>titre du document
 annoté</strong> (également appelé document source), le <strong>type de
 l'annotation</strong>, sa <strong>date de création</strong> et la
@@ -126,14 +128,13 @@ l'annotation</strong>, sa <strong>date de création</strong> et la
 <p>Certaines de ces méta-données ont des propriétés spécifiques. </p>
 <ul>
   <li>Le champ <strong>Document source</strong> est un lien qui pointe sur le
-    texte annoté. Si l'utilisateur double-clique dessus (comme pour tout lien
-    dans Amaya) alors le document annoté est affiché en premier plan et le
-    texte annoté est mis en évidence.</li>
-  <li>La méta-donnée <strong>Type de l'annotation</strong> permet à
-    l'utilisateur de classer les annotations et de changer leur type. Un
-    double-clic sur ce champ montre la liste des types disponibles. Nous
-    préciserons plus loin comment un utilisateur peut définir son propre type
-    d'annotation.</li>
+    texte annoté. Si vous double-cliquez dessus (comme pour tout lien dans
+    Amaya), le document annoté est affiché en premier plan et le texte annoté
+    est mis en évidence.</li>
+  <li>La méta-donnée <strong>Type de l'annotation</strong> vous permet de
+    classer les annotations et de changer leur type. Un double-clic sur ce
+    champ montre la liste des types disponibles. Voir plus loin comment
+    définir son propre type d'annotation.</li>
   <li>Enfin, la méta-donnée <strong>Date de dernière modification</strong>
     est automatiquement mise à jour lorsque l'annotation est sauvegardée.</li>
 </ul>
@@ -147,16 +148,16 @@ quel document HTML. </p>
 <strong>Imprimer</strong> qui imprime le corps de l'annotation ou la commande
 <strong>Recharger</strong>.</p>
 
-<h3 id="Enregister">Enregistrer une annotation</h3>
+<h3 id="Enregister">Enregister une annotation</h3>
 
-<p>Enregistrer une annotation revient à enregistrer n'importe quel autre
-document, l'utilisateur doit juste sélectionner l'entrée
-<strong>Enregistrer</strong> du menu <strong>Fichier</strong> ou cliquer sur
+<p>L'enregistrement d'une annotation se fait comme l'enregistrement de
+n'importe quel autre document. Sélectionnez l'entrée
+<strong>Enregistrer</strong> du menu <strong>Fichier</strong> ou cliquez sur
 le bouton équivalent ou bien activer le raccourci-clavier correspondant.</p>
 
 <p>Les annotations locales sont sauvées sous le répertoire des annotations et
-les annotations distantes sont sauvées sous le serveur d'annotation
-correspondant, si l'utilisateur possède un droit d'écriture dessus.</p>
+les annotations distantes sont sauvées sur le serveur d'annotation, si
+l'utilisateur possède un droit d'écriture.</p>
 
 <p>Pour transformer une annotation locale en une annotation publique
 (distante), l'utilisateur doit utiliser l'entrée <strong>Enregistrer sur le
@@ -169,84 +170,120 @@ d'annotations.</p>
 
 <h3 id="Deleting1">Détruire une annotation</h3>
 
-<p>La commande <strong>Supprimer</strong> du sous-menu
-<strong>Outils/Annotations</strong> vous permet de supprimer l'annotation
-courante. Vous pouvez également supprimer une annotation à partir du document
-annoté en sélectionnant l'icône de celle-ci puis en appelant cette commande
-dans le menu du document annoté.</p>
+<p>Pour supprimer une annotation vous pouvez utiliser la commande
+<strong>Annotations/Supprimer</strong> du menu <strong>Outils</strong> de la
+fenêtre de l'annotation à supprimer.</p>
+
+<p>Vous pouvez également supprimer une annotation à partir du document
+annoté, en sélectionnant l'icône de celle-ci puis en appelant la même
+commande dans le menu du document annoté.</p>
 
 <h3 id="Loading">Charger et présenter les annotations</h3>
 
-<p>La commande <strong>Charger les annotations</strong> indique à Amaya de
-rechercher les annotations associées à l'URL du document chargé dans la vue
-principale. Amaya va alors rechercher les annotations correspondantes dans
-les serveurs d'annotations définis dans les <strong>Préférences</strong>.</p>
+<p>La commande <strong>Outils/Annotations/Charger annotations</strong>
+indique à Amaya de rechercher les annotations associées à l'URL du document
+chargé dans la vue principale. Amaya va alors rechercher les annotations
+correspondantes dans les serveurs d'annotations définis dans les
+<strong>Préférences/Annotations</strong>.</p>
 
 <p>Les annotations peuvent également être chargées automatiquement en
 choisissant l'option <strong>Charger automatiquement les annotations</strong>
-dans les <strong>Préférences</strong>.</p>
+dans les <strong>Préférences/Annotations</strong>. La recherche sur un
+serveur d'annotations retourne toutes les annotations associées à un
+document.</p>
 
 <h3 id="Navigating">Activer des annotations</h3>
 
-<p>Les annotations apparaissent dans la vue des liens du document annoté
-(avec les autres liens définis dans ce document) et sont symbolisées par la
-même icône que dans la vue principale.</p>
+<p>Les annotations apparaissent dans la vue <strong>Liens</strong> du
+document annoté (avec les autres liens définis dans ce document) et sont
+symbolisées par la même icône que dans la vue principale. La vue Liens montre
+toutes les annotations du document sans tenir compte du fait qu'elles aient
+été ou non cachées par le menu <strong>Filtrer</strong>. Comme dans la vue
+principale, un simple-clic sur l'icône met en évidence le partie annotée du
+document et un double-clic ouvre l'annotation. La figure ci-dessous montre un
+exemple de navigation d'un lien d'annotation vers un autre même si
+l'annotation ne peut être vue par tous les utilisateurs à cause d'une
+indisponibilité ou des caractéristiques du support utilisé.</p>
 
-<p>Comme dans la vue principale, un simple-clic sur l'icône met en évidence
-le partie annotée du document et un double-clic ouvre l'annotation.</p>
+<h3 id="Moving">Déplacer des annotations</h3>
 
-<h3 id="Threads">Répondre aux annotations / fil de discussion</h3>
+<p>Amaya vous permet également de déplacer une annotation vers un autre
+endroit du document, par exemple pour rattacher des <a
+href="Annotations.html#Issues1">annotations trompeuses ou orphelines</a>.
+Vous pouvez déplacer une annotation soit vers la sélection courante, soit
+vers la valeur d'un XPointer. Actuellement, on ne peut déplacer des
+annotations que dans le document où elles ont été créées.</p>
+
+<p>Pour déplacer une annotation vers la sélection courante, il faut d'abord
+ouvrir une fenêtre d'annotation et sélectionner une partie du document
+annoté. Puis, dans la fenêtre d'annotation, appeler le menu
+<strong>Annotations/Move to selection</strong>. Amaya déplace alors l'icône
+de l'annotation vers la partie sélectionnée et considère l'annotation comme
+modifiée. Pour rendre ce changement effectif, vous devrez l'enregistrer. De
+la même manière que pour la création, vous pouvez déplacer une annotation
+vers la position courante du curseur sans avoir besoin de faire la
+sélection.</p>
+
+<p>Vous pouvez aussi mémoriser la position où vous voulez déplacer une
+annotation, par exemple pour déplacer plusieurs annotations vers le même
+endroit ou pour se déplacer dans la fenêtre avant de faire la manipulation.
+Pour cela, faire la sélection (ou placer le curseur) à l'endroit désiré puis,
+utiliser le menu <strong>Annotations/Enregistrer la sélection comme
+XPointer</strong> pour créer un XPointer représentant cette sélection. Enfin,
+dans la fenêtre d'annotation, utiliser le menu <strong>Annotations/Déplacer
+sur le XPointer enregistré</strong> pour déplacer l'annotation à la nouvelle
+position. Comme précédemment, vous devrez enregistrer l'annotation pour
+rendre ce changement effectif.</p>
+
+<h3 id="Threads">Répondre aux annotations / fils de discussion</h3>
 
 <p>Les annotations peuvent être considérées comme des commentaires sur des
-documents. La commande <strong>Répondre à l'annotation</strong> du sous-menu
-<strong>Outils/Annotations</strong> élargit l'espace de travail collaboratif
-en permettant aux utilisateurs de répondre aux annotations des autres
-utilisateurs ainsi qu'aux autres réponses</p>
+documents. La commande <strong>Répondre à l'annotation</strong> élargit
+l'espace de travail collaboratif en permettant aux utilisateurs de répondre
+aux annotations des autres utilisateurs ainsi qu'aux autres réponses</p>
 
 <p>L'utilisateur peut appeler cette commande depuis la fenêtre d'une
-annotation ou depuis la fenêtre d'une réponse.</p>
-
-<p>Un nouveau document d'annotation est alors créé. Les champs de cette
-annotation réponse peuvent être édités de le même manière que ceux de toute
-autre annotation (voir <a href="#Creating">Créer une annotation</a>).</p>
+annotation ou depuis la fenêtre d'une réponse. Une nouvelle fenêtre de
+réponse est alors ouverte. Les champs de cette fenêtre peuvent être édités de
+le même manière que ceux d'une fenêtre d'annotation (voir <a
+href="#Creating">Créer une annotation</a>).</p>
 
 <p>Quand la réponse est terminée, l'utilisateur peut la poster sur un serveur
-par à la commande <strong>Outils/Enregistrer sur le serveur</strong> ou
+par à la commande <strong>Enregistrer sur le serveur</strong> ou
 l'enregistrer localement par la commande
 <strong>Fichier/Enregistrer</strong>. La commande
-<strong>Outils/Annotations/Détruire</strong> supprime la réponse.</p>
+<strong>Annotations/Détruire</strong> supprime la réponse.</p>
 
 <p>Les réponses peuvent également être annotées comme n'importe quel document
 comme expliqué dans la section <a href="#Creating">Créer une
 annotation</a>.</p>
 
+<h2 id="Interface">Interface utilisateur</h2>
+
 <p>Toutes les réponses relatives à une même annotation sont affichées en
 dessous de celle-ci, dans une section "fil". Chaque élément du fil donne la
-date de la réponse, son auteur et son titre. </p>
+date de la réponse, son auteur et son titre. Le contenu de chacune des
+réponses est accessible en double-cliquant sur la réponse dans le fil. La
+réponse sélectionnée est mise en sur-brillance et présentée dans une nouvelle
+fenêtre de réponse. Lorsqu'une autre réponse est sélectionnée, la même
+fenêtre de réponse est utilisée.</p>
 
-<p>Le contenu de chacune des réponses est accessible en double-cliquant sur
-la réponse dans le fil. La réponse sélectionnée est mise en sur-brillance et
-présentée dans un nouvel onglet de réponse. Lorsqu'une autre réponse est
-sélectionnée, le même onglet de réponse est utilisé.</p>
-
-<h4 id="Probl">Problèmes connus : fil incomplet</h4>
+<h2 id="Probl">Problèmes connus: fils incomplets</h2>
 
 <p>Il n'y a pas encore de contrôle pour déterminer quelle réponse devrait
 être postée. Dans l'absolu, il ne devrait pas être possible de poster une
 réponse à une réponse sur un autre serveur que la réponse elle-même. De même,
 si vous supprimez une réponse vous devriez supprimer toutes les réponses se
 rapportant à l'annotation. Sans cela, vous pouvez avoir des fragments du fil
-qui ne peuvent être correctement rattachés à celui-ci.</p>
-
-<p>Par exemple, soit R1 une réponse à l'annotation A1 et R2 une réponse à R1.
-Si vous postez R1 et sauvez localement R2 et si vous visualisez A1 en
-chargeant uniquement les annotations locales, alors seule R2 sera visible.</p>
-
-<p>A ce niveau, Amaya ne sait pas que R1 existe et suppose que R2 a perdu sa
-réponse "mère". On identifie ces fils "orphelins" en plaçant devant un point
-d'interrogation. Si par la suite Amaya trouve de nouveaux éléments du fil,
-par exemple en chargeant R1, il les triera correctement. Dans notre exemple,
-la réponse R2 deviendra fille de R1, comme attendu.</p>
+qui ne peuvent être correctement rattachés à celui-ci. Par exemple, soit R1
+une réponse à l'annotation A1 et R2 une réponse à R1. Si vous postez R1 et
+sauvez localement R2 et si vous visualisez A1 en chargeant uniquement les
+annotations locales, alors seule R2 sera visible. A ce niveau, Amaya ne sait
+pas que R1 existe et suppose que R2 a perdu sa réponse "mère". On identifie
+ces fils "orphelins" en plaçant devant un point d'interrogation. Si par la
+suite Amaya trouve de nouveaux éléments du fil, par exemple en chargeant R1,
+il les triera correctement. Dans notre exemple, la réponse R2 deviendra fille
+de R1, comme attendu.</p>
 </div>
 
 <div id="Issues">
@@ -264,12 +301,11 @@ href="http://www.w3.org/XML/Linking">XPointer</a></strong>. Les XPointers
 reposent sur la structure du document. Pour construire un XPointer, par
 exemple pour une sélection, on part du premier point de la sélection et on
 remonte à travers la structure du document jusqu'à trouver la racine de
-celui-ci. Si un élément possède un attribut <code>id</code>, on arrête la
-recherche et on considère que le début du XPointer est cet élément. Par
-exemple, en regardant le source HTML de cette documentation, on s'aperçoit
-que la section courante est à l'intérieur d'un élément <code>div</code>,
-lequel possède un attribut <code>id</code> avec la valeur "Issues". Voici un
-extrait du code source:</p>
+celui-ci. Si un élément possède un attribut ID, on arrête la recherche et on
+considère que le début du XPointer est cet élément. Par exemple, en regardant
+le source HTML de cette documentation, on s'aperçoit que la section courante
+est à l'intérieur d'un élément DIV, lequel possède un attribut ID avec la
+valeur "Issues". Voici un extrait du code source:</p>
 <pre>  &lt;div id="Issues"&gt;
   &lt;h3&gt;&gt;Problèmes sur ....&lt;/h3&gt;&gt;
   &lt;p&gt;Si vous utilisez ...&lt;/p&gt;
@@ -282,27 +318,22 @@ extrait du code source:</p>
 <p style="text-align: center"><code>xpointer(id("Issues")/p[2])</code></p>
 
 <p>Le XPointer ci-dessus pointe sur le second élément <code>p</code> à partir
-de l'élément parent qui possède l'attribut <code>id</code> avec la valeur
-"Issues". L'utilisation de l'attribut <code>id</code> permet à l'auteur du
-document de déplacer la totalité de cette section n'importe où dans le
-document sans avoir besoin de remettre à jour le Xpointer correspondant. Ce
-dernier de dépend pas des éléments qui précèdent cette section.</p>
-
-<h4 id="Annotation1">Annotations orphelines</h4>
+de l'élément parent qui possède l'attribut ID avec la valeur "Issues".
+L'utilisation de l'attribut ID permet à l'auteur du document de déplacer la
+totalité de cette section n'importe où dans le document sans avoir besoin de
+remettre à jour le Xpointer correspondant. Ce dernier de dépend pas des
+éléments qui précèdent cette section.</p>
 
 <p>Une annotation est dite <strong>orpheline</strong> lorsqu'elle ne peut
 plus être rattachée au document, c'est à dire quand le Xpointer ne trouve
 plus l'élément correspondant dans la structure du document. Cela arrive
 notamment quand la structure est modifiée. Par exemple, le Xpointer précédent
 ne pourrait plus retrouver l'élément correspondant si l'on supprimait
-l'attribut <code>id</code> de celui-ci. Amaya avertit l'utilisateur s'il
-détecte une annotation orpheline au chargement. Les annotations orphelines
-sont visibles dans la vue <strong>Liens</strong> du document et sont
-symbolisées par l'icône des annotations sur laquelle est superposé un point
-d'interrogation <img src="../images/annotorp.png"
-alt="Orphan annotation icon" />.</p>
-
-<h4 id="Annotation2">Annotations trompeuses</h4>
+l'attribut ID de celui-ci. Amaya avertit l'utilisateur s'il détecte une
+annotation orpheline au chargement. Les annotations orphelines sont visibles
+dans la vue <strong>Liens</strong> du document et sont symbolisées par
+l'icône des annotations sur laquelle est superposé un point d'interrogation
+<img src="../images/annotorp.png" alt="Orphan annotation icon" />.</p>
 
 <p>Une annotation est dite <strong>trompeuse</strong> lorsqu'elle ne pointe
 pas sur la bonne partie du document. En reprenant notre exemple, nous pouvons
@@ -314,15 +345,14 @@ actuelle, Amaya n'avertit pas l'utilisateur des annotations trompeuses. Une
 prochaine version l'avertira de la possibilité d'une annotation d'être
 trompeuse.</p>
 
-<h4 id="Comment">Comment éviter ces problèmes ?</h4>
+<p>Comment éviter ces problèmes ?</p>
 
-<p>Si vous êtes l'auteur du document, utilisez les attributs <code>id</code>
-aux endroits stratégiques, par exemple pour les éléments <code>div</code>.
-Amaya vous permet d'associer ou de retirer automatiquement un attribut
-<code>id</code> en sélectionnant l'entrée <strong>Ajouter/Retirer des
-attributs <code>ID</code></strong> du menu <strong>Liens</strong>. Dans notre
-exemple, on peut éviter le problème des annotations trompeuses en ajoutant un
-attribut id au second paragraphe:</p>
+<p>Si vous êtes l'auteur du document, utilisez les attributs ID aux endroits
+stratégiques, par exemple pour les éléments DIV. Amaya vous permet d'associer
+ou de retirer automatiquement un attribut ID en sélectionnant l'entrée
+<strong>Ajouter/Retirer des attributs ID</strong> du menu
+<strong>Liens</strong>. Dans notre exemple, on peut éviter le problème des
+annotations trompeuses en ajoutant un attribut ID au second paragraphe:</p>
 <pre>  &lt;p id="Amaya"&gt;Pour cela, Amaya utilise...&lt;/p&gt;</pre>
 
 <p>Un XPointer qui pointe sur ce paragraphe est alors</p>
