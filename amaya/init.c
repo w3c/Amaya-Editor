@@ -738,12 +738,16 @@ void DocStatusUpdate (Document doc, ThotBool modified)
   else
     /* the document is no longer modified */
     {
-      for (document = 1, NoDocumentModified = TRUE; NoDocumentModified && document < DocumentTableLength; document++)
-        if (TtaIsDocumentModified (document))NoDocumentModified = FALSE;
-        ;
+      NoDocumentModified = TRUE;
+      for (document = 1 ; NoDocumentModified && document < DocumentTableLength; document++)
+        {
+          if (TtaIsDocumentModified (document) && document!=doc)
+            NoDocumentModified = FALSE;
+        }
 
       TtaSetItemOff (doc, 1, File, BSave);
-      if (NoDocumentModified) TtaSetItemOff (doc, 1, File, BSaveAll);
+      if (NoDocumentModified)
+        TtaSetItemOff (doc, 1, File, BSaveAll);
 
       if (TtaIsDocumentUpdated (doc))
         {
