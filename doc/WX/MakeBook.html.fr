@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Construire un livre</title>
   <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="Numbering.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -22,24 +23,26 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Assembling">
-<h2><a name="L1065">Assembler des collections de document</a></h2>
+<h2 id="Assembler">Assembler des collections de document</h2>
 
 <p>Pour activer cette fonctionnalité, choisissez l'entrée <strong>Construire
-un livre</strong> du menu <strong>XHTML</strong>.</p>
+un livre</strong> du menu <strong>Outils</strong>.</p>
 
 <p>Amaya vous permet de manipuler des collections de document. Une telle
 collection peut, par exemple, représenter une documentation technique
-constituée de plusieurs pages web. Une de ces pages contient le titre de
-toute la documentation (un élément <code>H1</code>), une introduction
-(d'autres éléments), et une liste (<code>OL</code> ou <code>UL</code>) dont
-les items contiennent les liens vers chaque chapitre. Les chapitres sont des
-documents séparés qui peuvent aussi avoir le même type de structure.</p>
+constituée de plusieurs pages web. </p>
+
+<p>Une de ces pages contient le titre de toute la documentation (un élément
+<code>h1</code>), une introduction (d'autres éléments), et une liste
+(<code>ol</code> ou <code>ul</code>) dont les items contiennent les liens
+vers chaque chapitre. Les chapitres sont des documents séparés qui peuvent
+aussi avoir le même type de structure.</p>
 
 <p>Une telle organisation est utile pour naviguer, mais elle a un certain
 nombre d'inconvénients lorsque la totalité de la documentation doit être
-imprimée. <strong>Amaya</strong> règle ce problème à l'aide de la fonction
-"construire un livre". Il vous suffit d'utiliser les liens tapés pour lier
-les chapitres : associez un attribut <code>rel="chapter"</code> ou
+imprimée. Amaya règle ce problème à l'aide de la commande <strong>Construire
+un livre</strong>. Il vous suffit d'utiliser les liens tapés pour lier les
+chapitres : associez un attribut <code>rel="chapter"</code> ou
 <code>rel="subdocument</code>" à l'ancre lien (sélectionnez l'élément
 <code>A</code> et utilisez le menu <strong><a
 href="Attributes.html.fr#L1073">Attributs</a></strong>).</p>
@@ -51,18 +54,18 @@ href="Attributes.html.fr#L1073">Attributs</a></strong>).</p>
 </ul>
 
 <p>Pour référencer une sous-partie d'un document, la méthode habituelle est
-de définir un élément DIV qui délimite la partie du document cible que vous
-voulez inclure et lier <span xml:lang="fr" lang="fr"></span>à cet <a
-href="Links.html.fr#target1">élément cible.</a></p>
+de définir un élément <code>div</code> qui délimite la partie du document
+cible que vous voulez inclure et lier <span xml:lang="fr" lang="fr"></span>à
+cet <a href="Links.html.fr#target1">élément cible.</a></p>
 
-<p>Ensuite, lorsque vous activez la fonction <strong>Construire un
-livre</strong>, tous les blocs (éléments <code>LI</code> dans l'exemple plus
+<p>Ensuite, lorsque vous activez la commande <strong>Construire un
+livre</strong>, tous les blocs (éléments <code>li</code> dans l'exemple plus
 haut) contenant un lien vers un chapitre seront remplacés par les pages Web
 correspondantes (ou sous-parties de pages Web). Vous obtiendrez ainsi un
 unique document contenant la totalité de la collection :</p>
 <ul>
-  <li><p>Quand un lien référence une page Web, tout le contenu BODY du
-    document cible est inclus.</p>
+  <li><p>Quand un lien référence une page Web, tout le contenu
+    <code>body</code> du document cible est inclus.</p>
   </li>
   <li><p>Si le lien référence un élément cible, cet élément et son contenu
     sont inclus.</p>
@@ -72,20 +75,22 @@ unique document contenant la totalité de la collection :</p>
   </li>
 </ul>
 
-<p>Avant chaque remplacement, la fonction "construire un livre" engendre un
-nouvel élément DIV avec un attribut ID. Ainsi, toutes les parties ajoutées
-sont clairement séparées.</p>
+<p>Avant chaque remplacement, la commande <strong>Construire un
+livre</strong> engendre un nouvel élément <code>div</code> avec un attribut
+<code>id</code>. Ainsi, toutes les parties ajoutées sont clairement
+séparées.</p>
 
 <p>Les parties précédentes du nouveau document engendré peuvent contenir des
 liens, des ancres cibles et des éléments cibles. Pendant cette opération,
-Amaya vérifie que chaque valeur des attributs NAME et ID reste unique dans le
-nouveau document. Si besoin est, Amaya change ces valeurs et met à jour les
-liens relatifs. Au même moment, les liens externes sont automatiquement mis à
-jour quand ils se réfèrent à un document externe ou à un sous-document
-nouvellement inclus. Par exemple, si un lien pointe vers un document entier
-externe, ce lien référence l'élément incluant DIV parés l'opération. Ainsi,
-le nouveau document unique contenant la totalité de la collection reste
-cohérent.</p>
+Amaya vérifie que chaque valeur des attributs <code>name</code> et
+<code>id</code> reste unique dans le nouveau document. Si besoin est, Amaya
+change ces valeurs et met à jour les liens relatifs. Au même moment, les
+liens externes sont automatiquement mis à jour quand ils se réfèrent à un
+document externe ou à un sous-document nouvellement inclus. Par exemple, si
+un lien pointe vers un document entier externe, ce lien référence l'élément
+<code>div</code> engendré par la commande <strong>Construire un
+livre</strong>. Ainsi, le nouveau document unique contient la totalité de la
+collection et reste cohérent.</p>
 
 <p>Ce gros document peut être <a href="Numbering.html.fr#L1064">numéroté</a>
 et <a href="Printing.html.fr#L1062">imprimé</a> avec une table des matières

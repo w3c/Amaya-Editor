@@ -112,8 +112,7 @@ invocation est redirigée vers l'instance active. Ce comportement peut être
 modifié en forçant la variable d'environnement
 <strong>AMAYA_MULTIPLE_INSTANCES=yes</strong>.</p>
 
-<h3 id="propos"><a name="Conventions">A propos des répertoires de
-configuration</a></h3>
+<h3 id="propos">A propos des répertoires de configuration</h3>
 
 <p>Amaya utilise un certain nombre de répertoires par défaut pour conserver
 les informations de configuration.</p>

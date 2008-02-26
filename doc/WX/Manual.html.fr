@@ -319,7 +319,7 @@ décrits.</p>
     texte</a></li>
 </ul>
 <ul>
-  <li><a href="SpellChecking.html.fr#L47">Vérifier l'orthographe</a>
+  <li><a href="SpellChecking.html.fr#L47">Vérifier l'orthographe</a> 
     <ul>
       <li><a href="SpellChecking.html.fr#dictionnai">Le dictionnaire
         personnel</a></li>
@@ -332,7 +332,7 @@ décrits.</p>
 </ul>
 <ul>
   <li><a href="Publishing.html.fr#Sauver2">Enregistrer et publier des
-    documents</a>
+    documents</a> 
     <ul>
       <li><a href="Publishing.html.fr#commande">La commande
       enregistrer</a></li>
@@ -348,10 +348,10 @@ décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Printing.html.fr#Imprimer">Imprimer des documents</a>
+  <li><a href="Printing.html.fr#Imprimer">Imprimer des documents</a> 
     <ul>
       <li><a href="Printing.html.fr#commande">La commande Paramétrer et
-        imprimer</a>
+        imprimer</a> 
         <ul>
           <li><a href="Printing.html.fr#Plates-for">Plates-formes
           Linux</a></li>
@@ -369,6 +369,10 @@ décrits.</p>
   <li><a href="Numbering.html.fr#roter">Numéroter les sections</a></li>
   <li><a href="Numbering.html.fr#Engendrer">Engendrer la table des
     matières</a></li>
+</ul>
+<ul>
+  <li><a href="MakeBook.html.fr#Assembler">Assembler des collections de
+    document</a></li>
 </ul>
 
 <p></p>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
@@ -12,7 +12,8 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" />
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
+/> 
 
 <p class="nav"><a href="MakeBook.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -20,31 +21,42 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 <a href="Configure.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
+
+<div id="page_body">
+
+<div class="toc">
 <ul>
-  <li><a href="Annotations.html.fr#def">Définition</a></li>
-  <li><a href="Annotations.html.fr#Local">Annotations locales et
-  distantes</a></li>
-  <li><a href="Annotations.html.fr#Annotation">Menu des annotations</a></li>
-  <li><a href="Annotations.html.fr#Configurat">Menu de configuration pour les
-    annotations</a></li>
-  <li><a href="Annotations.html.fr#Creating">Créer une annotation</a></li>
-  <li><a href="Annotations.html.fr#Deleting1">Supprimer une
-  annotation</a></li>
-  <li><a href="Annotations.html.fr#Loading">Charger et afficher une
-    annotations</a></li>
-  <li><a href="Annotations.html.fr#Navigating">Activer des
-  annotations</a></li>
-  <li><a href="Annotations.html.fr#Moving">Déplacer des annotations</a></li>
-  <li><a href="#Threads">Répondre à une annotation / fils de
-  discussion</a></li>
-  <li><a href="Annotations.html.fr#Issues1">Problèmes relatifs aux
-    annotations et aux documents modifiés</a></li>
+  <li><a href="#annotation">Les annotations</a>
+    <ul>
+      <li><a href="#def">Qu'est-ce qu'une annotation ?</a></li>
+      <li><a href="#Local">Annotations locales et distantes</a>
+        <ul>
+          <li><a href="#Annotation">Annotations distantes</a></li>
+        </ul>
+      </li>
+      <li><a href="#Creating">Créer une annotation</a></li>
+      <li><a href="#Enregister">Enregister une annotation</a></li>
+      <li><a href="#Deleting1">Détruire une annotation</a></li>
+      <li><a href="#Loading">Charger et présenter les annotations</a></li>
+      <li><a href="#Navigating">Activer des annotations</a></li>
+      <li><a href="#Moving">Déplacer des annotations</a></li>
+      <li><a href="#Threads">Répondre aux annotations / fils de
+      discussion</a></li>
+    </ul>
+  </li>
+  <li><a href="#Interface">Interface utilisateur</a></li>
+  <li><a href="#Probl">Problèmes connus: fils incomplets</a>
+    <ul>
+      <li><a href="#Issues1">Problèmes relatifs aux annotations et aux
+        documents modifiés</a></li>
+    </ul>
+  </li>
 </ul>
+</div>
 
-<div id="Annotations">
-<h2><a name="L1065">Les annotations dans Amaya</a></h2>
+<h2 id="annotation">Les annotations</h2>
 
-<h3 id="def">Définition</h3>
+<h3 id="def">Qu'est-ce qu'une annotation ?</h3>
 
 <p>Une annotation est un commentaire, une note, une explication ou tout autre
 remarque externe qui peut être attachée à un document web ou à une partie de
@@ -57,18 +69,14 @@ href="http://www.w3.org/2000/10/annotation-ns">schéma</a> <a
 href="http://www.w3.org/RDF/">RDF</a> pour décrire les annotations.</p>
 
 <p>Les annotations peuvent être enregistrées localement ou sur un ou
-plusieurs <strong>serveur(s) d'annotations</strong>. Lorsqu'un document est
-chargé, Amaya interroge chacun de ces serveurs et recherche les annotations
-relatives à ce document. Chaque annotation est ensuite représentée par
-l'icône suivante <img src="../images/annot.png"
-alt="Crayon representant une annotation" /> qui est ajoutée au document (voir
-figure ci-dessous). Lorsque l'utilisateur clique sur l'icône d'annotation, le
-passage annoté est mis en évidence. Si l'utilisateur double-clique sur
-l'icône alors le contenu de l'annotation ainsi que les autres méta-données
-lui sont présentées dans une nouvelle fenêtre.</p>
-
-<p style="text-align: center"><img src="../images/annotationicon.png"
-alt="annotation icon (= pencil)" /></p>
+plusieurs <em>serveur(s) d'annotations</em>. Lorsqu'un document est chargé,
+Amaya interroge chacun de ces serveurs et recherche les annotations relatives
+à ce document. Chaque annotation est ensuite représentée par l'icône suivante
+<img src="../images/annot.png" alt="Crayon representant une annotation" />
+qui est ajoutée au document. Lorsque l'utilisateur clique sur l'icône
+d'annotation, le passage annoté est mis en évidence. Si l'utilisateur
+double-clique sur l'icône alors le contenu de l'annotation ainsi que les
+autres méta-données lui sont présentées dans une nouvelle fenêtre.</p>
 
 <p>Une annotation possède plusieurs propriétés :</p>
 <ul>
@@ -82,44 +90,42 @@ alt="annotation icon (= pencil)" /></p>
 <h3 id="Local">Annotations locales et distantes</h3>
 
 <p>Amaya peut enregistrer les annotations dans un fichier local (annotations
-locales) ou sur le Web (annotations distantes). Les <strong>annotations
-distantes</strong> sont enregistrées sur des serveurs d'annotations et
-peuvent être chargées ou enregistrées par quiconque ayant les droits d'accès
-correspondants, comme pour les autres documents HTML. Les annotations
-distantes sont dites <strong>partagées</strong> ou <strong>publiques</strong>
-parce qu'elles peuvent être vues par plusieurs personnes. Si vous désirez
-installer votre propre serveur d'annotations, veuillez vous référer au
-document "<a
+locales) ou sur le Web (annotations distantes).</p>
+
+<p>Les <em>annotations locales</em> ne nécessitent pas l'utilisation de
+serveur. Elles sont enregistrées sous le répertoire <a
+href="Configure.html.fr#pertoire1">AmayaHome</a>, dans un répertoire
+spécifique appelé <code>annotations</code> et peuvent être visualisées
+uniquement par leur auteur (selon les droits d'accès en fonction). </p>
+
+<p>Ce répertoire comporte trois sortes de fichiers:</p>
+<ul>
+  <li><code>annot.index :</code> les URL associées aux fichiers dans lesquels
+    les méta-données des annotations sont sauvegardées.</li>
+  <li><code>index + random suffix :</code> un fichier contenant les
+    méta-données d'une annotation relative à une URL. Les méta-données sont
+    spécifiées avec RDF.</li>
+  <li><code>annot + random suffix.html :</code> contient le corps de
+    l'annotation enregistrée en XHTML.</li>
+</ul>
+
+<p>Un utilisateur peut à tout moment transformer une <em>annotation
+locale</em> en une annotation partagée en utilisant l'entrée
+<strong>Enregistrer une annotation</strong> du sous-menu
+<strong>Outils/Annotations</strong>. Si cette commande réussit, l'annotation
+est supprimée localement et transférée sur un serveur d'annotations. </p>
+
+<h4 id="Annotation">Annotations distantes</h4>
+
+<p>Les <em>annotations distantes</em> sont enregistrées sur des serveurs
+d'annotations et peuvent être chargées ou enregistrées par quiconque ayant
+les droits d'accès correspondants, comme pour les autres documents HTML.</p>
+
+<p>Les annotations distantes sont dites partagées ou publiques parce qu'elles
+peuvent être vues par plusieurs personnes. Si vous désirez installer votre
+propre serveur d'annotations, veuillez vous référer au document "<a
 href="http://www.w3.org/1999/02/26-modules/User/Annotations-HOWTO.html">Annotation-Server
 HOWTO</a>".</p>
-
-<p>Les <strong>annotations locales</strong> ne nécessitent pas l'utilisation
-de serveur. Elles sont enregistrées sous le répertoire de configuration
-d'Amaya, dans un répertoire spécifique appelé <code>annotations</code> et
-peuvent être visualisées uniquement par leur auteur (selon les droits d'accès
-en fonction). Ce répertoire comporte trois sortes de fichiers:</p>
-<dl>
-  <dt><strong>annot.index</strong></dt>
-    <dd>les URL associées aux fichiers dans lesquels les méta-données des
-      annotations sont sauvegardées.</dd>
-  <dt><strong>index + random suffix</strong></dt>
-    <dd>un fichier contenant les méta-données d'une annotation relative à une
-      URL. Les méta-données sont spécifiées avec RDF.</dd>
-  <dt><strong>annot + random suffix.html</strong></dt>
-    <dd>contient le corps de l'annotation enregistrée en XHTML.</dd>
-</dl>
-
-<p>Un utilisateur peut à tout moment transformer une annotation locale en une
-annotation partagée en utilisant l'entrée <strong>Enregistrer une
-annotation</strong> du menu <strong>Annotations</strong>. Si cette commande
-réussit, l'annotation est supprimée localement et transférée sur un serveur
-d'annotations. La section suivante décrit comment définir le nom du serveur
-d'annotations sur lequel les annotations distantes sont enregistrées.</p>
-
-<h3 id="Annotation">Menu des annotations</h3>
-
-<p>La plupart des commandes utilisées pour la gestion des annotations se
-trouvent dans le menu d'annotations ou dans le menu de préférences.</p>
 
 <h3 id="Creating">Créer une annotation</h3>
 
@@ -128,64 +134,63 @@ s'appliquent sur le document entier et celles qui s'appliquent sur une partie
 ou une sélection du document.</p>
 <ul>
   <li>Pour annoter un document entier, sélectionnez l'entrée <strong>Annoter
-    le document</strong> du menu <strong>Annotations</strong>.</li>
+    le document</strong> du sous-menu
+  <strong>Outils/Annotations</strong>.</li>
   <li>Pour annoter une partie, faire la sélection désirée et sélectionnez
     l'entrée <strong>Annoter la sélection</strong>.</li>
 </ul>
 
-<p>Dans tous les cas, une fenêtre d'annotation s'affichera (figure suivante).
-Le contenu de cette fenêtre montre les méta-données de l'annotation à
-l'intérieur d'un cadre et le <strong>corps</strong> de l'annotation à
-l'extérieur.</p>
-
-<p style="text-align: center"><img src="../images/annotationwindow.png"
-alt="annotation window" /></p>
-
-<p></p>
+<p>Dans tous les cas, un document d'annotation s'affiche, initialisé avec les
+méta-données de l'annotation et un corps <strong>d</strong>'annotation
+vide.</p>
 
 <p>Les méta-données actuellement définies pour une annotation indiquent le
 <strong>nom de son auteur</strong>, le <strong>titre du document
 annoté</strong> (également appelé document source), le <strong>type de
 l'annotation</strong>, sa <strong>date de création</strong> et la
-<strong>date de sa dernière modification</strong>. Certaines de ces
-méta-données ont des propriétés spécifiques. Ainsi, le champ <strong>document
-source</strong> est également un lien qui pointe sur le texte annoté. Si
-l'utilisateur double-clique dessus (comme pour tout lien dans Amaya) alors le
-document annoté est affiché en premier plan et le texte annoté est mis en
-évidence. La méta-donnée <strong>type de l'annotation</strong> permet à
-l'utilisateur de classer les annotations et de changer leur type. Un
-double-clic sur ce champ montre la liste des types disponibles. Nous
-préciserons plus loin comment un utilisateur peut définir son propre type
-d'annotation. Enfin, la méta-donnée <strong>date de dernière
-modification</strong> est automatiquement mise à jour lorsque l'annotation
-est sauvegardée.</p>
+<strong>date de sa dernière modification</strong>.</p>
+
+<p>Certaines de ces méta-données ont des propriétés spécifiques. </p>
+<ul>
+  <li>Le champ <strong>Document source</strong> est un lien qui pointe sur le
+    texte annoté. Si l'utilisateur double-clique dessus (comme pour tout lien
+    dans Amaya) alors le document annoté est affiché en premier plan et le
+    texte annoté est mis en évidence.</li>
+  <li>La méta-donnée <strong>Type de l'annotation</strong> permet à
+    l'utilisateur de classer les annotations et de changer leur type. Un
+    double-clic sur ce champ montre la liste des types disponibles. Nous
+    préciserons plus loin comment un utilisateur peut définir son propre type
+    d'annotation.</li>
+  <li>Enfin, la méta-donnée <strong>Date de dernière modification</strong>
+    est automatiquement mise à jour lorsque l'annotation est sauvegardée.</li>
+</ul>
 
 <p>Sous l'entête de l'annotation se trouve le <strong>corps</strong> de
 celle-ci. Il montre son contenu courant et peut être édité comme n'importe
-quel document HTML. Il est à noter que la version courante d'Amaya ne
-supporte pas les images dans le corps des annotations et que certaines des
-fonctionnalités de celles-ci ne sont pas encore disponibles, comme la vue
-structure par exemple.</p>
+quel document HTML. </p>
 
-<p>Enregistrer une annotation revient à enregistrer n'importe quel autre document,
-l'utilisateur doit juste sélectionner l'entrée <strong>Enregistrer</strong> du
-menu <strong>Fichier</strong> ou cliquer sur le bouton équivalent ou bien
-activer le raccourci-clavier correspondant. Les annotations locales sont
-sauvées sous le répertoire des annotations et les annotations distantes sont
-sauvées sous le serveur d'annotation correspondant, si l'utilisateur possède
-un droit d'écriture dessus.</p>
+<h3 id="Enregister">Enregister une annotation</h3>
+
+<p>Enregistrer une annotation revient à enregistrer n'importe quel autre
+document, l'utilisateur doit juste sélectionner l'entrée
+<strong>Enregistrer</strong> du menu <strong>Fichier</strong> ou cliquer sur
+le bouton équivalent ou bien activer le raccourci-clavier correspondant.</p>
+
+<p>Les annotations locales sont sauvées sous le répertoire des annotations et
+les annotations distantes sont sauvées sous le serveur d'annotation
+correspondant, si l'utilisateur possède un droit d'écriture dessus.</p>
 
 <p>Pour transformer une annotation locale en une annotation publique
-(distante), l'utilisateur doit utiliser l'entrée <strong>Enregistrer les
-annotations</strong>, elles seront alors enregistrées sous le serveur défini
-dans le menu de configuration puis, en cas de succès, supprimées du
-répertoire local. La sauvegarde des annotations se fera alors directement sur
-le serveur d'annotations. Dans la version initiale des annotations,
-l'opération inverse (transfert d'une annotation distante dans le répertoire
-local) n'est pas supportée .</p>
+(distante), l'utilisateur doit utiliser l'entrée <strong>Enregistrer sur le
+serveur</strong>. Elle sera alors enregistrée sous le serveur défini dans le
+menu de Préférences puis, en cas de succès, supprimées du répertoire
+local.</p>
+
+<p>La sauvegarde des annotations se fera alors directement sur le serveur
+d'annotations.</p>
 
 <p>Certaines commandes accessibles dans la vue principale d'Amaya sont
-également disponibles pour les annotation comme par exemple le commande
+également disponibles pour les annotations comme par exemple le commande
 <strong>Imprimer</strong> qui imprime le corps de l'annotation ou la commande
 <strong>Recharger</strong>.</p>
 
@@ -223,9 +228,6 @@ exemple de navigation d'un lien d'annotation vers un autre même si
 l'annotation ne peut être vue par tous les utilisateurs à cause d'une
 indisponibilité ou des caractéristiques du support utilisé.</p>
 
-<p style="text-align: center"><img src="../images/linkwindow.png"
-alt="Link window shows annotations" /></p>
-
 <h3 id="Moving">Déplacer des annotations</h3>
 
 <p>Amaya vous permet également de déplacer une annotation vers un autre
@@ -240,9 +242,10 @@ ouvrir une fenêtre d'annotation et sélectionner une partie du document
 annoté. Puis, dans la fenêtre d'annotation, appeler le menu
 <strong>Annotations/Move to selection</strong>. Amaya déplace alors l'icône
 de l'annotation vers la partie sélectionnée et considère l'annotation comme
-modifiée. Pour rendre ce changement effectif, vous devrez l'enregistrer. De la
-même manière que pour la création, vous pouvez déplacer une annotation vers
-la position courante du curseur sans avoir besoin de faire la sélection.</p>
+modifiée. Pour rendre ce changement effectif, vous devrez l'enregistrer. De
+la même manière que pour la création, vous pouvez déplacer une annotation
+vers la position courante du curseur sans avoir besoin de faire la
+sélection.</p>
 
 <p>Vous pouvez aussi mémoriser la position où vous voulez déplacer une
 annotation, par exemple pour déplacer plusieurs annotations vers le même
@@ -252,8 +255,8 @@ utiliser le menu <strong>Annotations/Enregistrer la sélection comme
 XPointer</strong> pour créer un XPointer représentant cette sélection. Enfin,
 dans la fenêtre d'annotation, utiliser le menu <strong>Annotations/Déplacer
 sur le XPointer enregistré</strong> pour déplacer l'annotation à la nouvelle
-position. Comme précédemment, vous devrez enregistrer l'annotation pour rendre ce
-changement effectif.</p>
+position. Comme précédemment, vous devrez enregistrer l'annotation pour
+rendre ce changement effectif.</p>
 
 <h3 id="Threads">Répondre aux annotations / fils de discussion</h3>
 
@@ -269,18 +272,16 @@ le même manière que ceux d'une fenêtre d'annotation (voir <a
 href="#Creating">Créer une annotation</a>).</p>
 
 <p>Quand la réponse est terminée, l'utilisateur peut la poster sur un serveur
-par à la commande <strong>Enregistrer sur le serveur</strong> ou l'enregistrer
-localement par la commande <strong>Fichier/Enregistrer</strong>. La commande
+par à la commande <strong>Enregistrer sur le serveur</strong> ou
+l'enregistrer localement par la commande
+<strong>Fichier/Enregistrer</strong>. La commande
 <strong>Annotations/Détruire</strong> supprime la réponse.</p>
 
 <p>Les réponses peuvent également être annotées comme n'importe quel document
 comme expliqué dans la section <a href="#Creating">Créer une
 annotation</a>.</p>
 
-<h2>Interface utilisateur</h2>
-
-<p><img alt="An annotation with a discussion thread"
-src="../images/threads.png" /></p>
+<h2 id="Interface">Interface utilisateur</h2>
 
 <p>Toutes les réponses relatives à une même annotation sont affichées en
 dessous de celle-ci, dans une section "fil". Chaque élément du fil donne la
@@ -290,7 +291,7 @@ réponse sélectionnée est mise en sur-brillance et présentée dans une nouvelle
 fenêtre de réponse. Lorsqu'une autre réponse est sélectionnée, la même
 fenêtre de réponse est utilisée.</p>
 
-<h2>Problèmes connus: fils incomplets</h2>
+<h2 id="Probl">Problèmes connus: fils incomplets</h2>
 
 <p>Il n'y a pas encore de contrôle pour déterminer quelle réponse devrait
 être postée. Dans l'absolu, il ne devrait pas être possible de poster une
