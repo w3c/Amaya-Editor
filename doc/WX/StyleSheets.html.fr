@@ -37,114 +37,115 @@ permettent de changer globalement la présentation du document courant.</p>
 <p class="ProcedureCaption">Pour changer la présentation du document avec un
 thème  :</p>
 <ul>
-  <li>Sélectionnez l'entrée <strong>Classique</strong> ou
-    <strong>Moderne</strong> dans la liste des thèmes proposés pour l'outil
-    <strong>Style</strong>,</li>
-  <li>ou sélectionnez l'entrée <strong>Classique</strong> ou
-    <strong>Moderne</strong> dans le sous-menu
-  <strong>Format/Thème</strong>.</li>
+  <li>Sélectionnez <strong>Classique</strong> ou <strong>Moderne</strong>
+    dans la liste des thèmes proposés par l'outil <strong>Style</strong>,</li>
+  <li>ou sélectionnez <strong>Classique</strong> ou <strong>Moderne</strong>
+    dans le sous-menu <strong>Format/Thème</strong>.</li>
 </ul>
 
 <p class="ProcedureCaption">Pour retirer le thème courant :</p>
 <ul>
-  <li>Sélectionnez l'entrée <strong>Pas de thème</strong> dans la liste des
-    thèmes proposés pour l'outil <strong>Style</strong>,</li>
-  <li>ou sélectionnez l'entrée <strong>Pas de thème</strong> dans le
-    sous-menu <strong>Format/Thème</strong>.</li>
+  <li>Sélectionnez <strong>Pas de thème</strong> dans la liste des thèmes
+    proposés par l'outil <strong>Style</strong>,</li>
+  <li>ou sélectionnez <strong>Pas de thème</strong> dans le sous-menu
+    <strong>Format/Thème</strong>.</li>
 </ul>
 
-<p>Tous ces changements peuvent être défaits.</p>
+<p>Tous ces changements peuvent être défaits
+(<strong>Édition/Défaire</strong> ou <kbd>Ctrl-z</kbd>).</p>
 
 <p>Quand un thème est appliqué à un document, Amaya engendre un élément
 <code>style</code> dont le contenu vient des fichiers
 <code>Amaya/config/Classis.css</code> ou
-<code>Amaya/config/Modern.css</code>. L'utilisateur peut créer ses propres
-fichier Classic.css et Modern.css dans son répertoire <a
-href="Configure.html.fr#pertoire1">AmayaHome</a>.</p>
+<code>Amaya/config/Modern.css</code>. Vous pouvez créer vos propres fichier
+<code>Classic.css</code> et <code>Modern.css</code> dans son répertoire <a
+href="Configure.html.fr#pertoire1">AmayaHome</a>. Si vous le faites, Amaya
+utilisera ces fichiers à la place des fichiers par défaut du répertoire
+<code>config</code>.</p>
 
 <h3 id="Appliquer1">Appliquer du style spécifique</h3>
 
-<p>Certains styles comme la couleur du texte, la couleur de fond, la police
-de caractères, l'alignement, l'interligne, ou l'indentation peuvent  être
-appliqués à une portion de texte ou un élément complet avec l'outil
-<strong>Style</strong> ou les sous-menus correspondants du menu
+<p>Certaines propriétés de style comme la couleur du texte, la couleur de
+fond, la police de caractères, l'alignement, l'interligne, ou l'indentation
+peuvent  être appliqués à une portion de texte ou un élément complet avec
+l'outil <strong>Style</strong> ou avec les sous-menus du menu
 <strong>Format</strong>.</p>
 
 <p class="ProcedureCaption">Pour appliquer un style spécifique  :</p>
 <ol>
   <li>Sélectionnez un fragment de texte ou un élément.<br />
-    Pour sélectionner un élément, vous devez cliquer dans l'élément, puis
-    utiliser la touche <kbd>F2</kbd> jusqu'à ce que la ligne en bas de la
-    fenêtre affiche son type en première position.</li>
-  <li>Choisissez la bonne entrée dans l'outil <strong>Style</strong> ou dans
-    le menu Format. 
-    <p>L'outil <strong>Style</strong> propose deux boutons pour la couleur du
-    texte et la couleur de fond : le premier permet d'appliquer la couleur
-    visualisée alors que le second permet de choisir et appliquer une autre
-    couleur.</p>
-    <p>Les entrées polices et taille de caractères sont les seules entrées
-    mises à jour quand la sélection change.</p>
+    Pour sélectionner un élément, cliquez dans l'élément, puis utiliser la
+    touche <kbd>F2</kbd> jusqu'à ce que la ligne en bas de la fenêtre affiche
+    le type de l'élément voulu en première position.</li>
+  <li>Choisissez dans l'outil <strong>Style</strong> ou dans le menu
+    <strong>Format</strong> l'entrée correspondant à la propriété de style
+    qui vous intéresse.
+    <p>L'outil <strong>Style</strong> propose deux boutons pour chacune des
+    couleurs (couleur du texte et couleur de fond). Le premier bouton de
+    chaque paire permet d'appliquer la couleur visualisée alors ; le second
+    permet de choisir une autre couleur et de l'appliquer.</p>
+    <p>Les entrées polices et taille de caractères sont les seules mises à
+    jour en fonction de la sélection.</p>
   </li>
 </ol>
 
 <p class="ProcedureCaption">Pour retirer un style spécifique :</p>
 <ul>
-  <li>L'outil <strong>Style</strong> permet pas de retirer le style
+  <li>L'outil <strong>Style</strong> ne permet pas de retirer le style
     spécifique. Il faut donc utiliser les entrées <strong>Pas de
     couleur</strong> ou <strong>Défaut</strong> des sous-menus du menu
     <strong>Format</strong>.</li>
-  <li>Dans la version avancée d'Amaya, l'utilisateur peut directement <a
+  <li>Dans le profil d'édition avancée, vous pouvez directement <a
     href="Attributes.html.fr">éditer l'attribut</a> <code>style</code>.</li>
 </ul>
 
 <h3 id="Associer">Associer une classe à un élément</h3>
 
-<p>Toutes les classes disponibles pour un document sont listées dans l'outil
-<strong>Appliquer classe</strong>.</p>
+<p>Toutes les valeurs disponibles pour l'attribut <code>class</code> dans le
+document sont listées dans l'outil <strong>Appliquer classe</strong>.</p>
 
 <p class="ProcedureCaption">Pour appliquer une classe à un élément  :</p>
 <ol>
-  <li>Choisissez la bonne entrée dans l'outil <strong>Appliquer
-    classe</strong>.</li>
+  <li>Choisissez la valeur dans l'outil <strong>Appliquer
+  classe</strong>.</li>
   <li>Si vous voulez sélectionner la classe appliquée à un autre élément,
     vous devez sélectionner cet élément, puis cliquer sur le bouton <img
     alt="Refresh" src="../../resources/icons/16x16/refresh.png" /> . La liste
-    d'<strong>Appliquer classe</strong> est mise à jour et la classe
-    appliquée est sélectionnée.</li>
+    <strong>Appliquer classe</strong> est mise à jour et la classe de cet
+    élément est sélectionnée.</li>
   <li>Sélectionnez un fragment de texte ou un élément.<br />
-    Pour sélectionner un élément, vous devez cliquer dans l'élément, puis
-    utiliser la touche <kbd>F2</kbd> jusqu'à ce que la ligne en bas de la
-    fenêtre affiche son type en première position.</li>
+    Pour sélectionner un élément, cliquez dans l'élément, puis utiliser la
+    touche <kbd>F2</kbd> jusqu'à ce que la ligne en bas de la fenêtre affiche
+    le type de l'élément en première position.</li>
   <li>Cliquer sur le bouton <img alt="ok"
     src="../../resources/icons/16x16/ok.png" /> pour appliquer la classe à la
     sélection courante.<br />
-    Si un fragment de texte est sélectionné, Amaya engendrera un élément
+    Si un fragment de texte est sélectionné, Amaya engendre un élément
     <code>span</code> pour englober le texte courant et l'attribut
-    <code>class</code> sera attaché à ce nouvel élément
-  <code>span</code>.</li>
+    <code>class</code> est attaché à ce nouvel élément <code>span</code>.</li>
 </ol>
 
-<p>Pour associer une classe ( attribut <code>class</code>) à un élément, vous
+<p>Pour associer une classe (attribut <code>class</code>) à un élément, vous
 pouvez également utiliser l'outil <a
-href="Attributes.html.fr#L1073"><strong>Attributs</strong></a>. Cet outil
-Attributs permet aussi de retirer l'attribut <code>class</code> d'un élément
-ou de le modifier (l'attribut <code>class</code> se manipule comme un autre
-attribut).</p>
+href="Attributes.html.fr#L1073"><strong>Attributs</strong></a> (dans le
+profil avancé seulement). Cet outil permet aussi de retirer l'attribut
+<code>class</code> d'un élément ou de le modifier (l'attribut
+<code>class</code> se manipule comme n'importe quel autre attribut).</p>
 
 <p class="ProcedureCaption">Pour retirer la classe d'un élément  :</p>
 <ul>
   <li>Vous pouvez éditer l'attribut <code>class</code> dans l'outils
     <strong>Attributs</strong>. 
-    <p>Quand l'élément est sélectionné, vous cliquez sur le [X] de l'entrée
-    pour supprimer l'attribut <code>class</code>, ou vous cliquez sur
-    l'entrée et éditez sa valeur puis confirmez avec le bouton appliquer
-    (<img alt="ok" src="../../resources/icons/16x16/ok.png" /> ).</p>
+    <p>Quand l'élément est sélectionné, cliquez sur le [X] de l'entrée pour
+    supprimer l'attribut <code>class</code>, ou cliquez sur l'entrée et
+    éditez sa valeur, puis confirmez avec le bouton appliquer <img alt="ok"
+    src="../../resources/icons/16x16/ok.png" />.</p>
   </li>
   <li>Vous pouvez aussi retirer ou éditer l'attribut <code>class</code> dans
-    la vue structure. 
-    <p>Pour retirer l'attribut <code>class</code>, vous cliquez dans la
-    valeur, <code><kbd>F2</kbd></code> pour sélectionner la valeur entière,
-    puis deux <kbd>Suppr</kbd> pour détruire l'attribut.</p>
+    la vue structure.
+    <p>Pour retirer l'attribut <code>class</code>, cliquez dans la valeur,
+    <code><kbd>F2</kbd></code> pour sélectionner la valeur entière, puis deux
+    <kbd>Suppr</kbd> pour détruire l'attribut.</p>
     <p></p>
   </li>
 </ul>
@@ -152,21 +153,21 @@ attribut).</p>
 <h3 id="L613"><a name="L1371" id="L1371">Créer des éléments de style
 HTML</a></h3>
 
-<p>HTML définit certains éléments de niveau de caractère qui permettent
+<p>HTML définit certains éléments de niveau caractère qui permettent
 d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
 <strong>Insertion</strong> permettent d'éditer ces éléments HTML.</p>
 
 <h4 id="Types">Eléments type information</h4>
 
-<p>La commande<strong>Types information</strong> du menu
+<p>La commande <strong>Types information</strong> du menu
 <strong>Insertion</strong> présente un sous-menu offrant un choix d'éléments
 HTML qui définissent des styles abstraits.</p>
 
 <p class="ProcedureCaption">Pour appliquer un des éléments type
 information :</p>
 <ol>
-  <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
-  <li>Choisissez une commande dans ce menu <strong>Types
+  <li>Sélectionnez une chaîne de caractères.</li>
+  <li>Choisissez une commande dans le menu <strong>Types
     information</strong>. 
     <p>La chaîne de caractères sélectionnée reçoit le style correspondant.</p>
   </li>
@@ -191,8 +192,8 @@ texte.</p>
 
 <p class="ProcedureCaption">Pour appliquer un des éléments caractères :</p>
 <ol>
-  <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
-  <li>Choisissez une commande dans ce menu <strong>Eléments
+  <li>Sélectionnez une chaîne de caractères.</li>
+  <li>Choisissez une commande dans le menu <strong>Eléments
     caractères</strong>. 
     <p>La chaîne de caractères sélectionnée reçoit le style correspondant.</p>
   </li>
@@ -211,11 +212,13 @@ caractères</strong> s'annulent si elles sont appliquées de nouveau.</p>
 
 <p class="ProcedureCaption">Pour supprimer un élément style :</p>
 <ol>
-  <li>Sélectionnez l'élément que vous voulez supprimer.</li>
+  <li>Sélectionnez la chaîne de caractères dont vous voulez supprimer le
+    style.</li>
   <li>Appliquez de nouveau la commande du sous-menu <strong>Types
     information</strong> ou <strong>Eléments caractères</strong> du menu
-    <strong>Insertion</strong>, ou dans l'outil <strong>Eléments</strong> :
-    <em>em</em> (<img src="../../resources/icons/16x16/XHTML_I.png"
+    <strong>Insertion</strong>, ou utilisez le bouton de l'outil
+    <strong>Eléments</strong> : <em>em</em> (<img
+    src="../../resources/icons/16x16/XHTML_I.png"
     alt="Bouton Mise en evidence" /> ), <strong>strong</strong> (<img
     src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />
     ), <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
@@ -228,37 +231,45 @@ caractères</strong> s'annulent si elles sont appliquées de nouveau.</p>
     src="../../resources/icons/16x16/XHTML_sub.png" /> ).</li>
 </ol>
 
+<p>Si vous voulez insérer un texte sans aucun style dans une chaîne de
+caractère stylée, placez le point d'insertion à la position désirée et
+activez la commande correspondant au style à retirer (sous-menu <strong>Types
+information</strong> ou <strong>Eléments caractères</strong> du menu
+<strong>Insertion</strong>, ou utilisez le bouton de l'outil
+<strong>Eléments</strong>).</p>
+
 <h3 id="L2881">Utiliser l'éditeur de style</h3>
 
 <p class="Note"><strong>Note :</strong> L'éditeur de style n'est pas
-disponible dans la version Lite d'Amaya</p>
+disponible dans le profil Lite d'Amaya</p>
 
-<p>L'entrée <strong>Style CSS</strong> du menu <strong>Format</strong>, ou le
-bouton <img alt="css" src="../../resources/icons/22x22/css.png" />, permet
-d'engendrer une liste de propriétés CSS. Cette entrée de menu affiche une
-boite de dialogue avec 4 différents onglets: Caractères, Couleurs, Boites,
-Format.</p>
+<p>L'entrée <strong>Editeur de style</strong> du menu
+<strong>Format</strong>, ou le bouton <img alt="css"
+src="../../resources/icons/22x22/css.png" /> de la barre de boutons, permet
+d'engendrer une liste de propriétés de style CSS, à l'aide d'une boite de
+dialogue avec 4 onglets : Caractères, Couleurs, Boites, Format.</p>
 
-<p>Quand l'utilisateur a positionne un ensemble de propriétés, il peut
-<strong>Appliquer</strong> ces propriétés à la sélection courante :</p>
+<p>Quand vous avez choisi un ensemble de propriétés, vous pouvez les
+<strong>Appliquer</strong> à la sélection courante :</p>
 <ul>
-  <li>Si la sélection se trouve dans une vue formatée, Amaya engendrera des
-    éléments <code>span</code> avec un attribut style ou un attribut style
-    sur l'élément courant, ou bien une simple mise à jour de l'attribut style
-    existant.</li>
+  <li>Si la sélection se trouve dans une vue formatée, Amaya engendre un
+    attribut style pour l'élément sélectionné, créant un élément
+    <code>span</code> lorsqu'une simple chaîne de caractères est
+  sélectionnée.</li>
   <li>Si la sélection se trouve dans une vue source ou dans un fichier CSS,
-    Amaya engendrera une chaîne de caractères à la position courante.</li>
+    Amaya engendre à la position courante la syntaxe CSS des propriétés que
+    vous avez choisies.</li>
 </ul>
 
 <p>Dans tous les cas, les adresses des images incluses dans la liste des
 propriétés (<code>background-image</code>, <code>list-style-image</code>)
-seront transformées en adresses relatives au document sélectionné.</p>
+sont transformées en adresses relatives au document.</p>
 
 <h3 id="feuilles1"><a name="feuilles">Les feuilles de style CSS externes et
 utilisateur</a></h3>
 
 <p class="Note"><strong>Note :</strong> Ces actions ne sont pas disponibles
-dans la version Lite d'Amaya</p>
+dans le profil Lite d'Amaya.</p>
 
 <p>Un document peut associer plusieurs feuilles de style externes qui sont
 chargées avec le document et lui sont appliquées.</p>
@@ -267,13 +278,13 @@ chargées avec le document et lui sont appliquées.</p>
 la même feuille de style s'applique à plusieurs documents affichés, Amaya ne
 charge qu'une seule instance de la feuille de style.</p>
 
-<p>L'utilisateur peut définir une feuille de style spécifique qui s'applique
-à tous les documents chargés. Cette feuille de style est appelée <em>feuille
-de style utilisateur</em>. c'est le fichier local <code>amaya.css</code>
-conservé dans l'environnement de l'utilisateur (le <a
-href="Configure.html.fr#AmayaHome">répertoire d'AmayaHome</a>).</p>
+<p>Vous pouvez définir une feuille de style spécifique qui s'applique à tous
+les documents que vous chargez. Cette feuille de style est appelée
+<em>feuille de style utilisateur</em>. C'est le fichier local
+<code>amaya.css</code> conservé dans votre environnement utilisateur (<a
+href="Configure.html.fr#AmayaHome">répertoire AmayaHome</a>).</p>
 
-<p>Par exemple si vous préférez afficher les document en Helvetica et
+<p>Par exemple, si vous préférez afficher les document en Helvetica et
 imprimer avec une police de caractères de petite taille, vous pouvez créer
 votre feuille de style utilisateur avec les règles CSS suivantes :</p>
 <pre>@media print {
@@ -286,25 +297,26 @@ votre feuille de style utilisateur avec les règles CSS suivantes :</p>
 <h4 id="L90"><a name="Managing">Gérer des feuilles de style CSS
 externes</a></h4>
 
-<p>Le menu <strong>Format</strong> donne accès à une série de commandes qui
-permettent de contrôler les feuilles de style CSS externes et de
-l'utilisateur :</p>
+<p>Le sous-menu <strong>Format/Feuilles de style</strong> donne accès à une
+série de commandes qui permettent de contrôler les feuilles de style CSS
+externes et de l'utilisateur.</p>
 <ul>
   <li>La commande <strong>Ajouter</strong> permet de lier une nouvelle
     feuille de style CSS à un document courant. 
     <p>Cette commande fait apparaître une boîte de dialogue :</p>
     <ul>
       <li>Si la feuille CSS cible est visualisée dans une autre fenêtre
-        d'Amaya , cliquez sur le bouton <strong>Clic</strong> puis n'importe
+        d'Amaya, cliquez sur le bouton <strong>Clic</strong> puis n'importe
         où dans la feuille CSS cible. Le lien est créé.</li>
-      <li>Si la feuille CSS cible est visualisée dans un autre onglet ,
+      <li>Si la feuille CSS cible est visualisée dans un autre onglet,
         cliquez sur le bouton <strong>Clic</strong> puis changez d'onglet et
         cliquez n'importe où dans la feuille CSS cible. Le lien est créé.</li>
       <li>Si la feuille CSS cible est locale vous pouvez utiliser le bouton
         <strong>Parcourir</strong> pour la sélectionner.</li>
-      <li>Sinon entrez l'URI (comme http://www.w3.org/file.css) la feuille
-        CSS cible et taper sur la touche <kbd>Entrée</kbd> pour confirmer. Le
-        lien est créé.</li>
+      <li>Sinon entrez l'URI (comme http://www.w3.org/file.css) de la feuille
+        CSS cible et tapez sur la touche <kbd>Entrée</kbd> pour confirmer (ou
+        cliquez sut le bouton <strong>Confirmer</strong>). Le lien est
+      créé.</li>
     </ul>
     <p></p>
   </li>
@@ -313,8 +325,8 @@ l'utilisateur :</p>
     <p></p>
   </li>
   <li>La commande <strong>Désactiver</strong> permet de supprimer les effets
-    d'une des feuilles de style actives du document courant. Cette commande
-    n'affecte en rien le lien CSS dans le document. 
+    d'une des feuilles de style active du document courant. Cette commande
+    n'affecte en rien le lien CSS dans le document. Elle l'ignore simplement.
     <p></p>
   </li>
   <li>La commande <strong>Réactiver</strong> permet de rétablir les effets
@@ -323,9 +335,9 @@ l'utilisateur :</p>
     <p></p>
   </li>
   <li>La commande <strong>Retirer</strong> permet de retirer une des feuilles
-    de style CSS externes. Cette commande agit comme la commande Désactiver.
-    En plus de cela, l'élément lien qui attache les feuilles de style CSS est
-    supprimé.</li>
+    de style CSS externes. Cette commande agit comme la commande Désactiver,
+    mais en plus, le lien qui attache la feuille de style CSS est
+  supprimé.</li>
 </ul>
 
 <p>Les commandes <strong>Ouvrir</strong>, <strong>Désactiver</strong> et
@@ -340,59 +352,58 @@ activer/désactiver, et ouvrir des feuilles de style.</p>
 
 <h3 id="Visualiser">Visualiser le style appliqué</h3>
 
-<p>S'il y a beaucoup de feuilles de style attachées à un document, il est
-difficile de comprendre pourquoi un élément est visualisé avec cette couleur
-ou ces marges, etc. Pour aider l'utilisateur, Amaya fournit une commande
-<strong>Montrer le style appliqué</strong> qui visualise dans une fenêtre
-externe les propriétés CSS appliquées au premier élément de la sélection
-courante.</p>
+<p>Lorsque de multiples feuilles de style sont attachées à un document, il
+est souvent difficile de comprendre pourquoi un élément est visualisé avec
+telle ou telle propriété de style. Pour vous aider dans cette situation,
+Amaya fournit la commande <strong>Format/Montrer le style appliqué</strong>
+qui visualise dans une fenêtre externe les propriétés CSS appliquées au
+premier élément de la sélection courante.</p>
 
-<p>L'utilisateur peut afficher le source CSS qui engendre chaque propriété en
-double (ou simple) cliquant sur la propriété. Aussi longtemps que la fenêtre
-est ouverte, Amaya met à jour le contenu de la fenêtre quand la sélection
-change.</p>
+<p>Vous pouvez alors afficher la règle CSS qui engendre chaque propriété en
+double-cliquant sur la propriété. Aussi longtemps que la fenêtre des
+propriétés CSS est ouverte, Amaya met à jour son contenu chaque fois que la
+sélection change.</p>
 
-<p>En appuyant sur la touche <kbd>F2</kbd>, l'utilisateur peut ainsi voir les
-propriétés CSS appliquées aux éléments englobants. Quand l'utilisateur
-modifie la sélection en sélectionnant dans le chemin de la barre d'état
-affiché en bas de la fenêtre, les propriétés CSS appliquées sont aussi mises
-à jour.</p>
+<p>En appuyant sur la touche <kbd>F2</kbd>, vous pouvez ainsi voir les
+propriétés CSS appliquées aux éléments englobants. Quand vous cahngez la
+sélection en sélectionnant dans le chemin de la barre d'état affiché en bas
+de la fenêtre, les propriétés CSS appliquées sont également mises à jour.</p>
 
 <h3 id="L554">Créer un style générique pour un élément ou une classe</h3>
 
-<p>Quand un attribut <strong>style</strong> a été associé à un élément, vous
+<p>Quand un attribut <code>style</code> a été associé à un élément, vous
 pouvez utiliser cet élément comme un modèle pour créer ou modifier une règle
-de style en utilisant la commande <strong>Créer une règle</strong>.</p>
+de style en utilisant la commande <strong>Format/Créer une règle</strong>.</p>
 
 <p class="ProcedureCaption">Pour créer un style générique pour un élément ou
 une classe :</p>
 <ol>
   <li>Sélectionnez l'élément que vous désirez utiliser comme modèle. Par
     défaut la sélection est mise sur la chaîne de caractères, et vous devez
-    utiliser la touche F2 pour sélectionner l''élément englobant. 
+    utiliser la touche <kbd>F2</kbd> pour sélectionner l''élément englobant. 
     <p class="Note"><strong>Note</strong> : Vous devez sélectionner un seul
     élément et cet élément doit avoir un attribut <code>style</code>.</p>
     <p></p>
   </li>
-  <li>Choisissez <strong>Créer une règle</strong> depuis le menu
-    <strong>Format</strong>. Une boîte de dialogue surgit et visualise une
-    liste de sélecteurs CSS. Cette liste inclus toutes les classes qui sont
+  <li>Choisissez <strong>Créer une règle</strong> dans le menu
+    <strong>Format</strong>. Une boîte de dialogue s'affiche et montre une
+    liste de sélecteurs CSS. Cette liste inclut toutes les classes qui sont
     définies pour le document courant (y compris les classes définies par les
     feuilles de style liées au document), ainsi que le type de l'élément
     auquel le style est associé. 
     <p></p>
   </li>
   <li>Choisissez un sélecteur dans cette liste ou entrez un nouveau nom de
-    classe et cliquer sur le bouton <strong>Confirmer</strong>. 
+    classe et cliquez sur le bouton <strong>Confirmer</strong>. 
     <p>Le style de l'élément sélectionné est désormais associé au sélecteur
-    choisi et l'attribut <code>style</code> est supprimé pour l'élément
-    sélectionné. Son contenu est déplacé à l'élément <code>STYLE</code>, dans
-    le <code>HEAD</code> document, et tous les éléments correspondant au
-    sélecteur sont visualisés dans le nouveau style.</p>
+    choisi et l'attribut <code>style</code> est supprimé de l'élément
+    sélectionné. Sa valeur est déplacée à l'élément <code>style</code>, dans
+    l'entête <code>head</code> du document, et tous les éléments
+    correspondant au sélecteur sont visualisés dans le nouveau style.</p>
   </li>
 </ol>
 
-<p>Quand vous avez créé une nouvelles classes avec la commande <strong>Créer
+<p>Quand vous avez créé une nouvelle classe avec la commande <strong>Créer
 une règle</strong>, cette classe est automatiquement ajoutée à la liste de
 l'outil <strong>Appliquer une classe</strong>.</p>
 </div>
