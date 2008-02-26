@@ -522,7 +522,7 @@ static void GetCacheConf (void)
   TtaGetEnvBoolean ("CACHE_PROTECTED_DOCS", &(GProp_Cache.CacheProtectedDocs));
   TtaGetEnvBoolean ("CACHE_DISCONNECTED_MODE", &(GProp_Cache.CacheDisconnectMode));
   TtaGetEnvBoolean ("CACHE_EXPIRE_IGNORE", &(GProp_Cache.CacheExpireIgnore));
-  GetEnvString ("CACHE_DIR", GProp_Cache.CacheDirectory);
+  GetEnvString ("CACHE_DIR", &(GProp_Cache.CacheDirectory[0]));
   TtaGetEnvInt ("CACHE_SIZE", &(GProp_Cache.CacheSize));
   TtaGetEnvInt ("MAX_CACHE_ENTRY_SIZE", &( GProp_Cache.MaxCacheFile));
 }
@@ -546,7 +546,7 @@ static void ValidateCacheConf (void)
   change += RemoveLastDirSep (GProp_Cache.CacheDirectory);
   if (GProp_Cache.CacheDirectory[0] == EOS)
     {
-      GetDefEnvString ("CACHE_DIR", GProp_Cache.CacheDirectory);
+      GetDefEnvString ("CACHE_DIR", &(GProp_Cache.CacheDirectory[0]));
       change = 1;
     }
 
@@ -599,7 +599,7 @@ static void GetDefaultCacheConf ()
                    CacheBase + mCacheOptions, 2);
   GetDefEnvToggle ("CACHE_EXPIRE_IGNORE", &(GProp_Cache.CacheExpireIgnore),
                    CacheBase + mCacheOptions, 3);
-  GetDefEnvString ("CACHE_DIR", GProp_Cache.CacheDirectory);
+  GetDefEnvString ("CACHE_DIR", &(GProp_Cache.CacheDirectory[0]));
   TtaGetDefEnvInt ("CACHE_SIZE", &(GProp_Cache.CacheSize));
   TtaGetDefEnvInt ("MAX_CACHE_ENTRY_SIZE", &( GProp_Cache.MaxCacheFile));
 }
@@ -769,8 +769,8 @@ void CacheConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 static void GetProxyConf (void)
 {
-  GetEnvString ("HTTP_PROXY", GProp_Proxy.HttpProxy);
-  GetEnvString ("PROXYDOMAIN", GProp_Proxy.ProxyDomain);
+  GetEnvString ("HTTP_PROXY", &(GProp_Proxy.HttpProxy[0]));
+  GetEnvString ("PROXYDOMAIN", &(GProp_Proxy.ProxyDomain[0]));
   TtaGetEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY",
                     &(GProp_Proxy.ProxyDomainIsOnlyProxy));
 }
@@ -797,8 +797,8 @@ static void SetProxyConf (void)
 static void GetDefaultProxyConf ()
 {
   /* read the default values */
-  GetDefEnvString ("HTTP_PROXY", GProp_Proxy.HttpProxy);
-  GetDefEnvString ("PROXYDOMAIN", GProp_Proxy.ProxyDomain);
+  GetDefEnvString ("HTTP_PROXY", &(GProp_Proxy.HttpProxy[0]));
+  GetDefEnvString ("PROXYDOMAIN", &(GProp_Proxy.ProxyDomain[0]));
   TtaGetDefEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY",
                        &(GProp_Proxy.ProxyDomainIsOnlyProxy));
 }
@@ -987,8 +987,8 @@ void GetGeneralConf (void)
   TtaGetEnvBoolean ("SHOW_SEQUENCES", &(GProp_General.S_Shortcuts));
   TtaGetEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", &(GProp_General.WarnCTab));
   TtaGetEnvBoolean ("TIP_OF_THE_DAY_STARTUP", &(GProp_General.ShowTipsStartup));
-  GetEnvString ("HOME_PAGE", GProp_General.HomePage);
-  GetEnvString ("LANG", GProp_General.DialogueLang);
+  GetEnvString ("HOME_PAGE", &(GProp_General.HomePage[0]));
+  GetEnvString ("LANG", &(GProp_General.DialogueLang[0]));
   GetEnvString ("ACCESSKEY_MOD", ptr);
   if (!strcmp (ptr, "Alt"))
     GProp_General.AccesskeyMod = 0;
@@ -1038,7 +1038,7 @@ void ValidateGeneralConf (void)
   sprintf (s, "%s%cconfig%c%s-amayamsg", ptr, DIR_SEP, DIR_SEP, lang);
   if (!TtaFileExist (s))
     {
-      GetDefEnvString ("LANG", GProp_General.DialogueLang);
+      GetDefEnvString ("LANG", &(GProp_General.DialogueLang[0]));
       change++;
     }
   if (change)
@@ -1210,8 +1210,8 @@ void GetDefaultGeneralConf ()
   TtaGetDefEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", &(GProp_General.WarnCTab));
   TtaGetDefEnvBoolean ("TIP_OF_THE_DAY_STARTUP", &(GProp_General.ShowTipsStartup));
   
-  GetDefEnvString ("HOME_PAGE", GProp_General.HomePage);
-  GetDefEnvString ("LANG", GProp_General.DialogueLang);
+  GetDefEnvString ("HOME_PAGE", &(GProp_General.HomePage[0]));
+  GetDefEnvString ("LANG", &(GProp_General.DialogueLang[0]));
   GetDefEnvString ("ACCESSKEY_MOD", ptr);
   if (!strcmp (ptr, "Alt"))
     GProp_General.AccesskeyMod = 0;
@@ -1407,9 +1407,9 @@ static void GetDefaultPublishConf ()
   GProp_Publish.LostUpdateCheck = FALSE;
   TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", GProp_Publish.LostUpdateCheck, TRUE);
   TtaGetDefEnvInt ("EXPORT_LENGTH", &(GProp_Publish.ExportLength));
-  GetDefEnvString ("DEFAULTNAME", GProp_Publish.DefaultName);
-  GetDefEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect);
-  GetDefEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType);
+  GetDefEnvString ("DEFAULTNAME", &(GProp_Publish.DefaultName[0]));
+  GetDefEnvString ("SAFE_PUT_REDIRECT", &(GProp_Publish.SafePutRedirect[0]));
+  GetDefEnvString ("DOCUMENT_CHARSET", &(GProp_Publish.CharsetType[0]));
 }
 
 
@@ -1612,9 +1612,9 @@ void PublishConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 void GetEmailsConf (void)
 {
-    GetEnvString ("EMAILS_SMTP_SERVER", GProp_Emails.serverAddress);
+  GetEnvString ("EMAILS_SMTP_SERVER", &(GProp_Emails.serverAddress[0]));
     TtaGetEnvInt ("EMAILS_SMTP_PORT", &(GProp_Emails.serverPort));
-    GetEnvString ("EMAILS_FROM_ADDRESS", GProp_Emails.fromAddress);
+    GetEnvString ("EMAILS_FROM_ADDRESS", &(GProp_Emails.fromAddress[0]));
 }
 
 /*----------------------------------------------------------------------
@@ -1637,8 +1637,8 @@ void SetEmailsConf (void)
 void GetDefaultEmailsConf ()
 {
   TtaGetDefEnvInt ("EMAILS_SMTP_PORT", &(GProp_Emails.serverPort));
-  GetDefEnvString ("EMAILS_SMTP_SERVER", GProp_Emails.serverAddress);
-  GetDefEnvString ("EMAILS_FROM_ADDRESS", GProp_Emails.fromAddress);
+  GetDefEnvString ("EMAILS_SMTP_SERVER", &(GProp_Emails.serverAddress[0]));
+  GetDefEnvString ("EMAILS_FROM_ADDRESS", &(GProp_Emails.fromAddress[0]));
 }
 
 /*----------------------------------------------------------------------
@@ -1696,12 +1696,12 @@ void GetBrowseConf (void)
   TtaGetEnvBoolean ("LOAD_CSS", &(GProp_Browse.LoadCss));
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick));
   TtaGetEnvBoolean ("CHECK_READ_IDS", &(GProp_Browse.WarnIDs));
-  GetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
+  GetEnvString ("SCREEN_TYPE", &(GProp_Browse.ScreenType[0]));
   if (GProp_Browse.ScreenType[0] == EOS)
     // no current selection
     strcpy (GProp_Browse.ScreenType, "screen");
   TtaGetEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
-  GetEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg);
+  GetEnvString ("ACCEPT_LANGUAGES", &(GProp_Browse.LanNeg[0]));
   TtaGetEnvInt ("MAX_URL_LIST", &(GProp_Browse.MaxURL));
 }
 
@@ -1770,9 +1770,9 @@ void GetDefaultBrowseConf ()
                    BrowseBase + mToggleBrowse, 3);
   GetDefEnvToggle ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick),
                    BrowseBase + mToggleBrowse, 4);
-  GetDefEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
+  GetDefEnvString ("SCREEN_TYPE", &(GProp_Browse.ScreenType[0]));
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
-  GetDefEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg);
+  GetDefEnvString ("ACCEPT_LANGUAGES", &(GProp_Browse.LanNeg[0]));
   TtaGetDefEnvBoolean ("CHECK_READ_IDS", &(GProp_Browse.WarnIDs));
   GProp_Browse.OpeningLocation = 1;
   TtaGetDefEnvInt ("MAX_URL_LIST", &(GProp_Browse.MaxURL));
@@ -1917,12 +1917,12 @@ void BrowseConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 static void GetColorConf (void)
 {
-  GetEnvString ("ForegroundColor", GProp_Color.FgColor);
-  GetEnvString ("BackgroundColor", GProp_Color.BgColor);
-  GetEnvString ("BgSelectColor", GProp_Color.BgSelColor);
-  GetEnvString ("FgSelectColor", GProp_Color.FgSelColor);
-  GetEnvString ("MenuFgColor", GProp_Color.MenuFgColor);
-  GetEnvString ("MenuBgColor", GProp_Color.MenuBgColor);
+  GetEnvString ("ForegroundColor", &(GProp_Color.FgColor[0]));
+  GetEnvString ("BackgroundColor", &(GProp_Color.BgColor[0]));
+  GetEnvString ("BgSelectColor", &(GProp_Color.BgSelColor[0]));
+  GetEnvString ("FgSelectColor", &(GProp_Color.FgSelColor[0]));
+  GetEnvString ("MenuFgColor", &(GProp_Color.MenuFgColor[0]));
+  GetEnvString ("MenuBgColor", &(GProp_Color.MenuBgColor[0]));
 }
 
 /*----------------------------------------------------------------------
@@ -1931,12 +1931,12 @@ static void GetColorConf (void)
   ----------------------------------------------------------------------*/
 static void GetDefaultColorConf (void)
 {
-  GetDefEnvString ("ForegroundColor", GProp_Color.FgColor);
-  GetDefEnvString ("BackgroundColor", GProp_Color.BgColor);
-  GetDefEnvString ("BgSelectColor", GProp_Color.BgSelColor);
-  GetDefEnvString ("FgSelectColor", GProp_Color.FgSelColor);
-  GetDefEnvString ("MenuFgColor", GProp_Color.MenuFgColor);
-  GetDefEnvString ("MenuBgColor", GProp_Color.MenuBgColor);
+  GetDefEnvString ("ForegroundColor", &(GProp_Color.FgColor[0]));
+  GetDefEnvString ("BackgroundColor", &(GProp_Color.BgColor[0]));
+  GetDefEnvString ("BgSelectColor", &(GProp_Color.BgSelColor[0]));
+  GetDefEnvString ("FgSelectColor", &(GProp_Color.FgSelColor[0]));
+  GetDefEnvString ("MenuFgColor", &(GProp_Color.MenuFgColor[0]));
+  GetDefEnvString ("MenuBgColor", &(GProp_Color.MenuBgColor[0]));
 }
 
 /*----------------------------------------------------------------------
@@ -2336,8 +2336,8 @@ static void GetAnnotConf (void)
 #else /* _WX */
   GetEnvString ("ANNOT_USER", GProp_Annot.AnnotUser);
 #endif /* _WX */
-  GetEnvString ("ANNOT_POST_SERVER", GProp_Annot.AnnotPostServer);
-  GetEnvString ("ANNOT_SERVERS", GProp_Annot.AnnotServers);
+  GetEnvString ("ANNOT_POST_SERVER", &(GProp_Annot.AnnotPostServer[0]));
+  GetEnvString ("ANNOT_SERVERS", &(GProp_Annot.AnnotServers[0]));
   TtaGetEnvBoolean ("ANNOT_LAUTOLOAD", &(GProp_Annot.AnnotLAutoLoad));
   TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &(GProp_Annot.AnnotRAutoLoad));
   TtaGetEnvBoolean ("ANNOT_RAUTOLOAD_RST", &(GProp_Annot.AnnotRAutoLoadRst));
@@ -2393,8 +2393,8 @@ static void GetDefaultAnnotConf ()
   else
     GProp_Annot.AnnotUser[0] = EOS;
   TtaFreeMemory (ptr);
-  GetDefEnvString ("ANNOT_POST_SERVER", GProp_Annot.AnnotPostServer);
-  GetDefEnvString ("ANNOT_SERVERS", GProp_Annot.AnnotServers);
+  GetDefEnvString ("ANNOT_POST_SERVER", &(GProp_Annot.AnnotPostServer[0]));
+  GetDefEnvString ("ANNOT_SERVERS", &(GProp_Annot.AnnotServers[0]));
   TtaGetDefEnvBoolean ("ANNOT_LAUTOLOAD", &(GProp_Annot.AnnotLAutoLoad));
   TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD", &(GProp_Annot.AnnotRAutoLoad));
   TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD_RST", &(GProp_Annot.AnnotRAutoLoadRst));
