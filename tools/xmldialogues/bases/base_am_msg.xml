@@ -6794,6 +6794,10 @@
 <message xml:lang="en">Component '%s' has multiple definition.</message>
 <message xml:lang="fr">Le composant '%s' a une définition multiple.</message>
 </label>
+<label define="AM_TEMPLATE_ERR_BADLIB">
+<message xml:lang="en">Library '%s' can not be loaded.</message>
+<message xml:lang="fr">La bibliothèque '%s' ne peut être chargée.</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

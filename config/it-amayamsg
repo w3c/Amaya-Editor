@@ -477,3 +477,4 @@
 474 **Template has error(s), it will not be used:
 475 **Close
 476 **Component '%s' has multiple definition.
+477 **Library '%s' can not be loaded.

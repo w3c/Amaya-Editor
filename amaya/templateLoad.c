@@ -339,7 +339,11 @@ ThotBool LoadTemplate (Document doc, char* templatename)
           iter = HashMap_GetForwardIterator(t->libraries);
           // Load dependancies
           ITERATOR_FOREACH(iter, HashMapNode, node)
-            Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem);
+            {
+              if(!Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem))
+                Template_AddError(t, TtaGetMessage(AMAYA, AM_TEMPLATE_ERR_BADLIB),
+                      ((XTigerTemplate)node->elem)->name);
+            }
 
           // Add standard libraries.
           Template_AddStandardDependancies(t);
@@ -392,7 +396,7 @@ ThotBool LoadTemplate (Document doc, char* templatename)
   Load a library with all its dependancies.
   @param t Template of preimported library.
   ----------------------------------------------------------------------*/
-void Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
+ThotBool Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   ForwardIterator iter;
@@ -418,7 +422,11 @@ void Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
     iter = HashMap_GetForwardIterator(t->libraries);
     // Load dependancies
     ITERATOR_FOREACH(iter, HashMapNode, node)
-      Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem);
+      {
+        if(!Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem))
+          Template_AddError(t, TtaGetMessage(AMAYA, AM_TEMPLATE_ERR_BADLIB),
+                ((XTigerTemplate)node->elem)->name);
+      }
 
     // Add standard libraries.
     Template_AddStandardDependancies(t);
@@ -433,16 +441,22 @@ void Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
     Template_FillDeclarations (t);
     Template_PreInstantiateComponents (t);
     Template_CalcBlockLevel (t);
-
-    t->isLoaded = TRUE;
-#ifdef AMAYA_DEBUG  
-    printf("XTiger library %s loaded.\n", t->name);
-#endif /* AMAYA_DEBUG */
-
     DocumentTypes[ctx->newdoc] = docTemplate;
+    t->isLoaded = TRUE;
+
+    
+#ifdef AMAYA_DEBUG  
+    if(Template_HasErrors(t))
+      printf("XTiger library %s has error(s)\n", t->name);
+    else
+      printf("XTiger library %s loaded successfully.\n", t->name);
+#endif /* AMAYA_DEBUG */
 
     TtaFreeMemory(ctx->templatePath);
     TtaFreeMemory(ctx);
+
+    return !Template_HasErrors(t);
   }
 #endif /* TEMPLATES */
+  return FALSE;
 }

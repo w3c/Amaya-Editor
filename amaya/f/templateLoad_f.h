@@ -20,7 +20,7 @@ extern void Template_PreParseDeclarations ( XTigerTemplate t,
                                             Element el );
 extern ThotBool LoadTemplate ( Document doc,
                                char* templatename );
-extern void Template_LoadXTigerTemplateLibrary ( XTigerTemplate t );
+extern ThotBool Template_LoadXTigerTemplateLibrary ( XTigerTemplate t );
 
 #else /* __STDC__ */
 
@@ -38,7 +38,7 @@ extern void Template_PreParseDeclarations ( XTigerTemplate t,
                                               Element el );
 extern ThotBool LoadTemplate ( Document doc,
                                  char* templatename );
-extern void Template_LoadXTigerTemplateLibrary ( XTigerTemplate t );
+extern ThotBool Template_LoadXTigerTemplateLibrary ( XTigerTemplate t );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
