@@ -359,6 +359,33 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
+ * Dump element path
+  ----------------------------------------------------------------------*/
+void DumpElementSubPath(Element el, char* buffer)
+{
+  Element parent = TtaGetParent(el);
+  if(parent==NULL)
+    strcpy(buffer, TtaGetElementTypeName(TtaGetElementType(el)));
+  else
+    {
+      DumpElementSubPath(parent, buffer);
+      strcat(buffer, "/");
+      strcat(buffer, TtaGetElementTypeName(TtaGetElementType(el)));
+    }
+}
+
+/*----------------------------------------------------------------------
+ * Dump element path
+  ----------------------------------------------------------------------*/
+void DumpElementPath(Element el)
+{
+  char buffer[MAX_LENGTH];
+  DumpElementSubPath(el, buffer);
+  printf("%s\n", buffer);
+}
+
+
+/*----------------------------------------------------------------------
  * Dump template element
   ----------------------------------------------------------------------*/
 void DumpTemplateElement(Element el, Document doc)

@@ -666,10 +666,7 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
   char        currentType[MAX_LENGTH];
   Declaration decl;
   
-  static int off = 0;
-  off++;
-  
-  for(int i=0; i<off; i++)
+//  DumpElementPath(el);
   
   if (t && el && doc)
     {
@@ -680,7 +677,6 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
             {
             case Template_EL_TEXT_UNIT:
               //TtaSetAccessRight( el, ReadWrite, doc);
-              off--;
               return;
             case Template_EL_useEl:
             case Template_EL_useSimple:
@@ -694,7 +690,6 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
                       case SimpleTypeNat:
                       case XmlElementNat:
                         TtaSetAccessRight (el, ReadWrite, doc);
-                        off--;
                         return;
                       default:
                         TtaSetAccessRight (el, ReadOnly, doc);
@@ -720,7 +715,6 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
           TtaNextSibling (&child);
         }
     }
-  off--;
 #endif /* TEMPLATES */
 }
 
