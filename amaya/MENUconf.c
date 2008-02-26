@@ -1365,9 +1365,9 @@ static void GetPublishConf (void)
   TtaGetEnvBoolean ("EXPORT_CRLF", &(GProp_Publish.ExportCRLF));
   TtaGetEnvBoolean ("GENERATE_MATHPI", &(GProp_Publish.GenerateMathPI));
   TtaGetEnvInt ("EXPORT_LENGTH", &(GProp_Publish.ExportLength));
-  GetEnvString ("DEFAULTNAME", GProp_Publish.DefaultName);
-  GetEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect);
-  GetEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType);
+  GetEnvString ("DEFAULTNAME", &(GProp_Publish.DefaultName[0]));
+  GetEnvString ("SAFE_PUT_REDIRECT", &(GProp_Publish.SafePutRedirect[0]));
+  GetEnvString ("DOCUMENT_CHARSET", &(GProp_Publish.CharsetType[0]));
 }
 
 /*----------------------------------------------------------------------
