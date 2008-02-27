@@ -2,14 +2,14 @@
 
   body {
     font-family: helvetica, arial, sans-serif;
-    font-size: 10pt;
+    font-size: 11pt;
     margin: 0;
     padding: 0;
-    background-color: rgb(249, 247, 244);
-    color: rgb(102, 102, 102);
+    background-color: #f2f3eb;
+    color: black;
     }
 
-  body > div {
+  div.PageHead {
     font-size: 20pt;
     background-color: #3d3766;
     color: white;
@@ -29,11 +29,11 @@
     margin-left: 10px;
     }
 
-  div + div {
-    font-size: 10pt;
+  div#page_body {
     color: #000000;
     background-color: #f2f3eb;
     padding: 0 2em 0 2em;
+    font-size: 11pt;
     }
 
   small {
@@ -49,13 +49,12 @@
     }
 
   pre {
-    font-family: 'Monotype.com',monospace;
+    font-family: monospace;
     }
 
   p.ProcedureCaption, li.ProcedureCaption, div.ProcedureCaption {
     margin: 1.5em 0em 0.5em 1em;
     font-size: 1em;
-    font-family: Verdana,Myriad Web,Syntax,sans-serif;
     color: teal;
     font-weight: 700;
     }
@@ -397,3 +396,61 @@
 
   .characters td {  }
 
+/* page layout and style for printing */
+@media print {
+    html {margin: 0; padding: 0}
+    body {font: 11pt serif;
+          background-color: transparent;}
+    div.PageHead {string-set: headerleft content()}
+    h2 {string-set: headerright content()}
+        p.nav, .logo {display: none}
+    div#page_body {background-color: transparent;
+	           padding: 0;}
+    table {border-collapse: collapse; empty-cells: show;
+           border: 1px solid black}
+    td, th {border: 1px solid black;
+            padding: 0.1em 0.3em 0.1em 0.3em}
+    pre, tt, code {font-size: 85%;
+                   font-family: "Bitstream Vera Sans Mono",
+                                "Lucida Console", monospace}
+    kbd {font-size: 85%;
+                   font-family: "Bitstream Vera Sans Mono",
+                                "Lucida Console", monospace}    @page {
+      margin: 23mm;
+      border-top: thin solid black;
+      border-bottom: thin solid black;
+      padding: 6mm 0 4mm;
+      size: a4;
+      font: 11pt serif; 
+      }
+    @page :left {
+      @top-left {
+        content: string(headerleft);
+        font-style: italic;
+        font-size: 11pt;
+        vertical-align: bottom;
+        margin: 0.3em 0;
+        }
+      @bottom-left {
+        content: counter(page);
+        font-size: 11pt;
+        vertical-align: top;
+        margin: 0.3em 0;
+        }
+      }
+    @page :right {
+      @top-right { 
+        content: string(headerright);
+        font-style: italic;
+        font-size: 11pt;
+        vertical-align: bottom;
+        margin: 0.3em 0;
+        }
+      @bottom-right {
+        content: counter(page);
+        font-size: 11pt;
+        vertical-align: top;
+        margin: 0.3em 0;
+        }
+      }
+}

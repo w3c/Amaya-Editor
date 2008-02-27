@@ -13,7 +13,7 @@ body {background-color: #FFFFFF}</style>
 
 <body xml:lang="fr" lang="fr">
 
-<div>
+<div class="PageHead">
 Manuel d'utilisation d'Amaya</div>
 
 <div>

@@ -9,7 +9,7 @@
 
 <body xml:lang="fr" lang="fr">
 
-<div>
+<div class="PageHead">
 Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /> 
 

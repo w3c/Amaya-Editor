@@ -10,7 +10,7 @@
 
 <body lang="fr">
 
-<div>
+<div class="PageHead">
 Amaya<img border="0" alt="logo" src="../../resources/icons/22x22/logo.png"> 
 
 <p class="nav"><a href="ImageMaps.html.fr"><img alt="previous"
