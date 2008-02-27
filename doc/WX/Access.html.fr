@@ -21,27 +21,26 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png"
 /></a></p>
 </div>
 
-<div id="Access">
+<div class="PageBody" id="Access">
 <h2 id="Accessibil">Accessibilité</h2>
 
-<h3 id="Fonctions">Fonctions accessible</h3>
+<h3 id="Fonctions">Fonctions accessibles</h3>
 
-<p>L'accessibilité pour les personnes handicapées s'améliore de version en
-version. Il est possible d'exécuter un grand nombre de fonctions sans
-utiliser une souris, et d'exécuter des fonctions d'édition (à l'exception la
-saisie de texte) sans utiliser le clavier.</p>
+<p>Pour amélioere l''accessibilité pour les personnes handicapées, il est
+possible d'exécuter un grand nombre de fonctions sans utiliser une souris, et
+d'exécuter des fonctions d'édition (à l'exception la saisie de texte) sans
+utiliser le clavier.</p>
 
-<p>Les caractéristiques d'accessibilité dans la version courante incluent
-:</p>
+<p>Les caractéristiques d'accessibilité incluent :</p>
 <ul>
   <li>Les vues liens, structure, et table des matières peuvent être utilisées
     pour naviguer dans le document. Elles sont synchronisées avec la vue
     formatée.</li>
   <li>Editer le code source.</li>
-  <li>Ajouter, supprimer et éditer dynamiquement plusieurs feuilles de style,
-    incluant une feuille de style.</li>
-  <li>Les accès rapides et l'activation des commandes au clavier, des liens
-    et des contrôles de forme.</li>
+  <li>Ajouter, supprimer et éditer dynamiquement plusieurs feuilles de
+  style.</li>
+  <li>Les accès rapides et l'activation au clavier des liens et des contrôles
+    de formulaires.</li>
 </ul>
 
 <h3 id="Produire">Produire un contenu accessible</h3>
@@ -49,25 +48,26 @@ saisie de texte) sans utiliser le clavier.</p>
 <p>Amaya peut être utilisé pour produire un contenu conforme au <a
 href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content Accessibility
 Guidelines</a> du W3C. Certaines caractéristiques, comme par exemple
-l'obligation d'avoir un attribut <code>alt</code> pour les images et les
-zones actives , ont déjà été incluses (il est impossible d'ajouter une image
+l'obligation de fournir un attribut <code>alt</code> pour les images et les
+zones actives, sont déjà disponibles (il est impossible d'ajouter une image
 tant qu'il n'y a pas de texte alterné).</p>
 
-<p>Amaya produit aussi automatiquement un balisage valide conforme au W3C.
-D'autres caractéristiques, comme les longues descriptions spécifiques et les
-légendes, doivent être effectuées par l'auteur à l'aide de l'outil
-<strong>Attributs</strong> ou de la vue structure.</p>
+<p>Amaya produit aussi automatiquement un balisage valide conforme aux
+recommandations du W3C. D'autres caractéristiques, comme les longues
+descriptions spécifiques et les légendes, peuvent être assurées par l'auteur
+à l'aide de l'outil <strong>Attributs</strong> ou de la vue structure.</p>
 
 <p>La documentation d'aide d'Amaya décrit <a
 href="HTML-elements/infoTypes.html.fr">comment utiliser quelques éléments
-individuels HTML</a> et inclue une aide en ligne sur comment assurer que les
-pages produites soient accessibles. De plus, les guides en ligne plus
-complets sont les <a href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content
-Accessibility Guidelines</a> du W3C. Le <a href="http://www.w3.org/WAI">Web
-Accessibility Initiative</a> du W3C publie également "<a
+individuels HTML</a> et inclut une aide en ligne sur la façon d'assurer que
+les pages produites soient accessibles. On peut aussi consulter des guides en
+ligne plus complets, comme les <a
+href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content Accessibility
+Guidelines</a> du W3C. Le <a href="http://www.w3.org/WAI">Web Accessibility
+Initiative</a> du W3C publie également "<a
 href="http://www.w3.org/WAI/References/QuickTips/#Introduction">De brefs
-renseignements pour faire des sites Web accessibles</a>", dix rappels
-pratiques qui sont :</p>
+renseignements pour faire des sites Web accessibles</a>", dont les dix
+rappels pratiques sont :</p>
 <ul>
   <li><strong>Images &amp; animations.</strong> Utilisez l'attribut
     <code>alt</code> pour décrire la fonction de chaque optique.</li>
