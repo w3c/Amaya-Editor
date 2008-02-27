@@ -1150,7 +1150,7 @@ void CheckTemplate (Document doc)
       else
         {
           // fix all access rights in the instance
-//          Template_FixAccessRight (t, root, doc);
+          Template_FixAccessRight (t, root, doc);
           TtaUpdateAccessRightInViews (doc, root);
         }
     }
