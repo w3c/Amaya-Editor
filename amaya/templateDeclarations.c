@@ -29,7 +29,6 @@
 #include "wxdialogapi_f.h"
 #include "message.h"
 
-
 #define UNION_ANY            "any"
 #define UNION_ANYCOMPONENT   "anyComponent"
 #define UNION_ANYSIMPLE      "anySimple"
@@ -1065,7 +1064,11 @@ void Template_AddError(XTigerTemplate t, const char* format, ...)
   
   if(t)
     {
+#ifdef _WINDOWS
+	  _vsnprintf (buffer, MAX_LENGTH, format, ap);
+#else /* _WINDOWS */
       vsnprintf(buffer, MAX_LENGTH, format, ap);
+#endif /* _WINDOWS */
       DLList_Append(t->errorList, TtaStrdup(buffer));
     }
   va_end(ap);
