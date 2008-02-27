@@ -30,11 +30,12 @@ Dernière mise à jour : <!--$date=-->2007-04-27<!--$-->
  </p>
 </div>
 
+<div class="PageBody">
+
 <p>Ce document a pour but d'aider les nouveaux utilisateurs d'Amaya. Pour
 plus de détail sur l'interface, il faut se reporter au <a
 href="Manual.html.fr">manuel de référence</a>.</p>
 
-<div>
 <h3 id="Plan">Plan</h3>
 <ol>
   <li><a href="#L271">Présentation générale d'Amaya</a></li>

@@ -23,7 +23,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="Spell">
+<div class="PageBody" id="Spell">
 <h2 id="L47">Vérifier l'orthographe</h2>
 
 <p>Amaya est pourvu d'un vérificateur d'orthographe multilingue. Cet outil

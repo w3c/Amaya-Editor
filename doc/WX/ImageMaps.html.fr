@@ -22,7 +22,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="Client-sid">
+<div class="PageBody" id="Client-sid">
 <h2 id="Images"><a name="L1013">Éditer des images et zones actives</a></h2>
 
 <h3 id="Ajouter"><a name="Adding">Ajouter une image</a></h3>

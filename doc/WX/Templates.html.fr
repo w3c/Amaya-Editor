@@ -23,7 +23,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="modèles">
+<div class="PageBody" id="modèles">
 <h2 id="Templates">Éditer avec des modèles</h2>
 
 <h3 id="What">Qu'est-ce qu'un modèle ?</h3>

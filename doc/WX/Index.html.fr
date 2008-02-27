@@ -16,7 +16,7 @@ body {background-color: #FFFFFF}</style>
 <div class="PageHead">
 Manuel d'utilisation d'Amaya</div>
 
-<div>
+<div class="PageBody">
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>

@@ -22,7 +22,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="Assembling">
+<div class="PageBody" id="Assembling">
 <h2 id="Assembler">Assembler des collections de documents</h2>
 
 <p>Pour activer cette fonctionnalité, choisissez l'entrée <strong>Construire

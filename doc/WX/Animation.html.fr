@@ -22,7 +22,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="page_body" xml:lang="fr" lang="fr">
+<div class="PageBody" id="page_body" xml:lang="fr" lang="fr">
 <h2>Graphiques et Animation SMIL</h2>
 
 <p>SVG représente l'animation comme des éléments intermédiaires dans la

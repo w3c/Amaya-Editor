@@ -22,7 +22,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="Selecting">
+<div class="PageBody" id="Selecting">
 <h2 id="L58">Sélectionner</h2>
 
 <p>De nombreuses commandes agissent sur la sélection courante. La sélection

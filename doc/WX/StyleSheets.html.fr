@@ -23,7 +23,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="Style">
+<div class="PageBody" id="Style">
 <h2 id="Cascades">Appliquer du style à un document</h2>
 
 <p>Le menu <strong>Format</strong> vous permet de changer l'apparence de vos

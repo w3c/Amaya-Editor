@@ -20,7 +20,7 @@ href="Math.html.fr"><img alt="next" border="0"
 src="../../resources/icons/misc/right.png"> </a></p>
 </div>
 
-<div id="HTML">
+<div class="PageBody" id="HTML">
 <h2 id="ments">Les &eacute;l&eacute;ments HTML</h2>
 
 <p>Amaya reconna&icirc;t tous les &eacute;l&eacute;ments de HTML 4.0, mais ne

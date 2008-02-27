@@ -23,7 +23,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
 </a></p>
 </div>
 
-<div id="Configuring">
+<div class="PageBody" id="Configuring">
 <h2 id="Configurer">Configurer Amaya</h2>
 
 <p>Amaya utilise différents fichiers de configuration pour initialiser les

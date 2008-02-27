@@ -22,7 +22,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
 src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
-<div id="Views">
+<div class="PageBody" id="Views">
 <h2 id="Vues">Vues d'un document</h2>
 
 <p><strong>Amaya</strong> peut présenter différentes <em>vues</em> d'un

@@ -23,7 +23,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
 src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
-<div id="Keyboard">
+<div class="PageBody" id="Keyboard">
 <h2 id="Saisir">Saisir du texte</h2>
 
 <p>Pour les caractères qui ne sont pas directement disponibles depuis le

@@ -22,7 +22,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="Section">
+<div class="PageBody" id="Section">
 <h2 id="roter">Numéroter les sections</h2>
 
 <p>Les en-têtes de section (éléments <code>h2</code> à <code>h6</code>)

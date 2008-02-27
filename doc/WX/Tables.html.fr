@@ -22,7 +22,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="Editing">
+<div class="PageBody" id="Editing">
 <h2 id="Editer">Edition des tables</h2>
 
 <p>Il n'existe pas d'éditeur de tables indépendant dans Amaya. Une table est

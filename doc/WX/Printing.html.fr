@@ -22,7 +22,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="Printing">
+<div class="PageBody" id="Printing">
 <h2 id="Imprimer">Imprimer des documents</h2>
 
 <p>Amaya est capable d'imprimer des document avec ou sans feuilles de style

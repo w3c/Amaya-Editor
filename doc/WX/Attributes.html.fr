@@ -22,7 +22,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="Attributes">
+<div class="PageBody" id="Attributes">
 <h2 id="Editer">Editer des attributs</h2>
 
 <p>Il y a deux manières d'éditer des attributs :</p>

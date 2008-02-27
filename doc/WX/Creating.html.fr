@@ -22,7 +22,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
 src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
-<div id="Creating">
+<div class="PageBody" id="Creating">
 <h2 id="L1103">Créer des <span xml:lang="fr" lang="fr">éléments</span></h2>
 
 <h3 id="Modes">Modes d'édition</h3>

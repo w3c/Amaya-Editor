@@ -20,7 +20,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
 src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
-<div id="Graphics">
+<div class="PageBody" id="Graphics">
 <h2 id="Editer">Editer des graphiques SVG</h2>
 
 <p>Amaya vous permet d'inclure des graphiques vectoriels dans des pages Web,

@@ -26,19 +26,19 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png"
 
 <h3 id="Fonctions">Fonctions accessibles</h3>
 
-<p>Pour amélioere l''accessibilité pour les personnes handicapées, il est
-possible d'exécuter un grand nombre de fonctions sans utiliser une souris, et
-d'exécuter des fonctions d'édition (à l'exception la saisie de texte) sans
-utiliser le clavier.</p>
+<p>Afin d'améliorer l'accessibilité pour les personnes handicapées, un grand
+nombre de fonctions d'Amaya peuvent être exécutées sans utiliser la souris ou
+le clavier.</p>
 
 <p>Les caractéristiques d'accessibilité incluent :</p>
 <ul>
-  <li>Les vues liens, structure, et table des matières peuvent être utilisées
-    pour naviguer dans le document. Elles sont synchronisées avec la vue
-    formatée.</li>
-  <li>Editer le code source.</li>
-  <li>Ajouter, supprimer et éditer dynamiquement plusieurs feuilles de
-  style.</li>
+  <li>Les vues liens, structure, et table des matières, qui peuvent être
+    utilisées pour naviguer dans le document. Elles sont synchronisées avec
+    la vue formatée.</li>
+  <li>La possibilité d'éditer le code source.</li>
+  <li>Les feuilles de style, qui peuvent être ajoutées et éditées
+    dynamiquement, randant ainsi le contenu des pages indépendant de leur
+    présentation.</li>
   <li>Les accès rapides et l'activation au clavier des liens et des contrôles
     de formulaires.</li>
 </ul>
@@ -52,47 +52,49 @@ l'obligation de fournir un attribut <code>alt</code> pour les images et les
 zones actives, sont déjà disponibles (il est impossible d'ajouter une image
 tant qu'il n'y a pas de texte alterné).</p>
 
-<p>Amaya produit aussi automatiquement un balisage valide conforme aux
-recommandations du W3C. D'autres caractéristiques, comme les longues
-descriptions spécifiques et les légendes, peuvent être assurées par l'auteur
-à l'aide de l'outil <strong>Attributs</strong> ou de la vue structure.</p>
+<p>Amaya produit aussi automatiquement un balisage valide, conforme aux
+recommandations du W3C. D'autres caractéristiques, comme l'ajout de
+descriptions longues et les légendes, peuvent être assurées par l'auteur à
+l'aide de l'outil <strong>Attributs</strong> ou de la vue structure.</p>
 
-<p>La documentation d'aide d'Amaya décrit <a
+<p>La documentation d'Amaya décrit <a
 href="HTML-elements/infoTypes.html.fr">comment utiliser quelques éléments
-individuels HTML</a> et inclut une aide en ligne sur la façon d'assurer que
+individuels HTML</a> et comporte une aide en ligne sur la façon d'assurer que
 les pages produites soient accessibles. On peut aussi consulter des guides en
 ligne plus complets, comme les <a
 href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content Accessibility
 Guidelines</a> du W3C. Le <a href="http://www.w3.org/WAI">Web Accessibility
-Initiative</a> du W3C publie également "<a
+Initiative</a> du W3C publie également <a
 href="http://www.w3.org/WAI/References/QuickTips/#Introduction">De brefs
-renseignements pour faire des sites Web accessibles</a>", dont les dix
-rappels pratiques sont :</p>
+renseignements pour faire des sites Web accessibles</a> dont les dix conseils
+pratiques sont :</p>
 <ul>
   <li><strong>Images &amp; animations.</strong> Utilisez l'attribut
-    <code>alt</code> pour décrire la fonction de chaque optique.</li>
-  <li><strong>Zones actives.</strong> Utilisez l'élément <code>map</code>
-    côté-client et le texte pour les zones sensibles.</li>
+    <code>alt</code> pour décrire la fonction de chaque graphique.</li>
+  <li><strong>Zones actives.</strong> Utilisez l'élément <code>map</code> et
+    le texte pour les zones sensibles.</li>
   <li><strong>Multimédia.</strong> Fournissez des légendes et des
-    transcriptions audio, et des descriptions vidéo.</li>
+    transcriptions pour l'audio, et des descriptions pour la vidéo.</li>
   <li><strong>Liens hypertextes.</strong> Utilisez un texte qui a un sens
-    même lorsqu'il est lu en-dehors du contexte. Par exemple, évitez "cliquer
-    ici".</li>
+    même lorsqu'il est lu en-dehors de son contexte. Par exemple, évitez
+    « cliquer ici ».</li>
   <li><strong>Organisation de la page.</strong> Utilisez les en-têtes, les
-    listes, ainsi qu'une structure logique. Utilisez les <strong>CSS</strong>
-    pour la bordure et le style quand cela est possible.</li>
-  <li><strong>Graphismes &amp; cartes.</strong> Récapitulez ou utilisez
-    l'attribut <code>longdesc</code>.</li>
-  <li><strong>Scripts, applets, &amp; plug-ins.</strong> Fournissez un
-    contenu alternatif dans le cas où les caractéristiques actives sont
-    inaccessibles ou sans support.</li>
-  <li><strong>Frames.</strong> Utilisez <code>NOFRAMES</code> ainsi que des
-    titres significatifs.</li>
-  <li><strong>Tables.</strong> Faîtes une lecture sensée ligne par ligne.
-    Récapitulez.</li>
-  <li><strong>Vérifier votre travail.</strong> Validez. Utilisez les outils,
-    la liste de vérification, et les aides en ligne à <a
-    href="http://www.w3.org/TR/WAI-WEBCONTENT">http://www.w3.org/TR/WAI-WEBCONTENT</a>.</li>
+    listes, ainsi qu'une structure cohérente. Utilisez les
+    <strong>CSS</strong> pour la mise en page et le style quand cela est
+    possible.</li>
+  <li><strong>Graphiques et schémas.</strong> Résumez ou utilisez l'attribut
+    <code>longdesc</code>.</li>
+  <li><strong>Scripts, applets, et plug-ins.</strong> Fournissez un contenu
+    alternatif qui sera utilisé dans le cas où les caractéristiques actives
+    sont inaccessibles ou non supportées.</li>
+  <li><strong>Frames.</strong> Utilisez l'élément <code>noframe</code> ainsi
+    que des titres significatifs.</li>
+  <li><strong>Tables.</strong> Assurez-vous qu'une lecture ligne par ligne
+    aie du sens. Résumez.</li>
+  <li><strong>Vérifier votre travail.</strong> <a
+    href="http://validator.w3.org/">Validez</a>. Utilisez les outils, la
+    liste de vérification, et les aides en ligne à <a
+    href="http://www.w3.org/TR/WCAG">http://www.w3.org/TR/WCAG</a>.</li>
 </ul>
 
 <p></p>

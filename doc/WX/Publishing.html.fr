@@ -23,7 +23,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
 /></a></p>
 </div>
 
-<div id="Saving">
+<div class="PageBody" id="Saving">
 <h2 id="Sauver2">Enregistrer et publier des documents</h2>
 
 <p>Amaya permet d'enregistrer les documents (X)HTML soit en format d'origine,

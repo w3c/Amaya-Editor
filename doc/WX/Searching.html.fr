@@ -24,7 +24,7 @@ href="SpellChecking.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="Searching">
+<div class="PageBody" id="Searching">
 <h2 id="Rechercher">Rechercher et remplacer du texte</h2>
 
 <p>Vous pouvez rechercher et remplacer du texte par l'intermédiaire de la
