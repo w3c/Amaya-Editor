@@ -417,10 +417,104 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
+  <li><a href="Configure.html.fr#Configurer">Configurer Amaya</a> 
+    <ul>
+      <li><a href="Configure.html.fr#plusieurs">Une ou plusieurs instances
+        d'Amaya</a></li>
+      <li><a href="Configure.html.fr#propos">Répertoires de configuration</a> 
+        <ul>
+          <li><a href="Configure.html.fr#pertoire">Le répertoire
+          config</a></li>
+          <li><a href="Configure.html.fr#pertoire1">Le répertoire
+            AmayaHome</a></li>
+          <li><a href="Configure.html.fr#pertoire2">Le répertoire
+            AmayaTemp</a></li>
+        </ul>
+      </li>
+      <li><a href="Configure.html.fr#Menus">Préférences</a> 
+        <ul>
+          <li><a href="Configure.html.fr#rences">Les préférences
+            générales</a> 
+            <ul>
+              <li><a href="Configure.html.fr#Profile">Profils</a></li>
+              <li><a href="Configure.html.fr#Options">Options</a></li>
+              <li><a href="Configure.html.fr#Polices">Polices de caractères
+                et langue</a></li>
+              <li><a href="Configure.html.fr#rapides">Accès rapides</a></li>
+            </ul>
+          </li>
+          <li><a href="Configure.html.fr#L405">Préférences de navigation</a> 
+            <ul>
+              <li><a href="Configure.html.fr#Endroit">Endroit
+              d'ouverture</a></li>
+              <li><a href="Configure.html.fr#Options1">Options</a></li>
+              <li><a href="Configure.html.fr#Type">Type d'écran
+              courant</a></li>
+              <li><a href="Configure.html.fr#L1309">Négociation de
+              langues</a></li>
+            </ul>
+          </li>
+          <li><a href="Configure.html.fr#L470">Préférences de publication</a> 
+            <ul>
+              <li><a href="Configure.html.fr#Charset">Charset pour les
+                nouveaux documents</a></li>
+              <li><a href="Configure.html.fr#Options2">Options</a></li>
+              <li><a href="Configure.html.fr#faut">Nom par défaut pour les
+                URLs finissant par '/'</a></li>
+              <li><a href="Configure.html.fr#Permettre">Permettre des
+                redirections PUT automatiques sur ces domaines</a></li>
+            </ul>
+          </li>
+          <li><a href="Configure.html.fr#L1595">Préférences de cache</a> 
+            <ul>
+              <li><a href="Configure.html.fr#Options3">Options</a></li>
+              <li><a href="Configure.html.fr#L1701">Répertoire du
+              cache</a></li>
+              <li><a href="Configure.html.fr#Taille">Taille du cache
+              (Mo)</a></li>
+              <li><a href="Configure.html.fr#Taille1">Taille maximum des
+                entrées du cache (Mo)</a></li>
+              <li><a href="Configure.html.fr#Vider">Vider le cache</a></li>
+            </ul>
+          </li>
+          <li><a href="Configure.html.fr#L5991">Préférences des mots de
+            passe</a> 
+            <ul>
+              <li><a href="Configure.html.fr#Vider1">Enregistrer les mots de
+                passe</a></li>
+              <li><a href="Configure.html.fr#Vider11">Tout effacer</a></li>
+              <li><a href="Configure.html.fr#Vider111">Sites</a></li>
+            </ul>
+          </li>
+          <li><a href="Configure.html.fr#L599">Préférences du proxy</a></li>
+          <li><a href="Configure.html.fr#Proxy1">Proxy HTTP</a></li>
+          <li><a href="Configure.html.fr#Liste">Liste du domaine
+          proxy</a></li>
+          <li><a href="Configure.html.fr#L632">Préférences des
+          couleurs</a></li>
+          <li><a href="Configure.html.fr#rences1">Les préférences de
+            géométrie</a></li>
+          <li><a href="Configure.html.fr#Configurat">Configuration des
+            annotations</a></li>
+          <li><a href="Configure.html.fr#utilisateu">Nom de
+          l'utilisateur</a></li>
+          <li><a href="Configure.html.fr#Serveur">Serveur de
+          publication</a></li>
+          <li><a href="Configure.html.fr#Serveurs">Serveurs d'annotations</a> 
+            <ul>
+              <li><a href="Configure.html.fr#Options4">Options</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<ul>
   <li><a href="ShortCuts.html.fr#raccourcis">Les raccourcis clavier</a></li>
 </ul>
 <ul>
-  <li><a href="Access.html.fr#Accessibil">Accessibilité</a>
+  <li><a href="Access.html.fr#Accessibil">Accessibilité</a> 
     <ul>
       <li><a href="Access.html.fr#Fonctions">Fonctions accessible</a></li>
       <li><a href="Access.html.fr#Produire">Produire un contenu

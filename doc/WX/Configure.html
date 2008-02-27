@@ -23,86 +23,6 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
 src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#Configuring">Configuring Amaya</a>
-    <ul>
-      <li><a href="#more">One or more instances of Amaya</a></li>
-      <li><a href="#About">Configuration directory and file conventions</a>
-        <ul>
-          <li><a href="#config">The config directory</a></li>
-          <li><a href="#AmayaHome">The AmayaHome directory</a></li>
-          <li><a href="#AmayaTemp">The AmayaTemp directory</a></li>
-        </ul>
-      </li>
-      <li><a href="#Menu">Preferences</a>
-        <ul>
-          <li><a href="#General">General preferences</a>
-            <ul>
-              <li><a href="#Profile">Profiles</a></li>
-              <li><a href="#Check">Check boxes</a></li>
-              <li><a href="#Font">Font and language options</a></li>
-              <li><a href="#Access">Access keys</a></li>
-            </ul>
-          </li>
-          <li><a href="#Browsing">Browsing preferences</a>
-            <ul>
-              <li><a href="#Opening">Opening location</a></li>
-              <li><a href="#Check1">Check boxes</a></li>
-              <li><a href="#Current">Current screen type</a></li>
-              <li><a href="#Language">Language negotiation
-              preferences</a></li>
-            </ul>
-          </li>
-          <li><a href="#Publishing">Publishing preferences</a>
-            <ul>
-              <li><a href="#Charset">Charset for new documents</a></li>
-              <li><a href="#Check2">Check boxes</a></li>
-              <li><a href="#Default">Default name for URLs finishing in
-                '/'</a></li>
-              <li><a href="#Allow">Allow automatic PUT redirections on these
-                domains</a></li>
-            </ul>
-          </li>
-          <li><a href="#Cache">Cache preferences</a>
-            <ul>
-              <li><a href="#Check3">Check boxes</a></li>
-              <li><a href="#Cache1">Cache directory</a></li>
-              <li><a href="#Cache2">Cache size</a></li>
-              <li><a href="#Cache3">Cache entry size limit</a></li>
-              <li><a href="#Flush">Flush cache</a></li>
-            </ul>
-          </li>
-          <li><a href="#L5991">Passwords preferences</a>
-            <ul>
-              <li><a href="#remember_passwd">Remember passwords for
-              sites</a></li>
-              <li><a href="#remove_all">Remove all</a></li>
-              <li><a href="#sites">Sites</a></li>
-            </ul>
-          </li>
-          <li><a href="#Proxy">Proxy preferences</a>
-            <ul>
-              <li><a href="#Proxy1">Proxy domain list</a></li>
-            </ul>
-          </li>
-          <li><a href="#Color">Color preferences</a></li>
-          <li><a href="#Window">Window geometry preferences</a></li>
-          <li><a href="#Configurin1">Configuring annotation settings</a></li>
-          <li><a href="#Annotation">Annotation user</a></li>
-          <li><a href="#Annotation1">Annotation post server</a></li>
-          <li><a href="#Annotation2">Annotation servers</a>
-            <ul>
-              <li><a href="#Check4">Check boxes</a></li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="page_body">
 <h2 id="Configuring">Configuring Amaya</h2>
 
@@ -253,8 +173,7 @@ Otherwise Amaya selects a default position.</p>
 may contain the following files:</p>
 <ul>
   <li><strong>thot.rc</strong>: Contains the user preferences, changed
-    through the <strong>Preferences</strong> submenus on the
-    <strong>Edit</strong> menu.</li>
+    through the <strong>Preferences</strong> dialog.</li>
   <li><strong><a name="amaya.keyb"
     id="amaya.keyb">amaya.keyboard</a></strong> (Unix),
     <strong>amaya.kb</strong> (Windows) or <strong>amaya.kb-mac</strong> (Mac
@@ -342,66 +261,22 @@ subsequent executions of Amaya.</p>
 
 <h3 id="Menu">Preferences</h3>
 
-<p>These dialogs are found under the <strong>Preferences</strong> submenu on
-the <strong>Edit</strong> menu. Nine preferences dialogs are available:
-<strong>General</strong>, <strong>Browsing, Publishing</strong>,
-<strong>Cache</strong>, <strong>Proxy</strong>, <strong>Colors</strong>,
-<strong>Window geometry</strong>, <strong>Annotations, WebDAV</strong>.</p>
+<p>These dialogs are found under the <strong>Preferences</strong> entry on
+the <strong>Edit</strong> menu (<strong>Amaya</strong> menu on MacOS X). Nine
+preferences dialogs are available: <strong>General</strong>,
+<strong>Browsing, Publishing</strong>, <strong>Cache</strong>,
+<strong>Proxy</strong>, <strong>Colors</strong>, <strong>Window
+geometry</strong>, <strong>Annotations, WebDAV, Templates, Mail</strong>.</p>
 
 <p>Each of these dialogs contains three action buttons:</p>
-
-<table border="1" cellspacing="0" cellpadding="0" width="581"
-style="width:435.75pt;  margin-left:3.75pt;border-collapse:collapse;border:none;">
-  <tbody>
-    <tr>
-      <td width="65"
-      style="width:48.75pt;border-top:solid .75pt;   border-left:none;border-bottom:double 1.5pt;border-right:solid black .5pt;   padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableHead"><b>Button</b></p>
-      </td>
-      <td width="516"
-      style="width:387.0pt;border-top:solid .75pt;   border-left:none;border-bottom:double 1.5pt;border-right:none;padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableHead"><b>Action</b></p>
-      </td>
-    </tr>
-    <tr>
-      <td width="65"
-      style="width:48.75pt;border-top:none;border-left:none;   border-bottom:solid black .5pt;border-right:solid black .5pt;padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Apply</p>
-      </td>
-      <td width="516"
-      style="width:387.0pt;border:none;border-bottom:solid black .5pt;   padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Validates and stores the options shown in the
-        menu.</p>
-      </td>
-    </tr>
-    <tr>
-      <td width="65"
-      style="width:48.75pt;border-top:none;border-left:none;   border-bottom:solid black .5pt;border-right:solid black .5pt;padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Defaults</p>
-      </td>
-      <td width="516"
-      style="width:387.0pt;border:none;border-bottom:solid black .5pt;   padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Restores, but does not save, the default values.
-        Use the <strong>Apply</strong> button to validate the options.</p>
-      </td>
-    </tr>
-    <tr>
-      <td width="65"
-      style="width:48.75pt;border-top:none;border-left:none;   border-bottom:solid 1.5pt;border-right:solid black .5pt;padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Close</p>
-      </td>
-      <td width="516"
-      style="width:387.0pt;border:none;border-bottom:solid 1.5pt;   padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Dismisses the menu.</p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<ul>
+  <li>Apply: Validates and stores the options shown</li>
+  <li>Defaults: Restores, but does not save, the default values. Use the
+    Apply button to validate the options.</li>
+  <li>Close: Dismisses the dialog.</li>
+</ul>
 
 <h4 id="General">General preferences</h4>
-
-<p>To open the <strong>General preferences</strong> dialog, choose
-<strong>General</strong> from the <strong>Preferences</strong> submenu.</p>
 
 <p><strong>Home Page.</strong> Specifies the URI that Amaya will load when
 launched or when the user clicks the home page button. An example is <a
@@ -467,13 +342,13 @@ windows. This change affects only font sizes but not image sizes, and is
 reflected immediately in all open document windows.</p>
 
 <p><strong>Dialogue language.</strong> Specifies the language for all of
-Amaya's menus and dialogue messages. The default language is American English
-(en). At the present time, alternate languages are available: French (fr),
-German (de), Italian (it), Spanish (es), Portuguese (pt), Finnish (fi),
-Hungarian (hu), Russian (ru), Turkish (tr), etc. When launched, Amaya loads
-dialogue files according to the current dialogue language: en-, fr-, de-,
-it-, es-, pt-, fi- or tr-, etc. files. These dialogue files are located in
-the <strong>Amaya/config</strong> directory.</p>
+Amaya's menus and dialogue messages. At the present time, alternate languages
+are available: American English (en), French (fr), German (de), Italian (it),
+Spanish (es), Portuguese (pt), Finnish (fi), Hungarian (hu), Russian (ru),
+Turkish (tr), etc. When launched, Amaya loads dialogue files according to the
+current dialogue language: en-, fr-, de-, it-, es-, pt-, fi- or tr-, etc.
+files. These dialogue files are located in the <strong>Amaya/config</strong>
+directory.</p>
 
 <h5 id="Access">Access keys</h5>
 
@@ -570,7 +445,7 @@ MIME type at the time of this release, Note that this requires also a change
 in your server configuration, if it's not storing somewhere the metadata
 associated with each document. This option does not modify the MIME type of
 existing documents: the MIME type that is received is the same one that will
-be used when saving the document, except if you do a <strong>SaveAs</strong>
+be used when saving the document, except if you do a <strong>Save as</strong>
 operation, of course.</p>
 
 <p><strong>Use ETAGS and preconditions.</strong> HTTP/1.1 introduces new
@@ -819,13 +694,13 @@ to an option name. A mark in the box indicates that the option is active.</p>
 <p><strong>Autoload local annotations</strong>. Whether Amaya should request
 local annotations automatically every time you browse a new Web page. If it
 is not checked, then you can manually choose <strong>Load
-annotations</strong> from the <strong>Annotations</strong> menu.</p>
+annotations</strong> from the <strong>Tools/Annotations</strong> submenu.</p>
 
 <p><strong>Autoload remote annotations</strong>. Whether Amaya should request
 remote annotations automatically (by querying the annotation server) every
 time you browse a new Web page. If it is not checked, then you can manually
 choose <strong>Load annotations</strong> from the
-<strong>Annotations</strong> menu.</p>
+<strong>Tools/Annotations</strong> submenu.</p>
 
 <p class="Note"><strong>Note:</strong> You may experience a delay when Amaya
 loads remote annotations in resolving the DNS name of the annotation

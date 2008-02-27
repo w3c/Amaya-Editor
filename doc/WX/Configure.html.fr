@@ -23,84 +23,6 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
 </a></p>
 </div>
 
-<div class="toc">
-<ul>
-  <li><a href="#Configurer">Configurer Amaya</a>
-    <ul>
-      <li><a href="#plusieurs">Une ou plusieurs instances d'Amaya</a></li>
-      <li><a href="#propos">Répertoires de configuration</a>
-        <ul>
-          <li><a href="#pertoire">Le répertoire config</a></li>
-          <li><a href="#pertoire1">Le répertoire AmayaHome</a></li>
-          <li><a href="#pertoire2">Le répertoire AmayaTemp</a></li>
-        </ul>
-      </li>
-      <li><a href="#Menus">Préférences</a>
-        <ul>
-          <li><a href="#rences">Les préférences générales</a>
-            <ul>
-              <li><a href="#Profile">Profils</a></li>
-              <li><a href="#Options">Options</a></li>
-              <li><a href="#Polices">Polices de caractères et langue</a></li>
-              <li><a href="#rapides">Accès rapides</a></li>
-            </ul>
-          </li>
-          <li><a href="#L405">Préférences de navigation</a>
-            <ul>
-              <li><a href="#Endroit">Endroit d'ouverture</a></li>
-              <li><a href="#Options1">Options</a></li>
-              <li><a href="#Type">Type d'écran courant</a></li>
-              <li><a href="#L1309">Négociation de langues</a></li>
-            </ul>
-          </li>
-          <li><a href="#L470">Préférences de publication</a>
-            <ul>
-              <li><a href="#Charset">Charset pour les nouveaux
-              documents</a></li>
-              <li><a href="#Options2">Options</a></li>
-              <li><a href="#faut">Nom par défaut pour les URLs finissant par
-                '/'</a></li>
-              <li><a href="#Permettre">Permettre des redirections PUT
-                automatiques sur ces domaines</a></li>
-            </ul>
-          </li>
-          <li><a href="#L1595">Préférences de cache</a>
-            <ul>
-              <li><a href="#Options3">Options</a></li>
-              <li><a href="#L1701">Répertoire du cache</a></li>
-              <li><a href="#Taille">Taille du cache (Mo)</a></li>
-              <li><a href="#Taille1">Taille maximum des entrées du cache
-                (Mo)</a></li>
-              <li><a href="#Vider">Vider le cache</a></li>
-            </ul>
-          </li>
-          <li><a href="#L5991">Préférences des mots de passe</a>
-            <ul>
-              <li><a href="#Vider1">Enregistrer les mots de passe</a></li>
-              <li><a href="#Vider11">Tout effacer</a></li>
-              <li><a href="#Vider111">Sites</a></li>
-            </ul>
-          </li>
-          <li><a href="#L599">Préférences du proxy</a></li>
-          <li><a href="#Proxy1">Proxy HTTP</a></li>
-          <li><a href="#Liste">Liste du domaine proxy</a></li>
-          <li><a href="#L632">Préférences des couleurs</a></li>
-          <li><a href="#rences1">Les préférences de géométrie</a></li>
-          <li><a href="#Configurat">Configuration des annotations</a></li>
-          <li><a href="#utilisateu">Nom de l'utilisateur</a></li>
-          <li><a href="#Serveur">Serveur de publication</a></li>
-          <li><a href="#Serveurs">Serveurs d'annotations</a>
-            <ul>
-              <li><a href="#Options4">Options</a></li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
-</div>
-
 <div id="Configuring">
 <h2 id="Configurer">Configurer Amaya</h2>
 
@@ -319,30 +241,20 @@ ultérieures.</p>
 
 <h3 id="Menus"><a name="preferences">Préférences</a></h3>
 
-<p>Ces menus se trouvent sous le menu <strong>Éditer/Préférences</strong>. Il
-y a 9 différents menus de préférences disponibles : <strong>Générales,
-Navigation, Publication, Cache, Proxy, Couleurs, Géométrie, Annotations,
-WebDAV</strong>. Ces menus sont légèrement différents sur Windows et station
-Unix, mais chacun présente trois boutons d'action :</p>
-
-<table border="0" cellspacing="5" cellpadding="5"
-summary="action button chart">
-  <tbody>
-    <tr>
-      <th>Appliquer</th>
-      <td>Ce bouton valide et stocke les options affichées dans le menu.</td>
-    </tr>
-    <tr>
-      <th>Défauts</th>
-      <td>Ce bouton rétablit, mais ne sauve pas, les valeurs par défaut.
-        Utilisez le bouton Appliquer pour valider les options.</td>
-    </tr>
-    <tr>
-      <th>Fermer</th>
-      <td>Ce bouton ferme le menu.</td>
-    </tr>
-  </tbody>
-</table>
+<p>Ce dialogue se trouve dans <strong>Éditer/Préférences</strong>
+(<strong>Amaya/Préférences</strong> sous Mac OSX). Il y a douze onglets
+différents disponibles : <strong>Générales, Navigation, Publication, Cache,
+Proxy, Couleurs, Géométrie, Annotations, WebDAV, Modèles, Courriel</strong>.
+Ce présente trois boutons d'action :</p>
+<ul>
+  <li><strong>Appliquer</strong> : ce bouton valide et stocke les options
+    affichées.</li>
+  <li><strong>Défauts</strong> : ce bouton rétablit, mais ne sauve pas, les
+    valeurs par défaut. Utilisez le bouton Appliquer pour valider les
+  options.</li>
+  <li><strong>Fermer</strong> : ce bouton ferme le dialogue sans
+  appliquer.</li>
+</ul>
 
 <h4 id="rences"><a name="General">Les préférences générales</a></h4>
 
