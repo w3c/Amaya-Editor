@@ -36,7 +36,7 @@ paramètres de configuration par le biais de préférences spécifiques.</p>
 <p>Par défaut une seule instance de l'application est lancée. Toute nouvelle
 invocation est redirigée vers l'instance active. Ce comportement peut être
 modifié en forçant la variable d'environnement
-<strong>AMAYA_MULTIPLE_INSTANCES=yes</strong>.</p>
+<code>AMAYA_MULTIPLE_INSTANCES=yes</code>.</p>
 
 <h3 id="propos">Répertoires de configuration</h3>
 
@@ -50,50 +50,29 @@ dialogue dans le répertoire config. Le répertoire parent est celui où Amaya a
 été installé (par défaut <code>Amaya/config</code> sur Unix, voir le tableau
 ci-dessous pour Windows et Mac OS X).</p>
 
-<table border="1" cellspacing="0">
+<table border="1">
   <tbody>
     <tr>
-      <td valign="top"
-      style="border:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><b>Architecture</b></p>
+      <td><p class="TableText">Unix</p>
       </td>
-      <td valign="top"
-      style="border:solid .5pt;   border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><b>Config Directory Location</b></p>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top"
-      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Unix</p>
-      </td>
-      <td valign="top"
-      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Amaya-x.x/config where
+      <td><p class="TableText"><code>Amaya-x.x/config where
         Amaya-x.x=binary_path/../..</code></p>
 
         <p>(e.g. /usr/lib/Amaya.x.x/config)</p>
       </td>
     </tr>
     <tr>
-      <td valign="top"
-      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Windows NT/XP</p>
+      <td><p class="TableText">Windows NT/XP/Vista</p>
       </td>
-      <td valign="top"
-      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\amaya</code><br />
+      <td><p class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\amaya</code><br />
         by default <br />
         C:\Documents and Settings\$user_name\Amaya-x.x\config</p>
       </td>
     </tr>
     <tr>
-      <td valign="top"
-      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Mac OS X</p>
+      <td><p class="TableText">Mac OS X</p>
       </td>
-      <td valign="top"
-      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+      <td><p
         class="TableText"><code>/Applications/Amaya.app/Contents/MacOS/Amaya-x.x/config</code></p>
       </td>
     </tr>
@@ -112,46 +91,26 @@ répertoire par défaut.</p>
 <p>La table suivante montre la position par défaut de ce répertoire dans les
 différentes architectures :</p>
 
-<table border="1" summary="directory structure">
-  <thead>
-    <tr>
-      <td><strong>architecture</strong></td>
-      <td><strong>le répertoire AmayaHome</strong></td>
-    </tr>
-  </thead>
+<table border="1">
   <tbody>
     <tr>
-      <td valign="top"><p class="TableText">Unix</p>
+      <td><p class="TableText">Unix</p>
       </td>
-      <td valign="top"><p class="TableText"><code>$HOME/.amaya</code></p>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top"><p class="TableText">Windows 95/ <br />
-        Windows 98</p>
-      </td>
-      <td valign="top"><p
-        class="TableText"><code>AMAYA-INSTALL-DIR\users\username</code> <br />
-        ou, si l'utilisateur n'a pas fait login, <br />
-        <code>AMAYA-INSTALL-DIR\users\default</code></p>
+      <td><p class="TableText"><code>$HOME/.amaya</code></p>
       </td>
     </tr>
     <tr>
-      <td valign="top"><p class="TableText">Windows NT/XP</p>
+      <td><p class="TableText">Windows NT/XP</p>
       </td>
-      <td valign="top"><p
-        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\amaya</code><br />
+      <td><p class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\amaya</code><br />
         par défaut <br />
         c:\Documents and Settings\$user_name\amaya     </p>
       </td>
     </tr>
     <tr>
-      <td valign="top"
-      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Mac OS X</p>
+      <td><p class="TableText">Mac OS X</p>
       </td>
-      <td valign="top"
-      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+      <td><p
         class="TableText"><code><code>~/Library/Application Support/amaya<code>  <br
         />
         </code></code></code></p>
@@ -163,15 +122,15 @@ différentes architectures :</p>
 <p>Le répertoire <strong>AmayaHome</strong> est conservé même si on installe
 de nouvelles versions d'Amaya. Il peut contenir les fichiers suivants :</p>
 <ul>
-  <li><strong>thot.rc</strong> : les préférences de l'utilisateur, changées
-    grâce au menu des préférences.</li>
-  <li><a name="keyboard"><strong>amaya.keyboard</strong></a> (Unix),
-    <strong>amaya.kb</strong> (Windows) ou <strong>amaya.kb-mac</strong> : ce
-    fichier définit les raccourcis clavier d'Amaya pour la plate-forme
-    correspondante.</li>
-  <li><strong>amaya.css</strong> : contient la feuille de style de
-    l'utilisateur.</li>
-  <li><strong>dictionary.DCT</strong> : Amaya fournit un vérificateur
+  <li><code>thot.rc</code> : les préférences de l'utilisateur, changées grâce
+    au menu des préférences.</li>
+  <li><a name="keyboard"><code>amaya.keyboard</code></a> (Unix),
+    <code>amaya.kb</code> (Windows) ou <code>amaya.kb-mac</code> : ce fichier
+    définit les raccourcis clavier d'Amaya pour la plate-forme
+  correspondante.</li>
+  <li><code>amaya.css</code> : contient la <em>feuille de style de
+    l'utilisateur</em>.</li>
+  <li><code>dictionary.DCT</code> : Amaya fournit un vérificateur
     d'orthographe multi-langues. Par défaut le vérificateur d'orthographe
     travaille avec deux dictionnaires : Le dictionnaire Anglais et le
     dictionnaire Français (d'autres dictionnaires peuvent être téléchargés
@@ -193,37 +152,22 @@ dans un répertoire que nous appelons le répertoire
 <strong>AmayaTemp</strong>. La table suivante montre où ce répertoire est
 stocké dans les différents architectures :</p>
 
-<table border="1" summary="directory structure">
-  <thead>
-    <tr>
-      <td><strong>architecture</strong></td>
-      <td><strong>le répertoire AmayaTemp</strong></td>
-    </tr>
-  </thead>
+<table border="1">
   <tbody>
     <tr>
       <td>Unix</td>
       <td>$HOME/.amaya</td>
     </tr>
     <tr>
-      <td>Windows 9x</td>
-      <td><p>c :\temp\amaya (default value)</p>
-      </td>
-    </tr>
-    <tr>
-      <td>Window XP</td>
+      <td>Window NT/XP/Vista</td>
       <td>$HOMEDRIVE:\$HOMEPATH\Local Documents and Settings\Temp\amaya<br />
         par défaut <br />
         c:\Documents and Settings\$user_name\Local Settings\Temp\amaya</td>
     </tr>
     <tr>
-      <td valign="top"
-      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Mac OS X</p>
+      <td><p class="TableText">Mac OS X</p>
       </td>
-      <td valign="top"
-      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code><code>~/.amaya</code></code></p>
+      <td><p class="TableText"><code><code>~/.amaya</code></code></p>
       </td>
     </tr>
   </tbody>
@@ -560,46 +504,33 @@ fonctionner sur un port autre que 80, alors, comme un URL, vous devez ajouter
 un caractère ":" au nom du proxy, suivi par le numéro du port. Voici deux
 exemples.</p>
 
-<table border="1" cellspacing="0" cellpadding="0"
-style="margin-left:.2in;border-collapse:  collapse;border:none;">
+<table border="1">
   <tbody>
     <tr>
-      <td width="194" valign="top"
-      style="width:145.85pt;border-top:solid green 1.5pt;   border-left:none;border-bottom:solid green .75pt;border-right:none;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><span xml:lang="EN" lang="EN"
+      <td><p class="TableHead"><span xml:lang="EN" lang="EN"
         style="font-weight:   normal"><b>HTTP Proxy Entry</b></span></p>
       </td>
-      <td width="377" valign="top"
-      style="width:282.55pt;border-top:solid green 1.5pt;   border-left:none;border-bottom:solid green .75pt;border-right:none;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><span xml:lang="EN" lang="EN"
+      <td><p class="TableHead"><span xml:lang="EN" lang="EN"
         style="font-weight:   normal"><b>Résultat</b></span></p>
       </td>
     </tr>
     <tr>
-      <td width="194" valign="top"
-      style="width:145.85pt;border:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="Code0"><span xml:lang="EN" lang="EN">  
+      <td><p class="Code0"><span xml:lang="EN" lang="EN">  
         groucho.marx.edu</span></p>
 
         <p class="Code0"><span xml:lang="EN" lang="EN">           </span></p>
       </td>
-      <td width="377" valign="top"
-      style="width:282.55pt;border:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Déclare un proxy appelé groucho.marx.edu fonctionne
-        par défaut sur le port 80.</p>
+      <td><p class="TableText">Déclare un proxy appelé groucho.marx.edu
+        fonctionne par défaut sur le port 80.</p>
       </td>
     </tr>
     <tr>
-      <td width="194" valign="top"
-      style="width:145.85pt;border:none;border-bottom:   solid green 1.5pt;padding:0in 5.4pt 0in 5.4pt"><p
-        class="Code0"><span xml:lang="EN" lang="EN">  
+      <td><p class="Code0"><span xml:lang="EN" lang="EN">  
         groucho.marx.edu:1234</span></p>
 
         <p class="Code0"><span xml:lang="EN" lang="EN">           </span></p>
       </td>
-      <td width="377" valign="top"
-      style="width:282.55pt;border:none;border-bottom:   solid green 1.5pt;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Déclare un proxy appelé groucho.marx.edu,
+      <td><p class="TableText">Déclare un proxy appelé groucho.marx.edu,
         fonctionnant sur le port 1234.</p>
       </td>
     </tr>
