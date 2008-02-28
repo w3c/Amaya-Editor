@@ -23,8 +23,8 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
 src="../../resources/icons/misc/right.png" alt="next" /> </a></p>
 </div>
 
-<div class="PageBody" id="page_body">
-<h2 id="Support">Support XML générique</h2>
+<div class="PageBody" id="XML">
+<h2 id="Support">Éditer des documents XML</h2>
 
 <h3 id="Chargement">Chargement de document XML</h3>
 

@@ -43,48 +43,50 @@ les aspects spécifiques d'Amaya sont décrits.</p>
 <p>Chacune des sections suivantes décrit brièvement comment utiliser une
 fonction spécifique d'Amaya :</p>
 <ul>
-  <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer avec
-    Amaya</a></li>
-  <li><a rel="Chapter" href="Selecting.html.fr#Selecting">Sélection</a></li>
+  <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer</a></li>
+  <li><a rel="Chapter"
+  href="Selecting.html.fr#Selecting">Sélectionner</a></li>
   <li><a rel="Chapter" href="Views.html.fr#Views">Afficher des vues</a></li>
   <li><a href="Document.html.fr#Changing">Éditer des documents</a></li>
-  <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer de nouveaux
+  <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer des
     éléments</a></li>
   <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Éditer des
     attributs</a></li>
   <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Saisir du
   texte</a></li>
-  <li><a href="HTML.html.fr#HTML">Les élements HTML</a></li>
-  <li><a href="Templates.html.fr#modèles">Éditer avec des modèles</a></li>
-  <li><a rel="Chapter" href="Changing.html.fr#Changing">Éditer la structure
+  <li><a rel="Chapter" href="HTML.html.fr#HTML">Les élements HTML</a></li>
+  <li><a rel="Chapter" href="Templates.html.fr#modèles">Éditer avec des
+    modèles</a></li>
+  <li><a rel="Chapter" href="Changing.html.fr#Changing">Changer la structure
     du document</a></li>
   <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et modifier des
     liens et des ancres</a></li>
   <li><a rel="Chapter" href="Tables.html.fr#Editing">Éditer des
   tables</a></li>
-  <li><a rel="Chapter" href="ImageMaps.html.fr#Client-sid">Créer et utiliser
-    des zones actives</a></li>
+  <li><a rel="Chapter" href="ImageMaps.html.fr#Client-sid">Éditer des images
+    et des zones actives</a></li>
   <li><a href="Math.html.fr#Math" rel="Chapter">Éditer des
   mathématiques</a></li>
-  <li><a href="SVG.html.fr#Graphics" rel="Chapter">Éditer des
-  graphiques</a></li>
-  <li><a href="Xml.html.fr#XML" rev="Chapter">Support XML générique</a></li>
-  <li><a rel="Chapter" href="StyleSheets.html.fr#Style">Les feuilles de
-    style</a></li>
+  <li><a href="SVG.html.fr#Graphics" rel="Chapter">Éditer des graphiques
+    SVG</a></li>
+  <li><a rel="Chapter" href="Xml.html.fr#XML" rev="Chapter">Éditer des
+    documents XML</a></li>
+  <li><a rel="Chapter" href="StyleSheets.html.fr#Style">Appliquer du style à
+    un document</a></li>
   <li><a rel="Chapter" href="Searching.html.fr#Searching">Rechercher et
     remplacer du texte</a></li>
   <li><a rel="Chapter" href="SpellChecking.html.fr#Spell">Vérifier
     l'orthographe</a></li>
-  <li><a rel="Chapter" href="Publishing.html.fr#Saving">Sauver et publier des
-    documents</a></li>
+  <li><a rel="Chapter" href="Publishing.html.fr#Saving">Enregistrer et
+    publier des documents</a></li>
   <li><a rel="Chapter" href="Printing.html.fr#Printing">Imprimer des
     documents</a></li>
   <li><a rel="Chapter" href="Numbering.html.fr#Section">Numéroter les
     sections</a></li>
   <li><a rel="Chapter" href="MakeBook.html.fr#Assembling">Assembler des
     collections de document</a></li>
-  <li><a rel="Chapter" href="Annotations.html.fr#Annotations">Les annotations
-    dans Amaya</a></li>
+  <li><a rel="Chapter" href="Annotations.html.fr#Annotations">Annoter les
+    documents</a></li>
 </ul>
 
 <p>La section <a href="Configure.html.fr#Configuring"
@@ -92,8 +94,8 @@ rel="Chapter">Configurer Amaya</a> explique comment modifier les options par
 défaut.</p>
 
 <p>La section <a href="ShortCuts.html.fr#page_body" rel="Chapter">Les
-raccourcis clavier dans Amaya</a> explique comment est construite la liste
-des raccourcis clavier.</p>
+raccourcis clavier</a> explique comment est construite la liste des
+raccourcis clavier.</p>
 
 <p>La page sur <a href="Access.html.fr#Access" rel="Chapter">l'Accessibilité
 dans Amaya</a> décrit les fonctionnalités d'accessibilité d'Amaya, et
