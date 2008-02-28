@@ -214,7 +214,7 @@ des fonctionnalités disponibles à un instant donné est appelé un
 de choisir un profil (Lite, Lite+Math, etc.). Le profil choisi ne s'applique
 pas immédiatement, mais seulement au prochain démarrage d'Amaya.</p>
 
-<h5>Position des panneaux d'outils</h5>
+<h5 id="Position">Position des panneaux d'outils</h5>
 
 <p>Les panneaux d'outils peuvent être affichés, sur le coté gauche de la
 fenêtre, ou sur le côté droit de la fenêtre, ou paramétrables.</p>
@@ -261,7 +261,7 @@ langues ISO-Latin-1 en écrivant les fichiers de dialogue correspondants. Ces
 fichiers de dialogue doivent se trouver dans le même répertoire (c'est à dire
 <strong>Amaya/config</strong>).</p>
 
-<h5>Page de démarrage</h5>
+<h5 id="Page">Page de démarrage</h5>
 
 <p>Ce champ spécifie l'URI qu'Amaya chargera au démarrage ou quand
 l'utilisateur pressera le bouton Home. Un exemple est <a
@@ -437,7 +437,7 @@ station de travail. Si les documents diffèrent, Amaya vous alertera.</p>
 fichiers produits par Amaya se terminent par <code>CR/LF</code> (format DOS)
 ou par un simple LF (format standard). </p>
 
-<h5>Longueur de ligne fixée</h5>
+<h5 id="Longueur">Longueur de ligne fixée</h5>
 
 <p>Cette option fixe le nombre maximum de caractères attendus par lignes que
 doit engendré Amaya quand il produit le fichier HTML ou XML. Quand la valeur
