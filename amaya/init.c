@@ -1507,7 +1507,7 @@ static void TextURL (Document doc, View view, char *text, intptr_t noreplace)
 
       if (noreplace != 0)
         //ask the user choice
-        LoadDefaultOpeningLocation (TRUE);
+        LoadDefaultOpeningLocation (FALSE);
       else
         DontReplaceOldDoc = FALSE;
       if (!DontReplaceOldDoc && !CanReplaceCurrentDocument (doc, view))
