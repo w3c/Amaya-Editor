@@ -28,21 +28,20 @@ Manuel d'utilisation d'Amaya</div>
 <p>Ce manuel présente l'interface utilisateur d'Amaya. L'interface
 utilisateur sur votre machine peut-être un peu différente puisqu'elle
 dépend de la plateforme et la configuration choisie. Ce manuel n'est pas
-exhaustif, son but est simplement d'aider les utilisateurs à découvrir les
-principales caractéristiques du logiciel.</p>
+exhaustif, son but est simplement de vous aider à découvrir les principales
+caractéristiques du logiciel.</p>
 
 <p>Ce document est organisé comme un livre. Vous pouvez utiliser la commande
-<a href="MakeBook.html.fr#L1065">Outils/Construire un livre</a> pour
-assembler et imprimer la totalité du manuel.</p>
+<strong><a href="MakeBook.html.fr#L1065">Outils/Construire un
+livre</a></strong> pour assembler et imprimer la totalité du manuel.</p>
 
-<p>Beaucoup de commandes d'<strong>Amaya</strong> sont identiques à celles
-fournies par les traitements de texte classiques. Elles ne sont pas
-présentées ici. Seuls les aspects spécifiques d'<strong>Amaya</strong>
-sont décrits.</p>
+<p>Beaucoup de commandes d'Amaya sont identiques à celles fournies par les
+traitements de texte classiques. Elles ne sont pas présentées ici. Seuls
+les aspects spécifiques d'Amaya sont décrits.</p>
 <hr />
 
-<p>Chaque section suivante décrit brièvement comment utiliser une fonction
-spécifique d'Amaya :</p>
+<p>Chacune des sections suivantes décrit brièvement comment utiliser une
+fonction spécifique d'Amaya :</p>
 <ul>
   <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer avec
     Amaya</a></li>
@@ -90,7 +89,7 @@ spécifique d'Amaya :</p>
 
 <p>La section <a href="Configure.html.fr#Configuring"
 rel="Chapter">Configurer Amaya</a> explique comment modifier les options par
-defaut.</p>
+défaut.</p>
 
 <p>La section <a href="ShortCuts.html.fr#page_body" rel="Chapter">Les
 raccourcis clavier dans Amaya</a> explique comment est construite la liste
