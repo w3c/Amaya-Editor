@@ -27,9 +27,10 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
 <h2 id="Configurer">Configurer Amaya</h2>
 
 <p>Amaya utilise différents fichiers de configuration pour initialiser les
-paramètres globaux, dialogues, raccourcis, taille et position de la fenêtre,
-feuille de style de l'utilisateur, etc. Vous pouvez changer la majorité des
-paramètres de configuration par le biais de préférences spécifiques.</p>
+paramètres globaux, les dialogues, les raccourcis, la taille et la position
+de la fenêtre, la feuille de style de l'utilisateur, etc. Vous pouvez changer
+la plupart de ces paramètres de configuration par le biais de dialogues de
+préférences.</p>
 
 <h3 id="plusieurs">Une ou plusieurs instances d'Amaya</h3>
 
@@ -43,7 +44,7 @@ modifié en forçant la variable d'environnement
 <p>Amaya utilise un certain nombre de répertoires par défaut pour conserver
 les informations de configuration.</p>
 
-<h4 id="pertoire">Le répertoire config</h4>
+<h4 id="pertoire">Le répertoire <code>config</code></h4>
 
 <p>Amaya enregistre la plupart des valeurs par défaut et tous les messages de
 dialogue dans le répertoire config. Le répertoire parent est celui où Amaya a
@@ -79,7 +80,7 @@ ci-dessous pour Windows et Mac OS X).</p>
   </tbody>
 </table>
 
-<h4 id="pertoire1">Le répertoire AmayaHome</h4>
+<h4 id="pertoire1">Le répertoire <code>AmayaHome</code></h4>
 
 <p>Amaya stocke les préférences de l'utilisateur ainsi que les autres
 fichiers de configuration de l'utilisateur dans un répertoire que nous
@@ -146,7 +147,8 @@ de nouvelles versions d'Amaya. Il peut contenir les fichiers suivants :</p>
 du démarrage. Si vous les changer, vous devrez quitter et redémarrer Amaya
 pour les prendre en compte.</p>
 
-<h4 id="pertoire2"><a name="AmayaTemp">Le répertoire AmayaTemp</a></h4>
+<h4 id="pertoire2"><a name="AmayaTemp">Le répertoire
+<code>AmayaTemp</code></a></h4>
 
 <p>Amaya stocke tous les fichiers temporaires qu'il crée durant l'exécution
 dans un répertoire que nous appelons le répertoire

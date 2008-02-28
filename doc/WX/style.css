@@ -35,6 +35,29 @@
     padding: 0 2em 12em 2em;
     font-size: 11pt;
     }
+  div.PageBody div.PageBody, div#page_body div.PageBody,
+  div.PageBody div#page_body, div#page_body div#page_body {
+    background-color: transparent;
+    padding: 0;
+    }
+
+/* table of contents */
+  div.toc {
+    margin-top: 1em;
+    }
+  div.toc li {
+    list-style-type: none;
+    }
+  div.toc ul {
+    font-weight: bold;
+    margin-left: 0;
+    padding-left: 0;
+    }
+  div.toc ul ul {
+    margin-left: 1.5em;
+    padding-left: 0;
+    font-weight: normal;
+    }
 
   small {
     font-size: 0.92em;
@@ -58,57 +81,53 @@
     }
 
   p.ProcedureCaption {
-    margin: 1.5em 0em 0.5em 1em;
+    margin: 1em 0em 0.5em 1em;
     font-size: 1em;
     color: teal;
     font-weight: 700;
     }
 
   p.Note, p.ProcedureNote {
-    margin-top: .2em;
-    margin-bottom: .2em;
+    margin-top: .7em;
+    margin-bottom: .7em;
+    padding-top: .1em;
+    padding-bottom: .1em;
     border-top: thin solid;
     border-bottom: thin solid;
     }
 
   h1 {
     font-family: Tahoma,Verdana,Myriad Web,Syntax,sans-serif;
-    font-size-adjust: 0.53;
     font-size: 1.85em;
     font-weight: 500;
     }
 
   h2 {
     font-family: Tahoma,Verdana,Myriad Web,Syntax,sans-serif;
-    font-size-adjust: 0.53;
     font-size: 1.67em;
     font-weight: 600;
     }
 
   h3 {
     font-family: Tahoma,Verdana,Myriad Web,Syntax,sans-serif;
-    font-size-adjust: 0.53;
     font-size: 1.5em;
     font-weight: 600;
     }
 
   h4 {
     font-family: Tahoma,Verdana,Myriad Web,Syntax,sans-serif;
-    font-size-adjust: 0.53;
     font-size: 1.33em;
     font-weight: 600;
     }
 
   h5, dt {
     font-family: Tahoma,Verdana,Myriad Web,Syntax,sans-serif;
-    font-size-adjust: 0.53;
     font-size: 1.17em;
     font-weight: 600;
     }
 
   h6 {
     font-family: Tahoma,Verdana,Myriad Web,Syntax,sans-serif;
-    font-size-adjust: 0.53;
     font-size: 1em;
     font-weight: 700;
     }
@@ -173,7 +192,7 @@
     color: rgb(255, 51, 0);
     }
 
-  div > p:first-child, body > p:first-child, td > p:first-child {
+  div > p:first-child, body > p:first-child {
     margin-top: 0.75em;
     margin-bottom: 0.75em;
     padding-top: 0pt;
@@ -227,13 +246,24 @@
     }
 
   ul, ol, dl, p, pre, hr {
-    margin-top: 0.2em;
-    margin-bottom: 0.2em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
     padding-top: 0pt;
     padding-bottom: 0pt;
     }
 
-  li, dt, div {
+  li, dt {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding-top: 0pt;
+    padding-bottom: 0pt;
+    }
+  dt + dt {
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    }
+
+  div {
     margin-top: 0pt;
     margin-bottom: 0pt;
     padding-top: 0pt;
@@ -257,12 +287,13 @@
 
   dd {
     margin-top: 0pt;
-    margin-bottom: 0.75em;
+    margin-bottom: 0.5em;
     padding-top: 0pt;
     padding-bottom: 0pt;
     }
 
-  ul ul, ol ol, li address, li dl, li ul, li ol, li p, li hr, li pre, dd ol, dd p, dd ul, dd pre {
+  ul ul, ol ol, li li, li address, li dl, li ul, li ol, li p, li hr, li pre, dd ol, dd ul, dd p, dd li, dd pre {
+    margin-top: 0pt;
     margin-bottom: 0pt;
     padding-top: 0pt;
     padding-bottom: 0pt;
@@ -281,7 +312,6 @@
     @page {
       margin: 23mm;
       border-top: thin solid black;
-      border-bottom: thin solid black;
       padding: 6mm 0 4mm;
       size: a4;
       font: 11pt serif; 
@@ -340,6 +370,12 @@
     div#page_body, div.PageBody {
       background-color: transparent;
       padding: 0;
+      }
+    div.toc a {
+      text-decoration: none;
+      }
+    div.toc a::after {
+      content: leader('.') target-counter(attr(href), page);
       }
     h2 {
       string-set: headerright content();
