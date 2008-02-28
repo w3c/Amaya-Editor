@@ -437,7 +437,7 @@ groucho.marx.edu</code>.</p>
 <h4 id="Cache">Cache preferences</h4>
 
 <p>Amaya provides a cache through libwww. The cache is enabled by default and
-is stored in the AmayaTemp/libwww-cache directory. This menu also provides a
+is stored in the AmayaTemp/libwww-cache directory. This tab also provides a
 <strong>Flush Cache</strong> button for erasing the cache directory.</p>
 
 <h5 id="Check3">Check boxes</h5>
@@ -458,14 +458,9 @@ cache.</p>
 
 <h5 id="Cache1">Cache directory</h5>
 
-<p>Identifies the parent directory for the libwww-cache directory. Changing
-this directory does not erase the contents of the previous one. You must
-remove it yourself.</p>
-
-<p class="Note"><strong>Note:</strong> File protection mechanisms prevent the
-use of NFS (Network File System) directories for the cache directory as NFS
-allows reuse by multiple processes or users. Use a local directory for the
-cache.</p>
+<p>Identifies the address of the libwww-cache directory. Changing this
+directory does not erase the contents of the previous one. You must remove it
+yourself.</p>
 
 <h5 id="Cache2">Cache size</h5>
 
@@ -551,9 +546,8 @@ two examples.</p>
 <p>Lists space-separated domains where you want to use your proxy. Use the
 switch buttons to specify if the proxy should or shouldn't be used with this
 domain list. For example:</p>
-
-<p><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code></p>
-<pre style="margin-left:.5in">         ^--------------^----&gt; space separated entries</pre>
+<pre><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code>
+              ^--------------^----&gt; space separated entries</pre>
 
 <h4 id="Color">Color preferences</h4>
 
@@ -572,11 +566,10 @@ the current selection.</p>
 </ul>
 
 <p>All these colors may be selected by name, hex code, or RGB format:</p>
-<ul>
-  <li>Proposed valid names., Black, Blue, Fuchsia, Gray, Green, Lime, Maroon,
-    Navy, Olive, Purple, Red, S</li>
-  <li>Valid hexcode format is #FF00FF, for example.</li>
-  <li>Valid RGB format is rgb(255, 0, 255), for example.</li>
+<ul type="square">
+  <li>Proposed valid names.</li>
+  <li>Valid hexcode format is <code>#FF00FF</code>, for example.</li>
+  <li>Valid RGB format is <code>rgb(255, 0, 255)</code>, for example.</li>
 </ul>
 
 <p>You can also select colors with the associated color palette.</p>
@@ -595,7 +588,7 @@ windows geometry should be saved when the application is exited.</p>
   <li>or to restore the default values.</li>
 </ul>
 
-<p class="Note"><strong>Note</strong>: These changes take affect when you
+<p class="Note"><strong>Note</strong>: These changes take effect when you
 open new document windows.</p>
 
 <h4 id="Configurin1">Configuring annotation settings</h4>
@@ -621,7 +614,7 @@ can specify one or more servers. The reserved server name
 does not necessarily mean that a local annotation server is running (or it
 would show a complete URL ).Under Unix, the annotation servers are specified
 as a space separated list. Under Windows, you can add a new server name by
-clicking in the Annotations servers list, pressing the <strong>Enter</strong>
+clicking in the Annotations servers list, pressing the <code>Enter</code>
 key, and then typing the server name . By default, this list is initialized
 to <code>localhost</code>.</p>
 

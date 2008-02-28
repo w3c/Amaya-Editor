@@ -467,8 +467,9 @@ exemple, <code>www.w3.org groucho.marx.edu</code>.</p>
 
 <p>Amaya fournit un cache par l'intermédiaire de la libwww. Par défaut, le
 cache est activé et est stocké dans le répertoire
-<strong>AmayaTemp/libwww-cache</strong>. Ce menu fournit également un bouton
-<strong>Nettoyage du Cache</strong>, pour effacer le répertoire du cache.</p>
+<strong>AmayaTemp/libwww-cache</strong>. Cet onglet fournit également un
+bouton <strong>Nettoyage du Cache</strong>, pour effacer le répertoire du
+cache.</p>
 
 <h5 id="Options3">Options</h5>
 
@@ -477,26 +478,21 @@ de gauche alignée avec l'intitulé de l'option.</p>
 
 <p><strong>Activer le cache</strong>. Active ou désactive le cache</p>
 
-<p><strong>Cache des documents protégés</strong>. Par défaut, les documents
-qui sont protégés par un mot de passe sont stockés dans le cache. Utiliser ce
-drapeau pour passer outre ce comportement.</p>
+<p><strong>Stocker dans le cache des documents protégés</strong>. Par défaut,
+les documents qui sont protégés par un mot de passe sont stockés dans le
+cache. Utiliser ce drapeau pour passer outre ce comportement.</p>
 
 <p><strong>Mode déconnecté</strong>. Récupère toujours les documents depuis
 le cache.</p>
 
-<p><strong>Ignorer les expirations : entête</strong>. Ignore les dates
-d'expiration des entrées de cache.</p>
+<p><strong>Ignorer l'en-tête Expires</strong>. Ignore les dates d'expiration
+des entrées de cache.</p>
 
 <h5 id="L1701">Répertoire du cache</h5>
 
-<p>Donne le répertoire parent pour le répertoire libwww-cache. Le fait de
-changer ce répertoire n'effacera pas le contenu du précédant. Vous aurez à le
-supprimer vous même.</p>
-
-<p class="Note"><strong>Note :</strong> On ne peut pas utiliser des
-répertoires NFS (Network File System) pour le répertoire du cache en raison
-de leurs mécanismes de verrouillage. Utiliser un répertoire 'local' pour le
-cache.</p>
+<p>Donne l'adresse du répertoire libwww-cache. Le fait de changer ce
+répertoire n'effacera pas le contenu du précédant. Vous aurez à le supprimer
+vous même.</p>
 
 <h5 id="Taille">Taille du cache (Mo)</h5>
 
@@ -584,12 +580,12 @@ exemples.</p>
 <h4 id="Liste">Liste du domaine proxy</h4>
 
 <p>Donne une liste des domaines séparés par des espaces pour lesquels vous
-utilisez votre proxy. Par exemple : <pre>harpo.marx.edu zeppo.marx.edu chico.marx.edu
+utilisez votre proxy. Par exemple : <pre><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code>
               ^--------------^----&gt; entrées séparées par des espaces</pre>
 Utilisez le menu pour spécifier si le proxy doit ou ne doit pas être utilisé
 avec cette liste de domaines.</p>
 
-<h4 id="L632"><a name="color">Préférences des couleurs</a></h4>
+<h4 id="L632">Préférences des couleurs</h4>
 
 <p>Ce menu permet la sélection des couleurs du premier plan et de l'arrière
 plan par défaut pour les documents. Il permet également de contrôler les
@@ -610,8 +606,8 @@ couleurs utilisées par Amaya pour visualiser la sélection courante.</p>
 hexadécimal, ou leur format rgb :</p>
 <ul type="square">
   <li>Les noms valides proposés.</li>
-  <li>Le format hexadécimal valide est #FF00FF par exemple.</li>
-  <li>Le format rgb valide est rgb(255, 0, 255) par exemple.</li>
+  <li>Le format hexadécimal valide est <code>#FF00FF</code> par exemple.</li>
+  <li>Le format rgb valide est <code>rgb(255, 0, 255)</code> par exemple.</li>
 </ul>
 
 <p>Vous pouvez également sélectionner les couleurs par le biais de la palette
@@ -620,7 +616,7 @@ associée.</p>
 <p class="Note"><strong>Note :</strong> le changement des couleurs sera
 effectif quand vous ouvrirez une nouvelle fenêtre de document.</p>
 
-<h4 id="rences1"><a name="HTML">Les préférences de géométrie</a></h4>
+<h4 id="rences1">Les préférences de géométrie</h4>
 
 <p><strong>Enregistrer la géométrie en quittant</strong>. La géométrie
 courante des fenêtres sera automatiquement sauvegardée en quittant
@@ -664,7 +660,7 @@ chercher localement les annotations. Cela ne signifie pas que l'on utilise un
 serveur pour les annotations locale, pour cela il faudrait donner l'URL
 complète de celui-ci. Sous Unix, les serveurs d'annotations sont spécifiés à
 la suite, séparés par un espace. Sous Windows, ils sont spécifiés les uns
-après les autres et séparés par la touche <code>Return</code>. Par défaut, ce
+après les autres et séparés par la touche <code>Entrée</code>. Par défaut, ce
 champ est initialisé avec <code>localhost</code>.</p>
 
 <p class="Note"><em class="Note">ASTUCE</em>: Vous pouvez inhiber la
