@@ -752,11 +752,15 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
         dim = pBox->BxW;
 
       /* left margin */
-      if (pAb->AbLeftMarginUnit != UnAuto)
+      if (pBox->BxType == BoCell || pBox->BxType == BoRow)
+        pBox->BxLMargin = 0;
+      else if (pAb->AbLeftMarginUnit != UnAuto)
         pBox->BxLMargin = GetPixelValue (pAb->AbLeftMargin, pAb->AbLeftMarginUnit, dim,
                                          pAb, ViewFrameTable[frame - 1].FrMagnification);
       /* right margin */
-      if (pAb->AbRightMarginUnit != UnAuto)
+      if (pBox->BxType == BoCell || pBox->BxType == BoRow)
+        pBox->BxRMargin = 0;
+      else if (pAb->AbRightMarginUnit != UnAuto)
         pBox->BxRMargin = GetPixelValue (pAb->AbRightMargin, pAb->AbRightMarginUnit, dim,
                                          pAb, ViewFrameTable[frame - 1].FrMagnification);
 
@@ -879,7 +883,9 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
       else
         {
           /* top margin */
-          if (pAb->AbTopMarginUnit != UnAuto)
+          if (pBox->BxType == BoCell || pBox->BxType == BoRow)
+            pBox->BxTMargin = 0;
+          else if (pAb->AbTopMarginUnit != UnAuto)
             pBox->BxTMargin = GetPixelValue (pAb->AbTopMargin, pAb->AbTopMarginUnit, dim,
                                              pAb, ViewFrameTable[frame - 1].FrMagnification);
           /* top padding */
@@ -899,7 +905,9 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
       else
         {
           /* bottom margin */
-          if (pAb->AbBottomMarginUnit != UnAuto)
+          if (pBox->BxType == BoCell || pBox->BxType == BoRow)
+            pBox->BxBMargin = 0;
+          else if (pAb->AbBottomMarginUnit != UnAuto)
             pBox->BxBMargin = GetPixelValue (pAb->AbBottomMargin, pAb->AbBottomMarginUnit, dim,
                                              pAb, ViewFrameTable[frame - 1].FrMagnification);
           /* bottom padding */

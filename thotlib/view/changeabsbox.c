@@ -144,7 +144,7 @@ static void SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl,
   pR = *pRule;
   *pRule = NULL;
   *pRuleView1 = NULL;
-  while (pR != NULL)
+  while (pR != NULL && *pRule == NULL)
     {
       if (pR->PrType == typeRule &&
           (typeRule != PtFunction || typeFunc == FnAny ||
