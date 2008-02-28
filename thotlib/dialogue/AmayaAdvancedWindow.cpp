@@ -185,19 +185,18 @@ void AmayaAdvancedWindow::LoadConfig()
     m_manager.GetPane(it->second).Show(open && m_bShowPanels);
   }
 
- 
-  m_manager.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("AmayaAdvancedNotebook")).
-                                    CenterPane().PaneBorder(false));
   // Add toolbars to AUI
   if(HaveToolBarBrowsing())
     m_manager.AddPane(GetToolBarBrowsing(), wxAuiPaneInfo().
                   Name(wxT("Browsing")).Caption(wxT("Browsing")).ToolbarPane().Top().
-                  Gripper(false).Row(0).Floatable(false).PaneBorder(false));
+                  Gripper(false).Row(0).Floatable(false).PaneBorder(false).Layer(2));
   if(HaveToolBarEditing())
     m_manager.AddPane(GetToolBarEditing(), wxAuiPaneInfo().
                   Name(wxT("Edition")).Caption(wxT("Edition")).ToolbarPane().Top().
-                  Gripper(false).Row(1).Floatable(false).PaneBorder(false));
-  
+                  Gripper(false).Row(1).Floatable(false).PaneBorder(false).Layer(1));
+   
+  m_manager.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("AmayaAdvancedNotebook")).
+                                    CenterPane().PaneBorder(false));
   m_manager.Update();
 
   // Add menu items
@@ -392,9 +391,14 @@ void AmayaAdvancedWindow::OnClose(wxCloseEvent& event)
  -----------------------------------------------------------------------*/
 bool AmayaAdvancedWindow::IsToolBarShown(int toolbarID)
 {
+  wxPanel *p;
+  wxRect r;
+  wxString str;
+
   switch(toolbarID)
   {
     case 0:
+      
       if(HaveToolBarBrowsing())
         return m_manager.GetPane(GetToolBarBrowsing()).IsShown();
       break;
@@ -415,6 +419,7 @@ bool AmayaAdvancedWindow::IsToolBarShown(int toolbarID)
  -----------------------------------------------------------------------*/
 void AmayaAdvancedWindow::ShowToolBar(int toolbarID, bool bShow)
 {
+  wxString str;
   switch(toolbarID)
   {
     case 0:
@@ -428,8 +433,8 @@ void AmayaAdvancedWindow::ShowToolBar(int toolbarID, bool bShow)
     default:
       break;
   }
-  m_manager.Update();
   RefreshShowToolBarToggleMenu(toolbarID);
+  m_manager.Update();
 }
 
 
