@@ -62,7 +62,7 @@ ci-dessous pour Windows et Mac OS X).</p>
       </td>
     </tr>
     <tr>
-      <td><p class="TableText">Windows NT/XP/Vista</p>
+      <td><p class="TableText">Windows </p>
       </td>
       <td><p class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\amaya</code><br />
         by default <br />
@@ -100,7 +100,7 @@ différentes architectures :</p>
       </td>
     </tr>
     <tr>
-      <td><p class="TableText">Windows NT/XP</p>
+      <td><p class="TableText">Windows</p>
       </td>
       <td><p class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\amaya</code><br />
         par défaut <br />
@@ -140,10 +140,11 @@ de nouvelles versions d'Amaya. Il peut contenir les fichiers suivants :</p>
     de l'utilisateur".</li>
 </ul>
 
-<p class="Note"><strong>Note :</strong> les fichiers <strong>amaya.keyboard,
-amaya.kb</strong> et <strong>amaya.css</strong> sont chargés au moment du
-démarrage. Si vous les changer, vous devrez quitter et redémarrer Amaya pour
-les prendre en compte.</p>
+<p class="Note"><strong>Note :</strong> les fichiers
+<code>amaya.keyboard</code>, <code>amaya.kb</code>,
+<code>amaya.kb-mac</code>, et <code>amaya.css</code> sont chargés au moment
+du démarrage. Si vous les changer, vous devrez quitter et redémarrer Amaya
+pour les prendre en compte.</p>
 
 <h4 id="pertoire2"><a name="AmayaTemp">Le répertoire AmayaTemp</a></h4>
 
@@ -159,13 +160,13 @@ stocké dans les différents architectures :</p>
       <td>$HOME/.amaya</td>
     </tr>
     <tr>
-      <td>Window NT/XP/Vista</td>
+      <td>Windows</td>
       <td>$HOMEDRIVE:\$HOMEPATH\Local Documents and Settings\Temp\amaya<br />
         par défaut <br />
         c:\Documents and Settings\$user_name\Local Settings\Temp\amaya</td>
     </tr>
     <tr>
-      <td><p class="TableText">Mac OS X</p>
+      <td><p class="TableText">Mac OS X</p>
       </td>
       <td><p class="TableText"><code><code>~/.amaya</code></code></p>
       </td>
@@ -196,63 +197,45 @@ Ce présente trois boutons d'action :</p>
   <li><strong>Défauts</strong> : ce bouton rétablit, mais ne sauve pas, les
     valeurs par défaut. Utilisez le bouton Appliquer pour valider les
   options.</li>
-  <li><strong>Fermer</strong> : ce bouton ferme le dialogue sans
+  <li><strong>Annuler</strong> : ce bouton ferme le dialogue sans
   appliquer.</li>
 </ul>
 
-<h4 id="rences"><a name="General">Les préférences générales</a></h4>
+<h4 id="General">Les préférences générales</h4>
 
-<p><strong>Page de démarrage</strong>. Spécifie l'URI qu'Amaya chargera au
-démarrage ou quand l'utilisateur pressera le bouton Home. Un exemple est <a
-href="http://www.w3.org"><code>http://www.w3.org</code></a>.</p>
+<h5 id="Profile">Profil</h5>
 
-<p class="Note"><strong>Note :</strong> Un URI complet doit être utilisé.<br
-/>
-</p>
-
-<h5 id="Profile">Profils</h5>
-
-<p>Amaya peut être configuré pour présenter un ensemble de fonctionalités
+<p>Amaya peut être configuré pour présenter un ensemble de fonctionnalités
 plus ou moins étendu et l'interface utilisateur correspondante. L'ensemble
-des fonctionalités disponibles à un instant donné est appelé un
+des fonctionnalités disponibles à un instant donné est appelé un
 <em>profil</em>.</p>
 
-<p>Un menu dans les préférence générales permet de choisir un profil. Le
-profil choisi ne s'applique pas immédiatement, mais seulement au prochain
-démarrage d'Amaya.</p>
+<p>Dans les préférences <strong>Générales</strong> un menu déroulant permet
+de choisir un profil (Lite, Lite+Math, etc.). Le profil choisi ne s'applique
+pas immédiatement, mais seulement au prochain démarrage d'Amaya.</p>
 
-<h5 id="Options">Options</h5>
+<h5>Position des panneaux d'outils</h5>
 
-<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case
-de gauche alignée avec l'intitulé de l'option.</p>
+<p>Les panneaux d'outils peuvent être affichés, sur le coté gauche de la
+fenêtre, ou sur le côté droit de la fenêtre, ou paramétrables.</p>
 
-<p><strong><a name="Enable" id="Enable">Preserver les lignes dans le
-coller</a></strong>. Cette option concerne le coller depuis une autre
-application. Quand cette option est activée, les lignes de l'application
-source sont conservées. Sinon les caractères « fin de ligne » sont remplacés
-par des espaces.</p>
-
-<p><strong>Garder les espaces multiples</strong>. Quand cette option est
-activée, Amaya engendre des espaces non séquables pour preserver les espaces
-multiples insérés.</p>
-
-<p><strong>Produire des fichiers de sauvegarde</strong>. Si cette option est
-active Amaya va produire périodiquement un fichier de sauvegarde pour chaque
-document édité.</p>
-
-<p><strong>Anti-aliasing.</strong> Contrôle si l'usage de polices de
-caractères anti-aliased (meilleure qualité d'affichage quand l'option est
-utilisée).</p>
-
-<p><strong>ISO format for date.</strong> Contrôle le format des date
-engendrées par Amaya : soit au format ISO (DD-MM-YYYY) soit au format
-américain (YYYY/MM/DD).</p>
-
-<p><strong>Montrer les cibles</strong>. Contrôle si les cibles de liens sont
-visualisées ou non. Montrer les cibles peut aider quand on veut <a
-href="Links.html.fr#L245">créer de nouveaux liens</a>. Cette option agit
-immédiatement sur toutes les vues formatées de documents. <br />
-</p>
+<p>Si vous choisissez l'option <strong>Paramétrable</strong>, vous
+pouvez :</p>
+<ul>
+  <li>Réordonner la liste des panneaux : Vous cliquez sur le titre du panneau
+    et le déplacez vers la bonne position dans la liste.</li>
+  <li>Afficher des panneaux des deux côtés pour avoir accès à tous les outils
+    en même temps : Vous pouvez déplacer un panneau d'outils en cliquant sur
+    son titre et le déplacer vers l'autre côté de la fenêtre. La position
+    finale du <strong>curseur</strong> (non du panneau) doit être exactement
+    sur le bord de la fenêtre.</li>
+  <li>Détacher un panneau : Si vous déplacer un panneau vers une position
+    autre qu'un bord de fenêtre, le panneau reste dans l'état flottant.</li>
+  <li>Supprimer/Ajouter un panneau : Quand vous cliquez sur la croix dans le
+    titre du panneau, le panneau est supprimé. Vous pouvez aussi fermer et
+    ouvrir un panneau avec le sous-menu <strong>Barres d'outils</strong> du
+    menu <strong>Affichage</strong>.</li>
+</ul>
 
 <h5 id="Polices">Polices de caractères et langue</h5>
 
@@ -278,26 +261,70 @@ langues ISO-Latin-1 en écrivant les fichiers de dialogue correspondants. Ces
 fichiers de dialogue doivent se trouver dans le même répertoire (c'est à dire
 <strong>Amaya/config</strong>).</p>
 
+<h5>Page de démarrage</h5>
+
+<p>Ce champ spécifie l'URI qu'Amaya chargera au démarrage ou quand
+l'utilisateur pressera le bouton Home. Un exemple est <a
+href="http://www.w3.org"><code>http://www.w3.org</code></a>.</p>
+
+<p class="Note"><strong>Note :</strong> Un URI complet doit être utilisé.</p>
+
+<h5 id="Options">Options</h5>
+
+<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case
+de gauche alignée avec l'intitulé de l'option.</p>
+
+<p><strong>Mode d'édition XML.</strong> L'utilisateur peut fixer son mode
+d'édition (<a href="Creating.html.fr#Modes">Texte ou XML</a>) par défaut.</p>
+
+<p><strong><a name="Enable" id="Enable">Préserver les lignes dans le
+coller</a></strong>. Cette option concerne le coller depuis une autre
+application. Quand cette option est activée, les lignes de l'application
+source sont conservées. Sinon les caractères « fin de ligne » sont remplacés
+par des espaces.</p>
+
+<p><strong>Garder les espaces multiples</strong>. Quand cette option est
+activée, Amaya engendre des espaces non séquables pour préserver les espaces
+multiples insérés.</p>
+
+<p><strong>Produire des fichiers de sauvegarde</strong>. Si cette option est
+active Amaya va produire périodiquement un fichier de sauvegarde pour chaque
+document édité.</p>
+
+<p><strong>Anti-aliasing.</strong> Contrôle si l'usage de polices de
+caractères anti-aliased (meilleure qualité d'affichage quand l'option est
+utilisée).</p>
+
+<p><strong>ISO format for date.</strong> Contrôle le format des date
+engendrées par Amaya : soit au format ISO (DD-MM-YYYY) soit au format
+américain (YYYY/MM/DD).</p>
+
+<p><strong>Montrer les cibles</strong>. Contrôle si les cibles de liens sont
+visualisées ou non. Montrer les cibles peut aider quand on veut <a
+href="Links.html.fr#L245">créer de nouveaux liens</a>.</p>
+
+<p><strong>Montrer tous les raccourcis.</strong> Contrôle si les séquences de
+touches sont visualisées ou non dans les menus.</p>
+
+<p><strong>Avertir avant de fermer plusieurs onglets.</strong> Demande à
+Amaya d'afficher un dialogue quand plusieurs onglets sont fermés en même
+temps.</p>
+
+<p><strong>Afficher le "Conseil du jour" au démarrage.</strong> Contrôle si
+le "Conseil du jour" visualisé au démarrage.</p>
+
 <h5 id="rapides">Accès rapides</h5>
 
-<p>Cette option spécifie la touche <strong>Alt</strong> ou
-<strong>Control</strong> utilisée pour mettre en oeuvre les <a
-href="Browsing.html.fr#L294">accès rapides</a> des documents ou indique que
-les accès rapides sont ignorés.</p>
+<p>Cette option spécifie la touche <code>Alt</code> ou <code>Ctrl</code>
+utilisée pour mettre en oeuvre les <a href="Browsing.html.fr#L294">accès
+rapides</a> des documents, ou indique que les accès rapides sont ignorés.</p>
 
-<p class="Note"><strong>Note</strong> : La touche Alt peut ne pas fonctionner
-parce qu'elle est utilisée par les widgets d'interface.</p>
+<p class="Note"><strong>Note</strong> : La touche <code>Alt</code> peut ne
+pas fonctionner parce qu'elle est utilisée par les widgets d'interface.</p>
 
-<h4 id="L405"><a name="L970">Préférences de navigation</a></h4>
+<h4 id="L405">Préférences de navigation</h4>
 
 <p>les Préférences de navigation contrôle le chargement des pages.</p>
-
-<h5 id="Endroit">Endroit d'ouverture</h5>
-
-<p>Quand l'utilisateur clique avec le bouton droit sur un lien vers une
-nouvelle page Web, cette page peut être affichée soit <strong>dans un nouvel
-onglet</strong>, soit <strong>dans une nouvelle fenêtre</strong>. Cette
-option indique la préférence de l'utilisateur.</p>
 
 <h5 id="Options1">Options</h5>
 
@@ -325,12 +352,23 @@ le formulaire est validé. document.</p>
 doivent être chargées et appliquées ou non. Cette option prend effet dès que
 le formulaire est validé.</p>
 
-<p><strong>Le double clic active les liens</strong>. Depuis la première
+<p><strong>Cliquer deux fois pour suivre un lien</strong>. Depuis la première
 version d'Amaya, les utilisateurs ont besoin de double cliquer sur un lien
 pour l'activer. Cela permet de différencier l'édition d'un lien de son
 activation. Vous pouvez changer ce comportement en désactivant cette option.
 <br />
 </p>
+
+<h5 id="Endroit">Endroit d'ouverture</h5>
+
+<p>Cette option indique le comportement standard voulu par l'utilisateur
+quand :</p>
+<ul>
+  <li>Un document récent est ouvert depuis le sous-menu
+    <strong>Fichier/Ouvrir</strong>.</li>
+  <li>Une autre URI est choisie dans la liste déroulante de la barre de
+    navigation.</li>
+</ul>
 
 <h5 id="Type">Type d'écran courant</h5>
 
@@ -396,8 +434,14 @@ document dès qu'il a été publié et le compare à la copie stockée dans votre
 station de travail. Si les documents diffèrent, Amaya vous alertera.</p>
 
 <p><strong>Exporter CR/LF</strong>. Indique si les fins de lignes des
-fichiers produits par Amaya se terminent par CR/LF (format DOS) ou par un
-simple LF (format standard). <br />
+fichiers produits par Amaya se terminent par <code>CR/LF</code> (format DOS)
+ou par un simple LF (format standard). </p>
+
+<h5>Longueur de ligne fixée</h5>
+
+<p>Cette option fixe le nombre maximum de caractères attendus par lignes que
+doit engendré Amaya quand il produit le fichier HTML ou XML. Quand la valeur
+est 0, Amaya utilise sa propre valeur par défaut (actuellement 78).<br />
 </p>
 
 <h5 id="faut">Nom par défaut pour les URLs finissant par '/'</h5>

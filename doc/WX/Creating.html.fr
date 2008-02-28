@@ -41,8 +41,9 @@ src="../../resources/icons/misc/right.png" /> </a></p>
     autre vocabulaires XML.</li>
 </ul>
 
-<p>Vous pouvez facilement changer de mode d'édition (Texte/XML) en cliquant
-sur le bouton correspondant dans le coin en bas à droite de la fenêtre.</p>
+<p>Vous pouvez facilement changer de mode d'édition (<a
+href="#Modes">Texte/XML</a>) en cliquant sur le bouton correspondant dans le
+coin en bas à droite de la fenêtre.</p>
 
 <h3 id="Boutons"><a name="Types" id="Types">Boutons et menus</a></h3>
 

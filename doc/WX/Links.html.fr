@@ -25,7 +25,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <div class="PageBody" id="Creating">
 <h2 id="L1140">Créer et modifier des liens et des ancres</h2>
 
-<h3 id="L1142"><a name="L557">Créer une ancre cible</a></h3>
+<h3 id="L1142">Créer une ancre cible</h3>
 
 <p>Une ancre cible est une partie du texte qui est référencée par un lien
 (une ancre source). Avant de créer un lien sur une telle partie du texte,
@@ -64,7 +64,7 @@ créer un lien vers cette ancre cible, choisissez <strong>Lier à la cible
 créée</strong> dans le menu <strong>Liens</strong> après avoir sélectionné
 l'origine du lien à créer.</p>
 
-<h3 id="L1188"><a name="target1">Créer un élément cible</a></h3>
+<h3 id="L1188">Créer un élément cible</h3>
 
 <p>En HTML 4.0, un élément peut être utilisé comme une cible de liens. Un
 élément cible est un élément tapé qui possède un attribut i<code></code>d qui
@@ -98,7 +98,7 @@ est référencé par un lien (une ancre source). Avant de créer un lien à un tel
       <li>En générant un label.</li>
     </ul>
     <p>Dans les deux cas, Amaya garanti que la valeur générée est valide et
-    unique dans le document.  Mais vous pouvez <a
+    unique dans le document. Mais vous pouvez <a
     href="Attributes.html.fr">changer cette valeur</a>, comme celle de
     n'importe quel attribut.</p>
   </li>
@@ -117,7 +117,7 @@ créer un lien vers cet élément cible, choisissez <strong>Lier à la cible
 créée</strong> dans le menu <strong>Liens</strong> après avoir sélectionné
 l'origine du lien à créer.</p>
 
-<h3 id="L1247"><a name="L245" id="L245">Créer un lien externe</a></h3>
+<h3 id="L1247">Créer un lien externe</h3>
 
 <p class="ProcedureCaption">Pour créer une ancre qui est un lien vers un
 autre document :</p>
@@ -181,7 +181,7 @@ n'est sélectionnée, c'est l'adresse du document courant qui est enregistrée.
 Cette adresse peut ainsi être collée dans un formulaire ou dans une autre
 application externe.</p>
 
-<h3 id="Changer"><a name="Changing" id="Changing">Changer un lien</a></h3>
+<h3 id="Changer">Changer un lien</h3>
 
 <p>Utilisez cette procédure si vous voulez changer la cible du lien sans
 changer l'ancre.</p>
@@ -203,8 +203,7 @@ changer l'ancre.</p>
 soit dans la vue liens, ou encore en utilisant l'outil
 <strong>Attributs</strong>.</p>
 
-<h3 id="Supprimer"><a name="Removing" id="Removing">Supprimer un lien ou une
-ancre cible</a></h3>
+<h3 id="Supprimer">Supprimer un lien ou une ancre cible</h3>
 
 <p>La commande <strong>Supprimer le lien ou la cible</strong> du menu
 <strong>Liens</strong> détruit l'ancre qui englobe la sélection courante.</p>

@@ -36,7 +36,7 @@ preferences menus.</p>
 <p>By default only one instance of Amaya is allowed to run at a time. Each
 new invocation is redirected to the running instance. This option can be
 changed by setting the environment variable
-<strong>AMAYA_MULTIPLE_INSTANCES=yes.</strong></p>
+<code>AMAYA_MULTIPLE_INSTANCES=yes.</code></p>
 
 <h3 id="About">Configuration directory and file conventions</h3>
 
@@ -61,7 +61,7 @@ This directory's parent is the one in which Amaya was installed.</p>
       </td>
     </tr>
     <tr>
-      <td><p class="TableText">Windows NT/XP/Vista</p>
+      <td><p class="TableText">Windows </p>
       </td>
       <td><p class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\amaya</code><br />
         by default <br />
@@ -69,7 +69,7 @@ This directory's parent is the one in which Amaya was installed.</p>
       </td>
     </tr>
     <tr>
-      <td><p class="TableText">Mac OS X</p>
+      <td><p class="TableText">Mac OS X</p>
       </td>
       <td><p
         class="TableText"><code>/Applications/Amaya.app/Contents/MacOS/Amayax.x/config</code></p>
@@ -95,7 +95,7 @@ Otherwise Amaya selects a default position.</p>
       </td>
     </tr>
     <tr>
-      <td>Windows NT/XP</td>
+      <td>Windows</td>
       <td><p class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\amaya</code><br />
         by default <br />
         C:\Documents and Settings\$user_name\amaya</p>
@@ -116,15 +116,14 @@ Otherwise Amaya selects a default position.</p>
 <p>This directory is preserved even when installing new versions of Amaya. It
 may contain the following files:</p>
 <ul>
-  <li><strong>thot.rc</strong>: Contains the user preferences, changed
-    through the <strong>Preferences</strong> dialog.</li>
-  <li><strong><a name="amaya.keyb"
-    id="amaya.keyb">amaya.keyboard</a></strong> (Unix),
-    <strong>amaya.kb</strong> (Windows) or <strong>amaya.kb-mac</strong> (Mac
+  <li><code>thot.rc</code>: Contains the user preferences, changed through
+    the <strong>Preferences</strong> dialog.</li>
+  <li><code><a name="amaya.keyb" id="amaya.keyb">amaya.keyboard</a></code>
+    (Unix), <code>amaya.kb</code> (Windows) or <code>amaya.kb-mac</code> (Mac
     OS X): Defines Amaya keyboard shortcuts for the corresponding
   platform.</li>
-  <li><strong>amaya.css</strong>: Contains the user's style sheet.</li>
-  <li><strong>dictionary.DCT</strong>: Amaya provides a multilingual spell
+  <li><code>amaya.css</code>: Contains the user's style sheet.</li>
+  <li><code>dictionary.DCT</code>: Amaya provides a multilingual spell
     checker. By default, the spell checker works with two dictionaries:
     English and French (you can download other dictionaries from the <a
     href="http://www.w3.org/Amaya/User/BinDist.html">W3C servers</a>). When
@@ -134,7 +133,7 @@ may contain the following files:</p>
 
 <p class="Note"><strong>Note</strong>:<br />
 The <code>amaya.keyboard</code>, <code>amaya.kb</code>,
-<code>amaya.kb-mac</code> and <code>amaya.css</code> files are loaded at
+<code>amaya.kb-mac</code>, and <code>amaya.css</code> files are loaded at
 launch time. If you change them, you must quit and restart Amaya to take the
 changes into account.</p>
 
@@ -153,10 +152,11 @@ within different architectures:</p>
       </td>
     </tr>
     <tr>
-      <td>Window NT/XP/Vista</td>
-      <td>$HOMEDRIVE\$HOMEPATH\Local Documents and Settings\Temp\amaya<br />
+      <td>Windows</td>
+      <td><p class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\amaya</code><br />
         by default <br />
-        c:\Documents and Settings\$user_name\Local Settings\Temp\amaya</td>
+        C:\Documents and Settings\$user_name\amaya</p>
+      </td>
     </tr>
     <tr>
       <td><p class="TableText">Mac OS X</p>
@@ -186,63 +186,45 @@ geometry</strong>, <strong>Annotations, WebDAV, Templates, Mail</strong>.</p>
 
 <p>Each of these dialogs contains three action buttons:</p>
 <ul>
-  <li>Apply: Validates and stores the options shown</li>
-  <li>Defaults: Restores, but does not save, the default values. Use the
-    Apply button to validate the options.</li>
-  <li>Close: Dismisses the dialog.</li>
+  <li><strong>Apply</strong>: Validates and stores the options shown</li>
+  <li><strong>Defaults</strong>: Restores, but does not save, the default
+    values. Use the Apply button to validate the options.</li>
+  <li><strong>Cancel</strong>: Dismisses the dialog.</li>
 </ul>
 
 <h4 id="General">General preferences</h4>
 
-<p><strong>Home Page.</strong> Specifies the URI that Amaya will load when
-launched or when the user clicks the home page button. An example is <a
-href="http://www.w3.org/"><code>http://www.w3.org</code></a></p>
-
-<p class="Note"><strong>Note:</strong> A complete URI must be used.</p>
-
-<h5 id="Profile">Profiles</h5>
+<h5 id="Profile">Profile</h5>
 
 <p>Amaya may be configured so as to include more of less features, with their
 corresponding user interface components. The set of features available at a
 given time is called a <em>profile</em>.</p>
 
 <p>In <strong>General</strong> preferences a menu allows you to choose the
-profile that meets your needs. The chosen profile is not applied immediately
-when pressing the <strong>Apply</strong> button. You have to restart Amaya to
-activate the new profile.</p>
+profile that meets your needs (Lite, Lite+Math, etc.). The chosen profile is
+not applied immediately when pressing the <strong>Apply</strong> button. You
+have to restart Amaya to activate the new profile.</p>
 
-<h5 id="Check">Check boxes</h5>
+<h5>Panel bar position</h5>
 
-<p>The options below can be toggled on or off by clicking the check box next
-to an option name. A mark in the box indicates that the option is active.</p>
+<p>Tool panels can be displayed, on left side of the window, or on the right
+side of the window, or customizable.</p>
 
-<p><strong>Preserve lines when pasting.</strong> This option concerns the
-pasting form an external application. When that option is active, Amaya keeps
-lines in the source application. If not active, <code>newline</code>
-characters are replaced by spaces. This option is immediately effective.</p>
-
-<p id="Keep"><strong>Keep multiple spaces.</strong> When that option is
-active, Amaya generates no-break spaces to keep multiple inserted spaces.
-This option is immediately effective.</p>
-
-<p><strong>Generate backup files.</strong> When that option is active, Amaya
-generates a backup file for each edited document, after a given volume of
-modification. This option is immediately effective.</p>
-
-<p><strong>Anti-aliasing.</strong> Controls whether anti-aliased fonts are
-used (better rendering when this option is used).</p>
-
-<p><strong>ISO format for date.</strong> Controls whether generated dates are
-displayed using the ISO format (DD-MM-YYYY) or the American format
-(YYYY/MM/DD).</p>
-
-<p><strong>Show targets.</strong> Controls whether link targets should be
-shown in all document main views.</p>
-
-<p><strong>Access keys.</strong> Specifies the key (<code>Alt</code> or
-<code>Control</code>) used to implement the document <a
-href="Browsing.html#Access">access keys</a>, or specifies that access keys
-defined in documents are ignored.</p>
+<p>If you select the <strong>Customizable</strong> option, you may:</p>
+<ul>
+  <li>Re-order the list of panels: You click on the title of the panel and
+    drag it to the right position in the list.</li>
+  <li>Display panels on both sides to get access to all tools at the same
+    time: You can move a tool panel by clicking on its title and drag it to
+    the other window side. The final position of the <strong>cursor</strong>
+    (not the panel) must be exactly on the window side.</li>
+  <li>Detach a panel: If you move a tool panel to a different position than a
+    window side, the panel is set floating.</li>
+  <li>Remove/Add a panel: When you click on the cross in the panel title, the
+    panel is remoed. You can also close and open a panel with the
+    <strong>Show/Hide toolbars</strong> submenu of the <strong>Views</strong>
+    menu.</li>
+</ul>
 
 <h5 id="Font">Font and language options</h5>
 
@@ -266,27 +248,68 @@ current dialogue language: en-, fr-, de-, it-, es-, pt-, fi- or tr-, etc.
 files. These dialogue files are located in the <strong>Amaya/config</strong>
 directory.</p>
 
+<h5>Home page</h5>
+
+<p><strong>This field s</strong>pecifies the URI that Amaya will load when
+launched or when the user clicks the home page button. An example is <a
+href="http://www.w3.org/"><code>http://www.w3.org</code></a></p>
+
+<p class="Note"><strong>Note:</strong> A complete URI must be used.</p>
+
+<h5 id="Check">Check boxes</h5>
+
+<p>The options below can be toggled on or off by clicking the check box next
+to an option name. A mark in the box indicates that the option is active.</p>
+
+<p><strong>XML editing mode.</strong> The user can set his/her default
+editing mode (<a href="Creating.html#Editing">Text or XML</a>).</p>
+
+<p><strong>Preserve lines when pasting.</strong> This option concerns the
+pasting form an external application. When that option is active, Amaya keeps
+lines in the source application. If not active, <code>newline</code>
+characters are replaced by spaces. This option is immediately effective.</p>
+
+<p id="Keep"><strong>Keep multiple spaces.</strong> When that option is
+active, Amaya generates no-break spaces to keep multiple inserted spaces.
+This option is immediately effective.</p>
+
+<p><strong>Generate backup files.</strong> When that option is active, Amaya
+generates a backup file for each edited document, after a given volume of
+modification. This option is immediately effective.</p>
+
+<p><strong>Anti-aliasing.</strong> Controls whether anti-aliased fonts are
+used (better rendering when this option is used).</p>
+
+<p><strong>ISO format for date.</strong> Controls whether generated dates are
+displayed using the ISO format (DD-MM-YYYY) or the American format
+(YYYY/MM/DD).</p>
+
+<p><strong>Show targets.</strong> Controls whether link targets should be
+shown in all document main views. Show targets may be useful when one wants
+to <a href="Links.html#Creating2">create new links</a>.</p>
+
+<p><strong>Display all shorcuts.</strong> Controls whether shortcuts
+sequenses should be shown in menus.</p>
+
+<p><strong>Warn when closing multiple tabs.</strong> Ask Amaya to display a
+dialog when several tabs are closed at the same time.</p>
+
+<p><strong>Show "Tip of the day" at startup.</strong> Controls whether the
+"Tip of the day" is shown at startup.</p>
+
 <h5 id="Access">Access keys</h5>
 
-<p>This option lets you specify the <strong>Alt</strong> or
-<strong>Control</strong> modifier used to manage <a
-href="Browsing.html">access keys</a> of documents, or says that access keys
-are ignored.</p>
+<p>This option lets you specify the <code>Alt</code> or <code>Ctrl</code>
+modifier used to manage <a href="Browsing.html">access keys</a> of documents,
+or says that access keys are ignored.</p>
 
-<p class="Note"><strong>Note</strong>: The Alt modifier could not work
-because it is used by UI widgets.</p>
+<p class="Note"><strong>Note</strong>: The <code>Alt</code> modifier could
+not work because it is used by UI widgets.</p>
 
 <h4 id="Browsing">Browsing preferences</h4>
 
 <p>The <strong>Browsing preferences</strong> dialog control loading of
 pages.</p>
-
-<h5 id="Opening">Opening location</h5>
-
-<p>When the user clicks with the right button on a link to a new Web page,
-this new page can be displayed either <strong>in a new tab</strong> or
-<strong>in a new window</strong>. This option specifies the user
-preference.</p>
 
 <h5 id="Check1">Check boxes</h5>
 
@@ -307,7 +330,7 @@ This option is immediately effective.</p>
 images should be shown. This option is only effective when loading a new
 document.</p>
 
-<p><strong>Load CSS.</strong> Controls whether CSS style sheets should be
+<p><strong>Apply CSS.</strong> Controls whether CSS style sheets should be
 loaded and applied or not. This option is immediately effective.</p>
 
 <p><strong>Double-click activates link.</strong> Since the first version of
@@ -315,10 +338,20 @@ Amaya, users double-click a link to activate it. This enables you to choose
 whether to edit a link or activate it. You can override this behavior by
 deactivating this option.</p>
 
+<h5 id="Opening">Opening location</h5>
+
+<p>This option gives the default behaviour selected by the user when:</p>
+<ul>
+  <li>A recent document is open from the <strong>File/Open document</strong>
+    submenu.</li>
+  <li>Another URI is selected in the combobox of the navigation toolbar.</li>
+</ul>
+
 <h5 id="Current">Current screen type</h5>
 
 <p>Defines the current screen type. This value has an effect when a CSS style
-sheet specifies a media. This option is immediately effective.</p>
+sheet specifies a <code>media</code>. This option is immediately
+effective.</p>
 
 <h5 id="Language">Language negotiation preferences</h5>
 
@@ -377,6 +410,12 @@ the documents differ, Amaya will warn you.</p>
 
 <p><strong>Export CR/LF</strong>. This option, if enabled, precedes each line
 feed by a carriage return (DOS format).</p>
+
+<h5>Fixed line length</h5>
+
+<p>That option gives the maximum number of characters expected in lines
+generated by Amaya when it creates a HTML or XML file. When the value is 0,
+Amaya uses its own default value (today 78).</p>
 
 <h5 id="Default">Default name for URLs finishing in '/'</h5>
 
