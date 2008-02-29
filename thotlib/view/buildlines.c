@@ -2034,9 +2034,12 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
       if (floatL)
         {
           by = floatL->BxYOrg;
+          bh = 0;
           if (floatL->BxTMargin < 0)
             by += floatL->BxTMargin;
-          bh = floatL->BxTBorder + floatL->BxTPadding + floatL->BxH + floatL->BxBBorder + floatL->BxBPadding;
+          else
+            bh += floatL->BxTMargin;
+          bh += floatL->BxTBorder + floatL->BxTPadding + floatL->BxH + floatL->BxBBorder + floatL->BxBPadding;
         }
       if (floatL &&
           ((pLine->LiYOrg + orgY >= by &&
@@ -2095,9 +2098,12 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
       if (floatR)
         {
           by = floatR->BxYOrg;
+          bh = 0;
           if (floatR->BxTMargin < 0)
             by += floatR->BxTMargin;
-          bh = floatR->BxTBorder + floatR->BxTPadding + floatR->BxH + floatR->BxBBorder + floatR->BxBPadding;
+          else
+            bh += floatR->BxTMargin;
+          bh += floatR->BxTBorder + floatR->BxTPadding + floatR->BxH + floatR->BxBBorder + floatR->BxBPadding;
         }
       if (floatR &&
           ((pLine->LiYOrg + orgY >= by &&
