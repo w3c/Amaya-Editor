@@ -812,6 +812,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
   LoadedImageDesc    *desc;
   ElemImage          *ctxEl, *ctxPrev;
   ElementType         elType;
+  DisplayMode         dispMode;
   char               *tempfile;
   char               *base_url;
   char               *ptr;
@@ -922,6 +923,10 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
         desc->content_type = TtaStrdup (ptr);
       ctxEl = desc->elImage;
       desc->elImage = NULL;
+      /* Avoid too many redisplay */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, DeferredDisplay);
       while (ctxEl)
         {
           /* the image may be included using either an SRC, an EMBED,
@@ -965,6 +970,9 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
           ctxEl = ctxEl->nextElement;
           TtaFreeMemory (ctxPrev);
         }
+      /* Restore the display mode */
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, dispMode);
     }
 }
 
