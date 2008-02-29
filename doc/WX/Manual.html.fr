@@ -498,7 +498,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
 <p><a name="There" id="There">Il y a également une brève introduction qui
 décrit les éléments HTML et explique comment les utiliser.</a></p>
 <ul>
-  <li><a href="HTML.html.fr#ments">Les éléments HTML</a></li>
+  <li><a href="HTML-elements/HTML.html.fr#HTML">Les éléments HTML</a></li>
   <li><a href="HTML-elements/infoTypes.html.fr#Information">Types
     d'information dans HTML</a> </li>
   <li><a href="HTML-elements/structure.html.fr#HTML">Structure du document

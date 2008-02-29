@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
@@ -12,7 +12,7 @@
 
 
   </style>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="ru" lang="ru">
@@ -20,14 +20,15 @@
 <table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../images/w3c_home" /> <img
-        border="0" alt="Amaya" src="../../resources/icons/22x22/logo.png" />
-      </td>
+      <td><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
+        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png"
+        /> </td>
       <td><p align="right"><a href="EditChar.html.ru"><img alt="Предыдущий"
-        src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.ru"><img
-        alt="Вверх" border="0" src="../../resources/icons/misc/up.png" /></a> <a
+        src="../../../resources/icons/misc/left.png" /></a> <a
+        href="Manual.html.ru"><img alt="Вверх" border="0"
+        src="../../../resources/icons/misc/up.png" /></a> <a
         href="Changing.html.ru"><img alt="Следующий" border="0"
-        src="../../resources/icons/misc/right.png" /></a></p>
+        src="../../../resources/icons/misc/right.png" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -353,8 +354,9 @@ Amaya</a>.</p>
 </dl>
 
 <p align="right"><a href="Manual.html.ru"><img alt="top" border="0"
-src="../../resources/icons/misc/up.png" /></a> <a href="HTML-elements/infoTypes.html.ru"><img
-alt="next" border="0" src="../../resources/icons/misc/right.png" /></a></p>
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="HTML-elements/infoTypes.html.ru"><img alt="next" border="0"
+src="../../../resources/icons/misc/right.png" /></a></p>
 <hr />
 
 <p></p>
