@@ -43,22 +43,24 @@ les aspects spécifiques d'Amaya sont décrits.</p>
 <p>Chacune des sections suivantes décrit brièvement comment utiliser une
 fonction spécifique d'Amaya :</p>
 <ul>
-  <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer</a></li>
+  <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer et utiliser
+    les formulaires</a></li>
+  <li><a rel="Chapter" href="Views.html.fr#Views">Utiliser les vues d'un
+    document</a></li>
   <li><a rel="Chapter"
   href="Selecting.html.fr#Selecting">Sélectionner</a></li>
-  <li><a rel="Chapter" href="Views.html.fr#Views">Afficher des vues</a></li>
-  <li><a href="Document.html.fr#Changing">Éditer des documents</a></li>
+  <li><a href="Document.html.fr#Changing">Créer et ouvrir des
+  documents</a></li>
   <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer des
     éléments</a></li>
   <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Éditer des
     attributs</a></li>
   <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Saisir du
   texte</a></li>
-  <li><a rel="Chapter" href="HTML.html.fr#HTML">Les élements HTML</a></li>
   <li><a rel="Chapter" href="Templates.html.fr#modèles">Éditer avec des
     modèles</a></li>
   <li><a rel="Chapter" href="Changing.html.fr#Changing">Changer la structure
-    du document</a></li>
+    d'un document</a></li>
   <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et modifier des
     liens et des ancres</a></li>
   <li><a rel="Chapter" href="Tables.html.fr#Editing">Éditer des
@@ -79,34 +81,29 @@ fonction spécifique d'Amaya :</p>
     l'orthographe</a></li>
   <li><a rel="Chapter" href="Publishing.html.fr#Saving">Enregistrer et
     publier des documents</a></li>
+  <li><a href="WebDAV.html.fr#WebDAV" rel="Chapter">Coopérer</a></li>
   <li><a rel="Chapter" href="Printing.html.fr#Printing">Imprimer des
     documents</a></li>
   <li><a rel="Chapter" href="Numbering.html.fr#Section">Numéroter les
     sections</a></li>
   <li><a rel="Chapter" href="MakeBook.html.fr#Assembling">Assembler des
-    collections de document</a></li>
-  <li><a rel="Chapter" href="Annotations.html.fr#Annotations">Annoter les
+    collections de documents</a></li>
+  <li><a rel="Chapter" href="Annotations.html.fr#Annotations">Annoter des
     documents</a></li>
+  <li><a href="Configure.html.fr#Configuring" rel="Chapter">Configurer
+    Amaya</a></li>
+  <li><a href="ShortCuts.html.fr#page_body" rel="Chapter">Définir des
+    raccourcis clavier</a></li>
+  <li><a href="Access.html.fr#Access" rel="Chapter">Produire des documents
+    accessibles</a></li>
 </ul>
-
-<p>La section <a href="Configure.html.fr#Configuring"
-rel="Chapter">Configurer Amaya</a> explique comment modifier les options par
-défaut.</p>
-
-<p>La section <a href="ShortCuts.html.fr#page_body" rel="Chapter">Les
-raccourcis clavier</a> explique comment est construite la liste des
-raccourcis clavier.</p>
-
-<p>La page sur <a href="Access.html.fr#Access" rel="Chapter">l'Accessibilité
-dans Amaya</a> décrit les fonctionnalités d'accessibilité d'Amaya, et
-explique comment les utiliser pour produire des pages utilisables aussi bien
-par les gens qui ont des handicaps que par ceux qui n'en ont pas.</p>
 <hr />
 
 <p><a name="There" id="There">Il y a également une brève introduction qui
 décrit quelques éléments HTML (comme les en-têtes, les listes, les
 citations) et explique comment les utiliser.</a></p>
 <ul>
+  <li><a rel="Chapter" href="HTML.html.fr#HTML">Les élements HTML</a></li>
   <li><a href="HTML-elements/infoTypes.html.fr#Information"
     rel="Chapter">Types d'information dans HTML</a></li>
   <li><a href="HTML-elements/structure.html.fr#HTML" rel="Chapter">Structure

@@ -15,15 +15,16 @@
 Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /> 
 
-<p class="nav"><a href="HTML.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="SVG.html.fr" accesskey="n"><img alt="next"
-src="../../resources/icons/misc/right.png" /></a></p>
+<p class="nav"><a href="ImageMaps.html.fr" accesskey="p"><img
+alt="previous" src="../../resources/icons/misc/left.png" /></a> <a
+href="Manual.html.fr" accesskey="t"><img alt="top"
+src="../../resources/icons/misc/up.png" /></a> <a href="SVG.html.fr"
+accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
+/></a></p>
 </div>
 
 <div class="PageBody" id="Math">
-<h2 id="Editer">Editer des mathématiques</h2>
+<h2 id="Editer">Éditer des mathématiques</h2>
 
 <p>Amaya propose une interface Wysiwyg où les expressions mathématiques <a
 href="http://www.w3.org/TR/MathML2/">MathML</a> sont traitées comme des

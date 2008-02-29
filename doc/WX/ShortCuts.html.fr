@@ -16,22 +16,22 @@ Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /> 
 
 <p class="nav"><a href="Configure.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" /></a><a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a><a
+src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
 href="Access.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2 id="raccourcis">Les raccourcis clavier</h2>
+<h2 id="raccourcis">Définir des raccourcis clavier</h2>
 
 <p>Il est utile de pouvoir invoquer les commandes des menus directement
 depuis le clavier. Vous pouvez accomplir ceci par un fichier de raccourcis
 clavier (un fichier par plate-forme). Ces fichiers définissent une liste
-d'associations entre une séquence au clavier et la commande correspondante
-invoquée. Ils sont stockés dans le répertoire Amaya/config :
-<code><code>amaya.keyboard</code></code> (Linux), amaya.kb (Windows) and
-<code>amaya.kb-mac</code> (Mac OS X).</p>
+d'associations entre une séquence au clavier et la commande invoquée. Ils
+sont stockés dans le répertoire <code>Amaya/config</code> et sont différent
+pour chaque plate-forme : <code><code>amaya.keyboard</code></code> (Linux),
+<code>amaya.kb</code> (Windows) and <code>amaya.kb-mac</code> (Mac OS X).</p>
 <ul>
   <li><a href="ShortCuts-Linux.html.fr">Liste des raccoucis clavier par
     défaut pour Linux</a></li>

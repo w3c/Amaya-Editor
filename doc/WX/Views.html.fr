@@ -15,15 +15,15 @@
 Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /> 
 
-<p class="nav"><a href="Selecting.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
-<a href="Document.html.fr" accesskey="n"><img alt="next"
-src="../../resources/icons/misc/right.png" /> </a></p>
+<p class="nav"><a href="Browsing.html.fr" accesskey="p"><img alt="previous"
+src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
+<a href="Selecting.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div class="PageBody" id="Views">
-<h2 id="Vues">Vues d'un document</h2>
+<h2 id="Vues">Utiliser les vues d'un document</h2>
 
 <p><strong>Amaya</strong> peut présenter différentes <em>vues</em> d'un
 document simultanément. Chaque onglet correspond à un document et les vues du

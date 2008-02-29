@@ -13,10 +13,9 @@
 <div class="PageHead">
 Amaya<img border="0" alt="logo" src="../../resources/icons/22x22/logo.png"> 
 
-<p class="nav"><a href="ImageMaps.html.fr"><img alt="previous"
-src="../../resources/icons/misc/left.png"> </a><a href="Manual.html"><img
-alt="top" border="0" src="../../resources/icons/misc/up.png"> </a> <a
-href="Math.html.fr"><img alt="next" border="0"
+<p class="nav"><a href="Manual.html.fr"><img alt="top" border="0"
+src="../../resources/icons/misc/up.png"> </a> <a
+href="HTML-elements/infoTypes.html.fr"><img alt="next" border="0"
 src="../../resources/icons/misc/right.png"> </a></p>
 </div>
 

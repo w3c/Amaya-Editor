@@ -59,6 +59,13 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
+  <li><a href="Views.html.fr#Vues">Utiliser les vues d'un document</a> 
+    <ul>
+      <li><a href="Views.html.fr#Ouvrir">Ouvrir une vue</a></li>
+      <li><a href="Views.html.fr#Fermer">Fermer une vue</a></li>
+      <li><a href="Views.html.fr#Utiliser">Utiliser les vues</a></li>
+    </ul>
+  </li>
   <li><a href="Selecting.html.fr#L58">Sélectionner</a> 
     <ul>
       <li><a href="Selecting.html.fr#L94">Sélectionner avec la souris</a></li>
@@ -73,15 +80,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Views.html.fr#Vues">Vues d'un document</a> 
-    <ul>
-      <li><a href="Views.html.fr#Ouvrir">Ouvrir une vue</a></li>
-      <li><a href="Views.html.fr#Fermer">Fermer une vue</a></li>
-      <li><a href="Views.html.fr#Utiliser">Utiliser les vues</a></li>
-    </ul>
-  </li>
-</ul>
-<ul>
   <li><a href="Document.html.fr#L50">Créer et ouvrir des documents</a> 
     <ul>
       <li><a href="Document.html.fr#L54">Créer un document</a></li>
@@ -90,7 +88,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Creating.html.fr#L1103">Créer les <span xml:lang="fr"
+  <li><a href="Creating.html.fr#L1103">Créer des <span xml:lang="fr"
     lang="fr">éléments</span></a> 
     <ul>
       <li><a href="Creating.html.fr#Modes">Modes d'édition</a></li>
@@ -120,7 +118,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Attributes.html.fr#Editer">Editer des attributs</a> 
+  <li><a href="Attributes.html.fr#Editer">Éditer des attributs</a> 
     <ul>
       <li><a href="Attributes.html.fr#Editer1">Editer des attributs par le
         biais de l'outil Attributs</a></li>
@@ -168,7 +166,8 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Changing.html.fr#Editer">Changer la structure du document</a> 
+  <li><a href="Changing.html.fr#Editer">Changer la structure d'un
+    document</a> 
     <ul>
       <li><a href="Changing.html.fr#Changer">Changer le type de
       l'élément</a></li>
@@ -201,7 +200,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="Tables.html.fr#Editer">Editer des tables</a> 
+  <li><a href="Tables.html.fr#Editer">Éditer des tables</a> 
     <ul>
       <li><a href="Tables.html.fr#L62">Créer une nouvelle table</a></li>
       <li><a href="Tables.html.fr#Ajouter">Ajouter une colonne</a></li>
@@ -219,7 +218,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="ImageMaps.html.fr#Images">Editer des images et zones
+  <li><a href="ImageMaps.html.fr#Images">Éditer des images et des zones
     actives</a> 
     <ul>
       <li><a href="ImageMaps.html.fr#Ajouter">Ajouter une image</a></li>
@@ -232,10 +231,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="HTML.html.fr#ments">Les éléments HTML</a></li>
-</ul>
-<ul>
-  <li><a href="Math.html.fr#Editer">Editer des mathématiques</a> 
+  <li><a href="Math.html.fr#Editer">Éditer des mathématiques</a> 
     <ul>
       <li><a href="Math.html.fr#L57">Créer une formule mathématique</a> 
         <ul>
@@ -268,10 +264,10 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="SVG.html.fr#Editer">Editer des graphiques SVG</a></li>
+  <li><a href="SVG.html.fr#Editer">Éditer des graphiques SVG</a></li>
 </ul>
 <ul>
-  <li><a href="Xml.html.fr#Support">Support XML générique</a> 
+  <li><a href="Xml.html.fr#Support">Édter des documents XML</a> 
     <ul>
       <li><a href="Xml.html.fr#Chargement">Chargement de document XML</a></li>
       <li><a href="Xml.html.fr#Utilsation">Utilsation du style dans
@@ -350,6 +346,20 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
+  <li><a href="WebDAV.html.fr#Coop">Coopérer</a> 
+    <ul>
+      <li><a href="WebDAV.html.fr#L49">À propos de WebDAV</a></li>
+      <li><a href="WebDAV.html.fr#Support">Support WebDAV dans Amaya</a></li>
+      <li><a href="WebDAV.html.fr#Partager">Partager des documents</a></li>
+      <li><a href="WebDAV.html.fr#Options">Options WebDAV</a></li>
+      <li><a href="WebDAV.html.fr#Compiler">Compiler Amaya avec WebDAV</a> 
+        <ul>
+          <li><a href="WebDAV.html.fr#libwww">At libwww folder:</a></li>
+          <li><a href="WebDAV.html.fr#Amaya">At Amaya folder:</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
   <li><a href="Printing.html.fr#Imprimer">Imprimer des documents</a> 
     <ul>
       <li><a href="Printing.html.fr#commande">La commande Paramétrer et
@@ -374,10 +384,10 @@ aspects spécifiques d'Amaya sont décrits.</p>
 </ul>
 <ul>
   <li><a href="MakeBook.html.fr#Assembler">Assembler des collections de
-    document</a></li>
+    documents</a></li>
 </ul>
 <ul>
-  <li><a href="Annotations.html.fr#annotation">Annoter les documents</a> 
+  <li><a href="Annotations.html.fr#annotation">Annoter des documents</a> 
     <ul>
       <li><a href="Annotations.html.fr#def">Qu'est-ce qu'une
       annotation ?</a></li>
@@ -518,7 +528,8 @@ aspects spécifiques d'Amaya sont décrits.</p>
   </li>
 </ul>
 <ul>
-  <li><a href="ShortCuts.html.fr#raccourcis">Les raccourcis clavier</a></li>
+  <li><a href="ShortCuts.html.fr#raccourcis">Définir des raccourcis
+    clavier</a></li>
 </ul>
 <ul>
   <li><a href="Access.html.fr#Accessibil">Accessibilité</a> 
@@ -537,8 +548,9 @@ aspects spécifiques d'Amaya sont décrits.</p>
 <p><a name="There" id="There">Il y a également une brève introduction qui
 décrit les éléments HTML et explique comment les utiliser.</a></p>
 <ul>
+  <li><a href="HTML.html.fr#ments">Les éléments HTML</a></li>
   <li><a href="HTML-elements/infoTypes.html.fr#Information">Types
-    d'information dans HTML</a></li>
+    d'information dans HTML</a> </li>
   <li><a href="HTML-elements/structure.html.fr#HTML">Structure du document
     HTML</a></li>
   <li><a href="HTML-elements/headings.html.fr#Heading">Éléments

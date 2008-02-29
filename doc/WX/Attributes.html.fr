@@ -23,7 +23,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div class="PageBody" id="Attributes">
-<h2 id="Editer">Editer des attributs</h2>
+<h2 id="Editer">Éditer des attributs</h2>
 
 <p>Il y a deux manières d'éditer des attributs :</p>
 <ul>

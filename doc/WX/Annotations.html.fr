@@ -3,7 +3,7 @@
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Annoter les documents</title>
+  <title>Annoter des documents</title>
   <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
@@ -23,7 +23,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div class="PageBody" id="Annotations">
-<h2 id="annotation">Annoter les documents</h2>
+<h2 id="annotation">Annoter des documents</h2>
 
 <h3 id="def">Qu'est-ce qu'une annotation ?</h3>
 

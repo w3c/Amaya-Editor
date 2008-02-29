@@ -3,7 +3,7 @@
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Xml Support</title>
+  <title>Documents XML</title>
   <meta http-equiv="content-type"
   content="application/xhtml+xml; charset=iso-8859-1" />
   <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
@@ -16,11 +16,11 @@
 Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /> 
 
-<p class="nav"><a href="Animation.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
+<p class="nav"><a href="SVG.html.fr" accesskey="p"><img alt="previous"
+src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 <a href="StyleSheets.html.fr" accesskey="n"><img
-src="../../resources/icons/misc/right.png" alt="next" /> </a></p>
+src="../../resources/icons/misc/right.png" alt="next" /></a></p>
 </div>
 
 <div class="PageBody" id="XML">
