@@ -103,7 +103,8 @@ fonction spécifique d'Amaya :</p>
 disponible. Elle décrit quelques éléments HTML et explique comment les
 utiliser.</a></p>
 <ul>
-  <li><a rel="Chapter" href="HTML.html.fr#HTML">Les élements HTML</a></li>
+  <li><a rel="Chapter" href="HTML-elements/HTML.html.fr#HTML">Les élements
+    HTML</a></li>
   <li><a href="HTML-elements/infoTypes.html.fr#Information"
     rel="Chapter">Types d'information dans HTML</a></li>
   <li><a href="HTML-elements/structure.html.fr#HTML" rel="Chapter">Structure
