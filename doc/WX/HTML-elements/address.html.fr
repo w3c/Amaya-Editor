@@ -10,19 +10,18 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img border="0" alt="Amaya"
-src="../../../resources/icons/22x22/logo.png" /> 
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" /> 
 
 <p class="nav"><a href="lists.html.fr"><img alt="previous" border="0"
 src="../../../resources/icons/misc/left.png" /></a> <a
-href="../Manual.html.fr#There"><img alt="top" border="0"
+href="HTML.html.fr"><img alt="top" border="0"
 src="../../../resources/icons/misc/up.png" /></a> <a
 href="inline.html.fr"><img alt="next" border="0"
 src="../../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="About">
-<h1>À propos de l'auteur</h1>
+<h3>À propos de l'auteur</h3>
 
 <p>Une page Web devrait toujours contenir certaines informations qui
 permettent au lecteur de connaître qui a écrit la page ou qui en est

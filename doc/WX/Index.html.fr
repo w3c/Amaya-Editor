@@ -35,13 +35,13 @@ caractéristiques du logiciel.</p>
 <strong><a href="MakeBook.html.fr#L1065">Outils/Construire un
 livre</a></strong> pour assembler et imprimer la totalité du manuel.</p>
 
-<p>Beaucoup de commandes d'Amaya sont identiques à celles fournies par les
+<p>De nombreuses commandes d'Amaya sont identiques à celles fournies par les
 traitements de texte classiques. Elles ne sont pas présentées ici. Seuls
 les aspects spécifiques d'Amaya sont décrits.</p>
 <hr />
 
 <p>Chacune des sections suivantes décrit brièvement comment utiliser une
-fonction spécifique d'Amaya :</p>
+fonction spécifique d'Amaya.</p>
 <ul>
   <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer et utiliser
     les formulaires</a></li>
@@ -49,8 +49,8 @@ fonction spécifique d'Amaya :</p>
     document</a></li>
   <li><a rel="Chapter"
   href="Selecting.html.fr#Selecting">Sélectionner</a></li>
-  <li><a href="Document.html.fr#Changing">Créer et ouvrir des
-  documents</a></li>
+  <li><a href="Document.html.fr#Document" rel="Chapter">Créer et ouvrir des
+    documents</a></li>
   <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer des
     éléments</a></li>
   <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Éditer des
@@ -96,32 +96,11 @@ fonction spécifique d'Amaya :</p>
     raccourcis clavier</a></li>
   <li><a href="Access.html.fr#Access" rel="Chapter">Produire des documents
     accessibles</a></li>
+  <li><a href="HTML-elements/HTML.html.fr#Intro" rel="Chapter">Une
+    introduction à HTML</a></li>
 </ul>
-<hr />
 
-<p><a name="There" id="There">Les sections suivantes donnent une brève
-introduction à HTML. Elle décrivent quelques éléments HTML et expliquent
-comment les utiliser.</a></p>
-<ul>
-  <li><a rel="Chapter" href="HTML-elements/HTML.html.fr#HTML">Les élements
-    HTML</a></li>
-  <li><a href="HTML-elements/infoTypes.html.fr#Information"
-    rel="Chapter">Types d'information dans HTML</a></li>
-  <li><a href="HTML-elements/structure.html.fr#HTML" rel="Chapter">Structure
-    du document HTML</a></li>
-  <li><a href="HTML-elements/headings.html.fr#Heading"
-    rel="Chapter">Éléments d'en-tête</a></li>
-  <li><a href="HTML-elements/lists.html.fr#List" rel="Chapter">Éléments
-    d'une liste</a></li>
-  <li><a href="HTML-elements/address.html.fr#About" rel="Chapter">A propos de
-    l'auteur</a></li>
-  <li><a href="HTML-elements/inline.html.fr#Inline3"
-    rel="Chapter">Définitions en ligne, citations, code, insertions et
-    suppressions, abréviations, etc.</a></li>
-  <li><a href="HTML-elements/40styling.html.fr#Character"
-    rel="Chapter">Éléments de style de HTML (ce qu'il ne faut pas faire et
-    ce qui doit être fait...)</a></li>
-</ul>
+<p> </p>
 <hr />
 
 <p class="policyfooter"><small>Copyright  ©  1994-2008 <a

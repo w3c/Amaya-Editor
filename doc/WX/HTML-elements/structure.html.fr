@@ -14,14 +14,14 @@
 
 <p class="nav"><a href="infoTypes.html.fr"><img alt="previous" border="0"
 src="../../../resources/icons/misc/left.png" /></a> <a
-href="../Manual.html.fr#There"><img alt="top" border="0"
+href="HTML.html.fr"><img alt="top" border="0"
 src="../../../resources/icons/misc/up.png" /></a> <a
 href="headings.html.fr"><img alt="next" border="0"
 src="../../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="HTML">
-<h1>Structure du document HTML</h1>
+<h3>Structure du document HTML</h3>
 
 <p>Les documents HTML ont une structure assez uniforme. S'il y a des sections
 qui contiennent des sous-sections, la division du texte est ordinairement

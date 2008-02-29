@@ -10,19 +10,18 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-Amaya<img border="0" alt="Amaya"
-src="../../../resources/icons/22x22/logo.png" /> 
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" /> 
 
 <p class="nav"><a href="address.html.fr"><img alt="previous" border="0"
 src="../../../resources/icons/misc/left.png" /></a> <a
-href="../Manual.html.fr#There"><img alt="top" border="0"
+href="HTML.html.fr"><img alt="top" border="0"
 src="../../../resources/icons/misc/up.png" /></a> <a
 href="40styling.html.fr"><img alt="next" border="0"
 src="../../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="Inline3">
-<h1>Types en ligne</h1>
+<h3>Types en ligne</h3>
 
 <p>Un texte à l'intérieur d'un paragraphe, une entête, ou un autre élément
 bloc peut être balisé de différentes façons, par exemple pour mettre l'accent
@@ -32,7 +31,7 @@ alors que les liens, qui sont eux aussi des éléments en ligne, soient décrits
 séparément.</p>
 
 <div>
-<h2><a name="Inline21"></a><a name="Definition">Définitions</a></h2>
+<h4><a name="Inline21"></a><a name="Definition">Définitions</a></h4>
 
 <p>L'élément <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-DFN"><code>dfn</code></a>
@@ -44,7 +43,7 @@ utiliser pour changer la présentation des définitions en ligne.</p>
 </div>
 
 <div>
-<h2><a name="Inline1">Les citations en ligne</a></h2>
+<h4><a name="Inline1">Les citations en ligne</a></h4>
 
 <p>Les citations qui sont en ligne peuvent être marquées en utilisant
 l'élément d'information "citation" - l'élément HTML <a
@@ -61,7 +60,7 @@ rendues avec des guillemets appropriés à la langue courante.</p>
 </div>
 
 <div>
-<h2>Les éléments exemple, ins, etc.</h2>
+<h4>Les éléments exemple, ins, etc.</h4>
 
 <p>Les éléments sont fournis pour marquer les codes, comme
 <code>statement:do-something</code>, avec le balisage différent pour
@@ -85,7 +84,7 @@ utilisées pour changer la présentation de ces éléments.</p>
 </div>
 
 <div>
-<h2><a name="Inline">Acronymes et abréviations</a></h2>
+<h4><a name="Inline">Acronymes et abréviations</a></h4>
 
 <p>Les acronymes et les abréviations devraient être marqués comme tels, en
 utilisant les éléments <a
@@ -110,7 +109,7 @@ utilisées pour changer la présentation des acronymes ou des abréviations.</p>
 </div>
 
 <div>
-<h2><a name="Inline2">Insertions et suppressions</a></h2>
+<h4><a name="Inline2">Insertions et suppressions</a></h4>
 
 <p>Les éléments <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
@@ -125,7 +124,7 @@ utilisées pour changer la présentation des insertions et des suppressions.</p>
 </div>
 
 <div>
-<h2><a name="Emphasis">Les éléments de mise en évidence</a></h2>
+<h4><a name="Emphasis">Les éléments de mise en évidence</a></h4>
 
 <p>HTML a des éléments pour définir deux niveaux de mise en évidence :</p>
 <ol>
@@ -161,7 +160,7 @@ src="../../../resources/icons/16x16/XHTML_B.png" alt="Strong" /> - l'élément
 <p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation des deux types de mise en évidence.</p>
 
-<h2 id="L260">L'élément span</h2>
+<h4 id="L260">L'élément span</h4>
 
 <p>L'élément <a
 href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-SPAN">span</a>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>éléments d'une liste</title>
+  <title>Éléments de liste</title>
   <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -14,14 +14,14 @@
 
 <p class="nav"><a href="headings.html.fr"><img alt="previous" border="0"
 src="../../../resources/icons/misc/left.png" /></a> <a
-href="../Manual.html.fr#There"><img alt="top" border="0"
+href="HTML.html.fr"><img alt="top" border="0"
 src="../../../resources/icons/misc/up.png" /></a> <a
 href="address.html.fr"><img alt="next" border="0"
 src="../../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="List">
-<h1>Éléments de liste</h1>
+<h3>Éléments de liste</h3>
 
 <p>Il y a trois types de liste dans HTML. Les deux types simples sont : liste
 ordonnée et liste non ordonnée. Il y a aussi une liste de définitions. Les

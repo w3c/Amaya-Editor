@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>éléments d'entête</title>
+  <title>Éléments d'entête</title>
   <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -14,14 +14,14 @@
 
 <p class="nav"><a href="structure.html.fr"><img alt="previous" border="0"
 src="../../../resources/icons/misc/left.png" /> </a> <a
-href="../Manual.html.fr#There"><img alt="top" border="0"
+href="HTML.html.fr"><img alt="top" border="0"
 src="../../../resources/icons/misc/up.png" /> </a> <a
 href="lists.html.fr"><img alt="next" border="0"
 src="../../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
 <div id="Heading">
-<h1>Éléments d'entête</h1>
+<h3>Éléments d'entête</h3>
 
 <p>HTML fournit 6 niveaux d'entête : <a
 href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-H1"><code>h1,
