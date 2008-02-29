@@ -31,6 +31,7 @@
 #include "AmayaPage.h"
 #include "AmayaWindow.h"
 #include "AmayaNormalWindow.h"
+#include "AmayaHelpWindow.h"
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
 #include "AmayaApp.h"
@@ -110,8 +111,11 @@ bool AmayaAdvancedNotebook::ClosePage(int page_id)
   bool result = true;
 
   page->Hide();
+  
   if(GetPageCount()==1 &&
-     AmayaNormalWindow::GetNormalWindowCount()==1)
+     AmayaNormalWindow::GetNormalWindowCount()==1 &&
+     !GetAmayaWindow()->IsKindOf(CLASSINFO(AmayaHelpWindow))
+     )
 	{
       TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
 	  result = false;
