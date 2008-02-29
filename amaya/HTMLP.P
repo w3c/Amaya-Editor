@@ -6145,8 +6145,26 @@ ATTRIBUTES
         CreateBefore(AttrValue);
         END;
 
- Clear_:
+ Clear_ = Left_:
+        BEGIN
         CreateBefore(AttrNameAndValue);
+        Clear: Left;
+        END;
+ Clear_ = Right_:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Clear: Right;
+        END;
+ Clear_ = All_:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Clear: Both;
+        END;
+ Clear_ = None_:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Clear: None;
+        END;
 
  Alignment = Top_:
         BEGIN

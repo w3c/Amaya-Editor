@@ -921,6 +921,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
       /* memorize the mime type (in case we want to save the file later on) */
       if (ptr)
         desc->content_type = TtaStrdup (ptr);
+
       ctxEl = desc->elImage;
       desc->elImage = NULL;
       /* Avoid too many redisplay */
@@ -1459,6 +1460,7 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
 ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 {
   AttributeType       attrType, attrType1, attrType2;
+  DisplayMode         dispMode;
   char               *currentURL;
   ThotBool            stopped_flag, loadImages, loadObjects;
 
@@ -1485,6 +1487,10 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
   /* register the current URL */
   currentURL = TtaStrdup (DocumentURLs[doc]);
 
+  /* Avoid too many redisplay */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
   /* We are currently fetching images for this document */
   /* during this time LoadImage has not to stop transfer */
   /* prepare the attribute to be searched */
@@ -1527,6 +1533,10 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
     stopped_flag = FALSE;
   else
     stopped_flag = TRUE;
+
+  /* Restore the display mode */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
   
   /* Images fetching is now finished */
   TtaFreeMemory (currentURL);
