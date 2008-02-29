@@ -9,6 +9,18 @@
     color: black;
     }
 
+  div.Cover {
+    color: black;
+    background-color: transparent;
+    padding: 0 2em 0em 2em;
+    font-size: 11pt;
+    }
+
+  div.Cover h1 {
+    color: #003366;
+    margin-bottom: 1em;
+    }
+
   div.PageHead {
     font-size: 20pt;
     background-color: #3d3766;
@@ -354,6 +366,14 @@
       font: 11pt serif;
       background-color: transparent;
       }
+    div.Cover {
+      padding: 0 0 1em 0;
+      page-break-after: always;
+      }
+    div.Cover h1 {
+      string-set: headerleft content();
+      color: black;
+      }
     div.PageHead {
       string-set: headerleft content();
       background-color: transparent;
@@ -370,6 +390,10 @@
     div#page_body, div.PageBody {
       background-color: transparent;
       padding: 0;
+      page-break-before: right;
+      }
+    div.toc {
+      page-break-before: right;
       }
     div.toc a {
       text-decoration: none;

@@ -13,10 +13,8 @@ body {background-color: #FFFFFF}</style>
 
 <body xml:lang="fr" lang="fr">
 
-<div class="PageHead">
-Manuel d'utilisation d'Amaya</div>
-
-<div class="PageBody">
+<div class="Cover">
+<h1>Manuel d'utilisation d'Amaya</h1>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
@@ -24,6 +22,9 @@ Manuel d'utilisation d'Amaya</div>
     <dd>Charles McCathieNevile, John Russell, Marja-Riitta Koivunen, Laurent
       Carcone</dd>
 </dl>
+<hr />
+
+<p> </p>
 
 <p>Ce manuel présente l'interface utilisateur d'Amaya. L'interface
 utilisateur sur votre machine peut-être un peu différente puisqu'elle
@@ -38,10 +39,9 @@ livre</a></strong> pour assembler et imprimer la totalité du manuel.</p>
 <p>De nombreuses commandes d'Amaya sont identiques à celles fournies par les
 traitements de texte classiques. Elles ne sont pas présentées ici. Seuls
 les aspects spécifiques d'Amaya sont décrits.</p>
-<hr />
+</div>
 
-<p>Chacune des sections suivantes décrit brièvement comment utiliser une
-fonction spécifique d'Amaya.</p>
+<div class="PageBody">
 <ul>
   <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer et utiliser
     les formulaires</a></li>
