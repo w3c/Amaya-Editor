@@ -232,7 +232,7 @@ réponse sélectionnée est mise en sur-brillance et présentée dans une nouvelle
 fenêtre de réponse. Lorsqu'une autre réponse est sélectionnée, la même
 fenêtre de réponse est utilisée.</p>
 
-<h2 id="Probl">Problèmes connus: fils incomplets</h2>
+<h3 id="Probl">Problèmes connus: fils incomplets</h3>
 
 <p>Il n'y a pas de contrôle pour déterminer quelle réponse devrait être
 postée. Dans l'absolu, il ne devrait pas être possible de poster une réponse
@@ -248,7 +248,6 @@ ces fils "orphelins" en plaçant devant un point d'interrogation. Si par la
 suite Amaya trouve de nouveaux éléments du fil, par exemple en chargeant R1,
 il les triera correctement. Dans notre exemple, la réponse R2 deviendra fille
 de R1, comme attendu.</p>
-</div>
 
 <div id="Issues">
 <h3 id="Issues1">Problèmes relatifs aux annotations et aux documents
@@ -271,7 +270,7 @@ le source HTML de cette documentation, on s'aperçoit que la section courante
 est à l'intérieur d'un élément DIV, lequel possède un attribut ID avec la
 valeur "Issues". Voici un extrait du code source:</p>
 <pre>  &lt;div id="Issues"&gt;
-  &lt;h3&gt;&gt;Problèmes sur ....&lt;/h3&gt;&gt;
+  &lt;h3&gt;Problèmes sur ....&lt;/h3&gt;
   &lt;p&gt;Si vous utilisez ...&lt;/p&gt;
   &lt;p&gt;Pour cela, Amaya utilise le mécanisme &lt;strong&gt;XPointer&lt;/strong&gt;...&lt;/p&gt;
   ...
@@ -325,6 +324,9 @@ annotations trompeuses en ajoutant un attribut ID au second paragraphe:</p>
 
 <p>Ainsi, ce XPointer pointera toujours sur le même paragraphe, sans se
 soucier de la position de celui-ci dans la structure du document.</p>
+</div>
+
+<p></p>
 </div>
 </body>
 </html>

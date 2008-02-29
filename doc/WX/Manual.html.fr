@@ -366,23 +366,11 @@ aspects spécifiques d'Amaya sont décrits.</p>
       <li><a href="Annotations.html.fr#Navigating">Les annotations dans la
         vue Liens</a></li>
       <li><a href="Annotations.html.fr#Threads">Répondre aux annotations /
-        fil de discussion</a> 
-        <ul>
-          <li><a href="Annotations.html.fr#Probl">Problèmes connus : fil
-            incomplet</a></li>
-        </ul>
-      </li>
+        fil de discussion</a> </li>
+      <li><a href="Annotations.html.fr#Probl">Problèmes connus : fil
+        incomplet</a></li>
       <li><a href="Annotations.html.fr#Issues1">Problèmes relatifs aux
-        annotations et aux documents modifiés</a> 
-        <ul>
-          <li><a href="Annotations.html.fr#Annotation1">Annotations
-            orphelines</a></li>
-          <li><a href="Annotations.html.fr#Annotation2">Annotations
-            trompeuses</a></li>
-          <li><a href="Annotations.html.fr#Comment">Comment éviter ces
-            problèmes ?</a></li>
-        </ul>
-      </li>
+        annotations et aux documents modifiés</a> </li>
     </ul>
   </li>
   <li><a href="Configure.html.fr#Configurer">Configurer Amaya</a> 

@@ -12,7 +12,7 @@
 
 <body>
 
-<div class="PageHead" id="WebDAV">
+<div class="PageHead">
 Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 /> 
 
@@ -23,7 +23,7 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
-<div id="page_body">
+<div id="WebDAV" class="PageBody">
 <h2 id="Coop">Coopérer</h2>
 
 <h3 id="L49">À propos de WebDAV</h3>
