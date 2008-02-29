@@ -57,8 +57,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
       multiple</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Views.html.fr#Vues">Utiliser les vues d'un document</a> 
     <ul>
       <li><a href="Views.html.fr#Ouvrir">Ouvrir une vue</a></li>
@@ -78,16 +76,12 @@ aspects spécifiques d'Amaya sont décrits.</p>
         structure</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Document.html.fr#L50">Créer et ouvrir des documents</a> 
     <ul>
       <li><a href="Document.html.fr#L54">Créer un document</a></li>
       <li><a href="Document.html.fr#Ouverture">Ouvrir un document</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Creating.html.fr#L1103">Créer des <span xml:lang="fr"
     lang="fr">éléments</span></a> 
     <ul>
@@ -116,8 +110,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
       jour</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Attributes.html.fr#Editer">Éditer des attributs</a> 
     <ul>
       <li><a href="Attributes.html.fr#Editer1">Editer des attributs par le
@@ -127,8 +119,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
       <li><a href="Attributes.html.fr#Copier">Copier des attributs</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="EditChar.html.fr#Saisir">Saisir du texte</a> 
     <ul>
       <li><a href="EditChar.html.fr#support">Le support multi-touches
@@ -139,8 +129,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
       espaces</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Templates.html.fr#Templates">Éditer avec des modèles</a> 
     <ul>
       <li><a href="Templates.html.fr#What">Qu'est-ce qu'un modèle ?</a></li>
@@ -164,8 +152,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
       </li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Changing.html.fr#Editer">Changer la structure d'un
     document</a> 
     <ul>
@@ -183,8 +169,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
       <li><a href="Changing.html.fr#Fusionner">Fusionner des éléments</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Links.html.fr#L1140">Créer et modifier des liens et des
     ancres</a> 
     <ul>
@@ -198,8 +182,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
         cible</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Tables.html.fr#Editer">Éditer des tables</a> 
     <ul>
       <li><a href="Tables.html.fr#L62">Créer une nouvelle table</a></li>
@@ -216,8 +198,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
         table</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="ImageMaps.html.fr#Images">Éditer des images et des zones
     actives</a> 
     <ul>
@@ -229,8 +209,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
       actives</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Math.html.fr#Editer">Éditer des mathématiques</a> 
     <ul>
       <li><a href="Math.html.fr#L57">Créer une formule mathématique</a> 
@@ -262,11 +240,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
       </li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="SVG.html.fr#Editer">Éditer des graphiques SVG</a></li>
-</ul>
-<ul>
   <li><a href="Xml.html.fr#Support">Édter des documents XML</a> 
     <ul>
       <li><a href="Xml.html.fr#Chargement">Chargement de document XML</a></li>
@@ -275,8 +249,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
       <li><a href="Xml.html.fr#Edition">Edition de documents XML</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="StyleSheets.html.fr#Cascades">Appliquer du style à un
     document</a> 
     <ul>
@@ -311,12 +283,8 @@ aspects spécifiques d'Amaya sont décrits.</p>
         élément ou une classe</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Searching.html.fr#Rechercher">Rechercher et remplacer du
     texte</a></li>
-</ul>
-<ul>
   <li><a href="SpellChecking.html.fr#L47">Vérifier l'orthographe</a> 
     <ul>
       <li><a href="SpellChecking.html.fr#dictionnai">Le dictionnaire
@@ -327,8 +295,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
       document</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Publishing.html.fr#Sauver2">Enregistrer et publier des
     documents</a> 
     <ul>
@@ -344,8 +310,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
       document</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="WebDAV.html.fr#Coop">Coopérer</a> 
     <ul>
       <li><a href="WebDAV.html.fr#L49">À propos de WebDAV</a></li>
@@ -376,17 +340,11 @@ aspects spécifiques d'Amaya sont décrits.</p>
         CSS</a></li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Numbering.html.fr#roter">Numéroter les sections</a></li>
   <li><a href="Numbering.html.fr#Engendrer">Engendrer la table des
     matières</a></li>
-</ul>
-<ul>
   <li><a href="MakeBook.html.fr#Assembler">Assembler des collections de
     documents</a></li>
-</ul>
-<ul>
   <li><a href="Annotations.html.fr#annotation">Annoter des documents</a> 
     <ul>
       <li><a href="Annotations.html.fr#def">Qu'est-ce qu'une
@@ -427,8 +385,6 @@ aspects spécifiques d'Amaya sont décrits.</p>
       </li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="Configure.html.fr#Configurer">Configurer Amaya</a> 
     <ul>
       <li><a href="Configure.html.fr#plusieurs">Une ou plusieurs instances
@@ -526,23 +482,17 @@ aspects spécifiques d'Amaya sont décrits.</p>
       </li>
     </ul>
   </li>
-</ul>
-<ul>
   <li><a href="ShortCuts.html.fr#raccourcis">Définir des raccourcis
     clavier</a></li>
-</ul>
-<ul>
   <li><a href="Access.html.fr#Accessibil">Accessibilité</a> 
     <ul>
-      <li><a href="Access.html.fr#Fonctions">Fonctions accessible</a></li>
+      <li><a href="Access.html.fr#Fonctions">Fonctions accessibles</a></li>
       <li><a href="Access.html.fr#Produire">Produire un contenu
       accessible</a></li>
     </ul>
   </li>
 </ul>
 </div>
-
-<p></p>
 <hr />
 
 <p><a name="There" id="There">Il y a également une brève introduction qui

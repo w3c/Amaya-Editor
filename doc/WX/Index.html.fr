@@ -99,9 +99,9 @@ fonction spécifique d'Amaya :</p>
 </ul>
 <hr />
 
-<p><a name="There" id="There">Il y a également une brève introduction qui
-décrit quelques éléments HTML (comme les en-têtes, les listes, les
-citations) et explique comment les utiliser.</a></p>
+<p><a name="There" id="There">Une brève introduction à HTML est également
+disponible. Elle décrit quelques éléments HTML et explique comment les
+utiliser.</a></p>
 <ul>
   <li><a rel="Chapter" href="HTML.html.fr#HTML">Les élements HTML</a></li>
   <li><a href="HTML-elements/infoTypes.html.fr#Information"

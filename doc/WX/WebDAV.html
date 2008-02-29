@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>WebDAV Functions in Amaya</title>
+  <title>Cooperating through WebDAV</title>
   <meta name="generator" content="amaya 8.7.2, see http://www.w3.org/Amaya/"
   />
   <link href="style.css" rel="stylesheet" type="text/css" />
@@ -24,9 +24,9 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h2>WebDAV in Amaya</h2>
+<h2 id="Cooperatin">Cooperating through WebDAV</h2>
 
-<h3>About WebDAV</h3>
+<h3 id="About">About WebDAV</h3>
 
 <p><a href="http://www.webdav.org/">WebDAV (WWW Distributed Authoring and
 Versioning)</a> is a set of extensions to the HTTP protocol, which allows
@@ -54,7 +54,7 @@ server due to exceptions in the server.</p>
 href="http://andrew2.andrew.cmu.edu/rfc/rfc2518.html">RFC 2518</a> and also
 at the <a href="http://www.webdav.org/">WebDAV.org</a> website.</p>
 
-<h3>WebDAV support in Amaya</h3>
+<h3 id="WebDAV">WebDAV support in Amaya</h3>
 
 <p>Amaya has an optional and limited support for WebDAV. This includes the
 following operations: lock/unlock a WebDAV compilant resource, view the
@@ -62,7 +62,7 @@ WebDAV properties of a resource, and lock discovery capabilities. Besides, it
 also includes some awareness functions, that can automatically inform users
 about locked resources.</p>
 
-<h3>How use it?</h3>
+<h3 id="Sharing">Sharing documents</h3>
 
 <p>The WebDAV support present in Amaya intents to help small groups of users
 to edit collaboratively their web pages. To illustrate how it works, here is
@@ -95,26 +95,26 @@ you did this, when loading a page locked by a colleague under
 <code>http://davserver.mycompany.com/shared/</code> folder, you will be
 notified by Amaya about this.</p>
 
-<h3>WebDAV options</h3>
+<h3 id="WebDAV1">WebDAV options</h3>
 
 <p>The following options can be set with the <strong>Preferences /
 WebDAV</strong> dialog box. They are also available in the Amaya registry:</p>
 <dl>
   <dt>User's Personal Reference (URL)</dt>
     <dd>An URL that identifies the user. Example: mailto:myself@myhost.com or
-      http://myhost.com/myhomepage.html
+      http://myhost.com/myhomepage.html 
       <p>Registry: <code>DAV_USER_URL= [ URL ]</code></p>
     </dd>
   <dt>Lock Depth</dt>
     <dd>If depth is infinite, a lock over a collection (folder) will affect
       all components. Otherwise, the lock will affect only the collection,
       preventing an user that does not know the lock to create or remove
-      components.
+      components. 
       <p>Registry: <code>DAV_DEPTH= [ infinity | <strong>0</strong>
       ]</code></p>
     </dd>
   <dt>Lock Scope</dt>
-    <dd>The lock scope: exclusive or shared.
+    <dd>The lock scope: exclusive or shared. 
       <p>Registry: <code>DAV_LOCK_SCOPE= [ <strong>exclusive</strong> |
       shared ]</code></p>
     </dd>
@@ -126,23 +126,23 @@ WebDAV</strong> dialog box. They are also available in the Amaya registry:</p>
       ]</code></dd>
   <dt>General Awareness</dt>
     <dd>Indicates if you want basic awareness information about locked
-      resources
+      resources 
       <p>Registry: <code>DAV_AWARENESS= [ yes | <strong>no</strong>
       ]</code></p>
     </dd>
   <dt>Awareness on exit</dt>
     <dd>Indicates if you want to receive information about your own locks,
-      when you leave a resource.
+      when you leave a resource. 
       <p>Registry: <code>DAV_AWARENESS_ONEXIT=[ yes | <strong>no</strong>
       ]</code></p>
     </dd>
   <dt>User's WebDAV Resource List (URL URL)</dt>
-    <dd>A list of the URLs of the resources you use as WebDAV resources.
+    <dd>A list of the URLs of the resources you use as WebDAV resources. 
       <p>Registry: <code>DAV_URLS= [ URL URL URL ... ]</code></p>
     </dd>
 </dl>
 
-<h3>How to compile Amaya with WebDAV?</h3>
+<h3 id="Compiling">Compiling Amaya with WebDAV</h3>
 
 <p>WebDAV support is an optional feature of Amaya. To compile and use it, you
 need the following:</p>
@@ -162,14 +162,14 @@ follow this bootstrap instructions (under Linux/Unix environments - for
 windows environments, see <a href="http://www.w3.org/Amaya/">Amaya</a> and <a
 href="http://www.w3.org/Library/">Libwww</a> homepage):</p>
 
-<h4>At libwww folder:</h4>
+<h4 id="libwww">At libwww folder:</h4>
 <ul>
   <li>libtoolize -c -f</li>
   <li>perl config/winConfigure.pl</li>
   <li>aclocal; autoheader; automake; autoconf</li>
 </ul>
 
-<h4>At Amaya folder:</h4>
+<h4 id="Amaya">At Amaya folder:</h4>
 <ul>
   <li>autoconf</li>
   <li>mkdir LINUX-ELF (or GTK, or obj)</li>
