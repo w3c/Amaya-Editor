@@ -1138,8 +1138,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 #endif /* _GL */
           /* stretched box not already handled */
           if (pBox->BxHorizFlex &&
-              (pAb->AbLeafType != LtCompound ||
-               pBox->BxPacking == 0))
+              (pAb->AbLeafType != LtCompound || pBox->BxPacking == 0))
             MoveBoxEdge (pBox, NULL, OpHorizDep, delta, frame, TRUE);
           else
             {

@@ -234,12 +234,14 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   if (rtl)
     /* right-to-left wirting */
     x += pLine->LiXMax;
-  if (xAbs)
+  if (xAbs || !pParentBox->BxXToCompute)
+    // the ligne position is absolute
     x += pParentBox->BxXOrg;
   nSpaces = 0;	/* number of spaces */
   width = 0;	/* text width without spaces */
   baseline = pLine->LiYOrg + pLine->LiHorizRef;
-  if (yAbs)
+  if (yAbs || !pParentBox->BxYToCompute)
+    // the ligne position is absolute
     baseline += pParentBox->BxYOrg;
   
   /* get the list of boxes displayed in the line */
@@ -538,9 +540,11 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
         delta = pLine->LiXMax - pLine->LiRealLength;
       x = pLine->LiXOrg + delta;
     }
-  if (xAbs)
+  if (xAbs || !pBox->BxXToCompute)
+    // the ligne position is absolute
     x += pParentBox->BxXOrg;
-  if (yAbs)
+  if (yAbs || !pBox->BxYToCompute)
+    // the ligne position is absolute value
     baseline += pParentBox->BxYOrg;
 
   /* get the list of boxes displayed in the line */
