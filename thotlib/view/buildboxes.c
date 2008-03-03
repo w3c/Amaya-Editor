@@ -2389,7 +2389,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       pBox->BxYToCompute = FALSE;
       enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
       enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
-      if (boxType == BoRow || boxType == BoColumn)
+      if (boxType == BoRow || boxType == BoColumn || boxType == BoTable)
         {
           /* float and inlines are not allowed for rows and cells */
           inLine = FALSE;

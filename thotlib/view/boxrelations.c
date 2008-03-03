@@ -223,7 +223,8 @@ static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
   if (inLine && IsParentBox (pTargetBox, pOrginBox))
     /* dont register the relation in this case */
     return;
-
+  if (pOrginBox == NULL)
+    return;
   if (op != OpIgnore)
     /* register in pTargetBox that pOrginBox has a relation with it */
     InsertDimRelation (pTargetBox, pOrginBox, OpIgnore, horizRef, inLine);
