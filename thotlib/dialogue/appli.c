@@ -756,7 +756,8 @@ void TtaSetStatusSelectedElement(Document document, View view, Element elem)
           statusbar = wxDynamicCast(window->GetStatusBar(), AmayaStatusBar);
           if (statusbar)
             {
-              if (frame == ActiveFrame)
+              if (frame == ActiveFrame ||
+                  FrameTable[frame].FrDoc == FrameTable[ActiveFrame].FrDoc)
                 statusbar->SetSelectedElement (elem);
               else
                 statusbar->SetSelectedElement (NULL);
