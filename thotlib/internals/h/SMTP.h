@@ -75,7 +75,7 @@ enum wxMimeContentTransfertEncoding
 #define wxMIMETYPE_MULTIPART_FORM_DATA wxT("multipart/form-data")
 
 
-WX_DECLARE_STRING_HASH_MAP( wxString, wxMimeExtraParamMap ); 
+WX_DECLARE_STRING_HASH_MAP( wxString, wxMimeExtraParamMap );
 
 typedef struct{
     size_t size;
@@ -359,6 +359,8 @@ enum wxSMTP_STEP
   wxSMTP_STEP_DONE
 };
 
+WX_DECLARE_STRING_HASH_MAP( wxString, wxSmtpParamMap );
+
 
 /** SMTP sender. */
 class wxSMTP : public wxCmdLineProtocol
@@ -366,6 +368,8 @@ class wxSMTP : public wxCmdLineProtocol
 public:
     wxSMTP();
     virtual ~wxSMTP(){}
+
+    void UseAuthentification(const wxString& name, const wxString& passwd);
     
     bool Connect(wxSockAddress& address, bool wait = true);
 
@@ -385,11 +389,18 @@ protected:
     
     virtual bool SendContent(wxEmailMessage& message);
     
+    virtual bool SendAuthentication();
+    
     static int GetResponseCode(const wxString& rep);
     virtual wxString SendCommand(const wxString& request, bool* haveError=NULL);
     
     long m_error;
     long m_errorStep;
+private:
+    wxSmtpParamMap m_params;
+    
+    bool m_useAuth;
+    wxString m_user, m_passwd;
 };
 
 

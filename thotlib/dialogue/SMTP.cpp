@@ -574,84 +574,6 @@ bool wxMultipartMimeContainer::Write(wxOutputStream& out)const
 
 
 //==========================================================================
-// wxCmdLineProtocol
-//==========================================================================
-
-wxString wxCmdLineProtocol::SendCommand(wxString request, bool* haveError)
-{
-    wxStringInputStream stmin(request << wxT("\r\n"));
-    wxSocketOutputStream stmout(*this);
-    stmout.Write(stmin);
-    stmout.Close();
-
-    /* Wait for a response. */    
-    const int buffsize = 256; 
-    char buff[buffsize];
-    int search = 0;
-
-    while(true)
-    {
-        wxSocketClient::Read(buff, buffsize);
-        m_buffer += wxString(buff, *wxConvCurrent, LastCount());
-        
-        if(Error())
-        {
-            if(haveError!=NULL)
-                *haveError = true;
-            return wxT("");
-        }
-        
-        for(; search < (int) m_buffer.Length()-1; search++)
-        {
-            if(m_buffer[search]==wxT('\r'))
-            {
-                if(m_buffer[search+1]==wxT('\n'))
-                {
-                    wxString rep = m_buffer.Left(search);
-                    m_buffer = m_buffer.Mid(search+2);
-                    return rep;
-                }
-            }
-        }
-    }
-}
-
-wxString wxCmdLineProtocol::ReadLine(bool* haveError)
-{
-    /* Wait for a response. */    
-    const int buffsize = 256; 
-    char buff[buffsize];
-    int search = 0;
-
-    while(true)
-    {
-        wxSocketClient::Read(buff, buffsize);
-        m_buffer += wxString(buff, *wxConvCurrent, LastCount());
-        
-        if(Error())
-        {
-            if(haveError)
-                *haveError = true;
-            return wxT("");
-        }
-        
-        for(; search < (int)m_buffer.Length()-1; search++)
-        {
-            if(m_buffer[search]==wxT('\r'))
-            {
-                if(m_buffer[search+1]==wxT('\n'))
-                {
-                    wxString rep = m_buffer.Left(search);
-                    m_buffer = m_buffer.Mid(search+2);
-                    return rep;
-                }
-            }
-        }
-    }
-}
-
-
-//==========================================================================
 // wxEmailMessage
 //==========================================================================
 wxEmailMessage::wxEmailMessage(const wxString& subject, const wxString& text, const wxString& from):
@@ -876,8 +798,16 @@ wxString wxEmailMessage::QEncode(const wxString& str)
 wxSMTP::wxSMTP():
 wxCmdLineProtocol(),
 m_error(0),
-m_errorStep(wxSMTP_STEP_UNKNOW)
+m_errorStep(wxSMTP_STEP_UNKNOW),
+m_useAuth(false)
 {
+}
+
+void wxSMTP::UseAuthentification(const wxString& name, const wxString& passwd)
+{
+    m_useAuth = true;
+    m_user    = name;
+    m_passwd  = passwd;
 }
 
 bool wxSMTP::Connect(wxSockAddress& address, bool wait)
@@ -912,8 +842,30 @@ bool wxSMTP::SendHello()
         str = addr.Hostname();
     else
         str = wxT("localhost");
-    m_error = GetResponseCode(SendCommand(wxT("HELO ")+str));
-    return m_error==220;
+    
+    str = SendCommand(wxT("EHLO ")+str);
+    m_error = GetResponseCode(str);
+    
+    /* Process ESMTP params. */
+    wxStringTokenizer tkz(str, wxT("\r\n"));
+    bool bFirst = true;
+    while ( tkz.HasMoreTokens() )
+    {
+        wxString line = tkz.GetNextToken();
+        if(bFirst)
+          {
+            /* Skip first line. */
+            bFirst = false;
+            continue;
+          }
+        line.Remove(0, 4);
+        line.Trim();
+        wxString name, value;
+        name = line.BeforeFirst(wxT(' '));
+        value = line.AfterFirst(wxT(' '));
+        m_params[name] = value;
+    }
+    return m_error==250;
 }
 
 bool wxSMTP::SendQuit()
@@ -977,6 +929,12 @@ bool wxSMTP::SendMail(wxEmailMessage& message)
     if(!SendFrom(message.GetFrom()))
         return false;
 
+    if(m_useAuth)
+      if(!SendAuthentication())
+        return false;
+      
+    
+    
     for(int i=0; i<message.GetRecipientCount(); i++)
     {
         if(!SendTo(message.GetRecipient(i)))
@@ -998,6 +956,16 @@ bool wxSMTP::SendMail(wxEmailMessage& message)
     return true;
 }
 
+bool wxSMTP::SendAuthentication()
+{
+  if(m_params[wxT("AUTH")].IsEmpty())
+    return true;
+  
+  // TODO !!!
+  
+  return true;
+}
+
 int wxSMTP::GetResponseCode(const wxString& rep)
 {
     wxString num = rep.BeforeFirst(wxT(' '));
@@ -1013,6 +981,8 @@ wxString wxSMTP::SendCommand(const wxString& request, bool* haveError)
     wxString line, res;
     
     res = wxCmdLineProtocol::SendCommand(request, haveError);
+    
+    int i = 0;
     
     if(res.Length()>4 && res[3]!=wxT(' '))
     {
@@ -1034,6 +1004,81 @@ long wxSMTP::GetLastError(long* step)
     *step = m_errorStep;
   return m_error;
 }
+
+
+
+//==========================================================================
+// wxCmdLineProtocol
+//==========================================================================
+
+wxString wxCmdLineProtocol::SendCommand(wxString request, bool* haveError)
+{
+    wxStringInputStream stmin(request << wxT("\r\n"));
+    wxSocketOutputStream stmout(*this);
+    stmout.Write(stmin);
+    stmout.Close();
+
+    /* Wait for a response. */    
+    const int buffsize = 256; 
+    char buff[buffsize];
+    int search = 0;
+
+    while(true)
+    {
+        wxSocketClient::Read(buff, buffsize);
+        m_buffer += wxString(buff, *wxConvCurrent, LastCount());
+        
+        if(Error())
+        {
+            if(haveError!=NULL)
+                *haveError = true;
+            return wxT("");
+        }
+        
+        for(; search < (int) m_buffer.Length()-1; search++)
+        {
+            if(m_buffer[search]==wxT('\r'))
+            {
+                if(m_buffer[search+1]==wxT('\n'))
+                {
+                    wxString rep = m_buffer.Left(search);
+                    m_buffer = m_buffer.Mid(search+2);
+                    return rep;
+                }
+            }
+        }
+    }
+}
+
+wxString wxCmdLineProtocol::ReadLine(bool* haveError)
+{
+    /* Wait for a response. */    
+    const int buffsize = 256; 
+    char buff[buffsize];
+    int search = 0;
+
+    while(true)
+    {
+        search = m_buffer.Find(wxT("\r\n"));
+        if(search!=wxNOT_FOUND)
+        {
+          wxString rep = m_buffer.Left(search);
+          m_buffer = m_buffer.Mid(search+2);
+          return rep;            
+        }
+      
+        wxSocketClient::Read(buff, buffsize);
+        m_buffer += wxString(buff, *wxConvCurrent, LastCount());
+        
+        if(Error())
+        {
+            if(haveError)
+                *haveError = true;
+            return wxT("");
+        }
+    }
+}
+
 
 
 #endif /* _WX */

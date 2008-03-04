@@ -515,7 +515,6 @@ void TtaExecuteMenuActionFromActionId (int action_id, Document doc,
                                        View view, ThotBool force)
 {
   int                 frame_id, ref;
-  
   // prevent recursive call
   if (g_DoingAction)
     return;
@@ -602,7 +601,6 @@ void TtaExecuteMenuAction (const char *actionName, Document doc, View view,
       TtaExecuteMenuActionFromActionId (action_id, doc, view, force);
     }
 }
-
 
 /*----------------------------------------------------------------------
   TteAddMenu ajoute un nouveau menu pour le schema donne. Si le      

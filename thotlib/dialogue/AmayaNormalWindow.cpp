@@ -69,6 +69,8 @@
 #include "AmayaAdvancedWindow.h"
 #include "AmayaHelpWindow.h"
 
+#include "AmayaWindowIterator.h"
+
 
 #ifdef _MACOS
 /* Wrap-up to prevent an event when the tabs are switched on Mac */
@@ -107,6 +109,7 @@ AmayaNormalWindow* AmayaNormalWindow::CreateNormalWindow(wxWindow * parent, wxWi
 
 
 int AmayaNormalWindow::s_normalWindowCount = 0;
+
 
 IMPLEMENT_CLASS(AmayaNormalWindow, AmayaWindow)
 
@@ -931,7 +934,6 @@ void AmayaNormalWindow::PrepareRecentDocumentMenu(wxMenuItem* item)
     }
 }
 
-
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
  *      Method:  OnRecentDocMenu
@@ -952,6 +954,44 @@ void AmayaNormalWindow::OnRecentDocMenu(wxCommandEvent& event)
 }
 
 /*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnClose
+ * Description:  
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::OnClose(wxCloseEvent& event)
+{
+  event.Skip();
+  
+  if(!IsKindOf(CLASSINFO(AmayaHelpWindow)))
+    {
+      AmayaWindowIterator it;
+      AmayaHelpWindow* help = NULL;
+      for( it.first(); !it.isDone(); it.next() )
+        {
+          AmayaWindow* win = (AmayaWindow*)it.currentElement();
+          if(win && win!=this)
+            {
+              if(!win->IsKindOf(CLASSINFO(AmayaHelpWindow)))
+                // There is at least one window not help nor closed.
+                // Dont do anything
+                return;
+              else
+                help = (AmayaHelpWindow*)win;
+            }
+        }
+      if(help)
+        {
+          AmayaFrame* frame = help->GetActiveFrame();
+          if(frame)
+            {
+              int id = frame->GetMasterFrameId();
+              TtaPostMenuAction("CloseHelpWindow", FrameTable[id].FrDoc, FrameTable[id].FrView, TRUE);
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
@@ -967,6 +1007,8 @@ BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
   EVT_COMBOBOX( XRCID("wxID_TOOL_URL"),   AmayaNormalWindow::OnURLSelected )
   EVT_TEXT_ENTER( XRCID("wxID_TOOL_URL"), AmayaNormalWindow::OnURLTextEnter )
   EVT_TEXT( XRCID("wxID_TOOL_URL"),       AmayaNormalWindow::OnURLText )
+  
+  EVT_CLOSE(AmayaNormalWindow::OnClose)
   
   EVT_MENU_RANGE(RECENT_DOC_ID, RECENT_DOC_ID+RECENT_DOC_MAX_NB,
                                         AmayaNormalWindow::OnRecentDocMenu)

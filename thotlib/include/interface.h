@@ -162,6 +162,20 @@ extern void TtaExecuteMenuAction (const char *actionName, Document doc, View vie
 				  ThotBool force);
 
 /*----------------------------------------------------------------------
+  TtaPostMenuAction execute the corresponding menu action when idle.
+  ----------------------------------------------------------------------*/
+extern void TtaPostMenuAction (const char *actionName, Document doc, View view,
+                           ThotBool force);
+
+/*----------------------------------------------------------------------
+  TtaPostMenuActionById execute the corresponding menu action when idle.
+  ----------------------------------------------------------------------*/
+extern void TtaPostMenuActionById (int actionId, Document doc, View view,
+                           ThotBool force);
+
+
+
+/*----------------------------------------------------------------------
    TtaAddButton
    Adds a new button entry in a document view.
    This function must specify a valid view of a valid document.
@@ -468,6 +482,13 @@ extern void TtaStringToClipboard (unsigned char *s, CHARSET encoding);
   TtaUpdateToolPanelLayout
   ----------------------------------------------------------------------*/
 extern void TtaUpdateToolPanelLayout ();
+
+
+/*----------------------------------------------------------------------
+  TtaCloseAllHelpWindows Closes all opened help windows.
+  ----------------------------------------------------------------------*/
+extern void TtaCloseAllHelpWindows ();
+
 
 #endif /* __CEXTRACT__  */
 

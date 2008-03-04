@@ -70,6 +70,10 @@
 #include "AmayaXHTMLPanel.h"
 #include "AmayaStatsThread.h"
 #include "AmayaQuickSplitButton.h"
+#include "AmayaActionEvent.h"
+#include "AmayaHelpWindow.h"
+#include "AmayaWindowIterator.h"
+
 
 static int g_logerror_action_id = -1;
 
@@ -2387,4 +2391,43 @@ int TtaGetDocumentPageType(Document doc)
   else
     return WXAMAYAPAGE_SIMPLE;
 }
+
+/*----------------------------------------------------------------------
+  TtaPostMenuAction execute the corresponding menu action when idle.
+  ----------------------------------------------------------------------*/
+void TtaPostMenuAction (const char *actionName, Document doc, View view,
+                           ThotBool force)
+{
+  AmayaActionEvent evt(actionName, doc, view, force);
+  AmayaApp::PostAmayaAction(evt);
+}
+
+
+/*----------------------------------------------------------------------
+  TtaPostMenuActionById execute the corresponding menu action when idle.
+  ----------------------------------------------------------------------*/
+void TtaPostMenuActionById (int actionId, Document doc, View view,
+                           ThotBool force)
+{
+  AmayaActionEvent evt(actionId, doc, view, force);
+  AmayaApp::PostAmayaAction(evt);
+}
+
+/*----------------------------------------------------------------------
+  TtaCloseAllHelpWindows Closes all opened help windows.
+  ----------------------------------------------------------------------*/
+void TtaCloseAllHelpWindows ()
+{
+  AmayaWindowIterator it;
+  for( it.first(); !it.isDone(); it.next() )
+    {
+      AmayaWindow* win = (AmayaWindow*)it.currentElement();
+      if(win)
+        {
+          if(wxDynamicCast(win, AmayaHelpWindow))
+            win->Close();
+        }
+    }
+}
+
 #endif /* _WX */

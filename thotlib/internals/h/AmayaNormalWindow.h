@@ -110,6 +110,8 @@ protected:
   void OnURLTextEnter( wxCommandEvent& event );
   void OnURLSelected( wxCommandEvent& event );
   void OnURLText( wxCommandEvent& event );
+  
+  void OnClose(wxCloseEvent& event);
 
   virtual void RefreshShowToolBarToggleMenu(int toolbarID);
   

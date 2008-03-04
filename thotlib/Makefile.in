@@ -192,6 +192,7 @@ EDITOR_OBJ = \
 	content/search.o \
 	content/searchref.o \
 	content/word.o \
+  dialogue/AmayaActionEvent.o \
 	dialogue/AmayaStatusBar.o \
 	dialogue/AmayaConfirmCloseTab.o \
 	dialogue/AmayaAddPointEvtHandler.o \
@@ -248,6 +249,7 @@ EDITOR_OBJ = \
 	dialogue/input.o \
 	dialogue/interface.o \
 	dialogue/keyboards.o \
+	dialogue/md5.o \
 	dialogue/modiftype.o \
 	dialogue/profiles.o \
 	dialogue/presentmenu.o \
@@ -321,6 +323,7 @@ libThotEditor.a : $(THOTK_OBJ) $(DISPLAY_OBJ) $(EDITOR_OBJ)
 
 PRINT_OBJ= \
 	base/AmayaAppPP.o \
+  dialogue/AmayaActionEvent.o \
 	dialogue/AmayaPrintNotify.o \
 	dialogue/nodialog.o \
 	tree/paginatePP.o \

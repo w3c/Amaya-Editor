@@ -32,6 +32,7 @@
 #include "appdialogue_wx.h"
 #include "registry_wx.h"
 #include "message_wx.h"
+#include "appdialogue_f.h"
 
 #include "AmayaLogDebug.h"
 #include "wxAmayaSocketEventLoop.h"
@@ -39,6 +40,7 @@
 #include "AmayaAppInstance.h"
 #include "AmayaWindow.h"
 #include "AmayaNormalWindow.h"
+#include "AmayaActionEvent.h"
 
 IMPLEMENT_APP(AmayaApp)
 
@@ -709,7 +711,28 @@ int AmayaApp::FilterEvent(wxEvent& event)
   return -1;
 }
 
-  
+/*----------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  PostAmayaAction
+  -----------------------------------------------------------------------*/
+void AmayaApp::PostAmayaAction(const AmayaActionEvent& event)
+{
+  wxGetApp().AddPendingEvent((wxEvent&)event);
+}
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  OnAction
+  -----------------------------------------------------------------------*/
+void AmayaApp::OnAction(AmayaActionEvent& event)
+{
+  TtaExecuteMenuActionFromActionId(event.GetId(),  event.GetDocument(),
+                event.GetView(), event.IsForced());
+}
+
+
+
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)
   EVT_IDLE( AmayaApp::OnIdle ) // Process a wxEVT_IDLE event  
   //#if defined(_WINDOWS) && !defined(_WIN_PRINT)
@@ -718,6 +741,7 @@ BEGIN_EVENT_TABLE(AmayaApp, wxApp)
   //#endif /* #if defined(_WINDOWS) && !defined(_WIN_PRINT) */
   EVT_KEY_DOWN( AmayaApp::OnKeyDown )
   EVT_CHAR(     AmayaApp::OnChar )
+  EVT_AMAYA_ALL_ACTION(AmayaApp::OnAction)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

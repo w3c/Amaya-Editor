@@ -18,6 +18,15 @@ extern void TtaExecuteMenuAction ( const char *actionName,
                                    Document doc,
                                    View view,
                                    ThotBool force );
+extern int FindMenuAction ( const char *actionName );
+extern void TtaPostMenuAction ( const char *actionName,
+                                Document doc,
+                                View view,
+                                ThotBool force );
+extern void TtaPostMenuActionById ( int actionId,
+                                    Document doc,
+                                    View view,
+                                    ThotBool force );
 extern void DisplayPRule ( PtrPRule RP,
                            FILE *fileDescriptor,
                            PtrElement pEl,
@@ -195,6 +204,15 @@ extern void TtaExecuteMenuAction ( const char *actionName,
                                      Document doc,
                                      View view,
                                      ThotBool force );
+extern int FindMenuAction ( const char *actionName );
+extern void TtaPostMenuAction ( const char *actionName,
+                                  Document doc,
+                                  View view,
+                                  ThotBool force );
+extern void TtaPostMenuActionById ( int actionId,
+                                      Document doc,
+                                      View view,
+                                      ThotBool force );
 extern void DisplayPRule ( PtrPRule RP,
                              FILE *fileDescriptor,
                              PtrElement pEl,

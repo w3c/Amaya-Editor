@@ -28,6 +28,9 @@ extern ThotBool TemplateCanInsertFirstChild ( ElementType elementType,
                                               Element parent,
                                               Document document );
 extern ThotBool ValidateTemplateAttrInMenu ( NotifyAttribute * event );
+extern void DumpElementSubPath ( Element el,
+                                 char* buffer );
+extern void DumpElementPath ( Element el );
 extern void DumpTemplateElement ( Element el,
                                   Document doc );
 
@@ -55,6 +58,9 @@ extern ThotBool TemplateCanInsertFirstChild ( ElementType elementType,
                                                 Element parent,
                                                 Document document );
 extern ThotBool ValidateTemplateAttrInMenu ( NotifyAttribute * event );
+extern void DumpElementSubPath ( Element el,
+                                   char* buffer );
+extern void DumpElementPath ( Element el );
 extern void DumpTemplateElement ( Element el,
                                     Document doc );
 

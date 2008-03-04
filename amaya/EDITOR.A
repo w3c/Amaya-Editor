@@ -420,6 +420,7 @@ FUNCTIONS
   UpdateContextSensitiveMenus,
   UpdateStyleList,
   ShowLogFile,
+  CloseHelpWindow,
   CreateMIntegral,
   CreateMSum,
   CreateMOVERARROW,

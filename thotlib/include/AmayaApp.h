@@ -18,6 +18,7 @@ class wxAmayaSocketEventLoop;
 class wxSingleInstanceChecker;
 class AmayaAppInstance;
 class AmayaLogDebug;
+class AmayaActionEvent;
 
 #ifdef _GL
 class AmayaApp : public wxGLApp
@@ -42,6 +43,9 @@ public:
   static int GetDocumentIconId(const char * p_name);
   static wxIcon GetAppIcon();
 
+  
+  static void PostAmayaAction(const AmayaActionEvent& event);
+  
 #ifdef __WXDEBUG__
   static AmayaLogDebug * GetAmayaLogDebug( wxWindow * p_parent );
   static void DestroyAmayaLogDebug();
@@ -55,6 +59,8 @@ public:
   void OnChar( wxKeyEvent& event );
   void OnKeyDown( wxKeyEvent& event );
 
+  void OnAction(AmayaActionEvent& event);
+  
   static void SetupDocumentIconList();
 
   bool m_AmayaIsLaunched;

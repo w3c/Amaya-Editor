@@ -234,6 +234,8 @@ extern void SetMaxURLList ( int max );
 extern void ClearURLList ( void );
 extern char* CreateTempDirectory ( const char* name );
 extern int ChooseDocumentPage ( Document doc );
+extern void CloseHelpWindow ( Document doc,
+                              View view );
 
 #else /* __STDC__ */
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
@@ -465,6 +467,8 @@ extern void SetMaxURLList ( int max );
 extern void ClearURLList ( void );
 extern char* CreateTempDirectory ( const char* name );
 extern int ChooseDocumentPage ( Document doc );
+extern void CloseHelpWindow ( Document doc,
+                                View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

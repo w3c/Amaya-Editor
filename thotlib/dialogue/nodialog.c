@@ -47,6 +47,41 @@ void TtaExecuteMenuAction (const char *actionName, Document doc, View view,
 			   ThotBool force)
 {
 }
+
+/*----------------------------------------------------------------------
+  FindMenuAction returns the entry that describes the menu action.
+  ----------------------------------------------------------------------*/
+int FindMenuAction ( const char *actionName )
+{
+  return 0;
+}
+
+/*----------------------------------------------------------------------
+  TtaPostMenuAction execute the corresponding menu action when idle.
+  ----------------------------------------------------------------------*/
+void TtaPostMenuAction (const char *actionName, Document doc, View view,
+                           ThotBool force)
+{
+}
+
+
+/*----------------------------------------------------------------------
+  TtaPostMenuActionById execute the corresponding menu action when idle.
+  ----------------------------------------------------------------------*/
+void TtaPostMenuActionById (int actionId, Document doc, View view,
+                           ThotBool force)
+{
+}
+
+/*----------------------------------------------------------------------
+  TtaExecuteMenuActionFromActionId execute the corresponding menu action.
+  When force is TRUE the action is called even if it's not active.
+  ----------------------------------------------------------------------*/
+void TtaExecuteMenuActionFromActionId (int action_id, Document doc,
+                                       View view, ThotBool force)
+{
+}
+
 /*----------------------------------------------------------------------
   DisplayPRule displays the presentation rule pointed by RP.
   ----------------------------------------------------------------------*/
@@ -555,4 +590,11 @@ void TtaSendStatsInfo()
 ThotBool TtaDetachFrame( int frame_id )
 {
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  TtaCloseAllHelpWindows Closes all opened help windows.
+  ----------------------------------------------------------------------*/
+void TtaCloseAllHelpWindows ()
+{
 }
