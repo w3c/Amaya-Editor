@@ -96,7 +96,7 @@ private:
 //-----------------------------------------------------------------------------
 class RecipientPanel : public wxPanel
 {
-  DECLARE_CLASS()
+  DECLARE_CLASS(RecipientPanel)
 public:
   RecipientPanel(wxWindow* parent);
   void AddDefaultRecipients(const wxArrayString& arr);
