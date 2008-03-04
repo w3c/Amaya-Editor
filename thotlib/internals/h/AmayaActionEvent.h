@@ -22,7 +22,7 @@ public:
   AmayaActionEvent(const AmayaActionEvent& event);
   virtual ~AmayaActionEvent();
 
-  virtual AmayaActionEvent* Clone() const;
+  virtual wxEvent* Clone() const;
   
   Document GetDocument()const{return m_doc;}
   View     GetView()const{return m_view;}

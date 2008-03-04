@@ -48,7 +48,7 @@ AmayaActionEvent::~AmayaActionEvent()
 {
 }
 
-AmayaActionEvent* AmayaActionEvent::Clone() const
+wxEvent* AmayaActionEvent::Clone() const
 {
   return new AmayaActionEvent(*this);
 }
