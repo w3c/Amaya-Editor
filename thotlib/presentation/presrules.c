@@ -4072,7 +4072,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbStrokeOpacity = 1000;
-              appl = TRUE;	      
+              appl = TRUE;
             }
           break;
         case PtBackground:

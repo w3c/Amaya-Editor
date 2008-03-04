@@ -532,11 +532,13 @@ PtrHandlePSchema FirstPSchemaExtension (PtrSSchema pSS, PtrDocument pDoc,
 
   if (pEl && pEl->ElFirstSchDescr)
     {
+      // get the schema list attached to the element
       pPfS = pEl->ElFirstSchDescr;
       while (pPfS && pPfS->PfSSchema != pSS)
         pPfS = pPfS->PfNext;
     }
   else
+    // get the schema list attached to the document
     pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (pPfS)
     return (pPfS->PfFirstPSchemaExtens);
