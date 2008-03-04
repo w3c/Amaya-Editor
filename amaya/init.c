@@ -4662,6 +4662,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
 #endif /* ANNOTATIONS */
                 }
             }
+
           /* check parsing errors */
           if (DocumentTypes[newdoc] == docLog ||
               method == CE_MAKEBOOK || method == CE_TEMPLATE || method == CE_HELP)

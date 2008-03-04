@@ -69,7 +69,6 @@ CSSProperty;
 static int           LineNumber = -1; /* The line where the error occurs */
 static int           NewLineSkipped = 0;
 static int           RedisplayImages = 0; /* number of BG images loading */
-static int           RedisplayDoc = 0; /* document to be redisplayed */
 static int           Style_parsing = 0; /* > 0 when parsing a set of CSS rules */
 static char         *ImportantPos = NULL;
 static ThotBool      RedisplayBGImage = FALSE; /* TRUE when a BG image is inserted */
@@ -2166,7 +2165,8 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
   CSSImageCallbackPtr        callblock;
   Element                    el;
   PSchema                    tsch;
-  PInfoPtr                   pInfo;
+  Document                   redisplaydoc;
+  PInfoPtr                   pInfo = NULL;
   CSSInfoPtr                 css;
   PresentationContext        ctxt;
   PresentationValue          image;
@@ -2181,19 +2181,14 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
   el = callblock->el;
   tsch = callblock->tsch;
   ctxt = callblock->ctxt;
+  redisplaydoc = ctxt->doc;
   if (doc == 0 && !isnew)
     /* apply to the current document only */
-    doc = ctxt->doc;
+    doc = redisplaydoc;
   if (doc)
-    {
-      /* avoid too many redisplay */
-      dispMode = TtaGetDisplayMode (doc);
-      if (dispMode == DisplayImmediately)
-        TtaSetDisplayMode (doc, DeferredDisplay);
-    }
+    redisplaydoc = doc;
   else
     {
-      dispMode = TtaGetDisplayMode (RedisplayDoc);
       /* check if the CSS still exists */
       css = CSSList;
       while (css && css != callblock->css)
@@ -2203,10 +2198,19 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
         tsch = NULL;
     }
 
-  if (tsch && css && ctxt && ctxt->doc)
+  if (tsch && css && ctxt && redisplaydoc)
     {
       // check if the presentation schema is still there
-      pInfo = css->infos[ctxt->doc];
+      pInfo = css->infos[redisplaydoc];
+      if (pInfo == NULL && DocumentURLs[redisplaydoc] == NULL)
+        {
+          // the redisplaydoc was probably an object
+          while (redisplaydoc > 0 && pInfo == 0)
+            pInfo = css->infos[--redisplaydoc];
+          if (redisplaydoc)
+            ctxt->doc = redisplaydoc;
+        }
+
       found = FALSE;
       while (!found && pInfo)
         {
@@ -2243,29 +2247,20 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
   TtaFreeMemory (callblock);
   if (css)
     RedisplayImages--;
-  if (doc)
+  if (redisplaydoc &&
+      /* check if all background images are now loaded */
+      (css == NULL || (pInfo && Style_parsing == 0 && RedisplayImages == 0)))
     {
-      if (dispMode == DisplayImmediately)
-        /* restore the display mode */
-        TtaSetDisplayMode (doc, dispMode);
-    }
-  else if (css && Style_parsing == 0 && RedisplayImages == 0 && RedisplayDoc)
-    {
-      /* all background images are now loaded */
-      if (css->infos[RedisplayDoc] &&
-          /* don't manage a document used by make book */
-          (DocumentMeta[RedisplayDoc] == NULL ||
-           DocumentMeta[RedisplayDoc]->method != CE_MAKEBOOK))
+      /* don't manage a document used by make book */
+      if (DocumentMeta[redisplaydoc] == NULL ||
+          DocumentMeta[redisplaydoc]->method != CE_MAKEBOOK)
         {
           /* Change the Display Mode to take into account the new
              presentation */
-          dispMode = TtaGetDisplayMode (RedisplayDoc);
-#ifdef AMAYA_DEBUG
-          //printf ("ParseCSSImageCallback Show BGimages\n");
-#endif /* AMAYA_DEBUG */
+          dispMode = TtaGetDisplayMode (redisplaydoc);
           /* force the redisplay of this box */
-          TtaSetDisplayMode (RedisplayDoc, NoComputedDisplay);
-          TtaSetDisplayMode (RedisplayDoc, dispMode);
+          TtaSetDisplayMode (redisplaydoc, NoComputedDisplay);
+          TtaSetDisplayMode (redisplaydoc, dispMode);
         }
       RedisplayBGImage = FALSE;
     }
@@ -2340,7 +2335,6 @@ static char *SetCSSImage (Element element, PSchema tsch,
                   /* check if the image url is related to an external CSS */
                   if (css)
                     {
-                      RedisplayDoc = ctxt->doc;
                       /* fetch and display background image of element */
                       if (FetchImage (0, el, tempname, AMAYA_LOAD_IMAGE,
                                       ParseCSSImageCallback, callblock))
@@ -8050,7 +8044,6 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
       RedisplayBGImage = FALSE;
       if (dispMode != NoComputedDisplay)
         {
-          RedisplayDoc = 0;
           //printf ("ReadCSS Show BGimages\n");
           TtaSetDisplayMode (docRef, NoComputedDisplay);
           TtaSetDisplayMode (docRef, dispMode);

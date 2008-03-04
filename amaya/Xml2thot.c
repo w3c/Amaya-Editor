@@ -5165,8 +5165,7 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
 
   /* Avoid too many redisplay */
   dispMode = TtaGetDisplayMode (doc);
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, NoComputedDisplay);
+  TtaSetDisplayMode (doc, NoComputedDisplay);
 
   /* General initialization */
   RootElement = NULL;
@@ -5417,7 +5416,7 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
     }
 
   /* Restore the display mode */
-  if (dispMode == DisplayImmediately && DocumentURLs[doc])
+  if (DocumentURLs[doc])
     TtaSetDisplayMode (doc, dispMode);
 
   if (docURL)
@@ -5439,8 +5438,6 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
       /* Make the external element not editable */
       TtaSetAccessRight (extEl, ReadOnly, doc);
     }
-
-
   return;
 }
 

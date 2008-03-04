@@ -926,7 +926,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
       desc->elImage = NULL;
       /* Avoid too many redisplay */
       dispMode = TtaGetDisplayMode (doc);
-      if (dispMode == DisplayImmediately)
+      if (doc != 0 && dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, DeferredDisplay);
       while (ctxEl)
         {
@@ -972,7 +972,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
           TtaFreeMemory (ctxPrev);
         }
       /* Restore the display mode */
-      if (dispMode == DisplayImmediately)
+      if (doc != 0 && dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, dispMode);
     }
 }

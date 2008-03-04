@@ -568,19 +568,16 @@ typedef struct _DocumentMetaDataElement
   char      *content_location; /* simplified content location returned by the server */
   char      *full_content_location; /* full content location returned by the server */
   char      *reason;           /* http_headers reason*/
-
   int        method;           /* method used to send this data */
   Element    link_icon;        /* there is a link to an icon */
   ThotBool   xmlformat;        /* the document should be exported in xml format */
   ThotBool   compound;         /* the document is a compound document */
 #ifdef ANNOTATIONS
   Document   source_doc;       /* if the document is an annotation,
-				  this variable giveso the annoted document
-				  docid */
+				  this variable giveso the annoted document docid */
 #endif /* ANNOTATIONS */
-
-  ThotBool  isTemplate;			 /* True if the document is a XTiger template or library,
-  									False if template instance or not using XTiger.*/
+  ThotBool  isTemplate;	 /* True if the document is a XTiger template or library,
+  			    False if template instance or not using XTiger.*/
 #ifdef TEMPLATES
   char      *template_url;       /* the url of the original template (or null if not an instance) */
   char      *template_version;   /* if this document is derived from a template,
