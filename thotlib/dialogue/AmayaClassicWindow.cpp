@@ -282,7 +282,7 @@ void AmayaClassicWindow::OnClose(wxCloseEvent& event)
     m_pNotebook->Destroy();
     m_pNotebook = NULL;
   }
-  Destroy();
+  event.Skip();
 }
 
 
