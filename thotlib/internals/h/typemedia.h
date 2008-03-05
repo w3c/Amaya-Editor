@@ -322,7 +322,7 @@ typedef struct _Box
       float 	     _BxXRatio_;
       float 	     _BxYRation_;
     } s1;
-    struct /* BoBlock*/
+    struct /* BoBlock BoFloatBlock BoCell BoCellBlock */
     {
       PtrLine 	 _BxFirstLine_;	/* First line if applicable */
       PtrLine 	 _BxLastLine_;	/* Last line */

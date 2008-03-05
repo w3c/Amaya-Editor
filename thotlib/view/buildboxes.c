@@ -2309,7 +2309,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   ThotBool            enclosedWidth, directParent;
   ThotBool            enclosedHeight, uniqueChild;
   ThotBool            inlineChildren, inlineFloatC;
-  ThotBool            dummyChild, positioning;
+  ThotBool            dummyChild, positioning, extraflow;
 
   if (pAb->AbDead)
     return (NULL);
@@ -2327,6 +2327,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS))
         boxType = BoCell;
     }
+  extraflow = ExtraAbFlow (pAb, frame);
   /* Chargement de la fonte attachee au pave */
   height = pAb->AbSize;
   unit = pAb->AbSizeUnit;
@@ -2396,7 +2397,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           inLineFloat = FALSE;
           inlineChildren = FALSE;
           inlineFloatC = FALSE;
-          pAb->AbFloat = 'N';
+          if (boxType == BoRow || boxType == BoColumn)
+            pAb->AbFloat = 'N';
         }
       else
         {
@@ -2436,7 +2438,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                   !pAb->AbWidth.DimIsPosition &&
                   pAb->AbWidth.DimValue <= 0 &&
                   /* a positioned box cannot be a ghost */
-                  !ExtraAbFlow (pAb, frame) &&
+                  !extraflow &&
                   /* and not already registered as .... */
                   pBox->BxType != BoFloatGhost &&
                   pBox->BxType != BoFloatBlock &&
@@ -2447,6 +2449,24 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                     pBox->BxType = BoFloatGhost;
                   if (pAb->AbFirstEnclosed)
                     pBox->BxType = BoGhost;
+                  /* this element can be split */
+                  inlineChildren = inLine;
+                  inlineFloatC = inLineFloat;
+                }
+              else if (inlineChildren && inLineFloat &&
+                       !inlineFloatC && pAb->AbClear == 'N'&&
+                       pAb->AbFloat == 'N' &&
+                       (pAb->AbPrevious && pAb->AbPrevious->AbFloat != 'N') &&
+                       /* a positioned box cannot be a ghost */
+                       !extraflow &&
+                       pAb->AbFirstEnclosed &&
+                       /* and not already registered as .... */
+                       pBox->BxType != BoFloatGhost &&
+                       pBox->BxType != BoFloatBlock &&
+                       pBox->BxType != BoCellBlock &&
+                       boxType != BoCell)
+                {
+                  pBox->BxType = BoGhost;
                   /* this element can be split */
                   inlineChildren = inLine;
                   inlineFloatC = inLineFloat;

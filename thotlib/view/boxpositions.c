@@ -826,9 +826,6 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
                 if (vertRef && newY)
                   {
                     i = pChildBox->BxYOrg + pChildBox->BxH - height;
-if (!strcmp(pChildAb->AbElement->ElLabel, "L724"))
-  printf ("AddBoxTranslations 724 %d+%d\n",pChildBox->BxYOrg,y);
-		    
                     /* regarde s'il s'agit d'une boite elastique */
                     if (pChildBox->BxVertFlex)
                       {

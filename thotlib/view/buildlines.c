@@ -1853,7 +1853,7 @@ void ClearAFloat (PtrAbstractBox pAb)
   ----------------------------------------------------------------------*/
 static void SetClear (PtrBox box, ThotBool *clearL, ThotBool *clearR)
 {
-  PtrAbstractBox      pAb, pParent;
+  PtrAbstractBox      pAb, pParent, pChild;
 
   *clearL = FALSE;
   *clearR = FALSE;
@@ -1862,6 +1862,17 @@ static void SetClear (PtrBox box, ThotBool *clearL, ThotBool *clearR)
       pAb = box->BxAbstractBox;
       *clearL = (pAb->AbClear == 'L' || pAb->AbClear == 'B');
       *clearR =(pAb->AbClear == 'R' || pAb->AbClear == 'B');
+      // check also the first child
+      if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed)
+        {
+          pChild = pAb->AbFirstEnclosed;
+          while (pChild->AbPresentationBox && pChild->AbNext)
+            pChild = pChild->AbNext;
+          if (pChild->AbClear == 'L' || pChild->AbClear == 'B')
+            *clearL = TRUE;
+          if (pChild->AbClear == 'R' || pChild->AbClear == 'B')
+            *clearR = TRUE;          
+        }
       /* check if an enclosing ghost box generates a clear */
       pParent = pAb->AbEnclosing;
       while (pParent && pParent->AbBox &&
@@ -2657,12 +2668,12 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   line_spaces += pNextBox->BxNSpaces;
                 }
               // check minwidth and maxwidth values
-               if (onlySpace && line_spaces == 0)
-                 {
-                   if (pLine->LiXMax < xi)
-                     pLine->LiXMax = xi;
-                   minWidth = xi;
-                 }
+              if (onlySpace && line_spaces == 0)
+                {
+                  if (pLine->LiXMax < xi)
+                    pLine->LiXMax = xi;
+                  minWidth = xi;
+                }
 
               if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
                   pNextBox->BxNexChild)
@@ -2719,6 +2730,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
               still = FALSE;
             }
         }
+
       if (pNextBox == NULL)
         {
           *full = FALSE;
@@ -3126,7 +3138,12 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   int                 t = 0, b = 0, l = 0, r = 0;
   ThotBool            extensibleblock;
 
-  if (xAbs)
+  extensibleblock =  pBlock->BxContentWidth;
+  if (!extensibleblock && !updateWidth)
+    // nothing to do
+    return;
+
+  if (xAbs || !pBlock->BxXToCompute)
     x = pBlock->BxXOrg;
   else
     x = 0;
@@ -3135,21 +3152,22 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   if (pBlock->BxLMargin > 0)
     x += pBlock->BxLMargin;
   x1 = x2 = 0;
-  if (yAbs)
+  if (yAbs || !pBlock->BxYToCompute)
     y = pBlock->BxYOrg;
   else
     y = 0;
   y += t + pBlock->BxTBorder + pBlock->BxTPadding;
   if (pBlock->BxTMargin > 0)
     y += pBlock->BxTMargin;
-  extensibleblock =  pBlock->BxContentWidth;
- 
+
   pfloat = pBlock->BxLeftFloat;
   while (pfloat && pfloat->FlBox)
     {
       box = pfloat->FlBox;
-      if (box->BxType == BoFloatBlock && box->BxContentWidth)
+      if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxContentWidth)
         w = box->BxMaxWidth + box->BxLMargin + box->BxLBorder + box->BxLPadding + box->BxRBorder + box->BxRPadding;
+      else if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
+        w = box->BxMinWidth + box->BxLMargin + box->BxLBorder + box->BxLPadding + box->BxRBorder + box->BxRPadding;
       else
         w = box->BxWidth - box->BxRMargin;
       if (box->BxRMargin < 0)
@@ -3167,8 +3185,10 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   while (pfloat && pfloat->FlBox)
     {
       box = pfloat->FlBox;
-      if (box->BxType == BoFloatBlock && box->BxContentWidth)
+      if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxContentWidth)
         w = box->BxMaxWidth + box->BxLBorder + box->BxLPadding + box->BxRMargin + box->BxRBorder + box->BxRPadding;
+      else if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
+        w = box->BxMinWidth + box->BxLBorder + box->BxLPadding + box->BxRMargin + box->BxRBorder + box->BxRPadding;
       else
         w = box->BxWidth - box->BxLMargin;
       if (box->BxLMargin < 0)

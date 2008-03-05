@@ -1135,7 +1135,25 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
   int                 mbp, delta;
   ThotBool            skip;
 
+  GiveAttrWidth (cell, ViewFrameTable[frame - 1].FrMagnification, width, percent);
   box = cell->AbBox;
+  if (box->BxType == BoCellBlock)
+    {
+      // min and max are already computed
+      *min = box->BxMinWidth;
+      *max = box->BxMaxWidth;      
+      if (*width)
+        {
+          *width = *width + mbp;
+          if (*width > *min)
+            *min = *width;
+          else if (*width < *min)
+            *width = *min;
+          if (*width > *max)
+            *max = *width;
+        }
+      return;
+    }
   /* take into account the left margin, border and padding */
   mbp = box->BxLBorder + box->BxLPadding;
   if (cell->AbLeftMarginUnit != UnAuto && box->BxLMargin > 0)
@@ -1227,7 +1245,6 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
         }
     }
   /* take into account margins, borders, paddings */
-  CleanAutoMargins (cell);
   mbp = box->BxLBorder + box->BxLPadding + box->BxRBorder + box->BxRPadding;
   if (box->BxLMargin > 0)
     mbp += box->BxLMargin;
@@ -1235,7 +1252,6 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
     mbp += box->BxRMargin;
   *min = *min + mbp;
   *max = *max + mbp;
-  GiveAttrWidth (cell, ViewFrameTable[frame - 1].FrMagnification, width, percent);
   if (*width)
     {
       *width = *width + mbp;
@@ -2228,6 +2244,7 @@ void TtaUnlockTableFormatting ()
                     }
                   else if (table && table->AbEnclosing->AbBox &&
                            table->AbEnclosing->AbBox->BxType != BoCell &&
+                           table->AbEnclosing->AbBox->BxType != BoCellBlock &&
                            table->AbEnclosing->AbWidth.DimAbRef == NULL &&
                            table->AbEnclosing->AbWidth.DimValue == -1)
                     WidthPack (table->AbEnclosing, table->AbBox, pLockRel->LockRFrame[i]);

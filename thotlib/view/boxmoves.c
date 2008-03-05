@@ -838,7 +838,7 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                   TransmitRuleWidth (pBox, pSourceBox, frame);
                 }
             }
-          else if (pBox->BxType == BoCell &&
+          else if ((pBox->BxType == BoCell || pBox->BxType == BoCellBlock) &&
                    !pBox->BxAbstractBox->AbWidth.DimIsPosition &&
                    pBox->BxAbstractBox->AbWidth.DimAbRef == NULL &&
                    pBox->BxAbstractBox->AbWidth.DimValue >= 0)
@@ -1984,7 +1984,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
   pAb = pBox->BxAbstractBox;
   if (pAb == NULL)
     return;
-
   GetExtraMargins (pBox, NULL, frame, &i, &j, &extraL, &extraR);
   if (!pAb->AbMBPChange && delta)
     {
@@ -2364,7 +2363,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                       if (pDimRel->DimROp[i] == OpSame)
                         {
                           /* Changing the width */
-                          if (box->BxType == BoCell ||
+                          if (box->BxType == BoCell || box->BxType == BoCellBlock ||
                               (pRefAb->AbWidth.DimUnit == UnPercent && pRefAb->AbWidth.DimValue == 100))
                             {
                               // transmit the column width to table cells
@@ -2375,7 +2374,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                                 val -= box->BxRMargin;
                               val = val - box->BxLBorder - box->BxLPadding - box->BxRBorder - box->BxRPadding;
                             }
-                          else if (pBox->BxType == BoCell && pRefAb->AbPresentationBox)
+                          else if ((pBox->BxType == BoCell || pBox->BxType == BoCellBlock) &&
+                                   pRefAb->AbPresentationBox)
                             // transmit the cell width to cellframe
                             val = pBox->BxW + pBox->BxLPadding + pBox->BxRPadding - box->BxW;
                           else if (pRefAb->AbWidth.DimUnit == UnPercent)
@@ -2491,7 +2491,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                       /* Don't check the inclusion more than 2 times */
                       else if (pParent->AbBox->BxCycles <= 1)
                         {
-                          if (pParent->AbBox->BxType == BoCell)
+                          if (pParent->AbBox->BxType == BoCell || pParent->AbBox->BxType == BoCellBlock)
                             UpdateColumnWidth (pParent, NULL, frame);
                           else
                             WidthPack (pParent, pSourceBox, frame);
@@ -3060,7 +3060,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                        !IsSiblingBox (pBox, pSourceBox))
                 RecordEnclosing (pParent->AbBox, FALSE);
             }
-          else if (pBox->BxType == BoCell)
+          else if (pBox->BxType == BoCell || pBox->BxType == BoCellBlock)
             /* it's a cell with a rowspan attribute */
             UpdateCellHeight (pAb, frame);
         }
@@ -3397,7 +3397,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
       pParent = pAb->AbEnclosing;
       if (checkParent && pBox->BxXOutOfStruct && pParent &&
           /* table evaluation is done by a specific algorithm */
-          pBox->BxType != BoCell && pBox->BxType != BoColumn)
+          pBox->BxType != BoCell && pBox->BxType != BoCellBlock && pBox->BxType != BoColumn)
         /*
          * cannot compute it if this box is not placed
          * or if the management is differed.

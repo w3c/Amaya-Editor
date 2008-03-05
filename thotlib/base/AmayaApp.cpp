@@ -638,6 +638,8 @@ void AmayaApp::OnChar(wxKeyEvent& event)
   {
     if (!TtaHandleUnicodeKey(event))
       event.Skip();
+    else
+      event.Skip(false);
   }
   else
     event.Skip();
