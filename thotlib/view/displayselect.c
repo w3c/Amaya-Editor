@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -467,19 +467,65 @@ void DisplayBgBoxSelection (int frame, PtrBox pBox)
 void DrawBoxSelection (int frame, PtrBox pBox)
 {
   PtrBox              pChildBox;
-  PtrAbstractBox      pAb;
+  PtrAbstractBox      pAb, pChild, pParent;
+  PtrLine             pLine;
+  int                 xd, yd, xf, yf;
+  ThotBool            first = TRUE;
 
-  if (pBox != NULL)
+  if (pBox)
     {
-      pAb = pBox->BxAbstractBox;      
       if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
         {
           /* display the selection on pieces of the current box */
           pChildBox = pBox->BxNexChild;
-          while (pChildBox != NULL)
+          while (pChildBox)
             {
               DrawBoxSelection (frame, pChildBox);
               pChildBox = pChildBox->BxNexChild;
+            }
+        }
+      else if (pBox->BxType == BoGhost)
+        {
+          pAb = pBox->BxAbstractBox;
+          if (pAb && pAb->AbDisplay == 'B')
+            {
+              /* compute the redisplayed area */
+              pChild = pAb->AbFirstEnclosed;
+              pParent = pAb->AbEnclosing;
+              while (pParent->AbBox && pParent->AbBox->BxType == BoGhost)
+                pParent = pParent->AbEnclosing;
+              xd = pParent->AbBox->BxXOrg + pParent->AbBox->BxLMargin + pParent->AbBox->BxLBorder;
+              xf = xd + pParent->AbBox->BxW;
+              while (pChild)
+                {
+                  pChildBox = pChild->AbBox;
+                  if (pChildBox == NULL)
+                    ;
+                  else if (pChildBox->BxType == BoSplit || pChildBox->BxType == BoMulScript)
+                    while (pChildBox)
+                      {
+                        /* check pieces */
+                        if (first)
+                          {
+                            yd = pChildBox->BxYOrg;
+                            first = FALSE;
+                          }
+                        yf = pChildBox->BxYOrg + pChildBox->BxHeight;
+                        pChildBox = pChildBox->BxNexChild;
+                      }
+                  else if (!pChild->AbPresentationBox && pChildBox->BxType != BoGhost)
+                    {
+                      /* skip presentation boxes and ghosts */
+                      if (first)
+                        {
+                          yd = pChildBox->BxYOrg;
+                          first = FALSE;
+                        }
+                      yf = pChildBox->BxYOrg + pChildBox->BxHeight;
+                    }
+                  pChild = pChild->AbNext;
+                }
+              DefClip (frame, xd, yd, xf, yf);
             }
         }
       else

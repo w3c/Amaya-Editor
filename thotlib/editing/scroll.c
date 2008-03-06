@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -737,7 +737,8 @@ ThotBool IsScrolled (int frame, int selection)
 void ShowSelectedBox (int frame, ThotBool active)
 {
   ViewFrame          *pFrame;
-  PtrBox              pBo1;
+  PtrBox              pBox;
+  PtrAbstractBox      pAb;
   int                 xmin, xmax;
   int                 ymin, ymax;
   int                 x, y, dx, dy, w, h;
@@ -752,31 +753,43 @@ void ShowSelectedBox (int frame, ThotBool active)
   pFrame = &ViewFrameTable[frame - 1];
   if (pFrame->FrSelectionBegin.VsBox != NULL && pFrame->FrReady)
     {
-      pBo1 = pFrame->FrSelectionBegin.VsBox;
+      pBox = pFrame->FrSelectionBegin.VsBox;
       /* Check if almost one box is displayed */
-      while (pBo1 && pBo1->BxAbstractBox &&
-             pBo1->BxAbstractBox->AbVisibility < pFrame->FrVisibility)
+      while (pBox && pBox->BxAbstractBox &&
+             pBox->BxAbstractBox->AbVisibility < pFrame->FrVisibility)
         {
-          if (pBo1->BxAbstractBox->AbSelected ||
-              pBo1 == pFrame->FrSelectionBegin.VsBox)
-            pBo1 = pBo1->BxNext;
+          if (pBox->BxAbstractBox->AbSelected ||
+              pBox == pFrame->FrSelectionBegin.VsBox)
+            pBox = pBox->BxNext;
           else
             /* no box found */
             return;
         }
-      if (pBo1 != NULL)
+      if (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoGhost))
+        {
+          // get the position of the fist visible box
+          pAb = pBox->BxAbstractBox;
+          while (pAb && pAb->AbBox &&
+                 (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoGhost))
+            pAb = pAb->AbFirstEnclosed;
+          if (pAb)
+            pBox = pAb->AbBox;
+          else
+            pBox = NULL;
+        }
+      if (pBox)
         {
 #ifdef _GL
-          if (pBo1->BxBoundinBoxComputed)
+          if (pBox->BxBoundinBoxComputed)
             {
-              x = pBo1->BxClipX + pFrame->FrXOrg;
-              y = pBo1->BxClipY + pFrame->FrYOrg;
+              x = pBox->BxClipX + pFrame->FrXOrg;
+              y = pBox->BxClipY + pFrame->FrYOrg;
             }
           else
 #endif /* _GL*/
             {
-              x = pBo1->BxXOrg;
-              y = pBo1->BxYOrg;
+              x = pBox->BxXOrg;
+              y = pBox->BxYOrg;
             }
           GetSizesFrame (frame, &w, &h);
           xmin = pFrame->FrXOrg;
@@ -788,9 +801,9 @@ void ShowSelectedBox (int frame, ThotBool active)
           dy = 13;
           w /= 2;
           h /= 2;
-          if (pBo1->BxAbstractBox)
+          if (pBox->BxAbstractBox)
             {
-              if (!pBo1->BxAbstractBox->AbHorizPos.PosUserSpecified)
+              if (!pBox->BxAbstractBox->AbHorizPos.PosUserSpecified)
                 /* the box position is not given by the user */
                 {
                   if (x + dx < xmin + 10)
@@ -801,17 +814,17 @@ void ShowSelectedBox (int frame, ThotBool active)
                     HorizontalScroll (frame, x + dx - xmax + w, 0);
                 }
 
-              if (!pBo1->BxAbstractBox->AbVertPos.PosUserSpecified)
+              if (!pBox->BxAbstractBox->AbVertPos.PosUserSpecified)
                 /* the box position is not given by the user */
                 {
 #ifdef _GL
-                  if (y + pBo1->BxClipH < ymin + dy)
+                  if (y + pBox->BxClipH < ymin + dy)
                     /* scroll the window */
-                    VerticalScroll (frame, y + pBo1->BxClipH - ymin - h, 0);
+                    VerticalScroll (frame, y + pBox->BxClipH - ymin - h, 0);
 #else /* _GL */
-                  if (y + pBo1->BxHeight < ymin + dy)
+                  if (y + pBox->BxHeight < ymin + dy)
                     /* scroll the window */
-                    VerticalScroll (frame, y + pBo1->BxHeight - ymin - h, 0);
+                    VerticalScroll (frame, y + pBox->BxHeight - ymin - h, 0);
 #endif /* _GL */
                   else if (y > ymax - dy)
                     /* scroll the window */
