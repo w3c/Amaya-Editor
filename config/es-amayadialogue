@@ -315,40 +315,42 @@
 313 Ver propiedades del recurso...
 314 Copiar información de bloqueo
 315 ¿Bloqueado?
-316 &Javascript/DOM
-317 Activar/Desactivar
-318 Ejecutar un comando
-319 Ejecutar un script externo
-320 Añadir un script externo
-321 Insertar un script
-322 Acerca de Amaya
-323 Página web de Amaya en el W3C
-324 Índice
-325 Navegar
-326 Vistas
-327 Seleccionar
-328 Documentos
-329 Crear elementos
-330 Atributos
-331 Caracteres
-332 Modelos
-333 Reestructurar
-334 Enlaces
-335 Tablas
-336 Mapas de imagen
-337 MathML
-338 Gráficos
-339 Soporte XML
-340 Hojas de estilo
-341 Buscar
-342 Revisar ortografía
-343 Publicar
-344 Cooperación
-345 Imprimir
-346 Numerar
-347 Hacer libros
-348 Anotaciones
-349 Configurar
-350 Atajos de teclado
-351 Accesibilidad
-352 Sugerencia del día...
+316 **Templates
+317 **Create template from current document...
+318 &Javascript/DOM
+319 Activar/Desactivar
+320 Ejecutar un comando
+321 Ejecutar un script externo
+322 Añadir un script externo
+323 Insertar un script
+324 Acerca de Amaya
+325 Página web de Amaya en el W3C
+326 Índice
+327 Navegar
+328 Vistas
+329 Seleccionar
+330 Documentos
+331 Crear elementos
+332 Atributos
+333 Caracteres
+334 Modelos
+335 Reestructurar
+336 Enlaces
+337 Tablas
+338 Mapas de imagen
+339 MathML
+340 Gráficos
+341 Soporte XML
+342 Hojas de estilo
+343 Buscar
+344 Revisar ortografía
+345 Publicar
+346 Cooperación
+347 Imprimir
+348 Numerar
+349 Hacer libros
+350 Anotaciones
+351 Configurar
+352 Atajos de teclado
+353 Accesibilidad
+354 Sugerencia del día...

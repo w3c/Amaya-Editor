@@ -315,40 +315,42 @@
 313 Informazioni per il lock...
 314 Copia delle informazioni per il lock...
 315 Lock?
-316 &Javascript/DOM
-317 Attiva/Disattiva
-318 Esegui un comando
-319 Esegui un comando
-320 Aggiungi uno script esterno
-321 Inserisci uno script
-322 Informazioni su Amaya
-323 Informazioni su Amaya al W3C
-324 Indice
-325 Navigazione
-326 Viste
-327 Selezione
-328 Documento
-329 Creazione elementi
-330 Attributi
-331 Caratteri
-332 Modelli
-333 Ristrutturazione
-334 Collegamenti
-335 Tabelle
-336 Zone attive
-337 Matematica
-338 Graphics
-339 Supporto XML
-340 Fogli di stile
-341 Ricerca
-342 Controllo ortografico
-343 Pubblicazione
-344 Cooperazione
-345 Stampa
-346 Numerazione
-347 Creare un libro
-348 Annotazioni
-349 Configurazione
-350 Scelte rapide
-351 Accessibilità in Amaya
-352 Suggerimenti del giorno...
+316 **Templates
+317 **Create template from current document...
+318 &Javascript/DOM
+319 Attiva/Disattiva
+320 Esegui un comando
+321 Esegui un comando
+322 Aggiungi uno script esterno
+323 Inserisci uno script
+324 Informazioni su Amaya
+325 Informazioni su Amaya al W3C
+326 Indice
+327 Navigazione
+328 Viste
+329 Selezione
+330 Documento
+331 Creazione elementi
+332 Attributi
+333 Caratteri
+334 Modelli
+335 Ristrutturazione
+336 Collegamenti
+337 Tabelle
+338 Zone attive
+339 Matematica
+340 Graphics
+341 Supporto XML
+342 Fogli di stile
+343 Ricerca
+344 Controllo ortografico
+345 Pubblicazione
+346 Cooperazione
+347 Stampa
+348 Numerazione
+349 Creare un libro
+350 Annotazioni
+351 Configurazione
+352 Scelte rapide
+353 Accessibilità in Amaya
+354 Suggerimenti del giorno...

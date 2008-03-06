@@ -315,40 +315,42 @@
 313 Tekrar okuma ayarlarını göster...
 314 kilitli bilgileri kopyala...
 315 kitli mi?
-316 &Javascript/DOM
-317 **Enable/Disable
-318 **Execute a command
-319 **Execute an external script
-320 **Add an external script
-321 **Insert a script
-322 Amaya hakkında
-323 W3C deki Amaya hakkında
-324 Içerik
-325 Tarama
-326 Görünümler
-327 Seç
-328 Döküman
-329 Yarat
-330 Tarz tanımları
-331 karakterler
-332 **Templates
-333 Yeniden yapılandırma
-334 Bağlantılar
-335 Tablolar
-336 Aktif alan
-337 Matematik
-338 Grafik
-339 XML desteği
-340 Görüntü haritaları
-341 Yazı hataları arama
-342 Yazı hataları düzeltmek
-343 Bastırma
-344 Birlikte çalışmak
-345 Sayfa yerleştirme
-346 Numaralandır
-347 Kitap oluşturma
-348 Not ekleme
-349 Yapılandırması
-350 Kısalmalar
-351 Amaya\'ya ulaşmak
-352 **Tip of the day...
+316 **Templates
+317 **Create template from current document...
+318 &Javascript/DOM
+319 **Enable/Disable
+320 **Execute a command
+321 **Execute an external script
+322 **Add an external script
+323 **Insert a script
+324 Amaya hakkında
+325 W3C deki Amaya hakkında
+326 Içerik
+327 Tarama
+328 Görünümler
+329 Seç
+330 Döküman
+331 Yarat
+332 Tarz tanımları
+333 karakterler
+334 **Templates
+335 Yeniden yapılandırma
+336 Bağlantılar
+337 Tablolar
+338 Aktif alan
+339 Matematik
+340 Grafik
+341 XML desteği
+342 Görüntü haritaları
+343 Yazı hataları arama
+344 Yazı hataları düzeltmek
+345 Bastırma
+346 Birlikte çalışmak
+347 Sayfa yerleştirme
+348 Numaralandır
+349 Kitap oluşturma
+350 Not ekleme
+351 Yapılandırması
+352 Kısalmalar
+353 Amaya\'ya ulaşmak
+354 **Tip of the day...

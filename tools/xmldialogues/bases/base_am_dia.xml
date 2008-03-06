@@ -4311,6 +4311,14 @@
 <message xml:lang="cn">锁定了吗?</message>
 <message xml:lang="tw">鎖定了嗎?</message>
 <message xml:lang="sk">Zamknutý?</message></label>
+<label define="Templates_">
+<message xml:lang="en">Templates</message>
+<message xml:lang="fr">Modèles</message>
+</label>
+<label define="BCreateTemplateFromDocument">
+<message xml:lang="en">Create template from current document...</message>
+<message xml:lang="fr">Créer un modèle depuis le document courant...</message>
+</label>
 <label define="JavascriptDom_">
 <message xml:lang="en">&amp;Javascript/DOM</message>
 <message xml:lang="fr">&amp;Javascript/DOM</message>

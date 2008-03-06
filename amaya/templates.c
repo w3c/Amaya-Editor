@@ -60,7 +60,7 @@ ThotBool IsTemplateInstanceDocument(Document doc)
 /*----------------------------------------------------------------------
   IsTemplateDocument: Test if a document is a template (not an instance)
   doc : Document to test
-  return : TRUE if the document is an instance
+  return : TRUE if the document is a template
   ----------------------------------------------------------------------*/
 ThotBool IsTemplateDocument(Document doc)
 {
@@ -1508,5 +1508,12 @@ ThotBool TemplateAttrInMenu (NotifyAttribute * event)
   else
 #endif /* TEMPLATES */
     return FALSE;
+}
+
+/*----------------------------------------------------------------------
+
+  ----------------------------------------------------------------------*/
+void CreateTemplateFromDocument(Document doc, View view)
+{
 }
 

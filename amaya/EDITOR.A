@@ -356,6 +356,7 @@ MENUS
   Tools.Cooperation_ button:BCopyLock -> CopyLockInformation;
   Tools.Cooperation_ Separator;
   Tools.Cooperation_ toggle:BLockIndicator -> LockIndicator;
+  Tools.Templates_  button:BCreateTemplateFromDocument -> CreateTemplateFromDocument;
   Tools.JavascriptDom_ toggle:BSwitch_JS_DOM-> SwitchJavaScript;
   Tools.JavascriptDom_ button:BExecuteACommand -> ExecuteACommand;
   Tools.JavascriptDom_ button:BExecuteExternal -> ExecuteExternal;

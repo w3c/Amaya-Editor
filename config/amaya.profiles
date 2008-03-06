@@ -717,6 +717,7 @@ HelpShortCuts
 
 [templates]
 ConfigTemplates
+CreateTemplateFromDocument
 
 [spell]
 SpellCheck

@@ -315,40 +315,42 @@
 313 Näytä objektin ominaisuudet...
 314 Kopioi lukitustiedot...
 315 Lukittu?
-316 &Javascript/DOM
-317 **Enable/Disable
-318 **Execute a command
-319 **Execute an external script
-320 **Add an external script
-321 **Insert a script
-322 Tietoja Amayasta
-323 Lisätietoa Amayasta W3C:ssä
-324 Hakemisto
-325 Selaaminen
-326 Näkymät
-327 Valinta
-328 Dokumentti
-329 Elementtien luominen
-330 Asetukset
-331 Fontit
-332 **Templates
-333 Rakenteen muunto
-334 Linkit
-335 Taulukot
-336 Kuvakartat
-337 Matematiikka
-338 Grafiikka
-339 XML-tuki
-340 Tyylitiedostot
-341 Etsiminen
-342 Oikeinkirjoituksen tarkastus
-343 Julkaisu
-344 Yhteistyö
-345 Tulostus
-346 Numerointi
-347 Koosteen valmistus
-348 Merkinnät
-349 Asetuksien määritys
-350 Näppäinkomennot
-351 Amayan helppokäyttötoiminnot
-352 **Tip of the day...
+316 **Templates
+317 **Create template from current document...
+318 &Javascript/DOM
+319 **Enable/Disable
+320 **Execute a command
+321 **Execute an external script
+322 **Add an external script
+323 **Insert a script
+324 Tietoja Amayasta
+325 Lisätietoa Amayasta W3C:ssä
+326 Hakemisto
+327 Selaaminen
+328 Näkymät
+329 Valinta
+330 Dokumentti
+331 Elementtien luominen
+332 Asetukset
+333 Fontit
+334 **Templates
+335 Rakenteen muunto
+336 Linkit
+337 Taulukot
+338 Kuvakartat
+339 Matematiikka
+340 Grafiikka
+341 XML-tuki
+342 Tyylitiedostot
+343 Etsiminen
+344 Oikeinkirjoituksen tarkastus
+345 Julkaisu
+346 Yhteistyö
+347 Tulostus
+348 Numerointi
+349 Koosteen valmistus
+350 Merkinnät
+351 Asetuksien määritys
+352 Näppäinkomennot
+353 Amayan helppokäyttötoiminnot
+354 **Tip of the day...

@@ -315,40 +315,42 @@
 313 查看資源屬性...
 314 復制鎖定信息...
 315 鎖定了嗎?
-316 &Javascript/DOM
-317 **Enable/Disable
-318 **Execute a command
-319 **Execute an external script
-320 **Add an external script
-321 **Insert a script
-322 關于 Amaya
-323 關于 Amaya at W3C
-324 索引
-325 Browsing
-326 Views
-327 Selecting
-328 Document
-329 Creating elements
-330 Attributes
-331 Characters
-332 **Templates
-333 Restructuring
-334 Links
-335 Tables
-336 Image maps
-337 Math
-338 Graphics
-339 XML support
-340 Style sheets
-341 Searching
-342 Spell Checking
-343 Publishing
-344 協作
-345 Printing
-346 Numbering
-347 Making books
-348 Annotations
-349 Configuring
-350 Shortcuts
-351 Accessibility in Amaya
-352 **Tip of the day...
+316 **Templates
+317 **Create template from current document...
+318 &Javascript/DOM
+319 **Enable/Disable
+320 **Execute a command
+321 **Execute an external script
+322 **Add an external script
+323 **Insert a script
+324 關于 Amaya
+325 關于 Amaya at W3C
+326 索引
+327 Browsing
+328 Views
+329 Selecting
+330 Document
+331 Creating elements
+332 Attributes
+333 Characters
+334 **Templates
+335 Restructuring
+336 Links
+337 Tables
+338 Image maps
+339 Math
+340 Graphics
+341 XML support
+342 Style sheets
+343 Searching
+344 Spell Checking
+345 Publishing
+346 協作
+347 Printing
+348 Numbering
+349 Making books
+350 Annotations
+351 Configuring
+352 Shortcuts
+353 Accessibility in Amaya
+354 **Tip of the day...

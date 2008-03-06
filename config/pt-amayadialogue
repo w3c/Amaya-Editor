@@ -315,40 +315,42 @@
 313 Exibir as propriedades do recurso
 314 Copiar a informação da trava...
 315 Travado?
-316 &Javascript/DOM
-317 **Enable/Disable
-318 **Execute a command
-319 **Execute an external script
-320 **Add an external script
-321 **Insert a script
-322 Sobre Amaya
-323 Sobre Amaya no W3C
-324 Índice
-325 Navegar
-326 Vistas
-327 Selecionar
-328 Documento
-329 Criar elementos
-330 Atributos
-331 Caracteres
-332 **Templates
-333 Reestruturar
-334 Enlaces
-335 Tabelas
-336 Mapas de Imagem
-337 Matemática
-338 Gráficos
-339 Suporte à XML
-340 Folhas de estilo
-341 Achar...
-342 Verificar ortografia
-343 Publicar
-344 Cooperação
-345 Imprimir
-346 Numberar
-347 Criar livros
-348 Anotações
-349 Configurar
-350 Atalhos
-351 Accessibilidade em Amaya
-352 **Tip of the day...
+316 **Templates
+317 **Create template from current document...
+318 &Javascript/DOM
+319 **Enable/Disable
+320 **Execute a command
+321 **Execute an external script
+322 **Add an external script
+323 **Insert a script
+324 Sobre Amaya
+325 Sobre Amaya no W3C
+326 Índice
+327 Navegar
+328 Vistas
+329 Selecionar
+330 Documento
+331 Criar elementos
+332 Atributos
+333 Caracteres
+334 **Templates
+335 Reestruturar
+336 Enlaces
+337 Tabelas
+338 Mapas de Imagem
+339 Matemática
+340 Gráficos
+341 Suporte à XML
+342 Folhas de estilo
+343 Achar...
+344 Verificar ortografia
+345 Publicar
+346 Cooperação
+347 Imprimir
+348 Numberar
+349 Criar livros
+350 Anotações
+351 Configurar
+352 Atalhos
+353 Accessibilidade em Amaya
+354 **Tip of the day...
