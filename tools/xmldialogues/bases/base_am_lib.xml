@@ -2933,20 +2933,20 @@
 	<message xml:lang="sk">Uložiť</message>
 </label>
 <label define="TMSG_BUTTON_NEW">
-	<message xml:lang="en">New XHTML document</message>
-	<message xml:lang="fr">Nouveau document XHTML</message>
-	<message xml:lang="de">XHTML</message>
-	<message xml:lang="it">Nuovo documento XHTML</message>
-	<message xml:lang="es">Nuevo documento XHTML</message>
-	<message xml:lang="pt">Novo documento XHTML</message>
-	<message xml:lang="fi">Uusi XHTML dokumentti</message>
-	<message xml:lang="tr">Yeni XHTML dosyası</message>
-	<message xml:lang="ru">Новый XHTML документ</message>
-	<message xml:lang="hu">Új XHTML dokumentum...</message>
-	<message xml:lang="ka">ახალი XHTML დოკუმენტი...</message>
-	<message xml:lang="cn">新建 XHTML 文档</message>
-	<message xml:lang="tw">新建 XHTML 文檔</message>
-	<message xml:lang="sk">Nový XHTML dokument</message>
+	<message xml:lang="en">New document</message>
+	<message xml:lang="fr">Nouveau document</message>
+	<message xml:lang="de">Neu Dokument</message>
+	<message xml:lang="it">Nuovo documento</message>
+	<message xml:lang="es">Nuevo documento</message>
+	<message xml:lang="pt">Novo documento</message>
+	<message xml:lang="fi">Uusi dokumentti</message>
+	<message xml:lang="tr">Yeni dosyası</message>
+	<message xml:lang="ru">Новый документ</message>
+	<message xml:lang="hu">Új dokumentum...</message>
+	<message xml:lang="ka">ახალი დოკუმენტი...</message>
+	<message xml:lang="cn">新建 文档</message>
+	<message xml:lang="tw">新建  文檔</message>
+	<message xml:lang="sk">Nový dokument</message>
 </label>
 <label define="TMSG_BUTTON_OPEN">
 	<message xml:lang="en">Open document</message>

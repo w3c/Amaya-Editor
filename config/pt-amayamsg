@@ -1,479 +1,475 @@
 # encoding= latin1
 0 Arquivos
 1 Abrir
-2 Novo documento XHTML 1.1
-3 Novo documento XHTML 1.0 Transitional
-4 Novo documento XHTML 1.0 Strict
-5 Novo documento XHTML 1.0 Basic
-6 Novo documento MathML
-7 Novo documento SVG
-8 Nova folha de estilo CSS
-9 Do gabarito
-10 **In new tab
-11 >Abrir em nova janela
-12 Apagar
-13 Clique
-14 Documento salvo: %s
-15 Atributo
-16 URL
-17 Texto
-18 Nome
-19 Senha
-20 Usar como classe
-21 Buscando %s
-22 Não é possível carregar %s
-23 Terminado!
-24 Selecionar o destino
-25 Destino inválido
-26 Inserir a URI ou procurar
-27 Título
-28 Mudar título
-29 **Document modified - Do you want to save it?
-30 Redirecionando busca de %s
-31 Demasiados redirecionamentos detetados
-32 Não é possível criar arquivo local %s
-33 Não é possível criar diretorio %s
-34 Esperando por soquete livre
-35 Lendo %s
-36 Gravando %s
-37 Esperando por conexão
-38 Contactando %s
-39 Pesquisando %s
-40 Estado desconhecido
-41 Diálogo de Autenticação
-42 Por favor autenticar para
-43 Falha de autorização para %s
-44 %s carregado mas não há dados disponíveis
-45 Transferência interrompida!
-46 %s Não está disponível no momento. Por favor tente novamente mais tarde.
-47 %s carregado
-48 Salvando %s
-49 Não é possível salvar em: %s
-50 Mensagens de erro do sistema em português
-51 Uma âncora não pode conter esses elementos
-52 Não é possível criar uma âncora dentro de outra âncora
-53 Sinto muito, não há ainda suporte GET para URLs deste tipo: %s
-54 Sinto muito, não há ainda suporte PUT para URLs deste tipo: %s
-55 Esta versão de Amaya não suporta esta facilidade
-56 Terminada a gravação de %s
-57 Não foi possível normalizar %s
-58 Não foi possível criar o diretório de arquivos temporários %s
-59 Não há transformação aplicável à seleção
-60 A transformação falhou
-61 Erro de sintaxe no arquivo HTML.trans linha %s
-62 Matemática
-63 Gráficos
-64 Salvar como
-65 Por favor autenticar para o domínio \'%s\' no servidor \'%s\'
-66 Domínio: %s
-67 Servidor: %s
-68 Editor/Navegador
-69 Temporização de requisição expirou - o servidor não respondeu
-70 %s já existe. Gravar por cima?
-71 %s mudou. gravar por cima?
-72 Imagem de fundo
-73 Imagem de fundo não é permitida aqui
-74 CSS
-75 **Saving will save following images too?
-76 Falha ao salvar na URL
-77 Salvar no disco?
-78 Copiar imagens
-79 Transformar URLs
-80 Localização do documento
-81 Diretório de imagens
-82 Localização do objeto
-83 Arquivos CSS
-84 Abrir CSS
-85 Desabilitar CSS
-86 Habilitar CSS
-87 Remover CSS
-88 Editor/navegador do W3C para a web
-89 (envie questões para www-amaya@w3.org)
-90 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
-91 w3.org/Amaya/
-92 Não é possível tratar URLs com mais de %s caracteres
-93 Somente o tipo padrão é permitido
-94 Atualização de enlaces: %s%% foi tratado
-95 Nada novo a ser salvo
-96 Repetir-y
-97 Por favor insira nome de usuário:
-98 %d requisições pendentes
-99 Não há arquivo CSS disponível
-100 **Don't save
-101 Não repetir
-102 O documento não tem nome. Salvando em:
-103 Plugins
-104 Erro desconhecido ao salvar a URL %s
-105 Não é possível criar uma conexão ao servidor
-106 O acesso a %s é proibido pelo servidor
-107 Operação bem sucedida para %s
-108 %s foi criado
-109 %s foi atualizado
-110 Operação completada com código de estado %s
-111 O servidor não entendeu a sintaxe da requisição
-112 O servidor não tem informação nova para devolver
-113 Este método não é permitido
-114 Por favor autenticar para acessar %s
-115 Verificando ...
-116 A salvação em %s falhou. Salvar no disco?
-117 A salvação em %s parece corrompida. Ignorar?
-118 URL %s redirecionada para %s. Ignorar?
-119 A recarga de %s falhou. Ignorar?
-120 O servidor responde com um erro: %s
-121 O servidor não suporta este método de requisição
-122 Filtro
-123 Transferências ativas
-124 Transferências enfileiradas
-125 Índice dos conteúdos
-126 Tabela de enlaces
-127 Modo repetiçao
-128 repetir
-129 repetir-x
-130 Sua sessão Amaya precedente falhou. Quer recarregar as cópias de segurança dos documentos?
-131 A autenticação falhou. Tentar novamente?
-132 A operação será redirecionada. Continuar?
-133 Linhas
-134 Colunas
-135 Borda (pixel)
-136 Texto alternativo
-137 O texto alternativo é mandatório
-138 Imprimir URL
-139 Aplicar
-140 Valores padrão
-141 Esvaziar cache
-142 Cache
-143 Habilitar cache
-144 Documentos protegidos em cache
-145 Modo desconectado
-146 Ignorar fim de validade (Expires): cabeçalho
-147 Diretório cache
-148 Tamanho de cache (MB)
-149 Tamanho limite de entrada de cache (MB)
-150 Proxy
-151 Proxy HTTP (por exemplo www.w3.org:1234)
-152 Lista de domínios proxy (por exemplo lists.w3.org)
-153 Geral
-154 Página principal
-155 Retardo de mensagens de apoio (ToolTip) (ms)
-156 Retardo de duplo clique (ms)
-157 Tamnho do tipo (font) do menu
-158 Zoom de tipo (font)
-159 Linguagem de diálogo
-160 **Preserve lines when pasting
-161 **Generate backup files
-162 **Save geometry on exit
-163 Exibir imagens de fundo
-164 Exibir barra de ferramentas
-165 Exibir endereço
-166 Exibir destinos
-167 Exportar CR/LF
-168 **Browsing
-169 **Load images (img)
-170 Duplo clique ativa enlace
-171 Publicação
-172 Usar ETAGS e pré-condições
-173 Verificar cada PUT com um GET
-174 Nome padrão para URLs terminadas em '/'
-175 Geometria
-176 Salvar geometria atual
-177 restaurar geometria padrão
-178 As mudanças serão efetivadas quando uma nova janela abrir.
-179 Cor do plano frontal do documento
-180 Cor de fundo do documento
-181 Cor do plano frontal do menu
-182 Cor de fundo do menu
-183 Não foi possível inicializar o cache. Você pode ter especificado um diretório de cache inválido ou tem outro Amaya usando o cache.
-184 Lista de idiomas preferidos como "pt, en":
-185 Estas modificações não serão modificadas até que se reinicialize Amaya.
-186 Permitir redirecionamentos PUT automáticos nestes domínios
-187 Ignorar folhas de estilo
-188 Tipo de transformação
-189 (separar cada entrada com um espaço)
-190 Não há proxy nestes domínios
-191 Somente com proxy estes domínios
-192 Nome de carácter
-193 Diretório de usuário Amaya
-194 Diretório temporário
-195 Usar paleta
-196 Negociação de idioma
-197 Anotações
-198 Enlace
-199 Usuário anotador
-200 Servidor de publicação de anotações
-201 Servidores de anotações
-202 Autocarregar anotações locais
-203 Autocarregar anotações remotas
-204 Desabilitar autocarga remota em cada partida (para trabalho off-line)
-205 Cor de seleção
-206 **Selection background color
-207 Orientação
-208 Vertical
-209 Horizontal
-210 **Keep multiple spaces
-211 **Error(s) in the source code
-212 **Fatal error - Fix the source code to continue
-213 **Try the 'File/Read as' entry
-214 Caracteres inválidos
-215 Perfil del documento:
-216 Erros - veja Arquivo > Exibir erros de gramática (parsing)
-217 A codificação deste documento não é suportada porAmaya
-218 Editar ou salvar este documento vai mudar seu tipo
-219 Indisponível
-220 Navegar
-221 Navegador de arquivos
-222 Seleção
-223 Menu filtro local de anotações
-224 Exibir
-225 Esconder
-226 Exibir tudo
-227 Esconder tudo
-228 * significa escondido, - significa parcialmente escondido
-229 Opções de filtragem
-230 Por autor
-231 Por tipo
-232 Por servidor
-233 Teclas de acesso
-234 Ignorar
-235 **Panel bar position: 
-236 **left
-237 **right
-238 Elemento de estilo
-239 Não é possível criar um XPointer
-240 Impossível anexar um XPointer inicial a um elemento adicionado internamente
-241 Impossível anexar um XPointer final a um elemento adicionado internamente
-242 Não é possível achar para onde mover a anotação
-243 Não é possível mover a anotação para outro documento
-244 Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar
-245 Incapaz de construir um XPointer para esta anotação
-246 Fazer uma nova anotação
-247 A postagem da anotação falhou
-248 A supressão da anotação falhou
-249 Anotação suprimida!
-250 Carregamento do índice de anotação falhou
-251 Erro
-252 Selecionar um charset
-253 Selecionar o tipo MIME
-254 Mudar Charset
-255 Mudar o tipo MIME
-256 Modificar
-257 este tipo de documento não suporta conjuntos de caracteres (charsets)
-258 O destino deve ser uma URL HTTP para usar esta opção
-259 Erro: tipo MIME inválido
-260 Desconhecido
-261 Estilos ignorados -veja Exibir erros de gramática (parsing)
-262 Este documento já está carregado em outra Janela
-263 Salvar esta instância pode causar um problema de perda de atualização
-264 **Adding or changing the doctype will remove some elements or attributes
-265 **Please confirm operation
-266 Utilise o tipo MIME application/xhtml+xml para documentos XHTML
-267 **Charset for new documents
-268 Documento foi travado com sucesso!
-269 Documento não pode ser travado com sucesso!
-270 Travando %s...
-271 Documento %s está travado!
-272 Documento %s foi travado por %s (tempo restante %s)
-273 Sobrepor trava?
-274 Copiar informação da trava?
-275 Tente destravar o documento...
-276 Documento foi destravado com sucesso!
-277 Documento não pode ser destravado com sucesso!
-278 Destravando %s...
-279 Documento %s está destravado!
-280 Destravar o documento?
-281 Propriedades do documento
-282 Propriedades do documento não estão disponíveis
-283 Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...
-284 Buscando as propriedades do documento...
-285 Lamento, WebDAV não supporta URLs como %s
-286 Impossível salvar informação de trava localmente
-287 Impossível remover informação de trava local
-288 Lamento, esta operação não é permitida para %s
-289 Operação falhou! Causa: Falha de dependência
-290 Operaçã falhou! Causa: %s
-291 Tentar de novo?
-292 WebDAV
-293 Referência Pessoal do Usuário (URL)
-294 Lista de Recursos WebDAV do Usuário (URL URL)
-295 Profundidade da Trava
-296 infinita
-297 Duração da Trava
-298 Infinito
-299 Outro (Segundos)
-300 Escopo da Trava
-301 exclusivo
-302 compartilhado
-303 Percepção
-304 Percepção geral
-305 Percepção ao sair
-306 **Animation
-307 **SVG Library
-308 **Copy option
-309 **Copy selection
-310 **Refer to selection
-311 **Add new model into library
-312 **URL of the new SVG  ...
-313 **Library title
-314 **Library URL
-315 **Create library
-316 **Browse library
-317 **Create or search library
-318 **The selection includes no SVG elements. Please reselect
-319 **The library title is mandatory
-320 **Move the position cursor in edited document to define a new key position...
-321 **Key position defined. Move the slider to define animation duration...
-322 **Select starting color of element...
-323 **Starting color defined. Move the slider to define animation duration...
-324 **Select ending color...
-325 **Animation defined.
-326 **Animated attribute
-327 **Element without ID
-328 **Add ID
-329 **Remove ID
-330 **Add/Remove IDs
-331 **Apply operation
-332 **Enter an element name
-333 **Apply CSS
-334 **Current screen type
-335 **New Topic
-336 **Bookmark Properties
-337 **Topic Properties
-338 **Topic hierarchy:
-339 Título:
-340 **Recalls:
-341 Autor:
-342 **Created:
-343 **Last modified:
-344 **Description:
-345 **Please select an element
-346 **All CSS
-347 **CSS style rules applied to the <%s> element\n
-348 **Blue lines are links activated by a double (or a single) click\n
-349 **Load objects (object, embed, iframe)
-350 **No style rule for this element
-351 **No insert position defined. Please select first
-352 **Document information
-353 **Document Type
-354 **MIME Type
-355 **Charset
-356 **Content Length
-357 **Content Location
-358 Preferências
-359 Carácter (&xxx;)
-360 **Create Object
-361 **Directory
-362 **File
-363 **Replace current
-364 **In new Window
-365 Anti-aliasing
-366 **ISO format for date
-367 **New documents location
-368 **Opening location
-369 **Warn when closing multiple tabs
-370 **Max url number in history
-371 **Clear url list
-372 **Display all shortcuts
-373 **Fixed line length (0 = default value)
-374 **Template
-375 **Save the document as...
-376 **Template not found
-377 **Show template's boxes
-378 **Apply closes the dialogue
-379 **Not allowed
-380 **Protected element
-381 **The selection should not cross an element of this type
-382 **No heading found
-383 **Save anyway
-384 **Cannot locate host
-385 **Document has changed (412)
-386 **Conflict with the current state of the resource
-387 **Invalid selection
-388 **Unknown element
-389 **%d updated elements
-390 **The title is mandatory
-391 **Templates
-392 **Number of occurrences
-393 **Maximum number of occurrences reached
-394 **Minimum number of occurrences reached
-395 **Check duplicated IDs
-396 **Add the xsl stylesheet for MathML elements
-397 **Insert operator
-398 **Select the way the operator has to be displayed
-399 **Insert an integral
-400 **Select the type of integral
-401 **Attributes of the fence
-402 **Select open, separator and close symbols
-403 **Number of operator symbols
-404 **Number of coordinates
-405 **Length of the N-tuples
-406 **Number of elements
-407 **Number of variables
-408 **Degree
-409 **Degree of the variable number %d
-410 **Compound document
-411 **Copy resources (styles and scripts)
-412 **Where to save resources
-413 **Where to save images
-414 **Document
-415 **Images, Styles and Scripts
-416 **Mail
-417 **Common parameters for sending mails:
-418 **SMTP server address:
-419 **Server port:
-420 **(25 by default)
-421 **Sending address (From field):
-422 **To:
-423 **Send by mail
-424 **Subject:
-425 **Send as:
-426 **Message body
-427 **Attachment
-428 **Zip archive
-429 **Don't send
-430 **Send
-431 **The server address and port must be set in Preferences
-432 **Message:
-433 **Alternate textual  message:
-434 **The server is unreachable or does not respond
-435 **The server has reject you
-436 **The sender address is misformatted
-437 **A recipient address is misformatted
-438 **The mail content is misformatted
-439 **Mail not sent
-440 **Mail sent
-441 **Passwords
-442 **Do you want Amaya to remember this password?
-443 **Remember passwords for sites
-444 **Sites
-445 **Remove all
-446 **An error occured during the building of the javascript/DOM objects
-447 **A script is still running but will be aborted as soon as possible. Please try later.
-448 **Javascript/DOM can not be enabled in this view.
-449 **Enter a javascript command:
-450 **The command returned the value: %s
-451 **The command returned no value
-452 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-453 Novo
-454 **Customizable
-455 Create
-456 **Create the link by click
-457 Apagar âncora
-458 **Save without template
-459 **With theme ...
-460 **Full width
-461 **With caption
-462 **Size
-463 **Position
-464 **XML editing mode
-465 **List of style sheets
-466 **Add a style sheet...
-467 **Remove selected style sheets
-468 **Activate selected style sheets
-469 **Desactivate selected style sheets
-470 **Open selected style sheets
-471 Perfil del Amaya:
-472 **Show "Tip of the day" at startup
-473 **Choose font family and size:
-474 **Template has error(s), it will not be used:
-475 **Close
-476 **Component '%s' has multiple definition.
-477 **Library '%s' can not be loaded.
+2 Novo documento MathML
+3 Novo documento SVG
+4 Nova folha de estilo CSS
+5 Do gabarito
+6 **In new tab
+7 >Abrir em nova janela
+8 Apagar
+9 Clique
+10 Documento salvo: %s
+11 Atributo
+12 URL
+13 Texto
+14 Nome
+15 Senha
+16 Usar como classe
+17 Buscando %s
+18 Não é possível carregar %s
+19 Terminado!
+20 Selecionar o destino
+21 Destino inválido
+22 Inserir a URI ou procurar
+23 Título
+24 Mudar título
+25 **Document modified - Do you want to save it?
+26 Redirecionando busca de %s
+27 Demasiados redirecionamentos detetados
+28 Não é possível criar arquivo local %s
+29 Não é possível criar diretorio %s
+30 Esperando por soquete livre
+31 Lendo %s
+32 Gravando %s
+33 Esperando por conexão
+34 Contactando %s
+35 Pesquisando %s
+36 Estado desconhecido
+37 Diálogo de Autenticação
+38 Por favor autenticar para
+39 Falha de autorização para %s
+40 %s carregado mas não há dados disponíveis
+41 Transferência interrompida!
+42 %s Não está disponível no momento. Por favor tente novamente mais tarde.
+43 %s carregado
+44 Salvando %s
+45 Não é possível salvar em: %s
+46 Mensagens de erro do sistema em português
+47 Uma âncora não pode conter esses elementos
+48 Não é possível criar uma âncora dentro de outra âncora
+49 Sinto muito, não há ainda suporte GET para URLs deste tipo: %s
+50 Sinto muito, não há ainda suporte PUT para URLs deste tipo: %s
+51 Esta versão de Amaya não suporta esta facilidade
+52 Terminada a gravação de %s
+53 Não foi possível normalizar %s
+54 Não foi possível criar o diretório de arquivos temporários %s
+55 Não há transformação aplicável à seleção
+56 A transformação falhou
+57 Erro de sintaxe no arquivo HTML.trans linha %s
+58 Matemática
+59 Gráficos
+60 Salvar como
+61 Por favor autenticar para o domínio \'%s\' no servidor \'%s\'
+62 Domínio: %s
+63 Servidor: %s
+64 Editor/Navegador
+65 Temporização de requisição expirou - o servidor não respondeu
+66 %s já existe. Gravar por cima?
+67 %s mudou. gravar por cima?
+68 Imagem de fundo
+69 Imagem de fundo não é permitida aqui
+70 CSS
+71 **Saving will save following images too?
+72 Falha ao salvar na URL
+73 Salvar no disco?
+74 Copiar imagens
+75 Transformar URLs
+76 Localização do documento
+77 Diretório de imagens
+78 Localização do objeto
+79 Arquivos CSS
+80 Abrir CSS
+81 Desabilitar CSS
+82 Habilitar CSS
+83 Remover CSS
+84 Editor/navegador do W3C para a web
+85 (envie questões para www-amaya@w3.org)
+86 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
+87 w3.org/Amaya/
+88 Não é possível tratar URLs com mais de %s caracteres
+89 Somente o tipo padrão é permitido
+90 Atualização de enlaces: %s%% foi tratado
+91 Nada novo a ser salvo
+92 Repetir-y
+93 Por favor insira nome de usuário:
+94 %d requisições pendentes
+95 Não há arquivo CSS disponível
+96 **Don't save
+97 Não repetir
+98 O documento não tem nome. Salvando em:
+99 Plugins
+100 Erro desconhecido ao salvar a URL %s
+101 Não é possível criar uma conexão ao servidor
+102 O acesso a %s é proibido pelo servidor
+103 Operação bem sucedida para %s
+104 %s foi criado
+105 %s foi atualizado
+106 Operação completada com código de estado %s
+107 O servidor não entendeu a sintaxe da requisição
+108 O servidor não tem informação nova para devolver
+109 Este método não é permitido
+110 Por favor autenticar para acessar %s
+111 Verificando ...
+112 A salvação em %s falhou. Salvar no disco?
+113 A salvação em %s parece corrompida. Ignorar?
+114 URL %s redirecionada para %s. Ignorar?
+115 A recarga de %s falhou. Ignorar?
+116 O servidor responde com um erro: %s
+117 O servidor não suporta este método de requisição
+118 Filtro
+119 Transferências ativas
+120 Transferências enfileiradas
+121 Índice dos conteúdos
+122 Tabela de enlaces
+123 Modo repetiçao
+124 repetir
+125 repetir-x
+126 Sua sessão Amaya precedente falhou. Quer recarregar as cópias de segurança dos documentos?
+127 A autenticação falhou. Tentar novamente?
+128 A operação será redirecionada. Continuar?
+129 Linhas
+130 Colunas
+131 Borda (pixel)
+132 Texto alternativo
+133 O texto alternativo é mandatório
+134 Imprimir URL
+135 Aplicar
+136 Valores padrão
+137 Esvaziar cache
+138 Cache
+139 Habilitar cache
+140 Documentos protegidos em cache
+141 Modo desconectado
+142 Ignorar fim de validade (Expires): cabeçalho
+143 Diretório cache
+144 Tamanho de cache (MB)
+145 Tamanho limite de entrada de cache (MB)
+146 Proxy
+147 Proxy HTTP (por exemplo www.w3.org:1234)
+148 Lista de domínios proxy (por exemplo lists.w3.org)
+149 Geral
+150 Página principal
+151 Retardo de mensagens de apoio (ToolTip) (ms)
+152 Retardo de duplo clique (ms)
+153 Tamnho do tipo (font) do menu
+154 Zoom de tipo (font)
+155 Linguagem de diálogo
+156 **Preserve lines when pasting
+157 **Generate backup files
+158 **Save geometry on exit
+159 Exibir imagens de fundo
+160 Exibir barra de ferramentas
+161 Exibir endereço
+162 Exibir destinos
+163 Exportar CR/LF
+164 **Browsing
+165 **Load images (img)
+166 Duplo clique ativa enlace
+167 Publicação
+168 Usar ETAGS e pré-condições
+169 Verificar cada PUT com um GET
+170 Nome padrão para URLs terminadas em '/'
+171 Geometria
+172 Salvar geometria atual
+173 restaurar geometria padrão
+174 As mudanças serão efetivadas quando uma nova janela abrir.
+175 Cor do plano frontal do documento
+176 Cor de fundo do documento
+177 Cor do plano frontal do menu
+178 Cor de fundo do menu
+179 Não foi possível inicializar o cache. Você pode ter especificado um diretório de cache inválido ou tem outro Amaya usando o cache.
+180 Lista de idiomas preferidos como "pt, en":
+181 Estas modificações não serão modificadas até que se reinicialize Amaya.
+182 Permitir redirecionamentos PUT automáticos nestes domínios
+183 Ignorar folhas de estilo
+184 Tipo de transformação
+185 (separar cada entrada com um espaço)
+186 Não há proxy nestes domínios
+187 Somente com proxy estes domínios
+188 Nome de carácter
+189 Diretório de usuário Amaya
+190 Diretório temporário
+191 Usar paleta
+192 Negociação de idioma
+193 Anotações
+194 Enlace
+195 Usuário anotador
+196 Servidor de publicação de anotações
+197 Servidores de anotações
+198 Autocarregar anotações locais
+199 Autocarregar anotações remotas
+200 Desabilitar autocarga remota em cada partida (para trabalho off-line)
+201 Cor de seleção
+202 **Selection background color
+203 Orientação
+204 Vertical
+205 Horizontal
+206 **Keep multiple spaces
+207 **Error(s) in the source code
+208 **Fatal error - Fix the source code to continue
+209 **Try the 'File/Read as' entry
+210 Caracteres inválidos
+211 Perfil del documento:
+212 Erros - veja Arquivo > Exibir erros de gramática (parsing)
+213 A codificação deste documento não é suportada porAmaya
+214 Editar ou salvar este documento vai mudar seu tipo
+215 Indisponível
+216 Navegar
+217 Navegador de arquivos
+218 Seleção
+219 Menu filtro local de anotações
+220 Exibir
+221 Esconder
+222 Exibir tudo
+223 Esconder tudo
+224 * significa escondido, - significa parcialmente escondido
+225 Opções de filtragem
+226 Por autor
+227 Por tipo
+228 Por servidor
+229 Teclas de acesso
+230 Ignorar
+231 **Panel bar position: 
+232 **left
+233 **right
+234 Elemento de estilo
+235 Não é possível criar um XPointer
+236 Impossível anexar um XPointer inicial a um elemento adicionado internamente
+237 Impossível anexar um XPointer final a um elemento adicionado internamente
+238 Não é possível achar para onde mover a anotação
+239 Não é possível mover a anotação para outro documento
+240 Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar
+241 Incapaz de construir um XPointer para esta anotação
+242 Fazer uma nova anotação
+243 A postagem da anotação falhou
+244 A supressão da anotação falhou
+245 Anotação suprimida!
+246 Carregamento do índice de anotação falhou
+247 Erro
+248 Selecionar um charset
+249 Selecionar o tipo MIME
+250 Mudar Charset
+251 Mudar o tipo MIME
+252 Modificar
+253 este tipo de documento não suporta conjuntos de caracteres (charsets)
+254 O destino deve ser uma URL HTTP para usar esta opção
+255 Erro: tipo MIME inválido
+256 Desconhecido
+257 Estilos ignorados -veja Exibir erros de gramática (parsing)
+258 Este documento já está carregado em outra Janela
+259 Salvar esta instância pode causar um problema de perda de atualização
+260 **Adding or changing the doctype will remove some elements or attributes
+261 **Please confirm operation
+262 Utilise o tipo MIME application/xhtml+xml para documentos XHTML
+263 **Charset for new documents
+264 Documento foi travado com sucesso!
+265 Documento não pode ser travado com sucesso!
+266 Travando %s...
+267 Documento %s está travado!
+268 Documento %s foi travado por %s (tempo restante %s)
+269 Sobrepor trava?
+270 Copiar informação da trava?
+271 Tente destravar o documento...
+272 Documento foi destravado com sucesso!
+273 Documento não pode ser destravado com sucesso!
+274 Destravando %s...
+275 Documento %s está destravado!
+276 Destravar o documento?
+277 Propriedades do documento
+278 Propriedades do documento não estão disponíveis
+279 Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...
+280 Buscando as propriedades do documento...
+281 Lamento, WebDAV não supporta URLs como %s
+282 Impossível salvar informação de trava localmente
+283 Impossível remover informação de trava local
+284 Lamento, esta operação não é permitida para %s
+285 Operação falhou! Causa: Falha de dependência
+286 Operaçã falhou! Causa: %s
+287 Tentar de novo?
+288 WebDAV
+289 Referência pessoal do usuário (URL)
+290 Lista de recursos WebDAV do usuário (URL URL)
+291 Profundidade da Trava
+292 infinita
+293 Duração da Trava
+294 Infinito
+295 Outro (Segundos)
+296 Escopo da Trava
+297 exclusivo
+298 compartilhado
+299 Percepção
+300 Percepção geral
+301 Percepção ao sair
+302 **Animation
+303 **SVG Library
+304 **Copy option
+305 **Copy selection
+306 **Refer to selection
+307 **Add new model into library
+308 **URL of the new SVG  ...
+309 **Library title
+310 **Library URL
+311 **Create library
+312 **Browse library
+313 **Create or search library
+314 **The selection includes no SVG elements. Please reselect
+315 **The library title is mandatory
+316 **Move the position cursor in edited document to define a new key position...
+317 **Key position defined. Move the slider to define animation duration...
+318 **Select starting color of element...
+319 **Starting color defined. Move the slider to define animation duration...
+320 **Select ending color...
+321 **Animation defined.
+322 **Animated attribute
+323 **Element without ID
+324 **Add ID
+325 **Remove ID
+326 **Add/Remove IDs
+327 **Apply operation
+328 **Enter an element name
+329 **Apply CSS
+330 **Current screen type
+331 **New Topic
+332 **Bookmark Properties
+333 **Topic Properties
+334 **Topic hierarchy:
+335 Título:
+336 **Recalls:
+337 Autor:
+338 **Created:
+339 **Last modified:
+340 **Description:
+341 **Please select an element
+342 **All CSS
+343 **CSS style rules applied to the <%s> element\n
+344 **Blue lines are links activated by a double (or a single) click\n
+345 **Load objects (object, embed, iframe)
+346 **No style rule for this element
+347 **No insert position defined. Please select first
+348 **Document information
+349 **Document Type
+350 **MIME Type
+351 **Charset
+352 **Content Length
+353 **Content Location
+354 Preferências
+355 Carácter (&xxx;)
+356 **Create Object
+357 **Directory
+358 **File
+359 **Replace current
+360 **In new Window
+361 Anti-aliasing
+362 **ISO format for date
+363 **New documents location
+364 **Opening location
+365 **Warn when closing multiple tabs
+366 **Max url number in history
+367 **Clear url list
+368 **Display all shortcuts
+369 **Fixed line length (0 = default value)
+370 **Template
+371 **Save the document as...
+372 **Template not found
+373 **Show template's boxes
+374 **Apply closes the dialogue
+375 **Not allowed
+376 **Protected element
+377 **The selection should not cross an element of this type
+378 **No heading found
+379 **Save anyway
+380 **Cannot locate host
+381 **Document has changed (412)
+382 **Conflict with the current state of the resource
+383 **Invalid selection
+384 **Unknown element
+385 **%d updated elements
+386 **The title is mandatory
+387 **Templates
+388 **Number of occurrences
+389 **Maximum number of occurrences reached
+390 **Minimum number of occurrences reached
+391 **Check duplicated IDs
+392 **Add the xsl stylesheet for MathML elements
+393 **Insert operator
+394 **Select the way the operator has to be displayed
+395 **Insert an integral
+396 **Select the type of integral
+397 **Attributes of the fence
+398 **Select open, separator and close symbols
+399 **Number of operator symbols
+400 **Number of coordinates
+401 **Length of the N-tuples
+402 **Number of elements
+403 **Number of variables
+404 **Degree
+405 **Degree of the variable number %d
+406 **Compound document
+407 **Copy resources (styles and scripts)
+408 **Where to save resources
+409 **Where to save images
+410 **Document
+411 **Images, Styles and Scripts
+412 **Mail
+413 **Common parameters for sending mails:
+414 **SMTP server address:
+415 **Server port:
+416 **(25 by default)
+417 **Sending address (From field):
+418 **To:
+419 **Send by mail
+420 **Subject:
+421 **Send as:
+422 **Message body
+423 **Attachment
+424 **Zip archive
+425 **Don't send
+426 **Send
+427 **The server address and port must be set in Preferences
+428 **Message:
+429 **Alternate textual  message:
+430 **The server is unreachable or does not respond
+431 **The server has reject you
+432 **The sender address is misformatted
+433 **A recipient address is misformatted
+434 **The mail content is misformatted
+435 **Mail not sent
+436 **Mail sent
+437 **Passwords
+438 **Do you want Amaya to remember this password?
+439 **Remember passwords for sites
+440 **Sites
+441 **Remove all
+442 **An error occured during the building of the javascript/DOM objects
+443 **A script is still running but will be aborted as soon as possible. Please try later.
+444 **Javascript/DOM can not be enabled in this view.
+445 **Enter a javascript command:
+446 **The command returned the value: %s
+447 **The command returned no value
+448 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+449 Novo
+450 **Customizable
+451 Create
+452 **Create the link by click
+453 Apagar âncora
+454 **Save without template
+455 **With theme ...
+456 **Full width
+457 **With caption
+458 **Size
+459 **Position
+460 **XML editing mode
+461 **List of style sheets
+462 **Add a style sheet...
+463 **Remove selected style sheets
+464 **Activate selected style sheets
+465 **Desactivate selected style sheets
+466 **Open selected style sheets
+467 Perfil del Amaya:
+468 **Show "Tip of the day" at startup
+469 **Choose font family and size:
+470 **Template has error(s), it will not be used:
+471 **Close
+472 **Component '%s' has multiple definition.
+473 **Library '%s' can not be loaded.

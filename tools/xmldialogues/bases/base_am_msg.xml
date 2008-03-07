@@ -50,70 +50,6 @@
 	<message xml:lang="tw">打開</message>
 	<message xml:lang="sk">Otvoriť</message>
 </label>
-<label define="AM_NEW_HTML11">
-	<message xml:lang="en">New XHTML 1.1 document</message>
-	<message xml:lang="fr">Nouveau document XHTML 1.1</message>
-	<message xml:lang="de">XHTML 1.1</message>
-	<message xml:lang="it">Nuovo documento XHTML 1.1</message>
-	<message xml:lang="es">Nuevo documento XHTML 1.1</message>
-	<message xml:lang="pt">Novo documento XHTML 1.1</message>
-	<message xml:lang="fi">Uusi XHTML 1.1 dokumentti</message>
-	<message xml:lang="tr">Yeni XHTML 1.1 dosyası</message>
-	<message xml:lang="ru">Новый XHTML 1.1 документ</message>
-	<message xml:lang="hu">Új XHTML 1.1 dokumentum...</message>
-	<message xml:lang="ka">ახალი XHTML 1.1 დოკუმენტი...</message>
-	<message xml:lang="cn">新建 XHTML 1.1 文档</message>
-	<message xml:lang="tw">新建 XHTML 1.1 文檔</message>
-	<message xml:lang="sk">Nový XHTML 1.1 dokument</message>
-</label>
-<label define="AM_NEW_HTML_TRANSITIONAL">
-	<message xml:lang="en">New XHTML 1.0 Transitional document</message>
-	<message xml:lang="fr">Nouveau document XHTML 1.0 Transitional</message>
-	<message xml:lang="de">XHTML 1.0 Transitional</message>
-	<message xml:lang="it">Nuovo documento XHTML 1.0 Transitional</message>
-	<message xml:lang="es">Nuevo documento XHTML 1.0 Transitional</message>
-	<message xml:lang="pt">Novo documento XHTML 1.0 Transitional</message>
-	<message xml:lang="fi">Uusi XHTML 1.0 Transitional document</message>
-	<message xml:lang="tr">Yeni XHTML 1.0 Transitional dosyası</message>
-	<message xml:lang="ru">Новый XHTML 1.0 Transitional документ</message>
-	<message xml:lang="hu">Új XHTML 1.0 átmeneti dokumentum...</message>
-	<message xml:lang="ka">ახალი XHTML 1.0 გარდამავალი დოკუმენტი...</message>
-	<message xml:lang="cn">新建 XHTML 1.0 Transitional 文档</message>
-	<message xml:lang="tw">新建 XHTML 1.0 Transitional 文檔</message>
-	<message xml:lang="sk">Nový XHTML 1.0 Transitional dokument</message>
-</label>
-<label define="AM_NEW_HTML_STRICT">
-	<message xml:lang="en">New XHTML 1.0 Strict document</message>
-	<message xml:lang="fr">Nouveau document XHTML 1.0 Strict</message>
-	<message xml:lang="de">XHTML 1.0 Strict</message>
-	<message xml:lang="it">Nuovo documento XHTML 1.0 Strict</message>
-	<message xml:lang="es">Nuevo documento XHTML 1.0 Strict</message>
-	<message xml:lang="pt">Novo documento XHTML 1.0 Strict</message>
-	<message xml:lang="fi">Uusi XHTML 1.0 Strict document</message>
-	<message xml:lang="tr">Yeni XHTML 1.0 Strict dosyası</message>
-	<message xml:lang="ru">Новый XHTML 1.0 Strict документ</message>
-	<message xml:lang="hu">Új XHTML 1.0 kötött dokumentum...</message>
-	<message xml:lang="ka">ახალი XHTML 1.0 ზუსტი დოკუმენტი...</message>
-	<message xml:lang="cn">新建 XHTML 1.0 Strict 文档</message>
-	<message xml:lang="tw">新建 XHTML 1.0 Strict 文檔</message>
-	<message xml:lang="sk">Nový XHTML 1.0 Strict dokument</message>
-</label>
-<label define="AM_NEW_HTML_BASIC">
-	<message xml:lang="en">New XHTML 1.0 Basic document</message>
-	<message xml:lang="fr">Nouveau document XHTML 1.0 Basic</message>
-	<message xml:lang="de">XHTML 1.0 Basic</message>
-	<message xml:lang="it">Nuovo documento XHTML 1.0 Basic</message>
-	<message xml:lang="es">Nuevo documento XHTML 1.0 Basic</message>
-	<message xml:lang="pt">Novo documento XHTML 1.0 Basic</message>
-	<message xml:lang="fi">Uusi XHTML 1.0 Basic dokumentti</message>
-	<message xml:lang="tr">Yeni XHTML 1.0 Basic dosyası</message>
-	<message xml:lang="ru">Новый XHTML 1.0 Basic документ</message>
-	<message xml:lang="hu">Új XHTML 1.0 alap dokumentum...</message>
-	<message xml:lang="ka">ახალი XHTML 1.0 ძირითადი დოკუმენტი...</message>
-	<message xml:lang="cn">新建 XHTML 1.0 Basic 文档</message>
-	<message xml:lang="tw">新建 XHTML 1.0 Basic 文檔</message>
-	<message xml:lang="sk">Nový XHTML 1.0 Basic dokument</message>
-</label>
 <label define="AM_NEW_MATHML">
 	<message xml:lang="en">New MathML document</message>
 	<message xml:lang="fr">Nouveau document MathML</message>
@@ -1564,7 +1500,7 @@
 </label>
 <label define="AM_GET_USER_NAME">
 	<message xml:lang="en">Please enter username:</message>
-	<message xml:lang="fr">Entrer le nom utilisateur :</message>
+	<message xml:lang="fr">Entrer le nom d'utilisateur :</message>
 	<message xml:lang="de">Bitte Benutzernamen eingeben:</message>
 	<message xml:lang="it">Digita lo username:</message>
 	<message xml:lang="tr">Kullanıcı ismini girin:</message>
@@ -3086,7 +3022,7 @@
 </label>
 <label define="AM_USER_DIR">
 	<message xml:lang="en">Amaya user directory</message>
-	<message xml:lang="fr">Repertoire utilisateur</message>
+	<message xml:lang="fr">Répertoire utilisateur</message>
 	<message xml:lang="de">Heimatverzeichnis</message>
 	<message xml:lang="it">Directory dell'utente</message>
 	<message xml:lang="es">Directorio de usuario de Amaya:</message>
@@ -4632,13 +4568,13 @@
 	<message xml:lang="sk">WebDAV</message>
 </label>
 <label define="AM_DAV_USER_URL">
-	<message xml:lang="en">User's Personal Reference (URL)</message>
-	<message xml:lang="fr">Référence Personnelle de l'utilisateur (URL)</message>
-	<message xml:lang="pt">Referência Pessoal do Usuário (URL)</message>
+	<message xml:lang="en">User's personal reference (URL)</message>
+	<message xml:lang="fr">Référence personnelle de l'utilisateur (URL)</message>
+	<message xml:lang="pt">Referência pessoal do usuário (URL)</message>
 	<message xml:lang="de">Persönliche Benutzerreferenzen (URL)</message>
 	<message xml:lang="fi">Käyttäjän henkilökohtainen linkki (URL)</message>
 	<message xml:lang="it">Riferimento personale utente (URL)</message>
-	<message xml:lang="es">Referencia Personal del Usuario (URL):</message>
+	<message xml:lang="es">Referencia personal del usuario (URL):</message>
 	<message xml:lang="tr">Kullanıyıcının özel referansı (URL)</message>
 	<message xml:lang="ru">Персональная ссылка пользователя (URL)</message>
 	<message xml:lang="hu">User's personal reference (URL)</message>
@@ -4648,13 +4584,13 @@
 	<message xml:lang="sk">Používateské osobné príručky (URL)</message>
 </label>
 <label define="AM_DAV_USER_RESOURCES">
-	<message xml:lang="en">User's WebDAV Resource List (URL URL)</message>
-	<message xml:lang="fr">List des Ressources de l'utilisateur (URL URL)</message>
-	<message xml:lang="pt">Lista de Recursos WebDAV do Usuário (URL URL)</message>
+	<message xml:lang="en">User's WebDAV resource list (URL URL)</message>
+	<message xml:lang="fr">Liste des ressources de l'utilisateur (URL URL)</message>
+	<message xml:lang="pt">Lista de recursos WebDAV do usuário (URL URL)</message>
 	<message xml:lang="de">WebDAV Resourcenliste des Benutzers (URL)</message>
 	<message xml:lang="fi">Käyttäjän WebDAV resurssi luettelo (URL URL)</message>
-	<message xml:lang="it">Resource List WebDAV per l'utente(URL URL)</message>
-	<message xml:lang="es">Lista de Recursos WebDAV del Usuario:</message>
+	<message xml:lang="it">Resource list WebDAV per l'utente(URL URL)</message>
+	<message xml:lang="es">Lista de recursos WebDAV del usuario:</message>
 	<message xml:lang="tr">Kullanıyıcının referans listesi (URL URL)</message>
 	<message xml:lang="ru">Пользовательский список ресурсов WebDAV (URL URL)</message>
 	<message xml:lang="hu">User's WebDAV erőforrás listája (URL URL)</message>
@@ -4825,7 +4761,7 @@
 </label>
 <label define="AM_DAV_AWARENESS_ONEXIT">
 	<message xml:lang="en">Awareness on exit</message>
-	<message xml:lang="fr">Notification àla sortie</message>
+	<message xml:lang="fr">Notification à la sortie</message>
 	<message xml:lang="pt">Percepção ao sair</message>
 	<message xml:lang="de">Am Ende benachrichtigen</message>
 	<message xml:lang="fi">Valvetila poistuttaessa</message>
