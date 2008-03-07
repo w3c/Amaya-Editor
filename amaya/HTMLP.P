@@ -2930,6 +2930,7 @@ RULES
 
  Definitions: BEGIN
         Width: auto{Enclosing . Width};
+        Visibility: 0;
         END;
 
  Definition: BEGIN
@@ -2938,6 +2939,7 @@ RULES
         MarginLeft: LIST_INDENT;
         Width: auto{Enclosing . Width};
         Display: Block;
+        Visibility: GrandFather =;
         HorizPos: Left = Enclosing . Left;
         IN Structure_view BEGIN
                 MarginLeft: 0;
@@ -3336,7 +3338,11 @@ RULES
                 END;        
         END;
 
- FIELDSET: BEGIN
+ Fieldset_Content: BEGIN
+        Width: auto{Enclosing . Width};
+        END;
+
+FIELDSET: BEGIN
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
         Width: auto{Enclosing . Width};

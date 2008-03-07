@@ -3134,6 +3134,7 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   PtrFloat            pfloat;
   PtrBox              box;
   PtrAbstractBox      pAb;
+  PtrLine             pLine;
   int                 y, x, x1, x2, w;
   int                 t = 0, b = 0, l = 0, r = 0;
   ThotBool            extensibleblock;
@@ -3201,11 +3202,22 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
         *height = box->BxYOrg + box->BxHeight - y;
       pfloat = pfloat->FlNext;
     }
+
+  if (updateWidth)
+    {
+      /* update min and max widths */
+      if (pBlock->BxMinWidth < x1)
+        pBlock->BxMinWidth = x1;
+      if (pBlock->BxMinWidth < x2)
+        pBlock->BxMinWidth = x2;
+      pBlock->BxMaxWidth += x1+ x2;
+    }
+
   if (extensibleblock)
     {
       // move right floated boxes according to the right constraint
       pfloat = pBlock->BxRightFloat;
-      x = x1 + pBlock->BxMaxWidth + x2;
+      x = pBlock->BxMaxWidth;
       while (pfloat && pfloat->FlBox)
         {
           XMove (pfloat->FlBox, NULL,
@@ -3216,12 +3228,6 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
     }
   if (updateWidth)
     {
-      /* update min and max widths */
-      x1 += x2;
-      if (pBlock->BxMinWidth < x1)
-        pBlock->BxMinWidth = x1;
-      pBlock->BxMaxWidth += x1;
-
       // transmit min and max to enclosing not block of line boxes
       pAb = pBlock->BxAbstractBox;
       while (pAb && pAb->AbEnclosing && pAb->AbEnclosing->AbBox)

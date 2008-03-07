@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2277,6 +2277,8 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   if (l > from->BxLBorder)
     l = from->BxLBorder;
   height = box->BxHeight;
+  if (et < 0)
+    yFrame += et;
   b = y + h - yFrame - height + eb + from->BxBBorder;
   if (b > from->BxBBorder)
     b = from->BxBBorder;
@@ -2285,6 +2287,8 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
     width += box->BxLMargin;
   if (er < 0)
     er = 0;
+  if (el < 0)
+    xFrame += el;
   r = x + w - xFrame - width + er + from->BxRBorder;
   if (r > from->BxRBorder)
     r = from->BxRBorder;

@@ -2285,22 +2285,20 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                                         switch (pRefAb->AbHorizPos.PosRefEdge)
                                           {
                                           case VertMiddle:
+                                            /* recheck the position */
+                                            j = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + (pBox->BxW - box->BxWidth) / 2 - box->BxXOrg;
                                             if (absoluteMove)
-                                              j = middleTrans;
-                                            else
-                                              /* recheck the position */
-                                              j = (pBox->BxWidth - box->BxWidth) / 2 - box->BxXOrg;
+                                              j += pBox->BxXOrg;
                                             if (box->BxHorizFlex)
                                               MoveBoxEdge (box, pBox, pRel->ReOp, j, frame, TRUE);
                                             else
                                               XMove (box, pBox, j, frame);
                                             break;
                                           case Right:
+                                            /* recheck the position */
+                                            j = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxW - box->BxWidth - box->BxXOrg;
                                             if (absoluteMove)
-                                              j = endTrans;
-                                            else
-                                              /* recheck the position */
-                                              j = pBox->BxWidth - box->BxWidth - box->BxXOrg;
+                                              j += pBox->BxXOrg;
                                             if (box->BxHorizFlex)
                                               MoveBoxEdge (box, pBox, pRel->ReOp, j, frame, TRUE);
                                             else
@@ -2855,22 +2853,20 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                       switch (pRefAb->AbVertPos.PosRefEdge)
                                         {
                                         case HorizMiddle:
+                                          /* recheck the position */
+                                          j = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + (pBox->BxH - box->BxHeight) / 2 - box->BxYOrg;
                                           if (absoluteMove)
-                                            j = middleTrans;
-                                          else
-                                            /* recheck the position */
-                                            j = (pBox->BxHeight - box->BxHeight) / 2 - box->BxYOrg;
+                                            j += pBox->BxYOrg;
                                           if (box->BxVertFlex)
                                             MoveBoxEdge (box, pBox, pRel->ReOp, j, frame, FALSE);
                                           else
                                             YMove (box, pBox, j, frame);
                                           break;
                                         case Bottom:
+                                          /* recheck the position */
+                                          j = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + pBox->BxH - box->BxHeight - box->BxYOrg;
                                           if (absoluteMove)
-                                            j = endTrans;
-                                          else
-                                            /* recheck the position */
-                                            j = pBox->BxHeight - box->BxHeight - box->BxYOrg;
+                                            j += pBox->BxYOrg;
                                           if (box->BxVertFlex)
                                             MoveBoxEdge (box, pBox, pRel->ReOp, j, frame, FALSE);
                                           else
