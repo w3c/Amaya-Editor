@@ -3896,7 +3896,7 @@ void SelectColumn (Document doc, View view)
   ----------------------------------------------------------------------*/
 static void CreateColumn (Document doc, View view, ThotBool before)
 {
-  Element             cell, lastCell, elNew, col, lastCol;
+  Element             cell, lastCell, elNew, colhead, lastColhead;
   ElementType         elType;
   Attribute           attr;
   AttributeType       attrType;
@@ -3909,7 +3909,7 @@ static void CreateColumn (Document doc, View view, ThotBool before)
     {
       elType = TtaGetElementType (cell);
       inMath = !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML");  
-      col = NULL;
+      colhead = NULL;
       if (!before)
         {
           attrType.AttrSSchema = elType.ElSSchema;
@@ -3918,37 +3918,37 @@ static void CreateColumn (Document doc, View view, ThotBool before)
           else
             attrType.AttrTypeNum = HTML_ATTR_ColExt;
           lastCell = cell; /* last selected cell (in tree order) */
-          lastCol = TtaGetColumn (lastCell); /* rightmost column */
+          lastColhead = TtaGetColumn (lastCell); /* rightmost column */
           cell = GetEnclosingCell (doc, TRUE, FALSE); /* first selected cell */
           /* check all cells in the current selection to find the rightmost
-             column (lastCol) to which a selected cell is extended */
+             column (lastColhead) to which a selected cell is extended */
           do
             {
               attr = TtaGetAttribute (cell, attrType);
               if (attr)
-                /* this cell is extended horizontally. Get its rightmost col */
-                TtaGiveReferenceAttributeValue (attr, &col);
+                /* this cell is extended horizontally. Get its rightmost colhead */
+                TtaGiveReferenceAttributeValue (attr, &colhead);
               else
-                col = TtaGetColumn (cell);
-              if (TtaIsBefore (lastCol, col))
-                lastCol = col;
+                colhead = TtaGetColumn (cell);
+              if (TtaIsBefore (lastColhead, colhead))
+                lastColhead = colhead;
               if (cell == lastCell)
                 cell = NULL;
               else
                 TtaGiveNextElement (doc, &cell, lastCell);
             }
           while (cell);
-          col = lastCol;
+          colhead = lastColhead;
         }
-      if (!col)
-        col = TtaGetColumn (cell);
-      if (col)
+      if (!colhead)
+        colhead = TtaGetColumn (cell);
+      if (colhead)
         {
           dispMode = TtaGetDisplayMode (doc);
           if (dispMode == DisplayImmediately)
             TtaSetDisplayMode (doc, DeferredDisplay);
           /* Create the column */
-          elNew = NewColumnHead (col, before, FALSE, NULL, doc, inMath, TRUE);
+          elNew = NewColumnHead (colhead, before, FALSE, NULL, doc, inMath, TRUE);
           TtaSetDisplayMode (doc, dispMode);
           TtaSetDocumentModified (doc);
         }

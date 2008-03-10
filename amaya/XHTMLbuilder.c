@@ -1455,13 +1455,14 @@ static void XhtmlTypeAttrValue (char *val,
   CreateAttrWidthPercentPxl
   an HTML attribute "width" has been created for a Table, an image,
   an Object of a HR.
-  Create the corresponding attribute IntWidthPercent or IntWidthPxl.
+  Create the corresponding attribute IntWidthPercent, IntWidthPxl or
+  IntWidthRelative for element el.
   oldWidth is -1 or the old image width.
   ----------------------------------------------------------------------*/
 void CreateAttrWidthPercentPxl (char *buffer, Element el,
                                 Document doc, int oldWidth)
 {
-  AttributeType   attrTypePxl, attrTypePercent;
+  AttributeType   attrTypePxl, attrTypePercent, attrTypeRelative;
   Attribute       attrOld, attrNew;
   int             length, val;
   char            msgBuffer[MaxMsgLength];
@@ -1514,15 +1515,20 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
     length--;
   attrTypePxl.AttrSSchema = elType.ElSSchema;
   attrTypePercent.AttrSSchema = elType.ElSSchema;
+  attrTypeRelative.AttrSSchema = elType.ElSSchema;
   attrTypePxl.AttrTypeNum = HTML_ATTR_IntWidthPxl;
   attrTypePercent.AttrTypeNum = HTML_ATTR_IntWidthPercent;
+  attrTypeRelative.AttrTypeNum = HTML_ATTR_IntWidthRelative;
   do
     {
       /* is the last character a '%' ? */
       if (buffer[length] == '%')
+        /* percentage */
         {
-          /* remove IntWidthPxl */
+          /* remove IntWidthPxl or IntWidthRelative */
           attrOld = TtaGetAttribute (el, attrTypePxl);
+          if (!attrOld)
+            attrOld = TtaGetAttribute (el, attrTypeRelative);
           /* update IntWidthPercent */
           attrNew = TtaGetAttribute (el, attrTypePercent);
           if (attrNew == NULL)
@@ -1538,10 +1544,36 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
                 oldWidth = TtaGetAttributeValue (attrOld);
             }
         }
-      else
+      /* is the last character a '*' ? */
+      else if (buffer[length] == '*')
+        /* relative width */
         {
-          /* remove IntWidthPercent */
+          /* remove IntWidthPxl or IntWidthPercent */
+          attrOld = TtaGetAttribute (el, attrTypePxl);
+          if (!attrOld)
+            attrOld = TtaGetAttribute (el, attrTypePercent);
+          /* update IntWidthRelative */
+          attrNew = TtaGetAttribute (el, attrTypeRelative);
+          if (attrNew == NULL)
+            {
+              attrNew = TtaNewAttribute (attrTypeRelative);
+              TtaAttachAttribute (el, attrNew, doc);
+            }
+          else if (isImage && oldWidth == -1)
+            {
+              if (attrOld == NULL)
+                oldWidth = TtaGetAttributeValue (attrNew);
+              else
+                oldWidth = TtaGetAttributeValue (attrOld);
+            }
+        }
+      else
+        /* width in pixels */
+        {
+          /* remove IntWidthPercent or IntWidthRelative */
           attrOld = TtaGetAttribute (el, attrTypePercent);
+          if (!attrOld)
+            attrOld = TtaGetAttribute (el, attrTypeRelative);
           /* update IntWidthPxl */
           attrNew = TtaGetAttribute (el, attrTypePxl);
           if (attrNew == NULL)

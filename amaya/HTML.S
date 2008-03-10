@@ -759,7 +759,18 @@ STRUCT
         { align       valign       width    span }
          = CONSTANT C_Empty;
 
-  Column_head (ATTR IntWidthPercent; IntWidthPxl) =
+  ColColgroup = CASE OF { alias for reference  Ref_ColColgroup }
+        COL;
+        COLGROUP;
+        END;
+
+  Column_head (ATTR IntWidthPercent; IntWidthPxl;
+               IntWidthRelative = Integer;
+               { IntWidthForced indicates that IntWidthPercent,
+                 IntWidthPxl or IntWidthRelative comes from a
+                 COL or COLGROUP element }
+               IntWidthForced = IntWidthForced_;
+               Ref_ColColgroup = REFERENCE(ColColgroup)) =
         CONSTANT C_Head;
 
   thead                                                                { THEAD }
@@ -991,6 +1002,8 @@ EXCEPT
         InternalLink:   Invisible;
         IntWidthPercent:NewPercentWidth, Invisible;
         IntWidthPxl:    NewWidth, Invisible;
+        IntWidthRelative:NewWidth, Invisible;
+        IntWidthForced: Invisible;
         IntHeightPercent:Invisible;
         IntHeightPxl:   NewHeight, Invisible;
         IntAreaSize:    Invisible;
