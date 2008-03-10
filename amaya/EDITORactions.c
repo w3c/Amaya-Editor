@@ -2251,7 +2251,7 @@ void CreateAddress (Document doc, View view)
 void DoTableCreation (Document doc)
 {
   ElementType         elType;
-  Element             el, new_, caption, cell, row, child;
+  Element             el, new_, caption, cell, row, cols, prevCol, child;
   AttributeType       attrType;
   Attribute           attr;
   int                 firstChar, i, profile;
@@ -2274,6 +2274,31 @@ void DoTableCreation (Document doc)
           elType.ElTypeNum = HTML_EL_CAPTION;
           caption = TtaNewTree (doc, elType, "");
           TtaInsertFirstChild (&caption, el, doc);
+        }
+      else
+        caption = NULL;
+
+      /* create a COL element for each column */
+      if (NumberCols > 0)
+        {
+          elType.ElTypeNum = HTML_EL_Cols;
+          cols = TtaNewElement (doc, elType);
+          if (caption)
+            TtaInsertSibling (cols, caption, FALSE, doc);
+          else
+            TtaInsertFirstChild (&cols, el, doc);
+          elType.ElTypeNum = HTML_EL_COL;
+          prevCol = NULL;
+          while (NumberCols > 0)
+            {
+              new_ = TtaNewTree (doc, elType, "");
+              if (prevCol)
+                TtaInsertSibling (new_, prevCol, FALSE, doc);
+              else
+                TtaInsertFirstChild (&new_, cols, doc);
+              prevCol = new_;
+              NumberCols--;
+            }
         }
 
       /* manage the border attribute */
@@ -2342,13 +2367,6 @@ void DoTableCreation (Document doc)
                 TtaInsertFirstChild (&child, cell, doc);
             }
           TtaSelectElement (doc, child);
-          elType.ElTypeNum = HTML_EL_Data_cell;
-          while (NumberCols > 1)
-            {
-              new_ = TtaNewTree (doc, elType, "");
-              TtaInsertSibling (new_, cell, FALSE, doc);
-              NumberCols--;
-            }
         }
       if (NumberRows > 1)
         {
