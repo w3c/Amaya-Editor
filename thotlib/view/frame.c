@@ -660,8 +660,6 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   if (b > 0)
     height -= b;
   
-  //if (!strcmp(pFrom->AbElement->ElLabel,"L374") && yd < ymax)
-  //printf("DrawBorder of L374\n");
   /* clipping on the origin */
   if (xd < x)
     {

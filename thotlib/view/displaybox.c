@@ -2277,9 +2277,9 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   if (l > from->BxLBorder)
     l = from->BxLBorder;
   height = box->BxHeight;
-  if (et < 0)
-    yFrame += et;
   b = y + h - yFrame - height + eb + from->BxBBorder;
+  if (et < 0)
+    b -= et;
   if (b > from->BxBBorder)
     b = from->BxBBorder;
   width = box->BxWidth;
@@ -2287,9 +2287,9 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
     width += box->BxLMargin;
   if (er < 0)
     er = 0;
+  r = x + w + 1 - xFrame - width + er + from->BxRBorder;
   if (el < 0)
-    xFrame += el;
-  r = x + w - xFrame - width + er + from->BxRBorder;
+    r -= el;
   if (r > from->BxRBorder)
     r = from->BxRBorder;
   if (from->BxType == BoTable)
