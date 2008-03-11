@@ -1983,6 +1983,7 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, int frame,
                                   ThotBool *directParent, ThotBool *uniqueChild,
                                   ThotBool *dummyChild)
 {
+  PtrSSchema          pSS;
   PtrAbstractBox      pChildAb;
   int                 nb;
   ThotBool            found, unique, leaf;
@@ -1993,6 +1994,12 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, int frame,
   nb = 0;
   if (pAb && !pAb->AbDead)
     {
+      pSS = pAb->AbElement->ElStructSchema;
+      if (TypeHasException (ExcIsColHead, pAb->AbElement->ElTypeNumber, pSS) ||
+          TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber, pSS) ||
+          TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber, pSS) ||
+          TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS))
+        return found;
       /* check all enclosed boxes */
       pChildAb = pAb->AbFirstEnclosed;
       /* stop as soon as we know the result */
@@ -3689,918 +3696,800 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
       if (pBox)
         pBox->VisibleModification = TRUE;
 #endif /* _GL */
-    }
 
-  /* NEW AbstractBox */
-  if (pAb->AbNew)
-    {
-      AnyWidthUpdate = TRUE;
-      /* Check the position of the new box in the list of terminal boxes */
-      pCurrentAb = PreviousLeafAbstractBox (pAb);
-      /* Get the box just before */
-      if (pCurrentAb)
-        pCurrentBox = pCurrentAb->AbBox;
-      else
-        pCurrentBox = NULL;
-      i = 0; /* Position within the document */
-      if (pCurrentBox)
+      /* NEW AbstractBox */
+      if (pAb->AbNew)
         {
-          if (pCurrentBox->BxType == BoSplit ||
-              pCurrentBox->BxType == BoMulScript)
-            /* take the last split box */
-            while (pCurrentBox->BxNexChild)
-              pCurrentBox = pCurrentBox->BxNexChild;
-          pNextBox = pCurrentBox->BxNext;
-        }
-      else
-        {
+          AnyWidthUpdate = TRUE;
+          /* Check the position of the new box in the list of terminal boxes */
+          pCurrentAb = PreviousLeafAbstractBox (pAb);
+          /* Get the box just before */
+          if (pCurrentAb)
+            pCurrentBox = pCurrentAb->AbBox;
+          else
+            pCurrentBox = NULL;
+          i = 0; /* Position within the document */
+          if (pCurrentBox)
+            {
+              if (pCurrentBox->BxType == BoSplit ||
+                  pCurrentBox->BxType == BoMulScript)
+                /* take the last split box */
+                while (pCurrentBox->BxNexChild)
+                  pCurrentBox = pCurrentBox->BxNexChild;
+              pNextBox = pCurrentBox->BxNext;
+            }
+          else
+            {
+              if (pMainBox)
+                pNextBox = pMainBox->BxNext;
+              else
+                pNextBox = NULL;
+            }
+
+          /* Get the box just after */
+          if (pParent && !inLine && !inLineFloat &&
+              pParent->AbAcceptLineBreak && pParent->AbFloat == 'N' &&
+              pParent->AbEnclosing && pParent->AbEnclosing->AbBox &&
+              (pParent->AbEnclosing->AbBox->BxType == BoBlock ||
+               pParent->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+               pParent->AbEnclosing->AbBox->BxType == BoCellBlock ||
+               pParent->AbEnclosing->AbBox->BxType == BoGhost ||
+               pParent->AbEnclosing->AbBox->BxType == BoFloatGhost))
+            {
+              if (pParent->AbEnclosing->AbBox->BxType == BoBlock)
+                /* the parent was not set ghost because it was empty */
+                inLine = TRUE;
+              else if ((pParent->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+                        pParent->AbEnclosing->AbBox->BxType == BoCellBlock) &&
+                       pAb->AbLeafType == LtCompound && pAb->AbInLine)
+                /* the parent was not set ghost because it was empty */
+                inLineFloat = FALSE;
+              else if (pParent->AbEnclosing->AbBox->BxType == BoGhost ||
+                       pParent->AbEnclosing->AbBox->BxType == BoFloatGhost)
+                {
+                  pBlock = pParent->AbEnclosing;
+                  while (pBlock && pBlock->AbBox &&
+                         pBlock->AbBox->BxType != BoBlock &&
+                         pBlock->AbBox->BxType != BoFloatBlock &&
+                         pBlock->AbBox->BxType != BoCellBlock)
+                    pBlock = pBlock->AbEnclosing;
+                  if (pBlock && pBlock->AbBox)
+                    {
+                      if (pBlock->AbBox->BxType == BoBlock)
+                        /* within a block */
+                        inLine = TRUE;
+                      else
+                        inLineFloat = FALSE;
+                    }
+                }
+
+              if (inLine || inLineFloat)
+                {
+                  if (ExtraAbFlow (pParent, frame))
+                    {
+                      /* a positioned box cannot be a ghost */
+                      inLine = FALSE;
+                      inLineFloat = FALSE;
+                      pBlock = NULL;
+                    }
+                  else if (pParent->AbFloat == 'N' &&
+                           !pParent->AbHeight.DimIsPosition &&
+                           pParent->AbHeight.DimValue <= 0 &&
+                           !pParent->AbWidth.DimIsPosition &&
+                           pParent->AbWidth.DimValue <= 0 &&
+                           (!HasFloatingChild (pParent, frame, &directParent, &uniqueChild, &dummyChild) ||
+                            uniqueChild) && !dummyChild)
+                    {
+                      /* the parent becomes ghost */
+                      pParent->AbBox->BxType = BoGhost;
+                      /* the current box won't be displayed */
+                      if (pParent->AbFillBox)
+                        pParent->AbBox->BxDisplay = TRUE;
+                    }
+                }
+            }
+
+          if (pParent && pNextBox && pNextBox == pParent->AbBox)
+            /* the new box will replace the previous one */
+            pNextBox = pNextBox->BxNext;
+          /* On etablit le chainage pour inserer en fin les nouvelles boites */
+          /* Faut-il dechainer la boite englobante ? */
           if (pMainBox)
-            pNextBox = pMainBox->BxNext;
-          else
-            pNextBox = NULL;
-        }
-
-      /* Get the box just after */
-      if (pParent && !inLine && !inLineFloat &&
-          pParent->AbAcceptLineBreak && pParent->AbFloat == 'N' &&
-          pParent->AbEnclosing && pParent->AbEnclosing->AbBox &&
-          (pParent->AbEnclosing->AbBox->BxType == BoBlock ||
-           pParent->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-           pParent->AbEnclosing->AbBox->BxType == BoCellBlock ||
-           pParent->AbEnclosing->AbBox->BxType == BoGhost ||
-           pParent->AbEnclosing->AbBox->BxType == BoFloatGhost))
-        {
-          if (pParent->AbEnclosing->AbBox->BxType == BoBlock)
-            /* the parent was not set ghost because it was empty */
-            inLine = TRUE;
-          else if ((pParent->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-                    pParent->AbEnclosing->AbBox->BxType == BoCellBlock) &&
-                   pAb->AbLeafType == LtCompound && pAb->AbInLine)
-            /* the parent was not set ghost because it was empty */
-            inLineFloat = FALSE;
-          else if (pParent->AbEnclosing->AbBox->BxType == BoGhost ||
-                   pParent->AbEnclosing->AbBox->BxType == BoFloatGhost)
             {
-              pBlock = pParent->AbEnclosing;
-              while (pBlock && pBlock->AbBox &&
-                     pBlock->AbBox->BxType != BoBlock &&
-                     pBlock->AbBox->BxType != BoFloatBlock &&
-                     pBlock->AbBox->BxType != BoCellBlock)
-                pBlock = pBlock->AbEnclosing;
-              if (pBlock && pBlock->AbBox)
+              if (pCurrentBox == NULL)
+                pMainBox->BxNext = NULL;	/* debut du chainage */
+              pLastBox = pMainBox->BxPrevious;	/* memorise la derniere boite*/
+              pMainBox->BxPrevious = pCurrentBox;/* fin provisoire du chainage*/
+            }
+          else
+            pLastBox = NULL;	/* memorise la derniere boite*/
+      
+          /* Faut-il dechainer la boite englobante ? */
+          ReadyToDisplay = FALSE;	/* On arrete l'evaluation du reaffichage */
+          Propagate = ToSiblings;	/* Limite la propagation sur le descendance */
+          pBox = CreateBox (pAb, frame, inLine, inLineFloat, &i);
+      
+          ReadyToDisplay = TRUE;	/* On retablit l'evaluation du reaffichage */      
+          /* Mise a jour de la liste des boites terminales */
+          if (pMainBox && pNextBox)
+            {
+              /* On ajoute en fin de chainage */
+              pNextBox->BxPrevious = pMainBox->BxPrevious;
+              /* derniere boite chainee */
+              if (pMainBox->BxPrevious)
+                pMainBox->BxPrevious->BxNext = pNextBox;
+              pMainBox->BxPrevious = pLastBox;
+              /* nouvelle fin de chainage */
+              if (pMainBox->BxNext == NULL)
+                pMainBox->BxNext = pNextBox;
+            }
+
+          if (pBox)
+            {
+              /* set the box position in the concrete image */
+              IsXYPosComplete (pBox, &orgXComplete, &orgYComplete);
+              if (!orgXComplete || !orgYComplete)
                 {
-                  if (pBlock->AbBox->BxType == BoBlock)
-                    /* within a block */
-                    inLine = TRUE;
+                  /* si la boite n'a pas deja ete placee en absolu */
+                  /* Initialise le placement des boites creees */
+                  SetBoxToTranslate (pAb, !orgXComplete, !orgYComplete);
+                  /* La boite racine va etre placee */
+                  pBox->BxXToCompute = FALSE;
+                  pBox->BxYToCompute = FALSE;
+                  AddBoxTranslations (pAb, pFrame->FrVisibility, frame,
+                                      !orgXComplete, !orgYComplete);
+                }
+#ifdef _GL
+              else
+                {
+                  if (FrameTable[frame].FrView == 1 &&
+                      (pBox->BxXOrg || pBox->BxYOrg) &&
+                      !pAb->AbPresentationBox &&
+                      pAb->AbElement->ElSystemOrigin)
+                    {
+                      pBox->BxClipX = 0;
+                      pBox->BxClipY = 0;
+                    }
                   else
-                    inLineFloat = FALSE;
+                    {
+                      pBox->BxClipX = pBox->BxXOrg;
+                      pBox->BxClipY = pBox->BxYOrg;
+                    }
+                  pBox->BxClipW = pBox->BxW;
+                  pBox->BxClipH = pBox->BxH;
                 }
-            }
-
-          if (inLine || inLineFloat)
-            {
-              if (ExtraAbFlow (pParent, frame))
-                {
-                  /* a positioned box cannot be a ghost */
-                  inLine = FALSE;
-                  inLineFloat = FALSE;
-                  pBlock = NULL;
-                }
-              else if (pParent->AbFloat == 'N' &&
-                       !pParent->AbHeight.DimIsPosition &&
-                       pParent->AbHeight.DimValue <= 0 &&
-                       !pParent->AbWidth.DimIsPosition &&
-                       pParent->AbWidth.DimValue <= 0 &&
-                       (!HasFloatingChild (pParent, frame, &directParent, &uniqueChild, &dummyChild) ||
-                        uniqueChild) && !dummyChild)
-                {
-                  /* the parent becomes ghost */
-                  pParent->AbBox->BxType = BoGhost;
-                  /* the current box won't be displayed */
-                  if (pParent->AbFillBox)
-                    pParent->AbBox->BxDisplay = TRUE;
-                }
-            }
-        }
-
-      if (pParent && pNextBox && pNextBox == pParent->AbBox)
-        /* the new box will replace the previous one */
-        pNextBox = pNextBox->BxNext;
-      /* On etablit le chainage pour inserer en fin les nouvelles boites */
-      /* Faut-il dechainer la boite englobante ? */
-      if (pMainBox)
-        {
-          if (pCurrentBox == NULL)
-            pMainBox->BxNext = NULL;	/* debut du chainage */
-          pLastBox = pMainBox->BxPrevious;	/* memorise la derniere boite*/
-          pMainBox->BxPrevious = pCurrentBox;/* fin provisoire du chainage*/
-        }
-      else
-        pLastBox = NULL;	/* memorise la derniere boite*/
-      
-      /* Faut-il dechainer la boite englobante ? */
-      ReadyToDisplay = FALSE;	/* On arrete l'evaluation du reaffichage */
-      Propagate = ToSiblings;	/* Limite la propagation sur le descendance */
-      pBox = CreateBox (pAb, frame, inLine, inLineFloat, &i);
-      
-      ReadyToDisplay = TRUE;	/* On retablit l'evaluation du reaffichage */      
-      /* Mise a jour de la liste des boites terminales */
-      if (pMainBox && pNextBox)
-        {
-          /* On ajoute en fin de chainage */
-          pNextBox->BxPrevious = pMainBox->BxPrevious;
-          /* derniere boite chainee */
-          if (pMainBox->BxPrevious)
-            pMainBox->BxPrevious->BxNext = pNextBox;
-          pMainBox->BxPrevious = pLastBox;
-          /* nouvelle fin de chainage */
-          if (pMainBox->BxNext == NULL)
-            pMainBox->BxNext = pNextBox;
-        }
-
-      if (pBox)
-        {
-          /* set the box position in the concrete image */
-          IsXYPosComplete (pBox, &orgXComplete, &orgYComplete);
-          if (!orgXComplete || !orgYComplete)
-            {
-              /* si la boite n'a pas deja ete placee en absolu */
-              /* Initialise le placement des boites creees */
-              SetBoxToTranslate (pAb, !orgXComplete, !orgYComplete);
-              /* La boite racine va etre placee */
-              pBox->BxXToCompute = FALSE;
-              pBox->BxYToCompute = FALSE;
-              AddBoxTranslations (pAb, pFrame->FrVisibility, frame,
-                                  !orgXComplete, !orgYComplete);
-            }
-#ifdef _GL
-          else
-            {
-              if (FrameTable[frame].FrView == 1 &&
-                  (pBox->BxXOrg || pBox->BxYOrg) &&
-                  !pAb->AbPresentationBox &&
-                  pAb->AbElement->ElSystemOrigin)
-                {
-                  pBox->BxClipX = 0;
-                  pBox->BxClipY = 0;
-                }
-              else
-                {
-                  pBox->BxClipX = pBox->BxXOrg;
-                  pBox->BxClipY = pBox->BxYOrg;
-                }
-              pBox->BxClipW = pBox->BxW;
-              pBox->BxClipH = pBox->BxH;
-            }
 #endif /* _GL */
 
-          /* On prepare le reaffichage */
-          if (pAb->AbNotInLine || (!inLine && !inLineFloat))
-            DefBoxRegion (frame, pBox, -1, -1, -1, -1);
+              /* On prepare le reaffichage */
+              if (pAb->AbNotInLine || (!inLine && !inLineFloat))
+                DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 	  
-          pAb->AbChange = FALSE;
-          pAb->AbFloatChange = FALSE;
-          if (pBlock)
-            {
-              /* update the enclosing block of line */
-              Propagate = ToChildren;
-              RecomputeLines (pBlock, NULL, NULL, frame);
-            }
-          /* check enclosing cell */
-          pCell = GetParentCell (pBox);
-          if (pBox->BxType != BoCell &&
-              TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber,
-                                pAb->AbElement->ElStructSchema))
-            pCell = pAb->AbNext;
-          if (pCell)
-            {
-              Propagate = ToChildren;
-              UpdateColumnWidth (pCell, NULL, frame);
-            }
-          result = TRUE;
-          pAb->AbWidthChange = FALSE;
-          pAb->AbHeightChange = FALSE;
-          pAb->AbAspectChange = FALSE;
-          pAb->AbSizeChange = FALSE;
-          pAb->AbChange = FALSE;
-          pAb->AbMBPChange = FALSE;
-        }
-#ifdef _GL
-      if (pBox)
-        pBox->VisibleModification = TRUE;   
-#endif /* _GL */
-      /* Restore the propagation */
-      Propagate = savpropage;
-    }
-  /* AbstractBox DEAD */
-  else if (pAb->AbDead)
-    {
-      /* mark all children */
-      TransmitDeadStatus (pAb, TRUE);
-      AnyWidthUpdate = TRUE;
-      if (pAb->AbLeafType == LtPolyLine)
-        FreePolyline (pBox);	/* libere la liste des buffers de la boite */
-      else if (pAb->AbLeafType == LtPath)
-        FreePath (pBox);	/* libere la liste des descripteurs de path */
-
-      /* On situe la boite dans le chainage des boites terminales */
-      pCurrentAb = PreviousLeafAbstractBox (pAb);
-
-      /* On recherche la derniere boite terminale avant */
-      if (pCurrentAb == NULL)
-        pCurrentBox = pMainBox;	/* debut du chainage */
-      else
-        {
-          pCurrentBox = pCurrentAb->AbBox;
-          /* Est-ce que la boite est coupee ? */
-          if (pCurrentBox->BxType == BoSplit || pCurrentBox->BxType == BoMulScript)
-            while (pCurrentBox->BxNexChild)
-              pCurrentBox = pCurrentBox->BxNexChild;
-        }
-
-      /* Est-ce que la boite englobante devient terminale ? */
-      if (IsAbstractBoxEmpty (pParent))
-        {
-          pNextBox = pParent->AbBox;
-          /* Si la boite etait eclatee, elle ne l'est plus */
-          if (pNextBox->BxType == BoGhost || pNextBox->BxType == BoFloatGhost)
-            pNextBox->BxType = BoComplete;
-	  
-          /* On ne chaine qu'une seule fois la boite englobante */
-          if (pNextBox != pCurrentBox->BxNext)
-            {
-              if (pCurrentBox == pMainBox)
-                pNextBox->BxPrevious = NULL;
-              else
-                pNextBox->BxPrevious = pCurrentBox;
-	      
-              /* On defait l'ancien chainage */
-              pCurrentBox->BxNext->BxPrevious = pCurrentBox->BxNext;
-              pCurrentBox->BxNext = pNextBox;
-            }
-          pCurrentBox = pNextBox;
-        }
-      
-      /* On recherche la premiere boite terminale apres */
-      pCurrentAb = pAb;
-      pNextBox = NULL;
-      while (pNextBox == NULL)
-        {
-          while (pCurrentAb->AbEnclosing && !pCurrentAb->AbNext)
-            pCurrentAb = pCurrentAb->AbEnclosing;
-          pCurrentAb = pCurrentAb->AbNext;
-          if (pCurrentAb == NULL)
-            pNextBox = pMainBox;	/* 1ere boite suivante */
-          else
-            {
-              while (pCurrentAb->AbBox && pCurrentAb->AbFirstEnclosed)
-                pCurrentAb = pCurrentAb->AbFirstEnclosed;
-              pNextBox = pCurrentAb->AbBox;
-            }
-        }
-
-      /* Est-ce que la boite est coupee ? */
-      if (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript)
-        pNextBox = pNextBox->BxNexChild;
-
-      /* Destruction */
-      pCell = GetParentCell (pCurrentBox);
-      isCell = pCurrentBox->BxType == BoCell;
-      RemoveBoxes (pAb, FALSE, frame);
-      
-      /* update the list of leaf boxes */
-      if (pCurrentBox == pMainBox)
-        /* first box in the list */
-        pNextBox->BxPrevious = NULL;
-      else
-        {
-          /* backward link */
-          pNextBox->BxPrevious = pCurrentBox;
-          if ((pNextBox->BxType == BoPiece || pNextBox->BxType == BoScript) &&
-              pNextBox->BxAbstractBox->AbBox)
-            {
-              if (pCurrentBox->BxType == BoPiece || pCurrentBox->BxType == BoScript)
-                pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox->BxAbstractBox->AbBox;
-              else
-                pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox;
-            }
-        }
-      if (pNextBox == pMainBox)
-        /* last box in the list */
-        pCurrentBox->BxNext = NULL;
-      else
-        {
-          /* forward link */
-          pCurrentBox->BxNext = pNextBox;
-          if ((pCurrentBox->BxType == BoPiece || pCurrentBox->BxType == BoScript) &&
-              pCurrentBox->BxAbstractBox->AbBox)
-            {
-              if (pNextBox->BxType == BoPiece || pNextBox->BxType == BoScript)
-                pCurrentBox->BxAbstractBox->AbBox->BxNext = pNextBox->BxAbstractBox->AbBox;
-              else
-                pCurrentBox->BxAbstractBox->AbBox->BxNext = pNextBox;
-            }
-        }
-      
-      /* Check table consistency */
-      if (isCell && pCurrentBox && pCurrentBox->BxAbstractBox)
-        UpdateColumnWidth (pCurrentBox->BxAbstractBox, NULL, frame);
-      /* check enclosing cell */
-      if (pCell && !IsDead (pAb) &&
-               (pAb->AbNext || (!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
-        UpdateColumnWidth (pCell, NULL, frame);
-      else if (pCell)
-        UpdateCellHeight (pCell, frame);
-      result = TRUE;
-    }
-  else
-    {
-
-      // zoom apply to SVG only
-      //if (pAb->AbElement && pAb->AbElement->ElStructSchema &&
-      //    pAb->AbElement->ElStructSchema->SsName &&
-      //    !strcmp (pAb->AbElement->ElStructSchema->SsName, "SVG"))
-      zoom = ViewFrameTable[frame - 1].FrMagnification;
-      //else
-      //   zoom = 0;
-
-      /* CHANGE BOX ASPECT */
-      if (pAb->AbAspectChange)
-        {
-          pAb->AbAspectChange = FALSE;
-          if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
-            {
-              /* extend the clipping to the last piece when the box is split */
-              pCurrentBox = pBox;
+              pAb->AbChange = FALSE;
+              pAb->AbFloatChange = FALSE;
+              if (pBlock)
+                {
+                  /* update the enclosing block of line */
+                  Propagate = ToChildren;
+                  RecomputeLines (pBlock, NULL, NULL, frame);
+                }
+              /* check enclosing cell */
+              pCell = GetParentCell (pBox);
+              if (pBox->BxType != BoCell &&
+                  TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber,
+                                    pAb->AbElement->ElStructSchema))
+                pCell = pAb->AbNext;
+              if (pCell)
+                {
+                  Propagate = ToChildren;
+                  UpdateColumnWidth (pCell, NULL, frame);
+                }
               result = TRUE;
-              while (result)
-                {
-                  if (pCurrentBox->BxNexChild == NULL)
-                    result = FALSE;
-                  else if (pCurrentBox->BxNexChild->BxNChars == 0)
-                    result = FALSE;
-                  else
-                    pCurrentBox = pCurrentBox->BxNexChild;
-                }
+              pAb->AbWidthChange = FALSE;
+              pAb->AbHeightChange = FALSE;
+              pAb->AbAspectChange = FALSE;
+              pAb->AbSizeChange = FALSE;
+              pAb->AbChange = FALSE;
+              pAb->AbMBPChange = FALSE;
             }
-          else if (pAb->AbLeafType == LtCompound)
-            {
-              /* Is there a background image? */
-              if (pAb->AbPictBackground != NULL)
-                {
-                  /* force filling */
-                  pAb->AbFillBox = TRUE;
-                  /* load the picture */
-                  LoadPicture (frame, pBox, (ThotPictInfo *) pAb->AbPictBackground);
-                }
-            }
-          else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
-            {
-              /* update radius of the rectangle with rounded corners */
-              ComputeRadius (pAb, frame, TRUE);
-              ComputeRadius (pAb, frame, FALSE);
-            }
-
-          /* Note if there is a border or a fill */
-          MarkDisplayedBox (pBox);
-          /* Is it a filled box? */
-          if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell &&
-              pAb->AbEnclosing == NULL)
-            {
-              /* root abstractbox */
-              if (pBox->BxDisplay)
-                SetMainWindowBackgroundColor (frame, pAb->AbBackground);
-              else
-                SetMainWindowBackgroundColor (frame, DefaultBColor);
-            }
-        }
-      /* CHANGE CHARACTER SIZE */
-      if (pAb->AbSizeChange)
-        {
-          /* check the effect */
-          pDimAb = &pAb->AbWidth;
-          if (!pDimAb->DimIsPosition)
-            {
-              if (pDimAb->DimAbRef || pDimAb->DimValue >= 0)
-                pAb->AbWidthChange = (pDimAb->DimUnit == UnRelative);
-              if (pAb->AbHorizPos.PosAbRef != NULL)
-                pAb->AbHorizPosChange = (pAb->AbHorizPos.PosUnit == UnRelative);
-            }
-	  
-          pDimAb = &pAb->AbHeight;
-          if (!pDimAb->DimIsPosition)
-            {
-              if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
-                pAb->AbHeightChange = (pDimAb->DimUnit == UnRelative);
-              if (pAb->AbVertPos.PosAbRef != NULL)
-                pAb->AbVertPosChange = (pAb->AbVertPos.PosUnit == UnRelative);
-            }
-	    
-          pAb->AbHorizRefChange = (pAb->AbHorizRef.PosUnit == UnRelative);
-          pAb->AbVertRefChange = (pAb->AbVertRef.PosUnit == UnRelative);
-        }
-      /* CHANGE FLOAT/CLEAR */
-      if (pAb->AbFloatChange)
-        {
-          Propagate = ToChildren;
-          pAb->AbFloatChange = FALSE;
-          UpdateFloat (pAb, pParent, inLine || inLineFloat, frame, computeBBoxes);
+#ifdef _GL
+          if (pBox)
+            pBox->VisibleModification = TRUE;   
+#endif /* _GL */
           /* Restore the propagation */
           Propagate = savpropage;
         }
-
-      /* CHANGE THE CONTENTS */
-      if (pAb->AbChange || pAb->AbSizeChange)
+      /* AbstractBox DEAD */
+      else if (pAb->AbDead)
         {
-          /* check the font of the abstract box */
-          height = pAb->AbSize;
-          unit = pAb->AbSizeUnit;
-          if (pAb->AbLeafType == LtText)
-            {
-              if (pAb->AbElement->ElLanguage < TtaGetFirstUserLanguage ())
-                /* ElLanguage is actually a script */
-                pBox->BxFont = ThotLoadFont (TtaGetScript (pAb->AbLang),
-                                             pAb->AbFont,
-                                             FontStyleAndWeight(pAb),
-                                             height, unit, frame);
-              else
-                pBox->BxFont = ThotLoadFont ('L', pAb->AbFont,
-                                             FontStyleAndWeight(pAb),
-                                             height, unit, frame);
-            }
-          else if (pAb->AbLeafType == LtSymbol)
-            pBox->BxFont = ThotLoadFont ('G', pAb->AbFont, FontStyleAndWeight (pAb),
-                                         height, unit, frame);
+          /* mark all children */
+          TransmitDeadStatus (pAb, TRUE);
+          AnyWidthUpdate = TRUE;
+          if (pAb->AbLeafType == LtPolyLine)
+            FreePolyline (pBox);	/* libere la liste des buffers de la boite */
+          else if (pAb->AbLeafType == LtPath)
+            FreePath (pBox);	/* libere la liste des descripteurs de path */
+
+          /* On situe la boite dans le chainage des boites terminales */
+          pCurrentAb = PreviousLeafAbstractBox (pAb);
+
+          /* On recherche la derniere boite terminale avant */
+          if (pCurrentAb == NULL)
+            pCurrentBox = pMainBox;	/* debut du chainage */
           else
-            pBox->BxFont = ThotLoadFont ('L', 1, 0, height, unit, frame);
+            {
+              pCurrentBox = pCurrentAb->AbBox;
+              /* Est-ce que la boite est coupee ? */
+              if (pCurrentBox->BxType == BoSplit || pCurrentBox->BxType == BoMulScript)
+                while (pCurrentBox->BxNexChild)
+                  pCurrentBox = pCurrentBox->BxNexChild;
+            }
+
+          /* Est-ce que la boite englobante devient terminale ? */
+          if (IsAbstractBoxEmpty (pParent))
+            {
+              pNextBox = pParent->AbBox;
+              /* Si la boite etait eclatee, elle ne l'est plus */
+              if (pNextBox->BxType == BoGhost || pNextBox->BxType == BoFloatGhost)
+                pNextBox->BxType = BoComplete;
 	  
-          /* transmit underline and thickness */
-          pBox->BxUnderline = pAb->AbUnderline;
-          pBox->BxThickness = pAb->AbThickness;
-          if (pAb->AbLeafType == LtCompound)
-            {
-              /* update a compound element */
-              if (pBox->BxType == BoBlock ||
-                  pBox->BxType == BoFloatBlock ||
-                  pBox->BxType == BoCellBlock)
-                /* update the current block of lines */
-                RecomputeLines (pAb, NULL, pBox, frame);
+              /* On ne chaine qu'une seule fois la boite englobante */
+              if (pNextBox != pCurrentBox->BxNext)
+                {
+                  if (pCurrentBox == pMainBox)
+                    pNextBox->BxPrevious = NULL;
+                  else
+                    pNextBox->BxPrevious = pCurrentBox;
+	      
+                  /* On defait l'ancien chainage */
+                  pCurrentBox->BxNext->BxPrevious = pCurrentBox->BxNext;
+                  pCurrentBox->BxNext = pNextBox;
+                }
+              pCurrentBox = pNextBox;
             }
+      
+          /* On recherche la premiere boite terminale apres */
+          pCurrentAb = pAb;
+          pNextBox = NULL;
+          while (pNextBox == NULL)
+            {
+              while (pCurrentAb->AbEnclosing && !pCurrentAb->AbNext)
+                pCurrentAb = pCurrentAb->AbEnclosing;
+              pCurrentAb = pCurrentAb->AbNext;
+              if (pCurrentAb == NULL)
+                pNextBox = pMainBox;	/* 1ere boite suivante */
+              else
+                {
+                  while (pCurrentAb->AbBox && pCurrentAb->AbFirstEnclosed)
+                    pCurrentAb = pCurrentAb->AbFirstEnclosed;
+                  pNextBox = pCurrentAb->AbBox;
+                }
+            }
+
+          /* Est-ce que la boite est coupee ? */
+          if (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript)
+            pNextBox = pNextBox->BxNexChild;
+
+          /* Destruction */
+          pCell = GetParentCell (pCurrentBox);
+          isCell = pCurrentBox->BxType == BoCell;
+          RemoveBoxes (pAb, FALSE, frame);
+      
+          /* update the list of leaf boxes */
+          if (pCurrentBox == pMainBox)
+            /* first box in the list */
+            pNextBox->BxPrevious = NULL;
           else
             {
-               /* update a leaf element */
-              switch (pAb->AbLeafType)
+              /* backward link */
+              pNextBox->BxPrevious = pCurrentBox;
+              if ((pNextBox->BxType == BoPiece || pNextBox->BxType == BoScript) &&
+                  pNextBox->BxAbstractBox->AbBox)
                 {
-                case LtPageColBreak:
-                  width = 0;
-                  height = 0;
-                  break;
-                case LtText:
-                  GiveTextSize (pAb, frame, &width, &height, &nSpaces);
-		  
-                  /* Si la boite est justifiee */
-                  if (pBox->BxSpaceWidth != 0)
-                    {
-                      i = pBox->BxSpaceWidth - BoxCharacterWidth (SPACE, 1, pBox->BxFont);
-                      /* On prend la largeur justifiee */
-                      width = width + i * nSpaces + pBox->BxNPixels;
-                      /* width shift */
-                      adjustDelta = width - pBox->BxW;
-                    }
-                  /* character shift */
-                  charDelta = pAb->AbVolume - pBox->BxNChars;
-                  /* space shift */
-                  nSpaces -= pBox->BxNSpaces;
-                  pBox->BxBuffer = pAb->AbText;
-                  break;
-                case LtPicture:
-                  if (pAb->AbChange)
-                    {
-                      /* the picture change, RAZ the structure */
-                      CleanPictInfo ((ThotPictInfo *) pBox->BxPictInfo);
-                      if (pAb->AbWidth.DimAbRef == NULL &&  pAb->AbWidth.DimValue == -1)
-                        {
-                          /* use the content width */
-                          pBox->BxWidth -= pBox->BxW;
-                          pBox->BxW = 0;
-                          pBox->BxVertRef = 0;
-                        }
-                      if (pAb->AbHeight.DimAbRef == NULL &&  pAb->AbHeight.DimValue == -1)
-                        {
-                          /* use the content height */
-                          pBox->BxHeight -= pBox->BxH;
-                          pBox->BxH = 0;
-                          pBox->BxHorizRef = 0;
-                        }
-                      SetCursorWatch (frame);
-                      LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
-                      ResetCursorWatch (frame);
-                      GivePictureSize (pAb, zoom, &width, &height);
-                    }
+                  if (pCurrentBox->BxType == BoPiece || pCurrentBox->BxType == BoScript)
+                    pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox->BxAbstractBox->AbBox;
                   else
-                    {
-                      width = pBox->BxW;
-                      height = pBox->BxH;
-                    }
-                  break;
-                case LtSymbol:
-                  GiveSymbolSize (pAb, &width, &height);
-                  break;
-                case LtGraphics:
-                  /* Si le trace graphique a change */
-                  if (pAb->AbChange)
-                    {
-                      /* Si transformation polyline en graphique simple */
-                      pAb->AbRealShape = pAb->AbShape;
-		      
-                      /* remonte a la recherche d'un ancetre elastique */
-                      pCurrentAb = pAb;
-                      while (pCurrentAb != NULL)
-                        {
-                          pCurrentBox = pCurrentAb->AbBox;
-                          if (pCurrentBox->BxHorizFlex || pCurrentBox->BxVertFlex)
-                            {
-                              MirrorShape (pAb, pCurrentBox->BxHorizInverted,
-                                           pCurrentBox->BxVertInverted,
-                                           FALSE);
-                              pCurrentAb = NULL;		/* on arrete */
-                            }
-                          else
-                            pCurrentAb = pCurrentAb->AbEnclosing;
-                        }
-                    }
-                  GiveGraphicSize (pAb, &width, &height);
-                  break;
-                case LtPolyLine:
-                  if (pAb->AbChange)
-                    {
-                      /* Libere les anciens buffers */
-                      FreePolyline (pBox);
-                      /* Recopie les buffers du pave */
-                      pBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
-                      pBox->BxNChars = pAb->AbVolume;
-		      
-                      /* remonte a la recherche d'un ancetre elastique */
-                      pCurrentAb = pAb;
-                      while (pCurrentAb != NULL)
-                        {
-                          pCurrentBox = pCurrentAb->AbBox;
-                          if (pCurrentBox->BxHorizFlex ||
-                              pCurrentBox->BxVertFlex)
-                            {
-                              MirrorShape (pAb,
-                                           pCurrentBox->BxHorizInverted,
-                                           pCurrentBox->BxVertInverted,
-                                           FALSE);
-                              /* on arrete */
-                              pCurrentAb = NULL;	
-                            }
-                          else
-                            pCurrentAb = pCurrentAb->AbEnclosing;
-                        }
-                    }
-                  GivePolylineSize (pAb, zoom, &width, &height);
-                  break;
-                case LtPath:
-                  /* by default don't change the size */
-                  width = pAb->AbBox->BxWidth;
-                  height = pAb->AbBox->BxHeight;
-                  if (pAb->AbChange)
-                    {
-                      /* free the old path descriptor */
-                      FreePath (pBox);
-                      /* copy the new one from the abstract box */
-                      pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
-                      pBox->BxNChars = pAb->AbVolume;
-                      if (pAb->AbEnclosing)
-                        {
-                          /* the direct parent is the SVG path element */
-                          pParent = pAb->AbEnclosing->AbEnclosing;
-                          while (pParent &&
-                                 TypeHasException (ExcIsGroup,
-                                                   pParent->AbElement->ElTypeNumber,
-                                                   pParent->AbElement->ElStructSchema))
-                            pParent = pParent->AbEnclosing;
-                          width = pParent->AbBox->BxWidth;
-                          height = pParent->AbBox->BxHeight;
-                          pAb->AbBox->BxWidth = width;
-                          pAb->AbBox->BxHeight = height;
-                          pParent = pAb->AbEnclosing;
-                          pParent->AbBox->BxWidth = width;
-                          pParent->AbBox->BxHeight = height;
-                        }
-                    }
-                  break;
-                default:
-                  break;
+                    pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox;
                 }
-	      
-              /* update the box  */
-              pDimAb = &pAb->AbWidth;
-              if (pDimAb->DimIsPosition)
-                width = 0;
-              else if (pDimAb->DimAbRef || pDimAb->DimValue >= 0)
-                width = 0;
-              else
-                width -= pBox->BxW;	/* width delta */
-              pDimAb = &pAb->AbHeight;
-              if (pDimAb->DimIsPosition)
-                height = 0;
-              else if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
-                height = 0;
-              else
-                height -= pBox->BxH;	/* height delta */
-              pLine = NULL;
-              /* the picture box width changed but not the
-                 block of lines */
-              if (pAb->AbLeafType == LtPicture || width || height ||
-                  pBox->BxType == BoMulScript)
-                {
-                  BoxUpdate (pBox, pLine, charDelta, nSpaces, width,
-                             adjustDelta, height, frame, FALSE);
-#ifdef _GL
-                  if (NeedToComputeABoundingBox (pAb, frame))
-                    {
-                      /* need to recompute almost this bounding box */
-                      *computeBBoxes = TRUE;
-                      pBox->BxBoundinBoxComputed = FALSE;
-                    }
-#endif /* _GL */
-                  if (pAb->AbLeafType == LtPicture)
-                    {
-                      DefBoxRegion (frame, pBox, -1, -1, -1, -1);
-                      if (pBlock)
-                        {
-                          RecomputeLines (pBlock, NULL, NULL, frame);
-                          /* we will have to pack enclosing box */
-                          if (pBlock->AbEnclosing)
-                            RecordEnclosing (pBlock->AbEnclosing->AbBox, FALSE);
-                        }
-                    }
-                  /* check enclosing cell */
-                  pCell = GetParentCell (pBox);
-                  if (pCell && width)
-                    UpdateColumnWidth (pCell, NULL, frame);
-                  result = TRUE;
-                }
-              else
-                result = FALSE;
             }
-
-          if (pAb->AbChange)
-            pAb->AbChange = FALSE;
-          if (pAb->AbSizeChange)
-            pAb->AbSizeChange = FALSE;
-        }
-
-      /* keep in memory previous width and height of the box */
-      savedW = width = pBox->BxW;
-      savedH = height = pBox->BxH;
-      pEl = pAb->AbElement;
-      pChild = NULL;
-      if (pEl)
-        {
-          isImg = TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema);
-          if (isImg && (pAb->AbWidthChange || pAb->AbHeightChange))
+          if (pNextBox == pMainBox)
+            /* last box in the list */
+            pCurrentBox->BxNext = NULL;
+          else
             {
-              // update all dimensions due to the ratio
-              pAb->AbWidthChange = TRUE;
-              pAb->AbHeightChange = TRUE;
-              // Need to update update the width/height of the enclosed PICTURE
-              pChild = pAb->AbFirstEnclosed;
-              found = FALSE;
-              while (!found && pChild)
+              /* forward link */
+              pCurrentBox->BxNext = pNextBox;
+              if ((pCurrentBox->BxType == BoPiece || pCurrentBox->BxType == BoScript) &&
+                  pCurrentBox->BxAbstractBox->AbBox)
                 {
-                  if (pChild->AbBox && !pChild->AbPresentationBox &&
-                      pChild->AbLeafType == LtPicture)
-                    {
-                      /* Update its width */
-                      imageDesc = (ThotPictInfo *) pChild->AbBox->BxPictInfo;
-                      found = TRUE;
-                    }
+                  if (pNextBox->BxType == BoPiece || pNextBox->BxType == BoScript)
+                    pCurrentBox->BxAbstractBox->AbBox->BxNext = pNextBox->BxAbstractBox->AbBox;
                   else
-                    pChild = pChild->AbNext;
+                    pCurrentBox->BxAbstractBox->AbBox->BxNext = pNextBox;
                 }
-              if (found)
-                box = pChild->AbBox;
             }
+      
+          /* Check table consistency */
+          if (isCell && pCurrentBox && pCurrentBox->BxAbstractBox)
+            UpdateColumnWidth (pCurrentBox->BxAbstractBox, NULL, frame);
+          /* check enclosing cell */
+          if (pCell && !IsDead (pAb) &&
+              (pAb->AbNext || (!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
+            UpdateColumnWidth (pCell, NULL, frame);
+          else if (pCell)
+            UpdateCellHeight (pCell, frame);
+          result = TRUE;
         }
       else
-        isImg = FALSE;
-      if (pAb->AbLeafType == LtPicture &&
-          (pAb->AbWidthChange || pAb->AbHeightChange))
         {
-          if (!pAb->AbWidthChange &&
-              !pAb->AbWidth.DimIsPosition &&
-              pAb->AbWidth.DimValue == -1 &&
-              pAb->AbWidth.DimAbRef == NULL)
-            /* due to the ratio, the width changes */
-            pBox->BxW = 0;
-          if (!pAb->AbHeightChange &&
-              !pAb->AbHeight.DimIsPosition &&
-              pAb->AbHeight.DimValue == -1 &&
-              pAb->AbHeight.DimAbRef == NULL)
-            /* due to the ratio, the height changes */
-            pBox->BxH = 0;
-        }
 
-      /* CHANGE WIDTH */
-      if (pAb->AbWidthChange)
-        {
-          AnyWidthUpdate = TRUE;
-          /* Remove the old value */
-          ClearDimRelation (pBox, TRUE, frame);
-          /* New width */
-          condition = ComputeDimRelation (pAb, frame, TRUE);
-          if (condition || (!pAb->AbWidth.DimIsPosition &&
-                            pAb->AbWidth.DimMinimum))
+          // zoom apply to SVG only
+          //if (pAb->AbElement && pAb->AbElement->ElStructSchema &&
+          //    pAb->AbElement->ElStructSchema->SsName &&
+          //    !strcmp (pAb->AbElement->ElStructSchema->SsName, "SVG"))
+          zoom = ViewFrameTable[frame - 1].FrMagnification;
+          //else
+          //   zoom = 0;
+
+          /* CHANGE BOX ASPECT */
+          if (pAb->AbAspectChange)
             {
-              switch (pAb->AbLeafType)
+              pAb->AbAspectChange = FALSE;
+              if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
                 {
-                case LtText:
-                  GiveTextSize (pAb, frame, &width, &height, &i);
-                  break;
-                case LtPicture:
-                  imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
-                  pBox->BxW = 0;
-                  LoadPicture (frame, pBox, imageDesc);
-                  GivePictureSize (pAb, zoom, &width, &height);
-                  break;
-                case LtSymbol:
-                  GiveSymbolSize (pAb, &width, &height);
-                  break;
-                case LtGraphics:
-                  GiveGraphicSize (pAb, &width, &height);
-                  break;
-                case LtCompound:
-                  if (pBox->BxType == BoBlock ||
-                      pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock)
+                  /* extend the clipping to the last piece when the box is split */
+                  pCurrentBox = pBox;
+                  result = TRUE;
+                  while (result)
                     {
-                      RecomputeLines (pAb, NULL, NULL, frame);
-                      width = pBox->BxW;
+                      if (pCurrentBox->BxNexChild == NULL)
+                        result = FALSE;
+                      else if (pCurrentBox->BxNexChild->BxNChars == 0)
+                        result = FALSE;
+                      else
+                        pCurrentBox = pCurrentBox->BxNexChild;
                     }
-                  else if (isCell)
-                    /* Check table consistency */
-                    UpdateColumnWidth (pAb, NULL, frame);
-                  else if (isImg && box && imageDesc)
-                    {
-                      // set to the default image size
-                      width = imageDesc->PicWidth;
-                      if (!pChild->AbWidth.DimIsPosition &&
-                          pChild->AbWidth.DimValue == -1 &&
-                          pChild->AbWidth.DimAbRef == NULL)
-                        {
-                          box->BxW = width;
-                          box->BxWidth = width;
-                        }
-                    }
-                  else
-                    GiveEnclosureSize (pAb, frame, &width, &height);
-                  break;
-                default:
-                  width = pBox->BxW;
-                  break;
                 }
-	      
-              /* Change the width of the contents */
-              if (!result)
-                result = width != savedW;
-              ChangeDefaultWidth (pBox, NULL, width, 0, frame);
-              // the width is updated
-              savedW = width;
-            }
-          else
-            {
-              /* the box width is constrained */
-              width = pBox->BxW;
-              savedW = width;
-              result = TRUE;
-            }
+              else if (pAb->AbLeafType == LtCompound)
+                {
+                  /* Is there a background image? */
+                  if (pAb->AbPictBackground != NULL)
+                    {
+                      /* force filling */
+                      pAb->AbFillBox = TRUE;
+                      /* load the picture */
+                      LoadPicture (frame, pBox, (ThotPictInfo *) pAb->AbPictBackground);
+                    }
+                }
+              else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
+                {
+                  /* update radius of the rectangle with rounded corners */
+                  ComputeRadius (pAb, frame, TRUE);
+                  ComputeRadius (pAb, frame, FALSE);
+                }
 
-          /* check auto margins */
-          CheckMBP (pAb, pCurrentBox, frame, TRUE);
-          if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
-              pAb->AbRxUnit == UnPercent)
-            /* update radius of the rectangle with rounded corners */
-            ComputeRadius (pAb, frame, TRUE);
+              /* Note if there is a border or a fill */
+              MarkDisplayedBox (pBox);
+              /* Is it a filled box? */
+              if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell &&
+                  pAb->AbEnclosing == NULL)
+                {
+                  /* root abstractbox */
+                  if (pBox->BxDisplay)
+                    SetMainWindowBackgroundColor (frame, pAb->AbBackground);
+                  else
+                    SetMainWindowBackgroundColor (frame, DefaultBColor);
+                }
+            }
+          /* CHANGE CHARACTER SIZE */
+          if (pAb->AbSizeChange)
+            {
+              /* check the effect */
+              pDimAb = &pAb->AbWidth;
+              if (!pDimAb->DimIsPosition)
+                {
+                  if (pDimAb->DimAbRef || pDimAb->DimValue >= 0)
+                    pAb->AbWidthChange = (pDimAb->DimUnit == UnRelative);
+                  if (pAb->AbHorizPos.PosAbRef != NULL)
+                    pAb->AbHorizPosChange = (pAb->AbHorizPos.PosUnit == UnRelative);
+                }
 	  
-          /* Check table consistency */
-          if (pCurrentBox->BxType == BoColumn)
-            UpdateTable (NULL, pAb, NULL, frame);
-          else if (pCurrentBox->BxType == BoCell)
-            UpdateColumnWidth (pAb, NULL, frame);
-          /* check enclosing cell */
-          pCell = GetParentCell (pCurrentBox);
-          if (pCell)
-            {
-              pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock, BoCellBlock);
-              if (pBlock != NULL)
-                RecomputeLines (pBlock, NULL, NULL, frame);
-              UpdateColumnWidth (pCell, NULL, frame);
-            }
-        }
-      /* CHANGE HEIGHT */
-      if (pAb->AbHeightChange)
-        {
-          /* Remove the old value */
-          ClearDimRelation (pBox, FALSE, frame);
-          /* New height */
-          condition = ComputeDimRelation (pAb, frame, FALSE);
-          if (condition ||
-              (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
-            {
-              switch (pAb->AbLeafType)
+              pDimAb = &pAb->AbHeight;
+              if (!pDimAb->DimIsPosition)
                 {
-                case LtText:
-                  GiveTextSize (pAb, frame, &width, &height, &i);
-                  break;
-                case LtPicture:
-                  imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
-                  pBox->BxH = 0;
-                  LoadPicture (frame, pBox, imageDesc);
-                  GivePictureSize (pAb, zoom, &width, &height);
-                  break;
-                case LtSymbol:
-                  GiveSymbolSize (pAb, &width, &height);
-                  break;
-                case LtGraphics:
-                  GiveGraphicSize (pAb, &width, &height);
-                  break;
-                case LtCompound:
+                  if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
+                    pAb->AbHeightChange = (pDimAb->DimUnit == UnRelative);
+                  if (pAb->AbVertPos.PosAbRef != NULL)
+                    pAb->AbVertPosChange = (pAb->AbVertPos.PosUnit == UnRelative);
+                }
+	    
+              pAb->AbHorizRefChange = (pAb->AbHorizRef.PosUnit == UnRelative);
+              pAb->AbVertRefChange = (pAb->AbVertRef.PosUnit == UnRelative);
+            }
+          /* CHANGE FLOAT/CLEAR */
+          if (pAb->AbFloatChange)
+            {
+              Propagate = ToChildren;
+              pAb->AbFloatChange = FALSE;
+              UpdateFloat (pAb, pParent, inLine || inLineFloat, frame, computeBBoxes);
+              /* Restore the propagation */
+              Propagate = savpropage;
+            }
+
+          /* CHANGE THE CONTENTS */
+          if (pAb->AbChange || pAb->AbSizeChange)
+            {
+              /* check the font of the abstract box */
+              height = pAb->AbSize;
+              unit = pAb->AbSizeUnit;
+              if (pAb->AbLeafType == LtText)
+                {
+                  if (pAb->AbElement->ElLanguage < TtaGetFirstUserLanguage ())
+                    /* ElLanguage is actually a script */
+                    pBox->BxFont = ThotLoadFont (TtaGetScript (pAb->AbLang),
+                                                 pAb->AbFont,
+                                                 FontStyleAndWeight(pAb),
+                                                 height, unit, frame);
+                  else
+                    pBox->BxFont = ThotLoadFont ('L', pAb->AbFont,
+                                                 FontStyleAndWeight(pAb),
+                                                 height, unit, frame);
+                }
+              else if (pAb->AbLeafType == LtSymbol)
+                pBox->BxFont = ThotLoadFont ('G', pAb->AbFont, FontStyleAndWeight (pAb),
+                                             height, unit, frame);
+              else
+                pBox->BxFont = ThotLoadFont ('L', 1, 0, height, unit, frame);
+	  
+              /* transmit underline and thickness */
+              pBox->BxUnderline = pAb->AbUnderline;
+              pBox->BxThickness = pAb->AbThickness;
+              if (pAb->AbLeafType == LtCompound)
+                {
+                  /* update a compound element */
                   if (pBox->BxType == BoBlock ||
-                      pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock)
-                    height = pBox->BxH;
-                  else if (isImg && box && imageDesc)
+                      pBox->BxType == BoFloatBlock ||
+                      pBox->BxType == BoCellBlock)
+                    /* update the current block of lines */
+                    RecomputeLines (pAb, NULL, pBox, frame);
+                }
+              else
+                {
+                  /* update a leaf element */
+                  switch (pAb->AbLeafType)
                     {
-                      // set to the default image size
-                      height = imageDesc->PicHeight;
-                      if (!pChild->AbHeight.DimIsPosition &&
-                          pChild->AbHeight.DimValue == -1 &&
-                          pChild->AbHeight.DimAbRef == NULL)
+                    case LtPageColBreak:
+                      width = 0;
+                      height = 0;
+                      break;
+                    case LtText:
+                      GiveTextSize (pAb, frame, &width, &height, &nSpaces);
+		  
+                      /* Si la boite est justifiee */
+                      if (pBox->BxSpaceWidth != 0)
                         {
-                          box->BxH = height;
-                          box->BxHeight = height;
+                          i = pBox->BxSpaceWidth - BoxCharacterWidth (SPACE, 1, pBox->BxFont);
+                          /* On prend la largeur justifiee */
+                          width = width + i * nSpaces + pBox->BxNPixels;
+                          /* width shift */
+                          adjustDelta = width - pBox->BxW;
                         }
+                      /* character shift */
+                      charDelta = pAb->AbVolume - pBox->BxNChars;
+                      /* space shift */
+                      nSpaces -= pBox->BxNSpaces;
+                      pBox->BxBuffer = pAb->AbText;
+                      break;
+                    case LtPicture:
+                      if (pAb->AbChange)
+                        {
+                          /* the picture change, RAZ the structure */
+                          CleanPictInfo ((ThotPictInfo *) pBox->BxPictInfo);
+                          if (pAb->AbWidth.DimAbRef == NULL &&  pAb->AbWidth.DimValue == -1)
+                            {
+                              /* use the content width */
+                              pBox->BxWidth -= pBox->BxW;
+                              pBox->BxW = 0;
+                              pBox->BxVertRef = 0;
+                            }
+                          if (pAb->AbHeight.DimAbRef == NULL &&  pAb->AbHeight.DimValue == -1)
+                            {
+                              /* use the content height */
+                              pBox->BxHeight -= pBox->BxH;
+                              pBox->BxH = 0;
+                              pBox->BxHorizRef = 0;
+                            }
+                          SetCursorWatch (frame);
+                          LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
+                          ResetCursorWatch (frame);
+                          GivePictureSize (pAb, zoom, &width, &height);
+                        }
+                      else
+                        {
+                          width = pBox->BxW;
+                          height = pBox->BxH;
+                        }
+                      break;
+                    case LtSymbol:
+                      GiveSymbolSize (pAb, &width, &height);
+                      break;
+                    case LtGraphics:
+                      /* Si le trace graphique a change */
+                      if (pAb->AbChange)
+                        {
+                          /* Si transformation polyline en graphique simple */
+                          pAb->AbRealShape = pAb->AbShape;
+		      
+                          /* remonte a la recherche d'un ancetre elastique */
+                          pCurrentAb = pAb;
+                          while (pCurrentAb != NULL)
+                            {
+                              pCurrentBox = pCurrentAb->AbBox;
+                              if (pCurrentBox->BxHorizFlex || pCurrentBox->BxVertFlex)
+                                {
+                                  MirrorShape (pAb, pCurrentBox->BxHorizInverted,
+                                               pCurrentBox->BxVertInverted,
+                                               FALSE);
+                                  pCurrentAb = NULL;		/* on arrete */
+                                }
+                              else
+                                pCurrentAb = pCurrentAb->AbEnclosing;
+                            }
+                        }
+                      GiveGraphicSize (pAb, &width, &height);
+                      break;
+                    case LtPolyLine:
+                      if (pAb->AbChange)
+                        {
+                          /* Libere les anciens buffers */
+                          FreePolyline (pBox);
+                          /* Recopie les buffers du pave */
+                          pBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
+                          pBox->BxNChars = pAb->AbVolume;
+		      
+                          /* remonte a la recherche d'un ancetre elastique */
+                          pCurrentAb = pAb;
+                          while (pCurrentAb != NULL)
+                            {
+                              pCurrentBox = pCurrentAb->AbBox;
+                              if (pCurrentBox->BxHorizFlex ||
+                                  pCurrentBox->BxVertFlex)
+                                {
+                                  MirrorShape (pAb,
+                                               pCurrentBox->BxHorizInverted,
+                                               pCurrentBox->BxVertInverted,
+                                               FALSE);
+                                  /* on arrete */
+                                  pCurrentAb = NULL;	
+                                }
+                              else
+                                pCurrentAb = pCurrentAb->AbEnclosing;
+                            }
+                        }
+                      GivePolylineSize (pAb, zoom, &width, &height);
+                      break;
+                    case LtPath:
+                      /* by default don't change the size */
+                      width = pAb->AbBox->BxWidth;
+                      height = pAb->AbBox->BxHeight;
+                      if (pAb->AbChange)
+                        {
+                          /* free the old path descriptor */
+                          FreePath (pBox);
+                          /* copy the new one from the abstract box */
+                          pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
+                          pBox->BxNChars = pAb->AbVolume;
+                          if (pAb->AbEnclosing)
+                            {
+                              /* the direct parent is the SVG path element */
+                              pParent = pAb->AbEnclosing->AbEnclosing;
+                              while (pParent &&
+                                     TypeHasException (ExcIsGroup,
+                                                       pParent->AbElement->ElTypeNumber,
+                                                       pParent->AbElement->ElStructSchema))
+                                pParent = pParent->AbEnclosing;
+                              width = pParent->AbBox->BxWidth;
+                              height = pParent->AbBox->BxHeight;
+                              pAb->AbBox->BxWidth = width;
+                              pAb->AbBox->BxHeight = height;
+                              pParent = pAb->AbEnclosing;
+                              pParent->AbBox->BxWidth = width;
+                              pParent->AbBox->BxHeight = height;
+                            }
+                        }
+                      break;
+                    default:
+                      break;
+                    }
+	      
+                  /* update the box  */
+                  pDimAb = &pAb->AbWidth;
+                  if (pDimAb->DimIsPosition)
+                    width = 0;
+                  else if (pDimAb->DimAbRef || pDimAb->DimValue >= 0)
+                    width = 0;
+                  else
+                    width -= pBox->BxW;	/* width delta */
+                  pDimAb = &pAb->AbHeight;
+                  if (pDimAb->DimIsPosition)
+                    height = 0;
+                  else if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
+                    height = 0;
+                  else
+                    height -= pBox->BxH;	/* height delta */
+                  pLine = NULL;
+                  /* the picture box width changed but not the
+                     block of lines */
+                  if (pAb->AbLeafType == LtPicture || width || height ||
+                      pBox->BxType == BoMulScript)
+                    {
+                      BoxUpdate (pBox, pLine, charDelta, nSpaces, width,
+                                 adjustDelta, height, frame, FALSE);
+#ifdef _GL
+                      if (NeedToComputeABoundingBox (pAb, frame))
+                        {
+                          /* need to recompute almost this bounding box */
+                          *computeBBoxes = TRUE;
+                          pBox->BxBoundinBoxComputed = FALSE;
+                        }
+#endif /* _GL */
+                      if (pAb->AbLeafType == LtPicture)
+                        {
+                          DefBoxRegion (frame, pBox, -1, -1, -1, -1);
+                          if (pBlock)
+                            {
+                              RecomputeLines (pBlock, NULL, NULL, frame);
+                              /* we will have to pack enclosing box */
+                              if (pBlock->AbEnclosing)
+                                RecordEnclosing (pBlock->AbEnclosing->AbBox, FALSE);
+                            }
+                        }
+                      /* check enclosing cell */
+                      pCell = GetParentCell (pBox);
+                      if (pCell && width)
+                        UpdateColumnWidth (pCell, NULL, frame);
+                      result = TRUE;
                     }
                   else
-                    GiveEnclosureSize (pAb, frame, &width, &height);
-                  break;
-                default:
-                  height = pBox->BxH;
-                  break;
+                    result = FALSE;
                 }
 
-              /* Change the height of the contents */
-              if (!result)
-                result = height != savedH;
-              /* force the reevaluation of the baseline */
-              ClearAxisRelation (pBox, FALSE);
-              /* new horizontal */
-              ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
-              ChangeDefaultHeight (pBox, NULL, height, frame);
-              // the height is updated
-              savedH = height;
+              if (pAb->AbChange)
+                pAb->AbChange = FALSE;
+              if (pAb->AbSizeChange)
+                pAb->AbSizeChange = FALSE;
+            }
+
+          /* keep in memory previous width and height of the box */
+          savedW = width = pBox->BxW;
+          savedH = height = pBox->BxH;
+          pEl = pAb->AbElement;
+          pChild = NULL;
+          if (pEl)
+            {
+              isImg = TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema);
+              if (isImg && (pAb->AbWidthChange || pAb->AbHeightChange))
+                {
+                  // update all dimensions due to the ratio
+                  pAb->AbWidthChange = TRUE;
+                  pAb->AbHeightChange = TRUE;
+                  // Need to update update the width/height of the enclosed PICTURE
+                  pChild = pAb->AbFirstEnclosed;
+                  found = FALSE;
+                  while (!found && pChild)
+                    {
+                      if (pChild->AbBox && !pChild->AbPresentationBox &&
+                          pChild->AbLeafType == LtPicture)
+                        {
+                          /* Update its width */
+                          imageDesc = (ThotPictInfo *) pChild->AbBox->BxPictInfo;
+                          found = TRUE;
+                        }
+                      else
+                        pChild = pChild->AbNext;
+                    }
+                  if (found)
+                    box = pChild->AbBox;
+                }
             }
           else
+            isImg = FALSE;
+          if (pAb->AbLeafType == LtPicture &&
+              (pAb->AbWidthChange || pAb->AbHeightChange))
             {
-              /* the box height is constrained */
-              height = pBox->BxH;
-              savedH = height;
-              result = TRUE;
+              if (!pAb->AbWidthChange &&
+                  !pAb->AbWidth.DimIsPosition &&
+                  pAb->AbWidth.DimValue == -1 &&
+                  pAb->AbWidth.DimAbRef == NULL)
+                /* due to the ratio, the width changes */
+                pBox->BxW = 0;
+              if (!pAb->AbHeightChange &&
+                  !pAb->AbHeight.DimIsPosition &&
+                  pAb->AbHeight.DimValue == -1 &&
+                  pAb->AbHeight.DimAbRef == NULL)
+                /* due to the ratio, the height changes */
+                pBox->BxH = 0;
             }
 
-          /* recheck auto and % margins */
-          CheckMBP (pAb, pCurrentBox, frame, TRUE);
-          if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
-              pAb->AbRyUnit == UnPercent)
-            /* update radius of the rectangle with rounded corners */
-            ComputeRadius (pAb, frame, FALSE);
-        }
-
-      if (isImg && pChild)
-        {
-          // Need to update update the width/height of the enclosed PICTURE
-          /* Update its width */
-          ClearDimRelation (pChild->AbBox, TRUE, frame);
-          ComputeDimRelation (pChild, frame, TRUE);
-          /* Update its height */
-          ClearDimRelation (pChild->AbBox, FALSE, frame);
-          ComputeDimRelation (pChild, frame, FALSE);
-          // regenerate the texture
-          LoadPicture (frame, pChild->AbBox,
-                       (ThotPictInfo *) pChild->AbBox->BxPictInfo);
-        }
-      else if (pAb->AbLeafType == LtPicture)
-        // regenerate the texture
-        LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
-
-      /* MARGIN PADDING BORDER */
-      if (pAb->AbMBPChange)
-        {
-          pAb->AbMBPChange = FALSE;
-          Propagate = ToAll;	/* On passe en mode normal de propagation */
-          if (CheckMBP (pAb, pBox, frame, TRUE))
+          /* CHANGE WIDTH */
+          if (pAb->AbWidthChange)
             {
+              AnyWidthUpdate = TRUE;
+              /* Remove the old value */
+              ClearDimRelation (pBox, TRUE, frame);
+              /* New width */
+              condition = ComputeDimRelation (pAb, frame, TRUE);
+              if (condition || (!pAb->AbWidth.DimIsPosition &&
+                                pAb->AbWidth.DimMinimum))
+                {
+                  switch (pAb->AbLeafType)
+                    {
+                    case LtText:
+                      GiveTextSize (pAb, frame, &width, &height, &i);
+                      break;
+                    case LtPicture:
+                      imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
+                      pBox->BxW = 0;
+                      LoadPicture (frame, pBox, imageDesc);
+                      GivePictureSize (pAb, zoom, &width, &height);
+                      break;
+                    case LtSymbol:
+                      GiveSymbolSize (pAb, &width, &height);
+                      break;
+                    case LtGraphics:
+                      GiveGraphicSize (pAb, &width, &height);
+                      break;
+                    case LtCompound:
+                      if (pBox->BxType == BoBlock ||
+                          pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock)
+                        {
+                          RecomputeLines (pAb, NULL, NULL, frame);
+                          width = pBox->BxW;
+                        }
+                      else if (isCell)
+                        /* Check table consistency */
+                        UpdateColumnWidth (pAb, NULL, frame);
+                      else if (isImg && box && imageDesc)
+                        {
+                          // set to the default image size
+                          width = imageDesc->PicWidth;
+                          if (!pChild->AbWidth.DimIsPosition &&
+                              pChild->AbWidth.DimValue == -1 &&
+                              pChild->AbWidth.DimAbRef == NULL)
+                            {
+                              box->BxW = width;
+                              box->BxWidth = width;
+                            }
+                        }
+                      else
+                        GiveEnclosureSize (pAb, frame, &width, &height);
+                      break;
+                    default:
+                      width = pBox->BxW;
+                      break;
+                    }
+	      
+                  /* Change the width of the contents */
+                  if (!result)
+                    result = width != savedW;
+                  ChangeDefaultWidth (pBox, NULL, width, 0, frame);
+                  // the width is updated
+                  savedW = width;
+                }
+              else
+                {
+                  /* the box width is constrained */
+                  width = pBox->BxW;
+                  savedW = width;
+                  result = TRUE;
+                }
+
+              /* check auto margins */
+              CheckMBP (pAb, pCurrentBox, frame, TRUE);
+              if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
+                  pAb->AbRxUnit == UnPercent)
+                /* update radius of the rectangle with rounded corners */
+                ComputeRadius (pAb, frame, TRUE);
+	  
               /* Check table consistency */
               if (pCurrentBox->BxType == BoColumn)
                 UpdateTable (NULL, pAb, NULL, frame);
@@ -4608,163 +4497,281 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                 UpdateColumnWidth (pAb, NULL, frame);
               /* check enclosing cell */
               pCell = GetParentCell (pCurrentBox);
-              if (pBlock)
-                {
-                  /* update the enclosing block of line */
-                  Propagate = ToChildren;
-                  RecomputeLines (pBlock, NULL, NULL, frame);
-                }
               if (pCell)
-                UpdateColumnWidth (pCell, NULL, frame);
+                {
+                  pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock, BoCellBlock);
+                  if (pBlock != NULL)
+                    RecomputeLines (pBlock, NULL, NULL, frame);
+                  UpdateColumnWidth (pCell, NULL, frame);
+                }
+            }
+          /* CHANGE HEIGHT */
+          if (pAb->AbHeightChange)
+            {
+              /* Remove the old value */
+              ClearDimRelation (pBox, FALSE, frame);
+              /* New height */
+              condition = ComputeDimRelation (pAb, frame, FALSE);
+              if (condition ||
+                  (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
+                {
+                  switch (pAb->AbLeafType)
+                    {
+                    case LtText:
+                      GiveTextSize (pAb, frame, &width, &height, &i);
+                      break;
+                    case LtPicture:
+                      imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
+                      pBox->BxH = 0;
+                      LoadPicture (frame, pBox, imageDesc);
+                      GivePictureSize (pAb, zoom, &width, &height);
+                      break;
+                    case LtSymbol:
+                      GiveSymbolSize (pAb, &width, &height);
+                      break;
+                    case LtGraphics:
+                      GiveGraphicSize (pAb, &width, &height);
+                      break;
+                    case LtCompound:
+                      if (pBox->BxType == BoBlock ||
+                          pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock)
+                        height = pBox->BxH;
+                      else if (isImg && box && imageDesc)
+                        {
+                          // set to the default image size
+                          height = imageDesc->PicHeight;
+                          if (!pChild->AbHeight.DimIsPosition &&
+                              pChild->AbHeight.DimValue == -1 &&
+                              pChild->AbHeight.DimAbRef == NULL)
+                            {
+                              box->BxH = height;
+                              box->BxHeight = height;
+                            }
+                        }
+                      else
+                        GiveEnclosureSize (pAb, frame, &width, &height);
+                      break;
+                    default:
+                      height = pBox->BxH;
+                      break;
+                    }
+
+                  /* Change the height of the contents */
+                  if (!result)
+                    result = height != savedH;
+                  /* force the reevaluation of the baseline */
+                  ClearAxisRelation (pBox, FALSE);
+                  /* new horizontal */
+                  ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
+                  ChangeDefaultHeight (pBox, NULL, height, frame);
+                  // the height is updated
+                  savedH = height;
+                }
               else
                 {
-                  table = GetParentTable (pCurrentBox);
-                  if (table)
-                    UpdateTable (table, NULL, NULL, frame);
+                  /* the box height is constrained */
+                  height = pBox->BxH;
+                  savedH = height;
+                  result = TRUE;
                 }
+
+              /* recheck auto and % margins */
+              CheckMBP (pAb, pCurrentBox, frame, TRUE);
+              if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
+                  pAb->AbRyUnit == UnPercent)
+                /* update radius of the rectangle with rounded corners */
+                ComputeRadius (pAb, frame, FALSE);
             }
 
-          /* do we have to register that box as filled box */
-          if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell)
-            MarkDisplayedBox (pBox);
-          /* Restore the propagation */
-          Propagate = savpropage;
-          result = TRUE;
-        }
+          if (isImg && pChild)
+            {
+              // Need to update update the width/height of the enclosed PICTURE
+              /* Update its width */
+              ClearDimRelation (pChild->AbBox, TRUE, frame);
+              ComputeDimRelation (pChild, frame, TRUE);
+              /* Update its height */
+              ClearDimRelation (pChild->AbBox, FALSE, frame);
+              ComputeDimRelation (pChild, frame, FALSE);
+              // regenerate the texture
+              LoadPicture (frame, pChild->AbBox,
+                           (ThotPictInfo *) pChild->AbBox->BxPictInfo);
+            }
+          else if (pAb->AbLeafType == LtPicture)
+            // regenerate the texture
+            LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
 
-      if (ExtraFlow (pBox, frame))
-        {
-          /* ignore position rules */
-          pAb->AbHorizPosChange = FALSE;
-          pAb->AbVertPosChange = FALSE;
-        }
-      /* CHANGE HORIZONTAL POSITION */
-      if (pAb->AbHorizPosChange)
-        {
-          AnyWidthUpdate = TRUE;
-          /* Les cas de coherence sur les boites elastiques */
-          /* Les reperes Position et Dimension doivent etre differents */
-          /* Ces reperes ne peuvent pas etre l'axe de reference        */
-          if (pAb->AbWidth.DimIsPosition
-              && (pAb->AbHorizPos.PosEdge == pAb->AbWidth.DimPosition.PosEdge
-                  || pAb->AbHorizPos.PosEdge == VertMiddle
-                  || pAb->AbHorizPos.PosEdge == VertRef))
+          /* MARGIN PADDING BORDER */
+          if (pAb->AbMBPChange)
             {
-              if (pAb->AbWidth.DimPosition.PosEdge == Left)
-                pAb->AbHorizPos.PosEdge = Right;
-              else if (pAb->AbWidth.DimPosition.PosEdge == Right)
-                pAb->AbHorizPos.PosEdge = Left;
-              pAb->AbHorizPosChange = FALSE;
-            }
-          else if (pAb->AbEnclosing == NULL)
-            condition = TRUE;
-          else if (pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-                   pAb->AbEnclosing->AbBox->BxType == BoBlock ||
-                   pAb->AbEnclosing->AbBox->BxType == BoCellBlock ||
-                   pAb->AbEnclosing->AbBox->BxType == BoGhost ||
-                   pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
-            /* the positioning rule is ignored */
-            condition = !pAb->AbHorizEnclosing;
-          else
-            condition = TRUE;
-          if (condition)
-            {
-              /* remove the old horizontal position */
-              ClearPosRelation (pBox, TRUE);
-              if (pAb->AbHorizPos.PosAbRef && pAb->AbHorizPos.PosAbRef == pAb->AbPrevious)
-                while (pAb->AbHorizPos.PosAbRef && ExtraAbFlow (pAb, frame))
-                  {
-                    pAb->AbHorizPos.PosAbRef = pAb->AbHorizPos.PosAbRef->AbPrevious;
-                    if (pAb->AbHorizPos.PosAbRef && pAb->AbHorizPos.PosAbRef->AbDead)
-                      pAb->AbHorizPos.PosAbRef = pAb->AbHorizPos.PosAbRef->AbPrevious;
-                  }
-              /* new horizontal position */
-              ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
-              result = TRUE;
-            }
-          else
-            pAb->AbHorizPosChange = FALSE;
-        }
-      /* CHANGE VERTICAL POSITION */
-      if (pAb->AbVertPosChange)
-        {
-          /* Les cas de coherence sur les boites elastiques */
-          /* Les reperes Position et Dimension doivent etre differents */
-          /* Ces reperes ne peuvent pas etre l'axe de reference        */
-          if (pAb->AbHeight.DimIsPosition &&
-              (pAb->AbVertPos.PosEdge == pAb->AbHeight.DimPosition.PosEdge ||
-               pAb->AbVertPos.PosEdge == HorizMiddle ||
-               pAb->AbVertPos.PosEdge == HorizRef))
-            {
-              if (pAb->AbHeight.DimPosition.PosEdge == Top)
-                pAb->AbVertPos.PosEdge = Bottom;
-              else if (pAb->AbHeight.DimPosition.PosEdge == Bottom)
-                pAb->AbVertPos.PosEdge = Top;
-              pAb->AbVertPosChange = FALSE;
-            }
-          else if (pAb->AbEnclosing == NULL || !pAb->AbVertEnclosing)
-            condition = TRUE;
-          else if (pAb->AbEnclosing->AbBox->BxType == BoBlock ||
-                   pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-                   pAb->AbEnclosing->AbBox->BxType == BoCellBlock ||
-                   pAb->AbEnclosing->AbBox->BxType == BoGhost ||
-                    pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
-            {
-              /* the position depends on the line? */
-              if (!pAb->AbHorizEnclosing && pBox->BxNChars > 0)
+              pAb->AbMBPChange = FALSE;
+              Propagate = ToAll;	/* On passe en mode normal de propagation */
+              if (CheckMBP (pAb, pBox, frame, TRUE))
                 {
-                  pPosAb = &pAb->AbVertPos;
-                  pLine = SearchLine (pBox, frame);
-                  if (pLine)
+                  /* Check table consistency */
+                  if (pCurrentBox->BxType == BoColumn)
+                    UpdateTable (NULL, pAb, NULL, frame);
+                  else if (pCurrentBox->BxType == BoCell)
+                    UpdateColumnWidth (pAb, NULL, frame);
+                  /* check enclosing cell */
+                  pCell = GetParentCell (pCurrentBox);
+                  if (pBlock)
                     {
-                      i = GetPixelValue (pPosAb->PosDistance,
-                                         pPosAb->PosUnit, pAb->AbBox->BxW, pAb, zoom);
-                      i += GetPixelValue (pPosAb->PosDistDelta,
-                                          pPosAb->PosDeltaUnit, pAb->AbBox->BxW, pAb, zoom);
-                      pLine->LiYOrg += i;
-                      EncloseInLine (pBox, frame, pAb->AbEnclosing);
+                      /* update the enclosing block of line */
+                      Propagate = ToChildren;
+                      RecomputeLines (pBlock, NULL, NULL, frame);
+                    }
+                  if (pCell)
+                    UpdateColumnWidth (pCell, NULL, frame);
+                  else
+                    {
+                      table = GetParentTable (pCurrentBox);
+                      if (table)
+                        UpdateTable (table, NULL, NULL, frame);
                     }
                 }
-              condition = FALSE;
-            }
-          else
-            condition = TRUE;
-	  
-          if (condition)
-            {
-              /* remove the old vertical position */
-              ClearPosRelation (pBox, FALSE);
-              if (pAb->AbVertPos.PosAbRef && pAb->AbVertPos.PosAbRef == pAb->AbPrevious)
-              while (pAb->AbVertPos.PosAbRef && ExtraAbFlow (pAb, frame))
-                {
-                  pAb->AbVertPos.PosAbRef = pAb->AbVertPos.PosAbRef->AbPrevious;
-                    if (pAb->AbVertPos.PosAbRef && pAb->AbVertPos.PosAbRef->AbDead)
-                      pAb->AbVertPos.PosAbRef = pAb->AbVertPos.PosAbRef->AbPrevious;
-                }
-              /* new vertical position */
-              ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
+
+              /* do we have to register that box as filled box */
+              if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell)
+                MarkDisplayedBox (pBox);
+              /* Restore the propagation */
+              Propagate = savpropage;
               result = TRUE;
             }
-          else
-            pAb->AbVertPosChange = FALSE;
-        }
-      /* CHANGE HORIZONTAL AXIS */
-      if (pAb->AbHorizRefChange)
-        {
-          /* remove the old horizontal axis */
-          ClearAxisRelation (pBox, FALSE);
-          /* new horizontal */
-          ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
-          result = TRUE;
-        }
-      /* CHANGE VERTICAL AXIS */
-      if (pAb->AbVertRefChange)
-        {
-          /* remove the vertical axis */
-          ClearAxisRelation (pBox, TRUE);
-          /* new vertical axis */
-          ComputeAxisRelation (pAb->AbVertRef, pBox, frame, TRUE);
-          result = TRUE;
+
+          if (ExtraFlow (pBox, frame))
+            {
+              /* ignore position rules */
+              pAb->AbHorizPosChange = FALSE;
+              pAb->AbVertPosChange = FALSE;
+            }
+          /* CHANGE HORIZONTAL POSITION */
+          if (pAb->AbHorizPosChange)
+            {
+              AnyWidthUpdate = TRUE;
+              /* Les cas de coherence sur les boites elastiques */
+              /* Les reperes Position et Dimension doivent etre differents */
+              /* Ces reperes ne peuvent pas etre l'axe de reference        */
+              if (pAb->AbWidth.DimIsPosition
+                  && (pAb->AbHorizPos.PosEdge == pAb->AbWidth.DimPosition.PosEdge
+                      || pAb->AbHorizPos.PosEdge == VertMiddle
+                      || pAb->AbHorizPos.PosEdge == VertRef))
+                {
+                  if (pAb->AbWidth.DimPosition.PosEdge == Left)
+                    pAb->AbHorizPos.PosEdge = Right;
+                  else if (pAb->AbWidth.DimPosition.PosEdge == Right)
+                    pAb->AbHorizPos.PosEdge = Left;
+                  pAb->AbHorizPosChange = FALSE;
+                }
+              else if (pAb->AbEnclosing == NULL)
+                condition = TRUE;
+              else if (pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+                       pAb->AbEnclosing->AbBox->BxType == BoBlock ||
+                       pAb->AbEnclosing->AbBox->BxType == BoCellBlock ||
+                       pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+                       pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
+                /* the positioning rule is ignored */
+                condition = !pAb->AbHorizEnclosing;
+              else
+                condition = TRUE;
+              if (condition)
+                {
+                  /* remove the old horizontal position */
+                  ClearPosRelation (pBox, TRUE);
+                  if (pAb->AbHorizPos.PosAbRef && pAb->AbHorizPos.PosAbRef == pAb->AbPrevious)
+                    while (pAb->AbHorizPos.PosAbRef && ExtraAbFlow (pAb, frame))
+                      {
+                        pAb->AbHorizPos.PosAbRef = pAb->AbHorizPos.PosAbRef->AbPrevious;
+                        if (pAb->AbHorizPos.PosAbRef && pAb->AbHorizPos.PosAbRef->AbDead)
+                          pAb->AbHorizPos.PosAbRef = pAb->AbHorizPos.PosAbRef->AbPrevious;
+                      }
+                  /* new horizontal position */
+                  ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
+                  result = TRUE;
+                }
+              else
+                pAb->AbHorizPosChange = FALSE;
+            }
+          /* CHANGE VERTICAL POSITION */
+          if (pAb->AbVertPosChange)
+            {
+              /* Les cas de coherence sur les boites elastiques */
+              /* Les reperes Position et Dimension doivent etre differents */
+              /* Ces reperes ne peuvent pas etre l'axe de reference        */
+              if (pAb->AbHeight.DimIsPosition &&
+                  (pAb->AbVertPos.PosEdge == pAb->AbHeight.DimPosition.PosEdge ||
+                   pAb->AbVertPos.PosEdge == HorizMiddle ||
+                   pAb->AbVertPos.PosEdge == HorizRef))
+                {
+                  if (pAb->AbHeight.DimPosition.PosEdge == Top)
+                    pAb->AbVertPos.PosEdge = Bottom;
+                  else if (pAb->AbHeight.DimPosition.PosEdge == Bottom)
+                    pAb->AbVertPos.PosEdge = Top;
+                  pAb->AbVertPosChange = FALSE;
+                }
+              else if (pAb->AbEnclosing == NULL || !pAb->AbVertEnclosing)
+                condition = TRUE;
+              else if (pAb->AbEnclosing->AbBox->BxType == BoBlock ||
+                       pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+                       pAb->AbEnclosing->AbBox->BxType == BoCellBlock ||
+                       pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+                       pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
+                {
+                  /* the position depends on the line? */
+                  if (!pAb->AbHorizEnclosing && pBox->BxNChars > 0)
+                    {
+                      pPosAb = &pAb->AbVertPos;
+                      pLine = SearchLine (pBox, frame);
+                      if (pLine)
+                        {
+                          i = GetPixelValue (pPosAb->PosDistance,
+                                             pPosAb->PosUnit, pAb->AbBox->BxW, pAb, zoom);
+                          i += GetPixelValue (pPosAb->PosDistDelta,
+                                              pPosAb->PosDeltaUnit, pAb->AbBox->BxW, pAb, zoom);
+                          pLine->LiYOrg += i;
+                          EncloseInLine (pBox, frame, pAb->AbEnclosing);
+                        }
+                    }
+                  condition = FALSE;
+                }
+              else
+                condition = TRUE;
+	  
+              if (condition)
+                {
+                  /* remove the old vertical position */
+                  ClearPosRelation (pBox, FALSE);
+                  if (pAb->AbVertPos.PosAbRef && pAb->AbVertPos.PosAbRef == pAb->AbPrevious)
+                    while (pAb->AbVertPos.PosAbRef && ExtraAbFlow (pAb, frame))
+                      {
+                        pAb->AbVertPos.PosAbRef = pAb->AbVertPos.PosAbRef->AbPrevious;
+                        if (pAb->AbVertPos.PosAbRef && pAb->AbVertPos.PosAbRef->AbDead)
+                          pAb->AbVertPos.PosAbRef = pAb->AbVertPos.PosAbRef->AbPrevious;
+                      }
+                  /* new vertical position */
+                  ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
+                  result = TRUE;
+                }
+              else
+                pAb->AbVertPosChange = FALSE;
+            }
+          /* CHANGE HORIZONTAL AXIS */
+          if (pAb->AbHorizRefChange)
+            {
+              /* remove the old horizontal axis */
+              ClearAxisRelation (pBox, FALSE);
+              /* new horizontal */
+              ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
+              result = TRUE;
+            }
+          /* CHANGE VERTICAL AXIS */
+          if (pAb->AbVertRefChange)
+            {
+              /* remove the vertical axis */
+              ClearAxisRelation (pBox, TRUE);
+              /* new vertical axis */
+              ComputeAxisRelation (pAb->AbVertRef, pBox, frame, TRUE);
+              result = TRUE;
+            }
         }
     }
 #ifdef _GL  
