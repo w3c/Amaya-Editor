@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2005
+ *  (c) COPYRIGHT INRIA 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1910,9 +1910,12 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
         /* check any inserted character */
         ExceptionNum (ExcCheckAllChars, True, False, False, wi);
         break;
+      case KWD_NewRoot:
+        /* Manage that node as a root element */
+        ExceptionNum (ExcNewRoot, True, False, False, wi);
       case KWD_Root:
         CurExtensRule = NewExtensionRule (wi, 0);
-        CurExtensRule->SrName[0] = '\0';
+        CurExtensRule->SrName[0] = EOS;
         break;
         /* end of case c */
       }

@@ -1,4 +1,4 @@
-		{ I. Vatton 	 November 1994-2002  }
+		{ . Vatton 	 Nonember 1994-2002  }
 
 STRUCTURE HTML;
 
@@ -1077,16 +1077,16 @@ EXCEPT
         ID :            CssId; {Default id attribute}
         Class:          CssClass, DuplicateAttr;
         External_Object: Hidden;
-        External_Object_Content: Hidden, NoSpellCheck;
+        External_Object_Content: Hidden, NoSpellCheck, NewRoot;
         Embed_:         NoBreakByReturn, NoReplicate, NoSpellCheck;
-        Embed_Content:  Hidden, NoSelect;
+        Embed_Content:  Hidden, NoSelect, NewRoot;
         Object:         NoBreakByReturn, NoReplicate, IsImg;
         Object_Content: Hidden, NoSelect, NoCreate, NoCut, NoBreakByReturn;
         Applet:         NoBreakByReturn, NoReplicate;
         Applet_Content: Hidden, NoSelect, NoCreate, NoCut, NoBreakByReturn;
         IFRAME:         NoBreakByReturn, NoReplicate, NoSpellCheck;
         Iframe_Content: Hidden, NoSelect, NoCut, NoBreakByReturn;
-        Iframe_Src_Content: Hidden, NoCut, NoSelect;
+        Iframe_Src_Content: Hidden, NoCut, NoSelect, NewRoot;
         Fieldset_Content: Hidden, NoSelect, NoCut, NoBreakByReturn;
         is_css:         Invisible;
         Start:          StartCounter;

@@ -2498,7 +2498,7 @@ EXCEPT
    script_:              NoMove, NoResize, NoShowBox, NoCreate;
    style__:       NoMove, NoResize, NoShowBox, NoCreate;
    switch:        NoMove, NoResize, NoShowBox, NoCreate, HighlightChildren;
-   foreignObject: MoveResize, HighlightChildren, NoCreate;
+   foreignObject: MoveResize, HighlightChildren, NoCreate, NewRoot;
    SVG_Image:     Hidden, SelectParent;
    GRAPHICS:            SelectParent;
    PICTURE:       NoMove, NoResize, SelectParent;

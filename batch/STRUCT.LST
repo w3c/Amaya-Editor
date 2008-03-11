@@ -140,7 +140,7 @@ number
 			 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
 			 'MarkupPreserve' / 'NotAnElementNode' / 'CheckAllChars' /
 	     'IsImg' / 'IsMap' / 'DuplicateAttr' / 'PseudoParag' /
-	     'GiveName' /
+	     'GiveName' / 'NewRoot' /
 			 ExceptNum .
    52	ExceptNum =	 NUMBER .
 	
@@ -283,7 +283,8 @@ code  key-word      numbers of rules using the key-word
 1202  DuplicateAttr        51
 1203  PseudoParag          51
 1204  GiveName             51
-1205  Root                 54
+1205  NewRoot              51
+1206  Root                 54
 
 
 

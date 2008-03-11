@@ -109,9 +109,10 @@
 #define ExcSetWindowBackground 345
 #define ExcIsGroup 346
 #define ExcSpacePreserve 347
+#define ExcNewRoot 348
 
 /* Template exceptions */
-#define ExcGiveName 348
+#define ExcGiveName 349
 
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400

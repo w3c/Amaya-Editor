@@ -5033,10 +5033,10 @@ static Element  SetExternalElementType (Element el, Document doc,
           elemContent = TtaNewElement (doc, elType);
           if (elemContent != NULL)
             {
+              attrType.AttrSSchema = elType.ElSSchema;
               TtaInsertSibling (elemContent, el, FALSE, doc);
               /* Remove the IntHeightPercent Thot attributes: this attribute
                  does not make sense for Thot. */
-              attrType.AttrSSchema = elType.ElSSchema;
               attrType.AttrTypeNum = HTML_ATTR_IntHeightPercent;
               attr = TtaGetAttribute (el, attrType);
               if (attr != NULL)

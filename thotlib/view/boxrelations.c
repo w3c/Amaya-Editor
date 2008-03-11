@@ -660,6 +660,8 @@ PtrAbstractBox GetEnclosingViewport (PtrAbstractBox pAb)
     {
       pAb = pAb->AbEnclosing;
       while (pAb &&
+             !TypeHasException (ExcNewRoot, pAb->AbElement->ElTypeNumber,
+                                pAb->AbElement->ElStructSchema) &&
              (pAb->AbLeafType != LtCompound ||
               pAb->AbPositioning == NULL ||
               pAb->AbPositioning->PnAlgorithm == PnInherit ||
