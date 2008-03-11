@@ -34,10 +34,9 @@ extern Element NewColumnHead ( Element lastcolhead,
                                Document doc,
                                ThotBool inMath,
                                ThotBool generateEmptyCells );
-extern ThotBool RemoveColumn ( Element colhead,
-                               Document doc,
-                               ThotBool ifEmpty,
-                               ThotBool inMath );
+extern void NewColElement ( Element colhead,
+                            ThotBool before,
+                            Document doc );
 extern Element NextTableRow ( Element row );
 extern void CheckAllRows ( Element table,
                            Document doc,
@@ -128,10 +127,9 @@ extern Element NewColumnHead ( Element lastcolhead,
                                  Document doc,
                                  ThotBool inMath,
                                  ThotBool generateEmptyCells );
-extern ThotBool RemoveColumn ( Element colhead,
-                                 Document doc,
-                                 ThotBool ifEmpty,
-                                 ThotBool inMath );
+extern void NewColElement ( Element colhead,
+                              ThotBool before,
+                              Document doc );
 extern Element NextTableRow ( Element row );
 extern void CheckAllRows ( Element table,
                              Document doc,

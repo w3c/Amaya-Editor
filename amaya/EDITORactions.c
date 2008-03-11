@@ -3967,6 +3967,8 @@ static void CreateColumn (Document doc, View view, ThotBool before)
             TtaSetDisplayMode (doc, DeferredDisplay);
           /* Create the column */
           elNew = NewColumnHead (colhead, before, FALSE, NULL, doc, inMath, TRUE);
+          if (elNew && !inMath)
+            NewColElement (elNew, before, doc);
           TtaSetDisplayMode (doc, dispMode);
           TtaSetDocumentModified (doc);
         }

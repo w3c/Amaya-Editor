@@ -30,14 +30,6 @@ extern void TtaExecuteMenuAction ( const char *actionName,
                                    Document doc,
                                    View view,
                                    ThotBool force );
-extern void TtaPostMenuAction ( const char *actionName,
-                                Document doc,
-                                View view,
-                                ThotBool force );
-extern void TtaPostMenuActionById ( int actionId,
-                                    Document doc,
-                                    View view,
-                                    ThotBool force );
 extern void TteAddMenu ( int view,
                          int menuID,
                          int itemsNumber,
@@ -144,14 +136,6 @@ extern void TtaExecuteMenuAction ( const char *actionName,
                                      Document doc,
                                      View view,
                                      ThotBool force );
-extern void TtaPostMenuAction ( const char *actionName,
-                                  Document doc,
-                                  View view,
-                                  ThotBool force );
-extern void TtaPostMenuActionById ( int actionId,
-                                      Document doc,
-                                      View view,
-                                      ThotBool force );
 extern void TteAddMenu ( int view,
                            int menuID,
                            int itemsNumber,
