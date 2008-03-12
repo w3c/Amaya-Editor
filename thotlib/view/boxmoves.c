@@ -3284,6 +3284,9 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                   box = box->BxNexChild;
                 }
             }
+          if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
+            // update the osition of floated boxes too
+            ShiftFloatingBoxes (pBox, delta, frame);
         }
 	  
       /* Check the validity of dependency rules */

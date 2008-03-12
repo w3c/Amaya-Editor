@@ -777,6 +777,9 @@ void ShowSelectedBox (int frame, ThotBool active)
           else
             pBox = NULL;
         }
+
+      if (pBox && (pBox->BxType == BoSplit || pBox->BxType == BoMulScript))
+        pBox = pBox->BxNexChild;
       if (pBox)
         {
 #ifdef _GL

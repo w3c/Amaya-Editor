@@ -594,7 +594,7 @@ static void MovingCommands (int code, Document doc, View view,
                         {
                           /* check if boxes are within the same line */
                           box = pBox;
-                          while (box && pLine == NULL)
+                          while (box && box->BxType != BoCell && pLine == NULL)
                             {
                               pLine = SearchLine (box, frame);
                               if (box->BxAbstractBox &&
@@ -605,7 +605,7 @@ static void MovingCommands (int code, Document doc, View view,
                             }
                           box = ibox;
                           if (pLine)
-                            while (box && pLine1 == NULL)
+                            while (box && box->BxType != BoCell && pLine1 == NULL)
                               {
                                 pLine1 = SearchLine (box, frame);
                                 if (box->BxAbstractBox &&

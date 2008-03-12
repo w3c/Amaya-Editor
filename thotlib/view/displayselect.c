@@ -487,7 +487,7 @@ void DrawBoxSelection (int frame, PtrBox pBox)
       else if (pBox->BxType == BoGhost)
         {
           pAb = pBox->BxAbstractBox;
-          if (pAb && pAb->AbDisplay == 'B')
+          //if (pAb && pAb->AbDisplay == 'B')
             {
               /* compute the redisplayed area */
               pChild = pAb->AbFirstEnclosed;
@@ -513,6 +513,8 @@ void DrawBoxSelection (int frame, PtrBox pBox)
                         yf = pChildBox->BxYOrg + pChildBox->BxHeight;
                         pChildBox = pChildBox->BxNexChild;
                       }
+                  else if (pChildBox->BxType == BoGhost)
+                    DrawBoxSelection (frame, pChildBox);
                   else if (!pChild->AbPresentationBox && pChildBox->BxType != BoGhost)
                     {
                       /* skip presentation boxes and ghosts */

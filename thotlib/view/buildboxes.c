@@ -2235,8 +2235,14 @@ static void AddFloatingBox (PtrAbstractBox pAb, int frame, ThotBool left)
             }
           while (pParent != pBlock && !ExtraAbFlow (pParent, frame))
             {
-              pParent->AbBox->BxType = BoFloatGhost;
-              pParent = pParent->AbEnclosing;
+              if (pParent->AbBox->BxType == BoGhost ||
+                  pParent->AbBox->BxType == BoFloatGhost)
+                pParent = pBlock;
+              else
+                {
+                  pParent->AbBox->BxType = BoFloatGhost;
+                  pParent = pParent->AbEnclosing;
+                }
             }
 
           /* the x position is out of the structure */
@@ -2367,7 +2373,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       zoom = ViewFrameTable[frame - 1].FrMagnification;
       //else
       //  zoom = 0;
-
       if (pAb->AbLeafType == LtCompound)
         pBox->BxType = boxType;
       /* pMainBox points to the root box of the view */
@@ -2418,9 +2423,9 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 
           if (pAb->AbLeafType == LtCompound)
             {
-              if (pBox->BxType == BoFloatGhost)
+              if (TypeHasException (ExcNewRoot, pAb->AbElement->ElTypeNumber, pSS))
                 {
-                  /* skipped element */
+                  /* that element cannot become a ghost */
                   inlineChildren = FALSE;
                   inlineFloatC = FALSE;
                   directParent = FALSE;
@@ -2460,16 +2465,18 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                   inlineChildren = inLine;
                   inlineFloatC = inLineFloat;
                 }
-              else if (inlineChildren && inLineFloat &&
-                       !inlineFloatC && pAb->AbClear == 'N'&&
+              else if ((inlineChildren || inlineFloatC) &&
+                       inLineFloat &&
+                       pAb->AbClear == 'N' &&
                        pAb->AbFloat == 'N' &&
-                       (pAb->AbPrevious && pAb->AbPrevious->AbFloat != 'N') &&
+                       //pAb->AbDisplay != 'B' &&
+                       //(pAb->AbPrevious && pAb->AbPrevious->AbFloat != 'N') &&
                        /* a positioned box cannot be a ghost */
                        !extraflow &&
                        pAb->AbFirstEnclosed &&
                        /* and not already registered as .... */
                        pBox->BxType != BoFloatGhost &&
-                       pBox->BxType != BoFloatBlock &&
+                       //pBox->BxType != BoFloatBlock &&
                        pBox->BxType != BoCellBlock &&
                        boxType != BoCell)
                 {
@@ -5283,7 +5290,8 @@ void CheckScrollingWidthHeight (int frame)
                            /* ignoge boxes with absolute or fixed positions */
                           pAb = GetEnclosingViewport (pBox->BxAbstractBox);
                           if (pAb == NULL ||
-                              pAb->AbPositioning->PnAlgorithm == PnRelative)
+                              (pAb->AbPositioning &&
+                               pAb->AbPositioning->PnAlgorithm == PnRelative))
                             xmax = pBox->BxClipX + pBox->BxClipW;
                         }
                       // check if a positioned box is out of the document
@@ -5302,7 +5310,8 @@ void CheckScrollingWidthHeight (int frame)
                           /* ignoge boxes with absolute or fixed positions */
                           pAb = GetEnclosingViewport (pBox->BxAbstractBox);
                           if (pAb == NULL ||
-                              pAb->AbPositioning->PnAlgorithm == PnRelative)
+                              (pAb->AbPositioning &&
+                               pAb->AbPositioning->PnAlgorithm == PnRelative))
                             xmax = pBox->BxXOrg + pBox->BxWidth;
                         }
                       // check if a positioned box is out of the document

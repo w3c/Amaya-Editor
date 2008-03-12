@@ -2267,8 +2267,20 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
     return;
   from = pFrom->AbBox;
   /* position in the frame */
-  xFrame = box->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
-  yFrame = box->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
+  if (box->BxBoundinBoxComputed)
+    {
+      xFrame = box->BxClipX;
+      yFrame = box->BxClipY;
+      width = box->BxClipW;
+      height = box->BxClipH;
+    }
+  else
+    {
+      xFrame = box->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
+      yFrame = box->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
+      width = box->BxWidth;
+      height = box->BxHeight;
+    }
   /* part of the top, left, bottom and right border which are visible */
   t = yFrame + et + from->BxTBorder - y;
   if (t > from->BxTBorder)
@@ -2276,20 +2288,18 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   l = xFrame + el + from->BxLBorder - x;
   if (l > from->BxLBorder)
     l = from->BxLBorder;
-  height = box->BxHeight;
-  b = y + h - yFrame - height + eb + from->BxBBorder;
   if (et < 0)
-    b -= et;
+    yFrame += et;
+  b = y + h - yFrame - height + eb + from->BxBBorder;
   if (b > from->BxBBorder)
     b = from->BxBBorder;
-  width = box->BxWidth;
   if (box->BxLMargin < 0)
     width += box->BxLMargin;
   if (er < 0)
     er = 0;
-  r = x + w + 1 - xFrame - width + er + from->BxRBorder;
   if (el < 0)
-    r -= el;
+    xFrame += el;
+  r = x + w + 1 - xFrame - width + er + from->BxRBorder;
   if (r > from->BxRBorder)
     r = from->BxRBorder;
   if (from->BxType == BoTable)

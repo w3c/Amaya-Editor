@@ -524,7 +524,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   int                 xbg, ybg, shiftx, shifty;
   int                 width = 0, height = 0;
   int                 wbg, hbg, pos;
-  int                 w, h, view;
+  int                 w, h, view, delta;
   int                 t, b, l, r, bt, bb, bl, br;
 #ifdef _GL
   int                 tex_bg_id = 0;
@@ -637,11 +637,19 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       bt = from->BxTBorder;
       br = from->BxRBorder;
       pLine = SearchLine (pBox, frame);
-      pParent = pFrom->AbEnclosing;
-      while (pParent->AbBox && pParent->AbBox->BxType == BoGhost)
-        pParent = pParent->AbEnclosing;
-      xd = pParent->AbBox->BxXOrg + pLine->LiXOrg + shiftx;
-      width =  pLine->LiXMax;
+      if (pLine)
+        {
+          pParent = pFrom->AbEnclosing;
+          while (pParent->AbBox && pParent->AbBox->BxType == BoGhost)
+            pParent = pParent->AbEnclosing;
+          xd = pParent->AbBox->BxXOrg + pLine->LiXOrg + shiftx;
+          width =  pLine->LiXMax;
+        }
+      else
+        {
+          xd = pBox->BxXOrg;
+          width = pBox->BxWidth;
+        }
     }
   else
     {
@@ -663,14 +671,14 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   /* clipping on the origin */
   if (xd < x)
     {
-      width = width - x + xd;
-      l = l - x + xd;
+      delta = x - xd;
+      width = width - delta;
       xd = x;
     }
   if (yd < y)
     {
-      height = height - y + yd;
-      t = t - y + yd;
+      delta = y - yd;
+      height = height - delta;
       yd = y;
     }
   /* clipping on the width */

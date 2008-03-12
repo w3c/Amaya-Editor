@@ -507,7 +507,11 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
               if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle ||
                   (pBox->BxAbstractBox->AbLeftMarginUnit == UnAuto &&
                    pBox->BxAbstractBox->AbRightMarginUnit == UnAuto))
-                delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
+                {
+                  // center only if there is enough space
+                  if (pLine->LiXMax > pLine->LiRealLength)
+                    delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
+                }
               else if (pBox->BxAbstractBox->AbHorizPos.PosEdge == Left)
                 delta = pLine->LiXMax - pLine->LiRealLength;
             }
@@ -530,7 +534,11 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
           if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle ||
               (pBox->BxAbstractBox->AbLeftMarginUnit == UnAuto &&
                pBox->BxAbstractBox->AbRightMarginUnit == UnAuto))
-            delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
+            {
+              // center only if there is enough space
+              if (pLine->LiXMax > pLine->LiRealLength)
+                delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
+            }
           else if (pBox->BxAbstractBox->AbHorizPos.PosEdge == Right)
             delta = pLine->LiXMax - pLine->LiRealLength;
         }
@@ -2407,6 +2415,22 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                       *full = FALSE;
                       still = FALSE;
                     }
+                  else if ((pBox->BxAbstractBox->AbNext == NULL &&
+                            (pBox->BxAbstractBox->AbEnclosing->AbDisplay == 'B' ||
+                             pBox->BxAbstractBox->AbEnclosing->AbInLine) &&
+                            pBox->BxAbstractBox->AbEnclosing->AbBox->BxType == BoGhost) ||
+                           (pNextBox && pNextBox->BxAbstractBox &&
+                            pNextBox->BxAbstractBox->AbPrevious == NULL &&
+                            pNextBox->BxAbstractBox->AbEnclosing &&
+                            pNextBox->BxAbstractBox->AbEnclosing->AbBox &&
+                            (pNextBox->BxAbstractBox->AbEnclosing->AbDisplay == 'B' ||
+                             pNextBox->BxAbstractBox->AbEnclosing->AbInLine) &&
+                            pNextBox->BxAbstractBox->AbEnclosing->AbBox->BxType == BoGhost))
+                    {
+                      // detect the end or the beginning of a ghost block
+                      *full = TRUE;
+                      still = FALSE;
+                    }
                 }
             }
           else
@@ -2686,6 +2710,22 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   pBox->BxAbstractBox->AbTypeNum == 0)
                 /* dont' cut just after a bullet */
                 still = TRUE;
+              else if ((pBox->BxAbstractBox->AbNext == NULL &&
+                        (pBox->BxAbstractBox->AbEnclosing->AbDisplay == 'B' ||
+                         pBox->BxAbstractBox->AbEnclosing->AbInLine) &&
+                        pBox->BxAbstractBox->AbEnclosing->AbBox->BxType == BoGhost) ||
+                       (pNextBox && pNextBox->BxAbstractBox &&
+                        pNextBox->BxAbstractBox->AbPrevious == NULL &&
+                        pNextBox->BxAbstractBox->AbEnclosing &&
+                        pNextBox->BxAbstractBox->AbEnclosing->AbBox &&
+                        (pNextBox->BxAbstractBox->AbEnclosing->AbDisplay == 'B' ||
+                         pNextBox->BxAbstractBox->AbEnclosing->AbInLine) &&
+                        pNextBox->BxAbstractBox->AbEnclosing->AbBox->BxType == BoGhost))
+                {
+                // detect the end or the beginning of a ghost block
+                  *full = TRUE;
+                  still = FALSE;
+                }
               else if (!pBox->BxAbstractBox->AbElement->ElTerminal &&
                        (pBox->BxAbstractBox->AbElement->ElTypeNumber == 0 ||
                         pNextBox == NULL ||
@@ -2709,18 +2749,6 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   /* only one compound box by line */
                   *full = TRUE;
                   still = FALSE;
-#ifdef IV
-                  if (pBox->BxAbstractBox->AbLeafType == LtCompound)
-                    {
-                      if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
-                          pBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle)
-                        pLine->LiXOrg += (pLine->LiXMax - pBox->BxWidth) / 2;
-
-                      if (pBox->BxAbstractBox->AbHorizPos.PosEdge == Right &&
-                          pBox->BxAbstractBox->AbHorizPos.PosRefEdge == Right)
-                        pLine->LiXOrg += (pLine->LiXMax - pBox->BxWidth);
-                    }
-#endif
                 }
             }
          else
@@ -3420,6 +3448,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
                 x += boxPrevL->BxLMargin;
               if (bw < boxPrevL->BxLMargin)
                 x = left + orgX;
+              y = boxPrevL->BxYOrg;
             }
           else if (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight &&
                    box->BxAbstractBox->AbFloat == 'R')
@@ -3429,6 +3458,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
                 x -= boxPrevR->BxRMargin;
               if (bw < boxPrevR->BxRMargin)
                 x = pBlock->BxWidth - right - bw + orgX;
+              y = boxPrevR->BxYOrg;
             }
         }
       else
