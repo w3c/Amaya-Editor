@@ -6734,6 +6734,18 @@
 <message xml:lang="en">Library '%s' can not be loaded.</message>
 <message xml:lang="fr">La bibliothèque '%s' ne peut être chargée.</message>
 </label>
+<label define="AM_TEMPLATE_ERR_INSTANCE">
+<message xml:lang="en">Can not convert an instance document to template.</message>
+<message xml:lang="fr">Conversion d'une instance en modèle impossible.</message>
+</label>
+<label define="AM_TEMPLATE_ERR_TEMPLATE">
+<message xml:lang="en">The document is already a template.</message>
+<message xml:lang="fr">Le document est déjà un modèle.</message>
+</label>
+<label define="AM_TEMPLATE_ERR_CREATION">
+<message xml:lang="en">Error in template creation:</message>
+<message xml:lang="fr">Erreur pendant la création du modèle:</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

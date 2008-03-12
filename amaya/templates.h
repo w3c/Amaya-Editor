@@ -8,6 +8,9 @@
 #include "MENUconf.h"
 
 
+#define Template_Current_Version "0.9"
+
+
 /* Structure of a template */
 struct _XTigerTemplate;
 typedef struct _XTigerTemplate *XTigerTemplate;

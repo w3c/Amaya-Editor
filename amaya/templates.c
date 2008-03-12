@@ -1510,10 +1510,18 @@ ThotBool TemplateAttrInMenu (NotifyAttribute * event)
     return FALSE;
 }
 
-/*----------------------------------------------------------------------
+void SaveDocumentAs (Document doc, View view);
 
+/*----------------------------------------------------------------------
+  CreateTemplateFromDocument
+  Create a template from the current document.
   ----------------------------------------------------------------------*/
 void CreateTemplateFromDocument(Document doc, View view)
 {
+  char buffer[MAX_LENGTH];
+  strcpy(buffer, DocumentURLs[doc]);
+  strcat(buffer, ".xtd");
+  DontReplaceOldDoc = TRUE;
+  CreateTemplate(doc, buffer);
 }
 

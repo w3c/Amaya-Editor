@@ -12,9 +12,8 @@
 
 #include "Elemlist.h"
 
-#include "AHTURLTools_f.h"
+#include "wxdialogapi_f.h"
 #include "EDITimage_f.h"
-#include "HTMLactions_f.h"
 #include "HTMLsave_f.h"
 #include "HTMLtable_f.h"
 #include "html2thot_f.h"
@@ -23,6 +22,7 @@
 #include "templateDeclarations_f.h"
 #include "templateInstantiate_f.h"
 #include "Templatebuilder_f.h"
+#include "templateLoad_f.h"
 #include "templateUtils_f.h"
 #include "fetchHTMLname_f.h"
 #include "Template.h"
@@ -195,19 +195,171 @@ Element Template_InsertBagChild (Document doc, Element el, Declaration decl, Tho
   return NULL;
 }
 
+
+/*----------------------------------------------------------------------
+  CreateTemplate
+  Create a template from any document.
+  ----------------------------------------------------------------------*/
+void CreateTemplate(Document doc, char *templatePath)
+{
+#ifdef TEMPLATES
+  Document          newdoc = 0;
+  Element           root, head, elem, xt, title, child, last;
+  ElementType       elType, xtType;
+  char             *localFile, *s;
+  ThotBool          changes = FALSE, mathPI;
+  SSchema           templSchema;
+  XTigerTemplate    t;
+  
+  if(IsTemplateInstanceDocument(doc))
+    {
+      ShowMessage(TtaGetMessage (AMAYA, AM_TEMPLATE_ERR_INSTANCE),
+          TtaGetMessage (AMAYA, AM_TEMPLATE_ERR_CREATION));
+      return;
+    }
+
+  if(IsTemplateDocument(doc))
+    {
+      ShowMessage(TtaGetMessage (AMAYA, AM_TEMPLATE_ERR_TEMPLATE),
+          TtaGetMessage (AMAYA, AM_TEMPLATE_ERR_CREATION));
+      return;
+    }
+  
+  
+  
+  if (!TtaHasUndoSequence (doc))
+    {
+      root = TtaGetRootElement(doc);
+      elType = TtaGetElementType (root);
+      // get the target document type
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      
+      TtaNewNature (doc, elType.ElSSchema,  NULL, "Template", "TemplateP");
+      TtaSetANamespaceDeclaration(doc, root, "xt", Template_URI);
+      templSchema = TtaGetSSchema("Template", doc);
+      TtaSetUriSSchema(templSchema, Template_URI);
+
+      // Do special stuff for HTML documents
+      if (strcmp (s, "HTML") == 0)
+        {
+          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+          TtaSetStructureChecking (FALSE, doc);
+
+          // Initialize the xt:head
+          elType.ElTypeNum = HTML_EL_HEAD;
+          head = TtaSearchTypedElement (elType, SearchInTree, root);
+          if(head)
+            {
+              xtType.ElSSchema = templSchema;
+              xtType.ElTypeNum = Template_EL_head;
+              xt = TtaNewElement(doc, xtType);
+              
+              elem = TtaGetLastChild(head);
+              if(elem)
+                  TtaInsertSibling(xt, elem, FALSE, doc);
+              else
+                  TtaInsertFirstChild(&xt, head, doc);
+              
+              SetAttributeStringValue(xt, Template_ATTR_version, Template_Current_Version);
+              SetAttributeStringValue(xt, Template_ATTR_templateVersion, "1.0");
+            }
+          
+          // Initialize the document title
+          elType.ElTypeNum = HTML_EL_TITLE;
+          title = TtaSearchTypedElement (elType, SearchInTree, root);
+          if(title)
+            {
+              // Create xt:use for title
+              xtType.ElTypeNum = Template_EL_useSimple;
+              xt = TtaNewElement(doc, xtType);
+              TtaInsertFirstChild(&xt, title, doc);
+              SetAttributeStringValue(xt, Template_ATTR_types, "string");
+              SetAttributeStringValue(xt, Template_ATTR_title, "title");
+              
+              // Move current title content to xt:use
+              last = NULL;
+              while(child = TtaGetLastChild(title), child!=NULL)
+                {
+                  if(child==xt)
+                    break;
+                  TtaRemoveTree(child, doc);
+                  if(last)
+                    TtaInsertSibling(child, last, FALSE, doc);
+                  else
+                    TtaInsertFirstChild(&child, xt, doc);
+                  last = child;
+                }
+            }
+
+          // Save HTML special changes
+          TtaSetStructureChecking (TRUE, doc);
+          TtaCloseUndoSequence (doc);
+          changes = TRUE;
+        }
+      
+      // Save document
+      TtaGetEnvBoolean ("GENERATE_MATHPI", &mathPI);
+      TtaSetEnvBoolean("GENERATE_MATHPI", TRUE, TRUE);
+      SaveDocumentToNewDoc(doc, newdoc, templatePath, &localFile);
+      TtaSetEnvBoolean("GENERATE_MATHPI", mathPI, TRUE);
+
+      // Revert HTML special changes
+      if(changes)
+        TtaUndoNoRedo (doc);
+      
+      TtaFreeMemory(localFile);
+      
+      TtaClearUndoHistory (doc);
+      RemoveParsingErrors (doc);
+
+      TtaFreeMemory(DocumentURLs[doc]);
+      DocumentURLs[doc] = TtaStrdup(templatePath);
+      
+      if(DocumentMeta[doc]==NULL)
+        DocumentMeta[doc] = DocumentMetaDataAlloc();
+      
+      DocumentMeta[doc]->method = CE_TEMPLATE;
+      if(DocumentMeta[doc]->initial_url)
+        {
+          TtaFreeMemory(DocumentMeta[doc]->initial_url);
+          DocumentMeta[doc]->initial_url = NULL;
+        }
+      TtaSetDocumentModified (doc);
+
+      // Load template-related infos :
+      // like LoadTemplate(..)
+      t = LookForXTigerTemplate(templatePath);
+      t->doc = doc;
+      Template_PrepareTemplate(t);
+      DocumentMeta[doc]->isTemplate = TRUE;
+//      DocumentTypes[doc] = docTemplate;
+      t->isLoaded = TRUE;
+
+#ifdef AMAYA_DEBUG  
+      DumpAllDeclarations();
+#endif /* AMAYA_DEBUG */
+      
+      /* Update the URL combo box */
+      AddURLInCombobox (DocumentURLs[doc], NULL, FALSE);
+      TtaSetTextZone (doc, 1, URL_list);
+      //
+    }  
+#endif /* TEMPLATES */  
+}
+
 /*----------------------------------------------------------------------
   CreateInstance
   basedoc is the displayed doc that launchs the creation of instance
   ----------------------------------------------------------------------*/
-void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
+void CreateInstance(char *templatePath, char *instancePath, int basedoc)
 {
 #ifdef TEMPLATES
   Document          doc = 0, newdoc = 0;
-  DocumentType      docType;
   ElementType       elType;
   Element           root, title, text;
   CHARSET           charset;
   char             *localFile, *s, *charsetname;
+  ThotBool          changes = FALSE;
 
   XTigerTemplate t = GetXTigerTemplate(templatePath);
   if (t == NULL)
@@ -224,37 +376,16 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
   else
     newdoc = basedoc;
 
-  localFile = GetLocalPath (newdoc, instancePath);
   if (!TtaHasUndoSequence (doc))
     {
-      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       root = TtaGetRootElement(doc);
       elType = TtaGetElementType (root);
       // get the target document type
       s = TtaGetSSchemaName (elType.ElSSchema);
+      // Do special stuff for HTML documents
       if (strcmp (s, "HTML") == 0)
-        docType = docHTML;
-      else if (strcmp (s, "SVG") == 0)
-        docType = docSVG;
-      else if (strcmp (s, "MathML") == 0)
-        docType = docMath;
-      else
-        docType = docXml;
-      // update all links
-      SetRelativeURLs (doc, instancePath, "", FALSE, FALSE, FALSE);
-
-      // prepare the new document view
-      TtaExtractName (instancePath, DirectoryName, DocumentName);
-      // save in the local path
-      switch (docType)
         {
-        case docSVG:
-          TtaExportDocumentWithNewLineNumbers (doc, localFile, "SVGT", FALSE);
-          break;
-        case docMath:
-          TtaExportDocumentWithNewLineNumbers (doc, localFile, "MathMLT", FALSE);
-          break;
-        case docHTML:
+          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
           // Initialize the document title
           elType.ElTypeNum = HTML_EL_TITLE;
           title = TtaSearchTypedElement (elType, SearchInTree, root);
@@ -277,7 +408,6 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
                 // Look for the first text child
                 TtaNextSibling (&text);
             }
-        
           // update the charset if needed
           charsetname = TtaGetEnvString ("DOCUMENT_CHARSET");
           charset = TtaGetCharset (charsetname);
@@ -289,28 +419,26 @@ void  CreateInstance(char *templatePath, char *instancePath, int basedoc)
               DocumentMeta[doc]->charset = TtaStrdup (charsetname);
               SetNamespacesAndDTD (doc);
             }
-
-          // export the document
-          if (TtaGetDocumentProfile(doc) == L_Xhtml11 ||
-              TtaGetDocumentProfile(doc) == L_Basic)
-            TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLT11", FALSE);
-          else
-            TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLTX", FALSE);
-          break;
-        default:
-          TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL, FALSE);
-          break;
+          // Save HTML special changes
+          TtaCloseUndoSequence (doc);
+          changes = TRUE;
         }
 
-      TtaCloseUndoSequence (doc);
-      TtaUndoNoRedo (doc);
+      // Save document
+      SaveDocumentToNewDoc(doc, newdoc, instancePath, &localFile);
+
+      // Revert HTML special changes
+      if(changes)
+        TtaUndoNoRedo (doc);
+      
+      TtaFreeMemory(localFile);
+
       TtaClearUndoHistory (doc);
       RemoveParsingErrors (doc);
       GetAmayaDoc (instancePath, NULL, basedoc, basedoc, CE_INSTANCE,
                    !DontReplaceOldDoc, NULL, NULL);
       TtaSetDocumentModified (newdoc);
     }
-  TtaFreeMemory (localFile);
 #endif /* TEMPLATES */
 }
 

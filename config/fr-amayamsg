@@ -473,3 +473,6 @@
 471 Fermer
 472 Le composant '%s' a une définition multiple.
 473 La bibliothèque '%s' ne peut être chargée.
+474 Conversion d'une instance en modèle impossible.
+475 Le document est déjà un modèle.
+476 Erreur pendant la création du modèle:

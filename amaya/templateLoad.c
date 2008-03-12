@@ -262,6 +262,46 @@ void Template_PreParseDeclarations (XTigerTemplate t, Element el)
 }
 
 
+/*----------------------------------------------------------------------
+  Template_PrepareTemplate: Prepare template after loading it
+  and before using it.
+  ----------------------------------------------------------------------*/
+void Template_PrepareTemplate(void* templ)
+{
+#ifdef TEMPLATES
+  XTigerTemplate   t = (XTigerTemplate)templ;
+  ForwardIterator  iter;
+  HashMapNode      node;
+  
+  Template_PreParseDeclarations(t, 0);
+
+  iter = HashMap_GetForwardIterator(t->libraries);
+  // Load dependancies
+  ITERATOR_FOREACH(iter, HashMapNode, node)
+    {
+      if(!Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem))
+        Template_AddError(t, TtaGetMessage(AMAYA, AM_TEMPLATE_ERR_BADLIB),
+              ((XTigerTemplate)node->elem)->name);
+    }
+
+  // Add standard libraries.
+  Template_AddStandardDependancies(t);
+  
+  // Propagate dependancy elements
+  ITERATOR_FOREACH(iter, HashMapNode, node)
+    Template_AddLibraryDeclarations (t, (XTigerTemplate)node->elem);
+
+  TtaFreeMemory(iter);
+
+  Template_ParseDeclarations  (t, 0);
+  Template_MoveUnknownDeclarationToXmlElement(t);
+  Template_FillDeclarations (t);
+  
+  Template_PreInstantiateComponents (t);
+  Template_CalcBlockLevel (t);
+#endif /* TEMPLATES */
+}
+
 
 /*----------------------------------------------------------------------
   LoadTemplate_callback: Called after loading a template.
@@ -334,33 +374,7 @@ ThotBool LoadTemplate (Document doc, char* templatename)
 
       if (t)
         {
-          Template_PreParseDeclarations(t, 0);
-
-          iter = HashMap_GetForwardIterator(t->libraries);
-          // Load dependancies
-          ITERATOR_FOREACH(iter, HashMapNode, node)
-            {
-              if(!Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem))
-                Template_AddError(t, TtaGetMessage(AMAYA, AM_TEMPLATE_ERR_BADLIB),
-                      ((XTigerTemplate)node->elem)->name);
-            }
-
-          // Add standard libraries.
-          Template_AddStandardDependancies(t);
-          
-          // Propagate dependancy elements
-          ITERATOR_FOREACH(iter, HashMapNode, node)
-            Template_AddLibraryDeclarations (t, (XTigerTemplate)node->elem);
-      
-          TtaFreeMemory(iter);
-
-          Template_ParseDeclarations  (t, 0);
-          Template_MoveUnknownDeclarationToXmlElement(t);
-          Template_FillDeclarations (t);
-          
-          Template_PreInstantiateComponents (t);
-          Template_CalcBlockLevel (t);
-          
+          Template_PrepareTemplate(t);
           ctx->t->isLoaded = TRUE;
 #ifdef AMAYA_DEBUG  
     printf("XTiger template %s loaded.\n", t->name);
@@ -417,30 +431,8 @@ ThotBool Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
     while (!ctx->isloaded)
       TtaHandlePendingEvents ();
 
-    Template_PreParseDeclarations(t, 0);
-
-    iter = HashMap_GetForwardIterator(t->libraries);
-    // Load dependancies
-    ITERATOR_FOREACH(iter, HashMapNode, node)
-      {
-        if(!Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem))
-          Template_AddError(t, TtaGetMessage(AMAYA, AM_TEMPLATE_ERR_BADLIB),
-                ((XTigerTemplate)node->elem)->name);
-      }
-
-    // Add standard libraries.
-    Template_AddStandardDependancies(t);
-
-    // Propagate dependancy elements
-    ITERATOR_FOREACH(iter, HashMapNode, node)
-      Template_AddLibraryDeclarations (t, (XTigerTemplate)node->elem);
-
-    TtaFreeMemory(iter);
-
-    Template_ParseDeclarations  (t, 0);
-    Template_FillDeclarations (t);
-    Template_PreInstantiateComponents (t);
-    Template_CalcBlockLevel (t);
+    Template_PrepareTemplate(t);
+    
     DocumentTypes[ctx->newdoc] = docTemplate;
     t->isLoaded = TRUE;
 

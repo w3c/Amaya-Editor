@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ShowMessage ( const char* message,
+                          const char* title );
 extern void ParseStyleDlgValues ( void *style_widget,
                                   char *cssRule );
 extern void DisplayStyleValue ( const char *property,
@@ -163,6 +165,8 @@ extern ThotBool CreateFontDlgWX ( ThotWindow parent,
 
 #else /* __STDC__ */
 
+extern void ShowMessage ( const char* message,
+                            const char* title );
 extern void ParseStyleDlgValues ( void *style_widget,
                                     char *cssRule );
 extern void DisplayStyleValue ( const char *property,

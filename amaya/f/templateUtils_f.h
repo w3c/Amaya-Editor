@@ -33,6 +33,10 @@ extern void DumpElementSubPath ( Element el,
 extern void DumpElementPath ( Element el );
 extern void DumpTemplateElement ( Element el,
                                   Document doc );
+extern ThotBool SaveDocumentToNewDoc ( Document doc,
+                                       Document newdoc,
+                                       char* newpath,
+                                       char** temppath );
 
 #else /* __STDC__ */
 
@@ -63,6 +67,10 @@ extern void DumpElementSubPath ( Element el,
 extern void DumpElementPath ( Element el );
 extern void DumpTemplateElement ( Element el,
                                     Document doc );
+extern ThotBool SaveDocumentToNewDoc ( Document doc,
+                                         Document newdoc,
+                                         char* newpath,
+                                         char** temppath );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

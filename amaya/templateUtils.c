@@ -9,6 +9,10 @@
 #include "Templatename.h"
 #include "templates_f.h"
 
+#include "AHTURLTools_f.h"
+#include "HTMLsave_f.h"
+
+
 #include <stdarg.h>
 
 /*----------------------------------------------------------------------
@@ -483,4 +487,61 @@ void DumpTemplateElement(Element el, Document doc)
             }
         }
     }
+}
+
+/*----------------------------------------------------------------------
+ * Save an opened document to a specified path in order to open.
+ * \param doc Original doc to save
+ * \param newdoc Document where reopen it
+ * \param newpath URI where save the doc
+ * \param temppath Path of temporary create file
+  ----------------------------------------------------------------------*/
+ThotBool SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath, char** temppath)
+{
+  ElementType   elType;
+  Element       root;
+  char         *localFile, *s;
+  ThotBool      res = FALSE;
+  
+  localFile = GetLocalPath (newdoc, newpath);
+  if (!TtaHasUndoSequence (doc))
+    {
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+
+      // update all links
+      SetRelativeURLs (doc, newpath, "", FALSE, FALSE, FALSE);
+      // prepare the new document view
+      TtaExtractName (newpath, DirectoryName, DocumentName);
+
+      root = TtaGetRootElement(doc);
+      elType = TtaGetElementType (root);
+      // get the target document type
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      if (strcmp (s, "HTML") == 0)
+        {
+          /* docType = docHTML; */
+          if (TtaGetDocumentProfile(doc) == L_Xhtml11 ||
+              TtaGetDocumentProfile(doc) == L_Basic)
+            res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLT11", FALSE);
+          else
+            res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLTX", FALSE);
+        }
+      else if (strcmp (s, "SVG") == 0)
+        /* docType = docSVG; */
+        res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "SVGT", FALSE);
+      else if (strcmp (s, "MathML") == 0)
+        /* docType = docMath; */
+        res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "MathMLT", FALSE);
+      else
+        /* docType = docXml; */
+        res = TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL, FALSE);
+
+      TtaCloseUndoSequence (doc);
+      TtaUndoNoRedo (doc);
+    }
+  if(temppath)
+    *temppath = localFile;
+  else
+    TtaFreeMemory(localFile);
+  return res;
 }

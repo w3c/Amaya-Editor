@@ -155,12 +155,15 @@ XTigerTemplate NewXTigerLibrary (const char *templatePath)
 
 /*----------------------------------------------------------------------
   Look for a XTiger library
+  Create it if not found.
   ----------------------------------------------------------------------*/
 XTigerTemplate LookForXTigerLibrary (const char *templatePath)
 { 
 #ifdef TEMPLATES
   XTigerTemplate t = NULL;
   
+  if (Templates_Map == NULL)
+    InitializeTemplateEnvironment ();
   t = (XTigerTemplate) HashMap_Get(Templates_Map, (void*)templatePath);
   if (!t)
   {
@@ -200,6 +203,31 @@ XTigerTemplate GetXTigerDocTemplate (Document doc)
   return NULL;
 #endif /* TEMPLATES */
 }
+
+
+/*----------------------------------------------------------------------
+  Look for a XTiger template
+  Create it if not found.
+  ----------------------------------------------------------------------*/
+XTigerTemplate LookForXTigerTemplate (const char *templatePath)
+{ 
+#ifdef TEMPLATES
+  XTigerTemplate t = NULL;
+  
+  if (Templates_Map == NULL)
+    InitializeTemplateEnvironment ();
+  t = (XTigerTemplate) HashMap_Get(Templates_Map, (void*)templatePath);
+  if (!t)
+  {
+    t = NewXTigerTemplate(templatePath);
+  }
+  return t;
+#else
+  return NULL;
+#endif /* TEMPLATES */
+}
+
+
 
 /*----------------------------------------------------------------------
   Template_AddStandardDependancies

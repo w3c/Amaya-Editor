@@ -18,6 +18,7 @@ extern void Template_ParseDeclarations ( XTigerTemplate t,
                                          Element el );
 extern void Template_PreParseDeclarations ( XTigerTemplate t,
                                             Element el );
+extern void Template_PrepareTemplate ( void* templ );
 extern ThotBool LoadTemplate ( Document doc,
                                char* templatename );
 extern ThotBool Template_LoadXTigerTemplateLibrary ( XTigerTemplate t );
@@ -36,6 +37,7 @@ extern void Template_ParseDeclarations ( XTigerTemplate t,
                                            Element el );
 extern void Template_PreParseDeclarations ( XTigerTemplate t,
                                               Element el );
+extern void Template_PrepareTemplate ( void* templ );
 extern ThotBool LoadTemplate ( Document doc,
                                  char* templatename );
 extern ThotBool Template_LoadXTigerTemplateLibrary ( XTigerTemplate t );

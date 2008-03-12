@@ -18,6 +18,8 @@ extern Element Template_InsertBagChild ( Document doc,
                                          Element el,
                                          Declaration decl,
                                          ThotBool before );
+extern void CreateTemplate ( Document doc,
+                             char *templatePath );
 extern void CreateInstance ( char *templatePath,
                              char *instancePath,
                              int basedoc );
@@ -76,6 +78,8 @@ extern Element Template_InsertBagChild ( Document doc,
                                            Element el,
                                            Declaration decl,
                                            ThotBool before );
+extern void CreateTemplate ( Document doc,
+                               char *templatePath );
 extern void CreateInstance ( char *templatePath,
                                char *instancePath,
                                int basedoc );

@@ -57,6 +57,18 @@ int img_Last_used_filter = 0;
 int obj_Last_used_filter = 0;
 int link_Last_used_filter = 0;
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void ShowMessage(const char* message, const char* title)
+{
+  
+  wxMessageDialog messagedialog( NULL,
+         TtaConvMessageToWX(message),
+         TtaConvMessageToWX(title),
+         (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+  messagedialog.ShowModal();
+}
+
 
 /*----------------------------------------------------------------------
   ParseStyleDlgValues: parse a CSS Style string to update the Style
@@ -749,8 +761,8 @@ ThotBool CreateCSSDlgWX (int ref, int subref, ThotWindow parent, char *title,
                          int nb_item, char *items)
 {
 #ifdef _WX
-  wxString      wx_title = TtaConvMessageToWX( title );
   wxArrayString wx_items;
+  wxString      wx_title  = TtaConvMessageToWX( title );
   
   /* build the css filename list */
   int i = 0;
@@ -764,11 +776,7 @@ ThotBool CreateCSSDlgWX (int ref, int subref, ThotWindow parent, char *title,
 
   if ( nb_item <= 0 )
     {
-      wxMessageDialog messagedialog( NULL,
-				     TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_NO_CSS)),
-				     wx_title,
-				     (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
-      messagedialog.ShowModal();
+      ShowMessage(TtaGetMessage(AMAYA, AM_NO_CSS), title);
       return FALSE;
     }
 
@@ -853,11 +861,7 @@ ThotBool CreateListDlgWX (int ref, int subref, ThotWindow parent, char *title,
 
   if ( nb_item <= 0 )
     {
-      wxMessageDialog messagedialog( NULL,
-				     TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_NO_CSS)),
-				     wx_title,
-				     (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
-      messagedialog.ShowModal();
+      ShowMessage(TtaGetMessage(AMAYA, AM_NO_CSS), title);
       return FALSE;
     }
 
@@ -1241,11 +1245,7 @@ ThotBool CreateEnumListDlgWX (int ref, int subref, ThotWindow parent,
   if ( nb_item <= 0 )
     {
       /* TODO: change the message when there is no items, should never occured */
-      wxMessageDialog messagedialog( NULL,
-             TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_NO_CSS)),
-             wx_title,
-             (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
-      messagedialog.ShowModal();
+      ShowMessage(TtaGetMessage(AMAYA, AM_NO_CSS), title);
       return FALSE;
     }  
 

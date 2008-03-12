@@ -477,3 +477,6 @@
 471 Close
 472 Component '%s' has multiple definition.
 473 Library '%s' can not be loaded.
+474 Can not convert an instance document to template.
+475 The document is already a template.
+476 Error in template creation:
