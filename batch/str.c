@@ -1913,6 +1913,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
       case KWD_NewRoot:
         /* Manage that node as a root element */
         ExceptionNum (ExcNewRoot, True, False, False, wi);
+        break;
       case KWD_Root:
         CurExtensRule = NewExtensionRule (wi, 0);
         CurExtensRule->SrName[0] = EOS;
