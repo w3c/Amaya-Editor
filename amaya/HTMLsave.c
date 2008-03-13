@@ -403,9 +403,9 @@ char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
     {
       // look for the beginning and the end of the url
       e = b;
-      while ((*e != '"' || *e != '\'') && *e != EOS)
+      while (*e != '"' && *e != '\'' && *e != EOS)
         e++;
-      while ((*b != '"' || *b != '\'') && b != sString)
+      while (*b != '"' && *b != '\'' && b != sString)
         b--;
       if (*b == '"' || *b == '\'')
         b++;
@@ -668,9 +668,12 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
                 newString = UpdateCSSURLs (doc, oldpath, newpath, NULL, orgString,
                                         FALSE, FALSE);
               else
+		{
                 // Update the XML PI content
-                newString = UpdateDocResource (doc, oldpath, newpath, cssbase, orgString,
+                newString = UpdateDocResource (doc, oldpath, newpath,
+					       cssbase, orgString,
                                                el, savedResources, FALSE, fullCopy);
+		}
               if (newString)
                 {
                   /* register the modification to be able to undo it */
