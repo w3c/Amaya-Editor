@@ -18,6 +18,7 @@
 #define THOT_EXPORT extern
 #include "templateDeclarations.h"
 
+#include "templates_f.h"
 #include "templateDeclarations_f.h"
 #include "templateUtils_f.h"
 #include "templateInstantiate_f.h"
@@ -388,6 +389,7 @@ ThotBool LoadTemplate (Document doc, char* templatename)
               DoInstanceTemplate (ctx->templatePath);
               DocumentTypes[ctx->newdoc] = docTemplate;
               TtaSetDocumentUnmodified (ctx->newdoc);
+              UpdateTemplateMenus(doc);
               res = true;
             }
         }

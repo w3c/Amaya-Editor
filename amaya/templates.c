@@ -1510,8 +1510,6 @@ ThotBool TemplateAttrInMenu (NotifyAttribute * event)
     return FALSE;
 }
 
-void SaveDocumentAs (Document doc, View view);
-
 /*----------------------------------------------------------------------
   CreateTemplateFromDocument
   Create a template from the current document.
@@ -1525,3 +1523,14 @@ void CreateTemplateFromDocument(Document doc, View view)
   CreateTemplate(doc, buffer);
 }
 
+/*----------------------------------------------------------------------
+  UpdateTemplateMenus
+  ----------------------------------------------------------------------*/
+void UpdateTemplateMenus (Document doc)
+{
+  if(IsTemplateInstanceDocument(doc) || 
+      IsTemplateDocument(doc))
+    TtaSetItemOff (doc, 1, Tools, BCreateTemplateFromDocument);
+  else
+    TtaSetItemOn (doc, 1, Tools, BCreateTemplateFromDocument);
+}

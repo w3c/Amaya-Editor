@@ -504,41 +504,35 @@ ThotBool SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath, char
   ThotBool      res = FALSE;
   
   localFile = GetLocalPath (newdoc, newpath);
-  if (!TtaHasUndoSequence (doc))
+
+  // update all links
+  SetRelativeURLs (doc, newpath, "", FALSE, FALSE, FALSE);
+  // prepare the new document view
+  TtaExtractName (newpath, DirectoryName, DocumentName);
+
+  root = TtaGetRootElement(doc);
+  elType = TtaGetElementType (root);
+  // get the target document type
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp (s, "HTML") == 0)
     {
-      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-
-      // update all links
-      SetRelativeURLs (doc, newpath, "", FALSE, FALSE, FALSE);
-      // prepare the new document view
-      TtaExtractName (newpath, DirectoryName, DocumentName);
-
-      root = TtaGetRootElement(doc);
-      elType = TtaGetElementType (root);
-      // get the target document type
-      s = TtaGetSSchemaName (elType.ElSSchema);
-      if (strcmp (s, "HTML") == 0)
-        {
-          /* docType = docHTML; */
-          if (TtaGetDocumentProfile(doc) == L_Xhtml11 ||
-              TtaGetDocumentProfile(doc) == L_Basic)
-            res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLT11", FALSE);
-          else
-            res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLTX", FALSE);
-        }
-      else if (strcmp (s, "SVG") == 0)
-        /* docType = docSVG; */
-        res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "SVGT", FALSE);
-      else if (strcmp (s, "MathML") == 0)
-        /* docType = docMath; */
-        res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "MathMLT", FALSE);
+      /* docType = docHTML; */
+      if (TtaGetDocumentProfile(doc) == L_Xhtml11 ||
+          TtaGetDocumentProfile(doc) == L_Basic)
+        res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLT11", FALSE);
       else
-        /* docType = docXml; */
-        res = TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL, FALSE);
-
-      TtaCloseUndoSequence (doc);
-      TtaUndoNoRedo (doc);
+        res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "HTMLTX", FALSE);
     }
+  else if (strcmp (s, "SVG") == 0)
+    /* docType = docSVG; */
+    res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "SVGT", FALSE);
+  else if (strcmp (s, "MathML") == 0)
+    /* docType = docMath; */
+    res = TtaExportDocumentWithNewLineNumbers (doc, localFile, "MathMLT", FALSE);
+  else
+    /* docType = docXml; */
+    res = TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL, FALSE);
+
   if(temppath)
     *temppath = localFile;
   else
