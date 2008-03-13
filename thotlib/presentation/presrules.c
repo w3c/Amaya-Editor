@@ -4262,6 +4262,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                          pParent->AbElement->ElStructSchema->SsName &&
                          // look for an enclosing block element
                          (pParent->AbDisplay == 'I' ||
+                          // U = I for generic XML documents
+                         (pParent->AbDisplay == 'U' &&
+                          pParent->AbElement->ElStructSchema->SsIsXml) ||
                           !strcmp (pParent->AbElement->ElStructSchema->SsName, "Template")))
                     pParent = pParent->AbEnclosing;
                   if (pParent && !pParent->AbInLine)

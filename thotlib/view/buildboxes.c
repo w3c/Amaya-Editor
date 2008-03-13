@@ -1790,7 +1790,8 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
     return;
   pAb = pBox->BxAbstractBox;
   pRefAb = pRefBox->BxAbstractBox;
-  if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+  if ((pBox->BxType == BoGhost && !pAb->AbInLine && pAb->AbDisplay != 'B') ||
+      pBox->BxType == BoFloatGhost)
     {
       /* when it's a dummy box report changes to the children */
       pChild = pAb->AbFirstEnclosed;
@@ -1954,7 +1955,7 @@ static ThotBool InlineTextChildren (PtrAbstractBox pAb, int frame)
   if (pAb && !pAb->AbDead && !pAb->AbInLine &&
       FrameTable[frame].FrView == 1 && /* only in formatted view */
       pAb->AbBox && pAb->AbBox->BxType != BoGhost &&
-      (pAb->AbDisplay == 'U' || pAb->AbDisplay == 'B') &&
+      (pAb->AbDisplay == 'U' || pAb->AbDisplay == 'B' || pAb->AbDisplay == 'L') &&
       !pAb->AbWidth.DimIsPosition &&
       (pAb->AbWidth.DimAbRef || pAb->AbWidth.DimValue != -1))
     {
@@ -1965,6 +1966,8 @@ static ThotBool InlineTextChildren (PtrAbstractBox pAb, int frame)
         {
           if (pChildAb->AbLeafType == LtText &&
               !pChildAb->AbPresentationBox)
+            return TRUE;
+          else if (pChildAb->AbDisplay == 'I')
             return TRUE;
           pChildAb = pChildAb->AbNext;
         }
