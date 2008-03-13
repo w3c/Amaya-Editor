@@ -209,7 +209,6 @@ static ThotBool	     ImmediatelyAfterTag = FALSE;
 static ThotBool	     HTMLStyleAttribute = FALSE;
 static ThotBool	     XMLSpaceAttribute = FALSE;
 static ThotBool      ParsingCDATA = FALSE;
-static ThotBool      IgnoreCommentAndPi = FALSE;
 static char	     currentElementContent = ' ';
 static char	     currentElementName[100];
 
@@ -2642,8 +2641,8 @@ void PutInXmlElement (char *data, int length)
                 /* associate a specific 'Line' presentation rule to the 
                    parent element if we are parsing a generic-XML element */
 #ifdef XML_GENERIC
-                if (!strcmp ((char *)currentParserCtxt->SSchemaName, "XML"))
-                  CreateXmlLinePRule (elText, XMLcontext.doc);
+                //if (!strcmp ((char *)currentParserCtxt->SSchemaName, "XML"))
+                //  CreateXmlLinePRule (elText, XMLcontext.doc);
 #endif /* XML_GENERIC */
               }
           }
@@ -4078,7 +4077,7 @@ void XmlStyleSheetPi (char *PiData, Element piEl)
   CreateXmlPi
   Create a Processing Instruction element into the Thot tree.
   ---------------------------------------------------------------------*/
-static void       CreateXmlPi (char *piTarget, char *piData)
+static void CreateXmlPi (char *piTarget, char *piData)
 {
   ElementType    elType, elTypeLeaf;
   Element  	  piEl, piLineEl, piLeaf, lastChild;
@@ -4279,8 +4278,7 @@ static void Hndl_Comment (void *userData, const XML_Char *data)
       ParseDoctypeContent ("-->", 3);
       return;
     }
-  if (!IgnoreCommentAndPi)
-    CreateXmlComment ((char*) data);
+  CreateXmlComment ((char*) data);
 }
 
 
@@ -4578,8 +4576,7 @@ static void Hndl_PI (void *userData, const XML_Char *target,
       ParseDoctypeContent ("?>", 2);
       return;
     }
-  if (!IgnoreCommentAndPi)
-    CreateXmlPi ((char*) target, (char*) pidata);
+  CreateXmlPi ((char*) target, (char*) pidata);
 }
 
 /*----------------------------------------------------------------------
@@ -4941,7 +4938,6 @@ static void  InitializeXmlParsingContext (Document doc,
   ParsingCDATA = FALSE;
   VirtualDoctype = FALSE;
   ShowParsingErrors =  TRUE;
-  IgnoreCommentAndPi = FALSE;
   PARSING_BUFFER = FALSE;
 
   HtmlLineRead = 0;

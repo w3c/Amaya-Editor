@@ -4257,19 +4257,23 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                 /* display: inline */
                 {
                   pParent = pAb->AbEnclosing;
-                  while (pParent && pParent->AbElement &&
+                  while (pParent && pParent->AbElement && pParent->AbEnclosing &&
                          pParent->AbElement->ElStructSchema &&
                          pParent->AbElement->ElStructSchema->SsName &&
-                         !strcmp (pParent->AbElement->ElStructSchema->SsName, "Template"))
-                    {
-                      // Skip template elements
-                      pParent->AbBuildAll = TRUE;
-                      pParent = pParent->AbEnclosing;
-                    }
-                  if (pParent)
+                         // look for an enclosing block element
+                         (pParent->AbDisplay == 'I' ||
+                          !strcmp (pParent->AbElement->ElStructSchema->SsName, "Template")))
+                    pParent = pParent->AbEnclosing;
+                  if (pParent && !pParent->AbInLine)
                     {
                       pParent->AbInLine = TRUE;
                       pParent->AbBuildAll = TRUE;
+                      pAbb = pAb->AbEnclosing;
+                      while (pAbb && pAbb != pParent)
+                        {
+                          pAbb->AbBuildAll = TRUE;
+                          pAbb = pAbb->AbEnclosing;
+                        }
                     }
                   pAb->AbAcceptLineBreak = TRUE;
                   pAb->AbBuildAll = TRUE;
