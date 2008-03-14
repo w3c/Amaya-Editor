@@ -8,6 +8,8 @@
 
 extern void TtaChangeElementType ( Element element,
                                    int typeNum );
+extern void TtaUpdateRootElementType ( Element element,
+                                       Document doc );
 extern ThotBool TtaChangeTypeOfElement ( Element elem,
                                          Document doc,
                                          int newTypeNum );
@@ -145,6 +147,8 @@ extern ThotBool TtaHasReturnCreateNLException ( ElementType elType );
 
 extern void TtaChangeElementType ( Element element,
                                      int typeNum );
+extern void TtaUpdateRootElementType ( Element element,
+                                         Document doc );
 extern ThotBool TtaChangeTypeOfElement ( Element elem,
                                            Document doc,
                                            int newTypeNum );

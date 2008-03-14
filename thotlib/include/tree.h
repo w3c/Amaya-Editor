@@ -73,6 +73,14 @@ ConstructType;
    typeNum: new type for the element
    ---------------------------------------------------------------------- */
 extern void TtaChangeElementType (Element element, int typeNum);
+/* ----------------------------------------------------------------------
+   TtaUpdateRootElementType
+   Change the type of the root element.
+   CAUTION: THIS FUNCTION SHOULD BE USED VERY CARFULLY!
+   Parameters:
+   element: the concerned element
+   ---------------------------------------------------------------------- */
+extern void TtaUpdateRootElementType (Element element, Document doc);
 
 /*----------------------------------------------------------------------
    TtaChangeTypeOfElement

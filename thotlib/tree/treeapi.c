@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -73,6 +73,32 @@ void TtaChangeElementType (Element element, int typeNum)
     TtaError (ERR_invalid_element_type);
   else
     ((PtrElement)element)->ElTypeNumber = typeNum;
+}
+
+/* ----------------------------------------------------------------------
+   TtaUpdateRootElementType
+   Change the type of the root element.
+   CAUTION: THIS FUNCTION SHOULD BE USED VERY CARFULLY!
+   Parameters:
+   element: the concerned element
+   ---------------------------------------------------------------------- */
+void TtaUpdateRootElementType (Element element, Document doc)
+{
+  PtrElement pEl = (PtrElement)element;
+
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (pEl->ElParent || pEl->ElTerminal)
+    TtaError (ERR_invalid_parameter);
+  else if (LoadedDocument[doc - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (pEl->ElFirstChild && pEl->ElStructSchema != pEl->ElFirstChild->ElStructSchema)
+    {
+      pEl->ElStructSchema = pEl->ElFirstChild->ElStructSchema;
+      LoadedDocument[doc - 1]->DocSSchema = pEl->ElStructSchema;
+      // need to free the schema ???
+    }
 }
 
 /*----------------------------------------------------------------------

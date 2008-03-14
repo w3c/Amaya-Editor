@@ -7463,6 +7463,9 @@ void StartParser (Document doc, char *fileName,
           docURL2 = NULL;
         }
 
+      // change the type of the root element if needed
+      TtaUpdateRootElementType (rootElement, doc);
+
       if (!external_doc)
         TtaSetDisplayMode (doc, dispMode);
 

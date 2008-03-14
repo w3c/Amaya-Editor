@@ -14,9 +14,10 @@ extern ThotBool ExportDocument ( Document doc,
                                  char *fName,
                                  char *tschema,
                                  ThotBool recordLineNb );
-extern void ExportXmlDocument ( Document doc,
-                                PtrElement pNode,
-                                ThotBool recordLineNb );
+extern void ExportXmlElement ( Document doc,
+                               PtrElement pEl,
+                               ThotBool lineBreak,
+                               ThotBool recordLineNb );
 extern void ExportTree ( PtrElement pEl,
                          Document doc,
                          char *fName,
@@ -39,9 +40,10 @@ extern ThotBool ExportDocument ( Document doc,
                                    char *fName,
                                    char *tschema,
                                    ThotBool recordLineNb );
-extern void ExportXmlDocument ( Document doc,
-                                  PtrElement pNode,
-                                  ThotBool recordLineNb );
+extern void ExportXmlElement ( Document doc,
+                                 PtrElement pEl,
+                                 ThotBool lineBreak,
+                                 ThotBool recordLineNb );
 extern void ExportTree ( PtrElement pEl,
                            Document doc,
                            char *fName,

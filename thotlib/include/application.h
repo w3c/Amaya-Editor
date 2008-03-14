@@ -59,7 +59,7 @@
 #define ERR_language_not_found 		101
 #define Template_URI_o  "http://wam.inrialpes.fr/xtiger"
 #define Template_URI    "http://ns.inria.org/xtiger"
-
+#define Template_URI_f  "http://ns.inria.fr/xtiger"
 #ifndef __CEXTRACT__
 
 /*----------------------------------------------------------------------
