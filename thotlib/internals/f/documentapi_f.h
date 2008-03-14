@@ -7,8 +7,10 @@
 #ifdef __STDC__
 
 extern int TtaGetDocumentProfile ( Document document );
+extern int TtaGetDocumentExtraProfile ( Document document );
 extern void TtaSetDocumentProfile ( Document document,
-                                    int profile );
+                                    int profile,
+                                    int extraProfile );
 extern CHARSET TtaGetDocumentCharset ( Document document );
 extern void TtaSetDocumentCharset ( Document document,
                                     CHARSET charSet,
@@ -117,8 +119,10 @@ extern ThotBool TtaIsXmlSSchema ( SSchema schema );
 #else /* __STDC__ */
 
 extern int TtaGetDocumentProfile ( Document document );
+extern int TtaGetDocumentExtraProfile ( Document document );
 extern void TtaSetDocumentProfile ( Document document,
-                                      int profile );
+                                      int profile,
+                                      int extraProfile );
 extern CHARSET TtaGetDocumentCharset ( Document document );
 extern void TtaSetDocumentCharset ( Document document,
                                       CHARSET charSet,

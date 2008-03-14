@@ -1600,7 +1600,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   ElementType   elType;
   Element       docEl, eltype;
   char          charsetname[MAX_LENGTH];
-  int           parsingLevel;
+  int           parsingLevel, extraProfile;
   char         *s;
   char          type[NAME_LENGTH];
   char          tempdoc2 [100];
@@ -1641,7 +1641,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
       DocumentMeta[ext_doc]->xmlformat = xml_doctype;
       charset = TtaGetDocumentCharset (doc);
       TtaSetDocumentCharset (ext_doc, charset, FALSE);
-      TtaSetDocumentProfile (ext_doc, new_doctype);
+      TtaSetDocumentProfile (ext_doc, new_doctype, 0);
 
       /* Copy the current document into a second temporary file */
       sprintf (tempdoc2, "%s%c%d%c%s",
@@ -1656,9 +1656,9 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   /* Check if there is a doctype declaration */
   charsetname[0] = EOS;
   CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
-                  &parsingLevel, &charset, charsetname, &thotType);
+                  &parsingLevel, &charset, charsetname, &thotType, &extraProfile);
   /* Store the new document type */
-  TtaSetDocumentProfile (ext_doc, new_doctype);
+  TtaSetDocumentProfile (ext_doc, new_doctype, 0);
 
   // Get user information about read IDs
   Check_read_ids = TRUE;
@@ -1769,7 +1769,7 @@ void RestartParser (Document doc, char *localFile,
   CHARSET       charset, doc_charset;
   DocumentType  thotType;
   char          charsetname[MAX_LENGTH];
-  int           profile, parsingLevel;
+  int           profile, parsingLevel, extraProfile;
   ThotBool      xmlDec, withDoctype, isXML, useMath, isKnown;
 
   if (doc == 0)
@@ -1785,7 +1785,7 @@ void RestartParser (Document doc, char *localFile,
   /* check if there is an XML declaration with a charset declaration */
   charsetname[0] = EOS;
   CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
-                  &parsingLevel, &charset, charsetname, &thotType);
+                  &parsingLevel, &charset, charsetname, &thotType, &extraProfile);
   /* Check charset information in a meta */
   if (charset == UNDEFINED_CHARSET)
     CheckCharsetInMeta (localFile, &charset, charsetname);
@@ -1824,7 +1824,7 @@ void RestartParser (Document doc, char *localFile,
   profile = TtaGetDocumentProfile (doc);
   if (profile != parsingLevel)
     {
-      TtaSetDocumentProfile (doc, parsingLevel);
+      TtaSetDocumentProfile (doc, parsingLevel, extraProfile);
       TtaUpdateMenus (doc, 1, FALSE);
     }
 

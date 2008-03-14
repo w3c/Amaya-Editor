@@ -485,7 +485,7 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
 {
   AttributeMapping   *ptr;
   char                c;
-  int                 i, profile;
+  int                 i, profile, extraprofile;
   ThotBool            xmlformat;
 
   /* Initialization */
@@ -532,6 +532,8 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
     c = attrName[0];
 
   profile = TtaGetDocumentProfile (doc);
+  extraprofile = TtaGetDocumentExtraProfile (doc);
+
   if (profile == L_Annot)
     profile = L_Other;
   /* look for the first concerned entry in the table */
@@ -549,15 +551,19 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
                 (ptr[i].XMLelement[0] != EOS && elementName &&
                  strcmp (ptr[i].XMLelement, elementName))))
         i++;
-      else if (profile != L_Other && !(ptr[i].Level & profile))
+      else if (profile != L_Other && extraprofile == 0 && !(ptr[i].Level & profile))
+        {
+          *checkProfile = FALSE;
+          i++;
+        }
+      else if ((ptr[i].Level == L_RDFaValue) && (extraprofile != L_RDFa))
         {
           *checkProfile = FALSE;
           i++;
         }
       else
         {
-          /* Special case for the 'name' attribute for 
-             elements 'a' and 'map' in xhtml1.1 profile */
+          /* Special case for the 'name' attribute for elements 'a' and 'map' in xhtml1.1 profile */
           if ((profile == L_Xhtml11) &&
               !strcmp (attrName, "name") && elementName &&
               (!strcmp (elementName, "a") || !strcmp (elementName, "map")))

@@ -1240,6 +1240,26 @@ ATTRIBUTES
 		BEGIN
 		END;
 
+ about: BEGIN
+		BEGIN
+		END;
+
+ property: BEGIN
+		BEGIN
+		END;
+
+ resource: BEGIN
+		BEGIN
+		END;
+
+ datatype: BEGIN
+		BEGIN
+		END;
+
+ instanceof: BEGIN
+		BEGIN
+		END;
+
 TextTRANSLATE
 	BEGIN
 	'\240' -> ' '; { &nbsp; }

@@ -59,7 +59,8 @@ extern void CheckDocHeader ( char *fileName,
                              int *docProfile,
                              CHARSET *charset,
                              char *charsetname,
-                             DocumentType *thotType );
+                             DocumentType *thotType,
+                             int *extraProfile );
 extern void CheckCharsetInMeta ( char *fileName,
                                  CHARSET *charset,
                                  char *charsetname );
@@ -141,7 +142,8 @@ extern void CheckDocHeader ( char *fileName,
                                int *docProfile,
                                CHARSET *charset,
                                char *charsetname,
-                               DocumentType *thotType );
+                               DocumentType *thotType,
+                               int *extraProfile );
 extern void CheckCharsetInMeta ( char *fileName,
                                    CHARSET *charset,
                                    char *charsetname );

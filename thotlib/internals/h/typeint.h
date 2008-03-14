@@ -909,6 +909,7 @@ typedef struct _DocumentDescr
   CHARSET         DocCharset;     /* charset of the document */
   ThotBool	  DocDefaultCharset;/* TRUE if the charset is set by default */
   int		  DocProfile;	  /* profile of the document */
+  int		  DocExtraProfile;/* 'extra' profile of the document */
   PtrNsUriDescr   DocNsUriDecl;   /* first namespace declaration */
   
 #ifdef _WX

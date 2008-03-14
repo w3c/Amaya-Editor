@@ -416,7 +416,10 @@ char * DocumentTypeString (Document document)
           result = "Unknown";
           break;
         case L_Xhtml11:
-          result = "XHTML 1.1";
+          if (TtaGetDocumentExtraProfile(document) == L_RDFa)
+            result = "XHTML+RDFa";
+	  else
+            result = "XHTML 1.1";
           break;
         case L_Basic:
           result = "XHTML 1.0 Basic";
@@ -2208,11 +2211,9 @@ static void GiveWindowGeometry (Document doc, int docType, int method,
   + ThotBool inNewWindow: true if the new doc should be created in a new window
   + ...
   ----------------------------------------------------------------------*/
-Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
-                         ThotBool inNewWindow,
-                         char *docname, DocumentType docType,
-                         Document sourceOfDoc, ThotBool readOnly, int profile,
-                         int method)
+Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow,
+                         char *docname, DocumentType docType, Document sourceOfDoc,
+			 ThotBool readOnly, int profile, int extraProfile, int method)
 {
   Document      doc; /* the new doc */
   View          mainView, structView, altView, linksView, tocView;
@@ -2221,7 +2222,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   char          buffer[MAX_LENGTH];
   int           x, y, w, h;
   int           requested_doc, visibility = 5;
-  Language	    lang;
+  Language	lang;
   ThotBool      isOpen, reinitialized = FALSE, show;
   /* specific to wxWidgets user interface */
   /* ------------------------------------ */
@@ -2438,7 +2439,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
         TtaSetNotificationMode (doc, 1);
        
       /* store the profile of the new document */
-      TtaSetDocumentProfile (doc, profile);
+      TtaSetDocumentProfile (doc, profile, extraProfile);
 
       if (method == CE_MAKEBOOK || method == CE_TEMPLATE)
         // it's not necessary to create the document window
@@ -2805,7 +2806,7 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
   char           *localFile = NULL;
   char            documentname[MAX_LENGTH];
   char            s[MAX_LENGTH], charsetname[MAX_LENGTH];
-  int             i, parsingLevel;
+  int             i, parsingLevel, extraProfile;
   ThotBool        plaintext;
   ThotBool        xmlDec, withDoctype, isXML, useMath, isKnown;
 
@@ -2865,7 +2866,7 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
       /* check if there is an XML declaration with a charset declaration */
       charsetname[0] = EOS;
       CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
-                      &parsingLevel, &doc_charset, charsetname, &thotType);
+                      &parsingLevel, &doc_charset, charsetname, &thotType, &extraProfile);
       StartXmlParser (doc, localFile, documentname, s,
                       localFile, xmlDec, withDoctype, useMath, FALSE);
     }
@@ -2994,7 +2995,7 @@ Document LoadDocument (Document doc, char *pathname,
   char               *content_type, *reason;
   char               *http_content_type;
   int                 i, j;
-  int                 docProfile;
+  int                 docProfile, extraProfile;
   DocumentType        thotType;
   char                local_content_type[MAX_LENGTH];
   ThotBool            unknown;
@@ -3026,7 +3027,7 @@ Document LoadDocument (Document doc, char *pathname,
   else
     s = pathname;
   CheckDocHeader (s, &xmlDec, &withDoctype, &isXML, &useMath, &isknown,
-                  &docProfile, &charset, charsetname, &thotType);
+                  &docProfile, &charset, charsetname, &thotType, &extraProfile);
   docType = thotType;
 
   /* Check charset information in a meta */
@@ -3414,7 +3415,7 @@ Document LoadDocument (Document doc, char *pathname,
                                            FALSE /* replaceOldDoc */,
                                            TRUE /* inNewWindow */,
                                            documentname, docType, 0, FALSE,
-                                           docProfile, method);
+                                           docProfile, extraProfile, method);
                   ResetStop (doc);
                   /* clear the status line of previous document */
                   TtaSetStatus (doc, 1, " ", NULL);
@@ -3426,7 +3427,7 @@ Document LoadDocument (Document doc, char *pathname,
                                          TRUE /* replaceOldDoc */,
                                          FALSE /* inNewWindow */,
                                          documentname, docType, 0, FALSE,
-                                         docProfile, method);
+                                         docProfile, extraProfile, method);
             }
           else if (method == CE_ABSOLUTE  || method == CE_HELP || method == CE_INSTANCE  ||
                    method == CE_FORM_POST || method == CE_FORM_GET)
@@ -3435,7 +3436,7 @@ Document LoadDocument (Document doc, char *pathname,
                                      TRUE /* replaceOldDoc */,
                                      FALSE /* inNewWindow */,
                                      documentname, docType, 0, FALSE,
-                                     docProfile, method);
+                                     docProfile, extraProfile, method);
 #ifdef ANNOTATIONS
           else if (method == CE_ANNOT) /*  && docType == docHTML) */
             {
@@ -3460,14 +3461,14 @@ Document LoadDocument (Document doc, char *pathname,
                                      TRUE /* replaceOldDoc */,
                                      FALSE /* inNewWindow */,
                                      documentname, docType, 0, FALSE,
-                                     docProfile, method);
+                                     docProfile, extraProfile, method);
           else
             {
               /* document already initialized */
               newdoc = doc;
               /* store the profile of the new document */
               /* and update the menus according to it */
-              TtaSetDocumentProfile (newdoc, docProfile);
+              TtaSetDocumentProfile (newdoc, docProfile, extraProfile);
             }
         }
       else
@@ -3496,7 +3497,7 @@ Document LoadDocument (Document doc, char *pathname,
       if (method == CE_INSTANCE && TtaFileExist (localdoc))
         // only the temporary file exists
         CheckDocHeader (localdoc, &xmlDec, &withDoctype, &isXML, &useMath, &isknown,
-                        &docProfile, &charset, charsetname, &thotType);
+                        &docProfile, &charset, charsetname, &thotType, &extraProfile);
       else if (tempfile[0] != EOS)
         {
           /* It is a document loaded from the Web */
@@ -3709,7 +3710,7 @@ Document LoadDocument (Document doc, char *pathname,
           TtaGetEnvBoolean ("CHECK_READ_IDS", &Check_read_ids);
           /* Calls the corresponding parser */
           if (DocumentMeta[newdoc]->xmlformat && !plainText)
-            StartXmlParser (newdoc,	localdoc, documentname, tempdir,
+            StartXmlParser (newdoc, localdoc, documentname, tempdir,
                             pathname, xmlDec, withDoctype, useMath, FALSE);
           else
             StartParser (newdoc, localdoc, documentname, tempdir,
@@ -3718,7 +3719,7 @@ Document LoadDocument (Document doc, char *pathname,
       TtaFreeMemory (tempdir);
    
       /* Update the Doctype menu */
-      TtaSetDocumentProfile (newdoc, docProfile);
+      TtaSetDocumentProfile (newdoc, docProfile, extraProfile);
       UpdateEditorMenus (newdoc);
 
       if (*inNewWindow || newdoc != doc)
@@ -4127,8 +4128,8 @@ void ShowSource (Document doc, View view)
   CHARSET          charset;
   char            *localFile;
   char            *s;
-  char  	         documentname[MAX_LENGTH];
-  char  	         tempdir[MAX_LENGTH];
+  char  	   documentname[MAX_LENGTH];
+  char  	   tempdir[MAX_LENGTH];
   Document         sourceDoc;
   NotifyElement    event;
 
@@ -4188,7 +4189,7 @@ void ShowSource (Document doc, View view)
                                   FALSE /* replaceOldDoc */,
                                   FALSE /* inNewWindow */,
                                   documentname, (DocumentType)docSource, doc, FALSE,
-                                  TtaGetDocumentProfile (doc),
+                                  TtaGetDocumentProfile (doc), TtaGetDocumentExtraProfile (doc),
                                   (int)CE_ABSOLUTE);   
       if (sourceDoc > 0)
         {
@@ -4815,7 +4816,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   char               *documentname;
   char               *content_type = NULL;
   char                charsetname[MAX_LENGTH];
-  int                 parsingLevel;
+  int                 parsingLevel, extraProfile;
   int                 toparse;
   int                 mode;
   int                 docType;
@@ -4875,8 +4876,8 @@ Document GetAmayaDoc (char *urlname, char *form_data,
       docType = docXml;
       //TODO Check that urlname is a valid URL
       if (!IsW3Path (urlname))
-        CheckDocHeader(urlname, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
-                       &parsingLevel, &doc_charset, charsetname, (DocumentType*)&docType);
+        CheckDocHeader(urlname, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown, &parsingLevel, 
+		       &doc_charset, charsetname, (DocumentType*)&docType, &extraProfile);
     }
 #ifdef _SVG
   else if (IsLibraryName (documentname))
@@ -4996,7 +4997,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                                   FALSE /* replaceOldDoc */,
                                   TRUE /* inNewWindow */,
                                   documentname, (DocumentType)docLog, 0, FALSE,
-                                  L_Other, method);
+                                  L_Other, 0, method);
       else if (method == CE_HELP)
         {
           /* add the URI in the combobox string */
@@ -5006,7 +5007,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                                    !DontReplaceOldDoc /* replaceOldDoc */,
                                    InNewWindow /* inNewWindow */,
                                    documentname, (DocumentType)docType, 0, TRUE,
-                                   L_Other, method);
+                                   L_Other, 0, method);
           if (newdoc)
             {
               /* help document has to be in read-only mode */
@@ -5021,7 +5022,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                                    FALSE /* replaceOldDoc */,
                                    TRUE /* inNewWindow */,
                                    documentname, (DocumentType)docAnnot, 0, FALSE,
-                                   L_Annot, method);
+                                   L_Annot, 0, method);
           /* we're downloading an annotation, fix the accept_header
              (thru the content_type variable) to application/rdf */
           content_type = "application/rdf";
@@ -5039,7 +5040,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                                    FALSE /* replaceOldDoc */,
                                    InNewWindow /* inNewWindow */,
                                    documentname, (DocumentType)docType, 0, FALSE,
-                                   L_Other, method);
+                                   L_Other, 0, method);
         }
       else
         {
@@ -6240,8 +6241,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 }
 
 /*----------------------------------------------------------------------
-  RestoreOneAmayaDoc restores a saved file doc is the suggested doc to
-  be loaded or 0.
+  RestoreOneAmayaDoc restores a saved file
+  doc is the suggested doc to be loaded or 0.
   docname is the original name of the document.
   tempdoc is the name of the saved file.
   Return the new recovered document
@@ -6264,7 +6265,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
                            FALSE /* replaceOldDoc */,
                            TRUE /* inNewWindow */,
                            DocumentName, (DocumentType)docType, 0, FALSE,
-                           L_Other, CE_ABSOLUTE);
+                           L_Other, 0, CE_ABSOLUTE);
   if (newdoc != 0)
     {
       /* load the saved file */

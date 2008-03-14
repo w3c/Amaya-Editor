@@ -2874,7 +2874,7 @@ void ShowSourceOfTimeline (Document document, View view)
                                   FALSE /* replaceOldDoc */,
                                   TRUE /* inNewWindow */,
                                   documentname, docSource, document, FALSE,
-                                  L_Other, CE_ABSOLUTE);   
+                                  L_Other, 0, CE_ABSOLUTE);   
       if (sourceDoc > 0)
         {
           DocumentSource[document] = sourceDoc;

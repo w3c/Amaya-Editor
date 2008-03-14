@@ -697,7 +697,7 @@ Document BM_NewDocument (Document requested_doc, int ref)
                             TRUE /* inNewWindow */,
 	                    (char *) ((ref == 0) ? "bookmarks.rdf" : ptr), 
 			    docBookmark, 0, FALSE, 
-			    L_Bookmarks, CE_ABSOLUTE);
+			    L_Bookmarks, 0, CE_ABSOLUTE);
     }
 
 

@@ -8171,6 +8171,36 @@ ATTRIBUTES
         CreateBefore(AttrValue);
         END;
 
+  about:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+
+  property:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+
+  resource:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+
+  datatype:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+
+  instanceof:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+
   Invalid_attribute:
         BEGIN
         if TEXT_UNIT

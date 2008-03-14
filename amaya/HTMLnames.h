@@ -142,6 +142,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"unknown_attr", "", 'A', HTML_ATTR_Invalid_attribute, L_TransitionalValue},
 
    {"abbr", "", 'A', HTML_ATTR_abbr, L_BasicValue},
+   {"about", "", 'A', HTML_ATTR_about, L_RDFaValue},
    {"accept", "", 'A', HTML_ATTR_accept, L_BasicValue},
    {"accept-charset", "form", 'A', HTML_ATTR_accept_charset, L_BasicValue},
    {"accesskey", "", 'A', HTML_ATTR_accesskey, L_BasicValue},
@@ -214,6 +215,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
 
    {"data", "", 'A', HTML_ATTR_data, L_BasicValue},
    {"datapagesize", "table", 'A', HTML_ATTR_datapagesize, L_BasicValue},
+   {"datatype", "", 'A', HTML_ATTR_datatype, L_RDFaValue},
    {"datetime", "", 'A', HTML_ATTR_datetime, L_BasicValue},
    {"declare", "object", 'A', HTML_ATTR_declare, L_BasicValue},
    {"defer", "script", 'A', HTML_ATTR_defer, L_BasicValue},
@@ -243,6 +245,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"http-equiv", "", 'A', HTML_ATTR_http_equiv, L_BasicValue},
 
    {"id", "", 'A', HTML_ATTR_ID, L_BasicValue},
+   {"instanceof", "", 'A', HTML_ATTR_instanceof, L_RDFaValue},
    {"ismap", "", 'A', HTML_ATTR_ISAMAP, L_StrictValue},
 
    {"label", "", 'A', HTML_ATTR_label, L_BasicValue},
@@ -294,10 +297,12 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"pluginurl", "embed", 'A', HTML_ATTR_pluginurl, L_TransitionalValue},
    {"profile", "head", 'A', HTML_ATTR_profile, L_BasicValue},
    {"prompt", "", 'A', HTML_ATTR_Prompt, L_StrictValue},
+   {"property", "", 'A', HTML_ATTR_property, L_RDFaValue},
 
    {"rbspan", "rt", 'A', HTML_ATTR_rbspan, L_RubyValue},
    {"readonly", "", 'A', HTML_ATTR_readonly, L_BasicValue},
    {"rel", "", 'A', HTML_ATTR_REL, L_BasicValue},
+   {"resource", "", 'A', HTML_ATTR_resource, L_RDFaValue},
    {"rev", "", 'A', HTML_ATTR_REV, L_BasicValue},
    {"rows", "frameset", 'A', HTML_ATTR_RowHeight, L_TransitionalValue},
    {"rows", "textarea", 'A', HTML_ATTR_Rows, L_BasicValue},

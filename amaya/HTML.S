@@ -11,8 +11,14 @@ ATTR
    PseudoClass = Text;
    Style\240 = Text;		{ style }
    Title = Text;		{ title }
-			{ i18n }
+		 	{ i18n }
    dir = ltr_, rtl_;		{ dir }
+		 	{ RDFa }
+   about = Text;		{ about }
+   property = Text;		{ property }
+   resource = Text;		{ resource }
+   datatype = Text;		{ datatype }
+   instanceof = Text;		{ instanceof }
 			{ events }
    onclick = Text;		{ onclick }
    ondblclick = Text;		{ ondblclick }

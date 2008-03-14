@@ -92,10 +92,33 @@ int TtaGetDocumentProfile (Document document)
 }
 
 /*----------------------------------------------------------------------
+  TtaGetDocumentExtraProfile
+  Gets the document profile
+  ----------------------------------------------------------------------*/
+int TtaGetDocumentExtraProfile (Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS ||
+      LoadedDocument[document - 1] == NULL)
+    {
+      TtaError (ERR_invalid_document_parameter);
+      return (UNDEFINED_CHARSET);
+    }
+  else
+    {
+      pDoc = LoadedDocument[document - 1];
+      return (pDoc->DocExtraProfile);
+    }
+}
+
+/*----------------------------------------------------------------------
   TtaSetDocumentProfile
   Sets the document profile
   ----------------------------------------------------------------------*/
-void TtaSetDocumentProfile (Document document, int profile)
+void TtaSetDocumentProfile (Document document, int profile,  int extraProfile)
 {
   PtrDocument pDoc;
 
@@ -109,6 +132,7 @@ void TtaSetDocumentProfile (Document document, int profile)
     {
       pDoc = LoadedDocument[document - 1];
       pDoc->DocProfile = profile;
+      pDoc->DocExtraProfile = extraProfile;
     }
 }
 

@@ -749,10 +749,16 @@ extern void  TtaSetDocumentCharset (Document document,
 extern int TtaGetDocumentProfile (Document document);
 
 /*----------------------------------------------------------------------
+  TtaGetDocumentExtraProfile
+  Gets the 'extra' document profile
+ ----------------------------------------------------------------------*/
+extern int TtaGetDocumentExtraProfile (Document document);
+
+/*----------------------------------------------------------------------
   TtaSetDocumentProfile
   Sets the document profile
  ----------------------------------------------------------------------*/
-extern void TtaSetDocumentProfile (Document document, int profile);
+extern void TtaSetDocumentProfile (Document document, int profile, int extraProfile);
 
 /*----------------------------------------------------------------------
   TtaSetNamespaceDeclaration

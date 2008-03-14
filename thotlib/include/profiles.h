@@ -31,7 +31,12 @@
 #define L_TransitionalValue 0x08 /* allowed only in Transitional profile */
 #define L_MathMLValue       0x2E /* allowed in MathML profile, SVG profile */
                                  /* and XHTML profiles except Basic */
+#define L_RDFaValue         0x10 /* allowed only in XHTML+RDFa profile */
 #define L_OtherValue        0xFF
+
+/* 'Extra' profiles */
+#define L_NoExtraProfile    0
+#define L_RDFa              1
 
 /*----------------------------------------------------------------------
   TtaCanEdit returns TRUE if there is almost one editing function active.

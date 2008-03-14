@@ -593,7 +593,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
   int                 i;
   DocumentType        thotType;
   PicType             picType;
-  int                 parsingLevel;
+  int                 parsingLevel, extraProfile;
   CHARSET             charset;
   char                charsetname[MAX_LENGTH];
   char               *imageName;
@@ -673,8 +673,8 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
                 is_html = TRUE;
               else /* try sniffing */
                 {
-                  CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &useMath,
-                                  &isKnown, &parsingLevel, &charset, charsetname, &thotType);
+                  CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown, 
+				  &parsingLevel, &charset, charsetname, &thotType, &extraProfile);
                   if (isXML && thotType == docSVG)
                     is_svg = TRUE;
                   if (isXML && thotType == docMath)

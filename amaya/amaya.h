@@ -681,6 +681,7 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 #define DOCTYPE1_XHTML11_PLUS_MATHML  "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN\""
 #define DOCTYPE1_XHTML11_PLUS_MATHML_PLUS_SVG  "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN\""
 #define DOCTYPE1_XHTML10_TRANSITIONAL "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\""
+#define DOCTYPE1_XHTML_PLUS_RDFa      "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML+RDFa 1.0//EN\""
 #define DOCTYPE1_MATHML20             "<!DOCTYPE math PUBLIC \"-//W3C//DTD MathML 2.0//EN\""
 #define DOCTYPE1_SVG10                "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\""
 
@@ -693,6 +694,7 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 #define DOCTYPE2_XHTML11_PLUS_MATHML  "      \"http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd\">"
 #define DOCTYPE2_XHTML11_PLUS_MATHML_PLUS_SVG  "      \"http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd\">"
 #define DOCTYPE2_XHTML10_TRANSITIONAL "      \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"
+#define DOCTYPE2_XHTML_PLUS_RDFa      "      \"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd\">"
 #define DOCTYPE2_MATHML20             "      \"http://www.w3.org/TR/MathML2/dtd/mathml2.dtd\">"
 #define DOCTYPE2_SVG10                "      \"http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd\">"
 

@@ -292,6 +292,8 @@ void CreateDoctype (Document doc, Element doctype, int profile,
             TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML11_PLUS_MATHML_PLUS_SVG,
                                language, doc);
         }
+      else if ((profile == L_Xhtml11) && (TtaGetDocumentExtraProfile(doc) == L_RDFa))
+        TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML_PLUS_RDFa, language, doc);
       else if (profile == L_Xhtml11)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML11, language, doc);
       else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
@@ -329,6 +331,8 @@ void CreateDoctype (Document doc, Element doctype, int profile,
       else if (profile == L_Xhtml11 && useSVG)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11_PLUS_MATHML_PLUS_SVG, language,
                            doc);
+      else if ((profile == L_Xhtml11) && (TtaGetDocumentExtraProfile(doc) == L_RDFa))
+        TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML_PLUS_RDFa, language, doc);
       else if (profile == L_Xhtml11)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11, language, doc);
       else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
@@ -384,7 +388,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       doc = InitDocAndView (doc,
                             !DontReplaceOldDoc /* replaceOldDoc */,
                             InNewWindow /* inNewWindow */,
-                            documentname, (DocumentType)docType, 0, FALSE, profile,
+                            documentname, (DocumentType)docType, 0, FALSE, profile, 0,
                             CE_ABSOLUTE);
       InitDocHistory (doc);
       DontReplaceOldDoc = FALSE;
@@ -399,7 +403,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       doc = InitDocAndView (doc,
                             !DontReplaceOldDoc /* replaceOldDoc */,
                             InNewWindow /* inNewWindow */,
-                            documentname, (DocumentType)docType, 0, FALSE, profile,
+                            documentname, (DocumentType)docType, 0, FALSE, profile, 0,
                             CE_ABSOLUTE);
     }
   TtaFreeMemory (documentname);
@@ -419,7 +423,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
   DocumentSource[doc] = 0;
 
   /* store the document profile */
-  TtaSetDocumentProfile (doc, profile);
+  TtaSetDocumentProfile (doc, profile, 0);
 
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
@@ -730,7 +734,7 @@ void NotFoundDoc (char *url, Document doc)
       doc = InitDocAndView (doc,
                             !DontReplaceOldDoc /* replaceOldDoc */,
                             InNewWindow /* inNewWindow */,
-                            documentname, docHTML, 0, FALSE, L_Strict,
+                            documentname, docHTML, 0, FALSE, L_Strict, 0,
                             CE_ABSOLUTE);
       InitDocHistory (doc);
       DontReplaceOldDoc = FALSE;
@@ -745,7 +749,7 @@ void NotFoundDoc (char *url, Document doc)
       doc = InitDocAndView (doc,
                             !DontReplaceOldDoc /* replaceOldDoc */,
                             InNewWindow /* inNewWindow */,
-                            documentname, docHTML, 0, FALSE, L_Strict,
+                            documentname, docHTML, 0, FALSE, L_Strict, 0,
                             CE_ABSOLUTE);
     }
   TtaFreeMemory (documentname);
@@ -765,7 +769,7 @@ void NotFoundDoc (char *url, Document doc)
   DocumentSource[doc] = 0;
 
   /* store the document profile */
-  TtaSetDocumentProfile (doc, L_Strict);
+  TtaSetDocumentProfile (doc, L_Strict, 0);
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
   docEl = TtaGetMainRoot (doc);
@@ -940,7 +944,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
   char           *tempdoc = NULL; 
   char            documentname[MAX_LENGTH];
   char            tempdir[MAX_LENGTH];
-  int             oldprofile;
+  int             oldprofile, oldExtraprofile;
   ThotBool        ok = FALSE, error = FALSE;
   
   /* The document has to be parsed with the new doctype */
@@ -970,6 +974,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
   TtaExtractName (tempdoc, tempdir, documentname);
   /* change the document profile */
   oldprofile = TtaGetDocumentProfile (doc);
+  oldExtraprofile = TtaGetDocumentExtraProfile (doc);
   ok = ParseWithNewDoctype (doc, tempdoc, tempdir, documentname, new_doctype,
                             &error, xmlDoctype, useMathML, useSVG);
 
@@ -989,7 +994,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
     }
   else
     /* restore the document profile */
-    TtaSetDocumentProfile (doc, oldprofile);
+    TtaSetDocumentProfile (doc, oldprofile, oldExtraprofile);
 
   TtaFreeMemory (tempdoc);
 }
@@ -1024,7 +1029,7 @@ void RemoveDoctype (Document doc, View view)
   if (doctype != NULL)
     {
       TtaDeleteTree (doctype, doc);
-      TtaSetDocumentProfile (doc, L_Other);
+      TtaSetDocumentProfile (doc, L_Other, L_NoExtraProfile);
       UpdateDoctypeMenu (doc);
       TtaSetDocumentModified (doc);
     }

@@ -5258,7 +5258,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                      ThotBool *isXML, ThotBool *useMath, ThotBool *isknown,
                      int *docProfile, CHARSET *charset, char *charsetname,
-                     DocumentType *thotType)
+                     DocumentType *thotType, int *extraProfile)
 {
   gzFile      stream;
   char       *ptr, *beg, *end, *ptrns;
@@ -5275,6 +5275,8 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
   *docProfile = L_Other;
   *charset = UNDEFINED_CHARSET;
   *thotType = docText;
+  *extraProfile = L_NoExtraProfile;
+
   stream = TtaGZOpen (fileName);
   if (stream != 0)
     {
@@ -5458,9 +5460,22 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                           *thotType = docHTML;
                                           *isknown = TRUE;
                                           *docProfile = L_Xhtml11;
-                                        }
-                                    }
-                                }
+					}
+				      else
+					{
+					  ptr = strstr (&buffer[i], "+RDFa");
+					  if (!ptr || (ptr && ptr > end))
+					    ptr = strstr (&buffer[i], "+rdfa");
+					  if (ptr && ptr < end)
+					    {
+					      *thotType = docHTML;
+					      *isknown = TRUE;
+					      *docProfile = L_Xhtml11;
+					      *extraProfile = L_RDFa;
+					    }
+					}
+				    }
+				}
                             }
                           else
                             {

@@ -87,7 +87,7 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
   annotDoc = InitDocAndView (doc,
                              FALSE /* replaceOldDoc */,
                              TRUE /* inNewWindow */,
-                             tmp, docAnnot, 0, FALSE, L_Annot, CE_ABSOLUTE);
+                             tmp, docAnnot, 0, FALSE, L_Annot, 0, CE_ABSOLUTE);
 
   if (annotDoc == 0) 
     {

@@ -2794,6 +2794,41 @@ ATTRIBUTES
         Create DoubleQuote;
         END;
 
+ about: BEGIN
+  Create SAN;
+	Create 'about="';
+	Create about;
+	Create DoubleQuote;
+	END;
+
+ property: BEGIN
+  Create SAN;
+	Create 'property="';
+	Create property;
+	Create DoubleQuote;
+	END;
+
+ resource: BEGIN
+  Create SAN;
+	Create 'resource="';
+	Create resource;
+	Create DoubleQuote;
+	END;
+
+ datatype: BEGIN
+  Create SAN;
+	Create 'datatype="';
+	Create datatype;
+	Create DoubleQuote;
+	END;
+
+ instanceof: BEGIN
+  Create SAN;
+	Create 'instanceof="';
+	Create instanceof;
+	Create DoubleQuote;
+	END;
+
  Invalid_attribute:
         BEGIN
 #ifndef XML

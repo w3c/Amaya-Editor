@@ -5146,7 +5146,7 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
   NotifyElement event;
   DisplayMode   dispMode;
   gzFile        infile;
-  int           parsingLevel, saveDocNet;
+  int           parsingLevel, extraProfile, saveDocNet;
   char          charsetname[MAX_LENGTH];
   char          type[NAME_LENGTH];
   char         *extUseUri = NULL, *extUseId = NULL, *s = NULL, *htmlURL = NULL;
@@ -5276,7 +5276,7 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
           /* Check if there is an xml declaration with a charset declaration */
           if (tempName != EOS)
             CheckDocHeader (tempName, &xmlDec, &docType, &isXML, &useMath, &isKnown,
-                            &parsingLevel, &charset, charsetname, &thotType);
+                            &parsingLevel, &charset, charsetname, &thotType, &extraProfile);
 	  
           /* Parse the external file */
           DocumentMeta[externalDoc]->compound = FALSE;
