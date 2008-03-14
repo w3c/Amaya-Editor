@@ -4671,6 +4671,7 @@ void ExportXmlDocument (Document doc, PtrElement pNode, ThotBool recordLineNb)
               /* Generate the xml declaration */
               if (pNode == pDoc->DocDocElement)
                 {
+#ifdef IV
                   /* version */
                   ExportXmlBuffer (doc, (unsigned char *)"<?xml version=\"1.0\"");
                   /* encoding */
@@ -4686,6 +4687,7 @@ void ExportXmlDocument (Document doc, PtrElement pNode, ThotBool recordLineNb)
                       ExportXmlBuffer (doc, (unsigned char *)"\"");
                     }
                   ExportXmlBuffer (doc, (unsigned char *)"?>");
+#endif
                 }
               else
                 {

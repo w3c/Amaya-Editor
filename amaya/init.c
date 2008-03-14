@@ -4217,7 +4217,7 @@ void ShowSource (Document doc, View view)
           charset = TtaGetDocumentCharset (doc);
           if (charset == UNDEFINED_CHARSET)
             {
-              if (DocumentMeta[doc]->xmlformat)
+              if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
                 TtaSetDocumentCharset (SavingDocument, UTF_8, FALSE);
               else
                 TtaSetDocumentCharset (SavingDocument, ISO_8859_1, FALSE);
@@ -4865,12 +4865,12 @@ Document GetAmayaDoc (char *urlname, char *form_data,
     docType = docSVG;
   else if (IsCSSName (documentname))
     docType = docCSS;
-#ifdef TEMPLATES
+#ifdef IV
   else if (IsXTiger (documentname))
-    // @@@@ by default it's a HTML document
-    docType = docHTML;
+      // @@@@ by default it's a HTML document
+      docType = docHTML;
 #endif /* TEMPLATES */
-  else if (IsXMLName (documentname))
+  else if (IsXTiger (documentname) || IsXMLName (documentname))
     {
       docType = docXml;
       //TODO Check that urlname is a valid URL
@@ -5250,22 +5250,14 @@ static void ChangeDoctype (ThotBool isXml)
 }
 
 /*----------------------------------------------------------------------
-  UpdateSaveAsButtons
-  Maintain consistency between buttons in the Save As dialog box
-  ----------------------------------------------------------------------*/
-static void UpdateSaveAsButtons ()
-{
-}
-
-/*----------------------------------------------------------------------
   SetFileSuffix
   Set the suffix of the file name used for saving a document
   ----------------------------------------------------------------------*/
 static void SetFileSuffix ()
 {
   char  	suffix[6];
-  char         *filename;
-  int		i, len;
+  char   *filename;
+  int		  i, len;
 
   if (SavingDocument && SaveName[0] != EOS)
     {
@@ -5659,14 +5651,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
           SaveAsHTML = TRUE;
           SaveAsXML = FALSE;
           SaveAsText = FALSE;
-          UpdateSaveAsButtons ();
           SetFileSuffix ();
           break;
         case 1:	/* "Save as XML" button */
           SaveAsXML = TRUE;
           SaveAsHTML = FALSE;
           SaveAsText = FALSE;
-          UpdateSaveAsButtons ();
           SetFileSuffix ();
           /* Set the document charset */
           if (TtaGetDocumentCharset (SavingDocument) == UNDEFINED_CHARSET)

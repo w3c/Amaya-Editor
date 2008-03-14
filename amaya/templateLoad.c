@@ -150,16 +150,15 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
   ElementType  type;
-  char        *name = NULL,
-              *include = NULL,
-              *exclude = NULL;
+  Element      child;
+  char        *name = NULL, *include = NULL, *exclude = NULL;
   Declaration old = NULL;
 
-  if(!t)
+  if (!t)
     return;
 
-  if(el==NULL)
-    el = TtaGetMainRoot(t->doc);
+  if (el == NULL)
+    el = TtaGetMainRoot (t->doc);
 
   type = TtaGetElementType (el);	
   if (!strcmp (TtaGetSSchemaName (type.ElSSchema),"Template"))
@@ -211,7 +210,7 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
         }
     }
 
-  Element child = TtaGetFirstChild (el);
+  child = TtaGetFirstChild (el);
   while (child)
     {
       Template_ParseDeclarations (t, child);
@@ -294,7 +293,7 @@ void Template_PrepareTemplate(void* templ)
 
   TtaFreeMemory(iter);
 
-  Template_ParseDeclarations  (t, 0);
+  Template_ParseDeclarations  (t, NULL);
   Template_MoveUnknownDeclarationToXmlElement(t);
   Template_FillDeclarations (t);
   
@@ -332,12 +331,14 @@ static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 
 
 /*----------------------------------------------------------------------
+  LoadTemplate loads the template document and returns its type.
+  Return docFree itf the template cannot be loaded.
   ----------------------------------------------------------------------*/
-ThotBool LoadTemplate (Document doc, char* templatename)
+DocumentType LoadTemplate (Document doc, char* templatename)
 {
 #ifdef TEMPLATES
-  ThotBool         res = FALSE;
   Document         newdoc = 0;
+  DocumentType     docType = docFree;
   char            *s, *directory;
   unsigned int     size = strlen (templatename) + 1;
   XTigerTemplate   t = NULL;
@@ -381,16 +382,15 @@ ThotBool LoadTemplate (Document doc, char* templatename)
     printf("XTiger template %s loaded.\n", t->name);
 #endif /* AMAYA_DEBUG */
           if(Template_HasErrors(t))
-            {
-              Template_ShowErrors(t);
-            }
+            Template_ShowErrors(t);
           else
             {
               DoInstanceTemplate (ctx->templatePath);
+              // get the real docType of the template
+              docType = DocumentTypes[ctx->newdoc];
               DocumentTypes[ctx->newdoc] = docTemplate;
               TtaSetDocumentUnmodified (ctx->newdoc);
               UpdateTemplateMenus(doc);
-              res = true;
             }
         }
       TtaFreeMemory(ctx->templatePath);
@@ -400,9 +400,9 @@ ThotBool LoadTemplate (Document doc, char* templatename)
 #ifdef AMAYA_DEBUG  
   DumpAllDeclarations();
 #endif /* AMAYA_DEBUG */
-  return res;
+  return docType;
 #else /* TEMPLATES */
-  return FALSE;
+  return docFree;
 #endif /* TEMPLATES */
 }
 

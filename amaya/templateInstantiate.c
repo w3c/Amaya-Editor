@@ -373,6 +373,7 @@ void CreateInstance(char *templatePath, char *instancePath, int basedoc)
 
   if (!TtaHasUndoSequence (doc))
     {
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       root = TtaGetRootElement(doc);
       elType = TtaGetElementType (root);
       // get the target document type
@@ -380,7 +381,6 @@ void CreateInstance(char *templatePath, char *instancePath, int basedoc)
       // Do special stuff for HTML documents
       if (strcmp (s, "HTML") == 0)
         {
-          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
           // Initialize the document title
           elType.ElTypeNum = HTML_EL_TITLE;
           title = TtaSearchTypedElement (elType, SearchInTree, root);
@@ -403,21 +403,22 @@ void CreateInstance(char *templatePath, char *instancePath, int basedoc)
                 // Look for the first text child
                 TtaNextSibling (&text);
             }
-          // update the charset if needed
-          charsetname = TtaGetEnvString ("DOCUMENT_CHARSET");
-          charset = TtaGetCharset (charsetname);
-          if (charset != UNDEFINED_CHARSET &&
-              DocumentMeta[doc]->charset &&
-              strcmp (charsetname, DocumentMeta[doc]->charset))
-            {
-              TtaSetDocumentCharset (doc, charset, FALSE);
-              DocumentMeta[doc]->charset = TtaStrdup (charsetname);
-              SetNamespacesAndDTD (doc);
-            }
-          // Save HTML special changes
-          TtaCloseUndoSequence (doc);
-          changes = TRUE;
         }
+
+      // update the charset if needed
+      charsetname = TtaGetEnvString ("DOCUMENT_CHARSET");
+      charset = TtaGetCharset (charsetname);
+      if (charset != UNDEFINED_CHARSET &&
+          DocumentMeta[doc]->charset &&
+          strcmp (charsetname, DocumentMeta[doc]->charset))
+        {
+          TtaSetDocumentCharset (doc, charset, FALSE);
+          DocumentMeta[doc]->charset = TtaStrdup (charsetname);
+          SetNamespacesAndDTD (doc);
+        }
+      // Save HTML special changes
+      TtaCloseUndoSequence (doc);
+      changes = TRUE;
 
       // Save document
       SaveDocumentToNewDoc(doc, newdoc, instancePath, &localFile);
@@ -1179,7 +1180,7 @@ void DoInstanceTemplate (char *templatename)
 #ifdef TEMPLATES
   XTigerTemplate  t;
   ElementType     elType;
-  Element         root, piElem, doctype, elFound, text;
+  Element         root, piElem, doctype, line, text, elNew, elFound;
   Document        doc;
   char           *s, *charsetname = NULL, buffer[MAX_LENGTH];
   int             pi_type;
@@ -1226,33 +1227,40 @@ void DoInstanceTemplate (char *templatename)
     }
 
   doctype = TtaSearchTypedElement (elType, SearchInTree, root);
-  if (!doctype)
+  if (doctype == NULL)
     {
-      /* generate the XML declaration */
-      /* Check the Thot abstract tree against the structure schema. */
-      TtaSetStructureChecking (FALSE, doc);
-      elType.ElTypeNum = pi_type;
-      doctype = TtaNewTree (doc, elType, "");
-      TtaInsertFirstChild (&doctype, root, doc);
-      elFound = TtaGetFirstChild (doctype);
-      text = TtaGetFirstChild (elFound);
-      strcpy (buffer, "xml version=\"1.0\" encoding=\"");
-      charsetname = UpdateDocumentCharset (doc);
-      strcat (buffer, charsetname);
-      strcat (buffer, "\"");
-      TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
-      TtaSetStructureChecking (TRUE, doc);
-      TtaFreeMemory(charsetname);
+      elType.ElTypeNum = pi_type;      
+      piElem = TtaSearchTypedElement (elType, SearchInTree, root);
+      if (piElem == NULL)
+        {
+          /* generate the XML declaration */
+          /* Check the Thot abstract tree against the structure schema. */
+          TtaSetStructureChecking (FALSE, doc);
+          piElem = TtaNewTree (doc, elType, "");
+          TtaInsertFirstChild (&piElem, root, doc);
+          line = TtaGetFirstChild (piElem);
+          text = TtaGetFirstChild (line);
+          strcpy (buffer, "xml version=\"1.0\" encoding=\"");
+          charsetname = UpdateDocumentCharset (doc);
+          strcat (buffer, charsetname);
+          strcat (buffer, "\"");
+          TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
+          TtaSetStructureChecking (TRUE, doc);
+          TtaFreeMemory(charsetname);
+        }
     }
   
   /* generate the XTiger PI */
   /* Check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (FALSE, doc);
   elType.ElTypeNum = pi_type;
-  piElem = TtaNewTree (doc, elType, "");
-  TtaInsertSibling (piElem, doctype, FALSE, doc);
-  elFound = TtaGetFirstChild (piElem);
-  text = TtaGetFirstChild (elFound);
+  elNew = TtaNewTree (doc, elType, "");
+  if (doctype)
+    TtaInsertSibling (elNew, doctype, FALSE, doc);
+  else
+    TtaInsertSibling (elNew, piElem, FALSE, doc);
+  line = TtaGetFirstChild (elNew);
+  text = TtaGetFirstChild (line);
   strcpy (buffer, "xtiger template=\"");
   strcat (buffer, templatename);
   strcat (buffer, "\" version=\"");

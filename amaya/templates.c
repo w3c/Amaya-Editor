@@ -375,9 +375,11 @@ void InitTemplates ()
 void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
 {
 #ifdef TEMPLATES
-
-  char *s;
-  ThotBool dontReplace = DontReplaceOldDoc;
+  DocumentType docType;
+  int          len, i;
+  char        *s;
+  char  	     suffix[6];
+  ThotBool     dontReplace = DontReplaceOldDoc;
 
   if (!IsW3Path (docname) && TtaFileExist (docname))
     {
@@ -389,11 +391,45 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
       if (!UserAnswer)
         return;
     }
-
-  if(LoadTemplate (0, templatename))
+  docType = LoadTemplate (0, templatename);
+  if (docType != docFree)
     {
+      /* check if the file suffix is conform to the document type */
+      s = (char *)TtaGetMemory (strlen (docname) + 10);
+      strcpy (s, docname);
+      if (!IsXMLName (docname))
+        {
+          // by default no suffix is added
+          suffix[0] = EOS;
+          if (IsMathMLName (docname) && docType != docMath)
+            strcpy (suffix, "mml");
+          else if (IsSVGName (docname) && docType != docSVG)
+            strcpy (suffix, "svg");
+          else if (IsHTMLName (docname) && docType != docHTML)
+            strcpy (suffix, "xml");
+          if (suffix[0] != EOS)
+            {
+              // change or update the suffix
+              len = strlen (s);
+              for (i = len-1; i > 0 && s[i] != '.'; i--);
+              if (s[i] != '.')
+                {
+                  /* there is no suffix */
+                  s[i++] = '.';
+                  strcpy (&s[i], suffix);
+                }
+              else
+                {
+                  /* there is a suffix */
+                  i++;
+                  strcpy (&s[i], suffix);
+                }
+            }
+        }
+      // now create the instance
       DontReplaceOldDoc = dontReplace;
-      CreateInstance (templatename, docname, doc);
+      CreateInstance (templatename, s, doc);
+      TtaFreeMemory (s);
     }
 #endif /* TEMPLATES */
 }

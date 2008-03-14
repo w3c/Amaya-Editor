@@ -50,6 +50,7 @@ extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );
 extern ThotBool TemplateAttrInMenu ( NotifyAttribute * event );
 extern void CreateTemplateFromDocument ( Document doc,
                                          View view );
+extern void UpdateTemplateMenus ( Document doc );
 
 #else /* __STDC__ */
 
@@ -97,6 +98,7 @@ extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );
 extern ThotBool TemplateAttrInMenu ( NotifyAttribute * event );
 extern void CreateTemplateFromDocument ( Document doc,
                                            View view );
+extern void UpdateTemplateMenus ( Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

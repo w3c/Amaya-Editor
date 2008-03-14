@@ -626,7 +626,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       xd = pBox->BxXOrg + l;
       width = pBox->BxWidth;
     }
-  else if (from->BxType == BoGhost && pFrom->AbDisplay == 'B')
+  else if (from->BxType == BoGhost && (pFrom->AbDisplay == 'B' || pFrom->AbInLine))
     {
       l = 0;//from->BxLMargin;
       b = 0;//from->BxBMargin;
