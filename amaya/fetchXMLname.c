@@ -369,6 +369,7 @@ char *GetXMLElementName (ElementType elType, Document doc)
       profile = TtaGetDocumentProfile (doc);
       if (profile == L_Annot)
         profile = L_Other;
+
       if (ptr)
         do
           {
@@ -587,7 +588,7 @@ char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
 {
   AttributeMapping   *ptr;
   char               *name, *tag;
-  int                 i, profile;
+  int                 i, profile, extraprofile;
   ThotBool            invalid = FALSE;
 
   if (attrType.AttrTypeNum > 0)
@@ -617,20 +618,21 @@ char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
         ptr = XHTMLAttributeMappingTable;
       
       profile = TtaGetDocumentProfile (doc);
+      extraprofile = TtaGetDocumentExtraProfile (doc);
       if (profile == L_Annot)
         profile = L_Other;
+
       if (ptr)
         do
           {
             if (ptr[i].ThotAttribute == attrType.AttrTypeNum &&
-                (ptr[i].XMLelement[0] == EOS ||
-                 !strcmp (ptr[i].XMLelement, tag)))
+                (ptr[i].XMLelement[0] == EOS || !strcmp (ptr[i].XMLelement, tag)))
               {
-                if (doc != 0 &&
-                    profile != L_Other &&
-                    !(ptr[i].Level & profile))
+                if (doc != 0 && profile != L_Other && extraprofile == L_NoExtraProfile && !(ptr[i].Level & profile))
                   invalid = TRUE;
-                else
+                else if (doc != 0 && ptr[i].Level == L_RDFaValue && extraprofile != L_RDFa)
+                  invalid = TRUE;
+		else
                   return ptr[i].XMLattribute;
               }
             i++;
