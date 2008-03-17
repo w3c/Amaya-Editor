@@ -264,93 +264,94 @@
 262 &Add/Remove IDs...
 263 Chec&k spelling...
 264 Transfor&m...
-265 Edit table
-266 Change to data cell
-267 Change to heading cell
-268 Merge cells
-269 Join with the cell at the right
-270 Join with the cell below
-271 Shrink horizontal extend
-272 Shrink vertical extend
-273 Select the row
-274 Insert a row
-275 Append a row
-276 Select the column
-277 Insert a column
-278 Append a column
-279 Paste before
-280 Paste after
-281 Change title...
-282 Change doctype
-283 Remove the doctype
-284 Add a doctype
-285 Change to XHTML 1.1
-286 Change to XHTML 1.0 Transitional
-287 Change to XHTML 1.0 Strict
-288 Change to XHTML 1.0 Basic
-289 Change to HTML 4.01 Transitional
-290 Change to HTML 4.01 Strict
-291 &Section numbering
-292 &Add/Update table of contents
-293 &Make book
-294 Insert time stamp
-295 Graphics
-296 Show SVG library
-297 Add to SVG library
-298 A&nnotations
-299 Annotate selection
-300 Annotate document
-301 Move to selection
-302 Store selection as &XPointer
-303 Move to stored XPointer
-304 Reply to annotation
-305 Post to server
-306 Delete
-307 Load
-308 Customize query...
-309 Local filter...
-310 C&ooperation
-311 Lock resource...
-312 Unlock resource...
-313 View resource properties...
-314 Copy lock information...
-315 Locked?
-316 Templates
-317 Create template from current document...
-318 &Javascript/DOM
-319 Enable/Disable
-320 Execute a command
-321 Execute an external script
-322 Add an external script
-323 Insert a script
-324 About Amaya
-325 About Amaya at W3C
-326 Index
-327 Browsing
-328 Views
-329 Selecting
-330 Documents
-331 Creating elements
-332 Attributes
-333 Characters
-334 Templates
-335 Restructuring
-336 Links
-337 Tables
-338 Image maps
-339 Math
-340 Graphics
-341 XML support
-342 Style sheets
-343 Searching
-344 Spell checking
-345 Publishing
-346 Cooperation
-347 Printing
-348 Numbering
-349 Making books
-350 Annotations
-351 Configuring
-352 Shortcuts
-353 Accessibility in Amaya
-354 Tip of the day...
+265 Code clean up
+266 Edit table
+267 Change to data cell
+268 Change to heading cell
+269 Merge cells
+270 Join with the cell at the right
+271 Join with the cell below
+272 Shrink horizontal extend
+273 Shrink vertical extend
+274 Select the row
+275 Insert a row
+276 Append a row
+277 Select the column
+278 Insert a column
+279 Append a column
+280 Paste before
+281 Paste after
+282 Change title...
+283 Change doctype
+284 Remove the doctype
+285 Add a doctype
+286 Change to XHTML 1.1
+287 Change to XHTML 1.0 Transitional
+288 Change to XHTML 1.0 Strict
+289 Change to XHTML 1.0 Basic
+290 Change to HTML 4.01 Transitional
+291 Change to HTML 4.01 Strict
+292 &Section numbering
+293 &Add/Update table of contents
+294 &Make book
+295 Insert time stamp
+296 Graphics
+297 Show SVG library
+298 Add to SVG library
+299 A&nnotations
+300 Annotate selection
+301 Annotate document
+302 Move to selection
+303 Store selection as &XPointer
+304 Move to stored XPointer
+305 Reply to annotation
+306 Post to server
+307 Delete
+308 Load
+309 Customize query...
+310 Local filter...
+311 C&ooperation
+312 Lock resource...
+313 Unlock resource...
+314 View resource properties...
+315 Copy lock information...
+316 Locked?
+317 Templates
+318 Create template from current document...
+319 &Javascript/DOM
+320 Enable/Disable
+321 Execute a command
+322 Execute an external script
+323 Add an external script
+324 Insert a script
+325 About Amaya
+326 About Amaya at W3C
+327 Index
+328 Browsing
+329 Views
+330 Selecting
+331 Documents
+332 Creating elements
+333 Attributes
+334 Characters
+335 Templates
+336 Restructuring
+337 Links
+338 Tables
+339 Image maps
+340 Math
+341 Graphics
+342 XML support
+343 Style sheets
+344 Searching
+345 Spell checking
+346 Publishing
+347 Cooperation
+348 Printing
+349 Numbering
+350 Making books
+351 Annotations
+352 Configuring
+353 Shortcuts
+354 Accessibility in Amaya
+355 Tip of the day...

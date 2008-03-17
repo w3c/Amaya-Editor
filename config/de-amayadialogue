@@ -264,93 +264,94 @@
 262 Id hinzufügen/entfernen...
 263 Rechtschreibprüfung...
 264 Transformieren...
-265 Tabelle editieren
-266 Umwandeln in datenzelle
-267 Umwandeln in titelzelle
-268 Zusammenfügen die zellen
-269 Zusammenfügen mit rechter Zelle
-270 Zusammenfügen mit der zelle darunter
-271 Verkleinern der breite
+265 **Code clean up
+266 Tabelle editieren
+267 Umwandeln in datenzelle
+268 Umwandeln in titelzelle
+269 Zusammenfügen die zellen
+270 Zusammenfügen mit rechter Zelle
+271 Zusammenfügen mit der zelle darunter
 272 Verkleinern der breite
-273 Zeile auswählen
-274 Zeile einfügen (davor)
-275 Zeile inzufügen (danach)
-276 Spalte auswählen
-277 Spalte einfügen (davor)
-278 Spalte inzufügen (danach)
-279 Einfügen (davor)
-280 Einfügen (danach)
-281 Titel ändern
-282 DTD ändern
-283 DTD entfernen
-284 Dokumenttyp hinzufügen
-285 XHTML 1.1
-286 Dokumenttyp XHTML 1.0 Transitional zuweisen
-287 XHTML 1.0 Strict
-288 XHTML 1.0 Basic
-289 HTML 4.01 Transitional
-290 HTML Strict
-291 Abschnitte numerieren
-292 Inhaltsverzeichnis erzeugen
-293 Buch erstellen
-294 Zeitstempel einfügen
-295 Grafiken
-296 SVG-Bibliothek anzeigen...
-297 Markierung in SVG-Bibliothek
-298 A&nmerkungen
-299 Zur Markierung
-300 Zum Dokument
-301 Auf Markierung verschieben
-302 Als XPointer speichern
-303 Auf XPointer verschieben
-304 Beantworten
-305 Veröffentlichen
-306 Löschen
-307 Laden
-308 Abfrage bearbeiten...
-309 Filter...
-310 &Kooperation
-311 Resource sperren...
-312 Resource entsperren...
-313 Resourceeigenschaften anzeigen...
-314 Sperrinformation kopieren...
-315 Gesperrt?
-316 **Templates
-317 **Create template from current document...
-318 &Javascript/DOM
-319 Java-Unterstützung ein-/ausschalten
-320 Befehl ausführen
-321 externes Skript ausführen
-322 externes Skript hinzufügen
-323 Skript einfügen
-324 Info
-325 Über Amaya
-326 Index
-327 Browsen
-328 Ansichten
-329 Markieren
-330 Dokuments
-331 Elemente
-332 Attribute
-333 Zeichen
-334 Vorlagen
-335 Transformieren
-336 Verweise
-337 Tabellen
-338 Aktive Bildbereiche
-339 Formeln
-340 Grafiken
-341 XML
-342 Formate/Formatvorlagen
-343 Suchen/Ersetzen
-344 Rechtschreibprüfung
-345 Speichern/Veröffentlichen
-346 Kooperation
-347 Drucken
-348 Abschnitte numerieren
-349 Buch erstellen
-350 Anmerkungen
-351 Konfiguration
-352 Tastenkürzel
-353 Benutzerfreundlichkeit
-354 Tip des Tages...
+273 Verkleinern der breite
+274 Zeile auswählen
+275 Zeile einfügen (davor)
+276 Zeile inzufügen (danach)
+277 Spalte auswählen
+278 Spalte einfügen (davor)
+279 Spalte inzufügen (danach)
+280 Einfügen (davor)
+281 Einfügen (danach)
+282 Titel ändern
+283 DTD ändern
+284 DTD entfernen
+285 Dokumenttyp hinzufügen
+286 XHTML 1.1
+287 Dokumenttyp XHTML 1.0 Transitional zuweisen
+288 XHTML 1.0 Strict
+289 XHTML 1.0 Basic
+290 HTML 4.01 Transitional
+291 HTML Strict
+292 Abschnitte numerieren
+293 Inhaltsverzeichnis erzeugen
+294 Buch erstellen
+295 Zeitstempel einfügen
+296 Grafiken
+297 SVG-Bibliothek anzeigen...
+298 Markierung in SVG-Bibliothek
+299 A&nmerkungen
+300 Zur Markierung
+301 Zum Dokument
+302 Auf Markierung verschieben
+303 Als XPointer speichern
+304 Auf XPointer verschieben
+305 Beantworten
+306 Veröffentlichen
+307 Löschen
+308 Laden
+309 Abfrage bearbeiten...
+310 Filter...
+311 &Kooperation
+312 Resource sperren...
+313 Resource entsperren...
+314 Resourceeigenschaften anzeigen...
+315 Sperrinformation kopieren...
+316 Gesperrt?
+317 **Templates
+318 **Create template from current document...
+319 &Javascript/DOM
+320 Java-Unterstützung ein-/ausschalten
+321 Befehl ausführen
+322 externes Skript ausführen
+323 externes Skript hinzufügen
+324 Skript einfügen
+325 Info
+326 Über Amaya
+327 Index
+328 Browsen
+329 Ansichten
+330 Markieren
+331 Dokuments
+332 Elemente
+333 Attribute
+334 Zeichen
+335 Vorlagen
+336 Transformieren
+337 Verweise
+338 Tabellen
+339 Aktive Bildbereiche
+340 Formeln
+341 Grafiken
+342 XML
+343 Formate/Formatvorlagen
+344 Suchen/Ersetzen
+345 Rechtschreibprüfung
+346 Speichern/Veröffentlichen
+347 Kooperation
+348 Drucken
+349 Abschnitte numerieren
+350 Buch erstellen
+351 Anmerkungen
+352 Konfiguration
+353 Tastenkürzel
+354 Benutzerfreundlichkeit
+355 Tip des Tages...

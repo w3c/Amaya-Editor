@@ -1718,12 +1718,6 @@ void MakeToc (Document doc, View view)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
       return;
     }
-  else if (TtaIsReadOnly (el))
-    {
-      /* read-only */
-      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
-      return;
-    }
 
   elType = TtaGetElementType (el);
   s = TtaGetSSchemaName (elType.ElSSchema);

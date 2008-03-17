@@ -189,6 +189,7 @@ HelpAtW3C
 +struct-module
 +text-module
 +css-style
+&RemoveDeprecatedElements
 
 ################# XHTML1.1
 {XHTML 1.1}
@@ -541,6 +542,7 @@ HelpLinks
 [edit-module]
 &SetOnOffINS
 &SetOnOffDEL
+&RemoveDeprecatedElements
 
 [bdi-text-module]
 &SetOnOffBDO

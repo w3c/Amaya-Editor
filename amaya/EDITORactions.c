@@ -93,11 +93,161 @@ void ExecuteACommand (Document document, View view)
 
 /*----------------------------------------------------------------------
   InsertScript
-    Add a <script> and open the structure View
+  Add a <script> and open the structure View
   -----------------------------------------------------------------------*/
-void InsertScript(Document document, View view)
+void InsertScript (Document document, View view)
 {
   CreateScript (document, view, FALSE);
+}
+
+/*----------------------------------------------------------------------
+  RemoveDeprecatedElements
+  Remove <font>, <basefont>, <center>, <dir>, <menu>,
+  <applet>, <isindex>, <s>, <u>, <strike>
+  -----------------------------------------------------------------------*/
+void RemoveDeprecatedElements (Document doc, View view)
+{
+  Element             el, old, parent, child;
+  ElementType         elType, searchedType1, searchedType2;
+  ElementType         searchedType3, searchedType4, searchedType5;
+  DisplayMode         dispMode;
+  char               *s;
+  ThotBool            modified = FALSE, closeUndo;
+  
+  /* get the insert point */
+  el = TtaGetMainRoot (doc);
+  if (el == NULL || TtaIsReadOnly (el))
+    {
+      /* no selection */
+      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+      return;
+    }
+
+  elType = TtaGetElementType (el);
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp (s, "HTML"))
+    {
+      /* check if there is HTML Hi elements and if the current position is
+         within a HTML Body element */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, SuspendDisplay);
+
+      if (TtaHasUndoSequence (doc))
+        closeUndo = FALSE;
+      else
+        {
+          closeUndo = TRUE;
+          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+        }
+
+      /* Don't check the Thot abstract tree against the structure schema. */
+      TtaSetStructureChecking (FALSE, doc);
+
+      /* remove <font> <basefont> <center> <dir> <menu> */
+      searchedType1.ElSSchema = elType.ElSSchema;
+      searchedType1.ElTypeNum = HTML_EL_Font_;
+      searchedType2.ElSSchema = elType.ElSSchema;
+      searchedType2.ElTypeNum = HTML_EL_Center;
+      searchedType3.ElSSchema = elType.ElSSchema;
+      searchedType3.ElTypeNum = HTML_EL_Directory;
+      searchedType4.ElSSchema = elType.ElSSchema;
+      searchedType4.ElTypeNum = HTML_EL_Menu;
+      searchedType5.ElSSchema = elType.ElSSchema;
+      searchedType5.ElTypeNum = HTML_EL_BaseFont;
+      while (el)
+        {
+          el = TtaSearchElementAmong5Types (searchedType1, searchedType2,
+                                            searchedType3, searchedType4,
+                                            searchedType5, SearchForward, el);
+          if (el)
+            {
+              parent = TtaGetParent (el);
+              elType = TtaGetElementType (el);
+              if (elType.ElTypeNum == HTML_EL_Font_ ||
+                  IsCharacterLevelElement (parent))
+                {
+                  old = el;
+                  el = parent;
+                  // move all children before the removed element
+                  child = TtaGetFirstChild (old);
+                  while (child)
+                    {
+                      TtaRegisterElementDelete (child, doc);
+                      TtaRemoveTree (child, doc);
+                      TtaInsertSibling (child, old, TRUE, doc);
+                      TtaRegisterElementCreate (child, doc);
+                      TtaNextSibling (&child);
+                    }
+                  TtaRegisterElementDelete (old, doc);
+                  TtaDeleteTree (old, doc);
+                  modified = TRUE;
+                }
+              else if (elType.ElTypeNum == HTML_EL_Center)
+                {
+                  // change to a Division
+                  TtaChangeTypeOfElement (el, doc, HTML_EL_Division);
+                  /* register the change in the undo sequence */
+                  TtaRegisterElementTypeChange (el, HTML_EL_Division, doc);
+                  modified = TRUE;
+                }
+              else
+                {
+                  // change to a Unnumbered_List
+                  TtaChangeTypeOfElement (el, doc, HTML_EL_Unnumbered_List);
+                  /* register the change in the undo sequence */
+                  TtaRegisterElementTypeChange (el, HTML_EL_Unnumbered_List, doc);
+                  modified = TRUE;
+                }
+            }
+        }
+
+      el = TtaGetMainRoot (doc);
+      /* remove <font> <basefont> <center> <dir> <menu> */
+      searchedType1.ElSSchema = elType.ElSSchema;
+      searchedType1.ElTypeNum = HTML_EL_Applet;
+      searchedType2.ElSSchema = elType.ElSSchema;
+      searchedType2.ElTypeNum = HTML_EL_ISINDEX;
+      searchedType3.ElSSchema = elType.ElSSchema;
+      searchedType3.ElTypeNum = HTML_EL_Struck_text;
+      searchedType4.ElSSchema = elType.ElSSchema;
+      searchedType4.ElTypeNum = HTML_EL_Font;
+      searchedType5.ElSSchema = elType.ElSSchema;
+      searchedType5.ElTypeNum = HTML_EL_Invalid_element;
+      while (el)
+        {
+          el = TtaSearchElementAmong5Types (searchedType1, searchedType2,
+                                            searchedType3, searchedType4,
+                                            searchedType5, SearchForward, el);
+          if (el)
+            {
+              parent = TtaGetParent (el);
+              old = el;
+              el = parent;
+              // move all children before the removed element
+              child = TtaGetFirstChild (old);
+              while (child)
+                {
+                  TtaRegisterElementDelete (child, doc);
+                  TtaRemoveTree (child, doc);
+                  TtaInsertSibling (child, old, TRUE, doc);
+                  TtaNextSibling (&child);
+                  TtaRegisterElementCreate (child, doc);
+                }
+              TtaRegisterElementDelete (old, doc);
+              TtaDeleteTree (old, doc);
+              modified = TRUE;
+            }
+        }
+
+      TtaSetStructureChecking (TRUE, doc);
+      if (closeUndo)
+        TtaCloseUndoSequence (doc);
+      if (modified)
+        TtaSetDocumentModified (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, dispMode);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -345,7 +495,6 @@ void CreateDoctype (Document doc, Element doctype, int profile,
         TtaSetTextContent (text, (unsigned char*)DOCTYPE2_SVG10, language, doc);
     }
   TtaSetStructureChecking (TRUE, doc);
-  return;
 }
 
 /*----------------------------------------------------------------------

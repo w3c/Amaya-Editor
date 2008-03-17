@@ -264,93 +264,94 @@
 262 &Crear/Borrar atributos id...
 263 &Revisar ortografía...
 264 &Transformar...
-265 Editar tabla
-266 Cambiar a celda de datos
-267 Cambiar a celda de cabecera
-268 Unir
-269 Unir con celda derecha
-270 Unir con celda inferior
-271 Reducir extensión horizontal
-272 Reducir extensión vertical
-273 Seleccionar fila
-274 Insertar fila delante
-275 Añadir fila detrás
-276 Seleccionar columna
-277 Insertar columna delante
-278 Añadir columna detrás
-279 Pegar delante
-280 Pegar detrás
-281 Título (title) ...
-282 Cambiar doct&ype
-283 &Borrar doctype
-284 Añadir doctype
-285 Cambiar a XHTML 1.1
-286 Cambiar a XHTML 1.0 Transitional
-287 Cambiar a XHTML 1.0 &Strict
-288 Cambiar a XHTML 1.0 Basic
-289 Cambiar a HTML 4.01 Transitional
-290 Cambiar a HTML 4.01 Strict
-291 &Numerar encabezados
-292 &Generar índice de materias
-293 &Hacer libro
-294 Insertar fecha y hora actual
-295 Gráficos
-296 &Ver Biblioteca SVG
-297 &Añadir a la Biblioteca SVG
-298 A&notaciones
-299 Anotar &selección
-300 Anotar &documento
-301 &Mover a selección
-302 Guardar selección como &XPointer
-303 Mover a &XPointer guardado
-304 &Responder a anotación
-305 &Enviar al servidor
-306 &Borrar
-307 &Cargar
-308 &Personalizar consulta...
-309 &Filtro local...
-310 &Cooperación
-311 Bloquear recurso
-312 Desbloquear recurso...
-313 Ver propiedades del recurso...
-314 Copiar información de bloqueo
-315 ¿Bloqueado?
-316 **Templates
-317 **Create template from current document...
-318 &Javascript/DOM
-319 Activar/Desactivar
-320 Ejecutar un comando
-321 Ejecutar un script externo
-322 Añadir un script externo
-323 Insertar un script
-324 Acerca de Amaya
-325 Página web de Amaya en el W3C
-326 Índice
-327 Navegar
-328 Vistas
-329 Seleccionar
-330 Documentos
-331 Crear elementos
-332 Atributos
-333 Caracteres
-334 Modelos
-335 Reestructurar
-336 Enlaces
-337 Tablas
-338 Mapas de imagen
-339 MathML
-340 Gráficos
-341 Soporte XML
-342 Hojas de estilo
-343 Buscar
-344 Revisar ortografía
-345 Publicar
-346 Cooperación
-347 Imprimir
-348 Numerar
-349 Hacer libros
-350 Anotaciones
-351 Configurar
-352 Atajos de teclado
-353 Accesibilidad
-354 Sugerencia del día...
+265 **Code clean up
+266 Editar tabla
+267 Cambiar a celda de datos
+268 Cambiar a celda de cabecera
+269 Unir
+270 Unir con celda derecha
+271 Unir con celda inferior
+272 Reducir extensión horizontal
+273 Reducir extensión vertical
+274 Seleccionar fila
+275 Insertar fila delante
+276 Añadir fila detrás
+277 Seleccionar columna
+278 Insertar columna delante
+279 Añadir columna detrás
+280 Pegar delante
+281 Pegar detrás
+282 Título (title) ...
+283 Cambiar doct&ype
+284 &Borrar doctype
+285 Añadir doctype
+286 Cambiar a XHTML 1.1
+287 Cambiar a XHTML 1.0 Transitional
+288 Cambiar a XHTML 1.0 &Strict
+289 Cambiar a XHTML 1.0 Basic
+290 Cambiar a HTML 4.01 Transitional
+291 Cambiar a HTML 4.01 Strict
+292 &Numerar encabezados
+293 &Generar índice de materias
+294 &Hacer libro
+295 Insertar fecha y hora actual
+296 Gráficos
+297 &Ver Biblioteca SVG
+298 &Añadir a la Biblioteca SVG
+299 A&notaciones
+300 Anotar &selección
+301 Anotar &documento
+302 &Mover a selección
+303 Guardar selección como &XPointer
+304 Mover a &XPointer guardado
+305 &Responder a anotación
+306 &Enviar al servidor
+307 &Borrar
+308 &Cargar
+309 &Personalizar consulta...
+310 &Filtro local...
+311 &Cooperación
+312 Bloquear recurso
+313 Desbloquear recurso...
+314 Ver propiedades del recurso...
+315 Copiar información de bloqueo
+316 ¿Bloqueado?
+317 **Templates
+318 **Create template from current document...
+319 &Javascript/DOM
+320 Activar/Desactivar
+321 Ejecutar un comando
+322 Ejecutar un script externo
+323 Añadir un script externo
+324 Insertar un script
+325 Acerca de Amaya
+326 Página web de Amaya en el W3C
+327 Índice
+328 Navegar
+329 Vistas
+330 Seleccionar
+331 Documentos
+332 Crear elementos
+333 Atributos
+334 Caracteres
+335 Modelos
+336 Reestructurar
+337 Enlaces
+338 Tablas
+339 Mapas de imagen
+340 MathML
+341 Gráficos
+342 Soporte XML
+343 Hojas de estilo
+344 Buscar
+345 Revisar ortografía
+346 Publicar
+347 Cooperación
+348 Imprimir
+349 Numerar
+350 Hacer libros
+351 Anotaciones
+352 Configurar
+353 Atajos de teclado
+354 Accesibilidad
+355 Sugerencia del día...

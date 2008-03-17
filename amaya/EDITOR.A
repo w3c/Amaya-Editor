@@ -303,6 +303,7 @@ MENUS
 
 	Tools button:BSpellCheck -> SpellCheck icon:spellcheck.png;
 	Tools button:BTransform -> TransformType;
+	Tools button:BCleanUp -> RemoveDeprecatedElements;
 	Tools.TableE button:BDataCell -> ChangeToDataCell;
 	Tools.TableE button:BHeadingCell -> ChangeToHeadingCell;
 	Tools.TableE button:BCellMerge -> MergeSelectedCells icon:Table_merge.png;

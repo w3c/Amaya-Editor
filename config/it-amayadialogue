@@ -264,93 +264,94 @@
 262 Aggiungi/Togli ID...
 263 Controllo ortografico...
 264 Trasforma...
-265 Modifica tabella
-266 Cambia la cella a data
-267 Cambia la cella a intestazione
-268 Unisci
-269 Unisci la cella a quella di destra
-270 Unisci la cella a quella sotto
-271 Riduci l'estensione orizzontale
-272 Riduci l'estensione verticale
-273 Seleziona la riga
-274 Inserisci una riga
-275 Aggiungi una riga
-276 Seleziona la colonna
-277 Inserisci una colonna
-278 Aggiungi una colonna
-279 Incolla prima
-280 Incolla dopo
-281 Cambia titolo...
-282 Cambia/Crea doctype
-283 Elimina doctype
-284 Aggiungi un doctype
-285 Cambia/Crea doctype XHTML 1.1
-286 Cambia/Crea doctype XHTML 1.0 Transitional
-287 Cambia/Crea doctype XHTML 1.0 Strict
-288 Cambia/Crea doctype XHTML 1.0 Basic
-289 Cambia/Crea doctype HTML 4.01 Transitional
-290 Cambia/Crea doctype HTML 4.01 Strict
-291 Numerazione delle sezioni
-292 Genera Indice
-293 Crea libro
-294 Inserisci timestamp
-295 Grafica
-296 Mostri librería SVG
-297 Aggiunga nella librería SVG
-298 A&nnotazioni
-299 Annota la selezione
-300 Annota il documento
-301 Muovi sulla selezione
-302 Salva la selezione come XPointer
-303 Muovi sull'Xpointer memorizzato
-304 Rispondi all'annotazione
-305 Registra
-306 Elimina
-307 Carica
-308 Personalizza la richiesta
-309 Filtro locale...
-310 &Cooperazione
-311 Lock resource...
-312 Unlock resource...
-313 Informazioni per il lock...
-314 Copia delle informazioni per il lock...
-315 Lock?
-316 **Templates
-317 **Create template from current document...
-318 &Javascript/DOM
-319 Attiva/Disattiva
-320 Esegui un comando
+265 **Code clean up
+266 Modifica tabella
+267 Cambia la cella a data
+268 Cambia la cella a intestazione
+269 Unisci
+270 Unisci la cella a quella di destra
+271 Unisci la cella a quella sotto
+272 Riduci l'estensione orizzontale
+273 Riduci l'estensione verticale
+274 Seleziona la riga
+275 Inserisci una riga
+276 Aggiungi una riga
+277 Seleziona la colonna
+278 Inserisci una colonna
+279 Aggiungi una colonna
+280 Incolla prima
+281 Incolla dopo
+282 Cambia titolo...
+283 Cambia/Crea doctype
+284 Elimina doctype
+285 Aggiungi un doctype
+286 Cambia/Crea doctype XHTML 1.1
+287 Cambia/Crea doctype XHTML 1.0 Transitional
+288 Cambia/Crea doctype XHTML 1.0 Strict
+289 Cambia/Crea doctype XHTML 1.0 Basic
+290 Cambia/Crea doctype HTML 4.01 Transitional
+291 Cambia/Crea doctype HTML 4.01 Strict
+292 Numerazione delle sezioni
+293 Genera Indice
+294 Crea libro
+295 Inserisci timestamp
+296 Grafica
+297 Mostri librería SVG
+298 Aggiunga nella librería SVG
+299 A&nnotazioni
+300 Annota la selezione
+301 Annota il documento
+302 Muovi sulla selezione
+303 Salva la selezione come XPointer
+304 Muovi sull'Xpointer memorizzato
+305 Rispondi all'annotazione
+306 Registra
+307 Elimina
+308 Carica
+309 Personalizza la richiesta
+310 Filtro locale...
+311 &Cooperazione
+312 Lock resource...
+313 Unlock resource...
+314 Informazioni per il lock...
+315 Copia delle informazioni per il lock...
+316 Lock?
+317 **Templates
+318 **Create template from current document...
+319 &Javascript/DOM
+320 Attiva/Disattiva
 321 Esegui un comando
-322 Aggiungi uno script esterno
-323 Inserisci uno script
-324 Informazioni su Amaya
-325 Informazioni su Amaya al W3C
-326 Indice
-327 Navigazione
-328 Viste
-329 Selezione
-330 Documento
-331 Creazione elementi
-332 Attributi
-333 Caratteri
-334 Modelli
-335 Ristrutturazione
-336 Collegamenti
-337 Tabelle
-338 Zone attive
-339 Matematica
-340 Graphics
-341 Supporto XML
-342 Fogli di stile
-343 Ricerca
-344 Controllo ortografico
-345 Pubblicazione
-346 Cooperazione
-347 Stampa
-348 Numerazione
-349 Creare un libro
-350 Annotazioni
-351 Configurazione
-352 Scelte rapide
-353 Accessibilità in Amaya
-354 Suggerimenti del giorno...
+322 Esegui un comando
+323 Aggiungi uno script esterno
+324 Inserisci uno script
+325 Informazioni su Amaya
+326 Informazioni su Amaya al W3C
+327 Indice
+328 Navigazione
+329 Viste
+330 Selezione
+331 Documento
+332 Creazione elementi
+333 Attributi
+334 Caratteri
+335 Modelli
+336 Ristrutturazione
+337 Collegamenti
+338 Tabelle
+339 Zone attive
+340 Matematica
+341 Graphics
+342 Supporto XML
+343 Fogli di stile
+344 Ricerca
+345 Controllo ortografico
+346 Pubblicazione
+347 Cooperazione
+348 Stampa
+349 Numerazione
+350 Creare un libro
+351 Annotazioni
+352 Configurazione
+353 Scelte rapide
+354 Accessibilità in Amaya
+355 Suggerimenti del giorno...

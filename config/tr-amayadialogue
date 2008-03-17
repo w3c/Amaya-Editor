@@ -264,93 +264,94 @@
 262 IDs ekle/sil
 263 Yazım hataları ara...
 264 Dönüştür
-265 **Edit table
-266 **Change to data cell
-267 **Change to heading cell
-268 **Merge cells
-269 **Join with the cell at the right
-270 **Join with the cell below
-271 **Shrink horizontal extend
-272 **Shrink vertical extend
-273 **Select the row
-274 **Insert a row
-275 **Append a row
-276 **Select the column
-277 **Insert a column
-278 **Append a column
-279 **Paste before
-280 **Paste after
-281 Başlığı değiştir
-282 Doctype\'bı düzenle
-283 doctype\'bı sil
-284 **Add a doctype
-285 XHTML 1.1 doctype
-286 XHTML 1.0 Transitional doctype
-287 XHTML 1.0 Strict doctype
-288 XHTML 1.0 Basic doctype
-289 HTML 4.01 Transitional doctype
-290 HTML 4.01 Strict doctype
-291 Bölüm numaralandırması
-292 **&Add/Update table of contents
-293 Kitap yap
-294 **Insert time stamp
-295 **Graphics
-296 SVG kütüphanesini göster
-297 SVG kütüphanesine seçili alanı ekle
-298 &Eklemeler
-299 Seçili alan ekleme
-300 Doküman eklemek
-301 Seçili alanı taşı
-302 seçilen alanı XPointer gibi kaydet
-303 Xpointer\'daki birikenleri taşı
-304 Tekrar ekle
-305 Server\'e kaydet
-306 Sil
-307 Yükle
-308 Kişisel ayarlama...
-309 Sabit filitre...
-310 &Birlikte çalışmak
-311 Tekrar okumayı kitle...
-312 Tekrar okumayı kilidi aç...
-313 Tekrar okuma ayarlarını göster...
-314 kilitli bilgileri kopyala...
-315 kitli mi?
-316 **Templates
-317 **Create template from current document...
-318 &Javascript/DOM
-319 **Enable/Disable
-320 **Execute a command
-321 **Execute an external script
-322 **Add an external script
-323 **Insert a script
-324 Amaya hakkında
-325 W3C deki Amaya hakkında
-326 Içerik
-327 Tarama
-328 Görünümler
-329 Seç
-330 Döküman
-331 Yarat
-332 Tarz tanımları
-333 karakterler
-334 **Templates
-335 Yeniden yapılandırma
-336 Bağlantılar
-337 Tablolar
-338 Aktif alan
-339 Matematik
-340 Grafik
-341 XML desteği
-342 Görüntü haritaları
-343 Yazı hataları arama
-344 Yazı hataları düzeltmek
-345 Bastırma
-346 Birlikte çalışmak
-347 Sayfa yerleştirme
-348 Numaralandır
-349 Kitap oluşturma
-350 Not ekleme
-351 Yapılandırması
-352 Kısalmalar
-353 Amaya\'ya ulaşmak
-354 **Tip of the day...
+265 **Code clean up
+266 **Edit table
+267 **Change to data cell
+268 **Change to heading cell
+269 **Merge cells
+270 **Join with the cell at the right
+271 **Join with the cell below
+272 **Shrink horizontal extend
+273 **Shrink vertical extend
+274 **Select the row
+275 **Insert a row
+276 **Append a row
+277 **Select the column
+278 **Insert a column
+279 **Append a column
+280 **Paste before
+281 **Paste after
+282 Başlığı değiştir
+283 Doctype\'bı düzenle
+284 doctype\'bı sil
+285 **Add a doctype
+286 XHTML 1.1 doctype
+287 XHTML 1.0 Transitional doctype
+288 XHTML 1.0 Strict doctype
+289 XHTML 1.0 Basic doctype
+290 HTML 4.01 Transitional doctype
+291 HTML 4.01 Strict doctype
+292 Bölüm numaralandırması
+293 **&Add/Update table of contents
+294 Kitap yap
+295 **Insert time stamp
+296 **Graphics
+297 SVG kütüphanesini göster
+298 SVG kütüphanesine seçili alanı ekle
+299 &Eklemeler
+300 Seçili alan ekleme
+301 Doküman eklemek
+302 Seçili alanı taşı
+303 seçilen alanı XPointer gibi kaydet
+304 Xpointer\'daki birikenleri taşı
+305 Tekrar ekle
+306 Server\'e kaydet
+307 Sil
+308 Yükle
+309 Kişisel ayarlama...
+310 Sabit filitre...
+311 &Birlikte çalışmak
+312 Tekrar okumayı kitle...
+313 Tekrar okumayı kilidi aç...
+314 Tekrar okuma ayarlarını göster...
+315 kilitli bilgileri kopyala...
+316 kitli mi?
+317 **Templates
+318 **Create template from current document...
+319 &Javascript/DOM
+320 **Enable/Disable
+321 **Execute a command
+322 **Execute an external script
+323 **Add an external script
+324 **Insert a script
+325 Amaya hakkında
+326 W3C deki Amaya hakkında
+327 Içerik
+328 Tarama
+329 Görünümler
+330 Seç
+331 Döküman
+332 Yarat
+333 Tarz tanımları
+334 karakterler
+335 **Templates
+336 Yeniden yapılandırma
+337 Bağlantılar
+338 Tablolar
+339 Aktif alan
+340 Matematik
+341 Grafik
+342 XML desteği
+343 Görüntü haritaları
+344 Yazı hataları arama
+345 Yazı hataları düzeltmek
+346 Bastırma
+347 Birlikte çalışmak
+348 Sayfa yerleştirme
+349 Numaralandır
+350 Kitap oluşturma
+351 Not ekleme
+352 Yapılandırması
+353 Kısalmalar
+354 Amaya\'ya ulaşmak
+355 **Tip of the day...

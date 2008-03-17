@@ -264,93 +264,94 @@
 262 Lisää/Poista elementti...
 263 Tarkista oikeinkirjoitus...
 264 Muunna...
-265 **Edit table
-266 **Change to data cell
-267 **Change to heading cell
-268 **Merge cells
-269 **Join with the cell at the right
-270 **Join with the cell below
-271 **Shrink horizontal extend
-272 **Shrink vertical extend
-273 **Select the row
-274 **Insert a row
-275 **Append a row
-276 **Select the column
-277 **Insert a column
-278 **Append a column
-279 **Paste before
-280 **Paste after
-281 Muuta otsake...
-282 Muuta tyyppi
-283 Poista tyyppi
-284 **Add a doctype
-285 Aseta tyypiksi XHTML 1.1
-286 **Change to XHTML 1.0 Transitional
-287 Aseta tyypiksi XHTML 1.0 Strict
-288 Aseta tyypiksi XHTML 1.0 Basic
-289 Aseta tyypiksi HTML 4.01 Transitional
-290 Aseta tyypiksi HTML 4.01 Strict
-291 Osien numerointi
-292 **&Add/Update table of contents
-293 Valmista kooste
-294 **Insert time stamp
-295 **Graphics
-296 **Show SVG library
-297 **Add to SVG library
-298 Mer&kinnät
-299 Valinnan lisätiedot
-300 Dokumentin lisätiedot
-301 Siirrä valintaan
-302 Tallenna valinta XPointer:iin
-303 Siirrä XPointer:iin
-304 Vastaa merkintään
-305 Lähetä palvelimelle
-306 Poista
-307 Lataa
-308 Mukauta tiedustelu...
-309 Paikalliset rajoitukset...
-310 Yht&eistyö
-311 Lukitse objekti...
-312 Vapauta objekti...
-313 Näytä objektin ominaisuudet...
-314 Kopioi lukitustiedot...
-315 Lukittu?
-316 **Templates
-317 **Create template from current document...
-318 &Javascript/DOM
-319 **Enable/Disable
-320 **Execute a command
-321 **Execute an external script
-322 **Add an external script
-323 **Insert a script
-324 Tietoja Amayasta
-325 Lisätietoa Amayasta W3C:ssä
-326 Hakemisto
-327 Selaaminen
-328 Näkymät
-329 Valinta
-330 Dokumentti
-331 Elementtien luominen
-332 Asetukset
-333 Fontit
-334 **Templates
-335 Rakenteen muunto
-336 Linkit
-337 Taulukot
-338 Kuvakartat
-339 Matematiikka
-340 Grafiikka
-341 XML-tuki
-342 Tyylitiedostot
-343 Etsiminen
-344 Oikeinkirjoituksen tarkastus
-345 Julkaisu
-346 Yhteistyö
-347 Tulostus
-348 Numerointi
-349 Koosteen valmistus
-350 Merkinnät
-351 Asetuksien määritys
-352 Näppäinkomennot
-353 Amayan helppokäyttötoiminnot
-354 **Tip of the day...
+265 **Code clean up
+266 **Edit table
+267 **Change to data cell
+268 **Change to heading cell
+269 **Merge cells
+270 **Join with the cell at the right
+271 **Join with the cell below
+272 **Shrink horizontal extend
+273 **Shrink vertical extend
+274 **Select the row
+275 **Insert a row
+276 **Append a row
+277 **Select the column
+278 **Insert a column
+279 **Append a column
+280 **Paste before
+281 **Paste after
+282 Muuta otsake...
+283 Muuta tyyppi
+284 Poista tyyppi
+285 **Add a doctype
+286 Aseta tyypiksi XHTML 1.1
+287 **Change to XHTML 1.0 Transitional
+288 Aseta tyypiksi XHTML 1.0 Strict
+289 Aseta tyypiksi XHTML 1.0 Basic
+290 Aseta tyypiksi HTML 4.01 Transitional
+291 Aseta tyypiksi HTML 4.01 Strict
+292 Osien numerointi
+293 **&Add/Update table of contents
+294 Valmista kooste
+295 **Insert time stamp
+296 **Graphics
+297 **Show SVG library
+298 **Add to SVG library
+299 Mer&kinnät
+300 Valinnan lisätiedot
+301 Dokumentin lisätiedot
+302 Siirrä valintaan
+303 Tallenna valinta XPointer:iin
+304 Siirrä XPointer:iin
+305 Vastaa merkintään
+306 Lähetä palvelimelle
+307 Poista
+308 Lataa
+309 Mukauta tiedustelu...
+310 Paikalliset rajoitukset...
+311 Yht&eistyö
+312 Lukitse objekti...
+313 Vapauta objekti...
+314 Näytä objektin ominaisuudet...
+315 Kopioi lukitustiedot...
+316 Lukittu?
+317 **Templates
+318 **Create template from current document...
+319 &Javascript/DOM
+320 **Enable/Disable
+321 **Execute a command
+322 **Execute an external script
+323 **Add an external script
+324 **Insert a script
+325 Tietoja Amayasta
+326 Lisätietoa Amayasta W3C:ssä
+327 Hakemisto
+328 Selaaminen
+329 Näkymät
+330 Valinta
+331 Dokumentti
+332 Elementtien luominen
+333 Asetukset
+334 Fontit
+335 **Templates
+336 Rakenteen muunto
+337 Linkit
+338 Taulukot
+339 Kuvakartat
+340 Matematiikka
+341 Grafiikka
+342 XML-tuki
+343 Tyylitiedostot
+344 Etsiminen
+345 Oikeinkirjoituksen tarkastus
+346 Julkaisu
+347 Yhteistyö
+348 Tulostus
+349 Numerointi
+350 Koosteen valmistus
+351 Merkinnät
+352 Asetuksien määritys
+353 Näppäinkomennot
+354 Amayan helppokäyttötoiminnot
+355 **Tip of the day...

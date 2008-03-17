@@ -264,93 +264,94 @@
 262 &Azonosítók (id) hozzáadása/törlése...
 263 Szó&elemző...
 264 &Átalakítás...
-265 
-266 &Adatcellává tétel
-267 &Fejléccé tétel
-268 Egyesítés
-269 Egyesítés a &jobbra lévő cellával
-270 Egyesítés az &alatta lévő cellával
-271 Shrink &horizontal extend
-272 Shrink &vertical extend
-273 Sor &kijelölése
-274 Sor &beillesztése
-275 Sor &hozzáadása
-276 Oszlop ki&jelölése
-277 Oszlop be&illesztése
-278 Oszlop hozzá&adása
-279 Beillesztés &elé
-280 Beillesztés &mögé
-281 Cím &cseréje...
-282 Doctype megváltoztatása
-283 doctype eltávolítása
-284 Doctype hozzáadása
-285 Change to XHTML 1.1
-286 XHTML 1.0 átmenetivé tétel
-287 XHTML 1.0 kötötté tétel
-288 XHTML 1.0 alappá tétel
-289 &HTML 4.01 átmenetivé tétel
-290 HTML 4.01 kötötté tétel
-291 &Szakasz számozás
-292 &Tartalomjegyzék létrehozása
-293 &Kötet létrehozása
-294 Időbélyeg beilesztése
-295 
-296 &Képtár mutatása
-297 Kijelölt kép &beillesztése
-298 &Jegyzetek
-299 Jegyzet a &kijelöléshez
-300 Jegyzet a &dokumentumhoz
-301 &Ugrás a kijelöléshez
-302 Kijelölés tárolása &XPointerként
-303 &Tárolt XPointerhez ugrás
-304 Jegyzetre &válaszolás
-305 Küldés a &kiszolgálóra
-306 &Törlés
-307 &Betöltés
-308 &Lekérdezés testreszabása...
-309 &Helyi szűrő...
-310 &Együttműködés
-311 Erőforrás &zárolása...
-312 Erőforrás &felszabadítása...
-313 Erőforrás &tulajdonságai...
-314 Zárolási adatok &másolása...
-315 &Zárolt?
-316 **Templates
-317 **Create template from current document...
-318 &Javascript/DOM
-319 Engedélyezés/tiltás
-320 Parancs végrehajtása
-321 Külső szkript végrehajtása
-322 Külső szkript hozzáadása
-323 Szkript beillesztése
-324 Amaya &névjegye
-325 Az Amaya a W3C &webhelyen
-326 &Betűrendes mutató
-327 Böngészés
-328 &Nézetek
-329 Kijelölés
-330 Dokumentum
-331 Elemek létrehozása
-332 &Attribútumok
-333 Karakterek
-334 Sablonok
-335 Szerkezetátalakítás
-336 Kapcsok
-337 Táblázatok
-338 Térképek
-339 Matematika
-340 Grafika
-341 XML támogatás
-342 &Stíluslapok
-343 Keresés
-344 &Szóellenőrzés
-345 &Kiadás
-346 Együttműködés
-347 Nyomtatás
-348 Számozás
-349 Kötetek
-350 Jegyzetek
-351 Beállítása
-352 Gyorsbillentyűk
-353 Kisegítő lehetőségek az Amayában
-354 A nap tippje
+265 **Code clean up
+266 
+267 &Adatcellává tétel
+268 &Fejléccé tétel
+269 Egyesítés
+270 Egyesítés a &jobbra lévő cellával
+271 Egyesítés az &alatta lévő cellával
+272 Shrink &horizontal extend
+273 Shrink &vertical extend
+274 Sor &kijelölése
+275 Sor &beillesztése
+276 Sor &hozzáadása
+277 Oszlop ki&jelölése
+278 Oszlop be&illesztése
+279 Oszlop hozzá&adása
+280 Beillesztés &elé
+281 Beillesztés &mögé
+282 Cím &cseréje...
+283 Doctype megváltoztatása
+284 doctype eltávolítása
+285 Doctype hozzáadása
+286 Change to XHTML 1.1
+287 XHTML 1.0 átmenetivé tétel
+288 XHTML 1.0 kötötté tétel
+289 XHTML 1.0 alappá tétel
+290 &HTML 4.01 átmenetivé tétel
+291 HTML 4.01 kötötté tétel
+292 &Szakasz számozás
+293 &Tartalomjegyzék létrehozása
+294 &Kötet létrehozása
+295 Időbélyeg beilesztése
+296 
+297 &Képtár mutatása
+298 Kijelölt kép &beillesztése
+299 &Jegyzetek
+300 Jegyzet a &kijelöléshez
+301 Jegyzet a &dokumentumhoz
+302 &Ugrás a kijelöléshez
+303 Kijelölés tárolása &XPointerként
+304 &Tárolt XPointerhez ugrás
+305 Jegyzetre &válaszolás
+306 Küldés a &kiszolgálóra
+307 &Törlés
+308 &Betöltés
+309 &Lekérdezés testreszabása...
+310 &Helyi szűrő...
+311 &Együttműködés
+312 Erőforrás &zárolása...
+313 Erőforrás &felszabadítása...
+314 Erőforrás &tulajdonságai...
+315 Zárolási adatok &másolása...
+316 &Zárolt?
+317 **Templates
+318 **Create template from current document...
+319 &Javascript/DOM
+320 Engedélyezés/tiltás
+321 Parancs végrehajtása
+322 Külső szkript végrehajtása
+323 Külső szkript hozzáadása
+324 Szkript beillesztése
+325 Amaya &névjegye
+326 Az Amaya a W3C &webhelyen
+327 &Betűrendes mutató
+328 Böngészés
+329 &Nézetek
+330 Kijelölés
+331 Dokumentum
+332 Elemek létrehozása
+333 &Attribútumok
+334 Karakterek
+335 Sablonok
+336 Szerkezetátalakítás
+337 Kapcsok
+338 Táblázatok
+339 Térképek
+340 Matematika
+341 Grafika
+342 XML támogatás
+343 &Stíluslapok
+344 Keresés
+345 &Szóellenőrzés
+346 &Kiadás
+347 Együttműködés
+348 Nyomtatás
+349 Számozás
+350 Kötetek
+351 Jegyzetek
+352 Beállítása
+353 Gyorsbillentyűk
+354 Kisegítő lehetőségek az Amayában
+355 A nap tippje

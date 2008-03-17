@@ -264,93 +264,94 @@
 262 &Ajouter/Retirer des attributs ID...
 263 Vérifier &orthographe...
 264 Transfor&mer...
-265 Editer la table
-266 Changer en cellule
-267 Changer en cellule titre
-268 Fusionner les cellules
-269 Joindre avec la cellule de droite
-270 Joindre avec la cellule au-dessous
-271 Réduire extension horizontale
-272 Réduire extension verticale
-273 Sélectionner la ligne
-274 Insérer une ligne
-275 Ajouter une ligne
-276 Sélectionner la colonne
-277 Insérer une colonne
-278 Ajouter une colonne
-279 Coller avant
-280 Coller après
-281 Changer le titre...
-282 Changer le doctype
-283 Supprimer le doctype
-284 Ajouter un doctype
-285 Changer pour XHTML 1.1
-286 Changer pour XHTML 1.0 Transitional
-287 Changer pour XHTML 1.0 Strict
-288 Changer pour XHTML 1.0 Basic
-289 Changer pour HTML 4.01 Transitional
-290 Changer pour HTML 4.01 Strict
-291 &Numéroter les sections
-292 &Ajouter/Actualiser la table des matières
-293 &Construire un livre
-294 Insérer la date de mise à jour
-295 Graphiques
-296 Montrer la librairie SVG
-297 Ajouter à la librairie SVG
-298 A&nnotations
-299 Annoter la sélection
-300 Annoter le document
-301 Déplacer sur la sélection
-302 Enregistrer la sélection comme &XPointer
-303 Déplacer sur le XPointer enregistré
-304 Répondre à l'annotation
-305 Enregister sur le serveur
-306 Supprimer
-307 Charger annotations
-308 Personnaliser la requête...
-309 Filtrer local...
-310 C&oopération
-311 Verrouiller la ressource...
-312 Déverrouiller la ressource...
-313 Visualiser les propriétés de la ressource...
-314 Copier les informations du verrou...
-315 Verrouillé ?
-316 Modèles
-317 Créer un modèle depuis le document courant...
-318 &Javascript/DOM
-319 Activer/Désactiver
-320 Exécuter une commande
-321 Exécuter un script externe
-322 Ajouter un script externe
-323 Inserer un script
-324 À propos de Amaya
-325 À propos d'Amaya au W3C
-326 Index
-327 Navigation
-328 Vues
-329 Sélection
-330 Documents
-331 Création d'éléments
-332 Attributs
-333 Caractères
-334 Modèles
-335 Restructuration
-336 Liens
-337 Tableaux
-338 Zones actives
-339 Math
-340 Graphiques
-341 Support XML
-342 Feuilles de style
-343 Recherche
-344 Vérification orthographique
-345 Enregistrement
-346 Coopération
-347 Impression
-348 Numérotation
-349 Construction de livre
-350 Annotations
-351 Configuration
-352 Raccourcis clavier
-353 Accessibilité d'Amaya
-354 Conseil du jour...
+265 Nettoyage du code
+266 Editer la table
+267 Changer en cellule
+268 Changer en cellule titre
+269 Fusionner les cellules
+270 Joindre avec la cellule de droite
+271 Joindre avec la cellule au-dessous
+272 Réduire extension horizontale
+273 Réduire extension verticale
+274 Sélectionner la ligne
+275 Insérer une ligne
+276 Ajouter une ligne
+277 Sélectionner la colonne
+278 Insérer une colonne
+279 Ajouter une colonne
+280 Coller avant
+281 Coller après
+282 Changer le titre...
+283 Changer le doctype
+284 Supprimer le doctype
+285 Ajouter un doctype
+286 Changer pour XHTML 1.1
+287 Changer pour XHTML 1.0 Transitional
+288 Changer pour XHTML 1.0 Strict
+289 Changer pour XHTML 1.0 Basic
+290 Changer pour HTML 4.01 Transitional
+291 Changer pour HTML 4.01 Strict
+292 &Numéroter les sections
+293 &Ajouter/Actualiser la table des matières
+294 &Construire un livre
+295 Insérer la date de mise à jour
+296 Graphiques
+297 Montrer la librairie SVG
+298 Ajouter à la librairie SVG
+299 A&nnotations
+300 Annoter la sélection
+301 Annoter le document
+302 Déplacer sur la sélection
+303 Enregistrer la sélection comme &XPointer
+304 Déplacer sur le XPointer enregistré
+305 Répondre à l'annotation
+306 Enregister sur le serveur
+307 Supprimer
+308 Charger annotations
+309 Personnaliser la requête...
+310 Filtrer local...
+311 C&oopération
+312 Verrouiller la ressource...
+313 Déverrouiller la ressource...
+314 Visualiser les propriétés de la ressource...
+315 Copier les informations du verrou...
+316 Verrouillé ?
+317 Modèles
+318 Créer un modèle depuis le document courant...
+319 &Javascript/DOM
+320 Activer/Désactiver
+321 Exécuter une commande
+322 Exécuter un script externe
+323 Ajouter un script externe
+324 Inserer un script
+325 À propos de Amaya
+326 À propos d'Amaya au W3C
+327 Index
+328 Navigation
+329 Vues
+330 Sélection
+331 Documents
+332 Création d'éléments
+333 Attributs
+334 Caractères
+335 Modèles
+336 Restructuration
+337 Liens
+338 Tableaux
+339 Zones actives
+340 Math
+341 Graphiques
+342 Support XML
+343 Feuilles de style
+344 Recherche
+345 Vérification orthographique
+346 Enregistrement
+347 Coopération
+348 Impression
+349 Numérotation
+350 Construction de livre
+351 Annotations
+352 Configuration
+353 Raccourcis clavier
+354 Accessibilité d'Amaya
+355 Conseil du jour...

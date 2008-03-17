@@ -264,93 +264,94 @@
 262 &Pridať/odstrániť ID...
 263 Kontrola pravopi&su
 264 T&ransformovať
-265 **Edit table
-266 Zmeniť na bunku s dátami
-267 Zmeniť na bunku s nadpisom
-268 Zlúčiť
-269 Zlúčiť s pravou bunkou
-270 Zlúčiť s dolnou bunkou
-271 Rozdeliť bunky horizontálne
-272 Rozdeliť bunky vertikálne
-273 Označiť riadok
-274 Vložiť riadok nad
-275 Vložiť riadok pod
-276 Označiť stĺpec
-277 Vložiť stĺpec vľavo
-278 Vložiť stĺpec vpravo
-279 Prilepiť pred
-280 Prilepiť za
-281 Zmeniť názov (title)
-282 Zmeniť typ dokumentu
-283 Odstrániť označenie dokumentu
-284 Pridať označenie dokumentu
-285 Zmeniť na XHTML 1.1
-286 Zmeniť na XHTML 1.0 Transitional
-287 Zmeniť na XHTML 1.0 Strict
-288 Zmeniť na XHTML 1.0 Basic
-289 Zmeniť na HTML 4.01 Transitional
-290 Zmeniť na HTML 4.01 Strict
-291 &Očíslovať podkapitoly
-292 &Vytvoriť obsah
-293 &Zostaviť knihu
-294 Vložiť dnešný dátum
-295 **Graphics
-296 Zobraziť SVG knižnicu
-297 Pridať do SVG knižnice
-298 &Komentáre
-299 Okomentovať výber
-300 Okomentovať dokument
-301 Presunúť k výberu
-302 Uložiť výber ako &XPointer
-303 Presunúť k uloženému XPointeru
-304 Reagovať na komentár
-305 Odoslať na server
-306 Odstrániť komentár
-307 Nahrať komentár
-308 Zadefinovať požiadavku...
-309 Filtrovať komentáre...
-310 Sp&olupráca
-311 Uzamknúť zdrojový súbor...
-312 Odomknúť zdrojový súbor...
-313 Zobraziť vlastnosti zdroja...
-314 Kopírovať informácie o uzamknutí...
-315 Zamknutý?
-316 **Templates
-317 **Create template from current document...
-318 &Javascript/DOM
-319 **Enable/Disable
-320 **Execute a command
-321 **Execute an external script
-322 **Add an external script
-323 **Insert a script
-324 O programe Amaya
-325 Domoská stránka programu Amaya
-326 Témy pomocníka
-327 Prehliadanie
-328 Zobrazenia
-329 Označovanie
-330 Vytváranie dokumentu
-331 Vkladanie prvkov
-332 Atribúty
-333 Vkladanie znakov
-334 Šablóny
-335 Úprava dokumentu
-336 Prepojenia
-337 Tabuľky
-338 Oblasti obrázkov
-339 Vzorce
-340 Úprava SVG grafiky
-341 XML podpora
-342 Kaskádové štýly
-343 Vyhľadávanie
-344 Kontrola pravopisu
-345 Publikovanie
-346 Spolupráca
-347 Tlač
-348 Číslovanie podkapitol
-349 Vytváranie kníh
-350 Komentáre
-351 Nastavenia programu
-352 Klávesové skratky
-353 Zjednodušenie ovládania
-354 **Tip of the day...
+265 **Code clean up
+266 **Edit table
+267 Zmeniť na bunku s dátami
+268 Zmeniť na bunku s nadpisom
+269 Zlúčiť
+270 Zlúčiť s pravou bunkou
+271 Zlúčiť s dolnou bunkou
+272 Rozdeliť bunky horizontálne
+273 Rozdeliť bunky vertikálne
+274 Označiť riadok
+275 Vložiť riadok nad
+276 Vložiť riadok pod
+277 Označiť stĺpec
+278 Vložiť stĺpec vľavo
+279 Vložiť stĺpec vpravo
+280 Prilepiť pred
+281 Prilepiť za
+282 Zmeniť názov (title)
+283 Zmeniť typ dokumentu
+284 Odstrániť označenie dokumentu
+285 Pridať označenie dokumentu
+286 Zmeniť na XHTML 1.1
+287 Zmeniť na XHTML 1.0 Transitional
+288 Zmeniť na XHTML 1.0 Strict
+289 Zmeniť na XHTML 1.0 Basic
+290 Zmeniť na HTML 4.01 Transitional
+291 Zmeniť na HTML 4.01 Strict
+292 &Očíslovať podkapitoly
+293 &Vytvoriť obsah
+294 &Zostaviť knihu
+295 Vložiť dnešný dátum
+296 **Graphics
+297 Zobraziť SVG knižnicu
+298 Pridať do SVG knižnice
+299 &Komentáre
+300 Okomentovať výber
+301 Okomentovať dokument
+302 Presunúť k výberu
+303 Uložiť výber ako &XPointer
+304 Presunúť k uloženému XPointeru
+305 Reagovať na komentár
+306 Odoslať na server
+307 Odstrániť komentár
+308 Nahrať komentár
+309 Zadefinovať požiadavku...
+310 Filtrovať komentáre...
+311 Sp&olupráca
+312 Uzamknúť zdrojový súbor...
+313 Odomknúť zdrojový súbor...
+314 Zobraziť vlastnosti zdroja...
+315 Kopírovať informácie o uzamknutí...
+316 Zamknutý?
+317 **Templates
+318 **Create template from current document...
+319 &Javascript/DOM
+320 **Enable/Disable
+321 **Execute a command
+322 **Execute an external script
+323 **Add an external script
+324 **Insert a script
+325 O programe Amaya
+326 Domoská stránka programu Amaya
+327 Témy pomocníka
+328 Prehliadanie
+329 Zobrazenia
+330 Označovanie
+331 Vytváranie dokumentu
+332 Vkladanie prvkov
+333 Atribúty
+334 Vkladanie znakov
+335 Šablóny
+336 Úprava dokumentu
+337 Prepojenia
+338 Tabuľky
+339 Oblasti obrázkov
+340 Vzorce
+341 Úprava SVG grafiky
+342 XML podpora
+343 Kaskádové štýly
+344 Vyhľadávanie
+345 Kontrola pravopisu
+346 Publikovanie
+347 Spolupráca
+348 Tlač
+349 Číslovanie podkapitol
+350 Vytváranie kníh
+351 Komentáre
+352 Nastavenia programu
+353 Klávesové skratky
+354 Zjednodušenie ovládania
+355 **Tip of the day...

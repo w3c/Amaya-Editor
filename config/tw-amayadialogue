@@ -264,93 +264,94 @@
 262 添加/刪除 ID(&A)...
 263 拼寫檢查(&K)...
 264 轉換(&M)...
-265 **Edit table
-266 改為數據單元格
-267 改為表頭單元格
-268 **Merge cells
-269 與右側單元格合并
-270 與下方單元格合并
-271 收縮水平范圍
-272 收縮垂直范圍
-273 選擇該行
-274 插入新行
-275 附加一行
-276 選擇該列
-277 插入新列
-278 附加一列
-279 粘貼在前
-280 粘貼在后
-281 更改標題...
-282 改變文檔類型
-283 刪除doctype聲明
-284 添加doctype聲明
-285 改為 XHTML 1.1
-286 改為 XHTML 1.0 Transitional
-287 改為 XHTML 1.0 Strict
-288 改為 XHTML 1.0 Basic
-289 改為 HTML 4.01 Transitional
-290 改為 HTML 4.01 Strict
-291 區域統計(&S)
-292 生成內容列表(&G)
-293 制作書籍(&M)
-294 插入時間戳
-295 **Graphics
-296 顯示圖形庫
-297 添加選中圖形
-298 注釋
-299 為選擇區作注釋
-300 為文檔作注釋
-301 移動到選擇區
-302 存儲選擇區為 XPointer(&X)
-303 移動到已存儲的 XPointer
-304 答復注釋
-305 提交到服務器
-306 刪除
-307 載入
-308 自定義查詢...
-309 本地過濾器...
-310 協作(&O)
-311 鎖定資源...
-312 取消鎖定資源...
-313 查看資源屬性...
-314 復制鎖定信息...
-315 鎖定了嗎?
-316 **Templates
-317 **Create template from current document...
-318 &Javascript/DOM
-319 **Enable/Disable
-320 **Execute a command
-321 **Execute an external script
-322 **Add an external script
-323 **Insert a script
-324 關于 Amaya
-325 關于 Amaya at W3C
-326 索引
-327 Browsing
-328 Views
-329 Selecting
-330 Document
-331 Creating elements
-332 Attributes
-333 Characters
-334 **Templates
-335 Restructuring
-336 Links
-337 Tables
-338 Image maps
-339 Math
-340 Graphics
-341 XML support
-342 Style sheets
-343 Searching
-344 Spell Checking
-345 Publishing
-346 協作
-347 Printing
-348 Numbering
-349 Making books
-350 Annotations
-351 Configuring
-352 Shortcuts
-353 Accessibility in Amaya
-354 **Tip of the day...
+265 **Code clean up
+266 **Edit table
+267 改為數據單元格
+268 改為表頭單元格
+269 **Merge cells
+270 與右側單元格合并
+271 與下方單元格合并
+272 收縮水平范圍
+273 收縮垂直范圍
+274 選擇該行
+275 插入新行
+276 附加一行
+277 選擇該列
+278 插入新列
+279 附加一列
+280 粘貼在前
+281 粘貼在后
+282 更改標題...
+283 改變文檔類型
+284 刪除doctype聲明
+285 添加doctype聲明
+286 改為 XHTML 1.1
+287 改為 XHTML 1.0 Transitional
+288 改為 XHTML 1.0 Strict
+289 改為 XHTML 1.0 Basic
+290 改為 HTML 4.01 Transitional
+291 改為 HTML 4.01 Strict
+292 區域統計(&S)
+293 生成內容列表(&G)
+294 制作書籍(&M)
+295 插入時間戳
+296 **Graphics
+297 顯示圖形庫
+298 添加選中圖形
+299 注釋
+300 為選擇區作注釋
+301 為文檔作注釋
+302 移動到選擇區
+303 存儲選擇區為 XPointer(&X)
+304 移動到已存儲的 XPointer
+305 答復注釋
+306 提交到服務器
+307 刪除
+308 載入
+309 自定義查詢...
+310 本地過濾器...
+311 協作(&O)
+312 鎖定資源...
+313 取消鎖定資源...
+314 查看資源屬性...
+315 復制鎖定信息...
+316 鎖定了嗎?
+317 **Templates
+318 **Create template from current document...
+319 &Javascript/DOM
+320 **Enable/Disable
+321 **Execute a command
+322 **Execute an external script
+323 **Add an external script
+324 **Insert a script
+325 關于 Amaya
+326 關于 Amaya at W3C
+327 索引
+328 Browsing
+329 Views
+330 Selecting
+331 Document
+332 Creating elements
+333 Attributes
+334 Characters
+335 **Templates
+336 Restructuring
+337 Links
+338 Tables
+339 Image maps
+340 Math
+341 Graphics
+342 XML support
+343 Style sheets
+344 Searching
+345 Spell Checking
+346 Publishing
+347 協作
+348 Printing
+349 Numbering
+350 Making books
+351 Annotations
+352 Configuring
+353 Shortcuts
+354 Accessibility in Amaya
+355 **Tip of the day...

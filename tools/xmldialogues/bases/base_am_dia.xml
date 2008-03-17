@@ -3624,6 +3624,10 @@
 <message xml:lang="cn">转换(&amp;M)...</message>
 <message xml:lang="tw">轉換(&amp;M)...</message>
 <message xml:lang="sk">T&amp;ransformovať</message></label>
+<label define="BCleanUp">
+<message xml:lang="en">Code clean up</message>
+<message xml:lang="fr">Nettoyage du code</message>
+</label>
 <label define="TableE">
 <message xml:lang="en">Edit table</message>
 <message xml:lang="fr">Editer la table</message>

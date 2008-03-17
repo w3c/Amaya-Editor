@@ -264,93 +264,94 @@
 262 Adicionar/Remover IDs...
 263 Verificar ortografia...
 264 Transformar...
-265 **Edit table
-266 **Change to data cell
-267 **Change to heading cell
-268 **Merge cells
-269 **Join with the cell at the right
-270 **Join with the cell below
-271 **Shrink horizontal extend
-272 **Shrink vertical extend
-273 **Select the row
-274 **Insert a row
-275 **Append a row
-276 **Select the column
-277 **Insert a column
-278 **Append a column
-279 **Paste before
-280 **Paste after
-281 Mudar título...
-282 Alterar document type
-283 Remover doctype
-284 **Add a doctype
-285 Alterar doctype para XHTML 1.1
-286 Modificar/Criar doctype XHTML 1.0
-287 Alterar doctype para XHTML 1.0 Strict
-288 Alterar doctype para XHTML 1.0 Basic
-289 Alterar doctype para HTML 4.01 Transitional
-290 Alterar doctype para HTML 4.01 Strict
-291 Numeração de seção
-292 **&Add/Update table of contents
-293 Construir livro
-294 **Insert time stamp
-295 **Graphics
-296 **Show SVG library
-297 **Add to SVG library
-298 A&notações
-299 Anotar seleção
-300 Anotar documento
-301 Mover até a seleção
-302 Salvar seleção como XPointer
-303 Mover para o XPointer memorizado
-304 Responder à anotação
-305 Registrar
-306 Apagar
-307 Carregar
-308 Personalizar consulta...
-309 Filtro local...
-310 &Cooperação
-311 Travar o recurso
-312 Destravar o recurso
-313 Exibir as propriedades do recurso
-314 Copiar a informação da trava...
-315 Travado?
-316 **Templates
-317 **Create template from current document...
-318 &Javascript/DOM
-319 **Enable/Disable
-320 **Execute a command
-321 **Execute an external script
-322 **Add an external script
-323 **Insert a script
-324 Sobre Amaya
-325 Sobre Amaya no W3C
-326 Índice
-327 Navegar
-328 Vistas
-329 Selecionar
-330 Documento
-331 Criar elementos
-332 Atributos
-333 Caracteres
-334 **Templates
-335 Reestruturar
-336 Enlaces
-337 Tabelas
-338 Mapas de Imagem
-339 Matemática
-340 Gráficos
-341 Suporte à XML
-342 Folhas de estilo
-343 Achar...
-344 Verificar ortografia
-345 Publicar
-346 Cooperação
-347 Imprimir
-348 Numberar
-349 Criar livros
-350 Anotações
-351 Configurar
-352 Atalhos
-353 Accessibilidade em Amaya
-354 **Tip of the day...
+265 **Code clean up
+266 **Edit table
+267 **Change to data cell
+268 **Change to heading cell
+269 **Merge cells
+270 **Join with the cell at the right
+271 **Join with the cell below
+272 **Shrink horizontal extend
+273 **Shrink vertical extend
+274 **Select the row
+275 **Insert a row
+276 **Append a row
+277 **Select the column
+278 **Insert a column
+279 **Append a column
+280 **Paste before
+281 **Paste after
+282 Mudar título...
+283 Alterar document type
+284 Remover doctype
+285 **Add a doctype
+286 Alterar doctype para XHTML 1.1
+287 Modificar/Criar doctype XHTML 1.0
+288 Alterar doctype para XHTML 1.0 Strict
+289 Alterar doctype para XHTML 1.0 Basic
+290 Alterar doctype para HTML 4.01 Transitional
+291 Alterar doctype para HTML 4.01 Strict
+292 Numeração de seção
+293 **&Add/Update table of contents
+294 Construir livro
+295 **Insert time stamp
+296 **Graphics
+297 **Show SVG library
+298 **Add to SVG library
+299 A&notações
+300 Anotar seleção
+301 Anotar documento
+302 Mover até a seleção
+303 Salvar seleção como XPointer
+304 Mover para o XPointer memorizado
+305 Responder à anotação
+306 Registrar
+307 Apagar
+308 Carregar
+309 Personalizar consulta...
+310 Filtro local...
+311 &Cooperação
+312 Travar o recurso
+313 Destravar o recurso
+314 Exibir as propriedades do recurso
+315 Copiar a informação da trava...
+316 Travado?
+317 **Templates
+318 **Create template from current document...
+319 &Javascript/DOM
+320 **Enable/Disable
+321 **Execute a command
+322 **Execute an external script
+323 **Add an external script
+324 **Insert a script
+325 Sobre Amaya
+326 Sobre Amaya no W3C
+327 Índice
+328 Navegar
+329 Vistas
+330 Selecionar
+331 Documento
+332 Criar elementos
+333 Atributos
+334 Caracteres
+335 **Templates
+336 Reestruturar
+337 Enlaces
+338 Tabelas
+339 Mapas de Imagem
+340 Matemática
+341 Gráficos
+342 Suporte à XML
+343 Folhas de estilo
+344 Achar...
+345 Verificar ortografia
+346 Publicar
+347 Cooperação
+348 Imprimir
+349 Numberar
+350 Criar livros
+351 Anotações
+352 Configurar
+353 Atalhos
+354 Accessibilidade em Amaya
+355 **Tip of the day...
