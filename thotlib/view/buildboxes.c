@@ -2472,6 +2472,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                        inLineFloat &&
                        pAb->AbClear == 'N' &&
                        pAb->AbFloat == 'N' &&
+                       pAb->AbAdjust != AlignCenter &&
                        //pAb->AbDisplay != 'B' &&
                        //(pAb->AbPrevious && pAb->AbPrevious->AbFloat != 'N') &&
                        /* a positioned box cannot be a ghost */
