@@ -755,14 +755,16 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case 'U':	/*union */
           *width = BoxCharacterWidth (229, 1, font);
           break;
-        case 'b': /* Over bracket */
-        case 'B': /* Under bracket */
         case 8 : /* HorizontalLine ; U02500 */
         case 9 : /* UnderBar ; U00332 */
         case 10 : /* OverBar ; U000AF */
         case '-':
         case '_':
         case 'h': /* overline */
+          *height = hfont / 4;
+          break;
+        case 'b': /* Over bracket */
+        case 'B': /* Under bracket */
         case 'o': /* over brace */
         case 'p': /* over parenthesis */
         case 'q': /* under parenthesis */

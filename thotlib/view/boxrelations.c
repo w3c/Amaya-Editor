@@ -2427,6 +2427,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                     pParentAb->AbBox->BxType == BoGhost)))
                 {
                   /* all child heights depend on the parent height */
+#ifdef IV
                   if (pAb->AbLeafType == LtSymbol)
                     {
                       pParentAb->AbHeight.DimValue = 10;
@@ -2436,6 +2437,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                     0, 0, frame);
                     }
                   else
+#endif
                     {
                       pDimAb->DimAbRef = NULL;
                       pDimAb->DimValue = -1;
@@ -2460,8 +2462,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   pAb->AbFirstEnclosed->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
                   pAb->AbFirstEnclosed->AbHeight.DimAbRef == pAb)
                 {
-                  pDimAb->DimValue = 10;
-                  pDimAb->DimUnit = UnRelative;
+                  // get the default height
+                  pAb->AbFirstEnclosed->AbHeight.DimAbRef = NULL;
+                  pAb->AbFirstEnclosed->AbHeight.DimValue = -1;
                 }
             }
 
