@@ -2380,8 +2380,9 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc,
       if (isXML)
         {
           /* Does the parent element contains a 'Line' presentation rule ? */
-          if (TtaHasXmlInLineRule (elType, doc))
-            removeLeadingSpaces = FALSE;
+          /* if (TtaHasXmlInLineRule (elType, doc))*/
+          /* Return FALSE for XML documents */
+	  removeLeadingSpaces = FALSE;
         }
       else
         {
@@ -2554,8 +2555,8 @@ void PutInXmlElement (char *data, int length)
         }
     }
 
+  i = 0;
   if (XMLcontext.lastElement)
-    i = 0;
   {
     /* Suppress the leading spaces in Inline elements */
     insSibling = InsertSibling ();
