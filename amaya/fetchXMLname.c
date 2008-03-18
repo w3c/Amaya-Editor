@@ -312,7 +312,7 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
                  strcmp (ptr[i].XMLname, XMLname))
           /* it's not the tag */
           i++;
-        else if (profile != L_Other && !(ptr[i].Level & profile))
+        else if (XMLtype == XHTML_TYPE && profile != L_Other && !(ptr[i].Level & profile))
           {
             /* this tag is not valid in the document profile */
             *checkProfile = FALSE;
