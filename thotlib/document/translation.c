@@ -107,8 +107,7 @@ static void ExportNsDeclaration (Document doc, PtrElement pNode);
 static char* ExportElemNsPrefix (Document doc, PtrElement pNode);
 static char* ExportAttrNsPrefix (Document doc, PtrElement pNode,
                                  PtrAttribute pAttr);
-static void ExportXmlBuffer (Document doc, unsigned char *buffer);
-static void ExportXmlText (Document doc, PtrTextBuffer pBT,
+static void ExportXmlText (Document doc, PtrTextBuffer pBT, ThotBool lineBreak,
                            ThotBool translate, ThotBool entityName);
 static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
                         PtrSSchema pSSch, PtrElement pEl, ThotBool *transChar,
@@ -775,6 +774,25 @@ static void PutInt (int n, int fnum, char *outBuf, Document doc,
   while (buffer[i] != EOS)
     PutChar ((wchar_t) buffer[i++], fnum, outBuf, doc, lineBreak,
              FALSE, FALSE);
+}
+
+/*----------------------------------------------------------------------
+  ExportXmlBuffer                    
+  ----------------------------------------------------------------------*/
+static void ExportXmlBuffer (Document doc, unsigned char *buffer,
+                    ThotBool lineBreak)
+{
+  unsigned char    c;
+  int              i, fnum;
+  
+  fnum = 1;
+  i = 0;
+  if (buffer)
+    while (buffer[i] != EOS)
+      {
+        c = buffer[i++];
+        PutChar ((wchar_t) c, fnum, NULL, doc, lineBreak, FALSE, FALSE);
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -2714,36 +2732,36 @@ static void ApplyAttrRules (TOrder position, PtrElement pEl,
           /* translation of an attribute from an unknown namespace */
           if (position == TBefore)
             {
-              ExportXmlBuffer (doc, (unsigned char *)" ");
+              ExportXmlBuffer (doc, (unsigned char *)" ", *lineBreak);
               ns_prefix = ExportAttrNsPrefix (doc, pEl, pAttr);
               if (ns_prefix != NULL)
                 {
-                  ExportXmlBuffer (doc, (unsigned char *)ns_prefix); 
-                  ExportXmlBuffer (doc, (unsigned char *)":");
+                  ExportXmlBuffer (doc, (unsigned char *)ns_prefix, *lineBreak); 
+                  ExportXmlBuffer (doc, (unsigned char *)":", *lineBreak);
                 }
               /* Export the attribute name */
               pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
-              ExportXmlBuffer (doc, (unsigned char *)pAttr1->AttrName);
-              ExportXmlBuffer (doc, (unsigned char *)"=");
+              ExportXmlBuffer (doc, (unsigned char *)pAttr1->AttrName, *lineBreak);
+              ExportXmlBuffer (doc, (unsigned char *)"=", *lineBreak);
               /* Export the attribute's value */
               switch (pAttr1->AttrType)
                 {
                 case AtNumAttr:
-                  ExportXmlBuffer (doc, (unsigned char*)pAttr->AeAttrValue);
+                  ExportXmlBuffer (doc, (unsigned char*)pAttr->AeAttrValue, FALSE);
                   break;
                 case AtTextAttr:
                   if (pAttr->AeAttrText)
                     {
-                      ExportXmlBuffer (doc, (unsigned char *)"\"");
+                      ExportXmlBuffer (doc, (unsigned char *)"\"", FALSE);
                       /* Export the text buffer content */
-                      ExportXmlText (doc, pAttr->AeAttrText, TRUE, FALSE);
-                      ExportXmlBuffer (doc, (unsigned char *)"\"");
+                      ExportXmlText (doc, pAttr->AeAttrText, *lineBreak, TRUE, FALSE);
+                      ExportXmlBuffer (doc, (unsigned char *)"\"", FALSE);
                     }
                   break;
                 case AtEnumAttr:
-                  ExportXmlBuffer (doc, (unsigned char *)"\"");
-                  ExportXmlBuffer (doc, (unsigned char *)pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
-                  ExportXmlBuffer (doc, (unsigned char *)"\"");
+                  ExportXmlBuffer (doc, (unsigned char *)"\"", FALSE);
+                  ExportXmlBuffer (doc, (unsigned char *)pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1], FALSE);
+                  ExportXmlBuffer (doc, (unsigned char *)"\"", FALSE);
 		   
                   break;
                 default:
@@ -4485,24 +4503,6 @@ static char* ExportElemNsPrefix (Document doc, PtrElement pNode)
 }
 
 /*----------------------------------------------------------------------
-  ExportXmlBuffer                    
-  ----------------------------------------------------------------------*/
-static void ExportXmlBuffer (Document doc, unsigned char *buffer)
-{
-  unsigned char    c;
-  int              i, fnum;
-  
-  fnum = 1;
-  i = 0;
-  if (buffer)
-    while (buffer[i] != EOS)
-      {
-        c = buffer[i++];
-        PutChar ((wchar_t) c, fnum, NULL, doc, TRUE, FALSE, FALSE);
-      }
-}
-
-/*----------------------------------------------------------------------
   ExportNsDeclaration
   Export the namespace attributes of the Element pNode into
   the main output file
@@ -4535,17 +4535,17 @@ static void ExportNsDeclaration (Document doc, PtrElement pNode)
               (uriDecl->NsUriName || prefixDecl->NsPrefixName))
             {
               if (i > 0)
-                ExportXmlBuffer (doc, (unsigned char *)"\n");
+                ExportXmlBuffer (doc, (unsigned char *)"\n", FALSE);
               /* A Namespace declaration has been found for this element */
-              ExportXmlBuffer (doc, (unsigned char *)" xmlns");
+              ExportXmlBuffer (doc, (unsigned char *)" xmlns", FALSE);
               if (prefixDecl->NsPrefixName != NULL)
                 {
-                  ExportXmlBuffer (doc, (unsigned char *)":");
-                  ExportXmlBuffer (doc, (unsigned char *)prefixDecl->NsPrefixName);
+                  ExportXmlBuffer (doc, (unsigned char *)":", FALSE);
+                  ExportXmlBuffer (doc, (unsigned char *)prefixDecl->NsPrefixName, FALSE);
                 }
-              ExportXmlBuffer (doc, (unsigned char *)"=\"");
-              ExportXmlBuffer (doc, (unsigned char *)uriDecl->NsUriName);
-              ExportXmlBuffer (doc, (unsigned char *)"\"");
+              ExportXmlBuffer (doc, (unsigned char *)"=\"", FALSE);
+              ExportXmlBuffer (doc, (unsigned char *)uriDecl->NsUriName, FALSE);
+              ExportXmlBuffer (doc, (unsigned char *)"\"", FALSE);
               i++;
             }
           prefixDecl = prefixDecl->NsNextPrefixDecl;
@@ -4562,7 +4562,7 @@ static void ExportNsDeclaration (Document doc, PtrElement pNode)
   pointed by pBT.
   length gives the max length of exported lines or 0.                         
   ----------------------------------------------------------------------*/
-static void ExportXmlText (Document doc, PtrTextBuffer pBT,
+static void ExportXmlText (Document doc, PtrTextBuffer pBT, ThotBool lineBreak,
                            ThotBool translate, ThotBool entityName)
 {
   PtrTextBuffer       b;
@@ -4577,7 +4577,7 @@ static void ExportXmlText (Document doc, PtrTextBuffer pBT,
       while (i < b->BuLength && b->BuContent[i] != EOS)
         {
           c = (wchar_t) b->BuContent[i];
-          PutChar (c, fnum, NULL, doc, TRUE, translate, TRUE);
+          PutChar (c, fnum, NULL, doc, lineBreak, translate, entityName);
           /* Next character */
           i++;
         }
@@ -4593,7 +4593,7 @@ static void ExportXmlText (Document doc, PtrTextBuffer pBT,
   length gives the max length of exported lines or 0.                         
   ----------------------------------------------------------------------*/
 static void ExportXmlElText (Document doc,  PtrElement pNode,
-                             PtrTextBuffer pBT)
+                             PtrTextBuffer pBT, ThotBool lineBreak)
 {
   PtrElement          parent;
   PtrSRule            pRe1;
@@ -4614,7 +4614,7 @@ static void ExportXmlElText (Document doc,  PtrElement pNode,
   /* in MathML, try to generate the name of the char. */
   entityName = !strcmp (pNode->ElStructSchema->SsName, "MathML");
   /* Export the text buffer content */
-  ExportXmlText (doc, pBT, translate, entityName);
+  ExportXmlText (doc, pBT, lineBreak, translate, entityName);
 }
 
 /*----------------------------------------------------------------------
@@ -4634,13 +4634,11 @@ void ExportXmlElement (Document doc, PtrElement pEl,
   PtrAttribute        pAttr;
   PtrTtAttribute      pAttr1;
   PtrDocument         pDoc;
-  CHARSET             charset;
-  const char         *charset_name;
   char               *startName = NULL;
   char               *endName = NULL;
   char               *ns_prefix;
-  int                 fnum = 1, len_ns, i;
-  ThotBool            specialTag, indent = FALSE;
+  int                 fnum = 1, len_ns;
+  ThotBool            specialTag;
 
   if (pEl)
     {
@@ -4678,8 +4676,6 @@ void ExportXmlElement (Document doc, PtrElement pEl,
                   len_ns = 0;
                   if (ExportElemNsPrefix (doc, pEl) != NULL)
                     len_ns = strlen (ExportElemNsPrefix (doc, pEl)) + 1;
-                  // add thecurrent indent
-                  len_ns += OutFile[fnum].OfIndent + 2;
                   startName = (char *)TtaGetMemory (strlen (pRe1->SrOrigName) + 2 + len_ns + 1);
                   endName = (char *)TtaGetMemory (strlen (pRe1->SrOrigName) + 3 + len_ns + 1);
                   if (TypeHasException (ExcHidden, pEl->ElTypeNumber,	pEl->ElStructSchema))
@@ -4687,24 +4683,15 @@ void ExportXmlElement (Document doc, PtrElement pEl,
                       /* Don't export hidden elements */
                       startName[0] = EOS;
                       pChild = pEl->ElNext;
-                      if (pChild && lineBreak)
-                        strcpy (endName, "\n");
-                      else
-                        endName[0] = EOS;
+                      endName[0] = EOS;
                       specialTag = TRUE;
                     }
                   else
                     {
                       startName[0] = EOS;
-                      if (lineBreak)
-                        {
-                          strcat (startName, "\n");
-                          /* test the exception xml:space="preserve" */
-                          if (TtaIsElementWithSpacePreserve ((Element) pEl))
-                            lineBreak = FALSE;
-                          for (i = 0; i < OutFile[fnum].OfIndent; i++)
-                            strcat (startName, " ");
-                        }
+                      /* test the exception xml:space="preserve" */
+                      if (TtaIsElementWithSpacePreserve ((Element) pEl))
+                        lineBreak = FALSE;
 
                       if (strcmp (pRe1->SrOrigName, "xmlcomment") == 0)
                         {
@@ -4715,7 +4702,7 @@ void ExportXmlElement (Document doc, PtrElement pEl,
                       else if (strcmp (pRe1->SrOrigName, "xmlpi") == 0)
                         {
                           strcat (startName, "<?");
-                          strcpy (endName, "?>");
+                          strcpy (endName, "?>\n");
                           specialTag = TRUE;
                         }
                       else if (strcmp (pRe1->SrOrigName, "doctype") == 0)
@@ -4732,7 +4719,6 @@ void ExportXmlElement (Document doc, PtrElement pEl,
                         }
                       else
                         {
-                          indent = TRUE;
                           strcat (startName, "<");
                           strcpy (endName, "</");
                           ns_prefix = ExportElemNsPrefix (doc, pEl);
@@ -4748,7 +4734,7 @@ void ExportXmlElement (Document doc, PtrElement pEl,
                           strcat (endName, ">");
                         }
                     }
-                  ExportXmlBuffer (doc, (unsigned char *)startName);
+                  ExportXmlBuffer (doc, (unsigned char *)startName, FALSE);
 
                   /* if needed, record the current line number of the main
                      output file in the element being translated */
@@ -4766,37 +4752,37 @@ void ExportXmlElement (Document doc, PtrElement pEl,
                       if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
                         /* Don't export invisible attributes */
                         {
-                          ExportXmlBuffer (doc, (unsigned char *)" ");
+                          ExportXmlBuffer (doc, (unsigned char *)" ", lineBreak);
                           /* Export the attribute prefix if it exists */
                           ns_prefix = ExportAttrNsPrefix (doc, pEl, pAttr);
                           if (ns_prefix != NULL)
                             {
-                              ExportXmlBuffer (doc, (unsigned char *)ns_prefix); 
-                              ExportXmlBuffer (doc, (unsigned char *)":");
+                              ExportXmlBuffer (doc, (unsigned char *)ns_prefix, FALSE); 
+                              ExportXmlBuffer (doc, (unsigned char *)":", FALSE);
                             }
                           /* Export the attribute name */
                           pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
-                          ExportXmlBuffer (doc, (unsigned char *)pAttr1->AttrName);
-                          ExportXmlBuffer (doc, (unsigned char *)"=");
+                          ExportXmlBuffer (doc, (unsigned char *)pAttr1->AttrName, lineBreak);
+                          ExportXmlBuffer (doc, (unsigned char *)"=", lineBreak);
                           /* Export the attribute's value */
                           switch (pAttr1->AttrType)
                             {
                             case AtNumAttr:
-                              ExportXmlBuffer (doc, (unsigned char*)pAttr->AeAttrValue);
+                              ExportXmlBuffer (doc, (unsigned char*)pAttr->AeAttrValue, FALSE);
                               break;
                             case AtTextAttr:
                               if (pAttr->AeAttrText)
                                 {
-                                  ExportXmlBuffer (doc, (unsigned char *)"\"");
+                                  ExportXmlBuffer (doc, (unsigned char *)"\"", FALSE);
                                   /* Export the text buffer content */
-                                  ExportXmlText (doc, pAttr->AeAttrText, TRUE, FALSE);
-                                  ExportXmlBuffer (doc, (unsigned char *)"\"");
+                                  ExportXmlText (doc, pAttr->AeAttrText, FALSE, TRUE, FALSE);
+                                  ExportXmlBuffer (doc, (unsigned char *)"\"", FALSE);
                                 }
                               break;
                             case AtEnumAttr:
-                              ExportXmlBuffer (doc, (unsigned char *)"\"");
-                              ExportXmlBuffer (doc, (unsigned char *)pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
-                              ExportXmlBuffer (doc, (unsigned char *)"\"");
+                              ExportXmlBuffer (doc, (unsigned char *)"\"", FALSE);
+                              ExportXmlBuffer (doc, (unsigned char *)pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1], FALSE);
+                              ExportXmlBuffer (doc, (unsigned char *)"\"", FALSE);
 			      
                               break;
                             default:
@@ -4807,26 +4793,22 @@ void ExportXmlElement (Document doc, PtrElement pEl,
                     }
 		  
                   if ((startName[0] != EOS) && !specialTag)
-                    ExportXmlBuffer (doc, (unsigned char *)">");
+                    ExportXmlBuffer (doc, (unsigned char *)">", lineBreak);
                   if (startName != NULL)
                     TtaFreeMemory (startName);
                 }
 	      
               /* Recursive export */
               pChild = pEl->ElFirstChild;
-              if (lineBreak && indent)
-                OutFile[fnum].OfIndent += 2;
               while (pChild)
                 {
                   ExportXmlElement (doc, pChild, lineBreak, recordLineNb);
                   pChild = pChild->ElNext;
                 }
-              if (lineBreak && indent)
-                OutFile[fnum].OfIndent -= 2;
 	      
               /* Export End tag */
               if (pEl != pDoc->DocDocElement)
-                ExportXmlBuffer (doc, (unsigned char *)endName);
+                ExportXmlBuffer (doc, (unsigned char *)endName, lineBreak);
               if (endName != NULL)
                 TtaFreeMemory (endName);
             }
@@ -4836,10 +4818,10 @@ void ExportXmlElement (Document doc, PtrElement pEl,
               switch (pEl->ElLeafType)
                 {
                 case LtPicture:
-                  ExportXmlElText (doc, pEl, pEl->ElText);
+                  ExportXmlElText (doc, pEl, pEl->ElText, lineBreak);
                   break;
                 case LtText:
-                  ExportXmlElText (doc, pEl, pEl->ElText);
+                  ExportXmlElText (doc, pEl, pEl->ElText, lineBreak);
                   break;
                 default:
                   break;	
