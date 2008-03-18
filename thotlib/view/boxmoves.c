@@ -1821,7 +1821,7 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 {
   PtrAbstractBox      pAb, pParent, pNext, pPrev;
   PtrBox              box;
-  ThotBool            first, last, add, isExtra;
+  ThotBool            first, last, add, isExtra, isBlock;
 
   *t = *b = *l = *r = 0;
   pAb = pBox->BxAbstractBox;
@@ -1840,9 +1840,6 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
     {
       pParent = pAb->AbEnclosing;
       /* check if there are enclosing ghost boxes */ 
-      /*while (pParent && pParent->AbBox &&
-             pParent->AbBox->BxType == BoComplete)
-             pParent = pParent->AbEnclosing;*/
       if (pParent && pParent->AbBox &&
           pParent->AbBox->BxType == BoGhost)
         {
@@ -1882,6 +1879,9 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
                  (pAb->AbBox->BxType == BoGhost ||
                   pAb->AbBox->BxType == BoFloatGhost))
             {
+              isBlock = (pAb->AbBox->BxType == BoGhost &&
+                         (pAb->AbInLine ||
+                          pAb->AbDisplay == 'B' || pAb->AbDisplay != 'L'));
               box = pAb->AbBox;
               if (!add && pFrom)
                 add = (pFrom == pAb || IsParentBox (pFrom->AbBox, box));
@@ -1897,15 +1897,17 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
                     }
                   else
                     {
-                      if (pParent->AbBox->BxType == BoFloatBlock ||
-                          pParent->AbBox->BxType == BoCellBlock || first)
+                      if (!isBlock &&
+                          (pParent->AbBox->BxType == BoFloatBlock ||
+                           pParent->AbBox->BxType == BoCellBlock || first))
                         {
                           *l += box->BxLMargin;
                           if (pFrom != pAb)
                             *l += box->BxLBorder + box->BxLPadding;
                         }
-                      if (pParent->AbBox->BxType == BoFloatBlock ||
-                          pParent->AbBox->BxType == BoCellBlock || last)
+                      if (!isBlock &&
+                          (pParent->AbBox->BxType == BoFloatBlock ||
+                           pParent->AbBox->BxType == BoCellBlock || last))
                         {
                           *r += box->BxRMargin;
                           if (pFrom != pAb)
