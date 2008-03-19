@@ -3209,14 +3209,21 @@ void ColumnDeleted (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void ColumnPasted (NotifyElement * event)
 {
+#ifdef VQ
   Element         prevColhead, row, prev, table, prevCell;
   ElementType     elType;
   Document        doc;
   int             rowspan;
   ThotBool        inMath, span;
+#endif
 
   CurrentColumn = event->element;
   LastPastedEl = CurrentColumn;
+  if (CurrentColumn &&
+      !TtaSameSSchemas (TtaGetElementType(CurrentColumn).ElSSchema,
+                        TtaGetSSchema("MathML", event->document)))
+    NewColElement (CurrentColumn, FALSE, event->document);
+#ifdef VQ
   prevColhead = CurrentColumn;
   TtaPreviousSibling (&prevColhead);
   if (prevColhead)
@@ -3260,6 +3267,7 @@ void ColumnPasted (NotifyElement * event)
             }
         }
     }
+#endif
 }
 
 /*----------------------------------------------------------------------
