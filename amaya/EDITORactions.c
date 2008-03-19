@@ -107,15 +107,18 @@ void InsertScript (Document document, View view)
   -----------------------------------------------------------------------*/
 void RemoveDeprecatedElements (Document doc, View view)
 {
-  Element             el, old, parent, child;
+  Element             el, old, parent, child, root;
   ElementType         elType, searchedType1, searchedType2;
   ElementType         searchedType3, searchedType4, searchedType5;
+  AttributeType       attrType, attrType1, attrType2;
+  Attribute           attr;
   DisplayMode         dispMode;
   char               *s;
   ThotBool            modified = FALSE, closeUndo;
   
   /* get the insert point */
-  el = TtaGetMainRoot (doc);
+  root = TtaGetMainRoot (doc);
+  el = root;
   if (el == NULL || TtaIsReadOnly (el))
     {
       /* no selection */
@@ -145,6 +148,10 @@ void RemoveDeprecatedElements (Document doc, View view)
       TtaSetStructureChecking (FALSE, doc);
 
       /* remove <font> <basefont> <center> <dir> <menu> */
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_TextAlign;
+      attrType1.AttrSSchema = elType.ElSSchema;
+      attrType2.AttrSSchema = elType.ElSSchema;
       searchedType1.ElSSchema = elType.ElSSchema;
       searchedType1.ElTypeNum = HTML_EL_Font_;
       searchedType2.ElSSchema = elType.ElSSchema;
@@ -189,6 +196,14 @@ void RemoveDeprecatedElements (Document doc, View view)
                   TtaChangeTypeOfElement (el, doc, HTML_EL_Division);
                   /* register the change in the undo sequence */
                   TtaRegisterElementTypeChange (el, HTML_EL_Division, doc);
+                  attr = TtaGetAttribute (el, attrType);
+                  if (attr == NULL)
+                    {
+                      attr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (el, attr, doc);
+                      TtaSetAttributeValue (attr, HTML_ATTR_TextAlign_VAL_center_, el, doc);
+                      TtaRegisterAttributeCreate (attr, el, doc);
+                    }
                   modified = TRUE;
                 }
               else
@@ -202,8 +217,8 @@ void RemoveDeprecatedElements (Document doc, View view)
             }
         }
 
-      el = TtaGetMainRoot (doc);
       /* remove <font> <basefont> <center> <dir> <menu> */
+      el = root;
       searchedType1.ElSSchema = elType.ElSSchema;
       searchedType1.ElTypeNum = HTML_EL_Applet;
       searchedType2.ElSSchema = elType.ElSSchema;
@@ -240,11 +255,40 @@ void RemoveDeprecatedElements (Document doc, View view)
             }
         }
 
+      /* remove language and style attributes */
+      el = root;
+      attrType1.AttrTypeNum = HTML_ATTR_Style_;
+      attrType2.AttrTypeNum = HTML_ATTR_Language;
+      while (el)
+        {
+          TtaSearchAttributes (attrType1,attrType2, SearchForward,
+                               el, &el, &attr);
+          if (el)
+            {
+              elType = TtaGetElementType (el);
+              if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
+                  (elType.ElTypeNum != HTML_EL_Division && elType.ElTypeNum != HTML_EL_Span))
+                {
+                  parent = TtaGetParent (el);
+                  TtaRegisterAttributeDelete (attr, el, doc);
+                  TtaRemoveAttribute (el, attr, doc);
+                  el = parent;
+                  modified = TRUE;
+                }
+            }
+        }
+
       TtaSetStructureChecking (TRUE, doc);
       if (closeUndo)
         TtaCloseUndoSequence (doc);
       if (modified)
+        {
         TtaSetDocumentModified (doc);
+        // work done
+        TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_DOCUMENT_LOADED);
+        }
+      else
+        TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_NOTHING_TO_REPLACE);
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, dispMode);
     }

@@ -1474,7 +1474,8 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
           TtaSetAttributeText (attr, value, el, doc);
           if (newAttr)
             TtaRegisterAttributeCreate (attr, el, doc);
-	  
+          // don't generate a height attribute
+#ifdef IV
           if (width < w)
             {
               attrType.AttrTypeNum = HTML_ATTR_Height_;
@@ -1495,6 +1496,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
                 TtaRegisterAttributeCreate (attr, el, doc);
             }
           else
+#endif
             {
               attrType.AttrTypeNum = HTML_ATTR_Height_;
               attr = TtaGetAttribute (el, attrType);
