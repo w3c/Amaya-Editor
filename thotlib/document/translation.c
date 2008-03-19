@@ -4306,6 +4306,9 @@ ThotBool ExportDocument (Document doc, char *fName, char *tschema,
   if (pDoc->DocSSchema && strcmp (pDoc->DocSSchema->SsName, "TextFile"))
     {
       TtaGetEnvInt ("EXPORT_LENGTH", &(ExportLength));
+      if (ExportLength == 0)
+        /* the user asks for the default value */
+        ExportLength = 80;
       /* check if the document has a doctype */
       if (GetDoctypeFunction)
         /* check if there is a DOCTYPE */
