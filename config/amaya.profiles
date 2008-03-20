@@ -637,6 +637,7 @@ SelectColumn
 &CreateMSQRT
 &CreateMENCLOSE
 &CreateMFRAC
+&CreateMLFRAC
 &CreateMSUBSUP
 &CreateMSUB
 &CreateMSUP

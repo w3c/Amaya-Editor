@@ -626,6 +626,7 @@ FUNCTIONS
   CreateMCSCH,
   CreateMEXP,
   CreateMLN,
+  CreateMLFRAC,
   CreateMLOG,
   CreateMSEC,
   CreateMSECH,

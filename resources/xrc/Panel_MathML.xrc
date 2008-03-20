@@ -60,8 +60,8 @@
                     <object class="tool" name="wxID_PANEL_MATH_FRAC">
                       <bitmap>../icons/16x16/MATHML_frac.png</bitmap>
                     </object>
-                    <object class="tool" name="wxID_PANEL_MATH_SQRT">
-                      <bitmap>../icons/16x16/MATHML_sqrt.png</bitmap>
+                    <object class="tool" name="wxID_PANEL_MATH_LFRAC">
+                      <bitmap>../icons/16x16/MATHML_lfrac.png</bitmap>
                     </object>
                   </object>
                 </object>
@@ -134,6 +134,12 @@
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_OVERDOT">
                       <bitmap>../icons/16x16/MATHML_overdot.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_SQRT">
+                      <bitmap>../icons/16x16/MATHML_sqrt.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_ROOT">
+                      <bitmap>../icons/16x16/MATHML_root.png</bitmap>
                     </object>
                   </object>
                 </object>
@@ -567,6 +573,9 @@
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_FRAC">
                       <bitmap>../icons/16x16/MATHML_frac.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_LFRAC">
+                      <bitmap>../icons/16x16/MATHML_lfrac.png</bitmap>
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_POWER">
                       <bitmap>../icons/16x16/MATHML_power.png</bitmap>

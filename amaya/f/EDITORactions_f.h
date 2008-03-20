@@ -12,6 +12,8 @@ extern void ExecuteACommand ( Document document,
                               View view );
 extern void InsertScript ( Document document,
                            View view );
+extern void RemoveDeprecatedElements ( Document doc,
+                                       View view );
 extern void AddExternal ( Document document,
                           View view );
 extern void ExecuteExternal ( Document document,
@@ -284,6 +286,8 @@ extern void ExecuteACommand ( Document document,
                                 View view );
 extern void InsertScript ( Document document,
                              View view );
+extern void RemoveDeprecatedElements ( Document doc,
+                                         View view );
 extern void AddExternal ( Document document,
                             View view );
 extern void ExecuteExternal ( Document document,

@@ -63,6 +63,8 @@ extern void CreateMPHANTOM ( Document document,
                              View view );
 extern void CreateMFRAC ( Document document,
                           View view );
+extern void CreateMLFRAC ( Document document,
+                           View view );
 extern void CreateMSUBSUP ( Document document,
                             View view );
 extern void CreateMSUB ( Document document,
@@ -642,6 +644,8 @@ extern void CreateMPHANTOM ( Document document,
                                View view );
 extern void CreateMFRAC ( Document document,
                             View view );
+extern void CreateMLFRAC ( Document document,
+                             View view );
 extern void CreateMSUBSUP ( Document document,
                               View view );
 extern void CreateMSUB ( Document document,

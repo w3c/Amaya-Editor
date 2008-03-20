@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1987,19 +1987,33 @@ static void CreateMathConstruct (int construct, ...)
       if(construct == 2)
         moveHere = TtaGetFirstChild(TtaGetLastChild(el));
 
+      if (construct == 4)
+        {
+          if (va_arg(varpos, int) == 1)
+            {
+              // generate the bevelled attribute
+              attrType.AttrSSchema = elType.ElSSchema;
+              attrType.AttrTypeNum = MathML_ATTR_bevelled;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              TtaSetAttributeValue (attr, MathML_ATTR_bevelled_VAL_true, el, doc);
+              TtaChangeTypeOfElement (el, doc, MathML_EL_BevelledMFRAC);
+            }
+        }
+      
       if(construct == 11 || (construct >= 14 && construct <= 19) || construct == 61)
         moveHere = TtaGetFirstChild(el);
 
       if (construct == 18)
         {
-        if (va_arg(varpos, int) == 1)
-          {/* actuarial */
-          attrType.AttrSSchema = elType.ElSSchema;
-          attrType.AttrTypeNum = MathML_ATTR_notation;
-          attr = TtaNewAttribute (attrType);
-          TtaAttachAttribute (el, attr, doc);
-          TtaSetAttributeValue (attr, MathML_ATTR_notation_VAL_actuarial, el, doc);
-          }
+          if (va_arg(varpos, int) == 1)
+            {/* actuarial */
+              attrType.AttrSSchema = elType.ElSSchema;
+              attrType.AttrTypeNum = MathML_ATTR_notation;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              TtaSetAttributeValue (attr, MathML_ATTR_notation_VAL_actuarial, el, doc);
+            }
         }
       if (construct == 20)
         {
@@ -3579,7 +3593,15 @@ void CreateMPHANTOM (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMFRAC (Document document, View view)
 {
-  CreateMathConstruct (4);
+  CreateMathConstruct (4, 0);
+}
+
+/*----------------------------------------------------------------------
+  CreateMLFRAC
+  ----------------------------------------------------------------------*/
+void CreateMLFRAC (Document document, View view)
+{
+  CreateMathConstruct (4, 1);
 }
 
 /*----------------------------------------------------------------------
