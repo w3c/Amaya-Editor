@@ -853,11 +853,14 @@ void AddPromptIndicator (Element el, Document doc)
   AttributeType       attrType;
   Attribute           att;
 
-  elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = Template_ATTR_prompt;
-  att = TtaNewAttribute (attrType);
-  TtaAttachAttribute (el, att, doc);
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = Template_ATTR_prompt;
+      att = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, att, doc);
+    }
 #endif /* TEMPLATES */
 }
 

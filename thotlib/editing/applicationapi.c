@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -277,7 +277,7 @@ ThotBool TtaUseDotForFloat ()
 void TtaInitialize (char *applicationName)
 {
   int                 i;
-  float               val;
+  float               val = 0.;
 
   UserErrorCode = 0;
   strcpy (DefaultDocumentName, "");

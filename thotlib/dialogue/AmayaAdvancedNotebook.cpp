@@ -121,6 +121,10 @@ bool AmayaAdvancedNotebook::ClosePage(int page_id)
 	  result = false;
 	}
 
+  page = (AmayaPage*)GetPage( page_id );
+  if (page == NULL)
+    return result;
+
   if(page->Close())
   {
     DeletePage(page_id);

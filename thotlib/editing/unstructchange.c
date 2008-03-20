@@ -2134,7 +2134,10 @@ void TtcCreateElement (Document doc, View view)
               if (pElReplicate)
                 {
                   if (TypeHasException (ExcNoReplicate, pElReplicate->ElTypeNumber,
-                                        pElReplicate->ElStructSchema))
+                                        pElReplicate->ElStructSchema) ||
+                      (pElReplicate->ElStructSchema &&
+                       (!strcmp (pElReplicate->ElStructSchema->SsName, "MathML") ||
+                        !strcmp (pElReplicate->ElStructSchema->SsName, "SVG"))))
                     {
                       if (!selBegin)
                       selEnd = TRUE;

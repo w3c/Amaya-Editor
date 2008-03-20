@@ -3963,7 +3963,7 @@ void CheckNewLines (NotifyOnTarget *event)
     {
       length = TtaGetElementVolume (leaf);
       content = (CHAR_T *)TtaGetMemory ((length + 1) * sizeof(CHAR_T));
-      TtaGiveBufferContent (leaf, content, length, &lang);
+      TtaGiveBufferContent (leaf, &content[0], length, &lang);
       content[length] = EOS;
     }
   else

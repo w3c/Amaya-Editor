@@ -544,6 +544,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   y = pFrame->FrYOrg;
   GetSizesFrame (frame, &w, &h);
   xd = yd = width = height = t = b = l = r = 0;
+  bl = bt = br = bb = 0;
   from = pFrom->AbBox;
   pAb = pBox->BxAbstractBox;
   if (pAb)

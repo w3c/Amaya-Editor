@@ -85,8 +85,9 @@ void InitializeTemplateEnvironment ()
 #ifdef TEMPLATES
   Templates_Map = StringHashMap_Create((Container_DestroyElementFunction) 
                                                     Template_Destroy, TRUE, -1);
-  HashMap_Set (Templates_Map, (void*)PREDEFINED_LIB, CreatePredefinedTypesLibrary ());
-  HashMap_Set (Templates_Map, (void*)HTML_LIBRARY, CreateHTMLLibrary ());
+  HashMap_Set (Templates_Map, (void*)TtaStrdup(PREDEFINED_LIB),
+               CreatePredefinedTypesLibrary ());
+  HashMap_Set (Templates_Map, (void*)TtaStrdup(HTML_LIBRARY), CreateHTMLLibrary ());
 #endif /* TEMPLATES */
 }
 
@@ -131,7 +132,7 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath)
   t->errorList = DLList_Create();
   t->errorList->destroyElement = (Container_DestroyElementFunction)TtaFreeMemory;
 
-  HashMap_Set (Templates_Map, t->name, t);
+  HashMap_Set (Templates_Map, TtaStrdup(t->name), t);
   return t;
 #else
   return NULL;
@@ -373,13 +374,15 @@ Declaration Declaration_Clone (Declaration dec)
       iter = HashMap_GetForwardIterator(dec->unionType.include);
       ITERATOR_FOREACH(iter, HashMapNode, node)
         {
-          HashMap_Set(newdec->unionType.include, TtaStrdup((const char*)node->key), NULL);
+          HashMap_Set(newdec->unionType.include,
+                      TtaStrdup((const char*)node->key), NULL);
         }
       TtaFreeMemory(iter);
       iter = HashMap_GetForwardIterator(dec->unionType.exclude);
       ITERATOR_FOREACH(iter, HashMapNode, node)
         {
-          HashMap_Set(newdec->unionType.exclude, TtaStrdup((const char*)node->key), NULL);
+          HashMap_Set(newdec->unionType.exclude,
+                      TtaStrdup((const char*)node->key), NULL);
         }
       TtaFreeMemory(iter);
       break;
@@ -730,19 +733,19 @@ void Template_AddDeclaration (XTigerTemplate t, Declaration dec)
       switch (dec->nature)
         {
         case SimpleTypeNat:
-          HashMap_Set (t->simpleTypes, dec->name, dec);
+          HashMap_Set (t->simpleTypes, TtaStrdup(dec->name), dec);
           break;
         case XmlElementNat:
-          HashMap_Set (t->elements, dec->name, dec);
+          HashMap_Set (t->elements,  TtaStrdup(dec->name), dec);
           break;
         case ComponentNat:
-          HashMap_Set (t->components, dec->name, dec);
+          HashMap_Set (t->components,  TtaStrdup(dec->name), dec);
           break;
         case UnionNat:
-          HashMap_Set (t->unions, dec->name, dec);
+          HashMap_Set (t->unions,  TtaStrdup(dec->name), dec);
           break;
         default:
-          HashMap_Set (t->unknowns, dec->name, dec);
+          HashMap_Set (t->unknowns,  TtaStrdup(dec->name), dec);
           break;
         }
         dec->usedIn = t;
@@ -790,7 +793,7 @@ void Template_MoveUnknownDeclarationToXmlElement (XTigerTemplate t)
         {
           decl = Declaration_Create (t, old->name, UnknownNat);
           decl->elementType.name = TtaStrdup(old->name);
-          HashMap_Set (t->elements, decl->name, decl);
+          HashMap_Set (t->elements,  TtaStrdup(decl->name), decl);
         }
     }
   TtaFreeMemory(iter);
@@ -1562,7 +1565,7 @@ HashMap Template_ExpandUnion(XTigerTemplate t, Declaration decl)
                         {
                           Declaration granchild = (Declaration) childNode->elem;
                           if (!HashMap_Get(expanded, granchild->name))
-                            HashMap_Set(expanded, granchild->name, granchild);
+                            HashMap_Set(expanded,  TtaStrdup(granchild->name), granchild);
                         }
                       TtaFreeMemory(childIter);
                     }
@@ -1570,7 +1573,7 @@ HashMap Template_ExpandUnion(XTigerTemplate t, Declaration decl)
                     {
                       /* Add it to expanded map.*/
                       if (!HashMap_Get(expanded, child->name))
-                        HashMap_Set(expanded, child->name, child);
+                        HashMap_Set(expanded,  TtaStrdup(child->name), child);
                     }
                 }
             }

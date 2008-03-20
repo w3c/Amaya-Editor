@@ -680,6 +680,7 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
                   TtaRegisterElementReplace (next, doc);
                   TtaSetTextContent (next, (unsigned char *)newString, lang, doc);
                   TtaFreeMemory (newString);
+                  newString = NULL;
                 }
               else
                 // no change
