@@ -1773,9 +1773,9 @@ static void AddBoxInLine (PtrBox pBox, int frame, PtrLine pLine,
   else if (t || b)
     pLine->LiNoOverlap = TRUE;
   /* Compute the current line height */
-  if (*ascent < pBox->BxHorizRef)
+  if (*ascent < pBox->BxHorizRef + t)
     *ascent = pBox->BxHorizRef + t;
-  if (*descent < pBox->BxHeight - pBox->BxHorizRef)
+  if (*descent < pBox->BxHeight - pBox->BxHorizRef + b)
     *descent = pBox->BxHeight - pBox->BxHorizRef + b;
 }
 

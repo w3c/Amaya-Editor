@@ -84,7 +84,9 @@ void TtaChangeElementType (Element element, int typeNum)
    ---------------------------------------------------------------------- */
 void TtaUpdateRootElementType (Element element, Document doc)
 {
-  PtrElement pEl = (PtrElement)element;
+  PtrDocument pDoc;
+  PtrSSchema  pSS;
+  PtrElement  pEl = (PtrElement)element;
 
   UserErrorCode = 0;
   if (element == NULL)
@@ -95,9 +97,11 @@ void TtaUpdateRootElementType (Element element, Document doc)
     TtaError (ERR_invalid_document_parameter);
   else if (pEl->ElFirstChild && pEl->ElStructSchema != pEl->ElFirstChild->ElStructSchema)
     {
+      pDoc = LoadedDocument[doc - 1];
+      pSS = pEl->ElFirstChild->ElStructSchema;
       pEl->ElStructSchema = pEl->ElFirstChild->ElStructSchema;
-      LoadedDocument[doc - 1]->DocSSchema = pEl->ElStructSchema;
-      // need to free the schema ???
+      pDoc->DocSSchema = pEl->ElStructSchema;
+      //ReleaseStructureSchema (pSS, pDoc);
     }
 }
 

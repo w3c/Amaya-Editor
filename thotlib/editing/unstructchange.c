@@ -1502,9 +1502,9 @@ ThotBool IsXMLEditMode ()
       if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
         {
           if (firstSel && firstSel->ElStructSchema &&
-              (!strcmp (firstSel->ElParent->ElStructSchema->SsName, "XML") ||
-               !strcmp (firstSel->ElParent->ElStructSchema->SsName, "SVG") ||
-               !strcmp (firstSel->ElParent->ElStructSchema->SsName, "MathML")))
+              (!strcmp (firstSel->ElStructSchema->SsName, "XML") ||
+               !strcmp (firstSel->ElStructSchema->SsName, "SVG") ||
+               !strcmp (firstSel->ElStructSchema->SsName, "MathML")))
             // force the XML edit mode
             return TRUE;
         }
@@ -1512,11 +1512,6 @@ ThotBool IsXMLEditMode ()
   return edit;
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-static ThotBool NotifyNewElement (Document doc, Element el, ThotBool before)
-{
-}
 
 /*----------------------------------------------------------------------
   TtcCreateElement handles the Return (or Enter) key.
@@ -1622,6 +1617,13 @@ void TtcCreateElement (Document doc, View view)
             return;
         }
     }
+  else if (firstSel && firstSel->ElStructSchema &&
+           !strcmp (firstSel->ElStructSchema->SsName, "MathML") &&
+           firstSel->ElParent && firstSel->ElParent->ElStructSchema &&
+           !strcmp (firstSel->ElParent->ElStructSchema->SsName, "MathML"))
+    // don't manage this action within a MathML construction
+    return;
+
   firstEl = firstSel;
   lastEl = lastSel;
   if (!ElementIsReadOnly (firstSel) && AscentReturnCreateNL (firstSel))
