@@ -100,7 +100,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   ,m_pLastUsedFilter(p_last_used_filter)
 {
   char      *s;
-  char       buffer[MAX_LENGTH];
+  char       buffer[MAX_LENGTH], *suffix;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("OpenDocDlgWX"));
   // waiting for a return
@@ -211,15 +211,18 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
       if (TtaFileExist(buffer))
         {
           int        i = 1, len;
+          // keep the current suffix
           len = strlen (buffer);
           while (buffer[len] != '.')
             len--;
+          suffix = TtaStrdup (&buffer[len]);
           do
             {
-              sprintf (&buffer[len], "%d.html", i);
+              sprintf (&buffer[len], "%d%s", i, suffix);
               i++;
             }
           while (TtaFileExist(buffer));
+          TtaFreeMemory (suffix);
         }
       XRCCTRL(*this, "wxID_COMBOBOX",wxComboBox )->SetValue(TtaConvMessageToWX(buffer));
     }
