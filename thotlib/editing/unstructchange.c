@@ -1131,13 +1131,19 @@ void PasteCommand ()
               if (savebefore)
                 {
                   for (i = 0; i < NCreatedElements && !pSel; i++)
-                    if (CreatedElement[i] != NULL)
+                    if (CreatedElement[i] &&
+                        !TypeHasException (ExcIsColHead,
+                                           CreatedElement[i]->ElTypeNumber,
+                                           CreatedElement[i]->ElStructSchema))
                       pSel = CreatedElement[i];
                 }
               else
                 {
                   for (i = NCreatedElements - 1; i >= 0 && !pSel; i--)
-                    if (CreatedElement[i] != NULL)
+                    if (CreatedElement[i] &&
+                        !TypeHasException (ExcIsColHead,
+                                           CreatedElement[i]->ElTypeNumber,
+                                           CreatedElement[i]->ElStructSchema))
                       pSel = CreatedElement[i];
                 }
               if (pSel)

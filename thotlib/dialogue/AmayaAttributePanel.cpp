@@ -26,6 +26,7 @@
 #define THOT_EXPORT extern
 #include "attrmenu.h"
 #include "attrmenu_f.h"
+#include "callback_f.h"
 #include "tree_f.h"
 #include "containers.h"
 #include "frame_tv.h"
@@ -369,10 +370,11 @@ void AmayaAttributeToolPanel::QueryRemoveCurrentAttribute()
   ----------------------------------------------------------------------*/
 void AmayaAttributeToolPanel::RemoveCurrentAttribute()
 {
-  PtrElement    pEl;
-  Attribute     attr;
-  AttributeType attrType;
-  int           kind;
+  PtrElement      pEl;
+  Attribute       attr;
+  AttributeType   attrType;
+  NotifyAttribute notifyAttr;
+  int             kind;
 
   Document     doc = TtaGetDocument((Element)m_firstSel);
   DisplayMode  mode = TtaGetDisplayMode(doc);
@@ -384,25 +386,39 @@ void AmayaAttributeToolPanel::RemoveCurrentAttribute()
     {
       TtaSetDisplayMode(doc, DeferredDisplay);
       TtaOpenUndoSequence(doc, (Element)m_firstSel, (Element)m_lastSel,
-			  m_firstChar, m_lastChar);
+                          m_firstChar, m_lastChar);
 
       /* first selected element */
       pEl = (PtrElement)m_firstSel;
       attr = (Attribute)m_currentAttElem->val;
       TtaGiveAttributeType (attr, &attrType, &kind);
+      /* prepare event AttrDelete to be sent to the application */
+      notifyAttr.event = TteAttrDelete;
+      notifyAttr.document = doc;
+      notifyAttr.info = 0; /* not sent by undo */
+      notifyAttr.attributeType = attrType;
       while (pEl != NULL)
         {
-	  if (attr)
-	    {
-	      TtaRegisterAttributeDelete(attr, (Element)pEl, doc);
-	      TtaRemoveAttribute((Element)pEl, attr, doc);
-	    }
-           /* next element in the selection */
+          if (attr)
+            {
+              notifyAttr.element = (Element) pEl;
+              notifyAttr.attribute = attr;
+              if (!CallEventAttribute (&notifyAttr, TRUE))
+                /* application accepts */
+                {
+                  TtaRegisterAttributeDelete(attr, (Element)pEl, doc);
+                  TtaRemoveAttribute((Element)pEl, attr, doc);
+                  TtaSetDocumentModified(doc);
+                  /* send event Attribute deleted */
+                  notifyAttr.attribute = NULL;
+                  CallEventAttribute (&notifyAttr, FALSE);
+                }
+            }
+          /* next element in the selection */
           pEl = NextInSelection (pEl, (PtrElement)m_lastSel);
-	  attr = TtaGetAttribute ((Element)pEl, attrType);
+          attr = TtaGetAttribute ((Element)pEl, attrType);
         }
-      
-      TtaSetDocumentModified(doc);
+
       TtaCloseUndoSequence(doc);
       TtaSetDisplayMode(doc, mode);
       ForceAttributeUpdate();
