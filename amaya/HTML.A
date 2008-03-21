@@ -265,7 +265,14 @@ ATTRIBUTES
         AttrModify.Post -> AttrAreaSizeModified;
         AttrDelete.Pre ->  AttrAreaSizeDelete;        
            END;
-   
+   span_:
+        BEGIN
+        AttrCreate.Post -> SpanCreated;
+        AttrModify.Pre ->  ModifySpan;
+        AttrModify.Post -> SpanModified;
+        AttrDelete.Pre ->  DeleteSpan;
+        END;
+
    colspan_:
         BEGIN
         AttrCreate.Post -> ColspanCreated;

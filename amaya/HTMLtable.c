@@ -32,6 +32,7 @@ static Element      DeletedTable = NULL; // the current deleted table element
 static Element      ParentDeletedTable = NULL; // the parent of the deleted table
 static int          PreviousColspan;
 static int          PreviousRowspan;
+static int          PreviousSpan;
 
 /*----------------------------------------------------------------------
   WithinLastPastedCell
@@ -686,7 +687,7 @@ static void CreateCellsInRowGroup (Element group, Element prevCol,
   NewColumnHead creates a new Column_head and returns it.   
   If generateEmptyCells == TRUE, create an additional empty cell in all
   rows, except the row indicated.
-  If last == TRUE when lastcolhead is the last current column.
+  If last == TRUE then lastcolhead is the last current column.
   The parameter before indicates if the lastcolhead precedes or follows
   the new created Column_head. It should be FALSE when last is TRUE.
   ----------------------------------------------------------------------*/
@@ -2901,7 +2902,7 @@ static void ClearColumn (Element colhead, Document doc)
         {
           TtaGiveReferenceAttributeValue (attr, &col);
           if (col)
-            /* there is aa associated COL or COLGROUP element */
+            /* there is an associated COL or COLGROUP element */
             {
               /* get its span attribute (the number of column represented by
                  the element) */
@@ -2947,7 +2948,8 @@ static void ClearColumn (Element colhead, Document doc)
                             col = parent;
                         }
                     }
-                  TtaRegisterElementDelete (col, doc);
+                  /* no need to register the deletion of the COL element: when undoing the
+                     delete command, a new COL element will be created anyway */
                   TtaDeleteTree (col, doc);
                 }
               else
@@ -2958,12 +2960,14 @@ static void ClearColumn (Element colhead, Document doc)
                     /* the new value should be 1 (i.e. default value).
                        Delete the attribute */
                     {
-                      TtaRegisterAttributeDelete (attrSpan, col, doc);
+                      /* no need to register the deletion of the span attribute: when undoing
+                         the delete command, the attribute will be created anyway */
                       TtaRemoveAttribute (col, attrSpan, doc);
                     }
                   else
                     {
-                      TtaRegisterAttributeReplace (attrSpan, col, doc);
+                      /* no need to register the old value of the span attribute: when undoing
+                         the delete command, the attribute will be updated anyway */
                       span--;
                       TtaSetAttributeValue (attrSpan, span, col, doc);
                     }
@@ -3173,6 +3177,128 @@ ThotBool DeleteTBody (NotifyElement * event)
         }
       return TRUE;		/* don't let Thot perform normal operation */
     }
+}
+
+/*----------------------------------------------------------------------
+  ModifySpan  
+  The user wants to modify the value of a span attribute.                                       
+  ----------------------------------------------------------------------*/
+ThotBool ModifySpan (NotifyAttribute * event)
+{
+  /* save the attribute value before it is modified */
+  PreviousSpan = TtaGetAttributeValue (event->attribute);
+  if (PreviousSpan < 0)
+    PreviousSpan = 1;
+  return FALSE;		/* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+  SpanModified
+  The value of a span attribute has been changed.
+  ----------------------------------------------------------------------*/
+void SpanModified (NotifyAttribute * event)
+{
+  Element             col, colhead, prevColhead, table, el;
+  ElementType         elType;
+  Attribute           attr, attrRef;
+  AttributeType       attrType;
+  Document            doc;
+  int                 span, i, ncol;
+
+  attr = event->attribute;
+  span = TtaGetAttributeValue (attr);
+  if (span == PreviousSpan)
+    /* no change */
+    return;
+
+  doc = event->document;
+  col = event->element;
+  if (span < PreviousSpan)
+    /* if the user wants to delete existing columns, she should use the
+       specific table editing commands. What columns does she exactly want
+       to delete? */
+    /* restore the previous value */
+    TtaSetAttributeValue (attr, PreviousSpan, col, doc);
+  else
+    /* the user wants to create new columns */
+    {
+      elType = TtaGetElementType (col);
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_Ref_ColColgroup;
+
+      /* get the last Column_head corresponding to the COL or COLGROUP
+         element to which the modified attribute belongs */
+      elType.ElTypeNum = HTML_EL_Table_;
+      table = TtaGetTypedAncestor (event->element, elType);
+      elType.ElTypeNum = HTML_EL_Column_head;
+      colhead = TtaSearchTypedElement (elType, SearchInTree, table); /* first
+                                                    column head in the table */
+      prevColhead = NULL;
+      while (colhead)
+        {
+          attrRef = TtaGetAttribute (colhead, attrType);
+          if (attrRef)
+            {
+              TtaGiveReferenceAttributeValue (attrRef, &el);
+              if (el == col)
+                /* this column head corresponds to our COL or COLGROUP */
+                prevColhead = colhead;
+              else
+                if (prevColhead)
+                  /* we are after the column heads corresponding to our
+                     COL or COLGROUP. Stop */
+                  colhead = NULL;
+            }
+          if (colhead)
+            TtaNextSibling (&colhead);
+        }
+
+      /* create new columns after the last one corresponding to our COL or
+         COLGROUP */
+      if (prevColhead)
+        {
+          ncol = span - PreviousSpan;
+          for (i = 1; i <= ncol; i++)
+            {
+              colhead = NewColumnHead (prevColhead, FALSE, FALSE, NULL, doc,
+                                       FALSE, TRUE);
+              if (colhead)
+                {
+                  prevColhead = colhead;
+                  attrRef = TtaNewAttribute (attrType);
+                  if (attrRef)
+                    {
+                      TtaAttachAttribute (colhead, attrRef, doc);
+                      TtaSetAttributeReference (attrRef, colhead, doc, col);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  SpanCreated
+  An attribute span has just been created by the user.
+  ----------------------------------------------------------------------*/
+void SpanCreated (NotifyAttribute * event)
+{
+  PreviousSpan = 1;
+  SpanModified (event);
+}
+
+/*----------------------------------------------------------------------
+  DeleteSpan
+  The user wants to delete a span attribute
+  ----------------------------------------------------------------------*/
+ThotBool DeleteSpan (NotifyAttribute * event)
+{
+	if (event->info == 1)
+    /* undoing attribute creation. Accept */
+    return FALSE;
+  /* prevent the user from deleting this attribute. She should use
+     commands for deleting columns instead */
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
