@@ -30,6 +30,7 @@
 #include "templates.h"
 #include "templateDeclarations.h"
 
+
 #define MaxMsgLength 200
 #include "anim_f.h"
 #include "animbuilder_f.h"
@@ -39,6 +40,7 @@
 #include "HTMLactions_f.h"
 #include "css_f.h"
 #include "templateDeclarations_f.h"
+#include "templates_f.h"
 #include "Xml2thot_f.h"
 #include "XHTMLbuilder_f.h"
 
@@ -135,7 +137,7 @@ ThotBool NeedAMenu (Element el, Document doc)
     res = TRUE;
   else
     {
-      t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
+      t = GetXTigerDocTemplate (doc);
       if (t)
         {
           dec = Template_GetDeclaration (t, types);
@@ -183,7 +185,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
     {
     case Template_EL_head:
       CheckMandatoryAttribute (el, doc, Template_ATTR_version);
-      DocumentMeta[doc]->isTemplate = TRUE;
+      SetDocumentAsXTigerTemplate(doc);
       break;
 
     case Template_EL_component:

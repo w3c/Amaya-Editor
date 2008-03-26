@@ -113,7 +113,8 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath)
   XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof (_XTigerTemplate));
 
   memset (t, 0 ,sizeof (_XTigerTemplate));
-  t->name = TtaStrdup(templatePath);
+  t->uri         = TtaStrdup(templatePath);
+
   t->libraries   = StringHashMap_Create(NULL, FALSE, -1);
   t->elements    = KeywordHashMap_Create((Container_DestroyElementFunction)
                                                 Declaration_Destroy, TRUE, -1);
@@ -125,14 +126,14 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath)
                                                 Declaration_Destroy, TRUE, -1);
   t->unknowns    = KeywordHashMap_Create((Container_DestroyElementFunction)
                                                 Declaration_Destroy, TRUE, -1);
-  t->doc = -1;
+  t->doc   = -1;
   t->users = 0;
-  t->isPredefined = FALSE;
+  t->state = 0;
   
   t->errorList = DLList_Create();
   t->errorList->destroyElement = (Container_DestroyElementFunction)TtaFreeMemory;
 
-  HashMap_Set (Templates_Map, TtaStrdup(t->name), t);
+  HashMap_Set (Templates_Map, TtaStrdup(t->uri), t);
   return t;
 #else
   return NULL;
@@ -147,7 +148,7 @@ XTigerTemplate NewXTigerLibrary (const char *templatePath)
 #ifdef TEMPLATES
   XTigerTemplate t;
   t = (XTigerTemplate)NewXTigerTemplate (templatePath);
-  t->isLibrary = TRUE;
+  t->state |= templLibrary;
   return t;
 #else
   return NULL;
@@ -199,7 +200,26 @@ XTigerTemplate GetXTigerTemplate (const char *templatePath)
 XTigerTemplate GetXTigerDocTemplate (Document doc)
 {
 #ifdef TEMPLATES
-  return GetXTigerTemplate(DocumentMeta[doc]->template_url);
+  HashMapNode     node;
+  ForwardIterator iter;
+  XTigerTemplate  t = NULL, res = NULL;
+
+  if (Templates_Map == NULL)
+    InitializeTemplateEnvironment ();
+  
+  iter = HashMap_GetForwardIterator(Templates_Map);
+  ITERATOR_FOREACH(iter, HashMapNode, node)
+    {
+      t = (XTigerTemplate)node->elem;
+      if(t)
+        if(t->doc==doc)
+          {
+            res = t;
+            break;
+          }
+    }
+  TtaFreeMemory(iter);
+  return res;
 #else
   return NULL;
 #endif /* TEMPLATES */
@@ -238,7 +258,7 @@ XTigerTemplate LookForXTigerTemplate (const char *templatePath)
 void Template_AddStandardDependancies(XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  if(t && !t->isLibrary)
+  if(t && !Template_IsLibrary(t))
   {
       if(DocumentTypes[t->doc]==docHTML)
       {
@@ -259,7 +279,7 @@ XTigerTemplate CreatePredefinedTypesLibrary ()
 {
 #ifdef TEMPLATES
   XTigerTemplate lib = NewXTigerLibrary (PREDEFINED_LIB);
-  lib->isLibrary = true;
+  lib->state |= templLibrary|templPredefined;
 
   Template_DeclareNewSimpleType (lib, TYPE_NUMBER,  XTNumber);
   Template_DeclareNewSimpleType (lib, TYPE_BOOLEAN, XTBoolean);
@@ -270,7 +290,7 @@ XTigerTemplate CreatePredefinedTypesLibrary ()
   Template_DeclareNewUnion (lib, UNION_ANYELEMENT, NULL, NULL);
   Template_DeclareNewUnion (lib, UNION_ANY, UNION_ANY_DEFINITION, NULL);
   
-  lib->isPredefined = TRUE;
+  
   return lib;
 #else
   return NULL;
@@ -289,8 +309,7 @@ XTigerTemplate CreateHTMLLibrary ()
   HashMap          map;
   XTigerTemplate lib = NewXTigerLibrary (HTML_LIBRARY);
 
-  lib->isLibrary = true;
-  lib->isPredefined = TRUE;
+  lib->state |= templLibrary|templPredefined;
 
   // Add elements
   map = KeywordHashMap_CreateFromList(NULL, -1, XTigerHTMLElements);
@@ -889,7 +908,7 @@ void Template_Close(XTigerTemplate t)
 #ifdef TEMPLATES
   if (t)
   {
-    HashMap_DestroyElement(Templates_Map, t->name);
+    HashMap_DestroyElement(Templates_Map, t->uri);
   }
 #endif /* TEMPLATES */
 }
@@ -941,7 +960,9 @@ static void Template_Destroy (XTigerTemplate t)
   //Freeing the template
   TtaFreeMemory(t->version);
   TtaFreeMemory(t->templateVersion);
-  TtaFreeMemory(t->name);
+  
+  TtaFreeMemory(t->uri);
+  TtaFreeMemory(t->base_uri);
   TtaFreeMemory (t);
 #endif /* TEMPLATES */
 }
@@ -1112,7 +1133,7 @@ void Template_ShowErrors(XTigerTemplate t)
 {
   if(t && !DLList_IsEmpty(t->errorList))
     {
-      ShowNonSelListDlgWX(NULL, t->name,
+      ShowNonSelListDlgWX(NULL, t->uri,
           TtaGetMessage (AMAYA, AM_TEMPLATE_HAS_ERROR),
           TtaGetMessage (AMAYA, AM_CLOSE), t->errorList);
     }
@@ -1172,7 +1193,7 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
                   else
                     fprintf (file, " inline");
                   if (aux->declaredIn!=t)
-                    fprintf (file, " (declared in %s)", aux->declaredIn->name);
+                    fprintf (file, " (declared in %s)", aux->declaredIn->uri);
                   break;
                 case UnionNat:
                   fprintf (file, "\n%s+ %s ",indentation,aux->name);
@@ -1181,7 +1202,7 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
                   else
                     fprintf (file, " inline");
                   if (aux->declaredIn!=t)
-                    fprintf (file, " (declared in %s)", aux->declaredIn->name);
+                    fprintf (file, " (declared in %s)", aux->declaredIn->uri);
                   Template_PrintUnion (aux, indent+1, t, file);
                 default:
                   //impossible
@@ -1215,7 +1236,7 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
                 else
                   fprintf (file, " inline");
                 if (aux->declaredIn!=t)
-                  fprintf (file, " (declared in %s)", aux->declaredIn->name);
+                  fprintf (file, " (declared in %s)", aux->declaredIn->uri);
                 break;
               case UnionNat:
                 fprintf (file, "\n%s+ %s ",indentation,aux->name);
@@ -1224,7 +1245,7 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
                 else
                   fprintf (file, " inline");
                 if (aux->declaredIn!=t)
-                  fprintf (file, " (declared in %s)", aux->declaredIn->name);
+                  fprintf (file, " (declared in %s)", aux->declaredIn->uri);
                 Template_PrintUnion (aux, indent+1, t, file);
               default:
                 //impossible
@@ -1302,7 +1323,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
           else
             fprintf (file, " inline");
           if (dec->declaredIn!=t)
-            fprintf (file, " (declared in %s)", dec->declaredIn->name);
+            fprintf (file, " (declared in %s)", dec->declaredIn->uri);
         }
       TtaFreeMemory(iter);  
     }
@@ -1322,7 +1343,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
           else
             fprintf (file, " inline");
           if (dec->declaredIn!=t)
-            fprintf (file, " (declared in %s)", dec->declaredIn->name);
+            fprintf (file, " (declared in %s)", dec->declaredIn->uri);
         }
       TtaFreeMemory(iter);  
     }
@@ -1342,7 +1363,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
           else
             fprintf (file, " inline");
           if (dec->declaredIn!=t)
-            fprintf (file, " (declared in %s)", dec->declaredIn->name);
+            fprintf (file, " (declared in %s)", dec->declaredIn->uri);
           FPrintElement(file, dec->componentType.content, 1);
         }
       TtaFreeMemory(iter);  
@@ -1363,7 +1384,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
           else
             fprintf (file, " inline");
           if (dec->declaredIn!=t)
-            fprintf (file, " (declared in %s)", dec->declaredIn->name);
+            fprintf (file, " (declared in %s)", dec->declaredIn->uri);
           Template_PrintUnion (dec, 1, t, file);
         }
       TtaFreeMemory(iter);  
@@ -1409,7 +1430,7 @@ void DumpAllDeclarations()
       if (t)
       {
         fprintf(file, "################################################################################\n");
-        fprintf(file, "## Template declaration for \"%s\" (%d) :\n", t->name, t->doc);
+        fprintf(file, "## Template declaration for \"%s\" (%d) :\n", t->uri, t->doc);
         fprintf(file, "################################################################################\n");
         PrintDeclarations(t, file);
         fprintf(file, "\n################################################################################\n");
@@ -1493,7 +1514,7 @@ void SetTemplateDocument (XTigerTemplate t, Document doc)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void AddUser (XTigerTemplate t)
+void Template_AddReference (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   if (t)
@@ -1503,17 +1524,74 @@ void AddUser (XTigerTemplate t)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void RemoveUser (XTigerTemplate t)
+void Template_RemoveReference (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   if (t)
   {
     t->users--;
-    if (t->users == 0 && !t->isPredefined)
+    if (t->users == 0 && !Template_IsPredefined(t))
       Template_Close (t);
   }  
 #endif /* TEMPLATES */
 }
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+ThotBool Template_IsPredefined(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  if (t)
+    return (t->state&templPredefined)!=0;
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+ThotBool Template_IsLibrary(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  if (t)
+    return (t->state&templLibrary)!=0;
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+ThotBool Template_IsInstance(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  if (t)
+    return (t->state&templInstance)!=0;
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+ThotBool Template_IsLoaded(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  if (t)
+    return (t->state&templloaded)!=0;
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+ThotBool Template_IsInternal(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  if (t)
+    return (t->state&templInternal)!=0;
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
 
 /*----------------------------------------------------------------------
   Template_ExpandUnion
@@ -1942,7 +2020,7 @@ ThotBool Template_CanInsertElementInBag (Document doc, ElementType type, char* b
   HashMapNode     node;
   Declaration     decl;
   
-  t = (XTigerTemplate) HashMap_Get (Templates_Map, DocumentMeta[doc]->template_url);
+  t = GetXTigerDocTemplate(doc);
   if (t)
     {
       map = KeywordHashMap_CreateFromList(NULL, -1, bagTypes);
@@ -1977,7 +2055,7 @@ ThotBool Template_CanInsertTypeInBag (Document doc, const char* type, char* bagT
   ForwardIterator iter;
   HashMapNode     node;
     
-  t = (XTigerTemplate) HashMap_Get (Templates_Map, DocumentMeta[doc]->template_url);
+  t = GetXTigerDocTemplate(doc);
   if (t)
     {
       map = KeywordHashMap_CreateFromList(NULL, -1, bagTypes);
@@ -2010,7 +2088,7 @@ ThotBool Template_CanInsertElementInBagElement (Document doc, ElementType type, 
   XTigerTemplate  t;
   char *bagTypes;
   
-  t = (XTigerTemplate) HashMap_Get (Templates_Map, DocumentMeta[doc]->template_url);
+  t = GetXTigerDocTemplate(doc);
   if (t && bag)
   {
     bagTypes = GetAttributeStringValueFromNum(bag, Template_ATTR_types, NULL);
@@ -2032,7 +2110,7 @@ ThotBool Template_CanInsertElementInBagElement (Document doc, const char* type, 
   XTigerTemplate  t;
   char *bagTypes;
   
-  t = (XTigerTemplate) HashMap_Get (Templates_Map, DocumentMeta[doc]->template_url);
+  t = GetXTigerDocTemplate(doc);
   if (t && bag)
   {
     bagTypes = GetAttributeStringValueFromNum(bag, Template_ATTR_types, NULL);
@@ -2057,7 +2135,7 @@ ThotBool Template_CanInsertElementInUse (Document doc, ElementType type, char* u
 #ifdef TEMPLATES
   XTigerTemplate  t;
   Element         elem;
-  t = (XTigerTemplate) HashMap_Get (Templates_Map, DocumentMeta[doc]->template_url);
+  t = GetXTigerDocTemplate(doc);
   if (t && useType)
   {
     // Allow only simple type element.

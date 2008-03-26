@@ -5900,7 +5900,7 @@ void StartXmlParser (Document doc, char *fileName,
 
 #ifdef TEMPLATES
   // load the referred template if it's an instance
-  OpeningInstance(fileName, doc);
+  OpeningInstance(fileName, doc, pathURL);
 #endif /* TEMPLATES */
 
   /* General initialization */

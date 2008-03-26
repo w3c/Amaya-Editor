@@ -358,10 +358,6 @@ void DocumentMetaClear (DocumentMetaDataElement *me)
   TtaFreeMemory (me->reason);
   me->reason = NULL;
   me->link_icon = NULL;
-#ifdef TEMPLATES
-  TtaFreeMemory (me->template_url);
-  me->template_url = NULL;
-#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
@@ -3601,10 +3597,6 @@ Document LoadDocument (Document doc, char *pathname,
       if (docType != docLog)
         TtaSetStatusSelectedElement (newdoc, 1, NULL);
 
-#ifdef TEMPLATES
-      DocumentMeta[newdoc]->template_version = NULL;
-#endif /* TEMPLATES */
-
       /* Set character encoding */
       DocumentMeta[newdoc]->charset = NULL;
       charEncoding = HTTP_headers (http_headers, AM_HTTP_CHARSET);
@@ -4246,7 +4238,7 @@ void ShowSource (Document doc, View view)
 
 #ifdef TEMPLATES
           // lock source of template instances
-          if (DocumentMeta[doc] && DocumentMeta[doc]->template_url)
+          if (IsTemplateInstanceDocument(doc))
             {
               ThotBool allow;
               TtaGetEnvBoolean ("EDIT_SRC_TEMPLATE", &allow);
@@ -7220,7 +7212,7 @@ void CheckAmayaClosed ()
   while (i < DocumentTableLength &&
          (DocumentURLs[i] == NULL ||
           DocumentMeta[i] == NULL ||
-          DocumentMeta[i]->isTemplate ||
+          IsInternalTemplateDocument(i) ||
           DocumentMeta[i]->method == CE_HELP))
     i++;
   

@@ -2203,7 +2203,7 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag,
       XTigerTemplate  t;
 
       // check if the tag is allowed there
-      t = GetXTigerTemplate (DocumentMeta[TransDoc]->template_url);
+      t = GetXTigerDocTemplate (TransDoc);
       if (t)
         {
           listtypes = Template_GetListTypes (t, el);

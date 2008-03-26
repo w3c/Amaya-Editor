@@ -8,6 +8,8 @@
 
 extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern ThotBool IsTemplateDocument ( Document doc );
+extern ThotBool IsInternalTemplateDocument ( Document doc );
+extern char* GetDocumentInstanceTemplateUrl ( Document doc );
 extern ThotBool CheckPromptIndicator ( Element el,
                                        Document doc );
 extern ThotBool RemovePromptIndicator ( NotifyOnTarget *event );
@@ -39,8 +41,9 @@ extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
 extern void CheckTemplate ( Document doc );
-extern void OpeningInstance ( char *fileName,
-                              Document doc );
+extern void OpeningInstance ( char *localFileName,
+                              Document doc,
+                              char* docURL );
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
@@ -51,11 +54,20 @@ extern ThotBool TemplateAttrInMenu ( NotifyAttribute * event );
 extern void CreateTemplateFromDocument ( Document doc,
                                          View view );
 extern void UpdateTemplateMenus ( Document doc );
+extern void UninstanciateTemplateDocument ( Document doc );
+extern void Template_PrepareInstance ( char *fileName,
+                                       Document doc,
+                                       char* template_version,
+                                       char* template_url );
+extern void SetDocumentAsXTigerTemplate ( Document doc );
+extern void SetDocumentAsXTigerLibrary ( Document doc );
 
 #else /* __STDC__ */
 
 extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern ThotBool IsTemplateDocument ( Document doc );
+extern ThotBool IsInternalTemplateDocument ( Document doc );
+extern char* GetDocumentInstanceTemplateUrl ( Document doc );
 extern ThotBool CheckPromptIndicator ( Element el,
                                          Document doc );
 extern ThotBool RemovePromptIndicator ( NotifyOnTarget *event );
@@ -87,8 +99,9 @@ extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
 extern void CheckTemplate ( Document doc );
-extern void OpeningInstance ( char *fileName,
-                                Document doc );
+extern void OpeningInstance ( char *localFileName,
+                                Document doc,
+                                char* docURL );
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
@@ -99,6 +112,13 @@ extern ThotBool TemplateAttrInMenu ( NotifyAttribute * event );
 extern void CreateTemplateFromDocument ( Document doc,
                                            View view );
 extern void UpdateTemplateMenus ( Document doc );
+extern void UninstanciateTemplateDocument ( Document doc );
+extern void Template_PrepareInstance ( char *fileName,
+                                         Document doc,
+                                         char* template_version,
+                                         char* template_url );
+extern void SetDocumentAsXTigerTemplate ( Document doc );
+extern void SetDocumentAsXTigerLibrary ( Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

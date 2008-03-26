@@ -72,8 +72,13 @@ extern Element GetComponentContent ( Declaration d );
 extern Document GetTemplateDocument ( XTigerTemplate t );
 extern void SetTemplateDocument ( XTigerTemplate t,
                                   Document doc );
-extern void AddUser ( XTigerTemplate t );
-extern void RemoveUser ( XTigerTemplate t );
+extern void Template_AddReference ( XTigerTemplate t );
+extern void Template_RemoveReference ( XTigerTemplate t );
+extern ThotBool Template_IsPredefined ( XTigerTemplate t );
+extern ThotBool Template_IsLibrary ( XTigerTemplate t );
+extern ThotBool Template_IsInstance ( XTigerTemplate t );
+extern ThotBool Template_IsLoaded ( XTigerTemplate t );
+extern ThotBool Template_IsInternal ( XTigerTemplate t );
 extern HashMap Template_ExpandUnion ( XTigerTemplate t,
                                       Declaration decl );
 extern HashMap Template_ExpandHashMapTypes ( XTigerTemplate t,
@@ -176,8 +181,13 @@ extern Element GetComponentContent ( Declaration d );
 extern Document GetTemplateDocument ( XTigerTemplate t );
 extern void SetTemplateDocument ( XTigerTemplate t,
                                     Document doc );
-extern void AddUser ( XTigerTemplate t );
-extern void RemoveUser ( XTigerTemplate t );
+extern void Template_AddReference ( XTigerTemplate t );
+extern void Template_RemoveReference ( XTigerTemplate t );
+extern ThotBool Template_IsPredefined ( XTigerTemplate t );
+extern ThotBool Template_IsLibrary ( XTigerTemplate t );
+extern ThotBool Template_IsInstance ( XTigerTemplate t );
+extern ThotBool Template_IsLoaded ( XTigerTemplate t );
+extern ThotBool Template_IsInternal ( XTigerTemplate t );
 extern HashMap Template_ExpandUnion ( XTigerTemplate t,
                                         Declaration decl );
 extern HashMap Template_ExpandHashMapTypes ( XTigerTemplate t,

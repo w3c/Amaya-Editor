@@ -30,11 +30,6 @@ extern void InstantiateTemplate_callback ( int newdoc,
                                            char *proxyName,
                                            AHTHeaders *http_headers,
                                            void * context );
-extern void InstantiateTemplate ( Document doc,
-                                  char *templatename,
-                                  char *docname,
-                                  DocumentType docType,
-                                  ThotBool loaded );
 extern Element Template_GetNewSimpleTypeInstance ( Document doc,
                                                    Element parent,
                                                    Declaration decl );
@@ -90,11 +85,6 @@ extern void InstantiateTemplate_callback ( int newdoc,
                                              char *proxyName,
                                              AHTHeaders *http_headers,
                                              void * context );
-extern void InstantiateTemplate ( Document doc,
-                                    char *templatename,
-                                    char *docname,
-                                    DocumentType docType,
-                                    ThotBool loaded );
 extern Element Template_GetNewSimpleTypeInstance ( Document doc,
                                                      Element parent,
                                                      Declaration decl );

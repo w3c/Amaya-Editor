@@ -325,9 +325,8 @@ void CreateTemplate(Document doc, char *templatePath)
   t = LookForXTigerTemplate(templatePath);
   t->doc = doc;
   Template_PrepareTemplate(t);
-  DocumentMeta[doc]->isTemplate = TRUE;
-//  DocumentTypes[doc] = docTemplate;
-  t->isLoaded = TRUE;
+  //  DocumentTypes[doc] = docTemplate;
+  t->state |= templloaded|templTemplate;
 
 #ifdef AMAYA_DEBUG  
     DumpAllDeclarations();
@@ -457,34 +456,34 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 #endif /* TEMPLATES */
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void InstantiateTemplate (Document doc, char *templatename, char *docname,
-                          DocumentType docType, ThotBool loaded)
-{
-#ifdef TEMPLATES
-  if (!loaded)
-    {
-      // Create the callback context
-      InstantiateCtxt *ctx = (InstantiateCtxt *)TtaGetMemory (sizeof (InstantiateCtxt));
-      ctx->templatePath	= TtaStrdup (templatename);
-      ctx->instancePath	= TtaStrdup (docname);
-      ctx->schemaName = GetSchemaFromDocType(docType);
-      ctx->doc = doc;
-      ctx->docType = docType;
-
-      GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
-                   (void (*)(int, int, char*, char*, char*,
-                             const AHTHeaders*, void*)) InstantiateTemplate_callback,
-                   (void *) ctx);
-    }
-  else
-    {
-      DoInstanceTemplate (templatename);
-      CreateInstance (templatename, docname, doc);
-    }  
-#endif /* TEMPLATES */
-}
+///*----------------------------------------------------------------------
+//  ----------------------------------------------------------------------*/
+//void InstantiateTemplate (Document doc, char *templatename, char *docname,
+//                          DocumentType docType, ThotBool loaded)
+//{
+//#ifdef TEMPLATES
+//  if (!loaded)
+//    {
+//      // Create the callback context
+//      InstantiateCtxt *ctx = (InstantiateCtxt *)TtaGetMemory (sizeof (InstantiateCtxt));
+//      ctx->templatePath	= TtaStrdup (templatename);
+//      ctx->instancePath	= TtaStrdup (docname);
+//      ctx->schemaName = GetSchemaFromDocType(docType);
+//      ctx->doc = doc;
+//      ctx->docType = docType;
+//
+//      GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
+//                   (void (*)(int, int, char*, char*, char*,
+//                             const AHTHeaders*, void*)) InstantiateTemplate_callback,
+//                   (void *) ctx);
+//    }
+//  else
+//    {
+//      DoInstanceTemplate (templatename);
+//      CreateInstance (templatename, docname, doc);
+//    }  
+//#endif /* TEMPLATES */
+//}
 
 /*----------------------------------------------------------------------
   InstantiateAttribute
@@ -790,8 +789,6 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
   Element     child;
   char        currentType[MAX_LENGTH];
   Declaration decl;
-  
-//  DumpElementPath(el);
   
   if (t && el && doc)
     {
@@ -1145,7 +1142,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           /* if this use element is not empty, don't do anything: it is
              supposed to contain a valid instance. This should be
              checked, though */
-          if (DocumentMeta[doc] && DocumentMeta[doc]->isTemplate)
+          if (IsTemplateDocument(doc) && ! IsTemplateInstanceDocument(doc))
             // add the initial indicator
             AddPromptIndicator (el, doc);
             

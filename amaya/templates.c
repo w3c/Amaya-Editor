@@ -7,6 +7,7 @@
  
 /*
  * Authors: Francesc Campoy Flores
+ *          Émilien Kia
  *
  */
 
@@ -39,7 +40,6 @@
 #include "fetchXMLname_f.h"
 #include "MENUconf.h"
 
-
 /* Paths from which looking for templates.*/
 static Prop_Templates_Path *TemplateRepositoryPaths;
 
@@ -51,10 +51,14 @@ static Prop_Templates_Path *TemplateRepositoryPaths;
 ThotBool IsTemplateInstanceDocument(Document doc)
 {
 #ifdef TEMPLATES
-  return (DocumentMeta[doc] != NULL) && (DocumentMeta[doc]->template_url != NULL);
-#else  /* TEMPLATES */
+  XTigerTemplate t = GetXTigerDocTemplate(doc);
+  if(t)
+    return (t->state&templInstance)!=0;
+  else
+    return FALSE;
+#else /* TEMPLATES */
   return FALSE;
-#endif /* TEMPLATES */
+#endif /* TEMPLATES */ 
 }
 
 /*----------------------------------------------------------------------
@@ -65,10 +69,48 @@ ThotBool IsTemplateInstanceDocument(Document doc)
 ThotBool IsTemplateDocument(Document doc)
 {
 #ifdef TEMPLATES
-  return (DocumentMeta[doc] != NULL && DocumentMeta[doc]->isTemplate);
-#else  /* TEMPLATES */
+  XTigerTemplate t = GetXTigerDocTemplate(doc);
+  if(t)
+    return (t->state&templTemplate)!=0;
+  else
+    return FALSE;
+#else /* TEMPLATES */
   return FALSE;
-#endif /* TEMPLATES */
+#endif /* TEMPLATES */ 
+}
+
+
+/*----------------------------------------------------------------------
+  Test if a document is an internal template.
+  (no instance is opened and it is not edited)
+  ----------------------------------------------------------------------*/
+ThotBool IsInternalTemplateDocument(Document doc)
+{
+#ifdef TEMPLATES
+  XTigerTemplate t = GetXTigerDocTemplate(doc);
+  if(t)
+    return (t->state&templInternal)!=0;
+  else
+    return FALSE;
+#else /* TEMPLATES */
+  return FALSE;
+#endif /* TEMPLATES */ 
+}
+
+/*----------------------------------------------------------------------
+  Return the URL of an instance template.
+  ----------------------------------------------------------------------*/
+char* GetDocumentInstanceTemplateUrl(Document doc)
+{
+#ifdef TEMPLATES
+  XTigerTemplate t = GetXTigerDocTemplate(doc);
+  if(t)
+    return t->base_uri;
+  else
+    return FALSE;
+#else /* TEMPLATES */
+  return NULL;
+#endif /* TEMPLATES */ 
 }
 
 /*----------------------------------------------------------------------
@@ -608,7 +650,7 @@ void UseCreated (NotifyElement *event)
        instanciated */
     return;
 
-  t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
+  t = GetXTigerDocTemplate (doc);
   if (!t)
     return; // no template ?!?!
 
@@ -771,7 +813,7 @@ ThotBool BagButtonClicked (NotifyElement *event)
 
   TtaCancelSelection (doc);
   templateSSchema = TtaGetSSchema ("Template", doc);  
-  t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
+  t = GetXTigerDocTemplate(doc);
   elType = TtaGetElementType (el);
   while (bagEl &&
          (elType.ElSSchema != templateSSchema ||
@@ -894,7 +936,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
 
   TtaCancelSelection(doc);
 
-  t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
+  t = GetXTigerDocTemplate(doc);
   elType = TtaGetElementType(el);
   while (elType.ElTypeNum != Template_EL_repeat)
   {
@@ -1001,7 +1043,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
 
   TtaCancelSelection(doc);
   
-  t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
+  t = GetXTigerDocTemplate(doc);
   if (!t)
     return FALSE; /* let Thot perform normal operation */
   elType = TtaGetElementType(el);
@@ -1131,7 +1173,7 @@ ThotBool OptionButtonClicked (NotifyElement *event)
   if (!contentEl)
     /* the "use" element is empty. Instantiate it */
     {
-      t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
+      t = GetXTigerDocTemplate (doc);
       if (!t)
         return FALSE; // no template ?!?!
       InstantiateUse (t, useEl, doc, TRUE);
@@ -1170,13 +1212,13 @@ void CheckTemplate (Document doc)
 #ifdef TEMPLATES
   Element    root;
   
-  if (DocumentMeta[doc] && DocumentMeta[doc]->template_url)
+  if(IsTemplateInstanceDocument(doc))
     {
       XTigerTemplate   t;
 
       root = TtaGetRootElement (doc);
       TtaSetAccessRight (root, ReadOnly, doc);
-      t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
+      t = GetXTigerDocTemplate (doc);
       if (t == NULL)
         {
           // the template cannot be loaded
@@ -1186,6 +1228,7 @@ void CheckTemplate (Document doc)
       else
         {
           // fix all access rights in the instance
+          Template_PrepareTemplate(t);
           Template_FixAccessRight (t, root, doc);
           TtaUpdateAccessRightInViews (doc, root);
         }
@@ -1198,7 +1241,7 @@ void CheckTemplate (Document doc)
   If it's an instance and the template is not loaded, load it into a
   temporary file
   ----------------------------------------------------------------------*/
-void OpeningInstance (char *fileName, Document doc)
+void OpeningInstance (char *localFileName, Document doc, char* docURL)
 {
 #ifdef TEMPLATES
   XTigerTemplate   t;
@@ -1206,8 +1249,10 @@ void OpeningInstance (char *fileName, Document doc)
   gzFile           stream;
   char             buffer[2000];
   int              res;
+  char            *template_version = NULL,
+                  *template_url = NULL;
 
-  stream = TtaGZOpen (fileName);
+  stream = TtaGZOpen (localFileName);
   if (stream != 0)
     {
       res = gzread (stream, buffer, 1999);
@@ -1234,7 +1279,7 @@ void OpeningInstance (char *fileName, Document doc)
               {
                 *ptr = EOS;
                 //Get now the template URI
-                DocumentMeta[doc]->template_version = TtaStrdup (content);
+                template_version = TtaStrdup (content);
                 *ptr = '"';
               }
            
@@ -1254,21 +1299,25 @@ void OpeningInstance (char *fileName, Document doc)
               {
                 *ptr = EOS;
                 //Get now the template URI
-                DocumentMeta[doc]->template_url = TtaStrdup (content);
-                if (Templates_Map == NULL)
-                  InitializeTemplateEnvironment ();
-                t = GetXTigerTemplate (content);
+                template_url = TtaStrdup (content);
+
+                t = GetXTigerTemplate (template_url);
                 if (!t)
                   {
-                    LoadTemplate (doc, content);
-                    t = GetXTigerTemplate(content);
+                    LoadTemplate (doc, template_url);
+                    t = GetXTigerTemplate(template_url);
                   }
-                AddUser (t);
+                Template_PrepareInstance(docURL, doc, template_version, template_url);
+                template_version = NULL;
+                template_url     = NULL;
+                Template_AddReference (t);
                 *ptr = '"';
               }
           }
         }
     }
+  TtaFreeMemory(template_version);
+  TtaFreeMemory(template_url);
   TtaGZClose (stream);
 #endif /* TEMPLATES */
 }
@@ -1280,29 +1329,12 @@ void OpeningInstance (char *fileName, Document doc)
 ThotBool ClosingInstance(NotifyDialog* dialog)
 {
 #ifdef TEMPLATES
-  //If it is a template all has been already freed
-  if (DocumentMeta[dialog->document] == NULL)
-    return FALSE;
-
-  char *turl = DocumentMeta[dialog->document]->template_url;
-  if (turl)
-  {
-    XTigerTemplate t = GetXTigerTemplate(turl);
-    if (t)
-      RemoveUser (t);
-    TtaFreeMemory (turl);
-    DocumentMeta[dialog->document]->template_url = NULL;
-  }
-  
-  if (DocumentMeta[dialog->document]->template_version)
-  {
-    TtaFreeMemory(DocumentMeta[dialog->document]->template_version);
-    DocumentMeta[dialog->document]->template_version = NULL;
-  }
+  XTigerTemplate t = GetXTigerDocTemplate(dialog->document);
+  if(t)
+    Template_RemoveReference(t);
 #endif /* TEMPLATES */
   return FALSE;
 }
-
 
 /*----------------------------------------------------------------------
   IsTemplateElement
@@ -1447,7 +1479,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   {
     xtType = TtaGetElementType(xtElem);
     
-    t = GetXTigerTemplate(DocumentMeta[doc]->template_url);
+    t = GetXTigerDocTemplate(doc);
 
     if (xtType.ElTypeNum==Template_EL_bag)
     {
@@ -1552,11 +1584,13 @@ ThotBool TemplateAttrInMenu (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 void CreateTemplateFromDocument(Document doc, View view)
 {
+#ifdef TEMPLATES
   char buffer[MAX_LENGTH];
   strcpy(buffer, DocumentURLs[doc]);
   strcat(buffer, ".xtd");
   DontReplaceOldDoc = TRUE;
   CreateTemplate(doc, buffer);
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
@@ -1569,4 +1603,65 @@ void UpdateTemplateMenus (Document doc)
     TtaSetItemOff (doc, 1, Tools, BCreateTemplateFromDocument);
   else
     TtaSetItemOn (doc, 1, Tools, BCreateTemplateFromDocument);
+}
+
+/*----------------------------------------------------------------------
+  UninstanciateTemplateDocument
+  An instance of a template is tranformed into a template-less docuemnt.
+  Remove link between XTigerTemplate structure and document.
+  ----------------------------------------------------------------------*/
+void UninstanciateTemplateDocument(Document doc)
+{
+#ifdef TEMPLATES
+  XTigerTemplate t = GetXTigerDocTemplate(doc);
+  if(t)
+    Template_Close(t);
+#endif /* TEMPLATES */  
+}
+
+
+/*----------------------------------------------------------------------
+  Template_PrepareInstance
+  Allocate XTigerTemplate structure for instance and initialize template
+  url and template version.
+  ----------------------------------------------------------------------*/
+void Template_PrepareInstance(char *fileName, Document doc, char* template_version, char* template_url)
+{
+#ifdef TEMPLATES
+  XTigerTemplate t = GetXTigerTemplate(fileName);
+  if(!t)
+    t = NewXTigerTemplate(fileName);
+  t->state           = templInstance;
+  t->templateVersion = template_version;
+  t->base_uri        = template_url;
+  t->doc             = doc;
+  
+#endif /* TEMPLATES */
+}
+
+
+/*----------------------------------------------------------------------
+  SetDocumentAsXTigerTemplate
+  Set the document template structure as template.
+  ----------------------------------------------------------------------*/
+void SetDocumentAsXTigerTemplate(Document doc)
+{
+#ifdef TEMPLATES
+  XTigerTemplate t = GetXTigerDocTemplate(doc);
+  if(t)
+    t->state |= templTemplate;
+#endif /* TEMPLATES */  
+}
+
+/*----------------------------------------------------------------------
+  SetDocumentAsXTigerLibrary
+  Set the document template structure as template library.
+  ----------------------------------------------------------------------*/
+void SetDocumentAsXTigerLibrary(Document doc)
+{
+#ifdef TEMPLATES
+  XTigerTemplate t = GetXTigerDocTemplate(doc);
+  if(t)
+    t->state |= templLibrary;
+#endif /* TEMPLATES */  
 }

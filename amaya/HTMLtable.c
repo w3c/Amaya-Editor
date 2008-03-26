@@ -25,6 +25,9 @@
 #include "Mathedit_f.h"
 #include "XHTMLbuilder_f.h"
 
+#include "templates.h"
+#include "templates_f.h"
+
 static Element      CurrentColumn = NULL;
 static Element      CurrentTable = NULL;
 static Element      LastPastedEl = NULL; // last pasted table element
@@ -1905,7 +1908,7 @@ void CheckTable (Element table, Document doc)
   Attribute         attr;
   ThotBool          previousStructureChecking, before, inMath, inTemplate;
 
-  if (DocumentMeta[doc] && DocumentMeta[doc]->isTemplate)
+  if (IsTemplateDocument(doc))
     /* do not check the structure of a table when loading a template.
        Checking will be done when instanciating a template */
     return;

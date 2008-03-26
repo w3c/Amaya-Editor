@@ -555,6 +555,7 @@ THOT_EXPORT const char *DocumentTypeNames[docTypeMax]
 #endif /* THOT_INITGLOBALVAR */
 ; /* do not remove this ; */
 
+
 /* a record for data associated with a request */
 typedef struct _DocumentMetaDataElement
 {
@@ -576,14 +577,16 @@ typedef struct _DocumentMetaDataElement
   Document   source_doc;       /* if the document is an annotation,
 				  this variable giveso the annoted document docid */
 #endif /* ANNOTATIONS */
-  ThotBool  isTemplate;	 /* True if the document is a XTiger template or library,
-  			    False if template instance or not using XTiger.*/
-#ifdef TEMPLATES
-  char      *template_url;       /* the url of the original template (or null if not an instance) */
-  char      *template_version;   /* if this document is derived from a template,
-				     The name and the version of the template used to create the document 
-				     is stored in this variable */
-#endif /* TEMPLATES */
+  
+//#ifdef TEMPLATES
+//  ThotBool  isTemplate;	 /* True if the document is a XTiger template or library,
+//  			    False if template instance or not using XTiger.*/
+//  ThotBool  isInternalTemplate;  /* True if the template is loaded internaly, not used ad edited document.*/ 
+//  char      *template_url;       /* the url of the original template (or null if not an instance) */
+//  char      *template_version;   /* if this document is derived from a template,
+//				     The name and the version of the template used to create the document 
+//				     is stored in this variable */
+//#endif /* TEMPLATES */
   
 } DocumentMetaDataElement;
 

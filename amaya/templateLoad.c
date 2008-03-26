@@ -80,7 +80,7 @@ void Template_AddLibraryToImport (XTigerTemplate t, Element el)
     src = GetAttributeStringValueFromNum(el, Template_ATTR_src, NULL);
 
 #ifdef AMAYA_DEBUG  
-    printf("%s requires %s\n", t->name, src);
+    printf("%s requires %s\n", t->uri, src);
 #endif /* AMAYA_DEBUG */
 
     NormalizeURL(src, TtaGetDocument(el), tempfile, tempname, NULL);
@@ -266,12 +266,13 @@ void Template_PreParseDeclarations (XTigerTemplate t, Element el)
   Template_PrepareTemplate: Prepare template after loading it
   and before using it.
   ----------------------------------------------------------------------*/
-void Template_PrepareTemplate(void* templ)
+void Template_PrepareTemplate(XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  XTigerTemplate   t = (XTigerTemplate)templ;
   ForwardIterator  iter;
   HashMapNode      node;
+  XTigerTemplate   templ = NULL;
+  char*            templUri;
   
   Template_PreParseDeclarations(t, 0);
 
@@ -281,7 +282,7 @@ void Template_PrepareTemplate(void* templ)
     {
       if(!Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem))
         Template_AddError(t, TtaGetMessage(AMAYA, AM_TEMPLATE_ERR_BADLIB),
-              ((XTigerTemplate)node->elem)->name);
+              ((XTigerTemplate)node->elem)->uri);
     }
 
   // Add standard libraries.
@@ -293,6 +294,13 @@ void Template_PrepareTemplate(void* templ)
 
   TtaFreeMemory(iter);
 
+  if(t->base_uri)
+    {
+      templ = GetXTigerTemplate(t->base_uri);
+      if(templ)
+        Template_AddLibraryDeclarations(t, templ);
+    }
+  
   Template_ParseDeclarations  (t, NULL);
   Template_MoveUnknownDeclarationToXmlElement(t);
   Template_FillDeclarations (t);
@@ -316,14 +324,11 @@ static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
   if (newdoc)
     {
       // the template is now loaded
-      if(!ctx->t)
-        ctx->t = NewXTigerTemplate (ctx->templatePath);
       SetTemplateDocument (ctx->t, newdoc);
   
       ctx->isloaded = TRUE;
       ctx->newdoc   = newdoc;
     }
-  ctx->isloaded = TRUE;
       // restore the loading document
   W3Loading = ctx->docLoading;
 }
@@ -332,6 +337,7 @@ static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 
 /*----------------------------------------------------------------------
   LoadTemplate loads the template document and returns its type.
+  If template is already loaded, returns its type.
   Return docFree itf the template cannot be loaded.
   ----------------------------------------------------------------------*/
 DocumentType LoadTemplate (Document doc, char* templatename)
@@ -342,8 +348,6 @@ DocumentType LoadTemplate (Document doc, char* templatename)
   char            *s, *directory;
   unsigned int     size = strlen (templatename) + 1;
   XTigerTemplate   t = NULL;
-  ForwardIterator  iter;
-  HashMapNode      node;
 
   if (!IsW3Path (templatename))
     {
@@ -357,13 +361,16 @@ DocumentType LoadTemplate (Document doc, char* templatename)
     }
 
   //If types are not loaded we load the template and we parse it
-  if (!GetXTigerTemplate(templatename))
+  t = GetXTigerTemplate(templatename);
+  if (t==NULL)
     {
+      // The template is not loaded, load it !
       //Load the document
       TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
       ctx->templatePath	= TtaStrdup (templatename);
       ctx->isloaded = FALSE;
-      ctx->t = NULL;
+      ctx->t = NewXTigerTemplate (templatename);
+
       // the current loading document changes and should be restored
       ctx->docLoading = W3Loading;
       W3Loading = 0;
@@ -374,12 +381,13 @@ DocumentType LoadTemplate (Document doc, char* templatename)
         TtaHandlePendingEvents ();
       t = ctx->t;
 
+      printf("LoadTemplate doctype %d\n", DocumentTypes[ctx->newdoc]);
+      
       if (t)
         {
           Template_PrepareTemplate(t);
-          ctx->t->isLoaded = TRUE;
 #ifdef AMAYA_DEBUG  
-    printf("XTiger template %s loaded.\n", t->name);
+    printf("XTiger template %s loaded.\n", t->uri);
 #endif /* AMAYA_DEBUG */
           if(Template_HasErrors(t))
             Template_ShowErrors(t);
@@ -388,14 +396,21 @@ DocumentType LoadTemplate (Document doc, char* templatename)
               DoInstanceTemplate (ctx->templatePath);
               // get the real docType of the template
               docType = DocumentTypes[ctx->newdoc];
-              DocumentTypes[ctx->newdoc] = docTemplate;
+              t->state |= templTemplate|templloaded;
+//              DocumentTypes[ctx->newdoc] = docTemplate;
               TtaSetDocumentUnmodified (ctx->newdoc);
-              UpdateTemplateMenus(doc);
+              UpdateTemplateMenus(ctx->newdoc);
             }
         }
       TtaFreeMemory(ctx->templatePath);
       TtaFreeMemory(ctx);
     }
+  else
+    {
+      // The template is already loaded, use it.
+      docType = DocumentTypes[t->doc];
+    }
+  
 
 #ifdef AMAYA_DEBUG  
   DumpAllDeclarations();
@@ -415,18 +430,16 @@ DocumentType LoadTemplate (Document doc, char* templatename)
 ThotBool Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  ForwardIterator iter;
-  HashMapNode     node;
   Document        newdoc = 0;
   
-  if (t && !t->isLoaded)
+  if (t && !Template_IsLoaded(t))
   {
     // Load the document (look at LoadTemplate)
     TemplateCtxt *ctx = (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
-    ctx->templatePath = TtaStrdup (t->name);
+    ctx->templatePath = TtaStrdup (t->uri);
     ctx->isloaded = FALSE;
     ctx->t = t;
-    newdoc = GetAmayaDoc (t->name, NULL, 0, 0, CE_TEMPLATE, FALSE, 
+    newdoc = GetAmayaDoc (t->uri, NULL, 0, 0, CE_TEMPLATE, FALSE, 
                           (void (*)(int, int, char*, char*, char*,
                                     const AHTHeaders*, void*)) LoadTemplate_callback,
                           (void *) ctx);
@@ -436,14 +449,13 @@ ThotBool Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
     Template_PrepareTemplate(t);
     
     DocumentTypes[ctx->newdoc] = docTemplate;
-    t->isLoaded = TRUE;
-
+    t->state |= templLibrary|templloaded;
     
 #ifdef AMAYA_DEBUG  
     if(Template_HasErrors(t))
-      printf("XTiger library %s has error(s)\n", t->name);
+      printf("XTiger library %s has error(s)\n", t->uri);
     else
-      printf("XTiger library %s loaded successfully.\n", t->name);
+      printf("XTiger library %s loaded successfully.\n", t->uri);
 #endif /* AMAYA_DEBUG */
 
     TtaFreeMemory(ctx->templatePath);

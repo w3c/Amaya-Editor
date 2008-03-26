@@ -260,7 +260,7 @@ void FillInsertableElemList (Document doc, Element el, DLList list)
       doc = TtaGetDocument(el);
 
 #ifdef TEMPLATES
-    t = GetXTigerTemplate(DocumentMeta[doc]->template_url);
+    t = GetXTigerDocTemplate(doc);
     level = 0;
     cont = TRUE;
     elem = el;

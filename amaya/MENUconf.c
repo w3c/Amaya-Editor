@@ -2507,7 +2507,7 @@ static void UpdateShowTemplates ()
   for (doc = 1; doc < DocumentTableLength; doc++)
     {
       /* Change the Display Mode to take into account the new presentation */
-      if (IsTemplateInstance (doc))
+      if (IsTemplateInstanceDocument (doc))
         {
           LoadInstanceOfTemplate(doc);
           dispMode = TtaGetDisplayMode (doc);

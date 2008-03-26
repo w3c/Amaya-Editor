@@ -146,68 +146,6 @@ void ParseCharsetAndContentType (Element el, Document doc)
     }
 }
 
-#ifdef TEMPLATES
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void ParseTemplateMeta (Element el, Document doc)
-{
-  AttributeType attrType;
-  Attribute     attr;
-  ElementType   elType;
-  char         *text, *text2, *ptrText;
-  int           length;
-
-  elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_meta_name;
-  attr = TtaGetAttribute (el, attrType);
-
-  if (attr != NULL)
-    {
-      /* There is a name attribute */
-      length = TtaGetTextAttributeLength (attr);
-      if (length > 0)
-        {
-          text = (char *)TtaGetMemory (length + 1);
-          TtaGiveTextAttributeValue (attr, text, &length);
-          if (!strcasecmp (text, "template"))
-            {
-              /* We are parsing the 'template' meta */
-              attrType.AttrTypeNum = HTML_ATTR_meta_content;
-              attr = TtaGetAttribute (el, attrType);
-              if (attr != NULL)
-                {
-                  length = TtaGetTextAttributeLength (attr);
-                  if (length > 0)
-                    {
-                      text2 = (char *)TtaGetMemory (length + 1);
-                      TtaGiveTextAttributeValue (attr, text2, &length);
-                      ptrText = text2;
-		      
-                      /* Convert all char to lower case */
-                      while (*ptrText)
-                        {
-                          *ptrText = tolower (*ptrText);
-                          ptrText++;
-                        }
-
-                      if (!DocumentMeta[doc])
-                        DocumentMeta[doc] = DocumentMetaDataAlloc ();
-                      if (DocumentMeta[doc]->template_version == NULL)
-                        {
-                          DocumentMeta[doc]->template_version = TtaStrdup (text2);
-                        }
-                      TtaFreeMemory (text2);
-                    }       
-                } 
-            }
-          TtaFreeMemory (text);
-        }
-    }
-}
-#endif /* TEMPLATES */
-
-
 /*----------------------------------------------------------------------
   XhtmlCannotContainText 
   Return TRUE if element el is a block element.
@@ -913,9 +851,6 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
       ParseCharsetAndContentType (el, doc);
       /* Check the mandatory CONTENT attribute */
       CheckMandatoryAttribute (el, doc, HTML_ATTR_meta_content);
-#ifdef TEMPLATES
-      ParseTemplateMeta (el, doc);
-#endif /* TEMPLATES */
       break;
 
     case HTML_EL_BASE:
