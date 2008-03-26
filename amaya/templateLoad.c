@@ -272,7 +272,6 @@ void Template_PrepareTemplate(XTigerTemplate t)
   ForwardIterator  iter;
   HashMapNode      node;
   XTigerTemplate   templ = NULL;
-  char*            templUri;
   
   Template_PreParseDeclarations(t, 0);
 
