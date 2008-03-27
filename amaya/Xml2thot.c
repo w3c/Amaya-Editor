@@ -5983,12 +5983,22 @@ void StartXmlParser (Document doc, char *fileName,
       TtaExtractName (pathURL, temppath, tempname);
       TtaSetDocumentDirectory (doc, temppath);
 
+      // change the type of the root element if needed
+      s = TtaGetSSchemaName (DocumentSSchema);
+      if (DocumentTypes[doc] == docHTML && strcmp ((char *)s, "HTML"))
+        TtaUpdateRootElementType (RootElement, "HTML", doc);
+      else if (DocumentTypes[doc] == docSVG && strcmp ((char *)s, "SVG"))
+        TtaUpdateRootElementType (RootElement, "SVG", doc);
+      else if (DocumentTypes[doc] == docMath && strcmp ((char *)s, "MathML"))
+        TtaUpdateRootElementType (RootElement, "MathML", doc);
+
       /* Initialize all parser contexts if not done yet */
       if (FirstParserCtxt == NULL)
         InitXmlParserContexts ();
 
       /* Select root context */
       isXHTML = FALSE;
+      DocumentSSchema = TtaGetDocumentSSchema (doc);
       s = TtaGetSSchemaName (DocumentSSchema);
       if (strcmp ((char *)s, "HTML") == 0)
         {
@@ -6018,9 +6028,6 @@ void StartXmlParser (Document doc, char *fileName,
         TtaNewNature (doc, DocumentSSchema,  NULL, "MathML", "MathMLP");
       /* Parse the input file and build the Thot tree */
       XmlParse ((FILE*)stream, charset, &xmlDec, &xmlDoctype);
-
-      // change the type of the root element if needed
-      TtaUpdateRootElementType (RootElement, doc);
 
       if (!externalDoc)
         /* Load the style sheets for xml documents */

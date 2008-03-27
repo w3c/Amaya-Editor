@@ -42,6 +42,7 @@
 #include "labelalloc_f.h"
 #include "memory_f.h"
 #include "references_f.h"
+#include "schemas_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"
 #include "structmodif_f.h"
@@ -77,31 +78,38 @@ void TtaChangeElementType (Element element, int typeNum)
 
 /* ----------------------------------------------------------------------
    TtaUpdateRootElementType
-   Change the type of the root element.
+   Change the document and the root element schema if different to the
+   requested schema.
    CAUTION: THIS FUNCTION SHOULD BE USED VERY CARFULLY!
    Parameters:
-   element: the concerned element
+   root:   the concerned element must be the root of the document
+   schemaName: the requested schema name.
    ---------------------------------------------------------------------- */
-void TtaUpdateRootElementType (Element element, Document doc)
+void TtaUpdateRootElementType (Element root, char *schemaName, Document doc)
 {
   PtrDocument pDoc;
-  PtrSSchema  pSS;
-  PtrElement  pEl = (PtrElement)element;
+  PtrSSchema  pSS, pSNew;
+  PtrElement  pEl = (PtrElement)root;
 
   UserErrorCode = 0;
-  if (element == NULL)
+  if (root == NULL)
     TtaError (ERR_invalid_parameter);
   else if (pEl->ElParent || pEl->ElTerminal)
     TtaError (ERR_invalid_parameter);
   else if (LoadedDocument[doc - 1] == NULL)
     TtaError (ERR_invalid_document_parameter);
-  else if (pEl->ElFirstChild && pEl->ElStructSchema != pEl->ElFirstChild->ElStructSchema)
+  else
     {
       pDoc = LoadedDocument[doc - 1];
-      pSS = pEl->ElFirstChild->ElStructSchema;
-      pEl->ElStructSchema = pEl->ElFirstChild->ElStructSchema;
-      pDoc->DocSSchema = pEl->ElStructSchema;
-      //ReleaseStructureSchema (pSS, pDoc);
+      pSS = pEl->ElStructSchema;
+      if (pSS == NULL || pSS->SsName == NULL ||
+          strcmp (pSS->SsName, schemaName))
+        {
+          pSNew = LoadStructureSchema (NULL, schemaName, pDoc);
+          pEl->ElStructSchema = pSNew;
+          pDoc->DocSSchema = pSNew;
+          //ReleaseStructureSchema (pSS, pDoc);
+        }
     }
 }
 

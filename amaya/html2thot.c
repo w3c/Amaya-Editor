@@ -7390,6 +7390,7 @@ void StartParser (Document doc, char *fileName,
                 }
               isHTML = TRUE;
             }
+
 #ifdef ANNOTATIONS
           if (DocumentTypes[doc] == docAnnot)
             rootElement = ANNOT_GetHTMLRoot (doc, FALSE); 
@@ -7425,6 +7426,9 @@ void StartParser (Document doc, char *fileName,
       /* save the path or URL of the document */
       TtaExtractName (pathURL, temppath, tempname);
       TtaSetDocumentDirectory (doc, temppath);
+      // change the type of the root element if needed
+      if (isHTML)
+        TtaUpdateRootElementType (rootElement, "HTML", doc);
 
       /* parse the input file and build the Thot document */
       if (plainText)
@@ -7462,9 +7466,6 @@ void StartParser (Document doc, char *fileName,
           TtaFreeMemory (docURL2);
           docURL2 = NULL;
         }
-
-      // change the type of the root element if needed
-      TtaUpdateRootElementType (rootElement, doc);
 
       if (!external_doc)
         TtaSetDisplayMode (doc, dispMode);

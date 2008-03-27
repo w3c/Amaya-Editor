@@ -3168,7 +3168,6 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   PtrFloat            pfloat;
   PtrBox              box;
   PtrAbstractBox      pAb;
-  PtrLine             pLine;
   int                 y, x, x1, x2, w;
   int                 t = 0, b = 0, l = 0, r = 0;
   ThotBool            extensibleblock;
