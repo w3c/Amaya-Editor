@@ -6891,7 +6891,7 @@ void InitAmaya (NotifyEvent * event)
   ----------------------------------------------------------------------*/
 void OpenNewDocFromArgv( char * url )
 {
-  int i;
+  int i, doc, view;
   char ptr[MAX_LENGTH];
   char * s = url;
   
@@ -6955,6 +6955,9 @@ void OpenNewDocFromArgv( char * url )
           CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
         }
     }
+  // raise the view if it is not shown
+  TtaGetActiveView (&doc, &view);
+  TtaRaiseView (doc, view);
 }
 
 /*----------------------------------------------------------------------

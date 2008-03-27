@@ -188,7 +188,7 @@ OpenURLCallback AmayaURLGrabberServer::GetOpenURLCallback()
 bool AmayaURLGrabberConnection::OnPoke(const wxString &topic, const wxString &item,
                                        wxChar *data, int size, wxIPCFormat format)
 {
-  if (topic == m_Owner.m_AcceptedTopic && m_Owner.m_pURLOpenCallback)
+  if (/*topic == m_Owner.m_AcceptedTopic &&*/ m_Owner.m_pURLOpenCallback)
     {
       /* copy the possible url argument */
       char buffer[MAX_LENGTH];
