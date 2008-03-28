@@ -654,7 +654,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
     }
   else
     {
-      GetExtraMargins (pBox, pFrom, frame, &t, &b, &l, &r);
+      GetExtraMargins (pBox, pFrom, frame, TRUE, &t, &b, &l, &r);
       xd = pBox->BxXOrg + l;
       width = pBox->BxWidth;
     }

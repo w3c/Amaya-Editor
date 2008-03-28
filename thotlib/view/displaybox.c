@@ -2425,7 +2425,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
     shiftx = shifty = 0;
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
-  GetExtraMargins (box, NULL, frame, &t, &b, &l, &r);
+  GetExtraMargins (box, NULL, frame, FALSE, &t, &b, &l, &r);
   x = ViewFrameTable[frame - 1].FrXOrg;
   y = ViewFrameTable[frame - 1].FrYOrg;
   xd = box->BxXOrg + box->BxLMargin + l + shiftx;

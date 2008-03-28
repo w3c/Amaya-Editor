@@ -67,7 +67,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
       halfThick = thick / 2;
 
       /* selection points */
-      GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
+      GetExtraMargins (pBox, NULL, frame, FALSE, &t, &b, &l, &r);
       leftX = l + pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder
         + pBox->BxLPadding - pFrame->FrXOrg - halfThick;
       topY = t + pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder

@@ -1904,7 +1904,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int frame, int Indent,
               wrnumber (pBox->BxRuleHeight, fileDescriptor);
             }
           /* display extra margins */
-          GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
+          GetExtraMargins (pBox, NULL, frame, TRUE, &t, &b, &l, &r);
           if (t || b || l || r)
             {
               fprintf (fileDescriptor, "\n");

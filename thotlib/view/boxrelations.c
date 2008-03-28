@@ -1644,7 +1644,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
 
       if (pRefAb == pAb->AbEnclosing)
         {
-          GetExtraMargins (pRefBox, NULL, frame, &t, &b, &l, &r);
+          GetExtraMargins (pRefBox, NULL, frame, FALSE, &t, &b, &l, &r);
           t += pRefBox->BxTMargin + pRefBox->BxTBorder + pRefBox->BxTPadding;
           l += pRefBox->BxLMargin + pRefBox->BxLBorder + pRefBox->BxLPadding;
           b += pRefBox->BxBMargin + pRefBox->BxBBorder + pRefBox->BxBPadding;
@@ -2469,7 +2469,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
             }
 
           /* Compute the delta width that must be substract to 100% width or enclosing width */
-          GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
+          GetExtraMargins (pBox, NULL, frame, FALSE, &t, &b, &l, &r);
           dx += l + r;
           if (pBox->BxLMargin > 0)
             dx += pBox->BxLMargin;
@@ -3417,7 +3417,7 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
       pBox->BxType == BoFloatBlock ||
       pBox->BxType == BoCellBlock)
     {
-      GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
+      GetExtraMargins (pBox, NULL, frame, FALSE, &t, &b, &l, &r);
       x = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + l;
       y = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + t;
     }
