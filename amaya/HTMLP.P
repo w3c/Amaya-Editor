@@ -4359,7 +4359,7 @@ FIELDSET: BEGIN
         BEGIN
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
-  Foreground: GrandFather =;
+        Foreground: GrandFather =;
         Background: GrandFather =;
         Line;
 #ifdef PAGE
@@ -4383,7 +4383,21 @@ FIELDSET: BEGIN
                 END;
         END;
 
+ ColStruct:  BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                END;
+        END;
+
  Cols:  BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                END;
+        END;
+
+ Colgroups:  BEGIN
         Visibility: 0;
         IN Structure_view BEGIN
                 Visibility: Enclosing =;

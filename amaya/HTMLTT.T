@@ -1240,23 +1240,23 @@ ATTRIBUTES
 		BEGIN
 		END;
 
- about: BEGIN
+ about:
 		BEGIN
 		END;
 
- property: BEGIN
+ property:
 		BEGIN
 		END;
 
- resource: BEGIN
+ resource:
 		BEGIN
 		END;
 
- datatype: BEGIN
+ datatype:
 		BEGIN
 		END;
 
- instanceof: BEGIN
+ instanceof:
 		BEGIN
 		END;
 

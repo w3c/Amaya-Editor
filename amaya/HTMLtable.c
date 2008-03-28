@@ -868,8 +868,8 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 void  NewColElement (Element colhead, ThotBool before, Document doc)
 {
   ElementType         elType;
-  Element             prevColhead, nextColhead, el, cols, col, newCol,
-                      prevCol, nextCol, registerEl;
+  Element             prevColhead, nextColhead, el, colstruct, col, newCol,
+                      prevCol, nextCol;
   AttributeType       attrTypeRef, attrTypeSpan;
   Attribute           attrRef, attrSpan;
   SSchema             tableSS;
@@ -877,30 +877,32 @@ void  NewColElement (Element colhead, ThotBool before, Document doc)
 
   if (!colhead)
     return;
-  registerEl = NULL;
   elType = TtaGetElementType (colhead);
   tableSS = elType.ElSSchema;
   /* are there any COL or COLGROUP elements in this table ? (look for element
-     Cols that contains all COL and COLGROUP elements */
-  cols = NULL;
-  el = TtaGetParent (colhead);
+     ColStruct that contains all COL and COLGROUP elements */
+  colstruct = NULL;
+  el = TtaGetParent (colhead);   /* get the Table_head element */
   do
     {
       TtaPreviousSibling (&el);
       if (el)
         {
           elType = TtaGetElementType (el);
-          if (elType.ElSSchema == tableSS && elType.ElTypeNum == HTML_EL_Cols)
-            cols = el;
+          if (elType.ElSSchema == tableSS &&
+              elType.ElTypeNum == HTML_EL_ColStruct)
+            colstruct = el;
         }
     }
-  while (el && !cols);
-  if (!cols)
-    /* there is no Cols element, then no COL or COLGROUP in this table */
+  while (el && !colstruct);
+  if (!colstruct)
+    /* there is no ColStruct element, then no COL or COLGROUP in this table */
     return;
 
   /* does this table use COLGROUP elements or only COL elements? */
-  el = TtaGetFirstChild (cols);
+  el = TtaGetFirstChild (colstruct);
+  if (el)
+    el = TtaGetFirstChild (el);
   col = NULL;
   while (el && !col)
     {
@@ -944,7 +946,8 @@ void  NewColElement (Element colhead, ThotBool before, Document doc)
       else
         newCol = TtaNewElement (doc, elType);
       TtaInsertSibling (newCol, col, TRUE, doc);
-      registerEl = newCol;
+      /* no need to register the new COL element. When undoing, it will be
+         removed by the removal of the Column_head element */
     }
   else
     {
@@ -966,7 +969,8 @@ void  NewColElement (Element colhead, ThotBool before, Document doc)
               else
                 newCol = TtaNewElement (doc, elType);
               TtaInsertSibling (newCol, prevCol, FALSE, doc);
-              registerEl = newCol;
+              /* no need to register the new COL element. When undoing, it
+                 will be removed by the removal of the Column_head element */
             }
         }
       else
@@ -989,7 +993,8 @@ void  NewColElement (Element colhead, ThotBool before, Document doc)
                    TtaInsertSibling (newCol, nextCol, TRUE, doc);
                  else
                    TtaInsertSibling (newCol, prevCol, FALSE, doc);
-                 registerEl = newCol;
+                 /* no need to register the new COL element. When undoing, it
+                    will be removed by the removal of the Column_head element*/
                }
              else
                /* the previous Column_head and the next one are linked to
@@ -1002,7 +1007,8 @@ void  NewColElement (Element colhead, ThotBool before, Document doc)
                  attrSpan = TtaGetAttribute (prevCol, attrTypeSpan);
                  if (attrSpan)
                    {
-                     TtaRegisterAttributeReplace (attrSpan, prevCol, doc);
+                     /* no need to register the attribute. ClearColumn will
+                        do the job when undoing the creation of the column */
                      val = TtaGetAttributeValue (attrSpan);
                      val++;
                      TtaSetAttributeValue (attrSpan, val, prevCol, doc);
@@ -1024,8 +1030,6 @@ void  NewColElement (Element colhead, ThotBool before, Document doc)
         }
       if (attrRef)
         TtaSetAttributeReference (attrRef, colhead, doc, newCol);
-      if (registerEl)
-        TtaRegisterElementCreate (registerEl, doc);
     }
 }
 
@@ -1455,8 +1459,12 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
                     /* there is no Column_head for that COL or COLGROUP */
                     /* Create one */
                     {
-                      colElement[cRef] = NewColumnHead (colElement[cRef - 1],
-                                        FALSE, TRUE, NULL, doc, inMath, FALSE);
+                      if (cRef > 0)
+                        prevColhead = colElement[cRef - 1];
+                      else
+                        prevColhead = NULL;
+                      colElement[cRef] = NewColumnHead (prevColhead, FALSE,
+                                               TRUE, NULL, doc, inMath, FALSE);
                       if (cRef == cNumber && cRef < MAX_COLS)
                         cNumber++;
                     }
@@ -1903,7 +1911,7 @@ void CheckTable (Element table, Document doc)
   ElementType       elType, elType1;
   Element           el, columnHeads, thead, tfoot, firstcolhead, temp_el,
                     tbody, table_body, prevrow, prevEl, nextEl, cols, col,
-                    nextCol, prevCol, enclosingTable;
+                    colstruct, nextCol, prevCol, enclosingTable;
   AttributeType     attrType;
   Attribute         attr;
   ThotBool          previousStructureChecking, before, inMath, inTemplate;
@@ -1921,6 +1929,7 @@ void CheckTable (Element table, Document doc)
       thead = NULL;
       tfoot = NULL;
       table_body = NULL;
+      colstruct = NULL;
       cols = NULL;
       col = NULL;
       elType = TtaGetElementType (table);
@@ -1950,8 +1959,8 @@ void CheckTable (Element table, Document doc)
             thead = el;
           else if (!inMath && elType.ElTypeNum == HTML_EL_tfoot)
             tfoot = el;
-          else if (!inMath && elType.ElTypeNum == HTML_EL_Cols)
-            cols = el;
+          else if (!inMath && elType.ElTypeNum == HTML_EL_ColStruct)
+            colstruct = el;
           else if (!inMath && (elType.ElTypeNum == HTML_EL_COL ||
                                elType.ElTypeNum == HTML_EL_COLGROUP))
             {
@@ -2006,15 +2015,23 @@ void CheckTable (Element table, Document doc)
       previousStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (FALSE, doc);
 
-      /* create a Cols element enclosing all COL or COLGROUP elements if any */
+      /* create a ColStruct element enclosing all COL or COLGROUP elements
+         if any */
       elType = TtaGetElementType (table);
-      if (!inMath && !cols && col)
+      if (!inMath && !colstruct && col)
         {
-          elType.ElTypeNum = HTML_EL_Cols;
-          cols = TtaNewElement (doc, elType);
-          if (cols)
+          elType.ElTypeNum = HTML_EL_ColStruct;
+          colstruct = TtaNewElement (doc, elType);
+          if (colstruct)
             {
-              TtaInsertSibling (cols, col, TRUE, doc);
+              TtaInsertSibling (colstruct, col, TRUE, doc);
+              elType = TtaGetElementType (col);
+              if (elType.ElTypeNum == HTML_EL_COL)
+                elType.ElTypeNum = HTML_EL_Cols;
+              else
+                elType.ElTypeNum = HTML_EL_Colgroups;
+              cols = TtaNewElement (doc, elType);
+              TtaInsertFirstChild (&cols, colstruct, doc);
               prevCol = NULL;
               do
                 {
@@ -2051,8 +2068,8 @@ void CheckTable (Element table, Document doc)
       if (columnHeads)
         {
           firstcolhead = TtaGetFirstChild (columnHeads);
-          if (cols)
-            TtaInsertSibling (columnHeads, cols, FALSE, doc);
+          if (colstruct)
+            TtaInsertSibling (columnHeads, colstruct, FALSE, doc);
           else
             {
               el = TtaGetFirstChild (table);
@@ -3301,6 +3318,36 @@ ThotBool DeleteSpan (NotifyAttribute * event)
     return FALSE;
   /* prevent the user from deleting this attribute. She should use
      commands for deleting columns instead */
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  DeleteColElement
+  The user tries to delete a COL or COLGROUP element.
+  ----------------------------------------------------------------------*/
+ThotBool DeleteColElement (NotifyElement * event)
+{
+  /* reject the command */
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  CreateColElement
+  The user tries to creaete a COL or COLGROUP element.
+  ----------------------------------------------------------------------*/
+ThotBool CreateColElement (NotifyElement * event)
+{
+  /* reject the command */
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  PasteColElement
+  The user tries to paste a COL or COLGROUP element.
+  ----------------------------------------------------------------------*/
+ThotBool PasteColElement (NotifyOnValue * event)
+{
+  /* reject the command */
   return TRUE;
 }
 

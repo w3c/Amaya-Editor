@@ -2623,8 +2623,8 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
       case CsChoice:
         break;
       case CsList:
-        t1 = NewSubtree (pSRule->SrListItem, pSS, pDoc, Desc, TRUE, withAttr,
-                         withLabel);
+        t1 = NewSubtree (pSRule->SrListItem, pSS, pDoc, Desc, TRUE,
+                         withAttr, withLabel);
         if (pEl == NULL)
           pEl = t1;
         else

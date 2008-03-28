@@ -1075,6 +1075,18 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
       CheckTable (el, doc);
       SubWithinTable ();
       break;
+
+    case HTML_EL_COL:
+    case HTML_EL_COLGROUP:
+      /* create a C_Empty child */
+      if (!TtaGetFirstChild (el))
+        {
+          elType.ElTypeNum = HTML_EL_C_Empty;
+          child = TtaNewElement (doc, elType);
+          if (child)
+            TtaInsertFirstChild (&child, el, doc);
+        }
+      break;
        
     case HTML_EL_TITLE:
       /* show the TITLE in the main window */

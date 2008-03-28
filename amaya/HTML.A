@@ -75,8 +75,6 @@ ELEMENTS
         ElemMenu.Pre -> HTMLElementTypeInMenu;
    Input_Text:
         ElemMenu.Pre -> HTMLElementTypeInMenu;
-   Col_elem:
-        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Table_cell:
         ElemMenu.Pre -> HTMLElementTypeInMenu;
    ElemOrArea:
@@ -144,6 +142,20 @@ ELEMENTS
 
    Table_body:
         ElemDelete.Post -> TablebodyDeleted;
+
+   COL:
+        BEGIN
+        ElemDelete.Pre -> DeleteColElement;
+        ElemNew.Pre ->   CreateColElement;
+        ElemPaste.Pre -> PasteColElement;
+        END;
+
+   COLGROUP:
+        BEGIN
+        ElemDelete.Pre -> DeleteColElement;
+        ElemNew.Pre ->   CreateColElement;
+        ElemPaste.Pre -> PasteColElement;
+        END;
 
    Column_head:
         BEGIN
@@ -239,33 +251,34 @@ ATTRIBUTES
         END;
 
    IntWidthPxl:
-           BEGIN
+        BEGIN
         AttrModify.Pre ->  StoreWidth;
-           AttrModify.Post -> GraphicsModified;
-            END;
+        AttrModify.Post -> GraphicsModified;
+        END;
    
    Height_:
-           BEGIN
+        BEGIN
         AttrCreate.Pre ->  StoreHeight;
         AttrCreate.Post -> AttrHeightModified;
         AttrModify.Pre ->  StoreHeight;
         AttrModify.Post -> AttrHeightModified;
         AttrDelete.Pre ->  AttrHeightDelete;        
-           END;
+        END;
     
    IntHeightPxl:
-           BEGIN
+        BEGIN
         AttrModify.Pre ->  StoreHeight;
-           AttrModify.Post -> GraphicsModified;
-           END;
+        AttrModify.Post -> GraphicsModified;
+        END;
 
    Area_Size:
-           BEGIN
+        BEGIN
         AttrCreate.Post -> AttrAreaSizeModified;
         AttrModify.Post -> AttrAreaSizeModified;
         AttrDelete.Pre ->  AttrAreaSizeDelete;        
-           END;
-   span_:
+        END;
+
+    span_:
         BEGIN
         AttrCreate.Post -> SpanCreated;
         AttrModify.Pre ->  ModifySpan;

@@ -721,7 +721,7 @@ STRUCT
            frame = void, above, below, hsides, lhs, rhs,
          { frame   void  above  below  hsides  lhs  rhs  }
                    vsides, box, border;
-         {           vsides  box  border }
+         {         vsides  box  border }
            rules_ = none_, groups, rows, cols, all;
          { rules    none   groups  rows  cols  all }
            cellspacing = Integer; cellpadding = Integer;
@@ -731,15 +731,15 @@ STRUCT
            datapagesize = Text; IntWidthPxl; IntWidthPercent) =
          { datapagesize }
         BEGIN
-      ?        CAPTION;                                                { CAPTION }
-      ? Cols = LIST OF (Col_elem = CASE OF
-                                COL;                                { COL }
-                                COLGROUP;                        { COLGROUP }
-                                END);
+      ? CAPTION;                                                { CAPTION }
+      ? ColStruct = CASE OF
+            Cols = LIST OF (COL);                               { COL }
+            Colgroups = LIST OF (COLGROUP);                     { COLGROUP }
+            END;
         Table_head = LIST OF (Column_head);
-      ? thead;                                                        { THEAD }
+      ? thead;                                                   { THEAD }
         Table_body = LIST OF (tbody);
-      ? tfoot;                                                        { TFOOT }
+      ? tfoot;                                                   { TFOOT }
         END;
 
   CAPTION                                                        { CAPTION }
@@ -758,7 +758,7 @@ STRUCT
         { valign        top       middle       bottom       baseline }
           Width__; span_ = Integer)
         { width    span }
-         = LIST OF (COL);
+         = LIST [0..*] OF (COL);
 
   COL                                                                { COL }
     (ATTR Cell_align; Cell_valign; Width__; span_)
@@ -1045,7 +1045,9 @@ EXCEPT
         Column_head:    IsColHead, NoCut, Hidden, NoBreakByReturn;
         Table_head:     NoCut, Hidden, NoSelect, NoBreakByReturn;
         C_Head:         Hidden, NoSelect;
-        Cols:           Hidden, NoSelect, NoCreate;
+        ColStruct:           Hidden, NoSelect, NoCreate, NoBreakByReturn;
+        Cols:           Hidden, NoSelect, NoCreate, NoBreakByReturn;
+        Colgroups:      Hidden, NoSelect, NoCreate, NoBreakByReturn;
         Table_body:     PageBreakAllowed, Hidden, NoBreakByReturn;
         thead:          NoBreakByReturn; 
         tbody:          NoBreakByReturn;

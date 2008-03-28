@@ -2449,7 +2449,8 @@ void CreateAddress (Document doc, View view)
 void DoTableCreation (Document doc)
 {
   ElementType         elType;
-  Element             el, new_, caption, cell, row, cols, prevCol, child;
+  Element             el, new_, caption, cell, row, colstruct, cols, prevCol,
+                      child;
   AttributeType       attrType;
   Attribute           attr;
   int                 firstChar, i, profile;
@@ -2479,12 +2480,15 @@ void DoTableCreation (Document doc)
       /* create a COL element for each column */
       if (NumberCols > 0)
         {
+          elType.ElTypeNum = HTML_EL_ColStruct;
+          colstruct = TtaNewElement (doc, elType);
+          if (caption)
+            TtaInsertSibling (colstruct, caption, FALSE, doc);
+          else
+            TtaInsertFirstChild (&colstruct, el, doc);
           elType.ElTypeNum = HTML_EL_Cols;
           cols = TtaNewElement (doc, elType);
-          if (caption)
-            TtaInsertSibling (cols, caption, FALSE, doc);
-          else
-            TtaInsertFirstChild (&cols, el, doc);
+          TtaInsertFirstChild (&cols, colstruct, doc);
           elType.ElTypeNum = HTML_EL_COL;
           prevCol = NULL;
           while (NumberCols > 0)
@@ -2749,73 +2753,7 @@ void CreateCaption (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateColgroup (Document doc, View view)
 {
-  ElementType         elType;
-  Element             el, child;
-  int                 i, j;
-
-  TtaGiveFirstSelectedElement (doc, &el, &i, &j);
-  if (el != NULL)
-    {
-      elType = TtaGetElementType (el);
-      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-        {
-          /* it's an HTML element */
-          if (elType.ElTypeNum == HTML_EL_COLGROUP ||
-              elType.ElTypeNum == HTML_EL_COL)
-            {
-              /* insert after the curent element */
-              child = el;
-              /* create the Colgroup element */
-              elType.ElTypeNum = HTML_EL_COLGROUP;
-              el = TtaNewTree (doc, elType, "");
-              TtaInsertSibling (el, child, FALSE, doc);
-              /* update the selection */
-              child = TtaGetFirstChild (el);
-              if (child == NULL)
-                TtaSelectElement (doc, el);
-              else
-                TtaSelectElement (doc, child);
-            }
-          else
-            {
-              if (elType.ElTypeNum != HTML_EL_Table_)
-                {
-                  /* move the selection after the CAPTION */
-                  elType.ElTypeNum = HTML_EL_Table_;
-                  el = TtaGetTypedAncestor (el, elType);
-                }
-              if (el != NULL)
-                {
-                  /* skip the CAPTION */
-                  child = TtaGetFirstChild (el);
-                  elType = TtaGetElementType (child);
-                  if (elType.ElTypeNum == HTML_EL_CAPTION)
-                    {
-                      TtaNextSibling (&child);
-                      elType = TtaGetElementType (child);
-                    }
-                  if (elType.ElTypeNum == HTML_EL_Cols)
-                    /* select the first COL or COLGROUP */
-                    child = TtaGetFirstChild (child);
-                  /* move the selection if there is no extension */
-                  if (TtaIsSelectionEmpty ())
-                    TtaSelectElement (doc, child);
-                  /* create the COLGROUP element */
-                  elType.ElTypeNum = HTML_EL_COLGROUP;
-                  TtaCreateElement (elType, doc);
-                  TtaGiveFirstSelectedElement (doc, &el, &i, &j);
-                  /* create a COL element within */
-                  elType.ElTypeNum = HTML_EL_COL;
-                  child = TtaNewTree (doc, elType, "");
-                  TtaInsertFirstChild (&child, el, doc);
-                  /* update the selection */
-                  TtaSelectElement (doc, child);
-                }
-            }
-        }
-    }
-  else
-    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+  return;
 }
 
 /*----------------------------------------------------------------------
@@ -2823,76 +2761,7 @@ void CreateColgroup (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateCol (Document doc, View view)
 {
-  ElementType         elType;
-  Element             el, child;
-  int                 i, j;
-
-  TtaGiveFirstSelectedElement (doc, &el, &i, &j);
-  if (el != NULL)
-    {
-      elType = TtaGetElementType (el);
-      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-        {
-          /* it's an HTML element */
-          if (elType.ElTypeNum == HTML_EL_COLGROUP)
-            {
-              /* insert within the curent element */
-              /* create the Colgroup element */
-              elType.ElTypeNum = HTML_EL_COL;
-              child = TtaNewTree (doc, elType, "");
-              TtaInsertFirstChild (&child, el, doc);
-              /* update the selection */
-              TtaSelectElement (doc, child);
-            }
-          if (elType.ElTypeNum == HTML_EL_COL)
-            {
-              /* insert after the curent element */
-              child = el;
-              /* create the COL element */
-              elType.ElTypeNum = HTML_EL_COL;
-              el = TtaNewTree (doc, elType, "");
-              TtaInsertSibling (el, child, FALSE, doc);
-              /* update the selection */
-              TtaSelectElement (doc, el);
-            }
-          else
-            {
-              if (elType.ElTypeNum != HTML_EL_Table_)
-                {
-                  /* move the selection after the CAPTION */
-                  elType.ElTypeNum = HTML_EL_Table_;
-                  el = TtaGetTypedAncestor (el, elType);
-                }
-              if (el != NULL)
-                {
-                  /* skip the CAPTION */
-                  child = TtaGetFirstChild (el);
-                  elType = TtaGetElementType (child);
-                  if (elType.ElTypeNum == HTML_EL_CAPTION)
-                    {
-                      TtaNextSibling (&child);
-                      elType = TtaGetElementType (child);
-                    }
-                  if (elType.ElTypeNum == HTML_EL_Cols)
-                    {
-                      /* select the first COL */
-                      child = TtaGetFirstChild (child);
-                      elType = TtaGetElementType (child);
-                      if (elType.ElTypeNum == HTML_EL_COLGROUP)
-                        child = TtaGetFirstChild (child);
-                    }
-                  /* move the selection if there is no extension */
-                  if (TtaIsSelectionEmpty ())
-                    TtaSelectElement (doc, child);
-                  /* create the COL element */
-                  elType.ElTypeNum = HTML_EL_COL;
-                  TtaCreateElement (elType, doc);
-                }
-            }
-        }
-    }
-  else
-    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+  return;
 }
 
 /*----------------------------------------------------------------------
