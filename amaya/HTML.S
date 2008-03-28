@@ -19,6 +19,8 @@ ATTR
    resource = Text;		{ resource }
    datatype = Text;		{ datatype }
    instanceof = Text;		{ instanceof }
+   REL = Text;			{ rel }
+   REV = Text;			{ rev }
 			{ events }
    onclick = Text;		{ onclick }
    ondblclick = Text;		{ ondblclick }
@@ -111,8 +113,8 @@ STRUCT
   LINK                                                                { LINK }
      (ATTR charset; HREF_ = Text; hreflang = Text;
          { charset  href          hreflang }
-           Link_type = Text; REL = Text; REV = Text;
-         { type              rel         rev }
+           Link_type = Text;
+         { type }
            media; target_ = Text) =
          { media  target }
         CONSTANT C_Empty;
@@ -275,8 +277,8 @@ STRUCT
          { charset  type       name }
            HREF_; hreflang; target_;
          { href   hreflang  target}
-           REL; REV; accesskey = Text;
-         { rel  rev  accesskey }
+           accesskey = Text;
+         { accesskey }
            shape = rectangle, circle, polygon, default_;
          { shape   rect       cirecle poly     default }
            coords = Text; tabindex = Integer;

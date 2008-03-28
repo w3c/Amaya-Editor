@@ -569,7 +569,12 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
               !strcmp (attrName, "name") && elementName &&
               (!strcmp (elementName, "a") || !strcmp (elementName, "map")))
             *checkProfile = FALSE;
-          else
+          /* Special case for the attributes 'rel' and 'rev' for elements 'a' and 'link' */
+          else if ((!strcmp (attrName, "rel") || !strcmp (attrName, "rev")) &&
+		   (strcmp (elementName, "a") && strcmp (elementName, "link")) &&
+		   (extraprofile != L_RDFa))
+	    *checkProfile = FALSE;
+	  else
             *thotType = ptr[i].ThotAttribute;
           return (i);
         }
@@ -631,6 +636,12 @@ char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
                 if (doc != 0 && profile != L_Other && extraprofile == L_NoExtraProfile && !(ptr[i].Level & profile))
                   invalid = TRUE;
                 else if (doc != 0 && ptr[i].Level == L_RDFaValue && extraprofile != L_RDFa)
+                  invalid = TRUE;
+		else if ((attrType.AttrTypeNum == HTML_ATTR_REL ||
+			  attrType.AttrTypeNum == HTML_ATTR_REV) &&
+		 	  elType.ElTypeNum != HTML_EL_Anchor &&
+			  elType.ElTypeNum != HTML_EL_LINK &&
+			  extraprofile != L_RDFa)
                   invalid = TRUE;
 		else
                   return ptr[i].XMLattribute;
