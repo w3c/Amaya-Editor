@@ -144,7 +144,7 @@ ThotBool NeedAMenu (Element el, Document doc)
           if (dec && dec->nature == UnionNat)
             {
               /* TODO utiliser la liste étendue plutot que la liste d'inclusion.*/ 
-              iter = HashMap_GetForwardIterator(dec->unionType.include);
+              iter = SearchSet_GetForwardIterator(dec->unionType.include);
               if(ForwardIterator_GetCount(iter)>1)
                 res = TRUE;
               TtaFreeMemory(iter);

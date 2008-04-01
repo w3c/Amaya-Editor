@@ -98,10 +98,10 @@ void Template_AddLibraryToImport (XTigerTemplate t, Element el)
 void Template_CheckTypesAttribute (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
-  char *types;
-  HashMap map;
+  char           *types;
+  StringSet       set;
   ForwardIterator iter;
-  HashMapNode node;
+  StringSetNode   node;
   
   if(!t)
     return;
@@ -109,18 +109,17 @@ void Template_CheckTypesAttribute (XTigerTemplate t, Element el)
   types = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
   if(types)
   {
-    map = KeywordHashMap_CreateFromList (NULL, -1, types);
-    iter = HashMap_GetForwardIterator(map);
-    ITERATOR_FOREACH(iter, HashMapNode, node)
+    set = StringSet_CreateFromString(types, " ");
+    iter = StringSet_GetForwardIterator(set);
+    ITERATOR_FOREACH(iter, StringSetNode, node)
       {
-        if ( Template_GetDeclaration (t, (const char*)node->key) == NULL)
+        if ( Template_GetDeclaration (t, (const char*)node->elem) == NULL)
           //TODO_XTIGER We must add the current namespace
-          Template_DeclareNewElement (t, (const char*)node->key);
+          Template_DeclareNewElement (t, (const char*)node->elem);
       }
     TtaFreeMemory(iter);
-
     TtaFreeMemory (types);
-    HashMap_Destroy (map);
+    StringSet_Destroy (set);
   }
 #endif /* TEMPLATES */
 }

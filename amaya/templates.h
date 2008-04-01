@@ -33,19 +33,20 @@ struct _XTigerTemplate
   int           state;          // Union of TemplateFlag
   char*         uri;            // Template URI (formerly name).
   char*         base_uri;       // URI of template if this is an instance.
-  char*         version;        //Version of XTiger language
-  char*         templateVersion;//Version of template
+  char*         version;        // Version of XTiger language
+  char*         templateVersion;// Version of template
 
-  HashMap       libraries;      //Imported libraries (StringHashMap<XTigerTemplate>)
-  HashMap       simpleTypes;    //All simple types declared in the document (KeywordHashMap<Declaration>)
-  HashMap       elements;       //All element types declared in the document (KeywordHashMap<Declaration>)
-  HashMap       components;     //All component types declared in the document (KeywordHashMap<Declaration>)
-  HashMap       unions;         //All union types declared in the document (KeywordHashMap<Declaration>)
-  HashMap       unknowns;       //All unknown declarations, used in template parsing,
+  HashMap       libraries;      // Imported libraries (StringHashMap<XTigerTemplate>)
+  
+  SearchSet     simpleTypes;    // All simple types declared in the document (SearchSet<Declaration, char*>)
+  SearchSet     elements;       // All element types declared in the document (SearchSet<Declaration, char*>)
+  SearchSet     components;     // All component types declared in the document (SearchSet<Declaration, char*>)
+  SearchSet     unions;         // All union types declared in the document (SearchSet<Declaration, char*>)
+  SearchSet     unknowns;       // All unknown declarations, used in template parsing (SearchSet<Declaration, char*>)
 
-  Document      doc;            //Use to store component structures
-  int           users;          //Number of documents using this template
-  DLList        errorList;      //Error string list (DLList<char*>)
+  Document      doc;            // Use to store component structures
+  int           users;          // Number of documents using this template
+  SList         errorList;      // Error string list (DLList<char*>)
 };
 
 
@@ -86,9 +87,11 @@ typedef struct _Component
 
 typedef struct _Union
 {
-	HashMap  include;  //KeywordHashMap<Declaration>
-	HashMap  exclude;  //KeywordHashMap<Declaration>
-  HashMap  expanded; //KeywordHashMap<Declaration>
+  SearchSet  include;  // SearchSet<Declaration, char*>
+  SearchSet  exclude;  // SearchSet<Declaration, char*>
+  SearchSet  expanded; // SearchSet<Declaration, char*>
+  char*      includeStr;
+  char*      excludeStr;
 } Union;
 
 /* Structure of a declaration */

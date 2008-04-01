@@ -751,22 +751,6 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
         TtaDeleteTree(newEl, doc);
         newEl = el;
         break;
-      case UnionNat :
-        /* Nothing to do.*/
-  //                elType.ElTypeNum = Template_EL_useEl;
-  //                cont = TtaNewElement (doc, elType);
-  //                if (cont)
-  //                  {
-  //                    TtaSetAccessRight (cont, ReadWrite, doc);
-  //                    at = TtaNewAttribute (att);
-  //                    if (at)
-  //                      {
-  //                        TtaAttachAttribute (cont, at, doc);
-  //                        TtaSetAttributeText(at, types, cont, doc);
-  //                      }
-  //                  }
-        /* @@@@@ */
-        break;
       default :
         //Impossible
         break;   
@@ -1294,8 +1278,8 @@ void DoInstanceTemplate (char *templatename)
 }
 
 /*----------------------------------------------------------------------
-  Template_PreInstantiateComponents: Instantiates all components in 
-  order to improve editing.
+  Template_PreInstantiateComponents
+  Instantiates all components in order to improve editing.
   ----------------------------------------------------------------------*/
 void Template_PreInstantiateComponents (XTigerTemplate t)
 {
@@ -1303,15 +1287,14 @@ void Template_PreInstantiateComponents (XTigerTemplate t)
   if (!t)
     return;
 
-  HashMap         components = GetComponents(t);
-  ForwardIterator iter = HashMap_GetForwardIterator(components);
-  Declaration     comp;
-  HashMapNode     node;
+  ForwardIterator iter = SearchSet_GetForwardIterator(GetComponents(t));
+  Declaration     dec;
+  SearchSetNode   node;
 
-  ITERATOR_FOREACH(iter, HashMapNode, node)
+  ITERATOR_FOREACH(iter, SearchSetNode, node)
     {
-      comp = (Declaration) node->elem;
-      ParseTemplate(t, GetComponentContent(comp), GetTemplateDocument(t), TRUE);
+      dec = (Declaration) node->elem;
+      ParseTemplate(t, GetComponentContent(dec), GetTemplateDocument(t), TRUE);
     }
   TtaFreeMemory(iter);
 #endif /* TEMPLATES */

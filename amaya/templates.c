@@ -1426,13 +1426,12 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
             ancestorType.ElTypeNum == Template_EL_useEl)
     {
       // only check the bag child @@@ will be check exclude/include later
-      //if (ancestor != parent)
-      //  return  FALSE; // let Thot do the job
+      if (ancestor != parent)
+        return  FALSE; // let Thot do the job
       types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_currentType, NULL);
       b = Template_CanInsertElementInUse(event->document, elType, types, parent, event->position);
       TtaFreeMemory(types);
       return !b;
-      
     }
   }
   

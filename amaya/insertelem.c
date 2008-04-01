@@ -103,90 +103,84 @@ void InsertableElement_Final()
   @param resolvedPath Path of different succesive union name.
   @param list List to fill.
   ----------------------------------------------------------------------*/
-static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
+static void FillUnionResolvedPossibleElement(XTigerTemplate t, Declaration dec,
                                              Element elem, const char* resolvedPath,
                                              DLList list, int level)
 {
-  Declaration dec = Template_GetDeclaration (t, name);
-  Document    doc = TtaGetDocument(elem);
-  if (dec == NULL)
-    return;
-  
-  if (dec->nature==ComponentNat)
-  {
-    DLList_Append(list, ElemListElement_CreateComponent(level, dec->name, (void*)dec,
-                                                        resolvedPath, elem));
-  }
-  else if (dec->nature==UnionNat)
-  {
-    DLList          tempList = ElemList_Create();
-    ForwardIterator iter = HashMap_GetForwardIterator(dec->unionType.include);
-    HashMapNode     mapnode;
-    DLListNode      listnode;
-
-    int len1 = 0 , len2 = strlen(dec->name);
-    if (resolvedPath!=NULL)
-      len1 = strlen(resolvedPath);
-    char* newPath = (char*)TtaGetMemory(len1+len2+2);
-    if (len1 > 0)
+  Document    doc;
+  if(t && dec && elem)
     {
-      strcpy(newPath, resolvedPath);
-      newPath[len1] = '/';
-      strcpy(newPath+len1+1, dec->name);
+      doc = TtaGetDocument(elem);
+      if (dec->nature==ComponentNat)
+        DLList_Append(list, ElemListElement_CreateComponent(level, dec->name, (void*)dec,
+                                                            resolvedPath, elem));
+      else if (dec->nature==UnionNat)
+        {
+          DLList          tempList = ElemList_Create();
+          ForwardIterator iter = SearchSet_GetForwardIterator(dec->unionType.include);
+          SearchSetNode   mapnode;
+          DLListNode      listnode;
+      
+          int len1 = 0 , len2 = strlen(dec->name);
+          if (resolvedPath!=NULL)
+            len1 = strlen(resolvedPath);
+          char* newPath = (char*)TtaGetMemory(len1+len2+2);
+          if (len1 > 0)
+            {
+              strcpy(newPath, resolvedPath);
+              newPath[len1] = '/';
+              strcpy(newPath+len1+1, dec->name);
+            }
+          else
+            strcpy(newPath, dec->name);
+          
+          ITERATOR_FOREACH(iter, SearchSetNode, mapnode)
+            {
+              FillUnionResolvedPossibleElement(t, (Declaration)mapnode->elem, elem, newPath, tempList, level);
+            }
+          TtaFreeMemory(iter);
+          
+          iter = DLList_GetForwardIterator(tempList);
+          
+          
+          listnode = (DLListNode) ForwardIterator_GetFirst(iter);
+          ITERATOR_FOREACH(iter, DLListNode, listnode)
+            DLList_Append(list, listnode->elem);
+          TtaFreeMemory(iter);
+      
+          tempList->destroyElement = NULL;
+          DLList_Destroy(tempList);
+          
+          TtaFreeMemory(newPath);
+          
+          /** todo Remove excluded elements.*/
+        }
+      else if (dec->nature==SimpleTypeNat)
+        DLList_Append(list, ElemListElement_CreateBaseType(level, dec->name, resolvedPath,
+                                                           elem));
+        /* Do nothing. */
+      else
+        {
+          /* Search in tgt std elements. */
+          int xmlType; /* See parser.h */
+          for(xmlType=XHTML_TYPE; xmlType<Template_TYPE; xmlType++)
+            {
+              ElementType elType = {0,0};
+              char*       mappedName;
+              char       content;
+              ThotBool    checkProfile;
+              MapXMLElementType(xmlType, dec->name, &elType, &mappedName, &content,
+                                &checkProfile, doc);
+              if (elType.ElTypeNum!=0)
+                {
+                  if(TemplateCanInsertFirstChild(elType, elem, doc))
+                    DLList_Append(list, ElemListElement_CreateLanguageElement(level, elType,
+                                                                            resolvedPath, elem));
+                  break;
+                }
+            }
+        }
     }
-    else
-    {
-      strcpy(newPath, dec->name);
-    }
-    
-    ITERATOR_FOREACH(iter, HashMapNode, mapnode)
-      {
-        FillUnionResolvedPossibleElement(t, (char*)mapnode->key, elem, newPath, tempList, level);
-      }
-    TtaFreeMemory(iter);
-    
-    iter = DLList_GetForwardIterator(tempList);
-    
-    
-    listnode = (DLListNode) ForwardIterator_GetFirst(iter);
-    ITERATOR_FOREACH(iter, DLListNode, listnode)
-      DLList_Append(list, listnode->elem);
-    TtaFreeMemory(iter);
-
-    tempList->destroyElement = NULL;
-    DLList_Destroy(tempList);
-    
-    TtaFreeMemory(newPath);
-    
-    /** todo Remove excluded elements.*/
-  }
-  else if (dec->nature==SimpleTypeNat)
-  {
-    DLList_Append(list, ElemListElement_CreateBaseType(level, dec->name, resolvedPath,
-                                                       elem));
-    /* Do nothing. */
-  }
-  else
-  {
-    /* Search in tgt std elements. */
-    int xmlType; /* See parser.h */
-    for(xmlType=XHTML_TYPE; xmlType<Template_TYPE; xmlType++)
-    {
-      ElementType elType = {0,0};
-      char*       mappedName;
-      char       content;
-      ThotBool    checkProfile;
-      MapXMLElementType(xmlType, dec->name, &elType, &mappedName, &content,
-                        &checkProfile, doc);
-      if (elType.ElTypeNum!=0)
-      {
-        if(TemplateCanInsertFirstChild(elType, elem, doc))
-          DLList_Append(list, ElemListElement_CreateLanguageElement(level, elType,
-                                                                  resolvedPath, elem));
-        break;
-      }
-    }
-  }
 }
 
 /*----------------------------------------------------------------------
@@ -197,26 +191,23 @@ static void FillInsertableElementFromElemAttribute (XTigerTemplate t,
                                                     Element elem, Element refelem,
                                                     int attrib, DLList list, int level)
 {
-  ElementType     elType = TtaGetElementType(elem);
+  ElementType     elType        = TtaGetElementType(elem);
   AttributeType   attributeType = {elType.ElSSchema, attrib};
-  Attribute       att = TtaGetAttribute (elem, attributeType);
-  int             size = TtaGetTextAttributeLength (att);
-  char*           types = (char *) TtaGetMemory (size+1); 
+  Attribute       att           = TtaGetAttribute (elem, attributeType);
+  int             size          = TtaGetTextAttributeLength (att);
+  char*           types         = (char *) TtaGetMemory (size+1); 
 
   TtaGiveTextAttributeValue (att, types, &size);
-  HashMap         basemap = KeywordHashMap_CreateFromList(NULL, -1, types);
-  HashMap         map     = Template_ExpandHashMapTypes(t, basemap);
+  SearchSet       set           = Template_GetDeclarationSetFromNames(t, types, true);
   ForwardIterator iter;
-  HashMapNode     node;
+  SearchSetNode   node;
    
-  iter = HashMap_GetForwardIterator(map);
-  ITERATOR_FOREACH(iter, HashMapNode, node)
+  iter = SearchSet_GetForwardIterator(set);
+  ITERATOR_FOREACH(iter, SearchSetNode, node)
     {
-      FillUnionResolvedPossibleElement(t, (const char*)node->key, refelem, NULL, list, level);
+      FillUnionResolvedPossibleElement(t, (Declaration)node->elem, refelem, NULL, list, level);
     }
-  HashMap_Destroy (map);
-  HashMap_Destroy (basemap);
-  
+  SearchSet_Destroy (set);
   TtaFreeMemory (types);
 }
 #endif/* TEMPLATES */
