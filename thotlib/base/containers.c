@@ -129,6 +129,336 @@ long ForwardIterator_GetCount (ForwardIterator iter)
 }
 
 /*------------------------------------------------------------------------------
+ * Simple list
+ *----------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------
+ * Create a new list of elements.
+ * @return Empty list of element. 
+ ----------------------------------------------------------------------------*/
+SList SList_Create()
+{
+  SList list = (SList)TtaGetMemory (sizeof(sSList));
+  memset (list, 0, sizeof(sSList));
+  return list;
+}
+
+/*------------------------------------------------------------------------------
+ * Destroy a list of element
+ * All element are freed.
+ * @param list List to destroy.
+ ----------------------------------------------------------------------------*/
+void SList_Destroy (SList list)
+{
+  if (list)
+    {
+      SList_Empty (list);
+      TtaFreeMemory (list);
+    }
+}
+
+/*------------------------------------------------------------------------------
+ * Empty a list of element.
+ * All elements are freed.
+ * @param list List to empty.
+ ----------------------------------------------------------------------------*/
+void SList_Empty(SList list)
+{
+  SListNode node;
+  if (list!=NULL)
+    {
+      node = list->first;
+      while (node)
+        {
+          SListNode next = (SListNode) node->next;
+          if (list->destroyElement)
+            list->destroyElement (node->elem);
+          node->elem = NULL;
+          TtaFreeMemory (node);
+          node = next;
+        }
+      list->first = list->last = NULL;
+    }
+}
+
+/*------------------------------------------------------------------------------
+ * Test if a list is empty.
+ ----------------------------------------------------------------------------*/
+ThotBool SList_IsEmpty (SList list)
+{
+  return list == NULL || list->first == NULL;
+}
+
+/*------------------------------------------------------------------------------
+ * Return the node just before the param node. NULL if node is the first.
+ ----------------------------------------------------------------------------*/
+SListNode SList_GetPrev(SList list, SListNode node)
+{
+  SListNode prev = NULL;
+  if (list && node || list->first==node)
+    {
+      for (prev=list->first; prev->next!=NULL&&prev->next!=node; prev=prev->next) {}
+    }
+  return prev;
+}
+
+/*------------------------------------------------------------------------------
+ * Return the node just before the param node. NULL if node is the first.
+ ----------------------------------------------------------------------------*/
+SListNode SList_Find(SList list, const ContainerElement elem)
+{
+  SListNode node = NULL;
+  if (list)
+    {
+      for(node=list->first; node!=NULL&&node->elem!=elem; node=node->next) {}
+    }
+  return node;
+}
+
+
+/*------------------------------------------------------------------------------
+ * Append an element at the end of the list
+ * @param list List at which the new element is append.
+ * @param elem Element to append.
+ ----------------------------------------------------------------------------*/
+SListNode SList_Append (SList list, ContainerElement elem)
+{
+  SListNode node = NULL;
+  if (list)
+    {
+      node = (SListNode) TtaGetMemory (sizeof (sSListNode));
+      memset (node, 0, sizeof(sSListNode));
+      node->elem = elem;
+      
+      if (list->last==NULL)
+        list->first = list->last = node;
+      else
+        {
+          list->last->next = node;
+          list->last = node;
+        }
+    }
+  return node;
+}
+
+/*------------------------------------------------------------------------------
+ * Prepend an element at the begining of the list
+ * @param list List at which the new element is append.
+ * @param elem Element to append.
+ ----------------------------------------------------------------------------*/
+SListNode SList_Prepend (SList list, ContainerElement elem)
+{
+  SListNode node = NULL;
+  if (list)
+    {
+      node = (SListNode) TtaGetMemory (sizeof(sSListNode));
+      memset (node, 0, sizeof(sDLListNode));
+      node->elem = elem;
+      node->next = list->first; 
+      list->first = node;
+    }
+  return node;
+}
+
+/*------------------------------------------------------------------------------
+ * Insert an element after an element in a list
+ * @param list List at which the new element is append.
+ * @param before Node after which the element is to be inserted.
+ * @param elem Element to append.
+ ----------------------------------------------------------------------------*/
+SListNode SList_InsertAfter (SList list, SListNode before, ContainerElement elem)
+{
+  SListNode node = NULL;
+  if (list)
+    {
+      node = (SListNode)TtaGetMemory (sizeof(sSListNode));
+      memset (node, 0, sizeof(sDLListNode));
+      node->elem = elem;
+      
+      if(list->first==NULL)
+        list->first = list->last = node;
+      else if (before)
+        {
+          node->next = before->next;
+          before->next = node;
+          if(node->next==NULL)
+            list->last = node;
+        }
+      else
+        {
+          list->last->next = node;
+          list->last = node;
+        }
+    }  
+  return node;
+}
+
+/*------------------------------------------------------------------------------
+ * Insert an element before an element in a list
+ * @param list List at which the new element is append.
+ * @param after Node before which the element is to be inserted.
+ * @param elem Element to insert.
+ ----------------------------------------------------------------------------*/
+SListNode SList_InsertBefore (SList list, SListNode after, ContainerElement elem)
+{
+  SListNode node = NULL, before = NULL;
+  if(list)
+    {
+      node = (SListNode)TtaGetMemory (sizeof(sSListNode));
+      memset (node, 0, sizeof(sSListNode));
+      node->elem = elem;
+      node->next = after;
+
+      if(list->first==NULL)
+        list->first = list->last = node;
+      else if(after==NULL)
+        {
+          // Insert after last
+          list->last->next = node;
+          list->last = node;
+        }
+      else if(after==list->first)
+        {
+          list->first = node;
+        }
+      else
+        {
+          before = SList_GetPrev(list, after);
+          if(before)
+            {
+              node->next   = before->next;
+              before->next = node;
+            }
+        }
+    }  
+  return node;
+}
+
+/*------------------------------------------------------------------------------
+ * Remove an element from a list
+ * @param list List from which remove the element.
+ * @param node Node to remove.
+ * @return Element
+ ----------------------------------------------------------------------------*/
+ContainerElement SList_RemoveElement (SList list, SListNode node)
+{
+  ContainerElement elem = NULL;
+  SListNode prev = NULL;
+  if(list&&node)
+    {
+      if(list->first==node)
+        {
+          list->first = node->next;
+        }
+      else
+        {
+          prev = SList_GetPrev(list, node);
+          if(prev==NULL)
+            return NULL;
+          prev->next = node->next;
+          if(list->last==node)
+            list->last = prev;
+        }
+      TtaFreeMemory(node);
+    }
+  return elem;
+}
+
+/*------------------------------------------------------------------------------
+ * Destroy an element.
+ * Remove an element and destroy it.
+ * @param list List from which remove the element.
+ * @param node Node to remove.
+ ----------------------------------------------------------------------------*/
+void  SList_DestroyElement (SList list, SListNode node)
+{
+  ContainerElement elem = SList_RemoveElement(list, node);
+  if (elem && list->destroyElement)
+    list->destroyElement(elem);
+}
+
+/*------------------------------------------------------------------------------
+ ----------------------------------------------------------------------------*/
+static SListNode SListIterator_GetFirst (ForwardIterator iter)
+{
+  SList list = (SList)iter->container;
+  if (list)
+    return list->first;
+  else
+    return NULL;
+}
+
+/*------------------------------------------------------------------------------
+ ----------------------------------------------------------------------------*/
+static SListNode SListIterator_GetNext(ForwardIterator iter)
+{
+  SListNode node = (SListNode) iter->currentNode;
+  if (node)
+    return node->next;
+  else
+    return NULL;
+}
+
+/*------------------------------------------------------------------------------
+ * Create a SList forward iterator.
+ * @param list List on which iterate.
+ * @return the iterator.
+ ----------------------------------------------------------------------------*/
+ForwardIterator SList_GetForwardIterator(SList list)
+{
+  return ForwardIterator_Create((Container)list,
+          (ForwardIterator_GetFirstFunction)SListIterator_GetFirst,
+          (ForwardIterator_GetNextFunction)SListIterator_GetNext);
+}
+
+/*------------------------------------------------------------------------------
+ * Retrieve the size of the list.
+ * \note : o(n) function.
+ ----------------------------------------------------------------------------*/
+int SList_GetSize(SList list)
+{
+  int        i = 0;
+  SListNode node;
+  if(list && list->first!=0)
+    {
+      node = list->first;
+      while(node)
+        {
+          i++;
+          node = node->next;
+        }
+    }
+  return i;
+}
+
+/*------------------------------------------------------------------------------
+ * Retrieve an element from its index.
+ * \note : o(n) function.
+ ----------------------------------------------------------------------------*/
+SListNode SList_GetElement(SList list, int index)
+{
+  int        i = 0;
+  SListNode node = NULL;
+  if(list && list->first!=0)
+    {
+      node = list->first;
+      while(node)
+        {
+          if(i==index)
+            break;
+          i++;
+          node = node->next;
+        }
+    }
+  return node;  
+}
+
+
+
+
+
+
+
+/*------------------------------------------------------------------------------
  * Double linked list
  *----------------------------------------------------------------------------*/
 
@@ -141,53 +471,6 @@ DLList DLList_Create()
   DLList list = (DLList)TtaGetMemory (sizeof(sDLList));
   memset (list, 0, sizeof(sDLList));
   return list;
-}
-
-/*------------------------------------------------------------------------------
- * Empty a list of element.
- * All elements are freed.
- * @param list List to empty.
- ----------------------------------------------------------------------------*/
-void DLList_Empty(DLList list)
-{
-  DLListNode node;
-
-  if (list == NULL)
-    return;
-
-  node = list->first;
-  while (node)
-    {
-      DLListNode next = (DLListNode) node->next;
-      if (list->destroyElement)
-        list->destroyElement (node->elem);
-      node->elem = NULL;
-      TtaFreeMemory (node);
-      node = next;
-    }
-  list->first = list->last = NULL;  
-}
-
-/*------------------------------------------------------------------------------
- * Destroy a list of element
- * All element are freed.
- * @param list List to destroy.
- ----------------------------------------------------------------------------*/
-void DLList_Destroy (DLList list)
-{
-  if (list)
-    {
-      DLList_Empty (list);
-      TtaFreeMemory( list);
-    }
-}
-
-/*------------------------------------------------------------------------------
- * Test if a list is empty.
- ----------------------------------------------------------------------------*/
-ThotBool DLList_IsEmpty (DLList list)
-{
-  return list == NULL || list->first == NULL;
 }
 
 /*------------------------------------------------------------------------------
@@ -221,12 +504,13 @@ DLListNode DLList_Append (DLList list, ContainerElement elem)
  ----------------------------------------------------------------------------*/
 DLListNode DLList_Prepend (DLList list, ContainerElement elem)
 {
-  DLListNode node = (DLListNode) TtaGetMemory (sizeof(sDLListNode));
-
-  memset (node, 0, sizeof(sDLListNode));
-  node->elem = elem;
+  DLListNode node = NULL;
   if (list)
     {
+      node = (DLListNode) TtaGetMemory (sizeof(sDLListNode));
+      memset (node, 0, sizeof(sDLListNode));
+      node->elem = elem;
+      
       node->next = list->first;
       list->first = (DLListNode) node;
       if (list->last == NULL)
@@ -298,23 +582,22 @@ DLListNode DLList_InsertBefore (DLList list, DLListNode after, ContainerElement 
  ----------------------------------------------------------------------------*/
 ContainerElement DLList_RemoveElement (DLList list, DLListNode node)
 {
-  ContainerElement elem;
-
-  if (node == NULL)
-    return NULL;
-
-  elem = node->elem;
-  if (node == list->first)
-    list->first = node->next;
-  else
-    node->prev->next = node->next;
-
-  if (node == list->last)
-    list->last = node->prev;
-  else
-    node->next->prev = node->prev;
-
-  TtaFreeMemory(node);
+  ContainerElement elem = NULL;
+  if(list&&node)
+    {
+      elem = node->elem;
+      if (node == list->first)
+        list->first = node->next;
+      else
+        node->prev->next = node->next;
+    
+      if (node == list->last)
+        list->last = node->prev;
+      else
+        node->next->prev = node->prev;
+    
+      TtaFreeMemory(node);
+    }
   return elem;
 }
 
@@ -331,42 +614,6 @@ void  DLList_DestroyElement (DLList list, DLListNode node)
     list->destroyElement(elem);
 }
 
-
-/*------------------------------------------------------------------------------
- ----------------------------------------------------------------------------*/
-static DLListNode DLListIterator_GetFirst (ForwardIterator iter)
-{
-  DLList list = (DLList)iter->container;
-  if (list)
-    return list->first;
-  else
-    return NULL;
-}
-
-/*------------------------------------------------------------------------------
- ----------------------------------------------------------------------------*/
-static DLListNode DLListIterator_GetNext(ForwardIterator iter)
-{
-  DLListNode node = (DLListNode) iter->currentNode;
-  if (node)
-    return node->next;
-  else
-    return NULL;
-}
-
-/*------------------------------------------------------------------------------
- * Create a DLList forward iterator.
- * @param list List on which iterate.
- * @return the iterator.
- ----------------------------------------------------------------------------*/
-ForwardIterator DLList_GetForwardIterator(DLList list)
-{
-  return ForwardIterator_Create((Container)list,
-          (ForwardIterator_GetFirstFunction)DLListIterator_GetFirst,
-          (ForwardIterator_GetNextFunction)DLListIterator_GetNext);
-}
-
-
 /*------------------------------------------------------------------------------
  * Swap two nodes.
  ----------------------------------------------------------------------------*/
@@ -376,48 +623,6 @@ void DLList_SwapContent(DLList list, DLListNode node1, DLListNode node2)
   elem = node1->elem;
   node1->elem = node2->elem;
   node2->elem = elem;
-}
-
-/*------------------------------------------------------------------------------
- * Retrieve the size of the list.
- * \note : o(n) function.
- ----------------------------------------------------------------------------*/
-int DLList_GetSize(DLList list)
-{
-  int        i = 0;
-  DLListNode node;
-  if(list && list->first!=0)
-    {
-      node = list->first;
-      while(node)
-        {
-          i++;
-          node = node->next;
-        }
-    }
-  return i;
-}
-
-/*------------------------------------------------------------------------------
- * Retrieve an element from its index.
- * \note : o(n) function.
- ----------------------------------------------------------------------------*/
-DLListNode DLList_GetElement(DLList list, int index)
-{
-  int        i = 0;
-  DLListNode node = NULL;
-  if(list && list->first!=0)
-    {
-      node = list->first;
-      while(node)
-        {
-          if(i==index)
-            break;
-          i++;
-          node = node->next;
-        }
-    }
-  return node;  
 }
 
 /*------------------------------------------------------------------------------
@@ -527,6 +732,275 @@ DLList DLList_GetRefListFromIterator(ForwardIterator iter, Container_CompareFunc
   return list; 
 }
 
+
+
+
+
+
+
+
+/*------------------------------------------------------------------------------
+ * Simple set
+ *----------------------------------------------------------------------------*/
+
+/*------------------------------------------------------------------------------
+ * Create a new set of elements.
+ * @return Empty set of element. 
+ ----------------------------------------------------------------------------*/
+SSet SSet_Create(Container_CompareFunction compare)
+{
+  SSet set = NULL;
+  if(compare)
+    {
+      set = (SSet)TtaGetMemory (sizeof(sSSet));
+      memset (set, 0, sizeof(sSSet));
+      set->compare = compare;
+    }
+  return set;
+}
+
+/*------------------------------------------------------------------------------
+ * Return the node just before the param node. NULL if node is the first.
+ ----------------------------------------------------------------------------*/
+SSetNode SSet_Find(SSet set, const ContainerElement elem)
+{
+  SSetNode node = NULL;
+  if (set)
+    {
+      for(node=set->first; node!=NULL&&set->compare(node->elem,elem)!=0; node=node->next) {}
+    }
+  return node;
+}
+
+/*----------------------------------------------------------------------
+ * Insert element into a set.
+ * If the element is already in the set, the old node is returned.
+  -----------------------------------------------------------------------*/
+SSetNode SSet_Insert(SSet set, ContainerElement elem)
+{
+  SSetNode node = NULL, before = NULL, next = NULL;
+  if(set)
+    {
+      if(set->first == NULL)
+        {
+          // Empty set
+          node = (SListNode)TtaGetMemory (sizeof(sSListNode));
+          memset (node, 0, sizeof(sSListNode));
+          node->elem = elem;
+          set->first = set->last = node; 
+        }
+      else if(set->compare(set->last->elem, elem)<0)
+        {
+          // After last
+          node = (SListNode)TtaGetMemory (sizeof(sSListNode));
+          memset (node, 0, sizeof(sSListNode));
+          node->elem = elem;
+          set->last->next = node;
+          set->last = node;
+        }
+      else if(set->compare(elem, set->first->elem)<0)
+        {
+          // Before first
+          node = (SListNode)TtaGetMemory (sizeof(sSListNode));
+          memset (node, 0, sizeof(sSListNode));
+          node->elem = elem;
+          node->next = set->first;
+          set->first = node;
+        }
+      else
+        {
+          before = set->first;
+          while(node==NULL)
+            {
+              if(set->compare(before->elem, elem)==0)
+                return before;
+              next = before->next;
+              if(set->compare(elem, next->elem)<0)
+                {
+                  node = (SListNode)TtaGetMemory (sizeof(sSListNode));
+                  memset (node, 0, sizeof(sSListNode));
+                  node->elem = elem;
+                  node->next = next;
+                  before->next = node;
+                }
+              else
+                before = next;
+            }
+        }
+    }
+  return node;
+}
+
+
+
+
+/*------------------------------------------------------------------------------
+ * String set
+ *----------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------
+ * Create a new set of strings.
+ * @return Empty set of element. 
+ ----------------------------------------------------------------------------*/
+StringSet StringSet_Create()
+{
+  StringSet set = SSet_Create((Container_CompareFunction)strcmp);
+  set->destroyElement = (Container_DestroyElementFunction)TtaFreeMemory;
+  return set;
+}
+
+/*------------------------------------------------------------------------------
+ * Create a new set of strings from a string
+ * @return Empty set of element. 
+ ----------------------------------------------------------------------------*/
+StringSet StringSet_CreateFromString(const char* str, const char* sep)
+{
+  StringSet set = StringSet_Create();
+  StringSet_InsertMulti(set, str, sep);
+  return set;  
+}
+
+/*----------------------------------------------------------------------
+ * Insert string into a set.
+ * If the element is already in the set, the old node is returned.
+  -----------------------------------------------------------------------*/
+SSetNode StringSet_Insert(SSet set, const char* str)
+{
+  SSetNode node = NULL;
+  if(set)
+    {
+      node = StringSet_Find(set, (char*)str);
+      if(!node)
+          node =  SSet_Insert(set, TtaStrdup(str));
+    }
+  return node;
+}
+
+/*----------------------------------------------------------------------
+ * Insert multiple strings into a set.
+  -----------------------------------------------------------------------*/
+void StringSet_InsertMulti(StringSet set, const char* str, const char* sep)
+{
+  char buffer[256];
+  const char *c;
+  int pos;
+  
+  if(set && str && sep)
+    {
+      c = str;
+      pos = 0;
+      while(*c!=0)
+        {
+          if(strchr(sep, *c)!=NULL)
+            {
+              if(pos>0)
+                {
+                  buffer[pos] = EOS;
+                  StringSet_Insert(set, buffer);
+                  pos = 0;
+                }
+            }
+          else
+            {
+              buffer[pos] = *c;
+              pos++;
+            }
+          c++;
+        }
+      if(pos>0)
+        {
+          buffer[pos] = EOS;
+          StringSet_Insert(set, buffer);
+        }        
+    }
+}
+
+
+
+
+
+/*------------------------------------------------------------------------------
+ * Searchable set
+ *----------------------------------------------------------------------------*/
+
+/*------------------------------------------------------------------------------
+ * Create a new set of elements.
+ * @return Empty set of element. 
+ ----------------------------------------------------------------------------*/
+SearchSet SearchSet_Create(Container_DestroyElementFunction destroy,
+        Container_CompareFunction compare, Container_CompareFunction search)
+{
+  SearchSet set = NULL;
+  if(compare && search)
+    {
+      set = (SearchSet)TtaGetMemory (sizeof(sSearchSet));
+      memset (set, 0, sizeof(sSearchSet));
+      set->destroyElement = destroy;
+      set->compare = compare;
+      set->search = search;
+    }
+  return set;
+}
+
+/*------------------------------------------------------------------------------
+ * Search an element with a key starting with (excluded) node
+ * @return Element node or. 
+ ----------------------------------------------------------------------------*/
+SearchSetNode SearchSet_Search(SearchSet set, void* searchKey, SearchSetNode node)
+{
+  if(set)
+    {
+      if(node)
+        node = node->next;
+      else
+        node = set->first;
+      
+      while(node)
+        {
+          int res = set->search(node->elem, searchKey);
+          if(res==0)
+            return node;
+          else if(res>0)
+            return NULL;
+          else
+            node = node->next;
+        }
+    }
+  return NULL;
+}
+
+/*------------------------------------------------------------------------------
+ * Search an element with a key starting with (excluded) node
+ * @return Element node or. 
+ ----------------------------------------------------------------------------*/
+ContainerElement SearchSet_SearchElement(SearchSet set, void* searchKey, SearchSetNode node)
+{
+  SearchSetNode res = SearchSet_Search(set, searchKey, node);
+  if(res)
+    return res->elem;
+  else
+    return NULL;
+}
+
+/*------------------------------------------------------------------------------
+ * Search an element with a key starting with (excluded) node
+ * @return Element node or. 
+ ----------------------------------------------------------------------------*/
+void SearchSet_Swap(SearchSet set1, SearchSet set2)
+{
+  _sSearchSet temp;
+  memcpy(&temp, set2, sizeof(_sSearchSet));
+  memcpy(set2, set1, sizeof(_sSearchSet));
+  memcpy(set1, &temp, sizeof(_sSearchSet));  
+}
+
+
+
+
+
+
+/*------------------------------------------------------------------------------
+ * Simple hash map
+ *----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------
   Simple Hash map "destroy key" function.

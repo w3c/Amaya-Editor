@@ -17,10 +17,33 @@ extern ForwardIterator ForwardIterator_Create ( Container container,
 extern ContainerNode ForwardIterator_GetFirst ( ForwardIterator iter );
 extern ContainerNode ForwardIterator_GetNext ( ForwardIterator iter );
 extern long ForwardIterator_GetCount ( ForwardIterator iter );
+extern SList SList_Create ( void );
+extern void SList_Destroy ( SList list );
+extern void SList_Empty ( SList list );
+extern ThotBool SList_IsEmpty ( SList list );
+extern SListNode SList_GetPrev ( SList list,
+                                 SListNode node );
+extern SListNode SList_Find ( SList list,
+                              const ContainerElement elem );
+extern SListNode SList_Append ( SList list,
+                                ContainerElement elem );
+extern SListNode SList_Prepend ( SList list,
+                                 ContainerElement elem );
+extern SListNode SList_InsertAfter ( SList list,
+                                     SListNode before,
+                                     ContainerElement elem );
+extern SListNode SList_InsertBefore ( SList list,
+                                      SListNode after,
+                                      ContainerElement elem );
+extern ContainerElement SList_RemoveElement ( SList list,
+                                              SListNode node );
+extern void SList_DestroyElement ( SList list,
+                                   SListNode node );
+extern ForwardIterator SList_GetForwardIterator ( SList list );
+extern int SList_GetSize ( SList list );
+extern SListNode SList_GetElement ( SList list,
+                                    int index );
 extern DLList DLList_Create ( void );
-extern void DLList_Empty ( DLList list );
-extern void DLList_Destroy ( DLList list );
-extern ThotBool DLList_IsEmpty ( DLList list );
 extern DLListNode DLList_Append ( DLList list,
                                   ContainerElement elem );
 extern DLListNode DLList_Prepend ( DLList list,
@@ -35,19 +58,39 @@ extern ContainerElement DLList_RemoveElement ( DLList list,
                                                DLListNode node );
 extern void DLList_DestroyElement ( DLList list,
                                     DLListNode node );
-extern ForwardIterator DLList_GetForwardIterator ( DLList list );
 extern void DLList_SwapContent ( DLList list,
                                  DLListNode node1,
                                  DLListNode node2 );
-extern int DLList_GetSize ( DLList list );
-extern DLListNode DLList_GetElement ( DLList list,
-                                      int index );
 extern void DLList_Sort ( DLList list,
                           Container_CompareFunction compare );
 extern DLList DLList_GetRefList ( DLList srcList,
                                   Container_CompareFunction compare );
 extern DLList DLList_GetRefListFromIterator ( ForwardIterator iter,
                                               Container_CompareFunction compare );
+extern SSet SSet_Create ( Container_CompareFunction compare );
+extern SSetNode SSet_Find ( SSet set,
+                            const ContainerElement elem );
+extern SSetNode SSet_Insert ( SSet set,
+                              ContainerElement elem );
+extern StringSet StringSet_Create ( void );
+extern StringSet StringSet_CreateFromString ( const char* str,
+                                              const char* sep );
+extern SSetNode StringSet_Insert ( SSet set,
+                                   const char* str );
+extern void StringSet_InsertMulti ( StringSet set,
+                                    const char* str,
+                                    const char* sep );
+extern SearchSet SearchSet_Create ( Container_DestroyElementFunction destroy,
+                                    Container_CompareFunction compare,
+                                    Container_CompareFunction search );
+extern SearchSetNode SearchSet_Search ( SearchSet set,
+                                        void* searchKey,
+                                        SearchSetNode node );
+extern ContainerElement SearchSet_SearchElement ( SearchSet set,
+                                                  void* searchKey,
+                                                  SearchSetNode node );
+extern void SearchSet_Swap ( SearchSet set1,
+                             SearchSet set2 );
 extern HashMap HashMap_Create ( Container_DestroyElementFunction destroy,
                                 HashMap_HashFunction hash,
                                 int nbNodes );
@@ -95,10 +138,33 @@ extern ForwardIterator ForwardIterator_Create ( Container container,
 extern ContainerNode ForwardIterator_GetFirst ( ForwardIterator iter );
 extern ContainerNode ForwardIterator_GetNext ( ForwardIterator iter );
 extern long ForwardIterator_GetCount ( ForwardIterator iter );
+extern SList SList_Create ( void );
+extern void SList_Destroy ( SList list );
+extern void SList_Empty ( SList list );
+extern ThotBool SList_IsEmpty ( SList list );
+extern SListNode SList_GetPrev ( SList list,
+                                   SListNode node );
+extern SListNode SList_Find ( SList list,
+                                const ContainerElement elem );
+extern SListNode SList_Append ( SList list,
+                                  ContainerElement elem );
+extern SListNode SList_Prepend ( SList list,
+                                   ContainerElement elem );
+extern SListNode SList_InsertAfter ( SList list,
+                                       SListNode before,
+                                       ContainerElement elem );
+extern SListNode SList_InsertBefore ( SList list,
+                                        SListNode after,
+                                        ContainerElement elem );
+extern ContainerElement SList_RemoveElement ( SList list,
+                                                SListNode node );
+extern void SList_DestroyElement ( SList list,
+                                     SListNode node );
+extern ForwardIterator SList_GetForwardIterator ( SList list );
+extern int SList_GetSize ( SList list );
+extern SListNode SList_GetElement ( SList list,
+                                      int index );
 extern DLList DLList_Create ( void );
-extern void DLList_Empty ( DLList list );
-extern void DLList_Destroy ( DLList list );
-extern ThotBool DLList_IsEmpty ( DLList list );
 extern DLListNode DLList_Append ( DLList list,
                                     ContainerElement elem );
 extern DLListNode DLList_Prepend ( DLList list,
@@ -113,19 +179,39 @@ extern ContainerElement DLList_RemoveElement ( DLList list,
                                                  DLListNode node );
 extern void DLList_DestroyElement ( DLList list,
                                       DLListNode node );
-extern ForwardIterator DLList_GetForwardIterator ( DLList list );
 extern void DLList_SwapContent ( DLList list,
                                    DLListNode node1,
                                    DLListNode node2 );
-extern int DLList_GetSize ( DLList list );
-extern DLListNode DLList_GetElement ( DLList list,
-                                        int index );
 extern void DLList_Sort ( DLList list,
                             Container_CompareFunction compare );
 extern DLList DLList_GetRefList ( DLList srcList,
                                     Container_CompareFunction compare );
 extern DLList DLList_GetRefListFromIterator ( ForwardIterator iter,
                                                 Container_CompareFunction compare );
+extern SSet SSet_Create ( Container_CompareFunction compare );
+extern SSetNode SSet_Find ( SSet set,
+                              const ContainerElement elem );
+extern SSetNode SSet_Insert ( SSet set,
+                                ContainerElement elem );
+extern StringSet StringSet_Create ( void );
+extern StringSet StringSet_CreateFromString ( const char* str,
+                                                const char* sep );
+extern SSetNode StringSet_Insert ( SSet set,
+                                     const char* str );
+extern void StringSet_InsertMulti ( StringSet set,
+                                      const char* str,
+                                      const char* sep );
+extern SearchSet SearchSet_Create ( Container_DestroyElementFunction destroy,
+                                      Container_CompareFunction compare,
+                                      Container_CompareFunction search );
+extern SearchSetNode SearchSet_Search ( SearchSet set,
+                                          void* searchKey,
+                                          SearchSetNode node );
+extern ContainerElement SearchSet_SearchElement ( SearchSet set,
+                                                    void* searchKey,
+                                                    SearchSetNode node );
+extern void SearchSet_Swap ( SearchSet set1,
+                               SearchSet set2 );
 extern HashMap HashMap_Create ( Container_DestroyElementFunction destroy,
                                   HashMap_HashFunction hash,
                                   int nbNodes );
