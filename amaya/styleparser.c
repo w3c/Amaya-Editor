@@ -81,7 +81,7 @@ static ThotBool      All_sides = FALSE; // TRUE when "boder valus must be displa
   ----------------------------------------------------------------------*/
 static char *SkipWord (char *ptr)
 {
-  while (isalnum((int)*ptr) || *ptr == '-' || *ptr == '#' || *ptr == '%')
+  while (isalnum((int)*ptr) || *ptr == '-' || *ptr == '#' || *ptr == '%' || *ptr == '.')
     ptr++;
   return (ptr);
 }
@@ -131,7 +131,7 @@ char *SkipBlanksAndComments (char *ptr)
 static int NumberOfValues (char *ptr)
 {
   int n = 0;
-  while (*ptr != EOS && *ptr != ';' &&  *ptr != '}')
+  while (*ptr != EOS && *ptr != ';' &&  *ptr != '}' &&  *ptr != ',')
     {
       ptr = SkipBlanksAndComments (ptr);
       n++;
@@ -2125,7 +2125,7 @@ static char *ParseCSSUrl (char *cssRule, char **url)
         }
       /* keep the current position */
       ptr = cssRule;
-      if (saved == ')')
+      if (saved == '(')
         {
           /* remove extra spaces */
           if (cssRule[-1] == SPACE)
