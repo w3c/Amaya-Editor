@@ -5344,9 +5344,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
             {
               if (LastURLName[0] != EOS)
                 {
-                  TtaSetStatus (CurrentDocument, 1,
+                  /*TtaSetStatus (CurrentDocument, 1,
                                 TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-                                DocumentName);
+                                DocumentName);*/
                   /* update the list of URLs */
                   if (NewFile)
                     InitializeNewDoc (LastURLName, NewDocType,
