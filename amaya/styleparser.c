@@ -6580,6 +6580,11 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                        !strcmp (deb, "focus"))
                 /* hover, active, focus pseudo-classes */
                 {
+                  attrnames[0] = NULL;
+                  attrnums[0] = ATTR_PSEUDO;
+                  attrlevels[0] = 0;
+                  attrmatch[0] = Txtmatch;
+                  attrvals[0] = deb;
                   specificity += 10;
                   /* not supported */
                   DoApply = FALSE;
