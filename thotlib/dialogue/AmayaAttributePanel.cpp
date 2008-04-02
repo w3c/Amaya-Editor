@@ -322,8 +322,11 @@ void AmayaAttributeToolPanel::SelectAttribute(int position)
       else if(inttype!=wxATTR_INTTYPE_NONE)
         {
           if(AttrListElem_IsEnum(m_currentAttElem))
+	    {
               /* all type restricted to enum. */
               SetupAttr(m_currentAttElem, wxATTR_PANEID_ENUM);
+	      return;          
+	    }
           else if(s_subpanelAssoc[m_currentAttElem->restr.RestrType][inttype]!=wxATTR_PANEID_NONE)
             {
               SetupAttr(m_currentAttElem, s_subpanelAssoc[m_currentAttElem->restr.RestrType][inttype]);
