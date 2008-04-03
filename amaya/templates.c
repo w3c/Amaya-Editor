@@ -125,6 +125,9 @@ ThotBool CheckPromptIndicator (Element el, Document doc)
   Attribute       att;
   SSchema         templateSSchema;
 
+  if (!IsTemplateInstanceDocument(doc))
+    /* let Thot perform normal operation */
+    return FALSE;
   elType = TtaGetElementType (el);
   templateSSchema = TtaGetSSchema ("Template", doc);
 	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
@@ -152,6 +155,7 @@ ThotBool CheckPromptIndicator (Element el, Document doc)
         }
     }
 #endif /* TEMPLATES */
+  /* let Thot perform normal operation */
   return FALSE;
 }
 

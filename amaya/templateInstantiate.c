@@ -839,8 +839,12 @@ void AddPromptIndicator (Element el, Document doc)
       elType = TtaGetElementType (el);
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = Template_ATTR_prompt;
-      att = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, att, doc);
+      att = TtaGetAttribute (el, attrType);
+      if (att == NULL)
+        {
+          att = TtaNewAttribute (attrType);
+          TtaAttachAttribute (el, att, doc);
+        }
     }
 #endif /* TEMPLATES */
 }
@@ -1126,9 +1130,8 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           /* if this use element is not empty, don't do anything: it is
              supposed to contain a valid instance. This should be
              checked, though */
-          if (IsTemplateDocument(doc) && ! IsTemplateInstanceDocument(doc))
             // add the initial indicator
-            AddPromptIndicator (el, doc);
+          AddPromptIndicator (el, doc);
             
           if (!TtaGetFirstChild (el))
             InstantiateUse (t, el, doc, FALSE);
