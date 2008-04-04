@@ -1154,7 +1154,7 @@ void Template_AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib)
   CopyDeclarationSetElements(lib->elements, t->elements, t);
   CopyDeclarationSetElements(lib->components, t->components, t);
   CopyDeclarationSetElements(lib->unions, t->unions, t);
-  // Do not copy unknown elements
+  CopyDeclarationSetElements(lib->unknowns, t->unknowns, t);
 
 #endif /* TEMPLATES */
 }
@@ -1711,6 +1711,19 @@ SearchSet Template_ExpandUnion(XTigerTemplate t, Declaration decl)
                                   (Container_CompareFunction)Declaration_Compare,
                                   (Container_CompareFunction)Declaration_CompareToString);
       
+      if(!strcmp(decl->name, UNION_ANY))
+        {
+          // Add only element and component declaration
+          iter = SearchSet_GetForwardIterator(t->elements);
+          ITERATOR_FOREACH(iter, SearchSetNode, node)
+            SearchSet_Insert (expanded, node->elem);
+          TtaFreeMemory(iter);
+          iter = SearchSet_GetForwardIterator(t->components);
+          ITERATOR_FOREACH(iter, SearchSetNode, node)
+            SearchSet_Insert (expanded, node->elem);
+          TtaFreeMemory(iter);
+          
+        }
       if(!strcmp(decl->name, UNION_ANYELEMENT))
         {
           iter = SearchSet_GetForwardIterator(t->elements);
@@ -1798,8 +1811,6 @@ SearchSet Template_ExpandTypeSet (XTigerTemplate t, SearchSet types)
     ITERATOR_FOREACH (iterbase, SearchSetNode, nodebase)
       {
         decl = (Declaration) nodebase->elem;
-//        if (!decl)
-//          decl = Template_GetDeclaration (t, (char*) nodebase->key);
         if (decl)
           {
             if (decl->nature == UnionNat)
