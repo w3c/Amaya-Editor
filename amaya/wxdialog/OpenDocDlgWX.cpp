@@ -151,7 +151,12 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
         {
           // document title
           Mandatory_title = TRUE;
+          XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->Hide();
+          XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->Hide();
+#ifdef IV
           XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_BM_TITLE)));
+          XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
+#endif
 #ifdef TEMPLATES
           XRCCTRL(*this, "wxID_BUTTON_TEMPLATE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
           XRCCTRL(*this, "wxID_USE_TEMPLATE", wxCheckBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_NEW_TEMPLATE)));
@@ -160,7 +165,6 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
           XRCCTRL(*this, "wxID_BUTTON_TEMPLATE", wxBitmapButton)->Hide();
           XRCCTRL(*this, "wxID_USE_TEMPLATE", wxCheckBox)->Hide();
 #endif /* TEMPLATES */
-          XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
           XRCCTRL(*this, "wxID_ERROR", wxStaticText)->SetLabel( TtaConvMessageToWX(""));
           // Get the last selected profile
           XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_XML_PROFILE)));
@@ -173,6 +177,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
 
           // Update the template combobox with pre-declared templates
           UpdateTemplateList ();
+          GetSizer()->SetSizeHints( this );
         }
     }
   else
@@ -414,10 +419,25 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
   value = value.Trim(TRUE).Trim(FALSE);
   strncpy (docname, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH - 1);
   docname[MAX_LENGTH - 1] = EOS;
-
   // Get the document title
   if (Mandatory_title)
     {
+      // get the donument name as default document title
+      end_pos = value.Find(DIR_SEP, true);
+      if (end_pos)
+        title = value.Mid(end_pos+1, value.Length());
+      else
+        title = value;
+      end_pos = title.Find('.', true);
+      if (end_pos)
+        name = title.Mid(0, end_pos);
+      else
+        name = title;
+      // use default title
+      strncpy( buffer, (const char*)name.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+      buffer[MAX_LENGTH - 1] = EOS;
+      ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
+#ifdef IV
       // get the document title
       title = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
       if (title.Len() == 0)
@@ -457,6 +477,7 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
           buffer[MAX_LENGTH - 1] = EOS;
           ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
         }
+#endif
     }
 
 
