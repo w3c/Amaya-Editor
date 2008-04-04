@@ -1388,10 +1388,7 @@ void SetNamespacesAndDTD (Document doc)
                   elFound = NULL;
                 }
               else if (RemoveTemplate && strstr (buffer, "xtiger template"))
-                {
-                  TtaDeleteTree (el, doc);
-                  UninstanciateTemplateDocument(doc);
-                }
+                TtaDeleteTree (el, doc);
               if (elFound)
                 TtaNextSibling (&elFound);
             }
