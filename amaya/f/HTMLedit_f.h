@@ -29,6 +29,7 @@ extern ThotBool CheckMandatory ( NotifyAttribute *event );
 extern void AttributeChange ( int aType,
                               char * data );
 extern ThotBool GenerateInlineElement ( int eType,
+                                        SSchema eSchema,
                                         int aType,
                                         char * data,
                                         ThotBool replace );
@@ -178,6 +179,7 @@ extern ThotBool CheckMandatory ( NotifyAttribute *event );
 extern void AttributeChange ( int aType,
                                 char * data );
 extern ThotBool GenerateInlineElement ( int eType,
+                                          SSchema eSchema,
                                           int aType,
                                           char * data,
                                           ThotBool replace );

@@ -6746,6 +6746,22 @@
 <message xml:lang="en">Error in template creation:</message>
 <message xml:lang="fr">Erreur pendant la création du modèle:</message>
 </label>
+<label define="AM_TEMPLATE_USESTRING">
+<message xml:lang="en">Text box</message>
+<message xml:lang="fr">Zone de texte</message>
+</label>
+<label define="AM_TEMPLATE_USESTRING_LABEL">
+<message xml:lang="en">Text box label:</message>
+<message xml:lang="fr">Nom de la zone de texte:</message>
+</label>
+<label define="AM_TEMPLATE_BAGANY">
+<message xml:lang="en">Free editing box</message>
+<message xml:lang="fr">Zone d'édition libre</message>
+</label>
+<label define="AM_TEMPLATE_BAGANY_LABEL">
+<message xml:lang="en">Free editing box label:</message>
+<message xml:lang="fr">Nom de la zone d'édition libre:</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

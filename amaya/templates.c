@@ -19,12 +19,12 @@
 #include "Elemlist.h"
 #include "templates.h"
 
-
 #ifdef TEMPLATES
 #include "Template.h"
 #include "templateDeclarations.h"
 
 #include "html2thot_f.h"
+#include "HTMLedit_f.h"
 #include "templates_f.h"
 #include "templateUtils_f.h"
 #include "templateLoad_f.h"
@@ -1668,3 +1668,160 @@ void SetDocumentAsXTigerLibrary(Document doc)
     t->state |= templLibrary;
 #endif /* TEMPLATES */  
 }
+
+
+/*----------------------------------------------------------------------
+  TemplateCreateTextBox
+  Create a xt:use types="string" box around the selection.
+  ----------------------------------------------------------------------*/
+void TemplateCreateTextBox(Document doc, View view)
+{
+#ifdef TEMPLATES
+  Element     selElem;
+  ElementType selType;
+  int         firstChar, lastChar;
+  SSchema     sstempl = TtaGetSSchema ("Template", doc);
+  ElementType useType;
+  Element     use;
+  char        buffer[128];
+  
+  char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_USESTRING);
+  char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_USESTRING_LABEL);
+
+  if (!TtaGetDocumentAccessMode(doc))
+    return;
+  
+  if(doc && TtaGetDocumentAccessMode(doc) && sstempl &&
+      IsTemplateDocument(doc) && !IsTemplateInstanceDocument(doc))
+    {
+      TtaGiveFirstSelectedElement(doc, &selElem, &firstChar, &lastChar);
+      if(selElem)
+        {
+          selType =  TtaGetElementType(selElem);
+          if(!TtaIsLeaf(selType))
+            {
+              selElem = TtaGetFirstLeaf(selElem);
+              selType = TtaGetElementType(selElem);
+              firstChar = lastChar = 0;
+            }
+          
+          if(selType.ElTypeNum==1)
+            {
+              QueryStringFromUser(label, title, buffer, 127);
+              useType.ElSSchema = sstempl;
+              useType.ElTypeNum = Template_EL_useSimple;
+
+              if(firstChar==0)
+                {
+                  use = TtaNewElement(doc, useType);
+                  if(use)
+                    {
+                      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+                      TtaInsertSibling(use, selElem, FALSE, doc);
+                      TtaRegisterElementCreate(use, doc);
+                      TtaRegisterElementDelete (selElem, doc);
+                      TtaRemoveTree(selElem, doc);
+                      TtaInsertFirstChild(&selElem, use, doc);
+                      TtaRegisterElementDelete (selElem, doc);
+                      SetAttributeStringValue(use, Template_ATTR_types, "string");
+                      SetAttributeStringValue(use, Template_ATTR_title, buffer);
+                      TtaCloseUndoSequence(doc);
+                      TtaSelectElement(doc, use);
+                    }
+                }
+              else
+                {
+                  GenerateInlineElement(Template_EL_useSimple, sstempl, 0, "", TRUE);
+                  TtaGiveFirstSelectedElement(doc, &use, &firstChar, &lastChar);
+                  selType =  TtaGetElementType(use);
+                  if(selType.ElSSchema==sstempl && selType.ElTypeNum==Template_EL_useSimple)
+                    {
+                      SetAttributeStringValue(use, Template_ATTR_types, "string");
+                      SetAttributeStringValue(use, Template_ATTR_title, buffer);                      
+                    }
+                }
+            }
+          
+        }
+    }
+#endif /* TEMPLATES */
+}
+
+
+/*----------------------------------------------------------------------
+  TemplateCreateFreeBox
+  Create a xt:bag types="string" box around the selection.
+  ----------------------------------------------------------------------*/
+void TemplateCreateFreeBox(Document doc, View view)
+{
+#ifdef TEMPLATES
+  Element     selElem, selElem2;
+  ElementType selType, selType2;
+  int         firstChar, lastChar, firstChar2, lastChar2;
+  SSchema     sstempl = TtaGetSSchema ("Template", doc);
+
+  ElementType bagType;
+  Element     bag;
+  char        buffer[128];
+
+  char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_BAGANY);
+  char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_BAGANY_LABEL);
+
+  if (!TtaGetDocumentAccessMode(doc))
+    return;
+  
+  if(doc && TtaGetDocumentAccessMode(doc) && sstempl &&
+      IsTemplateDocument(doc) && !IsTemplateInstanceDocument(doc))
+    {
+      TtaGiveFirstSelectedElement(doc, &selElem, &firstChar, &lastChar);
+      TtaGiveLastSelectedElement(doc, &selElem2, &firstChar2, &lastChar2);
+      
+      if(selElem && selElem2)
+        {
+          selType =  TtaGetElementType(selElem);
+          selType2 =  TtaGetElementType(selElem2);
+
+//          printf("Selection %d %p %d %d\n", selType.ElTypeNum, selElem, firstChar, lastChar);
+//          printf("          %d %p %d %d\n", selType2.ElTypeNum, selElem2, firstChar2, lastChar2);
+          
+          QueryStringFromUser(label, title, buffer, 127);
+          bagType.ElSSchema = sstempl;
+          bagType.ElTypeNum = Template_EL_bag;
+          
+          if(selElem==selElem2)
+            {
+              if(firstChar==0)
+                {
+                  ThotBool        oldStructureChecking;
+                  DisplayMode     dispMode;
+                  dispMode = TtaGetDisplayMode (doc);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  oldStructureChecking = TtaGetStructureChecking (doc);
+                  TtaSetStructureChecking (FALSE, doc);
+                  
+                  // Only one element fully selected
+                  bag = TtaNewElement(doc, bagType);
+                  
+                  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+                  TtaInsertSibling(bag, selElem, FALSE, doc);
+                  TtaRegisterElementCreate(bag, doc);
+                  TtaRegisterElementDelete (selElem, doc);
+                  TtaRemoveTree(selElem, doc);
+                  TtaInsertFirstChild(&selElem, bag, doc);
+                  TtaRegisterElementDelete (selElem, doc);
+                  SetAttributeStringValue(bag, Template_ATTR_types, "any");
+                  SetAttributeStringValue(bag, Template_ATTR_title, buffer);
+                  TtaCloseUndoSequence(doc);
+                  TtaSelectElement(doc, bag);
+                  
+                  TtaSetStructureChecking (oldStructureChecking, doc);
+                  TtaSetDisplayMode (doc, dispMode);
+
+                }
+            }
+        }
+    }
+#endif /* TEMPLATES */
+}
+

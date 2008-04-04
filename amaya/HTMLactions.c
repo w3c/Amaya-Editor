@@ -4335,15 +4335,15 @@ void SetCharFontOrPhrase (int doc, int elemtype)
                 CreateHTMLelement (blocktype, doc);
               else
                 // create a inline element
-                GenerateInlineElement (elemtype, 0, "", TRUE);
+                GenerateInlineElement (elemtype, NULL, 0, "", TRUE);
             }
           else
             // create a inline element
-            GenerateInlineElement (elemtype, 0, "", TRUE);
+            GenerateInlineElement (elemtype, NULL, 0, "", TRUE);
           TtaSetStructureChecking (oldStructureChecking, doc);
         }
       else
-        GenerateInlineElement (elemtype, 0, "", TRUE);
+        GenerateInlineElement (elemtype, NULL, 0, "", TRUE);
       TtaCloseUndoSequence (doc);      
     }
 

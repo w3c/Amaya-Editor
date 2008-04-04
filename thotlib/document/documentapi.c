@@ -335,6 +335,8 @@ void TtaCloseDocument (Document document)
 #ifndef NODISPLAY
       /* Closing all opened views relating to the document */
       /* close the views */
+      
+      
       for (nv = 1; nv <= MAX_VIEW_DOC; nv++)
         if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
           {
@@ -1836,4 +1838,53 @@ ThotBool TtaIsXmlSSchema (SSchema schema)
   if (!schema)
     TtaError (ERR_invalid_parameter);
   return ((PtrSSchema) schema)->SsIsXml;
+}
+
+/*----------------------------------------------------------------------
+  TtaAddDocumentReference
+  Add a reference to the specified document.
+  ----------------------------------------------------------------------*/
+void TtaAddDocumentReference (Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      pDoc->DocNbRef++;
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaRemoveDocumentReference
+  Remove a reference to the specified document.
+  If the document has no reference anymore, it is freed.
+  ----------------------------------------------------------------------*/
+void TtaRemoveDocumentReference (Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      pDoc->DocNbRef--;
+      if(pDoc->DocNbRef <= 0)
+        {
+          TtaCloseDocument(document);
+        }
+    }
 }

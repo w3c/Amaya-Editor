@@ -531,7 +531,7 @@ static Element GenerateInlinechildren (Element el, ElementType newType, Document
   -----------------------------------------------------------------------*/
 void AttributeChange (int aType, char * data)
 {
-  GenerateInlineElement (HTML_EL_Span, aType, data, TRUE);
+  GenerateInlineElement (HTML_EL_Span, NULL, aType, data, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -623,7 +623,7 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
   If the selection is within a style element and the element type is
   a span adds the data into the style element.
   -----------------------------------------------------------------------*/
-ThotBool GenerateInlineElement (int eType, int aType, char * data, ThotBool replace)
+ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, char * data, ThotBool replace)
 {
   Element         el, firstSel, lastSel, next, in_line, sibling, child;
   Element         last, parent, enclose, selected;
@@ -689,7 +689,10 @@ ThotBool GenerateInlineElement (int eType, int aType, char * data, ThotBool repl
           
           /* register this element in the editing history */
           elType = TtaGetElementType (firstSel);
-          newType.ElSSchema = elType.ElSSchema;
+          if (eSchema!=NULL)
+            newType.ElSSchema = eSchema;
+          else
+            newType.ElSSchema = elType.ElSSchema;
           newType.ElTypeNum = 0;
           attrType.AttrSSchema = elType.ElSSchema;
           attrType.AttrTypeNum = aType;
@@ -2494,7 +2497,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
           TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
           if (createLink)
             {
-              if(GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_HREF_, "", TRUE))
+              if(GenerateInlineElement (HTML_EL_Anchor, NULL, HTML_ATTR_HREF_, "", TRUE))
                 {
                   // get the created anchor
                   TtaGiveFirstSelectedElement (doc, &anchor, &firstChar, &i);
@@ -2522,7 +2525,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
             }
           else
             {
-              if(!GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_ID, "", TRUE))
+              if(!GenerateInlineElement (HTML_EL_Anchor, NULL, HTML_ATTR_ID, "", TRUE))
                 {
                   /* ask Thot to display changes made in the document */
                   TtaSetDisplayMode (doc, dispMode);

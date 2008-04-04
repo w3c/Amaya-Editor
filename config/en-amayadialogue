@@ -318,40 +318,42 @@
 316 Locked?
 317 Templates
 318 Create template from current document...
-319 &Javascript/DOM
-320 Enable/Disable
-321 Execute a command
-322 Execute an external script
-323 Add an external script
-324 Insert a script
-325 About Amaya
-326 About Amaya at W3C
-327 Index
-328 Browsing
-329 Views
-330 Selecting
-331 Documents
-332 Creating elements
-333 Attributes
-334 Characters
-335 Templates
-336 Restructuring
-337 Links
-338 Tables
-339 Image maps
-340 Math
-341 Graphics
-342 XML support
-343 Style sheets
-344 Searching
-345 Spell checking
-346 Publishing
-347 Cooperation
-348 Printing
-349 Numbering
-350 Making books
-351 Annotations
-352 Configuring
-353 Shortcuts
-354 Accessibility in Amaya
-355 Tip of the day...
+319 Create a text box
+320 Create a free editing box
+321 &Javascript/DOM
+322 Enable/Disable
+323 Execute a command
+324 Execute an external script
+325 Add an external script
+326 Insert a script
+327 About Amaya
+328 About Amaya at W3C
+329 Index
+330 Browsing
+331 Views
+332 Selecting
+333 Documents
+334 Creating elements
+335 Attributes
+336 Characters
+337 Templates
+338 Restructuring
+339 Links
+340 Tables
+341 Image maps
+342 Math
+343 Graphics
+344 XML support
+345 Style sheets
+346 Searching
+347 Spell checking
+348 Publishing
+349 Cooperation
+350 Printing
+351 Numbering
+352 Making books
+353 Annotations
+354 Configuring
+355 Shortcuts
+356 Accessibility in Amaya
+357 Tip of the day...

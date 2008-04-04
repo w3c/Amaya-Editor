@@ -456,35 +456,6 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 #endif /* TEMPLATES */
 }
 
-///*----------------------------------------------------------------------
-//  ----------------------------------------------------------------------*/
-//void InstantiateTemplate (Document doc, char *templatename, char *docname,
-//                          DocumentType docType, ThotBool loaded)
-//{
-//#ifdef TEMPLATES
-//  if (!loaded)
-//    {
-//      // Create the callback context
-//      InstantiateCtxt *ctx = (InstantiateCtxt *)TtaGetMemory (sizeof (InstantiateCtxt));
-//      ctx->templatePath	= TtaStrdup (templatename);
-//      ctx->instancePath	= TtaStrdup (docname);
-//      ctx->schemaName = GetSchemaFromDocType(docType);
-//      ctx->doc = doc;
-//      ctx->docType = docType;
-//
-//      GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
-//                   (void (*)(int, int, char*, char*, char*,
-//                             const AHTHeaders*, void*)) InstantiateTemplate_callback,
-//                   (void *) ctx);
-//    }
-//  else
-//    {
-//      DoInstanceTemplate (templatename);
-//      CreateInstance (templatename, docname, doc);
-//    }  
-//#endif /* TEMPLATES */
-//}
-
 /*----------------------------------------------------------------------
   InstantiateAttribute
   ----------------------------------------------------------------------*/

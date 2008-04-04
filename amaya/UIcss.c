@@ -727,7 +727,7 @@ void GenerateStyle (char * data , ThotBool add)
     return;
 
   if (data && data[0] != EOS)
-    GenerateInlineElement (HTML_EL_Span, HTML_ATTR_Style_, data, !add);
+    GenerateInlineElement (HTML_EL_Span, NULL, HTML_ATTR_Style_, data, !add);
   else
     {
       TtaGiveLastSelectedElement (doc, &lastC, &i, &j);

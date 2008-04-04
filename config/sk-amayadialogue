@@ -318,40 +318,42 @@
 316 Zamknutý?
 317 **Templates
 318 **Create template from current document...
-319 &Javascript/DOM
-320 **Enable/Disable
-321 **Execute a command
-322 **Execute an external script
-323 **Add an external script
-324 **Insert a script
-325 O programe Amaya
-326 Domoská stránka programu Amaya
-327 Témy pomocníka
-328 Prehliadanie
-329 Zobrazenia
-330 Označovanie
-331 Vytváranie dokumentu
-332 Vkladanie prvkov
-333 Atribúty
-334 Vkladanie znakov
-335 Šablóny
-336 Úprava dokumentu
-337 Prepojenia
-338 Tabuľky
-339 Oblasti obrázkov
-340 Vzorce
-341 Úprava SVG grafiky
-342 XML podpora
-343 Kaskádové štýly
-344 Vyhľadávanie
-345 Kontrola pravopisu
-346 Publikovanie
-347 Spolupráca
-348 Tlač
-349 Číslovanie podkapitol
-350 Vytváranie kníh
-351 Komentáre
-352 Nastavenia programu
-353 Klávesové skratky
-354 Zjednodušenie ovládania
-355 **Tip of the day...
+319 **Create a text box
+320 **Create a free editing box
+321 &Javascript/DOM
+322 **Enable/Disable
+323 **Execute a command
+324 **Execute an external script
+325 **Add an external script
+326 **Insert a script
+327 O programe Amaya
+328 Domoská stránka programu Amaya
+329 Témy pomocníka
+330 Prehliadanie
+331 Zobrazenia
+332 Označovanie
+333 Vytváranie dokumentu
+334 Vkladanie prvkov
+335 Atribúty
+336 Vkladanie znakov
+337 Šablóny
+338 Úprava dokumentu
+339 Prepojenia
+340 Tabuľky
+341 Oblasti obrázkov
+342 Vzorce
+343 Úprava SVG grafiky
+344 XML podpora
+345 Kaskádové štýly
+346 Vyhľadávanie
+347 Kontrola pravopisu
+348 Publikovanie
+349 Spolupráca
+350 Tlač
+351 Číslovanie podkapitol
+352 Vytváranie kníh
+353 Komentáre
+354 Nastavenia programu
+355 Klávesové skratky
+356 Zjednodušenie ovládania
+357 **Tip of the day...

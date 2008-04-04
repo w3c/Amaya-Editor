@@ -626,7 +626,6 @@ void AmayaFrame::OnClose(wxCloseEvent& event)
   int                 view;
 
   GetDocAndView (m_FrameId, &pDoc, &view);
-  /** \todo See what follow : */
   CloseView (pDoc, view);
 }
 

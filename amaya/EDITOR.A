@@ -358,6 +358,9 @@ MENUS
   Tools.Cooperation_ Separator;
   Tools.Cooperation_ toggle:BLockIndicator -> LockIndicator;
   Tools.Templates_  button:BCreateTemplateFromDocument -> CreateTemplateFromDocument;
+  Tools.Templates_  Separator;
+  Tools.Templates_  button:BTemplateCreateTextBox -> TemplateCreateTextBox;
+  Tools.Templates_  button:BTemplateCreateFreeBox -> TemplateCreateFreeBox;
   Tools.JavascriptDom_ toggle:BSwitch_JS_DOM-> SwitchJavaScript;
   Tools.JavascriptDom_ button:BExecuteACommand -> ExecuteACommand;
   Tools.JavascriptDom_ button:BExecuteExternal -> ExecuteExternal;

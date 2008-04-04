@@ -721,6 +721,8 @@ HelpShortCuts
 [templates]
 ConfigTemplates
 CreateTemplateFromDocument
+TemplateCreateTextBox
+TemplateCreateFreeBox
 
 [spell]
 SpellCheck

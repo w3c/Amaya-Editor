@@ -115,6 +115,8 @@ extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
                                           char *sSchemaName,
                                           Document document );
 extern ThotBool TtaIsXmlSSchema ( SSchema schema );
+extern void TtaAddDocumentReference ( Document document );
+extern void TtaRemoveDocumentReference ( Document document );
 
 #else /* __STDC__ */
 
@@ -227,6 +229,8 @@ extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
                                             char *sSchemaName,
                                             Document document );
 extern ThotBool TtaIsXmlSSchema ( SSchema schema );
+extern void TtaAddDocumentReference ( Document document );
+extern void TtaRemoveDocumentReference ( Document document );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

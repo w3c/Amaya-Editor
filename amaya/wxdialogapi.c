@@ -1322,3 +1322,11 @@ ThotBool CreateFontDlgWX(ThotWindow parent, const char *title, int* family, int*
   return FALSE;
 }
 
+/*----------------------------------------------------------------------
+  QueryStringFromUser
+  ----------------------------------------------------------------------*/
+void QueryStringFromUser(const char *label, const char *title, char* res, int sz)
+{
+  wxString str = wxGetTextFromUser(TtaConvMessageToWX(label), TtaConvMessageToWX(title));
+  strncpy(res, (const char*)str.mb_str(wxConvUTF8), sz);
+}

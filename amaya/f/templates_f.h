@@ -61,6 +61,11 @@ extern void Template_PrepareInstance ( char *fileName,
                                        char* template_url );
 extern void SetDocumentAsXTigerTemplate ( Document doc );
 extern void SetDocumentAsXTigerLibrary ( Document doc );
+extern void TemplateCreateUseString ( Document doc,
+                                      Element elem,
+                                      ThotBool around );
+extern void TemplateCreateTextBox ( Document doc,
+                                    View view );
 
 #else /* __STDC__ */
 
@@ -119,6 +124,11 @@ extern void Template_PrepareInstance ( char *fileName,
                                          char* template_url );
 extern void SetDocumentAsXTigerTemplate ( Document doc );
 extern void SetDocumentAsXTigerLibrary ( Document doc );
+extern void TemplateCreateUseString ( Document doc,
+                                        Element elem,
+                                        ThotBool around );
+extern void TemplateCreateTextBox ( Document doc,
+                                      View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

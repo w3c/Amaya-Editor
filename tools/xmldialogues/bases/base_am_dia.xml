@@ -4323,6 +4323,14 @@
 <message xml:lang="en">Create template from current document...</message>
 <message xml:lang="fr">Créer un modèle depuis le document courant...</message>
 </label>
+<label define="BTemplateCreateTextBox">
+<message xml:lang="en">Create a text box</message>
+<message xml:lang="fr">Créer une zone de texte</message>
+</label>
+<label define="BTemplateCreateFreeBox">
+<message xml:lang="en">Create a free editing box</message>
+<message xml:lang="fr">Créer une zone d'édition libre</message>
+</label>
 <label define="JavascriptDom_">
 <message xml:lang="en">&amp;Javascript/DOM</message>
 <message xml:lang="fr">&amp;Javascript/DOM</message>

@@ -1039,7 +1039,7 @@ static void DoApplyClass (Document doc)
 
   if (strcmp (CurrentClass, "(no_class)") &&
       !IsImplicitClassName (CurrentClass, doc))
-    GenerateInlineElement (HTML_EL_Span, HTML_ATTR_Class, a_class, FALSE);
+    GenerateInlineElement (HTML_EL_Span, NULL, HTML_ATTR_Class, a_class, FALSE);
   else
     {
       /* remove class attributes */

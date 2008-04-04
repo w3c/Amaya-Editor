@@ -318,40 +318,42 @@
 316 kitli mi?
 317 **Templates
 318 **Create template from current document...
-319 &Javascript/DOM
-320 **Enable/Disable
-321 **Execute a command
-322 **Execute an external script
-323 **Add an external script
-324 **Insert a script
-325 Amaya hakkında
-326 W3C deki Amaya hakkında
-327 Içerik
-328 Tarama
-329 Görünümler
-330 Seç
-331 Döküman
-332 Yarat
-333 Tarz tanımları
-334 karakterler
-335 **Templates
-336 Yeniden yapılandırma
-337 Bağlantılar
-338 Tablolar
-339 Aktif alan
-340 Matematik
-341 Grafik
-342 XML desteği
-343 Görüntü haritaları
-344 Yazı hataları arama
-345 Yazı hataları düzeltmek
-346 Bastırma
-347 Birlikte çalışmak
-348 Sayfa yerleştirme
-349 Numaralandır
-350 Kitap oluşturma
-351 Not ekleme
-352 Yapılandırması
-353 Kısalmalar
-354 Amaya\'ya ulaşmak
-355 **Tip of the day...
+319 **Create a text box
+320 **Create a free editing box
+321 &Javascript/DOM
+322 **Enable/Disable
+323 **Execute a command
+324 **Execute an external script
+325 **Add an external script
+326 **Insert a script
+327 Amaya hakkında
+328 W3C deki Amaya hakkında
+329 Içerik
+330 Tarama
+331 Görünümler
+332 Seç
+333 Döküman
+334 Yarat
+335 Tarz tanımları
+336 karakterler
+337 **Templates
+338 Yeniden yapılandırma
+339 Bağlantılar
+340 Tablolar
+341 Aktif alan
+342 Matematik
+343 Grafik
+344 XML desteği
+345 Görüntü haritaları
+346 Yazı hataları arama
+347 Yazı hataları düzeltmek
+348 Bastırma
+349 Birlikte çalışmak
+350 Sayfa yerleştirme
+351 Numaralandır
+352 Kitap oluşturma
+353 Not ekleme
+354 Yapılandırması
+355 Kısalmalar
+356 Amaya\'ya ulaşmak
+357 **Tip of the day...

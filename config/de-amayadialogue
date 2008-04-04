@@ -318,40 +318,42 @@
 316 Gesperrt?
 317 **Templates
 318 **Create template from current document...
-319 &Javascript/DOM
-320 Java-Unterstützung ein-/ausschalten
-321 Befehl ausführen
-322 externes Skript ausführen
-323 externes Skript hinzufügen
-324 Skript einfügen
-325 Info
-326 Über Amaya
-327 Index
-328 Browsen
-329 Ansichten
-330 Markieren
-331 Dokuments
-332 Elemente
-333 Attribute
-334 Zeichen
-335 Vorlagen
-336 Transformieren
-337 Verweise
-338 Tabellen
-339 Aktive Bildbereiche
-340 Formeln
-341 Grafiken
-342 XML
-343 Formate/Formatvorlagen
-344 Suchen/Ersetzen
-345 Rechtschreibprüfung
-346 Speichern/Veröffentlichen
-347 Kooperation
-348 Drucken
-349 Abschnitte numerieren
-350 Buch erstellen
-351 Anmerkungen
-352 Konfiguration
-353 Tastenkürzel
-354 Benutzerfreundlichkeit
-355 Tip des Tages...
+319 **Create a text box
+320 **Create a free editing box
+321 &Javascript/DOM
+322 Java-Unterstützung ein-/ausschalten
+323 Befehl ausführen
+324 externes Skript ausführen
+325 externes Skript hinzufügen
+326 Skript einfügen
+327 Info
+328 Über Amaya
+329 Index
+330 Browsen
+331 Ansichten
+332 Markieren
+333 Dokuments
+334 Elemente
+335 Attribute
+336 Zeichen
+337 Vorlagen
+338 Transformieren
+339 Verweise
+340 Tabellen
+341 Aktive Bildbereiche
+342 Formeln
+343 Grafiken
+344 XML
+345 Formate/Formatvorlagen
+346 Suchen/Ersetzen
+347 Rechtschreibprüfung
+348 Speichern/Veröffentlichen
+349 Kooperation
+350 Drucken
+351 Abschnitte numerieren
+352 Buch erstellen
+353 Anmerkungen
+354 Konfiguration
+355 Tastenkürzel
+356 Benutzerfreundlichkeit
+357 Tip des Tages...

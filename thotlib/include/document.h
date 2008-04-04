@@ -791,6 +791,19 @@ void TtaFreeNamespaceDeclarations (Document document);
  ----------------------------------------------------------------------*/
 void TtaSetUriSSchema (SSchema sSchema, char *sSchemaUri);
 
+
+/*----------------------------------------------------------------------
+  TtaAddDocumentReference
+  Add a reference to the specified document.
+  ----------------------------------------------------------------------*/
+void TtaAddDocumentReference (Document document);
+
+/*----------------------------------------------------------------------
+  TtaRemoveDocumentReference
+  Remove a reference to the specified document.
+  If the document has no reference anymore, it is freed.
+  ----------------------------------------------------------------------*/
+void TtaRemoveDocumentReference (Document document);
 #endif /* __CEXTRACT__ */
 
 /*----------------------------------------------------------------------
@@ -800,6 +813,5 @@ void TtaSetUriSSchema (SSchema sSchema, char *sSchemaUri);
   schema: the structure schema of interest.
   ----------------------------------------------------------------------*/
 ThotBool TtaIsXmlSSchema (SSchema schema);
-
 
 #endif

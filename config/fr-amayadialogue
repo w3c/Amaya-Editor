@@ -318,40 +318,42 @@
 316 Verrouillé ?
 317 Modèles
 318 Créer un modèle depuis le document courant...
-319 &Javascript/DOM
-320 Activer/Désactiver
-321 Exécuter une commande
-322 Exécuter un script externe
-323 Ajouter un script externe
-324 Inserer un script
-325 À propos de Amaya
-326 À propos d'Amaya au W3C
-327 Index
-328 Navigation
-329 Vues
-330 Sélection
-331 Documents
-332 Création d'éléments
-333 Attributs
-334 Caractères
-335 Modèles
-336 Restructuration
-337 Liens
-338 Tableaux
-339 Zones actives
-340 Math
-341 Graphiques
-342 Support XML
-343 Feuilles de style
-344 Recherche
-345 Vérification orthographique
-346 Enregistrement
-347 Coopération
-348 Impression
-349 Numérotation
-350 Construction de livre
-351 Annotations
-352 Configuration
-353 Raccourcis clavier
-354 Accessibilité d'Amaya
-355 Conseil du jour...
+319 Créer une zone de texte
+320 Créer une zone d'édition libre
+321 &Javascript/DOM
+322 Activer/Désactiver
+323 Exécuter une commande
+324 Exécuter un script externe
+325 Ajouter un script externe
+326 Inserer un script
+327 À propos de Amaya
+328 À propos d'Amaya au W3C
+329 Index
+330 Navigation
+331 Vues
+332 Sélection
+333 Documents
+334 Création d'éléments
+335 Attributs
+336 Caractères
+337 Modèles
+338 Restructuration
+339 Liens
+340 Tableaux
+341 Zones actives
+342 Math
+343 Graphiques
+344 Support XML
+345 Feuilles de style
+346 Recherche
+347 Vérification orthographique
+348 Enregistrement
+349 Coopération
+350 Impression
+351 Numérotation
+352 Construction de livre
+353 Annotations
+354 Configuration
+355 Raccourcis clavier
+356 Accessibilité d'Amaya
+357 Conseil du jour...

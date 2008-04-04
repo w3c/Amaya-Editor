@@ -840,86 +840,87 @@ typedef struct _DocumentDescr *PtrDocument;
 #define MAX_NATURES_DOC 20	/* maximum length of the nature table */
 typedef struct _DocumentDescr
 {
-  PtrDocument     DocNext;	  /* to link the free blocks */
-  PtrSSchema	  DocSSchema;	  /* main structure schema of the document */
+  PtrDocument        DocNext;	  /* to link the free blocks */
+  PtrSSchema	       DocSSchema;	  /* main structure schema of the document */
   PtrDocSchemasDescr DocFirstSchDescr; /* first descriptor of all schemas
 				     associated with  this document */
-  PtrElement      DocDocElement;  /* pointer to the document element */
-  PtrReferredDescr DocReferredEl; /* pointer on the fake descriptor, beginning
+  PtrElement         DocDocElement;  /* pointer to the document element */
+  PtrReferredDescr   DocReferredEl; /* pointer on the fake descriptor, beginning
 				     of the string of descriptors of elements
 				     referenced in the document */
   
-  DocViewDescr    DocView[MAX_VIEW_DOC]; /* correspondence between the document
+  DocViewDescr       DocView[MAX_VIEW_DOC]; /* correspondence between the document
 				     views and those defined in the present.
 				     schemas used in the document */
-  PtrAbstractBox  DocViewRootAb[MAX_VIEW_DOC]; /* pointer on the root abstract
+  PtrAbstractBox     DocViewRootAb[MAX_VIEW_DOC]; /* pointer on the root abstract
 				     box of each view of the main tree, in the
 				     same order as in DocView */
-  PtrElement	  DocViewSubTree[MAX_VIEW_DOC];	/* root of the subtree of the
+  PtrElement	       DocViewSubTree[MAX_VIEW_DOC];	/* root of the subtree of the
 				     main tree to display in the view, null
 				     by default */
-  int		  DocViewFrame[MAX_VIEW_DOC];	/* ident. of the window
+  int		             DocViewFrame[MAX_VIEW_DOC];	/* ident. of the window
 				     corresponding to the view */
-  int		  DocViewVolume[MAX_VIEW_DOC];   /* volume of the view */
-  int             DocViewFreeVolume[MAX_VIEW_DOC]; /* free volume in the view*/
-  int             DocViewNPages[MAX_VIEW_DOC];  /* number of pages */
-  PtrAbstractBox  DocViewModifiedAb[MAX_VIEW_DOC]; /* pointer on the abstract
+  int		             DocViewVolume[MAX_VIEW_DOC];   /* volume of the view */
+  int                DocViewFreeVolume[MAX_VIEW_DOC]; /* free volume in the view*/
+  int                DocViewNPages[MAX_VIEW_DOC];  /* number of pages */
+  PtrAbstractBox     DocViewModifiedAb[MAX_VIEW_DOC]; /* pointer on the abstract
 				     box to redisplay for the view */
-  ADocumentName	  DocDName;	  /* document name for the user */
-  PathBuffer      DocDirectory;	  /* directory of the document */
-  PathBuffer	  DocSchemasPath; /* path of the document schemas */
-  ThotBool	  DocNotifyAll;	  /* Thot must indicate to the application the
+  ADocumentName	     DocDName;	  /* document name for the user */
+  PathBuffer         DocDirectory;	  /* directory of the document */
+  PathBuffer	       DocSchemasPath; /* path of the document schemas */
+  ThotBool	         DocNotifyAll;	  /* Thot must indicate to the application the
 				     creation of ALL the subtree elements that
 				     were created or pasted */
-  ThotBool        DocReadOnly;	  /* document is read only */
-  ThotBool        DocExportStructure; /* the logical structure contains only
+  ThotBool           DocReadOnly;	  /* document is read only */
+  ThotBool           DocExportStructure; /* the logical structure contains only
 				     the skeleton elements */
-  int             DocLabelExpMax; /* maximum value of element labels */
-  int		  DocMaxPairIdent;/* higher document pair id. value */
-  ThotBool        DocModified;	  /* the document was modified */
-  ThotBool        DocUpdated;	  /* any change occurs since the last reset */
-  int             DocNTypedChars; /* number of characters typed since the last
+  int                DocLabelExpMax; /* maximum value of element labels */
+  int		             DocMaxPairIdent;/* higher document pair id. value */
+  ThotBool           DocModified;	  /* the document was modified */
+  ThotBool           DocUpdated;	  /* any change occurs since the last reset */
+  int                DocNTypedChars; /* number of characters typed since the last
 				     time the document was saved */
-  int		  DocNLanguages;  /* number of languages actually used */
-  Language	  DocLanguages[MAX_LANGUAGES_DOC]; /* the languages used in the
+  int		             DocNLanguages;  /* number of languages actually used */
+  Language	         DocLanguages[MAX_LANGUAGES_DOC]; /* the languages used in the
 						      document */
   /* table of the structure schemas (natures) used in the document */
-  int		  DocNNatures;	  /* number of natures */
-  char*		  DocNatureName[MAX_NATURES_DOC]; /* names of natures */
-  char*		  DocNaturePresName[MAX_NATURES_DOC]; /* names of the
+  int		             DocNNatures;	  /* number of natures */
+  char*		           DocNatureName[MAX_NATURES_DOC]; /* names of natures */
+  char*		           DocNaturePresName[MAX_NATURES_DOC]; /* names of the
                                      presentationschemas of these natures */
-  PtrSSchema	  DocNatureSSchema[MAX_NATURES_DOC];/* structure schemas
+  PtrSSchema	       DocNatureSSchema[MAX_NATURES_DOC];/* structure schemas
 						       of these natures */
   /* information used while reading the pivot file */
-  int		  DocPivotVersion;/* pivot version number */
-  PtrReferredDescr DocLabels;	  /* external labels */
-  unsigned char   DocCheckingMode;/* check document structure against the
+  int		             DocPivotVersion;/* pivot version number */
+  PtrReferredDescr   DocLabels;	  /* external labels */
+  unsigned char      DocCheckingMode;/* check document structure against the
 				     structure schemas */
-  ThotBool	  DocPivotError;  /* a format error has been detected */
+  ThotBool	         DocPivotError;  /* a format error has been detected */
   
   /* history of last changes made in the document */
-  PtrEditOperation DocLastEdit;	  /* latest editing operation */
-  int		  DocNbEditsInHistory; /* number of editing commands recorded
+  PtrEditOperation   DocLastEdit;	  /* latest editing operation */
+  int		             DocNbEditsInHistory; /* number of editing commands recorded
 				     in the history */
-  ThotBool	  DocEditSequence;/* indicate whether a sequence of editing
+  ThotBool	         DocEditSequence;/* indicate whether a sequence of editing
 				     operations is open */
   /* queue of latest undone commands */
-  PtrEditOperation DocLastUndone; /* latest editing operation undone */
-  int		  DocNbUndone;	  /* number of undone editing commands */
-  CHARSET         DocCharset;     /* charset of the document */
-  ThotBool	  DocDefaultCharset;/* TRUE if the charset is set by default */
-  int		  DocProfile;	  /* profile of the document */
-  int		  DocExtraProfile;/* 'extra' profile of the document */
-  PtrNsUriDescr   DocNsUriDecl;   /* first namespace declaration */
+  PtrEditOperation   DocLastUndone; /* latest editing operation undone */
+  int		             DocNbUndone;	  /* number of undone editing commands */
+  CHARSET            DocCharset;     /* charset of the document */
+  ThotBool	         DocDefaultCharset;/* TRUE if the charset is set by default */
+  int		             DocProfile;	  /* profile of the document */
+  int		             DocExtraProfile;/* 'extra' profile of the document */
+  PtrNsUriDescr      DocNsUriDecl;   /* first namespace declaration */
   
 #ifdef _WX
-  ThotBool   EnabledMenus[MAX_MENU];    /* Enabled top menus in the menubar  */
-  Proc       Call_Text;                 /* This is the callback which is called when a url is activated */
+  ThotBool           EnabledMenus[MAX_MENU]; /* Enabled top menus in the menubar  */
+  Proc               Call_Text;  /* This is the callback which is called when a url is activated */
 #endif /* _WX */
 
-  char * DocTypeName; /* this is the document type name given by amaya 
-                       * see amaya/amaya.h:DocumentTypeNames table for a complet enumeration */
-  
+  char              *DocTypeName; /* this is the document type name given by amaya 
+              * see amaya/amaya.h:DocumentTypeNames table for a complet enumeration */
+  int                DocNbRef; /* Number of reference to the document.
+              * Usefull for templates to reference a document which is not displayed. */ 
 } DocumentDescr;
 
 #endif /* __TYPE_INT_H__ */
