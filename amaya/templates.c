@@ -474,7 +474,7 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
         }
       // now create the instance
       DontReplaceOldDoc = dontReplace;
-      CreateInstance (templatename, s, doc);
+      CreateInstance (templatename, s, docname, doc);
       TtaFreeMemory (s);
     }
 #endif /* TEMPLATES */

@@ -22,6 +22,7 @@ extern void CreateTemplate ( Document doc,
                              char *templatePath );
 extern void CreateInstance ( char *templatePath,
                              char *instancePath,
+                             char *docname,
                              int basedoc );
 extern void InstantiateTemplate_callback ( int newdoc,
                                            int status,
@@ -77,6 +78,7 @@ extern void CreateTemplate ( Document doc,
                                char *templatePath );
 extern void CreateInstance ( char *templatePath,
                                char *instancePath,
+                               char *docname,
                                int basedoc );
 extern void InstantiateTemplate_callback ( int newdoc,
                                              int status,

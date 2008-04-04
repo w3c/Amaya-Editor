@@ -162,8 +162,8 @@ extern ThotBool CreateFontDlgWX ( ThotWindow parent,
                                   const char *title,
                                   int* family,
                                   int* size );
-extern void QueryStringFromUser ( const char *title,
-                                  const char *label,
+extern void QueryStringFromUser ( const char *label,
+                                  const char *title,
                                   char* res,
                                   int sz );
 
@@ -325,8 +325,8 @@ extern ThotBool CreateFontDlgWX ( ThotWindow parent,
                                     const char *title,
                                     int* family,
                                     int* size );
-extern void QueryStringFromUser ( const char *title,
-                                    const char *label,
+extern void QueryStringFromUser ( const char *label,
+                                    const char *title,
                                     char* res,
                                     int sz );
 

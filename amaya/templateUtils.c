@@ -491,12 +491,11 @@ void DumpTemplateElement(Element el, Document doc)
 
 /*----------------------------------------------------------------------
  * Save an opened document to a specified path in order to open.
- * \param doc Original doc to save
- * \param newdoc Document where reopen it
- * \param newpath URI where save the doc
- * \param temppath Path of temporary create file
+ * param doc Original doc to save
+ * param newdoc Document where reopen it
+ * param newpath URI where save the doc
   ----------------------------------------------------------------------*/
-ThotBool SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath, char** temppath)
+ThotBool SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
 {
   ElementType   elType;
   Element       root;
@@ -504,7 +503,6 @@ ThotBool SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath, char
   ThotBool      res = FALSE;
   
   localFile = GetLocalPath (newdoc, newpath);
-
   // update all links
   SetRelativeURLs (doc, newpath, "", FALSE, FALSE, FALSE);
   // prepare the new document view
@@ -532,10 +530,5 @@ ThotBool SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath, char
   else
     /* docType = docXml; */
     res = TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL, FALSE);
-
-  if(temppath)
-    *temppath = localFile;
-  else
-    TtaFreeMemory(localFile);
   return res;
 }

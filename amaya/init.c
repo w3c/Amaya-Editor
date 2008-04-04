@@ -5091,6 +5091,13 @@ Document GetAmayaDoc (char *urlname, char *form_data,
             }
           else
             {
+              if (method == CE_INSTANCE)
+                {
+                  // the temporary file is already there
+                  char *localFile = GetLocalPath (newdoc, initial_url);
+                  strcpy (tempfile, localFile);
+                  TtaFreeMemory (localFile);      
+                }
               /* wasn't a document off the web, we need to open it */
               TtaSetStatus (newdoc, 1,
                             TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),

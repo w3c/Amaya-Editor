@@ -6,12 +6,12 @@
  */
 
 #include "templates.h"
-
 #define THOT_EXPORT extern
+#include "amaya.h"
 #include "templateDeclarations.h"
 
 #include "Elemlist.h"
-
+#include "AHTURLTools_f.h"
 #include "wxdialogapi_f.h"
 #include "EDITimage_f.h"
 #include "HTMLsave_f.h"
@@ -29,16 +29,6 @@
 
 #ifdef TEMPLATES
 #define TEMPLATE_SCHEMA_NAME "Template"
-
-typedef struct _InstantiateCtxt
-{
-  char         *templatePath;
-  char         *instancePath;
-  char         *schemaName;
-  Document      doc;
-  DocumentType  docType;
-  ThotBool      dontReplace;
-} InstantiateCtxt;
 #endif /* TEMPLATES */
 
 
@@ -300,7 +290,7 @@ void CreateTemplate(Document doc, char *templatePath)
   // Save document
   TtaGetEnvBoolean ("GENERATE_MATHPI", &mathPI);
   TtaSetEnvBoolean("GENERATE_MATHPI", TRUE, TRUE);
-  SaveDocumentToNewDoc(doc, newdoc, templatePath, NULL);
+  SaveDocumentToNewDoc(doc, newdoc, templatePath);
   TtaSetEnvBoolean("GENERATE_MATHPI", mathPI, TRUE);
   
   TtaClearUndoHistory (doc);
@@ -345,14 +335,15 @@ void CreateTemplate(Document doc, char *templatePath)
   CreateInstance
   basedoc is the displayed doc that launchs the creation of instance
   ----------------------------------------------------------------------*/
-void CreateInstance(char *templatePath, char *instancePath, int basedoc)
+void CreateInstance(char *templatePath, char *instancePath,
+                    char *docname, int basedoc)
 {
 #ifdef TEMPLATES
   Document          doc = 0, newdoc = 0;
   ElementType       elType;
   Element           root, title, text;
   CHARSET           charset;
-  char             *localFile, *s, *charsetname;
+  char             *s, *charsetname;
   ThotBool          changes = FALSE;
 
   XTigerTemplate t = GetXTigerTemplate(templatePath);
@@ -420,16 +411,15 @@ void CreateInstance(char *templatePath, char *instancePath, int basedoc)
       changes = TRUE;
 
       // Save document
-      SaveDocumentToNewDoc(doc, newdoc, instancePath, &localFile);
+      SaveDocumentToNewDoc(doc, newdoc, instancePath);
 
       // Revert HTML special changes
-      if(changes)
+      if (changes)
         TtaUndoNoRedo (doc);
       
-      TtaFreeMemory(localFile);
-
       TtaClearUndoHistory (doc);
       RemoveParsingErrors (doc);
+      // now load the document as an instance
       GetAmayaDoc (instancePath, NULL, basedoc, basedoc, CE_INSTANCE,
                    !DontReplaceOldDoc, NULL, NULL);
       TtaSetDocumentModified (newdoc);
@@ -438,23 +428,6 @@ void CreateInstance(char *templatePath, char *instancePath, int basedoc)
 #endif /* TEMPLATES */
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
-                                   char *outputfile,
-                                   char *proxyName, AHTHeaders *http_headers,
-                                   void * context)
-{
-#ifdef TEMPLATES
-  InstantiateCtxt *ctx = (InstantiateCtxt*)context;
-
-  DoInstanceTemplate (ctx->templatePath);
-  CreateInstance (ctx->templatePath, ctx->instancePath, ctx->doc);
-  TtaFreeMemory (ctx->templatePath);
-  TtaFreeMemory (ctx->instancePath);
-  TtaFreeMemory (ctx);
-#endif /* TEMPLATES */
-}
 
 /*----------------------------------------------------------------------
   InstantiateAttribute

@@ -35,8 +35,7 @@ extern void DumpTemplateElement ( Element el,
                                   Document doc );
 extern ThotBool SaveDocumentToNewDoc ( Document doc,
                                        Document newdoc,
-                                       char* newpath,
-                                       char** temppath );
+                                       char* newpath );
 
 #else /* __STDC__ */
 
@@ -69,8 +68,7 @@ extern void DumpTemplateElement ( Element el,
                                     Document doc );
 extern ThotBool SaveDocumentToNewDoc ( Document doc,
                                          Document newdoc,
-                                         char* newpath,
-                                         char** temppath );
+                                         char* newpath );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
