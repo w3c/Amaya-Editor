@@ -1777,6 +1777,7 @@ static void AddBoxInLine (PtrBox pBox, int frame, PtrLine pLine,
     *descent = pBox->BxHeight - pBox->BxHorizRef + b;
 }
 
+
 /*----------------------------------------------------------------------
   ClearFloats
   ----------------------------------------------------------------------*/
@@ -2755,7 +2756,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   still = FALSE;
                 }
             }
-         else
+          else
             {
               /* We need to split that box or a previous one */
               toCut = TRUE;
@@ -3841,8 +3842,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                   pParent->AbBox->BxType == BoGhost ||
                   pParent->AbBox->BxType == BoFloatGhost))
             {
-              //l += pParent->AbBox->BxLMargin + pParent->AbBox->BxLBorder + pParent->AbBox->BxLPadding;
-              //r += pParent->AbBox->BxRMargin + pParent->AbBox->BxRBorder + pParent->AbBox->BxRPadding;
               isExtraFlow = ExtraFlow (pParent->AbBox, frame);
               if (isExtraFlow)
                 pParent = GetEnclosingViewport (pParent);
@@ -4026,11 +4025,12 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       /* Initialize a new line */
       pLine->LiPrevious = prevLine;
       pLine->LiYOrg = *height + top;
-      if (pNextBox->BxAbstractBox->AbFloat == 'N' &&
+      pChildAb = pNextBox->BxAbstractBox;
+      if (pChildAb->AbFloat == 'N' &&
           !ExtraFlow (pNextBox, frame) &&
-          (!pNextBox->BxAbstractBox->AbHorizEnclosing ||
-           (pNextBox->BxAbstractBox->AbNotInLine &&
-            pNextBox->BxAbstractBox->AbDisplay != 'U')))
+          (!pChildAb->AbHorizEnclosing ||
+           (pChildAb->AbNotInLine &&
+            pChildAb->AbDisplay != 'U')))
         {
           /* The current box escape the line rule */
           pLine->LiFirstBox = pNextBox;
@@ -4047,8 +4047,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
           pLine->LiRealLength = pNextBox->BxWidth;
           /* the paragraph should be large enough
              ( for math with display:block by example) */
-          if (pNextBox->BxAbstractBox->AbNotInLine &&
-              pNextBox->BxAbstractBox->AbDisplay != 'U')
+          if (pChildAb->AbNotInLine &&
+              pChildAb->AbDisplay != 'U')
             {
               if (pNextBox->BxWidth > pBox->BxMaxWidth)
                 pBox->BxMaxWidth = pNextBox->BxWidth;
@@ -4056,8 +4056,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                 pBox->BxMinWidth = pNextBox->BxWidth;
               pLine->LiXOrg = left;
               x = left;
-              if (pNextBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
-                  pNextBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle &&
+              if (pChildAb->AbHorizPos.PosEdge == VertMiddle &&
+                  pChildAb->AbHorizPos.PosRefEdge == VertMiddle &&
                   pBox->BxWidth > pNextBox->BxWidth)
                 x += (pBox->BxWidth - pNextBox->BxWidth) / 2;
               if (Propagate != ToSiblings || pBox->BxVertFlex)
@@ -4075,7 +4075,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
           *height += pLine->LiHeight;
           pBoxToBreak = NULL;
         }
-      else if (!pNextBox->BxAbstractBox->AbNotInLine)
+      else if (!pChildAb->AbNotInLine)
         {
           /* line indent */
           pLine->LiXOrg = left;
@@ -4086,7 +4086,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                            pNextBox->BxType == BoDotted))
             {
               pLine->LiFirstPiece = pNextBox;
-              pLine->LiFirstBox = pNextBox->BxAbstractBox->AbBox;
+              pLine->LiFirstBox = pChildAb->AbBox;
             }
           else
             {
@@ -4109,8 +4109,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
             pBox->BxMinWidth = minWidth;
           if (prevLine)
             {
-              /* initial position */
-              org = prevLine->LiYOrg + prevLine->LiHeight;
               if (pLine->LiYOrg == org  && pBox->BxType == BoBlock)
                 {
                   /* line position not updated by floating boxes */

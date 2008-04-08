@@ -3942,7 +3942,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
               pNextBox = pParent->AbBox;
               /* Si la boite etait eclatee, elle ne l'est plus */
               if (pNextBox->BxType == BoGhost || pNextBox->BxType == BoFloatGhost)
-                pNextBox->BxType = BoComplete;
+                {
+                  if (pParent->AbInLine || pParent->AbDisplay == 'B')
+                    pNextBox->BxType = BoBlock;
+                  else
+                    pNextBox->BxType = BoComplete;
+                }
 	  
               /* On ne chaine qu'une seule fois la boite englobante */
               if (pNextBox != pCurrentBox->BxNext)
