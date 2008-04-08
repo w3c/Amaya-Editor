@@ -105,6 +105,7 @@ extern ThotBool AttrFontSizeDelete ( NotifyAttribute * event );
 extern void AttrColorCreated ( NotifyAttribute * event );
 extern ThotBool AttrColorDelete ( NotifyAttribute *event );
 extern ThotBool GlobalAttrInMenu ( NotifyAttribute * event );
+extern ThotBool AttrRELREVinMenu ( NotifyAttribute * event );
 extern ThotBool AttrNAMEinMenu ( NotifyAttribute * event );
 extern ThotBool AttrScriptLanguageinMenu ( NotifyAttribute * event );
 extern void SetOnOffEmphasis ( Document document,
@@ -255,6 +256,7 @@ extern ThotBool AttrFontSizeDelete ( NotifyAttribute * event );
 extern void AttrColorCreated ( NotifyAttribute * event );
 extern ThotBool AttrColorDelete ( NotifyAttribute *event );
 extern ThotBool GlobalAttrInMenu ( NotifyAttribute * event );
+extern ThotBool AttrRELREVinMenu ( NotifyAttribute * event );
 extern ThotBool AttrNAMEinMenu ( NotifyAttribute * event );
 extern ThotBool AttrScriptLanguageinMenu ( NotifyAttribute * event );
 extern void SetOnOffEmphasis ( Document document,

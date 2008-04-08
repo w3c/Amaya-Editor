@@ -443,6 +443,18 @@ ATTRIBUTES
         AttrDelete.Post -> GlobalAttrDeleted;
         END;
 
+   REL:
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
+
+   REV:
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
+
    onclick:
         BEGIN
         AttrCreate.Post -> GlobalAttrCreated;

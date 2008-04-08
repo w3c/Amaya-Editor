@@ -103,4 +103,7 @@ typedef enum
   warningMessage
 } ErrorType;
 
+/* Allowed values for the attributes REL and REV in XHTML+RDFa */
+#define REL_REV_Attr_Values  "alternate appendix bookmark cite chapter contants copyright glossary help icon index last license meta next p3pv1 prev role section stylesheet subsection start up"
+
 #endif /* PARSER_H */

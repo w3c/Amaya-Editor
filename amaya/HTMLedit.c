@@ -21,6 +21,7 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "parser.h"
 #include "css.h"
 #include "XLink.h"
 #include "MathML.h"
@@ -4790,10 +4791,10 @@ ThotBool AttrColorDelete (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 ThotBool GlobalAttrInMenu (NotifyAttribute * event)
 {
-  ElementType         elType, parentType;
-  Element             parent;
-  char               *attr;
-  ThotBool            edit_xmlid;
+  ElementType   elType, parentType;
+  Element       parent;
+  char         *attr;
+  ThotBool      edit_xmlid;
 
   elType = TtaGetElementType (event->element);
 
@@ -4840,6 +4841,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
     edit_xmlid = TRUE;
   else
     TtaGetEnvBoolean ("SHOW_XMLID", &edit_xmlid);
+
   if (!edit_xmlid && event->attributeType.AttrTypeNum == HTML_ATTR_xmlid)
     return TRUE;	/* don't show xml:id in the menu */
   else if ((DocumentMeta[event->document] == NULL ||
@@ -4848,6 +4850,20 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
             event->attributeType.AttrTypeNum == HTML_ATTR_xmlid))
     return TRUE;	/* don't put xml attributes in the menu */
 
+
+  if (event->attributeType.AttrTypeNum == HTML_ATTR_REL ||
+      event->attributeType.AttrTypeNum == HTML_ATTR_REV)
+    {
+      if (TtaGetDocumentExtraProfile (event->document) != L_RDFa)
+	/* REL et REV are global for XHTML+RDFa documents only */
+	return FALSE;
+      else
+	{
+	  event->restr.RestrEnumVal = TtaStrdup(REL_REV_Attr_Values);
+	  event->restr.RestrFlags |= attr_enum;
+	}
+    }
+  
   /* handle only Global attributes */
   if (event->attributeType.AttrTypeNum != HTML_ATTR_ID &&
       event->attributeType.AttrTypeNum != HTML_ATTR_Class &&
@@ -4869,17 +4885,17 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
     /* it's not a global attribute. Accept it */
     return ValidateTemplateAttrInMenu(event);
 #else /* TEMPLATES */
-    /* it's not a global attribute. Accept it */
+  /* it's not a global attribute. Accept it */
     return FALSE;
 #endif /* TEMPLATES */
-
-  if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"HTML"))
-    /* it's not a HTML element */
-    return TRUE;
-  else
-    /* it's a HTML element */
-    {
-      /* BASE and SCRIPT do not accept any global attribute */
+    
+    if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"HTML"))
+      /* it's not a HTML element */
+      return TRUE;
+    else
+      /* it's a HTML element */
+      {
+	/* BASE and SCRIPT do not accept any global attribute */
       if (elType.ElTypeNum == HTML_EL_BASE ||
           elType.ElTypeNum == HTML_EL_SCRIPT_ ||
           elType.ElTypeNum == HTML_EL_Element)
@@ -4981,6 +4997,16 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
 #endif /* TEMPLATES */
     }
   return TRUE;	/* don't put an invalid attribute in the menu */
+}
+
+/*----------------------------------------------------------------------
+  AttrRELREVinMenu
+  Display a list of values for those attributes
+  ----------------------------------------------------------------------*/
+ThotBool AttrRELREVinMenu (NotifyAttribute * event)
+{  
+  /* let Thot perform normal operation */
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
