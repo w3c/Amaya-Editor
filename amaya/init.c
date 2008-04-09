@@ -819,8 +819,6 @@ static void SetCharsetMenuOff (Document doc, View view)
 void SetTableMenuOff (Document doc, View view)
 {
   TtaSetItemOff (doc, view, Types, BCaption);
-  TtaSetItemOff (doc, view, Types, BColgroup);
-  TtaSetItemOff (doc, view, Types, BCol);
   TtaSetItemOff (doc, view, Types, BTHead);
   TtaSetItemOff (doc, view, Types, BTBody);
   TtaSetItemOff (doc, view, Types, BTFoot);
@@ -850,8 +848,6 @@ void SetTableMenuOn (Document doc, View view)
     {
       /* a table element is selected */
       TtaSetItemOn (doc, view, Types, BCaption);
-      TtaSetItemOn (doc, view, Types, BColgroup);
-      TtaSetItemOn (doc, view, Types, BCol);
       TtaSetItemOn (doc, view, Types, BTHead);
       TtaSetItemOn (doc, view, Types, BTBody);
       TtaSetItemOn (doc, view, Types, BTFoot);
@@ -861,8 +857,6 @@ void SetTableMenuOn (Document doc, View view)
   else
     {
       TtaSetItemOff (doc, view, Types, BCaption);
-      TtaSetItemOff (doc, view, Types, BColgroup);
-      TtaSetItemOff (doc, view, Types, BCol);
       TtaSetItemOff (doc, view, Types, BTHead);
       TtaSetItemOff (doc, view, Types, BTBody);
       TtaSetItemOff (doc, view, Types, BTFoot);

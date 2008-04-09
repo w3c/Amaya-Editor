@@ -614,8 +614,6 @@ SelectColumn
 [tables]
 +basic-table-module
 +table-edit
-&CreateColgroup
-&CreateCol
 &CreateTHead
 &CreateTFoot
 &ChangeToDataCell

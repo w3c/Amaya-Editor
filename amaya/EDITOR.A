@@ -190,8 +190,6 @@ MENUS
 	Types.Table Separator;
 	Types.Table button:BTable -> CreateTable icon:XHTML_Table.png;
 	Types.Table button:BCaption -> CreateCaption;
-	Types.Table button:BColgroup -> CreateColgroup;
-	Types.Table button:BCol -> CreateCol;
 	Types.Table button:BTHead -> CreateTHead;
 	Types.Table button:BTBody -> CreateTBody;
 	Types.Table button:BTFoot -> CreateTFoot;

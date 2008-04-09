@@ -2748,21 +2748,6 @@ void CreateCaption (Document doc, View view)
     TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
 }
 
-/*----------------------------------------------------------------------
-  CreateColgroup
-  ----------------------------------------------------------------------*/
-void CreateColgroup (Document doc, View view)
-{
-  return;
-}
-
-/*----------------------------------------------------------------------
-  CreateCol
-  ----------------------------------------------------------------------*/
-void CreateCol (Document doc, View view)
-{
-  return;
-}
 
 /*----------------------------------------------------------------------
   FirstDescendantOfTypes

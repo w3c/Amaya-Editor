@@ -134,10 +134,6 @@ extern void DoCreateTable ( Document doc,
                             View view );
 extern void CreateCaption ( Document doc,
                             View view );
-extern void CreateColgroup ( Document doc,
-                             View view );
-extern void CreateCol ( Document doc,
-                        View view );
 extern void ChangeToDataCell ( Document doc,
                                View view );
 extern void ChangeToHeadingCell ( Document doc,
@@ -408,10 +404,6 @@ extern void DoCreateTable ( Document doc,
                               View view );
 extern void CreateCaption ( Document doc,
                               View view );
-extern void CreateColgroup ( Document doc,
-                               View view );
-extern void CreateCol ( Document doc,
-                          View view );
 extern void ChangeToDataCell ( Document doc,
                                  View view );
 extern void ChangeToHeadingCell ( Document doc,

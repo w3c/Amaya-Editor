@@ -24,13 +24,6 @@ extern void CreateInstance ( char *templatePath,
                              char *instancePath,
                              char *docname,
                              int basedoc );
-extern void InstantiateTemplate_callback ( int newdoc,
-                                           int status,
-                                           char *urlName,
-                                           char *outputfile,
-                                           char *proxyName,
-                                           AHTHeaders *http_headers,
-                                           void * context );
 extern Element Template_GetNewSimpleTypeInstance ( Document doc,
                                                    Element parent,
                                                    Declaration decl );
@@ -80,13 +73,6 @@ extern void CreateInstance ( char *templatePath,
                                char *instancePath,
                                char *docname,
                                int basedoc );
-extern void InstantiateTemplate_callback ( int newdoc,
-                                             int status,
-                                             char *urlName,
-                                             char *outputfile,
-                                             char *proxyName,
-                                             AHTHeaders *http_headers,
-                                             void * context );
 extern Element Template_GetNewSimpleTypeInstance ( Document doc,
                                                      Element parent,
                                                      Declaration decl );

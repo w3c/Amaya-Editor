@@ -2979,8 +2979,6 @@ void UpdateContextSensitiveMenus (Document doc, View view)
     {
       TableMenuActive = FALSE;
       TtaSetItemOff (doc, 1, Types, BCaption);
-      TtaSetItemOff (doc, 1, Types, BColgroup);
-      TtaSetItemOff (doc, 1, Types, BCol);
       TtaSetItemOff (doc, 1, Types, BTHead);
       TtaSetItemOff (doc, 1, Types, BTBody);
       TtaSetItemOff (doc, 1, Types, BTFoot);
@@ -2994,8 +2992,6 @@ void UpdateContextSensitiveMenus (Document doc, View view)
     {
       TableMenuActive = TRUE;
       TtaSetItemOn (doc, 1, Types, BCaption);
-      TtaSetItemOn (doc, 1, Types, BColgroup);
-      TtaSetItemOn (doc, 1, Types, BCol);
       TtaSetItemOn (doc, 1, Types, BTHead);
       TtaSetItemOn (doc, 1, Types, BTBody);
       TtaSetItemOn (doc, 1, Types, BTFoot);

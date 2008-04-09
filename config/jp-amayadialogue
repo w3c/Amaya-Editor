@@ -152,209 +152,207 @@
 150 **Table
 151 **Insert a table
 152 **caption
-153 **colgroup
-154 **col
-155 **thead
-156 **tbody
-157 **tfoot
-158 **&Math
-159 **Insert a formula
-160 **Plain text (mtext)
-161 **Identifier (mi)
-162 **Number (mn)
-163 **Operator (mo)
-164 **Space (mspace)
-165 **Character (&xxx;)
-166 **InvisibleTimes
-167 **ApplyFunction
-168 **Root (mroot)
-169 **Square root (msqrt)
-170 **Enclose (menclose)
-171 **Fraction (mfrac)
-172 **Subscript and superscript (msubsup)
-173 **Subscript (msub)
-174 **Superscript (msup)
-175 **Under and over (munderover)
-176 **Under (munder)
-177 **Over (mover)
-178 **Parentheses (mrow)
-179 **Multiscripts (mmultiscripts)
-180 **New matrix (mtable)
-181 **Form
-182 **Insert a form
-183 **Button (input)
-184 **Checkbox (input)
-185 **File selector (input)
-186 **Hidden (input)
-187 **Image (input)...
-188 **Password (input)
-189 **Radio (input)
-190 **Reset (input)
-191 **Submit (input)
-192 **Text (input)
-193 **fieldset
-194 **label
-195 **Menu (option)
-196 **Submenu (optgroup)
-197 **textarea
-198 **Object
-199 **object
-200 **Parameter (param)
-201 **Map area
-202 **Insert a map
-203 **Circle area
-204 **Polygon area
-205 **Rectangle area
-206 **Hidden elements
-207 **style
-208 **Comment
-209 **base
-210 **meta
-211 **link
-212 **script
-213 **noscript
-214 **Division (div)
-215 **address
-216 **blockquote
-217 **Inline frame (iframe)
-218 **ruby
-219 **Theme
-220 **Classic
-221 **Modern
-222 **No theme
-223 **Text color
-224 **Select a text color...
-225 **No color
-226 **Background color
-227 **Select a background color...
-228 **No color
-229 **Alignment
-230 **Left
-231 **Center
-232 **Right
-233 **Justify
-234 **Default
-235 **Line spacing
-236 **Single
-237 **Half
-238 **Double
-239 **Default
-240 **Indent
-241 **Increase
-242 **Decrease
-243 **Default
-244 **Character
-245 **Select a font...
-246 **Default
-247 **&Style editor...
-248 **Create &rule...
-249 **Show applied style...
-250 **Style sheets
-251 **Link...
-252 **Open...
-253 **Disable...
-254 **Enable...
-255 **Remove...
-256 **Copy location
-257 **Paste location
-258 **&Link to previous target
-259 **&Create or change link...
-260 **Create &target
-261 **&Delete link or target
-262 **&Add/Remove IDs...
-263 **Chec&k spelling...
-264 **Transfor&m...
-265 **Code clean up
-266 **Edit table
-267 **Change to data cell
-268 **Change to heading cell
-269 **Merge cells
-270 **Join with the cell at the right
-271 **Join with the cell below
-272 **Shrink horizontal extend
-273 **Shrink vertical extend
-274 **Select the row
-275 **Insert a row
-276 **Append a row
-277 **Select the column
-278 **Insert a column
-279 **Append a column
-280 **Paste before
-281 **Paste after
-282 **Change title...
-283 **Change doctype
-284 **Remove the doctype
-285 **Add a doctype
-286 **Change to XHTML 1.1
-287 **Change to XHTML 1.0 Transitional
-288 **Change to XHTML 1.0 Strict
-289 **Change to XHTML 1.0 Basic
-290 **Change to XHTML+RDFa
-291 **Change to HTML 4.01 Transitional
-292 **Change to HTML 4.01 Strict
-293 **&Section numbering
-294 **&Add/Update table of contents
-295 **&Make book
-296 **Insert time stamp
-297 **Graphics
-298 **Show SVG library
-299 **Add to SVG library
-300 **A&nnotations
-301 **Annotate selection
-302 **Annotate document
-303 **Move to selection
-304 **Store selection as &XPointer
-305 **Move to stored XPointer
-306 **Reply to annotation
-307 **Post to server
-308 **Delete
-309 **Load
-310 **Customize query...
-311 **Local filter...
-312 **C&ooperation
-313 **Lock resource...
-314 **Unlock resource...
-315 **View resource properties...
-316 **Copy lock information...
-317 **Locked?
-318 **Templates
-319 **Create template from current document...
-320 **Create a text box
-321 **Create a free editing box
-322 **&Javascript/DOM
-323 **Enable/Disable
-324 **Execute a command
-325 **Execute an external script
-326 **Add an external script
-327 **Insert a script
-328 **About Amaya
-329 **About Amaya at W3C
-330 **Index
-331 **Browsing
-332 **Views
-333 **Selecting
-334 **Documents
-335 **Creating elements
-336 **Attributes
-337 **Characters
-338 **Templates
-339 **Restructuring
-340 **Links
-341 **Tables
-342 **Image maps
-343 **Math
-344 **Graphics
-345 **XML support
-346 **Style sheets
-347 **Searching
-348 **Spell checking
-349 **Publishing
-350 **Cooperation
-351 **Printing
-352 **Numbering
-353 **Making books
-354 **Annotations
-355 **Configuring
-356 **Shortcuts
-357 **Accessibility in Amaya
-358 **Tip of the day...
+153 **thead
+154 **tbody
+155 **tfoot
+156 **&Math
+157 **Insert a formula
+158 **Plain text (mtext)
+159 **Identifier (mi)
+160 **Number (mn)
+161 **Operator (mo)
+162 **Space (mspace)
+163 **Character (&xxx;)
+164 **InvisibleTimes
+165 **ApplyFunction
+166 **Root (mroot)
+167 **Square root (msqrt)
+168 **Enclose (menclose)
+169 **Fraction (mfrac)
+170 **Subscript and superscript (msubsup)
+171 **Subscript (msub)
+172 **Superscript (msup)
+173 **Under and over (munderover)
+174 **Under (munder)
+175 **Over (mover)
+176 **Parentheses (mrow)
+177 **Multiscripts (mmultiscripts)
+178 **New matrix (mtable)
+179 **Form
+180 **Insert a form
+181 **Button (input)
+182 **Checkbox (input)
+183 **File selector (input)
+184 **Hidden (input)
+185 **Image (input)...
+186 **Password (input)
+187 **Radio (input)
+188 **Reset (input)
+189 **Submit (input)
+190 **Text (input)
+191 **fieldset
+192 **label
+193 **Menu (option)
+194 **Submenu (optgroup)
+195 **textarea
+196 **Object
+197 **object
+198 **Parameter (param)
+199 **Map area
+200 **Insert a map
+201 **Circle area
+202 **Polygon area
+203 **Rectangle area
+204 **Hidden elements
+205 **style
+206 **Comment
+207 **base
+208 **meta
+209 **link
+210 **script
+211 **noscript
+212 **Division (div)
+213 **address
+214 **blockquote
+215 **Inline frame (iframe)
+216 **ruby
+217 **Theme
+218 **Classic
+219 **Modern
+220 **No theme
+221 **Text color
+222 **Select a text color...
+223 **No color
+224 **Background color
+225 **Select a background color...
+226 **No color
+227 **Alignment
+228 **Left
+229 **Center
+230 **Right
+231 **Justify
+232 **Default
+233 **Line spacing
+234 **Single
+235 **Half
+236 **Double
+237 **Default
+238 **Indent
+239 **Increase
+240 **Decrease
+241 **Default
+242 **Character
+243 **Select a font...
+244 **Default
+245 **&Style editor...
+246 **Create &rule...
+247 **Show applied style...
+248 **Style sheets
+249 **Link...
+250 **Open...
+251 **Disable...
+252 **Enable...
+253 **Remove...
+254 **Copy location
+255 **Paste location
+256 **&Link to previous target
+257 **&Create or change link...
+258 **Create &target
+259 **&Delete link or target
+260 **&Add/Remove IDs...
+261 **Chec&k spelling...
+262 **Transfor&m...
+263 **Code clean up
+264 **Edit table
+265 **Change to data cell
+266 **Change to heading cell
+267 **Merge cells
+268 **Join with the cell at the right
+269 **Join with the cell below
+270 **Shrink horizontal extend
+271 **Shrink vertical extend
+272 **Select the row
+273 **Insert a row
+274 **Append a row
+275 **Select the column
+276 **Insert a column
+277 **Append a column
+278 **Paste before
+279 **Paste after
+280 **Change title...
+281 **Change doctype
+282 **Remove the doctype
+283 **Add a doctype
+284 **Change to XHTML 1.1
+285 **Change to XHTML 1.0 Transitional
+286 **Change to XHTML 1.0 Strict
+287 **Change to XHTML 1.0 Basic
+288 **Change to XHTML+RDFa
+289 **Change to HTML 4.01 Transitional
+290 **Change to HTML 4.01 Strict
+291 **&Section numbering
+292 **&Add/Update table of contents
+293 **&Make book
+294 **Insert time stamp
+295 **Graphics
+296 **Show SVG library
+297 **Add to SVG library
+298 **A&nnotations
+299 **Annotate selection
+300 **Annotate document
+301 **Move to selection
+302 **Store selection as &XPointer
+303 **Move to stored XPointer
+304 **Reply to annotation
+305 **Post to server
+306 **Delete
+307 **Load
+308 **Customize query...
+309 **Local filter...
+310 **C&ooperation
+311 **Lock resource...
+312 **Unlock resource...
+313 **View resource properties...
+314 **Copy lock information...
+315 **Locked?
+316 **Templates
+317 **Create template from current document...
+318 **Create a text box
+319 **Create a free editing box
+320 **&Javascript/DOM
+321 **Enable/Disable
+322 **Execute a command
+323 **Execute an external script
+324 **Add an external script
+325 **Insert a script
+326 **About Amaya
+327 **About Amaya at W3C
+328 **Index
+329 **Browsing
+330 **Views
+331 **Selecting
+332 **Documents
+333 **Creating elements
+334 **Attributes
+335 **Characters
+336 **Templates
+337 **Restructuring
+338 **Links
+339 **Tables
+340 **Image maps
+341 **Math
+342 **Graphics
+343 **XML support
+344 **Style sheets
+345 **Searching
+346 **Spell checking
+347 **Publishing
+348 **Cooperation
+349 **Printing
+350 **Numbering
+351 **Making books
+352 **Annotations
+353 **Configuring
+354 **Shortcuts
+355 **Accessibility in Amaya
+356 **Tip of the day...
