@@ -124,22 +124,19 @@ void AmayaScrollBar::OnLineUp( wxScrollEvent& event )
 {
   Document doc; 
   View     view;
+
   FrameToView( m_ParentFrameID, &doc, &view );
   if (event.GetOrientation() == wxVERTICAL)
-    {
       TtcLineUp (doc, view); 
-      TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnLineUp - TtcLineUp(%d, %d)"), doc, view );
-    }
   else
-    {
       TtcScrollLeft(doc, view);
-      TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnLineUp - TtcScrollLeft(%d, %d)"), doc, view );
-    }
 
-  // set this flag to ignore the next generated OnScroll event
-  // this is necessary because 2 events occure when up/down button is pressed (it's an optimisation)
-  // this hack works because OnLineDown is called before OnScroll,
-  // but becareful the events orders could change in future wxWidgets releases or can be platform specific
+  /* this flag is necessary because 2 events occure when up/down button
+     is pressed (it's an optimisation)
+     this hack works because OnLineDown is called before OnScroll,
+     but becareful the events orders could change in future wxWidgets
+     releases or can be platform specific
+  */
   m_IgnoreNextScrollEvent = TRUE;
 }
 
@@ -152,23 +149,72 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
 {
   Document doc; 
   View     view;
+
   FrameToView( m_ParentFrameID, &doc, &view );
   if (event.GetOrientation() == wxVERTICAL)
+    TtcLineDown (doc, view);
+  else
+    TtcScrollRight(doc, view);
+  
+  /* this flag is necessary because 2 events occure when up/down button
+     is pressed (it's an optimisation)
+     this hack works because OnLineDown is called before OnScroll,
+     but becareful the events orders could change in future wxWidgets
+     releases or can be platform specific
+  */
+  m_IgnoreNextScrollEvent = TRUE;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaScrollBar
+ *      Method:  OnScrollUp
+ * Description:  
+  -----------------------------------------------------------------------*/
+void AmayaScrollBar::OnScrollUp( wxScrollEvent& event )
+{
+  Document doc; 
+  View     view;
+
+  FrameToView (m_ParentFrameID, &doc, &view);
+  if (event.GetOrientation() == wxVERTICAL)
     {
-      TtcLineDown (doc, view);
-      TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnLineDown [TtcLineDown(%d, %d)]"), doc, view );
+      TtcPageUp (doc, view);
+      /* this flag is necessary because 2 events occure when up/down button
+         is pressed (it's an optimisation)
+         this hack works because OnLineDown is called before OnScroll,
+         but becareful the events orders could change in future wxWidgets
+         releases or can be platform specific
+      */
+      m_IgnoreNextScrollEvent = TRUE;
     }
   else
+    OnScroll (event);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaScrollBar
+ *      Method:  OnScrollDown
+ * Description:  
+  -----------------------------------------------------------------------*/
+void AmayaScrollBar::OnScrollDown( wxScrollEvent& event )
+{
+  Document doc; 
+  View     view;
+
+  FrameToView (m_ParentFrameID, &doc, &view);
+  if (event.GetOrientation() == wxVERTICAL)
     {
-      TtcScrollRight(doc, view);
-      TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnLineDown [TtcScrollRight(%d, %d)]"), doc, view );
+      TtcPageDown (doc, view);
+      /* this flag is necessary because 2 events occure when up/down button
+         is pressed (it's an optimisation)
+         this hack works because OnLineDown is called before OnScroll,
+         but becareful the events orders could change in future wxWidgets
+         releases or can be platform specific
+      */
+      m_IgnoreNextScrollEvent = TRUE;
     }
-  
-  // set this flag to ignore the next generated OnScroll event
-  // this is necessary because 2 events occure when up/down button is pressed (it's an optimisation)
-  // this hack works because OnLineDown is called before OnScroll,
-  // but becareful the events orders could change in future wxWidgets releases or can be platform specific
-  m_IgnoreNextScrollEvent = TRUE;
+  else if (event.GetOrientation() == wxVERTICAL)
+    OnScroll (event);
 }
 
 /*----------------------------------------------------------------------
@@ -178,9 +224,12 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaScrollBar::OnScroll( wxScrollEvent& event )
 {
-  // this flag is necessary because 2 events occure when up/down button is pressed (it's an optimisation)
-  // this hack works because OnLineDown is called before OnScroll,
-  // but becareful the events orders could change in future wxWidgets releases or can be platform specific
+  /* this flag is necessary because 2 events occure when up/down button
+     is pressed (it's an optimisation)
+     this hack works because OnLineDown is called before OnScroll,
+     but becareful the events orders could change in future wxWidgets
+     releases or can be platform specific
+  */
   if (m_IgnoreNextScrollEvent)
     {
       m_IgnoreNextScrollEvent = FALSE;
@@ -208,18 +257,16 @@ void AmayaScrollBar::OnScroll( wxScrollEvent& event )
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaScrollBar, wxScrollBar)
-  EVT_SCROLL_TOP( AmayaScrollBar::OnTop ) /* Process wxEVT_SCROLL_TOP scroll-to-top events (minium position). */
-  EVT_SCROLL_BOTTOM( AmayaScrollBar::OnBottom ) /* Process wxEVT_SCROLL_TOP scroll-to-bottom events (maximum position). */
-  EVT_SCROLL_LINEUP( AmayaScrollBar::OnLineUp ) /* Process wxEVT_SCROLL_LINEUP line up events. */
+  EVT_SCROLL_TOP( AmayaScrollBar::OnTop ) /* wxEVT_SCROLL_TOP (minium position) */
+  EVT_SCROLL_BOTTOM( AmayaScrollBar::OnBottom ) /* wxEVT_SCROLL_TOP (maximum position) */
+  EVT_SCROLL_LINEUP( AmayaScrollBar::OnLineUp ) /* wxEVT_SCROLL_LINEUP */
   EVT_SCROLL_LINEDOWN( AmayaScrollBar::OnLineDown )
-  EVT_SCROLL_PAGEUP( AmayaScrollBar::OnScroll )
-  EVT_SCROLL_PAGEDOWN( AmayaScrollBar::OnScroll )
-  EVT_SCROLL_THUMBTRACK( AmayaScrollBar::OnScroll ) /* Process wxEVT_SCROLL_THUMBTRACK thumbtrack events (frequent events sent as the user drags the thumbtrack). */
-  EVT_SCROLL_THUMBRELEASE( AmayaScrollBar::OnScroll ) /* Process wxEVT_SCROLL_THUMBRELEASE thumb release events.*/
+  EVT_SCROLL_PAGEUP( AmayaScrollBar::OnScrollUp )
+  EVT_SCROLL_PAGEDOWN( AmayaScrollBar::OnScrollDown )
+  EVT_SCROLL_THUMBTRACK( AmayaScrollBar::OnScroll ) /* wxEVT_SCROLL_THUMBTRACK (frequent events sent as the user drags the thumbtrack). */
+  EVT_SCROLL_THUMBRELEASE( AmayaScrollBar::OnScroll ) /* wxEVT_SCROLL_THUMBRELEASE thumb release events.*/
 
-  /* TODO : a renommer en EVT_SCROLL_CHANGED qd on se mettra a jour avec la tete de CVS */
-  EVT_SCROLL_ENDSCROLL( AmayaScrollBar::OnScroll )
-
+  EVT_SCROLL_CHANGED( AmayaScrollBar::OnScroll )
   EVT_SET_FOCUS( AmayaScrollBar::OnSetFocus )
   EVT_KILL_FOCUS( AmayaScrollBar::OnKillFocus )
   //  EVT_SCROLL_THUMBTRACK(    AmayaFrame::OnScrollLineUp )

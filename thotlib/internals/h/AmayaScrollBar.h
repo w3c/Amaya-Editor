@@ -20,6 +20,8 @@ protected:
   DECLARE_EVENT_TABLE()
   void OnSetFocus( wxFocusEvent & event );
   void OnKillFocus( wxFocusEvent & event );
+  void OnScrollUp( wxScrollEvent& event );
+  void OnScrollDown( wxScrollEvent& event );
   void OnScroll( wxScrollEvent& event );
   void OnLineDown( wxScrollEvent& event );
   void OnLineUp( wxScrollEvent& event );

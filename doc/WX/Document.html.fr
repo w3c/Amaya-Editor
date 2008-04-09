@@ -12,18 +12,16 @@
 <body xml:lang="en" lang="en">
 
 <div class="PageHead" id="Changing">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Selecting.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Creating.html.fr" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Creating.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div class="PageBody" id="Document" xml:lang="fr" lang="fr">
-
 <h2 id="L50">Créer et ouvrir des documents</h2>
 
 <h3 id="L54">Créer un document</h3>
@@ -43,23 +41,24 @@ types de documents sont disponibles :</p>
 <ol>
   <li>Choisissez l'entrée <strong>Nouveau</strong> du menu
     <strong>Fichier</strong> et sélectionnez le type de document désiré.</li>
-  <li>Amaya vous demande alors de spécifier l'URI ou le nom local du document
-    à créer (un nom par défaut est affecté si aucun nom n'est spécifié). Un
+  <li>Amaya vous demande alors de spécifier l'URI ou le nom local du document à
+    créer (un nom par défaut est affecté si aucun nom n'est spécifié). Un
     sélecteur de fichier vous permet de trouver le répertoire voulu et de
     vérifier les fichiers qui existent déjà.</li>
   <li>Choisissez l'emplacement où le nouveau document doit s'ouvrir : onglet
     courant, nouvel onglet ou nouvelle fenêtre.</li>
   <li>Quand un nouveau document XHTML est créé : 
     <ul>
-      <li>Le <strong>Titre</strong> du document est demandé. Si vous ne
-        donnez pas de titre, Amaya va en engendrer un par défaut et va
-        réafficher le dialogue pour que vous puissiez confirmer ce choix.</li>
+      <li>Quand le <strong>titre</strong> du document est requis, Amaya
+        engendre un titre par défaut (le nom du fichier sans suffixe). Ce titre
+        pourra être modifié ultérieurement par la commande
+        <strong>Outils/Changer le titre</strong>.</li>
       <li>Si vous prévoyez d'utiliser <a href="Templates.html.fr">un
         modèle</a>, cliquez sur le bouton <strong>A partir du modèle</strong>
-        et sélectionnez un des modèles, soit en sélectionnant dans la liste
-        des modèles enregistrés ou en tapant l'URI ou le nom du fichier du
-        modèle qui n'est pas dans la liste. Vous pouvez mettre à jour la
-        liste des modèles dans <strong>Préférences/Modèles</strong></li>
+        et sélectionnez un des modèles, soit en sélectionnant dans la liste des
+        modèles enregistrés ou en tapant l'URI ou le nom du fichier du modèle
+        qui n'est pas dans la liste. Vous pouvez mettre à jour la liste des
+        modèles dans <strong>Préférences/Modèles</strong></li>
       <li>Il est possible de spécifier le <strong>Profil du document</strong>
         créé (XHTML Transitional, XHTML 1.1, XHTML strict, XHTML basic, HTML
         transitional, Compound document).  Vous pouvez laisser Amaya choisir
@@ -71,9 +70,9 @@ types de documents sont disponibles :</p>
     </ul>
   </li>
   <li>Sélectionnez un <strong>Codage</strong> pour encoder le texte du
-    document. Attention si vous prévoyez de publier le document sur un
-    serveur, ce <strong>Codage</strong> doit être choisi en accord avec le
-    serveur Web qui va délivrer le document.<br />
+    document. Attention si vous prévoyez de publier le document sur un serveur,
+    ce <strong>Codage</strong> doit être choisi en accord avec le serveur Web
+    qui va délivrer le document.<br />
     Habituellement les pages <code>.html</code> sont servies avec
     <code>iso-8859-1</code> and les pages <code>.xml</code> sont servies avec
     <code>utf-8</code>.</li>
@@ -87,36 +86,36 @@ types de documents sont disponibles :</p>
 :</p>
 <dl>
   <dt>Menu Fichier</dt>
-    <dd>L'entrée <strong>Ouvrir</strong> du menu <strong>Fichier</strong>
-      vous permet d'ouvrir un nouveau document. La commande clavier par
-      défaut est <kbd>Ctrl-o Ctrl-o</kbd> . Cette commande fait apparaître
-      une boîte de dialogue dans laquelle vous pouvez entrer un nom de
-      fichier local ou une URI. Vous pouvez également choisir un fichier en
-      utilisant le sélecteur de fichiers locaux (cliquez sur l'icone de
-      fichier en haut à droite de cette boîte de dialogue).</dd>
+    <dd>L'entrée <strong>Ouvrir</strong> du menu <strong>Fichier</strong> vous
+      permet d'ouvrir un nouveau document. La commande clavier par défaut est
+      <kbd>Ctrl-o Ctrl-o</kbd> . Cette commande fait apparaître une boîte de
+      dialogue dans laquelle vous pouvez entrer un nom de fichier local ou une
+      URI. Vous pouvez également choisir un fichier en utilisant le sélecteur
+      de fichiers locaux (cliquez sur l'icone de fichier en haut à droite de
+      cette boîte de dialogue).</dd>
     <dd>Quand le document est correctement spécifié, cliquez sur le bouton
       <strong>Ouvrir</strong>. 
-      <p>Vous pouvez aussi utiliser le bouton à droite de la zone de saisie
-      du nom de fichier. Il affiche la liste des fichiers ouverts récemment
-      avec Amaya. Chosissez dans cette liste celui que vous voulez ouvrir.</p>
+      <p>Vous pouvez aussi utiliser le bouton à droite de la zone de saisie du
+      nom de fichier. Il affiche la liste des fichiers ouverts récemment avec
+      Amaya. Chosissez dans cette liste celui que vous voulez ouvrir.</p>
       <p>La commande <strong>Ouvrir</strong> peut aussi être utilisée pour
       créer un nouveau document local, en spécifiant le nom d'un fichier qui
       n'existe pas encore.</p>
     </dd>
   <dt>Explorateur de fichiers</dt>
     <dd>Un explorateur de fichiers peut être affiché dans la fenêtre d'Outils
-      par la commande <strong>Affichage / Barres d'outils /
-      Fichiers</strong>. Cet outil donne accès à tous les répertoires locaux.
-      Un simple clic permet d'ouvrir ou de fermer un répertoire et un double
-      clic sur un nom de fichier ouvre le document correspondant.</dd>
+      par la commande <strong>Affichage / Barres d'outils / Fichiers</strong>.
+      Cet outil donne accès à tous les répertoires locaux. Un simple clic
+      permet d'ouvrir ou de fermer un répertoire et un double clic sur un nom
+      de fichier ouvre le document correspondant.</dd>
   <dt>Adresse du document courant</dt>
     <dd>Une zone affiche en haut de la fenêtre le nom du fichier ou l'URI du
-      document courant. Vous pouvez saisir le nom d'un autre document (local
-      ou distant) qui va être affiché à la place du document courant. Tapez
-      sur la touche <kbd>Entrée</kbd> quand le curseur se trouve dans cette
-      zone pour activer le chargement du document. Cette commande peut aussi
-      être utilisée pour créer un nouveau document local, en entrant le nom
-      d'un fichier qui n'existe pas encore. 
+      document courant. Vous pouvez saisir le nom d'un autre document (local ou
+      distant) qui va être affiché à la place du document courant. Tapez sur la
+      touche <kbd>Entrée</kbd> quand le curseur se trouve dans cette zone pour
+      activer le chargement du document. Cette commande peut aussi être
+      utilisée pour créer un nouveau document local, en entrant le nom d'un
+      fichier qui n'existe pas encore. 
       <p>Le bouton à la droite de cette zone affiche la liste des derniers
       documents chargés. Vous pouvez choisir un document dans cette liste. Ce
       document vient alors remplacer le document courant.</p>
@@ -132,33 +131,32 @@ types de documents sont disponibles :</p>
 <p><strong>Note sur le codage des caractères</strong></p>
 
 <p>Les documents HTML sont chargés par défaut comme des fichiers <a
-href="EditChar.html.fr">ISO-latin-1</a>. Sans information sur le "charset"
-dans l'en-tête HTTP ou dans un élément <code>meta</code>, un document HTML
-est considéré comme codé en ISO-latin-1. Les documents XML (y compris XHTML)
-sont lus par défaut comme des fichiers UTF 8. Quand il n'y a pas
-d'information sur le "charset" dans l'en-tête HTTP, dans la déclaration XML,
-ou dans un élément <code>meta</code>, un document XML est considéré comme
-codé en UTF 8. Comme les codages par défaut de HTML et de XML sont
-différents, il arrive souvent que des auteurs aient créé des documents XML
-codés en ISO-latin-1 qui ne fournissent pas d'informations explicites sur
-leur codage. Si un caractère analysé par Amaya ne correspond pas à un
-caractère UTF 8 valide (cela arrive si le document est codé en ISO-latin-1
-mais lu comme un fichier UTF 8), le document est considéré comme incorrect:
-le traitement s'arrête et un message d'erreur est affiché. Ce message propose
-soit de recharger le document comme un document HTML, soit de montrer les
-erreurs. Dans le premier cas, le document est rechargé avec le "charset"
-correspondant à l'ISO-latin-1. Le document est maintenant considéré comme
-modifié (un charset a été ajouté) et peut être sauvé.</p>
+href="EditChar.html.fr">ISO-latin-1</a>. Sans information sur le "charset" dans
+l'en-tête HTTP ou dans un élément <code>meta</code>, un document HTML est
+considéré comme codé en ISO-latin-1. Les documents XML (y compris XHTML) sont
+lus par défaut comme des fichiers UTF 8. Quand il n'y a pas d'information sur
+le "charset" dans l'en-tête HTTP, dans la déclaration XML, ou dans un élément
+<code>meta</code>, un document XML est considéré comme codé en UTF 8. Comme les
+codages par défaut de HTML et de XML sont différents, il arrive souvent que des
+auteurs aient créé des documents XML codés en ISO-latin-1 qui ne fournissent
+pas d'informations explicites sur leur codage. Si un caractère analysé par
+Amaya ne correspond pas à un caractère UTF 8 valide (cela arrive si le document
+est codé en ISO-latin-1 mais lu comme un fichier UTF 8), le document est
+considéré comme incorrect: le traitement s'arrête et un message d'erreur est
+affiché. Ce message propose soit de recharger le document comme un document
+HTML, soit de montrer les erreurs. Dans le premier cas, le document est
+rechargé avec le "charset" correspondant à l'ISO-latin-1. Le document est
+maintenant considéré comme modifié (un charset a été ajouté) et peut être
+sauvé.</p>
 
 <p><a name="entite" id="entite"><strong>Amaya</strong> interprète les entités
-caractères</a>. Quand il ne dispose pas du caractère correspondant, il
-affiche un '?' (ou il affiche le nom de l'entité lorsqu'elle figure dans un
-attribut ou quand elle est inconnue). Lorsque le document est sauvé, ces
-entités caractères sont restaurées, sauf si le document est codé en ISO
-Latin-1 et que l'entité correspond à un caractère ISO Latin-1. Dans ce cas
-c'est simplement le code ISO Latin-1 du caractère qui est sauvé. Si le
-document est codé en ASCII, Amaya convertit en entités les caractères ISO
-Latin-1 qui n'existent pas en ASCII.</p>
+caractères</a>. Quand il ne dispose pas du caractère correspondant, il affiche
+un '?' (ou il affiche le nom de l'entité lorsqu'elle figure dans un attribut ou
+quand elle est inconnue). Lorsque le document est sauvé, ces entités caractères
+sont restaurées, sauf si le document est codé en ISO Latin-1 et que l'entité
+correspond à un caractère ISO Latin-1. Dans ce cas c'est simplement le code ISO
+Latin-1 du caractère qui est sauvé. Si le document est codé en ASCII, Amaya
+convertit en entités les caractères ISO Latin-1 qui n'existent pas en ASCII.</p>
 
 <p></p>
 
