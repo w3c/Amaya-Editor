@@ -289,71 +289,72 @@
 287 Dokumenttyp XHTML 1.0 Transitional zuweisen
 288 XHTML 1.0 Strict
 289 XHTML 1.0 Basic
-290 HTML 4.01 Transitional
-291 HTML Strict
-292 Abschnitte numerieren
-293 Inhaltsverzeichnis erzeugen
-294 Buch erstellen
-295 Zeitstempel einfügen
-296 Grafiken
-297 SVG-Bibliothek anzeigen...
-298 Markierung in SVG-Bibliothek
-299 A&nmerkungen
-300 Zur Markierung
-301 Zum Dokument
-302 Auf Markierung verschieben
-303 Als XPointer speichern
-304 Auf XPointer verschieben
-305 Beantworten
-306 Veröffentlichen
-307 Löschen
-308 Laden
-309 Abfrage bearbeiten...
-310 Filter...
-311 &Kooperation
-312 Resource sperren...
-313 Resource entsperren...
-314 Resourceeigenschaften anzeigen...
-315 Sperrinformation kopieren...
-316 Gesperrt?
-317 **Templates
-318 **Create template from current document...
-319 **Create a text box
-320 **Create a free editing box
-321 &Javascript/DOM
-322 Java-Unterstützung ein-/ausschalten
-323 Befehl ausführen
-324 externes Skript ausführen
-325 externes Skript hinzufügen
-326 Skript einfügen
-327 Info
-328 Über Amaya
-329 Index
-330 Browsen
-331 Ansichten
-332 Markieren
-333 Dokuments
-334 Elemente
-335 Attribute
-336 Zeichen
-337 Vorlagen
-338 Transformieren
-339 Verweise
-340 Tabellen
-341 Aktive Bildbereiche
-342 Formeln
-343 Grafiken
-344 XML
-345 Formate/Formatvorlagen
-346 Suchen/Ersetzen
-347 Rechtschreibprüfung
-348 Speichern/Veröffentlichen
-349 Kooperation
-350 Drucken
-351 Abschnitte numerieren
-352 Buch erstellen
-353 Anmerkungen
-354 Konfiguration
-355 Tastenkürzel
-356 Benutzerfreundlichkeit
-357 Tip des Tages...
+290 XHTML+RDFa
+291 HTML 4.01 Transitional
+292 HTML Strict
+293 Abschnitte numerieren
+294 Inhaltsverzeichnis erzeugen
+295 Buch erstellen
+296 Zeitstempel einfügen
+297 Grafiken
+298 SVG-Bibliothek anzeigen...
+299 Markierung in SVG-Bibliothek
+300 A&nmerkungen
+301 Zur Markierung
+302 Zum Dokument
+303 Auf Markierung verschieben
+304 Als XPointer speichern
+305 Auf XPointer verschieben
+306 Beantworten
+307 Veröffentlichen
+308 Löschen
+309 Laden
+310 Abfrage bearbeiten...
+311 Filter...
+312 &Kooperation
+313 Resource sperren...
+314 Resource entsperren...
+315 Resourceeigenschaften anzeigen...
+316 Sperrinformation kopieren...
+317 Gesperrt?
+318 **Templates
+319 **Create template from current document...
+320 **Create a text box
+321 **Create a free editing box
+322 &Javascript/DOM
+323 Java-Unterstützung ein-/ausschalten
+324 Befehl ausführen
+325 externes Skript ausführen
+326 externes Skript hinzufügen
+327 Skript einfügen
+328 Info
+329 Über Amaya
+330 Index
+331 Browsen
+332 Ansichten
+333 Markieren
+334 Dokuments
+335 Elemente
+336 Attribute
+337 Zeichen
+338 Vorlagen
+339 Transformieren
+340 Verweise
+341 Tabellen
+342 Aktive Bildbereiche
+343 Formeln
+344 Grafiken
+345 XML
+346 Formate/Formatvorlagen
+347 Suchen/Ersetzen
+348 Rechtschreibprüfung
+349 Speichern/Veröffentlichen
+350 Kooperation
+351 Drucken
+352 Abschnitte numerieren
+353 Buch erstellen
+354 Anmerkungen
+355 Konfiguration
+356 Tastenkürzel
+357 Benutzerfreundlichkeit
+358 Tip des Tages...

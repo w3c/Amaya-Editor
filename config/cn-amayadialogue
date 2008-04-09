@@ -289,71 +289,72 @@
 287 改为 XHTML 1.0 Transitional
 288 改为 XHTML 1.0 Strict
 289 改为 XHTML 1.0 Basic
-290 改为 HTML 4.01 Transitional
-291 改为 HTML 4.01 Strict
-292 区域统计(&S)
-293 生成内容列表(&G)
-294 制作书籍(&M)
-295 插入时间戳
-296 **Graphics
-297 显示图形库
-298 添加选中图形
-299 注释
-300 为选择区作注释
-301 为文档作注释
-302 移动到选择区
-303 存储选择区为 XPointer(&X)
-304 移动到已存储的 XPointer
-305 答复注释
-306 提交到服务器
-307 删除
-308 载入
-309 自定义查询...
-310 本地过滤器...
-311 协作(&O)
-312 锁定资源...
-313 取消锁定资源...
-314 查看资源属性...
-315 复制锁定信息...
-316 锁定了吗?
-317 **Templates
-318 **Create template from current document...
-319 **Create a text box
-320 **Create a free editing box
-321 &Javascript/DOM
-322 **Enable/Disable
-323 **Execute a command
-324 **Execute an external script
-325 **Add an external script
-326 **Insert a script
-327 关于 Amaya
-328 关于 Amaya at W3C
-329 索引
-330 Browsing
-331 Views
-332 Selecting
-333 Document
-334 Creating elements
-335 Attributes
-336 Characters
-337 **Templates
-338 Restructuring
-339 Links
-340 Tables
-341 Image maps
-342 Math
-343 Graphics
-344 XML support
-345 Style sheets
-346 Searching
-347 Spell Checking
-348 Publishing
-349 协作
-350 Printing
-351 Numbering
-352 Making books
-353 Annotations
-354 Configuring
-355 Shortcuts
-356 Accessibility in Amaya
-357 **Tip of the day...
+290 **Change to XHTML+RDFa
+291 改为 HTML 4.01 Transitional
+292 改为 HTML 4.01 Strict
+293 区域统计(&S)
+294 生成内容列表(&G)
+295 制作书籍(&M)
+296 插入时间戳
+297 **Graphics
+298 显示图形库
+299 添加选中图形
+300 注释
+301 为选择区作注释
+302 为文档作注释
+303 移动到选择区
+304 存储选择区为 XPointer(&X)
+305 移动到已存储的 XPointer
+306 答复注释
+307 提交到服务器
+308 删除
+309 载入
+310 自定义查询...
+311 本地过滤器...
+312 协作(&O)
+313 锁定资源...
+314 取消锁定资源...
+315 查看资源属性...
+316 复制锁定信息...
+317 锁定了吗?
+318 **Templates
+319 **Create template from current document...
+320 **Create a text box
+321 **Create a free editing box
+322 &Javascript/DOM
+323 **Enable/Disable
+324 **Execute a command
+325 **Execute an external script
+326 **Add an external script
+327 **Insert a script
+328 关于 Amaya
+329 关于 Amaya at W3C
+330 索引
+331 Browsing
+332 Views
+333 Selecting
+334 Document
+335 Creating elements
+336 Attributes
+337 Characters
+338 **Templates
+339 Restructuring
+340 Links
+341 Tables
+342 Image maps
+343 Math
+344 Graphics
+345 XML support
+346 Style sheets
+347 Searching
+348 Spell Checking
+349 Publishing
+350 协作
+351 Printing
+352 Numbering
+353 Making books
+354 Annotations
+355 Configuring
+356 Shortcuts
+357 Accessibility in Amaya
+358 **Tip of the day...

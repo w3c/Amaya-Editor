@@ -289,71 +289,72 @@
 287 Cambia/Crea doctype XHTML 1.0 Transitional
 288 Cambia/Crea doctype XHTML 1.0 Strict
 289 Cambia/Crea doctype XHTML 1.0 Basic
-290 Cambia/Crea doctype HTML 4.01 Transitional
-291 Cambia/Crea doctype HTML 4.01 Strict
-292 Numerazione delle sezioni
-293 Genera Indice
-294 Crea libro
-295 Inserisci timestamp
-296 Grafica
-297 Mostri librería SVG
-298 Aggiunga nella librería SVG
-299 A&nnotazioni
-300 Annota la selezione
-301 Annota il documento
-302 Muovi sulla selezione
-303 Salva la selezione come XPointer
-304 Muovi sull'Xpointer memorizzato
-305 Rispondi all'annotazione
-306 Registra
-307 Elimina
-308 Carica
-309 Personalizza la richiesta
-310 Filtro locale...
-311 &Cooperazione
-312 Lock resource...
-313 Unlock resource...
-314 Informazioni per il lock...
-315 Copia delle informazioni per il lock...
-316 Lock?
-317 **Templates
-318 **Create template from current document...
-319 **Create a text box
-320 **Create a free editing box
-321 &Javascript/DOM
-322 Attiva/Disattiva
-323 Esegui un comando
+290 Cambia/Crea doctype XHTML+RDFa
+291 Cambia/Crea doctype HTML 4.01 Transitional
+292 Cambia/Crea doctype HTML 4.01 Strict
+293 Numerazione delle sezioni
+294 Genera Indice
+295 Crea libro
+296 Inserisci timestamp
+297 Grafica
+298 Mostri librería SVG
+299 Aggiunga nella librería SVG
+300 A&nnotazioni
+301 Annota la selezione
+302 Annota il documento
+303 Muovi sulla selezione
+304 Salva la selezione come XPointer
+305 Muovi sull'Xpointer memorizzato
+306 Rispondi all'annotazione
+307 Registra
+308 Elimina
+309 Carica
+310 Personalizza la richiesta
+311 Filtro locale...
+312 &Cooperazione
+313 Lock resource...
+314 Unlock resource...
+315 Informazioni per il lock...
+316 Copia delle informazioni per il lock...
+317 Lock?
+318 **Templates
+319 **Create template from current document...
+320 **Create a text box
+321 **Create a free editing box
+322 &Javascript/DOM
+323 Attiva/Disattiva
 324 Esegui un comando
-325 Aggiungi uno script esterno
-326 Inserisci uno script
-327 Informazioni su Amaya
-328 Informazioni su Amaya al W3C
-329 Indice
-330 Navigazione
-331 Viste
-332 Selezione
-333 Documento
-334 Creazione elementi
-335 Attributi
-336 Caratteri
-337 Modelli
-338 Ristrutturazione
-339 Collegamenti
-340 Tabelle
-341 Zone attive
-342 Matematica
-343 Graphics
-344 Supporto XML
-345 Fogli di stile
-346 Ricerca
-347 Controllo ortografico
-348 Pubblicazione
-349 Cooperazione
-350 Stampa
-351 Numerazione
-352 Creare un libro
-353 Annotazioni
-354 Configurazione
-355 Scelte rapide
-356 Accessibilità in Amaya
-357 Suggerimenti del giorno...
+325 Esegui un comando
+326 Aggiungi uno script esterno
+327 Inserisci uno script
+328 Informazioni su Amaya
+329 Informazioni su Amaya al W3C
+330 Indice
+331 Navigazione
+332 Viste
+333 Selezione
+334 Documento
+335 Creazione elementi
+336 Attributi
+337 Caratteri
+338 Modelli
+339 Ristrutturazione
+340 Collegamenti
+341 Tabelle
+342 Zone attive
+343 Matematica
+344 Graphics
+345 Supporto XML
+346 Fogli di stile
+347 Ricerca
+348 Controllo ortografico
+349 Pubblicazione
+350 Cooperazione
+351 Stampa
+352 Numerazione
+353 Creare un libro
+354 Annotazioni
+355 Configurazione
+356 Scelte rapide
+357 Accessibilità in Amaya
+358 Suggerimenti del giorno...

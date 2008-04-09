@@ -289,71 +289,72 @@
 287 Modificar/Criar doctype XHTML 1.0
 288 Alterar doctype para XHTML 1.0 Strict
 289 Alterar doctype para XHTML 1.0 Basic
-290 Alterar doctype para HTML 4.01 Transitional
-291 Alterar doctype para HTML 4.01 Strict
-292 Numeração de seção
-293 **&Add/Update table of contents
-294 Construir livro
-295 **Insert time stamp
-296 **Graphics
-297 **Show SVG library
-298 **Add to SVG library
-299 A&notações
-300 Anotar seleção
-301 Anotar documento
-302 Mover até a seleção
-303 Salvar seleção como XPointer
-304 Mover para o XPointer memorizado
-305 Responder à anotação
-306 Registrar
-307 Apagar
-308 Carregar
-309 Personalizar consulta...
-310 Filtro local...
-311 &Cooperação
-312 Travar o recurso
-313 Destravar o recurso
-314 Exibir as propriedades do recurso
-315 Copiar a informação da trava...
-316 Travado?
-317 **Templates
-318 **Create template from current document...
-319 **Create a text box
-320 **Create a free editing box
-321 &Javascript/DOM
-322 **Enable/Disable
-323 **Execute a command
-324 **Execute an external script
-325 **Add an external script
-326 **Insert a script
-327 Sobre Amaya
-328 Sobre Amaya no W3C
-329 Índice
-330 Navegar
-331 Vistas
-332 Selecionar
-333 Documento
-334 Criar elementos
-335 Atributos
-336 Caracteres
-337 **Templates
-338 Reestruturar
-339 Enlaces
-340 Tabelas
-341 Mapas de Imagem
-342 Matemática
-343 Gráficos
-344 Suporte à XML
-345 Folhas de estilo
-346 Achar...
-347 Verificar ortografia
-348 Publicar
-349 Cooperação
-350 Imprimir
-351 Numberar
-352 Criar livros
-353 Anotações
-354 Configurar
-355 Atalhos
-356 Accessibilidade em Amaya
-357 **Tip of the day...
+290 Alterar doctype para XHTML+RDFa
+291 Alterar doctype para HTML 4.01 Transitional
+292 Alterar doctype para HTML 4.01 Strict
+293 Numeração de seção
+294 **&Add/Update table of contents
+295 Construir livro
+296 **Insert time stamp
+297 **Graphics
+298 **Show SVG library
+299 **Add to SVG library
+300 A&notações
+301 Anotar seleção
+302 Anotar documento
+303 Mover até a seleção
+304 Salvar seleção como XPointer
+305 Mover para o XPointer memorizado
+306 Responder à anotação
+307 Registrar
+308 Apagar
+309 Carregar
+310 Personalizar consulta...
+311 Filtro local...
+312 &Cooperação
+313 Travar o recurso
+314 Destravar o recurso
+315 Exibir as propriedades do recurso
+316 Copiar a informação da trava...
+317 Travado?
+318 **Templates
+319 **Create template from current document...
+320 **Create a text box
+321 **Create a free editing box
+322 &Javascript/DOM
+323 **Enable/Disable
+324 **Execute a command
+325 **Execute an external script
+326 **Add an external script
+327 **Insert a script
+328 Sobre Amaya
+329 Sobre Amaya no W3C
+330 Índice
+331 Navegar
+332 Vistas
+333 Selecionar
+334 Documento
+335 Criar elementos
+336 Atributos
+337 Caracteres
+338 **Templates
+339 Reestruturar
+340 Enlaces
+341 Tabelas
+342 Mapas de Imagem
+343 Matemática
+344 Gráficos
+345 Suporte à XML
+346 Folhas de estilo
+347 Achar...
+348 Verificar ortografia
+349 Publicar
+350 Cooperação
+351 Imprimir
+352 Numberar
+353 Criar livros
+354 Anotações
+355 Configurar
+356 Atalhos
+357 Accessibilidade em Amaya
+358 **Tip of the day...

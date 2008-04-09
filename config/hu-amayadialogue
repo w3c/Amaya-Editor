@@ -289,71 +289,72 @@
 287 XHTML 1.0 átmenetivé tétel
 288 XHTML 1.0 kötötté tétel
 289 XHTML 1.0 alappá tétel
-290 &HTML 4.01 átmenetivé tétel
-291 HTML 4.01 kötötté tétel
-292 &Szakasz számozás
-293 &Tartalomjegyzék létrehozása
-294 &Kötet létrehozása
-295 Időbélyeg beilesztése
-296 
-297 &Képtár mutatása
-298 Kijelölt kép &beillesztése
-299 &Jegyzetek
-300 Jegyzet a &kijelöléshez
-301 Jegyzet a &dokumentumhoz
-302 &Ugrás a kijelöléshez
-303 Kijelölés tárolása &XPointerként
-304 &Tárolt XPointerhez ugrás
-305 Jegyzetre &válaszolás
-306 Küldés a &kiszolgálóra
-307 &Törlés
-308 &Betöltés
-309 &Lekérdezés testreszabása...
-310 &Helyi szűrő...
-311 &Együttműködés
-312 Erőforrás &zárolása...
-313 Erőforrás &felszabadítása...
-314 Erőforrás &tulajdonságai...
-315 Zárolási adatok &másolása...
-316 &Zárolt?
-317 **Templates
-318 **Create template from current document...
-319 **Create a text box
-320 **Create a free editing box
-321 &Javascript/DOM
-322 Engedélyezés/tiltás
-323 Parancs végrehajtása
-324 Külső szkript végrehajtása
-325 Külső szkript hozzáadása
-326 Szkript beillesztése
-327 Amaya &névjegye
-328 Az Amaya a W3C &webhelyen
-329 &Betűrendes mutató
-330 Böngészés
-331 &Nézetek
-332 Kijelölés
-333 Dokumentum
-334 Elemek létrehozása
-335 &Attribútumok
-336 Karakterek
-337 Sablonok
-338 Szerkezetátalakítás
-339 Kapcsok
-340 Táblázatok
-341 Térképek
-342 Matematika
-343 Grafika
-344 XML támogatás
-345 &Stíluslapok
-346 Keresés
-347 &Szóellenőrzés
-348 &Kiadás
-349 Együttműködés
-350 Nyomtatás
-351 Számozás
-352 Kötetek
-353 Jegyzetek
-354 Beállítása
-355 Gyorsbillentyűk
-356 Kisegítő lehetőségek az Amayában
-357 A nap tippje
+290 **Change to XHTML+RDFa
+291 &HTML 4.01 átmenetivé tétel
+292 HTML 4.01 kötötté tétel
+293 &Szakasz számozás
+294 &Tartalomjegyzék létrehozása
+295 &Kötet létrehozása
+296 Időbélyeg beilesztése
+297 
+298 &Képtár mutatása
+299 Kijelölt kép &beillesztése
+300 &Jegyzetek
+301 Jegyzet a &kijelöléshez
+302 Jegyzet a &dokumentumhoz
+303 &Ugrás a kijelöléshez
+304 Kijelölés tárolása &XPointerként
+305 &Tárolt XPointerhez ugrás
+306 Jegyzetre &válaszolás
+307 Küldés a &kiszolgálóra
+308 &Törlés
+309 &Betöltés
+310 &Lekérdezés testreszabása...
+311 &Helyi szűrő...
+312 &Együttműködés
+313 Erőforrás &zárolása...
+314 Erőforrás &felszabadítása...
+315 Erőforrás &tulajdonságai...
+316 Zárolási adatok &másolása...
+317 &Zárolt?
+318 **Templates
+319 **Create template from current document...
+320 **Create a text box
+321 **Create a free editing box
+322 &Javascript/DOM
+323 Engedélyezés/tiltás
+324 Parancs végrehajtása
+325 Külső szkript végrehajtása
+326 Külső szkript hozzáadása
+327 Szkript beillesztése
+328 Amaya &névjegye
+329 Az Amaya a W3C &webhelyen
+330 &Betűrendes mutató
+331 Böngészés
+332 &Nézetek
+333 Kijelölés
+334 Dokumentum
+335 Elemek létrehozása
+336 &Attribútumok
+337 Karakterek
+338 Sablonok
+339 Szerkezetátalakítás
+340 Kapcsok
+341 Táblázatok
+342 Térképek
+343 Matematika
+344 Grafika
+345 XML támogatás
+346 &Stíluslapok
+347 Keresés
+348 &Szóellenőrzés
+349 &Kiadás
+350 Együttműködés
+351 Nyomtatás
+352 Számozás
+353 Kötetek
+354 Jegyzetek
+355 Beállítása
+356 Gyorsbillentyűk
+357 Kisegítő lehetőségek az Amayában
+358 A nap tippje

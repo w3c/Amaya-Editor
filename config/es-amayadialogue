@@ -289,71 +289,72 @@
 287 Cambiar a XHTML 1.0 Transitional
 288 Cambiar a XHTML 1.0 &Strict
 289 Cambiar a XHTML 1.0 Basic
-290 Cambiar a HTML 4.01 Transitional
-291 Cambiar a HTML 4.01 Strict
-292 &Numerar encabezados
-293 &Generar índice de materias
-294 &Hacer libro
-295 Insertar fecha y hora actual
-296 Gráficos
-297 &Ver Biblioteca SVG
-298 &Añadir a la Biblioteca SVG
-299 A&notaciones
-300 Anotar &selección
-301 Anotar &documento
-302 &Mover a selección
-303 Guardar selección como &XPointer
-304 Mover a &XPointer guardado
-305 &Responder a anotación
-306 &Enviar al servidor
-307 &Borrar
-308 &Cargar
-309 &Personalizar consulta...
-310 &Filtro local...
-311 &Cooperación
-312 Bloquear recurso
-313 Desbloquear recurso...
-314 Ver propiedades del recurso...
-315 Copiar información de bloqueo
-316 ¿Bloqueado?
-317 **Templates
-318 **Create template from current document...
-319 **Create a text box
-320 **Create a free editing box
-321 &Javascript/DOM
-322 Activar/Desactivar
-323 Ejecutar un comando
-324 Ejecutar un script externo
-325 Añadir un script externo
-326 Insertar un script
-327 Acerca de Amaya
-328 Página web de Amaya en el W3C
-329 Índice
-330 Navegar
-331 Vistas
-332 Seleccionar
-333 Documentos
-334 Crear elementos
-335 Atributos
-336 Caracteres
-337 Modelos
-338 Reestructurar
-339 Enlaces
-340 Tablas
-341 Mapas de imagen
-342 MathML
-343 Gráficos
-344 Soporte XML
-345 Hojas de estilo
-346 Buscar
-347 Revisar ortografía
-348 Publicar
-349 Cooperación
-350 Imprimir
-351 Numerar
-352 Hacer libros
-353 Anotaciones
-354 Configurar
-355 Atajos de teclado
-356 Accesibilidad
-357 Sugerencia del día...
+290 Cambiar a XHTML+RDFa
+291 Cambiar a HTML 4.01 Transitional
+292 Cambiar a HTML 4.01 Strict
+293 &Numerar encabezados
+294 &Generar índice de materias
+295 &Hacer libro
+296 Insertar fecha y hora actual
+297 Gráficos
+298 &Ver Biblioteca SVG
+299 &Añadir a la Biblioteca SVG
+300 A&notaciones
+301 Anotar &selección
+302 Anotar &documento
+303 &Mover a selección
+304 Guardar selección como &XPointer
+305 Mover a &XPointer guardado
+306 &Responder a anotación
+307 &Enviar al servidor
+308 &Borrar
+309 &Cargar
+310 &Personalizar consulta...
+311 &Filtro local...
+312 &Cooperación
+313 Bloquear recurso
+314 Desbloquear recurso...
+315 Ver propiedades del recurso...
+316 Copiar información de bloqueo
+317 ¿Bloqueado?
+318 **Templates
+319 **Create template from current document...
+320 **Create a text box
+321 **Create a free editing box
+322 &Javascript/DOM
+323 Activar/Desactivar
+324 Ejecutar un comando
+325 Ejecutar un script externo
+326 Añadir un script externo
+327 Insertar un script
+328 Acerca de Amaya
+329 Página web de Amaya en el W3C
+330 Índice
+331 Navegar
+332 Vistas
+333 Seleccionar
+334 Documentos
+335 Crear elementos
+336 Atributos
+337 Caracteres
+338 Modelos
+339 Reestructurar
+340 Enlaces
+341 Tablas
+342 Mapas de imagen
+343 MathML
+344 Gráficos
+345 Soporte XML
+346 Hojas de estilo
+347 Buscar
+348 Revisar ortografía
+349 Publicar
+350 Cooperación
+351 Imprimir
+352 Numerar
+353 Hacer libros
+354 Anotaciones
+355 Configurar
+356 Atajos de teclado
+357 Accesibilidad
+358 Sugerencia del día...

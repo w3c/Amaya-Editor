@@ -289,71 +289,72 @@
 287 Changer pour XHTML 1.0 Transitional
 288 Changer pour XHTML 1.0 Strict
 289 Changer pour XHTML 1.0 Basic
-290 Changer pour HTML 4.01 Transitional
-291 Changer pour HTML 4.01 Strict
-292 &Numéroter les sections
-293 &Ajouter/Actualiser la table des matières
-294 &Construire un livre
-295 Insérer la date de mise à jour
-296 Graphiques
-297 Montrer la librairie SVG
-298 Ajouter à la librairie SVG
-299 A&nnotations
-300 Annoter la sélection
-301 Annoter le document
-302 Déplacer sur la sélection
-303 Enregistrer la sélection comme &XPointer
-304 Déplacer sur le XPointer enregistré
-305 Répondre à l'annotation
-306 Enregister sur le serveur
-307 Supprimer
-308 Charger annotations
-309 Personnaliser la requête...
-310 Filtrer local...
-311 C&oopération
-312 Verrouiller la ressource...
-313 Déverrouiller la ressource...
-314 Visualiser les propriétés de la ressource...
-315 Copier les informations du verrou...
-316 Verrouillé ?
-317 Modèles
-318 Créer un modèle depuis le document courant...
-319 Créer une zone de texte
-320 Créer une zone d'édition libre
-321 &Javascript/DOM
-322 Activer/Désactiver
-323 Exécuter une commande
-324 Exécuter un script externe
-325 Ajouter un script externe
-326 Inserer un script
-327 À propos de Amaya
-328 À propos d'Amaya au W3C
-329 Index
-330 Navigation
-331 Vues
-332 Sélection
-333 Documents
-334 Création d'éléments
-335 Attributs
-336 Caractères
-337 Modèles
-338 Restructuration
-339 Liens
-340 Tableaux
-341 Zones actives
-342 Math
-343 Graphiques
-344 Support XML
-345 Feuilles de style
-346 Recherche
-347 Vérification orthographique
-348 Enregistrement
-349 Coopération
-350 Impression
-351 Numérotation
-352 Construction de livre
-353 Annotations
-354 Configuration
-355 Raccourcis clavier
-356 Accessibilité d'Amaya
-357 Conseil du jour...
+290 Changer pour XHTML+RDFa
+291 Changer pour HTML 4.01 Transitional
+292 Changer pour HTML 4.01 Strict
+293 &Numéroter les sections
+294 &Ajouter/Actualiser la table des matières
+295 &Construire un livre
+296 Insérer la date de mise à jour
+297 Graphiques
+298 Montrer la librairie SVG
+299 Ajouter à la librairie SVG
+300 A&nnotations
+301 Annoter la sélection
+302 Annoter le document
+303 Déplacer sur la sélection
+304 Enregistrer la sélection comme &XPointer
+305 Déplacer sur le XPointer enregistré
+306 Répondre à l'annotation
+307 Enregister sur le serveur
+308 Supprimer
+309 Charger annotations
+310 Personnaliser la requête...
+311 Filtrer local...
+312 C&oopération
+313 Verrouiller la ressource...
+314 Déverrouiller la ressource...
+315 Visualiser les propriétés de la ressource...
+316 Copier les informations du verrou...
+317 Verrouillé ?
+318 Modèles
+319 Créer un modèle depuis le document courant...
+320 Créer une zone de texte
+321 Créer une zone d'édition libre
+322 &Javascript/DOM
+323 Activer/Désactiver
+324 Exécuter une commande
+325 Exécuter un script externe
+326 Ajouter un script externe
+327 Inserer un script
+328 À propos de Amaya
+329 À propos d'Amaya au W3C
+330 Index
+331 Navigation
+332 Vues
+333 Sélection
+334 Documents
+335 Création d'éléments
+336 Attributs
+337 Caractères
+338 Modèles
+339 Restructuration
+340 Liens
+341 Tableaux
+342 Zones actives
+343 Math
+344 Graphiques
+345 Support XML
+346 Feuilles de style
+347 Recherche
+348 Vérification orthographique
+349 Enregistrement
+350 Coopération
+351 Impression
+352 Numérotation
+353 Construction de livre
+354 Annotations
+355 Configuration
+356 Raccourcis clavier
+357 Accessibilité d'Amaya
+358 Conseil du jour...

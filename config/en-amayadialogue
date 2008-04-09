@@ -289,71 +289,72 @@
 287 Change to XHTML 1.0 Transitional
 288 Change to XHTML 1.0 Strict
 289 Change to XHTML 1.0 Basic
-290 Change to HTML 4.01 Transitional
-291 Change to HTML 4.01 Strict
-292 &Section numbering
-293 &Add/Update table of contents
-294 &Make book
-295 Insert time stamp
-296 Graphics
-297 Show SVG library
-298 Add to SVG library
-299 A&nnotations
-300 Annotate selection
-301 Annotate document
-302 Move to selection
-303 Store selection as &XPointer
-304 Move to stored XPointer
-305 Reply to annotation
-306 Post to server
-307 Delete
-308 Load
-309 Customize query...
-310 Local filter...
-311 C&ooperation
-312 Lock resource...
-313 Unlock resource...
-314 View resource properties...
-315 Copy lock information...
-316 Locked?
-317 Templates
-318 Create template from current document...
-319 Create a text box
-320 Create a free editing box
-321 &Javascript/DOM
-322 Enable/Disable
-323 Execute a command
-324 Execute an external script
-325 Add an external script
-326 Insert a script
-327 About Amaya
-328 About Amaya at W3C
-329 Index
-330 Browsing
-331 Views
-332 Selecting
-333 Documents
-334 Creating elements
-335 Attributes
-336 Characters
-337 Templates
-338 Restructuring
-339 Links
-340 Tables
-341 Image maps
-342 Math
-343 Graphics
-344 XML support
-345 Style sheets
-346 Searching
-347 Spell checking
-348 Publishing
-349 Cooperation
-350 Printing
-351 Numbering
-352 Making books
-353 Annotations
-354 Configuring
-355 Shortcuts
-356 Accessibility in Amaya
-357 Tip of the day...
+290 Change to XHTML+RDFa
+291 Change to HTML 4.01 Transitional
+292 Change to HTML 4.01 Strict
+293 &Section numbering
+294 &Add/Update table of contents
+295 &Make book
+296 Insert time stamp
+297 Graphics
+298 Show SVG library
+299 Add to SVG library
+300 A&nnotations
+301 Annotate selection
+302 Annotate document
+303 Move to selection
+304 Store selection as &XPointer
+305 Move to stored XPointer
+306 Reply to annotation
+307 Post to server
+308 Delete
+309 Load
+310 Customize query...
+311 Local filter...
+312 C&ooperation
+313 Lock resource...
+314 Unlock resource...
+315 View resource properties...
+316 Copy lock information...
+317 Locked?
+318 Templates
+319 Create template from current document...
+320 Create a text box
+321 Create a free editing box
+322 &Javascript/DOM
+323 Enable/Disable
+324 Execute a command
+325 Execute an external script
+326 Add an external script
+327 Insert a script
+328 About Amaya
+329 About Amaya at W3C
+330 Index
+331 Browsing
+332 Views
+333 Selecting
+334 Documents
+335 Creating elements
+336 Attributes
+337 Characters
+338 Templates
+339 Restructuring
+340 Links
+341 Tables
+342 Image maps
+343 Math
+344 Graphics
+345 XML support
+346 Style sheets
+347 Searching
+348 Spell checking
+349 Publishing
+350 Cooperation
+351 Printing
+352 Numbering
+353 Making books
+354 Annotations
+355 Configuring
+356 Shortcuts
+357 Accessibility in Amaya
+358 Tip of the day...
