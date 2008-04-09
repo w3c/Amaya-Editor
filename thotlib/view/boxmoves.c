@@ -1844,23 +1844,22 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
       if (pParent && pParent->AbBox &&
           pParent->AbBox->BxType == BoGhost)
         {
+          /* check if it's the first and/or the last child */
+          pPrev = pAb->AbPrevious;
+          while (pPrev && pPrev->AbPresentationBox)
+            pPrev = pPrev->AbPrevious;
+          first = (pPrev == NULL);
+          pNext = pAb->AbNext;
+          while (pNext && pNext->AbPresentationBox)
+            pNext = pNext->AbNext;
+          last = (pNext == NULL);
           if (pBox->BxType == BoPiece || pBox->BxType == BoScript)
             {
               /* check if it's the first and/or the last piece of text */
-              first = (pBox == pAb->AbBox->BxNexChild);
-              last = (pBox->BxNexChild == NULL);
-            }
-          else
-            {
-              /* check if it's the first and/or the last child */
-              pPrev = pAb->AbPrevious;
-              while (pPrev && pPrev->AbPresentationBox)
-                pPrev = pPrev->AbPrevious;
-              first = (pPrev == NULL);
-              pNext = pAb->AbNext;
-              while (pNext && pNext->AbPresentationBox)
-                pNext = pNext->AbNext;
-              last = (pNext == NULL);
+              if (first)
+                first = (pBox == pAb->AbBox->BxNexChild);
+              if (last)
+                last = (pBox->BxNexChild == NULL);
             }
 
           /* check the block type */
@@ -1952,6 +1951,35 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
               pAb = pAb->AbEnclosing;
             }
         }
+    }
+}
+
+/*----------------------------------------------------------------------
+  CheckExtensibleBlocks
+  Check if extensible boxes must be updated
+  ----------------------------------------------------------------------*/
+static void CheckExtensibleBlocks (PtrAbstractBox pAb, PtrBox pBox, int frame)
+{
+  PtrAbstractBox pChild;
+  PtrBox         box;
+
+  pChild = pAb->AbFirstEnclosed;
+  while (pChild)
+    {
+      if (pChild->AbLeafType == LtCompound && pChild->AbBox && !pChild->AbDead &&
+          pChild->AbBox->BxContentWidth)
+        {
+          box = pChild->AbBox;
+          if (box->BxType == BoBlock || box->BxType == BoFloatBlock)
+            {
+              //if (box->BxWidth > pBox->BxW)
+              RecomputeLines (pChild, NULL, pBox, frame);
+            }
+          else
+            // check enclosed blocks
+            CheckExtensibleBlocks (pChild, pBox, frame);
+        }
+      pChild = pChild->AbNext;
     }
 }
 
@@ -2349,6 +2377,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                 }
             }
 
+          if (pBox->BxType == BoCell)
+            CheckExtensibleBlocks (pAb, pBox, frame);
           /* check dimension constraints */
           pDimRel = pBox->BxWidthRelations;
           while (pDimRel)
@@ -2436,7 +2466,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
               /* next relation block */
               pDimRel = pDimRel->DimRNext;
             }
-
+          
           /* Check enclosing constraints */
           pParent = pAb->AbEnclosing;
           if (!toMove)

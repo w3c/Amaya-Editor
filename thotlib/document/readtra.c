@@ -1083,6 +1083,7 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
           pTSch->TsVarBuffer[i].VbIdent[0] = EOS;
           pTSch->TsVarBuffer[i].VbNum = 0;
         }
+      i = 0;
       for (i = 0; i < pTSch->TsNVarBuffers; i++)
         {
           TtaReadName (file, (unsigned char *)pTSch->TsVarBuffer[i].VbIdent);
@@ -1166,7 +1167,7 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
                         ReadPtrTRuleBlock (file, &pNextBlock);
                 }
             }
-      TtaReadShort (file, &pTSch->TsNTranslScripts);
+      TtaReadShort (file, &(pTSch->TsNTranslScripts));
       if (!error)
         for (i = 0; i < pTSch->TsNTranslScripts; i++)
           {
@@ -1175,8 +1176,8 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
             TtaReadShort (file, &pAlphTr->AlBegin);
             TtaReadShort (file, &pAlphTr->AlEnd);
           }
-      TtaReadShort (file, &pTSch->TsSymbolFirst);
-      TtaReadShort (file, &pTSch->TsSymbolLast);
+      TtaReadShort (file, &(pTSch->TsSymbolFirst));
+      TtaReadShort (file, &(pTSch->TsSymbolLast));
       TtaReadShort (file, &pTSch->TsGraphicsFirst);
       TtaReadShort (file, &pTSch->TsGraphicsLast);
       TtaReadShort (file, &pTSch->TsNCharTransls);
@@ -1184,7 +1185,7 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
       if (!error)
         for (i = 0; i < pTSch->TsNCharTransls; i++)
           {
-            pStringTr = &pTSch->TsCharTransl[i];
+            pStringTr = &(pTSch->TsCharTransl[i]);
             /* lit la chaine source */
             j = 0;
             do
