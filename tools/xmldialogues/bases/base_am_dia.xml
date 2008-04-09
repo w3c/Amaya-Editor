@@ -3936,7 +3936,7 @@
 <message xml:lang="es">Cambiar a XHTML+RDFa</message>
 <message xml:lang="pt">Alterar doctype para XHTML+RDFa</message>
 <message xml:lang="fi">Aseta tyypiksi XHTML 1.0+RDFa</message>
-<message xml:lang="tr">XHTML+RDFa doctype</message>
+<message xml:lang="tr">XHTML+RDFa doctype</message></label>
 <label define="BDoctypeHtmlTransitional">
 <message xml:lang="en">Change to HTML 4.01 Transitional</message>
 <message xml:lang="fr">Changer pour HTML 4.01 Transitional</message>
