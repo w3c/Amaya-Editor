@@ -710,15 +710,16 @@ static void SetFormReadWrite (Element el, Document doc)
   ----------------------------------------------------------------------*/
 void DocStatusUpdate (Document doc, ThotBool modified)
 {
-  Document    otherDoc;
-  int document;
-  ThotBool NoDocumentModified;
+  Document    otherDoc, idoc;
+  ThotBool    noDocumentModified;
 
   if (modified && TtaGetDocumentAccessMode (doc))
     /* the document has been modified and is not in Read-Only mode */
     {
       TtaSetItemOn (doc, 1, File, BSave);
-      TtaSetItemOn (doc, 1, File, BSaveAll);
+        // update all document status
+        for (idoc = 1; idoc < DocumentTableLength; idoc++)
+          TtaSetItemOn (idoc, 1, File, BSaveAll);
 #ifdef _JAVA
       StopJavascript (doc);
 #endif /* _JAVA */
@@ -737,16 +738,18 @@ void DocStatusUpdate (Document doc, ThotBool modified)
   else
     /* the document is no longer modified */
     {
-      NoDocumentModified = TRUE;
-      for (document = 1 ; NoDocumentModified && document < DocumentTableLength; document++)
+      noDocumentModified = TRUE;
+      for (idoc = 1; noDocumentModified && idoc < DocumentTableLength; idoc++)
         {
-          if (TtaIsDocumentModified (document) && document!=doc)
-            NoDocumentModified = FALSE;
+          if (TtaIsDocumentModified (idoc) && idoc != doc)
+            noDocumentModified = FALSE;
         }
 
       TtaSetItemOff (doc, 1, File, BSave);
-      if (NoDocumentModified)
-        TtaSetItemOff (doc, 1, File, BSaveAll);
+      if (noDocumentModified)
+        // update all document status
+        for (idoc = 1; noDocumentModified && idoc < DocumentTableLength; idoc++)
+          TtaSetItemOff (idoc, 1, File, BSaveAll);
 
       if (TtaIsDocumentUpdated (doc))
         {
