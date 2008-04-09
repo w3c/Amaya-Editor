@@ -455,6 +455,36 @@ ATTRIBUTES
         AttrDelete.Post -> GlobalAttrDeleted;
         END;
 
+   about:
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
+
+   property:
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
+
+   resource:
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
+
+  datatype:
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
+
+  instanceof:
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
+
    onclick:
         BEGIN
         AttrCreate.Post -> GlobalAttrCreated;

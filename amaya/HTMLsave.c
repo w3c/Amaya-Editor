@@ -1195,7 +1195,7 @@ void SetNamespacesAndDTD (Document doc)
   char         *charsetname = NULL;
   char          buffer[300];
   char         *attrText;
-  int           length, profile, pi_type;
+  int           length, profile, extraProfile, pi_type;
   ThotBool      useMathML, useSVG, useHTML, useXML, mathPI, useXLink;
   ThotBool      xmlDecl, xhtml_mimetype, insertMeta;
 
@@ -1301,12 +1301,13 @@ void SetNamespacesAndDTD (Document doc)
   if (DocumentMeta[doc]->xmlformat)
     {
       profile = TtaGetDocumentProfile(doc);
+      extraProfile = TtaGetDocumentExtraProfile(doc);
       if (DocumentTypes[doc] == docHTML && doctype)
         {
           /* Create a XHTML + MathML + SVG doctype */
           if ((useMathML || useSVG) && !useXML && !useXLink && profile == L_Xhtml11)
             {
-              CreateDoctype (doc, doctype, L_Xhtml11, useMathML, useSVG);
+              CreateDoctype (doc, doctype, L_Xhtml11, extraProfile, useMathML, useSVG);
               /* it's not necessary to generate the math PI */
               mathPI = FALSE;
             }
@@ -1315,7 +1316,7 @@ void SetNamespacesAndDTD (Document doc)
             TtaDeleteTree (doctype, doc);
           else
             // regenerate the doctype with the right profile
-            CreateDoctype (doc, doctype, profile, useMathML, useSVG);
+            CreateDoctype (doc, doctype, profile, extraProfile, useMathML, useSVG);
         }
       else if (doctype &&
                ((useSVG && (useMathML || useHTML || useXML || useXLink)) ||
@@ -1581,7 +1582,7 @@ void SetNamespacesAndDTD (Document doc)
   the parsing errors due to the new doctype
   ----------------------------------------------------------------------*/
 ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
-                              char *documentname, int new_doctype,
+                              char *documentname, int new_doctype, int new_extraProfile,
                               ThotBool *error, ThotBool xml_doctype,
                               ThotBool useMathML, ThotBool useSVG)
 {
@@ -1633,7 +1634,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
       DocumentMeta[ext_doc]->xmlformat = xml_doctype;
       charset = TtaGetDocumentCharset (doc);
       TtaSetDocumentCharset (ext_doc, charset, FALSE);
-      TtaSetDocumentProfile (ext_doc, new_doctype, 0);
+      TtaSetDocumentProfile (ext_doc, new_doctype, new_extraProfile);
 
       /* Copy the current document into a second temporary file */
       sprintf (tempdoc2, "%s%c%d%c%s",
@@ -1650,7 +1651,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
                   &parsingLevel, &charset, charsetname, &thotType, &extraProfile);
   /* Store the new document type */
-  TtaSetDocumentProfile (ext_doc, new_doctype, 0);
+  TtaSetDocumentProfile (ext_doc, new_doctype, new_extraProfile);
 
   // Get user information about read IDs
   Check_read_ids = TRUE;
@@ -1714,7 +1715,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
         elType.ElTypeNum = SVG_EL_DOCTYPE;
       eltype = TtaSearchTypedElement (elType, SearchInTree, docEl);
       /* Add the new doctype */
-      CreateDoctype (ext_doc, eltype, new_doctype, useMathML, useSVG);
+      CreateDoctype (ext_doc, eltype, new_doctype, new_extraProfile, useMathML, useSVG);
 
       /* Save this new document state */
       if (DocumentTypes[doc] == docSVG)
@@ -1761,7 +1762,7 @@ void RestartParser (Document doc, char *localFile,
   CHARSET       charset, doc_charset;
   DocumentType  thotType;
   char          charsetname[MAX_LENGTH];
-  int           profile, parsingLevel, extraProfile;
+  int           profile, parsingLevel, extraProfile, old_extraProfile;
   ThotBool      xmlDec, withDoctype, isXML, useMath, isKnown;
 
   if (doc == 0)
@@ -1814,7 +1815,8 @@ void RestartParser (Document doc, char *localFile,
   TtaClearUndoHistory (doc);
   /* Store the document profile if it has been modified */
   profile = TtaGetDocumentProfile (doc);
-  if (profile != parsingLevel)
+  old_extraProfile = TtaGetDocumentExtraProfile (doc);
+  if ((profile != parsingLevel) || (old_extraProfile != extraProfile))
     {
       TtaSetDocumentProfile (doc, parsingLevel, extraProfile);
       TtaUpdateMenus (doc, 1, FALSE);

@@ -760,7 +760,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
 
   elType.ElTypeNum = HTML_EL_DOCTYPE;
   doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-  CreateDoctype (newLibraryDoc, doctype, L_Xhtml11, FALSE, FALSE);
+  CreateDoctype (newLibraryDoc, doctype, L_Xhtml11, 0, FALSE, FALSE);
   
   /* Load user's style sheet */
   LoadUserStyleSheet (newLibraryDoc);
@@ -1903,7 +1903,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
       /* create the SVG DOCTYPE element */
       elType.ElTypeNum = SVG_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, root);
-      CreateDoctype (newSVGDoc, doctype, L_SVG, FALSE, FALSE);
+      CreateDoctype (newSVGDoc, doctype, L_SVG, 0, FALSE, FALSE);
 
       root = TtaGetRootElement (newSVGDoc);
       elType.ElTypeNum = SVG_EL_XMLcomment;

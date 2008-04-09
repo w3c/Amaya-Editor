@@ -70,6 +70,7 @@ static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
 static int          NewDocType = 0;
 static int          NewDocProfile = 0;
+static int          NewDocExtraProfile = 0;
 static ThotBool     NewXML = TRUE;
 static ThotBool     BADMimeType = FALSE;
 static ThotBool     CriticConfirm = FALSE;
@@ -2019,7 +2020,8 @@ void UpdateDoctypeMenu (Document doc)
   DocumentType    docType;
   SSchema         nature;
   char           *ptr;
-  ThotBool	      useMathML, useSVG, useHTML, useMath, withDocType;
+  int             profile, extraProfile;
+  ThotBool	  useMathML, useSVG, useHTML, useMath, withDocType;
  
   docType = DocumentTypes[doc];
   if (docType != docText && docType != docCSS &&
@@ -2028,7 +2030,7 @@ void UpdateDoctypeMenu (Document doc)
     {
       /* look for a MathML or SVG nature within the document */
       nature = NULL;
-      useMathML = useSVG =  useHTML = FALSE;
+      useMathML = useSVG = useHTML = FALSE;
       do
         {
           TtaNextNature (doc, &nature);
@@ -2064,38 +2066,55 @@ void UpdateDoctypeMenu (Document doc)
 
       if (docType == docHTML)
         {
-          /* allow to change the DocType:
-             A confirmation will be requested if some attribues
-             or elements may be lost */
-          if (TtaGetDocumentProfile(doc) == L_Xhtml11) /* already done */
-            TtaSetItemOff (doc, 1, Tools, BDoctypeXhtml11);
-          else
-            TtaSetItemOn (doc, 1, Tools, BDoctypeXhtml11);
+          /* Allow to change the DocType: */
+	  /* A confirmation is requested if some attributes or elements are lost */
+	  profile = TtaGetDocumentProfile (doc);
+	  extraProfile = TtaGetDocumentExtraProfile (doc);
 
-          if (TtaGetDocumentProfile(doc) == L_Transitional &&
+          if (profile == L_Xhtml11)
+	    /* already done */
+	    {
+	      if (extraProfile == L_RDFa)
+		{
+		  TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlRDFa);
+		  TtaSetItemOn (doc, 1, Tools, BDoctypeXhtml11);
+		}
+	      else
+		{
+		  TtaSetItemOn (doc, 1, Tools, BDoctypeXhtmlRDFa);
+		  TtaSetItemOff (doc, 1, Tools, BDoctypeXhtml11);
+		}
+	    }
+	  else
+	    {
+	      TtaSetItemOn (doc, 1, Tools, BDoctypeXhtml11);
+	      TtaSetItemOn (doc, 1, Tools, BDoctypeXhtmlRDFa);
+	    }
+
+          if (profile == L_Transitional &&
               DocumentMeta[doc]->xmlformat == TRUE) /* already done */
             TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlTransitional);
           else
             TtaSetItemOn (doc, 1, Tools, BDoctypeXhtmlTransitional);
 
-          if (TtaGetDocumentProfile(doc) == L_Strict &&
+          if (profile == L_Strict &&
               DocumentMeta[doc]->xmlformat == TRUE) /* already done */
             TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlStrict);
           else
             TtaSetItemOn (doc, 1, Tools, BDoctypeXhtmlStrict);
 
-          if (TtaGetDocumentProfile(doc) == L_Basic) /* already done */
+          if (profile == L_Basic) /* already done */
             TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlBasic);
           else
             TtaSetItemOn (doc, 1, Tools, BDoctypeXhtmlBasic);
 
-          if (TtaGetDocumentProfile(doc) == L_Transitional &&
+          if (profile == L_Transitional &&
               DocumentMeta[doc]->xmlformat != TRUE) /* already done */
             TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlTransitional);
           else
             TtaSetItemOn (doc, 1, Tools, BDoctypeHtmlTransitional);
 
-          if (TtaGetDocumentProfile(doc) == L_Strict &&
+          if (profile == L_Strict &&
               DocumentMeta[doc]->xmlformat != TRUE) /* already done */
             TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlStrict);
           else
@@ -2107,6 +2126,7 @@ void UpdateDoctypeMenu (Document doc)
           TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlTransitional);
           TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlStrict);
           TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlBasic);
+	  TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlRDFa);
           TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlTransitional);
           TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlStrict);
         }
@@ -2119,6 +2139,7 @@ void UpdateDoctypeMenu (Document doc)
       TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlTransitional);
       TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlStrict);
       TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlBasic);
+      TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlRDFa);
       TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlTransitional);
       TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlStrict);
     }
@@ -5354,7 +5375,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
                   /* update the list of URLs */
                   if (NewFile)
                     InitializeNewDoc (LastURLName, NewDocType,
-                                      doc, NewDocProfile, NewXML);
+                                      doc, NewDocProfile, NewDocExtraProfile, NewXML);
                   /* load an URL */ 
                   else if (DontReplaceOldDoc)
                     GetAmayaDoc (LastURLName, NULL, doc, doc,
@@ -5375,7 +5396,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
                   NormalizeFile (tempfile, tempname, AM_CONV_ALL);
                   if (NewFile)
                     InitializeNewDoc (tempfile, NewDocType,
-                                      doc, NewDocProfile, NewXML);
+                                      doc, NewDocProfile, NewDocExtraProfile, NewXML);
                   else if (FileExistTarget (tempname))
                     {
                       if (DontReplaceOldDoc)
@@ -5480,6 +5501,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* only used by WX version to get back the new profile */
       if (NewDocType == docHTML)
         {
+	  NewDocExtraProfile = 0;
           char *compound = TtaGetMessage (AMAYA, AM_COMPOUND_DOCUMENT);
           if (data && compound && !strcmp (data, compound))
             NewDocProfile = L_Other;
@@ -5494,7 +5516,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
               else if (strstr (data, "Transitional"))
                 NewDocProfile = L_Transitional;
               else if (NewXML)
-                NewDocProfile = L_Xhtml11;
+		{
+		  NewDocProfile = L_Xhtml11;
+		  if (strstr (data, "RDFa"))
+		    NewDocExtraProfile = L_RDFa;
+		}
               else
                 NewDocProfile = L_Transitional;
             }

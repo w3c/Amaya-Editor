@@ -132,6 +132,7 @@
                         <item>XHTML Transitional</item>
                         <item>XHTML Strict</item>
                         <item>XHTML Basic</item>
+                        <item>XHTML+RDFa</item>
                         <item>HTML Transitional</item>
                       </content>
                       <selection>1</selection>

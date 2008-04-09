@@ -33,12 +33,14 @@ extern void NewCss ( Document doc,
 extern void CreateDoctype ( Document doc,
                             Element doctype,
                             int profile,
+                            int extraProfile,
                             ThotBool useMathML,
                             ThotBool useSVG );
 extern void InitializeNewDoc ( char *url,
                                int docType,
                                Document doc,
                                int profile,
+                               int extraProfile,
                                ThotBool isXML );
 extern void NotFoundDoc ( char *url,
                           Document doc );
@@ -54,6 +56,8 @@ extern void CreateDoctypeXhtmlStrict ( Document doc,
                                        View view );
 extern void CreateDoctypeXhtmlBasic ( Document doc,
                                       View view );
+extern void CreateDoctypeXhtmlRDFa ( Document doc,
+                                     View view );
 extern void CreateDoctypeHtmlTransitional ( Document doc,
                                             View view );
 extern void CreateDoctypeHtmlStrict ( Document doc,
@@ -303,12 +307,14 @@ extern void NewCss ( Document doc,
 extern void CreateDoctype ( Document doc,
                               Element doctype,
                               int profile,
+                              int extraProfile,
                               ThotBool useMathML,
                               ThotBool useSVG );
 extern void InitializeNewDoc ( char *url,
                                  int docType,
                                  Document doc,
                                  int profile,
+                                 int extraProfile,
                                  ThotBool isXML );
 extern void NotFoundDoc ( char *url,
                             Document doc );
@@ -324,6 +330,8 @@ extern void CreateDoctypeXhtmlStrict ( Document doc,
                                          View view );
 extern void CreateDoctypeXhtmlBasic ( Document doc,
                                         View view );
+extern void CreateDoctypeXhtmlRDFa ( Document doc,
+                                       View view );
 extern void CreateDoctypeHtmlTransitional ( Document doc,
                                               View view );
 extern void CreateDoctypeHtmlStrict ( Document doc,

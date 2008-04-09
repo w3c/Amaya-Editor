@@ -345,7 +345,6 @@ void NewMathML (Document doc, View view)
 {
   OpenNew (doc, view, docMath, L_MathML);
 }
-
 /*----------------------------------------------------------------------
   NewSVG: Create a new XHTML document
   ----------------------------------------------------------------------*/
@@ -367,13 +366,13 @@ void NewCss (Document doc, View view)
   The parameter doctype points to the current DOCTYPE or NULL.
   Parameters useMathML and useSVG determine the XHTML 1.1 profile.
   --------------------------------------------------------------------------*/
-void CreateDoctype (Document doc, Element doctype, int profile,
+void CreateDoctype (Document doc, Element doctype, int profile, int extraProfile,
                     ThotBool useMathML, ThotBool useSVG)
 {
   ElementType     elType, lineType, piType;
   Element         docEl, doctypeLine, text, child, prev;
   Language        language;
-  char		        buffer[400], *name, *private_dtd;
+  char		  buffer[400], *name, *private_dtd;
   
   /* Don't check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (FALSE, doc);
@@ -486,7 +485,7 @@ void CreateDoctype (Document doc, Element doctype, int profile,
             TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML11_PLUS_MATHML_PLUS_SVG,
                                language, doc);
         }
-      else if ((profile == L_Xhtml11) && (TtaGetDocumentExtraProfile(doc) == L_RDFa))
+      else if ((profile == L_Xhtml11) && (extraProfile == L_RDFa))
         TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML_PLUS_RDFa, language, doc);
       else if (profile == L_Xhtml11)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML11, language, doc);
@@ -525,7 +524,7 @@ void CreateDoctype (Document doc, Element doctype, int profile,
       else if (profile == L_Xhtml11 && useSVG)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11_PLUS_MATHML_PLUS_SVG, language,
                            doc);
-      else if ((profile == L_Xhtml11) && (TtaGetDocumentExtraProfile(doc) == L_RDFa))
+      else if ((profile == L_Xhtml11) && (extraProfile == L_RDFa))
         TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML_PLUS_RDFa, language, doc);
       else if (profile == L_Xhtml11)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11, language, doc);
@@ -547,7 +546,7 @@ void CreateDoctype (Document doc, Element doctype, int profile,
   The url is coded with the default charset.
   ----------------------------------------------------------------------*/
 void InitializeNewDoc (char *url, int docType, Document doc, int profile,
-                       ThotBool isXML)
+                       int extraProfile, ThotBool isXML)
 {
   ElementType          elType;
   Element              docEl, root, title, text, el, head, child, meta, body;
@@ -578,10 +577,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
   NormalizeURL (url, 0, pathname, documentname, NULL);
   if (doc == 0 || DontReplaceOldDoc)
     {
-      doc = InitDocAndView (doc,
-                            !DontReplaceOldDoc /* replaceOldDoc */,
-                            InNewWindow /* inNewWindow */,
-                            documentname, (DocumentType)docType, 0, FALSE, profile, 0,
+      doc = InitDocAndView (doc, !DontReplaceOldDoc /* replaceOldDoc */, InNewWindow /* inNewWindow */,
+                            documentname, (DocumentType)docType, 0, FALSE, profile, extraProfile,
                             CE_ABSOLUTE);
       InitDocHistory (doc);
       DontReplaceOldDoc = FALSE;
@@ -594,9 +591,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
                      DocumentMeta[doc]->form_data,
                      DocumentMeta[doc]->method);
       doc = InitDocAndView (doc,
-                            !DontReplaceOldDoc /* replaceOldDoc */,
-                            InNewWindow /* inNewWindow */,
-                            documentname, (DocumentType)docType, 0, FALSE, profile, 0,
+                            !DontReplaceOldDoc /* replaceOldDoc */, InNewWindow /* inNewWindow */,
+                            documentname, (DocumentType)docType, 0, FALSE, profile, extraProfile,
                             CE_ABSOLUTE);
     }
   TtaFreeMemory (documentname);
@@ -616,7 +612,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
   DocumentSource[doc] = 0;
 
   /* store the document profile */
-  TtaSetDocumentProfile (doc, profile, 0);
+  TtaSetDocumentProfile (doc, profile, extraProfile);
 
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
@@ -654,7 +650,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       elType.ElTypeNum = HTML_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
       if (profile != L_Other)
-        CreateDoctype (doc, doctype, profile, FALSE, FALSE);
+        CreateDoctype (doc, doctype, profile, extraProfile, FALSE, FALSE);
       else if (doctype)
         TtaDeleteTree (doctype, doc);
       
@@ -761,7 +757,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       /* create the MathML DOCTYPE element */
       elType.ElTypeNum = MathML_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-      CreateDoctype (doc, doctype, L_MathML, FALSE, FALSE);
+      CreateDoctype (doc, doctype, L_MathML, 0, FALSE, FALSE);
 
       /* Set the namespace declaration */
       root = TtaGetRootElement (doc);
@@ -787,7 +783,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       /* create the SVG DOCTYPE element */
       elType.ElTypeNum = SVG_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-      CreateDoctype (doc, doctype, L_SVG, FALSE, FALSE);
+      CreateDoctype (doc, doctype, L_SVG, 0, FALSE, FALSE);
 
       /* Set the namespace declaration */
       root = TtaGetRootElement (doc);
@@ -1131,8 +1127,8 @@ void NotFoundDoc (char *url, Document doc)
   Create or change the doctype of a document
   --------------------------------------------------------------------------*/
 static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
-                                   ThotBool xmlDoctype,
-                                   ThotBool useMathML, ThotBool useSVG)
+				   int new_extraProfile, ThotBool xmlDoctype,
+				   ThotBool useMathML, ThotBool useSVG)
 {
   char           *tempdoc = NULL; 
   char            documentname[MAX_LENGTH];
@@ -1169,7 +1165,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
   oldprofile = TtaGetDocumentProfile (doc);
   oldExtraprofile = TtaGetDocumentExtraProfile (doc);
   ok = ParseWithNewDoctype (doc, tempdoc, tempdir, documentname, new_doctype,
-                            &error, xmlDoctype, useMathML, useSVG);
+                            new_extraProfile, &error, xmlDoctype, useMathML, useSVG);
 
   if (ok)
     {
@@ -1239,7 +1235,7 @@ void AddDoctype (Document doc, View view)
 
   DocumentType    docType;
   int             profile;
-  ThotBool	      useMathML, useSVG;
+  ThotBool	  useMathML, useSVG;
  
   HasNatures (doc, &useMathML, &useSVG);
   profile =  L_Other;
@@ -1256,8 +1252,8 @@ void AddDoctype (Document doc, View view)
   else if (docType == docSVG)
     profile = L_SVG;
 
-  CreateOrChangeDoctype (doc, view, profile, DocumentMeta[doc]->xmlformat,
-                         useMathML, useSVG);
+  CreateOrChangeDoctype (doc, view, profile, 0,
+			 DocumentMeta[doc]->xmlformat, useMathML, useSVG);
   UpdateEditorMenus (doc);
 }
 
@@ -1270,7 +1266,7 @@ void CreateDoctypeXhtml11 (Document doc, View view)
   ThotBool	  useMathML, useSVG;
  
   HasNatures (doc, &useMathML, &useSVG);
-  CreateOrChangeDoctype (doc, view, L_Xhtml11, TRUE, useMathML, useSVG);
+  CreateOrChangeDoctype (doc, view, L_Xhtml11, 0, TRUE, useMathML, useSVG);
   UpdateEditorMenus (doc);
 }
 
@@ -1283,7 +1279,7 @@ void CreateDoctypeXhtmlTransitional (Document doc, View view)
   ThotBool	  useMathML, useSVG;
  
   HasNatures (doc, &useMathML, &useSVG);
-  CreateOrChangeDoctype (doc, view, L_Transitional, TRUE, useMathML, useSVG);
+  CreateOrChangeDoctype (doc, view, L_Transitional, 0, TRUE, useMathML, useSVG);
   UpdateEditorMenus (doc);
 }
 
@@ -1296,7 +1292,7 @@ void CreateDoctypeXhtmlStrict (Document doc, View view)
   ThotBool	  useMathML, useSVG;
  
   HasNatures (doc, &useMathML, &useSVG);
-  CreateOrChangeDoctype (doc, view, L_Strict, TRUE, useMathML, useSVG);
+  CreateOrChangeDoctype (doc, view, L_Strict, 0, TRUE, useMathML, useSVG);
   UpdateEditorMenus (doc);
 }
 
@@ -1309,7 +1305,17 @@ void CreateDoctypeXhtmlBasic (Document doc, View view)
   ThotBool	  useMathML, useSVG;
  
   HasNatures (doc, &useMathML, &useSVG);
-  CreateOrChangeDoctype (doc, view, L_Basic, TRUE, useMathML, useSVG);
+  CreateOrChangeDoctype (doc, view, L_Basic, 0, TRUE, useMathML, useSVG);
+  UpdateEditorMenus (doc);
+}
+
+/*--------------------------------------------------------------------------
+  CreateDoctypeXhtmlRDFa
+  Create or change the doctype for a XHTML+RDFa document
+  --------------------------------------------------------------------------*/
+void CreateDoctypeXhtmlRDFa (Document doc, View view)
+{ 
+  CreateOrChangeDoctype (doc, view, L_Xhtml11, L_RDFa, TRUE, 0, 0);
   UpdateEditorMenus (doc);
 }
 
@@ -1319,7 +1325,7 @@ void CreateDoctypeXhtmlBasic (Document doc, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeHtmlTransitional (Document doc, View view)
 {
-  CreateOrChangeDoctype (doc, view, L_Transitional, FALSE, FALSE, FALSE);
+  CreateOrChangeDoctype (doc, view, L_Transitional, 0, FALSE, FALSE, FALSE);
   UpdateEditorMenus (doc);
 }
 
@@ -1329,7 +1335,7 @@ void CreateDoctypeHtmlTransitional (Document doc, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeHtmlStrict (Document doc, View view)
 {
-  CreateOrChangeDoctype (doc, view, L_Strict, FALSE, FALSE, FALSE);
+  CreateOrChangeDoctype (doc, view, L_Strict, 0, FALSE, FALSE, FALSE);
   UpdateEditorMenus (doc);
 }
 
@@ -1339,7 +1345,7 @@ void CreateDoctypeHtmlStrict (Document doc, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeMathML (Document doc, View view)
 {
-  CreateOrChangeDoctype (doc, view, L_MathML, TRUE, FALSE, FALSE);
+  CreateOrChangeDoctype (doc, view, L_MathML, 0, TRUE, FALSE, FALSE);
 }
 
 /*--------------------------------------------------------------------------
@@ -1351,7 +1357,7 @@ void CreateDoctypeSVG (Document doc, View view)
   ThotBool	  useMathML, useSVG;
  
   HasNatures (doc, &useMathML, &useSVG);
-  CreateOrChangeDoctype (doc, view, L_SVG, TRUE, useMathML, useSVG);
+  CreateOrChangeDoctype (doc, view, L_SVG, 0, TRUE, useMathML, useSVG);
 }
 
 /*----------------------------------------------------------------------

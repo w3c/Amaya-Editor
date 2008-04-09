@@ -395,6 +395,7 @@ HelpMath
 &CreateDoctypeXhtmlTransitional
 &CreateDoctypeXhtmlStrict
 &CreateDoctypeXhtmlBasic
+&CreateDoctypeXhtmlRDFa
 &CreateDoctypeHtmlTransitional
 &CreateDoctypeHtmlStrict
 
