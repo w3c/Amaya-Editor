@@ -5504,7 +5504,10 @@ static ThotBool MathMoveForward ()
           do
             {
               successorType = TtaGetElementType (nextEl);
-              if (successorType.ElTypeNum == MathML_EL_XMLcomment &&
+              if ((successorType.ElTypeNum == MathML_EL_XMLcomment ||
+                   successorType.ElTypeNum == MathML_EL_Overscript ||
+                   successorType.ElTypeNum == MathML_EL_Superscript ||
+                   successorType.ElTypeNum == MathML_EL_MO) &&
                   !strcmp (TtaGetSSchemaName (successorType.ElSSchema), "MathML"))
                 nextEl = TtaGetSuccessor (nextEl);
               else
@@ -5650,7 +5653,10 @@ static ThotBool MathMoveBackward ()
           do
             {
               predecType = TtaGetElementType (prevEl);
-              if (predecType.ElTypeNum == MathML_EL_XMLcomment &&
+              if ((predecType.ElTypeNum == MathML_EL_XMLcomment ||
+                   predecType.ElTypeNum == MathML_EL_Overscript ||
+                   predecType.ElTypeNum == MathML_EL_Superscript ||
+                   predecType.ElTypeNum == MathML_EL_MO) &&
                   !strcmp (TtaGetSSchemaName (predecType.ElSSchema), "MathML"))
                 prevEl = TtaGetPredecessor (prevEl);
               else
