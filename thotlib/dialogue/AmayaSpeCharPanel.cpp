@@ -66,9 +66,13 @@ extern SpecialCharEntry special_char_entries[];
 
 //
 //
-// AmayaSpeCharToolPanelNew
+// AmayaSpeCharToolPanel
 //
 //
+
+AmayaSpeCharBitmapMap AmayaSpeCharToolPanel::s_bitmapMap;
+
+
 
 #define MAX_TOOL_PER_LINE 8
 
@@ -128,15 +132,14 @@ wxString AmayaSpeCharToolPanel::GetDefaultAUIConfig()
 -----------------------------------------------------------------------*/
 void AmayaSpeCharToolPanel::Initialize()
 {
-  ThotFont  font;
   SpecFont  fontset;
-  int       index;
-  unsigned char     *data;
   wxSizer*  sz = new wxBoxSizer(wxVERTICAL);
 
   m_pBook = new wxChoicebook(this, wxID_ANY);
   sz->Add(m_pBook, 1, wxEXPAND);
   SetSizer(sz);
+  
+  InitializeBitmapMap();
   
   m_pBook->SetImageList(&m_imagelist);
   
@@ -169,22 +172,47 @@ void AmayaSpeCharToolPanel::Initialize()
             }
           int toolid = wxNewId();
           m_hash[toolid] = car;
-          index = GetFontAndIndexFromSpec (car->unicode, fontset, 0, &font);
-          data = GetCharacterGlyph ((GL_font *)font, index, 16, 16);
           wxString str = wxChar(car->unicode);
-          wxImage img(16, 16, data, false);
-          tb->AddTool(toolid, str, wxBitmap(img),
+          tb->AddTool(toolid, str, s_bitmapMap[car->unicode],
                       TtaConvMessageToWX(car->name));
-          //tb->AddTool(toolid, str, wxCharToIcon<16, 16>(wxString(wxChar(car->unicode))),
-          //            TtaConvMessageToWX(car->name));
-          //TtaFreeMemory (data);
           car++;
         }
       entry++;
       panel->SetSizer(sz);
     }
-  // now free loaded fonts
-  // ThotFreeFont (1);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaSpeCharToolPanel
+ *      Method:  InitializeBitmapMap
+-----------------------------------------------------------------------*/
+void AmayaSpeCharToolPanel::InitializeBitmapMap()
+{
+  ThotFont  font;
+  SpecFont  fontset;
+  int       index;
+  unsigned char     *data;
+
+  if(s_bitmapMap.empty())
+    {
+      SpecialCharEntry *entry = special_char_entries;
+      while(entry->table!=NULL)
+        {
+          AmayaSpeChar *car = entry->table;
+          fontset = ThotLoadFont ('L', 1, 0, 12, UnPixel, 1);
+          while (car->unicode != -1)
+            {
+              index = GetFontAndIndexFromSpec (car->unicode, fontset, 0, &font);
+              data = GetCharacterGlyph ((GL_font *)font, index, 16, 16);
+              wxImage img(16, 16, data, false);          
+              s_bitmapMap[car->unicode] = wxBitmap(img);
+              car++;
+            }
+          entry++;
+        }
+      // now free loaded fonts
+      // ThotFreeFont (1);
+    }
 }
 
 /*----------------------------------------------------------------------

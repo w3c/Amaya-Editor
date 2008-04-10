@@ -21,6 +21,7 @@ typedef struct
 
 WX_DECLARE_HASH_MAP( int, AmayaSpeChar*, wxIntegerHash, wxIntegerEqual, AmayaSpeCharMap );
 
+WX_DECLARE_HASH_MAP( int, wxBitmap, wxIntegerHash, wxIntegerEqual, AmayaSpeCharBitmapMap );
 
 
 class AmayaSpeCharToolPanel :  public AmayaToolPanel
@@ -57,6 +58,9 @@ protected:
   AmayaSpeCharMap m_hash;
   wxChoicebook *m_pBook;
   wxImageList m_imagelist;
+  
+  static AmayaSpeCharBitmapMap s_bitmapMap;
+  static void InitializeBitmapMap();
 };
 
 #endif // __AMAYASPECHARPANEL_H__
