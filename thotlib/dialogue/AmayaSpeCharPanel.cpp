@@ -183,6 +183,8 @@ void AmayaSpeCharToolPanel::Initialize()
       entry++;
       panel->SetSizer(sz);
     }
+  // now free loaded fonts
+  // ThotFreeFont (1);
 }
 
 /*----------------------------------------------------------------------

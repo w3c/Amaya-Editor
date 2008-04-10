@@ -1068,10 +1068,10 @@ static void GeneratePostscriptFont (char r_name[10], char script, int family,
 }
 
 /*----------------------------------------------------------------------
-  FontIdentifier computes the name of a Thot font.
+  GetFontIdentifier computes the name of a Thot font.
   ----------------------------------------------------------------------*/
-static void FontIdentifier (char script, int family, int highlight, int size,
-                            TypeUnit unit, char r_name[10], char r_nameX[100])
+void GetFontIdentifier (char script, int family, int highlight, int size,
+                        TypeUnit unit, char r_name[10], char r_nameX[100])
 {
   char        *ffamily;
   const char  *wght, *slant;
@@ -1100,9 +1100,6 @@ static void FontIdentifier (char script, int family, int highlight, int size,
       sprintf (r_nameX, "%s-%s-%s-normal-*-%d-*-100-100-p-106-iso10646-1",
                ffamily, wght, slant, size);
       GeneratePostscriptFont (r_name, script, family, highlight, size);
-#ifdef _GTK
-      gdk_font_load ((gchar *)r_nameX);
-#endif /* _GTK */
     }
   else
     { 
@@ -1147,20 +1144,69 @@ static void FontIdentifier (char script, int family, int highlight, int size,
         {
           switch (family)
             {
+            case 1 :
+              sprintf (r_nameX, 
+                       "-altsys-esstixone-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
+            case 2 :
+              sprintf (r_nameX, 
+                       "-altsys-esstixtwo-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
+            case 3 :
+              sprintf (r_nameX, 
+                       "-altsys-esstixthree-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
+            case 4 :
+              sprintf (r_nameX, 
+                       "-altsys-esstixfour-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
+            case 5 :
+              sprintf (r_nameX, 
+                       "-altsys-esstixfive-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
             case 6 :
               sprintf (r_nameX, 
-                       "-altsys-esstixsix-medium-r-normal-*-%i-*-*-*-p-*-ascii-0",
-                       size);
+                       "-altsys-esstixsix-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
               break;
             case 7:
               sprintf (r_nameX, 
-                       "-altsys-esstixseven-medium-r-normal-*-%i-*-*-*-p-*-ascii-0",
-                       size);
+                       "-altsys-esstixseven-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
               break;	  
+            case 8:
+              sprintf (r_nameX, 
+                       "-altsys-esstixseight-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;	  
+            case 9 :
+              sprintf (r_nameX, 
+                       "-altsys-esstixnine-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
             case 10: 
               sprintf (r_nameX, 
-                       "-altsys-esstixten-medium-r-normal-*-%i-*-*-*-p-*-ascii-0",
-                       size);
+                       "-altsys-esstixten-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
+            case 11 :
+              sprintf (r_nameX, 
+                       "-altsys-esstixeleven-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
+            case 12 :
+              sprintf (r_nameX, 
+                       "-altsys-esstixtwelve-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
+            case 13: 
+              sprintf (r_nameX, 
+                       "-altsys-esstixthirteen-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
+            case 14 :
+              sprintf (r_nameX, 
+                       "-altsys-esstixfourteen-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
+            case 15 :
+              sprintf (r_nameX, 
+                       "-altsys-esstixfifteen-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
+              break;
+            case 16 :
+              sprintf (r_nameX, 
+                       "-altsys-esstixsixteen-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
               break;
             default:
               break;
@@ -1246,76 +1292,6 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 
 
 /*----------------------------------------------------------------------
-  GetFontIdentifier computes the name of a Thot font.
-  The size is expressed in unit.
-  ----------------------------------------------------------------------*/
-void GetFontIdentifier (char script, int family, int highlight, int size,
-                        TypeUnit unit, char text[10], char textX[100])
-{
-  char     *result = NULL;
-#if (defined(_GTK) || defined(_WX)) && !defined(_GL)
-  char      format[100];
-  int       i, j, k, end, internalsize;
-
-  if (!Printing)
-    result = FontLoadFromConfig (script, family, highlight);
-  if (result)
-    {
-      /*size*/
-      if (unit == UnRelative)
-        {
-          /* La size est relative */
-          if (size > MaxNumberOfSizes)
-            internalsize = LogicalPointsSizes[MaxNumberOfSizes];
-          else if (size >= 0)
-            internalsize = LogicalPointsSizes[size];
-          else
-            internalsize = size;
-        }
-      else if (unit == UnPixel)
-        internalsize = PixelToPoint (size);
-      else
-        internalsize = size;
-      i = k = 0;
-      j = strlen (result);  
-      while (i < j)
-        {
-          if (result[i] == '-') 
-            {
-              k++;
-              if (k == 7)
-                {
-                  /* pixel font size information */
-                  i++;
-                  end = i;
-                  while (result[end] != '-')
-                   end++;
-                  /* point font size information */
-                  end++;
-                  while (result[end] != '-')
-                    end++;                  
-                  break;
-                }
-            }
-          i++;
-        }
-      if (i == j)
-        result = NULL;
-      else
-        {
-          strncpy (format, result, i);
-          strcpy (&format[i], "*-%d");
-          sprintf (textX, format, internalsize * 10);  
-          strcat (textX, &result[end]);  
-          GeneratePostscriptFont (text, script, family, highlight, internalsize);
-        }
-    }
-#endif /* #if (defined(_GTK) || defined(_WX)) && !defined(_GL) */
-  if (result == NULL)
-    FontIdentifier (script, family, highlight, size, unit, text, textX);
-}
-
-/*----------------------------------------------------------------------
   ReadFont do a raw Thot font loading (bypasses the font cache).
   ----------------------------------------------------------------------*/
 ThotFont ReadFont (char script, int family, int highlight, int size,
@@ -1343,16 +1319,12 @@ char *GetPostscriptNameFromFont (void * font, char *fontname)
   /* browse the table of fonts */
   i = 0;
   result = 0;
-  while (TtFonts[i] != font && 
-         i < MAX_FONT)
+  while (TtFonts[i] != font && i < MAX_FONT)
     i++;
   if (i >= MAX_FONT)
     i = 0;
   i = i * 8;
 
-  /*   if (font != PostscriptFont) */
-  /*     { */
-  /*       PostscriptFont = font; */
   if (TtPsFontName[i] == 'g')  /* Greek script */
     {
       c0 = TtPsFontName[i];
@@ -1367,34 +1339,8 @@ char *GetPostscriptNameFromFont (void * font, char *fontname)
       /* convert lowercase to uppercase */
       c2 = TtPsFontName[i + 2]; /* Style normal bold italique */	 
     }
-      
-  /*  sprintf (fontname,  */
-  /* 	       "%c%c%c", c0, c1, c2); */
-
-
-  sprintf (fontname,  
-           "%c%c%c %s sf\n", c0, c1, c2,  &TtPsFontName[i + 3]);
-
+  sprintf (fontname, "%c%c%c %s sf\n", c0, c1, c2,  &TtPsFontName[i + 3]);
   return fontname;
-  /*  } */
-
-
-  /*  int deb = 0, i = 0; */
- 
-  /*  while (i < FirstFreeFont) */
-  /*     { */
-  /*       if (TtFonts[i] == font) */
-  /* 	return 	&TtFontName[deb]; */
-  /*       else if  (TtFonts[i] == NULL) */
-  /* 	/\* check if we forgot to update FirstFreeFont *\/ */
-  /* 	FirstFreeFont = i; */
-  /*       else */
-  /* 	{ */
-  /* 	  i++; */
-  /* 	  deb += MAX_FONTNAME; */
-  /* 	} */
-  /*     } */
-  return NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -1411,7 +1357,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
   int                 i, j, deb, free_entry;
   int                 val;
   unsigned int		    mask;
-  char                text[10], PsName[10], textX[100];
+  char                text[MAX_FONTNAME], PsName[MAX_FONTNAME], textX[100];
 #ifdef _WINGUI
   SIZE                wsize;
   TEXTMETRIC          textMetric;
@@ -1451,7 +1397,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
         {
           /* No table overflow: load the new font */
 #ifdef _GL
-          //printf("tex=%s ", text);
+          //printf("tex[%d]=%s \n", free_entry, text);
           ptfont = (ThotFont)GL_LoadFont (script, family, highlight, size);
 #else /*_GL*/
 #ifdef _WINGUI
@@ -1551,7 +1497,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 #endif/*  _GL */
         }
       
-      if (ptfont == NULL && script != 'E')
+      if (ptfont == NULL)
         {
           if (free_entry < MAX_FONT &&
               script != '1' && script != 'L' && script != 'G' && size != -1)
@@ -1560,15 +1506,29 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
                                       -1, requestedsize, frame, FALSE, FALSE);
           else
             {
-              /* Try to load another family from the same script */
+              /* Try to load another family from the same script and family */
               for (j = 0; j < FirstFreeFont; j++)
                 {
-                  if (TtFonts[j] && TtFontName[j * MAX_FONTNAME] == script)
+                  if (TtFonts[j] &&
+                      TtFontName[j * MAX_FONTNAME] == text[0] &&
+                      TtFontName[j * MAX_FONTNAME + 1] == text[1])
                     {
                       i = j;
                       ptfont = TtFonts[i];
-                      // stop now
-                      j = FirstFreeFont;
+                      j = FirstFreeFont;  // stop now
+                    }
+                }
+              if (ptfont == NULL && script != 'E')
+                {
+                  for (j = 0; j < FirstFreeFont; j++)
+                    {
+                      if (TtFonts[j] &&
+                          TtFontName[j * MAX_FONTNAME] == text[0])
+                        {
+                          i = j;
+                          ptfont = TtFonts[i];
+                          j = FirstFreeFont;  // stop now
+                        }
                     }
                 }
             }
@@ -2611,10 +2571,10 @@ void ThotFreeFont (int frame)
         }
 
       /* keep default fonts */
-      i = 0;
+      i = FirstFreeFont - 1;
       /* free all attached fonts */
       doIt = TRUE;
-      while (i < FirstFreeFont)
+      while (i >= 0)
         {
 #ifdef _GL
           if (TtFontMask[i] == mask || TtFontMask[i] == 0)
@@ -2683,7 +2643,7 @@ void ThotFreeFont (int frame)
           else
             /* unlink this frame */
             TtFontMask[i] = TtFontMask[i] & (~mask);
-          i++;
+          i--;
         }
     }
 }

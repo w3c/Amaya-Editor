@@ -351,24 +351,22 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
       if (WinFontExist ("esstix6_.ttf"))
 #endif /*_WINGUI*/
 #endif
-        if (pBox->BxAbstractBox->AbSizeUnit == UnRelative)
-          size = ThotFontPointSize (pBox->BxAbstractBox->AbSize);
-        else
-          size = pBox->BxAbstractBox->AbSize;
-
         if (StixExist && font == NULL && pBox->BxH > 0)
           {
-            if ( pBox->BxH > size)
-              size = pBox->BxH;
+            size = PixelToPoint (pBox->BxH);
+            if (pBox->BxFont && pBox->BxFont->FontSize > size)
+              size = pBox->BxFont->FontSize;
             GetMathFontFromChar (pBox->BxAbstractBox->AbShape,
                                  pBox->BxFont,
                                  (void **) &font, size);
             if (font)
               useStix = TRUE;
           }
+        else
+          size = pBox->BxFont->FontSize;
+
       if (font == NULL)
         GetFontAndIndexFromSpec (32, pBox->BxFont, 1, &font);
-
       if (font != NULL)
         {
           /* Position in the frame */

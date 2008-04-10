@@ -1156,13 +1156,17 @@ static void DrawCompoundHorizArrow (int frame, int x, int y, int l, int h,
                                         int leftChar, int middleChar,int rightChar)
 {
   int             baseline, lWidth, mWidth, rWidth;
-  int             xMiddleChar, gap, xf1;
+  int             xMiddleChar, gap, xf1, xf2;
   ThotFont        font;
 
   font = (ThotFont)LoadStixFont (8, size);
   /* in this Esstix font, the base line is the bottom of the straight part */
-  baseline = y + CharacterAscent (middleChar, font);
-
+  xf1 = CharacterAscent (leftChar, font);
+  xf2 = CharacterAscent (rightChar, font);
+  if (xf1 > xf2)
+    baseline = y + xf1;
+  else
+     baseline = y + xf2;
   lWidth = CharacterWidth (leftChar, font);
   mWidth = CharacterWidth (middleChar, font);
   rWidth = CharacterWidth (rightChar, font);
@@ -1362,7 +1366,7 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
     case 'L':
     case 'R':
       *width = CharacterWidth (0x25, pfont);
-      *height = CharacterAscent (0x25, pfont);
+      *height = CharacterHeight (0x25, pfont);
       break;
     case '<':
     case '>':
@@ -1379,7 +1383,6 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
     case 'I':	/* intersection */
     case 'U':	/* union */
       *width = BoxCharacterWidth (0xe5, pfont);
-      *height = hfont;
       break;
 #endif
     default:
@@ -1392,11 +1395,11 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
 
 /*----------------------------------------------------------------------
   GetMathFontFromChar
+  The size values must be expressed in points
   ----------------------------------------------------------------------*/
 void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
                           int size)
 {
-  size = PixelToPoint (size);
   switch (typesymb)
     {
       /*integral, union...*/
