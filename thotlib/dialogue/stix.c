@@ -1112,7 +1112,7 @@ static void DrawCompoundHorizBraceStix (int frame, int x, int y, int l, int h,
 }
 
 /*----------------------------------------------------------------------
-  DrawStixHorizontalBrace draw an overbrace or an underbrace (depending on
+  DrawStixHorizontalBrace draws an overbrace or an underbrace (depending on
   direction).
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
@@ -1143,6 +1143,91 @@ void DrawStixHorizontalBrace (int frame, int x, int y, int l, int h,
     else
       /* draw an underbrace */
       DrawCompoundHorizBraceStix (frame, x, y, l, h, size, fg, 0x3f, 0x40, 0x41);
+
+}
+
+/*----------------------------------------------------------------------
+  DrawCompoundHorizArrow
+  Draw a wide horizontal arrow with several characters from the Esstix-eight
+  font.
+  ----------------------------------------------------------------------*/
+static void DrawCompoundHorizArrow (int frame, int x, int y, int l, int h,
+                                        int size, int fg,
+                                        int leftChar, int middleChar,int rightChar)
+{
+  int             baseline, lWidth, mWidth, rWidth;
+  int             xMiddleChar, gap, xf1;
+  ThotFont        font;
+
+  font = (ThotFont)LoadStixFont (8, size);
+  /* in this Esstix font, the base line is the bottom of the straight part */
+  baseline = y + CharacterAscent (middleChar, font);
+
+  lWidth = CharacterWidth (leftChar, font);
+  mWidth = CharacterWidth (middleChar, font);
+  rWidth = CharacterWidth (rightChar, font);
+  DrawChar ((char)leftChar, frame, x, baseline, font, fg);
+  DrawChar ((char)rightChar, frame, x + l - rWidth, baseline, font, fg);
+
+  gap = l - lWidth - rWidth;
+  xf1 = x + lWidth;
+  if (gap > 0 && mWidth > 0)
+    /* there are gaps between components. Draw fill characters between components */
+    {
+      while (gap > 0)
+        {
+          if (gap < mWidth/2)
+            /* the gap is less than onefill character. Draw a single fill
+               character centered in each gap */
+            DrawChar ((char)middleChar, frame, xf1-(gap/2), baseline,
+                      font, fg);
+          else
+            DrawChar ((char)middleChar, frame, xf1, baseline, font, fg);
+          gap -= mWidth;
+          xf1 += mWidth;
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  DrawStixHorizArrow draws a horizontal arrow according to the type.
+  type : 0 = Arrow, 1 = Arrow with opposite directions, 2 = DoubleArrow,
+         3 = DoubleArrow with opposite directions
+         4 = two arrows with opposite directions, 5 = TeeArrow, 6 = ArrowBar
+         7 = Vector,  8 = Vector with opposite directions, 9 = TeeVector,
+         10 = VectorBar, 
+         11 = two vectors with opposite directions = Equilibrium
+         12 = ReverseVector, 13 = ReverseVector with opposite directions,
+         14 = TeeReverseVector, 15 = ReverseVectorBar
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawStixHorizArrow (int frame, int x, int y, int l, int h,
+                         int type, int size, int fg)
+{
+  unsigned char   symb;
+  ThotFont        font;
+
+  size = size + (size * ViewFrameTable[frame-1].FrMagnification / 10);
+  if (size <= 0)
+    size = 1;
+  font = (ThotFont)LoadStixFont (8, size);
+  if (l <= CharacterWidth (0x25, font))
+    /*  write a single Esstix 7 character */
+    {
+      if (type == 0)
+        symb = 0x25;
+      else
+        symb = 0x21;
+      DrawCenteredStixChar (font, symb, x, y, l, h, fg, frame);
+    }
+  else
+    /* wide horizontal brace. Display it from several components */
+    if (type == 0)
+      /* draw an overbrace */
+      DrawCompoundHorizArrow (frame, x, y, l, h, size, fg, 0x23, 0x23, 0x25);
+    else
+      /* draw an underbrace */
+      DrawCompoundHorizArrow (frame, x, y, l, h, size, fg, 0x22, 0x23, 0x23);
 
 }
 
@@ -1274,6 +1359,11 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
     case 6:
       *width = StixBracketWidth (*height, pAb->AbBox->BxFont);	
       break;
+    case 'L':
+    case 'R':
+      *width = CharacterWidth (0x25, pfont);
+      *height = CharacterAscent (0x25, pfont);
+      break;
     case '<':
     case '>':
       *width = StixPointyBracketWidth (*height);	
@@ -1342,6 +1432,8 @@ void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
     case '>':
       *font = LoadStixFont (7, size);
       break;
+    case 'L':
+    case 'R':
     case 'o':
     case 'u':
       *font = LoadStixFont (8, size);

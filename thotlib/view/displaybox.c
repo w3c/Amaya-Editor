@@ -351,9 +351,15 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
       if (WinFontExist ("esstix6_.ttf"))
 #endif /*_WINGUI*/
 #endif
+        if (pBox->BxAbstractBox->AbSizeUnit == UnRelative)
+          size = ThotFontPointSize (pBox->BxAbstractBox->AbSize);
+        else
+          size = pBox->BxAbstractBox->AbSize;
+
         if (StixExist && font == NULL && pBox->BxH > 0)
           {
-            size = pBox->BxH;
+            if ( pBox->BxH > size)
+              size = pBox->BxH;
             GetMathFontFromChar (pBox->BxAbstractBox->AbShape,
                                  pBox->BxFont,
                                  (void **) &font, size);
@@ -379,12 +385,6 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
           if (height < 0)
             height = 0;
 	  
-          if (pBox->BxAbstractBox->AbSizeUnit == UnPoint ||
-              pBox->BxAbstractBox->AbSizeUnit == UnPixel)
-            size = FontRelSize (pBox->BxAbstractBox->AbSize);
-          else
-            size = pBox->BxAbstractBox->AbSize;
-
           if (selected &&
               !pFrame->FrSelectOnePosition &&
               pFrame->FrSelectionBegin.VsXPos != pBox->BxW)
@@ -583,8 +583,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               break;
             case 'o':/* horizontal brace */
               if (useStix)
-                DrawStixHorizontalBrace (frame, xd, yd, width, height, 0, size,
-                                         fg);
+                DrawStixHorizontalBrace (frame, xd, yd, width, height, 0, size, fg);
               else
                 DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 0,fg);
               break;
@@ -605,18 +604,15 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               break;
             case 'u':
               if (useStix)
-                DrawStixHorizontalBrace (frame, xd, yd, width, height, 1, size,
-                                         fg);
+                DrawStixHorizontalBrace (frame, xd, yd, width, height, 1, size, fg);
               else
                 DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 1,fg);
               break;
             case 'v':
-              DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox,
-                                0, 0);
+              DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox, 0, 0);
               break;
             case 'D':
-              DrawVerticalLine (frame, i, 6, xd, yd, width, height, 1, fg, pBox,
-                                0, 0);
+              DrawVerticalLine (frame, i, 6, xd, yd, width, height, 1, fg, pBox, 0, 0);
               break;
             case 'I':
               DrawIntersection (frame, xd, yd, width, height, font, fg);
@@ -640,13 +636,19 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
          /* c = 150 to 213 : Display one of the 64 strechable arrows from
             the MathML 2.0 Operator dictionary (appendix F.5)  */
             case 'L': /* (c = 76 [change to 150 ?]) ; LeftArrow ; U02190  */
-              DrawArrow (frame, i, 5, xd, yd, width, height, 180, 0, fg);
+              if (useStix)
+                DrawStixHorizArrow (frame, xd, yd, width, height, 1, size, fg);
+              else
+                DrawArrow (frame, i, 5, xd, yd, width, height, 180, 0, fg);
               break;
             case '^': /* (c = 94 [change to 151 ?]) ; UpArrow ; U02191 */
               DrawArrow (frame, i, 5, xd, yd, width, height, 90, 0, fg);
               break;
             case 'R': /* (c = 82 [change to 152 ?]) ; RightArrow ; U02192 */
-              DrawArrow (frame, i, 5, xd, yd, width, height, 0, 0, fg);
+              if (useStix)
+                DrawStixHorizArrow (frame, xd, yd, width, height, 0, size, fg);
+              else
+                DrawArrow (frame, i, 5, xd, yd, width, height, 0, 0, fg);
               break;
             case 'V': /* (c = 86 [change to 153 ?]) ; DownArrow ; U02193 */
               DrawArrow (frame, i, 5, xd, yd, width, height, 270, 0, fg);

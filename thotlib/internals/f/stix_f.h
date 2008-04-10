@@ -70,6 +70,14 @@ extern void DrawStixHorizontalBrace ( int frame,
                                       int direction,
                                       int size,
                                       int fg );
+extern void DrawStixHorizArrow ( int frame,
+                                 int x,
+                                 int y,
+                                 int l,
+                                 int h,
+                                 int type,
+                                 int size,
+                                 int fg );
 extern int GetMathFontWidth ( char shape,
                               SpecFont font,
                               int height );
@@ -152,6 +160,14 @@ extern void DrawStixHorizontalBrace ( int frame,
                                         int direction,
                                         int size,
                                         int fg );
+extern void DrawStixHorizArrow ( int frame,
+                                   int x,
+                                   int y,
+                                   int l,
+                                   int h,
+                                   int type,
+                                   int size,
+                                   int fg );
 extern int GetMathFontWidth ( char shape,
                                 SpecFont font,
                                 int height );
