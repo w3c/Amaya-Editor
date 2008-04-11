@@ -252,6 +252,8 @@ RULES
     
   component:
 		BEGIN
+    if within head
+       Visibility: 0;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
@@ -274,6 +276,7 @@ RULES
 		  BorderRightColor: 	Blue;
       END;
   	IN Structure_view BEGIN
+      Visibility: Enclosing =;
 			BorderTopWidth: 0;
 			BorderLeftWidth: 0;
 			BorderBottomWidth: 0;

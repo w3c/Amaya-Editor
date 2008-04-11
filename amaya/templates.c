@@ -53,7 +53,7 @@ ThotBool IsTemplateInstanceDocument(Document doc)
 #ifdef TEMPLATES
   XTigerTemplate t = GetXTigerDocTemplate(doc);
   if(t)
-    return (t->state&templInstance)!=0;
+    return (t->state & templInstance) != 0;
   else
     return FALSE;
 #else /* TEMPLATES */

@@ -2353,8 +2353,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       pAb->AbElement->ElLanguage < TtaGetFirstUserLanguage ())
     /* ElLanguage is actually a script */
     script = TtaGetScript (pAb->AbLang);
-  /*else if (pAb->AbLeafType == LtSymbol)
-    script = 'G';*/
+  else if (pAb->AbLeafType == LtSymbol)
+    script = 'G';
   else
     script = 'L';
   /* teste l'unite */

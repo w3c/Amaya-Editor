@@ -1,6 +1,6 @@
 /*
  *
- *  COPYRIGHT INRIA and W3C, 1996-2007
+ *  COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -217,8 +217,8 @@ XTigerTemplate GetXTigerDocTemplate (Document doc)
   ITERATOR_FOREACH(iter, HashMapNode, node)
     {
       t = (XTigerTemplate)node->elem;
-      if(t)
-        if(t->doc==doc)
+      if (t)
+        if (t->doc==doc)
           {
             res = t;
             break;
@@ -264,9 +264,9 @@ XTigerTemplate LookForXTigerTemplate (const char *templatePath)
 void Template_AddStandardDependancies(XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  if(t && !Template_IsLibrary(t))
+  if (t && !Template_IsLibrary(t))
   {
-      if(DocumentTypes[t->doc]==docHTML)
+      if (DocumentTypes[t->doc]==docHTML)
       {
         Template_AddLibraryDeclarations (t,(XTigerTemplate)HashMap_Get(Templates_Map,
                                                           (void*)HTML_LIBRARY));  
@@ -456,10 +456,10 @@ void Declaration_Destroy (Declaration dec)
         SearchSet_Destroy (dec->unionType.expanded);
         dec->unionType.expanded = NULL;
       }
-    if(dec->unionType.includeStr)
+    if (dec->unionType.includeStr)
       TtaFreeMemory(dec->unionType.includeStr);
     dec->unionType.includeStr = NULL;
-    if(dec->unionType.excludeStr)
+    if (dec->unionType.excludeStr)
       TtaFreeMemory(dec->unionType.excludeStr);
     dec->unionType.excludeStr = NULL;
   }
@@ -489,12 +489,12 @@ ThotBool Declaration_GetElementType (Declaration dec, ElementType *type)
 #ifdef TEMPLATES
   if (dec)
     {
-      if(dec->nature==XmlElementNat)
+      if (dec->nature==XmlElementNat)
       {
         GIType (dec->name, type, dec->usedIn->doc);
         return TRUE;
       }
-      else if(dec->nature==ComponentNat)
+      else if (dec->nature==ComponentNat)
       {
         *type = TtaGetElementType(TtaGetFirstChild(dec->componentType.content));
         return TRUE;
@@ -513,9 +513,9 @@ int Declaration_Compare (Declaration dec1, Declaration dec2)
 #ifdef TEMPLATES
   if (dec1 && dec2)
     return strcmp(dec1->name, dec2->name);
-  else if(dec1)
+  else if (dec1)
     return 1;
-  else if(dec2)
+  else if (dec2)
     return -1;
   else
 #endif /* TEMPLATES */
@@ -531,9 +531,9 @@ int Declaration_CompareToString (Declaration dec, const char* name)
 #ifdef TEMPLATES
   if (dec && name)
     return strcmp(dec->name, name);
-  else if(dec)
+  else if (dec)
     return 1;
-  else if(name)
+  else if (name)
     return -1;
   else
 #endif /* TEMPLATES */
@@ -1002,7 +1002,7 @@ static void Template_Destroy (XTigerTemplate t)
   t->errorList = NULL;
 
   //Freeing the document
-  if (t->doc>0)
+  if (t->doc > 0)
     {
       FreeDocumentResource (t->doc);
       TtcCloseDocument (t->doc, 0);
@@ -1168,7 +1168,7 @@ void Template_AddError(XTigerTemplate t, const char* format, ...)
   va_start(ap, format);
   char buffer[MAX_LENGTH];
   
-  if(t)
+  if (t)
     {
 #ifdef _WINDOWS
 	  _vsnprintf (buffer, MAX_LENGTH, format, ap);
@@ -1185,7 +1185,7 @@ void Template_AddError(XTigerTemplate t, const char* format, ...)
   ----------------------------------------------------------------------*/
 void Template_ShowErrors(XTigerTemplate t)
 {
-  if(t && !SList_IsEmpty(t->errorList))
+  if (t && !SList_IsEmpty(t->errorList))
     {
       ShowNonSelListDlgWX(NULL, t->uri,
           TtaGetMessage (AMAYA, AM_TEMPLATE_HAS_ERROR),
@@ -1664,10 +1664,10 @@ SearchSet Template_GetDeclarationSetFromNames(XTigerTemplate t, const char* name
       ITERATOR_FOREACH(iter, StringSetNode, node)
         {
           name = (const char*)node->elem;
-          if(name && name[0]!=EOS)
+          if (name && name[0]!=EOS)
             {
               dec = Template_GetDeclaration(t, name);
-              if(dec)
+              if (dec)
                 SearchSet_Insert(set, dec);
             }
         }
@@ -1711,7 +1711,7 @@ SearchSet Template_ExpandUnion(XTigerTemplate t, Declaration decl)
                                   (Container_CompareFunction)Declaration_Compare,
                                   (Container_CompareFunction)Declaration_CompareToString);
       
-      if(!strcmp(decl->name, UNION_ANY))
+      if (!strcmp(decl->name, UNION_ANY))
         {
           // Add only element and component declaration
           iter = SearchSet_GetForwardIterator(t->elements);
@@ -1724,7 +1724,7 @@ SearchSet Template_ExpandUnion(XTigerTemplate t, Declaration decl)
           TtaFreeMemory(iter);
           
         }
-      if(!strcmp(decl->name, UNION_ANYELEMENT))
+      if (!strcmp(decl->name, UNION_ANYELEMENT))
         {
           iter = SearchSet_GetForwardIterator(t->elements);
           ITERATOR_FOREACH(iter, SearchSetNode, node)
@@ -1739,7 +1739,7 @@ SearchSet Template_ExpandUnion(XTigerTemplate t, Declaration decl)
             {
               /* Fill the decl if not already done.*/
               child = (Declaration) node->elem;
-              if(child)
+              if (child)
                 {
                   /* If element is union, expand it and add content in expanded map.*/
                   if (child->nature==UnionNat)
@@ -1879,7 +1879,7 @@ void Template_FilterInsertableElement (XTigerTemplate t, SearchSet set,
                     res = TtaCanInsertSibling(type, refelem, FALSE, t->doc);
                   else
                     res = TtaCanInsertFirstChild(type, refelem, t->doc);
-                  if(res)
+                  if (res)
                     SearchSet_Insert(newset, node->elem);
                 }
             }
@@ -1899,7 +1899,7 @@ void Template_FilterInsertableElement (XTigerTemplate t, SearchSet set,
 static int Template_UserCompareDeclaration(Declaration dec1 ,Declaration dec2)
 {
 #ifdef TEMPLATES
-  if(dec1->nature == dec2->nature)
+  if (dec1->nature == dec2->nature)
     return strcmp((char*)dec1->name,(char*)dec2->name);
   else
     return ((int)dec1->nature) - ((int)dec2->nature);
