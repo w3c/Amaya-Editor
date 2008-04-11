@@ -646,7 +646,8 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
                 }
             }
           /* deplace l'insertion dans le pave de composition vide */
-          else if (pSelAb->AbLeafType == LtCompound && pSelAb->AbFirstEnclosed == NULL)
+          else if (pSelAb->AbLeafType == LtCompound &&
+                   pSelAb->AbFirstEnclosed == NULL)
             {
               *pAb = CreateALeaf (pSelAb, frame, natureToCreate, TRUE);
               moveSelection = TRUE;
@@ -681,7 +682,7 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
                 /* the sibling can't accept the requested content */
                 *pAb = CreateALeaf (*pAb, frame, natureToCreate, before);
               else
-                /* the new content will ba added to the existing sibling */
+                /* the new content will be added to the existing sibling */
                 {
                   if (before)
                     i = pSiblingAb->AbVolume + 1;
@@ -3637,15 +3638,51 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
             /* table formatting is not loked, lock it now */
             TtaLockTableFormatting ();
 
+          /* When the selection is at a block level move the selection to children */
+          if (!StructSelectionMode &&
+              firstEl == lastEl &&
+              !ViewFrameTable[frame - 1].FrSelectOnePosition &&
+              // don't replace a paragraph by a char
+              (TypeHasException (ExcParagraphBreak, firstEl->ElTypeNumber,
+                                firstEl->ElStructSchema) ||
+              // don't replace a division by a char
+               TypeHasException (ExcNoBreakByReturn, firstEl->ElTypeNumber,
+                                 firstEl->ElStructSchema)))
+            {
+              // move the selection to enclosed elements
+              firstEl = firstEl->ElFirstChild;
+              lastEl = firstEl;
+              while (lastEl && lastEl->ElNext)
+                lastEl = lastEl->ElNext;
+              if (firstEl && firstEl->ElTerminal && firstEl->ElLeafType == LtText)
+                SelectString (pDoc, firstEl, 1, 0);
+              else
+                SelectElement (pDoc, firstEl, TRUE, FALSE, TRUE);
+              if (lastEl != firstEl)
+                {
+                  if (lastEl->ElTerminal && lastEl->ElLeafType == LtText)
+                    ExtendSelection (lastEl, lastEl->ElVolume+1, TRUE, FALSE, FALSE);
+                  else
+                    ExtendSelection (lastEl, 0, FALSE, FALSE, FALSE);
+                }
+              else if (lastEl->ElTerminal && lastEl->ElLeafType == LtText)
+                ExtendSelection (lastEl, lastEl->ElVolume+1, TRUE, FALSE, FALSE);
+            }
+
           /* in principle, the entered character should replace the current
              selection, but... */
           if (!StructSelectionMode &&
               !ViewFrameTable[frame - 1].FrSelectOnePosition &&
-              (firstEl != lastEl ||
-               !TypeHasException (ExcNoCut, firstEl->ElTypeNumber,
-                                  firstEl->ElStructSchema) ||
+              (!TypeHasException (ExcNoCut, firstEl->ElTypeNumber,
+                                 firstEl->ElStructSchema) ||
+               // accept to remove a break
                !TypeHasException (ExcIsBreak, firstEl->ElTypeNumber,
-                                  firstEl->ElStructSchema)))
+                                  firstEl->ElStructSchema)) &&
+              (!TypeHasException (ExcNoCut, lastEl->ElTypeNumber,
+                                 lastEl->ElStructSchema) ||
+               // accept to remove a break
+               TypeHasException (ExcIsBreak, lastEl->ElTypeNumber,
+                                 lastEl->ElStructSchema)))
             {
               if (firstEl == lastEl &&
                   !firstEl->ElTerminal &&
@@ -3668,12 +3705,12 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
                         {
                           while (pEl->ElNext)
                             pEl = pEl->ElNext;
-                          ExtendSelection (pEl, pEl->ElVolume, FALSE, FALSE, FALSE);
+                          ExtendSelection (pEl, pEl->ElVolume, TRUE, FALSE, FALSE);
                         }
                     }
                 }
-            /* delete the current selection */
-            ContentEditing (TEXT_SUP);
+              /* delete the current selection */
+              ContentEditing (TEXT_SUP);
             }
           InsertChar (frame, c, -1);
           if (!lock)
