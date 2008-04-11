@@ -2267,6 +2267,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
     return;
   from = pFrom->AbBox;
   /* position in the frame */
+#ifdef _GL
   if (box->BxBoundinBoxComputed)
     {
       xFrame = box->BxClipX;
@@ -2275,6 +2276,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       height = box->BxClipH;
     }
   else
+#endif /* _GL */
     {
       xFrame = box->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
       yFrame = box->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;

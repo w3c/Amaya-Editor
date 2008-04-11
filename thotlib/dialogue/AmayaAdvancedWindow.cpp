@@ -393,7 +393,6 @@ void AmayaAdvancedWindow::OnClose(wxCloseEvent& event)
  -----------------------------------------------------------------------*/
 bool AmayaAdvancedWindow::IsToolBarShown(int toolbarID)
 {
-  wxPanel *p;
   wxRect r;
   wxString str;
 
