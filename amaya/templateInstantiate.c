@@ -336,7 +336,7 @@ void CreateTemplate(Document doc, char *templatePath)
   basedoc is the displayed doc that launchs the creation of instance
   ----------------------------------------------------------------------*/
 void CreateInstance(char *templatePath, char *instancePath,
-                    char *docname, int basedoc)
+                    char *docname,  DocumentType docType, int basedoc)
 {
 #ifdef TEMPLATES
   Document          doc = 0, newdoc = 0;
@@ -361,6 +361,8 @@ void CreateInstance(char *templatePath, char *instancePath,
   else
     newdoc = basedoc;
 
+  // register the document type to open the right page model
+  DocumentTypes[newdoc] = docType;
   if (!TtaHasUndoSequence (doc))
     {
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);

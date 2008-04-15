@@ -40,8 +40,8 @@ extern void GetFontIdentifier ( char script,
                                 int highlight,
                                 int size,
                                 TypeUnit unit,
-                                char text[10],
-                                char textX[100] );
+                                char r_name[10],
+                                char r_nameX[100] );
 extern ThotFont ReadFont ( char script,
                            int family,
                            int highlight,
@@ -122,8 +122,8 @@ extern void GetFontIdentifier ( char script,
                                   int highlight,
                                   int size,
                                   TypeUnit unit,
-                                  char text[10],
-                                  char textX[100] );
+                                  char r_name[10],
+                                  char r_nameX[100] );
 extern ThotFont ReadFont ( char script,
                              int family,
                              int highlight,

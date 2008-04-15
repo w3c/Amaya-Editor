@@ -4885,7 +4885,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
     {
       docType = docXml;
       //TODO Check that urlname is a valid URL
-      if (!IsW3Path (urlname))
+      if (!IsW3Path (urlname) && TtaFileExist (urlname))
         CheckDocHeader(urlname, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown, &parsingLevel, 
 		       &doc_charset, charsetname, (DocumentType*)&docType, &extraProfile);
     }
