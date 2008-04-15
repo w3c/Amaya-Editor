@@ -468,7 +468,6 @@ void DrawBoxSelection (int frame, PtrBox pBox)
 {
   PtrBox              pChildBox;
   PtrAbstractBox      pAb, pChild, pParent;
-  PtrLine             pLine;
   int                 xd, yd, xf, yf;
   ThotBool            first = TRUE;
 

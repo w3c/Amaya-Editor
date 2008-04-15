@@ -1156,7 +1156,7 @@ static void DrawCompoundHorizArrow (int frame, int x, int y, int l, int h,
                                         int leftChar, int middleChar,int rightChar)
 {
   int             baseline, lWidth, mWidth, rWidth;
-  int             xMiddleChar, gap, xf1, xf2;
+  int             gap, xf1, xf2;
   ThotFont        font;
 
   font = (ThotFont)LoadStixFont (8, size);
