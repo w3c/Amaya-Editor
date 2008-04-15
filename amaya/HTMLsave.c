@@ -585,7 +585,7 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
   searchedType3.ElTypeNum = 0;
   searchedType4.ElTypeNum = 0;
   searchedType5.ElTypeNum = 0;
-  if (elType.ElSSchema == XHTMLSSchema || elType.ElSSchema == SVGSSchema)
+  if (elType.ElSSchema != XLinkSSchema)
     {
       if (elType.ElSSchema == XHTMLSSchema)
         {
@@ -625,6 +625,7 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
     }
   else
     el = NULL;
+
   while (el)
     {
       /* this is a style element */

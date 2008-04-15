@@ -132,7 +132,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
     /* ensp     */ {8194, 1130}, /* en space, U+2002 ISOpub */
     /* emsp     */ {8195, 1160}, /* em space, U+2003 ISOpub */
     /* thinsp   */ {8201, 1129}, /* thin space, U+2009 ISOpub */
-       /* zwnj     */ {8204, 1063}, /* zero width non-joiner, U+200C NEW RFC 2070 */
+    /* zwnj     */ {8204, 1063}, /* zero width non-joiner, U+200C NEW RFC 2070 */
     /* zwj      */ {8205, 1063}, /* zero width joiner, U+200D NEW RFC 2070 */
     /* lrm      */ {8206, 1063}, /* left-to-right mark, U+200E NEW RFC 2070 */
     /* rlm      */ {8207, 1063}, /* right-to-left mark, U+200F NEW RFC 2070 */
@@ -476,9 +476,9 @@ static int          LgBufferAttrValue = 0;
 static Element      CommentText = NULL;	  /* TEXT element of the current
                                              Comment element */
 static Element      ASPText = NULL;	     /* TEXT element of the current
-                                             ASP element */
+                                            ASP element */
 static Element      PIText = NULL;	     /* TEXT element of the current
-                                             ASP element */
+                                            ASP element */
 static ThotBool     UnknownTag = FALSE;	  /* the last start tag encountered is
                                              invalid */
 static ThotBool     HTMLrootClosed = FALSE;
@@ -989,14 +989,14 @@ void HTMLParseError (Document doc, char* msg, int lineNumber)
           docURL = NULL;
         }
       else
-	{
-	  if (CSSErrorsFound && docURL2)
-	    {
-	      fprintf (ErrFile, "\n*** Errors/warnings in %s\n", docURL2);
-	      TtaFreeMemory (docURL2);
-	      docURL2 = NULL;
-	    }
-	}
+        {
+          if (CSSErrorsFound && docURL2)
+            {
+              fprintf (ErrFile, "\n*** Errors/warnings in %s\n", docURL2);
+              TtaFreeMemory (docURL2);
+              docURL2 = NULL;
+            }
+        }
 
       if (lineNumber <= 0)
         /* print the line number and character number before the message */
@@ -1150,7 +1150,7 @@ static void TextToDocument ()
       i = 0;
       insSibling = InsertSibling ();
       ignoreLeadingSpaces = IsLeadingSpaceUseless (HTMLcontext.lastElement,
-                                                  HTMLcontext.doc, insSibling, FALSE);
+                                                   HTMLcontext.doc, insSibling, FALSE);
       if (ignoreLeadingSpaces &&
           !Within (HTML_EL_Preformatted, DocumentSSchema) &&
           !Within (HTML_EL_STYLE_, DocumentSSchema) &&
@@ -4718,12 +4718,12 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
                        !Within (HTML_EL_SCRIPT_, DocumentSSchema) &&
                        !Within (HTML_EL_Text_Area, DocumentSSchema)))
                     {
-                    if (EmptyLine)
-                    /* ignore spaces at the beginning of an input line */
-                      charRead = EOS;
-                    else if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == SPACE)
-                    /* ignore multiple spaces */
-                      charRead = EOS;
+                      if (EmptyLine)
+                        /* ignore spaces at the beginning of an input line */
+                        charRead = EOS;
+                      else if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == SPACE)
+                        /* ignore multiple spaces */
+                        charRead = EOS;
                     }
                 }
               else
@@ -5429,24 +5429,24 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                             {
                                               ptr = strstr (&buffer[i], "1.1");
                                               if (ptr && ptr < end)
-						{
-						  ptr = strstr (&buffer[i], "svg:svg");
-						  if (ptr && ptr < end)
-						    {
-						      *thotType = docSVG;
-						      *isXML = TRUE;
-						      *isknown = TRUE;
-						      *docProfile = L_SVG;
-						      *useMath = TRUE;
-						    }
-						  else
-						    {
-						      *docProfile = L_Xhtml11;
-						      ptr = strstr (&buffer[i], "plus MathML");
-						      if (ptr && ptr < end)
-							*useMath = TRUE;
-						    }
-						}
+                                                {
+                                                  ptr = strstr (&buffer[i], "svg:svg");
+                                                  if (ptr && ptr < end)
+                                                    {
+                                                      *thotType = docSVG;
+                                                      *isXML = TRUE;
+                                                      *isknown = TRUE;
+                                                      *docProfile = L_SVG;
+                                                      *useMath = TRUE;
+                                                    }
+                                                  else
+                                                    {
+                                                      *docProfile = L_Xhtml11;
+                                                      ptr = strstr (&buffer[i], "plus MathML");
+                                                      if (ptr && ptr < end)
+                                                        *useMath = TRUE;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -5460,22 +5460,22 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                           *thotType = docHTML;
                                           *isknown = TRUE;
                                           *docProfile = L_Xhtml11;
-					}
-				      else
-					{
-					  ptr = strstr (&buffer[i], "+RDFa");
-					  if (!ptr || (ptr && ptr > end))
-					    ptr = strstr (&buffer[i], "+rdfa");
-					  if (ptr && ptr < end)
-					    {
-					      *thotType = docHTML;
-					      *isknown = TRUE;
-					      *docProfile = L_Xhtml11;
-					      *extraProfile = L_RDFa;
-					    }
-					}
-				    }
-				}
+                                        }
+                                      else
+                                        {
+                                          ptr = strstr (&buffer[i], "+RDFa");
+                                          if (!ptr || (ptr && ptr > end))
+                                            ptr = strstr (&buffer[i], "+rdfa");
+                                          if (ptr && ptr < end)
+                                            {
+                                              *thotType = docHTML;
+                                              *isknown = TRUE;
+                                              *docProfile = L_Xhtml11;
+                                              *extraProfile = L_RDFa;
+                                            }
+                                        }
+                                    }
+                                }
                             }
                           else
                             {
@@ -7450,8 +7450,8 @@ void StartParser (Document doc, char *fileName,
           // now load the user style sheet
           if (!external_doc)
             {
-            LoadUserStyleSheet (doc);
-            UpdateStyleList (doc, 1);
+              LoadUserStyleSheet (doc);
+              UpdateStyleList (doc, 1);
             }
         }
 
