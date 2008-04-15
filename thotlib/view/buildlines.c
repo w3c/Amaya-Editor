@@ -517,7 +517,7 @@ static void Align (PtrBox pParentBox, PtrBox pBBox, PtrLine pLine, int frame,
               else if (pBox->BxAbstractBox->AbHorizPos.PosEdge == Left)
                 delta = pLine->LiXMax - pLine->LiRealLength;
             }
-          else if (pBox->BxAbstractBox->AbAdjust == AlignCenter)
+          else if (pBBox->BxAbstractBox->AbAdjust == AlignCenter)
             delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
           else if (pBBox->BxAbstractBox->AbAdjust == AlignLeft)
             delta = pLine->LiXMax - pLine->LiRealLength;
@@ -544,9 +544,9 @@ static void Align (PtrBox pParentBox, PtrBox pBBox, PtrLine pLine, int frame,
           else if (pBox->BxAbstractBox->AbHorizPos.PosEdge == Right)
             delta = pLine->LiXMax - pLine->LiRealLength;
         }
-      else if (pBox->BxAbstractBox->AbAdjust == AlignCenter)
+      else if (pBBox->BxAbstractBox->AbAdjust == AlignCenter)
         delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
-      else if (pBox->BxAbstractBox->AbAdjust == AlignRight)
+      else if (pBBox->BxAbstractBox->AbAdjust == AlignRight)
         delta = pLine->LiXMax - pLine->LiRealLength;
       x = pLine->LiXOrg + delta;
     }
@@ -4112,15 +4112,14 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
             pBox->BxMinWidth = minWidth;
 
           // check if there is an enclosing ghost block
-          pRefBlock = pNextBox->BxAbstractBox;
+          pRefBlock = pNextBox->BxAbstractBox->AbEnclosing;
           while (pRefBlock != pAb &&
                  pRefBlock->AbBox->BxType == BoGhost &&
                  !pRefBlock->AbInLine)
             pRefBlock = pRefBlock->AbEnclosing;
-
           if (pRefBlock != pAb)
-              lspacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
-                              pAb, ViewFrameTable[frame - 1].FrMagnification);
+            lspacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
+                                   pAb, ViewFrameTable[frame - 1].FrMagnification);
           else
             lspacing = lineSpacing;
           if (prevLine)
@@ -4168,8 +4167,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
             }
 	  
           /* Take into account the text-align */
-          if (toAdjust &&
-              pRefBlock->AbInLine && pRefBlock->AbAdjust == AlignJustify &&
+          if (toAdjust && pRefBlock->AbInLine &&
+              pRefBlock->AbAdjust == AlignJustify &&
               (full ||
                pRefBlock->AbTruncatedTail || pLine->LiRealLength > pLine->LiXMax))
             {
