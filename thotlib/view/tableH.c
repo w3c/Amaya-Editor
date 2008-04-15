@@ -1137,6 +1137,8 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 
   GiveAttrWidth (cell, ViewFrameTable[frame - 1].FrMagnification, width, percent);
   box = cell->AbBox;
+  /* take into account the left margin, border and padding */
+  mbp = box->BxLBorder + box->BxLPadding;
   if (box->BxType == BoCellBlock)
     {
       // min and max are already computed
@@ -1154,8 +1156,6 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
         }
       return;
     }
-  /* take into account the left margin, border and padding */
-  mbp = box->BxLBorder + box->BxLPadding;
   if (cell->AbLeftMarginUnit != UnAuto && box->BxLMargin > 0)
     mbp += box->BxLMargin;
   /* process elements in this cell */
