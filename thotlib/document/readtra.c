@@ -1027,11 +1027,11 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
         memset (pNextBlock, 0, sizeof (TRuleBlock));
 
       /* lit la partie fixe du schema de traduction */
-      TtaReadName (file, (unsigned char *)pTSch->TsStructName);
-      TtaReadShort (file, &pTSch->TsStructCode);
-      TtaReadShort (file, &pTSch->TsLineLength);
-      TtaReadName (file, (unsigned char *)pTSch->TsEOL);
-      TtaReadName (file, (unsigned char *)pTSch->TsTranslEOL);
+      TtaReadName (file, (unsigned char *)&(pTSch->TsStructName[0]));
+      TtaReadShort (file, &(pTSch->TsStructCode));
+      TtaReadShort (file, &(pTSch->TsLineLength));
+      TtaReadName (file, (unsigned char *)&(pTSch->TsEOL[0]));
+      TtaReadName (file, (unsigned char *)&(pTSch->TsTranslEOL[0]));
       TtaReadShort (file, &pTSch->TsNConstants);
       TtaReadShort (file, &pTSch->TsNCounters);
       TtaReadShort (file, &pTSch->TsNVariables);
@@ -1105,7 +1105,7 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
             ReadPtrTRuleBlock (file, &pNextBlock);
       if (!error)
         for (i = 0; i < InitialNElems; i++)
-          TtaReadBool (file, &pTSch->TsInheritAttr->Bln[i]);
+          TtaReadBool (file, &(pTSch->TsInheritAttr->Bln[i]));
       if (!error)
         for (i = 0; i < pSS->SsNAttributes && !error; i++)
           {
@@ -1167,7 +1167,9 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
                         ReadPtrTRuleBlock (file, &pNextBlock);
                 }
             }
+printf ("r=%d a=%d %d ====>\n", pSS->SsNRules, pSS->SsNAttributes, pTSch->TsNTranslScripts);
       TtaReadShort (file, &(pTSch->TsNTranslScripts));
+printf ("%s c=%d c=%d v=%d b=%d t=%d\n",fileName,pTSch->TsNConstants,pTSch->TsNCounters,pTSch->TsNVariables,pTSch->TsNBuffers,pTSch->TsNTranslScripts);
       if (!error)
         for (i = 0; i < pTSch->TsNTranslScripts; i++)
           {

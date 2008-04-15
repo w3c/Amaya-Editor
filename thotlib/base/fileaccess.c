@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -67,10 +67,10 @@ ThotBool TtaReadByte (BinFile file, unsigned char *bval)
 
   if (fread (&v, sizeof (unsigned char), 1, file) == 0)
     {
-      *bval = (char) 0;
+      *bval = (unsigned char) 0;
       return FALSE;
     } 
-  *bval = (char) v;
+  *bval = v;
   return TRUE;
 }
 /*----------------------------------------------------------------------
@@ -96,7 +96,7 @@ ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval)
 
   if (TtaReadByte (file, &car) == 0)
     {
-      *bval = (char) 0;
+      *bval = (CHAR_T) 0;
       return (FALSE);
     } 
 

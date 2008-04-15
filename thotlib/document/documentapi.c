@@ -1087,7 +1087,6 @@ SSchema TtaGetSSchemaByUri (char *uriName, Document document)
   schema = NULL;
   if (uriName == NULL || uriName[0] == EOS)
     TtaError (ERR_invalid_parameter);
-  /* verifies the parameter document */
   else if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
   else if (LoadedDocument[document - 1] == NULL)
