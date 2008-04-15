@@ -1882,7 +1882,7 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
             }
           else
             {
-              if (ns_uri != NULL)
+              // if (ns_uri != NULL)
                 {
                   isnew = FALSE;
                   elType->ElSSchema = GetGenericXMLSSchemaByUri (ns_uri, XMLcontext.doc, &isnew);
@@ -1895,6 +1895,7 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
                         TtaChangeGenericSchemaNames (ns_uri, elementName, XMLcontext.doc);
                     }
                 }
+                /*
               else
                 {
                   if (XMLcontext.lastElementClosed)
@@ -1914,6 +1915,7 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
                   else
                     elType->ElSSchema = parentType.ElSSchema;
                 }
+                */
               *level = TRUE;
               *content = SPACE;
             }
@@ -2022,7 +2024,8 @@ static void StartOfXmlStartElement (char *name)
           XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
           CurrentParserCtxt = NULL;
         }
-      else
+      else if (CurrentParserCtxt->UriName != NULL &&
+               CurrentParserCtxt->UriName[0] != EOS)
         {
           nsDefUri = GetDefaultNsUri (&def_uri);
           if (def_uri && nsDefUri == NULL)

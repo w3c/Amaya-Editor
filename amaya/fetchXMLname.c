@@ -145,15 +145,13 @@ SSchema GetGenericXMLSSchema (char *schemaName, Document doc)
   Returns the XML Thot schema for the document doc.
   ----------------------------------------------------------------------*/
 SSchema GetGenericXMLSSchemaByUri (char *uriName, Document doc, ThotBool *isnew)
-
 {
   SSchema	XMLSSchema;
 
   if (uriName == NULL)
-    XMLSSchema = NULL;
+    XMLSSchema = TtaGetSSchemaByUri ("Default_Uri", doc);
   else
     XMLSSchema = TtaGetSSchemaByUri (uriName, doc);
-
   if (XMLSSchema == NULL)
     {
       XMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), uriName,
@@ -168,7 +166,6 @@ SSchema GetGenericXMLSSchemaByUri (char *uriName, Document doc, ThotBool *isnew)
   GetXMLSSchema returns the XML Thot schema for document doc.
   ----------------------------------------------------------------------*/
 SSchema GetXMLSSchema (int XMLtype, Document doc)
-
 {
   if (XMLtype == XHTML_TYPE)
     return GetXHTMLSSchema (doc);
