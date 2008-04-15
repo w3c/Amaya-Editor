@@ -1167,9 +1167,7 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
                         ReadPtrTRuleBlock (file, &pNextBlock);
                 }
             }
-printf ("r=%d a=%d %d ====>\n", pSS->SsNRules, pSS->SsNAttributes, pTSch->TsNTranslScripts);
       TtaReadShort (file, &(pTSch->TsNTranslScripts));
-printf ("%s c=%d c=%d v=%d b=%d t=%d\n",fileName,pTSch->TsNConstants,pTSch->TsNCounters,pTSch->TsNVariables,pTSch->TsNBuffers,pTSch->TsNTranslScripts);
       if (!error)
         for (i = 0; i < pTSch->TsNTranslScripts; i++)
           {
