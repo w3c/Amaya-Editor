@@ -1256,7 +1256,7 @@ ATTRIBUTES
 		BEGIN
 		END;
 
- instanceof:
+ typeof:
 		BEGIN
 		END;
 

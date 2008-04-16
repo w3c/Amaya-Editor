@@ -8209,7 +8209,7 @@ ATTRIBUTES
         CreateBefore(AttrValue);
         END;
 
-  instanceof:
+  typeof:
         BEGIN
         CreateBefore(AttrName);
         CreateBefore(AttrValue);

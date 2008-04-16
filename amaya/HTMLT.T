@@ -2822,10 +2822,10 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- instanceof: BEGIN
+ typeof: BEGIN
   Create SAN;
-	Create 'instanceof="';
-	Create instanceof;
+	Create 'typeof="';
+	Create typeof;
 	Create DoubleQuote;
 	END;
 

@@ -245,7 +245,6 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"http-equiv", "", 'A', HTML_ATTR_http_equiv, L_BasicValue},
 
    {"id", "", 'A', HTML_ATTR_ID, L_BasicValue},
-   {"instanceof", "", 'A', HTML_ATTR_instanceof, L_RDFaValue},
    {"ismap", "", 'A', HTML_ATTR_ISAMAP, L_StrictValue},
 
    {"label", "", 'A', HTML_ATTR_label, L_BasicValue},
@@ -347,6 +346,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"type", "style", 'A', HTML_ATTR_Notation, L_StrictValue},
    {"type", "ul", 'A', HTML_ATTR_BulletStyle, L_BasicValue},
    {"type", "", SPACE, DummyAttribute, L_BasicValue},
+   {"typeof", "", 'A', HTML_ATTR_typeof, L_RDFaValue},
 
    {"usemap", "", 'A', HTML_ATTR_USEMAP, L_BasicValue},
 

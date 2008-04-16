@@ -18,7 +18,7 @@ ATTR
    property = Text;		{ property }
    resource = Text;		{ resource }
    datatype = Text;		{ datatype }
-   instanceof = Text;		{ instanceof }
+   typeof = Text;		{ typeof }
    REL = Text;			{ rel }
    REV = Text;			{ rev }
 			{ events }

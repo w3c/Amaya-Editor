@@ -479,7 +479,7 @@ ATTRIBUTES
         AttrDelete.Post -> GlobalAttrDeleted;
         END;
 
-  instanceof:
+  typeof:
         BEGIN
         AttrCreate.Post -> GlobalAttrCreated;
         AttrDelete.Post -> GlobalAttrDeleted;
