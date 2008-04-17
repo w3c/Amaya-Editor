@@ -2010,8 +2010,8 @@ static void SetClear (PtrBox box, ThotBool *clearL, ThotBool *clearR)
       while (pParent && pParent->AbBox &&
              (pParent->AbBox->BxType == BoGhost ||
               pParent->AbBox->BxType == BoFloatGhost) &&
-             pParent->AbElement &&
-             pParent->AbElement->ElFirstChild == pAb->AbElement)
+             pParent->AbElement /*&&
+                                  pParent->AbElement->ElFirstChild == pAb->AbElement*/)
         {
           if (pParent->AbClear == 'L' || pParent->AbClear == 'B')
             *clearL = TRUE;
@@ -3597,8 +3597,10 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       *newblock = Checknewblock (prevBox, pNextBox, pBlock, frame);
       if ( *newblock)
         {
-          /* the current line must be closed */
+          /* the current line */
           AddAllBoxesInLine (prevBox, frame, pBlock, pRootAb, pLine, notComplete, full);
+  if (h > pLine->LiHeight)
+    pLine->LiHeight = h;
           return minWidth;
         }
     }
@@ -4213,6 +4215,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                 }
               else if (newblock && prevLine->LiLastBox)
                 {
+#ifdef IV
                   prevBlock = GetEnclosingBlock (prevLine->LiLastBox->BxAbstractBox, pAb);
                   lspacing = 0;
                   // get the max of top and bottom margins
@@ -4222,6 +4225,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                       lspacing >= 0 && prevBlock->AbBox->BxBMargin > lspacing)
                     lspacing = prevBlock->AbBox->BxBMargin;
                   pLine->LiYOrg = org - lspacing;
+#endif
                 }
             }
           /* prepare information for the next line */
