@@ -2450,6 +2450,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                    (uniqueChild && pAb->AbLeftMargin == 0 && pAb->AbRightMargin == 0)) &&
                   pAb->AbFloat == 'N' &&
                   (pAb->AbAcceptLineBreak || inlineFloatC) &&
+                  /* a sized box cannot be a ghost */
                   !pAb->AbHeight.DimIsPosition &&
                   pAb->AbHeight.DimValue <= 0 &&
                   !pAb->AbWidth.DimIsPosition &&
@@ -2474,7 +2475,11 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                        inLineFloat &&
                        pAb->AbClear == 'N' &&
                        pAb->AbFloat == 'N' &&
-                       pAb->AbAdjust != AlignCenter &&
+                       /* a sized box cannot be a ghost */
+                       !pAb->AbHeight.DimIsPosition &&
+                       pAb->AbHeight.DimValue <= 0 &&
+                       !pAb->AbWidth.DimIsPosition &&
+                       pAb->AbWidth.DimValue <= 0 &&
                        pAb->AbLeftBorder == 0 && pAb->AbRightBorder == 0 &&
                        /* a positioned box cannot be a ghost */
                        !extraflow &&
@@ -2829,8 +2834,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 #ifdef _GL
   pBox->BxClipX = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
   pBox->BxClipY = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
-  pBox->BxClipW = pBox->BxWidth;
-  pBox->BxClipH = pBox->BxHeight;
+  pBox->BxClipW = pBox->BxW;
+  pBox->BxClipH = pBox->BxH;
 #endif /* _GL */
   return (pBox);
 }

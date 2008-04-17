@@ -1361,7 +1361,6 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                               Propagate == ToSiblings &&
                               !pChildAb->AbBox->BxVertFlex)
                             pChildAb->AbBox->BxYToCompute = TRUE;
-
                           YMoveAllEnclosed (pChildAb->AbBox, delta, frame);
                         }
                     }
@@ -2548,7 +2547,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                      -> check vertical enclosing */
                   if (pParent->AbBox->BxType != BoTable)
                     {
-                      Propagate = ToChildren;
+                      //Propagate = ToChildren;
                       HeightPack (pParent, pSourceBox, frame);
                     }
                   /* restore the value if necessary */
@@ -2633,7 +2632,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
       /* Do we have to clean up the history of moved boxes */
       if (pSourceBox == NULL && pFromBox == NULL)
         pBox->BxMoved = NULL;
-      
       if (!IsDead (pAb))
         {
           /* Area zone before moving */

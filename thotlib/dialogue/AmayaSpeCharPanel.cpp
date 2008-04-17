@@ -211,7 +211,7 @@ void AmayaSpeCharToolPanel::InitializeBitmapMap()
           entry++;
         }
       // now free loaded fonts
-      // ThotFreeFont (1);
+      ThotFreeFont (1);
     }
 }
 

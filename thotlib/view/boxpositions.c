@@ -599,8 +599,8 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
       y = pBox->BxYOrg;
     }
 #ifdef _GL
-  pBox->BxClipX = x;
-  pBox->BxClipY = y;
+  pBox->BxClipX = x + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+  pBox->BxClipY = y + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
   pBox->BxClipW = pBox->BxW;
   pBox->BxClipH = pBox->BxH;
 #endif /* _GL */
