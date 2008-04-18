@@ -727,7 +727,6 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
             dim = GetGhostSize (pBox, TRUE, pBlock);
           else
             {
-              //#ifdef POSITIONING
               if (pAb->AbLeafType == LtCompound &&
                   pAb->AbPositioning &&
                   (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
@@ -744,7 +743,6 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
                   else
                     dim = pBox->BxW;
                 }
-              //#endif /* POSITIONING */
               else if (pParent)
                 dim = pParent->BxW;
               else
@@ -1205,7 +1203,6 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
       fprintf (stderr, "Position refers a dead box");
       pRefAb = NULL;
     }
-  //#ifdef POSITIONING
   else if (pRefAb && !IsParentBox (pRefAb->AbBox, pBox))
     /* ignore previous absolute positioning */
     while (pRefAb &&
@@ -1229,7 +1226,6 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
           }
         rule->PosAbRef = pRefAb;
       }
-  //#endif /* POSITIONING */
 	   
   if (pAb->AbFloat != 'N' &&
       (pAb->AbLeafType == LtPicture ||
@@ -1270,6 +1266,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
         }
     }
 
+  parent = pAb->AbEnclosing;
   if (horizRef)
     {
       /* Horizontal rule */
@@ -1289,12 +1286,18 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
                pRefAb->AbHorizPos.PosAbRef == pAb)
         {
           /* Bad rule: change the ref to the previous box */
-          while (pRefAb &&
-                 pRefAb->AbHorizPos.PosAbRef == pAb)
+          while (pRefAb && pRefAb->AbHorizPos.PosAbRef == pAb)
             pRefAb = pRefAb->AbPrevious;
           pAb->AbHorizPos.PosAbRef = pRefAb;
         }
-      
+      if (parent && parent->AbDisplay == 'I')
+        {
+          // force inline display
+          pRefAb = NULL;
+          pAb->AbHorizPos.PosAbRef = NULL;
+          pAb->AbHorizPos.PosDistDelta = 0;
+        }
+
       if (pRefAb == NULL)
         {
           /* default rule */
@@ -1421,6 +1424,14 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
   else
     {
       /* Vertical rule */
+      if (parent && parent->AbDisplay == 'I')
+        {
+          // force inline display
+          pRefAb = NULL;
+          pAb->AbVertPos.PosAbRef = NULL;
+          pAb->AbVertPos.PosDistDelta = 0;
+        }
+
       if (pRefAb == pAb)
         {
           /* could not depend on itself */

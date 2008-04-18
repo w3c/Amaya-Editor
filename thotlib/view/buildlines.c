@@ -1995,7 +1995,9 @@ static void SetClear (PtrBox box, ThotBool *clearL, ThotBool *clearR)
       *clearL = (pAb->AbClear == 'L' || pAb->AbClear == 'B');
       *clearR =(pAb->AbClear == 'R' || pAb->AbClear == 'B');
       // check also the first child
-      if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed)
+      if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed &&
+          // don't check children of a floated box
+          pAb->AbFloat == 'N')
         {
           pChild = pAb->AbFirstEnclosed;
           while (pChild->AbPresentationBox && pChild->AbNext)
@@ -2010,8 +2012,8 @@ static void SetClear (PtrBox box, ThotBool *clearL, ThotBool *clearR)
       while (pParent && pParent->AbBox &&
              (pParent->AbBox->BxType == BoGhost ||
               pParent->AbBox->BxType == BoFloatGhost) &&
-             pParent->AbElement /*&&
-                                  pParent->AbElement->ElFirstChild == pAb->AbElement*/)
+             pParent->AbElement &&
+             pParent->AbElement->ElFirstChild == pAb->AbElement)
         {
           if (pParent->AbClear == 'L' || pParent->AbClear == 'B')
             *clearL = TRUE;
@@ -2054,9 +2056,14 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
     return;
   /* clear values */
   newFloat = FALSE;
+#ifdef IV
   if (pBox && pBox->BxAbstractBox && pBox->BxAbstractBox->AbFloat != 'N')
-    // skip floated boxed
-    return;
+    {
+      // skip floated boxed
+      pLine->LiXMax = pBlock->BxW - pLine->LiXOrg;
+      return;
+    }
+#endif
   SetClear (pBox, &clearL, &clearR);
   /* relative line positions */
   orgX = 0;
@@ -4198,34 +4205,40 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
             {
               /* initial position */
               org = prevLine->LiYOrg + prevLine->LiHeight;
-              if (pLine->LiYOrg == org && !newblock && pRefBlock->AbBox->BxType == BoBlock)
+              if (pLine->LiYOrg == org)
                 {
-                  /* line position not updated by floating boxes */
-                  /* position when line spacing applies */
-                  if (pRefBlock != pAb && pRefBlock->AbInLine)
-                    lspacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
-                                           pAb, ViewFrameTable[frame - 1].FrMagnification);
-                  else
-                    lspacing = lineSpacing;
-                  org = prevLine->LiYOrg + prevLine->LiHorizRef + lspacing - pLine->LiHorizRef;
-                  if (org > pLine->LiYOrg ||
-                      (!prevLine->LiNoOverlap && !pLine->LiNoOverlap && !standard))
-                    /* apply the rule of line spacing */
-                    pLine->LiYOrg = org;
-                }
-              else if (newblock && prevLine->LiLastBox)
-                {
-#ifdef IV
-                  prevBlock = GetEnclosingBlock (prevLine->LiLastBox->BxAbstractBox, pAb);
-                  lspacing = 0;
-                  // get the max of top and bottom margins
-                  if (pRefBlock != pAb && pRefBlock != prevBlock)
-                    lspacing =  pRefBlock->AbBox->BxTMargin;
-                  if (prevBlock != pAb && pRefBlock != prevBlock &&
-                      lspacing >= 0 && prevBlock->AbBox->BxBMargin > lspacing)
-                    lspacing = prevBlock->AbBox->BxBMargin;
-                  pLine->LiYOrg = org - lspacing;
-#endif
+                  if (!newblock && pRefBlock->AbBox->BxType == BoBlock)
+                    {
+                      /* line position not updated by floated boxes */
+                      if (pRefBlock != pAb && pRefBlock->AbInLine)
+                        lspacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
+                                               pAb, ViewFrameTable[frame - 1].FrMagnification);
+                      else
+                        lspacing = lineSpacing;
+                      /* position when line spacing applies */
+                      org = prevLine->LiYOrg + prevLine->LiHorizRef + lspacing - pLine->LiHorizRef;
+                      if (org > pLine->LiYOrg ||
+                          (!prevLine->LiNoOverlap && !pLine->LiNoOverlap && !standard))
+                        /* apply the rule of line spacing */
+                        pLine->LiYOrg = org;
+                    }
+                  else if (newblock && prevLine->LiLastBox)
+                    {
+                      prevBlock = GetEnclosingBlock (prevLine->LiLastBox->BxAbstractBox, pAb);
+                      lspacing = 0;
+                      // keep the max of top and bottom margins
+                      if (pRefBlock != pAb &&
+                          prevBlock != pAb && pRefBlock != prevBlock &&
+                          pRefBlock->AbBox->BxTMargin > 0 &&
+                          prevBlock->AbBox->BxBMargin > 0)
+                        {
+                          if (pRefBlock->AbBox->BxTMargin > prevBlock->AbBox->BxBMargin)
+                            lspacing = prevBlock->AbBox->BxBMargin;
+                          else
+                            lspacing = pRefBlock->AbBox->BxBMargin;
+                        }
+                      pLine->LiYOrg -= lspacing;
+                    }
                 }
             }
           /* prepare information for the next line */
@@ -4297,6 +4310,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
         {
           /* skip to the next box */
           pBoxToBreak = NULL;
+          /* skip not in line boxes */
           do
             pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
           while (pNextBox &&

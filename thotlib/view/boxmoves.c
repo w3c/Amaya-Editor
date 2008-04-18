@@ -1888,6 +1888,7 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
                   /* add values if necessary */
                   if ( box->BxType == BoFloatGhost && pFrom != pAb)
                     {
+                      // ignore left and right padding margin of floated boxes
                       *l += box->BxLBorder;
                       *r += box->BxRBorder;
                       *t += box->BxTMargin + box->BxTBorder + box->BxTPadding;
@@ -1895,17 +1896,13 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
                     }
                   else
                     {
-                      if (!isBlock &&
-                          (pParent->AbBox->BxType == BoFloatBlock ||
-                           pParent->AbBox->BxType == BoCellBlock || first))
+                      if (!isBlock && first)
                         {
                           *l += box->BxLMargin;
                           if (pFrom != pAb)
                             *l += box->BxLBorder + box->BxLPadding;
                         }
-                      if (!isBlock &&
-                          (pParent->AbBox->BxType == BoFloatBlock ||
-                           pParent->AbBox->BxType == BoCellBlock || last))
+                      if (!isBlock && last)
                         {
                           *r += box->BxRMargin;
                           if (pFrom != pAb)
