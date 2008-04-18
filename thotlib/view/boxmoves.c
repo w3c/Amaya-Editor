@@ -1880,7 +1880,7 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
             {
               box = pAb->AbBox;
               isBlock = (box->BxType == BoGhost &&
-                         (pAb->AbInLine || pAb->AbDisplay == 'B' || pAb->AbDisplay == 'L'));
+                         (pAb->AbDisplay == 'B' || pAb->AbDisplay == 'L'));
               if (!add && pFrom)
                 add = (pFrom == pAb || IsParentBox (pFrom->AbBox, box));
               if (add)

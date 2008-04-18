@@ -2450,7 +2450,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                   pAb->AbFloat == 'N' &&
                   (pAb->AbAcceptLineBreak || inlineFloatC) &&
                   /* a sized not inline box cannot be a ghost */
-                  (//pAb->AbDisplay == 'I' ||
+                  (pAb->AbDisplay == 'I' ||
                    (!pAb->AbHeight.DimIsPosition &&
                     pAb->AbHeight.DimValue <= 0)) &&
                   !pAb->AbWidth.DimIsPosition &&
@@ -2470,10 +2470,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                   /* this element can be split */
                   inlineChildren = inLine;
                   inlineFloatC = inLineFloat;
-                  TransmitMBP (pBox, pBox, frame,
-                               pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder,
-                               pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder,
-                               TRUE, inLineFloat, TRUE, TRUE);
                 }
               else if ((inlineChildren || inlineFloatC) &&
                        inLineFloat &&
@@ -2499,10 +2495,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                   /* this element can be split */
                   inlineChildren = inLine;
                   inlineFloatC = inLineFloat;
-                  TransmitMBP (pBox, pBox, frame,
-                               pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder,
-                               pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder,
-                               TRUE, inLineFloat, TRUE, TRUE);
                 }
               else if (inlineChildren)
                 {
@@ -2754,6 +2746,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                                 inlineFloatC, carIndex);
               pChildAb = pChildAb->AbNext;
             }
+
           GiveEnclosureSize (pAb, frame, &width, &height);
           /* Position of box axis */
           ComputeAxisRelation (pAb->AbVertRef, pBox, frame, TRUE);
