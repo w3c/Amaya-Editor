@@ -362,6 +362,31 @@ void NewCss (Document doc, View view)
 }
 
 /*--------------------------------------------------------------------------
+  AddRDFaNS
+  Add the RDFa specific namespace declarations to the root element
+  --------------------------------------------------------------------------*/
+static void AddRDFaNS (Document doc)
+{
+  ElementType          elType;
+  Element              docEl, root;
+
+  docEl = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (docEl);
+  elType.ElTypeNum = HTML_EL_HTML;
+  root = TtaSearchTypedElement (elType, SearchInTree, docEl);
+  if (root)
+    {
+      TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
+      TtaSetANamespaceDeclaration (doc, root, RDF_PREFIX, RDF_URI);
+      TtaSetANamespaceDeclaration (doc, root, RDFS_PREFIX, RDFS_URI);
+      TtaSetANamespaceDeclaration (doc, root, OWL_PREFIX, OWL_URI);
+      TtaSetANamespaceDeclaration (doc, root, XSD_PREFIX, XSD_URI);
+      TtaSetANamespaceDeclaration (doc, root, FOAF_PREFIX, FOAF_URI);
+      TtaSetANamespaceDeclaration (doc, root, DC_PREFIX, DC_URI);
+    }
+}
+
+/*--------------------------------------------------------------------------
   CreateDoctype creates a doctype declaration
   The parameter doctype points to the current DOCTYPE or NULL.
   Parameters useMathML and useSVG determine the XHTML 1.1 profile.
@@ -486,7 +511,10 @@ void CreateDoctype (Document doc, Element doctype, int profile, int extraProfile
                                language, doc);
         }
       else if ((profile == L_Xhtml11) && (extraProfile == L_RDFa))
-        TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML_PLUS_RDFa, language, doc);
+	{
+	  AddRDFaNS (doc);
+	  TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML_PLUS_RDFa, language, doc);
+	}
       else if (profile == L_Xhtml11)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML11, language, doc);
       else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
@@ -525,7 +553,10 @@ void CreateDoctype (Document doc, Element doctype, int profile, int extraProfile
         TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11_PLUS_MATHML_PLUS_SVG, language,
                            doc);
       else if ((profile == L_Xhtml11) && (extraProfile == L_RDFa))
-        TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML_PLUS_RDFa, language, doc);
+	{
+	  AddRDFaNS (doc);
+	  TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML_PLUS_RDFa, language, doc);
+	}
       else if (profile == L_Xhtml11)
         TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11, language, doc);
       else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
@@ -660,8 +691,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       /* Set the namespace declaration */
       elType.ElTypeNum = HTML_EL_HTML;
       root = TtaSearchTypedElement (elType, SearchInTree, docEl);
-      TtaSetUriSSchema (elType.ElSSchema, XHTML_URI);
       TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
+      TtaSetUriSSchema (elType.ElSSchema, XHTML_URI);
 
       /* attach an attribute PrintURL to the root element */
       attrType.AttrTypeNum = HTML_ATTR_PrintURL;

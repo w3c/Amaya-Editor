@@ -26,8 +26,35 @@
 #define XLink_URI       "http://www.w3.org/1999/xlink"
 #define XLink_PREFIX    "xlink"
 #define Template_PREFIX "t"
-
 #define NAMESPACE_URI   "http://www.w3.org/XML/1998/namespace"
+
+/* RDFa namespace declarations */
+#define RDF_URI        "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+#define RDF_PREFIX     "rdf"
+#define RDFS_URI       "http://www.w3.org/2000/01/rdf-schema#"
+#define RDFS_PREFIX    "rdfs"
+#define FOAF_URI       "http://xmlns.com/foaf/0.1"
+#define FOAF_PREFIX    "foaf"
+#define DC_URI         "http://purl.org/dc/elements/1.1"
+#define DC_PREFIX      "dc"
+#define OWL_URI        "http://www.w3.org/2002/07/owl#"
+#define OWL_PREFIX     "owl"
+#define XSD_URI        "http://www.w3.org/2001/XMLSchema#"
+#define XSD_PREFIX     "xsd"
+#define VCARD_URI      "http://www.w3.org/2001/vcard-rdf/3.0#"
+#define VCARD_PREFIX   "vcard"
+#define GEO_URI        "http://www.w3.org/2003/01/geo/wgs84_pos#"
+#define GEO_PREFIX     "geo"
+#define CONTACT_URI    "http://www.w3.org/2000/10/swap/pim/contact#"
+#define CONTACT_PREFIX "contact"
+#define AIR_URI        "http://www.daml.org/2001/10/html/airport-ont#"
+#define AIR_PREFIX     "air"
+#define SRW_URI        "http://purl.org/net/inkel/rdf/schemas/lang/1.1#"
+#define SRW_PREFIX     "srw"
+#define BIO_URI        "http://purl.org/vocab/bio/0.1/"
+#define BIO_PREFIX     "bio"
+#define WN_URI         "http://xmlns.com/wordnet/1.6/"
+#define WN_PREFIX      "wn"
 
 #define MaxTypeNameLength 30
 #define DummyAttribute    500
