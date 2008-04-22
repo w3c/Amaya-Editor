@@ -3144,7 +3144,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                               pSelBox->BxType == BoComplete)
                             {
                               /* Mise a jour des marques */
-                              GetExtraMargins (pSelBox, NULL, frame, FALSE, &t, &b, &l, &r);
+                              GetExtraMargins (pSelBox, frame, FALSE, &t, &b, &l, &r);
                               xDelta = BoxCharacterWidth (c, variant, font);
                               pViewSel->VsXPos = xDelta + l;
                               pViewSel->VsIndBox = charsDelta;

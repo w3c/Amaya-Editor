@@ -2844,7 +2844,7 @@ void LocateClickedChar (PtrBox pBox, int frame, ThotBool extend,
   CHAR_T              c;
   ThotBool            notfound, rtl;
 
-  GetExtraMargins (pBox, NULL, frame, FALSE, &t, &b, &l, &r);
+  GetExtraMargins (pBox, frame, FALSE, &t, &b, &l, &r);
   *x = *x - l - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding;
   /* Nombre de caracteres qui precedent */
   *index = 0;

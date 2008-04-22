@@ -207,9 +207,8 @@ void DefClip (int frame, int xstart, int ytop, int xstop, int ybottom)
 void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
                    int ystart, int ystop)
 {
-  ViewFrame          *pFrame;
   PtrFlow             pFlow;
-  PtrAbstractBox      pAb;
+  PtrAbstractBox      pAb, first, last, pParent;
 #ifdef _GL
   PtrAbstractBox      pClipAb;
   ThotBool            formatted;
@@ -218,7 +217,59 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
   int                 x1, x2, y1, y2, k;
 
   k = 0;
-  if (pBox && pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost)
+  if (pBox && pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+    {
+      pAb = pBox->BxAbstractBox;
+      /* get the first and last enclosed boxes */
+      first = pAb->AbFirstEnclosed;
+      while (first && first->AbBox == NULL)
+        first = first->AbNext;
+      if (first == NULL)
+        return;
+      last = first;
+      while (last->AbNext && last->AbNext->AbBox)
+        last = last->AbNext;
+      
+      while (first->AbBox && first->AbBox->BxType == BoGhost && first->AbFirstEnclosed)
+        first = first->AbFirstEnclosed;
+      while (last->AbBox && last->AbBox->BxType == BoGhost && last->AbFirstEnclosed)
+        {
+          last = last->AbFirstEnclosed;
+          while (last->AbNext && last->AbNext->AbBox)
+            last = last->AbNext;
+        }
+
+      // get horizontal limits
+      pParent = pAb->AbEnclosing;
+      while (pParent->AbBox && pParent->AbBox->BxType == BoGhost)
+        pParent = pParent->AbEnclosing;
+      x1 = pParent->AbBox->BxXOrg + pParent->AbBox->BxLMargin
+        + pParent->AbBox->BxLBorder + pParent->AbBox->BxLPadding;
+      x2 = x1 + pParent->AbBox->BxW;
+      pFlow = GetRelativeFlow (pParent->AbBox, frame);
+      if (pFlow)
+        {
+          x1 += pFlow->FlXStart;
+          x2 += pFlow->FlXStart;
+        }
+      // get the right leaf box
+      pBox = first->AbBox;
+      if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
+        pBox = pBox->BxNexChild;
+      y1 = pBox->BxYOrg;
+      y2 = pBox->BxYOrg + pBox->BxHeight;
+      pBox = last->AbBox;
+      if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
+        {
+          pBox = pBox->BxNexChild;
+          while (pBox->BxNexChild && pBox->BxNexChild->BxW > 0)
+            pBox = pBox->BxNexChild;
+        }
+      if (pBox->BxYOrg + pBox->BxHeight > y2)
+        y2 = pBox->BxYOrg + pBox->BxHeight;
+      DefClip (frame, x1, y1, x2, y2);
+    }
+  else
     {
       pAb = pBox->BxAbstractBox;
       if (pBox->BxType == BoCell)
@@ -259,7 +310,6 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 #endif /* _GL */
       if (pAb)
         pEl = pAb->AbElement;
-      pFrame = &ViewFrameTable[frame - 1];
       /* take into account the positioning */
       pFlow = GetRelativeFlow (pBox, frame);
       if (pEl && pBox->BxAbstractBox &&
@@ -558,9 +608,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       if (pParent == NULL || pParent->AbBox == NULL)
         return;
       if (pBox == from && pBox->BxType == BoGhost)
-        topdown = (pParent->AbBox &&
-                   (pParent->AbBox->BxType == BoFloatBlock ||
-                    pParent->AbBox->BxType == BoCellBlock));
+        topdown = TRUE;
       /* display all children */
       pChild = pAb->AbFirstEnclosed;
       while (pChild)
@@ -627,12 +675,11 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       xd = pBox->BxXOrg + l;
       width = pBox->BxWidth;
     }
-  else if (from->BxType == BoGhost && (pFrom->AbDisplay == 'B' || pFrom->AbInLine))
+  else if (from->BxType == BoGhost &&
+           (pFrom->AbDisplay == 'B' || pFrom->AbDisplay == 'L'))
     {
-      l = 0;//from->BxLMargin;
-      b = 0;//from->BxBMargin;
-      t = 0;//from->BxTMargin;
-      r = 0;//from->BxRMargin;
+      // the box is displayed on a set of lines
+      t = b = l = r = 0;
       bl = from->BxLBorder;
       bb = from->BxBBorder;
       bt = from->BxTBorder;
@@ -644,7 +691,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           while (pParent->AbBox && pParent->AbBox->BxType == BoGhost)
             pParent = pParent->AbEnclosing;
           xd = pParent->AbBox->BxXOrg + pLine->LiXOrg + shiftx;
-          width =  pLine->LiXMax;
+          width = pLine->LiXMax;
         }
       else
         {
@@ -654,9 +701,20 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
     }
   else
     {
-      GetExtraMargins (pBox, pFrom, frame, TRUE, &t, &b, &l, &r);
-      xd = pBox->BxXOrg + l;
-      width = pBox->BxWidth;
+      // the box is displayed on a set of lines
+      t = b = l = r = 0;
+      /*GetExtraMargins (from, frame, TRUE, &t, &b, &l, &r);
+      t +=  from->BxTMargin;
+      b +=  from->BxBMargin;
+      l += from->BxLMargin;
+      r += from->BxRMargin;*/
+      
+      bl = from->BxLBorder;
+      bb = from->BxBBorder;
+      bt = from->BxTBorder;
+      br = from->BxRBorder;
+      xd = pBox->BxXOrg + shiftx;
+      width =  pBox->BxWidth;
     }
   if (l > 0)
     width -= l;

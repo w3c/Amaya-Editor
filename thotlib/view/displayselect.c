@@ -26,6 +26,7 @@
 #include "frame_tv.h"
 
 #include "boxmoves_f.h"
+#include "boxpositions_f.h"
 #include "displayselect_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
@@ -67,7 +68,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
       halfThick = thick / 2;
 
       /* selection points */
-      GetExtraMargins (pBox, NULL, frame, FALSE, &t, &b, &l, &r);
+      GetExtraMargins (pBox, frame, FALSE, &t, &b, &l, &r);
       leftX = l + pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder
         + pBox->BxLPadding - pFrame->FrXOrg - halfThick;
       topY = t + pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder
@@ -467,9 +468,6 @@ void DisplayBgBoxSelection (int frame, PtrBox pBox)
 void DrawBoxSelection (int frame, PtrBox pBox)
 {
   PtrBox              pChildBox;
-  PtrAbstractBox      pAb, pChild, pParent;
-  int                 xd, yd, xf, yf;
-  ThotBool            first = TRUE;
 
   if (pBox)
     {
@@ -481,52 +479,6 @@ void DrawBoxSelection (int frame, PtrBox pBox)
             {
               DrawBoxSelection (frame, pChildBox);
               pChildBox = pChildBox->BxNexChild;
-            }
-        }
-      else if (pBox->BxType == BoGhost)
-        {
-          pAb = pBox->BxAbstractBox;
-          //if (pAb && pAb->AbDisplay == 'B')
-            {
-              /* compute the redisplayed area */
-              pChild = pAb->AbFirstEnclosed;
-              pParent = pAb->AbEnclosing;
-              while (pParent->AbBox && pParent->AbBox->BxType == BoGhost)
-                pParent = pParent->AbEnclosing;
-              xd = pParent->AbBox->BxXOrg + pParent->AbBox->BxLMargin + pParent->AbBox->BxLBorder;
-              xf = xd + pParent->AbBox->BxW;
-              while (pChild)
-                {
-                  pChildBox = pChild->AbBox;
-                  if (pChildBox == NULL)
-                    ;
-                  else if (pChildBox->BxType == BoSplit || pChildBox->BxType == BoMulScript)
-                    while (pChildBox)
-                      {
-                        /* check pieces */
-                        if (first)
-                          {
-                            yd = pChildBox->BxYOrg;
-                            first = FALSE;
-                          }
-                        yf = pChildBox->BxYOrg + pChildBox->BxHeight;
-                        pChildBox = pChildBox->BxNexChild;
-                      }
-                  else if (pChildBox->BxType == BoGhost)
-                    DrawBoxSelection (frame, pChildBox);
-                  else if (!pChild->AbPresentationBox && pChildBox->BxType != BoGhost)
-                    {
-                      /* skip presentation boxes and ghosts */
-                      if (first)
-                        {
-                          yd = pChildBox->BxYOrg;
-                          first = FALSE;
-                        }
-                      yf = pChildBox->BxYOrg + pChildBox->BxHeight;
-                    }
-                  pChild = pChild->AbNext;
-                }
-              DefClip (frame, xd, yd, xf, yf);
             }
         }
       else

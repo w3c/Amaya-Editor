@@ -2443,7 +2443,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                   inlineChildren = pAb->AbInLine || InlineTextChildren (pAb, frame);
                 }
 
-              if (((inLine /*&& pAb->AbClear == 'N'*/) ||
+              if ((inLine ||
                    (inLineFloat && !dummyChild)) &&
                   (!inlineFloatC ||
                    (uniqueChild && pAb->AbLeftMargin == 0 && pAb->AbRightMargin == 0)) &&
@@ -2473,15 +2473,13 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                 }
               else if ((inlineChildren || inlineFloatC) &&
                        inLineFloat &&
-                       //pAb->AbClear == 'N' &&
                        pAb->AbFloat == 'N' &&
                        /* a sized not inline box cannot be a ghost */
-                       (//pAb->AbDisplay == 'I' ||
+                       (pAb->AbDisplay == 'I' ||
                         (!pAb->AbHeight.DimIsPosition &&
                          pAb->AbHeight.DimValue <= 0)) &&
                        !pAb->AbWidth.DimIsPosition &&
                        pAb->AbWidth.DimValue <= 0 &&
-                       pAb->AbLeftBorder == 0 && pAb->AbRightBorder == 0 &&
                        /* a positioned box cannot be a ghost */
                        !extraflow &&
                        pAb->AbFirstEnclosed &&
@@ -3792,8 +3790,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                       pBlock = NULL;
                     }
                   else if (pParent->AbFloat == 'N' &&
-                           !pParent->AbHeight.DimIsPosition &&
-                           pParent->AbHeight.DimValue <= 0 &&
+                           (pParent->AbDisplay == 'I' ||
+                            (!pParent->AbHeight.DimIsPosition &&
+                             pParent->AbHeight.DimValue <= 0)) &&
                            !pParent->AbWidth.DimIsPosition &&
                            pParent->AbWidth.DimValue <= 0 &&
                            (!HasFloatingChild (pParent, frame, &directParent, &uniqueChild, &dummyChild) ||
