@@ -1834,9 +1834,6 @@ void GetExtraMargins (PtrBox pBox, int frame, ThotBool withMargin,
           (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
            pAb->AbEnclosing->AbBox->BxType == BoFloatGhost))
         {
-          box = pAb->AbEnclosing->AbBox;
-          isBlock = (box->BxType == BoGhost &&
-                     (pAb->AbDisplay == 'B' || pAb->AbDisplay == 'L'));
           if (pBox->BxType != BoGhost ||
               (pAb->AbDisplay != 'B' && pAb->AbDisplay != 'L'))
             {

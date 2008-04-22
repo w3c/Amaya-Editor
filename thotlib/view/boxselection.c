@@ -509,7 +509,6 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
           graphSel = (pAb->AbLeafType == LtPolyLine ||
                       pAb->AbLeafType == LtPath ||
                       pAb->AbLeafType == LtGraphics);
-          /*printf ("firstChar=%d lastChar=%d\n", firstChar, lastChar);*/
           /* check index values */
           if (pAb->AbLeafType == LtText)
             {

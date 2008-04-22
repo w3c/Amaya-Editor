@@ -1386,8 +1386,9 @@ void ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
             For ghost elements or elements with the exception
             HighlightChildren, the selection is transmitted to children
           */
-          while (pAb && pAb->AbFirstEnclosed &&  pAb->AbDisplay != 'B' &&
-                 ((pAb->AbBox && pAb->AbBox->BxType == BoGhost) ||
+          while (pAb && pAb->AbFirstEnclosed &&
+                 //pAb->AbDisplay != 'B' && pAb->AbDisplay != 'L' &&
+                 (//(pAb->AbBox && pAb->AbBox->BxType == BoGhost) ||
                   (FrameTable[frame].FrView == 1 &&
                    TypeHasException (ExcHighlightChildren,
                                      pAb->AbElement->ElTypeNumber,
@@ -1586,25 +1587,25 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
                    SelectedPointInPolyline > 0)
             partialSel = TRUE;
         }
-
       /*
         For ghost elements or elements with the exception
         HighlightChildren, the selection is transmitted to children
       */
-      while (pAb && pAb->AbFirstEnclosed && pAb->AbDisplay != 'B' &&
-             ((pAb->AbBox && pAb->AbBox->BxType == BoGhost) ||
+      while (pAb && pAb->AbFirstEnclosed &&
+             //pAb->AbDisplay != 'B' && pAb->AbDisplay != 'L' &&
+             //((pAb->AbBox && pAb->AbBox->BxType == BoGhost) ||
               (FrameTable[frame].FrView == 1 &&
                TypeHasException (ExcHighlightChildren,
                                  pAb->AbElement->ElTypeNumber,
-                                 pAb->AbElement->ElStructSchema))))
+                                 pAb->AbElement->ElStructSchema)))
         {
-          /* select children intead of the current abstract box */
+          /* select children instead of the current abstract box */
           if (depth < MAX_TRANSMIT)
             pSelAb[depth++] = pAb;
           pAb = pAb->AbFirstEnclosed;
           pEl = pAb->AbElement;
         }
-      
+     
       if (partialSel && !pAb->AbPresentationBox)
         pNextAb = NULL;
       else
