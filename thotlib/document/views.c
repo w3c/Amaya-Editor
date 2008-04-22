@@ -364,10 +364,7 @@ void OpenDefaultViews (PtrDocument pDoc)
      }
   if (pDoc->DocViewFrame[0] == 0)
      /* echec creation fenetre */
-     {
-     UnloadTree (document);
-     UnloadDocument (&pDoc);
-     }
+       CloseDocumentAndViews(pDoc, FALSE);
   else
      {
      pDoc->DocView[0].DvSSchema = pSS;

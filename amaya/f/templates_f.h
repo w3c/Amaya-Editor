@@ -44,7 +44,7 @@ extern void CheckTemplate ( Document doc );
 extern void OpeningInstance ( char *localFileName,
                               Document doc,
                               char* docURL );
-extern ThotBool ClosingInstance ( NotifyDialog* dialog );
+extern ThotBool ClosingTemplateDocument ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
 extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
@@ -106,7 +106,7 @@ extern void CheckTemplate ( Document doc );
 extern void OpeningInstance ( char *localFileName,
                                 Document doc,
                                 char* docURL );
-extern ThotBool ClosingInstance ( NotifyDialog* dialog );
+extern ThotBool ClosingTemplateDocument ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
 extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );

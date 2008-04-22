@@ -742,6 +742,12 @@ void AddDocHistory (Document doc, char *url, char *initial_url,
   SetArrowButton (doc, FALSE, FALSE);
 }
 
+
+#ifdef AMAYA_DEBUG
+  void TtaDumpDocumentReference();
+  void DumpTemplateReferences ();
+#endif /* AMAYA_DEBUG */
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void HelpAmaya (Document document, View view)
@@ -902,7 +908,12 @@ void HelpAmaya (Document document, View view)
 #endif
   
   wxAboutBox(info);
+
   
+#ifdef AMAYA_DEBUG
+  TtaDumpDocumentReference();
+  DumpTemplateReferences();
+#endif /* AMAYA_DEBUG */
 }
 
 

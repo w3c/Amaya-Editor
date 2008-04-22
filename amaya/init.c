@@ -2216,49 +2216,20 @@ static void GiveWindowGeometry (Document doc, int docType, int method,
 }
 
 /*----------------------------------------------------------------------
-  InitDocAndView prepares the main view of a new document.
-  logFile is TRUE if the new view is created to display a log file
-  sourceOfDoc is not zero when we're opening the source view of a document.
-  params:
-  + Document oldDoc: the old document id
-  + ThotBool replaceOldDoc: true if the new doc should replace the old one
-  + ThotBool inNewWindow: true if the new doc should be created in a new window
-  + ...
   ----------------------------------------------------------------------*/
-Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow,
-                         char *docname, DocumentType docType, Document sourceOfDoc,
-			 ThotBool readOnly, int profile, int extraProfile, int method)
+void WhereOpenView(Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow,
+                    DocumentType docType, int method,  
+                    int* windowId, int* pageId, int* pagePosition,
+                    int* _visibility, ThotBool* isOpen, int* requestedDoc)
 {
-  Document      doc; /* the new doc */
-  View          mainView, structView, altView, linksView, tocView;
-  Element       root, comment, leaf;
-  ElementType   elType;
-  char          buffer[MAX_LENGTH];
-  int           x, y, w, h;
-  int           requested_doc, visibility = 5;
-  Language	lang;
-  ThotBool      isOpen, reinitialized = FALSE, show;
-  /* specific to wxWidgets user interface */
-  /* ------------------------------------ */
-  /* this is the window id identifying where the document should be shown 
-   * this window_id is a document attribute and the corresponding
-   * window widget has been allocated before this function call */
-  int           window_id = -1;
-  /* this is the page id identifying where the document should be shown
-   * into a window (window_id), each page can contain one or more documents */
-  int           page_id   = -1;
-  /* this is the choosen position in the given page (top or bottom) */
-  int           page_position = 0;
-  /* ------------------------------------ */
-  
-  /* is there any editing function available */
-  if (!TtaCanEdit ())
-    /* change the document status */
-    readOnly = TRUE;
-
-  /* if it is a source document, reload its corresponding document */
-  if (DocumentTypes[oldDoc] == docSource)
-    oldDoc = GetDocFromSource (oldDoc);
+  Document  doc; /* the new doc */
+  int       window_id     = -1,
+            page_id       = -1,
+            page_position = 0,
+            visibility    = 5,
+            requested_doc;
+  View      structView, altView, linksView, tocView;
+  ThotBool  is_open;
 
   /* if the old doc doesn't exist it's not possible to create a new tab,
    * just open it in a new window */
@@ -2267,6 +2238,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 
   /* previous document */
   doc = oldDoc;
+
   if (replaceOldDoc && oldDoc > 0)
     /* the new document will replace another document in the same window */
     {
@@ -2309,10 +2281,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
       HideHSplitToggle (doc, 1);
       HideVSplitToggle (doc, 1);
       TtaFreeView (doc, 1);
-      isOpen = TRUE;
+      is_open = TRUE;
       /* use the same document identifier */
       requested_doc = doc;
-      oldDoc = 0;	/* the previous document doesn't exist any more */
+      oldDoc = 0; /* the previous document doesn't exist any more */
       /* The toolkit has to do its job now */
       TtaHandlePendingEvents ();
     }
@@ -2326,25 +2298,25 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
         {
           // the annotation window is already open
           inNewWindow = FALSE;
-          isOpen = TRUE;
+          is_open = TRUE;
           page_id   = TtaGetFreePageId( window_id );
           page_position = 1;
         }
       else
-        isOpen = FALSE;
+        is_open = FALSE;
       requested_doc = 0;
     }
   else if (inNewWindow)
     {
       /* open the new document in a fresh window */
-      isOpen = FALSE;
+      is_open = FALSE;
       requested_doc = 0;
     }
   else
     {
       /* open the new document in the same window but in a fresh page */
       requested_doc = 0;
-      isOpen = TRUE;
+      is_open = TRUE;
       if (docType == docSource)
         {
           /* source view is open it into the same page as formatted view */
@@ -2361,193 +2333,124 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
           page_position = 1;
         }
     }
+  
+  *windowId     = window_id;
+  *pageId       = page_id;
+  *pagePosition = page_position;
+  *isOpen       = is_open;
+  *_visibility  = visibility;
+  *requestedDoc = requested_doc;
+}
 
-  /* Init the new document */
-  if (docType == docText || docType == docCSS ||
-      docType == docSource || docType == docLog)
-    doc = TtaInitDocument ("TextFile", docname, requested_doc);
-  else if (docType == docAnnot)
-    doc = TtaInitDocument ("Annot", docname, requested_doc);
-#ifdef BOOKMARKS
-  else if (docType == docBookmark)
-    doc = TtaInitDocument ("Topics", docname, requested_doc);
-#endif /* BOOKMARKS */
-  else if (docType == docSVG)
-    doc = TtaInitDocument ("SVG", docname, requested_doc);
-  else if (docType == docMath)
-    doc = TtaInitDocument ("MathML", docname, requested_doc);
-#ifdef XML_GENERIC      
-  else if (docType == docXml)
-    doc = TtaInitDocument ("XML", docname, requested_doc);
-#endif /* XML_GENERIC */
-  else
-    doc = TtaInitDocument ("HTML", docname, requested_doc);
-  if (doc >= DocumentTableLength)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+View InitView(Document oldDoc, Document doc, 
+        ThotBool replaceOldDoc, ThotBool inNewWindow, ThotBool isOpen,
+        int window_id, int page_id, int page_position,
+        DocumentType docType, int method)
+{
+  View          mainView;
+  int           x, y, w, h;
+  ThotBool      reinitialized = FALSE;
+
+  /* gets registered window parameters */
+  GiveWindowGeometry (doc, docType, method, &x, &y, &w, &h);
+  /* create a new window if needed */
+  if (window_id == -1)
     {
-      TtaCloseDocument (doc);
-      doc = 0;
+      /* get the parent window because the log should stay on top of his parent */
+      int parent_window_id = TtaGetDocumentWindowId( oldDoc, -1 );
+      switch(docType)
+        {
+          case docLog:
+          case docLibrary:
+            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
+            break;
+          case docCSS:
+            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_CSS, 0 );
+            break;
+          case docAnnot:
+            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_ANNOT, 0 );
+            break;
+          default:
+            if (method == CE_HELP)
+              window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_HELP, 0 );
+            else
+              /* a normal window should never had a parent ! */
+              window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
+            break;
+        }
+      page_id   = TtaGetFreePageId( window_id );
+      page_position = 1;
     }
-  else if (doc > 0)
+  
+  /* init default documents menus states: enable/disable, toggle/untoggle
+   * need to be done before frame creation because the active frame will
+   * use it to refresh the menus */
+  if (!replaceOldDoc || !isOpen)
+    TtaInitMenuItemStats(doc);
+  TtaInitTopMenuStats(doc);
+  
+  /* open the main view */
+  if (docType == docLog)
     {
-      /* assign a presentation model to the document */
-      if (docType == docText || docType == docCSS ||
-          docType == docSource || docType == docLog)
-        TtaSetPSchema (doc, "TextFileP");
-      else if (docType == docAnnot)
-        {
-          TtaSetPSchema (doc, "AnnotP");
-          profile = L_Annot; /* force the profile */
-        }
-#ifdef BOOKMARKS
-      else if (docType == docBookmark)
-        {
-          TtaSetPSchema (doc, "TopicsP");
-          profile = L_Bookmarks; /* force the profile */
-        }
-#endif /* BOOKMARKS */
-      else if (docType == docSVG)
-        TtaSetPSchema (doc, "SVGP");
-      else if (docType == docMath)
-        TtaSetPSchema (doc, "MathMLP");
-#ifdef XML_GENERIC      
-      else if (docType == docXml)
-        TtaSetPSchema (doc, "XMLP");
-#endif /* XML_GENERIC */
-       /* @@ shouldn't we have a Color and BW case for annots too? */
-      else
-        {
-          if (TtaGetScreenDepth () > 1)
-            TtaSetPSchema (doc, "HTMLP");
-          else
-            TtaSetPSchema (doc, "HTMLPBW");
-          /* set attribute dir on the Document element. */
-          AddDirAttributeToDocEl (doc);
-        }
-      if (docType == docSVG || docType == docMath)
-        /* add a comment proudly claiming that the document was created by
-           Amaya */
-        {
-          root = TtaGetRootElement (doc);
-          elType = TtaGetElementType (root);
-          if (docType == docSVG)
-            elType.ElTypeNum = SVG_EL_XMLcomment;
-          else
-            elType.ElTypeNum = MathML_EL_XMLcomment;
-          comment = TtaNewTree (doc, elType, "");
-          TtaSetStructureChecking (FALSE, doc);
-          TtaInsertSibling (comment, root, TRUE, doc);
-          TtaSetStructureChecking (TRUE, doc);
-          strcpy (buffer, " Created by ");
-          strcat (buffer, TtaGetAppName());
-          strcat (buffer, " ");
-          strcat (buffer, TtaGetAppVersion());
-          strcat (buffer, ", see http://www.w3.org/Amaya/ ");
-          leaf = TtaGetFirstLeaf (comment);
-          lang = TtaGetLanguageIdFromScript('L');
-          TtaSetTextContent (leaf, (unsigned char *)buffer, lang, doc);
-        }
-
-      if (docType == docBookmark)
-        TtaSetNotificationMode (doc, 0); /* we don't need notif. in bookmarks */
-      else
-        TtaSetNotificationMode (doc, 1);
-       
-      /* store the profile of the new document */
-      TtaSetDocumentProfile (doc, profile, extraProfile);
-
-      if (method == CE_MAKEBOOK || method == CE_TEMPLATE)
-        // it's not necessary to create the document window
-        return doc;
-
-      /* gets registered window parameters */
-      GiveWindowGeometry (doc, docType, method, &x, &y, &w, &h);
-      /* create a new window if needed */
-      if (window_id == -1)
-        {
-          /* get the parent window because the log should stay on top of his parent */
-          int parent_window_id = TtaGetDocumentWindowId( oldDoc, -1 );
-          switch(docType)
-            {
-              case docLog:
-              case docLibrary:
-                window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
-                break;
-              case docCSS:
-                window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_CSS, 0 );
-                break;
-              case docAnnot:
-                window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_ANNOT, 0 );
-                break;
-              default:
-                if (method == CE_HELP)
-                  window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_HELP, 0 );
-                else
-                  /* a normal window should never had a parent ! */
-                  window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
-                break;
-            }
-          page_id   = TtaGetFreePageId( window_id );
-          page_position = 1;
-        }
-
-      /* init default documents menus states: enable/disable, toggle/untoggle
-       * need to be done before frame creation because the active frame will
-       * use it to refresh the menus */
-      if (!replaceOldDoc || !isOpen)
-        TtaInitMenuItemStats(doc);
-      TtaInitTopMenuStats(doc);
-
-      DocumentTypes[doc] = docType;
-      /* open the main view */
+      /* without menu bar */
+      mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y,
+                                  w, h, FALSE, FALSE,
+                                  window_id, page_id, page_position);
       if (docType == docLog)
-        {
-          /* without menu bar */
-          mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y,
-                                      w, h, FALSE, FALSE,
-                                      window_id, page_id, page_position);
-          if (docType == docLog)
-            // apply style attached to log files
-            SetStyleOfLog (doc);
-        }
-      else if (docType == docLibrary && method == CE_RELATIVE)
-        /* without menu bar */
-        mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y,
-                                    w, h, FALSE, TRUE,
-                                    window_id, page_id, page_position);
-      else
-        mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y,
-                                    w, h, TRUE, TRUE,
-                                    window_id, page_id, page_position);
-      if (mainView == 0)
-        {
-          TtaCloseDocument (doc);
-          return (0);
-        }
+        // apply style attached to log files
+        SetStyleOfLog (doc);
+    }
+  else if (docType == docLibrary && method == CE_RELATIVE)
+    /* without menu bar */
+    mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y,
+                                w, h, FALSE, TRUE,
+                                window_id, page_id, page_position);
+  else
+    mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y,
+                                w, h, TRUE, TRUE,
+                                window_id, page_id, page_position);
+  
+  if(mainView==0)
+    return 0;
+  
 
-      /* init the zoom factor to 0 if the document isn't replaced */
-      if (!replaceOldDoc)
-        TtaSetZoom (doc, -1, 0);
+  /* init the zoom factor to 0 if the document isn't replaced */
+  if (!replaceOldDoc)
+    TtaSetZoom (doc, -1, 0);
 
-       /* update the menus according to the profile */
-       /* By default no log file */
-      //UpdateLogFile (doc, FALSE);
+   /* update the menus according to the profile */
+   /* By default no log file */
+  //UpdateLogFile (doc, FALSE);
 #ifndef DAV    /* don't active the WebDAV menu if flag is off */
-      TtaSetMenuOff (doc, 1, Cooperation_);
+  TtaSetMenuOff (doc, 1, Cooperation_);
 #endif  /* DAV */
 
-      /* do we have to redraw buttons and menus? */
-      reinitialized = (docType != DocumentTypes[doc]);
-      if (docType == docLog || docType == docLibrary || docType == docSource)
-        {
+  /* do we have to redraw buttons and menus? */
+  reinitialized = (docType != DocumentTypes[doc]);
+  if (docType == docLog || docType == docLibrary || docType == docSource)
+    {
 #ifdef _SVG
-          if (docType == docLibrary)
-            /* Initialize SVG Library Buffer string */
-            TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-                            FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
+      if (docType == docLibrary)
+        /* Initialize SVG Library Buffer string */
+        TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+                        FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
 #endif /* _SVG */
-        }
     }
+  
+  return mainView;
+}
 
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PostInitView(Document doc, DocumentType docType, int visibility,
+                  ThotBool replaceOldDoc, ThotBool isOpen)
+{
+  ThotBool reinitialized = TRUE, show;
+  
   if (!replaceOldDoc || !isOpen)
     {
       /* initial state for menu entries */
@@ -2720,6 +2623,168 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
             }
         }
     }
+}
+
+
+/*----------------------------------------------------------------------
+  InitDocAndView prepares the main view of a new document.
+  logFile is TRUE if the new view is created to display a log file
+  sourceOfDoc is not zero when we're opening the source view of a document.
+  params:
+  + Document oldDoc: the old document id
+  + ThotBool replaceOldDoc: true if the new doc should replace the old one
+  + ThotBool inNewWindow: true if the new doc should be created in a new window
+  + ...
+  ----------------------------------------------------------------------*/
+Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow,
+                         char *docname, DocumentType docType, Document sourceOfDoc,
+			 ThotBool readOnly, int profile, int extraProfile, int method)
+{
+  Document      doc; /* the new doc */
+  View          mainView;
+  Element       root, comment, leaf;
+  ElementType   elType;
+  char          buffer[MAX_LENGTH];
+  int           requested_doc, visibility = 5;
+  Language	    lang;
+  ThotBool      isOpen, reinitialized = FALSE, show;
+  /* specific to wxWidgets user interface */
+  /* ------------------------------------ */
+  /* this is the window id identifying where the document should be shown 
+   * this window_id is a document attribute and the corresponding
+   * window widget has been allocated before this function call */
+  int           window_id = -1;
+  /* this is the page id identifying where the document should be shown
+   * into a window (window_id), each page can contain one or more documents */
+  int           page_id   = -1;
+  /* this is the choosen position in the given page (top or bottom) */
+  int           page_position = 0;
+  /* ------------------------------------ */
+  
+  /* is there any editing function available */
+  if (!TtaCanEdit ())
+    /* change the document status */
+    readOnly = TRUE;
+
+  /* if it is a source document, reload its corresponding document */
+  if (DocumentTypes[oldDoc] == docSource)
+    oldDoc = GetDocFromSource (oldDoc);
+
+  /* Where open the new document ? in which window ? */
+  WhereOpenView(oldDoc, replaceOldDoc, inNewWindow, docType, method,
+                &window_id, &page_id, &page_position, &visibility, &isOpen, &requested_doc);
+  
+  
+  /* Init the new document */
+  if (docType == docText || docType == docCSS ||
+      docType == docSource || docType == docLog)
+    doc = TtaInitDocument ("TextFile", docname, requested_doc);
+  else if (docType == docAnnot)
+    doc = TtaInitDocument ("Annot", docname, requested_doc);
+#ifdef BOOKMARKS
+  else if (docType == docBookmark)
+    doc = TtaInitDocument ("Topics", docname, requested_doc);
+#endif /* BOOKMARKS */
+  else if (docType == docSVG)
+    doc = TtaInitDocument ("SVG", docname, requested_doc);
+  else if (docType == docMath)
+    doc = TtaInitDocument ("MathML", docname, requested_doc);
+#ifdef XML_GENERIC      
+  else if (docType == docXml)
+    doc = TtaInitDocument ("XML", docname, requested_doc);
+#endif /* XML_GENERIC */
+  else
+    doc = TtaInitDocument ("HTML", docname, requested_doc);
+  if (doc >= DocumentTableLength)
+    {
+      TtaCloseDocument (doc);
+      doc = 0;
+    }
+  else if (doc > 0)
+    {
+      /* assign a presentation model to the document */
+      if (docType == docText || docType == docCSS ||
+          docType == docSource || docType == docLog)
+        TtaSetPSchema (doc, "TextFileP");
+      else if (docType == docAnnot)
+        {
+          TtaSetPSchema (doc, "AnnotP");
+          profile = L_Annot; /* force the profile */
+        }
+#ifdef BOOKMARKS
+      else if (docType == docBookmark)
+        {
+          TtaSetPSchema (doc, "TopicsP");
+          profile = L_Bookmarks; /* force the profile */
+        }
+#endif /* BOOKMARKS */
+      else if (docType == docSVG)
+        TtaSetPSchema (doc, "SVGP");
+      else if (docType == docMath)
+        TtaSetPSchema (doc, "MathMLP");
+#ifdef XML_GENERIC      
+      else if (docType == docXml)
+        TtaSetPSchema (doc, "XMLP");
+#endif /* XML_GENERIC */
+       /* @@ shouldn't we have a Color and BW case for annots too? */
+      else
+        {
+          if (TtaGetScreenDepth () > 1)
+            TtaSetPSchema (doc, "HTMLP");
+          else
+            TtaSetPSchema (doc, "HTMLPBW");
+          /* set attribute dir on the Document element. */
+          AddDirAttributeToDocEl (doc);
+        }
+      if (docType == docSVG || docType == docMath)
+        /* add a comment proudly claiming that the document was created by
+           Amaya */
+        {
+          root = TtaGetRootElement (doc);
+          elType = TtaGetElementType (root);
+          if (docType == docSVG)
+            elType.ElTypeNum = SVG_EL_XMLcomment;
+          else
+            elType.ElTypeNum = MathML_EL_XMLcomment;
+          comment = TtaNewTree (doc, elType, "");
+          TtaSetStructureChecking (FALSE, doc);
+          TtaInsertSibling (comment, root, TRUE, doc);
+          TtaSetStructureChecking (TRUE, doc);
+          strcpy (buffer, " Created by ");
+          strcat (buffer, TtaGetAppName());
+          strcat (buffer, " ");
+          strcat (buffer, TtaGetAppVersion());
+          strcat (buffer, ", see http://www.w3.org/Amaya/ ");
+          leaf = TtaGetFirstLeaf (comment);
+          lang = TtaGetLanguageIdFromScript('L');
+          TtaSetTextContent (leaf, (unsigned char *)buffer, lang, doc);
+        }
+
+      if (docType == docBookmark)
+        TtaSetNotificationMode (doc, 0); /* we don't need notif. in bookmarks */
+      else
+        TtaSetNotificationMode (doc, 1);
+       
+      /* store the profile of the new document */
+      TtaSetDocumentProfile (doc, profile, extraProfile);
+
+      if (method == CE_MAKEBOOK || method == CE_TEMPLATE)
+        // it's not necessary to create the document window
+        return doc;
+
+      DocumentTypes[doc] = docType;
+
+      mainView = InitView(oldDoc, doc, replaceOldDoc, inNewWindow, isOpen,
+                            window_id, page_id, page_position, docType, method);
+      if(mainView==0)
+        {
+          TtaCloseDocument (doc);
+          return (0);
+        }
+
+    }
+  
+  PostInitView(doc, docType, visibility, replaceOldDoc, isOpen);
 
   // show the window if it's not allready done
   TtaShowWindow( window_id, TRUE );
@@ -3852,7 +3917,7 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
       if (res == 0)
         {
           /* cannot load the document */
-          ResetStop(newdoc);
+          ResetStop(newdoc); 
           newdoc = 0;
           TtaFreeMemory (initial_url);
         }
@@ -4962,7 +5027,26 @@ Document GetAmayaDoc (char *urlname, char *form_data,
         /* following the link to another open window */
         {
           /* raise its window */
-          TtaRaiseView (newdoc, 1);
+          int frame_id;
+          frame_id = GetWindowNumber (newdoc, 1);
+          if(frame_id!=0)
+              TtaRaiseView (newdoc, 1);
+          else
+            {
+              int window_id, page_id, page_position, visibility, requested_doc;
+              ThotBool isOpen;
+              /* Where open the new document ? in which window ? */
+              TtaAddDocumentReference(newdoc);
+              WhereOpenView(doc, !DontReplaceOldDoc, InNewWindow, (DocumentType)docType, method, 
+                  &window_id, &page_id, &page_position, &visibility, &isOpen, &requested_doc);
+
+              InitView(doc, newdoc, !DontReplaceOldDoc, InNewWindow, isOpen, 
+                      window_id, page_id, page_position, (DocumentType)docType, method);
+              PostInitView(newdoc, (DocumentType)docType, visibility,
+                  !DontReplaceOldDoc, isOpen);
+              
+              TtaShowWindow( window_id, TRUE );
+            }
           /* don't add it to the doc's historic */
           history = FALSE;
         }
@@ -5155,6 +5239,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   TtaFreeMemory (tempfile);
   TtaFreeMemory (initial_url);
   DontReplaceOldDoc = FALSE;
+  TtaAddDocumentReference(newdoc);
   return (newdoc);
 }
 
@@ -5501,7 +5586,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* only used by WX version to get back the new profile */
       if (NewDocType == docHTML)
         {
-	  NewDocExtraProfile = 0;
+				  NewDocExtraProfile = 0;
           char *compound = TtaGetMessage (AMAYA, AM_COMPOUND_DOCUMENT);
           if (data && compound && !strcmp (data, compound))
             NewDocProfile = L_Other;

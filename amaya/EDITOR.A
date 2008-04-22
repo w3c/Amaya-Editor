@@ -26,7 +26,7 @@ USES
 DEFAULT
    BEGIN
    	  Init.Post -> InitAmaya;
-	  DocClose.Pre -> ClosingInstance;
+      DocClose.Pre -> ClosingTemplateDocument;
 	  DocClose.Post -> DocumentClosed;
 	  DocSave.Pre -> DocumentToSave;
 	  ViewOpen.Pre -> RequestView;

@@ -491,9 +491,7 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
 void PreventReloadingTemplate(char* template_url)
 {
 #ifdef TEMPLATES
-  XTigerTemplate t = GetXTigerTemplate (template_url);
-  if (t)
-    t->users++;
+  Template_AddReference(GetXTigerTemplate (template_url));
 #endif /* TEMPLATES */
 }
 
@@ -505,9 +503,7 @@ void PreventReloadingTemplate(char* template_url)
 void AllowReloadingTemplate(char* template_url)
 {
 #ifdef TEMPLATES
-  XTigerTemplate t = GetXTigerTemplate (template_url);
-  if (t)
-    t->users--;  
+  Template_RemoveReference(GetXTigerTemplate (template_url));
 #endif /* TEMPLATES */  
 }
 
@@ -1327,15 +1323,15 @@ void OpeningInstance (char *localFileName, Document doc, char* docURL)
 }
 
 /*----------------------------------------------------------------------
-  ClosingInstance
-  Callback called before closing a document. Checks for unused templates.
+  ClosingTemplateDocument
+  Callback called before closing a document which uses templates.
   ----------------------------------------------------------------------*/
-ThotBool ClosingInstance(NotifyDialog* dialog)
+ThotBool ClosingTemplateDocument(NotifyDialog* dialog)
 {
 #ifdef TEMPLATES
   XTigerTemplate t = GetXTigerDocTemplate(dialog->document);
   if(t)
-    Template_RemoveReference(t);
+      Template_RemoveReference(t);
 #endif /* TEMPLATES */
   return FALSE;
 }
@@ -1638,6 +1634,7 @@ void Template_PrepareInstance(char *fileName, Document doc, char* template_versi
   t->templateVersion = template_version;
   t->base_uri        = template_url;
   t->doc             = doc;
+  t->ref             = 1;
   
 #endif /* TEMPLATES */
 }

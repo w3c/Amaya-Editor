@@ -19,6 +19,8 @@ extern Document TtaOpenDocument ( char *documentName,
                                   int accessMode );
 extern void UnloadTree ( Document document );
 extern void UnloadDocument ( PtrDocument * pDoc );
+extern void CloseDocumentAndViews ( PtrDocument pDoc,
+                                    ThotBool notify );
 extern void TtaCloseDocument ( Document document );
 extern void TtaSetDocumentPath ( char *path );
 extern ThotBool TtaCheckPath ( char *path );
@@ -117,6 +119,7 @@ extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
 extern ThotBool TtaIsXmlSSchema ( SSchema schema );
 extern void TtaAddDocumentReference ( Document document );
 extern void TtaRemoveDocumentReference ( Document document );
+extern void TtaDumpDocumentReference ( void );
 
 #else /* __STDC__ */
 
@@ -133,6 +136,8 @@ extern Document TtaOpenDocument ( char *documentName,
                                     int accessMode );
 extern void UnloadTree ( Document document );
 extern void UnloadDocument ( PtrDocument * pDoc );
+extern void CloseDocumentAndViews ( PtrDocument pDoc,
+                                      ThotBool notify );
 extern void TtaCloseDocument ( Document document );
 extern void TtaSetDocumentPath ( char *path );
 extern ThotBool TtaCheckPath ( char *path );
@@ -231,6 +236,7 @@ extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
 extern ThotBool TtaIsXmlSSchema ( SSchema schema );
 extern void TtaAddDocumentReference ( Document document );
 extern void TtaRemoveDocumentReference ( Document document );
+extern void TtaDumpDocumentReference ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

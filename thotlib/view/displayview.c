@@ -435,15 +435,7 @@ void TCloseDocument (PtrDocument pDoc)
              for that document, close them */
           CloseAttributeDialogues (pDoc);
           TtaHandlePendingEvents ();
-          /* detruit toutes les vues ouvertes du document */
-          CloseAllViewsDoc (pDoc);
-          /* free document contents */
-          UnloadTree (document);
-          notifyDoc.event = TteDocClose;
-          notifyDoc.document = document;
-          notifyDoc.view = 0;
-          CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-          UnloadDocument (&pDoc);
+          CloseDocumentAndViews(pDoc, TRUE);
         }
     }
 }
@@ -532,7 +524,6 @@ void  CloseDocumentView (PtrDocument pDoc, int view, ThotBool closeDoc)
 void CloseAllViewsDoc (PtrDocument pDoc)
 {
   int                 view;
-
   if (pDoc != NULL)
     {
       /* detruit les vues de l'arbre principal */

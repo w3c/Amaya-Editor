@@ -45,7 +45,7 @@ struct _XTigerTemplate
   SearchSet     unknowns;       // All unknown declarations, used in template parsing (SearchSet<Declaration, char*>)
 
   Document      doc;            // Use to store component structures
-  int           users;          // Number of documents using this template
+  int           ref;            // Reference counting
   SList         errorList;      // Error string list (DLList<char*>)
 };
 

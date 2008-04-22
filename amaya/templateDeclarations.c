@@ -133,7 +133,7 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath)
                                     (Container_CompareFunction)Declaration_CompareToString);
 
   t->doc   = -1;
-  t->users = 0;
+  t->ref   = 0;
   t->state = 0;
   
   t->errorList = SList_Create();
@@ -249,12 +249,24 @@ XTigerTemplate LookForXTigerTemplate (const char *templatePath)
     t = NewXTigerTemplate(templatePath);
   }
   return t;
-#else
+#else /* TEMPLATES */
   return NULL;
 #endif /* TEMPLATES */
 }
 
 
+/*----------------------------------------------------------------------
+  Close a XTiger template
+  ----------------------------------------------------------------------*/
+void Template_Close(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  if(t)
+    {
+      HashMap_DestroyElement(Templates_Map, t->uri);
+    }
+#endif /* TEMPLATES */
+}
 
 /*----------------------------------------------------------------------
   Template_AddStandardDependancies
@@ -948,73 +960,68 @@ Declaration Template_GetElementDeclaration (const XTigerTemplate t, const char *
     return NULL;
 }
 
-
-
-/*----------------------------------------------------------------------
-  Close a template and free it.
-  Revove it from the global template map.
-  ----------------------------------------------------------------------*/
-void Template_Close(XTigerTemplate t)
-{
-#ifdef TEMPLATES
-  if (t)
-  {
-    HashMap_DestroyElement(Templates_Map, t->uri);
-  }
-#endif /* TEMPLATES */
-}
-
 /*----------------------------------------------------------------------
   Free all the space used by a template
   ----------------------------------------------------------------------*/
 static void Template_Destroy (XTigerTemplate t)
 {	
 #ifdef TEMPLATES
-  if (!t)
-    return;
-    
-  //Cleaning the unions
-  SearchSet_Destroy(t->unions);
-  t->unions = NULL;
-
-  /* Cleanning library dependancies. */
-  HashMap_Destroy(t->libraries);
-  t->libraries = NULL;
-
-  //Cleaning the components
-  SearchSet_Destroy(t->components);
-  t->components = NULL;
-
-  //Cleaning the elements
-  SearchSet_Destroy(t->elements);
-  t->elements = NULL;
-
-  //Cleaning the simple types
-  SearchSet_Destroy(t->simpleTypes);
-  t->simpleTypes = NULL;
-
-  //Cleaning the unknown types
-  SearchSet_Destroy(t->unknowns);
-  t->unknowns = NULL;
-
-  //Clean error list
-  SList_Destroy(t->errorList);
-  t->errorList = NULL;
-
-  //Freeing the document
-  if (t->doc > 0)
+  ForwardIterator iter;
+  HashMapNode     node;
+  if (t)
     {
-      FreeDocumentResource (t->doc);
-      TtcCloseDocument (t->doc, 0);
+      if(t->base_uri)
+        {
+          Template_RemoveReference(GetXTigerTemplate(t->base_uri));
+          TtaFreeMemory(t->base_uri);
+        }
+    
+      /* Cleanning library dependancies. */
+      iter = HashMap_GetForwardIterator(t->libraries);
+      ITERATOR_FOREACH(iter, HashMapNode, node)
+        {
+          Template_RemoveReference((XTigerTemplate)node->elem);
+        }
+      HashMap_Destroy(t->libraries);
+      t->libraries = NULL;
+      
+      //Cleaning the unions
+      SearchSet_Destroy(t->unions);
+      t->unions = NULL;
+    
+      //Cleaning the components
+      SearchSet_Destroy(t->components);
+      t->components = NULL;
+    
+      //Cleaning the elements
+      SearchSet_Destroy(t->elements);
+      t->elements = NULL;
+    
+      //Cleaning the simple types
+      SearchSet_Destroy(t->simpleTypes);
+      t->simpleTypes = NULL;
+    
+      //Cleaning the unknown types
+      SearchSet_Destroy(t->unknowns);
+      t->unknowns = NULL;
+    
+      //Clean error list
+      SList_Destroy(t->errorList);
+      t->errorList = NULL;
+    
+      //Freeing the document
+      if (t->doc>0)
+        {
+          TtaRemoveDocumentReference(t->doc);
+          t->doc = 0;
+        }
+    
+      //Freeing the template
+      TtaFreeMemory(t->uri);
+      TtaFreeMemory(t->version);
+      TtaFreeMemory(t->templateVersion);
+      TtaFreeMemory (t);
     }
-
-  //Freeing the template
-  TtaFreeMemory(t->version);
-  TtaFreeMemory(t->templateVersion);
-
-  TtaFreeMemory(t->uri);
-  TtaFreeMemory(t->base_uri);
-  TtaFreeMemory (t);
 #endif /* TEMPLATES */
 }
 
@@ -1480,7 +1487,7 @@ void DumpAllDeclarations()
       if (t)
       {
         fprintf(file, "################################################################################\n");
-        fprintf(file, "## Template declaration for \"%s\" (%d) :\n", t->uri, t->doc);
+        fprintf(file, "## %s (doc %d used %d times)\n", t->uri, t->doc, t->ref);
         fprintf(file, "################################################################################\n");
         PrintDeclarations(t, file);
         fprintf(file, "\n################################################################################\n");
@@ -1514,6 +1521,30 @@ void DumpDeclarations (XTigerTemplate t)
   TtaWriteClose (file);
 #endif /* TEMPLATES */
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void DumpTemplateReferences ()
+{
+#ifdef TEMPLATES
+  XTigerTemplate  t;
+  ForwardIterator iter;
+  HashMapNode     node;
+
+  iter = HashMap_GetForwardIterator(Templates_Map);
+  ITERATOR_FOREACH(iter, HashMapNode, node)
+    {
+      t = (XTigerTemplate) node->elem;
+      if (t)
+      {
+        printf("(%0d) %s %d\n", t->doc, t->uri, t->ref);
+      }
+    }
+  TtaFreeMemory(iter);
+#endif /* TEMPLATES */
+}
+
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1568,7 +1599,9 @@ void Template_AddReference (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   if (t)
-    t->users++;
+    {
+      t->ref++;
+    }
 #endif /* TEMPLATES */
 }
 
@@ -1579,8 +1612,8 @@ void Template_RemoveReference (XTigerTemplate t)
 #ifdef TEMPLATES
   if (t)
   {
-    t->users--;
-    if (t->users == 0 && !Template_IsPredefined(t))
+    t->ref--;
+    if (t->ref <= 0 && !Template_IsPredefined(t))
       Template_Close (t);
   }  
 #endif /* TEMPLATES */
