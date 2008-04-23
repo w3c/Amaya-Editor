@@ -2651,7 +2651,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
   char          buffer[MAX_LENGTH];
   int           requested_doc, visibility = 5;
   Language	    lang;
-  ThotBool      isOpen, reinitialized = FALSE, show;
+  ThotBool      isOpen;
   /* specific to wxWidgets user interface */
   /* ------------------------------------ */
   /* this is the window id identifying where the document should be shown 
