@@ -2353,6 +2353,8 @@ View InitView(Document oldDoc, Document doc,
   int           x, y, w, h;
   ThotBool      reinitialized = FALSE;
 
+  TtaSetDisplayMode(doc, NoComputedDisplay);
+  
   /* gets registered window parameters */
   GiveWindowGeometry (doc, docType, method, &x, &y, &w, &h);
   /* create a new window if needed */
@@ -2427,6 +2429,8 @@ View InitView(Document oldDoc, Document doc,
   TtaSetMenuOff (doc, 1, Cooperation_);
 #endif  /* DAV */
 
+  TtaSetDisplayMode(doc, DisplayImmediately);
+  
   /* do we have to redraw buttons and menus? */
   reinitialized = (docType != DocumentTypes[doc]);
   if (docType == docLog || docType == docLibrary || docType == docSource)
@@ -5039,12 +5043,10 @@ Document GetAmayaDoc (char *urlname, char *form_data,
               TtaAddDocumentReference(newdoc);
               WhereOpenView(doc, !DontReplaceOldDoc, InNewWindow, (DocumentType)docType, method, 
                   &window_id, &page_id, &page_position, &visibility, &isOpen, &requested_doc);
-
               InitView(doc, newdoc, !DontReplaceOldDoc, InNewWindow, isOpen, 
                       window_id, page_id, page_position, (DocumentType)docType, method);
               PostInitView(newdoc, (DocumentType)docType, visibility,
                   !DontReplaceOldDoc, isOpen);
-              
               TtaShowWindow( window_id, TRUE );
             }
           /* don't add it to the doc's historic */
