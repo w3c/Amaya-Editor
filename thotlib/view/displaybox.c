@@ -2239,21 +2239,18 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 }
 
 
-
-
 /*----------------------------------------------------------------------
   DisplayBorders displays the box borders.
   The parameter pForm points the box that generates the border or fill.
   Parameters x, y, w, h give the clipping region.
   et, eb, el, and er give top, bottom, left and right extra margins.
-  Parameters first and last are TRUE when the box pBox is respectively
-  at the first position and/or the last position of pFrom (they must be
-  TRUE for pFrom itself).
+  Parameters bt, bb, bl, br give the top, bottom, left, and right width
+  of borders.
   ----------------------------------------------------------------------*/
 void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
                      int x, int y, int w, int h,
                      int et, int eb, int el, int er,
-                     ThotBool topdown, ThotBool first, ThotBool last) 
+                     int bt, int bb, int bl, int br) 
 {
   PtrBox              from;
   PtrAbstractBox      child;
@@ -2283,18 +2280,35 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       width = box->BxWidth;
       height = box->BxHeight;
     }
+  if (x < xFrame)
+    {
+      width = width + xFrame - x;
+      xFrame = x;
+    }
+  if (x + w > xFrame + width)
+  width = x + w - xFrame;
+
   /* part of the top, left, bottom and right border which are visible */
   t = yFrame + et + from->BxTBorder - y;
   if (t > from->BxTBorder)
     t = from->BxTBorder;
+  else if (t < 0)
+    t = 0;
+
   l = xFrame + el + from->BxLBorder - x;
   if (l > from->BxLBorder)
     l = from->BxLBorder;
+  else if (l < 0)
+    l = 0;
+
   if (et < 0)
     yFrame += et;
   b = y + h - yFrame - height + eb + from->BxBBorder;
   if (b > from->BxBBorder)
     b = from->BxBBorder;
+  else if (b < 0)
+    b = 0;
+
   if (box->BxLMargin < 0)
     width += box->BxLMargin;
   if (er < 0)
@@ -2304,6 +2318,9 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   r = x + w + 1 - xFrame - width + er + from->BxRBorder;
   if (r > from->BxRBorder)
     r = from->BxRBorder;
+  else if (r < 0)
+    r = 0;
+
   if (from->BxType == BoTable)
     {
       // no border around the caption
@@ -2337,17 +2354,9 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
             }
         }
     }
-  if (topdown && !first)
-    t = 0; /* no top border */
-  if (topdown && !last)
-    b = 0; /* no bottom border */
-  if (!topdown && !first)
-    l = 0; /* no left border */
-  if (!topdown && !last)
-    r = 0; /* no right border */
 
   if (from->BxTBorder && pFrom->AbTopStyle > 2 &&
-      pFrom->AbTopBColor != -2 && t > 0)
+      pFrom->AbTopBColor != -2 && t > 0 && bt)
     {
       /* the top border is visible */
       if (pFrom->AbTopBColor == -1)
@@ -2359,7 +2368,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
                           l, r);
     }
   if (from->BxLBorder && pFrom->AbLeftStyle > 2 &&
-      pFrom->AbLeftBColor != -2 && l > 0)
+      pFrom->AbLeftBColor != -2 && l > 0 && bl)
     {
       /* the left border is visible */
       if (pFrom->AbLeftBColor == -1)
@@ -2371,7 +2380,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
                         t , b);
     }
   if (from->BxBBorder && pFrom->AbBottomStyle > 2 &&
-      pFrom->AbBottomBColor != -2 && b > 0)
+      pFrom->AbBottomBColor != -2 && b > 0 && bb)
     {
       /* the bottom border is visible */
       if (pFrom->AbBottomBColor == -1)
@@ -2384,7 +2393,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
                           l, r);
     }
   if (from->BxRBorder && pFrom->AbRightStyle > 2 &&
-      pFrom->AbRightBColor != -2 && r > 0)
+      pFrom->AbRightBColor != -2 && r > 0 && br)
     {
       /* the right border is visible */
       if (pFrom->AbRightBColor == -1)
@@ -2592,8 +2601,8 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
       b += box->BxBMargin;
       t += box->BxTMargin;
       r += box->BxRMargin;
-      DisplayBorders (box, pAb, frame, xd - x, yd - y, width, height,
-                      t, b, l, r, TRUE, TRUE, TRUE);
+      DisplayBorders (box, pAb, frame, xd - x, yd - y, width, height, t, b, l, r,
+                      box->BxTBorder, box->BxBBorder, box->BxLBorder, box->BxRBorder);
     }
 #ifdef _GL
   if (Printing)

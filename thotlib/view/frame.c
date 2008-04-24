@@ -559,10 +559,9 @@ static void AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
   ----------------------------------------------------------------------*/
 void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
                     int xmin, int xmax, int ymin, int ymax, ThotBool selected,
-                    ThotBool first, ThotBool last, ThotBool topdown,
-                    ThotBool show_bgimage)
+                    ThotBool first, ThotBool last, ThotBool show_bgimage)
 {
-  PtrBox              from;
+  PtrBox              from, box;
   PtrAbstractBox      pChild, pAb, pParent, pNext;
   PtrDocument         pDoc;
   PtrElement          pEl = NULL;
@@ -607,8 +606,6 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
         pParent = pParent->AbEnclosing;
       if (pParent == NULL || pParent->AbBox == NULL)
         return;
-      if (pBox == from && pBox->BxType == BoGhost)
-        topdown = TRUE;
       /* display all children */
       pChild = pAb->AbFirstEnclosed;
       while (pChild)
@@ -623,7 +620,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
               /* draw each child boxes */
               DrawFilledBox (pChild->AbBox, pFrom, frame, pFlow,
                              xmin, xmax, ymin, ymax,
-                             selected, first, isLast, topdown, show_bgimage);
+                             selected, first, isLast, show_bgimage);
               first = FALSE;
             }
           pChild = pNext;
@@ -638,7 +635,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           isLast = (last && pBox->BxNexChild == NULL);
           DrawFilledBox (pBox, pFrom, frame, pFlow,
                          xmin, xmax, ymin, ymax,
-                         selected, first, isLast, topdown, show_bgimage);
+                         selected, first, isLast, show_bgimage);
           pBox = pBox->BxNexChild;
           first = FALSE;
         }
@@ -674,54 +671,88 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       br = pBox->BxRBorder;
       xd = pBox->BxXOrg + l;
       width = pBox->BxWidth;
+      yd = pBox->BxYOrg + t;
+      height = pBox->BxHeight;
     }
   else if (from->BxType == BoGhost &&
-           (pFrom->AbDisplay == 'B' || pFrom->AbDisplay == 'L'))
+           (pFrom->AbDisplay == 'B'/* || (pFrom->AbDisplay == 'U' && pFrom->AbInLine)*/))
     {
-      // the box is displayed on a set of lines
-      t = b = l = r = 0;
-      bl = from->BxLBorder;
-      bb = from->BxBBorder;
-      bt = from->BxTBorder;
-      br = from->BxRBorder;
+      // check if borders are displayed
+      if (first)
+        bt = from->BxTBorder;
+      else
+        bt = 0;
+      if (last)
+        bb = from->BxBBorder;
+      else
+        bb = 0;
+      bl = br = 0;
       pLine = SearchLine (pBox, frame);
       if (pLine)
         {
+          // check the beginning and end of the current line
+          if (pBox == pLine->LiFirstBox || pBox == pLine->LiFirstPiece)
+            bl = from->BxLBorder;
+          if (pBox == pLine->LiLastBox || pBox == pLine->LiLastPiece)
+            br = from->BxRBorder;
           pParent = pFrom->AbEnclosing;
           while (pParent->AbBox && pParent->AbBox->BxType == BoGhost)
             pParent = pParent->AbEnclosing;
-          xd = pParent->AbBox->BxXOrg + pLine->LiXOrg + shiftx;
-          width = pLine->LiXMax;
+          xd = pParent->AbBox->BxXOrg + pLine->LiXOrg - bl + shiftx;
+          width = pLine->LiXMax + bl;
+          yd = pParent->AbBox->BxYOrg + pLine->LiYOrg;
+          height = pLine->LiHeight;
+
+          // check if it's the first line
+          t = b = l = r = 0;
+          if (pLine->LiPrevious)
+            box = pLine->LiPrevious->LiLastBox;
+          else
+            box = 0;
+          if (box == NULL || !IsParentBox (from, box))
+            {
+              yd += from->BxTMargin;
+              height -= from->BxTMargin;
+            }
+          // check if it's the last line
+          if (pLine->LiNext)
+            box = pLine->LiPrevious->LiFirstBox;
+          else
+            box = 0;
+          if (box == NULL || !IsParentBox (from, box))
+            height -= from->BxBMargin;
         }
       else
         {
           xd = pBox->BxXOrg;
           width = pBox->BxWidth;
+          yd = pBox->BxYOrg;
+          height = pBox->BxHeight;
         }
     }
   else
     {
       // the box is displayed on a set of lines
-      t = b = l = r = 0;
-      /*GetExtraMargins (from, frame, TRUE, &t, &b, &l, &r);
-      t +=  from->BxTMargin;
-      b +=  from->BxBMargin;
-      l += from->BxLMargin;
-      r += from->BxRMargin;*/
-      
-      bl = from->BxLBorder;
-      bb = from->BxBBorder;
+      GetExtraMargins (from, frame, FALSE, &t, &b, &l, &r);
       bt = from->BxTBorder;
-      br = from->BxRBorder;
+      bb = from->BxBBorder;
+      if (first)
+        bl = from->BxLBorder;
+      else
+        bl = 0;
+      if (isLast)
+        br = from->BxRBorder;
+      else
+        br = 0;
       xd = pBox->BxXOrg + shiftx;
       width =  pBox->BxWidth;
+      yd = pBox->BxYOrg;
+      height = pBox->BxHeight;
     }
   if (l > 0)
     width -= l;
   if (r > 0)
     width -= r;
-  yd = pBox->BxYOrg + t;
-  height = pBox->BxHeight;
   if (t > 0)
     height -= t;
   if (b > 0)
@@ -786,15 +817,6 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
     }
   else
     {
-      // check if borders are displayed
-      if (topdown && !first)
-        bt = 0;
-      if (topdown && !last)
-        bb = 0;
-      if (!topdown && !first)
-        bl = 0;
-      if (!topdown && !last)
-        br = 0;
       // prepare the area to display a background image
       xbg = xd + bl;
       ybg = yd + bt;
@@ -871,8 +893,11 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
                            wbg, hbg, t, l);
             }
         }
-      DisplayBorders (pBox, pFrom, frame, xd - x, yd - y, width, height,
-                      t, b, l, r, topdown, first, last);
+      if (bt || bb || bl || br)
+        {
+          DisplayBorders (pBox, pFrom, frame, xd - x, yd - y, width, height,
+                          t, b, l, r, bt, bb, bl, br);
+        }
     }
 
   /* remove shift due to relative positioning */
@@ -1645,7 +1670,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
   selected = pAb->AbSelected;
   if (pAb->AbVis != 'H' && (pBox->BxDisplay || selected) && pFlow == NULL)
     DrawFilledBox (pBox, pAb, frame, pFlow, xmin, xmax, ymin, ymax,
-                   selected, TRUE, TRUE, TRUE, show_bgimage);
+                   selected, TRUE, TRUE, show_bgimage);
   while (plane != nextplane)
     /* there is a new plane to display */
     {
@@ -1762,8 +1787,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                           (pBox->BxDisplay || pAb->AbSelected))
                         DrawFilledBox (pBox, pAb, frame, pFlow,
                                        xmin, xmax, ymin, ymax,
-                                       selected, TRUE, TRUE, TRUE,
-                                       show_bgimage);
+                                       selected, TRUE, TRUE, show_bgimage);
                       if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
                         {
                           /* this is a new box */

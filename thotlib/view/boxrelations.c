@@ -2669,8 +2669,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                        ((parent->AbWidth.DimAbRef == NULL &&
                                          parent->AbWidth.DimValue == -1) ||
                                         (inLine &&
-                                         pAb->AbDisplay != 'B' &&
-                                         pAb->AbDisplay != 'L')))
+                                         pAb->AbDisplay != 'B' && pAb->AbDisplay != 'L')))
                                 {
                                   /* inherit from contents */
                                   pDimAb->DimAbRef = NULL;
@@ -2688,8 +2687,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                           else if (pParentAb->AbInLine &&
                                    pParentAb->AbBox->BxType != BoCell &&
                                    pParentAb->AbWidth.DimAbRef &&
-                                   pAb->AbDisplay != 'B' &&
-                                   pAb->AbDisplay != 'L')
+                                   pAb->AbDisplay != 'B' && pAb->AbDisplay != 'L')
                             {
                               /* inherit from the parent box */
                               pDimAb->DimAbRef = NULL;

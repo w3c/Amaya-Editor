@@ -1835,7 +1835,8 @@ void GetExtraMargins (PtrBox pBox, int frame, ThotBool withMargin,
            pAb->AbEnclosing->AbBox->BxType == BoFloatGhost))
         {
           if (pBox->BxType != BoGhost ||
-              (pAb->AbDisplay != 'B' && pAb->AbDisplay != 'L'))
+              (pAb->AbDisplay != 'B' /*&&
+              (pAb->AbDisplay != 'U' || !pAb->AbInLine)*/))
             {
               /* check if it's the first and/or the last child */
               pPrev = pAb->AbPrevious;
@@ -1863,7 +1864,8 @@ void GetExtraMargins (PtrBox pBox, int frame, ThotBool withMargin,
             {
               box = pAb->AbBox;
               isBlock = (box->BxType == BoGhost &&
-                         (pAb->AbDisplay == 'B' || pAb->AbDisplay == 'L'));
+                         (pAb->AbDisplay == 'B' /*||
+                          (pAb->AbDisplay == 'U' && pAb->AbInLine)*/));
               /* add values if necessary */
               if ( box->BxType == BoFloatGhost)
                 {
@@ -1878,8 +1880,8 @@ void GetExtraMargins (PtrBox pBox, int frame, ThotBool withMargin,
                   // left and right extra margins
                   if (isBlock)
                     {
-                      *l += box->BxLBorder + box->BxLPadding;
-                      *r += box->BxRBorder + box->BxRPadding;
+                      // *l += box->BxLBorder + box->BxLPadding;
+                      //*r += box->BxRBorder + box->BxRPadding;
                     }
                   else
                     {
@@ -2044,7 +2046,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
               TtaFreeMemory ((STRING) pBox->BxPictInfo);
               pBox->BxPictInfo = NULL;
             }
-
           /* Check the validity of dependency rules */
           toMove = TRUE;
           if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)

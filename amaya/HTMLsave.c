@@ -511,6 +511,8 @@ fprintf(stderr, "Move file: from %s to %s\n", old_url, new_url);
             }
           if (old_url[0] != EOS && TtaFileExist (old_url))
             {
+              if (saveResources)
+                {
               if (dst_is_local)
                 {
                   /* copy the file to the new location */
@@ -528,6 +530,7 @@ fprintf(stderr, "Move file: from %s to %s\n", old_url, new_url);
               if (!src_is_local)
                 // remove the temporay file
                 TtaFileUnlink (tempdocument);
+                }
             }
           TtaFreeMemory (tempdocument);
         }

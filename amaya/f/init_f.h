@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -98,16 +99,6 @@ extern void GoToHome ( Document doc,
                        View view );
 extern void UpdateDoctypeMenu ( Document doc );
 extern void AddDirAttributeToDocEl ( Document doc );
-extern View InitView ( Document oldDoc,
-                       Document doc,
-                       ThotBool replaceOldDoc,
-                       ThotBool inNewWindow,
-                       ThotBool isOpen,
-                       int window_id,
-                       int page_id,
-                       int page_position,
-                       DocumentType docType,
-                       int method );
 extern void WhereOpenView ( Document oldDoc,
                             ThotBool replaceOldDoc,
                             ThotBool inNewWindow,
@@ -119,6 +110,21 @@ extern void WhereOpenView ( Document oldDoc,
                             int* _visibility,
                             ThotBool* isOpen,
                             int* requestedDoc );
+extern View InitView ( Document oldDoc,
+                       Document doc,
+                       ThotBool replaceOldDoc,
+                       ThotBool inNewWindow,
+                       ThotBool isOpen,
+                       int window_id,
+                       int page_id,
+                       int page_position,
+                       DocumentType docType,
+                       int method );
+extern void PostInitView ( Document doc,
+                           DocumentType docType,
+                           int visibility,
+                           ThotBool replaceOldDoc,
+                           ThotBool isOpen );
 extern Document InitDocAndView ( Document oldDoc,
                                  ThotBool replaceOldDoc,
                                  ThotBool inNewWindow,
@@ -260,6 +266,7 @@ extern void CloseHelpWindow ( Document doc,
                               View view );
 
 #else /* __STDC__ */
+
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -353,16 +360,6 @@ extern void GoToHome ( Document doc,
                          View view );
 extern void UpdateDoctypeMenu ( Document doc );
 extern void AddDirAttributeToDocEl ( Document doc );
-extern View InitView ( Document oldDoc,
-                         Document doc,
-                         ThotBool replaceOldDoc,
-                         ThotBool inNewWindow,
-                         ThotBool isOpen,
-                         int window_id,
-                         int page_id,
-                         int page_position,
-                         DocumentType docType,
-                         int method );
 extern void WhereOpenView ( Document oldDoc,
                               ThotBool replaceOldDoc,
                               ThotBool inNewWindow,
@@ -374,6 +371,21 @@ extern void WhereOpenView ( Document oldDoc,
                               int* _visibility,
                               ThotBool* isOpen,
                               int* requestedDoc );
+extern View InitView ( Document oldDoc,
+                         Document doc,
+                         ThotBool replaceOldDoc,
+                         ThotBool inNewWindow,
+                         ThotBool isOpen,
+                         int window_id,
+                         int page_id,
+                         int page_position,
+                         DocumentType docType,
+                         int method );
+extern void PostInitView ( Document doc,
+                             DocumentType docType,
+                             int visibility,
+                             ThotBool replaceOldDoc,
+                             ThotBool isOpen );
 extern Document InitDocAndView ( Document oldDoc,
                                    ThotBool replaceOldDoc,
                                    ThotBool inNewWindow,

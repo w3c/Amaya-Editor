@@ -812,7 +812,7 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax,
       NotFeedBackMode = FALSE;
       glRenderMode (GL_FEEDBACK);
       DrawFilledBox (box, box->BxAbstractBox, frame, NULL,
-		     xmin, xmax, ymin, ymax, FALSE, TRUE, TRUE, TRUE, show_bgimage);
+		     xmin, xmax, ymin, ymax, FALSE, TRUE, TRUE, show_bgimage);
       size = glRenderMode (GL_RENDER);
       NotFeedBackMode = TRUE;
       if (size > 0)
