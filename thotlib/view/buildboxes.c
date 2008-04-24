@@ -2361,13 +2361,13 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
            /* a sized not inline box cannot be a ghost */
            (pAb->AbDisplay == 'I' ||
             (!pAb->AbHeight.DimIsPosition &&
-             pAb->AbHeight.DimValue <= 0)) &&
+             pAb->AbHeight.DimValue <= 0 &&
+             pAb->AbLeftBorder == 0 && pAb->AbRightBorder == 0 &&
+             pAb->AbTopBorder == 0 && pAb->AbBottomBorder == 0)) &&
            !pAb->AbWidth.DimIsPosition &&
            pAb->AbWidth.DimValue <= 0 &&
            /* a positioned box cannot be a ghost */
            !extraflow &&
-           pAb->AbLeftBorder == 0 && pAb->AbRightBorder == 0 &&
-           pAb->AbTopBorder == 0 && pAb->AbBottomBorder == 0 &&
            pAb->AbFirstEnclosed &&
            /* and not already registered as .... */
            pBox->BxType != BoFloatGhost &&

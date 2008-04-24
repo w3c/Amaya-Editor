@@ -2286,7 +2286,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       xFrame = x;
     }
   if (x + w > xFrame + width)
-  width = x + w - xFrame;
+    width = x + w - xFrame;
 
   /* part of the top, left, bottom and right border which are visible */
   t = yFrame + et + from->BxTBorder - y;
