@@ -1284,9 +1284,7 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
   else
     {
       if (ref == MathsDialogue + FormMaths)
-        {
           ThotCallback (ref, INTEGER_DATA, (char*)value);
-        }
       else
         {
           ThotCallback (subref, INTEGER_DATA, (char *)value);
@@ -1294,6 +1292,7 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
         }
     }
   
+  TtaRedirectFocus ();
   return TRUE;
 }
 
@@ -1301,7 +1300,8 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
 /*----------------------------------------------------------------------
   CreateFontDlgWX
   ----------------------------------------------------------------------*/
-ThotBool CreateFontDlgWX(ThotWindow parent, const char *title, int* family, int* size)
+ThotBool CreateFontDlgWX(ThotWindow parent, const char *title, int* family,
+			 int* size)
 {
   if (family && size)
     {

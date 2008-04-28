@@ -137,6 +137,7 @@ void AuthentDlgWX::OnConfirmButton( wxCommandEvent& event )
   // return done
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -147,6 +148,7 @@ void AuthentDlgWX::OnCancelButton( wxCommandEvent& event )
   // return done
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  TtaRedirectFocus();
 }
 
 /*---------------------------------------------------------------

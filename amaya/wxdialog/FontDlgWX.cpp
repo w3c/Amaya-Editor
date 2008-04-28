@@ -80,6 +80,7 @@ void FontDlgWX::SetFontSize(int size)
 void FontDlgWX::OnCancel( wxCommandEvent& event )
 {
   EndModal (wxID_CANCEL);
+  TtaRedirectFocus();
 }
 
 
@@ -91,6 +92,7 @@ void FontDlgWX::OnCancel( wxCommandEvent& event )
 void FontDlgWX::OnOk( wxCommandEvent& event )
 {
   EndModal (wxID_OK);
+  TtaRedirectFocus();
 }
 
 

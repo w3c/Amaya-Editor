@@ -132,6 +132,7 @@ void InitConfirmDlgWX::OnConfirmButton( wxCommandEvent& event )
    {
      Waiting = 0;
      ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
+     TtaRedirectFocus();
    }
  }
 
@@ -144,6 +145,7 @@ void InitConfirmDlgWX::OnCancelButton( wxCommandEvent& event )
    {
      Waiting = 0;
      ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+     TtaRedirectFocus();
    }
 }
 
@@ -156,7 +158,10 @@ void InitConfirmDlgWX::OnCancelButton( wxCommandEvent& event )
 void InitConfirmDlgWX::OnClose(wxCloseEvent& event)
 {
  if (Waiting)
-   ThotCallback (MyRef, INTEGER_DATA, (char*) 0); 
+   {
+     ThotCallback (MyRef, INTEGER_DATA, (char*) 0); 
+     TtaRedirectFocus();
+   }
 }
 
 #endif /* _WX */

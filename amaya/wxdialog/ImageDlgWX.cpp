@@ -174,6 +174,7 @@ void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
     {
       Waiting = 0;
       ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+      TtaRedirectFocus();
       return;
     }
 
@@ -253,6 +254,7 @@ void ImageDlgWX::OnCancelButton( wxCommandEvent& event )
   // return done
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  TtaRedirectFocus();
 }
 
 #endif /* _WX */

@@ -88,6 +88,7 @@ void ListDlgWX::OnOkButton( wxCommandEvent& event )
     }
   LoadDefaultOpeningLocation (FALSE);
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -98,10 +99,8 @@ void ListDlgWX::OnOkButton( wxCommandEvent& event )
 void ListDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  TtaRedirectFocus();
 }
-
-
-
 
 //
 //
@@ -134,6 +133,7 @@ NonSelListDlgWX::NonSelListDlgWX(wxWindow* parent, const wxString & title,
 NonSelListDlgWX::~NonSelListDlgWX()
 {
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  TtaRedirectFocus();
 }
 
 

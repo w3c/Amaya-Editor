@@ -113,6 +113,7 @@ void MakeIdDlgWX::OnRemoveButton( wxCommandEvent& event )
 
   /* The dialogue is no longer destroyed in the callback to prevent a crash on Mac */
   TtaDestroyDialogue (MyRef);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -123,6 +124,7 @@ void MakeIdDlgWX::OnRemoveButton( wxCommandEvent& event )
 void MakeIdDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   TtaDestroyDialogue (MyRef);
+  TtaRedirectFocus();
 }
 
 #endif /* _WX */

@@ -3471,44 +3471,10 @@ gboolean CloseMathMenu (GtkWidget *widget,
   ----------------------------------------------------------------------*/
 static void CreateMathMenu (Document doc, View view)
 {
-#ifdef _GTK
-  GtkWidget *w;
-#endif /*_GTK*/
-
   if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */
     return;
 
-#if defined(_GTK)
-  if (!InitMaths)
-    {
-      InitMaths = TRUE;
-
-      /* Dialogue box for the Math palette */
-      TtaNewSheet (MathsDialogue + FormMaths, TtaGetViewFrame (doc, view), 
-                   TtaGetMessage (AMAYA, AM_BUTTON_MATH),
-                   0, NULL, TRUE, 2, 'L', D_DONE);
-      TtaNewIconMenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
-                      NULL, 7, mIcons, FALSE);
-      TtaNewIconMenu (MathsDialogue + MenuMaths1, MathsDialogue + FormMaths, 0,
-                      NULL, 7, &mIcons[7], FALSE);
-      /* do not need to initialise the selection into the palette */
-      /*TtaSetMenuForm (MathsDialogue + MenuMaths, 0);*/
-      TtaSetDialoguePosition ();
-      w =   CatWidget (MathsDialogue + FormMaths);
-      gtk_signal_connect (GTK_OBJECT (w), 
-                          "delete_event",
-                          GTK_SIGNAL_FUNC (CloseMathMenu), 
-                          (gpointer)(MathsDialogue + FormMaths));
-
-      gtk_signal_connect (GTK_OBJECT (w), 
-                          "destroy",
-                          GTK_SIGNAL_FUNC (CloseMathMenu), 
-                          (gpointer)(MathsDialogue + FormMaths));
-    }
-  TtaShowDialogue (MathsDialogue + FormMaths, TRUE); 
-#endif /* #if defined(_GTK)  */
-  
 #ifdef _WINGUI
   CreateMathDlgWindow (TtaGetViewFrame (doc, view));
 #endif /* _WINGUI */
@@ -7108,18 +7074,6 @@ void CreateMathEntity (Document document, View view)
   TtaShowDialogue (BaseDialog + MathEntityForm, FALSE);
   TtaWaitShowDialogue ();
 #endif /* _WX */
-
-#if defined(_GTK)
-  TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
-              TtaGetMessage (AMAYA, AM_MEntity), TRUE, 1, 'L', D_CANCEL);
-  TtaNewTextForm (BaseDialog + MathEntityText, BaseDialog + MathEntityForm,
-                  TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME), NAME_LENGTH, 1,
-                  FALSE);
-  TtaSetTextForm (BaseDialog + MathEntityText, MathMLEntityName);
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + MathEntityForm, FALSE);
-  TtaWaitShowDialogue ();
-#endif /* #if defined(_GTK) */
 
   if (MathMLEntityName[0] != EOS)
     InsertMathEntity ((unsigned char *)MathMLEntityName, document);
