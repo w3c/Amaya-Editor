@@ -397,8 +397,9 @@ static void Adjust (PtrBox pParentBox, PtrBox pBBox, PtrLine pLine, int frame,
   else
     pBoxInLine = pLine->LiFirstBox;
   if (pLine->LiFirstBox == pLine->LiLastBox &&
-      pBoxInLine->BxType == BoTable ||
-      pBoxInLine->BxAbstractBox->AbDisplay == 'B')
+      pBoxInLine->BxLMargin > 0 &&
+      (pBoxInLine->BxType == BoTable ||
+       pBoxInLine->BxAbstractBox->AbDisplay == 'B'))
     {
       if (pBoxInLine->BxLMargin > pLine->LiXOrg)
         x -= pLine->LiXOrg;
@@ -577,8 +578,9 @@ static void Align (PtrBox pParentBox, PtrBox pBBox, PtrLine pLine, int frame,
     pBoxInLine = pLine->LiFirstBox;
 
   if (pLine->LiFirstBox == pLine->LiLastBox &&
-      pBoxInLine->BxType == BoTable ||
-      pBoxInLine->BxAbstractBox->AbDisplay == 'B')
+      pBoxInLine->BxLMargin > 0 &&
+      (pBoxInLine->BxType == BoTable ||
+       pBoxInLine->BxAbstractBox->AbDisplay == 'B'))
     {
       if (pBoxInLine->BxLMargin > pLine->LiXOrg)
         x -= pLine->LiXOrg;
@@ -4680,7 +4682,7 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
                   ThotBool removed, ThotBool *changeSelectBegin,
                   ThotBool *changeSelectEnd)
 {
-  PtrBox              box;
+  PtrBox              box = NULL;
   PtrLine             pNextLine;
   PtrLine             pLine;
 
@@ -4720,26 +4722,30 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
           FreeLine (pLine);
           pLine = pNextLine;
         }
+    }
+  else if (pBox->BxAbstractBox && pBox->BxAbstractBox->AbFirstEnclosed)
+    // it coud be a new block element
+    box = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
+    
       
-      /* Liberation des boites de coupure suivantes */
-      if (box)
-        {
-          if (box->BxType == BoScript && box->BxNexChild)
-            /* get the next child */
-            box = box->BxNexChild;
-          else
-            box = GetNextBox (box->BxAbstractBox, frame);
-        }
-      while (box)
-        {
-          RemoveBreaks (box, frame, removed,
-                        changeSelectBegin, changeSelectEnd);
-          if (box->BxType == BoScript && box->BxNexChild)
-            /* get the next child */
-            box = box->BxNexChild;
-          else
-            box = GetNextBox (box->BxAbstractBox, frame);
-        }
+  /* Liberation des boites de coupure suivantes */
+  if (box)
+    {
+      if (box->BxType == BoScript && box->BxNexChild)
+        /* get the next child */
+        box = box->BxNexChild;
+      else
+        box = GetNextBox (box->BxAbstractBox, frame);
+    }
+  while (box)
+    {
+      RemoveBreaks (box, frame, removed,
+                    changeSelectBegin, changeSelectEnd);
+      if (box->BxType == BoScript && box->BxNexChild)
+        /* get the next child */
+        box = box->BxNexChild;
+      else
+        box = GetNextBox (box->BxAbstractBox, frame);
     }
 }
 
