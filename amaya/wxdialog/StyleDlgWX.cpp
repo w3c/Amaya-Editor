@@ -2356,6 +2356,9 @@ void StyleDlgWX::OnOk( wxCommandEvent& event )
         }
       else if (check)
         TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", FALSE, TRUE);
+      // redirect focus to the canvas because when an action is done 
+      // it's more probable that the user wants to type some characteres after executing the action
+      TtaRedirectFocus();
     }
   else
     XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NO_INSERT_POINT)));
@@ -2396,6 +2399,7 @@ void StyleDlgWX::OnCancel( wxCommandEvent& event )
     TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", FALSE, TRUE);
 
   ThotCallback (m_ref, STRING_DATA, NULL);
+  TtaRedirectFocus();
   m_OnApplyLock = FALSE;
 }
 

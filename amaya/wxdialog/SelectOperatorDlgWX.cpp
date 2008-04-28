@@ -65,6 +65,7 @@ void SelectOperatorDlgWX::OnOperator0( wxCommandEvent& event )
     return;
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
+  TtaRedirectFocus();
   TtaDestroyDialogue (MyRef);
 }
 

@@ -123,6 +123,7 @@ void PrintDlgWX::OnPrintButton( wxCommandEvent& event )
 {
   // print callback
   ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (char*) 1);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -131,6 +132,7 @@ void PrintDlgWX::OnPrintButton( wxCommandEvent& event )
 void PrintDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (char*) 0);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------

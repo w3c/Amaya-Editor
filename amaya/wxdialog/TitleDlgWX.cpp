@@ -77,6 +77,7 @@ void TitleDlgWX::OnConfirmButton( wxCommandEvent& event )
   ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer );
   // set the new title
   ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (char*) 1);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -85,6 +86,7 @@ void TitleDlgWX::OnConfirmButton( wxCommandEvent& event )
 void TitleDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (char*) 0); 
+  TtaRedirectFocus();
 }
 
 #endif /* _WX */

@@ -100,6 +100,7 @@ SearchDlgWX::~SearchDlgWX()
 {
   /* when the dialog is destroyed, It important to cleanup context */
   ThotCallback (NumFormSearchText, INTEGER_DATA, (char*) 0); 
+  TtaRedirectFocus();
 }
 
 
@@ -174,6 +175,7 @@ void SearchDlgWX::OnNoReplaceButton( wxCommandEvent& event )
 void SearchDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   ThotCallback (NumFormSearchText, INTEGER_DATA, (char*) 0); 
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------

@@ -534,6 +534,9 @@ void OpenDocDlgWX::OnCancelButton( wxCommandEvent& event )
   // return done
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  // redirect focus to the canvas because when an action is done 
+  // it's more probable that the user wants to type some characteres after executing the action
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------

@@ -141,6 +141,7 @@ SpellCheckDlgWX::~SpellCheckDlgWX()
 {
   /* when the dialog is destroyed, It important to cleanup context */
   ThotCallback (m_ref, INTEGER_DATA, (char*) 0);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -149,6 +150,7 @@ SpellCheckDlgWX::~SpellCheckDlgWX()
 void SpellCheckDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   ThotCallback (m_ref, INTEGER_DATA, (char*) 0);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------

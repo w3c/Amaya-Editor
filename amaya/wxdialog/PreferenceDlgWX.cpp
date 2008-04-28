@@ -1603,6 +1603,7 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
 
 #ifdef TEMPLATES
   // not necessary to update the list
+  OnTemplateAdd (event);
   GetValueDialog_Templates();
   ThotCallback (GetPrefTemplatesBase() + TemplatesMenu, INTEGER_DATA, (char*) 1);
 #endif /* TEMPLATES */

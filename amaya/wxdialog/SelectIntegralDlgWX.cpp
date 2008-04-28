@@ -114,6 +114,7 @@ void SelectIntegralDlgWX::OnClose(wxCloseEvent& event)
     return;
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  TtaRedirectFocus();
   TtaDestroyDialogue (MyRef);
 }
 
@@ -128,6 +129,7 @@ void SelectIntegralDlgWX::OnCancel(wxCommandEvent& event)
   if (!Waiting)return;
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  TtaRedirectFocus();
   TtaDestroyDialogue (MyRef);
 }
 

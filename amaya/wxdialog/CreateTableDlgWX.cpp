@@ -113,7 +113,7 @@ void CreateTableDlgWX::OnConfirmButton( wxCommandEvent& event )
   else
     TCaption = 0;
   ThotCallback (BaseDialog + TableForm, INTEGER_DATA, (char *) 1);
-
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -124,6 +124,7 @@ void CreateTableDlgWX::OnCancelButton( wxCommandEvent& event )
   // return done
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char *) 0);
+  TtaRedirectFocus();
 }
 
 

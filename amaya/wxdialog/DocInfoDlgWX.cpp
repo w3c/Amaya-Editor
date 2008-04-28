@@ -108,7 +108,10 @@ DocInfoDlgWX::DocInfoDlgWX( int ref, wxWindow* parent, int doc ) :
 DocInfoDlgWX::~DocInfoDlgWX()
 {
   if (My_ref)
-    TtaDestroyDialogue (My_ref);
+    {
+      TtaDestroyDialogue (My_ref);
+      TtaRedirectFocus();
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -117,6 +120,7 @@ DocInfoDlgWX::~DocInfoDlgWX()
 void DocInfoDlgWX::OnDoneButton( wxCommandEvent& event )
 {
   TtaDestroyDialogue (My_ref);
+  TtaRedirectFocus();
   My_ref = 0;
 }
 

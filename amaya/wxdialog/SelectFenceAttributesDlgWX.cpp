@@ -106,6 +106,7 @@ void SelectFenceAttributesDlgWX::OnClose(wxCloseEvent& event)
     return;
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  TtaRedirectFocus();
   TtaDestroyDialogue (MyRef);
 }
 
@@ -120,6 +121,7 @@ void SelectFenceAttributesDlgWX::OnCancel(wxCommandEvent& event)
   if (!Waiting)return;
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  TtaRedirectFocus();
   TtaDestroyDialogue (MyRef);
 }
 

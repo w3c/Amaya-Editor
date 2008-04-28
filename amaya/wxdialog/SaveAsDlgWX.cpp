@@ -376,6 +376,7 @@ void SaveAsDlgWX::OnConfirmButton( wxCommandEvent& event )
       // save callback
       Waiting = 0;
       ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
+      TtaRedirectFocus();
     }
 }
 
@@ -389,6 +390,7 @@ void SaveAsDlgWX::OnCancelButton( wxCommandEvent& event )
       // a return is still requested
       Waiting = 0;
       ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+      TtaRedirectFocus();
     }
 }
 

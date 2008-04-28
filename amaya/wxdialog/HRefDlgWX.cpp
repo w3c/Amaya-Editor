@@ -123,6 +123,7 @@ void HRefDlgWX::OnOk( wxCommandEvent& event )
   ThotCallback (BaseDialog + AttrHREFText, STRING_DATA, (char *)buffer);
   // create or load the new document
   ThotCallback (MyRef, INTEGER_DATA, (char*)1);
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -191,6 +192,7 @@ void HRefDlgWX::OnCancel( wxCommandEvent& event )
   //  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
   //Close();
   TtaDestroyDialogue( MyRef );
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
