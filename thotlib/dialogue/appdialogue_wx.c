@@ -2213,6 +2213,8 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
           int thotMask = 0;
           if (event.CmdDown())
             thotMask |= THOT_MOD_CTRL;
+          if (event.ControlDown())
+            thotMask |= THOT_MOD_CTRL;
           if (event.AltDown())
             thotMask |= THOT_MOD_ALT;
           if (event.ShiftDown())

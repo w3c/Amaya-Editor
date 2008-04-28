@@ -2219,7 +2219,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
             pLine->LiYOrg = by - orgY;
           bottomL = by + bh - orgY;
         }
-      else if (floatL)
+      else if (floatL && pfloatL)
         {
           /* look at all previous floating boxes */
           pfloatL = pfloatL->FlPrevious;
@@ -2284,7 +2284,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
             pLine->LiXMax -= floatR->BxRMargin;
           bottomR = by + bh - orgY;
         }
-      else if (floatR)
+      else if (floatR && pfloatR)
         {
           /* look at all previous floating boxes */
           pfloatR = pfloatR->FlPrevious;
