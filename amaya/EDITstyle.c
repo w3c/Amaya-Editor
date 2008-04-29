@@ -57,7 +57,7 @@
 
 static char         ListBuffer[MAX_CSS_LENGTH];
 static int          NbClass = 0;
-static char         CurrentClass[80];
+static char         CurrentClass[200];
 static Element      ClassReference;
 static Document     DocReference;
 static Document	    ApplyClassDoc;
@@ -1344,9 +1344,8 @@ static void UpdateClass (Document doc)
   Element             el, root, child, title, head, line, prev, styleEl;
   ElementType         elType, selType;
   char               *stylestring;
-  char               *text;
-  char               *a_class;
-  char               *schName;
+  char               *text, *ptr, *a_pseudo, *a_id;
+  char               *a_class, *a_elem, *schName;
   int                 len, base, i;
   Language            lang;
   ThotBool            found, empty, insertNewLine, ok;
@@ -1356,7 +1355,31 @@ static void UpdateClass (Document doc)
   attrType.AttrTypeNum = 0;
   attrTypeT.AttrSSchema = elType.ElSSchema;
   attrTypeT.AttrTypeNum = 0;
-  GIType (CurrentClass, &selType, doc);
+  // look for the selected element and class
+  a_elem = CurrentClass;
+  ptr = strstr (a_elem, " ");
+  while (ptr)
+    {
+      a_elem = &ptr[1];
+      ptr = strstr (a_elem, " ");
+    }
+
+  a_class = strstr (a_elem, ".");
+  if (a_class != a_elem && a_class)
+      *a_class = EOS;
+  a_id = strstr (a_elem, "#");
+  if (a_id)
+      *a_id = EOS;
+  a_pseudo = strstr (a_elem, ":");
+  if (a_pseudo)
+      *a_pseudo = EOS;
+  GIType (a_elem, &selType, doc);
+  if (a_class != a_elem && a_class)
+      *a_class = '.';
+  if (a_id)
+      *a_id = '#';
+  if (a_pseudo)
+      *a_pseudo = ':';
   if (selType.ElTypeNum != elType.ElTypeNum && selType.ElTypeNum != 0)
     {
       ok = FALSE;
@@ -1437,19 +1460,19 @@ static void UpdateClass (Document doc)
           if (attr)
             {
               len = TtaGetTextAttributeLength (attr);
-              a_class = (char *)TtaGetMemory (len + 1);
-              TtaGiveTextAttributeValue (attr, a_class, &len);
-              found = (!strcmp (a_class, "text/css"));
-              TtaFreeMemory (a_class);
+              ptr = (char *)TtaGetMemory (len + 1);
+              TtaGiveTextAttributeValue (attr, ptr, &len);
+              found = (!strcmp (ptr, "text/css"));
+              TtaFreeMemory (ptr);
               // check if it's a theme
               attr = TtaGetAttribute (el, attrTypeT);
               if (found && attr)
                 {
                   len = TtaGetTextAttributeLength (attr);
-                  a_class = (char *)TtaGetMemory (len + 1);
-                  TtaGiveTextAttributeValue (attr, a_class, &len);
-                  found = (strcmp (a_class, "Amaya theme") == 0);
-                  TtaFreeMemory (a_class);
+                  ptr = (char *)TtaGetMemory (len + 1);
+                  TtaGiveTextAttributeValue (attr, ptr, &len);
+                  found = (strcmp (ptr, "Amaya theme") == 0);
+                  TtaFreeMemory (ptr);
                 }
             }
         }
@@ -1536,13 +1559,10 @@ static void UpdateClass (Document doc)
   strcat (stylestring, "}");
 
   TtaOpenUndoSequence (doc, ClassReference, ClassReference, 0, 0);
-
   /* create the class attribute */
-  if (selType.ElTypeNum == 0)
+  if (a_class)
     {
-      a_class = &CurrentClass[0];
-      if (*a_class == '.')
-        a_class++;
+      a_class++;
       if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
         {
           attrType.AttrSSchema = elType.ElSSchema;
@@ -1683,8 +1703,10 @@ static void UpdateClass (Document doc)
       /* parse and apply this new CSS to the current document */
       dispMode = TtaGetDisplayMode (doc);
       TtaSetDisplayMode (doc, NoComputedDisplay);
-      ReadCSSRules (doc, NULL, stylestring, NULL,
+      ptr = (char *)TtaConvertMbsToByte ((unsigned char *)stylestring, TtaGetLocaleCharset ());
+      ReadCSSRules (doc, NULL, ptr, NULL,
                     TtaGetElementLineNumber (child), TRUE, styleEl);
+      TtaFreeMemory (ptr);
       TtaSetDisplayMode (doc, dispMode);
     }
   /* free the stylestring now */
@@ -1695,6 +1717,7 @@ static void UpdateClass (Document doc)
     /* Register the created STYLE or child element in the Undo queue */
     TtaRegisterElementCreate (el, doc);
   TtaCloseUndoSequence (doc);
+  TtaSelectElement (doc, ClassReference);
 }
 
 /*----------------------------------------------------------------------
@@ -1896,7 +1919,7 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
 	    
 /*----------------------------------------------------------------------
   CreateClass
-  creates a class from the Style attribute of the selected element
+  creates a class or element rule from the Style attribute of the selected element
   ----------------------------------------------------------------------*/
 void CreateClass (Document doc, View view)
 {
@@ -1958,8 +1981,11 @@ void CreateClass (Document doc, View view)
         attrType.AttrTypeNum = HTML_ATTR_Style_;
       attr = TtaGetAttribute (ClassReference, attrType);
       if (attr == NULL)
-        /* no attribute style */
-        return;
+        {
+          /* no attribute style */
+          TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_STYLE_FOR_ELEM);
+          return;
+        }
 
       /* update the class name selector. */
       if (!strcmp (schName, "HTML") && elType.ElTypeNum == HTML_EL_Preformatted)
@@ -1971,16 +1997,10 @@ void CreateClass (Document doc, View view)
         InitConfirm (doc, 1, TtaGetMessage (LIB, TMSG_SEL_CLASS));
       else
         {
-#ifdef _GTK
-          TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
-                      TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
-#endif /* _GTK */
           NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, elHtmlName);
-#ifdef _GTK
           TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
                           TtaGetMessage (LIB, TMSG_SEL_CLASS),
                           NbClass, ListBuffer, 5, NULL, TRUE, FALSE);
-#endif /* _GTK */
   
           /* preselect the entry corresponding to the class of the element. */
           if (!strcmp (schName, "MathML"))
@@ -1996,20 +2016,13 @@ void CreateClass (Document doc, View view)
             {
               len = 50;
               TtaGiveTextAttributeValue (attr, a_class, &len);
-#ifdef _GTK
-              TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
-#endif /* _GTK */
               strcpy (CurrentClass, a_class);
             }
           else
             {
-#ifdef _GTK
-              TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
-#endif /* _GTK */
               strcpy (CurrentClass, elHtmlName);
             }
   
-#ifdef _WX
           CreateListEditDlgWX( BaseDialog+ClassForm,
                                TtaGetViewFrame(doc, 1),
                                TtaGetMessage(AMAYA, AM_DEF_CLASS),
@@ -2017,16 +2030,10 @@ void CreateClass (Document doc, View view)
                                NbClass,
                                ListBuffer,
                                CurrentClass );
-#endif /* _WX */
 
           /* pop-up the dialogue box. */
-#if defined(_GTK) | defined(_WX)
+          TtaSetDialoguePosition ();
           TtaShowDialogue (BaseDialog + ClassForm, TRUE);
-#endif  /* defined(_GTK) | defined(_WX) */
-
-#ifdef _WINGUI
-          CreateRuleDlgWindow (TtaGetViewFrame (doc, 1), NbClass, ListBuffer);
-#endif /* _WINGUI */
         }
     }
 }
