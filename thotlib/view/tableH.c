@@ -924,12 +924,17 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
           useMax = TRUE;
           // check if a column is too narrow
           var = (delta - max) / n;
+#ifndef IV
+          delta = delta - max;
+          pixels = delta - (var * n);
+          delta -= pixels;
+#else
           i = 0;
           for (cRef = 0; cRef < cNumber; cRef++)
             {
               if (colBox[cRef]->AbBox->BxMaxWidth > var)
                 i++;
-            }
+                }*/
           if (i == 0)
             // all cells have the same width
             max = 0;
@@ -948,6 +953,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
                 /* decrease extra pixels */
                 pixels -= var;
             }
+#endif
         }
       else
         {
@@ -991,9 +997,6 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
         extra = (pixels + n / 2) / n;
       else
         extra = pixels;
-      if (useMax)
-        // ignore extra pixels which will be added
-        delta -= pixels;
       for (cRef = 0; cRef < cNumber; cRef++)
         {
           box = colBox[cRef]->AbBox;
@@ -1004,11 +1007,11 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
             i = colWidth[cRef];
           else if (useMax)
             {
-              if (max)
-                i = delta * box->BxMaxWidth / max + box->BxMaxWidth;
-              else
+              //if (max)
+              //  i = delta * box->BxMaxWidth / max + box->BxMaxWidth;
+              //else
                 i = delta / n;
-              // i = box->BxMaxWidth + var;
+              i = box->BxMaxWidth + var;
               addPixels = TRUE;
             }
           else
