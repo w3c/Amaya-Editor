@@ -1121,11 +1121,73 @@ ATTRIBUTES
         create SAN;
         create ' notation="actuarial"';
         end;
-   notation =radical :
+   notation = radical:
         begin
         create SAN;
         create ' notation="radical"';
         end;
+   notation = box:
+        begin
+        create SAN;
+        create ' notation="box"';
+        end;
+   notation = roundedbox:
+        begin
+        create SAN;
+        create ' notation="roundedbox"';
+        end;
+   notation = circle_:
+        begin
+        create SAN;
+        create ' notation="circle"';
+        end;
+
+   notation = updiagonalstrike:
+        begin
+        create SAN;
+        create ' notation="updiagonalstrike"';
+        end;
+   notation = downdiagonalstrike:
+        begin
+        create SAN;
+        create ' notation="downdiagonalstrike"';
+        end;
+   notation = verticalstrike:
+        begin
+        create SAN;
+        create ' notation="verticalstrike"';
+        end;
+   notation = horizontalstrike:
+        begin
+        create SAN;
+        create ' notation="horizontalstrike"';
+        end;
+   notation = madruwb:
+        begin
+        create SAN;
+        create ' notation="madruwb"';
+        end;
+   notation = left_:
+        begin
+        create SAN;
+        create ' notation="left"';
+        end;
+   notation = right_:
+        begin
+        create SAN;
+        create ' notation="right"';
+        end;
+   notation = top_:
+        begin
+        create SAN;
+        create ' notation="top"';
+        end;
+   notation = bottom_:
+        begin
+        create SAN;
+        create ' notation="bottom"';
+        end;
+
 
    scriptlevel:
         begin

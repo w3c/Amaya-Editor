@@ -2302,6 +2302,7 @@ ATTRIBUTES
                 MarginLeft: Enclosing =;
                 END;
         END;
+
   notation = actuarial:
         BEGIN
         CreateBefore(AttrNameAndValue);
@@ -2324,6 +2325,7 @@ ATTRIBUTES
                 MarginLeft: Enclosing =;
                 END;
         END;
+
   notation = radical:
         BEGIN
         CreateBefore(AttrNameAndValue);
@@ -2340,6 +2342,286 @@ ATTRIBUTES
                 VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
                 PaddingLeft: Enclosing =;
+                END;
+        END;
+
+  notation = box:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 1 pt;
+        BorderLeftWidth: 1 pt;
+        BorderRightWidth: 1 pt;
+        BorderBottomWidth: 1 pt;
+        BorderTopStyle: Solid;
+        BorderLeftStyle: Solid;
+        BorderRightStyle: Solid;
+        BorderBottomStyle: Solid;
+        BorderTopColor: Foreground;
+        BorderLeftColor: Foreground;
+   BorderRightColor: Foreground;
+   BorderBottomColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0.2;
+        MarginLeft: 0.2;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
+
+  notation = top_:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 1 pt;
+        BorderLeftWidth: 0 pt;
+        BorderRightWidth: 0 pt;
+        BorderBottomWidth: 0 pt;
+        BorderTopStyle: Solid;
+        BorderTopColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0.2;
+        MarginLeft: 0.2;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
+
+  notation = left_:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 0 pt;
+        BorderLeftWidth: 1 pt;
+        BorderRightWidth: 0 pt;
+        BorderBottomWidth: 0 pt;
+        BorderLeftStyle: Solid;
+        BorderLeftColor: Foreground;
+        PaddingRight: 0;
+        MarginRight: 0;
+        PaddingLeft: 0.2;
+        MarginLeft: 0.2;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
+
+  notation = right_:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 0 pt;
+        BorderLeftWidth: 0 pt;
+        BorderRightWidth: 1 pt;
+        BorderBottomWidth: 0 pt;
+        BorderRightStyle: Solid;
+        BorderRightColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0;
+        MarginLeft: 0;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
+
+  notation = bottom_:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 0 pt;
+        BorderLeftWidth: 0 pt;
+        BorderRightWidth: 0 pt;
+        BorderBottomWidth: 1 pt;
+        BorderBottomStyle: Solid;
+        BorderBottomColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0.2;
+        MarginLeft: 0.2;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
+
+  notation = roundedbox:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 1 pt;
+        BorderLeftWidth: 1 pt;
+        BorderRightWidth: 1 pt;
+        BorderBottomWidth: 1 pt;
+        BorderTopStyle: Solid;
+        BorderLeftStyle: Solid;
+        BorderRightStyle: Solid;
+        BorderBottomStyle: Solid;
+        BorderTopColor: Foreground;
+        BorderLeftColor: Foreground;
+   BorderRightColor: Foreground;
+   BorderBottomColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0.2;
+        MarginLeft: 0.2;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
+
+  notation = circle_:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 1 pt;
+        BorderLeftWidth: 1 pt;
+        BorderRightWidth: 1 pt;
+        BorderBottomWidth: 1 pt;
+        BorderTopStyle: Solid;
+        BorderLeftStyle: Solid;
+        BorderRightStyle: Solid;
+        BorderBottomStyle: Solid;
+        BorderTopColor: Foreground;
+        BorderLeftColor: Foreground;
+   BorderRightColor: Foreground;
+   BorderBottomColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0.2;
+        MarginLeft: 0.2;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
+
+  notation = horizontalstrike:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Underline: CrossedOut;
+        BorderTopWidth: 0;
+        BorderLeftWidth: 0;
+        BorderTopColor: Foreground;
+        BorderRightColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0;
+        MarginLeft: 0;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
+
+  notation = downdiagonalstrike:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Underline: CrossedOut;
+        BorderTopWidth: 0;
+        BorderLeftWidth: 0;
+        BorderTopColor: Foreground;
+        BorderRightColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0;
+        MarginLeft: 0;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
+
+  notation = updiagonalstrike:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Underline: CrossedOut;
+        BorderTopWidth: 0;
+        BorderLeftWidth: 0;
+        BorderTopColor: Foreground;
+        BorderRightColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0;
+        MarginLeft: 0;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
+
+  notation = verticalstrike:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Underline: CrossedOut;
+        BorderTopWidth: 0;
+        BorderLeftWidth: 0;
+        BorderTopColor: Foreground;
+        BorderRightColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0;
+        MarginLeft: 0;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
+
+  notation = madruwb:
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 0 pt;
+        BorderLeftWidth: 0 pt;
+        BorderRightWidth: 1 pt;
+        BorderBottomWidth: 1 pt;
+        BorderRightStyle: Solid;
+        BorderBottomStyle: Solid;
+        BorderRightColor: Foreground;
+        BorderBottomColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0;
+        MarginLeft: 0;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
                 END;
         END;
 

@@ -155,7 +155,10 @@ STRUCT
 	    END;
 
       MENCLOSE
-	  (ATTR notation = longdiv, actuarial, radical)
+	  (ATTR notation = longdiv, actuarial, radical, box, roundedbox,
+                     circle_, left_, right_, top_, bottom_,
+                     updiagonalstrike, downdiagonalstrike, verticalstrike,
+                     horizontalstrike, madruwb)
 	  = LIST OF (Construct);
 
       MROOT
