@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 9.99
+%define version 10.1
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -88,7 +88,7 @@ cd linux
 export HOME=`pwd`
 ../configure --prefix=/usr/share --exec=/usr/share  --datadir=/usr/share
 #cp Options.orig Options
-#make all
+make depend
 make
 %install
 cd linux

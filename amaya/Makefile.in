@@ -18,10 +18,10 @@ LIBS	=  $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
 	   @AMAYA_RAPTOR_LIBS@ \
 	   $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
            -L../thotlib -L.. -lThotEditor \
-          $(AMAYA_OPTION_EXTRA_LIBS) $(IMGLIBS) $(EXPAT_LIBRARIES) \
+          $(AMAYA_OPTION_EXTRA_LIBS) $(EXPAT_LIBRARIES) \
 	  $(AMAYA_LIBWWW_LIBS) \
-	  @LIBS@ $(GL_LIBRARIES) $(GTK_GL_LIBRARIES) $(FREETYPE_LIBRARIES) $(XFT_LIBRARIES) \
-          $(GTK_LIBRARIES) $(WX_LIBRARIES)
+	  $(GL_LIBRARIES) $(GTK_GL_LIBRARIES) $(FREETYPE_LIBRARIES) $(XFT_LIBRARIES) \
+          $(WX_LIBRARIES)
 
 AMAYA	= @top_srcdir@/amaya
 
@@ -73,21 +73,8 @@ force :
 ../thotlib/libThotEditor.a : force
 	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" libThotEditor)
 
-../libjpeg.a : @MAKEJPEG@ force
-	@(cd ../libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
-
-../libpng.a : @MAKEPNG@ force
-	@(cd ../libpng ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
-
-../libz.a : @MAKEPNG@ force
-	@(cd ../libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
-
 ../tools/mkdep/mkdep : 
 	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
-
-#../libraptor/.libs/libraptor.a \
-#amaya_comp_libraptor: @MAKERAPTOR@ force
-#	@(cd .. ; $(MAKE) libraptor CC="$(CC)" CFLAGS="-O2 -x c")
 
 ../redland/librdf/.libs/librdf.a \
 ../redland/raptor/.libs/libraptor.a \

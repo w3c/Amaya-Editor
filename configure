@@ -14680,7 +14680,6 @@ fi
 
 EXTRA_MAKEFILE_IN=
 make_output="Makefile Options.orig:Options.in tools/Makefile \
-       libjpeg/Makefile libpng/Makefile libpng/zlib/Makefile \
        tools/mkdep/Makefile \
        tools/cextract-1.7/Makefile thotlib/Makefile \
        thotlib/include/Makefile batch/Makefile \
