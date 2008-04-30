@@ -573,18 +573,15 @@ void AmayaFrame::SetFrameURL( const wxString & new_url )
   -----------------------------------------------------------------------*/
 wxString AmayaFrame::GetFrameURL()
 {
-  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::GetFrameURL - frameid=%d url=")+m_FrameUrl, GetFrameId() );
+  int       doc_id;
+  int       frame_id;
 
-  if (GetMasterFrameId() == GetFrameId())
-    return m_FrameUrl;
-  else
-    {
-      AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
-      if (p_frame)
-        return p_frame->m_FrameUrl;
-      else
-        return m_FrameUrl;
-    }
+  frame_id = GetFrameId();
+  doc_id = FrameTable[frame_id].FrDoc;
+  if (doc_id && DocumentURLs[doc_id])
+    m_FrameUrl = TtaConvMessageToWX(DocumentURLs[doc_id]);
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::GetFrameURL - frameid=%d url=")+m_FrameUrl, GetFrameId() );
+  return m_FrameUrl;
 }
 
 

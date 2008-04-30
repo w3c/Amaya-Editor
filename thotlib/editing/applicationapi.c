@@ -280,7 +280,6 @@ void TtaInitialize (char *applicationName)
   float               val = 0.;
 
   UserErrorCode = 0;
-  strcpy (DefaultDocumentName, "");
   InitEditorMemory ();	      /* Initializes the memory managment of the editor */
   InitNatures ();	      /* Initializes the table of Natures */
 
