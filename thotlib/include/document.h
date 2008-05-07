@@ -774,6 +774,13 @@ void TtaSetANamespaceDeclaration (Document document, Element element,
 char *TtaGiveNamespaceDeclaration (Document document, Element element);
 
 /*----------------------------------------------------------------------
+  TtaGiveElemNamespaceDeclarations
+  Give all namespace declarations and prefixes defined for a element           
+  ----------------------------------------------------------------------*/
+void TtaGiveElemNamespaceDeclarations (Document doc, Element pNode,
+				       char **declarations, char **prefixes);
+
+/*----------------------------------------------------------------------
   TtaFreeElemNamespaceDeclarations
   Free all the namespaces declarations of a document
  ----------------------------------------------------------------------*/

@@ -2460,7 +2460,38 @@ ThotBool DoubleClick (NotifyElement *event)
   ----------------------------------------------------------------------*/
 ThotBool SimpleClick (NotifyElement *event)
 {
-  ThotBool usedouble;
+  /*
+#define MAX_NS 20
+  char     *declarations[MAX_NS];
+  char     *prefixes[MAX_NS];
+  int       i;
+
+  for (i=0; i<MAX_NS; i++)
+    {
+      declarations[i] = NULL;
+      prefixes[i] = NULL;
+    }
+
+
+  TtaGiveElemNamespaceDeclarations (event->document, event->element,
+				    &declarations[0], &prefixes[0]);
+
+  for (i=0; i<MAX_NS; i++)
+    {
+      if (declarations[i] != NULL)
+	{
+	  printf ("\nxmlns= ");
+	  if (prefixes[i] != NULL)
+	    printf ("%s: ", prefixes[i]);
+	  printf ("%s ", declarations[i]);
+	}
+      if (prefixes[i] == NULL && declarations[i] == NULL)
+	i = MAX_NS;
+    }
+  printf ("\n");
+  */
+
+  ThotBool  usedouble;
 
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);
   if (usedouble)

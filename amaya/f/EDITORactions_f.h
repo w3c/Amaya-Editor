@@ -35,7 +35,8 @@ extern void CreateDoctype ( Document doc,
                             int profile,
                             int extraProfile,
                             ThotBool useMathML,
-                            ThotBool useSVG );
+                            ThotBool useSVG,
+                            ThotBool newDoc );
 extern void InitializeNewDoc ( char *url,
                                int docType,
                                Document doc,
@@ -309,7 +310,8 @@ extern void CreateDoctype ( Document doc,
                               int profile,
                               int extraProfile,
                               ThotBool useMathML,
-                              ThotBool useSVG );
+                              ThotBool useSVG,
+                              ThotBool newDoc );
 extern void InitializeNewDoc ( char *url,
                                  int docType,
                                  Document doc,

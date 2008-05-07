@@ -1311,7 +1311,7 @@ void SetNamespacesAndDTD (Document doc)
           /* Create a XHTML + MathML + SVG doctype */
           if ((useMathML || useSVG) && !useXML && !useXLink && profile == L_Xhtml11)
             {
-              CreateDoctype (doc, doctype, L_Xhtml11, extraProfile, useMathML, useSVG);
+              CreateDoctype (doc, doctype, L_Xhtml11, extraProfile, useMathML, useSVG, FALSE);
               /* it's not necessary to generate the math PI */
               mathPI = FALSE;
             }
@@ -1320,7 +1320,7 @@ void SetNamespacesAndDTD (Document doc)
             TtaDeleteTree (doctype, doc);
           else
             // regenerate the doctype with the right profile
-            CreateDoctype (doc, doctype, profile, extraProfile, useMathML, useSVG);
+            CreateDoctype (doc, doctype, profile, extraProfile, useMathML, useSVG, FALSE);
         }
       else if (doctype &&
                ((useSVG && (useMathML || useHTML || useXML || useXLink)) ||
@@ -1719,7 +1719,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
         elType.ElTypeNum = SVG_EL_DOCTYPE;
       eltype = TtaSearchTypedElement (elType, SearchInTree, docEl);
       /* Add the new doctype */
-      CreateDoctype (ext_doc, eltype, new_doctype, new_extraProfile, useMathML, useSVG);
+      CreateDoctype (ext_doc, eltype, new_doctype, new_extraProfile, useMathML, useSVG, TRUE);
 
       /* Save this new document state */
       if (DocumentTypes[doc] == docSVG)

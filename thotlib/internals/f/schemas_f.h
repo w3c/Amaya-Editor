@@ -116,6 +116,10 @@ extern void CopyNamespaceDeclarations ( PtrDocument docSource,
                                         PtrElement elTarget );
 extern char *GiveCurrentNsUri ( PtrDocument pDoc,
                                 PtrElement pEl );
+extern void GiveElemNamespaceDeclarations ( PtrDocument pDoc,
+                                            PtrElement pEl,
+                                            char **declarations,
+                                            char **prefixes );
 
 #else /* __STDC__ */
 
@@ -229,6 +233,10 @@ extern void CopyNamespaceDeclarations ( PtrDocument docSource,
                                           PtrElement elTarget );
 extern char *GiveCurrentNsUri ( PtrDocument pDoc,
                                   PtrElement pEl );
+extern void GiveElemNamespaceDeclarations ( PtrDocument pDoc,
+                                              PtrElement pEl,
+                                              char **declarations,
+                                              char **prefixes );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

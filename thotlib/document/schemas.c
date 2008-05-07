@@ -2959,7 +2959,6 @@ void CopyNamespaceDeclarations (PtrDocument docSource, PtrElement elSource,
     }
 }
 
-
 /*----------------------------------------------------------------------
   GiveCurrentNsUri
   Give the current namespace declarations for the element pEl
@@ -3004,3 +3003,36 @@ char *GiveCurrentNsUri (PtrDocument pDoc, PtrElement pEl)
   return (ns_uri);
 }
 
+/*----------------------------------------------------------------------
+  GiveElemNamespaceDeclarations
+  Give the current namespace declarations / prefixes  for the element pEl
+  ----------------------------------------------------------------------*/
+void GiveElemNamespaceDeclarations (PtrDocument pDoc, PtrElement pEl,
+				    char **declarations, char **prefixes)
+{
+
+  PtrNsUriDescr    uriDecl;
+  PtrNsPrefixDescr prefixDecl;
+  int              i = 0;
+
+  /* Search all the namespace declarations declared for this element */
+  uriDecl = pDoc->DocNsUriDecl;
+  while (uriDecl != NULL)
+    {
+      prefixDecl = uriDecl->NsPtrPrefix;
+      while (prefixDecl != NULL)
+        {
+          if (prefixDecl->NsPrefixElem == pEl &&
+              (uriDecl->NsUriName || prefixDecl->NsPrefixName))
+            {
+              /* A Namespace declaration has been found for this element */
+	      *&prefixes[i] = prefixDecl->NsPrefixName;
+	      *&declarations[i] = uriDecl->NsUriName;
+              i++;
+            }
+          prefixDecl = prefixDecl->NsNextPrefixDecl;
+        }
+      uriDecl = uriDecl->NsNextUriDecl;
+    }
+  return;
+}

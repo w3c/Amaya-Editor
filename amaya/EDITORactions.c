@@ -392,7 +392,7 @@ static void AddRDFaNS (Document doc)
   Parameters useMathML and useSVG determine the XHTML 1.1 profile.
   --------------------------------------------------------------------------*/
 void CreateDoctype (Document doc, Element doctype, int profile, int extraProfile,
-                    ThotBool useMathML, ThotBool useSVG)
+                    ThotBool useMathML, ThotBool useSVG, ThotBool newDoc)
 {
   ElementType     elType, lineType, piType;
   Element         docEl, doctypeLine, text, child, prev;
@@ -512,7 +512,8 @@ void CreateDoctype (Document doc, Element doctype, int profile, int extraProfile
         }
       else if ((profile == L_Xhtml11) && (extraProfile == L_RDFa))
 	{
-	  AddRDFaNS (doc);
+	  if (newDoc)
+	    AddRDFaNS (doc);
 	  TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML_PLUS_RDFa, language, doc);
 	}
       else if (profile == L_Xhtml11)
@@ -554,7 +555,8 @@ void CreateDoctype (Document doc, Element doctype, int profile, int extraProfile
                            doc);
       else if ((profile == L_Xhtml11) && (extraProfile == L_RDFa))
 	{
-	  AddRDFaNS (doc);
+	  if (newDoc)
+	    AddRDFaNS (doc);
 	  TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML_PLUS_RDFa, language, doc);
 	}
       else if (profile == L_Xhtml11)
@@ -681,7 +683,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       elType.ElTypeNum = HTML_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
       if (profile != L_Other)
-        CreateDoctype (doc, doctype, profile, extraProfile, FALSE, FALSE);
+        CreateDoctype (doc, doctype, profile, extraProfile, FALSE, FALSE, TRUE);
       else if (doctype)
         TtaDeleteTree (doctype, doc);
       
@@ -788,7 +790,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       /* create the MathML DOCTYPE element */
       elType.ElTypeNum = MathML_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-      CreateDoctype (doc, doctype, L_MathML, 0, FALSE, FALSE);
+      CreateDoctype (doc, doctype, L_MathML, 0, FALSE, FALSE, TRUE);
 
       /* Set the namespace declaration */
       root = TtaGetRootElement (doc);
@@ -814,7 +816,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       /* create the SVG DOCTYPE element */
       elType.ElTypeNum = SVG_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-      CreateDoctype (doc, doctype, L_SVG, 0, FALSE, FALSE);
+      CreateDoctype (doc, doctype, L_SVG, 0, FALSE, FALSE, TRUE);
 
       /* Set the namespace declaration */
       root = TtaGetRootElement (doc);
