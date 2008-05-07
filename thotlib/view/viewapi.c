@@ -151,7 +151,7 @@ View TtaOpenMainView ( Document document, const char * doctypename,
   Return value:
   the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-static View OpenView (Document document, char *viewName,
+static View OpenView (Document document, const char *viewName,
                       int x, int y, int w, int h,
                       Element subtree)
 {
@@ -247,7 +247,7 @@ static View OpenView (Document document, char *viewName,
   Return value:
   the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-View TtaOpenView (Document document, char *viewName, int x, int y, int w, int h)
+View TtaOpenView (Document document, const char *viewName, int x, int y, int w, int h)
 {
   return OpenView (document, viewName, x, y, w, h, NULL);
 }
@@ -755,7 +755,7 @@ ThotBool TtaIsViewOpen (Document document, View view)
   Return value:
   the view. 0 if no view of that name is currently open for the document.
   ----------------------------------------------------------------------*/
-View TtaGetViewFromName (Document document, char *viewName)
+View TtaGetViewFromName (Document document, const char *viewName)
 {
   View                view;
   PtrDocument         pDoc;

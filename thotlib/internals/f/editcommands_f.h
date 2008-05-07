@@ -18,7 +18,7 @@ extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                              CHAR_T c,
                              int keyboard );
-extern void PasteXClipboard ( unsigned char *src,
+extern void PasteXClipboard ( const unsigned char *src,
                               int nbytes,
                               CHARSET charset );
 extern void TtcInsertChar ( Document doc,
@@ -32,7 +32,7 @@ extern void TtcDeleteSelection ( Document doc,
                                  View view );
 extern void TtcInclude ( Document doc,
                          View view );
-extern void TtaPasteFromBuffer ( unsigned char *src,
+extern void TtaPasteFromBuffer ( const unsigned char *src,
                                  int length,
                                  CHARSET charset );
 extern void TtcPasteFromClipboard ( Document doc,
@@ -59,7 +59,7 @@ extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                                CHAR_T c,
                                int keyboard );
-extern void PasteXClipboard ( unsigned char *src,
+extern void PasteXClipboard ( const unsigned char *src,
                                 int nbytes,
                                 CHARSET charset );
 extern void TtcInsertChar ( Document doc,
@@ -73,7 +73,7 @@ extern void TtcDeleteSelection ( Document doc,
                                    View view );
 extern void TtcInclude ( Document doc,
                            View view );
-extern void TtaPasteFromBuffer ( unsigned char *src,
+extern void TtaPasteFromBuffer ( const unsigned char *src,
                                    int length,
                                    CHARSET charset );
 extern void TtcPasteFromClipboard ( Document doc,

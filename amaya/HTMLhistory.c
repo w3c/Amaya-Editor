@@ -970,9 +970,8 @@ static void DisplayHelp (int doc, int index)
   Element     root;
   char        localname[MAX_LENGTH];
   char       *s, *lang;
-  char       *helpdir;
+  const char *helpdir = "WX";
 
-  helpdir = "WX";
   lang = TtaGetVarLANG ();
   s = TtaGetEnvString ("THOTDIR");
   if (s != NULL)

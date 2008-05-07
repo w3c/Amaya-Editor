@@ -73,7 +73,6 @@ typedef struct _AttSearch
 #endif /* TEMPLATES */
 
 #define StdDefaultName "Overview.html"
-static char        *DefaultName;
 static char         tempSavedObject[MAX_LENGTH];
 static ThotBool     TextFormat;
 static ThotBool     Saving_lock = FALSE;
@@ -982,6 +981,7 @@ void SaveDocumentAs (Document doc, View view)
 {
   char                tempname[MAX_LENGTH];
   int                 i;
+  char               *defaultName;
 
   if (DocumentURLs[doc] == 0)
     return;
@@ -1076,10 +1076,11 @@ void SaveDocumentAs (Document doc, View view)
             }
           else if (SaveName[0] == EOS)
             {
-              DefaultName = TtaGetEnvString ("DEFAULTNAME");
-              if (DefaultName == NULL || *DefaultName == EOS)
-                DefaultName = StdDefaultName;
-              strcpy (SaveName, DefaultName);
+              defaultName = TtaGetEnvString ("DEFAULTNAME");
+              if (defaultName == NULL || *defaultName == EOS)
+                strcpy (SaveName, StdDefaultName);
+              else
+                strcpy (SaveName, defaultName);
               strcat (tempname, SaveName);
             }
 	  
@@ -2036,6 +2037,7 @@ static ThotBool HasSavingName (Document doc, View view, char *url,
   char            documentname[MAX_LENGTH];
   int             len;
   ThotBool        ok;
+  char           *defaultName;
 
   len = strlen (url);
   TtaExtractName (url, msg, documentname);
@@ -2067,15 +2069,15 @@ static ThotBool HasSavingName (Document doc, View view, char *url,
         }
       else
         {
-          DefaultName = TtaGetEnvString ("DEFAULTNAME");
-          if (DefaultName == NULL || *DefaultName == EOS)
-            DefaultName = StdDefaultName;
-          strcat (msg, DefaultName);
+          defaultName = TtaGetEnvString ("DEFAULTNAME");
+          if (defaultName == NULL || *defaultName == EOS)
+            defaultName = (char*)StdDefaultName;
+          strcat (msg, defaultName);
           InitConfirm (doc, view, msg);
           
           if (UserAnswer != 0 && DocumentMeta[doc])
             {
-              DocumentMeta[doc]->content_location = TtaStrdup (DefaultName);
+              DocumentMeta[doc]->content_location = TtaStrdup (defaultName);
               ok = (DocumentMeta[doc]->content_location != NULL);
             }
           if (ok)
@@ -2105,7 +2107,7 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
   char              msg[MAX_LENGTH];
   char              tempfile[MAX_LENGTH]; /* File name used to refetch */
   char              tempURL[MAX_LENGTH];  /* May be redirected */
-  char             *verify_publish;
+  const char       *verify_publish;
   int               res;
   int               mode = 0;
 #ifdef AMAYA_DEBUG
@@ -4527,6 +4529,7 @@ ThotBool SaveTempCopy (Document doc, const char* dstdir, char** filename)
 {
   char buff[MAX_LENGTH];
   char* oldURL;
+  char* defaultName;
   
   oldURL = TtaStrdup(DocumentURLs[doc]);
   if (Saving_lock)
@@ -4542,10 +4545,11 @@ ThotBool SaveTempCopy (Document doc, const char* dstdir, char** filename)
   TtaExtractName (DocumentURLs[doc], buff, SaveName);
   if (SaveName[0]==EOS)
     {
-      DefaultName = TtaGetEnvString ("DEFAULTNAME");
-      if (DefaultName == NULL || *DefaultName == EOS)
-        DefaultName = StdDefaultName;
-      strcpy(SaveName, DefaultName);
+      defaultName = TtaGetEnvString ("DEFAULTNAME");
+      if (defaultName == NULL || *defaultName == EOS)
+        strcpy(SaveName, StdDefaultName);
+      else
+        strcpy(SaveName, defaultName);
     }
   
   CopyImages = FALSE;

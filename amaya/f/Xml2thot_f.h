@@ -34,7 +34,7 @@ extern void ParseExternalDocument ( char *fileName,
                                     ThotBool isclosed,
                                     Document doc,
                                     Language lang,
-                                    char *typeName );
+                                    const char *typeName );
 extern ThotBool ParseXmlBuffer ( char *xmlBuffer,
                                  Element el,
                                  ThotBool isclosed,
@@ -97,7 +97,7 @@ extern void ParseExternalDocument ( char *fileName,
                                       ThotBool isclosed,
                                       Document doc,
                                       Language lang,
-                                      char *typeName );
+                                      const char *typeName );
 extern ThotBool ParseXmlBuffer ( char *xmlBuffer,
                                    Element el,
                                    ThotBool isclosed,

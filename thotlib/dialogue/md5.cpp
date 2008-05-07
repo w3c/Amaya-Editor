@@ -448,7 +448,6 @@ wxHMACMD5Stream::wxHMACMD5Stream(const unsigned char* key, size_t keysize)
 {
   unsigned char  ipad[65];
   unsigned char  opad[65];
-  unsigned char  tk[16];
   unsigned char* keybuff = NULL;
   int i;
   

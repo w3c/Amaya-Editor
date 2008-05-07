@@ -3453,7 +3453,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
   PasteXCliboard reads nbytes from the buffer and calls Paste_X as
   many times as necessary with the characters read.     
   ----------------------------------------------------------------------*/
-void PasteXClipboard (unsigned char *src, int nbytes, CHARSET charset)
+void PasteXClipboard (const unsigned char *src, int nbytes, CHARSET charset)
 {
   PtrTextBuffer       clipboard;
   PtrAbstractBox      pAb;
@@ -4041,7 +4041,7 @@ void TtcInclude (Document doc, View view)
   TtcPasteFormBuffer pastes at the current insert position the content
   of the buffer.
   ----------------------------------------------------------------------*/
-void TtaPasteFromBuffer (unsigned char *src, int length, CHARSET charset)
+void TtaPasteFromBuffer (const unsigned char *src, int length, CHARSET charset)
 {
   PasteXClipboard (src, length, charset);
 }

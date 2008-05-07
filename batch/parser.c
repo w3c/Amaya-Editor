@@ -812,7 +812,7 @@ void ParserEnd ()
    regles a` partir d'un fichier grammaire de type GRM.		
    fileName est le nom du fichier grammaire, avec le suffixe .GRM.	
   ----------------------------------------------------------------------*/
-void InitSyntax (char *fileName)
+void InitSyntax (const char *fileName)
 {
   indLine             j, wind, wlen;
   SyntacticType       wnat;

@@ -50,7 +50,7 @@ void InitApplicationSchema (PtrSSchema pSS)
 /*----------------------------------------------------------------------
    FetchAction finds and returns an action with the name actionName 
   ----------------------------------------------------------------------*/
-PtrAction FetchAction (char *actionName)
+PtrAction FetchAction (const char *actionName)
 {
   PtrAction           pAction;
 
@@ -65,7 +65,7 @@ PtrAction FetchAction (char *actionName)
    TteAddAction inserts an action in the list of actions           
    pointed to by the global variable ActionList.           
   ----------------------------------------------------------------------*/
-void TteAddAction (char *actionName, Proc doIt)
+void TteAddAction (const char *actionName, Proc doIt)
 {
   PtrAction           pAction;
   PtrAction           newAction;
@@ -105,7 +105,7 @@ void TteAddAction (char *actionName, Proc doIt)
 /*----------------------------------------------------------------------
    TteGetEventsSet returns a pointer to an existing events set.		
   ----------------------------------------------------------------------*/
-PtrEventsSet TteGetEventsSet (char *name)
+PtrEventsSet TteGetEventsSet (const char *name)
 {
   PtrEventsSet        pevset;
 
@@ -131,7 +131,7 @@ PtrEventsSet TteGetEventsSet (char *name)
    TteNewEventsSet returns a pointer to a new events set.		
    It is added to the global list.       			
   ----------------------------------------------------------------------*/
-PtrEventsSet TteNewEventsSet (int structureId, char *name)
+PtrEventsSet TteNewEventsSet (int structureId, const char *name)
 {
   PtrEventsSet        pevset, newEvSet;
   int                 event;
@@ -175,7 +175,7 @@ PtrEventsSet TteNewEventsSet (int structureId, char *name)
    eventsList.				                        
   ----------------------------------------------------------------------*/
 void TteAddActionEvent (PtrEventsSet eventsList, int typeId,
-			APPevent event, ThotBool pre, char *actionName)
+			APPevent event, ThotBool pre, const char *actionName)
 {
   PtrAction           action;
   PtrActionEvent      pactevent, newactevent;

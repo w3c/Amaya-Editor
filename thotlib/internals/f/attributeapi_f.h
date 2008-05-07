@@ -20,7 +20,7 @@ extern void TtaSetAttributeValue ( Attribute attribute,
                                    Element element,
                                    Document document );
 extern void TtaSetAttributeText ( Attribute attribute,
-                                  char* buffer,
+                                  const char* buffer,
                                   Element element,
                                   Document document );
 extern void TtaNextAttribute ( Element element,
@@ -32,7 +32,7 @@ extern void TtaCopyAttributes ( Element src,
 extern void TtaGiveAttributeType ( Attribute attribute,
                                    AttributeType *attType,
                                    int *attrKind );
-extern void TtaGiveAttributeTypeFromName ( char *name,
+extern void TtaGiveAttributeTypeFromName ( const char *name,
                                            Element element,
                                            AttributeType *attType,
                                            int *attrKind );
@@ -87,7 +87,7 @@ extern void TtaSetAttributeValue ( Attribute attribute,
                                      Element element,
                                      Document document );
 extern void TtaSetAttributeText ( Attribute attribute,
-                                    char* buffer,
+                                    const char* buffer,
                                     Element element,
                                     Document document );
 extern void TtaNextAttribute ( Element element,
@@ -99,7 +99,7 @@ extern void TtaCopyAttributes ( Element src,
 extern void TtaGiveAttributeType ( Attribute attribute,
                                      AttributeType *attType,
                                      int *attrKind );
-extern void TtaGiveAttributeTypeFromName ( char *name,
+extern void TtaGiveAttributeTypeFromName ( const char *name,
                                              Element element,
                                              AttributeType *attType,
                                              int *attrKind );

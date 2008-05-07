@@ -44,7 +44,7 @@ extern ThotBool TtaIsActionActive (char *name, Document doc);
   TtaIsActionAvailable
   Returns TRUE if the function is available
   ----------------------------------------------------------------------*/
-extern ThotBool TtaIsActionAvailable (char *name);
+extern ThotBool TtaIsActionAvailable (const char *name);
 
 /*----------------------------------------------------------------------
    TtaNewPulldown cre'e un pull-down menu :                           
@@ -303,14 +303,14 @@ extern void TtaNewSelector (int ref, int ref_parent, char *title, int number,
    se'lectionne'e.                                                    
    Le parame`tre text donne le texte si entry vaut -1.                
   ----------------------------------------------------------------------*/
-extern void TtaSetSelector (int ref, int entry, char *text);
+extern void TtaSetSelector (int ref, int entry, const char *text);
 
 /*----------------------------------------------------------------------
    TtaNewLabel cre'e un intitule' constant dans un formulaire :       
    Le parame`tre ref donne la re'fe'rence du catalogue.               
    Le parame`tre text donne l'intitule'.                              
   ----------------------------------------------------------------------*/
-extern void TtaNewLabel (int ref, int ref_parent, char *text);
+extern void TtaNewLabel (int ref, int ref_parent, const char *text);
 
 /*----------------------------------------------------------------------
    TtaNewPaddedLabel cre'e un intitule' constant dans un formulaire :       

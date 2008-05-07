@@ -36,7 +36,7 @@ extern CHAR_T *ustrtok ( CHAR_T *str,
                          const CHAR_T *delemiter );
 extern CHAR_T *ustrstr ( const CHAR_T *str,
                          const CHAR_T *strCharSet );
-extern CHARSET TtaGetCharset ( char *charsetname );
+extern CHARSET TtaGetCharset ( const char *charsetname );
 extern CHARSET TtaGetLocaleCharset ( void );
 extern CHARSET TtaGetDefaultCharset ( void );
 extern const char *TtaGetCharsetName ( CHARSET charset );
@@ -73,7 +73,7 @@ extern CHAR_T *ustrtok ( CHAR_T *str,
                            const CHAR_T *delemiter );
 extern CHAR_T *ustrstr ( const CHAR_T *str,
                            const CHAR_T *strCharSet );
-extern CHARSET TtaGetCharset ( char *charsetname );
+extern CHARSET TtaGetCharset ( const char *charsetname );
 extern CHARSET TtaGetLocaleCharset ( void );
 extern CHARSET TtaGetDefaultCharset ( void );
 extern const char *TtaGetCharsetName ( CHARSET charset );

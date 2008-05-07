@@ -149,7 +149,7 @@ void InitImage (void)
   'a': circle
   'p': polygon
   ----------------------------------------------------------------------*/
-static void CreateAreaMap (Document doc, View view, char *shape)
+static void CreateAreaMap (Document doc, View view, const char *shape)
 {
   Element             el, map, parent, image, child, div;
   Element             newMap, newElem;

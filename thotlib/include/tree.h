@@ -83,7 +83,7 @@ extern void TtaChangeElementType (Element element, int typeNum);
    root:   the concerned element must be the root of the document
    schemaName: the requested schema name.
    ---------------------------------------------------------------------- */
-extern void TtaUpdateRootElementType (Element element, char *schemaName, Document doc);
+extern void TtaUpdateRootElementType (Element element, const char *schemaName, Document doc);
 
 /*----------------------------------------------------------------------
    TtaChangeTypeOfElement
@@ -124,7 +124,7 @@ extern Element TtaNewElement (Document document, ElementType elementType);
    the root element of the created tree.
    ---------------------------------------------------------------------- */
 extern Element TtaNewTree (Document document, ElementType elementType,
-			   char* label);
+			   const char* label);
 
 /* ----------------------------------------------------------------------
    TtaNewTranscludedElement
@@ -241,8 +241,8 @@ extern void TtaAttachNewTree (Element tree, Document document);
    name must not be specified in parameter TSchemaName. See
    function TtaSetSchemaPath.
   ----------------------------------------------------------------------*/
-extern void TtaExportTree (Element element, Document document, char *fileName,
-			   char *TSchemaName);
+extern void TtaExportTree (Element element, Document document,
+          const char *fileName, const char *TSchemaName);
  
 /* ----------------------------------------------------------------------
    TtaRedisplayElement
@@ -1298,7 +1298,7 @@ extern void TtaSetXmlInLineRule (ElementType elType, Document document);
   TtaAppendXmlElement
   Add a new element to the schema
   ----------------------------------------------------------------------*/
-extern void TtaAppendXmlElement (char *XMLName, ElementType *elType,
+extern void TtaAppendXmlElement (const char *XMLName, ElementType *elType,
 				 char **mappedName, Document doc);
 
 /*----------------------------------------------------------------------
@@ -1306,15 +1306,15 @@ extern void TtaAppendXmlElement (char *XMLName, ElementType *elType,
   Search in elType->ElSSchema if not NULL otherwise,
   search in the different loaded natures.
    ----------------------------------------------------------------------*/
-extern void TtaGetXmlElementType (char *XMLElementName, ElementType *elType,
+extern void TtaGetXmlElementType (const char *XMLElementName, ElementType *elType,
 				  char **mappedName, Document doc);
 
 /*----------------------------------------------------------------------
   TtaChangeGenericSSchemaName
   Change the name of a generic xml schema
   ----------------------------------------------------------------------*/
-extern void TtaChangeGenericSchemaNames (char *sSchemauri, char *sSchemaName,
-					 Document doc);
+extern void TtaChangeGenericSchemaNames (const char *sSchemauri,
+            const char *sSchemaName, Document doc);
 
 
 /*----------------------------------------------------------------------

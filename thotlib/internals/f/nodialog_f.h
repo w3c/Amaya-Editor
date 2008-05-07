@@ -37,7 +37,7 @@ extern void DisplayPRule ( PtrPRule RP,
                            PtrPSchema pSchP,
                            int indent );
 extern void DisplayStyleValue ( const char *property,
-                                char *start_value,
+                                const char *start_value,
                                 char *end_value );
 extern void NewInitialSequence ( PtrDocument pDoc );
 extern void ShowBox ( int frame,
@@ -61,7 +61,7 @@ extern void InitDialogueFont ( void );
 extern void TteFreeAllEventsList ( void );
 extern int GetObjectWWW ( int docid,
                           char *urlName,
-                          char *formdata,
+                          const char *formdata,
                           char *outputfile,
                           int mode,
                           void *incremental_cbf,
@@ -69,14 +69,14 @@ extern int GetObjectWWW ( int docid,
                           void *terminate_cbf,
                           void* context_tcbf,
                           ThotBool error_html,
-                          char *content_type );
+                          const char *content_type );
 extern ThotBool IsW3Path ( const char* path );
 extern void CloseTextInsertion ( void );
 extern void NormalizeURL ( char* orgName,
                            Document doc,
                            char* newName,
                            char* docName,
-                           char* otherPath );
+                           const char* otherPath );
 extern ThotBool LoadRemoteStyleSheet ( char *url,
                                        Document doc,
                                        Element el,
@@ -228,7 +228,7 @@ extern void DisplayPRule ( PtrPRule RP,
                              PtrPSchema pSchP,
                              int indent );
 extern void DisplayStyleValue ( const char *property,
-                                  char *start_value,
+                                  const char *start_value,
                                   char *end_value );
 extern void NewInitialSequence ( PtrDocument pDoc );
 extern void ShowBox ( int frame,
@@ -252,7 +252,7 @@ extern void InitDialogueFont ( void );
 extern void TteFreeAllEventsList ( void );
 extern int GetObjectWWW ( int docid,
                             char *urlName,
-                            char *formdata,
+                            const char *formdata,
                             char *outputfile,
                             int mode,
                             void *incremental_cbf,
@@ -260,14 +260,14 @@ extern int GetObjectWWW ( int docid,
                             void *terminate_cbf,
                             void* context_tcbf,
                             ThotBool error_html,
-                            char *content_type );
+                            const char *content_type );
 extern ThotBool IsW3Path ( const char* path );
 extern void CloseTextInsertion ( void );
 extern void NormalizeURL ( char* orgName,
                              Document doc,
                              char* newName,
                              char* docName,
-                             char* otherPath );
+                             const char* otherPath );
 extern ThotBool LoadRemoteStyleSheet ( char *url,
                                          Document doc,
                                          Element el,

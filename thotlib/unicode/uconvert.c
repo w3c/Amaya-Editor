@@ -481,7 +481,7 @@ wchar_t MACROMANCP [] = {
 #define MACROMANCP_length sizeof(MACROMANCP) / sizeof(wchar_t);
 
 #include "memory_f.h"
-static unsigned char *StopTranslation = NULL;
+static const unsigned char *StopTranslation = NULL;
 
 /*----------------------------------------------------------------------
   TtaGetCharFromWC returns the ISO or Windows character code
@@ -755,7 +755,7 @@ wchar_t TtaConvertSjisToWC (unsigned char b1, unsigned char b2)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-wchar_t TtaGetWCFromJisChar (unsigned char *c, CHARSET encoding)
+wchar_t TtaGetWCFromJisChar (const unsigned char *c, CHARSET encoding)
 {
   unsigned char b[2];
   wchar_t       wc;
@@ -956,9 +956,9 @@ int TtaWCToMBstring (wchar_t src, unsigned char **dest)
   Returns the number of bytes in the multibyte character or -1
   The pointer to the source multibyte string is updated.
   ----------------------------------------------------------------------*/
-int TtaMBstringToWC (unsigned char **src, wchar_t *dest)
+int TtaMBstringToWC (const unsigned char **src, wchar_t *dest)
 {
-  unsigned char *ptrSrc = *src;
+  const unsigned char *ptrSrc = *src;
   wchar_t        res;
   int            nbBytesConverted = 0;
   int            nbBytesToConvert, i;
@@ -1197,7 +1197,7 @@ unsigned char *TtaConvertWCToByte (wchar_t *src, CHARSET encoding)
   JIS) into a wide character.
   The returned string should be freed by the caller.
   ----------------------------------------------------------------------*/
-wchar_t *TtaConvertByteToWC (unsigned char *src, CHARSET encoding)
+wchar_t *TtaConvertByteToWC (const unsigned char *src, CHARSET encoding)
 {
   wchar_t          *dest;
   int               i, len;
@@ -1285,7 +1285,7 @@ unsigned char *TtaConvertByteToMbs (unsigned char *src, CHARSET encoding)
   Returns the length of the treated source string.
   The returned string should be freed by the caller.
   ----------------------------------------------------------------------*/
-unsigned char *TtaConvertByteToMbsWithCheck (unsigned char *src,
+unsigned char *TtaConvertByteToMbsWithCheck (const unsigned char *src,
                                              CHARSET encoding, int *length)
 {
   wchar_t         *tmp;
@@ -1317,10 +1317,11 @@ unsigned char *TtaConvertByteToMbsWithCheck (unsigned char *src,
   Byte string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-unsigned char *TtaConvertMbsToByte (unsigned char *src, CHARSET encoding)
+unsigned char *TtaConvertMbsToByte (const unsigned char *src, CHARSET encoding)
 {
   wchar_t         *tmp;
-  unsigned char   *dest, *ptr;
+  unsigned char   *dest;
+  const unsigned char *ptr;
   int              i, l, len;
 
   dest = NULL;
@@ -1355,10 +1356,10 @@ unsigned char *TtaConvertMbsToByte (unsigned char *src, CHARSET encoding)
   string (8-bit or 16-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-CHAR_T *TtaConvertMbsToCHAR (unsigned char *src)
+CHAR_T *TtaConvertMbsToCHAR (const unsigned char *src)
 {
   CHAR_T          *dest = NULL;
-  unsigned char   *ptr;
+  const unsigned char   *ptr;
   int              i, l, len;
 
   if (src)
@@ -1395,7 +1396,7 @@ unsigned char *TtaConvertCHARToByte (CHAR_T *src, CHARSET encoding)
   string.
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-CHAR_T *TtaConvertByteToCHAR (unsigned char *src, CHARSET encoding)
+CHAR_T *TtaConvertByteToCHAR (const unsigned char *src, CHARSET encoding)
 {
   return TtaConvertByteToWC (src, encoding);
 }

@@ -15,7 +15,11 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.27  2006-04-06 08:38:30  vatton
+** Revision 1.28  2008-05-07 13:49:07  kia
+** char* => const char*
+** (Regis patches + many many others)
+**
+** Revision 1.27  2006/04/06 08:38:30  vatton
 ** Improve the creation of in-line elements.
 ** Irene
 **
@@ -187,7 +191,7 @@ void DAVSetLockIndicator (Document docid)
 /*----------------------------------------------------------------------
   DAVDisplayMessage: display a message to user.
   ---------------------------------------------------------------------- */
-void DAVDisplayMessage (char *msg, char *arg) 
+void DAVDisplayMessage (const char *msg, const char *arg) 
 {
   if (msg && *msg) 
     {
@@ -239,8 +243,8 @@ BOOL DAVConfirmDialog (Document docid, char *msg1, char *msg2, char *msg3)
 
   THE LIST AND ITS COMPONENTES ARE DESTROYED INSIDE THIS FUNCTION!!!!
   ---------------------------------------------------------------------- */
-void DAVPropertiesVerticalDialog (Document docid, char *title,
-                                  char *rheader, char *lheader, AwList *list) 
+void DAVPropertiesVerticalDialog (Document docid, const char *title,
+    const char *rheader, const char *lheader, AwList *list) 
 {
 #ifdef _GTK
   char   *name, *value;

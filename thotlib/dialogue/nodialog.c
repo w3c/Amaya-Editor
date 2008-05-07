@@ -93,7 +93,7 @@ void DisplayPRule (PtrPRule RP, FILE *fileDescriptor,
 /*----------------------------------------------------------------------
   DisplayStyleValue: update the property in Style dialog
   ----------------------------------------------------------------------*/
-void  DisplayStyleValue (const char *property, char *start_value, char *end_value)
+void  DisplayStyleValue (const char *property, const char *start_value, char *end_value)
 {
 }
 
@@ -165,10 +165,10 @@ void TteFreeAllEventsList (void)
 /*----------------------------------------------------------------------
    GetObjectWWW
   ----------------------------------------------------------------------*/
-int GetObjectWWW (int docid, char *urlName, char *formdata,
+int GetObjectWWW (int docid, char *urlName, const char *formdata,
 		  char *outputfile, int mode, void *incremental_cbf, 
 		  void* context_icbf, void *terminate_cbf, 
-		  void* context_tcbf, ThotBool error_html, char *content_type)
+		  void* context_tcbf, ThotBool error_html, const char *content_type)
 {
   return 0;
 }
@@ -194,7 +194,7 @@ void CloseTextInsertion ()
    or file name path (newName) and the name of the document (docName).        
   ----------------------------------------------------------------------*/
 void NormalizeURL (char* orgName, Document doc, char* newName, char* docName,
-		   char* otherPath)
+		   const char* otherPath)
 {
   TtaExtractName (orgName, newName, docName);
 }
@@ -328,7 +328,7 @@ ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
-void TtaSetStatus (Document document, View view, char *text, char *name)
+void TtaSetStatus (Document document, View view, const char *text, const char *name)
 {
 }
 

@@ -169,7 +169,7 @@ static void         FreeMatchEnv ()
 /*----------------------------------------------------------------------
   NewNode: allocation of a Structure tree node.     
   ----------------------------------------------------------------------*/
-static strNode *NewNode (char *tag)
+static strNode *NewNode (const char *tag)
 {
   StructureTree res;
 
@@ -1363,7 +1363,7 @@ static void CopySubTrees (strNode * Root, Document doc)
   PutBeginTag,PutEndTag,TransferNode 
   fill the HTML buffer with the generated nodes 
   ----------------------------------------------------------------------*/
-static ThotBool PutInHtmlBuffer (char *s)
+static ThotBool PutInHtmlBuffer (const char *s)
 {
   int len;
   
@@ -2185,13 +2185,14 @@ static void MyNextSelectedElement (Document doc, Element * elSelect)
   WARNING This function works as long as there are no cycles in S schema
   whithout any HTML element inside....
   ----------------------------------------------------------------------*/
-static ThotBool IsValidHtmlChild (ElementType elemType, char *tag,
-                                  char *prevtag, Element el)
+static ThotBool IsValidHtmlChild (ElementType elemType, const char *tag,
+                                  const char *prevtag, Element el)
 {
   ElementType         elemTypeChild, tagElType, prevElType;
   ElementType        *subTypes = NULL;
   ConstructType       constOfType;
-  char               *name, *listtypes;
+  const char         *name;
+  char               *listtypes;
   int                 cardinal, i = 0, start;
   ThotBool            result, found;
 

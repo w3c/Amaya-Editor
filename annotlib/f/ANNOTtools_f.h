@@ -48,7 +48,7 @@ extern ThotBool AnnotFilter_showAuthor ( List *list,
 extern void AnnotFilter_deleteAll ( Document doc );
 extern void AnnotFilter_build ( Document doc );
 extern List *AnnotList_search ( List *list,
-                                char *object );
+                                const char *object );
 extern AnnotMeta *AnnotList_searchAnnot ( List *list,
                                           char *url,
                                           AnnotMetaDataSearch searchType );
@@ -97,7 +97,7 @@ extern Element SearchElementInDoc ( Document doc,
 extern char *SearchAttributeInEl ( Document doc,
                                    Element el,
                                    int attrTypeNum,
-                                   char *schema );
+                                   const char *schema );
 extern void SubstituteCharInString ( char *buffer,
                                      char old,
                                      char new_ );
@@ -174,7 +174,7 @@ extern ThotBool AnnotFilter_showAuthor ( List *list,
 extern void AnnotFilter_deleteAll ( Document doc );
 extern void AnnotFilter_build ( Document doc );
 extern List *AnnotList_search ( List *list,
-                                  char *object );
+                                  const char *object );
 extern AnnotMeta *AnnotList_searchAnnot ( List *list,
                                             char *url,
                                             AnnotMetaDataSearch searchType );
@@ -223,7 +223,7 @@ extern Element SearchElementInDoc ( Document doc,
 extern char *SearchAttributeInEl ( Document doc,
                                      Element el,
                                      int attrTypeNum,
-                                     char *schema );
+                                     const char *schema );
 extern void SubstituteCharInString ( char *buffer,
                                        char old,
                                        char new_ );

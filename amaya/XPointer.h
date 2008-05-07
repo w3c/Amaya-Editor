@@ -24,7 +24,7 @@ typedef enum _nodeType {
 
 /* forms of symbol table entry */
 struct entry { 
-  char *lexptr;
+  const char *lexptr;
   int token;
 };
 

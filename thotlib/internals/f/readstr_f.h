@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBool ReadStructureSchema ( char * fileName,
+extern ThotBool ReadStructureSchema ( const char * fileName,
                                       PtrSSchema pSS );
 
 #else /* __STDC__ */
 
-extern ThotBool ReadStructureSchema ( char * fileName,
+extern ThotBool ReadStructureSchema ( const char * fileName,
                                         PtrSSchema pSS );
 
 #endif /* __STDC__ */

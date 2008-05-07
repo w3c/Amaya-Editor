@@ -11,8 +11,8 @@ extern void TtaSetDoctypeFunction ( Proc3 procedure );
 extern void TtaGetTime ( char *s,
                          CHARSET charset );
 extern ThotBool ExportDocument ( Document doc,
-                                 char *fName,
-                                 char *tschema,
+                                 const char *fName,
+                                 const char *tschema,
                                  ThotBool recordLineNb );
 extern void ExportXmlElement ( Document doc,
                                PtrElement pEl,
@@ -20,14 +20,14 @@ extern void ExportXmlElement ( Document doc,
                                ThotBool recordLineNb );
 extern void ExportTree ( PtrElement pEl,
                          Document doc,
-                         char *fName,
-                         char *tschema );
+                         const char *fName,
+                         const char *tschema );
 extern ThotBool TtaExportDocument ( Document document,
-                                    char *fileName,
-                                    char *tschema );
+                                    const char *fileName,
+                                    const char *tschema );
 extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
-                                                      char *fileName,
-                                                      char *tschema,
+                                                      const char *fileName,
+                                                      const char *tschema,
                                                       ThotBool skipXTiger );
 
 #else /* __STDC__ */
@@ -37,8 +37,8 @@ extern void TtaSetDoctypeFunction ( Proc3 procedure );
 extern void TtaGetTime ( char *s,
                            CHARSET charset );
 extern ThotBool ExportDocument ( Document doc,
-                                   char *fName,
-                                   char *tschema,
+                                   const char *fName,
+                                   const char *tschema,
                                    ThotBool recordLineNb );
 extern void ExportXmlElement ( Document doc,
                                  PtrElement pEl,
@@ -46,14 +46,14 @@ extern void ExportXmlElement ( Document doc,
                                  ThotBool recordLineNb );
 extern void ExportTree ( PtrElement pEl,
                            Document doc,
-                           char *fName,
-                           char *tschema );
+                           const char *fName,
+                           const char *tschema );
 extern ThotBool TtaExportDocument ( Document document,
-                                      char *fileName,
-                                      char *tschema );
+                                      const char *fileName,
+                                      const char *tschema );
 extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
-                                                        char *fileName,
-                                                        char *tschema,
+                                                        const char *fileName,
+                                                        const char *tschema,
                                                         ThotBool skipXTiger );
 
 #endif /* __STDC__ */

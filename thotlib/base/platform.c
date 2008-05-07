@@ -247,7 +247,7 @@ static int TtaFileClose (ThotFileHandle handle)
 /*----------------------------------------------------------------------
    TtaGetFileSize
   ----------------------------------------------------------------------*/
-unsigned long TtaGetFileSize (char *filename)
+unsigned long TtaGetFileSize (const char *filename)
 {
 #ifdef _WX
   wxFile file(TtaConvMessageToWX(filename));

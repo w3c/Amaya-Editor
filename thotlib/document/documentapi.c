@@ -537,8 +537,8 @@ void TtaSetSchemaPath (char *path)
   the structure schema of the new nature; NULL if the structure schema
   has not been loaded.
   ----------------------------------------------------------------------*/
-SSchema TtaNewNature (Document document, SSchema schema, char *natureURI,
-                      char *natureName, char *presentationName)
+SSchema TtaNewNature (Document document, SSchema schema, const char *natureURI,
+                      const char *natureName, const char *presentationName)
 {
   int                 natureRule;
   PtrSSchema          natureSchema;
@@ -624,7 +624,7 @@ SSchema TtaNewSchemaExtension (Document document, char *extensionName,
   presentationName: Name of the presentation schema to be associated
   with the document.
   ----------------------------------------------------------------------*/
-void TtaSetPSchema (Document document, char *presentationName)
+void TtaSetPSchema (Document document, const char *presentationName)
 {
   PtrDocument         pDoc;
 #ifndef NODISPLAY
@@ -1077,7 +1077,7 @@ char *TtaGetPSchemaName (SSchema schema)
   the structure schema having this name, or NULL if this structure
   schema is not loaded or not used by the document.
   ----------------------------------------------------------------------*/
-SSchema TtaGetSSchema (char *name, Document document)
+SSchema TtaGetSSchema (const char *name, Document document)
 {
   SSchema          schema;
 
@@ -1108,7 +1108,7 @@ SSchema TtaGetSSchema (char *name, Document document)
   the structure schema having this URI, or NULL if this structure
   schema is not loaded or not used by the document.
   ----------------------------------------------------------------------*/
-SSchema TtaGetSSchemaByUri (char *uriName, Document document)
+SSchema TtaGetSSchemaByUri (const char *uriName, Document document)
 {
   SSchema          schema;
 
@@ -1589,7 +1589,7 @@ PtrDocument         DocToPtr (Document document)
   Sets a namespace declaration for an element 
   ----------------------------------------------------------------------*/
 void TtaSetANamespaceDeclaration (Document document, Element element,
-                                  char *NsPrefix, char *NsUri)
+                                  const char *NsPrefix, const char *NsUri)
 {
   PtrDocument pDoc;
 
@@ -1622,25 +1622,6 @@ char *TtaGiveNamespaceDeclaration (Document document, Element element)
   else
     return GiveCurrentNsUri (LoadedDocument[document - 1], (PtrElement)element);
   return NULL;
-}
-
-/*----------------------------------------------------------------------
-  TtaGiveElemNamespaceDeclarations
-  Give all namespace declarations and prefixes defined for a element           
-  ----------------------------------------------------------------------*/
-void TtaGiveElemNamespaceDeclarations (Document document,  Element element,
-				       char **declarations, char **prefixes)
-{
-  UserErrorCode = 0;
-  /* verifies the parameter document */
-  if (document < 1 || document > MAX_DOCUMENTS)
-    TtaError (ERR_invalid_document_parameter);
-  else if (LoadedDocument[document - 1] == NULL)
-    TtaError (ERR_invalid_document_parameter);
-  else
-    return GiveElemNamespaceDeclarations (LoadedDocument[document - 1],
-					  (PtrElement)element,
-					  declarations, prefixes);
 }
 
 /*----------------------------------------------------------------------
@@ -1792,7 +1773,7 @@ void TtaSetXmlInLineRule (ElementType elType, Document document)
   TtaAppendXmlElement
   Add a new element to the schema
   ----------------------------------------------------------------------*/
-void TtaAppendXmlElement (char *xmlName, ElementType *elType,
+void TtaAppendXmlElement (const char *xmlName, ElementType *elType,
                           char **mappedName, Document document)
 {
   PtrDocument pDoc;
@@ -1818,7 +1799,7 @@ void TtaAppendXmlElement (char *xmlName, ElementType *elType,
   Search in elType->ElSSchema if not NULL otherwise,
   search in the different loaded natures.
   ----------------------------------------------------------------------*/
-void TtaGetXmlElementType (char *xmlName, ElementType *elType,
+void TtaGetXmlElementType (const char *xmlName, ElementType *elType,
                            char **mappedName, Document document)
 {
   PtrDocument pDoc;
@@ -1841,7 +1822,7 @@ void TtaGetXmlElementType (char *xmlName, ElementType *elType,
   TtaSetUriSSchema
   Set the namespace uri associated with that schema
   ----------------------------------------------------------------------*/
-void TtaSetUriSSchema (SSchema sSchema, char *sSchemaUri)
+void TtaSetUriSSchema (SSchema sSchema, const char *sSchemaUri)
 {
   UserErrorCode = 0;
   if (sSchema == NULL)
@@ -1854,7 +1835,7 @@ void TtaSetUriSSchema (SSchema sSchema, char *sSchemaUri)
   TtaChangeGenericSchemaNames
   Change the name of a generic xml schema
   ----------------------------------------------------------------------*/
-void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
+void TtaChangeGenericSchemaNames (const char *sSchemaUri, const char *sSchemaName,
                                   Document document)
 {
   PtrDocument pDoc;

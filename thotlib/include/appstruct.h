@@ -18,7 +18,7 @@
 typedef struct _APP_action *PtrAction;
 typedef struct _APP_action
 {
-    char*      ActName;   /* Name of the action                      */
+    const char*ActName;   /* Name of the action                      */
     Proc       ActAction; /* The action to be executed               */
     ThotBool   ActPre;    /* Previous event implies function         */
     APPevent   ActEvent;  /* What NotifyEvent context to generate    */
@@ -39,7 +39,7 @@ typedef struct _EventsSet *PtrEventsSet;
 typedef struct _EventsSet
 {
   int                 EvSStructId;/* Identifier of SSchema */
-  char               *EvSName;	/* Name of the events set */
+  const char         *EvSName;	/* Name of the events set */
   PtrActionEvent      EvSList[NUMBER_OF_APP_EVENTS];
   PtrEventsSet        EvSNext;	/* Next EventsSet in the list */
 } EventsSet;
@@ -67,15 +67,15 @@ extern ThotBool     TtaNotifySubTree (APPevent appEvent, Document doc, Element e
 extern void         TteZeroMenu ();
 extern void         TteOpenMainWindow (char *name);
 extern void         TteInitMenus (char *name, int number);
-extern void         TteAddMenuAction (char* actionName, Proc procedure, ThotBool state);
-extern void         TteAddMenu (int view, int menuID, int itemsNumber, char* menuName);
+extern void         TteAddMenuAction (const char* actionName, Proc procedure, ThotBool state);
+extern void         TteAddMenu (int view, int menuID, int itemsNumber, const char* menuName);
 extern void         TteAddSubMenu (int menuID, int itemID, int itemsNumber);
 extern void         TteAddMenuItem (int menuID, int subMenuID, int itemID, const char* actionName, char itemType, const char * iconName);
 
-extern void         TteAddAction (char* actionName, Proc doIt);
-extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, ThotBool pre, char* actionName);
+extern void         TteAddAction (const char* actionName, Proc doIt);
+extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, ThotBool pre, const char* actionName);
 extern PtrEventsSet TteGetEventsSet (char *name);
-extern PtrEventsSet TteNewEventsSet (int structureId, char *name);
+extern PtrEventsSet TteNewEventsSet (int structureId, const char *name);
 extern void         TtcStandardPresentation (Document document, View view);
 extern void         TtcStandardGeometry (Document document, View view);
 extern void         TtaSetTransformCallback (Func2 function);

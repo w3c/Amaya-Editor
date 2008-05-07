@@ -893,7 +893,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
                 }
             }
           else
-            prefix = "";
+            prefix = NULL;
           desc->tempfile = GetTempName (dir, prefix);
           TtaFreeMemory (tempfile);
           TtaFileUnlink (desc->tempfile);

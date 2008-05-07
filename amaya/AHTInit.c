@@ -188,7 +188,7 @@ PUBLIC void HTIconInit (const char * url_prefix)
 PUBLIC void HTMIMEInit (void)
 {
     struct {
-        char * string;
+        const char * string;
 	HTParserCallback * pHandler;
     } fixedHandlers[] = {
 	{"accept", &HTMIME_accept}, 

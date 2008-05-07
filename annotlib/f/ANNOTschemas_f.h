@@ -10,7 +10,7 @@ extern void SCHEMA_AddStatement ( RDFResourceP s,
                                   RDFPropertyP p,
                                   RDFResourceP o );
 extern RDFResourceP ANNOT_FindRDFResource ( List** listP,
-                                            char* name,
+                                            const char* name,
                                             ThotBool create );
 extern RDFStatementP ANNOT_FindRDFStatement ( List* list,
                                               RDFPropertyP p );
@@ -28,7 +28,7 @@ extern void SCHEMA_AddStatement ( RDFResourceP s,
                                     RDFPropertyP p,
                                     RDFResourceP o );
 extern RDFResourceP ANNOT_FindRDFResource ( List** listP,
-                                              char* name,
+                                              const char* name,
                                               ThotBool create );
 extern RDFStatementP ANNOT_FindRDFStatement ( List* list,
                                                 RDFPropertyP p );

@@ -136,7 +136,7 @@ extern void TtaGetViewXYWH (Document doc, int view, int *x, int *y, int *w, int 
    name: the name of the view in P schema.  
    x, y, width, height: the frame's geometry
   ----------------------------------------------------------------------*/
-extern void TtaGetViewGeometry (Document document, char *name, int *x,
+extern void TtaGetViewGeometry (Document document, const char *name, int *x,
 				int *y, int *width, int *height);
 
 /*----------------------------------------------------------------------
@@ -163,7 +163,7 @@ extern void TtaGetViewGeometryMM (Document document, char*name, int *x,
    Return value:
    the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-extern View TtaOpenView (Document document, char *viewName, int x, int y,
+extern View TtaOpenView (Document document, const char *viewName, int x, int y,
 			 int w, int h);
 
 /*----------------------------------------------------------------------
@@ -369,7 +369,7 @@ extern ThotBool TtaIsViewOpen (Document document, View view);
    Return value:
    the view. 0 if no view of that name is currently open for the document.
   ----------------------------------------------------------------------*/
-extern View TtaGetViewFromName (Document document, char *viewName);
+extern View TtaGetViewFromName (Document document, const char *viewName);
 
 /*----------------------------------------------------------------------
    Map and raise the corresponding window.                          

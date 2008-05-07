@@ -124,7 +124,7 @@ PathBuffer path;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static char *SkipToEqual (char *ptr)
+static const char *SkipToEqual (const char *ptr)
 {
   while (*ptr != EOS && *ptr != '=' && *ptr != EOL && *ptr != __CR__)
     ptr++;
@@ -133,7 +133,7 @@ static char *SkipToEqual (char *ptr)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static char *SkipToEndValue (char *ptr)
+static const char *SkipToEndValue (const char *ptr)
 {
   while (*ptr != EOS && *ptr != EOL && *ptr != __CR__)
     ptr++;
@@ -144,7 +144,7 @@ static char *SkipToEndValue (char *ptr)
   TtaSkipBlanks skips all spaces, tabs, linefeeds and newlines at the
   beginning of the string and returns the pointer to the new position. 
   ----------------------------------------------------------------------*/
-char *TtaSkipBlanks (char *ptr)
+const char *TtaSkipBlanks (const char *ptr)
 {
   while (*ptr == SPACE || *ptr == BSPACE || *ptr == EOL ||
          *ptr == TAB || *ptr == __CR__)
@@ -171,14 +171,15 @@ ThotBool TtaIsBlank (const char *ptr)
   string of all $(xxx) references by the values of xxx.
   and return a modified output string.
   ----------------------------------------------------------------------*/
-static void DoVariableSubstitution (char *input, int i_len, char *output,
+static void DoVariableSubstitution (const char *input, int i_len, char *output,
                                     int o_len)
 {
-  char *cour = input;
-  char *base = input;
+  const char *cour = input;
+  const char *base = input;
   char *res  = output;
   char *value;
-  char  save;
+  char  name[80];
+  char *nameptr;
 
 #define CHECK_OVERFLOW (cour - input > i_len || res - output >= o_len - 1)
   while (*cour)
@@ -205,33 +206,32 @@ static void DoVariableSubstitution (char *input, int i_len, char *output,
 
       /* Ok, that the beginning of a variable name ... */
       base += 2;		/* skip the $(  header */
+      nameptr = name;
       do
         {
+          *nameptr = *cour;
           cour++;
+          nameptr++;
           if CHECK_OVERFLOW
             break;
         }
       while (*cour != ')' && !TtaIsBlank (cour));
       if CHECK_OVERFLOW
         break;
-      
-      save = *cour;
-      *cour = EOS;
-      if (save != ')')
-        fprintf (stderr, "invalid variable name %s in %s\n", base, THOT_INI_FILENAME);
 
+      *nameptr = EOS;
+      if (*cour != ')')
+        fprintf (stderr, "invalid variable name %s in %s\n", base, THOT_INI_FILENAME);
       /* We are ready to fetch the base value from the Registry */
-      value = TtaGetEnvString (base);
+      value = TtaGetEnvString (name+1);
       if (value == NULL)
         {
-          fprintf (stderr, "%s referencing undefined variable %s\n", THOT_INI_FILENAME, base);
-          *cour = save;
+          fprintf (stderr, "%s referencing undefined variable %s\n", THOT_INI_FILENAME, name);
           cour++;
           if CHECK_OVERFLOW
             break;
           continue;
         }
-      *cour = save;
       while (*value)
         {
           *res++ = *value++;
@@ -251,7 +251,7 @@ static void DoVariableSubstitution (char *input, int i_len, char *output,
 /*----------------------------------------------------------------------
   NewRegisterEntry : add a fresh new entry in the Register.
   ----------------------------------------------------------------------*/
-static int NewRegisterEntry (const char *appli, const char *name, char *value,
+static int NewRegisterEntry (const char *appli, const char *name, const char *value,
                              RegistryLevel level)
 {
   char        resu[2000];
@@ -344,7 +344,7 @@ static int NewRegisterEntry (const char *appli, const char *name, char *value,
   AddRegisterEntry : add an entry in the Register, we first check
   that it doesn't already exist especially if the value is empty.
   ----------------------------------------------------------------------*/
-static int AddRegisterEntry (const char *appli, const char *name, char *value,
+static int AddRegisterEntry (const char *appli, const char *name, const char *value,
                              RegistryLevel level, int overwrite)
 {
   char          resu[2000];
@@ -717,7 +717,7 @@ void TtaSetEnvInt (const char *name, int value, int overwrite)
   ----------------------------------------------------------------------*/
 void TtaSetEnvBoolean (const char *name, ThotBool value, int overwrite)
 {
-  char *ptr;
+  const char *ptr;
 
   if (value)
     ptr = "yes";
@@ -730,34 +730,30 @@ void TtaSetEnvBoolean (const char *name, ThotBool value, int overwrite)
   TtaSetEnvString : set the value associated to an environment string,
   for the current application.
   ----------------------------------------------------------------------*/
-void TtaSetEnvString (const char *name, char *value, int overwrite)
+void TtaSetEnvString (const char *name, const char *value, int overwrite)
 {
-  char *tmp = value;
-  
-  /* make sure that value isn't NULL */
-  if (!tmp)
-    tmp = "";
   if (!strcmp (name, "LANG") && value && overwrite)
   {
     strncpy (StandardLANG, value, 2);
     StandardLANG[2] = EOS;
   }
-  AddRegisterEntry (AppRegistryEntryAppli, name, tmp, REGISTRY_USER, overwrite);
+  if(value)
+    AddRegisterEntry (AppRegistryEntryAppli, name, value, REGISTRY_USER, overwrite);
+  else
+    AddRegisterEntry (AppRegistryEntryAppli, name, "", REGISTRY_USER, overwrite);
 }
 
 /*----------------------------------------------------------------------
   TtaSetDefEnvString : set the default value associated to an environment
   string, for the current application.
   ----------------------------------------------------------------------*/
-void TtaSetDefEnvString (const char *name, char *value, int overwrite)
+void TtaSetDefEnvString (const char *name, const char *value, int overwrite)
 {
-  char *tmp = value;
-             
   /* make sure that value isn't NULL */
-  if (!tmp)
-    tmp = "";
-
-  AddRegisterEntry (AppRegistryEntryAppli, name, tmp, REGISTRY_SYSTEM, overwrite);
+  if (value)
+    AddRegisterEntry (AppRegistryEntryAppli, name, value, REGISTRY_SYSTEM, overwrite);
+  else
+    AddRegisterEntry (AppRegistryEntryAppli, name, "", REGISTRY_SYSTEM, overwrite);
 }
 
 /*----------------------------------------------------------------------
@@ -1079,7 +1075,7 @@ static void ImportRegistryFile (char *filename, RegistryLevel level)
         break;
 
       str = string;
-      str = TtaSkipBlanks (str);
+      str = (char*)TtaSkipBlanks (str);
       string[sizeof (string) - 1] = EOS;
       /* Comment starts with a semicolumn */
       if (*str == ';' || *str == '#')
@@ -1088,7 +1084,7 @@ static void ImportRegistryFile (char *filename, RegistryLevel level)
       if (*str == '[')
         {
           str++;
-          str = TtaSkipBlanks (str);
+          str = (char*)TtaSkipBlanks (str);
           base = str;
           while ((*str != EOS) && (*str != ']'))
             str++;
@@ -1107,13 +1103,13 @@ static void ImportRegistryFile (char *filename, RegistryLevel level)
 
       /* entries have the following form : name=value */
       name = str;
-      str = SkipToEqual (str);
+      str = (char*)SkipToEqual (str);
       if (*str != '=')
         continue;
       *str++ = EOS;
-      str = TtaSkipBlanks (str);
+      str = (char*)TtaSkipBlanks (str);
       value = str;
-      str = SkipToEndValue (str);
+      str = (char*)SkipToEndValue (str);
       *str = EOS;
       AddRegisterEntry (appli, name, value, level, TRUE);
     }
@@ -1201,9 +1197,9 @@ static void InitEnviron ()
   /* APP_TMPDIR not defined for compilers */
   if (!pT)
 #ifdef _WINDOWS
-    pT = "c:\temp";
+    pT = TtaStrdup("c:\temp");
 #else /* _WINDOWS */
-  pT = "/tmp";
+  pT = TtaStrdup("/tmp");
 #endif /* _WINDOWS */
   /* create the TMPDIR dir if it doesn't exist */
   if (!TtaMakeDirectory (pT))
@@ -1224,11 +1220,11 @@ static void InitEnviron ()
   ----------------------------------------------------------------------*/
 void TtaInitializeAppRegistry (char *appArgv0)
 {
-  char        app_home[MAX_PATH];
-  char        filename[MAX_PATH];
+  char        app_home[MAX_PATH] = "";
+  char        filename[MAX_PATH] = "";
   char       *my_path;
   char       *dir_end = NULL;
-  char       *appName; 
+  const char *appName = "amaya";
   char       *ptr;
 #ifdef _WINGUI
   /* name in Windows NT 4 is 20 chars */
@@ -1359,7 +1355,6 @@ void TtaInitializeAppRegistry (char *appArgv0)
    */
   /* IV june 2004: force the appName to use the amaya temporary directory
      with thot compilers */
-  appName = "amaya";
   AppRegistryEntryAppli = TtaStrdup (appName);
   AppNameW = TtaStrdup (appName);
 #ifdef HAVE_LSTAT
@@ -1683,7 +1678,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
                       REGISTRY_SYSTEM, FALSE);
 
   /* read the user's preferences (if they exist) */
-  if (app_home && *app_home != EOS)
+  if (app_home[0] != EOS)
     {
 #ifdef _MACOS
       if (!TtaDirExists (app_home_mac))

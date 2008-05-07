@@ -37,7 +37,7 @@ static char        CSSpath[500];
 static Document    CSSdocument;
 static Element    *CSSlink = NULL;
 /* Use the same order of CSSCategory defined in css.h */
-static char       *DisplayCategory[]={
+static const char       *DisplayCategory[]={
   "[x] " /*CSS_Unknown*/,
   "[U] " /*CSS_USER_STYLE*/,
   "[S] " /*CSS_DOCUMENT_STYLE*/,
@@ -703,7 +703,7 @@ char *CssToPrint (Document doc, char *printdir)
   Apply the current set of CSS properties to the current selection
   Add is TRUE when data is added to the existing style
   -----------------------------------------------------------------------*/
-void GenerateStyle (char * data , ThotBool add)
+void GenerateStyle (const char * data , ThotBool add)
 {
   Element             el, firstC, lastC;
   Attribute           attr = NULL;
@@ -1150,9 +1150,9 @@ void DoSelectBgColor (Document doc, View view)
   CleanUpAttribute removes the CSS rule (data) from the attribute value
   Return TRUE if the selection will change
   -----------------------------------------------------------------------*/
-static ThotBool CleanUpAttribute (Attribute attr, char *data, Element el, Document doc)
+static ThotBool CleanUpAttribute (Attribute attr, const char *data, Element el, Document doc)
 {
-  char     *buffer, *property, *start, *stop, *ptr;
+  char     *buffer, *property, *start, *stop, *ptr, *old;
   int       lg;
   ThotBool  selChange = FALSE;
 
@@ -1199,7 +1199,9 @@ static ThotBool CleanUpAttribute (Attribute attr, char *data, Element el, Docume
               TtaSetAttributeText (attr, buffer, el, doc);
             }
           // unapply the CSS property
-          ParseHTMLSpecificStyle (el, data, doc, 2000, TRUE);
+          old = TtaStrdup(data);
+          ParseHTMLSpecificStyle (el, old, doc, 2000, TRUE);
+          TtaFreeMemory(old);
           TtaSetDocumentModified (doc);
         }
       TtaFreeMemory (buffer);
@@ -1212,7 +1214,7 @@ static ThotBool CleanUpAttribute (Attribute attr, char *data, Element el, Docume
   RemoveSpecificStyle
   Remove a css property
   ----------------------------------------------------------------------*/
-ThotBool RemoveSpecificStyle (Document doc, char *cssproperty)
+ThotBool RemoveSpecificStyle (Document doc, const char *cssproperty)
 {
   Element         el, parent1, parent2;
   ElementType	    elType;

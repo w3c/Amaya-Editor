@@ -8,7 +8,7 @@
 
 extern void InitTranslationSchemasTable ( void );
 extern void ClearTranslationSchemasTable ( void );
-extern PtrTSchema LoadTranslationSchema ( char *schName,
+extern PtrTSchema LoadTranslationSchema ( const char *schName,
                                           PtrSSchema pSS );
 extern PtrTSchema GetTranslationSchema ( PtrSSchema pSS );
 extern ThotBool IsTranslateTag ( PtrTSchema pTSch,
@@ -18,7 +18,7 @@ extern ThotBool IsTranslateTag ( PtrTSchema pTSch,
 
 extern void InitTranslationSchemasTable ( void );
 extern void ClearTranslationSchemasTable ( void );
-extern PtrTSchema LoadTranslationSchema ( char *schName,
+extern PtrTSchema LoadTranslationSchema ( const char *schName,
                                             PtrSSchema pSS );
 extern PtrTSchema GetTranslationSchema ( PtrSSchema pSS );
 extern ThotBool IsTranslateTag ( PtrTSchema pTSch,

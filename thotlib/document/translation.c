@@ -144,7 +144,7 @@ void TtaSetDoctypeFunction (Proc3 procedure)
   Copy string value into variable buffer named bufferName in translation
   schema pTSch.
   ----------------------------------------------------------------------*/
-static void SetVariableBuffer (PtrTSchema pTSch, char* bufferName, char* value)
+static void SetVariableBuffer (PtrTSchema pTSch, const char* bufferName, char* value)
 {
   int     i, bufNum;
 
@@ -4288,7 +4288,7 @@ static void FlushOutputFiles ()
   tschema into the file fName.
   Returns TRUE if sucessful.
   ----------------------------------------------------------------------*/
-ThotBool ExportDocument (Document doc, char *fName, char *tschema,
+ThotBool ExportDocument (Document doc, const char *fName, const char *tschema,
                          ThotBool recordLineNb)
 {
   PtrDocument         pDoc;
@@ -4840,8 +4840,8 @@ void ExportXmlElement (Document doc, PtrElement pEl,
   selon le schema de traduction de nom tschema et produit le resultat
   dans le fichier de nom fName ou dans le buffer.
   ----------------------------------------------------------------------*/
-void ExportTree (PtrElement pEl, Document doc, char *fName,
-                 char *tschema)
+void ExportTree (PtrElement pEl, Document doc, const char *fName,
+                 const char *tschema)
 {
   PtrDocument         pDoc;
   int                 i;
@@ -4918,7 +4918,7 @@ void ExportTree (PtrElement pEl, Document doc, char *fName,
   name must not be specified in parameter tschema. See
   function TtaSetSchemaPath.
   ----------------------------------------------------------------------*/
-ThotBool TtaExportDocument (Document document, char *fileName, char *tschema)
+ThotBool TtaExportDocument (Document document, const char *fileName, const char *tschema)
 {
   ThotBool ok = FALSE;
 
@@ -4956,8 +4956,8 @@ ThotBool TtaExportDocument (Document document, char *fileName, char *tschema)
   name must not be specified in parameter tschema (See TtaSetSchemaPath)
   skipXTiger is TRUE if XTiger elements are removed
   ----------------------------------------------------------------------*/
-ThotBool TtaExportDocumentWithNewLineNumbers (Document document, char *fileName,
-                                              char *tschema, ThotBool skipXTiger)
+ThotBool TtaExportDocumentWithNewLineNumbers (Document document, const char *fileName,
+                                              const char *tschema, ThotBool skipXTiger)
 {
   ThotBool ok = FALSE;
 

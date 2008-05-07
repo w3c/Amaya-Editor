@@ -11,7 +11,7 @@ extern void ShowMessage ( const char* message,
 extern void ParseStyleDlgValues ( void *style_widget,
                                   char *cssRule );
 extern void DisplayStyleValue ( const char *property,
-                                char *start_value,
+                                const char *start_value,
                                 char *end_value );
 extern ThotBool CreateSelectOperatorDlgWX ( int ref,
                                             ThotWindow parent );
@@ -24,9 +24,9 @@ extern ThotBool CreateInitConfirmDlgWX ( int ref,
                                          char *title,
                                          char *extrabutton,
                                          char *confirmbutton,
-                                         char *label,
-                                         char *label2,
-                                         char *label3 );
+                                         const char *label,
+                                         const char *label2,
+                                         const char *label3 );
 extern ThotBool CreateOpenDocDlgWX ( int ref,
                                      ThotWindow parent,
                                      const char *title,
@@ -174,7 +174,7 @@ extern void ShowMessage ( const char* message,
 extern void ParseStyleDlgValues ( void *style_widget,
                                     char *cssRule );
 extern void DisplayStyleValue ( const char *property,
-                                  char *start_value,
+                                  const char *start_value,
                                   char *end_value );
 extern ThotBool CreateSelectOperatorDlgWX ( int ref,
                                               ThotWindow parent );
@@ -187,9 +187,9 @@ extern ThotBool CreateInitConfirmDlgWX ( int ref,
                                            char *title,
                                            char *extrabutton,
                                            char *confirmbutton,
-                                           char *label,
-                                           char *label2,
-                                           char *label3 );
+                                           const char *label,
+                                           const char *label2,
+                                           const char *label3 );
 extern ThotBool CreateOpenDocDlgWX ( int ref,
                                        ThotWindow parent,
                                        const char *title,

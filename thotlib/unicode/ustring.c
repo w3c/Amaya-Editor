@@ -367,7 +367,7 @@ CHAR_T *ustrstr (const CHAR_T *str, const CHAR_T *strCharSet)
 /*----------------------------------------------------------------------
   TtaGetCharset gives the charset 
   ----------------------------------------------------------------------*/
-CHARSET TtaGetCharset (char *charsetname)
+CHARSET TtaGetCharset (const char *charsetname)
 {
   int index = 0;
 

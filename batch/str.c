@@ -134,7 +134,7 @@ static ThotBool     ImportExcept;  /* we met exception ImportLine or
 /*----------------------------------------------------------------------
   InitBasicType                                                  
   ----------------------------------------------------------------------*/
-static void InitBasicType (SRule *pRule, char *name, BasicType typ)
+static void InitBasicType (SRule *pRule, const char *name, BasicType typ)
 {
   if (pRule->SrName == NULL)
     {

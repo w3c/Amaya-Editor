@@ -136,11 +136,11 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
   else if (!strncasecmp (ptr, "rgb", 3))
     {
       ptr = &ptr[3];
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       if (*ptr == '(')
         {
           ptr++;
-          ptr = TtaSkipBlanks (ptr);
+          ptr = (char*)TtaSkipBlanks (ptr);
           failed = FALSE;
           /* encoded as rgb(red, green, blue) or rgb(red%, green%, blue%) */
           sscanf (ptr, "%d", &r);

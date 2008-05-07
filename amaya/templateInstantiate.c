@@ -544,7 +544,7 @@ Element Template_GetNewSimpleTypeInstance(Document doc, Element parent, Declarat
   Element           newEl = NULL;
 #ifdef TEMPLATES
   ElementType       elType;
-  char             *empty = " ";
+  const char       *empty = " ";
 
   elType.ElSSchema = TtaGetSSchema("Template", doc);
   elType.ElTypeNum = Template_EL_TEXT_UNIT;

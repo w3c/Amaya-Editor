@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern int GetFrameNumber ( ThotWindow win );
 extern void FrameKilled ( int *w,
                           int frame,
@@ -50,8 +49,8 @@ extern void DisplaySelMessage ( char *text,
                                 PtrDocument pDoc );
 extern void TtaSetStatus ( Document document,
                            View view,
-                           char *text,
-                           char *name );
+                           const char *text,
+                           const char *name );
 extern void TtaSetStatusSelectedElement ( Document document,
                                           View view,
                                           Element elem );
@@ -114,7 +113,6 @@ extern const char * TtaGetAppDate ( void );
 extern const char * TtaGetAppYear ( void );
 
 #else /* __STDC__ */
-
 extern int GetFrameNumber ( ThotWindow win );
 extern void FrameKilled ( int *w,
                             int frame,
@@ -159,8 +157,8 @@ extern void DisplaySelMessage ( char *text,
                                   PtrDocument pDoc );
 extern void TtaSetStatus ( Document document,
                              View view,
-                             char *text,
-                             char *name );
+                             const char *text,
+                             const char *name );
 extern void TtaSetStatusSelectedElement ( Document document,
                                             View view,
                                             Element elem );

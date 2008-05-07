@@ -2392,7 +2392,9 @@ static void CreateMathConstruct (int construct, ...)
           attr = TtaNewAttribute (attrType);
           TtaAttachAttribute (child, attr, doc);
           TtaSetAttributeText (attr, "0", child, doc);
-          MathMLlinethickness (doc, child, "0");
+          tmptext = TtaStrdup("0");
+          MathMLlinethickness (doc, child, tmptext);
+          TtaFreeMemory(tmptext);
         
           moveHere = TtaGetFirstChild (TtaGetFirstChild (child));
           TtaDeleteTree (leaf, doc);
@@ -5321,7 +5323,7 @@ ThotBool  GlobalMathAttrInMenu (NotifyAttribute *event)
 {
   ElementType         elType, parentType;
   Element             parent;
-  char               *attr;
+  const char         *attr;
 
   elType = TtaGetElementType (event->element);
 

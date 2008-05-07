@@ -22,7 +22,7 @@ extern void AnalyzeToken ( indLine wi,
                            int *rank,
                            SyntRuleNum *pr );
 extern void ParserEnd ( void );
-extern void InitSyntax ( char *fileName );
+extern void InitSyntax ( const char *fileName );
 
 #else /* __STDC__ */
 
@@ -42,7 +42,7 @@ extern void AnalyzeToken ( indLine wi,
                              int *rank,
                              SyntRuleNum *pr );
 extern void ParserEnd ( void );
-extern void InitSyntax ( char *fileName );
+extern void InitSyntax ( const char *fileName );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

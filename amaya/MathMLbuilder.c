@@ -1213,7 +1213,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
       parent = TtaGetParent (el);
       if (parent != NULL)
         {
-          /* don't process the mo if it is within a base. It will be processed
+          /* don't process the mo if it is within a base.ï¿½It will be processed
              when the enclosing construct is processed (see below) */
           elType = TtaGetElementType (parent);
           if (elType.ElSSchema != MathMLSSchema ||
@@ -2740,7 +2740,7 @@ void MathMLScriptShift (Document doc, Element el, char *value, int attr)
         {
           ctxt->destroy = FALSE;
           /* parse the attribute value (a number followed by a unit) */
-          value = TtaSkipBlanks (value);
+          value = (char*)TtaSkipBlanks (value);
           value = ParseCSSUnit (value, &pval);
           if (pval.typed_data.unit != UNIT_INVALID)
             {
@@ -2899,7 +2899,7 @@ void HandleRowalignAttribute (Attribute attr, Element el, Document doc,
               if (*ptr != EOS)
                 {
                   /* get next word in the attribute value */
-                  ptr = TtaSkipBlanks (ptr);
+                  ptr = (char*)TtaSkipBlanks (ptr);
                   /* process that word */
                   if (*ptr != EOS && *ptr != ' ')
                     {
@@ -3108,7 +3108,7 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
               if (*ptr != EOS)
                 {
                   /* get next word in the attribute value */
-                  ptr = TtaSkipBlanks (ptr);
+                  ptr = (char*)TtaSkipBlanks (ptr);
                   /* process that word */
                   if (*ptr != EOS && *ptr != ' ')
                     {
@@ -3255,7 +3255,7 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
             {
               /* get the next field in the attribute value (a number followed
                  by a unit) */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               if (*ptr != EOS)
                 {
                   ptr = ParseCSSUnit (ptr, &pval);
@@ -3327,7 +3327,7 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
                           spanPtr = ptr;
                           for (i = 1; i < rowspan && *spanPtr != EOS; i++)
                             {
-                              spanPtr = TtaSkipBlanks (spanPtr);
+                              spanPtr = (char*)TtaSkipBlanks (spanPtr);
                               spanPtr = ParseCSSUnit (spanPtr, &pval);
                             }
                           if (pval.typed_data.unit == UNIT_INVALID)
@@ -3525,7 +3525,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
                     {
                       /* parse the next field in the attribute value (a number
                          followed by a unit or a named space) */
-                      ptr = TtaSkipBlanks (ptr);
+                      ptr = (char*)TtaSkipBlanks (ptr);
                       if (*ptr != EOS)
                         {
                           /* is there a columnspan attribute on that cell? */
@@ -3537,7 +3537,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
                           /* skip (colspan - 1) words in the attribute */
                           for (i = 1; i <= colspan && *ptr != EOS; i++)
                             {
-                              ptr = TtaSkipBlanks (ptr);
+                              ptr = (char*)TtaSkipBlanks (ptr);
                               ptr = ConvertNamedSpace (ptr, valueOfNamedSpace);
                               if (valueOfNamedSpace[0] != EOS)
                                 /* it's a named space */
@@ -3724,7 +3724,7 @@ void HandleRowlinesAttribute (Attribute attr, Element el, Document doc,
             if (*ptr != EOS)
               {
                 /* get next word in the attribute value */
-                ptr = TtaSkipBlanks (ptr);
+                ptr = (char*)TtaSkipBlanks (ptr);
                 /* process that word */
                 if (*ptr != EOS && *ptr != ' ')
                   {
@@ -3770,7 +3770,7 @@ void HandleRowlinesAttribute (Attribute attr, Element el, Document doc,
                       spanPtr = ptr;
                       for (i = 1; i < rowspan && *spanPtr != EOS; i++)
                         {
-                          spanPtr = TtaSkipBlanks (spanPtr);
+                          spanPtr = (char*)TtaSkipBlanks (spanPtr);
                           if (*spanPtr != EOS && *spanPtr != ' ')
                             {
                               if (!strncasecmp (spanPtr, "none", 4))
@@ -3935,7 +3935,7 @@ void HandleColumnlinesAttribute (Attribute attr, Element el, Document doc,
                         for (i = 1; i <= colspan && *ptr != EOS; i++)
                           {
                             /* get next word in the attribute value */
-                            ptr = TtaSkipBlanks (ptr);
+                            ptr = (char*)TtaSkipBlanks (ptr);
                             /* process that word */
                             if (*ptr != EOS && *ptr != ' ')
                               {
@@ -4040,7 +4040,7 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
     {
       ptr = value;
       /* parse the first part: horizontal spacing */
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       if (*ptr != EOS)
         {
           ptr = ConvertNamedSpace (ptr, valueOfNamedSpace);
@@ -4062,7 +4062,7 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
               vertPaddingUnit = horizPaddingUnit;
               vertPaddingReal = horizPaddingReal;
               /* parse the second part, if any */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               if (*ptr != EOS)
                 {
                   ptr = ConvertNamedSpace (ptr, valueOfNamedSpace);
@@ -4664,7 +4664,7 @@ void MathMLSetScriptLevel (Document doc, Element el, char *value)
     {
       ctxt->destroy = FALSE;
       /* parse the attribute value (an optional sign and an integer) */
-      value = TtaSkipBlanks (value);
+      value = (char*)TtaSkipBlanks (value);
       relative = (value[0] == '-' || value[0] == '+');
       value = ParseCSSUnit (value, &pval);
       if (pval.typed_data.unit != UNIT_REL &&
@@ -4721,12 +4721,13 @@ void MathMLSetScriptLevel (Document doc, Element el, char *value)
   the element.
   If value is NULL, remove the corresponding Thot presentation rule.
   -----------------------------------------------------------------------*/
-void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
+void MathMLSpacingAttr (Document doc, Element el, const char *value, int attr)
 {
   ElementType         elType;
   PresentationValue   pval;
   PresentationContext ctxt;
   int                 ruleType;
+  char*               tmp = NULL;
 
   /* provisionally, handles only mspace elements */
   elType = TtaGetElementType (el);
@@ -4760,8 +4761,9 @@ void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
     {
       ctxt->destroy = FALSE;
       /* parse the attribute value (a number followed by a unit) */
-      value = TtaSkipBlanks (value);
-      value = ParseCSSUnit (value, &pval);
+      value = (char*)TtaSkipBlanks (value);
+      tmp = TtaStrdup(value);
+      tmp = ParseCSSUnit (tmp, &pval);
       /***** we should accept namedspace for width *****/
       if (pval.typed_data.unit != UNIT_INVALID)
         {
@@ -4771,6 +4773,7 @@ void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
           ctxt->cssSpecificity = 0;
           TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
         }
+      TtaFreeMemory(tmp);
     }
   TtaFreeMemory (ctxt);
 }

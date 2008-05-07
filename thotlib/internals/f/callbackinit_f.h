@@ -7,33 +7,33 @@
 #ifdef __STDC__
 
 extern void InitApplicationSchema ( PtrSSchema pSS );
-extern PtrAction FetchAction ( char *actionName );
-extern void TteAddAction ( char *actionName,
+extern PtrAction FetchAction ( const char *actionName );
+extern void TteAddAction ( const char *actionName,
                            Proc doIt );
-extern PtrEventsSet TteGetEventsSet ( char *name );
+extern PtrEventsSet TteGetEventsSet ( const char *name );
 extern PtrEventsSet TteNewEventsSet ( int structureId,
-                                      char *name );
+                                      const char *name );
 extern void TteAddActionEvent ( PtrEventsSet eventsList,
                                 int typeId,
                                 APPevent event,
                                 ThotBool pre,
-                                char *actionName );
+                                const char *actionName );
 extern void TteFreeAllEventsList ( void );
 
 #else /* __STDC__ */
 
 extern void InitApplicationSchema ( PtrSSchema pSS );
-extern PtrAction FetchAction ( char *actionName );
-extern void TteAddAction ( char *actionName,
+extern PtrAction FetchAction ( const char *actionName );
+extern void TteAddAction ( const char *actionName,
                              Proc doIt );
-extern PtrEventsSet TteGetEventsSet ( char *name );
+extern PtrEventsSet TteGetEventsSet ( const char *name );
 extern PtrEventsSet TteNewEventsSet ( int structureId,
-                                        char *name );
+                                        const char *name );
 extern void TteAddActionEvent ( PtrEventsSet eventsList,
                                   int typeId,
                                   APPevent event,
                                   ThotBool pre,
-                                  char *actionName );
+                                  const char *actionName );
 extern void TteFreeAllEventsList ( void );
 
 #endif /* __STDC__ */

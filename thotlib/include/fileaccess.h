@@ -67,21 +67,21 @@ typedef long ThotFileOffset;
 #endif /* !_WINGUI */
 
 #ifndef __CEXTRACT__
-extern int TtaDirExists ( CONST char *dirpath );
-extern ThotBool TtaFileExist ( CONST char *filename );
-extern int TtaFileUnlink ( CONST char *filename );
+extern int TtaDirExists ( const char *dirpath );
+extern ThotBool TtaFileExist ( const char *filename );
+extern int TtaFileUnlink ( const char *filename );
 extern ThotBool TtaFileRename( const char * oldname, const char * newname );
-extern unsigned long TtaGetFileSize (char *filename);
-extern ThotBool TtaFileCopy ( CONST char *sourceFileName,
-			      CONST char *targetFileName );
+extern unsigned long TtaGetFileSize (const char *filename);
+extern ThotBool TtaFileCopy ( const char *sourceFileName,
+    const char *targetFileName );
 
 /*----------------------------------------------------------------------
    TtaFileCopyUncompress copies a source file into a target file and
    uncompress if necessary
    Return TRUE if the copy is done.
   ----------------------------------------------------------------------*/
-extern ThotBool TtaFileCopyUncompress (CONST char *sourceFile,
-				       CONST char *targetFile);
+extern ThotBool TtaFileCopyUncompress (const char *sourceFile,
+    const char *targetFile);
 
 extern ThotBool TtaReadByte ( BinFile file,
                              unsigned char *bval );
@@ -100,14 +100,14 @@ extern ThotBool TtaReadName ( BinFile file,
 extern char * TtaGetRealFileName(CONST char *name);
 
 #ifndef NODISPLAY
-extern gzFile TtaGZOpen (CONST char *filename);
+extern gzFile TtaGZOpen (const char *filename);
 extern void TtaGZClose (gzFile file);
 #endif /* NODISPLAY */
-extern BinFile TtaReadOpen (CONST char *filename);
+extern BinFile TtaReadOpen (const char *filename);
 extern void TtaReadClose ( BinFile file );
-extern BinFile TtaWriteOpen (CONST char *filename);
-extern BinFile TtaAddOpen (CONST char *filename);
-extern BinFile TtaRWOpen (CONST char *filename);
+extern BinFile TtaWriteOpen (const char *filename);
+extern BinFile TtaAddOpen (const char *filename);
+extern BinFile TtaRWOpen (const char *filename);
 extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
                               char bval );
@@ -116,8 +116,8 @@ extern ThotBool TtaWriteShort ( BinFile file,
                                int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,
                                  int lval );
-extern ThotBool TtaCompareFiles ( CONST char *file1,
-                                 CONST char *file2 );
+extern ThotBool TtaCompareFiles ( const char *file1,
+    const char *file2 );
 
 /*----------------------------------------------------------------------
    TtaMakeDirectory

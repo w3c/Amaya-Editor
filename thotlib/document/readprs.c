@@ -1329,7 +1329,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
   Retourne un pointeur sur le schema de presentation en memoire	
   chargement reussi, NULL si echec.				
   ----------------------------------------------------------------------*/
-PtrPSchema      ReadPresentationSchema (char *fileName, PtrSSchema pSS)
+PtrPSchema      ReadPresentationSchema (const char *fileName, PtrSSchema pSS)
 {
   PtrPRule            pNextPRule;
   PtrPSchema          pPSch;

@@ -19,7 +19,7 @@
 GetSchemaFromDocType: Returns the name of the schema corresponding to 
 a doc type.
 ----------------------------------------------------------------------*/
-char *GetSchemaFromDocType (DocumentType docType)
+const char *GetSchemaFromDocType (DocumentType docType)
 {
 #ifdef TEMPLATES
 	switch (docType)
@@ -44,7 +44,7 @@ char *GetSchemaFromDocType (DocumentType docType)
 /*----------------------------------------------------------------------
 Set the value of a string attribute 
 ----------------------------------------------------------------------*/
-void SetAttributeStringValue (Element el, int att, char* value)
+void SetAttributeStringValue (Element el, int att, const char* value)
 {
 #ifdef TEMPLATES
   Document      doc = TtaGetDocument(el);
@@ -504,7 +504,7 @@ ThotBool SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
   
   localFile = GetLocalPath (newdoc, newpath);
   // update all links
-  SetRelativeURLs (doc, newpath, "", FALSE, FALSE, FALSE);
+  SetRelativeURLs (doc, newpath, NULL, FALSE, FALSE, FALSE);
   // prepare the new document view
   TtaExtractName (newpath, DirectoryName, DocumentName);
 

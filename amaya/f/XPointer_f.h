@@ -8,9 +8,9 @@
 
 extern Element AGetRootElement ( Document doc );
 extern Element SearchAttrId ( Element root,
-                              char *val );
+                              const char *val );
 extern Element SearchSiblingIndex ( Element root,
-                                    char *el_name,
+                                    const char *el_name,
                                     int *index );
 extern ThotBool SearchTextPosition ( Element *mark,
                                      int *firstCh );
@@ -29,9 +29,9 @@ extern void XPointer_bufferFree ( void );
 
 extern Element AGetRootElement ( Document doc );
 extern Element SearchAttrId ( Element root,
-                                char *val );
+                                const char *val );
 extern Element SearchSiblingIndex ( Element root,
-                                      char *el_name,
+                                      const char *el_name,
                                       int *index );
 extern ThotBool SearchTextPosition ( Element *mark,
                                        int *firstCh );

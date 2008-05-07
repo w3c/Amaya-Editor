@@ -171,7 +171,7 @@ extern const char *TtaGetStrError (int errorCode);
    which sizes are sufficient to contain the path and      
    the file name.                                          
   ----------------------------------------------------------------------*/
-extern void TtaExtractName (char *text, char *aDirectory, char *aName);
+extern void TtaExtractName (const char *text, char *aDirectory, char *aName);
 
 /*----------------------------------------------------------------------
    TtaIsPrinting returns TRUE is the application is printing.    

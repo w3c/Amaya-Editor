@@ -364,7 +364,7 @@ void HTTP_headers_set (HTRequest *request, HTResponse *response,
       if (tmp_atom)
         tmp_char = HTAtom_name (tmp_atom);
       else
-        tmp_char = "www/unknown";
+        tmp_char = (char*)"www/unknown";
       
       if (tmp_char && tmp_char[0] != EOS)
         {
@@ -552,7 +552,7 @@ AHTReqContext *AHTReqContext_new (int docid)
   AHTDocId_Status    *docid_status;
 
   if ((me = (AHTReqContext *) TtaGetMemory (sizeof (AHTReqContext))) == NULL)
-    outofmem (__FILE__, "AHTReqContext_new");
+    outofmem ((char*)__FILE__, (char*)"AHTReqContext_new");
 
   /* clear the structure */
   memset ((void *) me, 0, sizeof (AHTReqContext));
@@ -1103,7 +1103,7 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
     }
   else
     {
-      HTRequest_addError (request, ERR_FATAL, NO, HTERR_MAX_REDIRECT, NULL, 0, "HTRedirectFilter");
+      HTRequest_addError (request, ERR_FATAL, NO, HTERR_MAX_REDIRECT, NULL, 0, (char*)"HTRedirectFilter");
       /* so that we can show the error message */
       if (me->error_html)
         DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
@@ -2870,7 +2870,7 @@ static char * NextNameValue (char **pstr, char **name, char **value)
 /*----------------------------------------------------------------------
   PrepareFormdata
   ---------------------------------------------------------------------*/
-static   HTAssocList * PrepareFormdata (char *string)
+static   HTAssocList * PrepareFormdata (const char *string)
 {
   char          *tmp_string, *tmp_string_ptr;
   char          *name;
@@ -2917,18 +2917,18 @@ void AHTRequest_setRefererHeader (AHTReqContext  *me)
       rqhd = (HTRqHd)((int)rqhd & (~HT_C_REFERER));      
 
       HTRequest_setRqHd (request, rqhd);
-      HTRequest_addExtraHeader (request, "Referer", me->refdocUrl);
+      HTRequest_addExtraHeader (request, (char*)"Referer", (char*)me->refdocUrl);
     }
 }
 
 /*----------------------------------------------------------------------
   ---------------------------------------------------------------------*/
-void AHTRequest_setCustomAcceptHeader (HTRequest *request, char *value)
+void AHTRequest_setCustomAcceptHeader (HTRequest *request, const char *value)
 {				
   HTRqHd rqhd = HTRequest_rqHd (request);
   rqhd = (HTRqHd)((int)rqhd & (~HT_C_ACCEPT_TYPE));
   HTRequest_setRqHd (request, rqhd);
-  HTRequest_addExtraHeader (request, "Accept", value);
+  HTRequest_addExtraHeader (request, (char*)"Accept", (char*)value);
 }
 
 /*----------------------------------------------------------------------
@@ -3021,10 +3021,10 @@ void InvokeGetObjectWWW_callback (int docid, char *urlName,
   HT_ERROR
   HT_OK
   ----------------------------------------------------------------------*/
-int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
+int GetObjectWWW (int docid, int refdoc, char *urlName, const char *formdata,
                   char *outputfile, int mode, TIcbf *incremental_cbf, 
                   void *context_icbf, TTcbf *terminate_cbf, 
-                  void *context_tcbf, ThotBool error_html, char *content_type)
+                  void *context_tcbf, ThotBool error_html, const char *content_type)
 {
   AHTReqContext      *me;
   char               *ref;

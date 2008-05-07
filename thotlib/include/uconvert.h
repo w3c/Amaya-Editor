@@ -29,7 +29,7 @@ extern wchar_t TtaGetWCFromChar (unsigned char c, CHARSET encoding);
   Returns the number of bytes in the multibyte character or -1
   The pointer to the source multibyte string is updated.
   ----------------------------------------------------------------------*/
-extern int TtaMBstringToWC (unsigned char **src, wchar_t *dest);
+extern int TtaMBstringToWC (const unsigned char **src, wchar_t *dest);
 
 /*----------------------------------------------------------------------
   TtaWCToMBs converts a wide character into a multibyte string according to
@@ -63,7 +63,7 @@ extern unsigned char *TtaConvertWCToByte (wchar_t *src, CHARSET encoding);
   JIS) into a wide character.
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern wchar_t *TtaConvertByteToWC (unsigned char *src, CHARSET encoding);
+extern wchar_t *TtaConvertByteToWC (const unsigned char *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
   TtaConvertByteToMbs converts the src (1 or 2 bytes) into a UTF-8
@@ -79,7 +79,7 @@ extern unsigned char *TtaConvertByteToMbs (unsigned char *src, CHARSET encoding)
   Returns the length of the treated source string.
   The returned string should be freed by the caller.
   ----------------------------------------------------------------------*/
-extern unsigned char *TtaConvertByteToMbsWithCheck (unsigned char *src,
+extern unsigned char *TtaConvertByteToMbsWithCheck (const unsigned char *src,
                                                     CHARSET encoding, int *length);
 
 /*-------------------------------------------------------------
@@ -87,14 +87,14 @@ extern unsigned char *TtaConvertByteToMbsWithCheck (unsigned char *src,
   Byte string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern unsigned char *TtaConvertMbsToByte (unsigned char *src, CHARSET encoding);
+extern unsigned char *TtaConvertMbsToByte (const unsigned char *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
   TtaConvertMbsToCHAR converts a UTF-8 string (8-bit) into CHAR_T
   string (8-bit or 16-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern CHAR_T *TtaConvertMbsToCHAR (unsigned char *src);
+extern CHAR_T *TtaConvertMbsToCHAR (const unsigned char *src);
 
 /*-------------------------------------------------------------
   TtaConvertCHARToByte converts the src CHAR_T* into an ISO
@@ -108,6 +108,6 @@ extern unsigned char *TtaConvertCHARToByte (CHAR_T *src, CHARSET encoding);
   string.
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern CHAR_T *TtaConvertByteToCHAR (unsigned char *src, CHARSET encoding);
+extern CHAR_T *TtaConvertByteToCHAR (const unsigned char *src, CHARSET encoding);
 
 #endif /* __UCONVERT_H__ */

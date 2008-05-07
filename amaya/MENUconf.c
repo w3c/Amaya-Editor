@@ -113,7 +113,7 @@ static Prop_Publish GProp_Publish;
 static int          SafePutStatus;
 static int          CurrentCharset;
 static char         NewCharset[MAX_LENGTH];
-static char        *CharsetTxt[]={
+static const char  *CharsetTxt[]={
   "us-ascii", "iso-8859-1", "utf-8"
 };
 
@@ -191,7 +191,7 @@ static ThotBool _GetSysUserName (char *username)
   GetEnvString: front end to TtaGetEnvString. If the variable name doesn't
   exist, it sets the value to an empty ("") string
   ----------------------------------------------------------------------*/
-static void  GetEnvString (char *name, char  *value)
+static void  GetEnvString (const char *name, char  *value)
 {
   char   *ptr;
 
@@ -332,7 +332,7 @@ void InitAmayaDefEnv (void)
   care of switching the toggle button according to the status of the
   variable.
   ----------------------------------------------------------------------*/
-static void GetDefEnvToggle (char *name, ThotBool *value, int ref, int entry)
+static void GetDefEnvToggle (const char *name, ThotBool *value, int ref, int entry)
 {
   ThotBool old = *value;
 
@@ -350,7 +350,7 @@ static void GetDefEnvToggle (char *name, ThotBool *value, int ref, int entry)
   GetDefEnvString: front end to TtaGetDefEnvString. If the variable name 
   doesn't exist, it sets the value to an empty ("") string
   ----------------------------------------------------------------------*/
-static void GetDefEnvString (char *name, char  *value)
+static void GetDefEnvString (const char *name, char  *value)
 {
   char  *ptr;
 
@@ -1422,7 +1422,7 @@ static void BuildCharsetSelector (void)
   int         i, i_default;
   int         nbcharset = sizeof(CharsetTxt) / sizeof(char *);
   int         indx, length;
-  char       *entry;
+  const char *entry;
   char        BufMenu[MAX_LENGTH];
 
   /* recopy the propositions  */
@@ -2127,7 +2127,7 @@ void         ColorConfMenu (Document document, View view)
   Restores the default integer geometry values that are stored in a 
   registry entry under the form "x y w h"
   ----------------------------------------------------------------------*/
-static void RestoreDefEnvGeom (char *env_var, Document doc)
+static void RestoreDefEnvGeom (const char *env_var, Document doc)
 {
   /* in order to read the default values from HTML.conf, we erase the 
      registry entry */
@@ -2184,7 +2184,6 @@ static void SetEnvGeom (const char *view_name, Document doc)
 static void RestoreDefaultGeometryConf (void)
 {
   int   doc;
-
   // restore default save geometry on exit
   GetDefEnvToggle ("SAVE_GEOMETRY", &S_Geometry,
                    GeometryBase + mToggleGeom, 0);

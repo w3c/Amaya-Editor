@@ -28,7 +28,7 @@ extern void XmlElementComplete ( ParserData *context,
                                  int *error );
 extern void CreateXmlLinePRule ( Element elText,
                                  Document doc );
-extern void MapGenericXmlElement ( char *XMLName,
+extern void MapGenericXmlElement ( const char *XMLName,
                                    ElementType *elType,
                                    char **mappedName,
                                    Document doc );
@@ -67,7 +67,7 @@ extern void XmlElementComplete ( ParserData *context,
                                    int *error );
 extern void CreateXmlLinePRule ( Element elText,
                                    Document doc );
-extern void MapGenericXmlElement ( char *XMLName,
+extern void MapGenericXmlElement ( const char *XMLName,
                                      ElementType *elType,
                                      char **mappedName,
                                      Document doc );

@@ -16,13 +16,13 @@ extern wchar_t TtaConvertJisToWC ( unsigned char b1,
                                    CHARSET charset );
 extern wchar_t TtaConvertSjisToWC ( unsigned char b1,
                                     unsigned char b2 );
-extern wchar_t TtaGetWCFromJisChar ( unsigned char *c,
+extern wchar_t TtaGetWCFromJisChar ( const unsigned char *c,
                                      CHARSET encoding );
 extern wchar_t TtaGetWCFromChar ( unsigned char c,
                                   CHARSET encoding );
 extern int TtaWCToMBstring ( wchar_t src,
                              unsigned char **dest );
-extern int TtaMBstringToWC ( unsigned char **src,
+extern int TtaMBstringToWC ( const unsigned char **src,
                              wchar_t *dest );
 extern int TtaGetNextWCFromString ( wchar_t *car,
                                     unsigned char **txt,
@@ -31,19 +31,19 @@ extern int TtaGetNumberOfBytesToRead ( unsigned char **txt,
                                        CHARSET encoding );
 extern unsigned char *TtaConvertWCToByte ( wchar_t *src,
                                            CHARSET encoding );
-extern wchar_t *TtaConvertByteToWC ( unsigned char *src,
+extern wchar_t *TtaConvertByteToWC ( const unsigned char *src,
                                      CHARSET encoding );
 extern unsigned char *TtaConvertByteToMbs ( unsigned char *src,
                                             CHARSET encoding );
-extern unsigned char *TtaConvertByteToMbsWithCheck ( unsigned char *src,
+extern unsigned char *TtaConvertByteToMbsWithCheck ( const unsigned char *src,
                                                      CHARSET encoding,
                                                      int *length );
-extern unsigned char *TtaConvertMbsToByte ( unsigned char *src,
+extern unsigned char *TtaConvertMbsToByte ( const unsigned char *src,
                                             CHARSET encoding );
-extern CHAR_T *TtaConvertMbsToCHAR ( unsigned char *src );
+extern CHAR_T *TtaConvertMbsToCHAR ( const unsigned char *src );
 extern unsigned char *TtaConvertCHARToByte ( CHAR_T *src,
                                              CHARSET encoding );
-extern CHAR_T *TtaConvertByteToCHAR ( unsigned char *src,
+extern CHAR_T *TtaConvertByteToCHAR ( const unsigned char *src,
                                       CHARSET encoding );
 
 #else /* __STDC__ */
@@ -58,13 +58,13 @@ extern wchar_t TtaConvertJisToWC ( unsigned char b1,
                                      CHARSET charset );
 extern wchar_t TtaConvertSjisToWC ( unsigned char b1,
                                       unsigned char b2 );
-extern wchar_t TtaGetWCFromJisChar ( unsigned char *c,
+extern wchar_t TtaGetWCFromJisChar ( const unsigned char *c,
                                        CHARSET encoding );
 extern wchar_t TtaGetWCFromChar ( unsigned char c,
                                     CHARSET encoding );
 extern int TtaWCToMBstring ( wchar_t src,
                                unsigned char **dest );
-extern int TtaMBstringToWC ( unsigned char **src,
+extern int TtaMBstringToWC ( const unsigned char **src,
                                wchar_t *dest );
 extern int TtaGetNextWCFromString ( wchar_t *car,
                                       unsigned char **txt,
@@ -73,19 +73,19 @@ extern int TtaGetNumberOfBytesToRead ( unsigned char **txt,
                                          CHARSET encoding );
 extern unsigned char *TtaConvertWCToByte ( wchar_t *src,
                                              CHARSET encoding );
-extern wchar_t *TtaConvertByteToWC ( unsigned char *src,
+extern wchar_t *TtaConvertByteToWC ( const unsigned char *src,
                                        CHARSET encoding );
 extern unsigned char *TtaConvertByteToMbs ( unsigned char *src,
                                               CHARSET encoding );
-extern unsigned char *TtaConvertByteToMbsWithCheck ( unsigned char *src,
+extern unsigned char *TtaConvertByteToMbsWithCheck ( const unsigned char *src,
                                                        CHARSET encoding,
                                                        int *length );
-extern unsigned char *TtaConvertMbsToByte ( unsigned char *src,
+extern unsigned char *TtaConvertMbsToByte ( const unsigned char *src,
                                               CHARSET encoding );
-extern CHAR_T *TtaConvertMbsToCHAR ( unsigned char *src );
+extern CHAR_T *TtaConvertMbsToCHAR ( const unsigned char *src );
 extern unsigned char *TtaConvertCHARToByte ( CHAR_T *src,
                                                CHARSET encoding );
-extern CHAR_T *TtaConvertByteToCHAR ( unsigned char *src,
+extern CHAR_T *TtaConvertByteToCHAR ( const unsigned char *src,
                                         CHARSET encoding );
 
 #endif /* __STDC__ */

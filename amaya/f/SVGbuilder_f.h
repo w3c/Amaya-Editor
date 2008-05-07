@@ -54,7 +54,7 @@ extern void UnknownSVGNameSpace ( ParserData *context,
                                   char* content );
 extern void UpdateTransformAttr ( Element el,
                                   Document doc,
-                                  char *operation,
+                                  const char *operation,
                                   float value,
                                   ThotBool firstParam,
                                   ThotBool increment );
@@ -155,7 +155,7 @@ extern void UnknownSVGNameSpace ( ParserData *context,
                                     char* content );
 extern void UpdateTransformAttr ( Element el,
                                     Document doc,
-                                    char *operation,
+                                    const char *operation,
                                     float value,
                                     ThotBool firstParam,
                                     ThotBool increment );

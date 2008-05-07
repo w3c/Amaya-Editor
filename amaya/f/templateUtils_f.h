@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *GetSchemaFromDocType ( DocumentType docType );
+extern const char *GetSchemaFromDocType ( DocumentType docType );
 extern void SetAttributeStringValue ( Element el,
                                       int att,
-                                      char* value );
+                                      const char* value );
 extern void SetAttributeStringValueWithUndo ( Element el,
                                               int att,
                                               char* value );
@@ -39,10 +39,10 @@ extern ThotBool SaveDocumentToNewDoc ( Document doc,
 
 #else /* __STDC__ */
 
-extern char *GetSchemaFromDocType ( DocumentType docType );
+extern const char *GetSchemaFromDocType ( DocumentType docType );
 extern void SetAttributeStringValue ( Element el,
                                         int att,
-                                        char* value );
+                                        const char* value );
 extern void SetAttributeStringValueWithUndo ( Element el,
                                                 int att,
                                                 char* value );

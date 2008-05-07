@@ -23,7 +23,7 @@
 
 struct unit_def
 {
-   char               *sign;
+   const char         *sign;
    unsigned int        unit;
 };
 

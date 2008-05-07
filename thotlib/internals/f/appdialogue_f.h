@@ -10,7 +10,7 @@ extern void TteInitMenus ( char *name,
                            int number );
 extern int TtaGetMenuActionNumber ( void );
 extern void FreeMenus ( void );
-extern void TteAddMenuAction ( char *actionName,
+extern void TteAddMenuAction ( const char *actionName,
                                Proc procedure,
                                ThotBool state );
 extern int FindMenuAction ( const char *actionName );
@@ -25,7 +25,7 @@ extern void TtaExecuteMenuActionFromActionId ( int action_id,
 extern void TteZeroMenu ( void );
 extern ThotBool TtaIsActionActive ( char *name,
                                     Document doc );
-extern ThotBool TtaIsActionAvailable ( char *name );
+extern ThotBool TtaIsActionAvailable ( const char *name );
 extern void TtaExecuteMenuAction ( const char *actionName,
                                    Document doc,
                                    View view,
@@ -33,7 +33,7 @@ extern void TtaExecuteMenuAction ( const char *actionName,
 extern void TteAddMenu ( int view,
                          int menuID,
                          int itemsNumber,
-                         char *menuName );
+                         const char *menuName );
 extern void TteAddSubMenu ( int menuID,
                             int itemID,
                             int itemsNumber );
@@ -116,7 +116,7 @@ extern void TteInitMenus ( char *name,
                              int number );
 extern int TtaGetMenuActionNumber ( void );
 extern void FreeMenus ( void );
-extern void TteAddMenuAction ( char *actionName,
+extern void TteAddMenuAction ( const char *actionName,
                                  Proc procedure,
                                  ThotBool state );
 extern int FindMenuAction ( const char *actionName );
@@ -131,7 +131,7 @@ extern void TtaExecuteMenuActionFromActionId ( int action_id,
 extern void TteZeroMenu ( void );
 extern ThotBool TtaIsActionActive ( char *name,
                                       Document doc );
-extern ThotBool TtaIsActionAvailable ( char *name );
+extern ThotBool TtaIsActionAvailable ( const char *name );
 extern void TtaExecuteMenuAction ( const char *actionName,
                                      Document doc,
                                      View view,
@@ -139,7 +139,7 @@ extern void TtaExecuteMenuAction ( const char *actionName,
 extern void TteAddMenu ( int view,
                            int menuID,
                            int itemsNumber,
-                           char *menuName );
+                           const char *menuName );
 extern void TteAddSubMenu ( int menuID,
                               int itemID,
                               int itemsNumber );

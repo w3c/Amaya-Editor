@@ -202,7 +202,7 @@ void CheckMandatoryAttribute (Element el, Document doc, int attrNum)
   Attribute      attr;
   AttributeType  attrType;
   int            lineNum;
-  char          *name;
+  const char    *name;
   char           msgBuffer[MaxMsgLength];
 
   elType = TtaGetElementType (el);
@@ -1406,7 +1406,7 @@ static void XhtmlTypeAttrValue (char *val,
   IntWidthRelative for element el.
   oldWidth is -1 or the old image width.
   ----------------------------------------------------------------------*/
-void CreateAttrWidthPercentPxl (char *buffer, Element el,
+void CreateAttrWidthPercentPxl (const char *buffer, Element el,
                                 Document doc, int oldWidth)
 {
   AttributeType   attrTypePxl, attrTypePercent, attrTypeRelative;
@@ -1546,9 +1546,10 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
         /* its not a number. Delete attribute and send an error message */
         {
           TtaRemoveAttribute (el, attrNew, doc);
-          if (strlen (buffer) > MaxMsgLength - 30)
-            buffer[MaxMsgLength - 30] = EOS;
-          sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
+// Replaced by sprintf format
+//          if (strlen (buffer) > MaxMsgLength - 30)
+//            buffer[MaxMsgLength - 30] = EOS;
+          sprintf (msgBuffer, "Invalid attribute value \"%*s\"", 30, buffer);
           HTMLParseError (doc, msgBuffer, 0);
         }
 
@@ -1581,7 +1582,7 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
   Create the corresponding attribute IntHeightPercent or IntHeightPxl.
   oldHeight is -1 or the old image width.
   ----------------------------------------------------------------------*/
-void CreateAttrHeightPercentPxl (char *buffer, Element el,
+void CreateAttrHeightPercentPxl (const char *buffer, Element el,
                                  Document doc, int oldHeight)
 {
   AttributeType   attrTypePxl, attrTypePercent;
@@ -1689,9 +1690,10 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
         /* its not a number. Delete attribute and send an error message */
         {
           TtaRemoveAttribute (el, attrNew, doc);
-          if (strlen (buffer) > MaxMsgLength - 30)
-            buffer[MaxMsgLength - 30] = EOS;
-          sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
+// Replaced by sprintf format
+//          if (strlen (buffer) > MaxMsgLength - 30)
+//            buffer[MaxMsgLength - 30] = EOS;
+          sprintf (msgBuffer, "Invalid attribute value \"%*s\"", 30, buffer);
           HTMLParseError (doc, msgBuffer, 0);
         }
 

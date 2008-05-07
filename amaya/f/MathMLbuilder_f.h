@@ -103,7 +103,7 @@ extern void MathMLSetScriptLevel ( Document doc,
                                    char *value );
 extern void MathMLSpacingAttr ( Document doc,
                                 Element el,
-                                char *value,
+                                const char *value,
                                 int attr );
 extern void MathMLSetDisplaystyleAttr ( Element el,
                                         Attribute attr,
@@ -214,7 +214,7 @@ extern void MathMLSetScriptLevel ( Document doc,
                                      char *value );
 extern void MathMLSpacingAttr ( Document doc,
                                   Element el,
-                                  char *value,
+                                  const char *value,
                                   int attr );
 extern void MathMLSetDisplaystyleAttr ( Element el,
                                           Attribute attr,

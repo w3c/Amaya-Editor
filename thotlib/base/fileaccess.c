@@ -681,11 +681,11 @@ ThotBool TtaWriteInteger (BinFile file, int lval)
    which sizes are sufficient to contain the path and      
    the file name.                                          
   ----------------------------------------------------------------------*/
-void TtaExtractName (char *text, char *aDirectory, char *aName)
+void TtaExtractName (const char *text, char *aDirectory, char *aName)
 {
   int                lg, i, j;
-  char              *ptr;
-  char              *oldptr;
+  const char              *ptr;
+  const char              *oldptr;
   
   if (text == NULL || aDirectory == NULL || aName == NULL)
     /* No input text or error in input parameters */
@@ -743,7 +743,7 @@ void TtaExtractName (char *text, char *aDirectory, char *aName)
    dans directory_list le 1er nom du path fourni a` l'appel
    (MakeCompleteName est utilise pour la lecture)          
   ----------------------------------------------------------------------*/
-void MakeCompleteName (char *fname, const char *fext, char *directory_list,
+void MakeCompleteName (const char *fname, const char *fext, char *directory_list,
 		       char *completeName, int *length)
 {
    int                 i, j;
@@ -870,16 +870,19 @@ static ThotBool IsExtended (const char *fileName, const char *extension)
    Si fileName se termine deja par extension, alors copie  
    simplement fileName dans completeName.                  
   ----------------------------------------------------------------------*/
-void FindCompleteName (char *fileName, const char *extension,
+void FindCompleteName (const char *fileName, const char *extension,
 		       PathBuffer directory, PathBuffer completeName,
 		       int *length)
 {
   int              i, j, k, h = 0;
   char            *home_dir = NULL;
+  char             tempfilename[MAX_PATH] = "";
+  const char      *tempfn = fileName;
 
   /* on recopie le repertoire */
   i = strlen (directory);
   j = strlen (fileName);
+  
   /* check for tilde indicating the HOME directory */
   if (directory[0] == '~')
     {
@@ -904,15 +907,17 @@ void FindCompleteName (char *fileName, const char *extension,
   if (strcmp (extension, "PIV") == 0)
     {
       if (j > 4 &&
-	  fileName[j - 4] == '.' && fileName[j - 3] == 'p' &&
-	  fileName[j - 2] == 'i' && fileName[j - 1] == 'v')
-	{
-	  fileName[j - 3] = 'P';
-	  fileName[j - 2] = 'I';
-	  fileName[j - 1] = 'V';
-	}
+          fileName[j - 4] == '.' && fileName[j - 3] == 'p' &&
+          fileName[j - 2] == 'i' && fileName[j - 1] == 'v')
+        {
+          strcpy(tempfilename, fileName);
+          tempfn = tempfilename;
+          tempfilename[j - 3] = 'P';
+          tempfilename[j - 2] = 'I';
+          tempfilename[j - 1] = 'V';
+        }
     }
-  if (!IsExtended (fileName, extension) && extension[0] != EOS)
+  if (!IsExtended (tempfn, extension) && extension[0] != EOS)
     k = strlen (extension) + 1;	/* dont forget the '.' */
   else
     k = 0;
@@ -931,7 +936,7 @@ void FindCompleteName (char *fileName, const char *extension,
   if (i >= 1)
     strcat (completeName, DIR_STR);
   /* on recopie le nom */
-  strcat (completeName, fileName);
+  strcat (completeName, tempfn);
   if (k != 0)
     {
       /* on ajoute l'extension */

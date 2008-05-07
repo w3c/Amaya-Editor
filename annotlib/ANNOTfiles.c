@@ -56,12 +56,12 @@ void ANNOT_SetPath (Document document)
   -----------------------------------------------------------------------*/
 Document ANNOT_NewDocument (Document doc, AnnotMode mode)
 {
-  Document annotDoc;
-  char     *annot_dir;
-  char     *fname;
-  char     *docname;
-  char     *tmpname;
-  char     *tmp;
+  Document    annotDoc;
+  char       *annot_dir;
+  char       *fname;
+  char       *docname;
+  char       *tmpname;
+  const char *tmp;
 
   /* Create a new annotation document */
   annot_dir = GetAnnotDir ();
@@ -273,7 +273,7 @@ void ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   char          *source_url;
   char          *cdate;
   char          *mdate;
-  char          *type;
+  const char    *type;
 #ifdef ANNOT_ON_ANNOT
   Document       thread_doc;
 #endif /* ANNOT_ON_ANNOT */
@@ -993,7 +993,7 @@ void ANNOT_InitDocumentStructure (Document doc, Document docAnnot,
 				  AnnotMeta *annot, AnnotMode mode)
 {
   char *source_doc_title;
-  char *text;
+  const char *text;
 #ifdef ANNOT_ON_ANNOT
   Element el;
   ElementType elType;

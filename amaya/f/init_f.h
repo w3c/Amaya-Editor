@@ -5,14 +5,13 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
-extern char * DocumentTypeString ( Document document );
+extern const char * DocumentTypeString ( Document document );
 extern void DocumentInfo ( Document document,
                            View view );
-extern Document IsDocumentLoaded ( char *documentURL,
-                                   char *form_data );
+extern Document IsDocumentLoaded ( const char *documentURL,
+                                   const char *form_data );
 extern void ExtractParameters ( char *aName,
                                 char *parameters );
 extern void SetArrowButton ( Document doc,
@@ -52,8 +51,8 @@ extern void InitFormAnswer ( Document document,
                              const char *auth_realm,
                              char *server,
                              int i_auth );
-extern void InitInfo ( char *label,
-                       char *info );
+extern void InitInfo ( const char *label,
+                       const char *info );
 extern void InitAlert ( Document document,
                         View view,
                         char *label );
@@ -71,9 +70,9 @@ extern void ConfirmError3L ( Document document,
                              char *confirmbutton );
 extern void InitConfirm3L ( Document document,
                             View view,
-                            char *label1,
-                            char *label2,
-                            char *label3,
+                            const char *label1,
+                            const char *label2,
+                            const char *label3,
                             ThotBool withCancel );
 extern void InitConfirm ( Document document,
                           View view,
@@ -128,7 +127,7 @@ extern void PostInitView ( Document doc,
 extern Document InitDocAndView ( Document oldDoc,
                                  ThotBool replaceOldDoc,
                                  ThotBool inNewWindow,
-                                 char *docname,
+                                 const char *docname,
                                  DocumentType docType,
                                  Document sourceOfDoc,
                                  ThotBool readOnly,
@@ -188,8 +187,8 @@ extern void GetAmayaDoc_callback ( int newdoc,
                                    char *proxyName,
                                    AHTHeaders *http_headers,
                                    void * context );
-extern Document GetAmayaDoc ( char *urlname,
-                              char *form_data,
+extern Document GetAmayaDoc ( const char *urlname,
+                              const char *form_data,
                               Document doc,
                               Document baseDoc,
                               int method,
@@ -266,14 +265,13 @@ extern void CloseHelpWindow ( Document doc,
                               View view );
 
 #else /* __STDC__ */
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
-extern char * DocumentTypeString ( Document document );
+extern const char * DocumentTypeString ( Document document );
 extern void DocumentInfo ( Document document,
                              View view );
-extern Document IsDocumentLoaded ( char *documentURL,
-                                     char *form_data );
+extern Document IsDocumentLoaded ( const char *documentURL,
+                                     const char *form_data );
 extern void ExtractParameters ( char *aName,
                                   char *parameters );
 extern void SetArrowButton ( Document doc,
@@ -313,8 +311,8 @@ extern void InitFormAnswer ( Document document,
                                const char *auth_realm,
                                char *server,
                                int i_auth );
-extern void InitInfo ( char *label,
-                         char *info );
+extern void InitInfo ( const char *label,
+                         const char *info );
 extern void InitAlert ( Document document,
                           View view,
                           char *label );
@@ -332,9 +330,9 @@ extern void ConfirmError3L ( Document document,
                                char *confirmbutton );
 extern void InitConfirm3L ( Document document,
                               View view,
-                              char *label1,
-                              char *label2,
-                              char *label3,
+                              const char *label1,
+                              const char *label2,
+                              const char *label3,
                               ThotBool withCancel );
 extern void InitConfirm ( Document document,
                             View view,
@@ -389,7 +387,7 @@ extern void PostInitView ( Document doc,
 extern Document InitDocAndView ( Document oldDoc,
                                    ThotBool replaceOldDoc,
                                    ThotBool inNewWindow,
-                                   char *docname,
+                                   const char *docname,
                                    DocumentType docType,
                                    Document sourceOfDoc,
                                    ThotBool readOnly,
@@ -449,8 +447,8 @@ extern void GetAmayaDoc_callback ( int newdoc,
                                      char *proxyName,
                                      AHTHeaders *http_headers,
                                      void * context );
-extern Document GetAmayaDoc ( char *urlname,
-                                char *form_data,
+extern Document GetAmayaDoc ( const char *urlname,
+                                const char *form_data,
                                 Document doc,
                                 Document baseDoc,
                                 int method,

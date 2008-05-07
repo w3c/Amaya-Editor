@@ -14,7 +14,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.17  2005-06-23 15:00:48  cvs
+ ** Revision 1.18  2008-05-07 13:49:07  kia
+ ** char* => const char*
+ ** (Regis patches + many many others)
+ **
+ ** Revision 1.17  2005/06/23 15:00:48  cvs
  ** fix 2 memory leak.
  ** (I hope it can help for MacOSX crash on http://www.w3.org/People/all ?)
  ** S. GULLY
@@ -401,14 +405,14 @@ void DAVSaveRegistry (void)
     
     /************* DAVAwareness, DAVAwarenessOnExit ************ */
     if (DAVAwareness == YES) 
-        TtaSetEnvString (DAV_AWARENESS,"yes",TRUE);
+        TtaSetEnvString (DAV_AWARENESS, "yes",TRUE);
     else 
-        TtaSetEnvString (DAV_AWARENESS,"no",TRUE);
+        TtaSetEnvString (DAV_AWARENESS, "no",TRUE);
     
     if (DAVAwarenessExit == YES)
-        TtaSetEnvString (DAV_AWARENESS_EXIT,"yes",TRUE);
+        TtaSetEnvString (DAV_AWARENESS_EXIT, "yes",TRUE);
     else
-        TtaSetEnvString (DAV_AWARENESS_EXIT,"no",TRUE);
+        TtaSetEnvString (DAV_AWARENESS_EXIT, "no",TRUE);
     
     
     /************************** DAVResources ******************** */

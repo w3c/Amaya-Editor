@@ -140,7 +140,8 @@ static void RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
   Returns NULL or a new allocated string.
   styleString returns the last managed position
   ----------------------------------------------------------------------*/
-static char *UpdateCSSImport (char *oldpath, char *newpath, char **styleString)
+static char *UpdateCSSImport (const char *oldpath, const char *newpath,
+                                char **styleString)
 {
   char               *b, *e = NULL, *newString, *oldptr, *sString;
   char                old_url[MAX_LENGTH];
@@ -248,7 +249,7 @@ static char *UpdateCSSImport (char *oldpath, char *newpath, char **styleString)
   Returns NULL or a new allocated styleString.
   ----------------------------------------------------------------------*/
 char *UpdateCSSURLs (Document doc, char *oldpath, char *newpath,
-                     char *imgpath, char *styleString,
+                     const char *imgpath, char *styleString,
                      ThotBool imgSave, ThotBool localimport)
 {
   LoadedImageDesc    *pImage;
@@ -1740,7 +1741,7 @@ static void PutClassName (Attribute attr, char *className, char *buf,
       selector[len+1] = EOS;
       /* get the first name contained in the attribute */
       ptr = (char *)selector;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
     }
   else
     ptr = className;
@@ -1808,7 +1809,7 @@ static void PutClassName (Attribute attr, char *className, char *buf,
         {
           *ptr = c; // restore the character
           ptr++;
-          ptr = TtaSkipBlanks (ptr);
+          ptr = (char*)TtaSkipBlanks (ptr);
         }
       /* and process the next name, if any */
     }
@@ -1818,7 +1819,7 @@ static void PutClassName (Attribute attr, char *className, char *buf,
   BuildClassList
   Build the whole list of class names after the first name.
   ----------------------------------------------------------------------*/
-static int BuildClassList (Document doc, char *buf, int size, char *first)
+static int BuildClassList (Document doc, char *buf, int size, const char *first)
 {
   Element             el;
   Attribute           attr;
@@ -1928,7 +1929,7 @@ void CreateClass (Document doc, View view)
   Element             last_elem;
   ElementType         elType;
   char                a_class[50];
-  char               *elHtmlName;
+  const char         *elHtmlName;
   char               *schName;
   int                 len, i, j;
   int                 firstSelectedChar, lastSelectedChar;

@@ -1274,7 +1274,7 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
   elType = TtaGetElementType (el);
   if (attr)
     {
-      name = GetXMLAttributeName (attrType, elType, doc);
+      name = (char*)GetXMLAttributeName (attrType, elType, doc);
       if (!strcmp (name, "id"))
         {
           if (!TtaIsValidID (attr, FALSE))

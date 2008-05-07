@@ -203,7 +203,7 @@ void  CreateXmlLinePRule (Element elText, Document doc)
 /*----------------------------------------------------------------------
   MapGenericXmlType
   ----------------------------------------------------------------------*/
-void  MapGenericXmlElement (char *XMLName, ElementType *elType,
+void  MapGenericXmlElement (const char *XMLName, ElementType *elType,
 			    char **mappedName, Document doc)
 {
   if (elType->ElSSchema == NULL)

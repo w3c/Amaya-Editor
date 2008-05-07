@@ -29,11 +29,11 @@ extern void CreateHTMLAttribute ( Element el,
                                   Document doc,
                                   Attribute *lastAttribute,
                                   Element *lastAttrElement );
-extern void CreateAttrWidthPercentPxl ( char *buffer,
+extern void CreateAttrWidthPercentPxl ( const char *buffer,
                                         Element el,
                                         Document doc,
                                         int oldWidth );
-extern void CreateAttrHeightPercentPxl ( char *buffer,
+extern void CreateAttrHeightPercentPxl ( const char *buffer,
                                          Element el,
                                          Document doc,
                                          int oldHeight );
@@ -79,11 +79,11 @@ extern void CreateHTMLAttribute ( Element el,
                                     Document doc,
                                     Attribute *lastAttribute,
                                     Element *lastAttrElement );
-extern void CreateAttrWidthPercentPxl ( char *buffer,
+extern void CreateAttrWidthPercentPxl ( const char *buffer,
                                           Element el,
                                           Document doc,
                                           int oldWidth );
-extern void CreateAttrHeightPercentPxl ( char *buffer,
+extern void CreateAttrHeightPercentPxl ( const char *buffer,
                                            Element el,
                                            Document doc,
                                            int oldHeight );

@@ -39,7 +39,7 @@
 
 #define HTML_LIBRARY          "-HTML-" 
 
-char* XTigerHTMLUnions[] = 
+const char* XTigerHTMLUnions[] = 
 {
   "appHTMLInfoTypes", "em strong cite dfn code var samp kbd abbr acronym ins del",
   "appHTMLCharTypes", "i b tt u s big small sub sup q bdo",
@@ -52,7 +52,7 @@ char* XTigerHTMLUnions[] =
 };
 
 
-char* XTigerHTMLElements = "em strong cite dfn code var samp kbd abbr acronym ins del "
+const char* XTigerHTMLElements = "em strong cite dfn code var samp kbd abbr acronym ins del "
                     "i b tt u s big small sub sup q bdo "
                     "input option optgroup select button label "
                     "a font span img br object "

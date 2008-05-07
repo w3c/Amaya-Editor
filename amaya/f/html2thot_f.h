@@ -19,7 +19,7 @@ extern void SetHtmlElemLineNumber ( Element el );
 extern int IsWithinHtmlTable ( void );
 extern void InitMapping ( void );
 extern void HTMLParseError ( Document doc,
-                             char* msg,
+                             const char* msg,
                              int lineNumber );
 extern ThotBool IsCharacterLevelType ( ElementType elType );
 extern ThotBool IsCharacterLevelElement ( Element el );
@@ -81,9 +81,9 @@ extern void ParseExternalHTMLDoc ( Document doc,
 extern void ClearHTMLParser ( void );
 extern void StartParser ( Document doc,
                           char *fileName,
-                          char *documentName,
+                          const char *documentName,
                           char* documentDirectory,
-                          char *pathURL,
+                          const char *pathURL,
                           ThotBool plainText,
                           ThotBool external_doc );
 
@@ -102,7 +102,7 @@ extern void SetHtmlElemLineNumber ( Element el );
 extern int IsWithinHtmlTable ( void );
 extern void InitMapping ( void );
 extern void HTMLParseError ( Document doc,
-                               char* msg,
+                               const char* msg,
                                int lineNumber );
 extern ThotBool IsCharacterLevelType ( ElementType elType );
 extern ThotBool IsCharacterLevelElement ( Element el );
@@ -164,9 +164,9 @@ extern void ParseExternalHTMLDoc ( Document doc,
 extern void ClearHTMLParser ( void );
 extern void StartParser ( Document doc,
                             char *fileName,
-                            char *documentName,
+                            const char *documentName,
                             char* documentDirectory,
-                            char *pathURL,
+                            const char *pathURL,
                             ThotBool plainText,
                             ThotBool external_doc );
 

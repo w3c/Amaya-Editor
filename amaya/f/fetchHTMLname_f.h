@@ -9,7 +9,7 @@
 extern int MapGI ( char *gi,
                    SSchema *schema,
                    Document doc );
-extern void GIType ( char *gi,
+extern void GIType ( const char *gi,
                      ElementType *elType,
                      Document doc );
 extern AttributeMapping *MapAttr ( char *attrName,
@@ -17,9 +17,9 @@ extern AttributeMapping *MapAttr ( char *attrName,
                                    int elemEntry,
                                    ThotBool *level,
                                    Document doc );
-extern AttributeMapping *MapHTMLAttribute ( char *attrName,
+extern AttributeMapping *MapHTMLAttribute ( const char *attrName,
                                             AttributeType *attrType,
-                                            char *elementName,
+                                            const char *elementName,
                                             ThotBool *level,
                                             Document doc );
 
@@ -28,7 +28,7 @@ extern AttributeMapping *MapHTMLAttribute ( char *attrName,
 extern int MapGI ( char *gi,
                      SSchema *schema,
                      Document doc );
-extern void GIType ( char *gi,
+extern void GIType ( const char *gi,
                        ElementType *elType,
                        Document doc );
 extern AttributeMapping *MapAttr ( char *attrName,
@@ -36,9 +36,9 @@ extern AttributeMapping *MapAttr ( char *attrName,
                                      int elemEntry,
                                      ThotBool *level,
                                      Document doc );
-extern AttributeMapping *MapHTMLAttribute ( char *attrName,
+extern AttributeMapping *MapHTMLAttribute ( const char *attrName,
                                               AttributeType *attrType,
-                                              char *elementName,
+                                              const char *elementName,
                                               ThotBool *level,
                                               Document doc );
 

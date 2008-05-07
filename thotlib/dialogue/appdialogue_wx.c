@@ -578,7 +578,8 @@ void TtaRefreshMenuItemStats( int doc_id, void * context, int menu_item_id )
   Menu_Ctl *    item_submenu = NULL;
   int           item_nb = 0;
   int           item_id = menu_item_id;
-  char          item_type = ' ', *name;
+  char          item_type = ' ';
+  const char    *name;
   int           item_action = 0;
   ThotBool      item_enable = FALSE;
   ThotBool      item_toggle = FALSE;

@@ -64,7 +64,7 @@ static void Factor (XPointerContextPtr ctx);
   CtxAddError
   puts an error code in the context
   ----------------------------------------------------------------------*/
-static void CtxAddError (XPointerContextPtr ctx, char *msg)
+static void CtxAddError (XPointerContextPtr ctx, const char *msg)
 {
   if (!ctx->error)
     ctx->error = TtaStrdup (msg);
@@ -91,7 +91,7 @@ int LookupSymbol (XPointerContextPtr ctx, char *s)
 /*----------------------------------------------------------------------
   InsertSymbol
   ----------------------------------------------------------------------*/
-static int InsertSymbol (XPointerContextPtr ctx, char *s, int tok)
+static int InsertSymbol (XPointerContextPtr ctx, const char *s, int tok)
 {
   int len;
   symTableCtx *me = ctx->symtable;
@@ -114,7 +114,7 @@ static int InsertSymbol (XPointerContextPtr ctx, char *s, int tok)
   me->symtable[me->lastentry].token = tok;
   me->symtable[me->lastentry].lexptr = &(me->lexemes[me->lastchar + 1]);
   me->lastchar = me->lastchar + len + 1;
-  strcpy (me->symtable[me->lastentry].lexptr, s);
+  strcpy ((char*)me->symtable[me->lastentry].lexptr, s);
 
   return me->lastentry;
 }
@@ -123,7 +123,7 @@ static int InsertSymbol (XPointerContextPtr ctx, char *s, int tok)
   Actions
  **************************************************/
 
-static void AddChild (XPointerContextPtr ctx, char *node)
+static void AddChild (XPointerContextPtr ctx, const char *node)
 {
   nodeInfo *curNode = ctx->curNode;
 
@@ -198,7 +198,7 @@ static void GotoChild (XPointerContextPtr ctx)
     CtxAddError (ctx, "GotoChild: no such node");
 }
 
-static void GotoId (XPointerContextPtr ctx, char *id)
+static void GotoId (XPointerContextPtr ctx, const char *id)
 {
   nodeInfo *curNode = ctx->curNode;
   

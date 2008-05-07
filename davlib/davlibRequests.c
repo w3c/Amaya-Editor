@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.14  2005-06-21 13:29:35  gully
+ ** Revision 1.15  2008-05-07 13:49:07  kia
+ ** char* => const char*
+ ** (Regis patches + many many others)
+ **
+ ** Revision 1.14  2005/06/21 13:29:35  gully
  ** compilation fix
  ** S. GULLY
  **
@@ -1617,7 +1621,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
          }/*lockdiscovery*/
          else
           { /* the resource is unlocked */ 
-            line = LockLine_newObject (davctx->relativeURI," ",DAVDepth,DAVTimeout,time(NULL));
+            line = LockLine_newObject (davctx->relativeURI, " ", DAVDepth, DAVTimeout,time(NULL));
             
 #ifdef DEBUG_DAV
             fprintf (stderr,"FilterFindLock_handler.... not found, "

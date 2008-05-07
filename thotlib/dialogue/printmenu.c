@@ -358,7 +358,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 #ifndef _WX
        sprintf (&cmd[i], " -w%lu", (intptr_t) FrRef[0]);
 #else /* _WX */
-       sprintf (&cmd[i], " -w%lu", (intptr_t) FrameTable[0].WdFrame);
+       sprintf (&cmd[i], " -w%lu", (long unsigned int)(intptr_t) FrameTable[0].WdFrame);
 #endif /* _WX */
 #endif /* _WINDOWS */
      }
@@ -1173,7 +1173,7 @@ int TtaGetPrintParameter (PrintParameter parameter)
 /*----------------------------------------------------------------------
   TtaSetPrintCommand sets the print command.
   ----------------------------------------------------------------------*/
-void TtaSetPrintCommand (char *command)
+void TtaSetPrintCommand (const char *command)
 {
   strcpy (pPrinter, command);
 }
@@ -1182,7 +1182,7 @@ void TtaSetPrintCommand (char *command)
 /*----------------------------------------------------------------------
   TtaSetPrintSchema fixes the printing schema.
   ----------------------------------------------------------------------*/
-void TtaSetPrintSchema (char *name)
+void TtaSetPrintSchema (const char *name)
 {
   if (strlen(name) >= MAX_NAME_LENGTH)
     TtaError(ERR_invalid_parameter);
@@ -1194,7 +1194,7 @@ void TtaSetPrintSchema (char *name)
 /*----------------------------------------------------------------------
   TtaSetPrintCommand sets the path of ps file.
   ----------------------------------------------------------------------*/
-void TtaSetPsFile (char *path)
+void TtaSetPsFile (const char *path)
 {
   strcpy (PSdir, path);
 }

@@ -61,7 +61,7 @@ typedef wchar_t *STRING;
 /*----------------------------------------------------------------------
   TtaGetCharset gives the charset 
   ----------------------------------------------------------------------*/
-extern CHARSET TtaGetCharset (char *charsetname);
+extern CHARSET TtaGetCharset (const char *charsetname);
 
 /*----------------------------------------------------------------------
   TtaGetLocaleCharset returns the user system charset

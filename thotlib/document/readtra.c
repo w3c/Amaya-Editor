@@ -954,7 +954,7 @@ static void FreeTRulesPres (int pres, PRuleTransl *pPruleTr)
   - fileName: nom du fichier a lire, sans le suffixe .TRA 
   - pSS: schema de structure correspondant, deja rempli.  
   ----------------------------------------------------------------------*/
-PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
+PtrTSchema ReadTranslationSchema (const char* fileName, PtrSSchema pSS)
 {
   BinFile             file;
   PtrTRule            pNextTRule;

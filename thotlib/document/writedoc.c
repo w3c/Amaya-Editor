@@ -191,7 +191,7 @@ static ThotBool simpleSave (PtrDocument pDoc, char *name, ThotBool withEvent)
    Envoie un message et rend false si l'ecriture n'a pu se 
    faire.                                                  
   ----------------------------------------------------------------------*/
-static ThotBool saveWithExtension (PtrDocument pDoc, char *extension)
+static ThotBool saveWithExtension (PtrDocument pDoc, const char *extension)
 {
    char                buf[MAX_TXT_LEN];
    int                 i;

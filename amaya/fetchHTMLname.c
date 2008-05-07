@@ -135,7 +135,7 @@ int MapGI (char *gi, SSchema *schema, Document doc)
    GIType  search in mapping tables the Element type associated with
    a given GI Name. If not found returns zero.
   ----------------------------------------------------------------------*/
-void GIType (char *gi, ElementType *elType, Document doc)
+void GIType (const char *gi, ElementType *elType, Document doc)
 {
   char              c;
   char             *ptr;
@@ -209,9 +209,9 @@ AttributeMapping   *MapAttr (char *attrName, SSchema *schema,
    Search in the Attribute Mapping Table the entry for the attribute
    of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
-AttributeMapping *MapHTMLAttribute (char *attrName,
+AttributeMapping *MapHTMLAttribute (const char *attrName,
 				    AttributeType *attrType,
-				    char *elementName,
+				    const char *elementName,
 				    ThotBool *level,
 				    Document doc)
 {

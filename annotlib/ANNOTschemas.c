@@ -88,7 +88,7 @@ typedef struct _ParseContext
 /*------------------------------------------------------------
    _ListSearchResource
   ------------------------------------------------------------*/
-static RDFResourceP _ListSearchResource( List* list, char* name)
+static RDFResourceP _ListSearchResource( List* list, const char* name)
 {
   List *item = list;
   RDFResourceP resource = NULL;
@@ -311,7 +311,7 @@ static void ReadSchema_callback (Document doc, int status,
 /*------------------------------------------------------------
    ANNOT_FindRDFResource
   ------------------------------------------------------------*/
-RDFResourceP ANNOT_FindRDFResource( List** listP, char* name, ThotBool create )
+RDFResourceP ANNOT_FindRDFResource( List** listP, const char* name, ThotBool create )
 {
   RDFResourceP resource;
 
@@ -477,7 +477,7 @@ static void FreeAnnotNS (void)
   ------------------------------------------------------------
    Sets the base annotation namespace name
   ------------------------------------------------------------*/
-static void SetAnnotNS (char *ns_name)
+static void SetAnnotNS (const char *ns_name)
 {
   ANNOT_NS = TtaStrdup (ns_name);
   ANNOTATION_CLASSNAME = (char *)TtaGetMemory (strlen(ns_name)
@@ -670,7 +670,7 @@ void SCHEMA_InitSchemas (Document doc)
   /* @@ RRS: ANNOT_DEFAULT_TYPE should be accessible from the config menu */
   buffer = TtaGetEnvString ("ANNOT_DEFAULT_TYPE");
   if (!buffer)
-    buffer = "Comment";	/* fallback default type */
+    buffer = TtaStrdup("Comment");	/* fallback default type */
 
   /* two options; user can specify a full property URI or just the localname */
   if (IsW3Path (buffer)) /* full URI */
@@ -707,7 +707,7 @@ void SCHEMA_InitSchemas (Document doc)
   /* @@ RRS: REPLY_DEFAULT_TYPE should be accessible from the config menu */
   buffer = TtaGetEnvString ("REPLY_DEFAULT_TYPE");
   if (!buffer)
-    buffer = "Comment";	/* fallback default type */
+    buffer = TtaStrdup("Comment");	/* fallback default type */
 
   /* two options; user can specify a full property URI or just the localname */
   if (IsW3Path (buffer)) /* full URI */

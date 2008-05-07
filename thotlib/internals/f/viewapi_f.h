@@ -18,7 +18,7 @@ extern View TtaOpenMainView ( Document document,
                               int page_id,
                               int page_position );
 extern View TtaOpenView ( Document document,
-                          char *viewName,
+                          const char *viewName,
                           int x,
                           int y,
                           int w,
@@ -63,7 +63,7 @@ extern char *TtaGetViewName ( Document document,
 extern ThotBool TtaIsViewOpen ( Document document,
                                 View view );
 extern View TtaGetViewFromName ( Document document,
-                                 char *viewName );
+                                 const char *viewName );
 extern void TtaGiveActiveView ( Document * document,
                                 View * view );
 extern int TtaGiveActiveFrame ( void );
@@ -104,7 +104,7 @@ extern View TtaOpenMainView ( Document document,
                                 int page_id,
                                 int page_position );
 extern View TtaOpenView ( Document document,
-                            char *viewName,
+                            const char *viewName,
                             int x,
                             int y,
                             int w,
@@ -149,7 +149,7 @@ extern char *TtaGetViewName ( Document document,
 extern ThotBool TtaIsViewOpen ( Document document,
                                   View view );
 extern View TtaGetViewFromName ( Document document,
-                                   char *viewName );
+                                   const char *viewName );
 extern void TtaGiveActiveView ( Document * document,
                                   View * view );
 extern int TtaGiveActiveFrame ( void );

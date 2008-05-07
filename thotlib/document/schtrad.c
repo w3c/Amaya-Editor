@@ -90,7 +90,7 @@ void ClearTranslationSchemasTable ()
 /*----------------------------------------------------------------------
   LoadTranslationSchema charge un schema de traduction.           
   ----------------------------------------------------------------------*/
-PtrTSchema LoadTranslationSchema (char *schName, PtrSSchema pSS)
+PtrTSchema LoadTranslationSchema (const char *schName, PtrSSchema pSS)
 {
   PtrTSchema          pTSch;
   int                 i;

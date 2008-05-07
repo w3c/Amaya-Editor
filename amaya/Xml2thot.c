@@ -234,7 +234,7 @@ static ThotBool      VirtualDoctype = FALSE;
 /* maximum size of error messages */
 #define MaxMsgLength 200
 
-static void StartOfXmlStartElement (char *name);
+static void StartOfXmlStartElement (const char *name);
 static void DisableExpatParser ();
 static void XhtmlCheckInsert (Element *el, Element parent, Document doc,
                               ThotBool *inserted);
@@ -251,7 +251,7 @@ static void XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
   ChangeXmlParserContextByDTD
   Get the parser context correponding to a given DTD
   ----------------------------------------------------------------------*/
-static void ChangeXmlParserContextByDTD (char *DTDname)
+static void ChangeXmlParserContextByDTD (const char *DTDname)
 {
   CurrentParserCtxt = FirstParserCtxt;
   while (CurrentParserCtxt != NULL &&
@@ -1572,7 +1572,7 @@ static char *GetDefaultNsUri (ThotBool *def_uri)
   NsGetPrefix
   Get the prefix associated with an uri
   ----------------------------------------------------------------------*/
-static char *NsGetPrefix (char *ns_uri)
+static char *NsGetPrefix (const char *ns_uri)
 
 {
   int     i;
@@ -1849,7 +1849,7 @@ static void   XhtmlCheckContext (char *elName, const ElementType * elType,
   Search in the mapping tables the entry for the element elementName and
   returns the corresponding Thot element type.
   ----------------------------------------------------------------------*/
-static void   GetXmlElType (char *ns_uri, char *elementName,
+static void   GetXmlElType (const char *ns_uri, const char *elementName,
                             ElementType *elType, char **mappedName,
                             char *content, ThotBool *level)
 {
@@ -1857,8 +1857,8 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
   ThotBool      isnew;
   char         *s;
   char         *ns_name;
-  ElementType   parentType;
-  Element       parent;
+//  ElementType   parentType;
+//  Element       parent;
 #endif /* XML_GENERIC */
 
   /* initialize all parser contexts if not done yet */
@@ -1971,7 +1971,7 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
   The name of an element type has been read from a start tag.
   Create the corresponding Thot element according to the mapping table.
   ----------------------------------------------------------------------*/
-static void StartOfXmlStartElement (char *name)
+static void StartOfXmlStartElement (const char *name)
 {
   ElementType     elType;
   Element         newElement;
@@ -3446,7 +3446,7 @@ static void     CreateXmlEntity (char *data, int length)
   ParseDoctypeContent
   Parse the content of a DOCTYPE declaration
   -------------------------------------- -------------------------------*/
-static void ParseDoctypeContent (char *data, int length)
+static void ParseDoctypeContent (const char *data, int length)
 {
   ElementType     elType;
   Element  	  doctypeLine, doctypeLeaf, doctypeLineNew, lastChild;
@@ -5167,7 +5167,7 @@ static Element  SetExternalElementType (Element el, Document doc,
   ---------------------------------------------------------------------------*/
 void ParseExternalDocument (char *fileName, char *originalName, Element el,
                             ThotBool isclosed, Document doc, Language lang,
-                            char *typeName)
+                            const char *typeName)
 {
   ElementType   elType;
   Element       parent, oldel;

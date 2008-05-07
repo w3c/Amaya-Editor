@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool Prof_BelongTable ( const char *name );
-extern int Prof_BelongDoctype ( char *name,
+extern int Prof_BelongDoctype ( const char *name,
                                 int docProfile,
                                 ThotBool RO );
 extern void Prof_InitTable ( char *profile );
@@ -28,7 +28,7 @@ extern ThotBool Prof_ShowGUI ( const char* name );
 #else /* __STDC__ */
 
 extern ThotBool Prof_BelongTable ( const char *name );
-extern int Prof_BelongDoctype ( char *name,
+extern int Prof_BelongDoctype ( const char *name,
                                   int docProfile,
                                   ThotBool RO );
 extern void Prof_InitTable ( char *profile );

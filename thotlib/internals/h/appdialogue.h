@@ -14,7 +14,7 @@
 /* Structure of an item in the Actions Table */
 typedef struct _Action_Ctl
 {
-  char         *ActionName;    /* External name of the action           */
+  const char         *ActionName;    /* External name of the action           */
   Proc 		Call_Action;   /* Address C procedure                   */
   char         *ActionEquiv;   /* Displayed text for shortcuts          */
 #ifdef _WX

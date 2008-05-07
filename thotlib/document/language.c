@@ -278,18 +278,22 @@ static ISO639entry	ISO639table[] =
    TtaGetLanguageNameFromCode
    Returns the full name of a language whose RFC-1766 code is known
   ----------------------------------------------------------------------*/
-char *TtaGetLanguageNameFromCode (char *code)
+char *TtaGetLanguageNameFromCode (const char *code)
 {
-  int                 i;
+  const char zh[] = "zh";
+  const char* localcode = code;
+  int        i;
+  
 
   Langbuffer[0] = EOS;
   if (!strcmp (code, "cn") || !strcmp (code, "tw"))
     // a patch to support traditional and simplified chinese
-    strcpy (code, "zh");
+    localcode = zh;
+  
   for (i = 0; Langbuffer[0] == EOS && ISO639table[i].code[0] != EOS; i++)
     {
-      if (!strncasecmp (code, (const char *)ISO639table[i].code, 2))
-	strcpy (Langbuffer, (const char *)ISO639table[i].fullName);
+      if (!strncasecmp (localcode, (const char *)ISO639table[i].code, 2))
+        strcpy (Langbuffer, (const char *)ISO639table[i].fullName);
     }
   return Langbuffer;
 }
@@ -359,7 +363,7 @@ char *GetListOfLanguages (char *buffer, int length, char *languageCode,
    TtaGetLanguageCodeFromName
    Returns the RFC-1766 code for a language whose name is known
   ----------------------------------------------------------------------*/
-char *TtaGetLanguageCodeFromName (char *name)
+char *TtaGetLanguageCodeFromName (const char *name)
 {
   int                 i;
 
@@ -662,7 +666,7 @@ void TtaRemoveLanguage (Language language)
    identifier of that language, 0 if the language is not supported, 
    -1 for an unknown language.
   ----------------------------------------------------------------------*/
-Language TtaGetLanguageIdFromName (char *name)
+Language TtaGetLanguageIdFromName (const char *name)
 { 
   char                code[MAX_LENGTH], *ptr;
   int                 i;

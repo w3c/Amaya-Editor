@@ -624,7 +624,7 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
   If the selection is within a style element and the element type is
   a span adds the data into the style element.
   -----------------------------------------------------------------------*/
-ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, char * data, ThotBool replace)
+ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const char * data, ThotBool replace)
 {
   Element         el, firstSel, lastSel, next, in_line, sibling, child;
   Element         last, parent, enclose, selected;
@@ -640,6 +640,7 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, char * da
   SSchema         templateSSchema;
   int             i, j, firstchar, lastchar, lg, min, max;
   char           *name;
+  char           *tmpdata;
 
   doc = TtaGetSelectedDocument();
   done = FALSE;
@@ -1293,8 +1294,12 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, char * da
                               TtaRegisterElementCreate (in_line, doc);
                               done = TRUE; // action done
                               if (parse && data && data[0] != EOS)
-                                // apply CSS properties
-                                ParseHTMLSpecificStyle (in_line, data, doc, 1000, FALSE);
+                                {
+                                  // apply CSS properties
+                                  tmpdata = TtaStrdup(data);
+                                  ParseHTMLSpecificStyle (in_line, tmpdata, doc, 1000, FALSE);
+                                  TtaFreeMemory(tmpdata);
+                                }
                             }
                           else if (in_line && charlevel)
                             {
@@ -1355,8 +1360,12 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, char * da
                                               TtaRegisterAttributeCreate (newAttr, child, doc);
                                               done = TRUE; // action done
                                               if (parse)
-                                                // apply CSS properties
-                                                ParseHTMLSpecificStyle (child, data, doc, 1000, FALSE);
+                                                {
+                                                  // apply CSS properties
+                                                  tmpdata = TtaStrdup(data);
+                                                  ParseHTMLSpecificStyle (child, tmpdata, doc, 1000, FALSE);
+                                                  TtaFreeMemory(tmpdata);
+                                                }
                                             }
                                           else
                                             {
@@ -3406,7 +3415,7 @@ ThotBool ElementOKforProfile (Element el, Document doc)
       if (profile != L_Other)
         /* the document profile accepts only certain elements and attributes */
         {
-          name = GetXMLElementName (elType, doc);
+          name = (char*) GetXMLElementName (elType, doc);
           if (name == NULL || name[0] == EOS)
             /* this element type is not accepted in the document profile */
             ok = FALSE;
@@ -3420,7 +3429,7 @@ ThotBool ElementOKforProfile (Element el, Document doc)
                 {
                   nextAttr = attr;  TtaNextAttribute (el, &nextAttr);
                   TtaGiveAttributeType (attr, &attrType, &kind);
-                  name = GetXMLAttributeName (attrType, elType, doc);
+                  name = (char*) GetXMLAttributeName (attrType, elType, doc);
                   if (name == NULL || name[0] == EOS)
                     /* this attribute is not valid for this element in the
                        document profile. Delete it */
@@ -4832,7 +4841,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
         }
     }
 
-  attr = GetXMLAttributeName (event->attributeType, elType, event->document);
+  attr = (char*)GetXMLAttributeName (event->attributeType, elType, event->document);
   if (attr[0] == EOS)
     return TRUE;	/* don't put an invalid attribute in the menu */
 

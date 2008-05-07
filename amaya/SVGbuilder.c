@@ -622,7 +622,7 @@ static ThotBool EvaluateFeatures (Attribute attr)
         {
           TtaGiveTextAttributeValue (attr, text, &length);
           ptr = text;
-          ptr = TtaSkipBlanks (ptr);
+          ptr = (char*)TtaSkipBlanks (ptr);
           supported = True;
           while (*ptr != EOS && supported)
             {
@@ -636,7 +636,7 @@ static ThotBool EvaluateFeatures (Attribute attr)
                   while (*ptr != EOS && *ptr != SPACE && *ptr != BSPACE &&
                          *ptr != EOL && *ptr != TAB && *ptr != CR)
                     ptr++;
-                  ptr = TtaSkipBlanks (ptr);
+                  ptr = (char*)TtaSkipBlanks (ptr);
                 }
             }
           ok = supported;
@@ -665,7 +665,7 @@ static ThotBool EvaluateExtensions (Attribute attr)
         {
           TtaGiveTextAttributeValue (attr, text, &length);
           ptr = text;
-          ptr = TtaSkipBlanks (ptr);
+          ptr = (char*)TtaSkipBlanks (ptr);
           supported = True;
           while (*ptr != EOS && supported)
             {
@@ -678,7 +678,7 @@ static ThotBool EvaluateExtensions (Attribute attr)
                   while (*ptr != EOS && *ptr != SPACE && *ptr != BSPACE &&
                          *ptr != EOL && *ptr != TAB && *ptr != CR)
                     ptr++;
-                  ptr = TtaSkipBlanks (ptr);
+                  ptr = (char*)TtaSkipBlanks (ptr);
                 }
             }
           ok = supported;
@@ -709,13 +709,13 @@ static ThotBool EvaluateSystemLanguage (Attribute attr)
           acceptLang = TtaGetEnvString ("ACCEPT_LANGUAGES");
           if (!acceptLang)
             return (ok);
-          acceptLang = TtaSkipBlanks (acceptLang);
+          acceptLang = (char*)TtaSkipBlanks (acceptLang);
           if (*acceptLang != EOS)
             /* the list of user's preferred languages is not empty */
             {
               TtaGiveTextAttributeValue (attr, text, &length);
               ptr = text;
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               while (*ptr != EOS && !ok)
                 {
                   pref = acceptLang;
@@ -731,7 +731,7 @@ static ThotBool EvaluateSystemLanguage (Attribute attr)
                             pref++;
                           if (*pref == ',')
                             pref++;
-                          pref = TtaSkipBlanks (pref);
+                          pref = (char*)TtaSkipBlanks (pref);
                         }
                     }
                   if (!ok)
@@ -742,7 +742,7 @@ static ThotBool EvaluateSystemLanguage (Attribute attr)
                         ptr++;
                       if (*ptr == ',')
                         ptr++;
-                      ptr = TtaSkipBlanks (ptr);
+                      ptr = (char*)TtaSkipBlanks (ptr);
                     }
                 }
             }
@@ -1170,12 +1170,12 @@ static void ParsePreserveAspectRatioAttribute (Attribute attr, Element el,
       if (*ptr != EOS)
         {
           /* skip space characters */
-          ptr = TtaSkipBlanks (ptr);
+          ptr = (char*)TtaSkipBlanks (ptr);
           if (!strncmp (ptr, "defer", 5))
             /* ignore value "defer" */
             {
               ptr+= 5;
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
             }
           /* check the <align> value */
           if (!strncmp (ptr, "none", 4))
@@ -1761,7 +1761,7 @@ static char *GetNumber (char *ptr, int* number, ThotBool *error)
   increment indicates wheter delta is an increment or the total value of
   the translation (only for translations).
   -----------------------------------------------------------------------*/
-void UpdateTransformAttr (Element el, Document doc, char *operation,
+void UpdateTransformAttr (Element el, Document doc, const char *operation,
                           float value, ThotBool firstParam, ThotBool increment)
 {
   ElementType           elType;
@@ -1820,14 +1820,14 @@ void UpdateTransformAttr (Element el, Document doc, char *operation,
                       found = TRUE;
                       strncpy (newPtr, ptr, opLen);
                       ptr += opLen; newPtr += opLen;
-                      ptr = TtaSkipBlanks (ptr);
+                      ptr = (char*)TtaSkipBlanks (ptr);
                       if (*ptr != '(')
                         error = TRUE;
                       else
                         {
                           *newPtr = '('; newPtr++;
                           ptr++;
-                          ptr = TtaSkipBlanks (ptr);
+                          ptr = (char*)TtaSkipBlanks (ptr);
                           if (firstParam)
                             {
                               if (increment || otherValue)
@@ -1858,7 +1858,7 @@ void UpdateTransformAttr (Element el, Document doc, char *operation,
                                   if (*ptr == ',')
                                     {
                                       ptr++;
-                                      ptr = TtaSkipBlanks (ptr);
+                                      ptr = (char*)TtaSkipBlanks (ptr);
                                     }
                                   if (*ptr != ')' && *ptr != EOS &&
                                       (increment || otherValue))
@@ -2141,7 +2141,7 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
       TtaGiveTextAttributeValue (attr, text, &length);
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
       if (pval.typed_data.unit == UNIT_BOX)
         pval.typed_data.unit = UNIT_PX;
@@ -2276,7 +2276,7 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
       TtaGiveTextAttributeValue (attr, text, &length); 
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
       if (pval.typed_data.unit == UNIT_BOX)
         pval.typed_data.unit = UNIT_PX;
@@ -2334,7 +2334,7 @@ void ParseBaselineShiftAttribute (Attribute attr, Element el, Document doc,
       /* parse the attribute value */
       ptr = text;
       /* skip space characters */
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       if (!strncmp (ptr, "baseline", 8))
         {
           pval.typed_data.value = 0;
@@ -2418,7 +2418,7 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
       TtaGiveTextAttributeValue (attr, text, &length);
       ptr = text;
       error = FALSE;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       nbPoints = 0;
       minX = minY = 32000;
       maxX = maxY = 0;
@@ -2436,7 +2436,7 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
           if (*ptr == ',')
             {
               ptr++;
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
             }
           if (!error)
             {
@@ -2452,7 +2452,7 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
                   if (*ptr == ',')
                     {
                       ptr++;
-                      ptr = TtaSkipBlanks (ptr);
+                      ptr = (char*)TtaSkipBlanks (ptr);
                     }
                 }
             }
@@ -2493,46 +2493,46 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
       while (*ptr != EOS && !error)
         {
           /* skip space characters */
-          ptr = TtaSkipBlanks (ptr);
+          ptr = (char*)TtaSkipBlanks (ptr);
           if (!strncmp (ptr, "matrix", 6))
             {
               ptr += 6;
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               if (*ptr != '(')
                 error = TRUE;
               else
                 {
                   ptr++;
-                  ptr = TtaSkipBlanks (ptr);
+                  ptr = (char*)TtaSkipBlanks (ptr);
                   ptr = GetFloat (ptr, &a);
                   if (*ptr == ',')
                     {
                       ptr++;
-                      ptr = TtaSkipBlanks (ptr);
+                      ptr = (char*)TtaSkipBlanks (ptr);
                     }
                   ptr = GetFloat (ptr, &b);
                   if (*ptr == ',')
                     {
                       ptr++;
-                      ptr = TtaSkipBlanks (ptr);
+                      ptr = (char*)TtaSkipBlanks (ptr);
                     }
                   ptr = GetFloat (ptr, &c);
                   if (*ptr == ',')
                     {
                       ptr++;
-                      ptr = TtaSkipBlanks (ptr);
+                      ptr = (char*)TtaSkipBlanks (ptr);
                     }
                   ptr = GetFloat (ptr, &d);
                   if (*ptr == ',')
                     {
                       ptr++;
-                      ptr = TtaSkipBlanks (ptr);
+                      ptr = (char*)TtaSkipBlanks (ptr);
                     }
                   ptr = GetFloat (ptr, &e);
                   if (*ptr == ',')
                     {
                       ptr++;
-                      ptr = TtaSkipBlanks (ptr);
+                      ptr = (char*)TtaSkipBlanks (ptr);
                     }
                   ptr = GetFloat (ptr, &f);
                   if (*ptr != ')')
@@ -2577,13 +2577,13 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
             {
               x = 0;  y = 0;
               ptr += 9;
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               if (*ptr != '(')
                 error = TRUE;
               else
                 {
                   ptr++;
-                  ptr = TtaSkipBlanks (ptr);
+                  ptr = (char*)TtaSkipBlanks (ptr);
                   ptr = GetFloat (ptr, &x);
 #ifndef _GL
                   pval.typed_data.value = 0;
@@ -2602,7 +2602,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                       if (*ptr == ',')
                         {
                           ptr++;
-                          ptr = TtaSkipBlanks (ptr);
+                          ptr = (char*)TtaSkipBlanks (ptr);
                         }
                       ptr = GetFloat (ptr, &y);
                     }
@@ -2622,13 +2622,13 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
           else if (!strncmp (ptr, "scale", 5))
             {
               ptr += 5;
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               if (*ptr != '(')
                 error = TRUE;
               else
                 {
                   ptr++;
-                  ptr = TtaSkipBlanks (ptr);
+                  ptr = (char*)TtaSkipBlanks (ptr);
                   ptr = GetFloat (ptr, &scaleX);
                   if (*ptr == ')')
                     scaleY = scaleX;
@@ -2637,7 +2637,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                       if (*ptr == ',')
                         {
                           ptr++;
-                          ptr = TtaSkipBlanks (ptr);
+                          ptr = (char*)TtaSkipBlanks (ptr);
                         }
                       ptr = GetFloat (ptr, &scaleY);
                     }
@@ -2658,13 +2658,13 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
           else if (!strncmp (ptr, "rotate", 6))
             {
               ptr += 6;
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               if (*ptr != '(')
                 error = TRUE;
               else
                 {
                   ptr++;
-                  ptr = TtaSkipBlanks (ptr);
+                  ptr = (char*)TtaSkipBlanks (ptr);
                   ptr = GetFloat (ptr, &angle);
                   if (*ptr == ')')
                     {
@@ -2676,13 +2676,13 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                       if (*ptr == ',')
                         {
                           ptr++;
-                          ptr = TtaSkipBlanks (ptr);
+                          ptr = (char*)TtaSkipBlanks (ptr);
                         }
                       ptr = GetFloat (ptr, &x);
                       if (*ptr == ',')
                         {
                           ptr++;
-                          ptr = TtaSkipBlanks (ptr);
+                          ptr = (char*)TtaSkipBlanks (ptr);
                         }
                       ptr = GetFloat (ptr, &y);
                     }
@@ -2702,13 +2702,13 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
           else if (!strncmp (ptr, "skewX", 5))
             {
               ptr += 5;
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               if (*ptr != '(')
                 error = TRUE;
               else
                 {
                   ptr++;
-                  ptr = TtaSkipBlanks (ptr);
+                  ptr = (char*)TtaSkipBlanks (ptr);
                   ptr = GetFloat (ptr, &x);
                   if (*ptr == ')')
                     {
@@ -2726,13 +2726,13 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
           else if (!strncmp (ptr, "skewY", 5))
             {
               ptr += 5;
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               if (*ptr != '(')
                 error = TRUE;
               else
                 {
                   ptr++;
-                  ptr = TtaSkipBlanks (ptr);
+                  ptr = (char*)TtaSkipBlanks (ptr);
                   ptr = GetFloat (ptr, &y);
                   if (*ptr == ')')
                     {
@@ -2754,7 +2754,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
           if (!error)
             {
               /* skip spaces and the optional comma */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               if (*ptr == ',')
                 ptr++;
             }
@@ -2786,7 +2786,7 @@ void *ParseValuesDataAttribute (Attribute attr, Element el, Document doc)
       ptr = text;
       while (*ptr != EOS)
         {
-          ptr = TtaSkipBlanks (ptr);
+          ptr = (char*)TtaSkipBlanks (ptr);
           ptr = GetFloat (ptr, &x);
           if (*ptr == ';')
             {
@@ -2794,7 +2794,7 @@ void *ParseValuesDataAttribute (Attribute attr, Element el, Document doc)
             }
           else
             {
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               ptr = GetFloat (ptr, &y);
             }
           TtaAnimPathAddPoint (anim_seg, x, y);
@@ -2826,7 +2826,7 @@ void *ParseFromToDataAttribute (Attribute attrfrom, Attribute attrto,
       TtaGiveTextAttributeValue (attrfrom, text, &length);
       /* parse the attribute content */
       ptr = text;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       ptr = GetFloat (ptr, &x);
       ptr = GetFloat (ptr, &y);
       TtaAnimPathAddPoint (anim_seg, x, y);
@@ -2842,7 +2842,7 @@ void *ParseFromToDataAttribute (Attribute attrfrom, Attribute attrto,
       TtaGiveTextAttributeValue (attrto, text, &length);
       /* parse the attribute content */
       ptr = text;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       ptr = GetFloat (ptr, &x);
       ptr = GetFloat (ptr, &y);
       TtaFreeMemory (text);
@@ -2890,7 +2890,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
       TtaGiveTextAttributeValue (attr, text, &length);
       /* parse the attribute content */
       ptr = text;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       command = *ptr;
       ptr++;
       prevCommand = EOS;
@@ -2913,7 +2913,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'm':
               /* moveto */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               if (relative)
                 {
                   x = xcur;
@@ -2955,7 +2955,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'l':
               /* lineto */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               ptr = GetNumber (ptr, &x, &error);
               if (!error)
                 ptr = GetNumber (ptr, &y, &error);
@@ -2982,7 +2982,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'h':
               /* horizontal lineto */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               ptr = GetNumber (ptr, &x, &error);
               if (!error)
                 {
@@ -3003,7 +3003,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'v':
               /* vertical lineto */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               ptr = GetNumber (ptr, &y, &error);
               if (!error)
                 {
@@ -3024,7 +3024,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'c':
               /* curveto */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               ptr = GetNumber (ptr, &x1, &error);
               if (!error)
                 ptr = GetNumber (ptr, &y1, &error);
@@ -3068,7 +3068,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 's':
               /* smooth curveto */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               ptr = GetNumber (ptr, &x2, &error);
               if (!error)
                 ptr = GetNumber (ptr, &y2, &error);
@@ -3118,7 +3118,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'q':
               /* quadratic Bezier curveto */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               ptr = GetNumber (ptr, &x1, &error);
               if (!error)
                 ptr = GetNumber (ptr, &y1, &error);
@@ -3155,7 +3155,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 't':
               /* smooth quadratic Bezier curveto */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               ptr = GetNumber (ptr, &x, &error);
               if (!error)
                 ptr = GetNumber (ptr, &y, &error);
@@ -3198,7 +3198,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'a':
               /* elliptical arc */
-              ptr = TtaSkipBlanks (ptr);
+              ptr = (char*)TtaSkipBlanks (ptr);
               ptr = GetNumber (ptr, &rx, &error);    /* must be non-negative */
               if (rx < 0)
                 error = TRUE;
@@ -3257,7 +3257,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
                 /* don't expect coordinates after a close path command, only
                    a new command or end of the string */
                 {
-                  ptr = TtaSkipBlanks (ptr);	     
+                  ptr = (char*)TtaSkipBlanks (ptr);	     
                   command = *ptr;
                   ptr++;
                 }
@@ -3304,7 +3304,7 @@ int ParseIntAttribute (Attribute attr)
       TtaGiveTextAttributeValue (attr, text, &length);
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
       TtaFreeMemory (text);
       return pval.typed_data.value;
@@ -3329,7 +3329,7 @@ float ParseFloatAttribute (Attribute attr)
       TtaGiveTextAttributeValue (attr, text, &length);
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       ptr = ParseClampedUnit (ptr, &pval);
       TtaFreeMemory (text);
       return (float) pval.typed_data.value/1000;

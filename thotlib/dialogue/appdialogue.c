@@ -308,7 +308,7 @@ void FreeMenus ()
         }
       for (i = MAX_INTERNAL_CMD; i < FreeMenuAction; i++)
         {
-          TtaFreeMemory (MenuActionList[i].ActionName);
+//          TtaFreeMemory (MenuActionList[i].ActionName);
           MenuActionList[i].ActionName = NULL;
         }
       TtaFreeMemory (MenuActionList);
@@ -363,7 +363,7 @@ void FreeMenus ()
   TteAddMenuAction ajoute une nouvelle action dans la table des      
   actions d'interface.                                            
   ----------------------------------------------------------------------*/
-void TteAddMenuAction (char *actionName, Proc procedure, ThotBool state)
+void TteAddMenuAction (const char *actionName, Proc procedure, ThotBool state)
 {
   char               *ptr;
   int                 lg;
@@ -576,7 +576,7 @@ ThotBool TtaIsActionActive (char *name, Document doc)
   TtaIsActionAvailable
   Returns TRUE if the function is available
   ----------------------------------------------------------------------*/
-ThotBool TtaIsActionAvailable (char *name)
+ThotBool TtaIsActionAvailable (const char *name)
 {
   int      result = 0;
 
@@ -606,7 +606,7 @@ void TtaExecuteMenuAction (const char *actionName, Document doc, View view,
   TteAddMenu ajoute un nouveau menu pour le schema donne. Si le      
   nom de schema est Null, il s'agit des menus pris par defaut.    
   ----------------------------------------------------------------------*/
-void TteAddMenu (int view, int menuID, int itemsNumber, char *menuName)
+void TteAddMenu (int view, int menuID, int itemsNumber, const char *menuName)
 {
   Menu_Ctl           *ptrmenu = NULL;
   Menu_Ctl           *newmenu;

@@ -16,9 +16,9 @@ extern void TtaSetPrintExportFunc ( Func exportFunc );
 extern void TtaSetPrintParameter ( PrintParameter parameter,
                                    int value );
 extern int TtaGetPrintParameter ( PrintParameter parameter );
-extern void TtaSetPrintCommand ( char *command );
-extern void TtaSetPrintSchema ( char *name );
-extern void TtaSetPsFile ( char *path );
+extern void TtaSetPrintCommand ( const char *command );
+extern void TtaSetPrintSchema ( const char *name );
+extern void TtaSetPsFile ( const char *path );
 
 #else /* __STDC__ */
 
@@ -32,9 +32,9 @@ extern void TtaSetPrintExportFunc ( Func exportFunc );
 extern void TtaSetPrintParameter ( PrintParameter parameter,
                                      int value );
 extern int TtaGetPrintParameter ( PrintParameter parameter );
-extern void TtaSetPrintCommand ( char *command );
-extern void TtaSetPrintSchema ( char *name );
-extern void TtaSetPsFile ( char *path );
+extern void TtaSetPrintCommand ( const char *command );
+extern void TtaSetPrintSchema ( const char *name );
+extern void TtaSetPsFile ( const char *path );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

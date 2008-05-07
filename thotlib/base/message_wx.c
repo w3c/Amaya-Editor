@@ -25,6 +25,9 @@ wxString TtaConvMessageToWX( const char * p_message )
    * If needed it's possible to add a conditionnal variable to choose the p_message encoding.
    * See TtaGetMessageTable to understand how MessageTable are filled (in which encoding) */
   //  return wxString( wxConvUTF8.cMB2WC(p_message), *wxConvCurrent );
-  return wxString( p_message, wxConvUTF8 );
+  if(p_message==NULL)
+    return wxString(wxT(""));
+  else
+    return wxString( p_message, wxConvUTF8 );
 }
 #endif /* _WX */

@@ -1135,7 +1135,7 @@ ThotBool GlobalSVGAttrInMenu (NotifyAttribute * event)
 {
   ElementType         elType, parentType;
   Element             parent;
-  char               *attr;
+  const char         *attr;
 
   elType = TtaGetElementType (event->element);
 

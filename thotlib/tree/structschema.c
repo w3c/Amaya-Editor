@@ -144,7 +144,7 @@ void GetSRuleFromName (int *typeNum, PtrSSchema *pSS, char *typeName,
   n'est pas trouve'.                                      
   ----------------------------------------------------------------------*/
 void GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch,
-                          PtrElement pElem, char *attrName, int whichName)
+                          PtrElement pElem, const char *attrName, int whichName)
 {
   int                 i;
   ThotBool            found, newCshema;

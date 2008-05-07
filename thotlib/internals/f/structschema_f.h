@@ -15,7 +15,7 @@ extern void GetSRuleFromName ( int *typeNum,
 extern void GetAttrRuleFromName ( int *attrNum,
                                   PtrSSchema *pSSch,
                                   PtrElement pElem,
-                                  char *attrName,
+                                  const char *attrName,
                                   int whichName );
 extern int GetTypeNumIdentity ( int typeNum,
                                 PtrSSchema pSS );
@@ -128,7 +128,7 @@ extern void GetSRuleFromName ( int *typeNum,
 extern void GetAttrRuleFromName ( int *attrNum,
                                     PtrSSchema *pSSch,
                                     PtrElement pElem,
-                                    char *attrName,
+                                    const char *attrName,
                                     int whichName );
 extern int GetTypeNumIdentity ( int typeNum,
                                   PtrSSchema pSS );

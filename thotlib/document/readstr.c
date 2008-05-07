@@ -350,7 +350,7 @@ static ThotBool ReadConstants (BinFile file, PtrSSchema pSS)
    pSS: schema de structure en memoire a remplir.               	
    Retourne VRAI si chargement reussi, FAUX si echec.              
   ----------------------------------------------------------------------*/
-ThotBool ReadStructureSchema (char * fileName, PtrSSchema pSS)
+ThotBool ReadStructureSchema (const char * fileName, PtrSSchema pSS)
 { 
    BinFile             file;
    PathBuffer          buf;
@@ -482,7 +482,6 @@ ThotBool ReadStructureSchema (char * fileName, PtrSSchema pSS)
 			     }
 		  }
 	  }
-
 	TtaReadClose (file);
 	return TRUE;
      }

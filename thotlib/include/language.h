@@ -71,7 +71,7 @@ extern void TtaRemoveLanguage (Language language);
    identifier of that language, 0 if the language is not supported, 
    -1 for an unknown language.
   ----------------------------------------------------------------------*/
-extern Language TtaGetLanguageIdFromName (char *languageName);
+extern Language TtaGetLanguageIdFromName (const char *languageName);
 
 /*----------------------------------------------------------------------
    TtaGetVarLANG

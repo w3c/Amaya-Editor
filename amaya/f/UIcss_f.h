@@ -24,7 +24,7 @@ extern void UpdateStyleSheet ( char *url,
                                char *tempdoc );
 extern char *CssToPrint ( Document doc,
                           char *printdir );
-extern void GenerateStyle ( char * data,
+extern void GenerateStyle ( const char * data,
                             ThotBool add );
 extern void DoStyleColor ( char *color );
 extern void UpdateStylePanel ( Document doc,
@@ -40,7 +40,7 @@ extern void DoSelectColor ( Document doc,
 extern void DoSelectBgColor ( Document doc,
                               View view );
 extern ThotBool RemoveSpecificStyle ( Document doc,
-                                      char *cssproperty );
+                                      const char *cssproperty );
 extern void DoRemoveColor ( Document doc,
                             View view );
 extern void DoRemoveBgColor ( Document doc,
@@ -116,7 +116,7 @@ extern void UpdateStyleSheet ( char *url,
                                  char *tempdoc );
 extern char *CssToPrint ( Document doc,
                             char *printdir );
-extern void GenerateStyle ( char * data,
+extern void GenerateStyle ( const char * data,
                               ThotBool add );
 extern void DoStyleColor ( char *color );
 extern void UpdateStylePanel ( Document doc,
@@ -132,7 +132,7 @@ extern void DoSelectColor ( Document doc,
 extern void DoSelectBgColor ( Document doc,
                                 View view );
 extern ThotBool RemoveSpecificStyle ( Document doc,
-                                        char *cssproperty );
+                                        const char *cssproperty );
 extern void DoRemoveColor ( Document doc,
                               View view );
 extern void DoRemoveBgColor ( Document doc,

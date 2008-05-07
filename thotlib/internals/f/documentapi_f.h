@@ -29,14 +29,14 @@ extern void TtaAppendDocumentPath ( char *directory );
 extern void TtaSetSchemaPath ( char *path );
 extern SSchema TtaNewNature ( Document document,
                               SSchema schema,
-                              char *natureURI,
-                              char *natureName,
-                              char *presentationName );
+                              const char *natureURI,
+                              const char *natureName,
+                              const char *presentationName );
 extern SSchema TtaNewSchemaExtension ( Document document,
                                        char *extensionName,
                                        char *presentationName );
 extern void TtaSetPSchema ( Document document,
-                            char *presentationName );
+                            const char *presentationName );
 extern void TtaSetDocumentDirectory ( Document document,
                                       char *directory );
 extern void TtaSetDocumentAccessMode ( Document document,
@@ -59,9 +59,9 @@ extern void TtaGetDocumentDirectory ( Document document,
 extern SSchema TtaGetDocumentSSchema ( Document document );
 extern char *TtaGetSSchemaName ( SSchema schema );
 extern char *TtaGetPSchemaName ( SSchema schema );
-extern SSchema TtaGetSSchema ( char *name,
+extern SSchema TtaGetSSchema ( const char *name,
                                Document document );
-extern SSchema TtaGetSSchemaByUri ( char *uriName,
+extern SSchema TtaGetSSchemaByUri ( const char *uriName,
                                     Document document );
 extern ThotBool TtaSameSSchemas ( SSchema schema1,
                                   SSchema schema2 );
@@ -85,14 +85,10 @@ extern Document TtaGetDocumentOfSavedElements ( void );
 extern PtrDocument DocToPtr ( Document document );
 extern void TtaSetANamespaceDeclaration ( Document document,
                                           Element element,
-                                          char *NsPrefix,
-                                          char *NsUri );
+                                          const char *NsPrefix,
+                                          const char *NsUri );
 extern char *TtaGiveNamespaceDeclaration ( Document document,
                                            Element element );
-extern void TtaGiveElemNamespaceDeclarations ( Document document,
-                                               Element element,
-                                               char **declarations,
-                                               char **prefixes );
 extern void TtaFreeElemNamespaceDeclarations ( Document document,
                                                Element element );
 extern void TtaFreeNamespaceDeclarations ( Document document );
@@ -107,18 +103,18 @@ extern ThotBool TtaHasXmlInLineRule ( ElementType elType,
                                       Document document );
 extern void TtaSetXmlInLineRule ( ElementType elType,
                                   Document document );
-extern void TtaAppendXmlElement ( char *xmlName,
+extern void TtaAppendXmlElement ( const char *xmlName,
                                   ElementType *elType,
                                   char **mappedName,
                                   Document document );
-extern void TtaGetXmlElementType ( char *xmlName,
+extern void TtaGetXmlElementType ( const char *xmlName,
                                    ElementType *elType,
                                    char **mappedName,
                                    Document document );
 extern void TtaSetUriSSchema ( SSchema sSchema,
-                               char *sSchemaUri );
-extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
-                                          char *sSchemaName,
+                               const char *sSchemaUri );
+extern void TtaChangeGenericSchemaNames ( const char *sSchemaUri,
+                                          const char *sSchemaName,
                                           Document document );
 extern ThotBool TtaIsXmlSSchema ( SSchema schema );
 extern void TtaAddDocumentReference ( Document document );
@@ -150,14 +146,14 @@ extern void TtaAppendDocumentPath ( char *directory );
 extern void TtaSetSchemaPath ( char *path );
 extern SSchema TtaNewNature ( Document document,
                                 SSchema schema,
-                                char *natureURI,
-                                char *natureName,
-                                char *presentationName );
+                                const char *natureURI,
+                                const char *natureName,
+                                const char *presentationName );
 extern SSchema TtaNewSchemaExtension ( Document document,
                                          char *extensionName,
                                          char *presentationName );
 extern void TtaSetPSchema ( Document document,
-                              char *presentationName );
+                              const char *presentationName );
 extern void TtaSetDocumentDirectory ( Document document,
                                         char *directory );
 extern void TtaSetDocumentAccessMode ( Document document,
@@ -180,9 +176,9 @@ extern void TtaGetDocumentDirectory ( Document document,
 extern SSchema TtaGetDocumentSSchema ( Document document );
 extern char *TtaGetSSchemaName ( SSchema schema );
 extern char *TtaGetPSchemaName ( SSchema schema );
-extern SSchema TtaGetSSchema ( char *name,
+extern SSchema TtaGetSSchema ( const char *name,
                                  Document document );
-extern SSchema TtaGetSSchemaByUri ( char *uriName,
+extern SSchema TtaGetSSchemaByUri ( const char *uriName,
                                       Document document );
 extern ThotBool TtaSameSSchemas ( SSchema schema1,
                                     SSchema schema2 );
@@ -206,14 +202,10 @@ extern Document TtaGetDocumentOfSavedElements ( void );
 extern PtrDocument DocToPtr ( Document document );
 extern void TtaSetANamespaceDeclaration ( Document document,
                                             Element element,
-                                            char *NsPrefix,
-                                            char *NsUri );
+                                            const char *NsPrefix,
+                                            const char *NsUri );
 extern char *TtaGiveNamespaceDeclaration ( Document document,
                                              Element element );
-extern void TtaGiveElemNamespaceDeclarations ( Document document,
-                                                 Element element,
-                                                 char **declarations,
-                                                 char **prefixes );
 extern void TtaFreeElemNamespaceDeclarations ( Document document,
                                                  Element element );
 extern void TtaFreeNamespaceDeclarations ( Document document );
@@ -228,18 +220,18 @@ extern ThotBool TtaHasXmlInLineRule ( ElementType elType,
                                         Document document );
 extern void TtaSetXmlInLineRule ( ElementType elType,
                                     Document document );
-extern void TtaAppendXmlElement ( char *xmlName,
+extern void TtaAppendXmlElement ( const char *xmlName,
                                     ElementType *elType,
                                     char **mappedName,
                                     Document document );
-extern void TtaGetXmlElementType ( char *xmlName,
+extern void TtaGetXmlElementType ( const char *xmlName,
                                      ElementType *elType,
                                      char **mappedName,
                                      Document document );
 extern void TtaSetUriSSchema ( SSchema sSchema,
-                                 char *sSchemaUri );
-extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
-                                            char *sSchemaName,
+                                 const char *sSchemaUri );
+extern void TtaChangeGenericSchemaNames ( const char *sSchemaUri,
+                                            const char *sSchemaName,
                                             Document document );
 extern ThotBool TtaIsXmlSSchema ( SSchema schema );
 extern void TtaAddDocumentReference ( Document document );

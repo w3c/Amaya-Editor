@@ -99,64 +99,33 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void SetComboValue (wxComboBox *combo, char *value)
+static void SetComboValue (wxComboBox *combo, const char *value)
 {
-  wxString current;
-  char    *ptr1, *ptr2, *buffer, c = EOS;
-  int      len, len1;
-
   if (value == NULL)
     return;
-  ptr1 = value;
-  while (*ptr1 == SPACE)
-    ptr1++;
-  ptr2 = ptr1;
-  while (*ptr2 != EOS && *ptr2 != ';')
-    ptr2++;
-  c = *ptr2;
-  if (c != EOS)
-    *ptr2 = EOS;
-  combo->SetStringSelection (TtaConvMessageToWX (ptr1));
-//  combo->SetValue (TtaConvMessageToWX (ptr1));
-  // check if the value is already in the combo list
-  current = combo->GetValue ();
-  len = current.Len();
-  len1 = strlen (ptr1);
-  buffer = NULL;
-  if (len > 0)
-    buffer = TtaStrdup ((const char*)current.mb_str(wxConvUTF8));
-  if (len != len1 || (len > 0 && strncmp (buffer, ptr1, len)))
+  wxString str = TtaConvMessageToWX(value);
+  str.Trim();
+  str = str.BeforeFirst(wxT(';'));
+  
+  combo->SetStringSelection (str);
+  if(combo->GetValue()!=str)
     {
-      // add first the value in the combo box
-      combo->Append (TtaConvMessageToWX (ptr1));
-      combo->SetValue (TtaConvMessageToWX (ptr1));
+      combo->Append (str);
+      combo->SetValue (str);      
     }
-    TtaFreeMemory (buffer);
-  if (c != EOS)
-    *ptr2 = c;
+
 }
 
 /*----------------------------------------------------------------------
   property is TRUE when the value includes the property
   ----------------------------------------------------------------------*/
-static void SetChoiceValue (wxChoice *choice, char *value)
+static void SetChoiceValue (wxChoice *choice, const char *value)
 {
-  char *ptr1, *ptr2, c = EOS;
-
   if (value == NULL)
     return;
-  ptr1 = value;
-  while (*ptr1 == SPACE)
-    ptr1++;
-  ptr2 = ptr1;
-  while (*ptr2 != EOS && *ptr2 != ';')
-    ptr2++;
-  c = *ptr2;
-  if (c != EOS)
-    *ptr2 = EOS;
-  choice->SetStringSelection(TtaConvMessageToWX( ptr1 ));
-  if (c != EOS)
-    *ptr2 = c;
+  wxString str = TtaConvMessageToWX(value);
+  str.Trim();
+  choice->SetStringSelection(str.BeforeFirst(wxT(';')));
 }
 
 /*----------------------------------------------------------------------
@@ -310,7 +279,7 @@ void StyleDlgWX::SetColorTextChanged (int id)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void StyleDlgWX::SetValue (const char *property, char *value)
+void StyleDlgWX::SetValue (const char *property, const char *value)
 {
   wxToolBar* tb = XRCCTRL(*this, "wxID_REPEAT_TOOL", wxToolBar);
   wxCommandEvent  event;

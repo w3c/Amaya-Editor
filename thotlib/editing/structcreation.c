@@ -2595,7 +2595,7 @@ PtrElement CreateOrPasteInText (ThotBool create, ThotBool paste,
   Retourne Faux si le menu est sature' et que la nouvelle entree  
   n'a pas pu etre ajoutee.                                        
   ----------------------------------------------------------------------*/
-static ThotBool AddInsertMenuItem (Name word1, Name word2, Name word3,
+static ThotBool AddInsertMenuItem (const Name word1, const Name word2, const Name word3,
                                    int *prevMenuInd, int *nItems,
                                    int *menuInd, char *menuBuf)
 {

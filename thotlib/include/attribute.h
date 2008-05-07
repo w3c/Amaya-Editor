@@ -82,7 +82,7 @@ extern void TtaSetAttributeValue (Attribute attribute, int value, Element elemen
    document: the document to which the element belongs.
    Must be 0 if element is NULL.
    ---------------------------------------------------------------------- */
-extern void TtaSetAttributeText (Attribute attribute, char *buffer,
+extern void TtaSetAttributeText (Attribute attribute, const char *buffer,
 				 Element element, Document document);
 
 /* ----------------------------------------------------------------------
@@ -155,7 +155,7 @@ extern void TtaGiveAttributeType (Attribute attribute, AttributeType *attributeT
    attrKind: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
    3 = CsReference
    ---------------------------------------------------------------------- */
-extern void TtaGiveAttributeTypeFromName (char *name, Element element, AttributeType *attributeType, int *attrKind);
+extern void TtaGiveAttributeTypeFromName (const char *name, Element element, AttributeType *attributeType, int *attrKind);
 
 /* ----------------------------------------------------------------------
    TtaGiveAttributeTypeFromOriginalName

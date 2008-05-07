@@ -579,7 +579,7 @@ void TtaSetAttributeValue (Attribute attribute, int value,
    document: the document to which the element belongs.
    Must be 0 if element is NULL.
    ---------------------------------------------------------------------- */
-void TtaSetAttributeText (Attribute attribute, char* buffer,
+void TtaSetAttributeText (Attribute attribute, const char* buffer,
                           Element element, Document document)
 {
   int                 lg;
@@ -763,7 +763,7 @@ void TtaGiveAttributeType (Attribute attribute,
    attrKind: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
    3 = CsReference
    ---------------------------------------------------------------------- */
-void TtaGiveAttributeTypeFromName (char *name, Element element,
+void TtaGiveAttributeTypeFromName (const char *name, Element element,
                                    AttributeType *attType, int *attrKind)
 {
   PtrSSchema          pSS;

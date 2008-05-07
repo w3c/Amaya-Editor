@@ -1045,8 +1045,8 @@ static void GeneratePostscriptFont (char r_name[10], char script, int family,
                                     int highlight, int size)
 {
   
-  char        *cfamily = "sthc";
-  char        *efamily = "sthcklmnopqruvwxyzabd";
+  const char        *cfamily = "sthc";
+  const char        *efamily = "sthcklmnopqruvwxyzabd";
 
   if (script != 'E')
     {
@@ -1073,7 +1073,7 @@ static void GeneratePostscriptFont (char r_name[10], char script, int family,
 void GetFontIdentifier (char script, int family, int highlight, int size,
                         TypeUnit unit, char r_name[10], char r_nameX[100])
 {
-  char        *ffamily;
+  const char  *ffamily;
   const char  *wght, *slant;
   char        encoding[3];
 

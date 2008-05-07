@@ -30,7 +30,7 @@ extern ThotBool TextsEqual ( PtrTextBuffer pBuf1,
 extern void CopyTextToText ( PtrTextBuffer pSrceBuf,
                              PtrTextBuffer pCopyBuf,
                              int *len );
-extern int CopyMBs2Buffer ( unsigned char *src,
+extern int CopyMBs2Buffer ( const unsigned char *src,
                             PtrTextBuffer pBuf,
                             int pos,
                             int slength );
@@ -118,7 +118,7 @@ extern ThotBool TextsEqual ( PtrTextBuffer pBuf1,
 extern void CopyTextToText ( PtrTextBuffer pSrceBuf,
                                PtrTextBuffer pCopyBuf,
                                int *len );
-extern int CopyMBs2Buffer ( unsigned char *src,
+extern int CopyMBs2Buffer ( const unsigned char *src,
                               PtrTextBuffer pBuf,
                               int pos,
                               int slength );

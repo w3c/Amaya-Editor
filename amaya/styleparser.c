@@ -61,7 +61,7 @@ typedef char *(*PropertyParser) (Element element,
 /* Description of the set of CSS properties supported */
 typedef struct CSSProperty
 {
-  char                *name;
+  const char          *name;
   PropertyParser       parsing_function;
 }
 CSSProperty;
@@ -269,7 +269,7 @@ static char *SkipString (char *ptr)
   CSSCheckEndValue
   print an error message if another character is found
   ----------------------------------------------------------------------*/
-static char *CSSCheckEndValue (char *cssRule, char *endvalue, char *msg)
+static char *CSSCheckEndValue (char *cssRule, char *endvalue, const char *msg)
 {
   char        c = EOS;
   if (*endvalue != EOS && *endvalue != SPACE && *endvalue != '/' &&
@@ -373,7 +373,7 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
   SkipValue
   skips the value and display an error message if msg is not NULL
   ----------------------------------------------------------------------*/
-static char *SkipValue (char *msg, char *ptr)
+static char *SkipValue (const char *msg, char *ptr)
 {
   char       *deb;
   char        c;
@@ -1501,9 +1501,9 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
     }
 
   if (!width)
-    ParseCSSBorderTopWidth (element, tsch, context, "medium", css, isHTML);
+    ParseCSSBorderTopWidth (element, tsch, context, (char*)"medium", css, isHTML);
   if (!style)
-    ParseCSSBorderStyleTop (element, tsch, context, "none", css, isHTML);
+    ParseCSSBorderStyleTop (element, tsch, context, (char*)"none", css, isHTML);
   if (!color && DoApply)
     {
       /* get the box color */
@@ -1561,9 +1561,9 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
     }
 
   if (!width)
-    ParseCSSBorderLeftWidth (element, tsch, context, "medium", css, isHTML);
+    ParseCSSBorderLeftWidth (element, tsch, context, (char*)"medium", css, isHTML);
   if (!style)
-    ParseCSSBorderStyleLeft (element, tsch, context, "none", css, isHTML);
+    ParseCSSBorderStyleLeft (element, tsch, context, (char*)"none", css, isHTML);
   if (!color && DoApply)
     {
       /* get the box color */
@@ -1621,9 +1621,9 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
     }
 
   if (!width)
-    ParseCSSBorderBottomWidth (element, tsch, context, "medium", css, isHTML);
+    ParseCSSBorderBottomWidth (element, tsch, context, (char*)"medium", css, isHTML);
   if (!style)
-    ParseCSSBorderStyleBottom (element, tsch, context, "none", css, isHTML);
+    ParseCSSBorderStyleBottom (element, tsch, context, (char*)"none", css, isHTML);
   if (!color && DoApply)
     {
       /* get the box color */
@@ -1681,9 +1681,9 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
     }
 
   if (!width)
-    ParseCSSBorderRightWidth (element, tsch, context, "medium", css, isHTML);
+    ParseCSSBorderRightWidth (element, tsch, context, (char*)"medium", css, isHTML);
   if (!style)
-    ParseCSSBorderStyleRight (element, tsch, context, "none", css, isHTML);
+    ParseCSSBorderStyleRight (element, tsch, context, (char*)"none", css, isHTML);
   if (!color && DoApply)
     {
       /* get the box color */
@@ -3793,11 +3793,11 @@ static char *ParseCSSFont (Element element, PSchema tsch,
       ptr = cssRule;
       /* set default variant, style, weight */
       if (!variant)
-        ParseACSSFontVariant (element, tsch, context, "normal", css, isHTML);
+        ParseACSSFontVariant (element, tsch, context, (char*)"normal", css, isHTML);
       if (!style)
-        ParseACSSFontStyle (element, tsch, context, "normal", css, isHTML);
+        ParseACSSFontStyle (element, tsch, context, (char*)"normal", css, isHTML);
       if (!weight)
-        ParseACSSFontWeight (element, tsch, context, "normal", css, isHTML);
+        ParseACSSFontWeight (element, tsch, context, (char*)"normal", css, isHTML);
       /* now parse the font size and the font family */
       if (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS)
         cssRule = ParseACSSFontSize (element, tsch, context, cssRule, css, isHTML, FALSE);
@@ -5500,17 +5500,18 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
     }
 
   if (color && !img)
-    ParseCSSBackgroundImage (element, tsch, ctxt, "none", css, isHTML);
+    ParseCSSBackgroundImage (element, tsch, ctxt, (char*)
+        "none", css, isHTML);
   
   if (img && !repeat)
     ParseACSSBackgroundRepeat (element, tsch, ctxt,
-                               "repeat", css, isHTML);
+        (char*)"repeat", css, isHTML);
   if (img && !position)
     ParseACSSBackgroundPosition (element, tsch, ctxt,
-                                 "0% 0%", css, isHTML, &across);
+        (char*)"0% 0%", css, isHTML, &across);
   if (img && !attach)
     ParseACSSBackgroundAttachment (element, tsch, ctxt,
-                                   "scroll", css, isHTML);
+                                   (char*)"scroll", css, isHTML);
   return (cssRule);
 }
 
@@ -8008,17 +8009,17 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
                 {
                   /* import section */
                   cssRule = &CSSbuffer[import+7];
-                  cssRule = TtaSkipBlanks (cssRule);
+                  cssRule = (char*)TtaSkipBlanks (cssRule);
                   /* save the current line number */
                   newlines += LineNumber;
                   if (!strncasecmp (cssRule, "url", 3))
                     {
                       cssRule = &cssRule[3];
-                      cssRule = TtaSkipBlanks (cssRule);
+                      cssRule = (char*)TtaSkipBlanks (cssRule);
                       if (*cssRule == '(')
                         {
                           cssRule++;
-                          cssRule = TtaSkipBlanks (cssRule);
+                          cssRule = (char*)TtaSkipBlanks (cssRule);
                           quoted = (*cssRule == '"' || *cssRule == '\'');
                           if (quoted)
                             cssRule++;
@@ -8053,7 +8054,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
                         Escaped quotes are not handled. See function SkipQuotedString
                       */
                       cssRule++;
-                      cssRule = TtaSkipBlanks (cssRule);
+                      cssRule = (char*)TtaSkipBlanks (cssRule);
                       base = cssRule;
                       while (*cssRule != EOS &&
                              (*cssRule != '"' ||
@@ -8064,7 +8065,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
                     }
                   /* check if a media is defined */
                   cssRule++;
-                  cssRule = TtaSkipBlanks (cssRule);
+                  cssRule = (char*)TtaSkipBlanks (cssRule);
                   if (*cssRule != ';')
                     {
                       css_media = CheckMediaCSS (cssRule);

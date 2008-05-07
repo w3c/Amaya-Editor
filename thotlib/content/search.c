@@ -730,7 +730,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
   it. It return NULL if the string is not found.
   ----------------------------------------------------------------------*/
 Element TtaSearchText (Document document, Element element, ThotBool forward,
-                       char *text, int *firstCh, int *lastCh, CHARSET encoding)
+                       const char *text, int *firstCh, int *lastCh, CHARSET encoding)
 {
   PtrDocument         pDoc = NULL;
   PtrElement          elFound;

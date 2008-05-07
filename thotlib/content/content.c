@@ -558,7 +558,7 @@ PtrPathSeg CopyPath (PtrPathSeg firstPathEl)
   ----------------------------------------------------------------------*/
 ThotBool StringAndTextEqual (const char *text, PtrTextBuffer pBuf)
 {
-  unsigned char      *ptr;
+  const unsigned char *ptr;
   wchar_t             wc;
   int                 i;
   int                 l, length;
@@ -718,7 +718,7 @@ void CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyBuf, int *len)
   if necessary.
   Returns the number of (wide )characters added in buffers.
   ----------------------------------------------------------------------*/
-int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int slength)
+int CopyMBs2Buffer (const unsigned char *src, PtrTextBuffer pBuf, int pos, int slength)
 {
   PtrTextBuffer       pNext;
   int                 l, length;

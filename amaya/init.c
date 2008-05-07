@@ -366,9 +366,9 @@ void DocumentMetaClear (DocumentMetaDataElement *me)
   Returns a string that represents the document type or the current
   profile.
   ----------------------------------------------------------------------*/
-char * DocumentTypeString (Document document)
+const char * DocumentTypeString (Document document)
 {
-  char *result;
+  const char *result;
   ThotBool isXml;
 
   result = NULL;
@@ -463,7 +463,7 @@ void DocumentInfo (Document document, View view)
   IsDocumentLoaded returns the document identification if the        
   corresponding document is already loaded or 0.          
   ----------------------------------------------------------------------*/
-Document IsDocumentLoaded (char *documentURL, char *form_data)
+Document IsDocumentLoaded (const char *documentURL, const char *form_data)
 {
   int               i;
   ThotBool          found;
@@ -1608,7 +1608,7 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
   InitInfo
   Displays a message box with the given info text
   ----------------------------------------------------------------------*/
-void InitInfo (char *label, char *info)
+void InitInfo (const char *label, const char *info)
 {
   if (!info || *info == EOS)
     return;
@@ -1682,8 +1682,8 @@ void ConfirmError3L (Document document, View view, char *label1, char *label2,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void InitConfirm3L (Document document, View view, char *label1, char *label2,
-                    char *label3, ThotBool withCancel)
+void InitConfirm3L (Document document, View view, const char *label1, const char *label2,
+                    const char *label3, ThotBool withCancel)
 {
   /* IV: This widget can't be called twice, but it happens when downloading a
      document with protected images. This is a quick silution to avoid the
@@ -1760,7 +1760,7 @@ void InitCharset (Document document, View view, char *url)
   ----------------------------------------------------------------------*/
 void InitMimeType (Document document, View view, char *url, char *status)
 {
-  char *mimetypes_list;
+  const char *mimetypes_list;
   int nbmimetypes;
 
   if (DocumentTypes[document] == docImage)
@@ -1822,7 +1822,7 @@ static void BrowserForm (Document doc, View view, char *urlname)
   The parameter name gives a proposed document name (New document).
   The parameter title gives the title of the the form.
   ----------------------------------------------------------------------*/
-static void InitOpenDocForm (Document doc, View view, char *name, char *title,
+static void InitOpenDocForm (Document doc, View view, const char *name, const char *title,
                              DocumentType docType)
 {
   char              s [MAX_LENGTH];
@@ -2174,7 +2174,7 @@ void AddDirAttributeToDocEl (Document doc)
 static void GiveWindowGeometry (Document doc, int docType, int method,
                                 int *x, int *y, int *w, int *h)
 {
-  char      *label;
+  const char      *label;
 
   /* get the window geometry */
   if (docType == docAnnot)
@@ -2641,7 +2641,7 @@ void PostInitView(Document doc, DocumentType docType, int visibility,
   + ...
   ----------------------------------------------------------------------*/
 Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow,
-                         char *docname, DocumentType docType, Document sourceOfDoc,
+                         const char *docname, DocumentType docType, Document sourceOfDoc,
 			 ThotBool readOnly, int profile, int extraProfile, int method)
 {
   Document      doc; /* the new doc */
@@ -4791,8 +4791,6 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
           if (status == -2)
             {
               s = HTTP_headers (http_headers, AM_HTTP_REASON);
-              if (!s)
-                s = "";
               sprintf (tempdocument, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
               if (proxyName != NULL)
                 {
@@ -4879,7 +4877,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
   click.
   - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
-Document GetAmayaDoc (char *urlname, char *form_data,
+Document GetAmayaDoc (const char *urlname, const char *form_data,
                       Document doc, Document baseDoc, int method,
                       ThotBool history, TTcbf *cbf, void *ctx_cbf)
 {
@@ -4892,8 +4890,9 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   char               *parameters;
   char               *target;
   char               *initial_url;
+  char                temp_url[MAX_LENGTH];
   char               *documentname;
-  char               *content_type = NULL;
+  const char         *content_type = NULL;
   char                charsetname[MAX_LENGTH];
   int                 parsingLevel, extraProfile;
   int                 toparse;
@@ -4924,15 +4923,19 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   tempfile     = (char *)TtaGetMemory (MAX_LENGTH);
   tempfile[0]  = EOS;
   initial_url     = (char *)TtaGetMemory (MAX_LENGTH);
-  ExtractParameters (urlname, parameters);
+  
+  strcpy(temp_url,  urlname);
+  /* Extract parameters if any */
+  ExtractParameters (temp_url, parameters);
   /* Extract the target if necessary */
-  ExtractTarget (urlname, target);
+  ExtractTarget (temp_url, target);
+
   /* Add the  base content if necessary */
   if (method == CE_RELATIVE || method == CE_FORM_GET ||
       method == CE_FORM_POST || method == CE_MAKEBOOK || method == CE_TEMPLATE)
-    NormalizeURL (urlname, baseDoc, initial_url, documentname, NULL);
+    NormalizeURL (temp_url, baseDoc, initial_url, documentname, NULL);
   else
-    NormalizeURL (urlname, 0, initial_url, documentname, NULL);
+    NormalizeURL (temp_url, 0, initial_url, documentname, NULL);
 
   // check if the page is displayed in the help window
   if (DocumentMeta[baseDoc] && DocumentMeta[baseDoc]->method == CE_HELP)
@@ -4954,8 +4957,8 @@ Document GetAmayaDoc (char *urlname, char *form_data,
     {
       docType = docXml;
       //TODO Check that urlname is a valid URL
-      if (!IsW3Path (urlname) && TtaFileExist (urlname))
-        CheckDocHeader(urlname, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown, &parsingLevel, 
+      if (!IsW3Path (temp_url) && TtaFileExist (temp_url))
+        CheckDocHeader(temp_url, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown, &parsingLevel, 
 		       &doc_charset, charsetname, (DocumentType*)&docType, &extraProfile);
     }
 #ifdef _SVG

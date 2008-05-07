@@ -691,7 +691,7 @@ void AnnotFilter_build (Document doc)
   AnnotList_search
   Returns the list item that contains the object
   ------------------------------------------------------------*/
-List *AnnotList_search (List *list, char *object)
+List *AnnotList_search (List *list, const char *object)
 {
   List *item = list;
 
@@ -2489,7 +2489,7 @@ Element SearchElementInDoc (Document doc, int elTypeNum)
   document element or NULL otherwise.
   -----------------------------------------------------------------------*/
 char *SearchAttributeInEl (Document doc, Element el, int attrTypeNum, 
-                           char *schema)
+                           const char *schema)
 {
   AttributeType  attrType;
   Attribute      attr;
@@ -2908,9 +2908,6 @@ char * ANNOT_GetBodySSchemaName (Document doc)
       result = TtaGetSSchemaName (elType.ElSSchema);
     }
 
-  if (!result)
-    result = "";
-
   return result;
 }
 
@@ -2924,7 +2921,7 @@ void ANNOT_CreateBodyTree (Document doc, DocumentType bodyType)
   Element     body, el;
   ThotBool    result;
   ThotBool    oldStructureChecking;
-  char       *ns_uri = NULL;
+  const char *ns_uri = NULL;
 
   if (DocumentTypes[doc] == docAnnot)
     {

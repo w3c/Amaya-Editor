@@ -600,7 +600,7 @@ ThotBool Prof_BelongTable (const char *name)
   0: the function must be hidden
   1: the function is accepted
   ----------------------------------------------------------------------*/
-int Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
+int Prof_BelongDoctype (const char *name, int docProfile, ThotBool RO)
 {
   int     left, right, middle, i;
 

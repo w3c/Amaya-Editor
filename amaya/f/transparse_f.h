@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void FreeList ( strListSymb *list );
-extern int MapThotAttr ( char* attrName,
-                         char *elementName );
+extern int MapThotAttr ( const char* attrName,
+                         const char *elementName );
 extern void DoInitAutomaton ( void );
 extern void FreeTransform ( void );
 extern ThotBool DoStartParser ( char *name,
@@ -18,8 +18,8 @@ extern ThotBool DoStartParser ( char *name,
 #else /* __STDC__ */
 
 extern void FreeList ( strListSymb *list );
-extern int MapThotAttr ( char* attrName,
-                           char *elementName );
+extern int MapThotAttr ( const char* attrName,
+                           const char *elementName );
 extern void DoInitAutomaton ( void );
 extern void FreeTransform ( void );
 extern ThotBool DoStartParser ( char *name,

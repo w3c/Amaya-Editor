@@ -16,7 +16,7 @@
  then associate a macro to its index.
 ***************************************/
 
-static char *Manual[] = {
+static const char *Manual[] = {
 "Manual.html",
 "Browsing.html",
 "Views.html",

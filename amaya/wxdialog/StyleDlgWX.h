@@ -21,7 +21,7 @@ public:
   // Constructor.
   StyleDlgWX( int ref,
               wxWindow* parent );
-  void SetValue (const char *property, char *value);
+  void SetValue (const char *property, const char *value);
 
   // Destructor.
   virtual ~StyleDlgWX();

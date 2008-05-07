@@ -37,9 +37,9 @@ extern void TtaPrint (Document document, char *viewNames, char *cssNames);
 extern void TtaSetPrintExportFunc (Func exportFunc);
 extern void TtaSetPrintParameter (PrintParameter parameter, int value);
 extern int TtaGetPrintParameter (PrintParameter parameter);
-extern void TtaSetPrintCommand (char *command);
-extern void TtaSetPsFile (char *path);
-extern void TtaSetPrintSchema (char *name);
+extern void TtaSetPrintCommand (const char *command);
+extern void TtaSetPsFile (const char *path);
+extern void TtaSetPrintSchema (const char *name);
 
 #endif /* __CEXTRACT__ */
 

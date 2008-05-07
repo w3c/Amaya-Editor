@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *TtaSkipBlanks ( char *ptr );
+extern const char *TtaSkipBlanks ( const char *ptr );
 extern ThotBool TtaIsBlank ( const char *ptr );
 extern ThotBool TtaGetEnvInt ( const char *name,
                                int *value );
@@ -21,10 +21,10 @@ extern void TtaSetEnvBoolean ( const char *name,
                                ThotBool value,
                                int overwrite );
 extern void TtaSetEnvString ( const char *name,
-                              char *value,
+                              const char *value,
                               int overwrite );
 extern void TtaSetDefEnvString ( const char *name,
-                                 char *value,
+                                 const char *value,
                                  int overwrite );
 extern ThotBool TtaGetDefEnvInt ( const char *name,
                                   int *value );
@@ -40,7 +40,7 @@ extern int SearchFile ( char *fileName,
 
 #else /* __STDC__ */
 
-extern char *TtaSkipBlanks ( char *ptr );
+extern const char *TtaSkipBlanks ( const char *ptr );
 extern ThotBool TtaIsBlank ( const char *ptr );
 extern ThotBool TtaGetEnvInt ( const char *name,
                                  int *value );
@@ -55,10 +55,10 @@ extern void TtaSetEnvBoolean ( const char *name,
                                  ThotBool value,
                                  int overwrite );
 extern void TtaSetEnvString ( const char *name,
-                                char *value,
+                                const char *value,
                                 int overwrite );
 extern void TtaSetDefEnvString ( const char *name,
-                                   char *value,
+                                   const char *value,
                                    int overwrite );
 extern ThotBool TtaGetDefEnvInt ( const char *name,
                                     int *value );

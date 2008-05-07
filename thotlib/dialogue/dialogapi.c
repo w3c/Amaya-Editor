@@ -4399,7 +4399,7 @@ void TtaDesactiveSelector (int ref)
   se'lectionne'e.                                                    
   The parameter text donne le texte si entry vaut -1.                
   ----------------------------------------------------------------------*/
-void TtaSetSelector (int ref, int entry, char *text)
+void TtaSetSelector (int ref, int entry, const char *text)
 {
 #if defined(_GTK)
   ThotWidget          wt;
@@ -4574,7 +4574,7 @@ static void NewLabel (int ref, int ref_parent, char *text, int padding)
   The parameter ref donne la re'fe'rence du catalogue.               
   The parameter text donne l'intitule'.                              
   ----------------------------------------------------------------------*/
-void TtaNewLabel (int ref, int ref_parent, char *text)
+void TtaNewLabel (int ref, int ref_parent, const char *text)
 {
 #if defined(_GTK)
   NewLabel (ref, ref_parent, text, 0);

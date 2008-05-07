@@ -12,7 +12,11 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.2  2002-06-12 10:30:06  kirschpi
+ ** Revision 1.3  2008-05-07 13:49:08  kia
+ ** char* => const char*
+ ** (Regis patches + many many others)
+ **
+ ** Revision 1.2  2002/06/12 10:30:06  kirschpi
  ** - adjusts in code format
  ** Manuele
  **
@@ -113,7 +117,7 @@ extern int AwString_delete (AwString string)
  *      text size + 1)
  * ------------------------------------------------------
  */ 
-extern int AwString_set (AwString string, char *text) 
+extern int AwString_set (AwString string, const char *text) 
 {
     int size;
     int ret = AWSTRING_FAILED;

@@ -35,7 +35,7 @@ typedef int     *PathSegment;
    language: language of that Text element.
    document: the document containing that element.
   ----------------------------------------------------------------------*/
-extern void TtaSetTextContent (Element element, unsigned char *content,
+extern void TtaSetTextContent (Element element, const unsigned char *content,
 			       Language language, Document document);
 
 /*----------------------------------------------------------------------
@@ -52,8 +52,8 @@ extern void TtaSetTextContent (Element element, unsigned char *content,
    document: the document containing that element.
    mime_type: MIME type of the picture, if known. NULL, otherwise
   ----------------------------------------------------------------------*/
-extern void TtaSetPictureContent (Element element, unsigned char *content,
-				  Language language, Document document, char *mime_type);
+extern void TtaSetPictureContent (Element element, const unsigned char *content,
+				  Language language, Document document, const char *mime_type);
 
 /*----------------------------------------------------------------------
    TtaAppendTextContent
@@ -105,7 +105,7 @@ extern void TtaRemoveFinalSpaces (Element element, Document document,
   it. It return NULL if the string is not found.
   ----------------------------------------------------------------------*/
 extern Element TtaSearchText (Document document, Element element, ThotBool forward,
-			      char *text, int *firstCh, int *lastCh, CHARSET encoding);
+			      const char *text, int *firstCh, int *lastCh, CHARSET encoding);
 
 /* ----------------------------------------------------------------------
    TtaInsertTextContent
@@ -500,7 +500,7 @@ extern PicType TtaGetPictureType (Element element);
    Parameter:
    mime_type: mime type of an image.
   ----------------------------------------------------------------------*/
-extern void TtaSetPictureType (Element element, char *mime_type);
+extern void TtaSetPictureType (Element element, const char *mime_type);
 
 /*----------------------------------------------------------------------
    TtaGetTextLength
@@ -678,7 +678,7 @@ extern int TtaGetPageView (Element pageElement);
   TtcPasteFormBuffer pastes at the current insert position the content
   of the buffer.
   ----------------------------------------------------------------------*/
-extern void TtaPasteFromBuffer (unsigned char *src, int length, CHARSET charset);
+extern void TtaPasteFromBuffer (const unsigned char *src, int length, CHARSET charset);
 
 #endif /* __CEXTRACT__ */
 

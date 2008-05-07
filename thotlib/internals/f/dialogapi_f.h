@@ -129,10 +129,10 @@ extern void TtaActiveSelector ( int ref );
 extern void TtaDesactiveSelector ( int ref );
 extern void TtaSetSelector ( int ref,
                              int entry,
-                             char *text );
+                             const char *text );
 extern void TtaNewLabel ( int ref,
                           int ref_parent,
-                          char *text );
+                          const char *text );
 extern void TtaNewPaddedLabel ( int ref,
                                 int ref_parent,
                                 char *text,
@@ -313,10 +313,10 @@ extern void TtaActiveSelector ( int ref );
 extern void TtaDesactiveSelector ( int ref );
 extern void TtaSetSelector ( int ref,
                                int entry,
-                               char *text );
+                               const char *text );
 extern void TtaNewLabel ( int ref,
                             int ref_parent,
-                            char *text );
+                            const char *text );
 extern void TtaNewPaddedLabel ( int ref,
                                   int ref_parent,
                                   char *text,

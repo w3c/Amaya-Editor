@@ -374,7 +374,7 @@ static char * GetIdValue (Element el)
 
   returns TRUE if the element has an attribute ID with value val
   ----------------------------------------------------------------------*/
-static ThotBool TestIdValue (Element el, char *val)
+static ThotBool TestIdValue (Element el, const char *val)
 {
   char *   id_value;
   ThotBool result = FALSE;
@@ -396,7 +396,7 @@ static ThotBool TestIdValue (Element el, char *val)
 
   returns TRUE if the element has a name equal to name
   ----------------------------------------------------------------------*/
-static ThotBool TestElName (Element el, char *name)
+static ThotBool TestElName (Element el, const char *name)
 {
   ElementType elType;
   char *typeName;
@@ -551,7 +551,7 @@ static void PreviousSibling (Element *el)
   returns the first element that doesn't have an exception and that
   has an ID attribute with value val
   ----------------------------------------------------------------------*/
-Element SearchAttrId (Element root, char *val)
+Element SearchAttrId (Element root, const char *val)
 {
   Element el, result;
 
@@ -586,7 +586,7 @@ Element SearchAttrId (Element root, char *val)
 /*----------------------------------------------------------------------
   SearchSiblingIndex
   ----------------------------------------------------------------------*/
-Element SearchSiblingIndex (Element root, char *el_name, int *index)
+Element SearchSiblingIndex (Element root, const char *el_name, int *index)
 {
   Element sibling, child, result;
 

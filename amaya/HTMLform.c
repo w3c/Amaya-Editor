@@ -87,7 +87,7 @@ void RestoreDocumentStatus (NotifyOnTarget *event)
   AddToBuffer
   reallocates memory and concatenates a string into buffer	
   ----------------------------------------------------------------------*/
-static void AddToBuffer (char *orig)
+static void AddToBuffer (const char *orig)
 {
   void               *status;
   int                 lg;
@@ -151,7 +151,7 @@ static void AddToBufferWithEOS (char *orig)
   AddElement
   add a string into the query FormBuf				
   ----------------------------------------------------------------------*/
-static void AddElement (unsigned char *element, CHARSET charset)
+static void AddElement (const unsigned char *element, CHARSET charset)
 {
   CHAR_T           wc;
   char            tmp[4];
@@ -262,7 +262,7 @@ static void TrimSpaces (char *string)
   AddNameValue
   add a name=value pair, and a trailling & into the query FormBuf	
   ----------------------------------------------------------------------*/
-static void AddNameValue (char *name, char *value, CHARSET charset)
+static void AddNameValue (const char *name, const char *value, CHARSET charset)
 {
   AddElement ((unsigned char *)name, charset);
   AddToBuffer ("=");
@@ -781,7 +781,7 @@ static void DoSubmit (Document doc, int method, char *action)
             param = (char *)TtaConvertMbsToByte ((unsigned char *)ptr,
                                                  TtaGetDefaultCharset ());
           else
-            param = "";
+            param = NULL;
           GetAmayaDoc (urlName, param, doc, doc, evt, TRUE, NULL, NULL);
           if (ptr)
             TtaFreeMemory (param);

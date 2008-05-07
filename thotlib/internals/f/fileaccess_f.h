@@ -44,17 +44,17 @@ extern ThotBool TtaWriteShort ( BinFile file,
                                 int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,
                                   int lval );
-extern void TtaExtractName ( char *text,
+extern void TtaExtractName ( const char *text,
                              char *aDirectory,
                              char *aName );
-extern void MakeCompleteName ( char *fname,
+extern void MakeCompleteName ( const char *fname,
                                const char *fext,
                                char *directory_list,
                                char *completeName,
                                int *length );
 extern void GetPictureFileName ( char *name,
                                  char *fileName );
-extern void FindCompleteName ( char *fileName,
+extern void FindCompleteName ( const char *fileName,
                                const char *extension,
                                PathBuffer directory,
                                PathBuffer completeName,
@@ -106,17 +106,17 @@ extern ThotBool TtaWriteShort ( BinFile file,
                                   int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,
                                     int lval );
-extern void TtaExtractName ( char *text,
+extern void TtaExtractName ( const char *text,
                                char *aDirectory,
                                char *aName );
-extern void MakeCompleteName ( char *fname,
+extern void MakeCompleteName ( const char *fname,
                                  const char *fext,
                                  char *directory_list,
                                  char *completeName,
                                  int *length );
 extern void GetPictureFileName ( char *name,
                                    char *fileName );
-extern void FindCompleteName ( char *fileName,
+extern void FindCompleteName ( const char *fileName,
                                  const char *extension,
                                  PathBuffer directory,
                                  PathBuffer completeName,

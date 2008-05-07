@@ -85,7 +85,7 @@ void TtaChangeElementType (Element element, int typeNum)
    root:   the concerned element must be the root of the document
    schemaName: the requested schema name.
    ---------------------------------------------------------------------- */
-void TtaUpdateRootElementType (Element root, char *schemaName, Document doc)
+void TtaUpdateRootElementType (Element root, const char *schemaName, Document doc)
 {
   PtrDocument pDoc;
   PtrSSchema  pSS, pSNew;
@@ -215,7 +215,7 @@ Element TtaNewElement (Document document, ElementType elementType)
    Return value:
    the root element of the created tree.
    ---------------------------------------------------------------------- */
-Element TtaNewTree (Document document, ElementType elementType, char* label)
+Element TtaNewTree (Document document, ElementType elementType, const char* label)
 {
   PtrElement          element;
   
@@ -914,7 +914,7 @@ void TtaAttachNewTree (Element tree, Document document)
   function TtaSetSchemaPath.
   ----------------------------------------------------------------------*/
 void TtaExportTree (Element element, Document document,
-                    char *fileName, char *TSchemaName)
+                    const char *fileName, const char *TSchemaName)
 {
 #ifndef NODISPLAY
   UserErrorCode = 0;

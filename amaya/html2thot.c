@@ -504,15 +504,16 @@ static int          CharRank = 0;	  /* rank of the last matching
                                        character in that entry */
 /* second char of an UTF-8 string */
 static unsigned char SecondByte[6] = {EOS, EOS, EOS, EOS, EOS, EOS};
-static void         ProcessStartGI (char* GIname);
+static void         ProcessStartGI (const char* GIname);
 static void         EndOfAttrValue (char c);
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static char *StrCaseStr (char *str1, char *str2)
+static const char *StrCaseStr (const char *str1, const char *str2)
 {
-  char      c, *ptr;
-  int       len;
+  char        c;
+  const char *ptr;
+  int         len;
 
   if (str1 == NULL || str2 == NULL)
     return NULL;
@@ -971,7 +972,7 @@ static ThotBool Within (int ThotType, SSchema ThotSSchema)
   If lineNumber = 0, print the current line number in the source file,
   otherwise print the line number provided.
   ----------------------------------------------------------------------*/
-void HTMLParseError (Document doc, char* msg, int lineNumber)
+void HTMLParseError (Document doc, const char* msg, int lineNumber)
 {
   HTMLErrorsFound = TRUE;
   if (!ErrFile)
@@ -2311,7 +2312,7 @@ static void SpecialImplicitEnd (int entry)
   Create the corresponding Thot thing (element, attribute,
   or character), according to the mapping table.
   ----------------------------------------------------------------------*/
-static void ProcessStartGI (char* GIname)
+static void ProcessStartGI (const char* GIname)
 {
   ElementType         elType;
   Element             el;
@@ -2350,23 +2351,24 @@ static void ProcessStartGI (char* GIname)
         /* unknown tag */
         {
           UnknownTag = TRUE;
-          if (strlen ((char *)GIname) > MaxMsgLength - 20)
-            GIname[MaxMsgLength - 20] = EOS;
+// Replaced by sprintf formating
+//          if (strlen ((const char *)GIname) > MaxMsgLength - 20)
+//            GIname[MaxMsgLength - 20] = EOS;
           if (DocumentMeta[HTMLcontext.doc] &&
               DocumentMeta[HTMLcontext.doc]->xmlformat)
             {
-              sprintf (msgBuffer, "Invalid tag <%s> (removed when saving)", GIname);
+              sprintf (msgBuffer, "Invalid tag <%*s> (removed when saving)", 20, GIname);
               HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
               removed = TRUE;
             }
           else
             {
-              sprintf (msgBuffer, "Warning - unknown tag <%s>", GIname);
+              sprintf (msgBuffer, "Warning - unknown tag <%*s>", 20, GIname);
               HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
               removed = FALSE;
             }
           /* create an Invalid_element */
-          sprintf (msgBuffer, "<%s", GIname);
+          sprintf (msgBuffer, "<%*s", 20, GIname);
           InsertInvalidEl (msgBuffer, removed);
         }
     }
@@ -2379,11 +2381,12 @@ static void ProcessStartGI (char* GIname)
         {
           /* Invalid element for the document profile */
           /* don't process that element */
-          if (strlen ((char *)GIname) > MaxMsgLength - 20)
-            GIname[MaxMsgLength - 20] = EOS;
+// Replaced by sprintf formating
+//          if (strlen ((const char *)GIname) > MaxMsgLength - 20)
+//            GIname[MaxMsgLength - 20] = EOS;
           sprintf (msgBuffer,
-                   "Invalid start element <%s> for the document profile",
-                   GIname);
+                   "Invalid start element <%*s> for the document profile",
+                   20, GIname);
           HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
           XMLErrorsFoundInProfile = TRUE;
           UnknownTag = TRUE;
@@ -4355,7 +4358,7 @@ void GetNextHTMLbuffer (FILE *infile, ThotBool *endOfFile,
           charset == SHIFT_JIS    || charset == GB_2312)
         {
           /* convert the original stream into UTF-8 */
-          *buff = (char *)TtaConvertByteToMbsWithCheck ((unsigned char *)FileBuffer,
+          *buff = (char *)TtaConvertByteToMbsWithCheck ((const unsigned char *)FileBuffer,
                                                         charset, &res);
           HTMLcontext.encoding = UTF_8;
           if (*buff)
@@ -4842,7 +4845,7 @@ static Element GetANewText (Element el, ElementType elType, Document doc)
   buffer textbuf. One parameter should be NULL.
   ----------------------------------------------------------------------*/
 static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
-                          char *pathURL)
+                          const char *pathURL)
 {
   Element             parent, el, prev;
   Element             elLeaf;
@@ -5699,17 +5702,17 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
           endOfSniffedFile = (res < INPUT_FILE_BUFFER_SIZE);
 	  
           /* looks for the first <meta> element */
-          meta = StrCaseStr (&buffer[i], "<meta");
+          meta = (char*)StrCaseStr (&buffer[i], "<meta");
           if (meta)
             {
               endmeta = strstr (meta, ">");
               /* looks for the first "http-equiv" declaration */
-              http = StrCaseStr (meta, "http-equiv");
+              http = (char*)StrCaseStr (meta, "http-equiv");
               if (http && http > endmeta)
                 {
                   while (endmeta && http > endmeta)
                     {
-                      meta =  StrCaseStr (endmeta,  "<meta");
+                      meta =  (char*)StrCaseStr (endmeta,  "<meta");
                       if (meta)
                         endmeta = strstr (meta, ">");
                       else
@@ -5723,11 +5726,11 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
               if (http)
                 {
                   /* looks for the "Content-Type" declaration */
-                  content = StrCaseStr (meta, "content-type");
+                  content = (char*)StrCaseStr (meta, "content-type");
                   if (content)
                     {
                       /* check whether there is a charset */
-                      ptr = StrCaseStr (meta, "charset");
+                      ptr = (char*)StrCaseStr (meta, "charset");
                       if (ptr)
                         {
                           endOfSniffedFile = TRUE;
@@ -5763,7 +5766,7 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
           /* looks for the <body> element */
           if (!endOfSniffedFile)
             {
-              body = StrCaseStr (&buffer[i], "<body");
+              body = (char*)StrCaseStr (&buffer[i], "<body");
               if (body)
                 endOfSniffedFile = TRUE;
             }
@@ -7223,8 +7226,8 @@ void ClearHTMLParser ()
   path or URL of the html document.
   ------------------------------------------------------------------------------*/
 void StartParser (Document doc, char *fileName,
-                  char *documentName, char* documentDirectory,
-                  char *pathURL, ThotBool plainText, ThotBool external_doc)
+                  const char *documentName, char* documentDirectory,
+                  const char *pathURL, ThotBool plainText, ThotBool external_doc)
 {
   DisplayMode     dispMode;
   CHARSET         charset;

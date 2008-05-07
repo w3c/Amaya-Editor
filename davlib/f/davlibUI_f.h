@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void DAVSetLockIndicator ( Document docid );
-extern void DAVDisplayMessage ( char *msg,
-                                char *arg );
+extern void DAVDisplayMessage ( const char *msg,
+                                const char *arg );
 extern void DAVDisplayMultiLineMessage ( Document docid,
                                          char *line1,
                                          char *line2,
@@ -18,9 +18,9 @@ extern BOOL DAVConfirmDialog ( Document docid,
                                char *msg2,
                                char *msg3 );
 extern void DAVPropertiesVerticalDialog ( Document docid,
-                                          char *title,
-                                          char *rheader,
-                                          char *lheader,
+                                          const char *title,
+                                          const char *rheader,
+                                          const char *lheader,
                                           AwList *list );
 extern void DAVHorizontalDialog ( Document docid,
                                   char *title,
@@ -42,8 +42,8 @@ extern void DAVShowPreferencesDlg ( Document document );
 #else /* __STDC__ */
 
 extern void DAVSetLockIndicator ( Document docid );
-extern void DAVDisplayMessage ( char *msg,
-                                  char *arg );
+extern void DAVDisplayMessage ( const char *msg,
+                                  const char *arg );
 extern void DAVDisplayMultiLineMessage ( Document docid,
                                            char *line1,
                                            char *line2,
@@ -53,9 +53,9 @@ extern BOOL DAVConfirmDialog ( Document docid,
                                  char *msg2,
                                  char *msg3 );
 extern void DAVPropertiesVerticalDialog ( Document docid,
-                                            char *title,
-                                            char *rheader,
-                                            char *lheader,
+                                            const char *title,
+                                            const char *rheader,
+                                            const char *lheader,
                                             AwList *list );
 extern void DAVHorizontalDialog ( Document docid,
                                     char *title,

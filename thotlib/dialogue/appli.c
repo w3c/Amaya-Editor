@@ -697,7 +697,7 @@ void DisplaySelMessage (char *text, PtrDocument pDoc)
 /*----------------------------------------------------------------------
   TtaSetStatus displays a status message into a document window.
   ----------------------------------------------------------------------*/
-void TtaSetStatus (Document document, View view, char *text, char *name)
+void TtaSetStatus (Document document, View view, const char *text, const char *name)
 {
   int                 frame, length;
   char                *s = NULL;

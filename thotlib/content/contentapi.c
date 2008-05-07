@@ -198,7 +198,7 @@ static void InsertText (PtrElement pEl, int position, unsigned char *content,
 /*----------------------------------------------------------------------
   SetContent
   ----------------------------------------------------------------------*/
-static void SetContent (Element element, unsigned char *content,
+static void SetContent (Element element, const unsigned char *content,
                         Language language, Document document)
 {
   PtrTextBuffer       pBuf, pNextBuff;
@@ -369,7 +369,7 @@ static void SetContent (Element element, unsigned char *content,
   language: language of that Text element.
   document: the document containing that element.
   ----------------------------------------------------------------------*/
-void TtaSetTextContent (Element element, unsigned char *content,
+void TtaSetTextContent (Element element, const unsigned char *content,
                         Language language, Document document)
 {
   SetContent (element, content, language, document);
@@ -391,8 +391,8 @@ void TtaSetTextContent (Element element, unsigned char *content,
   document: the document containing that element.
   mime_type: MIME tpye of the picture
   ----------------------------------------------------------------------*/
-void TtaSetPictureContent (Element element, unsigned char *content,
-                           Language language, Document document, char *mime_type)
+void TtaSetPictureContent (Element element, const unsigned char *content,
+                           Language language, Document document, const char *mime_type)
 {
   SetContent (element, content, language, document);
 #ifndef NODISPLAY
@@ -2442,7 +2442,7 @@ PicType TtaGetPictureType (Element element)
   Parameter:
   mime_type: mime type of an image.
   ----------------------------------------------------------------------*/
-void TtaSetPictureType (Element element, char *mime_type)
+void TtaSetPictureType (Element element, const char *mime_type)
 {
   PicType          typeImage;
   ThotPictInfo    *imageDesc;

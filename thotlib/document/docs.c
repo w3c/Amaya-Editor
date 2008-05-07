@@ -115,7 +115,7 @@ Document TtaGetNextDocumentIndex ()
   the document that has been created or 0 if the document has not
   been created.
   ----------------------------------------------------------------------*/
-Document TtaInitDocument (char *structureSchema, char *documentName,
+Document TtaInitDocument (const char *structureSchema, const char *documentName,
                           Document document)
 {
   PtrDocument         pDoc;
@@ -225,7 +225,7 @@ Document TtaInitDocument (char *structureSchema, char *documentName,
   the document that has been created or 0 if the document has not
   been created.
   ----------------------------------------------------------------------*/
-Document TtaNewDocument (char *structureSchema, char *documentName)
+Document TtaNewDocument (const char *structureSchema, const char *documentName)
 {
   return TtaInitDocument (structureSchema, documentName, 0);
 }

@@ -60,21 +60,27 @@ ThotColorStruct  cblack;
  * FindColor looks for the named color ressource.
  * The result is the closest color found the Thot color table.
  ----------------------------------------------------------------------*/
-static ThotBool FindColor (char *colorplace,
-                           char *defaultcolor, ThotColor *colorpixel)
+static ThotBool FindColor (const char *colorplace,
+                           const char *defaultcolor, ThotColor *colorpixel)
 {
    int                 col;
    char               *value;
    unsigned short      red;
    unsigned short      green;
    unsigned short      blue;
+   char                *temp;
+   
 
    value = TtaGetEnvString (colorplace);
    /* do you need to take the default color? */
    if (value != NULL && value[0] != EOS)
      TtaGiveRGB (value, &red, &green, &blue);
    else if (defaultcolor)
-     TtaGiveRGB (defaultcolor, &red, &green, &blue);
+     {
+       temp = TtaStrdup(defaultcolor);
+       TtaGiveRGB (temp, &red, &green, &blue);
+       TtaFreeMemory(temp);
+     }
    else
      return (FALSE);
 

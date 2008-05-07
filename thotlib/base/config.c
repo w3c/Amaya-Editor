@@ -226,7 +226,7 @@ static void getStringAfterColon (unsigned char *line, char *text)
    1 si on trouve le 1er mot,                           
    2 si on trouve le 2eme mot.                          
   ----------------------------------------------------------------------*/
-static int readUntil (FILE *file, char *word1, char *word2)
+static int readUntil (FILE *file, const char *word1, const char *word2)
 {
    ThotBool            stop;
    int                 ret;
@@ -680,10 +680,10 @@ void ConfigSSchemaInternalName (char *nameUser, char *nameSchema,
 /*----------------------------------------------------------------------
    openConfigFile                                                  
   ----------------------------------------------------------------------*/
-static FILE *openConfigFile (char *name, ThotBool lang)
+static FILE *openConfigFile (const char *name, ThotBool lang)
 {
    FILE               *file;
-   char               *suffix;
+   const char         *suffix;
    int                 i;
    PathBuffer          DirBuffer, filename;
    char               *app_home;
@@ -1166,7 +1166,7 @@ static ThotBool readUntilStyle (FILE *file, char *namePSchema)
    Retourne le file descriptor du fichier si on a trouve'  
    le fichier .conf et la section, NULL sinon.             
   ----------------------------------------------------------------------*/
-static FILE *openConfFileAndReadUntil (PtrSSchema pSS, char *sectName)
+static FILE *openConfFileAndReadUntil (PtrSSchema pSS, const char *sectName)
 {
    FILE    *file;
 
@@ -1362,7 +1362,7 @@ void ConfigOpenFirstViews (PtrDocument pDoc)
   dimensions (width, height) de la fenetre ou doit        
   s'afficher la vue de non view pour le document pDoc.     
   ----------------------------------------------------------------------*/
-void  ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x,
+void  ConfigGetViewGeometry (PtrDocument pDoc, const char *view, int *x,
                              int *y, int *width, int *height)
 {
   FILE               *file;
@@ -1526,7 +1526,7 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
    Parameters:    document: the document.                  
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
-void TtaGetViewGeometry (Document document, char *name, int *x, int *y,
+void TtaGetViewGeometry (Document document, const char *name, int *x, int *y,
                          int *width, int *height)
 {
   PtrDocument pDoc;

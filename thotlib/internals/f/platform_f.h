@@ -13,7 +13,7 @@ extern ThotBool TtaFileExist ( CONST char *filename );
 extern int TtaFileUnlink ( CONST char *filename );
 extern ThotBool TtaFileRename ( const char * oldname,
                                 const char * newname );
-extern unsigned long TtaGetFileSize ( char *filename );
+extern unsigned long TtaGetFileSize ( const char *filename );
 extern ThotBool TtaFileCopy ( CONST char *sourceFileName,
                               CONST char *targetFileName );
 extern ThotBool TtaCompareFiles ( CONST char *file1,
@@ -28,7 +28,7 @@ extern ThotBool TtaFileExist ( CONST char *filename );
 extern int TtaFileUnlink ( CONST char *filename );
 extern ThotBool TtaFileRename ( const char * oldname,
                                   const char * newname );
-extern unsigned long TtaGetFileSize ( char *filename );
+extern unsigned long TtaGetFileSize ( const char *filename );
 extern ThotBool TtaFileCopy ( CONST char *sourceFileName,
                                 CONST char *targetFileName );
 extern ThotBool TtaCompareFiles ( CONST char *file1,

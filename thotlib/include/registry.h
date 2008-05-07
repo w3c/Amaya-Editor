@@ -16,7 +16,7 @@
  * TtaSkipBlanks skips all spaces, tabs, linefeeds and newlines at the
  * beginning of the string and returns the pointer to the new position. 
  */
-extern char *TtaSkipBlanks (char *ptr);
+extern const char *TtaSkipBlanks (const char *ptr);
 
 
 /*
@@ -84,13 +84,13 @@ extern void TtaSetEnvBoolean (const char *name, ThotBool value, int overwrite);
  * TtaSetEnvString : set the value associated to an environment string,
  *                  for the current application.
  */
-extern void TtaSetEnvString (const char *name, char *value, int overwrite);
+extern void TtaSetEnvString (const char *name, const char *value, int overwrite);
 
 /*
  * TtaSetDefEnvString : set the defaul value associated to an environment 
  *                      string, for the current application.
  */
-extern void TtaSetDefEnvString (const char *name, char *value, int overwrite);
+extern void TtaSetDefEnvString (const char *name, const char *value, int overwrite);
 
 /*
  * TtaGetDefEnvInt : read the default integer value associated to an 

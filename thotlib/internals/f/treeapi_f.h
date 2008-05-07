@@ -9,7 +9,7 @@
 extern void TtaChangeElementType ( Element element,
                                    int typeNum );
 extern void TtaUpdateRootElementType ( Element root,
-                                       char *schemaName,
+                                       const char *schemaName,
                                        Document doc );
 extern ThotBool TtaChangeTypeOfElement ( Element elem,
                                          Document doc,
@@ -18,7 +18,7 @@ extern Element TtaNewElement ( Document document,
                                ElementType elementType );
 extern Element TtaNewTree ( Document document,
                             ElementType elementType,
-                            char* label );
+                            const char* label );
 extern Element TtaNewTranscludedElement ( Document document,
                                           Element orig );
 extern Element TtaCopyTree ( Element sourceElement,
@@ -41,8 +41,8 @@ extern void TtaAttachNewTree ( Element tree,
                                Document document );
 extern void TtaExportTree ( Element element,
                             Document document,
-                            char *fileName,
-                            char *TSchemaName );
+                            const char *fileName,
+                            const char *TSchemaName );
 extern void TtaRedisplayElement ( Element element,
                                   Document document );
 extern void TtaInsertSibling ( Element newElement,
@@ -149,7 +149,7 @@ extern ThotBool TtaHasReturnCreateNLException ( ElementType elType );
 extern void TtaChangeElementType ( Element element,
                                      int typeNum );
 extern void TtaUpdateRootElementType ( Element root,
-                                         char *schemaName,
+                                         const char *schemaName,
                                          Document doc );
 extern ThotBool TtaChangeTypeOfElement ( Element elem,
                                            Document doc,
@@ -158,7 +158,7 @@ extern Element TtaNewElement ( Document document,
                                  ElementType elementType );
 extern Element TtaNewTree ( Document document,
                               ElementType elementType,
-                              char* label );
+                              const char* label );
 extern Element TtaNewTranscludedElement ( Document document,
                                             Element orig );
 extern Element TtaCopyTree ( Element sourceElement,
@@ -181,8 +181,8 @@ extern void TtaAttachNewTree ( Element tree,
                                  Document document );
 extern void TtaExportTree ( Element element,
                               Document document,
-                              char *fileName,
-                              char *TSchemaName );
+                              const char *fileName,
+                              const char *TSchemaName );
 extern void TtaRedisplayElement ( Element element,
                                     Document document );
 extern void TtaInsertSibling ( Element newElement,

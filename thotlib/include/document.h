@@ -53,7 +53,7 @@ extern Document TtaGetNextDocumentIndex ();
    the document that has been created or 0 if the document has not
    been created.
   ----------------------------------------------------------------------*/
-extern Document TtaInitDocument (char *structureSchema, char *documentName,
+extern Document TtaInitDocument (const char *structureSchema, const char *documentName,
 				 Document document);
 
 /*----------------------------------------------------------------------
@@ -75,7 +75,7 @@ extern Document TtaInitDocument (char *structureSchema, char *documentName,
    the document that has been created or 0 if the document has not
    been created.
   ----------------------------------------------------------------------*/
-extern Document TtaNewDocument (char *structureSchema, char *documentName);
+extern Document TtaNewDocument (const char *structureSchema, const char *documentName);
 
 /*----------------------------------------------------------------------
    TtaOpenDocument
@@ -131,8 +131,8 @@ extern void TtaSaveDocument (Document document, char *documentName);
    
    Return: TRUE if done correctly
   ----------------------------------------------------------------------*/
-extern ThotBool TtaExportDocument (Document document, char *fileName,
-				   char *TSchemaName);
+extern ThotBool TtaExportDocument (Document document, const char *fileName,
+				   const char *TSchemaName);
 
 /*----------------------------------------------------------------------
    TtaExportDocumentWithNewLineNumbers
@@ -154,7 +154,7 @@ extern ThotBool TtaExportDocument (Document document, char *fileName,
    Return: TRUE if done correctly
   ----------------------------------------------------------------------*/
 extern ThotBool TtaExportDocumentWithNewLineNumbers (Document document,
-						     char *fileName, char *TSchemaName, ThotBool skipXTiger);
+						     const char *fileName, const char *TSchemaName, ThotBool skipXTiger);
 
 /*----------------------------------------------------------------------
    TtaCloseDocument
@@ -269,8 +269,8 @@ extern void TtaSetSchemaPath (char *path);
 
   ----------------------------------------------------------------------*/
 extern SSchema TtaNewNature (Document document, SSchema schema,
-			     char *natureURI, char *natureName,
-			     char *presentationName);
+			     const char *natureURI, const char *natureName,
+			     const char *presentationName);
 
 /*----------------------------------------------------------------------
    TtaNewSchemaExtension
@@ -339,7 +339,7 @@ extern void TtaRemoveSchemaExtension (Document document, SSchema extension,
    with the document.
 
   ----------------------------------------------------------------------*/
-extern void TtaSetPSchema (Document document, char *presentationName);
+extern void TtaSetPSchema (Document document, const char *presentationName);
 
 /*----------------------------------------------------------------------
    TtaSetDocumentDirectory
@@ -531,7 +531,7 @@ extern char *TtaGetPSchemaName (SSchema schema);
    the structure schema having this name, or NULL if this structure
    schema is not loaded or not used by the document.
   ----------------------------------------------------------------------*/
-extern SSchema TtaGetSSchema (char *name, Document document);
+extern SSchema TtaGetSSchema (const char *name, Document document);
 
 /*----------------------------------------------------------------------
    TtaGetSSchemaByUri
@@ -545,7 +545,7 @@ extern SSchema TtaGetSSchema (char *name, Document document);
    the structure schema having this URI, or NULL if this structure
    schema is not loaded or not used by the document.
   ----------------------------------------------------------------------*/
-SSchema TtaGetSSchemaByUri (char *uriName, Document document);
+SSchema TtaGetSSchemaByUri (const char *uriName, Document document);
 
 /*----------------------------------------------------------------------
    TtaSameSSchemas
@@ -765,7 +765,7 @@ extern void TtaSetDocumentProfile (Document document, int profile, int extraProf
   Sets a namespace declaration for an element 
  ----------------------------------------------------------------------*/
 void TtaSetANamespaceDeclaration (Document document, Element element,
-                                  char *Ns_Prefix, char *Ns_Uri);
+                                  const char *Ns_Prefix, const char *Ns_Uri);
 
 /*----------------------------------------------------------------------
   TtaGiveNamespaceURI
@@ -796,7 +796,7 @@ void TtaFreeNamespaceDeclarations (Document document);
   TtaSetUriSSchema
   Set the schema namespace declaration uri
  ----------------------------------------------------------------------*/
-void TtaSetUriSSchema (SSchema sSchema, char *sSchemaUri);
+void TtaSetUriSSchema (SSchema sSchema, const char *sSchemaUri);
 
 
 /*----------------------------------------------------------------------

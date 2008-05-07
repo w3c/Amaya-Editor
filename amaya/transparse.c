@@ -1007,7 +1007,7 @@ static void EndRuleTagName (unsigned char c)
    search in AttributeMaParsedingTable the entry for the attribute of name Attr
    and returns the Thot Attribute corresponding to the rank of that entry.
   ----------------------------------------------------------------------*/
-int MapThotAttr (char* attrName, char *elementName)
+int MapThotAttr (const char* attrName, const char *elementName)
 {
   int        i, thotAttr;
   ThotBool   level;
@@ -1088,7 +1088,7 @@ static void DoEndRuleAttrName (unsigned char c)
   if (ParsedLgBuffer != 0)
     {
       if (strcmp ((char *)ParsedNode->Tag, "*") == 0)
-	thotAttr = MapThotAttr ((char *)inputBuffer, "");
+	thotAttr = MapThotAttr ((char *)inputBuffer, NULL);
       else
 	thotAttr = MapThotAttr ((char *)inputBuffer, (char *)ParsedNode->Tag);
       if (thotAttr != -1)

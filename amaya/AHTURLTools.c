@@ -1534,7 +1534,7 @@ static void CleanCopyFileURL (char *dest, char *src,
   the name "noname.html".
   ----------------------------------------------------------------------*/
 void NormalizeURL (char *orgName, Document doc, char *newName,
-                   char *docName, char *otherPath)
+                   char *docName, const char *otherPath)
 {
   char          *basename;
   char           tempOrgName[MAX_LENGTH];
@@ -1903,7 +1903,7 @@ static void scan (char *name, HTURI *parts)
   On exit,
   returns		A pointer to a malloc'd string which MUST BE FREED
   ----------------------------------------------------------------------*/
-char   *AmayaParseUrl (const char *aName, char *relatedName, int wanted)
+char   *AmayaParseUrl (const char *aName, const char *relatedName, int wanted)
 {
   char      *return_value;
   char       result[MAX_LENGTH];
@@ -1913,7 +1913,7 @@ char   *AmayaParseUrl (const char *aName, char *relatedName, int wanted)
   HTURI      given, related;
   int        len, l;
   char       used_sep;
-  char      *used_str;
+  const char*used_str;
 
   if (strchr (aName, DIR_SEP) || strchr (relatedName, DIR_SEP))
     {
@@ -1937,8 +1937,6 @@ char   *AmayaParseUrl (const char *aName, char *relatedName, int wanted)
       strncpy (rel, relatedName, MAX_LENGTH - 1);
       rel[MAX_LENGTH - 1] = EOS;
     }
-  else
-    relatedName[0] = EOS;
   
   scan (name, &given);
   scan (rel,  &related); 
@@ -2480,15 +2478,15 @@ ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
   parsed by AmayaParseUrl relative to relatedName, will yield aName.
   The caller is responsible for freeing the resulting name later.
   ----------------------------------------------------------------------*/
-char      *MakeRelativeURL (char *aName, char *relatedName)
+char      *MakeRelativeURL (const char *aName, const char *relatedName)
 {
-  char  *return_value;
-  char   result[MAX_LENGTH];
-  char  *p;
-  char  *q;
-  char  *after_access;
-  char  *last_slash = NULL;
-  int    slashes, levels, len;
+  char        *return_value;
+  char         result[MAX_LENGTH];
+  const char  *p;
+  const char  *q;
+  const char  *after_access;
+  const char  *last_slash = NULL;
+  int          slashes, levels, len;
 #ifdef _WINDOWS
   int ndx;
 #endif /* _WINDOWS */
@@ -2584,7 +2582,7 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
   Otherwise, in case of a system error, returns FALSE, with a 
   filesize of 0L.
   ---------------------------------------------------------------------*/
-ThotBool AM_GetFileSize (char *filename, unsigned long *file_size)
+ThotBool AM_GetFileSize (const char *filename, unsigned long *file_size)
 {
   if (!TtaFileExist (filename))
     return FALSE;

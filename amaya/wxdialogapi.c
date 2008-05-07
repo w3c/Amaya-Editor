@@ -111,7 +111,7 @@ void  ParseStyleDlgValues (void *style_widget, char *cssRule)
 /*----------------------------------------------------------------------
   DisplayStyleValue: update the property in Style dialog
   ----------------------------------------------------------------------*/
-void  DisplayStyleValue (const char *property, char *start_value, char *end_value)
+void  DisplayStyleValue (const char *property, const char *start_value, char *end_value)
 {
 #ifdef _WX
   char c = EOS;
@@ -272,7 +272,7 @@ ThotBool CreateSelectIntegralDlgWX ( int ref, ThotWindow parent)
   ----------------------------------------------------------------------*/
 ThotBool CreateInitConfirmDlgWX ( int ref, ThotWindow parent,
 				  char *title, char *extrabutton, char *confirmbutton,
-				  char *label, char *label2, char *label3 )
+				  const char *label, const char *label2, const char *label3 )
 {
 #ifdef _WX
   /* check if the dialog is alredy open */

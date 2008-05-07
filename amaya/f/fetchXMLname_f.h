@@ -12,9 +12,9 @@ extern SSchema GetSVGSSchema ( Document doc );
 extern SSchema GetXLinkSSchema ( Document doc );
 extern SSchema GetTemplateSSchema ( Document doc );
 extern SSchema GetTextSSchema ( Document doc );
-extern SSchema GetGenericXMLSSchema ( char *schemaName,
+extern SSchema GetGenericXMLSSchema ( const char *schemaName,
                                       Document doc );
-extern SSchema GetGenericXMLSSchemaByUri ( char *uriName,
+extern SSchema GetGenericXMLSSchemaByUri ( const char *uriName,
                                            Document doc,
                                            ThotBool *isnew );
 extern SSchema GetXMLSSchema ( int XMLtype,
@@ -23,14 +23,14 @@ extern void HasNatures ( Document document,
                          ThotBool *useMathML,
                          ThotBool *useSVG );
 extern void MapXMLElementType ( int XMLtype,
-                                char *XMLname,
+                                const char *XMLname,
                                 ElementType *elType,
                                 char **mappedName,
                                 char *content,
                                 ThotBool *checkProfile,
                                 Document doc );
-extern char *GetXMLElementName ( ElementType elType,
-                                 Document doc );
+extern const char *GetXMLElementName ( ElementType elType,
+                                       Document doc );
 extern ThotBool IsXMLElementInline ( ElementType elType,
                                      Document doc );
 extern void MapXMLAttributeValue ( int XMLtype,
@@ -38,14 +38,14 @@ extern void MapXMLAttributeValue ( int XMLtype,
                                    const AttributeType *attrType,
                                    int *value );
 extern int MapXMLAttribute ( int XMLtype,
-                             char *attrName,
-                             char *elementName,
+                             const char *attrName,
+                             const char *elementName,
                              ThotBool *checkProfile,
                              Document doc,
                              int *thotType );
-extern char *GetXMLAttributeName ( AttributeType attrType,
-                                   ElementType elType,
-                                   Document doc );
+extern const char *GetXMLAttributeName ( AttributeType attrType,
+                                         ElementType elType,
+                                         Document doc );
 extern void HasADoctype ( Document doc,
                           ThotBool *found,
                           ThotBool *useMath );
@@ -65,9 +65,9 @@ extern SSchema GetSVGSSchema ( Document doc );
 extern SSchema GetXLinkSSchema ( Document doc );
 extern SSchema GetTemplateSSchema ( Document doc );
 extern SSchema GetTextSSchema ( Document doc );
-extern SSchema GetGenericXMLSSchema ( char *schemaName,
+extern SSchema GetGenericXMLSSchema ( const char *schemaName,
                                         Document doc );
-extern SSchema GetGenericXMLSSchemaByUri ( char *uriName,
+extern SSchema GetGenericXMLSSchemaByUri ( const char *uriName,
                                              Document doc,
                                              ThotBool *isnew );
 extern SSchema GetXMLSSchema ( int XMLtype,
@@ -76,14 +76,14 @@ extern void HasNatures ( Document document,
                            ThotBool *useMathML,
                            ThotBool *useSVG );
 extern void MapXMLElementType ( int XMLtype,
-                                  char *XMLname,
+                                  const char *XMLname,
                                   ElementType *elType,
                                   char **mappedName,
                                   char *content,
                                   ThotBool *checkProfile,
                                   Document doc );
-extern char *GetXMLElementName ( ElementType elType,
-                                   Document doc );
+extern const char *GetXMLElementName ( ElementType elType,
+                                         Document doc );
 extern ThotBool IsXMLElementInline ( ElementType elType,
                                        Document doc );
 extern void MapXMLAttributeValue ( int XMLtype,
@@ -91,14 +91,14 @@ extern void MapXMLAttributeValue ( int XMLtype,
                                      const AttributeType *attrType,
                                      int *value );
 extern int MapXMLAttribute ( int XMLtype,
-                               char *attrName,
-                               char *elementName,
+                               const char *attrName,
+                               const char *elementName,
                                ThotBool *checkProfile,
                                Document doc,
                                int *thotType );
-extern char *GetXMLAttributeName ( AttributeType attrType,
-                                     ElementType elType,
-                                     Document doc );
+extern const char *GetXMLAttributeName ( AttributeType attrType,
+                                           ElementType elType,
+                                           Document doc );
 extern void HasADoctype ( Document doc,
                             ThotBool *found,
                             ThotBool *useMath );

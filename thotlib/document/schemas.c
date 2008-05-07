@@ -102,7 +102,7 @@ void InitNatures ()
   Return the structure schema called name used by document pDoc.
   Return NULL if this document does not use this structure schema.
   ----------------------------------------------------------------------*/
-PtrSSchema GetSSchemaForDoc (char *name, PtrDocument pDoc)
+PtrSSchema GetSSchemaForDoc (const char *name, PtrDocument pDoc)
 {
   PtrSSchema          pSS;
   PtrDocSchemasDescr  pPfS;
@@ -124,7 +124,7 @@ PtrSSchema GetSSchemaForDoc (char *name, PtrDocument pDoc)
   Return the structure schema with URI uriName used by document pDoc.
   Return NULL if this document does not use this structure schema.
   ----------------------------------------------------------------------*/
-PtrSSchema GetSSchemaByUriForDoc (char *uriName, PtrDocument pDoc)
+PtrSSchema GetSSchemaByUriForDoc (const char *uriName, PtrDocument pDoc)
 {
   PtrSSchema          pSS;
   PtrDocSchemasDescr  pPfS;
@@ -404,7 +404,7 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
   table of loaded schemas, and return a pointer to it.
   Return TRUE if schema has been successfully loaded.
   ----------------------------------------------------------------------*/
-ThotBool LoadPresentationSchema (char *schemaName, PtrSSchema pSS,
+ThotBool LoadPresentationSchema (const char *schemaName, PtrSSchema pSS,
                                  PtrDocument pDoc)
 {
   PtrPSchema           pPSchema;
@@ -736,7 +736,7 @@ PtrPSchema PresentationSchema (PtrSSchema pSS, PtrDocument pDoc)
   is already loaded.
   Return NULL if schema can't be loaded.
   ----------------------------------------------------------------------*/
-PtrSSchema LoadStructureSchema (char *schemaURI, char * schemaName,
+PtrSSchema LoadStructureSchema (const char *schemaURI, const char * schemaName,
                                 PtrDocument pDoc)
 {
   PtrSSchema           pSSchema;
@@ -890,8 +890,8 @@ void ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
   de presentation par defaut defini dans le schema de structure, sinon on
   propose le schema de presentation de nom PSchName.
   ----------------------------------------------------------------------*/
-void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule, char *schURI,
-                       PtrDocument pDoc)
+void LoadNatureSchema (PtrSSchema pSS, const char *PSchName, int rule,
+                        const char *schURI, PtrDocument pDoc)
 {
   char          *schName;
   PtrSSchema     pNatureSS;
@@ -1147,7 +1147,7 @@ static void AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
   le schema de presentation par defaut defini dans le schema de	
   structure, sauf si le premier octet de PSchName est nul.	
   ----------------------------------------------------------------------*/
-int CreateNature (char *SSchURI, char *SSchName, char *PSchName,
+int CreateNature (const char *SSchURI, const char *SSchName, const char *PSchName,
                   PtrSSchema pSS, PtrDocument pDoc)
 {
 #ifndef NODISPLAY
@@ -2294,7 +2294,7 @@ void SetXmlInLineRule (ElementType elType, PtrDocument pDoc)
   AppendXmlElement
   Add a new element type to the schema
   ----------------------------------------------------------------------*/
-void AppendXmlElement (char *xmlName, int *typeNum, PtrSSchema pSS,
+void AppendXmlElement (const char *xmlName, int *typeNum, PtrSSchema pSS,
                        char **mappedName, PtrDocument pDoc)
 {
   PtrDocSchemasDescr  pPfS;
@@ -2430,7 +2430,7 @@ void GetXmlAttributeType (char* xmlName, AttributeType *attrType, PtrDocument pD
   Search in elType->ElSSchema if not NULL otherwise,
   search in the different loaded natures.
   ----------------------------------------------------------------------*/
-void GetXmlElementType (char *xmlName, ElementType *elType,
+void GetXmlElementType (const char *xmlName, ElementType *elType,
                         char **mappedName, PtrDocument pDoc)
 {
   PtrDocSchemasDescr  pPfS;
@@ -2494,7 +2494,7 @@ void GetXmlElementType (char *xmlName, ElementType *elType,
   SetUriSSchema
   Set the namespace uri associated with that schema
   ----------------------------------------------------------------------*/
-void SetUriSSchema (PtrSSchema pSSchema, char *sSchemaUri)
+void SetUriSSchema (PtrSSchema pSSchema, const char *sSchemaUri)
 {
   if (sSchemaUri != NULL && pSSchema->SsUriName == NULL)
     {
@@ -2507,7 +2507,7 @@ void SetUriSSchema (PtrSSchema pSSchema, char *sSchemaUri)
   ChangeGenericSchemaNames
   Change the name of a generic xml schema
   ----------------------------------------------------------------------*/
-void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument pDoc)
+void ChangeGenericSchemaNames (const char *sSchemaUri, const char *sSchemaName, PtrDocument pDoc)
 
 {
   PtrSSchema          pSS, docSS;
@@ -2693,7 +2693,7 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
   AddANewNamespacePrefix
   ----------------------------------------------------------------------*/
 static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
-                                    char *nsPrefix, PtrNsUriDescr uriDecl)
+                                    const char *nsPrefix, PtrNsUriDescr uriDecl)
 {
   PtrNsPrefixDescr   newDecl, lastDecl, prevDecl;
 
@@ -2728,7 +2728,7 @@ static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
   AddANewNamespaceUri
   ----------------------------------------------------------------------*/
 static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
-                                 char *nsPrefix, const char *NsUri)
+                                 const char *nsPrefix, const char *NsUri)
 {
   PtrNsUriDescr  newUriDecl, uriDecl, prevUriDecl;
 
@@ -2765,7 +2765,7 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
   Add a namespace declaration to the document
   ----------------------------------------------------------------------*/
 void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
-                              char *nsPrefix, const char *NsUri)
+                              const char *nsPrefix, const char *NsUri)
 {
   PtrNsUriDescr   uriDecl;
   ThotBool        found;

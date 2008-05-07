@@ -719,7 +719,7 @@ static void TimelineParseCoordAttribute (Attribute attr, Element el, Document do
       TtaGiveTextAttributeValue (attr, text, &length);
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
       if (pval.typed_data.unit != UNIT_INVALID)
         {
@@ -827,7 +827,7 @@ static ThotBool TimelineParseWidthHeightAttribute (Attribute attr, Element el,
       TtaGiveTextAttributeValue (attr, text, &length); 
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
-      ptr = TtaSkipBlanks (ptr);
+      ptr = (char*)TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
       if (pval.typed_data.unit != UNIT_INVALID)
         {
@@ -867,7 +867,7 @@ static ThotBool TimelineParseWidthHeightAttribute (Attribute attr, Element el,
   ----------------------------------------------------------------------*/
 #ifdef _SVG
 static Element Insert_rectangle(Document timelinedoc, Element root,
-                                char* fill_color,char* stroke_color,
+                                const char* fill_color, const char* stroke_color,
                                 int x, int y, int w, int h, int Insert_enfant,
                                 int typeNum) 
 {
@@ -953,7 +953,7 @@ static Element Insert_rectangle(Document timelinedoc, Element root,
   primitive to generate Timeline Element line via thot api
   ----------------------------------------------------------------------*/
 #ifdef _SVG
-static Element Insert_tline(Document timelinedoc, Element root, char* couleur,
+static Element Insert_tline(Document timelinedoc, Element root, const char* couleur,
                             int x1, int y1, int x2, int y2, int Insert_enfant) 
 {
   Element              el = NULL;
@@ -1028,8 +1028,8 @@ static Element Insert_tline(Document timelinedoc, Element root, char* couleur,
   primitive to generate Timeline Element text via thot api
   ----------------------------------------------------------------------*/
 #ifdef _SVG
-static Element Insert_text(Document timelinedoc, Element root, char* couleur,
-                           char* text, char* font_family, int font_size,
+static Element Insert_text(Document timelinedoc, Element root, const char* couleur,
+                           const char* text, const char* font_family, int font_size,
                            int x, int y, int Insert_enfant, int type_num) 
 {
   Element              el = NULL;

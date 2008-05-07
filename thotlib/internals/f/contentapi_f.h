@@ -7,14 +7,14 @@
 #ifdef __STDC__
 
 extern void TtaSetTextContent ( Element element,
-                                unsigned char *content,
+                                const unsigned char *content,
                                 Language language,
                                 Document document );
 extern void TtaSetPictureContent ( Element element,
-                                   unsigned char *content,
+                                   const unsigned char *content,
                                    Language language,
                                    Document document,
-                                   char *mime_type );
+                                   const char *mime_type );
 extern void TtaAppendTextContent ( Element element,
                                    unsigned char *content,
                                    Document document );
@@ -173,7 +173,7 @@ extern void TtaGivePictureSize ( Element element,
                                  int *height );
 extern PicType TtaGetPictureType ( Element element );
 extern void TtaSetPictureType ( Element element,
-                                char *mime_type );
+                                const char *mime_type );
 extern void TtaGiveBufferContent ( Element element,
                                    CHAR_T *buffer,
                                    int length,
@@ -201,14 +201,14 @@ extern int TtaGetPageView ( Element pageElement );
 #else /* __STDC__ */
 
 extern void TtaSetTextContent ( Element element,
-                                  unsigned char *content,
+                                  const unsigned char *content,
                                   Language language,
                                   Document document );
 extern void TtaSetPictureContent ( Element element,
-                                     unsigned char *content,
+                                     const unsigned char *content,
                                      Language language,
                                      Document document,
-                                     char *mime_type );
+                                     const char *mime_type );
 extern void TtaAppendTextContent ( Element element,
                                      unsigned char *content,
                                      Document document );
@@ -367,7 +367,7 @@ extern void TtaGivePictureSize ( Element element,
                                    int *height );
 extern PicType TtaGetPictureType ( Element element );
 extern void TtaSetPictureType ( Element element,
-                                  char *mime_type );
+                                  const char *mime_type );
 extern void TtaGiveBufferContent ( Element element,
                                      CHAR_T *buffer,
                                      int length,
