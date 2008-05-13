@@ -29,7 +29,7 @@
  */
 PUBLIC time_t strtotime (char *time) 
 {
-    char * months[12] = { "Jan","Feb","Mar","Apr","May","Jun", 
+    const char * months[12] = { "Jan","Feb","Mar","Apr","May","Jun", 
 	                  "Jul","Aug","Sep","Oct","Nov","Dec" };	
     char copy[128];
     time_t t1;
@@ -218,7 +218,7 @@ LockLine * LockLine_new (const char * aline)
          {
 
             if ( (me = (LockLine *)HT_CALLOC (1,sizeof(LockLine))) == NULL)
-                HT_OUTOFMEM ("LockLine new");
+                HT_OUTOFMEM ((char*)"LockLine new");
 
             me->relativeURI = me->lockToken = NULL;
             me->timeout =  me->initialTime = NULL;
@@ -262,7 +262,7 @@ PUBLIC LockLine * LockLine_newObject (char * relativeURI, char * locktoken,
      {
 
         if ( (me = (LockLine *)HT_CALLOC (1,sizeof(LockLine))) == NULL)
-            HT_OUTOFMEM ("LockLine newObject");
+            HT_OUTOFMEM ((char*)"LockLine newObject");
 
         me->relativeURI = me->lockToken = me->timeout = me->initialTime = NULL;
 
@@ -414,7 +414,7 @@ PUBLIC char * makeIfItem (const char * filename, char * relUri, char *lockToken)
         sum += 15;
         
         if ( (ptr = (char *)HT_CALLOC (sum,sizeof(char))) == NULL)
-             HT_OUTOFMEM("AHTLockFile makeIfItem");
+             HT_OUTOFMEM((char*)"AHTLockFile makeIfItem");
         
         sprintf (ptr,"<http://%s%s> (%s) ",filename,relUri,lockToken);
      }
@@ -546,8 +546,8 @@ PUBLIC HTList * searchLockBase ( char * filename,  char * reqUri)
         time (&now);
 	itime = strtotime (info->initialTime);
     
-        if (HTStrCaseStr(info->timeout,"Infinite")!=NULL) tout = now;
-        else if (HTStrCaseStr(info->timeout,"Second-")!=NULL) 
+        if (HTStrCaseStr(info->timeout, (char*)"Infinite")!=NULL) tout = now;
+        else if (HTStrCaseStr(info->timeout, (char*)"Second-")!=NULL) 
          {
             ptr = strchr(info->timeout,'-') + 1;
             tout = (time_t) atol(ptr);
@@ -649,11 +649,11 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
      *                     |   |        |   |
      *                   host dom     port rel
      */                 
-    host = HTStrCaseStr (address, "://");
+    host = HTStrCaseStr (address, (char*)"://");
     status = (host) ? YES:NO;
     host = (host) ? host+3:host;
-    port = (status) ? HTStrCaseStr (host, ":"):NULL;
-    rel  = (status) ? HTStrCaseStr (host, "/"):NULL;
+    port = (status) ? HTStrCaseStr (host, (char*)":"):NULL;
+    rel  = (status) ? HTStrCaseStr (host, (char*)"/"):NULL;
     
     /* if port is pointing for somewhere after the first "/" (rel),
      * so it's not indicating the port number */
@@ -693,7 +693,7 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
       (*rel) = '\0';
     /* try to find the domain name in the host */
     StrAllocCopy (filename, host);
-    dom = HTStrCaseStr (host, ".");
+    dom = HTStrCaseStr (host, (char*)".");
     
     if (dom == NULL) 
      {
@@ -702,7 +702,7 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
        StrAllocCopy (fqdn, localFQDN);
         if (strcasecomp (host,"localhost") != 0) 
          {
-            dom = HTStrCaseStr (fqdn, ".");
+            dom = HTStrCaseStr (fqdn, (char*)".");
             if (dom) 
 	      StrAllocCat (filename, dom);
             HT_FREE (fqdn);

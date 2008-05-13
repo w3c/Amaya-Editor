@@ -12,7 +12,10 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.5  2003-11-19 12:33:16  gully
+ ** Revision 1.6  2008-05-13 09:30:27  kia
+ ** More char* fixes
+ **
+ ** Revision 1.5  2003/11/19 12:33:16  gully
  ** Compilation fix (webdav support)
  **
  ** S. GULLY
@@ -558,7 +561,7 @@ extern AwTree *AwParser_umountMessage (AwString message)
  * This function searches the value of an element in a XML
  * tree. It returns a new string with the value or NULL.
  * ----------------------------------------------------------- */
-extern char * AwParser_searchInTree (AwTree *tree, char *elem) 
+extern char * AwParser_searchInTree (AwTree *tree, const char *elem) 
 {
     AwString pattern;
     AwString value;

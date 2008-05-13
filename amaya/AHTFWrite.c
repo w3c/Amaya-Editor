@@ -227,7 +227,7 @@ HTStream *AHTFWriter_new (HTRequest *request, FILE *fp, BOOL leave_open)
      }
 
    if ((me = (HTStream *) HT_CALLOC (1, sizeof (HTStream))) == NULL)
-     HT_OUTOFMEM ("HTFWriter_new");
+     HT_OUTOFMEM ((char*)"HTFWriter_new");
    me->isa = &AHTFWriter;
 #ifdef DEBUG_LIBWWW
    if (fp == NULL)

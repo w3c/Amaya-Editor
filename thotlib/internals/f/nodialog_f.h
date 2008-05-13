@@ -112,8 +112,8 @@ extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
                                      ThotBool pre );
 extern void TtaSetStatus ( Document document,
                            View view,
-                           char *text,
-                           char *name );
+                           const char *text,
+                           const char *name );
 extern void FreeMenus ( void );
 extern void SwitchPaste ( PtrDocument pDoc,
                           ThotBool on );
@@ -303,8 +303,8 @@ extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
                                        ThotBool pre );
 extern void TtaSetStatus ( Document document,
                              View view,
-                             char *text,
-                             char *name );
+                             const char *text,
+                             const char *name );
 extern void FreeMenus ( void );
 extern void SwitchPaste ( PtrDocument pDoc,
                             ThotBool on );

@@ -265,7 +265,7 @@ static int WordHyphen (STRING word, int length, Language language,
   - hyphen is TRUE if an hyphen should be displayed.
   ----------------------------------------------------------------------*/
 int HyphenLastWord (SpecFont font, int variant, Language language, PtrTextBuffer *buffer,
-                    int *rank, int *width, ThotBool *hyphen)
+    int *rank, int *width, ThotBool *hyphen)
 {
   PtrTextBuffer       adbuff;
   CHAR_T              word[THOT_MAX_CHAR];
@@ -283,79 +283,78 @@ int HyphenLastWord (SpecFont font, int variant, Language language, PtrTextBuffer
       adbuff = *buffer;
       i = *rank;
       if (i >= adbuff->BuLength)
-	{
-	  if (adbuff->BuNext)
-	    {
-	      i = 0;
-	      adbuff = adbuff->BuNext;
-	    }
-	  else
-	    return retLength;
-	}
+        {
+          if (adbuff->BuNext)
+            {
+              i = 0;
+              adbuff = adbuff->BuNext;
+            }
+          else
+            return retLength;
+        }
 
       /* get the next word */
       nbChars = NextWord (font, variant, &adbuff, &i, word, &w);
       /* hyphen width */
       if (language < TtaGetFirstUserLanguage ())
-	lghyphen = 0;
+        lghyphen = 0;
       else
-	lghyphen = BoxCharacterWidth (173, 1, font);
+        lghyphen = BoxCharacterWidth (173, 1, font);
       /* width available for the first part of the word */
       rest = *width - w - lghyphen;
-      if (word)
-	/* length of the word */
-	wordLength = ustrlen (word);
+      /* length of the word */
+      wordLength = ustrlen (word);
       if (wordLength > 4 && rest > 0)
-	{
-	  /* look for a break */
-	  length = 0;
-	  charWidth = BoxCharacterWidth (word[length], variant, font);
-	  while (rest >= charWidth && length < wordLength)
-	    {
-	      rest -= charWidth;
-	      length++;
-	      charWidth = BoxCharacterWidth (word[length], variant, font);
-	    }
+        {
+          /* look for a break */
+          length = 0;
+          charWidth = BoxCharacterWidth (word[length], variant, font);
+          while (rest >= charWidth && length < wordLength)
+            {
+              rest -= charWidth;
+              length++;
+              charWidth = BoxCharacterWidth (word[length], variant, font);
+            }
 
-	  if (length > 1)
-	    {
-	      /* try to hyphanate the word */
-	      length = WordHyphen (word, length, language, hyphen);
-	      if (length > 0)
-		{
-		  /* found */
-		  if (*hyphen)
-		    *width = w + lghyphen;
-		  else
-		    *width = w;
-		  /* number of characters */
-		  retLength = length + nbChars;
-		  while (length > 0)
-		    {
-		      if (i >= adbuff->BuLength)
-			{
-			  adbuff = adbuff->BuNext;
-			  i = 0;
-			}
-		      else
-			{
-			  /* width and length of the first part of the word */
-			  length--;
-			  *width += BoxCharacterWidth (adbuff->BuContent[i++], variant, font);
-			}
-		    }
-		  
-		  /* locate the second part of the word */
-		  if (i >= adbuff->BuLength)
-		    {
-		      i = 0;
-		      adbuff = adbuff->BuNext;
-		    }
-		  *rank = i;
-		  *buffer = adbuff;
-		}
-	    }
-	}
+          if (length > 1)
+            {
+              /* try to hyphanate the word */
+              length = WordHyphen (word, length, language, hyphen);
+              if (length > 0)
+                {
+                  /* found */
+                  if (*hyphen)
+                    *width = w + lghyphen;
+                  else
+                    *width = w;
+                  /* number of characters */
+                  retLength = length + nbChars;
+                  while (length > 0)
+                    {
+                      if (i >= adbuff->BuLength)
+                        {
+                          adbuff = adbuff->BuNext;
+                          i = 0;
+                        }
+                      else
+                        {
+                          /* width and length of the first part of the word */
+                          length--;
+                          *width += BoxCharacterWidth (adbuff->BuContent[i++], variant, font);
+                        }
+                    }
+
+                  /* locate the second part of the word */
+                  if (i >= adbuff->BuLength)
+                    {
+                      i = 0;
+                      adbuff = adbuff->BuNext;
+                    }
+                  *rank = i;
+                  *buffer = adbuff;
+                }
+            }
+        }
     }
   return retLength;
 }

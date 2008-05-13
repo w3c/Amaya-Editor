@@ -7873,7 +7873,7 @@ void MathEntityModified (NotifyAttribute *event)
   -----------------------------------------------------------------------*/
 void MathDisplayAttrCreated (NotifyAttribute *event)
 {
-  ParseHTMLSpecificStyle (event->element, "display:block", event->document,
+  ParseHTMLSpecificStyle (event->element, (char*)"display:block", event->document,
                           0, TRUE);
   SetDisplaystyleMathElement (event->element, event->document);
 }
@@ -7884,7 +7884,7 @@ void MathDisplayAttrCreated (NotifyAttribute *event)
   -----------------------------------------------------------------------*/
 void MathDisplayAttrDeleted (NotifyAttribute *event)
 {
-  ParseHTMLSpecificStyle (event->element, "display:inline", event->document,
+  ParseHTMLSpecificStyle (event->element, (char*)"display:inline", event->document,
                           0, TRUE);
   SetDisplaystyleMathElement (event->element, event->document);
 }
@@ -7974,7 +7974,7 @@ ThotBool MathAttrFontsizeDelete (NotifyAttribute *event)
        font-size */
     /* in the statement below, "10pt" is meaningless. It's here just to
        make the CSS parser happy */
-    ParseHTMLSpecificStyle (event->element, "font-size: 10pt",
+    ParseHTMLSpecificStyle (event->element, (char*)"font-size: 10pt",
                             event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -7999,7 +7999,7 @@ ThotBool MathAttrLspaceDelete (NotifyAttribute *event)
      padding-left */
   /* in the statement below, "10pt" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, "padding-left: 10pt",
+  ParseHTMLSpecificStyle (event->element, (char*)"padding-left: 10pt",
                           event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -8014,7 +8014,7 @@ ThotBool MathAttrRspaceDelete (NotifyAttribute *event)
      padding-right */
   /* in the statement below, "10pt" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, "padding-right: 10pt",
+  ParseHTMLSpecificStyle (event->element, (char*)"padding-right: 10pt",
                           event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -8049,7 +8049,7 @@ ThotBool MathAttrFontfamilyDelete (NotifyAttribute *event)
   /* ask the CSS handler to remove the effect of property font-family */
   /* in the statement below, "serif" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, "font-family: serif",
+  ParseHTMLSpecificStyle (event->element, (char*)"font-family: serif",
                           event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -8328,7 +8328,7 @@ ThotBool AttrLinethicknessDelete (NotifyAttribute *event)
   /* ask the CSS handler to remove the effect of property stroke-width */
   /* in the statement below, "1pt" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, "stroke-width: 1pt",
+  ParseHTMLSpecificStyle (event->element, (char*)"stroke-width: 1pt",
                           event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }

@@ -13,7 +13,10 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.2  2002-06-03 14:37:44  kirschpi
+ ** Revision 1.3  2008-05-13 09:30:27  kia
+ ** More char* fixes
+ **
+ ** Revision 1.2  2002/06/03 14:37:44  kirschpi
  ** The name of some public functions have been changed to avoid conflic with
  ** other libraries.
  **
@@ -65,6 +68,6 @@ extern void AwParser_freeNode (AwNode *n);                                      
 extern AwString AwParser_mountMessage (AwTree *tree);                                 	/* mounts a protocol message */
 extern AwString AwParser_mountElement (AwNode *node);                                  	/* mounts a xml string with the node data */
 extern AwTree *AwParser_umountMessage (AwString message);                             	/* "umounts" a awareness protocol message */
-extern char * AwParser_searchInTree (AwTree *tree, char *elem);                            	/* searches the value of an element in a XML tree */
+extern char * AwParser_searchInTree (AwTree *tree, const char *elem);                            	/* searches the value of an element in a XML tree */
 
 #endif

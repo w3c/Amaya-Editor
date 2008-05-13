@@ -15,7 +15,10 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.28  2008-05-07 13:49:07  kia
+** Revision 1.29  2008-05-13 09:30:27  kia
+** More char* fixes
+**
+** Revision 1.28  2008/05/07 13:49:07  kia
 ** char* => const char*
 ** (Regis patches + many many others)
 **
@@ -628,12 +631,12 @@ AwList * GetPropfindInfoFromNode (AwNode *propnode)
           AwString_delete(info);
 
           /* properties that we don't want, continue */
-          if (!HTStrCaseStr(name,"getetag") && !HTStrCaseStr(name,"executable") 
-              && !HTStrCaseStr(name,"resourcetype") && !HTStrCaseStr(name,"source")
-              && !HTStrCaseStr(name,"supportedlock") && !HTStrCaseStr(name,"status"))
+          if (!HTStrCaseStr(name,(char*)"getetag") && !HTStrCaseStr(name,(char*)"executable") 
+              && !HTStrCaseStr(name,(char*)"resourcetype") && !HTStrCaseStr(name,(char*)"source")
+              && !HTStrCaseStr(name,(char*)"supportedlock") && !HTStrCaseStr(name,(char*)"status"))
             {
               /* lockdiscovery property? */
-              if (HTStrCaseStr(name,"lockdiscovery")) 
+              if (HTStrCaseStr(name,(char*)"lockdiscovery")) 
                 {
                   Nactivelock = AwNode_nextChild(child);
                   Nns = NULL;
@@ -655,11 +658,11 @@ AwList * GetPropfindInfoFromNode (AwNode *propnode)
                           AwString_delete(info);
 			  
                           /* ignore locktoken */
-                          if (HTStrCaseStr (Nns,"locktoken")) 
+                          if (HTStrCaseStr (Nns,(char*)"locktoken")) 
                             continue;
 			  
                           /* if owner, found href child */ 
-                          if (HTStrCaseStr (Nns,"owner")) 
+                          if (HTStrCaseStr (Nns,(char*)"owner")) 
                             {
                               href = NULL;    
                               info = AwString_new (5);

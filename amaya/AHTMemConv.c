@@ -48,7 +48,7 @@ static int AHTMemConv_abort ( HTStream * me,
   ----------------------------------------------------------------------*/
 static int         AHTMemConv_put_character (HTStream * me, char c)
 {
-   char*              tmp = "";
+   char                tmp[2];
    AHTReqContext      *reqcont;
 
    if (WWWTRACE)
@@ -57,6 +57,7 @@ static int         AHTMemConv_put_character (HTStream * me, char c)
    reqcont = (AHTReqContext *) HTRequest_context (me->request);
 
    tmp[0] = c;
+   tmp[1] = EOS;
    StrAllocCat (reqcont->error_stream, tmp);
    reqcont->error_stream_size += 1;
    return HT_OK;
@@ -166,7 +167,7 @@ HTStream           *AHTMemConv_new (HTRequest * request)
    AHTReqContext      *reqcont;
 
    if ((me = (HTStream *) HT_CALLOC (1, sizeof (HTStream))) == NULL)
-      HT_OUTOFMEM ("HTXConvert");
+      HT_OUTOFMEM ((char*)"HTXConvert");
 
    me->isa = &AHTResponseClass;
    me->request = request;

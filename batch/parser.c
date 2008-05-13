@@ -313,8 +313,7 @@ void GetNextToken (indLine start, indLine *wi, indLine *wl, SyntacticType *wn)
        else if ((inputLine[j] >= 'A' && inputLine[j] <= 'Z') ||
                 inputLine[j] == NBSP || /*nobreakspace */
                 (inputLine[j] >= 'a' && inputLine[j] <= 'z') ||
-                (((int) inputLine[j]) >= 192 &&
-                 ((int) inputLine[j]) <= 255))
+                ( inputLine[j] >= 192 /*&& inputLine[j] <= 255 : not needed inputLine[] is unsigned char */))
 	 *wn = SynIdentifier;
        else if (inputLine[j] == '\'')
 	 *wn = SynString;
@@ -365,8 +364,7 @@ void GetNextToken (indLine start, indLine *wi, indLine *wl, SyntacticType *wn)
 			  (inputLine[j] >= 'a' && inputLine[j] <= 'z') || 
 			  (inputLine[j] == NBSP) || /*nobreakspace */
 			  (inputLine[j] >= '0' && inputLine[j] <= '9') || 
-			  ((int)inputLine[j] >= 192 &&
-			   (int) inputLine[j] <= 255)  || /* lettre accentuee */
+			  (inputLine[j] >= 192 /* && inputLine[j] <= 255 : not needed inputLine[] is unsigned char*/)  || /* lettre accentuee */
 			  inputLine[j] == '_')) {
 		      CompilerMessage (j + 1, COMPIL, FATAL, BAD_WORD,
 				       inputLine, LineNum);

@@ -25,7 +25,7 @@ extern AwString AwParser_mountMessage ( AwTree *tree );
 extern AwString AwParser_mountElement ( AwNode *node );
 extern AwTree *AwParser_umountMessage ( AwString message );
 extern char * AwParser_searchInTree ( AwTree *tree,
-                                      char *elem );
+                                      const char *elem );
 
 #else /* __STDC__ */
 
@@ -48,7 +48,7 @@ extern AwString AwParser_mountMessage ( AwTree *tree );
 extern AwString AwParser_mountElement ( AwNode *node );
 extern AwTree *AwParser_umountMessage ( AwString message );
 extern char * AwParser_searchInTree ( AwTree *tree,
-                                        char *elem );
+                                        const char *elem );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -15,7 +15,10 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.15  2008-05-07 13:49:07  kia
+ ** Revision 1.16  2008-05-13 09:30:27  kia
+ ** More char* fixes
+ **
+ ** Revision 1.15  2008/05/07 13:49:07  kia
  ** char* => const char*
  ** (Regis patches + many many others)
  **
@@ -1579,7 +1582,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
 #endif        
             /* try to discover who is the lock's owner */
             lockinfo = DAVGetLockFromTree (davctx->tree, owner);
-            if (lockinfo && owner && *owner) 
+            if (lockinfo && owner[0]!=EOS) 
              {
                 /* if the user wants to receive awareness information,
                  * notify him/her about locked resources
@@ -1621,7 +1624,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
          }/*lockdiscovery*/
          else
           { /* the resource is unlocked */ 
-            line = LockLine_newObject (davctx->relativeURI, " ", DAVDepth, DAVTimeout,time(NULL));
+            line = LockLine_newObject (davctx->relativeURI, (char*)" ", DAVDepth, DAVTimeout,time(NULL));
             
 #ifdef DEBUG_DAV
             fprintf (stderr,"FilterFindLock_handler.... not found, "

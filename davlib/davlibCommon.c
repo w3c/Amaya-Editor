@@ -15,7 +15,10 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.13  2005-06-23 15:00:48  cvs
+ ** Revision 1.14  2008-05-13 09:30:27  kia
+ ** More char* fixes
+ **
+ ** Revision 1.13  2005/06/23 15:00:48  cvs
  ** fix 2 memory leak.
  ** (I hope it can help for MacOSX crash on http://www.w3.org/People/all ?)
  ** S. GULLY
@@ -227,8 +230,8 @@ time_t DAVTimeoutValue (char *timeout)
     char *ptr = NULL;
         
     time(&now);                
-    if (HTStrCaseStr(timeout,"Infinite")!=NULL) tout = now;
-    else if (HTStrCaseStr(timeout,"Second-")!=NULL) 
+    if (HTStrCaseStr(timeout, (char*)"Infinite")!=NULL) tout = now;
+    else if (HTStrCaseStr(timeout, (char*)"Second-")!=NULL) 
      {
         ptr = strchr(timeout,'-') + 1;
         tout = (time_t) atol(ptr);
@@ -595,7 +598,7 @@ void DAVAddIfHeader (AHTReqContext *context, char *url)
                             (ifHeader)?ifHeader:"none");
 #endif    
             if (ifHeader) /*add If header */
-                HTRequest_addExtraHeader (context->request,"If",ifHeader);
+                HTRequest_addExtraHeader (context->request, (char*)"If", ifHeader);
 
          }
      }
@@ -645,7 +648,7 @@ AHTDAVContext * AHTDAVContext_new (const char *DocURL)
         return NULL;
     
     if ( (me = (AHTDAVContext *)HT_CALLOC (1,sizeof(AHTDAVContext))) == NULL)
-        outofmem (__FILE__,"AHTDAVContext_new");
+        outofmem ((char*)__FILE__, (char*)"AHTDAVContext_new");
     
     /* getting absolute and relative URI */
     if (!separateUri (DocURL,DAVFullHostName,

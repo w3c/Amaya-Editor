@@ -1789,7 +1789,7 @@ static void AddBoxInLine (PtrBox pBox, int frame, PtrLine pLine,
 {
   int t, b, l, r;
 
-  l = b = l = t = 0;
+  l = b = r = t = 0;
   GetExtraMargins (pBox, frame, TRUE, &t, &b, &l, &r);
   pLine->LiRealLength += pBox->BxWidth + l + r;
   /* check if the line includes a compound box or an image */
