@@ -2715,17 +2715,7 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                                         pCell1->ElStructSchema))
                 pCell1 = pCell1->ElParent;
               /* is element pEl (within) a table cell */
-              pCell2 = pEl;
-              while (pCell2 &&
-                     !TypeHasException (ExcIsCell, pCell2->ElTypeNumber,
-                                        pCell2->ElStructSchema))
-                pCell2 = pCell2->ElParent;
-              if ((pCell1 && !pCell2) || (!pCell1 && pCell2))
-                /* selection has started within a table and is being extended
-                   outside, or it has started outside of a table and the user
-                   tries to extend it in a table. This is invalid */
-                return;
-              if (pCell1 && pCell2)
+              if (pCell1)
                 {
                   /* get the table that contains pCell1 */
                   pTable1 = pCell1;
@@ -2733,16 +2723,75 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                                                       pTable1->ElTypeNumber,
                                                       pTable1->ElStructSchema))
                     pTable1 = pTable1->ElParent;
+                }
+              else
+                pTable1 = NULL;
+              pCell2 = pEl;
+              while (pCell2 &&
+                     !TypeHasException (ExcIsCell, pCell2->ElTypeNumber,
+                                        pCell2->ElStructSchema))
+                pCell2 = pCell2->ElParent;
+              if (pCell2)
+                {
                   /* get the table that contains pCell2 */
                   pTable2 = pCell2;
                   while (pTable2 && !TypeHasException (ExcIsTable,
                                                       pTable2->ElTypeNumber,
                                                       pTable2->ElStructSchema))
                     pTable2 = pTable2->ElParent;
-                  /* do not allow selection extension outside of the current
-                     table */
-                  if (pTable1 != pTable2)
-                    return;
+                }
+              else
+                pTable2 = NULL;
+
+              if (pTable1 != pTable2)
+                {
+                  /* selection has started within a table and is being extended
+                     outside, or it has started outside of a table and the user
+                     tries to extend it in a table. Select the whole table */
+                  if (pTable1 && pTable2)
+                    {
+                      if (ElemIsAnAncestor (pTable1, pTable2))
+                        {
+                          FixedElement = pTable1;
+                          FixedChar = 0;
+                          pEl = pTable1;
+                          rank = 0;
+                        }
+                      else if (ElemIsAnAncestor (pTable2, pTable1))
+                        {
+                          FixedElement = pTable2;
+                          FixedChar = 0;
+                          pEl = pTable2;
+                          rank = 0;
+                        }
+                      else if (ElemIsBefore (pTable1, pTable2))
+                        {
+                          FixedElement = pTable1;
+                          FixedChar = 0;
+                          pEl = pTable2;
+                          rank = 0;
+                        }
+                      else
+                        {
+                          FixedElement = pTable2;
+                          FixedChar = 0;
+                          pEl = pTable1;
+                          rank = 0;
+                        }
+                    }
+                  else if (pTable1)
+                    {
+                      FixedElement = pTable1;
+                      FixedChar = 0;
+                    }
+                  else
+                    {
+                      pEl = pTable2;
+                      rank = 0;
+                    }
+                }
+              else if (pCell1 && pCell2)
+                {
                   if (pCell2 == pCell1)
                     /* extending selection within the same cell. We are no
                        longer in table selection mode */
