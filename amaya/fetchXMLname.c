@@ -568,7 +568,8 @@ int MapXMLAttribute (int XMLtype, const char *attrName, const char *elementName,
             *checkProfile = FALSE;
           /* Special case for the attributes 'rel' and 'rev' for elements 'a' and 'link' */
           else if ((!strcmp (attrName, "rel") || !strcmp (attrName, "rev")) &&
-		   (strcmp (elementName, "a") && strcmp (elementName, "link")) &&
+		   elementName && 
+                   (strcmp (elementName, "a") && strcmp (elementName, "link")) &&
 		   (extraprofile != L_RDFa))
 	    *checkProfile = FALSE;
 	  else
