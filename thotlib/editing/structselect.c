@@ -2743,6 +2743,53 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
               else
                 pTable2 = NULL;
 
+              // check if they are nested tables
+              if (pTable1 && pTable2 && pTable1 != pTable2)
+                {
+                  while (ElemIsAnAncestor (pTable1, pTable2))
+                    {
+                      pCell2 = pTable2->ElParent;
+                      while (pCell2 &&
+                             !TypeHasException (ExcIsCell, pCell2->ElTypeNumber,
+                                                pCell2->ElStructSchema))
+                        pCell2 = pCell2->ElParent;
+                      if (pCell2)
+                        {
+                          /* get the table that contains pCell2 */
+                          pTable2 = pCell2;
+                          while (pTable2 && !TypeHasException (ExcIsTable,
+                                                               pTable2->ElTypeNumber,
+                                                               pTable2->ElStructSchema))
+                            pTable2 = pTable2->ElParent;
+                        }
+                      else
+                        pTable2 = NULL;
+                      pEl = pCell2;
+                    }
+                  while (ElemIsAnAncestor (pTable2, pTable1))
+                    {
+                      pCell1 = pTable1->ElParent;
+                      while (pCell1 &&
+                             !TypeHasException (ExcIsCell, pCell1->ElTypeNumber,
+                                                pCell1->ElStructSchema))
+                        pCell1 = pCell1->ElParent;
+                      if (pCell1)
+                        {
+                          /* get the table that contains pCell1 */
+                          pTable1 = pCell1;
+                          while (pTable1 && !TypeHasException (ExcIsTable,
+                                                               pTable1->ElTypeNumber,
+                                                               pTable1->ElStructSchema))
+                            pTable1 = pTable1->ElParent;
+                        }
+                      else
+                        pTable1 = NULL;
+                      FixedElement = pCell1;
+                    }
+                  FixedChar = 0;
+                  rank = 0;
+                }
+
               if (pTable1 != pTable2)
                 {
                   /* selection has started within a table and is being extended
@@ -2750,21 +2797,7 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                      tries to extend it in a table. Select the whole table */
                   if (pTable1 && pTable2)
                     {
-                      if (ElemIsAnAncestor (pTable1, pTable2))
-                        {
-                          FixedElement = pTable1;
-                          FixedChar = 0;
-                          pEl = pTable1;
-                          rank = 0;
-                        }
-                      else if (ElemIsAnAncestor (pTable2, pTable1))
-                        {
-                          FixedElement = pTable2;
-                          FixedChar = 0;
-                          pEl = pTable2;
-                          rank = 0;
-                        }
-                      else if (ElemIsBefore (pTable1, pTable2))
+                      if (ElemIsBefore (pTable1, pTable2))
                         {
                           FixedElement = pTable1;
                           FixedChar = 0;
