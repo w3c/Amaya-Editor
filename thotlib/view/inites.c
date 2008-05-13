@@ -252,21 +252,21 @@ void         FreeDocColors ()
 #endif /* _GTK */
 #if defined(_WX)
   int        i;
-  
+
   /* free standard colors */
   for (i = 0; i < NColors; i++)
-    if (Pix_Color && Pix_Color[i])
+    if (Pix_Color[i])
       {
-	delete ((wxColour *)Pix_Color[i]);
-	Pix_Color[i] = NULL;
+        delete ((wxColour *)Pix_Color[i]);
+        Pix_Color[i] = NULL;
       }
-  
+
   /* free extended colors */
   for (i = 0; i < NbExtColors; i++)
     if (ExtColor && ExtColor[i])
       {
-	delete ((wxColour *)ExtColor[i]);
-	ExtColor[i] = NULL;
+        delete ((wxColour *)ExtColor[i]);
+        ExtColor[i] = NULL;
       }
 #endif /* #if defined(_WX) */
 #endif /* _WIN_PRINT */

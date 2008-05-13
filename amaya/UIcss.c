@@ -420,9 +420,8 @@ void UpdateStyleSheet (char *url, char *tempdoc)
           while (doc < DocumentTableLength)
             {
               /* don't manage a document used by make book */
-              if (DocumentURLs &&
-                  (DocumentMeta[doc] == NULL ||
-                   DocumentMeta[doc]->method != CE_MAKEBOOK))
+              if (DocumentMeta[doc] == NULL ||
+                   DocumentMeta[doc]->method != CE_MAKEBOOK)
                 {
                   pInfo = css->infos[doc];
                   while (pInfo)

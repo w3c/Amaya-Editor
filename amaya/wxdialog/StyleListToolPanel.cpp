@@ -17,7 +17,7 @@
 #include "css.h"
 #include "UIcss_f.h"
 
-static char       *DisplayCategory[]={
+static const char       *DisplayCategory[]={
   "[x] " /*CSS_Unknown*/,
   "[U] " /*CSS_USER_STYLE*/,
   "[S] " /*CSS_DOCUMENT_STYLE*/,

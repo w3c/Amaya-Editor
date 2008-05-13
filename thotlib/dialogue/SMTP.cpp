@@ -982,8 +982,6 @@ wxString wxSMTP::SendCommand(const wxString& request, bool* haveError)
     
     res = wxCmdLineProtocol::SendCommand(request, haveError);
     
-    int i = 0;
-    
     if(res.Length()>4 && res[3]!=wxT(' '))
     {
         line = ReadLine();
