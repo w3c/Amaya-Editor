@@ -29,7 +29,7 @@ END_EVENT_TABLE()
 DocInfoDlgWX::DocInfoDlgWX( int ref, wxWindow* parent, int doc ) : 
     AmayaDialog( parent, ref )
 {
-  char         *content;
+  const char         *content;
 
   My_ref = ref;
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("DocInfoDlgWX"));

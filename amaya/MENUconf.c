@@ -274,7 +274,7 @@ void InitAmayaDefEnv (void)
     TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
   TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
 #else /* _MACOS */
-  if (TempFileDirectory)
+  if (TempFileDirectory[0]!=EOS)
     {
       sprintf (s, "%s%clibwww-cache", TempFileDirectory, DIR_SEP);
       TtaSetDefEnvString ("CACHE_DIR", s, FALSE);
