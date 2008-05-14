@@ -276,15 +276,18 @@ void Template_Close(XTigerTemplate t)
 void Template_AddStandardDependancies(XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  if (t && !Template_IsLibrary(t))
+  if (t)
   {
-      if (DocumentTypes[t->doc]==docHTML)
-      {
-        Template_AddLibraryDeclarations (t,(XTigerTemplate)HashMap_Get(Templates_Map,
-                                                          (void*)HTML_LIBRARY));  
-      }
-    Template_AddLibraryDeclarations (t,(XTigerTemplate)HashMap_Get(Templates_Map,
-                                                      (void*)PREDEFINED_LIB));  
+	Template_AddLibraryDeclarations (t,(XTigerTemplate)HashMap_Get(Templates_Map,
+													  (void*)PREDEFINED_LIB));  
+	if(!Template_IsLibrary(t))
+	  {
+		if (DocumentTypes[t->doc]==docHTML)
+		  {
+			Template_AddLibraryDeclarations (t,(XTigerTemplate)HashMap_Get(Templates_Map,
+															  (void*)HTML_LIBRARY));  
+		  }
+	  }
   }      
 
 #endif /* TEMPLATES */
