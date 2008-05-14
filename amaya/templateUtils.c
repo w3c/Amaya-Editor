@@ -490,6 +490,27 @@ void DumpTemplateElement(Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+ * Dump subtree
+  ----------------------------------------------------------------------*/
+void DumpSubtree(Element el, Document doc, int off)
+{
+  Element child = TtaGetFirstChild(el);
+  int i;
+  
+  for(i=0; i<off; i++)
+    printf("  ");
+  DumpTemplateElement(el, doc);
+  printf("\n");
+
+  while(child)
+    {
+      DumpSubtree(child, doc, off+1);
+      TtaNextSibling(&child);
+    }
+  
+}
+
+/*----------------------------------------------------------------------
  * Save an opened document to a specified path in order to open.
  * param doc Original doc to save
  * param newdoc Document where reopen it
