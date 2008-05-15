@@ -1133,6 +1133,10 @@ ThotBool FrameMouseWheelCallback(
           /* if CTRL is down then zoom */
           ZoomOut (document, view);	   
         }
+      else if (thot_mod_mask & THOT_MOD_SHIFT)
+        {
+          HorizontalScroll (frame, -39, 1);
+        }
       else
         { 
           VerticalScroll (frame, -39, 1);
@@ -1146,6 +1150,10 @@ ThotBool FrameMouseWheelCallback(
         {
           /* if CTRL is down then zoom */
           ZoomIn (document, view);
+        }
+      else if (thot_mod_mask & THOT_MOD_SHIFT)
+        {
+          HorizontalScroll (frame, 39, 1);          
         }
       else
         {
