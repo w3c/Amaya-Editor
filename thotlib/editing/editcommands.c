@@ -3658,15 +3658,18 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
                 SelectString (pDoc, firstEl, 1, 0);
               else
                 SelectElement (pDoc, firstEl, TRUE, FALSE, TRUE);
-              if (lastEl != firstEl)
+              if (lastEl)
                 {
-                  if (lastEl->ElTerminal && lastEl->ElLeafType == LtText)
+                  if (lastEl != firstEl)
+                    {
+                      if (lastEl->ElTerminal && lastEl->ElLeafType == LtText)
+                        ExtendSelection (lastEl, lastEl->ElVolume+1, TRUE, FALSE, FALSE);
+                      else
+                        ExtendSelection (lastEl, 0, FALSE, FALSE, FALSE);
+                    }
+                  else if (lastEl->ElTerminal && lastEl->ElLeafType == LtText)
                     ExtendSelection (lastEl, lastEl->ElVolume+1, TRUE, FALSE, FALSE);
-                  else
-                    ExtendSelection (lastEl, 0, FALSE, FALSE, FALSE);
                 }
-              else if (lastEl->ElTerminal && lastEl->ElLeafType == LtText)
-                ExtendSelection (lastEl, lastEl->ElVolume+1, TRUE, FALSE, FALSE);
             }
 
           /* in principle, the entered character should replace the current
