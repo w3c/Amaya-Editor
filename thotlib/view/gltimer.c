@@ -248,15 +248,15 @@ ThotBool GetBadCard ()
   Then we call a redrawframebottom
   ----------------------------------------------------------------------*/
 ThotBool GL_DrawAll ()
-{  
-  int              frame;
+{
+  Document         doc;
   AnimTime         current_time;
   ThotBool         was_animation = FALSE; 
   char             out[128];
   unsigned int     i;
+  int              frame, nb_animated_frame = 0;
   static ThotBool  frame_animating = FALSE;  
   static double    lastime;
-  int              nb_animated_frame = 0;
 
   if (!FrameUpdating)
     {
@@ -289,14 +289,15 @@ ThotBool GL_DrawAll ()
                     }
                   else
                     current_time = FrameTable[frame].LastTime;
-
+                  doc =  FrameTable[frame].FrDoc;
                   if (FrameTable[frame].DblBuffNeedSwap &&
-                      FrameTable[frame].FrDoc &&
-                      documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
+                      doc && LoadedDocument[doc - 1] &&
+                      LoadedDocument[doc - 1]->DocSSchema &&
+                      strcmp (LoadedDocument[doc - 1]->DocSSchema->SsName, "TextFile") &&
+                      documentDisplayMode[doc - 1] != NoComputedDisplay)
                     {
 #ifdef _WX
                       // do not draw anything if the animated canvas page is not raidsed
-                      //                        if (FrameTable[frame].WdFrame->GetPageParent()->IsSelected())
                       if (FrameTable[frame].WdFrame->GetPageParent()->IsShown())
 #endif /* _WX */
                         if (GL_prepare (frame))
