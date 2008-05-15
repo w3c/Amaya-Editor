@@ -392,6 +392,7 @@ THOT_EXPORT char       Answer_text[MAX_LENGTH];
 THOT_EXPORT char       Answer_name[NAME_LENGTH];
 THOT_EXPORT char       Answer_password[NAME_LENGTH];
 THOT_EXPORT char       Display_password[NAME_LENGTH];
+THOT_EXPORT char       CurrentNameSpace[MAX_LENGTH]; // namespace of the sniffed document
 THOT_EXPORT char       ScanFilter[NAME_LENGTH]; /* to scan directories    */
 THOT_EXPORT char       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the user for a MathML expression */
 THOT_EXPORT char       JavascriptPromptValue[MAX_LENGTH]; /* value typed by the user in a prompt form */

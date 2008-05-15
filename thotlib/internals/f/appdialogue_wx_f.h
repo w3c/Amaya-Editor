@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern void TtaShowWindow ( int window_id,
                             ThotBool show );
 extern int TtaMakeWindow ( int x,
@@ -100,6 +101,7 @@ extern void TtaSetEnumContextMenu ( int res );
 extern int TtaGetEnumContextMenu ( void );
 
 #else /* __STDC__ */
+
 extern void TtaShowWindow ( int window_id,
                               ThotBool show );
 extern int TtaMakeWindow ( int x,

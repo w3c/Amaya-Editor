@@ -2682,23 +2682,23 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
   /* Init the new document */
   if (docType == docText || docType == docCSS ||
       docType == docSource || docType == docLog)
-    doc = TtaInitDocument ("TextFile", docname, requested_doc);
+    doc = TtaInitDocument ("TextFile", docname, CurrentNameSpace, requested_doc);
   else if (docType == docAnnot)
-    doc = TtaInitDocument ("Annot", docname, requested_doc);
+    doc = TtaInitDocument ("Annot", docname, CurrentNameSpace, requested_doc);
 #ifdef BOOKMARKS
   else if (docType == docBookmark)
-    doc = TtaInitDocument ("Topics", docname, requested_doc);
+    doc = TtaInitDocument ("Topics", docname, CurrentNameSpace, requested_doc);
 #endif /* BOOKMARKS */
   else if (docType == docSVG)
-    doc = TtaInitDocument ("SVG", docname, requested_doc);
+    doc = TtaInitDocument ("SVG", docname, CurrentNameSpace, requested_doc);
   else if (docType == docMath)
-    doc = TtaInitDocument ("MathML", docname, requested_doc);
+    doc = TtaInitDocument ("MathML", docname, CurrentNameSpace, requested_doc);
 #ifdef XML_GENERIC      
   else if (docType == docXml)
-    doc = TtaInitDocument ("XML", docname, requested_doc);
+    doc = TtaInitDocument ("XML", docname, CurrentNameSpace, requested_doc);
 #endif /* XML_GENERIC */
   else
-    doc = TtaInitDocument ("HTML", docname, requested_doc);
+    doc = TtaInitDocument ("HTML", docname, CurrentNameSpace, requested_doc);
   if (doc >= DocumentTableLength)
     {
       TtaCloseDocument (doc);

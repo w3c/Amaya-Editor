@@ -2511,7 +2511,7 @@ static void Build_timeline (Document basedoc, char* timelineName)
   el = NULL;
   root = NULL;
   /* create the document */
-  dt[basedoc].timelinedoc = TtaInitDocument ("Timeline", "Timeline", 0);
+  dt[basedoc].timelinedoc = TtaInitDocument ("Timeline", "Timeline", "Timeline", 0);
   TtaSetPSchema (dt[basedoc].timelinedoc, "TimelineP");
   
   /* get customizable default position & size*/

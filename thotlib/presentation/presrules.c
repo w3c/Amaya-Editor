@@ -2017,7 +2017,8 @@ void SearchPresSchema (PtrElement pEl, PtrPSchema *pSchP, int *indexElType,
       /* de presentation (s'il y en a) de la regle nature dans la structure */
       /* englobante. */
       /* on ne traite pas les marques de page */
-      if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
+      if ((!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak) &&
+           *indexElType == (*pSchS)->SsRootElem)
         if (pEl->ElParent != NULL)
           /* il y a un englobant */
           if (pEl->ElParent->ElStructSchema != pEl->ElStructSchema)

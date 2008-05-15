@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
@@ -1876,7 +1876,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
   int                  firstChar, lastChar, i;
   ThotBool             oldStructureChecking;
   
-  newSVGDoc = TtaInitDocument ("SVG", "tmp", 0);
+  newSVGDoc = TtaInitDocument ("SVG", "tmp", CurrentNameSpace, 0);
   if (newSVGDoc != 0)
     {
       TtaSetPSchema (newSVGDoc, "SVGP");

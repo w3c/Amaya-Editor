@@ -418,6 +418,9 @@ ThotBool LoadPresentationSchema (const char *schemaName, PtrSSchema pSS,
     /* no presentation schema specified, use the default P schema specified
        in the structure schema */
     schemaName = pSS->SsDefaultPSchema;
+  else if (!strcmp (schemaName, "XMLP"))
+    // the name of the schema could be already changed
+     schemaName = pSS->SsDefaultPSchema;
   pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (pPfS && pPfS->PfPSchema &&
       !strcmp (schemaName, pPfS->PfPSchema->PsPresentName))
@@ -2507,7 +2510,8 @@ void SetUriSSchema (PtrSSchema pSSchema, const char *sSchemaUri)
   ChangeGenericSchemaNames
   Change the name of a generic xml schema
   ----------------------------------------------------------------------*/
-void ChangeGenericSchemaNames (const char *sSchemaUri, const char *sSchemaName, PtrDocument pDoc)
+void ChangeGenericSchemaNames (const char *sSchemaUri, const char *sSchemaName,
+                               PtrDocument pDoc)
 
 {
   PtrSSchema          pSS, docSS;

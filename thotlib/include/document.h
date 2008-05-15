@@ -48,13 +48,14 @@ extern Document TtaGetNextDocumentIndex ();
    characters). The directory name is not part of this parameter
    (see TtaSetDocumentPath).
    document: the requested document or 0.
+   nspace: namespace used for the XML document
 
    Return value:
    the document that has been created or 0 if the document has not
    been created.
   ----------------------------------------------------------------------*/
 extern Document TtaInitDocument (const char *structureSchema, const char *documentName,
-				 Document document);
+                                 const char *nspace, Document document);
 
 /*----------------------------------------------------------------------
    TtaNewDocument

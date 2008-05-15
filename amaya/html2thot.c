@@ -5279,7 +5279,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
   *charset = UNDEFINED_CHARSET;
   *thotType = docText;
   *extraProfile = L_NoExtraProfile;
-
+  CurrentNameSpace[0] = EOS;
   stream = TtaGZOpen (fileName);
   if (stream != 0)
     {
@@ -5582,14 +5582,18 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           ptrns = strstr (&buffer[i], "xmlns");
                           if (ptrns && ptrns < end)
                             {
-                              ptr = strstr (ptrns,  XHTML_URI);
-                              if (ptr && ptr < end)
+                              *isXML = TRUE;
+                              ptrns += 5;
+                              if (*ptrns != ':')
                                 {
-                                  /* The xhtml namespace declaration is found */
-                                  *thotType = docHTML;
-                                  *isXML = TRUE;
-                                  *isknown = TRUE;
-                                  *docProfile = L_Transitional;
+                                  ptr = strstr (ptrns,  XHTML_URI);
+                                  if (ptr && ptr < end)
+                                    {
+                                      /* The xhtml namespace declaration is found */
+                                      *thotType = docHTML;
+                                      *isknown = TRUE;
+                                      *docProfile = L_Transitional;
+                                    }
                                 }
                             }
                           else
@@ -5610,12 +5614,16 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           ptrns = strstr (&buffer[i], "xmlns");
                           if (ptrns && ptrns < end)
                             {
-                              ptr = strstr (ptrns, "svg");
-                              if (ptr && ptr < end)
+                              *isXML = TRUE;
+                              ptrns += 5;
+                              if (*ptrns != ':')
                                 {
-                                  /* The svg namespace declaration is found */
-                                  *isXML = TRUE;
-                                  *isknown = TRUE;
+                                  ptr = strstr (ptrns, "svg");
+                                  if (ptr && ptr < end)
+                                    {
+                                      /* The svg namespace declaration is found */
+                                      *isknown = TRUE;
+                                    }
                                 }
                             }
                         }
@@ -5633,12 +5641,16 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           ptrns = strstr (&buffer[i], "xmlns");
                           if (ptrns && ptrns < end)
                             {
-                              ptr = strstr (ptrns, "MathML");
-                              if (ptr && ptr < end)
+                              *isXML = TRUE;
+                              ptrns += 5;
+                              if (*ptrns != ':')
                                 {
-                                  /* The MathML namespace declaration is found */
-                                  *isXML = TRUE;
-                                  *isknown = TRUE;
+                                  ptr = strstr (ptrns, "MathML");
+                                  if (ptr && ptr < end)
+                                    {
+                                      /* The MathML namespace declaration is found */
+                                      *isknown = TRUE;
+                                    }
                                 }
                             }
                         }
@@ -5647,6 +5659,39 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           /* it's not necessary to continue */
                           found = FALSE;
                           endOfSniffedFile = TRUE;			  
+                          /* We consider the document as a xml one */
+                          end = strstr (&buffer[i], ">");
+                          ptrns = strstr (&buffer[i], "xmlns");
+                          if (ptrns && ptrns < end)
+                            {
+                              *thotType = docXml;
+                              ptrns += 5;
+                              if (*ptrns != ':')
+                                {
+                                  // copy the namespace
+                                  while (ptrns != end && *ptrns != '"')
+                                    ptrns++;
+                                  ptr = &ptrns[1];
+                                  j = 0;
+                                  while (ptr != end && *ptr != *ptrns && j < NAME_LENGTH)
+                                    {
+                                      CurrentNameSpace[j++] = *ptr;
+                                      ptr++;
+                                    }
+                                }
+                            }
+                          if (CurrentNameSpace[0] == EOS)
+                            {
+                              // copy the root name
+                              j = 0;
+                              ptr = &buffer[i];
+                              while (ptr != end && *ptr != SPACE && j < NAME_LENGTH)
+                                {
+                                  CurrentNameSpace[j++] = *ptr;
+                                  ptr++;
+                                }
+                              
+                            }
                         }
                     }
                   else

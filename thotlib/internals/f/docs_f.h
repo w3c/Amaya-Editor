@@ -9,6 +9,7 @@
 extern Document TtaGetNextDocumentIndex ( void );
 extern Document TtaInitDocument ( const char *structureSchema,
                                   const char *documentName,
+                                  const char *nspace,
                                   Document document );
 extern Document TtaNewDocument ( const char *structureSchema,
                                  const char *documentName );
@@ -32,6 +33,7 @@ extern void BackupOnFatalErrorLoadResources ( void );
 extern Document TtaGetNextDocumentIndex ( void );
 extern Document TtaInitDocument ( const char *structureSchema,
                                     const char *documentName,
+                                    const char *nspace,
                                     Document document );
 extern Document TtaNewDocument ( const char *structureSchema,
                                    const char *documentName );

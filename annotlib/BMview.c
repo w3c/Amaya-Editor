@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999-2005
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -911,7 +911,7 @@ Document BM_GetTopicTree (int ref)
   Element el;
   ElementType elType;
 
-  doc = TtaInitDocument ("Topics", "sorted topics", 0);
+  doc = TtaInitDocument ("Topics", "sorted topics", "Topics", 0);
   if (doc == 0)
     return 0;
   TtaSetDisplayMode (doc, NoComputedDisplay);
