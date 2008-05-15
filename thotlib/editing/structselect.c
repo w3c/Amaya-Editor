@@ -4100,6 +4100,7 @@ static void SelColumns (PtrElement col1, PtrElement col2)
     }
   while (pRow && !pCell);
   pLast = pCell;
+  
   if (pFirst && pFirst == pLast)
     SelectElementWithEvent (SelectedDocument, pFirst, TRUE, FALSE);
   else
@@ -4122,7 +4123,7 @@ static void SelColumns (PtrElement col1, PtrElement col2)
           DoExtendSelection (pLast, 0, FALSE, TRUE, FALSE, TRUE, FALSE); /* the
           last parameter should be TRUE, but we do not want multiple columns
           to be selected as long as commands Cut, Copy and Paste can not
-          handle mutiple columns at a time */
+          handle multiple columns at a time */
           
           /* send event TteElemExtendSelect.Post to the application */
           notifyEl.event = TteElemExtendSelect;
@@ -4135,9 +4136,11 @@ static void SelColumns (PtrElement col1, PtrElement col2)
           CallEventType ((NotifyEvent *) & notifyEl, FALSE);
         }
     }
+
   WholeColumnSelected = TRUE;
   FirstSelectedColumn = col1;
   LastSelectedColumn = col2;
+  TtaSetStatusSelectedElement (doc, 1, (Element) FirstSelectedElement);  
 }
 
 /*----------------------------------------------------------------------

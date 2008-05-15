@@ -17,6 +17,14 @@
 #include "logdebug.h"
 #include "selection.h"
 
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "edit_tv.h"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
+#include "select_tv.h"
+
+
 #include "callback_f.h"
 #include "exceptions_f.h"
 #include "structschema_f.h"
@@ -63,13 +71,13 @@ void AmayaPathControl::SetSelection(Element elem)
   wxString            name;
   wxRect              rect;
   int                 length, kind, i;
-  char               *buffer = NULL, buff[MAX_LENGTH];
-  bool                xtiger, file = false;
+  char                buffer[MAX_LENGTH], buff[MAX_LENGTH];
+  ThotBool            xtiger = FALSE, file = FALSE;
   Document            doc = TtaGetDocument(elem);
   SSchema             htmlSSchema = TtaGetSSchema ("HTML", doc);
   AttributeType       attrType;
   Attribute           attr;
-  
+  const char*         elname;
   
   m_items.DeleteContents(true);
   m_items.clear();
@@ -84,38 +92,43 @@ void AmayaPathControl::SetSelection(Element elem)
           (!pEl->ElTerminal ||
            (pEl->ElLeafType != LtText && pEl->ElLeafType != LtPicture)))
         {
-          buffer = NULL;
-          xtiger = (pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
-                    !strcmp (pEl->ElStructSchema->SsName, "Template"));
-          if (xtiger)
+          buffer[0] = EOS;
+
+          if ((pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
+              !strcmp (pEl->ElStructSchema->SsName, "Template")))
             {
-              // replace the element name byt the attribute value
+              // The element is an XTiger element.
+              // Replace its name by the attribute value
+              xtiger = TRUE;
               pAttr = GetAttrElementWithException (ExcGiveName, pEl);
               if (pAttr)
                 {
-                  length = TtaGetTextAttributeLength ((Attribute)pAttr);
-                  buffer = (char *)TtaGetMemory (length + 1);
                   /* copy the NAME attribute into TargetName */
+                  length = MAX_LENGTH-1;
                   TtaGiveTextAttributeValue ((Attribute)pAttr, buffer, &length);
                 }
             }
-          else
+          else if((pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
+                      !strcmp (pEl->ElStructSchema->SsName, "TextFile")))
             {
-              // display the line number
-              file = (pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
-                      !strcmp (pEl->ElStructSchema->SsName, "TextFile"));
-              if (file)
-                {
-                  buffer = (char *)TtaGetMemory (20);
-                  sprintf (buffer, "Line: %d", pEl->ElLineNb);
-                }
+              // The showed document is a text file.
+              // Display the selection line number
+              file = TRUE;
+              sprintf (buffer, "Line: %d", pEl->ElLineNb);
             }
-          if (buffer)
+          else if(WholeColumnSelected && pEl==(PtrElement)elem &&
+                  pEl->ElStructSchema==(PtrSSchema)htmlSSchema)
+            {
+              // The selection is a table column
+              elname = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName;
+              if( !strcmp(elname, "td") || !strcmp(elname, "th"))
+                sprintf (buffer, "Column");
+            }
+
+          if (buffer[0]!=EOS)
             {
               // replace the element name by the attribute value
               name = TtaConvMessageToWX(buffer);
-              TtaFreeMemory (buffer);
-              buffer = NULL;
             }
           else
             {
