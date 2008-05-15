@@ -29,7 +29,7 @@
 #define L_StrictValue       0x0E /* allowed in all XHTML profiles except Basic */
 #define L_RubyValue         0x04 /* allowed only in Xhtml11 profile */
 #define L_TransitionalValue 0x08 /* allowed only in Transitional profile */
-#define L_MathMLValue       0x2E /* allowed in MathML profile, SVG profile */
+#define L_MathMLValue       0x3E /* allowed in MathML profile, SVG profile */
                                  /* and XHTML profiles except Basic */
 #define L_RDFaValue         0x10 /* allowed only in XHTML+RDFa profile */
 #define L_OtherValue        0xFF
