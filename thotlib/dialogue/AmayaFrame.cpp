@@ -622,8 +622,11 @@ void AmayaFrame::OnClose(wxCloseEvent& event)
   PtrDocument         pDoc;
   int                 view;
 
-  GetDocAndView (m_FrameId, &pDoc, &view);
-  CloseView (pDoc, view);
+  if (m_FrameId > 0)
+    {
+      GetDocAndView (m_FrameId, &pDoc, &view);
+      CloseView (pDoc, view);
+    }
 }
 
 /*----------------------------------------------------------------------
