@@ -749,7 +749,43 @@ ThotBool IsXMLStruct (const char *path)
 }
 
 /*----------------------------------------------------------------------
-  IsXTiger                                                        
+  IsXTigerLibrary                                                        
+  returns TRUE if path points to an XTiger resource.
+  ----------------------------------------------------------------------*/
+ThotBool IsXTigerLibrary (const char *path)
+{
+  char        *temppath;
+  char        *suffix;
+  ThotBool    ret;
+
+  if (!path)
+    return (FALSE);
+
+  temppath = TtaStrdup ((char *)path);
+  suffix = (char *)TtaGetMemory (strlen (path) + 1);
+  TtaExtractSuffix (temppath, suffix);
+
+  if (!strcasecmp (suffix, "xtl"))
+    ret = TRUE;
+  else if (!strcmp (suffix, "gz"))
+    {
+      /* take into account compressed files */
+      TtaExtractSuffix (temppath, suffix);       
+      if (!strcasecmp (suffix, "xtl"))
+        ret = TRUE;
+      else
+        ret = FALSE;
+    }
+  else
+    ret = FALSE;
+
+  TtaFreeMemory (temppath);
+  TtaFreeMemory (suffix);
+  return (ret);
+}
+
+/*----------------------------------------------------------------------
+  IsXTiger
   returns TRUE if path points to an XTiger resource.
   ----------------------------------------------------------------------*/
 ThotBool IsXTiger (const char *path)
@@ -765,13 +801,13 @@ ThotBool IsXTiger (const char *path)
   suffix = (char *)TtaGetMemory (strlen (path) + 1);
   TtaExtractSuffix (temppath, suffix);
 
-  if (!strcasecmp (suffix, "xtd") || !strcasecmp (suffix, "xtl"))
+  if (!strcasecmp (suffix, "xtd"))
     ret = TRUE;
   else if (!strcmp (suffix, "gz"))
     {
       /* take into account compressed files */
       TtaExtractSuffix (temppath, suffix);       
-      if (!strcasecmp (suffix, "xtd") || !strcasecmp (suffix, "xtl"))
+      if (!strcasecmp (suffix, "xtd"))
         ret = TRUE;
       else
         ret = FALSE;

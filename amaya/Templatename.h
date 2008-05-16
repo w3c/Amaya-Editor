@@ -10,6 +10,7 @@ static ElemMapping    TemplateElemMappingTable[] =
     {"component", SPACE, Template_EL_component, L_OtherValue, FALSE},
     {"head", SPACE, Template_EL_head, L_OtherValue, FALSE},   
     {"import", SPACE, Template_EL_import, L_OtherValue, FALSE},
+    {"library", SPACE, Template_EL_Template, L_OtherValue, FALSE},
     {"option", SPACE, Template_EL_option, L_OtherValue, FALSE},
     {"repeat", SPACE, Template_EL_repeat, L_OtherValue, FALSE},
     {"union", SPACE, Template_EL_union, L_OtherValue, FALSE},

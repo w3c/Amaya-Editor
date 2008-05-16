@@ -283,22 +283,22 @@ static ThotBool ChangeXmlParserContextByUri (char *uriName)
   while (!found && CurrentParserCtxt != NULL)
     {
       if (strcmp (CurrentParserCtxt->UriName, Template_URI))
-	{
-	  if (!strcmp ((char *)uriName, CurrentParserCtxt->UriName))
-	    found = TRUE;
-	}
+        {
+          if (!strcmp ((char *)uriName, CurrentParserCtxt->UriName))
+            found = TRUE;
+        }
       else
-	{
-	  /* Templates */
-	  if (!strcmp ((char *)uriName, CurrentParserCtxt->UriName) ||
-	      !strcmp ((char *)uriName, Template_URI_o) ||
-	      !strcmp ((char *)uriName, Template_URI_f))
-	    found = TRUE;
-	}
+        {
+          /* Templates */
+          if (!strcmp ((char *)uriName, CurrentParserCtxt->UriName) ||
+              !strcmp ((char *)uriName, Template_URI_o) ||
+              !strcmp ((char *)uriName, Template_URI_f))
+            found = TRUE;
+        }
       if (!found)
-	CurrentParserCtxt = CurrentParserCtxt->NextParserCtxt;
+        CurrentParserCtxt = CurrentParserCtxt->NextParserCtxt;
     }
- 
+
   /*
     while (CurrentParserCtxt != NULL &&
     strcmp ((char *)uriName, CurrentParserCtxt->UriName) &&
@@ -306,8 +306,8 @@ static ThotBool ChangeXmlParserContextByUri (char *uriName)
     !strcmp ((char *)uriName, Template_URI_o) ||
     !strcmp ((char *)uriName, Template_URI_f)))
     CurrentParserCtxt = CurrentParserCtxt->NextParserCtxt;
-  */
-  
+   */
+
   /* Initialize the corresponding Thot schema */
   if (CurrentParserCtxt != NULL &&
       CurrentParserCtxt != GenericXmlParserCtxt &&

@@ -33,6 +33,9 @@ extern void DumpElementSubPath ( Element el,
 extern void DumpElementPath ( Element el );
 extern void DumpTemplateElement ( Element el,
                                   Document doc );
+extern void DumpSubtree ( Element el,
+                          Document doc,
+                          int off );
 extern ThotBool SaveDocumentToNewDoc ( Document doc,
                                        Document newdoc,
                                        char* newpath );
@@ -66,6 +69,9 @@ extern void DumpElementSubPath ( Element el,
 extern void DumpElementPath ( Element el );
 extern void DumpTemplateElement ( Element el,
                                     Document doc );
+extern void DumpSubtree ( Element el,
+                            Document doc,
+                            int off );
 extern ThotBool SaveDocumentToNewDoc ( Document doc,
                                          Document newdoc,
                                          char* newpath );

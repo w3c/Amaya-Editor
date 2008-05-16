@@ -682,8 +682,10 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
         break;
       case ComponentNat:
         newEl = TtaCopyTree(dec->componentType.content, doc, doc, el);
-        ProcessAttr (dec->usedIn, newEl, doc);        
+        ProcessAttr (dec->usedIn, newEl, doc);
+
         /* Copy elements from new use to existing use. */
+        DumpSubtree(newEl, doc, 0);
         while ((child = TtaGetFirstChild(newEl)))
         {
           TtaRemoveTree (child, doc);
@@ -1012,14 +1014,14 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
   if (!t || !el)
     return;
   
-//  static int off = 0;
-//  int i;
-//  off++;
-//  printf("ParseTemplate ");
-//  for(i=0; i<off; i++)
-//    printf(" ");
-//  DumpTemplateElement(el, doc);
-//  printf("\n");
+  static int off = 0;
+  int i;
+  off++;
+  printf("ParseTemplate ");
+  for(i=0; i<off; i++)
+    printf(" ");
+  DumpTemplateElement(el, doc);
+  printf("\n");
   
   name = TtaGetSSchemaName (elType.ElSSchema);
   if (!strcmp (name, "Template"))
@@ -1030,7 +1032,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           //Remove it and all of its children
           TtaDeleteTree(el, doc);
           //We must stop searching into this tree
-//          off--;
+          off--;
           return;
           break;
         case Template_EL_component :
@@ -1102,7 +1104,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
       ParseTemplate (t, child, doc, loading);
       child = aux;
     }
-//  off--;
+  off--;
 #endif /* TEMPLATES */
 }
 
@@ -1123,6 +1125,8 @@ void DoInstanceTemplate (char *templatename)
   if (!t)
     return;
 
+  printf("DoInstanceTemplate %s\n", templatename);
+  
   doc = GetTemplateDocument (t);
   root =	TtaGetMainRoot (doc);
   ParseTemplate (t, root, doc, FALSE);
@@ -1236,10 +1240,14 @@ void Template_PreInstantiateComponents (XTigerTemplate t)
   if (!t)
     return;
 
+  DumpAllDeclarations();
+  
   ForwardIterator iter = SearchSet_GetForwardIterator(GetComponents(t));
   Declaration     dec;
   SearchSetNode   node;
 
+  printf("Template_PreInstantiateComponents %s\n", t->uri);
+  
   ITERATOR_FOREACH(iter, SearchSetNode, node)
     {
       dec = (Declaration) node->elem;

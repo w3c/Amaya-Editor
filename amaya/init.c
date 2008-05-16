@@ -2630,6 +2630,8 @@ void PostInitView(Document doc, DocumentType docType, int visibility,
 }
 
 
+#include "templateUtils_f.h"
+
 /*----------------------------------------------------------------------
   InitDocAndView prepares the main view of a new document.
   logFile is TRUE if the new view is created to display a log file
@@ -2693,6 +2695,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
     doc = TtaInitDocument ("SVG", docname, CurrentNameSpace, requested_doc);
   else if (docType == docMath)
     doc = TtaInitDocument ("MathML", docname, CurrentNameSpace, requested_doc);
+#ifdef TEMPLATES
+  else if (docType == docTemplate)
+    doc = TtaInitDocument ("Template", docname, CurrentNameSpace, requested_doc);
+#endif /* TEMPLATES */
 #ifdef XML_GENERIC      
   else if (docType == docXml)
     doc = TtaInitDocument ("XML", docname, CurrentNameSpace, requested_doc);
@@ -2726,6 +2732,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
         TtaSetPSchema (doc, "SVGP");
       else if (docType == docMath)
         TtaSetPSchema (doc, "MathMLP");
+#ifdef TEMPLATES
+      else if (docType == docTemplate)
+        TtaSetPSchema (doc, "TemplateP");      
+#endif /* TEMPLATES */
 #ifdef XML_GENERIC      
       else if (docType == docXml)
         TtaSetPSchema (doc, "XMLP");
@@ -2792,6 +2802,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 
   // show the window if it's not allready done
   TtaShowWindow( window_id, TRUE );
+
   return (doc);
 }
 
@@ -4948,11 +4959,8 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
     docType = docSVG;
   else if (IsCSSName (documentname))
     docType = docCSS;
-#ifdef IV
-  else if (IsXTiger (documentname))
-      // @@@@ by default it's a HTML document
-      docType = docHTML;
-#endif /* TEMPLATES */
+  else if (IsXTigerLibrary (documentname))
+      docType = docTemplate;
   else if (IsXTiger (documentname) || IsXMLName (documentname))
     {
       docType = docXml;
@@ -5239,6 +5247,9 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
       TtaFreeMemory (target);
       TtaFreeMemory (documentname);
     }
+  
+  printf("plop\n");
+  DumpSubtree(TtaGetMainRoot(newdoc), newdoc, 0);
 
   TtaFreeMemory (parameters);
   TtaFreeMemory (tempfile);

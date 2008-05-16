@@ -16,7 +16,9 @@ CONST
 
 STRUCT
 
-  Template = CASE OF
+  Template ( ATTR version = TEXT; templateVersion = TEXT ) = LIST OF (TemplateObject);
+
+  TemplateObject = CASE OF
       head;
       repeat;
       option;
@@ -24,15 +26,19 @@ STRUCT
       useSimple;
       bag;
       attribute;
-    END;
+    END + (Comment\240, XMLPI);
 
-  head ( ATTR version = TEXT; templateVersion = TEXT ) = 
+  head ( ATTR version; templateVersion ) = 
     LIST OF ( Declaration = CASE OF
       component;
       union;
       import;
     END
    );
+
+  Comment\240 = LIST OF (Comment_line = TEXT) - (Comment\240);
+  
+  XMLPI (ATTR is_css = Text) = LIST OF (PI_line = TEXT);
 
   component ( ATTR name = TEXT ) = ANY - ( head, union, import );
   union ( ATTR name; includeAt = TEXT; exclude = TEXT ) = CONSTANT C_CR; {It is always empty}
@@ -71,6 +77,10 @@ STRUCT
     ) = CONSTANT C_CR; {It is always empty}
 
 EXCEPT
+  XMLPI:              ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
+  Comment\240:        ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
+  Comment_line:       Hidden, MarkupPreserve;
+  PI_line:            Hidden, MarkupPreserve;
   useEl:              NoReplicate, NoBreakByReturn;
   useSimple:          NoReplicate, NoBreakByReturn;
   repeat:             NoReplicate, NoBreakByReturn, NoCreate;

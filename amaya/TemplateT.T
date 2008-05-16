@@ -142,6 +142,28 @@ RULES
     create CloseEmptyTagNL;
   end;
   
+ Comment\240: BEGIN
+        NoLineBreak;
+         Create '<!--';
+        {NoTranslation;}
+        Create '-->\12' after;
+        END;
+
+ Comment_line: BEGIN
+        if not last create '\12' after;
+        END;
+        
+ XMLPI: BEGIN
+        NoLineBreak;
+         Create '<?';
+        {NoTranslation;}
+        Create '?>\12' after;
+        END;
+
+ PI_line: BEGIN
+        if not last create '\12' after;
+        END;
+  
 ATTRIBUTES
 
   name :

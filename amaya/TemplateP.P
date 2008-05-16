@@ -26,6 +26,11 @@ VIEWS
 #define ATTR_Color DarkGreen3
 #define ATTRVALUE_Color DarkMagenta2
 #define INVALID_Color Red
+#define COMMENT_Font Helvetica
+#define COMMENT_Style Italics
+#define COMMENT_Weight Normal
+#define COMMENT_Color DarkLawnGreen3
+
    
 DEFAULT
    BEGIN
@@ -60,6 +65,46 @@ DEFAULT
    END;
 
 BOXES
+
+
+ COMMENT_S: BEGIN
+        Content: Text '<!--';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                END;
+        END;
+
+ COMMENT_E: BEGIN
+        Content: Text '-->';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                VertPos: HRef = Previous . HRef;
+                HorizPos: Left = Previous . Right;
+                END;
+        END;
+
+ PI_S: BEGIN
+        Content: Text '<?';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Foreground: TAG_Color;
+                END;
+        END;
+
+ PI_E: BEGIN
+        Content: Text '?>';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                VertPos: HRef = Previous . HRef;
+                HorizPos: Left = Previous . Right;
+                Foreground: TAG_Color;
+                END;
+        END;
+
   AttrName: BEGIN
     Content: (Text ' ' AttributeName Text '=');
     Visibility: 0;
@@ -232,6 +277,52 @@ BOXES
 	END;
 
 RULES
+
+  Comment\240:
+        BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Font: COMMENT_Font;
+                Style: COMMENT_Style;
+                Weight: COMMENT_Weight;
+                Foreground: COMMENT_Color;
+                Width: Enclosing . Width;
+                VertPos: Top = Previous . Bottom;
+                END;
+        END;
+
+  Comment_line:
+        BEGIN
+        if First CreateFirst(COMMENT_S);
+        if Last CreateLast(COMMENT_E);
+        IN Structure_view BEGIN
+                Width: Enclosed . Width;
+                VertPos: Top = Previous . Bottom + 0.2;
+                END;
+        END;
+
+  XMLPI:
+        BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Font: COMMENT_Font;
+                Style: COMMENT_Style;
+                Weight: COMMENT_Weight;
+                Width: Enclosing . Width;
+                END;
+        END;
+
+  PI_line:
+        BEGIN
+        if First CreateFirst(PI_S);
+        if Last CreateLast(PI_E);
+        IN Structure_view BEGIN
+                Width: Enclosed . Width;
+                VertPos: Top = Previous . Bottom + 0.2;
+                END;
+        END;
 
   head:
     BEGIN

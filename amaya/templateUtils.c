@@ -397,10 +397,24 @@ void DumpTemplateElement(Element el, Document doc)
   ElementType elType;
   SSchema     schema = TtaGetSSchema ("Template", doc);
   char*       str;
+  char        buffer[MAX_LENGTH];
+  int         len;
+  Language    lang;
+  
   if(el && doc)
     {
       elType = TtaGetElementType(el);
-      printf("%s", TtaGetElementTypeName(elType));
+      printf("- %p %d ", elType.ElSSchema, elType.ElTypeNum);
+      printf(" %s", TtaGetSSchemaName(elType.ElSSchema));
+      printf(":%s", TtaGetElementTypeName(elType));
+      if(elType.ElTypeNum==1)
+        {
+          len = MAX_LENGTH-1;
+          TtaGiveTextContent(el, (unsigned char*)buffer, &len, &lang);
+          buffer[len] = EOS;
+          printf(" \"%s\"", buffer);
+        }
+      
       if(elType.ElSSchema==schema)
         {
           switch(elType.ElTypeNum)

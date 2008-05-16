@@ -939,75 +939,77 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   t = GetXTigerDocTemplate(doc);
   elType = TtaGetElementType(el);
   while (elType.ElTypeNum != Template_EL_repeat)
-  {
-    repeatEl = TtaGetParent(repeatEl);
-    if (repeatEl == NULL)
-      break;
-    elType = TtaGetElementType(repeatEl);
-  }
+    {
+      repeatEl = TtaGetParent(repeatEl);
+      if (repeatEl == NULL)
+        break;
+      elType = TtaGetElementType(repeatEl);
+    }
   if (repeatEl)
-  {
-    if (Template_CanInsertRepeatChild (repeatEl))
     {
-      firstEl = TtaGetFirstChild (repeatEl);
-    listtypes = Template_GetListTypes (t, firstEl);
-    if (listtypes)
-      {
-#ifdef AMAYA_DEBUG
-      printf("RepeatButtonClicked : \n  > %s\n", listtypes);
-#endif /* AMAYA_DEBUG */
-        
-        result = QueryStringFromMenu (doc, listtypes);
-        TtaFreeMemory (listtypes);
-        if (result)
+      if (Template_CanInsertRepeatChild (repeatEl))
         {
-          decl = Template_GetDeclaration (t, result);
-          if (decl)
-          {
-            dispMode = TtaGetDisplayMode (doc);
-            if (dispMode == DisplayImmediately)
-              /* don't set NoComputedDisplay
+          firstEl = TtaGetFirstChild (repeatEl);
+          listtypes = Template_GetListTypes (t, firstEl);
+          if (listtypes)
+            {
+#ifdef AMAYA_DEBUG
+              printf("RepeatButtonClicked : \n  > %s\n", listtypes);
+#endif /* AMAYA_DEBUG */
+
+              result = QueryStringFromMenu (doc, listtypes);
+              TtaFreeMemory (listtypes);
+              if (result)
+                {
+                  decl = Template_GetDeclaration (t, result);
+                  if (decl)
+                    {
+                      dispMode = TtaGetDisplayMode (doc);
+                      if (dispMode == DisplayImmediately)
+                        /* don't set NoComputedDisplay
                  -> it breaks down views formatting when Enter generates new elements  */
-              TtaSetDisplayMode (doc, DeferredDisplay);
+                        TtaSetDisplayMode (doc, DeferredDisplay);
 
-            /* Prepare insertion.*/          
-            oldStructureChecking = TtaGetStructureChecking (doc);
-            TtaSetStructureChecking (FALSE, doc);
-            TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-            /* Insert. */
-            if (el == repeatEl)
-              newEl = Template_InsertRepeatChildAfter (doc, repeatEl, decl, NULL);
-            else
-              newEl = Template_InsertRepeatChildAfter (doc, repeatEl, decl, el);
-              
-            /* Finish insertion.*/
-            TtaCloseUndoSequence(doc);
-            TtaSetDocumentModified (doc);
-            TtaSetStructureChecking (oldStructureChecking, doc);
+                      /* Prepare insertion.*/          
+                      oldStructureChecking = TtaGetStructureChecking (doc);
+                      TtaSetStructureChecking (FALSE, doc);
+                      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+                      /* Insert. */
+                      if (el == repeatEl)
+                        newEl = Template_InsertRepeatChildAfter (doc, repeatEl, decl, NULL);
+                      else
+                        newEl = Template_InsertRepeatChildAfter (doc, repeatEl, decl, el);
 
-            // restore the display
-            TtaSetDisplayMode (doc, dispMode);
-            firstEl = GetFirstEditableElement (newEl);
-            if (firstEl)
-            {
-              TtaSelectElement (doc, firstEl);
-              TtaSetStatusSelectedElement (doc, view, firstEl);
+                      /* Finish insertion.*/
+                      TtaCloseUndoSequence(doc);
+                      TtaSetDocumentModified (doc);
+                      TtaSetStructureChecking (oldStructureChecking, doc);
+
+                      // restore the display
+                      TtaSetDisplayMode (doc, dispMode);
+                      firstEl = GetFirstEditableElement (newEl);
+                      if (firstEl)
+                        {
+                          TtaSelectElement (doc, firstEl);
+                          TtaSetStatusSelectedElement (doc, view, firstEl);
+                        }
+                      else
+                        {
+                          TtaSelectElement (doc, newEl);
+                          TtaSetStatusSelectedElement (doc, view, newEl);
+                        }
+                    }
+                }
             }
-            else
-            {
-              TtaSelectElement (doc, newEl);
-              TtaSetStatusSelectedElement (doc, view, newEl);
-            }
-          }
+          TtaFreeMemory(result);
+          DumpSubtree(repeatEl, doc, 0);
+
         }
-      }
-      TtaFreeMemory(result);
+      else /* if (Template_CanInsertRepeatChild(repeatEl)) */
+        {
+          TtaSetStatus(doc, view, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR_HAVE_MAX), NULL);
+        }
     }
-    else /* if (Template_CanInsertRepeatChild(repeatEl)) */
-    {
-      TtaSetStatus(doc, view, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR_HAVE_MAX), NULL);
-    }
-  }
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
   return TRUE;
