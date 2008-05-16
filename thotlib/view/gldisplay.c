@@ -2157,7 +2157,7 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
           if (align == 1)
             X = x + (l - thick) / 2;// midle
           else if (align == 2)
-            X = x + l - (thick + 1) / 2;// right
+            X = x + l - thick / 2;// right
           else
             X = x + thick / 2;// left
             
