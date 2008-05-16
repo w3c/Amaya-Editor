@@ -614,7 +614,8 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           pNext = pChild->AbNext;
           while (pNext && pNext->AbPresentationBox)
             pNext = pNext->AbNext;
-          isLast = (last && pNext == NULL);
+          isLast = (last &&
+                    (pNext == NULL || pNext->AbNotInLine || !pNext->AbHorizEnclosing));
           if (pChild->AbBox && !pChild->AbPresentationBox)
             {
               /* draw each child boxes */
@@ -740,7 +741,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
         bl = from->BxLBorder;
       else
         bl = 0;
-      if (isLast)
+      if (last)
         br = from->BxRBorder;
       else
         br = 0;
