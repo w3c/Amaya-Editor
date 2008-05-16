@@ -5248,9 +5248,6 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
       TtaFreeMemory (documentname);
     }
   
-  printf("plop\n");
-  DumpSubtree(TtaGetMainRoot(newdoc), newdoc, 0);
-
   TtaFreeMemory (parameters);
   TtaFreeMemory (tempfile);
   TtaFreeMemory (initial_url);
