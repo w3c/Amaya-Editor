@@ -2280,6 +2280,8 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       width = box->BxWidth;
       height = box->BxHeight;
     }
+  if (box->BxLMargin < 0)
+    width += box->BxLMargin;
   if (x < xFrame)
     {
       width = width + xFrame - x;
@@ -2303,19 +2305,23 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
 
   if (et < 0)
     yFrame += et;
-  b = y + h - yFrame - height + eb + from->BxBBorder;
+  if (y + h < yFrame + height)
+    b =  eb + from->BxBBorder;
+  else
+    b = y + h - yFrame - height + eb + from->BxBBorder;
   if (b > from->BxBBorder)
     b = from->BxBBorder;
   else if (b < 0)
     b = 0;
 
-  if (box->BxLMargin < 0)
-    width += box->BxLMargin;
   if (er < 0)
     er = 0;
   if (el < 0)
     xFrame += el;
-  r = x + w + 1 - xFrame - width + er + from->BxRBorder;
+  if ( x + w < xFrame + width)
+    r = er + from->BxRBorder;
+  else
+    r = x + w + 1 - xFrame - width + er + from->BxRBorder;
   if (r > from->BxRBorder)
     r = from->BxRBorder;
   else if (r < 0)

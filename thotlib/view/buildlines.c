@@ -207,6 +207,95 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
   return result;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void HandleNotInline (PtrBox pBlock, PtrLine pLine, int frame)
+{
+  PtrBox              pBox, pBoxInLine, refBox;
+  PtrAbstractBox      pRefAb;
+  int                 dx, dy;
+
+  if (pLine->LiFirstPiece)
+    pBoxInLine = pLine->LiFirstPiece;
+  else
+    pBoxInLine = pLine->LiFirstBox;
+  if (pBoxInLine)
+    {
+      pBox = pBoxInLine->BxPrevious;
+      if (pBox &&
+          (!pBox->BxAbstractBox->AbHorizEnclosing || pBox->BxAbstractBox->AbNotInLine))
+        // manage this previous not in line box
+        pBoxInLine = pBox;
+      do
+        {
+          if (pBoxInLine->BxType == BoSplit || pBoxInLine->BxType == BoMulScript)
+            pBox = pBoxInLine->BxNexChild;
+          else
+            pBox = pBoxInLine;
+          if (pBox->BxAbstractBox->AbFloat == 'N' && !ExtraFlow (pBox, frame))
+            {
+              if (!pBox->BxAbstractBox->AbHorizEnclosing)
+                {
+                  dy = pBlock->BxYOrg + pLine->LiYOrg + pLine->LiHorizRef - pBox->BxHorizRef - pBox->BxYOrg;
+                  YMove (pBox, NULL, dy, frame);
+                }
+              else if (pBox->BxAbstractBox->AbNotInLine)
+                {
+                  // look at the position of the referred box
+                  pRefAb = pBox->BxAbstractBox->AbHorizPos.PosAbRef;
+                  while (pRefAb && pRefAb->AbBox &&
+                         (pRefAb->AbBox->BxType == BoGhost ||
+                          pRefAb->AbNotInLine ||
+                          pRefAb->AbDead ||
+                          pRefAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility ||
+                          pRefAb->AbBox == pBox))
+                    {
+                      if (pRefAb->AbBox->BxType == BoGhost)
+                        pRefAb = pRefAb->AbFirstEnclosed;
+                      else
+                        pRefAb = pRefAb->AbNext;
+                      if (pBox->BxAbstractBox->AbVertPos.PosRefEdge == Bottom)
+                        {
+                          while (pRefAb && pRefAb->AbNext)
+                            pRefAb = pRefAb->AbNext;
+                        }
+                    }
+                  if (pRefAb && pRefAb->AbBox)
+                    {
+                      refBox = pRefAb->AbBox;
+                      if (refBox->BxType == BoSplit || refBox->BxType == BoMulScript)
+                        {
+                          refBox = refBox->BxNexChild;
+                          if (pBox->BxAbstractBox->AbVertPos.PosRefEdge == Bottom)
+                            {
+                              // move to the last of enclosed boxes
+                              while (refBox->BxNexChild)
+                                refBox = refBox->BxNexChild;
+                            }
+                        }
+                      dx = refBox->BxXOrg - pBox->BxXOrg;
+                      dy = refBox->BxYOrg - pBox->BxYOrg;
+                      if (pBox->BxAbstractBox->AbVertPos.PosRefEdge == Bottom)
+                        dy += refBox->BxHeight - pBox->BxHeight;
+                    }
+                  else
+                    {
+                      dx = 0;
+                      dy = pBlock->BxYOrg + pLine->LiYOrg - pBox->BxYOrg;
+                    }
+                  XMove (pBox, NULL, dx, frame);
+                  YMove (pBox, NULL, dy, frame);
+                }
+            }
+          if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
+            /* get the next child */
+            pBoxInLine = pBox->BxNexChild;
+          else
+            pBoxInLine = GetNextBox (pBox->BxAbstractBox, frame);
+        }
+      while (pBoxInLine && pBox != pLine->LiLastBox && pBox != pLine->LiLastPiece);
+    }
+}
 
 /*----------------------------------------------------------------------
   Adjust computes the space width in the adjusted line of pParentBox.
@@ -219,7 +308,6 @@ static void Adjust (PtrBox pParentBox, PtrBox pBBox, PtrLine pLine, int frame,
 {
   PtrBox              pBox, pBoxInLine;
   PtrBox              boxes[200];
-  PtrAbstractBox      pRefAb;
   int                 width, baseline;
   int                 nSpaces, delta;
   int                 x, dx, dy;
@@ -392,76 +480,7 @@ static void Adjust (PtrBox pParentBox, PtrBox pBBox, PtrLine pLine, int frame,
     }
 
   /* Now handle NotInline boxes */
-  if (pLine->LiFirstPiece)
-    pBoxInLine = pLine->LiFirstPiece;
-  else
-    pBoxInLine = pLine->LiFirstBox;
-  if (pLine->LiFirstBox == pLine->LiLastBox &&
-      pBoxInLine->BxLMargin > 0 &&
-      (pBoxInLine->BxType == BoTable ||
-       pBoxInLine->BxAbstractBox->AbDisplay == 'B'))
-    {
-      if (pBoxInLine->BxLMargin > pLine->LiXOrg)
-        x -= pLine->LiXOrg;
-      else
-        x -= pBoxInLine->BxLMargin;
-    }
-  max = 0;
-  if (pBoxInLine)
-    do
-      {
-        if (pBoxInLine->BxType == BoSplit || pBoxInLine->BxType == BoMulScript)
-          pBox = pBoxInLine->BxNexChild;
-        else
-          pBox = pBoxInLine;
-        if (pBox->BxAbstractBox->AbFloat == 'N' && !ExtraFlow (pBox, frame))
-          {
-            if (!pBox->BxAbstractBox->AbHorizEnclosing)
-              {
-                dy = baseline - pBox->BxHorizRef - pBox->BxYOrg;
-                YMove (pBox, NULL, dy, frame);
-              }
-            else if (pBox->BxAbstractBox->AbNotInLine)
-              {
-                // look at the position of the referred box
-                pRefAb = pBox->BxAbstractBox->AbHorizPos.PosAbRef;
-                while (pRefAb && pRefAb->AbBox &&
-                       (pRefAb->AbBox->BxType == BoGhost ||
-                        pRefAb->AbNotInLine ||
-                        pRefAb->AbDead ||
-                        pRefAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility ||
-                        pRefAb->AbBox == pBox))
-                  if (pRefAb->AbBox->BxType == BoGhost)
-                    pRefAb = pRefAb->AbFirstEnclosed;
-                  else
-                    pRefAb = pRefAb->AbNext;
-                if (pRefAb && pRefAb->AbBox)
-                  {
-                    PtrBox refBox = pRefAb->AbBox;
-                    if (refBox->BxType == BoSplit ||
-                        refBox->BxType == BoMulScript)
-                      refBox = refBox->BxNexChild;
-                    //GetExtraMargins (refBox, frame, TRUE, &t, &b, &l, &r);
-                    dx = refBox->BxXOrg - pBox->BxXOrg;
-                    dy = refBox->BxYOrg - pBox->BxYOrg;
-                  }
-                else
-                  {
-                    dx = 0;
-                    dy = pLine->LiYOrg - pBox->BxYOrg;
-                  }
-                XMove (pBox, NULL, dx, frame);
-                YMove (pBox, NULL, dy, frame);
-              }
-          }
-        if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
-          /* get the next child */
-          pBoxInLine = pBox->BxNexChild;
-        else
-          pBoxInLine = GetNextBox (pBox->BxAbstractBox, frame);
-      }
-    while (max < 200 && pBoxInLine && pBox != pLine->LiLastBox &&
-           pBox != pLine->LiLastPiece);
+  HandleNotInline (pParentBox, pLine, frame);
 }
 
 
@@ -491,7 +510,6 @@ static void Align (PtrBox pParentBox, PtrBox pBBox, PtrLine pLine, int frame,
 {
   PtrBox              pBox, pBoxInLine;
   PtrBox              boxes[200];
-  PtrAbstractBox      pRefAb;
   int                 baseline, x, delta = 0;
   int                 i, j, k, max, dx, dy;
   int                 t, b, l, r;
@@ -676,65 +694,7 @@ static void Align (PtrBox pParentBox, PtrBox pBBox, PtrLine pLine, int frame,
     }
 
   /* Now handle NotInline boxes */
-  if (pLine->LiFirstPiece)
-    pBoxInLine = pLine->LiFirstPiece;
-  else
-    pBoxInLine = pLine->LiFirstBox;
-  max = 0;
-  if (pBoxInLine)
-    do
-      {
-        if (pBoxInLine->BxType == BoSplit || pBoxInLine->BxType == BoMulScript)
-          pBox = pBoxInLine->BxNexChild;
-        else
-          pBox = pBoxInLine;
-        if (pBox->BxAbstractBox->AbFloat == 'N' && !ExtraFlow (pBox, frame))
-          {
-            if (!pBox->BxAbstractBox->AbHorizEnclosing)
-              {
-                dy = baseline - pBox->BxHorizRef - pBox->BxYOrg;
-                YMove (pBox, NULL, dy, frame);
-              }
-            else if (pBox->BxAbstractBox->AbNotInLine)
-              {
-                // look at the position of the referred box
-                pRefAb = pBox->BxAbstractBox->AbHorizPos.PosAbRef;
-                while (pRefAb && pRefAb->AbBox &&
-                       (pRefAb->AbBox->BxType == BoGhost ||
-                        pRefAb->AbNotInLine ||
-                        pRefAb->AbDead ||
-                        pRefAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility ||
-                        pRefAb->AbBox == pBox))
-                  if (pRefAb->AbBox->BxType == BoGhost)
-                    pRefAb = pRefAb->AbFirstEnclosed;
-                  else
-                    pRefAb = pRefAb->AbNext;
-                if (pRefAb && pRefAb->AbBox)
-                  {
-                    PtrBox refBox = pRefAb->AbBox;
-                    if (refBox->BxType == BoSplit || refBox->BxType == BoMulScript)
-                      refBox = refBox->BxNexChild;
-                    //GetExtraMargins (refBox, frame, TRUE, &t, &b, &l, &r);
-                    dx = refBox->BxXOrg - pBox->BxXOrg;
-                    dy = refBox->BxYOrg - pBox->BxYOrg;
-                  }
-                else
-                  {
-                    dx = 0;
-                    dy = pLine->LiYOrg - pBox->BxYOrg;
-                  }
-                XMove (pBox, NULL, dx, frame);
-                YMove (pBox, NULL, dy, frame);
-              }
-          }
-        if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
-          /* get the next child */
-          pBoxInLine = pBox->BxNexChild;
-        else
-          pBoxInLine = GetNextBox (pBox->BxAbstractBox, frame);
-      }
-    while (max < 200 && pBoxInLine && pBox != pLine->LiLastBox &&
-           pBox != pLine->LiLastPiece);
+  HandleNotInline (pParentBox, pLine, frame);
 }
 
 
@@ -2315,7 +2275,9 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
       if (floatR == NULL)
         {
           /* line extended to the right edge of the block */
-          pLine->LiXMax = left + pBlock->BxW - pLine->LiXOrg;
+          pLine->LiXMax = pBlock->BxW - pLine->LiXOrg;
+          if (pBlock->BxLeftFloat || pBlock->BxRightFloat)
+            pLine->LiXMax += left;
           bottomR = pLine->LiYOrg;
         }
       else
@@ -2714,6 +2676,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     }
                   else
                     pNextBox->BxContentWidth = FALSE;
+
                   val = val - l - r;
                   if (pNextBox->BxShrink)
                     {
@@ -4479,8 +4442,7 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
           if (box->BxType == BoSplit || box->BxType == BoMulScript)
             box = box->BxNexChild;
           if (box &&
-              (!box->BxAbstractBox->AbNotInLine ||
-               box->BxAbstractBox->AbDisplay == 'U') &&
+              !box->BxAbstractBox->AbNotInLine &&
               box->BxAbstractBox->AbFloat == 'N' &&
               !ExtraFlow (box, frame) &&
               box->BxAbstractBox->AbHorizEnclosing)
@@ -4533,8 +4495,7 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
           (pBox->BxType == BoSplit || pBox->BxType == BoMulScript))
         pBox = pBox->BxNexChild;
       if (pBox &&
-          (!pBox->BxAbstractBox->AbNotInLine ||
-           pBox->BxAbstractBox->AbDisplay == 'U') &&
+         !pBox->BxAbstractBox->AbNotInLine &&
           pBox->BxAbstractBox->AbFloat == 'N' &&
           !ExtraFlow (pBox, frame) &&
           pBox->BxAbstractBox->AbHorizEnclosing)

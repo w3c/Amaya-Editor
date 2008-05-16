@@ -3547,7 +3547,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
       if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
         checkParent = (pAb->AbEnclosing->AbBox->BxType != BoGhost &&
                        pAb->AbEnclosing->AbBox->BxType != BoFloatGhost);
-      if (pAb->AbNotInLine &&
+      if (pAb->AbNotInLine ||
           (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
            pAb->AbEnclosing->AbBox->BxType == BoFloatGhost ||
            pAb->AbEnclosing->AbBox->BxType == BoBlock ||
