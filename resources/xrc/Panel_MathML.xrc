@@ -175,7 +175,7 @@
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_EQ">
-                      <bitmap>../icons/16x16/MATHML_neq.png</bitmap>
+                      <bitmap>../icons/16x16/MATHML_eq.png</bitmap>
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_NEQ">
                       <bitmap>../icons/16x16/MATHML_neq.png</bitmap>
