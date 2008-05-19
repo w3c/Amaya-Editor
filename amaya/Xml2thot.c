@@ -299,15 +299,6 @@ static ThotBool ChangeXmlParserContextByUri (char *uriName)
         CurrentParserCtxt = CurrentParserCtxt->NextParserCtxt;
     }
 
-  /*
-    while (CurrentParserCtxt != NULL &&
-    strcmp ((char *)uriName, CurrentParserCtxt->UriName) &&
-    (strcmp (CurrentParserCtxt->UriName, Template_URI) ||
-    !strcmp ((char *)uriName, Template_URI_o) ||
-    !strcmp ((char *)uriName, Template_URI_f)))
-    CurrentParserCtxt = CurrentParserCtxt->NextParserCtxt;
-   */
-
   /* Initialize the corresponding Thot schema */
   if (CurrentParserCtxt != NULL &&
       CurrentParserCtxt != GenericXmlParserCtxt &&
@@ -2064,8 +2055,10 @@ static void StartOfXmlStartElement (const char *name)
   if (CurrentParserCtxt == NULL)
     {
 #ifdef XML_GENERIC
-      /* assign the generic context */
+      /* create a new XML generic context */
       CurrentParserCtxt = GenericXmlParserCtxt;
+      CurrentParserCtxt->UriName = TtaStrdup (nsURI);
+      TtaSetUriSSchema (CurrentParserCtxt->XMLSSchema, CurrentParserCtxt->UriName);
 #else /*XML_GENERIC*/
       CurrentParserCtxt = savParserCtxt;
       UnknownNS = TRUE;
@@ -3837,7 +3830,8 @@ static void      CreateXmlComment (char *commentValue)
   /* Create a Thot element for the comment */
   elType.ElSSchema = NULL;
   elType.ElTypeNum = 0;
-  GetXmlElType (NULL, "xmlcomment", &elType, &mappedName, &cont, &level);
+  GetXmlElType (CurrentParserCtxt->UriName, "xmlcomment",
+                &elType, &mappedName, &cont, &level);
   if (elType.ElTypeNum > 0)
     {
       commentEl = TtaNewElement (XMLcontext.doc, elType);
@@ -3847,7 +3841,8 @@ static void      CreateXmlComment (char *commentValue)
       /* Element XMLcomment */
       elType.ElSSchema = NULL;
       elType.ElTypeNum = 0;
-      GetXmlElType (NULL, "xmlcomment_line", &elType, &mappedName, &cont, &level);
+      GetXmlElType (CurrentParserCtxt->UriName, "xmlcomment_line",
+                    &elType, &mappedName, &cont, &level);
       commentLineEl = TtaNewElement (XMLcontext.doc, elType);
       XmlSetElemLineNumber (commentLineEl);
       TtaInsertFirstChild (&commentLineEl, commentEl, XMLcontext.doc);

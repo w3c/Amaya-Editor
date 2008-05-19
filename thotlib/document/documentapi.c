@@ -1032,7 +1032,7 @@ SSchema  TtaGetDocumentSSchema (Document document)
 char *TtaGetSSchemaName (SSchema schema)
 {
   UserErrorCode = 0;
-  if (schema == NULL)
+  if (schema == NULL || ((PtrSSchema) schema)->SsName == NULL)
     {
       ISObuffer[0] = EOS;
       TtaError (ERR_invalid_parameter);
@@ -1055,7 +1055,7 @@ char *TtaGetSSchemaName (SSchema schema)
 char *TtaGetPSchemaName (SSchema schema)
 {
   UserErrorCode = 0;
-  if (schema == NULL)
+  if (schema == NULL || ((PtrSSchema) schema)->SsName == NULL)
     {
       ISObuffer[0] = EOS;
       TtaError (ERR_invalid_parameter);

@@ -277,6 +277,20 @@ BOXES
 	END;
 
 RULES
+  Template:
+        BEGIN
+        Width: Enclosing . Width;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        IN Structure_view BEGIN
+                Size: TAG_FONTSIZE;
+                Width: Enclosing . Width - 1;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + 1;
+                PaddingLeft: 0.4;
+                Font: Helvetica;
+                END;
+        END;
 
   Comment\240:
         BEGIN
@@ -287,8 +301,9 @@ RULES
                 Style: COMMENT_Style;
                 Weight: COMMENT_Weight;
                 Foreground: COMMENT_Color;
-                Width: Enclosing . Width;
-                VertPos: Top = Previous . Bottom;
+		            HorizPos: Left = Enclosing . Left;
+	              Width: Enclosing . Width;
+		            VertPos: Top = Previous . Bottom;
                 END;
         END;
 
@@ -343,8 +358,6 @@ RULES
     
   component:
 		BEGIN
-    if within head
-       Visibility: 0;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
