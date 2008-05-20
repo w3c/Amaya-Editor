@@ -32,6 +32,10 @@ RULES
     create 'library';
     create Attributes;
     create tagend;
+    indent +2;
+    indent -2 after;
+    create SCT after;
+    create 'library>\12' after;
   end;
 
   head:

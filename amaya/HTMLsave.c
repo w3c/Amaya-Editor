@@ -1294,6 +1294,12 @@ void SetNamespacesAndDTD (Document doc)
       pi_type = MathML_EL_XMLPI;
       attrType.AttrTypeNum = 0;
     }
+  else if (strcmp (s, "Template") == 0)
+    {
+      elType.ElTypeNum = 0;
+      pi_type = Template_EL_XMLPI;
+      attrType.AttrTypeNum = 0;
+    }
   else
     {
       elType.ElTypeNum = XML_EL_doctype;
