@@ -1026,7 +1026,7 @@ void SaveDocumentAs (Document doc, View view)
         strcpy (UserMimeType, AM_SVG_MIME_TYPE);
       else if (DocumentTypes[doc] == docMath)
         strcpy (UserMimeType, AM_MATHML_MIME_TYPE);
-      else if (DocumentTypes[doc] == docXml)
+      else if (DocumentTypes[doc] == docXml || DocumentTypes[doc] == docTemplate)
         strcpy (UserMimeType, AM_GENERIC_XML_MIME_TYPE);
       else if (DocumentTypes[doc] == docCSS)
         strcpy (UserMimeType, "text/css");
@@ -1804,7 +1804,7 @@ void RestartParser (Document doc, char *localFile,
   DocumentMeta[doc]->compound = FALSE;
   if (isXML || IsMathMLName (localFile) ||
       IsSVGName (localFile) || IsXMLName (localFile) ||
-      DocumentTypes[doc] == docXml)
+      DocumentTypes[doc] == docXml || DocumentTypes[doc] == docTemplate)
     DocumentMeta[doc]->xmlformat = TRUE;
   else
     DocumentMeta[doc]->xmlformat = FALSE;
@@ -1877,11 +1877,7 @@ void RedisplaySourceFile (Document doc)
   int		              position, distance;
   NotifyElement       event;
 
-  if (DocumentTypes[doc] == docHTML ||
-      DocumentTypes[doc] == docLibrary ||
-      DocumentTypes[doc] == docSVG ||
-      DocumentTypes[doc] == docXml ||
-      DocumentTypes[doc] == docMath)
+  if (IsXMLDocType (doc))
     /* it's a structured document */
     if (DocumentSource[doc])
       /* The source code of this document is currently displayed */
@@ -1966,6 +1962,8 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
         ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT", RemoveTemplate);
       else if (DocumentTypes[doc] == docMath)
         ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT", RemoveTemplate);
+      else if (DocumentTypes[doc] == docTemplate)
+        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "TemplateT", FALSE);
       else if (DocumentTypes[doc] == docXml)
         ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL, RemoveTemplate);
       else if (DocumentTypes[doc] == docImage)
@@ -2305,6 +2303,8 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
     TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT", RemoveTemplate);
   else if (DocumentTypes[doc] == docMath)
     TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT", RemoveTemplate);
+  else if (DocumentTypes[doc] == docTemplate)
+    TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT", FALSE);
   else if (DocumentTypes[doc] == docXml)
     TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL, RemoveTemplate);
 #ifdef BOOKMARKS
@@ -2476,12 +2476,7 @@ Document GetDocFromSource (Document sourceDoc)
   if (DocumentTypes[sourceDoc] == docSource)
     /* It's a source document */
     for (i = 1; i < DocumentTableLength && xmlDoc == 0; i++)
-      if (DocumentTypes[i] == docHTML ||
-          DocumentTypes[i] == docAnnot ||
-          DocumentTypes[i] == docSVG ||
-          DocumentTypes[i] == docXml ||
-          DocumentTypes[i] == docLibrary ||
-          DocumentTypes[i] == docMath)
+      if (IsXMLDocType (i))
         if (DocumentSource[i] == sourceDoc)
           xmlDoc = i;
   return xmlDoc;
@@ -2544,11 +2539,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
   /* change display mode to avoid flicker due to callbacks executed when
      saving some elements, for instance META */
   dispMode = TtaGetDisplayMode (doc);
-  if (DocumentTypes[doc] == docHTML ||
-      DocumentTypes[doc] == docSVG ||
-      DocumentTypes[doc] == docLibrary ||
-      DocumentTypes[doc] == docMath ||
-      DocumentTypes[doc] == docXml)
+  if (IsXMLDocType (doc))
     /* it's the structured form of the document */
     {
       if (dispMode == DisplayImmediately)
@@ -3210,6 +3201,8 @@ static ThotBool  AutoSaveDocument (Document doc, View view, char *local_url)
         ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT", FALSE);
       else if (DocumentTypes[doc] == docMath)
         ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT", FALSE);
+      else if (DocumentTypes[doc] == docTemplate)
+        ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "TemplateT", FALSE);
       else if (DocumentTypes[doc] == docXml)
         ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL, FALSE);
     }
@@ -4316,6 +4309,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
             {
               if (CopyImages &&
                   DocumentTypes[doc] != docMath &&
+                  DocumentTypes[doc] != docTemplate &&
                   DocumentTypes[doc] != docXml)
                 UpdateImages (doc, src_is_local, dst_is_local, imgbase, documentFile);
               if (CopyCss)

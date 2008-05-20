@@ -21,3 +21,6 @@ useEl: use
 useSimple: use
 ref_name: name
 title: label
+Comment\240: Comment
+XMLPI: PI
+xmlid: xml:id

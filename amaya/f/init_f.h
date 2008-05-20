@@ -8,6 +8,7 @@
 
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
+extern ThotBool IsXMLDocType ( Document doc );
 extern const char * DocumentTypeString ( Document document );
 extern void DocumentInfo ( Document document,
                            View view );
@@ -269,6 +270,7 @@ extern void CloseHelpWindow ( Document doc,
 
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
+extern ThotBool IsXMLDocType ( Document doc );
 extern const char * DocumentTypeString ( Document document );
 extern void DocumentInfo ( Document document,
                              View view );

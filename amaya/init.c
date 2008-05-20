@@ -362,6 +362,23 @@ void DocumentMetaClear (DocumentMetaDataElement *me)
 }
 
 /*----------------------------------------------------------------------
+  IsXMLDocType
+  Returns TRUE if the DocumentTypes of the document is XML
+  ----------------------------------------------------------------------*/
+ThotBool IsXMLDocType (Document doc)
+{
+  if (DocumentTypes[doc] == docHTML ||
+      DocumentTypes[doc] == docLibrary ||
+      DocumentTypes[doc] == docMath ||
+      DocumentTypes[doc] == docSVG  ||
+      DocumentTypes[doc] == docTemplate  ||
+      DocumentTypes[doc] == docXml)
+    return TRUE;
+  else
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
   DocumentTypeString
   Returns a string that represents the document type or the current
   profile.
@@ -399,6 +416,9 @@ const char * DocumentTypeString (Document document)
       break;
     case docLibrary:
       result = "HTML";
+      break;
+    case docTemplate:
+      result = "XTiger template";
       break;
     default:
       break;
@@ -958,7 +978,7 @@ void UpdateEditorMenus (Document doc)
       TtaSetItemOn (doc, 1, Views, BShowFormatted);
       TtaSetItemOn (doc, 1, Views, TSplitHorizontally);
       TtaSetItemOn (doc, 1, Views, TSplitVertically);
-      if  (DocumentTypes[doc] == docXml)
+      if  (DocumentTypes[doc] == docXml || DocumentTypes[doc] == docTemplate)
         {
           TtaSetItemOff (doc, 1, Views, BShowAlternate);
           TtaSetItemOff (doc, 1, Views, BShowToC);
@@ -989,12 +1009,7 @@ void UpdateEditorMenus (Document doc)
           else
             SetTableMenuOff (doc, 1);
     
-          if (DocumentTypes[doc] == docHTML ||
-              DocumentTypes[doc] == docAnnot ||
-              DocumentTypes[doc] == docSVG ||
-              DocumentTypes[doc] == docMath ||
-              DocumentTypes[doc] == docXml ||
-              DocumentTypes[doc] == docImage)
+          if (IsXMLDocType (doc))
             {
               TtaSetItemOn (doc, 1, Tools, BSpellCheck);
               TtaSetMenuOn (doc, 1, Style);
@@ -2251,12 +2266,7 @@ void WhereOpenView(Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow
       /* force the document's page position because sometime oldDoc is
          a source document placed on the bottom part of the page */
       page_position = 1;
-      if (DocumentTypes[doc] == docHTML ||
-          DocumentTypes[doc] == docSVG ||
-          DocumentTypes[doc] == docXml ||
-          DocumentTypes[doc] == docMath ||
-          DocumentTypes[doc] == docLibrary ||
-          DocumentTypes[doc] == docImage)
+      if (IsXMLDocType (doc))
         {
           /* close the Alternate view if it is open */
           altView = TtaGetViewFromName (doc, "Alternate_view");
@@ -2424,7 +2434,6 @@ View InitView(Document oldDoc, Document doc,
 
    /* update the menus according to the profile */
    /* By default no log file */
-  //UpdateLogFile (doc, FALSE);
 #ifndef DAV    /* don't active the WebDAV menu if flag is off */
   TtaSetMenuOff (doc, 1, Cooperation_);
 #endif  /* DAV */
@@ -2481,11 +2490,7 @@ void PostInitView(Document doc, DocumentType docType, int visibility,
   //if (DocumentURLs[doc] && strcmp (DocumentURLs[doc], "empty"))
   TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
                    TRUE, (Proc)TextURL, URL_list );
-  if ((DocumentTypes[doc] == docHTML ||
-       DocumentTypes[doc] == docSVG ||
-       DocumentTypes[doc] == docXml ||
-       DocumentTypes[doc] == docMath ||
-       DocumentTypes[doc] == docLibrary))
+  if (IsXMLDocType (doc))
     {
       /* init show target menu item */
       TtaGetEnvBoolean ("SHOW_TARGET", &show);
@@ -3250,7 +3255,7 @@ Document LoadDocument (Document doc, char *pathname,
         strcpy (local_content_type , AM_MATHML_MIME_TYPE);
       else if (docType == docSVG)
         strcpy (local_content_type , AM_SVG_MIME_TYPE);
-      else if (docType == docXml)
+      else if (docType == docXml || docType == docTemplate)
         strcpy (local_content_type , "text/xml");
       else if (docType == docText || docType == docCSS ||
                docType == docSource || docType == docLog )
@@ -3566,11 +3571,9 @@ Document LoadDocument (Document doc, char *pathname,
             }
         }
       else
-        {
-          DocumentTypes[doc] = docType;
-          newdoc = doc;
-        }
+        newdoc = doc;
 
+      DocumentTypes[newdoc] = docType;
       if (docType == docImage)
         /* create an HTML container */
         {
@@ -3777,15 +3780,11 @@ Document LoadDocument (Document doc, char *pathname,
       if (DocumentMeta[newdoc]->method == CE_INIT)
         DocumentMeta[newdoc]->method = CE_ABSOLUTE;
 
-      if (docType == docHTML ||
-          docType == docSVG ||
+      if (IsXMLDocType (newdoc) ||
 #ifdef ANNOTATIONS
           (docType == docAnnot && annotBodyType != docText) ||
 #endif /* ANNOTATIONS */
-          docType == docBookmark ||
-          docType == docXml ||
-          docType == docLibrary ||
-          docType == docMath)
+          docType == docBookmark)
         plainText = FALSE;
       else
         plainText = (docProfile == L_Other || docProfile == L_CSS || docProfile == L_TEXT);
@@ -4226,11 +4225,7 @@ void ShowSource (Document doc, View view)
   if (!DocumentURLs[doc])
     /* the document is not loaded yet */
     return;
-  if (DocumentTypes[doc] != docHTML &&
-      DocumentTypes[doc] != docSVG &&
-      DocumentTypes[doc] != docXml &&
-      DocumentTypes[doc] != docLibrary &&
-      DocumentTypes[doc] != docMath)
+  if (!IsXMLDocType (doc))
     /* it's not an HTML or an XML document */
     return;
   if (!strcmp (DocumentURLs[doc], "empty"))
@@ -4267,6 +4262,9 @@ void ShowSource (Document doc, View view)
           else if (DocumentTypes[doc] == docMath)
             TtaExportDocumentWithNewLineNumbers (doc, localFile,
                                                  "MathMLT", FALSE);
+          else if (DocumentTypes[doc] == docTemplate)
+            TtaExportDocumentWithNewLineNumbers (doc, localFile,
+                                                 "TemplateT", FALSE);
 #ifdef XML_GENERIC
           else if (DocumentTypes[doc] == docXml)
             TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL, FALSE);
@@ -8009,17 +8007,12 @@ char* CreateTempDirectory(const char* name)
   ----------------------------------------------------------------------*/
 int ChooseDocumentPage(Document doc)
 {
-  switch(DocumentTypes[doc])
-  {
-    case docHTML:
-    case docSVG:
-    case docMath:
-    case docXml:
-    case docTemplate:
-      return WXAMAYAPAGE_SPLITTABLE;
-    default :
-      return WXAMAYAPAGE_SIMPLE;
-  }
+  if (DocumentTypes[doc] == docLibrary)
+    return WXAMAYAPAGE_SIMPLE;
+  else if (IsXMLDocType (doc))
+    return WXAMAYAPAGE_SPLITTABLE;
+  else
+    return WXAMAYAPAGE_SIMPLE;
 }
 
 /*----------------------------------------------------------------------

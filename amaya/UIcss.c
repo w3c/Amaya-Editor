@@ -760,6 +760,20 @@ void GenerateStyle (const char * data , ThotBool add)
 }
 
 /*----------------------------------------------------------------------
+  NoCSSEditing returns TRUE if any CSS editing is available
+  ----------------------------------------------------------------------*/
+ThotBool NoCSSEditing (Document doc)
+{
+  if (!TtaGetDocumentAccessMode (doc))
+    return TRUE;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docXml || DocumentTypes[doc] == docTemplate ||
+      DocumentTypes[doc] == docImage || DocumentTypes[doc] == docLibrary)
+    return TRUE;
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
   GetEnclosingBlock
   ----------------------------------------------------------------------*/
 static ThotBool GetEnclosingBlock (Document doc)
@@ -769,7 +783,7 @@ static ThotBool GetEnclosingBlock (Document doc)
   int                 i, j;
 
   if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
-      DocumentTypes[doc] == docXml)
+      DocumentTypes[doc] == docXml || DocumentTypes[doc] == docTemplate)
     return FALSE;
   TtaGiveFirstSelectedElement (doc, &first, &i, &j);
   if (first == NULL)
@@ -878,11 +892,10 @@ void DoStyleColor (char *color)
   ThotBool            open = FALSE, isBg;
 
   doc = TtaGetSelectedDocument();
-  if (!TtaGetDocumentAccessMode (doc) || color == NULL)
+  if (color == NULL)
     /* document is ReadOnly */
     return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
-      DocumentTypes[doc] == docXml)
+  if (NoCSSEditing (doc))
     return;
   // new thot color
   ptr = strstr (color, "#");
@@ -943,11 +956,8 @@ void DoSelectFontSize (Document doc, View view)
   ThotBool            open = FALSE;
 
   doc = TtaGetSelectedDocument();
-  if (!TtaGetDocumentAccessMode (doc))
+  if (NoCSSEditing (doc))
     /* document is ReadOnly */
-    return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
-      DocumentTypes[doc] == docXml)
     return;
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
@@ -982,11 +992,8 @@ void DoSelectFontFamilly (Document doc, View view)
   ThotBool            open = FALSE;
 
   doc = TtaGetSelectedDocument();
-  if (!TtaGetDocumentAccessMode (doc))
+  if (NoCSSEditing (doc))
     /* document is ReadOnly */
-    return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
-      DocumentTypes[doc] == docXml)
     return;
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
@@ -1028,11 +1035,8 @@ void DoSelectFont (Document doc, View view)
   int                 family, size;
   ThotBool            open = FALSE;
 
-  if (!TtaGetDocumentAccessMode (doc))
+  if (NoCSSEditing (doc))
     /* document is ReadOnly */
-    return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
-      DocumentTypes[doc] == docXml)
     return;
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
@@ -1082,11 +1086,8 @@ void DoSelectColor (Document doc, View view)
   unsigned short      green;
   unsigned short      blue;
 
-  if (!TtaGetDocumentAccessMode (doc))
+  if (NoCSSEditing (doc))
     /* document is ReadOnly */
-    return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
-      DocumentTypes[doc] == docXml)
     return;
 
   if (Current_Color != -1)
@@ -1120,11 +1121,8 @@ void DoSelectBgColor (Document doc, View view)
   unsigned short      green;
   unsigned short      blue;
 
-  if (!TtaGetDocumentAccessMode (doc))
+  if (NoCSSEditing (doc))
     /* document is ReadOnly */
-    return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
-      DocumentTypes[doc] == docXml)
     return;
 
   if (Current_BackgroundColor != -1)
@@ -1224,11 +1222,8 @@ ThotBool RemoveSpecificStyle (Document doc, const char *cssproperty)
   DisplayMode     dispMode;
   ThotBool        open = FALSE, selChange = FALSE;
 
-  if (!TtaGetDocumentAccessMode (doc))
+  if (NoCSSEditing (doc))
     /* document is ReadOnly */
-    return selChange;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
-      DocumentTypes[doc] == docXml)
     return selChange;
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
@@ -1306,11 +1301,8 @@ void DoRemoveFont (Document doc, View view)
   TypeUnit            unit;
 
   doc = TtaGetSelectedDocument();
-  if (!TtaGetDocumentAccessMode (doc))
+  if (NoCSSEditing (doc))
     /* document is ReadOnly */
-    return;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docSource ||
-      DocumentTypes[doc] == docXml)
     return;
 
   RemoveSpecificStyle (doc, "font-family: Times");

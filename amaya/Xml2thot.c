@@ -282,19 +282,16 @@ static ThotBool ChangeXmlParserContextByUri (char *uriName)
 
   while (!found && CurrentParserCtxt != NULL)
     {
-      if (strcmp (CurrentParserCtxt->UriName, Template_URI))
-        {
-          if (!strcmp ((char *)uriName, CurrentParserCtxt->UriName))
-            found = TRUE;
-        }
-      else
+      if (!strcmp (CurrentParserCtxt->UriName, Template_URI))
         {
           /* Templates */
-          if (!strcmp ((char *)uriName, CurrentParserCtxt->UriName) ||
+          if (!strcmp ((char *)uriName, Template_URI) ||
               !strcmp ((char *)uriName, Template_URI_o) ||
               !strcmp ((char *)uriName, Template_URI_f))
             found = TRUE;
         }
+      else if (!strcmp ((char *)uriName, CurrentParserCtxt->UriName))
+        found = TRUE;
       if (!found)
         CurrentParserCtxt = CurrentParserCtxt->NextParserCtxt;
     }
@@ -6013,6 +6010,8 @@ void StartXmlParser (Document doc, char *fileName,
         TtaUpdateRootElementType (RootElement, "SVG", doc);
       else if (DocumentTypes[doc] == docMath && strcmp ((char *)s, "MathML"))
         TtaUpdateRootElementType (RootElement, "MathML", doc);
+      else if (DocumentTypes[doc] == docTemplate && strcmp ((char *)s, "Template"))
+        TtaUpdateRootElementType (RootElement, "Template", doc);
 
       /* Initialize all parser contexts if not done yet */
       if (FirstParserCtxt == NULL)
@@ -6031,6 +6030,8 @@ void StartXmlParser (Document doc, char *fileName,
         ChangeXmlParserContextByDTD ("SVG");
       else if (strcmp ((char *)s, "MathML") == 0)
         ChangeXmlParserContextByDTD ("MathML");
+      else if (strcmp ((char *)s, "Template") == 0)
+        ChangeXmlParserContextByDTD ("Template");
       else
 #ifdef XML_GENERIC
         {

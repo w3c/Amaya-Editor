@@ -5255,7 +5255,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   The document type transitional, XHTML 1.1, basic, other (docProfile)
   The charset value if the XML declaration gives an encoding or
   UNDEFINED_CHARSET.
-  The type of the document (given by the first element name)
+  The type of the doc'ument (given by the first element name)
   A boolean that indicates if an XML DTD is supported by Amaya
   ----------------------------------------------------------------------*/
 void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
@@ -5264,9 +5264,9 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                      DocumentType *thotType, int *extraProfile)
 {
   gzFile      stream;
-  char       *ptr, *beg, *end, *ptrns;
+  char       *ptr, *beg, *end, *ptrns, *prefix;
   char       *buffer = FileBuffer;
-  int         res, i, j, k;
+  int         res, i, j, k, pref_lg;
   ThotBool    endOfSniffedFile, beginning;
   ThotBool    found;
 
@@ -5299,6 +5299,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
             buffer[res] = EOS;
           /* check if the file contains "<?xml ..." */
           i = 0;
+          prefix = NULL;
           endOfSniffedFile = (res < INPUT_FILE_BUFFER_SIZE);
           found = TRUE;
           while (found)
@@ -5569,8 +5570,12 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                               buffer[j] != ':'))
                         j++;
                       if (buffer[j] == ':')
+                        {
                         /* there is a prefix, skip it */
-                        i = j + 1;
+                          prefix = &buffer[i];
+                          pref_lg = j - i;
+                          i = j + 1;
+                        }
                       if (!strncasecmp ((char *)&buffer[i], "html", 4))
                         {
                           /* the html tag is found */
@@ -5584,7 +5589,8 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                             {
                               *isXML = TRUE;
                               ptrns += 5;
-                              if (*ptrns != ':')
+                              if (*ptrns != ':' ||
+                                  (prefix && !strncmp (&ptrns[1], (const char*)prefix, pref_lg)))
                                 {
                                   ptr = strstr (ptrns,  XHTML_URI);
                                   if (ptr && ptr < end)
@@ -5616,7 +5622,8 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                             {
                               *isXML = TRUE;
                               ptrns += 5;
-                              if (*ptrns != ':')
+                              if (*ptrns != ':' ||
+                                  (prefix && !strncmp (&ptrns[1], (const char*)prefix, pref_lg)))
                                 {
                                   ptr = strstr (ptrns, "svg");
                                   if (ptr && ptr < end)
@@ -5643,14 +5650,38 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                             {
                               *isXML = TRUE;
                               ptrns += 5;
-                              if (*ptrns != ':')
+                              if (*ptrns != ':' ||
+                                  (prefix && !strncmp (&ptrns[1], (const char*)prefix, pref_lg)))
                                 {
                                   ptr = strstr (ptrns, "MathML");
                                   if (ptr && ptr < end)
-                                    {
-                                      /* The MathML namespace declaration is found */
-                                      *isknown = TRUE;
-                                    }
+                                    /* The MathML namespace declaration is found */
+                                    *isknown = TRUE;
+                                }
+                            }
+                        }
+                      else if (!strncasecmp ((char *)&buffer[i], "library", 7))
+                        {
+                          /* the library tag is found */
+                          i += 7;
+                          /* it's not necessary to continue */
+                          found = FALSE;
+                          endOfSniffedFile = TRUE;
+                          /* We consider the document as a mathml one */
+                          *thotType = docTemplate;
+                          end = strstr (&buffer[i], ">");
+                          ptrns = strstr (&buffer[i], "xmlns");
+                          if (ptrns && ptrns < end)
+                            {
+                              *isXML = TRUE;
+                              ptrns += 5;
+                              if (*ptrns != ':' ||
+                                  (prefix && !strncmp (&ptrns[1], (const char*)prefix, pref_lg)))
+                                {
+                                  ptr = strstr (ptrns, "xtiger");
+                                  if (ptr && ptr < end)
+                                    /* The xtiger namespace declaration is found */
+                                    *isknown = TRUE;
                                 }
                             }
                         }
@@ -5666,7 +5697,8 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                             {
                               *thotType = docXml;
                               ptrns += 5;
-                              if (*ptrns != ':')
+                              if (*ptrns != ':' ||
+                                  (prefix && !strncmp (&ptrns[1], (const char*)prefix, pref_lg)))
                                 {
                                   // copy the namespace
                                   while (ptrns != end && *ptrns != '"')

@@ -185,6 +185,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
     {
     case Template_EL_head:
       CheckMandatoryAttribute (el, doc, Template_ATTR_version);
+    case Template_EL_Template:
       SetDocumentAsXTigerTemplate(doc);
       break;
 

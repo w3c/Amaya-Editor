@@ -32,7 +32,6 @@ STRUCT
    cdata = LIST OF (cdata_line = TEXT);
 
 EXCEPT
-
    XML:                 MoveResize, NoMove;
    PICTURE:             NoMove, NoResize;
    TEXT:                NoMove, NoResize;

@@ -1,5 +1,5 @@
 	{ Translation Schema for XTiger Templates
-	  Francesc Campoy Flores & I. Vatton    January 2007 }
+	  Francesc Campoy Flores & I. Vatton    2007 - 2008 }
 
 
 TRANSLATION Template;
@@ -28,6 +28,10 @@ RULES
     Use XLinkT for XLink;
     Use SVGT for SVG;
     Use MathMLT for MathML;
+    create SOT;
+    create 'library';
+    create Attributes;
+    create tagend;
   end;
 
   head:
@@ -165,6 +169,15 @@ RULES
         END;
   
 ATTRIBUTES
+
+  xmlid :
+    begin
+      create SAN;
+      create 'xml:id=';
+      create DoubleQuote;
+      create name;
+      create DoubleQuote;
+    end;
 
   name :
     begin

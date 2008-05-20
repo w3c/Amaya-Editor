@@ -11,10 +11,11 @@ VIEWS
 
 #define STRUCT_INDENT 1.5
 #define TAG_Font Helvetica
-#define TAG_Color DarkGreen3
+#define TAG_Color DarkGold3
 #define TAG_Weight Bold
 #define TAG_Visibility 7
 #define TAG_FONTSIZE 11 pt
+#define DOC_FONTSIZE 12 pt
 #define ATTR_Font Helvetica
 #define ATTR_Style Roman
 #define ATTR_Weight Normal
@@ -23,7 +24,7 @@ VIEWS
 #define INVALID_Weight Normal
 #define INVALID_Visibility 7
 #define INVALID_Font Helvetica
-#define ATTR_Color DarkGreen3
+#define ATTR_Color DarkGold3
 #define ATTRVALUE_Color DarkMagenta2
 #define INVALID_Color Red
 #define COMMENT_Font Helvetica
@@ -277,6 +278,31 @@ BOXES
 	END;
 
 RULES
+ Document:
+        BEGIN
+        Depth: 0;
+        Direction: ltr;
+        Adjust: Left;
+        Indent: 0;
+        Font: Times;
+        Style: Roman;
+        Weight: Normal;
+        LineWeight: 0;
+        Width: Enclosing . Width;
+        Size: DOC_FONTSIZE;
+        Height: Enclosing . Height min;
+        HorizPos: Left = Enclosing . Left;
+        VertPos: Top = Enclosing . Top;
+        IN Structure_view BEGIN
+                Size: TAG_FONTSIZE;
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left;
+                PaddingLeft: 0.4;
+                Font: Helvetica;
+                END;
+        END;
+
   Template:
         BEGIN
         Width: Enclosing . Width;
@@ -654,6 +680,12 @@ RULES
 
 ATTRIBUTES
 
+  xmlid:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
   name:
   BEGIN
 	CreateBefore(AttrName);
@@ -767,6 +799,6 @@ ATTRIBUTES
 	   CreateAfter(Unknown_End);
 	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
   	 CreateBefore(UnknownAttrValue);
-	END;	
+	END;
 
 END

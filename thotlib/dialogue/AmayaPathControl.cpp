@@ -293,7 +293,7 @@ void AmayaPathControlItem::Draw(wxDC& dc, bool isFocused)
     else if (isXTiger)
     {
       wxColour col = dc.GetTextForeground();
-      dc.SetTextForeground(wxColour(25, 142, 25));
+      dc.SetTextForeground(wxColour(140, 140, 10));
       dc.DrawText(label, rect.x, rect.y);
       dc.SetTextForeground(col);
     }

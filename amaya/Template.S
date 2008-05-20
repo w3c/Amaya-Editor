@@ -9,6 +9,7 @@ DEFPRES TemplateP;
 ATTR
   { generic attributes for internal use }
   Unknown_attribute = TEXT;	{ to store an unknown attribute }
+  xmlid = Text;		{ id }
 
 CONST
 
@@ -78,9 +79,9 @@ STRUCT
 
 EXCEPT
   XMLPI:              ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
+  PI_line:            Hidden, MarkupPreserve;
   Comment\240:        ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
   Comment_line:       Hidden, MarkupPreserve;
-  PI_line:            Hidden, MarkupPreserve;
   useEl:              NoReplicate, NoBreakByReturn;
   useSimple:          NoReplicate, NoBreakByReturn;
   repeat:             NoReplicate, NoBreakByReturn, NoCreate;
@@ -95,5 +96,6 @@ EXCEPT
   ref_name:		        GiveName;
   name:			          GiveName;
   prompt:             Invisible;
+  xmlid:		          CssId;
 	
 END

@@ -3501,11 +3501,7 @@ void SynchronizeSourceView (NotifyElement *event)
      user has just clicked */
   otherDoc = 0;
   otherDocIsStruct = FALSE;
-  if (DocumentTypes[doc] == docHTML ||
-      DocumentTypes[doc] == docLibrary ||
-      DocumentTypes[doc] == docMath ||
-      DocumentTypes[doc] == docSVG  ||
-      DocumentTypes[doc] == docXml)
+  if (IsXMLDocType (doc))
     /* the user clicked on a structured document, the other doc is the
        corresponding source document */
     otherDoc = DocumentSource[doc];
@@ -3516,11 +3512,7 @@ void SynchronizeSourceView (NotifyElement *event)
       otherDocIsStruct = TRUE;
       for (i = 1; i < DocumentTableLength; i++)
         if (DocumentURLs[i] &&
-            (DocumentTypes[i] == docHTML ||
-             DocumentTypes[i] == docLibrary ||
-             DocumentTypes[i] == docMath ||
-             DocumentTypes[i] == docSVG ||
-             DocumentTypes[i] == docXml) &&
+            IsXMLDocType (i) &&
             DocumentSource[i] == doc)
           {
             otherDoc = i;
@@ -3961,11 +3953,7 @@ void CheckSynchronize (NotifyElement *event)
           /* Synchronize the content of the old document */
           if (DocumentTypes[SelectionDoc] == docSource || /* source of ... */
               (DocumentSource[SelectionDoc] && /* has a source */
-               (DocumentTypes[SelectionDoc] == docHTML ||
-                DocumentTypes[SelectionDoc] == docSVG ||
-                DocumentTypes[SelectionDoc] == docLibrary ||
-                DocumentTypes[SelectionDoc] == docMath ||
-                DocumentTypes[SelectionDoc] == docXml)))
+               IsXMLDocType (SelectionDoc)))
             {
               if (event->info == 1)
                 /* an undo operation was done in event->document */
