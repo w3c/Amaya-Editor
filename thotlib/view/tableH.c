@@ -1313,6 +1313,7 @@ void GetCellSpans (PtrElement cell, int *colspan, int *rowspan,
     }
 }
 
+
 /*----------------------------------------------------------------------
   SetTableWidths computes the minimum width and the maximum width of
   all cells, columns and the table itself.
@@ -1343,6 +1344,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
   int                 min, max, percent, realMin, realMax;
   int                 attrVSpan, attrHSpan;
   int                 cellWidth;
+  ThotBool           *colWidthForced;
   ThotBool            skip, change, reformat;
   ThotBool            foundH, foundV;
 
@@ -1388,6 +1390,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
   colWidth = (int*)TtaGetMemory (sizeof (int) * cNumber);
   colPercent = (int*)TtaGetMemory (sizeof (int) * cNumber);
   colVSpan = (int*)TtaGetMemory (sizeof (int) * cNumber);
+  colWidthForced = (ThotBool*)TtaGetMemory (sizeof (ThotBool) * cNumber);
   while (pTabRel)
     {
       for (i = 0; i < MAX_RELAT_DIM &&
@@ -1397,8 +1400,12 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
           colBox[cRef] = pTabRel->TaRTable[i];
           colBox[cRef]->AbBox->BxMinWidth = 0;
           colBox[cRef]->AbBox->BxMaxWidth = 0;
+          // check if col or colgroup elements are defined
           colWidth[cRef] = 0;
           colPercent[cRef] = 0;
+          colWidthForced[cRef] = GiveAttrWidth (colBox[cRef],
+                                                ViewFrameTable[frame - 1].FrMagnification,
+                                                &colWidth[cRef], &colPercent[cRef]);
           colVSpan[cRef] = 0;
           cRef++;
         }
@@ -1443,8 +1450,8 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
                     }
                   if (cRef >= cNumber)
                     pAb = NULL;
-
-                  if (pAb)
+                  //manage the cell only if the column width is not forced
+                  if (pAb && !colWidthForced[cRef])
                     {
                       /* is it vertically or horizontally spanned ? */
                       span = 1;
@@ -1711,6 +1718,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
   pBox->BxMinWidth = min;
   pBox->BxMaxWidth = max;
   pBox->BxRuleWidth = width;
+  TtaFreeMemory (colWidthForced);
   TtaFreeMemory (colVSpan);
   TtaFreeMemory (colBox);
   TtaFreeMemory (colWidth);

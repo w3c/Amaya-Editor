@@ -1047,7 +1047,7 @@ EXCEPT
         Column_head:    IsColHead, NoCut, Hidden, NoBreakByReturn;
         Table_head:     NoCut, Hidden, NoSelect, NoBreakByReturn;
         C_Head:         Hidden, NoSelect;
-        ColStruct:           Hidden, NoSelect, NoCreate, NoBreakByReturn;
+        ColStruct:      Hidden, NoSelect, NoCreate, NoBreakByReturn;
         Cols:           Hidden, NoSelect, NoCreate, NoBreakByReturn;
         Colgroups:      Hidden, NoSelect, NoCreate, NoBreakByReturn;
         Table_body:     PageBreakAllowed, Hidden, NoBreakByReturn;
