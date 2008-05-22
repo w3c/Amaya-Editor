@@ -1118,7 +1118,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
                     /* all boxes are now managed: stop the loop */
                     pAb = pNext = NULL;
                   else if (pNext)
-                    break;
+                    pAb = NULL; //break;
                   else
                     {
                       /* go up in the tree */
@@ -2094,7 +2094,7 @@ void ComputeChangedBoundingBoxes (int frame)
                                                pBox->BxHeight);
 		  
                       if (pAb->AbElement->ElSystemOrigin &&
-                          (pFrame->FrXOrg ||pFrame->FrYOrg))
+                          (pFrame->FrXOrg || pFrame->FrYOrg))
                         {
                           OldXOrg = pFrame->FrXOrg;
                           OldYOrg = pFrame->FrYOrg;
@@ -2152,16 +2152,22 @@ void ComputeChangedBoundingBoxes (int frame)
                     {
                       OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
                       if (formatted && IfPopMatrix (pAb))
-                        OriginSystemExit (pAb, pFrame, plane,
-                                          &OldXOrg, &OldYOrg, 
-                                        ClipXOfFirstCoordSys,
-                                          ClipYOfFirstCoordSys);
+                        {
+                          if (pAb->AbElement->ElSystemOrigin &&
+                              (OldXOrg || OldYOrg))
+                            {
+                              OriginSystemExit (pAb, pFrame, plane,
+                                                &OldXOrg, &OldYOrg, 
+                                                ClipXOfFirstCoordSys,
+                                                ClipYOfFirstCoordSys);
+                            }
+                        }
                     }
                   if (pAb == root)
                     /* all boxes are now managed: stop the loop */
                     pAb = pNext = NULL;
                   else if (pNext)
-                    break;
+                    pAb = NULL; //break;
                   else
                     {
                       /* go up in the tree */

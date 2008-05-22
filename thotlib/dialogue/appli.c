@@ -1114,12 +1114,8 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
  *   + TRUE : if the event must be forwarded to other widgets
  *   + FALSE : if the event is cought
  ----------------------------------------------------------------------*/
-ThotBool FrameMouseWheelCallback( 
-                                 int frame,
-                                 int thot_mod_mask,
-                                 int direction,
-                                 int delta,
-                                 int x, int y )
+ThotBool FrameMouseWheelCallback( int frame, int thot_mod_mask,
+                                 int direction, int delta, int x, int y )
 {
   Document   document;
   View       view;
@@ -1129,36 +1125,24 @@ ThotBool FrameMouseWheelCallback(
       /* wheel mice up*/
       FrameToView (frame, &document, &view);
       if (thot_mod_mask & THOT_MOD_CTRL)
-        {
           /* if CTRL is down then zoom */
           ZoomOut (document, view);	   
-        }
       else if (thot_mod_mask & THOT_MOD_SHIFT)
-        {
           HorizontalScroll (frame, -39, 1);
-        }
       else
-        { 
           VerticalScroll (frame, -39, 1);
-        }
     }
   else
     {
       /* wheel mice down */
       FrameToView (frame, &document, &view); 
       if (thot_mod_mask & THOT_MOD_CTRL)
-        {
           /* if CTRL is down then zoom */
           ZoomIn (document, view);
-        }
       else if (thot_mod_mask & THOT_MOD_SHIFT)
-        {
           HorizontalScroll (frame, 39, 1);          
-        }
       else
-        {
           VerticalScroll (frame, 39, 1);
-        }
     }
   return TRUE;
 }
