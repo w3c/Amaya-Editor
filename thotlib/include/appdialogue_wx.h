@@ -58,6 +58,7 @@ extern void TtaInitMenuItemStats( int doc_id );
 #include "AmayaParams.h"
 extern void TtaSendDataToPanel( int panel_type, AmayaParams& params );
 
+extern ThotBool TtaFrameIsShown (int frame);
 extern ThotBool TtaHandleUnicodeKey( wxKeyEvent& event );
 extern ThotBool TtaHandleShortcutKey( wxKeyEvent& event );
 extern ThotBool TtaHandleSpecialKey( wxKeyEvent& event );

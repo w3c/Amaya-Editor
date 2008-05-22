@@ -34,6 +34,7 @@
 
 #include "absboxes_f.h"
 #include "abspictures_f.h"
+#include "appdialogue_wx.h"
 #include "applicationapi_f.h"
 #include "attributes_f.h"
 #include "attrpresent_f.h"
@@ -1163,36 +1164,40 @@ ThotBool Animate_boxes (int frame, AnimTime current_time)
 {
 #ifdef _GL 
   ViewFrame        *pFrame;
-  Animated_Cell    *current = (Animated_Cell *)FrameTable[frame].Animated_Boxes;
+  Animated_Cell    *current;
   ThotBool          isfinished;
 
-  /* Time update */ 
-  Animated_Frame = frame;
-  SetBaseClipping ();
-  isfinished = TRUE;
-  while (current)
-    {      
-      if (GL_prepare (frame)) // to be sure the canvas is current one
-        if (animate_box (current->El, current_time))
-          isfinished = FALSE;
-      current = current->Next;
+  if (TtaFrameIsShown (frame))
+    {
+      /* Time update */
+      current = (Animated_Cell *)FrameTable[frame].Animated_Boxes;
+      Animated_Frame = frame;
+      SetBaseClipping ();
+      isfinished = TRUE;
+      while (current)
+        {      
+          if (GL_prepare (frame)) // to be sure the canvas is current one
+            if (animate_box (current->El, current_time))
+              isfinished = FALSE;
+          current = current->Next;
+        }
+      ComputeChangedBoundingBoxes (Animated_Frame);
+      if (isfinished)
+        return TRUE;
+      
+      if (Clipx - 1 < 0.00001)
+        Clipx = 1;
+      if (Clipy - 1 < 0.00001)
+        Clipy = 1;
+      pFrame = &ViewFrameTable[frame - 1];
+      DefClip (frame, 
+               (int)(Clipx - 1) + pFrame->FrXOrg, 
+               (int)(Clipy - 1)+ pFrame->FrYOrg, 
+               (int)(ClipxMax + 1) + pFrame->FrXOrg, 
+               (int)(ClipyMax + 1)+ pFrame->FrYOrg);
+      
+      FrameTable[frame].DblBuffNeedSwap = TRUE;
     }
-  ComputeChangedBoundingBoxes (Animated_Frame);
-  if (isfinished)
-    return TRUE;
-
-  if (Clipx - 1 < 0.00001)
-    Clipx = 1;
-  if (Clipy - 1 < 0.00001)
-    Clipy = 1;
-  pFrame = &ViewFrameTable[frame - 1];
-  DefClip (frame, 
-           (int)(Clipx - 1) + pFrame->FrXOrg, 
-           (int)(Clipy - 1)+ pFrame->FrYOrg, 
-           (int)(ClipxMax + 1) + pFrame->FrXOrg, 
-           (int)(ClipyMax + 1)+ pFrame->FrYOrg);
-
-  FrameTable[frame].DblBuffNeedSwap = TRUE;
   return FALSE;
 #endif /* _GL */
   return TRUE;

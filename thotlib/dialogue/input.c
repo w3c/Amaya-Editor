@@ -812,6 +812,9 @@ int ThotInput (int frame, unsigned int value, int command, int modifiers,
           /* available action for this frame or the main frame */
           if (MenuActionList[command].Call_Action)
             {
+              if (command == CMD_DeletePrevChar)
+                TtaExecuteMenuActionFromActionId(command, document, view, FALSE);
+              else
               /* I just generate an event which contains "command, doc, and view"
                * then I post it on current window eventhandler in order
                * to differe the shortcut action to avoid crash which can occurs 

@@ -1118,7 +1118,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
                     /* all boxes are now managed: stop the loop */
                     pAb = pNext = NULL;
                   else if (pNext)
-                    pAb = NULL; //break;
+                    break;
                   else
                     {
                       /* go up in the tree */
@@ -2167,7 +2167,7 @@ void ComputeChangedBoundingBoxes (int frame)
                     /* all boxes are now managed: stop the loop */
                     pAb = pNext = NULL;
                   else if (pNext)
-                    pAb = NULL; //break;
+                    break;
                   else
                     {
                       /* go up in the tree */

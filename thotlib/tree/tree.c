@@ -1064,6 +1064,10 @@ ThotBool EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
     SSok = !strcmp (pEl->ElStructSchema->SsName, pSS->SsName);
   if (SSok && pEl->ElTypeNumber == typeNum)
     ok = TRUE;
+  else if (SSok && typeNum == 1 && pEl->ElTerminal && pEl->ElLeafType == LtText &&
+           TypeHasException (ExcSelectParent, pEl->ElTypeNumber, pEl->ElStructSchema))
+    // this is a patch to manage <br> like a string for copy/paste
+    ok = TRUE;
   else if (pSS && (SSok || pEl->ElTerminal))
     {
       pRe1 = pSS->SsRule->SrElem[typeNum - 1];

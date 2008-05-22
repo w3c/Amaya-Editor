@@ -55,6 +55,7 @@
 #include "thotcolor_tv.h"
 
 
+#include "appdialogue_wx.h"
 #include "boxlocate_f.h"
 #include "buildlines_f.h"
 #include "context_f.h"
@@ -292,13 +293,11 @@ ThotBool GL_DrawAll ()
                   doc =  FrameTable[frame].FrDoc;
                   if (FrameTable[frame].DblBuffNeedSwap &&
                       doc && LoadedDocument[doc - 1] &&
-                      LoadedDocument[doc - 1]->DocSSchema &&
-                      strcmp (LoadedDocument[doc - 1]->DocSSchema->SsName, "TextFile") &&
-                      documentDisplayMode[doc - 1] != NoComputedDisplay)
+                      documentDisplayMode[doc - 1] == DisplayImmediately)
                     {
 #ifdef _WX
                       // do not draw anything if the animated canvas page is not raidsed
-                      if (FrameTable[frame].WdFrame->GetPageParent()->IsShown())
+                      if (TtaFrameIsShown (frame))
 #endif /* _WX */
                         if (GL_prepare (frame))
                           {

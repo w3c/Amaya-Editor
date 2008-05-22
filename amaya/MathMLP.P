@@ -1398,6 +1398,7 @@ RULES
         BEGIN
         VertPos: Top = Enclosing . Top;
         HorizPos: VMiddle = Enclosing . VMiddle;
+        Display: Block;
         IN Structure_view BEGIN
                 HorizPos: Left = Enclosing . Left;
                 Width: Enclosing . Width;
