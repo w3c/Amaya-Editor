@@ -677,9 +677,13 @@ ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
   if (TtaCheckMakeDirectory (SavePath, TRUE))
     {
       strcat (SavePath, objectname);
-      DoSaveObjectAs ();
-      SavingObject = 0;
-      return FALSE;
+      if (!TtaFileExist (SavePath))
+	{
+	  // we can save the file without any dialog
+	  DoSaveObjectAs ();
+	  SavingObject = 0;
+	  return FALSE;
+	}
     }
   #endif /* _MACOS */
   // Create a generic filedialog
