@@ -541,8 +541,10 @@ static void LinkCellToColumnHead (Element cell, Element colhead,
                                   Document doc, ThotBool inMath)
 {
   ElementType         elType;
+  Element             col;
   AttributeType       attrType;
   Attribute           attr;
+  int                 val;
 
   if (cell == NULL || colhead == NULL)
     return;
@@ -561,6 +563,64 @@ static void LinkCellToColumnHead (Element cell, Element colhead,
     }
   if (attr)
     TtaSetAttributeReference (attr, cell, doc, colhead);
+  if (!inMath)
+    /* if the relevant COL or COLGROUP element has a "align" attribute
+       put the corresponding IntCellAlign attribute on the cell, unless the
+       cell has its own align attribute */
+    {
+      attrType.AttrTypeNum = HTML_ATTR_Cell_align;
+      attr = TtaGetAttribute (cell, attrType);
+      if (!attr)
+	/* no align attribute on the cell */
+	{
+	  attrType.AttrTypeNum = HTML_ATTR_Ref_ColColgroup;
+	  attr = TtaGetAttribute (colhead, attrType);
+	  if (attr)
+	    /* this Column-head is linked to a COL or COLGROUP element */
+	    {
+	      TtaGiveReferenceAttributeValue (attr, &col);
+	      if (col)
+		/* the cell inherits its alignment from this element or from
+		   one of its ancestors */
+		{
+		  attrType.AttrTypeNum = HTML_ATTR_Cell_align;
+		  attr = TtaGetAttribute (col, attrType);
+		  while (col && !attr)
+		    {
+		      /* no "align" attribute. Check the parent */
+		      col = TtaGetParent (col);
+		      if (col)
+			{
+			  elType = TtaGetElementType (col);
+			  if (elType.ElSSchema == attrType.AttrSSchema &&
+			      elType.ElTypeNum == HTML_EL_COLGROUP)
+			    /* parent is a COLGROUP. Get its align attribute */
+			    attr = TtaGetAttribute (col, attrType);
+			  else
+			    /* parent is not a COLGROUP. Stop */
+			    col = NULL;
+			}
+		    }
+		  if (attr)
+		    /* the related COL or COLGROUP (or one of its ancestors)
+		       has an "align" attribute */
+		    {
+		      val = TtaGetAttributeValue (attr);
+		      attrType.AttrTypeNum = HTML_ATTR_IntCellAlign;
+		      attr = TtaGetAttribute (cell, attrType);
+		      if (attr == NULL)
+			{
+			  attr = TtaNewAttribute (attrType);
+			  if (attr)
+			    TtaAttachAttribute (cell, attr, doc);
+			}
+		      if (attr)
+			TtaSetAttributeValue (attr, val, cell, doc);
+		    }
+		}
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3319,6 +3379,159 @@ ThotBool DeleteSpan (NotifyAttribute * event)
   /* prevent the user from deleting this attribute. She should use
      commands for deleting columns instead */
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  CellAlign1Col
+  ----------------------------------------------------------------------*/
+static void CellAlign1Col (Element col, Document doc, int val)
+{
+  Element             colhead, cell;
+  ElementType         elType;
+  Attribute           attrRef_ColColgroup, attrRef_column, attrIntCellAlign;
+  AttributeType       attrType, aType;
+  int                 kind;
+
+  elType = TtaGetElementType (col);
+  attrType.AttrSSchema = elType.ElSSchema;
+  /* check all Column_head elements related to this COL or COLGROUP leaf */
+  colhead = NULL;
+  attrRef_ColColgroup = NULL;
+  TtaNextLoadedReference (col, &colhead, &attrRef_ColColgroup);
+  while (colhead && attrRef_ColColgroup)
+    {
+      /* we are interested only in elements linked by a Ref_ColColgroup
+	 attribute */
+      TtaGiveAttributeType(attrRef_ColColgroup, &aType, &kind);
+      if (aType.AttrSSchema == attrType.AttrSSchema &&
+	  aType.AttrTypeNum == HTML_ATTR_Ref_ColColgroup)
+	{
+	  /* check all cells related to this colhead */
+	  cell = NULL;
+	  attrRef_column = NULL;
+	  TtaNextLoadedReference (colhead, &cell, &attrRef_column);
+	  while (cell && attrRef_column)
+	    {
+	      /* we are interested only in elements linked by a Ref_column
+		 attribute */
+	      TtaGiveAttributeType(attrRef_column, &aType, &kind);
+	      if (aType.AttrSSchema == attrType.AttrSSchema &&
+		  aType.AttrTypeNum == HTML_ATTR_Ref_column)
+		{
+		  /* is there a align attribute on this cell? */
+		  attrType.AttrTypeNum = HTML_ATTR_Cell_align;
+		  if (!TtaGetAttribute (cell, attrType))
+		    /* no. It inherit from the COL of COLGROUP */
+		    {
+		      attrType.AttrTypeNum = HTML_ATTR_IntCellAlign;
+		      attrIntCellAlign = TtaGetAttribute (cell, attrType);
+		      if (val == 0)
+			/* removing the align attribute */
+			{
+			  if (attrIntCellAlign)
+			    TtaRemoveAttribute (cell, attrIntCellAlign, doc);
+			}
+		      else
+			{
+			  if (!attrIntCellAlign)
+			    {
+			      attrIntCellAlign = TtaNewAttribute (attrType);
+			      TtaAttachAttribute (cell, attrIntCellAlign, doc);
+			    }
+			  TtaSetAttributeValue (attrIntCellAlign, val, cell,
+						doc);
+			}
+		    }
+		}
+	      /* get the next cell linked to the colhead */
+	      TtaNextLoadedReference (colhead, &cell, &attrRef_column);
+	    }
+	}
+      /* get the next colhead belonging to the COL or COLGROUP leaf */
+      TtaNextLoadedReference (col, &colhead, &attrRef_ColColgroup);	  
+    }
+}
+
+/*----------------------------------------------------------------------
+  CellAlignChanged
+  An attribute "align" has been changed by the user on element el.
+  If this element is a COL or COLGROUP element, reflect the change on
+  all cells in all columns controlled by the element.
+  ----------------------------------------------------------------------*/
+static void CellAlignChanged (Element el, Document doc, int val)
+{
+  Element             child;
+  ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
+  SSchema             HTMLschema;
+
+  elType = TtaGetElementType (el);
+  HTMLschema = elType.ElSSchema;
+  if (elType.ElTypeNum == HTML_EL_COL || elType.ElTypeNum == HTML_EL_COLGROUP)
+    /* the attribute is on a COL or COLGROUP element */
+    {
+      /* process all COL or COLGROUP descendants that are leaves of element el*/
+      child = TtaGetFirstChild (el);
+      if (!child)
+	/* this is a COL or COLGROUP leaf. Process all the related cells */
+	CellAlign1Col (el, doc, val);
+      else
+	{
+	  elType = TtaGetElementType (child);
+	  if (elType.ElSSchema == HTMLschema &&
+	      elType.ElTypeNum == HTML_EL_C_Empty)
+	    /* this is actually an empty element */
+	    CellAlign1Col (el, doc, val);
+	  else
+	    {
+	      /* this COL or COLGROUP element has children. Process them */
+	      attrType.AttrSSchema = HTMLschema;
+	      attrType.AttrTypeNum = HTML_ATTR_Cell_align;
+	      do
+		{
+		  if (!TtaGetAttribute (child, attrType))
+		    /* this child has no "align" attribute. Process its leaves*/
+		    CellAlignChanged (child, doc, val);
+		  TtaNextSibling (&child);
+		}
+	      while (child);
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  CellAlignCreated
+  An attribute "align" has been created by the user.
+  ----------------------------------------------------------------------*/
+void CellAlignCreated (NotifyAttribute * event)
+{
+  int       val;
+
+  val = TtaGetAttributeValue (event->attribute);
+  CellAlignChanged (event->element, event->document, val);
+}
+
+/*----------------------------------------------------------------------
+  CellAlignModified
+  The value of an attribute "align" has been modified by the user
+  ----------------------------------------------------------------------*/
+void CellAlignModified (NotifyAttribute * event)
+{
+  int       val;
+
+  val = TtaGetAttributeValue (event->attribute);
+  CellAlignChanged (event->element, event->document, val);
+}
+
+/*----------------------------------------------------------------------
+  CellAlignDeleted
+  An attribute "align" has been deleted by the user
+  ----------------------------------------------------------------------*/
+void CellAlignDeleted (NotifyAttribute * event)
+{
+  CellAlignChanged (event->element, event->document, 0);
 }
 
 /*----------------------------------------------------------------------

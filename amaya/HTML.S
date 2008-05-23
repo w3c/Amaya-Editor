@@ -755,7 +755,7 @@ STRUCT
     (ATTR Cell_align = Cell_left, Cell_center, Cell_right,
         { align        left       center       right }
                        Cell_justify, Cell_char;
-        {               justify       char }
+        {              justify       char }
           Cell_valign = Cell_top, Cell_middle, Cell_bottom, Cell_baseline;
         { valign        top       middle       bottom       baseline }
           Width__; span_ = Integer)
@@ -817,6 +817,8 @@ STRUCT
          { rowspan             colspan }
            Cell_align; char; charoff; Cell_valign;
          { align       char  charoff  valign }
+	   IntCellAlign = IntCellLeft, IntCellCenter, IntCellRight,
+	                  IntCellJustify, IntCellChar;
            No_wrap = no_wrap; BackgroundColor;
          { nowrap             bgcolor }
            Width__; IntWidthPxl; IntWidthPercent;
@@ -831,6 +833,7 @@ STRUCT
            rowspan_; colspan_;
          { rowspan   colspan }
            Cell_align; char; charoff; Cell_valign;
+	   IntCellAlign;
          { align       char  charoff  valign }
            No_wrap; BackgroundColor;
          { nowrap   bgcolor }
@@ -1018,6 +1021,7 @@ EXCEPT
         IntSizeIncr:    Invisible;
         IntSizeDecr:    Invisible;
         IntSizeRel:     Invisible;
+        IntCellAlign:	Invisible;
         x_coord:        Invisible, NewHPos;
         y_coord:        Invisible, NewVPos;
         Ref_IMG:        Invisible;

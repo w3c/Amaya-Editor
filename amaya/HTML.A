@@ -278,7 +278,7 @@ ATTRIBUTES
         AttrDelete.Pre ->  AttrAreaSizeDelete;        
         END;
 
-    span_:
+   span_:
         BEGIN
         AttrCreate.Post -> SpanCreated;
         AttrModify.Pre ->  ModifySpan;
@@ -302,6 +302,13 @@ ATTRIBUTES
         AttrModify.Post -> RowspanModified;
         AttrDelete.Pre ->  RegisterRowspan;
         AttrDelete.Post -> RowspanDeleted;
+        END;
+
+   Cell_align:
+        BEGIN
+        AttrCreate.Post -> CellAlignCreated;
+        AttrModify.Post -> CellAlignModified;
+        AttrDelete.Post -> CellAlignDeleted;
         END;
 
    NAME:

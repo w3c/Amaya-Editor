@@ -6953,32 +6953,33 @@ ATTRIBUTES
         BEGIN
         CreateBefore(AttrNameAndValue);
         Adjust: Left;
-        IN Structure_view BEGIN
+        IN Structure_view
                 Adjust: Enclosing =;
-                END;
         END;
+ IntCellAlign = IntCellLeft :
+        Adjust: Left;
  Cell_align = Cell_center :
         BEGIN
         CreateBefore(AttrNameAndValue);
         Adjust: VMiddle;
-        IN Structure_view BEGIN
+        IN Structure_view
                 Adjust: Enclosing =;
-                END;
-        IN Alternate_view BEGIN
+        IN Alternate_view
                    Adjust: Left;
-                END;
         END;
+ IntCellAlign = IntCellCenter :
+        Adjust: VMiddle;
  Cell_align = Cell_right :
         BEGIN
         CreateBefore(AttrNameAndValue);
         Adjust: Right;
-        IN Structure_view BEGIN
+        IN Structure_view
                 Adjust: Enclosing =;
-                END;
-        IN Alternate_view BEGIN
+        IN Alternate_view
                    Adjust: Left;
-                END;
         END;
+ IntCellAlign = IntCellRight :
+        Adjust: Right;
  Cell_align = Cell_justify :
         BEGIN
         CreateBefore(AttrNameAndValue);
@@ -6988,24 +6989,25 @@ ATTRIBUTES
         IN Alternate_view
                    Adjust: Left;
         END;
+ IntCellAlign = IntCellJustify :
+        Adjust: Justify;
  Cell_align = Cell_char :
         BEGIN
         CreateBefore(AttrNameAndValue);
         Adjust: Right;
-        IN Structure_view BEGIN
+        IN Structure_view
                 Adjust: Enclosing =;
-                END;
-        IN Alternate_view BEGIN
+        IN Alternate_view
                    Adjust: Left;
-                END;
         END;
+ IntCellAlign = IntCellChar :
+        Adjust: Right;
 
  Cell_align (Table_) = Cell_left :
         BEGIN
         HorizPos: Left = Enclosing . Left;        
-        IN Structure_view BEGIN
+        IN Structure_view
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-                END;
         END;
  Cell_align (Table_) = Cell_center :
         BEGIN
