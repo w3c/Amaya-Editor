@@ -452,18 +452,21 @@ ThotBool GiveAttrWidth (PtrAbstractBox pAb, int zoom, int *width, int *percent)
         }
     }
 
-  /* these values can be overwritten by CSS rules */
-  if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimUnit == UnPercent)
+  /* these values can be overwritten by CSS rules on table and cells */
+  if (pAb->AbBox && pAb->AbBox->BxType != BoColumn)
     {
-      found = TRUE;
-      *width = 0;
-      *percent = pAb->AbWidth.DimValue;
-    }
-  else if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimValue > 0)
-    {
-      found = TRUE;
-      *width = PixelValue (pAb->AbWidth.DimValue, pAb->AbWidth.DimUnit, NULL, zoom);
-      *percent = 0;
+      if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimUnit == UnPercent)
+        {
+          found = TRUE;
+          *width = 0;
+          *percent = pAb->AbWidth.DimValue;
+        }
+      else if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimValue > 0)
+        {
+          found = TRUE;
+          *width = PixelValue (pAb->AbWidth.DimValue, pAb->AbWidth.DimUnit, NULL, zoom);
+          *percent = 0;
+        }
     }
   return (found);
 }
