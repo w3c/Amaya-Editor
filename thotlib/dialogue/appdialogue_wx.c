@@ -2230,7 +2230,6 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
       if (proceed_key)
         {
           int  thotMask = 0;
-          bool status;
 
           if (event.CmdDown())
             thotMask |= THOT_MOD_CTRL;
@@ -2244,13 +2243,10 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
           TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleSpecialKey: thot_keysym=%x"), thot_keysym);
           frame = TtaGiveActiveFrame();
           ThotInput (frame, thot_keysym, 0, thotMask, thot_keysym, TRUE);
-          status = FrameTable[frame].DblBuffNeedSwap;
-          FrameTable[frame].DblBuffNeedSwap = true;
           // try to redraw something because when a key in pressed a long time
           // the ThotInput action is repeted but nothing is shown on the screen 
           // before the user release the key.
           GL_DrawAll();
-          FrameTable[frame].DblBuffNeedSwap = status;
           return true;
         }
       else
