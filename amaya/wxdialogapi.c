@@ -677,17 +677,31 @@ ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
   if (TtaCheckMakeDirectory (SavePath, TRUE))
     {
       strcat (SavePath, objectname);
-      if (!TtaFileExist (SavePath))
+      if (TtaFileExist (SavePath))
 	{
-	  // we can save the file without any dialog
-	  DoSaveObjectAs ();
-	  SavingObject = 0;
-	  return FALSE;
+	  char  *suffix;
+          int    i = 1, len;
+          // keep the current suffix
+          len = strlen (SavePath);
+          while (SavePath[len] != '.')
+            len--;
+          suffix = TtaStrdup (&SavePath[len]);
+          do
+            {
+              sprintf (&SavePath[len], "%d%s", i, suffix);
+              i++;
+            }
+          while (TtaFileExist(SavePath));
+          TtaFreeMemory (suffix);
 	}
+      // we can now save the file without any dialog
+      DoSaveObjectAs ();
+      SavingObject = 0;
+      return FALSE;
     }
   #endif /* _MACOS */
   // Create a generic filedialog
-  wxString      wx_filter = APPFILENAMEFILTER;
+  wxString      wx_filter = _T("*|*.*");//APPFILENAMEFILTER;
   wxFileDialog *p_dlg = new wxFileDialog (
                                           parent,
                                           TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OBJECT_LOCATION) ),
