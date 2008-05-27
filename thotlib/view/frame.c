@@ -717,7 +717,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
             }
           // check if it's the last line
           if (pLine->LiNext)
-            box = pLine->LiPrevious->LiFirstBox;
+            box = pLine->LiNext->LiFirstBox;
           else
             box = 0;
           if (box == NULL || !IsParentBox (from, box))
