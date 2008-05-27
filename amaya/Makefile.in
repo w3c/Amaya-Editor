@@ -150,7 +150,7 @@ AMAYA_OPTION_SCHEMAS= \
 
 AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ \
 		-I@srcdir@/f -I@srcdir@/xpm \
-                -I@top_srcdir@/libpng/zlib $(AMAYA_OPTION_INCLUDES)
+                $(AMAYA_OPTION_INCLUDES) $(WX_INCLUDES)
 
 AMAYA_LIBS= ../thotlib/libThotEditor.a \
             libCSS.a $(AMAYA_OPTION_LIBS) \

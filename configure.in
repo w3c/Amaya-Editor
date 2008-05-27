@@ -751,7 +751,7 @@ fi
 if test "$with_raptor" = "yes" ; then
 	if test "$with_system_raptor" != "yes" ; then
 		AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -I\$(THOTDIR)/../redland/raptor "
-		AMAYA_RAPTOR_LIBS="../redland/raptor/.libs/libraptor.a"
+		AMAYA_RAPTOR_LIBS="../raptor/.libs/libraptor.a"
 		AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/../redland/raptor"
 		BUILDRAPTOR="raptor"
 		CURRENTPATH="`pwd`"
