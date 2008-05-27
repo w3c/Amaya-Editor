@@ -1197,7 +1197,6 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
   pRefBox = NULL;
   pRefAb = rule->PosAbRef;
   pAb = pBox->BxAbstractBox;
-
   if (pRefAb && IsDead (pRefAb))
     {
       fprintf (stderr, "Position refers a dead box");
@@ -1290,7 +1289,8 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
             pRefAb = pRefAb->AbPrevious;
           pAb->AbHorizPos.PosAbRef = pRefAb;
         }
-      if (parent && parent->AbDisplay == 'I')
+      if (parent && parent->AbDisplay == 'I' &&
+          parent->AbFloat == 'N' &&  !ExtraAbFlow (pAb, frame))
         {
           // force inline display
           pRefAb = NULL;
@@ -1424,7 +1424,8 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
   else
     {
       /* Vertical rule */
-      if (parent && parent->AbDisplay == 'I')
+      if (parent && parent->AbDisplay == 'I' &&
+          parent->AbFloat == 'N' &&  !ExtraAbFlow (pAb, frame))
         {
           // force inline display
           pRefAb = NULL;
