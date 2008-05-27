@@ -11,11 +11,10 @@ THOTINCLUDES = @THOTINCLUDES@
 include Options
 
 LIBWWW	   = libwww
-REDLAND    = redland
 
 #MKP: adding davlib
 SUBDIRS	= @SUBDIRS@ tools thotlib batch annotlib @DAVDIR@ amaya
-EXTRA_SUBDIRS= $(LIBWWW) $(REDLAND) $(WX_BUILDDIR) $(GL_BUILDDIR)
+EXTRA_SUBDIRS= raptor $(LIBWWW) $(WX_BUILDDIR) $(GL_BUILDDIR)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -24,7 +23,7 @@ bindir = @bindir@
 
 srcdir	= $(THOTDIR)
 
-default : tools gl @BUILDWXWIDGETS@ thotlib batch amaya_prog print_prog
+default : tools gl @BUILDWXWIDGETS@ @BUILDRAPTOR@ thotlib batch amaya_prog print_prog
 
 amaya : tools thotlib amaya_prog print_prog
 
@@ -253,56 +252,11 @@ libwww : libwww_config libwww_make
 		@($(ECHO) "libwww is installed")
 
 #
-# Rules to build the redland RDF library
+# Rules to build the raptor RDF library
 #
-
-# Previous rule used to link and compile expat inside redland... to be removed
-# after checking all is ok in all the platforms
-# we're using the expat from inside libwww
-# @(if test ! -e "$(THOTDIR)/../$(REDLAND)/expat"  ; then \
-#   libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; \
-#    echo $$libwwwdir ; \
-#    $(LN_S) "$$libwwwdir/modules/expat" "$(THOTDIR)/../$(REDLAND)/expat" ; \
-# fi)
-
-# Because redland 0.9.14 forces the check on a glib-2.0 function, we remove the
-# results of the configure to force its non use.
-
-redland_config: @MAKEREDLAND@ force
-	@(if test ! -e "$(THOTDIR)/../$(REDLAND)"  ; then \
-	      $(ECHO) "Error redland dir not found at $(THOTDIR)/$(REDLAND)" ; \
-	  fi)
-	 @(if test ! -d "$(REDLAND)"  ; then \
-		$(MKDIR) $(REDLAND) ; \
-          fi)
-	 @(localdir=`pwd` ; redlanddir="$$localdir/../../$(REDLAND)" ; \
-	  cd $(REDLAND) ; unset LANG; \
-	  if test ! -f Makefile -o ! -f  redland-src-config ; then \
-			CPPFLAGS="-I$$localdir/../../$(LIBWWW)/modules/expat/lib" \
-			LDFLAGS="-L$$localdir/libwww/modules/expat -L$$localdir/libwww/modules/expat/.libs" \
-			$$redlanddir/configure \
-			--build=@build_alias@ --host=@host_alias@ --target=@target_alias@ \
-			--disable-shared \
-			--disable-nfc-check \
-			--without-bdb \
-	 		--with-raptor=internal \
-			--with-xml-parser=expat \
-			--with-www=none \
-			--without-libwww \
-			--without-openssl-digests \
-			--without-mysql ;\
-		$(ECHO) "redland is configured" ; \
-	  fi)
-
-
-# the -DLIBRDF_INTERNAL=1 is needed if we're going to pass our own CFLAGS.
-redland_make: @MAKEREDLAND@ force
-	@(cd $(REDLAND) ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) -DLIBRDF_INTERNAL=1"; \
-	)
-
-redland: @MAKEREDLAND@ redland_config redland_make
-	@($(ECHO) "redland is installed")
+raptor: force
+	$(MAKE) -C raptor
+	@($(ECHO) "raptor is installed")
 
 #
 # This section try to maintain the Makefile(s) up-to-date in

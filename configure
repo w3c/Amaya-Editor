@@ -714,7 +714,14 @@ WX_LIBRARIES
 WX_LINKDEPS
 FREETYPE_INCLUDES
 FREETYPE_LIBRARIES
-REDLAND_CONFIG
+RAPTOR_CONFIG
+BUILDRAPTOR
+AMAYA_ANNOT_OPTIONS
+AMAYA_ANNOT_INCLUDES
+AMAYA_ANNOT_EXTRA_LIBS
+ANNOTLIB_COMPILE_BM
+AMAYA_RAPTOR_LIBS
+AMAYA_RAPTOR_INCLUDES
 AMAYA_INSTALLDIR
 APP_MAJVER
 APP_MINVER
@@ -727,9 +734,6 @@ APIINCLUDES
 VPATHOPT
 THOT_OPTIONS
 AMAYA_OPTIONS
-AMAYA_ANNOT_OPTIONS
-AMAYA_ANNOT_INCLUDES
-AMAYA_ANNOT_EXTRA_LIBS
 IMGLIBS
 EXTRA_INCLUDES
 DAVDIR
@@ -738,10 +742,6 @@ WITHDAV
 WWWDAV
 MAKE_LIBWWW_RDF_PARSER
 LIBWWW_RDF_PARSER
-MAKEREDLAND
-AMAYA_RAPTOR_SRC
-AMAYA_RAPTOR_LIBS
-AMAYA_RAPTOR_INCLUDES
 SUBDIRS
 EXTRA_MAKEFILE_IN
 LTLIBOBJS'
@@ -1346,7 +1346,7 @@ Optional Features:
   --enable-system-wx      try the wxWidgets system library
   --disable-svg           disable SVG support
   --disable-annot         disable Annotations support
-  --enable-system-redland try the redland RDF system library
+  --enable-system-raptor  try the raptor RDF system library
   --disable-templates     disable experimental templates support
   --disable-generic-xml   disable Generic XML support
 
@@ -14265,41 +14265,41 @@ fi
 
 
 
-#annot need Redland
+#annot need Raptor
 if test "$with_annot" = "yes" ; then
-	with_redland="yes"
+	with_raptor="yes"
 else
-	with_redland="no"
+	with_raptor="no"
 fi
 
-# Check whether --enable-system-redland was given.
-if test "${enable_system_redland+set}" = set; then
-  enableval=$enable_system_redland; case "${enableval}" in
-	  yes) with_system_redland="yes";;
-	  no)  with_system_redland="no" ;;
-	  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-system-redland" >&5
-echo "$as_me: error: bad value ${enableval} for --enable-system-redland" >&2;}
+# Check whether --enable-system-raptor was given.
+if test "${enable_system_raptor+set}" = set; then
+  enableval=$enable_system_raptor; case "${enableval}" in
+	  yes) with_system_raptor="yes";;
+	  no)  with_system_raptor="no" ;;
+	  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-system-raptor" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-system-raptor" >&2;}
    { (exit 1); exit 1; }; } ;;
 	esac
 else
-  with_system_redland="no"
+  with_system_raptor="no"
 fi
 
 
-#If Redland is needed and we are asked
+#If Raptor is needed and we are asked
 #to use the system library, check if is present
-if test "$with_redland" = "yes" -a "$with_system_redland" = "yes" ; then
-    # check to see if we have a redland library
-    # Extract the first word of "redland-config", so it can be a program name with args.
-set dummy redland-config; ac_word=$2
+if test "$with_raptor" = "yes" -a "$with_system_raptor" = "yes" ; then
+    # check to see if we have a raptor library
+    # Extract the first word of "raptor-config", so it can be a program name with args.
+set dummy raptor-config; ac_word=$2
 { echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
-if test "${ac_cv_path_REDLAND_CONFIG+set}" = set; then
+if test "${ac_cv_path_RAPTOR_CONFIG+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  case $REDLAND_CONFIG in
+  case $RAPTOR_CONFIG in
   [\\/]* | ?:[\\/]*)
-  ac_cv_path_REDLAND_CONFIG="$REDLAND_CONFIG" # Let the user override the test with a path.
+  ac_cv_path_RAPTOR_CONFIG="$RAPTOR_CONFIG" # Let the user override the test with a path.
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -14309,7 +14309,7 @@ do
   test -z "$as_dir" && as_dir=.
   for ac_exec_ext in '' $ac_executable_extensions; do
   if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_REDLAND_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    ac_cv_path_RAPTOR_CONFIG="$as_dir/$ac_word$ac_exec_ext"
     echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -14320,10 +14320,10 @@ IFS=$as_save_IFS
   ;;
 esac
 fi
-REDLAND_CONFIG=$ac_cv_path_REDLAND_CONFIG
-if test -n "$REDLAND_CONFIG"; then
-  { echo "$as_me:$LINENO: result: $REDLAND_CONFIG" >&5
-echo "${ECHO_T}$REDLAND_CONFIG" >&6; }
+RAPTOR_CONFIG=$ac_cv_path_RAPTOR_CONFIG
+if test -n "$RAPTOR_CONFIG"; then
+  { echo "$as_me:$LINENO: result: $RAPTOR_CONFIG" >&5
+echo "${ECHO_T}$RAPTOR_CONFIG" >&6; }
 else
   { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
@@ -14331,82 +14331,75 @@ fi
 
 
 
-    if test "$REDLAND_CONFIG" = "" ; then
-	{ echo "$as_me:$LINENO: WARNING: Not using system-provided redland library" >&5
-echo "$as_me: WARNING: Not using system-provided redland library" >&2;}
-	with_system_redland="no"
-    else
-
-	{ echo "$as_me:$LINENO: checking system redland version" >&5
-echo $ECHO_N "checking system redland version... $ECHO_C" >&6; }
-	redland_min_version=0.9.16
-	REDLAND_VERSION=`$REDLAND_CONFIG --version`
-	redland_version_dec=`echo $REDLAND_VERSION | awk -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
-	redland_min_version_dec=`echo $redland_min_version | awk -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
-	if test $redland_version_dec -lt $redland_min_version_dec; then
-		{ echo "$as_me:$LINENO: result: no - found version $REDLAND_VERSION and minimal version is $redland_min_version" >&5
-echo "${ECHO_T}no - found version $REDLAND_VERSION and minimal version is $redland_min_version" >&6; }
-		with_system_redland="no"
-	else
-		{ echo "$as_me:$LINENO: result: yes - found version $REDLAND_VERSION" >&5
-echo "${ECHO_T}yes - found version $REDLAND_VERSION" >&6; }
-		{ echo "$as_me:$LINENO: checking checking for redland headers" >&5
-echo $ECHO_N "checking checking for redland headers... $ECHO_C" >&6; }
-						REDLAND_HEADERS=""
-		if test -e "/usr/include/redland.h" ; then
-			REDLAND_HEADERS="/usr/include";
-		elif test -e "/usr/local/include/redland.h" ; then
-			REDLAND_HEADERS="/usr/local/include";
-		fi
-		if test $REDLAND_HEADERS != ""; then
-			{ echo "$as_me:$LINENO: result: yes - have development version" >&5
-echo "${ECHO_T}yes - have development version" >&6; }
-		else
-			{ echo "$as_me:$LINENO: result: no - no development version" >&5
-echo "${ECHO_T}no - no development version" >&6; }
-			with_system_redland="no"
-		fi
-	fi
+    if test "$RAPTOR_CONFIG" = "" ; then
+	{ echo "$as_me:$LINENO: WARNING: Not using system-provided Raptor library" >&5
+echo "$as_me: WARNING: Not using system-provided Raptor library" >&2;}
+	with_system_raptor="no"
     fi
 fi
 
 #if we use the builtin library,
 #check it is present
-if test "$with_redland" = "yes" -a "$with_system_redland" != "yes" \
-	-a ! -d "$srcdir/../redland" ; then
-	{ echo "$as_me:$LINENO: WARNING: Redland source dir not found !!" >&5
-echo "$as_me: WARNING: Redland source dir not found !!" >&2;}
-	{ echo "$as_me:$LINENO: WARNING: Disabling redland build !" >&5
-echo "$as_me: WARNING: Disabling redland build !" >&2;}
-	MAKEREDLAND='#'
-	with_redland="no"
+if test "$with_raptor" = "yes" -a "$with_system_raptor" != "yes" \
+	-a ! -d "$srcdir/../redland/raptor" ; then
+	{ echo "$as_me:$LINENO: WARNING: Raptor source dir not found !!" >&5
+echo "$as_me: WARNING: Raptor source dir not found !!" >&2;}
+	{ echo "$as_me:$LINENO: WARNING: Disabling raptor build !" >&5
+echo "$as_me: WARNING: Disabling raptor build !" >&2;}
+	with_raptor="no"
 fi
 
-#At this point, we know everything about Redland,
+#At this point, we know everything about Raptor,
 #so either set the variables we will need later,
 #or disable Annotations
-if test "$with_redland" = "yes" ; then
-	AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DAM_REDLAND"
-	if test "$with_system_redland" != "yes" ; then
-		AMAYA_RAPTOR_SRC="amaya_comp_redland"
-		AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor "
-		AMAYA_RAPTOR_LIBS="../redland/librdf/.libs/librdf.a ../redland/raptor/.libs/libraptor.a"
-		AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor"
+if test "$with_raptor" = "yes" ; then
+	if test "$with_system_raptor" != "yes" ; then
+		AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -I\$(THOTDIR)/../redland/raptor "
+		AMAYA_RAPTOR_LIBS="../redland/raptor/.libs/libraptor.a"
+		AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/../redland/raptor"
+		BUILDRAPTOR="raptor"
+		CURRENTPATH="`pwd`"
+		mkdir $BUILDRAPTOR
+		cd $BUILDRAPTOR &&
+			CC="$CC" CXX="$CXX" \
+			CPPFLAGS="-I$CURRENTPATH/../../libwww/modules/expat/lib" \
+			LDFLAGS="-L$CURRENTPATH/libwww/modules/expat -L$CURRENTPATH/libwww/modules/expat/.libs" \
+			../../../redland/raptor/configure \
+			--build=$build_alias --host=$host_alias --target=$target_alias \
+			--disable-shared \
+			--with-xml-parser=expat \
+			--with-www=none
+			$ECHO "Raptor is configured"
+			$ECHO "Patching the raptor_config.h file to avoid including glib2-0"
+			$CP raptor_config.h raptor_config.h.orig
+			$SED "s/\(\#define HAVE_G_UTF8_NORMALIZE 1\)/\/* \1 *\//" \
+				raptor_config.h.orig > raptor_config.h
+			$RM raptor_config.h.orig
+			$ECHO "Raptor is patched"
+		cd ..
 	else
-		MAKEREDLAND='#'
-		AMAYA_RAPTOR_SRC=
-		redland_includes=`$REDLAND_CONFIG --cflags`
-	  redland_libs=`$REDLAND_CONFIG --libs`
+		raptor_includes=`$RAPTOR_CONFIG --cflags`
+		raptor_libs=`$RAPTOR_CONFIG --libs`
  		AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS"
-		AMAYA_ANNOT_INCLUDES="$redland_includes -I\$(THOTDIR)/thotlib/include"
-		AMAYA_ANNOT_EXTRA_LIBS="$redland_libs"
-		AMAYA_RAPTOR_INCLUDES="$redland_includes"
+		AMAYA_ANNOT_INCLUDES="$raptor_includes -I\$(THOTDIR)/thotlib/include"
+		AMAYA_ANNOT_EXTRA_LIBS="$raptor_libs"
+		AMAYA_RAPTOR_INCLUDES="$raptor_includes"
        fi
 else
 	with_annot="no"
 fi
 
 ANNOTLIB_COMPILE_BM='#'
+
+
+
+
+
+
+
+
+
+
 
 ###################End of Annotations Support####################
 
@@ -14627,12 +14620,7 @@ AMAYA_INSTALLDIR="Amaya"
 
 
 
-
-
-
-
 #AC_SUBST(ANNOTLIB_COMPILE_BM)
-
 
 
 
@@ -15513,7 +15501,14 @@ WX_LIBRARIES!$WX_LIBRARIES$ac_delim
 WX_LINKDEPS!$WX_LINKDEPS$ac_delim
 FREETYPE_INCLUDES!$FREETYPE_INCLUDES$ac_delim
 FREETYPE_LIBRARIES!$FREETYPE_LIBRARIES$ac_delim
-REDLAND_CONFIG!$REDLAND_CONFIG$ac_delim
+RAPTOR_CONFIG!$RAPTOR_CONFIG$ac_delim
+BUILDRAPTOR!$BUILDRAPTOR$ac_delim
+AMAYA_ANNOT_OPTIONS!$AMAYA_ANNOT_OPTIONS$ac_delim
+AMAYA_ANNOT_INCLUDES!$AMAYA_ANNOT_INCLUDES$ac_delim
+AMAYA_ANNOT_EXTRA_LIBS!$AMAYA_ANNOT_EXTRA_LIBS$ac_delim
+ANNOTLIB_COMPILE_BM!$ANNOTLIB_COMPILE_BM$ac_delim
+AMAYA_RAPTOR_LIBS!$AMAYA_RAPTOR_LIBS$ac_delim
+AMAYA_RAPTOR_INCLUDES!$AMAYA_RAPTOR_INCLUDES$ac_delim
 AMAYA_INSTALLDIR!$AMAYA_INSTALLDIR$ac_delim
 APP_MAJVER!$APP_MAJVER$ac_delim
 APP_MINVER!$APP_MINVER$ac_delim
@@ -15526,9 +15521,6 @@ APIINCLUDES!$APIINCLUDES$ac_delim
 VPATHOPT!$VPATHOPT$ac_delim
 THOT_OPTIONS!$THOT_OPTIONS$ac_delim
 AMAYA_OPTIONS!$AMAYA_OPTIONS$ac_delim
-AMAYA_ANNOT_OPTIONS!$AMAYA_ANNOT_OPTIONS$ac_delim
-AMAYA_ANNOT_INCLUDES!$AMAYA_ANNOT_INCLUDES$ac_delim
-AMAYA_ANNOT_EXTRA_LIBS!$AMAYA_ANNOT_EXTRA_LIBS$ac_delim
 IMGLIBS!$IMGLIBS$ac_delim
 EXTRA_INCLUDES!$EXTRA_INCLUDES$ac_delim
 DAVDIR!$DAVDIR$ac_delim
@@ -15537,10 +15529,6 @@ WITHDAV!$WITHDAV$ac_delim
 WWWDAV!$WWWDAV$ac_delim
 MAKE_LIBWWW_RDF_PARSER!$MAKE_LIBWWW_RDF_PARSER$ac_delim
 LIBWWW_RDF_PARSER!$LIBWWW_RDF_PARSER$ac_delim
-MAKEREDLAND!$MAKEREDLAND$ac_delim
-AMAYA_RAPTOR_SRC!$AMAYA_RAPTOR_SRC$ac_delim
-AMAYA_RAPTOR_LIBS!$AMAYA_RAPTOR_LIBS$ac_delim
-AMAYA_RAPTOR_INCLUDES!$AMAYA_RAPTOR_INCLUDES$ac_delim
 SUBDIRS!$SUBDIRS$ac_delim
 EXTRA_MAKEFILE_IN!$EXTRA_MAKEFILE_IN$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim

@@ -78,8 +78,8 @@ force :
 
 ../redland/librdf/.libs/librdf.a \
 ../redland/raptor/.libs/libraptor.a \
-amaya_comp_redland: @MAKEREDLAND@ force
-	@(cd .. ; $(MAKE) redland CC="$(CC)" CFLAGS="-O2")
+redland:
+	$(MAKE) -C ../redland
 
 .depends depend : ../tools/mkdep/mkdep
 	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c > .depends
@@ -131,7 +131,7 @@ AMAYA_OPTION_OBJ= \
          $(AMAYA_ANNOT_OBJ) $(AMAYA_DAV_OBJ) $(AMAYA_TEMPLATES_OBJ)
 
 AMAYA_SRC= \
-         $(AMAYA_LIBWWW_SRC) @AMAYA_RAPTOR_SRC@ \
+         $(AMAYA_LIBWWW_SRC) \
 	 $(AMAYA_MATH_SRC) $(AMAYA_SVG_SRC) \
          $(AMAYA_ANNOT_SRC) $(AMAYA_DAV_SRC) $(AMAYA_TEMPLATES_SRC)
 
