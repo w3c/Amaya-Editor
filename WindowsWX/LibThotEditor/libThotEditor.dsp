@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\..\wxWidgets\lib\vc_dll\mswu" /I "..\\" /I "..\..\..\wxWidgets\include" /I "..\..\..\wxWidgets\contrib\include" /I "..\..\libpng\zlib" /I "..\..\..\wxWidgets\src\jpeg" /I "..\..\..\wxWidgets\src\tiff" /I "..\..\..\wxWidgets\src\png" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\amaya" /I "..\..\..\freetype\include" /D "WWW_WIN_DLL" /D "SOCKS" /D "__WXMSW__" /D "UNICODE" /D "_UNICODE" /D "STDC_HEADERS" /D "XMD_H" /D "THOT_TOOLTIPS" /D "_WINDOWS" /D "_GL" /D "WIN32" /D WINVER=0x400 /D wxUSE_GUI=1 /D "_WX" /D "WXUSINGDLL" /FD /TP /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\..\wxWidgets\lib\vc_dll\mswu" /I "..\\" /I "..\..\..\wxWidgets\include" /I "..\..\..\wxWidgets\contrib\include" /I "..\..\..\wxWidgets\src\jpeg" /I "..\..\..\wxWidgets\src\tiff" /I "..\..\..\wxWidgets\src\png" /I "..\..\..\wxWidgets\src\zlib" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\amaya" /I "..\..\..\freetype\include" /D "WWW_WIN_DLL" /D "SOCKS" /D "__WXMSW__" /D "UNICODE" /D "_UNICODE" /D "STDC_HEADERS" /D "XMD_H" /D "THOT_TOOLTIPS" /D "_WINDOWS" /D "_GL" /D "WIN32" /D WINVER=0x400 /D wxUSE_GUI=1 /D "_WX" /D "WXUSINGDLL" /FD /TP /c
 # ADD BASE RSC /l 0x40c
 # ADD RSC /l 0x40c
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MDd /W3 /GR /GX /Zi /Od /I "..\..\..\wxWidgets\lib\vc_dll\mswud" /I "..\\" /I "..\..\..\wxWidgets\include" /I "..\..\..\wxWidgets\contrib\include" /I "..\..\libpng\zlib" /I "..\..\..\wxWidgets\src\jpeg" /I "..\..\..\wxWidgets\src\tiff" /I "..\..\..\wxWidgets\src\png" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\amaya" /I "..\..\..\freetype\include" /D "WWW_WIN_DLL" /D "SOCKS" /D "__WXMSW__" /D "UNICODE" /D "_UNICODE" /D "STDC_HEADERS" /D "XMD_H" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "THOT_TOOLTIPS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /D "_GL" /D "WIN32" /D WINVER=0x400 /D wxUSE_GUI=1 /D "_WX" /D "WXUSINGDLL" /FR /FD /TP /c
+# ADD CPP /nologo /MDd /W3 /GR /GX /Zi /Od /I "..\..\..\wxWidgets\lib\vc_dll\mswud" /I "..\\" /I "..\..\..\wxWidgets\include" /I "..\..\..\wxWidgets\contrib\include" /I "..\..\..\wxWidgets\src\jpeg" /I "..\..\..\wxWidgets\src\tiff" /I "..\..\..\wxWidgets\src\png" /I "..\..\..\wxWidgets\src\zlib" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\amaya" /I "..\..\..\freetype\include" /D "WWW_WIN_DLL" /D "SOCKS" /D "__WXMSW__" /D "UNICODE" /D "_UNICODE" /D "STDC_HEADERS" /D "XMD_H" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "THOT_TOOLTIPS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /D "_GL" /D "WIN32" /D WINVER=0x400 /D wxUSE_GUI=1 /D "_WX" /D "WXUSINGDLL" /FR /FD /TP /c
 # ADD BASE RSC /l 0x40c
 # ADD RSC /l 0x40c
 BSC32=bscmake.exe

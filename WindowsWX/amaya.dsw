@@ -63,9 +63,6 @@ Package=<4>
     Project_Dep_Name thotprinter
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name libpng
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name annotlib
     End Project Dependency
     Begin Project Dependency
@@ -159,33 +156,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "libjpeg"=.\libjpeg\libjpeg.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "libpng"=.\libpng\libpng.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name zlib
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "libraptor"=.\libraptor\libraptor.dsp - Package Owner=<4>
 
 Package=<5>
@@ -206,9 +176,6 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name zlib
-    End Project Dependency
 }}}
 
 ###############################################################################
@@ -270,31 +237,13 @@ Package=<4>
     Project_Dep_Name printlib
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name libjpeg
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name Compilers
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name libpng
     End Project Dependency
 }}}
 
 ###############################################################################
 
 Project: "tra"=.\tra\tra.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "zlib"=.\zlib\zlib.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
