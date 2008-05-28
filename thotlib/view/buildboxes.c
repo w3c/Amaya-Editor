@@ -2471,8 +2471,11 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   else
     script = 'L';
   /* teste l'unite */
-  font = ThotLoadFont (script, pAb->AbFont, FontStyleAndWeight(pAb),
-                       height, unit, frame);
+  if (pAb->AbLeafType == LtCompound && pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
+    font = pAb->AbEnclosing->AbBox->BxFont;
+  else
+    font = ThotLoadFont (script, pAb->AbFont, FontStyleAndWeight(pAb),
+                         height, unit, frame);
 
   /* Creation */
   pBox = pAb->AbBox;
