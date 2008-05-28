@@ -4409,10 +4409,12 @@ FIELDSET: BEGIN
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
         Visibility: 1;
+        Height: 0;
         IN Structure_view BEGIN
                 VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
                 Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
                 Adjust: Left;
                 Visibility: Enclosing =;
                 END;
@@ -4486,15 +4488,27 @@ FIELDSET: BEGIN
         PageBreak: Yes;
 #endif
         VertPos: Top = Previous not Table_head . Bottom;
+        BorderTopWidth: Enclosing =;
+        BorderRightWidth: Enclosing =;
+        BorderBottomWidth: Enclosing =;
+        BorderLeftWidth: Enclosing =;
         IN Structure_view BEGIN
                 Visibility: Enclosing =;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width;
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderBottomWidth: 0;
+                BorderLeftWidth: 0;
                 END;
         IN Alternate_view BEGIN
                 Visibility: Enclosing =;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width;
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderBottomWidth: 0;
+                BorderLeftWidth: 0;
                 END;
         END;
 
