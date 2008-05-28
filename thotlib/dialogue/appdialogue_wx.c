@@ -2327,9 +2327,7 @@ void TtaSendStatsInfo()
 }
 
 
-
 #ifdef _WX
-
 static PopupDocContextMenuFuction s_PopupDocContextMenuFuction = NULL;
 
 /*----------------------------------------------------------------------
@@ -2348,8 +2346,8 @@ void TtaSetPopupDocContextMenuFunction(PopupDocContextMenuFuction fn)
   ----------------------------------------------------------------------*/
 void TtaPopupDocContextMenu(int document, int window, void* win, int x, int y)
 {
-  if(s_PopupDocContextMenuFuction && win)
-    s_PopupDocContextMenuFuction(document, window, win, x, y);
+  if (s_PopupDocContextMenuFuction && win)
+    s_PopupDocContextMenuFuction (document, window, win, x, y);
 }
 #endif /* _WX */
 

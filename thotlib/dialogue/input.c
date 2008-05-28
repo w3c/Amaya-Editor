@@ -812,14 +812,15 @@ int ThotInput (int frame, unsigned int value, int command, int modifiers,
           /* available action for this frame or the main frame */
           if (MenuActionList[command].Call_Action)
             {
-              if (command == CMD_DeletePrevChar)
-                TtaExecuteMenuActionFromActionId(command, document, view, FALSE);
-              else
+              if (strstr (MenuActionList[command].ActionName, "Close") != NULL ||
+                  strstr (MenuActionList[command].ActionName, "Split") != NULL)
               /* I just generate an event which contains "command, doc, and view"
                * then I post it on current window eventhandler in order
                * to differe the shortcut action to avoid crash which can occurs 
                * when an action destroy something which is used further by wxWidgets. */
-              AmayaWindow::DoAmayaAction( command, document, view );
+                AmayaWindow::DoAmayaAction( command, document, view );
+              else
+                TtaExecuteMenuActionFromActionId(command, document, view, FALSE);
               done = TRUE;
             }
           
