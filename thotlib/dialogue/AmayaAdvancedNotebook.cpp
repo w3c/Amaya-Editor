@@ -109,34 +109,34 @@ bool AmayaAdvancedNotebook::ClosePage(int page_id)
 {
   AmayaPage *page = (AmayaPage*)GetPage( page_id );
   bool result = true;
+  if (page == NULL)
+    return result;
 
   page->Hide();
-  
-  if(GetPageCount()==1 &&
-     AmayaNormalWindow::GetNormalWindowCount()==1 &&
-     !GetAmayaWindow()->IsKindOf(CLASSINFO(AmayaHelpWindow))
-     )
-	{
+  if (GetPageCount()==1 &&
+      AmayaNormalWindow::GetNormalWindowCount()==1 &&
+      !GetAmayaWindow()->IsKindOf(CLASSINFO(AmayaHelpWindow)))
+    {
       TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
-	  result = false;
-	}
+      result = false;
+    }
 
   page = (AmayaPage*)GetPage( page_id );
   if (page == NULL)
     return result;
 
-  if(page->Close())
-  {
-    DeletePage(page_id);
-    /** \todo Update selection with old selection page. */
-    UpdatePageId();    
-    return result;
-  }
+  if (page->Close())
+    {
+      DeletePage(page_id);
+      /** \todo Update selection with old selection page. */
+      UpdatePageId();    
+      return result;
+    }
   else
-  {
-    page->Show();
-    return false;
-  }
+    {
+      page->Show();
+      return false;
+    }
 }
 
 
