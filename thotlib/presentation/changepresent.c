@@ -1291,7 +1291,8 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
             pAbRedisp = NULL;
             if (elType > 0)
               /* presentation rules are associated with an element type */
-              found = (pAb->AbElement->ElTypeNumber == elType &&
+              found = (elType == MAX_BASIC_TYPE /* any element */ ||
+                       pAb->AbElement->ElTypeNumber == elType &&
                        !strcmp (pAb->AbElement->ElStructSchema->SsName,
                                 pSS->SsName));
             else if (attrType > 0)
