@@ -845,14 +845,14 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
             /* draw the box selection */
             DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, BgSelColor, 2);
         }
-      else if (!selected && from->BxType != BoTable)
+      else if (!selected && pFrom->AbElement &&
+              pFrom->AbElement->ElStructSchema &&
+               (from->BxType != BoTable ||
+                strcmp (pFrom->AbElement->ElStructSchema->SsName, "HTML")))
         {
 #ifdef IV
           // skip the table caption
-          if (from->BxType == BoTable && pFrom->AbElement &&
-              pFrom->AbElement->ElStructSchema &&
-              !strcmp (pFrom->AbElement->ElStructSchema->SsName, "HTML")
-              )
+          if (from->BxType == BoTable)
             {
               // no border around the caption
               pChild = pFrom->AbFirstEnclosed;
@@ -899,7 +899,11 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
                            wbg, hbg, t, l);
             }
         }
-      if ((bt || bb || bl || br) && from->BxType != BoTable)
+      if ((bt || bb || bl || br) &&
+          pFrom->AbElement &&
+          pFrom->AbElement->ElStructSchema &&
+          (from->BxType != BoTable ||
+           strcmp (pFrom->AbElement->ElStructSchema->SsName, "HTML")))
         {
           DisplayBorders (pBox, pFrom, frame, xd - x, yd - y, width, height,
                           t, b, l, r, bt, bb, bl, br);
