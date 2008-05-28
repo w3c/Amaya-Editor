@@ -849,7 +849,10 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
         {
 #ifdef IV
           // skip the table caption
-          if (from->BxType == BoTable)
+          if (from->BxType == BoTable && pFrom->AbElement &&
+              pFrom->AbElement->ElStructSchema &&
+              !strcmp (pFrom->AbElement->ElStructSchema->SsName, "HTML")
+              )
             {
               // no border around the caption
               pChild = pFrom->AbFirstEnclosed;

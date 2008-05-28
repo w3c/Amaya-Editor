@@ -2263,7 +2263,9 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
     /* cell borders are displayed by a presentation box */
     return;
   from = pFrom->AbBox;
-  if (from->BxType == BoTable)
+  if (from->BxType == BoTable && pFrom->AbElement &&
+      pFrom->AbElement->ElStructSchema &&
+      !strcmp (pFrom->AbElement->ElStructSchema->SsName, "HTML"))
     return;
   /* position in the frame */
 #ifdef _GL
