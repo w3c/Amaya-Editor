@@ -845,8 +845,9 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
             /* draw the box selection */
             DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, BgSelColor, 2);
         }
-      else if (!selected)
+      else if (!selected && from->BxType != BoTable)
         {
+#ifdef IV
           // skip the table caption
           if (from->BxType == BoTable)
             {
@@ -877,6 +878,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
                     }
                 }
             }
+#endif
 
           /* don't fill the background when an enclosing box is selected */
           if (!setWindow && pFrom->AbFillBox && pFrom->AbFillPattern)
@@ -894,7 +896,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
                            wbg, hbg, t, l);
             }
         }
-      if (bt || bb || bl || br)
+      if ((bt || bb || bl || br) && from->BxType != BoTable)
         {
           DisplayBorders (pBox, pFrom, frame, xd - x, yd - y, width, height,
                           t, b, l, r, bt, bb, bl, br);

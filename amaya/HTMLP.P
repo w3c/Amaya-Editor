@@ -4471,6 +4471,21 @@ FIELDSET: BEGIN
 
  Table_content:
         BEGIN
+        Background: Enclosing =;
+        ShowBox;
+        FillPattern: Enclosing =;
+        BorderTopWidth: Enclosing =;
+        BorderRightWidth: Enclosing =;
+        BorderBottomWidth: Enclosing =;
+        BorderLeftWidth: Enclosing =;
+        BorderTopColor: Enclosing =;
+        BorderRightColor: Enclosing =;
+        BorderBottomColor: Enclosing =;
+        BorderLeftColor: Enclosing =;
+        BorderTopStyle: Enclosing =;
+        BorderRightStyle: Enclosing =;
+        BorderBottomStyle: Enclosing =;
+        BorderLeftStyle: Enclosing =;
 #ifdef PAGE
         PageBreak: Yes;
 #endif
@@ -4479,11 +4494,21 @@ FIELDSET: BEGIN
                 Visibility: Enclosing =;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width;
+                FillPattern: nopattern;
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderBottomWidth: 0;
+                BorderLeftWidth: 0;
                 END;
         IN Alternate_view BEGIN
                 Visibility: Enclosing =;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width;
+                FillPattern: nopattern;
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderBottomWidth: 0;
+                BorderLeftWidth: 0;
                 END;
         END;
 

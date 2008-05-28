@@ -2263,6 +2263,8 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
     /* cell borders are displayed by a presentation box */
     return;
   from = pFrom->AbBox;
+  if (from->BxType == BoTable)
+    return;
   /* position in the frame */
 #ifdef _GL
   if (box->BxBoundinBoxComputed)
@@ -2326,7 +2328,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
     r = from->BxRBorder;
   else if (r < 0)
     r = 0;
-
+#ifdef IV
   if (from->BxType == BoTable)
     {
       // no border around the caption
@@ -2360,7 +2362,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
             }
         }
     }
-
+#endif
   if (from->BxTBorder && pFrom->AbTopStyle > 2 &&
       pFrom->AbTopBColor != -2 && t > 0 && bt)
     {
