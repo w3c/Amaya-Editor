@@ -33,10 +33,8 @@ extern Element NewColumnHead ( Element lastcolhead,
                                Element row,
                                Document doc,
                                ThotBool inMath,
-                               ThotBool generateEmptyCells );
-extern void NewColElement ( Element colhead,
-                            ThotBool before,
-                            Document doc );
+                               ThotBool generateEmptyCells,
+                               ThotBool generateCol );
 extern Element NextTableRow ( Element row );
 extern void CheckAllRows ( Element table,
                            Document doc,
@@ -61,6 +59,13 @@ extern ThotBool ModifySpan ( NotifyAttribute * event );
 extern void SpanModified ( NotifyAttribute * event );
 extern void SpanCreated ( NotifyAttribute * event );
 extern ThotBool DeleteSpan ( NotifyAttribute * event );
+extern void ColApplyCSSRule ( Element el,
+                              PresentationContext ctxt,
+                              char *cssRule,
+                              CSSInfoPtr css );
+extern void CellAlignCreated ( NotifyAttribute * event );
+extern void CellAlignModified ( NotifyAttribute * event );
+extern void CellAlignDeleted ( NotifyAttribute * event );
 extern ThotBool DeleteColElement ( NotifyElement * event );
 extern ThotBool CreateColElement ( NotifyElement * event );
 extern ThotBool PasteColElement ( NotifyOnValue * event );
@@ -133,10 +138,8 @@ extern Element NewColumnHead ( Element lastcolhead,
                                  Element row,
                                  Document doc,
                                  ThotBool inMath,
-                                 ThotBool generateEmptyCells );
-extern void NewColElement ( Element colhead,
-                              ThotBool before,
-                              Document doc );
+                                 ThotBool generateEmptyCells,
+                                 ThotBool generateCol );
 extern Element NextTableRow ( Element row );
 extern void CheckAllRows ( Element table,
                              Document doc,
@@ -161,6 +164,13 @@ extern ThotBool ModifySpan ( NotifyAttribute * event );
 extern void SpanModified ( NotifyAttribute * event );
 extern void SpanCreated ( NotifyAttribute * event );
 extern ThotBool DeleteSpan ( NotifyAttribute * event );
+extern void ColApplyCSSRule ( Element el,
+                                PresentationContext ctxt,
+                                char *cssRule,
+                                CSSInfoPtr css );
+extern void CellAlignCreated ( NotifyAttribute * event );
+extern void CellAlignModified ( NotifyAttribute * event );
+extern void CellAlignDeleted ( NotifyAttribute * event );
 extern ThotBool DeleteColElement ( NotifyElement * event );
 extern ThotBool CreateColElement ( NotifyElement * event );
 extern ThotBool PasteColElement ( NotifyOnValue * event );

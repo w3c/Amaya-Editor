@@ -8,7 +8,7 @@
 
 extern ThotBool TtaIsDocumentSelected ( Document document );
 extern Attribute TtaGetSelectedAttribute ( void );
-extern ThotBool TtaIsColumnRowSelected ( Document document );
+extern ThotBool TtaIsColumnSelected ( Document document );
 extern void TtaSelectElement ( Document document,
                                Element selectedElement );
 extern void TtaSelectElementWithoutPath ( Document document,
@@ -51,7 +51,7 @@ extern void TtaGiveLastSelectedElement ( Document document,
 
 extern ThotBool TtaIsDocumentSelected ( Document document );
 extern Attribute TtaGetSelectedAttribute ( void );
-extern ThotBool TtaIsColumnRowSelected ( Document document );
+extern ThotBool TtaIsColumnSelected ( Document document );
 extern void TtaSelectElement ( Document document,
                                  Element selectedElement );
 extern void TtaSelectElementWithoutPath ( Document document,

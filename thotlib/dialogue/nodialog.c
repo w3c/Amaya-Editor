@@ -12,6 +12,7 @@
   #include "wx/wx.h"
 #endif /* _WX */
 
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -21,6 +22,7 @@
 #include "application.h"
 #include "memory_f.h"
 #include "nodialog.h"
+#include "style.h"
 
 /*----------------------------------------------------------------------
   TtaGetPixelValue converts a logical value into a pixel value for
@@ -596,5 +598,13 @@ ThotBool TtaDetachFrame( int frame_id )
   TtaCloseAllHelpWindows Closes all opened help windows.
   ----------------------------------------------------------------------*/
 void TtaCloseAllHelpWindows ()
+{
+}
+
+/*----------------------------------------------------------------------
+  ColApplyCSSRule
+  apply a CSS rule attached to the COL or COLGROUP element el
+  ----------------------------------------------------------------------*/
+void ColApplyCSSRule (Element el, PresentationContext ctxt, char *cssRule, CSSInfoPtr css)
 {
 }

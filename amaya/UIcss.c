@@ -28,6 +28,7 @@
 #endif /* _WINGUI */
 #ifdef _WX
 #include "wxdialogapi_f.h"
+#include "HTMLtable_f.h"
 #include "appdialogue_wx.h"
 
 #endif /* _WX */
@@ -702,16 +703,19 @@ char *CssToPrint (Document doc, char *printdir)
   Apply the current set of CSS properties to the current selection
   Add is TRUE when data is added to the existing style
   -----------------------------------------------------------------------*/
-void GenerateStyle (const char * data , ThotBool add)
+static void GenerateStyle (const char * data , ThotBool add)
 {
   Element             el, firstC, lastC;
+  ElementType         elType;
   Attribute           attr = NULL;
   char                 *value;
   int                 doc, i, j, len;
   ThotBool            open;
+  PresentationContext ctxt;
 
   doc = TtaGetSelectedDocument();
   if (doc == 0)
+    /* no selection */
     return;
 
   if (!TtaGetDocumentAccessMode (doc))
@@ -723,10 +727,32 @@ void GenerateStyle (const char * data , ThotBool add)
 
   TtaGiveFirstSelectedElement (doc, &el, &i, &j);
   if (el == NULL)
+    /* no selection */
     return;
 
   if (data && data[0] != EOS)
-    GenerateInlineElement (HTML_EL_Span, NULL, HTML_ATTR_Style_, data, !add);
+    {
+      elType = TtaGetElementType (el);
+      if (TtaIsColumnSelected (doc) ||
+          (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+	   (elType.ElTypeNum == HTML_EL_COL ||
+	    elType.ElTypeNum == HTML_EL_COLGROUP)))
+	/* a whole column is selected in a HTML table. Call the table editor */
+	{
+	  /* create the context of the Specific presentation driver */
+	  ctxt = TtaGetSpecificStyleContext (doc);
+	  if (ctxt == NULL)
+	    return;
+	  ctxt->type = elType.ElTypeNum;
+	  ctxt->cssSpecificity = 1;
+	  ctxt->cssLine = TtaGetElementLineNumber (el);
+	  ctxt->destroy = FALSE;
+	  ColApplyCSSRule (NULL, ctxt, (char*)data, NULL);
+	}
+      else
+	GenerateInlineElement (HTML_EL_Span, NULL, HTML_ATTR_Style_, data,
+			       !add);
+    }
   else
     {
       TtaGiveLastSelectedElement (doc, &lastC, &i, &j);

@@ -24,8 +24,6 @@ extern void UpdateStyleSheet ( char *url,
                                char *tempdoc );
 extern char *CssToPrint ( Document doc,
                           char *printdir );
-extern void GenerateStyle ( const char * data,
-                            ThotBool add );
 extern ThotBool NoCSSEditing ( Document doc );
 extern void DoStyleColor ( char *color );
 extern void UpdateStylePanel ( Document doc,
@@ -117,8 +115,6 @@ extern void UpdateStyleSheet ( char *url,
                                  char *tempdoc );
 extern char *CssToPrint ( Document doc,
                             char *printdir );
-extern void GenerateStyle ( const char * data,
-                              ThotBool add );
 extern ThotBool NoCSSEditing ( Document doc );
 extern void DoStyleColor ( char *color );
 extern void UpdateStylePanel ( Document doc,

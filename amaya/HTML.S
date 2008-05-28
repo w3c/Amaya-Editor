@@ -739,9 +739,12 @@ STRUCT
             Colgroups = LIST OF (COLGROUP);                     { COLGROUP }
             END;
         Table_head = LIST OF (Column_head);
-      ? thead;                                                   { THEAD }
-        Table_body = LIST OF (tbody);
-      ? tfoot;                                                   { TFOOT }
+	Table_content =
+	    BEGIN
+          ? thead;                                               { THEAD }
+            Table_body = LIST OF (tbody);
+          ? tfoot;                                               { TFOOT }
+	    END;
         END;
 
   CAPTION                                                        { CAPTION }
@@ -1054,6 +1057,7 @@ EXCEPT
         ColStruct:      Hidden, NoSelect, NoCreate, NoBreakByReturn;
         Cols:           Hidden, NoSelect, NoCreate, NoBreakByReturn;
         Colgroups:      Hidden, NoSelect, NoCreate, NoBreakByReturn;
+        Table_content:	PageBreakAllowed, Hidden, NoBreakByReturn;
         Table_body:     PageBreakAllowed, Hidden, NoBreakByReturn;
         thead:          NoBreakByReturn; 
         tbody:          NoBreakByReturn;

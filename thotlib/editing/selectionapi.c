@@ -62,9 +62,9 @@ Attribute TtaGetSelectedAttribute ()
 }
 
 /*----------------------------------------------------------------------
-  TtaIsColumnRowSelected answers TRUE if there is a column or a row
+  TtaIsColumnSelected Answers TRUE if a whole table column is selected
   ----------------------------------------------------------------------*/
-ThotBool TtaIsColumnRowSelected (Document document)
+ThotBool TtaIsColumnSelected (Document document)
 {
   PtrDocument         docsel;
   PtrElement          first, last;
@@ -74,8 +74,7 @@ ThotBool TtaIsColumnRowSelected (Document document)
     return (FALSE);
   else if (LoadedDocument[document - 1] != docsel)
     return (FALSE);
-  else if (WholeColumnSelected ||
-           TypeHasException (ExcIsRow, first->ElTypeNumber, first->ElStructSchema))
+  else if (WholeColumnSelected)
     return (TRUE);
   else
     return (FALSE);

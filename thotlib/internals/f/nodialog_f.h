@@ -194,6 +194,10 @@ extern int TtaGiveActiveFrame ( void );
 extern ThotBool GL_DrawAll ( void );
 extern ThotBool TtaDetachFrame ( int frame_id );
 extern void TtaCloseAllHelpWindows ( void );
+extern void ColApplyCSSRule ( Element el,
+                              PresentationContext ctxt,
+                              char *cssRule,
+                              CSSInfoPtr css );
 
 #else /* __STDC__ */
 
@@ -385,6 +389,10 @@ extern int TtaGiveActiveFrame ( void );
 extern ThotBool GL_DrawAll ( void );
 extern ThotBool TtaDetachFrame ( int frame_id );
 extern void TtaCloseAllHelpWindows ( void );
+extern void ColApplyCSSRule ( Element el,
+                                PresentationContext ctxt,
+                                char *cssRule,
+                                CSSInfoPtr css );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

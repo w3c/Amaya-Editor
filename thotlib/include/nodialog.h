@@ -4,6 +4,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "style.h"
 #include "picture.h"
 #include "frame.h"
 #include "application.h"

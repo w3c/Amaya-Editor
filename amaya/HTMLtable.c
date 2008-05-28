@@ -14,6 +14,7 @@
 /* Amaya includes  */
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "css.h"
 #include "fetchXMLname_f.h"
 #include "undo.h"
 #include "MathML.h"
@@ -23,6 +24,7 @@
 #include "HTMLtable_f.h"
 #include "MathMLbuilder_f.h"
 #include "Mathedit_f.h"
+#include "styleparser_f.h"
 #include "XHTMLbuilder_f.h"
 
 #include "templates.h"
@@ -747,175 +749,62 @@ static void CreateCellsInRowGroup (Element group, Element prevCol,
 }
 
 /*----------------------------------------------------------------------
-  NewColumnHead creates a new Column_head and returns it.   
-  If generateEmptyCells == TRUE, create an additional empty cell in all
-  rows, except the row indicated.
-  If last == TRUE then lastcolhead is the last current column.
-  The parameter before indicates if the lastcolhead precedes or follows
-  the new created Column_head. It should be FALSE when last is TRUE.
+  TransmitBgcolorToColhead
+  A colhead is linked to a COL or COLGROUP element. If the latter has
+  an attribute style="background-color" (or inherits one from an ancestor
+  COLGROUP), applies this style to the colhead.
   ----------------------------------------------------------------------*/
-Element NewColumnHead (Element lastcolhead, ThotBool before,
-                       ThotBool last, Element row, Document doc,
-                       ThotBool inMath, ThotBool generateEmptyCells)
+static void TransmitBgcolorToColhead (Element newCol, Element colhead,
+				      Document doc)
 {
-  Element             colhead, currentrow, firstrow;
-  Element             group, groupdone, block;
-  Element             prevColhead, nextColhead;
-  Element             table, child;
+  Element             el;
   ElementType         elType;
-  int                 rowspan;
-  ThotBool            select, span;
+  AttributeType       attrTypeStyle;
+  Attribute           attrStyle;
+  int                 length;
+  char*               cssRule;
+  PresentationContext ctxt;
 
-  if (lastcolhead == NULL)
-    return NULL;
-  select = (row == NULL);
-  span = FALSE;
-  firstrow = NULL;
-  /* create a new column head */
-  elType = TtaGetElementType (lastcolhead);
-  colhead = TtaNewTree (doc, elType, "");
-  if (colhead != NULL)
+  elType = TtaGetElementType (newCol);
+  attrTypeStyle.AttrSSchema = elType.ElSSchema;
+  attrTypeStyle.AttrTypeNum = HTML_ATTR_Style_;
+  el = newCol;
+  while (el && (elType.ElTypeNum == HTML_EL_COL ||
+		elType.ElTypeNum == HTML_EL_COLGROUP))
     {
-      /* insert the new column head */
-      prevColhead = nextColhead = lastcolhead;
-      if (before)
-        TtaPreviousSibling (&prevColhead);
-      else
-        TtaNextSibling (&nextColhead);
-      TtaInsertSibling (colhead, lastcolhead, before, doc);
-      TtaRegisterElementCreate (colhead, doc);
-      if (inMath)
-        elType.ElTypeNum = MathML_EL_MTABLE;
-      else
-        elType.ElTypeNum = HTML_EL_Table_;
-      table = TtaGetTypedAncestor (lastcolhead, elType);
-      if (generateEmptyCells)
-        /* add empty cells to all other rows */
-        {
-          if (inMath)
-            elType.ElTypeNum = MathML_EL_TableRow;
-          else
-            elType.ElTypeNum = HTML_EL_Table_row;
-          if (row)
-            /* get the first row in the same group of rows */
-            {
-              group = TtaGetParent (row);
-              currentrow = TtaSearchTypedElement (elType, SearchInTree, group);
-            }
-          else
-            /* get the first row of the table */
-            currentrow = TtaSearchTypedElement (elType, SearchInTree, table);
-          firstrow = currentrow;
-
-          while (currentrow)
-            {
-              rowspan = 1;
-              if (currentrow == row && last)
-                /* we are not supposed to create more rows. Stop */
-                currentrow = NULL;
-              /* don't process the row containing the initial cell */
-              else if (currentrow != row)
-                {
-                  /* get the sibling cell */
-                  if (last)
-                    child = TtaGetLastChild (currentrow);
-                  else
-                    /* look for the previous cell */
-                    child = GetCloseCell (currentrow, prevColhead, doc, TRUE,
-                                         TRUE, inMath, &span, &rowspan, FALSE);
-                  if (child)
-                    {
-                      if (!span)
-                        {
-                          if (select && row == NULL)
-                            /* first row where a cell is created */
-                            row = currentrow;
-                          /* add a new cell after */
-                          AddEmptyCellInRow (currentrow, colhead, child, FALSE,
-                                             doc, inMath, FALSE, TRUE);
-                          TtaChangeInfoLastRegisteredElem (doc, 3);
-                        }
-                    }
-                  else
-                    {
-                      /* look for the next cell */
-                      child = GetCloseCell (currentrow, nextColhead, doc, FALSE,
-                                            TRUE, inMath, &span, &rowspan, FALSE);
-                      if (select && row == NULL)
-                        /* first row where a cell is created */
-                        row = currentrow;
-                      /* add a cell before */
-                      AddEmptyCellInRow (currentrow, colhead, child, TRUE, doc,
-                                         inMath, FALSE, TRUE);
-                      TtaChangeInfoLastRegisteredElem (doc, 3);
-                    }
-                  if (rowspan == 0)
-                    rowspan = THOT_MAXINT;
-                }
-              /* find the next row where a cell has to be created. Skip the
-                 spanned rows */
-              while (rowspan >= 1 && currentrow)
-                {
-                  currentrow = GetSiblingRow (currentrow, FALSE, inMath);
-                  rowspan--;
-                }
-            }
-
-          if (!inMath)
-            {
-              groupdone = TtaGetParent (row);	/* done with this group */
-              /* process the other row groups */
-              /* visit all children of the Table element */
-              block = TtaGetFirstChild (table);
-              while (block)
-                {
-                  elType = TtaGetElementType (block);
-                  if (elType.ElTypeNum == HTML_EL_thead ||
-                      elType.ElTypeNum == HTML_EL_tfoot)
-                    {
-                      /* this block is a thead or tfoot element */
-                      group = block;
-                      if (group != groupdone)
-                        CreateCellsInRowGroup (group, prevColhead, nextColhead,
-                                               colhead, doc, inMath, last);
-                      else if (last)
-                        block = NULL;
-                    }
-                  else if (elType.ElTypeNum == HTML_EL_Table_body)
-                    {
-                      /* this child is the Table_body element */
-                      /* get the first tbody element */
-                      group = TtaGetFirstChild (block);
-                      /* process all tbody elements */
-                      while (group != NULL)
-                        {
-                          if (group != groupdone)
-                            CreateCellsInRowGroup (group, prevColhead, nextColhead,
-                                                   colhead, doc, inMath, last);
-                          if (last)
-                            {
-                              group = NULL;
-                              block = NULL;
-                            }
-                          else
-                            TtaNextSibling (&group);
-                        }
-                    }
-                  if (block)
-                    TtaNextSibling (&block);
-                }
-            }
-          HandleColAndRowAlignAttributes (firstrow, doc);
-        }
+      attrStyle = TtaGetAttribute (el, attrTypeStyle);
+      if (attrStyle)
+	{
+	  length = TtaGetTextAttributeLength (attrStyle);
+	  if (length > 0)
+	    {
+	      cssRule = (char *)TtaGetMemory (length + 1);
+	      TtaGiveTextAttributeValue (attrStyle, cssRule, &length);
+	      if (!strncmp (cssRule, "background-color", 16))
+		{
+		  ctxt = TtaGetSpecificStyleContext (doc);
+		  if (ctxt)
+		    {
+		      ctxt->type = elType.ElTypeNum;
+		      ctxt->cssLine = TtaGetElementLineNumber (el);
+		      ctxt->destroy = FALSE;
+		      ctxt->uses = 1;
+		      ParseCSSRule (colhead, NULL, ctxt, cssRule, NULL, TRUE);
+		      TtaFreeMemory (ctxt);
+		    }
+		  el = NULL; /* done */
+		}
+	      TtaFreeMemory (cssRule);
+	    }
+	}
+      /* if not found, check the parent */
+      if (el)
+	{
+	  el = TtaGetParent (el);
+	  if (el)
+	    elType = TtaGetElementType (el);
+	}
     }
-  if (select)
-    {
-      child = GetCellFromColumnHead (row, colhead, inMath);
-      child = TtaGetFirstChild (child);
-      if (child)
-        TtaSelectElement (doc, child);
-    }
-  return colhead;
 }
 
 /*----------------------------------------------------------------------
@@ -925,7 +814,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
   Boolean before indicates that the Column_head element was created before
   or after the column where the selection was set.
   ----------------------------------------------------------------------*/
-void  NewColElement (Element colhead, ThotBool before, Document doc)
+static void  NewColElement (Element colhead, ThotBool before, Document doc)
 {
   ElementType         elType;
   Element             prevColhead, nextColhead, el, colstruct, col, newCol,
@@ -1089,8 +978,207 @@ void  NewColElement (Element colhead, ThotBool before, Document doc)
             TtaAttachAttribute (colhead, attrRef, doc);
         }
       if (attrRef)
-        TtaSetAttributeReference (attrRef, colhead, doc, newCol);
+	{
+	  TtaSetAttributeReference (attrRef, colhead, doc, newCol);
+	  /* if the COL or COLGROUP element has an attribute
+	     style="background-color:...", apply this style property
+	     to the Column_head */
+	  TransmitBgcolorToColhead (newCol, colhead, doc);
+	}
     }
+}
+
+/*----------------------------------------------------------------------
+  NewColumnHead creates a new Column_head and returns it.   
+  If generateEmptyCells == TRUE, create an additional empty cell in all
+  rows, except the row indicated.
+  If last == TRUE then lastcolhead is the last current column.
+  The parameter before indicates if the lastcolhead precedes or follows
+  the new created Column_head. It should be FALSE when last is TRUE.
+  ----------------------------------------------------------------------*/
+Element NewColumnHead (Element lastcolhead, ThotBool before,
+                       ThotBool last, Element row, Document doc,
+                       ThotBool inMath, ThotBool generateEmptyCells,
+		       ThotBool generateCol)
+{
+  Element             colhead, currentrow, firstrow;
+  Element             group, groupdone, block;
+  Element             prevColhead, nextColhead;
+  Element             table, child;
+  ElementType         elType;
+  SSchema             tableSSchema;
+  int                 rowspan;
+  ThotBool            select, span;
+
+  if (lastcolhead == NULL)
+    return NULL;
+  select = (row == NULL);
+  span = FALSE;
+  firstrow = NULL;
+  /* create a new column head */
+  elType = TtaGetElementType (lastcolhead);
+  tableSSchema = elType.ElSSchema;
+  colhead = TtaNewTree (doc, elType, "");
+  if (colhead != NULL)
+    {
+      /* insert the new column head */
+      prevColhead = nextColhead = lastcolhead;
+      if (before)
+        TtaPreviousSibling (&prevColhead);
+      else
+        TtaNextSibling (&nextColhead);
+      TtaInsertSibling (colhead, lastcolhead, before, doc);
+      TtaRegisterElementCreate (colhead, doc);
+      if (generateCol && !inMath)
+	/* create the relevant COL element if needed */
+	NewColElement (colhead, before, doc);
+      if (inMath)
+        elType.ElTypeNum = MathML_EL_MTABLE;
+      else
+        elType.ElTypeNum = HTML_EL_Table_;
+      table = TtaGetTypedAncestor (lastcolhead, elType);
+      if (generateEmptyCells)
+        /* add empty cells to all other rows */
+        {
+          if (inMath)
+            elType.ElTypeNum = MathML_EL_TableRow;
+          else
+            elType.ElTypeNum = HTML_EL_Table_row;
+          if (row)
+            /* get the first row in the same group of rows */
+            {
+              group = TtaGetParent (row);
+              currentrow = TtaSearchTypedElement (elType, SearchInTree, group);
+            }
+          else
+            /* get the first row of the table */
+            currentrow = TtaSearchTypedElement (elType, SearchInTree, table);
+          firstrow = currentrow;
+
+          while (currentrow)
+            {
+              rowspan = 1;
+              if (currentrow == row && last)
+                /* we are not supposed to create more rows. Stop */
+                currentrow = NULL;
+              /* don't process the row containing the initial cell */
+              else if (currentrow != row)
+                {
+                  /* get the sibling cell */
+                  if (last)
+                    child = TtaGetLastChild (currentrow);
+                  else
+                    /* look for the previous cell */
+                    child = GetCloseCell (currentrow, prevColhead, doc, TRUE,
+                                         TRUE, inMath, &span, &rowspan, FALSE);
+                  if (child)
+                    {
+                      if (!span)
+                        {
+                          if (select && row == NULL)
+                            /* first row where a cell is created */
+                            row = currentrow;
+                          /* add a new cell after */
+                          AddEmptyCellInRow (currentrow, colhead, child, FALSE,
+                                             doc, inMath, FALSE, TRUE);
+                          TtaChangeInfoLastRegisteredElem (doc, 3);
+                        }
+                    }
+                  else
+                    {
+                      /* look for the next cell */
+                      child = GetCloseCell (currentrow, nextColhead, doc, FALSE,
+                                            TRUE, inMath, &span, &rowspan, FALSE);
+                      if (select && row == NULL)
+                        /* first row where a cell is created */
+                        row = currentrow;
+                      /* add a cell before */
+                      AddEmptyCellInRow (currentrow, colhead, child, TRUE, doc,
+                                         inMath, FALSE, TRUE);
+                      TtaChangeInfoLastRegisteredElem (doc, 3);
+                    }
+                  if (rowspan == 0)
+                    rowspan = THOT_MAXINT;
+                }
+              /* find the next row where a cell has to be created. Skip the
+                 spanned rows */
+              while (rowspan >= 1 && currentrow)
+                {
+                  currentrow = GetSiblingRow (currentrow, FALSE, inMath);
+                  rowspan--;
+                }
+            }
+
+          if (!inMath)
+            {
+              groupdone = TtaGetParent (row);	/* done with this group */
+              /* process the other row groups */
+              /* visit all children of element Table_content */
+              child = TtaGetFirstChild (table);
+	      block = child;
+	      while (child)
+		{
+		  elType = TtaGetElementType (child);
+		  if (elType.ElTypeNum == HTML_EL_Table_content &&
+		      elType.ElSSchema == tableSSchema)
+		    {
+		      block = TtaGetFirstChild (child);
+		      child = NULL;
+		    }
+		  else
+		    TtaNextSibling (&child);
+		}
+              while (block)
+                {
+                  elType = TtaGetElementType (block);
+                  if (elType.ElSSchema == tableSSchema &&
+		      (elType.ElTypeNum == HTML_EL_thead ||
+                       elType.ElTypeNum == HTML_EL_tfoot))
+                    {
+                      /* this block is a thead or tfoot element */
+                      group = block;
+                      if (group != groupdone)
+                        CreateCellsInRowGroup (group, prevColhead, nextColhead,
+                                               colhead, doc, inMath, last);
+                      else if (last)
+                        block = NULL;
+                    }
+                  else if (elType.ElSSchema == tableSSchema &&
+			   elType.ElTypeNum == HTML_EL_Table_body)
+                    {
+                      /* this child is the Table_body element */
+                      /* get the first tbody element */
+                      group = TtaGetFirstChild (block);
+                      /* process all tbody elements */
+                      while (group != NULL)
+                        {
+                          if (group != groupdone)
+                            CreateCellsInRowGroup (group, prevColhead, nextColhead,
+                                                   colhead, doc, inMath, last);
+                          if (last)
+                            {
+                              group = NULL;
+                              block = NULL;
+                            }
+                          else
+                            TtaNextSibling (&group);
+                        }
+                    }
+                  if (block)
+                    TtaNextSibling (&block);
+                }
+            }
+          HandleColAndRowAlignAttributes (firstrow, doc);
+        }
+    }
+  if (select)
+    {
+      child = GetCellFromColumnHead (row, colhead, inMath);
+      child = TtaGetFirstChild (child);
+      if (child)
+        TtaSelectElement (doc, child);
+    }
+  return colhead;
 }
 
 /*----------------------------------------------------------------------
@@ -1524,7 +1612,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
                       else
                         prevColhead = NULL;
                       colElement[cRef] = NewColumnHead (prevColhead, FALSE,
-                                               TRUE, NULL, doc, inMath, FALSE);
+					TRUE, NULL, doc, inMath, FALSE, FALSE);
                       if (cRef == cNumber && cRef < MAX_COLS)
                         cNumber++;
                     }
@@ -1572,7 +1660,10 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
                                 }
                             }
                         }
-                    } 
+                    }
+		  /* the new Col_head element inherit the background color
+		     from the COL or COLGROUP element */
+		  TransmitBgcolorToColhead (colcolgroup, colhead, doc);
                 }
               /* get the next COL or COLGROUP sibling element */
               prev = colcolgroup;
@@ -1708,7 +1799,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
                           /* there is no Column_head for that cell */
                           /* Create an additional Column_head */
                           colElement[cRef] = NewColumnHead (colElement[cRef - 1], FALSE,
-                                                            TRUE, row, doc, inMath, TRUE);
+                                          TRUE, row, doc, inMath, TRUE, FALSE);
                           colVSpan[cRef] = 0;
                           cNumber++;
                         }
@@ -1769,7 +1860,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
                                               {
                                                 cRef++;
                                                 colElement[cRef] = NewColumnHead (colElement[cRef-1],
-                                                                                  FALSE, TRUE, row, doc, inMath, TRUE);
+                                                     FALSE, TRUE, row, doc, inMath, TRUE, FALSE);
                                                 cNumber++;
                                               }
                                             colVSpan[cRef] = colVSpan[cRef-1];
@@ -1970,8 +2061,8 @@ void CheckTable (Element table, Document doc)
 {
   ElementType       elType, elType1;
   Element           el, columnHeads, thead, tfoot, firstcolhead, temp_el,
-                    tbody, table_body, prevrow, prevEl, nextEl, cols, col,
-                    colstruct, nextCol, prevCol, enclosingTable;
+                    table_content, tbody, table_body, prevrow, prevEl, nextEl,
+                    cols, col, colstruct, nextCol, prevCol, enclosingTable;
   AttributeType     attrType;
   Attribute         attr;
   ThotBool          previousStructureChecking, before, inMath, inTemplate;
@@ -1989,6 +2080,7 @@ void CheckTable (Element table, Document doc)
       thead = NULL;
       tfoot = NULL;
       table_body = NULL;
+      table_content = NULL;
       colstruct = NULL;
       cols = NULL;
       col = NULL;
@@ -2015,6 +2107,8 @@ void CheckTable (Element table, Document doc)
               if (table_body == NULL)
                 table_body = el;
             }
+          else if (!inMath && elType.ElTypeNum == HTML_EL_Table_content)
+            table_content = el;
           else if (!inMath && elType.ElTypeNum == HTML_EL_thead)
             thead = el;
           else if (!inMath && elType.ElTypeNum == HTML_EL_tfoot)
@@ -2158,6 +2252,33 @@ void CheckTable (Element table, Document doc)
                 }
             }
 
+	  if (table_content == NULL)
+	    {
+	      /* there is no Table_content element, create one */
+	      elType.ElTypeNum = HTML_EL_Table_content;
+	      table_content = TtaNewElement (doc, elType);
+	      if (table_content)
+		{
+		  TtaInsertSibling (table_content, columnHeads, FALSE, doc);
+		  /* put all thead, tfoot, tbody elements in the new
+		     Table_content */
+		  el = table_content;
+		  TtaNextSibling (&el);
+		  prevEl = NULL;
+		  while (el)
+		    {
+		      nextEl = el;
+                      TtaNextSibling (&nextEl);
+		      TtaRemoveTree (el, doc);
+		      if (!prevEl)
+			TtaInsertFirstChild (&el, table_content, doc);
+		      else
+			TtaInsertSibling (el, prevEl, FALSE, doc);
+		      prevEl = el;
+		      el = nextEl;
+		    }
+		}
+	    }
           if (table_body == NULL)
             {
               /* There is no Table_body element. Create a Table_body element */
@@ -2170,8 +2291,10 @@ void CheckTable (Element table, Document doc)
                 {
                   if (thead != NULL)
                     TtaInsertSibling (table_body, thead, FALSE, doc);
-                  else
-                    TtaInsertSibling (table_body, columnHeads, FALSE, doc);
+                  else if (table_body != NULL)
+                    TtaInsertFirstChild (&table_body, table_content, doc);
+		  else
+		    TtaInsertSibling (table_body, columnHeads, FALSE, doc);
                   /* collect all Table_row elements and put them in the new
                      Table_body */
                   tbody = NULL;
@@ -2623,12 +2746,8 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
     {
       if (generateColumn)
         /* generate the new column */
-        {
-          colhead = NewColumnHead (colhead, before, FALSE, row, doc, inMath,
-                                   generateEmptyCells);
-          if (colhead && !inMath)
-            NewColElement (colhead, FALSE, doc);
-        }
+	colhead = NewColumnHead (colhead, before, FALSE, row, doc, inMath,
+				 generateEmptyCells, TRUE);
       else if (before)
         /* select the previous column */
         TtaPreviousSibling (&colhead);
@@ -3341,7 +3460,7 @@ void SpanModified (NotifyAttribute * event)
           for (i = 1; i <= ncol; i++)
             {
               colhead = NewColumnHead (prevColhead, FALSE, FALSE, NULL, doc,
-                                       FALSE, TRUE);
+                                       FALSE, TRUE, FALSE);
               if (colhead)
                 {
                   prevColhead = colhead;
@@ -3379,6 +3498,103 @@ ThotBool DeleteSpan (NotifyAttribute * event)
   /* prevent the user from deleting this attribute. She should use
      commands for deleting columns instead */
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  ApplyCSSRuleOneCol
+  apply a CSS rule attached to the COL or COLGROUP leaf.
+  ----------------------------------------------------------------------*/
+static void ApplyCSSRuleOneCol (Element col, PresentationContext ctxt,
+				char *cssRule, CSSInfoPtr css)
+{
+  Element             colhead;
+  ElementType         elType;
+  Attribute           attrRef_ColColgroup;
+  AttributeType       aType;
+  int                 kind;
+
+  elType = TtaGetElementType (col);
+  /* check all Column_head elements related to this COL or COLGROUP leaf */
+  colhead = NULL;
+  attrRef_ColColgroup = NULL;
+  TtaNextLoadedReference (col, &colhead, &attrRef_ColColgroup);
+  while (colhead && attrRef_ColColgroup)
+    {
+      /* we are interested only in elements linked by a Ref_ColColgroup
+	 attribute */
+      TtaGiveAttributeType(attrRef_ColColgroup, &aType, &kind);
+      if (aType.AttrSSchema == elType.ElSSchema &&
+	  aType.AttrTypeNum == HTML_ATTR_Ref_ColColgroup)
+	{
+	  if (!strncmp (cssRule, "background-color", 16))
+	    ParseCSSRule (colhead, NULL, ctxt, cssRule, NULL, TRUE);
+	}
+      /* get the next colhead belonging to the COL or COLGROUP leaf */
+      TtaNextLoadedReference (col, &colhead, &attrRef_ColColgroup);	  
+    }
+}
+
+/*----------------------------------------------------------------------
+  ColApplyCSSRule
+  apply a CSS rule attached to the COL or COLGROUP element el
+  ----------------------------------------------------------------------*/
+void ColApplyCSSRule (Element el, PresentationContext ctxt, char *cssRule,
+		      CSSInfoPtr css)
+{
+  Element             child, lastEl;
+  ElementType         elType;
+  AttributeType       attrType;
+  SSchema             HTMLschema;
+  Document            doc;
+  int                 i, j;
+
+  lastEl = el;
+  if (!el)
+    /* apply the CSS rule to the current selection */
+    {
+      doc = TtaGetSelectedDocument();
+      TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+      TtaGiveLastSelectedElement (doc, &lastEl, &i, &j);
+      if (TtaIsColumnSelected (doc))
+	/* all cells of a column are selected */
+	{
+	  /* @@@@ */;
+	}
+    }
+  if (!el)
+    return;
+
+  elType = TtaGetElementType (el);
+  HTMLschema = elType.ElSSchema;
+  if (elType.ElTypeNum == HTML_EL_COL || elType.ElTypeNum == HTML_EL_COLGROUP)
+    /* the CSS rule is on a COL or COLGROUP element */
+    {
+      /* process all COL or COLGROUP descendants that are leaves of element el*/
+      child = TtaGetFirstChild (el);
+      if (!child)
+	/* this is a COL or COLGROUP leaf. Process all the related cells */
+	ApplyCSSRuleOneCol (el, ctxt, cssRule, css);
+      else
+	{
+	  elType = TtaGetElementType (child);
+	  if (elType.ElSSchema == HTMLschema &&
+	      elType.ElTypeNum == HTML_EL_C_Empty)
+	    /* this is actually an empty element */
+	    ApplyCSSRuleOneCol (el, ctxt, cssRule, css);
+	  else
+	    {
+	      /* this COL or COLGROUP element has children. Process them */
+	      attrType.AttrSSchema = HTMLschema;
+	      attrType.AttrTypeNum = HTML_ATTR_Cell_align;
+	      do
+		{
+		  ApplyCSSRuleOneCol (child, ctxt, cssRule, css);
+		  TtaNextSibling (&child);
+		}
+	      while (child);
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3462,7 +3678,6 @@ static void CellAlignChanged (Element el, Document doc, int val)
 {
   Element             child;
   ElementType         elType;
-  Attribute           attr;
   AttributeType       attrType;
   SSchema             HTMLschema;
 

@@ -35,6 +35,7 @@ CSSImageCallbackBlock, *CSSImageCallbackPtr;
 #include "AHTURLTools_f.h"
 #include "HTMLpresentation_f.h"
 #include "HTMLimage_f.h"
+#include "HTMLtable_f.h"
 #include "UIcss_f.h"
 #include "css_f.h"
 #include "fetchHTMLname_f.h"
@@ -6287,7 +6288,16 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
   dispMode = TtaGetDisplayMode (doc);
   /* Call the parser */
   DoDialog = FALSE; // not parsing for CSS dialog
-  ParseCSSRule (el, NULL, (PresentationContext) ctxt, cssRule, NULL, isHTML);
+
+  /* if it is a property applied to a COL or a COLGROUP element in a HTML table,
+     associate the property to the corresponding Table_head or cell elements,
+     depending on the property. */
+  if (!strncmp (cssRule, "background-color", 16) && isHTML &&
+      (elType.ElTypeNum == HTML_EL_COL || elType.ElTypeNum == HTML_EL_COLGROUP))
+    ColApplyCSSRule (el, (PresentationContext) ctxt, cssRule, NULL);
+  else
+    ParseCSSRule (el, NULL, ctxt, cssRule, NULL, isHTML);
+
   /* restore the display mode if necessary */
   TtaSetDisplayMode (doc, dispMode);
   /* check if the context can be freed */

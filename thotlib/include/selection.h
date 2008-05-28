@@ -26,10 +26,9 @@ extern ThotBool TtaIsDocumentSelected (Document document);
 
 
 /*----------------------------------------------------------------------
-  TtaIsColumnRowSelected answers TRUE if there is a column or a row in
-  the Thot Clicboard.
+  TtaIsColumnSelected answers TRUE if a whole table column is selected.
   ----------------------------------------------------------------------*/
-extern ThotBool TtaIsColumnRowSelected (Document document);
+extern ThotBool TtaIsColumnSelected (Document document);
 
 /*----------------------------------------------------------------------
   TtaIsColumnRowSaved answers TRUE if there is a column or a row in

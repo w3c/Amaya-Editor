@@ -4433,10 +4433,16 @@ FIELDSET: BEGIN
         HorizRef: * . Top;
         HorizPos: Left = Enclosing . Left;
         Width: Enclosed . Width;
+        Height : Table_content . Height;
+        VertOverflow : yes;
         VertPos: nil;
 #ifdef PAGE
         PageBreak: No;
 #endif
+        BorderTopStyle: Solid;
+        BorderLeftStyle: Solid;
+        BorderRightStyle: Solid;
+        BorderBottomStyle: Solid;
         IN Structure_view BEGIN
                 Visibility: 0;
                 END;
@@ -4451,7 +4457,7 @@ FIELDSET: BEGIN
         HorizPos: Left = Previous . Right;
         VertPos: Top = Enclosing . Top;
         Width: Enclosed . Width;
-        Height: 0;
+        Height : Enclosing . Height;
         END;
 
  C_Head:
@@ -4461,6 +4467,24 @@ FIELDSET: BEGIN
         Width: 20 px;
         Height: 0;
         FillPattern: nopattern;
+        END;
+
+ Table_content:
+        BEGIN
+#ifdef PAGE
+        PageBreak: Yes;
+#endif
+        VertPos: Top = Previous not Table_head . Bottom;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                VertPos: Top = Previous . Bottom;
+                Width: Enclosing . Width;
+                END;
+        IN Alternate_view BEGIN
+                Visibility: Enclosing =;
+                VertPos: Top = Previous . Bottom;
+                Width: Enclosing . Width;
+                END;
         END;
 
  thead:

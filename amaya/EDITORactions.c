@@ -2662,17 +2662,20 @@ void CreateTable (Document doc, View view)
           withinTable = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
           inMath = TRUE;
           if (withinTable &&
-              (TtaIsColumnRowSelected (doc) ||
+              (TtaIsColumnSelected (doc) ||
+	       elTypeFirst.ElTypeNum == MathML_EL_MLABELEDTR ||
+               elTypeFirst.ElTypeNum == MathML_EL_MTR ||
                elTypeFirst.ElTypeNum == MathML_EL_MTD))
             return;
         }
       else if (!strcmp (name, "HTML"))
-        /* the current selection starts with a MathML element */
+        /* the current selection starts with a HTML element */
         {
           elType.ElTypeNum = HTML_EL_Table_;
           withinTable = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
           if (withinTable &&
-              (TtaIsColumnRowSelected (doc) ||
+              (TtaIsColumnSelected (doc) ||
+	       elTypeFirst.ElTypeNum == HTML_EL_Table_row ||
                elTypeFirst.ElTypeNum == HTML_EL_Data_cell ||
                elTypeFirst.ElTypeNum == HTML_EL_Heading_cell))
             return;
@@ -4057,9 +4060,7 @@ static void CreateColumn (Document doc, View view, ThotBool before)
           if (dispMode == DisplayImmediately)
             TtaSetDisplayMode (doc, DeferredDisplay);
           /* Create the column */
-          elNew = NewColumnHead (colhead, before, FALSE, NULL, doc, inMath, TRUE);
-          if (elNew && !inMath)
-            NewColElement (elNew, before, doc);
+          elNew = NewColumnHead (colhead, before, FALSE, NULL, doc, inMath, TRUE, TRUE);
           TtaSetDisplayMode (doc, dispMode);
           TtaSetDocumentModified (doc);
         }
