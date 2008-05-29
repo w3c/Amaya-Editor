@@ -831,7 +831,11 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         CloseTextInsertion ();
         
         if(IsSelectingImageControlPoint(frame, x, y, &ctrlpt)!=NULL)
-            ApplyDirectResize(frame, x, y);
+          {
+            ApplyDirectResize(frame, x, y, 
+                ctrlpt!=2 && ctrlpt!=6 ,
+                ctrlpt!=4 && ctrlpt!=8);
+          }
         /* Est-ce que la touche modifieur de geometrie est active ? */
         else if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
           {
@@ -868,7 +872,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         if (thot_mod_mask & THOT_MOD_CTRL)
           {
             /* resizing a box */
-            ApplyDirectResize (frame, x, y);
+            ApplyDirectResize (frame, x, y, TRUE, TRUE);
           }
         else
           {
@@ -887,7 +891,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         if (thot_mod_mask & THOT_MOD_CTRL)
           {
             /* resize a box */
-            ApplyDirectResize (frame, x, y);
+            ApplyDirectResize (frame, x, y, TRUE, TRUE);
           }
         else
 #endif

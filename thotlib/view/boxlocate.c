@@ -193,7 +193,6 @@ PtrBox IsSelectingImageControlPoint(int frame, int x, int y, int* ctrlpt)
   PtrElement      pPicture;
   PtrAbstractBox  pAb;
   ViewFrame      *pFrame;
-  int             selpoint;
   
   if (frame >= 1)
     {
@@ -211,7 +210,7 @@ PtrBox IsSelectingImageControlPoint(int frame, int x, int y, int* ctrlpt)
           x -= pFrame->FrXOrg;
           y -= pFrame->FrYOrg;
           
-          return IsOnShape (pAb, x, y, &selpoint);
+          return IsOnShape (pAb, x, y, ctrlpt);
         }
     }
   return NULL;
@@ -2512,6 +2511,9 @@ static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame,
   else if (!horizRef && pAb->AbHeight.DimIsPosition)
     /* stretchable box */
     ok = FALSE;
+  else if (pAb->AbLeafType == LtPicture)
+    /* an image is always stretchable.*/
+    ok = TRUE;  
   else if (pAb->AbLeafType == LtText &&
            (pParentAb->AbBox->BxType == BoBlock ||
             pParentAb->AbBox->BxType == BoFloatBlock ||
@@ -2590,8 +2592,11 @@ static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame,
 /*----------------------------------------------------------------------
   ApplyDirectResize looks for a box that can be resized at the current
   position (xm, ym).
+  resHoriz (resp. resVert) IS true if user can resize horizontally
+  (resp. vertically).
   ----------------------------------------------------------------------*/
-void ApplyDirectResize (int frame, int xm, int ym)
+void ApplyDirectResize (int frame, int xm, int ym,
+                  ThotBool resHoriz, ThotBool resVert)
 {
   PtrBox              pBox;
   PtrAbstractBox      pAb;
@@ -2642,8 +2647,8 @@ void ApplyDirectResize (int frame, int xm, int ym)
           /* On regarde si les modifications sont autorisees */
           else
             {
-              okH = CanBeResized (pAb, frame, TRUE, &xmin, &xmax);
-              okV = CanBeResized (pAb, frame, FALSE, &ymin, &ymax);
+              okH = CanBeResized (pAb, frame, TRUE, &xmin, &xmax) && resHoriz;
+              okV = CanBeResized (pAb, frame, FALSE, &ymin, &ymax) && resVert;
               if (okH || okV)
                 still = FALSE;
             }

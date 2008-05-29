@@ -54,7 +54,9 @@ extern void ApplyDirectTranslate ( int frame,
                                    int ym );
 extern void ApplyDirectResize ( int frame,
                                 int xm,
-                                int ym );
+                                int ym,
+                                ThotBool resHoriz,
+                                ThotBool resVert );
 extern void DirectCreation ( PtrBox pBox,
                              int frame );
 extern void LocateClickedChar ( PtrBox pBox,
@@ -116,7 +118,9 @@ extern void ApplyDirectTranslate ( int frame,
                                      int ym );
 extern void ApplyDirectResize ( int frame,
                                   int xm,
-                                  int ym );
+                                  int ym,
+                                  ThotBool resHoriz,
+                                  ThotBool resVert );
 extern void DirectCreation ( PtrBox pBox,
                                int frame );
 extern void LocateClickedChar ( PtrBox pBox,
