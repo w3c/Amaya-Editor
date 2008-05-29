@@ -811,7 +811,8 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
   Document   document;
   View       view;
 #endif /* !_WINDOWS && ! _MACOS */
-  
+  int ctrlpt;
+
   /* Amaya is waiting for a click selection ? */
   if (ClickIsDone == 1)
     {
@@ -828,8 +829,11 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
       {
         /* Stop any current insertion of text */
         CloseTextInsertion ();
+        
+        if(IsSelectingImageControlPoint(frame, x, y, &ctrlpt)!=NULL)
+            ApplyDirectResize(frame, x, y);
         /* Est-ce que la touche modifieur de geometrie est active ? */
-        if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
+        else if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
           {
             /* moving a box */     
             ApplyDirectTranslate (frame, x, y);
@@ -840,7 +844,6 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
             TtaAbortShowDialogue ();
             LocateSelectionInView (frame, x, y, 1);
 #if !defined (_WINDOWS) && !defined (_MACOS)
-            FrameToView (frame, &document, &view);
             DoCopyToClipboard (document, view, FALSE, TRUE);
 #endif /* _WINDOWS */
           }
@@ -1114,8 +1117,12 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
  *   + TRUE : if the event must be forwarded to other widgets
  *   + FALSE : if the event is cought
  ----------------------------------------------------------------------*/
-ThotBool FrameMouseWheelCallback( int frame, int thot_mod_mask,
-                                 int direction, int delta, int x, int y )
+ThotBool FrameMouseWheelCallback( 
+                                 int frame,
+                                 int thot_mod_mask,
+                                 int direction,
+                                 int delta,
+                                 int x, int y )
 {
   Document   document;
   View       view;
@@ -1125,24 +1132,36 @@ ThotBool FrameMouseWheelCallback( int frame, int thot_mod_mask,
       /* wheel mice up*/
       FrameToView (frame, &document, &view);
       if (thot_mod_mask & THOT_MOD_CTRL)
+        {
           /* if CTRL is down then zoom */
           ZoomOut (document, view);	   
+        }
       else if (thot_mod_mask & THOT_MOD_SHIFT)
+        {
           HorizontalScroll (frame, -39, 1);
+        }
       else
+        { 
           VerticalScroll (frame, -39, 1);
+        }
     }
   else
     {
       /* wheel mice down */
       FrameToView (frame, &document, &view); 
       if (thot_mod_mask & THOT_MOD_CTRL)
+        {
           /* if CTRL is down then zoom */
           ZoomIn (document, view);
+        }
       else if (thot_mod_mask & THOT_MOD_SHIFT)
+        {
           HorizontalScroll (frame, 39, 1);          
+        }
       else
+        {
           VerticalScroll (frame, 39, 1);
+        }
     }
   return TRUE;
 }

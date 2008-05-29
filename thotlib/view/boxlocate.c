@@ -11,6 +11,11 @@
  * Author: I. Vatton (INRIA)
  *
  */
+
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "ustring.h"
 #include "libmsg.h"
@@ -67,11 +72,25 @@
 #include "glwindowdisplay.h"
 #endif /*_GL*/
 
+#ifdef _WX
+  #include "logdebug.h"
+  #include "message_wx.h"
+  #include "AmayaFrame.h"
+  #include "AmayaAddPointEvtHandler.h"
+  #include "AmayaMovePointEvtHandler.h"
+  #include "AmayaMovingBoxEvtHandler.h"
+  #include "AmayaResizingBoxEvtHandler.h"
+#endif /* _WX */
+
+
 static ThotBool     SkipClickEvent = FALSE;
 
 #define Y_RATIO 200		/* penalisation en Y */
 #define ALLOC_POINTS    300
 #define ANCHOR_SIZE 3		/* taille des ancres */
+
+
+static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint);
 
 /*----------------------------------------------------------------------
   APPgraphicModify sends a message TteElemGraphModif to parent elements
@@ -164,6 +183,40 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
   ok = CallEventType ((NotifyEvent *) &notifyEl, pre);
   return ok;
 }
+
+/*----------------------------------------------------------------------
+  IsSelectingImageControlPoint
+  The frame must be the formatted view.
+  ----------------------------------------------------------------------*/
+PtrBox IsSelectingImageControlPoint(int frame, int x, int y, int* ctrlpt)
+{
+  PtrElement      pPicture;
+  PtrAbstractBox  pAb;
+  ViewFrame      *pFrame;
+  int             selpoint;
+  
+  if (frame >= 1)
+    {
+      if (FirstSelectedElement &&
+          FirstSelectedElement == LastSelectedElement &&
+          !FirstSelectedElement->ElTerminal &&
+          FirstSelectedElement->ElFirstChild &&
+          FirstSelectedElement->ElFirstChild->ElTerminal &&
+          FirstSelectedElement->ElFirstChild->ElLeafType == LtPicture)
+        {
+          pFrame = &ViewFrameTable[frame - 1];
+          pPicture = FirstSelectedElement->ElFirstChild;
+          pAb = pPicture->ElAbstractBox[0];
+          
+          x -= pFrame->FrXOrg;
+          y -= pFrame->FrYOrg;
+          
+          return IsOnShape (pAb, x, y, &selpoint);
+        }
+    }
+  return NULL;
+}
+
 
 /*----------------------------------------------------------------------
   LocateSelectionInView finds out the selected Abstract Box and if it's
@@ -1061,12 +1114,15 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 
   /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
+
   x -= pBox->BxXOrg;
   y -= pBox->BxYOrg;
     width = pBox->BxWidth;
   height = pBox->BxHeight;
   *selpoint = 0;
-  /* Keep in mind the selected caracteristic point       */
+  
+  
+  /* Keep in mind the selected characteristic point       */
   /*            1-------------2-------------3            */
   /*            |                           |            */
   /*            |                           |            */
@@ -1107,6 +1163,12 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     controlPoint = 0;
 
   /* Est-ce un point caracteristique specifique du graphique ? */
+  if (pAb->AbLeafType == LtPicture &&
+      x>-DELTA_SEL && x<width+DELTA_SEL && y>-DELTA_SEL && y<height+DELTA_SEL)
+    {
+      *selpoint = controlPoint;
+      return pBox;
+    }
   if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
     {
       GetFontAndIndexFromSpec (32, pBox->BxFont, 1, &font);
