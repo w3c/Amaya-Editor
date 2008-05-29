@@ -1770,6 +1770,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
       case KWD_GiveName: /* on attribute */
         ExceptionNum (ExcGiveName, False, True, False, wi);
         break;
+      case KWD_GiveTypes: /* on attribute */
+        ExceptionNum (ExcGiveName, False, True, False, wi);
+        break;
       case KWD_NoShowBox:
         ExceptionNum (ExcNoShowBox, True, False, False, wi);
         break;

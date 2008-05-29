@@ -90,7 +90,7 @@ EXCEPT
   {Hiding unkown and language attributes}
 	Unknown_attribute:  Invisible;
 	Language:           Invisible;
-  types :             DuplicateAttr;
+  types :             GiveTypes, DuplicateAttr;
   currentType:        Invisible;
   title:              GiveName;
   ref_name:		        GiveName;

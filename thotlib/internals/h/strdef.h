@@ -124,7 +124,8 @@
 #define KWD_PseudoParag 	1203
 #define KWD_GiveName 	1204
 #define KWD_NewRoot 	1205
-#define KWD_Root 	1206
+#define KWD_GiveTypes 	1206
+#define KWD_Root 	1207
 
 /*  RULES  */
 

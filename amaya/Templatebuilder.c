@@ -209,7 +209,8 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
             TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
         }
       CheckMandatoryAttribute (el, doc, Template_ATTR_types);
-      CheckMandatoryAttribute (el, doc, Template_ATTR_title);
+      // the label is no longer mandatory
+      // CheckMandatoryAttribute (el, doc, Template_ATTR_title);
       break;
 
     case Template_EL_bag:

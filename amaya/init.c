@@ -156,8 +156,7 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
 
   if (p_menu && doc)
     {
-      ThotBool noLink = !CanFollowTheLink(doc);
-      
+      ThotBool noLink = !CanFollowTheLink(doc);      
 #ifdef TEMPLATES
       ElementType     elType, parentType;
       DLList          list;
@@ -173,7 +172,6 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
                      *menuTemplateAppend = NULL;
       ThotBool        bTemplate = IsTemplateInstanceDocument(doc);
       ThotBool        do_insert = TRUE, do_append = TRUE;
-
 #endif /* TEMPLATES */
       
       wxMenuItem* items[4];
@@ -186,12 +184,12 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
           items[3] = p_menu->Remove(p_menu->FindItemByPosition(0));
         }
       else
-	{
+        {
           items[0] = NULL;
           items[1] = NULL;
           items[2] = NULL;
           items[3] = NULL;
-	}
+        }
 
 #ifdef TEMPLATES
       TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);

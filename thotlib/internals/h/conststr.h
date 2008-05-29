@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -112,7 +112,8 @@
 #define ExcNewRoot 348
 
 /* Template exceptions */
-#define ExcGiveName 349
+#define ExcGiveName  349
+#define ExcGiveTypes 350
 
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400
