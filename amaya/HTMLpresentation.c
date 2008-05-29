@@ -612,7 +612,10 @@ ThotBool ChangePRule (NotifyPresentation *event)
                 {
                   /* store information in Width or Height attribute */
                   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-                    TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
+                    {
+                      el = TtaGetParent (el);
+                      TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
+                    }
                   else
                     {
                       w = -1;
