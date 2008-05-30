@@ -2253,9 +2253,8 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
                      int bt, int bb, int bl, int br) 
 {
   PtrBox              from;
-  PtrAbstractBox      child;
   int                 color;
-  int                 t, b, l, r, pos;
+  int                 t, b, l, r;
   int                 xFrame, yFrame, height, width;
 
   if (pFrom == NULL || pFrom->AbBox == NULL ||
@@ -2330,41 +2329,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
     r = from->BxRBorder;
   else if (r < 0)
     r = 0;
-#ifdef IV
-  if (from->BxType == BoTable)
-    {
-      // no border around the caption
-      child = pFrom->AbFirstEnclosed;
-      while (child && child->AbPresentationBox)
-        child = child->AbNext;
-      if (child && child->AbElement && child->AbBox &&
-          TypeHasException (ExcIsCaption, child->AbElement->ElTypeNumber,
-                            child->AbElement->ElStructSchema))
-        {
-          /* there is a caption */
-          if (child->AbVertPos.PosEdge == Bottom)
-            {
-              // displayed on the top of the table
-              pos = child->AbBox->BxYOrg + child->AbBox->BxHeight - from->BxYOrg;
-              yFrame += pos;
-              y += pos;
-              h -= pos;
-              height -= pos;
-            }
-          else
-            {
-              // displayed on the bottom of the table
-              pos = child->AbBox->BxHeight + from->BxBBorder + from->BxBPadding;
-              height -= pos;
-              if (h > height)
-                h = height;
-              b += pos;
-              if (b > from->BxBBorder)
-                b = from->BxBBorder;
-            }
-        }
-    }
-#endif
+
   if (from->BxTBorder && pFrom->AbTopStyle > 2 &&
       pFrom->AbTopBColor != -2 && t > 0 && bt)
     {

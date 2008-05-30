@@ -39,6 +39,8 @@
 
 /* maximum number of editing operations recorded in the Undo or Redo queue */
 #define MAX_EDIT_HISTORY_LENGTH 20
+// When the lock is set, the history is not registered (Resizing, Moving)
+static ThotBool Lock_History = FALSE;
 
 #include "actions_f.h"
 #include "appdialogue_f.h"
@@ -55,6 +57,15 @@
 #include "tableH_f.h"
 #include "tree_f.h"
 #include "viewapi_f.h"
+
+/*----------------------------------------------------------------------
+  TtaSetWithHistory lock or unlock history management 
+  (used when resizing or moving an object)
+  ----------------------------------------------------------------------*/
+void TtaLockHistory (ThotBool status)
+{
+  Lock_History = status;
+}
 
 /*----------------------------------------------------------------------
   HistError
@@ -826,11 +837,11 @@ void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel, PtrElement last
 {
   PtrEditOperation	editOp;
 
-  //printf ("OpenHistorySequence\n");
   /* can not open a sequence if a sequence is already open */
   if (pDoc->DocEditSequence)
     {
-      HistError (8);
+      if (!Lock_History)
+        HistError (8); // accept multiple open
       return;
     }
   pDoc->DocEditSequence = TRUE;
@@ -877,7 +888,6 @@ ThotBool CloseHistorySequence (PtrDocument pDoc)
 {
   ThotBool	result;
 
-  //printf ("CloseHistorySequence\n");
   result = FALSE;
   if (pDoc)
     {
@@ -895,6 +905,10 @@ ThotBool CloseHistorySequence (PtrDocument pDoc)
               /* Clear the Redo queue */
               ClearRedoQueue (pDoc);
             }
+
+          if (Lock_History)
+            return result; // don't close
+
           /* sequence closed */
           pDoc->DocEditSequence = FALSE;
           /* Trigger the autosave procedure if the number of modifications has been reached */
@@ -1407,7 +1421,7 @@ void UndoNoRedo (Document doc)
 {
   PtrDocument          pDoc;
   DisplayMode          dispMode;
-  ThotBool		doit, lock;
+  ThotBool		         doit, lock;
 
   pDoc = LoadedDocument [doc - 1];
   if (!pDoc->DocLastEdit)
@@ -1580,4 +1594,3 @@ void TtcRedo (Document doc, View view)
   // Perhaps some contextual menus change
   TtaExecuteMenuAction ("UpdateContextSensitiveMenus", doc, 1, TRUE);
 }
-

@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void TtaLockHistory ( ThotBool status );
 extern void ClearHistory ( PtrDocument pDoc );
 extern void AddEditOpInHistory ( PtrElement pEl,
                                  PtrDocument pDoc,
@@ -47,6 +48,7 @@ extern void TtcRedo ( Document doc,
 
 #else /* __STDC__ */
 
+extern void TtaLockHistory ( ThotBool status );
 extern void ClearHistory ( PtrDocument pDoc );
 extern void AddEditOpInHistory ( PtrElement pEl,
                                    PtrDocument pDoc,

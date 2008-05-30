@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -45,7 +45,6 @@ static int          GridSize = 1;
 #include "memory_f.h"
 #include "units_f.h"
 #include "windowdisplay_f.h"
-
 #ifdef _GL
   #if defined (_MACOS) && defined (_WX)
   #include <gl.h>
@@ -54,12 +53,6 @@ static int          GridSize = 1;
   #endif /* _MACOS */
   #include "glwindowdisplay.h"
 #endif /*_GL*/
-
-#ifdef _GTK
-  #include <gdk/gdkx.h>
-  #include <gtk/gtkprivate.h>
-#endif /*_GTK*/
-
 #ifdef _WX
   #include "logdebug.h"
   #include "message_wx.h"
@@ -154,9 +147,6 @@ static void VideoInvert (int frame, int width, int height, int x, int y)
 #ifdef _WINGUI
       PatBlt (Gdc, x, y, width, height, PATINVERT);
 #endif /* _WINGUI */
-#ifdef _GTK
-      gdk_draw_rectangle (w, TtInvertGC, TRUE, x, y, width, height);
-#endif /* _GTK */
 #endif /*_GL*/
     }
 }
@@ -221,9 +211,6 @@ void InvertEllipse (int frame, int x, int y, int width, int height,
 	    DeleteObject (rgn);
 	  }
 #endif /* _WINGUI */
-#ifdef _GTK
-      gdk_draw_arc (w, TtInvertGC, FALSE, x, y, width, height, 0, 360 * 64);
-#endif /* _GTK */
 #endif /*_GL*/
     }
 }
@@ -313,9 +300,6 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
 #ifdef _WINGUI
      DrawOutpolygon (w, points, nb);
 #endif  /* !_WINGUI */
-#ifdef _GTK
-     gdk_draw_polygon (FrRef[frame], TtInvertGC, FALSE, points, nb);
-#endif /* _GTK */
 #endif /* ifndef _GL */
     }
   else 
@@ -323,10 +307,6 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
 #ifdef _WINGUI 
     DrawOutpolygon (w, points, nb - 1);
 #endif /* _WINGUI */
-#ifdef _GTK
-    gdk_draw_lines (FrRef[frame], TtInvertGC, points, nb - 1);
-#endif /* !_GTK */
-
 #endif /*_GL*/
   /* free the table of points */
   free ((STRING) points);
@@ -367,11 +347,6 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   delete p_addPointEvtHandler;
 #else /* _WX */
   ThotWindow          w;
-#ifdef _GTK
-  ThotEvent         *event;
-  GdkWindowPrivate  *xwindow;
-  int                 e, f;
-#endif /*_GTK*/
   float               ratioX, ratioY;
   int                 ret;
   int                 newx, newy;
@@ -406,17 +381,6 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
     WinErrorBox (w, "AddPoints (1)");
   cross = LoadCursor (NULL, IDC_CROSS);
 #endif /* _WINGUI */
-#ifdef _GTK
-  gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, HVCurs);
-  e = GDK_BUTTON_MOTION_MASK | GDK_POINTER_MOTION_MASK 
-    | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
-  ThotGrab (w, HVCurs, e, 0);
-  xwindow = (GdkWindowPrivate*) w;
-  XWarpPointer (GDK_DISPLAY(), 
-		None, 
-		xwindow->xwindow,
-		0, 0, 0, 0, lastx, lasty);
-#endif /* _GTK */
 
   /* shows up limit borders */
   /*BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);*/
@@ -590,137 +554,11 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
             }
         }
 #endif /* !_WINGUI */
-#ifdef _GTK
-      event = gdk_event_get ();
-      if (event)
-        {
-          /* we only deal with button press events */
-          switch (event->type)
-            {	 	      
-            case GDK_KEY_PRESS:
-              /* stop the creation of the polyline */
-              ret = 1;
-              break;
-            case GDK_BUTTON_PRESS:
-              /* it's a press button event */
-              input = TRUE;
-              break;
-            case  GDK_BUTTON_RELEASE:
-              if (input)
-                {
-                  /* left button keep the last segment built */
-                  /* keep the new segment first point coordinates */
-                  x1 = lastx;
-                  y1 = lasty;
-                  (*nbpoints)++;
-                  point++;
-                  /* points are registered */
-                  input = TRUE;
-                  
-                  /* update the box buffer */
-                  newx = LogicalValue (lastx - x, UnPixel, NULL,
-                                       ViewFrameTable[frame - 1].FrMagnification);
-                  newy = LogicalValue (lasty - y, UnPixel, NULL,
-                                       ViewFrameTable[frame - 1].FrMagnification);
-                  AddPointInPolyline (Bbuffer, point, newx, newy);
-                  /* update the abstract box buffer */
-                  newx1 = (int) ((float) newx * ratioX);
-                  newy1 = (int) ((float) newy * ratioY);
-                  AddPointInPolyline (Pbuffer, point, newx1, newy1);
-                  
-                  if (*nbpoints > maxPoints && maxPoints != 0)
-                    /* we have the right number of points */
-                    ret = 1;
-                  else if (maxPoints == 0 && (int) ((GdkEventButton *)event)->button != 1)
-                    /* any other button : end of user input */
-                    ret = 1;
-                  
-                  input = FALSE;
-                }
-              break;
-            case GDK_EXPOSE:
-              f = GetWindowFrame (((GdkEventExpose *)event)->window);
-              if (f <= MAX_FRAME + 1)
-                FrameToRedisplay (((GdkEventExpose *)event)->window, 
-                                  f, 
-                                  (GdkEventExpose *) & event);
-              break;
-            case GDK_MOTION_NOTIFY:
-              /* Check for window ID */
-              if (((GdkEventMotion *)event)->window == w)
-                {
-                  /* check the coordinates */
-                  newx = x + DO_ALIGN ((int) ((GdkEventMotion *)event)->x - x);
-                  newy = y + DO_ALIGN ((int) ((GdkEventMotion *)event)->y - y);
-                  /* Update the X position */
-                  if (newx < x)
-                    {
-                      newx = x;
-                      wrap = TRUE;
-                    }
-                  else if (newx > x + width)
-                    {
-                      newx = x + width;
-                      wrap = TRUE;
-                    }
-                  
-                  /* Update the Y position */
-                  if (newy < y)
-                    {
-                      newy = y;
-                      wrap = TRUE;
-                    }
-                  else if (newy > y + height)
-                    {
-                      newy = y + height;
-                      wrap = TRUE;
-                    } 
-                  
-                  /* shows the new adjacent segment position */
-                  if (1 || newx != lastx || newy != lasty)
-                    {
-                      if (x1 != -1)
-                        {
-                          gdk_draw_line (w, TtInvertGC, x1, y1, lastx, lasty);
-                          gdk_draw_line (w, TtInvertGC, x1, y1, newx, newy);
-                        }
-                      if (x3 != -1)
-                        {
-                          gdk_draw_line (w, TtInvertGC, lastx, lasty, x3, y3);
-                          gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
-                        }
-                    }
-                  lastx = newx;
-                  lasty = newy;
-                  if (wrap)
-                    {
-                      xwindow = (GdkWindowPrivate*) w;
-                      XWarpPointer (GDK_DISPLAY(), 
-                                    None, 
-                                    xwindow->xwindow,
-                                    0, 0, 0, 0, lastx, lasty);
-                      wrap = FALSE;
-                    }
-                }
-              break;
-            default: 
-              break;
-            }
-#ifdef _GL
-          FrameTable[frame].DblBuffNeedSwap = TRUE;
-          GL_Swap (frame);
-#endif /* _GL */
-        }
-#endif /* _GTK */
     }
   
 #ifdef _WINGUI
   SetCursor (LoadCursor (NULL, IDC_ARROW));
 #endif /* *_WINGUI */
-#ifdef _GTK
-  ThotUngrab ();  
-  gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, ArrowCurs);
-#endif /* !_GTK */
 #endif /* _WX */
 }
 
@@ -765,12 +603,6 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 #if defined(_WINGUI)
   ThotEvent           event;
 #endif /* if defined(_WINGUI) */
-#ifdef _GTK
-  ThotEvent           *event_tmp;
-  ThotEvent           *event;
-  GdkWindowPrivate    *xwindow;
-  int                 e,f;
-#endif /*_GTK*/
   float               ratioX, ratioY;
   int                 ret;
   int                 newx, newy;
@@ -803,17 +635,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   ptEnd.y = y3;
   cross = LoadCursor (NULL, IDC_CROSS);
   SetCursorPos (lastx + rect.left, lasty + rect.top);
-#endif /* !_WINGUI */
-#ifdef _GTK
-  gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, HVCurs);
-  e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
-  ThotGrab (w, HVCurs, e, 0);
-  xwindow = (GdkWindowPrivate*) w;
-  XWarpPointer (GDK_DISPLAY(), 
-                None, 
-                xwindow->xwindow,
-                0, 0, 0, 0, lastx, lasty);
-#endif /* !_GTK */
+#endif /* _WINGUI */
   
   /* shows up limit borders */
   /*BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);*/
@@ -906,181 +728,10 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
         default: break;
         }
 #endif /* !_WINGUI */
-#ifdef _GTK
-      event = gdk_event_get ();
-      if (event)
-        {
-          if (event->type == GDK_MOTION_NOTIFY)	
-            {
-              /* We take only the last position update */
-              while (gdk_events_pending ()) 
-                {
-                  event_tmp = gdk_event_get ();
-                  if (event_tmp)
-                    event = event_tmp;
-                }
-              if (event->type == GDK_MOTION_NOTIFY) 
-                {
-                  if (((GdkEventMotion *)event)->window == w)
-                    {
-                      /* check the coordinates */
-                      newx = x + DO_ALIGN ((int) ((GdkEventMotion *)event)->x - x);
-                      newy = y + DO_ALIGN ((int)((GdkEventMotion *)event)->y - y);
-                                            
-                      /* are limited to the box size */
-                      /* Update the X position */
-                      if (newx < x)
-                        {
-                          newx = x;
-                          wrap = TRUE;
-                        }
-                      else if (newx > x + width)
-                        {
-                          newx = x + width;
-                          wrap = TRUE;
-                        }
-                      
-                      /* Update the Y position */
-                      if (newy < y)
-                        {
-                          newy = y;
-                          wrap = TRUE;
-                        }
-                      else if (newy > y + height)
-                        {
-                          newy = y + height;
-                          wrap = TRUE;
-                        } 
-                    }
-                                    
-                  /* shows the new adjacent segment position */
-                  if (newx != lastx || newy != lasty)
-                    {
-#ifndef _GL
-                      if (x1 != -1)
-                        {
-                          gdk_draw_line (w, TtInvertGC, x1, y1, lastx, lasty);
-                          gdk_draw_line (w, TtInvertGC, x1, y1, newx, newy);
-                        }
-                      if (x3 != -1)
-                        {
-                          gdk_draw_line (w, TtInvertGC, lastx, lasty, x3, y3);
-                          gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
-                        }
-                      lastx = newx;
-                      lasty = newy;		      
-#else /* _GL */
-                      
-                      lastx = newx;
-                      lasty = newy;
-                      /* update the box buffer */
-                      newx = LogicalValue (lastx - firstx, UnPixel, NULL,
-                                           ViewFrameTable[frame - 1].FrMagnification);
-                      newy = LogicalValue (lasty - firsty, UnPixel, NULL,
-                                           ViewFrameTable[frame - 1].FrMagnification);
-                      
-                      if (pointselect == 0)
-                        /* it's really a polyline, not a line */
-                        {
-                          if (lastx - firstx > box->BxWidth)
-                            {
-                              box->BxWidth = lastx - firstx;
-                              box->BxW = box->BxWidth;
-                            }
-                          if (lasty - firsty > box->BxHeight)
-                            {
-                              box->BxHeight = lasty - firsty;
-                              box->BxH  = box->BxHeight;
-                            }
-                          if (lastx < box->BxClipX + EXTRA_GRAPH)
-                            box->BxClipX = lastx - EXTRA_GRAPH;
-                          if (lasty < box->BxClipY + EXTRA_GRAPH)
-                            box->BxClipY = lasty - EXTRA_GRAPH;
-                        }
-                      
-                      ModifyPointInPolyline (Bbuffer, point, newx, newy);
-                      
-                      /* update the abstract box buffer */
-                      newx1 = (int) ((float) newx * ratioX);
-                      newy1 = (int) ((float) newy * ratioY);
-                      
-                      ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
-                      
-                      if (pointselect == 0)
-                        {
-                          if (box->BxPictInfo != NULL)
-                            {
-                              /* we have to recompute the current spline */
-                              free ((STRING) box->BxPictInfo);
-                              box->BxPictInfo = NULL;
-                            }
-                        }
-                      
-                      DefBoxRegion (frame, box, 0, 0, width, height);
-                      RedrawFrameBottom (frame, 0, NULL);
-                      FrameTable[frame].DblBuffNeedSwap = TRUE;
-                      GL_Swap (frame);		      
-#endif /* _GL */
-                      if (wrap)
-                        {
-                          xwindow = (GdkWindowPrivate*) w;
-                          XWarpPointer (GDK_DISPLAY(), 
-                                        None, 
-                                        xwindow->xwindow,
-                                        0, 0, 0, 0, lastx, lasty);
-                          wrap = FALSE;
-                        }
-                    }
-                }
-            }
-          if (event->type == GDK_BUTTON_RELEASE)
-            {
-#ifdef _GL
-              if (box->BxAbstractBox->AbEnclosing &&
-                  box->BxAbstractBox->AbEnclosing->AbBox)
-                /* suppose the enclosing box has the same width and height as
-                   the polyline box */
-                {
-                  box->BxAbstractBox->AbEnclosing->AbBox->BxHeight = box->BxHeight;
-                  box->BxAbstractBox->AbEnclosing->AbBox->BxH = box->BxH;
-                  box->BxAbstractBox->AbEnclosing->AbBox->BxWidth = box->BxWidth;
-                  box->BxAbstractBox->AbEnclosing->AbBox->BxW = box->BxW;
-                }
-#else /* _GL */
-              lastx = newx - firstx;
-              lasty = newy - firsty;
-              /* update the box buffer */
-              newx = LogicalValue (lastx, UnPixel, NULL,
-                                   ViewFrameTable[frame - 1].FrMagnification);
-              newy = LogicalValue (lasty, UnPixel, NULL,
-                                   ViewFrameTable[frame - 1].FrMagnification);
-              ModifyPointInPolyline (Bbuffer, point, newx, newy);
-              /* update the abstract box buffer */
-              newx1 = (int) ((float) newx * ratioX);
-              newy1 = (int) ((float) newy * ratioY);
-              ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
-#endif /* _GL */
-              ret = 1;
-            }
-          
-          if (event->type == GDK_EXPOSE)
-            {
-              f = GetWindowFrame (((GdkEventExpose *)event)->window);
-              if (f <= MAX_FRAME + 1)
-                FrameToRedisplay (((GdkEventExpose *)event)->window, 
-                                  f, 
-                                  (GdkEventExpose *) & event);
-            }
-        }
-#endif /* _GTK */
     }  
 #ifdef _WINGUI
   SetCursor (LoadCursor (NULL, IDC_ARROW));
 #endif /* *_WINGUI */
-#ifdef _GTK
-  ThotUngrab ();
-  gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, ArrowCurs);
-#endif /* _GTK */
 #endif /* _WX */
 }
 
@@ -1554,7 +1205,7 @@ static void Resizing ( int frame, int *x, int *y, int *width, int *height,
 #ifdef _WX
   TTALOGDEBUG_7( TTA_LOG_SVGEDIT, _T("Resizing frame=%d xmin=%d xmax=%d ymin=%d ymax=%d xm=%d ym=%d"),
                  frame, xmin, xmax, ymin, ymax, xm, ym);
-  
+
   AmayaFrame * p_frame = FrameTable[frame].WdFrame;
   AmayaResizingBoxEvtHandler * p_resizingBoxEvtHandler =
     new AmayaResizingBoxEvtHandler( p_frame,
@@ -1563,17 +1214,11 @@ static void Resizing ( int frame, int *x, int *y, int *width, int *height,
                                     xm, ym, percentW, percentH );
   // now wait for the polygon creation end
   ThotEvent ev;
-  while(!p_resizingBoxEvtHandler->IsFinish())
+  while (!p_resizingBoxEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
-  
   delete p_resizingBoxEvtHandler;
 
-#else /* defined(_WX) */
-#ifdef _GTK
-  ThotEvent           *event_tmp;
-  ThotEvent           *event;
-  GdkWindowPrivate    *xwindow;
-#endif /*_GTK*/
+#else /* _WX */
   ThotWindow          w;
   PtrAbstractBox      pAb;
   int                 ret, dx, dy, dl, dh;
@@ -1594,9 +1239,7 @@ static void Resizing ( int frame, int *x, int *y, int *width, int *height,
                pAb->AbLeafType == LtGraphics &&
                (pAb->AbShape == 'a' || pAb->AbShape == 'c'));
   /* select the correct cursor */
-#ifndef _WX  
   w = FrRef[frame];
-#endif /* _WX */
   /* Use the reference point to move the box */
   switch (box->BxHorizEdge)
     {
@@ -1887,259 +1530,7 @@ static void Resizing ( int frame, int *x, int *y, int *width, int *height,
         default:  break;
         }
 #endif /* _WINGUI */
-#ifdef _GTK
-      event = gdk_event_get ();
-      if (event)
-        {
-          if (event->type == GDK_MOTION_NOTIFY)	
-            {
-              /* We take only last position update */
-              while (gdk_events_pending ()) 
-                {
-                  event_tmp = gdk_event_get ();
-                  if (event_tmp)
-                    event = event_tmp;
-                }
-              if (event->type == GDK_MOTION_NOTIFY) 
-                {
-                  /* Check for window ID */
-                  if (((GdkEventMotion *)event)->window == w)
-                    {
-                      /* compute the deltas */
-                      dl = (int) ((GdkEventMotion *)event)->x - xm;
-                      dh = (int) ((GdkEventMotion *)event)->y - ym;
-                      if (percentW != 0)
-                        {
-                          /* keep the greater value */
-                          if (dl < dh)
-                            dl = dh;
-                          dh = dl;
-                        }
-                      else if (percentH != 0)
-                        {
-                          /* keep the greater value */
-                          if (dh < dl)
-                            dh = dl;
-                          dl = dh;
-                        }
-                    }
-                  else
-                    dl = dh = 0;
-                  
-                  /* Check that size can be modified, and stay >= 0    */
-                  /* depending on base point and cursor position,      */
-                  /* increase or decreas width or height accordingly   */
-                  warpx = -1;
-                  warpy = -1;
-                  if (dl != 0)
-                    {
-                      if (xmin == xmax)
-                        /* X moves frozen */
-                        dl = 0;
-                      else if (ref_v == C_VCENTER && *width + (2 * dl * hDirection) < 0)
-                        {
-                          dl = -DO_ALIGN (*width / 2) * hDirection;
-                          warpx = xm + (dl * hDirection);
-                        }
-                      else if (*width + (dl * hDirection) < 0)
-                        {
-                          dl = -DO_ALIGN (*width) * hDirection;
-                          warpx = xm + (dl * hDirection);
-                        }
-                    }
-                  
-                  if (dh != 0)
-                    {
-                      if (ymin == ymax)
-                        /* Y moves frozen */
-                        dh = 0;
-                      else if (ref_h == C_HCENTER && *height + (2 * dh * vDirection) < 0)
-                        {
-                          dh = -DO_ALIGN (*height / 2) * vDirection;
-                          warpy = ym + (dh * vDirection);
-                        }
-                      else if (*height + dh < 0)
-                        {
-                          dh = -DO_ALIGN (*height) * vDirection;
-                          warpy = ym + (dh * vDirection);
-                        }
-                    }
-                  
-                  /* Compute the horizontal move of the origin */
-                  if (dl != 0)
-                    {
-                      dl = dl * hDirection;		/* Take care for direction */
-                      if (ref_v == C_VCENTER)
-                        {
-                          dx = xmin + DO_ALIGN (*x - (dl / 2) - xmin) - *x;
-                          /* Check the move is within limits */
-                          if (*x + dx < xmin)
-                            dx = xmin -* x;		/*left side */
-                          if (*x + *width - dx > xmax)
-                            dx = *x + *width - xmin - DO_ALIGN (xmax - xmin); /*right side */
-                          
-                          /* modify width for real */
-                          dl = -(dx * 2);
-                          if (dx != 0)
-                            warpx = xm - (dx * hDirection);
-                        }
-                      else if (ref_v == C_RIGHT)
-                        {
-                          dx = xmin + DO_ALIGN (*x - dl - xmin) - *x;
-                          /* Check the move is within limits */
-                          if (*x + dx < xmin)
-                            dx = xmin - *x;		/*left side */
-                          
-                          /* modify width for real */
-                          dl = -dx;
-                          if (dx != 0)
-                            warpx = xm + dx;
-                        }
-                      else
-                        {
-                          dx = 0;
-                          dl = xmin + DO_ALIGN (*x + *width + dl - xmin) - *x - *width;
-                          if (*x + *width + dl > xmax)
-                            dl = xmin + DO_ALIGN (xmax - xmin) - *x - *width; /*right side */
-                          if (dl != 0)
-                            warpx = xm + dl;
-                        }
-                    }
-                  else
-                    dx = 0;
-                  
-                  /* Compute vertical move */
-                  if (dh != 0)
-                    {
-                      dh = dh * vDirection;	/* Take care for direction */
-                      if (ref_h == C_HCENTER)
-                        {
-                          dy = ymin + DO_ALIGN (*y - (dh / 2) - ymin) - *y;
-                          /* Check the move is within limits */
-                          if (*y + dy < ymin)
-                            dy = ymin - *y;		/*upper border */
-                          if (*y + *height - dy > ymax)
-                            dy = *y + *height - ymin - DO_ALIGN (ymax - ymin);	/*bottom */
-                          /* change the height for real */
-                          dh = -(dy * 2);
-                          if (dy != 0)
-                            warpy = ym - (dy * vDirection);
-                        }
-                      else if (ref_h == C_BOTTOM)
-                        {
-                          dy = ymin + DO_ALIGN (*y - dh - ymin) - *y;
-                          /* Check the move is within limits */
-                          if (*y + dy < ymin)
-                            dy = ymin - *y;		/*upper border */
-                          /* change the height for real */
-                          dh = -dy;
-                          if (dy != 0)
-                            warpy = ym + dy;
-                        }
-                      else
-                        {
-                          dy = 0;
-                          dh = ymin + DO_ALIGN (*y + *height + dh - ymin) - *y - *height;
-                          if (*y + *height + dh > ymax)
-                            dh = ymin + DO_ALIGN (ymax - ymin) - *y - *height;	/*bottom */
-                          if (dh != 0)
-                            warpy = ym + dh;
-                        }
-                    }
-                  else
-                    dy = 0;
-                  
-                  /* Should we move the box */
-                  if ((dl != 0) || (dh != 0))
-                    {
-                      /* switch off the old box */
-#ifndef _GL
-                      if (isEllipse)
-                        InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-                      else
-                        BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-#endif /* _GL */
-                      /* is there any dependence between height and width */
-                      *width = *width + dl;
-                      *height = *height + dh;
-                      if (percentW != 0)
-                        *width = *height * percentW / 100;
-                      else if (percentH != 0)
-                        *height = *width * percentH / 100;
-                      *x = *x + dx;
-                      *y = *y + dy;
-                      /* switch on the new one */
-                      switch (box->BxHorizEdge)
-                        {
-                        case Right:
-                          xref = *width;
-                          break;
-                        case VertMiddle:
-                          xref = *width / 2;
-                          break;
-                        case VertRef:
-                          xref = box->BxVertRef;
-                          break;
-                        default:
-                          xref = 0;
-                          break;
-                        }
-                      switch (box->BxVertEdge)
-                        {
-                        case Bottom:
-                          yref = *height;
-                          break;
-                        case HorizMiddle:
-                          yref = *height / 2;
-                          break;
-                        case HorizRef:
-                          yref = box->BxHorizRef;
-                          break;
-                        default:
-                          yref = 0;
-                          break;
-                        }  
-#ifndef _GL
-                      if (isEllipse)
-                        InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-                      else
-                        BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-#else /* _GL */
-                      DefBoxRegion (frame, box, -1, -1, -1, -1);
-                      if (percentW)
-                        NewDimension (box->BxAbstractBox, 0, *height, frame, TRUE);
-                      else if (percentH)
-                        NewDimension (box->BxAbstractBox, *width, 0, frame, TRUE);
-                      else
-                        NewDimension (box->BxAbstractBox, *width, *height, frame, TRUE);
-                      
-                      FrameTable[frame].DblBuffNeedSwap = TRUE;
-                      GL_Swap (frame);
-#endif /* _GL */
-                    }
-                  
-                  /* Should we move the cursor */
-                  if (warpx >= 0 || warpy >= 0)
-                    {
-                      if (warpx >= 0)
-                        xm = warpx;
-                      if (warpy >= 0)
-                        ym = warpy; 
-                      
-                      xwindow = (GdkWindowPrivate*) w;
-                      XWarpPointer (GDK_DISPLAY(), 
-                                    None, 
-                                    xwindow->xwindow,
-                                    0, 0, 0, 0, xm, ym);
-                    }
-                }
-            }
-          if (event->type ==  GDK_BUTTON_RELEASE)
-            ret = 1;         
-        }
-#endif /* _GTK */
-    }
-  
+    } 
 #ifndef _GL
   /* Erase the box drawing */
   if (isEllipse)
@@ -2147,7 +1538,6 @@ static void Resizing ( int frame, int *x, int *y, int *width, int *height,
   else
     BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
 #endif /* _GL */
-
 #endif /* _WX */
 }
 
@@ -2172,9 +1562,6 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
 #ifdef _WINGUI
   POINT            cursorPos;
 #endif /* _WINGUI */
-#ifdef _GTK  
-  int              e;
-#endif /* _GTK */
   
   /* select the correct cursor */
   w = FrRef[frame];
@@ -2194,19 +1581,6 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
   ReleaseDC (w, Gdc);
 #endif /*_GL*/
 #endif /* _WINGUI */
-#ifdef _GTK
- e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
- if (xmin == xmax)
-    ThotGrab (w, VCurs, e, 0);
-  else if (ymin == ymax)
-    ThotGrab (w, HCurs, e, 0);
- else
-    ThotGrab (w, HVCurs, e, 0);
- Resizing (frame, &x, &y, width, height, box, xmin, xmax, ymin, ymax, xm, ym,
-           percentW, percentH);
- /* restore the previous state of the Thot Library */
- ThotUngrab ();
-#endif /*_GTK*/
 #else /* _WX */
  Resizing (frame, &x, &y, width, height, box, xmin, xmax, ymin, ymax, xm, ym,
            percentW, percentH);
@@ -2227,11 +1601,6 @@ static void Moving (int frame, int *x, int *y, int width, int height,
   ThotEvent           event;
   POINT               cursorPos;
 #endif /* _WINGUI */
-#ifdef _GTK
-  ThotEvent           *event_tmp;
-  ThotEvent           *event;
-  GdkWindowPrivate    *xwindow;
-#endif /*_GTK*/
   ThotWindow          w;
   PtrAbstractBox      pAb;
 #ifndef _WX
@@ -2425,148 +1794,6 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 	default: break;
 	}
 #endif /* _WINGUI */
-#ifdef _GTK
-      event = gdk_event_get ();
-      if (event)
-	{
-	  if (event->type == GDK_MOTION_NOTIFY) 
-	    {	
-
-	      /* We take only last position update */
-	      while (gdk_events_pending ()) 
-		{
-		  event_tmp = gdk_event_get ();
-		  if (event_tmp)
-		    event = event_tmp;
-		}
-
-	      if (event->type == GDK_MOTION_NOTIFY) 
-		{	
-		  /* Check for window ID */
-		  if (((GdkEventMotion *)event)->window == w)
-		    {
-		      /* compute the new box origin */
-		      newx = *x + (int) ((GdkEventMotion *)event)->x - xm;
-		      dx = xmin + DO_ALIGN (newx - xmin) - *x;
-		      newy = *y + (int)  ((GdkEventMotion *)event)->y - ym;
-		      dy = ymin + DO_ALIGN (newy - ymin) - *y;
-		    }
-		  else
-		    {
-		      dx = dy = 0;
-		    }	  
-		  newx = dx + *x;
-		  newy = dy + *y;
-	    
-		  /* Checks for limits */
-		  warpx = -1;
-		  warpy = -1;
-		  if (xmin == xmax)
-		    {
-		      newx = xmin;	/*left side */
-		      warpx = xm;
-		    }
-		  else if (newx < xmin)
-		    {
-		      newx = xmin;	/*left side */
-		      warpx = xm;
-		    }
-		  else if (newx + width > xmax)
-		    {
-		      if (xmin + width > xmax)
-			{
-			  newx = xmin;	/*overflow on left side */
-			  warpx = xm;
-			}
-		      else
-			{
-			  newx = xmin + DO_ALIGN (xmax - width - xmin); /*cote droit */
-			  warpx = xm + newx - *x;
-			}
-		    }
-		  else
-		    xm += dx;	/* New cursor location */
-	    
-		  dx = newx - *x;
-		  if (ymin == ymax)
-		    {
-		      newy = ymin;	/*upper border */
-		      warpy = ym;
-		    }
-		  else if (newy < ymin)
-		    {
-		      newy = ymin;	/*upper border */
-		      warpy = ym;
-		    }
-		  else if (newy + height > ymax)
-		    {
-		      if (ymin + height > ymax)
-			{
-			  newy = ymin;	/*overflow on upper border */
-			  warpy = ym;
-			}
-		      else
-			{
-			  newy = ymin + DO_ALIGN (ymax - height - ymin);  /* bottom border */
-			  warpy = ym + newy - *y;
-			}
-		    }
-		  else
-		    ym += dy;	/* New cursor location */
-		  dy = newy - *y;
-	    
-		  /* Should we move the box */
-		  if ((dx != 0) || (dy != 0))
-		    {
-#ifndef _GL
-		      if (isEllipse)
-			{
-			  /* old box */
-			  InvertEllipse (frame, *x, *y, width, height, *x + xref, *y + yref);
-			  /* new box */
-			  InvertEllipse (frame, newx, newy, width, height, newx + xref, newy + yref);
-			}
-		      else
-			{
-			  /* old box */
-			  BoxGeometry (frame, *x, *y, width, height, *x + xref, *y + yref);
-			  /* new box */
-			  BoxGeometry (frame, newx, newy, width, height, newx + xref, newy + yref);
-			}
-#else /* _GL */
-		      DefBoxRegion (frame, box, -1, -1, -1, -1);
-		      NewPosition (box->BxAbstractBox, 
-				   newx + (ViewFrameTable[frame - 1]).FrXOrg, xref, 
-				   newy + (ViewFrameTable[frame - 1]).FrYOrg, yref, 
-				   frame, TRUE);
-		      
-		      FrameTable[frame].DblBuffNeedSwap = TRUE;
-		      GL_Swap (frame);
-#endif /* _GL */
-		      *x = newx;
-		      *y = newy;
-		    }
-	    
-		  /* Should we move the cursor */
-		  if (warpx >= 0 || warpy >= 0)
-		    {
-		      if (warpx >= 0)
-			xm = warpx;
-		      if (warpy >= 0)
-			ym = warpy;
-
-		      xwindow = (GdkWindowPrivate*) w;
-		      XWarpPointer (GDK_DISPLAY(), 
-				    None, 
-				    xwindow->xwindow,
-				    0, 0, 0, 0, xm, ym);
-		    }
-		  }
-		}
-	  if (event->type ==  GDK_BUTTON_RELEASE)
-	    ret = 1;
-	}
-#endif /* _GTK */
     }
 #endif /* _WX */
 
@@ -2590,14 +1817,9 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
 		   PtrBox box, int xmin, int xmax, int ymin, int ymax,
 		   int xm, int ym)
 {
-#if defined(_GTK) || defined(_WINGUI)
+#ifdef _WINGUI
    ThotWindow          w;
-#endif /* defined(_GTK) || defined(_WINGUI) */
-#ifdef _GTK
-   int                 e;
-#endif /* _GTK */
-
-
+#endif /* _WINGUI */
 #ifdef _WINGUI
    w = FrRef[frame];
 #ifndef _GL
@@ -2610,22 +1832,7 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
    ReleaseDC (w, Gdc);
 #endif _GL
 #endif /* _WINGUI */
-   
-#ifdef _GTK
-   w = FrRef[frame];
-   e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
-   if ((xmin >= *x) && (xmax <= *x + width))
-     ThotGrab (w, VCurs, e, 0);
-   else if ((ymin >= *y) && (ymax <= *y + height))
-     ThotGrab (w, HCurs, e, 0);
-   else
-     ThotGrab (w, HVCurs, e, 0);
-   Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
-   /* restore the Thot Library state */
-   ThotUngrab ();
-#endif /*_GTK*/
-   
-#ifdef _WX
+   #ifdef _WX
   Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
 #endif /* _WX */
 }
@@ -2657,12 +1864,6 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   POINT               cursorPos;
   HCURSOR             cross;
 #endif /* _WINGUI */
-#ifdef _GTK
-  ThotWindow          wdum;
-  ThotEvent           *event;
-  GdkWindowPrivate    *xwindow, *xwindow2;
-  int                 e, f;
-#endif /*_GTK*/
   PtrAbstractBox      pAb;
   int                 xm, ym;
   int                 dx, dy;
@@ -2746,10 +1947,6 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   GetWindowRect (w, &rect);
   SetCursorPos (*x + rect.left, *y + rect.top);
 #endif /* _WINGUI */
-#ifdef _GTK
-  e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
-  ThotGrab (w, HVCurs, e, 0);
-#endif /* _GTK */
 
   if (isEllipse)
     InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
@@ -2830,120 +2027,6 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 	    } 
 	} 
 #endif /* _WINGUI */
-#ifdef _GTK
-      if (gdk_events_pending () == 0)
-	{ 
-	  /* current pointer position */
-	  xwindow = (GdkWindowPrivate*) w;
-	  xwindow2 = (GdkWindowPrivate*) wdum;
-	  xwindow2 = (GdkWindowPrivate*)TtaGetMemory (sizeof(GdkWindowPrivate)); /* SG 27.10.03 : I've replaced sizeof(GdkWindowPrivate*) by sizeof(GdkWindowPrivate) ... I think it was a 'faute de frappe' */
-	  XQueryPointer (GDK_DISPLAY(), 
-			 xwindow->xwindow, 
-			 &(xwindow2->xwindow), 
-			 &(xwindow2->xwindow), 
-			 &dx, &dy, 
-			 &newx, &newy, 
-			 (unsigned int *)&e);
-	  TtaFreeMemory (xwindow2);
-	  /* coordinate in limits */
-	  newx = DO_ALIGN (newx - xmin);
-	  newx += xmin;
-	  newy = DO_ALIGN (newy - ymin);
-	  newy += ymin;
-
-	  if (newx < xmin || newx > xmax || newy < ymin || newy > ymax)
-	    {	      
-	      xwindow = (GdkWindowPrivate*) w;
-	      XWarpPointer (GDK_DISPLAY(), 
-			    None, 
-			    xwindow->xwindow,
-			    0, 0, 0, 0, *x, *y);
-	    }
-	  else if ((newx != *x && PosX) || (newy != *y && PosY))
-	    {
-	      if (isEllipse)
-		InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-	      else
-		BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-	      if (PosX)
-		*x = newx;
-	      if (PosY)
-		*y = newy;
-
-	      if (isEllipse)
-		InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-	      else
-		BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-	      XFlush (TtDisplay);
-	      /* the postion is fixed */
-	      if (!PosX || !PosY)
-		{
-		  xwindow = (GdkWindowPrivate*) w;
-		  XWarpPointer (GDK_DISPLAY(), 
-				None, 
-				xwindow->xwindow,
-				0, 0, 0, 0, *x, *y);
-		}
-            }
-	}
-      else
-	{
-	  event = gdk_event_get ();
-	  if (event)
-	    {
-	      /* we only deal with button press events */
-	      switch (event->type)
-		{
-		case GDK_BUTTON_PRESS:
-		  if (PosX)
-		    xm = xmin + DO_ALIGN ((int) ((GdkEventButton *)event)->x - xmin);
-		  else
-		    xm = *x;
-		  if (PosY)
-		    ym = ymin + DO_ALIGN ((int) ((GdkEventButton *)event)->y - ymin);
-		  else
-		    ym = *y;
-		  
-		  /* check the coordinates */
-		  if (xm < xmin || xm > xmax ||
-		      !PosX ||
-		      ym < ymin || ym > ymax || !PosY)
-		    {
-		      xwindow = (GdkWindowPrivate*) w;
-		      XWarpPointer (GDK_DISPLAY(), 
-				    None, 
-				    xwindow->xwindow,
-				    0, 0, 0, 0, xm, ym);
-		      if (!PosX && !PosY)
-			ret = 1;
-		    }
-		  else
-		    ret = 1;
-		  break; 
-		case GDK_MOTION_NOTIFY:	  
-		  /* Check for window ID */
-		  if (((GdkEventMotion *)event)->window == w)
-		    {
-		      newx = xmin + DO_ALIGN ((int) ((GdkEventMotion *)event)->x - xmin);
-		      newy = ymin + DO_ALIGN ((int)((GdkEventMotion *)event)->y - ymin);
-		    }
-		case GDK_EXPOSE:
-		  f = GetWindowFrame (((GdkEventExpose *)event)->window);
-		  if (f <= MAX_FRAME + 1)
-		    FrameToRedisplay (((GdkEventExpose *)event)->window, 
-				      f, 
-				      (GdkEventExpose *) & event);
-		  /*XtDispatchEvent (&event);*/
-		  break;
-		default: break;
-		}
-#ifdef _GL
-	      FrameTable[frame].DblBuffNeedSwap = TRUE;
-	      GL_Swap (frame);
-#endif /* _GL */
-	    }
-	}
-#endif /* _GTK */
     }
 #endif /* _WX */
 
@@ -2958,30 +2041,11 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   *y = ym - rect.top;
   SetCursor (LoadCursor (NULL, IDC_CROSS));
 #endif /* _WINGUI */
-#ifdef _GTK
-  *x = xm;
-  *y = ym; 
-#endif /* _GTK */
-  
-#ifdef _WX
-  /*wxMessageDialog messagedialog( NULL,
-				 TtaConvMessageToWX("Not implemented yet"), 
-				 _T("Warning"),
-				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
-				 messagedialog.ShowModal();*/
-#else /* _WX */
-#endif /* _WX */
-  Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
+    Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
 #ifdef _WINGUI 
 #ifndef _GL
   ReleaseDC (w, Gdc);
 #endif /*_GL*/
   SetCursor (LoadCursor (NULL, IDC_ARROW));
 #endif /* _WINGUI */
-
-#ifdef _GTK  
-  /* restore state of the Thot Library */
-  ThotUngrab ();
-#endif /* _GTK */
 }
-

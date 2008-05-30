@@ -25,6 +25,8 @@ extern void TemplateEntityCreated ( unsigned char *entityValue,
                                     Document doc );
 extern ThotBool NeedAMenu ( Element el,
                             Document doc );
+extern void CheckNotEmptyComponent ( Element el,
+                                     Document doc );
 extern void TemplateElementComplete ( ParserData *context,
                                       Element el,
                                       int *error );
@@ -60,6 +62,8 @@ extern void TemplateEntityCreated ( unsigned char *entityValue,
                                       Document doc );
 extern ThotBool NeedAMenu ( Element el,
                               Document doc );
+extern void CheckNotEmptyComponent ( Element el,
+                                       Document doc );
 extern void TemplateElementComplete ( ParserData *context,
                                         Element el,
                                         int *error );

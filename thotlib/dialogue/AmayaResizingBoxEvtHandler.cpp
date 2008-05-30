@@ -12,6 +12,7 @@
 #include "libmsg.h"
 #include "message.h"
 #include "typeint.h"
+#include "undo.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -25,7 +26,6 @@
 #include "geom_f.h"
 #include "font_f.h"
 #include "content_f.h"
-
 #ifdef _GL
 #include "glwindowdisplay.h"
 #endif /* _GL */
@@ -97,12 +97,13 @@ AmayaResizingBoxEvtHandler::AmayaResizingBoxEvtHandler( AmayaFrame * p_frame,
     ,m_PercentH(percentH)
 {
   TTALOGDEBUG_0( TTA_LOG_SVGEDIT, _T("AmayaResizingBoxEvtHandler::AmayaResizingBoxEvtHandler"));
-
   if (m_pFrame)
     {
       // attach this handler to the canvas
       AmayaCanvas * p_canvas = m_pFrame->GetCanvas();
       p_canvas->PushEventHandler(this);
+      TtaOpenUndoSequence (FrameTable[m_FrameId].FrDoc, NULL, NULL, 0, 0);
+      TtaLockHistory (TRUE);
       
       // assign a cross mouse cursor
       m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
@@ -247,6 +248,8 @@ void AmayaResizingBoxEvtHandler::OnMouseDown( wxMouseEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaResizingBoxEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
+  TtaLockHistory (FALSE);
+  TtaCloseUndoSequence (FrameTable[m_FrameId].FrDoc);
   m_IsFinish = true;
 }
 

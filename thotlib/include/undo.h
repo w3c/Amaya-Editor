@@ -9,6 +9,13 @@
 #define _UNDO_H_
 
 #ifndef __CEXTRACT__
+
+/*----------------------------------------------------------------------
+  TtaSetWithHistory lock or unlock history management 
+  (used when resizing or moving an object)
+  ----------------------------------------------------------------------*/
+extern void TtaLockHistory (ThotBool status);
+
 /* ----------------------------------------------------------------------
    TtaHasUndoSequence returns TRUE if a undo sequence is opened
   ----------------------------------------------------------------------*/
