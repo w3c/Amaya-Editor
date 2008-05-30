@@ -25,6 +25,8 @@ ELEMENTS
 	BEGIN
 	ElemPaste.Post -> XmlStyleSheetPasted;
 	ElemDelete.Pre -> XmlStyleSheetDeleted;
+  ElemTextModify.Pre -> RemovePromptIndicator;
+  ElemTextModify.Post -> CheckNewLines;
 	END;
 
 ATTRIBUTES
