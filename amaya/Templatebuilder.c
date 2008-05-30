@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1998-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1998-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -171,6 +171,62 @@ ThotBool NeedAMenu (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void CheckNotEmptyComponent (Element el, Document doc)
+{
+#ifdef IV
+  // not sure it's necessary
+  Element          child, parent;
+  ElementType	     elType;
+  char            *s;
+
+  child = TtaGetFirstChild (el);
+  if (child)
+    {
+      while (child)
+        {
+          CheckNotEmptyComponent (child, doc);
+          TtaNextSibling (&child);
+        }
+    }
+  else
+    {
+      elType = TtaGetElementType (el);
+      if (!TtaIsLeaf (elType))
+        {
+          // generate a leaf element
+          s = TtaGetSSchemaName (elType.ElSSchema);
+          parent = el;
+          while (!strcmp (s, "Template"))
+            {
+              parent = TtaGetParent (parent);
+              elType = TtaGetElementType (parent);
+              s = TtaGetSSchemaName (elType.ElSSchema);
+            }
+          if (!strcmp (s, "HTML"))
+            {
+              if (IsCharacterLevelElement (el))
+                elType.ElTypeNum = HTML_EL_Basic_Elem;
+              else
+                elType.ElTypeNum = HTML_EL_Element;
+            }
+          else if (!strcmp (s, "MathML"))
+            elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+          else if (!strcmp (s, "SVG"))
+            elType.ElTypeNum = SVG_EL_GraphicsElement;
+          else if (elType.ElTypeNum == XML_EL_XML_Element)
+            return;
+          else
+            elType.ElTypeNum = XML_EL_XML_Element;
+printf ("==>Complete component %s:%d\n",s,elType.ElTypeNum);
+          child = TtaNewElement (doc, elType);
+          TtaInsertFirstChild (&child, el, doc);
+        }
+    }
+#endif
+}
+
+/*----------------------------------------------------------------------
   TemplateElementComplete
   Check the Thot structure of the Template element el.
   ----------------------------------------------------------------------*/
@@ -191,6 +247,8 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
 
     case Template_EL_component:
       CheckMandatoryAttribute (el, doc, Template_ATTR_name);
+      // check if the component is complete
+      CheckNotEmptyComponent (el, doc);
       break;
 
     case Template_EL_union:

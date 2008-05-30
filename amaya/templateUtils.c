@@ -367,6 +367,7 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 void DumpElementSubPath(Element el, char* buffer)
 {
+#ifdef AMAYA_DEBUG
   Element parent = TtaGetParent(el);
   if(parent==NULL)
     strcpy(buffer, TtaGetElementTypeName(TtaGetElementType(el)));
@@ -376,6 +377,7 @@ void DumpElementSubPath(Element el, char* buffer)
       strcat(buffer, "/");
       strcat(buffer, TtaGetElementTypeName(TtaGetElementType(el)));
     }
+#endif /* AMAYA_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -383,9 +385,11 @@ void DumpElementSubPath(Element el, char* buffer)
   ----------------------------------------------------------------------*/
 void DumpElementPath(Element el)
 {
+#ifdef AMAYA_DEBUG
   char buffer[MAX_LENGTH];
   DumpElementSubPath(el, buffer);
   printf("%s\n", buffer);
+#endif /* AMAYA_DEBUG */
 }
 
 
@@ -394,6 +398,7 @@ void DumpElementPath(Element el)
   ----------------------------------------------------------------------*/
 void DumpTemplateElement(Element el, Document doc)
 {
+#ifdef AMAYA_DEBUG
   ElementType elType;
   SSchema     schema = TtaGetSSchema ("Template", doc);
   char*       str;
@@ -501,6 +506,7 @@ void DumpTemplateElement(Element el, Document doc)
             }
         }
     }
+#endif /* AMAYA_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -508,6 +514,7 @@ void DumpTemplateElement(Element el, Document doc)
   ----------------------------------------------------------------------*/
 void DumpSubtree(Element el, Document doc, int off)
 {
+#ifdef AMAYA_DEBUG
   Element child = TtaGetFirstChild(el);
   int i;
   
@@ -521,7 +528,7 @@ void DumpSubtree(Element el, Document doc, int off)
       DumpSubtree(child, doc, off+1);
       TtaNextSibling(&child);
     }
-  
+#endif /* AMAYA_DEBUG */
 }
 
 /*----------------------------------------------------------------------

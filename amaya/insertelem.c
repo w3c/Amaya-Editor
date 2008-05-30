@@ -191,24 +191,28 @@ static void FillInsertableElementFromElemAttribute (XTigerTemplate t,
                                                     Element elem, Element refelem,
                                                     int attrib, DLList list, int level)
 {
-  ElementType     elType        = TtaGetElementType(elem);
+  ElementType     elType = TtaGetElementType(elem);
   AttributeType   attributeType = {elType.ElSSchema, attrib};
-  Attribute       att           = TtaGetAttribute (elem, attributeType);
-  int             size          = TtaGetTextAttributeLength (att);
-  char*           types         = (char *) TtaGetMemory (size+1); 
+  Attribute       att = TtaGetAttribute (elem, attributeType);
 
-  TtaGiveTextAttributeValue (att, types, &size);
-  SearchSet       set           = Template_GetDeclarationSetFromNames(t, types, true);
-  ForwardIterator iter;
-  SearchSetNode   node;
-   
-  iter = SearchSet_GetForwardIterator(set);
-  ITERATOR_FOREACH(iter, SearchSetNode, node)
+  if (att)
     {
-      FillUnionResolvedPossibleElement(t, (Declaration)node->elem, refelem, NULL, list, level);
+      int             size = TtaGetTextAttributeLength (att);
+      char           *types = (char *) TtaGetMemory (size+1);
+      SearchSet       set;
+      ForwardIterator iter;
+      SearchSetNode   node;
+
+      TtaGiveTextAttributeValue (att, types, &size);
+      set = Template_GetDeclarationSetFromNames(t, types, true);
+      iter = SearchSet_GetForwardIterator(set);
+      ITERATOR_FOREACH(iter, SearchSetNode, node)
+        {
+          FillUnionResolvedPossibleElement(t, (Declaration)node->elem, refelem, NULL, list, level);
+        }
+      SearchSet_Destroy (set);
+      TtaFreeMemory (types);
     }
-  SearchSet_Destroy (set);
-  TtaFreeMemory (types);
 }
 #endif/* TEMPLATES */
 
@@ -259,6 +263,8 @@ void FillInsertableElemList (Document doc, Element el, DLList list)
     while (elem && cont)
     {
       elType = TtaGetElementType (elem);
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+      {
       switch (elType.ElTypeNum)
         {
         case Template_EL_repeat:
@@ -291,6 +297,7 @@ void FillInsertableElemList (Document doc, Element el, DLList list)
           cont = FALSE;
           break;
         }
+      }
       elem = GetFirstTemplateParentElement (elem);
       level ++;
     }

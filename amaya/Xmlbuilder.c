@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -36,13 +36,13 @@
 
 /* Mapping table of XML attribute values */
 AttrValueMapping XmlAttrValueMappingTable[] =
-{
-   /* XML attribute xml:space */
-   {HTML_ATTR_xml_space, "default", XML_ATTR_xml_space_VAL_xml_space_default},
-   {HTML_ATTR_xml_space, "preserve", XML_ATTR_xml_space_VAL_xml_space_preserve},
+  {
+    /* XML attribute xml:space */
+    {HTML_ATTR_xml_space, "default", XML_ATTR_xml_space_VAL_xml_space_default},
+    {HTML_ATTR_xml_space, "preserve", XML_ATTR_xml_space_VAL_xml_space_preserve},
 
-   {0, "", 0}			/* Last entry. Mandatory */
-};
+    {0, "", 0}			/* Last entry. Mandatory */
+  };
 
 /* maximum size of error messages */
 #define MaxMsgLength 200
@@ -57,39 +57,39 @@ static char OldCssName[MAX_LENGTH];
 void XmlAttributeComplete (Attribute attr, Element el, Document doc)
 
 {
-   AttributeType    attrType, attrType1;
-   Attribute        intAttr;
-   int		    attrKind;
+  AttributeType    attrType, attrType1;
+  Attribute        intAttr;
+  int		    attrKind;
 
-   TtaGiveAttributeType (attr, &attrType, &attrKind);
+  TtaGiveAttributeType (attr, &attrType, &attrKind);
 
-   switch (attrType.AttrTypeNum)
-     {
-     case XML_ATTR_Language:
-       if (el == TtaGetRootElement (doc))
-	 /* it's the lang attribute on the root element */
-	 /* set the RealLang attribute */
-	 {
-	   attrType1.AttrSSchema = attrType.AttrSSchema ;
-	   attrType1.AttrTypeNum = XML_ATTR_RealLang;
-	   if (!TtaGetAttribute (el, attrType1))
-	     /* it's not present. Add it */
-	     {
-	       intAttr = TtaNewAttribute (attrType1);
-	       TtaAttachAttribute (el, intAttr, doc);
-	       TtaSetAttributeValue (intAttr, XML_ATTR_RealLang_VAL_Yes_,
-				     el, doc);
-	     }
-	 }
-       break;
-     default:
-       break;
-     }
-   return;
+  switch (attrType.AttrTypeNum)
+    {
+    case XML_ATTR_Language:
+      if (el == TtaGetRootElement (doc))
+        /* it's the lang attribute on the root element */
+        /* set the RealLang attribute */
+        {
+          attrType1.AttrSSchema = attrType.AttrSSchema ;
+          attrType1.AttrTypeNum = XML_ATTR_RealLang;
+          if (!TtaGetAttribute (el, attrType1))
+            /* it's not present. Add it */
+            {
+              intAttr = TtaNewAttribute (attrType1);
+              TtaAttachAttribute (el, intAttr, doc);
+              TtaSetAttributeValue (intAttr, XML_ATTR_RealLang_VAL_Yes_,
+                                    el, doc);
+            }
+        }
+      break;
+    default:
+      break;
+    }
+  return;
 }
 
 /*----------------------------------------------------------------------
-   A new element has been selected. Synchronize selection in source view.      
+  A new element has been selected. Synchronize selection in source view.      
   ----------------------------------------------------------------------*/
 void XmlSelectionChanged (NotifyElement *event)
 {
@@ -103,43 +103,43 @@ void XmlSelectionChanged (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-   CreateXmlAttribute
-   create an attribute of type attrType for the element el.
+  CreateXmlAttribute
+  create an attribute of type attrType for the element el.
   ----------------------------------------------------------------------*/
 void CreateXmlAttribute (Element el, AttributeType attrType,
-			 char *text, ThotBool isInvalid,
-			 Document doc, Attribute *lastAttribute,
-			 Element *lastAttrElement)
+                         char *text, ThotBool isInvalid,
+                         Document doc, Attribute *lastAttribute,
+                         Element *lastAttrElement)
      
 {
 }
 
 /*----------------------------------------------------------------------
-   MapXmLAttributeValue
-   Search in the Attribute Value Mapping Table the entry for the attribute
-   ThotAtt and its value AttrVal. Returns the corresponding Thot value.
+  MapXmLAttributeValue
+  Search in the Attribute Value Mapping Table the entry for the attribute
+  ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
 void MapXmlAttributeValue (char *AttrVal, const AttributeType * attrType,
-			   int *value)
+                           int *value)
 
 {
   *value = 0;
 
-   if (attrType->AttrTypeNum == XML_ATTR_xml_space)
-     {
-       if (strcmp (AttrVal, "preserve") == 0)
-	 *value = XML_ATTR_xml_space_VAL_xml_space_preserve;
-       else
-	 *value = XML_ATTR_xml_space_VAL_xml_space_default;
-     }
+  if (attrType->AttrTypeNum == XML_ATTR_xml_space)
+    {
+      if (strcmp (AttrVal, "preserve") == 0)
+        *value = XML_ATTR_xml_space_VAL_xml_space_preserve;
+      else
+        *value = XML_ATTR_xml_space_VAL_xml_space_default;
+    }
 
 }
 
 /*----------------------------------------------------------------------
-   MapGenericXmlAttribute
+  MapGenericXmlAttribute
   ----------------------------------------------------------------------*/
 void MapGenericXmlAttribute (char *attrName, AttributeType *attrType,
-			     Document doc)
+                             Document doc)
 {
   if (attrType->AttrSSchema == NULL)
     return;
@@ -164,47 +164,56 @@ void MapGenericXmlAttribute (char *attrName, AttributeType *attrType,
 void XmlElementComplete (ParserData *context, Element el, int *error)
 
 {
-  Document  doc;   
-  Element   lastChild;
+  Document     doc;   
+  Element      lastChild;
+  ElementType  elType;
 
   doc = context->doc;
   if (el && doc)
     {
       /* get the last child of the closed element */
       lastChild = TtaGetLastChild (el);
-      
       if (lastChild == NULL)
-	/* This is an empty element */
-	/* Add a specific presentation rule */
-	TtaAddEmptyBox (el);
+        {
+          /* This is an empty element */
+          /* Add a specific presentation rule */
+          //TtaAddEmptyBox (el);
+          elType = TtaGetElementType (el);
+          if (elType.ElTypeNum != XML_EL_XML_Element)
+            {
+              elType.ElTypeNum == XML_EL_XML_Element;
+              lastChild = TtaNewElement (doc, elType);
+              TtaInsertFirstChild (&lastChild, el, doc);
+            }
+        }
     }
   return;
 }
 
 /*----------------------------------------------------------------------
-   CreateXmlLinePRule
-   Create a generic 'Line' presentation rule for each element that
-   has at least one Text child
+  CreateXmlLinePRule
+  Create a generic 'Line' presentation rule for each element that
+  has at least one Text child
   ----------------------------------------------------------------------*/
 void  CreateXmlLinePRule (Element elText, Document doc)
   
 {
-   ElementType  parentType;
-   Element      parent;
+  ElementType  parentType;
+  Element      parent;
 
-   parent = TtaGetParent (elText);
-   if (parent != NULL)
-     {
-       parentType = TtaGetElementType (parent);
-       TtaSetXmlInLineRule (parentType, doc);
-     }
+  parent = TtaGetParent (elText);
+  if (parent != NULL)
+    {
+      parentType = TtaGetElementType (parent);
+      TtaSetXmlInLineRule (parentType, doc);
+    }
 }
 
 /*----------------------------------------------------------------------
   MapGenericXmlType
   ----------------------------------------------------------------------*/
 void  MapGenericXmlElement (const char *XMLName, ElementType *elType,
-			    char **mappedName, Document doc)
+                            char **mappedName, Document doc)
 {
   if (elType->ElSSchema == NULL)
     return;
@@ -222,9 +231,9 @@ void  MapGenericXmlElement (const char *XMLName, ElementType *elType,
 }
 
 /*----------------------------------------------------------------------
-   InsertCssInXml
-   Create a processing instruction containing the reference to 
-   a CSS stylesheet.
+  InsertCssInXml
+  Create a processing instruction containing the reference to 
+  a CSS stylesheet.
   ----------------------------------------------------------------------*/
 void InsertCssInXml (Document doc, View view)
 {
@@ -271,27 +280,27 @@ void InsertCssInXml (Document doc, View view)
       root = TtaGetRootElement (doc);
       TtaPreviousSibling (&root);
       if (root != NULL)
-	TtaInsertSibling (piEl, root, FALSE, doc);
+        TtaInsertSibling (piEl, root, FALSE, doc);
       else
-	{
-	  root = TtaGetMainRoot (doc);
-	  TtaInsertFirstChild (&piEl, root, doc);
-	}
+        {
+          root = TtaGetMainRoot (doc);
+          TtaInsertFirstChild (&piEl, root, doc);
+        }
       /* Create a xmlpi_line element as the first child of element xmlpi */
       elType.ElTypeNum = piLineNum;
       piLine = TtaNewElement (doc, elType);
       TtaRegisterElementCreate (piLine, doc);
       if (piLine != NULL)
-	{
-	  TtaInsertFirstChild (&piLine, piEl, doc);
-	  /* Create a text element with the name of that style sheet */
-	  elType.ElTypeNum = 1;
-	  el = TtaNewElement (doc, elType);
-	  TtaRegisterElementCreate (el, doc);
-	  TtaInsertFirstChild (&el, piLine, doc);
-	  /* Select a new destination */
-	  SelectDestination (doc, el, FALSE, FALSE);
-	}
+        {
+          TtaInsertFirstChild (&piLine, piEl, doc);
+          /* Create a text element with the name of that style sheet */
+          elType.ElTypeNum = 1;
+          el = TtaNewElement (doc, elType);
+          TtaRegisterElementCreate (el, doc);
+          TtaInsertFirstChild (&el, piLine, doc);
+          /* Select a new destination */
+          SelectDestination (doc, el, FALSE, FALSE);
+        }
     }
   TtaCloseUndoSequence (doc);
   TtaSetStructureChecking (TRUE, doc);
@@ -300,63 +309,63 @@ void InsertCssInXml (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-   IsXmlStyleSheet                                           
+  IsXmlStyleSheet                                           
   ----------------------------------------------------------------------*/
 static Element IsXmlStyleSheet (Element el)
 {
-   Element	 parent;
-   ElementType	 parentType;
-   int           piLineNum, piNum;
-   char         *s;
+  Element	 parent;
+  ElementType	 parentType;
+  int           piLineNum, piNum;
+  char         *s;
 
-   parent = NULL;
+  parent = NULL;
 
-   parent = TtaGetParent (el);
-   if (parent != NULL)
-     {
-       parentType = TtaGetElementType (parent);
-       s = TtaGetSSchemaName (parentType.ElSSchema);
-       if (strcmp (s, "MathML") == 0)
-	 {
-	   piLineNum = MathML_EL_XMLPI_line;
-	   piNum = MathML_EL_XMLPI;
-	 }
-       else if (strcmp (s, "SVG") == 0)
-	 {
-	   piLineNum = SVG_EL_XMLPI_line;
-	   piNum = SVG_EL_XMLPI;
-	 }
-       else
-	 {
-	   piLineNum = XML_EL_xmlpi_line;
-	   piNum = XML_EL_xmlpi;
-	 }
-       if (parentType.ElTypeNum == piLineNum)
-	 {
-	   /* We are treating an xml pi */
-	   parent = TtaGetParent (parent);
-	   parentType = TtaGetElementType (parent);
-	   if (parentType.ElTypeNum != piNum)
-	     parent = NULL;
-	 }
-       else
-	 parent = NULL;
-     }
+  parent = TtaGetParent (el);
+  if (parent != NULL)
+    {
+      parentType = TtaGetElementType (parent);
+      s = TtaGetSSchemaName (parentType.ElSSchema);
+      if (strcmp (s, "MathML") == 0)
+        {
+          piLineNum = MathML_EL_XMLPI_line;
+          piNum = MathML_EL_XMLPI;
+        }
+      else if (strcmp (s, "SVG") == 0)
+        {
+          piLineNum = SVG_EL_XMLPI_line;
+          piNum = SVG_EL_XMLPI;
+        }
+      else
+        {
+          piLineNum = XML_EL_xmlpi_line;
+          piNum = XML_EL_xmlpi;
+        }
+      if (parentType.ElTypeNum == piLineNum)
+        {
+          /* We are treating an xml pi */
+          parent = TtaGetParent (parent);
+          parentType = TtaGetElementType (parent);
+          if (parentType.ElTypeNum != piNum)
+            parent = NULL;
+        }
+      else
+        parent = NULL;
+    }
 
-   return parent;
+  return parent;
 }
 
 /*----------------------------------------------------------------------
   XmlElementTypeInMenu
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 ThotBool XmlElementTypeInMenu (NotifyElement *event)
 {
   return TRUE; /* prevent Thot from putting this element name in the
-		  element creation menu */
+                  element creation menu */
 }
 
 /*----------------------------------------------------------------------
-   XmlStyleSheetWillBeModified                                             
+  XmlStyleSheetWillBeModified                                             
   ----------------------------------------------------------------------*/
 ThotBool XmlStyleSheetWillBeModified (NotifyOnTarget *event)
 {
@@ -370,35 +379,35 @@ ThotBool XmlStyleSheetWillBeModified (NotifyOnTarget *event)
       length = TtaGetTextLength (event->target) + 1;
       buffer = (char *)TtaGetMemory (length);
       if (buffer != NULL)
-	{
-	  TtaGiveTextContent (event->target, (unsigned char *)buffer, &length, &lang);
-	  buffer[length++] = EOS;
-	  /* Is it an xml stylesheet ? */
-	  ptr = strstr (buffer, "xml-stylesheet");
-	  if (ptr != NULL)
-	    {
-	      /* Search the name of the stylesheet */
-	      ptr = strstr (buffer, "href");
-	      if (ptr != NULL)
-		{
-		  ptr = strstr (ptr, "\"");
-		  ptr++;
-		}
-	      if (ptr != NULL)
-		{
-		  end = strstr (ptr, "\"");
-		  *end = EOS;
-		  strcpy (OldCssName, ptr);
-		}
-	    }
-	}
+        {
+          TtaGiveTextContent (event->target, (unsigned char *)buffer, &length, &lang);
+          buffer[length++] = EOS;
+          /* Is it an xml stylesheet ? */
+          ptr = strstr (buffer, "xml-stylesheet");
+          if (ptr != NULL)
+            {
+              /* Search the name of the stylesheet */
+              ptr = strstr (buffer, "href");
+              if (ptr != NULL)
+                {
+                  ptr = strstr (ptr, "\"");
+                  ptr++;
+                }
+              if (ptr != NULL)
+                {
+                  end = strstr (ptr, "\"");
+                  *end = EOS;
+                  strcpy (OldCssName, ptr);
+                }
+            }
+        }
       TtaFreeMemory (buffer);
     }
   return FALSE;
 }
 
 /*----------------------------------------------------------------------
-   XmlStyleSheetModified                                             
+  XmlStyleSheetModified                                             
   ----------------------------------------------------------------------*/
 void XmlStyleSheetModified (NotifyOnTarget *event)
 {
@@ -414,42 +423,42 @@ void XmlStyleSheetModified (NotifyOnTarget *event)
       length = TtaGetTextLength (event->target) + 1;
       buffer = (char *)TtaGetMemory (length);
       if (buffer != NULL)
-	{
-	  TtaGiveTextContent (event->target, (unsigned char *)buffer, &length, &lang);
-	  buffer[length++] = EOS;
-	  /* Is it an xml stylesheet ? */
-	  ptr = strstr (buffer, "xml-stylesheet");
-	  if (ptr != NULL)
-	    {
-	      /* Search the name of the stylesheet */
-	      ptr = strstr (buffer, "href");
-	      if (ptr != NULL)
-		{
-		  ptr = strstr (ptr, "=");
-		  ptr++;
-		  while (ptr[0] != EOS && ptr[0] == ' ')
-		    ptr++;
-		  if (ptr[0] != EOS)
-		    {
-		      delimitor = ptr[0];
-		      strcpy (cssname, &ptr[1]);
-		      end = strchr (cssname, delimitor);
-		      if (end && end[0] != EOS)
-			*end = EOS;
-		      if (OldCssName[0] != EOS && 
-			  (strcmp (OldCssName, cssname) != 0))
-			{
-			  NormalizeURL (OldCssName, event->document, pathname, documentname, NULL);
-			  RemoveStyle (pathname, event->document, TRUE, TRUE, NULL, CSS_EXTERNAL_STYLE);
-			  oldStructureChecking = TtaGetStructureChecking (event->document);
-			  TtaSetStructureChecking (FALSE, event->document);
-			  XmlStyleSheetPi (buffer, event->element);
-			  TtaSetStructureChecking (oldStructureChecking, event->document);
-			}
-		    }
-		}
-	    }
-	}
+        {
+          TtaGiveTextContent (event->target, (unsigned char *)buffer, &length, &lang);
+          buffer[length++] = EOS;
+          /* Is it an xml stylesheet ? */
+          ptr = strstr (buffer, "xml-stylesheet");
+          if (ptr != NULL)
+            {
+              /* Search the name of the stylesheet */
+              ptr = strstr (buffer, "href");
+              if (ptr != NULL)
+                {
+                  ptr = strstr (ptr, "=");
+                  ptr++;
+                  while (ptr[0] != EOS && ptr[0] == ' ')
+                    ptr++;
+                  if (ptr[0] != EOS)
+                    {
+                      delimitor = ptr[0];
+                      strcpy (cssname, &ptr[1]);
+                      end = strchr (cssname, delimitor);
+                      if (end && end[0] != EOS)
+                        *end = EOS;
+                      if (OldCssName[0] != EOS && 
+                          (strcmp (OldCssName, cssname) != 0))
+                        {
+                          NormalizeURL (OldCssName, event->document, pathname, documentname, NULL);
+                          RemoveStyle (pathname, event->document, TRUE, TRUE, NULL, CSS_EXTERNAL_STYLE);
+                          oldStructureChecking = TtaGetStructureChecking (event->document);
+                          TtaSetStructureChecking (FALSE, event->document);
+                          XmlStyleSheetPi (buffer, event->element);
+                          TtaSetStructureChecking (oldStructureChecking, event->document);
+                        }
+                    }
+                }
+            }
+        }
       TtaFreeMemory (buffer);
     }
   OldCssName[0] = EOS;
@@ -457,59 +466,59 @@ void XmlStyleSheetModified (NotifyOnTarget *event)
 }
 
 /*----------------------------------------------------------------------
-   XmlStyleSheetDeleted                                              
+  XmlStyleSheetDeleted                                              
   ----------------------------------------------------------------------*/
 ThotBool XmlStyleSheetDeleted (NotifyElement * event)
 {
-   Element	 parent;
-   char          buffer[MAX_LENGTH];
-   char         *ptr = NULL;
-   int           length;
-   Language      lang;
+  Element	 parent;
+  char          buffer[MAX_LENGTH];
+  char         *ptr = NULL;
+  int           length;
+  Language      lang;
  
-   parent = IsXmlStyleSheet (event->element);
-   if (parent != NULL)
-     {
-       length = MAX_LENGTH - 1;
-       TtaGiveTextContent (event->element, (unsigned char *)buffer, &length, &lang);
-       buffer[length++] = EOS;
-       /* Is it an xml stylesheet ? */
-       ptr = strstr (buffer, "xml-stylesheet");
-       if (ptr != NULL)
-	 RemoveLink (parent, event->document);
-     }
-   /* let Thot perform normal operation */
-   return FALSE;
+  parent = IsXmlStyleSheet (event->element);
+  if (parent != NULL)
+    {
+      length = MAX_LENGTH - 1;
+      TtaGiveTextContent (event->element, (unsigned char *)buffer, &length, &lang);
+      buffer[length++] = EOS;
+      /* Is it an xml stylesheet ? */
+      ptr = strstr (buffer, "xml-stylesheet");
+      if (ptr != NULL)
+        RemoveLink (parent, event->document);
+    }
+  /* let Thot perform normal operation */
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
-   XmlStyleSheetPasted
+  XmlStyleSheetPasted
   ----------------------------------------------------------------------*/
 void XmlStyleSheetPasted (NotifyElement *event)
 {
-   Element	 parent;
-   Language      lang;
-   char          buffer[MAX_LENGTH];
-   char         *ptr = NULL;
-   int           length;
-   ThotBool      oldStructureChecking;
+  Element	 parent;
+  Language      lang;
+  char          buffer[MAX_LENGTH];
+  char         *ptr = NULL;
+  int           length;
+  ThotBool      oldStructureChecking;
 
-   parent = IsXmlStyleSheet (event->element);
-   if (parent != NULL)
-     {
-       length = MAX_LENGTH - 1;
-       TtaGiveTextContent (event->element, (unsigned char *)buffer, &length, &lang);
-       buffer[length++] = EOS;
-       /* Is it an xml stylesheet ? */
-       ptr = strstr (buffer, "xml-stylesheet");
-       if (ptr != NULL)
-	 {
-	   oldStructureChecking = TtaGetStructureChecking (event->document);
-	   TtaSetStructureChecking (FALSE, event->document);
-	   XmlStyleSheetPi (buffer, parent);
-	   TtaSetStructureChecking (oldStructureChecking, event->document);
-	 }
-     }
+  parent = IsXmlStyleSheet (event->element);
+  if (parent != NULL)
+    {
+      length = MAX_LENGTH - 1;
+      TtaGiveTextContent (event->element, (unsigned char *)buffer, &length, &lang);
+      buffer[length++] = EOS;
+      /* Is it an xml stylesheet ? */
+      ptr = strstr (buffer, "xml-stylesheet");
+      if (ptr != NULL)
+        {
+          oldStructureChecking = TtaGetStructureChecking (event->document);
+          TtaSetStructureChecking (FALSE, event->document);
+          XmlStyleSheetPi (buffer, parent);
+          TtaSetStructureChecking (oldStructureChecking, event->document);
+        }
+    }
 }
 
 /*----------------------------------------------------------------------

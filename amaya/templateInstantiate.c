@@ -686,13 +686,17 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
         ProcessAttr (dec->usedIn, newEl, doc);
 
         /* Copy elements from new use to existing use. */
+#ifdef AMAYA_DEBUG
         DumpSubtree(newEl, doc, 0);
-        while ((child = TtaGetFirstChild(newEl)))
-        {
-          TtaRemoveTree (child, doc);
-          child = InsertWithNotify (child, current, el, doc);
-          current = child; 
-        }
+#endif /* AMAYA_DEBUG */
+        child = TtaGetFirstChild(newEl);
+        while (child)
+          {
+            // move the new subtree to the document
+            TtaRemoveTree (child, doc);
+            current = InsertWithNotify (child, current, el, doc);
+            child = TtaGetFirstChild(newEl);
+          }
         
         /* Copy currentType attribute. */
         //attrCurrentTypeValue = GetAttributeStringValue (el, Template_ATTR_currentType, NULL);
@@ -1015,7 +1019,8 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
   if (!t || !el)
     return;
   
-  static int off = 0;
+#ifdef AMAYA_DEBUG
+ static int off = 0;
   int i;
   off++;
   printf("ParseTemplate ");
@@ -1023,6 +1028,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
     printf(" ");
   DumpTemplateElement(el, doc);
   printf("\n");
+#endif /* AMAYA_DEBUG */
   
   name = TtaGetSSchemaName (elType.ElSSchema);
   if (!strcmp (name, "Template"))
@@ -1126,7 +1132,9 @@ void DoInstanceTemplate (char *templatename)
   if (!t)
     return;
 
+#ifdef AMAYA_DEBUG
   printf("DoInstanceTemplate %s\n", templatename);
+#endif /* AMAYA_DEBUG */
   
   doc = GetTemplateDocument (t);
   root =	TtaGetMainRoot (doc);
@@ -1241,14 +1249,16 @@ void Template_PreInstantiateComponents (XTigerTemplate t)
   if (!t)
     return;
 
+#ifdef AMAYA_DEBUG
   DumpAllDeclarations();
-  
+#endif /* AMAYA_DEBUG */  
   ForwardIterator iter = SearchSet_GetForwardIterator(GetComponents(t));
   Declaration     dec;
   SearchSetNode   node;
 
+#ifdef AMAYA_DEBUG
   printf("Template_PreInstantiateComponents %s\n", t->uri);
-  
+#endif /* AMAYA_DEBUG */  
   ITERATOR_FOREACH(iter, SearchSetNode, node)
     {
       dec = (Declaration) node->elem;

@@ -342,12 +342,11 @@ XTigerTemplate CreateHTMLLibrary ()
   
   // Add predefined unions
   i=0;
-  while (XTigerHTMLUnions[i]!=NULL)
+  while (XTigerHTMLUnions[i] != NULL)
     {
       Template_DeclareNewUnion (lib, XTigerHTMLUnions[i], XTigerHTMLUnions[i+1], NULL);
       i+=2;
     }
-  
   return lib;
 #else
   return NULL;
@@ -1451,7 +1450,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
     }
   
   /* Unknowns : */
-  if (!SearchSet_IsEmpty(t->unknowns))
+  if (!SearchSet_IsEmpty (t->unknowns))
     {
       fprintf (file, "\n\nUNKNWONS\n");
       fprintf (file, "------------");
