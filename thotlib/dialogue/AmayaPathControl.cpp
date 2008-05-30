@@ -88,6 +88,7 @@ void AmayaPathControl::SetSelection(Element elem)
   while (pEl)
     {
       elType = TtaGetElementType (Element(pEl));
+      xtiger = FALSE;
       if (pEl->ElParent &&
           !HiddenType (pEl) &&
           (!WholeColumnSelected ||
