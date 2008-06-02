@@ -4577,10 +4577,19 @@ static void ExportXmlText (Document doc, PtrTextBuffer pBT, ThotBool lineBreak,
   while (b)
     {
       i = 0;
+      if (b->BuContent[i] == SPACE && lineBreak && !entityName)
+        {
+          // generate a linebreak
+          PutChar (EOL, fnum, NULL, doc, lineBreak, translate, entityName);
+          i++;
+        }
       while (i < b->BuLength && b->BuContent[i] != EOS)
         {
           c = (wchar_t) b->BuContent[i];
-          PutChar (c, fnum, NULL, doc, lineBreak, translate, entityName);
+          if (c == SPACE && i == b->BuLength-1)
+            PutChar (EOL, fnum, NULL, doc, lineBreak, translate, entityName);
+          else
+            PutChar (c, fnum, NULL, doc, lineBreak, translate, entityName);
           /* Next character */
           i++;
         }
@@ -4685,6 +4694,9 @@ void ExportXmlElement (Document doc, PtrElement pEl,
                     {
                       /* Don't export hidden elements */
                       startName[0] = EOS;
+                      if (pEl->ElNext && strcmp (pRe1->SrOrigName, "XML_Element") == 0)
+                        // but keep newlines
+                        strcpy (startName, "\n");
                       pChild = pEl->ElNext;
                       endName[0] = EOS;
                       specialTag = TRUE;

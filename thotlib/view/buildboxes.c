@@ -74,6 +74,7 @@ static int             BiwIndex = 0;
 #include "language_f.h"
 #include "memory_f.h"
 #include "picture_f.h"
+#include "registry_f.h"
 #include "scroll_f.h"
 #include "stix_f.h"
 #include "structselect_f.h"
@@ -2515,6 +2516,20 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
         }
       /* New values of margins, paddings and borders */
       pAb->AbMBPChange = FALSE;
+
+      // check if place holder are displayed
+      if (TypeHasException (ExcIsPlaceholder, pAb->AbElement->ElTypeNumber, pSS))
+        {
+          ThotBool show;
+          TtaGetEnvBoolean ("SHOW_PLACEHOLDER", &show);
+          if (!show)
+            {
+              pAb->AbTopBColor = -1;
+              pAb->AbRightBColor = -1;
+              pAb->AbBottomBColor = -1;
+              pAb->AbLeftBColor = -1;
+            }
+        }
       ComputeMBP (pAb, frame, TRUE, FALSE);
       ComputeMBP (pAb, frame, FALSE, FALSE);
 

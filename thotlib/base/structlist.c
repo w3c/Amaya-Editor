@@ -1038,8 +1038,8 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
           if (pAb->AbTypeNum == 0)
             fprintf (fileDescriptor, ".list-item-marker");
           else
-            fprintf (fileDescriptor, ".%s", pAb->AbPSchema->
-                     PsPresentBox->PresBox[pAb->AbTypeNum - 1]->PbName);
+            fprintf (fileDescriptor, ".%s",
+                      pAb->AbPSchema->PsPresentBox->PresBox[pAb->AbTypeNum - 1]->PbName);
         }
       fprintf (fileDescriptor, " TypeNum:%d", pAb->AbTypeNum);
       if (pAb->AbPresentationBox)

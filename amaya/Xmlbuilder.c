@@ -177,13 +177,13 @@ void XmlElementComplete (ParserData *context, Element el, int *error)
         {
           /* This is an empty element */
           /* Add a specific presentation rule */
-          //TtaAddEmptyBox (el);
           elType = TtaGetElementType (el);
           if (elType.ElTypeNum != XML_EL_XML_Element)
             {
-              elType.ElTypeNum == XML_EL_XML_Element;
-              lastChild = TtaNewElement (doc, elType);
-              TtaInsertFirstChild (&lastChild, el, doc);
+              TtaAddEmptyBox (el);
+              //elType.ElTypeNum == XML_EL_XML_Element;
+              //lastChild = TtaNewElement (doc, elType);
+              //TtaInsertFirstChild (&lastChild, el, doc);
             }
         }
     }

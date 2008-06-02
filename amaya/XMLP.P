@@ -1,6 +1,6 @@
-	{ Thot presentation schema for Generic XML
+        { Thot presentation schema for Generic XML
 
-	  L. Carcone	January 2001	}
+          L. Carcone        January 2001        }
 
 PRESENTATION XML;
 
@@ -47,8 +47,12 @@ DEFAULT
    VertRef: * . Left;
    Width: auto;
    Height: Enclosed . Height;
+   VertPos: HRef = Previous . HRef;
+   HorizPos: Left = Previous . Right;
+{
    VertPos: Top = Previous . Bottom;
    HorizPos: Left = Enclosing . Left;
+}
    Hyphenate: Enclosing =;
    LineSpacing: Enclosing =;
    LineWeight: Enclosing =;
@@ -66,10 +70,11 @@ DEFAULT
    Depth: Enclosing =;
    FillPattern: nopattern;
    IN Structure_view
-	BEGIN
-	VertPos: Top = Previous . Bottom;
-	Width: Enclosed . Width;
-	END;
+      BEGIN
+      HorizPos: Left = Enclosing . Left;
+      VertPos: Top = Previous . Bottom;
+      Width: Enclosed . Width;
+      END;
    END;
 
 BOXES
@@ -77,417 +82,458 @@ BOXES
 { presentation boxes }
 
    ElementName: BEGIN
-	Content: (ElemName);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Font: TAG_Font;
-		Style: TAG_Style;
-		Weight: TAG_Weight;
-		Visibility: TAG_Visibility;
-		Foreground: TAG_Color;
-		END;
-	END;
+        Content: (ElemName);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Size: TAG_FONTSIZE;
+                Font: TAG_Font;
+                Style: TAG_Style;
+                Weight: TAG_Weight;
+                Visibility: TAG_Visibility;
+                Foreground: TAG_Color;
+                END;
+        END;
 
    VerticalLine: BEGIN
-	Content: Graphics 'W';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		VertPos: Top = Creator . Top;
-		HorizPos: Left = Enclosing . Left;
-		Height: Creator . Height;
-		Width: 1.1;
-		LineWeight: 1 px;
-		Visibility: TAG_Visibility;
-		Foreground: TAG_Color;
-		END;
-	END;
+        Content: Graphics 'W';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                VertPos: Top = Creator . Top;
+                HorizPos: Left = Enclosing . Left;
+                Height: Creator . Height;
+                Width: 1.1;
+                LineWeight: 1 px;
+                Visibility: TAG_Visibility;
+                Foreground: TAG_Color;
+                END;
+        END;
 
    AttrName: BEGIN
-	Content: (Text ' ' AttributeName Text '=');
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
- 		Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;
-		Foreground: ATTR_Color;
-		END;
-	END;
+        Content: (Text ' ' AttributeName Text '=');
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                 Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;
+                Foreground: ATTR_Color;
+                END;
+        END;
 
    AttrValue: BEGIN
-	Content: (AttributeValue);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
-		Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;
-		Foreground: ATTRVALUE_Color;
-		END;
-	END;
+        Content: (AttributeValue);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;
+                Foreground: ATTRVALUE_Color;
+                END;
+        END;
 
   ATTR_xml_space_default: BEGIN
-	Content: Text ' xml:space=default';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
+        Content: Text ' xml:space=default';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
 
   ATTR_xml_space_preserve: BEGIN
-	Content: Text ' xml:space=preserve';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
+        Content: Text ' xml:space=preserve';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
 
    Comment_Start:
-	BEGIN
-	Content: Text '<!--';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		HorizRef: Enclosed . HRef;
-		END;
-	END;
+        BEGIN
+        Content: Text '<!--';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                HorizRef: Enclosed . HRef;
+                END;
+        END;
 
    Comment_End:
-	BEGIN
-	Content: Text '-->';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		HorizRef: Enclosed . HRef;
-		VertPos: HRef = Previous . HRef;
-		HorizPos: Left = Previous . Right;
-		END;
-	END;
+        BEGIN
+        Content: Text '-->';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                HorizRef: Enclosed . HRef;
+                VertPos: HRef = Previous . HRef;
+                HorizPos: Left = Previous . Right;
+                END;
+        END;
 
    PI_Start:
-	BEGIN
-	Content: Text '<?';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		HorizRef: Enclosed . HRef;
-		Foreground: TAG_Color;
-		END;
-	END;
+        BEGIN
+        Content: Text '<?';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                HorizRef: Enclosed . HRef;
+                Foreground: TAG_Color;
+                END;
+        END;
 
    PI_End:
-	BEGIN
-	Content: Text '?>';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		HorizRef: Enclosed . HRef;
-		Foreground: TAG_Color;
-		VertPos: HRef = Previous . HRef;
-		HorizPos: Left = Previous . Right;
-		END;
-	END;
+        BEGIN
+        Content: Text '?>';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                HorizRef: Enclosed . HRef;
+                Foreground: TAG_Color;
+                VertPos: HRef = Previous . HRef;
+                HorizPos: Left = Previous . Right;
+                END;
+        END;
 
  IndexBox: BEGIN
-	Content: Picture 'AmayaSrcSyncIndex.gif';
-	HorizPos: Left = Root . Left;
-	VertPos: Top = Creator . Top;
-	VertOverflow : Yes;
-	HorizOverflow : Yes;
-	Width : Enclosed . Width;
-	Inline: No;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
+        Content: Picture 'AmayaSrcSyncIndex.gif';
+        HorizPos: Left = Root . Left;
+        VertPos: Top = Creator . Top;
+        VertOverflow : Yes;
+        HorizOverflow : Yes;
+        Width : Enclosed . Width;
+        Inline: No;
+        Visibility: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
  CDATA_S: BEGIN
-	Content: Text '<![CDATA[';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Foreground: TAG_Color;
-		END;
-	END;
+        Content: Text '<![CDATA[';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Foreground: TAG_Color;
+                END;
+        END;
 
  CDATA_E: BEGIN
-	Content: Text ']]>';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Foreground: TAG_Color;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		END;
-	END;
+        Content: Text ']]>';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Foreground: TAG_Color;
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                END;
+        END;
 
   Spacehead:
-	BEGIN
-	Background : White;
-	Foreground : Black;
-	Fillpattern : nopattern;
-	Underline: NoUnderline;
-	Content: Text ' ';
-	Adjust: Left;
-	HorizPos: Left = Previous PAGE_BREAK . Left;
-	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
-	Height:   1.2 cm;
-	Size : 8 pt;
-	Font: times;
-	Style: Roman;
-	Weight: Normal;
-	END;
+        BEGIN
+        Background : White;
+        Foreground : Black;
+        Fillpattern : nopattern;
+        Underline: NoUnderline;
+        Content: Text ' ';
+        Adjust: Left;
+        HorizPos: Left = Previous PAGE_BREAK . Left;
+        VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
+        Height:   1.2 cm;
+        Size : 8 pt;
+        Font: times;
+        Style: Roman;
+        Weight: Normal;
+        END;
 
   PageNum:
-	BEGIN
-	Background : White;
-	Foreground : Black;
-	Fillpattern : nopattern;
-	Underline: NoUnderline;
-	Content: (Value (CptPage, Arabic));
-	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
-	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
-	Width: Enclosed . Width;
-	Height: 1.6 cm;
-	Size : 11 pt;
-	Font: times;
-	Style: Roman;
-	Weight: Normal;
-	END;
+        BEGIN
+        Background : White;
+        Foreground : Black;
+        Fillpattern : nopattern;
+        Underline: NoUnderline;
+        Content: (Value (CptPage, Arabic));
+        HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
+        VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
+        Width: Enclosed . Width;
+        Height: 1.6 cm;
+        Size : 11 pt;
+        Font: times;
+        Style: Roman;
+        Weight: Normal;
+        END;
 
   BottomSpace:
-	BEGIN
-	Background : White;
-	Foreground : Black;
-	FillPattern: backgroundcolor;
-	Height:   1.4 cm;
-	Width: 1 pt;
-	Underline: NoUnderline;
-	VertPos: Bottom = Next PAGE_BREAK . Top;
-	HorizPos: Left = Next PAGE_BREAK . Left;
-	Content: (Graphics ' ');
-	END;
+        BEGIN
+        Background : White;
+        Foreground : Black;
+        FillPattern: backgroundcolor;
+        Height:   1.4 cm;
+        Width: 1 pt;
+        Underline: NoUnderline;
+        VertPos: Bottom = Next PAGE_BREAK . Top;
+        HorizPos: Left = Next PAGE_BREAK . Left;
+        Content: (Graphics ' ');
+        END;
 
   ThePage:
-	BEGIN
-	Background : White;
-	Foreground : Black;
-	FillPattern: backgroundcolor;
-	ShowBox;
-	Width: 15.6 cm;
-	Height: 25.9 cm;
-	VertPos: Top = Enclosing . Top + 1.7 cm;
-	HorizPos: Left = Enclosing . Left + 2.7 cm;
-	CreateAfter (Spacehead);
-	if not One(CptPage) CreateBefore (PageNum);
-	if not One(CptPage) CreateBefore (BottomSpace);
-	Underline: NoUnderline;
-	END;
+        BEGIN
+        Background : White;
+        Foreground : Black;
+        FillPattern: backgroundcolor;
+        ShowBox;
+        Width: 15.6 cm;
+        Height: 25.9 cm;
+        VertPos: Top = Enclosing . Top + 1.7 cm;
+        HorizPos: Left = Enclosing . Left + 2.7 cm;
+        CreateAfter (Spacehead);
+        if not One(CptPage) CreateBefore (PageNum);
+        if not One(CptPage) CreateBefore (BottomSpace);
+        Underline: NoUnderline;
+        END;
 
 RULES
 
    Document:
-	BEGIN
-	Page(ThePage);
-	Depth: 0;
-	Adjust: Left;
-	Indent: 0;
-	Font: Times;
-	Style: Roman;
-	Weight: Normal;
-	LineWeight: 0;
-	Height: Enclosing . Height min;
-	Size: DOC_FONTSIZE;
-	IN Structure_view BEGIN
-		Visibility: 10;
-		Size: DOC_FONTSIZE;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left;
-		Width: Enclosing . Width;
-		PaddingLeft: 0.4;
-		Font: Helvetica;
-		END;
-	END;
+        BEGIN
+        Page(ThePage);
+  VertPos: Top = Previous . Bottom;
+  HorizPos: Left = Enclosing . Left;
+        Depth: 0;
+        Adjust: Left;
+        Indent: 0;
+        Font: Times;
+        Style: Roman;
+        Weight: Normal;
+        LineWeight: 0;
+        Height: Enclosing . Height min;
+        Size: DOC_FONTSIZE;
+        IN Structure_view BEGIN
+                Visibility: 10;
+                Size: DOC_FONTSIZE;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left;
+                Width: Enclosing . Width;
+                PaddingLeft: 0.4;
+                Font: Helvetica;
+                END;
+        END;
 
    XML:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	MarginBottom: 2 cm;
-	MarginLeft: 0.5 cm;
-	MarginRight: 0.5 cm;
-	IN Structure_view BEGIN
-		VertPos: Top = Previous . Bottom;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-  	MarginBottom: 0;
-	  MarginLeft: 0;
-	  MarginRight: 0;
-	  END;
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        VertPos: Top = Previous . Bottom;
+        HorizPos: Left = Enclosing . Left;
+        MarginBottom: 2 cm;
+        MarginLeft: 0.5 cm;
+        MarginRight: 0.5 cm;
+        IN Structure_view BEGIN
+                VertPos: Top = Previous . Bottom;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+          MarginBottom: 0;
+          MarginLeft: 0;
+          MarginRight: 0;
+          END;
+        END;
 
    xmlcomment:
-	BEGIN
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: COMMENT_Visibility;
-		Font: COMMENT_Font;
-		Style: COMMENT_Style; Weight: COMMENT_Weight;
-		Width: Enclosed . Width ;
-		Foreground: COMMENT_Color;
-		END;
-	END;
+        BEGIN
+        Visibility: 0;
+        VertPos: Top = Previous . Bottom;
+        HorizPos: Left = Enclosing . Left;
+        IN Structure_view BEGIN
+                Visibility: COMMENT_Visibility;
+                Font: COMMENT_Font;
+                Style: COMMENT_Style; Weight: COMMENT_Weight;
+                Width: Enclosed . Width ;
+                Foreground: COMMENT_Color;
+                END;
+        END;
 
    xmlcomment_line:
         BEGIN
         IF First CreateFirst(Comment_Start);
         IF Last CreateLast(Comment_End);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: COMMENT_Visibility;
-		Width: Enclosed . Width;
-		VertPos: Top = Previous . Bottom + 0.2;
-		END;
+        Visibility: 0;
+        VertPos: Top = Previous . Bottom;
+        HorizPos: Left = Enclosing . Left;
+        IN Structure_view BEGIN
+                Visibility: COMMENT_Visibility;
+                Width: Enclosed . Width;
+                VertPos: Top = Previous . Bottom + 0.2;
+                END;
         END;
 
    xmlpi:
-	BEGIN
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: COMMENT_Visibility;
-		Font: COMMENT_Font;
-		Style: COMMENT_Style; Weight: COMMENT_Weight;
-		Width: Enclosed . Width;
-		END;
-	END;
+        BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: COMMENT_Visibility;
+                Font: COMMENT_Font;
+                Style: COMMENT_Style; Weight: COMMENT_Weight;
+                Width: Enclosed . Width;
+                END;
+        END;
+
+   XML_Element:
+        BEGIN
+        Width: 4 px;
+        Height: 4 px;
+        HorizRef: * . Bottom;
+        ShowBox;
+        FillPattern:  nopattern {backgroundcolor};
+        Background : Grey;
+        VertPos: Top = Previous . Bottom + 0.5;
+        HorizPos: Left = Enclosing . Left;
+        BorderTopWidth: 2 px;
+        BorderLeftWidth: 2 px;
+        BorderBottomWidth: 2 px;
+        BorderRightWidth: 2 px;
+        BorderTopColor: LightGrey1;
+        BorderLeftColor: LightGrey1;
+        BorderBottomColor: DarkGrey3;
+        BorderRightColor: DarkGrey3;
+        BorderTopStyle: Solid;
+        BorderLeftStyle: Solid;
+        BorderBottomStyle: Solid;
+        BorderRightStyle: Solid;
+        IN Structure_view BEGIN
+               FillPattern: nopattern;
+               END;
+        END;
 
    xmlpi_line:
         BEGIN
         IF First CreateFirst(PI_Start);
         IF Last CreateLast(PI_End);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: COMMENT_Visibility;
-		Width: Enclosed . Width;
-		VertPos: Top = Previous . Bottom + 0.2;
-		END;
+        Visibility: 0;
+        VertPos: Top = Previous . Bottom;
+        HorizPos: Left = Enclosing . Left;
+        IN Structure_view BEGIN
+                Visibility: COMMENT_Visibility;
+                Width: Enclosed . Width;
+                VertPos: Top = Previous . Bottom + 0.2;
+                END;
         END;
 
   doctype:
-	BEGIN
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Width: Enclosed . Width;
-		Foreground: TAG_Color;
-		END;
-	END;
+        BEGIN
+        Visibility: 0;
+        VertPos: Top = Previous . Bottom;
+        HorizPos: Left = Enclosing . Left;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Width: Enclosed . Width;
+                Foreground: TAG_Color;
+                END;
+        END;
 
   doctype_line:
-	BEGIN
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Width: Enclosed . Width;
-		VertPos: Top = Previous . Bottom + 0.2;
-		END;
-	END;
+        BEGIN
+        Visibility: 0;
+  VertPos: Top = Previous . Bottom;
+  HorizPos: Left = Enclosing . Left;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Width: Enclosed . Width;
+                VertPos: Top = Previous . Bottom + 0.2;
+                END;
+        END;
 
   cdata:
-	BEGIN
-	Visibility: Enclosing =;
-	MarginBottom: 0.4;
-	IN Structure_view BEGIN
-		Width: Enclosed . Width;
-	        MarginBottom: 0;
-		END;
-	END;
+        BEGIN
+        Visibility: Enclosing =;
+        MarginBottom: 0.4;
+        IN Structure_view BEGIN
+                Width: Enclosed . Width;
+                MarginBottom: 0;
+                END;
+        END;
 
   cdata_line:
-	BEGIN
-	Visibility: Enclosing =;
-	HorizPos: Left = Enclosing . Left;
-	IF First CreateFirst(CDATA_S);
-	IF Last CreateLast(CDATA_E);
-	IN Structure_view BEGIN
-		Width: Enclosed . Width;
-		END;
-	END;
+        BEGIN
+        Visibility: Enclosing =;
+        HorizPos: Left = Enclosing . Left;
+        IF First CreateFirst(CDATA_S);
+        IF Last CreateLast(CDATA_E);
+        IN Structure_view BEGIN
+                Width: Enclosed . Width;
+                END;
+        END;
 
    TEXT_UNIT:
-	BEGIN
-	Width: Enclosed . Width;
-	IN Structure_view BEGIN
-		if NOT within xmlcomment_line AND NOT within xmlpi_line AND NOT within doctype_line AND NOT within cdata_line
-		   BEGIN
-		   HorizPos: Left = Enclosing . Left;
-		   VertPos: Top = Previous . Bottom;
-		   END;
-		if within xmlcomment_line BEGIN
-		   HorizPos: Left = Previous . Right;
-                   VertPos: HRef = Previous . HRef;
-		   END;
-		if within xmlpi_line BEGIN
-		   HorizPos: Left = Previous . Right;
-                   VertPos: HRef = Previous . HRef;
-		   END;
-		if within doctype_line
+        BEGIN
+        Width: Enclosed . Width;
+        IN Structure_view BEGIN
+                if NOT within xmlcomment_line AND NOT within xmlpi_line AND NOT within doctype_line AND NOT within cdata_line
                    BEGIN
-		   HorizPos: Left = Previous . Right;
-                   VertPos: HRef = Previous . HRef;
+                   HorizPos: Left = Enclosing . Left;
+                   VertPos: Top = Previous . Bottom;
                    END;
-		if within cdata_line
-                   BEGIN
-		   HorizPos: Left = Previous . Right;
-                   VertPos: HRef = Previous . HRef;
+                if within xmlcomment_line BEGIN
+                   HorizPos: Left = Previous . Right;
+       VertPos: HRef = Previous . HRef;
                    END;
-		END;
-	END;
+                if within xmlpi_line BEGIN
+                   HorizPos: Left = Previous . Right;
+       VertPos: HRef = Previous . HRef;
+                   END;
+                if within doctype_line
+       BEGIN
+                   HorizPos: Left = Previous . Right;
+       VertPos: HRef = Previous . HRef;
+       END;
+                if within cdata_line
+       BEGIN
+                   HorizPos: Left = Previous . Right;
+       VertPos: HRef = Previous . HRef;
+       END;
+                END;
+        END;
 
    GRAPHICS_UNIT:
-	BEGIN
-	Visibility: Enclosing =;
-	Height: Enclosing . Height;
-	Width: Enclosing . Width;	
-	IN Structure_view
-	   Visibility: 0;
-	END;
+        BEGIN
+        Visibility: Enclosing =;
+        Height: Enclosing . Height;
+        Width: Enclosing . Width;        
+        IN Structure_view
+           Visibility: 0;
+        END;
 
    PICTURE_UNIT:
-	BEGIN
-	CreateBefore(ElementName);
-	LineBreak: No;
-	PageBreak: No;
-	HorizRef: * . Bottom;
-	IN Structure_view BEGIN
-		Height: 0;
-		Width: 0;
-		Visibility: 1;
-		VertPos: Top = Previous . Bottom;
-		HorizPos: Left = Enclosing . Left;
-		END;
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        LineBreak: No;
+        PageBreak: No;
+        HorizRef: * . Bottom;
+        IN Structure_view BEGIN
+                Height: 0;
+                Width: 0;
+                Visibility: 1;
+                VertPos: Top = Previous . Bottom;
+                HorizPos: Left = Enclosing . Left;
+                END;
+        END;
 
 ATTRIBUTES
 
   Language:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
   xmlid:
         BEGIN
         CreateBefore(AttrName);
@@ -501,29 +547,29 @@ ATTRIBUTES
         END;
 
   xml_space = xml_space_default:
-	CreateBefore (ATTR_xml_space_default);
+        CreateBefore (ATTR_xml_space_default);
 
   xml_space = xml_space_preserve:
-	CreateBefore (ATTR_xml_space_preserve);
+        CreateBefore (ATTR_xml_space_preserve);
 
   Highlight:
-	BEGIN
+        BEGIN
   if TEXT_UNIT
-	   CreateAfter (IndexBox);
+           CreateAfter (IndexBox);
   if SYMBOL_UNIT
-	   CreateAfter (IndexBox);
+           CreateAfter (IndexBox);
   if PICTURE_UNIT
-	   CreateAfter (IndexBox);
-	if not TEXT_UNIT and not SYMBOL_UNIT and not PICTURE_UNIT
-	   CreateLast (IndexBox);
-	END;
+           CreateAfter (IndexBox);
+        if not TEXT_UNIT and not SYMBOL_UNIT and not PICTURE_UNIT
+           CreateLast (IndexBox);
+        END;
 
 { 
   bar:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 }
 
 END

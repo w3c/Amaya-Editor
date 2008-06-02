@@ -6830,6 +6830,7 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvBoolean ("INSERT_NBSP", FALSE, FALSE);
   TtaSetEnvBoolean ("GENERATE_MATHPI", TRUE, FALSE);
   TtaSetEnvBoolean ("EDIT_SRC_TEMPLATE", FALSE, FALSE);
+  TtaSetEnvBoolean ("SHOW_PLACEHOLDER", TRUE, FALSE);
   TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", TRUE, FALSE);
   TtaSetEnvBoolean("OPEN_PANEL", TRUE, FALSE);
   TtaSetEnvBoolean("BROWSE_TOOLBAR", TRUE, FALSE);
