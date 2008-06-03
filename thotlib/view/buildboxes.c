@@ -48,6 +48,7 @@
 #include "animbox_f.h"
 #include "glwindowdisplay.h"
 #endif /* _GL */
+#include "tree_f.h"
 
 extern Frame_Ctl   FrameTable[MAX_FRAME+1];
 
@@ -2522,7 +2523,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
         {
           ThotBool show;
           TtaGetEnvBoolean ("SHOW_PLACEHOLDER", &show);
-          if (!show)
+          if (!show || ElementIsReadOnly (pAb->AbElement))
             {
               pAb->AbTopBColor = -1;
               pAb->AbRightBColor = -1;

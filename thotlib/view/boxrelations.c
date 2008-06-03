@@ -1225,7 +1225,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
           }
         rule->PosAbRef = pRefAb;
       }
-	   
+  
   if (pAb->AbFloat != 'N' &&
       (pAb->AbLeafType == LtPicture ||
        (pAb->AbLeafType == LtCompound &&

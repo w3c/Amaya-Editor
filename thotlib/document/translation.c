@@ -4694,7 +4694,7 @@ void ExportXmlElement (Document doc, PtrElement pEl,
                     {
                       /* Don't export hidden elements */
                       startName[0] = EOS;
-                      if (pEl->ElNext && strcmp (pRe1->SrOrigName, "XML_Element") == 0)
+                      if (pEl->ElNext && strcmp (pRe1->SrOrigName, "xmlbr") == 0)
                         // but keep newlines
                         strcpy (startName, "\n");
                       pChild = pEl->ElNext;
@@ -4749,13 +4749,13 @@ void ExportXmlElement (Document doc, PtrElement pEl,
                           strcat (endName, ">");
                         }
                     }
-                  ExportXmlBuffer (doc, (unsigned char *)startName, FALSE);
 
                   /* if needed, record the current line number of the main
                      output file in the element being translated */
                   if (recordLineNb)
                     pEl->ElLineNb = OutFile[fnum].OfLineNumber + 1;
-		  
+                  ExportXmlBuffer (doc, (unsigned char *)startName, FALSE);
+
                   /* Export the namespace declarations */
                   if (!specialTag)
                     ExportNsDeclaration (doc, pEl);
@@ -4830,6 +4830,8 @@ void ExportXmlElement (Document doc, PtrElement pEl,
           else
             {
               /* It is a terminal element */
+              if (recordLineNb)
+                pEl->ElLineNb = OutFile[fnum].OfLineNumber + 1;
               switch (pEl->ElLeafType)
                 {
                 case LtPicture:

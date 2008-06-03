@@ -22,7 +22,7 @@ STRUCT
 	= LIST OF (XML_Element) + (xmlcomment, xmlpi, cdata);
 
    XML_Element = ANY;
-           
+
    xmlcomment = LIST OF (xmlcomment_line = TEXT) - (xmlcomment);
 
    xmlpi = LIST OF (xmlpi_line = TEXT);
@@ -31,6 +31,8 @@ STRUCT
 	
    cdata = LIST OF (cdata_line = TEXT);
 
+   xmlbr = TEXT;
+   
 EXCEPT
    XML:                 MoveResize, NoMove;
    PICTURE:             NoMove, NoResize;
@@ -48,6 +50,7 @@ EXCEPT
    doctype:             NoCut, NotAnElementNode;
    cdata_line:          Hidden, MarkupPreserve;
    XML_Element:         Hidden, IsPlaceholder;
+   xmlbr:               Hidden, IsBreak;
    xml_space:           SpacePreserve;
    xmlid:		CssId;
 END

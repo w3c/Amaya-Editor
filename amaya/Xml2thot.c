@@ -2526,7 +2526,7 @@ void PutInXmlElement (char *data, int length)
         }
       // create an empty element
       elType.ElSSchema = CurrentParserCtxt->XMLSSchema;
-      elType.ElTypeNum = XML_EL_XML_Element;
+      elType.ElTypeNum = XML_EL_xmlbr;
       elText = TtaNewElement (XMLcontext.doc, elType);
       XmlSetElemLineNumber (elText);
       InsertXmlElement (&elText);
@@ -2638,31 +2638,35 @@ void PutInXmlElement (char *data, int length)
                   {
                     // replace the previous XML_Element by  a text unit
                     elType = TtaGetElementType (XMLcontext.lastElement);
-                    insSibling = (elType.ElTypeNum != XML_EL_XML_Element);
+                    insSibling = (elType.ElTypeNum != XML_EL_xmlbr);
+                    if (!insSibling)
+                      elText = XMLcontext.lastElement;
                   }
-                elType.ElSSchema = CurrentParserCtxt->XMLSSchema;
-                /* create a TEXT element */
-                elType.ElTypeNum = 1;
-                elText = TtaNewElement (XMLcontext.doc, elType);
-                if (elText)
+                if (insSibling)
                   {
-                    XmlSetElemLineNumber (elText);
-                    if (insSibling)
+                    elType.ElSSchema = CurrentParserCtxt->XMLSSchema;
+                    /* create a TEXT element */
+                    elType.ElTypeNum = 1;
+                    elText = TtaNewElement (XMLcontext.doc, elType);
+                    if (elText)
                       {
+                        XmlSetElemLineNumber (elText);
                         InsertXmlElement (&elText);
                         /* put the content of the input buffer into the TEXT element */
                         TtaSetTextContent (elText, (unsigned char *)&(buffer[i1]),
                                            XMLcontext.language, XMLcontext.doc);
                       }
-                    else
-                      {
-                        // replace the empty element by a text unit
-                        TtaInsertFirstChild (&elText, XMLcontext.lastElement, XMLcontext.doc);
-                        TtaSetTextContent (elText, (unsigned char *)"\n",
-                                           XMLcontext.language, XMLcontext.doc);
-                        TtaAppendTextContent (XMLcontext.lastElement,
-                                              (unsigned char *)&(buffer[i1]), XMLcontext.doc);
-                      }
+                  }
+                else
+                  {
+                    // replace the empty element by a text unit
+                    TtaChangeTypeOfElement (elText, XMLcontext.doc, 1);
+                    XmlSetElemLineNumber (elText);
+                    // TtaInsertFirstChild (&elText, XMLcontext.lastElement, XMLcontext.doc);
+                    TtaSetTextContent (elText, (unsigned char *)"\n",
+                                       XMLcontext.language, XMLcontext.doc);
+                    TtaAppendTextContent (XMLcontext.lastElement,
+                                          (unsigned char *)&(buffer[i1]), XMLcontext.doc);
                   }
                 /* associate a specific 'Line' presentation rule to the 
                    parent element if we are parsing a generic-XML element */

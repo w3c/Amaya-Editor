@@ -2425,7 +2425,7 @@ static ThotBool Checknewblock (PtrBox pBox, PtrBox pNextBox, PtrBox pBlock, int 
   if (pBox == NULL || pBox->BxAbstractBox == NULL ||
       pNextBox == NULL || pNextBox->BxAbstractBox == NULL)
   return FALSE;
-    
+
   if ((pBox->BxAbstractBox->AbLeafType == LtCompound &&
        (pBox->BxAbstractBox->AbDisplay == 'B' ||
         //pBox->BxAbstractBox->AbInLine ||

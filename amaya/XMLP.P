@@ -342,10 +342,10 @@ RULES
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width - STRUCT_INDENT;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-          MarginBottom: 0;
-          MarginLeft: 0;
-          MarginRight: 0;
-          END;
+                MarginBottom: 0;
+                MarginLeft: 0;
+                MarginRight: 0;
+                END;
         END;
 
    xmlcomment:
@@ -387,33 +387,6 @@ RULES
                 END;
         END;
 
-   XML_Element:
-        BEGIN
-        Width: 4 px;
-        Height: 4 px;
-        HorizRef: * . Bottom;
-        ShowBox;
-        FillPattern:  nopattern {backgroundcolor};
-        Background : Grey;
-        VertPos: Top = Previous . Bottom + 0.5;
-        HorizPos: Left = Enclosing . Left;
-        BorderTopWidth: 2 px;
-        BorderLeftWidth: 2 px;
-        BorderBottomWidth: 2 px;
-        BorderRightWidth: 2 px;
-        BorderTopColor: LightGrey1;
-        BorderLeftColor: LightGrey1;
-        BorderBottomColor: DarkGrey3;
-        BorderRightColor: DarkGrey3;
-        BorderTopStyle: Solid;
-        BorderLeftStyle: Solid;
-        BorderBottomStyle: Solid;
-        BorderRightStyle: Solid;
-        IN Structure_view BEGIN
-               FillPattern: nopattern;
-               END;
-        END;
-
    xmlpi_line:
         BEGIN
         IF First CreateFirst(PI_Start);
@@ -443,8 +416,8 @@ RULES
   doctype_line:
         BEGIN
         Visibility: 0;
-  VertPos: Top = Previous . Bottom;
-  HorizPos: Left = Enclosing . Left;
+        VertPos: Top = Previous . Bottom;
+        HorizPos: Left = Enclosing . Left;
         IN Structure_view BEGIN
                 Visibility: Enclosing =;
                 Width: Enclosed . Width;
@@ -460,6 +433,37 @@ RULES
                 Width: Enclosed . Width;
                 MarginBottom: 0;
                 END;
+        END;
+   xmlbr:
+        BEGIN
+        Visibility: 0;
+        END;
+
+   XML_Element:
+        BEGIN
+        Width: 4 px;
+        Height: 4 px;
+        HorizRef: * . Bottom;
+        ShowBox;
+        FillPattern:  nopattern;
+        Background : Grey;
+        VertPos: Top = Previous . Bottom + 1;
+        HorizPos: Left = Enclosing . Left;
+        BorderTopWidth: 2 px;
+        BorderLeftWidth: 2 px;
+        BorderBottomWidth: 2 px;
+        BorderRightWidth: 2 px;
+        BorderTopColor: LightGrey1;
+        BorderLeftColor: LightGrey1;
+        BorderBottomColor: DarkGrey3;
+        BorderRightColor: DarkGrey3;
+        BorderTopStyle: Solid;
+        BorderLeftStyle: Solid;
+        BorderBottomStyle: Solid;
+        BorderRightStyle: Solid;
+        IN Structure_view BEGIN
+               FillPattern: nopattern;
+               END;
         END;
 
   cdata_line:

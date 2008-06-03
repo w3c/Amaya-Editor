@@ -4251,6 +4251,13 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                   pAb->AbDead = TRUE;
                   pAb->AbInLine = FALSE;
                 }
+              else if (pAb->AbDisplay == 'B' &&
+                       pAb->AbElement->ElStructSchema->SsIsXml)
+                /* display: inline */
+                {
+                  pAb->AbInLine = TRUE;
+                  pAb->AbBuildAll = TRUE;
+                }
               else if (pAb->AbDisplay == 'I')
                 /* display: inline */
                 {
