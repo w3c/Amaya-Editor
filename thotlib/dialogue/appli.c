@@ -848,6 +848,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
             TtaAbortShowDialogue ();
             LocateSelectionInView (frame, x, y, 1);
 #if !defined (_WINDOWS) && !defined (_MACOS)
+						FrameToView (frame, &document, &view);
             DoCopyToClipboard (document, view, FALSE, TRUE);
 #endif /* _WINDOWS */
           }
