@@ -2646,7 +2646,7 @@ void PutInXmlElement (char *data, int length)
                   {
                     elType.ElSSchema = CurrentParserCtxt->XMLSSchema;
                     /* create a TEXT element */
-                    elType.ElTypeNum = 1;
+                    elType.ElTypeNum = HTML_EL_TEXT_UNIT;
                     elText = TtaNewElement (XMLcontext.doc, elType);
                     if (elText)
                       {
@@ -2660,7 +2660,7 @@ void PutInXmlElement (char *data, int length)
                 else
                   {
                     // replace the empty element by a text unit
-                    TtaChangeTypeOfElement (elText, XMLcontext.doc, 1);
+                    TtaChangeTypeOfElement (elText, XMLcontext.doc, XML_EL_TEXT_UNIT);
                     XmlSetElemLineNumber (elText);
                     // TtaInsertFirstChild (&elText, XMLcontext.lastElement, XMLcontext.doc);
                     TtaSetTextContent (elText, (unsigned char *)"\n",

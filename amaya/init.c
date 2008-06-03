@@ -4557,9 +4557,9 @@ void ShowToC (Document doc, View view)
   ----------------------------------------------------------------------*/
 ThotBool RequestView (NotifyDialog *event)
 {
-  ShowStructure (event->document, event->view);
-  /* Inform Thot that the view is open by Amaya */
-  return TRUE;
+  //ShowStructure (event->document, event->view);
+  /* Inform Thot that the view is not open by Amaya */
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
