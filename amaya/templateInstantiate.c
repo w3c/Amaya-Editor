@@ -1039,7 +1039,9 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           //Remove it and all of its children
           TtaDeleteTree(el, doc);
           //We must stop searching into this tree
+#ifdef AMAYA_DEBUG
           off--;
+#endif /* AMAYA_DEBUG */
           return;
           break;
         case Template_EL_component :
@@ -1111,7 +1113,9 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
       ParseTemplate (t, child, doc, loading);
       child = aux;
     }
+#ifdef AMAYA_DEBUG
   off--;
+#endif /* AMAYA_DEBUG */
 #endif /* TEMPLATES */
 }
 
