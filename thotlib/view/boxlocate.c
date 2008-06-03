@@ -79,7 +79,6 @@
   #include "AmayaAddPointEvtHandler.h"
   #include "AmayaMovePointEvtHandler.h"
   #include "AmayaMovingBoxEvtHandler.h"
-  #include "AmayaResizingBoxEvtHandler.h"
 #endif /* _WX */
 
 
@@ -2709,6 +2708,8 @@ void ApplyDirectResize (int frame, int xm, int ym,
               else if (pAb->AbHeight.DimValue == 0)
                 percentH = 100;
             }
+          else if(resHoriz && resVert)
+              percentH = (int) ( (double)height / (double)width * 100.0 );
           GeometryResize (frame, x, y, &width, &height, pBox,
                           xmin, xmax, ymin, ymax, xm, ym,
                           percentW, percentH);
