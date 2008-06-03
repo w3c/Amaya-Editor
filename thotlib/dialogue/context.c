@@ -95,6 +95,10 @@ static ThotBool FindColor (const char *colorplace,
      BgSelColor = col;
    else if (strcmp (colorplace, "FgSelectColor") == 0)
      FgSelColor = col;
+   else if (strcmp (colorplace, "ResizeBgSelectColor") == 0)
+     ResizeBgSelColor = col;
+   else if (strcmp (colorplace, "ResizeFgSelectColor") == 0)
+     ResizeFgSelColor = col;
    
 #ifdef _WINGUI 
    *colorpixel = col;
@@ -131,6 +135,9 @@ void TtaUpdateEditorColors (void)
   /* selection colors */
   found = FindColor ("FgSelectColor", "White", &White_Color);
   found = FindColor ("BgSelectColor", "#008BB2", &Black_Color);
+  /* resize selection colors */
+  found = FindColor ("ResizeFgSelectColor", "Black", &White_Color);
+  found = FindColor ("ResizeBgSelectColor", "SpringGreen",   &Black_Color);
   /* background color */
   found = FindColor ("BackgroundColor", "LightGrey1", &White_Color);
   /* drawing color */
@@ -147,6 +154,7 @@ void TtaUpdateEditorColors (void)
   Scroll_Color = BgMenu_Color;
   /* color for the inactive entries */
   found = FindColor ("InactiveItemColor", "LightGrey2", &InactiveB_Color);
+  
   WindowBColor = -1; /* color will be defined with the toolbar background */
 }
 

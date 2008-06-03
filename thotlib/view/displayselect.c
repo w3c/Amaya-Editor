@@ -82,22 +82,22 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
           TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
         {
           /* 8 control points */
-          DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-                         0, BgSelColor, 2);
-          DrawRectangle (frame, 0, 0, middleX, topY, thick, thick,
-                         0, BgSelColor, 2);
-          DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-                         0, BgSelColor, 2);
-          DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
-                         0, BgSelColor, 2);
-          DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
-                         0, BgSelColor, 2);
-          DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-                         0, BgSelColor, 2);
-          DrawRectangle (frame, 0, 0, middleX, bottomY, thick, thick,
-                         0, BgSelColor, 2);
-          DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                         0, BgSelColor, 2);
+          DrawRectangle (frame, 1, 0, leftX, topY, thick, thick,
+              ResizeFgSelColor, ResizeBgSelColor, 2);
+          DrawRectangle (frame, 1, 0, middleX, topY, thick, thick,
+              ResizeFgSelColor, ResizeBgSelColor, 2);
+          DrawRectangle (frame, 1, 0, rightX, topY, thick, thick,
+              ResizeFgSelColor, ResizeBgSelColor, 2);
+          DrawRectangle (frame, 1, 0, leftX, middleY, thick, thick,
+              ResizeFgSelColor, ResizeBgSelColor, 2);
+          DrawRectangle (frame, 1, 0, rightX, middleY, thick, thick,
+              ResizeFgSelColor, ResizeBgSelColor, 2);
+          DrawRectangle (frame, 1, 0, leftX, bottomY, thick, thick,
+              ResizeFgSelColor, ResizeBgSelColor, 2);
+          DrawRectangle (frame, 1, 0, middleX, bottomY, thick, thick,
+              ResizeFgSelColor, ResizeBgSelColor, 2);
+          DrawRectangle (frame, 1, 0, rightX, bottomY, thick, thick,
+              ResizeFgSelColor, ResizeBgSelColor, 2);
         }
       else if (pAb->AbLeafType == LtPolyLine && pBox->BxNChars > 1)
         {
