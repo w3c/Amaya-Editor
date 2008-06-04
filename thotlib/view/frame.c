@@ -1670,7 +1670,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
             {
               /* box in the current plane */
               pBox = pAb->AbBox;
-              selected = pAb->AbSelected;
+
+              if (!selected && pAb->AbSelected)
+                // open the selected sequence
+                selected = pAb->AbSelected;
  #ifdef _GL
               if (pAb->AbElement && not_g_opacity_displayed)
                 {
@@ -1951,6 +1954,9 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                   OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin,
                                            ymax, FALSE);
 #endif /* _GL */
+                  if (pAb->AbSelected)
+                    // close the selected sequence
+                    selected = FALSE;
                   if (pAb == root)
                     /* all boxes are now managed: stop the loop */
                     pAb = pNext = NULL;

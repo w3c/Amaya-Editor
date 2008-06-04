@@ -1158,14 +1158,15 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
           DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, fg);
         }
 
-      /* show the selection on the whole image */
+      /* show the selection on the whole graphics */
       if (selected && !pAb->AbPresentationBox)
         {
           if (pFrame->FrSelectOnePosition)
             DisplayPointSelection (frame, pBox,
                                    pFrame->FrSelectionBegin.VsIndBox, TRUE);
           else
-            DisplayPointSelection (frame, pBox, 0, TRUE);
+            DisplayPointSelection (frame, pBox, 0,
+                                   pAb->AbSelected && TtaIsSelectionUnique ());
         }
     }
 }
@@ -1374,7 +1375,8 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
             DisplayPointSelection (frame, pBox,
                                    pFrame->FrSelectionBegin.VsIndBox, TRUE);
           else if (pBox->BxNChars > 1)
-            DisplayPointSelection (frame, pBox, 0, TRUE);
+            DisplayPointSelection (frame, pBox, 0,
+                                   pAb->AbSelected && TtaIsSelectionUnique ());
         }
     }
 }
@@ -1442,14 +1444,15 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected,
           DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, fg);
         }
       
-      /* show the selection on the whole image */
+      /* show the selection on the whole path */
       if (selected)
         {
           if (pFrame->FrSelectOnePosition)
             DisplayPointSelection (frame, pBox,
                                    pFrame->FrSelectionBegin.VsIndBox, TRUE);
           else
-            DisplayPointSelection (frame, pBox, 0, TRUE);
+            DisplayPointSelection (frame, pBox, 0,
+                                   pAb->AbSelected && TtaIsSelectionUnique ());
         }
     }
 }
