@@ -185,6 +185,14 @@ extern void TtaSetSelectionMode (ThotBool withMenu);
 extern ThotBool TtaIsSelectionEmpty ();
 
 /*----------------------------------------------------------------------
+   TtaIsSelectionUnique
+
+   Returns TRUE if there is a current selection and only one element is
+   selected.
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsSelectionUnique ();
+
+/*----------------------------------------------------------------------
    TtaGiveFirstSelectedElement
 
    Returns the first element in the current selection in a given document.

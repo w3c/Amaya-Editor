@@ -31,6 +31,7 @@ extern void TtaSelectInterval ( void );
 extern void TtaUnselect ( Document document );
 extern void TtaSetSelectionMode ( ThotBool withMenu );
 extern ThotBool TtaIsSelectionEmpty ( void );
+extern ThotBool TtaIsSelectionUnique ( void );
 extern void TtaGiveFirstSelectedElement ( Document document,
                                           Element *selectedElement,
                                           int *firstCharacter,
@@ -74,6 +75,7 @@ extern void TtaSelectInterval ( void );
 extern void TtaUnselect ( Document document );
 extern void TtaSetSelectionMode ( ThotBool withMenu );
 extern ThotBool TtaIsSelectionEmpty ( void );
+extern ThotBool TtaIsSelectionUnique ( void );
 extern void TtaGiveFirstSelectedElement ( Document document,
                                             Element *selectedElement,
                                             int *firstCharacter,

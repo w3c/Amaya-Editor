@@ -41,6 +41,7 @@
 #include "memory_f.h"
 #include "picture_f.h"
 #include "registry_f.h"
+#include "selectionapi_f.h"
 #include "stix_f.h"
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
@@ -153,7 +154,7 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
                                     pFrame->FrSelectionBegin.VsXPos + 2,
                                     t, pFrame->FrSelectionBegin.VsBox);
           else
-            DisplayPointSelection (frame, pBox, 0);
+            DisplayPointSelection (frame, pBox, 0, TRUE);
         }
     }
 }
@@ -1162,9 +1163,9 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
         {
           if (pFrame->FrSelectOnePosition)
             DisplayPointSelection (frame, pBox,
-                                   pFrame->FrSelectionBegin.VsIndBox);
+                                   pFrame->FrSelectionBegin.VsIndBox, TRUE);
           else
-            DisplayPointSelection (frame, pBox, 0);
+            DisplayPointSelection (frame, pBox, 0, TRUE);
         }
     }
 }
@@ -1371,9 +1372,9 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
         {
           if (pFrame->FrSelectOnePosition)
             DisplayPointSelection (frame, pBox,
-                                   pFrame->FrSelectionBegin.VsIndBox);
+                                   pFrame->FrSelectionBegin.VsIndBox, TRUE);
           else if (pBox->BxNChars > 1)
-            DisplayPointSelection (frame, pBox, 0);
+            DisplayPointSelection (frame, pBox, 0, TRUE);
         }
     }
 }
@@ -1446,9 +1447,9 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected,
         {
           if (pFrame->FrSelectOnePosition)
             DisplayPointSelection (frame, pBox,
-                                   pFrame->FrSelectionBegin.VsIndBox);
+                                   pFrame->FrSelectionBegin.VsIndBox, TRUE);
           else
-            DisplayPointSelection (frame, pBox, 0);
+            DisplayPointSelection (frame, pBox, 0, TRUE);
         }
     }
 }
@@ -2471,6 +2472,12 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
                  (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost));
             }
         }
+      else if (!selfsel &&
+               pAb->AbEnclosing->AbSelected &&
+               TtaIsSelectionUnique () &&
+               pAb->AbLeafType == LtPicture)
+        // display the selection at the image level
+        selfsel = TRUE;
     }
   
 #ifdef _GL 

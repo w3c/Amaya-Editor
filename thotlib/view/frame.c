@@ -306,6 +306,8 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
               pBox = pClipAb->AbBox;
               k = EXTRA_GRAPH;
             }
+          else
+            pAb = pClipAb;
         }
 #endif /* _GL */
       if (pAb)
@@ -372,7 +374,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
             x1 = k;
           if (y1 < k)
             y1 = k;
-          DefClip (frame, x1 - k, y1 - k, x2 + k, y2 + k);
+          DefClip (frame, x1 - k, y1 - k, x2 + k*2, y2 + k*2);
         }
     }
 }
@@ -572,7 +574,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   int                 x, y, xd = 0, yd = 0;
   int                 xbg, ybg, shiftx, shifty;
   int                 width = 0, height = 0;
-  int                 wbg, hbg, pos;
+  int                 wbg, hbg;
   int                 w, h, view, delta;
   int                 t, b, l, r, bt, bb, bl, br;
 #ifdef _GL
@@ -836,7 +838,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           if (FrameTable[frame].FrView == 1 &&
               TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
             // display an IMG as a PICTURE element
-            DisplayPointSelection (frame, pBox, 0);
+            DisplayPointSelection (frame, pBox, 0, FALSE);
 #ifdef _GL
           else if (FrameTable[frame].FrView == 1 && pFrom->AbElement->ElSystemOrigin)
             DrawRectangle (frame, 0, 0, 0, 0, width, height, 0, BgSelColor, 2);
@@ -1668,9 +1670,8 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
             {
               /* box in the current plane */
               pBox = pAb->AbBox;
-              if (!selected && pAb->AbSelected)
-                selected = pAb->AbSelected;
-#ifdef _GL
+              selected = pAb->AbSelected;
+ #ifdef _GL
               if (pAb->AbElement && not_g_opacity_displayed)
                 {
                   if (formatted && IfPushMatrix (pAb))
@@ -1950,8 +1951,6 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                   OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin,
                                            ymax, FALSE);
 #endif /* _GL */
-                  if (pAb->AbSelected)
-                    selected = FALSE;
                   if (pAb == root)
                     /* all boxes are now managed: stop the loop */
                     pAb = pNext = NULL;

@@ -1378,7 +1378,7 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
                 pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, 0);
               pAb->AbElement->ElNPoints = pAb->AbVolume;
               pBox->BxNChars = pAb->AbVolume;
-              DisplayPointSelection (frame, pBox, 0);
+              DisplayPointSelection (frame, pBox, 0, FALSE);
 #ifdef _GTK
               pBox->BxXRatio = 1;
               pBox->BxYRatio = 1;

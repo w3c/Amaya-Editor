@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -465,7 +465,8 @@ void SelectRange (PtrDocument SelDoc, PtrElement PremSel, PtrElement DerSel,
 /*----------------------------------------------------------------------
   DisplayPointSelection draw characteristics point of the box.
   ----------------------------------------------------------------------*/
-void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
+void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
+                            ThotBool could_resize)
 {
 }
 
@@ -541,6 +542,17 @@ void CloseAttributeDialogues (PtrDocument pDoc)
 ThotBool OpenParsingErrors (Document document)
 {
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+   TtaIsSelectionUnique
+
+   Returns TRUE if there is a current selection and only one element is
+   selected.
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsSelectionUnique ()
+{
+  return FALSE;
 }
 
 int TtaGiveActiveFrame()

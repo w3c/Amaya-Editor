@@ -159,7 +159,8 @@ extern void SelectRange ( PtrDocument SelDoc,
                           int dercar );
 extern void DisplayPointSelection ( int frame,
                                     PtrBox pBox,
-                                    int pointselect );
+                                    int pointselect,
+                                    ThotBool could_resize );
 extern void DisplayBgBoxSelection ( int frame,
                                     PtrBox pBox );
 extern void SetNewSelectionStatus ( int frame,
@@ -190,6 +191,7 @@ extern PtrElement CreateSibling ( PtrDocument pDoc,
                                   ThotBool inclusion );
 extern void CloseAttributeDialogues ( PtrDocument pDoc );
 extern ThotBool OpenParsingErrors ( Document document );
+extern ThotBool TtaIsSelectionUnique ( void );
 extern int TtaGiveActiveFrame ( void );
 extern ThotBool GL_DrawAll ( void );
 extern ThotBool TtaDetachFrame ( int frame_id );
@@ -354,7 +356,8 @@ extern void SelectRange ( PtrDocument SelDoc,
                             int dercar );
 extern void DisplayPointSelection ( int frame,
                                       PtrBox pBox,
-                                      int pointselect );
+                                      int pointselect,
+                                      ThotBool could_resize );
 extern void DisplayBgBoxSelection ( int frame,
                                       PtrBox pBox );
 extern void SetNewSelectionStatus ( int frame,
@@ -385,6 +388,7 @@ extern PtrElement CreateSibling ( PtrDocument pDoc,
                                     ThotBool inclusion );
 extern void CloseAttributeDialogues ( PtrDocument pDoc );
 extern ThotBool OpenParsingErrors ( Document document );
+extern ThotBool TtaIsSelectionUnique ( void );
 extern int TtaGiveActiveFrame ( void );
 extern ThotBool GL_DrawAll ( void );
 extern ThotBool TtaDetachFrame ( int frame_id );
