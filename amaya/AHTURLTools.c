@@ -90,19 +90,32 @@ static char UnEscapeChar (char c)
 char *EscapeURL (const char *url)
 {
   char *buffer;
-  int   buffer_len;
+  char *ptr, *server, *param;
+  int   buffer_len, par_len;
+  int   new_chars, len, url_len;
   int   buffer_free_mem;
-  char *ptr;
-  int   new_chars;
   void *status;
 
   if (url && *url)
     {
-      buffer_free_mem = strlen (url) + 20;
+      url_len =  strlen (url);
+      buffer_free_mem = url_len + 20;
+      // a patch for sweetwiki
+      server = "http://sweetwiki.inria.fr/";
+      param = "?templateoff=true&xslname=queryoff";
+      len = strlen(server);
+      par_len = strlen (param);
+      if (strncmp (url, server, len) ||
+          // or already included
+          url_len < 4 |
+          strncmp (&url[url_len-4], ".jsp", 4))
+        // it's not necessary to add these parameters
+        par_len = 0;
+
+      buffer_free_mem += par_len;
       buffer = (char *)TtaGetMemory (buffer_free_mem + 1);
       ptr = (char *) url;
       buffer_len = 0;
-
       while (*ptr)
         {
           switch (*ptr)
@@ -153,6 +166,13 @@ char *EscapeURL (const char *url)
           buffer_free_mem -= new_chars;
           /* examine the next char */
           ptr++;
+
+          if (*ptr == EOS && par_len)
+            {
+              // add parameters
+              ptr = param;
+              par_len = 0;
+            }
         }
       buffer[buffer_len] = EOS;
     }
