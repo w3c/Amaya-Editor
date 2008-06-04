@@ -103,6 +103,7 @@ AmayaResizingBoxEvtHandler::AmayaResizingBoxEvtHandler( AmayaFrame * p_frame,
       AmayaCanvas * p_canvas = m_pFrame->GetCanvas();
       p_canvas->PushEventHandler(this);
       TtaOpenUndoSequence (FrameTable[m_FrameId].FrDoc, NULL, NULL, 0, 0);
+      // keep the history open until the button is up
       TtaLockHistory (TRUE);
       
       // assign a cross mouse cursor
@@ -248,6 +249,7 @@ void AmayaResizingBoxEvtHandler::OnMouseDown( wxMouseEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaResizingBoxEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
+  // close the history now
   TtaLockHistory (FALSE);
   TtaCloseUndoSequence (FrameTable[m_FrameId].FrDoc);
   m_IsFinish = true;
@@ -472,6 +474,7 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
       else
         BoxGeometry (m_FrameId, *m_pX, *m_pY, *m_pWidth, *m_pHeight, *m_pX + m_Xref, *m_pY + m_Yref);
 #else /* _GL */
+printf ("Resize wp=%d, hp=%d, w=%d h=%d\n",m_PercentW,m_PercentH,*m_pHeight,*m_pHeight);
       DefBoxRegion (m_FrameId, m_Box, -1, -1, -1, -1);
       if (m_PercentW)
         NewDimension (m_Box->BxAbstractBox, 0, *m_pHeight, m_FrameId, TRUE);
