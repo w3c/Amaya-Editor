@@ -102,7 +102,7 @@ char *EscapeURL (const char *url)
       buffer_free_mem = url_len + 20;
       // a patch for sweetwiki
       server = "http://sweetwiki.inria.fr/";
-      param = "?templateoff=true&xslname=queryoff";
+      param = "?templateoff=true"; //&xslname=queryoff";
       len = strlen(server);
       par_len = strlen (param);
       if (strncmp (url, server, len) ||
