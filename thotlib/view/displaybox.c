@@ -2475,12 +2475,10 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
                  (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost));
             }
         }
-      else if (!selfsel &&
-               pAb->AbEnclosing->AbSelected && !pAb->AbEnclosing->AbPresentationBox &&
-               TtaIsSelectionUnique () &&
-               pAb->AbLeafType == LtPicture)
+      else if (pAb->AbLeafType == LtPicture)
         // display the selection at the image level
-        selfsel = TRUE;
+        selfsel = (pAb->AbEnclosing->AbSelected &&
+                   !pAb->AbPresentationBox && TtaIsSelectionUnique ());
     }
   
 #ifdef _GL 
