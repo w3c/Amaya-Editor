@@ -207,7 +207,7 @@ BOXES
 	END;
 
  BagButton: BEGIN
-	Content: Picture 'xtigerbag.png';
+	Content: Picture 'add.png';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top - 8 px;
 	MarginTop: 0 px;
@@ -221,7 +221,7 @@ BOXES
 	END;
 
  BagUse: BEGIN
-	Content: Picture 'xtigerbag.png';
+	Content: Picture 'add.png';
 	HorizPos: Left = Previous . Left;
 	VertPos: Top = Previous . Bottom;
 	MarginTop: 0 px;
@@ -235,7 +235,7 @@ BOXES
 	END;
 
  OptionButton: BEGIN
-	Content: Picture 'xtigeroption.png';
+	Content: Picture 'option.png';
   HorizRef: * . Bottom;
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top - 5 px;
@@ -250,7 +250,7 @@ BOXES
 	END;
 
  RepeatButton: BEGIN
-	Content: Picture 'xtigerrepeat.png';
+	Content: Picture 'add.png';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top - 10 px;
 	MarginTop: 0 px;
@@ -264,7 +264,7 @@ BOXES
 	END;
 
  RepeatUse: BEGIN
-	Content: Picture 'xtigerrepeat.png';
+	Content: Picture 'add.png';
 	HorizPos: Left = Previous . Left;
 	VertPos: Top = Previous . Bottom;
 	MarginTop: 0 px;
@@ -456,7 +456,7 @@ RULES
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
     LineBreak: No;
-    {Display: Block;}
+    Display: Block;
     VertPos: Top = 			Previous AnyElem . Bottom;
     HorizPos: Left =		Enclosing . Left; 
 		BorderTopWidth: 	 	1 px;
@@ -601,7 +601,7 @@ RULES
     VertPos: Top  	= Previous AnyElem . Bottom;
     MarginTop	: 3 px;
     HorizPos: Left  	= Enclosing . Left; 
-    BorderTopWidth:  2 pt;
+    {BorderTopWidth:  2 pt;
     BorderLeftWidth:  2 pt;
     BorderBottomWidth :  2 pt;
     BorderRightWidth :  2 pt;
@@ -612,7 +612,7 @@ RULES
     BorderTopColor:  Purple;
     BorderLeftColor:  Purple;
     BorderBottomColor : Purple;
-    BorderRightColor :  Purple;
+    BorderRightColor :  Purple;}
     PaddingRight:  3 px;
     PaddingLeft	:  3 px;
     PaddingTop	: 10 px;
@@ -638,14 +638,14 @@ RULES
 	  CreateFirst(OptionButton);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
-    Background : LightOrange4;
-    FillPattern: backgroundcolor;
-    ShowBox;
     {LineBreak: No;}
     {Display: Block;}
     VertPos: Top = Previous AnyElem . Bottom;
     MarginTop: 0;
     HorizPos: Left = Enclosing . Left; 
+    {Background : LightOrange4;
+    FillPattern: backgroundcolor;
+    ShowBox;
     BorderTopWidth: 1 pt;
     BorderLeftWidth: 1 pt;
     BorderBottomWidth: 1 pt;
@@ -657,7 +657,7 @@ RULES
     BorderTopColor: Orange;
     BorderLeftColor: Orange;
     BorderBottomColor: Orange;
-    BorderRightColor: Orange;
+    BorderRightColor: Orange;}
     PaddingRight:  	2 px;
     PaddingLeft:   2 px;
     PaddingTop:   2 px;

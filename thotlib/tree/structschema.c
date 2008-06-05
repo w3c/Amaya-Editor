@@ -602,6 +602,11 @@ ThotBool AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl,
   PtrSSchema          pSSrule, pSSExt;
 
   ret = FALSE;
+  // template elements
+  if (pSS &&
+      pSS->SsName && !strcmp (pSS->SsName, "Template"))
+    return TRUE;
+
   if (pSS &&
       pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsPairedElement &&
       !pSS->SsRule->SrElem[typeNum - 1]->SrFirstOfPair)
@@ -660,8 +665,8 @@ ThotBool AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl,
   dans typeNum le numero de cette regle.
   Si non retourne 0 dans typeNum et NULL dans pSS.		
   ----------------------------------------------------------------------*/
-void                ListOrAggregateRule (PtrDocument pDoc, PtrElement pEl,
-                                         int *typeNum, PtrSSchema * pSS)
+void ListOrAggregateRule (PtrDocument pDoc, PtrElement pEl,
+                          int *typeNum, PtrSSchema * pSS)
 {
   int                 c;
   ThotBool            test, equiv;
@@ -738,7 +743,7 @@ void                ListOrAggregateRule (PtrDocument pDoc, PtrElement pEl,
   et, dans nComp, le nombre de composants definis par le schema s'il
   s'agit d'un agregat.
   ----------------------------------------------------------------------*/
-RConstruct          GetElementConstruct (PtrElement pEl, int *nComp)
+RConstruct GetElementConstruct (PtrElement pEl, int *nComp)
 {
   RConstruct          constr;
   int                 typ = 0;
@@ -803,7 +808,7 @@ PtrElement AncestorList (PtrElement pEl)
   Teste si les cardinalites minimales et maximales de la liste	
   pEl permettent d'ajouter ou retrancher delta elements.		
   ----------------------------------------------------------------------*/
-ThotBool            CanChangeNumberOfElem (PtrElement pEl, int delta)
+ThotBool CanChangeNumberOfElem (PtrElement pEl, int delta)
 {
   PtrElement          pChild;
   int                 len;
