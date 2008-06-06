@@ -73,7 +73,11 @@ void TtaChangeElementType (Element element, int typeNum)
            typeNum > ((PtrElement)element)->ElStructSchema->SsNRules)
     TtaError (ERR_invalid_element_type);
   else
-    ((PtrElement)element)->ElTypeNumber = typeNum;
+    {
+      ((PtrElement)element)->ElTypeNumber = typeNum;
+      if (typeNum < AnyType)
+        ((PtrElement)element)->ElTerminal = TRUE;
+    }
 }
 
 /* ----------------------------------------------------------------------
