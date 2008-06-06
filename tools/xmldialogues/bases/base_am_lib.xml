@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<base version="51">
+<base version="52">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -17,6 +17,7 @@
 	<language encoding="utf8">tw</language>
 	<language encoding="utf8">sk</language>
 	<language encoding="utf8">jp</language>
+	<language encoding="utf8">ja</language>
 </control>
 <messages>
 <label define="TMSG_LIB_X11_ERR">
@@ -34,6 +35,7 @@
 	<message xml:lang="cn">X11 错误 : %s\n</message>
 	<message xml:lang="tw">X11 錯誤 : %s\n</message>
 	<message xml:lang="sk">Chyba X11 : %s\n</message>
+	<message xml:lang="ja">X11 エラー : %s\n</message>
 </label>
 <label define="TMSG_LIB_CONFIRM">
 	<message xml:lang="en">Confirm</message>
@@ -50,6 +52,7 @@
 	<message xml:lang="cn">确定</message>
 	<message xml:lang="tw">確定</message>
 	<message xml:lang="sk">Potvrdiť</message>
+	<message xml:lang="ja">確認</message>
 </label>
 <label define="TMSG_MISSING_ALPHABET">
 	<message xml:lang="en">No alphabet file</message>
@@ -66,6 +69,7 @@
 	<message xml:lang="cn">无字母表文件</message>
 	<message xml:lang="tw">無字母表文件</message>
 	<message xml:lang="sk">Chýba súbor s abecedou</message>
+	<message xml:lang="ja">ノーアルファベットファイル</message>
 </label>
 <label define="TMSG_OLD_VIEW_NOT_REPLACED">
 	<message xml:lang="en">New view cannot replace the old one</message>
@@ -82,6 +86,7 @@
 	<message xml:lang="cn">新视图无法取代原始视图</message>
 	<message xml:lang="tw">新視圖無法取代原始視圖</message>
 	<message xml:lang="sk">Nové zobrazenie nemôže nahradiť staré</message>
+	<message xml:lang="ja">新規ビューは古いビューと置換できません</message>
 </label>
 <label define="TMSG_OLD_SCH_TO_RECOMP">
 	<message xml:lang="en">Incompatible schemas. Recompile %s</message>
@@ -98,6 +103,7 @@
 	<message xml:lang="cn">不兼容的 schemas. 重新编译 %s</message>
 	<message xml:lang="tw">不兼容的 schemas. 重新編譯 %s</message>
 	<message xml:lang="sk">Nekompatibilná schéma. Prekompilujte %s</message>
+	<message xml:lang="ja">スキーマに互換性がありません。 %s をリコンパイルします。</message>
 </label>
 <label define="TMSG_MISSING_FONT">
 	<message xml:lang="en">Fatal Error: fonts not found</message>
@@ -114,6 +120,7 @@
 	<message xml:lang="cn">致命错误: 字体未找到</message>
 	<message xml:lang="tw">致命錯誤: 字體未找到</message>
 	<message xml:lang="sk">Kritická chyba: fonty neboli nájdené</message>
+	<message xml:lang="ja">致命的なエラー: フォントが見つかりません</message>
 </label>
 <label define="TMSG_NO_MEMORY">
 	<message xml:lang="en">Memory exhausted</message>
@@ -130,6 +137,7 @@
 	<message xml:lang="cn">内存耗尽</message>
 	<message xml:lang="tw">內存耗盡</message>
 	<message xml:lang="sk">Pamäť vyčerpaná</message>
+	<message xml:lang="ja">メモリ不足</message>
 </label>
 <label define="TMSG_UNABLE_TO_CONNECT_TO_X">
 	<message xml:lang="en">Fatal Error: Unable to connect to X</message>
@@ -146,6 +154,7 @@
 	<message xml:lang="cn">致命错误: 无法连接 X 服务器</message>
 	<message xml:lang="tw">致命錯誤: 無法連接 X 服務器</message>
 	<message xml:lang="sk">Nedá sa pripojiť k X</message>
+	<message xml:lang="ja">致命的なエラー: X に接続できません</message>
 </label>
 <label define="TMSG_VIEW_MODIFIED_BEFORE_CREATION">
 	<message xml:lang="en">View is modified before creation</message>
@@ -162,6 +171,7 @@
 	<message xml:lang="cn">视图已改变</message>
 	<message xml:lang="tw">視圖已改變</message>
 	<message xml:lang="sk">Zobrazenie bolo vytvorené pred vytvorením</message>
+	<message xml:lang="ja">ビューは作成される前に修正されています。</message>
 </label>
 <label define="TMSG_LIB_RULES_TABLE_FULL">
 	<message xml:lang="en">Rules table full.</message>
@@ -178,6 +188,7 @@
 	<message xml:lang="cn">规则表已满</message>
 	<message xml:lang="tw">規則表已滿</message>
 	<message xml:lang="sk">Tabuľka pravidiel je plná.</message>
+	<message xml:lang="ja">ルール表がいっぱいです。</message>
 </label>
 <label define="TMSG_INCORRECT_STR_FILE">
 	<message xml:lang="en">Incorrect file: %s.STR</message>
@@ -194,6 +205,7 @@
 	<message xml:lang="cn">错误文件: %s.STR</message>
 	<message xml:lang="tw">錯誤文件: %s.STR</message>
 	<message xml:lang="sk">Nesprávny súbor: %s.STR</message>
+	<message xml:lang="ja">誤ったファイル: %s.STR</message>
 </label>
 <label define="TMSG_INCORRECT_PRS_FILE">
 	<message xml:lang="en">Incorrect file: %s.PRS</message>
@@ -210,6 +222,7 @@
 	<message xml:lang="cn">错误文件: %s.PRS</message>
 	<message xml:lang="tw">錯誤文件: %s.PRS</message>
 	<message xml:lang="sk">Nesprávny súbor: %s.PRS</message>
+	<message xml:lang="ja">誤ったファイル: %s.PRS</message>
 </label>
 <label define="TMSG_DOC_PRINTED">
 	<message xml:lang="en">Document %s printed</message>
@@ -226,6 +239,7 @@
 	<message xml:lang="cn">%s个文档已打印</message>
 	<message xml:lang="tw">%s個文檔已打印</message>
 	<message xml:lang="sk">Dokument %s bol vytlačený</message>
+	<message xml:lang="ja">%s 文章は印刷されました</message>
 </label>
 <label define="TMSG_REDUCTION">
 	<message xml:lang="en">Disposition</message>
@@ -242,6 +256,7 @@
 	<message xml:lang="cn">设置</message>
 	<message xml:lang="tw">設置</message>
 	<message xml:lang="sk">Dispozície</message>
+	<message xml:lang="ja">配置</message>
 </label>
 <label define="TMSG_1_PAGE_SHEET">
 	<message xml:lang="en">1 page/sheet</message>
@@ -258,6 +273,7 @@
 	<message xml:lang="cn">1 版/页</message>
 	<message xml:lang="tw">1 版/頁</message>
 	<message xml:lang="sk">1 strana/hárok</message>
+	<message xml:lang="ja">一枚に一ページ</message>
 </label>
 <label define="TMSG_2_PAGE_SHEET">
 	<message xml:lang="en">2 pages/sheet</message>
@@ -274,6 +290,7 @@
 	<message xml:lang="cn">2 版/页</message>
 	<message xml:lang="tw">2 版/頁</message>
 	<message xml:lang="sk">2 strany/hárky</message>
+	<message xml:lang="ja">一枚に二ページ</message>
 </label>
 <label define="TMSG_4_PAGE_SHEET">
 	<message xml:lang="en">4 pages/sheet</message>
@@ -290,6 +307,7 @@
 	<message xml:lang="cn">4 版/页</message>
 	<message xml:lang="tw">4 版/頁</message>
 	<message xml:lang="sk">4 strany/hárky</message>
+	<message xml:lang="ja">一枚に四ページ</message>
 </label>
 <label define="TMSG_LIB_STRING">
 	<message xml:lang="en">%s</message>
@@ -306,6 +324,7 @@
 	<message xml:lang="cn">%s</message>
 	<message xml:lang="tw">%s</message>
 	<message xml:lang="sk">%s</message>
+	<message xml:lang="ja">%s</message>
 </label>
 <label define="TMSG_NOT_ENOUGH_MEMORY">
 	<message xml:lang="en">Not enough memory</message>
@@ -322,6 +341,7 @@
 	<message xml:lang="cn">内存不足</message>
 	<message xml:lang="tw">內存不足</message>
 	<message xml:lang="sk">Nedostatok pamäte</message>
+	<message xml:lang="ja">メモリが足りません</message>
 </label>
 <label define="TMSG_DEBUG_ERROR">
 	<message xml:lang="en">*** Amaya: Irrecoverable error ***</message>
@@ -338,6 +358,7 @@
 	<message xml:lang="cn">*** Amaya: 无法修复的错误 ***</message>
 	<message xml:lang="tw">*** Amaya: 無法修復的錯誤 ***</message>
 	<message xml:lang="sk">*** Amaya: Neopraviteľná chyba ***</message>
+	<message xml:lang="ja">*** Amaya: 回復できないエラーです ***</message>
 </label>
 <label define="TMSG_DEBUG_SAV_FILES">
 	<message xml:lang="en">modified documents, if any, will be saved</message>
@@ -354,6 +375,7 @@
 	<message xml:lang="cn">所有被更改的文档将被保存</message>
 	<message xml:lang="tw">所有被更改的文檔將被保存</message>
 	<message xml:lang="sk">ak dajaké dokumenty boli zmenené, budú uložené</message>
+	<message xml:lang="ja">変更を保存します</message>
 </label>
 <label define="TMSG_TRA_FILE_INCORRECT">
 	<message xml:lang="en">Incorrect .TRA file: %s</message>
@@ -370,6 +392,7 @@
 	<message xml:lang="cn">TRA文件错误: %s</message>
 	<message xml:lang="tw">TRA文件錯誤: %s</message>
 	<message xml:lang="sk">Nesprávny .TRA súbor: %s</message>
+	<message xml:lang="ja">誤った .TRA ファイル: %s</message>
 </label>
 <label define="TMSG_INVALID_SIBLING">
 	<message xml:lang="en">%s is not a valid sibling for %s (%s)</message>
@@ -386,6 +409,7 @@
 	<message xml:lang="cn">%s is not a valid sibling for %s (%s)</message>
 	<message xml:lang="tw">%s is not a valid sibling for %s (%s)</message>
 	<message xml:lang="sk">%s nie je platným súrodencom pre %s (%s)</message>
+	<message xml:lang="ja">%s は %s (%s)　と正当な兄弟関係ではありません</message>
 </label>
 <label define="TMSG_INVALID_CHILD">
 	<message xml:lang="en">%s is not a valid child for %s (%s)</message>
@@ -402,6 +426,7 @@
 	<message xml:lang="cn">%s 不是有效的 %s 子节点 (%s)</message>
 	<message xml:lang="tw">%s 不是有效的 %s 子節點 (%s)</message>
 	<message xml:lang="sk">%s nie je platným rodičom pre %s (%s)</message>
+	<message xml:lang="ja">%s は %s (%s)　と正当な子関係ではありません</message>
 </label>
 <label define="TMSG_PAGE">
 	<message xml:lang="en">%s, page %d</message>
@@ -418,6 +443,7 @@
 	<message xml:lang="cn">%s, page %d</message>
 	<message xml:lang="tw">%s, page %d</message>
 	<message xml:lang="sk">%s, strana %d</message>
+	<message xml:lang="ja">%s, ページ %d</message>
 </label>
 <label define="TMSG_LANGUAGE">
 	<message xml:lang="en">Language</message>
@@ -434,6 +460,7 @@
 	<message xml:lang="cn">语言</message>
 	<message xml:lang="tw">語言</message>
 	<message xml:lang="sk">Jazyk</message>
+	<message xml:lang="ja">言語</message>
 </label>
 <label define="TMSG_ATTR">
 	<message xml:lang="en">Attributes</message>
@@ -450,6 +477,7 @@
 	<message xml:lang="cn">属性</message>
 	<message xml:lang="tw">屬性</message>
 	<message xml:lang="sk">Attribúty</message>
+	<message xml:lang="ja">属性</message>
 </label>
 <label define="TMSG_STD_PRES">
 	<message xml:lang="en">Standard presentation</message>
@@ -466,6 +494,7 @@
 	<message xml:lang="cn">标准布局</message>
 	<message xml:lang="tw">標準布局</message>
 	<message xml:lang="sk">Štandardná prezentácia</message>
+	<message xml:lang="ja">標準プレゼンテーション</message>
 </label>
 <label define="TMSG_APPLY">
 	<message xml:lang="en">Apply</message>
@@ -482,6 +511,7 @@
 	<message xml:lang="cn">应用</message>
 	<message xml:lang="tw">應用</message>
 	<message xml:lang="sk">Nastaviť</message>
+	<message xml:lang="ja">適用</message>
 </label>
 <label define="TMSG_CHAR">
 	<message xml:lang="en">Characters</message>
@@ -498,6 +528,7 @@
 	<message xml:lang="cn">字符</message>
 	<message xml:lang="tw">字符</message>
 	<message xml:lang="sk">Písmo</message>
+	<message xml:lang="ja">文字</message>
 </label>
 <label define="TMSG_LINE">
 	<message xml:lang="en">Underline</message>
@@ -514,6 +545,7 @@
 	<message xml:lang="cn">下划线</message>
 	<message xml:lang="tw">下劃線</message>
 	<message xml:lang="sk">Podčiarknutie</message>
+	<message xml:lang="ja">下線</message>
 </label>
 <label define="TMSG_GRAPHICS_PRES">
 	<message xml:lang="en">Graphics</message>
@@ -530,6 +562,7 @@
 	<message xml:lang="cn">图形</message>
 	<message xml:lang="tw">圖形</message>
 	<message xml:lang="sk">Grafika</message>
+	<message xml:lang="ja">グラフィックス</message>
 </label>
 <label define="TMSG_FORMAT">
 	<message xml:lang="en">Format</message>
@@ -546,6 +579,7 @@
 	<message xml:lang="cn">格式</message>
 	<message xml:lang="tw">格式</message>
 	<message xml:lang="sk">Formát</message>
+	<message xml:lang="ja">フォーマット</message>
 </label>
 <label define="TMSG_UNCHANGED">
 	<message xml:lang="en">Default</message>
@@ -562,6 +596,7 @@
 	<message xml:lang="cn">默认</message>
 	<message xml:lang="tw">默認</message>
 	<message xml:lang="sk">Predvolené</message>
+	<message xml:lang="ja">デフォルト</message>
 </label>
 <label define="TMSG_ALIGN">
 	<message xml:lang="en">Align</message>
@@ -578,6 +613,7 @@
 	<message xml:lang="cn">布局</message>
 	<message xml:lang="tw">布局</message>
 	<message xml:lang="sk">Zarovnanie</message>
+	<message xml:lang="ja">整列</message>
 </label>
 <label define="TMSG_INDENT">
 	<message xml:lang="en">Indent</message>
@@ -594,6 +630,7 @@
 	<message xml:lang="cn">缩进</message>
 	<message xml:lang="tw">縮進</message>
 	<message xml:lang="sk">Odsadenie</message>
+	<message xml:lang="ja">インデントを増やす</message>
 </label>
 <label define="TMSG_LIB_PRINTING_IN_PROGRESS">
 	<message xml:lang="en">Printing in progress</message>
@@ -607,6 +644,7 @@
 	<message xml:lang="cn">正在打印</message>
 	<message xml:lang="tw">正在打印</message>
 	<message xml:lang="sk">Prebieha tlač</message>
+	<message xml:lang="ja">印刷中</message>
 </label>
 <label define="TMSG_LIB_PRINT">
 	<message xml:lang="en">Print</message>
@@ -623,6 +661,7 @@
 	<message xml:lang="cn">打印</message>
 	<message xml:lang="tw">打印</message>
 	<message xml:lang="sk">Tlač</message>
+	<message xml:lang="ja">印刷</message>
 </label>
 <label define="TMSG_MANUAL_FEED">
 	<message xml:lang="en">Manual feed</message>
@@ -639,6 +678,7 @@
 	<message xml:lang="cn">手动加纸</message>
 	<message xml:lang="tw">手動加紙</message>
 	<message xml:lang="sk">Ručné zakladanie</message>
+	<message xml:lang="ja">手送り</message>
 </label>
 <label define="TMSG_OPTIONS">
 	<message xml:lang="en">Options</message>
@@ -655,6 +695,7 @@
 	<message xml:lang="cn">选项</message>
 	<message xml:lang="tw">選項</message>
 	<message xml:lang="sk">Nastavenia</message>
+	<message xml:lang="ja">オプション</message>
 </label>
 <label define="TMSG_A4">
 	<message xml:lang="en">A4</message>
@@ -671,6 +712,7 @@
 	<message xml:lang="cn">A4</message>
 	<message xml:lang="tw">A4</message>
 	<message xml:lang="sk">A4</message>
+	<message xml:lang="ja">A4</message>
 </label>
 <label define="TMSG_US">
 	<message xml:lang="en">US</message>
@@ -687,6 +729,7 @@
 	<message xml:lang="cn">US</message>
 	<message xml:lang="tw">US</message>
 	<message xml:lang="sk">US</message>
+	<message xml:lang="ja">US</message>
 </label>
 <label define="TMSG_PAPER_SIZE">
 	<message xml:lang="en">Paper format</message>
@@ -703,6 +746,7 @@
 	<message xml:lang="cn">纸张类型</message>
 	<message xml:lang="tw">紙張類型</message>
 	<message xml:lang="sk">Formát papiera</message>
+	<message xml:lang="ja">用紙の書式設定</message>
 </label>
 <label define="TMSG_DONE">
 	<message xml:lang="en">Close</message>
@@ -719,6 +763,7 @@
 	<message xml:lang="cn">关闭</message>
 	<message xml:lang="tw">關閉</message>
 	<message xml:lang="sk">Zatvoriť</message>
+	<message xml:lang="ja">閉じる</message>
 </label>
 <label define="TMSG_DOC_DIR">
 	<message xml:lang="en">Directories</message>
@@ -735,6 +780,7 @@
 	<message xml:lang="cn">目录</message>
 	<message xml:lang="tw">目錄</message>
 	<message xml:lang="sk">Priečinky</message>
+	<message xml:lang="ja">ディレクトリ</message>
 </label>
 <label define="TMSG_FILE_EXIST">
 	<message xml:lang="en">The document %s already exists. Do you want to overwrite it?</message>
@@ -751,23 +797,26 @@
 	<message xml:lang="cn">%s 文档已存在，确认要覆盖吗?</message>
 	<message xml:lang="tw">%s 文檔已存在，確認要覆蓋嗎?</message>
 	<message xml:lang="sk">Dokument %s už existuje. Chcete ho nahradiť?</message>
+	<message xml:lang="ja">このドキュメント %s はすでに存在します。上書きしますか？</message>
 </label>
 <label define="TMSG_BUTTON_1">
 	<message xml:lang="en">Set the text color</message>
 	<message xml:lang="fr">Appliquer la couleur du texte</message>
 	<message xml:lang="de">Maustaste 1 setzt die Textfarbe</message>
-<message xml:lang="es">Establecer el color del texto</message>
-<message xml:lang="it">Impostare il colore del testo</message>
-<message xml:lang="de">Textfarbe einstellen</message>
-<message xml:lang="hu">Szöveg színének beállítása</message>
+	<message xml:lang="es">Establecer el color del texto</message>
+	<message xml:lang="it">Impostare il colore del testo</message>
+	<message xml:lang="de">Textfarbe einstellen</message>
+	<message xml:lang="hu">Szöveg színének beállítása</message>
+	<message xml:lang="ja">文字色</message>
 </label>
 <label define="TMSG_BUTTON_2">
 	<message xml:lang="en">Set the background color</message>
 	<message xml:lang="fr">Appliquer la couleur du fond</message>
-<message xml:lang="es">Establecer el color de fondo</message>
-<message xml:lang="it">Impostare il colore dello sfondo</message>
-<message xml:lang="de">Hintergrundfarbe einstellen</message>
-<message xml:lang="hu">Háttér színének beállítása</message>
+	<message xml:lang="es">Establecer el color de fondo</message>
+	<message xml:lang="it">Impostare il colore dello sfondo</message>
+	<message xml:lang="de">Hintergrundfarbe einstellen</message>
+	<message xml:lang="hu">Háttér színének beállítása</message>
+	<message xml:lang="ja">背景の色</message>
 </label>
 <label define="TMSG_FONT_FAMILY">
 	<message xml:lang="en">Font family</message>
@@ -784,6 +833,7 @@
 	<message xml:lang="cn">字体</message>
 	<message xml:lang="tw">字體</message>
 	<message xml:lang="sk">Rodina písma</message>
+	<message xml:lang="ja">フォントファミリー</message>
 </label>
 <label define="TMSG_ROMAN">
 	<message xml:lang="en">Normal</message>
@@ -800,6 +850,7 @@
 	<message xml:lang="cn">常规</message>
 	<message xml:lang="tw">常規</message>
 	<message xml:lang="sk">Normálne</message>
+	<message xml:lang="ja">普通</message>
 </label>
 <label define="TMSG_BOLD">
 	<message xml:lang="en">Bold</message>
@@ -816,6 +867,7 @@
 	<message xml:lang="cn">加粗</message>
 	<message xml:lang="tw">加粗</message>
 	<message xml:lang="sk">Tučné</message>
+	<message xml:lang="ja">太字</message>
 </label>
 <label define="TMSG_ITALIC">
 	<message xml:lang="en">Italic</message>
@@ -832,6 +884,7 @@
 	<message xml:lang="cn">倾斜</message>
 	<message xml:lang="tw">傾斜</message>
 	<message xml:lang="sk">Kurzíva</message>
+	<message xml:lang="ja">斜体 (italic)</message>
 </label>
 <label define="TMSG_OBLIQUE">
 	<message xml:lang="en">Oblique</message>
@@ -848,6 +901,7 @@
 	<message xml:lang="cn">斜体</message>
 	<message xml:lang="tw">斜體</message>
 	<message xml:lang="sk">Naklonené</message>
+	<message xml:lang="ja">斜体 (Oblique)</message>
 </label>
 <label define="TMSG_NOT_BOLD">
 	<message xml:lang="en">Normal</message>
@@ -864,6 +918,7 @@
 	<message xml:lang="cn">常规</message>
 	<message xml:lang="tw">常規</message>
 	<message xml:lang="sk">Normálne</message>
+	<message xml:lang="ja">普通</message>
 </label>
 <label define="TMSG_BOLDNESS">
 	<message xml:lang="en">Boldness</message>
@@ -880,6 +935,7 @@
 	<message xml:lang="cn">粗体</message>
 	<message xml:lang="tw">粗體</message>
 	<message xml:lang="sk">Hrúbka</message>
+	<message xml:lang="ja">太さ</message>
 </label>
 <label define="TMSG_NORMAL">
 	<message xml:lang="en">Normal</message>
@@ -896,6 +952,7 @@
 	<message xml:lang="cn">常规</message>
 	<message xml:lang="tw">常規</message>
 	<message xml:lang="sk">Normálna</message>
+	<message xml:lang="ja">普通</message>
 </label>
 <label define="TMSG_UNDERLINE">
 	<message xml:lang="en">Underline</message>
@@ -912,6 +969,7 @@
 	<message xml:lang="cn">下划线</message>
 	<message xml:lang="tw">下劃線</message>
 	<message xml:lang="sk">Podčiarknuté</message>
+	<message xml:lang="ja">下線</message>
 </label>
 <label define="TMSG_CROSS_OUT">
 	<message xml:lang="en">Cross out</message>
@@ -928,6 +986,7 @@
 	<message xml:lang="cn">删除线</message>
 	<message xml:lang="tw">刪除線</message>
 	<message xml:lang="sk">Prečiarknuté</message>
+	<message xml:lang="ja">取り消し線</message>
 </label>
 <label define="TMSG_BODY_SIZE_PTS">
 	<message xml:lang="en">Size</message>
@@ -944,6 +1003,7 @@
 	<message xml:lang="cn">大小 </message>
 	<message xml:lang="tw">大小 </message>
 	<message xml:lang="sk">Veľkosť písmen (v bodoch)</message>
+	<message xml:lang="ja">サイズ</message>
 </label>
 <label define="TMSG_NOINDENT">
 	<message xml:lang="en">Unindent</message>
@@ -952,6 +1012,7 @@
 	<message xml:lang="de">Ohne Einrücken</message>
 	<message xml:lang="hu">Behúzás csökkentése</message>
 	<message xml:lang="it">Senza indentazione</message>
+	<message xml:lang="ja">インデントを減らす</message>
 </label>
 <label define="TMSG_LINE_SPACING">
 	<message xml:lang="en">Single line spacing</message>
@@ -960,6 +1021,7 @@
 	<message xml:lang="de">Einzelne Zeile Abstand</message>
 	<message xml:lang="hu">Egyes sortávolság</message>
 	<message xml:lang="it">Interlinea singola</message>
+	<message xml:lang="ja">１行間</message>
 </label>
 <label define="TMSG_HLINE_SPACING">
 	<message xml:lang="en">Middle line spacing</message>
@@ -968,6 +1030,7 @@
 	<message xml:lang="de">Mittlere Zeile Abstand</message>
 	<message xml:lang="hu">Közepes sortávolság</message>
 	<message xml:lang="it">Interlinea mediana</message>
+	<message xml:lang="ja">１．５行間</message>
 </label>
 <label define="TMSG_DLINE_SPACING">
 	<message xml:lang="en">Double line spacing</message>
@@ -976,6 +1039,7 @@
 	<message xml:lang="de">Doppelte Zeile Abstand</message>
 	<message xml:lang="hu">Kettős sortávolság</message>
 	<message xml:lang="it">Interlinea doppia</message>
+	<message xml:lang="ja">２行間</message>
 </label>
 <label define="TMSG_SAVE_DOC">
 	<message xml:lang="en">Save document</message>
@@ -992,6 +1056,7 @@
 	<message xml:lang="cn">保存文档</message>
 	<message xml:lang="tw">保存文檔</message>
 	<message xml:lang="sk">Uložiť dokument</message>
+	<message xml:lang="ja">文章の保存</message>
 </label>
 <label define="TMSG_CLOSE_DON_T_SAVE">
 	<message xml:lang="en">Close, don't save</message>
@@ -1008,6 +1073,7 @@
 	<message xml:lang="cn">不保存直接关闭</message>
 	<message xml:lang="tw">不保存直接關閉</message>
 	<message xml:lang="sk">Zatvoriť bez uloženia</message>
+	<message xml:lang="ja">保存しないで閉じる</message>
 </label>
 <label define="TMSG_STYLE">
 	<message xml:lang="en">Character style</message>
@@ -1024,6 +1090,7 @@
 	<message xml:lang="cn">字符样式</message>
 	<message xml:lang="tw">字符樣式</message>
 	<message xml:lang="sk">Štýl znakov</message>
+	<message xml:lang="ja">文字スタイル</message>
 </label>
 <label define="TMSG_COLORS">
 	<message xml:lang="en">Colors</message>
@@ -1040,6 +1107,7 @@
 	<message xml:lang="cn">颜色</message>
 	<message xml:lang="tw">顏色</message>
 	<message xml:lang="sk">Farby</message>
+	<message xml:lang="ja">色</message>
 </label>
 <label define="TMSG_XHTML">
 	<message xml:lang="en">Elements</message>
@@ -1056,6 +1124,7 @@
 	<message xml:lang="cn">XHTML</message>
 	<message xml:lang="tw">XHTML</message>
 	<message xml:lang="sk">XHTML</message>
+	<message xml:lang="ja">要素</message>
 </label>
 <label define="TMSG_DEL">
 	<message xml:lang="en">Delete</message>
@@ -1072,6 +1141,7 @@
 	<message xml:lang="cn">删除</message>
 	<message xml:lang="tw">刪除</message>
 	<message xml:lang="sk">Odstrániť</message>
+	<message xml:lang="ja">削除</message>
 </label>
 <label define="TMSG_OUTPUT">
 	<message xml:lang="en">Output</message>
@@ -1088,6 +1158,7 @@
 	<message xml:lang="cn">输出</message>
 	<message xml:lang="tw">輸出</message>
 	<message xml:lang="sk">Výstup</message>
+	<message xml:lang="ja">出力</message>
 </label>
 <label define="TMSG_PS_FILE">
 	<message xml:lang="en">PostScript file</message>
@@ -1104,6 +1175,7 @@
 	<message xml:lang="cn">PostScript 文件</message>
 	<message xml:lang="tw">PostScript 文件</message>
 	<message xml:lang="sk">PostScriptový súbor</message>
+	<message xml:lang="ja">ポストスクリプトファイル</message>
 </label>
 <label define="TMSG_PRINTER">
 	<message xml:lang="en">Printer</message>
@@ -1120,6 +1192,7 @@
 	<message xml:lang="cn">打印机</message>
 	<message xml:lang="tw">打印機</message>
 	<message xml:lang="sk">Tlačiareň</message>
+	<message xml:lang="ja">プリンター</message>
 </label>
 <label define="TMSG_SEARCH_FOR">
 	<message xml:lang="en">Search for</message>
@@ -1136,6 +1209,7 @@
 	<message xml:lang="cn">搜索</message>
 	<message xml:lang="tw">搜索</message>
 	<message xml:lang="sk">Hľadať výraz</message>
+	<message xml:lang="ja">検索</message>
 </label>
 <label define="TMSG_UPPERCASE_EQ_LOWERCASE">
 	<message xml:lang="en">Ignore case</message>
@@ -1152,6 +1226,7 @@
 	<message xml:lang="cn">忽略大小写</message>
 	<message xml:lang="tw">忽略大小寫</message>
 	<message xml:lang="sk">Nerozlišovať veľkosť písmen</message>
+	<message xml:lang="ja">大文字と小文字を区別しない</message>
 </label>
 <label define="TMSG_REPLACE_BY">
 	<message xml:lang="en">Replace by</message>
@@ -1168,6 +1243,7 @@
 	<message xml:lang="cn">替换为</message>
 	<message xml:lang="tw">替換為</message>
 	<message xml:lang="sk">Nahradiť výrazom</message>
+	<message xml:lang="ja">次で置換</message>
 </label>
 <label define="TMSG_REPLACE">
 	<message xml:lang="en">Replace</message>
@@ -1184,6 +1260,7 @@
 	<message xml:lang="cn">替换</message>
 	<message xml:lang="tw">替換</message>
 	<message xml:lang="sk">Nahradiť</message>
+	<message xml:lang="ja">置換</message>
 </label>
 <label define="TMSG_NO_REPLACE">
 	<message xml:lang="en">No replace</message>
@@ -1200,6 +1277,7 @@
 	<message xml:lang="cn">无替换</message>
 	<message xml:lang="tw">無替換</message>
 	<message xml:lang="sk">Nič nenahrádzať</message>
+	<message xml:lang="ja">置換しない</message>
 </label>
 <label define="TMSG_REPLACE_ON_REQU">
 	<message xml:lang="en">Replace on request</message>
@@ -1216,6 +1294,7 @@
 	<message xml:lang="cn">询问是否替换</message>
 	<message xml:lang="tw">詢問是否替換</message>
 	<message xml:lang="sk">Potrvrdzovať nahradenie</message>
+	<message xml:lang="ja">一つずつ置換</message>
 </label>
 <label define="TMSG_AUTO_REPLACE">
 	<message xml:lang="en">Automatic replace</message>
@@ -1232,6 +1311,7 @@
 	<message xml:lang="cn">自动替换</message>
 	<message xml:lang="tw">自動替換</message>
 	<message xml:lang="sk">Automaticky nahradiť</message>
+	<message xml:lang="ja">自動的に置換</message>
 </label>
 <label define="TMSG_SEARCH_WHERE">
 	<message xml:lang="en">Search where</message>
@@ -1248,6 +1328,7 @@
 	<message xml:lang="cn">搜索范围</message>
 	<message xml:lang="tw">搜索范圍</message>
 	<message xml:lang="sk">Kde hľadať</message>
+	<message xml:lang="ja">検索箇所</message>
 </label>
 <label define="TMSG_BEFORE_SEL">
 	<message xml:lang="en">Before selection</message>
@@ -1264,6 +1345,7 @@
 	<message xml:lang="cn">选定区域前</message>
 	<message xml:lang="tw">選定區域前</message>
 	<message xml:lang="sk">Pred výberom</message>
+	<message xml:lang="ja">選択箇所より前</message>
 </label>
 <label define="TMSG_WITHIN_SEL">
 	<message xml:lang="en">Within selection</message>
@@ -1280,6 +1362,7 @@
 	<message xml:lang="cn">选定区域中</message>
 	<message xml:lang="tw">選定區域中</message>
 	<message xml:lang="sk">Vo výbere</message>
+	<message xml:lang="ja">選択箇所の中</message>
 </label>
 <label define="TMSG_AFTER_SEL">
 	<message xml:lang="en">After selection</message>
@@ -1296,6 +1379,7 @@
 	<message xml:lang="cn">选定区域后</message>
 	<message xml:lang="tw">選定區域后</message>
 	<message xml:lang="sk">Za výberom</message>
+	<message xml:lang="ja">選択箇所より後ろ</message>
 </label>
 <label define="TMSG_IN_WHOLE_DOC">
 	<message xml:lang="en">In the whole document</message>
@@ -1312,6 +1396,7 @@
 	<message xml:lang="cn">整个文档</message>
 	<message xml:lang="tw">整個文檔</message>
 	<message xml:lang="sk">V celom dokumente</message>
+	<message xml:lang="ja">ドキュメント全体</message>
 </label>
 <label define="TMSG_DO_NOT_REPLACE">
 	<message xml:lang="en">Do not replace</message>
@@ -1328,6 +1413,7 @@
 	<message xml:lang="cn">不替换</message>
 	<message xml:lang="tw">不替換</message>
 	<message xml:lang="sk">Nenahrádzať</message>
+	<message xml:lang="ja">置換しない</message>
 </label>
 <label define="TMSG_BEFORE_CLOSING">
 	<message xml:lang="en">before closing it</message>
@@ -1344,6 +1430,7 @@
 	<message xml:lang="cn">关闭前</message>
 	<message xml:lang="tw">關閉前</message>
 	<message xml:lang="sk">pred zatvorením</message>
+	<message xml:lang="ja">閉じる前に</message>
 </label>
 <label define="TMSG_CLOSE_DOC">
 	<message xml:lang="en">Close a document</message>
@@ -1360,6 +1447,7 @@
 	<message xml:lang="cn">关闭文档</message>
 	<message xml:lang="tw">關閉文檔</message>
 	<message xml:lang="sk">Zatvoriť dokumetn</message>
+	<message xml:lang="ja">ドキュメントを閉じる</message>
 </label>
 <label define="TMSG_MATH_SYMBOLS">
 	<message xml:lang="en">Math symbols</message>
@@ -1376,6 +1464,7 @@
 	<message xml:lang="cn">数学符号</message>
 	<message xml:lang="tw">數學符號</message>
 	<message xml:lang="sk">Matematické symboly</message>
+	<message xml:lang="ja">数学記号</message>
 </label>
 <label define="TMSG_GRAPHICS">
 	<message xml:lang="en">Graphics</message>
@@ -1392,6 +1481,7 @@
 	<message xml:lang="cn">图形</message>
 	<message xml:lang="tw">圖形</message>
 	<message xml:lang="sk">Grafika</message>
+	<message xml:lang="ja">グラフィックス</message>
 </label>
 <label define="TMSG_LATIN_ALPHABET">
 	<message xml:lang="en">Latin alphabet</message>
@@ -1408,6 +1498,7 @@
 	<message xml:lang="cn">拉丁文字母表</message>
 	<message xml:lang="tw">拉丁文字母表</message>
 	<message xml:lang="sk">Latinská abeceda</message>
+	<message xml:lang="ja">ラテン文字</message>
 </label>
 <label define="TMSG_GREEK_ALPHABET">
 	<message xml:lang="en">Greek alphabet</message>
@@ -1424,6 +1515,7 @@
 	<message xml:lang="cn">希腊文字母表</message>
 	<message xml:lang="tw">希臘文字母表</message>
 	<message xml:lang="sk">Grécka abeceda</message>
+	<message xml:lang="ja">ギリシャ文字</message>
 </label>
 <label define="TMSG_SAVE">
 	<message xml:lang="en">Save</message>
@@ -1440,6 +1532,7 @@
 	<message xml:lang="cn">保存</message>
 	<message xml:lang="tw">保存</message>
 	<message xml:lang="sk">Uložiť</message>
+	<message xml:lang="ja">保存</message>
 </label>
 <label define="TMSG_TEXT">
 	<message xml:lang="en">Text</message>
@@ -1456,6 +1549,7 @@
 	<message xml:lang="cn">文本</message>
 	<message xml:lang="tw">文本</message>
 	<message xml:lang="sk">Text</message>
+	<message xml:lang="ja">テキスト</message>
 </label>
 <label define="TMSG_GRAPHIC">
 	<message xml:lang="en">Graphic</message>
@@ -1472,6 +1566,7 @@
 	<message xml:lang="cn">图形</message>
 	<message xml:lang="tw">圖形</message>
 	<message xml:lang="sk">Grafika</message>
+	<message xml:lang="ja">グラフィックス</message>
 </label>
 <label define="TMSG_SYMBOL">
 	<message xml:lang="en">Symbol</message>
@@ -1488,6 +1583,7 @@
 	<message xml:lang="cn">符号</message>
 	<message xml:lang="tw">符號</message>
 	<message xml:lang="sk">Symbol</message>
+	<message xml:lang="ja">シンボル</message>
 </label>
 <label define="TMSG_PICTURE">
 	<message xml:lang="en">Image</message>
@@ -1504,6 +1600,7 @@
 	<message xml:lang="cn">图片</message>
 	<message xml:lang="tw">圖片</message>
 	<message xml:lang="sk">Obrázok</message>
+	<message xml:lang="ja">イメージ</message>
 </label>
 <label define="TMSG_EL_TYPE">
 	<message xml:lang="en">XML elements</message>
@@ -1520,6 +1617,7 @@
 	<message xml:lang="cn">XML</message>
 	<message xml:lang="tw">XML</message>
 	<message xml:lang="sk">XML</message>
+	<message xml:lang="ja">XML 要素</message>
 </label>
 <label define="TMSG_AFTER">
 	<message xml:lang="en">after</message>
@@ -1536,6 +1634,7 @@
 	<message xml:lang="cn">后</message>
 	<message xml:lang="tw">后</message>
 	<message xml:lang="sk">za</message>
+	<message xml:lang="ja">後</message>
 </label>
 <label define="TMSG_BEFORE">
 	<message xml:lang="en">before</message>
@@ -1552,6 +1651,7 @@
 	<message xml:lang="cn">前</message>
 	<message xml:lang="tw">前</message>
 	<message xml:lang="sk">pred</message>
+	<message xml:lang="ja">前</message>
 </label>
 <label define="TMSG_AROUND">
 	<message xml:lang="en">around</message>
@@ -1568,6 +1668,7 @@
 	<message xml:lang="cn">外</message>
 	<message xml:lang="tw">外</message>
 	<message xml:lang="sk">okolo</message>
+	<message xml:lang="ja">周囲</message>
 </label>
 <label define="TMSG_INCLUDE">
 	<message xml:lang="en">Include</message>
@@ -1584,6 +1685,7 @@
 	<message xml:lang="cn">包含</message>
 	<message xml:lang="tw">包含</message>
 	<message xml:lang="sk">Zahrnúť</message>
+	<message xml:lang="ja">インクルード</message>
 </label>
 <label define="TMSG_PASTE">
 	<message xml:lang="en">Paste</message>
@@ -1600,6 +1702,7 @@
 	<message xml:lang="cn">粘贴</message>
 	<message xml:lang="tw">粘貼</message>
 	<message xml:lang="sk">Prilepiť</message>
+	<message xml:lang="ja">貼り付け</message>
 </label>
 <label define="TMSG_TO_CREATE">
 	<message xml:lang="en">to create</message>
@@ -1616,6 +1719,7 @@
 	<message xml:lang="cn">创建</message>
 	<message xml:lang="tw">創建</message>
 	<message xml:lang="sk">vytvoriť</message>
+	<message xml:lang="ja">作成</message>
 </label>
 <label define="TMSG_INSERT">
 	<message xml:lang="en">Insert</message>
@@ -1632,6 +1736,7 @@
 	<message xml:lang="cn">插入</message>
 	<message xml:lang="tw">插入</message>
 	<message xml:lang="sk">Vložiť</message>
+	<message xml:lang="ja">挿入</message>
 </label>
 <label define="TMSG_PAGE_BRK">
 	<message xml:lang="en">Page break</message>
@@ -1648,6 +1753,7 @@
 	<message xml:lang="cn">分页符</message>
 	<message xml:lang="tw">分頁符</message>
 	<message xml:lang="sk">Koniec strany</message>
+	<message xml:lang="ja">改ページ</message>
 </label>
 <label define="TMSG_LANG_OF_EL">
 	<message xml:lang="en">Language of element</message>
@@ -1664,6 +1770,7 @@
 	<message xml:lang="cn">元素语言</message>
 	<message xml:lang="tw">元素語言</message>
 	<message xml:lang="sk">Jazyk prvku</message>
+	<message xml:lang="ja">要素の言語</message>
 </label>
 <label define="TMSG_INHERITED_LANG">
 	<message xml:lang="en">Inherited language:</message>
@@ -1680,6 +1787,7 @@
 	<message xml:lang="cn">继承语言:</message>
 	<message xml:lang="tw">繼承語言:</message>
 	<message xml:lang="sk">Prevzatý jazyk:</message>
+	<message xml:lang="ja">引き継いでいる言語:</message>
 </label>
 <label define="TMSG_NOT_FOUND">
 	<message xml:lang="en">Not found</message>
@@ -1696,6 +1804,7 @@
 	<message xml:lang="cn">未发现</message>
 	<message xml:lang="tw">未發現</message>
 	<message xml:lang="sk">Nenájdené</message>
+	<message xml:lang="ja">見つかりません</message>
 </label>
 <label define="TMSG_SEARCH_IN">
 	<message xml:lang="en">Search in</message>
@@ -1712,6 +1821,7 @@
 	<message xml:lang="cn">搜索</message>
 	<message xml:lang="tw">搜索</message>
 	<message xml:lang="sk">Hľadať v</message>
+	<message xml:lang="ja">ファイル内を検索</message>
 </label>
 <label define="TMSG_SEARCH">
 	<message xml:lang="en">Search</message>
@@ -1728,6 +1838,7 @@
 	<message xml:lang="cn">搜索</message>
 	<message xml:lang="tw">搜索</message>
 	<message xml:lang="sk">Hľadať</message>
+	<message xml:lang="ja">検索</message>
 </label>
 <label define="TMSG_EL_RO">
 	<message xml:lang="en">Read only element</message>
@@ -1744,6 +1855,7 @@
 	<message xml:lang="cn">只读元素</message>
 	<message xml:lang="tw">只讀元素</message>
 	<message xml:lang="sk">Prvok iba na čítanie</message>
+	<message xml:lang="ja">読み取り専用要素</message>
 </label>
 <label define="TMSG_NOTHING_TO_REPLACE">
 	<message xml:lang="en">Nothing to replace</message>
@@ -1760,6 +1872,7 @@
 	<message xml:lang="cn">未替换</message>
 	<message xml:lang="tw">未替換</message>
 	<message xml:lang="sk">Nie je čo nahrádzať</message>
+	<message xml:lang="ja">置換するものがありません</message>
 </label>
 <label define="TMSG_STD_CHAR">
 	<message xml:lang="en">Standard characters</message>
@@ -1776,6 +1889,7 @@
 	<message xml:lang="cn">标准字符</message>
 	<message xml:lang="tw">標準字符</message>
 	<message xml:lang="sk">Štandardné znaky</message>
+	<message xml:lang="ja">標準のキャラクタ</message>
 </label>
 <label define="TMSG_STD_GRAPHICS">
 	<message xml:lang="en">Standard graphics</message>
@@ -1792,6 +1906,7 @@
 	<message xml:lang="cn">标准图形</message>
 	<message xml:lang="tw">標準圖形</message>
 	<message xml:lang="sk">Štandardná grafika</message>
+	<message xml:lang="ja">標準のグラフィックス</message>
 </label>
 <label define="TMSG_STD_FORMAT">
 	<message xml:lang="en">Standard format</message>
@@ -1808,6 +1923,7 @@
 	<message xml:lang="cn">标准格式</message>
 	<message xml:lang="tw">標準格式</message>
 	<message xml:lang="sk">Štandardný formát</message>
+	<message xml:lang="ja">標準のフォーマット</message>
 </label>
 <label define="TMSG_STD_GEOMETRY">
 	<message xml:lang="en">Standard geometry</message>
@@ -1824,6 +1940,7 @@
 	<message xml:lang="cn">Standard geometry</message>
 	<message xml:lang="tw">Standard geometry</message>
 	<message xml:lang="sk">Štandardné rozmery</message>
+	<message xml:lang="ja">標準配置</message>
 </label>
 <label define="TMSG_TYPOGRAPHIC_POINTS">
 	<message xml:lang="en">pt</message>
@@ -1840,6 +1957,7 @@
 	<message xml:lang="cn">pt</message>
 	<message xml:lang="tw">pt</message>
 	<message xml:lang="sk">body</message>
+	<message xml:lang="ja">pt</message>
 </label>
 <label define="TMSG_LINE_STYLE">
 	<message xml:lang="en">Line style</message>
@@ -1856,6 +1974,7 @@
 	<message xml:lang="cn">样式</message>
 	<message xml:lang="tw">樣式</message>
 	<message xml:lang="sk">Štýl riadkov</message>
+	<message xml:lang="ja">線のスタイル</message>
 </label>
 <label define="TMSG_LINE_WEIGHT">
 	<message xml:lang="en">Line weight</message>
@@ -1872,6 +1991,7 @@
 	<message xml:lang="cn">粗度</message>
 	<message xml:lang="tw">粗度</message>
 	<message xml:lang="sk">Šírka riadka</message>
+	<message xml:lang="ja">線の太さ</message>
 </label>
 <label define="TMSG_FILL_PATTERN">
 	<message xml:lang="en">Fill pattern</message>
@@ -1888,6 +2008,7 @@
 	<message xml:lang="cn">填充样式</message>
 	<message xml:lang="tw">填充樣式</message>
 	<message xml:lang="sk">Vzor výplne</message>
+	<message xml:lang="ja">フィル・パターン</message>
 </label>
 <label define="TMSG_SPLIT">
 	<message xml:lang="en">Split</message>
@@ -1904,6 +2025,7 @@
 	<message xml:lang="cn">分割</message>
 	<message xml:lang="tw">分割</message>
 	<message xml:lang="sk">Rozdeliť</message>
+	<message xml:lang="ja">分割</message>
 </label>
 <label define="TMSG_OBJECT_TYPE">
 	<message xml:lang="en">Object type</message>
@@ -1920,6 +2042,7 @@
 	<message xml:lang="cn">对象类型</message>
 	<message xml:lang="tw">對象類型</message>
 	<message xml:lang="sk">Typ objektu</message>
+	<message xml:lang="ja">オブジェクトタイプ</message>
 </label>
 <label define="TMSG_GOTO_PAGE">
 	<message xml:lang="en">Goto page number:</message>
@@ -1936,6 +2059,7 @@
 	<message xml:lang="cn">跳转到:</message>
 	<message xml:lang="tw">跳轉到:</message>
 	<message xml:lang="sk">Prejsť na stranu číslo:</message>
+	<message xml:lang="ja">移動先ページ番号:</message>
 </label>
 <label define="TMSG_ANY">
 	<message xml:lang="en">Any</message>
@@ -1952,6 +2076,7 @@
 	<message xml:lang="cn">任意</message>
 	<message xml:lang="tw">任意</message>
 	<message xml:lang="sk">Ľubovoľný</message>
+	<message xml:lang="ja">その他</message>
 </label>
 <label define="TMSG_ATTR_TO_SEARCH">
 	<message xml:lang="en">Attribute to search</message>
@@ -1968,6 +2093,7 @@
 	<message xml:lang="cn">搜索属性</message>
 	<message xml:lang="tw">搜索屬性</message>
 	<message xml:lang="sk">Hľadať atribút</message>
+	<message xml:lang="ja">属性を検索</message>
 </label>
 <label define="TMSG_TYPE_TO_SEARCH">
 	<message xml:lang="en">Type to search</message>
@@ -1984,6 +2110,7 @@
 	<message xml:lang="cn">搜索类型</message>
 	<message xml:lang="tw">搜索類型</message>
 	<message xml:lang="sk">Hľadať typ</message>
+	<message xml:lang="ja">検索の種類</message>
 </label>
 <label define="TMSG_NATURES">
 	<message xml:lang="en">Natures</message>
@@ -2000,6 +2127,7 @@
 	<message xml:lang="cn">Natures</message>
 	<message xml:lang="tw">Natures</message>
 	<message xml:lang="sk">Prirodzený</message>
+	<message xml:lang="ja">種類</message>
 </label>
 <label define="TMSG_ATTRIBUTE_NAME">
 	<message xml:lang="en">Attribute</message>
@@ -2016,6 +2144,7 @@
 	<message xml:lang="cn">属性</message>
 	<message xml:lang="tw">屬性</message>
 	<message xml:lang="sk">Atríbútu</message>
+	<message xml:lang="ja">属性</message>
 </label>
 <label define="TMSG_ATTRIBUTE_VALUE">
 	<message xml:lang="en">Value</message>
@@ -2032,6 +2161,7 @@
 	<message xml:lang="cn">值</message>
 	<message xml:lang="tw">值</message>
 	<message xml:lang="sk">Hodnota</message>
+	<message xml:lang="ja">値</message>
 </label>
 <label define="TMSG_VALUE_OF_ATTR">
 	<message xml:lang="en">Attribute value</message>
@@ -2048,6 +2178,7 @@
 	<message xml:lang="cn">属性值</message>
 	<message xml:lang="tw">屬性值</message>
 	<message xml:lang="sk">Hodnota atríbútu</message>
+	<message xml:lang="ja">属性値</message>
 </label>
 <label define="TMSG_UNKNOWN_ATTR">
 	<message xml:lang="en">Unknown attribute</message>
@@ -2064,6 +2195,7 @@
 	<message xml:lang="cn">为之属性</message>
 	<message xml:lang="tw">為之屬性</message>
 	<message xml:lang="sk">Neznámy atribút</message>
+	<message xml:lang="ja">未知の属性</message>
 </label>
 <label define="TMSG_CANCEL">
 	<message xml:lang="en">Cancel</message>
@@ -2080,6 +2212,7 @@
 	<message xml:lang="cn">取消</message>
 	<message xml:lang="tw">取消</message>
 	<message xml:lang="sk">Zrušiť</message>
+	<message xml:lang="ja">キャンセル</message>
 </label>
 <label define="TMSG_ERROR_PS_TRANSLATION">
 	<message xml:lang="en">Error in PostScript translation</message>
@@ -2096,6 +2229,7 @@
 	<message xml:lang="cn">转换为 PostScript 时发生错误</message>
 	<message xml:lang="tw">轉換為 PostScript 時發生錯誤</message>
 	<message xml:lang="sk">Chyba v PostScriptovom preklade</message>
+	<message xml:lang="ja">ポストスクリプト翻訳におけるエラー</message>
 </label>
 <label define="TMSG_UNKNOWN_PRINTER">
 	<message xml:lang="en">Command refused by the spooler &quot;%s&quot;</message>
@@ -2112,6 +2246,7 @@
 	<message xml:lang="cn">命令被拒绝 &quot;%s&quot;</message>
 	<message xml:lang="tw">命令被拒絕 &quot;%s&quot;</message>
 	<message xml:lang="sk">Príkaz odmietnutý tlačiarňou &quot;%s&quot;</message>
+	<message xml:lang="ja">スプーラ"%s"によってコマンドが拒否されました</message>
 </label>
 <label define="TMSG_CANNOT_CREATE_PS">
 	<message xml:lang="en">Cannot create &quot;%s&quot;</message>
@@ -2128,6 +2263,7 @@
 	<message xml:lang="cn">无法创建 &quot;%s&quot;</message>
 	<message xml:lang="tw">無法創建 &quot;%s&quot;</message>
 	<message xml:lang="sk">Nedá sa vytvoriť &quot;%s&quot;</message>
+	<message xml:lang="ja">"%s"を作成できません</message>
 </label>
 <label define="TMSG_OVERLINE">
 	<message xml:lang="en">Overline</message>
@@ -2144,6 +2280,7 @@
 	<message xml:lang="cn">Overline</message>
 	<message xml:lang="tw">Overline</message>
 	<message xml:lang="sk">Pruh nad</message>
+	<message xml:lang="ja">オーバライン</message>
 </label>
 <label define="TMSG_DOCUMENT_FORMAT">
 	<message xml:lang="en">Document format</message>
@@ -2160,6 +2297,7 @@
 	<message xml:lang="cn">文档格式</message>
 	<message xml:lang="tw">文檔格式</message>
 	<message xml:lang="sk">Formát dokumentu</message>
+	<message xml:lang="ja">ドキュメント形式</message>
 </label>
 <label define="TMSG_DEL_ATTR">
 	<message xml:lang="en">Remove attribute</message>
@@ -2176,6 +2314,7 @@
 	<message xml:lang="cn">移除属性</message>
 	<message xml:lang="tw">移除屬性</message>
 	<message xml:lang="sk">Odstániť atribút</message>
+	<message xml:lang="ja">属性の消去</message>
 </label>
 <label define="TMSG_CPCOLORBG">
 	<message xml:lang="en">Select a background color</message>
@@ -2189,6 +2328,7 @@
 	<message xml:lang="cn">背景色</message>
 	<message xml:lang="tw">背景色</message>
 	<message xml:lang="sk">Farba pozadia</message>
+	<message xml:lang="ja">背景色を選択</message>
 </label>
 <label define="TMSG_CPCOLORFG">
 	<message xml:lang="en">Select a text color</message>
@@ -2202,6 +2342,7 @@
 	<message xml:lang="cn">前景色</message>
 	<message xml:lang="tw">前景色</message>
 	<message xml:lang="sk">Farba popredia</message>
+	<message xml:lang="ja">文字色を選択</message>
 </label>
 <label define="TMSG_NO_ELEMENT">
 	<message xml:lang="en">Select a generic XML structure</message>
@@ -2215,6 +2356,7 @@
 	<message xml:lang="cn">选择一般性 XML 框架</message>
 	<message xml:lang="tw">選擇一般性 XML 框架</message>
 	<message xml:lang="sk">Vybrať základnú štruktúru XML</message>
+	<message xml:lang="ja">一般的なXML 構造を選択</message>
 </label>
 <label define="TMSG_What">
 	<message xml:lang="en">Checking</message>
@@ -2231,6 +2373,7 @@
 	<message xml:lang="cn">检查</message>
 	<message xml:lang="tw">檢查</message>
 	<message xml:lang="sk">Kontrola</message>
+	<message xml:lang="ja">チェック</message>
 </label>
 <label define="TMSG_Pass_Without">
 	<message xml:lang="en">Search/Skip</message>
@@ -2247,6 +2390,7 @@
 	<message xml:lang="cn">查找/跳过</message>
 	<message xml:lang="tw">查找/跳過</message>
 	<message xml:lang="sk">Hľadať/Preskočiť</message>
+	<message xml:lang="ja">検索</message>
 </label>
 <label define="TMSG_Replace_With">
 	<message xml:lang="en">Replace (+ dic)</message>
@@ -2263,6 +2407,7 @@
 	<message xml:lang="cn">替换 (+ dic)</message>
 	<message xml:lang="tw">替換 (+ dic)</message>
 	<message xml:lang="sk">Nahradiť (+ slovník)</message>
+	<message xml:lang="ja">置換 (+ dic)</message>
 </label>
 <label define="TMSG_Replace_Without">
 	<message xml:lang="en">Replace and next</message>
@@ -2279,6 +2424,7 @@
 	<message xml:lang="cn">更正并查找写一个</message>
 	<message xml:lang="tw">更正并查找寫一個</message>
 	<message xml:lang="sk">Nahradiť a nájsť ďalšie</message>
+	<message xml:lang="ja">置換して次へ</message>
 </label>
 <label define="TMSG_Keep_Unknown">
 	<message xml:lang="en">Other language</message>
@@ -2295,6 +2441,7 @@
 	<message xml:lang="cn">其他语言</message>
 	<message xml:lang="tw">其他語言</message>
 	<message xml:lang="sk">Iný jazyk</message>
+	<message xml:lang="ja">他の言語</message>
 </label>
 <label define="TMSG_Pass_With">
 	<message xml:lang="en">Learn</message>
@@ -2311,6 +2458,7 @@
 	<message xml:lang="cn">学习</message>
 	<message xml:lang="tw">學習</message>
 	<message xml:lang="sk">Pridať do slovníka</message>
+	<message xml:lang="ja">記憶する</message>
 </label>
 <label define="TMSG_Specials">
 	<message xml:lang="en">words containing:</message>
@@ -2327,6 +2475,7 @@
 	<message xml:lang="cn">包含词语:</message>
 	<message xml:lang="tw">包含詞語:</message>
 	<message xml:lang="sk">slová obsahujúce:</message>
+	<message xml:lang="ja">以下を含む単語</message>
 </label>
 <label define="TMSG_Correct">
 	<message xml:lang="en">Spell checking ...</message>
@@ -2343,6 +2492,7 @@
 	<message xml:lang="cn">拼写检查 ...</message>
 	<message xml:lang="tw">拼寫檢查 ...</message>
 	<message xml:lang="sk">Kontrola pravopisu ...</message>
+	<message xml:lang="ja">スペルをチェックしています ...</message>
 </label>
 <label define="TMSG_Romans">
 	<message xml:lang="en">Roman numerals</message>
@@ -2359,6 +2509,7 @@
 	<message xml:lang="cn">罗马数字</message>
 	<message xml:lang="tw">羅馬數字</message>
 	<message xml:lang="sk">Rímske čísla</message>
+	<message xml:lang="ja">ロマン数字</message>
 </label>
 <label define="TMSG_Ignore">
 	<message xml:lang="en">Ignore</message>
@@ -2375,6 +2526,7 @@
 	<message xml:lang="cn">忽略</message>
 	<message xml:lang="tw">忽略</message>
 	<message xml:lang="sk">Ignorovať</message>
+	<message xml:lang="ja">無視</message>
 </label>
 <label define="TMSG_Capitals">
 	<message xml:lang="en">words that are all caps</message>
@@ -2391,6 +2543,7 @@
 	<message xml:lang="cn">全为大写的词语</message>
 	<message xml:lang="tw">全為大寫的詞語</message>
 	<message xml:lang="sk">slová napísané VEĽKÝMI písmenami</message>
+	<message xml:lang="ja">全て大文字の単語</message>
 </label>
 <label define="TMSG_Arabics">
 	<message xml:lang="en">words with digits</message>
@@ -2407,6 +2560,7 @@
 	<message xml:lang="cn">含数字的词语</message>
 	<message xml:lang="tw">含數字的詞語</message>
 	<message xml:lang="sk">slová s číslami</message>
+	<message xml:lang="ja">数字入りの単語</message>
 </label>
 <label define="TMSG_NO_PARAM">
 	<message xml:lang="en">Parameter file error</message>
@@ -2423,6 +2577,7 @@
 	<message xml:lang="cn">参数文件错误</message>
 	<message xml:lang="tw">參數文件錯誤</message>
 	<message xml:lang="sk">Chyba súboru s parametrami</message>
+	<message xml:lang="ja">パラメータファイルエラー</message>
 </label>
 <label define="TMSG_NO_KEYBOARD">
 	<message xml:lang="en">No keyboard file</message>
@@ -2439,6 +2594,7 @@
 	<message xml:lang="cn">无键盘文件</message>
 	<message xml:lang="tw">無鍵盤文件</message>
 	<message xml:lang="sk">Neexistuje súbor klávesnice</message>
+	<message xml:lang="ja">キーボードファイルがありません</message>
 </label>
 <label define="TMSG_NO_SAVE">
 	<message xml:lang="en">Cannot save the document dictionary</message>
@@ -2455,6 +2611,7 @@
 	<message xml:lang="cn">无法保存文档字典</message>
 	<message xml:lang="tw">無法保存文檔字典</message>
 	<message xml:lang="sk">Slovník sa nedá uložiť</message>
+	<message xml:lang="ja">このドキュメントディクショナリは保存できません</message>
 </label>
 <label define="TMSG_REFUSE_WORD">
 	<message xml:lang="en">Incorrect word &quot;%s&quot; refused in this dictionary</message>
@@ -2471,6 +2628,7 @@
 	<message xml:lang="cn">错误词语 &quot;%s&quot; 已被本字典拒绝</message>
 	<message xml:lang="tw">錯誤詞語 &quot;%s&quot; 已被本字典拒絕</message>
 	<message xml:lang="sk">Nesprávne slovo "%s" bolo zamietnuté v tomto slovníku</message>
+	<message xml:lang="ja">不正な単語 "%s" がこのディクショナリに拒否されました</message>
 </label>
 <label define="TMSG_ADD_WORD">
 	<message xml:lang="en">Word "%s" added in the document dictionary</message>
@@ -2487,6 +2645,7 @@
 	<message xml:lang="cn">词语 "%s" 已加入字典</message>
 	<message xml:lang="tw">詞語 "%s" 已加入字典</message>
 	<message xml:lang="sk">Slovo "%s" bolo pridané do slovníka</message>
+	<message xml:lang="ja">単語 "%s" がドキュメントディクショナリに追加されました</message>
 </label>
 <label define="TMSG_END_CHECK">
 	<message xml:lang="en">End of spell checking</message>
@@ -2503,6 +2662,7 @@
 	<message xml:lang="cn">拼写检查完成</message>
 	<message xml:lang="tw">拼寫檢查完成</message>
 	<message xml:lang="sk">Koniec kontroly pravopisu</message>
+	<message xml:lang="ja">スペルチェックが完了しました</message>
 </label>
 <label define="TMSG_STOP_CHECK">
 	<message xml:lang="en">Spell checking aborted</message>
@@ -2519,6 +2679,7 @@
 	<message xml:lang="cn">拼写检查已终止</message>
 	<message xml:lang="tw">拼寫檢查已終止</message>
 	<message xml:lang="sk">Kontrola pravopisu prerušená</message>
+	<message xml:lang="ja">スペルチェックが中断されました</message>
 </label>
 <label define="TMSG_NO_SELECT">
 	<message xml:lang="en">Please select a document</message>
@@ -2535,6 +2696,7 @@
 	<message xml:lang="cn">请选择文档</message>
 	<message xml:lang="tw">請選擇文檔</message>
 	<message xml:lang="sk">Prosím vyberte dokument</message>
+	<message xml:lang="ja">ドキュメントを選択してください</message>
 </label>
 <label define="TMSG_OK_SAVE">
 	<message xml:lang="en">Document dictionary saved: %s</message>
@@ -2551,6 +2713,7 @@
 	<message xml:lang="cn">文档字典已保存: %s</message>
 	<message xml:lang="tw">文檔字典已保存: %s</message>
 	<message xml:lang="sk">Slovník bol uložený</message>
+	<message xml:lang="ja">ドキュメント辞書を保存しました: %s</message>
 </label>
 <label define="TMSG_NOT_AVAILABLE">
 	<message xml:lang="en">Not available in this version</message>
@@ -2564,6 +2727,7 @@
 	<message xml:lang="cn">此版本尚未提供此功能</message>
 	<message xml:lang="tw">此版本尚未提供此功能</message>
 	<message xml:lang="sk">Nie je prístupné v tejto verzii</message>
+	<message xml:lang="ja">このバージョンでは利用できません</message>
 </label>
 <label define="TMSG_ATTACHDETACH">
 	<message xml:lang="en">Enable/Disable palette</message>
@@ -2577,6 +2741,7 @@
 	<message xml:lang="cn">启用/禁用小面板</message>
 	<message xml:lang="tw">啟用/禁用小面板</message>
 	<message xml:lang="sk">Vysunúť/zasunúť nástrojovú lištu</message>
+	<message xml:lang="ja">パレットの有効/無効</message>
 </label>
 <label define="TMSG_TOOLS">
 	<message xml:lang="en">Tools</message>
@@ -2590,6 +2755,7 @@
 	<message xml:lang="cn">工具</message>
 	<message xml:lang="tw">工具</message>
 	<message xml:lang="sk">Nástroje</message>
+	<message xml:lang="ja">ツール</message>
 </label>
 <label define="TMSG_ATTR_MANDATORY">
 	<message xml:lang="en">Mandatory attribute, it can't be removed</message>
@@ -2603,6 +2769,7 @@
 	<message xml:lang="cn">无法移出强制性属性</message>
 	<message xml:lang="tw">無法移出強制性屬性</message>
 	<message xml:lang="sk">Toto je povinný atribút, ktorý nemôže byť odstránený</message>
+	<message xml:lang="ja">義務的な属性。それを取り除くことができません</message>
 </label>
 <label define="TMSG_REFRESH">
 	<message xml:lang="en">Refresh</message>
@@ -2616,6 +2783,7 @@
 	<message xml:lang="cn">刷新</message>
 	<message xml:lang="tw">刷新</message>
 	<message xml:lang="sk">Obnoviť</message>
+	<message xml:lang="ja">更新</message>
 </label>
 <label define="TMSG_FORMATLEFT">
 	<message xml:lang="en">Align left</message>
@@ -2629,6 +2797,7 @@
 	<message xml:lang="cn">左</message>
 	<message xml:lang="tw">左</message>
 	<message xml:lang="sk">Doľava</message>
+	<message xml:lang="ja">文字列を左に揃える</message>
 </label>
 <label define="TMSG_FORMATRIGHT">
 	<message xml:lang="en">Align right</message>
@@ -2642,6 +2811,7 @@
 	<message xml:lang="cn">中</message>
 	<message xml:lang="tw">中</message>
 	<message xml:lang="sk">Doprava</message>
+	<message xml:lang="ja">文字列を右に揃える</message>
 </label>
 <label define="TMSG_FORMATCENTER">
 	<message xml:lang="en">Center</message>
@@ -2655,6 +2825,7 @@
 	<message xml:lang="cn">右</message>
 	<message xml:lang="tw">右</message>
 	<message xml:lang="sk">Centrovať</message>
+	<message xml:lang="ja">中央揃え</message>
 </label>
 <label define="TMSG_FORMATJUSTIFY">
 	<message xml:lang="en">Justify</message>
@@ -2668,6 +2839,7 @@
 	<message xml:lang="cn">对齐</message>
 	<message xml:lang="tw">對齊</message>
 	<message xml:lang="sk">Do bloku</message>
+	<message xml:lang="ja">両端揃え</message>
 </label>
 <label define="TMSG_APPLY_CLASS">
 	<message xml:lang="en">Apply class</message>
@@ -2684,6 +2856,7 @@
 	<message xml:lang="cn">应用 class</message>
 	<message xml:lang="tw">應用 class</message>
 	<message xml:lang="sk">Aplikovať triedu (class)</message>
+	<message xml:lang="ja">クラスを適用</message>
 </label>
 <label define="TMSG_SEL_CLASS">
 	<message xml:lang="en">Select a class or a pseudo-class</message>
@@ -2700,6 +2873,7 @@
 	<message xml:lang="cn">选择一个 class 或 pseudo-class</message>
 	<message xml:lang="tw">選擇一個 class 或 pseudo-class</message>
 	<message xml:lang="sk">Vyberte triedu alebo pseudotriedu</message>
+	<message xml:lang="ja">クラスまたは擬似クラスを選択</message>
 </label>
 <label define="TMSG_SEL">
 	<message xml:lang="en">Select</message>
@@ -2716,6 +2890,7 @@
 	<message xml:lang="cn">选择</message>
 	<message xml:lang="tw">選擇</message>
 	<message xml:lang="sk">Vybrať</message>
+	<message xml:lang="ja">選択</message>
 </label>
 <label define="TMSG_DISCARD">
 	<message xml:lang="en">Discard</message>
@@ -2728,6 +2903,7 @@
 	<message xml:lang="tw">放棄</message>
 	<message xml:lang="sk">Skartovať</message>
 	<message xml:lang="ru">Отменить выбор</message>
+	<message xml:lang="ja">破棄</message>
 </label>
 <label define="TMSG_MATHML">
 	<message xml:lang="en">Math</message>
@@ -2744,6 +2920,7 @@
 	<message xml:lang="cn">Maths</message>
 	<message xml:lang="tw">Maths</message>
 	<message xml:lang="sk">Vzorce</message>
+	<message xml:lang="ja">数式 / Math</message>
 </label>
 <label define="TMSG_MISC">
 	<message xml:lang="en">Misc</message>
@@ -2757,6 +2934,7 @@
 	<message xml:lang="cn">杂项</message>
 	<message xml:lang="tw">雜項</message>
 	<message xml:lang="sk">Rôzne</message>
+	<message xml:lang="ja">その他</message>
 </label>
 <label define="TMSG_BINARY_REL">
 	<message xml:lang="en">Binary relations</message>
@@ -2770,6 +2948,7 @@
 	<message xml:lang="cn">二元关系</message>
 	<message xml:lang="tw">二元關系</message>
 	<message xml:lang="sk">Relačné operátory</message>
+	<message xml:lang="ja">バイナリー関係</message>
 </label>
 <label define="TMSG_BINARY_REL_NEG">
 	<message xml:lang="en">Binary relations of negation</message>
@@ -2783,6 +2962,7 @@
 	<message xml:lang="cn">负二元关系</message>
 	<message xml:lang="tw">負二元關系</message>
 	<message xml:lang="sk">Negované relačné operátory</message>
+	<message xml:lang="ja">バイナリー否定の関係</message>
 </label>
 <label define="TMSG_OPERATOR">
 	<message xml:lang="en">Operators</message>
@@ -2796,6 +2976,7 @@
 	<message xml:lang="cn">算符</message>
 	<message xml:lang="tw">算符</message>
 	<message xml:lang="sk">Operátory</message>
+	<message xml:lang="ja">オペレータ</message>
 </label>
 <label define="TMSG_GREEK_CAP">
 	<message xml:lang="en">Greek alphabet (capital)</message>
@@ -2809,6 +2990,7 @@
 	<message xml:lang="cn">希腊字母(大写)</message>
 	<message xml:lang="tw">希臘字母(大寫)</message>
 	<message xml:lang="sk">Grácka abeceda (veľké)</message>
+	<message xml:lang="ja">ギリシャ文字 (大文字)</message>
 </label>
 <label define="TMSG_ARROW">
 	<message xml:lang="en">Arrows</message>
@@ -2822,6 +3004,7 @@
 	<message xml:lang="cn">键头</message>
 	<message xml:lang="tw">鍵頭</message>
 	<message xml:lang="sk">Šipky</message>
+	<message xml:lang="ja">矢印</message>
 </label>
 <label define="TMSG_SPECHAR">
 	<message xml:lang="en">Special characters</message>
@@ -2835,6 +3018,7 @@
 	<message xml:lang="cn">特殊字符</message>
 	<message xml:lang="tw">特殊字符</message>
 	<message xml:lang="sk">Špeciálne znaky</message>
+	<message xml:lang="ja">特殊文字</message>
 </label>
 <label define="TMSG_BUTTON_INTERRUPT">
 	<message xml:lang="en">Interrupt transfer</message>
@@ -2851,6 +3035,7 @@
 	<message xml:lang="cn">终止传输</message>
 	<message xml:lang="tw">終止傳輸</message>
 	<message xml:lang="sk">Prerušiť prenos</message>
+	<message xml:lang="ja">転送中止</message>
 </label>
 <label define="TMSG_BUTTON_PREVIOUS">
 	<message xml:lang="en">Previous document</message>
@@ -2867,6 +3052,7 @@
 	<message xml:lang="cn">上一文档</message>
 	<message xml:lang="tw">上一文檔</message>
 	<message xml:lang="sk">Predchádzajúci dokument</message>
+	<message xml:lang="ja">戻る</message>
 </label>
 <label define="TMSG_BUTTON_NEXT">
 	<message xml:lang="en">Next document</message>
@@ -2883,6 +3069,7 @@
 	<message xml:lang="cn">下一文档</message>
 	<message xml:lang="tw">下一文檔</message>
 	<message xml:lang="sk">Nasledujúci dokument</message>
+	<message xml:lang="ja">進む</message>
 </label>
 <label define="TMSG_BUTTON_RELOAD">
 	<message xml:lang="en">Reload</message>
@@ -2899,6 +3086,7 @@
 	<message xml:lang="cn">重新载入</message>
 	<message xml:lang="tw">重新載入</message>
 	<message xml:lang="sk">Načítať najnovšiu verziu stránky</message>
+	<message xml:lang="ja">更新</message>
 </label>
 <label define="TMSG_BUTTON_SAVE">
 	<message xml:lang="en">Save</message>
@@ -2915,6 +3103,7 @@
 	<message xml:lang="cn">保存</message>
 	<message xml:lang="tw">保存</message>
 	<message xml:lang="sk">Uložiť</message>
+	<message xml:lang="ja">保存</message>
 </label>
 <label define="TMSG_BUTTON_SAVE_ALL">
 	<message xml:lang="en">Save All</message>
@@ -2931,6 +3120,7 @@
 	<message xml:lang="cn">保存</message>
 	<message xml:lang="tw">保存</message>
 	<message xml:lang="sk">Uložiť</message>
+	<message xml:lang="ja">すべて保存</message>
 </label>
 <label define="TMSG_BUTTON_NEW">
 	<message xml:lang="en">New document</message>
@@ -2947,6 +3137,7 @@
 	<message xml:lang="cn">新建 文档</message>
 	<message xml:lang="tw">新建  文檔</message>
 	<message xml:lang="sk">Nový dokument</message>
+	<message xml:lang="ja">新しいXHTML文書</message>
 </label>
 <label define="TMSG_BUTTON_OPEN">
 	<message xml:lang="en">Open document</message>
@@ -2963,6 +3154,7 @@
 	<message xml:lang="cn">打开文档</message>
 	<message xml:lang="tw">打開文檔</message>
 	<message xml:lang="sk">Otvoriť dokument</message>
+	<message xml:lang="ja">開く</message>
 </label>
 <label define="TMSG_BUTTON_PRINT">
 	<message xml:lang="en">Print</message>
@@ -2979,6 +3171,7 @@
 	<message xml:lang="cn">打印</message>
 	<message xml:lang="tw">打印</message>
 	<message xml:lang="sk">Tlačiť</message>
+	<message xml:lang="ja">印刷</message>
 </label>
 <label define="TMSG_BUTTON_SEARCH">
 	<message xml:lang="en">Find</message>
@@ -2995,6 +3188,7 @@
 	<message xml:lang="cn">搜索</message>
 	<message xml:lang="tw">搜索</message>
 	<message xml:lang="sk">Hľadať</message>
+	<message xml:lang="ja">検索</message>
 </label>
 <label define="TMSG_BUTTON_HOME">
 	<message xml:lang="en">Home</message>
@@ -3011,6 +3205,7 @@
 	<message xml:lang="cn">主页</message>
 	<message xml:lang="tw">主頁</message>
 	<message xml:lang="sk">Prejsť na domovskú stránku</message>
+	<message xml:lang="ja">ホーム</message>
 </label>
 <label define="TMSG_BUTTON_ITALICS">
 	<message xml:lang="en">Emphasis On/Off</message>
@@ -3027,6 +3222,7 @@
 	<message xml:lang="cn">强调 On/Off</message>
 	<message xml:lang="tw">強調 On/Off</message>
 	<message xml:lang="sk">Zvýrazniť On/Off</message>
+	<message xml:lang="ja">斜体</message>
 </label>
 <label define="TMSG_BUTTON_BOLD">
 	<message xml:lang="en">Strong On/Off</message>
@@ -3043,6 +3239,7 @@
 	<message xml:lang="cn">加强 On/Off</message>
 	<message xml:lang="tw">加強 On/Off</message>
 	<message xml:lang="sk">Silno zvýrazniť On/Off</message>
+	<message xml:lang="ja">強調</message>
 </label>
 <label define="TMSG_BUTTON_CODE">
 	<message xml:lang="en">Code On/Off</message>
@@ -3059,6 +3256,7 @@
 	<message xml:lang="cn">代码 On/Off</message>
 	<message xml:lang="tw">代碼 On/Off</message>
 	<message xml:lang="sk">Zdrojový kód On/Off</message>
+	<message xml:lang="ja">ソースコード</message>
 </label>
 <label define="TMSG_BUTTON_IMG">
 	<message xml:lang="en">Insert/Replace image</message>
@@ -3075,6 +3273,7 @@
 	<message xml:lang="cn">插入图片</message>
 	<message xml:lang="tw">插入圖片</message>
 	<message xml:lang="sk">Obrázok (img)</message>
+	<message xml:lang="ja">画像の挿入/置換</message>
 </label>
 <label define="TMSG_BUTTON_H1">
 	<message xml:lang="en">Heading level 1</message>
@@ -3091,6 +3290,7 @@
 	<message xml:lang="cn">标题1</message>
 	<message xml:lang="tw">標題1</message>
 	<message xml:lang="sk">Nadpis úrovne 1</message>
+	<message xml:lang="ja">見出しの大きさ 1</message>
 </label>
 <label define="TMSG_BUTTON_H2">
 	<message xml:lang="en">Heading level 2</message>
@@ -3107,6 +3307,7 @@
 	<message xml:lang="cn">标题2</message>
 	<message xml:lang="tw">標題2</message>
 	<message xml:lang="sk">Nadpis úrovne 2</message>
+	<message xml:lang="ja">見出しの大きさ 2</message>
 </label>
 <label define="TMSG_BUTTON_H3">
 	<message xml:lang="en">Heading level 3</message>
@@ -3123,6 +3324,7 @@
 	<message xml:lang="cn">标题3</message>
 	<message xml:lang="tw">標題3</message>
 	<message xml:lang="sk">Nadpis úrovne 3</message>
+	<message xml:lang="ja">見出しの大きさ 3</message>
 </label>
 <label define="TMSG_BUTTON_H4">
 	<message xml:lang="en">Heading level 4</message>
@@ -3139,6 +3341,7 @@
 	<message xml:lang="cn">标题4</message>
 	<message xml:lang="tw">標題4</message>
 	<message xml:lang="sk">Nadpis úrovne 4</message>
+	<message xml:lang="ja">見出しの大きさ 4</message>
 </label>
 <label define="TMSG_BUTTON_P">
 	<message xml:lang="en">Paragraph</message>
@@ -3155,6 +3358,7 @@
 	<message xml:lang="cn">段落</message>
 	<message xml:lang="tw">段落</message>
 	<message xml:lang="sk">Odsek</message>
+	<message xml:lang="ja">段落</message>
 </label>
 <label define="TMSG_BUTTON_UL">
 	<message xml:lang="en">Bulleted list</message>
@@ -3171,6 +3375,7 @@
 	<message xml:lang="cn">无序列表</message>
 	<message xml:lang="tw">無序列表</message>
 	<message xml:lang="sk">Odrážky (ul)</message>
+	<message xml:lang="ja">箇条書き</message>
 </label>
 <label define="TMSG_BUTTON_OL">
 	<message xml:lang="en">Numbered list</message>
@@ -3187,6 +3392,7 @@
 	<message xml:lang="cn">有序列表</message>
 	<message xml:lang="tw">有序列表</message>
 	<message xml:lang="sk">Číslovanie (ol)</message>
+	<message xml:lang="ja">段落番号</message>
 </label>
 <label define="TMSG_BUTTON_DL">
 	<message xml:lang="en">Definition list</message>
@@ -3203,6 +3409,7 @@
 	<message xml:lang="cn">定义性列表</message>
 	<message xml:lang="tw">定義性列表</message>
 	<message xml:lang="sk">Zoznam definícií (dl)</message>
+	<message xml:lang="ja">リスト（定義）</message>
 </label>
 <label define="TMSG_BUTTON_LINK">
 	<message xml:lang="en">Link</message>
@@ -3219,6 +3426,7 @@
 	<message xml:lang="cn">链接</message>
 	<message xml:lang="tw">鏈接</message>
 	<message xml:lang="sk">Hypertextový odkaz</message>
+	<message xml:lang="ja">リンク</message>
 </label>
 <label define="TMSG_BUTTON_TABLE">
 	<message xml:lang="en">Table</message>
@@ -3235,6 +3443,7 @@
 	<message xml:lang="cn">表格</message>
 	<message xml:lang="tw">表格</message>
 	<message xml:lang="sk">Tabuľka (table)</message>
+	<message xml:lang="ja">表</message>
 </label>
 <label define="TMSG_LIB_WARNCTAB_INFO">
 	<message xml:lang="en">You are about to close %d open tabs. Are you sure you want to continue?</message>
@@ -3248,6 +3457,7 @@
 	<message xml:lang="cn">正要关闭%d个标签页,确定要这么做吗?</message>
 	<message xml:lang="tw">正要關閉%d個標簽頁,確定要這么做嗎?</message>
 	<message xml:lang="sk">Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?</message>
+	<message xml:lang="ja">このウィンドウでは %d 個のタブが開かれています。すべてのタブを閉じてよろしいですか？</message>
 </label>
 <label define="TMSG_LIB_WARNCTAB_CHECK">
 	<message xml:lang="en">Warn me when I attempt to close multiple tabs</message>
@@ -3261,6 +3471,7 @@
 	<message xml:lang="cn">关闭多个标签页的时候显示警告</message>
 	<message xml:lang="tw">關閉多個標簽頁的時候顯示警告</message>
 	<message xml:lang="sk">Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz</message>
+	<message xml:lang="ja">一度に複数のタブを閉じるときに警告する</message>
 </label>
 <label define="TMSG_LIB_CLOSETABS">
 	<message xml:lang="en">Close tabs</message>
@@ -3274,6 +3485,7 @@
 	<message xml:lang="cn">关闭标签</message>
 	<message xml:lang="tw">關閉標簽</message>
 	<message xml:lang="sk">Zatvoriť karty</message>
+	<message xml:lang="ja">タブを閉じる</message>
 </label>
 <label define="TMSG_LIB_NOERROR_DOC">
 	<message xml:lang="en">No error detected</message>
@@ -3287,6 +3499,7 @@
 	<message xml:lang="cn">没有检测到错误</message>
 	<message xml:lang="tw">沒有檢測到錯誤</message>
 	<message xml:lang="sk">Žiadne chyby neboli nájdené</message>
+	<message xml:lang="ja">エラーは発見されませんでした</message>
 </label>
 <label define="TMSG_LIB_ERROR_DOC">
 	<message xml:lang="en">Show parsing errors</message>
@@ -3303,6 +3516,7 @@
 	<message xml:lang="cn">显示解析错误</message>
 	<message xml:lang="tw">顯示解析錯誤</message>
 	<message xml:lang="sk">Zobraziť nájdené chyby</message>
+	<message xml:lang="ja">解析したエラーを表示</message>
 </label>
 <label define="TMSG_LIB_BOXES">
 	<message xml:lang="en">Boxes</message>
@@ -3315,6 +3529,7 @@
 	<message xml:lang="tw">表格</message>
 	<message xml:lang="sk">Kolónky</message>
 	<message xml:lang="ru">Блоки</message>
+	<message xml:lang="ja">ボックス</message>
 </label>
 <label define="TMSG_BUTTON_DIV">
 	<message xml:lang="en">Division</message>
@@ -3330,6 +3545,7 @@
 	<message xml:lang="cn">Div层</message>
 	<message xml:lang="tw">Div層</message>
 	<message xml:lang="sk">Oddelenie, vrstva (div)</message>
+	<message xml:lang="ja">分割</message>
 </label>
 <label define="TMSG_BUTTON_TARGET">
 	<message xml:lang="en">Target</message>
@@ -3345,6 +3561,7 @@
 	<message xml:lang="cn">目标</message>
 	<message xml:lang="tw">目標</message>
 	<message xml:lang="sk">Záložka</message>
+	<message xml:lang="ja">ターゲット</message>
 </label>
 <label define="TMSG_INSERTION">
 	<message xml:lang="en">Inserted text On/Off</message>
@@ -3361,6 +3578,7 @@
 	<message xml:lang="cn">插入 On/Off</message>
 	<message xml:lang="tw">插入 On/Off</message>
 	<message xml:lang="sk">Novovložený text On/Off</message>
+	<message xml:lang="ja">引用文</message>
 </label>
 <label define="TMSG_DELETION">
 	<message xml:lang="en">Deleted text On/Off</message>
@@ -3377,6 +3595,7 @@
 	<message xml:lang="cn">删除 On/Off</message>
 	<message xml:lang="tw">刪除 On/Off</message>
 	<message xml:lang="sk">Text na odstránenie On/Off</message>
+	<message xml:lang="ja">打ち消し線</message>
 </label>
 <label define="TMSG_SUB">
 	<message xml:lang="en">Subscript On/Off</message>
@@ -3393,6 +3612,7 @@
 	<message xml:lang="cn">桥表 On/Off</message>
 	<message xml:lang="tw">橋表 On/Off</message>
 	<message xml:lang="sk">Dolný index On/Off</message>
+	<message xml:lang="ja">サブスクリプト</message>
 </label>
 <label define="TMSG_SUP">
 	<message xml:lang="en">Superscript On/Off</message>
@@ -3409,6 +3629,7 @@
 	<message xml:lang="cn">上标 On/Off</message>
 	<message xml:lang="tw">上標 On/Off</message>
 	<message xml:lang="sk">Horný index On/Off</message>
+	<message xml:lang="ja">スーパースクリプト</message>
 </label>
 <label define="TMSG_BUTTON_DT">
 	<message xml:lang="en">Term</message>
@@ -3425,6 +3646,7 @@
 	<message xml:lang="cn">条目</message>
 	<message xml:lang="tw">條目</message>
 	<message xml:lang="sk">Termín (dt)</message>
+	<message xml:lang="ja">定義語</message>
 </label>
 <label define="TMSG_BUTTON_DD">
 	<message xml:lang="en">Definition</message>
@@ -3441,6 +3663,7 @@
 	<message xml:lang="cn">说明</message>
 	<message xml:lang="tw">說明</message>
 	<message xml:lang="sk">Definícia termínu (dd)</message>
+	<message xml:lang="ja">定義の説明</message>
 </label>
 <label define="TMSG_OBJECT">
 	<message xml:lang="en">Object</message>
@@ -3457,6 +3680,7 @@
 	<message xml:lang="cn">Object</message>
 	<message xml:lang="tw">Object</message>
 	<message xml:lang="sk">Objekt (object)</message>
+	<message xml:lang="ja">オブジェクト</message>
 </label>
 <label define="TMSG_CSSStyle">
 	<message xml:lang="en">Style</message>
@@ -3470,6 +3694,7 @@
 	<message xml:lang="cn">样式</message>
 	<message xml:lang="tw">樣式</message>
 	<message xml:lang="sk">Pravidlá</message>
+	<message xml:lang="ja">スタイル</message>
 </label>
 <label define="TMSG_EXPLORE">
 	<message xml:lang="en">Files</message>
@@ -3486,6 +3711,7 @@
 	<message xml:lang="cn">文件</message>
 	<message xml:lang="tw">文件</message>
 	<message xml:lang="sk">Súbor</message>
+	<message xml:lang="ja">ファイル</message>
 </label>
 <label define="TMSG_SplitHorizontally">
 	<message xml:lang="en">Horizontal split/unsplit</message>
@@ -3499,6 +3725,7 @@
 	<message xml:lang="cn">水平排列视图</message>
 	<message xml:lang="tw">水平排列視圖</message>
 	<message xml:lang="sk">Rozdeliť okno horizontálne</message>
+	<message xml:lang="ja">横向きの　分割/結合</message>
 </label>
 <label define="TMSG_SplitVertically">
 	<message xml:lang="en">Vertical split/unsplit</message>
@@ -3512,6 +3739,7 @@
 	<message xml:lang="cn">垂直排列视图</message>
 	<message xml:lang="tw">垂直排列視圖</message>
 	<message xml:lang="sk">Rozdeliť okno vertikálne</message>
+	<message xml:lang="ja">縦向きの　分割/結合</message>
 </label>
 <label define="TMSG_ShowPanel">
 	<message xml:lang="en">Show/hide tools</message>
@@ -3525,6 +3753,7 @@
 	<message xml:lang="cn">显示工具栏</message>
 	<message xml:lang="tw">顯示工具欄</message>
 	<message xml:lang="sk">Zobraziť/skryť nástroje</message>
+	<message xml:lang="ja">ツールを表示/隠す</message>
 </label>
 <label define="TMSG_Undo">
 	<message xml:lang="en">Undo</message>
@@ -3541,6 +3770,7 @@
 	<message xml:lang="cn">撤销</message>
 	<message xml:lang="tw">撤銷</message>
 	<message xml:lang="sk">Späť</message>
+	<message xml:lang="ja">元に戻す</message>
 </label>
 <label define="TMSG_Redo">
 	<message xml:lang="en">Redo</message>
@@ -3557,6 +3787,7 @@
 	<message xml:lang="cn">重做</message>
 	<message xml:lang="tw">重做</message>
 	<message xml:lang="sk">Opakovať</message>
+	<message xml:lang="ja">やり直し</message>
 </label>
 <label define="TMSG_Cut">
 	<message xml:lang="en">Cut</message>
@@ -3573,6 +3804,7 @@
 	<message xml:lang="cn">剪切</message>
 	<message xml:lang="tw">剪切</message>
 	<message xml:lang="sk">Vystrihnúť</message>
+	<message xml:lang="ja">切り取り</message>
 </label>
 <label define="TMSG_Copy">
 	<message xml:lang="en">Copy</message>
@@ -3589,6 +3821,7 @@
 	<message xml:lang="cn">复制</message>
 	<message xml:lang="tw">復制</message>
 	<message xml:lang="sk">Kopírovať</message>
+	<message xml:lang="ja">コピー</message>
 </label>
 <label define="TMSG_Paste">
 	<message xml:lang="en">Paste</message>
@@ -3605,6 +3838,7 @@
 	<message xml:lang="cn">粘贴</message>
 	<message xml:lang="tw">粘貼</message>
 	<message xml:lang="sk">Prilepiť</message>
+	<message xml:lang="ja">貼り付け</message>
 </label>
 <label define="TMSG_Spell">
 	<message xml:lang="en">Check spelling</message>
@@ -3621,94 +3855,104 @@
 	<message xml:lang="cn">拼写检查</message>
 	<message xml:lang="tw">拼寫檢查</message>
 	<message xml:lang="sk">Kontrola pravopisu</message>
+	<message xml:lang="ja">スペルチェック</message>
 </label>
 <label define="TMSG_MATH_PANEL_1">
-  <message xml:lang="en">Various constructs</message>
-  <message xml:lang="es">Varios</message>
-  <message xml:lang="fr">Constructions diverses</message>
+	<message xml:lang="en">Various constructs</message>
+	<message xml:lang="es">Varios</message>
+	<message xml:lang="fr">Constructions diverses</message>
 	<message xml:lang="de">Verschiedene Konstruktionen</message>
 	<message xml:lang="hu">Különböző szerkezetek</message>
 	<message xml:lang="it">Costrutti vari</message>
+	<message xml:lang="ja">様々な構成</message>
 </label>
 <label define="TMSG_MATH_PANEL_2">
-  <message xml:lang="en">Relations, orders and logic</message>
-  <message xml:lang="es">Relaciones, orden y lógica</message>
-  <message xml:lang="fr">Relations, ordre et logique</message>
+	<message xml:lang="en">Relations, orders and logic</message>
+	<message xml:lang="es">Relaciones, orden y lógica</message>
+	<message xml:lang="fr">Relations, ordre et logique</message>
 	<message xml:lang="de">Abhängigkeiten, Aufträge und Verknüpfungssteuerungen</message>
 	<message xml:lang="hu">Relációk, rendek és logika</message>
 	<message xml:lang="it">Relazioni, ordine e logica</message>
+	<message xml:lang="ja">道理と論理の関係</message>
 </label>
 <label define="TMSG_MATH_PANEL_3">
-  <message xml:lang="en">Sets and functions</message>
-  <message xml:lang="es">Conjuntos y funciones</message>
-  <message xml:lang="fr">Ensembles et fonctions</message>
+	<message xml:lang="en">Sets and functions</message>
+	<message xml:lang="es">Conjuntos y funciones</message>
+	<message xml:lang="fr">Ensembles et fonctions</message>
 	<message xml:lang="de">Datensätze und Funktionen</message>
 	<message xml:lang="hu">Halmazok és függvények</message>
 	<message xml:lang="it">Insiemi e funzioni</message>
+	<message xml:lang="ja">集合と関数</message>
 </label>
 <label define="TMSG_MATH_PANEL_4">
-  <message xml:lang="en">Arithmetic, operations, complexes and constants</message>
-  <message xml:lang="es">Aritmética, operaciones, complejos y constantes</message>
-  <message xml:lang="fr">Arithmétique, opérations, complexes et constantes</message>
+	<message xml:lang="en">Arithmetic, operations, complexes and constants</message>
+	<message xml:lang="es">Aritmética, operaciones, complejos y constantes</message>
+	<message xml:lang="fr">Arithmétique, opérations, complexes et constantes</message>
 	<message xml:lang="de">arithmetisch, Abläufe, Verzweigungen und Konstante</message>
 	<message xml:lang="hu">Számelmélet, műveletek, komplexek és állandók</message>
 	<message xml:lang="it">Arihmetica, operazioni, complessi e costanti</message>
+	<message xml:lang="ja">複素数と定数の計算、演算</message>
 </label>
 <label define="TMSG_MATH_PANEL_5">
-  <message xml:lang="en">Analysis, linear algebra and statistic</message>
-  <message xml:lang="es">Análisis, álgebra lineal y estadística</message>
-  <message xml:lang="fr">Analyse, algèbre linéaire et statistiques</message>
+	<message xml:lang="en">Analysis, linear algebra and statistic</message>
+	<message xml:lang="es">Análisis, álgebra lineal y estadística</message>
+	<message xml:lang="fr">Analyse, algèbre linéaire et statistiques</message>
 	<message xml:lang="de">Analyse, lineare Algebra und Statistik</message>
 	<message xml:lang="hu">Analízis, lineáris algebra és statisztika</message>
 	<message xml:lang="it">Analisi, algebra lineare e statistica</message>
+	<message xml:lang="ja">線形代数と統計の解析</message>
 </label>
 <label define="TMSG_MATH_PANEL_6">
-  <message xml:lang="en">Trigonometry and logarithms</message>
-  <message xml:lang="es">Trigonometría y logaritmos</message>
-  <message xml:lang="fr">Trigonométrie et logarithmes</message>
+	<message xml:lang="en">Trigonometry and logarithms</message>
+	<message xml:lang="es">Trigonometría y logaritmos</message>
+	<message xml:lang="fr">Trigonométrie et logarithmes</message>
 	<message xml:lang="de">Trigonometrie und Logarithmen</message>
 	<message xml:lang="hu">Trigonometria és logaritmusok</message>
 	<message xml:lang="it">Trigonometria e logaritmi</message>
+	<message xml:lang="ja">三角法と対数</message>
 </label>
 <label define="TMSG_ZoomIn">
-  <message xml:lang="en">Zoom in</message>
-  <message xml:lang="fr">Grossir</message>
-  <message xml:lang="de">Schrift vergrößern</message>
-  <message xml:lang="it">Ingrandisci</message>
-  <message xml:lang="tr">Uzaklaştır</message>
-  <message xml:lang="es">&amp;Aumentar tamaño de texto</message>
-  <message xml:lang="pt">Ampliar (Zoom in)</message>
-  <message xml:lang="fi">Lähennä</message>
-  <message xml:lang="ru">Увеличить</message>
-  <message xml:lang="hu">Nagyítás</message>
-  <message xml:lang="ka">გაზრდა</message>
-  <message xml:lang="cn">放大</message>
-  <message xml:lang="tw">放大</message>
-  <message xml:lang="sk">Zväčšiť veľkosť textu</message>
+	<message xml:lang="en">Zoom in</message>
+	<message xml:lang="fr">Grossir</message>
+	<message xml:lang="de">Schrift vergrößern</message>
+	<message xml:lang="it">Ingrandisci</message>
+	<message xml:lang="tr">Uzaklaştır</message>
+	<message xml:lang="es">&amp;Aumentar tamaño de texto</message>
+	<message xml:lang="pt">Ampliar (Zoom in)</message>
+	<message xml:lang="fi">Lähennä</message>
+	<message xml:lang="ru">Увеличить</message>
+	<message xml:lang="hu">Nagyítás</message>
+	<message xml:lang="ka">გაზრდა</message>
+	<message xml:lang="cn">放大</message>
+	<message xml:lang="tw">放大</message>
+	<message xml:lang="sk">Zväčšiť veľkosť textu</message>
+	<message xml:lang="ja">拡大</message>
 </label>
 <label define="TMSG_ZoomOut">
-  <message xml:lang="en">Zoom out</message>
-  <message xml:lang="fr">Réduire</message>
-  <message xml:lang="de">Schrift verkleinern</message>
-  <message xml:lang="it">Rimpicciolisci</message>
-  <message xml:lang="tr">Harita alanlarını göster</message>
-  <message xml:lang="es">&amp;Reducir tamaño de texto</message>
-  <message xml:lang="pt">Reduzir (Zoom out)</message>
-  <message xml:lang="fi">Loitonna</message>
-  <message xml:lang="ru">Уменьшить</message>
-  <message xml:lang="hu">Kicsinyítés</message>
-  <message xml:lang="ka">შემცირება</message>
-  <message xml:lang="cn">缩小</message>
-  <message xml:lang="tw">縮小</message>
-  <message xml:lang="sk">Zmenšiť veľkosť textu</message>
+	<message xml:lang="en">Zoom out</message>
+	<message xml:lang="fr">Réduire</message>
+	<message xml:lang="de">Schrift verkleinern</message>
+	<message xml:lang="it">Rimpicciolisci</message>
+	<message xml:lang="tr">Harita alanlarını göster</message>
+	<message xml:lang="es">&amp;Reducir tamaño de texto</message>
+	<message xml:lang="pt">Reduzir (Zoom out)</message>
+	<message xml:lang="fi">Loitonna</message>
+	<message xml:lang="ru">Уменьшить</message>
+	<message xml:lang="hu">Kicsinyítés</message>
+	<message xml:lang="ka">შემცირება</message>
+	<message xml:lang="cn">缩小</message>
+	<message xml:lang="tw">縮小</message>
+	<message xml:lang="sk">Zmenšiť veľkosť textu</message>
+	<message xml:lang="ja">縮小</message>
 </label>
 <label define="TMSG_THEME">
-<message xml:lang="en">Theme</message>
-<message xml:lang="es">Tema</message>
-<message xml:lang="fr">Thème</message>
-<message xml:lang="de">Thema</message>
-<message xml:lang="hu">Téma</message>
-<message xml:lang="it">Tema</message>
+	<message xml:lang="en">Theme</message>
+	<message xml:lang="es">Tema</message>
+	<message xml:lang="fr">Thème</message>
+	<message xml:lang="de">Thema</message>
+	<message xml:lang="hu">Téma</message>
+	<message xml:lang="it">Tema</message>
+	<message xml:lang="ja">テーマ</message>
 </label>
 <label define="TMSG_INSERT_MODE_XML">
 	<message xml:lang="en">XML</message>
@@ -3725,6 +3969,7 @@
 	<message xml:lang="cn">XML</message>
 	<message xml:lang="tw">XML</message>
 	<message xml:lang="sk">XML</message>
+	<message xml:lang="ja">XML</message>
 </label>
 <label define="TMSG_INSERT_MODE_TEXT">
 	<message xml:lang="en">Text</message>
@@ -3741,6 +3986,7 @@
 	<message xml:lang="tw">Text</message>
 	<message xml:lang="sk">Textové</message>
 	<message xml:lang="de">Text</message>
+	<message xml:lang="ja">テキスト</message>
 </label>
 <label define="TMSG_NO_RECENT_DOC">
 	<message xml:lang="en">No recent document</message>
@@ -3749,6 +3995,7 @@
 	<message xml:lang="it">Nessun documento recente</message>
 	<message xml:lang="hu">Nincs korábbi dokumentum</message>
 	<message xml:lang="es">No hay documentos recientes</message>
+	<message xml:lang="ja">現在の文書はありません</message>
 </label>
 <label define="TMSG_CLIC_ELEM_TO_SELECT_IT">
 	<message xml:lang="en">Click an element to select it</message>
@@ -3757,8 +4004,8 @@
 	<message xml:lang="hu">Elem kijelölése kattintással</message>
 	<message xml:lang="es">Haga clic en un elemento para seleccionarlo</message>
 	<message xml:lang="it">Click su un elemento per selezionarlo</message>
+	<message xml:lang="ja">要素を選択してください</message>
 </label>
-
 <label define="TMSG_INSERT_MODE">
 	<message xml:lang="en">Click to change the editing mode</message>
 	<message xml:lang="fr">Cliquer pour changer de mode d'édition</message>
@@ -3766,227 +4013,261 @@
 	<message xml:lang="hu">Szerkesztési mód váltása kattintással</message>
 	<message xml:lang="es">Haga clic para cambiar el modo de edición</message>
 	<message xml:lang="it">Click per modificare il modo editing</message>
+	<message xml:lang="ja">編集モードの変更</message>
 </label>
 <label define="CellMerge">
-<message xml:lang="en">Merge cells</message>
-<message xml:lang="fr">Fusionner les cellules</message>
-<message xml:lang="it">Unisci</message>
-<message xml:lang="de">Zusammenfügen die Zellen</message>
-<message xml:lang="es">Unir</message>
-<message xml:lang="ru">Объединить</message>
-<message xml:lang="hu">Egyesítés</message>
-<message xml:lang="sk">Zlúčiť</message></label>
+	<message xml:lang="en">Merge cells</message>
+	<message xml:lang="fr">Fusionner les cellules</message>
+	<message xml:lang="it">Unisci</message>
+	<message xml:lang="de">Zusammenfügen die Zellen</message>
+	<message xml:lang="es">Unir</message>
+	<message xml:lang="ru">Объединить</message>
+	<message xml:lang="hu">Egyesítés</message>
+	<message xml:lang="sk">Zlúčiť</message>
+	<message xml:lang="ja">セルの結合</message>
+</label>
 <label define="CellHShrink">
-<message xml:lang="en">Shrink horizontal extend</message>
-<message xml:lang="fr">Réduire extension horizontale</message>
-<message xml:lang="it">Riduci l'estensione orizzontale</message>
-<message xml:lang="de">Verkleinern der Breite</message>
-<message xml:lang="es">Reducir extensión horizontal</message>
-<message xml:lang="ru">Уменьшить расширение по горизонтали</message>
-<message xml:lang="hu">Shrink &amp;horizontal extend</message>
-<message xml:lang="ka">განივი შეკუმშვა</message>
-<message xml:lang="cn">收缩水平范围</message>
-<message xml:lang="tw">收縮水平范圍</message>
-<message xml:lang="sk">Rozdeliť bunky horizontálne</message></label>
+	<message xml:lang="en">Shrink horizontal extend</message>
+	<message xml:lang="fr">Réduire extension horizontale</message>
+	<message xml:lang="it">Riduci l'estensione orizzontale</message>
+	<message xml:lang="de">Verkleinern der Breite</message>
+	<message xml:lang="es">Reducir extensión horizontal</message>
+	<message xml:lang="ru">Уменьшить расширение по горизонтали</message>
+	<message xml:lang="hu">Shrink &amp;horizontal extend</message>
+	<message xml:lang="ka">განივი შეკუმშვა</message>
+	<message xml:lang="cn">收缩水平范围</message>
+	<message xml:lang="tw">收縮水平范圍</message>
+	<message xml:lang="sk">Rozdeliť bunky horizontálne</message>
+	<message xml:lang="ja">セルを列に分割する</message>
+</label>
 <label define="CellVShrink">
-<message xml:lang="en">Shrink vertical extend</message>
-<message xml:lang="fr">Réduire extension verticale</message>
-<message xml:lang="it">Riduci l'estensione verticale</message>
-<message xml:lang="de">Verkleinern der Breite</message>
-<message xml:lang="es">Reducir extensión vertical</message>
-<message xml:lang="ru">Уменьшить расширение по вертикали</message>
-<message xml:lang="hu">Shrink &amp;vertical extend</message>
-<message xml:lang="ka">მართობი შეკუმშვა</message>
-<message xml:lang="cn">收缩垂直范围</message>
-<message xml:lang="tw">收縮垂直范圍</message>
-<message xml:lang="sk">Rozdeliť bunky vertikálne</message></label>
+	<message xml:lang="en">Shrink vertical extend</message>
+	<message xml:lang="fr">Réduire extension verticale</message>
+	<message xml:lang="it">Riduci l'estensione verticale</message>
+	<message xml:lang="de">Verkleinern der Breite</message>
+	<message xml:lang="es">Reducir extensión vertical</message>
+	<message xml:lang="ru">Уменьшить расширение по вертикали</message>
+	<message xml:lang="hu">Shrink &amp;vertical extend</message>
+	<message xml:lang="ka">მართობი შეკუმშვა</message>
+	<message xml:lang="cn">收缩垂直范围</message>
+	<message xml:lang="tw">收縮垂直范圍</message>
+	<message xml:lang="sk">Rozdeliť bunky vertikálne</message>
+	<message xml:lang="ja">セルを行に分割する</message>
+</label>
 <label define="CreateRowB">
-<message xml:lang="en">Insert a row</message>
-<message xml:lang="fr">Insérer une ligne</message>
-<message xml:lang="it">Inserisci una riga</message>
-<message xml:lang="de">Zeile einfügen (davor)</message>
-<message xml:lang="es">Insertar fila delante</message>
-<message xml:lang="ru">Вставить строку</message>
-<message xml:lang="hu">Sor &amp;beillesztése</message>
-<message xml:lang="ka">მწკრივის ჩამატება</message>
-<message xml:lang="cn">插入新行</message>
-<message xml:lang="tw">插入新行</message>
-<message xml:lang="sk">Vložiť riadok nad</message></label>
+	<message xml:lang="en">Insert a row</message>
+	<message xml:lang="fr">Insérer une ligne</message>
+	<message xml:lang="it">Inserisci una riga</message>
+	<message xml:lang="de">Zeile einfügen (davor)</message>
+	<message xml:lang="es">Insertar fila delante</message>
+	<message xml:lang="ru">Вставить строку</message>
+	<message xml:lang="hu">Sor &amp;beillesztése</message>
+	<message xml:lang="ka">მწკრივის ჩამატება</message>
+	<message xml:lang="cn">插入新行</message>
+	<message xml:lang="tw">插入新行</message>
+	<message xml:lang="sk">Vložiť riadok nad</message>
+	<message xml:lang="ja">上に行を挿入</message>
+</label>
 <label define="CreateRowA">
-<message xml:lang="en">Append a row</message>
-<message xml:lang="fr">Ajouter une ligne</message>
-<message xml:lang="it">Aggiungi una riga</message>
-<message xml:lang="de">Zeile inzufügen (danach)</message>
-<message xml:lang="es">Añadir fila detrás</message>
-<message xml:lang="ru">Добавить строку</message>
-<message xml:lang="hu">Sor &amp;hozzáadása</message>
-<message xml:lang="ka">მწკრივის დამატება</message>
-<message xml:lang="cn">附加一行</message>
-<message xml:lang="tw">附加一行</message>
-<message xml:lang="sk">Vložiť riadok pod</message></label>
+	<message xml:lang="en">Append a row</message>
+	<message xml:lang="fr">Ajouter une ligne</message>
+	<message xml:lang="it">Aggiungi una riga</message>
+	<message xml:lang="de">Zeile inzufügen (danach)</message>
+	<message xml:lang="es">Añadir fila detrás</message>
+	<message xml:lang="ru">Добавить строку</message>
+	<message xml:lang="hu">Sor &amp;hozzáadása</message>
+	<message xml:lang="ka">მწკრივის დამატება</message>
+	<message xml:lang="cn">附加一行</message>
+	<message xml:lang="tw">附加一行</message>
+	<message xml:lang="sk">Vložiť riadok pod</message>
+	<message xml:lang="ja">下に行を挿入</message>
+</label>
 <label define="CreateColumnB">
-<message xml:lang="en">Insert a column</message>
-<message xml:lang="fr">Insérer une colonne</message>
-<message xml:lang="it">Inserisci una colonna</message>
-<message xml:lang="de">Spalte einfügen (davor)</message>
-<message xml:lang="es">Insertar columna delante</message>
-<message xml:lang="ru">Вставить столбец</message>
-<message xml:lang="hu">Oszlop be&amp;illesztése</message>
-<message xml:lang="ka">სვეტის ჩამატება</message>
-<message xml:lang="cn">插入新列</message>
-<message xml:lang="tw">插入新列</message>
-<message xml:lang="sk">Vložiť stĺpec vľavo</message></label>
+	<message xml:lang="en">Insert a column</message>
+	<message xml:lang="fr">Insérer une colonne</message>
+	<message xml:lang="it">Inserisci una colonna</message>
+	<message xml:lang="de">Spalte einfügen (davor)</message>
+	<message xml:lang="es">Insertar columna delante</message>
+	<message xml:lang="ru">Вставить столбец</message>
+	<message xml:lang="hu">Oszlop be&amp;illesztése</message>
+	<message xml:lang="ka">სვეტის ჩამატება</message>
+	<message xml:lang="cn">插入新列</message>
+	<message xml:lang="tw">插入新列</message>
+	<message xml:lang="sk">Vložiť stĺpec vľavo</message>
+	<message xml:lang="ja">左に列を挿入</message>
+</label>
 <label define="CreateColumnA">
-<message xml:lang="en">Append a column</message>
-<message xml:lang="fr">Ajouter une colonne</message>
-<message xml:lang="it">Aggiungi una colonna</message>
-<message xml:lang="de">Spalte inzufügen (danach)</message>
-<message xml:lang="es">Añadir columna detrás</message>
-<message xml:lang="ru">Добавить столбец</message>
-<message xml:lang="hu">Oszlop hozzá&amp;adása</message>
-<message xml:lang="ka">სვეტის დამატება</message>
-<message xml:lang="cn">附加一列</message>
-<message xml:lang="tw">附加一列</message>
-<message xml:lang="sk">Vložiť stĺpec vpravo</message></label>
-
+	<message xml:lang="en">Append a column</message>
+	<message xml:lang="fr">Ajouter une colonne</message>
+	<message xml:lang="it">Aggiungi una colonna</message>
+	<message xml:lang="de">Spalte inzufügen (danach)</message>
+	<message xml:lang="es">Añadir columna detrás</message>
+	<message xml:lang="ru">Добавить столбец</message>
+	<message xml:lang="hu">Oszlop hozzá&amp;adása</message>
+	<message xml:lang="ka">სვეტის დამატება</message>
+	<message xml:lang="cn">附加一列</message>
+	<message xml:lang="tw">附加一列</message>
+	<message xml:lang="sk">Vložiť stĺpec vpravo</message>
+	<message xml:lang="ja">右に列を挿入</message>
+</label>
 <label define="TIP_DIALOG_TITLE">
-<message xml:lang="en">Tip of the day</message>
-<message xml:lang="fr">Conseil du jour</message>
-<message xml:lang="es">Sugerencia del día</message>
-<message xml:lang="de">Tip des Tages</message>
-<message xml:lang="it">Suggerimento del giorno</message>
-<message xml:lang="hu">A nap tippje</message>
+	<message xml:lang="en">Tip of the day</message>
+	<message xml:lang="fr">Conseil du jour</message>
+	<message xml:lang="es">Sugerencia del día</message>
+	<message xml:lang="de">Tip des Tages</message>
+	<message xml:lang="it">Suggerimento del giorno</message>
+	<message xml:lang="hu">A nap tippje</message>
+	<message xml:lang="ja">今日のTips</message>
 </label>
 <label define="TIP_DIALOG_STARTUP">
-<message xml:lang="en">Show tip at startup</message>
-<message xml:lang="fr">Voir les conseils au démarrage</message>
-<message xml:lang="es">Mostrar sugerencia al iniciar el programa</message>
-<message xml:lang="de">Tips bei Programmstart anzeigen</message>
-<message xml:lang="it">Visualizza il suggerimento all'avvio</message>
-<message xml:lang="hu">Tipp mutatása a program indulásakor</message>
+	<message xml:lang="en">Show tip at startup</message>
+	<message xml:lang="fr">Voir les conseils au démarrage</message>
+	<message xml:lang="es">Mostrar sugerencia al iniciar el programa</message>
+	<message xml:lang="de">Tips bei Programmstart anzeigen</message>
+	<message xml:lang="it">Visualizza il suggerimento all'avvio</message>
+	<message xml:lang="hu">Tipp mutatása a program indulásakor</message>
+	<message xml:lang="ja">スタートアップ時にTips を表示</message>
 </label>
 <label define="TIP_DIALOG_NEXT_TIP">
-<message xml:lang="en">Next tip</message>
-<message xml:lang="fr">Conseil suivant</message>
-<message xml:lang="es">Siguiente sugerencia</message>
-<message xml:lang="de">Nächster Tip</message>
-<message xml:lang="it">Prossimo suggerimento</message>
-<message xml:lang="hu">Következő tipp</message>
+	<message xml:lang="en">Next tip</message>
+	<message xml:lang="fr">Conseil suivant</message>
+	<message xml:lang="es">Siguiente sugerencia</message>
+	<message xml:lang="de">Nächster Tip</message>
+	<message xml:lang="it">Prossimo suggerimento</message>
+	<message xml:lang="hu">Következő tipp</message>
+	<message xml:lang="ja">次のTips</message>
 </label>
 <label define="TIP_DIALOG_DID_YOU_KNOW">
-<message xml:lang="en">Did you know...</message>
-<message xml:lang="fr">Saviez vous...</message>
-<message xml:lang="es">¿Sabía que...?</message>
-<message xml:lang="de">Haben Sie schon gewusst?</message>
-<message xml:lang="it">Sapevi che...</message>
-<message xml:lang="hu">Tudta-e..</message>
+	<message xml:lang="en">Did you know...</message>
+	<message xml:lang="fr">Saviez vous...</message>
+	<message xml:lang="es">¿Sabía que...?</message>
+	<message xml:lang="de">Haben Sie schon gewusst?</message>
+	<message xml:lang="it">Sapevi che...</message>
+	<message xml:lang="hu">Tudta-e..</message>
+	<message xml:lang="ja">知っていますか...</message>
 </label>
 <label define="TIP_DIALOG_TIP_CLOSE">
-<message xml:lang="en">Close</message>
-<message xml:lang="fr">Fermer</message>
+	<message xml:lang="en">Close</message>
+	<message xml:lang="fr">Fermer</message>
+	<message xml:lang="ja">閉じる</message>
 </label>
 <label define="TIP_AMAYA_PROFILES">
-<message xml:lang="en">Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.</message>
-<message xml:lang="fr">Amaya s'adapte à vos besoins : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.</message>
-<message xml:lang="es">Amaya puede adaptarse a sus necesidades: incorpora cinco perfiles distintos con diferentes opciones de menús y paneles. Véase el menú Editar > Preferencias.</message>
-<message xml:lang="de">Amaya kann auf Ihre Bedürfnisse angepasst werden: fünf verschiedene Profile mit verschiedenen Kombinationen von Menu Einträgen und Bedienelementen. Für weitere Informationen werfen Sie bitte einen Blick in die Einstellungen.</message>
-<message xml:lang="it">Amaya può adattarsi al tuo uso: ci sono cinque diversi profili con un insieme differente di voci di menu e pannelli. Vedi Preferenze.</message>
-<message xml:lang="hu">Az Amaya testreszabható: öt különböző profilban különböző menü- készletek és panelkészlet áll rendelkezésére. Lásd a Beállításokban.</message>
+	<message xml:lang="en">Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.</message>
+	<message xml:lang="fr">Amaya s'adapte à vos besoins : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.</message>
+	<message xml:lang="es">Amaya puede adaptarse a sus necesidades: incorpora cinco perfiles distintos con diferentes opciones de menús y paneles. Véase el menú Editar > Preferencias.</message>
+	<message xml:lang="de">Amaya kann auf Ihre Bedürfnisse angepasst werden: fünf verschiedene Profile mit verschiedenen Kombinationen von Menu Einträgen und Bedienelementen. Für weitere Informationen werfen Sie bitte einen Blick in die Einstellungen.</message>
+	<message xml:lang="it">Amaya può adattarsi al tuo uso: ci sono cinque diversi profili con un insieme differente di voci di menu e pannelli. Vedi Preferenze.</message>
+	<message xml:lang="hu">Az Amaya testreszabható: öt különböző profilban különböző menü- készletek és panelkészlet áll rendelkezésére. Lásd a Beállításokban.</message>
+	<message xml:lang="ja">Amaya はあなたの要求に適応できます：5つのパラメータがメニューとパネルの異なる組み合わせで実現できます。詳しくは「編集」→「設定」→「一般」を参照してください。</message>
 </label>
 <label define="TIP_PANEL_MODES">
-<message xml:lang="en">Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.</message>
-<message xml:lang="fr">Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance panneau par panneau. Voir les Préférences.</message>
-<message xml:lang="es">Las ventanas de herramientas pueden mostrarse todas juntas a izquierda o derecha o por separado de forma personalizada. Véase el menú Editar > Preferencias.</message>
-<message xml:lang="de">Bedienelemente können links, rechts oder benutzerdefiniert angezeigt werden. Siehe Einstellungen.</message>
-<message xml:lang="it">I panelli possono essere visualizzati a sinistra o a destra o personalizzati pannello per pannello. Vedi Preferenze.</message>
-<message xml:lang="hu">A panelek az ablak bal vagy jobb szélére helyezhetők, vagy akár panelenként beállíthatók. Lásd a Beállításokban.</message>
+	<message xml:lang="en">Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.</message>
+	<message xml:lang="fr">Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance panneau par panneau. Voir les Préférences.</message>
+	<message xml:lang="es">Las ventanas de herramientas pueden mostrarse todas juntas a izquierda o derecha o por separado de forma personalizada. Véase el menú Editar > Preferencias.</message>
+	<message xml:lang="de">Bedienelemente können links, rechts oder benutzerdefiniert angezeigt werden. Siehe Einstellungen.</message>
+	<message xml:lang="it">I panelli possono essere visualizzati a sinistra o a destra o personalizzati pannello per pannello. Vedi Preferenze.</message>
+	<message xml:lang="hu">A panelek az ablak bal vagy jobb szélére helyezhetők, vagy akár panelenként beállíthatók. Lásd a Beállításokban.</message>
+	<message xml:lang="ja">パネルの表示位置はウィンドウの左右から選ぶか、もしくはカスタマイズできます。「設定」を参照してください。</message>
 </label>
 <label define="TIP_PARENT_SELECTION">
-<message xml:lang="en">With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.</message>
-<message xml:lang="fr">Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, pour appliquer les fonctions d'édition (copier, coller, attributs, etc.) à ces éléments.</message>
-<message xml:lang="es">Con la tecla F2 o Escape se puede seleccionar el elemento padre del elemento seleccionado para aplicarle funciones de edición (copiar, pegar, atributos, etc).</message>
-<message xml:lang="de">Mit F2 oder der Escape Taste können Sie das Elternelement in der Struktur auswählen und Editier Funktionen (kopieren, einfügen,Attribute usw.) auf dieses Element anzuwenden.</message>
-<message xml:lang="it">Con il tasto F2 o Escape si può selezionare l'elemento genitore nella struttura, per applicare a questi elementi le funzioni di editing (copia, incolla, attributi, etc.).</message>
-<message xml:lang="hu">Az F2 vagy Esc billentyűvel kijelölhetjük a szerkezeti elem elődelemét, amivel ezután szerkesztési műveletek (másolás, beillesztés, tulajdonságok stb.) végezhetők.</message>
+	<message xml:lang="en">With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.</message>
+	<message xml:lang="fr">Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, pour appliquer les fonctions d'édition (copier, coller, attributs, etc.) à ces éléments.</message>
+	<message xml:lang="es">Con la tecla F2 o Escape se puede seleccionar el elemento padre del elemento seleccionado para aplicarle funciones de edición (copiar, pegar, atributos, etc).</message>
+	<message xml:lang="de">Mit F2 oder der Escape Taste können Sie das Elternelement in der Struktur auswählen und Editier Funktionen (kopieren, einfügen,Attribute usw.) auf dieses Element anzuwenden.</message>
+	<message xml:lang="it">Con il tasto F2 o Escape si può selezionare l'elemento genitore nella struttura, per applicare a questi elementi le funzioni di editing (copia, incolla, attributi, etc.).</message>
+	<message xml:lang="hu">Az F2 vagy Esc billentyűvel kijelölhetjük a szerkezeti elem elődelemét, amivel ezután szerkesztési műveletek (másolás, beillesztés, tulajdonságok stb.) végezhetők.</message>
+	<message xml:lang="ja">F2もしくはエスケープキーで、編集機能（コピー、ペースト、属性、スタイルなど）に適応させるために文書中の現在の要素を選択できます。</message>
 </label>
 <label define="TIP_SPLIT_NOTEBOOK">
-<message xml:lang="en">You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.</message>
-<message xml:lang="fr">Vous pouvez afficher deux documents côte à côte dans la même fenêtre en déplaçant un onglet de document sur un bord du document affiché.</message>
-<message xml:lang="es">Puede mostrar dos o más documentos simultáneamente arrastrando la pestaña de un documento a uno de los bordes del documento visible.</message>
-<message xml:lang="de">Sie können zwei Dokumente nebeneinander im Fenster darstellen indem Sie ein Dokumenten-Tab an die Begrenzung des dargestellten Dokumentes ziehen.</message>
-<message xml:lang="it">Si possono visualizzare due documenti uno accanto all'altro nella finestra trascinando il tab del documento al margine del documento visualizzato.</message>
-<message xml:lang="hu">Két dokumentumot egymás mellé vagy alá helyezhetünk, ha az egyiket fülénél fogva a nyitva lévő másik dokumentum keretéhez húzzuk.</message>
+	<message xml:lang="en">You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.</message>
+	<message xml:lang="fr">Vous pouvez afficher deux documents côte à côte dans la même fenêtre en déplaçant un onglet de document sur un bord du document affiché.</message>
+	<message xml:lang="es">Puede mostrar dos o más documentos simultáneamente arrastrando la pestaña de un documento a uno de los bordes del documento visible.</message>
+	<message xml:lang="de">Sie können zwei Dokumente nebeneinander im Fenster darstellen indem Sie ein Dokumenten-Tab an die Begrenzung des dargestellten Dokumentes ziehen.</message>
+	<message xml:lang="it">Si possono visualizzare due documenti uno accanto all'altro nella finestra trascinando il tab del documento al margine del documento visualizzato.</message>
+	<message xml:lang="hu">Két dokumentumot egymás mellé vagy alá helyezhetünk, ha az egyiket fülénél fogva a nyitva lévő másik dokumentum keretéhez húzzuk.</message>
+	<message xml:lang="ja">表示されている文書の左右に文書タブをドラッグすることで、２つの文書を並べて表示することができます</message>
 </label>
 <label define="TIP_MOVE_PANELS">
-<message xml:lang="en">In customizable mode, you can drag panels to change their order or to make them floating.</message>
-<message xml:lang="fr">En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour en changer l'ordre ou les rendre flottants.</message>
-<message xml:lang="es">En el modo Personalizable, puede arrastrar los paneles de herramientas para cambiar su orden o mantenerlos flotantes.</message>
-<message xml:lang="de">Im benutzerdefinierten Modus können Sie Bedienelemente verschieben um ihre Anordnung zu verändern oder um sie frei zu platzieren.</message>
-<message xml:lang="it">Con il modo personalizzato, si può trascinare i pannelli per cambiare il loro ordine o per renderli mobili.</message>
-<message xml:lang="hu">Egyedi módban a panelek húzásásal megváltoztatható a sorrendjük, vagy lebegővé tehetők.</message>
+	<message xml:lang="en">In customizable mode, you can drag panels to change their order or to make them floating.</message>
+	<message xml:lang="fr">En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour en changer l'ordre ou les rendre flottants.</message>
+	<message xml:lang="es">En el modo Personalizable, puede arrastrar los paneles de herramientas para cambiar su orden o mantenerlos flotantes.</message>
+	<message xml:lang="de">Im benutzerdefinierten Modus können Sie Bedienelemente verschieben um ihre Anordnung zu verändern oder um sie frei zu platzieren.</message>
+	<message xml:lang="it">Con il modo personalizzato, si può trascinare i pannelli per cambiare il loro ordine o per renderli mobili.</message>
+	<message xml:lang="hu">Egyedi módban a panelek húzásásal megváltoztatható a sorrendjük, vagy lebegővé tehetők.</message>
+	<message xml:lang="ja">カスタムモードでは、ドラッグすることでパネルの順番を変えたりフローティング状態にできます</message>
 </label>
 <label define="TIP_MANY_COLUMNS">
-<message xml:lang="en">With the customizable mode, you can move panels on both sides of the window just by dragging.</message>
-<message xml:lang="fr">En mode paramétrable, vous pouvez placer plusieurs barres d'outils de chaque côté de la fenêtre en déplaçant les panneaux d'outils.</message>
-<message xml:lang="es">En el modo Personalizable, puede colocar los paneles de herramientas uno al lado del otro vertical u horizontalmente.</message>
-<message xml:lang="de">Im benutzerdefinierten Modus können Sie können Sie durch das Verschieben von Bedienelementen auf beiden Seiten Leisten mit Bedienelementen erstellen.</message>
-<message xml:lang="it">Con il modo personalizzato, si possono generare diverse barre di pannelli su ogni lato trascinando pannelli.</message>
-<message xml:lang="hu">Egyedi módban mindkét oldalon több paneltárat is készíthetünk a panelek húzásával.</message>
+	<message xml:lang="en">With the customizable mode, you can move panels on both sides of the window just by dragging.</message>
+	<message xml:lang="fr">En mode paramétrable, vous pouvez placer plusieurs barres d'outils de chaque côté de la fenêtre en déplaçant les panneaux d'outils.</message>
+	<message xml:lang="es">En el modo Personalizable, puede colocar los paneles de herramientas uno al lado del otro vertical u horizontalmente.</message>
+	<message xml:lang="de">Im benutzerdefinierten Modus können Sie können Sie durch das Verschieben von Bedienelementen auf beiden Seiten Leisten mit Bedienelementen erstellen.</message>
+	<message xml:lang="it">Con il modo personalizzato, si possono generare diverse barre di pannelli su ogni lato trascinando pannelli.</message>
+	<message xml:lang="hu">Egyedi módban mindkét oldalon több paneltárat is készíthetünk a panelek húzásával.</message>
+	<message xml:lang="ja">カスタムモードでは、ドラッグするだけでパネルをウィンドウの両サイドに移動できます</message>
 </label>
 <label define="TIP_EDITING_MODE">
-<message xml:lang="en">You can switch editing mode (Text/XML) by clicking on the corresponding button in the bottom right corner.</message>
-<message xml:lang="fr">Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton correspondant dans le coin inférieur droit.</message>
-<message xml:lang="es">Puede cambiar el modo de edición (Texto/XML) haciendo clic en el botón situado en la parte derecha de la barra de estado.</message>
-<message xml:lang="de">Sie können zwischen den Editiermodi (Text/XML) wechseln indem Sie auf das entsprechende Bedienfeld in der Statusleiste klicken.</message>
-<message xml:lang="it">Si può cambiare il modo di editing (Text/XML) cliccando sul corrispondente pulsante nella barra di stato.</message>
-<message xml:lang="hu">A szerkesztési mód (Szöveg/XML) váltása az állapotsorban lévő hasonló feliratú gombra kattintva is lehetséges.</message>
+	<message xml:lang="en">You can switch editing mode (Text/XML) by clicking on the corresponding button in the bottom right corner.</message>
+	<message xml:lang="fr">Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton correspondant dans le coin inférieur droit.</message>
+	<message xml:lang="es">Puede cambiar el modo de edición (Texto/XML) haciendo clic en el botón situado en la parte derecha de la barra de estado.</message>
+	<message xml:lang="de">Sie können zwischen den Editiermodi (Text/XML) wechseln indem Sie auf das entsprechende Bedienfeld in der Statusleiste klicken.</message>
+	<message xml:lang="it">Si può cambiare il modo di editing (Text/XML) cliccando sul corrispondente pulsante nella barra di stato.</message>
+	<message xml:lang="hu">A szerkesztési mód (Szöveg/XML) váltása az állapotsorban lévő hasonló feliratú gombra kattintva is lehetséges.</message>
+	<message xml:lang="ja">右下のボタンをクリックして編集モードをテキストかXML か変えられます</message>
 </label>
 <label define="TIP_ERROR_BUTTON">
-<message xml:lang="en">When there is red button in the bottom right corner, you can display errors by clicking on it.</message>
-<message xml:lang="fr">Quand il y a un bouton rouge dans le coin inférieur droit, vous pouvez afficher les erreurs en cliquant dessus.</message>
-<message xml:lang="es">Cuando se muestra un botón rojo en el extremo derecho de la barra de estado, puede ver los errores de la página haciendo clic en él.</message>
-<message xml:lang="de">Bemerken Sie einen roten Button in der Statusleiste können Sie sich mit einem Klick darauf Fehler im Dokument anzeigen lassen.</message>
-<message xml:lang="it">Quando c'è un pulsante rosso nella barra di stato, si possono vedere gli errori cliccandoci sopra .</message>
-<message xml:lang="hu">Ha az állapotsorban piros gomb látható, rákattintva megkapjuk a hibákat.</message>
+	<message xml:lang="en">When there is red button in the bottom right corner, you can display errors by clicking on it.</message>
+	<message xml:lang="fr">Quand il y a un bouton rouge dans le coin inférieur droit, vous pouvez afficher les erreurs en cliquant dessus.</message>
+	<message xml:lang="es">Cuando se muestra un botón rojo en el extremo derecho de la barra de estado, puede ver los errores de la página haciendo clic en él.</message>
+	<message xml:lang="de">Bemerken Sie einen roten Button in der Statusleiste können Sie sich mit einem Klick darauf Fehler im Dokument anzeigen lassen.</message>
+	<message xml:lang="it">Quando c'è un pulsante rosso nella barra di stato, si possono vedere gli errori cliccandoci sopra .</message>
+	<message xml:lang="hu">Ha az állapotsorban piros gomb látható, rákattintva megkapjuk a hibákat.</message>
+	<message xml:lang="ja">右下に赤いボタンがあるなら、クリックすることでエラーが見れます</message>
 </label>
 <label define="TIP_PATH_CONTROL">
-<message xml:lang="en">You can select an ancestor of the current selection by clicking on its name on the path control displayed at the bottom of the window.</message>
-<message xml:lang="fr">Vous pouvez sélectionner un ancêtre de la sélection courante en cliquant sur son nom dans le chemin affiché en bas de la fenêtre.</message>
-<message xml:lang="es">Puede seleccionar directamente un elemento (o en sus elementos padres) haciendo clic en su nombre que se muestra en la ruta de control situada en la parte izquierda de la barra de estado.</message>
-<message xml:lang="de">Sie können Vorgängerelemente durch einen Klick auf deren Bezeichnung in der Pfadanzeige unten in der Statusleiste auswählen.</message>
-<message xml:lang="it">Si può selezionare un antenato della selezione corrente clicccando sul suo nome nel path di controllo visualizzato nella barra di stato.</message>
-<message xml:lang="hu">Kijelölhetjük az aktuális kijelölés valamely elődelemét, ha az állapotsorban annak a nevére kattintunk.</message>
+	<message xml:lang="en">You can select an ancestor of the current selection by clicking on its name on the path control displayed at the bottom of the window.</message>
+	<message xml:lang="fr">Vous pouvez sélectionner un ancêtre de la sélection courante en cliquant sur son nom dans le chemin affiché en bas de la fenêtre.</message>
+	<message xml:lang="es">Puede seleccionar directamente un elemento (o en sus elementos padres) haciendo clic en su nombre que se muestra en la ruta de control situada en la parte izquierda de la barra de estado.</message>
+	<message xml:lang="de">Sie können Vorgängerelemente durch einen Klick auf deren Bezeichnung in der Pfadanzeige unten in der Statusleiste auswählen.</message>
+	<message xml:lang="it">Si può selezionare un antenato della selezione corrente clicccando sul suo nome nel path di controllo visualizzato nella barra di stato.</message>
+	<message xml:lang="hu">Kijelölhetjük az aktuális kijelölés valamely elődelemét, ha az állapotsorban annak a nevére kattintunk.</message>
+	<message xml:lang="ja">ウィンドウの下部に表示されているパスコントロールを使うことで、現在の要素の親要素を選ぶことができます。</message>
 </label>
 <label define="TIP_DOCUMENT_LIST_MENU">
-<message xml:lang="en">You can move to another tab with the menu displayed by the arrow button at right of document tabs.</message>
-<message xml:lang="fr">Vous pouvez changer d'onglet avec le menu affiché par le bouton flèche à droite des onglets.</message>
-<message xml:lang="es">Puede cambiar de pestaña de documento mediante el menú que se despliega haciendo clic en el botón en forma de flecha situado en el extremo derecho de las pestañas de documentos.</message>
-<message xml:lang="de">Sie können zu einer anderen Registerkarte wechseln indem Sie auf das Pfeil-nach-unten Symbol rechts neben den Registerleisten klicken.</message>
-<message xml:lang="it">Ci si può muovere in un altro tab con il menu visualizzato dal pulsante freccia alla destra dei tab del documento.</message>
-<message xml:lang="hu">A dokumentumfüleken lévő nyíl gomb megnyásakor megjelenő menü segítségével átválthatunk másik fülre.</message>
+	<message xml:lang="en">You can move to another tab with the menu displayed by the arrow button at right of document tabs.</message>
+	<message xml:lang="fr">Vous pouvez changer d'onglet avec le menu affiché par le bouton flèche à droite des onglets.</message>
+	<message xml:lang="es">Puede cambiar de pestaña de documento mediante el menú que se despliega haciendo clic en el botón en forma de flecha situado en el extremo derecho de las pestañas de documentos.</message>
+	<message xml:lang="de">Sie können zu einer anderen Registerkarte wechseln indem Sie auf das Pfeil-nach-unten Symbol rechts neben den Registerleisten klicken.</message>
+	<message xml:lang="it">Ci si può muovere in un altro tab con il menu visualizzato dal pulsante freccia alla destra dei tab del documento.</message>
+	<message xml:lang="hu">A dokumentumfüleken lévő nyíl gomb megnyásakor megjelenő menü segítségével átválthatunk másik fülre.</message>
+	<message xml:lang="ja">文書タブ右にあるボタンで、表示されているメニューの異なるタブへ移動することができます</message>
 </label>
 <label define="Classic">
-<message xml:lang="en">Classic</message>
-<message xml:lang="fr">Classique</message>
-<message xml:lang="es">Clásico</message>
-<message xml:lang="it">Classico</message>
-<message xml:lang="de">Klassisch</message>
-<message xml:lang="hu">Klasszikus</message>
+	<message xml:lang="en">Classic</message>
+	<message xml:lang="fr">Classique</message>
+	<message xml:lang="es">Clásico</message>
+	<message xml:lang="it">Classico</message>
+	<message xml:lang="de">Klassisch</message>
+	<message xml:lang="hu">Klasszikus</message>
+	<message xml:lang="ja">クラシック</message>
 </label>
 <label define="Modern">
-<message xml:lang="en">Modern</message>
-<message xml:lang="fr">Moderne</message>
-<message xml:lang="es">Moderno</message>
-<message xml:lang="it">Moderno</message>
-<message xml:lang="de">Modern</message>
-<message xml:lang="hu">Modern</message></label>
+	<message xml:lang="en">Modern</message>
+	<message xml:lang="fr">Moderne</message>
+	<message xml:lang="es">Moderno</message>
+	<message xml:lang="it">Moderno</message>
+	<message xml:lang="de">Modern</message>
+	<message xml:lang="hu">Modern</message>
+	<message xml:lang="ja">モダン</message>
+</label>
 <label define="NoTheme">
-<message xml:lang="en">No theme</message>
-<message xml:lang="fr">Pas de thème</message>
-<message xml:lang="es">Sin tema</message>
-<message xml:lang="it">Senza tema</message>
-<message xml:lang="de">Kein Motiv</message>
-<message xml:lang="hu">Téma nélkül</message></label>
+	<message xml:lang="en">No theme</message>
+	<message xml:lang="fr">Pas de thème</message>
+	<message xml:lang="es">Sin tema</message>
+	<message xml:lang="it">Senza tema</message>
+	<message xml:lang="de">Kein Motiv</message>
+	<message xml:lang="hu">Téma nélkül</message>
+	<message xml:lang="ja">テーマなし</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

@@ -1,358 +1,358 @@
-# encoding= 
-0 **&File
-1 **Context
-2 **Context
-3 **&Edit
-4 **&Views
-5 **&Insert
-6 **F&ormat
-7 **&Links
-8 **Attributes
-9 **&Tools
-10 **&Help
-11 **New tab
-12 **New &document...
-13 **New
-14 **New &document...
-15 **New &formula...
-16 **New &Drawing...
-17 **New s&tyle sheet...
-18 **&Open document...
-19 **&File
-20 **Open in new &window...
-21 **&Reload document
-22 **Read as
-23 **Unicode (UTF-8)
-24 **Western (ISO-8859-1)
-25 **Western (ISO-8859-15)
-26 **Western (Windows-1252)
-27 **Central Europe (ISO-8859-2)
-28 **Central Europe (Windows-1250)
-29 **South Europe (ISO-8859-3)
-30 **Baltic (ISO-8859-4)
-31 **Baltic (Windows-1257)
-32 **Cyrillic (ISO-8859-5)
-33 **Cyrillic (Windows-1251)
-34 **Cyrillic (KOI8-R)
-35 **Arabic (ISO-8859-6)
-36 **Arabic (Windows-1256)
-37 **Greek (ISO-8859-7)
-38 **Greek (Windows-1253)
-39 **Hebrew (ISO-8859-8)
-40 **Hebrew (Windows-1255)
-41 **Turkish (ISO-8859-9)
-42 **Turkish (Windows-1254)
-43 **Chinese Simplified (GB-2312)
-44 **Japanese (ISO-2022-JP)
-45 **Japanese (EUC-JP)
-46 **Japanese (Shift-JIS)
-47 **&Back
-48 **&Forward
-49 **&Save
-50 **Save &as...
-51 **Save all
-52 **S&ynchronize
-53 **Send by mail ...
-54 **Set&up and print...
-55 **&Print
-56 **&Close tab
-57 **Close &window
-58 **E&xit Amaya
-59 **New tab
-60 **Refresh tab
-61 **Refresh all tabs
-62 **Close other tabs
-63 **Close tab
-64 **Open the link
-65 **Open the link in new tab
-66 **Open the link in new window
-67 **Cut
-68 **Copy
-69 **Paste
-70 **Delete
-71 **Insert
-72 **Append
-73 **&Undo
-74 **&Redo
-75 **Cu&t
-76 **&Copy
-77 **&Paste
-78 **&Delete
-79 **&Insert
-80 **&Append
-81 **Select all
-82 **Select
-83 **Parent element
-84 **First child
-85 **Previous element
-86 **Next element
-87 **&Find...
-88 **&Preferences
-89 **Show/Hide toolbars
-90 **&Browsing
-91 **&Editing
-92 **Show &tools
-93 **Show &map areas
-94 **Show &targets
-95 **Show &formatted view
-96 **Show &structure
-97 **Show so&urce
-98 **Show lin&ks
-99 **Show &alternate
-100 **Show table &of contents
-101 **Split view horizontally
-102 **Split view vertically
-103 **Document &info
-104 **Show parsing errors
-105 **&Full screen
-106 **Zoom in
-107 **Zoom out
-108 **Paragraph (p)
-109 **Heading
-110 **h1
-111 **h2
-112 **h3
-113 **h4
-114 **h5
-115 **h6
-116 **List
-117 **Unordered list (ul)
-118 **Ordered list (ol)
-119 **Definition list (dl)
-120 **Term (dt)
-121 **Definition (dd)
-122 **Information type
-123 **Emphasis (em)
-124 **strong
-125 **cite
-126 **Definition (dfn)
-127 **code
-128 **Variable (var)
-129 **Sample (samp)
-130 **Keyboard (kbd)
-131 **Abbreviation (abbr)
-132 **acronym
-133 **Insertion (ins)
-134 **Deletion (del)
-135 **Character element
-136 **Italic (i)
-137 **Bold (b)
-138 **Teletype (tt)
-139 **big
-140 **small
-141 **Subscript (sub)
-142 **Superscript (sup)
-143 **Quotation (q)
-144 **BiDi override (bdo)
-145 **Image (img)...
-146 **Horizontal rule (hr)
-147 **Break (br)
-148 **Preformatted (pre)
-149 **Insert a table
-150 **Table
-151 **Insert a table
-152 **caption
-153 **thead
-154 **tbody
-155 **tfoot
-156 **&Math
-157 **Insert a formula
-158 **Plain text (mtext)
-159 **Identifier (mi)
-160 **Number (mn)
-161 **Operator (mo)
-162 **Space (mspace)
-163 **Character (&xxx;)
-164 **InvisibleTimes
-165 **ApplyFunction
-166 **Root (mroot)
-167 **Square root (msqrt)
-168 **Enclose (menclose)
-169 **Fraction (mfrac)
-170 **Subscript and superscript (msubsup)
-171 **Subscript (msub)
-172 **Superscript (msup)
-173 **Under and over (munderover)
-174 **Under (munder)
-175 **Over (mover)
-176 **Parentheses (mrow)
-177 **Multiscripts (mmultiscripts)
-178 **New matrix (mtable)
-179 **Form
-180 **Insert a form
-181 **Button (input)
-182 **Checkbox (input)
-183 **File selector (input)
-184 **Hidden (input)
-185 **Image (input)...
-186 **Password (input)
-187 **Radio (input)
-188 **Reset (input)
-189 **Submit (input)
-190 **Text (input)
-191 **fieldset
-192 **label
-193 **Menu (option)
-194 **Submenu (optgroup)
-195 **textarea
-196 **Object
-197 **object
-198 **Parameter (param)
-199 **Map area
-200 **Insert a map
-201 **Circle area
-202 **Polygon area
-203 **Rectangle area
-204 **Hidden elements
-205 **style
-206 **Comment
-207 **base
-208 **meta
-209 **link
-210 **script
-211 **noscript
-212 **Division (div)
-213 **address
-214 **blockquote
-215 **Inline frame (iframe)
-216 **ruby
-217 **Theme
-218 **Classic
-219 **Modern
-220 **No theme
-221 **Text color
-222 **Select a text color...
-223 **No color
-224 **Background color
-225 **Select a background color...
-226 **No color
-227 **Alignment
-228 **Left
-229 **Center
-230 **Right
-231 **Justify
-232 **Default
-233 **Line spacing
-234 **Single
-235 **Half
-236 **Double
-237 **Default
-238 **Indent
-239 **Increase
-240 **Decrease
-241 **Default
-242 **Character
-243 **Select a font...
-244 **Default
-245 **&Style editor...
-246 **Create &rule...
-247 **Show applied style...
-248 **Style sheets
-249 **Link...
-250 **Open...
-251 **Disable...
-252 **Enable...
-253 **Remove...
-254 **Copy location
-255 **Paste location
-256 **&Link to previous target
-257 **&Create or change link...
-258 **Create &target
-259 **&Delete link or target
-260 **&Add/Remove IDs...
-261 **Chec&k spelling...
-262 **Transfor&m...
-263 **Code clean up
-264 **Edit table
-265 **Change to data cell
-266 **Change to heading cell
-267 **Merge cells
-268 **Join with the cell at the right
-269 **Join with the cell below
-270 **Shrink horizontal extend
-271 **Shrink vertical extend
-272 **Select the row
-273 **Insert a row
-274 **Append a row
-275 **Select the column
-276 **Insert a column
-277 **Append a column
-278 **Paste before
-279 **Paste after
-280 **Change title...
-281 **Change doctype
-282 **Remove the doctype
-283 **Add a doctype
-284 **Change to XHTML 1.1
-285 **Change to XHTML 1.0 Transitional
-286 **Change to XHTML 1.0 Strict
-287 **Change to XHTML 1.0 Basic
-288 **Change to XHTML+RDFa
-289 **Change to HTML 4.01 Transitional
-290 **Change to HTML 4.01 Strict
-291 **&Section numbering
-292 **&Add/Update table of contents
-293 **&Make book
-294 **Insert time stamp
-295 **Graphics
-296 **Show SVG library
-297 **Add to SVG library
-298 **A&nnotations
-299 **Annotate selection
-300 **Annotate document
-301 **Move to selection
-302 **Store selection as &XPointer
-303 **Move to stored XPointer
-304 **Reply to annotation
-305 **Post to server
-306 **Delete
-307 **Load
-308 **Customize query...
-309 **Local filter...
-310 **C&ooperation
-311 **Lock resource...
-312 **Unlock resource...
-313 **View resource properties...
-314 **Copy lock information...
-315 **Locked?
-316 **Templates
-317 **Create template from current document...
-318 **Create a text box
-319 **Create a free editing box
-320 **&Javascript/DOM
-321 **Enable/Disable
-322 **Execute a command
-323 **Execute an external script
-324 **Add an external script
-325 **Insert a script
-326 **About Amaya
-327 **About Amaya at W3C
-328 **Index
-329 **Browsing
-330 **Views
-331 **Selecting
-332 **Documents
-333 **Creating elements
-334 **Attributes
-335 **Characters
-336 **Templates
-337 **Restructuring
-338 **Links
-339 **Tables
-340 **Image maps
-341 **Math
-342 **Graphics
-343 **XML support
-344 **Style sheets
-345 **Searching
-346 **Spell checking
-347 **Publishing
-348 **Cooperation
-349 **Printing
-350 **Numbering
-351 **Making books
-352 **Annotations
-353 **Configuring
-354 **Shortcuts
-355 **Accessibility in Amaya
-356 **Tip of the day...
+# encoding= utf8
+0 ファイル(&F)
+1 コンテキスト
+2 コンテキスト
+3 編集(&E)
+4 表示(&V)
+5 挿入(&I)
+6 書式(&O)
+7 リンク(&L)
+8 属性 / Attributes
+9 ツール(&T)
+10 ヘルプ(&H)
+11 新規タブ
+12 新しいHTML 文書(&D)...
+13 新規作成
+14 新しいHTML 文書(&D)...
+15 新しいMathML 文書(&F)...
+16 新規作成...
+17 新しいスタイルシート(&T)...
+18 開く(&O)...
+19 ファイル(&F)
+20 新しいウィンドウで開く(&w)...
+21 更新(&R)
+22 文字コード
+23 ユニコード (UTF-8)
+24 西ヨーロッパ言語 (ISO-8859-1)
+25 西ヨーロッパ言語 (ISO-8859-15)
+26 西ヨーロッパ言語 (Windows-1252)
+27 中央ヨーロッパ言語 (ISO-8859-2)
+28 中央ヨーロッパ言語 (Windows-1250)
+29 南ヨーロッパ言語 (ISO-8859-3)
+30 バルト言語 (ISO-8859-4)
+31 バルト言語 (Windows-1257)
+32 キリル言語 (ISO-8859-5)
+33 キリル言語 (Windows-1251)
+34 キリル言語 (KOI8-R)
+35 アラビア語 (ISO-8859-6)
+36 アラビア語 (Windows-1256)
+37 ギリシャ語 (ISO-8859-7)
+38 ギリシャ語 (Windows-1253)
+39 ヘブライ語 (ISO-8859-8)
+40 ヘブライ語 (Windows-1255)
+41 トルコ語 (ISO-8859-9)
+42 トルコ語 (Windows-1254)
+43 簡体字中国語 (GB-2312)
+44 日本語 (ISO-2022-JP)
+45 日本語 (EUC-JP)
+46 日本語 (Shift-JIS)
+47 前に戻る(&B)
+48 先に進む(&F)
+49 上書き保存(&S)
+50 名前を付けて保存(&a)...
+51 全て保存
+52 同期(&y)
+53 メールで送信 ...
+54 印刷設定(&U)...
+55 印刷(&P)
+56 タブを閉じる(&C)
+57 ウィンドウを閉じる(&W)
+58 終了(&x)
+59 新規タブ
+60 タブを更新
+61 全てのタブを更新
+62 他のタブを閉じる
+63 タブを閉じる
+64 リンクを開く
+65 リンクを新規タブで開く
+66 リンクを新規ウィンドウで開く
+67 切り取り
+68 コピー
+69 貼り付け
+70 削除
+71 挿入
+72 追加
+73 元に戻す(&U)
+74 やり直し(&R)
+75 切り取り(&t)
+76 コピー(&C)
+77 貼り付け(&P)
+78 削除(&D)
+79 挿入(&I)
+80 追加(&A)
+81 全て送信
+82 選択
+83 親要素
+84 最初の子要素
+85 前の要素
+86 次の要素
+87 検索(&F)...
+88 設定(&P)
+89 ツールバーの表示/非表示
+90 ブラウザバー(&B)
+91 編集バー(&E)
+92 ツールを表示(&t)
+93 マップエリアの表示(&m)
+94 ターゲットを表示(&t)
+95 フォーマットされた表示を見る(&f)
+96 構造を表示(&s)
+97 ソースを表示(&u)
+98 リンクを表示(&k)
+99 別形式で表示(&a)
+100 見出しを表示(&o)
+101 横に分割表示(&h)
+102 縦に分割表示(&v)
+103 ドキュメント情報(&I)
+104 構文解析エラーの表示
+105 フルスクリーン(&F)
+106 ズームイン(&I)
+107 ズームアウト(&O)
+108 段落 (p)
+109 見出し
+110 見出しの大きさ 1
+111 見出しの大きさ 2
+112 見出しの大きさ 3
+113 見出しの大きさ 4
+114 見出しの大きさ 5
+115 見出しの大きさ 6
+116 リスト
+117 順序なしリスト (ul)
+118 順序リスト (ol)
+119 定義リスト (dl)
+120 定義語 (dt)
+121 定義の説明 (dd)
+122 情報の種類
+123 強調 (em)
+124 強調 (strong)
+125 参照 (cite)
+126 定義 (dfn)
+127 コード(code)
+128 変数 (var)
+129 サンプル (samp)
+130 キーボード (kbd)
+131 略語 (abbr)
+132 略語 (acronym)
+133 挿入 (ins)
+134 削除 (del)
+135 キャラクタ要素
+136 斜体 (i)
+137 太字 (b)
+138 等幅 (tt)
+139 大きいフォント (big)
+140 小さいフォント (small)
+141 サブスクリプト (sub)
+142 スーパースクリプト (sup)
+143 引用 (インライン内容) (q)
+144 ドキュメントを表示する方向 (bdo)
+145 画像 (img)...
+146 罫線 (hr)
+147 行区切り (br)
+148 整形済テキスト (pre)
+149 表の挿入
+150 表
+151 表の挿入
+152 見出し
+153 カラムグループ
+154 カラム
+155 スレッド
+156 表のボディー部を定義
+157 表のフッタ部を定義
+158 数式 / Math (&M)
+159 MathML の挿入
+160 プレーンテキスト (mtext)
+161 識別子 (mi)
+162 数 (mn)
+163 オペレータ (mo)
+164 スペース (mspace)
+165 文字 (&xxx;)
+166 非表示の乗算
+167 機能の適用
+168 基数付きルート (mroot)
+169 基数なしルート (msqrt)
+170 同封 (menclose)
+171 分数 (mfrac)
+172 サブスクリプトとスーパースクリプト (msubsup)
+173 サブスクリプト (msub)
+174 スーパースクリプト (msup)
+175 上文字と下文字 (munderover)
+176 下文字 (munder)
+177 上文字 (mover)
+178 丸括弧 (mrow)
+179 マルチスクリプト (mmultiscripts)
+180 新しい行列 (mtable)
+181 フォーム
+182 フォームの挿入 (form)
+183 ボタン (button)
+184 チェックボックス (checkbox)
+185 ファイル選択コントロール (file)
+186 隠れコントロール成 (hidden)
+187 イメージ付き提出ボタン (image)...
+188 パスワード用のテキスト入力コントロール (password)
+189 ラジオボタン (radio)
+190 リセットボタン (reset)
+191 提出ボタン (submit)
+192 テキスト入力コントロール (text)
+193 フォームを構造化 (fieldset)
+194 コントロールのラベルを指定 (label)
+195 メニュー (option)
+196 選択項目のグループ化 (optgroup)
+197 複数行のテキスト入力コントロール (textarea)
+198 オブジェクト
+199 オブジェクト (object)
+200 オブジェクトの初期化 (param)
+201 マップエリア
+202 Map の挿入
+203 円領域
+204 多角形領域
+205 長方形領域
+206 隠し要素
+207 スタイル
+208 コメント
+209 基準URL
+210 メタ (meta)
+211 リンク (link)
+212 スクリプト
+213 スクリプトが実行されない場合
+214 グループ化 (div)
+215 問い合せ先 (address)
+216 引用 (ブロックレベル内容) (blockquote)
+217 インラインフレーム (iframe)
+218 ルビ
+219 テーマ
+220 クラシック
+221 モダン
+222 テーマなし
+223 文字色
+224 文字色の選択...
+225 なし
+226 背景色
+227 背景色の選択...
+228 なし
+229 行揃え
+230 左寄せ
+231 中央
+232 右寄せ
+233 両端揃え
+234 デフォルト
+235 行間
+236 シングル
+237 ハーフ
+238 ダブル
+239 デフォルト
+240 インデント
+241 増やす
+242 減らす
+243 デフォルト
+244 フォント
+245 フォントの選択...
+246 デフォルト
+247 スタイルの編集(&S)...
+248 ルール作成 (&r)...
+249 適用されたスタイルの表示...
+250 スタイルシート
+251 リンクする...
+252 開く...
+253 無効にする...
+254 有効にする...
+255 削除...
+256 現在のURL をコピー
+257 ロケーションの貼り付け
+258 前のターゲットにリンク(&L)
+259 リンクの作成、変更(&C)...
+260 ターゲットを作成(&t)
+261 リンクやターゲットの削除(&D)
+262 ID の追加と削除(&A)...
+263 スペルチェック(&k)...
+264 変換(&m)...
+265 表の編集
+266 セルデータの変更
+267 見出しセルの変更
+268 セルの結合
+269 右のセルと結合
+270 下のセルと結合
+271 水平方向の縮小、拡大
+272 垂直方向の縮小、拡大
+273 行を選択
+274 上に行を挿入
+275 下に行を挿入
+276 列を選択
+277 左に列を挿入
+278 右に列を挿入
+279 前に貼り付け
+280 後ろに貼り付け
+281 タイトルの変更...
+282 DOCTYPE の変更
+283 DOCTYPE の削除
+284 DOCTYPE の追加
+285 XHTML 1.1へ変更
+286 XHTML 1.0 Transitional へ変更
+287 XHTML 1.0 Strict へ変更
+288 XHTML 1.0 Basic へ変更
+289 HTML 4.01 Transitional へ変更
+290 HTML 4.01 Strict へ変更
+291 セクションに番号を付加(&S)
+292 表の内容を追加/更新
+293 ブックの作成(&M)
+294 現在の日付を挿入
+295 グラフィックス(Graphics)
+296 SVG ライブラリを表示
+297 SVG ライブラリに追加
+298 注釈(&n)
+299 選択領域に注釈を付ける
+300 文書に注釈を付ける
+301 選択した場所に移動
+302 選択したものを &XPointer として保存する
+303 保存してある XPointer へ移動する
+304 注釈に返事をする
+305 サーバに送信
+306 削除
+307 ロード
+308 クエリーのカスタマイズ...
+309 ローカルフィルタ...
+310 連携(&o)
+311 リソースをロックする...
+312 リソースのロックを解除...
+313 リソースのプロパティを表示...
+314 ロック情報をコピー...
+315 ロックしますか?
+316 Templates
+317 Create template from current document...
+318 Create a text box
+319 Create a free editing box
+320 Javascript/DOM(&J)
+321 有効/無効
+322 コマンドの実行
+323 外部スクリプトの実行
+324 外部スクリプトの追加
+325 スクリプトの挿入
+326 Amaya について
+327 配布先 (W3C) へ
+328 ユーザマニュアル
+329 ブラウジング
+330 ドキュメントの表示
+331 範囲指定
+332 ドキュメント
+333 要素の作成
+334 属性 / Attributes
+335 文字
+336 テンプレート
+337 ドキュメントの再構成
+338 リンク
+339 表
+340 イメージマップ
+341 数学表現
+342 グラフィックス(Graphics)
+343 XML のサポート
+344 スタイルシート
+345 検索
+346 スペルチェック
+347 出版
+348 協力
+349 印刷
+350 番号付け
+351 ブックを作る
+352 注釈
+353 コンフィグ
+354 ショートカットキー
+355 Amaya の利便性
+356 今日のTips

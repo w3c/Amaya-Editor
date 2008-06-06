@@ -1,274 +1,274 @@
-# encoding= 
-0 **X11 Error : %s\n
-1 **Confirm
-2 **No alphabet file
-3 **New view cannot replace the old one
-4 **Incompatible schemas. Recompile %s
-5 **Fatal Error: fonts not found
-6 **Memory exhausted
-7 **Fatal Error: Unable to connect to X
-8 **View is modified before creation
-9 **Rules table full.
-10 **Incorrect file: %s.STR
-11 **Incorrect file: %s.PRS
-12 **Document %s printed
-13 **Disposition
-14 **1 page/sheet
-15 **2 pages/sheet
-16 **4 pages/sheet
-17 **%s
-18 **Not enough memory
-19 ***** Amaya: Irrecoverable error ***
-20 **modified documents, if any, will be saved
-21 **Incorrect .TRA file: %s
-22 **%s is not a valid sibling for %s (%s)
-23 **%s is not a valid child for %s (%s)
-24 **%s, page %d
-25 **Language
-26 **Attributes
-27 **Standard presentation
-28 **Apply
-29 **Characters
-30 **Underline
-31 **Graphics
-32 **Format
-33 **Default
-34 **Align
-35 **Indent
-36 **Printing in progress
-37 **Print
-38 **Manual feed
-39 **Options
-40 **A4
-41 **US
-42 **Paper format
-43 **Close
-44 **Directories
-45 **The document %s already exists. Do you want to overwrite it?
-46 **Set the text color
-47 **Set the background color
-48 **Font family
-49 **Normal
-50 **Bold
-51 **Italic
-52 **Oblique
-53 **Normal
-54 **Boldness
-55 **Normal
-56 **Underline
-57 **Cross out
-58 **Size
-59 **Unindent
-60 **Single line spacing
-61 **Middle line spacing
-62 **Double line spacing
-63 **Save document
-64 **Close, don't save
-65 **Character style
-66 **Colors
-67 **Elements
-68 **Delete
-69 **Output
-70 **PostScript file
-71 **Printer
-72 **Search for
-73 **Ignore case
-74 **Replace by
-75 **Replace
-76 **No replace
-77 **Replace on request
-78 **Automatic replace
-79 **Search where
-80 **Before selection
-81 **Within selection
-82 **After selection
-83 **In the whole document
-84 **Do not replace
-85 **before closing it
-86 **Close a document
-87 **Math symbols
-88 **Graphics
-89 **Latin alphabet
-90 **Greek alphabet
-91 **Save
-92 **Text
-93 **Graphic
-94 **Symbol
-95 **Image
-96 **XML elements
-97 **after
-98 **before
-99 **around
-100 **Include
-101 **Paste
-102 **to create
-103 **Insert
-104 **Page break
-105 **Language of element
-106 **Inherited language:
-107 **Not found
-108 **Search in
-109 **Search
-110 **Read only element
-111 **Nothing to replace
-112 **Standard characters
-113 **Standard graphics
-114 **Standard format
-115 **Standard geometry
-116 **pt
-117 **Line style
-118 **Line weight
-119 **Fill pattern
-120 **Split
-121 **Object type
-122 **Goto page number:
-123 **Any
-124 **Attribute to search
-125 **Type to search
-126 **Natures
-127 **Attribute
-128 **Value
-129 **Attribute value
-130 **Unknown attribute
-131 **Cancel
-132 **Error in PostScript translation
-133 **Command refused by the spooler "%s"
-134 **Cannot create "%s"
-135 **Overline
-136 **Document format
-137 **Remove attribute
-138 **Select a background color
-139 **Select a text color
-140 **Select a generic XML structure
-141 **Checking
-142 **Search/Skip
-143 **Replace (+ dic)
-144 **Replace and next
-145 **Other language
-146 **Learn
-147 **words containing:
-148 **Spell checking ...
-149 **Roman numerals
-150 **Ignore
-151 **words that are all caps
-152 **words with digits
-153 **Parameter file error
-154 **No keyboard file
-155 **Cannot save the document dictionary
-156 **Incorrect word "%s" refused in this dictionary
-157 **Word "%s" added in the document dictionary
-158 **End of spell checking
-159 **Spell checking aborted
-160 **Please select a document
-161 **Document dictionary saved: %s
-162 **Not available in this version
-163 **Enable/Disable palette
-164 **Tools
-165 **Mandatory attribute, it can't be removed
-166 **Refresh
-167 **Align left
-168 **Align right
-169 **Center
-170 **Justify
-171 **Apply class
-172 **Select a class or a pseudo-class
-173 **Select
-174 **Discard
-175 **Math
-176 **Misc
-177 **Binary relations
-178 **Binary relations of negation
-179 **Operators
-180 **Greek alphabet (capital)
-181 **Arrows
-182 **Special characters
-183 **Interrupt transfer
-184 **Previous document
-185 **Next document
-186 **Reload
-187 **Save
-188 **Save All
-189 **New document
-190 **Open document
-191 **Print
-192 **Find
-193 **Home
-194 **Emphasis On/Off
-195 **Strong On/Off
-196 **Code On/Off
-197 **Insert/Replace image
-198 **Heading level 1
-199 **Heading level 2
-200 **Heading level 3
-201 **Heading level 4
-202 **Paragraph
-203 **Bulleted list
-204 **Numbered list
-205 **Definition list
-206 **Link
-207 **Table
-208 **You are about to close %d open tabs. Are you sure you want to continue?
-209 **Warn me when I attempt to close multiple tabs
-210 **Close tabs
-211 **No error detected
-212 **Show parsing errors
-213 **Boxes
-214 **Division
-215 **Target
-216 **Inserted text On/Off
-217 **Deleted text On/Off
-218 **Subscript On/Off
-219 **Superscript On/Off
-220 **Term
-221 **Definition
-222 **Object
-223 **Style
-224 **Files
-225 **Horizontal split/unsplit
-226 **Vertical split/unsplit
-227 **Show/hide tools
-228 **Undo
-229 **Redo
-230 **Cut
-231 **Copy
-232 **Paste
-233 **Check spelling
-234 **Various constructs
-235 **Relations, orders and logic
-236 **Sets and functions
-237 **Arithmetic, operations, complexes and constants
-238 **Analysis, linear algebra and statistic
-239 **Trigonometry and logarithms
-240 **Zoom in
-241 **Zoom out
-242 **Theme
-243 **XML
-244 **Text
-245 **No recent document
-246 **Click an element to select it
-247 **Click to change the editing mode
-248 **Merge cells
-249 **Shrink horizontal extend
-250 **Shrink vertical extend
-251 **Insert a row
-252 **Append a row
-253 **Insert a column
-254 **Append a column
-255 **Tip of the day
-256 **Show tip at startup
-257 **Next tip
-258 **Did you know...
-259 **Close
-260 **Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.
-261 **Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.
-262 **With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.
-263 **You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.
-264 **In customizable mode, you can drag panels to change their order or to make them floating.
-265 **With the customizable mode, you can move panels on both sides of the window just by dragging.
-266 **You can switch editing mode (Text/XML) by clicking on the corresponding button in the bottom right corner.
-267 **When there is red button in the bottom right corner, you can display errors by clicking on it.
-268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed at the bottom of the window.
-269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
-270 **Classic
-271 **Modern
-272 **No theme
+# encoding= utf8
+0 X11 エラー : %s\n
+1 確認
+2 ノーアルファベットファイル
+3 新規ビューは古いビューと置換できません
+4 スキーマに互換性がありません。 %s をリコンパイルします。
+5 致命的なエラー: フォントが見つかりません
+6 メモリ不足
+7 致命的なエラー: X に接続できません
+8 ビューは作成される前に修正されています。
+9 ルール表がいっぱいです。
+10 誤ったファイル: %s.STR
+11 誤ったファイル: %s.PRS
+12 %s 文章は印刷されました
+13 配置
+14 一枚に一ページ
+15 一枚に二ページ
+16 一枚に四ページ
+17 %s
+18 メモリが足りません
+19 *** Amaya: 回復できないエラーです ***
+20 変更を保存します
+21 誤った .TRA ファイル: %s
+22 %s は %s (%s)　と正当な兄弟関係ではありません
+23 %s は %s (%s)　と正当な子関係ではありません
+24 %s, ページ %d
+25 言語
+26 属性
+27 標準プレゼンテーション
+28 適用
+29 文字
+30 下線
+31 グラフィックス
+32 フォーマット
+33 デフォルト
+34 整列
+35 インデントを増やす
+36 印刷中
+37 印刷
+38 手送り
+39 オプション
+40 A4
+41 US
+42 用紙の書式設定
+43 閉じる
+44 ディレクトリ
+45 このドキュメント %s はすでに存在します。上書きしますか？
+46 文字色
+47 背景の色
+48 フォントファミリー
+49 普通
+50 太字
+51 斜体 (italic)
+52 斜体 (Oblique)
+53 普通
+54 太さ
+55 普通
+56 下線
+57 取り消し線
+58 サイズ
+59 インデントを減らす
+60 １行間
+61 １．５行間
+62 ２行間
+63 文章の保存
+64 保存しないで閉じる
+65 文字スタイル
+66 色
+67 要素
+68 削除
+69 出力
+70 ポストスクリプトファイル
+71 プリンター
+72 検索
+73 大文字と小文字を区別しない
+74 次で置換
+75 置換
+76 置換しない
+77 一つずつ置換
+78 自動的に置換
+79 検索箇所
+80 選択箇所より前
+81 選択箇所の中
+82 選択箇所より後ろ
+83 ドキュメント全体
+84 置換しない
+85 閉じる前に
+86 ドキュメントを閉じる
+87 数学記号
+88 グラフィックス
+89 ラテン文字
+90 ギリシャ文字
+91 保存
+92 テキスト
+93 グラフィックス
+94 シンボル
+95 イメージ
+96 XML 要素
+97 後
+98 前
+99 周囲
+100 インクルード
+101 貼り付け
+102 作成
+103 挿入
+104 改ページ
+105 要素の言語
+106 引き継いでいる言語:
+107 見つかりません
+108 ファイル内を検索
+109 検索
+110 読み取り専用要素
+111 置換するものがありません
+112 標準のキャラクタ
+113 標準のグラフィックス
+114 標準のフォーマット
+115 標準配置
+116 pt
+117 線のスタイル
+118 線の太さ
+119 フィル・パターン
+120 分割
+121 オブジェクトタイプ
+122 移動先ページ番号:
+123 その他
+124 属性を検索
+125 検索の種類
+126 種類
+127 属性
+128 値
+129 属性値
+130 未知の属性
+131 キャンセル
+132 ポストスクリプト翻訳におけるエラー
+133 スプーラ"%s"によってコマンドが拒否されました
+134 "%s"を作成できません
+135 オーバライン
+136 ドキュメント形式
+137 属性の消去
+138 背景色を選択
+139 文字色を選択
+140 一般的なXML 構造を選択
+141 チェック
+142 検索
+143 置換 (+ dic)
+144 置換して次へ
+145 他の言語
+146 記憶する
+147 以下を含む単語
+148 スペルをチェックしています ...
+149 ロマン数字
+150 無視
+151 全て大文字の単語
+152 数字入りの単語
+153 パラメータファイルエラー
+154 キーボードファイルがありません
+155 このドキュメントディクショナリは保存できません
+156 不正な単語 "%s" がこのディクショナリに拒否されました
+157 単語 "%s" がドキュメントディクショナリに追加されました
+158 スペルチェックが完了しました
+159 スペルチェックが中断されました
+160 ドキュメントを選択してください
+161 ドキュメント辞書を保存しました: %s
+162 このバージョンでは利用できません
+163 パレットの有効/無効
+164 ツール
+165 義務的な属性。それを取り除くことができません
+166 更新
+167 文字列を左に揃える
+168 文字列を右に揃える
+169 中央揃え
+170 両端揃え
+171 クラスを適用
+172 クラスまたは擬似クラスを選択
+173 選択
+174 破棄
+175 数式 / Math
+176 その他
+177 バイナリー関係
+178 バイナリー否定の関係
+179 オペレータ
+180 ギリシャ文字 (大文字)
+181 矢印
+182 特殊文字
+183 転送中止
+184 戻る
+185 進む
+186 更新
+187 保存
+188 すべて保存
+189 新しいXHTML文書
+190 開く
+191 印刷
+192 検索
+193 ホーム
+194 斜体
+195 強調
+196 ソースコード
+197 画像の挿入/置換
+198 見出しの大きさ 1
+199 見出しの大きさ 2
+200 見出しの大きさ 3
+201 見出しの大きさ 4
+202 段落
+203 箇条書き
+204 段落番号
+205 リスト（定義）
+206 リンク
+207 表
+208 このウィンドウでは %d 個のタブが開かれています。すべてのタブを閉じてよろしいですか？
+209 一度に複数のタブを閉じるときに警告する
+210 タブを閉じる
+211 エラーは発見されませんでした
+212 解析したエラーを表示
+213 ボックス
+214 分割
+215 ターゲット
+216 引用文
+217 打ち消し線
+218 サブスクリプト
+219 スーパースクリプト
+220 定義語
+221 定義の説明
+222 オブジェクト
+223 スタイル
+224 ファイル
+225 横向きの　分割/結合
+226 縦向きの　分割/結合
+227 ツールを表示/隠す
+228 元に戻す
+229 やり直し
+230 切り取り
+231 コピー
+232 貼り付け
+233 スペルチェック
+234 様々な構成
+235 道理と論理の関係
+236 集合と関数
+237 複素数と定数の計算、演算
+238 線形代数と統計の解析
+239 三角法と対数
+240 拡大
+241 縮小
+242 テーマ
+243 XML
+244 テキスト
+245 現在の文書はありません
+246 要素を選択してください
+247 編集モードの変更
+248 セルの結合
+249 セルを列に分割する
+250 セルを行に分割する
+251 上に行を挿入
+252 下に行を挿入
+253 左に列を挿入
+254 右に列を挿入
+255 今日のTips
+256 スタートアップ時にTips を表示
+257 次のTips
+258 知っていますか...
+259 閉じる
+260 Amaya はあなたの要求に適応できます：5つのパラメータがメニューとパネルの異なる組み合わせで実現できます。詳しくは「編集」→「設定」→「一般」を参照してください。
+261 パネルの表示位置はウィンドウの左右から選ぶか、もしくはカスタマイズできます。「設定」を参照してください。
+262 F2もしくはエスケープキーで、編集機能（コピー、ペースト、属性、スタイルなど）に適応させるために文書中の現在の要素を選択できます。
+263 表示されている文書の左右に文書タブをドラッグすることで、２つの文書を並べて表示することができます
+264 カスタムモードでは、ドラッグすることでパネルの順番を変えたりフローティング状態にできます
+265 カスタムモードでは、ドラッグするだけでパネルをウィンドウの両サイドに移動できます
+266 右下のボタンをクリックして編集モードをテキストかXML か変えられます
+267 右下に赤いボタンがあるなら、クリックすることでエラーが見れます
+268 ウィンドウの下部に表示されているパスコントロールを使うことで、現在の要素の親要素を選ぶことができます。
+269 文書タブ右にあるボタンで、表示されているメニューの異なるタブへ移動することができます
+270 クラシック
+271 モダン
+272 テーマなし

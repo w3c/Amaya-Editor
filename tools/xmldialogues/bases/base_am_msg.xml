@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<base version="89">
+<base version="90">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -16,6 +16,7 @@
 	<language encoding="utf8">tw</language>
 	<language encoding="utf8">sk</language>
 	<language encoding="utf8">jp</language>
+	<language encoding="utf8">ja</language>
 </control>
 <messages>
 <label define="AM_FILES">
@@ -33,6 +34,7 @@
 	<message xml:lang="cn">文件</message>
 	<message xml:lang="tw">文件</message>
 	<message xml:lang="sk">Súbory</message>
+	<message xml:lang="ja">ファイル</message>
 </label>
 <label define="AM_OPEN_URL">
 	<message xml:lang="en">Open</message>
@@ -49,6 +51,7 @@
 	<message xml:lang="cn">打开</message>
 	<message xml:lang="tw">打開</message>
 	<message xml:lang="sk">Otvoriť</message>
+	<message xml:lang="ja">開く</message>
 </label>
 <label define="AM_NEW_MATHML">
 	<message xml:lang="en">New MathML document</message>
@@ -65,6 +68,7 @@
 	<message xml:lang="cn">新建 MathML 文档</message>
 	<message xml:lang="tw">新建 MathML 文檔</message>
 	<message xml:lang="sk">Nový MathML dokument</message>
+	<message xml:lang="ja">新規 MathML 文書の作成</message>
 </label>
 <label define="AM_NEW_SVG">
 	<message xml:lang="en">New SVG document</message>
@@ -81,6 +85,7 @@
 	<message xml:lang="cn">新建 SVG 文档</message>
 	<message xml:lang="tw">新建 SVG 文檔</message>
 	<message xml:lang="sk">Nový SVG dokument</message>
+	<message xml:lang="ja">新規 SVG 文書の作成</message>
 </label>
 <label define="AM_NEW_CSS">
 	<message xml:lang="en">New CSS style sheet</message>
@@ -97,6 +102,7 @@
 	<message xml:lang="cn">新建 CSS 样式表</message>
 	<message xml:lang="tw">新建 CSS 樣式表</message>
 	<message xml:lang="sk">Nový súbor s CSS pravidlami</message>
+	<message xml:lang="ja">新規 CSS スタイルシートの作成</message>
 </label>
 <label define="AM_NEW_TEMPLATE">
 	<message xml:lang="en">From template</message>
@@ -113,6 +119,7 @@
 	<message xml:lang="cn">来自模板</message>
 	<message xml:lang="tw">來自模板</message>
 	<message xml:lang="sk">Otvoriť zo šablóny</message>
+	<message xml:lang="ja">テンプレートから</message>
 </label>
 <label define="AM_INNEWTAB">
 	<message xml:lang="en">In new tab</message>
@@ -126,6 +133,7 @@
 	<message xml:lang="cn">在新标签页打开</message>
 	<message xml:lang="tw">在新標簽頁打開</message>
 	<message xml:lang="sk">Otvoriť na karte</message>
+	<message xml:lang="ja">新しいタブ</message>
 </label>
 <label define="AM_OPEN_IN_NEW_WINDOW">
 	<message xml:lang="en">Open in new window</message>
@@ -142,6 +150,7 @@
 	<message xml:lang="cn">在新窗口打开</message>
 	<message xml:lang="tw">在新窗口打開</message>
 	<message xml:lang="sk">Otvoriť v novom okne</message>
+	<message xml:lang="ja">新しいウィンドウで開く</message>
 </label>
 <label define="AM_CLEAR">
 	<message xml:lang="en">Clear</message>
@@ -158,6 +167,7 @@
 	<message xml:lang="cn">清除</message>
 	<message xml:lang="tw">清除</message>
 	<message xml:lang="sk">Vymazať</message>
+	<message xml:lang="ja">クリア</message>
 </label>
 <label define="AM_CLICK">
 	<message xml:lang="en">Click</message>
@@ -172,6 +182,7 @@
 	<message xml:lang="cn">点击</message>
 	<message xml:lang="tw">點擊</message>
 	<message xml:lang="sk">Kliknúť</message>
+	<message xml:lang="ja">クリック</message>
 </label>
 <label define="AM_SAVED">
 	<message xml:lang="en">Document saved: %s</message>
@@ -188,6 +199,7 @@
 	<message xml:lang="cn">文档 %s 已保存</message>
 	<message xml:lang="tw">文檔 %s 已保存</message>
 	<message xml:lang="sk">Dokument uložený: %s</message>
+	<message xml:lang="ja">文書の保存: %s</message>
 </label>
 <label define="AM_ATTRIBUTE">
 	<message xml:lang="en">Attribute</message>
@@ -204,6 +216,7 @@
 	<message xml:lang="cn">属性</message>
 	<message xml:lang="tw">屬性</message>
 	<message xml:lang="sk">Atribúty</message>
+	<message xml:lang="ja">属性</message>
 </label>
 <label define="AM_HREF_VALUE">
 	<message xml:lang="en">URL</message>
@@ -220,6 +233,7 @@
 	<message xml:lang="cn">URL</message>
 	<message xml:lang="tw">URL</message>
 	<message xml:lang="sk">URL</message>
+	<message xml:lang="ja">URL</message>
 </label>
 <label define="AM_TEXT">
 	<message xml:lang="en">Text</message>
@@ -236,6 +250,7 @@
 	<message xml:lang="cn">文本文档</message>
 	<message xml:lang="tw">文本文檔</message>
 	<message xml:lang="sk">Text</message>
+	<message xml:lang="ja">テキスト</message>
 </label>
 <label define="AM_NAME">
 	<message xml:lang="en">Name</message>
@@ -252,6 +267,7 @@
 	<message xml:lang="cn">Name</message>
 	<message xml:lang="tw">Name</message>
 	<message xml:lang="sk">Meno</message>
+	<message xml:lang="ja">名前</message>
 </label>
 <label define="AM_PASSWORD">
 	<message xml:lang="en">Password</message>
@@ -268,6 +284,7 @@
 	<message xml:lang="cn">密码</message>
 	<message xml:lang="tw">密碼</message>
 	<message xml:lang="sk">Heslo</message>
+	<message xml:lang="ja">パスワード</message>
 </label>
 <label define="AM_DEF_CLASS">
 	<message xml:lang="en">Use as class</message>
@@ -284,6 +301,7 @@
 	<message xml:lang="cn">作为 class 使用</message>
 	<message xml:lang="tw">作為 class 使用</message>
 	<message xml:lang="sk">Použiť ako triedu (class)</message>
+	<message xml:lang="ja">クラスとしての使用</message>
 </label>
 <label define="AM_FETCHING">
 	<message xml:lang="en">Fetching %s</message>
@@ -300,6 +318,7 @@
 	<message xml:lang="cn">Fetching %s</message>
 	<message xml:lang="tw">Fetching %s</message>
 	<message xml:lang="sk">Pripájanie %s</message>
+	<message xml:lang="ja">%s を獲得しています</message>
 </label>
 <label define="AM_CANNOT_LOAD">
 	<message xml:lang="en">Cannot load %s</message>
@@ -316,6 +335,7 @@
 	<message xml:lang="cn">无法加载 %s</message>
 	<message xml:lang="tw">無法加載 %s</message>
 	<message xml:lang="sk">Nedá sa načítať %s</message>
+	<message xml:lang="ja">%s を読み込めません</message>
 </label>
 <label define="AM_DOCUMENT_LOADED">
 	<message xml:lang="en">Finished!</message>
@@ -332,6 +352,7 @@
 	<message xml:lang="cn">完成!</message>
 	<message xml:lang="tw">完成!</message>
 	<message xml:lang="sk">Dokončené!</message>
+	<message xml:lang="ja">完了</message>
 </label>
 <label define="AM_SEL_TARGET">
 	<message xml:lang="en">Select the target</message>
@@ -348,6 +369,7 @@
 	<message xml:lang="cn">选择目标</message>
 	<message xml:lang="tw">選擇目標</message>
 	<message xml:lang="sk">Označte cieľ odkazu</message>
+	<message xml:lang="ja">ターゲットを選択</message>
 </label>
 <label define="AM_INVALID_TARGET">
 	<message xml:lang="en">Invalid target</message>
@@ -364,6 +386,7 @@
 	<message xml:lang="cn">无效目标</message>
 	<message xml:lang="tw">無效目標</message>
 	<message xml:lang="sk">Neplatný cieľ odkazu</message>
+	<message xml:lang="ja">無効なターゲット</message>
 </label>
 <label define="AM_LOCATION">
 	<message xml:lang="en">Insert the URI or browse</message>
@@ -380,6 +403,7 @@
 	<message xml:lang="cn">插入 URI 或浏览文件</message>
 	<message xml:lang="tw">插入 URI 或瀏覽文件</message>
 	<message xml:lang="sk">Zadajte alebo nalistujte URI adresu</message>
+	<message xml:lang="ja">URIを入力、または参照</message>
 </label>
 <label define="AM_TITLE">
 	<message xml:lang="en">Title</message>
@@ -396,6 +420,7 @@
 	<message xml:lang="cn">标题</message>
 	<message xml:lang="tw">標題</message>
 	<message xml:lang="sk">Názov</message>
+	<message xml:lang="ja">タイトル</message>
 </label>
 <label define="AM_CHANGE_TITLE">
 	<message xml:lang="en">Change title</message>
@@ -412,6 +437,7 @@
 	<message xml:lang="cn">更改标题</message>
 	<message xml:lang="tw">更改標題</message>
 	<message xml:lang="sk">Zmeniť názov</message>
+	<message xml:lang="ja">タイトルの変更</message>
 </label>
 <label define="AM_DOC_MODIFIED">
 	<message xml:lang="en">Document modified - Do you want to save it?</message>
@@ -425,6 +451,7 @@
 	<message xml:lang="cn">文档已更改，你希望保存更改吗?</message>
 	<message xml:lang="tw">文檔已更改，你希望保存更改嗎?</message>
 	<message xml:lang="sk">Dokument bol zmenený - Chcete ho uložiť?</message>
+	<message xml:lang="ja">ドキュメントは変更されています。保存しますか？</message>
 </label>
 <label define="AM_RED_FETCHING">
 	<message xml:lang="en">Redirection fetching of %s</message>
@@ -441,6 +468,7 @@
 	<message xml:lang="cn">Redirection fetching of %s</message>
 	<message xml:lang="tw">Redirection fetching of %s</message>
 	<message xml:lang="sk">Presmerovanie spojenia %s</message>
+	<message xml:lang="ja">%s のメモリ呼び出しをリダイレクト</message>
 </label>
 <label define="AM_REDIRECTIONS_LIMIT">
 	<message xml:lang="en">Too many redirections detected</message>
@@ -457,6 +485,7 @@
 	<message xml:lang="cn">检测到过多重定向</message>
 	<message xml:lang="tw">檢測到過多重定向</message>
 	<message xml:lang="sk">Priveľa presmerovaní</message>
+	<message xml:lang="ja">検出されたリダイレクションが多すぎます</message>
 </label>
 <label define="AM_CANNOT_CREATE_FILE">
 	<message xml:lang="en">Cannot create local file %s</message>
@@ -473,6 +502,7 @@
 	<message xml:lang="cn">无法创建本地文件 %s</message>
 	<message xml:lang="tw">無法創建本地文件 %s</message>
 	<message xml:lang="sk">Súbor %s sa nedá vytvoriť</message>
+	<message xml:lang="ja">ローカルファイル%s を作成できません</message>
 </label>
 <label define="AM_CANNOT_CREATE_DIRECTORY">
 	<message xml:lang="en">Cannot create directory %s</message>
@@ -489,6 +519,7 @@
 	<message xml:lang="cn">无法创建目录 %s</message>
 	<message xml:lang="tw">無法創建目錄 %s</message>
 	<message xml:lang="sk">Priečinok %s sa nedá vytvoriť</message>
+	<message xml:lang="ja">ディレクトリ%s を作成できません</message>
 </label>
 <label define="AM_WAITING_FOR_SOCKET">
 	<message xml:lang="en">Waiting for a free socket</message>
@@ -505,6 +536,7 @@
 	<message xml:lang="cn">正在等待可用的 socket</message>
 	<message xml:lang="tw">正在等待可用的 socket</message>
 	<message xml:lang="sk">Čakanie na voľný socket</message>
+	<message xml:lang="ja">ソケットが自由になるのを待っています</message>
 </label>
 <label define="AM_PROG_READ">
 	<message xml:lang="en">Reading %s</message>
@@ -521,6 +553,7 @@
 	<message xml:lang="cn">正在读取 %s</message>
 	<message xml:lang="tw">正在讀取 %s</message>
 	<message xml:lang="sk">Načítava sa %s</message>
+	<message xml:lang="ja">%s を読み込んでいます</message>
 </label>
 <label define="AM_PROG_WRITE">
 	<message xml:lang="en">Writing %s</message>
@@ -537,6 +570,7 @@
 	<message xml:lang="cn">正在写入 %s</message>
 	<message xml:lang="tw">正在寫入 %s</message>
 	<message xml:lang="sk">Zapisuje sa %s</message>
+	<message xml:lang="ja">%s に書き込んでいます</message>
 </label>
 <label define="AM_WAITING_FOR_CONNECTION">
 	<message xml:lang="en">Waiting for connection</message>
@@ -553,6 +587,7 @@
 	<message xml:lang="cn">正在等待连接</message>
 	<message xml:lang="tw">正在等待連接</message>
 	<message xml:lang="sk">Čakanie na spojenie</message>
+	<message xml:lang="ja">接続するのを待っています</message>
 </label>
 <label define="AM_CONTACTING_HOST">
 	<message xml:lang="en">Contacting %s</message>
@@ -569,6 +604,7 @@
 	<message xml:lang="cn">正在连接 %s</message>
 	<message xml:lang="tw">正在連接 %s</message>
 	<message xml:lang="sk">Spájanie s %s</message>
+	<message xml:lang="ja">%s に接続しています</message>
 </label>
 <label define="AM_LOOKING_HOST">
 	<message xml:lang="en">Looking up %s</message>
@@ -585,6 +621,7 @@
 	<message xml:lang="cn">正在搜寻 %s</message>
 	<message xml:lang="tw">正在搜尋 %s</message>
 	<message xml:lang="sk">Hľadanie %s</message>
+	<message xml:lang="ja">%s　を検索中</message>
 </label>
 <label define="AM_UNKNOWN_STATUS">
 	<message xml:lang="en">Unknown status</message>
@@ -601,6 +638,7 @@
 	<message xml:lang="cn">未知状态</message>
 	<message xml:lang="tw">未知狀態</message>
 	<message xml:lang="sk">Neznámy stav</message>
+	<message xml:lang="ja">未知のステータスです</message>
 </label>
 <label define="AM_GET_AUTHENTICATION">
 	<message xml:lang="en">Authentication dialogue</message>
@@ -617,6 +655,7 @@
 	<message xml:lang="cn">身份验证对话框</message>
 	<message xml:lang="tw">身份驗證對話框</message>
 	<message xml:lang="sk">Dialóg autentifikácie</message>
+	<message xml:lang="ja">認証ダイアログ</message>
 </label>
 <label define="AM_GET_AUTHENTICATION_MSG">
 	<message xml:lang="en">Please authenticate for</message>
@@ -633,6 +672,7 @@
 	<message xml:lang="cn">请验证身份</message>
 	<message xml:lang="tw">請驗證身份</message>
 	<message xml:lang="sk">Autentifikujte sa pre</message>
+	<message xml:lang="ja">認証してください</message>
 </label>
 <label define="AM_AUTHENTICATION_FAILURE">
 	<message xml:lang="en">Authorization failure for %s</message>
@@ -649,6 +689,7 @@
 	<message xml:lang="cn">身份验证失败 %s</message>
 	<message xml:lang="tw">身份驗證失敗 %s</message>
 	<message xml:lang="sk">Autorizácia zlyhala pre %s</message>
+	<message xml:lang="ja">%s への認証失敗です</message>
 </label>
 <label define="AM_LOADED_NO_DATA">
 	<message xml:lang="en">%s loaded but no data is available</message>
@@ -665,6 +706,7 @@
 	<message xml:lang="cn">%s 已加载，但无法获取数据</message>
 	<message xml:lang="tw">%s 已加載，但無法獲取數據</message>
 	<message xml:lang="sk">%s nahhraný ale dáta nie sú prístupné</message>
+	<message xml:lang="ja">%s は読み込まれましたが、利用可能なデータがありません</message>
 </label>
 <label define="AM_LOAD_ABORT">
 	<message xml:lang="en">Transfer interrupted!</message>
@@ -681,6 +723,7 @@
 	<message xml:lang="cn">传输被中断!</message>
 	<message xml:lang="tw">傳輸被中斷!</message>
 	<message xml:lang="sk">Prenos prerušený!</message>
+	<message xml:lang="ja">転送が中断しました</message>
 </label>
 <label define="AM_NOT_AVAILABLE_RETRY">
 	<message xml:lang="en">%s is not available at the moment. Please retry later</message>
@@ -697,6 +740,7 @@
 	<message xml:lang="cn">%s 现在不可用, 请稍候重试</message>
 	<message xml:lang="tw">%s 現在不可用, 請稍候重試</message>
 	<message xml:lang="sk">%s nie je práve dostupné. Skúste neskôr.</message>
+	<message xml:lang="ja">%s は現在利用できません。後でやり直してください。</message>
 </label>
 <label define="AM_ELEMENT_LOADED">
 	<message xml:lang="en">%s loaded</message>
@@ -713,6 +757,7 @@
 	<message xml:lang="cn">%s 已加载</message>
 	<message xml:lang="tw">%s 已加載</message>
 	<message xml:lang="sk">%s načítaný</message>
+	<message xml:lang="ja">%s を読み込みました</message>
 </label>
 <label define="AM_REMOTE_SAVING">
 	<message xml:lang="en">Saving %s</message>
@@ -729,6 +774,7 @@
 	<message xml:lang="cn">正在保存 %s</message>
 	<message xml:lang="tw">正在保存 %s</message>
 	<message xml:lang="sk">Ukladanie %s</message>
+	<message xml:lang="ja">%s をセーブ中</message>
 </label>
 <label define="AM_CANNOT_SAVE">
 	<message xml:lang="en">Cannot save in: %s</message>
@@ -745,6 +791,7 @@
 	<message xml:lang="cn">无法保存: %s</message>
 	<message xml:lang="tw">無法保存: %s</message>
 	<message xml:lang="sk">Nedá sa uložiť do %s</message>
+	<message xml:lang="ja">%s は保存できませんでした。</message>
 </label>
 <label define="AM_SYSTEM_ERROR">
 	<message xml:lang="en">English system errors messages</message>
@@ -761,6 +808,7 @@
 	<message xml:lang="cn">中文系统错误消息</message>
 	<message xml:lang="tw">中文系統錯誤消息</message>
 	<message xml:lang="sk">Slovenské systémové chybové hlásenia</message>
+	<message xml:lang="ja">英語のシステム・エラーメッセージ</message>
 </label>
 <label define="AM_INVALID_ANCHOR1">
 	<message xml:lang="en">An anchor cannot contain these elements</message>
@@ -777,6 +825,7 @@
 	<message xml:lang="cn">anchor无法包含这些元素</message>
 	<message xml:lang="tw">anchor無法包含這些元素</message>
 	<message xml:lang="sk">Vnútri odkazu alebo záložky sa nesmie vyskytovať tento prvok</message>
+	<message xml:lang="ja">anchorはこれらの要素を含むことはできません</message>
 </label>
 <label define="AM_INVALID_ANCHOR2">
 	<message xml:lang="en">Cannot create an anchor within an anchor</message>
@@ -793,6 +842,7 @@
 	<message xml:lang="cn">无法在 anchor 中创建 anchor</message>
 	<message xml:lang="tw">無法在 anchor 中創建 anchor</message>
 	<message xml:lang="sk">Vnútri odkazu alebo záložky nesmie byť použitý ďalší odkaz</message>
+	<message xml:lang="ja">アンカーの中でアンカーを作成することができません</message>
 </label>
 <label define="AM_GET_UNSUPPORTED_PROTOCOL">
 	<message xml:lang="en">Sorry, no GET support yet for URLs of this type: %s</message>
@@ -809,6 +859,7 @@
 	<message xml:lang="cn">对不起, 此类URL不支持 GET 方法: %s</message>
 	<message xml:lang="tw">對不起, 此類URL不支持 GET 方法: %s</message>
 	<message xml:lang="sk">Metóda GET nie je podporováná URL tohto typu: %s</message>
+	<message xml:lang="ja">この種類のURLではGETはサポートされていません: %s</message>
 </label>
 <label define="AM_PUT_UNSUPPORTED_PROTOCOL">
 	<message xml:lang="en">Sorry, no PUT support yet for URLs of this type: %s</message>
@@ -825,6 +876,7 @@
 	<message xml:lang="cn">对不起, 此类URL不支持 PUT 方法: %s</message>
 	<message xml:lang="tw">對不起, 此類URL不支持 PUT 方法: %s</message>
 	<message xml:lang="sk">Metóda PUT nie je podporováná URL tohto typu: %s</message>
+	<message xml:lang="ja">この種類のURLではPUTはサポートされていません: %s</message>
 </label>
 <label define="AM_UNSUPPORTED_FEATURE">
 	<message xml:lang="en">This version of Amaya does not support this feature</message>
@@ -841,6 +893,7 @@
 	<message xml:lang="cn">此版本 Amaya 尚不支持此特性</message>
 	<message xml:lang="tw">此版本 Amaya 尚不支持此特性</message>
 	<message xml:lang="sk">Táto verzia programu Amaya nepodporuje túto funkciu</message>
+	<message xml:lang="ja">このバージョンの Amaya にこの機能はついていません</message>
 </label>
 <label define="AM_WROTE_OBJECT">
 	<message xml:lang="en">Finished writing %s</message>
@@ -857,6 +910,7 @@
 	<message xml:lang="cn">结束写入 %s</message>
 	<message xml:lang="tw">結束寫入 %s</message>
 	<message xml:lang="sk">Zápis %s ukončený</message>
+	<message xml:lang="ja">%s の変更終了</message>
 </label>
 <label define="AM_BAD_URL">
 	<message xml:lang="en">Could not normalize %s</message>
@@ -873,6 +927,7 @@
 	<message xml:lang="cn">无法标准化 %s</message>
 	<message xml:lang="tw">無法標準化 %s</message>
 	<message xml:lang="sk">Nedá sa normalizovať %s</message>
+	<message xml:lang="ja">%s を標準化できません</message>
 </label>
 <label define="AM_CACHE_ERROR">
 	<message xml:lang="en">Could not create temporary file directory %s</message>
@@ -889,6 +944,7 @@
 	<message xml:lang="cn">无法创建临时文件夹 %s</message>
 	<message xml:lang="tw">無法創建臨時文件夾 %s</message>
 	<message xml:lang="sk">Nedá sa vytvoriť priečinok pre dočasný súbor %s</message>
+	<message xml:lang="ja">テンポラリファイルディレクトリ %s を作成できません</message>
 </label>
 <label define="AM_NO_TRANS">
 	<message xml:lang="en">No transformation applicable to the selection</message>
@@ -905,6 +961,7 @@
 	<message xml:lang="cn">所选区域无法应用变换</message>
 	<message xml:lang="tw">所選區域無法應用變換</message>
 	<message xml:lang="sk">Na výber sa nedá aplikovať žiadna transformácia</message>
+	<message xml:lang="ja">選択に適切な変更方法が存在しません</message>
 </label>
 <label define="AM_TRANS_FAILED">
 	<message xml:lang="en">Transformation failed</message>
@@ -921,6 +978,7 @@
 	<message xml:lang="cn">变换失败</message>
 	<message xml:lang="tw">變換失敗</message>
 	<message xml:lang="sk">Transformácia zlyhala</message>
+	<message xml:lang="ja">変更は失敗しました</message>
 </label>
 <label define="AM_TRANS_PARSE_ERROR">
 	<message xml:lang="en">syntax error in file HTML.trans line %s</message>
@@ -937,6 +995,7 @@
 	<message xml:lang="cn">HTML语法错误 %s</message>
 	<message xml:lang="tw">HTML語法錯誤 %s</message>
 	<message xml:lang="sk">syntaktická chyba v súbore HTML.trans riadok %s</message>
+	<message xml:lang="ja">HTML.trans ライン %s における構文エラー</message>
 </label>
 <label define="AM_BUTTON_MATH">
 	<message xml:lang="en">Maths</message>
@@ -953,6 +1012,7 @@
 	<message xml:lang="cn">Maths</message>
 	<message xml:lang="tw">Maths</message>
 	<message xml:lang="sk">Matematické vzorce</message>
+	<message xml:lang="ja">数学表現.</message>
 </label>
 <label define="AM_BUTTON_GRAPHICS">
 	<message xml:lang="en">Graphics</message>
@@ -969,6 +1029,7 @@
 	<message xml:lang="cn">图形</message>
 	<message xml:lang="tw">圖形</message>
 	<message xml:lang="sk">SVG grafika</message>
+	<message xml:lang="ja">グラフィック</message>
 </label>
 <label define="AM_SAVE_AS">
 	<message xml:lang="en">Save as</message>
@@ -985,6 +1046,7 @@
 	<message xml:lang="cn">另存为</message>
 	<message xml:lang="tw">另存為</message>
 	<message xml:lang="sk">Uložiť ako</message>
+	<message xml:lang="ja">名前をつけて保存</message>
 </label>
 <label define="AM_AUTHENTICATION_REALM_SERVER">
 	<message xml:lang="en">Please authenticate for realm \'%s\' at server \'%s\'</message>
@@ -1001,6 +1063,7 @@
 	<message xml:lang="cn">Please authenticate for realm \'%s\' at server \'%s\'</message>
 	<message xml:lang="tw">Please authenticate for realm \'%s\' at server \'%s\'</message>
 	<message xml:lang="sk">Autentifikujte sa pre oblasť \'%s\' na serveri \'%s\'</message>
+	<message xml:lang="ja">\'%s\'領域がサーバ\'%s\'で適切か確認してください</message>
 </label>
 <label define="AM_AUTHENTICATION_REALM">
 	<message xml:lang="en">Realm: %s</message>
@@ -1017,6 +1080,7 @@
 	<message xml:lang="cn">域: %s</message>
 	<message xml:lang="tw">域: %s</message>
 	<message xml:lang="sk">Oblasť: %s</message>
+	<message xml:lang="ja">領域: %s</message>
 </label>
 <label define="AM_AUTHENTICATION_SERVER">
 	<message xml:lang="en">Server: %s</message>
@@ -1033,6 +1097,7 @@
 	<message xml:lang="cn">服务器: %s</message>
 	<message xml:lang="tw">服務器: %s</message>
 	<message xml:lang="sk">Server: %s</message>
+	<message xml:lang="ja">サーバ: %s</message>
 </label>
 <label define="AM_BUTTON_BrowseEdit">
 	<message xml:lang="en">Editor/Browser</message>
@@ -1049,6 +1114,7 @@
 	<message xml:lang="cn">编辑器/浏览器</message>
 	<message xml:lang="tw">編輯器/瀏覽器</message>
 	<message xml:lang="sk">Editor/Prehliadač</message>
+	<message xml:lang="ja">エディタ/ブラウザ</message>
 </label>
 <label define="AM_REQUEST_TIMEOUT">
 	<message xml:lang="en">Request timeout - server did not respond</message>
@@ -1065,6 +1131,7 @@
 	<message xml:lang="cn">请求超市 - 服务器无响应</message>
 	<message xml:lang="tw">請求超市 - 服務器無響應</message>
 	<message xml:lang="sk">Časový limit požiadavky uplynul - server neodpovedá</message>
+	<message xml:lang="ja">タイムアウト - サーバが応答しません</message>
 </label>
 <label define="AM_OVERWRITE_CHECK">
 	<message xml:lang="en">%s already exists. Overwrite it?</message>
@@ -1081,6 +1148,7 @@
 	<message xml:lang="cn">%s 已存在, 覆盖吗?</message>
 	<message xml:lang="tw">%s 已存在, 覆蓋嗎?</message>
 	<message xml:lang="sk">%s už existuje. Chcete ho prepísať?</message>
+	<message xml:lang="ja">%s は既に存在します。上書きしますか？</message>
 </label>
 <label define="AM_ETAG_CHANGED">
 	<message xml:lang="en">%s has changed. Overwrite it?</message>
@@ -1097,6 +1165,7 @@
 	<message xml:lang="cn">%s 已改变, 覆盖吗?</message>
 	<message xml:lang="tw">%s 已改變, 覆蓋嗎?</message>
 	<message xml:lang="sk">%s sa zmenil.  Chcete ho prepísať?</message>
+	<message xml:lang="ja">%s は変更されました。上書きしますか？</message>
 </label>
 <label define="AM_BACKGROUND_IMAGE">
 	<message xml:lang="en">Background image</message>
@@ -1113,6 +1182,7 @@
 	<message xml:lang="cn">背景图片</message>
 	<message xml:lang="tw">背景圖片</message>
 	<message xml:lang="sk">Obrázok pozadia</message>
+	<message xml:lang="ja">背景の画像</message>
 </label>
 <label define="AM_BG_IMAGE_NOT_ALLOWED">
 	<message xml:lang="en">Background image not allowed here</message>
@@ -1129,6 +1199,7 @@
 	<message xml:lang="cn">此处无法使用背景图片</message>
 	<message xml:lang="tw">此處無法使用背景圖片</message>
 	<message xml:lang="sk">Obrázok pozadia nie je tu dovolený</message>
+	<message xml:lang="ja">ここに背景の画像は使えません</message>
 </label>
 <label define="AM_CSS">
 	<message xml:lang="en">CSS</message>
@@ -1145,6 +1216,7 @@
 	<message xml:lang="cn">CSS</message>
 	<message xml:lang="tw">CSS</message>
 	<message xml:lang="sk">CSS</message>
+	<message xml:lang="ja">CSS</message>
 </label>
 <label define="AM_WARNING_SAVE_OVERWRITE">
 	<message xml:lang="en">Saving will save following images too?</message>
@@ -1159,6 +1231,7 @@
 	<message xml:lang="cn">同时保存这些图片吗?</message>
 	<message xml:lang="tw">同時保存這些圖片嗎?</message>
 	<message xml:lang="sk">Uložiť aj obrázky?</message>
+	<message xml:lang="ja">以下の画像も保存しますか?</message>
 </label>
 <label define="AM_URL_SAVE_FAILED">
 	<message xml:lang="en">Failed to save to URL</message>
@@ -1175,6 +1248,7 @@
 	<message xml:lang="cn">保存到URL失败</message>
 	<message xml:lang="tw">保存到URL失敗</message>
 	<message xml:lang="sk">Nedá sa uložiť do URL</message>
+	<message xml:lang="ja">URLへの保存が失敗しました</message>
 </label>
 <label define="AM_SAVE_DISK">
 	<message xml:lang="en">Save to disk ?</message>
@@ -1191,6 +1265,7 @@
 	<message xml:lang="cn">保存到磁盘吗?</message>
 	<message xml:lang="tw">保存到磁盤嗎?</message>
 	<message xml:lang="sk">Uložiť na disk ?</message>
+	<message xml:lang="ja">ディスクに保存しますか?</message>
 </label>
 <label define="AM_BCOPY_IMAGES">
 	<message xml:lang="en">Copy images</message>
@@ -1207,6 +1282,7 @@
 	<message xml:lang="cn">复制图片</message>
 	<message xml:lang="tw">復制圖片</message>
 	<message xml:lang="sk">Kopírovať obrázky</message>
+	<message xml:lang="ja">画像をコピー</message>
 </label>
 <label define="AM_BTRANSFORM_URL">
 	<message xml:lang="en">Transform URLs</message>
@@ -1223,6 +1299,7 @@
 	<message xml:lang="cn">变换URL</message>
 	<message xml:lang="tw">變換URL</message>
 	<message xml:lang="sk">Transformovať URL odkazy</message>
+	<message xml:lang="ja">URL を変換</message>
 </label>
 <label define="AM_DOC_LOCATION">
 	<message xml:lang="en">Document location</message>
@@ -1239,6 +1316,7 @@
 	<message xml:lang="cn">文档位置</message>
 	<message xml:lang="tw">文檔位置</message>
 	<message xml:lang="sk">Umiestnenie dokumentu</message>
+	<message xml:lang="ja">ドキュメントの場所</message>
 </label>
 <label define="AM_IMAGES_LOCATION">
 	<message xml:lang="en">Images directory</message>
@@ -1255,6 +1333,7 @@
 	<message xml:lang="cn">图片路径</message>
 	<message xml:lang="tw">圖片路徑</message>
 	<message xml:lang="sk">Priečinok pre obrázky</message>
+	<message xml:lang="ja">イメージディレクトリ</message>
 </label>
 <label define="AM_OBJECT_LOCATION">
 	<message xml:lang="en">Object location</message>
@@ -1271,6 +1350,7 @@
 	<message xml:lang="cn">对象未知</message>
 	<message xml:lang="tw">對象未知</message>
 	<message xml:lang="sk">Umiestnenie objektu</message>
+	<message xml:lang="ja">オブジェクトの場所</message>
 </label>
 <label define="AM_CSS_FILE">
 	<message xml:lang="en">CSS files</message>
@@ -1287,6 +1367,7 @@
 	<message xml:lang="cn">CSS 文件</message>
 	<message xml:lang="tw">CSS 文件</message>
 	<message xml:lang="sk">Súbory s CSS pravidlami</message>
+	<message xml:lang="ja">CSS のファイル</message>
 </label>
 <label define="AM_OPEN_CSS">
 	<message xml:lang="en">Open CSS</message>
@@ -1303,6 +1384,7 @@
 	<message xml:lang="cn">打开 CSS 样式表</message>
 	<message xml:lang="tw">打開 CSS 樣式表</message>
 	<message xml:lang="sk">Otvoriť súbor pravidiel CSS</message>
+	<message xml:lang="ja">CSS を開く</message>
 </label>
 <label define="AM_DISABLE_CSS">
 	<message xml:lang="en">Disable CSS</message>
@@ -1319,6 +1401,7 @@
 	<message xml:lang="cn">禁用 CSS 样式表</message>
 	<message xml:lang="tw">禁用 CSS 樣式表</message>
 	<message xml:lang="sk">Vypnuť CSS pravidlá</message>
+	<message xml:lang="ja">CSS を無効にする</message>
 </label>
 <label define="AM_ENABLE_CSS">
 	<message xml:lang="en">Enable CSS</message>
@@ -1335,6 +1418,7 @@
 	<message xml:lang="cn">启用 CSS 样式表</message>
 	<message xml:lang="tw">啟用 CSS 樣式表</message>
 	<message xml:lang="sk">Zapnúť CSS pravidlá</message>
+	<message xml:lang="ja">CSS を有効にする</message>
 </label>
 <label define="AM_REMOVE_CSS">
 	<message xml:lang="en">Remove CSS</message>
@@ -1351,6 +1435,7 @@
 	<message xml:lang="cn">移除 CSS 样式表</message>
 	<message xml:lang="tw">移除 CSS 樣式表</message>
 	<message xml:lang="sk">Odstrániť CSS pravidlá</message>
+	<message xml:lang="ja">CSS を削除</message>
 </label>
 <label define="AM_ABOUT1">
 	<message xml:lang="en">W3C's editor/browser for the web</message>
@@ -1367,6 +1452,7 @@
 	<message xml:lang="cn">W3C的网页编辑器/浏览器</message>
 	<message xml:lang="tw">W3C的網頁編輯器/瀏覽器</message>
 	<message xml:lang="sk">Editor/prehliadač webu od W3C</message>
+	<message xml:lang="ja">webのための W3C's エディタ/ブラウザ</message>
 </label>
 <label define="AM_ABOUT2">
 	<message xml:lang="en">(mail issues to www-amaya@w3.org)</message>
@@ -1383,6 +1469,7 @@
 	<message xml:lang="cn">(mail issues to www-amaya@w3.org)</message>
 	<message xml:lang="tw">(mail issues to www-amaya@w3.org)</message>
 	<message xml:lang="sk">(problémy posielať na www-amaya@w3.org)</message>
+	<message xml:lang="ja">(問題をメールで送る→ www-amaya@w3.org)</message>
 </label>
 <label define="AM_ABOUT_COPYRIGHT">
 	<message xml:lang="en">Copyright  ©  1994-%s INRIA and W3C® (MIT, ERCIM, Keio), All Rights Reserved.</message>
@@ -1400,6 +1487,7 @@
 	<message xml:lang="tk">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
 	<message xml:lang="en">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
 	<message xml:lang="sk">Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
+	<message xml:lang="ja">Copyright 1994-%s INRIA and W3C (MIT, ERCIM, Keio), All Rights Reserved.</message>
 </label>
 <label define="AM_ABOUT_WEBSITE">
 	<message xml:lang="en">w3.org/Amaya/</message>
@@ -1417,6 +1505,7 @@
 	<message xml:lang="tk">w3.org/Amaya/</message>
 	<message xml:lang="en">w3.org/Amaya/</message>
 	<message xml:lang="sk">w3.org/Amaya/</message>
+	<message xml:lang="ja">w3.org/Amaya/</message>
 </label>
 <label define="AM_TOO_LONG_URL">
 	<message xml:lang="en">Can't handle URLs having more than %s chars</message>
@@ -1433,6 +1522,7 @@
 	<message xml:lang="cn">无法提交超过 %s 个字符的 URL</message>
 	<message xml:lang="tw">無法提交超過 %s 個字符的 URL</message>
 	<message xml:lang="sk">Nedá sa spracovať URL odkaz, ktorý má viac ako %s znakov</message>
+	<message xml:lang="ja">%s 以上の文字をもつURLを扱うことはできません</message>
 </label>
 <label define="AM_INVALID_TYPE">
 	<message xml:lang="en">Only default type is allowed</message>
@@ -1449,6 +1539,7 @@
 	<message xml:lang="cn">只允许默认类型</message>
 	<message xml:lang="tw">只允許默認類型</message>
 	<message xml:lang="sk">Sú dovolená iba prevolené typy</message>
+	<message xml:lang="ja">デフォルトタイプしか扱うことはできません</message>
 </label>
 <label define="AM_UPDATED_LINK">
 	<message xml:lang="en">Links update: %s%% has been done</message>
@@ -1465,6 +1556,7 @@
 	<message xml:lang="cn">链接更新: %s% 已完成</message>
 	<message xml:lang="tw">鏈接更新: %s% 已完成</message>
 	<message xml:lang="sk">Aktualizovanie prepojení: %s%% bolo ukončené</message>
+	<message xml:lang="ja">リンクの更新: %s%% は完了しました</message>
 </label>
 <label define="AM_NOTHING_TO_SAVE">
 	<message xml:lang="en">Nothing new to be saved</message>
@@ -1481,6 +1573,7 @@
 	<message xml:lang="cn">无任何更新被保存</message>
 	<message xml:lang="tw">無任何更新被保存</message>
 	<message xml:lang="sk">Nie je nič nové, čo by sa dalo uložiť</message>
+	<message xml:lang="ja">保存するものはありません</message>
 </label>
 <label define="AM_REPEAT_Y">
 	<message xml:lang="en">repeat-y</message>
@@ -1497,6 +1590,7 @@
 	<message xml:lang="cn">repeat-y</message>
 	<message xml:lang="tw">repeat-y</message>
 	<message xml:lang="sk">Opakovať zvislo</message>
+	<message xml:lang="ja">繰り返し-y</message>
 </label>
 <label define="AM_GET_USER_NAME">
 	<message xml:lang="en">Please enter username:</message>
@@ -1513,6 +1607,7 @@
 	<message xml:lang="cn">请输入用户名:</message>
 	<message xml:lang="tw">請輸入用戶名:</message>
 	<message xml:lang="sk">Zadajte uživateľské meno:</message>
+	<message xml:lang="ja">ユーザ名を入力してください:</message>
 </label>
 <label define="AM_WAITING_REQUESTS">
 	<message xml:lang="en">%d outstanding requests</message>
@@ -1529,6 +1624,7 @@
 	<message xml:lang="cn">%d outstanding requests</message>
 	<message xml:lang="tw">%d outstanding requests</message>
 	<message xml:lang="sk">%d nevybavené požiadavky</message>
+	<message xml:lang="ja">%d は未解決のリクエストです</message>
 </label>
 <label define="AM_NO_CSS">
 	<message xml:lang="en">No CSS file available</message>
@@ -1545,6 +1641,7 @@
 	<message xml:lang="cn">无可用 CSS 文件</message>
 	<message xml:lang="tw">無可用 CSS 文件</message>
 	<message xml:lang="sk">Žiadny súbor pravidiel CSS nie je dostupný</message>
+	<message xml:lang="ja">利用可能なCSSファイルがありません</message>
 </label>
 <label define="AM_DONT_SAVE">
 	<message xml:lang="en">Don't save</message>
@@ -1558,6 +1655,7 @@
 	<message xml:lang="cn">不保存</message>
 	<message xml:lang="tw">不保存</message>
 	<message xml:lang="sk">Neukladať</message>
+	<message xml:lang="ja">保存しない</message>
 </label>
 <label define="AM_NO_REPEAT">
 	<message xml:lang="en">no-repeat</message>
@@ -1574,6 +1672,7 @@
 	<message xml:lang="cn">no-repeat</message>
 	<message xml:lang="tw">no-repeat</message>
 	<message xml:lang="sk">Neopakovať</message>
+	<message xml:lang="ja">折り返し無し</message>
 </label>
 <label define="AM_NO_NAME">
 	<message xml:lang="en">Document doesn't have a name. Saving to:</message>
@@ -1590,6 +1689,7 @@
 	<message xml:lang="cn">文档尚未命名, 保存至:</message>
 	<message xml:lang="tw">文檔尚未命名, 保存至:</message>
 	<message xml:lang="sk">Dokument nemá meno. Ukladanie do:</message>
+	<message xml:lang="ja">ドキュメントに名前がありません. Saving to:</message>
 </label>
 <label define="AM_BUTTON_PLUGIN">
 	<message xml:lang="en">Plugins</message>
@@ -1606,6 +1706,7 @@
 	<message xml:lang="cn">插件</message>
 	<message xml:lang="tw">插件</message>
 	<message xml:lang="sk">Doplnky</message>
+	<message xml:lang="ja">プラグイン</message>
 </label>
 <label define="AM_UNKNOWN_SAVE_ERROR">
 	<message xml:lang="en">Unknown error while saving URL %s</message>
@@ -1622,6 +1723,7 @@
 	<message xml:lang="cn">保存 URL 时发生未知错误: %s</message>
 	<message xml:lang="tw">保存 URL 時發生未知錯誤: %s</message>
 	<message xml:lang="sk">Vyskytla sa neznáma chyba pri ukladaní URL %s</message>
+	<message xml:lang="ja">URLを保存した際の未知のエラー %s</message>
 </label>
 <label define="AM_CANT_CONNECT_TO_HOST">
 	<message xml:lang="en">Cannot make a connection to the server</message>
@@ -1638,6 +1740,7 @@
 	<message xml:lang="cn">无法连接到服务器</message>
 	<message xml:lang="tw">無法連接到服務器</message>
 	<message xml:lang="sk">Nedá sa spojiť so serverom</message>
+	<message xml:lang="ja">サーバに接続が出来ません</message>
 </label>
 <label define="AM_FORBIDDEN_ACCESS">
 	<message xml:lang="en">Access to %s is forbidden by the server</message>
@@ -1654,6 +1757,7 @@
 	<message xml:lang="cn">访问 %s 已被服务器禁止</message>
 	<message xml:lang="tw">訪問 %s 已被服務器禁止</message>
 	<message xml:lang="sk">Prístup do %s je zamietnutý serverom</message>
+	<message xml:lang="ja">%s へのアクセスはサーバによって禁止されています</message>
 </label>
 <label define="AM_REQUEST_SUCCEEDED">
 	<message xml:lang="en">Operation succeeded for %s</message>
@@ -1670,6 +1774,7 @@
 	<message xml:lang="cn">操作 %s 已成功</message>
 	<message xml:lang="tw">操作 %s 已成功</message>
 	<message xml:lang="sk">Operácia úspešná pre %s</message>
+	<message xml:lang="ja">%s への操作が成功しました。</message>
 </label>
 <label define="AM_CREATED_NEW_REMOTE_RESSOURCE">
 	<message xml:lang="en">%s has been created</message>
@@ -1686,6 +1791,7 @@
 	<message xml:lang="cn">%s 已创建</message>
 	<message xml:lang="tw">%s 已創建</message>
 	<message xml:lang="sk">%s bol vytvorený</message>
+	<message xml:lang="ja">%s は作成されました。</message>
 </label>
 <label define="AM_UPDATED_REMOTE_RESSOURCE">
 	<message xml:lang="en">%s has been updated</message>
@@ -1702,6 +1808,7 @@
 	<message xml:lang="cn">%s 已更新</message>
 	<message xml:lang="tw">%s 已更新</message>
 	<message xml:lang="sk">%s bol aktualizovaný</message>
+	<message xml:lang="ja">%s はアップされました。</message>
 </label>
 <label define="AM_UNKNOWN_XXX_STATUS">
 	<message xml:lang="en">Operation completed with a %s status code</message>
@@ -1718,6 +1825,7 @@
 	<message xml:lang="cn">Operation completed with a %s status code</message>
 	<message xml:lang="tw">Operation completed with a %s status code</message>
 	<message xml:lang="sk">Operácia dokončená s návratomcým kódom %s </message>
+	<message xml:lang="ja">%s ステータスコードと一緒にオペレーションは完了しました</message>
 </label>
 <label define="AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX">
 	<message xml:lang="en">Server did not understand the request syntax</message>
@@ -1734,6 +1842,7 @@
 	<message xml:lang="cn">服务器无法解析请求</message>
 	<message xml:lang="tw">服務器無法解析請求</message>
 	<message xml:lang="sk">Server nerozumie syntaxi požiadavky</message>
+	<message xml:lang="ja">サーバは要求している構文を理解していませんでした。</message>
 </label>
 <label define="AM_NO_DATA">
 	<message xml:lang="en">Server has no new information to send back</message>
@@ -1750,6 +1859,7 @@
 	<message xml:lang="cn">服务器没有新的信息需要送回</message>
 	<message xml:lang="tw">服務器沒有新的信息需要送回</message>
 	<message xml:lang="sk">Server nemá žiadne nové informácie pre odpoveď</message>
+	<message xml:lang="ja">サーバに返す新しい情報はありません</message>
 </label>
 <label define="AM_METHOD_NOT_ALLOWED">
 	<message xml:lang="en">This method is not allowed</message>
@@ -1766,6 +1876,7 @@
 	<message xml:lang="cn">此方法被禁止</message>
 	<message xml:lang="tw">此方法被禁止</message>
 	<message xml:lang="sk">Táto metóda nie je dovolená</message>
+	<message xml:lang="ja">このメソッドは許可されていません</message>
 </label>
 <label define="AM_PLEASE_AUTHENTICATE">
 	<message xml:lang="en">Please authenticate to access %s</message>
@@ -1782,6 +1893,7 @@
 	<message xml:lang="cn">Please authenticate to access %s</message>
 	<message xml:lang="tw">Please authenticate to access %s</message>
 	<message xml:lang="sk">Autentifikujte sa pre prístup k %s</message>
+	<message xml:lang="ja">%s へアクセスするため認証してください</message>
 </label>
 <label define="AM_VERIFYING">
 	<message xml:lang="en">Verifying ...</message>
@@ -1798,6 +1910,7 @@
 	<message xml:lang="cn">正在验证 ...</message>
 	<message xml:lang="tw">正在驗證 ...</message>
 	<message xml:lang="sk">Overovanie ...</message>
+	<message xml:lang="ja">確認中 ...</message>
 </label>
 <label define="AM_SAVING_FAILED">
 	<message xml:lang="en">Saving to %s failed, Save to disk?</message>
@@ -1814,6 +1927,7 @@
 	<message xml:lang="cn">保存到 %s 失败, 保存到磁盘吗?</message>
 	<message xml:lang="tw">保存到 %s 失敗, 保存到磁盤嗎?</message>
 	<message xml:lang="sk">Ukladanie do %s zlyhalo. Uložiť na disk?</message>
+	<message xml:lang="ja">%s への保存に失敗しました。ディスクに保存しますか？</message>
 </label>
 <label define="AM_SAVE_COMPARE_FAILED">
 	<message xml:lang="en">Saving to %s seems corrupted, ignore?</message>
@@ -1830,6 +1944,7 @@
 	<message xml:lang="cn">保存到 %s 似乎不正确, 忽略吗?</message>
 	<message xml:lang="tw">保存到 %s 似乎不正確, 忽略嗎?</message>
 	<message xml:lang="sk">Ukladanie do %s sa zdá narušené. Ignorovať?</message>
+	<message xml:lang="ja">%s の保存に失敗しました, 無視しますか？?</message>
 </label>
 <label define="AM_SAVE_REDIRECTED">
 	<message xml:lang="en">URL %s redirected to %s, ignore?</message>
@@ -1846,6 +1961,7 @@
 	<message xml:lang="cn">URL %s 重定向到 %s, 忽略吗?</message>
 	<message xml:lang="tw">URL %s 重定向到 %s, 忽略嗎?</message>
 	<message xml:lang="sk">URL %s presmerovaná do %s. Ignorovať?</message>
+	<message xml:lang="ja">%s というURLが %s にリダイレクトしました。無視しますか？</message>
 </label>
 <label define="AM_SAVE_RELOAD_FAILED">
 	<message xml:lang="en">Reload of %s failed, ignore?</message>
@@ -1862,6 +1978,7 @@
 	<message xml:lang="cn">重新载入 %s 失败, 忽略吗?</message>
 	<message xml:lang="tw">重新載入 %s 失敗, 忽略嗎?</message>
 	<message xml:lang="sk">Aktualizovanie %s zlyhalo. Ignorovať?</message>
+	<message xml:lang="ja">%s の再読み込みに失敗しました。無視しますか？</message>
 </label>
 <label define="AM_SERVER_INTERNAL_ERROR_500_CAUSE">
 	<message xml:lang="en">Server reports an error: %s</message>
@@ -1878,6 +1995,7 @@
 	<message xml:lang="cn">服务器报告了一个错误: %s</message>
 	<message xml:lang="tw">服務器報告了一個錯誤: %s</message>
 	<message xml:lang="sk">Server oznámil chybu: %s</message>
+	<message xml:lang="ja">サーバからのエラーメッセージ: %s</message>
 </label>
 <label define="AM_SERVER_NOT_IMPLEMENTED_501_ERROR">
 	<message xml:lang="en">Server does not support this request method</message>
@@ -1894,6 +2012,7 @@
 	<message xml:lang="cn">服务器不支持此请求方法</message>
 	<message xml:lang="tw">服務器不支持此請求方法</message>
 	<message xml:lang="sk">Server nepodporuje požadovanú metódu</message>
+	<message xml:lang="ja">サーバは、この要求方式をサポートしていません。</message>
 </label>
 <label define="AM_PARSE">
 	<message xml:lang="en">Filter</message>
@@ -1910,6 +2029,7 @@
 	<message xml:lang="cn">过滤器</message>
 	<message xml:lang="tw">過濾器</message>
 	<message xml:lang="sk">Filter</message>
+	<message xml:lang="ja">フィルタ</message>
 </label>
 <label define="AM_ACTIVE_TRANSFERS">
 	<message xml:lang="en">active transfers</message>
@@ -1926,6 +2046,7 @@
 	<message xml:lang="cn">active transfers</message>
 	<message xml:lang="tw">active transfers</message>
 	<message xml:lang="sk">prebiehajúce prenosy</message>
+	<message xml:lang="ja">有効な転送</message>
 </label>
 <label define="AM_WAITING_TRANSFERS">
 	<message xml:lang="en">queued transfers</message>
@@ -1942,6 +2063,7 @@
 	<message xml:lang="cn">queued transfers</message>
 	<message xml:lang="tw">queued transfers</message>
 	<message xml:lang="sk">čakajúce prenosy</message>
+	<message xml:lang="ja">転送待ち</message>
 </label>
 <label define="AM_PRINT_TOC">
 	<message xml:lang="en">Table of contents</message>
@@ -1958,6 +2080,7 @@
 	<message xml:lang="cn">内容表格</message>
 	<message xml:lang="tw">內容表格</message>
 	<message xml:lang="sk">Obsah</message>
+	<message xml:lang="ja">見出し</message>
 </label>
 <label define="AM_NUMBERED_LINKS">
 	<message xml:lang="en">Table of links</message>
@@ -1974,6 +2097,7 @@
 	<message xml:lang="cn">链接表格</message>
 	<message xml:lang="tw">鏈接表格</message>
 	<message xml:lang="sk">Zoznam hypertextových prepojení</message>
+	<message xml:lang="ja">リンクの表</message>
 </label>
 <label define="AM_REPEAT_MODE">
 	<message xml:lang="en">Repeat Mode</message>
@@ -1990,6 +2114,7 @@
 	<message xml:lang="cn">重复模式</message>
 	<message xml:lang="tw">重復模式</message>
 	<message xml:lang="sk">Spôsob opakovania</message>
+	<message xml:lang="ja">繰り返しモード</message>
 </label>
 <label define="AM_REPEAT">
 	<message xml:lang="en">repeat</message>
@@ -2006,6 +2131,7 @@
 	<message xml:lang="cn">repeat</message>
 	<message xml:lang="tw">repeat</message>
 	<message xml:lang="sk">opakovať</message>
+	<message xml:lang="ja">繰り返し</message>
 </label>
 <label define="AM_REPEAT_X">
 	<message xml:lang="en">repeat-x</message>
@@ -2022,6 +2148,7 @@
 	<message xml:lang="cn">repeat-x</message>
 	<message xml:lang="tw">repeat-x</message>
 	<message xml:lang="sk">opakovať horizontálne</message>
+	<message xml:lang="ja">繰り返し-x</message>
 </label>
 <label define="AM_RELOAD_FILES">
 	<message xml:lang="en">Your previous Amaya session failed. Do you want to reload backup documents?</message>
@@ -2038,6 +2165,7 @@
 	<message xml:lang="cn">你上次的 Amaya 会话失败, 希望重新载入备份文档吗?</message>
 	<message xml:lang="tw">你上次的 Amaya 會話失敗, 希望重新載入備份文檔嗎?</message>
 	<message xml:lang="sk">Predchádzajúce sedenie programu Amaya havarovalo. Obnoviť dokument zo zálohy?</message>
+	<message xml:lang="ja">あなたの前のAmaya のセッションは失敗しました。バックアップされた文書を再読み込みしますか？</message>
 </label>
 <label define="AM_AUTHENTICATION_CONFIRM">
 	<message xml:lang="en">Authentication failed. Retry?</message>
@@ -2054,6 +2182,7 @@
 	<message xml:lang="cn">身份验证失败, 重试吗?</message>
 	<message xml:lang="tw">身份驗證失敗, 重試嗎?</message>
 	<message xml:lang="sk">Autentifikácia zlyhala. skúsiť znova?</message>
+	<message xml:lang="ja">認証に失敗しました。リトライしますか？</message>
 </label>
 <label define="AM_REDIRECTION_CONFIRM">
 	<message xml:lang="en">Operation will be redirected. Continue?</message>
@@ -2070,6 +2199,7 @@
 	<message xml:lang="cn">操作会被重定向, 继续吗?</message>
 	<message xml:lang="tw">操作會被重定向, 繼續嗎?</message>
 	<message xml:lang="sk">Operácia bude presmerovaná. Pokračovať?</message>
+	<message xml:lang="ja">操作は向け直されるでしょう。 続けますか?</message>
 </label>
 <label define="AM_ROWS">
 	<message xml:lang="en">Rows</message>
@@ -2086,6 +2216,7 @@
 	<message xml:lang="cn">行数</message>
 	<message xml:lang="tw">行數</message>
 	<message xml:lang="sk">Riadkov</message>
+	<message xml:lang="ja">行</message>
 </label>
 <label define="AM_COLS">
 	<message xml:lang="en">Columns</message>
@@ -2102,6 +2233,7 @@
 	<message xml:lang="cn">列数</message>
 	<message xml:lang="tw">列數</message>
 	<message xml:lang="sk">Stĺpcov</message>
+	<message xml:lang="ja">列</message>
 </label>
 <label define="AM_BORDER">
 	<message xml:lang="en">Border (pixel)</message>
@@ -2118,6 +2250,7 @@
 	<message xml:lang="cn">边框 (pixel)</message>
 	<message xml:lang="tw">邊框 (pixel)</message>
 	<message xml:lang="sk">Okraj (pixel)</message>
+	<message xml:lang="ja">ウィンドウの枠(ピクセル)</message>
 </label>
 <label define="AM_ALT">
 	<message xml:lang="en">Alternate text</message>
@@ -2134,6 +2267,7 @@
 	<message xml:lang="cn">代替文本</message>
 	<message xml:lang="tw">代替文本</message>
 	<message xml:lang="sk">Alternatívny text</message>
+	<message xml:lang="ja">代替テキスト</message>
 </label>
 <label define="AM_ALT_MISSING">
 	<message xml:lang="en">Give an alternate text</message>
@@ -2150,6 +2284,7 @@
 	<message xml:lang="cn">必须使用代替文本</message>
 	<message xml:lang="tw">必須使用代替文本</message>
 	<message xml:lang="sk">Alternatívny text je povinný</message>
+	<message xml:lang="ja">代わりのテキストを入力してください</message>
 </label>
 <label define="AM_PRINT_URL">
 	<message xml:lang="en">Print URL</message>
@@ -2166,6 +2301,7 @@
 	<message xml:lang="cn">打印 URL</message>
 	<message xml:lang="tw">打印 URL</message>
 	<message xml:lang="sk">Tlačiť URL odkazy</message>
+	<message xml:lang="ja">URL を印刷</message>
 </label>
 <label define="AM_APPLY_BUTTON">
 	<message xml:lang="en">Apply</message>
@@ -2182,6 +2318,7 @@
 	<message xml:lang="cn">应用</message>
 	<message xml:lang="tw">應用</message>
 	<message xml:lang="sk">Aplikovať</message>
+	<message xml:lang="ja">適用</message>
 </label>
 <label define="AM_DEFAULT_BUTTON">
 	<message xml:lang="en">Defaults</message>
@@ -2198,6 +2335,7 @@
 	<message xml:lang="cn">恢复默认值</message>
 	<message xml:lang="tw">恢復默認值</message>
 	<message xml:lang="sk">Pôvodné</message>
+	<message xml:lang="ja">デフォルト</message>
 </label>
 <label define="AM_FLUSH_CACHE_BUTTON">
 	<message xml:lang="en">Flush cache</message>
@@ -2214,6 +2352,7 @@
 	<message xml:lang="cn">Flush 缓冲区</message>
 	<message xml:lang="tw">Flush 緩沖區</message>
 	<message xml:lang="sk">Vyprázdniť Cache</message>
+	<message xml:lang="ja">キャッシュを消去</message>
 </label>
 <label define="AM_CACHE_MENU">
 	<message xml:lang="en">Cache</message>
@@ -2230,6 +2369,7 @@
 	<message xml:lang="cn">缓存</message>
 	<message xml:lang="tw">緩存</message>
 	<message xml:lang="sk">Cache</message>
+	<message xml:lang="ja">キャッシュ</message>
 </label>
 <label define="AM_ENABLE_CACHE">
 	<message xml:lang="en">Enable cache</message>
@@ -2246,6 +2386,7 @@
 	<message xml:lang="cn">启用缓存</message>
 	<message xml:lang="tw">啟用緩存</message>
 	<message xml:lang="sk">Povoliť Cache</message>
+	<message xml:lang="ja">キャッシュを有効にする</message>
 </label>
 <label define="AM_CACHE_PROT_DOCS">
 	<message xml:lang="en">Cache protected documents</message>
@@ -2262,6 +2403,7 @@
 	<message xml:lang="cn">缓存保护文档</message>
 	<message xml:lang="tw">緩存保護文檔</message>
 	<message xml:lang="sk">Ukladať chránené dokumenty</message>
+	<message xml:lang="ja">キャッシュが文章を保護しました</message>
 </label>
 <label define="AM_DISCONNECTED_MODE">
 	<message xml:lang="en">Disconnected mode</message>
@@ -2278,6 +2420,7 @@
 	<message xml:lang="cn">脱机模式</message>
 	<message xml:lang="tw">脫機模式</message>
 	<message xml:lang="sk">Offline mód</message>
+	<message xml:lang="ja">切断モード</message>
 </label>
 <label define="AM_IGNORE_EXPIRES">
 	<message xml:lang="en">Ignore Expires: header</message>
@@ -2294,6 +2437,7 @@
 	<message xml:lang="cn">忽略过期的 header</message>
 	<message xml:lang="tw">忽略過期的 header</message>
 	<message xml:lang="sk">Ignorovať dobu platnosti</message>
+	<message xml:lang="ja">有効期限を無視する: header</message>
 </label>
 <label define="AM_CACHE_DIR">
 	<message xml:lang="en">Cache directory</message>
@@ -2310,6 +2454,7 @@
 	<message xml:lang="cn">缓存路径</message>
 	<message xml:lang="tw">緩存路徑</message>
 	<message xml:lang="sk">Priečinok dočasných súborov Cahe</message>
+	<message xml:lang="ja">キャッシュディレクトリ</message>
 </label>
 <label define="AM_CACHE_SIZE">
 	<message xml:lang="en">Cache size (Mb)</message>
@@ -2326,6 +2471,7 @@
 	<message xml:lang="cn">缓存大小 (Mb)</message>
 	<message xml:lang="tw">緩存大小 (Mb)</message>
 	<message xml:lang="sk">Veľkosť cache (MB)</message>
+	<message xml:lang="ja">キャッシュサイズ (Mb)</message>
 </label>
 <label define="AM_CACHE_ENTRY_SIZE">
 	<message xml:lang="en">Cache entry size limit (Mb)</message>
@@ -2342,6 +2488,7 @@
 	<message xml:lang="cn">缓存入口大小 (Mb)</message>
 	<message xml:lang="tw">緩存入口大小 (Mb)</message>
 	<message xml:lang="sk">Veľkosť jedného záznamu (MB)</message>
+	<message xml:lang="ja">上限キャッシュ登録サイズ (Mb)</message>
 </label>
 <label define="AM_PROXY_MENU">
 	<message xml:lang="en">Proxy</message>
@@ -2358,6 +2505,7 @@
 	<message xml:lang="cn">代理</message>
 	<message xml:lang="tw">代理</message>
 	<message xml:lang="sk">Proxy</message>
+	<message xml:lang="ja">プロキシ</message>
 </label>
 <label define="AM_HTTP_PROXY">
 	<message xml:lang="en">HTTP proxy (e.g., www.w3.org:1234)</message>
@@ -2374,6 +2522,7 @@
 	<message xml:lang="cn">HTTP 代理 (例如 www.w3.org:1234)</message>
 	<message xml:lang="tw">HTTP 代理 (例如 www.w3.org:1234)</message>
 	<message xml:lang="sk">HTTP proxy (napr.: www.w3.org:1234)</message>
+	<message xml:lang="ja">HTTP プロキシ (例, www.w3.org:1234)</message>
 </label>
 <label define="AM_PROXY_DOMAIN">
 	<message xml:lang="en">Proxy domain list (e.g., lists.w3.org)</message>
@@ -2390,6 +2539,7 @@
 	<message xml:lang="cn">代理域名列表 (e.g., lists.w3.org)</message>
 	<message xml:lang="tw">代理域名列表 (e.g., lists.w3.org)</message>
 	<message xml:lang="sk">Zoznam proxy domén (napr.: lists.w3.org)</message>
+	<message xml:lang="ja">プロキシドメイン一覧 (例, lists.w3.org)</message>
 </label>
 <label define="AM_GENERAL_MENU">
 	<message xml:lang="en">General</message>
@@ -2406,6 +2556,7 @@
 	<message xml:lang="cn">一般</message>
 	<message xml:lang="tw">一般</message>
 	<message xml:lang="sk">Základné</message>
+	<message xml:lang="ja">一般</message>
 </label>
 <label define="AM_HOME_PAGE">
 	<message xml:lang="en">Home Page</message>
@@ -2422,6 +2573,7 @@
 	<message xml:lang="cn">主页</message>
 	<message xml:lang="tw">主頁</message>
 	<message xml:lang="sk">Domovská stránka</message>
+	<message xml:lang="ja">ホームページ</message>
 </label>
 <label define="AM_TOOLTIP_DELAY">
 	<message xml:lang="en">ToolTip delay (ms)</message>
@@ -2438,6 +2590,7 @@
 	<message xml:lang="cn">提示延迟 (毫秒)</message>
 	<message xml:lang="tw">提示延遲 (毫秒)</message>
 	<message xml:lang="sk">Rýchlosť zobrazovania Tooltypov (ms)</message>
+	<message xml:lang="ja">ToolTip の間隔 (ms)</message>
 </label>
 <label define="AM_DOUBLECLICK_DELAY">
 	<message xml:lang="en">Double click delay (ms)</message>
@@ -2454,6 +2607,7 @@
 	<message xml:lang="cn">双击延迟 (毫秒)</message>
 	<message xml:lang="tw">雙擊延遲 (毫秒)</message>
 	<message xml:lang="sk">Rýchlosť dvojkliku (ms)</message>
+	<message xml:lang="ja">ダブルクリックの間隔 (ms)</message>
 </label>
 <label define="AM_MENU_FONT_SIZE">
 	<message xml:lang="en">Menu font size</message>
@@ -2470,6 +2624,7 @@
 	<message xml:lang="cn">菜单字体大小</message>
 	<message xml:lang="tw">菜單字體大小</message>
 	<message xml:lang="sk">Veľkosť písma menu</message>
+	<message xml:lang="ja">メニューの文字のサイズ</message>
 </label>
 <label define="AM_ZOOM">
 	<message xml:lang="en">Font zoom</message>
@@ -2486,6 +2641,7 @@
 	<message xml:lang="cn">字体大小(%)</message>
 	<message xml:lang="tw">字體大小(%)</message>
 	<message xml:lang="sk">Veľkosť písma</message>
+	<message xml:lang="ja">フォントの倍率</message>
 </label>
 <label define="AM_DIALOGUE_LANGUAGE">
 	<message xml:lang="en">Dialogue language</message>
@@ -2502,6 +2658,7 @@
 	<message xml:lang="cn">程序语言</message>
 	<message xml:lang="tw">程序語言</message>
 	<message xml:lang="sk">Jazyk dialógov</message>
+	<message xml:lang="ja">ダイアログの言語</message>
 </label>
 <label define="AM_PASTE_LINE_BY_LINE">
 	<message xml:lang="en">Preserve lines when pasting</message>
@@ -2515,6 +2672,7 @@
 	<message xml:lang="cn">启用行对行粘贴</message>
 	<message xml:lang="tw">啟用行對行粘貼</message>
 	<message xml:lang="sk">Chrániť riadky pri prilepovaní</message>
+	<message xml:lang="ja">貼り付けの際に行を保存</message>
 </label>
 <label define="AM_AUTO_SAVE">
 	<message xml:lang="en">Generate backup files</message>
@@ -2528,6 +2686,7 @@
 	<message xml:lang="cn">生成备份文件</message>
 	<message xml:lang="tw">生成備份文件</message>
 	<message xml:lang="sk">Vytvárať zálohu súborov</message>
+	<message xml:lang="ja">バックアップファイルを作成</message>
 </label>
 <label define="AM_SAVE_GEOMETRY_ON_EXIT">
 	<message xml:lang="en">Save geometry on exit</message>
@@ -2541,6 +2700,7 @@
 	<message xml:lang="cn">退出前保存窗口位置</message>
 	<message xml:lang="tw">退出前保存窗口位置</message>
 	<message xml:lang="sk">Uložiť rozmery pri ukončení</message>
+	<message xml:lang="ja">終了時にジオメトリを保存</message>
 </label>
 <label define="AM_SHOW_BG_IMAGES">
 	<message xml:lang="en">Show background images</message>
@@ -2557,6 +2717,7 @@
 	<message xml:lang="cn">显示背景图片</message>
 	<message xml:lang="tw">顯示背景圖片</message>
 	<message xml:lang="sk">Zobraziť obrázky pozadia</message>
+	<message xml:lang="ja">背景画像を表示</message>
 </label>
 <label define="AM_SHOW_BUTTONBAR">
 	<message xml:lang="en">Show button bar</message>
@@ -2573,6 +2734,7 @@
 	<message xml:lang="cn">显示按钮栏</message>
 	<message xml:lang="tw">顯示按鈕欄</message>
 	<message xml:lang="sk">Ukázať tlačidlovú lištu</message>
+	<message xml:lang="ja">ボタンバーを表示</message>
 </label>
 <label define="AM_SHOW_TEXTZONE">
 	<message xml:lang="en">Show address</message>
@@ -2589,6 +2751,7 @@
 	<message xml:lang="cn">显示 ADDRESS</message>
 	<message xml:lang="tw">顯示 ADDRESS</message>
 	<message xml:lang="sk">Zobraziť adresu</message>
+	<message xml:lang="ja">アドレスを表示</message>
 </label>
 <label define="AM_SHOW_TARGETS">
 	<message xml:lang="en">Show targets</message>
@@ -2605,6 +2768,7 @@
 	<message xml:lang="cn">显示目标</message>
 	<message xml:lang="tw">顯示目標</message>
 	<message xml:lang="sk">Zobraziť záložky</message>
+	<message xml:lang="ja">ターゲットを表示</message>
 </label>
 <label define="AM_EXPORT_CRLF">
 	<message xml:lang="en">Export CR/LF</message>
@@ -2621,6 +2785,7 @@
 	<message xml:lang="cn">导出 CR/LF</message>
 	<message xml:lang="tw">導出 CR/LF</message>
 	<message xml:lang="sk">Exportovať CR/LF</message>
+	<message xml:lang="ja">改行を CR/LF でエクスポート</message>
 </label>
 <label define="AM_BROWSE_MENU">
 	<message xml:lang="en">Browsing</message>
@@ -2636,6 +2801,7 @@
 	<message xml:lang="cn">浏览</message>
 	<message xml:lang="tw">瀏覽</message>
 	<message xml:lang="sk">Prehliadanie</message>
+	<message xml:lang="ja">閲覧</message>
 </label>
 <label define="AM_LOAD_IMAGES">
 	<message xml:lang="en">Load images (img)</message>
@@ -2651,6 +2817,7 @@
 	<message xml:lang="cn">载入图片 (img)</message>
 	<message xml:lang="tw">載入圖片 (img)</message>
 	<message xml:lang="sk">Načítať obrázky (img)</message>
+	<message xml:lang="ja">画像を読み込む (img)</message>
 </label>
 <label define="AM_ENABLE_DOUBLECLICK">
 	<message xml:lang="en">Double click activates link</message>
@@ -2667,6 +2834,7 @@
 	<message xml:lang="cn">双击跟踪链接</message>
 	<message xml:lang="tw">雙擊跟蹤鏈接</message>
 	<message xml:lang="sk">Odkazy aktivovať dvojklikom</message>
+	<message xml:lang="ja">ダブルクリックでリンク先へ移動</message>
 </label>
 <label define="AM_PUBLISH_MENU">
 	<message xml:lang="en">Publishing</message>
@@ -2683,6 +2851,7 @@
 	<message xml:lang="cn">发布</message>
 	<message xml:lang="tw">發布</message>
 	<message xml:lang="sk">Publikovanie</message>
+	<message xml:lang="ja">出版</message>
 </label>
 <label define="AM_USE_ETAGS">
 	<message xml:lang="en">Use ETAGS and preconditions</message>
@@ -2699,6 +2868,7 @@
 	<message xml:lang="cn">使用ETAGS和前提</message>
 	<message xml:lang="tw">使用ETAGS和前提</message>
 	<message xml:lang="sk">Použiť prvky ETAGS a podmienky</message>
+	<message xml:lang="ja">ETAGS や前提条件を使用</message>
 </label>
 <label define="AM_VERIFY_PUT">
 	<message xml:lang="en">Verify each PUT with a GET</message>
@@ -2715,6 +2885,7 @@
 	<message xml:lang="cn">为每个PUT验证GET</message>
 	<message xml:lang="tw">為每個PUT驗證GET</message>
 	<message xml:lang="sk">Príkazy PUT overovať príkazmi GET</message>
+	<message xml:lang="ja">PUT 毎に GET によって検証する</message>
 </label>
 <label define="AM_DEFAULT_NAME">
 	<message xml:lang="en">Default name for URLs finishing in '/'</message>
@@ -2731,6 +2902,7 @@
 	<message xml:lang="cn">URL默认名称 '/'</message>
 	<message xml:lang="tw">URL默認名稱 '/'</message>
 	<message xml:lang="sk">Predvolené meno URL odkazov končiacich '/'</message>
+	<message xml:lang="ja">URL がスラッシュで終わっている場合のデフォルト名</message>
 </label>
 <label define="AM_GEOMETRY_MENU">
 	<message xml:lang="en">Geometry</message>
@@ -2747,6 +2919,7 @@
 	<message xml:lang="cn">窗口位置</message>
 	<message xml:lang="tw">窗口位置</message>
 	<message xml:lang="sk">Rozmery</message>
+	<message xml:lang="ja">ジオメトリ</message>
 </label>
 <label define="AM_SAVE_GEOMETRY">
 	<message xml:lang="en">Save current geometry</message>
@@ -2763,6 +2936,7 @@
 	<message xml:lang="cn">保存当前窗口位置</message>
 	<message xml:lang="tw">保存當前窗口位置</message>
 	<message xml:lang="sk">Uložiť súčasné rozmery</message>
+	<message xml:lang="ja">現在のジオメトリを保存する</message>
 </label>
 <label define="AM_RESTORE_GEOMETRY">
 	<message xml:lang="en">Restore default geometry</message>
@@ -2779,6 +2953,7 @@
 	<message xml:lang="cn">恢复默认窗口位置</message>
 	<message xml:lang="tw">恢復默認窗口位置</message>
 	<message xml:lang="sk">Obnoviť základné rozmery</message>
+	<message xml:lang="ja">初期ジオメトリをリストア</message>
 </label>
 <label define="AM_GEOMETRY_CHANGE">
 	<message xml:lang="en">The change will be effective when you open a new window.</message>
@@ -2795,6 +2970,7 @@
 	<message xml:lang="cn">改变会在新窗口内生效</message>
 	<message xml:lang="tw">改變會在新窗口內生效</message>
 	<message xml:lang="sk">Zmeny sa prejavia až po ukončení a opätovnom spustení programu.</message>
+	<message xml:lang="ja">これらの変更は新しいウィンドウを開いた時に有効になります。</message>
 </label>
 <label define="AM_DOC_FG_COLOR">
 	<message xml:lang="en">Document foreground color</message>
@@ -2811,6 +2987,7 @@
 	<message xml:lang="cn">文档前景色</message>
 	<message xml:lang="tw">文檔前景色</message>
 	<message xml:lang="sk">Farba textu dokumentu</message>
+	<message xml:lang="ja">ドキュメントの前景色</message>
 </label>
 <label define="AM_DOC_BG_COLOR">
 	<message xml:lang="en">Document background color</message>
@@ -2827,6 +3004,7 @@
 	<message xml:lang="cn">文档背景色</message>
 	<message xml:lang="tw">文檔背景色</message>
 	<message xml:lang="sk">Farba pozadia dokumentu</message>
+	<message xml:lang="ja">ドキュメントの背景色</message>
 </label>
 <label define="AM_MENU_FG_COLOR">
 	<message xml:lang="en">Menu foreground color</message>
@@ -2843,6 +3021,7 @@
 	<message xml:lang="cn">菜单前景色</message>
 	<message xml:lang="tw">菜單前景色</message>
 	<message xml:lang="sk">Farba textu menu</message>
+	<message xml:lang="ja">メニューの前景色</message>
 </label>
 <label define="AM_MENU_BG_COLOR">
 	<message xml:lang="en">Menu background color</message>
@@ -2859,6 +3038,7 @@
 	<message xml:lang="cn">菜单背景色</message>
 	<message xml:lang="tw">菜單背景色</message>
 	<message xml:lang="sk">Farba pozadia menu</message>
+	<message xml:lang="ja">メニューの背景色</message>
 </label>
 <label define="AM_CANT_CREATE_CACHE">
 	<message xml:lang="en">Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.</message>
@@ -2875,6 +3055,7 @@
 	<message xml:lang="cn">无法启用缓存, 你可能使用了无效的缓存目录或有其他 Amaya 实例在使用该缓存</message>
 	<message xml:lang="tw">無法啟用緩存, 你可能使用了無效的緩存目錄或有其他 Amaya 實例在使用該緩存</message>
 	<message xml:lang="sk">Nedá sa spustiť Cache. Asi ste zadali neplatný priečinok pre dočasné súbory Cache alebo ho uzamkol iný používateľ.</message>
+	<message xml:lang="ja">キャッシュをスタートできませんでした。無効なキャッシュディレクトリか、他のAmaya が使用しているキャッシュをしている可能性があります。</message>
 </label>
 <label define="AM_LANG_NEGOTIATION">
 	<message xml:lang="en">List of preferred languages like &quot;en, fr&quot;:</message>
@@ -2891,6 +3072,7 @@
 	<message xml:lang="cn">语言偏好 (如 &quot;en, fr&quot;):</message>
 	<message xml:lang="tw">語言偏好 (如 &quot;en, fr&quot;):</message>
 	<message xml:lang="sk">Zoznam uprednostňovaných jazykov napr.: &quot;sk, cs, en&quot;:</message>
+	<message xml:lang="ja">"en, fr" のような優先言語のリスト:</message>
 </label>
 <label define="AM_PROFILE_CHANGE">
 	<message xml:lang="en">These changes won't be effective until Amaya is restarted</message>
@@ -2907,6 +3089,7 @@
 	<message xml:lang="cn">当前改变会在重启Amaya后生效</message>
 	<message xml:lang="tw">當前改變會在重啟Amaya后生效</message>
 	<message xml:lang="sk">Táto zmena sa neprejaví pokým program Amaya nebude reštartovaný</message>
+	<message xml:lang="ja">これらの変更はAmayaが再起動されるまで有効にはなりません</message>
 </label>
 <label define="AM_SAFE_PUT_REDIRECT">
 	<message xml:lang="en">Allow automatic PUT redirections to these domains</message>
@@ -2923,6 +3106,7 @@
 	<message xml:lang="cn">允许以下域的自动实用 PUT 转向</message>
 	<message xml:lang="tw">允許以下域的自動實用 PUT 轉向</message>
 	<message xml:lang="sk">Povoliť automatické presmerovanie metódy PUT pre tieto domény</message>
+	<message xml:lang="ja">これらのドメインに対する自動的な PUT リダイレクトを許可する</message>
 </label>
 <label define="AM_WITH_CSS">
 	<message xml:lang="en">Ignore style sheets</message>
@@ -2939,6 +3123,7 @@
 	<message xml:lang="cn">忽略样式表</message>
 	<message xml:lang="tw">忽略樣式表</message>
 	<message xml:lang="sk">Ignorovať pravidlá CSS</message>
+	<message xml:lang="ja">スタイルシートを無視</message>
 </label>
 <label define="AM_TRANS">
 	<message xml:lang="en">Transform type</message>
@@ -2955,6 +3140,7 @@
 	<message xml:lang="cn">转换类型</message>
 	<message xml:lang="tw">轉換類型</message>
 	<message xml:lang="sk">Zmeniť typ na</message>
+	<message xml:lang="ja">変換方法</message>
 </label>
 <label define="AM_PROXY_DOMAIN_INFO">
 	<message xml:lang="en">(separate each entry with a space)</message>
@@ -2971,6 +3157,7 @@
 	<message xml:lang="cn">(以空格分隔域名)</message>
 	<message xml:lang="tw">(以空格分隔域名)</message>
 	<message xml:lang="sk">(každý záznam oddeľte medzerou)</message>
+	<message xml:lang="ja">(それぞれの登録をスペースで区切る)</message>
 </label>
 <label define="AM_DONT_PROXY_DOMAIN">
 	<message xml:lang="en">No proxy on these domains</message>
@@ -2987,6 +3174,7 @@
 	<message xml:lang="cn">对这些域名不启用代理</message>
 	<message xml:lang="tw">對這些域名不啟用代理</message>
 	<message xml:lang="sk">Bez proxy z týchto domén</message>
+	<message xml:lang="ja">これらのドメインにはプロキシがありません。</message>
 </label>
 <label define="AM_ONLY_PROXY_DOMAIN">
 	<message xml:lang="en">Only proxy these domains</message>
@@ -3003,6 +3191,7 @@
 	<message xml:lang="cn">仅对这些域名启用代理</message>
 	<message xml:lang="tw">僅對這些域名啟用代理</message>
 	<message xml:lang="sk">Iba proxy z týchto domén</message>
+	<message xml:lang="ja">これらのドメインにはプロキシしかありません。</message>
 </label>
 <label define="AM_MATH_ENTITY_NAME">
 	<message xml:lang="en">Character name</message>
@@ -3019,6 +3208,7 @@
 	<message xml:lang="cn">字符名称</message>
 	<message xml:lang="tw">字符名稱</message>
 	<message xml:lang="sk">Meno znaku</message>
+	<message xml:lang="ja">文字の名前</message>
 </label>
 <label define="AM_USER_DIR">
 	<message xml:lang="en">Amaya user directory</message>
@@ -3035,6 +3225,7 @@
 	<message xml:lang="cn">Amaya 用户目录</message>
 	<message xml:lang="tw">Amaya 用戶目錄</message>
 	<message xml:lang="sk">Užívateľský priečinok</message>
+	<message xml:lang="ja">アマヤユーザディレクトリ</message>
 </label>
 <label define="AM_TMP_DIR">
 	<message xml:lang="en">Temporary directory</message>
@@ -3051,6 +3242,7 @@
 	<message xml:lang="cn">临时目录</message>
 	<message xml:lang="tw">臨時目錄</message>
 	<message xml:lang="sk">Dočasný priečinok</message>
+	<message xml:lang="ja">一時ディレクトリ</message>
 </label>
 <label define="AM_COLOR_PALETTE">
 	<message xml:lang="en">Use palette</message>
@@ -3067,6 +3259,7 @@
 	<message xml:lang="cn">使用小面板</message>
 	<message xml:lang="tw">使用小面板</message>
 	<message xml:lang="sk">Použiť paletu</message>
+	<message xml:lang="ja">パレットを使用</message>
 </label>
 <label define="AM_LANNEG_MENU">
 	<message xml:lang="en">Language Negotiation</message>
@@ -3083,6 +3276,7 @@
 	<message xml:lang="cn">语言协商</message>
 	<message xml:lang="tw">語言協商</message>
 	<message xml:lang="sk">Rozlišovanie podľa jazyka</message>
+	<message xml:lang="ja">言語の干渉</message>
 </label>
 <label define="AM_ANNOT_CONF_MENU">
 	<message xml:lang="en">Annotations</message>
@@ -3099,6 +3293,7 @@
 	<message xml:lang="cn">注释</message>
 	<message xml:lang="tw">注釋</message>
 	<message xml:lang="sk">Komenmtáre</message>
+	<message xml:lang="ja">注釈</message>
 </label>
 <label define="AM_LINK">
 	<message xml:lang="en">Link</message>
@@ -3115,6 +3310,7 @@
 	<message xml:lang="cn">Link</message>
 	<message xml:lang="tw">Link</message>
 	<message xml:lang="sk">Vložiť prepojenie</message>
+	<message xml:lang="ja">リンク</message>
 </label>
 <label define="AM_ANNOT_USER">
 	<message xml:lang="en">Annotation and bookmark user</message>
@@ -3131,6 +3327,7 @@
 	<message xml:lang="cn">注释和书签作者</message>
 	<message xml:lang="tw">注釋和書簽作者</message>
 	<message xml:lang="sk">Používateľ komentýrov a pznámok</message>
+	<message xml:lang="ja">注釈とブックマークユーザ</message>
 </label>
 <label define="AM_ANNOT_POST_SERVER">
 	<message xml:lang="en">Annotation post server</message>
@@ -3147,6 +3344,7 @@
 	<message xml:lang="cn">注释提交服务器</message>
 	<message xml:lang="tw">注釋提交服務器</message>
 	<message xml:lang="sk">Vzdialený server komentárov</message>
+	<message xml:lang="ja">注釈投稿サーバ</message>
 </label>
 <label define="AM_ANNOT_SERVERS">
 	<message xml:lang="en">Annotation servers</message>
@@ -3163,6 +3361,7 @@
 	<message xml:lang="cn">注释服务器</message>
 	<message xml:lang="tw">注釋服務器</message>
 	<message xml:lang="sk">Servery komentárov</message>
+	<message xml:lang="ja">注釈サーバ</message>
 </label>
 <label define="AM_ANNOT_LAUTOLOAD">
 	<message xml:lang="en">Autoload local annotations</message>
@@ -3179,6 +3378,7 @@
 	<message xml:lang="cn">自动加载本地注释</message>
 	<message xml:lang="tw">自動加載本地注釋</message>
 	<message xml:lang="sk">Automaticky nahrať lokálne komentáre</message>
+	<message xml:lang="ja">ローカルな注釈を自動読み込みする</message>
 </label>
 <label define="AM_ANNOT_RAUTOLOAD">
 	<message xml:lang="en">Autoload remote annotations</message>
@@ -3195,6 +3395,7 @@
 	<message xml:lang="cn">自动远程本地注释</message>
 	<message xml:lang="tw">自動遠程本地注釋</message>
 	<message xml:lang="sk">Automaticky nahrať vzdialené komentáre</message>
+	<message xml:lang="ja">リモートな注釈を自動読み込みする</message>
 </label>
 <label define="AM_ANNOT_RAUTOLOAD_RST">
 	<message xml:lang="en">Disable remote autoload at each startup (for off-line work)</message>
@@ -3211,6 +3412,7 @@
 	<message xml:lang="cn">启动时禁用远程加载 (脱机工作时)</message>
 	<message xml:lang="tw">啟動時禁用遠程加載 (脫機工作時)</message>
 	<message xml:lang="sk">Zrušiť automatické nahrávanie vzdialených komentárov pri každom spustení (pre prácu offline)</message>
+	<message xml:lang="ja">オフライン作業のために、スタートアップ時に遠隔自動ロードしないようにする</message>
 </label>
 <label define="AM_FG_SEL_COLOR">
 	<message xml:lang="en">Selection color</message>
@@ -3227,6 +3429,7 @@
 	<message xml:lang="cn">选择区域前景色</message>
 	<message xml:lang="tw">選擇區域前景色</message>
 	<message xml:lang="sk">Farba vyznačeného textu</message>
+	<message xml:lang="ja">選択領域の色</message>
 </label>
 <label define="AM_BG_SEL_COLOR">
 	<message xml:lang="en">Selection background color</message>
@@ -3240,6 +3443,7 @@
 	<message xml:lang="cn">选择区域背景色</message>
 	<message xml:lang="tw">選擇區域背景色</message>
 	<message xml:lang="sk">Pozadie vyznačeného textu</message>
+	<message xml:lang="ja">選択領域の背景色</message>
 </label>
 <label define="AM_ORIENTATION">
 	<message xml:lang="en">Orientation</message>
@@ -3256,6 +3460,7 @@
 	<message xml:lang="cn">Orientation</message>
 	<message xml:lang="tw">Orientation</message>
 	<message xml:lang="sk">Orientácia</message>
+	<message xml:lang="ja">オリエンテーション</message>
 </label>
 <label define="AM_PORTRAIT">
 	<message xml:lang="en">Portrait</message>
@@ -3272,6 +3477,7 @@
 	<message xml:lang="cn">Portrait</message>
 	<message xml:lang="tw">Portrait</message>
 	<message xml:lang="sk">Na výšku</message>
+	<message xml:lang="ja">ポートレート</message>
 </label>
 <label define="AM_LANDSCAPE">
 	<message xml:lang="en">Landscape</message>
@@ -3288,6 +3494,7 @@
 	<message xml:lang="cn">Landscape</message>
 	<message xml:lang="tw">Landscape</message>
 	<message xml:lang="sk">Na šírku</message>
+	<message xml:lang="ja">景観</message>
 </label>
 <label define="AM_INSERT_NBSP">
 	<message xml:lang="en">Keep multiple spaces</message>
@@ -3298,6 +3505,7 @@
 	<message xml:lang="sk">Ponechať viacnásobné medzery</message>
 	<message xml:lang="it">Conserva gli spazi multipli</message>
 	<message xml:lang="ru">Пропускать множественные пробелы</message>
+	<message xml:lang="ja">場所をいくつか確保してください</message>
 </label>
 <label define="AM_XML_RETRY">
 	<message xml:lang="en">Error(s) in the source code</message>
@@ -3310,6 +3518,7 @@
 	<message xml:lang="tw">Error(s) in the source code</message>
 	<message xml:lang="sk">Chyba(y) v zdrojovom kóde</message>
 	<message xml:lang="ru">Ошибка(и) в исходном коде</message>
+	<message xml:lang="ja">ソースにエラーがあります</message>
 </label>
 <label define="AM_XML_ERROR">
 	<message xml:lang="en">Fatal error - Fix the source code to continue</message>
@@ -3322,6 +3531,7 @@
 	<message xml:lang="tw">Fatal error - Fix the source code to continue</message>
 	<message xml:lang="sk">Kritická chyba - Opravte zdrojový kód aby bolo možné pokračovať</message>
 	<message xml:lang="ru">Неисправимая ошибка - для продолжения исправьте исходный код</message>
+	<message xml:lang="ja">致命的なエラー - 続行するためにソースコードを修正してください</message>
 </label>
 <label define="AM_XML_CHARACTER_RETRY">
 	<message xml:lang="en">Try the 'File/Read as' entry</message>
@@ -3335,6 +3545,7 @@
 	<message xml:lang="cn">Try the 'File/Read as' entry</message>
 	<message xml:lang="tw">Try the 'File/Read as' entry</message>
 	<message xml:lang="sk">Skúste zvoliť 'Súbor/Načítať s kódovaním'</message>
+	<message xml:lang="ja">「ファイル」→「文字コード」を試してみてください</message>
 </label>
 <label define="AM_XML_CHARACTER_ERROR">
 	<message xml:lang="en">Invalid characters</message>
@@ -3351,6 +3562,7 @@
 	<message xml:lang="cn">Invalid characters</message>
 	<message xml:lang="tw">Invalid characters</message>
 	<message xml:lang="sk">Neplatný znak</message>
+	<message xml:lang="ja">無効な文字です</message>
 </label>
 <label define="AM_XML_PROFILE">
 	<message xml:lang="en">Document profile:</message>
@@ -3367,6 +3579,7 @@
 	<message xml:lang="cn">Document profile:</message>
 	<message xml:lang="tw">Document profile:</message>
 	<message xml:lang="sk">Profil dokumentu:</message>
+	<message xml:lang="ja">ドキュメントの概略:</message>
 </label>
 <label define="AM_XML_WARNING">
 	<message xml:lang="en">Errors detected - see File &gt; Show parsing errors</message>
@@ -3383,6 +3596,7 @@
 	<message xml:lang="cn">Errors detected - see File &gt; Show parsing errors</message>
 	<message xml:lang="tw">Errors detected - see File &gt; Show parsing errors</message>
 	<message xml:lang="sk">Nájdené chyby - pozri Súbor &gt; Skontrolovať chyby</message>
+	<message xml:lang="ja">エラー発見 - ファイルを見る > 文解析エラー表示</message>
 </label>
 <label define="AM_UNKNOWN_ENCODING">
 	<message xml:lang="en">The encoding of this document is not supported by Amaya</message>
@@ -3399,6 +3613,7 @@
 	<message xml:lang="cn">The encoding of this document is not supported by Amaya</message>
 	<message xml:lang="tw">The encoding of this document is not supported by Amaya</message>
 	<message xml:lang="sk">Kódovanie tohto dokumentu nie je podporované programom Amaya</message>
+	<message xml:lang="ja">このドキュメントのエンコードはAmayaではサポートされていません</message>
 </label>
 <label define="AM_XML_MISMATCH_PROFILE">
 	<message xml:lang="en">Editing and saving this document will change its type</message>
@@ -3415,6 +3630,7 @@
 	<message xml:lang="cn">Editing and saving this document will change its type</message>
 	<message xml:lang="tw">Editing and saving this document will change its type</message>
 	<message xml:lang="sk">Úpravou a uložením tohto dokumentu zmeníte jeho typ</message>
+	<message xml:lang="ja">この文書を編集し保存すると、種類を変更することになります</message>
 </label>
 <label define="AM_NOT_AVAILABLE">
 	<message xml:lang="en">Not available</message>
@@ -3431,6 +3647,7 @@
 	<message xml:lang="cn">Not available</message>
 	<message xml:lang="tw">Not available</message>
 	<message xml:lang="sk">Nedostupné</message>
+	<message xml:lang="ja">利用できません</message>
 </label>
 <label define="AM_BROWSE">
 	<message xml:lang="en">Browse</message>
@@ -3447,6 +3664,7 @@
 	<message xml:lang="cn">Browse</message>
 	<message xml:lang="tw">Browse</message>
 	<message xml:lang="sk">Nalistovať</message>
+	<message xml:lang="ja">参照</message>
 </label>
 <label define="AM_FILE_BROWSER">
 	<message xml:lang="en">File Browser</message>
@@ -3463,6 +3681,7 @@
 	<message xml:lang="cn">File Browser</message>
 	<message xml:lang="tw">File Browser</message>
 	<message xml:lang="sk">Prehliadač súborov</message>
+	<message xml:lang="ja">ファイルブラウザ</message>
 </label>
 <label define="AM_SELECTION">
 	<message xml:lang="en">Selection</message>
@@ -3479,6 +3698,7 @@
 	<message xml:lang="cn">Selection</message>
 	<message xml:lang="tw">Selection</message>
 	<message xml:lang="sk">Výber</message>
+	<message xml:lang="ja">選択</message>
 </label>
 <label define="AM_AFILTER">
 	<message xml:lang="en">Annotation Local Filter Menu</message>
@@ -3495,6 +3715,7 @@
 	<message xml:lang="cn">Annotation Local Filter Menu</message>
 	<message xml:lang="tw">Annotation Local Filter Menu</message>
 	<message xml:lang="sk">Menu filtra lokálnych komentárov</message>
+	<message xml:lang="ja">アノテーションのローカルのフィルタメニュー</message>
 </label>
 <label define="AM_AFILTER_SHOW">
 	<message xml:lang="en">Show errors</message>
@@ -3511,6 +3732,7 @@
 	<message xml:lang="cn">显示错误</message>
 	<message xml:lang="tw">顯示錯誤</message>
 	<message xml:lang="sk">Zobraziť chyby</message>
+	<message xml:lang="ja">エラーを見せる</message>
 </label>
 <label define="AM_AFILTER_HIDE">
 	<message xml:lang="en">Hide</message>
@@ -3527,6 +3749,7 @@
 	<message xml:lang="cn">隐藏</message>
 	<message xml:lang="tw">隱藏</message>
 	<message xml:lang="sk">Skryť</message>
+	<message xml:lang="ja">隠す</message>
 </label>
 <label define="AM_AFILTER_SHOW_ALL">
 	<message xml:lang="en">Show all</message>
@@ -3543,6 +3766,7 @@
 	<message xml:lang="cn">显示所有</message>
 	<message xml:lang="tw">顯示所有</message>
 	<message xml:lang="sk">Zobraziť všetko</message>
+	<message xml:lang="ja">全てを見せる</message>
 </label>
 <label define="AM_AFILTER_HIDE_ALL">
 	<message xml:lang="en">Hide all</message>
@@ -3559,6 +3783,7 @@
 	<message xml:lang="cn">隐藏所有</message>
 	<message xml:lang="tw">隱藏所有</message>
 	<message xml:lang="sk">Skryť všetko</message>
+	<message xml:lang="ja">全てを隠す</message>
 </label>
 <label define="AM_AFILTER_HELP">
 	<message xml:lang="en">* means hidden, - means partially hidden</message>
@@ -3575,6 +3800,7 @@
 	<message xml:lang="cn">* 表示隐藏所有, - 表示部分隐藏</message>
 	<message xml:lang="tw">* 表示隱藏所有, - 表示部分隱藏</message>
 	<message xml:lang="sk">* znamená skryté, - znamená čiastočne skryté</message>
+	<message xml:lang="ja">全部もしくは一部隠されています</message>
 </label>
 <label define="AM_AFILTER_OPTIONS">
 	<message xml:lang="en">Filter options</message>
@@ -3591,6 +3817,7 @@
 	<message xml:lang="cn">过滤器选项</message>
 	<message xml:lang="tw">過濾器選項</message>
 	<message xml:lang="sk">Možnosti filtra</message>
+	<message xml:lang="ja">フィルタオプション</message>
 </label>
 <label define="AM_AFILTER_BYAUTHOR">
 	<message xml:lang="en">By author</message>
@@ -3607,6 +3834,7 @@
 	<message xml:lang="cn">By 作者</message>
 	<message xml:lang="tw">By 作者</message>
 	<message xml:lang="sk">Podľa autora</message>
+	<message xml:lang="ja">著者ごと</message>
 </label>
 <label define="AM_AFILTER_BYTYPE">
 	<message xml:lang="en">By type</message>
@@ -3623,6 +3851,7 @@
 	<message xml:lang="cn">By 类型</message>
 	<message xml:lang="tw">By 類型</message>
 	<message xml:lang="sk">Podľa typu</message>
+	<message xml:lang="ja">種類ごと</message>
 </label>
 <label define="AM_AFILTER_BYSERVER">
 	<message xml:lang="en">By server</message>
@@ -3639,6 +3868,7 @@
 	<message xml:lang="cn">By 服务器</message>
 	<message xml:lang="tw">By 服務器</message>
 	<message xml:lang="sk">Podľa servera</message>
+	<message xml:lang="ja">サーバごと</message>
 </label>
 <label define="AM_ACCESSKEY">
 	<message xml:lang="en">Access keys</message>
@@ -3655,6 +3885,7 @@
 	<message xml:lang="cn">Access keys</message>
 	<message xml:lang="tw">Access keys</message>
 	<message xml:lang="sk">Klávesa pre prístup k menu</message>
+	<message xml:lang="ja">アクセス キー</message>
 </label>
 <label define="AM_NONE">
 	<message xml:lang="en">Ignore</message>
@@ -3671,6 +3902,7 @@
 	<message xml:lang="cn">忽略</message>
 	<message xml:lang="tw">忽略</message>
 	<message xml:lang="sk">Ignorovať</message>
+	<message xml:lang="ja">無視</message>
 </label>
 <label define="AM_TOOLPANEL_ALIGN">
 	<message xml:lang="en">Panel bar position: </message>
@@ -3679,6 +3911,7 @@
 	<message xml:lang="de">Werkzeugleiste ausrichten</message>
 	<message xml:lang="hu">Eszközsor igazítása:</message>
 	<message xml:lang="it">Allineamento della barra degli strumenti:</message>
+	<message xml:lang="ja">パネルバーの位置</message>
 </label>
 <label define="AM_TOOLPANEL_ALIGN_LEFT">
 	<message xml:lang="en">left</message>
@@ -3687,6 +3920,7 @@
 	<message xml:lang="de">links</message>
 	<message xml:lang="hu">balra</message>
 	<message xml:lang="it">sinistra</message>
+	<message xml:lang="ja">左</message>
 </label>
 <label define="AM_TOOLPANEL_ALIGN_RIGHT">
 	<message xml:lang="en">right</message>
@@ -3695,6 +3929,7 @@
 	<message xml:lang="de">rechts</message>
 	<message xml:lang="hu">jobbra</message>
 	<message xml:lang="it">destra</message>
+	<message xml:lang="ja">右</message>
 </label>
 <label define="AM_LOCAL_CSS">
 	<message xml:lang="en">Style element</message>
@@ -3711,6 +3946,7 @@
 	<message xml:lang="cn">Style 元素</message>
 	<message xml:lang="tw">Style 元素</message>
 	<message xml:lang="sk">Prvok štýl(style)</message>
+	<message xml:lang="ja">スタイル要素</message>
 </label>
 <label define="AM_NO_XPOINTER">
 	<message xml:lang="en">Cannot create an XPointer</message>
@@ -3727,6 +3963,7 @@
 	<message xml:lang="cn">无法创建 XPointer</message>
 	<message xml:lang="tw">無法創建 XPointer</message>
 	<message xml:lang="sk">Nedá sa vytvoriť XPointer</message>
+	<message xml:lang="ja">XPointer を作成できません</message>
 </label>
 <label define="AM_NO_SXPOINTER">
 	<message xml:lang="en">Impossible to attach a start XPointer on an internal added element</message>
@@ -3743,6 +3980,7 @@
 	<message xml:lang="cn">Impossible to attach a start XPointer on an internal added element</message>
 	<message xml:lang="tw">Impossible to attach a start XPointer on an internal added element</message>
 	<message xml:lang="sk">Nie je možné napojiť začiatok XPointera na vnútorne pridaný prvok</message>
+	<message xml:lang="ja">追加された要素の中には開始XPointer を貼り付けられません</message>
 </label>
 <label define="AM_NO_EXPOINTER">
 	<message xml:lang="en">Impossible to attach an end XPointer on an internal added element</message>
@@ -3759,6 +3997,7 @@
 	<message xml:lang="cn">Impossible to attach an end XPointer on an internal added element</message>
 	<message xml:lang="tw">Impossible to attach an end XPointer on an internal added element</message>
 	<message xml:lang="sk">Nie je možné napojiť koniec XPointera na vnútorne pridaný prvok</message>
+	<message xml:lang="ja">追加された要素の中には終了XPointer を貼り付けられません</message>
 </label>
 <label define="AM_NO_ANNOT_MOVE">
 	<message xml:lang="en">Cannot find where to move the annotation</message>
@@ -3775,6 +4014,7 @@
 	<message xml:lang="cn">未发现注释移动的位置</message>
 	<message xml:lang="tw">未發現注釋移動的位置</message>
 	<message xml:lang="sk">Nedokážem sa zistiť kam bol presunutý komentár</message>
+	<message xml:lang="ja">注釈をどこに移せばいいのか分かりません</message>
 </label>
 <label define="AM_NO_ANNOT_MOVE_OTHER">
 	<message xml:lang="en">Cannot move the annotation to a different document</message>
@@ -3791,6 +4031,7 @@
 	<message xml:lang="cn">无法将注释移到其他文档</message>
 	<message xml:lang="tw">無法將注釋移到其他文檔</message>
 	<message xml:lang="sk">Nedokážem presunúť komentár do iného dokumentu</message>
+	<message xml:lang="ja">注釈を別の文書に移すことができません</message>
 </label>
 <label define="AM_NO_ANNOT_USER">
 	<message xml:lang="en">No annotation user declared. Please open the Annotations/Configure menu.</message>
@@ -3807,6 +4048,7 @@
 	<message xml:lang="cn">未声明注释用户, 请打开 注释/配置 菜单</message>
 	<message xml:lang="tw">未聲明注釋用戶, 請打開 注釋/配置 菜單</message>
 	<message xml:lang="sk">Nebol vytvorený žiadny uživateľský komentár. Otvorte Komentáre/Konfigurácia menu.</message>
+	<message xml:lang="ja">アノテーションユーザの宣言がありません。アノテーション/コンフィグ メニューを開いてください。</message>
 </label>
 <label define="AM_CANNOT_ANNOTATE">
 	<message xml:lang="en">Unable to build an XPointer for this annotation</message>
@@ -3823,6 +4065,7 @@
 	<message xml:lang="cn">无法为该注释创建 XPointer</message>
 	<message xml:lang="tw">無法為該注釋創建 XPointer</message>
 	<message xml:lang="sk">Nedá sa vytvoriť Xpointer pre kometár</message>
+	<message xml:lang="ja">このアノテーションについてXpointer を構築することはできません</message>
 </label>
 <label define="AM_NEW_ANNOTATION">
 	<message xml:lang="en">Make a new annotation</message>
@@ -3839,6 +4082,7 @@
 	<message xml:lang="cn">创建新的注释</message>
 	<message xml:lang="tw">創建新的注釋</message>
 	<message xml:lang="sk">Vytvoriť nový kometár</message>
+	<message xml:lang="ja">新しい注釈の作成</message>
 </label>
 <label define="AM_ANNOT_POST_FAILURE">
 	<message xml:lang="en">Failed to post the annotation</message>
@@ -3855,6 +4099,7 @@
 	<message xml:lang="cn">无法提交注释</message>
 	<message xml:lang="tw">無法提交注釋</message>
 	<message xml:lang="sk">Odoslanie komentára zlyhalo</message>
+	<message xml:lang="ja">アノテーションの掲示に失敗しました</message>
 </label>
 <label define="AM_ANNOT_DELETE_FAILURE">
 	<message xml:lang="en">Failed to delete the annotation</message>
@@ -3871,6 +4116,7 @@
 	<message xml:lang="cn">无法删除注释</message>
 	<message xml:lang="tw">無法刪除注釋</message>
 	<message xml:lang="sk">Zmazanie kometára zlyhalo</message>
+	<message xml:lang="ja">アノテーションの削除に失敗しました</message>
 </label>
 <label define="AM_ANNOT_DELETED">
 	<message xml:lang="en">Annotation deleted!</message>
@@ -3887,6 +4133,7 @@
 	<message xml:lang="cn">注视已删除</message>
 	<message xml:lang="tw">注視已刪除</message>
 	<message xml:lang="sk">Komentár odstránený!</message>
+	<message xml:lang="ja">注釈を消しました!</message>
 </label>
 <label define="AM_ANNOT_INDEX_FAILURE">
 	<message xml:lang="en">Failed to load the annotation index</message>
@@ -3903,6 +4150,7 @@
 	<message xml:lang="cn">无法加载注释索引</message>
 	<message xml:lang="tw">無法加載注釋索引</message>
 	<message xml:lang="sk">Načítanie indexov komentára zlyhalo</message>
+	<message xml:lang="ja">アノテーションインデックスのロードに失敗しました</message>
 </label>
 <label define="AM_ERROR">
 	<message xml:lang="en">Error</message>
@@ -3919,6 +4167,7 @@
 	<message xml:lang="cn">错误</message>
 	<message xml:lang="tw">錯誤</message>
 	<message xml:lang="sk">Chyba</message>
+	<message xml:lang="ja">エラー</message>
 </label>
 <label define="AM_SELECT_CHARSET">
 	<message xml:lang="en">Select a charset</message>
@@ -3935,6 +4184,7 @@
 	<message xml:lang="cn">选择字符编码</message>
 	<message xml:lang="tw">選擇字符編碼</message>
 	<message xml:lang="sk">Vybrať znakovú sadu</message>
+	<message xml:lang="ja">文字コードの選択</message>
 </label>
 <label define="AM_SELECT_MIMETYPE">
 	<message xml:lang="en">Select a MIME type</message>
@@ -3951,6 +4201,7 @@
 	<message xml:lang="cn">选择 MIME 类型</message>
 	<message xml:lang="tw">選擇 MIME 類型</message>
 	<message xml:lang="sk">Vybrať MIME typ</message>
+	<message xml:lang="ja">MIME 型の選択</message>
 </label>
 <label define="AM_CHANGE_CHARSET">
 	<message xml:lang="en">Change charset</message>
@@ -3967,6 +4218,7 @@
 	<message xml:lang="cn">更改字符编码</message>
 	<message xml:lang="tw">更改字符編碼</message>
 	<message xml:lang="sk">Zmeniť znakovú sadu</message>
+	<message xml:lang="ja">文字コードの変更</message>
 </label>
 <label define="AM_CHANGE_MIME_TYPE">
 	<message xml:lang="en">Change MIME type</message>
@@ -3983,6 +4235,7 @@
 	<message xml:lang="cn">更改 MIME 类型</message>
 	<message xml:lang="tw">更改 MIME 類型</message>
 	<message xml:lang="sk">Zmeniť MIME typ</message>
+	<message xml:lang="ja">MIME 型の変更</message>
 </label>
 <label define="AM_CHANGE">
 	<message xml:lang="en">Change</message>
@@ -3999,6 +4252,7 @@
 	<message xml:lang="cn">更改</message>
 	<message xml:lang="tw">更改</message>
 	<message xml:lang="sk">Zmeniť</message>
+	<message xml:lang="ja">変更</message>
 </label>
 <label define="AM_NOCHARSET_SUPPORT">
 	<message xml:lang="en">This type of document doesn't support charsets</message>
@@ -4015,6 +4269,7 @@
 	<message xml:lang="cn">This type of document doesn't support charsets</message>
 	<message xml:lang="tw">This type of document doesn't support charsets</message>
 	<message xml:lang="sk">Tento typ dokumentu nepodporuje znakové sady</message>
+	<message xml:lang="ja">この種類の文書は文字集合をサポートしていません</message>
 </label>
 <label define="AM_NOMIMETYPE_SUPPORT">
 	<message xml:lang="en">The target must be an HTTP URL to use this option</message>
@@ -4031,6 +4286,7 @@
 	<message xml:lang="cn">The target must be an HTTP URL to use this option</message>
 	<message xml:lang="tw">The target must be an HTTP URL to use this option</message>
 	<message xml:lang="sk">Pre funkčnosť tejto voľby musí byť cieľ typu HTTP URL</message>
+	<message xml:lang="ja">このオプションを使用するためにはターゲットがHTTP のURL でなくてはいけません</message>
 </label>
 <label define="AM_INVALID_MIMETYPE">
 	<message xml:lang="en">Error: invalid MIME type</message>
@@ -4047,6 +4303,7 @@
 	<message xml:lang="cn">错误: 无效 MIME 类型</message>
 	<message xml:lang="tw">錯誤: 無效 MIME 類型</message>
 	<message xml:lang="sk">Chyba: neplatný MIME typ</message>
+	<message xml:lang="ja">エラー: 無効なMIME 型</message>
 </label>
 <label define="AM_UNKNOWN">
 	<message xml:lang="en">Unknown</message>
@@ -4063,6 +4320,7 @@
 	<message xml:lang="cn">未知</message>
 	<message xml:lang="tw">未知</message>
 	<message xml:lang="sk">Neznámy</message>
+	<message xml:lang="ja">不明</message>
 </label>
 <label define="AM_CSS_ERROR">
 	<message xml:lang="en">Styles are ignored - see Show parsing errors</message>
@@ -4079,6 +4337,7 @@
 	<message xml:lang="cn">Styles are ignored - see Show parsing errors</message>
 	<message xml:lang="tw">Styles are ignored - see Show parsing errors</message>
 	<message xml:lang="sk">Štýly sú ignorované - pozri Skontrolovať chyby</message>
+	<message xml:lang="ja">スタイルが読み込まれませんでした - 文解析エラー表示を参照してください</message>
 </label>
 <label define="AM_DOUBLE_LOAD">
 	<message xml:lang="en">This document is already loaded in another Window</message>
@@ -4095,6 +4354,7 @@
 	<message xml:lang="cn">This document is already loaded in another Window</message>
 	<message xml:lang="tw">This document is already loaded in another Window</message>
 	<message xml:lang="sk">Tento dokument je už načítaný v inom okne</message>
+	<message xml:lang="ja">このドキュメントは既に他のウィンドウで読み込まれています</message>
 </label>
 <label define="AM_UNSAVE">
 	<message xml:lang="en">Saving that instance may cause a lost update problem</message>
@@ -4111,6 +4371,7 @@
 	<message xml:lang="cn">Saving that instance may cause a lost update problem</message>
 	<message xml:lang="tw">Saving that instance may cause a lost update problem</message>
 	<message xml:lang="sk">Uložením tejto inštancie povedie k strate novších znien v dokumente</message>
+	<message xml:lang="ja">保存すると最新の問題が失われてしまうかもしれません</message>
 </label>
 <label define="AM_CHANGE_DOCTYPE1">
 	<message xml:lang="en">Adding or changing the doctype will remove some elements or attributes</message>
@@ -4124,6 +4385,7 @@
 	<message xml:lang="cn">Adding or changing the doctype will remove some elements or attributes</message>
 	<message xml:lang="tw">Adding or changing the doctype will remove some elements or attributes</message>
 	<message xml:lang="sk">Pridaním alebo zmenou prvku doctype budú odstránené niektoré prvky a atribúty</message>
+	<message xml:lang="ja">doctype の追加と変更はいくつかの要素や属性を削除する可能性があります</message>
 </label>
 <label define="AM_CHANGE_DOCTYPE2">
 	<message xml:lang="en">Please confirm operation</message>
@@ -4137,6 +4399,7 @@
 	<message xml:lang="cn">Please confirm operation</message>
 	<message xml:lang="tw">Please confirm operation</message>
 	<message xml:lang="sk">Prosím potvrďte operáciu</message>
+	<message xml:lang="ja">操作を確認してください</message>
 </label>
 <label define="AM_USE_XHTML_MIMETYPE">
 	<message xml:lang="en">Use the application/xhtml+xml MIME type for XHTML documents</message>
@@ -4153,6 +4416,7 @@
 	<message xml:lang="cn">对 XHTML 文档使用 application/xhtml+xml MIME 类型</message>
 	<message xml:lang="tw">對 XHTML 文檔使用 application/xhtml+xml MIME 類型</message>
 	<message xml:lang="sk">Použiť MIME typ application/xhtml+xml pre XHTML dokumenty</message>
+	<message xml:lang="ja">XHTML ドキュメントのために、適切なアプリケーションもしくはxhtml+xml MIME 型を使用してください</message>
 </label>
 <label define="AM_DEFAULT_CHARSET">
 	<message xml:lang="en">Charset for new documents</message>
@@ -4166,6 +4430,7 @@
 	<message xml:lang="cn">新建文档的字符集</message>
 	<message xml:lang="tw">新建文檔的字符集</message>
 	<message xml:lang="sk">Znaková sada pre nový dokument</message>
+	<message xml:lang="ja">新しいドキュメントの文字コード</message>
 </label>
 <label define="AM_LOCK_SUCCEED">
 	<message xml:lang="en">Lock succeed!</message>
@@ -4182,6 +4447,7 @@
 	<message xml:lang="cn">锁定成功!</message>
 	<message xml:lang="tw">鎖定成功!</message>
 	<message xml:lang="sk">Uzamknutie úspešné!</message>
+	<message xml:lang="ja">ロック成功!</message>
 </label>
 <label define="AM_LOCK_FAILED">
 	<message xml:lang="en">Lock failed!</message>
@@ -4198,6 +4464,7 @@
 	<message xml:lang="cn">锁定失败!</message>
 	<message xml:lang="tw">鎖定失敗!</message>
 	<message xml:lang="sk">Uzamknutie neúspešné!</message>
+	<message xml:lang="ja">ロック失敗!</message>
 </label>
 <label define="AM_LOCKING">
 	<message xml:lang="en">Locking %s...</message>
@@ -4214,6 +4481,7 @@
 	<message xml:lang="cn">锁定 %s...</message>
 	<message xml:lang="tw">鎖定 %s...</message>
 	<message xml:lang="sk">Zamykanie %s...</message>
+	<message xml:lang="ja">%s をロックします...</message>
 </label>
 <label define="AM_LOCKED">
 	<message xml:lang="en">Document %s is locked!</message>
@@ -4230,6 +4498,7 @@
 	<message xml:lang="cn">文档 %s 已锁定!</message>
 	<message xml:lang="tw">文檔 %s 已鎖定!</message>
 	<message xml:lang="sk">Dokument %s je uzamknutý!</message>
+	<message xml:lang="ja">%s の文書をロックしました!</message>
 </label>
 <label define="AM_LOCKED_BY_OTHER">
 	<message xml:lang="en">Document %s is locked by %s (timeout %s)</message>
@@ -4246,6 +4515,7 @@
 	<message xml:lang="cn">文档 %s 已被 %s 锁定 (过期时间 %s)</message>
 	<message xml:lang="tw">文檔 %s 已被 %s 鎖定 (過期時間 %s)</message>
 	<message xml:lang="sk">Dokument %s je uzapknutý %s (čas uzamknutia %s)</message>
+	<message xml:lang="ja">ドキュメント %s は %s によってロックされました(timeout %s)</message>
 </label>
 <label define="AM_LOCK_OVERWRITE">
 	<message xml:lang="en">Overwrite lock information?</message>
@@ -4262,6 +4532,7 @@
 	<message xml:lang="cn">覆盖锁定信息?</message>
 	<message xml:lang="tw">覆蓋鎖定信息?</message>
 	<message xml:lang="sk">Prepísať informácie o uzamknutí?</message>
+	<message xml:lang="ja">ロックの情報を上書きしますか?</message>
 </label>
 <label define="AM_COPY_LOCK">
 	<message xml:lang="en">Copy the lock information?</message>
@@ -4278,6 +4549,7 @@
 	<message xml:lang="cn">复制锁定信息?</message>
 	<message xml:lang="tw">復制鎖定信息?</message>
 	<message xml:lang="sk">Kopírovať informácie o uzamknutí?</message>
+	<message xml:lang="ja">ロックの情報をコピーしますか?</message>
 </label>
 <label define="AM_UNLOCK_BEFORE">
 	<message xml:lang="en">Try to unlock the document before...</message>
@@ -4294,6 +4566,7 @@
 	<message xml:lang="cn">Try to unlock the document before...</message>
 	<message xml:lang="tw">Try to unlock the document before...</message>
 	<message xml:lang="sk">Pokúšam sa najprv odomknúť dokument...</message>
+	<message xml:lang="ja">前もってドキュメントをアンロックするようにしてください...</message>
 </label>
 <label define="AM_UNLOCK_SUCCEED">
 	<message xml:lang="en">Unlock succeed!</message>
@@ -4310,6 +4583,7 @@
 	<message xml:lang="cn">解锁成功!</message>
 	<message xml:lang="tw">解鎖成功!</message>
 	<message xml:lang="sk">Odomknutie úspešné!</message>
+	<message xml:lang="ja">ロック解除成功!</message>
 </label>
 <label define="AM_UNLOCK_FAILED">
 	<message xml:lang="en">Unlock failed!</message>
@@ -4326,6 +4600,7 @@
 	<message xml:lang="cn">解锁失败!</message>
 	<message xml:lang="tw">解鎖失敗!</message>
 	<message xml:lang="sk">Odomknutie neúspešné!</message>
+	<message xml:lang="ja">ロック解除失敗!</message>
 </label>
 <label define="AM_UNLOCKING">
 	<message xml:lang="en">Unlocking %s...</message>
@@ -4342,6 +4617,7 @@
 	<message xml:lang="cn">解锁 %s...</message>
 	<message xml:lang="tw">解鎖 %s...</message>
 	<message xml:lang="sk">Odomkýnanie %s...</message>
+	<message xml:lang="ja">ロック解除中 %s...</message>
 </label>
 <label define="AM_UNLOCKED">
 	<message xml:lang="en">Document %s is unlocked!</message>
@@ -4358,6 +4634,7 @@
 	<message xml:lang="cn">文档 %s 已解锁!</message>
 	<message xml:lang="tw">文檔 %s 已解鎖!</message>
 	<message xml:lang="sk">Dokument %s je odomknutý!</message>
+	<message xml:lang="ja">ドキュメント %s はロック解除されました!</message>
 </label>
 <label define="AM_UNLOCK_DOCUMENT">
 	<message xml:lang="en">Unlock the document?</message>
@@ -4374,6 +4651,7 @@
 	<message xml:lang="cn">解锁文档吗?</message>
 	<message xml:lang="tw">解鎖文檔嗎?</message>
 	<message xml:lang="sk">Odomknúť dokument?</message>
+	<message xml:lang="ja">文書のロックを解除しますか?</message>
 </label>
 <label define="AM_DAV_PROPERTIES">
 	<message xml:lang="en">Document properties</message>
@@ -4390,6 +4668,7 @@
 	<message xml:lang="cn">文档属性</message>
 	<message xml:lang="tw">文檔屬性</message>
 	<message xml:lang="sk">Vlastnosti dokumentu</message>
+	<message xml:lang="ja">ドキュメントのプロパティ</message>
 </label>
 <label define="AM_PROPFIND_FAILED">
 	<message xml:lang="en">Document properties are not available</message>
@@ -4406,6 +4685,7 @@
 	<message xml:lang="cn">文档属性无法获得</message>
 	<message xml:lang="tw">文檔屬性無法獲得</message>
 	<message xml:lang="sk">Vlastnosti dokumentu nie sú prístupné</message>
+	<message xml:lang="ja">ドキュメントのプロパティは利用できません</message>
 </label>
 <label define="AM_PROPFIND_FAILED_TEMP">
 	<message xml:lang="en">Document properties are temporarily unavailable. Try again later...</message>
@@ -4422,6 +4702,7 @@
 	<message xml:lang="cn">Document properties are temporarily unavailable. Try again later...</message>
 	<message xml:lang="tw">Document properties are temporarily unavailable. Try again later...</message>
 	<message xml:lang="sk">Vlastnosti dokumentu sú dočasne neprístupné. Skúste neskôr...</message>
+	<message xml:lang="ja">ドキュメントのプロパティは現在利用できません。後でやり直してください。</message>
 </label>
 <label define="AM_FINDING_PROPERTIES">
 	<message xml:lang="en">Looking for document properties...</message>
@@ -4438,6 +4719,7 @@
 	<message xml:lang="cn">Looking for document properties...</message>
 	<message xml:lang="tw">Looking for document properties...</message>
 	<message xml:lang="sk">Hľadám vlastnosti dokumentu...</message>
+	<message xml:lang="ja">ドキュメントのプロパティを検索...</message>
 </label>
 <label define="AM_DAV_UNSUPPORTED_PROTOCOL">
 	<message xml:lang="en">Sorry, no WebDAV support for URLs of this type %s</message>
@@ -4454,6 +4736,7 @@
 	<message xml:lang="cn">Sorry, no WebDAV support for URLs of this type %s</message>
 	<message xml:lang="tw">Sorry, no WebDAV support for URLs of this type %s</message>
 	<message xml:lang="sk">Prepáčte, tento typ URL adries %s nepodporuje funkciu WebDAV</message>
+	<message xml:lang="ja">この種類の URLs %s　用の WebDAV はサポートされていません</message>
 </label>
 <label define="AM_SAVE_LOCKBASE_FAILED">
 	<message xml:lang="en">Failed to save lock info in the local base</message>
@@ -4470,6 +4753,7 @@
 	<message xml:lang="cn">Failed to save lock info in the local base</message>
 	<message xml:lang="tw">Failed to save lock info in the local base</message>
 	<message xml:lang="sk">Nedá sa uložiť informácia o uzamknutí do lokálneho zdroja</message>
+	<message xml:lang="ja">ローカルベースへのロック情報の保存を失敗しました</message>
 </label>
 <label define="AM_REMOVE_LOCKBASE_FAILED">
 	<message xml:lang="en">Failed to remove lok info from local base</message>
@@ -4486,6 +4770,7 @@
 	<message xml:lang="cn">Failed to remove lok info from local base</message>
 	<message xml:lang="tw">Failed to remove lok info from local base</message>
 	<message xml:lang="sk">Nedá sa odstrániť informácia o uzamknutí z lokálneho zdroja</message>
+	<message xml:lang="ja">ローカルベースのロック情報の削除に失敗しました</message>
 </label>
 <label define="AM_DAV_NOT_ALLOWED">
 	<message xml:lang="en">Sorry, this operation is not allowed for %s</message>
@@ -4502,6 +4787,7 @@
 	<message xml:lang="cn">Sorry, this operation is not allowed for %s</message>
 	<message xml:lang="tw">Sorry, this operation is not allowed for %s</message>
 	<message xml:lang="sk">Prepáčte, táto operácia nie je dovolená pre %s</message>
+	<message xml:lang="ja">残念ですが、このオペレーションは %s に許可されていません</message>
 </label>
 <label define="AM_FAILED_DEPENDENCY">
 	<message xml:lang="en">Request failed! Reason: Failed Dependency</message>
@@ -4518,6 +4804,7 @@
 	<message xml:lang="cn">Request failed! Reason: Failed Dependency</message>
 	<message xml:lang="tw">Request failed! Reason: Failed Dependency</message>
 	<message xml:lang="sk">Požiadavka odmietnutá! Príčina: zlá nadväznosť</message>
+	<message xml:lang="ja">要求は失敗しました! 理由: 依存状態の失敗</message>
 </label>
 <label define="AM_MULTI_STATUS_FAIL">
 	<message xml:lang="en">Request failed! Reason: %s</message>
@@ -4534,6 +4821,7 @@
 	<message xml:lang="cn">Request failed! Reason: %s</message>
 	<message xml:lang="tw">Request failed! Reason: %s</message>
 	<message xml:lang="sk">Požiadavka odmietnutá! Príčina: %s</message>
+	<message xml:lang="ja">要求は失敗しました! 理由: %s</message>
 </label>
 <label define="AM_DAV_TRY_AGAIN">
 	<message xml:lang="en">Try again?</message>
@@ -4550,6 +4838,7 @@
 	<message xml:lang="cn">再试一次?</message>
 	<message xml:lang="tw">再試一次?</message>
 	<message xml:lang="sk">Skúsiť znova?</message>
+	<message xml:lang="ja">もう一度試しますか？</message>
 </label>
 <label define="AM_DAV_PREFERENCES">
 	<message xml:lang="en">WebDAV</message>
@@ -4566,6 +4855,7 @@
 	<message xml:lang="cn">WebDAV</message>
 	<message xml:lang="tw">WebDAV</message>
 	<message xml:lang="sk">WebDAV</message>
+	<message xml:lang="ja">WebDAV</message>
 </label>
 <label define="AM_DAV_USER_URL">
 	<message xml:lang="en">User's personal reference (URL)</message>
@@ -4582,6 +4872,7 @@
 	<message xml:lang="cn">用户个人参考 (URL)</message>
 	<message xml:lang="tw">用戶個人參考 (URL)</message>
 	<message xml:lang="sk">Používateské osobné príručky (URL)</message>
+	<message xml:lang="ja">ユーザの身元保証 (URL)</message>
 </label>
 <label define="AM_DAV_USER_RESOURCES">
 	<message xml:lang="en">User's WebDAV resource list (URL URL)</message>
@@ -4598,6 +4889,7 @@
 	<message xml:lang="cn">用户 WebDAV 资源列表 (URL URL)</message>
 	<message xml:lang="tw">用戶 WebDAV 資源列表 (URL URL)</message>
 	<message xml:lang="sk">Používateľské WebDAV zoznamy zdrojov (URL URL)</message>
+	<message xml:lang="ja">ユーザーのWebDAV リソースリスト(URL URL)</message>
 </label>
 <label define="AM_DAV_DEPTH">
 	<message xml:lang="en">Lock Depth</message>
@@ -4614,6 +4906,7 @@
 	<message xml:lang="cn">锁定深度</message>
 	<message xml:lang="tw">鎖定深度</message>
 	<message xml:lang="sk">Hĺbka uzamknutia</message>
+	<message xml:lang="ja">ロックの深さ</message>
 </label>
 <label define="AM_DAV_DEPTH_INFINITY">
 	<message xml:lang="en">infinity</message>
@@ -4630,6 +4923,7 @@
 	<message xml:lang="cn">无限</message>
 	<message xml:lang="tw">無限</message>
 	<message xml:lang="sk">neobmedzená</message>
+	<message xml:lang="ja">無限</message>
 </label>
 <label define="AM_DAV_TIMEOUT">
 	<message xml:lang="en">Lock Timeout</message>
@@ -4646,6 +4940,7 @@
 	<message xml:lang="cn">锁定超时</message>
 	<message xml:lang="tw">鎖定超時</message>
 	<message xml:lang="sk">Trvanie uzamknutia</message>
+	<message xml:lang="ja">ロックタイムアウト</message>
 </label>
 <label define="AM_DAV_TIMEOUT_INFINITE">
 	<message xml:lang="en">Infinite</message>
@@ -4662,6 +4957,7 @@
 	<message xml:lang="cn">无限</message>
 	<message xml:lang="tw">無限</message>
 	<message xml:lang="sk">Neobmedzené</message>
+	<message xml:lang="ja">無限</message>
 </label>
 <label define="AM_DAV_TIMEOUT_OTHER">
 	<message xml:lang="en">Other (Seconds)</message>
@@ -4678,6 +4974,7 @@
 	<message xml:lang="cn">其他 (秒)</message>
 	<message xml:lang="tw">其他 (秒)</message>
 	<message xml:lang="sk">Obmedzené (v sekundách)</message>
+	<message xml:lang="ja">その他 (秒)</message>
 </label>
 <label define="AM_DAV_LOCKSCOPE">
 	<message xml:lang="en">Lock Scope</message>
@@ -4694,6 +4991,7 @@
 	<message xml:lang="cn">锁定范围</message>
 	<message xml:lang="tw">鎖定范圍</message>
 	<message xml:lang="sk">Typ uzamknutia</message>
+	<message xml:lang="ja">ロック範囲</message>
 </label>
 <label define="AM_DAV_LOCKSCOPE_EXCLUSIVE">
 	<message xml:lang="en">exclusive</message>
@@ -4710,6 +5008,7 @@
 	<message xml:lang="cn">排除</message>
 	<message xml:lang="tw">排除</message>
 	<message xml:lang="sk">výhradné</message>
+	<message xml:lang="ja">排他的</message>
 </label>
 <label define="AM_DAV_LOCKSCOPE_SHARED">
 	<message xml:lang="en">shared</message>
@@ -4726,6 +5025,7 @@
 	<message xml:lang="cn">共享</message>
 	<message xml:lang="tw">共享</message>
 	<message xml:lang="sk">zdielané</message>
+	<message xml:lang="ja">共有的</message>
 </label>
 <label define="AM_DAV_AWARENESS">
 	<message xml:lang="en">Awarenees</message>
@@ -4742,6 +5042,7 @@
 	<message xml:lang="cn">Awarenees</message>
 	<message xml:lang="tw">Awarenees</message>
 	<message xml:lang="sk">Upozornenia</message>
+	<message xml:lang="ja">認識</message>
 </label>
 <label define="AM_DAV_AWARENESS_GENERAL">
 	<message xml:lang="en">General awareness</message>
@@ -4758,6 +5059,7 @@
 	<message xml:lang="cn">一般感知</message>
 	<message xml:lang="tw">一般感知</message>
 	<message xml:lang="sk">Základné upozornenia</message>
+	<message xml:lang="ja">一般的な認識</message>
 </label>
 <label define="AM_DAV_AWARENESS_ONEXIT">
 	<message xml:lang="en">Awareness on exit</message>
@@ -4774,6 +5076,7 @@
 	<message xml:lang="cn">退出时感知</message>
 	<message xml:lang="tw">退出時感知</message>
 	<message xml:lang="sk">Upozorňovať pri skončení</message>
+	<message xml:lang="ja">終了の認識</message>
 </label>
 <label define="AM_BUTTON_ANIM">
 	<message xml:lang="en">Animation</message>
@@ -4789,6 +5092,7 @@
 	<message xml:lang="cn">Animation</message>
 	<message xml:lang="tw">Animation</message>
 	<message xml:lang="sk">Animácia</message>
+	<message xml:lang="ja">アニメーション</message>
 </label>
 <label define="AM_BUTTON_SVG_LIBRARY">
 	<message xml:lang="en">SVG Library</message>
@@ -4804,6 +5108,7 @@
 	<message xml:lang="cn">SVG Library</message>
 	<message xml:lang="tw">SVG Library</message>
 	<message xml:lang="sk">Knižnica SVG</message>
+	<message xml:lang="ja">SVG ライブラリ</message>
 </label>
 <label define="AM_SVGLIB_DIALOG1">
 	<message xml:lang="en">Copy option</message>
@@ -4819,6 +5124,7 @@
 	<message xml:lang="cn">Copy option</message>
 	<message xml:lang="tw">Copy option</message>
 	<message xml:lang="sk">Kopírovať voľbu</message>
+	<message xml:lang="ja">オプションのコピー</message>
 </label>
 <label define="AM_SVGLIB_COPY_SELECTION">
 	<message xml:lang="en">Copy selection</message>
@@ -4834,6 +5140,7 @@
 	<message xml:lang="cn">Copy selection</message>
 	<message xml:lang="tw">Copy selection</message>
 	<message xml:lang="sk">Kopírovať výber</message>
+	<message xml:lang="ja">選択したもののコピー</message>
 </label>
 <label define="AM_SVGLIB_REF_SELECTION">
 	<message xml:lang="en">Refer to selection</message>
@@ -4849,6 +5156,7 @@
 	<message xml:lang="cn">Refer to selection</message>
 	<message xml:lang="tw">Refer to selection</message>
 	<message xml:lang="sk">Odkázať na výber</message>
+	<message xml:lang="ja">選択参照</message>
 </label>
 <label define="AM_SVGLIB_ADD_SVG_MODEL_DIALOG">
 	<message xml:lang="en">Add new model into library</message>
@@ -4864,6 +5172,7 @@
 	<message xml:lang="cn">向 library 添加新的模型</message>
 	<message xml:lang="tw">向 library 添加新的模型</message>
 	<message xml:lang="sk">Pridať nový model do knižnice</message>
+	<message xml:lang="ja">ライブラリに新しいモデルを加える</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_SVG_">
 	<message xml:lang="en">URL of the new SVG  ...</message>
@@ -4879,6 +5188,7 @@
 	<message xml:lang="cn">URL of the new SVG  ...</message>
 	<message xml:lang="tw">URL of the new SVG  ...</message>
 	<message xml:lang="sk">URL Nového SVG súboru ...</message>
+	<message xml:lang="ja">新規SVG のURL ...</message>
 </label>
 <label define="AM_SVGLIB_CATALOGUE_TITLE">
 	<message xml:lang="en">Library title</message>
@@ -4894,6 +5204,7 @@
 	<message xml:lang="cn">Library 标题</message>
 	<message xml:lang="tw">Library 標題</message>
 	<message xml:lang="sk">Názov knižnice</message>
+	<message xml:lang="ja">ライブラリのタイトル</message>
 </label>
 <label define="AM_SVGLIB_CATALOGUE_URL">
 	<message xml:lang="en">Library URL</message>
@@ -4909,6 +5220,7 @@
 	<message xml:lang="cn">Library URL</message>
 	<message xml:lang="tw">Library URL</message>
 	<message xml:lang="sk">URL Knižnice</message>
+	<message xml:lang="ja">ライブラリのURL</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_CATALOGUE">
 	<message xml:lang="en">Create library</message>
@@ -4924,6 +5236,7 @@
 	<message xml:lang="cn">创建 library</message>
 	<message xml:lang="tw">創建 library</message>
 	<message xml:lang="sk">Vytvoriť knižnicu</message>
+	<message xml:lang="ja">ライブラリを作成</message>
 </label>
 <label define="AM_SVGLIB_ADD_NEW_CATALOGUE">
 	<message xml:lang="en">Browse library</message>
@@ -4939,6 +5252,7 @@
 	<message xml:lang="cn">浏览 library</message>
 	<message xml:lang="tw">瀏覽 library</message>
 	<message xml:lang="sk">Nalistovať knižnicu</message>
+	<message xml:lang="ja">ライブラリを参照する</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_CATALOGUE_DIALOG">
 	<message xml:lang="en">Create or search library</message>
@@ -4954,6 +5268,7 @@
 	<message xml:lang="cn">创建或搜索 library</message>
 	<message xml:lang="tw">創建或搜索 library</message>
 	<message xml:lang="sk">Vytvoriť alebo vyhľadať knižnicu</message>
+	<message xml:lang="ja">ライブラリの作成、検索</message>
 </label>
 <label define="AM_SVGLIB_NO_SVG_SELECTION">
 	<message xml:lang="en">The selection includes no SVG elements. Please reselect</message>
@@ -4969,6 +5284,7 @@
 	<message xml:lang="cn">The selection includes no SVG elements. Please reselect</message>
 	<message xml:lang="tw">The selection includes no SVG elements. Please reselect</message>
 	<message xml:lang="sk">Výber neobsahuje prvky SVG. Urobte nový výber</message>
+	<message xml:lang="ja">選択内にSVG エレメントが含まれていません。もう一度選択してください</message>
 </label>
 <label define="AM_SVGLIB_MISSING_TITLE">
 	<message xml:lang="en">The library title is mandatory</message>
@@ -4984,6 +5300,7 @@
 	<message xml:lang="cn">The library title is mandatory</message>
 	<message xml:lang="tw">The library title is mandatory</message>
 	<message xml:lang="sk">Názov knižnive je povinný</message>
+	<message xml:lang="ja">ライブラリのタイトルが必要です</message>
 </label>
 <label define="AM_SVGANIM_MOTION_HINT1">
 	<message xml:lang="en">Move the position cursor in edited document to define a new key position...</message>
@@ -4999,6 +5316,7 @@
 	<message xml:lang="cn">Move the position cursor in edited document to define a new key position...</message>
 	<message xml:lang="tw">Move the position cursor in edited document to define a new key position...</message>
 	<message xml:lang="sk">Presuňte pozíciu kurzora na miesto vdokumente, kde sa má vytvoriť nová kľučová pozícia...</message>
+	<message xml:lang="ja">編集されたドキュメントで位置のカーソルを動かして、新しいキーポジションを定義してください...</message>
 </label>
 <label define="AM_SVGANIM_MOTION_HINT2">
 	<message xml:lang="en">Key position defined. Move the slider to define animation duration...</message>
@@ -5014,6 +5332,7 @@
 	<message xml:lang="cn">Key position defined. Move the slider to define animation duration...</message>
 	<message xml:lang="tw">Key position defined. Move the slider to define animation duration...</message>
 	<message xml:lang="sk">Kľučová pozícia definovaná. Ťahaním posuvníka nastavte dĺžku trvania animácie...</message>
+	<message xml:lang="ja">定義されたキーポジション。 スライダーを動かして、アニメーション持続時間を定義してください...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT1">
 	<message xml:lang="en">Select starting color of element...</message>
@@ -5029,6 +5348,7 @@
 	<message xml:lang="cn">Select starting color of element...</message>
 	<message xml:lang="tw">Select starting color of element...</message>
 	<message xml:lang="sk">Vyberte počiatočnú farbu prvku...</message>
+	<message xml:lang="ja">要素の始めの色をを選択してください...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT2">
 	<message xml:lang="en">Starting color defined. Move the slider to define animation duration...</message>
@@ -5044,6 +5364,7 @@
 	<message xml:lang="cn">Starting color defined. Move the slider to define animation duration...</message>
 	<message xml:lang="tw">Starting color defined. Move the slider to define animation duration...</message>
 	<message xml:lang="sk">Počiatočná farba definovaná. Ťahaním posuvníka nastavte dĺžku trvania animácie...</message>
+	<message xml:lang="ja">始めの色が定義されました。 スライダーを動かして、アニメーション持続時間を定義してください...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT3">
 	<message xml:lang="en">Select ending color...</message>
@@ -5059,6 +5380,7 @@
 	<message xml:lang="cn">Select ending color...</message>
 	<message xml:lang="tw">Select ending color...</message>
 	<message xml:lang="sk">Vyberte koncovú farbu...</message>
+	<message xml:lang="ja">終了時の色の選択...</message>
 </label>
 <label define="AM_SVGANIM_ANIM_DEFINED">
 	<message xml:lang="en">Animation defined.</message>
@@ -5074,6 +5396,7 @@
 	<message xml:lang="cn">Animation defined.</message>
 	<message xml:lang="tw">Animation defined.</message>
 	<message xml:lang="sk">Animacia definovaná.</message>
+	<message xml:lang="ja">定義されたアニメーション。</message>
 </label>
 <label define="AM_SVGANIM_ANIMATED_ATTR">
 	<message xml:lang="en">Animated attribute</message>
@@ -5089,6 +5412,7 @@
 	<message xml:lang="cn">Animated attribute</message>
 	<message xml:lang="tw">Animated attribute</message>
 	<message xml:lang="sk">Animovaný atribút</message>
+	<message xml:lang="ja">アニメ－ションの属性</message>
 </label>
 <label define="AM_SVGANIM_NO_ID">
 	<message xml:lang="en">Element without ID</message>
@@ -5104,6 +5428,7 @@
 	<message xml:lang="cn">Element without ID</message>
 	<message xml:lang="tw">Element without ID</message>
 	<message xml:lang="sk">Prvok bez ID</message>
+	<message xml:lang="ja">ID なしの要素</message>
 </label>
 <label define="ADD_ID">
 	<message xml:lang="en">Add ID</message>
@@ -5117,6 +5442,7 @@
 	<message xml:lang="cn">添加 ID</message>
 	<message xml:lang="tw">添加 ID</message>
 	<message xml:lang="sk">Pridať ID</message>
+	<message xml:lang="ja">ID の追加</message>
 </label>
 <label define="REMOVE_ID">
 	<message xml:lang="en">Remove ID</message>
@@ -5130,6 +5456,7 @@
 	<message xml:lang="cn">删除 ID</message>
 	<message xml:lang="tw">刪除 ID</message>
 	<message xml:lang="sk">Odstrániť ID</message>
+	<message xml:lang="ja">ID の削除</message>
 </label>
 <label define="ADD_REMOVE_ID">
 	<message xml:lang="en">Add/Remove IDs</message>
@@ -5143,6 +5470,7 @@
 	<message xml:lang="cn">添加/删除 ID</message>
 	<message xml:lang="tw">添加/刪除 ID</message>
 	<message xml:lang="sk">Pridať/odstrániť ID</message>
+	<message xml:lang="ja">IDの追加と削除</message>
 </label>
 <label define="APPLY_OPERATION">
 	<message xml:lang="en">Apply operation</message>
@@ -5156,6 +5484,7 @@
 	<message xml:lang="cn">应用操作</message>
 	<message xml:lang="tw">應用操作</message>
 	<message xml:lang="sk">Aplikovať operáciu</message>
+	<message xml:lang="ja">適用範囲</message>
 </label>
 <label define="ENTER_ELEMENT_NAME">
 	<message xml:lang="en">Enter an element name</message>
@@ -5169,6 +5498,7 @@
 	<message xml:lang="cn">输入元素名称</message>
 	<message xml:lang="tw">輸入元素名稱</message>
 	<message xml:lang="sk">Zadajte meno prvku</message>
+	<message xml:lang="ja">要素名を入力</message>
 </label>
 <label define="AM_LOAD_CSS">
 	<message xml:lang="en">Apply CSS</message>
@@ -5182,6 +5512,7 @@
 	<message xml:lang="cn">应用 CSS 样式表</message>
 	<message xml:lang="tw">應用 CSS 樣式表</message>
 	<message xml:lang="sk">Aplikovať CSS</message>
+	<message xml:lang="ja">CSS を適用</message>
 </label>
 <label define="AM_SCREEN_TYPE">
 	<message xml:lang="en">Current screen type</message>
@@ -5195,6 +5526,7 @@
 	<message xml:lang="cn">当前屏幕类型</message>
 	<message xml:lang="tw">當前屏幕類型</message>
 	<message xml:lang="sk">Súčasný typ obrazovky</message>
+	<message xml:lang="ja">現在のスクリーンタイプ</message>
 </label>
 <label define="AM_NEW_TOPIC">
 	<message xml:lang="en">New Topic</message>
@@ -5208,6 +5540,7 @@
 	<message xml:lang="cn">新建主题</message>
 	<message xml:lang="tw">新建主題</message>
 	<message xml:lang="sk">Nová téma</message>
+	<message xml:lang="ja">新しいトピック</message>
 </label>
 <label define="AM_BM_BPROPERTIES">
 	<message xml:lang="en">Bookmark Properties</message>
@@ -5221,6 +5554,7 @@
 	<message xml:lang="cn">书签属性</message>
 	<message xml:lang="tw">書簽屬性</message>
 	<message xml:lang="sk">Vlastnosti záložky</message>
+	<message xml:lang="ja">ブックマークのプロパティ</message>
 </label>
 <label define="AM_BM_TPROPERTIES">
 	<message xml:lang="en">Topic Properties</message>
@@ -5234,6 +5568,7 @@
 	<message xml:lang="cn">主题属性</message>
 	<message xml:lang="tw">主題屬性</message>
 	<message xml:lang="sk">Vlastnosti témy</message>
+	<message xml:lang="ja">トピックのプロパティー</message>
 </label>
 <label define="AM_BM_TOPIC_HIERARCHY">
 	<message xml:lang="en">Topic hierarchy:</message>
@@ -5247,6 +5582,7 @@
 	<message xml:lang="cn">Topic hierarchy:</message>
 	<message xml:lang="tw">Topic hierarchy:</message>
 	<message xml:lang="sk">Hierarchia tém:</message>
+	<message xml:lang="ja">トピックの階層構造:</message>
 </label>
 <label define="AM_BM_TITLE">
 	<message xml:lang="en">Title:</message>
@@ -5263,6 +5599,7 @@
 	<message xml:lang="cn">标题:</message>
 	<message xml:lang="tw">標題:</message>
 	<message xml:lang="sk">Názov:</message>
+	<message xml:lang="ja">タイトル:</message>
 </label>
 <label define="AM_BM_RECALLS">
 	<message xml:lang="en">Recalls:</message>
@@ -5276,6 +5613,7 @@
 	<message xml:lang="cn">Recalls:</message>
 	<message xml:lang="tw">Recalls:</message>
 	<message xml:lang="sk">Zmeny:</message>
+	<message xml:lang="ja">呼び出す:</message>
 </label>
 <label define="AM_BM_AUTHOR">
 	<message xml:lang="en">Author:</message>
@@ -5291,6 +5629,7 @@
 	<message xml:lang="cn">作者:</message>
 	<message xml:lang="tw">作者:</message>
 	<message xml:lang="sk">Autor:</message>
+	<message xml:lang="ja">著者:</message>
 </label>
 <label define="AM_BM_CREATED">
 	<message xml:lang="en">Created:</message>
@@ -5304,6 +5643,7 @@
 	<message xml:lang="cn">创建:</message>
 	<message xml:lang="tw">創建:</message>
 	<message xml:lang="sk">Vytvorené:</message>
+	<message xml:lang="ja">作成日時:</message>
 </label>
 <label define="AM_BM_MODIFIED">
 	<message xml:lang="en">Last modified:</message>
@@ -5317,6 +5657,7 @@
 	<message xml:lang="cn">最后更改:</message>
 	<message xml:lang="tw">最后更改:</message>
 	<message xml:lang="sk">Posledná zmena:</message>
+	<message xml:lang="ja">最後の変更の日時:</message>
 </label>
 <label define="AM_BM_DESCRIPTION">
 	<message xml:lang="en">Description:</message>
@@ -5330,6 +5671,7 @@
 	<message xml:lang="cn">描述:</message>
 	<message xml:lang="tw">描述:</message>
 	<message xml:lang="sk">Popis:</message>
+	<message xml:lang="ja">説明:</message>
 </label>
 <label define="AM_NO_SELECTION">
 	<message xml:lang="en">Please select an element</message>
@@ -5343,6 +5685,7 @@
 	<message xml:lang="cn">Please select an element</message>
 	<message xml:lang="tw">Please select an element</message>
 	<message xml:lang="sk">Vyberte prvok</message>
+	<message xml:lang="ja">要素を選択してください</message>
 </label>
 <label define="AM_ALL_CSS">
 	<message xml:lang="en">All CSS</message>
@@ -5356,6 +5699,7 @@
 	<message xml:lang="cn">所有 CSS 样式表</message>
 	<message xml:lang="tw">所有 CSS 樣式表</message>
 	<message xml:lang="sk">Všetky CSS pravidlá</message>
+	<message xml:lang="ja">全ての CSS</message>
 </label>
 <label define="AM_STYLE_APPLIED">
 	<message xml:lang="en">CSS style rules applied to the &lt;%s&gt; element\n</message>
@@ -5369,6 +5713,7 @@
 	<message xml:lang="cn">CSS样式被应用于 &lt;%s&gt; 元素\n</message>
 	<message xml:lang="tw">CSS樣式被應用于 &lt;%s&gt; 元素\n</message>
 	<message xml:lang="sk">CSS pravidlá aplikované na &lt;%s&gt; prvok\n</message>
+	<message xml:lang="ja">CSS スタイルルールが &lt;%s> 要素に適用されました\n</message>
 </label>
 <label define="AM_LINK_LINE">
 	<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
@@ -5382,6 +5727,7 @@
 	<message xml:lang="cn">Blue lines are links activated by a double (or a single) click\n</message>
 	<message xml:lang="tw">Blue lines are links activated by a double (or a single) click\n</message>
 	<message xml:lang="sk">Modré riadky sú prepojenia aktivovateľné dvojitým (alebo jednoduchým) kliknutím\n</message>
+	<message xml:lang="ja">青いラインは、シングルクリックもしくはダブルクリックでアクティブになっています\n</message>
 </label>
 <label define="AM_LOAD_OBJECTS">
 	<message xml:lang="en">Load objects (object, embed, iframe)</message>
@@ -5395,6 +5741,7 @@
 	<message xml:lang="cn">载入对象 (object, embed, iframe)</message>
 	<message xml:lang="tw">載入對象 (object, embed, iframe)</message>
 	<message xml:lang="sk">Načítať objekty (object, embed, iframe)</message>
+	<message xml:lang="ja">オブジェクトのロード (object, embed, iframe)</message>
 </label>
 <label define="AM_NO_STYLE_FOR_ELEM">
 	<message xml:lang="en">No style rule for this element</message>
@@ -5408,6 +5755,7 @@
 	<message xml:lang="cn">No style rule for this element</message>
 	<message xml:lang="tw">No style rule for this element</message>
 	<message xml:lang="sk">Pre tento prvok nie sú definované CSS pravidlá</message>
+	<message xml:lang="ja">この要素に対するスタイル規則がありません。</message>
 </label>
 <label define="AM_NO_INSERT_POINT">
 	<message xml:lang="en">No insert position defined. Please select first</message>
@@ -5421,6 +5769,7 @@
 	<message xml:lang="cn">No insert position defined. Please select first</message>
 	<message xml:lang="tw">No insert position defined. Please select first</message>
 	<message xml:lang="sk">Najskôr vyberte miesto pre aplikovanie voľby</message>
+	<message xml:lang="ja">挿入位置が未定義です。先に選択してください</message>
 </label>
 <label define="AM_DOCINFO_TITLE">
 	<message xml:lang="en">Document information</message>
@@ -5434,6 +5783,7 @@
 	<message xml:lang="cn">Document information</message>
 	<message xml:lang="tw">Document information</message>
 	<message xml:lang="sk">Informácie o dokumente</message>
+	<message xml:lang="ja">ドキュメントの情報</message>
 </label>
 <label define="AM_DOCINFO_TYPE">
 	<message xml:lang="en">Document Type</message>
@@ -5447,6 +5797,7 @@
 	<message xml:lang="cn">Document Type</message>
 	<message xml:lang="tw">Document Type</message>
 	<message xml:lang="sk">Typ dokumentu</message>
+	<message xml:lang="ja">ドキュメントの種類</message>
 </label>
 <label define="AM_DOCINFO_TYPEMIME">
 	<message xml:lang="en">MIME Type</message>
@@ -5460,6 +5811,7 @@
 	<message xml:lang="cn">MIME 类型</message>
 	<message xml:lang="tw">MIME 類型</message>
 	<message xml:lang="sk">MIME typ</message>
+	<message xml:lang="ja">MIME 型</message>
 </label>
 <label define="AM_DOCINFO_CHARSET">
 	<message xml:lang="en">Charset</message>
@@ -5473,6 +5825,7 @@
 	<message xml:lang="cn">字符集</message>
 	<message xml:lang="tw">字符集</message>
 	<message xml:lang="sk">Znaková sada</message>
+	<message xml:lang="ja">文字符号化</message>
 </label>
 <label define="AM_DOCINFO_CLENGTH">
 	<message xml:lang="en">Content Length</message>
@@ -5486,6 +5839,7 @@
 	<message xml:lang="cn">Content Length</message>
 	<message xml:lang="tw">Content Length</message>
 	<message xml:lang="sk">Dĺžka dokumentu</message>
+	<message xml:lang="ja">コンテンツの文字数</message>
 </label>
 <label define="AM_DOCINFO_CLOCATION">
 	<message xml:lang="en">Content Location</message>
@@ -5499,6 +5853,7 @@
 	<message xml:lang="cn">Content Location</message>
 	<message xml:lang="tw">Content Location</message>
 	<message xml:lang="sk">Umiestnenie obsahu</message>
+	<message xml:lang="ja">コンテンツの場所</message>
 </label>
 <label define="AM_DLGPREFERENCE_TITLE">
 	<message xml:lang="en">Preferences</message>
@@ -5515,6 +5870,7 @@
 	<message xml:lang="cn">使用偏好</message>
 	<message xml:lang="tw">使用偏好</message>
 	<message xml:lang="sk">Možnosti</message>
+	<message xml:lang="ja">設定</message>
 </label>
 <label define="AM_MEntity">
 	<message xml:lang="en">Character (&amp;xxx;)</message>
@@ -5531,6 +5887,7 @@
 	<message xml:lang="cn">Character (&amp;xxx;)</message>
 	<message xml:lang="tw">Character (&amp;xxx;)</message>
 	<message xml:lang="sk">Znak (&amp;xxx;)</message>
+	<message xml:lang="ja">文字 (&amp;xxx;)</message>
 </label>
 <label define="AM_NEWOBJECT">
 	<message xml:lang="en">Create Object</message>
@@ -5544,6 +5901,7 @@
 	<message xml:lang="cn">创建对象</message>
 	<message xml:lang="tw">創建對象</message>
 	<message xml:lang="sk">Vytvoriť objekt</message>
+	<message xml:lang="ja">オブジェクトの作成</message>
 </label>
 <label define="AM_DIRECTORY">
 	<message xml:lang="en">Directory</message>
@@ -5557,6 +5915,7 @@
 	<message xml:lang="cn">目录</message>
 	<message xml:lang="tw">目錄</message>
 	<message xml:lang="sk">Priečinok</message>
+	<message xml:lang="ja">ディレクトリ</message>
 </label>
 <label define="AM_FILE">
 	<message xml:lang="en">File</message>
@@ -5570,6 +5929,7 @@
 	<message xml:lang="cn">文件</message>
 	<message xml:lang="tw">文件</message>
 	<message xml:lang="sk">Súbor</message>
+	<message xml:lang="ja">ファイル</message>
 </label>
 <label define="AM_REPLACECURRENT">
 	<message xml:lang="en">Replace current</message>
@@ -5583,6 +5943,7 @@
 	<message xml:lang="cn">在当前位置</message>
 	<message xml:lang="tw">在當前位置</message>
 	<message xml:lang="sk">Nahradiť súčasný obsah</message>
+	<message xml:lang="ja">現在のページを置換</message>
 </label>
 <label define="AM_INNEWWINDOW">
 	<message xml:lang="en">In new Window</message>
@@ -5596,6 +5957,7 @@
 	<message xml:lang="cn">在新的窗口</message>
 	<message xml:lang="tw">在新的窗口</message>
 	<message xml:lang="sk">V novom okne</message>
+	<message xml:lang="ja">新しいウィンドウ</message>
 </label>
 <label define="AM_NOALIASING">
 	<message xml:lang="en">Anti-aliasing</message>
@@ -5612,6 +5974,7 @@
 	<message xml:lang="cn">Anti-aliasing</message>
 	<message xml:lang="tw">Anti-aliasing</message>
 	<message xml:lang="sk">Anti-aliasing</message>
+	<message xml:lang="ja">アンチエイリアス</message>
 </label>
 <label define="AM_DATE">
 	<message xml:lang="en">ISO format for date</message>
@@ -5625,6 +5988,7 @@
 	<message xml:lang="cn">ISO 格式日期</message>
 	<message xml:lang="tw">ISO 格式日期</message>
 	<message xml:lang="sk">Použiť ISO formát pre dátum</message>
+	<message xml:lang="ja">日付に ISO 形式を使用</message>
 </label>
 <label define="AM_NEWDOCLOC">
 	<message xml:lang="en">New documents location</message>
@@ -5638,6 +6002,7 @@
 	<message xml:lang="cn">新建文档的位置</message>
 	<message xml:lang="tw">新建文檔的位置</message>
 	<message xml:lang="sk">Nové umiestnenie dokumentu</message>
+	<message xml:lang="ja">新たなドキュメントの保存場所</message>
 </label>
 <label define="AM_OPENLOC">
 	<message xml:lang="en">Opening location</message>
@@ -5651,6 +6016,7 @@
 	<message xml:lang="cn">打开位置</message>
 	<message xml:lang="tw">打開位置</message>
 	<message xml:lang="sk">Odkazy otvárať</message>
+	<message xml:lang="ja">開く場所</message>
 </label>
 <label define="AM_WARNCTAB">
 	<message xml:lang="en">Warn when closing multiple tabs</message>
@@ -5664,6 +6030,7 @@
 	<message xml:lang="cn">关闭多个标签页是显示警告</message>
 	<message xml:lang="tw">關閉多個標簽頁是顯示警告</message>
 	<message xml:lang="sk">Varovať pri zatváraní viacerých kariet</message>
+	<message xml:lang="ja">複数のタブを閉じるときに警告する</message>
 </label>
 <label define="AM_MAXURLLIST">
 	<message xml:lang="en">Max url number in history</message>
@@ -5677,6 +6044,7 @@
 	<message xml:lang="cn">历史 URL 最大数量</message>
 	<message xml:lang="tw">歷史 URL 最大數量</message>
 	<message xml:lang="sk">Maximálny počet zapamätaných url adries</message>
+	<message xml:lang="ja">履歴のURL の最大数</message>
 </label>
 <label define="AM_CLEARURLLIST">
 	<message xml:lang="en">Clear url list</message>
@@ -5690,6 +6058,7 @@
 	<message xml:lang="cn">清空 URL 列表</message>
 	<message xml:lang="tw">清空 URL 列表</message>
 	<message xml:lang="sk">Vymazať zoznam url</message>
+	<message xml:lang="ja">URL のリストをクリア</message>
 </label>
 <label define="AM_SHOWSHORTCUTS">
 	<message xml:lang="en">Display all shortcuts</message>
@@ -5704,6 +6073,7 @@
 	<message xml:lang="cn">显示所有快捷键</message>
 	<message xml:lang="tw">顯示所有快捷鍵</message>
 	<message xml:lang="sk">Zobrazovať všetky prepojenia</message>
+	<message xml:lang="ja">全てのショートカットを表示</message>
 </label>
 <label define="AM_EXPORT_LENGTH">
 	<message xml:lang="en">Fixed line length (0 = default value)</message>
@@ -5717,6 +6087,7 @@
 	<message xml:lang="cn">固定行的长度 (0 为默认值)</message>
 	<message xml:lang="tw">固定行的長度 (0 為默認值)</message>
 	<message xml:lang="sk">Pevná dĺžka riadkov (0 = predvolená hodnota)</message>
+	<message xml:lang="ja">行の長さを固定 (0 = default value)</message>
 </label>
 <label define="AM_TEMPLATE">
 	<message xml:lang="en">Template</message>
@@ -5730,6 +6101,7 @@
 	<message xml:lang="cn">模板</message>
 	<message xml:lang="tw">模板</message>
 	<message xml:lang="sk">Šablóna</message>
+	<message xml:lang="ja">テンプレート</message>
 </label>
 <label define="AM_TEMPLATE_INSTANCE">
 	<message xml:lang="en">Save the document as...</message>
@@ -5743,6 +6115,7 @@
 	<message xml:lang="cn">文档另存为...</message>
 	<message xml:lang="tw">文檔另存為...</message>
 	<message xml:lang="sk">Uložiť dokument ako...</message>
+	<message xml:lang="ja">名前をつけて保存</message>
 </label>
 <label define="AM_BAD_TEMPLATE">
 	<message xml:lang="en">Template not found</message>
@@ -5756,6 +6129,7 @@
 	<message xml:lang="cn">未找到模板</message>
 	<message xml:lang="tw">未找到模板</message>
 	<message xml:lang="sk">Šablóna nebola nájdená</message>
+	<message xml:lang="ja">テンプレートが見つかりませんでした</message>
 </label>
 <label define="AM_SHOW_TEMPLATES">
 	<message xml:lang="en">Show template's boxes</message>
@@ -5769,6 +6143,7 @@
 	<message xml:lang="cn">显示模板</message>
 	<message xml:lang="tw">顯示模板</message>
 	<message xml:lang="sk">Zobraziť bloky šablón</message>
+	<message xml:lang="ja">テンプレートボックスの表示</message>
 </label>
 <label define="AM_CLOSE_WHEN_APPLY">
 	<message xml:lang="en">Apply closes the dialogue</message>
@@ -5781,6 +6156,7 @@
 	<message xml:lang="cn">应用后关闭对话框</message>
 	<message xml:lang="tw">應用后關閉對話框</message>
 	<message xml:lang="sk">Zatvoriť diálóg pos stlačení tlačidla Aplikuj</message>
+	<message xml:lang="ja">このダイアログを閉じます.</message>
 </label>
 <label define="AM_NOT_ALLOWED">
 	<message xml:lang="en">Not allowed</message>
@@ -5793,6 +6169,7 @@
 	<message xml:lang="cn">此文档禁止</message>
 	<message xml:lang="tw">此文檔禁止</message>
 	<message xml:lang="sk">Nie je dovolené</message>
+	<message xml:lang="ja">許可されていません</message>
 </label>
 <label define="AM_READONLY">
 	<message xml:lang="en">Protected element</message>
@@ -5805,6 +6182,7 @@
 	<message xml:lang="cn">被保护的元素</message>
 	<message xml:lang="tw">被保護的元素</message>
 	<message xml:lang="sk">Chránený prvok</message>
+	<message xml:lang="ja">保護された要素です</message>
 </label>
 <label define="AM_INVALID_INLINE">
 	<message xml:lang="en">The selection should not cross an element of this type</message>
@@ -5817,6 +6195,7 @@
 	<message xml:lang="cn">选择区域不应该跨域此类元素</message>
 	<message xml:lang="tw">選擇區域不應該跨域此類元素</message>
 	<message xml:lang="sk">Výber nemôže byť krížený prvkom tohto typu</message>
+	<message xml:lang="ja">この種類の要素をクロスすべきではありません</message>
 </label>
 <label define="AM_NO_HEADING_FOUND">
 	<message xml:lang="en">No heading found</message>
@@ -5829,6 +6208,7 @@
 	<message xml:lang="cn">No heading found</message>
 	<message xml:lang="tw">No heading found</message>
 	<message xml:lang="sk">Nebol nájdený nadpis</message>
+	<message xml:lang="ja">項目が見つかりませんでした</message>
 </label>
 <label define="AM_SAVE_ANYWAY">
 	<message xml:lang="en">Save anyway</message>
@@ -5841,6 +6221,7 @@
 	<message xml:lang="tw">強制保存</message>
 	<message xml:lang="sk">Napriek tomu uložiť</message>
 	<message xml:lang="ru">Сохранять в любом случае</message>
+	<message xml:lang="ja">とにかく保存する</message>
 </label>
 <label define="AM_NO_HOST">
 	<message xml:lang="en">Cannot locate host</message>
@@ -5853,6 +6234,7 @@
 	<message xml:lang="tw">無法定位主機</message>
 	<message xml:lang="sk">Neviem lokalizovať hostiteľa</message>
 	<message xml:lang="ru">Невозможно определить расположение хоста</message>
+	<message xml:lang="ja">host を配置できません</message>
 </label>
 <label define="AM_DOC_CHANGED">
 	<message xml:lang="en">Document has changed (412)</message>
@@ -5865,6 +6247,7 @@
 	<message xml:lang="tw">文檔已被改變 (412)</message>
 	<message xml:lang="sk">Dokument sa zmenil (412)</message>
 	<message xml:lang="ru">Документ изменился (412)</message>
+	<message xml:lang="ja">ドキュメントが変更されています (412)</message>
 </label>
 <label define="AM_CONFLICT">
 	<message xml:lang="en">Conflict with the current state of the resource</message>
@@ -5877,6 +6260,7 @@
 	<message xml:lang="tw">與當前資源的狀態沖突</message>
 	<message xml:lang="sk">Konflikt so súčasným stavom zdroja</message>
 	<message xml:lang="ru">Конфликт с текущим состоянием ресурса</message>
+	<message xml:lang="ja">現在のリソースの状態と競合しています</message>
 </label>
 <label define="AM_INVALID_SELECTION">
 	<message xml:lang="en">Invalid selection</message>
@@ -5889,6 +6273,7 @@
 	<message xml:lang="tw">無效選擇區域</message>
 	<message xml:lang="sk">Neplatný výber</message>
 	<message xml:lang="ru">Неправильный выбор</message>
+	<message xml:lang="ja">無効な選択です</message>
 </label>
 <label define="AM_INVALID_ELEMENT">
 	<message xml:lang="en">Unknown element</message>
@@ -5901,6 +6286,7 @@
 	<message xml:lang="sk">Neznámy prvok</message>
 	<message xml:lang="it">Elemento sconosciuto</message>
 	<message xml:lang="ru">Неизвестный элемент</message>
+	<message xml:lang="ja">未知の要素です</message>
 </label>
 <label define="AM_CHANGE_NUMBER">
 	<message xml:lang="en">%d updated elements</message>
@@ -5913,6 +6299,7 @@
 	<message xml:lang="sk">Počet aktualizovaných prvkov: %d </message>
 	<message xml:lang="it">%d elementi aggiornati</message>
 	<message xml:lang="ru">Обновлено % элементов</message>
+	<message xml:lang="ja">%d アップデートされた要素</message>
 </label>
 <label define="AM_MISSING_TITLE">
 	<message xml:lang="en">The title is mandatory</message>
@@ -5923,6 +6310,7 @@
 	<message xml:lang="hu">A cím kötelező</message>
 	<message xml:lang="sk">Je potrebné zadať názov</message>
 	<message xml:lang="ru">Указание названия является обязательным условием</message>
+	<message xml:lang="ja">タイトルは必須です</message>
 </label>
 <label define="AM_TEMPLATES">
 	<message xml:lang="en">Templates</message>
@@ -5933,6 +6321,7 @@
 	<message xml:lang="sk">Šablóny</message>
 	<message xml:lang="it">Modelli</message>
 	<message xml:lang="ru">Шаблоны</message>
+	<message xml:lang="ja">テンプレート</message>
 </label>
 <label define="AM_NUMBER_OCCUR">
 	<message xml:lang="en">Number of occurrences</message>
@@ -5943,6 +6332,7 @@
 	<message xml:lang="sk">Počet výskytov</message>
 	<message xml:lang="it">Numero di occorrenze</message>
 	<message xml:lang="ru">Количество случаев</message>
+	<message xml:lang="ja">発生数</message>
 </label>
 <label define="AM_NUMBER_OCCUR_HAVE_MAX">
 	<message xml:lang="en">Maximum number of occurrences reached</message>
@@ -5953,6 +6343,7 @@
 	<message xml:lang="sk">Maximálny počet dosiahnutých výskytov</message>
 	<message xml:lang="it">Raggiunto il massimo numero di occorrenze</message>
 	<message xml:lang="ru">Максимально разрешённое число случаев</message>
+	<message xml:lang="ja">最大発生数</message>
 </label>
 <label define="AM_NUMBER_OCCUR_HAVE_MIN">
 	<message xml:lang="en">Minimum number of occurrences reached</message>
@@ -5963,6 +6354,7 @@
 	<message xml:lang="sk">Manimálny počet dosiahnutých výskytov</message>
 	<message xml:lang="it">Raggiunto il minimo numero di occorrenze</message>
 	<message xml:lang="ru">Минимально разрешённое число случаев</message>
+	<message xml:lang="ja">最小発生数</message>
 </label>
 <label define="AM_WARNIDS">
 	<message xml:lang="en">Check duplicated IDs</message>
@@ -5973,6 +6365,7 @@
 	<message xml:lang="sk">Kontrolovať duplicitné ID</message>
 	<message xml:lang="it">Controllo ID duplicati</message>
 	<message xml:lang="ru">Проверять на дублирование ID</message>
+	<message xml:lang="ja">重複したIDをチェック</message>
 </label>
 <label define="AM_MATHPI">
 	<message xml:lang="en">Add the xsl stylesheet for MathML elements</message>
@@ -5983,6 +6376,7 @@
 	<message xml:lang="sk">Pridať XSL štýly pre prvky jazyka MathML</message>
 	<message xml:lang="it">Aggiungi il foglio di stile xsl per gli elementi MathML</message>
 	<message xml:lang="ru">Добавить каскадную таблицу стилей xsl для элементов MathML</message>
+	<message xml:lang="ja">MathML elements のための xsl stylesheet を追加してください</message>
 </label>
 <label define="AM_SELECT_OPERATOR_TITLE">
 	<message xml:lang="en">Insert operator</message>
@@ -5993,6 +6387,7 @@
 	<message xml:lang="sk">Vložiť operátor</message>
 	<message xml:lang="it">Inserisci l'operatore</message>
 	<message xml:lang="ru">Вставить оператор</message>
+	<message xml:lang="ja">オペレーターを挿入してください</message>
 </label>
 <label define="AM_SELECT_OPERATOR_LABEL">
 	<message xml:lang="en">Select the way the operator has to be displayed</message>
@@ -6003,6 +6398,7 @@
 	<message xml:lang="sk">Vyberte spôsob akým budú operátory zobrazené</message>
 	<message xml:lang="it">Scegli il modo in cui l'operatore viene visualizzato</message>
 	<message xml:lang="ru">Выбрать способ которым должен показываться оператор</message>
+	<message xml:lang="ja">オペレーターが表示されるべき方法を選択してください</message>
 </label>
 <label define="AM_SELECT_INTEGRAL_TITLE">
 	<message xml:lang="en">Insert an integral</message>
@@ -6013,6 +6409,7 @@
 	<message xml:lang="sk">Vložiť integrál</message>
 	<message xml:lang="it">Inserisci un integrale</message>
 	<message xml:lang="ru">Вставить интеграл</message>
+	<message xml:lang="ja">インテグラルを挿入</message>
 </label>
 <label define="AM_SELECT_INTEGRAL_LABEL">
 	<message xml:lang="en">Select the type of integral</message>
@@ -6023,6 +6420,7 @@
 	<message xml:lang="sk">Vyberte typ integrálu</message>
 	<message xml:lang="it">Scegli il tipo di integrale</message>
 	<message xml:lang="ru">Выбрать тип интеграла</message>
+	<message xml:lang="ja">インテグラルの種類を選択してください</message>
 </label>
 <label define="AM_SELECT_FENCE_TITLE">
 	<message xml:lang="en">Attributes of the fence</message>
@@ -6033,6 +6431,7 @@
 	<message xml:lang="sk">Atribúty ohraničenia</message>
 	<message xml:lang="it">Attributi dei delimitatori</message>
 	<message xml:lang="ru">Атрибуты рамки выделения объекта</message>
+	<message xml:lang="ja">"かこい"の属性</message>
 </label>
 <label define="AM_SELECT_FENCE_LABEL">
 	<message xml:lang="en">Select open, separator and close symbols</message>
@@ -6043,6 +6442,7 @@
 	<message xml:lang="sk">Vyberte otvoriť, oddelovače a ukončenie symbolov</message>
 	<message xml:lang="it">Scegli simboli di apertura, separazione e chiusura</message>
 	<message xml:lang="ru">Выбрать символы открыть, разделить, закрыть</message>
+	<message xml:lang="ja">オープンシンボルかセパレイタシンボル、クローズシンボルを選択してください</message>
 </label>
 <label define="AM_NUMBER_OPERATORS">
 	<message xml:lang="en">Number of operator symbols</message>
@@ -6053,6 +6453,7 @@
 	<message xml:lang="sk">Počet sybolov operátorov</message>
 	<message xml:lang="it">Numero di simboli operatore</message>
 	<message xml:lang="ru">Число символов оператора</message>
+	<message xml:lang="ja">演算子記号の数</message>
 </label>
 <label define="AM_NUMBER_COORDONNATES">
 	<message xml:lang="en">Number of coordinates</message>
@@ -6063,6 +6464,7 @@
 	<message xml:lang="sk">Počet koordinátov</message>
 	<message xml:lang="it">Numero di coordinate</message>
 	<message xml:lang="ru">Число координат</message>
+	<message xml:lang="ja">座標の数</message>
 </label>
 <label define="AM_NUMBER_NUPLE">
 	<message xml:lang="en">Length of the N-tuples</message>
@@ -6073,6 +6475,7 @@
 	<message xml:lang="sk">Dĺžka N-tuplov</message>
 	<message xml:lang="it">Lunghezza delle N-uple</message>
 	<message xml:lang="ru">Длина набора из n элементов</message>
+	<message xml:lang="ja">N-タプルの長さ</message>
 </label>
 <label define="AM_NUMBER_ELEMENTS">
 	<message xml:lang="en">Number of elements</message>
@@ -6083,6 +6486,7 @@
 	<message xml:lang="sk">Počet prvkov</message>
 	<message xml:lang="it">Numero di elementi</message>
 	<message xml:lang="ru">Число элементов</message>
+	<message xml:lang="ja">要素の数</message>
 </label>
 <label define="AM_NUMBER_VARIABLES">
 	<message xml:lang="en">Number of variables</message>
@@ -6093,6 +6497,7 @@
 	<message xml:lang="sk">Počet premenných</message>
 	<message xml:lang="it">Numbeo di variabili</message>
 	<message xml:lang="ru">Число переменных</message>
+	<message xml:lang="ja">変数の数</message>
 </label>
 <label define="AM_DEGREE">
 	<message xml:lang="en">Degree</message>
@@ -6103,6 +6508,7 @@
 	<message xml:lang="sk">Stupeň voľnosti</message>
 	<message xml:lang="it">Grado della variabile</message>
 	<message xml:lang="ru">Степень</message>
+	<message xml:lang="ja">程度</message>
 </label>
 <label define="AM_DEGREE_VARIABLE">
 	<message xml:lang="en">Degree of the variable number %d</message>
@@ -6113,6 +6519,7 @@
 	<message xml:lang="sk">Počet stupňov voľnosti premenných %d</message>
 	<message xml:lang="it">Grado della  variable numero %d</message>
 	<message xml:lang="ru">Степень числа переменной %d</message>
+	<message xml:lang="ja">可変数の程度 %d</message>
 </label>
 <label define="AM_COMPOUND_DOCUMENT">
 	<message xml:lang="en">Compound document</message>
@@ -6123,6 +6530,7 @@
 	<message xml:lang="sk">Zložený dokument</message>
 	<message xml:lang="it">Documento composto</message>
 	<message xml:lang="ru">Составной документ</message>
+	<message xml:lang="ja">ドキュメントを混ぜる</message>
 </label>
 <label define="AM_BCOPY_CSS">
 	<message xml:lang="en">Copy resources (styles and scripts)</message>
@@ -6133,6 +6541,7 @@
 	<message xml:lang="ru">Копировать ресурсы (стили и сценарии)</message>
 	<message xml:lang="de">Bezugsquelle kopieren (Stile und Skripte)</message>
 	<message xml:lang="hu">Erőforrások másolása (stílusok és szkriptek)</message>
+	<message xml:lang="ja">リソース（スタイルとスクリプト）をコピー</message>
 </label>
 <label define="AM_WHERE_RESOURCE">
 	<message xml:lang="en">Where to save resources</message>
@@ -6143,6 +6552,7 @@
 	<message xml:lang="ru">Место для сохранения ресурсов</message>
 	<message xml:lang="de">Speicherort der Bezugsquellen</message>
 	<message xml:lang="hu">Hova mentsük az erőforrásokat</message>
+	<message xml:lang="ja">リソースを保存する場所</message>
 </label>
 <label define="AM_WHERE_IMAGE">
 	<message xml:lang="en">Where to save images</message>
@@ -6153,6 +6563,7 @@
 	<message xml:lang="ru">Место для сохранения изображений</message>
 	<message xml:lang="de">Speicherort für Bilder</message>
 	<message xml:lang="hu">Hova mentsük a képeket</message>
+	<message xml:lang="ja">画像を保存する場所</message>
 </label>
 <label define="AM_QUICK_SAVE">
 	<message xml:lang="en">Document</message>
@@ -6163,6 +6574,7 @@
 	<message xml:lang="ru">Документ</message>
 	<message xml:lang="de">Dokument</message>
 	<message xml:lang="hu">Dokumentum</message>
+	<message xml:lang="ja">ドキュメント</message>
 </label>
 <label define="AM_EXTENSION">
 	<message xml:lang="en">Images, Styles and Scripts</message>
@@ -6173,6 +6585,7 @@
 	<message xml:lang="ru">Изображения, стили и сценарии</message>
 	<message xml:lang="de">Bilder, Stile und Skripte</message>
 	<message xml:lang="hu">Képek, stílusok és szkriptek</message>
+	<message xml:lang="ja">イメージ, スタイル, スクリプト</message>
 </label>
 <label define="AM_EMAILS">
 	<message xml:lang="en">Mail</message>
@@ -6183,6 +6596,7 @@
 	<message xml:lang="ru">Почта</message>
 	<message xml:lang="de">E-Mail</message>
 	<message xml:lang="hu">Elektronikus levél</message>
+	<message xml:lang="ja">メール</message>
 </label>
 <label define="AM_EMAILS_PROPERTIES">
 	<message xml:lang="en">Common parameters for sending mails:</message>
@@ -6193,6 +6607,7 @@
 	<message xml:lang="ru">Настройки почты:</message>
 	<message xml:lang="de">Grundeinstellungen für E-Mail versenden</message>
 	<message xml:lang="hu">Elektronikus levélküldés általános paraméterei:</message>
+	<message xml:lang="ja">送信メールの共通パラメータ:</message>
 </label>
 <label define="AM_EMAILS_SERVER_ADDRESS">
 	<message xml:lang="en">SMTP server address:</message>
@@ -6203,6 +6618,7 @@
 	<message xml:lang="ru">Адрес SMTP сервера:</message>
 	<message xml:lang="de">SMTP Server AdresseServer Port</message>
 	<message xml:lang="hu">SMTP kiszolgáló címe:</message>
+	<message xml:lang="ja">SMTP サーバアドレス:</message>
 </label>
 <label define="AM_EMAILS_SERVER_PORT">
 	<message xml:lang="en">Server port:</message>
@@ -6213,6 +6629,7 @@
 	<message xml:lang="ru">Порт сервера:</message>
 	<message xml:lang="de">Server Port</message>
 	<message xml:lang="hu">Kiszolgáló kapu:</message>
+	<message xml:lang="ja">サーバー　ポート:</message>
 </label>
 <label define="AM_EMAILS_SERVER_DEFPORT">
 	<message xml:lang="en">(25 by default)</message>
@@ -6223,6 +6640,7 @@
 	<message xml:lang="ru">(по умолчанию 25)</message>
 	<message xml:lang="de">(25 voreingestellt)</message>
 	<message xml:lang="hu">(alapértelmezett: 25 )</message>
+	<message xml:lang="ja">(デフォルトは25)</message>
 </label>
 <label define="AM_EMAILS_FROM_">
 	<message xml:lang="en">Sending address (From field):</message>
@@ -6233,6 +6651,7 @@
 	<message xml:lang="ru">Адрес отправителя (Из поля):</message>
 	<message xml:lang="de">Absender Adresse (From field):</message>
 	<message xml:lang="hu">Feladó címe (From mező):</message>
+	<message xml:lang="ja">送信元アドレス(From field):</message>
 </label>
 <label define="AM_EMAILS_TO_">
 	<message xml:lang="en">To:</message>
@@ -6243,6 +6662,7 @@
 	<message xml:lang="ru">Кому:</message>
 	<message xml:lang="de">An</message>
 	<message xml:lang="hu">Címzett:</message>
+	<message xml:lang="ja">送信先:</message>
 </label>
 <label define="AM_EMAILS_SEND_BY_MAIL">
 	<message xml:lang="en">Send by mail</message>
@@ -6253,6 +6673,7 @@
 	<message xml:lang="ru">Отправить по почте</message>
 	<message xml:lang="de">Per E-Mail versenden</message>
 	<message xml:lang="hu">Küldés elektronikus levélben</message>
+	<message xml:lang="ja">メールで送信</message>
 </label>
 <label define="AM_EMAILS_SUBJECT_">
 	<message xml:lang="en">Subject:</message>
@@ -6263,6 +6684,7 @@
 	<message xml:lang="ru">Тема:</message>
 	<message xml:lang="de">Betreff:</message>
 	<message xml:lang="hu">Tárgy:</message>
+	<message xml:lang="ja">件名:</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_">
 	<message xml:lang="en">Send as:</message>
@@ -6273,6 +6695,7 @@
 	<message xml:lang="ru">Отправить как:</message>
 	<message xml:lang="de">Versenden als:</message>
 	<message xml:lang="hu">Küldi:</message>
+	<message xml:lang="ja">送信元:</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_MESSAGE">
 	<message xml:lang="en">Message body</message>
@@ -6283,6 +6706,7 @@
 	<message xml:lang="ru">Тело сообщения</message>
 	<message xml:lang="de">Nachricht</message>
 	<message xml:lang="hu">Üzenet szövege</message>
+	<message xml:lang="ja">本文:</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_ATTACHMENT">
 	<message xml:lang="en">Attachment</message>
@@ -6293,6 +6717,7 @@
 	<message xml:lang="ru">Вложение</message>
 	<message xml:lang="de">Anhang</message>
 	<message xml:lang="hu">Melléklet</message>
+	<message xml:lang="ja">添付:</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_ZIP">
 	<message xml:lang="en">Zip archive</message>
@@ -6301,6 +6726,7 @@
 	<message xml:lang="hu">Zip</message>
 	<message xml:lang="es">Archivo zip</message>
 	<message xml:lang="it">Archivio Zip</message>
+	<message xml:lang="ja">ZIP, アーカイブ</message>
 </label>
 <label define="AM_EMAILS_DONT_SEND">
 	<message xml:lang="en">Don't send</message>
@@ -6311,6 +6737,7 @@
 	<message xml:lang="ru">Не отправлять</message>
 	<message xml:lang="de">Nicht senden</message>
 	<message xml:lang="hu">Ne küldje</message>
+	<message xml:lang="ja">送信しない</message>
 </label>
 <label define="AM_EMAILS_SEND">
 	<message xml:lang="en">Send</message>
@@ -6321,6 +6748,7 @@
 	<message xml:lang="ru">Отправить</message>
 	<message xml:lang="de">absenden</message>
 	<message xml:lang="hu">Küldés</message>
+	<message xml:lang="ja">送信する</message>
 </label>
 <label define="AM_EMAILS_NO_SERVER">
 	<message xml:lang="en">The server address and port must be set in Preferences</message>
@@ -6331,6 +6759,7 @@
 	<message xml:lang="ru">Адрес сервера и его порт должны быть указаны в настройках</message>
 	<message xml:lang="de">Die Server-Adresse und der Port müssen in den Einstellungen konfiguriert sein</message>
 	<message xml:lang="hu">A kiszolgáló címét és kapuját a Beállításoknál kell megadni</message>
+	<message xml:lang="ja">[設定]でサーバとポートの設定をしてください</message>
 </label>
 <label define="AM_EMAILS_MESSAGE_BODY">
 	<message xml:lang="en">Message:</message>
@@ -6341,6 +6770,7 @@
 	<message xml:lang="ru">Сообщение:</message>
 	<message xml:lang="de">Nachricht</message>
 	<message xml:lang="hu">Üzenet:</message>
+	<message xml:lang="ja">本文:</message>
 </label>
 <label define="AM_EMAILS_MESSAGE_ALTERN">
 	<message xml:lang="en">Alternate textual  message:</message>
@@ -6351,6 +6781,7 @@
 	<message xml:lang="ru">Альтернативное текстовое сообщение:</message>
 	<message xml:lang="de">alternative textbasierte Nachricht</message>
 	<message xml:lang="hu">Másik szövegüzenet:</message>
+	<message xml:lang="ja">代替テキストメッセージ</message>
 </label>
 <label define="AM_EMAILS_ERR_SERVER_RESPOND">
 	<message xml:lang="en">The server is unreachable or does not respond</message>
@@ -6361,6 +6792,7 @@
 	<message xml:lang="ru">Сервер недоступен или не отвечает</message>
 	<message xml:lang="de">Der Server ist nicht erreichbar oder antwortet nicht</message>
 	<message xml:lang="hu">A kiszolgáló elérhetetlen vagy nem válaszol</message>
+	<message xml:lang="ja">サーバが接続されていないか、応答がありません</message>
 </label>
 <label define="AM_EMAILS_ERR_SERVER_REJECT">
 	<message xml:lang="en">The server has reject you</message>
@@ -6371,6 +6803,7 @@
 	<message xml:lang="ru">Сервер отказал вам в соединении</message>
 	<message xml:lang="de">Der Server hat Sie nicht akzeptiert</message>
 	<message xml:lang="hu">A kiszolgáló elutasítja a kérést</message>
+	<message xml:lang="ja">サーバにアクセスを拒否されました</message>
 </label>
 <label define="AM_EMAILS_ERR_FROM_ADDR">
 	<message xml:lang="en">The sender address is misformatted</message>
@@ -6381,6 +6814,7 @@
 	<message xml:lang="ru">Адрес отправителя имеет неправильный формат</message>
 	<message xml:lang="de">Die Absender-Adresse ist falsch formatiert</message>
 	<message xml:lang="hu">A küldő címének formátuma érvénytelen</message>
+	<message xml:lang="ja">送信元アドレスの形式がおかしいです</message>
 </label>
 <label define="AM_EMAILS_ERR_RCPT_ADDR">
 	<message xml:lang="en">A recipient address is misformatted</message>
@@ -6391,6 +6825,7 @@
 	<message xml:lang="ru">Адрес получателся имеет неправильный формат</message>
 	<message xml:lang="de">Eine Empfänger-Adresse ist falsch formatiert</message>
 	<message xml:lang="hu">A címzett címének formátuma érvénytelen</message>
+	<message xml:lang="ja">受取人アドレスの形式がおかしいです</message>
 </label>
 <label define="AM_EMAILS_ERR_BAD_CONTENT">
 	<message xml:lang="en">The mail content is misformatted</message>
@@ -6401,6 +6836,7 @@
 	<message xml:lang="ru">Содержимое почты имеет неправильный формат</message>
 	<message xml:lang="de">Der Inhalt der Nachricht ist falsch formatiert</message>
 	<message xml:lang="hu">Az üzenet tartalma érvénytelen formátumú</message>
+	<message xml:lang="ja">メールの形式がおかしいです</message>
 </label>
 <label define="AM_EMAILS_ERR_UNKNOW">
 	<message xml:lang="en">Mail not sent</message>
@@ -6411,6 +6847,7 @@
 	<message xml:lang="ru">Почта не отправлена</message>
 	<message xml:lang="de">E-Mail wurde nicht gesendet</message>
 	<message xml:lang="hu">Üzenet nincs elküldve</message>
+	<message xml:lang="ja">メールは送信されませんでした</message>
 </label>
 <label define="AM_EMAILS_SENT">
 	<message xml:lang="en">Mail sent</message>
@@ -6421,6 +6858,7 @@
 	<message xml:lang="ru">Почта отправлена</message>
 	<message xml:lang="de">E-Mail wurde gesendet</message>
 	<message xml:lang="hu">Üzenet elküldve</message>
+	<message xml:lang="ja">メールは送信されました</message>
 </label>
 <label define="AM_PASSWORDS">
 	<message xml:lang="en">Passwords</message>
@@ -6431,6 +6869,7 @@
 	<message xml:lang="ru">Пароли</message>
 	<message xml:lang="de">Passwörter</message>
 	<message xml:lang="hu">Jelszavak</message>
+	<message xml:lang="ja">パスワード</message>
 </label>
 <label define="AM_PASSWORDS_SAVE">
 	<message xml:lang="en">Do you want Amaya to remember this password?</message>
@@ -6441,6 +6880,7 @@
 	<message xml:lang="ru">Запомнить пароль</message>
 	<message xml:lang="de">Wollen Sie, dass Amaya das Passwort speichert?</message>
 	<message xml:lang="hu">Jegyezze meg az Amaya a jelszót?</message>
+	<message xml:lang="ja">Amaya にこのパスワードを記憶させますか？</message>
 </label>
 <label define="AM_PASSWORDS_SAVE_OPTION">
 	<message xml:lang="en">Remember passwords for sites</message>
@@ -6450,6 +6890,7 @@
 	<message xml:lang="ru">Запоминать пароли для сайтов</message>
 	<message xml:lang="de">Passwörter für Sites speichern</message>
 	<message xml:lang="hu">Jegyezze meg a weblapok jelszavait</message>
+	<message xml:lang="ja">サイトのパスワードを忘れないでください</message>
 </label>
 <label define="AM_PASSWORDS_LIST">
 	<message xml:lang="en">Sites</message>
@@ -6460,6 +6901,7 @@
 	<message xml:lang="ru">Сайты</message>
 	<message xml:lang="de">Sites (alle Dateien)</message>
 	<message xml:lang="hu">Weblapok</message>
+	<message xml:lang="ja">サイト</message>
 </label>
 <label define="AM_PASSWORDS_EMPTY">
 	<message xml:lang="en">Remove all</message>
@@ -6470,6 +6912,7 @@
 	<message xml:lang="ru">Удалить все</message>
 	<message xml:lang="de">Alles entfernen</message>
 	<message xml:lang="hu">Mind törlése</message>
+	<message xml:lang="ja">すべて削除</message>
 </label>
 <label define="AM_JAVASCRIPT_CAN_NOT_BUILD">
 	<message xml:lang="en">An error occured during the building of the javascript/DOM objects</message>
@@ -6478,6 +6921,7 @@
 	<message xml:lang="de">Ein Fehler ist aufgetreten beim Aufbau des Javascript/DOM Objekts</message>
 	<message xml:lang="hu">Hiba a javascript/DOM objektum felépítése közben</message>
 	<message xml:lang="it">Si è verificato un errore mentre si caricavano oggetti di javascript/DOM</message>
+	<message xml:lang="ja">javascript/DOM オブジェクトのビルド中にエラーが発生しました</message>
 </label>
 <label define="AM_JAVASCRIPT_IS_RUNNING">
 	<message xml:lang="en">A script is still running but will be aborted as soon as possible. Please try later.</message>
@@ -6486,6 +6930,7 @@
 	<message xml:lang="de">Ein Skript wird noch ausgeführt, aber beendet sobald es möglich ist. Bitte später versuchen</message>
 	<message xml:lang="hu">A szkript még fut, de amint lehet, megszakítjuk. Próbálja később.</message>
 	<message xml:lang="it">E' in esecuzione uno script che si cercherà di fermare prima possibile. Per favore prova più tardi.</message>
+	<message xml:lang="ja">スクリプトはまだ動いています。しかし、可能な限り早く停止させます。後で試してください。</message>
 </label>
 <label define="AM_JAVASCRIPT_VIEW">
 	<message xml:lang="en">Javascript/DOM can not be enabled in this view.</message>
@@ -6494,6 +6939,7 @@
 	<message xml:lang="de">Javascript/DOM kann in dieser Ansichtsoption nicht aktiviert werden</message>
 	<message xml:lang="hu">A javascript/DOM nem engedélyezhető ebben a nézetben.</message>
 	<message xml:lang="it">Javascript/DOM non è disponibile in questa vista.</message>
+	<message xml:lang="ja">Javascript/DOM はこのビューで利用できません</message>
 </label>
 <label define="AM_JAVASCRIPT_ENTER_A_COMMAND">
 	<message xml:lang="en">Enter a javascript command:</message>
@@ -6502,6 +6948,7 @@
 	<message xml:lang="de">Geben Sie einen Javascript-Befehl ein</message>
 	<message xml:lang="hu">Adjon meg egy javascript parancsot:</message>
 	<message xml:lang="it">Inserisci un comando javascript:</message>
+	<message xml:lang="ja">javascript のコマンドを入力してください:</message>
 </label>
 <label define="AM_JAVASCRIPT_RETURNED_VALUE">
 	<message xml:lang="en">The command returned the value: %s</message>
@@ -6510,6 +6957,7 @@
 	<message xml:lang="de">Der Befehl wurde als Wert: %s ausgegeben</message>
 	<message xml:lang="hu">A parancs a következő értéket adta vissza: %s</message>
 	<message xml:lang="it">Il comando riporta il valore: %s</message>
+	<message xml:lang="ja">コマンドはこの値を返しました: %s</message>
 </label>
 <label define="AM_JAVASCRIPT_NO_RETURNED_VALUE">
 	<message xml:lang="en">The command returned no value</message>
@@ -6518,6 +6966,7 @@
 	<message xml:lang="de">Der Befehl hat keinen Wert ausgegeben</message>
 	<message xml:lang="hu">A parancs nem adott vissza értéket</message>
 	<message xml:lang="it">Il comando riporta nessun valore</message>
+	<message xml:lang="ja">コマンド値を返しませんでした</message>
 </label>
 <label define="AM_JAVASCRIPT_SCRIPT_ERROR">
 	<message xml:lang="en">SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s</message>
@@ -6526,6 +6975,7 @@
 	<message xml:lang="de">SpyderMonkey hat folgenden Fehler ausgegeben:\n\nFile: %s\nLine: %d\n\n%s</message>
 	<message xml:lang="hu">A SpiderMonkey a következő hibát adta vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
 	<message xml:lang="it">SpiderMonkey riporta il seguente errore:\n\nFile: %s\nLine: %d\n\n%s</message>
+	<message xml:lang="ja">SpiderMonkey は次のエラーを返しました:\n\nファイル: %s\n行: %d\n\n%s</message>
 </label>
 <label define="AM_NEW">
 	<message xml:lang="en">New</message>
@@ -6542,6 +6992,7 @@
 	<message xml:lang="cn">新建</message>
 	<message xml:lang="tw">新建</message>
 	<message xml:lang="sk">Nový</message>
+	<message xml:lang="ja">新規</message>
 </label>
 <label define="AM_AUI_FREE_PANEL_POS">
 	<message xml:lang="en">Customizable</message>
@@ -6550,6 +7001,7 @@
 	<message xml:lang="de">Anpassen</message>
 	<message xml:lang="hu">Egyedi</message>
 	<message xml:lang="it">Personalizzabile</message>
+	<message xml:lang="ja">カスタマイズ可能</message>
 </label>
 <label define="AM_CREATE">
 	<message xml:lang="en">Create</message>
@@ -6560,6 +7012,7 @@
 	<message xml:lang="pt">Create</message>
 	<message xml:lang="fi">Luo</message>
 	<message xml:lang="hu">Létrehozása</message>
+	<message xml:lang="ja">作成</message>
 </label>
 <label define="AM_CREATE_BY_CLICK">
 	<message xml:lang="en">Create the link by click</message>
@@ -6568,6 +7021,7 @@
 	<message xml:lang="de">Den Verweis durch anklicken herstellen</message>
 	<message xml:lang="hu">Kapocs létrehozása kattintással</message>
 	<message xml:lang="it">Creare il collegamento con un click</message>
+	<message xml:lang="ja">クリックでリンクを作成</message>
 </label>
 <label define="AM_DELETE_LINK">
 	<message xml:lang="en">Delete link</message>
@@ -6584,6 +7038,7 @@
 	<message xml:lang="cn">删除 anchor</message>
 	<message xml:lang="tw">刪除 anchor</message>
 	<message xml:lang="sk">Odstrániť odkaz</message>
+	<message xml:lang="ja">リンクを削除</message>
 </label>
 <label define="AM_REMOVE_XTIGER">
 	<message xml:lang="en">Save without template</message>
@@ -6592,6 +7047,7 @@
 	<message xml:lang="de">Speichern ohne Vorlage</message>
 	<message xml:lang="hu">Mentés sablon nélkül</message>
 	<message xml:lang="it">Salvare senza template</message>
+	<message xml:lang="ja">テンプレートなしで保存</message>
 </label>
 <label define="AM_USE_THEME">
 	<message xml:lang="en">With theme ...</message>
@@ -6600,6 +7056,7 @@
 	<message xml:lang="de">Mit Thema...</message>
 	<message xml:lang="hu">Témával ...</message>
 	<message xml:lang="it">Con il tema ...</message>
+	<message xml:lang="ja">テーマ...</message>
 </label>
 <label define="AM_MAX_WIDTH">
 	<message xml:lang="en">Full width</message>
@@ -6608,6 +7065,7 @@
 	<message xml:lang="de">Ganze Breite</message>
 	<message xml:lang="hu">Teljes szélesség</message>
 	<message xml:lang="it">Larghezza intera</message>
+	<message xml:lang="ja">最大幅</message>
 </label>
 <label define="AM_CAPTION">
 	<message xml:lang="en">With caption</message>
@@ -6616,6 +7074,7 @@
 	<message xml:lang="de">Mit Titel</message>
 	<message xml:lang="hu">Felirattal</message>
 	<message xml:lang="it">Con intestazione</message>
+	<message xml:lang="ja">見出し</message>
 </label>
 <label define="AM_SIZE">
 	<message xml:lang="en">Size</message>
@@ -6624,6 +7083,7 @@
 	<message xml:lang="de">Grösse</message>
 	<message xml:lang="hu">Méret</message>
 	<message xml:lang="it">Grandezza</message>
+	<message xml:lang="ja">サイズ</message>
 </label>
 <label define="AM_POSITION">
 	<message xml:lang="en">Position</message>
@@ -6632,6 +7092,7 @@
 	<message xml:lang="de">Position</message>
 	<message xml:lang="hu">Helyzet</message>
 	<message xml:lang="it">Posizione</message>
+	<message xml:lang="ja">位置</message>
 </label>
 <label define="AM_XML_EDIT">
 	<message xml:lang="en">XML editing mode</message>
@@ -6640,54 +7101,61 @@
 	<message xml:lang="de">XML Bearbeiten Betriebsart</message>
 	<message xml:lang="hu">XML szerkesztési mód</message>
 	<message xml:lang="it">Modalità di editing XML</message>
+	<message xml:lang="ja">XML 編集モード</message>
 </label>
 <label define="AM_PANEL_STYLE_LIST">
 	<message xml:lang="en">List of style sheets</message>
 	<message xml:lang="fr">Liste des styles</message>
-<message xml:lang="es">Lista de hojas de estilo</message>
-<message xml:lang="it">Elenco dei fogli di stile</message>
-<message xml:lang="de">Liste der Dokumentenvorlagen</message>
-<message xml:lang="hu">Stíluslapok listája</message>
+	<message xml:lang="es">Lista de hojas de estilo</message>
+	<message xml:lang="it">Elenco dei fogli di stile</message>
+	<message xml:lang="de">Liste der Dokumentenvorlagen</message>
+	<message xml:lang="hu">Stíluslapok listája</message>
+	<message xml:lang="ja">スタイルシートのリスト</message>
 </label>
 <label define="AM_PANEL_CSS_ADD">
 	<message xml:lang="en">Add a style sheet...</message>
 	<message xml:lang="fr">Ajouter une feuille de style...</message>
-<message xml:lang="es">Añadir hoja de estilo ...</message>
-<message xml:lang="it">Aggiungi un foglio di stile...</message>
-<message xml:lang="de">Eine Dokumentenvorlage hinzufügen...</message>
-<message xml:lang="hu">Stíluslap hozzáadása...</message>
+	<message xml:lang="es">Añadir hoja de estilo ...</message>
+	<message xml:lang="it">Aggiungi un foglio di stile...</message>
+	<message xml:lang="de">Eine Dokumentenvorlage hinzufügen...</message>
+	<message xml:lang="hu">Stíluslap hozzáadása...</message>
+	<message xml:lang="ja">スタイルシートを追加...</message>
 </label>
 <label define="AM_PANEL_CSS_REM">
 	<message xml:lang="en">Remove selected style sheets</message>
 	<message xml:lang="fr">Retirer les styles sélectionnées</message>
-<message xml:lang="es">Eliminar hojas de estilo seleccionadas</message>
-<message xml:lang="it">Rimuovi il foglio di stile selezionato</message>
-<message xml:lang="de">Die ausgewählte Vorlage löschen</message>
-<message xml:lang="hu">Kijelölt stíluslapok eltávolítása</message>
+	<message xml:lang="es">Eliminar hojas de estilo seleccionadas</message>
+	<message xml:lang="it">Rimuovi il foglio di stile selezionato</message>
+	<message xml:lang="de">Die ausgewählte Vorlage löschen</message>
+	<message xml:lang="hu">Kijelölt stíluslapok eltávolítása</message>
+	<message xml:lang="ja">選択されたスタイルシートを削除</message>
 </label>
 <label define="AM_PANEL_CSS_ACTIVE">
 	<message xml:lang="en">Activate selected style sheets</message>
 	<message xml:lang="fr">Activer les feuilles de style sélectionnées</message>
-<message xml:lang="es">Activar hojas de estilo seleccionadas</message>
-<message xml:lang="it">Attiva il foglio di stile selezionato</message>
-<message xml:lang="de">Die ausgewählte Vorlage aktivieren</message>
-<message xml:lang="hu">Kijelölt stíluslapok aktiválása</message>
+	<message xml:lang="es">Activar hojas de estilo seleccionadas</message>
+	<message xml:lang="it">Attiva il foglio di stile selezionato</message>
+	<message xml:lang="de">Die ausgewählte Vorlage aktivieren</message>
+	<message xml:lang="hu">Kijelölt stíluslapok aktiválása</message>
+	<message xml:lang="ja">選択されたスタイルシートをアクティブにする</message>
 </label>
 <label define="AM_PANEL_CSS_DISACTIVE">
 	<message xml:lang="en">Desactivate selected style sheets</message>
 	<message xml:lang="fr">Désactiver les feuilles de style sélectionnées</message>
-<message xml:lang="es">Desactivar hojas de estilo seleccionadas</message>
-<message xml:lang="it">Disattiva il foglio di stile selezionato</message>
-<message xml:lang="de">Die ausgewählte Vorlage ausschalten</message>
-<message xml:lang="hu">Kijelölt stíluslapok deaktiválása</message>
+	<message xml:lang="es">Desactivar hojas de estilo seleccionadas</message>
+	<message xml:lang="it">Disattiva il foglio di stile selezionato</message>
+	<message xml:lang="de">Die ausgewählte Vorlage ausschalten</message>
+	<message xml:lang="hu">Kijelölt stíluslapok deaktiválása</message>
+	<message xml:lang="ja">選択されたスタイルシートのアクティブを解除する</message>
 </label>
 <label define="AM_PANEL_CSS_OPEN">
 	<message xml:lang="en">Open selected style sheets</message>
 	<message xml:lang="fr">Ouvir les feuilles de style sélectionnées</message>
-<message xml:lang="es">Abrir hojas de estilo selecc</message>
-<message xml:lang="it">Apri il foglio di stile selezionato</message>
-<message xml:lang="de">Die ausgewählte Vorlage öffnen</message>
-<message xml:lang="hu">Kijelölt stíluslapok megnyitása</message>
+	<message xml:lang="es">Abrir hojas de estilo selecc</message>
+	<message xml:lang="it">Apri il foglio di stile selezionato</message>
+	<message xml:lang="de">Die ausgewählte Vorlage öffnen</message>
+	<message xml:lang="hu">Kijelölt stíluslapok megnyitása</message>
+	<message xml:lang="ja">選択されたスタイルシートを開く</message>
 </label>
 <label define="AM_PROFILE">
 	<message xml:lang="en">Amaya profile:</message>
@@ -6703,64 +7171,71 @@
 	<message xml:lang="cn">Amaya profile:</message>
 	<message xml:lang="tw">Amaya profile:</message>
 	<message xml:lang="sk">Profil Amaya:</message>
+	<message xml:lang="ja">Amaya プロフィール:</message>
 </label>
 <label define="AM_SHOW_TIPS_STARTUP">
 	<message xml:lang="en">Show "Tip of the day" at startup</message>
 	<message xml:lang="fr">Afficher le "Conseil du jour" au démarrage</message>
-<message xml:lang="es">Mostrar "Sugerencia del día" al iniciar el programa</message>
-<message xml:lang="de">"Tip des Tages" bei Programmstart anzeigen</message>
-<message xml:lang="hu">A nap tippje" induláskor</message>
+	<message xml:lang="es">Mostrar "Sugerencia del día" al iniciar el programa</message>
+	<message xml:lang="de">"Tip des Tages" bei Programmstart anzeigen</message>
+	<message xml:lang="hu">A nap tippje" induláskor</message>
+	<message xml:lang="ja">"今日のTips" を起動時に表示する</message>
 </label>
 <label define="AM_CHOOSE_FONT">
-<message xml:lang="en">Choose font family and size:</message>
-<message xml:lang="fr">Choisissez la police de caractères :</message>
-<message xml:lang="es">Elija Fuente y tamaño:</message>
-<message xml:lang="de">Schriftart - und Größe wählen:</message>
-<message xml:lang="hu">Válasszon betűkészletet és -méretet</message>
+	<message xml:lang="en">Choose font family and size:</message>
+	<message xml:lang="fr">Choisissez la police de caractères :</message>
+	<message xml:lang="es">Elija Fuente y tamaño:</message>
+	<message xml:lang="de">Schriftart - und Größe wählen:</message>
+	<message xml:lang="hu">Válasszon betűkészletet és -méretet</message>
+	<message xml:lang="ja">フォントとサイズを選択してください:</message>
 </label>
 <label define="AM_TEMPLATE_HAS_ERROR">
-<message xml:lang="en">Template has error(s), it will not be used:</message>
-<message xml:lang="fr">Le modèle a des erreurs, il ne sera pas utilisé:</message>
+	<message xml:lang="en">Template has error(s), it will not be used:</message>
+	<message xml:lang="fr">Le modèle a des erreurs, il ne sera pas utilisé:</message>
+	<message xml:lang="ja">テンプレートがエラーを含んでいます, 使用できません:</message>
 </label>
 <label define="AM_CLOSE">
-<message xml:lang="en">Close</message>
-<message xml:lang="fr">Fermer</message>
+	<message xml:lang="en">Close</message>
+	<message xml:lang="fr">Fermer</message>
+	<message xml:lang="ja">閉じる</message>
 </label>
 <label define="AM_TEMPLATE_ERR_MULTICOMP">
-<message xml:lang="en">Component '%s' has multiple definition.</message>
-<message xml:lang="fr">Le composant '%s' a une définition multiple.</message>
+	<message xml:lang="en">Component '%s' has multiple definition.</message>
+	<message xml:lang="fr">Le composant '%s' a une définition multiple.</message>
+	<message xml:lang="ja">コンポーネント '%s' は複数定義されています</message>
 </label>
 <label define="AM_TEMPLATE_ERR_BADLIB">
-<message xml:lang="en">Library '%s' can not be loaded.</message>
-<message xml:lang="fr">La bibliothèque '%s' ne peut être chargée.</message>
+	<message xml:lang="en">Library '%s' can not be loaded.</message>
+	<message xml:lang="fr">La bibliothèque '%s' ne peut être chargée.</message>
+	<message xml:lang="ja">ライブラリ '%s' を読み込めません</message>
 </label>
 <label define="AM_TEMPLATE_ERR_INSTANCE">
-<message xml:lang="en">Can not convert an instance document to template.</message>
-<message xml:lang="fr">Conversion d'une instance en modèle impossible.</message>
+	<message xml:lang="en">Can not convert an instance document to template.</message>
+	<message xml:lang="fr">Conversion d'une instance en modèle impossible.</message>
 </label>
 <label define="AM_TEMPLATE_ERR_TEMPLATE">
-<message xml:lang="en">The document is already a template.</message>
-<message xml:lang="fr">Le document est déjà un modèle.</message>
+	<message xml:lang="en">The document is already a template.</message>
+	<message xml:lang="fr">Le document est déjà un modèle.</message>
 </label>
 <label define="AM_TEMPLATE_ERR_CREATION">
-<message xml:lang="en">Error in template creation:</message>
-<message xml:lang="fr">Erreur pendant la création du modèle:</message>
+	<message xml:lang="en">Error in template creation:</message>
+	<message xml:lang="fr">Erreur pendant la création du modèle:</message>
 </label>
 <label define="AM_TEMPLATE_USESTRING">
-<message xml:lang="en">Text box</message>
-<message xml:lang="fr">Zone de texte</message>
+	<message xml:lang="en">Text box</message>
+	<message xml:lang="fr">Zone de texte</message>
 </label>
 <label define="AM_TEMPLATE_USESTRING_LABEL">
-<message xml:lang="en">Text box label:</message>
-<message xml:lang="fr">Nom de la zone de texte:</message>
+	<message xml:lang="en">Text box label:</message>
+	<message xml:lang="fr">Nom de la zone de texte:</message>
 </label>
 <label define="AM_TEMPLATE_BAGANY">
-<message xml:lang="en">Free editing box</message>
-<message xml:lang="fr">Zone d'édition libre</message>
+	<message xml:lang="en">Free editing box</message>
+	<message xml:lang="fr">Zone d'édition libre</message>
 </label>
 <label define="AM_TEMPLATE_BAGANY_LABEL">
-<message xml:lang="en">Free editing box label:</message>
-<message xml:lang="fr">Nom de la zone d'édition libre:</message>
+	<message xml:lang="en">Free editing box label:</message>
+	<message xml:lang="fr">Nom de la zone d'édition libre:</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
