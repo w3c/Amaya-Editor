@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\..\wxWidgets\src\jpeg" /I "..\..\..\wxWidgets\src\png" /I "..\..\libpng\zlib" /D "NDEBUG" /D "__STDC_HEADERS" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /D "JCONFIG_INCLUDED" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\..\wxWidgets\src\jpeg" /I "..\..\..\wxWidgets\src\png" /I "..\..\..\wxWidgets\src\zlib" /D "NDEBUG" /D "__STDC_HEADERS" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /D "JCONFIG_INCLUDED" /YX /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MDd /W3 /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\..\wxWidgets\src\jpeg" /I "..\..\..\wxWidgets\src\png" /I "..\..\libpng\zlib" /D "_DEBUG" /D "_WINDOWS_DLL" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /YX /FD /c
+# ADD CPP /nologo /MDd /W3 /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\..\wxWidgets\src\jpeg" /I "..\..\..\wxWidgets\src\png" /I "..\..\..\wxWidgets\src\zlib" /D "_DEBUG" /D "_WINDOWS_DLL" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /YX /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
