@@ -107,7 +107,7 @@ char *EscapeURL (const char *url)
       par_len = strlen (param);
       if (strncmp (url, server, len) ||
           // or already included
-          url_len < 4 |
+          url_len < 4 ||
           strncmp (&url[url_len-4], ".jsp", 4))
         // it's not necessary to add these parameters
         par_len = 0;
