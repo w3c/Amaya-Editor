@@ -4586,9 +4586,9 @@ static void ExportXmlText (Document doc, PtrTextBuffer pBT, ThotBool lineBreak,
       while (i < b->BuLength && b->BuContent[i] != EOS)
         {
           c = (wchar_t) b->BuContent[i];
-          if (c == SPACE && i == b->BuLength-1)
+          /*if (c == SPACE && i == b->BuLength-1)
             PutChar (EOL, fnum, NULL, doc, lineBreak, translate, entityName);
-          else
+            else*/
             PutChar (c, fnum, NULL, doc, lineBreak, translate, entityName);
           /* Next character */
           i++;

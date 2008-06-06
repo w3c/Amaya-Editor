@@ -47,12 +47,8 @@ DEFAULT
    VertRef: * . Left;
    Width: auto;
    Height: Enclosed . Height;
-   VertPos: HRef = Previous . HRef;
-   HorizPos: Left = Previous . Right;
-{
    VertPos: Top = Previous . Bottom;
    HorizPos: Left = Enclosing . Left;
-}
    Hyphenate: Enclosing =;
    LineSpacing: Enclosing =;
    LineWeight: Enclosing =;

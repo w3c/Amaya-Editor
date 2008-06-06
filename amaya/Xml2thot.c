@@ -1217,7 +1217,7 @@ void InsertXmlElement (Element *el)
             TtaInsertFirstChild (el, XMLcontext.lastElement, XMLcontext.doc);
         }
 
-      if (*el != NULL)
+      if (*el)
         {
           XMLcontext.lastElement = *el;
           XMLcontext.lastElementClosed = FALSE;
@@ -2640,7 +2640,9 @@ void PutInXmlElement (char *data, int length)
                     elType = TtaGetElementType (XMLcontext.lastElement);
                     insSibling = (elType.ElTypeNum != XML_EL_xmlbr);
                     if (!insSibling)
+                      {
                       elText = XMLcontext.lastElement;
+                      }
                   }
                 if (insSibling)
                   {
@@ -2662,7 +2664,8 @@ void PutInXmlElement (char *data, int length)
                     // replace the empty element by a text unit
                     TtaChangeTypeOfElement (elText, XMLcontext.doc, XML_EL_TEXT_UNIT);
                     XmlSetElemLineNumber (elText);
-                    // TtaInsertFirstChild (&elText, XMLcontext.lastElement, XMLcontext.doc);
+                    XMLcontext.lastElement = elText;
+                    XMLcontext.lastElementClosed = FALSE;
                     TtaSetTextContent (elText, (unsigned char *)"\n",
                                        XMLcontext.language, XMLcontext.doc);
                     TtaAppendTextContent (XMLcontext.lastElement,

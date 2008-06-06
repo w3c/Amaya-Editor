@@ -494,7 +494,7 @@ Document IsDocumentLoaded (const char *documentURL, const char *form_data)
   /* look for the URL into the list of downloaded documents */
   while (!found && i < DocumentTableLength)
     {
-      if (DocumentURLs[i] && DocumentTypes[i] != docTemplate)
+      if (DocumentURLs[i] && DocumentTypes[i] != docTemplate && DocumentMeta[i])
         {
           /* compare the url */
           found = (!strcmp (documentURL, DocumentURLs[i]) ||
