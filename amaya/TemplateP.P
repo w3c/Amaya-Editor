@@ -206,6 +206,7 @@ BOXES
 		Visibility: 0;
 	END;
 
+#ifdef INSTANCE
  BagButton: BEGIN
 	Content: Picture 'add.png';
 	HorizPos: Left = Enclosing . Left;
@@ -219,7 +220,23 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
+#else
+ BagButton: BEGIN
+	Content: Picture 'xtigerbag.png';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top - 12 px;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+#endif
 
+#ifdef INSTANCE
  BagUse: BEGIN
 	Content: Picture 'add.png';
 	HorizPos: Left = Previous . Left;
@@ -233,12 +250,13 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
+#endif
 
  OptionButton: BEGIN
 	Content: Picture 'option.png';
   HorizRef: * . Bottom;
 	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top - 5 px;
+	VertPos: Top = Enclosing . Top - 10 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -249,6 +267,7 @@ BOXES
 		Visibility: 0;
 	END;
 
+#ifdef INSTANCE
  RepeatButton: BEGIN
 	Content: Picture 'add.png';
 	HorizPos: Left = Enclosing . Left;
@@ -262,7 +281,23 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
+#else
+ RepeatButton: BEGIN
+	Content: Picture 'xtigerrepeat.png';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top - 20 px;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+#endif
 
+#ifdef INSTANCE
  RepeatUse: BEGIN
 	Content: Picture 'add.png';
 	HorizPos: Left = Previous . Left;
@@ -276,6 +311,7 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
+#endif
 
 RULES
  Document:
@@ -367,7 +403,9 @@ RULES
 
   head:
     BEGIN
+#ifdef INSTANCE
     Visibility: 0;
+#endif
 	  CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
@@ -384,6 +422,9 @@ RULES
     
   component:
 		BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
@@ -420,11 +461,14 @@ RULES
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
 		  END;
+#endif
 	 END;
 
   union:
 		BEGIN
+#ifdef INSTANCE
 		Visibility: 0;
+#else
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
   	IN Structure_view BEGIN
@@ -433,6 +477,7 @@ RULES
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
 		  END;
+#endif
 	 END;
 
   attribute:
@@ -493,6 +538,12 @@ RULES
   useEl:	
 		BEGIN
     CreateBefore(ElementName);
+#ifdef INSTANCE
+    if immediately within repeat
+      CreateAfter(RepeatUse);
+    if immediately within bag
+      CreateAfter(BagUse);
+#endif
     if empty
 	     CreateFirst(UseButton);
   	CreateWith(VerticalLine);
@@ -500,27 +551,20 @@ RULES
     Height: auto{Enclosing . Height};
     {LineBreak: No;}
     {Display: Inline;}
-    VertPos: Top = 			Previous AnyElem . Bottom;
-    HorizPos: Left =		Enclosing . Left; 
-    if not immediately within option
-      BEGIN
-		  BorderTopWidth: 	 	1 px;
-		  BorderLeftWidth: 		1 px;
-		  BorderBottomWidth: 	1 px;
-		  BorderRightWidth: 	1 px;
-		  BorderTopStyle: 		Dotted;
-		  BorderLeftStyle: 		Dotted;
-		  BorderBottomStyle: 	Dotted;
-		  BorderRightStyle: 	Dotted;
-		  BorderTopColor: 		Blue;
-		  BorderLeftColor: 		Blue;
-		  BorderBottomColor: 	Blue;
-		  BorderRightColor: 	Blue;
-      END;
-    if immediately within repeat
-      CreateAfter(RepeatUse);
-    if immediately within bag
-      CreateAfter(BagUse);
+    VertPos: Top = Previous AnyElem . Bottom;
+    HorizPos: Left = Enclosing . Left; 
+		BorderTopWidth: 	 	1 px;
+		BorderLeftWidth: 		1 px;
+		BorderBottomWidth: 	1 px;
+		BorderRightWidth: 	1 px;
+		BorderTopStyle: 		Dotted;
+		BorderLeftStyle: 		Dotted;
+		BorderBottomStyle: 	Dotted;
+		BorderRightStyle: 	Dotted;
+		BorderTopColor: 		Blue;
+		BorderLeftColor: 		Blue;
+		BorderBottomColor: 	Blue;
+		BorderRightColor: 	Blue;
 		PaddingRight: 			2 px;
 		PaddingLeft: 				3 px;
 		PaddingTop: 				2 px;
@@ -543,6 +587,16 @@ RULES
 
   useSimple:	
 		BEGIN
+#ifdef INSTANCE
+    if immediately within repeat
+      CreateAfter(RepeatUse);
+    if immediately within bag
+      CreateAfter(BagUse);
+#else
+    Background : LightBlue4;
+    FillPattern: backgroundcolor;
+    ShowBox; 
+#endif
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
@@ -551,29 +605,22 @@ RULES
     {Display: Inline;}
     VertPos: Top = 			Previous AnyElem. Bottom;
     HorizPos: Left =		Enclosing . Left;
-    if not immediately within option
-      BEGIN
-		  BorderTopWidth: 	 	1 px;
-		  BorderLeftWidth: 		1 px;
-		  BorderBottomWidth: 	1 px;
-		  BorderRightWidth: 	1 px;
-		  BorderTopStyle: 		Dotted;
-		  BorderLeftStyle: 		Dotted;
-		  BorderBottomStyle: 	Dotted;
-		  BorderRightStyle: 	Dotted;
-		  BorderTopColor: 		Blue;
-		  BorderLeftColor: 		Blue;
-		  BorderBottomColor: 	Blue;
-		  BorderRightColor: 	Blue;
-		  PaddingRight: 			2 px;
-		  PaddingLeft: 				3 px;
-		  PaddingTop: 				2 px;
-		  PaddingBottom: 			2 px;
-      END;
-    if immediately within repeat
-      CreateAfter(RepeatUse);
-    if immediately within bag
-      CreateAfter(BagUse);
+		BorderTopWidth: 	 	1 px;
+		BorderLeftWidth: 		1 px;
+		BorderBottomWidth: 	1 px;
+		BorderRightWidth: 	1 px;
+		BorderTopStyle: 		Dotted;
+		BorderLeftStyle: 		Dotted;
+		BorderBottomStyle: 	Dotted;
+		BorderRightStyle: 	Dotted;
+		BorderTopColor: 		Blue;
+		BorderLeftColor: 		Blue;
+		BorderBottomColor: 	Blue;
+		BorderRightColor: 	Blue;
+		PaddingRight: 			2 px;
+		PaddingLeft: 				3 px;
+		PaddingTop: 				2 px;
+		PaddingBottom: 			2 px;
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
 			BorderLeftWidth: 0;
@@ -601,7 +648,8 @@ RULES
     VertPos: Top  	= Previous AnyElem . Bottom;
     MarginTop	: 3 px;
     HorizPos: Left  	= Enclosing . Left; 
-    {BorderTopWidth:  2 pt;
+#ifndef INSTANCE
+    BorderTopWidth:  2 pt;
     BorderLeftWidth:  2 pt;
     BorderBottomWidth :  2 pt;
     BorderRightWidth :  2 pt;
@@ -612,7 +660,8 @@ RULES
     BorderTopColor:  Purple;
     BorderLeftColor:  Purple;
     BorderBottomColor : Purple;
-    BorderRightColor :  Purple;}
+    BorderRightColor :  Purple;
+#endif
     PaddingRight:  3 px;
     PaddingLeft	:  3 px;
     PaddingTop	: 10 px;

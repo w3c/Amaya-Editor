@@ -823,13 +823,16 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   /* get the value of the "types" attribute */
   cont = NULL;
   elType = TtaGetElementType (el);
-  AddPromptIndicator (el, doc);
   types = GetAttributeStringValueFromNum (el, Template_ATTR_types, &size);
   if (!types || types[0] == EOS)
     {
       TtaFreeMemory (types);
       return NULL;
     }
+
+  if (!strcmp (types, "string"))
+    AddPromptIndicator (el, doc);
+
   giveItems (types, size, &items, &nbitems);
   // No structure checking
   oldStructureChecking = TtaGetStructureChecking (doc);
@@ -1088,8 +1091,10 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
              supposed to contain a valid instance. This should be
              checked, though */
             // add the initial indicator
-          AddPromptIndicator (el, doc);
-            
+          name = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
+          if (name && !strcmp (name, "string"))
+            AddPromptIndicator (el, doc);
+          TtaFreeMemory (name);
           if (!TtaGetFirstChild (el))
             InstantiateUse (t, el, doc, FALSE);
           break;

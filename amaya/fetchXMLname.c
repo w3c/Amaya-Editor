@@ -90,7 +90,7 @@ SSchema GetXLinkSSchema (Document doc)
   XLinkSSchema = TtaGetSSchema ("XLink", doc);
   if (XLinkSSchema == NULL)
     XLinkSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), NULL,
-                                "XLink", "XLinkP");
+                                    "XLink", "XLinkP");
   return (XLinkSSchema);
 }
 
@@ -103,8 +103,14 @@ SSchema GetTemplateSSchema (Document doc)
   
   TemplateSSchema = TtaGetSSchema ("Template",doc);
   if (TemplateSSchema == NULL)
-    TemplateSSchema = TtaNewNature (doc, TtaGetDocumentSSchema(doc), NULL,
-                                    "Template", "TemplateP");
+    {
+      if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_INSTANCE)
+        TemplateSSchema = TtaNewNature (doc, TtaGetDocumentSSchema(doc), NULL,
+                                    "Template", "TemplatePI");
+      else
+        TemplateSSchema = TtaNewNature (doc, TtaGetDocumentSSchema(doc), NULL,
+                                        "Template", "TemplateP");
+    }
   return (TemplateSSchema);
 }
     

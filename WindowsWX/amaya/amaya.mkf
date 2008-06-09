@@ -57,6 +57,7 @@ APP Timeline.A
 
 STR Template
 PRS TemplateP
+PRS -DINSTANCE TemplateP TemplatePI
 TRA TemplateT
 APP Template.A 
 

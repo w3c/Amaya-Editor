@@ -36,6 +36,7 @@ $(AMAYA)/Template.STR : $(AMAYA)/Template.S ../bin/str ../bin/prs ../bin/tra
 	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra; \
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
 	$$STR $(ALL_AMAYA_OPTIONS) Template ; \
+	$$PRS $(ALL_AMAYA_OPTIONS) -DINSTANCE TemplateP TemplatePI ; \
 	$$PRS $(ALL_AMAYA_OPTIONS) TemplateP ; \
 	$$TRA $(ALL_AMAYA_OPTIONS) -DXML TemplateT TemplateTX ; \
 	$$TRA $(ALL_AMAYA_OPTIONS) TemplateT
@@ -47,6 +48,7 @@ compTemplateP : $(AMAYA)/TemplateP.PRS
 $(AMAYA)/TemplateP.PRS : $(AMAYA)/TemplateP.P ../bin/prs
 	PRS=`pwd`/../bin/prs; \
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$PRS $(ALL_AMAYA_OPTIONS) -DINSTANCE TemplateP TemplatePI ; \
 	$$PRS $(ALL_AMAYA_OPTIONS) TemplateP
 
 #
