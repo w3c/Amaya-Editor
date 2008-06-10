@@ -1879,11 +1879,7 @@ void TtaSendDataToPanel( int panel_type, AmayaParams& params )
 {
   AmayaWindow * activeWindow = TtaGetActiveWindow();
   if(activeWindow)
-    {
-      AmayaToolPanel* panel = activeWindow->GetToolPanel(panel_type);
-      if (panel)
-        panel->SendDataToPanel(params);
-    }
+    activeWindow->SendDataToPanel(panel_type, params);
 }
 #endif /* _WX */
 

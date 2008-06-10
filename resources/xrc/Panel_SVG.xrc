@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxPanel" name="wxID_TOOLPANEL_SVG">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_1" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_PANEL_XHTML_H1">
+            <bitmap>../icons/16x16/XHTML_H1.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_H2">
+            <bitmap>../icons/16x16/XHTML_H2.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_H3">
+            <bitmap>../icons/16x16/XHTML_H3.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_H4">
+            <bitmap>../icons/16x16/XHTML_H4.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_P">
+            <bitmap>../icons/16x16/XHTML_P.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_XHTML_DIV">
+            <bitmap>../icons/16x16/XHTML_Div.png</bitmap>
+          </object>
+          <bitmapsize>16,16</bitmapsize>
+          <margins>2,0</margins>
+          <style>wxTB_FLAT|wxTB_NODIVIDER</style>
+        </object>
+      </object>
+    
+      
+      
+      
+    </object>
+    <style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
+  </object>
+</resource>

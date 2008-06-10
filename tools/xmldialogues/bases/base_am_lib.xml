@@ -4268,6 +4268,13 @@
 	<message xml:lang="hu">Téma nélkül</message>
 	<message xml:lang="ja">テーマなし</message>
 </label>
+<label define="TMSG_ELEMENTS">
+	<message xml:lang="en">Elements</message>
+	<message xml:lang="fr">Éléments</message>
+	<message xml:lang="de">Elemente</message>
+	<message xml:lang="it">Elementi</message>
+	<message xml:lang="es">Elementos</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

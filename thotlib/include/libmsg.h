@@ -275,6 +275,7 @@
 #define Classic		270
 #define Modern		271
 #define NoTheme		272
-#define TMSG_LIB_MSG_MAX		273
+#define TMSG_ELEMENTS		273
+#define TMSG_LIB_MSG_MAX		274
 
 #endif

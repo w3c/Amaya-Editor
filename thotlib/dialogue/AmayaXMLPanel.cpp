@@ -38,26 +38,36 @@
 #include "AmayaNormalWindow.h"
 
 
+
+
 //
 //
-// AmayaXMLToolPanel
+// AmayaXMLPanel
 //
 //
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaXMLToolPanel, AmayaToolPanel)
 
-AmayaXMLToolPanel::AmayaXMLToolPanel():
-  AmayaToolPanel()
+AmayaXMLPanel::AmayaXMLPanel():
+  wxPanel()
 ,m_XMLRef(0)
 ,m_fnCallback(NULL)
 {
 }
 
-AmayaXMLToolPanel::~AmayaXMLToolPanel()
+AmayaXMLPanel::AmayaXMLPanel(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+    const wxSize& size, long style, const wxString& name, wxObject* extra):
+  wxPanel()
+,m_XMLRef(0)
+,m_fnCallback(NULL)
+{
+  Create(parent, id, pos, size, style, name, extra);
+}
+
+AmayaXMLPanel::~AmayaXMLPanel()
 {
 }
 
-bool AmayaXMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+bool AmayaXMLPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
           const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_XML")))
@@ -69,27 +79,13 @@ bool AmayaXMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& p
   return true;
 }
 
-wxString AmayaXMLToolPanel::GetToolPanelName()const
-{
-  return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_EL_TYPE));
-}
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaXMLToolPanel
- *      Method:  GetDefaultAUIConfig
- * Description:  Return a default AUI config for the panel.
- -----------------------------------------------------------------------*/
-wxString AmayaXMLToolPanel::GetDefaultAUIConfig()
-{
-  return wxT("dir=4;layer=0;row=0;pos=3");
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaXMLToolPanel
+ *       Class:  AmayaXMLPanel
  *      Method:  SendDataToPanel
  * Description:  refresh the button widgets of the frame's panel
   -----------------------------------------------------------------------*/
-void AmayaXMLToolPanel::SendDataToPanel( AmayaParams& p )
+void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
 {
   int nb_el = (int)p.param1;
   m_fnCallback = (void*) p.param3;
@@ -168,11 +164,11 @@ void AmayaXMLToolPanel::SendDataToPanel( AmayaParams& p )
 
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaXMLToolPanel
+ *       Class:  AmayaXMLPanel
  *      Method:  OnApply
  * Description:  
   -----------------------------------------------------------------------*/
-void AmayaXMLToolPanel::OnApply( wxCommandEvent& event )
+void AmayaXMLPanel::OnApply( wxCommandEvent& event )
 {
   ElemListElement elem = NULL;
   
@@ -186,11 +182,11 @@ void AmayaXMLToolPanel::OnApply( wxCommandEvent& event )
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaXMLToolPanel
+ *       Class:  AmayaXMLPanel
  *      Method:  OnSelected
  * Description:  
   -----------------------------------------------------------------------*/
-void AmayaXMLToolPanel::OnSelected( wxCommandEvent& event )
+void AmayaXMLPanel::OnSelected( wxCommandEvent& event )
 {
   wxString s_selected = XRCCTRL(*this, "wxID_LIST_XML", wxListBox)->GetStringSelection();
   
@@ -206,21 +202,21 @@ void AmayaXMLToolPanel::OnSelected( wxCommandEvent& event )
 
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaXMLToolPanel
+ *       Class:  AmayaXMLPanel
  *      Method:  OnRefresh
  * Description:  refresh the panel from current selection
   -----------------------------------------------------------------------*/
-void AmayaXMLToolPanel::OnRefresh( wxCommandEvent& event )
+void AmayaXMLPanel::OnRefresh( wxCommandEvent& event )
 {
   RefreshXMLPanel();
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaXMLToolPanel
+ *       Class:  AmayaXMLPanel
  *      Method:  RefreshXMLPanel
  * Description:  refresh the panel from current selection
   -----------------------------------------------------------------------*/
-void AmayaXMLToolPanel::RefreshXMLPanel()
+void AmayaXMLPanel::RefreshXMLPanel()
 {
   Document doc;
   View view;
@@ -233,10 +229,11 @@ void AmayaXMLToolPanel::RefreshXMLPanel()
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaXMLToolPanel, AmayaToolPanel)
-  EVT_BUTTON( XRCID("wxID_APPLY"), AmayaXMLToolPanel::OnApply )
-  EVT_BUTTON( XRCID("wxID_REFRESH"), AmayaXMLToolPanel::OnRefresh )
-  EVT_LISTBOX( XRCID("wxID_LIST_XML"), AmayaXMLToolPanel::OnSelected ) 
-  EVT_LISTBOX_DCLICK( XRCID("wxID_LIST_XML"), AmayaXMLToolPanel::OnApply )
+BEGIN_EVENT_TABLE(AmayaXMLPanel, wxPanel)
+  EVT_BUTTON( XRCID("wxID_APPLY"), AmayaXMLPanel::OnApply )
+  EVT_BUTTON( XRCID("wxID_REFRESH"), AmayaXMLPanel::OnRefresh )
+  EVT_LISTBOX( XRCID("wxID_LIST_XML"), AmayaXMLPanel::OnSelected ) 
+  EVT_LISTBOX_DCLICK( XRCID("wxID_LIST_XML"), AmayaXMLPanel::OnApply )
 END_EVENT_TABLE()
+
 #endif /* #ifdef _WX */

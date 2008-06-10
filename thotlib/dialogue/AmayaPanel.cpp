@@ -82,6 +82,7 @@ AmayaToolPanelBar::~AmayaToolPanelBar()
 bool AmayaToolPanelBar::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
     const wxSize& size, long style, const wxString& name)
 {
+  printf("AmayaToolPanelBar::Create\n");
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_PANEL")))
     return false;
   

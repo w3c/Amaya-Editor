@@ -34,7 +34,7 @@
 
 //
 //
-// AmayaXHTMLToolPanel
+// AmayaXHTMLPanel
 //
 //
 
@@ -75,18 +75,23 @@ AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaXHTMLToolDef)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_TABLE_APPEND_COL","CreateColumnAfter",    LIB, CreateColumnA)
 AMAYA_END_TOOLBAR_DEF_TABLE()
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaXHTMLToolPanel, AmayaToolPanel)
-
-AmayaXHTMLToolPanel::AmayaXHTMLToolPanel():
-  AmayaToolPanel()
+AmayaXHTMLPanel::AmayaXHTMLPanel():
+  wxPanel()
 {
 }
 
-AmayaXHTMLToolPanel::~AmayaXHTMLToolPanel()
+AmayaXHTMLPanel::AmayaXHTMLPanel(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+    const wxSize& size, long style, const wxString& name, wxObject* extra):
+  wxPanel()
+{
+  Create(parent, id, pos, size, style, name, extra);
+}
+
+AmayaXHTMLPanel::~AmayaXHTMLPanel()
 {
 }
 
-bool AmayaXHTMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+bool AmayaXHTMLPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
           const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_XHTML")))
@@ -112,21 +117,6 @@ bool AmayaXHTMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   SetAutoLayout(true);
   
   return true;
-}
-
-wxString AmayaXHTMLToolPanel::GetToolPanelName()const
-{
-  return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_XHTML));
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaXHTMLToolPanel
- *      Method:  GetDefaultAUIConfig
- * Description:  Return a default AUI config for the panel.
- -----------------------------------------------------------------------*/
-wxString AmayaXHTMLToolPanel::GetDefaultAUIConfig()
-{
-  return wxT("dir=2;layer=0;row=0;pos=0");
 }
 
 

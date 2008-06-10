@@ -333,6 +333,7 @@ ShowEditingBar
 &DoSelectFontSize
 *AmayaToolBarEditing
 *AmayaXHTMLToolPanel
+*AmayaElementToolPanel
 *AmayaStyleToolPanel
 *AmayaExplorerToolPanel
 *AmayaSpeCharToolPanel

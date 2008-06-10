@@ -86,111 +86,6 @@ const char * TrigoID[]={
 int MAX_Trigo = sizeof(TrigoTable) / sizeof (char *);
 
 
-//
-//
-// AmayaMathMLToolPanel
-//
-//
-
-IMPLEMENT_DYNAMIC_CLASS(AmayaMathMLToolPanel, AmayaToolPanel)
-
-/*----------------------------------------------------------------------
------------------------------------------------------------------------*/
-AmayaMathMLToolPanel::AmayaMathMLToolPanel():
-  AmayaToolPanel(),
-  m_pBook(NULL),
-  m_imagelist(16,16)
-{
-}
-
-/*----------------------------------------------------------------------
------------------------------------------------------------------------*/
-AmayaMathMLToolPanel::~AmayaMathMLToolPanel()
-{
-}
-
-/*----------------------------------------------------------------------
------------------------------------------------------------------------*/
-bool AmayaMathMLToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
-          const wxSize& size, long style, const wxString& name, wxObject* extra)
-{
-  if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_MATHML")))
-    return false;
-  m_pBook = XRCCTRL(*this,"wxID_MATHS_CHOICEBOOK", wxChoicebook);
-  m_pBook->SetPageText(0, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_1)));
-  m_pBook->SetPageText(1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_2)));
-  m_pBook->SetPageText(2, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_3)));
-  m_pBook->SetPageText(3, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_4)));
-  m_pBook->SetPageText(4, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_5)));
-  m_pBook->ChangeSelection(0);
-  // add the trigonometry page
-  Initialize();
-  return true;
-}
-
-/*----------------------------------------------------------------------
------------------------------------------------------------------------*/
-wxString AmayaMathMLToolPanel::GetToolPanelName()const
-{
-  return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_MATHML));
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaMathMLToolPanel
- *      Method:  GetDefaultAUIConfig
- * Description:  Return a default AUI config for the panel.
- -----------------------------------------------------------------------*/
-wxString AmayaMathMLToolPanel::GetDefaultAUIConfig()
-{
-  return wxT("dir=2;layer=0;row=0;pos=3");
-}
-
-/*----------------------------------------------------------------------
------------------------------------------------------------------------*/
-void AmayaMathMLToolPanel::Initialize()
-{
-  wxSizer* sz = new wxBoxSizer(wxVERTICAL);
-  sz->Add(m_pBook, 1, wxEXPAND);
-  SetSizer(sz);
-  m_pBook->SetImageList(&m_imagelist);
-  wxBitmap bmp;
-  bmp.LoadFile(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "dummy.png"), wxBITMAP_TYPE_ANY);
-  int img = m_imagelist.Add(bmp);
-  wxPanel*   panel = new wxPanel(m_pBook, wxID_ANY);
-  m_pBook->AddPage(panel, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_6)), false, img);
-  
-  wxToolBar* tb = NULL;
-  sz = new wxBoxSizer(wxVERTICAL);
-  int i, line = 0;
-  for (i = 0; i < MAX_Trigo; i++)
-    {
-      if( ++line >= MAX_TOOL_PER_LINE || !tb)
-        {
-          if (tb)
-            tb->Realize();
-          tb = new AmayaMathMLToolBar();
-          tb->Create(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                     wxTB_HORIZONTAL|wxNO_BORDER|wxTB_NODIVIDER);
-#ifdef _MACOS
-          tb->SetToolBitmapSize(wxSize(24,24));
-#else /* _MACOS */
-          tb->SetToolBitmapSize(wxSize(36,16));
-#endif /* _MACOS */
-          tb->SetToolPacking(4);
-          sz->Add(tb, 0);
-          line = 0;
-        }
-      int toolid = wxXmlResource::GetXRCID( TtaConvMessageToWX(TrigoID[i]));
-      wxString str = TtaConvMessageToWX(TrigoTable[i]);
-#ifdef _MACOS
-      tb->AddTool(toolid, str, wxCharToIcon<24,24>(str), str);
-#else /* _MACOS */
-      tb->AddTool(toolid, str, wxCharToIcon<36, 16>(str), str);
-#endif /* _MACOS */
-    }
-  panel->SetSizer(sz);
-}
-
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaMathMLToolBarToolDef)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_MATH_BMATH",               "CreateMath", LIB, TMSG_MATHML) 
@@ -464,5 +359,104 @@ void AmayaMathMLToolBar::OnUpdate(wxUpdateUIEvent& event)
 AmayaToolBarToolDefHashMap AmayaMathMLToolBar::s_mymap;
 bool AmayaMathMLToolBar::s_isinit = false;
 
+
+
+//
+//
+// AmayaMathMLPanel
+//
+//
+
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
+AmayaMathMLPanel::AmayaMathMLPanel():
+  wxPanel(),
+  m_pBook(NULL),
+  m_imagelist(16,16)
+{
+}
+
+
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
+AmayaMathMLPanel::AmayaMathMLPanel(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+    const wxSize& size, long style, const wxString& name, wxObject* extra):
+      wxPanel(),
+  m_pBook(NULL),
+  m_imagelist(16,16)
+{
+  Create(parent, id, pos, size, style, name, extra);
+}
+
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
+AmayaMathMLPanel::~AmayaMathMLPanel()
+{
+}
+
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
+bool AmayaMathMLPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
+          const wxSize& size, long style, const wxString& name, wxObject* extra)
+{
+  if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_MATHML")))
+    return false;
+  m_pBook = XRCCTRL(*this,"wxID_MATHS_CHOICEBOOK", wxChoicebook);
+  m_pBook->SetPageText(0, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_1)));
+  m_pBook->SetPageText(1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_2)));
+  m_pBook->SetPageText(2, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_3)));
+  m_pBook->SetPageText(3, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_4)));
+  m_pBook->SetPageText(4, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_5)));
+  m_pBook->ChangeSelection(0);
+  // add the trigonometry page
+  Initialize();
+  return true;
+}
+
+/*----------------------------------------------------------------------
+-----------------------------------------------------------------------*/
+void AmayaMathMLPanel::Initialize()
+{
+  wxSizer* sz = new wxBoxSizer(wxVERTICAL);
+  sz->Add(m_pBook, 1, wxEXPAND);
+  SetSizer(sz);
+  m_pBook->SetImageList(&m_imagelist);
+  wxBitmap bmp;
+  bmp.LoadFile(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "dummy.png"), wxBITMAP_TYPE_ANY);
+  int img = m_imagelist.Add(bmp);
+  wxPanel*   panel = new wxPanel(m_pBook, wxID_ANY);
+  m_pBook->AddPage(panel, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_6)), false, img);
+  
+  wxToolBar* tb = NULL;
+  sz = new wxBoxSizer(wxVERTICAL);
+  int i, line = 0;
+  for (i = 0; i < MAX_Trigo; i++)
+    {
+      if( ++line >= MAX_TOOL_PER_LINE || !tb)
+        {
+          if (tb)
+            tb->Realize();
+          tb = new AmayaMathMLToolBar();
+          tb->Create(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                     wxTB_HORIZONTAL|wxNO_BORDER|wxTB_NODIVIDER);
+#ifdef _MACOS
+          tb->SetToolBitmapSize(wxSize(24,24));
+#else /* _MACOS */
+          tb->SetToolBitmapSize(wxSize(36,16));
+#endif /* _MACOS */
+          tb->SetToolPacking(4);
+          sz->Add(tb, 0);
+          line = 0;
+        }
+      int toolid = wxXmlResource::GetXRCID( TtaConvMessageToWX(TrigoID[i]));
+      wxString str = TtaConvMessageToWX(TrigoTable[i]);
+#ifdef _MACOS
+      tb->AddTool(toolid, str, wxCharToIcon<24,24>(str), str);
+#else /* _MACOS */
+      tb->AddTool(toolid, str, wxCharToIcon<36, 16>(str), str);
+#endif /* _MACOS */
+    }
+  panel->SetSizer(sz);
+}
   
 #endif /* #ifdef _WX */

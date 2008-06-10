@@ -6,9 +6,8 @@
 #include "wx/wx.h"
 #include "wx/spinctrl.h"
 
-#include "AmayaToolPanel.h"
-
 class AmayaNormalWindow;
+
 
 /*
  *  Description:  - AmayaXMLPanel is a specific sub-panel
@@ -16,26 +15,21 @@ class AmayaNormalWindow;
  *      Created:  8 December 14:47:04 CET 2004
  *     Revision:  none
  */
-class AmayaXMLToolPanel : public AmayaToolPanel
+class AmayaXMLPanel : public wxPanel
 {
-  DECLARE_DYNAMIC_CLASS(AmayaXMLToolPanel)
 public:
-  AmayaXMLToolPanel();
-  virtual ~AmayaXMLToolPanel();
+  AmayaXMLPanel();
+  AmayaXMLPanel(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, 
+      const wxSize& size = wxDefaultSize, long style = 0,
+      const wxString& name = wxT("AmayaXMLPanel"), wxObject* extra=NULL);
+  virtual ~AmayaXMLPanel();
   
   virtual bool Create(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, 
             const wxSize& size = wxDefaultSize, long style = 0,
-            const wxString& name = wxT("AmayaXMLToolPanel"), wxObject* extra=NULL);
-  
-  virtual wxString GetToolPanelName()const;
-  virtual int      GetToolPanelType()const{return WXAMAYA_PANEL_XML;}
-  virtual wxString GetToolPanelConfigKeyName()const{return wxT("PANEL_XML");}
+            const wxString& name = wxT("AmayaXMLPanel"), wxObject* extra=NULL);
 
-  /** Return a default AUI config for the panel.*/
-  virtual wxString GetDefaultAUIConfig();
-
+  virtual void SendDataToPanel( AmayaParams& params );
 protected:
- virtual void SendDataToPanel( AmayaParams& params );
  void RefreshXMLPanel();
 
  DECLARE_EVENT_TABLE()
@@ -47,6 +41,8 @@ protected:
  int m_XMLRef;
  void* m_fnCallback;
 };
+
+
 
 
 #endif // __AMAYAXMLPANEL_H__
