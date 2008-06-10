@@ -1217,10 +1217,11 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
 /*----------------------------------------------------------------------
   UnsplitBox removes all child pieces and scripts.
   ----------------------------------------------------------------------*/
-static void UnsplitBox (PtrBox pBox)
+static void UnsplitBox (PtrBox pBox, int frame)
 {
-  PtrBox              box;
-  
+  PtrBox     box;
+  PtrBox     pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
+
   if (pBox->BxType == BoComplete)
     return;
   box = pBox->BxNexChild;
@@ -1242,6 +1243,16 @@ static void UnsplitBox (PtrBox pBox)
 #endif /* _GL */
       box = FreeBox (box);
     }
+
+  //update box links
+  if (pBox->BxPrevious)
+    pBox->BxPrevious->BxNext = pBox;
+  else
+    pMainBox->BxNext = pBox;
+  if (pBox->BxNext)
+    pBox->BxNext->BxPrevious = pBox;
+  else
+    pMainBox->BxPrevious = pBox;
 }
 
 /*----------------------------------------------------------------------
@@ -1291,7 +1302,7 @@ static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
       dir = pAb->AbDirection;
       if (box->BxType == BoMulScript)
         /* remove multi script boxes */
-        UnsplitBox (box);
+        UnsplitBox (box, frame);
       while (nChars > 0)
         {
           bwidth = 0;
@@ -3206,7 +3217,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
             CleanPictInfo ((ThotPictInfo *)pBox->BxPictInfo);
           else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
             /* free child boxes */
-            UnsplitBox (pBox);
+            UnsplitBox (pBox, frame);
 
           // Reset the abstract box status
           pAb->AbFloatChange = FALSE;
