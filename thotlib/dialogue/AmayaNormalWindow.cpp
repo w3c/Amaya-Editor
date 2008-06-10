@@ -199,11 +199,22 @@ void AmayaNormalWindow::CleanUp()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::RegisterThotToolPanels()
 {
-  TtaSetEnvString("CLASSIC_PANEL_ORDER",
-                  "AmayaElementToolPanel;AmayaStyleToolPanel;AmayaApplyClassToolPanel;"
-                  "StyleListToolPanel;AmayaExplorerToolPanel;AmayaAttributeToolPanel;"
-                  "AmayaSpeCharToolPanel",
-                   FALSE);
+  char         *s;
+
+  s = TtaGetEnvString("CLASSIC_PANEL_ORDER");
+  // detect an old panel configuration
+  if (s && strstr (s, "AmayaXHTMLToolPanel"))
+    TtaSetEnvString("CLASSIC_PANEL_ORDER",
+                    "AmayaElementToolPanel;AmayaStyleToolPanel;AmayaApplyClassToolPanel;"
+                    "StyleListToolPanel;AmayaExplorerToolPanel;AmayaAttributeToolPanel;"
+                    "AmayaSpeCharToolPanel",
+                    TRUE);
+  /*else
+    TtaSetEnvString("CLASSIC_PANEL_ORDER",
+                    "AmayaElementToolPanel;AmayaStyleToolPanel;AmayaApplyClassToolPanel;"
+                    "StyleListToolPanel;AmayaExplorerToolPanel;AmayaAttributeToolPanel;"
+                    "AmayaSpeCharToolPanel",
+                    FALSE);*/
   RegisterToolPanelClass(CLASSINFO(AmayaExplorerToolPanel));
   RegisterToolPanelClass(CLASSINFO(AmayaElementToolPanel));
   RegisterToolPanelClass(CLASSINFO(AmayaAttributeToolPanel));
@@ -222,8 +233,10 @@ void AmayaNormalWindow::LoadConfig()
   unsigned int  n;
   wxArrayString arr;
   ClassInfoSet::iterator it;
+  char         *s;
 
-  wxString str = TtaConvMessageToWX(TtaGetEnvString("CLASSIC_PANEL_ORDER"));
+  s = TtaGetEnvString("CLASSIC_PANEL_ORDER");
+  wxString str = TtaConvMessageToWX(s);
   arr = wxStringTokenize(str, wxT(";"));
 
   for( it = g_AmayaToolPanelClassInfoSet.begin();
