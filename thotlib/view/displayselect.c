@@ -65,7 +65,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
       thick = HANDLE_WIDTH;
       if (could_resize && pAb->AbLeafType == LtPicture)
           // display larger handles
-        thick *= 2;
+        thick += 2;
       if (thick > pBox->BxWidth)
         thick = pBox->BxWidth;
       if (thick > pBox->BxHeight)
