@@ -108,20 +108,6 @@ bool AmayaAdvancedWindow::Initialize()
   
   // Create the notebook
   m_notebook = new AmayaAdvancedNotebook(this, wxID_ANY );
-//  m_manager.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("AmayaAdvancedNotebook")).
-//                                    CenterPane().PaneBorder(false));
-//
-//  
-//  // Add toolbars to AUI
-//  if(HaveToolBarBrowsing())
-//    m_manager.AddPane(GetToolBarBrowsing(), wxAuiPaneInfo().
-//                  Name(wxT("Browsing")).Caption(wxT("Browsing")).ToolbarPane().Top().
-//                  Gripper(false).Row(0).Floatable(false).PaneBorder(false));
-//  if(HaveToolBarEditing())
-//    m_manager.AddPane(GetToolBarEditing(), wxAuiPaneInfo().
-//                  Name(wxT("Edition")).Caption(wxT("Edition")).ToolbarPane().Top().
-//                  Gripper(false).Row(1).Floatable(false).PaneBorder(false));
-
   wxAuiDockArt* art = m_manager.GetArtProvider();
   if(art)
     {

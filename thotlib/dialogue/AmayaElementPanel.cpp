@@ -65,10 +65,10 @@ bool AmayaElementToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoin
   if(! wxPanel::Create(parent, id, pos, size, style, name))
     return false;
 
-  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "XHTML_B.png"), wxBITMAP_TYPE_PNG));
-  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "MATHML_Bmath.png"), wxBITMAP_TYPE_PNG));
-  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "XHTML_Comment.png"), wxBITMAP_TYPE_PNG));
-  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "XHTML_object.png"), wxBITMAP_TYPE_PNG));
+  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_html.png"), wxBITMAP_TYPE_PNG));
+  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_math.png"), wxBITMAP_TYPE_PNG));
+  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_xml.png"), wxBITMAP_TYPE_PNG));
+  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_svg.png"), wxBITMAP_TYPE_PNG));
   
   m_notebook = new wxNotebook(this, wxID_ANY);
   m_notebook->SetImageList(&m_imageList);

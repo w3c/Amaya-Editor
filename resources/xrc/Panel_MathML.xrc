@@ -200,11 +200,11 @@
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
-                    <object class="tool" name="wxID_PANEL_MATH_LT">
-                      <bitmap>../icons/16x16/MATHML_lt.png</bitmap>
+                    <object class="tool" name="wxID_PANEL_MATH_LEQ">
+                      <bitmap>../icons/16x16/MATHML_leq.png</bitmap>
                     </object>
-                    <object class="tool" name="wxID_PANEL_MATH_GT">
-                      <bitmap>../icons/16x16/MATHML_gt.png</bitmap>
+                    <object class="tool" name="wxID_PANEL_MATH_GEQ">
+                      <bitmap>../icons/16x16/MATHML_geq.png</bitmap>
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_LEQBINARY">
                       <bitmap>../icons/16x16/MATHML_leqbinary.png</bitmap>
@@ -212,17 +212,28 @@
                     <object class="tool" name="wxID_PANEL_MATH_GEQBINARY">
                       <bitmap>../icons/16x16/MATHML_geqbinary.png</bitmap>
                     </object>
-                    <object class="tool" name="wxID_PANEL_MATH_LEQ">
-                      <bitmap>../icons/16x16/MATHML_leq.png</bitmap>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxToolBar" subclass="AmayaMathMLToolBar">
+                    <style>wxTB_NODIVIDER|wxTB_FLAT</style>
+                    <object class="tool" name="wxID_PANEL_MATH_LT">
+                      <bitmap>../icons/16x16/MATHML_lt.png</bitmap>
                     </object>
-                    <object class="tool" name="wxID_PANEL_MATH_GEQ">
-                      <bitmap>../icons/16x16/MATHML_geq.png</bitmap>
+                    <object class="tool" name="wxID_PANEL_MATH_GT">
+                      <bitmap>../icons/16x16/MATHML_gt.png</bitmap>
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_LL">
                       <bitmap>../icons/16x16/MATHML_ll.png</bitmap>
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_GG">
                       <bitmap>../icons/16x16/MATHML_gg.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_MAX">
+                      <bitmap>../icons/16x16/MATHML_max.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_MAXUNDER">
+                      <bitmap>../icons/16x16/MATHML_maxunder.png</bitmap>
                     </object>
                   </object>
                 </object>
@@ -246,12 +257,6 @@
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_MINUNDER">
                       <bitmap>../icons/16x16/MATHML_minunder.png</bitmap>
-                    </object>
-                    <object class="tool" name="wxID_PANEL_MATH_MAX">
-                      <bitmap>../icons/16x16/MATHML_max.png</bitmap>
-                    </object>
-                    <object class="tool" name="wxID_PANEL_MATH_MAXUNDER">
-                      <bitmap>../icons/16x16/MATHML_maxunder.png</bitmap>
                     </object>
                   </object>
                 </object>
@@ -350,6 +355,32 @@
                 <object class="sizeritem">
                   <object class="wxToolBar" subclass="AmayaMathMLToolBar">
                     <style>wxTB_NODIVIDER|wxTB_FLAT</style>
+                    <object class="tool" name="wxID_PANEL_MATH_EMPTYSET">
+                      <bitmap>../icons/16x16/MATHML_emptyset.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_POWERSET">
+                      <bitmap>../icons/16x16/MATHML_powerset.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_COMPLEMENT">
+                      <bitmap>../icons/16x16/MATHML_complement.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_COMPLEMENTSUB">
+                      <bitmap>../icons/16x16/MATHML_complementsub.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_SETDIFF">
+                      <bitmap>../icons/16x16/MATHML_setdiff.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_SETSYMDIFF">
+                      <bitmap>../icons/16x16/MATHML_setsymdiff.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_SUBSET">
+                      <bitmap>../icons/16x16/MATHML_subset.png</bitmap>
+                    </object>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxToolBar" subclass="AmayaMathMLToolBar">
+                    <style>wxTB_NODIVIDER|wxTB_FLAT</style>
                     <object class="tool" name="wxID_PANEL_MATH_IN">
                       <bitmap>../icons/16x16/MATHML_in.png</bitmap>
                     </object>
@@ -361,9 +392,6 @@
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_NOTSUBSET">
                       <bitmap>../icons/16x16/MATHML_notsubset.png</bitmap>
-                    </object>
-                    <object class="tool" name="wxID_PANEL_MATH_SUBSET">
-                      <bitmap>../icons/16x16/MATHML_subset.png</bitmap>
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_PRSUBSETBINARY">
                       <bitmap>../icons/16x16/MATHML_prsubsetbinary.png</bitmap>
@@ -399,29 +427,6 @@
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_UNION">
                       <bitmap>../icons/16x16/MATHML_union.png</bitmap>
-                    </object>
-                  </object>
-                </object>
-                <object class="sizeritem">
-                  <object class="wxToolBar" subclass="AmayaMathMLToolBar">
-                    <style>wxTB_NODIVIDER|wxTB_FLAT</style>
-                    <object class="tool" name="wxID_PANEL_MATH_EMPTYSET">
-                      <bitmap>../icons/16x16/MATHML_emptyset.png</bitmap>
-                    </object>
-                    <object class="tool" name="wxID_PANEL_MATH_POWERSET">
-                      <bitmap>../icons/16x16/MATHML_powerset.png</bitmap>
-                    </object>
-                    <object class="tool" name="wxID_PANEL_MATH_COMPLEMENT">
-                      <bitmap>../icons/16x16/MATHML_complement.png</bitmap>
-                    </object>
-                    <object class="tool" name="wxID_PANEL_MATH_COMPLEMENTSUB">
-                      <bitmap>../icons/16x16/MATHML_complementsub.png</bitmap>
-                    </object>
-                    <object class="tool" name="wxID_PANEL_MATH_SETDIFF">
-                      <bitmap>../icons/16x16/MATHML_setdiff.png</bitmap>
-                    </object>
-                    <object class="tool" name="wxID_PANEL_MATH_SETSYMDIFF">
-                      <bitmap>../icons/16x16/MATHML_setsymdiff.png</bitmap>
                     </object>
                   </object>
                 </object>
@@ -680,9 +685,6 @@
                     <object class="tool" name="wxID_PANEL_MATH_INTUNDER">
                       <bitmap>../icons/16x16/MATHML_intunder.png</bitmap>
                     </object>
-                    <object class="tool" name="wxID_PANEL_MATH_INT2">
-                      <bitmap>../icons/16x16/MATHML_int2.png</bitmap>
-                    </object>
                   </object>
                 </object>
                 <object class="sizeritem">
@@ -702,6 +704,9 @@
                     </object>
                     <object class="tool" name="wxID_PANEL_MATH_TENDSTOTENDSTO">
                       <bitmap>../icons/16x16/MATHML_tendstotendsto.png</bitmap>
+                    </object>
+                    <object class="tool" name="wxID_PANEL_MATH_INT2">
+                      <bitmap>../icons/16x16/MATHML_int2.png</bitmap>
                     </object>
                   </object>
                 </object>
