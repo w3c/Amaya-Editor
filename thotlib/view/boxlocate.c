@@ -206,8 +206,8 @@ PtrBox IsSelectingImageControlPoint(int frame, int x, int y, int* ctrlpt)
           pPicture = FirstSelectedElement->ElFirstChild;
           pAb = pPicture->ElAbstractBox[0];
           
-          x -= pFrame->FrXOrg;
-          y -= pFrame->FrYOrg;
+          x += pFrame->FrXOrg;
+          y += pFrame->FrYOrg;
           
           return IsOnShape (pAb, x, y, ctrlpt);
         }
