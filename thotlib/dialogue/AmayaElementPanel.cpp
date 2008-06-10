@@ -50,6 +50,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaElementToolPanel, AmayaToolPanel)
 
 AmayaElementToolPanel::AmayaElementToolPanel():
   AmayaToolPanel(),
+  m_imageList(16, 16),
   m_xml(NULL)
 {
 }
@@ -63,16 +64,22 @@ bool AmayaElementToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoin
 {
   if(! wxPanel::Create(parent, id, pos, size, style, name))
     return false;
+
+  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "XHTML_B.png"), wxBITMAP_TYPE_PNG));
+  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "MATHML_Bmath.png"), wxBITMAP_TYPE_PNG));
+  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "XHTML_Comment.png"), wxBITMAP_TYPE_PNG));
+  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "XHTML_object.png"), wxBITMAP_TYPE_PNG));
   
   m_notebook = new wxNotebook(this, wxID_ANY);
+  m_notebook->SetImageList(&m_imageList);
   wxSizer* sz = new wxBoxSizer(wxVERTICAL);
   sz->Add(m_notebook, 1, wxEXPAND);
   SetSizer(sz);
   
-  m_notebook->AddPage(new AmayaXHTMLPanel(m_notebook, wxID_ANY), wxT("XHTML"));
-  m_notebook->AddPage(new AmayaMathMLPanel(m_notebook, wxID_ANY), wxT("MathML"));
-  m_notebook->AddPage(m_xml = new AmayaXMLPanel(m_notebook, wxID_ANY), wxT("XML"));
-  m_notebook->AddPage(new AmayaSVGPanel(m_notebook, wxID_ANY), wxT("SVG"));
+  m_notebook->AddPage(new AmayaXHTMLPanel(m_notebook, wxID_ANY), wxT(""), false, 0);
+  m_notebook->AddPage(new AmayaMathMLPanel(m_notebook, wxID_ANY), wxT(""), false, 1);
+  m_notebook->AddPage(m_xml = new AmayaXMLPanel(m_notebook, wxID_ANY), wxT(""), false, 2);
+  m_notebook->AddPage(new AmayaSVGPanel(m_notebook, wxID_ANY), wxT(""), false, 3);
   
   return true;
 }

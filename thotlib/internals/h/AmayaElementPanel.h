@@ -4,7 +4,9 @@
 #define __AMAYAELEMENTPANEL_H__
 
 #include "wx/wx.h"
+#include "wx/imaglist.h"
 #include "AmayaToolPanel.h"
+
 
 class AmayaNormalWindow;
 
@@ -41,6 +43,7 @@ public:
   
 protected:
   wxNotebook* m_notebook;
+  wxImageList m_imageList;
   
   AmayaXMLPanel* m_xml;
  
