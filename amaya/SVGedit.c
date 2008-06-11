@@ -2010,12 +2010,13 @@ void CreateGraphicElement (int entry)
 static void CreateGroup ()
 {
   Document	doc;
-  Element	el, prevSel, prevChild, group;
+  Element	el, prevSel, prevChild, group, parent;
   ElementType	elType;
   AttributeType	attrType;
   int		c1, i, minX, minY;
   DisplayMode	dispMode;
   ThotBool	position;
+  SSchema       docSchema, SvgSchema;
 
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
@@ -2026,6 +2027,14 @@ static void CreateGroup ()
     /* no selection. Return */
     return;
 
+  if (el)
+    {
+      parent = TtaGetParent (el);
+      if (TtaIsReadOnly (parent))
+        /* do not create new elements within a read-only element */
+        return;
+    }
+
   dispMode = TtaGetDisplayMode (doc);
   /* ask Thot to stop displaying changes made in the document */
   if (dispMode == DisplayImmediately)
@@ -2034,48 +2043,69 @@ static void CreateGroup ()
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   prevSel = NULL;
   prevChild = NULL;
-  /* Create a Group element */
-  elType = TtaGetElementType (el);
-  elType.ElTypeNum = SVG_EL_g;
-  group = TtaNewElement (doc, elType);
-  /* insert the new group element */
-  TtaInsertSibling (group, el, TRUE, doc);
-  TtaRegisterElementCreate (group, doc);
 
-  attrType.AttrSSchema = elType.ElSSchema;
-  minX = minY = 32000;
-  position = FALSE;
-  while (el != NULL)
+  /* Check whether the selection is in a SVG element */
+  docSchema = TtaGetDocumentSSchema (doc);
+  SvgSchema = GetSVGSSchema (doc);
+  attrType.AttrSSchema = SvgSchema;
+  elType = TtaGetElementType (el);
+  if (!(elType.ElTypeNum == SVG_EL_SVG &&
+	elType.ElSSchema == SvgSchema))
     {
-      if (prevSel != NULL)
-        {
-          TtaRegisterElementDelete (prevSel, doc);
-          TtaRemoveTree (prevSel, doc);
-          if (prevChild == NULL)
-            TtaInsertFirstChild (&prevSel, group, doc);
-          else
-            TtaInsertSibling (prevSel, prevChild, FALSE, doc);
-          TtaRegisterElementCreate (prevSel, doc);
-          prevChild = prevSel;
-        }
-      prevSel = el;
-      TtaGiveNextSelectedElement (doc, &el, &c1, &i);
-    }
-  if (prevSel != NULL)
-    {
-      TtaRegisterElementDelete (prevSel, doc);
-      TtaRemoveTree (prevSel, doc);
-      if (prevChild == NULL)
-        TtaInsertFirstChild (&prevSel, group, doc);
-      else
-        TtaInsertSibling (prevSel, prevChild, FALSE, doc);      
-      TtaRegisterElementCreate (prevSel, doc);
+
+      elType.ElTypeNum = SVG_EL_SVG;
+      elType.ElSSchema = SvgSchema;
+      parent = TtaGetTypedAncestor (el, elType);
+      if(parent)
+	{
+	  /* Create a Group element */
+	  elType = TtaGetElementType (el);
+	  elType.ElTypeNum = SVG_EL_g;
+	  group = TtaNewElement (doc, elType);
+
+
+	  /* insert the new group element */
+	  TtaInsertSibling (group, el, TRUE, doc);
+	  TtaRegisterElementCreate (group, doc);
+
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  minX = minY = 32000;
+	  position = FALSE;
+	  while (el != NULL)
+	    {
+	      if (prevSel != NULL)
+		{
+		  TtaRegisterElementDelete (prevSel, doc);
+		  TtaRemoveTree (prevSel, doc);
+		  if (prevChild == NULL)
+		    TtaInsertFirstChild (&prevSel, group, doc);
+		  else
+		    TtaInsertSibling (prevSel, prevChild, FALSE, doc);
+		  TtaRegisterElementCreate (prevSel, doc);
+		  prevChild = prevSel;
+		}
+	      prevSel = el;
+	      TtaGiveNextSelectedElement (doc, &el, &c1, &i);
+	    }
+	  if (prevSel != NULL)
+	    {
+	      TtaRegisterElementDelete (prevSel, doc);
+	      TtaRemoveTree (prevSel, doc);
+	      if (prevChild == NULL)
+		TtaInsertFirstChild (&prevSel, group, doc);
+	      else
+		TtaInsertSibling (prevSel, prevChild, FALSE, doc);      
+	      TtaRegisterElementCreate (prevSel, doc);
+	    }
+	  TtaSelectElement (doc, group);
+
+	}
     }
 
   TtaCloseUndoSequence (doc);
   /* ask Thot to display changes made in the document */
   TtaSetDisplayMode (doc, dispMode);
-  TtaSelectElement (doc, group);
+    
 }
 
 
@@ -2486,7 +2516,7 @@ void CreateSVG_Text (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Group (Document document, View view)
 {
-  CreateGraphicElement (11);
+  CreateGroup();
 }
 
 /*----------------------------------------------------------------------
