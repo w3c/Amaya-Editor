@@ -1738,6 +1738,7 @@ void CreateGraphicElement (int entry)
       newType.ElTypeNum = 0;
       break;
     default:
+      newType.ElTypeNum = 0;
       break;
     }
   InCreation = TRUE;
@@ -2389,4 +2390,213 @@ void Timeline_cross_prule_modified (NotifyPresentation *event)
 #ifdef _SVG
 	Key_position_defined (event->document, event->element);
 #endif /* _SVG */
+}
+
+
+/*----------------------------------------------------------------------
+  CreateSVG_Line
+  ----------------------------------------------------------------------*/
+void CreateSVG_Line (Document document, View view)
+{
+  CreateGraphicElement (0);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Rectangle
+  ----------------------------------------------------------------------*/
+void CreateSVG_Rectangle (Document document, View view)
+{
+  CreateGraphicElement (1);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_RoundedRectangle
+  ----------------------------------------------------------------------*/
+void CreateSVG_RoundedRectangle (Document document, View view)
+{
+  CreateGraphicElement (2);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Circle
+  ----------------------------------------------------------------------*/
+void CreateSVG_Circle (Document document, View view)
+{
+  CreateGraphicElement (3);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Ellipse
+  ----------------------------------------------------------------------*/
+void CreateSVG_Ellipse (Document document, View view)
+{
+  CreateGraphicElement (4);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Polyline
+  ----------------------------------------------------------------------*/
+void CreateSVG_Polyline (Document document, View view)
+{
+  CreateGraphicElement (5);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Polygon
+  ----------------------------------------------------------------------*/
+void CreateSVG_Polygon (Document document, View view)
+{
+  CreateGraphicElement (6);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Spline
+  ----------------------------------------------------------------------*/
+void CreateSVG_Spline (Document document, View view)
+{
+  CreateGraphicElement (7);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Closed
+  ----------------------------------------------------------------------*/
+void CreateSVG_Closed (Document document, View view)
+{
+  CreateGraphicElement (8);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_ForeignObject
+  ----------------------------------------------------------------------*/
+void CreateSVG_ForeignObject (Document document, View view)
+{
+  CreateGraphicElement (9);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Text
+  ----------------------------------------------------------------------*/
+void CreateSVG_Text (Document document, View view)
+{
+  CreateGraphicElement (10);
+}
+ 
+/*----------------------------------------------------------------------
+  CreateSVG_Group
+  ----------------------------------------------------------------------*/
+void CreateSVG_Group (Document document, View view)
+{
+  CreateGraphicElement (11);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_SimpleArrow
+  ----------------------------------------------------------------------*/
+void CreateSVG_SimpleArrow (Document document, View view)
+{
+  CreateGraphicElement (12);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_DoubleArrow
+  ----------------------------------------------------------------------*/
+void CreateSVG_DoubleArrow (Document document, View view)
+{
+  CreateGraphicElement (13);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Zigzag
+  ----------------------------------------------------------------------*/
+void CreateSVG_Zigzag (Document document, View view)
+{
+  CreateGraphicElement (14);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Square
+  ----------------------------------------------------------------------*/
+void CreateSVG_Square (Document document, View view)
+{
+  CreateGraphicElement (15);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_RoundedSquare
+  ----------------------------------------------------------------------*/
+void CreateSVG_RoundedSquare (Document document, View view)
+{
+  CreateGraphicElement (16);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Diamond
+  ----------------------------------------------------------------------*/
+void CreateSVG_Diamond (Document document, View view)
+{
+  CreateGraphicElement (17);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Trapezium
+  ----------------------------------------------------------------------*/
+void CreateSVG_Trapezium (Document document, View view)
+{
+  CreateGraphicElement (18);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Parallelogram
+  ----------------------------------------------------------------------*/
+void CreateSVG_Parallelogram (Document document, View view)
+{
+  CreateGraphicElement (19);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_EquilateralTriangle
+  ----------------------------------------------------------------------*/
+void CreateSVG_EquilateralTriangle (Document document, View view)
+{
+  CreateGraphicElement (20);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_IsoscelesTriangle
+  ----------------------------------------------------------------------*/
+void CreateSVG_IsoscelesTriangle (Document document, View view)
+{
+  CreateGraphicElement (21);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_RectangleTriangle
+  ----------------------------------------------------------------------*/
+void CreateSVG_RectangleTriangle (Document document, View view)
+{
+  CreateGraphicElement (22);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Cube
+  ----------------------------------------------------------------------*/
+void CreateSVG_Cube (Document document, View view)
+{
+  CreateGraphicElement (23);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Parallelepiped
+  ----------------------------------------------------------------------*/
+void CreateSVG_Parallelepiped (Document document, View view)
+{
+  CreateGraphicElement (24);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Cylinder
+  ----------------------------------------------------------------------*/
+void CreateSVG_Cylinder (Document document, View view)
+{
+  CreateGraphicElement (25);
 }

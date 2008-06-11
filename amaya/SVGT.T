@@ -20,20 +20,6 @@ VAR
 
 RULES
 
-   Document:
-	BEGIN
-        if Charset
-           Create '<?xml version="1.0"';
-        if Charset and not Charset = 'unknown'
-           BEGIN
-           Create ' encoding="';
-	   Create Charset;
-	   Create '"';
-           END;
-        if Charset
-           Create '?>\12';
-	END;
-
    SVG:
 	BEGIN
         if immediately within use_

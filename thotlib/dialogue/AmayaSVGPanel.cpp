@@ -40,15 +40,33 @@
 
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaSVGToolDef)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_P",       "CreateParagraph",      LIB, TMSG_BUTTON_P)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H1",      "CreateHeading1",       LIB, TMSG_BUTTON_H1)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H2",      "CreateHeading2",       LIB, TMSG_BUTTON_H2)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H3",      "CreateHeading3",       LIB, TMSG_BUTTON_H3)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_H4",      "CreateHeading4",       LIB, TMSG_BUTTON_H4)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_DIV",     "CreateDivision",       LIB, TMSG_BUTTON_DIV)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_TABLE",   "DoCreateTable",        LIB, TMSG_BUTTON_TABLE)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_TARGET",  "CreateTarget",         LIB, TMSG_BUTTON_TARGET)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_XHTML_LINK",    "CreateOrChangeLink",   LIB, TMSG_BUTTON_LINK)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_LINE",       "CreateSVG_Line", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_RECTANGLE",       "CreateSVG_Rectangle", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ROUNDED_RECTANGLE",       "CreateSVG_RoundedRectangle", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CIRCLE",       "CreateSVG_Circle", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ELLIPSE",       "CreateSVG_Ellipse", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_POLYLINE",       "CreateSVG_Polyline", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_POLYGON",       "CreateSVG_Polygon", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SPLINE",       "CreateSVG_Spline", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CLOSED",       "CreateSVG_Closed", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_FOREIGN_OBJECT",       "CreateSVG_ForeignObject", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_TEXT",       "CreateSVG_Text", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_GROUP",       "CreateSVG_Group", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SIMPLE_ARROW",       "CreateSVG_SimpleArrow", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DOUBLE_ARROW",       "CreateSVG_DoubleArrow", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ZIZAG",       "CreateSVG_Zigzag", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SQUARE",       "CreateSVG_Square", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ROUNDED_SQUARE",       "CreateSVG_RoundedSquare", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DIAMOND",       "CreateSVG_Diamond", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_TRAPEZIUM",       "CreateSVG_Trapezium", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_PARALLELOGRAM",       "CreateSVG_Parallelogram", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_EQUILATERAL_TRIANGLE",       "CreateSVG_EquilateralTriangle", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ISOSCELES_TRIANGLE",       "CreateSVG_IsoscelesTriangle", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_RECTANGLE_TRIANGLE",       "CreateSVG_RectangleTriangle", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CUBE",       "CreateSVG_Cube", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_PARALLELEPIPED",       "CreateSVG_Parallelepiped", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CYLINDER",       "CreateSVG_Cylinder", wxID_ANY, wxID_ANY)
+
 
 AMAYA_END_TOOLBAR_DEF_TABLE()
 
@@ -75,9 +93,21 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
     return false;
   
   m_tbar1 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_1", AmayaBaseToolBar);
+  m_tbar2 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_2", AmayaBaseToolBar);
+  m_tbar3 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_3", AmayaBaseToolBar);
+  m_tbar4 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_4", AmayaBaseToolBar);
+  m_tbar5 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_5", AmayaBaseToolBar);
 
   m_tbar1->Add(AmayaSVGToolDef);
   m_tbar1->Realize();
+  m_tbar2->Add(AmayaSVGToolDef);
+  m_tbar2->Realize();
+  m_tbar3->Add(AmayaSVGToolDef);
+  m_tbar3->Realize();
+  m_tbar4->Add(AmayaSVGToolDef);
+  m_tbar4->Realize();
+  m_tbar5->Add(AmayaSVGToolDef);
+  m_tbar5->Realize();
   Fit();
   SetAutoLayout(true);
   
