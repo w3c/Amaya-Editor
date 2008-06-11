@@ -13,6 +13,7 @@
 #include "message.h"
 #include "typeint.h"
 #include "undo.h"
+#include "picture.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -74,9 +75,9 @@ AmayaResizingBoxEvtHandler::AmayaResizingBoxEvtHandler() : wxEvtHandler()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-AmayaResizingBoxEvtHandler::AmayaResizingBoxEvtHandler( AmayaFrame * p_frame,
-                                                        int *x, int *y, int *width, int *height,
-                                                        PtrBox box, int xmin, int xmax, int ymin, int ymax,
+AmayaResizingBoxEvtHandler::AmayaResizingBoxEvtHandler (AmayaFrame * p_frame, int *x, int *y,
+                                                        int *width, int *height, PtrBox box,
+                                                        int xmin, int xmax, int ymin, int ymax,
                                                         int xm, int ym, int percentW, int percentH )
   : wxEvtHandler()
     ,m_IsFinish(false)
@@ -272,27 +273,24 @@ void AmayaResizingBoxEvtHandler::OnMouseDbClick( wxMouseEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
+  int           dx, dy, dl, dh, warpx, warpy;
+  bool          ratio;
+  ThotPictInfo *imageDesc;
+
   if (IsFinish())
     return;
 
-  int dx, dy, dl, dh, warpx, warpy;
-
   /* compute the deltas */
+  ratio = m_Box && m_Box->BxType == BoPicture && event.ShiftDown();
   dl = (int) (event.GetX() - m_Xm);
   dh = (int) (event.GetY() - m_Ym);
-  if (m_PercentW != 0)
+  if (ratio)
     {
       /* keep the greater value */
       if (dl < dh)
-        dl = dh;
-      dh = dl;
-    }
-  else if (m_PercentH != 0)
-    {
-      /* keep the greater value */
-      if (dh < dl)
-        dh = dl;
-      dl = dh;
+        dl = 0;
+      else
+        dh = 0;
     }
   
   /* Check that size can be modified, and stay >= 0    */
@@ -300,7 +298,7 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
   /* increase or decreas width or height accordingly   */
   warpx = -1;
   warpy = -1;
-  if (dl != 0)
+  if (dl)
     {
       if (m_Xmin == m_Xmax)
         /* X moves frozen */
@@ -317,7 +315,7 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
         }
     }
   
-  if (dh != 0)
+  if (dh)
     {
       if (m_Ymin == m_Ymax)
         /* Y moves frozen */
@@ -335,7 +333,7 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
     }
   
   /* Compute the horizontal move of the origin */
-  if (dl != 0)
+  if (dl)
     {
       dl = dl * m_HDirection;		/* Take care for direction */
       if (m_RefV == C_VCENTER)
@@ -378,7 +376,7 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
     dx = 0;
   
   /* Compute vertical move */
-  if (dh != 0)
+  if (dh)
     {
       dh = dh * m_VDirection;	/* Take care for direction */
       if (m_RefH == C_HCENTER)
@@ -419,7 +417,7 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
     dy = 0;
   
   /* Should we move the box */
-  if ((dl != 0) || (dh != 0))
+  if (dl || dh)
     {
       /* switch off the old box */
 #ifndef _GL
@@ -431,10 +429,22 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
       /* is there any dependence between height and width */
       *m_pWidth = *m_pWidth + dl;
       *m_pHeight = *m_pHeight + dh;
-      if (m_PercentW != 0)
-        *m_pWidth = *m_pHeight * m_PercentW / 100;
-      else if (m_PercentH != 0)
-        *m_pHeight = *m_pWidth * m_PercentH / 100;
+
+      // apply the ratio
+      if (ratio)
+        {
+          imageDesc = (ThotPictInfo *) m_Box->BxPictInfo;
+          if (dl)
+            *m_pHeight = *m_pWidth * imageDesc->PicHeight /imageDesc->PicWidth;
+          else
+            *m_pWidth = *m_pHeight * imageDesc->PicWidth /imageDesc->PicHeight;
+        }
+
+      /* if (m_PercentW)
+           *m_pWidth = *m_pHeight * m_PercentW / 100;
+           else if (m_PercentH)
+           *m_pHeight = *m_pWidth * m_PercentH / 100;*/
+
       *m_pX = *m_pX + dx;
       *m_pY = *m_pY + dy;
       /* switch on the new one */
@@ -475,12 +485,7 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
         BoxGeometry (m_FrameId, *m_pX, *m_pY, *m_pWidth, *m_pHeight, *m_pX + m_Xref, *m_pY + m_Yref);
 #else /* _GL */
       DefBoxRegion (m_FrameId, m_Box, -1, -1, -1, -1);
-      if (m_PercentW)
-        NewDimension (m_Box->BxAbstractBox, 0, *m_pHeight, m_FrameId, TRUE);
-      else if (m_PercentH)
-        NewDimension (m_Box->BxAbstractBox, *m_pWidth, 0, m_FrameId, TRUE);
-      else
-        NewDimension (m_Box->BxAbstractBox, *m_pWidth, *m_pHeight, m_FrameId, TRUE);
+      NewDimension (m_Box->BxAbstractBox, *m_pWidth, *m_pHeight, m_FrameId, TRUE);
       
       FrameTable[m_FrameId].DblBuffNeedSwap = TRUE;
       GL_Swap (m_FrameId);

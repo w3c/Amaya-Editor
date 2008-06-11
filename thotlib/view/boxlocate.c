@@ -41,6 +41,7 @@
 #include "appli_f.h"
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
+#include "boxpositions_f.h"
 #include "boxselection_f.h"
 #include "buildboxes_f.h"
 #include "buildlines_f.h"
@@ -192,7 +193,8 @@ PtrBox IsSelectingImageControlPoint(int frame, int x, int y, int* ctrlpt)
   PtrElement      pPicture;
   PtrAbstractBox  pAb;
   ViewFrame      *pFrame;
-  
+  PtrFlow         pFlow = NULL;
+
   if (frame >= 1)
     {
       if (FirstSelectedElement &&
@@ -205,10 +207,17 @@ PtrBox IsSelectingImageControlPoint(int frame, int x, int y, int* ctrlpt)
           pFrame = &ViewFrameTable[frame - 1];
           pPicture = FirstSelectedElement->ElFirstChild;
           pAb = pPicture->ElAbstractBox[0];
-          
+          // take into account the document scroll
           x += pFrame->FrXOrg;
           y += pFrame->FrYOrg;
-          
+          if (pAb && pAb->AbBox)
+            pFlow = GetRelativeFlow (pAb->AbBox, frame);
+          if (pFlow)
+            {
+              /* apply the box shift */
+              x += pFlow->FlXStart;
+              y += pFlow->FlYStart;
+            }
           return IsOnShape (pAb, x, y, ctrlpt);
         }
     }
