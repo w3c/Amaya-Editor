@@ -1904,29 +1904,11 @@ static void   GetXmlElType (const char *ns_uri, const char *elementName,
                         TtaChangeGenericSchemaNames (ns_uri, ns_name, XMLcontext.doc);
                       else
                         TtaChangeGenericSchemaNames (ns_uri, elementName, XMLcontext.doc);
+                      // complete the context if needed
+                      if (CurrentParserCtxt && CurrentParserCtxt->XMLSSchema == NULL)
+                        CurrentParserCtxt->XMLSSchema = elType->ElSSchema;
                     }
                 }
-                /*
-              else
-                {
-                  if (XMLcontext.lastElementClosed)
-                    parent = TtaGetParent (XMLcontext.lastElement);
-                  else
-                    parent = XMLcontext.lastElement;
-                  parentType = TtaGetElementType (parent);
-                  if (parentType.ElSSchema == NULL)
-                    {
-                      isnew = FALSE;
-                      elType->ElSSchema = GetGenericXMLSSchemaByUri ("Default_Uri",
-                                                                     XMLcontext.doc, &isnew);
-                      if (isnew)
-                        TtaChangeGenericSchemaNames ("Default_Uri", elementName,
-                                                     XMLcontext.doc);
-                    }
-                  else
-                    elType->ElSSchema = parentType.ElSSchema;
-                }
-                */
               *level = TRUE;
               *content = SPACE;
             }

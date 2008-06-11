@@ -1864,7 +1864,10 @@ ThotBool TtaIsXmlSSchema (SSchema schema)
 {
   UserErrorCode = 0;
   if (!schema)
-    TtaError (ERR_invalid_parameter);
+    {
+      TtaError (ERR_invalid_parameter);
+      return TRUE;
+    }
   return ((PtrSSchema) schema)->SsIsXml;
 }
 
