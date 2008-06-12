@@ -1577,7 +1577,7 @@ void CreateGraphicElement (int entry)
   int               docModified;
   ThotBool	    found, newGraph = FALSE, oldStructureChecking;;
 
-  int x1, y1, x2, y2;
+  int x1, y1, x2, y2, lx, ly;
 
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
@@ -1718,15 +1718,15 @@ void CreateGraphicElement (int entry)
     {
     case 0:	/* line */
       newType.ElTypeNum = SVG_EL_line_;
-      shape = 'g';
+      //shape = 'g';
       break;
     case 1:	/* rectangle */
       newType.ElTypeNum = SVG_EL_rect;
-      shape = 'C';
+      //shape = 'C';
       break;
     case 2:	/* rectangle with rounded corners */
       newType.ElTypeNum = SVG_EL_rect;
-      shape = 'C';
+      //shape = 'C';
       break;
     case 3:	/* circle */
       newType.ElTypeNum = SVG_EL_circle_;
@@ -1761,6 +1761,15 @@ void CreateGraphicElement (int entry)
     case 11:	/* group */
       newType.ElTypeNum = 0;
       break;
+
+    case 15: /* square */
+      newType.ElTypeNum = SVG_EL_rect;
+      break;
+
+    case 16: /* rounded square */
+      newType.ElTypeNum = SVG_EL_rect;
+      break;
+
     default:
       newType.ElTypeNum = SVG_EL_rect;
       break;
@@ -1783,26 +1792,68 @@ void CreateGraphicElement (int entry)
       /* create the new element */
       newEl = TtaNewElement (doc, newType);
 
+      if(entry >= 12 || entry == 1 || entry == 2 || entry == 0)
+	{
+	  AskSurroundingBox(&x1, &y1, &x2, &y2);
+	  TtaDisplayMessage(INFO, "x1 = %d, y1 = %d, x2 = %d, y2 = %d", x1, y1, x2, y2);
 
-  if(entry >= 12)
-    {
-      
-      AskSurroundingBox(&x1, &y1, &x2, &y2);
-      TtaDisplayMessage(INFO, "x1 = %d, y1 = %d, x2 = %d, y2 = %d", x1, y1, x2, y2);
+	  UpdatePositionAttribute (newEl, doc, x1, TRUE);
+	  UpdatePositionAttribute (newEl, doc, y1, FALSE);
+	  lx = x2 - x1;
+	  ly = y2 - y1;
 
-  elType = TtaGetElementType (newEl);
-  attrType.AttrSSchema = elType.ElSSchema;
+	  switch(entry)
+	    {
+	      /* Line */
+	    case 0:
+	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
+	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
+	      break;
+	      
+	      /* Rectangle */
+	    case 1:
+	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
+	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
+	      break;
 
-  attrType.AttrTypeNum = SVG_ATTR_x;
-  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
+	      /* Rounded-Rectangle */
+	    case 2:
+	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
+	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
 
-  attrType.AttrTypeNum = SVG_ATTR_y;
-  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+              attrType.AttrTypeNum = SVG_ATTR_rx;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+              TtaSetAttributeText (attr, "5px", newEl, doc);
+              ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+	      break;
 
-  UpdateWidthHeightAttribute (newEl, doc, x2 - x1, TRUE);
-  UpdateWidthHeightAttribute (newEl, doc, y2 - y1, FALSE);
+	    /* Square */
+	    case 15:
+	      if(ly < lx)lx = ly; else ly = lx;
+	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
+	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
+	      break;
 
-    }      
+	      /* Rounded Square */
+	    case 16:
+	      if(ly < lx)lx = ly; else ly = lx;
+	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
+	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
+
+              attrType.AttrTypeNum = SVG_ATTR_rx;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+              TtaSetAttributeText (attr, "5px", newEl, doc);
+              ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+	      break;
+
+	    default:
+	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
+	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
+	      break;
+	    }
+	}
 
       if (!sibling)
         TtaInsertFirstChild (&newEl, parent, doc);
@@ -2041,8 +2092,10 @@ void CreateGraphicElement (int entry)
   
   /* adapt the size of the SVG root element if necessary */
   InCreation = FALSE;
+
   /*CheckSVGRoot (doc, newEl);
     SetGraphicDepths (doc, SvgRoot);*/
+
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
   if (newType.ElTypeNum == 0)
