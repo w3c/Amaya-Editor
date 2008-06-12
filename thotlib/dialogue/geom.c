@@ -63,60 +63,6 @@ static int          GridSize = 1;
   #include "AmayaResizingBoxEvtHandler.h"
 #endif /* _WX */
 
-#ifdef _WINGUI
-#include "wininclude.h"
-
-/* working display for geom.c */
-static HDC     Gdc = NULL;
-extern int     X_Pos;
-extern int     Y_Pos;
-
-/*----------------------------------------------------------------------
-  DrawOutline :                                                    
-  ----------------------------------------------------------------------*/
-static void DrawOutline (HWND hwnd, POINT ptBeg, POINT ptEnd)
-{
-#ifndef _GL
-  HDC hdc;
-#endif /*_GL*/
-  ThotPoint ptTab [2];
-
-  ptTab[0].x = ptBeg.x;
-  ptTab[0].y = ptBeg.y;
-  ptTab[1].x = ptEnd.x;
-  ptTab[1].y = ptEnd.y;
-
-#ifdef _GL
-  
-  GL_DrawPolygon (ptTab, 2);
-
-#else /*_GL*/
-
-  hdc = GetDC (hwnd);
-  SetROP2 (hdc, R2_NOT);
-  SelectObject (hdc, GetStockObject (NULL_BRUSH));
-  /* SelectObject (hdc, GetStockObject (BLACK_PEN)); */
-  Polyline (hdc, ptTab, 2);
-  DeleteDC (hdc);
-
-#endif /*_GL*/
-}
-
-/*----------------------------------------------------------------------
-  DrawOutpolygon :                                                    
-  ----------------------------------------------------------------------*/
-void DrawOutpolygon (HWND hwnd, POINT* pt, int nb)
-{
-  HDC hdc;
-
-  hdc = GetDC (hwnd);
-  SetROP2 (hdc, R2_NOT);
-  SelectObject (hdc, GetStockObject (NULL_BRUSH));
-  /* SelectObject (hdc, GetStockObject (BLACK_PEN)); */
-  Polyline (hdc, pt, nb);  
-  DeleteDC (hdc);
-}
-#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   TtaGridDoAlign export the macro DO_ALIGN used to align points on a grid
@@ -133,21 +79,10 @@ int TtaGridDoAlign(int value)
 static void VideoInvert (int frame, int width, int height, int x, int y)
 {
   ThotWindow          w;
-
-#ifndef _WX
-  w = FrRef[frame];
-#else /* _WX */
   w = (ThotWindow)FrameTable[frame].WdFrame;
-#endif /* _WX */
   if (w != None)
     {
-#ifdef _GL
       GL_DrawEmptyRectangle (152, x, y, width, height, 0);
-#else /*_GL*/
-#ifdef _WINGUI
-      PatBlt (Gdc, x, y, width, height, PATINVERT);
-#endif /* _WINGUI */
-#endif /*_GL*/
     }
 }
 
@@ -181,38 +116,10 @@ void InvertEllipse (int frame, int x, int y, int width, int height,
                     int xr, int yr)
 {
   ThotWindow      w;
-#ifdef _WINGUI
-#ifndef _GL
-  HRGN            rgn;
-#endif /*_GL*/
-#endif /* _WINGUI */
 
-#ifndef _WX
-  w = FrRef[frame];
-#else /* _WX */
   w = (ThotWindow)FrameTable[frame].WdFrame;
-#endif /* _WX */
   if (w != None)
-    {
-#ifdef _GL
 	  GL_DrawArc (x, y, width, height, 0, 360 * 64, FALSE);
-#else /*_GL*/
-#ifdef _WINGUI
-	  rgn = CreateEllipticRgn (x, y, x + width, y + height);
-	  if (rgn)
-	  {
-	    InvertRgn (Gdc, rgn);
-	    DeleteObject (rgn);
-	  }
-	  rgn = CreateEllipticRgn (x + 1, y + 1, x + width - 2, y + height - 2);
-	  if (rgn)
-	  {
-	    InvertRgn (Gdc, rgn);
-	    DeleteObject (rgn);
-	  }
-#endif /* _WINGUI */
-#endif /*_GL*/
-    }
 }
 
 /*----------------------------------------------------------------------
@@ -232,11 +139,7 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
   int                 i, j;
   PtrTextBuffer       adbuff;
 
-#ifndef _WX
-  w = FrRef[frame];
-#else /* _WX */
   w = (ThotWindow)FrameTable[frame].WdFrame;
-#endif /* _WX */
   *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = -1;
   /* allocate a table of points */
   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
@@ -296,20 +199,10 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
 	 *x3 = (int)points[0].x;
 	 *y3 = (int)points[0].y;
        }
-#ifndef _GL
-#ifdef _WINGUI
-     DrawOutpolygon (w, points, nb);
-#endif  /* !_WINGUI */
-#endif /* ifndef _GL */
     }
   else 
-#ifndef _GL
-#ifdef _WINGUI 
-    DrawOutpolygon (w, points, nb - 1);
-#endif /* _WINGUI */
-#endif /*_GL*/
-  /* free the table of points */
-  free ((STRING) points);
+    /* free the table of points */
+    free ((STRING) points);
 }
 
 
@@ -353,15 +246,6 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   int                 newx1, newy1;
   ThotBool            input;
   ThotBool            wrap;
-#ifdef _WINGUI
-  ThotEvent           event;
-  RECT                rect;
-  POINT               cursorPos;
-  POINT               ptBeg;
-  POINT               ptEnd;
-  POINT               ptCur;
-  HCURSOR             cross;
-#endif /* _WINGUI */
 
   /* need the window to change the cursor */
   w = FrRef[frame];
@@ -369,18 +253,6 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) Bbuffer->BuPoints[0].XCoord;
   /* trasformation factor between the box and the abstract box */
   ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) Bbuffer->BuPoints[0].YCoord;
-
-#ifdef _WINGUI
-  GetWindowRect (w, &rect);
-  /* The grid stepping begins at the origin */
-  ptBeg.x = x1;
-  ptBeg.y = y1;
-  ptEnd.x = x3;
-  ptEnd.y = y3;
-  if (!SetCursorPos (lastx + rect.left, lasty + rect.top))
-    WinErrorBox (w, "AddPoints (1)");
-  cross = LoadCursor (NULL, IDC_CROSS);
-#endif /* _WINGUI */
 
   /* shows up limit borders */
   /*BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);*/
@@ -1191,7 +1063,7 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
   Resizing
   This function returns the new dimensions of the box.
   ----------------------------------------------------------------------*/
-static void Resizing ( int frame, int *x, int *y, int *width, int *height,
+static void Resizing ( int frame, int x, int y, int *width, int *height,
                        PtrBox box, int xmin, int xmax, int ymin, int ymax,
                        int xm, int ym, int percentW, int percentH )
 {
@@ -1202,7 +1074,6 @@ static void Resizing ( int frame, int *x, int *y, int *width, int *height,
 #define C_VCENTER 1
 #define C_RIGHT 2
 
-#ifdef _WX
   TTALOGDEBUG_7( TTA_LOG_SVGEDIT, _T("Resizing frame=%d xmin=%d xmax=%d ymin=%d ymax=%d xm=%d ym=%d"),
                  frame, xmin, xmax, ymin, ymax, xm, ym);
 
@@ -1217,328 +1088,6 @@ static void Resizing ( int frame, int *x, int *y, int *width, int *height,
   while (!p_resizingBoxEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   delete p_resizingBoxEvtHandler;
-
-#else /* _WX */
-  ThotWindow          w;
-  PtrAbstractBox      pAb;
-  int                 ret, dx, dy, dl, dh;
-  int                 ref_h, ref_v;
-  int                 hDirection, vDirection;
-  int                 xref, yref;
-  int                 warpx, warpy;
-#ifdef _WINGUI
-  ThotEvent			      event;
-  POINT               cursorPos;
-#endif /* _WINGUI */
-  ThotBool            isEllipse;
-  
-  pAb = box->BxAbstractBox;
-  if (pAb && pAb->AbLeafType == LtCompound)
-    pAb = pAb->AbFirstEnclosed;
-  isEllipse = (pAb &&
-               pAb->AbLeafType == LtGraphics &&
-               (pAb->AbShape == 'a' || pAb->AbShape == 'c'));
-  /* select the correct cursor */
-  w = FrRef[frame];
-  /* Use the reference point to move the box */
-  switch (box->BxHorizEdge)
-    {
-    case Right:
-      xref = *width;
-      ref_v = C_RIGHT;
-      /* Box shortened when X delta increase */
-      hDirection = -1;
-      break;
-    case VertMiddle:
-      xref = *width / 2;
-      ref_v = C_VCENTER;
-      /* Direction depends of original cursor location in the frame */
-      if (xm < *x + xref)
-        hDirection = -1;
-      else
-        hDirection = 1;
-      break;
-    case VertRef:
-      xref = box->BxVertRef;
-      ref_v = C_LEFT;
-      /* Box increased when X delta increase */
-      hDirection = 1;
-      break;
-    default:
-      xref = 0;
-      ref_v = C_LEFT;
-      /* Box increased when X delta increase */
-      hDirection = 1;
-      break;
-    }
-  switch (box->BxVertEdge)
-    {
-    case Bottom:
-      yref = *height;
-      ref_h = C_BOTTOM;
-      /* Box shortened when Y delta increase */
-      vDirection = -1;
-      break;
-    case HorizMiddle:
-      yref = *height / 2;
-      ref_h = C_HCENTER;
-      /* Direction depends of original cursor location in the frame */
-      if (ym < *y + yref)
-        vDirection = -1;
-      else
-        vDirection = 1;
-      break;
-    case HorizRef:
-      yref = box->BxHorizRef;
-      ref_h = C_TOP;
-      /* Box increased when Y delta increase */
-      vDirection = 1;
-      break;
-    default:
-      yref = 0;
-      ref_h = C_TOP;
-      /* Box increased when Y delta increase */
-      vDirection = 1;
-      break;
-    }  
-  
-  /* Shows the initial box size */
-  if (isEllipse)
-    InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-  else
-    BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-  ret = 0;
-
-  while (ret == 0)
-    {
-#ifdef _WINGUI
-      GetMessage (&event, NULL, 0, 0);
-      switch (event.message)
-        {
-        case WM_LBUTTONUP:
-        case WM_MBUTTONUP:
-        case WM_RBUTTONUP:
-          ret = 1;
-          break;
-          
-        case WM_MOUSEMOVE:
-          GetCursorPos (&cursorPos);
-          dl = cursorPos.x - xm;
-          dh = cursorPos.y - ym;
-          if (percentW != 0)
-            {
-              /* keep the greater value */
-              if (dl < dh)
-                dl = dh;
-              dh = dl;
-            }
-          else if (percentH != 0)
-            {
-              /* keep the greater value */
-              if (dh < dl)
-                dh = dl;
-              dl = dh;
-            }
-          /* Check that size can be modified, and stay >= 0    */
-          /* depending on base point and cursor position,      */
-          /* increase or decreas width or height accordingly   */
-          warpx = -1;
-          warpy = -1;
-          if (dl != 0)
-            if (xmin == xmax) /* X moves frozen */
-              dl = 0;
-            else if (ref_v == C_VCENTER && *width + (2 * dl * hDirection) < 0)
-              {
-                dl = -DO_ALIGN (*width / 2) * hDirection;
-                warpx = xm + (dl * hDirection);
-              }
-            else if (*width + (dl * hDirection) < 0)
-              {
-                dl = -DO_ALIGN (*width) * hDirection;
-                warpx = xm + (dl * hDirection);
-              }
-          
-          if (dh != 0)
-            if (ymin == ymax) /* Y moves frozen */
-              dh = 0;
-            else if (ref_h == C_HCENTER && *height + (2 * dh * vDirection) < 0)
-              {
-                dh = -(*height * vDirection * GridSize) / (2 * GridSize);
-                warpy = ym + (dh * vDirection);
-              }
-            else if (*height + dh < 0)
-              {
-                dh = -(*height * vDirection * GridSize) / GridSize;
-                warpy = ym + (dh * vDirection);
-              }
-          
-          /* Compute the horizontal move of the origin */
-          if (dl != 0)
-            {
-              dl = dl * hDirection; /* Take care for direction */
-              if (ref_v == C_VCENTER)
-                {
-                  dx = xmin + DO_ALIGN (*x - (dl / 2) - xmin) - *x;
-                  /* Check the move is within limits */
-                  if (*x + dx < xmin)
-                    dx = xmin - *x; /*left side */
-                  if (*x + *width - dx > xmax)
-                    dx = *x + *width - xmin - DO_ALIGN (xmax - xmin); /*right side */
-                  
-                  /* modify width for real */
-                  dl = -(dx * 2);
-                  if (dx != 0)
-                    warpx = xm - (dx * hDirection);
-                }
-              else if (ref_v == C_RIGHT)
-                {
-                  dx = xmin + DO_ALIGN (*x - dl - xmin) - *x;
-                  /* Check the move is within limits */
-                  if (*x + dx < xmin)
-                    dx = xmin - *x; /*left side */
-                  
-                  /* modify width for real */
-                  dl = -dx;
-                  if (dx != 0)
-                    warpx = xm + dx;
-                }
-              else
-                {
-                  dx = 0;
-                  dl = xmin + DO_ALIGN (*x + *width + dl - xmin) - *x - *width;
-                  if (*x + *width + dl > xmax)
-                    dl = xmin + DO_ALIGN (xmax - xmin) - *x - *width; /*right side */
-                  if (dl != 0)
-                    warpx = xm + dl;
-                }
-            }
-          else
-            dx = 0;
-          
-          /* Compute vertical move */
-          if (dh != 0)
-            {
-              dh = dh * vDirection;	/* Take care for direction */
-              if (ref_h == C_HCENTER)
-                {
-                  dy = ymin + DO_ALIGN (*y - (dh / 2) - ymin) - *y;
-                  /* Check the move is within limits */
-                  if (*y + dy < ymin)
-                    dy = ymin - *y; /*upper border */
-                  if (*y + *height - dy > ymax)
-                    dy = *y + *height - ymin - DO_ALIGN (ymax - ymin);	/*bottom */
-                  /* change the height for real */
-                  dh = -(dy * 2);
-                  if (dy != 0)
-                    warpy = ym - (dy * vDirection);
-                }
-              else if (ref_h == C_BOTTOM)
-                {
-                  dy = ymin + DO_ALIGN (*y - dh - ymin) - *y;
-                  /* Check the move is within limits */
-                  if (*y + dy < ymin)
-                    dy = ymin - *y; /*upper border */
-                  /* change the height for real */
-                  dh = -dy;
-                  if (dy != 0)
-                    warpy = ym + dy;
-                }
-              else
-                {
-                  dy = 0;
-                  dh = ymin + DO_ALIGN (*y + *height + dh - ymin) - *y - *height;
-                  if (*y + *height + dh > ymax)
-                    dh = ymin + DO_ALIGN (ymax - ymin) - *y - *height; /*bottom */
-                  if (dh != 0)
-                    warpy = ym + dh;
-                }
-            }
-          else
-            dy = 0;
-          /* Should we move the box */
-          if ((dl != 0) || (dh != 0))
-            {
-              /* switch off the old box */
-              if (isEllipse)
-                InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-              else
-                BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-              /* is there any dependence between height and width */
-              *width = *width + dl;
-              *height = *height + dh;
-              if (percentW != 0)
-                {
-                  *width = *height * percentW / 100;
-                  dx = dy *  percentW / 100;
-                }
-              else if (percentH != 0)
-                {
-                  *height = *width * percentH / 100;
-                  dy = dx *  percentH / 100;
-                }
-              *x = *x + dx;
-              *y = *y + dy;
-              /* switch on the new one */
-              switch (box->BxHorizEdge)
-                {
-                case Right:
-                  xref = *width;
-                  break;
-                case VertMiddle:
-                  xref = *width / 2;
-                  break;
-                case VertRef:
-                  xref = box->BxVertRef;
-                  break;
-                default:
-                  xref = 0;
-                  break;
-                }
-              switch (box->BxVertEdge)
-                {
-                case Bottom:
-                  yref = *height;
-                  break;
-                case HorizMiddle:
-                  yref = *height / 2;
-                  break;
-                case HorizRef:
-                  yref = box->BxHorizRef;
-                  break;
-                default:
-                  yref = 0;
-                  break;
-                }  
-              if (isEllipse)
-                InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-              else
-                BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-            }
-          
-          /* Should we move the cursor */
-          if (warpx >= 0 || warpy >= 0)
-            {
-              if (warpx >= 0)
-                xm = warpx /*+ rect.left*/;
-              if (warpy >= 0)
-                ym = warpy /*+ rect.top*/;
-            }
-          break;
-          
-        case WM_PAINT:
-          WIN_HandleExpose (w, frame, event.wParam, event.lParam);
-        default:  break;
-        }
-#endif /* _WINGUI */
-    } 
-#ifndef _GL
-  /* Erase the box drawing */
-  if (isEllipse)
-    InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-  else
-    BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-#endif /* _GL */
-#endif /* _WX */
 }
 
 
@@ -1557,34 +1106,8 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
                      PtrBox box, int xmin, int xmax, int ymin, int ymax,
                      int xm, int ym, int percentW, int percentH)
 {
-#ifndef _WX
-  ThotWindow       w;
-#ifdef _WINGUI
-  POINT            cursorPos;
-#endif /* _WINGUI */
-  
-  /* select the correct cursor */
-  w = FrRef[frame];
-#ifdef _WINGUI
-#ifndef _GL
-  Gdc = GetDC (w);
-#endif /*_GL*/
-  SetCursor (LoadCursor (NULL, IDC_CROSS));
-  GetCursorPos (&cursorPos);
-  xm = cursorPos.x;
-  ym = cursorPos.y;
-  Resizing (frame, &x, &y, width, height, box, xmin, xmax, ymin, ymax, xm, ym,
-            percentW, percentH);
-  /* Erase the box drawing */
-  SetCursor (LoadCursor (NULL, IDC_ARROW));
-#ifndef _GL
-  ReleaseDC (w, Gdc);
-#endif /*_GL*/
-#endif /* _WINGUI */
-#else /* _WX */
- Resizing (frame, &x, &y, width, height, box, xmin, xmax, ymin, ymax, xm, ym,
+ Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym,
            percentW, percentH);
-#endif /* _WX */
 }
 
 
@@ -1597,16 +1120,8 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 		    PtrBox box, int xmin, int xmax, int ymin, int ymax,
 		    int xm, int ym)
 {  
-#ifdef _WINGUI
-  ThotEvent           event;
-  POINT               cursorPos;
-#endif /* _WINGUI */
   ThotWindow          w;
   PtrAbstractBox      pAb;
-#ifndef _WX
-  int                 ret, dx, dy, newx, newy;
-  int                 warpx, warpy;
-#endif /* _WX */
   int                 xref, yref;
   ThotBool            isEllipse;
 
@@ -1617,11 +1132,7 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 	       pAb->AbLeafType == LtGraphics &&
 	       (pAb->AbShape == 'a' || pAb->AbShape == 'c'));
    /* Pick the correct cursor */
-#ifndef _WX 
-  w = FrRef[frame];
-#else /* #ifndef _WX */
   w = (ThotWindow)FrameTable[frame].WdFrame;
-#endif /* #ifndef _WX */
   /* draw the current box geometry */
   switch (box->BxHorizEdge)
     {
@@ -1658,9 +1169,6 @@ static void Moving (int frame, int *x, int *y, int width, int height,
   else
     BoxGeometry (frame, *x, *y, width, height, *x + xref, *y + yref);
 
-
-#ifdef _WX
-
   TTALOGDEBUG_10( TTA_LOG_SVGEDIT, _T("Moving frame=%d width=%d height=%d box=%d xmin=%d xmax=%d ymin=%d ymax=%d xm=%d ym=%d"), frame, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
 
   AmayaFrame * p_frame = FrameTable[frame].WdFrame;
@@ -1675,127 +1183,6 @@ static void Moving (int frame, int *x, int *y, int width, int height,
     TtaHandleOneEvent (&ev);
   
   delete p_movingBoxEvtHandler;
-
-#else /* _WX */
-
-  /* Loop on user interraction */
-  ret = 0;
-  while (ret == 0)
-    {
-#ifdef _WINGUI
-      /*GetMessage (&event, NULL, 0, 0);*/
-	  GetMessage (&event, NULL, 0, 0); // force unicode version
-      switch (event.message)
-	{
-	case WM_LBUTTONUP:
-	  ret = 1;
-	  break;
-
-	case WM_MOUSEMOVE:
-	  GetCursorPos (&cursorPos);
-	  ScreenToClient (w, &cursorPos);
-	  /* compute the new box origin */
-	  newx = *x + cursorPos.x - xm;
-	  dx = xmin + DO_ALIGN (newx - xmin) - *x;
-	  newy = *y + cursorPos.y - ym;
-	  dy = ymin + DO_ALIGN (newy - ymin) - *y;
-	  newx = dx + *x;
-	  newy = dy + *y;
-	  /* Checks for limits */
-	  warpx = -1;
-	  warpy = -1;
-	  if (xmin == xmax)
-	    {
-	      newx = xmin; /*left side */
-	      warpx = xm;
-	    }
-	  else if (newx < xmin)
-	    {
-	      newx = xmin; /*left side */
-	      warpx = xm;
-	    }
-	  else if (newx + width > xmax)
-	    {
-	      if (xmin + width > xmax)
-		{
-		  newx = xmin; /*overflow on left side */
-		  warpx = xm;
-		}
-	      else
-		{
-		  newx = xmin + DO_ALIGN (xmax - width - xmin); /*cote droit */
-		  warpx = xm + newx - *x;
-		}
-	    }
-	  else
-	    xm += dx; /* New cursor location */
-
-	  dx = newx - *x;
-	  if (ymin == ymax)
-	    {
-	      newy = ymin; /*upper border */
-	      warpy = ym;
-	    }
-	  else if (newy < ymin)
-	    {
-	      newy = ymin; /*upper border */
-	      warpy = ym;
-	    }
-	  else if (newy + height > ymax)
-	    {
-	      if (ymin + height > ymax)
-		{
-		  newy = ymin; /*overflow on upper border */
-		  warpy = ym;
-		}
-	      else
-		{
-		  newy = ymin + DO_ALIGN (ymax - height - ymin); /*cote inferieur */
-		  warpy = ym + newy - *y;
-		}
-	    }
-	  else
-	    ym += dy; /* New cursor location */
-	  dy = newy - *y;
-
-	  /* Should we move the box */
-	  if ((dx != 0) || (dy != 0))
-	    {
-	      if (isEllipse)
-		{
-		  /* old box */
-		  InvertEllipse (frame, *x, *y, width, height, *x + xref, *y + yref);
-		  /* new box */
-		  InvertEllipse (frame, newx, newy, width, height, newx + xref, newy + yref);
-		}
-	      else
-		{
-		  /* old box */
-		  BoxGeometry (frame, *x, *y, width, height, *x + xref, *y + yref);
-		  /* new box */
-		  BoxGeometry (frame, newx, newy, width, height, newx + xref, newy + yref);
-		}
-	      *x = newx;
-	      *y = newy;
-	    }
-
-	  /* Should we move the cursor */
-	  if (warpx >= 0 || warpy >= 0)
-	    {
-	      if (warpx >= 0)
-		xm = warpx;
-	      if (warpy >= 0)
-		ym = warpy;
-	    }
-	  break;
-
-	case WM_PAINT:
-	  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
-	default: break;
-	}
-#endif /* _WINGUI */
-    }
-#endif /* _WX */
 
   /* erase the box drawing */
   if (isEllipse)
@@ -1858,19 +1245,10 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 		     int percentH)
 {
   ThotWindow          w;
-#ifdef _WINGUI
-  ThotEvent           event;
-  RECT                rect;
-  POINT               cursorPos;
-  HCURSOR             cross;
-#endif /* _WINGUI */
   PtrAbstractBox      pAb;
   int                 xm, ym;
   int                 dx, dy;
   int                 ret;
-#ifndef _WX
-  int                 newx, newy;
-#endif /* _WX */
   int                 xref, yref;
   ThotBool            isEllipse;
 
@@ -1933,20 +1311,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
       break;
     }
   /* change the cursor, modify library state */
-#ifndef _WX 
-  w = FrRef[frame];
-#else /* #ifndef _WX */
   w = (ThotWindow)FrameTable[frame].WdFrame;
-#endif /* #ifndef _WX */
-
-#ifdef _WINGUI
-  cross = LoadCursor (NULL, IDC_CROSS);
-#ifndef _GL
-  Gdc = GetDC (w);
-#endif /*_GL*/
-  GetWindowRect (w, &rect);
-  SetCursorPos (*x + rect.left, *y + rect.top);
-#endif /* _WINGUI */
 
   if (isEllipse)
     InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
@@ -1954,81 +1319,6 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
     BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
   /* Loop on user input to keep the first point */
   ret = 0;
-#ifndef _WX
-  while (ret == 0)
-    {
-#ifdef _WINGUI
-     /*GetMessage (&event, NULL, 0, 0);*/
-	 GetMessage (&event, NULL, 0, 0); // force unicode version
-	 SetCursor (cross);
-      if (event.message == WM_MOUSEMOVE)
-	{
-	  GetCursorPos (&cursorPos);
-	  /* check the coordinates are withing limits */
-	  newx = DO_ALIGN (cursorPos.x - xmin);
-	  newx += xmin;
-	  newy = DO_ALIGN (cursorPos.y - ymin);
-	  newy += ymin;
-	  if (newx - rect.left < xmin || newx - rect.left > xmax ||
-	      newy - rect.top < ymin || newy - rect.top > ymax)
-            SetCursorPos (*x + rect.left, *y + rect.top);
-	  else if ((newx != *x && PosX) || (newy != *y && PosY))
-	    {
-	      if (isEllipse)
-		InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-	      else
-	      BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-	      if (PosX)
-		*x = newx - rect.left;
-	      if (PosY)
-		*y = newy - rect.top;
-	      
-	      if (isEllipse)
-		InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-	      else
-		BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-	      /* the postion is fixed */
-	      if (!PosX || !PosY)
-		SetCursorPos (*x + rect.left, *y + rect.top);
-	    }
-	}
-      else
-	{
-	  switch (event.message)
-	    {
-	    case WM_LBUTTONDOWN:
-	    case WM_MBUTTONDOWN:
-	    case WM_RBUTTONDOWN:	  
-	      GetCursorPos (&cursorPos);
-	      if (PosX)
-		xm = xmin + DO_ALIGN ((int) cursorPos.x - xmin);
-	      else
-		xm = *x;
-	      if (PosY)
-		ym = ymin + DO_ALIGN ((int) cursorPos.y - ymin);
-	      else
-		ym = *y;
-	      
-	      /* check the coordinates */
-	      if ((xm - rect.left) < xmin || (xm - rect.left) > xmax || !PosX ||
-		  (ym - rect.top) < ymin || (ym - rect.top) > ymax || !PosY)
-		{
-		  SetCursorPos (xm + rect.left, ym + rect.top);
-		  if (!PosX && !PosY)
-		    ret = 1;
-		}
-	      else
-		ret = 1;
-	      break; 
-	      
-		case WM_PAINT:
-		  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
-	    default: break;
-	    } 
-	} 
-#endif /* _WINGUI */
-    }
-#endif /* _WX */
 
   /* switch off the old box geometry */
   if (isEllipse)
@@ -2036,16 +1326,5 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   else
     BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
 
-#ifdef _WINGUI 
-  *x = xm - rect.left;
-  *y = ym - rect.top;
-  SetCursor (LoadCursor (NULL, IDC_CROSS));
-#endif /* _WINGUI */
-    Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
-#ifdef _WINGUI 
-#ifndef _GL
-  ReleaseDC (w, Gdc);
-#endif /*_GL*/
-  SetCursor (LoadCursor (NULL, IDC_ARROW));
-#endif /* _WINGUI */
+    Resizing (frame, *x, *y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
 }

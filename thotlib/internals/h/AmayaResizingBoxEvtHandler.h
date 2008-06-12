@@ -20,7 +20,7 @@ class AmayaResizingBoxEvtHandler : public wxEvtHandler
 
   AmayaResizingBoxEvtHandler();
   AmayaResizingBoxEvtHandler( AmayaFrame * p_frame,
-                              int *x, int *y, int *width, int *height,
+                              int x, int y, int *width, int *height,
                               PtrBox box, int xmin, int xmax, int ymin, int ymax,
                               int xm, int ym, int percentW, int percentH );
 
@@ -43,8 +43,8 @@ class AmayaResizingBoxEvtHandler : public wxEvtHandler
   AmayaFrame * m_pFrame;
   int m_FrameId;
 
-  int *m_pX;
-  int *m_pY;
+  int m_pX;
+  int m_pY;
   int *m_pWidth;
   int *m_pHeight;
   PtrBox m_Box;
@@ -54,12 +54,8 @@ class AmayaResizingBoxEvtHandler : public wxEvtHandler
   int m_Ymax;
   int m_Xm;
   int m_Ym;
-  int m_PercentW;
-  int m_PercentH;
   int m_Xref;
   int m_Yref;
-  int m_RefH;
-  int m_RefV;
   int m_HDirection;
   int m_VDirection;
   bool m_IsEllipse;

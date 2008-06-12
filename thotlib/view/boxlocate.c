@@ -2604,7 +2604,7 @@ static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame,
   (resp. vertically).
   ----------------------------------------------------------------------*/
 void ApplyDirectResize (int frame, int xm, int ym,
-                  ThotBool resHoriz, ThotBool resVert)
+                        ThotBool resHoriz, ThotBool resVert)
 {
   PtrBox              pBox;
   PtrAbstractBox      pAb;

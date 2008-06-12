@@ -153,7 +153,6 @@ void AmayaWindow::SaveConfig()
   -----------------------------------------------------------------------*/
 AmayaPage * AmayaWindow::CreatePage( Document doc,  bool attach, int position )
 {
-  printf("AmayaWindow::CreatePage\n");
   return NULL;
 }
 /*----------------------------------------------------------------------

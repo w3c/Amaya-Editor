@@ -4487,7 +4487,7 @@ FIELDSET: BEGIN
 #ifdef PAGE
         PageBreak: Yes;
 #endif
-        VertPos: Top = Previous not Table_head . Bottom;
+        VertPos: Top = Previous Table_head . Top;
         BorderTopWidth: Enclosing =;
         BorderRightWidth: Enclosing =;
         BorderBottomWidth: Enclosing =;
