@@ -1972,7 +1972,16 @@ void CreateGraphicElement (int entry)
 	      break;
 
 	    case 23: /* cube */
-	      if(ly < lx)lx = ly; else ly = lx;	      
+	      if(ly < lx)
+		{
+		  lx = ly;
+		  x2 = x1 + lx;
+		}
+	      else
+		{		
+		  ly = lx;	      
+		  y2 = y1 + lx;
+		}
 
 	    case 24: /* parallelepiped */
               attrType.AttrTypeNum = SVG_ATTR_d;
