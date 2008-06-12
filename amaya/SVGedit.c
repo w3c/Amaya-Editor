@@ -61,6 +61,7 @@ static ThotBool InCreation = FALSE;
 #include "Xmlbuilder_f.h"
 
 extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2);
+extern int ActiveFrame;
 
 #ifdef _WX
 #include "appdialogue_wx.h"
@@ -1579,6 +1580,8 @@ void CreateGraphicElement (int entry)
 
   int x1, y1, x2, y2, lx, ly;
 
+  char buffer[300];
+
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
     /* there is no selection. Nothing to do */
@@ -1770,6 +1773,42 @@ void CreateGraphicElement (int entry)
       newType.ElTypeNum = SVG_EL_rect;
       break;
 
+    case 17: /* diamond */
+      newType.ElTypeNum = SVG_EL_polygon;
+      break;
+
+    case 18: /* trapezium */
+      newType.ElTypeNum = SVG_EL_polygon;
+      break;
+
+    case 19: /* parallelogram */
+      newType.ElTypeNum = SVG_EL_polygon;
+      break;
+
+    case 20: /* equilateral triangle */
+      newType.ElTypeNum = SVG_EL_polygon;
+      break;
+
+    case 21: /* isosceles triangle */
+      newType.ElTypeNum = SVG_EL_polygon;
+      break;
+
+    case 22: /* rectangle triangle */
+      newType.ElTypeNum = SVG_EL_polygon;
+      break;
+
+    case 23: /* cube */
+      newType.ElTypeNum = SVG_EL_path;
+      break;
+
+    case 24: /* parallelepiped */
+      newType.ElTypeNum = SVG_EL_path;
+      break;
+
+    case 25: /* cylinder */
+      newType.ElTypeNum = SVG_EL_path;
+      break;
+
     default:
       newType.ElTypeNum = SVG_EL_rect;
       break;
@@ -1795,7 +1834,7 @@ void CreateGraphicElement (int entry)
       if(entry >= 12 || (entry >= 1 && entry <= 4))
 	{
 	  AskSurroundingBox(&x1, &y1, &x2, &y2);
-	  TtaDisplayMessage(INFO, "x1 = %d, y1 = %d, x2 = %d, y2 = %d", x1, y1, x2, y2);
+	  /*TtaDisplayMessage(INFO, "x1 = %d, y1 = %d, x2 = %d, y2 = %d", x1, y1, x2, y2);*/
 
 	  lx = x2 - x1;
 	  ly = y2 - y1;
@@ -1803,6 +1842,10 @@ void CreateGraphicElement (int entry)
 	  switch(entry)
 	    {
 	      
+	    /* Square */
+	    case 15:
+	      if(ly < lx)lx = ly; else ly = lx;
+
 	      /* Rectangle */
 	    case 1:
 	      UpdatePositionAttribute (newEl, doc, x1, TRUE);
@@ -1810,6 +1853,10 @@ void CreateGraphicElement (int entry)
 	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
 	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
 	      break;
+
+	      /* Rounded Square */
+	    case 16:
+	      if(ly < lx)lx = ly; else ly = lx;
 
 	      /* Rounded-Rectangle */
 	    case 2:
@@ -1842,27 +1889,130 @@ void CreateGraphicElement (int entry)
 	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
 	      break;
 
-	    /* Square */
-	    case 15:
-	      if(ly < lx)lx = ly; else ly = lx;
-	      UpdatePositionAttribute (newEl, doc, x1, TRUE);
-	      UpdatePositionAttribute (newEl, doc, y1, FALSE);
-	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
-	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
-	      break;
-
-	      /* Rounded Square */
-	    case 16:
-	      if(ly < lx)lx = ly; else ly = lx;
-	      UpdatePositionAttribute (newEl, doc, x1, TRUE);
-	      UpdatePositionAttribute (newEl, doc, y1, FALSE);
-	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
-	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
-
-              attrType.AttrTypeNum = SVG_ATTR_rx;
+	    case 17: /* diamond */
+              attrType.AttrTypeNum = SVG_ATTR_points;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (newEl, attr, doc);
-              TtaSetAttributeText (attr, "5px", newEl, doc);
+	      sprintf(buffer, "%d %d %d %d %d %d %d %d",
+		      x1         , y1 + lx / 2,
+		      x1 + lx / 2, y1         ,
+		      x2         , y1 + lx / 2,
+		      x1 + lx / 2, y2          
+		      );
+              TtaSetAttributeText (attr, buffer, newEl, doc);
+              ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+	      break;
+
+	    case 18: /* trapezium */
+              attrType.AttrTypeNum = SVG_ATTR_points;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+	      sprintf(buffer, "%d %d %d %d %d %d %d %d",
+		      x1, y2,
+		      x1 + lx / 4, y1,
+		      x2 - lx / 4, y1,
+		      x2, y2
+		      );
+              TtaSetAttributeText (attr, buffer, newEl, doc);
+              ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+	      break;
+
+	    case 19: /* parallelogram */
+              attrType.AttrTypeNum = SVG_ATTR_points;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+	      sprintf(buffer, "%d %d %d %d %d %d %d %d",
+		      x1 + lx/4, y1,
+		      x2, y1,
+		      x2 - lx / 4, y2,
+		      x1, y2
+		      );
+              TtaSetAttributeText (attr, buffer, newEl, doc);
+              ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+	      break;
+
+	    case 20: /* equilateral triangle */
+              attrType.AttrTypeNum = SVG_ATTR_points;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+	      lx = (int) (floor(2 *  ly / sqrt(3)));
+	      sprintf(buffer, "%d %d %d %d %d %d",
+		      x1 + lx/2, y1,
+		      x1 + lx, y2,
+		      x1, y2
+		      );
+              TtaSetAttributeText (attr, buffer, newEl, doc);
+              ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+	      break;
+
+	    case 21: /* isosceles triangle */
+              attrType.AttrTypeNum = SVG_ATTR_points;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+	      sprintf(buffer, "%d %d %d %d %d %d",
+		      x1 + lx/2, y1,
+		      x2, y2,
+		      x1, y2
+		      );
+              TtaSetAttributeText (attr, buffer, newEl, doc);
+              ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+	      break;
+
+	    case 22: /* rectangle triangle */
+              attrType.AttrTypeNum = SVG_ATTR_points;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+	      sprintf(buffer, "%d %d %d %d %d %d",
+		      x1, y1,
+		      x2, y1,
+		      x1, y2
+		      );
+              TtaSetAttributeText (attr, buffer, newEl, doc);
+              ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+	      break;
+
+	    case 23: /* cube */
+	      if(ly < lx)lx = ly; else ly = lx;	      
+
+	    case 24: /* parallelepiped */
+              attrType.AttrTypeNum = SVG_ATTR_d;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+	      sprintf(buffer, "M %d %d L %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d M %d %d L %d %d",
+		      x1, y1+ly/4,
+		      x1+lx/4, y1,
+		      x2, y1,
+		      x2, y2-ly/4,
+		      x2-lx/4, y2,
+		      x1,y2,
+		      x1, y1+ly/4,
+		      x2-lx/4, y1+ly/4,
+		      x2-lx/4, y2,
+		      x2-lx/4, y1+ly/4,
+		      x2, y1
+		      );
+              TtaSetAttributeText (attr, buffer, newEl, doc);
+              ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+	      break;
+
+	    case 25: /* Cylinder */
+              attrType.AttrTypeNum = SVG_ATTR_d;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+sprintf(buffer, "M %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 1 %d %d",
+		      x2, y1+ly/6,
+		      lx/2, ly/6,
+	              x1, y1+ly/6,
+
+		      x1, y2-ly/6,
+	              lx/2, ly/6,
+		      x2, y2-ly/6,
+
+		      x2, y1+ly/6,
+	              lx/2, ly/6,
+		      x1, y1+ly/6
+		      );
+              TtaSetAttributeText (attr, buffer, newEl, doc);
               ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
 	      break;
 

@@ -54,6 +54,9 @@
           <object class="tool" name="wxID_PANEL_SVG_PARALLELOGRAM">
             <bitmap>../icons/16x16/SVG_parallelogram.png</bitmap>
           </object>
+          <object class="tool" name="wxID_PANEL_SVG_TRAPEZIUM">
+            <bitmap>../icons/16x16/SVG_trapezium.png</bitmap>
+          </object>
         </object>
       </object>
       <object class="sizeritem">
