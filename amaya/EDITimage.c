@@ -616,7 +616,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
           if (TtaFileExist (pathimage))
             /* it's a paste command */
             TtaFileCopy (pathimage, desc->localName);
-          else if (LastURLImage && TtaFileExist (LastURLImage) &&
+          else if (TtaFileExist (LastURLImage) &&
                    desc->localName && !TtaFileExist (desc->localName))
             /* it's a new inserted image */
             TtaFileCopy (LastURLImage, desc->localName);
