@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2);
 extern ThotBool TtaIsTextInserting ( void );
 extern void TtcInsertGraph ( Document document,
                              View view,

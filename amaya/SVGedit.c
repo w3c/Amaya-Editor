@@ -60,12 +60,17 @@ static ThotBool InCreation = FALSE;
 #include "XLinkedit_f.h"
 #include "Xmlbuilder_f.h"
 
+<<<<<<< SVGedit.c
+extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2);
+
+=======
 #ifdef _WX
 #include "appdialogue_wx.h"
 #include "paneltypes_wx.h"
 #endif /* _WX */
 
 
+>>>>>>> 1.115
 #ifdef _GTK
 /* used for the close palette callback*/
 ThotWidget CatWidget(int ref);
@@ -1576,17 +1581,26 @@ void CreateGraphicElement (int entry)
   int               docModified;
   ThotBool	    found, newGraph = FALSE, oldStructureChecking;;
 
+  int x1, y1, x2, y2;
+
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
     /* there is no selection. Nothing to do */
+    {
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
     return;
+    }
+
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
   if (first)
     {
       parent = TtaGetParent (first);
       if (TtaIsReadOnly (parent))
         /* do not create new elements within a read-only element */
+	{
+	TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
         return;
+	}
     }
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   selEl = first;
@@ -1618,6 +1632,7 @@ void CreateGraphicElement (int entry)
                 {
                   /* It's not a generic XML element */
                   TtaCancelLastRegisteredSequence (doc);
+		  TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
                   return;
                 }
             }
@@ -1657,6 +1672,8 @@ void CreateGraphicElement (int entry)
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (SvgRoot, attr, doc);
               TtaSetAttributeText (attr, SVG_VERSION, SvgRoot, doc);
+	      UpdateWidthHeightAttribute (SvgRoot, doc, 500, TRUE);
+	      UpdateWidthHeightAttribute (SvgRoot, doc, 200, FALSE);
             }
         }
     }
@@ -1692,6 +1709,10 @@ void CreateGraphicElement (int entry)
       parent = SvgRoot;
       sibling = TtaGetLastChild (SvgRoot);
     }
+
+
+  /* Select the SVG element where the user will draw */
+  TtaSelectElement(doc, SvgRoot);
 
   newType.ElSSchema = SvgSchema;
   newType.ElTypeNum = 0;
@@ -1745,9 +1766,10 @@ void CreateGraphicElement (int entry)
       newType.ElTypeNum = 0;
       break;
     default:
-      newType.ElTypeNum = 0;
+      newType.ElTypeNum = SVG_EL_rect;
       break;
     }
+
   InCreation = TRUE;
   if (newType.ElTypeNum > 0)
     {
@@ -1755,15 +1777,37 @@ void CreateGraphicElement (int entry)
       /* ask Thot to stop displaying changes made in the document */
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, DeferredDisplay);
-      
+
       /* for rectangles, circle, ellipse, and text, ask for an elastic box */
-      if (newType.ElTypeNum == SVG_EL_rect ||
+      if (/*newType.ElTypeNum == SVG_EL_rect || */
           newType.ElTypeNum == SVG_EL_circle_ ||
           newType.ElTypeNum == SVG_EL_ellipse ||
           newType.ElTypeNum == SVG_EL_text_)
         TtaAskFirstCreation ();
       /* create the new element */
       newEl = TtaNewElement (doc, newType);
+
+
+  if(entry >= 12)
+    {
+      
+      AskSurroundingBox(&x1, &y1, &x2, &y2);
+      TtaDisplayMessage(INFO, "x1 = %d, y1 = %d, x2 = %d, y2 = %d", x1, y1, x2, y2);
+
+  elType = TtaGetElementType (newEl);
+  attrType.AttrSSchema = elType.ElSSchema;
+
+  attrType.AttrTypeNum = SVG_ATTR_x;
+  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
+
+  attrType.AttrTypeNum = SVG_ATTR_y;
+  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+
+  UpdateWidthHeightAttribute (newEl, doc, x2 - x1, TRUE);
+  UpdateWidthHeightAttribute (newEl, doc, y2 - y1, FALSE);
+
+    }      
+
       if (!sibling)
         TtaInsertFirstChild (&newEl, parent, doc);
       else
@@ -1994,20 +2038,22 @@ void CreateGraphicElement (int entry)
             }
         }
     }
+
   if (selEl != NULL)
     /* select the right element */
     TtaSelectElement (doc, selEl);
   
   /* adapt the size of the SVG root element if necessary */
   InCreation = FALSE;
-  CheckSVGRoot (doc, newEl);
-  SetGraphicDepths (doc, SvgRoot);
+  /*CheckSVGRoot (doc, newEl);
+    SetGraphicDepths (doc, SvgRoot);*/
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
   if (newType.ElTypeNum == 0)
     InitInfo ("      ", TtaGetMessage (AMAYA, AM_NOT_AVAILABLE));
 #endif /* _SVG */
 }
+
 
 #ifdef _SVG
 /*----------------------------------------------------------------------

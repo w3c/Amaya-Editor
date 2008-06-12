@@ -2004,6 +2004,58 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 }
 
 /*----------------------------------------------------------------------
+  AskSurroundingBox
+  Ask the user the position and size of the surrounding
+  box.
+
+  (x1,y1)
+       ----
+       |  |
+       |  |
+       ----
+         (x2,y2)
+
+  --------------------------------------------------------------------*/
+extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2)
+{
+  PtrBox pBox;
+  ViewFrame          *pFrame;
+  int frame;
+  int tmp;
+
+  frame = ActiveFrame;
+
+  *x1 = 0;
+  *x2 = 0;
+  *y1 = 0;
+  *y2 = 0;
+
+  if(frame <= 0)return;
+
+  pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
+
+  if (pBox == NULL)
+    {
+      TtaSetFocus ();
+      frame = ActiveFrame;
+      if (frame == 0)return;
+      pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
+      if (pBox == NULL)return;
+    }
+
+  pFrame = &ViewFrameTable[frame - 1];
+
+  *x1 = pBox->BxXOrg - pFrame->FrXOrg;
+  *y1 = pBox->BxYOrg - pFrame->FrYOrg;
+
+  LineCreation (frame, pBox, x1, y1, x2, y2);
+
+  if(*x2 < *x1){tmp = *x2; *x2 = *x1; *x1 = tmp;}
+  if(*y2 < *y1){tmp = *y2; *y2 = *y1; *y1 = tmp;}
+}
+
+
+/*----------------------------------------------------------------------
   ContentEditing manages Cut, Paste, Copy, Remvoe, and Insert commands.
   Return TRUE if a Cut command moved the selection to a next element.
   ----------------------------------------------------------------------*/
