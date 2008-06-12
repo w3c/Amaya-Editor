@@ -237,7 +237,11 @@ void SetBadCard (ThotBool badbuffer)
   ----------------------------------------------------------------------*/
 ThotBool GetBadCard ()
 {
+#ifdef _MACOS
+  return FALSE;
+#else /* _MACOS */
   return BadGLCard;
+#endif /* _MACOS */
 }
 
 /*----------------------------------------------------------------------

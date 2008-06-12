@@ -1712,7 +1712,11 @@ void GLResize (int width, int height, int x, int y)
   ----------------------------------------------------------------------*/
 ThotBool glhard()
 {
+#ifdef _MACOS
+  return FALSE;
+#else /* _MACOS */
   return (!Software_Mode);
+#endif /* _MACOS */
 }
 
 /*----------------------------------------------------------------------
