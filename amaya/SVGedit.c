@@ -60,6 +60,12 @@ static ThotBool InCreation = FALSE;
 #include "XLinkedit_f.h"
 #include "Xmlbuilder_f.h"
 
+#ifdef _WX
+#include "appdialogue_wx.h"
+#include "paneltypes_wx.h"
+#endif /* _WX */
+
+
 #ifdef _GTK
 /* used for the close palette callback*/
 ThotWidget CatWidget(int ref);
@@ -177,6 +183,7 @@ void GraphicsSelectionChanged (NotifyElement * event)
   
   UpdateXmlElementListTool(event->element,event->document);
   TtaSetStatusSelectedElement(event->document, 1, event->element);
+  TtaRaisePanel(WXAMAYA_PANEL_SVG);
 }
 
 /*----------------------------------------------------------------------

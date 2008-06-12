@@ -117,5 +117,38 @@ void AmayaElementToolPanel::SendDataToPanel(int panel_type, AmayaParams& p )
   }
 }
 
+/*----------------------------------------------------------------------
+ *       Class:  AmayaElementToolPanel
+ *      Method:  PanelTypeToIndex
+ * Description:  Get the panel index for specified type
+  -----------------------------------------------------------------------*/
+int AmayaElementToolPanel::PanelTypeToIndex(int panel_type)const
+{
+  switch(panel_type)
+  {
+    case WXAMAYA_PANEL_XHTML:
+      return 0;
+    case WXAMAYA_PANEL_MATHML:
+      return 1;
+    case WXAMAYA_PANEL_XML:
+      return 2;
+    case WXAMAYA_PANEL_SVG:
+      return 3;
+    default:
+      return wxNOT_FOUND;
+  }
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaElementToolPanel
+ *      Method:  RaisePanel
+ * Description:  Raise the specified panel
+  -----------------------------------------------------------------------*/
+void AmayaElementToolPanel::RaisePanel(int panel_type)
+{
+  int index = PanelTypeToIndex(panel_type);
+  if(index!=wxNOT_FOUND)
+    m_notebook->ChangeSelection(index);
+}
 
 #endif /* #ifdef _WX */

@@ -324,6 +324,7 @@ void AmayaNormalWindow::SendDataToPanel(int panel_type, AmayaParams& params)
     case WXAMAYA_PANEL_XHTML:
     case WXAMAYA_PANEL_MATHML:
     case WXAMAYA_PANEL_XML:
+    case WXAMAYA_PANEL_SVG:
       panel = GetToolPanel(WXAMAYA_PANEL_ELEMENTS);
       if(panel)
         ((AmayaElementToolPanel*)panel)->SendDataToPanel(panel_type, params);
@@ -332,6 +333,33 @@ void AmayaNormalWindow::SendDataToPanel(int panel_type, AmayaParams& params)
       panel = GetToolPanel(panel_type);
       if(panel)
         panel->SendDataToPanel(params);
+      break;      
+  }
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  RaisePanel
+ * Description:  Raiser the specified panel
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::RaisePanel(int panel_type)
+{
+  AmayaToolPanel* panel;
+  
+  switch(panel_type)
+  {
+    case WXAMAYA_PANEL_XHTML:
+    case WXAMAYA_PANEL_MATHML:
+    case WXAMAYA_PANEL_XML:
+    case WXAMAYA_PANEL_SVG:
+      panel = GetToolPanel(WXAMAYA_PANEL_ELEMENTS);
+      if(panel)
+        ((AmayaElementToolPanel*)panel)->RaisePanel(panel_type);
+      break;
+    default:
+      panel = GetToolPanel(panel_type);
+      if(panel)
+        panel->Raise();
       break;      
   }
 }

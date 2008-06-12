@@ -41,6 +41,9 @@ public:
   
   virtual void SendDataToPanel(int panel_type, AmayaParams& params );
   
+  int PanelTypeToIndex(int panel_type)const;
+  void RaisePanel(int panel_type);
+  
 protected:
   wxNotebook* m_notebook;
   wxImageList m_imageList;

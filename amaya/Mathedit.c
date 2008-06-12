@@ -91,6 +91,8 @@ static Document DocMathElementSelected = 0;
 #include "UIcss_f.h"
 #ifdef _WX
 #include "wxdialogapi_f.h"
+#include "appdialogue_wx.h"
+#include "paneltypes_wx.h"
 #endif /* _WX */
 #ifdef _WINGUI
 #include "wininclude.h"
@@ -1224,6 +1226,7 @@ void MathSelectionChanged (NotifyElement *event)
     }
     UpdateXmlElementListTool (event->element,event->document);
     TtaSetStatusSelectedElement (event->document, 1, event->element);
+    TtaRaisePanel(WXAMAYA_PANEL_MATHML);
 }
 
 /*----------------------------------------------------------------------

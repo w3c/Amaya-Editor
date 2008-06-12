@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern ThotBool CheckValidProfile ( NotifyElement *event );
 extern ThotBool CheckGenerator ( NotifyElement *event );
 extern ThotBool CheckUSEMAP ( NotifyAttribute *event );
@@ -81,7 +80,6 @@ extern void SendByMail ( Document document,
                          View view );
 
 #else /* __STDC__ */
-
 extern ThotBool CheckValidProfile ( NotifyElement *event );
 extern ThotBool CheckGenerator ( NotifyElement *event );
 extern ThotBool CheckUSEMAP ( NotifyAttribute *event );

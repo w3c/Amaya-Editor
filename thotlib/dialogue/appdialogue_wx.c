@@ -2444,4 +2444,14 @@ void TtaCloseAllHelpWindows ()
     }
 }
 
+/*----------------------------------------------------------------------
+  TtaRaiserPanel
+  ----------------------------------------------------------------------*/
+void TtaRaisePanel(int panel_type)
+{
+  AmayaWindow * activeWindow = TtaGetActiveWindow();
+  if(activeWindow)
+    activeWindow->RaisePanel(panel_type);
+}
+
 #endif /* _WX */

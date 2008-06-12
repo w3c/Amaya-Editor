@@ -32,6 +32,11 @@
 #include "HTMLactions_f.h"
 #include "AHTURLTools_f.h"
 
+#ifdef _WX
+#include "appdialogue_wx.h"
+#include "paneltypes_wx.h"
+#endif /* _WX */
+
 #define MaxMsgLength 200
 
 /* Mapping table of XML attribute values */
@@ -100,6 +105,7 @@ void XmlSelectionChanged (NotifyElement *event)
   
   UpdateXmlElementListTool(event->element,event->document);
   TtaSetStatusSelectedElement(event->document, 1, event->element);
+  TtaRaisePanel(WXAMAYA_PANEL_XML);
 }
 
 /*----------------------------------------------------------------------
