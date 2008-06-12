@@ -1579,6 +1579,9 @@ void CreateGraphicElement (int entry)
   ThotBool	    found, newGraph = FALSE, oldStructureChecking;;
 
   int x1, y1, x2, y2, lx, ly;
+  _ParserData context;
+
+  int error;
 
   char buffer[300];
 
@@ -1589,6 +1592,8 @@ void CreateGraphicElement (int entry)
     TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
     return;
     }
+
+  context.doc = doc; 
 
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
   if (first)
@@ -1905,11 +1910,20 @@ void CreateGraphicElement (int entry)
 
 	      /* Rectangle */
 	    case 1:
-	      UpdatePositionAttribute (newEl, doc, x1, TRUE);
-	      UpdatePositionAttribute (newEl, doc, y1, FALSE);
-	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
-	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
-	      SVGElementCreated (newEl, doc);
+	      SVGElementComplete (&context, newEl, &error);
+
+	      attrType.AttrTypeNum = SVG_ATTR_x;
+	      UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_y;
+	      UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_width_;
+	      UpdateAttrText (newEl, doc, attrType, lx, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_height_;
+	      UpdateAttrText (newEl, doc, attrType, ly, FALSE, TRUE);
+
 	      break;
 
 	      /* Rounded Square */
@@ -1918,10 +1932,19 @@ void CreateGraphicElement (int entry)
 
 	      /* Rounded-Rectangle */
 	    case 2:
-	      UpdatePositionAttribute (newEl, doc, x1, TRUE);
-	      UpdatePositionAttribute (newEl, doc, y1, FALSE);
-	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
-	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
+	      SVGElementComplete (&context, newEl, &error);
+
+	      attrType.AttrTypeNum = SVG_ATTR_x;
+	      UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_y;
+	      UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_width_;
+	      UpdateAttrText (newEl, doc, attrType, lx, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_height_;
+	      UpdateAttrText (newEl, doc, attrType, ly, FALSE, TRUE);
 
               attrType.AttrTypeNum = SVG_ATTR_rx;
               attr = TtaNewAttribute (attrType);
@@ -1933,18 +1956,22 @@ void CreateGraphicElement (int entry)
 	      /* Circle */
 	    case 3:
 	      if(ly < lx)lx = ly; else ly = lx;
-	      UpdatePositionAttribute (newEl, doc, x1 + lx / 2, TRUE);
-	      UpdatePositionAttribute (newEl, doc, y1 + ly / 2, FALSE);
-	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
-	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
-	      break;
 
 	      /* Ellipse */
 	    case 4:
-	      UpdatePositionAttribute (newEl, doc, x1 + lx / 2, TRUE);
-	      UpdatePositionAttribute (newEl, doc, y1 + ly / 2, FALSE);
-	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
-	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
+	      SVGElementComplete (&context, newEl, &error);
+
+	      attrType.AttrTypeNum = SVG_ATTR_cx;
+	      UpdateAttrText (newEl, doc, attrType, x1+lx/2, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_cy;
+	      UpdateAttrText (newEl, doc, attrType, y1+ly/2, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_rx;
+	      UpdateAttrText (newEl, doc, attrType, lx/2, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_ry;
+	      UpdateAttrText (newEl, doc, attrType, ly/2, FALSE, TRUE);;
 	      break;
 
 	    case 17: /* diamond */
