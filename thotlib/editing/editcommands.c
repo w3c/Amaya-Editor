@@ -2003,6 +2003,47 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
     }
 }
 
+
+/*----------------------------------------------------------------------
+  AskTwoPoints
+  Ask the user to enter two points
+
+ --------------------------------------------------------------------*/
+extern void AskTwoPoints(int *x1, int *y1, int *x2, int *y2)
+{
+  PtrBox pBox;
+  ViewFrame          *pFrame;
+  int frame;
+
+  frame = ActiveFrame;
+
+  *x1 = 0;
+  *x2 = 0;
+  *y1 = 0;
+  *y2 = 0;
+
+  if(frame <= 0)return;
+
+  pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
+
+  if (pBox == NULL)
+    {
+      TtaSetFocus ();
+      frame = ActiveFrame;
+      if (frame == 0)return;
+      pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
+      if (pBox == NULL)return;
+    }
+
+  pFrame = &ViewFrameTable[frame - 1];
+
+  *x1 = pBox->BxXOrg - pFrame->FrXOrg;
+  *y1 = pBox->BxYOrg - pFrame->FrYOrg;
+
+  LineCreation (frame, pBox, x1, y1, x2, y2);
+
+}
+
 /*----------------------------------------------------------------------
   AskSurroundingBox
   Ask the user the position and size of the surrounding

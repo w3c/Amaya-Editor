@@ -60,6 +60,7 @@ static ThotBool InCreation = FALSE;
 #include "XLinkedit_f.h"
 #include "Xmlbuilder_f.h"
 
+extern void AskTwoPoints(int *x1, int *y1, int *x2, int *y2);
 extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2);
 extern int ActiveFrame;
 
@@ -1554,6 +1555,74 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
 }
 #endif /* _SVG */
 
+
+
+void GetArrowCoord(int *x1, int *y1, int *x2, int *y2, int size)
+{
+  int newX1, newY1, newX2, newY2;
+
+  if(*x1 == *x2)
+    {
+      newX1 = *x2 - size;
+      newX2 = *x2 + size;
+
+      if(*y1 < *y2)
+	{
+	  /* |
+             v */
+
+	  newY1 = *y2 - size;
+	  newY2 = *y2 - size;
+        }
+      else
+        {
+	  /* ^
+             | */
+	  newY1 = *y2 + size;
+	  newY2 = *y2 + size;	  
+        }
+    }
+  else if(*x1 < *x2)
+    {
+      newX1 = *x2;
+      newX2 = *x2 + size;
+
+      if(*y1 < *y2)
+	{
+	  newY1 = *y2 + size;
+	  newY2 = *y2;
+	}
+      else
+	{
+	  newY1 = *y2 - size;
+	  newY2 = *y2;
+	}
+    }
+  else
+    {
+      newX2 = *x2;
+      newX1 = *x2 + size;
+
+      if(*y1 < *y2)
+	{
+	  newY1 = *y2 + size;
+	  newY2 = *y2;
+	}
+      else
+	{
+	  newY1 = *y2 - size;
+	  newY2 = *y2;
+	}
+    }
+
+
+  *x1 = newX1;
+  *y1 = newY1;
+  *x2 = newX2;
+  *y2 = newY2;
+}
+
+
 /*----------------------------------------------------------------------
   CreateGraphicElement
   Create a Graphics element.
@@ -1578,7 +1647,7 @@ void CreateGraphicElement (int entry)
   int               docModified;
   ThotBool	    found, newGraph = FALSE, oldStructureChecking;;
 
-  int x1, y1, x2, y2, lx, ly;
+  int x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
   _ParserData context;
 
   int error;
@@ -1726,7 +1795,7 @@ void CreateGraphicElement (int entry)
     {
     case 0:	/* line */
       newType.ElTypeNum = SVG_EL_line_;
-      shape = 'g';
+      //shape = 'g';
       break;
     case 1:	/* rectangle */
       newType.ElTypeNum = SVG_EL_rect;
@@ -1768,6 +1837,18 @@ void CreateGraphicElement (int entry)
       break;
     case 11:	/* group */
       newType.ElTypeNum = 0;
+      break;
+
+    case 12: /* Simple arrow */
+      newType.ElTypeNum = SVG_EL_path;
+      break;
+
+    case 13: /* Double arrow */
+      newType.ElTypeNum = SVG_EL_path;
+      break;
+
+    case 14: /* Zigzag */
+      newType.ElTypeNum = SVG_EL_polyline;
       break;
 
     case 15: /* square */
@@ -1892,12 +1973,79 @@ void CreateGraphicElement (int entry)
             }
         }
 
+      if(entry == 0 || (entry >= 12 && entry <= 14))
+	{
+	  AskTwoPoints(&x1, &y1, &x2, &y2);
+	  //TtaDisplayMessage(INFO, "(%d %d) (%d %d)", x1,y1 ,x2,y2);
 
-      if(entry >= 12 || (entry >= 1 && entry <= 4))
+	  switch(entry)
+	    {
+	    case 0: /* Line */
+	      SVGElementComplete (&context, newEl, &error);
+
+	      attrType.AttrTypeNum = SVG_ATTR_x1;
+	      UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_y1;
+	      UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_x2;
+	      UpdateAttrText (newEl, doc, attrType, x2, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_y2;
+	      UpdateAttrText (newEl, doc, attrType, y2, FALSE, TRUE);
+
+	      break;
+
+	    case 12: /* Simple Arrow */
+              attrType.AttrTypeNum = SVG_ATTR_d;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+
+	      x3 = x1; y3 = y1;
+	      x4 = x2; y4 = y2;
+	      GetArrowCoord(&x3, &y3, &x4, &y4, 5);
+
+	      sprintf(buffer, "M %d %d L %d %d M %d %d L %d %d %d %d",
+		      x1, y1, x2, y2,
+		      x3, y3, x2, y2, x4, y4
+		      );
+              TtaSetAttributeText (attr, buffer, newEl, doc);
+	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
+	      break;
+
+	    case 13: /* Double Arrow */
+              attrType.AttrTypeNum = SVG_ATTR_d;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+	      sprintf(buffer, "M %d %d L %d %d", x1, y1, x2, y2);
+              TtaSetAttributeText (attr, buffer, newEl, doc);
+	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
+	      break;
+
+	    case 14: /* Zigzag */
+              attrType.AttrTypeNum = SVG_ATTR_points;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (newEl, attr, doc);
+	      sprintf(buffer, "%d %d %d %d %d %d %d %d",
+		      x1,y1,
+		      x1,y1+(y2-y1)/2,
+		      x2,y1+(y2-y1)/2,
+		      x2,y2
+		      );
+              TtaSetAttributeText (attr, buffer, newEl, doc);
+	      ParsePointsAttribute (attr, newEl, doc);
+	      break;
+
+	    default:
+	      break;
+	    }
+	}
+
+      if(entry >= 15 || (entry >= 1 && entry <= 4))
 	{
 	  AskSurroundingBox(&x1, &y1, &x2, &y2);
-	  /*TtaDisplayMessage(INFO, "x1 = %d, y1 = %d, x2 = %d, y2 = %d", x1, y1, x2, y2);*/
-
+	  
 	  lx = x2 - x1;
 	  ly = y2 - y1;
 
@@ -2112,10 +2260,6 @@ sprintf(buffer, "M %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d
 	      break;
 
 	    default:
-	      UpdatePositionAttribute (newEl, doc, x1, TRUE);
-	      UpdatePositionAttribute (newEl, doc, y1, FALSE);
-	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
-	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
 	      break;
 	    }
 	}
