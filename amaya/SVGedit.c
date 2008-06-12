@@ -60,17 +60,13 @@ static ThotBool InCreation = FALSE;
 #include "XLinkedit_f.h"
 #include "Xmlbuilder_f.h"
 
-<<<<<<< SVGedit.c
 extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2);
 
-=======
 #ifdef _WX
 #include "appdialogue_wx.h"
 #include "paneltypes_wx.h"
 #endif /* _WX */
 
-
->>>>>>> 1.115
 #ifdef _GTK
 /* used for the close palette callback*/
 ThotWidget CatWidget(int ref);
