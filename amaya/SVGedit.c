@@ -1718,7 +1718,7 @@ void CreateGraphicElement (int entry)
     {
     case 0:	/* line */
       newType.ElTypeNum = SVG_EL_line_;
-      //shape = 'g';
+      shape = 'g';
       break;
     case 1:	/* rectangle */
       newType.ElTypeNum = SVG_EL_rect;
@@ -1730,11 +1730,11 @@ void CreateGraphicElement (int entry)
       break;
     case 3:	/* circle */
       newType.ElTypeNum = SVG_EL_circle_;
-      shape = 'a';
+      //shape = 'a';
       break;
     case 4:	/* ellipse */
       newType.ElTypeNum = SVG_EL_ellipse;
-      shape = 'c';
+      //shape = 'c';
       break;
     case 5:	/* polyline */
       newType.ElTypeNum = SVG_EL_polyline;
@@ -1784,40 +1784,37 @@ void CreateGraphicElement (int entry)
         TtaSetDisplayMode (doc, DeferredDisplay);
 
       /* for rectangles, circle, ellipse, and text, ask for an elastic box */
-      if (/*newType.ElTypeNum == SVG_EL_rect || */
+      if (/*newType.ElTypeNum == SVG_EL_rect || 
           newType.ElTypeNum == SVG_EL_circle_ ||
-          newType.ElTypeNum == SVG_EL_ellipse ||
+          newType.ElTypeNum == SVG_EL_ellipse ||*/
           newType.ElTypeNum == SVG_EL_text_)
         TtaAskFirstCreation ();
       /* create the new element */
       newEl = TtaNewElement (doc, newType);
 
-      if(entry >= 12 || entry == 1 || entry == 2 || entry == 0)
+      if(entry >= 12 || (entry >= 1 && entry <= 4))
 	{
 	  AskSurroundingBox(&x1, &y1, &x2, &y2);
 	  TtaDisplayMessage(INFO, "x1 = %d, y1 = %d, x2 = %d, y2 = %d", x1, y1, x2, y2);
 
-	  UpdatePositionAttribute (newEl, doc, x1, TRUE);
-	  UpdatePositionAttribute (newEl, doc, y1, FALSE);
 	  lx = x2 - x1;
 	  ly = y2 - y1;
 
 	  switch(entry)
 	    {
-	      /* Line */
-	    case 0:
-	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
-	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
-	      break;
 	      
 	      /* Rectangle */
 	    case 1:
+	      UpdatePositionAttribute (newEl, doc, x1, TRUE);
+	      UpdatePositionAttribute (newEl, doc, y1, FALSE);
 	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
 	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
 	      break;
 
 	      /* Rounded-Rectangle */
 	    case 2:
+	      UpdatePositionAttribute (newEl, doc, x1, TRUE);
+	      UpdatePositionAttribute (newEl, doc, y1, FALSE);
 	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
 	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
 
@@ -1828,9 +1825,28 @@ void CreateGraphicElement (int entry)
               ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
 	      break;
 
+	      /* Circle */
+	    case 3:
+	      if(ly < lx)lx = ly; else ly = lx;
+	      UpdatePositionAttribute (newEl, doc, x1 + lx / 2, TRUE);
+	      UpdatePositionAttribute (newEl, doc, y1 + ly / 2, FALSE);
+	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
+	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
+	      break;
+
+	      /* Ellipse */
+	    case 4:
+	      UpdatePositionAttribute (newEl, doc, x1 + lx / 2, TRUE);
+	      UpdatePositionAttribute (newEl, doc, y1 + ly / 2, FALSE);
+	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
+	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
+	      break;
+
 	    /* Square */
 	    case 15:
 	      if(ly < lx)lx = ly; else ly = lx;
+	      UpdatePositionAttribute (newEl, doc, x1, TRUE);
+	      UpdatePositionAttribute (newEl, doc, y1, FALSE);
 	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
 	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
 	      break;
@@ -1838,6 +1854,8 @@ void CreateGraphicElement (int entry)
 	      /* Rounded Square */
 	    case 16:
 	      if(ly < lx)lx = ly; else ly = lx;
+	      UpdatePositionAttribute (newEl, doc, x1, TRUE);
+	      UpdatePositionAttribute (newEl, doc, y1, FALSE);
 	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
 	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
 
@@ -1849,6 +1867,8 @@ void CreateGraphicElement (int entry)
 	      break;
 
 	    default:
+	      UpdatePositionAttribute (newEl, doc, x1, TRUE);
+	      UpdatePositionAttribute (newEl, doc, y1, FALSE);
 	      UpdateWidthHeightAttribute (newEl, doc, lx, TRUE);
 	      UpdateWidthHeightAttribute (newEl, doc, ly, FALSE);
 	      break;
