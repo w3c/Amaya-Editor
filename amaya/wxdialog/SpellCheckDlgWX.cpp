@@ -51,7 +51,7 @@ void SpellCheckDlgWX::Set_Proposals ( )
       for (i = 1; i <= m_max_proposals; i++)
         {
           TtaGetProposal (&proposal, i);
-          if (strcmp (proposal, "$") != 0)
+          if (proposal && strcmp (proposal, "$") != 0)
             XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString (i-1, TtaConvMessageToWX( proposal ));
         }
       XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetSelection(0);
