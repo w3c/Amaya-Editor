@@ -61,6 +61,7 @@ static int          GridSize = 1;
   #include "AmayaMovePointEvtHandler.h"
   #include "AmayaMovingBoxEvtHandler.h"
   #include "AmayaResizingBoxEvtHandler.h"
+  #include "AmayaCreateShapeEvtHandler.h"
 #endif /* _WX */
 
 
@@ -1327,4 +1328,21 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
     BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
 
     Resizing (frame, *x, *y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
+}
+
+int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2, Document doc, int shape_number)
+{
+  int nb_points;
+
+  AmayaFrame * p_frame = FrameTable[frame].WdFrame;
+  AmayaCreateShapeEvtHandler * p_CreateShapeEvtHandler = 
+    new AmayaCreateShapeEvtHandler( p_frame,
+				    x1, y1, x2, y2, &nb_points, doc, shape_number);
+  ThotEvent ev;
+  while(!p_CreateShapeEvtHandler->IsFinish())
+    TtaHandleOneEvent (&ev);
+  
+  delete p_CreateShapeEvtHandler;
+
+  return nb_points;
 }

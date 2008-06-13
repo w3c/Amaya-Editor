@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2,Document doc,int shape_number);
 extern int TtaGridDoAlign ( int value );
 extern void BoxGeometry ( int frame,
                           int x,

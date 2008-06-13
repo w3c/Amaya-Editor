@@ -62,7 +62,7 @@ static ThotBool InCreation = FALSE;
 #include <math.h>
 
 extern void AskTwoPoints(int *x1, int *y1, int *x2, int *y2);
-extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2);
+extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape_number);
 extern int ActiveFrame;
 
 #ifdef _WX
@@ -2072,7 +2072,7 @@ void CreateGraphicElement (int entry)
 
       if(entry >= 15 || (entry >= 1 && entry <= 4))
 	{
-	  AskSurroundingBox(&x1, &y1, &x2, &y2);
+	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry);
 	  if(!newEl)return;
 	  
 	  lx = x2 - x1;

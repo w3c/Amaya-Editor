@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void AskTwoPoints(int *x1, int *y1, int *x2, int *y2);
-extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2);
+extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape_number);
 extern ThotBool TtaIsTextInserting ( void );
 extern void TtcInsertGraph ( Document document,
                              View view,

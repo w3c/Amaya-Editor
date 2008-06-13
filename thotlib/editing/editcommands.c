@@ -2057,7 +2057,7 @@ extern void AskTwoPoints(int *x1, int *y1, int *x2, int *y2)
          (x2,y2)
 
   --------------------------------------------------------------------*/
-extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2)
+extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape_number)
 {
   PtrBox pBox;
   ViewFrame          *pFrame;
@@ -2088,8 +2088,10 @@ extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2)
 
   *x1 = pBox->BxXOrg - pFrame->FrXOrg;
   *y1 = pBox->BxYOrg - pFrame->FrYOrg;
+  *x2 = *x1 + pBox->BxWidth;
+  *y2 = *y1 + pBox->BxHeight;
 
-  LineCreation (frame, pBox, x1, y1, x2, y2);
+  ShapeCreation (frame, x1, y1, x2, y2, doc, shape_number);
 
   if(*x2 < *x1){tmp = *x2; *x2 = *x1; *x1 = tmp;}
   if(*y2 < *y1){tmp = *y2; *y2 = *y1; *y1 = tmp;}
