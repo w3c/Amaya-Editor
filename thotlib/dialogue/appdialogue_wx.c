@@ -2452,6 +2452,7 @@ void TtaRaisePanel(int panel_type)
   AmayaWindow * activeWindow = TtaGetActiveWindow();
   if(activeWindow)
     activeWindow->RaisePanel(panel_type);
+  TtaRedirectFocus ();
 }
 
 #endif /* _WX */
