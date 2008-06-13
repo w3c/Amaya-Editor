@@ -59,6 +59,7 @@ static ThotBool InCreation = FALSE;
 #include "SVGbuilder_f.h"
 #include "XLinkedit_f.h"
 #include "Xmlbuilder_f.h"
+#include <math.h>
 
 extern void AskTwoPoints(int *x1, int *y1, int *x2, int *y2);
 extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2);
@@ -1557,69 +1558,70 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
 
 
 
-void GetArrowCoord(int *x1, int *y1, int *x2, int *y2, int size)
+/*----------------------------------------------------------------------
+  GetArrowCoord
+
+  Return the coordinates of the two points that allow to draw an arrow,
+  from the coordinates of the two extremities:
+
+     (x2,y2)                   (x1,y1) ---/              
+        /                                /|       
+       /               ===>             / |
+      /                                /  (x2,y2)    
+     /                                /       
+   (x1,y1)
+  
+
+  ----------------------------------------------------------------------*/
+void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
 {
-  int newX1, newY1, newX2, newY2;
+  int dx, dy, x0, y0;
+#define size 7
+#define lambda 5
 
-  if(*x1 == *x2)
+  dx = *x2 - *x1;
+  dy = *y2 - *y1;
+  x0 = *x2;
+  y0 = *y2;
+
+  if(dx == 0 && dy == 0)return;
+
+  if(abs(lambda*dy) < abs(dx))
     {
-      newX1 = *x2 - size;
-      newX2 = *x2 + size;
-
-      if(*y1 < *y2)
-	{
-	  /* |
-             v */
-
-	  newY1 = *y2 - size;
-	  newY2 = *y2 - size;
-        }
-      else
-        {
-	  /* ^
-             | */
-	  newY1 = *y2 + size;
-	  newY2 = *y2 + size;	  
-        }
+      /* Almost horizontal arrow */
+      *x1 = x0 + size * (dx < 0 ? 1 : -1);
+      *x2 = *x1;
+      
+      *y1 = y0 - size;
+      *y2 = y0 + size;
+      return;
     }
-  else if(*x1 < *x2)
-    {
-      newX1 = *x2;
-      newX2 = *x2 + size;
 
-      if(*y1 < *y2)
-	{
-	  newY1 = *y2 + size;
-	  newY2 = *y2;
-	}
-      else
-	{
-	  newY1 = *y2 - size;
-	  newY2 = *y2;
-	}
+  if(abs(lambda*dx) < abs(dy))
+    {
+      /* Almost vertical arrow */
+      *y1 = y0 + size * (dy < 0 ? 1 : -1);
+      *y2 = *y1;
+
+      *x1 = x0 - size;
+      *x2 = x0 + size;
+      return;
+    }
+
+  if(dx < 0)
+    {
+      *x1 = x0;
+      *x2 = x0 + size;
+      *y2 = y0;
+      *y1 = y0 + size * (dy < 0 ? 1 : -1);
     }
   else
     {
-      newX2 = *x2;
-      newX1 = *x2 + size;
-
-      if(*y1 < *y2)
-	{
-	  newY1 = *y2 + size;
-	  newY2 = *y2;
-	}
-      else
-	{
-	  newY1 = *y2 - size;
-	  newY2 = *y2;
-	}
+      *x1 = x0;
+      *x2 = x0 - size;
+      *y2 = y0;
+      *y1 = y0 + size * (dy < 0 ? 1 : -1);
     }
-
-
-  *x1 = newX1;
-  *y1 = newY1;
-  *x2 = newX2;
-  *y2 = newY2;
 }
 
 
@@ -1647,7 +1649,7 @@ void CreateGraphicElement (int entry)
   int               docModified;
   ThotBool	    found, newGraph = FALSE, oldStructureChecking;;
 
-  int x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
+  int x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, lx, ly;
   _ParserData context;
 
   int error;
@@ -1745,8 +1747,19 @@ void CreateGraphicElement (int entry)
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (SvgRoot, attr, doc);
               TtaSetAttributeText (attr, SVG_VERSION, SvgRoot, doc);
-	      UpdateWidthHeightAttribute (SvgRoot, doc, 500, TRUE);
-	      UpdateWidthHeightAttribute (SvgRoot, doc, 200, FALSE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_width_;
+              attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (SvgRoot, attr, doc);
+	      TtaSetAttributeText (attr, "500", SvgRoot, doc);
+
+	      ParseWidthHeightAttribute (attr, SvgRoot, doc, FALSE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_height_;
+              attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (SvgRoot, attr, doc);
+	      TtaSetAttributeText (attr, "200", SvgRoot, doc);
+	      ParseWidthHeightAttribute (attr, SvgRoot, doc, FALSE);
             }
         }
     }
@@ -1976,6 +1989,7 @@ void CreateGraphicElement (int entry)
       if(entry == 0 || (entry >= 12 && entry <= 14))
 	{
 	  AskTwoPoints(&x1, &y1, &x2, &y2);
+	  if(!newEl)return;
 	  //TtaDisplayMessage(INFO, "(%d %d) (%d %d)", x1,y1 ,x2,y2);
 
 	  switch(entry)
@@ -2004,7 +2018,7 @@ void CreateGraphicElement (int entry)
 
 	      x3 = x1; y3 = y1;
 	      x4 = x2; y4 = y2;
-	      GetArrowCoord(&x3, &y3, &x4, &y4, 5);
+	      GetArrowCoord(&x3, &y3, &x4, &y4);
 
 	      sprintf(buffer, "M %d %d L %d %d M %d %d L %d %d %d %d",
 		      x1, y1, x2, y2,
@@ -2018,7 +2032,21 @@ void CreateGraphicElement (int entry)
               attrType.AttrTypeNum = SVG_ATTR_d;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (newEl, attr, doc);
-	      sprintf(buffer, "M %d %d L %d %d", x1, y1, x2, y2);
+
+	      x3 = x1; y3 = y1;
+	      x4 = x2; y4 = y2;
+	      GetArrowCoord(&x3, &y3, &x4, &y4);
+
+	      x5 = x2; y5 = y2;
+	      x6 = x1; y6 = y1;
+	      GetArrowCoord(&x5, &y5, &x6, &y6);
+
+	      sprintf(buffer, "M %d %d L %d %d M %d %d L %d %d %d %d M %d %d L %d %d %d %d",
+		      x1, y1, x2, y2,
+		      x3, y3, x2, y2, x4, y4,
+		      x5, y5, x1, y1, x6, y6
+		      );
+
               TtaSetAttributeText (attr, buffer, newEl, doc);
 	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
 	      break;
@@ -2045,6 +2073,7 @@ void CreateGraphicElement (int entry)
       if(entry >= 15 || (entry >= 1 && entry <= 4))
 	{
 	  AskSurroundingBox(&x1, &y1, &x2, &y2);
+	  if(!newEl)return;
 	  
 	  lx = x2 - x1;
 	  ly = y2 - y1;
