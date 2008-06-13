@@ -2788,7 +2788,7 @@ void CreateCaption (Document doc, View view)
         {
           caption = NULL;
           /* is the selection within a table */
-          if (elType.ElTypeNum != HTML_EL_Table_ && TtaIsSelectionEmpty ())
+          if (elType.ElTypeNum != HTML_EL_Table_)
             {
               /* get the enclosing table element */
               elType.ElTypeNum = HTML_EL_Table_;
@@ -2796,25 +2796,16 @@ void CreateCaption (Document doc, View view)
               if (el == NULL)
                 /* we are not in a table. Stop */
                 return;
-              else
-                {
-                  /* is there already a caption element in this table? */
-                  elType.ElTypeNum = HTML_EL_CAPTION;
-                  caption =  TtaSearchTypedElement (elType, SearchInTree, el);
-                  if (caption)
-                    /* there is a caption. Put the selection in it */
-                    el = TtaGetFirstLeaf (caption);
-                  else
-                    /* no caption yet. Select the first child of the table
-                       tp create a caption element there */
-                    el = TtaGetFirstChild (el);
-                  TtaSelectElement (doc, el);
-                }
             }
+          elType.ElTypeNum = HTML_EL_CAPTION;
+          caption =  TtaSearchTypedElement (elType, SearchInTree, el);
           if (!caption)
-            /* no caption yet. Create one */
             {
-              elType.ElTypeNum = HTML_EL_CAPTION;
+              /* no caption yet. Select the first child of the table
+                 to create a caption element there */
+              el = TtaGetFirstChild (el);
+              TtaSelectElement (doc, el);
+              /* no caption yet. Create one */
               TtaCreateElement (elType, doc);
             }
         }
