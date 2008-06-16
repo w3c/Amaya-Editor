@@ -61,8 +61,8 @@ static ThotBool InCreation = FALSE;
 #include "Xmlbuilder_f.h"
 #include <math.h>
 
-extern void AskTwoPoints(int *x1, int *y1, int *x2, int *y2);
-extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape_number);
+extern void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
+extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape);
 extern int ActiveFrame;
 
 #ifdef _WX
@@ -1556,75 +1556,6 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
 }
 #endif /* _SVG */
 
-
-
-/*----------------------------------------------------------------------
-  GetArrowCoord
-
-  Return the coordinates of the two points that allow to draw an arrow,
-  from the coordinates of the two extremities:
-
-     (x2,y2)                   (x1,y1) ---/              
-        /                                /|       
-       /               ===>             / |
-      /                                /  (x2,y2)    
-     /                                /       
-   (x1,y1)
-  
-
-  ----------------------------------------------------------------------*/
-void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
-{
-  int dx, dy, x0, y0;
-#define size 7
-#define lambda 5
-
-  dx = *x2 - *x1;
-  dy = *y2 - *y1;
-  x0 = *x2;
-  y0 = *y2;
-
-  if(dx == 0 && dy == 0)return;
-
-  if(abs(lambda*dy) < abs(dx))
-    {
-      /* Almost horizontal arrow */
-      *x1 = x0 + size * (dx < 0 ? 1 : -1);
-      *x2 = *x1;
-      
-      *y1 = y0 - size;
-      *y2 = y0 + size;
-      return;
-    }
-
-  if(abs(lambda*dx) < abs(dy))
-    {
-      /* Almost vertical arrow */
-      *y1 = y0 + size * (dy < 0 ? 1 : -1);
-      *y2 = *y1;
-
-      *x1 = x0 - size;
-      *x2 = x0 + size;
-      return;
-    }
-
-  if(dx < 0)
-    {
-      *x1 = x0;
-      *x2 = x0 + size;
-      *y2 = y0;
-      *y1 = y0 + size * (dy < 0 ? 1 : -1);
-    }
-  else
-    {
-      *x1 = x0;
-      *x2 = x0 - size;
-      *y2 = y0;
-      *y1 = y0 + size * (dy < 0 ? 1 : -1);
-    }
-}
-
-
 /*----------------------------------------------------------------------
   CreateGraphicElement
   Create a Graphics element.
@@ -1986,10 +1917,13 @@ void CreateGraphicElement (int entry)
             }
         }
 
-      if(entry == 0 || (entry >= 12 && entry <= 14))
+      if(!(entry >= 5 && entry <= 11))
 	{
-	  AskTwoPoints(&x1, &y1, &x2, &y2);
-	  //TtaDisplayMessage(INFO, "(%d %d) (%d %d)", x1,y1 ,x2,y2);
+
+	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry);
+	  
+	  lx = x2 - x1;
+	  ly = y2 - y1;
 
 	  switch(entry)
 	    {
@@ -2064,21 +1998,6 @@ void CreateGraphicElement (int entry)
 	      ParsePointsAttribute (attr, newEl, doc);
 	      break;
 
-	    default:
-	      break;
-	    }
-	}
-
-      if(entry >= 15 || (entry >= 1 && entry <= 4))
-	{
-	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry);
-	  
-	  lx = x2 - x1;
-	  ly = y2 - y1;
-
-	  switch(entry)
-	    {
-	      
 	    /* Square */
 	    case 15:
 	      if(ly < lx)lx = ly; else ly = lx;

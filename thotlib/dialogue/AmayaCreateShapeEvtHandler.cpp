@@ -43,22 +43,94 @@ int m_mouse_x,m_mouse_y;
 void DrawShape (int x1, int y1, int x2, int y2, int shape)
 { 
   int lx,ly,tmp;
+  int x3, y3, x4, y4, x5, y5, x6, y6;
   int i;
-  float theta;
   
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
   glColor4ub (127, 127, 127, 80);
 
-  if(x2 < x1){tmp = x2; x2 = x1; x1 = tmp;}
-  if(y2 < y1){tmp = y2; y2 = y1; y1 = tmp;}
-
-  lx = x2 - x1;
-  ly = y2 - y1;
+  if(!(shape == 0 || (shape >= 12 && shape <= 14)))
+    {
+      /* It's a shape drawn in a rectangle */
+      if(x2 < x1){tmp = x2; x2 = x1; x1 = tmp;}
+      if(y2 < y1){tmp = y2; y2 = y1; y1 = tmp;}
+      
+      lx = x2 - x1;
+      ly = y2 - y1;
+    }
 
   switch(shape)
     {
-      
+      /* Line */
+    case 0:
+      glBegin(GL_LINE);
+      glVertex2i(x1, y1);
+      glVertex2i(x2, y2);
+      glEnd (); 
+      break;
+
+    case 12: /* Simple Arrow */
+
+      x3 = x1; y3 = y1;
+      x4 = x2; y4 = y2;
+      GetArrowCoord(&x3, &y3, &x4, &y4);
+
+      glBegin(GL_LINE_STRIP);
+      glVertex2i(x1, y1);
+      glVertex2i(x2, y2);
+      glEnd (); 
+	      
+      glBegin(GL_LINE_STRIP);
+      glVertex2i(x3, y3);
+      glVertex2i(x2, y2);
+      glVertex2i(x4, y4);
+
+      glEnd (); 
+      break;
+
+
+
+    case 13: /* Double Arrow */
+      x3 = x1; y3 = y1;
+      x4 = x2; y4 = y2;
+      GetArrowCoord(&x3, &y3, &x4, &y4);
+
+      x5 = x2; y5 = y2;
+      x6 = x1; y6 = y1;
+      GetArrowCoord(&x5, &y5, &x6, &y6);
+
+      glBegin(GL_LINE_STRIP);
+      glVertex2i(x1, y1);
+      glVertex2i(x2, y2);
+      glEnd (); 
+
+
+      glBegin(GL_LINE_STRIP);
+      glVertex2i(x3, y3);
+      glVertex2i(x2, y2);
+      glVertex2i(x4, y4);
+      glEnd (); 
+
+      glBegin(GL_LINE_STRIP);
+      glVertex2i(x5, y5);
+      glVertex2i(x1, y1);
+      glVertex2i(x6, y6);
+      glEnd (); 
+
+      break;
+
+    case 14: /* Zigzag */
+      glBegin(GL_LINE_STRIP);
+      glVertex2i(x1,y1);
+      glVertex2i(x1,y1+(y2-y1)/2);
+      glVertex2i(x2,y1+(y2-y1)/2);
+      glVertex2i(x2,y2);
+      glEnd (); 
+      break;
+
+
+
       /* Square */
     case 15:
       if(ly < lx)lx = ly; else ly = lx;

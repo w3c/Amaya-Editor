@@ -2003,47 +2003,6 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
     }
 }
 
-
-/*----------------------------------------------------------------------
-  AskTwoPoints
-  Ask the user to enter two points
-
- --------------------------------------------------------------------*/
-extern void AskTwoPoints(int *x1, int *y1, int *x2, int *y2)
-{
-  PtrBox pBox;
-  ViewFrame          *pFrame;
-  int frame;
-
-  frame = ActiveFrame;
-
-  *x1 = 0;
-  *x2 = 0;
-  *y1 = 0;
-  *y2 = 0;
-
-  if(frame <= 0)return;
-
-  pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
-
-  if (pBox == NULL)
-    {
-      TtaSetFocus ();
-      frame = ActiveFrame;
-      if (frame == 0)return;
-      pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
-      if (pBox == NULL)return;
-    }
-
-  pFrame = &ViewFrameTable[frame - 1];
-
-  *x1 = pBox->BxXOrg - pFrame->FrXOrg;
-  *y1 = pBox->BxYOrg - pFrame->FrYOrg;
-
-  LineCreation (frame, pBox, x1, y1, x2, y2);
-
-}
-
 /*----------------------------------------------------------------------
   AskSurroundingBox
   Ask the user the position and size of the surrounding
@@ -2057,7 +2016,7 @@ extern void AskTwoPoints(int *x1, int *y1, int *x2, int *y2)
          (x2,y2)
 
   --------------------------------------------------------------------*/
-extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape_number)
+extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape)
 {
   PtrBox pBox;
   ViewFrame          *pFrame;
@@ -2091,12 +2050,15 @@ extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, 
   *x2 = *x1 + pBox->BxWidth;
   *y2 = *y1 + pBox->BxHeight;
 
-  ShapeCreation (frame, x1, y1, x2, y2, doc, shape_number);
+  ShapeCreation (frame, x1, y1, x2, y2, doc, shape);
 
-  if(*x2 < *x1){tmp = *x2; *x2 = *x1; *x1 = tmp;}
-  if(*y2 < *y1){tmp = *y2; *y2 = *y1; *y1 = tmp;}
+  if(!(shape == 0 || (shape >= 12 && shape <= 14)))
+    {
+      /* It's a shape drawn in a rectangle */
+      if(*x2 < *x1){tmp = *x2; *x2 = *x1; *x1 = tmp;}
+      if(*y2 < *y1){tmp = *y2; *y2 = *y1; *y1 = tmp;}
+    }
 }
-
 
 /*----------------------------------------------------------------------
   ContentEditing manages Cut, Paste, Copy, Remvoe, and Insert commands.

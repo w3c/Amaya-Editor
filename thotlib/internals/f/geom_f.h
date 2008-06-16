@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
 int MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xmax, int ymin, int ymax, ThotBool convert, int *x, int *y);
 int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2,Document doc,int shape_number);
 extern int TtaGridDoAlign ( int value );
