@@ -2131,6 +2131,18 @@ void CreateGraphicElement (int entry)
 	      /* Circle */
 	    case 3:
 	      if(ly < lx)lx = ly; else ly = lx;
+	      SVGElementComplete (&context, newEl, &error);
+
+	      attrType.AttrTypeNum = SVG_ATTR_cx;
+	      UpdateAttrText (newEl, doc, attrType, x1+lx/2, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_cy;
+	      UpdateAttrText (newEl, doc, attrType, y1+ly/2, FALSE, TRUE);
+
+	      attrType.AttrTypeNum = SVG_ATTR_r;
+	      UpdateAttrText (newEl, doc, attrType, lx/2, FALSE, TRUE);
+
+	      break;
 
 	      /* Ellipse */
 	    case 4:
