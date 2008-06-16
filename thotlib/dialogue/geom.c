@@ -34,6 +34,7 @@
 #include "presentationapi_f.h"
 #include "structcreation_f.h"
 #include "boxlocate_f.h"
+#include "geom_f.h"
 
 static int          GridSize = 1;
 #define DO_ALIGN(val) ((val + (GridSize/2)) / GridSize) * GridSize
@@ -1334,15 +1335,61 @@ int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2, Document doc, 
 {
   int nb_points;
 
-  AmayaFrame * p_frame = FrameTable[frame].WdFrame;
-  AmayaCreateShapeEvtHandler * p_CreateShapeEvtHandler = 
-    new AmayaCreateShapeEvtHandler( p_frame,
-				    x1, y1, x2, y2, &nb_points, doc, shape_number);
+  AmayaFrame * p_frame;
+  AmayaCreateShapeEvtHandler * p_CreateShapeEvtHandler;
   ThotEvent ev;
+
+  int xmin, ymin, xmax, ymax;
+
+  xmin = *x1;
+  ymin = *y1;
+  xmax = *x2;
+  ymax = *y2;
+
+  p_frame = FrameTable[frame].WdFrame;
+  p_CreateShapeEvtHandler = new AmayaCreateShapeEvtHandler( p_frame,
+				    x1, y1, x2, y2, &nb_points, doc, shape_number);
+
   while(!p_CreateShapeEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
   delete p_CreateShapeEvtHandler;
 
+  MouseCoordinatesToSVG(doc, p_frame, xmin, xmax, ymin, ymax, TRUE, x1, y1);
+  MouseCoordinatesToSVG(doc, p_frame, xmin, xmax, ymin, ymax, TRUE, x2, y2);
+ 
   return nb_points;
+}
+
+/* Convert the mouse coordinates (x,y) into the one in the SVG element and
+   display them into the status bar. If convert is TRUE, then x and y are
+   modified. */
+int MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xmax, int ymin, int ymax, ThotBool convert, int *x, int *y)
+{
+  int FrameId;
+  int newx, newy;
+  char buffer[100];
+
+  FrameId = p_frame->GetFrameId();
+
+  newx = LogicalValue (*x - xmin, UnPixel, NULL,
+  ViewFrameTable[FrameId - 1].FrMagnification);
+
+  if(newx < 0)newx = 0;
+  if(newx > (xmax - xmin))newx = (xmax - xmin);
+
+  newy = LogicalValue (*y - ymin, UnPixel, NULL,
+  ViewFrameTable[FrameId - 1].FrMagnification);
+
+  if(newy < 0)newy = 0;
+  if(newy > (ymax - ymin))newy = (ymax - ymin);
+
+  sprintf(buffer, "(%d,%d)", newx, newy);
+  TtaSetStatus (doc, 1, buffer, NULL);
+
+  if(convert)
+    {
+      *x = newx;
+      *y = newy;
+    }
 }

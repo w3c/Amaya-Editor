@@ -37,6 +37,9 @@
 #include "AmayaCanvas.h"
 #include "AmayaCreateShapeEvtHandler.h"
 
+int m_mouse_x1,m_mouse_y1;
+int m_mouse_x,m_mouse_y; 
+
 IMPLEMENT_DYNAMIC_CLASS(AmayaCreateShapeEvtHandler, wxEvtHandler)
 
 /*----------------------------------------------------------------------
@@ -80,8 +83,6 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler(AmayaFrame * p_frame, int
   ,m_y1(y1)
   ,m_x2(x2)
   ,m_y2(y2)
-  ,m_LastX(*x1)
-  ,m_LastY(*y1)
   ,m_ShapeNumber(shape_number)
   ,m_NbPoints(nb_points)
   ,m_document(doc)
@@ -161,13 +162,13 @@ void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
   switch(*m_NbPoints)
     {
     case 1:
-      *m_x1 = m_LastX;
-      *m_y1 = m_LastY;
+      *m_x1 = m_mouse_x;
+      *m_y1 = m_mouse_y;
       break;
 
     case 2:
-      *m_x2 = m_LastX;
-      *m_y2 = m_LastY;
+      *m_x2 = m_mouse_x;
+      *m_y2 = m_mouse_y;
       m_IsFinish = true;
       break;
 
@@ -191,41 +192,30 @@ void AmayaCreateShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
-  int x_mouse,y_mouse,newx,newy;
-
-  char buffer[100];
-
   /* check the coordinates */
-  x_mouse = m_xmin + TtaGridDoAlign( (int)(event.GetX() - m_xmin) );
-  y_mouse = m_ymin + TtaGridDoAlign( (int)(event.GetY() - m_ymin) );
+  m_mouse_x = m_xmin + TtaGridDoAlign( (int)(event.GetX() - m_xmin) );
+  m_mouse_y = m_ymin + TtaGridDoAlign( (int)(event.GetY() - m_ymin) );
 
-  if(*m_NbPoints == 1)
+  MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
+			FALSE, &m_mouse_x, &m_mouse_y);
+
+  if(*m_NbPoints == 0)
+    {
+    m_mouse_x1 = m_mouse_x;
+    m_mouse_y1 = m_mouse_y;
+    }
+  else 
     {
       switch(m_ShapeNumber)
 	{
 	default:
+	  //GL_DrawEmptyRectangle (1, m_mouse_x1, m_mouse_y1, m_mouse_x - m_mouse_x1 , m_mouse_y - m_mouse_y1, 0);
+	  //GL_DrawLine (m_mouse_x1, m_mouse_y1, m_mouse_x, m_mouse_y, FALSE);
+	  //GL_Swap (m_FrameId);
 	  break;
 	 
 	}
     }
-
-  newx = LogicalValue (x_mouse - m_xmin, UnPixel, NULL,
-  ViewFrameTable[m_FrameId - 1].FrMagnification);
-
-  if(newx < 0)newx = 0;
-  if(newx > (m_xmax - m_xmin))newx = (m_xmax - m_xmin);
-
-  newy = LogicalValue (y_mouse - m_ymin, UnPixel, NULL,
-  ViewFrameTable[m_FrameId - 1].FrMagnification);  
-
-  if(newy < 0)newy = 0;
-  if(newy > (m_ymax - m_ymin))newy = (m_ymax - m_ymin);
-
-  sprintf(buffer, "(%d,%d)", newx, newy);
-  TtaSetStatus (m_document, 1, buffer, NULL);
-
-  m_LastX = newx;
-  m_LastY = newy;
 
   m_pFrame->GetCanvas()->Refresh();
 }

@@ -1989,7 +1989,6 @@ void CreateGraphicElement (int entry)
       if(entry == 0 || (entry >= 12 && entry <= 14))
 	{
 	  AskTwoPoints(&x1, &y1, &x2, &y2);
-	  if(!newEl)return;
 	  //TtaDisplayMessage(INFO, "(%d %d) (%d %d)", x1,y1 ,x2,y2);
 
 	  switch(entry)
@@ -2073,7 +2072,6 @@ void CreateGraphicElement (int entry)
       if(entry >= 15 || (entry >= 1 && entry <= 4))
 	{
 	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry);
-	  if(!newEl)return;
 	  
 	  lx = x2 - x1;
 	  ly = y2 - y1;

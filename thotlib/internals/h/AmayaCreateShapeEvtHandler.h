@@ -42,8 +42,6 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
 
   int m_xmin, m_ymin, m_xmax, m_ymax;
   int *m_x1,*m_y1,*m_x2,*m_y2;
-  int m_LastX;
-  int m_LastY;
 
   int m_ShapeNumber;
   int *m_NbPoints;
