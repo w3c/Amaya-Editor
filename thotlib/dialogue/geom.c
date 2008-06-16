@@ -63,6 +63,7 @@ static int          GridSize = 1;
   #include "AmayaMovingBoxEvtHandler.h"
   #include "AmayaResizingBoxEvtHandler.h"
   #include "AmayaCreateShapeEvtHandler.h"
+  #include "AmayaCreatePathEvtHandler.h"
 #endif /* _WX */
 
 
@@ -1428,6 +1429,38 @@ int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2, Document doc, 
  
   return nb_points;
 }
+
+PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax, Document doc, int shape_number)
+{
+  PtrTextBuffer       pBuffer;
+  AmayaFrame * p_frame;
+  AmayaCreatePathEvtHandler * p_CreatePathEvtHandler;
+  ThotEvent ev;
+
+  /* Allocate a polyline buffer to simulate a polyline */ 
+  GetTextBuffer (&pBuffer);
+
+  pBuffer->BuPoints[0].XCoord = xmax - xmin;
+  pBuffer->BuPoints[0].YCoord = ymax - ymin;
+  
+
+  p_frame = FrameTable[frame].WdFrame;
+  p_CreatePathEvtHandler = new AmayaCreatePathEvtHandler(p_frame, xmin,
+							    ymin, xmax,
+							    ymax, pBuffer,
+							    doc, shape_number);
+  while(!p_CreatePathEvtHandler->IsFinish())
+    TtaHandleOneEvent (&ev);
+  
+  delete p_CreatePathEvtHandler;
+
+  /* Free the buffer */
+  FreeTextBuffer (pBuffer);
+  return NULL;
+}
+
+
+
 
 /* Convert the mouse coordinates (x,y) into the one in the SVG element and
    display them into the status bar. If convert is TRUE, then x and y are

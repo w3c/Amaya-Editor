@@ -2003,6 +2003,38 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
     }
 }
 
+extern void AskShapePoints (int x1, int x2, int y1, int y2, Document doc, int shape)
+{
+  PtrBox pBox;
+  ViewFrame          *pFrame;
+  int frame;
+
+  frame = ActiveFrame;
+
+  if(frame <= 0)return;
+
+  pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
+
+  if (pBox == NULL)
+    {
+      TtaSetFocus ();
+      frame = ActiveFrame;
+      if (frame == 0)return;
+      pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
+      if (pBox == NULL)return;
+    }
+
+  pFrame = &ViewFrameTable[frame - 1];
+
+  x1 = pBox->BxXOrg - pFrame->FrXOrg;
+  y1 = pBox->BxYOrg - pFrame->FrYOrg;
+  x2 = x1 + pBox->BxWidth;
+  y2 = y1 + pBox->BxHeight;
+
+  PathCreation (frame, x1, y1, x2, y2, doc, shape);
+
+}
+
 /*----------------------------------------------------------------------
   AskSurroundingBox
   Ask the user the position and size of the surrounding

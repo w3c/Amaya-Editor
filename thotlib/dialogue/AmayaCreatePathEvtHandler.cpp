@@ -38,7 +38,30 @@
 #include "AmayaCanvas.h"
 #include "AmayaCreatePathEvtHandler.h"
 
-int m_mouse_x,m_mouse_y; 
+static int m_mouse_x,m_mouse_y; 
+static int points;
+static int lastX, lastY;
+
+void DrawPathFragment (int x1, int y1, int x2, int y2, int shape/*, int p*/)
+{ 
+  glEnable(GL_COLOR_LOGIC_OP);
+  glLogicOp(GL_XOR);
+  glColor4ub (127, 127, 127, 80);
+
+  switch(shape)
+    {
+    default:
+      glBegin(GL_LINE);
+      glVertex2i(x1, y1);
+      glVertex2i(x2, y2);
+      glEnd (); 
+      break;
+    }
+
+  glLogicOp(GL_COPY);
+  glDisable(GL_COLOR_LOGIC_OP);
+}
+
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaCreatePathEvtHandler, wxEvtHandler)
 
@@ -70,7 +93,7 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler() : wxEvtHandler()
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
-AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x_min, int y_min, int x_max, int y_max, int *nb_points, Document doc, int shape_number)
+AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x_min, int y_min, int x_max, int y_max,  PtrTextBuffer Pbuffer, Document doc, int shape_number)
   : wxEvtHandler()
   ,m_IsFinish(false)
   ,m_pFrame(p_frame)
@@ -80,12 +103,12 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x
   ,m_xmax(x_max)
   ,m_ymax(y_max)
   ,m_ShapeNumber(shape_number)
-  ,m_NbPoints(nb_points)
+  ,m_Pbuffer(Pbuffer)
   ,m_document(doc)
     
 {
+  points = 0;
 
-  *m_NbPoints = 0;
   if (m_pFrame)
     {
       /* attach this handler to the canvas */
@@ -149,7 +172,12 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
   if (IsFinish())
     return;
 
-  (*m_NbPoints)++;
+
+  lastX = m_mouse_x;
+  lastY = m_mouse_y;
+  points++;
+  
+  AddPointInPolyline (m_Pbuffer, points, m_mouse_x, m_mouse_y);
 
 
 }
@@ -171,8 +199,16 @@ void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
+  if(points > 0)
+    DrawPathFragment (lastX, lastY, m_mouse_x, m_mouse_y, m_ShapeNumber
+		      /*, int p*/);
+
   m_mouse_x = event.GetX();
   m_mouse_y = event.GetY();
+
+  if(points > 0)
+    DrawPathFragment (lastX, lastY, m_mouse_x, m_mouse_y, m_ShapeNumber
+		    /*, int p*/);
 
   MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
 			FALSE, &m_mouse_x, &m_mouse_y);

@@ -63,6 +63,7 @@ static ThotBool InCreation = FALSE;
 
 extern void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
 extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape);
+extern void AskShapePoints (int x1, int x2, int y1, int y2,  Document doc, int shape);
 extern int ActiveFrame;
 
 #ifdef _WX
@@ -1759,7 +1760,7 @@ void CreateGraphicElement (int entry)
       break;
     case 5:	/* polyline */
       newType.ElTypeNum = SVG_EL_polyline;
-      shape = 'S';
+      //shape = 'S';
       break;
     case 6:	/* polygon */
       newType.ElTypeNum = SVG_EL_polygon;
@@ -1917,6 +1918,9 @@ void CreateGraphicElement (int entry)
             }
         }
 
+      if(entry == 5)
+	AskShapePoints (x1, x2, y1, y2, doc, entry);
+ 
       if(!(entry >= 5 && entry <= 11))
 	{
 

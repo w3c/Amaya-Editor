@@ -38,7 +38,7 @@
 #include "AmayaCanvas.h"
 #include "AmayaCreateShapeEvtHandler.h"
 
-int m_mouse_x,m_mouse_y; 
+static int m_mouse_x,m_mouse_y; 
 
 void DrawShape (int x1, int y1, int x2, int y2, int shape)
 { 
