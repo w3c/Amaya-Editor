@@ -200,6 +200,7 @@ EDITOR_OBJ = \
 	dialogue/AmayaMovingBoxEvtHandler.o \
 	dialogue/AmayaResizingBoxEvtHandler.o \
 	dialogue/AmayaCreateShapeEvtHandler.o \
+	dialogue/AmayaCreatePathEvtHandler.o \
 	dialogue/AmayaDialog.o \
 	dialogue/AmayaWindow.o \
 	dialogue/AmayaWindowIterator.o \
