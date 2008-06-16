@@ -1243,16 +1243,6 @@ static void UnsplitBox (PtrBox pBox, int frame)
 #endif /* _GL */
       box = FreeBox (box);
     }
-
-  //update box links
-  if (pBox->BxPrevious)
-    pBox->BxPrevious->BxNext = pBox;
-  else
-    pMainBox->BxNext = pBox;
-  if (pBox->BxNext)
-    pBox->BxNext->BxPrevious = pBox;
-  else
-    pMainBox->BxPrevious = pBox;
 }
 
 /*----------------------------------------------------------------------
