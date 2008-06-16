@@ -256,6 +256,8 @@ private:
  * AmayaStringAttributeSubpanel
  * Attribute subpanel for string values.
  * Can only use AtTextAttr non enumerated attributes.
+ * If (PtrAttrListElem)elem.restr.RestrEnumVal is non-null : it is used as proposed 
+ * (but not imposed) values (tab or EOL separated string.
  */
 class AmayaStringAttributeSubpanel : public AmayaAttributeSubpanel
 {
@@ -276,10 +278,13 @@ public:
    * Get the string value entered by the user.
    */
   virtual wxString GetStringValue();
-  virtual wxWindow* GetEditionControl(){return m_pText;}  
+  virtual wxWindow* GetEditionControl(){return m_hasDefaults?(wxWindow*)m_pCombo:(wxWindow*)m_pText;}  
 private:
+  bool m_hasDefaults;
   wxTextCtrl* m_pText;
+  wxComboBox* m_pCombo;
 };
+
 
 
 /**

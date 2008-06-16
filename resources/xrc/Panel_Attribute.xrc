@@ -5,18 +5,12 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxListCtrl" name="wxID_CLIST_ATTR">
-          
           <size>120,150</size>
-          
           <style>wxLC_REPORT|wxLC_ALIGN_LEFT|wxLC_SINGLE_SEL|wxRAISED_BORDER</style>
-          
           <focused>1</focused>
         </object>
-        
         <option>1</option>
-        
         <flag>wxALL|wxEXPAND</flag>
-        
         <border>2</border>
       </object>
       <object class="sizeritem">
@@ -28,24 +22,17 @@
                 <orient>wxHORIZONTAL</orient>
                 <object class="sizeritem">
                   <object class="wxBitmapButton" name="wxID_BUTTON_DEL_ATTR">
-                    
                     <bitmap>../icons/16x16/cancel.png</bitmap>
-                    
                     <style>wxBU_AUTODRAW</style>
-                    
                     <tooltip>*Supprimer*</tooltip>
                   </object>
-                  
                   <flag>wxALIGN_CENTRE</flag>
                 </object>
                 <object class="sizeritem">
                   <object class="wxStaticLine">
-                    
                     <style>wxLI_VERTICAL</style>
                   </object>
-                  
                   <flag>wxALL|wxEXPAND</flag>
-                  
                   <border>4</border>
                 </object>
                 <object class="sizeritem">
@@ -54,13 +41,10 @@
                       <orient>wxHORIZONTAL</orient>
                     </object>
                   </object>
-                  
                   <option>1</option>
-                  
                   <flag>wxEXPAND</flag>
                 </object>
               </object>
-              
               <flag>wxEXPAND</flag>
             </object>
             <object class="sizeritem">
@@ -69,9 +53,7 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxStaticLine"/>
-                    
                     <flag>wxALL|wxEXPAND</flag>
-                    
                     <border>4</border>
                   </object>
                   <object class="sizeritem">
@@ -79,45 +61,32 @@
                       <orient>wxHORIZONTAL</orient>
                       <object class="sizeritem">
                         <object class="wxStaticText" name="wxID_ATTR_LABEL_NEW_ATTR">
-                          
                           <label>*nouvel attribut :*</label>
                         </object>
-                        
                         <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
-                        
                         <border>4</border>
                       </object>
                       <object class="sizeritem">
                         <object class="wxChoice" name="wxID_CHOOSE_NEW_ATTRIBUTE">
-                          
                           <content/>
-                          
-                          <style></style>
+                          <style/>
                         </object>
-                        
                         <option>1</option>
-                        
                         <flag>wxEXPAND</flag>
                       </object>
                     </object>
-                    
                     <option>0</option>
-                    
                     <flag>wxEXPAND</flag>
                   </object>
                 </object>
               </object>
-              
               <flag>wxALL|wxEXPAND</flag>
-              
               <border>2</border>
             </object>
           </object>
           <style>wxTAB_TRAVERSAL</style>
         </object>
-        
         <flag>wxALL|wxEXPAND</flag>
-        
         <border>2</border>
       </object>
     </object>
@@ -128,12 +97,9 @@
       <orient>wxHORIZONTAL</orient>
       <object class="sizeritem">
         <object class="wxChoice" name="wxID_ATTR_CHOICE_ENUM">
-          
           <content/>
         </object>
-        
         <option>1</option>
-        
         <flag>wxEXPAND</flag>
       </object>
     </object>
@@ -143,26 +109,23 @@
       <orient>wxHORIZONTAL</orient>
       <object class="sizeritem">
         <object class="wxTextCtrl" name="wxID_ATTR_TEXT_VALUE">
-          
           <style>wxTE_PROCESS_ENTER</style>
         </object>
-        
         <option>1</option>
-        
+        <flag>wxEXPAND</flag>
+      </object>
+      <object class="sizeritem">
+        <object class="wxComboBox" name="wxID_ATTR_COMBO_VALUE"/>
+        <option>1</option>
         <flag>wxEXPAND</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_OK">
-          
           <bitmap>../icons/16x16/ok.png</bitmap>
-          
-          <default></default>
+          <default/>
         </object>
-        
         <option>0</option>
-        
         <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
-        
         <border>2</border>
       </object>
     </object>
@@ -173,26 +136,18 @@
       <orient>wxHORIZONTAL</orient>
       <object class="sizeritem">
         <object class="wxSpinCtrl" name="wxID_ATTR_NUM_VALUE">
-          
-          <value></value>
+          <value/>
         </object>
-        
         <option>1</option>
-        
         <flag>wxEXPAND</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_OK">
-          
           <bitmap>../icons/16x16/ok.png</bitmap>
-          
-          <default></default>
+          <default/>
         </object>
-        
         <option>0</option>
-        
         <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
-        
         <border>2</border>
       </object>
     </object>
@@ -205,26 +160,19 @@
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxChoice" name="wxID_ATTR_COMBO_LANG_LIST">
-              
               <content/>
-              
               <style>wxCB_SORT</style>
             </object>
-            
             <option>1</option>
-            
             <flag>wxEXPAND</flag>
           </object>
         </object>
-        
         <flag>wxEXPAND</flag>
       </object>
       <object class="sizeritem">
         <object class="wxStaticText" name="wxID_ATTR_LABEL_LANG_INHER">
-          
           <label>*Inherited language: French*</label>
         </object>
-        
         <flag>wxEXPAND</flag>
       </object>
     </object>

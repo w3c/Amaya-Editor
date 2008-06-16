@@ -993,7 +993,9 @@ END_EVENT_TABLE()
 
 AmayaStringAttributeSubpanel::AmayaStringAttributeSubpanel():
 AmayaAttributeSubpanel(),
-m_pText(NULL)
+m_hasDefaults(false),
+m_pText(NULL),
+m_pCombo(NULL)
 {
 }
 
@@ -1005,35 +1007,53 @@ bool AmayaStringAttributeSubpanel::Create(wxWindow* parent, wxWindowID id)
 {
   wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent,
                                         wxT("wxID_SUBPANEL_ATTRIBUTE_STRING"));
-  m_pText = XRCCTRL(*this, "wxID_ATTR_TEXT_VALUE", wxTextCtrl);
+  m_pText  = XRCCTRL(*this, "wxID_ATTR_TEXT_VALUE", wxTextCtrl);
+  m_pCombo = XRCCTRL(*this, "wxID_ATTR_COMBO_VALUE", wxComboBox);
+  
   XRCCTRL(*this, "wxID_OK", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
   return true;
 }
 
 bool AmayaStringAttributeSubpanel::SetAttrListElem(PtrAttrListElem elem)
 {
-   if(elem)
+  wxString value;
+  
+  if(elem)
     {
       if(AttrListElem_IsNew(elem) && elem->restr.RestrDefVal)
-        m_pText->SetValue(TtaConvMessageToWX(elem->restr.RestrDefVal));
+        value = TtaConvMessageToWX(elem->restr.RestrDefVal);
+      else if(elem->val && elem->val->AeAttrText)
+        value = AmayaAttributeSubpanel::getAttributeStringValue(elem);
+
+      if(elem->restr.RestrEnumVal!=NULL && elem->restr.RestrEnumVal[0]!=EOS)
+        {
+          m_hasDefaults = true;
+          m_pText->Hide();
+          m_pCombo->Show();
+          m_pCombo->Clear();
+          m_pCombo->Append(wxStringTokenize(TtaConvMessageToWX(elem->restr.RestrEnumVal)));
+          m_pCombo->SetValue(value);
+          m_pCombo->SetInsertionPointEnd();
+        }
       else
         {
-          if(elem->val && elem->val->AeAttrText)
-            {
-              m_pText->SetValue(AmayaAttributeSubpanel::getAttributeStringValue(elem));
-              m_pText->SetInsertionPointEnd();
-            }
-          else
-            m_pText->SetValue(wxT(""));
+          m_hasDefaults = false;
+          m_pText->Show();
+          m_pCombo->Hide();
+          m_pText->SetValue(value);
+          m_pText->SetInsertionPointEnd();
         }
+    
     }
   return true;
 }
 
 wxString AmayaStringAttributeSubpanel::GetStringValue()
 {
-  return m_pText->GetValue();
+  return m_hasDefaults?m_pCombo->GetValue():m_pText->GetValue();
 }
+
+
 
 
 /************************************************************************
