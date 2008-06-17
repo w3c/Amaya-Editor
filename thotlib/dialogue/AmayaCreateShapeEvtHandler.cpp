@@ -276,7 +276,6 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
 
     }
 
-  glFlush();
   glLogicOp(GL_COPY);
   glDisable(GL_COLOR_LOGIC_OP);
 }
@@ -343,10 +342,9 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler(AmayaFrame * p_frame, int
       m_pFrame->GetCanvas()->CaptureMouse();
     }
 
+
   //GL_VideoInvert (m_xmax - m_xmin, m_ymax - m_ymin,m_xmin,m_ymin);
-
-
-  GL_SetClipping (m_xmin, m_ymin, m_xmax - m_xmin, m_ymax - m_ymin);
+  //GL_SetClipping (m_xmin, m_ymin, m_xmax - m_xmin, m_ymax - m_ymin);
 }
 
 /*----------------------------------------------------------------------
@@ -367,7 +365,7 @@ AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
   /* Clear the Shape */
   DrawShape (*m_x1, *m_y1, *m_x2, *m_y2, m_ShapeNumber);
 
-  GL_UnsetClipping ();
+  //GL_UnsetClipping ();
 }
 
 /*----------------------------------------------------------------------
