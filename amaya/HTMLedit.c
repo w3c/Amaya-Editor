@@ -4869,7 +4869,6 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
       else
 	{
 	  event->restr.RestrEnumVal = TtaStrdup(REL_REV_Attr_Values);
-	  event->restr.RestrFlags |= attr_enum;
 	}
     }
   
