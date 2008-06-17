@@ -111,7 +111,7 @@ extern PtrTextBuffer PathCreation ( int frame,
                                     int ymax,
                                     Document doc,
                                     int shape_number );
-extern int MouseCoordinatesToSVG ( Document doc,
+extern void MouseCoordinatesToSVG ( Document doc,
                                    AmayaFrame * p_frame,
                                    int xmin,
                                    int xmax,
@@ -228,6 +228,7 @@ extern PtrTextBuffer PathCreation ( int frame,
                                       int ymax,
                                       Document doc,
                                       int shape_number );
+
 extern void MouseCoordinatesToSVG ( Document doc,
                                      AmayaFrame * p_frame,
                                      int xmin,
