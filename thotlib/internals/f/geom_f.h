@@ -112,14 +112,14 @@ extern PtrTextBuffer PathCreation ( int frame,
                                     Document doc,
                                     int shape_number );
 extern void MouseCoordinatesToSVG ( Document doc,
-                                   AmayaFrame * p_frame,
-                                   int xmin,
-                                   int xmax,
-                                   int ymin,
-                                   int ymax,
-                                   ThotBool convert,
-                                   int *x,
-                                   int *y );
+                                    AmayaFrame * p_frame,
+                                    int xmin,
+                                    int xmax,
+                                    int ymin,
+                                    int ymax,
+                                    ThotBool convert,
+                                    int *x,
+                                    int *y );
 
 #else /* __STDC__ */
 
@@ -228,16 +228,15 @@ extern PtrTextBuffer PathCreation ( int frame,
                                       int ymax,
                                       Document doc,
                                       int shape_number );
-
 extern void MouseCoordinatesToSVG ( Document doc,
-                                     AmayaFrame * p_frame,
-                                     int xmin,
-                                     int xmax,
-                                     int ymin,
-                                     int ymax,
-                                     ThotBool convert,
-                                     int *x,
-                                     int *y );
+                                      AmayaFrame * p_frame,
+                                      int xmin,
+                                      int xmax,
+                                      int ymin,
+                                      int ymax,
+                                      ThotBool convert,
+                                      int *x,
+                                      int *y );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

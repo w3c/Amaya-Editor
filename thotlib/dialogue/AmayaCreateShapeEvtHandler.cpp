@@ -48,16 +48,29 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
   
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
-  glColor4ub (127, 127, 127, 80);
+  glColor4ub (127, 127, 127, 0);
 
   if(!(shape == 0 || (shape >= 12 && shape <= 14)))
     {
       /* It's a shape drawn in a rectangle */
-      if(x2 < x1){tmp = x2; x2 = x1; x1 = tmp;}
-      if(y2 < y1){tmp = y2; y2 = y1; y1 = tmp;}
-      
-      lx = x2 - x1;
-      ly = y2 - y1;
+
+      lx = abs(x2 - x1);
+      ly = abs(y2 - y1);
+
+      if(shape == 20)
+	/* equilateral triangle */
+	lx = (int) (floor(2 *  ly / sqrt(3)));
+      else if(shape == 3 || shape == 15 || shape == 16 || shape == 23)
+	{
+	  /* lx and ly must be equal (square, circle...) */
+	  if(ly < lx)lx=ly; else ly = lx;
+	}
+
+      if(x2 < x1){x2 = x1 - lx; tmp = x2; x2 = x1; x1 = tmp;}
+	else x2 = x1 + lx;
+
+      if(y2 < y1){y2 = y1 - ly; tmp = y2; y2 = y1; y1 = tmp;}
+        else y2 = y1 + ly;
     }
 
   switch(shape)
@@ -133,8 +146,6 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
 
       /* Square */
     case 15:
-      if(ly < lx)lx = ly; else ly = lx;
-
       /* Rectangle */
     case 1:
       glBegin(GL_LINE_LOOP);
@@ -147,8 +158,6 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
 
       /* Rounded Square */
     case 16:
-      if(ly < lx)lx = ly; else ly = lx;
-
       /* Rounded-Rectangle */
     case 2:
       if(lx > 5 && ly > 5)
@@ -168,8 +177,6 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
 
       /* Circle */
     case 3:
-      if(ly < lx)lx = ly; else ly = lx;
-
       /* Ellipse */
     case 4:
       GL_DrawArc (x1, y1, lx, ly, 0, 360, FALSE);
@@ -204,7 +211,6 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
 
     case 20: /* equilateral triangle */
       glBegin(GL_LINE_LOOP);
-      lx = (int) (floor(2 *  ly / sqrt(3)));
       glVertex2i(x1 + lx/2, y1);
       glVertex2i(x1 + lx, y2);
       glVertex2i(x1, y2);
@@ -228,17 +234,6 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
       break;
 
     case 23: /* cube */
-      if(ly < lx)
-	{
-	  lx = ly;
-	  x2 = x1 + lx;
-	}
-      else
-	{		
-	  ly = lx;	      
-	  y2 = y1 + lx;
-	}
-
     case 24: /* parallelepiped */
       glBegin(GL_LINE_STRIP);
       glVertex2i(x1, y1+ly/4);

@@ -1454,6 +1454,8 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax, D
   
   delete p_CreatePathEvtHandler;
 
+  
+
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
   return NULL;

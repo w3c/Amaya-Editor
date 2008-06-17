@@ -14,18 +14,16 @@ extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
-extern void AskShapePoints ( int x1,
-                             int x2,
-                             int y1,
-                             int y2,
-                             Document doc,
-                             int shape );
+extern void AskShapePoints ( Document doc,
+                             int shape,
+                             Element svgRoot );
 extern void AskSurroundingBox ( int *x1,
                                 int *y1,
                                 int *x2,
                                 int *y2,
                                 Document doc,
-                                int shape );
+                                int shape,
+                                Element svgRoot );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                              CHAR_T c,
@@ -67,18 +65,16 @@ extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                         int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
-extern void AskShapePoints ( int x1,
-                               int x2,
-                               int y1,
-                               int y2,
-                               Document doc,
-                               int shape );
+extern void AskShapePoints ( Document doc,
+                               int shape,
+                               Element svgRoot );
 extern void AskSurroundingBox ( int *x1,
                                   int *y1,
                                   int *x2,
                                   int *y2,
                                   Document doc,
-                                  int shape );
+                                  int shape,
+                                  Element svgRoot );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                                CHAR_T c,

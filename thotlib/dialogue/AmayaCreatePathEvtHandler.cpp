@@ -46,7 +46,7 @@ void DrawPathFragment (int x1, int y1, int x2, int y2, int shape/*, int p*/)
 { 
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
-  glColor4ub (127, 127, 127, 80);
+  glColor4ub (127, 127, 127, 0);
 
   switch(shape)
     {

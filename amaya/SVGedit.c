@@ -61,9 +61,6 @@ static ThotBool InCreation = FALSE;
 #include "Xmlbuilder_f.h"
 #include <math.h>
 
-extern void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
-extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape);
-extern char *AskShapePoints (int x1, int x2, int y1, int y2, Document doc, int shape);
 extern int ActiveFrame;
 
 #ifdef _WX
@@ -1587,7 +1584,6 @@ void CreateGraphicElement (int entry)
   int error;
 
   char buffer[300];
-  char *buffer2;
 
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
@@ -1728,10 +1724,6 @@ void CreateGraphicElement (int entry)
       parent = SvgRoot;
       sibling = TtaGetLastChild (SvgRoot);
     }
-
-
-  /* Select the SVG element where the user will draw */
-  TtaSelectElement(doc, SvgRoot);
 
   newType.ElSSchema = SvgSchema;
   newType.ElTypeNum = 0;
@@ -1921,7 +1913,7 @@ void CreateGraphicElement (int entry)
 
       if(entry == 5)
 	{
-	AskShapePoints (x1, x2, y1, y2, doc, entry);
+	  AskShapePoints (doc, entry, SvgRoot);
 	
 	/*	attrType.AttrTypeNum = SVG_ATTR_points;
 	attr = TtaNewAttribute (attrType);
@@ -1935,7 +1927,7 @@ void CreateGraphicElement (int entry)
       if(!(entry >= 5 && entry <= 11))
 	{
 
-	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry);
+	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
 	  
 	  lx = x2 - x1;
 	  ly = y2 - y1;

@@ -2016,26 +2016,27 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
     }
 }
 
-extern void AskShapePoints (int x1, int x2, int y1, int y2, Document doc, int shape)
+/*----------------------------------------------------------------------
+  AskShapePoints
+  Ask the user the list of points of a polyline or curve.
+  --------------------------------------------------------------------*/
+void AskShapePoints (Document doc, int shape, Element svgRoot)
 {
+  PtrAbstractBox pAb;
   PtrBox pBox;
   ViewFrame          *pFrame;
   int frame;
+  int x1, x2, y1, y2;
 
   frame = ActiveFrame;
 
   if(frame <= 0)return;
 
-  pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
-
-  if (pBox == NULL)
-    {
-      TtaSetFocus ();
-      frame = ActiveFrame;
-      if (frame == 0)return;
-      pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
-      if (pBox == NULL)return;
-    }
+  if(frame <= 0 || svgRoot == NULL)return;
+  pAb = ((PtrElement)svgRoot) -> ElAbstractBox[0];
+  if(!pAb)return;
+  pBox = pAb -> AbBox;
+  if(!pBox)return;
 
   pFrame = &ViewFrameTable[frame - 1];
 
@@ -2050,23 +2051,16 @@ extern void AskShapePoints (int x1, int x2, int y1, int y2, Document doc, int sh
 
 /*----------------------------------------------------------------------
   AskSurroundingBox
-  Ask the user the position and size of the surrounding
-  box.
-
-  (x1,y1)
-       ----
-       |  |
-       |  |
-       ----
-         (x2,y2)
-
+  Ask the user the position and size of the surrounding box or the extremities
+  of a line.
   --------------------------------------------------------------------*/
-extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape)
+void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape, Element svgRoot)
 {
+  PtrAbstractBox pAb;
   PtrBox pBox;
   ViewFrame          *pFrame;
   int frame;
-  int tmp;
+  int lx,ly,tmp;
 
   frame = ActiveFrame;
 
@@ -2075,18 +2069,11 @@ extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, 
   *y1 = 0;
   *y2 = 0;
 
-  if(frame <= 0)return;
-
-  pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
-
-  if (pBox == NULL)
-    {
-      TtaSetFocus ();
-      frame = ActiveFrame;
-      if (frame == 0)return;
-      pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
-      if (pBox == NULL)return;
-    }
+  if(frame <= 0 || svgRoot == NULL)return;
+  pAb = ((PtrElement)svgRoot) -> ElAbstractBox[0];
+  if(!pAb)return;
+  pBox = pAb -> AbBox;
+  if(!pBox)return;
 
   pFrame = &ViewFrameTable[frame - 1];
 
@@ -2100,8 +2087,24 @@ extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, 
   if(!(shape == 0 || (shape >= 12 && shape <= 14)))
     {
       /* It's a shape drawn in a rectangle */
-      if(*x2 < *x1){tmp = *x2; *x2 = *x1; *x1 = tmp;}
-      if(*y2 < *y1){tmp = *y2; *y2 = *y1; *y1 = tmp;}
+
+      lx = abs(*x2 - *x1);
+      ly = abs(*y2 - *y1);
+
+      if(shape == 20)
+	/* equilateral triangle */
+	lx = (int) (floor(2 *  ly / sqrt(3)));
+      else if(shape == 3 || shape == 15 || shape == 16 || shape == 23)
+	{
+	  /* lx and ly must be equal (square, circle...) */
+	  if(ly < lx)lx=ly; else ly = lx;
+	}
+
+      if(*x2 < *x1){*x2 = *x1 - lx; tmp = *x2; *x2 = *x1; *x1 = tmp;}
+	else *x2 = *x1 + lx;
+
+      if(*y2 < *y1){*y2 = *y1 - ly; tmp = *y2; *y2 = *y1; *y1 = tmp;}
+        else *y2 = *y1 + ly;
     }
 }
 
