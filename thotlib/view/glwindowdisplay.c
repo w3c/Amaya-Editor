@@ -393,10 +393,6 @@ void GL_VideoInvert (int width, int height, int x, int y)
   /*a blend func like that could be coool ? 
     (GL_ONE_MINUS_DST_COLOR,GL_ZERO) */
   
-  glEnable(GL_COLOR_LOGIC_OP);
-
-  glLogicOp(GL_XOR);
-
   glColor4ub (127, 127, 127, 80);
   glBegin (GL_QUADS);
   glVertex2i (x, y);
@@ -404,10 +400,6 @@ void GL_VideoInvert (int width, int height, int x, int y)
   glVertex2i (x +  width, y + height);
   glVertex2i (x, y + height);
   glEnd (); 
-
-  glLogicOp(GL_COPY);
-
-  glDisable(GL_COLOR_LOGIC_OP);
 }
 
 

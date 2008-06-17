@@ -276,6 +276,7 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
 
     }
 
+  glFlush();
   glLogicOp(GL_COPY);
   glDisable(GL_COLOR_LOGIC_OP);
 }
@@ -339,18 +340,19 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler(AmayaFrame * p_frame, int
 
       /* assign a cross mouse cursor */
       m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
-#ifndef _MACOS
-      m_pFrame->GetCanvas()->CaptureMouse();
-#endif /* _MACOS */      
 
     }
+
+  //GL_VideoInvert (m_xmax - m_xmin, m_ymax - m_ymin,m_xmin,m_ymin);
+
+
+  GL_SetClipping (m_xmin, m_ymin, m_xmax - m_xmin, m_ymax - m_ymin);
 }
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
 AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
 {
-
   if (m_pFrame)
     {
       /* detach this handler from the canvas (restore default behaviour) */
@@ -359,18 +361,19 @@ AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
       
       /* restore the default cursor */
       m_pFrame->GetCanvas()->SetCursor( wxNullCursor );
-
       m_pFrame->GetCanvas()->ReleaseMouse();
     }
+
+  /* Clear the Shape */
+  DrawShape (*m_x1, *m_y1, *m_x2, *m_y2, m_ShapeNumber);
+
+  GL_UnsetClipping ();
 }
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
 bool AmayaCreateShapeEvtHandler::IsFinish()
 {
-
-  if(m_IsFinish)
-    DrawShape (*m_x1, *m_y1, *m_x2, *m_y2, m_ShapeNumber);
 
   return m_IsFinish;
 }
