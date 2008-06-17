@@ -2567,7 +2567,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
     if (pAb->AbShape == EOS)
       DisplayEmptyBox (box, frame, selfsel, t, b, l, r);
     else
-      DisplayGraph (box, frame, selected, t, b, l, r);
+      DisplayGraph (box, frame, selfsel, t, b, l, r);
   else if (pAb->AbLeafType == LtPolyLine)
     /* Polyline */
     DisplayPolyLine (box, frame, selfsel, t, b, l, r);

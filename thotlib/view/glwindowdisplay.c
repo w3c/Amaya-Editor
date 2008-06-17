@@ -1548,21 +1548,10 @@ void SetGlPipelineState ()
   glBlendFunc (GL_SRC_ALPHA, 
                GL_ONE_MINUS_SRC_ALPHA); 
   GL_SetOpacity (1000);
-
-#ifdef _GTK
-  if (GL_Err())
-    g_print ("OpenGL: Bad INIT\n");
-#endif /* _GTK */
-
 #ifdef _WX
   if (GL_Err())
     wxPrintf( _T("OpenGL: Bad INIT\n") ); 
 #endif /* _WX */
-
-#ifdef _WINGUI
-  if (GL_Err())
-    WinErrorBox (NULL, "OpenGL: Bad INIT\n");
-#endif  /* _WINGUI */
 }
 
 
@@ -1659,23 +1648,6 @@ void GL_window_copy_area (int frame, int xf, int yf, int x_source, int y_source,
     }
 }
 
-/*----------------------------------------------------------------------
-  GLSynchronize: Make sure all opengl calls are done
-  ----------------------------------------------------------------------*/
-#if 0
-/* NOT USED */
-void gl_synchronize ()
-{
-#ifdef _GTK
-  /* gtk_main_iteration_do (FALSE); */
-  /* 	while (gtk_events_pending ())  */
-  /* 	  gtk_main_iteration (); */
-
-  gdk_gl_wait_gdk ();
-  gdk_gl_wait_gl ();
-#endif /* _GTK */
-}
-#endif /* 0 */
 
 /*----------------------------------------------------------------------
   GLResize: 

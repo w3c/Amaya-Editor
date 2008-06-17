@@ -50,20 +50,25 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
   PtrAbstractBox      pAb;
   PtrTextBuffer       pBuffer;
   PtrPathSeg          pPa;
+  PtrElement          pEl;
   int                 leftX, middleX, rightX;
   int                 topY, middleY, bottomY;
   int                 t, b, l, r;
   int                 thick, halfThick;
   int                 i, j, n;
-  int                 x, y;
-  int                 bg, fg;
+  int                 x, y, bg, fg;
+  ThotBool            svg_or_img;
 
-  if (pBox != NULL)
+  if (pBox)
     {
       pFrame = &ViewFrameTable[frame - 1];
       pAb = pBox->BxAbstractBox;
+      pEl = pAb->AbElement;
       thick = HANDLE_WIDTH;
-      if (could_resize && pAb->AbLeafType == LtPicture)
+      svg_or_img = (pAb->AbLeafType == LtPicture ||
+                    (pEl && !pAb->AbPresentationBox &&
+                     TypeHasException (ExcIsDraw, pEl->ElTypeNumber, pEl->ElStructSchema)));
+      if (could_resize && svg_or_img)
           // display larger handles
         thick += 2;
       if (thick > pBox->BxWidth)
@@ -74,10 +79,18 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 
       /* selection points */
       GetExtraMargins (pBox, frame, FALSE, &t, &b, &l, &r);
-      leftX = l + pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder
-        + pBox->BxLPadding - pFrame->FrXOrg - halfThick;
-      topY = t + pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder
-        + pBox->BxTPadding - pFrame->FrYOrg - halfThick;
+      if (pEl->ElSystemOrigin)
+        {
+          leftX = - halfThick;
+          topY = - halfThick;
+        }
+      else
+        {
+          leftX = l + pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder
+            + pBox->BxLPadding - pFrame->FrXOrg - halfThick;
+          topY = t + pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder
+            + pBox->BxTPadding - pFrame->FrYOrg - halfThick;
+        }
       bottomY = topY + pBox->BxH - 1;
       rightX = leftX + pBox->BxW - 1;
       middleX = leftX + (pBox->BxW / 2) - halfThick/2;
@@ -94,7 +107,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
           fg = BgSelColor;
         }
 
-      if (pAb->AbLeafType == LtPicture)
+      if (svg_or_img)
         {
           /* 8 control points */
           DrawRectangle (frame, 1, 0, leftX+halfThick, topY+halfThick, pBox->BxW, pBox->BxH - 1,

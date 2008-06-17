@@ -320,7 +320,8 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
            pBox->BxAbstractBox->AbLeafType == LtPath ||
            (pEl &&
             (TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema) ||
-             TypeHasException (ExcIsTable, pEl->ElTypeNumber, pEl->ElStructSchema)))))
+             TypeHasException (ExcIsTable, pEl->ElTypeNumber, pEl->ElStructSchema) ||
+             TypeHasException (ExcIsDraw, pEl->ElTypeNumber, pEl->ElStructSchema)))))
         k = EXTRA_GRAPH;
 
       x1 = pBox->BxXOrg;
@@ -839,6 +840,10 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
               TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
             // display an IMG as a PICTURE element
             DisplayPointSelection (frame, pBox, 0, FALSE);
+          else if (FrameTable[frame].FrView == 1 &&
+                   TypeHasException (ExcIsDraw, pEl->ElTypeNumber, pEl->ElStructSchema))
+            // display a SVG element
+            DisplayPointSelection (frame, pBox, 0, TRUE);
 #ifdef _GL
           else if (FrameTable[frame].FrView == 1 && pFrom->AbElement->ElSystemOrigin)
             DrawRectangle (frame, 0, 0, 0, 0, width, height, 0, BgSelColor, 2);
@@ -1769,6 +1774,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                         DrawFilledBox (pBox, pAb, frame, pFlow,
                                        xmin, xmax, ymin, ymax,
                                        selected, TRUE, TRUE, show_bgimage);
+                      if (pAb->AbSelected && FrameTable[frame].FrView == 1 &&
+                           TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
+                                             pAb->AbElement->ElStructSchema))
+                        selected = FALSE;
                       if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
                         {
                           /* this is a new box */
