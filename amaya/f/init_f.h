@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern ThotBool IsXMLDocType ( Document doc );
@@ -266,6 +267,7 @@ extern void CloseHelpWindow ( Document doc,
                               View view );
 
 #else /* __STDC__ */
+
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern ThotBool IsXMLDocType ( Document doc );

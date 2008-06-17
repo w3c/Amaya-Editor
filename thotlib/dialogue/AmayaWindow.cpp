@@ -403,7 +403,6 @@ void AmayaWindow::OnIdle( wxIdleEvent& event )
         }
       m_MustCheckFocusIsNotLost = false;
     }
-
   event.Skip();
 }
 

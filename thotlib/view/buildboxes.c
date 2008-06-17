@@ -1219,28 +1219,42 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
   ----------------------------------------------------------------------*/
 static void UnsplitBox (PtrBox pBox, int frame)
 {
-  PtrBox     box;
-  PtrBox     pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
+  ViewFrame          *pFrame;
+  PtrBox              box;
 
   if (pBox->BxType == BoComplete)
     return;
   box = pBox->BxNexChild;
   pBox->BxNexChild = NULL;
   pBox->BxType = BoComplete;
+  pFrame = &ViewFrameTable[frame - 1];
+  // child boxes will be removed
+  if (box)
+    {
+      pBox->BxPrevious = box->BxPrevious;
+      if (box->BxPrevious)
+        box->BxPrevious->BxNext = pBox;
+      else
+        pFrame->FrAbstractBox->AbBox->BxNext = pBox;
+    }
   while (box && (box->BxType == BoScript || box->BxType == BoPiece))
     {
 #ifdef _GL
-#ifdef _WX
-      wxASSERT_MSG( !box->DisplayList ||
-                    glIsList(box->DisplayList),
-                    _T("GLBUG - UnsplitBox : glIsList returns false"));
-#endif /* _WX */
       if (glIsList (box->DisplayList))
         {
           glDeleteLists (box->DisplayList, 1);
           box->DisplayList = 0;
         }
 #endif /* _GL */
+      if (box->BxNexChild == NULL)
+        {
+          // it's the last child box
+          pBox->BxNext = box->BxNext;
+          if (box->BxNext)
+            box->BxNext->BxPrevious = pBox;
+          else
+            pFrame->FrAbstractBox->AbBox->BxPrevious = pBox;
+        }
       box = FreeBox (box);
     }
 }
@@ -3023,22 +3037,24 @@ PtrLine SearchLine (PtrBox pBox, int frame)
   between two lines. In that case only the main box is updated and the
   algorithm that splits the ext in lines is called.
   ----------------------------------------------------------------------*/
-void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
-                int wDelta, int adjustDelta, int hDelta, int frame,
-                ThotBool splitBox)
+PtrBox BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
+                  int wDelta, int adjustDelta, int hDelta, int frame,
+                  ThotBool splitBox)
 {
-  PtrBox              box1, pMainBox, pParentBox;
+  ViewFrame          *pFrame;
+  ViewSelection      *pViewSel, *pViewSelEnd;
+  PtrBox              box, pMainBox, pParentBox, prev = NULL;
   Propagation         savpropage;
   PtrAbstractBox      pAb;
   AbPosition         *pPosAb;
   AbDimension        *pDimAb;
   int                 j;
 
-  /* Traitement particulier aux boites de coupure */
+  pAb = pBox->BxAbstractBox;
+  pMainBox = pAb->AbBox;
   if (pBox->BxType == BoPiece || pBox->BxType == BoScript || pBox->BxType == BoDotted)
     {
-      /* Mise a jour de sa boite mere (boite coupee) */
-      pMainBox = pBox->BxAbstractBox->AbBox;
+      /* Update the initial box */
       pMainBox->BxNChars += charDelta;
       pMainBox->BxNSpaces += spaceDelta;
       pMainBox->BxW += wDelta;
@@ -3046,7 +3062,6 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
       pMainBox->BxH += hDelta;
       pMainBox->BxHeight += hDelta;
       /* Faut-il mettre a jour la base ? */
-      pAb = pMainBox->BxAbstractBox;
       pPosAb = &pAb->AbHorizRef;
       if (pPosAb->PosAbRef == NULL)
         {
@@ -3062,23 +3077,108 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
         }
 
       /* Mise a jour des positions des boites suivantes */
-      box1 = pBox->BxNexChild;
-      while (box1)
+      box = pBox->BxNexChild;
+      while (box)
         {
-          box1->BxFirstChar += charDelta;
-          box1 = box1->BxNexChild;
+          box->BxFirstChar += charDelta;
+          if (box->BxBuffer == pBox->BxBuffer)
+            box->BxIndChar += charDelta;
+          box = box->BxNexChild;
         }
     }
-
   /* Traitement sur la boite passee en parametre */
   savpropage = Propagate;
-  pAb = pBox->BxAbstractBox;
   /* update the box itself */
   if (pAb->AbLeafType == LtText)
     {
       /* when a character between 2 boxes are removed the box is unchanged */
       pBox->BxNSpaces += spaceDelta;
       pBox->BxNChars += charDelta;
+      pFrame = &ViewFrameTable[frame - 1];
+      if (pBox->BxType == BoScript && pBox->BxNChars == 0)
+        {
+          // free the empty script box
+          if (pMainBox->BxNexChild != pBox)
+            {
+              prev = pMainBox->BxNexChild;
+              while (prev && prev->BxNexChild != pBox)
+                prev = prev->BxNexChild;
+            }
+
+          // update box links
+          if (prev)
+            {
+              // there is a previous child
+              prev->BxNexChild = pBox->BxNexChild;
+              prev->BxNext = pBox->BxNext;
+              if (pBox->BxNext)
+                pBox->BxNext->BxPrevious = prev;
+              else
+                pFrame->FrAbstractBox->AbBox->BxPrevious = prev;
+            }
+          else
+            {
+              pMainBox->BxNexChild = pBox->BxNexChild;
+              if (pBox->BxPrevious)
+                pBox->BxPrevious->BxNext = pBox->BxNext;
+              else
+                pFrame->FrAbstractBox->AbBox->BxNext = pBox->BxNext;
+              
+              if (pBox->BxNext)
+                pBox->BxNext->BxPrevious = pBox->BxPrevious;
+              else
+                pFrame->FrAbstractBox->AbBox->BxPrevious = pBox->BxPrevious;
+            }
+#ifdef _GL
+          if (glIsList (pBox->DisplayList))
+            {
+              glDeleteLists (pBox->DisplayList, 1);
+              pBox->DisplayList = 0;
+            }
+#endif /* _GL */
+          pLine = SearchLine (pBox->BxNexChild, frame);
+          pViewSel = &pFrame->FrSelectionBegin;
+          pViewSelEnd = &pFrame->FrSelectionEnd;
+          box = FreeBox (pBox);
+          // update the selection
+          if (box)
+            {
+              pViewSel->VsBox = box;
+              pViewSelEnd->VsBox = box;
+            }
+          else
+            {
+              box = pMainBox->BxNexChild;
+              if (box)
+                {
+                  // there is almost a previous script box
+                  pViewSel->VsBox = box;
+                  pViewSelEnd->VsBox = box;
+                  if (prev)
+                    {
+                      // select the end of previous box
+                      pViewSel->VsXPos = box->BxW;
+                      pViewSel->VsNSpaces = box->BxNSpaces;
+                      pViewSel->VsIndBox = box->BxNChars;
+                    }
+                  pViewSelEnd->VsXPos = pViewSel->VsXPos + 2;
+                  pViewSelEnd->VsNSpaces = pViewSel->VsNSpaces;
+                  pViewSelEnd->VsIndBox = pViewSel->VsIndBox;
+                }
+              else
+                {
+                  pMainBox->BxType = BoComplete;
+                  box = pMainBox;
+                  pViewSel->VsBox = box;
+                  pViewSelEnd->VsBox = box;
+                }
+            }
+          /* Recompute the whole block? */
+          if (Propagate == ToAll)
+            RecomputeLines (pAb->AbEnclosing, pLine, box, frame);
+          Propagate = savpropage;
+          return box;
+        }
     }
 
   /* does the box width depends on the content? */
@@ -3151,6 +3251,7 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
   Propagate = savpropage;
 #ifdef _GL
   pBox->VisibleModification = TRUE;
+  return pBox;
 #endif /* _GL */
 }
 

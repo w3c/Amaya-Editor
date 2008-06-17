@@ -20,6 +20,58 @@ extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
 extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 extern void AttrAnimTimeChanged ( NotifyAttribute *event );
 extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
+extern void CreateSVG_Line ( Document document,
+                             View view );
+extern void CreateSVG_Rectangle ( Document document,
+                                  View view );
+extern void CreateSVG_RoundedRectangle ( Document document,
+                                         View view );
+extern void CreateSVG_Circle ( Document document,
+                               View view );
+extern void CreateSVG_Ellipse ( Document document,
+                                View view );
+extern void CreateSVG_Polyline ( Document document,
+                                 View view );
+extern void CreateSVG_Polygon ( Document document,
+                                View view );
+extern void CreateSVG_Spline ( Document document,
+                               View view );
+extern void CreateSVG_Closed ( Document document,
+                               View view );
+extern void CreateSVG_ForeignObject ( Document document,
+                                      View view );
+extern void CreateSVG_Text ( Document document,
+                             View view );
+extern void CreateSVG_Group ( Document document,
+                              View view );
+extern void CreateSVG_SimpleArrow ( Document document,
+                                    View view );
+extern void CreateSVG_DoubleArrow ( Document document,
+                                    View view );
+extern void CreateSVG_Zigzag ( Document document,
+                               View view );
+extern void CreateSVG_Square ( Document document,
+                               View view );
+extern void CreateSVG_RoundedSquare ( Document document,
+                                      View view );
+extern void CreateSVG_Diamond ( Document document,
+                                View view );
+extern void CreateSVG_Trapezium ( Document document,
+                                  View view );
+extern void CreateSVG_Parallelogram ( Document document,
+                                      View view );
+extern void CreateSVG_EquilateralTriangle ( Document document,
+                                            View view );
+extern void CreateSVG_IsoscelesTriangle ( Document document,
+                                          View view );
+extern void CreateSVG_RectangleTriangle ( Document document,
+                                          View view );
+extern void CreateSVG_Cube ( Document document,
+                             View view );
+extern void CreateSVG_Parallelepiped ( Document document,
+                                       View view );
+extern void CreateSVG_Cylinder ( Document document,
+                                 View view );
 
 #else /* __STDC__ */
 
@@ -37,6 +89,58 @@ extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
 extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 extern void AttrAnimTimeChanged ( NotifyAttribute *event );
 extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
+extern void CreateSVG_Line ( Document document,
+                               View view );
+extern void CreateSVG_Rectangle ( Document document,
+                                    View view );
+extern void CreateSVG_RoundedRectangle ( Document document,
+                                           View view );
+extern void CreateSVG_Circle ( Document document,
+                                 View view );
+extern void CreateSVG_Ellipse ( Document document,
+                                  View view );
+extern void CreateSVG_Polyline ( Document document,
+                                   View view );
+extern void CreateSVG_Polygon ( Document document,
+                                  View view );
+extern void CreateSVG_Spline ( Document document,
+                                 View view );
+extern void CreateSVG_Closed ( Document document,
+                                 View view );
+extern void CreateSVG_ForeignObject ( Document document,
+                                        View view );
+extern void CreateSVG_Text ( Document document,
+                               View view );
+extern void CreateSVG_Group ( Document document,
+                                View view );
+extern void CreateSVG_SimpleArrow ( Document document,
+                                      View view );
+extern void CreateSVG_DoubleArrow ( Document document,
+                                      View view );
+extern void CreateSVG_Zigzag ( Document document,
+                                 View view );
+extern void CreateSVG_Square ( Document document,
+                                 View view );
+extern void CreateSVG_RoundedSquare ( Document document,
+                                        View view );
+extern void CreateSVG_Diamond ( Document document,
+                                  View view );
+extern void CreateSVG_Trapezium ( Document document,
+                                    View view );
+extern void CreateSVG_Parallelogram ( Document document,
+                                        View view );
+extern void CreateSVG_EquilateralTriangle ( Document document,
+                                              View view );
+extern void CreateSVG_IsoscelesTriangle ( Document document,
+                                            View view );
+extern void CreateSVG_RectangleTriangle ( Document document,
+                                            View view );
+extern void CreateSVG_Cube ( Document document,
+                               View view );
+extern void CreateSVG_Parallelepiped ( Document document,
+                                         View view );
+extern void CreateSVG_Cylinder ( Document document,
+                                   View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

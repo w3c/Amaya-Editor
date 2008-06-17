@@ -138,7 +138,7 @@ void  *TtaGetMemory (unsigned int n)
 {
   void               *res;
   
-  if (n == 0)
+  if (n <= 0)
     n = 1;
   res = malloc ((size_t) n);
 
@@ -611,7 +611,6 @@ void GetTextBuffer (PtrTextBuffer *pBT)
   ----------------------------------------------------------------------*/
 void FreeTextBuffer (PtrTextBuffer pBT)
 {
-
   /* insere le buffer en tete de la chaine des libres */
   if (pBT != NULL)
     {
@@ -1995,6 +1994,7 @@ PtrBox FreeBox (PtrBox pBox)
 
   /* get next child */
   if (pBox->BxType == BoSplit ||
+      pBox->BxType == BoMulScript ||
       pBox->BxType == BoPiece ||
       pBox->BxType == BoScript ||
       pBox->BxType == BoDotted)

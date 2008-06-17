@@ -6,10 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
-int MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xmax, int ymin, int ymax, ThotBool convert, int *x, int *y);
-int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2,Document doc,int shape_number);
-PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax, Document doc, int shape_number);
 extern int TtaGridDoAlign ( int value );
 extern void BoxGeometry ( int frame,
                           int x,
@@ -97,6 +93,33 @@ extern void GeometryCreate ( int frame,
                              int DimY,
                              int percentW,
                              int percentH );
+extern void GetArrowCoord ( int *x1,
+                            int *y1,
+                            int *x2,
+                            int *y2 );
+extern int ShapeCreation ( int frame,
+                           int *x1,
+                           int *y1,
+                           int *x2,
+                           int *y2,
+                           Document doc,
+                           int shape_number );
+extern PtrTextBuffer PathCreation ( int frame,
+                                    int xmin,
+                                    int ymin,
+                                    int xmax,
+                                    int ymax,
+                                    Document doc,
+                                    int shape_number );
+extern int MouseCoordinatesToSVG ( Document doc,
+                                   AmayaFrame * p_frame,
+                                   int xmin,
+                                   int xmax,
+                                   int ymin,
+                                   int ymax,
+                                   ThotBool convert,
+                                   int *x,
+                                   int *y );
 
 #else /* __STDC__ */
 
@@ -187,6 +210,33 @@ extern void GeometryCreate ( int frame,
                                int DimY,
                                int percentW,
                                int percentH );
+extern void GetArrowCoord ( int *x1,
+                              int *y1,
+                              int *x2,
+                              int *y2 );
+extern int ShapeCreation ( int frame,
+                             int *x1,
+                             int *y1,
+                             int *x2,
+                             int *y2,
+                             Document doc,
+                             int shape_number );
+extern PtrTextBuffer PathCreation ( int frame,
+                                      int xmin,
+                                      int ymin,
+                                      int xmax,
+                                      int ymax,
+                                      Document doc,
+                                      int shape_number );
+extern int MouseCoordinatesToSVG ( Document doc,
+                                     AmayaFrame * p_frame,
+                                     int xmin,
+                                     int xmax,
+                                     int ymin,
+                                     int ymax,
+                                     ThotBool convert,
+                                     int *x,
+                                     int *y );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void AskTwoPoints(int *x1, int *y1, int *x2, int *y2);
-extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape_number);
 extern ThotBool TtaIsTextInserting ( void );
 extern void TtcInsertGraph ( Document document,
                              View view,
@@ -16,6 +14,18 @@ extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
+extern void AskShapePoints ( int x1,
+                             int x2,
+                             int y1,
+                             int y2,
+                             Document doc,
+                             int shape );
+extern void AskSurroundingBox ( int *x1,
+                                int *y1,
+                                int *x2,
+                                int *y2,
+                                Document doc,
+                                int shape );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                              CHAR_T c,
@@ -57,6 +67,18 @@ extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                         int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
+extern void AskShapePoints ( int x1,
+                               int x2,
+                               int y1,
+                               int y2,
+                               Document doc,
+                               int shape );
+extern void AskSurroundingBox ( int *x1,
+                                  int *y1,
+                                  int *x2,
+                                  int *y2,
+                                  Document doc,
+                                  int shape );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                                CHAR_T c,

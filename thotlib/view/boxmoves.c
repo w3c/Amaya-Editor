@@ -3872,8 +3872,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
                 pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
                 (FrameTable[frame].FrView != 1 ||
                  !TypeHasException (ExcIsMap, pChildAb->AbElement->ElTypeNumber,
-                                    pChildAb->AbElement->ElStructSchema)) &&
-                pChildAb->AbHorizEnclosing)
+                                    pChildAb->AbElement->ElStructSchema)))
               {
                 /* look for the box which relies the box to its enclosing */
                 pRelativeBox = GetHPosRelativeBox (pChildBox, NULL);
@@ -4107,8 +4106,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
                 pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
                 (FrameTable[frame].FrView != 1 ||
                  !TypeHasException (ExcIsMap, pChildAb->AbElement->ElTypeNumber,
-                                    pChildAb->AbElement->ElStructSchema)) &&
-                pChildAb->AbVertEnclosing)
+                                    pChildAb->AbElement->ElStructSchema)))
               {
                 /* look for the box which relies the box to its enclosing */
                 pRelativeBox = GetVPosRelativeBox (pChildBox, NULL);

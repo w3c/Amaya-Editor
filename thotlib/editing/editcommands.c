@@ -46,11 +46,7 @@ static Language     ClipboardLanguage = 0;
 /* X Clipboard */
 static struct _TextBuffer XClipboard;
 
-#ifdef _GTK
-static ThotBool     ClipboardToPaste = FALSE;
-#endif /* _GTK */
 static ThotBool     NewInsert;
-
 #include "abspictures_f.h"
 #include "actions_f.h"
 #include "appdialogue_f.h"
@@ -234,7 +230,8 @@ static ThotBool APPattrModify (PtrAttribute pAttr, PtrElement pEl,
   selection is between two different character scripts ('*'
   if there is no specific script),
   - frame: the curent frame.
-  Returns:                     
+  Parameter toDelete is TRUE if a delete of previous character is requested
+  Returns:
   - pBox: the selected box,
   - pBuffer: the selected buffer,
   - ind: the character position within the buffer,                  
@@ -243,9 +240,9 @@ static ThotBool APPattrModify (PtrAttribute pAttr, PtrElement pEl,
   ----------------------------------------------------------------------*/
 static void GiveInsertPoint (PtrAbstractBox pAb, char script, int frame,
                              PtrBox *pBox, PtrTextBuffer *pBuffer, int *ind,
-                             int *x, int *previousChars)
+                             int *x, int *previousChars, ThotBool toDelete)
 {
-  ViewSelection      *pViewSel;
+  ViewSelection      *pViewSel, *pViewSelEnd;
   PtrBox              box;
   ThotBool            ok;
   ThotBool            endOfPicture;
@@ -289,11 +286,27 @@ static void GiveInsertPoint (PtrAbstractBox pAb, char script, int frame,
         {
           /* the box is already selected */
           *pBox = pViewSel->VsBox;
+          if (toDelete && (*pBox)->BxType == BoScript &&
+              pViewSel->VsIndBox == 0)
+            {
+              // move the selection at the end of the previous script
+              *pBox = (*pBox)->BxPrevious;
+              pViewSel->VsBox = *pBox;
+              pViewSel->VsXPos = (*pBox)->BxW;
+              pViewSel->VsNSpaces = (*pBox)->BxNSpaces;
+              pViewSel->VsIndBox = (*pBox)->BxNChars;
+              pViewSelEnd = &ViewFrameTable[frame - 1].FrSelectionEnd;
+              pViewSelEnd->VsBox = pViewSel->VsBox;
+              pViewSelEnd->VsXPos = pViewSel->VsXPos + 2;
+              pViewSelEnd->VsNSpaces = pViewSel->VsNSpaces;
+              pViewSelEnd->VsIndBox = pViewSel->VsIndBox;
+            }
+
           *pBuffer = pViewSel->VsBuffer;
           *ind = pViewSel->VsIndBuf;
           *x = pViewSel->VsXPos;
           *previousChars = pViewSel->VsIndBox;
-          if (script != ' ' && script != '*' &&
+          if (!toDelete && script != ' ' && script != '*' &&
               script != pViewSel->VsBox->BxScript)
             {
               /* a specific script is requested */
@@ -392,7 +405,8 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
           /* close the current insertion */
           TextInserting = FALSE;
           /* Where is the insert point (&i not used)? */
-          GiveInsertPoint (NULL, '*', frame, &pSelBox, &pBuffer, &ind, &i, &j);
+          GiveInsertPoint (NULL, '*', frame, &pSelBox, &pBuffer, &ind, &i,
+                           &j, FALSE);
           if (pSelBox == NULL || pSelBox->BxAbstractBox == NULL ||
               pSelBox->BxAbstractBox->AbLeafType != LtText)
             /* no more selection */
@@ -845,9 +859,11 @@ static void CopyBuffers (SpecFont font, int variant, int frame, int startInd,
 
 /*----------------------------------------------------------------------
   Debute l'insertion de caracteres dans une boite de texte.      
+  Parameter toDelete is TRUE if a delete of previous character is requested
   ----------------------------------------------------------------------*/
 static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
-                                PtrTextBuffer pBuffer, int ind, int prev)
+                                PtrTextBuffer pBuffer, int ind, int prev,
+                                ThotBool toDelete)
 {
   PtrBox              pBox;
   PtrTextBuffer       pPreviousBuffer;
@@ -861,7 +877,8 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
     {
       /* get the insert point (&i not used) */
       if (pAb == NULL)
-        GiveInsertPoint (NULL, '*', frame, &pSelBox, &pBuffer, &ind, &i, &prev);
+        GiveInsertPoint (NULL, '*', frame, &pSelBox, &pBuffer, &ind, &i,
+                         &prev,toDelete);
       TextInserting = TRUE;
       /* the split box */
       pBox = pSelBox->BxAbstractBox->AbBox;
@@ -1379,10 +1396,6 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
               pAb->AbElement->ElNPoints = pAb->AbVolume;
               pBox->BxNChars = pAb->AbVolume;
               DisplayPointSelection (frame, pBox, 0, FALSE);
-#ifdef _GTK
-              pBox->BxXRatio = 1;
-              pBox->BxYRatio = 1;
-#endif /* _GTK */
             }
 
           /* redisplay the whole box */
@@ -1615,7 +1628,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
         pViewSel = &pFrame->FrSelectionBegin;
         pViewSelEnd = &pFrame->FrSelectionEnd;
         /* Note que le texte de l'e'le'ment va changer */
-        StartTextInsertion (NULL, frame, NULL, NULL, 0, 0);
+        StartTextInsertion (NULL, frame, NULL, NULL, 0, 0, FALSE);
         /* fusionne le premier et dernier buffer de la selection */
         /* target of the moving */
         pTargetBuffer = pViewSel->VsBuffer;
@@ -1893,7 +1906,7 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 
       /* Coupure des buffers pour l'insertion */
       if (!TextInserting)
-        StartTextInsertion (NULL, frame, NULL, NULL, 0, 0);
+        StartTextInsertion (NULL, frame, NULL, NULL, 0, 0, FALSE);
 
       /* Insertion en fin de buffer */
       if (pViewSel->VsIndBuf >= pViewSel->VsBuffer->BuLength)
@@ -2314,7 +2327,8 @@ ThotBool ContentEditing (int editType)
             }
 	  
           /* Recherche le point d'insertion (&i non utilise) */
-          GiveInsertPoint (pAb, '*', frame, &pBox, &pBuffer, &i, &x, &charsDelta);
+          GiveInsertPoint (pAb, '*', frame, &pBox, &pBuffer, &i, &x,
+                           &charsDelta, FALSE);
           if (pBox == NULL)
             {
               /* take in account another box */
@@ -2837,7 +2851,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                 {
                   /* Look for the insert point */
                   GiveInsertPoint (pAb, script, frame, &pSelBox, &pBuffer,
-                                   &ind, &xx, &previousChars);
+                                   &ind, &xx, &previousChars, toDelete);
                   /* keep in mind previous information about the insert point */
                   previousPos = pViewSel->VsXPos;
 		  
@@ -2857,9 +2871,8 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                       variant = pAb->AbFontVariant;
                       /* initialise l'insertion */
                       if (!TextInserting)
-                        StartTextInsertion (pAb, frame, pSelBox,
-                                            pBuffer, ind,
-                                            previousChars);
+                        StartTextInsertion (pAb, frame, pSelBox, pBuffer, ind,
+                                            previousChars, toDelete);
                       font = pSelBox->BxFont;
 		      
                       if (pBuffer == NULL)
@@ -2870,6 +2883,10 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                           pBuffer = pBuffer->BuPrevious;
                           ind = pBuffer->BuLength;
                           previousInd = ind;
+                          pViewSel->VsBuffer = pBuffer;
+                          pViewSel->VsIndBuf = ind;
+                          pViewSelEnd->VsBuffer = pBuffer;
+                          pViewSelEnd->VsIndBuf = ind;
                         }
 
                       /* prepare the clipping area */
@@ -2992,7 +3009,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                     else
                                       pBuffer = DeleteBuffer (pBuffer, frame);
                                   }
-			    
+
                               if (c == SPACE && pBuffer && pBuffer->BuLength)
                                 {
                                   // A space is deleted
@@ -3013,7 +3030,6 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                               else
                                 spacesDelta = 0;
                               toSplit = FALSE;
-			    
                               if (previousChars == 1 &&
                                   pSelBox->BxType == BoComplete &&
                                   pSelBox->BxNChars == 1)
@@ -3043,7 +3059,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                             TtcNextChar (FrameTable[frame].FrDoc,
                                                          FrameTable[frame].FrView);
                                         }
-                                      return FALSE/*selNext*/;
+                                      return FALSE;
                                     }
                                   /* update selection marks */
                                   xDelta = 2; // instead of BoxCharacterWidth (109, 1, font);
@@ -3351,8 +3367,9 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                         DefBoxRegion (frame, pSelBox, -1, -1, -1, -1);
                       else
                         DefBoxRegion (frame, pSelBox, xx, xx+2, -1, -1);
-                      BoxUpdate (pSelBox, pViewSel->VsLine, charsDelta,
-                                 spacesDelta, xDelta, adjust, 0, frame, toSplit);
+                      pSelBox = BoxUpdate (pSelBox, pViewSel->VsLine, charsDelta,
+                                           spacesDelta, xDelta, adjust, 0, frame,
+                                           toSplit);
                       ReadyToDisplay = status;
                       /* Mise a jour du volume du pave */
                       pAb->AbVolume += charsDelta;
@@ -3554,18 +3571,6 @@ void PasteXClipboard (const unsigned char *src, int nbytes, CHARSET charset)
   int                 i, j;
   int                 frame, lg;
   ThotBool            lock = TRUE;
-
-#ifdef _GTK
-  if (src == NULL)
-    {
-      ClipboardToPaste = FALSE;
-      return;
-    }
-  if (ClipboardToPaste)
-    ClipboardToPaste = FALSE;
-  else
-    return;
-#endif /* _GTK */
 
   /* check the current selection */
   if (!GetCurrentSelection (&pDoc, &pEl, &pEl, &i, &i))
@@ -4181,39 +4186,6 @@ void TtcPasteFromClipboard (Document doc, View view)
       TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Closed the clipboard.\n") );
     }
 #endif /* _WX */
-#ifdef _GTK
-  DisplayMode         dispMode;
-  int                 frame;
-
-  if (doc == 0)
-    return;
-  frame = GetWindowNumber (doc, view);
-  if (frame != ActiveFrame)
-    {
-      if (ActiveFrame > 0 && FrameTable[ActiveFrame].FrDoc != doc)
-        return;
-      else
-        {
-          CloseTextInsertion ();
-          /* use the right frame */
-          ActiveFrame = frame;
-        }
-    }
-  else
-    /* close previous changes without notification */
-    CloseTextInsertionWithControl (FALSE);
-
-  /* avoid to redisplay step by step */
-  dispMode = TtaGetDisplayMode (doc);
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, DeferredDisplay);
-  ClipboardToPaste = TRUE;
-   
-  /* just manage differed enclosing rules */
-  ComputeEnclosing (frame);
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, dispMode);   
-#endif /* _GTK */
 }
 
 
@@ -4430,14 +4402,6 @@ void TtcPaste (Document doc, View view)
               ContentEditing (TEXT_PASTE);
             }
 #endif /* _WX */
-#ifdef _GTK
-          if (FirstSelectedElement == NULL && FirstSavedElement)
-            {
-              /* TODO: paste only the text */
-            }
-          else
-            ContentEditing (TEXT_PASTE);
-#endif /*  _GTK*/
     
           if (!lock)
             /* unlock table formatting */
