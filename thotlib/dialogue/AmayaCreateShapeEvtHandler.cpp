@@ -340,7 +340,7 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler(AmayaFrame * p_frame, int
 
       /* assign a cross mouse cursor */
       m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
-
+      m_pFrame->GetCanvas()->CaptureMouse();
     }
 
   //GL_VideoInvert (m_xmax - m_xmin, m_ymax - m_ymin,m_xmin,m_ymin);
@@ -374,7 +374,6 @@ AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
  *----------------------------------------------------------------------*/
 bool AmayaCreateShapeEvtHandler::IsFinish()
 {
-
   return m_IsFinish;
 }
 
