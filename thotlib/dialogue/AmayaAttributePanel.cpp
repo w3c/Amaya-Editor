@@ -988,6 +988,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaStringAttributeSubpanel, AmayaAttributeSubpanel)
 
 BEGIN_EVENT_TABLE(AmayaStringAttributeSubpanel, AmayaAttributeSubpanel)
   EVT_TEXT_ENTER(XRCID("wxID_ATTR_TEXT_VALUE"), AmayaAttributeSubpanel::SendApplyInfoToParent)
+  EVT_TEXT_ENTER(XRCID("wxID_ATTR_COMBO_VALUE"), AmayaAttributeSubpanel::SendApplyInfoToParent)
 END_EVENT_TABLE()
 
 
