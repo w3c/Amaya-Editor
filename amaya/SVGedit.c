@@ -63,7 +63,7 @@ static ThotBool InCreation = FALSE;
 
 extern void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
 extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape);
-extern void AskShapePoints (int x1, int x2, int y1, int y2,  Document doc, int shape);
+extern char *AskShapePoints (int x1, int x2, int y1, int y2, Document doc, int shape);
 extern int ActiveFrame;
 
 #ifdef _WX
@@ -1587,6 +1587,7 @@ void CreateGraphicElement (int entry)
   int error;
 
   char buffer[300];
+  char *buffer2;
 
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
@@ -1919,7 +1920,17 @@ void CreateGraphicElement (int entry)
         }
 
       if(entry == 5)
+	{
 	AskShapePoints (x1, x2, y1, y2, doc, entry);
+	
+	/*	attrType.AttrTypeNum = SVG_ATTR_points;
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (newEl, attr, doc);
+
+
+	TtaSetAttributeText (attr, buffer, newEl, doc);
+	ParsePointsAttribute (attr, newEl, doc);*/
+	}
  
       if(!(entry >= 5 && entry <= 11))
 	{

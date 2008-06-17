@@ -1465,7 +1465,7 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax, D
 /* Convert the mouse coordinates (x,y) into the one in the SVG element and
    display them into the status bar. If convert is TRUE, then x and y are
    modified. */
-int MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xmax, int ymin, int ymax, ThotBool convert, int *x, int *y)
+void MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xmax, int ymin, int ymax, ThotBool convert, int *x, int *y)
 {
   int FrameId;
   int newx, newy;
@@ -1493,4 +1493,5 @@ int MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xmax
       *x = newx;
       *y = newy;
     }
+
 }
