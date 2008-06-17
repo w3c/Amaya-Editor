@@ -140,219 +140,220 @@
 138 Teletype (tt)
 139 big
 140 small
-141 Subscript (sub)
-142 Superscript (sup)
-143 Quotation (q)
-144 BiDi override (bdo)
-145 Image (img)...
-146 Horizontal rule (hr)
-147 Break (br)
-148 Preformatted (pre)
-149 Insert a table
-150 Table
-151 Insert a table
-152 caption
-153 thead
-154 tbody
-155 tfoot
-156 &Math
-157 Insert a formula
-158 Plain text (mtext)
-159 Identifier (mi)
-160 Number (mn)
-161 Operator (mo)
-162 Space (mspace)
-163 Character (&xxx;)
-164 InvisibleTimes
-165 ApplyFunction
-166 Root (mroot)
-167 Square root (msqrt)
-168 Enclose (menclose)
-169 Fraction (mfrac)
-170 Subscript and superscript (msubsup)
-171 Subscript (msub)
-172 Superscript (msup)
-173 Under and over (munderover)
-174 Under (munder)
-175 Over (mover)
-176 Parentheses (mrow)
-177 Multiscripts (mmultiscripts)
-178 New matrix (mtable)
-179 Form
-180 Insert a form
-181 Button (input)
-182 Checkbox (input)
-183 File selector (input)
-184 Hidden (input)
-185 Image (input)...
-186 Password (input)
-187 Radio (input)
-188 Reset (input)
-189 Submit (input)
-190 Text (input)
-191 fieldset
-192 label
-193 Menu (option)
-194 Submenu (optgroup)
-195 textarea
-196 Object
-197 object
-198 Parameter (param)
-199 Map area
-200 Insert a map
-201 Circle area
-202 Polygon area
-203 Rectangle area
-204 Hidden elements
-205 style
-206 Comment
-207 base
-208 meta
-209 link
-210 script
-211 noscript
-212 Division (div)
-213 address
-214 blockquote
-215 Inline frame (iframe)
-216 ruby
-217 Theme
-218 Classic
-219 Modern
-220 No theme
-221 Text color
-222 Select a text color...
-223 No color
-224 Background color
-225 Select a background color...
-226 No color
-227 Alignment
-228 Left
-229 Center
-230 Right
-231 Justify
-232 Default
-233 Line spacing
-234 Single
-235 Half
-236 Double
-237 Default
-238 Indent
-239 Increase
-240 Decrease
-241 Default
-242 Character
-243 Select a font...
-244 Default
-245 &Style editor...
-246 Create &rule...
-247 Show applied style...
-248 Style sheets
-249 Link...
-250 Open...
-251 Disable...
-252 Enable...
-253 Remove...
-254 Copy location
-255 Paste location
-256 &Link to previous target
-257 &Create or change link...
-258 Create &target
-259 &Delete link or target
-260 &Add/Remove IDs...
-261 Chec&k spelling...
-262 Transfor&m...
-263 Code clean up
-264 Edit table
-265 Change to data cell
-266 Change to heading cell
-267 Merge cells
-268 Join with the cell at the right
-269 Join with the cell below
-270 Shrink horizontal extend
-271 Shrink vertical extend
-272 Select the row
-273 Insert a row
-274 Append a row
-275 Select the column
-276 Insert a column
-277 Append a column
-278 Paste before
-279 Paste after
-280 Change title...
-281 Change doctype
-282 Remove the doctype
-283 Add a doctype
-284 Change to XHTML 1.1
-285 Change to XHTML 1.0 Transitional
-286 Change to XHTML 1.0 Strict
-287 Change to XHTML 1.0 Basic
-288 Change to XHTML+RDFa
-289 Change to HTML 4.01 Transitional
-290 Change to HTML 4.01 Strict
-291 &Section numbering
-292 &Add/Update table of contents
-293 &Make book
-294 Insert time stamp
-295 Graphics
-296 Show SVG library
-297 Add to SVG library
-298 A&nnotations
-299 Annotate selection
-300 Annotate document
-301 Move to selection
-302 Store selection as &XPointer
-303 Move to stored XPointer
-304 Reply to annotation
-305 Post to server
-306 Delete
-307 Load
-308 Customize query...
-309 Local filter...
-310 C&ooperation
-311 Lock resource...
-312 Unlock resource...
-313 View resource properties...
-314 Copy lock information...
-315 Locked?
-316 Templates
-317 Create template from current document...
-318 Create a text box
-319 Create a free editing box
-320 &Javascript/DOM
-321 Enable/Disable
-322 Execute a command
-323 Execute an external script
-324 Add an external script
-325 Insert a script
-326 About Amaya
-327 About Amaya at W3C
-328 Index
-329 Browsing
-330 Views
-331 Selecting
-332 Documents
-333 Creating elements
-334 Attributes
-335 Characters
-336 Templates
-337 Restructuring
-338 Links
-339 Tables
-340 Image maps
-341 Math
-342 Graphics
-343 XML support
-344 Style sheets
-345 Searching
-346 Spell checking
-347 Publishing
-348 Cooperation
-349 Printing
-350 Numbering
-351 Making books
-352 Annotations
-353 Configuring
-354 Shortcuts
-355 Accessibility in Amaya
-356 Tip of the day...
+141 Span
+142 Subscript (sub)
+143 Superscript (sup)
+144 Quotation (q)
+145 BiDi override (bdo)
+146 Image (img)...
+147 Horizontal rule (hr)
+148 Break (br)
+149 Preformatted (pre)
+150 Insert a table
+151 Table
+152 Insert a table
+153 caption
+154 thead
+155 tbody
+156 tfoot
+157 &Math
+158 Insert a formula
+159 Plain text (mtext)
+160 Identifier (mi)
+161 Number (mn)
+162 Operator (mo)
+163 Space (mspace)
+164 Character (&xxx;)
+165 InvisibleTimes
+166 ApplyFunction
+167 Root (mroot)
+168 Square root (msqrt)
+169 Enclose (menclose)
+170 Fraction (mfrac)
+171 Subscript and superscript (msubsup)
+172 Subscript (msub)
+173 Superscript (msup)
+174 Under and over (munderover)
+175 Under (munder)
+176 Over (mover)
+177 Parentheses (mrow)
+178 Multiscripts (mmultiscripts)
+179 New matrix (mtable)
+180 Form
+181 Insert a form
+182 Button (input)
+183 Checkbox (input)
+184 File selector (input)
+185 Hidden (input)
+186 Image (input)...
+187 Password (input)
+188 Radio (input)
+189 Reset (input)
+190 Submit (input)
+191 Text (input)
+192 fieldset
+193 label
+194 Menu (option)
+195 Submenu (optgroup)
+196 textarea
+197 Object
+198 object
+199 Parameter (param)
+200 Map area
+201 Insert a map
+202 Circle area
+203 Polygon area
+204 Rectangle area
+205 Hidden elements
+206 style
+207 Comment
+208 base
+209 meta
+210 link
+211 script
+212 noscript
+213 Division (div)
+214 address
+215 blockquote
+216 Inline frame (iframe)
+217 ruby
+218 Theme
+219 Classic
+220 Modern
+221 No theme
+222 Text color
+223 Select a text color...
+224 No color
+225 Background color
+226 Select a background color...
+227 No color
+228 Alignment
+229 Left
+230 Center
+231 Right
+232 Justify
+233 Default
+234 Line spacing
+235 Single
+236 Half
+237 Double
+238 Default
+239 Indent
+240 Increase
+241 Decrease
+242 Default
+243 Character
+244 Select a font...
+245 Default
+246 &Style editor...
+247 Create &rule...
+248 Show applied style...
+249 Style sheets
+250 Link...
+251 Open...
+252 Disable...
+253 Enable...
+254 Remove...
+255 Copy location
+256 Paste location
+257 &Link to previous target
+258 &Create or change link...
+259 Create &target
+260 &Delete link or target
+261 &Add/Remove IDs...
+262 Chec&k spelling...
+263 Transfor&m...
+264 Code clean up
+265 Edit table
+266 Change to data cell
+267 Change to heading cell
+268 Merge cells
+269 Join with the cell at the right
+270 Join with the cell below
+271 Shrink horizontal extend
+272 Shrink vertical extend
+273 Select the row
+274 Insert a row
+275 Append a row
+276 Select the column
+277 Insert a column
+278 Append a column
+279 Paste before
+280 Paste after
+281 Change title...
+282 Change doctype
+283 Remove the doctype
+284 Add a doctype
+285 Change to XHTML 1.1
+286 Change to XHTML 1.0 Transitional
+287 Change to XHTML 1.0 Strict
+288 Change to XHTML 1.0 Basic
+289 Change to XHTML+RDFa
+290 Change to HTML 4.01 Transitional
+291 Change to HTML 4.01 Strict
+292 &Section numbering
+293 &Add/Update table of contents
+294 &Make book
+295 Insert time stamp
+296 Graphics
+297 Show SVG library
+298 Add to SVG library
+299 A&nnotations
+300 Annotate selection
+301 Annotate document
+302 Move to selection
+303 Store selection as &XPointer
+304 Move to stored XPointer
+305 Reply to annotation
+306 Post to server
+307 Delete
+308 Load
+309 Customize query...
+310 Local filter...
+311 C&ooperation
+312 Lock resource...
+313 Unlock resource...
+314 View resource properties...
+315 Copy lock information...
+316 Locked?
+317 Templates
+318 Create template from current document...
+319 Create a text box
+320 Create a free editing box
+321 &Javascript/DOM
+322 Enable/Disable
+323 Execute a command
+324 Execute an external script
+325 Add an external script
+326 Insert a script
+327 About Amaya
+328 About Amaya at W3C
+329 Index
+330 Browsing
+331 Views
+332 Selecting
+333 Documents
+334 Creating elements
+335 Attributes
+336 Characters
+337 Templates
+338 Restructuring
+339 Links
+340 Tables
+341 Image maps
+342 Math
+343 Graphics
+344 XML support
+345 Style sheets
+346 Searching
+347 Spell checking
+348 Publishing
+349 Cooperation
+350 Printing
+351 Numbering
+352 Making books
+353 Annotations
+354 Configuring
+355 Shortcuts
+356 Accessibility in Amaya
+357 Tip of the day...
