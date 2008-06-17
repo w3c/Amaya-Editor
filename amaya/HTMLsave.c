@@ -3870,7 +3870,7 @@ static void UpdateCss (Document doc, ThotBool src_is_local,
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "UpdateCSS: from %s to %s\n", oldpath, url);
 #endif
-                  if (dst_is_local && localname)
+                  if (dst_is_local)
                     TtaFileCopy (localname, url);
                   else
                     {
