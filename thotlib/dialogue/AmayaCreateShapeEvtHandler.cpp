@@ -389,6 +389,11 @@ void AmayaCreateShapeEvtHandler::OnChar( wxKeyEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
+  if (IsFinish() || *m_NbPoints != 0)return;
+
+  *m_x1 = m_mouse_x;
+  *m_y1 = m_mouse_y;
+  *m_NbPoints = 1;
 }
 
 /*----------------------------------------------------------------------
@@ -398,27 +403,13 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
-  if (IsFinish())
-    return;
+  if(IsFinish() || *m_NbPoints != 1)return;
+  if(m_mouse_x == *m_x1 && m_mouse_y == *m_y1)return;
 
-  (*m_NbPoints)++;
-
- 
-  /* update the box buffer */
-  switch(*m_NbPoints)
-    {
-    case 1:
-      *m_x1 = m_mouse_x;
-      *m_y1 = m_mouse_y;
-      break;
-
-    case 2:
-      *m_x2 = m_mouse_x;
-      *m_y2 = m_mouse_y;
-      m_IsFinish = true;
-      break;
-
-    }
+  *m_x2 = m_mouse_x;
+  *m_y2 = m_mouse_y;
+  *m_NbPoints = 2;
+  m_IsFinish = true;
 }
 
 /*----------------------------------------------------------------------
