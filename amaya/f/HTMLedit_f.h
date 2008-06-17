@@ -150,6 +150,8 @@ extern void SetOnOffQuotation ( Document document,
                                 View view );
 extern void SetOnOffBDO ( Document document,
                           View view );
+extern void CreateSpan ( Document document,
+                         View view );
 extern Element SearchAnchor ( Document doc,
                               Element element,
                               Attribute *HrefAttr,
@@ -301,6 +303,8 @@ extern void SetOnOffQuotation ( Document document,
                                   View view );
 extern void SetOnOffBDO ( Document document,
                             View view );
+extern void CreateSpan ( Document document,
+                           View view );
 extern Element SearchAnchor ( Document doc,
                                 Element element,
                                 Attribute *HrefAttr,
