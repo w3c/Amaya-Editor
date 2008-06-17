@@ -5300,6 +5300,15 @@ void SetOnOffBDO (Document document, View view)
   SetCharFontOrPhrase (document, HTML_EL_BDO);
 }
 
+
+/*----------------------------------------------------------------------
+  Create a SPAN
+  ----------------------------------------------------------------------*/
+void CreateSpan (Document document, View view)
+{
+  // SetCharFontOrPhrase (document, HTML_EL_BDO);
+}
+
 /*----------------------------------------------------------------------
   SearchAnchor
   Return the enclosing anchor element.

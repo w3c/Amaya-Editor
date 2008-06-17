@@ -502,7 +502,7 @@ HelpEditChar
 &SetOnOffSample
 &SetOnOffVariable
 &CreateDate
-&MakeASpan
+&CreateSpan
 
 [hypertext-module]
 &CreateOrChangeLink

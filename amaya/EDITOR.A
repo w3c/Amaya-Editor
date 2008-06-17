@@ -176,7 +176,7 @@ MENUS
 	Types.Font toggle:TBold -> SetOnOffBold;
 	Types.Font toggle:TTeletype -> SetOnOffTeletype;
 	Types.Font toggle:TBig -> SetOnOffBig;
- 	Types.Font button:BSpan -> MakeASpan;
+ 	Types.Font button:BSpan -> CreateSpan;
  	Types.Font toggle:TSmall -> SetOnOffSmall;
 	Types.Font toggle:TSub -> SetOnOffSub;
  	Types.Font toggle:TSup -> SetOnOffSup;
