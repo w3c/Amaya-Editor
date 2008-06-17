@@ -2260,6 +2260,11 @@
 	<message xml:lang="sk">Malé (small)</message>
 	<message xml:lang="ja">小さいフォント (small)</message>
 </label>
+<label define="BSpan">
+	<message xml:lang="en">Span</message>
+	<message xml:lang="fr">Span</message>
+	<message xml:lang="de">Span</message>
+</label>
 <label define="TSub">
 	<message xml:lang="en">Subscript (sub)</message>
 	<message xml:lang="fr">Indice (sub)</message>
