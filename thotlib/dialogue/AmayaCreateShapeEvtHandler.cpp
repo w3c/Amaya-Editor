@@ -44,7 +44,6 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
 { 
   int lx,ly,tmp;
   int x3, y3, x4, y4, x5, y5, x6, y6;
-  int i;
   
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
@@ -341,10 +340,6 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler(AmayaFrame * p_frame, int
       m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
       m_pFrame->GetCanvas()->CaptureMouse();
     }
-
-
-  //GL_VideoInvert (m_xmax - m_xmin, m_ymax - m_ymin,m_xmin,m_ymin);
-  //GL_SetClipping (m_xmin, m_ymin, m_xmax - m_xmin, m_ymax - m_ymin);
 }
 
 /*----------------------------------------------------------------------
@@ -365,7 +360,6 @@ AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
   /* Clear the Shape */
   DrawShape (*m_x1, *m_y1, *m_x2, *m_y2, m_ShapeNumber);
 
-  //GL_UnsetClipping ();
 }
 
 /*----------------------------------------------------------------------
@@ -403,8 +397,12 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
+#define MIN_SHAPE_SIZE 10
   if(IsFinish() || *m_NbPoints != 1)return;
-  if(m_mouse_x == *m_x1 && m_mouse_y == *m_y1)return;
+
+  /* Check that the shape is not too small */
+  if((m_mouse_x - *m_x1) < MIN_SHAPE_SIZE ||
+     abs(m_mouse_y - *m_y1) < MIN_SHAPE_SIZE)return;
 
   *m_x2 = m_mouse_x;
   *m_y2 = m_mouse_y;
