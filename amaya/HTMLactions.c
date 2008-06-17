@@ -4303,7 +4303,7 @@ void SetCharFontOrPhrase (int doc, int elemtype)
         remove = TRUE;
     }
 
-  if (parent && remove)
+  if (parent && remove && elemtype != HTML_EL_Span)
     {
       TtaClearViewSelections ();
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);

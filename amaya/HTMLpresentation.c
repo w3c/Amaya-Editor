@@ -38,14 +38,14 @@
   Span element, create a span element that contains that text string
   and return TRUE; span contains then the created Span element.
   if the parameter presRule is not NULL and a span is generated, the
-  the presRule should be moved to the new span.
+  presRule should be moved to the new span.
   -----------------------------------------------------------------------*/
 ThotBool MakeASpan (Element elem, Element *span, Document doc, PRule presRule)
 {
   ElementType	elType;
-  Element	    parent, sibling;
-  char       *name;
-  ThotBool	  ret, doit;
+  Element       parent, sibling;
+  char         *name;
+  ThotBool      ret, doit;
 
   ret = FALSE;
   *span = NULL;

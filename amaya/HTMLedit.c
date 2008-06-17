@@ -5306,7 +5306,21 @@ void SetOnOffBDO (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSpan (Document document, View view)
 {
-  // SetCharFontOrPhrase (document, HTML_EL_BDO);
+  Element       selectedEl, span, parent;
+  ElementType   elType;
+  int           firstSelectedChar, lastSelectedChar;
+
+  TtaGiveFirstSelectedElement (document, &selectedEl, &firstSelectedChar,
+                               &lastSelectedChar);
+  if (selectedEl)
+    {
+      elType = TtaGetElementType (selectedEl);
+      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+        /* it's a HTML element */
+        SetCharFontOrPhrase (document, HTML_EL_Span);
+    }
+  else
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
 }
 
 /*----------------------------------------------------------------------
