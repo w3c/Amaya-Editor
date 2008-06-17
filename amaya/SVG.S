@@ -2471,7 +2471,7 @@ STRUCT
 EXCEPT
 
    { exceptions for elements }
-   SVG:           IsDraw, MoveResize, NoMove;
+   SVG:           IsDraw, MoveResize, NoMove, ClickableSurface;
    g:             NoMove, NoResize, HighlightChildren, NoShowBox,
                   NoCreate, IsGroup;
    defs:          NoMove, NoResize, NoShowBox, NoCreate;
