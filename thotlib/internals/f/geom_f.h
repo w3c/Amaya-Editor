@@ -6,13 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-<<<<<<< geom_f.h
-void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
-void MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xmax, int ymin, int ymax, ThotBool convert, int *x, int *y);
-int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2,Document doc,int shape_number);
-PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax, Document doc, int shape_number);
-=======
->>>>>>> 1.19
 extern int TtaGridDoAlign ( int value );
 extern void BoxGeometry ( int frame,
                           int x,
@@ -235,7 +228,7 @@ extern PtrTextBuffer PathCreation ( int frame,
                                       int ymax,
                                       Document doc,
                                       int shape_number );
-extern int MouseCoordinatesToSVG ( Document doc,
+extern void MouseCoordinatesToSVG ( Document doc,
                                      AmayaFrame * p_frame,
                                      int xmin,
                                      int xmax,
