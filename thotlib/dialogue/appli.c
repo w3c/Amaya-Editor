@@ -836,20 +836,10 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
             if (box->BxAbstractBox &&
                 (box->BxAbstractBox->AbLeafType == LtPath ||
                  box->BxAbstractBox->AbLeafType == LtPolyLine))
-              ApplyDirectTranslate (frame, x, y);
+              ApplyDirectTranslate (box, frame, x, y);
             else
-              ApplyDirectResize(frame, x, y, 
-                                ctrlpt!=2 && ctrlpt!=6 ,
-                                ctrlpt!=4 && ctrlpt!=8);
+              ApplyDirectResize(box, frame, ctrlpt, x, y);
           }
-#ifdef IV
-        /* Est-ce que la touche modifieur de geometrie est active ? */
-        else if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
-          {
-            /* moving a box */     
-            ApplyDirectTranslate (frame, x, y);
-          }
-#endif
         else if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
           {
             /* a selection extension */
@@ -878,39 +868,21 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
       
     case THOT_MIDDLE_BUTTON:
       {
-        if (thot_mod_mask & THOT_MOD_CTRL)
-          {
-            /* resizing a box */
-            ApplyDirectResize (frame, x, y, TRUE, TRUE);
-          }
-        else
-          {
-            ClickFrame = frame;
-            ClickX = x;
-            ClickY = y;
-            if (LocateSelectionInView (frame, ClickX, ClickY, 5))
-              return FALSE;
-          }
+        ClickFrame = frame;
+        ClickX = x;
+        ClickY = y;
+        if (LocateSelectionInView (frame, ClickX, ClickY, 5))
+          return FALSE;
       }
       break;
       
     case THOT_RIGHT_BUTTON:
       {
-#ifdef IV
-        if (thot_mod_mask & THOT_MOD_CTRL)
-          {
-            /* resize a box */
-            ApplyDirectResize (frame, x, y, TRUE, TRUE);
-          }
-        else
-#endif
-          {
-            ClickFrame = frame;
-            ClickX = x;
-            ClickY = y;
-            if (LocateSelectionInView (frame, ClickX, ClickY, 6))
-              return FALSE;
-          }
+        ClickFrame = frame;
+        ClickX = x;
+        ClickY = y;
+        if (LocateSelectionInView (frame, ClickX, ClickY, 6))
+          return FALSE;
       }
       break;
     }

@@ -618,7 +618,7 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim,
   int                   width, height;
 
   elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);//elType.ElSSchema;
   if (elType.ElTypeNum == SVG_EL_circle_)
     {
       /* express width or height as a radius */
@@ -636,11 +636,13 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim,
         attrType.AttrTypeNum = SVG_ATTR_ry;
       UpdateAttrText (el, doc, attrType, dim, FALSE, FALSE);
     }
-  else if (elType.ElTypeNum == SVG_EL_rect ||
+  else if (elType.ElTypeNum == SVG_EL_SVG ||
+           elType.ElTypeNum == SVG_EL_rect ||
            elType.ElTypeNum == SVG_EL_image ||
            elType.ElTypeNum == SVG_EL_foreignObject ||
            elType.ElTypeNum == SVG_EL_SVG)
     {
+printf ("Attribute -> %d\n",dim);
       if (horiz)
         attrType.AttrTypeNum = SVG_ATTR_width_;
       else
@@ -1350,7 +1352,8 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
             UpdatePositionAttribute (el, doc, x, TRUE);
         }
       else if (presType == PRHeight &&
-               (elType.ElTypeNum == SVG_EL_rect ||
+               (elType.ElTypeNum == SVG_EL_SVG ||
+                elType.ElTypeNum == SVG_EL_rect ||
                 elType.ElTypeNum == SVG_EL_ellipse ||
                 elType.ElTypeNum == SVG_EL_polyline ||
                 elType.ElTypeNum == SVG_EL_polygon ||
@@ -1363,7 +1366,8 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
           UpdateWidthHeightAttribute (el, doc, height, FALSE);
         }
       else if (presType == PRWidth &&
-               (elType.ElTypeNum == SVG_EL_rect ||
+               (elType.ElTypeNum == SVG_EL_SVG ||
+                elType.ElTypeNum == SVG_EL_rect ||
                 elType.ElTypeNum == SVG_EL_circle_ ||
                 elType.ElTypeNum == SVG_EL_ellipse ||
                 elType.ElTypeNum == SVG_EL_polyline ||

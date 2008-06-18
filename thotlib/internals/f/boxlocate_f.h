@@ -49,14 +49,15 @@ extern PtrBox GetClickedLeafBox ( int frame,
                                   int xRef,
                                   int yRef,
                                   PtrFlow *pFlow );
-extern void ApplyDirectTranslate ( int frame,
+extern void ApplyDirectTranslate ( PtrBox pBox,
+                                   int frame,
                                    int xm,
                                    int ym );
-extern void ApplyDirectResize ( int frame,
+extern void ApplyDirectResize ( PtrBox pBox,
+                                int frame,
+                                int pointselect,
                                 int xm,
-                                int ym,
-                                ThotBool resHoriz,
-                                ThotBool resVert );
+                                int ym );
 extern void DirectCreation ( PtrBox pBox,
                              int frame );
 extern void LocateClickedChar ( PtrBox pBox,
@@ -113,14 +114,15 @@ extern PtrBox GetClickedLeafBox ( int frame,
                                     int xRef,
                                     int yRef,
                                     PtrFlow *pFlow );
-extern void ApplyDirectTranslate ( int frame,
+extern void ApplyDirectTranslate ( PtrBox pBox,
+                                     int frame,
                                      int xm,
                                      int ym );
-extern void ApplyDirectResize ( int frame,
+extern void ApplyDirectResize ( PtrBox pBox,
+                                  int frame,
+                                  int pointselect,
                                   int xm,
-                                  int ym,
-                                  ThotBool resHoriz,
-                                  ThotBool resVert );
+                                  int ym );
 extern void DirectCreation ( PtrBox pBox,
                                int frame );
 extern void LocateClickedChar ( PtrBox pBox,

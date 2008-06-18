@@ -2293,16 +2293,13 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
 }
 
 /*----------------------------------------------------------------------
-  ApplyDirectTranslate looks for the selected box for a move.
-  If the smallest box containing point (xm, ym) in the window cannot
-  be moved, the function checks the encolsing box, etc.
+  ApplyDirectTranslate applies direct translation to the box.
   ----------------------------------------------------------------------*/
-void ApplyDirectTranslate (int frame, int xm, int ym)
+void ApplyDirectTranslate (PtrBox pBox, int frame, int xm, int ym)
 {
   PtrDocument         pDoc;
-  PtrBox              pBox;
   PtrAbstractBox      pAb;
-  PtrElement	      pEl;
+  PtrElement	        pEl;
   ViewFrame          *pFrame;
   PtrFlow             pFlow = NULL;
   int                 x, width;
@@ -2326,16 +2323,6 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
   if (pFrame->FrAbstractBox != NULL)
     {
       /* Get positions in the window */
-#ifndef _GL
-      x = xm + pFrame->FrXOrg;
-      y = ym + pFrame->FrYOrg;
-#else /*_GL*/
-      x = xm;
-      y = ym;
-#endif /* _GL */
-      /* Look for the box displayed at that point */
-      GetClickedBox (&pBox, &pFlow, pFrame->FrAbstractBox,
-                     frame, x, y, Y_RATIO, &pointselect);
       if (pBox)
         {
           pAb = pBox->BxAbstractBox;
@@ -2375,7 +2362,7 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
                 }
             }
           
-          if (pBox != NULL)
+          if (pBox)
             {
               /* A box is found */
               x = pBox->BxXOrg - pFrame->FrXOrg;
@@ -2495,8 +2482,8 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 /*----------------------------------------------------------------------
   CanBeResized teste si un pave est modifiable en Dimension.       
   ----------------------------------------------------------------------*/
-static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame,
-                                ThotBool horizRef, int *min, int *max)
+static ThotBool CanBeResized (PtrAbstractBox pAb, int frame,
+                              ThotBool horizRef, int *min, int *max)
 {
   PtrBox              pBox;
   PtrAbstractBox      pParentAb;
@@ -2610,15 +2597,10 @@ static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame,
 }
 
 /*----------------------------------------------------------------------
-  ApplyDirectResize looks for a box that can be resized at the current
-  position (xm, ym).
-  resHoriz (resp. resVert) IS true if user can resize horizontally
-  (resp. vertically).
+  ApplyDirectResize apply direct resizing to the box.
   ----------------------------------------------------------------------*/
-void ApplyDirectResize (int frame, int xm, int ym,
-                        ThotBool resHoriz, ThotBool resVert)
+void ApplyDirectResize (PtrBox pBox, int frame, int pointselect, int xm, int ym)
 {
-  PtrBox              pBox;
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
   PtrFlow             pFlow;
@@ -2627,26 +2609,14 @@ void ApplyDirectResize (int frame, int xm, int ym,
   int                 xmin, xmax;
   int                 ymin, ymax;
   int                 percentW, percentH;
-  int                 pointselect;
-  ThotBool            still, okH, okV;
+  ThotBool            still, okH, okV, resHoriz, resVert;
 
-  okH = FALSE;
-  okV = FALSE;
+  resHoriz = pointselect != 2 && pointselect != 6;
+  resVert = pointselect != 4 && pointselect != 8;
   pFrame = &ViewFrameTable[frame - 1];
   if (pFrame->FrAbstractBox != NULL)
     {
       /* On note les coordonnees par rapport a l'image concrete */
-#ifndef _GL
-      x = xm + pFrame->FrXOrg;
-      y = ym + pFrame->FrYOrg;
-#else /* _GL */
-      x = xm;
-      y = ym;
-#endif /* _GL */
-      /* On recherche la boite englobant le point designe */
-      /* designation style Grenoble */
-      GetClickedBox (&pBox, &pFlow, pFrame->FrAbstractBox,
-                     frame, x, y, Y_RATIO, &pointselect);
       if (pBox == NULL)
         pAb = NULL;
       else
@@ -2667,8 +2637,8 @@ void ApplyDirectResize (int frame, int xm, int ym,
           /* On regarde si les modifications sont autorisees */
           else
             {
-              okH = CanBeResized (pAb, frame, TRUE, &xmin, &xmax) && resHoriz;
-              okV = CanBeResized (pAb, frame, FALSE, &ymin, &ymax) && resVert;
+              okH = resHoriz && CanBeResized (pAb, frame, TRUE, &xmin, &xmax);
+              okV = resVert && CanBeResized (pAb, frame, FALSE, &ymin, &ymax);
               if (okH || okV)
                 still = FALSE;
             }
@@ -2688,7 +2658,7 @@ void ApplyDirectResize (int frame, int xm, int ym,
         }
       
       /* Est-ce que l'on a trouve une boite ? */
-      if (pBox != NULL)
+      if (pBox)
         {
           x = pBox->BxXOrg - pFrame->FrXOrg;
           y = pBox->BxYOrg - pFrame->FrYOrg;
