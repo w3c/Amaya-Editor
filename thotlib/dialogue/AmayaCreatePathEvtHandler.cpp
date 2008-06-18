@@ -172,13 +172,15 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
   if (IsFinish())
     return;
 
+  /* Are we in the SVG ? */
+  if(!MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
+			    FALSE, &m_mouse_x, &m_mouse_y))return;
 
   lastX = m_mouse_x;
   lastY = m_mouse_y;
   points++;
   
   AddPointInPolyline (m_Pbuffer, points, m_mouse_x, m_mouse_y);
-
 
 }
 
