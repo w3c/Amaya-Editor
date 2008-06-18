@@ -1580,7 +1580,7 @@ void CreateGraphicElement (int entry)
   char             *path;
   int		    c1, i, w, h, dir, svgDir;
   int               docModified;
-  ThotBool	    found, newGraph = FALSE, oldStructureChecking;;
+  ThotBool	    found, newGraph = FALSE, oldStructureChecking;
   ThotBool          isFilled;
 
   int x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, lx, ly;
@@ -1793,7 +1793,8 @@ void CreateGraphicElement (int entry)
       break;
 
     case 9:	/* switch and foreignObject with some HTML code */
-      newType.ElTypeNum = SVG_EL_switch;
+newType.ElTypeNum = SVG_EL_switch;
+      //      newType.ElTypeNum = SVG_EL_g;
       break;
 
     case 10:	/* text */
@@ -2240,53 +2241,59 @@ sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d
         /* create a foreignObject containing an XHTML div element within the
            new element */
         {
-	  /* Ask the position and size of the foreignObject */
-/* 	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot); */
+	  /* Ask the position and size */
+ 	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
 
-/* 	  attrType.AttrTypeNum = SVG_ATTR_x; */
-/* 	  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE); */
-	  
-/* 	  attrType.AttrTypeNum = SVG_ATTR_y; */
-/* 	  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE); */
+	  //newType.ElTypeNum = SVG_EL_switch;
+          /* do not check the Thot abstract tree against the structure schema */
+          oldStructureChecking = TtaGetStructureChecking (doc);
+          TtaSetStructureChecking (FALSE, doc);
+ 	  attrType.AttrTypeNum = SVG_ATTR_x;
+ 	  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
+ 	  attrType.AttrTypeNum = SVG_ATTR_y;
+ 	  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+          TtaSetStructureChecking (oldStructureChecking, doc);
 
-/* 	  attrType.AttrTypeNum = SVG_ATTR_width_; */
-/* 	  UpdateAttrText (newEl, doc, attrType, lx, FALSE, TRUE); */
-	  
-/* 	  attrType.AttrTypeNum = SVG_ATTR_height_; */
-/* 	  UpdateAttrText (newEl, doc, attrType, ly, FALSE, TRUE); */
+	  //SVG_EL_g
 
-
-
+	  /* Create a foreign Object */
           childType.ElSSchema = SvgSchema;
           childType.ElTypeNum = SVG_EL_foreignObject;
-          TtaAskFirstCreation ();
           foreignObj = TtaNewElement (doc, childType);
           TtaInsertFirstChild (&foreignObj, newEl, doc);
+
           /* associate a requiredExtensions attribute with the foreignObject
              element */
           attrType.AttrTypeNum = SVG_ATTR_requiredExtensions;
           attr = TtaNewAttribute (attrType);
           TtaAttachAttribute (foreignObj, attr, doc);
           TtaSetAttributeText (attr, XHTML_URI, foreignObj, doc);
+
+	  /* Size of the foreignObject */
           attrType.AttrTypeNum = SVG_ATTR_width_;
-          UpdateAttrText (foreignObj, doc, attrType, 100, FALSE, TRUE);
+          UpdateAttrText (foreignObj, doc, attrType, x2 - x1, FALSE, TRUE);
           attrType.AttrTypeNum = SVG_ATTR_height_;
-          UpdateAttrText (foreignObj, doc, attrType, 100, FALSE, TRUE);
+          UpdateAttrText (foreignObj, doc, attrType, y2 - y1, FALSE, TRUE);
+
           /* the document is supposed to be HTML */
           childType.ElSSchema = TtaNewNature (doc, docSchema, NULL, "HTML",
                                               "HTMLP");
           childType.ElTypeNum = HTML_EL_Division;
           child = TtaNewTree (doc, childType, "");
+
           /* do not check the Thot abstract tree against the structure */
           /* schema when inserting this element */
           oldStructureChecking = TtaGetStructureChecking (doc);
           TtaSetStructureChecking (FALSE, doc);
+
           /* insert the new <div> element */
           TtaInsertFirstChild (&child, foreignObj, doc);
+
           /* put an XHTML namespace declaration on the <div> element */
           TtaSetUriSSchema (childType.ElSSchema, XHTML_URI);
           TtaSetANamespaceDeclaration (doc, child, NULL, XHTML_URI);
           TtaSetStructureChecking (oldStructureChecking, doc);
+
           /* create an alternate SVG text element for viewers that are not
              able to display embedded MathML */
           elType.ElSSchema = SvgSchema;
@@ -2297,7 +2304,10 @@ sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d
           leaf = TtaNewElement (doc, elType);
           TtaInsertFirstChild (&leaf, altText, doc);
           lang = TtaGetLanguageIdFromScript('L');
-          //TtaSetTextContent (leaf, (unsigned char *)"<html>", lang, doc);
+          TtaSetTextContent (leaf,
+			     (unsigned char *)"foreignObject not supported" ,
+			     lang, doc);
+
           /* is there a SVG direction attribute on any ancestor element? */
           attrType.AttrTypeNum = SVG_ATTR_direction_;
           inheritedAttr = InheritAttribute (foreignObj, attrType);

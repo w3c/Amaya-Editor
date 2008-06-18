@@ -438,6 +438,7 @@ void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
+  m_IsFinish = true;
 }
 
 /*----------------------------------------------------------------------
