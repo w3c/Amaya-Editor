@@ -178,7 +178,7 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
     case 3:
       /* Ellipse */
     case 4:
-      GL_DrawArc (x1, y1, lx, ly, 0, 360, FALSE);
+      GL_DrawArc (x1, y1, lx, ly, 0, 360, 0, FALSE);
       break;
 
     case 17: /* diamond */
@@ -263,8 +263,8 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
       glVertex2i(x2, y2-ly/6);
       glEnd (); 
 
-      GL_DrawArc (x1, y1, lx, ly/3, 0, 360, FALSE);
-      GL_DrawArc (x1, y2-ly/3, lx, ly/3, 0, -180, FALSE);
+      GL_DrawArc (x1, y1, lx, ly/3, 0, 360, 0, FALSE);
+      GL_DrawArc (x1, y2-ly/3, lx, ly/3, 0, -180, 0, FALSE);
 
       break;
 

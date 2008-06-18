@@ -481,9 +481,10 @@ void GL_DrawSegments (ThotSegment *point, int npoints)
 
 /*----------------------------------------------------------------------
   GL_DrawArc : Draw an arc
+  mode = 0 (default mode), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
 void GL_DrawArc (float x, float y, float w, float h, int startAngle,
-                 int sweepAngle, ThotBool filled)
+                 int sweepAngle, int mode, ThotBool filled)
 {
   int       i, slices, npoints, j;
   GLfloat   angleOffset;
@@ -572,8 +573,8 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
       npoints++;
       points[npoints].x = points[slices+1].x;
       points[npoints].y = points[slices+1].y;
-      // display a not convex polygon
-      MakefloatMesh (points, npoints);
+      // display a not convex polygon NONZERO mode
+      MakefloatMesh (points, npoints, mode);
     }
 }
 
@@ -624,10 +625,11 @@ void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool round)
 /*----------------------------------------------------------------------
   GL_DrawPolygon : tesselation handles 
   convex, concave and polygon with holes
+  mode = 0 (default mode), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
-void GL_DrawPolygon (ThotPoint *points, int npoints)
+void GL_DrawPolygon (ThotPoint *points, int npoints, int mode)
 {
-  MakefloatMesh (points, npoints);
+  MakefloatMesh (points, npoints, mode);
 }
 
 

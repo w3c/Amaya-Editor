@@ -122,7 +122,7 @@ void InvertEllipse (int frame, int x, int y, int width, int height,
 
   w = (ThotWindow)FrameTable[frame].WdFrame;
   if (w != None)
-	  GL_DrawArc (x, y, width, height, 0, 360 * 64, FALSE);
+	  GL_DrawArc (x, y, width, height, 0, 360 * 64, 0, FALSE);
 }
 
 /*----------------------------------------------------------------------

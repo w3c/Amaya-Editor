@@ -533,7 +533,7 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
   points[2].x = xd;
   points[2].y = yd;
 
-  GL_DrawPolygon (points, 3);
+  GL_DrawPolygon (points, 3, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -1324,14 +1324,14 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
   if (pattern == 2)
     {
       LoadColor (bg);
-      GL_DrawPolygon (points, 5);
+      GL_DrawPolygon (points, 5, 0);
     }
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
       InitDrawing (style, thick, fg);
-      GL_DrawPolygon (points, 5);
+      GL_DrawPolygon (points, 5, 0);
     }
 }
 
@@ -1415,7 +1415,7 @@ static void DoDrawLines (int frame, int thick, int style,
     {
       /*  InitDrawing (style, thick, bg); */
       GL_SetForeground (bg, TRUE);
-      GL_DrawPolygon (points, npoints);
+      GL_DrawPolygon (points, npoints, 0);
     }
 
   /* Draw the border */
@@ -1650,14 +1650,14 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   if (pattern == 2)
     {
       GL_SetForeground (bg, TRUE);
-      GL_DrawPolygon (points, npoints);
+      GL_DrawPolygon (points, npoints, 0);
     }
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
       InitDrawing (style, thick, fg);
-      GL_DrawPolygon (points, npoints);
+      GL_DrawPolygon (points, npoints, 0);
     }
 
   /* free the table of points */
@@ -1675,8 +1675,9 @@ static void DoDrawMesh (int frame, int thick, int style, void *mesh,
   if (pattern == 2) 
     {
       /*  InitDrawing (style, thick, bg); */
-      GL_SetForeground (bg, TRUE); 
-      MakeMesh (mesh);  
+      GL_SetForeground (bg, TRUE);
+      // by default mode NONZERO
+      MakeMesh (mesh, 0);
     }
   /* Draw the border */
   if (thick > 0 && fg >= 0)
@@ -1907,7 +1908,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
       point[12].y = point[0].y;
 
       GL_SetForeground (bg, TRUE);
-      GL_DrawPolygon (point, 13);
+      GL_DrawPolygon (point, 13, 0);
 
       if (rayx || rayy )
         {
@@ -1916,7 +1917,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
               GL_DrawArc (xarc[i].x, xarc[i].y, 
                           xarc[i].width, xarc[i].height, 
                           xarc[i].angle1, xarc[i].angle2,
-                          TRUE); 
+                          0, TRUE); 
             }
         }
     }
@@ -1928,7 +1929,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
         GL_DrawArc (xarc[i].x, xarc[i].y, 
                     xarc[i].width, xarc[i].height, 
                     xarc[i].angle1, xarc[i].angle2,
-                    FALSE);
+                    0, FALSE);
       GL_DrawSegments (seg, 4);
     }
 }
@@ -1953,13 +1954,13 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
       thick < width && thick < height)
     {
       GL_SetForeground (bg, TRUE);
-      GL_DrawArc (x, y, width, height, 0, 360, TRUE);
+      GL_DrawArc (x, y, width, height, 0, 360, 0, TRUE);
     }
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
       InitDrawing (style, thick, fg);
-      GL_DrawArc (x, y, width, height, 0, 360, FALSE);
+      GL_DrawArc (x, y, width, height, 0, 360, 0, FALSE);
     }
 }
 
@@ -2087,7 +2088,7 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
           else
             {
               GL_SetForeground (fg, TRUE);
-              GL_DrawPolygon (point, 4);
+              GL_DrawPolygon (point, 4, 0);
               if (align != 1 && (style == 7 || style == 8))
                 {
                   // invert light and dark
@@ -2112,7 +2113,7 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
                       point[2].y = point[1].y - thick;
                     }
                   GL_SetForeground (fg, TRUE);
-                  GL_DrawPolygon (point, 4);
+                  GL_DrawPolygon (point, 4, 0);
                 }
             }
         }
@@ -2243,7 +2244,7 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
           else
             {
               GL_SetForeground (fg, TRUE);
-              GL_DrawPolygon (point, 4);
+              GL_DrawPolygon (point, 4, 0);
               if (align != 1 && (style == 7 || style == 8))
                 {
                   // invert light and dark
@@ -2268,7 +2269,7 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
                       point[2].y = point[3].y - bottom;
                     }
                   GL_SetForeground (fg, TRUE);
-                  GL_DrawPolygon (point, 4);
+                  GL_DrawPolygon (point, 4, 0);
                 }
             }
         }
@@ -2339,9 +2340,9 @@ void DrawHorizontalParenthesis (int frame, int thick, int style, int x, int y,
     {
       InitDrawing (style, thick, fg);
       if (align)
-        GL_DrawArc(x, y + h, l, -h, 0, 180, FALSE);
+        GL_DrawArc(x, y + h, l, -h, 0, 180, 0, FALSE);
       else
-        GL_DrawArc(x, y, l, h, 0, 180, FALSE);
+        GL_DrawArc(x, y, l, h, 0, 180, 0, FALSE);
     }
 }
 
@@ -2675,13 +2676,13 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
       point[12].y = point[0].y;
 
       GL_SetForeground (bg, TRUE);
-      GL_DrawPolygon (point, 13);
+      GL_DrawPolygon (point, 13, 0);
       for (i = 0; i < 4; i++)
         {  
           GL_DrawArc	(xarc[i].x, xarc[i].y, 
                        xarc[i].width, xarc[i].height, 
                        xarc[i].angle1, xarc[i].angle2,
-                       TRUE);
+                       0, TRUE);
         }
     }
 
@@ -2694,7 +2695,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
           GL_DrawArc (xarc[i].x, xarc[i].y, 
                       xarc[i].width, xarc[i].height, 
                       xarc[i].angle1, xarc[i].angle2,
-                      FALSE); 
+                      0, FALSE); 
         }
       if (arc2 < height / 2)
         GL_DrawSegments(seg, 5);
@@ -2727,14 +2728,14 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
   if (pattern == 2)
     {
       GL_SetForeground (bg, TRUE);
-      GL_DrawArc (x, y, width, height, 0, 360, TRUE);
+      GL_DrawArc (x, y, width, height, 0, 360, 0, TRUE);
     }
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
       InitDrawing (style, thick, fg);
-      GL_DrawArc(x, y, width, height, 0, 360, FALSE); 
+      GL_DrawArc(x, y, width, height, 0, 360, 0, FALSE); 
       px7mm = (int)((7 * DOT_PER_INCH) / 25.4 + 0.5);
       if (height > 2 * px7mm)
         {

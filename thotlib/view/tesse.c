@@ -247,8 +247,9 @@ void MakeMeshLines  (void *v_path)
 
 /*----------------------------------------------------------------------
   MakeMesh : Tesselate and display path using GLU library (part of OpenGL)
+  mode = 0 (GLU_TESS_WINDING_NONZERO), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
-void MakeMesh (void *v_path)
+void MakeMesh (void *v_path, int mode)
 {
 #ifdef _GL
   GLUtesselator *tobj = NULL;
@@ -273,8 +274,10 @@ void MakeMesh (void *v_path)
       gluTessCallback (tobj, GLU_TESS_ERROR_DATA,     (void (CALLBACK*)()) myGL_Err); 
       gluTessProperty (tobj, GLU_TESS_BOUNDARY_ONLY, 0); 
       //gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_POSITIVE);
-      //gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_ODD);
-      gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
+      if (mode == 0)
+        gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
+      else
+        gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_ODD);
       gluTessProperty (tobj, GLU_TESS_TOLERANCE, 0);
       gluTessNormal (tobj, 0.0f, 0.0f, 1.0f); 
       gluTessBeginPolygon (tobj, path);  
@@ -297,8 +300,9 @@ void MakeMesh (void *v_path)
 }
 /*---------------------------------------------------------------
   MakefloatMesh : use this module for computing polygons of points
+  mode = 0 (GLU_TESS_WINDING_NONZERO), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
-void MakefloatMesh (ThotPoint *points, int npoints)
+void MakefloatMesh (ThotPoint *points, int npoints, int mode)
 {
 #ifdef _GL  
   void     *mesh;
@@ -312,7 +316,7 @@ void MakefloatMesh (ThotPoint *points, int npoints)
       c++;	  
     }  
   CountourCountAdd (mesh);  
-  MakeMesh (mesh);
+  MakeMesh (mesh, mode);
   FreeMesh (mesh);  
 #endif /*_GL*/
 }
