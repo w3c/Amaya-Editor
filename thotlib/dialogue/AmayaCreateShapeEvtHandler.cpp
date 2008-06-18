@@ -143,8 +143,12 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
 
 
 
+      /* Foreign object */
+    case 9:
+
       /* Square */
     case 15:
+
       /* Rectangle */
     case 1:
       glBegin(GL_LINE_LOOP);
@@ -269,7 +273,7 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
       break;
 
     default:
-
+      /* m_ShapeNumber = 10 = Text */
 
       break;
 
@@ -394,6 +398,13 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
   *m_y1 = m_mouse_y;
   *m_NbPoints = 1;
 
+  if(m_ShapeNumber == 10)
+    {
+      /* Only one point is needed */
+      *m_x2 = *m_x1;
+      *m_y2 = *m_y1;
+      m_IsFinish = true;
+    }
 }
 
 /*----------------------------------------------------------------------
