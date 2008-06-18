@@ -1476,20 +1476,28 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int
   int newx, newy;
   char buffer[100];
   ThotBool inside = TRUE;
-
+  int width, height;
+  
   FrameId = p_frame->GetFrameId();
+
+  width = LogicalValue (xmax - xmin, UnPixel, NULL,
+  ViewFrameTable[FrameId - 1].FrMagnification);
+
+  height = LogicalValue (ymax - ymin, UnPixel, NULL,
+  ViewFrameTable[FrameId - 1].FrMagnification);
+
 
   newx = LogicalValue (*x - xmin, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
   if(newx < 0){newx = 0;inside=FALSE;}
-  else if(newx > (xmax - xmin)){newx = (xmax - xmin);inside=FALSE;}
+  else if(newx > width){newx = width;inside=FALSE;}
 
   newy = LogicalValue (*y - ymin, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
   if(newy < 0){newy = 0;inside=FALSE;}
-  else if(newy > (ymax - ymin)){newy = (ymax - ymin);inside=FALSE;}
+  else if(newy > height){newy = height;inside=FALSE;}
 
   sprintf(buffer, "(%d,%d)", newx, newy);
   TtaSetStatus (doc, 1, buffer, NULL);
