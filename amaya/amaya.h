@@ -496,6 +496,7 @@ THOT_EXPORT ThotBool   SelectionInB;
 THOT_EXPORT ThotBool   SelectionInTT;
 THOT_EXPORT ThotBool   SelectionInBIG;
 THOT_EXPORT ThotBool   SelectionInSMALL;
+THOT_EXPORT ThotBool   SelectionInSpan;
 THOT_EXPORT ThotBool   SelectionInSub;
 THOT_EXPORT ThotBool   SelectionInSup;
 THOT_EXPORT ThotBool   SelectionInQuote;

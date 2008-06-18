@@ -3121,6 +3121,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
           TtaSetItemOff (doc, 1, Types, BObject);
           TtaSetItemOff (doc, 1, Types, TBig);
           TtaSetItemOff (doc, 1, Types, TSmall);
+          TtaSetItemOff (doc, 1, Types, TSpan);
           TtaSetItemOff (doc, 1, Types, TSub);
           TtaSetItemOff (doc, 1, Types, TSup);
         }
@@ -3130,6 +3131,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
           TtaSetItemOn (doc, 1, Types, BObject);
           TtaSetItemOn (doc, 1, Types, TBig);
           TtaSetItemOn (doc, 1, Types, TSmall);
+          TtaSetItemOn (doc, 1, Types, TSpan);
           TtaSetItemOn (doc, 1, Types, TSub);
           TtaSetItemOn (doc, 1, Types, TSup);
         }
@@ -3319,6 +3321,14 @@ void UpdateContextSensitiveMenus (Document doc, View view)
     {
       SelectionInSMALL = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TSmall, newSelInElem);
+    }
+
+  elType.ElTypeNum = HTML_EL_Span;
+  newSelInElem = IsSelInElement (firstSel, lastSel, elType, elTypeFirst, elTypeLast);
+  if (SelectionInSpan != newSelInElem)
+    {
+      SelectionInSpan = newSelInElem;
+      TtaSetToggleItem (doc, 1, Types, TSpan, newSelInElem);
     }
 
   elType.ElTypeNum = HTML_EL_Subscript;
@@ -4303,7 +4313,7 @@ void SetCharFontOrPhrase (int doc, int elemtype)
         remove = TRUE;
     }
 
-  if (parent && remove && elemtype != HTML_EL_Span)
+  if (parent && remove)
     {
       TtaClearViewSelections ();
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);

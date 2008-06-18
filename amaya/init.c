@@ -6729,6 +6729,7 @@ void InitAmaya (NotifyEvent * event)
   SelectionInTT = FALSE;
   SelectionInBIG = FALSE;
   SelectionInSMALL = FALSE;
+  SelectionInSpan = FALSE;
   Synchronizing = FALSE;
   TableMenuActive = FALSE;
   MTableMenuActive = FALSE;

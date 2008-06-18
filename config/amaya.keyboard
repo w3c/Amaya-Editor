@@ -1,20 +1,12 @@
-# Keyboard configuration file for Windows
+# Keyboard configuration file for Linux
 # Be careful when using Alt key to define short cuts. 
-# Alt key, referenced by Windows API as VK_MENU is
-# usually used by Windows for some particular purposes
-# and especially default short cuts. Amaya also uses this
-# particular key to introduce its own short cuts without using
-# the Windows standard accelerator table.
 # You have to distinguish between <Alt/Control><Key> sequences and
 # <Shift><Alt/Control><Key> sequences.
 # For example:
 # Ctrl <Key>O:		ZoomIn()	## is wrong
 # Shift  <Key>O:	ZoomIn()	## is correct
 # Alt <Key>=:	        ZoomIn()	## is correct
-#
-# On Windows platforms Shift Alt is reserved by the system and
-# cannot be used to define shortcuts
-#
+##
 # Ctrl-x, c, v are used for cut, copy, paste
 # Ctrl-z and Ctrl-y are used for Undo/Redo
 #
@@ -86,13 +78,13 @@ Ctrl <Key>k:                       InsertAfter()
 Shift Ctrl <Key>K:                 InsertBefore() 
  
 #Headings sbmenu
-Ctrl <Key>h , Ctrl <Key>&:   CreateHeading1() 
-Ctrl <Key>h , Ctrl <Key>�:   CreateHeading2() 
-Ctrl <Key>h , Ctrl <Key>":   CreateHeading3() 
-Ctrl <Key>h , Ctrl <Key>':   CreateHeading4() 
-Ctrl <Key>h , Ctrl <Key>(:   CreateHeading5() 
-Ctrl <Key>h , Ctrl <Key>-:   CreateHeading6()
-Ctrl <Key>h , Ctrl <Key>$:   CreateHeading6()
+Ctrl <Key>h , Ctrl <Key>&:   	   CreateHeading1() 
+Ctrl <Key>h , Ctrl <Key>�: 	   CreateHeading2() 
+Ctrl <Key>h , Ctrl <Key>":     	   CreateHeading3() 
+Ctrl <Key>h , Ctrl <Key>':  	   CreateHeading4() 
+Ctrl <Key>h , Ctrl <Key>(:  	   CreateHeading5() 
+Ctrl <Key>h , Ctrl <Key>-:  	   CreateHeading6()
+Ctrl <Key>h , Ctrl <Key>$:  	   CreateHeading6()
 Ctrl <Key>h , Ctrl <Key>1:         CreateHeading1() 
 Ctrl <Key>h , Ctrl <Key>2:         CreateHeading2() 
 Ctrl <Key>h , Ctrl <Key>3:         CreateHeading3() 
@@ -132,6 +124,7 @@ Ctrl <Key>i , Ctrl <Key>i:         SetOnOffINS()
 Ctrl <Key>i , Ctrl <Key>k:         SetOnOffKeyboard() 
 Ctrl <Key>i , Ctrl <Key>l:         LinkCSS()
 Ctrl <Key>i , Ctrl <Key>m:         SetOnOffSample() 
+Ctrl <Key>i , Ctrl <Key>n:         CreateSpan() 
 Ctrl <Key>i , Ctrl <Key>o:         OpenCSS() 
 Ctrl <Key>i , Ctrl <Key>p:         TtcChangeColors() 
 Ctrl <Key>i , Ctrl <Key>q:         SetOnOffQuotation() 
