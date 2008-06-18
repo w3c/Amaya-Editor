@@ -25,7 +25,8 @@ extern void UpdateStyleSheet ( char *url,
 extern char *CssToPrint ( Document doc,
                           char *printdir );
 extern ThotBool NoCSSEditing ( Document doc );
-extern void DoStyleColor ( char *color );
+extern void DoStyleColor ( char *color,
+                           ThotBool isBg );
 extern void UpdateStylePanel ( Document doc,
                                View view );
 extern void DoSelectFontSize ( Document doc,
@@ -116,7 +117,8 @@ extern void UpdateStyleSheet ( char *url,
 extern char *CssToPrint ( Document doc,
                             char *printdir );
 extern ThotBool NoCSSEditing ( Document doc );
-extern void DoStyleColor ( char *color );
+extern void DoStyleColor ( char *color,
+                             ThotBool isBg );
 extern void UpdateStylePanel ( Document doc,
                                  View view );
 extern void DoSelectFontSize ( Document doc,

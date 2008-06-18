@@ -811,7 +811,8 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
   Document   document;
   View       view;
 #endif /* !_WINDOWS && ! _MACOS */
-  int ctrlpt;
+  PtrBox     box;
+  int        ctrlpt;
 
   /* Amaya is waiting for a click selection ? */
   if (ClickIsDone == 1)
@@ -829,19 +830,26 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
       {
         /* Stop any current insertion of text */
         CloseTextInsertion ();
-        
-        if(IsSelectingImageControlPoint(frame, x, y, &ctrlpt)!=NULL)
+        box = IsSelectingControlPoint (frame, x, y, &ctrlpt);
+        if (box)
           {
-            ApplyDirectResize(frame, x, y, 
-                ctrlpt!=2 && ctrlpt!=6 ,
-                ctrlpt!=4 && ctrlpt!=8);
+            if (box->BxAbstractBox &&
+                (box->BxAbstractBox->AbLeafType == LtPath ||
+                 box->BxAbstractBox->AbLeafType == LtPolyLine))
+              ApplyDirectTranslate (frame, x, y);
+            else
+              ApplyDirectResize(frame, x, y, 
+                                ctrlpt!=2 && ctrlpt!=6 ,
+                                ctrlpt!=4 && ctrlpt!=8);
           }
+#ifdef IV
         /* Est-ce que la touche modifieur de geometrie est active ? */
         else if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
           {
             /* moving a box */     
             ApplyDirectTranslate (frame, x, y);
           }
+#endif
         else if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
           {
             /* a selection extension */

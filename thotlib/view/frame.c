@@ -48,6 +48,8 @@
 #include "xwindowdisplay_f.h"
 #include "buildlines_f.h"
 #include "memory_f.h"
+#include "selectionapi_f.h"
+
 #include "registry.h"
 
 #ifdef _GL
@@ -836,7 +838,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       imageDesc = (ThotPictInfo *) pFrom->AbPictBackground;
       if (pFrom->AbSelected)
         {
-          if (FrameTable[frame].FrView == 1 &&
+          if (FrameTable[frame].FrView == 1 && TtaIsSelectionUnique () &&
               TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
             // display an IMG as a PICTURE element
             DisplayPointSelection (frame, pBox, 0, FALSE);
@@ -845,7 +847,8 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
             // display a SVG element
             DisplayPointSelection (frame, pBox, 0, TRUE);
 #ifdef _GL
-          else if (FrameTable[frame].FrView == 1 && pFrom->AbElement->ElSystemOrigin)
+          else if (FrameTable[frame].FrView == 1 && TtaIsSelectionUnique () &&
+                   pFrom->AbElement->ElSystemOrigin)
             DrawRectangle (frame, 0, 0, 0, 0, width, height, 0, BgSelColor, 2);
 #endif /* _GL */  
           else

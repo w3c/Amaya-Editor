@@ -185,40 +185,52 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
 }
 
 /*----------------------------------------------------------------------
-  IsSelectingImageControlPoint
+  IsSelectingControlPoint
   The frame must be the formatted view.
   ----------------------------------------------------------------------*/
-PtrBox IsSelectingImageControlPoint(int frame, int x, int y, int* ctrlpt)
+PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
 {
-  PtrElement      pPicture;
+  PtrElement      child;
   PtrAbstractBox  pAb;
   ViewFrame      *pFrame;
   PtrFlow         pFlow = NULL;
 
-  if (frame >= 1)
+  if (FrameTable[frame].FrView == 1 && FirstSelectedElement &&
+      FirstSelectedElement == LastSelectedElement)
     {
-      if (FirstSelectedElement &&
-          FirstSelectedElement == LastSelectedElement &&
-          !FirstSelectedElement->ElTerminal &&
+      if (!FirstSelectedElement->ElTerminal &&
           FirstSelectedElement->ElFirstChild &&
-          FirstSelectedElement->ElFirstChild->ElTerminal &&
-          FirstSelectedElement->ElFirstChild->ElLeafType == LtPicture)
+          FirstSelectedElement->ElFirstChild->ElTerminal)
         {
           pFrame = &ViewFrameTable[frame - 1];
-          pPicture = FirstSelectedElement->ElFirstChild;
-          pAb = pPicture->ElAbstractBox[0];
-          // take into account the document scroll
-          x += pFrame->FrXOrg;
-          y += pFrame->FrYOrg;
-          if (pAb && pAb->AbBox)
-            pFlow = GetRelativeFlow (pAb->AbBox, frame);
-          if (pFlow)
+          child = FirstSelectedElement->ElFirstChild;
+          if (child->ElLeafType == LtPicture ||
+              child->ElLeafType == LtPath ||
+              child->ElLeafType == LtPolyLine ||
+              child->ElLeafType == LtGraphics)
             {
-              /* apply the box shift */
-              x += pFlow->FlXStart;
-              y += pFlow->FlYStart;
+              pAb = child->ElAbstractBox[0];
+              // take into account the document scroll
+              x += pFrame->FrXOrg;
+              y += pFrame->FrYOrg;
+              if (pAb && pAb->AbBox)
+                pFlow = GetRelativeFlow (pAb->AbBox, frame);
+              if (pFlow)
+                {
+                  /* apply the box shift */
+                  x += pFlow->FlXStart;
+                  y += pFlow->FlYStart;
+                }
+              return IsOnShape (pAb, x, y, ctrlpt);
             }
-          return IsOnShape (pAb, x, y, ctrlpt);
+        }
+      else if (FirstSelectedElement->ElAbstractBox[0] &&
+               TypeHasException (ExcIsDraw, FirstSelectedElement->ElTypeNumber,
+                                 FirstSelectedElement->ElStructSchema))
+        {
+          pAb = FirstSelectedElement->ElAbstractBox[0];
+          if (pAb && pAb->AbBox)
+            return IsOnShape (pAb, x, y, ctrlpt);
         }
     }
   return NULL;
@@ -1124,7 +1136,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 
   x -= pBox->BxXOrg;
   y -= pBox->BxYOrg;
-    width = pBox->BxWidth;
+  width = pBox->BxWidth;
   height = pBox->BxHeight;
   *selpoint = 0;
   
@@ -1170,7 +1182,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     controlPoint = 0;
 
   /* Est-ce un point caracteristique specifique du graphique ? */
-  if (pAb->AbLeafType == LtPicture &&
+  if ((pAb->AbLeafType == LtPicture || pAb->AbLeafType == LtCompound) &&
       x>-DELTA_SEL && x<width+DELTA_SEL && y>-DELTA_SEL && y<height+DELTA_SEL)
     {
       *selpoint = controlPoint;

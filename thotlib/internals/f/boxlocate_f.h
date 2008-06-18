@@ -11,10 +11,10 @@ extern ThotBool APPgraphicModify ( PtrElement pEl,
                                    int frame,
                                    ThotBool pre,
                                    ThotBool openclose );
-extern PtrBox IsSelectingImageControlPoint ( int frame,
-                                             int x,
-                                             int y,
-                                             int* ctrlpt );
+extern PtrBox IsSelectingControlPoint ( int frame,
+                                        int x,
+                                        int y,
+                                        int* ctrlpt );
 extern ThotBool LocateSelectionInView ( int frame,
                                         int x,
                                         int y,
@@ -75,10 +75,10 @@ extern ThotBool APPgraphicModify ( PtrElement pEl,
                                      int frame,
                                      ThotBool pre,
                                      ThotBool openclose );
-extern PtrBox IsSelectingImageControlPoint ( int frame,
-                                               int x,
-                                               int y,
-                                               int* ctrlpt );
+extern PtrBox IsSelectingControlPoint ( int frame,
+                                          int x,
+                                          int y,
+                                          int* ctrlpt );
 extern ThotBool LocateSelectionInView ( int frame,
                                           int x,
                                           int y,
