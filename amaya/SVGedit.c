@@ -1569,7 +1569,7 @@ void CreateGraphicElement (int entry)
 #ifdef _SVG
   Document	    doc;
   Element	    first, SvgRoot, newEl, sibling, selEl;
-  Element           child, parent, elem, foreignObj, altText, leaf;
+  Element           child, parent, elem, switch_, foreignObj, altText, leaf;
   ElementType       elType, selType, newType, childType;
   AttributeType     attrType, attrTypeHTML;
   Attribute         attr, inheritedAttr;
@@ -1597,8 +1597,8 @@ void CreateGraphicElement (int entry)
   if (doc == 0)
     /* there is no selection. Nothing to do */
     {
-    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
-    return;
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
     }
 
   context.doc = doc; 
@@ -1610,8 +1610,8 @@ void CreateGraphicElement (int entry)
       if (TtaIsReadOnly (parent))
         /* do not create new elements within a read-only element */
 	{
-	TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
-        return;
+	  TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+	  return;
 	}
     }
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
@@ -1793,8 +1793,7 @@ void CreateGraphicElement (int entry)
       break;
 
     case 9:	/* switch and foreignObject with some HTML code */
-newType.ElTypeNum = SVG_EL_switch;
-      //      newType.ElTypeNum = SVG_EL_g;
+      newType.ElTypeNum = SVG_EL_g;
       break;
 
     case 10:	/* text */
@@ -1880,27 +1879,35 @@ newType.ElTypeNum = SVG_EL_switch;
 
       /* for rectangles, circle, ellipse, and text, ask for an elastic box */
       if (/*newType.ElTypeNum == SVG_EL_rect || 
-          newType.ElTypeNum == SVG_EL_circle_ ||
-          newType.ElTypeNum == SVG_EL_ellipse ||*/
+	    newType.ElTypeNum == SVG_EL_circle_ ||
+	    newType.ElTypeNum == SVG_EL_ellipse ||*/
           newType.ElTypeNum == SVG_EL_text_)
         TtaAskFirstCreation ();
       /* create the new element */
       newEl = TtaNewElement (doc, newType);
 
+/*       if (!sibling) */
+/*         TtaInsertFirstChild (&newEl, parent, doc); */
+/*       else */
+/*         { */
+/*           elType = TtaGetElementType (sibling); */
+/*           if (elType.ElSSchema == SvgSchema && */
+/*               elType.ElTypeNum == SVG_EL_GraphicsElement) */
+/*             /\* the new element replaces the existing, empty element *\/ */
+/*             TtaInsertFirstChild (&newEl, sibling, doc); */
+/*           else */
+/*             TtaInsertSibling (newEl, sibling, FALSE, doc); */
+/*         } */
+
+      /* Insert the child as the last element (i.e. in the foreground)
+	 of the SvgRoot */
+      sibling = TtaGetLastChild(SvgRoot);
       if (!sibling)
-        TtaInsertFirstChild (&newEl, parent, doc);
+         TtaInsertFirstChild (&newEl, SvgRoot, doc);
       else
-        {
-          elType = TtaGetElementType (sibling);
-          if (elType.ElSSchema == SvgSchema &&
-              elType.ElTypeNum == SVG_EL_GraphicsElement)
-            /* the new element replaces the existing, empty element */
-            TtaInsertFirstChild (&newEl, sibling, doc);
-          else
-            TtaInsertSibling (newEl, sibling, FALSE, doc);
-        }
+	TtaInsertSibling (newEl, sibling, FALSE, doc);
   
-     if(!(entry >= 5 && entry <= 11))
+      if(!(entry >= 5 && entry <= 11))
 	{
 	  /* Basic Shapes and lines */
 
@@ -1982,7 +1989,7 @@ newType.ElTypeNum = SVG_EL_switch;
 	      ParsePointsAttribute (attr, newEl, doc);
 	      break;
 
-	    /* Square */
+	      /* Square */
 	    case 15:
 	      if(ly < lx)lx = ly; else ly = lx;
 
@@ -2183,17 +2190,17 @@ newType.ElTypeNum = SVG_EL_switch;
               attrType.AttrTypeNum = SVG_ATTR_d;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (newEl, attr, doc);
-sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d A %d %d 0 0 0 %d %d",
-	x1, y1+ly/6,
-	x1, y2-ly/6,
-	lx/2, ly/6,
-	x2, y2-ly/6,
+	      sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d A %d %d 0 0 0 %d %d",
+		      x1, y1+ly/6,
+		      x1, y2-ly/6,
+		      lx/2, ly/6,
+		      x2, y2-ly/6,
 	
-	x2, y1+ly/6,
-	lx/2, ly/6,
-	x1, y1+ly/6,
-	lx/2, ly/6,
-	x2, y1+ly/6
+		      x2, y1+ly/6,
+		      lx/2, ly/6,
+		      x1, y1+ly/6,
+		      lx/2, ly/6,
+		      x2, y1+ly/6
 		      );
               TtaSetAttributeText (attr, buffer, newEl, doc);
 	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
@@ -2204,63 +2211,47 @@ sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d
 	      break;
 	    }
 	}
-     else if(entry == 5 /* entry >= 5 && entry <= 8*/)
+      else if(entry == 5 /* entry >= 5 && entry <= 8*/)
 	{
 	  /* Polyline and curves */
 	  AskShapePoints (doc, entry, SvgRoot);
 
 	  /* TODO... */
 	
-	/*	attrType.AttrTypeNum = SVG_ATTR_points;
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (newEl, attr, doc);
+	  /*	attrType.AttrTypeNum = SVG_ATTR_points;
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (newEl, attr, doc);
 
 
-	TtaSetAttributeText (attr, buffer, newEl, doc);
-	ParsePointsAttribute (attr, newEl, doc);*/
+		TtaSetAttributeText (attr, buffer, newEl, doc);
+		ParsePointsAttribute (attr, newEl, doc);*/
 	}
-     else if (entry == 10)
-        /* creation of a TEXT leaf */
-        {
-          childType.ElSSchema = SvgSchema;
-          childType.ElTypeNum = SVG_EL_TEXT_UNIT;
-          child = TtaNewElement (doc, childType);
-          TtaInsertFirstChild (&child, newEl, doc);
-          selEl = child;
-
-	  /* Ask where the user wants to insert the text */
-	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
-
-	  attrType.AttrTypeNum = SVG_ATTR_x;
-	  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
-	  
-	  attrType.AttrTypeNum = SVG_ATTR_y;
-	  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
-        }
-     else if (entry == 9)
+      else if (entry == 9)
         /* create a foreignObject containing an XHTML div element within the
            new element */
         {
 	  /* Ask the position and size */
  	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
 
-	  //newType.ElTypeNum = SVG_EL_switch;
-          /* do not check the Thot abstract tree against the structure schema */
-          oldStructureChecking = TtaGetStructureChecking (doc);
-          TtaSetStructureChecking (FALSE, doc);
- 	  attrType.AttrTypeNum = SVG_ATTR_x;
- 	  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
- 	  attrType.AttrTypeNum = SVG_ATTR_y;
- 	  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
-          TtaSetStructureChecking (oldStructureChecking, doc);
+	  /* create a transform=translate attribute */
+	  attrType.AttrTypeNum = SVG_ATTR_transform;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (newEl, attr, doc);
+	  sprintf(buffer, "translate(%d,%d)", x1, y1);
+	  TtaSetAttributeText (attr, buffer, newEl, doc);
+	  ParseTransformAttribute (attr, newEl, doc, FALSE);
 
-	  //SVG_EL_g
+	  /* Create a switch element */
+          childType.ElSSchema = SvgSchema;
+          childType.ElTypeNum = SVG_EL_switch;
+          switch_ = TtaNewElement (doc, childType);
+          TtaInsertFirstChild (&switch_, newEl, doc);
 
 	  /* Create a foreign Object */
           childType.ElSSchema = SvgSchema;
           childType.ElTypeNum = SVG_EL_foreignObject;
           foreignObj = TtaNewElement (doc, childType);
-          TtaInsertFirstChild (&foreignObj, newEl, doc);
+          TtaInsertFirstChild (&foreignObj, switch_, doc);
 
           /* associate a requiredExtensions attribute with the foreignObject
              element */
@@ -2343,91 +2334,114 @@ sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d
             }
           /* select the first leaf */
           elem = child;
+
           do
             {
               selEl = elem;
               elem = TtaGetFirstChild (elem);
             }
           while (elem != NULL);
-        }
-      /* set the visibility of the alternate text */
-      EvaluateTestAttrs (newEl, doc);
-      if (newGraph)
-        TtaRegisterElementCreate (SvgRoot, doc);
-      else
-        TtaRegisterElementCreate (newEl, doc);
 
+	  /* set the visibility of the alternate text */
+	  EvaluateTestAttrs (switch_, doc);
+        }
+      else if (entry == 10)
+        /* creation of a TEXT leaf */
+        {
+          childType.ElSSchema = SvgSchema;
+          childType.ElTypeNum = SVG_EL_TEXT_UNIT;
+          child = TtaNewElement (doc, childType);
+          TtaInsertFirstChild (&child, newEl, doc);
+          selEl = child;
+
+	  /* Ask where the user wants to insert the text */
+	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
+
+	  attrType.AttrTypeNum = SVG_ATTR_x;
+	  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
+	  
+	  attrType.AttrTypeNum = SVG_ATTR_y;
+	  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+        }
+
+
+
+      if (newGraph)
+	TtaRegisterElementCreate (SvgRoot, doc);
+      else
+	TtaRegisterElementCreate (newEl, doc);
+     
       /* ask Thot to display changes made in the document */
       TtaSetDisplayMode (doc, dispMode);
     }
 
 
-    /* create attributes fill and stroke if they are not inherited */
-      if (newType.ElTypeNum == SVG_EL_line_ ||
-          newType.ElTypeNum == SVG_EL_rect ||
-          newType.ElTypeNum == SVG_EL_circle_ ||
-          newType.ElTypeNum == SVG_EL_ellipse ||
-          newType.ElTypeNum == SVG_EL_polyline ||
-          newType.ElTypeNum == SVG_EL_polygon ||
-          newType.ElTypeNum == SVG_EL_path)
-        {
+  /* create attributes fill and stroke if they are not inherited */
+  if (newType.ElTypeNum == SVG_EL_line_ ||
+      newType.ElTypeNum == SVG_EL_rect ||
+      newType.ElTypeNum == SVG_EL_circle_ ||
+      newType.ElTypeNum == SVG_EL_ellipse ||
+      newType.ElTypeNum == SVG_EL_polyline ||
+      newType.ElTypeNum == SVG_EL_polygon ||
+      newType.ElTypeNum == SVG_EL_path)
+    {
   
-          selEl = newEl;
+      selEl = newEl;
 
-	  /* Get the stroke color */
-	  if (Current_Color != -1)
-	    TtaGiveThotRGB (Current_Color, &red, &green, &blue);
-	  else
-	    TtaGiveThotRGB (0, &red, &green, &blue);
-	  sprintf(stroke_color, "#%02x%02x%02x", red, green, blue);
+      /* Get the stroke color */
+      if (Current_Color != -1)
+	TtaGiveThotRGB (Current_Color, &red, &green, &blue);
+      else
+	TtaGiveThotRGB (0, &red, &green, &blue);
+      sprintf(stroke_color, "#%02x%02x%02x", red, green, blue);
 
-	  /* Get the fill color */
-	  if (Current_BackgroundColor != -1 && isFilled)
-	    {
-	    TtaGiveThotRGB (Current_BackgroundColor, &red, &green, &blue);
-	    sprintf(fill_color , "#%02x%02x%02x", red, green, blue);
-	    }
-	  else
-	    sprintf(fill_color , "none");
+      /* Get the fill color */
+      if (Current_BackgroundColor != -1 && isFilled)
+	{
+	  TtaGiveThotRGB (Current_BackgroundColor, &red, &green, &blue);
+	  sprintf(fill_color , "#%02x%02x%02x", red, green, blue);
+	}
+      else
+	sprintf(fill_color , "none");
 
-	  /* Apply the style */
-	  if(newType.ElTypeNum == SVG_EL_line_)
-	    sprintf(buffer, "stroke:%s", stroke_color);
-	  else
-	    sprintf(buffer, "stroke:%s; fill:%s", stroke_color, fill_color);
+      /* Apply the style */
+      if(newType.ElTypeNum == SVG_EL_line_)
+	sprintf(buffer, "stroke:%s", stroke_color);
+      else
+	sprintf(buffer, "stroke:%s; fill:%s", stroke_color, fill_color);
 
-	  ParseHTMLSpecificStyle (newEl, buffer, doc, 0, FALSE);
+      ParseHTMLSpecificStyle (newEl, buffer, doc, 0, FALSE);
 
-	  attrType.AttrTypeNum = SVG_ATTR_style_;
+      attrType.AttrTypeNum = SVG_ATTR_style_;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (newEl, attr, doc);
+      TtaSetAttributeText (attr, buffer, newEl, doc);
+  
+    } 
+
+
+  /******************** TODO: clean up this former code *********************/
+
+  /* create a child for the new element */
+  if (shape != EOS)
+    /* create a graphic leaf according to the element's type */
+    {
+      childType.ElSSchema = SvgSchema;
+      childType.ElTypeNum = SVG_EL_GRAPHICS_UNIT;
+      child = TtaNewElement (doc, childType);
+      TtaInsertFirstChild (&child, newEl, doc);
+      TtaSetGraphicsShape (child, shape, doc);
+      if (entry == 2)
+	/* rectangle with rounded corners */
+	{
+	  /* create a default rx attribute */
+	  attrType.AttrTypeNum = SVG_ATTR_rx;
 	  attr = TtaNewAttribute (attrType);
 	  TtaAttachAttribute (newEl, attr, doc);
-	  TtaSetAttributeText (attr, buffer, newEl, doc);
-  
-         } 
-
-
-   /******************** TODO: clean up this former code *********************/
-
-      /* create a child for the new element */
-      if (shape != EOS)
-        /* create a graphic leaf according to the element's type */
-        {
-          childType.ElSSchema = SvgSchema;
-          childType.ElTypeNum = SVG_EL_GRAPHICS_UNIT;
-          child = TtaNewElement (doc, childType);
-          TtaInsertFirstChild (&child, newEl, doc);
-          TtaSetGraphicsShape (child, shape, doc);
-          if (entry == 2)
-            /* rectangle with rounded corners */
-            {
-              /* create a default rx attribute */
-              attrType.AttrTypeNum = SVG_ATTR_rx;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-              TtaSetAttributeText (attr, "5px", newEl, doc);
-              ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
-            }
-        }
+	  TtaSetAttributeText (attr, "5px", newEl, doc);
+	  ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+	}
+    }
   
   if (shape == 'S' || shape == 'p' || shape == 'B' ||
       shape == 's' || shape == 'g')
@@ -2557,7 +2571,6 @@ static void CreateGroup ()
 	  elType = TtaGetElementType (el);
 	  elType.ElTypeNum = SVG_EL_g;
 	  group = TtaNewElement (doc, elType);
-
 
 	  /* insert the new group element */
 	  TtaInsertSibling (group, el, TRUE, doc);
