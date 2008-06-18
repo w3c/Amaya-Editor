@@ -192,6 +192,7 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
 {
   PtrElement      child;
   PtrAbstractBox  pAb;
+  PtrBox          box;
   ViewFrame      *pFrame;
   PtrFlow         pFlow = NULL;
 
@@ -221,7 +222,8 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
                   x += pFlow->FlXStart;
                   y += pFlow->FlYStart;
                 }
-              return IsOnShape (pAb, x, y, ctrlpt);
+              box = IsOnShape (pAb, x, y, ctrlpt);
+              return box;
             }
         }
       else if (FirstSelectedElement->ElAbstractBox[0] &&
@@ -230,7 +232,11 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
         {
           pAb = FirstSelectedElement->ElAbstractBox[0];
           if (pAb && pAb->AbBox)
-            return IsOnShape (pAb, x, y, ctrlpt);
+            {
+              box = IsOnShape (pAb, x, y, ctrlpt);
+              if (*ctrlpt != 0)
+                return box;
+            }
         }
     }
   return NULL;
@@ -2301,7 +2307,6 @@ void ApplyDirectTranslate (PtrBox pBox, int frame, int xm, int ym)
   PtrAbstractBox      pAb;
   PtrElement	        pEl;
   ViewFrame          *pFrame;
-  PtrFlow             pFlow = NULL;
   int                 x, width;
   int                 y, height;
   int                 xmin, xmax;
@@ -2474,6 +2479,8 @@ void ApplyDirectTranslate (PtrBox pBox, int frame, int xm, int ym)
                 }
               if (send)
                 APPgraphicModify (pEl, pointselect, frame, FALSE, open);
+              // now update attribute panels
+              TtaUpdateAttrMenu (FrameTable[frame].FrDoc);
             }
         }
     }
@@ -2603,7 +2610,6 @@ void ApplyDirectResize (PtrBox pBox, int frame, int pointselect, int xm, int ym)
 {
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
-  PtrFlow             pFlow;
   int                 x, width;
   int                 y, height;
   int                 xmin, xmax;
@@ -2709,6 +2715,8 @@ void ApplyDirectResize (PtrBox pBox, int frame, int pointselect, int xm, int ym)
             NewDimension (pAb, width, 0, frame, TRUE);
           else
             NewDimension (pAb, width, height, frame, TRUE);
+          // now update attribute panels
+          TtaUpdateAttrMenu (FrameTable[frame].FrDoc);
         }
     }
 }
