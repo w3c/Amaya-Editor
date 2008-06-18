@@ -393,6 +393,8 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
   *m_x1 = m_mouse_x;
   *m_y1 = m_mouse_y;
   *m_NbPoints = 1;
+
+  if(m_ShapeNumber == || == )
 }
 
 /*----------------------------------------------------------------------
