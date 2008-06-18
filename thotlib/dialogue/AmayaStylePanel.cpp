@@ -38,7 +38,7 @@
 #include "AmayaColorButton.h"
 
 
-extern void DoStyleColor (char * color);
+extern void DoStyleColor (char * color, ThotBool isBg);
 extern void ChangeTheme (const char *theme);
 //
 //
@@ -239,9 +239,9 @@ void AmayaStyleToolPanel::GenerateFontColour(wxColour c)
   if (color != Current_Color)
     Current_Color = color;
   // generate a color style
-  sprintf( color_string, "color:#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
+  sprintf( color_string, "#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
   CloseTextInsertion ();
-  DoStyleColor (color_string);
+  DoStyleColor (color_string, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -276,9 +276,9 @@ void AmayaStyleToolPanel::GenerateBackgroundColour(wxColour c)
   if (color != Current_BackgroundColor)
     Current_BackgroundColor = color;
   // generate a color style
-  sprintf( color_string, "background-color:#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
+  sprintf( color_string, "#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
   CloseTextInsertion ();
-  DoStyleColor (color_string);
+  DoStyleColor (color_string, TRUE);
 }
 
 /*----------------------------------------------------------------------

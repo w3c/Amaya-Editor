@@ -67,6 +67,7 @@ static const char       *DisplayCategory[]={
 #include "styleparser_f.h"
 #include "Xmlbuilder_f.h"
 #include "paneltypes_wx.h"
+#include "SVGbuilder_f.h"
 
 /*----------------------------------------------------------------------
   LoadRemoteStyleSheet loads a remote style sheet into a file.
@@ -907,7 +908,7 @@ static Element NewSpanElement (Document doc, ThotBool *open)
   DoStyleColor
   Apply color style
   ----------------------------------------------------------------------*/
-void DoStyleColor (char *color)
+void DoStyleColor (char *color, ThotBool isBg)
 {
   Document            doc;
   Element             el = NULL;
@@ -915,7 +916,9 @@ void DoStyleColor (char *color)
   int                 col, bg_col, new_col, firstChar, lastChar;
   unsigned short      red, green, blue;
   DisplayMode         dispMode;
-  ThotBool            open = FALSE, isBg;
+  ThotBool            open = FALSE;
+  ElementType       elType;
+  char buffer[50];
 
   doc = TtaGetSelectedDocument();
   if (color == NULL)
@@ -927,13 +930,14 @@ void DoStyleColor (char *color)
   ptr = strstr (color, "#");
   if (ptr == NULL)
     return;
-  isBg =  (strstr (color, "background-color") != NULL);
+
   TtaGiveRGB (ptr, &red, &green, &blue);
   new_col = TtaGetThotColor (red, green, blue);
 
   // check the current color
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
   TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
+
   if ((isBg && new_col == bg_col) || new_col == col)
     // do nothing
     return;
@@ -942,11 +946,48 @@ void DoStyleColor (char *color)
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
-  el = NewSpanElement (doc, &open);
-  if (el)
-     TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
-  if ((isBg && new_col == bg_col) || new_col != col)
-    GenerateStyle (color, TRUE);
+
+  elType = TtaGetElementType (el);
+  if(elType.ElSSchema == GetSVGSSchema (doc))
+    {
+      /* It's an SVG element */
+      if(elType.ElTypeNum == SVG_EL_rect ||
+	 elType.ElTypeNum == SVG_EL_circle_ ||
+	 elType.ElTypeNum == SVG_EL_ellipse ||
+	 elType.ElTypeNum == SVG_EL_polyline ||
+	 elType.ElTypeNum == SVG_EL_polygon ||
+	 elType.ElTypeNum == SVG_EL_path
+	 || (!isBg && elType.ElTypeNum == SVG_EL_line_)
+	 )
+	{
+	  if(isBg)
+	    sprintf( buffer, "fill:%s", color);
+	  else 
+	    sprintf( buffer, "stroke:%s", color);
+
+	  if ((isBg && new_col == bg_col) || new_col != col)
+	    GenerateStyle (buffer, TRUE);
+	  
+	}
+    }
+  else
+    {
+      if(isBg)
+	sprintf( buffer, "background-color:%s", color);
+      else 
+	sprintf( buffer, "color:%s", color);
+
+      el = NewSpanElement (doc, &open);
+      if (el)
+	TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
+      if ((isBg && new_col == bg_col) || new_col != col)
+	{
+	  GenerateStyle (buffer, TRUE);
+	  CreateCSSRules (el, doc);
+	}
+    }
+      
+
   if (open)
     TtaCloseUndoSequence (doc);
   if (dispMode == DisplayImmediately)
@@ -1128,8 +1169,8 @@ void DoSelectColor (Document doc, View view)
       colour_data = dialog.GetColourData();
       c = colour_data.GetColour();
       Current_Color = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
-      sprintf( color_string, "color:#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
-      DoStyleColor (color_string);
+      sprintf( color_string, "#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
+      DoStyleColor (color_string, FALSE);
     }
   UpdateStylePanel (doc, view);
 }
@@ -1163,8 +1204,10 @@ void DoSelectBgColor (Document doc, View view)
       colour_data = dialog.GetColourData();
       c = colour_data.GetColour();
       Current_BackgroundColor = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
-      sprintf( color_string, "background-color:#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
-      DoStyleColor (color_string);
+
+      sprintf( color_string, "#%02x%02x%02x",
+	       c.Red(), c.Green(), c.Blue());
+      DoStyleColor (color_string, TRUE);
     }
   UpdateStylePanel (doc, view);
 }
