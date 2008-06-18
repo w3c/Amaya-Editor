@@ -1733,10 +1733,13 @@ void CreateGraphicElement (int entry)
       sibling = TtaGetLastChild (SvgRoot);
     }
 
+
+  /* Select the SVG element where we draw, so that we can see its border */
+  TtaSelectElement(doc, SvgRoot);
+
   newType.ElSSchema = SvgSchema;
   newType.ElTypeNum = 0;
   shape = EOS;
-
   isFilled = TRUE;
 
   switch (entry)
@@ -1853,7 +1856,7 @@ void CreateGraphicElement (int entry)
       newType.ElTypeNum = SVG_EL_rect;
       break;
     }
-
+  
   InCreation = TRUE;
   if (newType.ElTypeNum > 0)
     {

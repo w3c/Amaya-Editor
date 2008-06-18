@@ -386,6 +386,10 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
   if (IsFinish() || *m_NbPoints != 0)return;
 
+  /* Are we in the SVG ? */
+  if(!MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
+			    FALSE, &m_mouse_x, &m_mouse_y))return;
+
   *m_x1 = m_mouse_x;
   *m_y1 = m_mouse_y;
   *m_NbPoints = 1;
@@ -402,8 +406,12 @@ void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
   if(IsFinish() || *m_NbPoints != 1)return;
 
   /* Check that the shape is not too small */
-  if((m_mouse_x - *m_x1) < MIN_SHAPE_SIZE ||
+  if(abs(m_mouse_x - *m_x1) < MIN_SHAPE_SIZE ||
      abs(m_mouse_y - *m_y1) < MIN_SHAPE_SIZE)return;
+
+  /* Are we in the SVG ? */
+  if(!MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
+      FALSE, &m_mouse_x, &m_mouse_y))return;
 
   *m_x2 = m_mouse_x;
   *m_y2 = m_mouse_y;
@@ -418,7 +426,6 @@ void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
-  m_IsFinish = true;
 }
 
 /*----------------------------------------------------------------------

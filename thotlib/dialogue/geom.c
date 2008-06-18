@@ -1466,26 +1466,30 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax, D
 
 /* Convert the mouse coordinates (x,y) into the one in the SVG element and
    display them into the status bar. If convert is TRUE, then x and y are
-   modified. */
-void MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xmax, int ymin, int ymax, ThotBool convert, int *x, int *y)
+   modified.
+
+   Return TRUE if the mouse is inside the SVG
+ */
+ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xmax, int ymin, int ymax, ThotBool convert, int *x, int *y)
 {
   int FrameId;
   int newx, newy;
   char buffer[100];
+  ThotBool inside = TRUE;
 
   FrameId = p_frame->GetFrameId();
 
   newx = LogicalValue (*x - xmin, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
-  if(newx < 0)newx = 0;
-  if(newx > (xmax - xmin))newx = (xmax - xmin);
+  if(newx < 0){newx = 0;inside=FALSE;}
+  else if(newx > (xmax - xmin)){newx = (xmax - xmin);inside=FALSE;}
 
   newy = LogicalValue (*y - ymin, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
-  if(newy < 0)newy = 0;
-  if(newy > (ymax - ymin))newy = (ymax - ymin);
+  if(newy < 0){newy = 0;inside=FALSE;}
+  else if(newy > (ymax - ymin)){newy = (ymax - ymin);inside=FALSE;}
 
   sprintf(buffer, "(%d,%d)", newx, newy);
   TtaSetStatus (doc, 1, buffer, NULL);
@@ -1496,4 +1500,5 @@ void MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xma
       *y = newy;
     }
 
+  return inside;
 }
