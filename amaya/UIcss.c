@@ -967,7 +967,6 @@ void DoStyleColor (char *color, ThotBool isBg)
 
 	  if ((isBg && new_col == bg_col) || new_col != col)
 	    GenerateStyle (buffer, TRUE);
-	  
 	}
     }
   else
@@ -983,7 +982,6 @@ void DoStyleColor (char *color, ThotBool isBg)
       if ((isBg && new_col == bg_col) || new_col != col)
 	{
 	  GenerateStyle (buffer, TRUE);
-	  CreateCSSRules (el, doc);
 	}
     }
       

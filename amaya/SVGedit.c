@@ -60,6 +60,7 @@ static ThotBool InCreation = FALSE;
 #include "XLinkedit_f.h"
 #include "Xmlbuilder_f.h"
 #include <math.h>
+#include "styleparser_f.h"
 
 extern int ActiveFrame;
 
@@ -1510,21 +1511,21 @@ ThotBool PastePicture (NotifyOnValue *event)
   Check if any ancestor of element el has a PRule of type property
   and return the PRule found or NULL if not found.
   -----------------------------------------------------------------------*/
-static PRule InheritPRule (Element el, int property)
-{
-  Element     asc;
-  PRule       inheritedPRule;
+/* static PRule InheritPRule (Element el, int property) */
+/* { */
+/*   Element     asc; */
+/*   PRule       inheritedPRule; */
 
-  inheritedPRule = NULL;
-  asc = TtaGetParent (el);
-  while (asc && !inheritedPRule)
-    {
-      inheritedPRule = TtaGetPRule (asc, property);
-      if (!inheritedPRule)
-        asc = TtaGetParent (asc);
-    }
-  return (inheritedPRule);
-}
+/*   inheritedPRule = NULL; */
+/*   asc = TtaGetParent (el); */
+/*   while (asc && !inheritedPRule) */
+/*     { */
+/*       inheritedPRule = TtaGetPRule (asc, property); */
+/*       if (!inheritedPRule) */
+/*         asc = TtaGetParent (asc); */
+/*     } */
+/*   return (inheritedPRule); */
+/* } */
 
 /*----------------------------------------------------------------------
   InheritAttribute
@@ -1580,13 +1581,17 @@ void CreateGraphicElement (int entry)
   int		    c1, i, w, h, dir, svgDir;
   int               docModified;
   ThotBool	    found, newGraph = FALSE, oldStructureChecking;;
+  ThotBool          isFilled;
 
   int x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, lx, ly;
+  unsigned short      red, green, blue;
+
   _ParserData context;
 
   int error;
 
   char buffer[300];
+  char stroke_color[10], fill_color[10];
 
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
@@ -1732,10 +1737,13 @@ void CreateGraphicElement (int entry)
   newType.ElTypeNum = 0;
   shape = EOS;
 
+  isFilled = TRUE;
+
   switch (entry)
     {
     case 0:	/* line */
       newType.ElTypeNum = SVG_EL_line_;
+      isFilled = FALSE;
       //shape = 'g';
       break;
     case 1:	/* rectangle */
@@ -1756,6 +1764,7 @@ void CreateGraphicElement (int entry)
       break;
     case 5:	/* polyline */
       newType.ElTypeNum = SVG_EL_polyline;
+      isFilled = FALSE;
       //shape = 'S';
       break;
     case 6:	/* polygon */
@@ -1764,6 +1773,7 @@ void CreateGraphicElement (int entry)
       break;
     case 7:	/* spline */
       newType.ElTypeNum = SVG_EL_path;
+      isFilled = FALSE;
       shape = 'B';
       break;
     case 8:	/* closed spline */
@@ -1782,14 +1792,17 @@ void CreateGraphicElement (int entry)
 
     case 12: /* Simple arrow */
       newType.ElTypeNum = SVG_EL_path;
+      isFilled = FALSE;
       break;
 
     case 13: /* Double arrow */
       newType.ElTypeNum = SVG_EL_path;
+      isFilled = FALSE;
       break;
 
     case 14: /* Zigzag */
       newType.ElTypeNum = SVG_EL_polyline;
+      isFilled = FALSE;
       break;
 
     case 15: /* square */
@@ -1870,50 +1883,7 @@ void CreateGraphicElement (int entry)
           else
             TtaInsertSibling (newEl, sibling, FALSE, doc);
         }
-
-      /* create attributes fill and stroke if they are not inherited */
-      if (newType.ElTypeNum == SVG_EL_line_ ||
-          newType.ElTypeNum == SVG_EL_rect ||
-          newType.ElTypeNum == SVG_EL_circle_ ||
-          newType.ElTypeNum == SVG_EL_ellipse ||
-          newType.ElTypeNum == SVG_EL_polyline ||
-          newType.ElTypeNum == SVG_EL_polygon ||
-          newType.ElTypeNum == SVG_EL_path)
-        {
-          selEl = newEl;
-          /* attribute stroke="black" */
-          attrType.AttrTypeNum = SVG_ATTR_stroke;
-          if (!InheritAttribute (newEl, attrType))
-            {
-              /* is there a CSS stroke property? */
-              if (!InheritPRule (newEl, PRForeground))
-                {
-                  attr = TtaNewAttribute (attrType);
-                  TtaAttachAttribute (newEl, attr, doc);
-                  TtaSetAttributeText (attr, "black", newEl, doc);
-                  ParseCSSequivAttribute (attrType.AttrTypeNum, attr, newEl,
-                                          doc, FALSE);
-                }
-            }
-          if (newType.ElTypeNum != SVG_EL_line_)
-            {
-              /* attribute fill="none" */
-              attrType.AttrTypeNum = SVG_ATTR_fill;
-              if (!InheritAttribute (newEl, attrType))
-                {
-                  /* is there a CSS fill property? */
-                  if (!InheritPRule (newEl, PRFillPattern))
-                    {
-                      attr = TtaNewAttribute (attrType);
-                      TtaAttachAttribute (newEl, attr, doc);
-                      TtaSetAttributeText (attr, "none", newEl, doc);
-                      ParseCSSequivAttribute (attrType.AttrTypeNum, attr,
-                                              newEl, doc, FALSE);
-                    }
-                }
-            }
-        }
-
+  
       if(entry == 5)
 	{
 	  AskShapePoints (doc, entry, SvgRoot);
@@ -2209,18 +2179,17 @@ void CreateGraphicElement (int entry)
               attrType.AttrTypeNum = SVG_ATTR_d;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (newEl, attr, doc);
-sprintf(buffer, "M %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 1 %d %d",
-		      x2, y1+ly/6,
-		      lx/2, ly/6,
-	              x1, y1+ly/6,
-
-		      x1, y2-ly/6,
-	              lx/2, ly/6,
-		      x2, y2-ly/6,
-
-		      x2, y1+ly/6,
-	              lx/2, ly/6,
-		      x1, y1+ly/6
+sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d A %d %d 0 0 0 %d %d",
+	x1, y1+ly/6,
+	x1, y2-ly/6,
+	lx/2, ly/6,
+	x2, y2-ly/6,
+	
+	x2, y1+ly/6,
+	lx/2, ly/6,
+	x1, y1+ly/6,
+	lx/2, ly/6,
+	x2, y1+ly/6
 		      );
               TtaSetAttributeText (attr, buffer, newEl, doc);
 	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
@@ -2232,6 +2201,49 @@ sprintf(buffer, "M %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d
 	    }
 	}
 
+
+    /* create attributes fill and stroke if they are not inherited */
+      if (newType.ElTypeNum == SVG_EL_line_ ||
+          newType.ElTypeNum == SVG_EL_rect ||
+          newType.ElTypeNum == SVG_EL_circle_ ||
+          newType.ElTypeNum == SVG_EL_ellipse ||
+          newType.ElTypeNum == SVG_EL_polyline ||
+          newType.ElTypeNum == SVG_EL_polygon ||
+          newType.ElTypeNum == SVG_EL_path)
+        {
+  
+          selEl = newEl;
+
+	  /* Get the stroke color */
+	  if (Current_Color != -1)
+	    TtaGiveThotRGB (Current_Color, &red, &green, &blue);
+	  else
+	    TtaGiveThotRGB (0, &red, &green, &blue);
+	  sprintf(stroke_color, "#%02x%02x%02x", red, green, blue);
+
+	  /* Get the fill color */
+	  if (Current_BackgroundColor != -1 && isFilled)
+	    {
+	    TtaGiveThotRGB (Current_BackgroundColor, &red, &green, &blue);
+	    sprintf(fill_color , "#%02x%02x%02x", red, green, blue);
+	    }
+	  else
+	    sprintf(fill_color , "none");
+
+	  /* Apply the style */
+	  if(newType.ElTypeNum == SVG_EL_line_)
+	    sprintf(buffer, "stroke:%s", stroke_color);
+	  else
+	    sprintf(buffer, "stroke:%s; fill:%s", stroke_color, fill_color);
+
+	  ParseHTMLSpecificStyle (newEl, buffer, doc, 0, FALSE);
+
+	  attrType.AttrTypeNum = SVG_ATTR_style_;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (newEl, attr, doc);
+	  TtaSetAttributeText (attr, buffer, newEl, doc);
+  
+         } 
 
       /* create a child for the new element */
       if (shape != EOS)
