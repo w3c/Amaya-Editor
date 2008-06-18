@@ -642,7 +642,6 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim,
            elType.ElTypeNum == SVG_EL_foreignObject ||
            elType.ElTypeNum == SVG_EL_SVG)
     {
-printf ("Attribute -> %d\n",dim);
       if (horiz)
         attrType.AttrTypeNum = SVG_ATTR_width_;
       else
