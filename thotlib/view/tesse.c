@@ -272,8 +272,9 @@ void MakeMesh (void *v_path)
       gluTessCallback (tobj, GLU_TESS_COMBINE_DATA,   (void (CALLBACK*)()) myCombine);
       gluTessCallback (tobj, GLU_TESS_ERROR_DATA,     (void (CALLBACK*)()) myGL_Err); 
       gluTessProperty (tobj, GLU_TESS_BOUNDARY_ONLY, 0); 
-      /* gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_POSITIVE); */
-      gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_ODD);
+      //gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_POSITIVE);
+      //gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_ODD);
+      gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
       gluTessProperty (tobj, GLU_TESS_TOLERANCE, 0);
       gluTessNormal (tobj, 0.0f, 0.0f, 1.0f); 
       gluTessBeginPolygon (tobj, path);  
