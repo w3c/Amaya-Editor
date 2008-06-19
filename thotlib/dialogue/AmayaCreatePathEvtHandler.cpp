@@ -119,6 +119,8 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x
       m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
       m_pFrame->GetCanvas()->CaptureMouse();
     }
+
+  glDisable(GL_LINE_STIPPLE);
 }
 
 /*----------------------------------------------------------------------

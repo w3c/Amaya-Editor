@@ -217,7 +217,26 @@ MENUS
 	Types.MathConstruct button:BOver -> CreateMOVER icon:MATHML_over.png;
 	Types.MathConstruct button:BParentheses -> CreateMPARENTHESIS icon:MATHML_parenthesis.png;
 	Types.MathConstruct button:BMultiscripts -> CreateMMULTISCRIPTS icon:MATHML_mscript.png;
-	Types.MathConstruct  button:BMatrix -> CreateMTABLE icon:MATHML_matrix.png;
+	Types.MathConstruct button:BMatrix -> CreateMTABLE icon:MATHML_matrix.png;
+
+	Types.SvgConstruct  button:BSVG_Line -> CreateSVG_Line icon:SVG_line.png;
+	Types.SvgConstruct  button:BSVG_SimpleArrow -> CreateSVG_SimpleArrow icon:SVG_simple_arrow.png;
+	Types.SvgConstruct  button:BSVG_Text -> CreateSVG_Text icon:SVG_text.png;
+	Types.SvgConstruct  button:BSVG_ForeignObject -> CreateSVG_ForeignObject icon:SVG_foreign_object.png;
+	Types.SvgConstruct  button:BSVG_Group -> CreateSVG_Group icon:SVG_group.png;
+	Types.SvgConstruct  button:BSVG_Square -> CreateSVG_Square icon:SVG_square.png;
+	Types.SvgConstruct  button:BSVG_Rectangle -> CreateSVG_Rectangle icon:SVG_rectangle.png;
+	Types.SvgConstruct  button:BSVG_Diamond -> CreateSVG_Diamond icon:SVG_diamond.png;
+	Types.SvgConstruct  button:BSVG_IsoscelesTriangle -> CreateSVG_IsoscelesTriangle icon:SVG_isosceles_triangle.png;
+	Types.SvgConstruct  button:BSVG_Circle -> CreateSVG_Circle icon:SVG_circle.png;
+	Types.SvgConstruct  button:BSVG_Ellipse -> CreateSVG_Ellipse icon:SVG_ellipse.png;
+	Types.SvgConstruct  button:BSVG_Polyline -> CreateSVG_Polyline icon:SVG_polyline.png;
+	Types.SvgConstruct  button:BSVG_Polygon -> CreateSVG_Polygon icon:SVG_polygon.png;
+	Types.SvgConstruct  button:BSVG_Spline -> CreateSVG_Spline icon:SVG_spline.png;
+	Types.SvgConstruct  button:BSVG_Closed -> CreateSVG_Closed icon:SVG_closed.png;
+	Types.SvgConstruct  button:BSVG_Cube -> CreateSVG_Cube icon:SVG_cube.png;
+	Types.SvgConstruct  button:BSVG_Parallelepiped -> CreateSVG_Parallelepiped icon:SVG_parallelepiped.png;
+	Types.SvgConstruct  button:BSVG_Cylinder -> CreateSVG_Cylinder icon:SVG_cylinder.png;
 
 	Types.Form button:BForm -> CreateForm;
 	Types.Form Separator;

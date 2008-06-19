@@ -345,6 +345,8 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler(AmayaFrame * p_frame, int
       m_pFrame->GetCanvas()->CaptureMouse();
 
     }
+
+  glDisable(GL_LINE_STIPPLE);
 }
 
 /*----------------------------------------------------------------------

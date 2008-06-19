@@ -2908,6 +2908,108 @@
 	<message xml:lang="sk">Nová matica (mtable)</message>
 	<message xml:lang="ja">丸括弧 (mrow)</message>
 </label>
+
+<label define="SvgConstruct">
+	<message xml:lang="en">Graphics</message>
+	<message xml:lang="fr">Graphiques</message>
+	<message xml:lang="es">Gráficos</message>
+	<message xml:lang="de">Grafiken</message>
+	<message xml:lang="it">Graphics</message>
+	<message xml:lang="pt">Gráficos</message>
+	<message xml:lang="fi">Grafiikka</message>
+	<message xml:lang="tr">Grafik</message>
+	<message xml:lang="hu">Grafika</message>
+	<message xml:lang="ka">გრაფიკა</message>
+	<message xml:lang="cn">Graphics</message>
+	<message xml:lang="tw">Graphics</message>
+	<message xml:lang="ja">グラフィックス(Graphics)</message>
+</label>
+<label define="BSVG_Line">
+	<message xml:lang="en">Line</message>
+	<message xml:lang="fr">Ligne</message>
+	<message xml:lang="es">Linea</message>
+</label>
+<label define="BSVG_SimpleArrow">
+	<message xml:lang="en">Arrow</message>
+	<message xml:lang="fr">Flèche</message>
+	<message xml:lang="es">Flecha</message>
+</label>
+<label define="BSVG_Text">
+	<message xml:lang="en">Text</message>
+	<message xml:lang="fr">Texte</message>
+	<message xml:lang="es">Texto</message>
+</label>
+<label define="BSVG_ForeignObject">
+	<message xml:lang="en">ForeignObject</message>
+	<message xml:lang="fr">ForeignObject</message>
+	<message xml:lang="es">ForeignObject</message>
+</label>
+<label define="BSVG_Group">
+	<message xml:lang="en">Group</message>
+	<message xml:lang="fr">Groupe</message>
+	<message xml:lang="es">Grupo</message>
+</label>
+<label define="BSVG_Square">
+	<message xml:lang="en">Square</message>
+	<message xml:lang="fr">Carré</message>
+	<message xml:lang="es">Cuadrado</message>
+</label>
+<label define="BSVG_Rectangle">
+	<message xml:lang="en">Rectangle</message>
+	<message xml:lang="fr">Rectangle</message>
+	<message xml:lang="es">Rectángulo</message>
+</label>
+<label define="BSVG_Diamond">
+  <message xml:lang="en">Diamond</message>
+  <message xml:lang="fr">Losange</message>
+  <message xml:lang="es">Rombo</message>
+</label>
+<label define="BSVG_IsoscelesTriangle">
+	<message xml:lang="en">Triangle</message>
+	<message xml:lang="fr">Triangle</message>
+	<message xml:lang="es">Triángulo</message>
+</label>
+<label define="BSVG_Circle">
+	<message xml:lang="en">Circle</message>
+	<message xml:lang="fr">Ligne</message>
+	<message xml:lang="es">Círculo</message>
+</label>
+<label define="BSVG_Ellipse">
+	<message xml:lang="en">Ellipse</message>
+	<message xml:lang="fr">Ellipse</message>
+	<message xml:lang="es">Elipse</message>
+</label>
+<label define="BSVG_Polyline">
+	<message xml:lang="en">Polyline</message>
+	<message xml:lang="fr">Multiligne</message>
+</label>
+<label define="BSVG_Polygon">
+	<message xml:lang="en">Polygon</message>
+	<message xml:lang="fr">Polygone</message>
+</label>
+<label define="BSVG_Spline">
+	<message xml:lang="en">Open curve</message>
+	<message xml:lang="fr">Courbe ouverte</message>
+</label>
+<label define="BSVG_Closed">
+	<message xml:lang="en">Closed curve</message>
+	<message xml:lang="fr">Courbe fermée</message>
+</label>
+<label define="BSVG_Cube">
+	<message xml:lang="en">Cube</message>
+	<message xml:lang="fr">Cube</message>
+	<message xml:lang="es">Cubo</message>
+</label>
+<label define="BSVG_Parallelepiped">
+	<message xml:lang="en">Parallelepiped</message>
+	<message xml:lang="fr">Parallèlépidède</message>
+</label>
+<label define="BSVG_Cylinder">
+	<message xml:lang="en">Cylinder</message>
+	<message xml:lang="fr">Cylindre</message>
+	<message xml:lang="es">Cilindro</message>
+</label>
+
 <label define="Form">
 	<message xml:lang="en">Form</message>
 	<message xml:lang="fr">Formulaire</message>

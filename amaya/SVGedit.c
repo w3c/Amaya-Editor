@@ -1736,7 +1736,7 @@ void CreateGraphicElement (int entry)
 
   /* Select the SVG element where we draw, so that we can see its border */
   TtaSelectElement(doc, SvgRoot);
-
+  
   newType.ElSSchema = SvgSchema;
   newType.ElTypeNum = 0;
   shape = EOS;
