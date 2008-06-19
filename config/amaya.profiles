@@ -751,6 +751,7 @@ ConfigTemplates
 CreateTemplateFromDocument
 TemplateCreateTextBox
 TemplateCreateFreeBox
+TemplateCreateRepeat
 
 [spell]
 SpellCheck

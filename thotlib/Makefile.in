@@ -223,6 +223,7 @@ EDITOR_OBJ = \
 	dialogue/AmayaMathMLPanel.o \
 	dialogue/AmayaSVGPanel.o \
 	dialogue/AmayaXMLPanel.o \
+    dialogue/AmayaTemplatePanel.o \
 	dialogue/AmayaPage.o \
 	dialogue/AmayaFrame.o \
 	dialogue/AmayaCanvas.o \

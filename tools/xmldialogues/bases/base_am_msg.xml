@@ -7237,6 +7237,14 @@
 	<message xml:lang="en">Free editing box label:</message>
 	<message xml:lang="fr">Nom de la zone d'édition libre:</message>
 </label>
+<label define="AM_TEMPLATE_REPEATCOMP">
+	<message xml:lang="en">Repeated component</message>
+	<message xml:lang="fr">Composant répétée</message>
+</label>
+<label define="AM_TEMPLATE_REPEATCOMP_LABEL">
+	<message xml:lang="en">Repeated component label:</message>
+	<message xml:lang="fr">Nom du composant répété:</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

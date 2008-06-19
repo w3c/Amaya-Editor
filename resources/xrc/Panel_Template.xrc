@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxPanel" name="wxID_TOOLPANEL_TEMPLATE">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_TEMPLATE_1" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_TEMPLATE_TEXT_BOX">
+            <bitmap>../icons/16x16/TEMPLATE_usetext.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TEMPLATE_FREE_BOX">
+            <bitmap>../icons/16x16/TEMPLATE_bag.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TEMPLATE_REPEAT_SECTION">
+            <bitmap>../icons/16x16/TEMPLATE_repeat.png</bitmap>
+          </object>
+          <bitmapsize>16,16</bitmapsize>
+          <margins>2,0</margins>
+          <style>wxTB_FLAT|wxTB_NODIVIDER</style>
+        </object>
+      </object>
+    
+      
+      
+      
+    </object>
+    <style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
+  </object>
+</resource>

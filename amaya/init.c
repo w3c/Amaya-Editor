@@ -946,6 +946,7 @@ void UpdateEditorMenus (Document doc)
 
   /* Update the doctype menu */
   UpdateDoctypeMenu (doc);
+  UpdateTemplateMenus (doc);
 
   if (DocumentTypes[doc] == docCSS || DocumentTypes[doc] == docSource ||
       DocumentTypes[doc] == docText || DocumentTypes[doc] == docImage)

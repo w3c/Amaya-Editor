@@ -380,6 +380,7 @@ MENUS
         Tools.Templates_  Separator;
         Tools.Templates_  button:BTemplateCreateTextBox -> TemplateCreateTextBox;
         Tools.Templates_  button:BTemplateCreateFreeBox -> TemplateCreateFreeBox;
+        Tools.Templates_  button:BTemplateCreateRepeat -> TemplateCreateRepeat;
         Tools.JavascriptDom_ toggle:BSwitch_JS_DOM-> SwitchJavaScript;
         Tools.JavascriptDom_ button:BExecuteACommand -> ExecuteACommand;
         Tools.JavascriptDom_ button:BExecuteExternal -> ExecuteExternal;

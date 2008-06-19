@@ -339,40 +339,41 @@
 337 **Create template from current document...
 338 **Create a text box
 339 **Create a free editing box
-340 &Javascript/DOM
-341 Activar/Desactivar
-342 Ejecutar un comando
-343 Ejecutar un script externo
-344 Añadir un script externo
-345 Insertar un script
-346 Acerca de Amaya
-347 Página web de Amaya en el W3C
-348 Índice
-349 Navegar
-350 Vistas
-351 Seleccionar
-352 Documentos
-353 Crear elementos
-354 Atributos
-355 Caracteres
-356 Modelos
-357 Reestructurar
-358 Enlaces
-359 Tablas
-360 Mapas de imagen
-361 MathML
-362 Gráficos
-363 Soporte XML
-364 Hojas de estilo
-365 Buscar
-366 Revisar ortografía
-367 Publicar
-368 Cooperación
-369 Imprimir
-370 Numerar
-371 Hacer libros
-372 Anotaciones
-373 Configurar
-374 Atajos de teclado
-375 Accesibilidad
-376 Sugerencia del día...
+340 **Create a repeated component
+341 &Javascript/DOM
+342 Activar/Desactivar
+343 Ejecutar un comando
+344 Ejecutar un script externo
+345 Añadir un script externo
+346 Insertar un script
+347 Acerca de Amaya
+348 Página web de Amaya en el W3C
+349 Índice
+350 Navegar
+351 Vistas
+352 Seleccionar
+353 Documentos
+354 Crear elementos
+355 Atributos
+356 Caracteres
+357 Modelos
+358 Reestructurar
+359 Enlaces
+360 Tablas
+361 Mapas de imagen
+362 MathML
+363 Gráficos
+364 Soporte XML
+365 Hojas de estilo
+366 Buscar
+367 Revisar ortografía
+368 Publicar
+369 Cooperación
+370 Imprimir
+371 Numerar
+372 Hacer libros
+373 Anotaciones
+374 Configurar
+375 Atajos de teclado
+376 Accesibilidad
+377 Sugerencia del día...

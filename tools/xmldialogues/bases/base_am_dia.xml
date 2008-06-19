@@ -5043,6 +5043,11 @@
 	<message xml:lang="fr">Créer une zone d'édition libre</message>
 	<message xml:lang="ja">Create a free editing box</message>
 </label>
+<label define="BTemplateCreateRepeat">
+	<message xml:lang="en">Create a repeated component</message>
+	<message xml:lang="fr">Créer un composant répétée</message>
+	<message xml:lang="ja">Create a repeated component</message>
+</label>
 <label define="JavascriptDom_">
 	<message xml:lang="en">&amp;Javascript/DOM</message>
 	<message xml:lang="fr">&amp;Javascript/DOM</message>
