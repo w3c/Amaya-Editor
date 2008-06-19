@@ -2293,11 +2293,14 @@ void CreateGraphicElement (Document doc, View view, int entry)
           TtaAttachAttribute (foreignObj, attr, doc);
           TtaSetAttributeText (attr, XHTML_URI, foreignObj, doc);
 
-	  /* Size of the foreignObject */
-          attrType.AttrTypeNum = SVG_ATTR_width_;
-          UpdateAttrText (foreignObj, doc, attrType, x2 - x1, FALSE, TRUE);
-          attrType.AttrTypeNum = SVG_ATTR_height_;
-          UpdateAttrText (foreignObj, doc, attrType, y2 - y1, FALSE, TRUE);
+	  if(isFormattedView)
+	    {
+	      /* Size of the foreignObject */
+	      attrType.AttrTypeNum = SVG_ATTR_width_;
+	      UpdateAttrText (foreignObj, doc, attrType, x2 - x1, FALSE, TRUE);
+	      attrType.AttrTypeNum = SVG_ATTR_height_;
+	      UpdateAttrText (foreignObj, doc, attrType, y2 - y1, FALSE, TRUE);
+	    }
 
           /* the document is supposed to be HTML */
           childType.ElSSchema = TtaNewNature (doc, docSchema, NULL, "HTML",
