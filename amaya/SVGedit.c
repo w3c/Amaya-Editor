@@ -1784,18 +1784,18 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
     case 6:	/* polygon */
       newType.ElTypeNum = SVG_EL_polygon;
-      shape = 'p';
+      //shape = 'p';
       break;
 
     case 7:	/* spline */
       newType.ElTypeNum = SVG_EL_path;
       isFilled = FALSE;
-      shape = 'B';
+      //shape = 'B';
       break;
 
     case 8:	/* closed spline */
       newType.ElTypeNum = SVG_EL_path;
-      shape = 's';
+      //shape = 's';
       break;
 
     case 9:	/* switch and foreignObject with some HTML code */
@@ -2236,7 +2236,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	      break;
 	    }
 	}
-      else if(entry == 5 /* entry >= 5 && entry <= 8*/)
+      else if(entry >= 5 && entry <= 8)
 	{
 	  selEl = newEl;
 

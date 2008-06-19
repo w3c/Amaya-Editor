@@ -98,7 +98,7 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
       glVertex2i(x2, y2);
       glVertex2i(x4, y4);
 
-      glEnd (); 
+      glEnd ();
       break;
 
 
