@@ -270,43 +270,6 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
                          type = TtaGetAttributeValue(attr);
                        else
                          type = Template_ATTR_type_VAL_string;
-#ifdef AMAYA_DEBUG
-#ifdef EK
-/******************************************************************************/
-                       printf("Attribute : %s \n", attrName);
-                       switch(useAt)
-                       {
-                         case Template_ATTR_useAt_VAL_required:
-                           printf("    required");
-                           break;
-                         case Template_ATTR_useAt_VAL_optional:
-                           printf("    optional");
-                           break;
-                         case Template_ATTR_useAt_VAL_prohibited:
-                           printf("    prohibited");
-                           break;
-                         default:
-                           printf("    error");
-                           break;
-                       }
-                       switch(type)
-                       {
-                         case Template_ATTR_type_VAL_string:
-                           printf(" string\n");
-                           break;
-                         case Template_ATTR_type_VAL_number:
-                           printf(" number\n");
-                           break;
-                         case Template_ATTR_type_VAL_listVal:
-                           printf(" list\n");
-                           break;
-                         default:
-                           printf(" error\n");
-                           break;
-                       }
-/******************************************************************************/
-#endif  /* EK */
-#endif /* AMAYA_DEBUG */
                        event->restr.RestrType = (RestrictionContentType)type;
                        /* If attr is prohibited, dont show it.*/
                        if(useAt==Template_ATTR_useAt_VAL_prohibited)
@@ -399,12 +362,14 @@ void DumpElementPath(Element el)
 void DumpTemplateElement(Element el, Document doc)
 {
 #ifdef AMAYA_DEBUG
-  ElementType elType;
-  SSchema     schema = TtaGetSSchema ("Template", doc);
-  char*       str;
-  char        buffer[MAX_LENGTH];
-  int         len;
-  Language    lang;
+  ElementType    elType;
+  AttributeType  attType;
+  Attribute      att;
+  SSchema        schema = TtaGetSSchema ("Template", doc);
+  char*          str;
+  char           buffer[MAX_LENGTH];
+  int            len;
+  Language       lang;
   
   if(el && doc)
     {
@@ -464,11 +429,6 @@ void DumpTemplateElement(Element el, Document doc)
                 printf(" maxOccurs=%s", str);
                 TtaFreeMemory(str);
                 break;
-              case Template_EL_option:
-                str = GetAttributeStringValueFromNum(el, Template_ATTR_title, NULL);
-                printf(" label=%s", str);
-                TtaFreeMemory(str);
-                break;
               case Template_EL_useSimple:
               case Template_EL_useEl:
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_title, NULL);
@@ -477,6 +437,11 @@ void DumpTemplateElement(Element el, Document doc)
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_types, NULL);
                 printf(" types=%s", str);
                 TtaFreeMemory(str);
+                attType.AttrSSchema = elType.ElSSchema;
+                attType.AttrTypeNum = Template_ATTR_option;
+                att = TtaGetAttribute (el, attType);
+                if (att)
+                  printf(" option");
                 break;
               case Template_EL_bag:
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_title, NULL);

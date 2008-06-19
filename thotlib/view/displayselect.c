@@ -63,6 +63,10 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
     {
       pFrame = &ViewFrameTable[frame - 1];
       pAb = pBox->BxAbstractBox;
+      if (pAb->AbPresentationBox)
+        // don't display handles of presentation boxes
+        return;
+
       pEl = pAb->AbElement;
       thick = HANDLE_WIDTH;
       svg_or_img = (pAb->AbLeafType == LtPicture ||

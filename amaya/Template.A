@@ -34,10 +34,10 @@ ELEMENTS
       BEGIN
          ElemLClick.Pre -> BagButtonClicked;
       END;
-   option :
+   {option :
       BEGIN
          ElemLClick.Pre -> OptionButtonClicked;
-      END;
+      END;}
 
 
    TEXT_UNIT:

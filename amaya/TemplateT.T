@@ -94,7 +94,7 @@ RULES
     create 'repeat>\12' after;
   end;
 
-  option:
+  {option:
     begin
     create SOT;
     create 'option';
@@ -105,7 +105,7 @@ RULES
     create SCT after;
     create 'option>\12' after;
   end;
-
+}
   useEl: 
     begin
     create SOT;
@@ -173,6 +173,17 @@ RULES
         END;
   
 ATTRIBUTES
+	
+  option = option_set :
+    begin
+      create SAN;
+      create 'option="set"';
+    end;
+  option = option_unset :
+    begin
+      create SAN;
+      create 'option="unset"';
+    end;
 
   xmlid :
     begin

@@ -839,6 +839,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       if (pFrom->AbSelected)
         {
           if (FrameTable[frame].FrView == 1 && TtaIsSelectionUnique () &&
+              !pAb->AbPresentationBox &&
               TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
             // display an IMG as a PICTURE element
             DisplayPointSelection (frame, pBox, 0, FALSE);

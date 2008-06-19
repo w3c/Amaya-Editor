@@ -5306,7 +5306,7 @@ void SetOnOffBDO (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSpan (Document document, View view)
 {
-  Element       selectedEl, span, parent;
+  Element       selectedEl;
   ElementType   elType;
   int           firstSelectedChar, lastSelectedChar;
 

@@ -22,7 +22,7 @@ STRUCT
   TemplateObject = CASE OF
       head;
       repeat;
-      option;
+      {option;}
       useEl;
       useSimple;
       bag;
@@ -50,19 +50,19 @@ STRUCT
 		  CASE OF
 		    useEl;
         useSimple;
-	    	option;
+	    	{option;}
 		    repeat;
 		    bag;
 		    END);
 
 
-  option ( ATTR title )
-  	= ANY - ( head, union, import, component );
+  {option ( ATTR title )
+  	= ANY - ( head, union, import, component );}
   
-  useEl ( ATTR title; types = TEXT; currentType = TEXT;  prompt = Yes_ )
+  useEl ( ATTR option = option_set, option_unset; title; types = TEXT; currentType = TEXT;  prompt = Yes_ )
      = ANY - ( head, union, import, component );
 
-  useSimple ( ATTR title; types; prompt)
+  useSimple ( ATTR option; title; types; prompt)
      = ANY - ( head, union, import, component );
 
   bag ( ATTR title; types ) 
@@ -85,16 +85,17 @@ EXCEPT
   useEl:              NoReplicate, NoBreakByReturn;
   useSimple:          NoReplicate, NoBreakByReturn;
   repeat:             NoReplicate, NoBreakByReturn, NoCreate;
-  option:             NoReplicate, NoBreakByReturn, NoCreate;
+  {option:             NoReplicate, NoBreakByReturn, NoCreate;}
   bag:                NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak;
   {Hiding unkown and language attributes}
 	Unknown_attribute:  Invisible;
 	Language:           Invisible;
   types :             GiveTypes, DuplicateAttr;
+  option:             DuplicateAttr;
   currentType:        Invisible;
-  title:              GiveName;
   ref_name:		        GiveName;
   name:			          GiveName;
+  title:              GiveName;
   prompt:             Invisible;
   xmlid:		          CssId;
 	

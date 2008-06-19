@@ -1125,10 +1125,21 @@ ThotBool UseButtonClicked (NotifyElement *event)
 ThotBool UseSimpleButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
+  ElementType     elType, parentType;
+  AttributeType   attrType;
+  Attribute       att;
+
   if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
-  ElementType parentType = TtaGetElementType (TtaGetParent( event->element));
+  elType = TtaGetElementType (event->element);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Template_ATTR_option;
+  att = TtaGetAttribute (event->element, attrType);
+  if (att)
+    return OptionButtonClicked (event);
+  
+  parentType = TtaGetElementType (TtaGetParent( event->element));
   if (parentType.ElTypeNum == Template_EL_repeat)
     return RepeatButtonClicked (event);
   else if (parentType.ElTypeNum == Template_EL_bag)

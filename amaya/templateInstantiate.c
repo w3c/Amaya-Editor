@@ -829,7 +829,6 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
       TtaFreeMemory (types);
       return NULL;
     }
-
   if (!strcmp (types, "string"))
     AddPromptIndicator (el, doc);
 
@@ -1078,9 +1077,9 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
             TtaSetAttributeText (att, name, el, doc);
           TtaFreeMemory(name);
           break;
-        case Template_EL_option :
+          /*case Template_EL_option :
           aux = NULL;
-          break;
+          break;*/
         case Template_EL_bag :
           //Link to types
           //Allow editing the content

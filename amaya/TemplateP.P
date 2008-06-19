@@ -196,6 +196,23 @@ BOXES
 	Content: Picture 'xtigeruse.png';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top - 2 px;
+  VertOverflow: Yes;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
+ OptionButton: BEGIN
+	Content: Picture 'xtigeroption.png';
+  HorizRef: * . Bottom;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top - 8 px;
+  VertOverflow: Yes;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -211,6 +228,7 @@ BOXES
 	Content: Picture 'add.png';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top - 8 px;
+  VertOverflow: Yes;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -241,6 +259,7 @@ BOXES
 	Content: Picture 'add.png';
 	HorizPos: Left = Previous . Left;
 	VertPos: Top = Previous . Bottom;
+  VertOverflow: Yes;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -251,21 +270,6 @@ BOXES
 		Visibility: 0;
 	END;
 #endif
-
- OptionButton: BEGIN
-	Content: Picture 'option.png';
-  HorizRef: * . Bottom;
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top - 10 px;
-	MarginTop: 0 px;
-	MarginBottom: 0 px;
-	MarginLeft: 0 px;
-	MarginRight: 0 px;
-  Inline: No;
-	Depth: Creator - 2;
-	IN Structure_view
-		Visibility: 0;
-	END;
 
 #ifdef INSTANCE
  RepeatButton: BEGIN
@@ -431,8 +435,8 @@ RULES
     Height: auto{Enclosing . Height};
     VertPos: Top = 			Previous AnyElem. Bottom;
     HorizPos: Left =		Enclosing . Left;
-    if not immediately within option
-      BEGIN
+    {if not immediately within option
+      BEGIN}
 		  BorderTopWidth: 	 	1 px;
 		  BorderLeftWidth: 		1 px;
 		  BorderBottomWidth: 	1 px;
@@ -445,7 +449,7 @@ RULES
 		  BorderLeftColor: 		Blue;
 		  BorderBottomColor: 	Blue;
 		  BorderRightColor: 	Blue;
-      END;
+    {  END;}
   	IN Structure_view BEGIN
       Visibility: Enclosing =;
 			BorderTopWidth: 0;
@@ -587,6 +591,10 @@ RULES
 
   useSimple:	
 		BEGIN
+    if option
+      BEGIN
+      CreateFirst(OptionButton);
+      END;
 #ifdef INSTANCE
     if immediately within repeat
       CreateAfter(RepeatUse);
@@ -681,32 +689,15 @@ RULES
     END;
 	 END;	 
 
-  option:	
+{  option:	
  BEGIN
     CreateBefore(ElementName);
 	  CreateFirst(OptionButton);
   	CreateWith(VerticalLine);
-    Width: auto{Enclosing . Width};
-    {LineBreak: No;}
-    {Display: Block;}
+    Width: auto;
     VertPos: Top = Previous AnyElem . Bottom;
     MarginTop: 0;
     HorizPos: Left = Enclosing . Left; 
-    {Background : LightOrange4;
-    FillPattern: backgroundcolor;
-    ShowBox;
-    BorderTopWidth: 1 pt;
-    BorderLeftWidth: 1 pt;
-    BorderBottomWidth: 1 pt;
-    BorderRightWidth: 1 pt;
-    BorderTopStyle: Dotted;
-    BorderLeftStyle: Dotted;
-    BorderBottomStyle: Dotted;
-    BorderRightStyle: Dotted;
-    BorderTopColor: Orange;
-    BorderLeftColor: Orange;
-    BorderBottomColor: Orange;
-    BorderRightColor: Orange;}
     PaddingRight:  	2 px;
     PaddingLeft:   2 px;
     PaddingTop:   2 px;
@@ -725,11 +716,17 @@ RULES
       VertPos: Top = Previous . Bottom;
       END;
 	 END;	 
-
+}
 
 ATTRIBUTES
 
   xmlid:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  option:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);

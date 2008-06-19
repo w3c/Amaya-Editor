@@ -280,10 +280,10 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
       CheckMandatoryAttribute (el, doc, Template_ATTR_ref_name);
       break;
 
-    case Template_EL_option :
+      /*case Template_EL_option :
       CheckMandatoryAttribute (el, doc, Template_ATTR_title);
       break;
-
+      */
     case Template_EL_repeat :
       // children must be use elements
       CheckMandatoryAttribute (el, doc, Template_ATTR_title);
@@ -316,10 +316,6 @@ void TemplateAttributeComplete (Attribute attr, Element el, Document doc)
     {
     case Template_ATTR_name:
       CheckUniqueName (el, doc, attr, attrType);
-      break;
-    case Template_ATTR_title:
-      break;
-    case Template_ATTR_ref_name:
       break;
     default:
       break;
