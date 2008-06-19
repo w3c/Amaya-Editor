@@ -43,7 +43,7 @@ static int N_points, state;
 static int lastX1 = 0, lastY1 = 0;
 static int lastX2 = 0, lastY2 = 0;
 static int lastX3 = 0, lastY3 = 0;
-static ThotBool refresh = FALSE;
+static ThotBool clear = FALSE;
 
 /*----------------------------------------------------------------------
   DrawLine
@@ -248,7 +248,6 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x
   glDisable(GL_LINE_STIPPLE);
   N_points = 0;
   state = 0;
-  refresh = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -302,11 +301,16 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
   if (IsFinish())
     return;
 
-  refresh = FALSE;
-
   /* Are we in the SVG ? */
   if(!MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
 			    FALSE, &m_mouse_x, &m_mouse_y))return;
+
+  if(m_ShapeNumber == 7 || m_ShapeNumber == 8)
+    {
+      clear = FALSE;
+      if(state == 0 || state == 1 || state == 3)
+	DrawPathFragment(m_ShapeNumber, m_mouse_x, m_mouse_y);
+    }
 
   N_points++;
 
@@ -317,7 +321,6 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
   lastX1 = m_mouse_x;
   lastY1 = m_mouse_y;
 
-
  /* Draw the shape */
   if(m_ShapeNumber == 5 || m_ShapeNumber == 6)
     {
@@ -327,13 +330,13 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
   else if(m_ShapeNumber == 7 || m_ShapeNumber == 8)
     {
       /* Bezier Curve */
+
       if(state < 4)state++;
       else state=3;
     }
 
-
-  refresh = TRUE;    
 }
+
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaCreatePathEvtHandler
@@ -352,22 +355,20 @@ void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
-  if(!refresh)return;
-  refresh = FALSE;
-
-  DrawPathFragment(m_ShapeNumber, m_mouse_x, m_mouse_y);
+  if(clear)
+    DrawPathFragment(m_ShapeNumber, m_mouse_x, m_mouse_y);
 
   m_mouse_x = event.GetX();
   m_mouse_y = event.GetY();
 
   DrawPathFragment(m_ShapeNumber, m_mouse_x, m_mouse_y);
+  clear = TRUE;
 
   MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
 			FALSE, &m_mouse_x, &m_mouse_y);
 
   m_pFrame->GetCanvas()->Refresh();
 
-  refresh = TRUE;
 }
 
 /*----------------------------------------------------------------------
