@@ -224,6 +224,7 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
             {
               pAb = child->ElAbstractBox[0];
               box = IsOnShape (pAb, x, y, ctrlpt);
+              if (child->ElLeafType != LtPicture || *ctrlpt != 0)
               return box;
             }
         }
