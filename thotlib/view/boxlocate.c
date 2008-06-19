@@ -199,11 +199,23 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
   if (FrameTable[frame].FrView == 1 && FirstSelectedElement &&
       FirstSelectedElement == LastSelectedElement)
     {
+      pAb = FirstSelectedElement->ElAbstractBox[0];
+      // take into account the document scroll
+      pFrame = &ViewFrameTable[frame - 1];
+      x += pFrame->FrXOrg;
+      y += pFrame->FrYOrg;
+      if (pAb && pAb->AbBox)
+        pFlow = GetRelativeFlow (pAb->AbBox, frame);
+      if (pFlow)
+        {
+          /* apply the box shift */
+          x += pFlow->FlXStart;
+          y += pFlow->FlYStart;
+        }
       if (!FirstSelectedElement->ElTerminal &&
           FirstSelectedElement->ElFirstChild &&
           FirstSelectedElement->ElFirstChild->ElTerminal)
         {
-          pFrame = &ViewFrameTable[frame - 1];
           child = FirstSelectedElement->ElFirstChild;
           if (child->ElLeafType == LtPicture ||
               child->ElLeafType == LtPath ||
@@ -211,17 +223,6 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
               child->ElLeafType == LtGraphics)
             {
               pAb = child->ElAbstractBox[0];
-              // take into account the document scroll
-              x += pFrame->FrXOrg;
-              y += pFrame->FrYOrg;
-              if (pAb && pAb->AbBox)
-                pFlow = GetRelativeFlow (pAb->AbBox, frame);
-              if (pFlow)
-                {
-                  /* apply the box shift */
-                  x += pFlow->FlXStart;
-                  y += pFlow->FlYStart;
-                }
               box = IsOnShape (pAb, x, y, ctrlpt);
               return box;
             }
@@ -230,7 +231,6 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
                TypeHasException (ExcIsDraw, FirstSelectedElement->ElTypeNumber,
                                  FirstSelectedElement->ElStructSchema))
         {
-          pAb = FirstSelectedElement->ElAbstractBox[0];
           if (pAb && pAb->AbBox)
             {
               box = IsOnShape (pAb, x, y, ctrlpt);
@@ -1139,13 +1139,11 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 
   /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
-
   x -= pBox->BxXOrg;
   y -= pBox->BxYOrg;
   width = pBox->BxWidth;
   height = pBox->BxHeight;
   *selpoint = 0;
-  
   
   /* Keep in mind the selected characteristic point       */
   /*            1-------------2-------------3            */
@@ -1156,37 +1154,42 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   /*            |                           |            */
   /*            7-------------6-------------5            */
 
-  if (x < DELTA_SEL)
-    if (y < DELTA_SEL)
+  if (x < DELTA_SEL || x > -DELTA_SEL)
+    {
+    if (y < DELTA_SEL || y > -DELTA_SEL)
       controlPoint = 1;
     else if (y > height / 2 - DELTA_SEL &&
              y < height / 2 + DELTA_SEL)
       controlPoint = 8;
-    else if (y > height - 10)
+    else if (y > height - DELTA_SEL || y < height + DELTA_SEL)
       controlPoint = 7;
     else
       controlPoint = 0;
+    }
   else if (x > width / 2 - DELTA_SEL &&
            x < width / 2 + DELTA_SEL)
-    if (y < DELTA_SEL)
+    {
+    if (y < DELTA_SEL || y > -DELTA_SEL)
       controlPoint = 2;
-    else if (y > height - DELTA_SEL)
+    else if (y > height - DELTA_SEL || y < height + DELTA_SEL)
       controlPoint = 6;
     else
       controlPoint = 0;
-  else if (x > width - DELTA_SEL)
-    if (y < DELTA_SEL)
+    }
+  else if (x > width - DELTA_SEL || x < width + DELTA_SEL)
+    {
+    if (y < DELTA_SEL || y > -DELTA_SEL)
       controlPoint = 3;
     else if (y > height / 2 - DELTA_SEL &&
              y < height / 2 + DELTA_SEL)
       controlPoint = 4;
-    else if (y > height - 10)
+    else if (y > height - DELTA_SEL || y < height + DELTA_SEL)
       controlPoint = 5;
     else
       controlPoint = 0;
+    }
   else
     controlPoint = 0;
-
   /* Est-ce un point caracteristique specifique du graphique ? */
   if ((pAb->AbLeafType == LtPicture || pAb->AbLeafType == LtCompound) &&
       x>-DELTA_SEL && x<width+DELTA_SEL && y>-DELTA_SEL && y<height+DELTA_SEL)
