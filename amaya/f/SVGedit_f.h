@@ -8,7 +8,9 @@
 
 extern void CheckSVGRoot ( Document doc,
                            Element el );
-extern void CreateGraphicElement ( int entry );
+extern void CreateGraphicElement ( Document doc,
+                                   View view,
+                                   int entry );
 extern void FreeSVG ( void );
 extern void InitSVG ( void );
 extern ThotBool SVGElementTypeInMenu ( NotifyElement *event );
@@ -77,7 +79,9 @@ extern void CreateSVG_Cylinder ( Document document,
 
 extern void CheckSVGRoot ( Document doc,
                              Element el );
-extern void CreateGraphicElement ( int entry );
+extern void CreateGraphicElement ( Document doc,
+                                     View view,
+                                     int entry );
 extern void FreeSVG ( void );
 extern void InitSVG ( void );
 extern ThotBool SVGElementTypeInMenu ( NotifyElement *event );

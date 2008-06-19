@@ -1564,10 +1564,9 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
   entry is the number of the entry chosen by the user in the Graphics
   palette.
   ----------------------------------------------------------------------*/
-void CreateGraphicElement (int entry)
+void CreateGraphicElement (Document doc, View view, int entry)
 {
 #ifdef _SVG
-  Document	    doc;
   Element	    first, SvgRoot, newEl, sibling, selEl;
   Element           child, parent, elem, switch_, foreignObj, altText, leaf;
   ElementType       elType, selType, newType, childType;
@@ -1581,7 +1580,7 @@ void CreateGraphicElement (int entry)
   int		    c1, i, w, h, dir, svgDir;
   int               docModified;
   ThotBool	    found, newGraph = FALSE, oldStructureChecking;
-  ThotBool          isFilled;
+  ThotBool          isFilled, isFormattedView;
 
   int x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, lx, ly;
   unsigned short      red, green, blue;
@@ -1593,15 +1592,19 @@ void CreateGraphicElement (int entry)
   char buffer[300];
   char stroke_color[10], fill_color[10];
 
-  doc = TtaGetSelectedDocument ();
+  /* Check that a document is selected */
   if (doc == 0)
-    /* there is no selection. Nothing to do */
     {
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
       return;
     }
 
-  context.doc = doc; 
+  context.doc = doc;
+ 
+  /* Check that whether we are in formatted or strutured view. */
+  if (view == 1) isFormattedView = TRUE;
+  else if(view == 2) isFormattedView = FALSE;
+  else return;
 
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
   if (first)
@@ -1734,8 +1737,11 @@ void CreateGraphicElement (int entry)
     }
 
 
-  /* Select the SVG element where we draw, so that we can see its border */
-  TtaSelectElement(doc, SvgRoot);
+  if(isFormattedView)
+    {
+      /* Select the SVG element where we draw, so that we can see its border */
+      TtaSelectElement(doc, SvgRoot);
+    }
   
   newType.ElSSchema = SvgSchema;
   newType.ElTypeNum = 0;
@@ -1793,7 +1799,10 @@ void CreateGraphicElement (int entry)
       break;
 
     case 9:	/* switch and foreignObject with some HTML code */
-      newType.ElTypeNum = SVG_EL_g;
+      if(isFormattedView)
+	 newType.ElTypeNum = SVG_EL_g;
+      else
+	newType.ElTypeNum = SVG_EL_switch;
       break;
 
     case 10:	/* text */
@@ -1877,41 +1886,57 @@ void CreateGraphicElement (int entry)
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, DeferredDisplay);
 
-      /* for rectangles, circle, ellipse, and text, ask for an elastic box */
-      if (/*newType.ElTypeNum == SVG_EL_rect || 
-	    newType.ElTypeNum == SVG_EL_circle_ ||
-	    newType.ElTypeNum == SVG_EL_ellipse ||*/
-          newType.ElTypeNum == SVG_EL_text_)
-        TtaAskFirstCreation ();
+/*       /\* for rectangles, circle, ellipse, and text, ask for an elastic box *\/ */
+/*       if (newType.ElTypeNum == SVG_EL_rect ||  */
+/* 	    newType.ElTypeNum == SVG_EL_circle_ || */
+/* 	    newType.ElTypeNum == SVG_EL_ellipse || */
+/*           newType.ElTypeNum == SVG_EL_text_) */
+/*         TtaAskFirstCreation (); */
+
       /* create the new element */
       newEl = TtaNewElement (doc, newType);
 
-/*       if (!sibling) */
-/*         TtaInsertFirstChild (&newEl, parent, doc); */
-/*       else */
-/*         { */
-/*           elType = TtaGetElementType (sibling); */
-/*           if (elType.ElSSchema == SvgSchema && */
-/*               elType.ElTypeNum == SVG_EL_GraphicsElement) */
-/*             /\* the new element replaces the existing, empty element *\/ */
-/*             TtaInsertFirstChild (&newEl, sibling, doc); */
-/*           else */
-/*             TtaInsertSibling (newEl, sibling, FALSE, doc); */
-/*         } */
-
-      /* Insert the child as the last element (i.e. in the foreground)
-	 of the SvgRoot */
-      sibling = TtaGetLastChild(SvgRoot);
-      if (!sibling)
-         TtaInsertFirstChild (&newEl, SvgRoot, doc);
+      if(isFormattedView)
+	{
+	  /* Insert the child as the last element (i.e. in the foreground)
+	     of the SvgRoot */
+	  sibling = TtaGetLastChild(SvgRoot);
+	  if (!sibling)
+	    TtaInsertFirstChild (&newEl, SvgRoot, doc);
+	  else
+	    TtaInsertSibling (newEl, sibling, FALSE, doc);
+	}
       else
-	TtaInsertSibling (newEl, sibling, FALSE, doc);
+	{
+	  if (!sibling)
+	    TtaInsertFirstChild (&newEl, parent, doc);
+	  else
+	    {
+	      elType = TtaGetElementType (sibling);
+	      if (elType.ElSSchema == SvgSchema &&
+		  elType.ElTypeNum == SVG_EL_GraphicsElement)
+		/* the new element replaces the existing, empty element */
+		TtaInsertFirstChild (&newEl, sibling, doc);
+	      else
+		TtaInsertSibling (newEl, sibling, FALSE, doc);
+	    }
+	}
+
   
       if(!(entry >= 5 && entry <= 11))
 	{
 	  /* Basic Shapes and lines */
 
-	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
+	  selEl = newEl;
+
+	  if(isFormattedView)
+	    AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
+	  else
+	    {
+	      /* TODO: add a dialog box ? */
+	      x1 = 0; y1 = 0;
+	      x2 = 50; y2 = 50;
+	    }
 	  
 	  lx = x2 - x1;
 	  ly = y2 - y1;
@@ -2213,9 +2238,12 @@ void CreateGraphicElement (int entry)
 	}
       else if(entry == 5 /* entry >= 5 && entry <= 8*/)
 	{
-	  /* Polyline and curves */
-	  AskShapePoints (doc, entry, SvgRoot);
+	  selEl = newEl;
 
+	  /* Polyline and curves */
+	  if(isFormattedView)
+	    AskShapePoints (doc, entry, SvgRoot);
+	  
 	  /* TODO... */
 	
 	  /*	attrType.AttrTypeNum = SVG_ATTR_points;
@@ -2230,22 +2258,27 @@ void CreateGraphicElement (int entry)
         /* create a foreignObject containing an XHTML div element within the
            new element */
         {
-	  /* Ask the position and size */
- 	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
+	  if(isFormattedView)
+	    {
+	      /* Ask the position and size */
+	    AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
+	  
+	    /* create a transform=translate attribute */
+	    attrType.AttrTypeNum = SVG_ATTR_transform;
+	    attr = TtaNewAttribute (attrType);
+	    TtaAttachAttribute (newEl, attr, doc);
+	    sprintf(buffer, "translate(%d,%d)", x1, y1);
+	    TtaSetAttributeText (attr, buffer, newEl, doc);
+	    ParseTransformAttribute (attr, newEl, doc, FALSE);
 
-	  /* create a transform=translate attribute */
-	  attrType.AttrTypeNum = SVG_ATTR_transform;
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (newEl, attr, doc);
-	  sprintf(buffer, "translate(%d,%d)", x1, y1);
-	  TtaSetAttributeText (attr, buffer, newEl, doc);
-	  ParseTransformAttribute (attr, newEl, doc, FALSE);
-
-	  /* Create a switch element */
-          childType.ElSSchema = SvgSchema;
-          childType.ElTypeNum = SVG_EL_switch;
-          switch_ = TtaNewElement (doc, childType);
-          TtaInsertFirstChild (&switch_, newEl, doc);
+	    /* Create a switch element */
+	    childType.ElSSchema = SvgSchema;
+	    childType.ElTypeNum = SVG_EL_switch;
+	    switch_ = TtaNewElement (doc, childType);
+	    TtaInsertFirstChild (&switch_, newEl, doc);
+	    }
+	  else
+	    switch_ = newEl;
 
 	  /* Create a foreign Object */
           childType.ElSSchema = SvgSchema;
@@ -2354,14 +2387,17 @@ void CreateGraphicElement (int entry)
           TtaInsertFirstChild (&child, newEl, doc);
           selEl = child;
 
-	  /* Ask where the user wants to insert the text */
-	  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
+	  if(isFormattedView)
+	    {
+	      /* Ask where the user wants to insert the text */
+	      AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
 
-	  attrType.AttrTypeNum = SVG_ATTR_x;
-	  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
-	  
-	  attrType.AttrTypeNum = SVG_ATTR_y;
-	  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+	      attrType.AttrTypeNum = SVG_ATTR_x;
+	      UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
+	      
+	      attrType.AttrTypeNum = SVG_ATTR_y;
+	      UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+	    }
         }
 
 
@@ -2376,8 +2412,9 @@ void CreateGraphicElement (int entry)
     }
 
 
-  /* create attributes fill and stroke if they are not inherited */
-  if (newType.ElTypeNum == SVG_EL_line_ ||
+  /* create attributes fill and stroke */
+  if (
+      newType.ElTypeNum == SVG_EL_line_ ||
       newType.ElTypeNum == SVG_EL_rect ||
       newType.ElTypeNum == SVG_EL_circle_ ||
       newType.ElTypeNum == SVG_EL_ellipse ||
@@ -2386,8 +2423,6 @@ void CreateGraphicElement (int entry)
       newType.ElTypeNum == SVG_EL_path)
     {
   
-      selEl = newEl;
-
       /* Get the stroke color */
       if (Current_Color != -1)
 	TtaGiveThotRGB (Current_Color, &red, &green, &blue);
@@ -2655,11 +2690,11 @@ static void CallbackGraph (int ref, int typedata, char *data)
             }
           else if (DocumentTypes[doc] != docSVG && DocumentMeta[doc])
             DocumentMeta[doc]->compound = TRUE;
-          /* there is a selection */
-          if (val == 11)
-            CreateGroup ();
-          else
-            CreateGraphicElement (val);
+/*           /\* there is a selection *\/ */
+/*           if (val == 11) */
+/*             CreateGroup (); */
+/*           else */
+/*             CreateGraphicElement (val); */
         }
       break;
  
@@ -2936,7 +2971,7 @@ void Timeline_cross_prule_modified (NotifyPresentation *event)
   ----------------------------------------------------------------------*/
 void CreateSVG_Line (Document document, View view)
 {
-  CreateGraphicElement (0);
+  CreateGraphicElement (document, view, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -2944,7 +2979,7 @@ void CreateSVG_Line (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Rectangle (Document document, View view)
 {
-  CreateGraphicElement (1);
+  CreateGraphicElement (document, view, 1);
 }
 
 /*----------------------------------------------------------------------
@@ -2952,7 +2987,7 @@ void CreateSVG_Rectangle (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_RoundedRectangle (Document document, View view)
 {
-  CreateGraphicElement (2);
+  CreateGraphicElement (document, view, 2);
 }
 
 /*----------------------------------------------------------------------
@@ -2960,7 +2995,7 @@ void CreateSVG_RoundedRectangle (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Circle (Document document, View view)
 {
-  CreateGraphicElement (3);
+  CreateGraphicElement (document, view, 3);
 }
 
 /*----------------------------------------------------------------------
@@ -2968,7 +3003,7 @@ void CreateSVG_Circle (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Ellipse (Document document, View view)
 {
-  CreateGraphicElement (4);
+  CreateGraphicElement (document, view, 4);
 }
 
 /*----------------------------------------------------------------------
@@ -2976,7 +3011,7 @@ void CreateSVG_Ellipse (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Polyline (Document document, View view)
 {
-  CreateGraphicElement (5);
+  CreateGraphicElement (document, view, 5);
 }
 
 /*----------------------------------------------------------------------
@@ -2984,7 +3019,7 @@ void CreateSVG_Polyline (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Polygon (Document document, View view)
 {
-  CreateGraphicElement (6);
+  CreateGraphicElement (document, view, 6);
 }
 
 /*----------------------------------------------------------------------
@@ -2992,7 +3027,7 @@ void CreateSVG_Polygon (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Spline (Document document, View view)
 {
-  CreateGraphicElement (7);
+  CreateGraphicElement (document, view, 7);
 }
 
 /*----------------------------------------------------------------------
@@ -3000,7 +3035,7 @@ void CreateSVG_Spline (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Closed (Document document, View view)
 {
-  CreateGraphicElement (8);
+  CreateGraphicElement (document, view, 8);
 }
 
 /*----------------------------------------------------------------------
@@ -3008,7 +3043,7 @@ void CreateSVG_Closed (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_ForeignObject (Document document, View view)
 {
-  CreateGraphicElement (9);
+  CreateGraphicElement (document, view, 9);
 }
 
 /*----------------------------------------------------------------------
@@ -3016,7 +3051,7 @@ void CreateSVG_ForeignObject (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Text (Document document, View view)
 {
-  CreateGraphicElement (10);
+  CreateGraphicElement (document, view, 10);
 }
  
 /*----------------------------------------------------------------------
@@ -3032,7 +3067,7 @@ void CreateSVG_Group (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_SimpleArrow (Document document, View view)
 {
-  CreateGraphicElement (12);
+  CreateGraphicElement (document, view, 12);
 }
 
 /*----------------------------------------------------------------------
@@ -3040,7 +3075,7 @@ void CreateSVG_SimpleArrow (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_DoubleArrow (Document document, View view)
 {
-  CreateGraphicElement (13);
+  CreateGraphicElement (document, view, 13);
 }
 
 /*----------------------------------------------------------------------
@@ -3048,7 +3083,7 @@ void CreateSVG_DoubleArrow (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Zigzag (Document document, View view)
 {
-  CreateGraphicElement (14);
+  CreateGraphicElement (document, view, 14);
 }
 
 /*----------------------------------------------------------------------
@@ -3056,7 +3091,7 @@ void CreateSVG_Zigzag (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Square (Document document, View view)
 {
-  CreateGraphicElement (15);
+  CreateGraphicElement (document, view, 15);
 }
 
 /*----------------------------------------------------------------------
@@ -3064,7 +3099,7 @@ void CreateSVG_Square (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_RoundedSquare (Document document, View view)
 {
-  CreateGraphicElement (16);
+  CreateGraphicElement (document, view, 16);
 }
 
 /*----------------------------------------------------------------------
@@ -3072,7 +3107,7 @@ void CreateSVG_RoundedSquare (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Diamond (Document document, View view)
 {
-  CreateGraphicElement (17);
+  CreateGraphicElement (document, view, 17);
 }
 
 /*----------------------------------------------------------------------
@@ -3080,7 +3115,7 @@ void CreateSVG_Diamond (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Trapezium (Document document, View view)
 {
-  CreateGraphicElement (18);
+  CreateGraphicElement (document, view, 18);
 }
 
 /*----------------------------------------------------------------------
@@ -3088,7 +3123,7 @@ void CreateSVG_Trapezium (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Parallelogram (Document document, View view)
 {
-  CreateGraphicElement (19);
+  CreateGraphicElement (document, view, 19);
 }
 
 /*----------------------------------------------------------------------
@@ -3096,7 +3131,7 @@ void CreateSVG_Parallelogram (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_EquilateralTriangle (Document document, View view)
 {
-  CreateGraphicElement (20);
+  CreateGraphicElement (document, view, 20);
 }
 
 /*----------------------------------------------------------------------
@@ -3104,7 +3139,7 @@ void CreateSVG_EquilateralTriangle (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_IsoscelesTriangle (Document document, View view)
 {
-  CreateGraphicElement (21);
+  CreateGraphicElement (document, view, 21);
 }
 
 /*----------------------------------------------------------------------
@@ -3112,7 +3147,7 @@ void CreateSVG_IsoscelesTriangle (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_RectangleTriangle (Document document, View view)
 {
-  CreateGraphicElement (22);
+  CreateGraphicElement (document, view, 22);
 }
 
 /*----------------------------------------------------------------------
@@ -3120,7 +3155,7 @@ void CreateSVG_RectangleTriangle (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Cube (Document document, View view)
 {
-  CreateGraphicElement (23);
+  CreateGraphicElement (document, view, 23);
 }
 
 /*----------------------------------------------------------------------
@@ -3128,7 +3163,7 @@ void CreateSVG_Cube (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Parallelepiped (Document document, View view)
 {
-  CreateGraphicElement (24);
+  CreateGraphicElement (document, view, 24);
 }
 
 /*----------------------------------------------------------------------
@@ -3136,5 +3171,5 @@ void CreateSVG_Parallelepiped (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Cylinder (Document document, View view)
 {
-  CreateGraphicElement (25);
+  CreateGraphicElement (document, view, 25);
 }

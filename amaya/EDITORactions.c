@@ -2017,7 +2017,7 @@ ThotBool HTMLelementAllowed (Document doc)
 #ifdef _SVG
   else if (strcmp (s, "SVG") == 0)
     {
-      CreateGraphicElement (9);
+      CreateGraphicElement (doc, 2, 9);
       return TRUE;
     }
 #endif /* _SVG */
