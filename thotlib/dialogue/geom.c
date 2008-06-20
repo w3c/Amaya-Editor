@@ -1433,7 +1433,7 @@ int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2, Document doc, 
 PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
 			    Document doc, int shape_number)
 {
-  unsigned int i, imax;
+  int i;
   PtrTextBuffer       pBuffer, pB;
   AmayaFrame * p_frame;
   AmayaCreatePathEvtHandler * p_CreatePathEvtHandler;
@@ -1463,15 +1463,14 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
   delete p_CreatePathEvtHandler;
 
   /* Convert the points of the polyline */
-  imax = MAX_POINT_POLY;
   for(pB = pBuffer; pB; pB = pB -> BuNext)
     {
-      if(pB -> BuNext == NULL)
-	imax =  pBuffer->BuLength % MAX_POINT_POLY;
-
-      for(i = 0; i < imax; i++)
+      i = 1;
+      for(; i < pB->BuLength; i++)
 	MouseCoordinatesToSVG(doc, p_frame, xmin, xmax, ymin, ymax, TRUE,
-			  &(pB->BuPoints[i].XCoord), &(pB->BuPoints[i].YCoord));
+			 &(pB->BuPoints[i].XCoord), &(pB->BuPoints[i].YCoord));
+
+      i = 0;
     }
 
   return pBuffer;

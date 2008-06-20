@@ -1617,6 +1617,13 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  return;
 	}
     }
+  else
+    {
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
+    }
+    
+
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   selEl = first;
   newEl = NULL;
@@ -2236,7 +2243,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  TtaAttachAttribute (newEl, attr, doc);
 
 	  TtaSetAttributeText (attr, attr_data, newEl, doc);
-	  free(attr_data);
+	  TtaFreeMemory(attr_data);
 
 	  if(entry == 5 || entry == 6)
 	    ParsePointsAttribute (attr, newEl, doc);

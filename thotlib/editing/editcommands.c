@@ -2022,13 +2022,17 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
   --------------------------------------------------------------------*/
 char *AskShapePoints (Document doc, int shape, Element svgRoot)
 {
-  PtrTextBuffer       pBuffer;
+  PtrTextBuffer       pBuffer, pB;
   PtrAbstractBox pAb;
   PtrBox pBox;
   ViewFrame          *pFrame;
   int frame;
   int x1, x2, y1, y2;
   char *attr_data = NULL;
+  int i;
+
+#define BUFFERPOINT_LENGTH 50
+  char bufferpoint[BUFFERPOINT_LENGTH];
 
   frame = ActiveFrame;
 
@@ -2048,6 +2052,29 @@ char *AskShapePoints (Document doc, int shape, Element svgRoot)
   y2 = y1 + pBox->BxHeight;
 
   pBuffer = PathCreation (frame, x1, y1, x2, y2, doc, shape);
+
+
+  if(shape == 7 || shape == 8)
+    {FreeTextBuffer (pBuffer);return NULL;}
+
+  attr_data = (char *)TtaGetMemory(BUFFERPOINT_LENGTH * pBuffer->BuLength + 1);
+  if(attr_data)
+    {
+
+      attr_data[0] = '\0';
+
+      for(pB = pBuffer; pB; pB = pB -> BuNext)
+	{
+	  i = 1;
+	  for(; i < pB -> BuLength; i++)
+	    {
+	    sprintf(bufferpoint, "%d,%d ",
+		    pB->BuPoints[i].XCoord, pB->BuPoints[i].YCoord);
+	    strcat (attr_data, bufferpoint);
+	    }
+	  i = 0;
+	}
+    }
 
   /* Free the buffer */
   FreeTextBuffer (pBuffer);

@@ -411,8 +411,8 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
     {
       /* Add a new point in the polyline/polygon */
       state = 1;
+      AddPointInPolyline (m_Pbuffer, N_points, lastX1, lastY1);
       N_points++;
-      AddPointInPolyline (m_Pbuffer, N_points, currentX, currentY);
     }
   else if(m_ShapeNumber == 7 || m_ShapeNumber == 8)
     {
@@ -422,18 +422,18 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
 	{
 	  /* Add a cubic Bezier Curve (the control points are the same, so
 	     actually it is a quadratic Bezier curve) */
-	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, lastX2, lastY2);
-	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, symX, symY);
-	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, symX, symY);
-	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, lastX1, lastY1);
+	  AddPointInPolyline (m_Pbuffer, N_points, lastX2, lastY2);N_points++;
+	  AddPointInPolyline (m_Pbuffer, N_points, symX, symY);N_points++;
+	  AddPointInPolyline (m_Pbuffer, N_points, symX, symY);N_points++;
+	  AddPointInPolyline (m_Pbuffer, N_points, lastX1, lastY1);N_points++;
 	}
       else if(state == 4)
 	{
 	  /* Add a cubic Bezier Curve */
-	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, lastX3, lastY3);
-	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, lastX2, lastY2);
-	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, symX, symY);
-	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, lastX1, lastY1);
+	  AddPointInPolyline (m_Pbuffer, N_points, lastX3, lastY3);N_points++;
+	  AddPointInPolyline (m_Pbuffer, N_points, lastX2, lastY2);N_points++;
+	  AddPointInPolyline (m_Pbuffer, N_points, symX, symY);N_points++;
+	  AddPointInPolyline (m_Pbuffer, N_points, lastX1, lastY1);N_points++;
 	}
 
       if(state < 4)state++;
