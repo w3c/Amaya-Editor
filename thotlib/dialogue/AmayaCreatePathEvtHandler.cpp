@@ -38,11 +38,12 @@
 #include "AmayaCanvas.h"
 #include "AmayaCreatePathEvtHandler.h"
 
-static int m_mouse_x,m_mouse_y;
 static int N_points, state;
-static int lastX1 = 0, lastY1 = 0;
-static int lastX2 = 0, lastY2 = 0;
-static int lastX3 = 0, lastY3 = 0;
+static int currentX,currentY;
+static int lastX1, lastY1;
+static int symX, symY;
+static int lastX2, lastY2;
+static int lastX3, lastY3;
 static ThotBool clear = FALSE;
 
 /*----------------------------------------------------------------------
@@ -56,11 +57,15 @@ static ThotBool clear = FALSE;
   (x2,y2)
 
  *----------------------------------------------------------------------*/
-void DrawLine (int x2, int y2, int x3, int y3)
+void DrawLine (int x2, int y2, int x3, int y3, ThotBool SpecialColor)
 {
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
-  glColor4ub (127, 127, 127, 0);
+
+  if(SpecialColor)
+    glColor4ub (127, 0, 127, 0);
+  else
+    glColor4ub (127, 127, 127, 0);
 
   glBegin(GL_LINE);
   glVertex2i(x2, y2);
@@ -75,7 +80,8 @@ void DrawLine (int x2, int y2, int x3, int y3)
   using (x2,y2) as the control points.
 
  *----------------------------------------------------------------------*/
-void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3)
+void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3,
+			  ThotBool SpecialColor)
 	      
 {
 #define N_INTERP 50
@@ -87,7 +93,11 @@ void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3)
 
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
-  glColor4ub (127, 127, 127, 0);
+
+  if(SpecialColor)
+    glColor4ub (127, 0, 127, 0);
+  else
+    glColor4ub (127, 127, 127, 0);
 
   glEnable(GL_MAP1_VERTEX_3);
   glMap1f(GL_MAP1_VERTEX_3, 0.0, 1.0, 3, 3, ctrlpoints[0]);
@@ -105,10 +115,9 @@ void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3)
   DrawCubicBezier
   draw a cubic Bezier Curve from (x1,y1) to (x4,y4),
   using (x2,y2) and (x3,y3) as the control points.
-
  *----------------------------------------------------------------------*/
 void DrawCubicBezier (int x1, int y1, int x2, int y2, int x3, int y3,
-		      int x4, int y4)
+		      int x4, int y4, ThotBool SpecialColor)
 {
   int i;
 
@@ -118,7 +127,11 @@ void DrawCubicBezier (int x1, int y1, int x2, int y2, int x3, int y3,
 
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
-  glColor4ub (127, 127, 127, 0);
+
+  if(SpecialColor)
+    glColor4ub (127, 0, 127, 0);
+  else
+    glColor4ub (127, 127, 127, 0);
 
   glEnable(GL_MAP1_VERTEX_3);
   glMap1f(GL_MAP1_VERTEX_3, 0.0, 1.0, 3, 4, ctrlpoints[0]);
@@ -132,30 +145,60 @@ void DrawCubicBezier (int x1, int y1, int x2, int y2, int x3, int y3,
   glDisable(GL_COLOR_LOGIC_OP);
 }
 
-/*
-  GetSymetricPoint
+/*----------------------------------------------------------------------
+  UpdateSymetricPoint
 
-  Get the symetric point of (x,y) 
+  Update the value of the current symetric point.
 
-  (symx, symy)-----------(lastX1,lastY1)--------------(x,y)
+                               (current)
+                           ---- 
+           -----(last)-----
+       ----
+  (sym)
 
-*/
-void GetSymetricPoint(int x, int y, int *symx, int *symy)
+  ----------------------------------------------------------------------*/
+void UpdateSymetricPoint()
 {
-  *symx = 2*lastX1 - x;
-  *symy = 2*lastY1 - y;
+  symX = 2*lastX1 - currentX;
+  symY = 2*lastY1 - currentY;
 }
 
-void DrawPathFragment(int shape, int x, int y)
+
+/*----------------------------------------------------------------------
+  DrawControlPoints
+
+  Draw the control points of the Bezier Curve.
+ *----------------------------------------------------------------------*/
+void DrawControlPoints ()
 {
-  int x0, y0;
+  glEnable(GL_COLOR_LOGIC_OP);
+  glLogicOp(GL_XOR);
+
+  glColor4ub (0, 127, 127, 100);
+
+  glBegin(GL_LINE);
+  glVertex2i(symX, symY);
+  glVertex2i(currentX, currentY);
+  glEnd ();
+  glDisable(GL_COLOR_LOGIC_OP);
+}
+
+
+/*----------------------------------------------------------------------
+  DrawPathFragment
+
+  Draw the last path fragment. If SpecialColor is TRUE, then this fragment
+  is drawn with a special color to show that it is active.
+ *----------------------------------------------------------------------*/
+void DrawPathFragment(int shape, ThotBool SpecialColor)
+{
 
 switch(shape)
   {
   case 5:
   case 6:
     if(state == 1)
-      DrawLine (lastX1, lastY1, x, y);
+      DrawLine (lastX1, lastY1, currentX, currentY, SpecialColor);
     break;
 
   case 7:
@@ -163,24 +206,55 @@ switch(shape)
     switch(state)
       {
       case 0:
+        /*                                                  */
+        /*                                                  */
+        /*         (current)+                               */
 	break;
-
       case 1:
-	DrawLine (lastX1, lastY1, x, y);
+        /*                          .....+(current)         */
+        /*                    ......                        */
+        /*         (last1)O...                              */
+	DrawLine (lastX1, lastY1, currentX, currentY, SpecialColor);
 	break;
 	
       case 2:
-	GetSymetricPoint(x, y, &x0, &y0);
-	DrawQuadraticBezier (lastX2, lastY2, x0, y0, lastX1, lastY1);	
+        /*                           +(current)             */
+        /*  (last2)                 /                       */
+        /*        .                /                        */
+        /*         ..          .(last1)                     */
+        /*           ..     ..  /                           */
+        /*             .....   /                            */
+        /*                  (sym)                           */
+	DrawQuadraticBezier (lastX2, lastY2, symX, symY,
+			     lastX1, lastY1, SpecialColor);
+	if(SpecialColor)DrawControlPoints();
 	break;
 
       case 3:
-	DrawQuadraticBezier (lastX2, lastY2, lastX1, lastY1, x, y);
+        /*                    +(current)                    */
+        /*                    ...                           */
+        /*                       .                          */
+        /*                      .                           */
+        /*                  ...   (last1)                   */
+        /*             .....                                */
+        /*   (last2)...                                     */
+        /*                                                  */
+	DrawQuadraticBezier (lastX2, lastY2, lastX1, lastY1,
+			     currentX, currentY, SpecialColor);
 	break;
 
       case 4:
-	GetSymetricPoint(x, y, &x0, &y0);
-	DrawCubicBezier(lastX3, lastY3, lastX2, lastY2, x0, y0, lastX1, lastY1);
+        /*      (current)+---(last1)---(sym)                */
+        /*                      ...                         */
+        /*                         ....                     */
+        /*                            .                     */
+        /*                            .                     */
+        /*                          ...                     */
+        /*               ...........     (last2)            */
+        /*    (last3)....                                   */
+	DrawCubicBezier(lastX3, lastY3, lastX2, lastY2, symX, symY,
+			lastX1, lastY1, SpecialColor);
+	if(SpecialColor)DrawControlPoints();
 	break;
       }
     break;
@@ -303,37 +377,75 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
 
   /* Are we in the SVG ? */
   if(!MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
-			    FALSE, &m_mouse_x, &m_mouse_y))return;
+			    FALSE, &currentX, &currentY))return;
 
   if(m_ShapeNumber == 7 || m_ShapeNumber == 8)
     {
       clear = FALSE;
+
       if(state == 0 || state == 1 || state == 3)
-	DrawPathFragment(m_ShapeNumber, m_mouse_x, m_mouse_y);
+	{
+	  /* Clear the active fragment */
+	  DrawPathFragment(m_ShapeNumber, TRUE);
+	}
+      else
+	{
+	  /* Clear the active fragment */
+	  DrawPathFragment(m_ShapeNumber, TRUE);
+
+	  /* Draw the new curve fragment */
+	  DrawPathFragment(m_ShapeNumber, FALSE);
+	}
+    }
+  else
+    {
+      /* Clear the active fragment */
+      DrawPathFragment(m_ShapeNumber, TRUE);
+      
+      /* Draw the new curve fragment */
+      DrawPathFragment(m_ShapeNumber, FALSE);
     }
 
-  N_points++;
+  if(m_ShapeNumber == 5 || m_ShapeNumber == 6)
+    {
+      /* Add a new point in the polyline/polygon */
+      state = 1;
+      N_points++;
+      AddPointInPolyline (m_Pbuffer, N_points, currentX, currentY);
+    }
+  else if(m_ShapeNumber == 7 || m_ShapeNumber == 8)
+    {
+      /* Bezier Curve */
+      
+      if(state == 2)
+	{
+	  /* Add a cubic Bezier Curve (the control points are the same, so
+	     actually it is a quadratic Bezier curve) */
+	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, lastX2, lastY2);
+	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, symX, symY);
+	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, symX, symY);
+	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, lastX1, lastY1);
+	}
+      else if(state == 4)
+	{
+	  /* Add a cubic Bezier Curve */
+	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, lastX3, lastY3);
+	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, lastX2, lastY2);
+	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, symX, symY);
+	  N_points++;AddPointInPolyline (m_Pbuffer, N_points, lastX1, lastY1);
+	}
+
+      if(state < 4)state++;
+      else state=3;
+    }
 
   lastX3 = lastX2;
   lastY3 = lastY2;
   lastX2 = lastX1;
   lastY2 = lastY1;
-  lastX1 = m_mouse_x;
-  lastY1 = m_mouse_y;
-
- /* Draw the shape */
-  if(m_ShapeNumber == 5 || m_ShapeNumber == 6)
-    {
-    state = 1;
-      //AddPointInPolyline (m_Pbuffer, N_points, m_mouse_x, m_mouse_y);
-    }
-  else if(m_ShapeNumber == 7 || m_ShapeNumber == 8)
-    {
-      /* Bezier Curve */
-
-      if(state < 4)state++;
-      else state=3;
-    }
+  lastX1 = currentX;
+  lastY1 = currentY;
+  UpdateSymetricPoint();
 
 }
 
@@ -356,16 +468,17 @@ void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
   if(clear)
-    DrawPathFragment(m_ShapeNumber, m_mouse_x, m_mouse_y);
+    DrawPathFragment(m_ShapeNumber, TRUE);
 
-  m_mouse_x = event.GetX();
-  m_mouse_y = event.GetY();
+  currentX = event.GetX();
+  currentY = event.GetY();
+  UpdateSymetricPoint();
 
-  DrawPathFragment(m_ShapeNumber, m_mouse_x, m_mouse_y);
+  DrawPathFragment(m_ShapeNumber, TRUE);
   clear = TRUE;
 
   MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
-			FALSE, &m_mouse_x, &m_mouse_y);
+			FALSE, &currentX, &currentY);
 
   m_pFrame->GetCanvas()->Refresh();
 
