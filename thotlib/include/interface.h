@@ -492,7 +492,7 @@ extern void TtaCloseAllHelpWindows ();
 
 extern void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
 extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape, Element svgRoot);
-extern void AskShapePoints (Document doc, int shape, Element svgRoot);
+extern char *AskShapePoints (Document doc, int shape, Element svgRoot);
 
 
 #endif /* __CEXTRACT__  */

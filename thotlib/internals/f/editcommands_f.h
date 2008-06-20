@@ -14,9 +14,9 @@ extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
-extern void AskShapePoints ( Document doc,
-                             int shape,
-                             Element svgRoot );
+extern char *AskShapePoints ( Document doc,
+                              int shape,
+                              Element svgRoot );
 extern void AskSurroundingBox ( int *x1,
                                 int *y1,
                                 int *x2,
@@ -65,9 +65,9 @@ extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                         int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
-extern void AskShapePoints ( Document doc,
-                               int shape,
-                               Element svgRoot );
+extern char *AskShapePoints ( Document doc,
+                                int shape,
+                                Element svgRoot );
 extern void AskSurroundingBox ( int *x1,
                                   int *y1,
                                   int *x2,

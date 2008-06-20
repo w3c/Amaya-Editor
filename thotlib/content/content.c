@@ -853,7 +853,7 @@ void ClearText (PtrTextBuffer pBuf)
 
 /*----------------------------------------------------------------------
   AddPointInPolyline ajoute un point de rang rank dans la liste   
-  des points de contro^le de la polyline.                 
+  des points de controle de la polyline.                 
   On saute le point 0 (coordonnees du point limite).      
   ----------------------------------------------------------------------*/
 void AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)

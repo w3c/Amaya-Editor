@@ -328,6 +328,7 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x
  *----------------------------------------------------------------------*/
 AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
 {
+  /* TODO: clear the preview of the polyline and curve */
 
   if (m_pFrame)
     {

@@ -1590,6 +1590,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   char buffer[300];
   char stroke_color[10], fill_color[10];
+  char *attr_data;
 
   /* Check that a document is selected */
   if (doc == 0)
@@ -2218,21 +2219,29 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	}
       else if(entry >= 5 && entry <= 8)
 	{
+	  /* Polyline and curves */
 	  selEl = newEl;
 
-	  /* Polyline and curves */
 	  if(isFormattedView)
-	    AskShapePoints (doc, entry, SvgRoot);
+	    attr_data = AskShapePoints (doc, entry, SvgRoot);
+	  else
+	    attr_data = NULL;
 
-	  /* TODO... */
+	  if(entry == 5 || entry == 6)
+	    attrType.AttrTypeNum = SVG_ATTR_points;
+	  else
+    	    attrType.AttrTypeNum = SVG_ATTR_d;
 
-	  /*	attrType.AttrTypeNum = SVG_ATTR_points;
-		attr = TtaNewAttribute (attrType);
-		TtaAttachAttribute (newEl, attr, doc);
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (newEl, attr, doc);
 
+	  TtaSetAttributeText (attr, attr_data, newEl, doc);
+	  free(attr_data);
 
-		TtaSetAttributeText (attr, buffer, newEl, doc);
-		ParsePointsAttribute (attr, newEl, doc);*/
+	  if(entry == 5 || entry == 6)
+	    ParsePointsAttribute (attr, newEl, doc);
+	  else
+	    ParsePathDataAttribute (attr, newEl, doc, TRUE);	    
 	}
       else if (entry == 9)
         /* create a foreignObject containing an XHTML div element within the

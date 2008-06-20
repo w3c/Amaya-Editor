@@ -1430,19 +1430,27 @@ int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2, Document doc, 
   return nb_points;
 }
 
-PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax, Document doc, int shape_number)
+PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
+			    Document doc, int shape_number)
 {
-  PtrTextBuffer       pBuffer;
+  unsigned int i, imax;
+  PtrTextBuffer       pBuffer, pB;
   AmayaFrame * p_frame;
   AmayaCreatePathEvtHandler * p_CreatePathEvtHandler;
+  int FrameId;
   ThotEvent ev;
+
+  FrameId = p_frame->GetFrameId();
 
   /* Allocate a polyline buffer to simulate a polyline */ 
   GetTextBuffer (&pBuffer);
 
-  pBuffer->BuPoints[0].XCoord = xmax - xmin;
-  pBuffer->BuPoints[0].YCoord = ymax - ymin;
-  
+  /* The coordinates of the points are "int", but AddPointInPolyline do not
+     accept value greater than width = BuPoints[0].XCoord and
+     height = BuPoints[0].YCoord. For Bezier Curves, the control point can be
+     outside the canvas, so take the greatest values. */
+  pBuffer->BuPoints[0].XCoord = INT_MAX;
+  pBuffer->BuPoints[0].YCoord = INT_MAX;
 
   p_frame = FrameTable[frame].WdFrame;
   p_CreatePathEvtHandler = new AmayaCreatePathEvtHandler(p_frame, xmin,
@@ -1454,21 +1462,28 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax, D
   
   delete p_CreatePathEvtHandler;
 
-  
+  /* Convert the points of the polyline */
+  imax = MAX_POINT_POLY;
+  for(pB = pBuffer; pB; pB = pB -> BuNext)
+    {
+      if(pB -> BuNext == NULL)
+	imax =  pBuffer->BuLength % MAX_POINT_POLY;
 
-  /* Free the buffer */
-  FreeTextBuffer (pBuffer);
-  return NULL;
+      for(i = 0; i < imax; i++)
+	MouseCoordinatesToSVG(doc, p_frame, xmin, xmax, ymin, ymax, TRUE,
+			  &(pB->BuPoints[i].XCoord), &(pB->BuPoints[i].YCoord));
+    }
+
+  return pBuffer;
 }
-
-
-
 
 /* Convert the mouse coordinates (x,y) into the one in the SVG element and
    display them into the status bar. If convert is TRUE, then x and y are
    modified.
 
    Return TRUE if the mouse is inside the SVG
+
+   TODO: conversion of the coordinates when the SVG has a viewbox attribute.
  */
 ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xmax, int ymin, int ymax, ThotBool convert, int *x, int *y)
 {
@@ -1486,27 +1501,26 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int
   height = LogicalValue (ymax - ymin, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
-
   newx = LogicalValue (*x - xmin, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
-  if(newx < 0){newx = 0;inside=FALSE;}
-  else if(newx > width){newx = width;inside=FALSE;}
-
   newy = LogicalValue (*y - ymin, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
-
-  if(newy < 0){newy = 0;inside=FALSE;}
-  else if(newy > height){newy = height;inside=FALSE;}
-
-  sprintf(buffer, "(%d,%d)", newx, newy);
-  TtaSetStatus (doc, 1, buffer, NULL);
 
   if(convert)
     {
       *x = newx;
       *y = newy;
     }
+
+  if(newx < 0){newx = 0;inside=FALSE;}
+  else if(newx > width){newx = width;inside=FALSE;}
+
+  if(newy < 0){newy = 0;inside=FALSE;}
+  else if(newy > height){newy = height;inside=FALSE;}
+
+  sprintf(buffer, "(%d,%d)", newx, newy);
+  TtaSetStatus (doc, 1, buffer, NULL);
 
   return inside;
 }

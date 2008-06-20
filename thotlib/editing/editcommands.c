@@ -2020,23 +2020,25 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
   AskShapePoints
   Ask the user the list of points of a polyline or curve.
   --------------------------------------------------------------------*/
-void AskShapePoints (Document doc, int shape, Element svgRoot)
+char *AskShapePoints (Document doc, int shape, Element svgRoot)
 {
+  PtrTextBuffer       pBuffer;
   PtrAbstractBox pAb;
   PtrBox pBox;
   ViewFrame          *pFrame;
   int frame;
   int x1, x2, y1, y2;
+  char *attr_data = NULL;
 
   frame = ActiveFrame;
 
-  if(frame <= 0)return;
+  if(frame <= 0)return NULL;
 
-  if(frame <= 0 || svgRoot == NULL)return;
+  if(frame <= 0 || svgRoot == NULL)return NULL;
   pAb = ((PtrElement)svgRoot) -> ElAbstractBox[0];
-  if(!pAb)return;
+  if(!pAb)return NULL;
   pBox = pAb -> AbBox;
-  if(!pBox)return;
+  if(!pBox)return NULL;
 
   pFrame = &ViewFrameTable[frame - 1];
 
@@ -2045,8 +2047,12 @@ void AskShapePoints (Document doc, int shape, Element svgRoot)
   x2 = x1 + pBox->BxWidth;
   y2 = y1 + pBox->BxHeight;
 
-  PathCreation (frame, x1, y1, x2, y2, doc, shape);
+  pBuffer = PathCreation (frame, x1, y1, x2, y2, doc, shape);
 
+  /* Free the buffer */
+  FreeTextBuffer (pBuffer);
+
+  return attr_data;
 }
 
 /*----------------------------------------------------------------------
