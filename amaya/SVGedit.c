@@ -9,14 +9,16 @@
  * This module contains editing functions for handling SVG objects.
  *
  * Author: I. Vatton
- *	   V. Quint
+ *         V. Quint
+ *         F. Wang - SVG panel
  */
+
+/* Included headerfiles */
 
 #ifdef _WX
 #include "wx/wx.h"
 #endif /* _WX */
 
-/* Included headerfiles */
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -26,6 +28,7 @@
 #include "view.h"
 #include "content.h"
 #include "document.h"
+#include <math.h>
 
 #include "SVG.h"
 #include "HTML.h"
@@ -37,18 +40,6 @@
 #include "UIcss_f.h"
 #include "templateUtils_f.h"
 
-static ThotIcon   iconGraph;
-static ThotIcon   iconGraphNo;
-static ThotIcon   mIcons[12];
-static ThotBool PaletteDisplayed = FALSE;
-static ThotBool InCreation = FALSE;
-
-#ifdef _WINGUI
-#include "wininclude.h"
-#define iconGraph 22
-#define iconGraphNo 22
-#endif /* _WINGUI */
-
 #include "EDITimage_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
@@ -59,20 +50,30 @@ static ThotBool InCreation = FALSE;
 #include "SVGbuilder_f.h"
 #include "XLinkedit_f.h"
 #include "Xmlbuilder_f.h"
-#include <math.h>
 #include "styleparser_f.h"
 
+static ThotIcon   iconGraph;
+static ThotIcon   iconGraphNo;
+static ThotIcon   mIcons[12];
+static ThotBool PaletteDisplayed = FALSE;
+
 extern int ActiveFrame;
+
+#ifdef _GTK
+/* used for the close palette callback*/
+ThotWidget CatWidget(int ref);
+#endif/*  _GTK */
 
 #ifdef _WX
 #include "appdialogue_wx.h"
 #include "paneltypes_wx.h"
 #endif /* _WX */
 
-#ifdef _GTK
-/* used for the close palette callback*/
-ThotWidget CatWidget(int ref);
-#endif/*  _GTK */
+#ifdef _WINGUI
+#include "wininclude.h"
+#define iconGraph 22
+#define iconGraphNo 22
+#endif /* _WINGUI */
 
 #ifdef _WINDOWS
 #include <commctrl.h>
@@ -136,7 +137,7 @@ void NameSpaceGenerated (NotifyAttribute *event)
 /*----------------------------------------------------------------------
   A new element has been selected.
   Check that this element can be selected.
-  Synchronize selection in source view.      
+  Synchronize selection in source view.
   ----------------------------------------------------------------------*/
 void GraphicsSelectionChanged (NotifyElement * event)
 {
@@ -183,7 +184,7 @@ void GraphicsSelectionChanged (NotifyElement * event)
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
   UnFrameMath ();
-  
+
   UpdateXmlElementListTool(event->element,event->document);
   TtaSetStatusSelectedElement(event->document, 1, event->element);
   TtaRaisePanel(WXAMAYA_PANEL_SVG);
@@ -289,7 +290,7 @@ ThotBool ExtendSelectSVGElement (NotifyElement *event)
   TtaAddElementToSelection (event->document, selEl);
   return TRUE; /* Don't let Thot perform normal operation */
 }
- 
+
 /*----------------------------------------------------------------------
   AttrCoordChanged
   -----------------------------------------------------------------------*/
@@ -362,7 +363,7 @@ ThotBool AttrPathDataDelete (NotifyAttribute * event)
 /*----------------------------------------------------------------------
   UpdateAttrText creates or updates the text attribute attr of the
   element el.
-  The parameter delta is TRUE when the value is 
+  The parameter delta is TRUE when the value is
   The parameter update is TRUE when the attribute must be parsed after
   the change.
   -----------------------------------------------------------------------*/
@@ -400,7 +401,7 @@ static void UpdateAttrText (Element el, Document doc, AttributeType attrType,
           if (buffer[i] == '.')
             {
               buffer[i] = EOS;
-              sscanf (buffer, "%d", &pval);	      
+              sscanf (buffer, "%d", &pval);
               v = i + 1;
             }
           i++;
@@ -581,9 +582,9 @@ static void UpdatePositionAttribute (Element el, Document doc, int pos,
                         TtaRegisterAttributeCreate (newAttr, textEl, doc);
                       TtaFreeMemory (value);
                     }
-                } 
-            } 
-        } 
+                }
+            }
+        }
     }
 }
 
@@ -619,7 +620,7 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim,
   int                   width, height;
 
   elType = TtaGetElementType (el);
-  attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);//elType.ElSSchema;
+  attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);/* elType.ElSSchema; */
   if (elType.ElTypeNum == SVG_EL_circle_)
     {
       /* express width or height as a radius */
@@ -684,7 +685,7 @@ void AttrCSSequivModified(NotifyAttribute *event)
                           event->attribute, event->element,
                           event->document, FALSE);
 }
- 
+
 /*----------------------------------------------------------------------
   AttrCSSequivDelete : attribute fill, stroke or stroke-width will be
   deleted. Remove the corresponding style presentation.
@@ -704,7 +705,7 @@ void AttrTextAnchorModified (NotifyAttribute *event)
 {
   SetTextAnchor (event->attribute, event->element, event->document, FALSE);
 }
- 
+
 /*----------------------------------------------------------------------
   AttrTextAnchorDelete : attribute text_anchor will be
   deleted. Remove the corresponding presentation.
@@ -1031,7 +1032,7 @@ ThotBool NewGraphElem (NotifyOnValue *event)
 {
   int           profile;
 
-  // is it a compound document?
+  /* is it a compound document? */
   profile = TtaGetDocumentProfile (event->document);
   if (profile == L_Strict || profile == L_Basic)
     {
@@ -1062,7 +1063,7 @@ void GraphElemPasted (NotifyElement *event)
   /*****  CheckSVGRoot (event->document, event->element); ****/
   SetGraphicDepths (event->document, event->element);
 
-  // it's a compound document
+  /* it's a compound document */
   profile = TtaGetDocumentProfile (event->document);
   if (DocumentTypes[event->document] == docMath ||
       profile == L_Strict || profile == L_Basic)
@@ -1282,7 +1283,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
   int           presType;
   int           mainView;
   int           x, y, width, height;
- 
+
   el = event->element;
   elType = TtaGetElementType (el);
   doc = event->document;
@@ -1575,9 +1576,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   SSchema	    docSchema, SvgSchema;
   DisplayMode       dispMode;
   Language          lang;
-  char		    shape;
-  char             *path;
-  int		    c1, i, w, h, dir, svgDir;
+  int		    c1, i, dir, svgDir;
   int               docModified;
   ThotBool	    found, newGraph = FALSE, oldStructureChecking;
   ThotBool          isFilled, isFormattedView;
@@ -1600,7 +1599,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
     }
 
   context.doc = doc;
- 
+
   /* Check that whether we are in formatted or strutured view. */
   if (view == 1) isFormattedView = TRUE;
   else if(view == 2) isFormattedView = FALSE;
@@ -1622,6 +1621,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   newEl = NULL;
   child = NULL;
   docModified = TtaIsDocumentModified (doc);
+
   /* Are we in a drawing? */
   docSchema = TtaGetDocumentSSchema (doc);
   SvgSchema = GetSVGSSchema (doc);
@@ -1673,7 +1673,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
                 }
               while (selType.ElTypeNum != HTML_EL_BODY &&
                      selType.ElTypeNum != HTML_EL_Division );
-	      
+
               /* create and insert a SVG element here */
               SvgRoot = TtaNewElement (doc, elType);
               TtaInsertSibling (SvgRoot, first, FALSE, doc);
@@ -1739,13 +1739,12 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   if(isFormattedView)
     {
-      /* Select the SVG element where we draw, so that we can see its border */
+      /* Select the SVG element where we draw, so that we can see the frame */
       TtaSelectElement(doc, SvgRoot);
     }
-  
+
   newType.ElSSchema = SvgSchema;
   newType.ElTypeNum = 0;
-  shape = EOS;
   isFilled = TRUE;
 
   switch (entry)
@@ -1753,49 +1752,40 @@ void CreateGraphicElement (Document doc, View view, int entry)
     case 0:	/* line */
       newType.ElTypeNum = SVG_EL_line_;
       isFilled = FALSE;
-      //shape = 'g';
       break;
 
     case 1:	/* rectangle */
       newType.ElTypeNum = SVG_EL_rect;
-      //shape = 'C';
       break;
 
     case 2:	/* rectangle with rounded corners */
       newType.ElTypeNum = SVG_EL_rect;
-      //shape = 'C';
       break;
 
     case 3:	/* circle */
       newType.ElTypeNum = SVG_EL_circle_;
-      //shape = 'a';
       break;
 
     case 4:	/* ellipse */
       newType.ElTypeNum = SVG_EL_ellipse;
-      //shape = 'c';
       break;
 
     case 5:	/* polyline */
       newType.ElTypeNum = SVG_EL_polyline;
       isFilled = FALSE;
-      //shape = 'S';
       break;
 
     case 6:	/* polygon */
       newType.ElTypeNum = SVG_EL_polygon;
-      //shape = 'p';
       break;
 
     case 7:	/* spline */
       newType.ElTypeNum = SVG_EL_path;
       isFilled = FALSE;
-      //shape = 'B';
       break;
 
     case 8:	/* closed spline */
       newType.ElTypeNum = SVG_EL_path;
-      //shape = 's';
       break;
 
     case 9:	/* switch and foreignObject with some HTML code */
@@ -1813,7 +1803,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
       /* Normally, the program don't reach this point */
       newType.ElTypeNum = 0;
       break;
- 
+
     case 12: /* Simple arrow */
       newType.ElTypeNum = SVG_EL_path;
       isFilled = FALSE;
@@ -1874,11 +1864,9 @@ void CreateGraphicElement (Document doc, View view, int entry)
       break;
 
     default:
-      newType.ElTypeNum = SVG_EL_rect;
       break;
     }
-  
-  InCreation = TRUE;
+
   if (newType.ElTypeNum > 0)
     {
       dispMode = TtaGetDisplayMode (doc);
@@ -1886,19 +1874,12 @@ void CreateGraphicElement (Document doc, View view, int entry)
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, DeferredDisplay);
 
-/*       /\* for rectangles, circle, ellipse, and text, ask for an elastic box *\/ */
-/*       if (newType.ElTypeNum == SVG_EL_rect ||  */
-/* 	    newType.ElTypeNum == SVG_EL_circle_ || */
-/* 	    newType.ElTypeNum == SVG_EL_ellipse || */
-/*           newType.ElTypeNum == SVG_EL_text_) */
-/*         TtaAskFirstCreation (); */
-
       /* create the new element */
       newEl = TtaNewElement (doc, newType);
 
       if(isFormattedView)
 	{
-	  /* Insert the child as the last element (i.e. in the foreground)
+	  /* Insert the element as the last child (i.e. in the foreground)
 	     of the SvgRoot */
 	  sibling = TtaGetLastChild(SvgRoot);
 	  if (!sibling)
@@ -1922,11 +1903,9 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    }
 	}
 
-  
-      if(!(entry >= 5 && entry <= 11))
+      if(entry <= 4 || entry >= 12)
 	{
 	  /* Basic Shapes and lines */
-
 	  selEl = newEl;
 
 	  if(isFormattedView)
@@ -1937,13 +1916,14 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	      x1 = 0; y1 = 0;
 	      x2 = 50; y2 = 50;
 	    }
-	  
+
 	  lx = x2 - x1;
 	  ly = y2 - y1;
 
 	  switch(entry)
 	    {
 	    case 0: /* Line */
+	      /* TODO: fix the bug with the coordinates */
 	      SVGElementComplete (&context, newEl, &error);
 
 	      attrType.AttrTypeNum = SVG_ATTR_x1;
@@ -2104,7 +2084,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		      x1         , y1 + ly/2,
 		      x1 + lx/2, y1         ,
 		      x2         , y1 + ly/2,
-		      x1 + lx/2, y2          
+		      x1 + lx/2, y2
 		      );
               TtaSetAttributeText (attr, buffer, newEl, doc);
 	      ParsePointsAttribute (attr, newEl, doc);
@@ -2185,8 +2165,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		  x2 = x1 + lx;
 		}
 	      else
-		{		
-		  ly = lx;	      
+		{
+		  ly = lx;
 		  y2 = y1 + lx;
 		}
 
@@ -2195,17 +2175,17 @@ void CreateGraphicElement (Document doc, View view, int entry)
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (newEl, attr, doc);
 	      sprintf(buffer, "M %d %d L %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d M %d %d L %d %d",
-		      x1, y1+ly/4,
-		      x1+lx/4, y1,
-		      x2, y1,
-		      x2, y2-ly/4,
-		      x2-lx/4, y2,
-		      x1,y2,
-		      x1, y1+ly/4,
-		      x2-lx/4, y1+ly/4,
-		      x2-lx/4, y2,
-		      x2-lx/4, y1+ly/4,
-		      x2, y1
+		      x1, y1+ly/4,      /*    <-1        2------------3 */
+		      x1+lx/4, y1,      /*    <-2       /             / */
+		      x2, y1,           /*    <-3      /             /| */
+		      x2, y2-ly/4,      /*    <-4     /             / | */
+		      x2-lx/4, y2,      /*    <-5    1-------------7  | */
+		      x1,y2,            /*    <-6    |             |  | */
+		      x1, y1+ly/4,      /*    <-1    |             |  4 */
+		      x2-lx/4, y1+ly/4, /*    <-7    |             |  / */
+		      x2-lx/4, y2,      /*    <-5    |             | /  */
+		      x2-lx/4, y1+ly/4, /*    <-7    |             |/   */
+		      x2, y1            /*    <-3    6-------------5    */
 		      );
               TtaSetAttributeText (attr, buffer, newEl, doc);
 	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
@@ -2216,20 +2196,20 @@ void CreateGraphicElement (Document doc, View view, int entry)
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (newEl, attr, doc);
 	      sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 0 %d %d L %d %d A %d %d 0 0 0 %d %d A %d %d 0 0 0 %d %d",
-		      x1, y1+ly/6,
-		      x1, y2-ly/6,
-		      lx/2, ly/6,
-		      x2, y2-ly/6,
-	
-		      x2, y1+ly/6,
-		      lx/2, ly/6,
-		      x1, y1+ly/6,
-		      lx/2, ly/6,
-		      x2, y1+ly/6
+       	       	      x1, y1+ly/6, /*    <-1          /----\             */
+		      x1, y2-ly/6, /*    <-2         1      4            */
+		      lx/2, ly/6,  /*                |\----/|            */
+		      x2, y2-ly/6, /*    <-3         |      |            */
+				   /*                |      |            */
+		      x2, y1+ly/6, /*    <-4         |      |            */
+		      lx/2, ly/6,  /*	             |      |            */
+		      x1, y1+ly/6, /*    <-1         2      3            */
+		      lx/2, ly/6,  /*  	              \----/             */
+		      x2, y1+ly/6  /*    <-4                             */
 		      );
               TtaSetAttributeText (attr, buffer, newEl, doc);
 	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
-	      
+
 	      break;
 
 	    default:
@@ -2243,9 +2223,9 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  /* Polyline and curves */
 	  if(isFormattedView)
 	    AskShapePoints (doc, entry, SvgRoot);
-	  
+
 	  /* TODO... */
-	
+
 	  /*	attrType.AttrTypeNum = SVG_ATTR_points;
 		attr = TtaNewAttribute (attrType);
 		TtaAttachAttribute (newEl, attr, doc);
@@ -2262,7 +2242,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    {
 	      /* Ask the position and size */
 	    AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
-	  
+
 	    /* create a transform=translate attribute */
 	    attrType.AttrTypeNum = SVG_ATTR_transform;
 	    attr = TtaNewAttribute (attrType);
@@ -2365,7 +2345,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
               attrTypeHTML.AttrSSchema = childType.ElSSchema;
               attrTypeHTML.AttrTypeNum = HTML_ATTR_dir;
               attr = TtaNewAttribute (attrTypeHTML);
-              TtaAttachAttribute (child, attr, doc);	   
+              TtaAttachAttribute (child, attr, doc);
               TtaSetAttributeValue (attr, dir, child, doc);
             }
           /* select the first leaf */
@@ -2397,19 +2377,17 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
 	      attrType.AttrTypeNum = SVG_ATTR_x;
 	      UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
-	      
+
 	      attrType.AttrTypeNum = SVG_ATTR_y;
 	      UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
 	    }
         }
 
-
-
       if (newGraph)
 	TtaRegisterElementCreate (SvgRoot, doc);
       else
 	TtaRegisterElementCreate (newEl, doc);
-     
+
       /* ask Thot to display changes made in the document */
       TtaSetDisplayMode (doc, dispMode);
     }
@@ -2425,7 +2403,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
       newType.ElTypeNum == SVG_EL_polygon ||
       newType.ElTypeNum == SVG_EL_path)
     {
-  
+
       /* Get the stroke color */
       if (Current_Color != -1)
 	TtaGiveThotRGB (Current_Color, &red, &green, &blue);
@@ -2454,97 +2432,19 @@ void CreateGraphicElement (Document doc, View view, int entry)
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (newEl, attr, doc);
       TtaSetAttributeText (attr, buffer, newEl, doc);
-  
-    } 
 
-
-  /******************** TODO: clean up this former code *********************/
-
-  /* create a child for the new element */
-  if (shape != EOS)
-    /* create a graphic leaf according to the element's type */
-    {
-      childType.ElSSchema = SvgSchema;
-      childType.ElTypeNum = SVG_EL_GRAPHICS_UNIT;
-      child = TtaNewElement (doc, childType);
-      TtaInsertFirstChild (&child, newEl, doc);
-      TtaSetGraphicsShape (child, shape, doc);
-      if (entry == 2)
-	/* rectangle with rounded corners */
-	{
-	  /* create a default rx attribute */
-	  attrType.AttrTypeNum = SVG_ATTR_rx;
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (newEl, attr, doc);
-	  TtaSetAttributeText (attr, "5px", newEl, doc);
-	  ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
-	}
     }
-  
-  if (shape == 'S' || shape == 'p' || shape == 'B' ||
-      shape == 's' || shape == 'g')
-    /* multipoints element. Let the user enter the points */
-    {
-      if (shape != 'g')
-        {
-          TtaGiveBoxSize (parent, doc, 1, UnPixel, &w, &h);
-          TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);
-        }
-      /* select the leaf element and ask the user to enter the points */
-      TtaSelectElement (doc, child);
-      TtcInsertGraph (doc, 1, shape);
-      /* the user has created the points */
-      if (shape != 'g')
-        {
-          if (TtaGetElementVolume (child) < 3)
-            {
-              /* the polyline doesn't have enough points */
-              TtaDeleteTree (newEl, doc);
-              TtaCancelLastRegisteredSequence (doc);
-              if (!docModified)
-                TtaSetDocumentUnmodified (doc);
-              TtaSelectElement (doc, first);
-              InCreation = FALSE;
-              return;
-            }
-          else if (shape == 'B' || /* open spline */
-                   shape == 's')   /* closed spline */
-            /* transform a Thot curve into a SVG path */
-            {
-              TtaCancelLastRegisteredOperation (doc);
-              path = TtaTransformCurveIntoPath (child);
-              TtaRemoveTree (child, doc);
-              TtaInsertFirstChild (&child, newEl, doc);
-              attrType.AttrTypeNum = SVG_ATTR_d;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-              TtaSetAttributeText (attr, path, newEl, doc);
-              TtaFreeMemory (path);
-              ParsePathDataAttribute (attr, newEl, doc, TRUE);
-              if (newGraph)
-                TtaRegisterElementCreate (SvgRoot, doc);
-              else
-                TtaRegisterElementCreate (newEl, doc);
-            }
-        }
-    }
-
-  /***********************************************************************/
 
   if (selEl != NULL)
     /* select the right element */
     TtaSelectElement (doc, selEl);
-  
-  /* adapt the size of the SVG root element if necessary */
-  InCreation = FALSE;
 
+  /* adapt the size of the SVG root element if necessary */
   /*CheckSVGRoot (doc, newEl);
     SetGraphicDepths (doc, SvgRoot);*/
 
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
-  if (newType.ElTypeNum == 0)
-    InitInfo ("      ", TtaGetMessage (AMAYA, AM_NOT_AVAILABLE));
 #endif /* _SVG */
 }
 
@@ -2640,7 +2540,7 @@ static void CreateGroup ()
 	      if (prevChild == NULL)
 		TtaInsertFirstChild (&prevSel, group, doc);
 	      else
-		TtaInsertSibling (prevSel, prevChild, FALSE, doc);      
+		TtaInsertSibling (prevSel, prevChild, FALSE, doc);
 	      TtaRegisterElementCreate (prevSel, doc);
 	    }
 	  TtaSelectElement (doc, group);
@@ -2651,18 +2551,15 @@ static void CreateGroup ()
   TtaCloseUndoSequence (doc);
   /* ask Thot to display changes made in the document */
   TtaSetDisplayMode (doc, dispMode);
-    
-}
 
+}
 
 /*----------------------------------------------------------------------
   CallbackGraph: manage Graph dialogue events.
   ----------------------------------------------------------------------*/
 static void CallbackGraph (int ref, int typedata, char *data)
 {
-  Document           doc;
   long int           val = (long int) data;
-  int                profile;
 
   ref -= GraphDialogue;
   if (ref == MenuGraph1)
@@ -2675,32 +2572,12 @@ static void CallbackGraph (int ref, int typedata, char *data)
     case FormGraph:
       /* the user has clicked the DONE button in the Graphics dialog box */
       PaletteDisplayed = FALSE;
-      TtaDestroyDialogue (ref);    
+      TtaDestroyDialogue (ref);
       break;
- 
+
     case MenuGraph:
-      /* the user has selected an entry in the Graphics palette */
-      doc = TtaGetSelectedDocument ();
-      if (doc > 0)
-        {
-          // is it a compound document
-          profile = TtaGetDocumentProfile (doc);
-          if (profile == L_Strict || profile == L_Basic)
-            {
-              /* no selection. Nothing to do */
-              TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
-              return;
-            }
-          else if (DocumentTypes[doc] != docSVG && DocumentMeta[doc])
-            DocumentMeta[doc]->compound = TRUE;
-/*           /\* there is a selection *\/ */
-/*           if (val == 11) */
-/*             CreateGroup (); */
-/*           else */
-/*             CreateGraphicElement (val); */
-        }
       break;
- 
+
     default:
       break;
     }
@@ -2753,7 +2630,7 @@ void InitSVG ()
   mIcons[10] = TtaCreatePixmapLogo (text_xpm);
   mIcons[11] = TtaCreatePixmapLogo (group_xpm);
 #endif /* #if defined(_GTK) */
-   
+
   GraphDialogue = TtaSetCallback ((Proc)CallbackGraph, MAX_GRAPH);
 #endif /* _SVG */
 }
@@ -2818,7 +2695,7 @@ ThotBool SVGWillBeDeleted (NotifyElement * event)
   TtaFreeElemNamespaceDeclarations (event->document, event->element);
   return FALSE; /* let Thot perform normal operation */
 }
- 
+
 /*----------------------------------------------------------------------
   TspanCreated
   A tspan element has been created by the user hitting a Enter key
@@ -2943,7 +2820,7 @@ ThotBool DeleteAttrXlinkHref (NotifyAttribute *event)
   /* prevents Thot from deleting the xlink:href attribute */
   return TRUE;
 }
- 
+
 
 /*----------------------------------------------------------------------
   AttrAnimTimeChanged
@@ -3056,7 +2933,7 @@ void CreateSVG_Text (Document document, View view)
 {
   CreateGraphicElement (document, view, 10);
 }
- 
+
 /*----------------------------------------------------------------------
   CreateSVG_Group
   ----------------------------------------------------------------------*/
