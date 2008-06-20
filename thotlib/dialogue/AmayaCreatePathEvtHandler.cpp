@@ -320,7 +320,7 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x
     }
 
   glDisable(GL_LINE_STIPPLE);
-  N_points = 0;
+  N_points = 1;
   state = 0;
 }
 
@@ -328,7 +328,51 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x
  *----------------------------------------------------------------------*/
 AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
 {
-  /* TODO: clear the preview of the polyline and curve */
+  PtrTextBuffer       pB;
+  int i, step;
+  ThotBool first_point = TRUE;
+  
+  i = 1;
+  step = 0;
+  for(pB = m_Pbuffer; pB; pB = pB -> BuNext)
+    {
+      for(; i < pB->BuLength; i++)
+	{
+
+	  /* Convert the points of the polyline/curve */
+	MouseCoordinatesToSVG(m_document, m_pFrame,
+			      m_xmin, m_xmax, m_ymin, m_ymax, TRUE,
+			 &(pB->BuPoints[i].XCoord), &(pB->BuPoints[i].YCoord));
+
+	/* Clear the preview of the polyline/curve */
+	if(!first_point)
+	  {
+	    if(m_ShapeNumber == 5 || m_ShapeNumber == 6)
+	      {
+		DrawLine (pB->BuPoints[i-1].XCoord, pB->BuPoints[i-1].YCoord,
+			  pB->BuPoints[i].XCoord, pB->BuPoints[i].YCoord,
+			  FALSE);
+	      }
+	    else
+	      {
+		if(step % 3 == 0)
+	  DrawCubicBezier (pB->BuPoints[i-3].XCoord,
+			   pB->BuPoints[i-3].YCoord,
+			   pB->BuPoints[i-2].XCoord,
+			   pB->BuPoints[i-2].YCoord,
+			   pB->BuPoints[i-1].XCoord,
+			   pB->BuPoints[i-1].YCoord,   
+			   pB->BuPoints[i].XCoord,
+			   pB->BuPoints[i].YCoord, FALSE);
+	      }
+	  }
+	else
+	  first_point = FALSE;
+
+	step=(step+1)%3;
+	}
+      i = 0;
+    }
 
   if (m_pFrame)
     {
@@ -411,8 +455,7 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
     {
       /* Add a new point in the polyline/polygon */
       state = 1;
-      AddPointInPolyline (m_Pbuffer, N_points, lastX1, lastY1);
-      N_points++;
+      AddPointInPolyline (m_Pbuffer, N_points, currentX, currentY);N_points++;
     }
   else if(m_ShapeNumber == 7 || m_ShapeNumber == 8)
     {
@@ -430,7 +473,6 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
       else if(state == 4)
 	{
 	  /* Add a cubic Bezier Curve */
-	  AddPointInPolyline (m_Pbuffer, N_points, lastX3, lastY3);N_points++;
 	  AddPointInPolyline (m_Pbuffer, N_points, lastX2, lastY2);N_points++;
 	  AddPointInPolyline (m_Pbuffer, N_points, symX, symY);N_points++;
 	  AddPointInPolyline (m_Pbuffer, N_points, lastX1, lastY1);N_points++;

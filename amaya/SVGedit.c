@@ -2456,8 +2456,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
     TtaSelectElement (doc, selEl);
 
   /* adapt the size of the SVG root element if necessary */
-  /*CheckSVGRoot (doc, newEl);
-    SetGraphicDepths (doc, SvgRoot);*/
+  /* CheckSVGRoot (doc, newEl);
+     SetGraphicDepths (doc, SvgRoot);*/
 
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);

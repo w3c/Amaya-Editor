@@ -1433,8 +1433,7 @@ int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2, Document doc, 
 PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
 			    Document doc, int shape_number)
 {
-  int i;
-  PtrTextBuffer       pBuffer, pB;
+  PtrTextBuffer       pBuffer;
   AmayaFrame * p_frame;
   AmayaCreatePathEvtHandler * p_CreatePathEvtHandler;
   int FrameId;
@@ -1449,6 +1448,8 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
      accept value greater than width = BuPoints[0].XCoord and
      height = BuPoints[0].YCoord. For Bezier Curves, the control point can be
      outside the canvas, so take the greatest values. */
+  AddPointInPolyline (pBuffer, 0,0,0);
+
   pBuffer->BuPoints[0].XCoord = INT_MAX;
   pBuffer->BuPoints[0].YCoord = INT_MAX;
 
@@ -1461,17 +1462,6 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
     TtaHandleOneEvent (&ev);
   
   delete p_CreatePathEvtHandler;
-
-  /* Convert the points of the polyline */
-  for(pB = pBuffer; pB; pB = pB -> BuNext)
-    {
-      i = 1;
-      for(; i < pB->BuLength; i++)
-	MouseCoordinatesToSVG(doc, p_frame, xmin, xmax, ymin, ymax, TRUE,
-			 &(pB->BuPoints[i].XCoord), &(pB->BuPoints[i].YCoord));
-
-      i = 0;
-    }
 
   return pBuffer;
 }
