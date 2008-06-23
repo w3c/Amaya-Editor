@@ -3291,7 +3291,7 @@ void TransformSVG_SendToBack (Document document, View view)
 /*----------------------------------------------------------------------
   TransformSVG_RotateAntiClockWise
   ----------------------------------------------------------------------*/
-void TransformSVG_RotateAntiClockWise (Document document, View view)
+void TransformSVG_AntiClockWise (Document document, View view)
 {
   TransformGraphicElement (document, view, 33);
 }
@@ -3299,7 +3299,7 @@ void TransformSVG_RotateAntiClockWise (Document document, View view)
 /*----------------------------------------------------------------------
   TransformSVG_RotateClockWise
   ----------------------------------------------------------------------*/
-void TransformSVG_RotateClockWise (Document document, View view)
+void TransformSVG_ClockWise (Document document, View view)
 {
   TransformGraphicElement (document, view, 34);
 }

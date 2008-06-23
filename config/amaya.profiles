@@ -691,8 +691,8 @@ HelpSVG
 &TransformSVG_BringForward
 &TransformSVG_SendBackward
 &TransformSVG_SendToBack
-&TransformSVG_RotateAntiClockWise
-&TransformSVG_RotateClockWise
+&TransformSVG_AntiClockWise
+&TransformSVG_ClockWise
 &TransformSVG_AlignLeft
 &TransformSVG_AlignCenter
 &TransformSVG_AlignRight

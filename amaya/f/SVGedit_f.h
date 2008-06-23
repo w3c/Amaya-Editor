@@ -11,6 +11,12 @@ extern void CheckSVGRoot ( Document doc,
 extern void CreateGraphicElement ( Document doc,
                                    View view,
                                    int entry );
+extern void TransformGraphicElement ( Document doc,
+                                      View view,
+                                      int entry );
+extern void CreateGroup ( void );
+extern void Ungroup ( Document doc,
+                      Element el );
 extern void FreeSVG ( void );
 extern void InitSVG ( void );
 extern ThotBool SVGElementTypeInMenu ( NotifyElement *event );
@@ -74,6 +80,38 @@ extern void CreateSVG_Parallelepiped ( Document document,
                                        View view );
 extern void CreateSVG_Cylinder ( Document document,
                                  View view );
+extern void TransformSVG_Ungroup ( Document document,
+                                   View view );
+extern void TransformSVG_FlipVertically ( Document document,
+                                          View view );
+extern void TransformSVG_FlipHorizontally ( Document document,
+                                            View view );
+extern void TransformSVG_BringToFront ( Document document,
+                                        View view );
+extern void TransformSVG_BringForward ( Document document,
+                                        View view );
+extern void TransformSVG_SendBackward ( Document document,
+                                        View view );
+extern void TransformSVG_SendToBack ( Document document,
+                                      View view );
+extern void TransformSVG_AntiClockWise ( Document document,
+                                         View view );
+extern void TransformSVG_ClockWise ( Document document,
+                                     View view );
+extern void TransformSVG_AlignLeft ( Document document,
+                                     View view );
+extern void TransformSVG_AlignCenter ( Document document,
+                                       View view );
+extern void TransformSVG_AlignRight ( Document document,
+                                      View view );
+extern void TransformSVG_AlignTop ( Document document,
+                                    View view );
+extern void TransformSVG_AlignMiddle ( Document document,
+                                       View view );
+extern void TransformSVG_AlignBottom ( Document document,
+                                       View view );
+extern void TransformSVG_Rotate ( Document document,
+                                  View view );
 
 #else /* __STDC__ */
 
@@ -82,6 +120,12 @@ extern void CheckSVGRoot ( Document doc,
 extern void CreateGraphicElement ( Document doc,
                                      View view,
                                      int entry );
+extern void TransformGraphicElement ( Document doc,
+                                        View view,
+                                        int entry );
+extern void CreateGroup ( void );
+extern void Ungroup ( Document doc,
+                        Element el );
 extern void FreeSVG ( void );
 extern void InitSVG ( void );
 extern ThotBool SVGElementTypeInMenu ( NotifyElement *event );
@@ -145,6 +189,38 @@ extern void CreateSVG_Parallelepiped ( Document document,
                                          View view );
 extern void CreateSVG_Cylinder ( Document document,
                                    View view );
+extern void TransformSVG_Ungroup ( Document document,
+                                     View view );
+extern void TransformSVG_FlipVertically ( Document document,
+                                            View view );
+extern void TransformSVG_FlipHorizontally ( Document document,
+                                              View view );
+extern void TransformSVG_BringToFront ( Document document,
+                                          View view );
+extern void TransformSVG_BringForward ( Document document,
+                                          View view );
+extern void TransformSVG_SendBackward ( Document document,
+                                          View view );
+extern void TransformSVG_SendToBack ( Document document,
+                                        View view );
+extern void TransformSVG_AntiClockWise ( Document document,
+                                           View view );
+extern void TransformSVG_ClockWise ( Document document,
+                                       View view );
+extern void TransformSVG_AlignLeft ( Document document,
+                                       View view );
+extern void TransformSVG_AlignCenter ( Document document,
+                                         View view );
+extern void TransformSVG_AlignRight ( Document document,
+                                        View view );
+extern void TransformSVG_AlignTop ( Document document,
+                                      View view );
+extern void TransformSVG_AlignMiddle ( Document document,
+                                         View view );
+extern void TransformSVG_AlignBottom ( Document document,
+                                         View view );
+extern void TransformSVG_Rotate ( Document document,
+                                    View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
