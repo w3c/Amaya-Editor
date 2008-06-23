@@ -1455,19 +1455,13 @@ RULES
 	BEGIN
 	create SOT;
 	create 'font-face';
-	indent +11;
+	indent +5;
 	create attributes;
-	if empty
-		create CloseEmptyTagNL;
-        indent -11;
-	if not empty
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'font-face>\12' after;		
-		END;
+	create CloseTagNL;
+	indent -3;
+	indent -2 after;
+	create SCT after;
+	create 'font-face>\12' after;		
 	END;
 
    font_face_src:
