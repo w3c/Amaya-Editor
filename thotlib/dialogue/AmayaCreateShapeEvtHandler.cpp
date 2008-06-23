@@ -349,7 +349,7 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler(AmayaFrame * p_frame, int
 
     }
 
-  glDisable(GL_LINE_STIPPLE);
+  InitDrawing (5, 1, 0);
 }
 
 /*----------------------------------------------------------------------

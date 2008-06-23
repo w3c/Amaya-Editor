@@ -327,7 +327,7 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
       m_pFrame->GetCanvas()->CaptureMouse();
     }
 
-  glDisable(GL_LINE_STIPPLE);
+  InitDrawing (5, 1, 0);
   N_points = 1;
   state = 0;
 }
