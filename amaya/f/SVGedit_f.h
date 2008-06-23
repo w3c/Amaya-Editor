@@ -14,6 +14,12 @@ extern void CreateGraphicElement ( Document doc,
 extern void TransformGraphicElement ( Document doc,
                                       View view,
                                       int entry );
+extern void GetPositionAndSizeInParent ( Document doc,
+                                         Element el,
+                                         int *x,
+                                         int *y,
+                                         int *width,
+                                         int *height );
 extern void CreateGroup ( void );
 extern void Ungroup ( Document doc,
                       Element el );
@@ -123,6 +129,12 @@ extern void CreateGraphicElement ( Document doc,
 extern void TransformGraphicElement ( Document doc,
                                         View view,
                                         int entry );
+extern void GetPositionAndSizeInParent ( Document doc,
+                                           Element el,
+                                           int *x,
+                                           int *y,
+                                           int *width,
+                                           int *height );
 extern void CreateGroup ( void );
 extern void Ungroup ( Document doc,
                         Element el );

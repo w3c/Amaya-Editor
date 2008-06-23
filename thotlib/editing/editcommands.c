@@ -2088,9 +2088,6 @@ char *AskShapePoints (Document doc, int shape, Element svgRoot)
 	}
     }
 
-  /* Close the path */
-  if(shape == 8)strcat (attr_data, "z");
-
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
 

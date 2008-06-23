@@ -337,7 +337,7 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
 AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
 {
   PtrTextBuffer       pB;
-  int i, step;
+  int i, step, symX2, symY2;
   ThotBool first_point = TRUE;
   
   i = 1;
@@ -346,13 +346,7 @@ AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
     {
       for(; i < pB->BuLength; i++)
 	{
-
-	  /* Convert the points of the polyline/curve */
-	MouseCoordinatesToSVG(m_document, m_pFrame,
-			      m_xmin, m_xmax, m_ymin, m_ymax, TRUE,
-			 &(pB->BuPoints[i].XCoord), &(pB->BuPoints[i].YCoord));
-
-	/* Clear the preview of the polyline/curve */
+      	/* Clear the preview of the polyline/curve */
 	if(!first_point)
 	  {
 	    if(m_ShapeNumber == 5 || m_ShapeNumber == 6)
@@ -378,6 +372,46 @@ AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
 	  first_point = FALSE;
 
 	step=(step+1)%3;
+	}
+
+      i--;
+      if(pB -> BuNext == NULL && i >= 1)
+	{
+	  /* Get the two last points */
+	  lastX1=pB->BuPoints[i].XCoord;
+	  lastY1=pB->BuPoints[i].YCoord;
+	  lastX2=pB->BuPoints[i-1].XCoord;
+	  lastY2=pB->BuPoints[i-1].YCoord;
+	}
+
+      i = 0;
+    }
+
+  if(m_ShapeNumber == 8 && N_points > 2)
+    {
+      /* close the curve */
+      symX2=2*lastX1-lastX2;
+      symY2=2*lastY1-lastY2;
+      AddPointInPolyline (m_Pbuffer, N_points, symX2, symY2);N_points++;
+
+      symX2=2*m_Pbuffer->BuPoints[1].XCoord-m_Pbuffer->BuPoints[2].XCoord;
+      symY2=2*m_Pbuffer->BuPoints[1].YCoord-m_Pbuffer->BuPoints[2].YCoord;
+      AddPointInPolyline (m_Pbuffer, N_points, symX2, symY2);N_points++;
+      AddPointInPolyline (m_Pbuffer, N_points,
+			  m_Pbuffer->BuPoints[1].XCoord,
+			  m_Pbuffer->BuPoints[1].YCoord
+			  );N_points++;
+    }
+  
+  /* Convert the points of the polyline/curve */
+  i = 1;
+  for(pB = m_Pbuffer; pB; pB = pB -> BuNext)
+    {
+      for(; i < pB->BuLength; i++)
+	{
+	  MouseCoordinatesToSVG(m_document, m_pFrame,
+			m_xmin, m_xmax, m_ymin, m_ymax, TRUE,
+			&(pB->BuPoints[i].XCoord), &(pB->BuPoints[i].YCoord));
 	}
       i = 0;
     }

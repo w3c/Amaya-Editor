@@ -2484,6 +2484,8 @@ void TransformGraphicElement (Document doc, View view, int entry)
   else if(view == 2)isFormattedView = FALSE;
   else return;
 
+  return;
+
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
   if (first)
     {
@@ -2498,6 +2500,17 @@ void TransformGraphicElement (Document doc, View view, int entry)
   else
     /* no selection */
     return;
+
+  {
+    int x,y, width, height;
+
+    GetPositionAndSizeInParent(doc, first, &x, &y, &width, &height);
+    TtaDisplayMessage(INFO, "x=%d, y=%d, width=%d, height=%d",x ,y, width,
+		      height);
+
+  }
+
+  return;
 
   /* Check whether the selected element is a child of a SVG element */
   svgSchema = GetSVGSSchema (doc);
@@ -2583,6 +2596,42 @@ void TransformGraphicElement (Document doc, View view, int entry)
   TtaSetDisplayMode (doc, dispMode);
 
   TtaSetDocumentModified (doc);
+#endif /* _SVG */
+}
+
+/*----------------------------------------------------------------------
+  
+
+  ----------------------------------------------------------------------*/
+void GetPositionAndSizeInParent(Document doc, Element el, int *x, int *y,
+			   int *width, int *height)
+{ 
+#ifdef _SVG
+  Element	   parent;
+  AttributeType    attrType;
+  SSchema          svgSchema;
+  ElementType      elType;
+  
+  //  int minx, miny, maxx, maxy, x,y;
+
+
+  if(!el)return;
+  parent = TtaGetParent(el);
+
+  /* Check whether the parent is an SVG element */
+  svgSchema = GetSVGSSchema (doc);
+  attrType.AttrSSchema = svgSchema;
+
+  elType = TtaGetElementType (parent);
+  if(elType.ElSSchema != svgSchema)return;
+
+  elType = TtaGetElementType (el);
+
+  TtaGiveBoxSize (el, doc, 1, UnPixel, width, height);
+  TtaGiveBoxPosition (el, doc, 1, UnPixel, x, y);
+
+  
+
 #endif /* _SVG */
 }
 
