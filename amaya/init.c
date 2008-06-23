@@ -511,8 +511,11 @@ Document IsDocumentLoaded (const char *documentURL, const char *form_data)
     }
   
   if (found)
-    /* document is found */
-    return ((Document) i);
+    {
+      /* document is found */
+      UpdateEditorMenus ((Document) i);
+      return ((Document) i);
+    }
   else
     /* document is not found */ 
     return ((Document) None);

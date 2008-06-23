@@ -323,11 +323,18 @@ static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
     {
       // the template is now loaded
       SetTemplateDocument (ctx->t, newdoc);
-  
       ctx->isloaded = TRUE;
       ctx->newdoc   = newdoc;
     }
-      // restore the loading document
+  else if (!IsW3Path (urlName) && !TtaFileExist (urlName))
+    {
+      // there is an error
+       SetTemplateDocument (ctx->t, newdoc);
+       ctx->isloaded = TRUE;
+       ctx->newdoc   = newdoc;
+    }
+
+  // restore the loading document
   W3Loading = ctx->docLoading;
 }
 #endif /* TEMPLATES */
