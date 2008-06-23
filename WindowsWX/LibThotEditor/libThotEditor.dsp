@@ -155,7 +155,19 @@ SOURCE=..\..\thotlib\dialogue\AmayaConfirmCloseTab.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaCreatePathEvtHandler.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\AmayaCreateShapeEvtHandler.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\AmayaElementPanel.cpp
 # End Source File
 # Begin Source File
 
@@ -244,6 +256,14 @@ SOURCE=..\..\thotlib\dialogue\AmayaStatusBar.cpp
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\AmayaStylePanel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\AmayaSVGPanel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\AmayaTemplatePanel.cpp
 # End Source File
 # Begin Source File
 
