@@ -1437,11 +1437,9 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
   PtrTextBuffer       pBuffer;
   AmayaFrame * p_frame;
   AmayaCreatePathEvtHandler * p_CreatePathEvtHandler;
-  int FrameId;
   ThotEvent ev;
 
   p_frame = FrameTable[frame].WdFrame;
-  FrameId = p_frame->GetFrameId();
 
   /* Allocate a polyline buffer to simulate a polyline */ 
   GetTextBuffer (&pBuffer);

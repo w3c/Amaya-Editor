@@ -40,10 +40,11 @@
 
 static int m_mouse_x,m_mouse_y; 
 
-void DrawShape (int x1, int y1, int x2, int y2, int shape)
+static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
 { 
   int lx,ly,tmp;
   int x3, y3, x4, y4, x5, y5, x6, y6;
+  
   
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
@@ -281,6 +282,8 @@ void DrawShape (int x1, int y1, int x2, int y2, int shape)
 
   glLogicOp(GL_COPY);
   glDisable(GL_COLOR_LOGIC_OP);
+
+  GL_Swap (frameId);
 }
 
 
@@ -353,7 +356,10 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler(AmayaFrame * p_frame, int
  *----------------------------------------------------------------------*/
 AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
 {
-  if (m_pFrame)
+	/* Clear the Shape */
+    DrawShape (*m_x1, *m_y1, *m_x2, *m_y2, m_ShapeNumber, m_FrameId);
+	
+	if (m_pFrame)
     {
       /* detach this handler from the canvas (restore default behaviour) */
       AmayaCanvas * p_canvas = m_pFrame->GetCanvas();
@@ -364,9 +370,7 @@ AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
       m_pFrame->GetCanvas()->ReleaseMouse();
     }
 
-  /* Clear the Shape */
-  DrawShape (*m_x1, *m_y1, *m_x2, *m_y2, m_ShapeNumber);
-
+  
 }
 
 /*----------------------------------------------------------------------
@@ -451,7 +455,7 @@ void AmayaCreateShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
   if(*m_NbPoints > 0)
-    DrawShape (*m_x1, *m_y1, m_mouse_x, m_mouse_y, m_ShapeNumber);
+    DrawShape (*m_x1, *m_y1, m_mouse_x, m_mouse_y, m_ShapeNumber, m_FrameId);
 
   m_mouse_x = event.GetX();
   m_mouse_y = event.GetY();
@@ -460,9 +464,10 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 			FALSE, &m_mouse_x, &m_mouse_y);
 
   if(*m_NbPoints > 0)
-    DrawShape (*m_x1, *m_y1, m_mouse_x, m_mouse_y, m_ShapeNumber);
+    DrawShape (*m_x1, *m_y1, m_mouse_x, m_mouse_y, m_ShapeNumber, m_FrameId);
 
-  m_pFrame->GetCanvas()->Refresh();
+	
+/*m_pFrame->GetCanvas()->Refresh();*/
 }
 
 /*----------------------------------------------------------------------
