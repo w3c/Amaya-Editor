@@ -1654,7 +1654,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
             }
         }
 
-      if (pRefAb == pAb->AbEnclosing)
+      if (pRefAb == pAb->AbEnclosing && pAb->AbVertEnclosing)
         {
           GetExtraMargins (pRefBox, frame, FALSE, &t, &b, &l, &r);
           t += pRefBox->BxTMargin + pRefBox->BxTBorder + pRefBox->BxTPadding;

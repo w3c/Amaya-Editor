@@ -212,7 +212,7 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
 static void HandleNotInline (PtrBox pBlock, PtrLine pLine, int frame)
 {
   PtrBox              pBox, pBoxInLine, refBox;
-  PtrAbstractBox      pRefAb;
+  PtrAbstractBox      pRefAb, pNext;
   int                 dx, dy;
 
   if (pLine->LiFirstPiece)
@@ -234,12 +234,7 @@ static void HandleNotInline (PtrBox pBlock, PtrLine pLine, int frame)
             pBox = pBoxInLine;
           if (pBox->BxAbstractBox->AbFloat == 'N' && !ExtraFlow (pBox, frame))
             {
-              if (!pBox->BxAbstractBox->AbHorizEnclosing)
-                {
-                  dy = pBlock->BxYOrg + pLine->LiYOrg + pLine->LiHorizRef - pBox->BxHorizRef - pBox->BxYOrg;
-                  YMove (pBox, NULL, dy, frame);
-                }
-              else if (pBox->BxAbstractBox->AbNotInLine)
+              if (pBox->BxAbstractBox->AbNotInLine)
                 {
                   // look at the position of the referred box
                   pRefAb = pBox->BxAbstractBox->AbHorizPos.PosAbRef;
@@ -251,9 +246,17 @@ static void HandleNotInline (PtrBox pBlock, PtrLine pLine, int frame)
                           pRefAb->AbBox == pBox))
                     {
                       if (pRefAb->AbBox->BxType == BoGhost)
-                        pRefAb = pRefAb->AbFirstEnclosed;
+                        pNext = pRefAb->AbFirstEnclosed;
                       else
-                        pRefAb = pRefAb->AbNext;
+                        pNext = pRefAb->AbNext;
+                      if (pNext)
+                        {
+                          if (!TypeHasException (ExcIsBreak,
+                                                 pNext->AbElement->ElTypeNumber,
+                                                 pNext->AbElement->ElStructSchema))
+                            pRefAb = pNext;
+                        }
+                      // look for the bottom position
                       if (pBox->BxAbstractBox->AbVertPos.PosRefEdge == Bottom)
                         {
                           while (pRefAb && pRefAb->AbNext)
@@ -273,10 +276,10 @@ static void HandleNotInline (PtrBox pBlock, PtrLine pLine, int frame)
                                 refBox = refBox->BxNexChild;
                             }
                         }
-                      dx = refBox->BxXOrg - pBox->BxXOrg;
-                      dy = refBox->BxYOrg - pBox->BxYOrg;
+                      dx = refBox->BxXOrg + pBox->BxAbstractBox->AbHorizPos.PosDistance - pBox->BxXOrg;
+                      dy = refBox->BxYOrg + pBox->BxAbstractBox->AbVertPos.PosDistance - pBox->BxYOrg;
                       if (pBox->BxAbstractBox->AbVertPos.PosRefEdge == Bottom)
-                        dy += refBox->BxHeight - pBox->BxHeight;
+                        dy = dy + refBox->BxHeight;
                     }
                   else
                     {
@@ -284,6 +287,11 @@ static void HandleNotInline (PtrBox pBlock, PtrLine pLine, int frame)
                       dy = pBlock->BxYOrg + pLine->LiYOrg - pBox->BxYOrg;
                     }
                   XMove (pBox, NULL, dx, frame);
+                  YMove (pBox, NULL, dy, frame);
+                }
+              else if (!pBox->BxAbstractBox->AbHorizEnclosing)
+                {
+                  dy = pBlock->BxYOrg + pLine->LiYOrg + pLine->LiHorizRef - pBox->BxHorizRef - pBox->BxYOrg;
                   YMove (pBox, NULL, dy, frame);
                 }
             }

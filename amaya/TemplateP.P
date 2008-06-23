@@ -210,8 +210,8 @@ BOXES
  OptionButton: BEGIN
 	Content: Picture 'xtigeroption.png';
   HorizRef: * . Bottom;
-	HorizPos: Left = Creator . Left;
-	VertPos: Top = Creator . Top - 2 px;
+	HorizPos: Left = Creator . Left - 6 px;
+	VertPos: Top = Creator . Top - 6 px;
   VertOverflow: Yes;
   HorizOverflow: Yes;
 	MarginTop: 0 px;
@@ -228,7 +228,7 @@ BOXES
  BagButton: BEGIN
 	Content: Picture 'add.png';
 	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top - 8 px;
+	VertPos: Top = Enclosing . Top - 2 px;
   VertOverflow: Yes;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
@@ -243,7 +243,7 @@ BOXES
  BagButton: BEGIN
 	Content: Picture 'xtigerbag.png';
 	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top - 12 px;
+	VertPos: Top = Enclosing . Top - 2 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -276,7 +276,7 @@ BOXES
  RepeatButton: BEGIN
 	Content: Picture 'add.png';
 	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top - 10 px;
+	VertPos: Top = Enclosing . Top - 2 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -290,7 +290,7 @@ BOXES
  RepeatButton: BEGIN
 	Content: Picture 'xtigerrepeat.png';
 	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top - 20 px;
+	VertPos: Top = Enclosing . Top - 2 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -626,8 +626,8 @@ RULES
 		BorderLeftColor: 		Blue;
 		BorderBottomColor: 	Blue;
 		BorderRightColor: 	Blue;
+		PaddingLeft: 				5 px;
 		PaddingRight: 			2 px;
-		PaddingLeft: 				3 px;
 		PaddingTop: 				2 px;
 		PaddingBottom: 			2 px;
   	IN Structure_view BEGIN

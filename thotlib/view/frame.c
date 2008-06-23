@@ -621,7 +621,10 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
             pNext = pNext->AbNext;
           isLast = (last &&
                     (pNext == NULL || pNext->AbNotInLine || !pNext->AbHorizEnclosing));
-          if (pChild->AbBox && !pChild->AbPresentationBox)
+          if (pChild->AbBox && !pChild->AbPresentationBox &&
+              !TypeHasException (ExcIsBreak,
+                                 pChild->AbElement->ElTypeNumber,
+                                 pChild->AbElement->ElStructSchema))
             {
               /* draw each child boxes */
               DrawFilledBox (pChild->AbBox, pFrom, frame, pFlow,
