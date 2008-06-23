@@ -234,11 +234,14 @@ static void HandleNotInline (PtrBox pBlock, PtrLine pLine, int frame)
             pBox = pBoxInLine;
           if (pBox->BxAbstractBox->AbFloat == 'N' && !ExtraFlow (pBox, frame))
             {
-              if (pBox->BxAbstractBox->AbNotInLine)
+              pRefAb = pBox->BxAbstractBox->AbHorizPos.PosAbRef;
+              if (pBox->BxAbstractBox->AbNotInLine &&
+                  // don't apply that rule in the refered element is the root
+                  pRefAb && pRefAb->AbEnclosing)
                 {
                   // look at the position of the referred box
-                  pRefAb = pBox->BxAbstractBox->AbHorizPos.PosAbRef;
-                  while (pRefAb && pRefAb->AbBox &&
+                  pNext = pRefAb;
+                  while (pRefAb && pRefAb->AbBox && pNext &&
                          (pRefAb->AbBox->BxType == BoGhost ||
                           pRefAb->AbNotInLine ||
                           pRefAb->AbDead ||
@@ -249,13 +252,14 @@ static void HandleNotInline (PtrBox pBlock, PtrLine pLine, int frame)
                         pNext = pRefAb->AbFirstEnclosed;
                       else
                         pNext = pRefAb->AbNext;
-                      if (pNext)
-                        {
-                          if (!TypeHasException (ExcIsBreak,
-                                                 pNext->AbElement->ElTypeNumber,
-                                                 pNext->AbElement->ElStructSchema))
-                            pRefAb = pNext;
-                        }
+                      if (pNext &&
+                          !TypeHasException (ExcIsBreak,
+                                             pNext->AbElement->ElTypeNumber,
+                                             pNext->AbElement->ElStructSchema))
+                        pRefAb = pNext;
+                      else 
+                        pNext = NULL;
+
                       // look for the bottom position
                       if (pBox->BxAbstractBox->AbVertPos.PosRefEdge == Bottom)
                         {
