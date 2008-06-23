@@ -210,9 +210,10 @@ BOXES
  OptionButton: BEGIN
 	Content: Picture 'xtigeroption.png';
   HorizRef: * . Bottom;
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top - 8 px;
+	HorizPos: Left = Creator . Left;
+	VertPos: Top = Creator . Top - 2 px;
   VertOverflow: Yes;
+  HorizOverflow: Yes;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;

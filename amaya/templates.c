@@ -804,8 +804,10 @@ ThotBool BagButtonClicked (NotifyElement *event)
   ThotBool        oldStructureChecking;
   DisplayMode     dispMode;
 
-  if (!TtaGetDocumentAccessMode(doc))
+  if (!TtaGetDocumentAccessMode (doc))
     return TRUE;
+  if (!IsTemplateInstanceDocument (doc))
+    return FALSE; /* let Thot perform normal operation */
 
   TtaGetActiveView (&doc, &view);
   if (view != 1)
@@ -929,13 +931,14 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
 
   if (!TtaGetDocumentAccessMode(doc))
     return TRUE;
+  if (!IsTemplateInstanceDocument (doc))
+    return FALSE; /* let Thot perform normal operation */
 
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
 
   TtaCancelSelection(doc);
-
   t = GetXTigerDocTemplate(doc);
   elType = TtaGetElementType(el);
   while (elType.ElTypeNum != Template_EL_repeat)
@@ -1036,15 +1039,16 @@ ThotBool UseButtonClicked (NotifyElement *event)
   char*           listtypes = NULL;
   char*           result = NULL;
 
-  if (!TtaGetDocumentAccessMode(doc))
+  if (!TtaGetDocumentAccessMode (doc))
     return TRUE;
+  if (!IsTemplateInstanceDocument (doc))
+    return FALSE; /* let Thot perform normal operation */
     
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
 
   TtaCancelSelection(doc);
-  
   t = GetXTigerDocTemplate(doc);
   if (!t)
     return FALSE; /* let Thot perform normal operation */
@@ -1129,8 +1133,10 @@ ThotBool UseSimpleButtonClicked (NotifyElement *event)
   AttributeType   attrType;
   Attribute       att;
 
-  if (!TtaGetDocumentAccessMode(event->document))
+  if (!TtaGetDocumentAccessMode (event->document))
     return TRUE;
+  if (!IsTemplateInstanceDocument (event->document))
+    return FALSE; /* let Thot perform normal operation */
 
   elType = TtaGetElementType (event->element);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -1155,33 +1161,31 @@ ThotBool OptionButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
   Element         useEl, contentEl, next;
-  ElementType     useType, optType;
+  ElementType     useType;
   Document        doc;
   XTigerTemplate  t;
   View            view;
 
-  if (!TtaGetDocumentAccessMode(event->document))
+  if (!TtaGetDocumentAccessMode (event->document))
     return TRUE;
+  if (!IsTemplateInstanceDocument (event->document))
+    return FALSE; /* let Thot perform normal operation */
 
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
 
   doc = event->document;
-  useEl = TtaGetFirstChild (event->element);
+  useEl = event->element;
   if (!useEl)
     return FALSE; /* let Thot perform normal operation */
   useType = TtaGetElementType (useEl);
-  optType = TtaGetElementType (event->element);
-  if ((useType.ElTypeNum != Template_EL_useEl &&
-      useType.ElTypeNum != Template_EL_useSimple) ||
-      useType.ElSSchema != optType.ElSSchema)
+  if (useType.ElTypeNum != Template_EL_useEl &&
+      useType.ElTypeNum != Template_EL_useSimple)
     return FALSE;
 
   TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
-
   TtaCancelSelection (doc);
-
   contentEl = TtaGetFirstChild (useEl);
   if (!contentEl)
     /* the "use" element is empty. Instantiate it */
