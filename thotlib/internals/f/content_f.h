@@ -91,6 +91,10 @@ extern void *TtaNewTransformMatrix ( float a,
                                      float d,
                                      float e,
                                      float f );
+extern void *TtaSimplifyTransformMatrix ( void *transform );
+extern void TtaApplyTransform ( Element el,
+                                float *x,
+                                float *y );
 
 #else /* __STDC__ */
 
@@ -179,6 +183,10 @@ extern void *TtaNewTransformMatrix ( float a,
                                        float d,
                                        float e,
                                        float f );
+extern void *TtaSimplifyTransformMatrix ( void *transform );
+extern void TtaApplyTransform ( Element el,
+                                  float *x,
+                                  float *y );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

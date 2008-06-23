@@ -16,10 +16,10 @@ extern void TransformGraphicElement ( Document doc,
                                       int entry );
 extern void GetPositionAndSizeInParent ( Document doc,
                                          Element el,
-                                         int *x,
-                                         int *y,
-                                         int *width,
-                                         int *height );
+                                         float *X,
+                                         float *Y,
+                                         float *width,
+                                         float *height );
 extern void CreateGroup ( void );
 extern void Ungroup ( Document doc,
                       Element el );
@@ -131,10 +131,10 @@ extern void TransformGraphicElement ( Document doc,
                                         int entry );
 extern void GetPositionAndSizeInParent ( Document doc,
                                            Element el,
-                                           int *x,
-                                           int *y,
-                                           int *width,
-                                           int *height );
+                                           float *X,
+                                           float *Y,
+                                           float *width,
+                                           float *height );
 extern void CreateGroup ( void );
 extern void Ungroup ( Document doc,
                         Element el );

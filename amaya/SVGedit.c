@@ -2468,7 +2468,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 void TransformGraphicElement (Document doc, View view, int entry)
 {
 #ifdef _SVG
-  Element	   first, parent, svgRoot, selEl;
+  Element	   first, parent, svgRoot;
   DisplayMode      dispMode;
   AttributeType    attrType;
   SSchema          svgSchema;
@@ -2483,8 +2483,6 @@ void TransformGraphicElement (Document doc, View view, int entry)
   if (view == 1) isFormattedView = TRUE;
   else if(view == 2)isFormattedView = FALSE;
   else return;
-
-  return;
 
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
   if (first)
@@ -2501,17 +2499,6 @@ void TransformGraphicElement (Document doc, View view, int entry)
     /* no selection */
     return;
 
-  {
-    int x,y, width, height;
-
-    GetPositionAndSizeInParent(doc, first, &x, &y, &width, &height);
-    TtaDisplayMessage(INFO, "x=%d, y=%d, width=%d, height=%d",x ,y, width,
-		      height);
-
-  }
-
-  return;
-
   /* Check whether the selected element is a child of a SVG element */
   svgSchema = GetSVGSSchema (doc);
   attrType.AttrSSchema = svgSchema;
@@ -2521,7 +2508,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
   elType.ElSSchema = svgSchema;
   svgRoot = TtaGetTypedAncestor (first, elType);
 
-  if (svgRoot == NULL || svgRoot == first )
+  if (svgRoot == NULL)
     return;
 
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
@@ -2534,12 +2521,13 @@ void TransformGraphicElement (Document doc, View view, int entry)
   switch(entry)
     {
     case 26:	/* Ungroup */
-      selEl = first;
+      /*selEl = first;
       while(selEl)
 	{
-	  Ungroup (doc, selEl);
+      	  Ungroup (doc, selEl);
 	  TtaGiveNextSelectedElement (doc, &selEl, &c1, &i);
-	}
+	  }*/
+        Ungroup (doc, first);
       break;
       
     case 27:   /* Flip Vertically */
@@ -2603,20 +2591,22 @@ void TransformGraphicElement (Document doc, View view, int entry)
   
 
   ----------------------------------------------------------------------*/
-void GetPositionAndSizeInParent(Document doc, Element el, int *x, int *y,
-			   int *width, int *height)
+extern void GetPositionAndSizeInParent(Document doc, Element el, float *X,
+				       float *Y, float *width, float *height)
 { 
 #ifdef _SVG
   Element	   parent;
   AttributeType    attrType;
   SSchema          svgSchema;
   ElementType      elType;
-  
-  //  int minx, miny, maxx, maxy, x,y;
-
+  int dummy1,dummy2;
+  float x[4], y[4], xmin, ymin, xmax, ymax;
+  unsigned short i;
+  ThotBool IsFirst;
 
   if(!el)return;
   parent = TtaGetParent(el);
+
 
   /* Check whether the parent is an SVG element */
   svgSchema = GetSVGSSchema (doc);
@@ -2627,10 +2617,55 @@ void GetPositionAndSizeInParent(Document doc, Element el, int *x, int *y,
 
   elType = TtaGetElementType (el);
 
-  TtaGiveBoxSize (el, doc, 1, UnPixel, width, height);
-  TtaGiveBoxPosition (el, doc, 1, UnPixel, x, y);
+  /* Get the box of the size
 
-  
+     0--------1
+     |        |
+     |        |
+     2--------3
+  */
+
+  /* TODO: these two functions do not work for path elements... */
+
+  TtaGiveBoxPosition (el, doc, 1, UnPixel, &dummy1, &dummy2);
+  x[0] = (float) dummy1;
+  y[0] = (float) dummy2;
+  TtaGiveBoxSize (el, doc, 1, UnPixel, &dummy1, &dummy2);
+  x[3] = x[0] + dummy1;
+  y[3] = y[0] + dummy2;
+
+  x[1] = x[3];
+  y[1] = y[0];
+  x[2] = x[0];
+  y[2] = y[3];
+
+  /* Apply the transformation to the box */
+  IsFirst = TRUE;
+  for(i = 0; i < 4; i++)
+    {
+      TtaApplyTransform(el, &x[i], &y[i]);
+      if(i == 0)
+	{
+	  xmin = x[i];
+	  xmax = x[i];
+	  ymin = y[i];
+	  ymax = y[i];
+	}
+      else
+	{
+	  if(x[i] < xmin)xmin = x[i];
+	  else if(x[i] > xmax)xmax = x[i];
+
+	  if(y[i] < ymin)ymin = y[i];
+	  else if(y[i] > ymax)ymax = y[i];
+	}
+    }
+
+
+  *X = xmin; 
+  *Y = ymin;
+  *width = xmax - xmin;
+  *height = ymax - ymin;
 
 #endif /* _SVG */
 }
@@ -2646,7 +2681,7 @@ void CreateGroup ()
   Element	el, prevSel, prevChild, group, parent;
   ElementType	elType;
   AttributeType	attrType;
-  int		c1, i, minX, minY;
+  int		c1, i;
   DisplayMode	dispMode;
   ThotBool	position;
   SSchema       docSchema, svgSchema;
@@ -2701,7 +2736,6 @@ void CreateGroup ()
 	  TtaRegisterElementCreate (group, doc);
 
 	  attrType.AttrSSchema = elType.ElSSchema;
-	  minX = minY = 32000;
 	  position = FALSE;
 	  while (el != NULL)
 	    {
@@ -2737,6 +2771,9 @@ void CreateGroup ()
   TtaCloseUndoSequence (doc);
   /* ask Thot to display changes made in the document */
   TtaSetDisplayMode (doc, dispMode);
+
+
+  TtaSetDocumentModified (doc);
 #endif /* _SVG */
 }
 
@@ -2749,7 +2786,8 @@ void Ungroup (Document doc, Element el)
 #ifdef _SVG
   ElementType   elType;
   SSchema       svgSchema;  
-  Element child, sibling;
+  Element child, nextchild, sibling;
+
 
   svgSchema = GetSVGSSchema (doc);
   elType = TtaGetElementType (el);
@@ -2759,7 +2797,7 @@ void Ungroup (Document doc, Element el)
     /* The element is not a g: nothing to do */
     return;
 
-  /* TODO:
+   /* TODO:
      - copy the properties of the g element to each of its children
    */
 
@@ -2767,17 +2805,24 @@ void Ungroup (Document doc, Element el)
   sibling = el;
   while(child)
     {
+      nextchild = child;
+      TtaNextSibling(&nextchild);
+
       elType = TtaGetElementType(child);
       if(!(elType.ElTypeNum == SVG_EL_title ||
 	   elType.ElTypeNum == SVG_EL_desc))
 	{
-	  TtaRegisterElementDelete (child, doc);
 	  TtaRemoveTree(child, doc);
 	  TtaInsertSibling(child, sibling, FALSE, doc);
-	  TtaRegisterElementCreate (child, doc);
 	  sibling = child;
 	}
+      child = nextchild;
     }
+
+  /*  sibling = el;
+  TtaNextSibling(&sibling);
+  TtaSelectElement(doc, sibling);*/
+  TtaDeleteTree(el, doc);
 #endif /* _SVG */
 }
 

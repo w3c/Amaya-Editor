@@ -1476,3 +1476,136 @@ void *TtaNewTransformMatrix (float a, float b, float c,
   pPa->FMatrix = f;
   return (pPa);
 }
+
+extern void *TtaSimplifyTransformMatrix(void *transform)
+{
+  PtrTransform result, pPa;
+  float T, cosT,sinT, tanT, a, b, c, d, e, f;
+
+  result = ((PtrTransform)(TtaNewTransformMatrix(1, 0, 0, 1, 0, 0)));
+  pPa = (PtrTransform)(transform);
+
+  while (pPa)
+    {      
+
+      switch (pPa->TransType)
+        {
+        case PtElTranslate:
+        case PtElAnimTranslate:
+	  result->EMatrix += result->AMatrix*pPa->XScale +
+	    result->CMatrix*pPa->YScale;
+	  result->FMatrix += result->BMatrix*pPa->XScale +
+	    result->DMatrix*pPa->YScale;
+          break;
+
+        case PtElScale:
+	  result->AMatrix *= pPa->XScale;
+	  result->CMatrix *= pPa->YScale;
+	  result->BMatrix *= pPa->XScale;
+	  result->DMatrix *= pPa->YScale;
+          break;
+
+        case PtElViewBox:
+          break;
+
+        case PtElRotate:
+        case PtElAnimRotate:
+	  /* tranlate(XRotate,YRotate) */
+	  result->EMatrix += result->AMatrix*pPa->XRotate +
+	    result->CMatrix*pPa->YRotate;
+	  result->FMatrix += result->BMatrix*pPa->XRotate +
+	    result->DMatrix*pPa->YRotate;
+
+	  /* rotate(TrAngle,0,0) */
+	  T = pPa->TrAngle * M_PI / 180;
+	  cosT = cos(T);
+	  sinT = sin(T);
+
+	  a = result->AMatrix;
+	  b = result->BMatrix;
+	  c = result->CMatrix;
+	  d = result->DMatrix;
+	  e = result->EMatrix;
+	  f = result->FMatrix;
+
+	  result->AMatrix = a*cosT + c*sinT;
+	  result->CMatrix = -a*sinT + c*cosT;
+	  result->BMatrix = b*cosT + d*sinT;
+	  result->DMatrix = -b*sinT + d*cosT;
+
+	  /* tranlate(-XRotate,-YRotate) */
+	  result->EMatrix -= result->AMatrix*pPa->XRotate +
+	    result->CMatrix*pPa->YRotate;
+	  result->FMatrix -= result->BMatrix*pPa->XRotate +
+	    result->DMatrix*pPa->YRotate;
+          break;  
+
+        case PtElMatrix:
+	  a = result->AMatrix;
+	  b = result->BMatrix;
+	  c = result->CMatrix;
+	  d = result->DMatrix;
+	  e = result->EMatrix;
+	  f = result->FMatrix;
+
+	  result->AMatrix = a*pPa->AMatrix + c*pPa->BMatrix;
+	  result->CMatrix = a*pPa->CMatrix + c*pPa->DMatrix;
+	  result->BMatrix = b*pPa->AMatrix + d*pPa->BMatrix;
+	  result->DMatrix = b*pPa->CMatrix + d*pPa->DMatrix;
+
+	  result->EMatrix += a*pPa->EMatrix + c*pPa->FMatrix;
+	  result->FMatrix += b*pPa->EMatrix + d*pPa->FMatrix;
+
+	  result->AMatrix = a;
+	  result->BMatrix = b;
+	  result->CMatrix = c;
+	  result->DMatrix = d;
+	  result->EMatrix = e;
+	  result->FMatrix = f;
+	  
+          break;	  
+
+        case PtElSkewX:
+	  T = pPa->TrAngle * M_PI / 180;
+	  tanT = tan(T);
+
+	  result->CMatrix += tanT*result->AMatrix;
+	  result->DMatrix += tanT*result->BMatrix;
+	  break;
+
+        case PtElSkewY:
+	  T = pPa->TrAngle * M_PI / 180;
+	  tanT = tan(T);
+
+	  result->AMatrix += tanT*result->CMatrix;
+	  result->BMatrix += tanT*result->DMatrix;
+          break;	  
+
+        default:
+          break;
+        }	       
+ 
+      pPa = pPa->Next;
+   }
+
+
+
+  return result;
+}
+
+extern void TtaApplyTransform(Element el, float *x, float *y)
+{
+  float newx,newy;
+  PtrTransform transform = (PtrTransform)
+    TtaSimplifyTransformMatrix(((PtrElement) el)->ElTransform);
+
+  newx = transform->AMatrix * *x + transform->CMatrix * *y + transform->EMatrix;
+  newy = transform->BMatrix * *x + transform->DMatrix * *y + transform->FMatrix;
+
+  *x = newx;
+  *y = newy;
+
+  TtaFreeTransform (transform);
+}
+
+
