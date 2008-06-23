@@ -1925,6 +1925,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
+      InitDrawing (style, thick, fg);
       for (i = 0; i < 4; i++)
         GL_DrawArc (xarc[i].x, xarc[i].y, 
                     xarc[i].width, xarc[i].height, 
