@@ -684,6 +684,22 @@ HelpSVG
 &CreateSVG_Cube
 &CreateSVG_Parallelepiped
 &CreateSVG_Cylinder
+&TransformSVG_Ungroup
+&TransformSVG_FlipVertically
+&TransformSVG_FlipHorizontally
+&TransformSVG_BringToFront
+&TransformSVG_BringForward
+&TransformSVG_SendBackward
+&TransformSVG_SendToBack
+&TransformSVG_RotateAntiClockWise
+&TransformSVG_RotateClockWise
+&TransformSVG_AlignLeft
+&TransformSVG_AlignCenter
+&TransformSVG_AlignRight
+&TransformSVG_AlignTop
+&TransformSVG_AlignMiddle
+&TransformSVG_AlignBottom
+&TransformSVG_Rotate
 
 ########### Javascript/DOM
 [javascript_dom]

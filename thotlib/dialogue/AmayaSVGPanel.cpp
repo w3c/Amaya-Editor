@@ -97,6 +97,9 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   m_tbar3 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_3", AmayaBaseToolBar);
   m_tbar4 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_4", AmayaBaseToolBar);
   m_tbar5 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_5", AmayaBaseToolBar);
+  m_tbar6 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_6", AmayaBaseToolBar);
+  m_tbar7 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_7", AmayaBaseToolBar);
+  m_tbar8 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_8", AmayaBaseToolBar);
 
   m_tbar1->Add(AmayaSVGToolDef);
   m_tbar1->Realize();
@@ -108,6 +111,12 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   m_tbar4->Realize();
   m_tbar5->Add(AmayaSVGToolDef);
   m_tbar5->Realize();
+  m_tbar6->Add(AmayaSVGToolDef);
+  m_tbar6->Realize();
+  m_tbar7->Add(AmayaSVGToolDef);
+  m_tbar7->Realize();
+  m_tbar8->Add(AmayaSVGToolDef);
+  m_tbar8->Realize();
   Fit();
   SetAutoLayout(true);
   

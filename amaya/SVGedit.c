@@ -1568,12 +1568,12 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
 void CreateGraphicElement (Document doc, View view, int entry)
 {
 #ifdef _SVG
-  Element	    first, SvgRoot, newEl, sibling, selEl;
+  Element	    first, svgRoot, newEl, sibling, selEl;
   Element           child, parent, elem, switch_, foreignObj, altText, leaf;
   ElementType       elType, selType, newType, childType;
   AttributeType     attrType, attrTypeHTML;
   Attribute         attr, inheritedAttr;
-  SSchema	    docSchema, SvgSchema;
+  SSchema	    docSchema, svgSchema;
   DisplayMode       dispMode;
   Language          lang;
   int		    c1, i, dir, svgDir;
@@ -1632,18 +1632,18 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   /* Are we in a drawing? */
   docSchema = TtaGetDocumentSSchema (doc);
-  SvgSchema = GetSVGSSchema (doc);
-  attrType.AttrSSchema = SvgSchema;
+  svgSchema = GetSVGSSchema (doc);
+  attrType.AttrSSchema = svgSchema;
   elType = TtaGetElementType (selEl);
   if (elType.ElTypeNum == SVG_EL_SVG &&
-      elType.ElSSchema == SvgSchema)
-    SvgRoot = selEl;
+      elType.ElSSchema == svgSchema)
+    svgRoot = selEl;
   else
     {
       elType.ElTypeNum = SVG_EL_SVG;
-      elType.ElSSchema = SvgSchema;
-      SvgRoot = TtaGetTypedAncestor (first, elType);
-      if (SvgRoot == NULL)
+      elType.ElSSchema = svgSchema;
+      svgRoot = TtaGetTypedAncestor (first, elType);
+      if (svgRoot == NULL)
         /* the current selection is not in a SVG element, create one */
         {
           selType = TtaGetElementType (first);
@@ -1659,7 +1659,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
                   return;
                 }
             }
-          SvgSchema = TtaNewNature (doc, docSchema, NULL, "SVG", "SVGP");
+          svgSchema = TtaNewNature (doc, docSchema, NULL, "SVG", "SVGP");
           if (TtaIsSelectionEmpty ())
             {
               /* try to create the SVG here */
@@ -1667,7 +1667,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
               TtaGiveFirstSelectedElement (doc, &elem, &c1, &i);
               selType = TtaGetElementType (elem);
               if (selType.ElTypeNum != elType.ElTypeNum)
-                SvgRoot = TtaGetTypedAncestor (elem, elType);
+                svgRoot = TtaGetTypedAncestor (elem, elType);
             }
           else
             {
@@ -1683,31 +1683,31 @@ void CreateGraphicElement (Document doc, View view, int entry)
                      selType.ElTypeNum != HTML_EL_Division );
 
               /* create and insert a SVG element here */
-              SvgRoot = TtaNewElement (doc, elType);
-              TtaInsertSibling (SvgRoot, first, FALSE, doc);
-              first = SvgRoot;
+              svgRoot = TtaNewElement (doc, elType);
+              TtaInsertSibling (svgRoot, first, FALSE, doc);
+              first = svgRoot;
               newGraph = TRUE;
             }
-          if (SvgRoot)
+          if (svgRoot)
             /* a root SVG element was created. Create the required attributes*/
             {
               attrType.AttrTypeNum = SVG_ATTR_version;
               attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (SvgRoot, attr, doc);
-              TtaSetAttributeText (attr, SVG_VERSION, SvgRoot, doc);
+              TtaAttachAttribute (svgRoot, attr, doc);
+              TtaSetAttributeText (attr, SVG_VERSION, svgRoot, doc);
 
 	      attrType.AttrTypeNum = SVG_ATTR_width_;
               attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (SvgRoot, attr, doc);
-	      TtaSetAttributeText (attr, "500", SvgRoot, doc);
+	      TtaAttachAttribute (svgRoot, attr, doc);
+	      TtaSetAttributeText (attr, "500", svgRoot, doc);
 
-	      ParseWidthHeightAttribute (attr, SvgRoot, doc, FALSE);
+	      ParseWidthHeightAttribute (attr, svgRoot, doc, FALSE);
 
 	      attrType.AttrTypeNum = SVG_ATTR_height_;
               attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (SvgRoot, attr, doc);
-	      TtaSetAttributeText (attr, "200", SvgRoot, doc);
-	      ParseWidthHeightAttribute (attr, SvgRoot, doc, FALSE);
+	      TtaAttachAttribute (svgRoot, attr, doc);
+	      TtaSetAttributeText (attr, "200", svgRoot, doc);
+	      ParseWidthHeightAttribute (attr, svgRoot, doc, FALSE);
             }
         }
     }
@@ -1715,7 +1715,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   /* look for the element (sibling) in front of which the new element will be
      created */
   sibling = NULL;
-  if (first == SvgRoot)
+  if (first == svgRoot)
     parent = NULL;
   else
     {
@@ -1727,7 +1727,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
           if (parent)
             {
               elType = TtaGetElementType (parent);
-              if (elType.ElSSchema == SvgSchema &&
+              if (elType.ElSSchema == svgSchema &&
                   (elType.ElTypeNum == SVG_EL_g ||
                    elType.ElTypeNum == SVG_EL_SVG))
                 found = TRUE;
@@ -1740,18 +1740,18 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   if (!parent)
     {
-      parent = SvgRoot;
-      sibling = TtaGetLastChild (SvgRoot);
+      parent = svgRoot;
+      sibling = TtaGetLastChild (svgRoot);
     }
 
 
   if(isFormattedView)
     {
       /* Select the SVG element where we draw, so that we can see the frame */
-      TtaSelectElement(doc, SvgRoot);
+      TtaSelectElement(doc, svgRoot);
     }
 
-  newType.ElSSchema = SvgSchema;
+  newType.ElSSchema = svgSchema;
   newType.ElTypeNum = 0;
   isFilled = TRUE;
 
@@ -1805,11 +1805,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
     case 10:	/* text */
       newType.ElTypeNum = SVG_EL_text_;
-      break;
-
-    case 11:	/* group */
-      /* Normally, the program don't reach this point */
-      newType.ElTypeNum = 0;
       break;
 
     case 12: /* Simple arrow */
@@ -1888,10 +1883,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
       if(isFormattedView)
 	{
 	  /* Insert the element as the last child (i.e. in the foreground)
-	     of the SvgRoot */
-	  sibling = TtaGetLastChild(SvgRoot);
+	     of the svgRoot */
+	  sibling = TtaGetLastChild(svgRoot);
 	  if (!sibling)
-	    TtaInsertFirstChild (&newEl, SvgRoot, doc);
+	    TtaInsertFirstChild (&newEl, svgRoot, doc);
 	  else
 	    TtaInsertSibling (newEl, sibling, FALSE, doc);
 	}
@@ -1902,7 +1897,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  else
 	    {
 	      elType = TtaGetElementType (sibling);
-	      if (elType.ElSSchema == SvgSchema &&
+	      if (elType.ElSSchema == svgSchema &&
 		  elType.ElTypeNum == SVG_EL_GraphicsElement)
 		/* the new element replaces the existing, empty element */
 		TtaInsertFirstChild (&newEl, sibling, doc);
@@ -1917,7 +1912,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  selEl = newEl;
 
 	  if(isFormattedView)
-	    AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
+	    AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, svgRoot);
 	  else
 	    {
 	      /* TODO: add a dialog box ? */
@@ -2230,7 +2225,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  selEl = newEl;
 
 	  if(isFormattedView)
-	    attr_data = AskShapePoints (doc, entry, SvgRoot);
+	    attr_data = AskShapePoints (doc, entry, svgRoot);
 	  else
 	    attr_data = NULL;
 
@@ -2257,7 +2252,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  if(isFormattedView)
 	    {
 	      /* Ask the position and size */
-	    AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
+	    AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, svgRoot);
 
 	    /* create a transform=translate attribute */
 	    attrType.AttrTypeNum = SVG_ATTR_transform;
@@ -2268,7 +2263,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    ParseTransformAttribute (attr, newEl, doc, FALSE);
 
 	    /* Create a switch element */
-	    childType.ElSSchema = SvgSchema;
+	    childType.ElSSchema = svgSchema;
 	    childType.ElTypeNum = SVG_EL_switch;
 	    switch_ = TtaNewElement (doc, childType);
 	    TtaInsertFirstChild (&switch_, newEl, doc);
@@ -2277,7 +2272,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    switch_ = newEl;
 
 	  /* Create a foreign Object */
-          childType.ElSSchema = SvgSchema;
+          childType.ElSSchema = svgSchema;
           childType.ElTypeNum = SVG_EL_foreignObject;
           foreignObj = TtaNewElement (doc, childType);
           TtaInsertFirstChild (&foreignObj, switch_, doc);
@@ -2319,7 +2314,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
           /* create an alternate SVG text element for viewers that are not
              able to display embedded MathML */
-          elType.ElSSchema = SvgSchema;
+          elType.ElSSchema = svgSchema;
           elType.ElTypeNum = SVG_EL_text_;
           altText = TtaNewElement (doc, elType);
           TtaInsertSibling (altText, foreignObj, FALSE, doc);
@@ -2380,7 +2375,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
       else if (entry == 10)
         /* creation of a TEXT leaf */
         {
-          childType.ElSSchema = SvgSchema;
+          childType.ElSSchema = svgSchema;
           childType.ElTypeNum = SVG_EL_TEXT_UNIT;
           child = TtaNewElement (doc, childType);
           TtaInsertFirstChild (&child, newEl, doc);
@@ -2389,7 +2384,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  if(isFormattedView)
 	    {
 	      /* Ask where the user wants to insert the text */
-	      AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, SvgRoot);
+	      AskSurroundingBox(&x1, &y1, &x2, &y2, doc, entry, svgRoot);
 
 	      attrType.AttrTypeNum = SVG_ATTR_x;
 	      UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
@@ -2400,7 +2395,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
         }
 
       if (newGraph)
-	TtaRegisterElementCreate (SvgRoot, doc);
+	TtaRegisterElementCreate (svgRoot, doc);
       else
 	TtaRegisterElementCreate (newEl, doc);
 
@@ -2457,21 +2452,147 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   /* adapt the size of the SVG root element if necessary */
   /* CheckSVGRoot (doc, newEl);
-     SetGraphicDepths (doc, SvgRoot);*/
+     SetGraphicDepths (doc, svgRoot);*/
 
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
 #endif /* _SVG */
 }
 
-
+/*----------------------------------------------------------------------
+  TransformGraphicElement
+  Apply a transformation to a Graphics element.
+  entry is the number of the entry chosen by the user in the Graphics
+  palette.
+  ----------------------------------------------------------------------*/
+void TransformGraphicElement (Document doc, View view, int entry)
+{
 #ifdef _SVG
+  Element	   first, parent, svgRoot, selEl;
+  DisplayMode      dispMode;
+  AttributeType    attrType;
+  SSchema          svgSchema;
+  ElementType      elType;
+  ThotBool         isFormattedView;
+  int		   c1, i;
+
+  /* Check that a document is selected */
+  if(doc == 0)return;
+
+  /* Check that whether we are in formatted or strutured view. */
+  if (view == 1) isFormattedView = TRUE;
+  else if(view == 2)isFormattedView = FALSE;
+  else return;
+
+  TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
+  if (first)
+    {
+      parent = TtaGetParent (first);
+      if (TtaIsReadOnly (parent))
+        /* do modify read-only element */
+	{
+	  TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+	  return;
+	}
+    }
+  else
+    /* no selection */
+    return;
+
+  /* Check whether the selected element is a child of a SVG element */
+  svgSchema = GetSVGSSchema (doc);
+  attrType.AttrSSchema = svgSchema;
+
+  elType = TtaGetElementType (first);
+  elType.ElTypeNum = SVG_EL_SVG;
+  elType.ElSSchema = svgSchema;
+  svgRoot = TtaGetTypedAncestor (first, elType);
+
+  if (svgRoot == NULL || svgRoot == first )
+    return;
+
+  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+
+  dispMode = TtaGetDisplayMode (doc);
+  /* ask Thot to stop displaying changes made in the document */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
+  switch(entry)
+    {
+    case 26:	/* Ungroup */
+      selEl = first;
+      while(selEl)
+	{
+	  Ungroup (doc, selEl);
+	  TtaGiveNextSelectedElement (doc, &selEl, &c1, &i);
+	}
+      break;
+      
+    case 27:   /* Flip Vertically */
+      break;
+      
+    case 28:   /* Flip Horizontally */
+      break;
+      
+    case 29:   /* BringToFront */
+      break;
+
+    case 30:   /* BringForward */
+      break;
+
+    case 31:   /* SendBackward */
+      break;
+
+    case 32:   /* SendToBack */
+      break;
+
+    case 33:   /* RotateAntiClockWise */
+      break;
+
+    case 34:   /* RotateClockWise */
+      break;
+
+    case 35:   /* AlignLeft */
+      break;
+
+    case 36:   /* AlignCenter */
+      break;
+
+    case 37:   /* AlignRight */
+      break;
+
+    case 38:   /* AlignTop */
+      break;
+
+    case 39:   /* AlignMiddle */
+      break;
+
+    case 40:   /* AlignBottom */
+      break;
+
+    case 41:   /* Rotate */
+      break;
+
+      /* Translate, Scale */
+
+    }
+  
+  TtaCloseUndoSequence (doc);
+  /* ask Thot to display changes made in the document */
+  TtaSetDisplayMode (doc, dispMode);
+
+  TtaSetDocumentModified (doc);
+#endif /* _SVG */
+}
+
 /*----------------------------------------------------------------------
   CreateGroup
   Create a g element surrounding the selected elements
   ----------------------------------------------------------------------*/
-static void CreateGroup ()
+void CreateGroup ()
 {
+#ifdef _SVG
   Document	doc;
   Element	el, prevSel, prevChild, group, parent;
   ElementType	elType;
@@ -2479,7 +2600,7 @@ static void CreateGroup ()
   int		c1, i, minX, minY;
   DisplayMode	dispMode;
   ThotBool	position;
-  SSchema       docSchema, SvgSchema;
+  SSchema       docSchema, svgSchema;
 
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
@@ -2509,15 +2630,15 @@ static void CreateGroup ()
 
   /* Check whether the selection is in a SVG element */
   docSchema = TtaGetDocumentSSchema (doc);
-  SvgSchema = GetSVGSSchema (doc);
-  attrType.AttrSSchema = SvgSchema;
+  svgSchema = GetSVGSSchema (doc);
+  attrType.AttrSSchema = svgSchema;
   elType = TtaGetElementType (el);
   if (!(elType.ElTypeNum == SVG_EL_SVG &&
-	elType.ElSSchema == SvgSchema))
+	elType.ElSSchema == svgSchema))
     {
 
       elType.ElTypeNum = SVG_EL_SVG;
-      elType.ElSSchema = SvgSchema;
+      elType.ElSSchema = svgSchema;
       parent = TtaGetTypedAncestor (el, elType);
       if(parent)
 	{
@@ -2567,9 +2688,51 @@ static void CreateGroup ()
   TtaCloseUndoSequence (doc);
   /* ask Thot to display changes made in the document */
   TtaSetDisplayMode (doc, dispMode);
-
+#endif /* _SVG */
 }
 
+/*----------------------------------------------------------------------
+  Ungroup
+  Ungroup the elements of a g element
+  ----------------------------------------------------------------------*/
+void Ungroup (Document doc, Element el)
+{
+#ifdef _SVG
+  ElementType   elType;
+  SSchema       svgSchema;  
+  Element child, sibling;
+
+  svgSchema = GetSVGSSchema (doc);
+  elType = TtaGetElementType (el);
+
+  if (!(elType.ElTypeNum == SVG_EL_g &&
+	elType.ElSSchema == svgSchema))
+    /* The element is not a g: nothing to do */
+    return;
+
+  /* TODO:
+     - copy the properties of the g element to each of its children
+   */
+
+  child = TtaGetFirstChild(el);
+  sibling = el;
+  while(child)
+    {
+      elType = TtaGetElementType(child);
+      if(!(elType.ElTypeNum == SVG_EL_title ||
+	   elType.ElTypeNum == SVG_EL_desc))
+	{
+	  TtaRegisterElementDelete (child, doc);
+	  TtaRemoveTree(child, doc);
+	  TtaInsertSibling(child, sibling, FALSE, doc);
+	  TtaRegisterElementCreate (child, doc);
+	  sibling = child;
+	}
+    }
+#endif /* _SVG */
+}
+
+#ifdef _SVG
 /*----------------------------------------------------------------------
   CallbackGraph: manage Graph dialogue events.
   ----------------------------------------------------------------------*/
@@ -2861,7 +3024,6 @@ void Timeline_cross_prule_modified (NotifyPresentation *event)
 #endif /* _SVG */
 }
 
-
 /*----------------------------------------------------------------------
   CreateSVG_Line
   ----------------------------------------------------------------------*/
@@ -3068,4 +3230,132 @@ void CreateSVG_Parallelepiped (Document document, View view)
 void CreateSVG_Cylinder (Document document, View view)
 {
   CreateGraphicElement (document, view, 25);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_Ungroup
+  ----------------------------------------------------------------------*/
+void TransformSVG_Ungroup (Document document, View view)
+{
+  TransformGraphicElement (document, view, 26);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_FlipVertically
+  ----------------------------------------------------------------------*/
+void TransformSVG_FlipVertically (Document document, View view)
+{
+  TransformGraphicElement (document, view, 27);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_FlipHorizontally
+  ----------------------------------------------------------------------*/
+void TransformSVG_FlipHorizontally (Document document, View view)
+{
+  TransformGraphicElement (document, view, 28);
+}
+      
+/*----------------------------------------------------------------------
+  TransformSVG_BringToFront
+  ----------------------------------------------------------------------*/
+void TransformSVG_BringToFront (Document document, View view)
+{
+  TransformGraphicElement (document, view, 29);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_BringForward
+  ----------------------------------------------------------------------*/
+void TransformSVG_BringForward (Document document, View view)
+{
+  TransformGraphicElement (document, view, 30);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_SendBackward
+  ----------------------------------------------------------------------*/
+void TransformSVG_SendBackward (Document document, View view)
+{
+  TransformGraphicElement (document, view, 31);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_SendToBack
+  ----------------------------------------------------------------------*/
+void TransformSVG_SendToBack (Document document, View view)
+{
+  TransformGraphicElement (document, view, 32);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_RotateAntiClockWise
+  ----------------------------------------------------------------------*/
+void TransformSVG_RotateAntiClockWise (Document document, View view)
+{
+  TransformGraphicElement (document, view, 33);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_RotateClockWise
+  ----------------------------------------------------------------------*/
+void TransformSVG_RotateClockWise (Document document, View view)
+{
+  TransformGraphicElement (document, view, 34);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_AlignLeft
+  ----------------------------------------------------------------------*/
+void TransformSVG_AlignLeft (Document document, View view)
+{
+  TransformGraphicElement (document, view, 35);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_AlignCenter
+  ----------------------------------------------------------------------*/
+void TransformSVG_AlignCenter (Document document, View view)
+{
+  TransformGraphicElement (document, view, 36);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_AlignRight
+  ----------------------------------------------------------------------*/
+void TransformSVG_AlignRight (Document document, View view)
+{
+  TransformGraphicElement (document, view, 37);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_AlignTop
+  ----------------------------------------------------------------------*/
+void TransformSVG_AlignTop (Document document, View view)
+{
+  TransformGraphicElement (document, view, 38);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_AlignMiddle
+  ----------------------------------------------------------------------*/
+void TransformSVG_AlignMiddle (Document document, View view)
+{
+  TransformGraphicElement (document, view, 39);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_AlignBottom
+  ----------------------------------------------------------------------*/
+void TransformSVG_AlignBottom (Document document, View view)
+{
+  TransformGraphicElement (document, view, 40);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_Rotate
+  ----------------------------------------------------------------------*/
+void TransformSVG_Rotate (Document document, View view)
+{
+  TransformGraphicElement (document, view, 41);
 }
