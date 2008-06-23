@@ -57,7 +57,7 @@ static ThotBool clear = FALSE;
   (x2,y2)
 
  *----------------------------------------------------------------------*/
-void DrawLine (int x2, int y2, int x3, int y3, ThotBool SpecialColor)
+static void DrawLine (int x2, int y2, int x3, int y3, ThotBool SpecialColor)
 {
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
@@ -67,7 +67,7 @@ void DrawLine (int x2, int y2, int x3, int y3, ThotBool SpecialColor)
   else
     glColor4ub (127, 127, 127, 0);
 
-  glBegin(GL_LINE);
+  glBegin(GL_LINE_STRIP);
   glVertex2i(x2, y2);
   glVertex2i(x3, y3);
   glEnd ();
@@ -80,7 +80,7 @@ void DrawLine (int x2, int y2, int x3, int y3, ThotBool SpecialColor)
   using (x2,y2) as the control points.
 
  *----------------------------------------------------------------------*/
-void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3,
+static void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3,
 			  ThotBool SpecialColor)
 	      
 {
@@ -116,7 +116,7 @@ void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3,
   draw a cubic Bezier Curve from (x1,y1) to (x4,y4),
   using (x2,y2) and (x3,y3) as the control points.
  *----------------------------------------------------------------------*/
-void DrawCubicBezier (int x1, int y1, int x2, int y2, int x3, int y3,
+static void DrawCubicBezier (int x1, int y1, int x2, int y2, int x3, int y3,
 		      int x4, int y4, ThotBool SpecialColor)
 {
   int i;
@@ -157,7 +157,7 @@ void DrawCubicBezier (int x1, int y1, int x2, int y2, int x3, int y3,
   (sym)
 
   ----------------------------------------------------------------------*/
-void UpdateSymetricPoint()
+static void UpdateSymetricPoint()
 {
   symX = 2*lastX1 - currentX;
   symY = 2*lastY1 - currentY;
@@ -169,14 +169,14 @@ void UpdateSymetricPoint()
 
   Draw the control points of the Bezier Curve.
  *----------------------------------------------------------------------*/
-void DrawControlPoints ()
+static void DrawControlPoints ()
 {
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
 
   glColor4ub (0, 127, 127, 100);
 
-  glBegin(GL_LINE);
+  glBegin(GL_LINE_STRIP);
   glVertex2i(symX, symY);
   glVertex2i(currentX, currentY);
   glEnd ();
@@ -190,7 +190,7 @@ void DrawControlPoints ()
   Draw the last path fragment. If SpecialColor is TRUE, then this fragment
   is drawn with a special color to show that it is active.
  *----------------------------------------------------------------------*/
-void DrawPathFragment(int shape, ThotBool SpecialColor)
+static void DrawPathFragment(int shape, ThotBool SpecialColor, int frameId)
 {
 
 switch(shape)
@@ -262,6 +262,8 @@ switch(shape)
   default:
     break;
   }
+
+  GL_Swap (frameId);
 }
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaCreatePathEvtHandler, wxEvtHandler)
@@ -380,6 +382,8 @@ AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
       i = 0;
     }
 
+  *m_NbPoints = N_points ;
+  
   if (m_pFrame)
     {
       /* detach this handler from the canvas (restore default behaviour) */
@@ -392,7 +396,6 @@ AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
       m_pFrame->GetCanvas()->ReleaseMouse();
     }
 
-  *m_NbPoints = N_points ;
 }
 
 /*----------------------------------------------------------------------
@@ -439,24 +442,24 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
       if(state == 0 || state == 1 || state == 3)
 	{
 	  /* Clear the active fragment */
-	  DrawPathFragment(m_ShapeNumber, TRUE);
+	  DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
 	}
       else
 	{
 	  /* Clear the active fragment */
-	  DrawPathFragment(m_ShapeNumber, TRUE);
+	  DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
 
 	  /* Draw the new curve fragment */
-	  DrawPathFragment(m_ShapeNumber, FALSE);
+	  DrawPathFragment(m_ShapeNumber, FALSE, m_FrameId);
 	}
     }
   else
     {
       /* Clear the active fragment */
-      DrawPathFragment(m_ShapeNumber, TRUE);
+      DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
       
       /* Draw the new curve fragment */
-      DrawPathFragment(m_ShapeNumber, FALSE);
+      DrawPathFragment(m_ShapeNumber, FALSE, m_FrameId);
     }
 
   if(m_ShapeNumber == 5 || m_ShapeNumber == 6)
@@ -519,19 +522,18 @@ void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
   if(clear)
-    DrawPathFragment(m_ShapeNumber, TRUE);
+    DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
 
   currentX = event.GetX();
   currentY = event.GetY();
   UpdateSymetricPoint();
 
-  DrawPathFragment(m_ShapeNumber, TRUE);
+  DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
   clear = TRUE;
 
   MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
 			FALSE, &currentX, &currentY);
-
-  m_pFrame->GetCanvas()->Refresh();
+  
 
 }
 

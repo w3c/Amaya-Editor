@@ -77,7 +77,7 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
     {
       /* Line */
     case 0:
-      glBegin(GL_LINE);
+      glBegin(GL_LINE_STRIP);
       glVertex2i(x1, y1);
       glVertex2i(x2, y2);
       glEnd (); 
@@ -258,12 +258,12 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
       break;
 
     case 25: /* Cylinder */
-      glBegin(GL_LINE);
+      glBegin(GL_LINE_STRIP);
       glVertex2i(x1, y1+ly/6);
       glVertex2i(x1, y2-ly/6);
       glEnd (); 
 
-      glBegin(GL_LINE);
+      glBegin(GL_LINE_STRIP);
       glVertex2i(x2, y1+ly/6);
       glVertex2i(x2, y2-ly/6);
       glEnd (); 
@@ -466,8 +466,6 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
   if(*m_NbPoints > 0)
     DrawShape (*m_x1, *m_y1, m_mouse_x, m_mouse_y, m_ShapeNumber, m_FrameId);
 
-	
-/*m_pFrame->GetCanvas()->Refresh();*/
 }
 
 /*----------------------------------------------------------------------
