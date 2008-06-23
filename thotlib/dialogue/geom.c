@@ -1400,7 +1400,8 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
     }
 }
 
-int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2, Document doc, int shape_number)
+int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2,
+		   Document doc, int shape_number)
 {
   int nb_points;
 
@@ -1431,7 +1432,7 @@ int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2, Document doc, 
 }
 
 PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
-			    Document doc, int shape_number)
+			    Document doc, int shape_number, int *NbPoints)
 {
   PtrTextBuffer       pBuffer;
   AmayaFrame * p_frame;
@@ -1455,9 +1456,10 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
 
   p_frame = FrameTable[frame].WdFrame;
   p_CreatePathEvtHandler = new AmayaCreatePathEvtHandler(p_frame, xmin,
-							    ymin, xmax,
-							    ymax, pBuffer,
-							    doc, shape_number);
+							 ymin, xmax,
+							 ymax, pBuffer,
+							 doc, shape_number,
+							 NbPoints);
   while(!p_CreatePathEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   

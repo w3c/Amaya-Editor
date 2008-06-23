@@ -294,7 +294,13 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler() : wxEvtHandler()
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
-AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x_min, int y_min, int x_max, int y_max,  PtrTextBuffer Pbuffer, Document doc, int shape_number)
+AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
+						     int x_min, int y_min,
+						     int x_max, int y_max,
+						     PtrTextBuffer Pbuffer,
+						     Document doc,
+						     int shape_number,
+						     int *NbPoints)
   : wxEvtHandler()
   ,m_IsFinish(false)
   ,m_pFrame(p_frame)
@@ -306,7 +312,7 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x
   ,m_ShapeNumber(shape_number)
   ,m_Pbuffer(Pbuffer)
   ,m_document(doc)
-
+  ,m_NbPoints(NbPoints)
 {
   if (m_pFrame)
     {
@@ -385,6 +391,8 @@ AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
 
       m_pFrame->GetCanvas()->ReleaseMouse();
     }
+
+  *m_NbPoints = N_points ;
 }
 
 /*----------------------------------------------------------------------

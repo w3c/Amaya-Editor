@@ -2029,10 +2029,10 @@ char *AskShapePoints (Document doc, int shape, Element svgRoot)
   int frame;
   int x1, x2, y1, y2;
   char *attr_data = NULL;
-  int i;
+  int i, length;
   short step;
 
-#define BUFFERPOINT_LENGTH 50
+#define BUFFERPOINT_LENGTH 30
   char bufferpoint[BUFFERPOINT_LENGTH];
 
   frame = ActiveFrame;
@@ -2052,11 +2052,13 @@ char *AskShapePoints (Document doc, int shape, Element svgRoot)
   x2 = x1 + pBox->BxWidth;
   y2 = y1 + pBox->BxHeight;
 
-  pBuffer = PathCreation (frame, x1, y1, x2, y2, doc, shape);
+  pBuffer = PathCreation (frame, x1, y1, x2, y2, doc, shape, &length);
+
+  printf("%d", length);
 
   if(pBuffer -> BuLength == 0)return NULL;
 
-  attr_data = (char *)TtaGetMemory(BUFFERPOINT_LENGTH * pBuffer->BuLength + 1);
+  attr_data = (char *)TtaGetMemory(BUFFERPOINT_LENGTH * length + 1);
   if(attr_data)
     {
 

@@ -110,7 +110,8 @@ extern PtrTextBuffer PathCreation ( int frame,
                                     int xmax,
                                     int ymax,
                                     Document doc,
-                                    int shape_number );
+                                    int shape_number,
+                                    int *NbPoints );
 extern ThotBool MouseCoordinatesToSVG ( Document doc,
                                         AmayaFrame * p_frame,
                                         int xmin,
@@ -227,7 +228,8 @@ extern PtrTextBuffer PathCreation ( int frame,
                                       int xmax,
                                       int ymax,
                                       Document doc,
-                                      int shape_number );
+                                      int shape_number,
+                                      int *NbPoints );
 extern ThotBool MouseCoordinatesToSVG ( Document doc,
                                           AmayaFrame * p_frame,
                                           int xmin,
