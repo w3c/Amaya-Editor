@@ -2460,6 +2460,96 @@ void CreateGraphicElement (Document doc, View view, int entry)
 }
 
 /*----------------------------------------------------------------------
+  SelectGraphicElement
+  ----------------------------------------------------------------------*/
+void SelectGraphicElement (Document doc, View view)
+{
+#ifdef _SVG
+  Element	   first, svgRoot, sibling, parent;
+  AttributeType    attrType;
+  SSchema          svgSchema;
+  ElementType      elType;
+  int		   c1, c2;
+  int x1,x2,y1,y2;
+  float xmin, xmax, ymin, ymax;
+  float x,y,width,height;
+  ThotBool IsFirst;
+
+  /* Check that a document is selected */
+  if(doc == 0)return;
+
+  /* Check that whether we are in formatted view. */
+  if (view != 1 )return;
+
+  TtaGiveFirstSelectedElement (doc, &first, &c1, &c2);
+  if (first)
+    {
+      parent = TtaGetParent (first);
+      if (TtaIsReadOnly (parent))
+        /* do modify read-only element */
+	{
+	  TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+	  return;
+	}
+    }
+  else
+    /* no selection */
+    return;
+
+  /* Check whether the selected element is a child of a SVG element */
+  svgSchema = GetSVGSSchema (doc);
+  attrType.AttrSSchema = svgSchema;
+
+  elType = TtaGetElementType (first);
+
+  if (elType.ElTypeNum == SVG_EL_SVG &&
+      elType.ElSSchema == svgSchema)
+    svgRoot = first;
+  else
+    {
+    elType.ElTypeNum = SVG_EL_SVG;
+    elType.ElSSchema = svgSchema;
+    svgRoot = TtaGetTypedAncestor (first, elType);
+    }
+
+  if (svgRoot == NULL)
+    return;
+  TtaSelectElement(doc, svgRoot);
+
+  /* Ask a box surrounding the element the user wants to select */
+  AskSurroundingBox(&x1, &y1, &x2, &y2, doc, 42, svgRoot);
+  xmin = (float)x1;
+  xmax = (float)x2;
+  ymin = (float)y1;
+  ymax = (float)y2;
+
+  TtaUnselect(doc);
+
+  /* Look for each child whether it is inside the box */
+  for(sibling = TtaGetFirstChild(svgRoot), IsFirst = TRUE;
+      sibling;
+      TtaNextSibling(&sibling)
+      )
+    {
+      GetPositionAndSizeInParent(doc, sibling, &x, &y, &width, &height);
+      if(x >= xmin && x + width <= xmax &&
+	 y >= ymin && y + height <= ymax)
+	{
+	  if(IsFirst)
+	    {
+	      TtaSelectElement(doc, sibling);  
+	      IsFirst = FALSE;
+	    }
+	  else
+	    TtaAddElementToSelection(doc, sibling);
+	}
+    }
+  
+#endif /* _SVG */
+}
+
+
+/*----------------------------------------------------------------------
   TransformGraphicElement
   Apply a transformation to a Graphics element.
   entry is the number of the entry chosen by the user in the Graphics
@@ -3481,4 +3571,12 @@ void TransformSVG_AlignBottom (Document document, View view)
 void TransformSVG_Rotate (Document document, View view)
 {
   TransformGraphicElement (document, view, 41);
+}
+
+/*----------------------------------------------------------------------
+  SVG_Select
+  ----------------------------------------------------------------------*/
+void SVG_Select (Document document, View view)
+{
+  SelectGraphicElement (document, view);
 }

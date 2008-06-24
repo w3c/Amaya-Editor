@@ -144,6 +144,9 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
 
 
 
+      /* Selection */
+    case 42:
+
       /* Foreign object */
     case 9:
 
@@ -349,7 +352,11 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler(AmayaFrame * p_frame, int
 
     }
 
-  InitDrawing (5, 1, 0);
+  if(m_ShapeNumber == 42)
+    /* It is actually a box that allows to select graphical elements */
+    InitDrawing (2, 1, 0);
+  else
+    InitDrawing (5, 1, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -466,6 +473,9 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
   if(*m_NbPoints > 0)
     DrawShape (*m_x1, *m_y1, m_mouse_x, m_mouse_y, m_ShapeNumber, m_FrameId);
 
+#ifndef _WINDOWS
+    m_pFrame->GetCanvas()->Refresh();
+#endif
 }
 
 /*----------------------------------------------------------------------

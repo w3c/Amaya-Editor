@@ -700,6 +700,7 @@ HelpSVG
 &TransformSVG_AlignMiddle
 &TransformSVG_AlignBottom
 &TransformSVG_Rotate
+&SVG_Select
 
 ########### Javascript/DOM
 [javascript_dom]
