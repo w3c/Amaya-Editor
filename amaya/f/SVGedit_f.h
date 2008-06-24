@@ -11,15 +11,21 @@ extern void CheckSVGRoot ( Document doc,
 extern void CreateGraphicElement ( Document doc,
                                    View view,
                                    int entry );
+extern void SelectGraphicElement ( Document doc,
+                                   View view );
 extern void TransformGraphicElement ( Document doc,
                                       View view,
                                       int entry );
-extern void GetPositionAndSizeInParent ( Document doc,
-                                         Element el,
-                                         float *X,
-                                         float *Y,
-                                         float *width,
-                                         float *height );
+extern void MoveElementInParentSpace ( Document doc,
+                                       Element el,
+                                       float x,
+                                       float y );
+extern void GetPositionAndSizeInParentSpace ( Document doc,
+                                              Element el,
+                                              float *X,
+                                              float *Y,
+                                              float *width,
+                                              float *height );
 extern void CreateGroup ( void );
 extern void Ungroup ( Document doc,
                       Element el );
@@ -118,6 +124,8 @@ extern void TransformSVG_AlignBottom ( Document document,
                                        View view );
 extern void TransformSVG_Rotate ( Document document,
                                   View view );
+extern void SVG_Select ( Document document,
+                         View view );
 
 #else /* __STDC__ */
 
@@ -126,15 +134,21 @@ extern void CheckSVGRoot ( Document doc,
 extern void CreateGraphicElement ( Document doc,
                                      View view,
                                      int entry );
+extern void SelectGraphicElement ( Document doc,
+                                     View view );
 extern void TransformGraphicElement ( Document doc,
                                         View view,
                                         int entry );
-extern void GetPositionAndSizeInParent ( Document doc,
-                                           Element el,
-                                           float *X,
-                                           float *Y,
-                                           float *width,
-                                           float *height );
+extern void MoveElementInParentSpace ( Document doc,
+                                         Element el,
+                                         float x,
+                                         float y );
+extern void GetPositionAndSizeInParentSpace ( Document doc,
+                                                Element el,
+                                                float *X,
+                                                float *Y,
+                                                float *width,
+                                                float *height );
 extern void CreateGroup ( void );
 extern void Ungroup ( Document doc,
                         Element el );
@@ -233,6 +247,8 @@ extern void TransformSVG_AlignBottom ( Document document,
                                          View view );
 extern void TransformSVG_Rotate ( Document document,
                                     View view );
+extern void SVG_Select ( Document document,
+                           View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

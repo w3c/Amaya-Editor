@@ -2496,6 +2496,15 @@ void SelectGraphicElement (Document doc, View view)
     /* no selection */
     return;
 
+  //  MoveElementInParentSpace(doc, first, 50, 50);
+  /*{
+    float x,y,width,height;
+    GetPositionAndSizeInParentSpace(doc, first, &x, &y, &width, &height);
+    printf("%f %f %f %f\n", x, y, width, height);
+    }*/
+
+  //  return;
+
   /* Check whether the selected element is a child of a SVG element */
   svgSchema = GetSVGSSchema (doc);
   attrType.AttrSSchema = svgSchema;
@@ -2531,7 +2540,7 @@ void SelectGraphicElement (Document doc, View view)
       TtaNextSibling(&sibling)
       )
     {
-      GetPositionAndSizeInParent(doc, sibling, &x, &y, &width, &height);
+      GetPositionAndSizeInParentSpace(doc, sibling, &x, &y, &width, &height);
       if(x >= xmin && x + width <= xmax &&
 	 y >= ymin && y + height <= ymax)
 	{
@@ -2547,7 +2556,6 @@ void SelectGraphicElement (Document doc, View view)
   
 #endif /* _SVG */
 }
-
 
 /*----------------------------------------------------------------------
   TransformGraphicElement
@@ -2568,6 +2576,8 @@ void TransformGraphicElement (Document doc, View view, int entry)
   ElementType      elType;
   ThotBool         isFormattedView;
   int		   c1, c2, i;
+  float x,y,width,height;
+  float xmin, ymin, xmax, ymax, xcenter, ycenter;
 
   /* Check that a document is selected */
   if(doc == 0)return;
@@ -2591,6 +2601,8 @@ void TransformGraphicElement (Document doc, View view, int entry)
   else
     /* no selection */
     return;
+
+  return;
 
   /* Check whether the selected element is a child of a SVG element */
   svgSchema = GetSVGSSchema (doc);
@@ -2627,8 +2639,6 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	i++;
       }
   ;
-
-  TtaUnselect(doc);
 
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 
@@ -2671,22 +2681,71 @@ void TransformGraphicElement (Document doc, View view, int entry)
       break;
 
     case 35:   /* AlignLeft */
-      break;
-
     case 36:   /* AlignCenter */
-      break;
-
     case 37:   /* AlignRight */
-      break;
-
     case 38:   /* AlignTop */
-      break;
-
     case 39:   /* AlignMiddle */
+    case 40:   /* AlignBottom */
+      if(nb_selected == 1)
+	{
+	}
+      else
+	{
+	  GetPositionAndSizeInParentSpace(doc, selected[0],
+					  &x, &y, &width, &height);
+	  xmin = x; xmax = x + width;
+	  ymin = y; ymax = y + height;
+
+	  for(i = 1; i < nb_selected; i++)
+	    {
+	      GetPositionAndSizeInParentSpace(doc, selected[i],
+					      &x, &y, &width, &height);
+	      if(x < xmin)xmin = x;
+	      if(x < ymin)ymin = y;
+	      if(x + width > xmax)xmax = x + width;
+	      if(y + height > ymax)ymax = y + height;
+	    }
+
+	  xcenter = (xmin+xmax)/2;
+	  ycenter = (ymin+ymax)/2;
+
+	  printf("xmin=%f xmax=%f ymin=%f ymax=%f\n", xmin, xmax, ymin, ymax);
+
+	  for(i = 0; i < nb_selected; i++)
+	    {
+	      GetPositionAndSizeInParentSpace(doc, selected[i],
+					      &x, &y, &width, &height);
+	      switch(entry)
+		{
+		case 35:   /* AlignLeft */
+		  MoveElementInParentSpace(doc, selected[i], xmin, y);
+		  break;
+
+		case 36:   /* AlignCenter */
+		  MoveElementInParentSpace(doc, selected[i], xcenter - width/2, y);
+		  break;
+
+		case 37:   /* AlignRight */
+		  MoveElementInParentSpace(doc, selected[i], xmax - width, y);
+		  break;
+
+		case 38:   /* AlignTop */
+		  MoveElementInParentSpace(doc, selected[i], x, ymin);
+		  break;
+
+		case 39:   /* AlignMiddle */
+		  MoveElementInParentSpace(doc, selected[i], x, ycenter - height/2);
+		  break;
+
+		case 40:   /* AlignBottom */
+		  MoveElementInParentSpace(doc, selected[i], x, ymax - height);
+		  break;
+		}
+	    }
+	}
       break;
 
-    case 40:   /* AlignBottom */
-      break;
+
 
     case 41:   /* Rotate */
       break;
@@ -2709,7 +2768,59 @@ void TransformGraphicElement (Document doc, View view, int entry)
   
 
   ----------------------------------------------------------------------*/
-extern void GetPositionAndSizeInParent(Document doc, Element el, float *X,
+void MoveElementInParentSpace(Document doc, Element el, float x, float y)
+{
+  int length, len;
+  float X, Y, width, height, tx, ty;
+  char buffer[50];
+  char *text;
+  Attribute attr;
+  AttributeType attrType;
+  ElementType           elType;
+
+  GetPositionAndSizeInParentSpace(doc, el, &X, &Y, &width, &height);
+  
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_transform;
+  attr = TtaGetAttribute (el, attrType);
+
+  tx = round(x - X);
+  ty = round(y - Y);
+
+  sprintf (buffer, "translate(%d,%d)", (int)tx, (int)ty);
+  len = strlen(buffer);
+
+  if (attr == NULL)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeText (attr, buffer, el, doc);
+      TtaRegisterAttributeCreate (attr, el, doc);
+    }
+  else
+    {
+      length = TtaGetTextAttributeLength (attr);
+      text = (char *)TtaGetMemory (len + length + 1);
+      if (text)
+        {
+	  sprintf(text, "%s ", buffer);
+          TtaGiveTextAttributeValue (attr, text+len+1, &length);
+	}
+
+      TtaRegisterAttributeReplace (attr, el, doc);
+      TtaSetAttributeText (attr, text, el, doc);
+      TtaFreeMemory (text);
+    }
+
+  TtaApplyTranslation (el, tx, ty, doc);
+}
+
+/*----------------------------------------------------------------------
+  
+
+  ----------------------------------------------------------------------*/
+void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
 				       float *Y, float *width, float *height)
 { 
 #ifdef _SVG
@@ -2757,11 +2868,10 @@ extern void GetPositionAndSizeInParent(Document doc, Element el, float *X,
   x[2] = x[0];
   y[2] = y[3];
 
-  /* Apply the transformation to the box */
   IsFirst = TRUE;
   for(i = 0; i < 4; i++)
     {
-      TtaApplyTransform(el, &x[i], &y[i]);
+      TtaCoordinatesInParentSpace(el, &x[i], &y[i]);
       if(i == 0)
 	{
 	  xmin = x[i];
@@ -2784,6 +2894,10 @@ extern void GetPositionAndSizeInParent(Document doc, Element el, float *X,
   *Y = ymin;
   *width = xmax - xmin;
   *height = ymax - ymin;
+
+  /* Apply the transformation to the box */
+  printf("%f %f %f %f\n", *X, *Y, *width, *height);
+
 
 #endif /* _SVG */
 }

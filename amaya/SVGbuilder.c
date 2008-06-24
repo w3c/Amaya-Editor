@@ -1758,7 +1758,7 @@ static char *GetNumber (char *ptr, int* number, ThotBool *error)
   UpdateTransformAttr
   update the "transform" attribute of element el to shift it by
   delta unit(s) horizontally (if firstParam) or vertically.
-  increment indicates wheter delta is an increment or the total value of
+  increment indicates whether delta is an increment or the total value of
   the translation (only for translations).
   -----------------------------------------------------------------------*/
 void UpdateTransformAttr (Element el, Document doc, const char *operation,

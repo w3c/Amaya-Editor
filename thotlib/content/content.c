@@ -1593,7 +1593,7 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
   return result;
 }
 
-extern void TtaApplyTransform(Element el, float *x, float *y)
+extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
 {
   float newx,newy;
   PtrTransform transform = (PtrTransform)
@@ -1608,4 +1608,29 @@ extern void TtaApplyTransform(Element el, float *x, float *y)
   TtaFreeTransform (transform);
 }
 
+extern void TtaApplyTranslation (Element element, float tx, float ty,
+                          Document document)
+{
+  PtrTransform       pPa, transform;
 
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    /* verifies the parameter document */
+    if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+    else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+    else
+      /* parameter document is correct */
+      {
+	transform = (PtrTransform)TtaNewTransformAnimTranslate (tx, ty);
+	if(transform)
+	  {
+	    pPa = ((PtrElement) element)->ElTransform;
+	    ((PtrElement) element)->ElTransform = transform;
+	    transform -> Next = pPa;
+	  }
+      }
+}

@@ -92,9 +92,13 @@ extern void *TtaNewTransformMatrix ( float a,
                                      float e,
                                      float f );
 extern void *TtaSimplifyTransformMatrix ( void *transform );
-extern void TtaApplyTransform ( Element el,
-                                float *x,
-                                float *y );
+extern void TtaCoordinatesInParentSpace ( Element el,
+                                          float *x,
+                                          float *y );
+extern void TtaApplyTranslation ( Element element,
+                                  float tx,
+                                  float ty,
+                                  Document document );
 
 #else /* __STDC__ */
 
@@ -184,9 +188,13 @@ extern void *TtaNewTransformMatrix ( float a,
                                        float e,
                                        float f );
 extern void *TtaSimplifyTransformMatrix ( void *transform );
-extern void TtaApplyTransform ( Element el,
-                                  float *x,
-                                  float *y );
+extern void TtaCoordinatesInParentSpace ( Element el,
+                                            float *x,
+                                            float *y );
+extern void TtaApplyTranslation ( Element element,
+                                    float tx,
+                                    float ty,
+                                    Document document );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

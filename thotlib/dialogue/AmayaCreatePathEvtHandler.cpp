@@ -568,6 +568,9 @@ void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
   MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
 			FALSE, &currentX, &currentY);
   
+#ifndef _WINDOWS
+    m_pFrame->GetCanvas()->Refresh();
+#endif
 
 }
 
