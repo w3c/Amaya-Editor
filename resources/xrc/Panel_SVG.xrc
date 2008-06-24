@@ -51,7 +51,7 @@
           <object class="tool" name="wxID_PANEL_SVG_BRING_FORWARD">
             <bitmap>../icons/16x16/SVG_bring_forward.png</bitmap>
           </object>
-          <object class="tool" name="wxID_PANEL_SVG_ROTATE_BRING_TO_FRONT">
+          <object class="tool" name="wxID_PANEL_SVG_BRING_TO_FRONT">
             <bitmap>../icons/16x16/SVG_bring_to_front.png</bitmap>
           </object>
         </object>
