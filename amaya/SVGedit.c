@@ -2602,8 +2602,6 @@ void TransformGraphicElement (Document doc, View view, int entry)
     /* no selection */
     return;
 
-  return;
-
   /* Check whether the selected element is a child of a SVG element */
   svgSchema = GetSVGSSchema (doc);
   attrType.AttrSSchema = svgSchema;
@@ -2701,7 +2699,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	      GetPositionAndSizeInParentSpace(doc, selected[i],
 					      &x, &y, &width, &height);
 	      if(x < xmin)xmin = x;
-	      if(x < ymin)ymin = y;
+	      if(y < ymin)ymin = y;
 	      if(x + width > xmax)xmax = x + width;
 	      if(y + height > ymax)ymax = y + height;
 	    }
@@ -2801,16 +2799,16 @@ void MoveElementInParentSpace(Document doc, Element el, float x, float y)
   else
     {
       length = TtaGetTextAttributeLength (attr);
-      text = (char *)TtaGetMemory (len + length + 1);
+      text = (char *)TtaGetMemory (len + length + 2);
       if (text)
         {
 	  sprintf(text, "%s ", buffer);
           TtaGiveTextAttributeValue (attr, text+len+1, &length);
+	  TtaRegisterAttributeReplace (attr, el, doc);
+	  TtaSetAttributeText (attr, text, el, doc);
+	  TtaFreeMemory (text);
 	}
 
-      TtaRegisterAttributeReplace (attr, el, doc);
-      TtaSetAttributeText (attr, text, el, doc);
-      TtaFreeMemory (text);
     }
 
   TtaApplyTranslation (el, tx, ty, doc);
