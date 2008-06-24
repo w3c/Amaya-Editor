@@ -2468,13 +2468,16 @@ void CreateGraphicElement (Document doc, View view, int entry)
 void TransformGraphicElement (Document doc, View view, int entry)
 {
 #ifdef _SVG
-  Element	   first, parent, svgRoot;
+  Element          *selected;
+  int              nb_selected;
+
+  Element	   first, sibling, parent, svgRoot;
   DisplayMode      dispMode;
   AttributeType    attrType;
   SSchema          svgSchema;
   ElementType      elType;
   ThotBool         isFormattedView;
-  int		   c1, i;
+  int		   c1, c2, i;
 
   /* Check that a document is selected */
   if(doc == 0)return;
@@ -2484,7 +2487,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
   else if(view == 2)isFormattedView = FALSE;
   else return;
 
-  TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
+  TtaGiveFirstSelectedElement (doc, &first, &c1, &c2);
   if (first)
     {
       parent = TtaGetParent (first);
@@ -2511,6 +2514,32 @@ void TransformGraphicElement (Document doc, View view, int entry)
   if (svgRoot == NULL)
     return;
 
+  /* Count how many children of svgRoot are selected*/
+  for(nb_selected = 0, sibling = first;
+      sibling;
+      TtaGiveNextSelectedElement(doc, &sibling, &c1, &c2)
+      )
+    if(TtaGetParent(sibling) == svgRoot)nb_selected++;
+  ;
+
+  /* Put all the pointer to the selected children into a table */
+  if(nb_selected == 0)return;
+  selected = (Element *)(TtaGetMemory(nb_selected * sizeof(Element)));
+  if(selected == NULL)return;
+
+  for(i = 0, sibling = first;
+      i < nb_selected;
+      TtaGiveNextSelectedElement(doc, &sibling, &c1, &c2)
+      )
+    if(TtaGetParent(sibling) == svgRoot)
+      {
+	selected[i] = sibling;
+	i++;
+      }
+  ;
+
+  TtaUnselect(doc);
+
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 
   dispMode = TtaGetDisplayMode (doc);
@@ -2521,13 +2550,10 @@ void TransformGraphicElement (Document doc, View view, int entry)
   switch(entry)
     {
     case 26:	/* Ungroup */
-      /*selEl = first;
-      while(selEl)
+      for(i = 0; i < nb_selected; i++)
 	{
-      	  Ungroup (doc, selEl);
-	  TtaGiveNextSelectedElement (doc, &selEl, &c1, &i);
-	  }*/
-        Ungroup (doc, first);
+	 Ungroup (doc, selected[i]);
+	}
       break;
       
     case 27:   /* Flip Vertically */
@@ -2579,6 +2605,8 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
     }
   
+  TtaFreeMemory(selected);
+
   TtaCloseUndoSequence (doc);
   /* ask Thot to display changes made in the document */
   TtaSetDisplayMode (doc, dispMode);
@@ -2795,6 +2823,7 @@ void Ungroup (Document doc, Element el)
   if (!(elType.ElTypeNum == SVG_EL_g &&
 	elType.ElSSchema == svgSchema))
     /* The element is not a g: nothing to do */
+    
     return;
 
    /* TODO:
@@ -2812,16 +2841,16 @@ void Ungroup (Document doc, Element el)
       if(!(elType.ElTypeNum == SVG_EL_title ||
 	   elType.ElTypeNum == SVG_EL_desc))
 	{
+	  TtaRegisterElementDelete (child, doc);
 	  TtaRemoveTree(child, doc);
 	  TtaInsertSibling(child, sibling, FALSE, doc);
+	  TtaRegisterElementCreate (child, doc);
 	  sibling = child;
 	}
       child = nextchild;
     }
 
-  /*  sibling = el;
-  TtaNextSibling(&sibling);
-  TtaSelectElement(doc, sibling);*/
+  TtaRegisterElementDelete (el, doc);
   TtaDeleteTree(el, doc);
 #endif /* _SVG */
 }
