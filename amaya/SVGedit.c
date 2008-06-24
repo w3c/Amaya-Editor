@@ -2496,15 +2496,6 @@ void SelectGraphicElement (Document doc, View view)
     /* no selection */
     return;
 
-  //  MoveElementInParentSpace(doc, first, 50, 50);
-  /*{
-    float x,y,width,height;
-    GetPositionAndSizeInParentSpace(doc, first, &x, &y, &width, &height);
-    printf("%f %f %f %f\n", x, y, width, height);
-    }*/
-
-  //  return;
-
   /* Check whether the selected element is a child of a SVG element */
   svgSchema = GetSVGSSchema (doc);
   attrType.AttrSSchema = svgSchema;
@@ -2686,9 +2677,44 @@ void TransformGraphicElement (Document doc, View view, int entry)
     case 40:   /* AlignBottom */
       if(nb_selected == 1)
 	{
+	  /* Only one element is selected: do the alignment in the svgRoot */
+	  TtaGiveBoxSize (svgRoot, doc, 1, UnPixel, &c1, &c2);
+	  xmax = (float)c1;ymax = (float)c2;
+
+	  GetPositionAndSizeInParentSpace(doc, selected[0],
+					  &x, &y, &width, &height);
+
+	      switch(entry)
+		{
+		case 35:   /* AlignLeft */
+		  MoveElementInParentSpace(doc, selected[0], 0, y);
+		  break;
+
+		case 36:   /* AlignCenter */
+		  MoveElementInParentSpace(doc, selected[0], (xmax-width)/2, y);
+		  break;
+
+		case 37:   /* AlignRight */
+		  MoveElementInParentSpace(doc, selected[0], xmax-width, y);
+		  break;
+
+		case 38:   /* AlignTop */
+		  MoveElementInParentSpace(doc, selected[0], x, ymin);
+		  break;
+
+		case 39:   /* AlignMiddle */
+		  MoveElementInParentSpace(doc, selected[0], x, (ymax-height)/2);
+		  break;
+
+		case 40:   /* AlignBottom */
+		  MoveElementInParentSpace(doc, selected[0], x, ymax-height);
+		  break;
+		}
+	  
 	}
       else
 	{
+	  /* More than one element */
 	  GetPositionAndSizeInParentSpace(doc, selected[0],
 					  &x, &y, &width, &height);
 	  xmin = x; xmax = x + width;
@@ -2768,50 +2794,37 @@ void TransformGraphicElement (Document doc, View view, int entry)
   ----------------------------------------------------------------------*/
 void MoveElementInParentSpace(Document doc, Element el, float x, float y)
 {
-  int length, len;
-  float X, Y, width, height, tx, ty;
-  char buffer[50];
-  char *text;
+  float X, Y, width, height;
+  float a,b,c,d,e,f;
+  char buffer[300];
   Attribute attr;
   AttributeType attrType;
-  ElementType           elType;
+  ElementType elType;
 
   GetPositionAndSizeInParentSpace(doc, el, &X, &Y, &width, &height);
   
+  /* Apply translation an get the new transform matrix */
+  TtaApplyTranslation (el, x - X, y - Y, doc);
+  TtaGetMatrixTransform(doc, el, &a, &b, &c, &d, &e, &f);
+  sprintf(buffer, "matrix(%f,%f,%f,%f,%f,%f)", a, b, c, d, e, f);
+
+  /* Remove the attribute if it already exists */
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_transform;
   attr = TtaGetAttribute (el, attrType);
 
-  tx = round(x - X);
-  ty = round(y - Y);
+  if(attr != NULL)
+    TtaRemoveAttribute(el, attr, doc);
 
-  sprintf (buffer, "translate(%d,%d)", (int)tx, (int)ty);
-  len = strlen(buffer);
-
-  if (attr == NULL)
+  /* Create a new attribute */
+  attr = TtaNewAttribute (attrType);
+  if(attr)
     {
-      attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
       TtaSetAttributeText (attr, buffer, el, doc);
       TtaRegisterAttributeCreate (attr, el, doc);
     }
-  else
-    {
-      length = TtaGetTextAttributeLength (attr);
-      text = (char *)TtaGetMemory (len + length + 2);
-      if (text)
-        {
-	  sprintf(text, "%s ", buffer);
-          TtaGiveTextAttributeValue (attr, text+len+1, &length);
-	  TtaRegisterAttributeReplace (attr, el, doc);
-	  TtaSetAttributeText (attr, text, el, doc);
-	  TtaFreeMemory (text);
-	}
-
-    }
-
-  TtaApplyTranslation (el, tx, ty, doc);
 }
 
 /*----------------------------------------------------------------------

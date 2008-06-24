@@ -1477,12 +1477,19 @@ void *TtaNewTransformMatrix (float a, float b, float c,
   return (pPa);
 }
 
+/*----------------------------------------------------------------------
+  TtaSimplifyTransformMatrix
+  Return a new transform of type PtElMatrix which represents the
+  composition of all the element of the list "transform".
+  ---------------------------------------------------------------------- */
 extern void *TtaSimplifyTransformMatrix(void *transform)
 {
   PtrTransform result, pPa;
   float T, cosT,sinT, tanT, a, b, c, d, e, f;
 
   result = ((PtrTransform)(TtaNewTransformMatrix(1, 0, 0, 1, 0, 0)));
+  result->Next = NULL;
+
   pPa = (PtrTransform)(transform);
 
   while (pPa)
@@ -1552,17 +1559,8 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
 	  result->CMatrix = a*pPa->CMatrix + c*pPa->DMatrix;
 	  result->BMatrix = b*pPa->AMatrix + d*pPa->BMatrix;
 	  result->DMatrix = b*pPa->CMatrix + d*pPa->DMatrix;
-
 	  result->EMatrix += a*pPa->EMatrix + c*pPa->FMatrix;
 	  result->FMatrix += b*pPa->EMatrix + d*pPa->FMatrix;
-
-	  result->AMatrix = a;
-	  result->BMatrix = b;
-	  result->CMatrix = c;
-	  result->DMatrix = d;
-	  result->EMatrix = e;
-	  result->FMatrix = f;
-	  
           break;	  
 
         case PtElSkewX:
@@ -1593,21 +1591,32 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
   return result;
 }
 
+/*----------------------------------------------------------------------
+  TtaCoordinatesInParentSpace
+  Convert the coordinates (x,y) of a point inside the space of the element
+  el into coordinates in its parent.
+  ---------------------------------------------------------------------- */
 extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
 {
   float newx,newy;
   PtrTransform transform = (PtrTransform)
     TtaSimplifyTransformMatrix(((PtrElement) el)->ElTransform);
 
-  newx = transform->AMatrix * *x + transform->CMatrix * *y + transform->EMatrix;
-  newy = transform->BMatrix * *x + transform->DMatrix * *y + transform->FMatrix;
+  if(transform)
+    {
+      newx = transform->AMatrix * *x + transform->CMatrix * *y + transform->EMatrix;
+      newy = transform->BMatrix * *x + transform->DMatrix * *y + transform->FMatrix;
 
-  *x = newx;
-  *y = newy;
+      *x = newx;
+      *y = newy;
 
-  TtaFreeTransform (transform);
+      TtaFreeTransform (transform);
+    }
 }
 
+/*----------------------------------------------------------------------
+  TtaApplyTranslation
+  ---------------------------------------------------------------------- */
 extern void TtaApplyTranslation (Element element, float tx, float ty,
                           Document document)
 {
@@ -1625,6 +1634,7 @@ extern void TtaApplyTranslation (Element element, float tx, float ty,
     else
       /* parameter document is correct */
       {
+	/* Add a new transform */
 	transform = (PtrTransform)TtaNewTransformAnimTranslate (tx, ty);
 	if(transform)
 	  {
@@ -1632,5 +1642,41 @@ extern void TtaApplyTranslation (Element element, float tx, float ty,
 	    ((PtrElement) element)->ElTransform = transform;
 	    transform -> Next = pPa;
 	  }
+
+	/* Simplify the transform */
+	transform = (PtrTransform)
+	  TtaSimplifyTransformMatrix(((PtrElement) element)->ElTransform);
+
+	if(transform)
+	  {
+	    pPa = ((PtrElement) element)->ElTransform;
+	    TtaFreeTransform (pPa);
+	    ((PtrElement) element)->ElTransform = transform;
+	    }
       }
+}
+
+/*----------------------------------------------------------------------
+  ---------------------------------------------------------------------- */
+extern void TtaGetMatrixTransform(Document document, Element el,
+				    float *a,
+				    float *b,
+				    float *c,
+				    float *d,
+				    float *e,			    
+				    float *f
+					    )
+{
+  PtrTransform transform = (PtrTransform)((PtrElement) el)->ElTransform;
+
+  if(transform)
+    {
+      *a = transform->AMatrix;
+      *b = transform->BMatrix;
+      *c = transform->CMatrix;
+      *d = transform->DMatrix;
+      *e = transform->EMatrix;
+      *f = transform->FMatrix;
+    }
+
 }

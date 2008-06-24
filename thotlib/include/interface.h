@@ -496,6 +496,15 @@ extern char *AskShapePoints (Document doc, int shape, Element svgRoot);
 extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y);
 extern void TtaApplyTranslation (Element element, float tx, float ty,
 				 Document document);
+
+extern void TtaGetMatrixTransform(Document document, Element el,
+				    float *a,
+				    float *b,
+				    float *c,
+				    float *d,
+				    float *e,			    
+				    float *f
+				    );
 #endif /* __CEXTRACT__  */
 
 #endif
