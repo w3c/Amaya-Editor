@@ -701,4 +701,3 @@ FUNCTIONS
   TransformSVG_Rotate,
   SVG_Select;
 END
-END
