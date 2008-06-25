@@ -141,39 +141,40 @@ void NameSpaceGenerated (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 void GraphicsSelectionChanged (NotifyElement * event)
 {
-  Element      asc, use;//, svgRoot;
-  //  AttributeType    attrType;
+  Element      asc, use, svgRoot;
+  AttributeType    attrType;
   ElementType  elType;
   int          elemType = 0;
-  //  SSchema      svgSchema;
+  SSchema      svgSchema;
+  Document doc; View view;
 
-  
+  TtaGiveActiveView(&doc, &view);
   /* In formatted view, you can only select the direct children of the
      svgRoot */
-/*   if(event -> view == 1) */
-/*     { */
-/*       svgSchema = GetSVGSSchema (event->document); */
-/*       attrType.AttrSSchema = svgSchema; */
+  if(view == 1)
+     {
+      svgSchema = GetSVGSSchema (event->document);
+      attrType.AttrSSchema = svgSchema;
 
-/*       elType = TtaGetElementType (event->element); */
+      elType = TtaGetElementType (event->element);
       
-/*       if (elType.ElSSchema == svgSchema && elType.ElTypeNum != SVG_EL_SVG) */
-/* 	{ */
-/* 	  elType.ElTypeNum = SVG_EL_SVG; */
-/* 	  elType.ElSSchema = svgSchema; */
-/* 	  svgRoot = TtaGetTypedAncestor (event->element, elType); */
-/* 	  asc = event->element; */
-/* 	  while(TtaGetParent(asc) != svgRoot) */
-/* 	    asc = TtaGetParent(asc); */
+      if (elType.ElSSchema == svgSchema && elType.ElTypeNum != SVG_EL_SVG)
+	{
+	  elType.ElTypeNum = SVG_EL_SVG;
+	  elType.ElSSchema = svgSchema;
+	  svgRoot = TtaGetTypedAncestor (event->element, elType);
+	  asc = event->element;
+	  while(TtaGetParent(asc) != svgRoot)
+	    asc = TtaGetParent(asc);
 
-/* 	  TtaSelectElement (event->document, asc); */
-/* 	  event->element = asc; */
-/* 	  event->elementType = TtaGetElementType(asc); */
-/*   	} */
+	  TtaSelectElement (event->document, asc);
+	  event->element = asc;
+	  event->elementType = TtaGetElementType(asc);
+  	}
 
-/*     } */
-/*   else */
-/*     { */
+    }
+  else
+    {
       /* if element is within a "use" or "tref" element, select that element
 	 instead */
       use = NULL;
@@ -209,7 +210,7 @@ void GraphicsSelectionChanged (NotifyElement * event)
 	  event->element = use;
 	  event->elementType.ElTypeNum = elemType;
 	}
-      //    }
+         }
 
 
   CheckSynchronize (event);
