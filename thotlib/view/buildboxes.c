@@ -1013,17 +1013,14 @@ static void GivePathSize (PtrAbstractBox pAb, int zoom, int *width,
 
   if(!FirstPoint)
     {
-    *width = xmax - xmin;
-    *height = ymax - ymin;
+      *width =  PixelValue (xmax - xmin, UnPixel, NULL, zoom);
+      *height =  PixelValue (ymax - ymin, UnPixel, NULL, zoom);
     }
   else
     {
       *width = 0;
       *height = 0;
     }
-
-  printf("width=%d height=%d \n", *width, *height);
-
 }
 
 
