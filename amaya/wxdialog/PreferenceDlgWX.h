@@ -119,6 +119,15 @@ private:
   void OnPasswordDeleted(wxCommandEvent& event);
   void OnPasswordSelected(wxCommandEvent& event);
 
+  // "RDFa" tab
+  void SetupLabelDialog_RDFa();
+  void SetupDialog_RDFa( const Prop_RDFa & prop );
+  void UpdateRDFaNsList();
+  void GetValueDialog_RDFa();
+  void OnNSAdd(wxCommandEvent& event);
+  void OnNSDelete(wxCommandEvent& event);
+  void OnNSSelected(wxCommandEvent& event);
+
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 

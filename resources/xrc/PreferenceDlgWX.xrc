@@ -1425,4 +1425,63 @@
       </object>
     </object>
   </object>
+  <object class="wxPanel" name="wxID_PAGE_RDFa">
+    <style>wxTAB_TRAVERSAL</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxStaticBoxSizer">
+          <label>Namespace Declarations</label>
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxListBox" name="wxID_LIST_NS">
+                  <content/>
+                  <style>wxLB_HSCROLL</style>
+                </object>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxBitmapButton" name="wxID_BUTTON_DELETE_NS">
+                      <bitmap>../icons/16x16/editdelete.png</bitmap>
+                    </object>
+                    <option>1</option>
+                    <flag>wxEXPAND</flag>
+                  </object>
+                </object>
+              </object>
+            </object>
+            <option>1</option>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_TEXT_NEW_NS"/>
+                <option>1</option>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_ADD_NS">
+                  <bitmap>../icons/16x16/ok.png</bitmap>
+                </object>
+              </object>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>4</border>
+          </object>
+        </object>
+        <option>2</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>10</border>
+      </object>
+    </object>
+  </object>
 </resource>

@@ -159,6 +159,14 @@ Prop_Emails GProp_Emails;
 int            PasswordsBase;
 Prop_Passwords GProp_Passwords;
 
+/* ============> RDFa menu option */
+int            RDFaBase;
+Prop_RDFa      GProp_RDFa;
+Prop_RDFa      GProp_RDFaDef;
+/* Paths from which looking for NS declarations */
+static Prop_RDFa_Path *RDFaNsList;
+static Prop_RDFa_Path *RDFaNsListDef;
+
 
 #include "HTMLsave_f.h"
 #include "init_f.h"
@@ -319,6 +327,9 @@ void InitAmayaDefEnv (void)
 
   /* Passwords */
   TtaSetEnvBoolean ("SAVE_PASSWORDS", TRUE, FALSE);
+
+  /* RDFa */
+  LoadRDFaNSList (&RDFaNsList);
   
   /* appearance */
 
@@ -2692,6 +2703,338 @@ static void PasswordsCallbackDialog (int ref, int typedata, char *data)
 }
 
 /*----------------------------------------------------------------------
+  AllocRDFaNsListElement: allocates an element for the list
+  of NS declarations
+  ----------------------------------------------------------------------*/
+void* AllocRDFaNsListElement (const char* path, void* prevElement)
+{
+  Prop_RDFa_Path *element;
+
+  element  = (Prop_RDFa_Path*)TtaGetMemory (sizeof(Prop_RDFa_Path));
+  memset (element, 0, sizeof(Prop_RDFa_Path));
+  strncpy (element->Path, path, MAX_LENGTH - 1);
+  if (prevElement)
+    {
+      element->NextPath = ((Prop_RDFa_Path*)prevElement)->NextPath;
+      ((Prop_RDFa_Path*)prevElement)->NextPath = element;
+    }
+  return element;
+}
+
+/*----------------------------------------------------------------------
+  FreeRDFaNSList: Free the list of NS declarations
+  ----------------------------------------------------------------------*/
+void FreeRDFaNSList (void* list)
+{
+  Prop_RDFa_Path **l = (Prop_RDFa_Path**) list;
+  Prop_RDFa_Path  *element = *l;
+
+  l = NULL;
+  while (element)
+  {
+    Prop_RDFa_Path* next = element->NextPath;
+    TtaFreeMemory (element);
+    element = next;
+  }
+}
+
+/*----------------------------------------------------------------------
+  CopyRDFaNsList: Copy a list of NS declarations
+  ----------------------------------------------------------------------*/
+static void CopyRDFaNsList (const Prop_RDFa_Path** src, Prop_RDFa_Path** dst)
+{
+  Prop_RDFa_Path *element=NULL, *current=NULL;
+  
+  if (*src)
+  {
+    *dst = (Prop_RDFa_Path*) TtaGetMemory (sizeof(Prop_RDFa_Path));
+    (*dst)->NextPath = NULL;
+    strcpy((*dst)->Path, (*src)->Path);
+    element = (*src)->NextPath;
+    current = *dst;
+  }
+  
+  while (element)
+    {
+      current->NextPath = (Prop_RDFa_Path*) TtaGetMemory (sizeof(Prop_RDFa_Path));
+      current = current->NextPath; 
+      current->NextPath = NULL;
+      strcpy(current->Path, element->Path);
+      element = element->NextPath;
+    }
+}
+
+/*----------------------------------------------------------------------
+  SaveRDFaNsList: Save the list of NS declarations
+  ----------------------------------------------------------------------*/
+static void SaveRDFaNsList (const Prop_RDFa_Path** list)
+{
+  const Prop_RDFa_Path *element;
+  char *path, *homePath;
+  unsigned char *c;
+  FILE *file;
+
+  path = (char *) TtaGetMemory (MAX_LENGTH);
+  homePath       = TtaGetEnvString ("APP_HOME");
+  sprintf (path, "%s%crdfa.dat", homePath, DIR_SEP);
+
+  file = TtaWriteOpen ((char *)path);
+  c = (unsigned char*)path;
+  *c = EOS;
+  if (file)
+  {
+    element = *list;
+    while (element)
+    {
+      fprintf(file, "%s\n", element->Path);
+      element = element->NextPath;
+    }
+    TtaWriteClose (file);
+  }
+}
+
+/*----------------------------------------------------------------------
+  SetRDFaNsList: Set the list of NS declarations
+  ----------------------------------------------------------------------*/
+void SetRDFaNsList (const void* list)
+{
+  const Prop_RDFa_Path** l = (const Prop_RDFa_Path**) list;
+  CopyRDFaNsList((const Prop_RDFa_Path**)l, &RDFaNsList);
+  SaveRDFaNsList((const Prop_RDFa_Path**)&RDFaNsList);
+}
+
+
+/*----------------------------------------------------------------------
+  GetRDFaNsListDef: Get the list of NS declarations
+  list : address of the list (address of the first element).
+  ----------------------------------------------------------------------*/
+static void GetRDFaNsListDef (void* list)
+{
+  Prop_RDFa_Path** l = (Prop_RDFa_Path**) list;
+  CopyRDFaNsList((const Prop_RDFa_Path**)&RDFaNsListDef, l);
+}
+
+/*----------------------------------------------------------------------
+  GetRDFaNsList: Get the list of NS declarations
+  list : address of the list (address of the first element).
+  ----------------------------------------------------------------------*/
+static void GetRDFaNsList (void* list)
+{
+  Prop_RDFa_Path** l = (Prop_RDFa_Path**) list;
+  CopyRDFaNsList((const Prop_RDFa_Path**)&RDFaNsList, l);
+}
+
+/*----------------------------------------------------------------------
+  LoadDefaultNSList: Load the list ofNS declarations
+  ----------------------------------------------------------------------*/
+static void LoadDefaultRDFaNSList (Prop_RDFa_Path** list)
+{
+  Prop_RDFa_Path *element, *current = NULL;
+  char           *path, *homePath, *configPath, *ptr;
+  unsigned char  *c;
+  FILE           *file;
+  
+  //clean up the curent list
+  FreeRDFaNSList (list);
+  *list = NULL;
+
+  // open the default file
+  path = (char *) TtaGetMemory (MAX_LENGTH);
+  configPath = (char *) TtaGetMemory (MAX_LENGTH);
+  homePath = TtaGetEnvString ("APP_HOME");
+  sprintf (path, "%s%crdfa.dat", homePath, DIR_SEP);
+
+  ptr = TtaGetEnvString ("THOTDIR");
+  strcpy (configPath, ptr);
+  strcat (configPath, DIR_STR);
+  strcat (configPath, "config");
+  strcat (configPath, DIR_STR);
+  strcat (configPath, "rdfa.dat");
+  file = TtaReadOpen ((char *)configPath);
+  if (!file)
+    {
+      /* The config file doesn't exist, load a static configuration */
+      file = TtaWriteOpen ((char *)path);
+      fprintf (file, "rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n");
+      fprintf (file, "rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"\n");
+      fprintf (file, "owl=\"http://www.w3.org/2002/07/owl#\"\n");
+      fprintf (file, "xsd=\"http://www.w3.org/2001/XMLSchema#\"\n");
+      fprintf (file, "foaf=\"http://xmlns.com/foaf/0.1/\"\n");
+      fprintf (file, "dc=\"http://purl.org/dc/elements/1.1/\"\n");
+      TtaWriteClose (file);
+      /* Retry to open it */
+      file = TtaReadOpen ((char *)path);
+    }
+  
+  if (file)
+    {
+      // read the file
+      c = (unsigned char*)path;
+      *c = EOS;
+      while (TtaReadByte (file, c))
+        {
+          if (*c == 13 || *c == EOL)
+            *c = EOS;
+          if (*c == EOS && c != (unsigned char*)path )
+            {
+              element = (Prop_RDFa_Path*) TtaGetMemory (sizeof(Prop_RDFa_Path));
+              element->NextPath = NULL;
+              strcpy (element->Path, path);
+
+              if (*list == NULL)
+                *list = element; 
+              else
+                current->NextPath = element;
+              current = element;
+
+              c = (unsigned char*) path;
+              *c = EOS;
+            }
+          else
+            c++;
+        }
+      if (c != (unsigned char*)path && *path != EOS)
+        {
+          element = (Prop_RDFa_Path*) TtaGetMemory (sizeof(Prop_RDFa_Path));
+          *(c+1) = EOS;
+          strcpy (element->Path, path);
+          element->NextPath = NULL;
+
+          if (*list == NULL)
+            *list = element; 
+          else
+            current->NextPath = element;
+        }
+      TtaReadClose (file);
+    }
+  TtaFreeMemory(path);
+  TtaFreeMemory(configPath);
+}
+
+/*----------------------------------------------------------------------
+  LoadNSList: Load the list ofNS declarations
+  ----------------------------------------------------------------------*/
+void LoadRDFaNSList (Prop_RDFa_Path** list)
+{
+  Prop_RDFa_Path *element, *current = NULL;
+  char *path, *homePath;
+  unsigned char *c;
+  int nb = 0;
+  FILE *file;
+  
+  //clean up the curent list
+
+  // open the file
+  path = (char *) TtaGetMemory (MAX_LENGTH);
+  homePath = TtaGetEnvString ("APP_HOME");
+  sprintf (path, "%s%crdfa.dat", homePath, DIR_SEP);
+  file = TtaReadOpen ((char *)path);
+  if (!file)
+    LoadDefaultRDFaNSList (list);
+  else
+    {
+      // read the file
+      c = (unsigned char*)path;
+      *c = EOS;
+      while (TtaReadByte (file, c))
+        {
+          if (*c == 13 || *c == EOL)
+            *c = EOS;
+          if (*c == EOS && c != (unsigned char*)path )
+            {
+              element = (Prop_RDFa_Path*) TtaGetMemory (sizeof(Prop_RDFa_Path));
+              element->NextPath = NULL;
+              strcpy (element->Path, path);
+
+              if (*list == NULL)
+                *list = element; 
+              else
+                current->NextPath = element;
+              current = element;
+              nb++;
+
+              c = (unsigned char*) path;
+              *c = EOS;
+            }
+          else
+            c++;
+        }
+      if (c != (unsigned char*)path && *path != EOS)
+        {
+          element = (Prop_RDFa_Path*) TtaGetMemory (sizeof(Prop_RDFa_Path));
+          *(c+1) = EOS;
+          strcpy (element->Path, path);
+          element->NextPath = NULL;
+
+          if (*list == NULL)
+            *list = element; 
+          else
+            current->NextPath = element;
+          nb++;
+        }
+      TtaReadClose (file);
+    }
+  GetRDFaNsList(&(GProp_RDFa.FirstPath));
+  TtaFreeMemory(path);
+}
+
+/*----------------------------------------------------------------------
+  GetRDFaConf
+  Makes a copy of the current registry RDFa values
+  ----------------------------------------------------------------------*/
+void GetRDFaConf (void)
+{
+  GetRDFaNsList(&(GProp_RDFa.FirstPath));
+}
+
+/*----------------------------------------------------------------------
+  GetDefaultRDFaConf
+  Gets the registry default RDFa values.
+  ----------------------------------------------------------------------*/
+void GetDefaultRDFaConf ()
+{
+  LoadDefaultRDFaNSList (&RDFaNsListDef);
+  GetRDFaNsListDef(&(GProp_RDFaDef.FirstPath));
+}
+
+/*----------------------------------------------------------------------
+  RDFaCallbackDialog
+  callback of the RDFa configuration menu
+  ----------------------------------------------------------------------*/
+static void RDFaCallbackDialog (int ref, int typedata, char *data)
+{
+  intptr_t  val;
+  if (ref==-1)
+    {
+    }
+  else
+    {
+      val = (intptr_t) data;
+      switch (ref - RDFaBase)
+        {
+        case RDFaMenu:
+          switch (val)
+            {
+            case 0: /* CANCEL */
+              TtaDestroyDialogue (ref);
+              break;
+            case 1: /* OK */
+              //TtaDestroyDialogue (ref);
+              break;
+            case 2: /* DEFAULT */
+              GetDefaultRDFaConf();
+              break;
+            default:
+              break;
+            }
+          break;
+        default:
+          break;
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
 int GetPrefGeneralBase()
@@ -2797,6 +3140,15 @@ int GetPrefEmailsBase()
 int GetPrefPasswordsBase()
 {
   return PasswordsBase;
+}
+
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefRDFaBase()
+{
+  return RDFaBase;
+
 }
 
 
@@ -3013,6 +3365,38 @@ Prop_Passwords GetProp_Passwords()
 
 
 /*----------------------------------------------------------------------
+  Use to set the Amaya global variables (RDFa preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_RDFa( const Prop_RDFa * prop )
+{
+  GProp_RDFa = *prop;
+}
+
+/*----------------------------------------------------------------------
+  Use to set the Amaya global variables (RDFa Default preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_RDFaDef( const Prop_RDFa * prop )
+{
+  GProp_RDFaDef = *prop;
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (RDFa preferences)
+  ----------------------------------------------------------------------*/
+Prop_RDFa GetProp_RDFa()
+{
+  return GProp_RDFa;
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (RDFa Default preferences)
+  ----------------------------------------------------------------------*/
+Prop_RDFa GetProp_RDFaDef()
+{
+  return GProp_RDFaDef;
+}
+
+/*----------------------------------------------------------------------
   PreferenceMenu
   Build and display the preference dialog
   ----------------------------------------------------------------------*/
@@ -3054,18 +3438,23 @@ void PreferenceMenu (Document document, View view)
   /* ---> Annot Tab */
   GetAnnotConf ();
 #endif /* ANNOTATIONS */
+
 #ifdef DAV
   /* ---> WebDAV Tab */
   GetDAVConf ();
 #endif /* DAV */
+
 #ifdef TEMPLATES
   /* ---> Templates Tab */
   GetTemplatesConf ();
 #endif /* TEMPLATES */
 
+  /* ---> Emails Tab */
   GetEmailsConf();
   /* ---> Passwords Tab */
   GetPasswordsConf ();
+  /* ---> RDFa Tab */
+  GetRDFaConf ();
 
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
                                              TtaGetViewFrame (document, view),
@@ -3139,4 +3528,5 @@ void InitConfMenu (void)
   InitDAVPreferences ();
 #endif /* DAV */
   EmailsBase = TtaSetCallback( (Proc)EmailsCallbackDialog, MAX_EMAILSMENU_DLG );
+  RDFaBase = TtaSetCallback( (Proc)RDFaCallbackDialog, MAX_RDFaMENU_DLG );
 }

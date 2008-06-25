@@ -100,6 +100,10 @@
 #define mTogglePasswordsFrame      2
 #define MAX_PASSWORDMENU_DLG       3
 
+#define RDFaMenu                   1
+#define mToggleRDFaFrame           2
+#define MAX_RDFaMENU_DLG           3
+
 
 typedef struct Prop_General_t
 {
@@ -230,5 +234,16 @@ typedef struct Prop_Passwords_t
 {
   ThotBool S_Passwords;
 } Prop_Passwords;
+
+typedef struct Prop_RDFa_Path_t {
+  char Path[MAX_LENGTH];
+  struct Prop_RDFa_Path_t* NextPath;
+} Prop_RDFa_Path;
+
+typedef struct Prop_RDFa_t
+{
+  ThotBool S_RDFa;
+  Prop_RDFa_Path* FirstPath;
+} Prop_RDFa;
 
 #endif /* _MENUCONF.h */

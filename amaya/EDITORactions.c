@@ -367,23 +367,99 @@ void NewCss (Document doc, View view)
   --------------------------------------------------------------------------*/
 static void AddRDFaNS (Document doc)
 {
-  ElementType          elType;
-  Element              docEl, root;
+  ElementType      elType;
+  Element          docEl, root;
+  char            *path, *tempPath, *homePath, *configPath, *ptr;
+  unsigned char    c;
+  FILE            *file;
+  char             line[MAX_LENGTH], prefix[MAX_LENGTH], uri[MAX_LENGTH];
+  int              len;
 
   docEl = TtaGetMainRoot (doc);
   elType = TtaGetElementType (docEl);
   elType.ElTypeNum = HTML_EL_HTML;
   root = TtaSearchTypedElement (elType, SearchInTree, docEl);
+
   if (root)
     {
+      // XHTML namespace
       TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
-      TtaSetANamespaceDeclaration (doc, root, RDF_PREFIX, RDF_URI);
-      TtaSetANamespaceDeclaration (doc, root, RDFS_PREFIX, RDFS_URI);
-      TtaSetANamespaceDeclaration (doc, root, OWL_PREFIX, OWL_URI);
-      TtaSetANamespaceDeclaration (doc, root, XSD_PREFIX, XSD_URI);
-      TtaSetANamespaceDeclaration (doc, root, FOAF_PREFIX, FOAF_URI);
-      TtaSetANamespaceDeclaration (doc, root, DC_PREFIX, DC_URI);
-    }
+
+      // Open the RDFa config file
+      path = (char *) TtaGetMemory (MAX_LENGTH);
+      configPath = (char *) TtaGetMemory (MAX_LENGTH);
+      tempPath = (char *) TtaGetMemory (MAX_LENGTH);
+      homePath = TtaGetEnvString ("APP_HOME");
+      sprintf (path, "%s%crdfa.dat", homePath, DIR_SEP);
+      sprintf (tempPath, "%s%crdfa-tmp.dat", homePath, DIR_SEP);
+      file = TtaReadOpen ((char *)path);
+      if (!file)
+	{
+	  // open the default file      
+	  ptr = TtaGetEnvString ("THOTDIR");
+	  strcpy (configPath, ptr);
+	  strcat (configPath, DIR_STR);
+	  strcat (configPath, "config");
+	  strcat (configPath, DIR_STR);
+	  strcat (configPath, "rdfa.dat");
+	  file = TtaReadOpen ((char *)configPath);
+	  if (!file)
+	    {
+	      /* The config file doesn't exist, load a static configuration */
+	      file = TtaWriteOpen ((char *)tempPath);
+	      fprintf (file, "rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n");
+	      fprintf (file, "rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"\n");
+	      fprintf (file, "owl=\"http://www.w3.org/2002/07/owl#\"\n");
+	      fprintf (file, "xsd=\"http://www.w3.org/2001/XMLSchema#\"\n");
+	      fprintf (file, "foaf=\"http://xmlns.com/foaf/0.1/\"\n");
+	      fprintf (file, "dc=\"http://purl.org/dc/elements/1.1/\"\n");
+	      TtaWriteClose (file);
+	      /* Retry to open it */
+	      file = TtaReadOpen ((char *)tempPath);
+	    }
+	}
+      
+      if (file)
+	{
+	  prefix[0] = EOS;
+	  uri[0] = EOS;
+	  line[0] = EOS;
+	  len = 0;
+
+	  while (TtaReadByte (file, &c))
+	    {
+	      if (c == 13 || c == EOL)
+		{
+		  line[len] = EOS;
+		  strcpy (uri, line);
+		  line[0] = EOS;
+		  len = 0;
+		  if (prefix[0] != EOS && uri[0] != EOS)
+		    {
+		      TtaSetANamespaceDeclaration (doc, root, prefix, uri);
+		      prefix[0] = EOS;
+		      uri[0] = EOS;
+		    }
+		}
+	      else if (c == '=')
+		{
+		  line[len] = EOS;
+		  strcpy (prefix, line);
+		  line[0] = EOS;
+		  len = 0;
+		}
+	      else
+		{
+		  line[len++] = (char)c;
+		}
+	    }
+	  TtaReadClose (file);
+	}
+    }  
+
+  TtaFreeMemory(path);
+  TtaFreeMemory(configPath);
+  TtaFreeMemory(tempPath);
 }
 
 /*--------------------------------------------------------------------------

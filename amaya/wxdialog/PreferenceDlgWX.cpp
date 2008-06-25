@@ -41,16 +41,16 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   // Clear url list callback
   EVT_BUTTON( XRCID("wxID_BUTTON_CLEARURL"), PreferenceDlgWX::OnClearUrlList )
   // Cache tab callbacks
-  EVT_BUTTON( XRCID("wxID_BUTTON_EMPTYCACHE"), PreferenceDlgWX::OnEmptyCache )
+  EVT_BUTTON( XRCID("wxID_BUTTON_EMPTYCACHE"),   PreferenceDlgWX::OnEmptyCache )
   // Color tab callbacks
   EVT_BUTTON( XRCID("wxID_BUTTON_TEXTCOLOR"),    PreferenceDlgWX::OnColorPalette )
   EVT_BUTTON( XRCID("wxID_BUTTON_BACKCOLOR"),    PreferenceDlgWX::OnColorPalette )
   EVT_BUTTON( XRCID("wxID_BUTTON_SELCOLOR"),     PreferenceDlgWX::OnColorPalette )
   EVT_BUTTON( XRCID("wxID_BUTTON_SELBACKCOLOR"), PreferenceDlgWX::OnColorPalette )
-  EVT_COMBOBOX( XRCID("wxID_COMBO_SELBACKCOLOR"),    PreferenceDlgWX::OnColorChanged )
-  EVT_COMBOBOX( XRCID("wxID_COMBO_SELCOLOR"),        PreferenceDlgWX::OnColorChanged )
-  EVT_COMBOBOX( XRCID("wxID_COMBO_BACKCOLOR"),       PreferenceDlgWX::OnColorChanged )
-  EVT_COMBOBOX( XRCID("wxID_COMBO_TEXTCOLOR"),       PreferenceDlgWX::OnColorChanged )
+  EVT_COMBOBOX( XRCID("wxID_COMBO_SELBACKCOLOR"),PreferenceDlgWX::OnColorChanged )
+  EVT_COMBOBOX( XRCID("wxID_COMBO_SELCOLOR"),    PreferenceDlgWX::OnColorChanged )
+  EVT_COMBOBOX( XRCID("wxID_COMBO_BACKCOLOR"),   PreferenceDlgWX::OnColorChanged )
+  EVT_COMBOBOX( XRCID("wxID_COMBO_TEXTCOLOR"),   PreferenceDlgWX::OnColorChanged )
   EVT_TEXT( XRCID("wxID_COMBO_SELBACKCOLOR"),    PreferenceDlgWX::OnColorTextChanged )
   EVT_TEXT( XRCID("wxID_COMBO_SELCOLOR"),        PreferenceDlgWX::OnColorTextChanged )
   EVT_TEXT( XRCID("wxID_COMBO_BACKCOLOR"),       PreferenceDlgWX::OnColorTextChanged )
@@ -78,6 +78,10 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_LISTBOX(XRCID("wxID_LIST_PASSWORDS"),         PreferenceDlgWX::OnPasswordSelected)
   EVT_BUTTON( XRCID("wxID_BUTTON_DELETE_PASSWORD"), PreferenceDlgWX::OnPasswordDeleted )
   EVT_BUTTON( XRCID("wxID_BUTTON_EMPTY_PASSWORDS"), PreferenceDlgWX::OnEmptyPasswords )
+  // RDFa tab callbacks
+  EVT_BUTTON( XRCID("wxID_BUTTON_DELETE_NS"),       PreferenceDlgWX::OnNSDelete )
+  EVT_BUTTON( XRCID("wxID_BUTTON_ADD_NS"),          PreferenceDlgWX::OnNSAdd )
+  EVT_LISTBOX(XRCID("wxID_LIST_NS"),                PreferenceDlgWX::OnNSSelected)
 
 END_EVENT_TABLE()
 
@@ -127,6 +131,8 @@ END_EVENT_TABLE()
       TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATES)), false);
   m_book->InsertPage(11, wxXmlResource::Get()->LoadPanel(m_book, wxT("wxID_PAGE_EMAILS")),
       TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS)), false);
+  m_book->InsertPage(12, wxXmlResource::Get()->LoadPanel(m_book, wxT("wxID_PAGE_RDFa")),
+		     TtaConvMessageToWX(TtaGetMessage(AMAYA, /*AM_RDFa*/ AM_TEMPLATES)), false);
   
 #ifndef DAV
   // invalid WebDAV Page
@@ -161,6 +167,7 @@ END_EVENT_TABLE()
 #endif /* TEMPLATES */
   SetupLabelDialog_Emails();
   SetupLabelDialog_Passwords();
+  SetupLabelDialog_RDFa();
 
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_APPLY_BUTTON)));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CANCEL)));
@@ -184,6 +191,7 @@ END_EVENT_TABLE()
 #endif /* TEMPLATES */
   SetupDialog_Emails( GetProp_Emails() );
   SetupDialog_Passwords( GetProp_Passwords() );
+  SetupDialog_RDFa( GetProp_RDFa() );
 
   // give focus to ...
   //  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
@@ -1550,6 +1558,121 @@ void PreferenceDlgWX::OnPasswordDeleted(wxCommandEvent& event)
 }
 
 /************************************************************************/
+/* RDFa tab                                                             */
+/************************************************************************/
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_RDFa inits RDFa labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_RDFa()
+{
+  XRCCTRL(*this, "wxID_BUTTON_ADD_NS", wxBitmapButton)->SetToolTip(TtaConvMessageToWX("Add"));
+  wxStaticBoxSizer *sz = (wxStaticBoxSizer*)XRCCTRL(*this, "wxID_PAGE_RDFa", wxPanel)->GetSizer()->GetItem((size_t)0)->GetSizer();
+  // sz->GetStaticBox()->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_RDFA)));
+  sz->GetStaticBox()->SetLabel(TtaConvMessageToWX("XHTML+RDFa"));
+}
+
+/*----------------------------------------------------------------------
+  SetupDialog_RDFa inits RDFa dialog
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupDialog_RDFa( const Prop_RDFa & prop)
+{
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_NS", wxListBox);
+  box->Clear()
+;
+  Prop_RDFa_Path* path = prop.FirstPath;
+  while (path)
+    {
+      box->Append(TtaConvMessageToWX(path->Path));
+      path = path->NextPath;
+    }
+}
+
+/*----------------------------------------------------------------------
+  GetValueDialog_NS gets the show NS indicator
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::GetValueDialog_RDFa()
+{
+  // Prop_RDFa       prop = GetProp_RDFa();
+}
+
+/*----------------------------------------------------------------------
+  UpdateNSList updates the current list of NS
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::UpdateRDFaNsList()
+{
+  wxString             value;
+  Prop_RDFa            prop = GetProp_RDFa();
+  Prop_RDFa_Path      *element = NULL;
+  wxListBox           *box;
+  int                  i;
+
+  FreeRDFaNSList(&(prop.FirstPath));
+  box = XRCCTRL(*this, "wxID_LIST_NS", wxListBox);
+  for (i = 0; i < (int)box->GetCount(); i++)
+    {
+      element = (Prop_RDFa_Path*) AllocRDFaNsListElement( (const char*) box->GetString(i).mb_str(*wxConvCurrent), element);
+    if (i == 0)
+       prop.FirstPath = element;
+    }
+  SetRDFaNsList ((const Prop_RDFa_Path**)&(prop.FirstPath));
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnNSAdd(wxCommandEvent& event)
+{
+  wxString   path = XRCCTRL(*this, "wxID_TEXT_NEW_NS", wxTextCtrl)->GetValue();
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_NS", wxListBox);
+  int        i;
+  
+  if (path.IsEmpty())
+    return;
+  for (i = 0; i < (int)box->GetCount(); i++)
+    {
+      box->GetString(i).mb_str(*wxConvCurrent);
+      if (!strcmp (path.mb_str(wxConvUTF8), box->GetString(i).mb_str(wxConvUTF8)))
+        {
+          // this entry already exists
+          box->SetSelection(box->GetCount()-1);
+          return;
+        }
+    }
+  box->Append(path);
+  box->SetSelection(box->GetCount()-1);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnNSDelete(wxCommandEvent& event)
+{
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_NS", wxListBox);
+  int sel = box->GetSelection();
+  if (sel != wxNOT_FOUND)
+  {
+    box->Delete(sel);
+  }
+  XRCCTRL(*this, "wxID_TEXT_NEW_NS", wxTextCtrl)->Clear();
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnNSSelected(wxCommandEvent& event)
+{
+  if (event.IsSelection())
+    XRCCTRL(*this, "wxID_TEXT_NEW_NS", wxTextCtrl)->SetValue(event.GetString());
+}
+
+
+/************************************************************************/
 /* General events                                                       */
 /************************************************************************/
 /*----------------------------------------------------------------------
@@ -1616,6 +1739,10 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   SetProp_Passwords( &prop_passwords );
   ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 1);
 
+  // update the ns list from the listbox
+  UpdateRDFaNsList();
+  ThotCallback (GetPrefRDFaBase() + RDFaMenu, INTEGER_DATA, (char*) 1);
+
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->Enable();
   m_OnApplyLock = FALSE;
@@ -1681,7 +1808,7 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
   else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_DAV")) )
     {
       ThotCallback (GetPrefDAVBase() + DAVMenu, INTEGER_DATA, (char*) 2);
-      SetupDialog_DAV( GetProp_DAV() );
+      // SetupDialog_DAV( GetProp_DAV() );
     }
 #endif /* DAV */
 #ifdef TEMPLATES
@@ -1701,6 +1828,11 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
       ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 2);
       SetupDialog_Passwords( GetProp_Passwords() );
     }
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_RDFa")) )
+    {
+      ThotCallback (GetPrefRDFaBase() + RDFaMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_RDFa( GetProp_RDFaDef() );
+    }
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 2);
 }
@@ -1712,6 +1844,8 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
 {
+  Prop_RDFa prop;
+
   if (m_OnApplyLock)
     return;
 
@@ -1734,6 +1868,7 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
 #endif /* TEMPLATES */
   ThotCallback (GetPrefEmailsBase() + EmailsMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 0);
+   ThotCallback (GetPrefRDFaBase() + RDFaMenu, INTEGER_DATA, (char*) 0);
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
   TtaRedirectFocus();
