@@ -956,8 +956,15 @@ static void GivePolylineSize (PtrAbstractBox pAb, int zoom, int *width,
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void UpdateLimits(int *xmin, int *ymin, int *xmax, int *ymax,
-			 int x, int y)
+			 int x, int y, ThotBool First)
 {
+  if(First)
+    {
+      *xmin = x; *xmax = x;
+      *ymin = y; *ymax = y;
+      return;
+    }
+
   if(x < *xmin)*xmin = x;
   else if(x > *xmax)*xmax = x;
 
@@ -971,13 +978,9 @@ static void UpdateLimits(int *xmin, int *ymin, int *xmax, int *ymax,
 static void GivePathSize (PtrAbstractBox pAb, int zoom, int *width,
                               int *height)
 {
-  PtrAbstractBox      pParent;
   PtrPathSeg       pPa;
   int xmin, xmax, ymin, ymax, x0, y0;
   ThotBool FirstPoint = TRUE;
-
-  *width = 0;
-  *height = 0;
 
   pPa = pAb->AbFirstPathSeg;
 
@@ -988,17 +991,20 @@ static void GivePathSize (PtrAbstractBox pAb, int zoom, int *width,
 
 	case PtLine:
 	case PtEllipticalArc:
-	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XStart, pPa->YStart);
-	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XEnd, pPa->YEnd);
+	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XStart, pPa->YStart,
+		       FirstPoint);
+	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XEnd, pPa->YEnd,
+		       FALSE);
 	  break;
 
 	case PtCubicBezier:
         case PtQuadraticBezier:
-	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XStart, pPa->YStart);
-	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XEnd, pPa->YEnd);
+	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XStart, pPa->YStart,
+		       FirstPoint);
+	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XEnd, pPa->YEnd, FALSE);
 	  x0= (pPa->XStart + 3*pPa->XCtrlStart + 3*pPa->XCtrlEnd + pPa->XEnd)/8;
 	  y0= (pPa->YStart + 3*pPa->YCtrlStart + 3*pPa->YCtrlEnd + pPa->YEnd)/8;
-	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, x0, y0);
+	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, x0, y0, FALSE);
 	  break;
 	}
       pPa = pPa -> PaNext;
@@ -1010,18 +1016,13 @@ static void GivePathSize (PtrAbstractBox pAb, int zoom, int *width,
     *width = xmax - xmin;
     *height = ymax - ymin;
     }
-
-  if (pAb->AbEnclosing)
+  else
     {
-      /* the direct parent is the SVG path element */
-      pParent = pAb->AbEnclosing->AbEnclosing;
-      while (pParent &&
-	     TypeHasException (ExcIsGroup, pParent->AbElement->ElTypeNumber,
-			       pParent->AbElement->ElStructSchema))
-	pParent = pParent->AbEnclosing;
-      *width = pParent->AbBox->BxWidth;
-      *height = pParent->AbBox->BxHeight;
+      *width = 0;
+      *height = 0;
     }
+
+  printf("width=%d height=%d \n", *width, *height);
 
 }
 
@@ -4445,23 +4446,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                           /* copy the new one from the abstract box */
                           pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
                           pBox->BxNChars = pAb->AbVolume;
-                          if (pAb->AbEnclosing)
-                            {
-                              /* the direct parent is the SVG path element */
-                              pParent = pAb->AbEnclosing->AbEnclosing;
-                              while (pParent &&
-                                     TypeHasException (ExcIsGroup,
-                                                       pParent->AbElement->ElTypeNumber,
-                                                       pParent->AbElement->ElStructSchema))
-                                pParent = pParent->AbEnclosing;
-                              width = pParent->AbBox->BxWidth;
-                              height = pParent->AbBox->BxHeight;
-                              pAb->AbBox->BxWidth = width;
-                              pAb->AbBox->BxHeight = height;
-                              pParent = pAb->AbEnclosing;
-                              pParent->AbBox->BxWidth = width;
-                              pParent->AbBox->BxHeight = height;
-                            }
+			  GivePathSize (pAb, zoom, &width, &height);
                         }
                       break;
                     default:

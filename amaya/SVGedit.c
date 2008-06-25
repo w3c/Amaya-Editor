@@ -2821,8 +2821,6 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	  xcenter = (xmin+xmax)/2;
 	  ycenter = (ymin+ymax)/2;
 
-	  printf("xmin=%f xmax=%f ymin=%f ymax=%f\n", xmin, xmax, ymin, ymax);
-
 	  for(i = 0; i < nb_selected; i++)
 	    {
 	      GetPositionAndSizeInParentSpace(doc, selected[i],
@@ -3021,14 +3019,14 @@ void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
      2--------3
   */
 
-  /* TODO: these two functions do not work for path elements... */
-
   TtaGiveBoxPosition (el, doc, 1, UnPixel, &dummy1, &dummy2);
   x[0] = (float) dummy1;
   y[0] = (float) dummy2;
   TtaGiveBoxSize (el, doc, 1, UnPixel, &dummy1, &dummy2);
   x[3] = x[0] + dummy1;
   y[3] = y[0] + dummy2;
+
+  printf("x1=%f y1=%f x2=%f y2=%f\n", x[0], y[0], x[3], y[3]);
 
   x[1] = x[3];
   y[1] = y[0];
@@ -3062,9 +3060,7 @@ void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
   *width = xmax - xmin;
   *height = ymax - ymin;
 
-  /* Apply the transformation to the box */
-  printf("%f %f %f %f\n", *X, *Y, *width, *height);
-
+  //printf("x'=%f y'=%f width=%f heigth=%f \n", *X, *Y, *width, *height);
 
 #endif /* _SVG */
 }
