@@ -241,9 +241,10 @@ BOXES
 	END;
 #else
  BagButton: BEGIN
-	Content: Picture 'xtigerbag.png';
+	Content: Picture 'xtigeruse.png';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top - 2 px;
+  VertOverflow: Yes;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -410,19 +411,37 @@ RULES
     BEGIN
 #ifdef INSTANCE
     Visibility: 0;
-#endif
+#else
+    Display : Block;
+    Visibility: 10;
 	  CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
     VertPos: Top = 			Previous ElementName. Bottom;
     HorizPos: Left =		Enclosing . Left;
+		PaddingTop: 			  10 px;
+		PaddingBottom: 			10 px;
+		PaddingLeft: 		  	10 px;
+		PaddingRight: 			10 px;
+		MarginBottom: 			10 px;
+    Background : DarkGrey1;
+    FillPattern: backgroundcolor;
+    ShowBox; 
   	IN Structure_view BEGIN
       Visibility: Enclosing =;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
+      FillPattern: nopattern;
+	  	BorderBottomWidth: 	0;
+		  PaddingTop: 			  0;
+		  PaddingBottom: 			0;
+	  	PaddingLeft: 		  	0;
+	  	PaddingRight: 			0;
+	  	MarginBottom: 		0;
 		  END;
+#endif
     END;
     
   component:
@@ -430,12 +449,17 @@ RULES
 #ifdef INSTANCE
     Visibility: 0;
 #else
+    Visibility: 10;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
     VertPos: Top = 			Previous AnyElem. Bottom;
     HorizPos: Left =		Enclosing . Left;
+    Background : White;
+    Display : Block;
+    FillPattern: backgroundcolor;
+    ShowBox; 
     {if not immediately within option
       BEGIN}
 		  BorderTopWidth: 	 	1 px;
@@ -487,7 +511,10 @@ RULES
 
   attribute:
 		BEGIN
+#ifdef INSTANCE
 		Visibility: 0;
+#else
+		Visibility: 10;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
   	IN Structure_view BEGIN
@@ -496,12 +523,16 @@ RULES
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
 		  END;
+#endif
 	 END;
 
   bag:
 		BEGIN
     CreateBefore(ElementName);
 	  CreateFirst(BagButton);
+    Background : LightGreen4;
+    FillPattern: backgroundcolor;
+    ShowBox; 
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
@@ -534,6 +565,7 @@ RULES
 		  PaddingLeft: 0;
 		  PaddingTop: 0;
 		  PaddingBottom: 0;
+      FillPattern: nopattern;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
@@ -548,14 +580,14 @@ RULES
       CreateAfter(RepeatUse);
     if immediately within bag
       CreateAfter(BagUse);
-#endif
     if empty
 	     CreateFirst(UseButton);
+#else
+	  CreateFirst(UseButton);
+#endif
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
-    {LineBreak: No;}
-    {Display: Inline;}
     VertPos: Top = Previous AnyElem . Bottom;
     HorizPos: Left = Enclosing . Left; 
 		BorderTopWidth: 	 	1 px;
@@ -666,10 +698,10 @@ RULES
     BorderLeftStyle:  Dotted;
     BorderBottomStyle :  Dotted;
     BorderRightStyle :  Dotted;
-    BorderTopColor:  Purple;
-    BorderLeftColor:  Purple;
-    BorderBottomColor : Purple;
-    BorderRightColor :  Purple;
+    BorderTopColor:  Grey;
+    BorderLeftColor:  Grey;
+    BorderBottomColor : Grey;
+    BorderRightColor :  Grey;
 #endif
     PaddingRight:  3 px;
     PaddingLeft	:  3 px;

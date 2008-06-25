@@ -66,17 +66,16 @@ ThotBool IsTemplateInstanceDocument(Document doc)
   doc : Document to test
   return : TRUE if the document is a template
   ----------------------------------------------------------------------*/
-ThotBool IsTemplateDocument(Document doc)
+ThotBool IsTemplateDocument (Document doc)
 {
 #ifdef TEMPLATES
   XTigerTemplate t = GetXTigerDocTemplate(doc);
-  if(t)
-    return (t->state&templTemplate)!=0;
+  if (t)
+    return ((t->state & templTemplate) != 0);
   else
     return FALSE;
-#else /* TEMPLATES */
-  return FALSE;
 #endif /* TEMPLATES */ 
+  return FALSE;
 }
 
 
@@ -1229,7 +1228,7 @@ void CheckTemplate (Document doc)
 #ifdef TEMPLATES
   Element    root;
   
-  if(IsTemplateInstanceDocument(doc))
+  if (IsTemplateInstanceDocument(doc))
     {
       XTigerTemplate   t;
 
@@ -1622,7 +1621,7 @@ void UpdateTemplateMenus (Document doc)
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateFreeBox);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateRepeat);
     }
-  else if (IsTemplateDocument(doc))
+  else if (DocumentURLs[doc] && IsXTiger (DocumentURLs[doc]))
     {
       // Template document
       TtaSetItemOff (doc, 1, Tools, BCreateTemplateFromDocument);
