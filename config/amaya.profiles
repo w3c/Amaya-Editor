@@ -173,7 +173,6 @@ HelpAtW3C
 +object-module
 +script-module
 +struct-module
-+svg
 +text-module
 +css-style
 
@@ -229,6 +228,7 @@ HelpAtW3C
 +basic-style
 +hypertext-module
 +maths
++svg
 +css-style
 
 ################# Annot
