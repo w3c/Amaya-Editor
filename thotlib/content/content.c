@@ -1615,10 +1615,11 @@ extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
 }
 
 /*----------------------------------------------------------------------
-  TtaApplyTranslation
+  TtaApplyMatrixTransform
   ---------------------------------------------------------------------- */
-extern void TtaApplyTranslation (Element element, float tx, float ty,
-                          Document document)
+extern void TtaApplyMatrixTransform (Document document, Element element,
+			    float a, float b, float c, float d, float e,
+			    float f)
 {
   PtrTransform       pPa, transform;
 
@@ -1635,7 +1636,7 @@ extern void TtaApplyTranslation (Element element, float tx, float ty,
       /* parameter document is correct */
       {
 	/* Add a new transform */
-	transform = (PtrTransform)TtaNewTransformAnimTranslate (tx, ty);
+	transform = (PtrTransform)TtaNewTransformMatrix (a, b, c, d, e, f);
 	if(transform)
 	  {
 	    pPa = ((PtrElement) element)->ElTransform;

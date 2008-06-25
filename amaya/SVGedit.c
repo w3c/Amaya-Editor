@@ -2646,11 +2646,11 @@ void TransformGraphicElement (Document doc, View view, int entry)
       break;
       
     case 27:   /* Flip Vertically */
-      break;
-      
     case 28:   /* Flip Horizontally */
-      break;
-      
+      for(i = 0; i < nb_selected; i++)
+	FlipElement(doc, selected[i], entry == 28);
+    break;
+
     case 29:   /* BringToFront */
       break;
 
@@ -2792,6 +2792,57 @@ void TransformGraphicElement (Document doc, View view, int entry)
   
 
   ----------------------------------------------------------------------*/
+void FlipElement(Document doc, Element el, ThotBool horiz)
+{
+  float X, Y, width, height, cx, cy;
+  float a,b,c,d,e,f;
+  char buffer[300];
+  Attribute attr;
+  AttributeType attrType;
+  ElementType elType;
+
+  /* Get the coordinates in Parent Space */
+  GetPositionAndSizeInParentSpace(doc, el, &X, &Y, &width, &height);
+  cx = X + width/2;
+  cy = Y + height/2;
+
+  /* Apply flip an get the new transform matrix */
+  TtaApplyMatrixTransform (doc, el, 1, 0, 0, 1, -cx, -cy);
+  
+  if(horiz)
+    TtaApplyMatrixTransform (doc, el, 1, 0, 0, -1, 0, 0);
+  else
+    TtaApplyMatrixTransform (doc, el, -1, 0, 0, 1, 0, 0);
+
+  TtaApplyMatrixTransform (doc, el, 1, 0, 0, 1, +cx, +cy);
+  
+  TtaGetMatrixTransform(doc, el, &a, &b, &c, &d, &e, &f);
+  sprintf(buffer, "matrix(%f,%f,%f,%f,%f,%f)", a, b, c, d, e, f);
+
+  /* Remove the attribute if it already exists */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_transform;
+  attr = TtaGetAttribute (el, attrType);
+
+  if(attr != NULL)
+    TtaRemoveAttribute(el, attr, doc);
+
+  /* Create a new attribute */
+  attr = TtaNewAttribute (attrType);
+  if(attr)
+    {
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeText (attr, buffer, el, doc);
+      TtaRegisterAttributeCreate (attr, el, doc);
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  
+
+  ----------------------------------------------------------------------*/
 void MoveElementInParentSpace(Document doc, Element el, float x, float y)
 {
   float X, Y, width, height;
@@ -2804,7 +2855,7 @@ void MoveElementInParentSpace(Document doc, Element el, float x, float y)
   GetPositionAndSizeInParentSpace(doc, el, &X, &Y, &width, &height);
   
   /* Apply translation an get the new transform matrix */
-  TtaApplyTranslation (el, x - X, y - Y, doc);
+  TtaApplyMatrixTransform (doc, el, 1, 0, 0, 1, x - X, y - Y);
   TtaGetMatrixTransform(doc, el, &a, &b, &c, &d, &e, &f);
   sprintf(buffer, "matrix(%f,%f,%f,%f,%f,%f)", a, b, c, d, e, f);
 

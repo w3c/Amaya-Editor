@@ -16,6 +16,9 @@ extern void SelectGraphicElement ( Document doc,
 extern void TransformGraphicElement ( Document doc,
                                       View view,
                                       int entry );
+extern void FlipElement ( Document,
+                          Element el,
+                          ThotBool horiz );
 extern void MoveElementInParentSpace ( Document doc,
                                        Element el,
                                        float x,
@@ -139,6 +142,9 @@ extern void SelectGraphicElement ( Document doc,
 extern void TransformGraphicElement ( Document doc,
                                         View view,
                                         int entry );
+extern void FlipElement ( Document,
+                            Element el,
+                            ThotBool horiz );
 extern void MoveElementInParentSpace ( Document doc,
                                          Element el,
                                          float x,

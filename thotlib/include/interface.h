@@ -494,8 +494,9 @@ extern void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
 extern void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape, Element svgRoot);
 extern char *AskShapePoints (Document doc, int shape, Element svgRoot);
 extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y);
-extern void TtaApplyTranslation (Element element, float tx, float ty,
-				 Document document);
+extern void TtaApplyMatrixTransform (Document document, Element element,
+				     float a, float b, float c, float d,
+				     float e, float f);
 
 extern void TtaGetMatrixTransform(Document document, Element el,
 				    float *a,
