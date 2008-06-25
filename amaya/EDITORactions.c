@@ -374,6 +374,7 @@ static void AddRDFaNS (Document doc)
   FILE            *file;
   char             line[MAX_LENGTH], prefix[MAX_LENGTH], uri[MAX_LENGTH];
   int              len;
+  ThotBool         pref;
 
   docEl = TtaGetMainRoot (doc);
   elType = TtaGetElementType (docEl);
@@ -425,6 +426,7 @@ static void AddRDFaNS (Document doc)
 	  uri[0] = EOS;
 	  line[0] = EOS;
 	  len = 0;
+	  pref = FALSE;
 
 	  while (TtaReadByte (file, &c))
 	    {
@@ -439,18 +441,21 @@ static void AddRDFaNS (Document doc)
 		      TtaSetANamespaceDeclaration (doc, root, prefix, uri);
 		      prefix[0] = EOS;
 		      uri[0] = EOS;
+		      pref = FALSE;
 		    }
 		}
 	      else if (c == '=')
 		{
 		  line[len] = EOS;
 		  strcpy (prefix, line);
+		  pref = TRUE;
 		  line[0] = EOS;
 		  len = 0;
 		}
 	      else
 		{
-		  line[len++] = (char)c;
+		  if (c != '"')
+		    line[len++] = (char)c;
 		}
 	    }
 	  TtaReadClose (file);
