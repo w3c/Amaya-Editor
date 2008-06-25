@@ -2699,7 +2699,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 		  break;
 
 		case 38:   /* AlignTop */
-		  MoveElementInParentSpace(doc, selected[0], x, ymin);
+		  MoveElementInParentSpace(doc, selected[0], x, 0);
 		  break;
 
 		case 39:   /* AlignMiddle */
@@ -2834,7 +2834,7 @@ void RotateElementInParentSpace(Document doc, Element el, float theta)
   cy = Y + height/2;
 
   /* Apply a rotation */
-  theta *= M_PI/180;
+  theta *= ((float)M_PI)/180;
   cost = cos(theta);
   sint = sin(theta);
   TtaApplyMatrixTransform (doc, el, 1, 0, 0, 1, -cx, -cy);
