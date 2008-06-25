@@ -953,6 +953,78 @@ static void GivePolylineSize (PtrAbstractBox pAb, int zoom, int *width,
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void UpdateLimits(int *xmin, int *ymin, int *xmax, int *ymax,
+			 int x, int y)
+{
+  if(x < *xmin)*xmin = x;
+  else if(x > *xmax)*xmax = x;
+
+  if(y < *ymin)*ymin = y;
+  else if(y > *ymax)*ymax = y;
+}
+
+/*----------------------------------------------------------------------
+  GivePathSize gives the internal size of a path.
+  ----------------------------------------------------------------------*/
+static void GivePathSize (PtrAbstractBox pAb, int zoom, int *width,
+                              int *height)
+{
+  PtrAbstractBox      pParent;
+  PtrPathSeg       pPa;
+  int xmin, xmax, ymin, ymax, x0, y0;
+  ThotBool FirstPoint = TRUE;
+
+  *width = 0;
+  *height = 0;
+
+  pPa = pAb->AbFirstPathSeg;
+
+  while(pPa)
+    {
+      switch(pPa->PaShape)
+	{
+
+	case PtLine:
+	case PtEllipticalArc:
+	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XStart, pPa->YStart);
+	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XEnd, pPa->YEnd);
+	  break;
+
+	case PtCubicBezier:
+        case PtQuadraticBezier:
+	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XStart, pPa->YStart);
+	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XEnd, pPa->YEnd);
+	  x0= (pPa->XStart + 3*pPa->XCtrlStart + 3*pPa->XCtrlEnd + pPa->XEnd)/8;
+	  y0= (pPa->YStart + 3*pPa->YCtrlStart + 3*pPa->YCtrlEnd + pPa->YEnd)/8;
+	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, x0, y0);
+	  break;
+	}
+      pPa = pPa -> PaNext;
+      FirstPoint = FALSE;
+    }
+
+  if(!FirstPoint)
+    {
+    *width = xmax - xmin;
+    *height = ymax - ymin;
+    }
+
+  if (pAb->AbEnclosing)
+    {
+      /* the direct parent is the SVG path element */
+      pParent = pAb->AbEnclosing->AbEnclosing;
+      while (pParent &&
+	     TypeHasException (ExcIsGroup, pParent->AbElement->ElTypeNumber,
+			       pParent->AbElement->ElStructSchema))
+	pParent = pParent->AbEnclosing;
+      *width = pParent->AbBox->BxWidth;
+      *height = pParent->AbBox->BxHeight;
+    }
+
+}
+
 
 /*----------------------------------------------------------------------
   FreePolyline frees buffers attached to the polyline box.
@@ -2447,7 +2519,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                          ThotBool inLineFloat, int *carIndex)
 {
   PtrSSchema          pSS;
-  PtrAbstractBox      pChildAb, pParent;
+  PtrAbstractBox      pChildAb;
   PtrBox              box, pMainBox;
   PtrBox              pBox;
   TypeUnit            unit;
@@ -2717,27 +2789,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           pBox->BxNChars = pAb->AbVolume;
           pBox->BxXRatio = 1;
           pBox->BxYRatio = 1;
-          if (pAb->AbEnclosing)
-            {
-              /* the direct parent is the SVG path element */
-              pParent = pAb->AbEnclosing->AbEnclosing;
-              while (pParent &&
-                     TypeHasException (ExcIsGroup, pParent->AbElement->ElTypeNumber,
-                                       pParent->AbElement->ElStructSchema))
-                pParent = pParent->AbEnclosing;
-              width = pParent->AbBox->BxWidth;
-              height = pParent->AbBox->BxHeight;
-              pAb->AbBox->BxWidth = width;
-              pAb->AbBox->BxHeight = height;
-              pParent = pAb->AbEnclosing;
-              pParent->AbBox->BxWidth = width;
-              pParent->AbBox->BxHeight = height;
-            }
-          else
-            {
-              width = 0;
-              height = 0;
-            }
+	  GivePathSize (pAb, zoom, &width, &height);
           break;
         case LtCompound:
           if (pBox->BxType == BoTable)

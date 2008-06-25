@@ -141,44 +141,77 @@ void NameSpaceGenerated (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 void GraphicsSelectionChanged (NotifyElement * event)
 {
-  Element      asc, use;
+  Element      asc, use;//, svgRoot;
+  //  AttributeType    attrType;
   ElementType  elType;
   int          elemType = 0;
+  //  SSchema      svgSchema;
 
-  /* if element is within a "use" or "tref" element, select that element
-     instead */
-  use = NULL;
-  asc = TtaGetParent (event->element);
-  /* look for the highest level use ancestor */
-  while (asc)
-    {
-      elType = TtaGetElementType (asc);
-      if (event->elementType.ElSSchema == elType.ElSSchema)
-        {
-          if (elType.ElTypeNum == SVG_EL_use_ ||
-              elType.ElTypeNum == SVG_EL_tref)
-            {
-              use = asc;
-              elemType = elType.ElTypeNum;
-            }
-          else if (elType.ElTypeNum == SVG_EL_desc ||
-                   elType.ElTypeNum == SVG_EL_title ||
-                   elType.ElTypeNum == SVG_EL_metadata)
-            /* even if a desc, title, or metadata is within a use or tref
-               element, selection is allowed within the desc, title, or
-               metadata element */
-            asc = NULL;
-        }
-      if (asc)
-        asc = TtaGetParent (asc);
-    }
-  if (use)
-    /* there is a use ancestor. Select it */
-    {
-      TtaSelectElement (event->document, use);
-      event->element = use;
-      event->elementType.ElTypeNum = elemType;
-    }
+  
+  /* In formatted view, you can only select the direct children of the
+     svgRoot */
+/*   if(event -> view == 1) */
+/*     { */
+/*       svgSchema = GetSVGSSchema (event->document); */
+/*       attrType.AttrSSchema = svgSchema; */
+
+/*       elType = TtaGetElementType (event->element); */
+      
+/*       if (elType.ElSSchema == svgSchema && elType.ElTypeNum != SVG_EL_SVG) */
+/* 	{ */
+/* 	  elType.ElTypeNum = SVG_EL_SVG; */
+/* 	  elType.ElSSchema = svgSchema; */
+/* 	  svgRoot = TtaGetTypedAncestor (event->element, elType); */
+/* 	  asc = event->element; */
+/* 	  while(TtaGetParent(asc) != svgRoot) */
+/* 	    asc = TtaGetParent(asc); */
+
+/* 	  TtaSelectElement (event->document, asc); */
+/* 	  event->element = asc; */
+/* 	  event->elementType = TtaGetElementType(asc); */
+/*   	} */
+
+/*     } */
+/*   else */
+/*     { */
+      /* if element is within a "use" or "tref" element, select that element
+	 instead */
+      use = NULL;
+      asc = TtaGetParent (event->element);
+      /* look for the highest level use ancestor */
+      while (asc)
+	{
+	  elType = TtaGetElementType (asc);
+	  if (event->elementType.ElSSchema == elType.ElSSchema)
+	    {
+	      if (elType.ElTypeNum == SVG_EL_use_ ||
+		  elType.ElTypeNum == SVG_EL_tref)
+		{
+		  use = asc;
+		  elemType = elType.ElTypeNum;
+		}
+	      else if (elType.ElTypeNum == SVG_EL_desc ||
+		       elType.ElTypeNum == SVG_EL_title ||
+		       elType.ElTypeNum == SVG_EL_metadata)
+		/* even if a desc, title, or metadata is within a use or tref
+		   element, selection is allowed within the desc, title, or
+		   metadata element */
+		asc = NULL;
+	    }
+	  if (asc)
+	    asc = TtaGetParent (asc);
+	}
+
+      if (use)
+	/* there is a use ancestor. Select it */
+	{
+	  TtaSelectElement (event->document, use);
+	  event->element = use;
+	  event->elementType.ElTypeNum = elemType;
+	}
+      //    }
+
+
   CheckSynchronize (event);
   Selection_changed_in_basedoc (event);
   /* update the displayed style information */
@@ -1926,7 +1959,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  switch(entry)
 	    {
 	    case 0: /* Line */
-	      /* TODO: fix the bug with the coordinates */
 	      SVGElementComplete (&context, newEl, &error);
 
 	      attrType.AttrTypeNum = SVG_ATTR_x1;
