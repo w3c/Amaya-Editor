@@ -2541,7 +2541,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                     {
                       ptr++;
 #ifdef _GL
-                      TtaReplaceTransform (el, 
+                      TtaAppendTransform (el, 
                                            TtaNewTransformMatrix (a, b, c,
                                                                   d, e, f),
                                            doc);
@@ -2611,7 +2611,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                   else
                     error = TRUE;
 #ifdef _GL
-                  TtaReplaceTransform (el, TtaNewTransformTranslate (x, y), doc);
+                  TtaAppendTransform (el, TtaNewTransformTranslate (x, y), doc);
 #else /* _GL */
                   pval.typed_data.value = (int)y;
                   TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
@@ -2645,7 +2645,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                     {
                       ptr++;
 #ifdef _GL
-                      TtaReplaceTransform (el, 
+                      TtaAppendTransform (el, 
                                            TtaNewTransformScale (scaleX, 
                                                                  scaleY),
                                            doc);
@@ -2690,7 +2690,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                     {
                       ptr++;
 #ifdef _GL
-                      TtaReplaceTransform (el, 
+                      TtaAppendTransform (el, 
                                            TtaNewTransformRotate (angle, x, y),
                                            doc);
 #endif /* _GL */
@@ -2714,7 +2714,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                     {
                       ptr++;
 #ifdef _GL
-                      TtaReplaceTransform (el, 
+                      TtaAppendTransform (el, 
                                            TtaNewTransformSkewX (x),
                                            doc);
 #endif /* _GL */
@@ -2738,7 +2738,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                     {
                       ptr++;
 #ifdef _GL
-                      TtaReplaceTransform (el, 
+                      TtaAppendTransform (el, 
                                            TtaNewTransformSkewY (y),
                                            doc);
 #endif /* _GL */

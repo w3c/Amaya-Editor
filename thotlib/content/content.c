@@ -1223,10 +1223,13 @@ void *TtaCopyAnim (void *void_src)
     } 
   return (void *) dest;
 }
+
+
 /*----------------------------------------------------------------------
   TtaReplaceTransform
 
-  Insert a Transform at the beginning of a Graphics basic element
+  Insert or Replace a Transform at the beginning of a Graphics basic element
+  if a transformation of the same type exists in the list, it is replaced
   Parameters:
   element: the Graphics element to be modified.
   transform: the path segment to be inserted.
@@ -1255,6 +1258,16 @@ void TtaReplaceTransform (Element element, void *transform,
             pPrevPa = NULL;
             while (pPa)
               {
+                if (pPa->TransType == ((PtrTransform)transform)->TransType)
+                  {
+                    if (pPrevPa == NULL)
+                      ((PtrElement) element)->ElTransform = (PtrTransform) transform;
+                    else
+                      pPrevPa->Next = (PtrTransform) transform;
+                    ((PtrTransform) transform)->Next = pPa->Next;
+                    TtaFreeMemory (pPa);	
+                    return;
+                  }	       
                 pPrevPa = pPa;
                 pPa = pPa->Next;
               }
