@@ -1465,7 +1465,10 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
-                <object class="wxTextCtrl" name="wxID_TEXT_NEW_NS"/>
+                <object class="wxComboBox" name="wxID_COMBOBOX_NEW_NS">
+                  <content/>
+                  <focused>1</focused>
+                </object>
                 <option>1</option>
               </object>
               <object class="sizeritem">

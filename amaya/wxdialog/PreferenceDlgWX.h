@@ -135,6 +135,7 @@ private:
   wxListBoxBook *m_book;
   
   wxArrayString m_UrlList;
+  wxArrayString m_RDFaNSList;
   
   // "Color" tab
   wxColourData colour_data;

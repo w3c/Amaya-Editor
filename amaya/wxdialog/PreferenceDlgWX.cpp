@@ -102,6 +102,7 @@ END_EVENT_TABLE()
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PreferenceDlgWX"));
   m_UrlList = url_list;
+  m_RDFaNSList = url_list;
   MyRef = ref;
 
   m_book = new wxListBoxBook(this, XRCID("wxID_NOTEBOOK"));
@@ -1572,6 +1573,16 @@ void PreferenceDlgWX::SetupLabelDialog_RDFa()
   wxStaticBoxSizer *sz = (wxStaticBoxSizer*)XRCCTRL(*this, "wxID_PAGE_RDFa", wxPanel)->GetSizer()->GetItem((size_t)0)->GetSizer();
   // sz->GetStaticBox()->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_RDFA)));
   sz->GetStaticBox()->SetLabel(TtaConvMessageToWX("XHTML+RDFa"));
+
+  // fill the combobox with ns list
+  XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->Append(m_RDFaNSList);
+#if defined(_WINDOWS) || defined(_MACOS)
+  // select the string
+  XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetSelection(0, -1);
+#else /* _WINDOWS || _MACOS */
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetInsertionPointEnd();
+#endif /* _WINDOWS || _MACOS */
 }
 
 /*----------------------------------------------------------------------
@@ -1590,6 +1601,15 @@ void PreferenceDlgWX::SetupDialog_RDFa( const Prop_RDFa & prop)
       box->Append(TtaConvMessageToWX(path->Path));
       path = path->NextPath;
     }
+#if defined(_WINDOWS) || defined(_MACOS)
+  // select the string
+  XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetSelection(0, -1);
+#else /* _WINDOWS || _MACOS */
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetInsertionPointEnd();
+#endif /* _WINDOWS || _MACOS */
+  XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetFocus();
+
 }
 
 /*----------------------------------------------------------------------
@@ -1599,7 +1619,9 @@ void PreferenceDlgWX::SetupDialog_RDFa( const Prop_RDFa & prop)
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::GetValueDialog_RDFa()
 {
-  // Prop_RDFa       prop = GetProp_RDFa();
+  wxString        value;
+
+  value = XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->GetValue();
 }
 
 /*----------------------------------------------------------------------
@@ -1630,7 +1652,7 @@ void PreferenceDlgWX::UpdateRDFaNsList()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnNSAdd(wxCommandEvent& event)
 {
-  wxString   path = XRCCTRL(*this, "wxID_TEXT_NEW_NS", wxTextCtrl)->GetValue();
+  wxString   path = XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->GetValue();
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_NS", wxListBox);
   int        i;
   
@@ -1648,6 +1670,7 @@ void PreferenceDlgWX::OnNSAdd(wxCommandEvent& event)
     }
   box->Append(path);
   box->SetSelection(box->GetCount()-1);
+  XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetValue( TtaConvMessageToWX("") );
 }
 
 /*----------------------------------------------------------------------
@@ -1660,7 +1683,7 @@ void PreferenceDlgWX::OnNSDelete(wxCommandEvent& event)
   {
     box->Delete(sel);
   }
-  XRCCTRL(*this, "wxID_TEXT_NEW_NS", wxTextCtrl)->Clear();
+  XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetValue( TtaConvMessageToWX("") );
 }
 
 /*----------------------------------------------------------------------
@@ -1668,7 +1691,7 @@ void PreferenceDlgWX::OnNSDelete(wxCommandEvent& event)
 void PreferenceDlgWX::OnNSSelected(wxCommandEvent& event)
 {
   if (event.IsSelection())
-    XRCCTRL(*this, "wxID_TEXT_NEW_NS", wxTextCtrl)->SetValue(event.GetString());
+    XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetValue(event.GetString());
 }
 
 
@@ -1844,8 +1867,6 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
 {
-  Prop_RDFa prop;
-
   if (m_OnApplyLock)
     return;
 
