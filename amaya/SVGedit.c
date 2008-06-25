@@ -2560,7 +2560,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
   Element          *selected;
   int              nb_selected;
 
-  Element	   first, sibling, parent, svgRoot;
+  Element	   first, sibling, sibling2, child, parent, svgRoot;
   DisplayMode      dispMode;
   AttributeType    attrType;
   SSchema          svgSchema;
@@ -2652,15 +2652,71 @@ void TransformGraphicElement (Document doc, View view, int entry)
     break;
 
     case 29:   /* BringToFront */
+      for(i = 0, sibling = TtaGetLastChild(svgRoot); i < nb_selected; i++)
+	{
+	  child = selected[i];
+	  if(child != sibling)
+	    {
+	      TtaRegisterElementDelete (child, doc);
+	      TtaRemoveTree(child, doc);
+	      TtaInsertSibling(child, sibling, FALSE, doc);
+	      TtaRegisterElementCreate (child, doc);
+	      sibling = child;
+	    }
+	}
       break;
 
     case 30:   /* BringForward */
+      for(i = nb_selected - 1, sibling2 = NULL; i >= 0; i--)
+	{
+	  child = selected[i];
+	  sibling = selected[i];
+	  TtaNextSibling(&sibling);
+
+	  if(sibling != sibling2)
+	    {
+	      TtaRegisterElementDelete (child, doc);
+	      TtaRemoveTree(child, doc);
+	      TtaInsertSibling(child, sibling, FALSE, doc);
+	      TtaRegisterElementCreate (child, doc);
+	    }
+
+	  sibling2 = child;
+	}
       break;
 
     case 31:   /* SendBackward */
+      for(i = 0, sibling2 = NULL; i < nb_selected; i++)
+	{
+	  child = selected[i];
+	  sibling = selected[i];
+	  TtaPreviousSibling(&sibling);
+
+	  if(sibling != sibling2)
+	    {
+	      TtaRegisterElementDelete (child, doc);
+	      TtaRemoveTree(child, doc);
+	      TtaInsertSibling(child, sibling, TRUE, doc);
+	      TtaRegisterElementCreate (child, doc);
+	    }
+
+	  sibling2 = child;
+	}
       break;
 
     case 32:   /* SendToBack */
+      for(i = 0, sibling = TtaGetFirstChild(svgRoot); i < nb_selected; i++)
+	{
+	  child = selected[i];
+	  if(child != sibling)
+	    {
+	      TtaRegisterElementDelete (child, doc);
+	      TtaRemoveTree(child, doc);
+	      TtaInsertSibling(child, sibling, i == 0, doc);
+	      TtaRegisterElementCreate (child, doc);
+	      sibling = child;
+	    }
+	}
       break;
 
     case 33:   /* RotateAntiClockWise */
@@ -2798,27 +2854,31 @@ void UpdateTransformMatrix(Document doc, Element el)
   Attribute attr;
   AttributeType attrType;
   ElementType elType;
+  ThotBool new_;
 
   TtaGetMatrixTransform(doc, el, &a, &b, &c, &d, &e, &f);
   sprintf(buffer, "matrix(%f,%f,%f,%f,%f,%f)", a, b, c, d, e, f);
 
-  /* Remove the attribute if it already exists */
+  /* Check if the attribute already exists */
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_transform;
   attr = TtaGetAttribute (el, attrType);
 
-  if(attr != NULL)
-    TtaRemoveAttribute(el, attr, doc);
+  new_ = (attr == NULL);
 
-  /* Create a new attribute */
-  attr = TtaNewAttribute (attrType);
-  if(attr)
+  if(new_)
     {
+      attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
-      TtaSetAttributeText (attr, buffer, el, doc);
-      TtaRegisterAttributeCreate (attr, el, doc);
     }
+
+  TtaSetAttributeText (attr, buffer, el, doc);
+
+  if(new_)
+    TtaRegisterAttributeCreate (attr, el, doc);
+  else
+    TtaRegisterAttributeReplace (attr, el, doc);
 }
 
 /*----------------------------------------------------------------------
