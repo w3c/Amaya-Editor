@@ -16,9 +16,14 @@ extern void SelectGraphicElement ( Document doc,
 extern void TransformGraphicElement ( Document doc,
                                       View view,
                                       int entry );
-extern void FlipElement ( Document,
-                          Element el,
-                          ThotBool horiz );
+extern void UpdateTransformMatrix ( Document doc,
+                                    Element el );
+extern void RotateElementInParentSpace ( Document doc,
+                                         Element el,
+                                         float theta );
+extern void FlipElementInParentSpace ( Document doc,
+                                       Element el,
+                                       ThotBool horiz );
 extern void MoveElementInParentSpace ( Document doc,
                                        Element el,
                                        float x,
@@ -142,9 +147,14 @@ extern void SelectGraphicElement ( Document doc,
 extern void TransformGraphicElement ( Document doc,
                                         View view,
                                         int entry );
-extern void FlipElement ( Document,
-                            Element el,
-                            ThotBool horiz );
+extern void UpdateTransformMatrix ( Document doc,
+                                      Element el );
+extern void RotateElementInParentSpace ( Document doc,
+                                           Element el,
+                                           float theta );
+extern void FlipElementInParentSpace ( Document doc,
+                                         Element el,
+                                         ThotBool horiz );
 extern void MoveElementInParentSpace ( Document doc,
                                          Element el,
                                          float x,
