@@ -2110,6 +2110,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
             pBox->BxRuleWidth = pBox->BxW;
           /* outside width */
           pBox->BxWidth = pBox->BxWidth + delta + diff;
+          // change the org if the box width increases on the left side
           pBox->BxXOrg += orgTrans;
 
           if (pBox->BxType == BoPicture || pAb->AbLeafType == LtGraphics)

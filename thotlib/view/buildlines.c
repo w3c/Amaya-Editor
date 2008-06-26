@@ -3354,6 +3354,8 @@ void ShiftFloatingBoxes (PtrBox pBlock, int delta, int frame)
 {
   PtrFloat            pfloat;
 
+  if (delta == 0)
+    return;
   pfloat = pBlock->BxLeftFloat;
   while (pfloat && pfloat->FlBox)
     {
@@ -4905,8 +4907,12 @@ ThotBool RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
             w = pBox->BxRuleWidth;
           // the box is shrunk only if there is only one line
           shrunk = (w != pBox->BxW && pBox->BxFirstLine == pBox->BxLastLine);
-          if (shrunk/*pBox != ibox && !IsParentBox (ibox, pBox)*/)
-            ResizeWidth (pBox, ibox, NULL, w - pBox->BxW, 0, 0, 0, frame, TRUE);
+          if (shrunk)
+            {
+              int x = pBox->BxXOrg;
+              ResizeWidth (pBox, ibox, NULL, w - pBox->BxW, 0, 0, 0, frame, TRUE);
+              ShiftFloatingBoxes (pBox, pBox->BxXOrg - x, frame);
+            }
         }
       else if (width != 0 && width != pBox->BxWidth)
         {
