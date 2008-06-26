@@ -263,7 +263,9 @@ switch(shape)
     break;
   }
 
+#ifdef _WINDOWS
   GL_Swap (frameId);
+#endif /* WINDOWS */
 }
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaCreatePathEvtHandler, wxEvtHandler)

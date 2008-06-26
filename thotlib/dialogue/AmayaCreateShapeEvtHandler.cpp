@@ -286,7 +286,9 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
   glLogicOp(GL_COPY);
   glDisable(GL_COLOR_LOGIC_OP);
 
+#ifdef _WINDOWS
   GL_Swap (frameId);
+#endif /* WINDOWS */
 }
 
 

@@ -2044,6 +2044,267 @@ void TtaInsertTransform (Element element, void *transform,
 }
 
 /*----------------------------------------------------------------------
+  TtaSimplifyTransformMatrix
+  Return a new transform of type PtElMatrix which represents the
+  composition of all the element of the list "transform".
+  ---------------------------------------------------------------------- */
+extern void *TtaSimplifyTransformMatrix(void *transform)
+{
+  PtrTransform result, pPa;
+  float T, cosT,sinT, tanT, a, b, c, d, e, f;
+
+  result = ((PtrTransform)(TtaNewTransformMatrix(1, 0, 0, 1, 0, 0)));
+  result->Next = NULL;
+
+  pPa = (PtrTransform)(transform);
+
+  while (pPa)
+    {      
+
+      switch (pPa->TransType)
+        {
+        case PtElTranslate:
+        case PtElAnimTranslate:
+	  result->EMatrix += result->AMatrix*pPa->XScale +
+	    result->CMatrix*pPa->YScale;
+	  result->FMatrix += result->BMatrix*pPa->XScale +
+	    result->DMatrix*pPa->YScale;
+          break;
+
+        case PtElScale:
+	  result->AMatrix *= pPa->XScale;
+	  result->CMatrix *= pPa->YScale;
+	  result->BMatrix *= pPa->XScale;
+	  result->DMatrix *= pPa->YScale;
+          break;
+
+        case PtElViewBox:
+          break;
+
+        case PtElRotate:
+        case PtElAnimRotate:
+	  /* tranlate(XRotate,YRotate) */
+	  result->EMatrix += result->AMatrix*pPa->XRotate +
+	    result->CMatrix*pPa->YRotate;
+	  result->FMatrix += result->BMatrix*pPa->XRotate +
+	    result->DMatrix*pPa->YRotate;
+
+	  /* rotate(TrAngle,0,0) */
+	  T = pPa->TrAngle * M_PI / 180;
+	  cosT = cos(T);
+	  sinT = sin(T);
+
+	  a = result->AMatrix;
+	  b = result->BMatrix;
+	  c = result->CMatrix;
+	  d = result->DMatrix;
+	  e = result->EMatrix;
+	  f = result->FMatrix;
+
+	  result->AMatrix = a*cosT + c*sinT;
+	  result->CMatrix = -a*sinT + c*cosT;
+	  result->BMatrix = b*cosT + d*sinT;
+	  result->DMatrix = -b*sinT + d*cosT;
+
+	  /* tranlate(-XRotate,-YRotate) */
+	  result->EMatrix -= result->AMatrix*pPa->XRotate +
+	    result->CMatrix*pPa->YRotate;
+	  result->FMatrix -= result->BMatrix*pPa->XRotate +
+	    result->DMatrix*pPa->YRotate;
+          break;  
+
+        case PtElMatrix:
+	  a = result->AMatrix;
+	  b = result->BMatrix;
+	  c = result->CMatrix;
+	  d = result->DMatrix;
+	  e = result->EMatrix;
+	  f = result->FMatrix;
+
+	  result->AMatrix = a*pPa->AMatrix + c*pPa->BMatrix;
+	  result->CMatrix = a*pPa->CMatrix + c*pPa->DMatrix;
+	  result->BMatrix = b*pPa->AMatrix + d*pPa->BMatrix;
+	  result->DMatrix = b*pPa->CMatrix + d*pPa->DMatrix;
+	  result->EMatrix += a*pPa->EMatrix + c*pPa->FMatrix;
+	  result->FMatrix += b*pPa->EMatrix + d*pPa->FMatrix;
+          break;	  
+
+        case PtElSkewX:
+	  T = pPa->TrAngle * M_PI / 180;
+	  tanT = tan(T);
+
+	  result->CMatrix += tanT*result->AMatrix;
+	  result->DMatrix += tanT*result->BMatrix;
+	  break;
+
+        case PtElSkewY:
+	  T = pPa->TrAngle * M_PI / 180;
+	  tanT = tan(T);
+
+	  result->AMatrix += tanT*result->CMatrix;
+	  result->BMatrix += tanT*result->DMatrix;
+          break;	  
+
+        default:
+          break;
+        }	       
+ 
+      pPa = pPa->Next;
+   }
+
+
+
+  return result;
+}
+
+/*----------------------------------------------------------------------
+  TtaCoordinatesInParentSpace
+  Convert the coordinates (x,y) of a point inside the space of the element
+  el into coordinates in its parent.
+  ---------------------------------------------------------------------- */
+extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
+{
+  float newx,newy;
+  PtrTransform transform = (PtrTransform)
+    TtaSimplifyTransformMatrix(((PtrElement) el)->ElTransform);
+
+  if(transform)
+    {
+      newx = transform->AMatrix * *x + transform->CMatrix * *y + transform->EMatrix;
+      newy = transform->BMatrix * *x + transform->DMatrix * *y + transform->FMatrix;
+
+      *x = newx;
+      *y = newy;
+
+      TtaFreeTransform (transform);
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaApplyMatrixTransform
+  Apply a transform matrix to an element and simplify its transformation
+  matrix.
+  ---------------------------------------------------------------------- */
+extern void TtaApplyMatrixTransform (Document document, Element element,
+			    float a, float b, float c, float d, float e,
+			    float f)
+{
+  PtrTransform       transform;
+
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    /* verifies the parameter document */
+    if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+    else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+    else
+      /* parameter document is correct */
+      {
+	/* Add a new transform */
+	TtaInsertTransform (element,
+			    TtaNewTransformMatrix (a, b, c, d, e, f),
+                            document);
+
+	/* Simplify the transform matrix */
+	transform = (PtrTransform)
+	  TtaSimplifyTransformMatrix(((PtrElement) element)->ElTransform);
+
+	if(transform)
+	  {
+	    TtaFreeTransform (((PtrElement) element)->ElTransform);
+	    ((PtrElement) element)->ElTransform = transform;
+	  }
+      }
+}
+
+/*----------------------------------------------------------------------
+  ---------------------------------------------------------------------- */
+extern void TtaGetMatrixTransform(Document document, Element el,
+				    float *a,
+				    float *b,
+				    float *c,
+				    float *d,
+				    float *e,			    
+				    float *f
+					    )
+{
+  PtrTransform transform = (PtrTransform)((PtrElement) el)->ElTransform;
+  float T, cosT,sinT, tanT;
+  float cx,cy;
+
+  *a = 1;
+  *b = 0;
+  *c = 0;
+  *d = 1;
+  *e = 0;
+  *f = 0;
+
+  if(transform)
+    {
+      switch(transform->TransType)
+        {
+        case PtElTranslate:
+        case PtElAnimTranslate:
+          *e = transform -> XScale;
+	  *f = transform -> YScale;
+          break;
+
+        case PtElScale:
+	  *a = transform -> XScale;
+	  *d = transform -> YScale;
+          break;
+
+        case PtElViewBox:
+          break;
+
+        case PtElRotate:
+        case PtElAnimRotate:
+	  T = transform->TrAngle * M_PI / 180;
+	  cosT = cos(T);sinT = sin(T);
+	  cx = transform->XRotate;
+	  cy = transform->YRotate;
+
+	  *a = cosT;
+	  *b = sinT;
+	  *c = -sinT;
+	  *d = cosT;
+
+	  *e = cy*sinT - cx*cosT + cx;
+	  *f = -cx*sinT - cy*cosT + cy;
+          break;  
+
+        case PtElMatrix:
+	  *a = transform->AMatrix;
+	  *b = transform->BMatrix;
+	  *c = transform->CMatrix;
+	  *d = transform->DMatrix;
+	  *e = transform->EMatrix;
+	  *f = transform->FMatrix;
+          break;	  
+
+        case PtElSkewX:
+	  T = transform->TrAngle * M_PI / 180;
+	  tanT = tan(T);
+
+	  break;
+
+        case PtElSkewY:
+	  T = transform->TrAngle * M_PI / 180;
+	  tanT = tan(T);
+          break;	  
+
+        default:
+	  break;
+	}
+
+    }
+
+}
+
+/*----------------------------------------------------------------------
   TtaSetElCoordinateSystem : make this element the start of a new
   coordinate system
   ----------------------------------------------------------------------*/
@@ -2937,4 +3198,3 @@ int TtaGetPageView (Element pageElement)
     pageView = ((PtrElement) pageElement)->ElViewPSchema;
   return pageView;
 }
-

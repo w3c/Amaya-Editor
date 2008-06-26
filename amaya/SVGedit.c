@@ -2859,8 +2859,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
 
     case 41:   /* Rotate */
-
-      //    AskRotationAngle(x1, y1, x2, y2, doc, entry, svgRoot);
+      //AskTransformSVG(doc, entry, svgRoot, selected[0]);
       break;
 
       /* Translate, Scale */
