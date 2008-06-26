@@ -2046,7 +2046,7 @@ void TtaInsertTransform (Element element, void *transform,
 /*----------------------------------------------------------------------
   TtaSimplifyTransformMatrix
   Return a new transform of type PtElMatrix which represents the
-  composition of all the element of the list "transform".
+  composition of all the elements of the list "transform".
   ---------------------------------------------------------------------- */
 extern void *TtaSimplifyTransformMatrix(void *transform)
 {
@@ -2221,6 +2221,14 @@ extern void TtaApplyMatrixTransform (Document document, Element element,
 }
 
 /*----------------------------------------------------------------------
+  TtaGetMatrixTransform
+  Get the coefficient of the matrix representing the transform attached to
+  the element el.
+
+  ( a  c  e )
+  ( b  d  f )
+  ( 0  0  1 )
+
   ---------------------------------------------------------------------- */
 extern void TtaGetMatrixTransform(Document document, Element el,
 				    float *a,
@@ -2232,7 +2240,7 @@ extern void TtaGetMatrixTransform(Document document, Element el,
 					    )
 {
   PtrTransform transform = (PtrTransform)((PtrElement) el)->ElTransform;
-  float T, cosT,sinT, tanT;
+  float T, cosT,sinT;
   float cx,cy;
 
   *a = 1;
@@ -2287,13 +2295,12 @@ extern void TtaGetMatrixTransform(Document document, Element el,
 
         case PtElSkewX:
 	  T = transform->TrAngle * M_PI / 180;
-	  tanT = tan(T);
-
+	  *c = tan(T);
 	  break;
 
         case PtElSkewY:
 	  T = transform->TrAngle * M_PI / 180;
-	  tanT = tan(T);
+	  *b = tan(T);
           break;	  
 
         default:

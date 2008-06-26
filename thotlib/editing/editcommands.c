@@ -2097,58 +2097,77 @@ char *AskShapePoints (Document doc, int shape, Element svgRoot)
   Ask the user the position and size of the surrounding box or the extremities
   of a line.
   --------------------------------------------------------------------*/
-void AskSurroundingBox(int *x1, int *y1, int *x2, int *y2, Document doc, int shape, Element svgRoot)
+void AskSurroundingBox(
+		       Document doc,
+		       Element svgCanvas,
+		       int shape,
+		       int *x1, int *y1,
+		       int *x2, int *y2,
+		       int *x3, int *y3,
+		       int *x4, int *y4,
+		       int *lx, int *ly)
 {
   PtrAbstractBox pAb;
   PtrBox pBox;
   ViewFrame          *pFrame;
   int frame;
-  int lx,ly,tmp;
+
+  int a1,b1,a2,b2;
 
   frame = ActiveFrame;
 
-  *x1 = 0;
-  *x2 = 0;
-  *y1 = 0;
-  *y2 = 0;
+  a1 = 0;
+  b1 = 0;
+  a2 = 0;
+  b2 = 0;
 
-  if(frame <= 0 || svgRoot == NULL)return;
-  pAb = ((PtrElement)svgRoot) -> ElAbstractBox[0];
+  if(frame <= 0 || svgCanvas == NULL)return;
+  pAb = ((PtrElement)svgCanvas) -> ElAbstractBox[0];
   if(!pAb)return;
   pBox = pAb -> AbBox;
   if(!pBox)return;
 
   pFrame = &ViewFrameTable[frame - 1];
 
-  *x1 = pBox->BxXOrg - pFrame->FrXOrg;
-  *y1 = pBox->BxYOrg - pFrame->FrYOrg;
-  *x2 = *x1 + pBox->BxWidth;
-  *y2 = *y1 + pBox->BxHeight;
+  a1 = pBox->BxXOrg - pFrame->FrXOrg;
+  b1 = pBox->BxYOrg - pFrame->FrYOrg;
+  a2 = a1 + pBox->BxWidth;
+  b2 = b1 + pBox->BxHeight;
 
-  ShapeCreation (frame, x1, y1, x2, y2, doc, shape);
+  ShapeCreation (frame, &a1, &b1, &a2, &b2, doc, shape);
+  *x1 = a1;
+  *y1 = b1;
+  *x4 = a2;
+  *y4 = b2;
+
+  *lx = abs(a2 - a1);
+  *ly = abs(b2 - b1);
 
   if(!(shape == 0 || (shape >= 12 && shape <= 14)))
     {
       /* It's a shape drawn in a rectangle */
 
-      lx = abs(*x2 - *x1);
-      ly = abs(*y2 - *y1);
-
       if(shape == 20)
 	/* equilateral triangle */
-	lx = (int) (floor(2 *  ly / sqrt(3)));
+	*lx = (int) (floor(2 *  *ly / sqrt(3)));
       else if(shape == 3 || shape == 15 || shape == 16 || shape == 23)
 	{
-	  /* lx and ly must be equal (square, circle...) */
-	  if(ly < lx)lx=ly; else ly = lx;
+	  /* *lx and *ly must be equal (square, circle...) */
+	  if(*ly < *lx)*lx=*ly; else *ly = *lx;
 	}
 
-      if(*x2 < *x1){*x2 = *x1 - lx; tmp = *x2; *x2 = *x1; *x1 = tmp;}
-	else *x2 = *x1 + lx;
+      if(*x4 < *x1)*x4 = *x1 - *lx;
+	else *x4 = *x1 + *lx;
 
-      if(*y2 < *y1){*y2 = *y1 - ly; tmp = *y2; *y2 = *y1; *y1 = tmp;}
-        else *y2 = *y1 + ly;
+      if(*y4 < *y1)*y4 = *y1 - *ly;
+      else *y4 = *y1 + *ly;
+
     }
+
+  *x2 = *x4;
+  *y2 = *y1;
+  *x3 = *x1;
+  *y3 = *y4;
 }
 
 /*----------------------------------------------------------------------

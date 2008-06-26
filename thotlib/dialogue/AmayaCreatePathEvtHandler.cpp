@@ -29,6 +29,8 @@
 
 #ifdef _GL
 #include "glwindowdisplay.h"
+#include "tesse_f.h"
+#include "spline_f.h"
 #endif /* _GL */
 
 #include "logdebug.h"
@@ -109,6 +111,16 @@ static void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3,
 
   glDisable(GL_MAP1_VERTEX_3);
   glDisable(GL_COLOR_LOGIC_OP);
+
+  /*
+  void        *mesh;
+  mesh = GetNewMesh ();
+  QuadraticSplit2 (x1, y1, x2, y2, x3, y3, mesh);
+  MeshNewPoint (x3, y3, mesh);
+  CountourCountAdd (mesh);
+  MakeMeshLines (mesh);
+  FreeMesh (mesh);*/
+
 }
 
 /*----------------------------------------------------------------------
@@ -121,9 +133,10 @@ static void DrawCubicBezier (int x1, int y1, int x2, int y2, int x3, int y3,
 {
   int i;
 
-  GLfloat ctrlpoints[4][3] =
+GLfloat ctrlpoints[4][3] =
     {{ (float) x1, (float) y1, 0.0}, { (float) x2, (float) y2, 0.0},
      { (float) x3, (float) y3, 0.0}, { (float) x4, (float) y4, 0.0}};
+
 
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
@@ -143,6 +156,16 @@ static void DrawCubicBezier (int x1, int y1, int x2, int y2, int x3, int y3,
 
   glDisable(GL_MAP1_VERTEX_3);
   glDisable(GL_COLOR_LOGIC_OP);
+
+  /*
+  void        *mesh;
+  mesh = GetNewMesh ();
+  PolySplit2 (x1, y1, x2, y2, x3, y3, x4, y4, mesh);
+  MeshNewPoint (x4, y4, mesh);
+  CountourCountAdd (mesh);
+  MakeMeshLines (mesh);
+  FreeMesh (mesh);
+  */
 }
 
 /*----------------------------------------------------------------------

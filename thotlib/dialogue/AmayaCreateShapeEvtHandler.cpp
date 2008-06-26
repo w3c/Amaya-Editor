@@ -42,10 +42,9 @@ static int m_mouse_x,m_mouse_y;
 
 static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
 { 
-  int lx,ly,tmp;
-  int x3, y3, x4, y4, x5, y5, x6, y6;
-  
-  
+  int lx,ly;
+  int x3, y3, x4, y4, x5, y5, x6, y6,tmp;
+
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
   glColor4ub (127, 127, 127, 0);
@@ -66,10 +65,10 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
 	  if(ly < lx)lx=ly; else ly = lx;
 	}
 
-      if(x2 < x1){x2 = x1 - lx; tmp = x2; x2 = x1; x1 = tmp;}
+      if(x2 < x1)x2 = x1 - lx;
 	else x2 = x1 + lx;
 
-      if(y2 < y1){y2 = y1 - ly; tmp = y2; y2 = y1; y1 = tmp;}
+      if(y2 < y1)y2 = y1 - ly;
         else y2 = y1 + ly;
     }
 
@@ -84,7 +83,6 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
       break;
 
     case 12: /* Simple Arrow */
-
       x3 = x1; y3 = y1;
       x4 = x2; y4 = y2;
       GetArrowCoord(&x3, &y3, &x4, &y4);
@@ -136,8 +134,8 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
     case 14: /* Zigzag */
       glBegin(GL_LINE_STRIP);
       glVertex2i(x1,y1);
-      glVertex2i(x1,y1+(y2-y1)/2);
-      glVertex2i(x2,y1+(y2-y1)/2);
+      glVertex2i(x1,(y1+y2)/2);
+      glVertex2i(x2,(y1+y2)/2);
       glVertex2i(x2,y2);
       glEnd (); 
       break;
@@ -147,9 +145,6 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
       /* Selection */
     case 42:
 
-      /* Foreign object */
-    case 9:
-
       /* Square */
     case 15:
 
@@ -157,9 +152,9 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
     case 1:
       glBegin(GL_LINE_LOOP);
       glVertex2i(x1, y1);
-      glVertex2i(x1 + lx, y1);
-      glVertex2i(x1 + lx, y1 + ly);
-      glVertex2i(x1, y1 + ly);
+      glVertex2i(x2, y1);
+      glVertex2i(x2, y2);
+      glVertex2i(x1, y2);
       glEnd (); 
       break;
 
@@ -169,14 +164,17 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
     case 2:
       if(lx > 5 && ly > 5)
 	{
+	  if(x2<x1){tmp=x1;x1=x2;x2=tmp;}
+	  if(y2<y1){tmp=y1;y1=y2;y2=tmp;}
+
 	  glBegin(GL_LINE_LOOP);
 	  glVertex2i(x1+5, y1);
-	  glVertex2i(x1+lx-5, y1);
-	  glVertex2i(x1+lx, y1+5);
-	  glVertex2i(x1+lx, y1+ly-5);
-	  glVertex2i(x1+lx-5, y1+ly);
-	  glVertex2i(x1+5, y1+ly);
-	  glVertex2i(x1, y1+ly-5);
+	  glVertex2i(x2-5, y1);
+	  glVertex2i(x2, y1+5);
+	  glVertex2i(x2, y2-5);
+	  glVertex2i(x2-5, y2);
+	  glVertex2i(x1+5, y2);
+	  glVertex2i(x1, y2-5);
 	  glVertex2i(x1, y1+5);
 	  glEnd();
 	}
@@ -186,47 +184,49 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
     case 3:
       /* Ellipse */
     case 4:
+      if(x2<x1)x1=x2;
+      if(y2<y1)y1=y2;
       GL_DrawArc (x1, y1, lx, ly, 0, 360, 0, FALSE);
       break;
 
     case 17: /* diamond */
       glBegin(GL_LINE_LOOP);
-      glVertex2i(x1, y1 + ly/2);
-      glVertex2i(x1 + lx/2, y1);
-      glVertex2i(x2, y1 + ly/2);
-      glVertex2i(x1 + lx/2, y2);
+      glVertex2i(x1, (y1+y2)/2);
+      glVertex2i((x1+x2)/2, y1);
+      glVertex2i(x2, (y1+y2)/2);
+      glVertex2i((x1+x2)/2, y2);
       glEnd ();
       break;
 
     case 18: /* trapezium */
       glBegin(GL_LINE_LOOP);
       glVertex2i(x1, y2);
-      glVertex2i(x1 + lx / 4, y1);
-      glVertex2i(x2 - lx / 4, y1);
+      glVertex2i((3*x1+x2)/4, y1);
+      glVertex2i((x1+3*x2)/4, y1);
       glVertex2i(x2, y2);
       glEnd (); 
       break;
 
     case 19: /* parallelogram */
       glBegin(GL_LINE_LOOP);
-      glVertex2i(x1 + lx/4, y1);
+      glVertex2i((3*x1+x2)/4, y1);
       glVertex2i(x2, y1);
-      glVertex2i(x2 - lx / 4, y2);
+      glVertex2i((3*x2+x1)/4, y2);
       glVertex2i(x1, y2);
       glEnd (); 
       break;
 
     case 20: /* equilateral triangle */
       glBegin(GL_LINE_LOOP);
-      glVertex2i(x1 + lx/2, y1);
-      glVertex2i(x1 + lx, y2);
+      glVertex2i((x1+x2)/2, y1);
+      glVertex2i(x2, y2);
       glVertex2i(x1, y2);
       glEnd (); 
       break;
 
     case 21: /* isosceles triangle */
       glBegin(GL_LINE_LOOP);
-      glVertex2i(x1 + lx/2, y1);
+      glVertex2i((x1+x2)/2, y1);
       glVertex2i(x2, y2);
       glVertex2i(x1, y2);
       glEnd (); 
@@ -243,40 +243,51 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
     case 23: /* cube */
     case 24: /* parallelepiped */
       glBegin(GL_LINE_STRIP);
-      glVertex2i(x1, y1+ly/4);
-      glVertex2i(x1+lx/4, y1);
+      glVertex2i(x1, (y1*3+y2)/4);
+      glVertex2i((3*x1+x2)/4, y1);
       glVertex2i(x2, y1);
-      glVertex2i(x2, y2-ly/4);
-      glVertex2i(x2-lx/4, y2);
+      glVertex2i(x2, (3*y2+y1)/4);
+      glVertex2i((3*x2+x1)/4, y2);
       glVertex2i(x1,y2);
-      glVertex2i(x1, y1+ly/4);
-      glVertex2i(x2-lx/4, y1+ly/4);
-      glVertex2i(x2-lx/4, y2);
+      glVertex2i(x1, (3*y1+y2)/4);
+      glVertex2i((3*x2+x1)/4, (3*y1+y2)/4);
+      glVertex2i((3*x2+x1)/4, y2);
       glEnd (); 
 
       glBegin(GL_LINE_STRIP);
-      glVertex2i(x2-lx/4, y1+ly/4);
+      glVertex2i((3*x2+x1)/4, (3*y1+y2)/4);
       glVertex2i(x2, y1);
       glEnd (); 
       break;
 
     case 25: /* Cylinder */
       glBegin(GL_LINE_STRIP);
-      glVertex2i(x1, y1+ly/6);
-      glVertex2i(x1, y2-ly/6);
+      glVertex2i(x1, (y1*5+y2)/6);
+      glVertex2i(x1, (5*y2+y1)/6);
       glEnd (); 
 
       glBegin(GL_LINE_STRIP);
-      glVertex2i(x2, y1+ly/6);
-      glVertex2i(x2, y2-ly/6);
+      glVertex2i(x2,(5*y1+y2)/6);
+      glVertex2i(x2,(5*y2+y1)/6);
       glEnd (); 
 
-      GL_DrawArc (x1, y1, lx, ly/3, 0, 360, 0, FALSE);
-      GL_DrawArc (x1, y2-ly/3, lx, ly/3, 0, -180, 0, FALSE);
+      if(x2 < x1)x1=x2;
+      
+      if(y2 < y1)
+	{
+	  GL_DrawArc (x1, y2, lx, ly/3, 0, 180, 0, FALSE);
+	  GL_DrawArc (x1, (y2+2*y1)/3, lx, ly/3, 0, 360, 0, FALSE);
+	}
+      else
+	{
+	  GL_DrawArc (x1, y1, lx, ly/3, 0, 360, 0, FALSE);
+	  GL_DrawArc (x1, (2*y2+y1)/3, lx, ly/3, 0, -180, 0, FALSE);
+	}
 
       break;
 
     default:
+      /* m_ShapeNumber = 9 = Foreign object */
       /* m_ShapeNumber = 10 = Text */
 
       break;
@@ -413,7 +424,7 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
   *m_y1 = m_mouse_y;
   *m_NbPoints = 1;
 
-  if(m_ShapeNumber == 10)
+  if(m_ShapeNumber == 10 || m_ShapeNumber == 9)
     {
       /* Only one point is needed */
       *m_x2 = *m_x1;
