@@ -16,10 +16,10 @@ PRINT
 #endif
 
 #define LINE_NUMBER_Color DarkGrey2
-#define MARKUP_Color DarkIndigo1
-#define LINK_Color DarkIndigo1
-#define ATTRVALUE_Color DarkMagenta2
-#define COMMENT_Color DarkLawnGreen3
+#define MARKUP_Color DarkBlue3
+#define LINK_Color DarkBlue3
+#define ATTRVALUE_Color DarkRed2
+#define COMMENT_Color DarkGreen3
 
 COUNTERS
 #ifdef PAGE
@@ -217,6 +217,7 @@ RULES
   Line\240: BEGIN
         LineBreak: Yes;
         Line;
+        Foreground: Black;
 #ifdef PAGE
         Width: Enclosing . Width;
 #else

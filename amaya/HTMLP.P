@@ -35,13 +35,13 @@ PRINT
 #define LINK_Color Black
 #define COMMENT_Color Black
 #else
-#define TAG_Color DarkIndigo1
-#define ATTR_Color DarkIndigo1
-#define ATTRVALUE_Color DarkMagenta2
+#define TAG_Color DarkBlue3
+#define ATTR_Color DarkBlue3
+#define ATTRVALUE_Color DarkRed2
 #define INVALID_Color Red
 #define UNKNOWNTAG_Color Red
 #define LINK_Color DarkIndigo1
-#define COMMENT_Color DarkLawnGreen3
+#define COMMENT_Color DarkGreen3
 #endif
 
 #define TAG_Font Helvetica
