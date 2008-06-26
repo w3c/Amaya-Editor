@@ -25,12 +25,12 @@ VIEWS
 #define INVALID_Visibility 7
 #define INVALID_Font Helvetica
 #define ATTR_Color DarkGold3
-#define ATTRVALUE_Color DarkMagenta2
+#define ATTRVALUE_Color DarkRed2
 #define INVALID_Color Red
 #define COMMENT_Font Helvetica
 #define COMMENT_Style Italics
 #define COMMENT_Weight Normal
-#define COMMENT_Color DarkLawnGreen3
+#define COMMENT_Color DarkGreen3
 
    
 DEFAULT
@@ -105,6 +105,26 @@ BOXES
                 Foreground: TAG_Color;
                 END;
         END;
+
+  ComponentName: BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
+Visibility: 10;
+    Content: (Text ' ' AttributeValue Text ' ');
+    HorizPos: Left = Enclosing . Left + 10 px;
+    VertPos: Bottom = Creator . Top;
+    Size: TAG_FONTSIZE;
+    Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+    Foreground: ATTR_Color;
+    Background: White;
+    FillPattern: backgroundcolor;
+    ShowBox;
+    IN Structure_view BEGIN
+      Visibility: 0;
+ 	    END;
+#endif
+   END;
 
   AttrName: BEGIN
     Content: (Text ' ' AttributeName Text '=');
@@ -421,11 +441,12 @@ RULES
     Height: auto{Enclosing . Height};
     VertPos: Top = 			Previous ElementName. Bottom;
     HorizPos: Left =		Enclosing . Left;
-		PaddingTop: 			  10 px;
+		PaddingTop: 			  50 px;
 		PaddingBottom: 			10 px;
 		PaddingLeft: 		  	10 px;
 		PaddingRight: 			10 px;
 		MarginBottom: 			10 px;
+		MarginTop: 			    2 px;
     Background : DarkGrey1;
     FillPattern: backgroundcolor;
     ShowBox; 
@@ -435,12 +456,13 @@ RULES
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
       FillPattern: nopattern;
-	  	BorderBottomWidth: 	0;
-		  PaddingTop: 			  0;
-		  PaddingBottom: 			0;
-	  	PaddingLeft: 		  	0;
-	  	PaddingRight: 			0;
-	  	MarginBottom: 		0;
+	  	BorderBottomWidth: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
+	  	PaddingLeft: 0;
+	  	PaddingRight: 0;
+	  	MarginTop: 0;
+	  	MarginBottom: 0;
 		  END;
 #endif
     END;
@@ -455,27 +477,24 @@ RULES
 	  CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
-    VertPos: Top = 			Previous AnyElem. Bottom;
-    HorizPos: Left =		Enclosing . Left;
+    VertPos: Top = Previous AnyElem. Bottom + 30 px;
+    HorizPos: Left = Enclosing . Left;
     Background : White;
     Display : Block;
     FillPattern: backgroundcolor;
     ShowBox; 
-    {if not immediately within option
-      BEGIN}
-		  BorderTopWidth: 	 	1 px;
-		  BorderLeftWidth: 		1 px;
-		  BorderBottomWidth: 	1 px;
-		  BorderRightWidth: 	1 px;
-		  BorderTopStyle: 		Dotted;
-		  BorderLeftStyle: 		Dotted;
-		  BorderBottomStyle: 	Dotted;
-		  BorderRightStyle: 	Dotted;
-		  BorderTopColor: 		Blue;
-		  BorderLeftColor: 		Blue;
-		  BorderBottomColor: 	Blue;
-		  BorderRightColor: 	Blue;
-    {  END;}
+		BorderTopWidth: 	 	1 px;
+		BorderLeftWidth: 		1 px;
+		BorderBottomWidth: 	1 px;
+		BorderRightWidth: 	1 px;
+		BorderTopStyle: 		Dotted;
+		BorderLeftStyle: 		Dotted;
+		BorderBottomStyle: 	Dotted;
+		BorderRightStyle: 	Dotted;
+		BorderTopColor: 		Blue;
+		BorderLeftColor: 		Blue;
+		BorderBottomColor: 	Blue;
+		BorderRightColor: 	Blue;
   	IN Structure_view BEGIN
       Visibility: Enclosing =;
 			BorderTopWidth: 0;
@@ -499,13 +518,41 @@ RULES
 #ifdef INSTANCE
 		Visibility: 0;
 #else
+		Visibility: 10;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
+    VertPos: Top = Previous AnyElem. Bottom + 30 px;
+	  Width: Enclosing . Width;
+    HorizPos: Left = Enclosing . Left;
+    Background : White;
+    Display : Block;
+    FillPattern: backgroundcolor;
+    ShowBox; 
+		BorderTopWidth: 	 	1 px;
+		BorderLeftWidth: 		1 px;
+		BorderBottomWidth: 	1 px;
+		BorderRightWidth: 	1 px;
+		BorderTopStyle: 		Dotted;
+		BorderLeftStyle: 		Dotted;
+		BorderBottomStyle: 	Dotted;
+		BorderRightStyle: 	Dotted;
+		BorderTopColor: 		Blue;
+		BorderLeftColor: 		Blue;
+		BorderBottomColor: 	Blue;
+		BorderRightColor: 	Blue;
   	IN Structure_view BEGIN
-  	  Visibility: Enclosing =;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
+			BorderTopWidth: 0;
+			BorderLeftWidth: 0;
+			BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+		  PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
+      FillPattern: nopattern;
 		  END;
 #endif
 	 END;
@@ -531,9 +578,11 @@ RULES
 		BEGIN
     CreateBefore(ElementName);
 	  CreateFirst(BagButton);
+#ifndef INSTANCE
     Background : LightGreen4;
     FillPattern: backgroundcolor;
     ShowBox; 
+#endif
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
@@ -768,6 +817,7 @@ ATTRIBUTES
 
   name:
   BEGIN
+	CreateBefore(ComponentName);
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    

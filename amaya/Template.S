@@ -82,11 +82,11 @@ EXCEPT
   PI_line:            Hidden, MarkupPreserve;
   Comment\240:        ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
   Comment_line:       Hidden, MarkupPreserve;
-  useEl:              NoReplicate, NoBreakByReturn;
+  useEl:              NoReplicate, NoBreakByReturn, ClickableSurface;
   useSimple:          NoReplicate, NoBreakByReturn;
-  repeat:             NoReplicate, NoBreakByReturn, NoCreate;
+  repeat:             NoReplicate, NoBreakByReturn, NoCreate, ClickableSurface;
   {option:             NoReplicate, NoBreakByReturn, NoCreate;}
-  bag:                NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak;
+  bag:                NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak, ClickableSurface;
   {Hiding unkown and language attributes}
 	Unknown_attribute:  Invisible;
 	Language:           Invisible;

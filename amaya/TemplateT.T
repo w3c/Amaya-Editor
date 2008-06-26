@@ -314,7 +314,7 @@ ATTRIBUTES
   prompt :
     begin
       create SAN;
-      create 'prompt="prompt"';
+      create 'initial="true"';
     end;
 
   useAt = required:

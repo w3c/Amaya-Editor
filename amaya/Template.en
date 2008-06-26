@@ -24,3 +24,5 @@ title: label
 Comment\240: Comment
 XMLPI: PI
 xmlid: xml:id
+prompt: initial
+Yes_: true
