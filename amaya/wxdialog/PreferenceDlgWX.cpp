@@ -133,7 +133,7 @@ END_EVENT_TABLE()
   m_book->InsertPage(11, wxXmlResource::Get()->LoadPanel(m_book, wxT("wxID_PAGE_EMAILS")),
       TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS)), false);
   m_book->InsertPage(12, wxXmlResource::Get()->LoadPanel(m_book, wxT("wxID_PAGE_RDFa")),
-		     TtaConvMessageToWX(TtaGetMessage(AMAYA, /*AM_RDFa*/ AM_TEMPLATES)), false);
+                     TtaConvMessageToWX("RDFa"), false);
   
 #ifndef DAV
   // invalid WebDAV Page

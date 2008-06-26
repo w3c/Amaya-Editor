@@ -474,11 +474,9 @@
 472 Le composant '%s' a une définition multiple.
 473 La bibliothèque '%s' ne peut être chargée.
 474 Conversion d'une instance en modèle impossible.
-475 Le document est déjà un modèle.
-476 Erreur pendant la création du modèle:
-477 Zone de texte
-478 Nom de la zone de texte:
-479 Zone d'édition libre
-480 Nom de la zone d'édition libre:
-481 Composant répétée
-482 Nom du composant répété:
+475 Le document est déjà un modèle
+476 La création du modèle a échouée
+477 Zone texte
+478 Label de l'élément :
+479 Zone multi-élément
+480 Elément de répétition

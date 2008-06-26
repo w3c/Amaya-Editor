@@ -474,11 +474,9 @@
 472 **Component '%s' has multiple definition.
 473 **Library '%s' can not be loaded.
 474 **Can not convert an instance document to template.
-475 **The document is already a template.
-476 **Error in template creation:
-477 **Text box
-478 **Text box label:
-479 **Free editing box
-480 **Free editing box label:
-481 **Repeated component
-482 **Repeated component label:
+475 **The document is already a template
+476 **Template creation fails
+477 **Text area
+478 **Element label:
+479 **Bag area
+480 **Repeat element

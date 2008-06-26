@@ -414,6 +414,7 @@ RULES
 #else
     Display : Block;
     Visibility: 10;
+  Depth: Enclosing - 2;
 	  CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};

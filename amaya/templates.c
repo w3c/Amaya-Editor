@@ -1718,7 +1718,7 @@ void TemplateCreateTextBox(Document doc, View view)
   char        buffer[128];
   
   char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_USESTRING);
-  char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_USESTRING_LABEL);
+  char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_LABEL);
 
   if (!TtaGetDocumentAccessMode(doc))
     return;
@@ -1797,7 +1797,7 @@ void TemplateCreateFreeBox(Document doc, View view)
   char        buffer[128];
 
   char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_BAGANY);
-  char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_BAGANY_LABEL);
+  char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_LABEL);
 
   if (!TtaGetDocumentAccessMode(doc))
     return;
@@ -1874,7 +1874,7 @@ void TemplateCreateRepeat(Document doc, View view)
   char        buffer[128];
 
   char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_REPEATCOMP);
-  char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_REPEATCOMP_LABEL);
+  char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_LABEL);
 
   if (!TtaGetDocumentAccessMode(doc))
     return;
