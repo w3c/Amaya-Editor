@@ -435,7 +435,10 @@ AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
       for(; i < pB->BuLength; i++)
 	{
 	  MouseCoordinatesToSVG(m_document, m_pFrame,
-			m_xmin, m_xmax, m_ymin, m_ymax, TRUE,
+			m_xmin, m_ymin,
+			m_xmax - m_xmin, m_ymax - m_ymin,
+			1,0,0,1,0,0,
+			TRUE,
 			&(pB->BuPoints[i].XCoord), &(pB->BuPoints[i].YCoord));
 	}
       i = 0;
@@ -491,7 +494,10 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
     return;
 
   /* Are we in the SVG ? */
-  if(!MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
+  if(!MouseCoordinatesToSVG(m_document, m_pFrame,
+			    m_xmin, m_ymin,
+			    m_xmax - m_xmin, m_ymax - m_ymin,
+			    1,0,0,1,0,0,
 			    FALSE, &currentX, &currentY))return;
 
   if(m_ShapeNumber == 7 || m_ShapeNumber == 8)
@@ -590,7 +596,10 @@ void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
   DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
   clear = TRUE;
 
-  MouseCoordinatesToSVG(m_document, m_pFrame, m_xmin, m_xmax, m_ymin, m_ymax,
+  MouseCoordinatesToSVG(m_document, m_pFrame,
+			m_xmin, m_ymin,
+			m_xmax - m_xmin, m_ymax - m_ymin,
+			1,0,0,1,0,0,
 			FALSE, &currentX, &currentY);
   
 #ifndef _WINDOWS

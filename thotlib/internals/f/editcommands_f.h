@@ -17,13 +17,20 @@ extern void ClearClipboard ( PtrTextBuffer clipboard );
 extern char *AskShapePoints ( Document doc,
                               int shape,
                               Element svgRoot );
-extern void AskSurroundingBox ( int *x1,
+extern void AskSurroundingBox ( Document doc,
+                                Element svgAncestor,
+                                Element svgCanvas,
+                                int shape,
+                                int *x1,
                                 int *y1,
                                 int *x2,
                                 int *y2,
-                                Document doc,
-                                int shape,
-                                Element svgRoot );
+                                int *x3,
+                                int *y3,
+                                int *x4,
+                                int *y4,
+                                int *lx,
+                                int *ly );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                              CHAR_T c,
@@ -68,13 +75,20 @@ extern void ClearClipboard ( PtrTextBuffer clipboard );
 extern char *AskShapePoints ( Document doc,
                                 int shape,
                                 Element svgRoot );
-extern void AskSurroundingBox ( int *x1,
+extern void AskSurroundingBox ( Document doc,
+                                  Element svgAncestor,
+                                  Element svgCanvas,
+                                  int shape,
+                                  int *x1,
                                   int *y1,
                                   int *x2,
                                   int *y2,
-                                  Document doc,
-                                  int shape,
-                                  Element svgRoot );
+                                  int *x3,
+                                  int *y3,
+                                  int *x4,
+                                  int *y4,
+                                  int *lx,
+                                  int *ly );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                                CHAR_T c,

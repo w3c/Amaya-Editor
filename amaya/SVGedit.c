@@ -1973,6 +1973,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  if(isFormattedView)
 	    {
 	    AskSurroundingBox(doc,
+			      svgAncestor,
 			      svgCanvas,
 			      entry,
 			      &x1, &y1, &x2, &y2,
@@ -1983,7 +1984,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    {
 	      /* TODO: add a dialog box ? */
 	      x1 = x2 = x3 = x4 = y1 = y2 = y3 = y4 = 0;
-	      lx = ly = 50;
+	      lx = ly = 0;
 	    }
 
 	  switch(entry)
@@ -2319,6 +2320,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    {
 	      /* Ask the position and size */
 	    AskSurroundingBox(doc,
+			      svgAncestor,
 			      svgCanvas,
 			      entry,
 			      &x1, &y1, &x2, &y2,
@@ -2456,6 +2458,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    {
 	      /* Ask where the user wants to insert the text */
 	      AskSurroundingBox(doc,
+				svgAncestor,
 				svgCanvas,
 				entry,
 				&x1, &y1, &x2, &y2,
@@ -2594,6 +2597,7 @@ void SelectGraphicElement (Document doc, View view)
 
   /* Ask a box surrounding the element the user wants to select */
   AskSurroundingBox(doc,
+		    svgCanvas,
 		    svgCanvas,
 		    42,
 		    &x1, &y1, &x2, &y2,

@@ -91,26 +91,6 @@ extern void *TtaNewTransformMatrix ( float a,
                                      float d,
                                      float e,
                                      float f );
-extern void *TtaSimplifyTransformMatrix ( void *transform );
-extern void TtaCoordinatesInParentSpace ( Element el,
-                                          float *x,
-                                          float *y );
-extern void TtaApplyMatrixTransform ( Document document,
-                                      Element element,
-                                      float a,
-                                      float b,
-                                      float c,
-                                      float d,
-                                      float e,
-                                      float f );
-extern void TtaGetMatrixTransform ( Document document,
-                                    Element el,
-                                    float *a,
-                                    float *b,
-                                    float *c,
-                                    float *d,
-                                    float *e,
-                                    float *f );
 
 #else /* __STDC__ */
 
@@ -199,26 +179,6 @@ extern void *TtaNewTransformMatrix ( float a,
                                        float d,
                                        float e,
                                        float f );
-extern void *TtaSimplifyTransformMatrix ( void *transform );
-extern void TtaCoordinatesInParentSpace ( Element el,
-                                            float *x,
-                                            float *y );
-extern void TtaApplyMatrixTransform ( Document document,
-                                        Element element,
-                                        float a,
-                                        float b,
-                                        float c,
-                                        float d,
-                                        float e,
-                                        float f );
-extern void TtaGetMatrixTransform ( Document document,
-                                      Element el,
-                                      float *a,
-                                      float *b,
-                                      float *c,
-                                      float *d,
-                                      float *e,
-                                      float *f );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

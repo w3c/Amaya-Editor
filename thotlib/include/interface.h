@@ -493,6 +493,7 @@ extern void TtaCloseAllHelpWindows ();
 extern void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
 void AskSurroundingBox(
 		       Document doc,
+		       Element svgAncestor,
 		       Element svgCanvas,
 		       int shape,
 		       int *x1, int *y1,

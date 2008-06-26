@@ -130,6 +130,26 @@ extern void TtaAddTransform ( Element element,
 extern void TtaInsertTransform ( Element element,
                                  void *transform,
                                  Document document );
+extern void *TtaSimplifyTransformMatrix ( void *transform );
+extern void TtaCoordinatesInParentSpace ( Element el,
+                                          float *x,
+                                          float *y );
+extern void TtaApplyMatrixTransform ( Document document,
+                                      Element element,
+                                      float a,
+                                      float b,
+                                      float c,
+                                      float d,
+                                      float e,
+                                      float f );
+extern void TtaGetMatrixTransform ( Document document,
+                                    Element el,
+                                    float *a,
+                                    float *b,
+                                    float *c,
+                                    float *d,
+                                    float *e,
+                                    float *f );
 extern void TtaSetElCoordinateSystem ( Element element );
 extern void TtaAppendAnim ( Element element,
                             void *anim );
@@ -324,6 +344,26 @@ extern void TtaAddTransform ( Element element,
 extern void TtaInsertTransform ( Element element,
                                    void *transform,
                                    Document document );
+extern void *TtaSimplifyTransformMatrix ( void *transform );
+extern void TtaCoordinatesInParentSpace ( Element el,
+                                            float *x,
+                                            float *y );
+extern void TtaApplyMatrixTransform ( Document document,
+                                        Element element,
+                                        float a,
+                                        float b,
+                                        float c,
+                                        float d,
+                                        float e,
+                                        float f );
+extern void TtaGetMatrixTransform ( Document document,
+                                      Element el,
+                                      float *a,
+                                      float *b,
+                                      float *c,
+                                      float *d,
+                                      float *e,
+                                      float *f );
 extern void TtaSetElCoordinateSystem ( Element element );
 extern void TtaAppendAnim ( Element element,
                               void *anim );

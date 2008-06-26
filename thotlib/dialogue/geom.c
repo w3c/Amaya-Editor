@@ -1401,6 +1401,7 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
 }
 
 int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2,
+		   float a, float b, float c, float d, float e, float f,
 		   Document doc, int shape_number)
 {
   int nb_points;
@@ -1409,24 +1410,33 @@ int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2,
   AmayaCreateShapeEvtHandler * p_CreateShapeEvtHandler;
   ThotEvent ev;
 
-  int xmin, ymin, xmax, ymax;
+  int x0, y0, width, height;
 
-  xmin = *x1;
-  ymin = *y1;
-  xmax = *x2;
-  ymax = *y2;
+  x0 = *x1;
+  y0 = *y1;
+  width = *x2;
+  height = *y2;
 
   p_frame = FrameTable[frame].WdFrame;
   p_CreateShapeEvtHandler = new AmayaCreateShapeEvtHandler( p_frame,
-				    x1, y1, x2, y2, &nb_points, doc, shape_number);
+							    x1, y1, x2, y2,
+							    a,b,c,d,e,f,
+							    &nb_points, doc,
+							    shape_number);
 
   while(!p_CreateShapeEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
   delete p_CreateShapeEvtHandler;
 
-  MouseCoordinatesToSVG(doc, p_frame, xmin, xmax, ymin, ymax, TRUE, x1, y1);
-  MouseCoordinatesToSVG(doc, p_frame, xmin, xmax, ymin, ymax, TRUE, x2, y2);
+  MouseCoordinatesToSVG(doc, p_frame, x0, y0,
+			width, height,
+			a,b,c,d,e,f,
+			TRUE, x1, y1);
+  MouseCoordinatesToSVG(doc, p_frame, x0, y0,
+			width, height,
+			a,b,c,d,e,f,
+			TRUE, x2, y2);
  
   return nb_points;
 }
@@ -1474,41 +1484,49 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
 
    TODO: conversion of the coordinates when the SVG has a viewbox attribute.
  */
-ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame, int xmin, int xmax, int ymin, int ymax, ThotBool convert, int *x, int *y)
+ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
+			       int x0, int y0,
+			       int width, int height,
+			       float a, float b, float c,
+			       float d, float e, float f,
+			       ThotBool convert, int *x, int *y
+			       )
 {
   int FrameId;
   int newx, newy;
+  int newx2, newy2;
   char buffer[100];
   ThotBool inside = TRUE;
-  int width, height;
-  
+
   FrameId = p_frame->GetFrameId();
 
-  width = LogicalValue (xmax - xmin, UnPixel, NULL,
+  width = LogicalValue (width, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
-  height = LogicalValue (ymax - ymin, UnPixel, NULL,
+  height = LogicalValue (height, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
-  newx = LogicalValue (*x - xmin, UnPixel, NULL,
+  newx = LogicalValue (*x - x0, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
+  newx2 = (int)(round(a * newx + c * newy + e));
 
-  newy = LogicalValue (*y - ymin, UnPixel, NULL,
+  newy = LogicalValue (*y - y0, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
+  newy2 = (int)(round(b * newx + d * newy + f));
 
   if(convert)
     {
-      *x = newx;
-      *y = newy;
+      *x = newx2;
+      *y = newy2;
     }
 
-  if(newx < 0){newx = 0;inside=FALSE;}
-  else if(newx > width){newx = width;inside=FALSE;}
+  if(newx2 < 0){newx2 = 0;inside=FALSE;}
+  else if(newx2 > width){newx2 = width;inside=FALSE;}
 
-  if(newy < 0){newy = 0;inside=FALSE;}
-  else if(newy > height){newy = height;inside=FALSE;}
+  if(newy2 < 0){newy2 = 0;inside=FALSE;}
+  else if(newy2 > height){newy2 = height;inside=FALSE;}
 
-  sprintf(buffer, "(%d,%d)", newx, newy);
+  sprintf(buffer, "(%d,%d)", newx2, newy2);
   TtaSetStatus (doc, 1, buffer, NULL);
 
   return inside;

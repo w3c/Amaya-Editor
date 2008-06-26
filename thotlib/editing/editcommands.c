@@ -2099,6 +2099,7 @@ char *AskShapePoints (Document doc, int shape, Element svgRoot)
   --------------------------------------------------------------------*/
 void AskSurroundingBox(
 		       Document doc,
+		       Element svgAncestor,
 		       Element svgCanvas,
 		       int shape,
 		       int *x1, int *y1,
@@ -2121,7 +2122,10 @@ void AskSurroundingBox(
   a2 = 0;
   b2 = 0;
 
-  if(frame <= 0 || svgCanvas == NULL)return;
+  if(frame <= 0 || svgCanvas == NULL || svgAncestor == NULL )return;
+
+
+
   pAb = ((PtrElement)svgCanvas) -> ElAbstractBox[0];
   if(!pAb)return;
   pBox = pAb -> AbBox;
@@ -2134,7 +2138,9 @@ void AskSurroundingBox(
   a2 = a1 + pBox->BxWidth;
   b2 = b1 + pBox->BxHeight;
 
-  ShapeCreation (frame, &a1, &b1, &a2, &b2, doc, shape);
+  ShapeCreation (frame, &a1, &b1, &a2, &b2, 
+		 1,0,0,1,0,0,
+		 doc, shape);
   *x1 = a1;
   *y1 = b1;
   *x4 = a2;
