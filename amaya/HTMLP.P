@@ -4444,6 +4444,10 @@ FIELDSET: BEGIN
         Background: Enclosing =;
         ShowBox;
         FillPattern: Enclosing =;
+        MarginTop: Enclosing =;
+        MarginRight: Enclosing =;
+        MarginBottom: Enclosing =;
+        MarginLeft: Enclosing =;
         BorderTopWidth: Enclosing =;
         BorderRightWidth: Enclosing =;
         BorderBottomWidth: Enclosing =;
