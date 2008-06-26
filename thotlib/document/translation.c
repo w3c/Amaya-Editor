@@ -512,6 +512,11 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
                   len = indent;
                   OutFile[fnum].OfStartOfLine = FALSE;
                 }
+
+              /* avoid to generate a dot at position 0 of a line
+                 as sendmail will duplication a such dot */
+              if (len == 0 &&  mbc[0] == 46)
+                OutFile[fnum].OfBuffer[len++] = SPACE;
               /* store the character into the buffer */
               for (index = 0; index < nb_bytes2write; index++)
                 {
