@@ -437,7 +437,7 @@ AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
 	  MouseCoordinatesToSVG(m_document, m_pFrame,
 			m_xmin, m_ymin,
 			m_xmax - m_xmin, m_ymax - m_ymin,
-			1,0,0,1,0,0,
+				NULL,
 			TRUE,
 			&(pB->BuPoints[i].XCoord), &(pB->BuPoints[i].YCoord));
 	}
@@ -497,7 +497,7 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
   if(!MouseCoordinatesToSVG(m_document, m_pFrame,
 			    m_xmin, m_ymin,
 			    m_xmax - m_xmin, m_ymax - m_ymin,
-			    1,0,0,1,0,0,
+			    NULL,
 			    FALSE, &currentX, &currentY))return;
 
   if(m_ShapeNumber == 7 || m_ShapeNumber == 8)
@@ -599,7 +599,7 @@ void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
   MouseCoordinatesToSVG(m_document, m_pFrame,
 			m_xmin, m_ymin,
 			m_xmax - m_xmin, m_ymax - m_ymin,
-			1,0,0,1,0,0,
+			NULL,
 			FALSE, &currentX, &currentY);
   
 #ifndef _WINDOWS

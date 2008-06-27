@@ -2112,19 +2112,29 @@ void AskSurroundingBox(
   PtrBox pBox;
   ViewFrame          *pFrame;
   int frame;
-
-  int a1,b1,a2,b2;
+  PtrTransform CTM, inverse;
 
   frame = ActiveFrame;
 
-  a1 = 0;
-  b1 = 0;
-  a2 = 0;
-  b2 = 0;
-
   if(frame <= 0 || svgCanvas == NULL || svgAncestor == NULL )return;
 
+  *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = *x4 = *y4 = *lx = * ly = 0;
+  
+  CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
 
+  if(CTM == NULL)
+    {
+      inverse = NULL;
+    }
+  else
+    {
+      inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
+      TtaFreeTransform(CTM);
+
+      if(inverse == NULL)
+      /* Transform not inversible */
+	return;
+	}
 
   pAb = ((PtrElement)svgCanvas) -> ElAbstractBox[0];
   if(!pAb)return;
@@ -2133,47 +2143,21 @@ void AskSurroundingBox(
 
   pFrame = &ViewFrameTable[frame - 1];
 
-  a1 = pBox->BxXOrg - pFrame->FrXOrg;
-  b1 = pBox->BxYOrg - pFrame->FrYOrg;
-  a2 = a1 + pBox->BxWidth;
-  b2 = b1 + pBox->BxHeight;
+  *x1 = pBox->BxXOrg - pFrame->FrXOrg;
+  *y1 = pBox->BxYOrg - pFrame->FrYOrg;
+  *x4 = pBox->BxWidth;
+  *y4 = pBox->BxHeight;
 
-  ShapeCreation (frame, &a1, &b1, &a2, &b2, 
-		 1,0,0,1,0,0,
+  ShapeCreation (frame, 
+		 x1, y1,
+		 x2, y2,
+		 x3, y3,
+		 x4, y4,
+		 lx, ly,
+		 (void *)inverse,
 		 doc, shape);
-  *x1 = a1;
-  *y1 = b1;
-  *x4 = a2;
-  *y4 = b2;
 
-  *lx = abs(a2 - a1);
-  *ly = abs(b2 - b1);
-
-  if(!(shape == 0 || (shape >= 12 && shape <= 14)))
-    {
-      /* It's a shape drawn in a rectangle */
-
-      if(shape == 20)
-	/* equilateral triangle */
-	*lx = (int) (floor(2 *  *ly / sqrt(3)));
-      else if(shape == 3 || shape == 15 || shape == 16 || shape == 23)
-	{
-	  /* *lx and *ly must be equal (square, circle...) */
-	  if(*ly < *lx)*lx=*ly; else *ly = *lx;
-	}
-
-      if(*x4 < *x1)*x4 = *x1 - *lx;
-	else *x4 = *x1 + *lx;
-
-      if(*y4 < *y1)*y4 = *y1 - *ly;
-      else *y4 = *y1 + *ly;
-
-    }
-
-  *x2 = *x4;
-  *y2 = *y1;
-  *x3 = *x1;
-  *y3 = *y4;
+  if(inverse != NULL)TtaFreeTransform(inverse);
 }
 
 /*----------------------------------------------------------------------

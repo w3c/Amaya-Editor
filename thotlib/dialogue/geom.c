@@ -1400,9 +1400,12 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
     }
 }
 
-int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2,
-		   float a, float b, float c, float d, float e, float f,
-		   Document doc, int shape_number)
+int ShapeCreation (int frame,
+		   int *x1, int *y1, int *x2, int *y2,
+		   int *x3, int *y3, int *x4, int *y4,
+		   int *lx, int *ly,
+		   void *transform,
+		   Document doc, int shape)
 {
   int nb_points;
 
@@ -1414,29 +1417,67 @@ int ShapeCreation (int frame, int *x1, int *y1, int *x2, int *y2,
 
   x0 = *x1;
   y0 = *y1;
-  width = *x2;
-  height = *y2;
+  width = *x4;
+  height = *y4;
 
   p_frame = FrameTable[frame].WdFrame;
   p_CreateShapeEvtHandler = new AmayaCreateShapeEvtHandler( p_frame,
-							    x1, y1, x2, y2,
-							    a,b,c,d,e,f,
+							    x1, y1,
+							    x4, y4,
+							    transform,
 							    &nb_points, doc,
-							    shape_number);
+							    shape);
 
   while(!p_CreateShapeEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
   delete p_CreateShapeEvtHandler;
 
+  *lx = abs(*x4 - *x1);
+  *ly = abs(*y4 - *y1);
+
+if(!(shape == 0 || (shape >= 12 && shape <= 14)))
+    {
+      /* It's a shape drawn in a rectangle */
+
+      if(shape == 20)
+	/* equilateral triangle */
+	*lx = (int) (floor(2 *  *ly / sqrt(3)));
+      else if(shape == 3 || shape == 15 || shape == 16 || shape == 23)
+	{
+	  /* *lx and *ly must be equal (square, circle...) */
+	  if(*ly < *lx)*lx=*ly; else *ly = *lx;
+	}
+
+      if(*x4 < *x1)*x4 = *x1 - *lx;
+	else *x4 = *x1 + *lx;
+
+      if(*y4 < *y1)*y4 = *y1 - *ly;
+      else *y4 = *y1 + *ly;
+
+    }
+
+  *x2 = *x4;
+  *y2 = *y1;
+  *x3 = *x1;
+  *y3 = *y4;
+
   MouseCoordinatesToSVG(doc, p_frame, x0, y0,
 			width, height,
-			a,b,c,d,e,f,
+			transform,
 			TRUE, x1, y1);
   MouseCoordinatesToSVG(doc, p_frame, x0, y0,
 			width, height,
-			a,b,c,d,e,f,
+			transform,
 			TRUE, x2, y2);
+  MouseCoordinatesToSVG(doc, p_frame, x0, y0,
+			width, height,
+			transform,
+			TRUE, x3, y3);
+  MouseCoordinatesToSVG(doc, p_frame, x0, y0,
+			width, height,
+			transform,
+			TRUE, x4, y4);
  
   return nb_points;
 }
@@ -1482,13 +1523,13 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
 
    Return TRUE if the mouse is inside the SVG
 
-   TODO: conversion of the coordinates when the SVG has a viewbox attribute.
+   transform is the inverse of the tansformation matrix
+
  */
 ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
 			       int x0, int y0,
 			       int width, int height,
-			       float a, float b, float c,
-			       float d, float e, float f,
+			       void *transform,
 			       ThotBool convert, int *x, int *y
 			       )
 {
@@ -1498,6 +1539,22 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
   char buffer[100];
   ThotBool inside = TRUE;
 
+  float a,b,c,d,e,f;
+  if(transform)
+    {
+      a = ((PtrTransform)(transform)) -> AMatrix;
+      b = ((PtrTransform)(transform)) -> BMatrix;
+      c = ((PtrTransform)(transform)) -> CMatrix;
+      d = ((PtrTransform)(transform)) -> DMatrix;
+      e = ((PtrTransform)(transform)) -> EMatrix;
+      f = ((PtrTransform)(transform)) -> FMatrix;
+    }
+  else
+    {
+      a = 1; b = 0; c = 0; d = 1; e = 0; f = 0;
+    }
+
+
   FrameId = p_frame->GetFrameId();
 
   width = LogicalValue (width, UnPixel, NULL,
@@ -1506,13 +1563,17 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
   height = LogicalValue (height, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
-  newx = LogicalValue (*x - x0, UnPixel, NULL,
-  ViewFrameTable[FrameId - 1].FrMagnification);
-  newx2 = (int)(round(a * newx + c * newy + e));
+  /* Maybe coordinates are not well computed here... */
 
-  newy = LogicalValue (*y - y0, UnPixel, NULL,
+  newx = (int)(round(a * (*x - x0) + c * (*y - y0) + e));
+  newy = (int)(round(b * (*x - x0) + d * (*y - y0) + f));
+
+  newx2 = LogicalValue (newx, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
-  newy2 = (int)(round(b * newx + d * newy + f));
+  newy2 = LogicalValue (newy, UnPixel, NULL,
+  ViewFrameTable[FrameId - 1].FrMagnification);
+
+  /* printf("%f %f %f %f %f %f\n", a, b, c, d, e, f); */
 
   if(convert)
     {

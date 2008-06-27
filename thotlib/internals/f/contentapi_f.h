@@ -134,6 +134,9 @@ extern void *TtaSimplifyTransformMatrix ( void *transform );
 extern void TtaCoordinatesInParentSpace ( Element el,
                                           float *x,
                                           float *y );
+extern void *TtaGetCurrentTransformMatrix ( Element el,
+                                            Element ancestor );
+extern void *TtaInverseTransform ( void *transform );
 extern void TtaApplyMatrixTransform ( Document document,
                                       Element element,
                                       float a,
@@ -348,6 +351,9 @@ extern void *TtaSimplifyTransformMatrix ( void *transform );
 extern void TtaCoordinatesInParentSpace ( Element el,
                                             float *x,
                                             float *y );
+extern void *TtaGetCurrentTransformMatrix ( Element el,
+                                              Element ancestor );
+extern void *TtaInverseTransform ( void *transform );
 extern void TtaApplyMatrixTransform ( Document document,
                                         Element element,
                                         float a,

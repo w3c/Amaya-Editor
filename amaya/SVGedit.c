@@ -1819,8 +1819,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
       if(svgCanvas == svgAncestor)
 	newType.ElTypeNum = SVG_EL_rect;
       else
-	newType.ElTypeNum = SVG_EL_path;
-
+      newType.ElTypeNum = SVG_EL_polygon;
       break;
 
       newType.ElTypeNum = SVG_EL_rect;
@@ -2098,7 +2097,17 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		}
 	      else
 		{
-		  /* TODO */
+		  attrType.AttrTypeNum = SVG_ATTR_points;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+		  sprintf(buffer, "%d %d %d %d %d %d %d %d",
+			  x1,y1,
+			  x2,y2,
+			  x4,y4,
+			  x3,y3
+			  );
+		  TtaSetAttributeText (attr, buffer, newEl, doc);
+		  ParsePointsAttribute (attr, newEl, doc);
 		}
 
 	      break;
@@ -2168,10 +2177,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (newEl, attr, doc);
 	      sprintf(buffer, "%d %d %d %d %d %d %d %d",
-		      (3*x1+x4)/4, y1,
-		      x4,y1,
-		      (x1+3*x4)/4, y4,
-		      x1,y4
+		      x3, y3,
+		      (3*x1+x2)/4, (3*y1+y2)/4,
+		      x2,y2,
+		      (3*x4+x3)/4, (3*y4+y3)/4
 		      );
               TtaSetAttributeText (attr, buffer, newEl, doc);
 	      ParsePointsAttribute (attr, newEl, doc);

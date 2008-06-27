@@ -335,7 +335,7 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler() : wxEvtHandler()
  *----------------------------------------------------------------------*/
 AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
 (AmayaFrame * p_frame, int *x1, int *y1, int *x2, int *y2,
- float a, float b, float c, float d, float e, float f,
+ void *transform,
  int *nb_points, Document doc, int shape_number)
   : wxEvtHandler()
   ,m_IsFinish(false)
@@ -349,12 +349,7 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
   ,m_y1(y1)
   ,m_x2(x2)
   ,m_y2(y2)
-  ,m_a(a)
-  ,m_b(b)
-  ,m_c(c)
-  ,m_d(d)
-  ,m_e(e)
-  ,m_f(f)
+  ,m_transform(transform)
   ,m_ShapeNumber(shape_number)
   ,m_NbPoints(nb_points)
   ,m_document(doc)
@@ -429,7 +424,7 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
   if(!MouseCoordinatesToSVG(m_document, m_pFrame,
 			    m_x0, m_y0,
 			    m_width, m_height,
-			    m_a,m_b,m_c,m_d,m_e,m_f,
+			    m_transform,
 			    FALSE, &m_mouse_x, &m_mouse_y))return;
 
   *m_x1 = m_mouse_x;
@@ -463,7 +458,7 @@ void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
   if(!MouseCoordinatesToSVG(m_document, m_pFrame,
 			    m_x0, m_y0,
 			    m_width, m_height,
-			    m_a,m_b,m_c,m_d,m_e,m_f,
+			    m_transform,
 			    FALSE, &m_mouse_x, &m_mouse_y))return;
 
   *m_x2 = m_mouse_x;
@@ -498,7 +493,7 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
   MouseCoordinatesToSVG(m_document, m_pFrame,
 			m_x0, m_y0,
 			m_width, m_height,
-			m_a,m_b,m_c,m_d,m_e,m_f,
+			m_transform,
 			FALSE, &m_mouse_x, &m_mouse_y);
 
   if(*m_NbPoints > 0)

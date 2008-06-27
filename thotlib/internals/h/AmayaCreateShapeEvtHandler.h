@@ -21,7 +21,7 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
   AmayaCreateShapeEvtHandler();
   AmayaCreateShapeEvtHandler(AmayaFrame * p_frame,
 			     int *x1, int *y1, int *x2, int *y2,
-			     float a, float b, float c, float d, float e, float f,
+			     void *transform,
 			     int *nb_points, Document doc, int shape_number);
   virtual ~AmayaCreateShapeEvtHandler();
 
@@ -44,7 +44,7 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
 
   int m_x0, m_y0, m_width, m_height;
   int *m_x1,*m_y1,*m_x2,*m_y2;
-  float m_a,m_b,m_c,m_d,m_e,m_f;
+  void *m_transform;
 
   int m_ShapeNumber;
   int *m_NbPoints;

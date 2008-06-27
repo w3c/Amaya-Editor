@@ -2053,6 +2053,8 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
   PtrTransform result, pPa;
   float T, cosT,sinT, tanT, a, b, c, d, e, f;
 
+  if(!transform)return NULL;
+
   result = ((PtrTransform)(TtaNewTransformMatrix(1, 0, 0, 1, 0, 0)));
   result->Next = NULL;
 
@@ -2181,6 +2183,163 @@ extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
 }
 
 /*----------------------------------------------------------------------
+  ---------------------------------------------------------------------- */
+extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor)
+{
+  PtrTransform CTM = NULL, transform;
+
+  /* Concatenate all simplified transform matrix */
+  while(el && el != ancestor)
+    {
+	  transform = (PtrTransform)
+	    TtaSimplifyTransformMatrix(((PtrElement) el)->ElTransform);
+
+	  if(transform != NULL)
+	    {
+	      transform -> Next = CTM;
+	      CTM = transform;
+	    }
+	  el = TtaGetParent(el);
+    }
+
+
+  /* Simplify the product */
+  if(CTM)
+    {
+      transform = (PtrTransform)
+	TtaSimplifyTransformMatrix(CTM);
+
+      TtaFreeTransform(CTM);
+      CTM = transform;
+    }
+ 
+  return CTM;
+}
+
+/*----------------------------------------------------------------------
+  ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  TtaInverseTransform
+  Return the matrix representing the inverse of a transform. If the
+  transform is not inversible, then return NULL.
+  ----------------------------------------------------------------------*/
+extern void *TtaInverseTransform (void *transform)
+{
+  PtrTransform result, pPa;
+  float a,b,c,d,e,f,a2,b2,c2,d2,e2,f2, cosA, sinA, tanA, det;
+  
+  result = (Transform*)TtaNewTransformMatrix (1, 0, 0, 1, 0, 0);
+  pPa = (Transform*)transform;
+
+    while (pPa)
+      {      
+      switch (pPa->TransType)
+        {
+        case PtElScale:
+        case PtElTranslate:
+        case PtElAnimTranslate:
+	  /* Check whether the scale matrix is inversible */
+	  if(pPa -> XScale == 0 || pPa -> YScale == 0)
+	    {
+	      TtaFreeTransform (result);
+	      return NULL;
+	    }
+
+	  /* Multiply by the inverse of scale(XScale, YScale) */
+	  result->AMatrix /= pPa -> XScale;
+	  result->CMatrix /= pPa -> XScale;
+	  result->EMatrix /= pPa -> XScale;
+	  result->BMatrix /= pPa -> YScale;
+	  result->DMatrix /= pPa -> YScale;
+	  result->FMatrix /= pPa -> YScale;
+          break;
+        case PtElViewBox:
+	  /* TODO: inverse matrix of a ViewBox ??? */
+          break;
+        case PtElRotate:
+        case PtElAnimRotate:
+	  /* Multiply result by the inverse of translate(-XRotate,-YRotate) */
+	  result->EMatrix -= pPa -> XRotate;
+	  result->FMatrix -= pPa -> YRotate;
+
+	  /* Multiply result by the inverse of rotate(TrAngle,0,0) */
+	  cosA = cos(pPa->TrAngle);
+	  sinA = sin(pPa->TrAngle);
+
+	  a = result->AMatrix * cosA - result->BMatrix * sinA;
+	  c = result->CMatrix * cosA - result->DMatrix * sinA;
+	  e = result->EMatrix * cosA - result->FMatrix * sinA;
+	  b = result->AMatrix * sinA + result->BMatrix * cosA;
+	  d = result->CMatrix * sinA + result->DMatrix * cosA;
+	  f = result->EMatrix * sinA + result->FMatrix * cosA;
+
+	  result->AMatrix = a;
+	  result->BMatrix = b;
+	  result->CMatrix = c;
+	  result->DMatrix = d;
+	  result->EMatrix = e;
+	  result->FMatrix = f;
+
+	  /* Multiply result by the inverse of translate(+XRotate,+YRotate) */
+	  result->EMatrix += pPa -> XRotate;
+	  result->FMatrix += pPa -> YRotate;
+          break;  
+        case PtElMatrix:
+	  /* Check whether the matrix is inversible */
+	  det = pPa->AMatrix*pPa->DMatrix - pPa->CMatrix*pPa->BMatrix;
+
+	  if(det == 0)
+	    {
+	      TtaFreeTransform (result);
+	      return NULL;
+	    }
+ 
+	  /* Compute the inverse of matrix */
+	  a = pPa->DMatrix / det;
+	  c = -pPa->CMatrix / det;
+	  e = (pPa->CMatrix*pPa->FMatrix - pPa->DMatrix*pPa->EMatrix)/det;
+	  b = -pPa->BMatrix / det;
+	  d = pPa->AMatrix / det;
+	  f = -(pPa->AMatrix*pPa->FMatrix - pPa->BMatrix*pPa->EMatrix)/det;
+
+  	  /* Multiply result by the inverse */
+	  a2 = a*result->AMatrix + c*result->BMatrix;
+	  c2 = a*result->CMatrix + c*result->DMatrix;
+	  e2 = a*result->EMatrix + c*result->FMatrix + e;
+	  b2 = b*result->AMatrix + d*result->BMatrix;
+	  d2 = b*result->CMatrix + d*result->DMatrix;
+	  f2 = b*result->EMatrix + d*result->FMatrix + f;
+
+	  result->AMatrix = a2;
+	  result->BMatrix = b2;
+	  result->CMatrix = c2;
+	  result->DMatrix = d2;
+	  result->EMatrix = e2;
+	  result->FMatrix = f2;
+
+          break;	  
+        case PtElSkewX:
+	  /* Multiply result by the inverse of skewX(TrFactor) */
+	  tanA = tan(pPa->TrFactor);
+	  result->AMatrix -= result->BMatrix * tanA;
+	  result->CMatrix -= result->DMatrix * tanA;
+	  result->EMatrix -= result->FMatrix * tanA;
+        case PtElSkewY:
+	  /* Multiply result by the inverse of skewX(TrFactor) */
+	  tanA = tan(pPa->TrFactor);
+	  result->BMatrix -= result->AMatrix * tanA;
+	  result->DMatrix -= result->CMatrix * tanA;
+	  result->FMatrix -= result->EMatrix * tanA;
+          break;	  
+        default:
+          break;
+        }	       
+      pPa = pPa->Next;
+    }
+  return (void *) result;
+}
+
+/*----------------------------------------------------------------------
   TtaApplyMatrixTransform
   Apply a transform matrix to an element and simplify its transformation
   matrix.
@@ -2222,7 +2381,7 @@ extern void TtaApplyMatrixTransform (Document document, Element element,
 
 /*----------------------------------------------------------------------
   TtaGetMatrixTransform
-  Get the coefficient of the matrix representing the transform attached to
+  Get the coefficients of the matrix representing the transform attached to
   the element el.
 
   ( a  c  e )

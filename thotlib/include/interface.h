@@ -516,6 +516,8 @@ extern void TtaGetMatrixTransform(Document document, Element el,
 				    float *e,			    
 				    float *f
 				    );
+extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor);
+extern void *TtaInverseTransform (void *transform);
 #endif /* __CEXTRACT__  */
 
 #endif
