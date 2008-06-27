@@ -441,42 +441,44 @@
 439 Enregistrer les mots de passe
 440 Sites
 441 Tout effacer
-442 Une erreur s'est produite pendant la construction des objets javascript/DOM
-443 Un script est encore en cours d'exécution mais sera interrompu dès que possible. Veuillez ressayer ultérieurement.
-444 Javascript/DOM ne peut être activé dans cette vue.
-445 Rentrez une commande javascript :
-446 La commande a retourné la valeur: %s
-447 La commande n'a retourné aucune valeur
-448 SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s
-449 Nouveau
-450 Paramétrable
-451 Créer
-452 Créer le lien en cliquant
-453 Detruire le lien
-454 Sauver sans modèle
-455 Avec le thème ...
-456 Pleine largeur
-457 Avec une légende
-458 Dimension
-459 Position
-460 Mode d'édition XML
-461 Liste des styles
-462 Ajouter une feuille de style...
-463 Retirer les styles sélectionnées
-464 Activer les feuilles de style sélectionnées
-465 Désactiver les feuilles de style sélectionnées
-466 Ouvir les feuilles de style sélectionnées
-467 Profil Amaya :
-468 Afficher le "Conseil du jour" au démarrage
-469 Choisissez la police de caractères :
-470 Le modèle a des erreurs, il ne sera pas utilisé:
-471 Fermer
-472 Le composant '%s' a une définition multiple.
-473 La bibliothèque '%s' ne peut être chargée.
-474 Conversion d'une instance en modèle impossible.
-475 Le document est déjà un modèle
-476 La création du modèle a échouée
-477 Zone texte
-478 Label de l'élément :
-479 Zone multi-élément
-480 Elément de répétition
+442 Espaces de noms XML générés pour les nouveaux documents XHTML+RDFa
+443 Choisir un espace de noms dans la liste ou en saisir un nouveau (syntaxe: prefix="uri")
+444 Une erreur s'est produite pendant la construction des objets javascript/DOM
+445 Un script est encore en cours d'exécution mais sera interrompu dès que possible. Veuillez ressayer ultérieurement.
+446 Javascript/DOM ne peut être activé dans cette vue.
+447 Rentrez une commande javascript :
+448 La commande a retourné la valeur: %s
+449 La commande n'a retourné aucune valeur
+450 SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s
+451 Nouveau
+452 Paramétrable
+453 Créer
+454 Créer le lien en cliquant
+455 Detruire le lien
+456 Sauver sans modèle
+457 Avec le thème ...
+458 Pleine largeur
+459 Avec une légende
+460 Dimension
+461 Position
+462 Mode d'édition XML
+463 Liste des styles
+464 Ajouter une feuille de style...
+465 Retirer les styles sélectionnées
+466 Activer les feuilles de style sélectionnées
+467 Désactiver les feuilles de style sélectionnées
+468 Ouvir les feuilles de style sélectionnées
+469 Profil Amaya :
+470 Afficher le "Conseil du jour" au démarrage
+471 Choisissez la police de caractères :
+472 Le modèle a des erreurs, il ne sera pas utilisé:
+473 Fermer
+474 Le composant '%s' a une définition multiple.
+475 La bibliothèque '%s' ne peut être chargée.
+476 Conversion d'une instance en modèle impossible.
+477 Le document est déjà un modèle
+478 La création du modèle a échouée
+479 Zone texte
+480 Label de l'élément :
+481 Zone multi-élément
+482 Elément de répétition

@@ -441,42 +441,44 @@
 439 Jegyezze meg a weblapok jelszavait
 440 Weblapok
 441 Mind törlése
-442 Hiba a javascript/DOM objektum felépítése közben
-443 A szkript még fut, de amint lehet, megszakítjuk. Próbálja később.
-444 A javascript/DOM nem engedélyezhető ebben a nézetben.
-445 Adjon meg egy javascript parancsot:
-446 A parancs a következő értéket adta vissza: %s
-447 A parancs nem adott vissza értéket
-448 A SpiderMonkey a következő hibát adta vissza:\n\nFájl: %s\nSor: %d\n\n%s
-449 Új
-450 Egyedi
-451 Létrehozása
-452 Kapocs létrehozása kattintással
-453 Horgony törlése
-454 Mentés sablon nélkül
-455 Témával ...
-456 Teljes szélesség
-457 Felirattal
-458 Méret
-459 Helyzet
-460 XML szerkesztési mód
-461 Stíluslapok listája
-462 Stíluslap hozzáadása...
-463 Kijelölt stíluslapok eltávolítása
-464 Kijelölt stíluslapok aktiválása
-465 Kijelölt stíluslapok deaktiválása
-466 Kijelölt stíluslapok megnyitása
-467 Amaya profile:
-468 A nap tippje" induláskor
-469 Válasszon betűkészletet és -méretet
-470 **Template has error(s), it will not be used:
-471 **Close
-472 **Component '%s' has multiple definition.
-473 **Library '%s' can not be loaded.
-474 **Can not convert an instance document to template.
-475 **The document is already a template
-476 **Template creation fails
-477 **Text area
-478 **Element label:
-479 **Bag area
-480 **Repeat element
+442 **XML namespaces generated for new XHTML+RDFa documents
+443 **Select a namespace in the list below or add a new one (syntax prefix="uri")
+444 Hiba a javascript/DOM objektum felépítése közben
+445 A szkript még fut, de amint lehet, megszakítjuk. Próbálja később.
+446 A javascript/DOM nem engedélyezhető ebben a nézetben.
+447 Adjon meg egy javascript parancsot:
+448 A parancs a következő értéket adta vissza: %s
+449 A parancs nem adott vissza értéket
+450 A SpiderMonkey a következő hibát adta vissza:\n\nFájl: %s\nSor: %d\n\n%s
+451 Új
+452 Egyedi
+453 Létrehozása
+454 Kapocs létrehozása kattintással
+455 Horgony törlése
+456 Mentés sablon nélkül
+457 Témával ...
+458 Teljes szélesség
+459 Felirattal
+460 Méret
+461 Helyzet
+462 XML szerkesztési mód
+463 Stíluslapok listája
+464 Stíluslap hozzáadása...
+465 Kijelölt stíluslapok eltávolítása
+466 Kijelölt stíluslapok aktiválása
+467 Kijelölt stíluslapok deaktiválása
+468 Kijelölt stíluslapok megnyitása
+469 Amaya profile:
+470 A nap tippje" induláskor
+471 Válasszon betűkészletet és -méretet
+472 **Template has error(s), it will not be used:
+473 **Close
+474 **Component '%s' has multiple definition.
+475 **Library '%s' can not be loaded.
+476 **Can not convert an instance document to template.
+477 **The document is already a template
+478 **Template creation fails
+479 **Text area
+480 **Element label:
+481 **Bag area
+482 **Repeat element

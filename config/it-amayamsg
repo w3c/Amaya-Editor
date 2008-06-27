@@ -442,42 +442,44 @@
 439 Ricorda le password per i siti
 440 Siti
 441 Elimina tutti
-442 Si è verificato un errore mentre si caricavano oggetti di javascript/DOM
-443 E' in esecuzione uno script che si cercherà di fermare prima possibile. Per favore prova più tardi.
-444 Javascript/DOM non è disponibile in questa vista.
-445 Inserisci un comando javascript:
-446 Il comando riporta il valore: %s
-447 Il comando riporta nessun valore
-448 SpiderMonkey riporta il seguente errore:\n\nFile: %s\nLine: %d\n\n%s
-449 Nuovo
-450 Personalizzabile
-451 Crea
-452 Creare il collegamento con un click
-453 Cancella ancora
-454 Salvare senza template
-455 Con il tema ...
-456 Larghezza intera
-457 Con intestazione
-458 Grandezza
-459 Posizione
-460 Modalità di editing XML
-461 Elenco dei fogli di stile
-462 Aggiungi un foglio di stile...
-463 Rimuovi il foglio di stile selezionato
-464 Attiva il foglio di stile selezionato
-465 Disattiva il foglio di stile selezionato
-466 Apri il foglio di stile selezionato
-467 Profilo Amaya:
-468 **Show "Tip of the day" at startup
-469 **Choose font family and size:
-470 **Template has error(s), it will not be used:
-471 **Close
-472 **Component '%s' has multiple definition.
-473 **Library '%s' can not be loaded.
-474 **Can not convert an instance document to template.
-475 **The document is already a template
-476 **Template creation fails
-477 **Text area
-478 **Element label:
-479 **Bag area
-480 **Repeat element
+442 **XML namespaces generated for new XHTML+RDFa documents
+443 **Select a namespace in the list below or add a new one (syntax prefix="uri")
+444 Si è verificato un errore mentre si caricavano oggetti di javascript/DOM
+445 E' in esecuzione uno script che si cercherà di fermare prima possibile. Per favore prova più tardi.
+446 Javascript/DOM non è disponibile in questa vista.
+447 Inserisci un comando javascript:
+448 Il comando riporta il valore: %s
+449 Il comando riporta nessun valore
+450 SpiderMonkey riporta il seguente errore:\n\nFile: %s\nLine: %d\n\n%s
+451 Nuovo
+452 Personalizzabile
+453 Crea
+454 Creare il collegamento con un click
+455 Cancella ancora
+456 Salvare senza template
+457 Con il tema ...
+458 Larghezza intera
+459 Con intestazione
+460 Grandezza
+461 Posizione
+462 Modalità di editing XML
+463 Elenco dei fogli di stile
+464 Aggiungi un foglio di stile...
+465 Rimuovi il foglio di stile selezionato
+466 Attiva il foglio di stile selezionato
+467 Disattiva il foglio di stile selezionato
+468 Apri il foglio di stile selezionato
+469 Profilo Amaya:
+470 **Show "Tip of the day" at startup
+471 **Choose font family and size:
+472 **Template has error(s), it will not be used:
+473 **Close
+474 **Component '%s' has multiple definition.
+475 **Library '%s' can not be loaded.
+476 **Can not convert an instance document to template.
+477 **The document is already a template
+478 **Template creation fails
+479 **Text area
+480 **Element label:
+481 **Bag area
+482 **Repeat element

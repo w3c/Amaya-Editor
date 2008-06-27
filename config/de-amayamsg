@@ -441,42 +441,44 @@
 439 Passwörter für Sites speichern
 440 Sites (alle Dateien)
 441 Alles entfernen
-442 Ein Fehler ist aufgetreten beim Aufbau des Javascript/DOM Objekts
-443 Ein Skript wird noch ausgeführt, aber beendet sobald es möglich ist. Bitte später versuchen
-444 Javascript/DOM kann in dieser Ansichtsoption nicht aktiviert werden
-445 Geben Sie einen Javascript-Befehl ein
-446 Der Befehl wurde als Wert: %s ausgegeben
-447 Der Befehl hat keinen Wert ausgegeben
-448 SpyderMonkey hat folgenden Fehler ausgegeben:\n\nFile: %s\nLine: %d\n\n%s
-449 Neu
-450 Anpassen
-451 Anker
-452 Den Verweis durch anklicken herstellen
-453 Verweis löschen
-454 Speichern ohne Vorlage
-455 Mit Thema...
-456 Ganze Breite
-457 Mit Titel
-458 Grösse
-459 Position
-460 XML Bearbeiten Betriebsart
-461 Liste der Dokumentenvorlagen
-462 Eine Dokumentenvorlage hinzufügen...
-463 Die ausgewählte Vorlage löschen
-464 Die ausgewählte Vorlage aktivieren
-465 Die ausgewählte Vorlage ausschalten
-466 Die ausgewählte Vorlage öffnen
-467 Amaya typ:
-468 "Tip des Tages" bei Programmstart anzeigen
-469 Schriftart - und Größe wählen:
-470 **Template has error(s), it will not be used:
-471 **Close
-472 **Component '%s' has multiple definition.
-473 **Library '%s' can not be loaded.
-474 **Can not convert an instance document to template.
-475 **The document is already a template
-476 **Template creation fails
-477 **Text area
-478 **Element label:
-479 **Bag area
-480 **Repeat element
+442 **XML namespaces generated for new XHTML+RDFa documents
+443 **Select a namespace in the list below or add a new one (syntax prefix="uri")
+444 Ein Fehler ist aufgetreten beim Aufbau des Javascript/DOM Objekts
+445 Ein Skript wird noch ausgeführt, aber beendet sobald es möglich ist. Bitte später versuchen
+446 Javascript/DOM kann in dieser Ansichtsoption nicht aktiviert werden
+447 Geben Sie einen Javascript-Befehl ein
+448 Der Befehl wurde als Wert: %s ausgegeben
+449 Der Befehl hat keinen Wert ausgegeben
+450 SpyderMonkey hat folgenden Fehler ausgegeben:\n\nFile: %s\nLine: %d\n\n%s
+451 Neu
+452 Anpassen
+453 Anker
+454 Den Verweis durch anklicken herstellen
+455 Verweis löschen
+456 Speichern ohne Vorlage
+457 Mit Thema...
+458 Ganze Breite
+459 Mit Titel
+460 Grösse
+461 Position
+462 XML Bearbeiten Betriebsart
+463 Liste der Dokumentenvorlagen
+464 Eine Dokumentenvorlage hinzufügen...
+465 Die ausgewählte Vorlage löschen
+466 Die ausgewählte Vorlage aktivieren
+467 Die ausgewählte Vorlage ausschalten
+468 Die ausgewählte Vorlage öffnen
+469 Amaya typ:
+470 "Tip des Tages" bei Programmstart anzeigen
+471 Schriftart - und Größe wählen:
+472 **Template has error(s), it will not be used:
+473 **Close
+474 **Component '%s' has multiple definition.
+475 **Library '%s' can not be loaded.
+476 **Can not convert an instance document to template.
+477 **The document is already a template
+478 **Template creation fails
+479 **Text area
+480 **Element label:
+481 **Bag area
+482 **Repeat element

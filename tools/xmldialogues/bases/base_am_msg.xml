@@ -6916,7 +6916,7 @@
 </label>
 <label define="AM_RDFa">
 	<message xml:lang="en">XML namespaces generated for new XHTML+RDFa documents</message>
-	<message xml:lang="fr">Espaces de noms XML générés pour les nouveaux documents XHTML+RDFa</message>
+	<message xml:lang="fr">Espaces de noms XML gÃ©nÃ©rÃ©s pour les nouveaux documents XHTML+RDFa</message>
 </label>
 <label define="AM_RDFa_NEW_LABEL">
 	<message xml:lang="en">Select a namespace in the list below or add a new one (syntax prefix="uri")</message>

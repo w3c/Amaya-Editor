@@ -1572,7 +1572,7 @@ void PreferenceDlgWX::SetupLabelDialog_RDFa()
 {
   XRCCTRL(*this, "wxID_BUTTON_ADD_NS", wxBitmapButton)->SetToolTip(TtaConvMessageToWX("Add"));
   wxStaticBoxSizer *sz = (wxStaticBoxSizer*)XRCCTRL(*this, "wxID_PAGE_RDFa", wxPanel)->GetSizer()->GetItem((size_t)0)->GetSizer();
-  sz->GetStaticBox()->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_RDFA)));
+  sz->GetStaticBox()->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_RDFa)));
   XRCCTRL(*this, "wxID_LABEL_NEW_NS", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_RDFa_NEW_LABEL)) );
 
   // fill the combobox with ns list

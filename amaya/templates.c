@@ -602,6 +602,28 @@ static char *createMenuString (const struct menuType* items, const int nbItems)
 }
 #endif /* TEMPLATES */
 
+
+/*----------------------------------------------------------------------
+  RepeatToBeCreated
+  An new repeat element will be created by the user through some generic editing
+  command
+  -----------------------------------------------------------------------*/
+ThotBool RepeatToBeCreated (NotifyElement *event)
+{
+  printf("RepeatToBeCreated\n");
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  RepeatCreated
+  A new "repeat" element has just been created by the user with a generic editing
+  command.
+  -----------------------------------------------------------------------*/
+void RepeatCreated (NotifyElement *event)
+{
+  printf("RepeatCreated\n");  
+}
+
 /*----------------------------------------------------------------------
   UseToBeCreated
   An new use element will be created by the user through some generic editing
@@ -1411,6 +1433,8 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   if(event->info==1)
     return FALSE;
 
+  printf("TemplateElementWillBeCreated\n");
+  
   if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
@@ -1787,7 +1811,7 @@ void TemplateCreateTextBox(Document doc, View view)
 void TemplateCreateFreeBox(Document doc, View view)
 {
 #ifdef TEMPLATES
-  Element     selElem, selElem2;
+  Element     selElem, selElem2, parent, parent2, current, child = NULL;
   ElementType selType, selType2;
   int         firstChar, lastChar, firstChar2, lastChar2;
   SSchema     sstempl = TtaGetSSchema ("Template", doc);
@@ -1813,44 +1837,52 @@ void TemplateCreateFreeBox(Document doc, View view)
           selType =  TtaGetElementType(selElem);
           selType2 =  TtaGetElementType(selElem2);
 
-//          printf("Selection %d %p %d %d\n", selType.ElTypeNum, selElem, firstChar, lastChar);
-//          printf("          %d %p %d %d\n", selType2.ElTypeNum, selElem2, firstChar2, lastChar2);
-          
           QueryStringFromUser(label, title, buffer, 127);
           bagType.ElSSchema = sstempl;
           bagType.ElTypeNum = Template_EL_bag;
           
-          if(selElem==selElem2)
+          parent  = TtaGetParent(selElem);
+          parent2 = TtaGetParent(selElem2);
+          
+          if(firstChar==0 && firstChar2==0 && parent == parent2)
             {
-              if(firstChar==0)
-                {
-                  ThotBool        oldStructureChecking;
-                  DisplayMode     dispMode;
-                  dispMode = TtaGetDisplayMode (doc);
-                  if (dispMode == DisplayImmediately)
-                    TtaSetDisplayMode (doc, DeferredDisplay);
-                  oldStructureChecking = TtaGetStructureChecking (doc);
-                  TtaSetStructureChecking (FALSE, doc);
-                  
-                  // Only one element fully selected
-                  bag = TtaNewElement(doc, bagType);
-                  
-                  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-                  TtaInsertSibling(bag, selElem, FALSE, doc);
-                  TtaRegisterElementCreate(bag, doc);
-                  TtaRegisterElementDelete (selElem, doc);
-                  TtaRemoveTree(selElem, doc);
-                  TtaInsertFirstChild(&selElem, bag, doc);
-                  TtaRegisterElementDelete (selElem, doc);
-                  SetAttributeStringValue(bag, Template_ATTR_types, "any");
-                  SetAttributeStringValue(bag, Template_ATTR_title, buffer);
-                  TtaCloseUndoSequence(doc);
-                  TtaSelectElement(doc, bag);
-                  
-                  TtaSetStructureChecking (oldStructureChecking, doc);
-                  TtaSetDisplayMode (doc, dispMode);
+              ThotBool        oldStructureChecking;
+              DisplayMode     dispMode;
+              dispMode = TtaGetDisplayMode (doc);
+              if (dispMode == DisplayImmediately)
+                TtaSetDisplayMode (doc, DeferredDisplay);
+              oldStructureChecking = TtaGetStructureChecking (doc);
+              TtaSetStructureChecking (FALSE, doc);
 
+              // Create and insert xt:bag element
+              bag = TtaNewElement(doc, bagType);
+              TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+              TtaInsertSibling(bag, selElem, TRUE, doc);
+              TtaRegisterElementCreate(bag, doc);
+
+              TtaNextSibling(&selElem2);
+              while(selElem!=selElem2)
+                {
+                  current = selElem;
+                  TtaNextSibling(&selElem);
+                  
+                  TtaRegisterElementDelete (current, doc);
+                  TtaRemoveTree(current, doc);
+                  if(child)
+                    TtaInsertSibling(current, child, FALSE, doc);
+                  else
+                    TtaInsertFirstChild(&current, bag, doc);
+                  TtaRegisterElementDelete (current, doc);
+                  child = current;
                 }
+              
+              SetAttributeStringValue(bag, Template_ATTR_types, "any");
+              SetAttributeStringValue(bag, Template_ATTR_title, buffer);
+              TtaCloseUndoSequence(doc);
+              TtaSelectElement(doc, bag);
+              
+              TtaSetStructureChecking (oldStructureChecking, doc);
+              TtaSetDisplayMode (doc, dispMode);
             }
         }
     }
@@ -1864,7 +1896,7 @@ void TemplateCreateFreeBox(Document doc, View view)
 void TemplateCreateRepeat(Document doc, View view)
 {
 #ifdef TEMPLATES
-  Element     selElem, selElem2;
+  Element     selElem, selElem2, parent, parent2, current, child = NULL;
   ElementType selType, selType2;
   int         firstChar, lastChar, firstChar2, lastChar2;
   SSchema     sstempl = TtaGetSSchema ("Template", doc);
@@ -1884,7 +1916,7 @@ void TemplateCreateRepeat(Document doc, View view)
     {
       TtaGiveFirstSelectedElement(doc, &selElem, &firstChar, &lastChar);
       TtaGiveLastSelectedElement(doc, &selElem2, &firstChar2, &lastChar2);
-      
+
       if(selElem && selElem2)
         {
           selType =  TtaGetElementType(selElem);
@@ -1895,44 +1927,58 @@ void TemplateCreateRepeat(Document doc, View view)
           repType.ElTypeNum = Template_EL_repeat;
           compType.ElSSchema = sstempl;
           compType.ElTypeNum = Template_EL_component;
-          
-          
-          if(selElem==selElem2)
+
+          parent  = TtaGetParent(selElem);
+          parent2 = TtaGetParent(selElem2);
+
+          if(firstChar==0 && firstChar2==0 && parent == parent2)
             {
-              if(firstChar==0)
+              ThotBool        oldStructureChecking;
+              DisplayMode     dispMode;
+              dispMode = TtaGetDisplayMode (doc);
+              if (dispMode == DisplayImmediately)
+                TtaSetDisplayMode (doc, DeferredDisplay);
+              oldStructureChecking = TtaGetStructureChecking (doc);
+              TtaSetStructureChecking (FALSE, doc);
+              
+              TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+              
+              rep  = TtaNewElement(doc, repType);
+              TtaInsertSibling(rep, selElem, TRUE, doc);
+              TtaRegisterElementCreate(rep, doc);
+
+              comp = TtaNewElement(doc, compType);
+              TtaInsertFirstChild(&comp, rep, doc);
+              TtaRegisterElementCreate(comp, doc);
+              
+              TtaNextSibling(&selElem2);
+              while(selElem!=selElem2)
                 {
-                  ThotBool        oldStructureChecking;
-                  DisplayMode     dispMode;
-                  dispMode = TtaGetDisplayMode (doc);
-                  if (dispMode == DisplayImmediately)
-                    TtaSetDisplayMode (doc, DeferredDisplay);
-                  oldStructureChecking = TtaGetStructureChecking (doc);
-                  TtaSetStructureChecking (FALSE, doc);
+                  current = selElem;
+                  TtaNextSibling(&selElem);
                   
-                  // Only one element fully selected
-                  
-                  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-                  
-                  rep  = TtaNewElement(doc, repType);
-                  TtaInsertSibling(rep, selElem, FALSE, doc);
-                  TtaRegisterElementCreate(rep, doc);
-
-                  comp = TtaNewElement(doc, compType);
-                  TtaInsertFirstChild(&comp, rep, doc);
-                  TtaRegisterElementCreate(comp, doc);
-                  
-                  TtaRegisterElementDelete (selElem, doc);
-                  TtaRemoveTree(selElem, doc);
-                  TtaInsertFirstChild(&selElem, comp, doc);
-                  TtaRegisterElementDelete (selElem, doc);
-                  SetAttributeStringValue(comp, Template_ATTR_name, buffer);
-                  TtaCloseUndoSequence(doc);
-                  TtaSelectElement(doc, rep);
-                  
-                  TtaSetStructureChecking (oldStructureChecking, doc);
-                  TtaSetDisplayMode (doc, dispMode);
-
+                  TtaRegisterElementDelete (current, doc);
+                  TtaRemoveTree(current, doc);
+                  if(child)
+                    TtaInsertSibling(current, child, FALSE, doc);
+                  else
+                    TtaInsertFirstChild(&current, comp, doc);
+                  TtaRegisterElementDelete (current, doc);
+                  child = current;
                 }
+              
+              
+              
+              TtaRegisterElementDelete (selElem, doc);
+              TtaRemoveTree(selElem, doc);
+              TtaInsertFirstChild(&selElem, comp, doc);
+              TtaRegisterElementDelete (selElem, doc);
+              SetAttributeStringValue(comp, Template_ATTR_name, buffer);
+              TtaCloseUndoSequence(doc);
+              TtaSelectElement(doc, rep);
+              
+              TtaSetStructureChecking (oldStructureChecking, doc);
+              TtaSetDisplayMode (doc, dispMode);
             }
         }
     }

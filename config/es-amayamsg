@@ -441,42 +441,44 @@
 439 Recordar contraseñas de los sitios
 440 Sitios
 441 Eliminar todo
-442 Ocurrió un error durante la construcción de los objetos JavaScript/DOM
-443 Un script se está ejecutando todavía, pero se abortará lo antes posible.
-444 No se puede activar JavaScript/DOM en esta vista
-445 Escriba un comando JavaScript:
-446 El comando devolvió el valor: %s
-447 El comando no devolvió ningún valor
-448 SpiderMonkey devolvió el error siguiente:\n\nArchivo: %s\nLínea: %d\n\n%s
-449 Nuevo
-450 Personalizable
-451 Crear
-452 Crear el enlace haciendo clic en el destino
-453 Borrar ancla
-454 Guardar sin plantilla
-455 Con tema ...
-456 Ancho 100%
-457 Con leyenda
-458 Tamaño
-459 Posición
-460 Modo de edición XML
-461 Lista de hojas de estilo
-462 Añadir hoja de estilo ...
-463 Eliminar hojas de estilo seleccionadas
-464 Activar hojas de estilo seleccionadas
-465 Desactivar hojas de estilo seleccionadas
-466 Abrir hojas de estilo selecc
-467 Perfil de Amaya:
-468 Mostrar "Sugerencia del día" al iniciar el programa
-469 Elija Fuente y tamaño:
-470 **Template has error(s), it will not be used:
-471 **Close
-472 **Component '%s' has multiple definition.
-473 **Library '%s' can not be loaded.
-474 **Can not convert an instance document to template.
-475 **The document is already a template
-476 **Template creation fails
-477 **Text area
-478 **Element label:
-479 **Bag area
-480 **Repeat element
+442 **XML namespaces generated for new XHTML+RDFa documents
+443 **Select a namespace in the list below or add a new one (syntax prefix="uri")
+444 Ocurrió un error durante la construcción de los objetos JavaScript/DOM
+445 Un script se está ejecutando todavía, pero se abortará lo antes posible.
+446 No se puede activar JavaScript/DOM en esta vista
+447 Escriba un comando JavaScript:
+448 El comando devolvió el valor: %s
+449 El comando no devolvió ningún valor
+450 SpiderMonkey devolvió el error siguiente:\n\nArchivo: %s\nLínea: %d\n\n%s
+451 Nuevo
+452 Personalizable
+453 Crear
+454 Crear el enlace haciendo clic en el destino
+455 Borrar ancla
+456 Guardar sin plantilla
+457 Con tema ...
+458 Ancho 100%
+459 Con leyenda
+460 Tamaño
+461 Posición
+462 Modo de edición XML
+463 Lista de hojas de estilo
+464 Añadir hoja de estilo ...
+465 Eliminar hojas de estilo seleccionadas
+466 Activar hojas de estilo seleccionadas
+467 Desactivar hojas de estilo seleccionadas
+468 Abrir hojas de estilo selecc
+469 Perfil de Amaya:
+470 Mostrar "Sugerencia del día" al iniciar el programa
+471 Elija Fuente y tamaño:
+472 **Template has error(s), it will not be used:
+473 **Close
+474 **Component '%s' has multiple definition.
+475 **Library '%s' can not be loaded.
+476 **Can not convert an instance document to template.
+477 **The document is already a template
+478 **Template creation fails
+479 **Text area
+480 **Element label:
+481 **Bag area
+482 **Repeat element
