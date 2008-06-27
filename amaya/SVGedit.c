@@ -149,29 +149,37 @@ void GraphicsSelectionChanged (NotifyElement * event)
   Document doc; View view;
 
   TtaGiveActiveView(&doc, &view);
-  /* In formatted view, you can only select the direct children of the
-     svgCanvas */
-  if(view == 1)
+
+  svgSchema = GetSVGSSchema (event->document);
+  attrType.AttrSSchema = svgSchema;
+  elType = TtaGetElementType (event->element);
+  
+  if (view == 1 && elType.ElSSchema == svgSchema &&
+      (elType.ElTypeNum == SVG_EL_g ||
+       elType.ElTypeNum == SVG_EL_path ||
+       elType.ElTypeNum == SVG_EL_rect ||
+       elType.ElTypeNum == SVG_EL_circle_ ||
+       elType.ElTypeNum == SVG_EL_ellipse ||
+       elType.ElTypeNum == SVG_EL_line_ ||
+       elType.ElTypeNum == SVG_EL_polyline ||
+       elType.ElTypeNum == SVG_EL_polygon ||
+       elType.ElTypeNum == SVG_EL_text_ ||
+       elType.ElTypeNum == SVG_EL_image ||
+       elType.ElTypeNum == SVG_EL_switch
+	   ))
      {
-      svgSchema = GetSVGSSchema (event->document);
-      attrType.AttrSSchema = svgSchema;
-
-      elType = TtaGetElementType (event->element);
-      
-      if (elType.ElSSchema == svgSchema && elType.ElTypeNum != SVG_EL_SVG)
-	{
-	  elType.ElTypeNum = SVG_EL_SVG;
-	  elType.ElSSchema = svgSchema;
-	  svgCanvas = TtaGetTypedAncestor (event->element, elType);
-	  asc = event->element;
-	  while(TtaGetParent(asc) != svgCanvas)
-	    asc = TtaGetParent(asc);
-
-	  TtaSelectElement (event->document, asc);
-	  event->element = asc;
-	  event->elementType = TtaGetElementType(asc);
-  	}
-
+       /* In formatted view, you can only select the direct children of the
+	  svgCanvas */
+       elType.ElTypeNum = SVG_EL_SVG;
+       elType.ElSSchema = svgSchema;
+       svgCanvas = TtaGetTypedAncestor (event->element, elType);
+       asc = event->element;
+       while(TtaGetParent(asc) != svgCanvas)
+	 asc = TtaGetParent(asc);
+       
+       TtaSelectElement (event->document, asc);
+       event->element = asc;
+       event->elementType = TtaGetElementType(asc);
     }
   else
     {
@@ -2920,6 +2928,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
 
     case 41:   /* Rotate */
+      
       break;
 
       /* Translate, Scale */

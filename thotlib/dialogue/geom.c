@@ -1401,11 +1401,15 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
 }
 
 int ShapeCreation (int frame,
+		   Document doc, 
+		   void *transform,
+		   int ancestorX, int ancestorY,
+		   int canvasWidth, int canvasHeight,
+		   int shape,
 		   int *x1, int *y1, int *x2, int *y2,
 		   int *x3, int *y3, int *x4, int *y4,
-		   int *lx, int *ly,
-		   void *transform,
-		   Document doc, int shape)
+		   int *lx, int *ly)
+
 {
   int nb_points;
 
@@ -1413,20 +1417,19 @@ int ShapeCreation (int frame,
   AmayaCreateShapeEvtHandler * p_CreateShapeEvtHandler;
   ThotEvent ev;
 
-  int x0, y0, width, height;
-
-  x0 = *x1;
-  y0 = *y1;
-  width = *x4;
-  height = *y4;
-
   p_frame = FrameTable[frame].WdFrame;
   p_CreateShapeEvtHandler = new AmayaCreateShapeEvtHandler( p_frame,
+							    doc,
+							    transform,
+							    ancestorX,
+							    ancestorY,
+							    canvasWidth,
+							    canvasHeight,
+							    shape,
 							    x1, y1,
 							    x4, y4,
-							    transform,
-							    &nb_points, doc,
-							    shape);
+							    &nb_points
+							    );
 
   while(!p_CreateShapeEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
@@ -1462,20 +1465,32 @@ if(!(shape == 0 || (shape >= 12 && shape <= 14)))
   *x3 = *x1;
   *y3 = *y4;
 
-  MouseCoordinatesToSVG(doc, p_frame, x0, y0,
-			width, height,
+  MouseCoordinatesToSVG(doc, p_frame,
+			ancestorX,
+			ancestorY,
+			canvasWidth,
+			canvasHeight,
 			transform,
 			TRUE, x1, y1);
-  MouseCoordinatesToSVG(doc, p_frame, x0, y0,
-			width, height,
+  MouseCoordinatesToSVG(doc, p_frame,
+			ancestorX,
+			ancestorY,
+			canvasWidth,
+			canvasHeight,
 			transform,
 			TRUE, x2, y2);
-  MouseCoordinatesToSVG(doc, p_frame, x0, y0,
-			width, height,
+  MouseCoordinatesToSVG(doc, p_frame,
+			ancestorX,
+			ancestorY,
+			canvasWidth,
+			canvasHeight,
 			transform,
 			TRUE, x3, y3);
-  MouseCoordinatesToSVG(doc, p_frame, x0, y0,
-			width, height,
+  MouseCoordinatesToSVG(doc, p_frame,
+			ancestorX,
+			ancestorY,
+			canvasWidth,
+			canvasHeight,
 			transform,
 			TRUE, x4, y4);
  
@@ -1563,15 +1578,14 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
   height = LogicalValue (height, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
-  /* Maybe coordinates are not well computed here... */
-
-  newx = (int)(round(a * (*x - x0) + c * (*y - y0) + e));
-  newy = (int)(round(b * (*x - x0) + d * (*y - y0) + f));
-
-  newx2 = LogicalValue (newx, UnPixel, NULL,
+  newx = LogicalValue (*x - x0, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
-  newy2 = LogicalValue (newy, UnPixel, NULL,
+
+  newy = LogicalValue (*y - x0, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
+
+  newx2 = (int)(round(a * newx + c * newx + e));
+  newy2 = (int)(round(b * newy + d * newy + f));
 
   /* printf("%f %f %f %f %f %f\n", a, b, c, d, e, f); */
 

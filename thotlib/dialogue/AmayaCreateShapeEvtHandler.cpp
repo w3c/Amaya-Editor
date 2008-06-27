@@ -334,25 +334,31 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler() : wxEvtHandler()
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
 AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
-(AmayaFrame * p_frame, int *x1, int *y1, int *x2, int *y2,
- void *transform,
- int *nb_points, Document doc, int shape_number)
+(AmayaFrame * p_frame,
+ Document doc, void *transform,
+ int ancestorX,
+ int ancestorY,
+ int canvasWidth,
+ int canvasHeight,
+ int shape_number,
+ int *x1, int *y1, int *x2, int *y2,
+ int *nb_points)
   : wxEvtHandler()
   ,m_IsFinish(false)
   ,m_pFrame(p_frame)
   ,m_FrameId(p_frame->GetFrameId())
-  ,m_x0(*x1)
-  ,m_y0(*y1)
-  ,m_width(*x2)
-  ,m_height(*y2)
+  ,m_document(doc)
+  ,m_transform(transform)
+  ,m_x0(ancestorX)
+  ,m_y0(ancestorY)
+  ,m_width(canvasWidth)
+  ,m_height(canvasHeight)
+  ,m_ShapeNumber(shape_number)
   ,m_x1(x1)
   ,m_y1(y1)
   ,m_x2(x2)
   ,m_y2(y2)
-  ,m_transform(transform)
-  ,m_ShapeNumber(shape_number)
   ,m_NbPoints(nb_points)
-  ,m_document(doc)
     
 {
 

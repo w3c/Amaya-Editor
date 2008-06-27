@@ -20,9 +20,14 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
 
   AmayaCreateShapeEvtHandler();
   AmayaCreateShapeEvtHandler(AmayaFrame * p_frame,
-			     int *x1, int *y1, int *x2, int *y2,
-			     void *transform,
-			     int *nb_points, Document doc, int shape_number);
+ Document doc, void *transform,
+ int ancestorX,
+ int ancestorY,
+ int canvasWidth,
+ int canvasHeight,
+ int shape_number,
+ int *x1, int *y1, int *x2, int *y2,
+ int *nb_points);
   virtual ~AmayaCreateShapeEvtHandler();
 
   bool IsFinish();
@@ -41,14 +46,12 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
 
   AmayaFrame * m_pFrame;
   int m_FrameId;
-
-  int m_x0, m_y0, m_width, m_height;
-  int *m_x1,*m_y1,*m_x2,*m_y2;
-  void *m_transform;
-
-  int m_ShapeNumber;
-  int *m_NbPoints;
   int m_document;
+  void *m_transform;
+  int m_x0, m_y0, m_width, m_height;
+  int m_ShapeNumber;
+  int *m_x1,*m_y1,*m_x2,*m_y2;
+  int *m_NbPoints;
 
 };
 

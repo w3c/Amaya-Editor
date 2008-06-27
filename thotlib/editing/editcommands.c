@@ -2113,6 +2113,7 @@ void AskSurroundingBox(
   ViewFrame          *pFrame;
   int frame;
   PtrTransform CTM, inverse;
+  int canvasWidth,canvasHeight,ancestorX,ancestorY;
 
   frame = ActiveFrame;
 
@@ -2136,26 +2137,35 @@ void AskSurroundingBox(
 	return;
 	}
 
+  pFrame = &ViewFrameTable[frame - 1];
+
+  /* Get the size of the SVG Canvas */
   pAb = ((PtrElement)svgCanvas) -> ElAbstractBox[0];
   if(!pAb)return;
   pBox = pAb -> AbBox;
   if(!pBox)return;
+  canvasWidth  = pBox->BxWidth;
+  canvasHeight = pBox->BxHeight;
 
-  pFrame = &ViewFrameTable[frame - 1];
+  /* Get the size of the origin of the ancestor */
+  pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
+  if(!pAb)return;
+  pBox = pAb -> AbBox;
+  if(!pBox)return;
+  ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
+  ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
-  *x1 = pBox->BxXOrg - pFrame->FrXOrg;
-  *y1 = pBox->BxYOrg - pFrame->FrYOrg;
-  *x4 = pBox->BxWidth;
-  *y4 = pBox->BxHeight;
-
-  ShapeCreation (frame, 
+  ShapeCreation (frame,
+		 doc,
+		 (void *)inverse,
+		 ancestorX, ancestorY,
+		 canvasWidth, canvasHeight,
+		 shape,
 		 x1, y1,
 		 x2, y2,
 		 x3, y3,
 		 x4, y4,
-		 lx, ly,
-		 (void *)inverse,
-		 doc, shape);
+		 lx, ly);
 
   if(inverse != NULL)TtaFreeTransform(inverse);
 }
