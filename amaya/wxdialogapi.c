@@ -1104,7 +1104,7 @@ ThotBool CreateCreateTableDlgWX (int ref, ThotWindow parent,
   - Change Amaya configuration options
  ------------------------------------------------------------------------*/
 ThotBool CreatePreferenceDlgWX (int ref, ThotWindow parent,
-                                const char *url_list)
+                                const char *url_list, const char *rdfa_list)
 {
 #ifdef _WX
 
@@ -1112,10 +1112,12 @@ ThotBool CreatePreferenceDlgWX (int ref, ThotWindow parent,
   if (TtaRaiseDialogue (ref))
     return FALSE;
 
-  wxArrayString wx_items = BuildWX_URL_List(url_list);
+  wxArrayString wx_items_uri = BuildWX_URL_List(url_list);
+  wxArrayString wx_items_rdfa = BuildWX_URL_List(rdfa_list);
   PreferenceDlgWX * p_dlg = new PreferenceDlgWX( ref,
 						 parent,
-						 wx_items);
+						 wx_items_uri,
+						 wx_items_rdfa);
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
       return TRUE;

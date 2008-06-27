@@ -96,13 +96,14 @@ END_EVENT_TABLE()
     returns:
     ----------------------------------------------------------------------*/
   PreferenceDlgWX::PreferenceDlgWX( int ref, wxWindow* parent,
-                                    const wxArrayString & url_list ) :
+                                    const wxArrayString & url_list,
+				    const wxArrayString & rdfa_list) :
     AmayaDialog( parent, ref ),
     m_IsInitialized(false) // this flag is used to know when events can be proceed
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PreferenceDlgWX"));
   m_UrlList = url_list;
-  m_RDFaNSList = url_list;
+  m_RDFaNSList = rdfa_list;
   MyRef = ref;
 
   m_book = new wxListBoxBook(this, XRCID("wxID_NOTEBOOK"));
@@ -1571,8 +1572,8 @@ void PreferenceDlgWX::SetupLabelDialog_RDFa()
 {
   XRCCTRL(*this, "wxID_BUTTON_ADD_NS", wxBitmapButton)->SetToolTip(TtaConvMessageToWX("Add"));
   wxStaticBoxSizer *sz = (wxStaticBoxSizer*)XRCCTRL(*this, "wxID_PAGE_RDFa", wxPanel)->GetSizer()->GetItem((size_t)0)->GetSizer();
-  // sz->GetStaticBox()->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_RDFA)));
-  sz->GetStaticBox()->SetLabel(TtaConvMessageToWX("XHTML+RDFa"));
+  sz->GetStaticBox()->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_RDFA)));
+  XRCCTRL(*this, "wxID_LABEL_NEW_NS", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_RDFa_NEW_LABEL)) );
 
   // fill the combobox with ns list
   XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->Append(m_RDFaNSList);

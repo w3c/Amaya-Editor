@@ -26,7 +26,8 @@ public:
   // Constructor.
   PreferenceDlgWX( int ref,
 		   wxWindow* parent,
-		   const wxArrayString & url_list );
+		   const wxArrayString & url_list,
+		   const wxArrayString & rdfa_list );
 
   // Destructor.
   virtual ~PreferenceDlgWX();

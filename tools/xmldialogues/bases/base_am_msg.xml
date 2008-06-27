@@ -6914,6 +6914,14 @@
 	<message xml:lang="hu">Mind törlése</message>
 	<message xml:lang="ja">すべて削除</message>
 </label>
+<label define="AM_RDFa">
+	<message xml:lang="en">XML namespaces generated for new XHTML+RDFa documents</message>
+	<message xml:lang="fr">Espaces de noms XML g�n�r�s pour les nouveaux documents XHTML+RDFa</message>
+</label>
+<label define="AM_RDFa_NEW_LABEL">
+	<message xml:lang="en">Select a namespace in the list below or add a new one (syntax prefix="uri")</message>
+	<message xml:lang="fr">Choisir un espace de noms dans la liste ou en saisir un nouveau (syntaxe: prefix="uri")</message>
+</label>
 <label define="AM_JAVASCRIPT_CAN_NOT_BUILD">
 	<message xml:lang="en">An error occured during the building of the javascript/DOM objects</message>
 	<message xml:lang="es">Ocurrió un error durante la construcción de los objetos JavaScript/DOM</message>

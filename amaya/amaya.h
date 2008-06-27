@@ -384,6 +384,7 @@ THOT_EXPORT char      *SavedDocumentURL;/* URL of the document that contained th
 THOT_EXPORT char      *AutoSave_list;
 THOT_EXPORT char      *Template_list; /* list of templates */
 THOT_EXPORT char      *URL_list; /* list of previous open URLs */
+THOT_EXPORT char      *RDFa_list; /* list of Namespace declarations for RDFa */
 #ifdef _SVG
 THOT_EXPORT char      *SVGlib_list;
 #endif /* _SVG */
@@ -418,6 +419,7 @@ THOT_EXPORT char       SaveFormTmp[MAX_LENGTH];
 
 THOT_EXPORT int        URL_list_len;
 THOT_EXPORT int        Template_list_len;
+THOT_EXPORT int        RDFa_list_len;
 /* list of auto-saved files */
 THOT_EXPORT int        AutoSave_list_len;
 THOT_EXPORT int        AutoSave_Interval;

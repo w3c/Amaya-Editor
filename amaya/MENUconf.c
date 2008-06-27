@@ -3458,7 +3458,7 @@ void PreferenceMenu (Document document, View view)
 
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
                                              TtaGetViewFrame (document, view),
-                                             URL_list );
+                                             URL_list, RDFa_list );
   if (created)
     {
       TtaSetDialoguePosition ();

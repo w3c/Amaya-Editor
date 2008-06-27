@@ -1462,6 +1462,13 @@
             <border>4</border>
           </object>
           <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_NEW_NS">
+              <label>Select a namespace in the list below or add a new one (syntax prefix="uri")</label>
+              <size>800,-1</size>
+              <style>wxALIGN_LEFT</style>
+            </object>
+          </object>
+          <object class="sizeritem">
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">

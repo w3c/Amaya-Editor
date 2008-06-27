@@ -248,6 +248,7 @@ extern void AddURLInCombobox ( char *pathname,
                                char *form_data,
                                ThotBool keep );
 extern void InitStringForCombobox ( void );
+extern void InitRDFaListForCombobox ( void );
 extern void RemoveDocFromSaveList ( char *name,
                                     char *initial_url,
                                     int doctype );
@@ -510,6 +511,7 @@ extern void AddURLInCombobox ( char *pathname,
                                  char *form_data,
                                  ThotBool keep );
 extern void InitStringForCombobox ( void );
+extern void InitRDFaListForCombobox ( void );
 extern void RemoveDocFromSaveList ( char *name,
                                       char *initial_url,
                                       int doctype );

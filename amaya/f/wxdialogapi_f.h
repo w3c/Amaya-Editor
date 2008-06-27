@@ -130,7 +130,8 @@ extern ThotBool CreateCreateTableDlgWX ( int ref,
                                          int def_border );
 extern ThotBool CreatePreferenceDlgWX ( int ref,
                                         ThotWindow parent,
-                                        const char *url_list );
+                                        const char *url_list,
+                                        const char *rdfa_list );
 extern ThotBool CreateSpellCheckDlgWX ( int ref,
                                         int base,
                                         ThotWindow parent,
@@ -293,7 +294,8 @@ extern ThotBool CreateCreateTableDlgWX ( int ref,
                                            int def_border );
 extern ThotBool CreatePreferenceDlgWX ( int ref,
                                           ThotWindow parent,
-                                          const char *url_list );
+                                          const char *url_list,
+                                          const char *rdfa_list );
 extern ThotBool CreateSpellCheckDlgWX ( int ref,
                                           int base,
                                           ThotWindow parent,

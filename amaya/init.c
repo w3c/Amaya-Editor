@@ -6972,6 +6972,10 @@ void InitAmaya (NotifyEvent * event)
   URL_list_len = 0;
   InitStringForCombobox ();
 
+  RDFa_list = NULL;
+  RDFa_list_len = 0;
+  InitRDFaListForCombobox ();
+
   AutoSave_list = NULL;
   AutoSave_list_len = 0;
   InitAutoSave ();
@@ -7652,6 +7656,69 @@ void InitStringForCombobox ()
   TtaFreeMemory (urlstring);
 }
 
+/*----------------------------------------------------------------------
+  InitRDFaListForCombobox
+  Initializes the Namespace list for RDFa
+  ----------------------------------------------------------------------*/
+void InitRDFaListForCombobox ()
+{
+  unsigned char     *urlstring, c;
+  char              *ptr;
+  FILE              *file;
+  int                i, nb, len;
+
+  /* remove the previous list */
+  TtaFreeMemory (RDFa_list);
+  urlstring = (unsigned char *) TtaGetMemory (MAX_LENGTH);
+  /* open the file rdfa_list.dat into config directory */
+  ptr = TtaGetEnvString ("THOTDIR");
+  strcpy ((char *)urlstring, ptr);
+  strcat ((char *)urlstring, DIR_STR);
+  strcat ((char *)urlstring, "config");
+  strcat ((char *)urlstring, DIR_STR);
+  strcat ((char *)urlstring, "rdfa_list.dat");
+  file = TtaReadOpen ((char *)urlstring);
+  *urlstring = EOS;
+
+  if (file)
+    {
+      /* get the size of the file */
+      fseek (file, 0L, 2);	/* end of the file */
+      RDFa_list_len = (ftell (file) * 4) + GetMaxURLList() + 4;
+      RDFa_list = (char *)TtaGetMemory (RDFa_list_len);
+      RDFa_list[0] = EOS;
+      fseek (file, 0L, 0);	/* beginning of the file */
+      /* initialize the list by reading the file */
+      i = 0;
+      nb = 0;
+      while (TtaReadByte (file, &c))
+        {
+	  len = 0;
+	  urlstring[len] = EOS;
+	  urlstring[len++] = (char)c;
+	  while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
+	    {
+	      if (c == 13)
+		urlstring[len] = EOS;
+	      else
+		urlstring[len++] = (char)c;
+	    }
+	  urlstring[len] = EOS;
+	  if (i > 0 && len)
+	    /* add an EOS between two urls */
+	    RDFa_list[i++] = EOS;
+	  if (len)
+	    {
+	      nb++;
+	      strcpy ((char *)&RDFa_list[i], (char *)urlstring);
+	      i += len;
+	    }
+        }
+      RDFa_list[i + 1] = EOS;
+      TtaReadClose (file);
+    }
+  TtaFreeMemory (urlstring);
+}
 
 /*----------------------------------------------------------------------
   RemoveDocFromSaveList remove the file from the AutoSave list
