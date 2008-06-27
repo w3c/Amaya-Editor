@@ -1665,19 +1665,16 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
   height = LogicalValue (height, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
-  /* TODO: check this as it no longer works
-     for transformed SVG. */
-
+  /* Mouse coordinates to SVG ancestor coordinates */
   newx = LogicalValue (*x - x0, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
   newy = LogicalValue (*y - y0, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
-  newx2 = (int)(round(a * newx + c * newx + e));
-  newy2 = (int)(round(b * newy + d * newy + f));
-
-  //  printf("%f %f %f %f %f %f\n", a, b, c, d, e, f);
+  /* SVG ancestor coordinates to SVG canvas */
+  newx2 = (int)(round(a * newx + c * newy + e));
+  newy2 = (int)(round(b * newx + d * newy + f));
 
   /* Modify x and y if asked */
   if(convert)
