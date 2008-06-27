@@ -1108,12 +1108,15 @@ ThotBool CreatePreferenceDlgWX (int ref, ThotWindow parent,
 {
 #ifdef _WX
 
+  wxArrayString wx_items_uri, wx_items_rdfa;
+
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
     return FALSE;
 
-  wxArrayString wx_items_uri = BuildWX_URL_List(url_list);
-  wxArrayString wx_items_rdfa = BuildWX_URL_List(rdfa_list);
+  wx_items_uri = BuildWX_URL_List(url_list);
+  if (rdfa_list)
+    wx_items_rdfa = BuildWX_URL_List(rdfa_list);
   PreferenceDlgWX * p_dlg = new PreferenceDlgWX( ref,
 						 parent,
 						 wx_items_uri,
