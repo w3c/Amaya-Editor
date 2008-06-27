@@ -1769,7 +1769,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
       parent = TtaGetParent(parent);
     }
 
-
   /* look for the element (sibling) in front of which the new element will be
      created */
   sibling = NULL;
@@ -2561,7 +2560,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
 void SelectGraphicElement (Document doc, View view)
 {
 #ifdef _SVG
-  Element	   first, svgCanvas, sibling, parent;
+  Element          svgAncestor, svgCanvas;
+  Element	   first, sibling, parent;
   AttributeType    attrType;
   SSchema          svgSchema;
   ElementType      elType;
@@ -2612,9 +2612,22 @@ void SelectGraphicElement (Document doc, View view)
     return;
   TtaSelectElement(doc, svgCanvas);
 
+  /* Look for the outermost <svg> element containg the svgCanvas. */
+  svgAncestor = svgCanvas;
+  parent = svgCanvas;
+  attrType.AttrSSchema = svgSchema;
+
+  while(parent)
+    {
+      elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == SVG_EL_SVG && elType.ElSSchema == svgSchema)
+	svgAncestor = parent;
+      parent = TtaGetParent(parent);
+    }
+
   /* Ask a box surrounding the element the user wants to select */
   AskSurroundingBox(doc,
-		    svgCanvas,
+		    svgAncestor,
 		    svgCanvas,
 		    42,
 		    &x1, &y1, &x2, &y2,

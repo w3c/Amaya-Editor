@@ -74,7 +74,12 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler() : wxEvtHandler()
 AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 						   Document doc,
 						   void *transform,
+						   int ancestorX,
+						   int ancestorY,
+						   int canvasWidth,
+						   int canvasHeight,
 						   Element el,
+						   int transform_type,
 						   int x1, int y1,
 						   int x2, int y2,
 						   int x3, int y3,
@@ -86,6 +91,11 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
   ,m_document(doc)
   ,m_transform(transform)
   ,m_el(el)
+  ,m_x0(ancestorX)
+  ,m_y0(ancestorY)
+  ,m_width(canvasWidth)
+  ,m_height(canvasHeight)
+  ,m_type(transform_type)
   ,m_x1(x1)
   ,m_y1(y1)
   ,m_x2(x2)
@@ -158,6 +168,7 @@ void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
+  if (IsFinish())return;
 }
 
 /*----------------------------------------------------------------------

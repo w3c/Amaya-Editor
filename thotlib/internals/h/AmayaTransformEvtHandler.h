@@ -22,7 +22,10 @@ class AmayaTransformEvtHandler : public wxEvtHandler
   AmayaTransformEvtHandler(AmayaFrame * p_frame,
 			   Document doc,
 			   void *transform,
+			   int ancestorX, int ancestorY,
+			   int canvasWidth, int canvasHeight,
 			   Element el,
+			   int transform_type,
 			   int x1, int y1,
 			   int x2, int y2,
 			   int x3, int y3,
@@ -48,7 +51,10 @@ class AmayaTransformEvtHandler : public wxEvtHandler
   int m_FrameId;
   int m_document;
   void *m_transform;
+  int m_x0,m_y0;
+  int m_width,m_height;
   Element m_el;
+  int m_type;
   int m_x1, m_y1;
   int m_x2, m_y2;
   int m_x3, m_y3;

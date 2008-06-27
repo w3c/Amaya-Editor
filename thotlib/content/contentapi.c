@@ -2045,6 +2045,7 @@ void TtaInsertTransform (Element element, void *transform,
 
 /*----------------------------------------------------------------------
   TtaSimplifyTransformMatrix
+
   Return a new transform of type PtElMatrix which represents the
   composition of all the elements of the list "transform".
   ---------------------------------------------------------------------- */
@@ -2161,8 +2162,9 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
 
 /*----------------------------------------------------------------------
   TtaCoordinatesInParentSpace
+
   Convert the coordinates (x,y) of a point inside the space of the element
-  el into coordinates in its parent.
+  el into coordinates in its parent space.
   ---------------------------------------------------------------------- */
 extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
 {
@@ -2183,6 +2185,15 @@ extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
 }
 
 /*----------------------------------------------------------------------
+  TtaGetCurrentTransformMatrix
+
+  Get the CTM that allows to get coordinates of a point in the ancestor
+  space from its coordinates in the element space.
+
+  ( x_in_ancestor_space )         ( x_in_el_space )
+  ( y_in_ancestor_space ) = CTM * ( y_in_el_space )
+  (          1          )         (        1      )
+
   ---------------------------------------------------------------------- */
 extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor)
 {
@@ -2217,9 +2228,8 @@ extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor)
 }
 
 /*----------------------------------------------------------------------
-  ---------------------------------------------------------------------- */
-/*----------------------------------------------------------------------
   TtaInverseTransform
+
   Return the matrix representing the inverse of a transform. If the
   transform is not inversible, then return NULL.
   ----------------------------------------------------------------------*/
@@ -2341,6 +2351,7 @@ extern void *TtaInverseTransform (void *transform)
 
 /*----------------------------------------------------------------------
   TtaApplyMatrixTransform
+
   Apply a transform matrix to an element and simplify its transformation
   matrix.
   ---------------------------------------------------------------------- */
@@ -2381,6 +2392,7 @@ extern void TtaApplyMatrixTransform (Document document, Element element,
 
 /*----------------------------------------------------------------------
   TtaGetMatrixTransform
+
   Get the coefficients of the matrix representing the transform attached to
   the element el.
 

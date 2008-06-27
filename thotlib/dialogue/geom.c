@@ -11,6 +11,7 @@
  *
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) - Unicode, Windows version and Plug-ins
+ *          F. Wang - SVG editing
  *
  */
 #ifdef _WX
@@ -64,6 +65,7 @@ static int          GridSize = 1;
   #include "AmayaResizingBoxEvtHandler.h"
   #include "AmayaCreateShapeEvtHandler.h"
   #include "AmayaCreatePathEvtHandler.h"
+  #include "AmayaTransformEvtHandler.h"
 #endif /* _WX */
 
 
@@ -235,7 +237,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
                                  x, y, x1, y1, x3, y3, lastx, lasty, point,
                                  nbpoints, maxPoints, width, height,
                                  Pbuffer, Bbuffer );
-  // now wait for the polygon creation end
+  /* now wait for the polygon creation end */
   ThotEvent ev;
   while(!p_addPointEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
@@ -467,7 +469,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
                                   x, y, width, height,
                                   Pbuffer, Bbuffer,
                                   pointselect );
-  // now wait for the polygon creation end
+  /* now wait for the polygon creation end */
   ThotEvent ev;
   while(!p_movePointEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
@@ -1086,7 +1088,7 @@ static void Resizing ( int frame, int x, int y, int *width, int *height,
                                     x, y, width, height,
                                     box, xmin, xmax, ymin, ymax,
                                     xm, ym, percentW, percentH );
-  // now wait for the polygon creation end
+  /* now wait for the polygon creation end */
   ThotEvent ev;
   while (!p_resizingBoxEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
@@ -1180,7 +1182,7 @@ static void Moving (int frame, int *x, int *y, int width, int height,
                                   x, y, width, height,
                                   box, xmin, xmax, ymin, ymax,
                                   xm, ym, xref, yref );
-  // now wait for the polygon creation end
+  /* now wait for the polygon creation end */
   ThotEvent ev;
   while(!p_movingBoxEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
@@ -1332,8 +1334,6 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
     Resizing (frame, *x, *y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
 }
 
-
-
 /*----------------------------------------------------------------------
   GetArrowCoord
 
@@ -1346,7 +1346,6 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
       /                                /  (x2,y2)    
      /                                /       
    (x1,y1)
-  
 
   ----------------------------------------------------------------------*/
 void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
@@ -1400,6 +1399,29 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
     }
 }
 
+/*----------------------------------------------------------------------
+  ShapeCreation
+
+  Call the handler that allows the user to draw a shape in an SVG canvas.
+  ancestorX and ancestorY are the absolute position of the SVG ancestor,
+  transform is a the matrix that allows to get coordinates of a point in
+  the Canvas from its coordinates in the Ancestor.
+
+          --------------------
+	  |  |------|        |
+          |  |Canvas| Ancestor
+          |  |------|        |
+	  --------------------
+
+  The returned value are the one of the surrounding rectangle
+
+     1--lx---2
+     |       |
+    ly Shape |
+     |       |
+     3-------4
+
+  ----------------------------------------------------------------------*/
 int ShapeCreation (int frame,
 		   Document doc, 
 		   void *transform,
@@ -1409,7 +1431,6 @@ int ShapeCreation (int frame,
 		   int *x1, int *y1, int *x2, int *y2,
 		   int *x3, int *y3, int *x4, int *y4,
 		   int *lx, int *ly)
-
 {
   int nb_points;
 
@@ -1439,32 +1460,42 @@ int ShapeCreation (int frame,
   *lx = abs(*x4 - *x1);
   *ly = abs(*y4 - *y1);
 
-if(!(shape == 0 || (shape >= 12 && shape <= 14)))
+  /* Some shapes have specific contrainsts.  */
+  if(!(shape == 0 || (shape >= 12 && shape <= 14)))
     {
-      /* It's a shape drawn in a rectangle */
-
       if(shape == 20)
-	/* equilateral triangle */
+	/* equilateral triangle
+	        
+              /\       ^
+	     /  \      |  ly        (ly)^2 + (lx/2)^2 = (lx)^2
+	    /    \     |         => ly = srqt(3)*lx/2
+	   .------.    v
+
+	   <------>
+              lx      */
 	*lx = (int) (floor(2 *  *ly / sqrt(3)));
+	
       else if(shape == 3 || shape == 15 || shape == 16 || shape == 23)
 	{
 	  /* *lx and *ly must be equal (square, circle...) */
 	  if(*ly < *lx)*lx=*ly; else *ly = *lx;
 	}
 
+      /* Invert the coordinates of (1) and (4) if necessary */
       if(*x4 < *x1)*x4 = *x1 - *lx;
-	else *x4 = *x1 + *lx;
+      else *x4 = *x1 + *lx;
 
       if(*y4 < *y1)*y4 = *y1 - *ly;
       else *y4 = *y1 + *ly;
-
     }
 
+  /* Compute the position of point (2) and (3) */
   *x2 = *x4;
   *y2 = *y1;
   *x3 = *x1;
   *y3 = *y4;
 
+  /* Convert the coordinates x1,y1 x2,y2 x3,y3 x4,y4 */
   MouseCoordinatesToSVG(doc, p_frame,
 			ancestorX,
 			ancestorY,
@@ -1497,9 +1528,62 @@ if(!(shape == 0 || (shape >= 12 && shape <= 14)))
   return nb_points;
 }
 
+/*----------------------------------------------------------------------
+  TransformSVG
+  ----------------------------------------------------------------------*/
+void TransformSVG (int frame,
+		  Document doc, 
+		  void *transform,
+		  int ancestorX, int ancestorY,
+		  int canvasWidth, int canvasHeight,
+		  Element el,
+		  int transform_type,
+		  int x1, int y1,
+		  int x2, int y2,
+		  int x3, int y3,
+		  int x4, int y4
+)
+{
+  AmayaFrame * p_frame;
+  AmayaTransformEvtHandler *p_TransformEvtHandler;
+  ThotEvent ev;
+
+  p_frame = FrameTable[frame].WdFrame;
+  p_TransformEvtHandler = new AmayaTransformEvtHandler(p_frame,
+						   doc,
+						   transform,
+						   ancestorX,
+						   ancestorY,
+						   canvasWidth,
+						   canvasHeight,
+						   el,
+						   transform_type,
+						   x1, y1,
+						   x2, y2,
+						   x3, y3,
+						   x4, y4);
+
+  while(!p_TransformEvtHandler->IsFinish())
+    TtaHandleOneEvent (&ev);
+  
+  delete p_TransformEvtHandler;
+
+}
+
+/*----------------------------------------------------------------------
+  PathCreation
+  ----------------------------------------------------------------------*/
 PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
 			    Document doc, int shape_number, int *NbPoints)
 {
+
+  /* TODO: - rewrite the module in order to directly create the graphical
+             unit in the Element.
+           - use a transformation matrix
+
+     fred */
+
+
   PtrTextBuffer       pBuffer;
   AmayaFrame * p_frame;
   AmayaCreatePathEvtHandler * p_CreatePathEvtHandler;
@@ -1532,15 +1616,16 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
   return pBuffer;
 }
 
-/* Convert the mouse coordinates (x,y) into the one in the SVG element and
-   display them into the status bar. If convert is TRUE, then x and y are
-   modified.
 
-   Return TRUE if the mouse is inside the SVG
+/*----------------------------------------------------------------------
+  MouseCoordinatesToSVG
 
-   transform is the inverse of the tansformation matrix
+  Convert the mouse coordinates (x,y) into the one in the SVG canvas and
+  display them into the status bar. If convert is TRUE, then x and y are
+  modified.
 
- */
+   Return TRUE if the mouse is inside the SVG Canvas 
+  ----------------------------------------------------------------------*/
 ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
 			       int x0, int y0,
 			       int width, int height,
@@ -1557,6 +1642,7 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
   float a,b,c,d,e,f;
   if(transform)
     {
+      /* Get the coefficients of the Matrix */
       a = ((PtrTransform)(transform)) -> AMatrix;
       b = ((PtrTransform)(transform)) -> BMatrix;
       c = ((PtrTransform)(transform)) -> CMatrix;
@@ -1566,6 +1652,7 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
     }
   else
     {
+      /* By default, the transfom matrix is the identity */
       a = 1; b = 0; c = 0; d = 1; e = 0; f = 0;
     }
 
@@ -1578,29 +1665,35 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
   height = LogicalValue (height, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
+  /* TODO: check this as it no longer works
+     for transformed SVG. */
+
   newx = LogicalValue (*x - x0, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
-  newy = LogicalValue (*y - x0, UnPixel, NULL,
+  newy = LogicalValue (*y - y0, UnPixel, NULL,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
   newx2 = (int)(round(a * newx + c * newx + e));
   newy2 = (int)(round(b * newy + d * newy + f));
 
-  /* printf("%f %f %f %f %f %f\n", a, b, c, d, e, f); */
+  //  printf("%f %f %f %f %f %f\n", a, b, c, d, e, f);
 
+  /* Modify x and y if asked */
   if(convert)
     {
       *x = newx2;
       *y = newy2;
     }
 
+  /* Check whether the point is inside the Canvas */
   if(newx2 < 0){newx2 = 0;inside=FALSE;}
   else if(newx2 > width){newx2 = width;inside=FALSE;}
 
   if(newy2 < 0){newy2 = 0;inside=FALSE;}
   else if(newy2 > height){newy2 = height;inside=FALSE;}
 
+  /* Display the coordinates in the status bar */
   sprintf(buffer, "(%d,%d)", newx2, newy2);
   TtaSetStatus (doc, 1, buffer, NULL);
 
