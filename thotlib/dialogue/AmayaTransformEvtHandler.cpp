@@ -239,6 +239,7 @@ void AmayaTransformEvtHandler::OnMouseWheel( wxMouseEvent& event )
 
       DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
       RedrawFrameBottom (m_FrameId, 0, NULL);
+      m_pFrame->GetCanvas()->Refresh();
     }
   else
     {
@@ -251,6 +252,7 @@ void AmayaTransformEvtHandler::OnMouseWheel( wxMouseEvent& event )
 
       DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
       RedrawFrameBottom (m_FrameId, 0, NULL);
+      m_pFrame->GetCanvas()->Refresh();
     }
 }
 
