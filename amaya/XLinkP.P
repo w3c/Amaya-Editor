@@ -25,7 +25,7 @@ VIEWS
 #define INVALID_Color Black
 #else
 #define ATTR_Color DarkIndigo1
-#define ATTRVALUE_Color DarkMagenta2
+#define ATTRVALUE_Color DarkMagenta3
 #define INVALID_Color Red
 #endif
 

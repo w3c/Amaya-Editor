@@ -26,3 +26,5 @@ XMLPI: PI
 xmlid: xml:id
 prompt: initial
 Yes_: true
+option_set: set
+option_unset: unset

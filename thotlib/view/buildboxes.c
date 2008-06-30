@@ -2096,7 +2096,8 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, int frame,
       if (TypeHasException (ExcIsColHead, pAb->AbElement->ElTypeNumber, pSS) ||
           TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber, pSS) ||
           TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber, pSS) ||
-          TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS))
+          TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS) ||
+          TypeHasException (ExcNewRoot, pAb->AbElement->ElTypeNumber, pSS))
         return found;
       /* check all enclosed boxes */
       pChildAb = pAb->AbFirstEnclosed;
@@ -2395,10 +2396,12 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
 {
   PtrSSchema          pSS;
   PtrBox              pBox;
-  ThotBool            uniqueChild, dummyChild, directParent, extraflow;
+  ThotBool            uniqueChild, dummyChild, directParent;
+  ThotBool            extraflow, isroot;
 
   pSS = pAb->AbElement->ElStructSchema;
-  if (TypeHasException (ExcNewRoot, pAb->AbElement->ElTypeNumber, pSS))
+  isroot = TypeHasException (ExcNewRoot, pAb->AbElement->ElTypeNumber, pSS);
+  if (isroot)
     {
       /* that element cannot become a ghost */
       *inlineChildren = FALSE;
@@ -2406,6 +2409,7 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
       directParent = FALSE;
       uniqueChild = FALSE;
       dummyChild = FALSE;
+      return;
     }
   else
     {
@@ -3599,6 +3603,9 @@ static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
           pParent->AbBox &&
           pParent->AbInLine &&
           pParent->AbEnclosing &&
+          (pParent->AbElement &&
+           !TypeHasException (ExcNewRoot, pParent->AbElement->ElTypeNumber,
+                              pParent->AbElement->ElStructSchema)) &&
           pChild == NULL && /* no previous or next */
           pAb->AbFloat != 'N' &&
           (pAb->AbLeafType == LtPicture ||

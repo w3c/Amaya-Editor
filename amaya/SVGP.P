@@ -32,9 +32,9 @@ VIEWS
 #define INVALID_Color Black
 #define COMMENT_Color Black
 #else
-#define TAG_Color DarkBlue3
-#define ATTR_Color DarkBlue3
-#define ATTRVALUE_Color DarkRed2
+#define TAG_Color DarkMagenta3
+#define ATTR_Color DarkMagenta3
+#define ATTRVALUE_Color DarkBlue2
 #define INVALID_Color Red
 #define UNKNOWNTAG_Color Red
 #define LINK_Color DarkIndigo1

@@ -83,6 +83,7 @@ EXCEPT
   Comment\240:        ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
   Comment_line:       Hidden, MarkupPreserve;
   useEl:              NoReplicate, NoBreakByReturn, ClickableSurface;
+  component:          NewRoot;
   useSimple:          NoReplicate, NoBreakByReturn;
   repeat:             NoReplicate, NoBreakByReturn, NoCreate, ClickableSurface;
   {option:             NoReplicate, NoBreakByReturn, NoCreate;}

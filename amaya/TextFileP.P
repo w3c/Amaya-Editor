@@ -16,9 +16,9 @@ PRINT
 #endif
 
 #define LINE_NUMBER_Color DarkGrey2
-#define MARKUP_Color DarkBlue3
-#define LINK_Color DarkBlue3
-#define ATTRVALUE_Color DarkRed2
+#define MARKUP_Color DarkMagenta3
+#define LINK_Color DarkMagenta3
+#define ATTRVALUE_Color DarkBlue2
 #define COMMENT_Color DarkGreen3
 
 COUNTERS
