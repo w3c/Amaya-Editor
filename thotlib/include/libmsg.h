@@ -69,7 +69,7 @@
 #define TMSG_CLOSE_DON_T_SAVE		64
 #define TMSG_STYLE		65
 #define TMSG_COLORS		66
-#define TMSG_XHTML		67
+#define TMSG_ELEMENTS		67
 #define TMSG_DEL		68
 #define TMSG_OUTPUT		69
 #define TMSG_PS_FILE		70
@@ -275,7 +275,20 @@
 #define Classic		270
 #define Modern		271
 #define NoTheme		272
-#define TMSG_ELEMENTS		273
-#define TMSG_LIB_MSG_MAX		274
+#define TMSG_FORMATTOP		273
+#define TMSG_FORMATBOTTOM		274
+#define TMSG_FORMATMIDDLE		275
+#define TMSG_GROUP		276
+#define TMSG_UNGROUP		277
+#define TMSG_TOFRONT		278
+#define TMSG_TOBACK		279
+#define TMSG_UP		280
+#define TMSG_DOWN		281
+#define TMSG_TURNLEFT		282
+#define TMSG_TURNRIGHT		283
+#define TMSG_ROTATE		284
+#define TMSG_VREVERSE		285
+#define TMSG_HREVERSE		286
+#define TMSG_LIB_MSG_MAX		287
 
 #endif

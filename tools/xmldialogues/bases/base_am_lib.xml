@@ -1109,21 +1109,15 @@
 	<message xml:lang="sk">Farby</message>
 	<message xml:lang="ja">色</message>
 </label>
-<label define="TMSG_XHTML">
+<label define="TMSG_ELEMENTS">
 	<message xml:lang="en">Elements</message>
 	<message xml:lang="fr">Eléments</message>
 	<message xml:lang="de">Elemente</message>
 	<message xml:lang="it">Elementi</message>
 	<message xml:lang="tr">XHTML</message>
 	<message xml:lang="es">Elementos</message>
-	<message xml:lang="pt">XHTML</message>
-	<message xml:lang="fi">XHTML</message>
-	<message xml:lang="ru">XHTML</message>
-	<message xml:lang="hu">XHTML</message>
-	<message xml:lang="ka">XHTML</message>
-	<message xml:lang="cn">XHTML</message>
-	<message xml:lang="tw">XHTML</message>
-	<message xml:lang="sk">XHTML</message>
+	<message xml:lang="pt">Elemento</message>
+	<message xml:lang="fi">Elementin</message>
 	<message xml:lang="ja">要素</message>
 </label>
 <label define="TMSG_DEL">
@@ -4268,12 +4262,61 @@
 	<message xml:lang="hu">Téma nélkül</message>
 	<message xml:lang="ja">テーマなし</message>
 </label>
-<label define="TMSG_ELEMENTS">
-	<message xml:lang="en">Elements</message>
-	<message xml:lang="fr">Éléments</message>
-	<message xml:lang="de">Elemente</message>
-	<message xml:lang="it">Elementi</message>
-	<message xml:lang="es">Elementos</message>
+<label define="TMSG_FORMATTOP">
+	<message xml:lang="en">Align top</message>
+	<message xml:lang="fr">Aligner en haut</message>
+</label>
+<label define="TMSG_FORMATBOTTOM">
+	<message xml:lang="en">Align bottom</message>
+	<message xml:lang="fr">Aligner en bas</message>
+</label>
+<label define="TMSG_FORMATMIDDLE">
+	<message xml:lang="en">Align middle</message>
+	<message xml:lang="fr">Aligner au milieu</message>
+</label>
+<label define="TMSG_GROUP">
+	<message xml:lang="en">Group</message>
+	<message xml:lang="fr">Grouper</message>
+</label>
+<label define="TMSG_UNGROUP">
+	<message xml:lang="en">Ungroup</message>
+	<message xml:lang="fr">Dégrouper</message>
+</label>
+<label define="TMSG_TOFRONT">
+	<message xml:lang="en">Bring to front</message>
+	<message xml:lang="fr">Mettre au dessus</message>
+</label>
+<label define="TMSG_TOBACK">
+	<message xml:lang="en">Send to back</message>
+	<message xml:lang="fr">Mettre en dessous</message>
+</label>
+<label define="TMSG_UP">
+	<message xml:lang="en">One level up</message>
+	<message xml:lang="fr">Monter d'un niveau</message>
+</label>
+<label define="TMSG_DOWN">
+	<message xml:lang="en">One level down</message>
+	<message xml:lang="fr">Descendre d'un niveau</message>
+</label>
+<label define="TMSG_TURNLEFT">
+	<message xml:lang="en">90% left</message>
+	<message xml:lang="fr">90% à gauche</message>
+</label>
+<label define="TMSG_TURNRIGHT">
+	<message xml:lang="en">90% right</message>
+	<message xml:lang="fr">90% à droite</message>
+</label>
+<label define="TMSG_ROTATE">
+	<message xml:lang="en">Rotate</message>
+	<message xml:lang="fr">Tourner</message>
+</label>
+<label define="TMSG_VREVERSE">
+	<message xml:lang="en">Vertical symmetry</message>
+	<message xml:lang="fr">Symétrie verticale</message>
+</label>
+<label define="TMSG_HREVERSE">
+	<message xml:lang="en">Horizontal symmetry</message>
+	<message xml:lang="fr">Symétrie horizontale</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>

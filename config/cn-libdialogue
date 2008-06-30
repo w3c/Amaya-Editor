@@ -66,7 +66,7 @@
 64 不保存直接关闭
 65 字符样式
 66 颜色
-67 XHTML
+67 **Elements
 68 删除
 69 输出
 70 PostScript 文件
@@ -272,4 +272,17 @@
 270 **Classic
 271 **Modern
 272 **No theme
-273 **Elements
+273 **Align top
+274 **Align bottom
+275 **Align middle
+276 **Group
+277 **Ungroup
+278 **Bring to front
+279 **Send to back
+280 **One level up
+281 **One level down
+282 **90% left
+283 **90% right
+284 **Rotate
+285 **Vertical symmetry
+286 **Horizontal symmetry

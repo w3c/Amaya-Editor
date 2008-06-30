@@ -66,7 +66,7 @@
 64 Sulje, älä tallenna
 65 Merkkityyli
 66 Värit
-67 XHTML
+67 Elementin
 68 Poista
 69 Tuloste
 70 PostScript tiedosto
@@ -272,4 +272,17 @@
 270 **Classic
 271 **Modern
 272 **No theme
-273 **Elements
+273 **Align top
+274 **Align bottom
+275 **Align middle
+276 **Group
+277 **Ungroup
+278 **Bring to front
+279 **Send to back
+280 **One level up
+281 **One level down
+282 **90% left
+283 **90% right
+284 **Rotate
+285 **Vertical symmetry
+286 **Horizontal symmetry
