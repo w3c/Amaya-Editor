@@ -7245,6 +7245,10 @@
 	<message xml:lang="en">Repeat element</message>
 	<message xml:lang="fr">Elément de répétition</message>
 </label>
+<label define="AM_TEMPLATE_NEWCOMP">
+	<message xml:lang="en">New component</message>
+	<message xml:lang="fr">Nouveau composant</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

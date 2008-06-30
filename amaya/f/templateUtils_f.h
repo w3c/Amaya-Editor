@@ -39,6 +39,7 @@ extern void DumpSubtree ( Element el,
 extern ThotBool SaveDocumentToNewDoc ( Document doc,
                                        Document newdoc,
                                        char* newpath );
+extern Element TemplateFindHead ( Document doc );
 
 #else /* __STDC__ */
 
@@ -75,6 +76,7 @@ extern void DumpSubtree ( Element el,
 extern ThotBool SaveDocumentToNewDoc ( Document doc,
                                          Document newdoc,
                                          char* newpath );
+extern Element TemplateFindHead ( Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

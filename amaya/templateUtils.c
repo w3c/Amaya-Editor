@@ -539,3 +539,20 @@ ThotBool SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
     res = TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL, FALSE);
   return res;
 }
+
+/*----------------------------------------------------------------------
+ * Retrieve the xt:head element.
+  ----------------------------------------------------------------------*/
+Element TemplateFindHead(Document doc)
+{
+#ifdef TEMPLATES
+  ElementType headType;
+  headType.ElSSchema = TtaGetSSchema ("Template", doc);
+  headType.ElTypeNum = Template_EL_head;
+  return TtaSearchTypedElement(headType, SearchInTree, TtaGetMainRoot(doc));
+#else /* TEMPLATES */
+  return NULL;
+#endif /* TEMPLATES */
+}
+
+

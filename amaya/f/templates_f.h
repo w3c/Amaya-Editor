@@ -69,6 +69,8 @@ extern void TemplateCreateFreeBox ( Document doc,
                                     View view );
 extern void TemplateCreateRepeat ( Document doc,
                                    View view );
+extern Element TemplateCreateComponent ( Document doc,
+                                         View view );
 
 #else /* __STDC__ */
 
@@ -135,6 +137,8 @@ extern void TemplateCreateFreeBox ( Document doc,
                                       View view );
 extern void TemplateCreateRepeat ( Document doc,
                                      View view );
+extern Element TemplateCreateComponent ( Document doc,
+                                           View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
