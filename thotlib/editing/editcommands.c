@@ -2176,10 +2176,7 @@ void AskSurroundingBox(
 void AskTransform(     Document doc,
 		       Element svgAncestor,
 		       Element svgCanvas,
-		       int transform_type, Element el,
-		       int xmin, int ymin,
-		       int width, int height
-		       )
+		       int transform_type, Element el)
 {
 
 
@@ -2227,24 +2224,19 @@ void AskTransform(     Document doc,
   if(!pBox)return;
   canvasWidth  = pBox->BxWidth;
   canvasHeight = pBox->BxHeight;
-  
 
   pAb = ((PtrElement)el) -> ElAbstractBox[0];
   if(!pAb)return;
   pBox = pAb -> AbBox;
   if(!pBox)return;
-
+  
   TransformSVG (frame,
 		doc, 
 		inverse,
 		ancestorX, ancestorY,
 		canvasWidth, canvasHeight,
-		el,
 		transform_type,
-		pBox,
-		xmin, ymin,
-		width, height
-		);
+		pBox);
 
   if(inverse != NULL)TtaFreeTransform(inverse);
 }

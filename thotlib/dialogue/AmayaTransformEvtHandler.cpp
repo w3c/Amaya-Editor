@@ -39,7 +39,8 @@
 #include "AmayaTransformEvtHandler.h"
 
 static int lastX, lastY, m_mouse_x,m_mouse_y;
-static ThotBool translate;
+extern void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
+				       float *Y, float *width, float *height);
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaTransformEvtHandler, wxEvtHandler)
 
@@ -73,18 +74,14 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler() : wxEvtHandler()
   
  *----------------------------------------------------------------------*/
 AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
-						   PtrBox box,
 						   Document doc,
 						   void *transform,
 						   int ancestorX,
 						   int ancestorY,
 						   int canvasWidth,
 						   int canvasHeight,
-						   Element el,
 						   int transform_type,
-						   int xmin, int ymin,
-						   int width, int height
-						   )
+						   PtrBox box)
   :wxEvtHandler()
   ,m_IsFinish(false)
   ,m_pFrame(p_frame)
@@ -96,14 +93,13 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
   ,m_y0(ancestorY)
   ,m_width(canvasWidth)
   ,m_height(canvasHeight)
-  ,m_el(el)
   ,m_type(transform_type)
-  ,m_xmin(xmin)
-  ,m_ymin(ymin)
-  ,m_lx(width)
-  ,m_ly(height)
+  ,m_el(NULL)
    
 {
+  if(m_box && m_box -> BxAbstractBox)
+    m_el = (Element)(m_box -> BxAbstractBox-> AbElement);
+
   if (m_pFrame)
     {
       /* attach this handler to the canvas */
@@ -112,11 +108,11 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 
       /* assign a cross mouse cursor */
       m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
+     
       m_pFrame->GetCanvas()->CaptureMouse();
 
     }
 
-  translate = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -157,7 +153,6 @@ void AmayaTransformEvtHandler::OnChar( wxKeyEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
-  translate = TRUE;
   if (IsFinish())return;
 }
 
@@ -168,6 +163,9 @@ void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
+  if(m_type == 0)
+     m_IsFinish = true;
+
   if (IsFinish())return;
 }
 
@@ -191,7 +189,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
   m_mouse_x = event.GetX();
   m_mouse_y = event.GetY();
 
-  if(translate)
+  if(m_type == 0)
     {
       TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1,
 			       m_mouse_x - lastX,
@@ -216,29 +214,44 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 void AmayaTransformEvtHandler::OnMouseWheel( wxMouseEvent& event )
 {
 #define SCALE_ 1.1
-#define ANGLE M_PI/50
+#define ANGLE M_PI/30
 
-  if(translate)
+  float x, y, width, height, cx, cy;
+  float theta, scale;
+
+  if(m_type == 41)
     {
-      TtaApplyMatrixTransform (m_document, m_el, SCALE_, 0, 0, SCALE_,
+      theta = (event.GetWheelRotation() > 0 ? ANGLE : -ANGLE);
+
+      GetPositionAndSizeInParentSpace(m_document, m_el,
+				      &x, &y, &width, &height);
+
+      cx = x + width/2;
+      cy = y + height/2;
+
+      TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1, -cx, -cy);
+      TtaApplyMatrixTransform (m_document, m_el,
+			       cos(theta), sin(theta), -sin(theta), cos(theta),
 			       0,
 			       0
 			       );
+      TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1, +cx, +cy);
+
+      DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
+      RedrawFrameBottom (m_FrameId, 0, NULL);
     }
   else
     {
+      scale = (event.GetWheelRotation() > 0 ? SCALE_ : -SCALE_);
 
-
-      TtaApplyMatrixTransform (m_document, m_el,
-			       cos(ANGLE), sin(ANGLE), -sin(ANGLE), cos(ANGLE),
+      TtaApplyMatrixTransform (m_document, m_el, scale, 0, 0, scale,
 			       0,
 			       0
 			       );
 
+      DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
+      RedrawFrameBottom (m_FrameId, 0, NULL);
     }
-      
-  DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
-  RedrawFrameBottom (m_FrameId, 0, NULL);
 }
 
 

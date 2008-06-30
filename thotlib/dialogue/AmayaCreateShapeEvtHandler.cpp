@@ -370,7 +370,13 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
       p_canvas->PushEventHandler(this);
 
       /* assign a cross mouse cursor */
-      m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
+
+      if(m_ShapeNumber == 9 || m_ShapeNumber == 10)
+	m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_IBEAM) );
+      else
+	m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
+
+
       m_pFrame->GetCanvas()->CaptureMouse();
 
     }

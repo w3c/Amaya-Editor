@@ -20,15 +20,13 @@ class AmayaTransformEvtHandler : public wxEvtHandler
 
   AmayaTransformEvtHandler();
   AmayaTransformEvtHandler(AmayaFrame * p_frame,
-			   PtrBox box,
 			   Document doc,
 			   void *transform,
 			   int ancestorX, int ancestorY,
 			   int canvasWidth, int canvasHeight,
-			   Element el,
 			   int transform_type,
-			   int xmin, int ymin,
-			   int width, int height);
+			   PtrBox box
+			   );
 
   virtual ~AmayaTransformEvtHandler();
 
@@ -53,10 +51,8 @@ class AmayaTransformEvtHandler : public wxEvtHandler
   void *m_transform;
   int m_x0,m_y0;
   int m_width,m_height;
-  Element m_el;
   int m_type;
-  int m_xmin, m_ymin;
-  int m_lx, m_ly;
+  Element m_el;
 };
 
 #endif /* __AMAYATRANSFORMEVTHANDLER_H__ */

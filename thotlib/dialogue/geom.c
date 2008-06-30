@@ -1536,12 +1536,8 @@ void TransformSVG (int frame,
 		   void *transform,
 		   int ancestorX, int ancestorY,
 		   int canvasWidth, int canvasHeight,
-		   Element el,
 		   int transform_type,
-		   PtrBox box,
-		   int xmin, int ymin,
-		   int width, int height
-)
+		   PtrBox box)
 {
   AmayaFrame * p_frame;
   AmayaTransformEvtHandler *p_TransformEvtHandler;
@@ -1549,17 +1545,14 @@ void TransformSVG (int frame,
 
   p_frame = FrameTable[frame].WdFrame;
   p_TransformEvtHandler = new AmayaTransformEvtHandler(p_frame,
-						       box,
 						       doc,
 						       transform,
 						       ancestorX,
 						       ancestorY,
 						       canvasWidth,
 						       canvasHeight,
-						       el,
 						       transform_type,
-						       xmin, ymin,
-						       width, height);
+						       box);
 
   while(!p_TransformEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);

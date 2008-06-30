@@ -524,9 +524,7 @@ extern void AskTransform(Document doc,
 			 Element svgAncestor,
 			 Element svgCanvas,
 			 int transform_type,
-			 Element el,
-			 int xmin, int ymin,
-			 int width, int height
+			 Element el
 			 );
 
 
