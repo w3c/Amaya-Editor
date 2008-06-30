@@ -30,6 +30,8 @@ extern void giveItems ( char *text,
                         int size,
                         struct menuType **items,
                         int *nbitems );
+extern ThotBool RepeatToBeCreated ( NotifyElement *event );
+extern void RepeatCreated ( NotifyElement *event );
 extern ThotBool UseToBeCreated ( NotifyElement *event );
 extern void UseCreated ( NotifyElement *event );
 extern ThotBool Template_CanInsertRepeatChild ( Element el );
@@ -94,6 +96,8 @@ extern void giveItems ( char *text,
                           int size,
                           struct menuType **items,
                           int *nbitems );
+extern ThotBool RepeatToBeCreated ( NotifyElement *event );
+extern void RepeatCreated ( NotifyElement *event );
 extern ThotBool UseToBeCreated ( NotifyElement *event );
 extern void UseCreated ( NotifyElement *event );
 extern ThotBool Template_CanInsertRepeatChild ( Element el );

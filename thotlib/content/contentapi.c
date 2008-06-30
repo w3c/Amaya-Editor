@@ -10,7 +10,7 @@
  *
  * Authors: V. Quint (INRIA)
  *          I. Vatton (INRIA) - Polylines
- *
+ *          F. Wang - Operations on transform matrix
  */
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -2054,12 +2054,19 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
   PtrTransform result, pPa;
   float T, cosT,sinT, tanT, a, b, c, d, e, f;
 
-  if(!transform)return NULL;
-
-  result = ((PtrTransform)(TtaNewTransformMatrix(1, 0, 0, 1, 0, 0)));
-  result->Next = NULL;
+  if(transform == NULL)
+    /* Nothing to do */
+    return NULL;
 
   pPa = (PtrTransform)(transform);
+
+  if(pPa->TransType == PtElMatrix && pPa->Next == NULL)
+    /* The matrix is already simplified, return a copy */
+    return TtaCopyTransform(transform);
+
+  /* result = Identity */
+  result = ((PtrTransform)(TtaNewTransformMatrix(1, 0, 0, 1, 0, 0)));
+  result->Next = NULL;
 
   while (pPa)
     {      
@@ -2082,6 +2089,7 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
           break;
 
         case PtElViewBox:
+	  /* TODO */
           break;
 
         case PtElRotate:
@@ -2155,8 +2163,6 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
       pPa = pPa->Next;
    }
 
-
-
   return result;
 }
 
@@ -2174,8 +2180,13 @@ extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
 
   if(transform)
     {
-      newx = transform->AMatrix * *x + transform->CMatrix * *y + transform->EMatrix;
-      newy = transform->BMatrix * *x + transform->DMatrix * *y + transform->FMatrix;
+      newx = transform->AMatrix * *x +
+	     transform->CMatrix * *y +
+	     transform->EMatrix;
+
+      newy = transform->BMatrix * *x +
+	     transform->DMatrix * *y +
+	     transform->FMatrix;
 
       *x = newx;
       *y = newy;
@@ -2388,6 +2399,368 @@ extern void TtaApplyMatrixTransform (Document document, Element element,
 	    ((PtrElement) element)->ElTransform = transform;
 	  }
       }
+}
+
+/*----------------------------------------------------------------------
+  TtaDecomposeTransform
+
+  Decompose the transform as a product of simple transforms:
+
+  - translate(tx, ty)
+  - rotate(theta)
+  - scale(sx, sy)
+  - skewX(theta)
+  - skewY(theta)
+
+  Each kind of transform is used at most once.
+  ---------------------------------------------------------------------- */
+extern void *TtaDecomposeTransform(void *transform)
+{
+  PtrTransform result = NULL, cursor;
+  PtrTransform matrix = (PtrTransform)TtaSimplifyTransformMatrix(transform);
+  float coeff,coeff1, coeff2, theta1, theta2;
+  float a,b,c,d,e,f;
+
+  if(matrix == NULL)return NULL;
+
+  a = matrix->AMatrix;
+  b = matrix->BMatrix;
+  c = matrix->CMatrix;
+  d = matrix->DMatrix;
+  e = matrix->EMatrix;
+  f = matrix->FMatrix;
+
+  TtaFreeTransform(matrix);
+
+  /* Add the non-lineary part of the transform (i.e. the translation)
+     
+     (a c e)   (1 0 e)(a c 0)
+     (b d f) = (0 1 f)(b d 0)
+     (0 0 1)   (0 0 1)(0 0 1)
+     
+  */
+  result = (PtrTransform)TtaNewTransformTranslate(e, f);
+  cursor = result;
+
+  if(b == 0 && c == 0)
+    {
+      /* I/ It's a scale
+
+	 (a c)   (a 0)
+	 (b d) = (0 d)
+      */
+
+      if(!(a == 1 && d == 1))
+	{
+	  cursor -> Next = (PtrTransform)TtaNewTransformScale(a, d);
+	  cursor = cursor -> Next;
+	}
+    }
+  else
+    {
+      if(a == d && b == -c)
+	{
+	  /* II/ A first case of product of scale and rotation
+
+	     (a -b)   (coeff       )(a'  -b')       {coeff = sqrt(a^2 + b^2)
+	     (b  a) = (       coeff)(b'   a')  with {a',b' between -1 and 1
+
+	     Hence the second matrix is the one of a rotation of angle
+	     theta = sgn(b')*acos(a').
+	  */
+	  coeff = sqrt(a*a + b*b); /* coeff > 0 since b != 0 */
+	  theta1 = acos(a/coeff) * 180 / M_PI;
+	  if(b < 0)theta1=-theta1;
+
+	  if(coeff1 != 1)
+	    {
+	      cursor -> Next = (PtrTransform)TtaNewTransformScale(coeff, coeff);
+	      cursor = cursor -> Next;
+	    }
+
+	  cursor -> Next = (PtrTransform)TtaNewTransformRotate(theta1, 0, 0);
+	  cursor = cursor -> Next;
+	}
+      else if(a*b + c*d == 0 && ((b!=0 && c!=0) || (a!=0 && d!=0)))
+	{
+	  /* III/ A second case of product of scale and rotation
+
+	     (a  c)   (-1/b     )(-ab  -bc)
+	     (b  d) = (      1/c)( bc   cd)
+
+	     or
+
+	     (a  c)   (1/d     )(ad   cd) 
+	     (b  d) = (     1/a)(ab   ad)
+
+	     Since cd = -ab The second matrix can be reduced as in II/
+	  */
+
+	  if(b != 0 && c != 0)
+	    {
+	      a = -a*b;
+	      d = b*c;
+	      coeff = sqrt(a*a + d*d);
+	      coeff1 = -coeff/b;
+	      coeff2 = coeff/c;
+	      theta1 = acos(a/coeff) * 180 / M_PI;
+	      if(d < 0)theta1=-theta1;
+	    }
+	  else /* a!= 0 && d != 0 */
+	    {
+	      b = a*d;
+	      c = c*d;
+	      coeff = sqrt(b*b + c*c);
+	      coeff1 = coeff/d;
+	      coeff2 = coeff/a;
+	      theta1 = acos(b/coeff) * 180 / M_PI;
+	      if(c < 0)theta1=-theta1;
+	    }
+
+	  /* case coeff1 == coeff2 == 1
+	     has already been treated in II/
+	     so the following scale is never useless */
+	  cursor -> Next = (PtrTransform)TtaNewTransformScale(coeff1, coeff2);
+	  cursor = cursor -> Next;
+	  cursor -> Next = (PtrTransform)TtaNewTransformRotate(theta1, 0, 0);
+	  cursor = cursor -> Next;
+	}
+      else if(b != 0 && c != 0 && (a*c + b*d == 0))
+	{
+	  /* IV/ A third case of product of scale and rotation
+
+	     (a  c)   (ac  -bc)(1/c     ) 
+	     (b  d) = (bc  -bd)(    -1/b)
+
+	     or 
+
+	     (a  c)   (ad ac)(1/d    ) 
+	     (b  d) = (bd ad)(    1/a)
+
+	     Since ac = -bd, the first matrix can be reduced as in II/
+
+	  */
+
+	  if(b != 0 && c != 0)
+	    {
+	      a = a*c;
+	      d = b*c;
+	      coeff = sqrt(a*a + d*d);
+	      coeff1 = coeff/c;
+	      coeff2 = -coeff/b;
+	      theta1 = acos(a/coeff) * 180 / M_PI;
+	      if(d < 0)theta1=-theta1;
+	    }
+	  else /* a!= 0 && d != 0 */
+	    {
+	      b = a*d;
+	      c = a*c;
+	      coeff = sqrt(b*b + c*c);
+	      coeff1 = coeff/d;
+	      coeff2 = coeff/a;
+	      theta1 = acos(b/coeff) * 180 / M_PI;
+	      if(c < 0)theta1=-theta1;
+	    }
+
+	  cursor -> Next = (PtrTransform)TtaNewTransformRotate(theta1, 0, 0);
+	  cursor = cursor -> Next;
+	  /* case coeff1 == coeff2 == 1
+	     has already been treated in II/
+	     so the following scale is never useless */
+	  cursor -> Next = (PtrTransform)TtaNewTransformScale(coeff1,coeff2);
+	  cursor = cursor -> Next;
+	}
+      else if(a != 0)
+	{
+	  /* V/ A first case of product of scale and skews
+
+	     (a c)   (1        0)(a           )(1  tan(T2))
+	     (b d) = (tan(T1)  1)(    d - bc/a)(0        1)
+
+	  */
+	  theta1 = atan(b/a) * 180 / M_PI;
+	  theta2 = atan(c/a) * 180 / M_PI;
+	  d -= b*c/a;
+
+	  cursor -> Next = (PtrTransform)TtaNewTransformSkewY(theta1);
+	  cursor = cursor -> Next;
+
+	  if(!(a == 1 && d == 1))
+	    {
+	      cursor -> Next = (PtrTransform)TtaNewTransformScale(a, d);
+	      cursor = cursor -> Next;
+	    }
+
+	  cursor -> Next = (PtrTransform)TtaNewTransformSkewX(theta2);
+	  cursor = cursor -> Next;
+	  
+	}
+      else if(d != 0)
+	{
+	  /* VI/ A second case of product of scale and skews
+
+	     (a c)   (1  tan(T2))(a - bc/d    )(1        0)
+	     (b d) = (0        1)(           d)(tan(T2)  1)
+
+	  */
+	  theta1 = atan(c/d) * 180 / M_PI;
+	  theta2 = atan(b/d) * 180 / M_PI;
+	  a -= b*c/d;
+
+	  cursor -> Next = (PtrTransform)TtaNewTransformSkewX(theta1);
+	  cursor = cursor -> Next;
+
+	  if(!(a == 1 && d == 1))
+	    {
+	      cursor -> Next = (PtrTransform)TtaNewTransformScale(a, d);
+	      cursor = cursor -> Next;
+	    }
+
+	  cursor -> Next = (PtrTransform)TtaNewTransformSkewY(theta2);
+	  cursor = cursor -> Next;
+	}
+      else /* VII/ a == 0 && d == 0 */
+	{
+	  if(c == 0 && b == 0)
+	    /* 
+	       (0 0)
+	       (0 0)
+	       
+	       It's actually the scale(0,0) */
+	    {
+	      cursor -> Next = (PtrTransform)TtaNewTransformScale(0, 0);
+	      cursor = cursor -> Next;
+	    }
+	  
+	  else
+	    {
+	      /*
+		(0 c)   (0 -1)(b   0)  
+		(b 0) = (1  0)(0  -c)
+
+		The first matrix is the one of the rotation of 90°
+	      */
+
+
+	      cursor -> Next = (PtrTransform)TtaNewTransformRotate(90,0,0);
+	      cursor = cursor -> Next;
+
+	      /* case b == -c == 1 and a == d == 0
+		 has already been treated in II/
+		 so the following scale is never useless */
+	      cursor -> Next = (PtrTransform)TtaNewTransformScale(b,-c);
+	      cursor = cursor -> Next;
+	    }
+    
+	}
+    }
+
+  if(e == 0 && f == 0)
+    {
+      /* Remove the initial translation */
+      cursor = result -> Next;
+      result -> Next = NULL;
+      TtaFreeTransform(result);
+      result = cursor;
+    }
+
+  return result;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetTransformAttributeValue
+
+  Get the value of the transform attribute attached to the element el,
+  using a reduced form (i.e. using only rotate, scale, translate and skew)
+
+  ---------------------------------------------------------------------- */
+extern char *TtaGetTransformAttributeValue(Document document, Element el)
+{
+  char buffer[500], buffer2[100], *result;
+
+  ThotBool add;
+  PtrTransform pPa;
+  PtrTransform transform =
+    (PtrTransform)TtaDecomposeTransform(((PtrElement) el)->ElTransform);
+
+  *buffer = '\0';
+
+  if(transform == NULL)
+    /* No transformation */
+    return NULL;
+
+  pPa = transform;
+
+  while(pPa)
+    {
+      add = FALSE;
+
+      switch(pPa->TransType)
+        {
+        case PtElTranslate:
+	  if(!(pPa -> XScale == 0 && pPa -> YScale == 0))
+	    {
+	      if(pPa -> YScale == 0)
+		sprintf(buffer2, "translate(%f) ", pPa -> XScale);
+	      else
+		sprintf(buffer2, "translate(%f,%f) ", pPa -> XScale, pPa -> YScale);
+
+	      add = TRUE;
+	    }
+          break;
+
+        case PtElScale:
+	  if(!(pPa -> XScale == 1 && pPa -> YScale == 1))
+	    {
+	      if(pPa -> XScale == pPa -> YScale && pPa -> XScale != 1)
+		sprintf(buffer2, "scale(%f) ", pPa -> XScale);
+	      else
+		sprintf(buffer2, "scale(%f,%f) ", pPa -> XScale, pPa -> YScale);
+
+	      add = TRUE;
+	    }
+          break;
+
+        case PtElRotate:
+	  if(pPa -> TrAngle != 0)
+	    {
+	      sprintf(buffer2, "rotate(%f) ", pPa -> TrAngle);
+	      add = TRUE;
+	    }
+          break;  
+
+        case PtElSkewX:
+	  if(pPa -> TrFactor != 0)
+	    {
+	      sprintf(buffer2, "skewX(%f) ", pPa -> TrFactor);
+	      add = TRUE;
+	    }
+	  break;
+
+        case PtElSkewY:
+	  if(pPa -> TrFactor != 0)
+	    {
+	      sprintf(buffer2, "skewY(%f) ", pPa -> TrFactor);
+	      add = TRUE;
+	    }          
+	  break;	  
+
+	default:
+	  break;
+	  }
+	   
+      if(add)strcat(buffer, buffer2);
+      pPa = pPa -> Next;
+    }
+  
+  TtaFreeTransform(transform);
+
+  result = (char *)TtaGetMemory(strlen(buffer) + 1);
+
+  if(result)
+    strcpy(result, buffer);
+
+  return result;
 }
 
 /*----------------------------------------------------------------------

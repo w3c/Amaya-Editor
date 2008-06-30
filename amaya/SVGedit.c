@@ -2963,15 +2963,13 @@ void TransformGraphicElement (Document doc, View view, int entry)
   ----------------------------------------------------------------------*/
 void UpdateTransformMatrix(Document doc, Element el)
 {
-  float a,b,c,d,e,f;
-  char buffer[300];
+  char *buffer;
   Attribute attr;
   AttributeType attrType;
   ElementType elType;
   ThotBool new_;
 
-  TtaGetMatrixTransform(doc, el, &a, &b, &c, &d, &e, &f);
-  sprintf(buffer, "matrix(%f,%f,%f,%f,%f,%f)", a, b, c, d, e, f);
+  buffer = TtaGetTransformAttributeValue(doc, el);
 
   /* Check if the attribute already exists */
   elType = TtaGetElementType (el);
@@ -2979,6 +2977,14 @@ void UpdateTransformMatrix(Document doc, Element el)
   attrType.AttrTypeNum = SVG_ATTR_transform;
   attr = TtaGetAttribute (el, attrType);
 
+  if(buffer == NULL && attr)
+    {
+      /* Remove the current transform attribute */
+      TtaRegisterAttributeDelete (attr, el, doc);
+      TtaRemoveAttribute (el, attr, doc);
+      return;
+    }
+    
   new_ = (attr == NULL);
 
   if(new_)
@@ -2986,13 +2992,15 @@ void UpdateTransformMatrix(Document doc, Element el)
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
     }
+  else
+    TtaRegisterAttributeReplace (attr, el, doc);
 
   TtaSetAttributeText (attr, buffer, el, doc);
 
   if(new_)
     TtaRegisterAttributeCreate (attr, el, doc);
-  else
-    TtaRegisterAttributeReplace (attr, el, doc);
+
+  TtaFreeMemory(buffer);
 }
 
 /*----------------------------------------------------------------------

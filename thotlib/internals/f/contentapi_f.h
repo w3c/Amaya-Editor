@@ -145,6 +145,9 @@ extern void TtaApplyMatrixTransform ( Document document,
                                       float d,
                                       float e,
                                       float f );
+extern void *TtaDecomposeTransform ( void *transform );
+extern char *TtaGetTransformAttributeValue ( Document document,
+                                             Element el );
 extern void TtaGetMatrixTransform ( Document document,
                                     Element el,
                                     float *a,
@@ -362,6 +365,9 @@ extern void TtaApplyMatrixTransform ( Document document,
                                         float d,
                                         float e,
                                         float f );
+extern void *TtaDecomposeTransform ( void *transform );
+extern char *TtaGetTransformAttributeValue ( Document document,
+                                               Element el );
 extern void TtaGetMatrixTransform ( Document document,
                                       Element el,
                                       float *a,
