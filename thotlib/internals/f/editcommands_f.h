@@ -31,6 +31,15 @@ extern void AskSurroundingBox ( Document doc,
                                 int *y4,
                                 int *lx,
                                 int *ly );
+extern void AskTransform ( Document doc,
+                           Element svgAncestor,
+                           Element svgCanvas,
+                           int transform_type,
+                           Element el,
+                           int xmin,
+                           int ymin,
+                           int width,
+                           int height );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                              CHAR_T c,
@@ -89,6 +98,15 @@ extern void AskSurroundingBox ( Document doc,
                                   int *y4,
                                   int *lx,
                                   int *ly );
+extern void AskTransform ( Document doc,
+                             Element svgAncestor,
+                             Element svgCanvas,
+                             int transform_type,
+                             Element el,
+                             int xmin,
+                             int ymin,
+                             int width,
+                             int height );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                                CHAR_T c,

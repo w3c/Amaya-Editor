@@ -2171,6 +2171,86 @@ void AskSurroundingBox(
 }
 
 /*----------------------------------------------------------------------
+  AskTransform
+  --------------------------------------------------------------------*/
+void AskTransform(     Document doc,
+		       Element svgAncestor,
+		       Element svgCanvas,
+		       int transform_type, Element el,
+		       int xmin, int ymin,
+		       int width, int height
+		       )
+{
+
+
+  PtrAbstractBox pAb;
+  PtrBox pBox;
+  ViewFrame          *pFrame;
+  int frame;
+  PtrTransform CTM, inverse;
+  int canvasWidth,canvasHeight,ancestorX,ancestorY;
+
+  frame = ActiveFrame;
+
+  if(frame <= 0 || svgCanvas == NULL || svgAncestor == NULL )return;
+
+  CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
+
+  if(CTM == NULL)
+    {
+      inverse = NULL;
+    }
+  else
+    {
+      inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
+      TtaFreeTransform(CTM);
+
+      if(inverse == NULL)
+      /* Transform not inversible */
+	return;
+	}
+
+  pFrame = &ViewFrameTable[frame - 1];
+
+  /* Get the size of the origin of the ancestor */
+  pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
+  if(!pAb)return;
+  pBox = pAb -> AbBox;
+  if(!pBox)return;
+  ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
+  ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
+
+  /* Get the size of the SVG Canvas */
+  pAb = ((PtrElement)svgCanvas) -> ElAbstractBox[0];
+  if(!pAb)return;
+  pBox = pAb -> AbBox;
+  if(!pBox)return;
+  canvasWidth  = pBox->BxWidth;
+  canvasHeight = pBox->BxHeight;
+  
+
+  pAb = ((PtrElement)el) -> ElAbstractBox[0];
+  if(!pAb)return;
+  pBox = pAb -> AbBox;
+  if(!pBox)return;
+
+  TransformSVG (frame,
+		doc, 
+		inverse,
+		ancestorX, ancestorY,
+		canvasWidth, canvasHeight,
+		el,
+		transform_type,
+		pBox,
+		xmin, ymin,
+		width, height
+		);
+
+  if(inverse != NULL)TtaFreeTransform(inverse);
+}
+
+
+/*----------------------------------------------------------------------
   ContentEditing manages Cut, Paste, Copy, Remvoe, and Insert commands.
   Return TRUE if a Cut command moved the selection to a next element.
   ----------------------------------------------------------------------*/

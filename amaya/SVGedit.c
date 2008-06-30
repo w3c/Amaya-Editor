@@ -2684,6 +2684,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
   int		   c1, c2, i;
   float x,y,width,height;
   float xmin, ymin, xmax, ymax, xcenter, ycenter;
+  int x0,y0,lx,ly;
 
   /* Check that a document is selected */
   if(doc == 0)return;
@@ -2941,7 +2942,18 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
 
     case 41:   /* Rotate */
-      
+      GetPositionAndSizeInParentSpace(doc, selected[0],
+				      &x, &y, &width, &height);
+
+      x0 = (int) round(x);
+      y0 = (int) round(y);
+      lx = (int) round(width);
+      ly = (int) round(height);
+
+      AskTransform(doc, svgCanvas, svgCanvas, entry, selected[0],
+		   x0,y0,width,height);
+
+      UpdateTransformMatrix(doc, selected[0]);
       break;
 
       /* Translate, Scale */

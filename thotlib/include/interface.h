@@ -519,6 +519,17 @@ extern void TtaGetMatrixTransform(Document document, Element el,
 extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor);
 extern void *TtaInverseTransform (void *transform);
 extern char *TtaGetTransformAttributeValue(Document document, Element el);
+
+extern void AskTransform(Document doc,
+			 Element svgAncestor,
+			 Element svgCanvas,
+			 int transform_type,
+			 Element el,
+			 int xmin, int ymin,
+			 int width, int height
+			 );
+
+
 #endif /* __CEXTRACT__  */
 
 #endif

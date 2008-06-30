@@ -38,7 +38,8 @@
 #include "AmayaCanvas.h"
 #include "AmayaTransformEvtHandler.h"
 
-static int m_mouse_x,m_mouse_y; 
+static int lastX, lastY, m_mouse_x,m_mouse_y;
+static ThotBool translate;
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaTransformEvtHandler, wxEvtHandler)
 
@@ -72,6 +73,7 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler() : wxEvtHandler()
   
  *----------------------------------------------------------------------*/
 AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
+						   PtrBox box,
 						   Document doc,
 						   void *transform,
 						   int ancestorX,
@@ -80,30 +82,26 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 						   int canvasHeight,
 						   Element el,
 						   int transform_type,
-						   int x1, int y1,
-						   int x2, int y2,
-						   int x3, int y3,
-						   int x4, int y4)
+						   int xmin, int ymin,
+						   int width, int height
+						   )
   :wxEvtHandler()
   ,m_IsFinish(false)
   ,m_pFrame(p_frame)
   ,m_FrameId(p_frame->GetFrameId())
+  ,m_box(box)
   ,m_document(doc)
   ,m_transform(transform)
-  ,m_el(el)
   ,m_x0(ancestorX)
   ,m_y0(ancestorY)
   ,m_width(canvasWidth)
   ,m_height(canvasHeight)
+  ,m_el(el)
   ,m_type(transform_type)
-  ,m_x1(x1)
-  ,m_y1(y1)
-  ,m_x2(x2)
-  ,m_y2(y2)
-  ,m_x3(x3)
-  ,m_y3(y3)
-  ,m_x4(x4)
-  ,m_y4(y4)
+  ,m_xmin(xmin)
+  ,m_ymin(ymin)
+  ,m_lx(width)
+  ,m_ly(height)
    
 {
   if (m_pFrame)
@@ -118,6 +116,7 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 
     }
 
+  translate = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -158,6 +157,7 @@ void AmayaTransformEvtHandler::OnChar( wxKeyEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
+  translate = TRUE;
   if (IsFinish())return;
 }
 
@@ -188,7 +188,24 @@ void AmayaTransformEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
-    m_pFrame->GetCanvas()->Refresh();
+  m_mouse_x = event.GetX();
+  m_mouse_y = event.GetY();
+
+  if(translate)
+    {
+      TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1,
+			       m_mouse_x - lastX,
+			       m_mouse_y - lastY
+			       );
+
+      DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
+      RedrawFrameBottom (m_FrameId, 0, NULL);
+    }
+
+  lastX = m_mouse_x;
+  lastY = m_mouse_y;
+
+  m_pFrame->GetCanvas()->Refresh();
 }
 
 /*----------------------------------------------------------------------
@@ -198,6 +215,30 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseWheel( wxMouseEvent& event )
 {
+#define SCALE_ 1.1
+#define ANGLE M_PI/50
+
+  if(translate)
+    {
+      TtaApplyMatrixTransform (m_document, m_el, SCALE_, 0, 0, SCALE_,
+			       0,
+			       0
+			       );
+    }
+  else
+    {
+
+
+      TtaApplyMatrixTransform (m_document, m_el,
+			       cos(ANGLE), sin(ANGLE), -sin(ANGLE), cos(ANGLE),
+			       0,
+			       0
+			       );
+
+    }
+      
+  DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
+  RedrawFrameBottom (m_FrameId, 0, NULL);
 }
 
 

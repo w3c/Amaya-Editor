@@ -1532,16 +1532,15 @@ int ShapeCreation (int frame,
   TransformSVG
   ----------------------------------------------------------------------*/
 void TransformSVG (int frame,
-		  Document doc, 
-		  void *transform,
-		  int ancestorX, int ancestorY,
-		  int canvasWidth, int canvasHeight,
-		  Element el,
-		  int transform_type,
-		  int x1, int y1,
-		  int x2, int y2,
-		  int x3, int y3,
-		  int x4, int y4
+		   Document doc, 
+		   void *transform,
+		   int ancestorX, int ancestorY,
+		   int canvasWidth, int canvasHeight,
+		   Element el,
+		   int transform_type,
+		   PtrBox box,
+		   int xmin, int ymin,
+		   int width, int height
 )
 {
   AmayaFrame * p_frame;
@@ -1550,18 +1549,17 @@ void TransformSVG (int frame,
 
   p_frame = FrameTable[frame].WdFrame;
   p_TransformEvtHandler = new AmayaTransformEvtHandler(p_frame,
-						   doc,
-						   transform,
-						   ancestorX,
-						   ancestorY,
-						   canvasWidth,
-						   canvasHeight,
-						   el,
-						   transform_type,
-						   x1, y1,
-						   x2, y2,
-						   x3, y3,
-						   x4, y4);
+						       box,
+						       doc,
+						       transform,
+						       ancestorX,
+						       ancestorY,
+						       canvasWidth,
+						       canvasHeight,
+						       el,
+						       transform_type,
+						       xmin, ymin,
+						       width, height);
 
   while(!p_TransformEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
