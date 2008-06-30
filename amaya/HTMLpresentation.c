@@ -627,12 +627,9 @@ ThotBool ChangePRule (NotifyPresentation *event)
                   if (presType == PRWidth)
                     {
                       /* the new value is the old one plus the delta */
-                      TtaGiveBoxSize (el, doc, 1, (TypeUnit)unit, &value, &i);
+                      //TtaGiveBoxSize (el, doc, 1, (TypeUnit)unit, &value, &i);
                       value = event->value;
-                      if (unit == UnPercent)
-                        sprintf (buffer, "%d%%", value);
-                      else
-                        sprintf (buffer, "%d", value);
+                      sprintf (buffer, "%d", value);
 
                       attrType.AttrTypeNum = HTML_ATTR_Width__;
                       attr = TtaGetAttribute (el, attrType);
@@ -653,12 +650,9 @@ ThotBool ChangePRule (NotifyPresentation *event)
                   else
                     {
                       /* the new value is the old one plus the delta */
-                      TtaGiveBoxSize (el, doc, 1, (TypeUnit)unit, &i, &value);
+                      //TtaGiveBoxSize (el, doc, 1, (TypeUnit)unit, &i, &value);
                       value = event->value;
-                      if (unit == UnPercent)
-                        sprintf (buffer, "%d%%", value);
-                      else
-                        sprintf (buffer, "%d", value);
+                      sprintf (buffer, "%d", value);
                       attrType.AttrTypeNum = HTML_ATTR_Height_;
                       attr = TtaGetAttribute (el, attrType);
                       if (attr == NULL)
@@ -671,7 +665,7 @@ ThotBool ChangePRule (NotifyPresentation *event)
                       else
                         {
                           TtaRegisterAttributeReplace (attr, el, doc);
-                          TtaSetAttributeValue (attr, value, el, doc);
+                          TtaSetAttributeText (attr, buffer, el, doc);
                         }
                       CreateAttrHeightPercentPxl (buffer, el, doc, h);
                     }
