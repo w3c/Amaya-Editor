@@ -5038,6 +5038,11 @@
 	<message xml:lang="fr">Créer une zone de texte</message>
 	<message xml:lang="ja">Create a text box</message>
 </label>
+<label define="BTemplateCreateUseBox">
+	<message xml:lang="en">Create and use a component</message>
+	<message xml:lang="fr">Créer et utiliser un composant</message>
+	<message xml:lang="ja">Create and use a component</message>
+</label>
 <label define="BTemplateCreateFreeBox">
 	<message xml:lang="en">Create a free editing box</message>
 	<message xml:lang="fr">Créer une zone d'édition libre</message>

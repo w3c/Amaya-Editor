@@ -767,6 +767,7 @@ HelpShortCuts
 ConfigTemplates
 CreateTemplateFromDocument
 TemplateCreateTextBox
+TemplateCreateUseBox
 TemplateCreateFreeBox
 TemplateCreateRepeat
 

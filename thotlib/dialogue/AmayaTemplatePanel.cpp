@@ -41,6 +41,7 @@
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaTemplateToolDef)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_TEXT_BOX",       "TemplateCreateTextBox", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_USE_BOX",        "TemplateCreateUseBox", wxID_ANY, wxID_ANY)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_FREE_BOX",       "TemplateCreateFreeBox", wxID_ANY, wxID_ANY)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_REPEAT_SECTION", "TemplateCreateRepeat", wxID_ANY, wxID_ANY)
 AMAYA_END_TOOLBAR_DEF_TABLE()

@@ -69,8 +69,10 @@ extern void TemplateCreateFreeBox ( Document doc,
                                     View view );
 extern void TemplateCreateRepeat ( Document doc,
                                    View view );
-extern Element TemplateCreateComponent ( Document doc,
-                                         View view );
+extern void TemplateCreateUseBox ( Document doc,
+                                   View view );
+extern Element Template_CreateUseFromSelection ( Document doc );
+extern Element Template_CreateComponentFromSelection ( Document doc );
 
 #else /* __STDC__ */
 
@@ -137,8 +139,10 @@ extern void TemplateCreateFreeBox ( Document doc,
                                       View view );
 extern void TemplateCreateRepeat ( Document doc,
                                      View view );
-extern Element TemplateCreateComponent ( Document doc,
-                                           View view );
+extern void TemplateCreateUseBox ( Document doc,
+                                     View view );
+extern Element Template_CreateUseFromSelection ( Document doc );
+extern Element Template_CreateComponentFromSelection ( Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

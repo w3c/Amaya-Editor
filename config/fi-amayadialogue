@@ -338,42 +338,43 @@
 336 **Templates
 337 **Create template from current document...
 338 **Create a text box
-339 **Create a free editing box
-340 **Create a repeated component
-341 &Javascript/DOM
-342 **Enable/Disable
-343 **Execute a command
-344 **Execute an external script
-345 **Add an external script
-346 **Insert a script
-347 Tietoja Amayasta
-348 Lisätietoa Amayasta W3C:ssä
-349 Hakemisto
-350 Selaaminen
-351 Näkymät
-352 Valinta
-353 Dokumentti
-354 Elementtien luominen
-355 Asetukset
-356 Fontit
-357 **Templates
-358 Rakenteen muunto
-359 Linkit
-360 Taulukot
-361 Kuvakartat
-362 Matematiikka
-363 Grafiikka
-364 XML-tuki
-365 Tyylitiedostot
-366 Etsiminen
-367 Oikeinkirjoituksen tarkastus
-368 Julkaisu
-369 Yhteistyö
-370 Tulostus
-371 Numerointi
-372 Koosteen valmistus
-373 Merkinnät
-374 Asetuksien määritys
-375 Näppäinkomennot
-376 Amayan helppokäyttötoiminnot
-377 **Tip of the day...
+339 **Create and use a component
+340 **Create a free editing box
+341 **Create a repeated component
+342 &Javascript/DOM
+343 **Enable/Disable
+344 **Execute a command
+345 **Execute an external script
+346 **Add an external script
+347 **Insert a script
+348 Tietoja Amayasta
+349 Lisätietoa Amayasta W3C:ssä
+350 Hakemisto
+351 Selaaminen
+352 Näkymät
+353 Valinta
+354 Dokumentti
+355 Elementtien luominen
+356 Asetukset
+357 Fontit
+358 **Templates
+359 Rakenteen muunto
+360 Linkit
+361 Taulukot
+362 Kuvakartat
+363 Matematiikka
+364 Grafiikka
+365 XML-tuki
+366 Tyylitiedostot
+367 Etsiminen
+368 Oikeinkirjoituksen tarkastus
+369 Julkaisu
+370 Yhteistyö
+371 Tulostus
+372 Numerointi
+373 Koosteen valmistus
+374 Merkinnät
+375 Asetuksien määritys
+376 Näppäinkomennot
+377 Amayan helppokäyttötoiminnot
+378 **Tip of the day...
