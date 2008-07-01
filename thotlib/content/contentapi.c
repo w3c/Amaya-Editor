@@ -2472,7 +2472,7 @@ extern void *TtaDecomposeTransform(void *transform)
 	  theta1 = acos(a/coeff) * 180 / M_PI;
 	  if(b < 0)theta1=-theta1;
 
-	  if(coeff1 != 1)
+	  if(coeff != 1)
 	    {
 	      cursor -> Next = (PtrTransform)TtaNewTransformScale(coeff, coeff);
 	      cursor = cursor -> Next;
