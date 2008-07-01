@@ -2895,12 +2895,16 @@ void SaveDocument (Document doc, View view)
 
       if (!ok || !with_suffix)
         {
-          // call Save As when there is no suffix
-          SavingDocument = 0;
-          Saving_lock = FALSE;
-          TtaSetDisplayMode (doc, dispMode);
-          SaveDocumentAs (doc, view);
-         return;
+	  // if the content_location is known, don't redirect to the Save As dialog
+	  if (!DocumentMeta[doc] || !DocumentMeta[doc]->full_content_location)
+	    {
+	      // call Save As when there is no suffix
+	      SavingDocument = 0;
+	      Saving_lock = FALSE;
+	      TtaSetDisplayMode (doc, dispMode);
+	      SaveDocumentAs (doc, view);
+	      return;
+	    }
         }
 
       ptr = GetLocalPath (doc, DocumentURLs[doc]);
