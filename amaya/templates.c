@@ -2082,55 +2082,57 @@ Element Template_CreateComponentFromSelection(Document doc)
           selType2 =  TtaGetElementType(selElem2);
 
           QueryStringFromUser(label, title, buffer, 127);
-          
-          head = TemplateFindHead(doc);
-          
-          compType.ElSSchema = sstempl;
-          compType.ElTypeNum = Template_EL_component;
-
-          parent  = TtaGetParent(selElem);
-          parent2 = TtaGetParent(selElem2);
-          
-          if(head && firstChar==0 && firstChar2==0 && parent == parent2)
+          if(buffer[0]!=EOS)
             {
-              dispMode = TtaGetDisplayMode (doc);
-              if (dispMode == DisplayImmediately)
-                TtaSetDisplayMode (doc, DeferredDisplay);
-              oldStructureChecking = TtaGetStructureChecking (doc);
-              TtaSetStructureChecking (FALSE, doc);
-
-              child = TtaGetLastChild(head);
-              TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-              comp = TtaNewElement(doc, compType);
-              if(child)
-                TtaInsertSibling(comp, child, FALSE, doc);
-              else
-                TtaInsertFirstChild(&comp, head, doc);
-              TtaRegisterElementCreate(comp, doc);
+              head = TemplateFindHead(doc);
               
-              TtaNextSibling(&selElem2);
-              child = NULL;
-              while(selElem!=selElem2)
+              compType.ElSSchema = sstempl;
+              compType.ElTypeNum = Template_EL_component;
+    
+              parent  = TtaGetParent(selElem);
+              parent2 = TtaGetParent(selElem2);
+              
+              if(head && firstChar==0 && firstChar2==0 && parent == parent2)
                 {
-                  current = selElem;
-                  TtaNextSibling(&selElem);
-                  
-                  TtaRegisterElementDelete (current, doc);
-                  TtaRemoveTree(current, doc);
+                  dispMode = TtaGetDisplayMode (doc);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  oldStructureChecking = TtaGetStructureChecking (doc);
+                  TtaSetStructureChecking (FALSE, doc);
+    
+                  child = TtaGetLastChild(head);
+                  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+                  comp = TtaNewElement(doc, compType);
                   if(child)
-                    TtaInsertSibling(current, child, FALSE, doc);
+                    TtaInsertSibling(comp, child, FALSE, doc);
                   else
-                    TtaInsertFirstChild(&current, comp, doc);
-                  TtaRegisterElementDelete (current, doc);
-                  child = current;
+                    TtaInsertFirstChild(&comp, head, doc);
+                  TtaRegisterElementCreate(comp, doc);
+                  
+                  TtaNextSibling(&selElem2);
+                  child = NULL;
+                  while(selElem!=selElem2)
+                    {
+                      current = selElem;
+                      TtaNextSibling(&selElem);
+                      
+                      TtaRegisterElementDelete (current, doc);
+                      TtaRemoveTree(current, doc);
+                      if(child)
+                        TtaInsertSibling(current, child, FALSE, doc);
+                      else
+                        TtaInsertFirstChild(&current, comp, doc);
+                      TtaRegisterElementDelete (current, doc);
+                      child = current;
+                    }
+                  
+                  SetAttributeStringValue(comp, Template_ATTR_name, buffer);
+                  TtaCloseUndoSequence(doc);
+                  TtaSelectElement(doc, comp);
+                  
+                  TtaSetStructureChecking (oldStructureChecking, doc);
+                  TtaSetDisplayMode (doc, dispMode);
                 }
-              
-              SetAttributeStringValue(comp, Template_ATTR_name, buffer);
-              TtaCloseUndoSequence(doc);
-              TtaSelectElement(doc, comp);
-              
-              TtaSetStructureChecking (oldStructureChecking, doc);
-              TtaSetDisplayMode (doc, dispMode);
             }
         }
     }
