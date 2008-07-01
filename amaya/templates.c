@@ -2139,10 +2139,6 @@ Element Template_CreateComponentFromSelection(Document doc)
                   child = current;
                 }
               
-              TtaRegisterElementDelete (selElem, doc);
-              TtaRemoveTree(selElem, doc);
-              TtaInsertFirstChild(&selElem, comp, doc);
-              TtaRegisterElementDelete (selElem, doc);
               SetAttributeStringValue(comp, Template_ATTR_name, buffer);
               TtaCloseUndoSequence(doc);
               TtaSelectElement(doc, comp);
