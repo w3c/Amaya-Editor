@@ -63,8 +63,6 @@ AmayaElementToolPanel::~AmayaElementToolPanel()
 bool AmayaElementToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
           const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
-  size_t icon_size = 16;
-
   if(! wxPanel::Create(parent, id, pos, size, style, name))
     return false;
 
@@ -85,12 +83,6 @@ bool AmayaElementToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoin
   m_notebook->AddPage(m_xml = new AmayaXMLPanel(m_notebook, wxID_ANY), wxT(""), false, 2);
   m_notebook->AddPage(new AmayaSVGPanel(m_notebook, wxID_ANY), wxT(""), false, 3);
   m_notebook->AddPage(new AmayaTemplatePanel(m_notebook, wxID_ANY), wxT(""), false, 4);
-  m_notebook->SetPageImage(icon_size,0);
-  m_notebook->SetPageImage(icon_size,1);
-  m_notebook->SetPageImage(icon_size,2);
-  m_notebook->SetPageImage(icon_size,3);
-  m_notebook->SetPageImage(icon_size,4);
-  
   return true;
 }
 
