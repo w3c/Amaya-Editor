@@ -1035,6 +1035,8 @@ bool AmayaStringAttributeSubpanel::SetAttrListElem(PtrAttrListElem elem)
           m_pCombo->Append(wxStringTokenize(TtaConvMessageToWX(elem->restr.RestrEnumVal)));
           m_pCombo->SetValue(value);
           m_pCombo->SetInsertionPointEnd();
+          GetSizer()->Show(m_pText, false);
+          GetSizer()->Show(m_pCombo, true);
         }
       else
         {
@@ -1043,8 +1045,10 @@ bool AmayaStringAttributeSubpanel::SetAttrListElem(PtrAttrListElem elem)
           m_pCombo->Hide();
           m_pText->SetValue(value);
           m_pText->SetInsertionPointEnd();
+          GetSizer()->Show(m_pText, true);
+          GetSizer()->Show(m_pCombo, false);
         }
-    
+      GetSizer()->Layout();
     }
   return true;
 }
