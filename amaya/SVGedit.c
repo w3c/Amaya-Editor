@@ -2941,7 +2941,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
 
     case 41:   /* Rotate */
-      AskTransform(doc, svgCanvas, svgCanvas, entry, selected[0]);
+      AskTransform(doc, svgCanvas, svgCanvas, 2, selected[0]);
       UpdateTransformMatrix(doc, selected[0]);
       break;
 
@@ -3119,7 +3119,7 @@ void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
   x[3] = x[0] + dummy1;
   y[3] = y[0] + dummy2;
 
-  printf("x1=%f y1=%f x2=%f y2=%f\n", x[0], y[0], x[3], y[3]);
+  //printf("x1=%f y1=%f x2=%f y2=%f\n", x[0], y[0], x[3], y[3]);
 
   x[1] = x[3];
   y[1] = y[0];
