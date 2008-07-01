@@ -15,6 +15,10 @@ extern PtrBox IsSelectingControlPoint ( int frame,
                                         int x,
                                         int y,
                                         int* ctrlpt );
+extern PtrBox IsClickingInShape ( int frame,
+                                  int x,
+                                  int y,
+                                  int* ctrlpt );
 extern ThotBool LocateSelectionInView ( int frame,
                                         int x,
                                         int y,
@@ -49,6 +53,8 @@ extern PtrBox GetClickedLeafBox ( int frame,
                                   int xRef,
                                   int yRef,
                                   PtrFlow *pFlow );
+extern void SVG_ApplyDirectTranslate ( PtrBox pBox,
+                                       int frame );
 extern void ApplyDirectTranslate ( PtrBox pBox,
                                    int frame,
                                    int xm,
@@ -80,6 +86,10 @@ extern PtrBox IsSelectingControlPoint ( int frame,
                                           int x,
                                           int y,
                                           int* ctrlpt );
+extern PtrBox IsClickingInShape ( int frame,
+                                    int x,
+                                    int y,
+                                    int* ctrlpt );
 extern ThotBool LocateSelectionInView ( int frame,
                                           int x,
                                           int y,
@@ -114,6 +124,8 @@ extern PtrBox GetClickedLeafBox ( int frame,
                                     int xRef,
                                     int yRef,
                                     PtrFlow *pFlow );
+extern void SVG_ApplyDirectTranslate ( PtrBox pBox,
+                                         int frame );
 extern void ApplyDirectTranslate ( PtrBox pBox,
                                      int frame,
                                      int xm,

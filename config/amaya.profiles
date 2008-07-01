@@ -701,6 +701,7 @@ HelpSVG
 &TransformSVG_AlignBottom
 &TransformSVG_Rotate
 &SVG_Select
+&CreateSVG_Image
 
 ########### Javascript/DOM
 [javascript_dom]

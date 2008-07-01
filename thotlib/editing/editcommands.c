@@ -2208,7 +2208,6 @@ void AskTransform(     Document doc,
 	}
 
   pFrame = &ViewFrameTable[frame - 1];
-
   /* Get the size of the origin of the ancestor */
   pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
   if(!pAb)return;

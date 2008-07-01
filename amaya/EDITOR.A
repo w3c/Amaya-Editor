@@ -700,5 +700,6 @@ FUNCTIONS
   TransformSVG_AlignMiddle,
   TransformSVG_AlignBottom,
   TransformSVG_Rotate,
-  SVG_Select;
+  SVG_Select,
+  CreateSVG_Image;
 END

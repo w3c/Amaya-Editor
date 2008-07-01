@@ -1602,6 +1602,27 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
 #endif /* _SVG */
 
 /*----------------------------------------------------------------------
+  GetAncestorCanvasAndGroup
+  Get all the Elements necessary to draw SVG:
+  
+  - svgCanvas: the innermost <svg> element containing el
+  - svgAncestor: the ancestor last <svg> ancestor of el, so we suppose
+    that no transform are applied to it.
+  - el: The element clicked/selected SVG object. If it is not a direct
+    child of the svgCanvas, then we take the 
+  
+  ----------------------------------------------------------------------*/
+/* Thot GetAncestorCanvasAndGroup(Document doc, Element *el, */
+/* 			  Element *svgAncestor, Element *svgCanvas) */
+/* { */
+/* #ifdef _SVG */
+/*   Element parent; */
+
+/* #endif /\* _SVG *\/ */
+/* } */
+
+
+/*----------------------------------------------------------------------
   CreateGraphicElement
   Create a Graphics element.
   entry is the number of the entry chosen by the user in the Graphics
@@ -2938,8 +2959,6 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	}
       break;
 
-
-
     case 41:   /* Rotate */
       AskTransform(doc, svgCanvas, svgCanvas, 2, selected[0]);
       UpdateTransformMatrix(doc, selected[0]);
@@ -3949,4 +3968,13 @@ void TransformSVG_Rotate (Document document, View view)
 void SVG_Select (Document document, View view)
 {
   SelectGraphicElement (document, view);
+}
+
+
+/*----------------------------------------------------------------------
+  SVG_Select
+  ----------------------------------------------------------------------*/
+void CreateSVG_Image (Document document, View view)
+{
+  AddNewImage (document, view, TRUE);
 }

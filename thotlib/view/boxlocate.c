@@ -91,6 +91,7 @@ static ThotBool     SkipClickEvent = FALSE;
 
 
 static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint);
+static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y);
 
 /*----------------------------------------------------------------------
   APPgraphicModify sends a message TteElemGraphModif to parent elements
@@ -243,6 +244,66 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
   return NULL;
 }
 
+/*----------------------------------------------------------------------
+  IsClickingInShape
+  The frame must be the formatted view.
+  ----------------------------------------------------------------------*/
+PtrBox IsClickingInShape(int frame, int x, int y, int* ctrlpt)
+{
+  PtrElement      child;
+  PtrAbstractBox  pAb;
+  PtrBox          box;
+  ViewFrame      *pFrame;
+  PtrFlow         pFlow = NULL;
+
+  if (FrameTable[frame].FrView == 1 && FirstSelectedElement &&
+      FirstSelectedElement == LastSelectedElement)
+    {
+      pAb = FirstSelectedElement->ElAbstractBox[0];
+      /* take into account the document scroll */
+      pFrame = &ViewFrameTable[frame - 1];
+      x += pFrame->FrXOrg;
+      y += pFrame->FrYOrg;
+      if (pAb && pAb->AbBox)
+        pFlow = GetRelativeFlow (pAb->AbBox, frame);
+      if (pFlow)
+        {
+          /* apply the box shift */
+          x += pFlow->FlXStart;
+          y += pFlow->FlYStart;
+        }
+      if (!FirstSelectedElement->ElTerminal &&
+          FirstSelectedElement->ElFirstChild &&
+          FirstSelectedElement->ElFirstChild->ElTerminal)
+        {
+          child = FirstSelectedElement->ElFirstChild;
+          if (child->ElLeafType == LtPicture ||
+              child->ElLeafType == LtPath ||
+              child->ElLeafType == LtPolyLine ||
+              child->ElLeafType == LtGraphics)
+            {
+              pAb = child->ElAbstractBox[0];
+	      if(IsInShape (pAb, x, y))
+		box = pAb->AbBox;
+              if (child->ElLeafType != LtPicture || *ctrlpt != 0)
+              return box;
+            }
+        }
+      else if (FirstSelectedElement->ElAbstractBox[0] &&
+               TypeHasException (ExcIsDraw, FirstSelectedElement->ElTypeNumber,
+                                 FirstSelectedElement->ElStructSchema))
+        {
+          if (pAb && pAb->AbBox)
+            {
+	      if(IsInShape (pAb, x, y))
+		box = pAb->AbBox;
+              if (*ctrlpt != 0)
+                return box;
+            }
+        }
+    }
+  return NULL;
+}
 
 /*----------------------------------------------------------------------
   LocateSelectionInView finds out the selected Abstract Box and if it's
@@ -2301,6 +2362,43 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
 
   return ok;
 }
+
+/*----------------------------------------------------------------------
+  SVG_ApplyDirectTranslate applies direct translation to the box.
+  ----------------------------------------------------------------------*/
+void SVG_ApplyDirectTranslate (PtrBox pBox, int frame)
+{
+  PtrDocument         pDoc;
+  PtrAbstractBox      pAb;
+  PtrElement          pEl, pParent;
+  ViewFrame          *pFrame;
+  int                 view;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  GetDocAndView (frame, &pDoc, &view);
+  if (pDoc == NULL)
+    return;
+
+  if(pBox)
+    {
+      pAb = pBox -> BxAbstractBox;
+      if(pAb)
+	{
+	  pEl = pAb -> AbElement;
+	  if(pEl)
+	    {
+	      pParent = pEl -> ElParent;
+	
+	      return;
+	      /*	      AskTransform((Document)pDoc,
+			   (Element)pParent,
+			   (Element)pParent,
+			   0, (Element)pEl);*/
+	    }
+	}
+    }
+}
+
 
 /*----------------------------------------------------------------------
   ApplyDirectTranslate applies direct translation to the box.

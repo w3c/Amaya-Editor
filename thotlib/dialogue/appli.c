@@ -840,29 +840,37 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
             else
               ApplyDirectResize(box, frame, ctrlpt, x, y);
           }
-        else if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
-          {
-            /* a selection extension */
-            TtaAbortShowDialogue ();
-            LocateSelectionInView (frame, x, y, 1);
-#if !defined (_WINDOWS) && !defined (_MACOS)
-						FrameToView (frame, &document, &view);
-            DoCopyToClipboard (document, view, FALSE, TRUE);
-#endif /* _WINDOWS */
-          }
         else
-          {
-            /* a simple selection */
-            ClickFrame = frame;
-            ClickX = x;
-            ClickY = y;
-            /* it's important to setup Selecting before the call of LocateSelectionInView 
-             * because LocateSelectionInView will handle gui events (keyup) and Selecting variable
-             * will not be unset => cause a infinit selection ! */
-            Selecting = TRUE;
-            if (LocateSelectionInView (frame, ClickX, ClickY, 2))
-              return FALSE;
-          }
+	  {
+	    box = IsClickingInShape(frame, x, y, &ctrlpt);
+	    if(box)
+	      SVG_ApplyDirectTranslate(box, frame);
+
+	    if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
+	      {
+		/* a selection extension */
+		TtaAbortShowDialogue ();
+		LocateSelectionInView (frame, x, y, 1);
+#if !defined (_WINDOWS) && !defined (_MACOS)
+		FrameToView (frame, &document, &view);
+		DoCopyToClipboard (document, view, FALSE, TRUE);
+#endif /* _WINDOWS */
+	      }
+	    else
+	      {
+		/* a simple selection */
+		ClickFrame = frame;
+		ClickX = x;
+		ClickY = y;
+		/* it's important to setup Selecting before the call of
+		   LocateSelectionInView because LocateSelectionInView will
+		   handle gui events (keyup) and Selecting variable
+		 * will not be unset => cause a infinit selection ! */
+		Selecting = TRUE;
+		if (LocateSelectionInView (frame, ClickX, ClickY, 2))
+		  return FALSE;
+	      }
+	  }
       }
       break;
       
