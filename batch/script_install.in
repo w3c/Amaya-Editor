@@ -72,7 +72,7 @@ $LN_S $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya $BINDIR/amaya
 
 $ECHO "--> Installing data"
 AMAYAFILES="*.STR *.conf *.trans* *.en *.gif *.png *.PRS *.TRA AmayaPage.html AmayaPage.html.* AmayaPage_WX.html AmayaPage_WX.html.* *.css Amaya.svg COPYRIGHT"
-CONFIGFILES="XKeysymDB unix-thot.rc amaya.keyboard amaya.kb amaya.kb-mac amaya.profiles *-amayadialogue *-amayamsg *-libdialogue amaya.emacs annot.schemas *.rdf *.css fonts.* gtkrc"
+CONFIGFILES="XKeysymDB unix-thot.rc amaya.keyboard amaya.kb amaya.kb-mac amaya.profiles *-amayadialogue *-amayamsg *-libdialogue amaya.emacs annot.schemas *.rdf *.css fonts.* *.dat gtkrc"
 LIBCONFIGFILES="*.css *.png *.lhtml *.svg"
 ANNOTFILES="*.STR *.PRS *.TRA *.en *.gif *.png"
 DICOFILES="*.ptn *.dic alphabet clavier"
