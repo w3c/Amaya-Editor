@@ -82,6 +82,7 @@ echo "Platform -------> GTK"
    ${AMAYADIR}/config/tr-* \
    ${AMAYADIR}/config/ru-* \
    ${AMAYADIR}/config/*.rdf \
+   ${AMAYADIR}/config/*.dat \
    ${AMAYADIR}/config/*thot.rc \
    ${AMAYADIR}/config/amaya.emacs \
    ${AMAYADIR}/config/amaya.kb \

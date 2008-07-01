@@ -254,6 +254,7 @@ ${AMAYADIR}/config/XKeysymDB \
 ${AMAYADIR}/config/*thot.rc \
 ${AMAYADIR}/config/thot.color \
 ${AMAYADIR}/config/*rdf \
+${AMAYADIR}/config/*.dat \
 ${AMAYADIR}/config/*.css \
 ${AMAYADIR}/config/annot.schemas \
 ${AMAYADIR}/config/fonts.* \
