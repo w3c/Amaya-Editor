@@ -1764,6 +1764,7 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 1);
 
   // update the ns list from the listbox
+  OnNSAdd(event);
   UpdateRDFaNsList();
   ThotCallback (GetPrefRDFaBase() + RDFaMenu, INTEGER_DATA, (char*) 1);
 
