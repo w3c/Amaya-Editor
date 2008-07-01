@@ -8,6 +8,10 @@
 
 extern void CheckSVGRoot ( Document doc,
                            Element el );
+extern ThotBool GetAncestorCanvasAndObject ( Document doc,
+                                             Element *el,
+                                             Element *svgAncestor,
+                                             Element *svgCanvas );
 extern void CreateGraphicElement ( Document doc,
                                    View view,
                                    int entry );
@@ -141,6 +145,10 @@ extern void CreateSVG_Image ( Document document,
 
 extern void CheckSVGRoot ( Document doc,
                              Element el );
+extern ThotBool GetAncestorCanvasAndObject ( Document doc,
+                                               Element *el,
+                                               Element *svgAncestor,
+                                               Element *svgCanvas );
 extern void CreateGraphicElement ( Document doc,
                                      View view,
                                      int entry );

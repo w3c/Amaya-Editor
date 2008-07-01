@@ -1602,7 +1602,7 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
 #endif /* _SVG */
 
 /*----------------------------------------------------------------------
-  GetAncestorCanvasAndGroup
+  GetAncestorCanvasAndObject
   Get all the Elements necessary to draw SVG:
   
   - svgCanvas: the innermost <svg> element containing el
@@ -1612,15 +1612,65 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
     child of the svgCanvas, then we take the 
   
   ----------------------------------------------------------------------*/
-/* Thot GetAncestorCanvasAndGroup(Document doc, Element *el, */
-/* 			  Element *svgAncestor, Element *svgCanvas) */
-/* { */
-/* #ifdef _SVG */
-/*   Element parent; */
+ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
+			  Element *svgAncestor, Element *svgCanvas)
+{
+#ifdef _SVG
+  Element parent, newEl;
+  ElementType elType;
+  SSchema	    docSchema, svgSchema;
 
-/* #endif /\* _SVG *\/ */
-/* } */
+  if(doc == 0)return FALSE;
 
+  docSchema = TtaGetDocumentSSchema (doc);
+  svgSchema = GetSVGSSchema (doc);
+
+  if(el)
+    {
+      elType = TtaGetElementType (*el);
+
+      /* Check whether el is an SVG element */
+      if (elType.ElSSchema != svgSchema)
+	return FALSE;
+
+      newEl = *el;
+      parent = TtaGetParent(newEl);
+
+      /* Look for el and svgCanvas */
+      while(parent)
+	{
+	  elType = TtaGetElementType (parent);
+	  if(elType.ElTypeNum == SVG_EL_SVG &&
+	     elType.ElSSchema == svgSchema)
+	    break;
+
+	  newEl = parent;
+	  parent = TtaGetParent(parent);
+	}
+
+      *el = newEl;
+      *svgCanvas = parent;
+    }
+
+  if(*svgCanvas == NULL)return FALSE;
+  
+  /* Look for svgAncestor */
+  *svgAncestor = *svgCanvas;
+  parent = *svgAncestor;
+  TtaGetParent(parent);
+
+  while(parent)
+    {
+      elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == SVG_EL_SVG && elType.ElSSchema == svgSchema)
+	*svgAncestor = parent;
+      parent = TtaGetParent(parent);
+    }
+
+  return TRUE;
+
+#endif /* _SVG */
+}
 
 /*----------------------------------------------------------------------
   CreateGraphicElement
@@ -1778,17 +1828,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
     }
 
   /* Look for the outermost <svg> element containg the svgCanvas. */
-  svgAncestor = svgCanvas;
-  parent = svgCanvas;
-  attrType.AttrSSchema = svgSchema;
-
-  while(parent)
-    {
-      elType = TtaGetElementType (parent);
-      if (elType.ElTypeNum == SVG_EL_SVG && elType.ElSSchema == svgSchema)
-	svgAncestor = parent;
-      parent = TtaGetParent(parent);
-    }
+  GetAncestorCanvasAndObject(doc, NULL,
+			     &svgAncestor, &svgCanvas);
 
   /* look for the element (sibling) in front of which the new element will be
      created */
@@ -2583,9 +2624,6 @@ void SelectGraphicElement (Document doc, View view)
 #ifdef _SVG
   Element          svgAncestor, svgCanvas;
   Element	   first, sibling, parent;
-  AttributeType    attrType;
-  SSchema          svgSchema;
-  ElementType      elType;
   int		   c1, c2;
   int x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
   float xmin, xmax, ymin, ymax;
@@ -2613,38 +2651,11 @@ void SelectGraphicElement (Document doc, View view)
     /* no selection */
     return;
 
-  /* Check whether the selected element is a child of a SVG element */
-  svgSchema = GetSVGSSchema (doc);
-  attrType.AttrSSchema = svgSchema;
-
-  elType = TtaGetElementType (first);
-
-  if (elType.ElTypeNum == SVG_EL_SVG &&
-      elType.ElSSchema == svgSchema)
-    svgCanvas = first;
-  else
-    {
-    elType.ElTypeNum = SVG_EL_SVG;
-    elType.ElSSchema = svgSchema;
-    svgCanvas = TtaGetTypedAncestor (first, elType);
-    }
-
-  if (svgCanvas == NULL)
+  if(!GetAncestorCanvasAndObject(doc, &first,
+				 &svgAncestor, &svgCanvas))
     return;
+
   TtaSelectElement(doc, svgCanvas);
-
-  /* Look for the outermost <svg> element containg the svgCanvas. */
-  svgAncestor = svgCanvas;
-  parent = svgCanvas;
-  attrType.AttrSSchema = svgSchema;
-
-  while(parent)
-    {
-      elType = TtaGetElementType (parent);
-      if (elType.ElTypeNum == SVG_EL_SVG && elType.ElSSchema == svgSchema)
-	svgAncestor = parent;
-      parent = TtaGetParent(parent);
-    }
 
   /* Ask a box surrounding the element the user wants to select */
   AskSurroundingBox(doc,
@@ -2696,11 +2707,9 @@ void TransformGraphicElement (Document doc, View view, int entry)
   Element          *selected;
   int              nb_selected;
 
-  Element	   first, sibling, sibling2, child, parent, svgCanvas;
+  Element          svgAncestor, svgCanvas;
+  Element	   first, sibling, sibling2, child, parent;
   DisplayMode      dispMode;
-  AttributeType    attrType;
-  SSchema          svgSchema;
-  ElementType      elType;
   ThotBool         isFormattedView;
   int		   c1, c2, i;
   float x,y,width,height;
@@ -2729,17 +2738,15 @@ void TransformGraphicElement (Document doc, View view, int entry)
     /* no selection */
     return;
 
-  /* Check whether the selected element is a child of a SVG element */
-  svgSchema = GetSVGSSchema (doc);
-  attrType.AttrSSchema = svgSchema;
+  /* Get the <svg/> ancestor, canvas and check that the first selected 
+     element is a child of canvas */
+  child = first;
 
-  elType = TtaGetElementType (first);
-  elType.ElTypeNum = SVG_EL_SVG;
-  elType.ElSSchema = svgSchema;
-  svgCanvas = TtaGetTypedAncestor (first, elType);
-
-  if (svgCanvas == NULL)
+  if(!GetAncestorCanvasAndObject(doc, &child,
+				 &svgAncestor, &svgCanvas))
     return;
+
+  if(child != first)return;
 
   /* Count how many children of svgCanvas are selected*/
   for(nb_selected = 0, sibling = first;
@@ -2960,7 +2967,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
       break;
 
     case 41:   /* Rotate */
-      AskTransform(doc, svgCanvas, svgCanvas, 2, selected[0]);
+      AskTransform(doc, svgAncestor, svgCanvas, 2, selected[0]);
       UpdateTransformMatrix(doc, selected[0]);
       break;
 
