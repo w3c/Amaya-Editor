@@ -604,27 +604,6 @@ static char *createMenuString (const struct menuType* items, const int nbItems)
 
 
 /*----------------------------------------------------------------------
-  RepeatToBeCreated
-  An new repeat element will be created by the user through some generic editing
-  command
-  -----------------------------------------------------------------------*/
-ThotBool RepeatToBeCreated (NotifyElement *event)
-{
-  printf("RepeatToBeCreated\n");
-  return FALSE;
-}
-
-/*----------------------------------------------------------------------
-  RepeatCreated
-  A new "repeat" element has just been created by the user with a generic editing
-  command.
-  -----------------------------------------------------------------------*/
-void RepeatCreated (NotifyElement *event)
-{
-  printf("RepeatCreated\n");  
-}
-
-/*----------------------------------------------------------------------
   UseToBeCreated
   An new use element will be created by the user through some generic editing
   command
@@ -1743,6 +1722,7 @@ void TemplateCreateTextBox(Document doc, View view)
   ElementType useType;
   Element     use;
   char        buffer[128];
+  ThotBool    oldStructureChecking;
   
   char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_USESTRING);
   char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_LABEL);
@@ -1769,6 +1749,9 @@ void TemplateCreateTextBox(Document doc, View view)
               QueryStringFromUser(label, title, buffer, 127);
               useType.ElSSchema = sstempl;
               useType.ElTypeNum = Template_EL_useSimple;
+
+              oldStructureChecking = TtaGetStructureChecking (doc);
+              TtaSetStructureChecking (FALSE, doc);
 
               if(firstChar==0)
                 {
@@ -1799,6 +1782,9 @@ void TemplateCreateTextBox(Document doc, View view)
                       SetAttributeStringValue(use, Template_ATTR_title, buffer);                      
                     }
                 }
+              
+              TtaSetStructureChecking (oldStructureChecking, doc);
+              
             }
           
         }

@@ -742,6 +742,16 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
               // check if the selection is within the head
               parentType.ElTypeNum = HTML_EL_HEAD;
               el = TtaGetTypedAncestor (firstSel, parentType);
+#ifdef TEMPLATES
+              if(el)
+                {
+                  // check if selection is within the xt:head
+                  parentType.ElSSchema = templateSSchema;
+                  parentType.ElTypeNum = Template_EL_head;
+                  if(TtaGetTypedAncestor (firstSel, parentType)!=NULL)
+                    el = NULL;
+                }
+#endif /* TEMPLATES */
             }
           
           if (el == NULL)
