@@ -8,7 +8,7 @@
   <style type="text/css">
 
 h3 {margin-left: 0.8em}
-.red {color: #FF0000; background-color: #FFFFFF}</style>
+ .red {color: #FF0000; background-color: #FFFFFF}</style>
   <meta name="GENERATOR" content="amaya 9.53, see http://www.w3.org/Amaya/" />
 </head>
 
@@ -31,14 +31,13 @@ href="http://www.w3.org/Amaya/User/New.html">Amaya 10.0</a>).</p>
   <li>This snapshot integrates a first level in the support of XHTML+RDFa
     documents : 
     <ul>
-      <li>specific RDFa attributes are allowed at parsing and proposed at
+      <li>the specific RDFa attributes are allowed at parsing and proposed at
         editing</li>
       <li>the attributes rel/rev are global for that profile and proposed with
         the values defined in the working draft</li>
-      <li>new XHTML+RDFa documents can be created from the menu, they are
-        generated with some namespace declarations attached to the html element
-        (the list of generated namespace declaration will be a user preference
-        in the next version)</li>
+      <li>a new XHTML+RDFa documents can be created from the menu, Amaya
+        generates the namespace declarations defined in the RDFa
+      Preference.</li>
     </ul>
     <p>====&gt; snapshot 10.1-pre</p>
   </li>
@@ -46,6 +45,11 @@ href="http://www.w3.org/Amaya/User/New.html">Amaya 10.0</a>).</p>
   <li>Support direct resizing of images</li>
   <li>Integration of Japanese dialogs thanks to Martin Dürst</li>
   <li>XHTML, MathML, and XML panels are now tabs of the "Elements" tool</li>
+  <li>A 'Span' menu item is now available in the menu Insert &gt; Character
+    Element</li>
+  <li>A new RDFa Preference allows the user to define the namespace
+    declarations that will be attached to the root element for a new XHTML+RDFa
+    document</li>
 </ul>
 
 <h3>Bug fixes</h3>
@@ -74,12 +78,14 @@ href="http://www.w3.org/Amaya/User/New.html">Amaya 10.0</a>).</p>
   <li>A background image CSS property attached to any element (*) was not
     applied immediately</li>
   <li>Improvement of XML document saving</li>
+  <li>Amaya now uses the Content Location to save a remote document without
+    suffix (instead of redirecting to the Save As dialog)</li>
 </ul>
 
 <p></p>
 <hr />
 <address>
-  last revised Date: <!--$date=-->2008-06-10<!--$-->
+  last revised Date: <!--$date=-->2008-07-02<!--$-->
 
 </address>
 </body>
