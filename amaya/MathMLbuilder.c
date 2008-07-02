@@ -4727,7 +4727,7 @@ void MathMLSpacingAttr (Document doc, Element el, const char *value, int attr)
   PresentationValue   pval;
   PresentationContext ctxt;
   int                 ruleType;
-  char*               tmp = NULL;
+  char*               tmp = NULL, *ptr;
 
   /* provisionally, handles only mspace elements */
   elType = TtaGetElementType (el);
@@ -4763,7 +4763,7 @@ void MathMLSpacingAttr (Document doc, Element el, const char *value, int attr)
       /* parse the attribute value (a number followed by a unit) */
       value = (char*)TtaSkipBlanks (value);
       tmp = TtaStrdup(value);
-      tmp = ParseCSSUnit (tmp, &pval);
+      ptr = ParseCSSUnit (tmp, &pval);
       /***** we should accept namedspace for width *****/
       if (pval.typed_data.unit != UNIT_INVALID)
         {
