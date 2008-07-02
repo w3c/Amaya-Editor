@@ -2051,8 +2051,11 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  else
 	    {
 	      /* TODO: add a dialog box ? */
-	      x1 = x2 = x3 = x4 = y1 = y2 = y3 = y4 = 0;
-	      lx = ly = 0;
+	      x1 = x3 = 0;
+	      x2 = x4 = 100;
+	      y1 = y2 = 0;
+	      y3 = y4 = 100;
+	      lx = ly = 100;
 	    }
 
 	  switch(entry)
