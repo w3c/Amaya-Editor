@@ -2502,7 +2502,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
               return;
             }
           else if (box->VisibleModification || GL_NotInFeedbackMode ())
-            {      
+            {
               if (glIsList (box->DisplayList))
                 glDeleteLists (box->DisplayList, 1);
               box->DisplayList = glGenLists (1);
@@ -2593,7 +2593,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
     {
       GL_SetFillOpacity (1000);
       GL_SetStrokeOpacity (1000);
-      box->VisibleModification = FALSE;  
+      box->VisibleModification = FALSE;
       if (isOpenList)
         glEndList ();
     }

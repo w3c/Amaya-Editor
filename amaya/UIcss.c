@@ -423,7 +423,7 @@ void UpdateStyleSheet (char *url, char *tempdoc)
             {
               /* don't manage a document used by make book */
               if (DocumentMeta[doc] == NULL ||
-                   DocumentMeta[doc]->method != CE_MAKEBOOK)
+                  DocumentMeta[doc]->method != CE_MAKEBOOK)
                 {
                   pInfo = css->infos[doc];
                   while (pInfo)
@@ -459,14 +459,14 @@ void UpdateStyleSheet (char *url, char *tempdoc)
                                 LoadUserStyleSheet (doc);
                               else
                                 {
-                                LoadStyleSheet (refcss->url, doc, refInfo->PiLink, NULL,
-                                                NULL, (CSSmedia)refInfo->PiMedia,
-                                                refInfo->PiCategory == CSS_USER_STYLE);
- #ifdef _WX
-                                /* Update the list of classes */
-                                TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
+                                  LoadStyleSheet (refcss->url, doc, refInfo->PiLink, NULL,
+                                                  NULL, (CSSmedia)refInfo->PiMedia,
+                                                  refInfo->PiCategory == CSS_USER_STYLE);
+#ifdef _WX
+                                  /* Update the list of classes */
+                                  TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
 #endif /* _WX */
-                               }
+                                }
                               if (CSSErrorsFound)
                                 {
                                   /* the CSS parser detected an error */
@@ -736,23 +736,23 @@ static void GenerateStyle (const char * data , ThotBool add)
       elType = TtaGetElementType (el);
       if (TtaIsColumnSelected (doc) ||
           (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
-	   (elType.ElTypeNum == HTML_EL_COL ||
-	    elType.ElTypeNum == HTML_EL_COLGROUP)))
-	/* a whole column is selected in a HTML table. Call the table editor */
-	{
-	  /* create the context of the Specific presentation driver */
-	  ctxt = TtaGetSpecificStyleContext (doc);
-	  if (ctxt == NULL)
-	    return;
-	  ctxt->type = elType.ElTypeNum;
-	  ctxt->cssSpecificity = 1;
-	  ctxt->cssLine = TtaGetElementLineNumber (el);
-	  ctxt->destroy = FALSE;
-	  ColApplyCSSRule (NULL, ctxt, (char*)data, NULL);
-	}
+           (elType.ElTypeNum == HTML_EL_COL ||
+            elType.ElTypeNum == HTML_EL_COLGROUP)))
+        /* a whole column is selected in a HTML table. Call the table editor */
+        {
+          /* create the context of the Specific presentation driver */
+          ctxt = TtaGetSpecificStyleContext (doc);
+          if (ctxt == NULL)
+            return;
+          ctxt->type = elType.ElTypeNum;
+          ctxt->cssSpecificity = 1;
+          ctxt->cssLine = TtaGetElementLineNumber (el);
+          ctxt->destroy = FALSE;
+          ColApplyCSSRule (NULL, ctxt, (char*)data, NULL);
+        }
       else
-	GenerateInlineElement (HTML_EL_Span, NULL, HTML_ATTR_Style_, data,
-			       !add);
+        GenerateInlineElement (HTML_EL_Span, NULL, HTML_ATTR_Style_, data,
+                               !add);
     }
   else
     {
@@ -952,37 +952,39 @@ void DoStyleColor (char *color, ThotBool isBg)
     {
       /* It's an SVG element */
       if(elType.ElTypeNum == SVG_EL_rect ||
-	 elType.ElTypeNum == SVG_EL_circle_ ||
-	 elType.ElTypeNum == SVG_EL_ellipse ||
-	 elType.ElTypeNum == SVG_EL_polyline ||
-	 elType.ElTypeNum == SVG_EL_polygon ||
-	 elType.ElTypeNum == SVG_EL_path
-	 || (!isBg && elType.ElTypeNum == SVG_EL_line_)
-	 )
-	{
-	  if(isBg)
-	    sprintf( buffer, "fill:%s", color);
-	  else 
-	    sprintf( buffer, "stroke:%s", color);
+         elType.ElTypeNum == SVG_EL_circle_ ||
+         elType.ElTypeNum == SVG_EL_ellipse ||
+         elType.ElTypeNum == SVG_EL_polyline ||
+         elType.ElTypeNum == SVG_EL_polygon ||
+         elType.ElTypeNum == SVG_EL_path
+         || (!isBg && elType.ElTypeNum == SVG_EL_line_)
+         )
+        {
+          if(isBg)
+            sprintf( buffer, "fill:%s", color);
+          else 
+            sprintf( buffer, "stroke:%s", color);
 
-	  if ((isBg && new_col == bg_col) || new_col != col)
-	    GenerateStyle (buffer, TRUE);
-	}
+          TtaSetDisplayMode (doc, DisplayImmediately);
+          if ((isBg && new_col == bg_col) || new_col != col)
+            GenerateStyle (buffer, TRUE);
+          TtaSetDisplayMode (doc, DeferredDisplay);
+        }
     }
   else
     {
       if(isBg)
-	sprintf( buffer, "background-color:%s", color);
+        sprintf( buffer, "background-color:%s", color);
       else 
-	sprintf( buffer, "color:%s", color);
+        sprintf( buffer, "color:%s", color);
 
       el = NewSpanElement (doc, &open);
       if (el)
-	TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
+        TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
       if ((isBg && new_col == bg_col) || new_col != col)
-	{
-	  GenerateStyle (buffer, TRUE);
-	}
+        {
+          GenerateStyle (buffer, TRUE);
+        }
     }
       
 
@@ -1204,7 +1206,7 @@ void DoSelectBgColor (Document doc, View view)
       Current_BackgroundColor = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
 
       sprintf( color_string, "#%02x%02x%02x",
-	       c.Red(), c.Green(), c.Blue());
+               c.Red(), c.Green(), c.Blue());
       DoStyleColor (color_string, TRUE);
     }
   UpdateStylePanel (doc, view);
@@ -1362,7 +1364,7 @@ void DoRemoveBgColor (Document doc, View view)
   ----------------------------------------------------------------------*/
 void DoRemoveFont (Document doc, View view)
 {
- Element             el = NULL;
+  Element             el = NULL;
   int                 firstChar, lastChar;
   int                 size = -1, family;
   TypeUnit            unit;
