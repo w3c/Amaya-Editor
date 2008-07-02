@@ -992,6 +992,9 @@ void DoStyleColor (char *color, ThotBool isBg)
     TtaCloseUndoSequence (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
+
+  // Update menus
+  UpdateContextSensitiveMenus (doc, 1);
 }
 
 

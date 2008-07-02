@@ -27,6 +27,7 @@
 #include "HTMLimage_f.h"
 #include "html2thot_f.h"
 #include "HTMLpresentation_f.h"
+#include "HTMLactions_f.h"
 #include "styleparser_f.h"
 #include "undo.h"
 #include "XHTMLbuilder_f.h"
@@ -112,6 +113,7 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc, PRule presRule)
               }
           }
       }
+  UpdateContextSensitiveMenus (doc, 1);
   return ret;
 }
 
