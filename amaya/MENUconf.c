@@ -1394,9 +1394,9 @@ static void SetPublishConf (void)
   TtaSetEnvBoolean ("EXPORT_CRLF", GProp_Publish.ExportCRLF, TRUE);
   TtaSetEnvBoolean ("GENERATE_MATHPI", GProp_Publish.GenerateMathPI, TRUE);
   TtaSetEnvInt ("EXPORT_LENGTH", GProp_Publish.ExportLength, TRUE);
-  TtaSetEnvString ("DEFAULTNAME", GProp_Publish.DefaultName, TRUE);
-  TtaSetEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect, TRUE);
-  TtaSetEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType, TRUE);
+  TtaSetEnvString ("DEFAULTNAME", &(GProp_Publish.DefaultName[0]), TRUE);
+  TtaSetEnvString ("SAFE_PUT_REDIRECT", &(GProp_Publish.SafePutRedirect[0]), TRUE);
+  TtaSetEnvString ("DOCUMENT_CHARSET", &(GProp_Publish.CharsetType[0]), TRUE);
 
   TtaSaveAppRegistry ();
 }

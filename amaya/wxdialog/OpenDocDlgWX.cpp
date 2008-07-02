@@ -409,11 +409,13 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
   else
     temp[0] = EOS;
 
-  // get the selected charset
-  value = XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->GetStringSelection();
-  strcpy (buffer, (const char*)value.mb_str(wxConvUTF8));
-  TtaSetEnvString ("DOCUMENT_CHARSET", buffer, TRUE);
-
+  if (Mandatory_title)
+    {
+      // get the selected charset
+      value = XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->GetStringSelection();
+      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8));
+      TtaSetEnvString ("DOCUMENT_CHARSET", buffer, TRUE);
+    }
   // get the combobox current url
   value = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
   value = value.Trim(TRUE).Trim(FALSE);
@@ -442,7 +444,7 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
       title = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
       if (title.Len() == 0)
         {
-          // get the donument name as default document title
+          // get the document name as default document title
           end_pos = value.Find(DIR_SEP, true);
           if (end_pos)
             title = value.Mid(end_pos+1, value.Length());
