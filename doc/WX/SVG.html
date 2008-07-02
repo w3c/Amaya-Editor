@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.8.51, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 8.8.51, see http://www.w3.org/Amaya/" />
   <title>Editing Graphics</title>
   <style type="text/css">
 
@@ -17,13 +14,12 @@
 <body xml:lang="en" lang="en">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Math.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Xml.html" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Xml.html" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
@@ -33,16 +29,71 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <p>Amaya enables you to include vector graphics in Web pages, following the
 Scalable Vector Graphics (SVG) specification.</p>
 
-<p>Amaya handles SVG elements as structured components, in the same way as
-HTML elements. Therefore, you can manipulate SVG graphics in the same way you
+<p>Amaya handles SVG elements as structured components, in the same way as HTML
+elements. Therefore, you can manipulate SVG graphics in the same way you
 manipulate other parts of HTML documents.</p>
 
-<p>All editing commands provided by Amaya for handling text are also
-available for handling graphics (for example it's possible to create a link
-on a SVG element).</p>
+<p>All editing commands provided by Amaya for handling text are also available
+for handling graphics (for example it's possible to create a link on a SVG
+element).</p>
 
-<p>Editing new SVG graphics in Amaya is not yet possible but the Amaya
-development team is working on it.</p>
+<p><strong>Warning: SVG authoring is under development. You may find bugs not
+fixed yet and the user interface is likely to change in the future.</strong></p>
+
+<h3>Creating Graphics with the Palette</h3>
+
+<p>To create a new SVG element in a document, move the insertion point to the
+position where you want to insert it, and then click on a button of the SVG
+panel.</p>
+
+<p>The available graphics elements are:</p>
+<ul>
+  <li>connectors: line, simple or double arrow, zigzag.</li>
+  <li>text or embedded HTML fragment (<code>foreignObject</code>) and
+  image.</li>
+  <li>basic shapes: square, rectangle, diamond, parallelogram, trapezium,
+    triangles, circle, ellipse.</li>
+  <li>polygon, polyline, open and close Bézier curves.</li>
+  <li>3D objects: cube, parallelepided, cylinder.</li>
+</ul>
+
+<p>In formatted view, the creation of graphics requires direct interaction:</p>
+<ul>
+  <li>for connectors, basic shapes or 3D objects: you first select the position
+    of the left corner by pressing the left mouse button. While holding down
+    the button, move the mouse to the position of the opposite corner, then
+    release the button.</li>
+  <li>for text and foreignObject: click on the position where you want to
+    insert the element.</li>
+  <li>for polygon and polyline: enter each point by clicking the corresponding
+    position with the left mouse button. To indicate the last point, use a
+    double-click.</li>
+  <li>Bézier curves: same as polygons except that you need to indicate the
+    direction of the tangents.</li>
+</ul>
+
+<h3>Applying transformations to graphics</h3>
+
+<p>To apply transformations on one object, you must first select it. The
+rectangular selection is useful to select several objects. The available
+transformations are:</p>
+<ul>
+  <li>group/ungroup objects</li>
+  <li>changing the level of objects: send to back, one level down, one level
+    up, bring to front</li>
+  <li>rotate, rotate 90°.</li>
+  <li>vertical and horizontal symmetry</li>
+  <li>alignments: left, center, right, top, middle, bottom. If only one object
+    is selected, the alignment is made according to the SVG canvas.</li>
+</ul>
+
+<h3>Styling graphics</h3>
+
+<p>You can change the color of the graphics using the Style panel:</p>
+<ul>
+  <li>background color is used to fill the graphics.</li>
+  <li>text color is used for the stroke color.</li>
+</ul>
 </div>
 </body>
 </html>

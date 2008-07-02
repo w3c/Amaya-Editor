@@ -10,13 +10,12 @@
 <body xml:lang="fr" lang="fr">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Math.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Xml.html.fr" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Xml.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
@@ -31,12 +30,70 @@ href="http://www.w3.org/TR/svg/">SVG</a>).</p>
 façon que les éléments HTML. Donc vous pouvez manipuler les graphiques SVG
 comme n'importe quelle autre partie des documents HTML.</p>
 
-<p>Toutes les fonctions d'édition fournies par Amaya pour éditer le texte
-sont aussi disponibles pour éditer le graphique (par exemple il est possible
-de créer un lien sur un élément SVG).</p>
+<p>Toutes les fonctions d'édition fournies par Amaya pour éditer le texte sont
+aussi disponibles pour éditer le graphique (par exemple il est possible de
+créer un lien sur un élément SVG).</p>
 
-<p>L'édition de nouveaux graphiques SVG dans Amaya n'est pas encore possible
-mais l'équipe de développement d'Amaya travaille sur ce projet.</p>
+<p><strong>Attention: L'édition SVG est en phase de développement. Vous
+trouverez certainement des bugs non encore corrigés et l'interface utilisateur
+risque de changer dans le futur.</strong></p>
+
+<h3><a name="L288" id="L288">Création de graphiques avec la palette</a></h3>
+
+<p>Pour créer un nouvel élément SVG dans un document, vous devez juste placer
+le point d'insertion à la position où vous voulez l'insérer, et cliquer sur un
+bouton de la palette.</p>
+
+<p>Les graphiques disponibles sont :</p>
+<ul>
+  <li>Une ligne, une simple ou double flèche, un "zigzag".</li>
+  <li>texte, fragment de HTML embarqué (<code>foreignObject</code>) et
+  image.</li>
+  <li>figures élémentaires : carré, rectangle, losange, parallélogramme,
+    trapèze, triangles, cercle et ellipse.</li>
+  <li>polygone et segments de droite, courbes ouverte et fermée.</li>
+  <li>Objets 3D: cube, parallelepipède, cylindre.</li>
+</ul>
+
+<p>En vue formattée, la création d'une forme nécessite quelques interactions
+directes avec l'utilisateur:</p>
+<ul>
+  <li>pour les connecteurs, figures élémentaires et objets 3D: vous devez tout
+    d'abord sélectionner la position du coin gauche en cliquant avec le bouton
+    gauche de la souris. Laissez le bouton appuyé et déplacez la souris jusqu'à
+    la position du coin opposé, puis lâchez le bouton.</li>
+  <li>pour le texte et les foreignObject : cliquez à la position où vous
+    souhaitez inserer l'élément.</li>
+  <li>pour les polygones et segments de droite: entrez chaque point en cliquant
+    la position correspondante avec le bouton gauche de la souris. Pour
+    indiquer le dernier point, faites un double clic.</li>
+  <li>coubes de Bézier: idem que pour les polygones, sauf que vous devez
+    indiquer la direction des tangentes.</li>
+</ul>
+
+<h3>Appliquer des transformations aux graphiques</h3>
+
+<p>Pour appliquer des transformations à un objet, il faut d'abord le
+sélectionner. La sélection rectangulaire est utile pour sélectionner plusieurs
+objets. Les transformations disponibles sont:</p>
+<ul>
+  <li>grouper/dégrouper des objets</li>
+  <li>changer le niveau des objets: envoyer à arrière-plan, descendre d'un
+    niveau, monter d'une niveau, monter au premier-plan.</li>
+  <li>tourner, pivoter de 90°.</li>
+  <li>symétries verticale et horizontale.</li>
+  <li>alignements : gauche, centre, droite, haut, milieu, bas. Si un seul objet
+    est sélectionné, l'alignement se fait par rapport au cadre SVG.</li>
+</ul>
+
+<h3>Appliquer du style aux graphiques</h3>
+
+<p>Vous pouvez changer la couleur des graphiques en utilisant le panneau de
+Style :</p>
+<ul>
+  <li>La couleur de fond est utilisée pour remplir les graphiques.</li>
+  <li>La couleur de texte est utilisée pour la couleur de contour.</li>
+</ul>
 </div>
 </body>
 </html>
