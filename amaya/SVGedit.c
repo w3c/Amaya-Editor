@@ -3148,7 +3148,7 @@ void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
   x[3] = x[0] + dummy1;
   y[3] = y[0] + dummy2;
 
-  //printf("x1=%f y1=%f x2=%f y2=%f\n", x[0], y[0], x[3], y[3]);
+  printf("x1=%f y1=%f width=%d height=%d\n", x[0], y[0], dummy1, dummy2);
 
   x[1] = x[3];
   y[1] = y[0];
@@ -3182,7 +3182,7 @@ void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
   *width = xmax - xmin;
   *height = ymax - ymin;
 
-  //printf("x'=%f y'=%f width=%f heigth=%f \n", *X, *Y, *width, *height);
+  //  printf("x'=%f y'=%f width=%f heigth=%f \n", *X, *Y, *width, *height);
 
 #endif /* _SVG */
 }

@@ -83,6 +83,7 @@ static int             BiwIndex = 0;
 #include "textcommands_f.h"
 #include "units_f.h"
 #include "windowdisplay_f.h"
+#include "spline_f.h"
 
 #define		_2xPI		6.2832
 #define		_1dSQR2		0.7071
@@ -951,76 +952,275 @@ static void GivePolylineSize (PtrAbstractBox pAb, int zoom, int *width,
       /* La hauteur est donnee par le point limite */
       *height =  PixelValue (pBuffer->BuPoints[0].YCoord, UnPixel, NULL, zoom);
     }
+
+  printf("GivePolylineSize>> width=%d, height=%d\n", *width, *height);
 }
 
 /*----------------------------------------------------------------------
+  UpdateLimits
+  Update the values min and max so that min <= v <= max
   ----------------------------------------------------------------------*/
-static void UpdateLimits(int *xmin, int *ymin, int *xmax, int *ymax,
-			 int x, int y, ThotBool First)
+static void UpdateLimits(int *min, int *max, int v)
 {
-  if(First)
+  if(min && max)
     {
-      *xmin = x; *xmax = x;
-      *ymin = y; *ymax = y;
-      return;
+      if(v < *min)*min = v;
+      else if(v > *max)*max = v;
+    }
+}
+
+/*----------------------------------------------------------------------
+  UpdateLimits_QuadraticBezier
+
+  Update the values min and max using f(0), f(1) and the values of f
+  at its critical points. f is defined by:
+
+  (%i1) f(t) := a0*(1-t)^2 + 2*a1*(1-t)*t + a2*t^2;
+  (%o1) f(t):=a0*(1-t)^2+2*a1*(1-t)*t+a2*t^2
+  (%i2) diff(f(t), t);
+  (%o2) 2*a2*t-2*a1*t+2*a1*(1-t)-2*a0*(1-t)
+  (%i3) partfrac(%, t);
+  (%o3) (2*a2-4*a1+2*a0)*t+2*a1-2*a0
+
+  ----------------------------------------------------------------------*/
+static void UpdateLimits_QuadraticBezier(int a0, int a1, int a2, 
+					int *min, int *max)
+{
+  int f_t;
+  double a,b,t;
+
+  UpdateLimits(min, max, a0);
+  UpdateLimits(min, max, a2);
+
+  a = 2*a2-4*a1+2*a0;
+  b = 2*a1-2*a0;
+
+  if(a != 0)
+    {
+      t = -b/a;
+      
+      if(t >= 0 && t <= 1)
+	{
+	  f_t = (int)(a0*(1-t)*(1-t)+
+		      2*a1*(1-t)*t+
+		      a2*t*t);
+	  UpdateLimits(min, max, f_t);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  UpdateLimits_EvaluateCubicBezier
+  ----------------------------------------------------------------------*/
+static void UpdateLimits_EvaluateCubicBezier(int a0, int a1, int a2, int a3,
+						double t, int *min, int *max)
+{
+  int f_t;
+
+  if(t >= 0 && t <= 1)
+    {
+      f_t = (int)(t*t*t*a3+
+		  3*(1-t)*t*t*a2+
+		  3*(1-t)*(1-t)*t*a1+
+		  (1-t)*(1-t)*(1-t)*a0);
+      UpdateLimits(min, max, f_t);
+    }
+}
+
+/*----------------------------------------------------------------------
+  UpdateLimits_CubicBezier
+
+  Update the values min and max using f(0), f(1) and the values of f
+  at its critical points. f is defined by:
+
+  (%i1) f(t) := t^3*a3+3*(1-t)*t^2*a2+3*(1-t)^2*t*a1+(1-t)^3*a0;
+  (%o1) f(t):=t^3*a3+3*(1-t)*t^2*a2+3*(1-t)^2*t*a1+(1-t)^3*a0
+  (%i2) diff(f(t), t);
+  (%o2) 3*a3*t^2-3*a2*t^2+6*a2*(1-t)*t-6*a1*(1-t)*t+3*a1*(1-t)^2-3*a0*(1-t)^2
+  (%i3) partfrac(%, t);
+  (%o3) (3*a3-9*a2+9*a1-3*a0)*t^2+(6*a2-12*a1+6*a0)*t+3*a1-3*a0
+
+  ----------------------------------------------------------------------*/
+static void UpdateLimits_CubicBezier(int a0, int a1, int a2, int a3,
+				      int *min, int *max)
+{
+  double a,b,c,delta;
+
+  UpdateLimits(min, max, a0);
+  UpdateLimits(min, max, a3);
+
+  a = 3*a3-9*a2+9*a1-3*a0;
+  b = 6*a2-12*a1+6*a0;
+  c = 3*a1-3*a0;
+
+  if(a == 0)
+    {
+      /* bX + c = 0 ? */
+
+      if(b != 0)
+	UpdateLimits_EvaluateCubicBezier(a0, a1, a2, a3,
+					  -c/b,
+					 min, max);
+    }
+  else
+    {
+      /* aX^2 + bX + c = 0 ? */
+
+      delta = b*b - 4*a*c;
+      
+      if(delta == 0)
+	  /* One root */
+	UpdateLimits_EvaluateCubicBezier(a0, a1, a2, a3,
+					  -b/(2*a),
+					 min, max);
+      else if(delta > 0)
+	{
+	  /* Two roots */
+	  UpdateLimits_EvaluateCubicBezier(a0, a1, a2, a3,
+					    (-b + sqrt(delta))/(2*a),
+					   min, max);
+
+	  UpdateLimits_EvaluateCubicBezier(a0, a1, a2, a3,
+					    (-b - sqrt(delta))/(2*a),
+					   min, max);
+	}
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  UpdateLimits_EllipticalArc
+  ----------------------------------------------------------------------*/
+static void UpdateLimits_EllipticalArc(PtrPathSeg pPa,
+				       int *xmin,
+				       int *xmax,
+				       int *ymin,
+				       int *ymax)
+{
+#define ALLOC_POINTS    300
+
+  ThotPoint           *points;
+  int                  i,maxpoints, npoints;
+  double               x1, y1, x2, y2, cx1, cy1;
+  x1 = (double) pPa->XStart;
+  y1 = (double) pPa->YStart;
+  x2 = (double) pPa->XEnd;
+  y2 = (double) pPa->YEnd;
+  cx1 = (double) pPa->XRadius;
+  cy1 = (double) pPa->YRadius;
+
+  /* get a buffer to store the points of the polygon */
+  maxpoints = ALLOC_POINTS;
+  points = (ThotPoint *) TtaGetMemory (maxpoints * sizeof(ThotPoint));
+  memset (points, 0, maxpoints * sizeof(ThotPoint));
+  npoints = 0;
+
+  /* Build the polyline that approximates the elliptic arc */
+  EllipticSplit ( 0, 0, 0,
+		  x1, y1,
+		  x2, y2,
+		  cx1, cy1,
+		  (int)fmod((double)pPa->XAxisRotation, (double)360),
+		  pPa->LargeArc, pPa->Sweep,
+		  &points, &npoints, &maxpoints);
+
+  /* Update the limit according to each point */
+  for(i = 0; i < npoints; i++)
+    {
+      UpdateLimits(xmin, xmax, (int)points[i].x);
+      UpdateLimits(ymin, ymax, (int)points[i].y);
     }
 
-  if(x < *xmin)*xmin = x;
-  else if(x > *xmax)*xmax = x;
-
-  if(y < *ymin)*ymin = y;
-  else if(y > *ymax)*ymax = y;
+  TtaFreeMemory(points);
 }
 
 /*----------------------------------------------------------------------
   GivePathSize gives the internal size of a path.
   ----------------------------------------------------------------------*/
 static void GivePathSize (PtrAbstractBox pAb, int zoom, int *width,
-                              int *height)
+			  int *height)
 {
   PtrPathSeg       pPa;
-  int xmin, xmax, ymin, ymax, x0, y0;
-  ThotBool FirstPoint = TRUE;
+  int xmin, xmax, ymin, ymax;
 
   pPa = pAb->AbFirstPathSeg;
 
-  while(pPa)
-    {
-      switch(pPa->PaShape)
-	{
-
-	case PtLine:
-	case PtEllipticalArc:
-	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XStart, pPa->YStart,
-		       FirstPoint);
-	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XEnd, pPa->YEnd,
-		       FALSE);
-	  break;
-
-	case PtCubicBezier:
-        case PtQuadraticBezier:
-	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XStart, pPa->YStart,
-		       FirstPoint);
-	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, pPa->XEnd, pPa->YEnd, FALSE);
-	  x0= (pPa->XStart + 3*pPa->XCtrlStart + 3*pPa->XCtrlEnd + pPa->XEnd)/8;
-	  y0= (pPa->YStart + 3*pPa->YCtrlStart + 3*pPa->YCtrlEnd + pPa->YEnd)/8;
-	  UpdateLimits(&xmin, &ymin, &xmax, &ymax, x0, y0, FALSE);
-	  break;
-	}
-      pPa = pPa -> PaNext;
-      FirstPoint = FALSE;
-    }
-
-  if(!FirstPoint)
-    {
-      *width =  PixelValue (xmax - xmin, UnPixel, NULL, zoom);
-      *height =  PixelValue (ymax - ymin, UnPixel, NULL, zoom);
-    }
-  else
+  if(!pPa)
     {
       *width = 0;
       *height = 0;
     }
+  else
+    {
+      /* Take the coordinates of the first point as the initial values for
+	 xmin, ymin, xmax, ymax */
+      xmin = pPa->XEnd;
+      xmax = pPa->XEnd;
+      ymin = pPa->YEnd;
+      ymax = pPa->YEnd;
+
+      /* Now look each fragment of the path */
+      while(pPa)
+	{
+	  switch(pPa->PaShape)
+	    {
+	    case PtLine:
+	      UpdateLimits(&xmin, &xmax, pPa->XStart);
+	      UpdateLimits(&ymin, &ymax, pPa->YStart);
+	      UpdateLimits(&xmin, &xmax, pPa->XEnd);
+	      UpdateLimits(&ymin, &ymax, pPa->YEnd);
+	      break;
+	      
+	    case PtEllipticalArc:
+	      UpdateLimits_EllipticalArc(pPa,
+					 &xmin,
+					 &xmax,
+					 &ymin,
+					 &ymax);
+	      break;
+
+	    case PtQuadraticBezier:
+	      /* Update horizontal limits */
+	      UpdateLimits_QuadraticBezier(pPa->XStart,
+					    pPa->XCtrlStart,
+					    pPa->XEnd,
+					    &xmin,
+					    &xmax);
+
+	      /* Update vertical limits */
+	      UpdateLimits_QuadraticBezier(pPa->YStart,
+					    pPa->YCtrlStart,
+					    pPa->YEnd,
+					    &ymin,
+					    &ymax);
+	      break;
+
+	    case PtCubicBezier:
+	      /* Update horizontal limits */
+	      UpdateLimits_CubicBezier(pPa->XStart,
+					pPa->XCtrlStart,
+					pPa->XCtrlEnd,
+					pPa->XEnd,
+					&xmin,
+					&xmax);
+
+	      /* Update vertical limits */
+	      UpdateLimits_CubicBezier(pPa->YStart,
+					pPa->YCtrlStart,
+					pPa->YCtrlEnd,
+					pPa->YEnd,
+					&ymin,
+					&ymax);
+	      break;
+	    }
+	  pPa = pPa -> PaNext;
+	}
+
+      *width =  PixelValue (xmax - xmin, UnPixel, NULL, zoom);
+      *height =  PixelValue (ymax - ymin, UnPixel, NULL, zoom);
+    }
+
+  printf("GivePathSize>> width=%d, height=%d\n", *width, *height);
 }
 
 
@@ -4415,7 +4615,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                           /* Libere les anciens buffers */
                           FreePolyline (pBox);
                           /* Recopie les buffers du pave */
-                          pBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
+                          pBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer,
+						     NULL);
                           pBox->BxNChars = pAb->AbVolume;
 		      
                           /* remonte a la recherche d'un ancetre elastique */
@@ -4440,9 +4641,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                       GivePolylineSize (pAb, zoom, &width, &height);
                       break;
                     case LtPath:
-                      /* by default don't change the size */
-                      width = pAb->AbBox->BxWidth;
-                      height = pAb->AbBox->BxHeight;
                       if (pAb->AbChange)
                         {
                           /* free the old path descriptor */
@@ -4450,8 +4648,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                           /* copy the new one from the abstract box */
                           pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
                           pBox->BxNChars = pAb->AbVolume;
-			  GivePathSize (pAb, zoom, &width, &height);
                         }
+
+		      GivePathSize (pAb, zoom, &width, &height);
                       break;
                     default:
                       break;

@@ -577,10 +577,15 @@ void  EllipticSplit (int frame, int x, int y,
       Rysin = yradius * sin (thetabegin + theta);
       x3 = Phicos*Rxcos - Phisin*Rysin + cX;
       y3 = Phisin*Rxcos + Phicos*Rysin + cY;
-      x3 = (double) (x + PixelValue ((int) x3, UnPixel, NULL,
+
+      if(frame > 0)
+	{
+	  /* Update the values according to zoom, if the frame is mentionned */
+	  x3 = (double) (x + PixelValue ((int) x3, UnPixel, NULL,
 			    ViewFrameTable[frame - 1].FrMagnification));
-      y3 = (double) (y + PixelValue ((int) y3, UnPixel, NULL,
+	  y3 = (double) (y + PixelValue ((int) y3, UnPixel, NULL,
 			    ViewFrameTable[frame - 1].FrMagnification));
+	}
       PolyNewPoint (x3, y3, points, npoints, maxpoints); 
       theta += cprim;
     }  
