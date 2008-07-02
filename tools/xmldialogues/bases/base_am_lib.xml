@@ -4299,12 +4299,12 @@
 	<message xml:lang="fr">Descendre d'un niveau</message>
 </label>
 <label define="TMSG_TURNLEFT">
-	<message xml:lang="en">90% left</message>
-	<message xml:lang="fr">90% à gauche</message>
+	<message xml:lang="en">90° left</message>
+	<message xml:lang="fr">90° à gauche</message>
 </label>
 <label define="TMSG_TURNRIGHT">
-	<message xml:lang="en">90% right</message>
-	<message xml:lang="fr">90% à droite</message>
+	<message xml:lang="en">90° right</message>
+	<message xml:lang="fr">90° à droite</message>
 </label>
 <label define="TMSG_ROTATE">
 	<message xml:lang="en">Rotate</message>
