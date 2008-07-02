@@ -2787,7 +2787,6 @@ void SaveDocument (Document doc, View view)
   Document	      xmlDoc;
   DisplayMode         dispMode;
   char                tempname[MAX_LENGTH];
-  char                localFile[MAX_LENGTH];
   char                msg[MAX_LENGTH];
   char               *ptr;
   int                 i;
@@ -2910,7 +2909,6 @@ void SaveDocument (Document doc, View view)
       ptr = GetLocalPath (doc, DocumentURLs[doc]);
       /*  no need to protect against a null ptr, as GetLocalPath
           will always return something at this point */
-      strcpy (localFile, ptr);
       TtaFreeMemory (ptr);
       /* it's a complete name: save it */
       if (ok)
