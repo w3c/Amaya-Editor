@@ -68,7 +68,6 @@ static int          GridSize = 1;
   #include "AmayaTransformEvtHandler.h"
 #endif /* _WX */
 
-
 /*----------------------------------------------------------------------
   TtaGridDoAlign export the macro DO_ALIGN used to align points on a grid
   ----------------------------------------------------------------------*/
@@ -1664,8 +1663,8 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
   /* SVG ancestor coordinates to SVG canvas */
-  newx2 = (int)(round(a * newx + c * newy + e));
-  newy2 = (int)(round(b * newx + d * newy + f));
+  newx2 = (int)(floor(a * newx + c * newy + e));
+  newy2 = (int)(floor(b * newx + d * newy + f));
 
   /* Modify x and y if asked */
   if(convert)
