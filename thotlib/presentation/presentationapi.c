@@ -2660,8 +2660,16 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
                 {
                   x = pAb->AbEnclosing->AbBox->BxWidth;
                   y = pAb->AbEnclosing->AbBox->BxHeight;
-                  *xCoord = pBox->BxXOrg - pAb->AbEnclosing->AbBox->BxXOrg;
-                  *yCoord = pBox->BxYOrg - pAb->AbEnclosing->AbBox->BxYOrg;
+                  *xCoord = pBox->BxXOrg;
+                  *yCoord = pBox->BxYOrg;
+                  if (pAb->AbEnclosing->AbElement &&
+                      !TypeHasException (ExcIsDraw,
+                                         pAb->AbEnclosing->AbElement->ElTypeNumber,
+                                         pAb->AbEnclosing->AbElement->ElStructSchema))
+                    {
+                      *xCoord -= pAb->AbEnclosing->AbBox->BxXOrg;
+                      *yCoord -= pAb->AbEnclosing->AbBox->BxYOrg;
+                    }
                 }
 	      
               /* Convert values to the requested unit */
