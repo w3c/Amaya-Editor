@@ -1146,7 +1146,7 @@ static void GivePathLimits (PtrAbstractBox pAb, int zoom,
 
   if(!pPa)
     {
-      if(xmin && ymin)
+      if(x0 && y0)
 	{
 	  *x0 = 0;
 	  *y0 = 0;
