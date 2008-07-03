@@ -2680,8 +2680,10 @@ extern char *TtaGetTransformAttributeValue(Document document, Element el)
 
   ThotBool add;
   PtrTransform pPa;
-  PtrTransform transform =
-    (PtrTransform)TtaDecomposeTransform(((PtrElement) el)->ElTransform);
+  PtrTransform transform;
+
+  if(!el)return NULL;
+  transform = (PtrTransform)TtaDecomposeTransform(((PtrElement) el)->ElTransform);
 
   *buffer = '\0';
 
@@ -2783,76 +2785,20 @@ extern void TtaGetMatrixTransform(Document document, Element el,
 				    float *f
 					    )
 {
-  PtrTransform transform = (PtrTransform)((PtrElement) el)->ElTransform;
-  float T, cosT,sinT;
-  float cx,cy;
+  PtrTransform transform;
 
-  *a = 1;
-  *b = 0;
-  *c = 0;
-  *d = 1;
-  *e = 0;
-  *f = 0;
+  if(!el)return;
+  transform = (PtrTransform)TtaSimplifyTransformMatrix(((PtrElement) el)->ElTransform);
 
-  if(transform)
-    {
-      switch(transform->TransType)
-        {
-        case PtElTranslate:
-        case PtElAnimTranslate:
-          *e = transform -> XScale;
-	  *f = transform -> YScale;
-          break;
 
-        case PtElScale:
-	  *a = transform -> XScale;
-	  *d = transform -> YScale;
-          break;
+  *a = transform->AMatrix;
+  *b = transform->BMatrix;
+  *c = transform->CMatrix;
+  *d = transform->DMatrix;
+  *e = transform->EMatrix;
+  *f = transform->FMatrix;
 
-        case PtElViewBox:
-          break;
-
-        case PtElRotate:
-        case PtElAnimRotate:
-	  T = transform->TrAngle * M_PI / 180;
-	  cosT = cos(T);sinT = sin(T);
-	  cx = transform->XRotate;
-	  cy = transform->YRotate;
-
-	  *a = cosT;
-	  *b = sinT;
-	  *c = -sinT;
-	  *d = cosT;
-
-	  *e = cy*sinT - cx*cosT + cx;
-	  *f = -cx*sinT - cy*cosT + cy;
-          break;  
-
-        case PtElMatrix:
-	  *a = transform->AMatrix;
-	  *b = transform->BMatrix;
-	  *c = transform->CMatrix;
-	  *d = transform->DMatrix;
-	  *e = transform->EMatrix;
-	  *f = transform->FMatrix;
-          break;	  
-
-        case PtElSkewX:
-	  T = transform->TrAngle * M_PI / 180;
-	  *c = tan(T);
-	  break;
-
-        case PtElSkewY:
-	  T = transform->TrAngle * M_PI / 180;
-	  *b = tan(T);
-          break;	  
-
-        default:
-	  break;
-	}
-
-    }
-
+  TtaFreeTransform(transform);
 }
 
 /*----------------------------------------------------------------------

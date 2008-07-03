@@ -395,8 +395,16 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	case 3:
 	  /* Moving center of rotation  */
-	  cx2 = m_mouse_x;
-	  cy2 = m_mouse_y;
+	  if(MouseCoordinatesToSVG(m_document, m_pFrame,
+				   m_x0, m_y0,
+				   m_width, m_height,
+				   m_inverse,
+				   FALSE, &m_mouse_x, &m_mouse_y))
+	    {
+	      cx2 = m_mouse_x;
+	      cy2 = m_mouse_y;
+	    }
+
 	  break;
 
 	default:

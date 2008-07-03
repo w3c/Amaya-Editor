@@ -3304,7 +3304,7 @@ void Ungroup (Document doc, Element el)
   ElementType   elType;
   SSchema       svgSchema;  
   Element child, nextchild, sibling;
-
+  float a,b,c,d,e,f;
 
   svgSchema = GetSVGSSchema (doc);
   elType = TtaGetElementType (el);
@@ -3315,9 +3315,8 @@ void Ungroup (Document doc, Element el)
     
     return;
 
-   /* TODO:
-     - copy the properties of the g element to each of its children
-   */
+  /* Get the transform matrix of the g element */
+  TtaGetMatrixTransform(doc, el, &a, &b, &c, &d, &e, &f);
 
   child = TtaGetFirstChild(el);
   sibling = el;
@@ -3330,11 +3329,18 @@ void Ungroup (Document doc, Element el)
       if(!(elType.ElTypeNum == SVG_EL_title ||
 	   elType.ElTypeNum == SVG_EL_desc))
 	{
+	  /* Move the child */
 	  TtaRegisterElementDelete (child, doc);
 	  TtaRemoveTree(child, doc);
 	  TtaInsertSibling(child, sibling, FALSE, doc);
 	  TtaRegisterElementCreate (child, doc);
+
+	  /* Apply the transformation matrix to the children */
+	  TtaApplyMatrixTransform (doc, child, a, b, c, d, e, f);
+	  UpdateTransformMatrix(doc, child);
+
 	  sibling = child;
+
 	}
       child = nextchild;
     }
