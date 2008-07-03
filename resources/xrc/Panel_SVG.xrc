@@ -164,6 +164,9 @@
           <object class="tool" name="wxID_PANEL_SVG_FLIP_HORIZONTALLY">
             <bitmap>../icons/16x16/SVG_flip_horizontally.png</bitmap>
           </object>
+          <object class="tool" name="wxID_PANEL_SVG_SKEW">
+            <bitmap>../icons/16x16/SVG_skew.png</bitmap>
+          </object>
         </object>
       </object>
       <object class="sizeritem">

@@ -701,5 +701,6 @@ FUNCTIONS
   TransformSVG_AlignBottom,
   TransformSVG_Rotate,
   SVG_Select,
-  CreateSVG_Image;
+  CreateSVG_Image,
+  TransformSVG_Skew;
 END

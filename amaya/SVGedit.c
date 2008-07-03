@@ -2974,6 +2974,12 @@ void TransformGraphicElement (Document doc, View view, int entry)
       UpdateTransformMatrix(doc, selected[0]);
       break;
 
+    case 42:   /* Skew */
+      AskTransform(doc, svgAncestor, svgCanvas, 4, selected[0]);
+      UpdateTransformMatrix(doc, selected[0]);
+      break;
+
+
       /* Translate, Scale */
 
     }
@@ -3993,4 +3999,12 @@ void SVG_Select (Document document, View view)
 void CreateSVG_Image (Document document, View view)
 {
   AddNewImage (document, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_Skew
+  ----------------------------------------------------------------------*/
+void TransformSVG_Skew (Document document, View view)
+{
+  TransformGraphicElement (document, view, 42);
 }

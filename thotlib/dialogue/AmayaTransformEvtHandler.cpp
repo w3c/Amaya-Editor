@@ -46,13 +46,13 @@ static int cx2, cy2;
 static float cx, cy;
 
 extern void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
-				       float *Y, float *width, float *height);
+					    float *Y, float *width, float *height);
 static ThotBool ButtonDown = TRUE;
 
 
 /*----------------------------------------------------------------------
   DrawLine
- *----------------------------------------------------------------------*/
+  *----------------------------------------------------------------------*/
 static void DrawRotationCenter()
 {
 #define CURSOR_SIZE 15
@@ -151,26 +151,26 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
     }
 
 
+  /*
+    Rectangle arround the object:
+	
+    (x,y)-----width--------| 
+    |                      |
+    |                      |
+    |       (cx,cy)        height
+    |                      |
+    |                      |
+    |----------------------|
+
+  */
+  GetPositionAndSizeInParentSpace(m_document, m_el,
+				  &x, &y, &width, &height);
+     
+  cx = x + width/2;
+  cy = y + height/2;
+
   if(m_type == 2)
     {
-      /*
-	Rectangle arround the object:
-	
-	(x,y)-----width--------| 
-	|                      |
-	|                      |
-	|       (cx,cy)        height
-	|                      |
-	|                      |
-	|----------------------|
-
-      */
-      GetPositionAndSizeInParentSpace(m_document, m_el,
-				      &x, &y, &width, &height);
-      
-      cx = x + width/2;
-      cy = y + height/2;
-
       SVGToMouseCoordinates(m_document, m_pFrame,
 			    m_x0, m_y0,
 			    m_width, m_height,
@@ -239,7 +239,7 @@ void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
     {
       /* Check whether the user is clicking on the center of rotation */
       if(abs(m_mouse_x - cx2) + abs(m_mouse_y - cy2) <= 20)
-	  m_type = 3;
+	m_type = 3;
     }
 
   if (IsFinish())return;
@@ -253,6 +253,8 @@ void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
 void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
   int x,y;
+
+  if (IsFinish())return;
 
   if(m_type == 3)
     {
@@ -273,12 +275,12 @@ void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
       cy = y;
 
       ButtonDown = FALSE;
-
       return;
+
     }
-  
+
   m_IsFinish = true;
-  if (IsFinish())return;
+
 }
 
 /*----------------------------------------------------------------------
@@ -301,6 +303,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
   int x1,y1,x2,y2;
   float theta, dx1, dx2, dy1, dy2, d;
   float det;
+  float skew;
 
 #define DELTA 10
 
@@ -317,16 +320,16 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
       /* Get the coordinates in the SVG canvas */
 
       MouseCoordinatesToSVG(m_document, m_pFrame,
-			m_x0, m_y0,
-			m_width, m_height,
-			m_inverse,
-			TRUE, &x1, &y1);
+			    m_x0, m_y0,
+			    m_width, m_height,
+			    m_inverse,
+			    TRUE, &x1, &y1);
 
       MouseCoordinatesToSVG(m_document, m_pFrame,
-			m_x0, m_y0,
-			m_width, m_height,
-			m_inverse,
-			TRUE, &x2, &y2);
+			    m_x0, m_y0,
+			    m_width, m_height,
+			    m_inverse,
+			    TRUE, &x2, &y2);
 
       /* Clear the center */
       if(m_type == 2 || m_type == 3)
@@ -350,18 +353,18 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  /* Rotate */
 
 	  /*
-                (dx1)               (x2,y2)
-             v1=(dy1)                /
-                               -->  /___
-                               v2  /    _
-                                  /     theta
-                (dx2)            /        |
-             v2=(dy2)           /         | 
-	                     (cx,cy)-----------------(x1,y1)
+	    (dx1)               (x2,y2)
+	    v1=(dy1)                /
+	    -->  /___
+	    v2  /    _
+	    /     theta
+	    (dx2)            /        |
+	    v2=(dy2)           /         | 
+	    (cx,cy)-----------------(x1,y1)
 
-                                           -->
-             d = ||v1||*||v2||             v1
-	   */
+	    -->
+	    d = ||v1||*||v2||             v1
+	  */
 
 	  dx1 = (x1 - cx);
 	  dx2 = (x2 - cx);
@@ -372,14 +375,14 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  if(d > 0)
 	    {
 	      /*
-		  {v1.v2 = d*cos(theta)
-                  {
-                  {             |dx1 dx2|
-                  {det(v1,v2) = |dy1 dy2| = d*sin(theta)
+		{v1.v2 = d*cos(theta)
+		{
+		{             |dx1 dx2|
+		{det(v1,v2) = |dy1 dy2| = d*sin(theta)
 
-		  => theta = sign(det(v1,v2))*acos((v1.v2)/d)
+		=> theta = sign(det(v1,v2))*acos((v1.v2)/d)
                         
-	       */
+	      */
 	      det = dx1*dy2 - dy1*dx2;
 	      theta = acos((dx1*dx2 + dy1*dy2)/d);
 	      if(det < 0)theta = -theta;
@@ -387,8 +390,10 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	      /* rotate(theta,cx,cy) */
 	      TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1, -cx, -cy);
 	      TtaApplyMatrixTransform (m_document, m_el,
-			       cos(theta), sin(theta), -sin(theta), cos(theta),
-			       +cx,+cy);
+				       cos(theta), sin(theta),
+				       -sin(theta), cos(theta),
+				       0,0);
+	      TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1, +cx, +cy);
 	    }
 
 	  break;
@@ -404,7 +409,47 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	      cx2 = m_mouse_x;
 	      cy2 = m_mouse_y;
 	    }
+	  break;
 
+	case 4:
+	  /* Skewing */
+
+	  /* Take the center of the shape as the origin */
+	  TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1, -cx, -cy);
+	  x1-=(int)cx;
+	  x2-=(int)cx;
+	  y1-=(int)cy;
+	  y2-=(int)cy;
+
+	  if(abs(y2 - y1) < abs(x2 - x1) && y1 != 0)
+	      /* Along the X axis:
+		 (x1)   (1   skew) (x2)
+                 (y1) = (       1) (y1)
+	       */ 
+	    {
+	      skew = ((float)(x1 - x2))/y1;
+	      TtaApplyMatrixTransform (m_document, m_el,
+				       1, 0,
+				       skew,
+				       1,
+				       0,0);
+	    }
+	  else if(abs(x2 - x1) < abs(y2 - y1) && x1 != 0)
+	    {
+	      /* Along the Y axis
+		 (x1)   (1    0) (x1)
+                 (y1) = (skew 1) (y2)
+	       */ 
+	      skew = ((float)(y1 - y2))/x1;
+	      TtaApplyMatrixTransform (m_document, m_el,
+				       1,
+				       skew,
+				       0, 1,
+				       0,0);
+	    }
+
+	  /* Move the shape to its initial position */
+	  TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1, +cx, +cy);
 	  break;
 
 	default:
@@ -439,18 +484,18 @@ void AmayaTransformEvtHandler::OnMouseWheel( wxMouseEvent& event )
   
   float scale;
 
-    {
-      scale = (event.GetWheelRotation() > 0 ? SCALE_ : 1/SCALE_);
+  {
+    scale = (event.GetWheelRotation() > 0 ? SCALE_ : 1/SCALE_);
 
-      TtaApplyMatrixTransform (m_document, m_el, scale, 0, 0, scale,
-			       0,
-			       0
-			       );
+    TtaApplyMatrixTransform (m_document, m_el, scale, 0, 0, scale,
+			     0,
+			     0
+			     );
 
-      DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
-      RedrawFrameBottom (m_FrameId, 0, NULL);
-      m_pFrame->GetCanvas()->Refresh();
-    }
+    DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
+    RedrawFrameBottom (m_FrameId, 0, NULL);
+    m_pFrame->GetCanvas()->Refresh();
+  }
 }
 
 

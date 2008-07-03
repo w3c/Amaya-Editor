@@ -702,6 +702,7 @@ HelpSVG
 &TransformSVG_Rotate
 &SVG_Select
 &CreateSVG_Image
+&TransformSVG_Skew
 
 ########### Javascript/DOM
 [javascript_dom]
