@@ -302,7 +302,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
   float theta, dx1, dx2, dy1, dy2, d;
   float det;
 
-#define DELTA 50
+#define DELTA 10
 
   m_mouse_x = event.GetX();
   m_mouse_y = event.GetY();
@@ -335,6 +335,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
       switch(m_type)
 	{
 	case 0:
+	  /* Translate */
 	  TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1,
 				   x2 - x1,
 				   y2 - y1
@@ -342,6 +343,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  break;
 
 	case 1:
+	  /* Scale */
 	  break;
 
 	case 2:

@@ -4673,8 +4673,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
 			}
 
 		      GivePathLimits (pAb, zoom,
-				      &(pBox->BxXOrg),
-				      &(pBox->BxYOrg),
+				      NULL,
+				      NULL,
 				      &width, &height);
 
                       break;
