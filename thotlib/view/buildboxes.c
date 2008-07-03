@@ -953,7 +953,6 @@ static void GivePolylineSize (PtrAbstractBox pAb, int zoom, int *width,
       *height =  PixelValue (pBuffer->BuPoints[0].YCoord, UnPixel, NULL, zoom);
     }
 
-  printf("GivePolylineSize>> width=%d, height=%d\n", *width, *height);
 }
 
 /*----------------------------------------------------------------------
@@ -1135,20 +1134,30 @@ static void UpdateLimits_EllipticalArc(PtrPathSeg pPa,
 }
 
 /*----------------------------------------------------------------------
-  GivePathSize gives the internal size of a path.
+  GivePathLimits
   ----------------------------------------------------------------------*/
-static void GivePathSize (PtrAbstractBox pAb, int zoom, int *width,
-			  int *height)
+static void GivePathLimits (PtrAbstractBox pAb, int zoom,
+			    int *x0, int *y0, int *width, int *height)
 {
   PtrPathSeg       pPa;
-  int xmin, xmax, ymin, ymax;
+  int xmin, ymin, xmax, ymax;
 
   pPa = pAb->AbFirstPathSeg;
 
   if(!pPa)
     {
-      *width = 0;
-      *height = 0;
+      if(xmin && ymin)
+	{
+	  *x0 = 0;
+	  *y0 = 0;
+	}
+
+
+      if(width && height)
+	{
+	  *width = 0;
+	  *height = 0;
+	}
     }
   else
     {
@@ -1216,11 +1225,18 @@ static void GivePathSize (PtrAbstractBox pAb, int zoom, int *width,
 	  pPa = pPa -> PaNext;
 	}
 
-      *width =  PixelValue (xmax - xmin, UnPixel, NULL, zoom);
-      *height =  PixelValue (ymax - ymin, UnPixel, NULL, zoom);
-    }
+      if(x0 && y0)
+	{
+	  *x0 = PixelValue (xmin, UnPixel, NULL, zoom);
+	  *y0 = PixelValue (ymin, UnPixel, NULL, zoom);
+	}
 
-  printf("GivePathSize>> width=%d, height=%d\n", *width, *height);
+      if(width && height)
+	{
+	  *width = PixelValue (xmax - xmin, UnPixel, NULL, zoom);
+	  *height = PixelValue (ymax - ymin, UnPixel, NULL, zoom);
+	}
+    }
 }
 
 
@@ -2991,7 +3007,11 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           pBox->BxNChars = pAb->AbVolume;
           pBox->BxXRatio = 1;
           pBox->BxYRatio = 1;
-	  GivePathSize (pAb, zoom, &width, &height);
+	  GivePathLimits (pAb, zoom,
+			  &(pBox->BxXOrg),
+			  &(pBox->BxYOrg),
+			  &width, &height);
+	  
           break;
         case LtCompound:
           if (pBox->BxType == BoTable)
@@ -3137,12 +3157,14 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       else if (pBox->BxType == BoCell)
         UpdateColumnWidth (pAb, NULL, frame);
     }
+
 #ifdef _GL
   pBox->BxClipX = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
   pBox->BxClipY = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
   pBox->BxClipW = pBox->BxW;
   pBox->BxClipH = pBox->BxH;
 #endif /* _GL */
+
   return (pBox);
 }
 
@@ -4648,9 +4670,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                           /* copy the new one from the abstract box */
                           pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
                           pBox->BxNChars = pAb->AbVolume;
-                        }
+			}
 
-		      GivePathSize (pAb, zoom, &width, &height);
+		      GivePathLimits (pAb, zoom,
+				      &(pBox->BxXOrg),
+				      &(pBox->BxYOrg),
+				      &width, &height);
+
                       break;
                     default:
                       break;

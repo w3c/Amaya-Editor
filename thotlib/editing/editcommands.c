@@ -2200,12 +2200,14 @@ void AskTransform(     Document doc,
   else
     {
       inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
-      TtaFreeTransform(CTM);
 
       if(inverse == NULL)
+	{
       /* Transform not inversible */
-	return;
+	  TtaFreeTransform(CTM);
+	  return;
 	}
+    }
 
   pFrame = &ViewFrameTable[frame - 1];
   /* Get the size of the origin of the ancestor */
@@ -2231,13 +2233,14 @@ void AskTransform(     Document doc,
   
   TransformSVG (frame,
 		doc, 
-		inverse,
+		CTM, inverse,
 		ancestorX, ancestorY,
 		canvasWidth, canvasHeight,
 		transform_type,
 		pBox);
 
-  if(inverse != NULL)TtaFreeTransform(inverse);
+  if(CTM)TtaFreeTransform(CTM);
+  if(inverse)TtaFreeTransform(inverse);
 }
 
 

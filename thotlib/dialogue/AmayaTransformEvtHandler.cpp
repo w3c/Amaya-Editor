@@ -39,10 +39,41 @@
 #include "AmayaTransformEvtHandler.h"
 
 static int lastX, lastY, m_mouse_x,m_mouse_y;
+
+/* Coordinates of the center of rotation */
+
+static int cx2, cy2;
+static float cx, cy;
+
 extern void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
 				       float *Y, float *width, float *height);
-static ThotBool move = TRUE;
+static ThotBool ButtonDown = TRUE;
 
+
+/*----------------------------------------------------------------------
+  DrawLine
+ *----------------------------------------------------------------------*/
+static void DrawRotationCenter()
+{
+#define CURSOR_SIZE 15
+
+  glEnable(GL_COLOR_LOGIC_OP);
+  glLogicOp(GL_XOR);
+
+  glColor4ub (127, 127, 127, 0);
+
+  glBegin(GL_LINE_STRIP);
+  glVertex2i(cx2-CURSOR_SIZE, cy2);
+  glVertex2i(cx2+CURSOR_SIZE, cy2);
+  glEnd ();
+
+  glBegin(GL_LINE_STRIP);
+  glVertex2i(cx2, cy2-CURSOR_SIZE);
+  glVertex2i(cx2, cy2+CURSOR_SIZE);
+  glEnd ();
+
+  glDisable(GL_COLOR_LOGIC_OP);
+}
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaTransformEvtHandler, wxEvtHandler)
 
@@ -77,7 +108,8 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler() : wxEvtHandler()
  *----------------------------------------------------------------------*/
 AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 						   Document doc,
-						   void *transform,
+						   void *CTM,
+						   void *inverse,
 						   int ancestorX,
 						   int ancestorY,
 						   int canvasWidth,
@@ -90,7 +122,8 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
   ,m_FrameId(p_frame->GetFrameId())
   ,m_box(box)
   ,m_document(doc)
-  ,m_transform(transform)
+  ,m_CTM(CTM)
+  ,m_inverse(inverse)
   ,m_x0(ancestorX)
   ,m_y0(ancestorY)
   ,m_width(canvasWidth)
@@ -99,6 +132,8 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
   ,m_el(NULL)
    
 {
+  float x, y, width, height;
+
   if(m_box && m_box -> BxAbstractBox)
     m_el = (Element)(m_box -> BxAbstractBox-> AbElement);
 
@@ -115,13 +150,52 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 
     }
 
-  move = FALSE;
+
+  if(m_type == 2)
+    {
+      /*
+	Rectangle arround the object:
+	
+	(x,y)-----width--------| 
+	|                      |
+	|                      |
+	|       (cx,cy)        height
+	|                      |
+	|                      |
+	|----------------------|
+
+      */
+      GetPositionAndSizeInParentSpace(m_document, m_el,
+				      &x, &y, &width, &height);
+      
+      cx = x + width/2;
+      cy = y + height/2;
+
+      SVGToMouseCoordinates(m_document, m_pFrame,
+			    m_x0, m_y0,
+			    m_width, m_height,
+			    m_CTM,
+			    cx,
+			    cy,
+			    &cx2, &cy2);
+
+      m_pFrame->GetCanvas()->Refresh();
+
+      /* Draw the initial center of rotation */
+      DrawRotationCenter();
+
+    }
+
+  ButtonDown = FALSE;
 }
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
 AmayaTransformEvtHandler::~AmayaTransformEvtHandler()
 {
+  /* Clear the center */
+  if(m_type == 2 || m_type == 3)
+    DrawRotationCenter();
 
   if (m_pFrame)
     {
@@ -133,6 +207,7 @@ AmayaTransformEvtHandler::~AmayaTransformEvtHandler()
       m_pFrame->GetCanvas()->SetCursor( wxNullCursor );
       m_pFrame->GetCanvas()->ReleaseMouse();
     }
+
 }
 
 /*----------------------------------------------------------------------
@@ -156,9 +231,16 @@ void AmayaTransformEvtHandler::OnChar( wxKeyEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
-  move = TRUE;
+  ButtonDown = TRUE;
   lastX = m_mouse_x;
   lastY = m_mouse_y;
+
+  if(m_type == 2)
+    {
+      /* Check whether the user is clicking on the center of rotation */
+      if(abs(m_mouse_x - cx2) + abs(m_mouse_y - cy2) <= 20)
+	  m_type = 3;
+    }
 
   if (IsFinish())return;
 }
@@ -170,6 +252,31 @@ void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
+  int x,y;
+
+  if(m_type == 3)
+    {
+      /* The user was moving the center */
+      m_type = 2;
+
+      /* Get the new coordinates */
+      x = cx2;
+      y = cy2;
+
+      MouseCoordinatesToSVG(m_document, m_pFrame,
+			    m_x0, m_y0,
+			    m_width, m_height,
+			    m_inverse,
+			    TRUE, &x, &y);
+
+      cx = x;
+      cy = y;
+
+      ButtonDown = FALSE;
+
+      return;
+    }
+  
   m_IsFinish = true;
   if (IsFinish())return;
 }
@@ -191,7 +298,6 @@ void AmayaTransformEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
-  float x, y, width, height, cx, cy;
   int x1,y1,x2,y2;
   float theta, dx1, dx2, dy1, dy2, d;
   float det;
@@ -201,9 +307,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
   m_mouse_x = event.GetX();
   m_mouse_y = event.GetY();
 
-
-
-  if(move && abs(m_mouse_x -lastX) + abs(m_mouse_y - lastY) > DELTA)
+  if(ButtonDown && abs(m_mouse_x -lastX) + abs(m_mouse_y - lastY) > DELTA)
     {
       x1 = lastX;
       y1 = lastY;
@@ -215,15 +319,18 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
       MouseCoordinatesToSVG(m_document, m_pFrame,
 			m_x0, m_y0,
 			m_width, m_height,
-			m_transform,
+			m_inverse,
 			TRUE, &x1, &y1);
-
 
       MouseCoordinatesToSVG(m_document, m_pFrame,
 			m_x0, m_y0,
 			m_width, m_height,
-			m_transform,
+			m_inverse,
 			TRUE, &x2, &y2);
+
+      /* Clear the center */
+      if(m_type == 2 || m_type == 3)
+	DrawRotationCenter();
 
       switch(m_type)
 	{
@@ -238,23 +345,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  break;
 
 	case 2:
-	  /*
-	    Rectangle arround the object:
-
-	            (x,y)-----width---------| 
-                     |                      |
-                     |                      |
-	             |       (cx,cy)        height
-                     |                      |
-                     |                      |
-                     |----------------------|
-
-	   */
-	  GetPositionAndSizeInParentSpace(m_document, m_el,
-					  &x, &y, &width, &height);
-
-	  cx = x + width/2;
-	  cy = y + height/2;
+	  /* Rotate */
 
 	  /*
                 (dx1)               (x2,y2)
@@ -300,6 +391,11 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	  break;
 
+	case 3:
+	  /* Moving center of rotation  */
+	  cx2 = m_mouse_x;
+	  cy2 = m_mouse_y;
+	  break;
 
 	default:
 	  break;
@@ -309,6 +405,10 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
       DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
       RedrawFrameBottom (m_FrameId, 0, NULL);
       m_pFrame->GetCanvas()->Refresh();
+
+      /* Redraw the center of rotation */
+      if(m_type == 2 || m_type == 3)
+	DrawRotationCenter();
 
       lastX = m_mouse_x;
       lastY = m_mouse_y;

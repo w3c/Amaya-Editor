@@ -1136,6 +1136,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 #ifdef _GL
           pBox->VisibleModification = TRUE;
 #endif /* _GL */
+
           /* stretched box not already handled */
           if (pBox->BxHorizFlex &&
               (pAb->AbLeafType != LtCompound || pBox->BxPacking == 0))
@@ -2046,6 +2047,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
               TtaFreeMemory ((STRING) pBox->BxPictInfo);
               pBox->BxPictInfo = NULL;
             }
+	  
           /* Check the validity of dependency rules */
           toMove = TRUE;
           if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)

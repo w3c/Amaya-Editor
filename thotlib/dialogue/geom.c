@@ -1423,7 +1423,7 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
   ----------------------------------------------------------------------*/
 int ShapeCreation (int frame,
 		   Document doc, 
-		   void *transform,
+		   void *inverseCTM,
 		   int ancestorX, int ancestorY,
 		   int canvasWidth, int canvasHeight,
 		   int shape,
@@ -1440,7 +1440,7 @@ int ShapeCreation (int frame,
   p_frame = FrameTable[frame].WdFrame;
   p_CreateShapeEvtHandler = new AmayaCreateShapeEvtHandler( p_frame,
 							    doc,
-							    transform,
+							    inverseCTM,
 							    ancestorX,
 							    ancestorY,
 							    canvasWidth,
@@ -1500,28 +1500,28 @@ int ShapeCreation (int frame,
 			ancestorY,
 			canvasWidth,
 			canvasHeight,
-			transform,
+			inverseCTM,
 			TRUE, x1, y1);
   MouseCoordinatesToSVG(doc, p_frame,
 			ancestorX,
 			ancestorY,
 			canvasWidth,
 			canvasHeight,
-			transform,
+			inverseCTM,
 			TRUE, x2, y2);
   MouseCoordinatesToSVG(doc, p_frame,
 			ancestorX,
 			ancestorY,
 			canvasWidth,
 			canvasHeight,
-			transform,
+			inverseCTM,
 			TRUE, x3, y3);
   MouseCoordinatesToSVG(doc, p_frame,
 			ancestorX,
 			ancestorY,
 			canvasWidth,
 			canvasHeight,
-			transform,
+			inverseCTM,
 			TRUE, x4, y4);
  
   return nb_points;
@@ -1532,7 +1532,7 @@ int ShapeCreation (int frame,
   ----------------------------------------------------------------------*/
 void TransformSVG (int frame,
 		   Document doc, 
-		   void *transform,
+		   void *CTM, void *inverse,
 		   int ancestorX, int ancestorY,
 		   int canvasWidth, int canvasHeight,
 		   int transform_type,
@@ -1545,7 +1545,8 @@ void TransformSVG (int frame,
   p_frame = FrameTable[frame].WdFrame;
   p_TransformEvtHandler = new AmayaTransformEvtHandler(p_frame,
 						       doc,
-						       transform,
+						       CTM,
+						       inverse,
 						       ancestorX,
 						       ancestorY,
 						       canvasWidth,
@@ -1619,7 +1620,7 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
 ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
 			       int x0, int y0,
 			       int width, int height,
-			       void *transform,
+			       void *inverseCTM,
 			       ThotBool convert, int *x, int *y
 			       )
 {
@@ -1630,15 +1631,15 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
   ThotBool inside = TRUE;
 
   float a,b,c,d,e,f;
-  if(transform)
+  if(inverseCTM)
     {
       /* Get the coefficients of the Matrix */
-      a = ((PtrTransform)(transform)) -> AMatrix;
-      b = ((PtrTransform)(transform)) -> BMatrix;
-      c = ((PtrTransform)(transform)) -> CMatrix;
-      d = ((PtrTransform)(transform)) -> DMatrix;
-      e = ((PtrTransform)(transform)) -> EMatrix;
-      f = ((PtrTransform)(transform)) -> FMatrix;
+      a = ((PtrTransform)(inverseCTM)) -> AMatrix;
+      b = ((PtrTransform)(inverseCTM)) -> BMatrix;
+      c = ((PtrTransform)(inverseCTM)) -> CMatrix;
+      d = ((PtrTransform)(inverseCTM)) -> DMatrix;
+      e = ((PtrTransform)(inverseCTM)) -> EMatrix;
+      f = ((PtrTransform)(inverseCTM)) -> FMatrix;
     }
   else
     {
@@ -1663,8 +1664,8 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
   ViewFrameTable[FrameId - 1].FrMagnification);
 
   /* SVG ancestor coordinates to SVG canvas */
-  newx2 = (int)(floor(a * newx + c * newy + e));
-  newy2 = (int)(floor(b * newx + d * newy + f));
+  newx2 = (int)(a * newx + c * newy + e);
+  newy2 = (int)(b * newx + d * newy + f);
 
   /* Modify x and y if asked */
   if(convert)
@@ -1685,4 +1686,47 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
   TtaSetStatus (doc, 1, buffer, NULL);
 
   return inside;
+}
+
+
+/*----------------------------------------------------------------------
+  MouseCoordinatesToSVG
+  ----------------------------------------------------------------------*/
+void SVGToMouseCoordinates(Document doc, AmayaFrame * p_frame,
+			   int x0, int y0,
+			   int width, int height,
+			   void *CTM,
+			   float x, float y,
+			   int *newx, int *newy
+			   )
+{
+  int FrameId;
+  float a,b,c,d,e,f;
+
+  if(CTM)
+    {
+      /* Get the coefficients of the Matrix */
+      a = ((PtrTransform)(CTM)) -> AMatrix;
+      b = ((PtrTransform)(CTM)) -> BMatrix;
+      c = ((PtrTransform)(CTM)) -> CMatrix;
+      d = ((PtrTransform)(CTM)) -> DMatrix;
+      e = ((PtrTransform)(CTM)) -> EMatrix;
+      f = ((PtrTransform)(CTM)) -> FMatrix;
+    }
+  else
+    {
+      /* By default, the transfom matrix is the identity */
+      a = 1; b = 0; c = 0; d = 1; e = 0; f = 0;
+    }
+
+
+  FrameId = p_frame->GetFrameId();
+
+  *newx = x0 + PixelValue ( (int)(a * x + c * y + e),
+			    UnPixel, NULL,
+			    ViewFrameTable[FrameId - 1].FrMagnification);
+
+  *newy = y0 + PixelValue ( (int)(b * x + d * y + f),
+		    UnPixel, NULL,
+		    ViewFrameTable[FrameId - 1].FrMagnification);
 }
