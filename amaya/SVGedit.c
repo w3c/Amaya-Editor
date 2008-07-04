@@ -346,6 +346,7 @@ void AttrCoordChanged (NotifyAttribute *event)
   -----------------------------------------------------------------------*/
 void AttrTransformChanged (NotifyAttribute *event)
 {
+  TtaRemoveTransform (event->document, event->element);
   ParseTransformAttribute (event->attribute, event->element, event->document,
                            FALSE);
   /*******   CheckSVGRoot (event->document, event->element); *****/
@@ -357,8 +358,7 @@ void AttrTransformChanged (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 ThotBool AttrTransformDelete (NotifyAttribute * event)
 {
-  ParseTransformAttribute (event->attribute, event->element, event->document,
-                           TRUE);
+  TtaRemoveTransform (event->document, event->element);
   return FALSE; /* let Thot perform normal operation */
 }
 

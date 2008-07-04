@@ -367,6 +367,7 @@ extern void TtaInsertTransform (Element element, void *transform,
 				 Document document);
 extern void TtaReplaceTransform (Element element, void *transform, 
 				 Document document);
+extern void TtaRemoveTransform (Document document, Element element);
 extern void TtaAppendTransform (Element element, void *transform, 
 				Document document);
 

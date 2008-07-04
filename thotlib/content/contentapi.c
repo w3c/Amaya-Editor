@@ -2060,8 +2060,11 @@ void TtaRemoveTransform (Document document, Element element)
     else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
     else
-      /* parameter document is correct */
-      TtaFreeTransform(((PtrElement)element)->ElTransform);
+      {
+        /* parameter document is correct */
+        TtaFreeTransform(((PtrElement)element)->ElTransform);
+        ((PtrElement)element)->ElTransform = NULL;
+      }
 }
 
 /*----------------------------------------------------------------------
