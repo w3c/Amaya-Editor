@@ -3113,8 +3113,8 @@ void MoveElementInParentSpace(Document doc, Element el, float x, float y)
   
 
   ----------------------------------------------------------------------*/
-void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
-				       float *Y, float *width, float *height)
+void GetPositionAndSizeInParentSpace (Document doc, Element el, float *X,
+                                      float *Y, float *width, float *height)
 { 
 #ifdef _SVG
   Element	   parent;
@@ -3135,10 +3135,10 @@ void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
   attrType.AttrSSchema = svgSchema;
 
   elType = TtaGetElementType (parent);
-  if(elType.ElSSchema != svgSchema)return;
+  if(elType.ElSSchema != svgSchema)
+    return;
 
   elType = TtaGetElementType (el);
-
   /* Get the box of the size
 
      0--------1
@@ -3154,7 +3154,7 @@ void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
   x[3] = x[0] + dummy1;
   y[3] = y[0] + dummy2;
 
-  printf("x1=%f y1=%f width=%d height=%d\n", x[0], y[0], dummy1, dummy2);
+  printf("type= %d x1=%f y1=%f width=%d height=%d\n",elType.ElTypeNum,  x[0], y[0], dummy1, dummy2);
 
   x[1] = x[3];
   y[1] = y[0];
@@ -3164,7 +3164,7 @@ void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
   IsFirst = TRUE;
   for(i = 0; i < 4; i++)
     {
-      TtaCoordinatesInParentSpace(el, &x[i], &y[i]);
+      //TtaCoordinatesInParentSpace(el, &x[i], &y[i]);
       if(i == 0)
 	{
 	  xmin = x[i];
