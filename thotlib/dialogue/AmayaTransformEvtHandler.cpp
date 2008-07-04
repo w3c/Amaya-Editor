@@ -310,7 +310,18 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
   m_mouse_x = event.GetX();
   m_mouse_y = event.GetY();
 
-  if(ButtonDown && abs(m_mouse_x -lastX) + abs(m_mouse_y - lastY) > DELTA)
+  if(!ButtonDown)
+    {
+      lastX = m_mouse_x;
+      lastY = m_mouse_y;
+
+      if(m_type == 0 || m_type == 1)
+	  /* For translate and scale, the module is called just after the user
+	     click on a shape, so the button is actually already down */
+	  ButtonDown = TRUE;
+
+    }
+  else if(abs(m_mouse_x -lastX) + abs(m_mouse_y - lastY) > DELTA)
     {
       x1 = lastX;
       y1 = lastY;
@@ -353,16 +364,16 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  /* Rotate */
 
 	  /*
-	    (dx1)               (x2,y2)
-	    v1=(dy1)                /
-	    -->  /___
-	    v2  /    _
-	    /     theta
-	    (dx2)            /        |
-	    v2=(dy2)           /         | 
-	    (cx,cy)-----------------(x1,y1)
+	        (dx1)               (x2,y2)
+	    v1= (dy1)                /
+	                     -->    /___
+	                     v2    /    _
+	                          /     theta
+	        (dx2)            /        |
+	    v2= (dy2)           /         | 
+	                      (cx,cy)-----------------(x1,y1)
 
-	    -->
+                                          -->
 	    d = ||v1||*||v2||             v1
 	  */
 
@@ -413,7 +424,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	case 4:
 	  /* Skewing */
-
+#define COEFF 10
 	  /* Take the center of the shape as the origin */
 	  TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1, -cx, -cy);
 	  x1-=(int)cx;
@@ -421,26 +432,26 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  y1-=(int)cy;
 	  y2-=(int)cy;
 
-	  if(abs(y2 - y1) < abs(x2 - x1) && y1 != 0)
+	  if(COEFF*abs(y2 - y1) <= abs(x2 - x1) && y1 != 0)
 	      /* Along the X axis:
-		 (x1)   (1   skew) (x2)
-                 (y1) = (       1) (y1)
+		 (x2)   (1   skew) (x1)   y1=y2
+                 (y2) = (       1) (y1)
 	       */ 
 	    {
-	      skew = ((float)(x1 - x2))/y1;
+	      skew = ((float)(x2 - x1))/y1;
 	      TtaApplyMatrixTransform (m_document, m_el,
 				       1, 0,
 				       skew,
 				       1,
 				       0,0);
 	    }
-	  else if(abs(x2 - x1) < abs(y2 - y1) && x1 != 0)
+	  else if(COEFF*abs(x2 - x1) <= abs(y2 - y1) && x1 != 0)
 	    {
 	      /* Along the Y axis
-		 (x1)   (1    0) (x1)
-                 (y1) = (skew 1) (y2)
+		 (x2)   (1    0) (x1)     x1=x2
+                 (y2) = (skew 1) (y1)
 	       */ 
-	      skew = ((float)(y1 - y2))/x1;
+	      skew = ((float)(y2 - y1))/x1;
 	      TtaApplyMatrixTransform (m_document, m_el,
 				       1,
 				       skew,

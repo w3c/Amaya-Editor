@@ -2170,6 +2170,11 @@ void AskSurroundingBox(
   if(inverse != NULL)TtaFreeTransform(inverse);
 }
 
+extern ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
+					   Element *svgAncestor,
+					   Element *svgCanvas);
+
+
 /*----------------------------------------------------------------------
   AskTransform
   --------------------------------------------------------------------*/
@@ -2189,7 +2194,12 @@ void AskTransform(     Document doc,
 
   frame = ActiveFrame;
 
-  if(frame <= 0 || svgCanvas == NULL || svgAncestor == NULL )return;
+  if(frame <= 0)return;
+
+  if(svgCanvas == NULL || svgAncestor == NULL)
+    if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
+      return;
+  ;
 
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
 

@@ -2379,21 +2379,23 @@ void SVG_ApplyDirectTranslate (PtrBox pBox, int frame)
   if (pDoc == NULL)
     return;
 
+  return;
+
   if(pBox)
     {
-      pAb = pBox -> BxAbstractBox;
+      pAb = pBox -> BxAbstractBox -> AbEnclosing;
       if(pAb)
 	{
 	  pEl = pAb -> AbElement;
+	  
 	  if(pEl)
 	    {
-	      pParent = pEl -> ElParent;
+	      	      pParent = pEl -> ElParent;
 	
-	      return;
-	      /*	      AskTransform((Document)pDoc,
-			   (Element)pParent,
-			   (Element)pParent,
-			   0, (Element)pEl);*/
+	      	      AskTransform((Document)pDoc,
+				   NULL,
+				   NULL,
+				   0, (Element)(&pEl));
 	    }
 	}
     }
