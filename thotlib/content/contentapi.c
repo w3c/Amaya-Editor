@@ -2044,6 +2044,27 @@ void TtaInsertTransform (Element element, void *transform,
 }
 
 /*----------------------------------------------------------------------
+  TtaRemoveTransform
+
+  Remove the Transform attached to a Graphics element
+  ----------------------------------------------------------------------*/
+void TtaRemoveTransform (Document document, Element element)
+{
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    /* verifies the parameter document */
+    if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+    else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+    else
+      /* parameter document is correct */
+      TtaFreeTransform(((PtrElement)element)->ElTransform);
+}
+
+/*----------------------------------------------------------------------
   TtaSimplifyTransformMatrix
 
   Return a new transform of type PtElMatrix which represents the
