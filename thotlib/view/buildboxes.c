@@ -2738,7 +2738,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                          ThotBool inLineFloat, int *carIndex)
 {
   PtrSSchema          pSS;
-  PtrAbstractBox      pChildAb;
+  PtrAbstractBox      pChildAb, pParent;
   PtrBox              box, pMainBox;
   PtrBox              pBox;
   TypeUnit            unit;
@@ -3008,6 +3008,27 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           pBox->BxNChars = pAb->AbVolume;
           pBox->BxXRatio = 1;
           pBox->BxYRatio = 1;
+          if (pAb->AbEnclosing)
+            {
+              /* the direct parent is the SVG path element */
+              pParent = pAb->AbEnclosing->AbEnclosing;
+              while (pParent &&
+                     TypeHasException (ExcIsGroup, pParent->AbElement->ElTypeNumber,
+                                       pParent->AbElement->ElStructSchema))
+                pParent = pParent->AbEnclosing;
+              width = pParent->AbBox->BxWidth;
+              height = pParent->AbBox->BxHeight;
+              pAb->AbBox->BxWidth = width;
+              pAb->AbBox->BxHeight = height;
+              pParent = pAb->AbEnclosing;
+              pParent->AbBox->BxWidth = width;
+              pParent->AbBox->BxHeight = height;
+            }
+          else
+            {
+              width = 0;
+              height = 0;
+            }
           break;
         case LtCompound:
           if (pBox->BxType == BoTable)
@@ -4659,6 +4680,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                       GivePolylineSize (pAb, zoom, &width, &height);
                       break;
                     case LtPath:
+                      /* by default don't change the size */
+                      width = pAb->AbBox->BxWidth;
+                      height = pAb->AbBox->BxHeight;
                       if (pAb->AbChange)
                         {
                           /* free the old path descriptor */
@@ -4666,7 +4690,24 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                           /* copy the new one from the abstract box */
                           pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
                           pBox->BxNChars = pAb->AbVolume;
-			}
+                          if (pAb->AbEnclosing)
+                            {
+                              /* the direct parent is the SVG path element */
+                              pParent = pAb->AbEnclosing->AbEnclosing;
+                              while (pParent &&
+                                     TypeHasException (ExcIsGroup,
+                                                       pParent->AbElement->ElTypeNumber,
+                                                       pParent->AbElement->ElStructSchema))
+                                pParent = pParent->AbEnclosing;
+                              width = pParent->AbBox->BxWidth;
+                              height = pParent->AbBox->BxHeight;
+                              pAb->AbBox->BxWidth = width;
+                              pAb->AbBox->BxHeight = height;
+                              pParent = pAb->AbEnclosing;
+                              pParent->AbBox->BxWidth = width;
+                              pParent->AbBox->BxHeight = height;
+                            }
+                        }
                       break;
                     default:
                       break;
