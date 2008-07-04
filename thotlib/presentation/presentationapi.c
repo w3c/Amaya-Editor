@@ -2574,8 +2574,13 @@ void TtaGiveBoxSize (Element element, Document document, View view,
             TtaError (ERR_element_has_no_box);
           else
             {
+#ifdef _GL
+              *width = pAb->AbBox->BxClipW;
+              *height = pAb->AbBox->BxClipH;
+#else /* _GL */
               *width = pAb->AbBox->BxWidth;
               *height = pAb->AbBox->BxHeight;
+#endif /* _GL */
 
               /* Convert values to pixels */
               if (unit == UnPercent)
@@ -2660,15 +2665,22 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
                 {
                   x = pAb->AbEnclosing->AbBox->BxWidth;
                   y = pAb->AbEnclosing->AbBox->BxHeight;
-                  *xCoord = pBox->BxXOrg;
-                  *yCoord = pBox->BxYOrg;
-                  if (pAb->AbEnclosing->AbElement &&
-                      !TypeHasException (ExcIsDraw,
-                                         pAb->AbEnclosing->AbElement->ElTypeNumber,
-                                         pAb->AbEnclosing->AbElement->ElStructSchema))
+                  if (pAb->AbEnclosing &&
+                      pAb->AbEnclosing->AbElement->ElStructSchema &&
+                      strcmp (pAb->AbElement->ElStructSchema->SsName,"SVG"))
                     {
-                      *xCoord -= pAb->AbEnclosing->AbBox->BxXOrg;
-                      *yCoord -= pAb->AbEnclosing->AbBox->BxYOrg;
+                      *xCoord = pBox->BxXOrg - pAb->AbEnclosing->AbBox->BxXOrg;
+                      *yCoord = pBox->BxYOrg- pAb->AbEnclosing->AbBox->BxYOrg;
+                    }
+                  else
+                    {
+#ifdef _GL
+                      *xCoord = pBox->BxClipX;
+                      *yCoord = pBox->BxClipY;
+#else /* _GL */
+                      *xCoord = pBox->BxXorg;
+                      *yCoord = pBox->BxYOrg;
+#endif /* _GL */
                     }
                 }
 	      
