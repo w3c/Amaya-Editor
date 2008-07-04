@@ -253,7 +253,9 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 			    cy,
 			    &cx2, &cy2);
 
-      m_pFrame->GetCanvas()->Refresh();
+#ifndef _WINDOWS
+    m_pFrame->GetCanvas()->Refresh();
+#endif /* WINDOWS */
       DrawRotationCenter(m_FrameId);
       break;
 
@@ -283,7 +285,9 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 			    bottom,
 			    &right2, &bottom2);
 
-      m_pFrame->GetCanvas()->Refresh();
+#ifndef _WINDOWS
+    m_pFrame->GetCanvas()->Refresh();
+#endif /* WINDOWS */
       DrawSkewArrows(m_FrameId);
       break;
       
@@ -608,13 +612,15 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  break;
 	}
 
-      DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
-      RedrawFrameBottom (m_FrameId, 0, NULL);
-      m_pFrame->GetCanvas()->Refresh();
+//#ifndef _WINDOWS
+	//DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
+    //RedrawFrameBottom (m_FrameId, 0, NULL);
+    m_pFrame->GetCanvas()->Refresh();
+//#endif /* WINDOWS */
 
       /* Redraw the center of rotation */
       if(m_type == 2 || m_type == 3)
-	DrawRotationCenter(m_FrameId);
+		DrawRotationCenter(m_FrameId);
 
       lastX = m_mouse_x;
       lastY = m_mouse_y;
@@ -643,10 +649,6 @@ void AmayaTransformEvtHandler::OnMouseWheel( wxMouseEvent& event )
 			     0,
 			     0
 			     );
-
-    DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
-    RedrawFrameBottom (m_FrameId, 0, NULL);
-    m_pFrame->GetCanvas()->Refresh();
   }
 }
 
