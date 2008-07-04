@@ -2636,6 +2636,7 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
 {
   PtrAbstractBox      pAb;
   PtrBox              pBox;
+  ViewFrame	         *pFrame;
   int                 frame;
   int                 x, y, w, h;
 
@@ -2661,13 +2662,15 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
           else
             {
               pBox = pAb->AbBox;
+              pFrame = &ViewFrameTable[frame - 1];
               if (pBox->BxType == BoSplit && pBox->BxNexChild != NULL)
                 pBox = pBox->BxNexChild;
+              
               if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
                 {
                   GetSizesFrame (frame, &x, &y);
-                  *xCoord = pBox->BxXOrg;
-                  *yCoord = pBox->BxYOrg;
+                  *xCoord = pBox->BxXOrg - pFrame->FrXOrg;
+                  *yCoord = pBox->BxYOrg - pFrame->FrYOrg;
                 }
               else
                 {
@@ -2680,8 +2683,8 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
                     {
                       w = pAb->AbEnclosing->AbBox->BxW;
                       h = pAb->AbEnclosing->AbBox->BxH;
-                      x = pAb->AbEnclosing->AbBox->BxXOrg;
-                      y = pAb->AbEnclosing->AbBox->BxYOrg;
+                      x = pAb->AbEnclosing->AbBox->BxXOrg - pFrame->FrXOrg;
+                      y = pAb->AbEnclosing->AbBox->BxYOrg - pFrame->FrYOrg;
                     }
                   else
                     {
@@ -2693,16 +2696,16 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
 #else /* _GL */
                       w = pAb->AbEnclosing->AbBox->BxW;
                       h = pAb->AbEnclosing->AbBox->BxH;
-                      x = pAb->AbEnclosing->AbBox->BxXOrg;
-                      y = pAb->AbEnclosing->AbBox->BxYOrg;
+                      x = pAb->AbEnclosing->AbBox->BxXOrg - pFrame->FrXOrg;
+                      y = pAb->AbEnclosing->AbBox->BxYOrg - pFrame->FrYOrg;
 #endif /* _GL */
                     }
 #ifdef _GL
                   *xCoord = pBox->BxClipX - x;
                   *yCoord = pBox->BxClipY - y;
 #else /* _GL */
-                  *xCoord = pBox->BxXorg - x;
-                  *yCoord = pBox->BxYOrg - y;
+                  *xCoord = pBox->BxXorg - pFrame->FrXorg - x;
+                  *yCoord = pBox->BxYOrg - pFrame->FrYorg - y;
 #endif /* _GL */
                 }
 	      
@@ -2714,8 +2717,8 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
                 }
               else
                 {
-                  *xCoord = LogicalValue (*xCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-                  *yCoord = LogicalValue (*yCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+                  *xCoord = LogicalValue (*xCoord, unit, pAb, pFrame->FrMagnification);
+                  *yCoord = LogicalValue (*yCoord, unit, pAb, pFrame->FrMagnification);
                 }
             }
         }
