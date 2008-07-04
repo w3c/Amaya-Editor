@@ -1692,7 +1692,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
   Language          lang;
   int		    c1, i, dir, svgDir;
   int               docModified;
-  ThotBool	    found, newGraph = FALSE, oldStructureChecking;
+  ThotBool	    found, newSVG = FALSE, replaceGraph = FALSE;
+  ThotBool          oldStructureChecking;
   ThotBool          isFilled, isFormattedView;
 
   int x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
@@ -1801,7 +1802,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
               svgCanvas = TtaNewElement (doc, elType);
               TtaInsertSibling (svgCanvas, first, FALSE, doc);
               first = svgCanvas;
-              newGraph = TRUE;
+              newSVG = TRUE;
             }
           if (svgCanvas)
             /* a root SVG element was created. Create the required attributes*/
@@ -1863,6 +1864,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
       sibling = TtaGetLastChild (svgCanvas);
     }
 
+
+  /* Check whether the sibling is a graphics element */
+  elType = TtaGetElementType (sibling);
+  replaceGraph = (elType.ElTypeNum == SVG_EL_GraphicsElement);
 
   if(isFormattedView)
     {
@@ -2003,7 +2008,9 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	{
 	  /* Insert the element as the last child (i.e. in the foreground)
 	     of the svgCanvas */
-	  sibling = TtaGetLastChild(svgCanvas);
+	  if(!replaceGraph)
+	    sibling = TtaGetLastChild(svgCanvas);
+
 	  if (!sibling)
 	    TtaInsertFirstChild (&newEl, svgCanvas, doc);
 	  else
@@ -2554,7 +2561,13 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    }
         }
 
-      if (newGraph)
+      if(replaceGraph)
+	{
+	  TtaRegisterElementDelete (sibling, doc);
+	  TtaDeleteTree(sibling, doc);
+	}
+
+      if (newSVG)
 	TtaRegisterElementCreate (svgCanvas, doc);
       else
 	TtaRegisterElementCreate (newEl, doc);
@@ -2946,7 +2959,8 @@ void TransformGraphicElement (Document doc, View view, int entry)
 		  break;
 
 		case 36:   /* AlignCenter */
-		  MoveElementInParentSpace(doc, selected[i], xcenter - width/2, y);
+		  MoveElementInParentSpace(doc, selected[i],
+					   xcenter - width/2, y);
 		  break;
 
 		case 37:   /* AlignRight */
@@ -2958,7 +2972,8 @@ void TransformGraphicElement (Document doc, View view, int entry)
 		  break;
 
 		case 39:   /* AlignMiddle */
-		  MoveElementInParentSpace(doc, selected[i], x, ycenter - height/2);
+		  MoveElementInParentSpace(doc, selected[i], x,
+					   ycenter - height/2);
 		  break;
 
 		case 40:   /* AlignBottom */
@@ -3043,6 +3058,9 @@ void UpdateTransformMatrix(Document doc, Element el)
     TtaRegisterAttributeCreate (attr, el, doc);
 
   TtaFreeMemory(buffer);
+
+  /* Update the attribute menu */
+  TtaUpdateAttrMenu(doc);
 }
 
 /*----------------------------------------------------------------------

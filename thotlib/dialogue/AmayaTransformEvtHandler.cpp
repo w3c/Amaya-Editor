@@ -206,8 +206,14 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 {
   float x, y, width, height;
 
+  /* Get the element to transform */
   if(m_box && m_box -> BxAbstractBox)
     m_el = (Element)(m_box -> BxAbstractBox-> AbElement);
+  else
+    {
+    m_IsFinish = true;
+    return;
+    }
 
   if (m_pFrame)
     {
@@ -615,6 +621,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
       DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
       RedrawFrameBottom (m_FrameId, 0, NULL);
       m_pFrame->GetCanvas()->Refresh();
+
 
       /* Redraw the center of rotation */
       if(m_type == 2 || m_type == 3)
