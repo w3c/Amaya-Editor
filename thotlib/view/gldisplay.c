@@ -550,8 +550,8 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
          
   fg : drawing color
   ----------------------------------------------------------------------*/
-void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
-                int orientation, int type, int fg)
+void DrawArrow (int frame, int thick, int style, int x, int y, int l,
+		       int h, int orientation, int type, int fg)
 {
   int                 xm, ym, xf, yf, D1, D2;
 

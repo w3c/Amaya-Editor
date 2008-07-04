@@ -26,6 +26,8 @@
 #include "geom_f.h"
 #include "font_f.h"
 #include "content_f.h"
+#include "windowdisplay_f.h"
+
 
 #ifdef _GL
 #include "glwindowdisplay.h"
@@ -38,12 +40,16 @@
 #include "AmayaCanvas.h"
 #include "AmayaTransformEvtHandler.h"
 
+/* Coordinates of the mouse */
 static int lastX, lastY, m_mouse_x,m_mouse_y;
 
 /* Coordinates of the center of rotation */
-
 static int cx2, cy2;
 static float cx, cy;
+
+/* Coordinates of the box */
+static int top2, left2, bottom2, right2;
+static float top, left, bottom, right;
 
 extern void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
 					    float *Y, float *width, float *height);
@@ -62,17 +68,75 @@ static void DrawRotationCenter()
 
   glColor4ub (127, 127, 127, 0);
 
+  /* Horizontal line */
   glBegin(GL_LINE_STRIP);
   glVertex2i(cx2-CURSOR_SIZE, cy2);
   glVertex2i(cx2+CURSOR_SIZE, cy2);
   glEnd ();
 
+  /* Vertical line */
   glBegin(GL_LINE_STRIP);
   glVertex2i(cx2, cy2-CURSOR_SIZE);
   glVertex2i(cx2, cy2+CURSOR_SIZE);
   glEnd ();
 
   glDisable(GL_COLOR_LOGIC_OP);
+}
+
+/*----------------------------------------------------------------------
+  DrawSkewArrows
+ *----------------------------------------------------------------------*/
+static void DrawSkewArrows(int frame)
+{
+  glEnable(GL_COLOR_LOGIC_OP);
+  glLogicOp(GL_XOR);
+  glColor4ub (127, 127, 127, 0);
+
+  /*
+             ----3-----
+             |        |
+             1        2
+             |        |
+             ----4-----
+
+  */
+  DrawArrow (frame, 1, 5,
+	     left2 - CURSOR_SIZE/2,
+	     (top2+bottom2)/2 - CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     2*CURSOR_SIZE,
+	     90, 3, 0);
+
+  DrawArrow (frame, 1, 5,
+	     right2 - CURSOR_SIZE/2,
+	     (top2+bottom2)/2 - CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     2*CURSOR_SIZE,
+	     90, 3, 0);
+
+  DrawArrow (frame, 1, 5,
+	     (left2+right2)/2 - CURSOR_SIZE,
+	     top2 - CURSOR_SIZE/2,
+	     2*CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     0, 3, 0);
+
+  DrawArrow (frame, 1, 5,
+	     (left2+right2)/2 - CURSOR_SIZE,
+	     bottom2 - CURSOR_SIZE/2,
+	     2*CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     0, 3, 0);
+
+  glDisable(GL_COLOR_LOGIC_OP);
+}
+
+/*----------------------------------------------------------------------
+  IsNear
+ *----------------------------------------------------------------------*/
+static ThotBool IsNear(int x, int y)
+{
+  return (abs(m_mouse_x - x) + abs(m_mouse_y - y) <= CURSOR_SIZE);
 }
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaTransformEvtHandler, wxEvtHandler)
@@ -169,8 +233,10 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
   cx = x + width/2;
   cy = y + height/2;
 
-  if(m_type == 2)
+  switch(m_type)
     {
+    case 2:
+      /* It's a rotation: compute the position of the center */
       SVGToMouseCoordinates(m_document, m_pFrame,
 			    m_x0, m_y0,
 			    m_width, m_height,
@@ -180,10 +246,41 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 			    &cx2, &cy2);
 
       m_pFrame->GetCanvas()->Refresh();
-
-      /* Draw the initial center of rotation */
       DrawRotationCenter();
+      break;
 
+
+    case 4:
+      /* It's a skewing: get the position of the arrows and draw them */
+
+      left = x;
+      top = y;
+
+      SVGToMouseCoordinates(m_document, m_pFrame,
+			    m_x0, m_y0,
+			    m_width, m_height,
+			    m_CTM,
+			    left,
+			    top,
+			    &left2, &top2);
+      
+      right = x + width;
+      bottom = y + height;
+
+      SVGToMouseCoordinates(m_document, m_pFrame,
+			    m_x0, m_y0,
+			    m_width, m_height,
+			    m_CTM,
+			    right,
+			    bottom,
+			    &right2, &bottom2);
+
+      m_pFrame->GetCanvas()->Refresh();
+      DrawSkewArrows(m_FrameId);
+      break;
+      
+    default:
+      break;
     }
 
   ButtonDown = FALSE;
@@ -231,18 +328,37 @@ void AmayaTransformEvtHandler::OnChar( wxKeyEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
+  if (IsFinish())return;
+
   ButtonDown = TRUE;
   lastX = m_mouse_x;
   lastY = m_mouse_y;
 
-  if(m_type == 2)
+  switch(m_type)
     {
-      /* Check whether the user is clicking on the center of rotation */
-      if(abs(m_mouse_x - cx2) + abs(m_mouse_y - cy2) <= 20)
-	m_type = 3;
-    }
+    case 2:
+      /* Rotation: is the user clicking on the center ? */
+      if(IsNear(cx2, cy2))
+	 m_type = 3;
+      break;
 
-  if (IsFinish())return;
+    case 4:
+      /* Skewing: is the user clicking on an arrow ? */
+
+      if(IsNear((left2+right2)/2, top2))
+	m_type = 5;
+      else if(IsNear((left2+right2)/2, bottom2))
+	m_type = 6;
+      else if(IsNear(left2, (top2+bottom2)/2))
+	m_type = 7;
+      else if(IsNear(right2, (top2+bottom2)/2))
+	m_type = 8;
+      else return;
+
+      /* Clear the arrows */
+      DrawSkewArrows(m_FrameId);
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -422,42 +538,59 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	    }
 	  break;
 
-	case 4:
-	  /* Skewing */
-#define COEFF 10
+	case 5:
+	case 6:
+	  /* Skewing along X axis */
+
 	  /* Take the center of the shape as the origin */
 	  TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1, -cx, -cy);
 	  x1-=(int)cx;
 	  x2-=(int)cx;
+
+	  if(m_type == 5)
+	    y1 = y2 = (int)(top - cy);
+	  else
+	    y1 = y2 = (int)(bottom - cy);
+
+	  /* 
+	     (x2)   (1   skew) (x1)   y1=y2
+	     (y2) = (       1) (y1)
+	  */ 
+	  skew = ((float)(x2 - x1))/y1;
+	  TtaApplyMatrixTransform (m_document, m_el,
+				   1, 0,
+				   skew,
+				   1,
+				   0,0);
+
+	  /* Move the shape to its initial position */
+	  TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1, +cx, +cy);
+	  break;
+
+	case 7:
+	case 8:
+	  /* Skewing along Y axis */
+
+	  /* Take the center of the shape as the origin */
+	  TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1, -cx, -cy);
 	  y1-=(int)cy;
 	  y2-=(int)cy;
 
-	  if(COEFF*abs(y2 - y1) <= abs(x2 - x1) && y1 != 0)
-	      /* Along the X axis:
-		 (x2)   (1   skew) (x1)   y1=y2
-                 (y2) = (       1) (y1)
-	       */ 
-	    {
-	      skew = ((float)(x2 - x1))/y1;
-	      TtaApplyMatrixTransform (m_document, m_el,
-				       1, 0,
-				       skew,
-				       1,
-				       0,0);
-	    }
-	  else if(COEFF*abs(x2 - x1) <= abs(y2 - y1) && x1 != 0)
-	    {
-	      /* Along the Y axis
-		 (x2)   (1    0) (x1)     x1=x2
-                 (y2) = (skew 1) (y1)
-	       */ 
-	      skew = ((float)(y2 - y1))/x1;
-	      TtaApplyMatrixTransform (m_document, m_el,
-				       1,
-				       skew,
-				       0, 1,
-				       0,0);
-	    }
+	  if(m_type == 5)
+	    x1 = x2 = (int)(left - cx);
+	  else
+	    x1 = x2 = (int)(right - cx);
+
+	  /*
+	  (x2)   (1    0) (x1)     x1=x2
+	  (y2) = (skew 1) (y1)
+	  */ 
+	  skew = ((float)(y2 - y1))/x1;
+	  TtaApplyMatrixTransform (m_document, m_el,
+				   1,
+				   skew,
+				   0, 1,
+				   0,0);
 
 	  /* Move the shape to its initial position */
 	  TtaApplyMatrixTransform (m_document, m_el, 1, 0, 0, 1, +cx, +cy);
@@ -466,7 +599,6 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	default:
 	  break;
 	}
-
 
       DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
       RedrawFrameBottom (m_FrameId, 0, NULL);
@@ -492,6 +624,7 @@ void AmayaTransformEvtHandler::OnMouseWheel( wxMouseEvent& event )
 {
 #define SCALE_ 1.1
 
+  return;
   
   float scale;
 
