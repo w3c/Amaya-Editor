@@ -612,11 +612,9 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  break;
 	}
 
-//#ifndef _WINDOWS
-	//DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
-    //RedrawFrameBottom (m_FrameId, 0, NULL);
-    m_pFrame->GetCanvas()->Refresh();
-//#endif /* WINDOWS */
+      DefBoxRegion (m_FrameId, m_box, -1, -1, -1, -1);
+      RedrawFrameBottom (m_FrameId, 0, NULL);
+      m_pFrame->GetCanvas()->Refresh();
 
       /* Redraw the center of rotation */
       if(m_type == 2 || m_type == 3)
