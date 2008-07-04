@@ -81,6 +81,10 @@ static void DrawRotationCenter()
   glEnd ();
 
   glDisable(GL_COLOR_LOGIC_OP);
+
+#ifdef _WINDOWS
+  GL_Swap (frameId);
+#endif /* WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -129,6 +133,10 @@ static void DrawSkewArrows(int frame)
 	     0, 3, 0);
 
   glDisable(GL_COLOR_LOGIC_OP);
+
+#ifdef _WINDOWS
+  GL_Swap (frameId);
+#endif /* WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -576,7 +584,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  y1-=(int)cy;
 	  y2-=(int)cy;
 
-	  if(m_type == 5)
+	  if(m_type == 7)
 	    x1 = x2 = (int)(left - cx);
 	  else
 	    x1 = x2 = (int)(right - cx);

@@ -3188,7 +3188,7 @@ void GetPositionAndSizeInParentSpace (Document doc, Element el, float *X,
   *width = xmax - xmin;
   *height = ymax - ymin;
 
-  //  printf("x'=%f y'=%f width=%f heigth=%f \n", *X, *Y, *width, *height);
+  printf("x'=%f y'=%f width=%f heigth=%f \n", *X, *Y, *width, *height);
 
 #endif /* _SVG */
 }
