@@ -2532,7 +2532,6 @@ void TtaGiveBoxFontInfo (Element element, Document document, View view,
     }
 }
 
-
 /*----------------------------------------------------------------------
   TtaGiveBoxSize
   Returns the height and width of the box corresponding to an element in
@@ -2572,6 +2571,15 @@ void TtaGiveBoxSize (Element element, Document document, View view,
           pAb = AbsBoxOfEl ((PtrElement) element, view);
           if (pAb == NULL || pAb->AbBox == NULL)
             TtaError (ERR_element_has_no_box);
+          else if (pAb->AbEnclosing &&
+                   pAb->AbEnclosing->AbElement->ElStructSchema &&
+                   (strcmp (pAb->AbElement->ElStructSchema->SsName,"SVG") ||
+                    TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
+                                      pAb->AbElement->ElStructSchema)))
+            {
+              *width = pAb->AbBox->BxWidth;
+              *height = pAb->AbBox->BxHeight;
+            }
           else
             {
 #ifdef _GL
@@ -2629,7 +2637,7 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
   PtrAbstractBox      pAb;
   PtrBox              pBox;
   int                 frame;
-  int                 x, y;
+  int                 x, y, w, h;
 
   UserErrorCode = 0;
   *xCoord = 0;
@@ -2663,32 +2671,46 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
                 }
               else
                 {
-                  x = pAb->AbEnclosing->AbBox->BxWidth;
-                  y = pAb->AbEnclosing->AbBox->BxHeight;
                   if (pAb->AbEnclosing &&
                       pAb->AbEnclosing->AbElement->ElStructSchema &&
-                      strcmp (pAb->AbElement->ElStructSchema->SsName,"SVG"))
+                      (strcmp (pAb->AbElement->ElStructSchema->SsName,"SVG") ||
+                        TypeHasException (ExcIsDraw,
+                                          pAb->AbEnclosing->AbElement->ElTypeNumber,
+                                          pAb->AbEnclosing->AbElement->ElStructSchema)))
                     {
-                      *xCoord = pBox->BxXOrg - pAb->AbEnclosing->AbBox->BxXOrg;
-                      *yCoord = pBox->BxYOrg- pAb->AbEnclosing->AbBox->BxYOrg;
+                      w = pAb->AbEnclosing->AbBox->BxW;
+                      h = pAb->AbEnclosing->AbBox->BxH;
+                      x = pAb->AbEnclosing->AbBox->BxXOrg;
+                      y = pAb->AbEnclosing->AbBox->BxYOrg;
                     }
                   else
                     {
 #ifdef _GL
-                      *xCoord = pBox->BxClipX;
-                      *yCoord = pBox->BxClipY;
+                      w = pAb->AbEnclosing->AbBox->BxClipW;
+                      h = pAb->AbEnclosing->AbBox->BxClipH;
+                      x = pAb->AbEnclosing->AbBox->BxClipX;
+                      y = pAb->AbEnclosing->AbBox->BxClipY;
 #else /* _GL */
-                      *xCoord = pBox->BxXorg;
-                      *yCoord = pBox->BxYOrg;
+                      w = pAb->AbEnclosing->AbBox->BxW;
+                      h = pAb->AbEnclosing->AbBox->BxH;
+                      x = pAb->AbEnclosing->AbBox->BxXOrg;
+                      y = pAb->AbEnclosing->AbBox->BxYOrg;
 #endif /* _GL */
                     }
+#ifdef _GL
+                  *xCoord = pBox->BxClipX - x;
+                  *yCoord = pBox->BxClipY - y;
+#else /* _GL */
+                  *xCoord = pBox->BxXorg - x;
+                  *yCoord = pBox->BxYOrg - y;
+#endif /* _GL */
                 }
 	      
               /* Convert values to the requested unit */
               if (unit == UnPercent)
                 {
-                  *xCoord = LogicalValue (*xCoord, UnPercent, (PtrAbstractBox) x, 0);
-                  *yCoord = LogicalValue (*yCoord, UnPercent, (PtrAbstractBox) y, 0);
+                  *xCoord = LogicalValue (*xCoord, UnPercent, (PtrAbstractBox) w, 0);
+                  *yCoord = LogicalValue (*yCoord, UnPercent, (PtrAbstractBox) h, 0);
                 }
               else
                 {
