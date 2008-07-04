@@ -59,7 +59,7 @@ static ThotBool ButtonDown = TRUE;
 /*----------------------------------------------------------------------
   DrawLine
   *----------------------------------------------------------------------*/
-static void DrawRotationCenter()
+static void DrawRotationCenter(int frame)
 {
 #define CURSOR_SIZE 15
 
@@ -83,7 +83,7 @@ static void DrawRotationCenter()
   glDisable(GL_COLOR_LOGIC_OP);
 
 #ifdef _WINDOWS
-  GL_Swap (frameId);
+  GL_Swap (frame);
 #endif /* WINDOWS */
 }
 
@@ -135,7 +135,7 @@ static void DrawSkewArrows(int frame)
   glDisable(GL_COLOR_LOGIC_OP);
 
 #ifdef _WINDOWS
-  GL_Swap (frameId);
+  GL_Swap (frame);
 #endif /* WINDOWS */
 }
 
@@ -254,7 +254,7 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 			    &cx2, &cy2);
 
       m_pFrame->GetCanvas()->Refresh();
-      DrawRotationCenter();
+      DrawRotationCenter(m_FrameId);
       break;
 
 
@@ -300,7 +300,7 @@ AmayaTransformEvtHandler::~AmayaTransformEvtHandler()
 {
   /* Clear the center */
   if(m_type == 2 || m_type == 3)
-    DrawRotationCenter();
+    DrawRotationCenter(m_FrameId);
 
   if (m_pFrame)
     {
@@ -468,7 +468,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
       /* Clear the center */
       if(m_type == 2 || m_type == 3)
-	DrawRotationCenter();
+	DrawRotationCenter(m_FrameId);
 
       switch(m_type)
 	{
@@ -614,7 +614,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
       /* Redraw the center of rotation */
       if(m_type == 2 || m_type == 3)
-	DrawRotationCenter();
+	DrawRotationCenter(m_FrameId);
 
       lastX = m_mouse_x;
       lastY = m_mouse_y;
