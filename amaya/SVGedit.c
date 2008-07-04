@@ -2970,13 +2970,19 @@ void TransformGraphicElement (Document doc, View view, int entry)
       break;
 
     case 41:   /* Rotate */
-      AskTransform(doc, svgAncestor, svgCanvas, 2, selected[0]);
-      UpdateTransformMatrix(doc, selected[0]);
+      if(isFormattedView)
+	{
+	  AskTransform(doc, svgAncestor, svgCanvas, 2, selected[0]);
+	  UpdateTransformMatrix(doc, selected[0]);
+	}
       break;
 
     case 42:   /* Skew */
-      AskTransform(doc, svgAncestor, svgCanvas, 4, selected[0]);
-      UpdateTransformMatrix(doc, selected[0]);
+      if(isFormattedView)
+	{
+	AskTransform(doc, svgAncestor, svgCanvas, 4, selected[0]);
+	UpdateTransformMatrix(doc, selected[0]);
+	}
       break;
 
 
@@ -3118,78 +3124,36 @@ void GetPositionAndSizeInParentSpace (Document doc, Element el, float *X,
 { 
 #ifdef _SVG
   Element	   parent;
-  AttributeType    attrType;
   SSchema          svgSchema;
   ElementType      elType;
   int dummy1,dummy2;
-  float x[4], y[4], xmin, ymin, xmax, ymax;
-  unsigned short i;
-  ThotBool IsFirst;
 
   if(!el)return;
   parent = TtaGetParent(el);
 
-
   /* Check whether the parent is an SVG element */
   svgSchema = GetSVGSSchema (doc);
-  attrType.AttrSSchema = svgSchema;
-
   elType = TtaGetElementType (parent);
   if(elType.ElSSchema != svgSchema)
     return;
 
-  elType = TtaGetElementType (el);
-  /* Get the box of the size
+  /* Get the position and size of the box
 
-     0--------1
-     |        |
-     |        |
-     2--------3
+    X,Y---width-----
+     |             |
+   height          |
+     |             |
+     ---------------
+
   */
 
   TtaGiveBoxPosition (el, doc, 1, UnPixel, &dummy1, &dummy2);
-  x[0] = (float) dummy1;
-  y[0] = (float) dummy2;
+  *X = (float)(dummy1);
+  *Y = (float)(dummy2);
+
   TtaGiveBoxSize (el, doc, 1, UnPixel, &dummy1, &dummy2);
-  x[3] = x[0] + dummy1;
-  y[3] = y[0] + dummy2;
-
-  printf("type= %d x1=%f y1=%f width=%d height=%d\n",elType.ElTypeNum,  x[0], y[0], dummy1, dummy2);
-
-  x[1] = x[3];
-  y[1] = y[0];
-  x[2] = x[0];
-  y[2] = y[3];
-
-  IsFirst = TRUE;
-  for(i = 0; i < 4; i++)
-    {
-      //TtaCoordinatesInParentSpace(el, &x[i], &y[i]);
-      if(i == 0)
-	{
-	  xmin = x[i];
-	  xmax = x[i];
-	  ymin = y[i];
-	  ymax = y[i];
-	}
-      else
-	{
-	  if(x[i] < xmin)xmin = x[i];
-	  else if(x[i] > xmax)xmax = x[i];
-
-	  if(y[i] < ymin)ymin = y[i];
-	  else if(y[i] > ymax)ymax = y[i];
-	}
-    }
-
-
-  *X = xmin; 
-  *Y = ymin;
-  *width = xmax - xmin;
-  *height = ymax - ymin;
-
-  printf("x'=%f y'=%f width=%f heigth=%f \n", *X, *Y, *width, *height);
-
+  *width = (float)(dummy1);
+  *height = (float)(dummy2);
 #endif /* _SVG */
 }
 

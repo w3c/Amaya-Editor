@@ -955,6 +955,7 @@ static void GivePolylineSize (PtrAbstractBox pAb, int zoom, int *width,
 
 }
 
+#ifdef path_limits
 /*----------------------------------------------------------------------
   UpdateLimits
   Update the values min and max so that min <= v <= max
@@ -1238,7 +1239,7 @@ static void GivePathLimits (PtrAbstractBox pAb, int zoom,
 	}
     }
 }
-
+#endif /* path_limit */
 
 /*----------------------------------------------------------------------
   FreePolyline frees buffers attached to the polyline box.
@@ -3007,11 +3008,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           pBox->BxNChars = pAb->AbVolume;
           pBox->BxXRatio = 1;
           pBox->BxYRatio = 1;
-	  GivePathLimits (pAb, zoom,
-			  &(pBox->BxXOrg),
-			  &(pBox->BxYOrg),
-			  &width, &height);
-	  
           break;
         case LtCompound:
           if (pBox->BxType == BoTable)
@@ -4671,12 +4667,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                           pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
                           pBox->BxNChars = pAb->AbVolume;
 			}
-
-		      GivePathLimits (pAb, zoom,
-				      NULL,
-				      NULL,
-				      &width, &height);
-
                       break;
                     default:
                       break;
