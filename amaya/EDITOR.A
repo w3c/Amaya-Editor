@@ -702,5 +702,6 @@ FUNCTIONS
   TransformSVG_Rotate,
   SVG_Select,
   CreateSVG_Image,
-  TransformSVG_Skew;
+  TransformSVG_Skew,
+  TransformSVG_Scale;
 END

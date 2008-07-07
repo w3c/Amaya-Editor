@@ -3018,7 +3018,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	}
       break;
 
-    case 42:   /* Skew */
+    case 43:   /* Skew */
       if(isFormattedView)
 	{
 	AskTransform(doc, svgAncestor, svgCanvas, 4, selected[0]);
@@ -3026,8 +3026,15 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	}
       break;
 
+    case 44:   /* Scale */
+      if(isFormattedView)
+	{
+	AskTransform(doc, svgAncestor, svgCanvas, 1, selected[0]);
+	UpdateTransformMatrix(doc, selected[0]);
+	}
+      break;
 
-      /* Translate, Scale */
+      /* Translate */
 
     }
   
@@ -4014,5 +4021,13 @@ void CreateSVG_Image (Document document, View view)
   ----------------------------------------------------------------------*/
 void TransformSVG_Skew (Document document, View view)
 {
-  TransformGraphicElement (document, view, 42);
+  TransformGraphicElement (document, view, 43);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_Scale
+  ----------------------------------------------------------------------*/
+void TransformSVG_Scale (Document document, View view)
+{
+  TransformGraphicElement (document, view, 44);
 }

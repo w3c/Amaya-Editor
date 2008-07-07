@@ -204,10 +204,30 @@ void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
       /* Rotation: is the user clicking on the center ? */
       if(IsNear(cx2, cy2))
 	 type = 3;
+
+      TransformHasChanged = false;
       break;
 
     case 1:
       /* Scaling: is the user clicking on an arrow ? */
+
+      if(IsNear((left2+right2)/2, top2))
+	type = 9;
+      else if(IsNear((left2+right2)/2, bottom2))
+	type = 10;
+      else if(IsNear(left2, (top2+bottom2)/2))
+	type = 11;
+      else if(IsNear(right2, (top2+bottom2)/2))
+	type = 12;
+      else  if(IsNear(left2, top2))
+	type = 13;
+      else if(IsNear(right2, top2))
+	type = 14;
+      else if(IsNear(right2, bottom2))
+	type = 15;
+      else if(IsNear(left2, bottom2))
+	type = 16;
+      else Finished = true;
 
       /* Clear the arrows */
       DrawScalingArrows();
@@ -248,6 +268,11 @@ void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
     case 2:
       /* The user was rotating the shape */
       ButtonDown = false;
+
+      if(!TransformHasChanged)
+	/* The user clicked but didn't move */
+	  Finished = true;
+
       break;
 
     case 3:
@@ -325,7 +350,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
   int x1,y1,x2,y2;
   float theta, dx1, dx2, dy1, dy2, d;
   float det;
-  float skew;
+  float skew,sx,sy;
 
   /* DELTA is the sensitivity toward mouse moves. */
 #define DELTA 20
@@ -433,6 +458,8 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 				       -sin(theta), cos(theta),
 				       0,0);
 	      TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +cx, +cy);
+
+	      TransformHasChanged = true;
 	    }
 
 	  break;
@@ -518,34 +545,193 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	case 9:
 	  /* Scaling: top border */
+	  y1-=(int)bottom;
+	  y2-=(int)bottom;
+
+	   /* We want to apply a vertical scale such that
+	      (x1,y1) is moved to (x2,y2) :
+
+	      (x2)   (1    0) (x1)     x1=x2=0
+	      (y2) = (0   sy) (y1)
+	   */ 
+
+	   if(y1 != 0 && y2 != 0)
+	     {
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, 0, -bottom);
+	       sy = ((float)y2)/y1;
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, sy, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, 0, +bottom);
+	     }
 	  break;
 
 	case 10:
 	  /* Scaling: bottom border */
-	  break;
+	  y1-=(int)top;
+	  y2-=(int)top;
+
+	   /* We want to apply a vertical scale such that
+	      (x1,y1) is moved to (x2,y2) :
+
+	      (x2)   (1    0) (x1)     x1=x2=0
+	      (y2) = (0   sy) (y1)
+	   */ 
+
+	   if(y1 != 0 && y2 != 0)
+	     {
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, 0, -top);
+	       sy = ((float)y2)/y1;
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, sy, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, 0, +top);
+	     }
+	   break;
 
 	case 11:
 	  /* Scaling: left border */
+	  x1-=(int)right;
+	  x2-=(int)right;
+
+	   /* We want to apply an horizontal scale such that
+	      (x1,y1) is moved to (x2,y2) :
+
+	      (x2)   (sx  0) (x1)     y1=y2=0
+	      (y2) = (0   1) (y1)
+	   */ 
+
+	   if(x1 != 0 && x2 != 0)
+	     {
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -right, 0);
+	       sx = ((float)x2)/x1;
+	       TtaApplyMatrixTransform (document, el, sx, 0, 0, 1, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +right, 0);
+	     }
 	  break;
 
 	case 12:
 	  /* Scaling: right border */
+	  x1-=(int)left;
+	  x2-=(int)left;
+
+	   /* We want to apply an horizontal scale such that
+	      (x1,y1) is moved to (x2,y2) :
+
+	      (x2)   (sx  0) (x1)     y1=y2=0
+	      (y2) = (0   1) (y1)
+	   */ 
+
+	   if(x1 != 0 && x2 != 0)
+	     {
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -left, 0);
+	       sx = ((float)x2)/x1;
+	       TtaApplyMatrixTransform (document, el, sx, 0, 0, 1, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +left, 0);
+	     }
 	  break;
 
 	case 13:
 	  /* Scaling: top left corner */
+	  x1-=(int)right;
+	  x2-=(int)right;
+	  y1-=(int)bottom;
+	  y2-=(int)bottom;
+
+	   /* We want to apply a scale such that
+	      (x1,y1) is moved to (x2,y2) :
+
+	      (x2)   (sx  0) (x1)    
+	      (y2) = (0   sy) (y1)
+	   */ 
+
+	   if(x1 != 0 && x2 != 0 && y1 !=0 && y2 != 0)
+	     {
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
+					-right, -bottom);
+	       sx = ((float)x2)/x1;
+	       sy = ((float)y2)/y1;
+	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
+					+right, +bottom);
+	     }
+
 	  break;
 
 	case 14:
 	  /* Scaling: top right corner */
+	  x1-=(int)left;
+	  x2-=(int)left;
+	  y1-=(int)bottom;
+	  y2-=(int)bottom;
+
+	   /* We want to apply a scale such that
+	      (x1,y1) is moved to (x2,y2) :
+
+	      (x2)   (sx  0) (x1)    
+	      (y2) = (0   sy) (y1)
+	   */ 
+
+	   if(x1 != 0 && x2 != 0 && y1 !=0 && y2 != 0)
+	     {
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
+					-left, -bottom);
+	       sx = ((float)x2)/x1;
+	       sy = ((float)y2)/y1;
+	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
+					+left, +bottom);
+	     }
+
 	  break;
 
 	case 15:
 	  /* Scaling: bottom right corner */
+	  x1-=(int)left;
+	  x2-=(int)left;
+	  y1-=(int)top;
+	  y2-=(int)top;
+
+	   /* We want to apply a scale such that
+	      (x1,y1) is moved to (x2,y2) :
+
+	      (x2)   (sx  0) (x1)    
+	      (y2) = (0   sy) (y1)
+	   */ 
+
+	   if(x1 != 0 && x2 != 0 && y1 !=0 && y2 != 0)
+	     {
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
+					-left, -top);
+	       sx = ((float)x2)/x1;
+	       sy = ((float)y2)/y1;
+	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
+					+left, +top);
+	     }
+
 	  break;
 
 	case 16:
 	  /* Scaling: bottom left corner */
+	  x1-=(int)right;
+	  x2-=(int)right;
+	  y1-=(int)top;
+	  y2-=(int)top;
+
+	   /* We want to apply a scale such that
+	      (x1,y1) is moved to (x2,y2) :
+
+	      (x2)   (sx  0) (x1)     y1=y2=0
+	      (y2) = (0   sy) (y1)
+	   */ 
+
+	   if(x1 != 0 && x2 != 0 && y1 !=0 && y2 != 0)
+	     {
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
+					-right, -top);
+	       sx = ((float)x2)/x1;
+	       sy = ((float)y2)/y1;
+	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
+					+right, +top);
+	     }
 	  break;
 
 	default:
@@ -697,8 +883,80 @@ void AmayaTransformEvtHandler::DrawScalingArrows()
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
   glColor4ub (127, 127, 127, 0);
-  glDisable(GL_COLOR_LOGIC_OP);
 
+  /*
+             5---3----6
+             |        |
+             1        2
+             |        |
+             8---4----7
+
+  */
+
+  /* 1 */
+  DrawArrow (FrameId, 1, 5,
+	     left2 - CURSOR_SIZE,
+	     (top2+bottom2)/2 - CURSOR_SIZE/2,
+	     2*CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     0, 3, 0);
+
+  /* 2 */
+  DrawArrow (FrameId, 1, 5,
+	     right2 - CURSOR_SIZE,
+	     (top2+bottom2)/2 - CURSOR_SIZE/2,
+	     2*CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     0, 3, 0);
+
+  /* 3 */
+  DrawArrow (FrameId, 1, 5,
+	     (left2+right2)/2 - CURSOR_SIZE/2,
+	     top2 - CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     2*CURSOR_SIZE,
+	     90, 3, 0);
+
+  /* 4 */
+  DrawArrow (FrameId, 1, 5,
+	     (left2+right2)/2 - CURSOR_SIZE/2,
+	     bottom2 - CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     2*CURSOR_SIZE,
+	     90, 3, 0);
+
+  /* 5*/
+  DrawArrow (FrameId, 1, 5,
+	     left2 - CURSOR_SIZE/2,
+	     top2 - CURSOR_SIZE/2,
+	     CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     135, 0, 0);
+
+  /* 6*/
+  DrawArrow (FrameId, 1, 5,
+	     right2 - CURSOR_SIZE/2,
+	     top2 - CURSOR_SIZE/2,
+	     CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     45, 0, 0);
+
+  /* 7*/
+  DrawArrow (FrameId, 1, 5,
+	     right2 - CURSOR_SIZE/2,
+	     bottom2 - CURSOR_SIZE/2,
+	     CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     315, 0, 0);
+  /* 6*/
+  DrawArrow (FrameId, 1, 5,
+	     left2 - CURSOR_SIZE/2,
+	     bottom2 - CURSOR_SIZE/2,
+	     CURSOR_SIZE,
+	     CURSOR_SIZE,
+	     225, 0, 0);
+
+  glDisable(GL_COLOR_LOGIC_OP);
 #ifdef _WINDOWS
   GL_Swap (FrameId);
 #endif /* WINDOWS */
@@ -790,9 +1048,9 @@ void AmayaTransformEvtHandler::UpdatePositions()
 
     /* Draw the arrows */
     if(type == 4)
-       DrawSkewingArrows();
-    else
       DrawSkewingArrows();
+    else
+      DrawScalingArrows();
       break;
       
     default:

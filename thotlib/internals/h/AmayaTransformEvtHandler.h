@@ -74,6 +74,7 @@ class AmayaTransformEvtHandler : public wxEvtHandler
 
   /* Mouse Button Down */
   bool ButtonDown;
+  bool TransformHasChanged;
 
 };
 

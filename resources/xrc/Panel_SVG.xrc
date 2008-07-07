@@ -167,6 +167,9 @@
           <object class="tool" name="wxID_PANEL_SVG_SKEW">
             <bitmap>../icons/16x16/SVG_skew.png</bitmap>
           </object>
+          <object class="tool" name="wxID_PANEL_SVG_SCALE">
+            <bitmap>../icons/16x16/SVG_scale.png</bitmap>
+          </object>
         </object>
       </object>
       <object class="sizeritem">
