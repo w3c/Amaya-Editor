@@ -181,9 +181,6 @@ void GraphicsSelectionChanged (NotifyElement * event)
        event->element = asc;
        event->elementType = TtaGetElementType(asc);
 
-       //       AskTransform(doc, NULL, NULL, 0, asc);
-       //UpdateTransformMatrix(event->document, asc);
-
     }
   else
     {
@@ -3078,6 +3075,8 @@ void UpdateTransformMatrix(Document doc, Element el)
       TtaRemoveAttribute (el, attr, doc);
       return;
     }
+
+  if(buffer == NULL)return;
     
   new_ = (attr == NULL);
 
