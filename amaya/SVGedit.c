@@ -180,6 +180,10 @@ void GraphicsSelectionChanged (NotifyElement * event)
        TtaSelectElement (event->document, asc);
        event->element = asc;
        event->elementType = TtaGetElementType(asc);
+
+       //       AskTransform(doc, NULL, NULL, 0, asc);
+       //UpdateTransformMatrix(event->document, asc);
+
     }
   else
     {

@@ -1040,6 +1040,8 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
   height = box->BxHeight;
   max = 0;
 
+  printf("x=%d y=%d width=%d height=%d\n", x, y, width, height);
+
   /* Is there a characteristic point of the drawing? */
   switch (pAb->AbRealShape)
     {
@@ -2368,34 +2370,33 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
   ----------------------------------------------------------------------*/
 void SVG_ApplyDirectTranslate (PtrBox pBox, int frame)
 {
-  PtrDocument         pDoc;
+  Document doc;
   PtrAbstractBox      pAb;
-  PtrElement          pEl, pParent;
+  PtrElement          pEl;
   ViewFrame          *pFrame;
-  int                 view;
+
+  if(frame <= 0)return;
 
   pFrame = &ViewFrameTable[frame - 1];
-  GetDocAndView (frame, &pDoc, &view);
-  if (pDoc == NULL)
-    return;
-
-  return;
+  doc = FrameTable[frame].FrDoc;
 
   if(pBox)
     {
-      pAb = pBox -> BxAbstractBox -> AbEnclosing;
+      pAb = pBox->BxAbstractBox;
       if(pAb)
 	{
-	  pEl = pAb -> AbElement;
-	  
-	  if(pEl)
+	  pAb = pAb->AbEnclosing;
+	  if(pAb)
 	    {
-	      	      pParent = pEl -> ElParent;
-	
-	      	      AskTransform((Document)pDoc,
-				   NULL,
-				   NULL,
-				   0, (Element)(&pEl));
+	      pEl = pAb->AbElement;
+	      
+	      if(pEl)
+		{
+		  AskTransform(doc,
+			       NULL,
+			       NULL,
+			       0, (Element)(pEl));
+		}
 	    }
 	}
     }

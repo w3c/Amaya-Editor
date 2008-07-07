@@ -38,23 +38,274 @@
 #include "AmayaCanvas.h"
 #include "AmayaCreateShapeEvtHandler.h"
 
-static int m_mouse_x,m_mouse_y; 
+IMPLEMENT_DYNAMIC_CLASS(AmayaCreateShapeEvtHandler, wxEvtHandler)
 
-static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
+/*----------------------------------------------------------------------
+ *  this is where the event table is declared
+ *  the callbacks are assigned to an event type
+ *----------------------------------------------------------------------*/
+BEGIN_EVENT_TABLE(AmayaCreateShapeEvtHandler, wxEvtHandler)
+EVT_KEY_DOWN ( AmayaCreateShapeEvtHandler::OnKeyDown )
+EVT_KEY_UP ( AmayaCreateShapeEvtHandler::OnKeyUp )
+EVT_LEFT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
+EVT_LEFT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp)
+EVT_LEFT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
+EVT_MIDDLE_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
+EVT_MIDDLE_UP(	AmayaCreateShapeEvtHandler::OnMouseUp)
+EVT_MIDDLE_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
+EVT_RIGHT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
+EVT_RIGHT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp)
+EVT_RIGHT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
+EVT_MOTION(		AmayaCreateShapeEvtHandler::OnMouseMove)
+EVT_MOUSEWHEEL(	AmayaCreateShapeEvtHandler::OnMouseWheel)
+END_EVENT_TABLE()
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler() : wxEvtHandler()
+{
+}
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
+(AmayaFrame * p_frame,
+ Document doc, void *transform,
+ int ancestorX,
+ int ancestorY,
+ int canvasWidth,
+ int canvasHeight,
+ int shape_number,
+ int *x1, int *y1, int *x2, int *y2,
+ ThotBool *created)
+  : wxEvtHandler()
+  ,finished(false)
+  ,pFrame(p_frame)
+  ,frameId(p_frame->GetFrameId())
+  ,document(doc)
+  ,transform(transform)
+  ,x0(ancestorX)
+  ,y0(ancestorY)
+  ,width(canvasWidth)
+  ,height(canvasHeight)
+  ,shape(shape_number)
+  ,px1(x1)
+  ,py1(y1)
+  ,px2(x2)
+  ,py2(y2)
+  ,created(created)
+  ,nb_points(0)
+  ,shift_down(false)
+{
+
+  if (pFrame)
+    {
+      /* attach this handler to the canvas */
+      AmayaCanvas * p_canvas = pFrame->GetCanvas();
+      p_canvas->PushEventHandler(this);
+
+      if(shape == 9 || shape == 10)
+	/* assign a ibeam mouse cursor */
+	pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_IBEAM) );
+      else
+	/* assign a cross mouse cursor */
+	pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
+
+
+      pFrame->GetCanvas()->CaptureMouse();
+
+    }
+
+  if(shape == 42)
+    /* It is actually a box that allows to select graphical elements, use
+       dash style */
+    InitDrawing (2, 1, 0);
+  else
+    InitDrawing (5, 1, 0);
+}
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
+{
+  /* Clear the Shape */
+  DrawShape ();
+
+  if (pFrame)
+    {
+      /* detach this handler from the canvas (restore default behaviour) */
+      AmayaCanvas * p_canvas = pFrame->GetCanvas();
+      p_canvas->PopEventHandler(false /* do not delete myself */);
+      
+      /* restore the default cursor */
+      pFrame->GetCanvas()->SetCursor( wxNullCursor );
+      pFrame->GetCanvas()->ReleaseMouse();
+    }
+  
+}
+
+/*----------------------------------------------------------------------
+  IsFinish
+ *----------------------------------------------------------------------*/
+bool AmayaCreateShapeEvtHandler::IsFinish()
+{
+  return finished;
+}
+
+/*----------------------------------------------------------------------
+  OnKeyDown
+ *----------------------------------------------------------------------*/
+void AmayaCreateShapeEvtHandler::OnKeyDown( wxKeyEvent& event )
+{
+  if(event.GetKeyCode() ==  WXK_SHIFT)
+    {
+      DrawShape ();
+      shift_down = true;
+      DrawShape ();
+    }
+  else
+    {
+      *created = FALSE;
+      finished = true;
+    }
+}
+
+/*----------------------------------------------------------------------
+  OnKeyUp
+ *----------------------------------------------------------------------*/
+void AmayaCreateShapeEvtHandler::OnKeyUp( wxKeyEvent& event )
+{
+  shift_down = false;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaCreateShapeEvtHandler
+ *      Method:  OnMouseDown
+ * Description:  handle mouse button down events
+ -----------------------------------------------------------------------*/
+void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
+{
+  if (finished || nb_points != 0)return;
+
+  /* Are we in the SVG ? */
+  if(!MouseCoordinatesToSVG(document, pFrame,
+			    x0, y0,
+			    width, height,
+			    transform,
+			    FALSE, px1, py1))return;
+  nb_points = 1;
+  *px2 = *px1;
+  *py2 = *py1;
+
+  if(shape == 10 || shape == 9)
+    /* Only one point is needed */
+      finished = true;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaCreateShapeEvtHandler
+ *      Method:  OnMouseUp
+ * Description:  handle mouse button up events
+ -----------------------------------------------------------------------*/
+void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
+{
+  if(finished || nb_points != 1)return;
+
+  /* Are we in the SVG ? */
+  if(!MouseCoordinatesToSVG(document, pFrame,
+			    x0, y0,
+			    width, height,
+			    transform,
+			    FALSE, px2, py2))return;
+
+  nb_points = 2;
+
+  *created = TRUE;
+  finished = true;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaCreateShapeEvtHandler
+ *      Method:  OnMouseDbClick
+ * Description:  handle mouse dbclick events
+ -----------------------------------------------------------------------*/
+void AmayaCreateShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
+{
+  finished = true;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaCreateShapeEvtHandler
+ *      Method:  OnMouseMove
+ * Description:  handle mouse move events
+ -----------------------------------------------------------------------*/
+void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
+{
+  int x,y;
+
+  /* Clear the shape */
+  DrawShape ();
+
+  /* Get the coordinates of the mouse and display them in the status bar */
+  x = event.GetX();
+  y = event.GetY();
+  
+  MouseCoordinatesToSVG(document, pFrame,
+			x0, y0,
+			width, height,
+			transform,
+			FALSE, &x, &y);
+
+  if(nb_points == 0)
+    {
+      /* First point */
+      *px1 = x;
+      *py1 = y;
+    }
+  else
+    {
+      /* Second point */
+      *px2 = x;
+      *py2 = y;
+    }
+
+  /* Draw the shape */
+  DrawShape ();
+
+#ifndef _WINDOWS
+    pFrame->GetCanvas()->Refresh();
+#endif
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaCreateShapeEvtHandler
+ *      Method:  OnMouseWheel
+ * Description:  handle mouse wheel events
+ -----------------------------------------------------------------------*/
+void AmayaCreateShapeEvtHandler::OnMouseWheel( wxMouseEvent& event )
+{
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void AmayaCreateShapeEvtHandler::DrawShape ()
 { 
   int lx,ly;
-  int x3, y3, x4, y4, x5, y5, x6, y6,tmp;
+  int x1, x2, y1, y2, x3, y3, x4, y4, x5, y5, x6, y6,tmp;
+  float theta;
+
+  if(nb_points == 0)return;
 
   glEnable(GL_COLOR_LOGIC_OP);
   glLogicOp(GL_XOR);
   glColor4ub (127, 127, 127, 0);
 
+  lx = abs(*px2 - *px1);
+  ly = abs(*py2 - *py1);
+  
   if(!(shape == 0 || (shape >= 12 && shape <= 14)))
     {
       /* It's a shape drawn in a rectangle */
-
-      lx = abs(x2 - x1);
-      ly = abs(y2 - y1);
 
       if(shape == 20)
 	/* equilateral triangle */
@@ -65,12 +316,55 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
 	  if(ly < lx)lx=ly; else ly = lx;
 	}
 
-      if(x2 < x1)x2 = x1 - lx;
-	else x2 = x1 + lx;
+      if(*px2 < *px1)*px2 = *px1 - lx;
+	else *px2 = *px1 + lx;
 
-      if(y2 < y1)y2 = y1 - ly;
-        else y2 = y1 + ly;
+      if(*py2 < *py1)*py2 = *py1 - ly;
+        else *py2 = *py1 + ly;
     }
+  else if((shape == 0 || shape == 12 || shape == 13) && shift_down)
+    {
+      /* It's a line or an arrow and the shift button is pressed */
+
+      /*     |    O
+             |   /
+	    ly  /
+             | /theta
+             |/
+             --lx--
+       */
+      if(lx == 0)
+	theta = M_PI_2;
+      else
+	theta = atan(ly/lx);
+
+      if(theta <= M_PI/8) 
+	{
+	  /* Horizontal line */
+	  *py2 = *py1;
+	}
+      else if(theta >= 3*M_PI/8)
+	{
+	  /* Vertical line */
+	  *px2 = *px1;
+	}
+      else
+	{
+	  /* Diagonal */
+	  if(ly > lx)lx=ly; else ly = lx;
+
+	  if(*px2 < *px1)*px2 = *px1 - lx;
+	  else *px2 = *px1 + lx;
+
+	  if(*py2 < *py1)*py2 = *py1 - ly;
+	  else *py2 = *py1 + ly;
+	}
+    }
+
+  x1 = *px1;
+  x2 = *px2;
+  y1 = *py1;
+  y2 = *py2;
 
   switch(shape)
     {
@@ -283,8 +577,8 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
       break;
 
     default:
-      /* m_ShapeNumber = 9 = Foreign object */
-      /* m_ShapeNumber = 10 = Text */
+      /* shape = 9 = Foreign object */
+      /* shape = 10 = Text */
 
       break;
 
@@ -297,225 +591,5 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
   GL_Swap (frameId);
 #endif /* WINDOWS */
 }
-
-
-IMPLEMENT_DYNAMIC_CLASS(AmayaCreateShapeEvtHandler, wxEvtHandler)
-
-/*----------------------------------------------------------------------
- *  this is where the event table is declared
- *  the callbacks are assigned to an event type
- *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaCreateShapeEvtHandler, wxEvtHandler)
-EVT_KEY_DOWN ( AmayaCreateShapeEvtHandler::OnChar )
-EVT_LEFT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
-EVT_LEFT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp)
-EVT_LEFT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
-EVT_MIDDLE_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
-EVT_MIDDLE_UP(	AmayaCreateShapeEvtHandler::OnMouseUp)
-EVT_MIDDLE_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
-EVT_RIGHT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
-EVT_RIGHT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp)
-EVT_RIGHT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
-EVT_MOTION(		AmayaCreateShapeEvtHandler::OnMouseMove)
-EVT_MOUSEWHEEL(	AmayaCreateShapeEvtHandler::OnMouseWheel)
-END_EVENT_TABLE()
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler() : wxEvtHandler()
-{
-}
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
-(AmayaFrame * p_frame,
- Document doc, void *transform,
- int ancestorX,
- int ancestorY,
- int canvasWidth,
- int canvasHeight,
- int shape_number,
- int *x1, int *y1, int *x2, int *y2,
- ThotBool *created)
-  : wxEvtHandler()
-  ,m_IsFinish(false)
-  ,m_pFrame(p_frame)
-  ,m_FrameId(p_frame->GetFrameId())
-  ,m_document(doc)
-  ,m_transform(transform)
-  ,m_x0(ancestorX)
-  ,m_y0(ancestorY)
-  ,m_width(canvasWidth)
-  ,m_height(canvasHeight)
-  ,m_ShapeNumber(shape_number)
-  ,m_x1(x1)
-  ,m_y1(y1)
-  ,m_x2(x2)
-  ,m_y2(y2)
-  ,m_created(created)
-  ,m_NbPoints(0)
-    
-{
-
-  if (m_pFrame)
-    {
-      /* attach this handler to the canvas */
-      AmayaCanvas * p_canvas = m_pFrame->GetCanvas();
-      p_canvas->PushEventHandler(this);
-
-      /* assign a cross mouse cursor */
-
-      if(m_ShapeNumber == 9 || m_ShapeNumber == 10)
-	m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_IBEAM) );
-      else
-	m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
-
-
-      m_pFrame->GetCanvas()->CaptureMouse();
-
-    }
-
-  if(m_ShapeNumber == 42)
-    /* It is actually a box that allows to select graphical elements */
-    InitDrawing (2, 1, 0);
-  else
-    InitDrawing (5, 1, 0);
-}
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
-{
-  /* Clear the Shape */
-  DrawShape (*m_x1, *m_y1, *m_x2, *m_y2, m_ShapeNumber, m_FrameId);
-
-  if (m_pFrame)
-    {
-      /* detach this handler from the canvas (restore default behaviour) */
-      AmayaCanvas * p_canvas = m_pFrame->GetCanvas();
-      p_canvas->PopEventHandler(false /* do not delete myself */);
-      
-      /* restore the default cursor */
-      m_pFrame->GetCanvas()->SetCursor( wxNullCursor );
-      m_pFrame->GetCanvas()->ReleaseMouse();
-    }
-  
-}
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-bool AmayaCreateShapeEvtHandler::IsFinish()
-{
-  return m_IsFinish;
-}
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-void AmayaCreateShapeEvtHandler::OnChar( wxKeyEvent& event )
-{
-  *m_created = FALSE;
-  m_IsFinish = true;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaCreateShapeEvtHandler
- *      Method:  OnMouseDown
- * Description:  handle mouse button down events
- -----------------------------------------------------------------------*/
-void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
-{
-  if (IsFinish() || m_NbPoints != 0)return;
-
-  /* Are we in the SVG ? */
-  if(!MouseCoordinatesToSVG(m_document, m_pFrame,
-			    m_x0, m_y0,
-			    m_width, m_height,
-			    m_transform,
-			    FALSE, &m_mouse_x, &m_mouse_y))return;
-
-  *m_x1 = m_mouse_x;
-  *m_y1 = m_mouse_y;
-  m_NbPoints = 1;
-
-  if(m_ShapeNumber == 10 || m_ShapeNumber == 9)
-    {
-      /* Only one point is needed */
-      *m_x2 = *m_x1;
-      *m_y2 = *m_y1;
-      m_IsFinish = true;
-    }
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaCreateShapeEvtHandler
- *      Method:  OnMouseUp
- * Description:  handle mouse button up events
- -----------------------------------------------------------------------*/
-void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
-{
-  if(IsFinish() || m_NbPoints != 1)return;
-
-  /* Are we in the SVG ? */
-  if(!MouseCoordinatesToSVG(m_document, m_pFrame,
-			    m_x0, m_y0,
-			    m_width, m_height,
-			    m_transform,
-			    FALSE, &m_mouse_x, &m_mouse_y))return;
-
-  *m_x2 = m_mouse_x;
-  *m_y2 = m_mouse_y;
-  m_NbPoints = 2;
-
-  *m_created = TRUE;
-  m_IsFinish = true;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaCreateShapeEvtHandler
- *      Method:  OnMouseDbClick
- * Description:  handle mouse dbclick events
- -----------------------------------------------------------------------*/
-void AmayaCreateShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
-{
-  m_IsFinish = true;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaCreateShapeEvtHandler
- *      Method:  OnMouseMove
- * Description:  handle mouse move events
- -----------------------------------------------------------------------*/
-void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
-{
-  if(m_NbPoints > 0)
-    DrawShape (*m_x1, *m_y1, m_mouse_x, m_mouse_y, m_ShapeNumber, m_FrameId);
-
-  m_mouse_x = event.GetX();
-  m_mouse_y = event.GetY();
-
-  MouseCoordinatesToSVG(m_document, m_pFrame,
-			m_x0, m_y0,
-			m_width, m_height,
-			m_transform,
-			FALSE, &m_mouse_x, &m_mouse_y);
-
-  if(m_NbPoints > 0)
-    DrawShape (*m_x1, *m_y1, m_mouse_x, m_mouse_y, m_ShapeNumber, m_FrameId);
-
-#ifndef _WINDOWS
-    m_pFrame->GetCanvas()->Refresh();
-#endif
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaCreateShapeEvtHandler
- *      Method:  OnMouseWheel
- * Description:  handle mouse wheel events
- -----------------------------------------------------------------------*/
-void AmayaCreateShapeEvtHandler::OnMouseWheel( wxMouseEvent& event )
-{
-}
-
 
 #endif /* _WX */

@@ -34,26 +34,28 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
 
  protected:
   DECLARE_EVENT_TABLE()
-  void OnChar( wxKeyEvent& event );
+  void OnKeyDown( wxKeyEvent& event );
+  void OnKeyUp( wxKeyEvent& event );
   void OnMouseMove( wxMouseEvent& event );
   void OnMouseWheel( wxMouseEvent& event );
   void OnMouseDbClick( wxMouseEvent& event );
   void OnMouseUp( wxMouseEvent& event );
   void OnMouseDown( wxMouseEvent& event );
+  void DrawShape ();
 
  protected:
-  bool m_IsFinish;
+  bool finished;
 
-  AmayaFrame * m_pFrame;
-  int m_FrameId;
-  int m_document;
-  void *m_transform;
-  int m_x0, m_y0, m_width, m_height;
-  int m_ShapeNumber;
-  int *m_x1,*m_y1,*m_x2,*m_y2;
-  ThotBool *m_created;
-  int m_NbPoints;
-
+  AmayaFrame * pFrame;
+  int frameId;
+  int document;
+  void *transform;
+  int x0, y0, width, height;
+  int shape;
+  int *px1,*py1,*px2,*py2;
+  ThotBool *created;
+  int nb_points;
+  bool shift_down;
 };
 
 #endif /* __AMAYACREATESHAPEEVTHANDLER_H__ */

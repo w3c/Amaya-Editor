@@ -359,6 +359,15 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
   mouse_x = event.GetX();
   mouse_y = event.GetY();
 
+  if(!ButtonDown && type == 0)
+    {
+      /* Translate: when the module is called, the user has already
+       pressed the button of the mouse. */
+      lastX = mouse_x;
+      lastY = mouse_y;
+      ButtonDown = true;
+    }
+
   if(ButtonDown && (abs(mouse_x -lastX) + abs(mouse_y - lastY) > DELTA))
     {
       /* The user is pressing the mouse button and moving */
