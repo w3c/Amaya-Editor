@@ -245,67 +245,6 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
 }
 
 /*----------------------------------------------------------------------
-  IsClickingInShape
-  The frame must be the formatted view.
-  ----------------------------------------------------------------------*/
-PtrBox IsClickingInShape(int frame, int x, int y, int* ctrlpt)
-{
-  PtrElement      child;
-  PtrAbstractBox  pAb;
-  PtrBox          box;
-  ViewFrame      *pFrame;
-  PtrFlow         pFlow = NULL;
-
-  if (FrameTable[frame].FrView == 1 && FirstSelectedElement &&
-      FirstSelectedElement == LastSelectedElement)
-    {
-      pAb = FirstSelectedElement->ElAbstractBox[0];
-      /* take into account the document scroll */
-      pFrame = &ViewFrameTable[frame - 1];
-      x += pFrame->FrXOrg;
-      y += pFrame->FrYOrg;
-      if (pAb && pAb->AbBox)
-        pFlow = GetRelativeFlow (pAb->AbBox, frame);
-      if (pFlow)
-        {
-          /* apply the box shift */
-          x += pFlow->FlXStart;
-          y += pFlow->FlYStart;
-        }
-      if (!FirstSelectedElement->ElTerminal &&
-          FirstSelectedElement->ElFirstChild &&
-          FirstSelectedElement->ElFirstChild->ElTerminal)
-        {
-          child = FirstSelectedElement->ElFirstChild;
-          if (child->ElLeafType == LtPicture ||
-              child->ElLeafType == LtPath ||
-              child->ElLeafType == LtPolyLine ||
-              child->ElLeafType == LtGraphics)
-            {
-              pAb = child->ElAbstractBox[0];
-	      if(IsInShape (pAb, x, y))
-		box = pAb->AbBox;
-              if (child->ElLeafType != LtPicture || *ctrlpt != 0)
-              return box;
-            }
-        }
-      else if (FirstSelectedElement->ElAbstractBox[0] &&
-               TypeHasException (ExcIsDraw, FirstSelectedElement->ElTypeNumber,
-                                 FirstSelectedElement->ElStructSchema))
-        {
-          if (pAb && pAb->AbBox)
-            {
-	      if(IsInShape (pAb, x, y))
-		box = pAb->AbBox;
-              if (*ctrlpt != 0)
-                return box;
-            }
-        }
-    }
-  return NULL;
-}
-
-/*----------------------------------------------------------------------
   LocateSelectionInView finds out the selected Abstract Box and if it's
   a TEXT element the selected character(s).
   The parameter button says what the editor wants to do with this
@@ -1040,7 +979,7 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
   height = box->BxHeight;
   max = 0;
 
-  printf("x=%d y=%d width=%d height=%d\n", x, y, width, height);
+  //  printf("x=%d y=%d width=%d height=%d\n", x, y, width, height);
 
   /* Is there a characteristic point of the drawing? */
   switch (pAb->AbRealShape)
@@ -2368,10 +2307,9 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
 /*----------------------------------------------------------------------
   SVG_ApplyDirectTranslate applies direct translation to the box.
   ----------------------------------------------------------------------*/
-void SVG_ApplyDirectTranslate (PtrBox pBox, int frame)
+void SVG_ApplyDirectTranslate (PtrAbstractBox      pAb, int frame)
 {
   Document doc;
-  PtrAbstractBox      pAb;
   PtrElement          pEl;
   ViewFrame          *pFrame;
 
@@ -2380,9 +2318,6 @@ void SVG_ApplyDirectTranslate (PtrBox pBox, int frame)
   pFrame = &ViewFrameTable[frame - 1];
   doc = FrameTable[frame].FrDoc;
 
-  if(pBox)
-    {
-      pAb = pBox->BxAbstractBox;
       if(pAb)
 	{
 	  pAb = pAb->AbEnclosing;
@@ -2399,7 +2334,7 @@ void SVG_ApplyDirectTranslate (PtrBox pBox, int frame)
 		}
 	    }
 	}
-    }
+
 }
 
 

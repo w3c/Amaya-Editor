@@ -2116,94 +2116,94 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 void DrawEllips (int frame, int thick, int style, int x, int y, int width,
                  int height, int fg, int bg, int pattern)
 {
-  void        *mesh;  
-  double x1, y1, x2, y2, rx, ry;
+/*   void        *mesh;   */
+/*   double x1, y1, x2, y2, rx, ry; */
 
-  /* Check that width and height are positive */
-  if (width <= 0 || height <= 0)
-    return;
-
-  /* Compute the coordinates and radius used */
-  rx = ((double) width)/2;
-  ry = ((double) height)/2;
-  x1 = x;
-  x2 = x+width;
-  y1 = y+ry;
-  y2 = y1;
-
-  /* Build an ellipse
-
-          ---------------
-         /       |       \
-        /        ry       \ 
-        |        |        |
- (x1,y1)|---rx---.        |(x2,y2)
-        |                 |
-        \                 / 
-         \               /
-          ---------------
-
-  */
- 
-  mesh = GetNewMesh ();
-
-  /* 1 -> 2 */
-  EllipticSplit2 (frame, 0, 0,
-		  x1, y1,
-		  x2, y2, 
-		  rx, ry,
-		  0,
-		  0,0,
-		  mesh);
-
-  /* 2 -> 1 */
-  EllipticSplit2 (frame, 0, 0,
-		  x2, y2,
-		  x1, y1, 
-		  rx, ry,
-		  0,
-		  0,0,
-		  mesh);
-
-  /* 1 */
-  MeshNewPoint (x1, y1, mesh);
-
-  CountourCountAdd (mesh);
-
-  /* Draw the shape and free the memory used */
-  CountourCountAdd (mesh);
-  DoDrawMesh (frame, thick, style, mesh, fg, bg, pattern);
-  FreeMesh (mesh);
-
-  /* The arcs are not always drawn well using DoDrawMesh,
-     (for instance when thick >= 10) so redraw them using the
-     former function, until the problem is fixed. - F. Wang */
-  if (thick > 0 && fg >= 0)
-    {
-      InitDrawing (style, (thick/2), fg);
-      GL_DrawArc (x, y, width, height, 0, 360, 0, FALSE);
-    }
-
-/*   /\* Fill in the rectangle *\/ */
-/*   if (pattern != 2 && thick <= 0 && pattern != fg) */
+/*   /\* Check that width and height are positive *\/ */
+/*   if (width <= 0 || height <= 0) */
 /*     return; */
 
-/*   if (pattern == fg) */
-/*     bg = fg; */
+/*   /\* Compute the coordinates and radius used *\/ */
+/*   rx = ((double) width)/2; */
+/*   ry = ((double) height)/2; */
+/*   x1 = x; */
+/*   x2 = x+width; */
+/*   y1 = y+ry; */
+/*   y2 = y1; */
 
-/*   y = y + FrameTable[frame].FrTopMargin; */
-/*   if ((pattern == 2 || (bg == fg && bg == pattern)) && */
-/*       thick < width && thick < height) */
-/*     { */
-/*       GL_SetForeground (bg, TRUE); */
-/*       GL_DrawArc (x, y, width, height, 0, 360, 0, TRUE); */
-/*     } */
-/*   /\* Draw the border *\/ */
+/*   /\* Build an ellipse */
+
+/*           --------------- */
+/*          /       |       \ */
+/*         /        ry       \  */
+/*         |        |        | */
+/*  (x1,y1)|---rx---.        |(x2,y2) */
+/*         |                 | */
+/*         \                 /  */
+/*          \               / */
+/*           --------------- */
+
+/*   *\/ */
+ 
+/*   mesh = GetNewMesh (); */
+
+/*   /\* 1 -> 2 *\/ */
+/*   EllipticSplit2 (frame, 0, 0, */
+/* 		  x1, y1, */
+/* 		  x2, y2,  */
+/* 		  rx, ry, */
+/* 		  0, */
+/* 		  0,0, */
+/* 		  mesh); */
+
+/*   /\* 2 -> 1 *\/ */
+/*   EllipticSplit2 (frame, 0, 0, */
+/* 		  x2, y2, */
+/* 		  x1, y1,  */
+/* 		  rx, ry, */
+/* 		  0, */
+/* 		  0,0, */
+/* 		  mesh); */
+
+/*   /\* 1 *\/ */
+/*   MeshNewPoint (x1, y1, mesh); */
+
+/*   CountourCountAdd (mesh); */
+
+/*   /\* Draw the shape and free the memory used *\/ */
+/*   CountourCountAdd (mesh); */
+/*   DoDrawMesh (frame, thick, style, mesh, fg, bg, pattern); */
+/*   FreeMesh (mesh); */
+
+/*   /\* The arcs are not always drawn well using DoDrawMesh, */
+/*      (for instance when thick >= 10) so redraw them using the */
+/*      former function, until the problem is fixed. - F. Wang *\/ */
 /*   if (thick > 0 && fg >= 0) */
 /*     { */
-/*       InitDrawing (style, thick, fg); */
+/*       InitDrawing (style, (thick/2), fg); */
 /*       GL_DrawArc (x, y, width, height, 0, 360, 0, FALSE); */
 /*     } */
+
+  /* Fill in the rectangle */
+  if (pattern != 2 && thick <= 0 && pattern != fg)
+    return;
+
+  if (pattern == fg)
+    bg = fg;
+
+  y = y + FrameTable[frame].FrTopMargin;
+  if ((pattern == 2 || (bg == fg && bg == pattern)) &&
+      thick < width && thick < height)
+    {
+      GL_SetForeground (bg, TRUE);
+      GL_DrawArc (x, y, width, height, 0, 360, 0, TRUE);
+    }
+  /* Draw the border */
+  if (thick > 0 && fg >= 0)
+    {
+      InitDrawing (style, thick, fg);
+      GL_DrawArc (x, y, width, height, 0, 360, 0, FALSE);
+    }
 }
 
 /*----------------------------------------------------------------------

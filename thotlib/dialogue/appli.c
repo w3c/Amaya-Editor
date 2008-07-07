@@ -813,7 +813,8 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
 #endif /* !_WINDOWS && ! _MACOS */
   PtrBox     box;
   int        ctrlpt;
-
+  PtrAbstractBox pAb;
+    
   /* Amaya is waiting for a click selection ? */
   if (ClickIsDone == 1)
     {
@@ -842,9 +843,9 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
           }
         else
 	  {
-	    box = IsClickingInShape(frame, x, y, &ctrlpt);
-	    if(box)
-	      SVG_ApplyDirectTranslate(box, frame);
+	    pAb = GetClickedAbsBox (frame, x, y);
+	    if(pAb)
+	      SVG_ApplyDirectTranslate(pAb, frame);
 
 	    if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
 	      {
