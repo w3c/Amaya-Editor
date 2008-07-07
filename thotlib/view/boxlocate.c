@@ -2307,6 +2307,9 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
 /*----------------------------------------------------------------------
   SVG_ApplyDirectTranslate applies direct translation to the box.
   ----------------------------------------------------------------------*/
+
+void UpdateTransformMatrix(Document doc, Element el);
+
 void SVG_ApplyDirectTranslate (PtrAbstractBox      pAb, int frame)
 {
   Document doc;
@@ -2331,6 +2334,8 @@ void SVG_ApplyDirectTranslate (PtrAbstractBox      pAb, int frame)
 			       NULL,
 			       NULL,
 			       0, (Element)(pEl));
+		  UpdateTransformMatrix(doc, (Element)(pEl));
+		  TtaSetDocumentModified(doc);
 		}
 	    }
 	}
