@@ -327,7 +327,8 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
 						     PtrTextBuffer Pbuffer,
 						     Document doc,
 						     int shape_number,
-						     int *NbPoints)
+						     int *NbPoints,
+						     ThotBool *created)
   : wxEvtHandler()
   ,m_IsFinish(false)
   ,m_pFrame(p_frame)
@@ -340,6 +341,7 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
   ,m_Pbuffer(Pbuffer)
   ,m_document(doc)
   ,m_NbPoints(NbPoints)
+  ,m_created(created)
 {
   if (m_pFrame)
     {
@@ -471,6 +473,7 @@ bool AmayaCreatePathEvtHandler::IsFinish()
  *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnChar( wxKeyEvent& event )
 {
+  *m_created = FALSE;
   m_IsFinish = true;
 }
 
@@ -576,6 +579,7 @@ void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
+  *m_created = (N_points > 2);
   m_IsFinish = true;
 }
 

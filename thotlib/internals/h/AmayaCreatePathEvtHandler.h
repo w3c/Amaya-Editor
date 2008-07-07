@@ -21,7 +21,8 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
   AmayaCreatePathEvtHandler();
   AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x_min, int y_min,
 			    int x_max, int y_max, PtrTextBuffer Pbuffer,
-			    Document doc, int shape_number, int *NbPoints);
+			    Document doc, int shape_number, int *NbPoints,
+			    ThotBool *created);
 
   virtual ~AmayaCreatePathEvtHandler();
 
@@ -47,6 +48,7 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
 
   PtrTextBuffer m_Pbuffer;
   int m_document, *m_NbPoints;
+  ThotBool *m_created;
 
 };
 

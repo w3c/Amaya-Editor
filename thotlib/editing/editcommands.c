@@ -2054,7 +2054,7 @@ char *AskShapePoints (Document doc, int shape, Element svgRoot)
 
   pBuffer = PathCreation (frame, x1, y1, x2, y2, doc, shape, &length);
 
-  if(pBuffer -> BuLength == 0)return NULL;
+  if(!pBuffer)return NULL;
 
   attr_data = (char *)TtaGetMemory(BUFFERPOINT_LENGTH * length + 1);
   if(attr_data)

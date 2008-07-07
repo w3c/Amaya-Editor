@@ -1598,6 +1598,7 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
      fred */
 
 
+  ThotBool created;
   PtrTextBuffer       pBuffer;
   AmayaFrame * p_frame;
   AmayaCreatePathEvtHandler * p_CreatePathEvtHandler;
@@ -1621,11 +1622,17 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
 							 ymin, xmax,
 							 ymax, pBuffer,
 							 doc, shape_number,
-							 NbPoints);
+							 NbPoints, &created);
   while(!p_CreatePathEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
   delete p_CreatePathEvtHandler;
+
+  if(!created)
+    {
+      FreeTextBuffer (pBuffer);
+      pBuffer = NULL;
+    }
 
   return pBuffer;
 }
