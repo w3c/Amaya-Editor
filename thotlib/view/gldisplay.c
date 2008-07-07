@@ -1927,6 +1927,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
   /* The arcs are not always drawn well using DoDrawMesh,
      (for instance when thick >= 10) so redraw them using the
      former function, until the problem is fixed. - F. Wang */
+#ifndef _MACOS
   GL_DrawArc (xmax-rayx*2, ymin,
 	      rayx*2, rayy*2,
 	      0, 90,
@@ -1946,7 +1947,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	      rayx*2, rayy*2,
 	      90, 90,
 	      0, FALSE);
-
+#endif /* _MACOS */
 /*   float               rayx, rayy, dx, dy; */
 /*   float               xf, yf; */
 /*   int                 i; */
