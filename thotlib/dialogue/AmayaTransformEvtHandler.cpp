@@ -77,7 +77,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaTransformEvtHandler, wxEvtHandler)
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaTransformEvtHandler, wxEvtHandler)
-EVT_CHAR( AmayaTransformEvtHandler::OnChar )
+EVT_KEY_DOWN( AmayaTransformEvtHandler::OnChar )
 EVT_LEFT_DOWN(AmayaTransformEvtHandler::OnMouseDown) 
 EVT_LEFT_UP(AmayaTransformEvtHandler::OnMouseUp)
 EVT_LEFT_DCLICK(AmayaTransformEvtHandler::OnMouseDbClick)

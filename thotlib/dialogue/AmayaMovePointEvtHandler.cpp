@@ -44,7 +44,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaMovePointEvtHandler, wxEvtHandler)
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaMovePointEvtHandler, wxEvtHandler)
-  EVT_CHAR( AmayaMovePointEvtHandler::OnChar )
+  EVT_KEY_DOWN( AmayaMovePointEvtHandler::OnChar )
 
   EVT_LEFT_DOWN(	AmayaMovePointEvtHandler::OnMouseDown) // Process a wxEVT_LEFT_DOWN event. 
   EVT_LEFT_UP(		AmayaMovePointEvtHandler::OnMouseUp) // Process a wxEVT_LEFT_UP event. 

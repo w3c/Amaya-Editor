@@ -306,19 +306,18 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaCreateShapeEvtHandler, wxEvtHandler)
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaCreateShapeEvtHandler, wxEvtHandler)
-EVT_CHAR( AmayaCreateShapeEvtHandler::OnChar )
-
-EVT_LEFT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown) // Process a wxEVT_LEFT_DOWN event. 
-EVT_LEFT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp) // Process a wxEVT_LEFT_UP event. 
-EVT_LEFT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick) // Process a wxEVT_LEFT_DCLICK event. 
-EVT_MIDDLE_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown) // Process a wxEVT_MIDDLE_DOWN event. 
-EVT_MIDDLE_UP(	AmayaCreateShapeEvtHandler::OnMouseUp) // Process a wxEVT_MIDDLE_UP event. 
-EVT_MIDDLE_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick) // Process a wxEVT_MIDDLE_DCLICK event. 
-EVT_RIGHT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown) // Process a wxEVT_RIGHT_DOWN event. 
-EVT_RIGHT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp) // Process a wxEVT_RIGHT_UP event. 
-EVT_RIGHT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick) // Process a wxEVT_RIGHT_DCLICK event. 
-EVT_MOTION(		AmayaCreateShapeEvtHandler::OnMouseMove) // Process a wxEVT_MOTION event. 
-EVT_MOUSEWHEEL(	AmayaCreateShapeEvtHandler::OnMouseWheel) // Process a wxEVT_MOUSEWHEEL event. 
+EVT_KEY_DOWN ( AmayaCreateShapeEvtHandler::OnChar )
+EVT_LEFT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
+EVT_LEFT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp)
+EVT_LEFT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
+EVT_MIDDLE_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
+EVT_MIDDLE_UP(	AmayaCreateShapeEvtHandler::OnMouseUp)
+EVT_MIDDLE_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
+EVT_RIGHT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
+EVT_RIGHT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp)
+EVT_RIGHT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
+EVT_MOTION(		AmayaCreateShapeEvtHandler::OnMouseMove)
+EVT_MOUSEWHEEL(	AmayaCreateShapeEvtHandler::OnMouseWheel)
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -391,8 +390,6 @@ AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
   /* Clear the Shape */
   DrawShape (*m_x1, *m_y1, *m_x2, *m_y2, m_ShapeNumber, m_FrameId);
 
-  *m_created = TRUE;
-	
   if (m_pFrame)
     {
       /* detach this handler from the canvas (restore default behaviour) */
@@ -417,6 +414,7 @@ bool AmayaCreateShapeEvtHandler::IsFinish()
  *----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnChar( wxKeyEvent& event )
 {
+  *m_created = FALSE;
   m_IsFinish = true;
 }
 
@@ -468,6 +466,8 @@ void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
   *m_x2 = m_mouse_x;
   *m_y2 = m_mouse_y;
   m_NbPoints = 2;
+
+  *m_created = TRUE;
   m_IsFinish = true;
 }
 

@@ -52,8 +52,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaResizingBoxEvtHandler, wxEvtHandler)
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaResizingBoxEvtHandler, wxEvtHandler)
-  EVT_CHAR( AmayaResizingBoxEvtHandler::OnChar )
-
+  EVT_KEY_DOWN( AmayaResizingBoxEvtHandler::OnChar )
   EVT_LEFT_DOWN( AmayaResizingBoxEvtHandler::OnMouseDown) // Process a wxEVT_LEFT_DOWN event. 
   EVT_LEFT_UP( AmayaResizingBoxEvtHandler::OnMouseUp) // Process a wxEVT_LEFT_UP event. 
   EVT_LEFT_DCLICK( AmayaResizingBoxEvtHandler::OnMouseDbClick) // Process a wxEVT_LEFT_DCLICK event. 

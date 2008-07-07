@@ -298,7 +298,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaCreatePathEvtHandler, wxEvtHandler)
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaCreatePathEvtHandler, wxEvtHandler)
-EVT_CHAR( AmayaCreatePathEvtHandler::OnChar )
+EVT_KEY_DOWN( AmayaCreatePathEvtHandler::OnChar )
 
 EVT_LEFT_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown) // Process a wxEVT_LEFT_DOWN event.
 EVT_LEFT_UP(		AmayaCreatePathEvtHandler::OnMouseUp) // Process a wxEVT_LEFT_UP event.
