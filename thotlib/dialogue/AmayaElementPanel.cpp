@@ -91,6 +91,7 @@ bool AmayaElementToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoin
   m_notebook->AddPage(new AmayaSVGPanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_svg.png"), wxBITMAP_TYPE_PNG));
   m_notebook->AddPage(new AmayaTemplatePanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_template.png"), wxBITMAP_TYPE_PNG));
   m_notebook->AddPage(m_xml = new AmayaXMLPanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_xml.png"), wxBITMAP_TYPE_PNG));
+  sz->Layout();
   return true;
 }
 
