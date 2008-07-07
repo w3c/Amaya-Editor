@@ -128,9 +128,6 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
  *----------------------------------------------------------------------*/
 AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
 {
-  /* Clear the Shape */
-  DrawShape ();
-
   if (pFrame)
     {
       /* detach this handler from the canvas (restore default behaviour) */
@@ -328,13 +325,13 @@ void AmayaCreateShapeEvtHandler::DrawShape ()
 
       /*     |    O
              |   /
-	    ly  /
+            ly  /
              | /theta
              |/
              --lx--
        */
       if(lx == 0)
-	theta = M_PI_2;
+	theta = M_PI/2;
       else
 	theta = atan(ly/lx);
 
@@ -351,7 +348,7 @@ void AmayaCreateShapeEvtHandler::DrawShape ()
       else
 	{
 	  /* Diagonal */
-	  if(ly > lx)lx=ly; else ly = lx;
+	  if(ly <lx)lx=ly; else ly = lx;
 
 	  if(*px2 < *px1)*px2 = *px1 - lx;
 	  else *px2 = *px1 + lx;
