@@ -128,6 +128,9 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
  *----------------------------------------------------------------------*/
 AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
 {
+  /* Clear the shape */
+  DrawShape ();
+
   if (pFrame)
     {
       /* detach this handler from the canvas (restore default behaviour) */
@@ -138,7 +141,6 @@ AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
       pFrame->GetCanvas()->SetCursor( wxNullCursor );
       pFrame->GetCanvas()->ReleaseMouse();
     }
-  
 }
 
 /*----------------------------------------------------------------------
