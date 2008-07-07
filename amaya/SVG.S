@@ -2501,7 +2501,7 @@ EXCEPT
    foreignObject: MoveResize, HighlightChildren, NoCreate, NewRoot;
    SVG_Image:     Hidden, SelectParent;
    GRAPHICS:            SelectParent;
-   PICTURE:       NoMove, NoResize, SelectParent;
+   PICTURE:       MoveResize{NoMove, NoResize, SelectParent};
    TEXT:          NoMove, NoResize;
    Unknown_namespace:   NoCreate;
    DOCTYPE:             NoCut, NoSpellCheck, NotAnElementNode;

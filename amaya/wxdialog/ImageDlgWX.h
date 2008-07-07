@@ -25,7 +25,7 @@ public:
               const wxString & urlToOpen,
               const wxString & alt,
               const wxString & filter,
-              int *p_last_used_filter );
+              int *p_last_used_filter, bool isSvg );
     
   // Destructor.                  
   virtual ~ImageDlgWX();

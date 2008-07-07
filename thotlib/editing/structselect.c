@@ -1970,6 +1970,7 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
             }
           /* Is the new selection in the same tree as the former selection */
           FirstSelectedElement = pEl;
+          SelPosition = !string;
           if (pDoc != SelectedDocument)
             {
               CancelSelection ();
@@ -1989,7 +1990,15 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
             }
           else if (pEl->ElLeafType == LtPicture)
             {
-              SelectedPictureEdge = firstChar;
+              if (pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
+                  !strcmp (pEl->ElStructSchema->SsName, "SVG"))
+                {
+                  // force the selection of the whole picture
+                  SelectedPictureEdge = 0;
+                  SelPosition = FALSE;
+                }
+              else
+                SelectedPictureEdge = firstChar;
               FirstSelectedChar = 0;
               LastSelectedChar = 0;
             }
@@ -2006,7 +2015,6 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
           LastSelectedColumn = NULL;
           WholeColumnSelected = FALSE;
           NSelectedElements = 0;
-          SelPosition = !string;
           /* highlight boxes of current selection */
           elVisible = SelectAbsBoxes (pEl, TRUE);
           if (!elVisible)
@@ -2188,9 +2196,14 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin,
       FixedChar = 0;
       /* If the selected element is empty or is a picture, the new */
       /* selection is simply considered as an insertion position */
-      if ((pEl->ElTerminal &&
-           (pEl->ElVolume == 0 || pEl->ElLeafType == LtPicture)) ||
-          (!pEl->ElTerminal && pEl->ElFirstChild == NULL))
+      if (pEl->ElTerminal && pEl->ElLeafType == LtPicture &&
+          pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
+          !strcmp (pEl->ElStructSchema->SsName, "SVG"))
+        // force the selection of the whole picture
+        SelPosition = FALSE;
+      else if ((pEl->ElTerminal &&
+                (pEl->ElVolume == 0 || pEl->ElLeafType == LtPicture)) ||
+               (!pEl->ElTerminal && pEl->ElFirstChild == NULL))
         {
           SelPosition = TRUE;
           if (pEl->ElTerminal && pEl->ElLeafType == LtPicture)

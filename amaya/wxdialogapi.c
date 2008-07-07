@@ -393,15 +393,16 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
 
 
 /*----------------------------------------------------------------------
-  CreateImageDlgWX create the dialog for creating new image
+  CreateImageDlgWX creates the dialog for creating new image
   params:
     + parent : parent window
     + title : dialog title
     + urlToOpen : suggested url
+    + isSvg is TRUE when creating a SVG image
   returns:
   ----------------------------------------------------------------------*/
 ThotBool CreateImageDlgWX (int ref, ThotWindow parent, const char *title,
-                           const char *urlToOpen, const char *alt)
+                           const char *urlToOpen, const char *alt, ThotBool isSvg)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -418,7 +419,8 @@ ThotBool CreateImageDlgWX (int ref, ThotWindow parent, const char *title,
                                        wx_urlToOpen,
                                        wx_alt,
                                        wx_filter,
-                                       &img_Last_used_filter
+                                       &img_Last_used_filter,
+                                       (bool)isSvg
                                        );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )

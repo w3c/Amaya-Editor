@@ -38,11 +38,13 @@ END_EVENT_TABLE()
     + title : dialog title
     + urlToOpen : the proposed url
     + alt: the suggested alt
+    + isSvg is TRUE when creating a SVG image
   returns:
   ----------------------------------------------------------------------*/
 ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
                         const wxString & urlToOpen, const wxString & alt,
-                        const wxString & filter, int * p_last_used_filter ) :
+                        const wxString & filter, int * p_last_used_filter,
+                        bool isSvg) :
   AmayaDialog( NULL, ref ),
   m_Filter(filter),
   m_pLastUsedFilter(p_last_used_filter)
@@ -56,7 +58,6 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
   SetTitle( title );
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_BUTTON_IMG) ));
   XRCCTRL(*this, "wxID_ALT_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT) ));
-  XRCCTRL(*this, "wxID_POSITION_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_POSITION) ));
   XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
   XRCCTRL(*this, "wxID_OPENBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
@@ -67,24 +68,33 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
 
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
 
+  // toolbar to select the html position
   wxToolBar* tb = XRCCTRL(*this, "wxID_TOOL", wxToolBar);
-  ImgPosition = 0;
-  switch (ImgPosition)
+  if (isSvg)
     {
-    case 1:
-      tb->ToggleTool(XRCID("wxID_LEFT"), true);
-      break;
-    case 2:
-      tb->ToggleTool(XRCID("wxID_CENTER"), true);
-      break;
-    case 3:
-      tb->ToggleTool(XRCID("wxID_RIGHT"), true);
-      break;
-    default:
-      tb->ToggleTool(XRCID("wxID_INLINE"), true);
-      break;
+      XRCCTRL(*this, "wxID_POSITION_LABEL", wxStaticText)->Hide();
+      tb->Hide();
     }
-
+  else
+    {
+      XRCCTRL(*this, "wxID_POSITION_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_POSITION) ));
+      ImgPosition = 0;
+      switch (ImgPosition)
+        {
+        case 1:
+          tb->ToggleTool(XRCID("wxID_LEFT"), true);
+          break;
+        case 2:
+          tb->ToggleTool(XRCID("wxID_CENTER"), true);
+          break;
+        case 3:
+          tb->ToggleTool(XRCID("wxID_RIGHT"), true);
+          break;
+        default:
+          tb->ToggleTool(XRCID("wxID_INLINE"), true);
+          break;
+        }
+    }
   SetAutoLayout( TRUE );
 
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetFocus();

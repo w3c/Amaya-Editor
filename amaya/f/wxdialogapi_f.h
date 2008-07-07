@@ -39,7 +39,8 @@ extern ThotBool CreateImageDlgWX ( int ref,
                                    ThotWindow parent,
                                    const char *title,
                                    const char *urlToOpen,
-                                   const char *alt );
+                                   const char *alt,
+                                   ThotBool isSvg );
 extern ThotBool CreateObjectDlgWX ( int ref,
                                     ThotWindow parent,
                                     const char *title,
@@ -203,7 +204,8 @@ extern ThotBool CreateImageDlgWX ( int ref,
                                      ThotWindow parent,
                                      const char *title,
                                      const char *urlToOpen,
-                                     const char *alt );
+                                     const char *alt,
+                                     ThotBool isSvg );
 extern ThotBool CreateObjectDlgWX ( int ref,
                                       ThotWindow parent,
                                       const char *title,

@@ -4016,7 +4016,7 @@ void SVG_Select (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Image (Document document, View view)
 {
-  AddNewImage (document, view, TRUE);
+  AddNewImage (document, view, FALSE, TRUE);
 }
 
 /*----------------------------------------------------------------------

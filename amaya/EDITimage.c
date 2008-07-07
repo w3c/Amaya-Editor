@@ -43,7 +43,7 @@ static int        RefFormImage = 0;
 #include "XHTMLbuilder_f.h"
 #include "wxdialogapi_f.h"
 #include "message_wx.h"
-
+#include "SVGbuilder_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -487,7 +487,7 @@ void CreateAreaPoly (Document doc, View view)
   Check if there is an alternate text when loading an image.
   ----------------------------------------------------------------------*/
 static char *GetImageURL (Document document, View view,
-                          ThotBool isObject, ThotBool isInput)
+                          ThotBool isObject, ThotBool isInput, ThotBool isSVG)
 {
 #ifdef _WX
   LoadedImageDesc   *desc;
@@ -516,11 +516,11 @@ static char *GetImageURL (Document document, View view,
   else if (isInput)
     CreateImageDlgWX (RefFormImage, TtaGetViewFrame (document, view),
                       TtaGetMessage (THOT, BImageInput),
-                      LastURLImage, ImgAlt);
+                      LastURLImage, ImgAlt, FALSE);
   else
     CreateImageDlgWX (RefFormImage, TtaGetViewFrame (document, view),
                       TtaGetMessage (LIB, TMSG_BUTTON_IMG),
-                      LastURLImage, ImgAlt);
+                      LastURLImage, ImgAlt, isSVG);
   TtaSetDialoguePosition ();
   TtaShowDialogue (RefFormImage, FALSE);
   TtaWaitShowDialogue ();
@@ -805,16 +805,22 @@ void UpdateSRCattribute (NotifyOnTarget *event)
   ElementType      elType;
   Document         doc;
   DisplayMode      dispMode;
-  char            *text;
+  char            *text, *name;
   char            *utf8value;
   int              length;
-  ThotBool         newAttr, isObject = FALSE, isInput = FALSE;
+  ThotBool         newAttr, isObject = FALSE, isInput = FALSE, isSvg = FALSE;
 
   el = event->element;
   doc = event->document;
   elType = TtaGetElementType (el);
-  isInput = (elType.ElTypeNum == HTML_EL_Image_Input);
-  isObject = (elType.ElTypeNum == HTML_EL_Object);
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    {
+      isInput = (elType.ElTypeNum == HTML_EL_Image_Input);
+      isObject = (elType.ElTypeNum == HTML_EL_Object);
+    }
+  else
+    isSvg = (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"));
   attrType.AttrSSchema = elType.ElSSchema;
   /* if it's not an HTML picture (it could be an SVG image for instance),
      ignore */
@@ -873,7 +879,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
     }
 
   /* Select an image name */
-  text = GetImageURL (doc, 1, isObject, isInput);
+  text = GetImageURL (doc, 1, isObject, isInput, isSvg);
   if (text == NULL || text[0] == EOS)
     /* The user has cancelled */
     {
@@ -1134,7 +1140,7 @@ void SvgImageCreated (NotifyElement *event)
   el = event->element;
   doc = event->document;
   /* display the Image form and get the user feedback */
-  text = GetImageURL (doc, 1, FALSE, FALSE);
+  text = GetImageURL (doc, 1, FALSE, FALSE, TRUE);
   if (text == NULL || text[0] == EOS)
     {
       /* delete the empty image element */
@@ -1177,7 +1183,7 @@ void SvgImageCreated (NotifyElement *event)
 #endif /* _WX */
       ImgAlt[0] = EOS;
     }
-  /* search the xlink:href attribute */
+  /* update the xlink:href attribute */
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_xlink_href;
   attr = TtaGetAttribute (el, attrType);
@@ -1295,12 +1301,12 @@ void  CreateObject (Document doc, View view)
 /*----------------------------------------------------------------------
   AddNewImage
   ----------------------------------------------------------------------*/
-void AddNewImage (Document doc, View view, ThotBool isInput)
+void AddNewImage (Document doc, View view, ThotBool isInput, ThotBool isSvg)
 {
   Element            firstSelEl, lastSelEl, parent, leaf, el;
   ElementType        elType;
   Attribute          attr;
-  AttributeType      attrType;
+  AttributeType      attrType, attrH;
   NotifyOnTarget     event;
   char              *name, *value;
   int                c1, i, j, cN, length, width, height, w, h, profile;
@@ -1389,8 +1395,24 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
           if (!strcmp (name, "SVG"))
             {
 #ifdef _SVG
+              // insert the new image as the last child to get it on the top
+              TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+              do
+                {
+                  el = firstSelEl;
+                  TtaNextSibling (&el);
+                  if (el)
+                    firstSelEl = el;
+                }
+              while (el);
+              TtaSelectElement (doc, firstSelEl);
+              TtaInsertAnyElement (doc, FALSE);
+              TtaExtendUndoSequence (doc);
               elType.ElTypeNum = SVG_EL_image;
-              TtaCreateElement (elType, doc);
+              checkoptions = TtaCreateElement (elType, doc);
+              TtaSetDocumentModified (doc);
+              if (!checkoptions)
+                TtaCloseUndoSequence(doc);
 #endif /* _SVG */
             }
           else if (!strcmp (name, "HTML"))
@@ -1403,12 +1425,13 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
                   (elType.ElTypeNum == HTML_EL_Element ||
                    XhtmlCannotContainText (elType)))
                 {
-		  profile = TtaGetDocumentProfile (doc);
-		  if ((profile == L_Strict || profile == L_Basic) &&(!IsBlockElementType (elType)))
-		    /* For a Strict or Basic profile, create a Paragraph that contain the image (instead of a pseudo-paragraph) */
-		    elType.ElTypeNum = HTML_EL_Paragraph;
-		  else
-		    elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+                  profile = TtaGetDocumentProfile (doc);
+                  if ((profile == L_Strict || profile == L_Basic) &&
+                      (!IsBlockElementType (elType)))
+                    /* For a Strict or Basic profile, create a Paragraph that contain the image (instead of a pseudo-paragraph) */
+                    elType.ElTypeNum = HTML_EL_Paragraph;
+                  else
+                    elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
                   TtaOpenUndoSequence (doc, firstSelEl, lastSelEl, c1, cN);
                   if (elType.ElTypeNum == HTML_EL_Element)
                     TtaRegisterElementDelete (firstSelEl, doc);
@@ -1441,9 +1464,19 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
         el = TtaGetParent (el);
-
-      UpdatePosition (doc, el);
       attrType.AttrSSchema = elType.ElSSchema;
+      attrH.AttrSSchema = elType.ElSSchema;
+      if (isSvg)
+        {
+          attrType.AttrTypeNum = SVG_ATTR_width_;
+          attrH.AttrTypeNum = SVG_ATTR_height_;
+        }
+      else
+        {
+          UpdatePosition (doc, el);
+          attrType.AttrTypeNum = HTML_ATTR_Width__;
+          attrH.AttrTypeNum = HTML_ATTR_Height_;
+        }
       /* search informations about height and width */
       width = 0; height = 0;
       if (el)
@@ -1453,7 +1486,6 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
           /* attach height and width attributes to the image */
           TtaExtendUndoSequence (doc);
           value = (char *)TtaGetMemory (50);
-          attrType.AttrTypeNum = HTML_ATTR_Width__;
           attr = TtaGetAttribute (el, attrType);
           if (attr == NULL)
             {
@@ -1465,7 +1497,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
             newAttr = FALSE;
           // check if the image is larger than the window
           TtaGiveWindowSize (doc, 1, UnPixel, &w, &h);
-          if (width < w)
+          if (width < w || isSvg)
             sprintf (value, "%d", width);
           else
             strcpy (value, "100%");
@@ -1475,15 +1507,13 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
           if (newAttr)
             TtaRegisterAttributeCreate (attr, el, doc);
           // don't generate a height attribute
-#ifdef IV
-          if (width < w)
+          if (width < w || isSvg)
             {
-              attrType.AttrTypeNum = HTML_ATTR_Height_;
-              attr = TtaGetAttribute (el, attrType);
+              attr = TtaGetAttribute (el, attrH);
               if (attr == NULL)
                 {
                   newAttr = TRUE;
-                  attr = TtaNewAttribute (attrType);
+                  attr = TtaNewAttribute (attrH);
                   TtaAttachAttribute (el, attr, doc);
                 }
               else
@@ -1496,10 +1526,8 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
                 TtaRegisterAttributeCreate (attr, el, doc);
             }
           else
-#endif
             {
-              attrType.AttrTypeNum = HTML_ATTR_Height_;
-              attr = TtaGetAttribute (el, attrType);
+              attr = TtaGetAttribute (el, attrH);
               if (attr)
                 {
                   TtaRegisterAttributeDelete (attr, el, doc);
@@ -1507,6 +1535,61 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
                 }
               // generate the internal attribute to apply %
               CreateAttrWidthPercentPxl (value, el, doc, width);
+            }
+
+          // generate x, y position
+          if (isSvg)
+            {
+#ifdef IV
+              parent = TtaGetParent (el);
+              TtaGiveBoxSize (parent, doc, 1, UnPixel, &w, &h);
+              if (width > w)
+                w = 0;
+              else
+                w = w/2 - width/2;
+              if (height > h)
+                h = 0;
+              else
+                h = h/2 - height/2;
+#endif
+              w = h = 0;
+              attrType.AttrTypeNum = SVG_ATTR_x;
+              attr = TtaGetAttribute (el, attrType);
+              if (attr == NULL)
+                {
+                  newAttr = TRUE;
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (el, attr, doc);
+                }
+              else
+                newAttr = FALSE;
+              sprintf (value, "%d", w);
+              if (!newAttr)
+                TtaRegisterAttributeReplace (attr, el, doc);
+              TtaSetAttributeText (attr, value, el, doc);
+              if (newAttr)
+                TtaRegisterAttributeCreate (attr, el, doc);
+              // apply the position change
+              ParseCoordAttribute (attr, el, doc);
+
+              attrH.AttrTypeNum = SVG_ATTR_y;
+              attr = TtaGetAttribute (el, attrH);
+              if (attr == NULL)
+                {
+                  newAttr = TRUE;
+                  attr = TtaNewAttribute (attrH);
+                  TtaAttachAttribute (el, attr, doc);
+                }
+              else
+                newAttr = FALSE;
+              sprintf (value, "%d", h);
+              if (!newAttr)
+                TtaRegisterAttributeReplace (attr, el, doc);
+              TtaSetAttributeText (attr, value, el, doc);
+              if (newAttr)
+                TtaRegisterAttributeCreate (attr, el, doc);
+              // apply the position change
+              ParseCoordAttribute (attr, el, doc);
             }
           TtaFreeMemory (value);
           TtaCloseUndoSequence(doc);
@@ -1522,7 +1605,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
 void CreateImage (Document doc, View view)
 {
   ImgAlt[0] = EOS;
-  AddNewImage (doc, view, FALSE);
+  AddNewImage (doc, view, FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------

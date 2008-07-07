@@ -29,7 +29,8 @@ extern void CreateObject ( Document doc,
                            View view );
 extern void AddNewImage ( Document doc,
                           View view,
-                          ThotBool isInput );
+                          ThotBool isInput,
+                          ThotBool isSvg );
 extern void CreateImage ( Document doc,
                           View view );
 extern void InsertImageOrObject ( Element el,
@@ -68,7 +69,8 @@ extern void CreateObject ( Document doc,
                              View view );
 extern void AddNewImage ( Document doc,
                             View view,
-                            ThotBool isInput );
+                            ThotBool isInput,
+                            ThotBool isSvg );
 extern void CreateImage ( Document doc,
                             View view );
 extern void InsertImageOrObject ( Element el,

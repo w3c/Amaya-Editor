@@ -2485,7 +2485,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
         }
       else if (pAb->AbLeafType == LtPicture)
         // display the selection at the image level
-        selfsel = ((/*selected || */pAb->AbEnclosing->AbSelected) &&
+        selfsel = ((pAb->AbSelected || pAb->AbEnclosing->AbSelected) &&
                    !pAb->AbPresentationBox &&
                    (pFrame->FrSelectOnePosition || TtaIsSelectionUnique ()));
     }
