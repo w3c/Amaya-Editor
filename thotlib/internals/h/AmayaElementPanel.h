@@ -4,6 +4,7 @@
 #define __AMAYAELEMENTPANEL_H__
 
 #include "wx/wx.h"
+#include "wx/aui/auibook.h"
 #include "wx/imaglist.h"
 #include "AmayaToolPanel.h"
 
@@ -45,7 +46,8 @@ public:
   void RaisePanel(int panel_type);
   
 protected:
-  wxNotebook* m_notebook;
+//  wxNotebook* m_notebook;
+  wxAuiNotebook* m_notebook;
   wxImageList m_imageList;
   
   AmayaXMLPanel* m_xml;
