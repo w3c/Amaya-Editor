@@ -1421,7 +1421,7 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
      3-------4
 
   ----------------------------------------------------------------------*/
-int ShapeCreation (int frame,
+ThotBool ShapeCreation (int frame,
 		   Document doc, 
 		   void *inverseCTM,
 		   int ancestorX, int ancestorY,
@@ -1431,13 +1431,14 @@ int ShapeCreation (int frame,
 		   int *x3, int *y3, int *x4, int *y4,
 		   int *lx, int *ly)
 {
-  int nb_points;
-
+  ThotBool created = FALSE;
   AmayaFrame * p_frame;
   AmayaCreateShapeEvtHandler * p_CreateShapeEvtHandler;
   ThotEvent ev;
 
   p_frame = FrameTable[frame].WdFrame;
+
+  /* Create the handler */
   p_CreateShapeEvtHandler = new AmayaCreateShapeEvtHandler( p_frame,
 							    doc,
 							    inverseCTM,
@@ -1448,20 +1449,31 @@ int ShapeCreation (int frame,
 							    shape,
 							    x1, y1,
 							    x4, y4,
-							    &nb_points
+							    &created
 							    );
 
+  /* Wait until the end of the interactive contruction */
   while(!p_CreateShapeEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
   delete p_CreateShapeEvtHandler;
 
+  if(!created)return FALSE;
+
+  /* Size of the construct */
   *lx = abs(*x4 - *x1);
   *ly = abs(*y4 - *y1);
 
   /* Some shapes have specific contrainsts.  */
-  if(!(shape == 0 || (shape >= 12 && shape <= 14)))
+  if(shape == 9 || shape == 10 || shape == 42)
     {
+      /* text, foreign object or selection */
+      created = TRUE;
+    }
+  else if(!(shape == 0 || (shape >= 12 && shape <= 14)))
+    {
+      /* Shape */
+
       if(shape == 20)
 	/* equilateral triangle
 	        
@@ -1486,7 +1498,18 @@ int ShapeCreation (int frame,
 
       if(*y4 < *y1)*y4 = *y1 - *ly;
       else *y4 = *y1 + *ly;
+
+      /* Check that the shape is not too small */
+#define MINSIZE 20
+      created = (*lx >= MINSIZE && *ly >= MINSIZE);
     }
+  else
+    {
+       /* Line, arrows etc. Check that it is not reduced to one point */
+      created = (*lx > 0 || *ly > 0);
+    }
+
+  if(!created)return FALSE;
 
   /* Compute the position of point (2) and (3) */
   *x2 = *x4;
@@ -1523,8 +1546,8 @@ int ShapeCreation (int frame,
 			canvasHeight,
 			inverseCTM,
 			TRUE, x4, y4);
- 
-  return nb_points;
+
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------

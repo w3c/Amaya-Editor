@@ -100,8 +100,6 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
       glEnd ();
       break;
 
-
-
     case 13: /* Double Arrow */
       x3 = x1; y3 = y1;
       x4 = x2; y4 = y2;
@@ -139,8 +137,6 @@ static void DrawShape (int x1, int y1, int x2, int y2, int shape, int frameId)
       glVertex2i(x2,y2);
       glEnd (); 
       break;
-
-
 
       /* Selection */
     case 42:
@@ -342,7 +338,7 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
  int canvasHeight,
  int shape_number,
  int *x1, int *y1, int *x2, int *y2,
- int *nb_points)
+ ThotBool *created)
   : wxEvtHandler()
   ,m_IsFinish(false)
   ,m_pFrame(p_frame)
@@ -358,11 +354,11 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
   ,m_y1(y1)
   ,m_x2(x2)
   ,m_y2(y2)
-  ,m_NbPoints(nb_points)
+  ,m_created(created)
+  ,m_NbPoints(0)
     
 {
 
-  *m_NbPoints = 0;
   if (m_pFrame)
     {
       /* attach this handler to the canvas */
@@ -392,10 +388,12 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
  *----------------------------------------------------------------------*/
 AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
 {
-	/* Clear the Shape */
-    DrawShape (*m_x1, *m_y1, *m_x2, *m_y2, m_ShapeNumber, m_FrameId);
+  /* Clear the Shape */
+  DrawShape (*m_x1, *m_y1, *m_x2, *m_y2, m_ShapeNumber, m_FrameId);
+
+  *m_created = TRUE;
 	
-	if (m_pFrame)
+  if (m_pFrame)
     {
       /* detach this handler from the canvas (restore default behaviour) */
       AmayaCanvas * p_canvas = m_pFrame->GetCanvas();
@@ -405,7 +403,6 @@ AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
       m_pFrame->GetCanvas()->SetCursor( wxNullCursor );
       m_pFrame->GetCanvas()->ReleaseMouse();
     }
-
   
 }
 
@@ -430,7 +427,7 @@ void AmayaCreateShapeEvtHandler::OnChar( wxKeyEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
-  if (IsFinish() || *m_NbPoints != 0)return;
+  if (IsFinish() || m_NbPoints != 0)return;
 
   /* Are we in the SVG ? */
   if(!MouseCoordinatesToSVG(m_document, m_pFrame,
@@ -441,7 +438,7 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
 
   *m_x1 = m_mouse_x;
   *m_y1 = m_mouse_y;
-  *m_NbPoints = 1;
+  m_NbPoints = 1;
 
   if(m_ShapeNumber == 10 || m_ShapeNumber == 9)
     {
@@ -459,12 +456,7 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
-#define MIN_SHAPE_SIZE 10
-  if(IsFinish() || *m_NbPoints != 1)return;
-
-  /* Check that the shape is not too small */
-  if(abs(m_mouse_x - *m_x1) < MIN_SHAPE_SIZE ||
-     abs(m_mouse_y - *m_y1) < MIN_SHAPE_SIZE)return;
+  if(IsFinish() || m_NbPoints != 1)return;
 
   /* Are we in the SVG ? */
   if(!MouseCoordinatesToSVG(m_document, m_pFrame,
@@ -475,7 +467,7 @@ void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
 
   *m_x2 = m_mouse_x;
   *m_y2 = m_mouse_y;
-  *m_NbPoints = 2;
+  m_NbPoints = 2;
   m_IsFinish = true;
 }
 
@@ -496,7 +488,7 @@ void AmayaCreateShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
-  if(*m_NbPoints > 0)
+  if(m_NbPoints > 0)
     DrawShape (*m_x1, *m_y1, m_mouse_x, m_mouse_y, m_ShapeNumber, m_FrameId);
 
   m_mouse_x = event.GetX();
@@ -508,7 +500,7 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 			m_transform,
 			FALSE, &m_mouse_x, &m_mouse_y);
 
-  if(*m_NbPoints > 0)
+  if(m_NbPoints > 0)
     DrawShape (*m_x1, *m_y1, m_mouse_x, m_mouse_y, m_ShapeNumber, m_FrameId);
 
 #ifndef _WINDOWS

@@ -41,20 +41,40 @@ class AmayaTransformEvtHandler : public wxEvtHandler
   void OnMouseDbClick( wxMouseEvent& event );
   void OnMouseUp( wxMouseEvent& event );
   void OnMouseDown( wxMouseEvent& event );
+  void DrawRotationCenter();
+  void DrawSkewingArrows();
+  void DrawScalingArrows();
+  void UpdatePositions();
+  bool IsNear(int x, int y);
 
  protected:
-  bool m_IsFinish;
+  bool Finished;
 
-  AmayaFrame * m_pFrame;
-  int m_FrameId;
-  PtrBox m_box;
-  int m_document;
-  void *m_CTM;
-  void *m_inverse;
-  int m_x0,m_y0;
-  int m_width,m_height;
-  int m_type;
-  Element m_el;
+  AmayaFrame * pFrame;
+  int FrameId;
+  PtrBox box;
+  int document;
+  void *CTM;
+  void *inverse;
+  int x0,y0;
+  int width,height;
+  int type;
+  Element el;
+
+  /* Coordinates of the mouse */
+  int lastX, lastY, mouse_x,mouse_y;
+
+  /* Coordinates of the center of rotation */
+  int cx2, cy2;
+  float cx, cy;
+
+  /* Coordinates of the box */
+  int top2, left2, bottom2, right2;
+  float top, left, bottom, right;
+
+  /* Mouse Button Down */
+  bool ButtonDown;
+
 };
 
 #endif /* __AMAYATRANSFORMEVTHANDLER_H__ */

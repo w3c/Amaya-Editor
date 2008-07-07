@@ -488,8 +488,7 @@ char *ParseNumber (char *cssRule, PresentationValue *pval)
 }
 
 /*----------------------------------------------------------------------
-  ParseCSSUnit:                                                  
-  parse a number followed by a CSS Unit and returns the corresponding      
+  ParseCSSUnit a number followed by a CSS Unit and returns the corresponding      
   value and its unit.                                           
   ----------------------------------------------------------------------*/
 char *ParseCSSUnit (char *cssRule, PresentationValue *pval)

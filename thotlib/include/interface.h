@@ -489,9 +489,8 @@ extern void TtaUpdateToolPanelLayout ();
   ----------------------------------------------------------------------*/
 extern void TtaCloseAllHelpWindows ();
 
-
 extern void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
-void AskSurroundingBox(
+ThotBool AskSurroundingBox(
 		       Document doc,
 		       Element svgAncestor,
 		       Element svgCanvas,
@@ -503,6 +502,14 @@ void AskSurroundingBox(
 		       int *lx, int *ly);
 
 extern char *AskShapePoints (Document doc, int shape, Element svgRoot);
+
+extern void AskTransform(Document doc,
+			 Element svgAncestor,
+			 Element svgCanvas,
+			 int transform_type,
+			 Element el
+			 );
+
 extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y);
 extern void TtaApplyMatrixTransform (Document document, Element element,
 				     float a, float b, float c, float d,
@@ -519,14 +526,6 @@ extern void TtaGetMatrixTransform(Document document, Element el,
 extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor);
 extern void *TtaInverseTransform (void *transform);
 extern char *TtaGetTransformAttributeValue(Document document, Element el);
-
-extern void AskTransform(Document doc,
-			 Element svgAncestor,
-			 Element svgCanvas,
-			 int transform_type,
-			 Element el
-			 );
-
 
 #endif /* __CEXTRACT__  */
 

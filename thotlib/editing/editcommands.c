@@ -2097,7 +2097,7 @@ char *AskShapePoints (Document doc, int shape, Element svgRoot)
   Ask the user the position and size of the surrounding box or the extremities
   of a line.
   --------------------------------------------------------------------*/
-void AskSurroundingBox(
+ThotBool AskSurroundingBox(
 		       Document doc,
 		       Element svgAncestor,
 		       Element svgCanvas,
@@ -2114,13 +2114,15 @@ void AskSurroundingBox(
   int frame;
   PtrTransform CTM, inverse;
   int canvasWidth,canvasHeight,ancestorX,ancestorY;
+  ThotBool created = FALSE;
 
   frame = ActiveFrame;
 
-  if(frame <= 0 || svgCanvas == NULL || svgAncestor == NULL )return;
+  if(frame <= 0 || svgCanvas == NULL || svgAncestor == NULL )return FALSE;
 
   *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = *x4 = *y4 = *lx = * ly = 0;
   
+  /* Get the current transform matrix */
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
 
   if(CTM == NULL)
@@ -2129,45 +2131,48 @@ void AskSurroundingBox(
     }
   else
     {
+      /* Get the inverse of the CTM and free the CTM */
       inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
       TtaFreeTransform(CTM);
 
       if(inverse == NULL)
-      /* Transform not inversible */
-	return;
-	}
+	/* Transform not inversible */
+	return FALSE;
+    }
 
   pFrame = &ViewFrameTable[frame - 1];
 
   /* Get the size of the SVG Canvas */
-  pAb = ((PtrElement)svgCanvas) -> ElAbstractBox[0];
-  if(!pAb)return;
-  pBox = pAb -> AbBox;
-  if(!pBox)return;
-  canvasWidth  = pBox->BxWidth;
-  canvasHeight = pBox->BxHeight;
+  TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
 
-  /* Get the size of the origin of the ancestor */
+  /* Get the origin of the ancestor */
+  //TtaGiveBoxPosition (svgAncestor, doc, 1, UnPixel, &ancestorX, &ancestorY);
   pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
-  if(!pAb)return;
-  pBox = pAb -> AbBox;
-  if(!pBox)return;
+  if(pAb && pAb -> AbBox)
+    pBox = pAb -> AbBox;
+  else return FALSE;
+
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
+  
+  /* Call the interactive module */
+  created = ShapeCreation (frame,
+			   doc,
+			   (void *)inverse,
+			   ancestorX, ancestorY,
+			   canvasWidth, canvasHeight,
+			   shape,
+			   x1, y1,
+			   x2, y2,
+			   x3, y3,
+			   x4, y4,
+			   lx, ly);
 
-  ShapeCreation (frame,
-		 doc,
-		 (void *)inverse,
-		 ancestorX, ancestorY,
-		 canvasWidth, canvasHeight,
-		 shape,
-		 x1, y1,
-		 x2, y2,
-		 x3, y3,
-		 x4, y4,
-		 lx, ly);
+  /* Free the inverse of the CTM */
+  if(inverse != NULL)
+    TtaFreeTransform(inverse);
 
-  if(inverse != NULL)TtaFreeTransform(inverse);
+  return created;
 }
 
 extern ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,

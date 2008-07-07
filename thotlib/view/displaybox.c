@@ -35,6 +35,7 @@
 #include "boxmoves_f.h"
 #include "buildboxes_f.h"
 #include "displaybox_f.h"
+#include "windowdisplay_f.h"
 #include "displayselect_f.h"
 #include "font_f.h"
 #include "exceptions_f.h"
@@ -62,7 +63,10 @@
 
 #include "fileaccess.h"
 
-
+#ifdef _GL
+void DrawRectangle2 (int frame, int thick, int style, int x, int y, int width,
+		     int height, int fg, int bg, int pattern);
+#endif /*_GL*/
 
 /*-------------------------------------------------------------------------
   NextChar returns the previous character of the same buffer according
@@ -1059,7 +1063,11 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
           break;
         case 'C':
           if (pBox->BxRx == 0 && pBox->BxRy == 0)	    
-            DrawRectangle (frame, i, style, xd, yd, width, height, fg, bg, pat);
+#ifdef _GL
+	    DrawRectangle2(frame, i, style, xd, yd, width, height, fg, bg, pat);
+#else
+	    DrawRectangle(frame, i, style, xd, yd, width, height, fg, bg, pat);
+#endif /*_GL*/
           else
             DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx,
                       pBox->BxRy, fg, bg, pat);

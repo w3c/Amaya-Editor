@@ -1607,13 +1607,13 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
   
   - svgCanvas: the innermost <svg> element containing el
   - svgAncestor: the ancestor last <svg> ancestor of el, so we suppose
-    that no transform are applied to it.
+  that no transform are applied to it.
   - el: The element clicked/selected SVG object. If it is not a direct
-    child of the svgCanvas, then we take the 
+  child of the svgCanvas, then we take the 
   
   ----------------------------------------------------------------------*/
 ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
-			  Element *svgAncestor, Element *svgCanvas)
+				    Element *svgAncestor, Element *svgCanvas)
 {
 #ifdef _SVG
   Element parent, newEl;
@@ -1693,6 +1693,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   int		    c1, i, dir, svgDir;
   int               docModified;
   ThotBool	    found, newSVG = FALSE, replaceGraph = FALSE;
+  ThotBool          created = FALSE;
   ThotBool          oldStructureChecking;
   ThotBool          isFilled, isFormattedView;
 
@@ -1893,7 +1894,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
       if(svgCanvas == svgAncestor)
 	newType.ElTypeNum = SVG_EL_rect;
       else
-      newType.ElTypeNum = SVG_EL_polygon;
+	newType.ElTypeNum = SVG_EL_polygon;
       break;
 
       newType.ElTypeNum = SVG_EL_rect;
@@ -1930,7 +1931,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
     case 9:	/* switch and foreignObject with some HTML code */
       if(isFormattedView)
-	 newType.ElTypeNum = SVG_EL_g;
+	newType.ElTypeNum = SVG_EL_g;
       else
 	newType.ElTypeNum = SVG_EL_switch;
       break;
@@ -2038,22 +2039,22 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  selEl = newEl;
 
 	  /*
-	      1-------------2
-              |             |
-              |             |
-              |             |
-              3-------------4
-	   */
+	    1-------------2
+	    |             |
+	    |             |
+	    |             |
+	    3-------------4
+	  */
 
 	  if(isFormattedView)
 	    {
-	    AskSurroundingBox(doc,
-			      svgAncestor,
-			      svgCanvas,
-			      entry,
-			      &x1, &y1, &x2, &y2,
-			      &x3, &y3, &x4, &y4,
-			      &lx, &ly);
+	      created = AskSurroundingBox(doc,
+					  svgAncestor,
+					  svgCanvas,
+					  entry,
+					  &x1, &y1, &x2, &y2,
+					  &x3, &y3, &x4, &y4,
+					  &lx, &ly);
 	    }
 	  else
 	    {
@@ -2063,315 +2064,318 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	      y1 = y2 = 0;
 	      y3 = y4 = 100;
 	      lx = ly = 100;
+	      created = TRUE;
 	    }
 
-	  switch(entry)
+	  if(created)
 	    {
-	    case 0: /* Line */
-	      SVGElementComplete (&context, newEl, &error);
-
-	      attrType.AttrTypeNum = SVG_ATTR_x1;
-	      UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
-
-	      attrType.AttrTypeNum = SVG_ATTR_y1;
-	      UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
-
-	      attrType.AttrTypeNum = SVG_ATTR_x2;
-	      UpdateAttrText (newEl, doc, attrType, x4, FALSE, TRUE);
-
-	      attrType.AttrTypeNum = SVG_ATTR_y2;
-	      UpdateAttrText (newEl, doc, attrType, y4, FALSE, TRUE);
-
-	      break;
-
-	    case 12: /* Simple Arrow */
-              attrType.AttrTypeNum = SVG_ATTR_d;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-
-	      tmpx1 = x1; tmpy1 = y1;
-	      tmpx2 = x4; tmpy2 = y4;
-	      GetArrowCoord(&tmpx1, &tmpy1, &tmpx2, &tmpy2);
-
-	      sprintf(buffer, "M %d %d L %d %d M %d %d L %d %d %d %d",
-		      x1, y1, x4, y4,
-		      tmpx1, tmpy1, x4, y4, tmpx2, tmpy2
-		      );
-              TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
-	      break;
-
-	    case 13: /* Double Arrow */
-              attrType.AttrTypeNum = SVG_ATTR_d;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-
-	      tmpx1 = x1; tmpy1 = y1;
-	      tmpx2 = x4; tmpy2 = y4;
-	      GetArrowCoord(&tmpx1, &tmpy1, &tmpx2, &tmpy2);
-
-	      tmpx3 = x4; tmpy3 = y4;
-	      tmpx4 = x1; tmpy4 = y1;
-	      GetArrowCoord(&tmpx3, &tmpy3, &tmpx4, &tmpy4);
-
-	      sprintf(buffer, "M %d %d L %d %d M %d %d L %d %d %d %d M %d %d L %d %d %d %d",
-		      x1, y1, x4, y4,
-		      tmpx1, tmpy1, x4, y4, tmpx2, tmpy2,
-		      tmpx3, tmpy3, x1, y1, tmpx4, tmpy4
-		      );
-
-              TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
-	      break;
-
-	    case 14: /* Zigzag */
-              attrType.AttrTypeNum = SVG_ATTR_points;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-	      sprintf(buffer, "%d %d %d %d %d %d %d %d",
-		      x1,y1,
-		      x1,(y1+y4)/2,
-		      x4,(y1+y4)/2,
-		      x4,y4
-		      );
-              TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParsePointsAttribute (attr, newEl, doc);
-	      break;
-
-	      /* Square */
-	    case 15:
-	      /* Rectangle */
-	    case 1:
-	      /* Rounded Square */
-	    case 16:
-	      /* Rounded-Rectangle */
-	    case 2:
-	      SVGElementComplete (&context, newEl, &error);
-
-	      if(svgCanvas == svgAncestor)
+	      switch(entry)
 		{
-		  if(x4 < x1)x1 = x4;
-		  if(y4 < y1)y1 = y4;
+		case 0: /* Line */
+		  SVGElementComplete (&context, newEl, &error);
 
-		  attrType.AttrTypeNum = SVG_ATTR_x;
+		  attrType.AttrTypeNum = SVG_ATTR_x1;
 		  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
-		  
-		  attrType.AttrTypeNum = SVG_ATTR_y;
-		  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
-		  
-		  attrType.AttrTypeNum = SVG_ATTR_width_;
-		  UpdateAttrText (newEl, doc, attrType, lx, FALSE, TRUE);
-	      
-		  attrType.AttrTypeNum = SVG_ATTR_height_;
-		  UpdateAttrText (newEl, doc, attrType, ly, FALSE, TRUE);
 
-		  if(entry == 16 || entry == 2)
-		    {
-		      attrType.AttrTypeNum = SVG_ATTR_rx;
-		      attr = TtaNewAttribute (attrType);
-		      TtaAttachAttribute (newEl, attr, doc);
-		      TtaSetAttributeText (attr, "5px", newEl, doc);
-		      ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
-		    }
-		}
-	      else
-		{
+		  attrType.AttrTypeNum = SVG_ATTR_y1;
+		  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+
+		  attrType.AttrTypeNum = SVG_ATTR_x2;
+		  UpdateAttrText (newEl, doc, attrType, x4, FALSE, TRUE);
+
+		  attrType.AttrTypeNum = SVG_ATTR_y2;
+		  UpdateAttrText (newEl, doc, attrType, y4, FALSE, TRUE);
+
+		  break;
+
+		case 12: /* Simple Arrow */
+		  attrType.AttrTypeNum = SVG_ATTR_d;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+
+		  tmpx1 = x1; tmpy1 = y1;
+		  tmpx2 = x4; tmpy2 = y4;
+		  GetArrowCoord(&tmpx1, &tmpy1, &tmpx2, &tmpy2);
+
+		  sprintf(buffer, "M %d %d L %d %d M %d %d L %d %d %d %d",
+			  x1, y1, x4, y4,
+			  tmpx1, tmpy1, x4, y4, tmpx2, tmpy2
+			  );
+		  TtaSetAttributeText (attr, buffer, newEl, doc);
+		  ParsePathDataAttribute (attr, newEl, doc, TRUE);
+		  break;
+
+		case 13: /* Double Arrow */
+		  attrType.AttrTypeNum = SVG_ATTR_d;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+
+		  tmpx1 = x1; tmpy1 = y1;
+		  tmpx2 = x4; tmpy2 = y4;
+		  GetArrowCoord(&tmpx1, &tmpy1, &tmpx2, &tmpy2);
+
+		  tmpx3 = x4; tmpy3 = y4;
+		  tmpx4 = x1; tmpy4 = y1;
+		  GetArrowCoord(&tmpx3, &tmpy3, &tmpx4, &tmpy4);
+
+		  sprintf(buffer, "M %d %d L %d %d M %d %d L %d %d %d %d M %d %d L %d %d %d %d",
+			  x1, y1, x4, y4,
+			  tmpx1, tmpy1, x4, y4, tmpx2, tmpy2,
+			  tmpx3, tmpy3, x1, y1, tmpx4, tmpy4
+			  );
+
+		  TtaSetAttributeText (attr, buffer, newEl, doc);
+		  ParsePathDataAttribute (attr, newEl, doc, TRUE);
+		  break;
+
+		case 14: /* Zigzag */
 		  attrType.AttrTypeNum = SVG_ATTR_points;
 		  attr = TtaNewAttribute (attrType);
 		  TtaAttachAttribute (newEl, attr, doc);
 		  sprintf(buffer, "%d %d %d %d %d %d %d %d",
 			  x1,y1,
-			  x2,y2,
-			  x4,y4,
-			  x3,y3
+			  x1,(y1+y4)/2,
+			  x4,(y1+y4)/2,
+			  x4,y4
 			  );
 		  TtaSetAttributeText (attr, buffer, newEl, doc);
 		  ParsePointsAttribute (attr, newEl, doc);
-		}
+		  break;
 
-	      break;
+		  /* Square */
+		case 15:
+		  /* Rectangle */
+		case 1:
+		  /* Rounded Square */
+		case 16:
+		  /* Rounded-Rectangle */
+		case 2:
+		  SVGElementComplete (&context, newEl, &error);
 
-	      /* Circle */
-	    case 3:
-	      SVGElementComplete (&context, newEl, &error);
+		  if(svgCanvas == svgAncestor)
+		    {
+		      if(x4 < x1)x1 = x4;
+		      if(y4 < y1)y1 = y4;
 
-	      attrType.AttrTypeNum = SVG_ATTR_cx;
-	      UpdateAttrText (newEl, doc, attrType, (x1+x4)/2, FALSE, TRUE);
-
-	      attrType.AttrTypeNum = SVG_ATTR_cy;
-	      UpdateAttrText (newEl, doc, attrType, (y1+y4)/2, FALSE, TRUE);
-
-	      attrType.AttrTypeNum = SVG_ATTR_r;
-	      UpdateAttrText (newEl, doc, attrType, lx/2, FALSE, TRUE);
-
-	      break;
-
-	      /* Ellipse */
-	    case 4:
-	      SVGElementComplete (&context, newEl, &error);
-
-	      attrType.AttrTypeNum = SVG_ATTR_cx;
-	      UpdateAttrText (newEl, doc, attrType, (x1+x4)/2, FALSE, TRUE);
-
-	      attrType.AttrTypeNum = SVG_ATTR_cy;
-	      UpdateAttrText (newEl, doc, attrType, (y1+y4)/2, FALSE, TRUE);
-
-	      attrType.AttrTypeNum = SVG_ATTR_rx;
-	      UpdateAttrText (newEl, doc, attrType, lx/2, FALSE, TRUE);
-
-	      attrType.AttrTypeNum = SVG_ATTR_ry;
-	      UpdateAttrText (newEl, doc, attrType, ly/2, FALSE, TRUE);;
-	      break;
-
-	    case 17: /* diamond */
-              attrType.AttrTypeNum = SVG_ATTR_points;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-	      sprintf(buffer, "%d %d %d %d %d %d %d %d",
-		      (x1+x3)/2  , (y1+y3)/2,
-		      (x1+x2)/2  , (y1+y2)/2,
-		      (x2+x4)/2  , (y2+y4)/2,
-		      (x4+x3)/2  , (y4+y3)/2
-		      );
-              TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParsePointsAttribute (attr, newEl, doc);
-	      break;
-
-	    case 18: /* trapezium */
-              attrType.AttrTypeNum = SVG_ATTR_points;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-	      sprintf(buffer, "%d %d %d %d %d %d %d %d",
-		      x3, y3,
-		      (3*x1+x2)/4, (3*y1+y2)/4,
-		      (3*x2+x1)/4, (3*y2+y1)/4,
-		      x4, y4
-		      );
-              TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParsePointsAttribute (attr, newEl, doc);
-	      break;
-
-	    case 19: /* parallelogram */
-              attrType.AttrTypeNum = SVG_ATTR_points;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-	      sprintf(buffer, "%d %d %d %d %d %d %d %d",
-		      x3, y3,
-		      (3*x1+x2)/4, (3*y1+y2)/4,
-		      x2,y2,
-		      (3*x4+x3)/4, (3*y4+y3)/4
-		      );
-              TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParsePointsAttribute (attr, newEl, doc);
-	      break;
-
-	    case 20: /* equilateral triangle */
-              attrType.AttrTypeNum = SVG_ATTR_points;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-
-	      sprintf(buffer, "%d %d %d %d %d %d",
-		      (x1+x2)/2, (y1+y2)/2,
-		      x3,y3,
-		      x4,y4
-		      );
-              TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParsePointsAttribute (attr, newEl, doc);
-	      break;
-
-	    case 21: /* isosceles triangle */
-              attrType.AttrTypeNum = SVG_ATTR_points;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-	      sprintf(buffer, "%d %d %d %d %d %d",
-		      (x1+x2)/2, (y1+y2)/2,
-		      x3, y3,
-		      x4, y4
-		      );
-              TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParsePointsAttribute (attr, newEl, doc);
-	      break;
-
-	    case 22: /* rectangle triangle */
-              attrType.AttrTypeNum = SVG_ATTR_points;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-	      sprintf(buffer, "%d %d %d %d %d %d",
-		      x1, y1,
-		      x2, y2,
-		      x3, y3
-		      );
-              TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParsePointsAttribute (attr, newEl, doc);
-	      break;
-
-	    case 23: /* cube */
-	    case 24: /* parallelepiped */
-              attrType.AttrTypeNum = SVG_ATTR_d;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-
-	      tmpx1 = (3*x1+x3)/4;
-	      tmpy1 = (3*y1+y3)/4;
-	      tmpx2 = (3*x2+x4)/4;
-	      tmpy2 = (3*y2+y4)/4;
-
-	      tmpx3 = (tmpx1+3*tmpx2)/4;
-	      tmpy3 = (tmpy1+3*tmpy2)/4;
-
-	      tmpx4= (3*x4+x3)/4;
-	      tmpy4 = (3*y4+y3)/4;
-
-	      sprintf(buffer, "M %d %d L %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d M %d %d L %d %d",
-		      tmpx1,tmpy1,            /*    <-1        2------------3 */
-		      (3*x1+x2)/4,(3*y1+y2)/4,/*    <-2       /             / */
-		      x2,y2,                  /*    <-3      /             /| */
-		      (3*x4+x2)/4,(3*y4+y2)/4,/*    <-4     /             / | */
-		      tmpx4,tmpy4,            /*    <-5    1-------------7  | */
-		      x3,y3,                  /*    <-6    |             |  | */
-		      tmpx1,tmpy1,            /*    <-1    |             |  4 */
-		      tmpx3,tmpy3,            /*    <-7    |             |  / */
-		      tmpx4,tmpy4,            /*    <-5    |             | /  */
-		      tmpx3,tmpy3,            /*    <-7    |             |/   */
-		      x2,y2                   /*    <-3    6-------------5    */
-		      );
-              TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
-	      break;
-
-	    case 25: /* Cylinder */
-	      tmpx1=(5*x1+x3)/6;
-	      tmpy1=(5*y1+y3)/6;
-	      tmpx2=(5*x3+x1)/6;
-	      tmpy2=(5*y3+y1)/6;
-	      tmpx3=(5*x4+x2)/6;
-	      tmpy3=(5*y4+y2)/6;
-	      tmpx4=(5*x2+x4)/6;
-	      tmpy4=(5*y2+y4)/6;
+		      attrType.AttrTypeNum = SVG_ATTR_x;
+		      UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
+		  
+		      attrType.AttrTypeNum = SVG_ATTR_y;
+		      UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+		  
+		      attrType.AttrTypeNum = SVG_ATTR_width_;
+		      UpdateAttrText (newEl, doc, attrType, lx, FALSE, TRUE);
 	      
-              attrType.AttrTypeNum = SVG_ATTR_d;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newEl, attr, doc);
-	      sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 %d %d %d L %d %d A %d %d 0 0 0 %d %d A %d %d 0 0 0 %d %d",
-       	       	      tmpx1,tmpy1,       /*    <-1          /----\            */
-		      tmpx2,tmpy2,       /*    <-2         1      4           */
-		      lx/2, ly/6,        /*                |\----/|           */
-		      ((x4 - x1)*(y4 - y1) >= 0 ? 0 : 1),/*|      |           */
-		      tmpx3,tmpy3,       /*    <-3         |      |           */
-				         /*                |      |           */
-		      tmpx4,tmpy4,       /*    <-4         |      |           */
-		      lx/2, ly/6,        /*	           |      |           */
-		      tmpx1,tmpy1,       /*    <-1         2      3           */
-		      lx/2, ly/6,        /*  	            \----/            */
-		      tmpx4,tmpy4        /*    <-4                            */
-    		      );
-              TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
+		      attrType.AttrTypeNum = SVG_ATTR_height_;
+		      UpdateAttrText (newEl, doc, attrType, ly, FALSE, TRUE);
 
-	      break;
+		      if(entry == 16 || entry == 2)
+			{
+			  attrType.AttrTypeNum = SVG_ATTR_rx;
+			  attr = TtaNewAttribute (attrType);
+			  TtaAttachAttribute (newEl, attr, doc);
+			  TtaSetAttributeText (attr, "5px", newEl, doc);
+			  ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+			}
+		    }
+		  else
+		    {
+		      attrType.AttrTypeNum = SVG_ATTR_points;
+		      attr = TtaNewAttribute (attrType);
+		      TtaAttachAttribute (newEl, attr, doc);
+		      sprintf(buffer, "%d %d %d %d %d %d %d %d",
+			      x1,y1,
+			      x2,y2,
+			      x4,y4,
+			      x3,y3
+			      );
+		      TtaSetAttributeText (attr, buffer, newEl, doc);
+		      ParsePointsAttribute (attr, newEl, doc);
+		    }
 
-	    default:
-	      break;
+		  break;
+
+		  /* Circle */
+		case 3:
+		  SVGElementComplete (&context, newEl, &error);
+
+		  attrType.AttrTypeNum = SVG_ATTR_cx;
+		  UpdateAttrText (newEl, doc, attrType, (x1+x4)/2, FALSE, TRUE);
+
+		  attrType.AttrTypeNum = SVG_ATTR_cy;
+		  UpdateAttrText (newEl, doc, attrType, (y1+y4)/2, FALSE, TRUE);
+
+		  attrType.AttrTypeNum = SVG_ATTR_r;
+		  UpdateAttrText (newEl, doc, attrType, lx/2, FALSE, TRUE);
+
+		  break;
+
+		  /* Ellipse */
+		case 4:
+		  SVGElementComplete (&context, newEl, &error);
+
+		  attrType.AttrTypeNum = SVG_ATTR_cx;
+		  UpdateAttrText (newEl, doc, attrType, (x1+x4)/2, FALSE, TRUE);
+
+		  attrType.AttrTypeNum = SVG_ATTR_cy;
+		  UpdateAttrText (newEl, doc, attrType, (y1+y4)/2, FALSE, TRUE);
+
+		  attrType.AttrTypeNum = SVG_ATTR_rx;
+		  UpdateAttrText (newEl, doc, attrType, lx/2, FALSE, TRUE);
+
+		  attrType.AttrTypeNum = SVG_ATTR_ry;
+		  UpdateAttrText (newEl, doc, attrType, ly/2, FALSE, TRUE);;
+		  break;
+
+		case 17: /* diamond */
+		  attrType.AttrTypeNum = SVG_ATTR_points;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+		  sprintf(buffer, "%d %d %d %d %d %d %d %d",
+			  (x1+x3)/2  , (y1+y3)/2,
+			  (x1+x2)/2  , (y1+y2)/2,
+			  (x2+x4)/2  , (y2+y4)/2,
+			  (x4+x3)/2  , (y4+y3)/2
+			  );
+		  TtaSetAttributeText (attr, buffer, newEl, doc);
+		  ParsePointsAttribute (attr, newEl, doc);
+		  break;
+
+		case 18: /* trapezium */
+		  attrType.AttrTypeNum = SVG_ATTR_points;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+		  sprintf(buffer, "%d %d %d %d %d %d %d %d",
+			  x3, y3,
+			  (3*x1+x2)/4, (3*y1+y2)/4,
+			  (3*x2+x1)/4, (3*y2+y1)/4,
+			  x4, y4
+			  );
+		  TtaSetAttributeText (attr, buffer, newEl, doc);
+		  ParsePointsAttribute (attr, newEl, doc);
+		  break;
+
+		case 19: /* parallelogram */
+		  attrType.AttrTypeNum = SVG_ATTR_points;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+		  sprintf(buffer, "%d %d %d %d %d %d %d %d",
+			  x3, y3,
+			  (3*x1+x2)/4, (3*y1+y2)/4,
+			  x2,y2,
+			  (3*x4+x3)/4, (3*y4+y3)/4
+			  );
+		  TtaSetAttributeText (attr, buffer, newEl, doc);
+		  ParsePointsAttribute (attr, newEl, doc);
+		  break;
+
+		case 20: /* equilateral triangle */
+		  attrType.AttrTypeNum = SVG_ATTR_points;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+
+		  sprintf(buffer, "%d %d %d %d %d %d",
+			  (x1+x2)/2, (y1+y2)/2,
+			  x3,y3,
+			  x4,y4
+			  );
+		  TtaSetAttributeText (attr, buffer, newEl, doc);
+		  ParsePointsAttribute (attr, newEl, doc);
+		  break;
+
+		case 21: /* isosceles triangle */
+		  attrType.AttrTypeNum = SVG_ATTR_points;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+		  sprintf(buffer, "%d %d %d %d %d %d",
+			  (x1+x2)/2, (y1+y2)/2,
+			  x3, y3,
+			  x4, y4
+			  );
+		  TtaSetAttributeText (attr, buffer, newEl, doc);
+		  ParsePointsAttribute (attr, newEl, doc);
+		  break;
+
+		case 22: /* rectangle triangle */
+		  attrType.AttrTypeNum = SVG_ATTR_points;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+		  sprintf(buffer, "%d %d %d %d %d %d",
+			  x1, y1,
+			  x2, y2,
+			  x3, y3
+			  );
+		  TtaSetAttributeText (attr, buffer, newEl, doc);
+		  ParsePointsAttribute (attr, newEl, doc);
+		  break;
+
+		case 23: /* cube */
+		case 24: /* parallelepiped */
+		  attrType.AttrTypeNum = SVG_ATTR_d;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+
+		  tmpx1 = (3*x1+x3)/4;
+		  tmpy1 = (3*y1+y3)/4;
+		  tmpx2 = (3*x2+x4)/4;
+		  tmpy2 = (3*y2+y4)/4;
+
+		  tmpx3 = (tmpx1+3*tmpx2)/4;
+		  tmpy3 = (tmpy1+3*tmpy2)/4;
+
+		  tmpx4= (3*x4+x3)/4;
+		  tmpy4 = (3*y4+y3)/4;
+
+		  sprintf(buffer, "M %d %d L %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d M %d %d L %d %d",
+			  tmpx1,tmpy1,            /*<-1        2------------3 */
+			  (3*x1+x2)/4,(3*y1+y2)/4,/*<-2       /             / */
+			  x2,y2,                  /*<-3      /             /| */
+			  (3*x4+x2)/4,(3*y4+y2)/4,/*<-4     /             / | */
+			  tmpx4,tmpy4,            /*<-5    1-------------7  | */
+			  x3,y3,                  /*<-6    |             |  | */
+			  tmpx1,tmpy1,            /*<-1    |             |  4 */
+			  tmpx3,tmpy3,            /*<-7    |             |  / */
+			  tmpx4,tmpy4,            /*<-5    |             | /  */
+			  tmpx3,tmpy3,            /*<-7    |             |/   */
+			  x2,y2                   /*<-3    6-------------5    */
+			  );
+		  TtaSetAttributeText (attr, buffer, newEl, doc);
+		  ParsePathDataAttribute (attr, newEl, doc, TRUE);
+		  break;
+
+		case 25: /* Cylinder */
+		  tmpx1=(5*x1+x3)/6;
+		  tmpy1=(5*y1+y3)/6;
+		  tmpx2=(5*x3+x1)/6;
+		  tmpy2=(5*y3+y1)/6;
+		  tmpx3=(5*x4+x2)/6;
+		  tmpy3=(5*y4+y2)/6;
+		  tmpx4=(5*x2+x4)/6;
+		  tmpy4=(5*y2+y4)/6;
+	      
+		  attrType.AttrTypeNum = SVG_ATTR_d;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+		  sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 %d %d %d L %d %d A %d %d 0 0 0 %d %d A %d %d 0 0 0 %d %d",
+			  tmpx1,tmpy1,       /*    <-1      /----\            */
+			  tmpx2,tmpy2,       /*    <-2     1      4           */
+			  lx/2, ly/6,        /*            |\----/|           */
+			  ((x4 - x1)*(y4 - y1)/*           |      |           */			   >= 0 ? 0 : 1),    /*            |      |           */
+			  tmpx3,tmpy3,       /*    <-3     |      |           */
+			  tmpx4,tmpy4,       /*    <-4     |      |           */
+			  lx/2, ly/6,        /*	           |      |           */
+			  tmpx1,tmpy1,       /*    <-1     2      3           */
+			  lx/2, ly/6,        /*             \----/            */
+			  tmpx4,tmpy4        /*    <-4                            */
+			  );
+		  TtaSetAttributeText (attr, buffer, newEl, doc);
+		  ParsePathDataAttribute (attr, newEl, doc, TRUE);
+
+		  break;
+
+		default:
+		  break;
+		}
 	    }
 	}
       else if(entry >= 5 && entry <= 8)
@@ -2380,54 +2384,66 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  selEl = newEl;
 
 	  if(isFormattedView)
-	    attr_data = AskShapePoints (doc, entry, svgCanvas);
+	    {
+	      attr_data = AskShapePoints (doc, entry, svgCanvas);
+	      created = (attr_data != NULL);
+	    }
 	  else
-	    attr_data = NULL;
+	    {
+	      attr_data = NULL;
+	      created = TRUE;
+	    }
 
-	  if(entry == 5 || entry == 6)
-	    attrType.AttrTypeNum = SVG_ATTR_points;
-	  else
-    	    attrType.AttrTypeNum = SVG_ATTR_d;
+	  if(created)
+	    {
 
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (newEl, attr, doc);
+	      if(entry == 5 || entry == 6)
+		attrType.AttrTypeNum = SVG_ATTR_points;
+	      else
+		attrType.AttrTypeNum = SVG_ATTR_d;
 
-	  TtaSetAttributeText (attr, attr_data, newEl, doc);
-	  TtaFreeMemory(attr_data);
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (newEl, attr, doc);
 
-	  if(entry == 5 || entry == 6)
-	    ParsePointsAttribute (attr, newEl, doc);
-	  else
-	    ParsePathDataAttribute (attr, newEl, doc, TRUE);	    
+	      TtaSetAttributeText (attr, attr_data, newEl, doc);
+	      TtaFreeMemory(attr_data);
+	      
+	      if(entry == 5 || entry == 6)
+		ParsePointsAttribute (attr, newEl, doc);
+	      else
+		ParsePathDataAttribute (attr, newEl, doc, TRUE);	    
+	    }
 	}
       else if (entry == 9)
         /* create a foreignObject containing an XHTML div element within the
            new element */
         {
+	  created = TRUE;
+
 	  if(isFormattedView)
 	    {
 	      /* Ask the position and size */
-	    AskSurroundingBox(doc,
-			      svgAncestor,
-			      svgCanvas,
-			      entry,
-			      &x1, &y1, &x2, &y2,
-			      &x3, &y3, &x4, &y4,
-			      &lx, &ly);
+	      AskSurroundingBox(doc,
+				svgAncestor,
+				svgCanvas,
+				entry,
+				&x1, &y1, &x2, &y2,
+				&x3, &y3, &x4, &y4,
+				&lx, &ly);
 
-	    /* create a transform=translate attribute */
-	    attrType.AttrTypeNum = SVG_ATTR_transform;
-	    attr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (newEl, attr, doc);
-	    sprintf(buffer, "translate(%d,%d)", x1, y1);
-	    TtaSetAttributeText (attr, buffer, newEl, doc);
-	    ParseTransformAttribute (attr, newEl, doc, FALSE);
+	      /* create a transform=translate attribute */
+	      attrType.AttrTypeNum = SVG_ATTR_transform;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (newEl, attr, doc);
+	      sprintf(buffer, "translate(%d,%d)", x1, y1);
+	      TtaSetAttributeText (attr, buffer, newEl, doc);
+	      ParseTransformAttribute (attr, newEl, doc, FALSE);
 
-	    /* Create a switch element */
-	    childType.ElSSchema = svgSchema;
-	    childType.ElTypeNum = SVG_EL_switch;
-	    switch_ = TtaNewElement (doc, childType);
-	    TtaInsertFirstChild (&switch_, newEl, doc);
+	      /* Create a switch element */
+	      childType.ElSSchema = svgSchema;
+	      childType.ElTypeNum = SVG_EL_switch;
+	      switch_ = TtaNewElement (doc, childType);
+	      TtaInsertFirstChild (&switch_, newEl, doc);
 	    }
 	  else
 	    switch_ = newEl;
@@ -2536,6 +2552,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
       else if (entry == 10)
         /* creation of a TEXT leaf */
         {
+	  created = TRUE;
+	  
           childType.ElSSchema = svgSchema;
           childType.ElTypeNum = SVG_EL_TEXT_UNIT;
           child = TtaNewElement (doc, childType);
@@ -2561,31 +2579,39 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    }
         }
 
-      if(replaceGraph)
+      if(created)
 	{
-	  TtaRegisterElementDelete (sibling, doc);
-	  TtaDeleteTree(sibling, doc);
+
+	  if(replaceGraph)
+	    {
+	      TtaRegisterElementDelete (sibling, doc);
+	      TtaDeleteTree(sibling, doc);
+	    }
+	  
+	  if (newSVG)
+	    TtaRegisterElementCreate (svgCanvas, doc);
+	  else
+	    TtaRegisterElementCreate (newEl, doc);
 	}
-
-      if (newSVG)
-	TtaRegisterElementCreate (svgCanvas, doc);
       else
-	TtaRegisterElementCreate (newEl, doc);
-
+	{
+	  TtaDeleteTree(newEl, doc);
+	  newEl = NULL;
+	}
+	  
       /* ask Thot to display changes made in the document */
       TtaSetDisplayMode (doc, dispMode);
     }
 
-
   /* create attributes fill and stroke */
-  if (
-      newType.ElTypeNum == SVG_EL_line_ ||
-      newType.ElTypeNum == SVG_EL_rect ||
-      newType.ElTypeNum == SVG_EL_circle_ ||
-      newType.ElTypeNum == SVG_EL_ellipse ||
-      newType.ElTypeNum == SVG_EL_polyline ||
-      newType.ElTypeNum == SVG_EL_polygon ||
-      newType.ElTypeNum == SVG_EL_path)
+  if (created && 
+      (newType.ElTypeNum == SVG_EL_line_ ||
+       newType.ElTypeNum == SVG_EL_rect ||
+       newType.ElTypeNum == SVG_EL_circle_ ||
+       newType.ElTypeNum == SVG_EL_ellipse ||
+       newType.ElTypeNum == SVG_EL_polyline ||
+       newType.ElTypeNum == SVG_EL_polygon ||
+       newType.ElTypeNum == SVG_EL_path))
     {
 
       /* Get the stroke color */

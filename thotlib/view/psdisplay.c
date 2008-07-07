@@ -1182,7 +1182,6 @@ void DrawRectangle (int frame, int thick, int style, int x, int y,
 #endif /* _WX */
 }
 
-
 /*----------------------------------------------------------------------
    DrawSegments draw a set of segments.
    Parameter buffer is a pointer to the list of control points.

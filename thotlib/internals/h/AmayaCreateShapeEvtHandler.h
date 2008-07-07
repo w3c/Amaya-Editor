@@ -27,7 +27,7 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
  int canvasHeight,
  int shape_number,
  int *x1, int *y1, int *x2, int *y2,
- int *nb_points);
+ ThotBool *created);
   virtual ~AmayaCreateShapeEvtHandler();
 
   bool IsFinish();
@@ -51,7 +51,8 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
   int m_x0, m_y0, m_width, m_height;
   int m_ShapeNumber;
   int *m_x1,*m_y1,*m_x2,*m_y2;
-  int *m_NbPoints;
+  ThotBool *m_created;
+  int m_NbPoints;
 
 };
 
