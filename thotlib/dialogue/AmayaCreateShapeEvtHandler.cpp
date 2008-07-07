@@ -46,7 +46,6 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaCreateShapeEvtHandler, wxEvtHandler)
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaCreateShapeEvtHandler, wxEvtHandler)
 EVT_KEY_DOWN ( AmayaCreateShapeEvtHandler::OnKeyDown )
-EVT_KEY_UP ( AmayaCreateShapeEvtHandler::OnKeyUp )
 EVT_LEFT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
 EVT_LEFT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp)
 EVT_LEFT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
@@ -97,7 +96,6 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
   ,nb_points(0)
   ,shift_down(false)
 {
-
   if (pFrame)
     {
       /* attach this handler to the canvas */
@@ -110,7 +108,6 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
       else
 	/* assign a cross mouse cursor */
 	pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
-
 
       pFrame->GetCanvas()->CaptureMouse();
 
@@ -156,25 +153,11 @@ bool AmayaCreateShapeEvtHandler::IsFinish()
  *----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnKeyDown( wxKeyEvent& event )
 {
-  if(event.GetKeyCode() ==  WXK_SHIFT)
-    {
-      DrawShape ();
-      shift_down = true;
-      DrawShape ();
-    }
-  else
+  if(event.GetKeyCode() !=  WXK_SHIFT)
     {
       *created = FALSE;
       finished = true;
     }
-}
-
-/*----------------------------------------------------------------------
-  OnKeyUp
- *----------------------------------------------------------------------*/
-void AmayaCreateShapeEvtHandler::OnKeyUp( wxKeyEvent& event )
-{
-  shift_down = false;
 }
 
 /*----------------------------------------------------------------------
@@ -248,6 +231,7 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
   /* Get the coordinates of the mouse and display them in the status bar */
   x = event.GetX();
   y = event.GetY();
+  shift_down = event.ShiftDown();
   
   MouseCoordinatesToSVG(document, pFrame,
 			x0, y0,

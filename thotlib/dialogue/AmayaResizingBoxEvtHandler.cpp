@@ -177,7 +177,8 @@ bool AmayaResizingBoxEvtHandler::IsFinish()
   ----------------------------------------------------------------------*/
 void AmayaResizingBoxEvtHandler::OnChar( wxKeyEvent& event )
 {
-  m_IsFinish = true;
+  if(event.GetKeyCode() !=  WXK_SHIFT)
+    m_IsFinish = true;
 }
 
 /*----------------------------------------------------------------------
@@ -294,6 +295,7 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
       FrameTable[m_FrameId].DblBuffNeedSwap = TRUE;
       GL_Swap (m_FrameId);
     }
+
 }
 
 /*----------------------------------------------------------------------

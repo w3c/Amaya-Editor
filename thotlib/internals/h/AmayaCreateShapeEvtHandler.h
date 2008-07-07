@@ -35,7 +35,6 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
  protected:
   DECLARE_EVENT_TABLE()
   void OnKeyDown( wxKeyEvent& event );
-  void OnKeyUp( wxKeyEvent& event );
   void OnMouseMove( wxMouseEvent& event );
   void OnMouseWheel( wxMouseEvent& event );
   void OnMouseDbClick( wxMouseEvent& event );
