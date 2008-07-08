@@ -2831,9 +2831,11 @@ static void LoadDefaultRDFaNSList (Prop_RDFa_Path** list)
 {
   Prop_RDFa_Path *element, *current = NULL;
   char           *path, *homePath, *configPath, *ptr;
-  unsigned char  *c;
+  unsigned char  *urlstring, c;
+  int             len;
   FILE           *file;
   
+  urlstring = (unsigned char *) TtaGetMemory (MAX_LENGTH);
   //clean up the curent list
   FreeRDFaNSList (list);
   *list = NULL;
@@ -2856,6 +2858,7 @@ static void LoadDefaultRDFaNSList (Prop_RDFa_Path** list)
       /* The config file doesn't exist, load a static configuration */
       file = TtaWriteOpen ((char *)path);
       fprintf (file, "rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n");
+
       fprintf (file, "rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"\n");
       fprintf (file, "owl=\"http://www.w3.org/2002/07/owl#\"\n");
       fprintf (file, "xsd=\"http://www.w3.org/2001/XMLSchema#\"\n");
@@ -2866,47 +2869,41 @@ static void LoadDefaultRDFaNSList (Prop_RDFa_Path** list)
       file = TtaReadOpen ((char *)path);
     }
   
+
+
   if (file)
     {
       // read the file
-      c = (unsigned char*)path;
-      *c = EOS;
-      while (TtaReadByte (file, c))
+      while (TtaReadByte (file, &c))
         {
-          if (*c == 13 || *c == EOL)
-            *c = EOS;
-          if (*c == EOS && c != (unsigned char*)path )
-            {
+	  len = 0;
+	  urlstring[len] = EOS;
+	  urlstring[len++] = (char)c;
+	  while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
+	    {
+	      if (c == 13)
+		urlstring[len] = EOS;
+	      else
+		urlstring[len++] = (char)c;
+	    }
+	  urlstring[len] = EOS;
+	  if (len)
+	    {
               element = (Prop_RDFa_Path*) TtaGetMemory (sizeof(Prop_RDFa_Path));
               element->NextPath = NULL;
-              strcpy (element->Path, path);
+              strcpy (element->Path, (char *)urlstring);
 
               if (*list == NULL)
                 *list = element; 
               else
                 current->NextPath = element;
               current = element;
-
-              c = (unsigned char*) path;
-              *c = EOS;
-            }
-          else
-            c++;
-        }
-      if (c != (unsigned char*)path && *path != EOS)
-        {
-          element = (Prop_RDFa_Path*) TtaGetMemory (sizeof(Prop_RDFa_Path));
-          *(c+1) = EOS;
-          strcpy (element->Path, path);
-          element->NextPath = NULL;
-
-          if (*list == NULL)
-            *list = element; 
-          else
-            current->NextPath = element;
+	    }
         }
       TtaReadClose (file);
     }
+
+  TtaFreeMemory (urlstring);
   TtaFreeMemory(path);
   TtaFreeMemory(configPath);
 }
@@ -2917,13 +2914,12 @@ static void LoadDefaultRDFaNSList (Prop_RDFa_Path** list)
 void LoadRDFaNSList (Prop_RDFa_Path** list)
 {
   Prop_RDFa_Path *element, *current = NULL;
-  char *path, *homePath;
-  unsigned char *c;
-  int nb = 0;
-  FILE *file;
+  char           *path, *homePath;
+  unsigned char  *urlstring, c;
+  int             len;
+  FILE           *file;
   
-  //clean up the curent list
-
+  urlstring = (unsigned char *) TtaGetMemory (MAX_LENGTH);
   // open the file
   path = (char *) TtaGetMemory (MAX_LENGTH);
   homePath = TtaGetEnvString ("APP_HOME");
@@ -2934,48 +2930,39 @@ void LoadRDFaNSList (Prop_RDFa_Path** list)
   else
     {
       // read the file
-      c = (unsigned char*)path;
-      *c = EOS;
-      while (TtaReadByte (file, c))
+      while (TtaReadByte (file, &c))
         {
-          if (*c == 13 || *c == EOL)
-            *c = EOS;
-          if (*c == EOS && c != (unsigned char*)path )
-            {
+	  len = 0;
+	  urlstring[len] = EOS;
+	  urlstring[len++] = (char)c;
+	  while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
+	    {
+	      if (c == 13)
+		urlstring[len] = EOS;
+	      else
+		urlstring[len++] = (char)c;
+	    }
+	  urlstring[len] = EOS;
+	  if (len)
+	    {
               element = (Prop_RDFa_Path*) TtaGetMemory (sizeof(Prop_RDFa_Path));
               element->NextPath = NULL;
-              strcpy (element->Path, path);
-
+              strcpy (element->Path, (char *)urlstring);
+	      
               if (*list == NULL)
                 *list = element; 
               else
                 current->NextPath = element;
               current = element;
-              nb++;
-
-              c = (unsigned char*) path;
-              *c = EOS;
-            }
-          else
-            c++;
-        }
-      if (c != (unsigned char*)path && *path != EOS)
-        {
-          element = (Prop_RDFa_Path*) TtaGetMemory (sizeof(Prop_RDFa_Path));
-          *(c+1) = EOS;
-          strcpy (element->Path, path);
-          element->NextPath = NULL;
-
-          if (*list == NULL)
-            *list = element; 
-          else
-            current->NextPath = element;
-          nb++;
-        }
+	    }
+	}
       TtaReadClose (file);
     }
-  GetRDFaNsList(&(GProp_RDFa.FirstPath));
+
   TtaFreeMemory(path);
+  TtaFreeMemory (urlstring);
+
+  GetRDFaNsList(&(GProp_RDFa.FirstPath));
 }
 
 /*----------------------------------------------------------------------
@@ -3019,7 +3006,7 @@ static void RDFaCallbackDialog (int ref, int typedata, char *data)
               TtaDestroyDialogue (ref);
               break;
             case 1: /* OK */
-              //TtaDestroyDialogue (ref);
+              TtaDestroyDialogue (ref);
               break;
             case 2: /* DEFAULT */
               GetDefaultRDFaConf();
