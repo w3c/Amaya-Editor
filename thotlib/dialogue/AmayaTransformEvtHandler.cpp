@@ -108,12 +108,11 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 						   int canvasWidth,
 						   int canvasHeight,
 						   int transform_type,
-						   PtrBox box)
+						   Element element)
   :wxEvtHandler()
   ,Finished(false)
   ,pFrame(p_frame)
   ,FrameId(p_frame->GetFrameId())
-  ,box(box)
   ,document(doc)
   ,CTM(CTM)
   ,inverse(inverse)
@@ -122,17 +121,20 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
   ,width(canvasWidth)
   ,height(canvasHeight)
   ,type(transform_type)
-  ,el(NULL)
+  ,el(element)
+  ,box(NULL)
   ,ButtonDown(false)
 {
-  /* Get the element to transform */
-  if(box && box -> BxAbstractBox)
-    el = (Element)(box -> BxAbstractBox-> AbElement);
-  else
+  PtrAbstractBox pAb;
+
+  pAb = ((PtrElement)el) -> ElAbstractBox[0];
+  if(!pAb && pAb -> AbBox)
     {
     Finished = true;
     return;
     }
+
+  box = pAb -> AbBox;
 
   if (pFrame)
     {

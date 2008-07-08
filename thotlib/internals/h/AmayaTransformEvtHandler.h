@@ -26,7 +26,7 @@ class AmayaTransformEvtHandler : public wxEvtHandler
 			   int ancestorX, int ancestorY,
 			   int canvasWidth, int canvasHeight,
 			   int transform_type,
-			   PtrBox box
+			   Element element
 			   );
 
   virtual ~AmayaTransformEvtHandler();
@@ -52,7 +52,6 @@ class AmayaTransformEvtHandler : public wxEvtHandler
 
   AmayaFrame * pFrame;
   int FrameId;
-  PtrBox box;
   int document;
   void *CTM;
   void *inverse;
@@ -60,6 +59,7 @@ class AmayaTransformEvtHandler : public wxEvtHandler
   int width,height;
   int type;
   Element el;
+  PtrBox box;
 
   /* Coordinates of the mouse */
   int lastX, lastY, mouse_x,mouse_y;

@@ -814,6 +814,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
   PtrBox     box;
   int        ctrlpt;
   PtrAbstractBox pAb;
+  Document doc;
     
   /* Amaya is waiting for a click selection ? */
   if (ClickIsDone == 1)
@@ -844,8 +845,19 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         else
 	  {
 	    pAb = GetClickedAbsBox (frame, x, y);
-	    if(pAb)
-	      SVG_ApplyDirectTranslate(pAb, frame);
+	    if(pAb && pAb->AbEnclosing)
+	      {
+		/* Try to call the SVG transform handler 
+		   to apply a translation  */
+		doc = FrameTable[frame].FrDoc;
+
+		if(AskTransform(doc,
+				NULL,
+				NULL,
+				0, (Element)(pAb->AbEnclosing->AbElement)))
+		  /* The user has moved an SVG element */
+		  TtaSetDocumentModified(doc);
+	      }
 
 	    if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
 	      {

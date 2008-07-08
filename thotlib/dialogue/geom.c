@@ -1559,7 +1559,7 @@ void TransformSVG (int frame,
 		   int ancestorX, int ancestorY,
 		   int canvasWidth, int canvasHeight,
 		   int transform_type,
-		   PtrBox box)
+		   Element el)
 {
   AmayaFrame * p_frame;
   AmayaTransformEvtHandler *p_TransformEvtHandler;
@@ -1575,13 +1575,12 @@ void TransformSVG (int frame,
 						       canvasWidth,
 						       canvasHeight,
 						       transform_type,
-						       box);
+						       el);
 
   while(!p_TransformEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
   delete p_TransformEvtHandler;
-
 }
 
 /*----------------------------------------------------------------------

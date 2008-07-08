@@ -49,8 +49,6 @@ extern PtrBox GetClickedLeafBox ( int frame,
                                   int xRef,
                                   int yRef,
                                   PtrFlow *pFlow );
-extern void SVG_ApplyDirectTranslate ( PtrAbstractBox pAb,
-                                       int frame );
 extern void ApplyDirectTranslate ( PtrBox pBox,
                                    int frame,
                                    int xm,
@@ -116,8 +114,6 @@ extern PtrBox GetClickedLeafBox ( int frame,
                                     int xRef,
                                     int yRef,
                                     PtrFlow *pFlow );
-extern void SVG_ApplyDirectTranslate ( PtrAbstractBox pAb,
-                                         int frame );
 extern void ApplyDirectTranslate ( PtrBox pBox,
                                      int frame,
                                      int xm,

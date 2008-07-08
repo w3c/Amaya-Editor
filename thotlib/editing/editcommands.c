@@ -2151,7 +2151,6 @@ ThotBool AskSurroundingBox(
   if(pAb && pAb -> AbBox)
     pBox = pAb -> AbBox;
   else return FALSE;
-
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
   
@@ -2179,6 +2178,7 @@ extern ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
 					   Element *svgAncestor,
 					   Element *svgCanvas);
 
+extern void UpdateTransformMatrix(Document doc, Element el);
 
 /*----------------------------------------------------------------------
   AskTransform
@@ -2206,14 +2206,14 @@ ThotBool AskTransform(     Document doc,
       return FALSE;
   ;
 
+  /* Get the current transform matrix */
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
 
   if(CTM == NULL)
-    {
       inverse = NULL;
-    }
   else
     {
+      /* Get the inverse of the CTM and free the CTM */
       inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
 
       if(inverse == NULL)
@@ -2225,37 +2225,33 @@ ThotBool AskTransform(     Document doc,
     }
 
   pFrame = &ViewFrameTable[frame - 1];
-  /* Get the size of the origin of the ancestor */
+  /* Get the size of the SVG Canvas */
+  TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
+
+  /* Get the origin of the ancestor */
+  //TtaGiveBoxPosition (svgAncestor, doc, 1, UnPixel, &ancestorX, &ancestorY);
   pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
-  if(!pAb)return FALSE;
-  pBox = pAb -> AbBox;
-  if(!pBox)return FALSE;
+  if(pAb && pAb -> AbBox)
+    pBox = pAb -> AbBox;
+  else return FALSE;
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
-  /* Get the size of the SVG Canvas */
-  pAb = ((PtrElement)svgCanvas) -> ElAbstractBox[0];
-  if(!pAb)return FALSE;
-  pBox = pAb -> AbBox;
-  if(!pBox)return FALSE;
-  canvasWidth  = pBox->BxWidth;
-  canvasHeight = pBox->BxHeight;
-
-  pAb = ((PtrElement)el) -> ElAbstractBox[0];
-  if(!pAb)return FALSE;
-  pBox = pAb -> AbBox;
-  if(!pBox)return FALSE;
-  
+  /* Call the interactive module */
   TransformSVG (frame,
 		doc, 
 		CTM, inverse,
 		ancestorX, ancestorY,
 		canvasWidth, canvasHeight,
 		transform_type,
-		pBox);
+		el);
 
+  /* Free the transform matrix */
   if(CTM)TtaFreeTransform(CTM);
   if(inverse)TtaFreeTransform(inverse);
+
+  /* Update the transform */
+  UpdateTransformMatrix(doc, el);
 
   return TRUE;
 }

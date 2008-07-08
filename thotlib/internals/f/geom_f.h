@@ -124,7 +124,7 @@ extern void TransformSVG ( int frame,
                            int canvasWidth,
                            int canvasHeight,
                            int transform_type,
-                           PtrBox box );
+                           Element el );
 extern PtrTextBuffer PathCreation ( int frame,
                                     int xmin,
                                     int ymin,
@@ -275,7 +275,7 @@ extern void TransformSVG ( int frame,
                              int canvasWidth,
                              int canvasHeight,
                              int transform_type,
-                             PtrBox box );
+                             Element el );
 extern PtrTextBuffer PathCreation ( int frame,
                                       int xmin,
                                       int ymin,

@@ -3013,26 +3013,17 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
     case 41:   /* Rotate */
       if(isFormattedView)
-	{
-	  AskTransform(doc, svgAncestor, svgCanvas, 2, selected[0]);
-	  UpdateTransformMatrix(doc, selected[0]);
-	}
+	AskTransform(doc, svgAncestor, svgCanvas, 2, selected[0]);
       break;
 
     case 43:   /* Skew */
       if(isFormattedView)
-	{
 	AskTransform(doc, svgAncestor, svgCanvas, 4, selected[0]);
-	UpdateTransformMatrix(doc, selected[0]);
-	}
       break;
 
     case 44:   /* Scale */
       if(isFormattedView)
-	{
 	AskTransform(doc, svgAncestor, svgCanvas, 1, selected[0]);
-	UpdateTransformMatrix(doc, selected[0]);
-	}
       break;
 
       /* Translate */
