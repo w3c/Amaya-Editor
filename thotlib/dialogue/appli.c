@@ -808,13 +808,14 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
                                  int thot_mod_mask, int x, int y )
 {
 #if !defined (_WINDOWS) && !defined (_MACOS)
-  Document   document;
-  View       view;
+  Document       document;
+  View           view;
 #endif /* !_WINDOWS && ! _MACOS */
-  PtrBox     box;
-  int        ctrlpt;
+  PtrBox         box;
+  int            ctrlpt;
   PtrAbstractBox pAb;
-  Document doc;
+  Document       doc;
+  ThotBool       keyup = FALSE;
     
   /* Amaya is waiting for a click selection ? */
   if (ClickIsDone == 1)
@@ -843,52 +844,60 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
               ApplyDirectResize(box, frame, ctrlpt, x, y);
           }
         else
-	  {
-	    pAb = GetClickedAbsBox (frame, x, y);
-	    if(pAb && pAb->AbEnclosing)
-	      {
-		/* Try to call the SVG transform handler 
-		   to apply a translation  */
-		doc = FrameTable[frame].FrDoc;
-
-		if(AskTransform(doc,
-				NULL,
-				NULL,
-				0, (Element)(pAb->AbEnclosing->AbElement)))
-		  /* The user has moved an SVG element */
-		  {
-		  TtaSetDocumentModified(doc);
-		  return FALSE;
-		  }
-		else
-		  Selecting = FALSE;
-	      }
-
-	    if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
-	      {
-		/* a selection extension */
-		TtaAbortShowDialogue ();
-		LocateSelectionInView (frame, x, y, 1);
+          {
+            pAb = GetClickedAbsBox (frame, x, y);
+            if (pAb && pAb->AbEnclosing &&
+                pAb->AbEnclosing->AbElement->ElStructSchema &&
+                pAb->AbEnclosing->AbElement->ElStructSchema->SsName &&
+                !strcmp (pAb->AbEnclosing->AbElement->ElStructSchema->SsName, "SVG"))
+              {
+                /* Try to call the SVG transform handler
+                   to apply a translation  */
+                doc = FrameTable[frame].FrDoc;
+                
+                if(AskTransform(doc,
+                                NULL,
+                                NULL,
+                                0, (Element)(pAb->AbEnclosing->AbElement)))
+                  /* The user has moved an SVG element */
+                  {
+                    TtaSetDocumentModified(doc);
+                    return FALSE;
+                  }
+                else
+                  keyup = TRUE;
+              }
+            
+            if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
+              {
+                /* a selection extension */
+                TtaAbortShowDialogue ();
+                LocateSelectionInView (frame, x, y, 1);
 #if !defined (_WINDOWS) && !defined (_MACOS)
-		FrameToView (frame, &document, &view);
-		DoCopyToClipboard (document, view, FALSE, TRUE);
+                FrameToView (frame, &document, &view);
+                DoCopyToClipboard (document, view, FALSE, TRUE);
 #endif /* _WINDOWS */
-	      }
-	    else
-	      {
-		/* a simple selection */
-		ClickFrame = frame;
-		ClickX = x;
-		ClickY = y;
-		/* it's important to setup Selecting before the call of
-		   LocateSelectionInView because LocateSelectionInView will
-		   handle gui events (keyup) and Selecting variable
-		 * will not be unset => cause a infinit selection ! */
-		Selecting = TRUE;
-		if (LocateSelectionInView (frame, ClickX, ClickY, 2))
-		  return FALSE;
-	      }
-	  }
+              }
+            else
+              {
+                /* a simple selection */
+                ClickFrame = frame;
+                ClickX = x;
+                ClickY = y;
+                /* it's important to setup Selecting before the call of
+                   LocateSelectionInView because LocateSelectionInView will
+                   handle gui events (keyup) and Selecting variable
+                   * will not be unset => cause a infinit selection ! */
+                Selecting = TRUE;
+                if (LocateSelectionInView (frame, ClickX, ClickY, 2))
+                  {
+                    if(keyup)Selecting = FALSE;
+                    return FALSE;
+                  }
+                else
+                  if(keyup)Selecting = FALSE;
+              }
+          }
       }
       break;
       
