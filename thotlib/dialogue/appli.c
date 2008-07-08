@@ -109,7 +109,7 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 #include "xwindowdisplay_f.h"
 #include "appdialogue_wx_f.h"
 #include "paneltypes_wx.h"
-
+#include "tree_f.h"
 
 /* defined into amaya directory ...*/
 extern void ZoomIn (Document document, View view);
@@ -807,14 +807,13 @@ static ThotBool     Selecting = FALSE;
 ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
                                  int thot_mod_mask, int x, int y )
 {
-#if !defined (_WINDOWS) && !defined (_MACOS)
   Document       document;
   View           view;
-#endif /* !_WINDOWS && ! _MACOS */
   PtrBox         box;
   int            ctrlpt;
   PtrAbstractBox pAb;
-  Document       doc;
+  PtrDocument         pDoc;
+  PtrElement pEl;
   ThotBool       keyup = FALSE;
     
   /* Amaya is waiting for a click selection ? */
@@ -853,15 +852,20 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
               {
                 /* Try to call the SVG transform handler
                    to apply a translation  */
-                doc = FrameTable[frame].FrDoc;
-                
-                if(AskTransform(doc,
+                document = FrameTable[frame].FrDoc;
+		pEl = (pAb->AbEnclosing->AbElement);
+		GetDocAndView (frame, &pDoc, &view);
+
+                if(!(pDoc->DocReadOnly) &&
+		   !(ElementIsReadOnly(pEl)) &&
+		   AskTransform(document,
                                 NULL,
                                 NULL,
-                                0, (Element)(pAb->AbEnclosing->AbElement)))
+                                0,
+				(Element)(pEl)))
                   /* The user has moved an SVG element */
                   {
-                    TtaSetDocumentModified(doc);
+                    TtaSetDocumentModified(document);
                     return FALSE;
                   }
                 else
