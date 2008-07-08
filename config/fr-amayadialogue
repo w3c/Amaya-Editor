@@ -68,7 +68,7 @@
 66 Ouvrir le lien dans une nouvelle fenêtre
 67 Tourner
 68 Incliner
-69 Étirer
+69 Redimensionner
 70 Couper
 71 Copier
 72 Coller
@@ -364,7 +364,7 @@
 362 Restructuration
 363 Liens
 364 Tableaux
-365 Zones actives
+365 Images
 366 Math
 367 Graphiques
 368 Support XML

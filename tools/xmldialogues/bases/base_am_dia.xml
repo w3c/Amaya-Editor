@@ -1081,7 +1081,7 @@
 </label>
 <label define="BSVG_Scale">
 	<message xml:lang="en">Scale</message>
-	<message xml:lang="fr">Étirer</message>
+	<message xml:lang="fr">Redimensionner</message>
 </label>
 <label define="BCCut">
 	<message xml:lang="en">Cut</message>
@@ -5361,13 +5361,13 @@
 	<message xml:lang="ja">表</message>
 </label>
 <label define="BHelpImageMaps">
-	<message xml:lang="en">Image maps</message>
-	<message xml:lang="fr">Zones actives</message>
-	<message xml:lang="de">Aktive Bildbereiche</message>
-	<message xml:lang="it">Zone attive</message>
+	<message xml:lang="en">Images</message>
+	<message xml:lang="fr">Images</message>
+	<message xml:lang="de">Bild</message>
+	<message xml:lang="it">Immagine</message>
 	<message xml:lang="tr">Aktif alan</message>
-	<message xml:lang="es">Mapas de imagen</message>
-	<message xml:lang="pt">Mapas de Imagem</message>
+	<message xml:lang="es">Imagen</message>
+	<message xml:lang="pt">Imagem</message>
 	<message xml:lang="fi">Kuvakartat</message>
 	<message xml:lang="ru">Использование изображения и карт</message>
 	<message xml:lang="hu">Térképek</message>

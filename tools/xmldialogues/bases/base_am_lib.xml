@@ -4320,11 +4320,11 @@
 </label>
 <label define="TMSG_SCALE">
 	<message xml:lang="en">Scale</message>
-	<message xml:lang="fr">Mettre à l'échelle</message>
+	<message xml:lang="fr">Redimensionner</message>
 </label>
 <label define="TMSG_SKEW">
 	<message xml:lang="en">Skew</message>
-	<message xml:lang="fr">Déformer</message>
+	<message xml:lang="fr">Incliner</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
