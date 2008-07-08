@@ -289,6 +289,8 @@
 #define TMSG_ROTATE		284
 #define TMSG_VREVERSE		285
 #define TMSG_HREVERSE		286
-#define TMSG_LIB_MSG_MAX		287
+#define TMSG_SCALE		287
+#define TMSG_SKEW		288
+#define TMSG_LIB_MSG_MAX		289
 
 #endif
