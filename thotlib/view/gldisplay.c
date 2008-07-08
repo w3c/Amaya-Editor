@@ -1322,7 +1322,6 @@ void DrawRectangle2 (int frame, int thick, int style, int x, int y, int width,
                     int height, int fg, int bg, int pattern)
 {
   void        *mesh;  
-  float th;
 
   /* Check that width and height are positive */
   if (width <= 0 || height <= 0)
@@ -1367,7 +1366,7 @@ void DrawRectangle2 (int frame, int thick, int style, int x, int y, int width,
   if (thick > 0 && fg >= 0)
     {
       InitDrawing (style, thick, fg); 
-      GL_DrawEmptyRectangle (fg, (float) (x + th), (float) (y + th),
+      GL_DrawEmptyRectangle (fg, (float) x, (float) y,
                              (float) width, (float) height,
                              (float) thick);
     }

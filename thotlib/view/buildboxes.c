@@ -3545,6 +3545,8 @@ PtrBox BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
 #ifdef _GL
   pBox->VisibleModification = TRUE;
   return pBox;
+#else
+  return pBox;
 #endif /* _GL */
 }
 
