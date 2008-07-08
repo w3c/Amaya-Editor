@@ -108,7 +108,8 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 						   int canvasWidth,
 						   int canvasHeight,
 						   int transform_type,
-						   Element element)
+						   Element element,
+						   ThotBool *transformApplied)
   :wxEvtHandler()
   ,Finished(false)
   ,pFrame(p_frame)
@@ -124,8 +125,11 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
   ,el(element)
   ,box(NULL)
   ,ButtonDown(false)
+  ,hasBeenTransformed(transformApplied)
 {
   PtrAbstractBox pAb;
+
+  *hasBeenTransformed = FALSE;
 
   pAb = ((PtrElement)el) -> ElAbstractBox[0];
   if(!pAb && pAb -> AbBox)
@@ -142,9 +146,13 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
       AmayaCanvas * p_canvas = pFrame->GetCanvas();
       p_canvas->PushEventHandler(this);
 
-      /* assign a cross mouse cursor */
-      pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
-     
+      if(type > 0)
+	{
+	/* assign a cross mouse cursor */
+	pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
+	}
+
+
       pFrame->GetCanvas()->CaptureMouse();
 
     }
@@ -167,7 +175,9 @@ AmayaTransformEvtHandler::~AmayaTransformEvtHandler()
       p_canvas->PopEventHandler(false /* do not delete myself */);
       
       /* restore the default cursor */
-      pFrame->GetCanvas()->SetCursor( wxNullCursor );
+      if(type > 0)
+	pFrame->GetCanvas()->SetCursor( wxNullCursor );
+
       pFrame->GetCanvas()->ReleaseMouse();
     }
 
@@ -207,7 +217,7 @@ void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
       if(IsNear(cx2, cy2))
 	 type = 3;
 
-      TransformHasChanged = false;
+      hasBeenRotated = false;
       break;
 
     case 1:
@@ -271,7 +281,7 @@ void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
       /* The user was rotating the shape */
       ButtonDown = false;
 
-      if(!TransformHasChanged)
+      if(!hasBeenRotated)
 	/* The user clicked but didn't move */
 	  Finished = true;
 
@@ -419,6 +429,8 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 				   x2 - x1,
 				   y2 - y1
 				   );
+
+	  *hasBeenTransformed = TRUE;
 	  break;
 
 	case 2:
@@ -470,7 +482,8 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 				       0,0);
 	      TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +cx, +cy);
 
-	      TransformHasChanged = true;
+	      hasBeenRotated = true;
+	      *hasBeenTransformed = TRUE;
 	    }
 
 	  break;
@@ -519,6 +532,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	  /* Move the shape to its initial position */
 	  TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +cx, +cy);
+	  *hasBeenTransformed = TRUE;
 	  break;
 
 	case 7:
@@ -552,6 +566,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	  /* Move the shape to its initial position */
 	  TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +cx, +cy);
+	  *hasBeenTransformed = TRUE;
 	  break;
 
 	case 9:
@@ -572,6 +587,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       sy = ((float)y2)/y1;
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, sy, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, 0, +bottom);
+	       *hasBeenTransformed = TRUE;
 	     }
 	  break;
 
@@ -593,6 +609,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       sy = ((float)y2)/y1;
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, sy, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, 0, +top);
+	       *hasBeenTransformed = TRUE;
 	     }
 	   break;
 
@@ -614,6 +631,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       sx = ((float)x2)/x1;
 	       TtaApplyMatrixTransform (document, el, sx, 0, 0, 1, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +right, 0);
+	       *hasBeenTransformed = TRUE;
 	     }
 	  break;
 
@@ -635,6 +653,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       sx = ((float)x2)/x1;
 	       TtaApplyMatrixTransform (document, el, sx, 0, 0, 1, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +left, 0);
+	       *hasBeenTransformed = TRUE;
 	     }
 	  break;
 
@@ -661,6 +680,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
 					+right, +bottom);
+	       *hasBeenTransformed = TRUE;
 	     }
 
 	  break;
@@ -688,6 +708,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
 					+left, +bottom);
+	       *hasBeenTransformed = TRUE;
 	     }
 
 	  break;
@@ -715,6 +736,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
 					+left, +top);
+	       *hasBeenTransformed = TRUE;
 	     }
 
 	  break;
@@ -742,6 +764,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
 					+right, +top);
+	       *hasBeenTransformed = TRUE;
 	     }
 	  break;
 
@@ -771,20 +794,6 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseWheel( wxMouseEvent& event )
 {
-#define SCALE_ 1.1
-
-  return;
-  
-  float scale;
-
-  {
-    scale = (event.GetWheelRotation() > 0 ? SCALE_ : 1/SCALE_);
-
-    TtaApplyMatrixTransform (document, el, scale, 0, 0, scale,
-			     0,
-			     0
-			     );
-  }
 }
 
 /*----------------------------------------------------------------------

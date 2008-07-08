@@ -1553,7 +1553,7 @@ ThotBool ShapeCreation (int frame,
 /*----------------------------------------------------------------------
   TransformSVG
   ----------------------------------------------------------------------*/
-void TransformSVG (int frame,
+ThotBool TransformSVG (int frame,
 		   Document doc, 
 		   void *CTM, void *inverse,
 		   int ancestorX, int ancestorY,
@@ -1564,6 +1564,7 @@ void TransformSVG (int frame,
   AmayaFrame * p_frame;
   AmayaTransformEvtHandler *p_TransformEvtHandler;
   ThotEvent ev;
+  ThotBool transformApplied;
 
   p_frame = FrameTable[frame].WdFrame;
   p_TransformEvtHandler = new AmayaTransformEvtHandler(p_frame,
@@ -1575,12 +1576,15 @@ void TransformSVG (int frame,
 						       canvasWidth,
 						       canvasHeight,
 						       transform_type,
-						       el);
+						       el,
+						       &transformApplied);
 
   while(!p_TransformEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
   delete p_TransformEvtHandler;
+
+  return transformApplied;
 }
 
 /*----------------------------------------------------------------------

@@ -856,7 +856,12 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
 				NULL,
 				0, (Element)(pAb->AbEnclosing->AbElement)))
 		  /* The user has moved an SVG element */
+		  {
 		  TtaSetDocumentModified(doc);
+		  return FALSE;
+		  }
+		else
+		  Selecting = FALSE;
 	      }
 
 	    if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)

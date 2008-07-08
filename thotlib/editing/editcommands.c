@@ -2196,6 +2196,7 @@ ThotBool AskTransform(     Document doc,
   int frame;
   PtrTransform CTM, inverse;
   int canvasWidth,canvasHeight,ancestorX,ancestorY;
+  ThotBool transformApplied;
 
   frame = ActiveFrame;
 
@@ -2238,13 +2239,13 @@ ThotBool AskTransform(     Document doc,
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
   /* Call the interactive module */
-  TransformSVG (frame,
-		doc, 
-		CTM, inverse,
-		ancestorX, ancestorY,
-		canvasWidth, canvasHeight,
-		transform_type,
-		el);
+  transformApplied = TransformSVG (frame,
+				   doc, 
+				   CTM, inverse,
+				   ancestorX, ancestorY,
+				   canvasWidth, canvasHeight,
+				   transform_type,
+				   el);
 
   /* Free the transform matrix */
   if(CTM)TtaFreeTransform(CTM);
@@ -2253,7 +2254,7 @@ ThotBool AskTransform(     Document doc,
   /* Update the transform */
   UpdateTransformMatrix(doc, el);
 
-  return TRUE;
+  return transformApplied;
 }
 
 

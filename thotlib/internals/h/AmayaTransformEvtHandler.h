@@ -26,7 +26,8 @@ class AmayaTransformEvtHandler : public wxEvtHandler
 			   int ancestorX, int ancestorY,
 			   int canvasWidth, int canvasHeight,
 			   int transform_type,
-			   Element element
+			   Element element,
+			   ThotBool *transformApplied
 			   );
 
   virtual ~AmayaTransformEvtHandler();
@@ -74,7 +75,8 @@ class AmayaTransformEvtHandler : public wxEvtHandler
 
   /* Mouse Button Down */
   bool ButtonDown;
-  bool TransformHasChanged;
+  bool hasBeenRotated;
+  ThotBool *hasBeenTransformed; 
 
 };
 
