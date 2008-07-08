@@ -15,10 +15,6 @@ extern PtrBox IsSelectingControlPoint ( int frame,
                                         int x,
                                         int y,
                                         int* ctrlpt );
-extern PtrBox IsClickingInShape ( int frame,
-                                  int x,
-                                  int y,
-                                  int* ctrlpt );
 extern ThotBool LocateSelectionInView ( int frame,
                                         int x,
                                         int y,
@@ -86,10 +82,6 @@ extern PtrBox IsSelectingControlPoint ( int frame,
                                           int x,
                                           int y,
                                           int* ctrlpt );
-extern PtrBox IsClickingInShape ( int frame,
-                                    int x,
-                                    int y,
-                                    int* ctrlpt );
 extern ThotBool LocateSelectionInView ( int frame,
                                           int x,
                                           int y,

@@ -490,7 +490,7 @@ extern void TtaUpdateToolPanelLayout ();
 extern void TtaCloseAllHelpWindows ();
 
 extern void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
-ThotBool AskSurroundingBox(
+extern ThotBool AskSurroundingBox(
 		       Document doc,
 		       Element svgAncestor,
 		       Element svgCanvas,
@@ -503,7 +503,7 @@ ThotBool AskSurroundingBox(
 
 extern char *AskShapePoints (Document doc, int shape, Element svgRoot);
 
-extern void AskTransform(Document doc,
+extern ThotBool AskTransform(Document doc,
 			 Element svgAncestor,
 			 Element svgCanvas,
 			 int transform_type,

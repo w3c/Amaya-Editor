@@ -2183,7 +2183,7 @@ extern ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
 /*----------------------------------------------------------------------
   AskTransform
   --------------------------------------------------------------------*/
-void AskTransform(     Document doc,
+ThotBool AskTransform(     Document doc,
 		       Element svgAncestor,
 		       Element svgCanvas,
 		       int transform_type, Element el)
@@ -2199,11 +2199,11 @@ void AskTransform(     Document doc,
 
   frame = ActiveFrame;
 
-  if(frame <= 0)return;
+  if(frame <= 0)return FALSE;
 
   if(svgCanvas == NULL || svgAncestor == NULL)
     if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
-      return;
+      return FALSE;
   ;
 
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
@@ -2220,31 +2220,31 @@ void AskTransform(     Document doc,
 	{
       /* Transform not inversible */
 	  TtaFreeTransform(CTM);
-	  return;
+	  return FALSE;
 	}
     }
 
   pFrame = &ViewFrameTable[frame - 1];
   /* Get the size of the origin of the ancestor */
   pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
-  if(!pAb)return;
+  if(!pAb)return FALSE;
   pBox = pAb -> AbBox;
-  if(!pBox)return;
+  if(!pBox)return FALSE;
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
   /* Get the size of the SVG Canvas */
   pAb = ((PtrElement)svgCanvas) -> ElAbstractBox[0];
-  if(!pAb)return;
+  if(!pAb)return FALSE;
   pBox = pAb -> AbBox;
-  if(!pBox)return;
+  if(!pBox)return FALSE;
   canvasWidth  = pBox->BxWidth;
   canvasHeight = pBox->BxHeight;
 
   pAb = ((PtrElement)el) -> ElAbstractBox[0];
-  if(!pAb)return;
+  if(!pAb)return FALSE;
   pBox = pAb -> AbBox;
-  if(!pBox)return;
+  if(!pBox)return FALSE;
   
   TransformSVG (frame,
 		doc, 
@@ -2256,6 +2256,8 @@ void AskTransform(     Document doc,
 
   if(CTM)TtaFreeTransform(CTM);
   if(inverse)TtaFreeTransform(inverse);
+
+  return TRUE;
 }
 
 

@@ -2330,12 +2330,14 @@ void SVG_ApplyDirectTranslate (PtrAbstractBox      pAb, int frame)
 	      
 	      if(pEl)
 		{
-		  AskTransform(doc,
+		  if(AskTransform(doc,
 			       NULL,
 			       NULL,
-			       0, (Element)(pEl));
-		  UpdateTransformMatrix(doc, (Element)(pEl));
-		  TtaSetDocumentModified(doc);
+				  0, (Element)(pEl)))
+		    {
+		      UpdateTransformMatrix(doc, (Element)(pEl));
+		      TtaSetDocumentModified(doc);
+		    }
 		}
 	    }
 	}
