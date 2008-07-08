@@ -184,7 +184,7 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
 
       ThotBool noSVG = TRUE;
       wxMenuItem* svg_items[4];
-#define SVG_FIRST_ITEM 10
+#define SVG_FIRST_ITEM 4
 #define SVG_NB_ITEM 4
 
 #ifdef _SVG

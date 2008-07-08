@@ -1070,6 +1070,19 @@
 	<message xml:lang="it">Apri il collegamento in una nuova finestra</message>
 	<message xml:lang="ja">リンクを新規ウィンドウで開く</message>
 </label>
+<label define="BSVG_Rotate">
+	<message xml:lang="en">Rotate</message>
+	<message xml:lang="fr">Tourner</message>
+	<message xml:lang="es">Cilindro</message>
+</label>
+<label define="BSVG_Skew">
+	<message xml:lang="en">Skew</message>
+	<message xml:lang="fr">Incliner</message>
+</label>
+<label define="BSVG_Scale">
+	<message xml:lang="en">Scale</message>
+	<message xml:lang="fr">Étirer</message>
+</label>
 <label define="BCCut">
 	<message xml:lang="en">Cut</message>
 	<message xml:lang="fr">Couper</message>
@@ -1168,19 +1181,6 @@
 	<message xml:lang="tw">附加</message>
 	<message xml:lang="sk">Vložiť za</message>
 	<message xml:lang="ja">追加</message>
-</label>
-<label define="BSVG_Rotate">
-	<message xml:lang="en">Rotate</message>
-	<message xml:lang="fr">Tourner</message>
-	<message xml:lang="es">Cilindro</message>
-</label>
-<label define="BSVG_Skew">
-	<message xml:lang="en">Skew</message>
-	<message xml:lang="fr">Incliner</message>
-</label>
-<label define="BSVG_Scale">
-	<message xml:lang="en">Scale</message>
-	<message xml:lang="fr">Étirer</message>
 </label>
 <!-- End of Document context menu. --><label define="BUndo">
 	<message xml:lang="en">&amp;Undo</message>

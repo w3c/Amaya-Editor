@@ -66,15 +66,15 @@
 64 **Open the link
 65 **Open the link in new tab
 66 **Open the link in new window
-67 剪切
-68 复制
-69 粘贴
-70 删除
-71 插入
-72 附加
-73 **Rotate
-74 **Skew
-75 **Scale
+67 **Rotate
+68 **Skew
+69 **Scale
+70 剪切
+71 复制
+72 粘贴
+73 删除
+74 插入
+75 附加
 76 撤销(&U)
 77 重做(&R)
 78 剪切(&T)

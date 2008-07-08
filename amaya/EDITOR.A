@@ -99,16 +99,16 @@ MENUS
         DocContext_ button:BFollowTheLinkNewTab -> FollowTheLinkNewTab;
         DocContext_ button:BFollowTheLinkNewWin -> FollowTheLinkNewWin;
         DocContext_ Separator;
+	DocContext_ button:BSVG_Rotate -> TransformSVG_Rotate icon:SVG_rotate.png;
+	DocContext_ button:BSVG_Skew -> TransformSVG_Skew icon:SVG_skew.png;
+	DocContext_ button:BSVG_Scale -> TransformSVG_Scale icon:SVG_scale.png;
+        DocContext_ Separator;
         DocContext_ button:BCCut -> TtcCutSelection icon:cut.png;
         DocContext_ button:BCCopy -> TtcCopySelection icon:copy.png;
         DocContext_ button:BCPaste -> PasteBuffer icon:paste.png;
         DocContext_ button:BCClear -> TtcDeleteSelection icon:editdelete.png;
         DocContext_ button:BCInsertBefore -> InsertBefore icon:insert.png;
         DocContext_ button:BCInsertAfter -> InsertAfter icon:append.png;
-        DocContext_ Separator;
-	DocContext_ button:BSVG_Rotate -> TransformSVG_Rotate icon:SVG_rotate.png;
-	DocContext_ button:BSVG_Skew -> TransformSVG_Skew icon:SVG_skew.png;
-	DocContext_ button:BSVG_Scale -> TransformSVG_Scale icon:SVG_scale.png;
 
 	Edit_ button:BUndo -> TtcUndo icon:undo.png;
 	Edit_ button:BRedo -> TtcRedo icon:redo.png;
