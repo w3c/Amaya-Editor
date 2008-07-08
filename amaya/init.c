@@ -174,7 +174,39 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
       ThotBool        do_insert = TRUE, do_append = TRUE;
 #endif /* TEMPLATES */
       
+#ifdef _SVG
+      ElementType     elementType;
+      SSchema	      svgSchema;
+#endif /* _SVG */
+
+
       wxMenuItem* items[4];
+
+      ThotBool noSVG = TRUE;
+      wxMenuItem* svg_items[4];
+#define SVG_FIRST_ITEM 10
+#define SVG_NB_ITEM 4
+
+#ifdef _SVG
+      /* Check if the selected element is an SVG one */
+      TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+      if(el)
+	{
+	  svgSchema = GetSVGSSchema (doc);
+	  elementType = TtaGetElementType(el);
+	  if(elementType.ElSSchema == svgSchema)
+	    noSVG = FALSE;
+	}
+#endif /* _SVG */
+
+      if(noSVG)
+	{
+	  /* Remove the SVG items */
+	  for(i = 0; i < SVG_NB_ITEM; i++)
+	      svg_items[i] = p_menu->
+		Remove(p_menu->FindItemByPosition(SVG_FIRST_ITEM));
+	}
+
       if (noLink)
         {
           // Remove link menu items (open in ...)
@@ -311,6 +343,14 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
           p_menu->Prepend(items[1]);
           p_menu->Prepend(items[0]);
         }
+
+      /* Reinsert the SVG items */
+      if(noSVG)
+	{
+	  for(i = SVG_NB_ITEM - 1; i >= 0; i--)
+	    p_menu->Insert(SVG_FIRST_ITEM, svg_items[i]);
+	}
+	
     }
   return -1;
 }

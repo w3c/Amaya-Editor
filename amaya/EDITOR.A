@@ -105,6 +105,10 @@ MENUS
         DocContext_ button:BCClear -> TtcDeleteSelection icon:editdelete.png;
         DocContext_ button:BCInsertBefore -> InsertBefore icon:insert.png;
         DocContext_ button:BCInsertAfter -> InsertAfter icon:append.png;
+        DocContext_ Separator;
+	DocContext_ button:BSVG_Rotate -> TransformSVG_Rotate icon:SVG_rotate.png;
+	DocContext_ button:BSVG_Skew -> TransformSVG_Skew icon:SVG_skew.png;
+	DocContext_ button:BSVG_Scale -> TransformSVG_Scale icon:SVG_scale.png;
 
 	Edit_ button:BUndo -> TtcUndo icon:undo.png;
 	Edit_ button:BRedo -> TtcRedo icon:redo.png;
