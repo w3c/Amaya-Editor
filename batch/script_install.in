@@ -104,14 +104,18 @@ for i in $LIBCONFIGFILES ; do
 	  done ;
 done ;
 cd - > /dev/null
+
 $ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/annotlib"
 cd $AMAYA_SOURCEBINDIR/../../annotlib
+if test -f Annot.STR ; then
 for i in $ANNOTFILES ; do
 	  for file in `$ECHO $i` ; do
 	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/annotlib ;
 	  done ;
 done ;
+fi
 cd - > /dev/null
+
 $ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/resources/xrc"
 cd $AMAYA_SOURCEBINDIR/../../resources/xrc
 for i in $RESOURCE_XRC_FILES ; do

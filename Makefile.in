@@ -14,7 +14,7 @@ LIBWWW	   = libwww
 
 #MKP: adding davlib
 SUBDIRS	= @SUBDIRS@ tools thotlib batch annotlib @DAVDIR@ amaya
-EXTRA_SUBDIRS= raptor $(LIBWWW) $(WX_BUILDDIR) $(GL_BUILDDIR)
+EXTRA_SUBDIRS= $(BUILDRAPTOR) $(LIBWWW) $(WX_BUILDDIR) $(GL_BUILDDIR)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

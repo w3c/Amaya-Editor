@@ -86,7 +86,7 @@ autoconf
 mkdir linux
 cd linux
 export HOME=`pwd`
-../configure --prefix=/usr/share --exec=/usr/share  --datadir=/usr/share
+../configure --enable-system-raptor --prefix=/usr/share --exec=/usr/share  --datadir=/usr/share
 #cp Options.orig Options
 make depend
 make

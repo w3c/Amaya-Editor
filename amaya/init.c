@@ -6873,7 +6873,7 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvBoolean ("LOAD_CSS", TRUE, FALSE);
   TtaSetEnvBoolean ("SEND_REFERER", FALSE, FALSE);
   TtaSetEnvBoolean ("INSERT_NBSP", FALSE, FALSE);
-  TtaSetEnvBoolean ("GENERATE_MATHPI", TRUE, FALSE);
+  TtaSetEnvBoolean ("GENERATE_MATHPI", FALSE, FALSE);
   TtaSetEnvBoolean ("EDIT_SRC_TEMPLATE", FALSE, FALSE);
   TtaSetEnvBoolean ("SHOW_PLACEHOLDER", TRUE, FALSE);
   TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", TRUE, FALSE);

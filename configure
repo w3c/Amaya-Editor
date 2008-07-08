@@ -14332,9 +14332,9 @@ fi
 
 
     if test "$RAPTOR_CONFIG" = "" ; then
-	{ echo "$as_me:$LINENO: WARNING: Not using system-provided Raptor library" >&5
+      { echo "$as_me:$LINENO: WARNING: Not using system-provided Raptor library" >&5
 echo "$as_me: WARNING: Not using system-provided Raptor library" >&2;}
-	with_system_raptor="no"
+      with_system_raptor="no"
     fi
 fi
 
@@ -14379,7 +14379,8 @@ if test "$with_raptor" = "yes" ; then
 		cd ..
 	else
 		raptor_includes=`$RAPTOR_CONFIG --cflags`
-		raptor_libs=`$RAPTOR_CONFIG --libs`
+		raptor_libs="-lraptor"
+		BUILDRAPTOR=""
  		AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS"
 		AMAYA_ANNOT_INCLUDES="$raptor_includes -I\$(THOTDIR)/thotlib/include"
 		AMAYA_ANNOT_EXTRA_LIBS="$raptor_libs"
@@ -16012,13 +16013,11 @@ if test "$build_amaya" = "yes" ; then
     fi
     if test "$with_annot" = "yes" ; then
 	echo Amaya configured with Annotations support
-    fi
-    if test "$with_redland" = "yes" ; then
-	if test "$with_system_redland" = "no" ; then
- 	  echo Amaya configured with the Redland RDF library \(local source\)
-	else
-	  echo Amaya configured with the Redland RDF library \(system\)
-	fi
+      if test "$with_system_raptor" = "yes" ; then
+ 	echo Amaya configured with the RaptorF library \(system\)
+      else
+	echo Amaya configured with the Raptor library \(system\)
+      fi
     fi
     if test "$with_templates" = "yes" ; then
 	echo Amaya configured with templates support
