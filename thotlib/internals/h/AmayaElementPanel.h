@@ -46,9 +46,9 @@ public:
   void RaisePanel(int panel_type);
   
 protected:
-//  wxNotebook* m_notebook;
+  virtual wxSize DoGetBestSize() const;
+  
   wxAuiNotebook* m_notebook;
-  wxImageList m_imageList;
   
   AmayaXMLPanel* m_xml;
  

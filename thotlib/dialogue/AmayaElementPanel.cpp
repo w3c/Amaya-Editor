@@ -51,7 +51,6 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaElementToolPanel, AmayaToolPanel)
 
 AmayaElementToolPanel::AmayaElementToolPanel():
   AmayaToolPanel(),
-  m_imageList(16, 16),
   m_xml(NULL)
 {
 }
@@ -66,32 +65,17 @@ bool AmayaElementToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoin
   if(! wxPanel::Create(parent, id, pos, size, style, name))
     return false;
 
-  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_html.png"), wxBITMAP_TYPE_PNG));
-  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_math.png"), wxBITMAP_TYPE_PNG));
-  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_svg.png"), wxBITMAP_TYPE_PNG));
-  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_template.png"), wxBITMAP_TYPE_PNG));
-  m_imageList.Add(wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_xml.png"), wxBITMAP_TYPE_PNG));
-  
-//  m_notebook = new wxNotebook(this, wxID_ANY);
-//  m_notebook->SetImageList(&m_imageList);
-  
   m_notebook = new wxAuiNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TOP);
   wxSizer* sz = new wxBoxSizer(wxVERTICAL);
   sz->Add(m_notebook, 1, wxEXPAND);
   SetSizer(sz);
-
-//  m_notebook->AddPage(new AmayaXHTMLPanel(m_notebook, wxID_ANY), wxT(""), false, 0);
-//  m_notebook->AddPage(new AmayaMathMLPanel(m_notebook, wxID_ANY), wxT(""), false, 1);
-//  m_notebook->AddPage(m_xml = new AmayaXMLPanel(m_notebook, wxID_ANY), wxT(""), false, 2);
-//  m_notebook->AddPage(new AmayaSVGPanel(m_notebook, wxID_ANY), wxT(""), false, 3);
-//  m_notebook->AddPage(new AmayaTemplatePanel(m_notebook, wxID_ANY), wxT(""), false, 4);
 
   m_notebook->AddPage(new AmayaXHTMLPanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_html.png"), wxBITMAP_TYPE_PNG));
   m_notebook->AddPage(new AmayaMathMLPanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_math.png"), wxBITMAP_TYPE_PNG));
   m_notebook->AddPage(new AmayaSVGPanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_svg.png"), wxBITMAP_TYPE_PNG));
   m_notebook->AddPage(new AmayaTemplatePanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_template.png"), wxBITMAP_TYPE_PNG));
   m_notebook->AddPage(m_xml = new AmayaXMLPanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_xml.png"), wxBITMAP_TYPE_PNG));
-  sz->Layout();
+  
   return true;
 }
 
@@ -161,6 +145,26 @@ void AmayaElementToolPanel::RaisePanel(int panel_type)
   if(index!=wxNOT_FOUND)
 //    m_notebook->ChangeSelection(index);
     m_notebook->SetSelection(index);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaElementToolPanel
+ *      Method:  wxSize DoGetBestSize() const;
+ * Description:  Compute the best size of the panel
+  -----------------------------------------------------------------------*/
+wxSize AmayaElementToolPanel::DoGetBestSize() const
+{
+  wxSize sz(0,0);
+  for(int i=0; i<(int)m_notebook->GetPageCount(); i++)
+    {
+      wxWindow* win = m_notebook->GetPage(i);
+      if(sz.x<win->GetBestSize().x)
+         sz.x = win->GetBestSize().x;
+      if(sz.y<win->GetBestSize().y)
+         sz.y = win->GetBestSize().y;
+    }
+  sz += wxSize(8, 32);
+  return sz;
 }
 
 #endif /* #ifdef _WX */

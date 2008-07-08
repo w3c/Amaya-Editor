@@ -5,35 +5,37 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
+          <orient>wxVERTICAL</orient>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_LABEL_TOOLS">
-              <label>Tools</label>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_LABEL_TOOLS">
+                  <label>Tools</label>
+                </object>
+                <option>0</option>
+                <flag>wxALIGN_CENTRE</flag>
+              </object>
+              <object class="spacer">
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_CLOSE">
+                  <bitmap stock_id="wxART_CROSS_MARK"/>
+                  <style platform="unix|win">wxNO_BORDER</style>
+                </object>
+                <option>0</option>
+                <flag>wxALIGN_CENTRE</flag>
+              </object>
             </object>
-            <option>0</option>
-            <flag>wxALIGN_CENTRE</flag>
-          </object>
-          <object class="spacer">
-            <option>1</option>
-            <flag>wxEXPAND</flag>
           </object>
           <object class="sizeritem">
-            <object class="wxBitmapButton" name="wxID_BUTTON_CLOSE">
-              <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
-              <style platform="unix|win">wxNO_BORDER</style>
-            </object>
-            <option>0</option>
-            <flag>wxALIGN_CENTRE</flag>
+            <object class="wxStaticLine"/>
           </object>
         </object>
-        <flag>wxALL|wxEXPAND</flag>
-        <border>4</border>
       </object>
-      <object class="sizeritem">
-        <object class="wxStaticLine"/>
-        <flag>wxALL|wxEXPAND</flag>
-        <border>4</border>
-      </object>
+      
       <object class="sizeritem">
         <object class="wxScrolledWindow" name="wxID_PANEL_SWIN">
           <object class="wxBoxSizer">
@@ -50,47 +52,37 @@
   <object class="wxPanel" name="wxID_DOCKED_TOOL_PANEL_CONTAINER">
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
+      
       <object class="sizeritem">
-        <object class="wxPanel" name="wxID_PANEL_TITLE">
-          <object class="wxBoxSizer">
-            <orient>wxHORIZONTAL</orient>
-            <object class="sizeritem">
-              <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
-                <bitmap>../icons/misc/expand_on.png</bitmap>
-                <style platform="unix|win">wxNO_BORDER</style>
-              </object>
-              <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
-              <border>4</border>
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
+              <bitmap>../icons/misc/expand_on.png</bitmap>
+              <style platform="unix|win">wxNO_BORDER</style>
             </object>
-            <object class="sizeritem">
-              <object class="wxStaticText" name="wxID_LABEL_TITLE">
-                <label>Panel</label>
-                <style>wxALIGN_LEFT</style>
-                <font>
-                  <size>10</size>
-                  <family>swiss</family>
-                  <style>normal</style>
-                  <weight>bold</weight>
-                  <underlined>0</underlined>
-                  <face>Sans</face>
-                </font>
-              </object>
-              <option>1</option>
-              <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
-              <border>4</border>
-            </object>
-            <object class="sizeritem">
-              <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
-                <bitmap>../icons/misc/detach.png</bitmap>
-                <style platform="unix|win">wxNO_BORDER</style>
-              </object>
-              <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
-              <border>4</border>
-            </object>
+            <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
+            <border>4</border>
           </object>
-          <style>wxTAB_TRAVERSAL|wxNO_BORDER</style>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_TITLE">
+              <label>Panel</label>
+              <font>
+                <size>10</size>
+                <style>normal</style>
+                <weight>bold</weight>
+                <underlined>0</underlined>
+                <family>swiss</family>
+                <face>Sans</face>
+              </font>
+              <style>wxALIGN_LEFT</style>
+            </object>
+            <option>1</option>
+            <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
+            <border>4</border>
+          </object>
+          <orient>wxHORIZONTAL</orient>
         </object>
-        <flag>wxTOP|wxEXPAND</flag>
+        <flag>wxEXPAND</flag>
       </object>
     </object>
     <style>wxTAB_TRAVERSAL</style>

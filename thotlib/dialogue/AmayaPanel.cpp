@@ -71,9 +71,9 @@ AmayaToolPanelBar::~AmayaToolPanelBar()
 {
   // Show or hide panel using env
   unsigned int n;
-  for(n=0; n<m_panels.GetCount(); n++)
+  for(n=0; n<m_items.GetCount(); n++)
     {
-      delete m_panels[n];
+      delete m_items[n];
     }
 }
 
@@ -87,17 +87,12 @@ bool AmayaToolPanelBar::Create(wxWindow* parent, wxWindowID id, const wxPoint& p
   
   XRCCTRL(*this, "wxID_LABEL_TOOLS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_TOOLS)));
   XRCCTRL(*this, "wxID_BUTTON_CLOSE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
-  
-  // To remove to show bar title.
-  wxSizer* sz = GetSizer();
-  if(sz)
-    {
-      sz->Show((size_t)0, false);
-      sz->Show((size_t)1, false);
-    }
-  
-  Initialize();
 
+  m_scwin = XRCCTRL(*this, "wxID_PANEL_SWIN", wxScrolledWindow);
+  
+  // Hide bar title.
+  HideHeader();
+  
   return true;
 }
 
@@ -113,35 +108,12 @@ void AmayaToolPanelBar::OnClose( wxCommandEvent& event )
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void AmayaToolPanelBar::Initialize()
-{
-  wxSizer* sz = NULL;
-  m_scwin = XRCCTRL(*this, "wxID_PANEL_SWIN", wxScrolledWindow);
-  if(m_scwin)
-    sz = m_scwin->GetSizer();
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
 bool AmayaToolPanelBar::AddPanel(AmayaToolPanel* panel)
 {
-  AmayaToolPanelBarListItem* item = new AmayaToolPanelBarListItem;
-  item->ci        = panel->GetClassInfo();
-  item->panel     = panel;
-  item->dock      = new AmayaDockedToolPanelContainer(panel, this, m_scwin, wxID_ANY);
-  item->floa      = NULL;
-  item->shown     = true;
-  item->floating  = false;
-  item->minimized = false;
-  m_panels.Add(item);
-  item->panel->Create(m_scwin, wxID_ANY);
-  item->panel->SetExapndedFlag(true);
-  item->panel->SetFloatingFlag(false);
-  item->panel->SetVisibleFlag(true);
-  item->panel->SetWindow((AmayaNormalWindow*)this->GetParent());
-  item->dock->Attach();
-  m_scwin->GetSizer()->Add(item->dock, 0, wxEXPAND|wxBOTTOM, 0);
+  AmayaToolPanelItem* item = new AmayaToolPanelItem(panel, m_scwin);
+  m_scwin->GetSizer()->Add(item, 0, wxEXPAND);
+  panel->SetWindow((AmayaNormalWindow*)this->GetParent());
+  m_items.Add(item);
   return true;
 }
 
@@ -152,15 +124,15 @@ void AmayaToolPanelBar::LoadConfig()
 {
   // Show or hide panel using env
   unsigned int n;
-  for(n=0; n<m_panels.GetCount(); n++)
+  for(n=0; n<m_items.GetCount(); n++)
     {
-      AmayaToolPanelBarListItem &item = *(m_panels[n]);
-      if (item.panel)
+      AmayaToolPanelItem* item = m_items[n];
+      if (item)
         {
           ThotBool value;
-          wxString str = wxT("OPEN_") + item.panel->GetToolPanelConfigKeyName();
+          wxString str = wxT("OPEN_") + item->GetPanel()->GetToolPanelConfigKeyName();
           TtaGetEnvBoolean((char*)(const char*)str.mb_str(wxConvUTF8), &value);
-          MinimizePanel(item.panel, !value);
+          MinimizePanel(item->GetPanel(), !value);
         }
     }
 }
@@ -170,13 +142,13 @@ void AmayaToolPanelBar::LoadConfig()
 void AmayaToolPanelBar::SaveConfig()
 {
   unsigned int n;
-  for(n=0; n<m_panels.GetCount(); n++)
+  for(n=0; n<m_items.GetCount(); n++)
     {
-      AmayaToolPanelBarListItem &item = *(m_panels[n]);
-      if(item.panel)
+      AmayaToolPanelItem* item = m_items[n];
+      if(item)
         {
-          ThotBool value = IsExpanded(item.panel);
-          wxString str = wxT("OPEN_") + item.panel->GetToolPanelConfigKeyName();
+          ThotBool value = IsExpanded(item->GetPanel());
+          wxString str = wxT("OPEN_") + item->GetPanel()->GetToolPanelConfigKeyName();
           TtaSetEnvBoolean((char*)(const char*)str.mb_str(wxConvUTF8), value, TRUE);
         }
     }
@@ -188,23 +160,21 @@ void AmayaToolPanelBar::ShowHeader(bool bShow)
 {
   wxSizer* sz = GetSizer();
   if(sz)
-    {
       sz->Show((size_t)0, bShow);
-    }
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-const AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)const
+const AmayaToolPanelItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)const
 {
   unsigned int n;
-  for (n = 0; n < m_panels.GetCount(); n++)
+  for (n = 0; n < m_items.GetCount(); n++)
     {
-      AmayaToolPanelBarListItem &item = *(m_panels[n]);
-      if (item.panel == panel)
+      AmayaToolPanelItem *item = m_items[n];
+      if (item->GetPanel() == panel)
         {
-          return &item;
+          return item;
         }
     }
   return NULL;
@@ -212,48 +182,30 @@ const AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPane
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-AmayaToolPanelBarListItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)
+AmayaToolPanelItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)
 {
   unsigned int n;
-  for (n = 0; n < m_panels.GetCount(); n++)
+  for (n = 0; n < m_items.GetCount(); n++)
     {
-      AmayaToolPanelBarListItem &item = *(m_panels[n]);
-      if (item.panel == panel)
+      AmayaToolPanelItem *item = m_items[n];
+      if (item->GetPanel() == panel)
         {
-          return &item;
+          return item;
         }
     }
   return NULL;
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void AmayaToolPanelBar::ShowPanel(AmayaToolPanel* panel, bool bShow)
-{
-  AmayaToolPanelBarListItem* item = FindItem(panel);
-  if (item && item->shown != bShow)
-    {
-      item->shown = bShow;
-      if(m_scwin)
-        m_scwin->GetSizer()->Show(item->dock, bShow);
-      if(item->floa)
-        item->floa->Show(bShow);
-      panel->SetVisibleFlag(bShow);
-      Layout();
-    }
-}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::MinimizePanel(AmayaToolPanel* panel, bool bMin)
 {
-  AmayaToolPanelBarListItem* item = FindItem(panel);
-  if (item && item->minimized != bMin && !item->floating && item->dock)
+  AmayaToolPanelItem* item = FindItem(panel);
+  if (item)
     {
-      if(item->dock->Minimize(bMin))
-        item->minimized = bMin;
+      item->Minimize(bMin);
       Layout();
-      panel->SetExapndedFlag(!bMin);
     }
 }
 
@@ -261,60 +213,18 @@ void AmayaToolPanelBar::MinimizePanel(AmayaToolPanel* panel, bool bMin)
   ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::ToggleMinimize(AmayaToolPanel* panel)
 {
-  AmayaToolPanelBarListItem* item = FindItem(panel);
+  AmayaToolPanelItem* item = FindItem(panel);
   if(item)
-      MinimizePanel(panel, !item->minimized);
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void AmayaToolPanelBar::FloatPanel(AmayaToolPanel* panel, bool bFloat)
-{
-  AmayaToolPanelBarListItem* item = FindItem(panel);
-  if(item && item->floating!=bFloat && item->dock)
-    {
-      item->floating = bFloat;
-      if(bFloat)
-        {
-          item->dock->Detach();
-          if(item->floa==NULL)
-              item->floa = new AmayaFloatingToolPanelContainer(panel, this,
-                    this, wxID_ANY);
-          item->floa->Attach();
-          item->floa->Show();
-        }
-      else
-        {
-          if(item->floa!=NULL)
-            {
-              item->floa->Detach();
-              item->floa->Destroy();
-              item->floa = NULL;
-            }
-          item->dock->Attach();
-        }
-      panel->SetFloatingFlag(bFloat);
-      Layout();
-    }
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void AmayaToolPanelBar::ToggleFloat(AmayaToolPanel* panel)
-{
-  AmayaToolPanelBarListItem* item = FindItem(panel);
-  if(item)
-    FloatPanel(panel, !item->floating);  
+      MinimizePanel(panel, !item->IsMinimized());
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 bool AmayaToolPanelBar::IsMinimized(const AmayaToolPanel* panel)const
 {
-  const AmayaToolPanelBarListItem* item = FindItem(panel);
+  const AmayaToolPanelItem* item = FindItem(panel);
   if(item)
-    return item->minimized;
+    return item->IsMinimized();
   return false;
 }
 
@@ -322,31 +232,9 @@ bool AmayaToolPanelBar::IsMinimized(const AmayaToolPanel* panel)const
   ----------------------------------------------------------------------*/
 bool AmayaToolPanelBar::IsExpanded(const AmayaToolPanel* panel)const
 {
-  const AmayaToolPanelBarListItem* item = FindItem(panel);
-  if(item)
-    return !item->minimized;
-  return false;  
+  return !IsMinimized(panel);  
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-bool AmayaToolPanelBar::IsFloating(const AmayaToolPanel* panel)const
-{
-  const AmayaToolPanelBarListItem* item = FindItem(panel);
-  if(item)
-    return item->floating;
-  return false;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-bool AmayaToolPanelBar::IsShown(const AmayaToolPanel* panel)const
-{
-  const AmayaToolPanelBarListItem* item = FindItem(panel);
-  if(item)
-    return item->shown;
-  return false;  
-}
 
 
 /*----------------------------------------------------------------------
@@ -354,12 +242,12 @@ bool AmayaToolPanelBar::IsShown(const AmayaToolPanel* panel)const
 AmayaToolPanel* AmayaToolPanelBar::GetToolPanel(int type)
 {
   unsigned int n;
-  for(n=0; n<m_panels.GetCount(); n++)
+  for(n=0; n<m_items.GetCount(); n++)
     {
-      AmayaToolPanelBarListItem &item = *(m_panels[n]);
-      if(item.panel->GetToolPanelType()==type)
+      AmayaToolPanelItem* item = m_items[n];
+      if(item->GetPanel()->GetToolPanelType()==type)
         {
-          return item.panel;
+          return item->GetPanel();
         }
     }
   return NULL;
@@ -375,42 +263,35 @@ void AmayaToolPanelBar::OpenToolPanel( int panel_type, bool bOpen)
 }
 
 
+
 //
 //
-// AmayaDockedToolPanelContainer
+// AmayaToolPanelItem
 //
 //
 
-wxBitmap AmayaDockedToolPanelContainer::s_Bitmap_DetachOn;
-wxBitmap AmayaDockedToolPanelContainer::s_Bitmap_DetachOff;
-wxBitmap AmayaDockedToolPanelContainer::s_Bitmap_ExpandOn;
-wxBitmap AmayaDockedToolPanelContainer::s_Bitmap_ExpandOff;
-bool AmayaDockedToolPanelContainer::s_bmpOk = false;
+wxBitmap AmayaToolPanelItem::s_Bitmap_Minimized;
+wxBitmap AmayaToolPanelItem::s_Bitmap_Expanded;
+bool AmayaToolPanelItem::s_bmpOk = false;
 
-BEGIN_EVENT_TABLE(AmayaDockedToolPanelContainer, wxPanel)
-  EVT_BUTTON( XRCID("wxID_BUTTON_EXPAND"), AmayaDockedToolPanelContainer::OnMinimize) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_DETACH"), AmayaDockedToolPanelContainer::OnDetach)
-  
-  EVT_UPDATE_UI(XRCID("wxID_BUTTON_EXPAND"), AmayaDockedToolPanelContainer::OnUpdateMinimizeUI)
+BEGIN_EVENT_TABLE(AmayaToolPanelItem, wxPanel)
+  EVT_BUTTON( XRCID("wxID_BUTTON_EXPAND"), AmayaToolPanelItem::OnMinimize)
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-AmayaDockedToolPanelContainer::AmayaDockedToolPanelContainer(
-    AmayaToolPanel* panel, AmayaToolPanelBar* bar, 
+AmayaToolPanelItem::AmayaToolPanelItem(
+    AmayaToolPanel* panel, 
     wxWindow* parent, wxWindowID id, const wxPoint& pos, 
     const wxSize& size, long style):
 wxPanel(),
-AmayaToolPanelContainer(panel, bar),
-m_bMinimized(false),
-m_bDetached(false)
+m_panel(panel),
+m_bMinimized(false)
 {
   if(!s_bmpOk)
     {
-      s_Bitmap_DetachOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "detach_floating.png" ), wxBITMAP_TYPE_PNG);
-      s_Bitmap_DetachOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "detach.png" ), wxBITMAP_TYPE_PNG);
-      s_Bitmap_ExpandOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "expand_on.png" ), wxBITMAP_TYPE_PNG);
-      s_Bitmap_ExpandOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "expand_off.png" ), wxBITMAP_TYPE_PNG);
+      s_Bitmap_Expanded  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "expand_on.png" ), wxBITMAP_TYPE_PNG);
+      s_Bitmap_Minimized = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "expand_off.png" ), wxBITMAP_TYPE_PNG);
       s_bmpOk = true;
     }
   
@@ -418,18 +299,22 @@ m_bDetached(false)
                                         wxT("wxID_DOCKED_TOOL_PANEL_CONTAINER"));
   
   XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->SetLabel(panel->GetToolPanelName());
+  
+  panel->Create(this, wxID_ANY);  
+  GetSizer()->Add(panel, 0, wxEXPAND);
+  GetSizer()->Layout();
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-AmayaDockedToolPanelContainer::~AmayaDockedToolPanelContainer()
+AmayaToolPanelItem::~AmayaToolPanelItem()
 {
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-bool AmayaDockedToolPanelContainer::Minimize(bool bMinimize)
+bool AmayaToolPanelItem::Minimize(bool bMinimize)
 {
   wxSizer* sz = GetSizer();
   if(sz->GetItem(1))
@@ -437,9 +322,9 @@ bool AmayaDockedToolPanelContainer::Minimize(bool bMinimize)
       m_bMinimized = bMinimize;
       sz->Show((size_t)1, !bMinimize);
       if (bMinimize)
-        XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_ExpandOff );
+        XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_Minimized );
       else
-        XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_ExpandOn );
+        XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_Expanded );
       GetParent()->Layout();
       return true;
     }
@@ -451,130 +336,21 @@ bool AmayaDockedToolPanelContainer::Minimize(bool bMinimize)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-bool AmayaDockedToolPanelContainer::Detach()
+void AmayaToolPanelItem::OnMinimize(wxCommandEvent& event)
 {
-  wxSizer* sz = GetSizer();
-  if(sz)
-    {
-      m_bDetached = true;
-      // XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetBitmapLabel( s_Bitmap_DetachOn );
-      if(!sz->Detach(GetPanel()))
-        return false;
-      GetParent()->Layout();
-      return true;
-    }  
-  return false;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-bool AmayaDockedToolPanelContainer::Attach()
-{
-  GetPanel()->Reparent(this);
-  wxSizer* sz = GetSizer();
-  if(sz)
-    {
-      m_bDetached = false;
-      //XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetBitmapLabel( s_Bitmap_DetachOff );
-      XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->Hide();
-      GetPanel()->Show();
-      sz->Add(GetPanel(), 1, wxEXPAND)->Show(!m_bMinimized);
-      sz->Layout();
-      GetParent()->Layout();
-      return true;
-    }
-  return false;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void AmayaDockedToolPanelContainer::OnMinimize(wxCommandEvent& event)
-{
-  if(GetBar())
-    GetBar()->ToggleMinimize(GetPanel());
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void AmayaDockedToolPanelContainer::OnUpdateMinimizeUI(wxUpdateUIEvent& event)
-{
-  event.Enable(!m_bDetached);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void AmayaDockedToolPanelContainer::OnDetach(wxCommandEvent& event)
-{
-  if(GetBar())
-    GetBar()->ToggleFloat(GetPanel());  
+  Minimize(!IsMinimized());
 }
 
 
-//
-//
-// AmayaFloatingToolPanelContainer
-//
-//
-BEGIN_EVENT_TABLE(AmayaFloatingToolPanelContainer, wxDialog)
-  EVT_CLOSE( AmayaFloatingToolPanelContainer::OnClose )
-END_EVENT_TABLE()
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-AmayaFloatingToolPanelContainer::AmayaFloatingToolPanelContainer(
-    AmayaToolPanel* panel, AmayaToolPanelBar* bar, 
-    wxWindow* parent, wxWindowID id, const wxPoint& pos, 
-    const wxSize& size, long style):
-wxDialog(parent, id, wxT(""), pos, size, style),
-AmayaToolPanelContainer(panel, bar)
-{
-  wxSizer* sz = new wxBoxSizer(wxVERTICAL);
-  SetSizerAndFit(sz);
-  SetTitle(panel->GetToolPanelName());
-}
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-AmayaFloatingToolPanelContainer::~AmayaFloatingToolPanelContainer()
-{
-}
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void AmayaFloatingToolPanelContainer::OnClose( wxCloseEvent& event )
-{
-  GetBar()->DockPanel(GetPanel());
-  event.Skip();
-}
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-bool AmayaFloatingToolPanelContainer::Detach()
-{
-  wxSizer* sz = GetSizer();
-  if(sz)
-    {
-      return sz->Detach(GetPanel());
-    }
-  return false;
-}
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-bool AmayaFloatingToolPanelContainer::Attach()
-{
-  GetPanel()->Reparent(this);
-  wxSizer* sz = GetSizer();
-  if(sz)
-    {
-      GetPanel()->Show();
-      sz->Add(GetPanel(), 0, wxEXPAND)->Show(true);
-      sz->Layout();
-      Fit();
-      return true;
-    }
-  return false;
-}
+
+
+
+
 
 
 //

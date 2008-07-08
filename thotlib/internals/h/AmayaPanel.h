@@ -74,23 +74,9 @@ class AmayaNormalWindow;
  */
 
 class AmayaToolPanel;
-class AmayaToolPanelContainer;
-class AmayaDockedToolPanelContainer;
-class AmayaFloatingToolPanelContainer;
+class AmayaToolPanelItem;
 
-
-struct AmayaToolPanelBarListItem
-{
-  wxClassInfo* ci;
-  AmayaToolPanel* panel;
-  AmayaDockedToolPanelContainer*   dock;
-  AmayaFloatingToolPanelContainer* floa;
-  bool shown;
-  bool floating;
-  bool minimized;
-};
-
-WX_DEFINE_ARRAY_PTR(AmayaToolPanelBarListItem *, AmayaToolPanelBarList);
+WX_DEFINE_ARRAY_PTR(AmayaToolPanelItem *, AmayaToolPanelItemArray);
 
 
 class AmayaToolPanelBar : public wxPanel
@@ -108,21 +94,12 @@ public:
   void ShowHeader(bool bShow);
   void HideHeader(){ShowHeader(false);}
   
-  void ShowPanel(AmayaToolPanel* panel, bool bShow=true);
   void MinimizePanel(AmayaToolPanel* panel, bool bMin=true);
-  void FloatPanel(AmayaToolPanel* panel, bool bFloat=true);
-
   void ToggleMinimize(AmayaToolPanel* panel);
-  void ToggleFloat(AmayaToolPanel* panel);
-  
-  void HidePanel(AmayaToolPanel* panel){ShowPanel(panel, false);}
   void UnminimizePanel(AmayaToolPanel* panel){MinimizePanel(panel, false);}
-  void DockPanel(AmayaToolPanel* panel){FloatPanel(panel, false);}
   
   bool IsMinimized(const AmayaToolPanel* panel)const;
   bool IsExpanded(const AmayaToolPanel* panel)const;
-  bool IsFloating(const AmayaToolPanel* panel)const;
-  bool IsShown(const AmayaToolPanel* panel)const;
   
   void OpenToolPanel( int panel_type, bool bOpen=true);
   void CloseToolPanel( int panel_type ){OpenToolPanel(false);}
@@ -137,105 +114,51 @@ public:
 private:
   void OnClose( wxCommandEvent& event );
   
-  void Initialize();
+  const AmayaToolPanelItem* FindItem(const AmayaToolPanel* panel)const;
+  AmayaToolPanelItem* FindItem(const AmayaToolPanel* panel);
   
-  const AmayaToolPanelBarListItem* FindItem(const AmayaToolPanel* panel)const;
-  AmayaToolPanelBarListItem* FindItem(const AmayaToolPanel* panel);
-  
-  AmayaToolPanelBarList m_panels;
   wxScrolledWindow* m_scwin;
+  AmayaToolPanelItemArray m_items;
 };
 
-typedef class AmayaToolPanelBar AmayaPanel;
-
 /**
- * Base tool panel container.
+ * Docked tool panel item container
  */
-class AmayaToolPanelContainer
-{
-public:
-  AmayaToolPanelContainer(AmayaToolPanel* panel, AmayaToolPanelBar* bar):
-    m_panel(panel), m_bar(bar){}
-  virtual ~AmayaToolPanelContainer(){}
-  
-  AmayaToolPanel* GetPanel()const{return m_panel;}
-  void SetPanel(AmayaToolPanel* panel){m_panel=panel;}
-  
-  AmayaToolPanelBar* GetBar()const{return m_bar;}
-  void SetBar(AmayaToolPanelBar* bar){m_bar=bar;}
-
-  virtual bool Detach()=0;
-  virtual bool Attach()=0;
-  
-protected:
-  AmayaToolPanel* m_panel;
-  AmayaToolPanelBar* m_bar;
-};
-
-
-/**
- * Docked tool panel container
- */
-class AmayaDockedToolPanelContainer : public wxPanel, public AmayaToolPanelContainer
+class AmayaToolPanelItem : public wxPanel
 {
   DECLARE_EVENT_TABLE()
 public:
-  AmayaDockedToolPanelContainer(AmayaToolPanel* panel, AmayaToolPanelBar* bar,
-      wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, 
+  AmayaToolPanelItem(AmayaToolPanel* panel,
+      wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, 
       const wxSize& size = wxDefaultSize, long style = 0);
-  virtual ~AmayaDockedToolPanelContainer();
+  virtual ~AmayaToolPanelItem();
   
   /**
    * Intend to minimize/unminimize the panel.
    * If the Container dont embed the panel, return false
    */
-  bool Minimize(bool bMinimize);
-  bool IsMinimized();
+  bool Minimize(bool bMinimize = true);
+  bool IsMinimized()const{return m_bMinimized;}
+  
+  AmayaToolPanel*    GetPanel()const{return m_panel;}
+  AmayaToolPanelBar* GetBar()const{return m_bar;}
 
-  virtual bool Detach();
-  virtual bool Attach();
 private:
   void OnMinimize(wxCommandEvent& event);
-  void OnDetach(wxCommandEvent& event);
   
-  void OnUpdateMinimizeUI(wxUpdateUIEvent& event);
+  AmayaToolPanel*    m_panel;
+  AmayaToolPanelBar* m_bar;
   
   bool m_bMinimized;
-  bool m_bDetached;
   
-  static wxBitmap s_Bitmap_DetachOn;
-  static wxBitmap s_Bitmap_DetachOff;
-  static wxBitmap s_Bitmap_ExpandOn;
-  static wxBitmap s_Bitmap_ExpandOff;
+  static wxBitmap s_Bitmap_Minimized;
+  static wxBitmap s_Bitmap_Expanded;
   static bool s_bmpOk;
 };
 
 
-/**
- * New Floating tool panel container.
- */
-class AmayaFloatingToolPanelContainer : public wxDialog, public AmayaToolPanelContainer
-{
-  DECLARE_EVENT_TABLE()
-public:
-  AmayaFloatingToolPanelContainer(AmayaToolPanel* panel, AmayaToolPanelBar* bar,
-      wxWindow * parent = NULL
-          ,wxWindowID     id             = wxID_ANY
-          ,const wxPoint& pos            = wxDefaultPosition
-          ,const wxSize&  size           = wxDefaultSize
-          ,long style                    = 
-          wxDEFAULT_DIALOG_STYLE |
-          wxSTAY_ON_TOP | 
-          wxTHICK_FRAME |
-          wxRESIZE_BORDER);
-  virtual ~AmayaFloatingToolPanelContainer();
-  
-  virtual bool Detach();
-  virtual bool Attach();
-  
-protected:
-  void OnClose(wxCloseEvent& event);
-};
+
+
 
 #endif // __AMAYAPANEL_H__
 
