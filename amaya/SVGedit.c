@@ -3319,6 +3319,8 @@ void Ungroup (Document doc, Element el)
   ElementType   elType;
   SSchema       svgSchema;  
   Element child, nextchild, sibling;
+  Attribute attr;
+  AttributeType attrType;
   float a,b,c,d,e,f;
 
   svgSchema = GetSVGSSchema (doc);
@@ -3330,8 +3332,13 @@ void Ungroup (Document doc, Element el)
     
     return;
 
+  /* Check if the attribute already exists */
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_transform;
+  attr = TtaGetAttribute (el, attrType);
+
   /* Get the transform matrix of the g element */
-  TtaGetMatrixTransform(doc, el, &a, &b, &c, &d, &e, &f);
+  if(attr)TtaGetMatrixTransform(doc, el, &a, &b, &c, &d, &e, &f);
 
   child = TtaGetFirstChild(el);
   sibling = el;
@@ -3350,9 +3357,12 @@ void Ungroup (Document doc, Element el)
 	  TtaInsertSibling(child, sibling, FALSE, doc);
 	  TtaRegisterElementCreate (child, doc);
 
-	  /* Apply the transformation matrix to the children */
-	  TtaApplyMatrixTransform (doc, child, a, b, c, d, e, f);
-	  UpdateTransformMatrix(doc, child);
+	  if(attr)
+	    {
+	      /* Apply the transformation matrix to the children */
+	      TtaApplyMatrixTransform (doc, child, a, b, c, d, e, f);
+	      UpdateTransformMatrix(doc, child);
+	    }
 
 	  sibling = child;
 
