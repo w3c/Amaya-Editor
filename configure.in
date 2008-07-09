@@ -212,7 +212,17 @@ dnl freetype2 is for text drawing (fonts ...)
 dnl wxGLCanvas is for integration of opengl in wxWidgets (WX)
 
 with_wx="yes"
-AC_ARG_ENABLE(system-wx,       [  --enable-system-wx      try the wxWidgets system library ])
+
+AC_ARG_ENABLE([system-wx],
+    AC_HELP_STRING([--enable-system-wx],[try the wxWidgets system library]),
+    [case "${enableval}" in
+      yes) with_system_wx="yes";;
+      no)  with_system_wx="no" ;;
+      *) AC_MSG_ERROR(bad value ${enableval} for --enable-system-wx) ;;
+    esac],
+    [with_system_wx="no"])
+
+
 
 AC_ARG_WITH([gl],
    AC_HELP_STRING([--with-gl],[enable canvas with hardware OpenGL implementation]),
@@ -288,14 +298,14 @@ if test "$with_mesa" = "yes" ; then
   AC_SUBST(GL_LIBRARIES)
 fi
 
-if test "$enable_system_wx" = "yes"; then
+if test "$with_system_wx" = "yes"; then
   AC_PATH_PROG(WXCONFIG, wx-config)
   if test -z "$WXCONFIG"; then
-    enable_system_wx="no"
+    with_system_wx="no"
   fi
 fi
   
-if test "$enable_system_wx" != "yes"; then
+if test "$with_system_wx" != "yes"; then
   # WX_SRCDIR is better to understand the code than with_wxsrcdir variable
   if test ! -f $with_wxsrcdir/Makefile.in ; then
     $with_wxsrcdir = ../../wxWidgets
@@ -390,7 +400,7 @@ if test "$enable_system_wx" != "yes"; then
   BUILDWXWIDGETS="wxwidgets"
   AC_SUBST(BUILDWXWIDGETS)
 
-fi #!$enable_system_wx
+fi #!$with_system_wx
 
 WX_INCLUDES="$WX_INCLUDES `$WXCONFIG --cxxflags`"
 AC_SUBST(WX_INCLUDES)
@@ -1090,10 +1100,6 @@ if test "$build_amaya" = "yes" ; then
     if test "$with_dav" = "yes" ; then
        make_output="$make_output davlib/Makefile"
        EXTRA_MAKEFILE_IN="$srcdir/davlib/Makefile.in"
-    fi
-
-    if test "$with_wx" = "yes" -a "enable_system_wx" = "yes" ; then
-       EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN $WX_SRCDIR/Makefile.in $WX_SRCDIR/configure.in"
     fi
 
 fi
