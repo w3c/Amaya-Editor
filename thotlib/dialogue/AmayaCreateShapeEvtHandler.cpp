@@ -254,10 +254,12 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 
   /* Draw the shape */
   DrawShape ();
-
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+  //if (frameId)
+  //  GL_Swap (frameId);
+#else /* _WINDOWS */
     pFrame->GetCanvas()->Refresh();
-#endif
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -280,7 +282,11 @@ void AmayaCreateShapeEvtHandler::DrawShape ()
   if(nb_points == 0)return;
 
   glEnable(GL_COLOR_LOGIC_OP);
+#ifdef _WINDOWS
+  glLogicOp(GL_COPY_INVERTED);
+#else /* _WINDOWS */
   glLogicOp(GL_XOR);
+#endif /* _WINDOWS */
   glColor4ub (127, 127, 127, 0);
 
   lx = abs(*px2 - *px1);

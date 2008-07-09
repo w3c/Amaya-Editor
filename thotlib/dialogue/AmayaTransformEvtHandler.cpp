@@ -807,7 +807,11 @@ void AmayaTransformEvtHandler::DrawRotationCenter()
   InitDrawing (5, 1, 0);
 
   glEnable(GL_COLOR_LOGIC_OP);
+#ifdef _WINDOWS
+  glLogicOp(GL_COPY_INVERTED);
+#else /* _WINDOWS */
   glLogicOp(GL_XOR);
+#endif /* _WINDOWS */
 
   glColor4ub (127, 127, 127, 0);
 
@@ -840,7 +844,12 @@ void AmayaTransformEvtHandler::DrawSkewingArrows()
   InitDrawing (5, 1, 0);
 
   glEnable(GL_COLOR_LOGIC_OP);
+#ifdef _WINDOWS
+  glLogicOp(GL_COPY_INVERTED);
+#else /* _WINDOWS */
   glLogicOp(GL_XOR);
+#endif /* _WINDOWS */
+
   glColor4ub (127, 127, 127, 0);
 
   /*
@@ -901,7 +910,12 @@ void AmayaTransformEvtHandler::DrawScalingArrows()
   InitDrawing (5, 1, 0);
 
   glEnable(GL_COLOR_LOGIC_OP);
+#ifdef _WINDOWS
+  glLogicOp(GL_COPY_INVERTED);
+#else /* _WINDOWS */
   glLogicOp(GL_XOR);
+#endif /* _WINDOWS */
+
   glColor4ub (127, 127, 127, 0);
 
   /*

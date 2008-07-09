@@ -62,12 +62,16 @@ static ThotBool clear = FALSE;
 static void DrawLine (int x2, int y2, int x3, int y3, ThotBool SpecialColor)
 {
   glEnable(GL_COLOR_LOGIC_OP);
+#ifdef _WINDOWS
+  glLogicOp(GL_COPY_INVERTED);
+    glColor4ub (127, 127, 127, 0);
+#else /* _WINDOWS */
   glLogicOp(GL_XOR);
-
   if(SpecialColor)
     glColor4ub (127, 0, 127, 0);
   else
     glColor4ub (127, 127, 127, 0);
+#endif /* _WINDOWS */
 
   glBegin(GL_LINE_STRIP);
   glVertex2i(x2, y2);
@@ -94,12 +98,16 @@ static void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3,
      { (float) x3, (float) y3, 0.0}};
 
   glEnable(GL_COLOR_LOGIC_OP);
+#ifdef _WINDOWS
+  glLogicOp(GL_COPY_INVERTED);
+    glColor4ub (127, 127, 127, 0);
+#else /* _WINDOWS */
   glLogicOp(GL_XOR);
-
   if(SpecialColor)
     glColor4ub (127, 0, 127, 0);
   else
     glColor4ub (127, 127, 127, 0);
+#endif /* _WINDOWS */
 
   glEnable(GL_MAP1_VERTEX_3);
   glMap1f(GL_MAP1_VERTEX_3, 0.0, 1.0, 3, 3, ctrlpoints[0]);
@@ -139,12 +147,16 @@ GLfloat ctrlpoints[4][3] =
 
 
   glEnable(GL_COLOR_LOGIC_OP);
+#ifdef _WINDOWS
+  glLogicOp(GL_COPY_INVERTED);
+    glColor4ub (127, 127, 127, 0);
+#else /* _WINDOWS */
   glLogicOp(GL_XOR);
-
   if(SpecialColor)
     glColor4ub (127, 0, 127, 0);
   else
     glColor4ub (127, 127, 127, 0);
+#endif /* _WINDOWS */
 
   glEnable(GL_MAP1_VERTEX_3);
   glMap1f(GL_MAP1_VERTEX_3, 0.0, 1.0, 3, 4, ctrlpoints[0]);
@@ -195,9 +207,13 @@ static void UpdateSymetricPoint()
 static void DrawControlPoints ()
 {
   glEnable(GL_COLOR_LOGIC_OP);
+#ifdef _WINDOWS
+  glLogicOp(GL_COPY_INVERTED);
+  glColor4ub (127, 127, 127, 0);
+#else /* _WINDOWS */
   glLogicOp(GL_XOR);
-
   glColor4ub (0, 127, 127, 100);
+#endif /* _WINDOWS */
 
   glBegin(GL_LINE_STRIP);
   glVertex2i(symX, symY);
@@ -606,9 +622,12 @@ void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
 			NULL,
 			FALSE, &currentX, &currentY);
   
-#ifndef _WINDOWS
-    m_pFrame->GetCanvas()->Refresh();
-#endif
+#ifdef _WINDOWS
+  //if (m_FrameId)
+   // GL_Swap (m_FrameId);
+#else /* _WINDOWS */
+  m_pFrame->GetCanvas()->Refresh();
+#endif /* _WINDOWS */
 
 }
 
