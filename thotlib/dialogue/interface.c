@@ -275,7 +275,7 @@ void TtaGetClickedElement (Document *document, Element *element)
     {
       *element = (Element) None;
       *document = (Document) None;
-      LocateSelectionInView (ClickFrame, ClickX, ClickY, 7);
+      LocateSelectionInView (ClickFrame, ClickX, ClickY, 7, NULL);
       pAb = GetClickedAbsBox (ClickFrame, ClickX, ClickY);
       if (ClickFrame == 0 || pAb == NULL)
 	return;

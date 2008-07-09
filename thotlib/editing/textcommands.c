@@ -433,7 +433,7 @@ static void MovingCommands (int code, Document doc, View view,
                 ClickY = 0;
               else
                 ClickY = h;
-              LocateSelectionInView (frame, 0, ClickY, 2);
+              LocateSelectionInView (frame, 0, ClickY, 2, NULL);
               Retry = FALSE;
               return;
             }

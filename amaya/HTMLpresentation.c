@@ -490,7 +490,7 @@ ThotBool ChangePRule (NotifyPresentation *event)
 #define STYLELEN 1000
   char               buffer[15], *name;
   int                presType;
-  int                w, h, unit, value, i;
+  int                w, h, unit, value;
   ThotBool           ret;
 
   el = event->element;

@@ -259,7 +259,8 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
   7 -> reset the selection without notification
 // return TRUE if the event is already managed
   ----------------------------------------------------------------------*/
-ThotBool LocateSelectionInView (int frame, int x, int y, int button)
+ThotBool LocateSelectionInView (int frame, int x, int y, int button,
+				ThotBool *Selecting)
 {
   PtrBox              pBox;
   PtrElement          pEl = NULL, firstEl;
@@ -277,6 +278,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button)
   int                 doc, view;
   int                 firstC;
   ThotBool            extend, ok, left = FALSE;
+  PtrDocument         pDoc;
 
   if (frame >= 1)
     {
@@ -430,9 +432,35 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button)
                   pAb = pFrame->FrAbstractBox;
                   nChars = 0;
                   GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO, &nChars);
+
                   if (pBox && pBox->BxAbstractBox)
                     {
                       el = pBox->BxAbstractBox->AbElement;
+
+		      if(Selecting != NULL && el->ElStructSchema &&
+			 el->ElStructSchema->SsName &&
+			 !strcmp (el->ElStructSchema->SsName, "SVG"))
+			{
+			  /* click on an SVG element. Does the user want to
+			     move it ? */
+			  GetDocAndView (frame, &pDoc, &view);
+			  if(!(pDoc->DocReadOnly) &&
+			     !(ElementIsReadOnly(pEl)))
+			    {
+			      *Selecting = FALSE;
+			      if(AskTransform(doc,
+					  NULL,
+					  NULL,
+					  0, (Element)el))
+				{
+				  /* The user has moved an SVG element */
+				  TtaSetDocumentModified(doc);
+		      
+				  return FALSE;
+				}
+			    }
+			}
+
                       NotifyClick (TteElemLClick, FALSE, el, doc);
                     }
                   break;

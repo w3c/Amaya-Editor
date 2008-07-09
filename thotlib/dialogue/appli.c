@@ -109,7 +109,6 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 #include "xwindowdisplay_f.h"
 #include "appdialogue_wx_f.h"
 #include "paneltypes_wx.h"
-#include "tree_f.h"
 
 /* defined into amaya directory ...*/
 extern void ZoomIn (Document document, View view);
@@ -807,14 +806,12 @@ static ThotBool     Selecting = FALSE;
 ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
                                  int thot_mod_mask, int x, int y )
 {
+#if !defined (_WINDOWS) && !defined (_MACOS)
   Document       document;
   View           view;
+#endif /* !_WINDOWS && ! _MACOS */
   PtrBox         box;
   int            ctrlpt;
-  PtrAbstractBox pAb;
-  PtrDocument         pDoc;
-  PtrElement pEl;
-  ThotBool       keyup = FALSE;
     
   /* Amaya is waiting for a click selection ? */
   if (ClickIsDone == 1)
@@ -844,39 +841,11 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
           }
         else
           {
-            pAb = GetClickedAbsBox (frame, x, y);
-            if (pAb && pAb->AbEnclosing &&
-                pAb->AbEnclosing->AbElement->ElStructSchema &&
-                pAb->AbEnclosing->AbElement->ElStructSchema->SsName &&
-                !strcmp (pAb->AbEnclosing->AbElement->ElStructSchema->SsName, "SVG"))
-              {
-                /* Try to call the SVG transform handler
-                   to apply a translation  */
-                document = FrameTable[frame].FrDoc;
-		pEl = (pAb->AbEnclosing->AbElement);
-		GetDocAndView (frame, &pDoc, &view);
-
-                if(!(pDoc->DocReadOnly) &&
-		   !(ElementIsReadOnly(pEl)) &&
-		   AskTransform(document,
-                                NULL,
-                                NULL,
-                                0,
-				(Element)(pEl)))
-                  /* The user has moved an SVG element */
-                  {
-                    TtaSetDocumentModified(document);
-                    return FALSE;
-                  }
-                else
-                  keyup = TRUE;
-              }
-            
             if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
               {
                 /* a selection extension */
                 TtaAbortShowDialogue ();
-                LocateSelectionInView (frame, x, y, 1);
+                LocateSelectionInView (frame, x, y, 1, &Selecting);
 #if !defined (_WINDOWS) && !defined (_MACOS)
                 FrameToView (frame, &document, &view);
                 DoCopyToClipboard (document, view, FALSE, TRUE);
@@ -893,14 +862,10 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
                    handle gui events (keyup) and Selecting variable
                    * will not be unset => cause a infinit selection ! */
                 Selecting = TRUE;
-                if (LocateSelectionInView (frame, ClickX, ClickY, 2))
-                  {
-                    if(keyup)Selecting = FALSE;
-                    return FALSE;
-                  }
-                else
-                  if(keyup)Selecting = FALSE;
-              }
+                if (LocateSelectionInView (frame, ClickX, ClickY, 2,
+					   &Selecting))
+		  return FALSE;
+             }
           }
       }
       break;
@@ -910,7 +875,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-        if (LocateSelectionInView (frame, ClickX, ClickY, 5))
+        if (LocateSelectionInView (frame, ClickX, ClickY, 5, &Selecting))
           return FALSE;
       }
       break;
@@ -920,7 +885,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-        if (LocateSelectionInView (frame, ClickX, ClickY, 6))
+        if (LocateSelectionInView (frame, ClickX, ClickY, 6, &Selecting))
           return FALSE;
       }
       break;
@@ -962,7 +927,7 @@ ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
       ClickFrame = frame;
       ClickX = x;
       ClickY = y;
-      if (LocateSelectionInView (frame, ClickX, ClickY, 4))
+      if (LocateSelectionInView (frame, ClickX, ClickY, 4, &Selecting))
         return FALSE;
       // SG: j'ai commente la ligne suivante car si le document est modifie 
       // et qu'on desire suivre un lien, un evenement keyup est generer
@@ -1001,7 +966,7 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-        LocateSelectionInView (frame, ClickX, ClickY, 3);
+        LocateSelectionInView (frame, ClickX, ClickY, 3, &Selecting);
 #if !defined (_WINDOWS) && !defined (_MACOS)
         /* a word is probably selected, copy it into clipboard */
         FrameToView (frame, &document, &view);
@@ -1017,7 +982,7 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-        LocateSelectionInView (frame, ClickX, ClickY, 5);
+        LocateSelectionInView (frame, ClickX, ClickY, 5, &Selecting);
       }
       break;
     
@@ -1027,7 +992,7 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-        LocateSelectionInView (frame, ClickX, ClickY, 6);
+        LocateSelectionInView (frame, ClickX, ClickY, 6, &Selecting);
       }
       break;
     }
@@ -1120,7 +1085,7 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
             }
           if (Selecting)
             {
-              LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
+              LocateSelectionInView (frame,  Motion_x, Motion_y, 0, &Selecting);
             }
         }
     }

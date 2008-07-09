@@ -18,7 +18,8 @@ extern PtrBox IsSelectingControlPoint ( int frame,
 extern ThotBool LocateSelectionInView ( int frame,
                                         int x,
                                         int y,
-                                        int button );
+                                        int button,
+                                        ThotBool *Selecting );
 extern ThotPoint *BuildPolygonForPath ( PtrPathSeg pPa,
                                         int frame,
                                         int* npoints,
@@ -83,7 +84,8 @@ extern PtrBox IsSelectingControlPoint ( int frame,
 extern ThotBool LocateSelectionInView ( int frame,
                                           int x,
                                           int y,
-                                          int button );
+                                          int button,
+                                          ThotBool *Selecting );
 extern ThotPoint *BuildPolygonForPath ( PtrPathSeg pPa,
                                           int frame,
                                           int* npoints,
