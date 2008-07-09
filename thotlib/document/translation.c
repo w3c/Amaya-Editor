@@ -4591,10 +4591,10 @@ static void ExportXmlText (Document doc, PtrTextBuffer pBT, ThotBool lineBreak,
       while (i < b->BuLength && b->BuContent[i] != EOS)
         {
           c = (wchar_t) b->BuContent[i];
-          /*if (c == SPACE && i == b->BuLength-1)
-            PutChar (EOL, fnum, NULL, doc, lineBreak, translate, entityName);
-            else*/
-            PutChar (c, fnum, NULL, doc, lineBreak, translate, entityName);
+         if (c == 0x22 || c == 0x26 || c == 0x3C || c == 0x3E || c == 0xA0)
+           // generate an entity
+           entityName = TRUE;
+          PutChar (c, fnum, NULL, doc, lineBreak, translate, entityName);
           /* Next character */
           i++;
         }
@@ -4629,7 +4629,7 @@ static void ExportXmlElText (Document doc,  PtrElement pNode,
        (strcmp (pRe1->SrOrigName, "doctype_line") == 0)))
     translate = FALSE;
   /* in MathML, try to generate the name of the char. */
-  entityName = !strcmp (pNode->ElStructSchema->SsName, "MathML");
+  entityName = (strcmp (pNode->ElStructSchema->SsName, "MathML") == 0);
   /* Export the text buffer content */
   ExportXmlText (doc, pBT, lineBreak, translate, entityName);
 }
