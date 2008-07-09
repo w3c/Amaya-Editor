@@ -354,7 +354,6 @@ const AmayaPageContainer* AmayaAdvancedWindow::GetPageContainer()const
   -----------------------------------------------------------------------*/
 void AmayaAdvancedWindow::OnClose(wxCloseEvent& event)
 {
-	wxMessageBox(wxT("AmayaAdvancedWindow::OnClose"));
   if (s_normalWindowCount == 1)
     TtaSetEnvBoolean("OPEN_PANEL", ToolPanelsShown(), TRUE);
   

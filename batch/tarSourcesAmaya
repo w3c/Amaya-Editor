@@ -12,7 +12,7 @@
 #
 
 # default parameters
-AMAYAVERSION="9.99"
+AMAYAVERSION="10.1"
 DEST=$HOME
 
 # Check argument number on the command line
@@ -159,8 +159,6 @@ ${AMAYADIR}/WindowsWX/LibThotKernel/*.dsp \
 ${AMAYADIR}/WindowsWX/app/*.dsp \
 ${AMAYADIR}/WindowsWX/cpp/*.dsp \
 ${AMAYADIR}/WindowsWX/davlib/*.dsp \
-${AMAYADIR}/WindowsWX/libjpeg/*.dsp \
-${AMAYADIR}/WindowsWX/libpng/*.dsp \
 ${AMAYADIR}/WindowsWX/libwww/*.dsp \
 ${AMAYADIR}/WindowsWX/printlib/*.dsp \
 ${AMAYADIR}/WindowsWX/libraptor/*.dsp \
@@ -169,7 +167,6 @@ ${AMAYADIR}/WindowsWX/str/*.dsp \
 ${AMAYADIR}/WindowsWX/thotprinter/*.dsp \
 ${AMAYADIR}/WindowsWX/tra/*.dsp \
 ${AMAYADIR}/WindowsWX/wx-setup/setup.h \
-${AMAYADIR}/WindowsWX/zlib/*.dsp \
 ${AMAYADIR}/README \
 ${AMAYADIR}/README.wx \
 ${AMAYADIR}/config.guess \
@@ -356,7 +353,6 @@ mkdir $TMP
 cd $TMP
 tar xzf $DEST/amaya-tmp-$AMAYAVERSION.tgz
 tar xzf $DEST/libs-tmp-$AMAYAVERSION.tgz
-\rm -r */CVS */*/CVS */*/*/CVS */*/*/*/CVS */*/*/*/*/CVS
 
 echo "Generating amaya-src tar file from $AMAYADIR"
 AMAYADIR=Amaya
