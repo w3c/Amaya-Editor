@@ -502,8 +502,8 @@ int * AmayaApp::GetGL_AttrList()
   TtaGetEnvBoolean("GL_ACCELERATED", &gl_accelerated);
   if (gl_accelerated)
     AttrList[12] = 0; /* ok enable opengl hardware acceleration */
-  else
-    AttrList[12] = 0;//WX_GL_NOT_ACCELERATED; /* disable opengl hardware acceleration */
+  //else
+  //  AttrList[12] = 0;//WX_GL_NOT_ACCELERATED; /* disable opengl hardware acceleration */
 #endif /* _WINDOWS */
   return AttrList;
 }
