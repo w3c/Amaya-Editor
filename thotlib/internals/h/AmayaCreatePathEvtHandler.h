@@ -34,8 +34,8 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
   void OnMouseMove( wxMouseEvent& event );
   void OnMouseWheel( wxMouseEvent& event );
   void OnMouseDbClick( wxMouseEvent& event );
-  void OnMouseUp( wxMouseEvent& event );
   void OnMouseDown( wxMouseEvent& event );
+  void OnMouseRightDown( wxMouseEvent& event );
 
  protected:
   bool m_IsFinish;

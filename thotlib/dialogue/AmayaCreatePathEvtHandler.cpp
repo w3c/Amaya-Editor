@@ -316,17 +316,14 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaCreatePathEvtHandler, wxEvtHandler)
 BEGIN_EVENT_TABLE(AmayaCreatePathEvtHandler, wxEvtHandler)
 EVT_KEY_DOWN( AmayaCreatePathEvtHandler::OnChar )
 
-EVT_LEFT_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown) // Process a wxEVT_LEFT_DOWN event.
-EVT_LEFT_UP(		AmayaCreatePathEvtHandler::OnMouseUp) // Process a wxEVT_LEFT_UP event.
-EVT_LEFT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick) // Process a wxEVT_LEFT_DCLICK event.
-EVT_MIDDLE_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown) // Process a wxEVT_MIDDLE_DOWN event.
-EVT_MIDDLE_UP(	AmayaCreatePathEvtHandler::OnMouseUp) // Process a wxEVT_MIDDLE_UP event.
-EVT_MIDDLE_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick) // Process a wxEVT_MIDDLE_DCLICK event.
-EVT_RIGHT_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown) // Process a wxEVT_RIGHT_DOWN event.
-EVT_RIGHT_UP(		AmayaCreatePathEvtHandler::OnMouseUp) // Process a wxEVT_RIGHT_UP event.
-EVT_RIGHT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick) // Process a wxEVT_RIGHT_DCLICK event.
-EVT_MOTION(		AmayaCreatePathEvtHandler::OnMouseMove) // Process a wxEVT_MOTION event.
-EVT_MOUSEWHEEL(	AmayaCreatePathEvtHandler::OnMouseWheel) // Process a wxEVT_MOUSEWHEEL event.
+EVT_LEFT_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown)
+EVT_LEFT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
+EVT_MIDDLE_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown)
+EVT_MIDDLE_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
+EVT_RIGHT_DOWN(	AmayaCreatePathEvtHandler::OnMouseRightDown)
+EVT_RIGHT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
+EVT_MOTION(		AmayaCreatePathEvtHandler::OnMouseMove)
+EVT_MOUSEWHEEL(	AmayaCreatePathEvtHandler::OnMouseWheel)
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -487,6 +484,14 @@ bool AmayaCreatePathEvtHandler::IsFinish()
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
+void AmayaCreatePathEvtHandler::OnMouseRightDown( wxMouseEvent& event )
+{
+  *m_created = TRUE;
+  m_IsFinish = true;
+}
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnChar( wxKeyEvent& event )
 {
   *m_created = FALSE;
@@ -499,15 +504,6 @@ void AmayaCreatePathEvtHandler::OnChar( wxKeyEvent& event )
  * Description:  handle mouse button down events
  -----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
-{
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaCreatePathEvtHandler
- *      Method:  OnMouseUp
- * Description:  handle mouse button up events
- -----------------------------------------------------------------------*/
-void AmayaCreatePathEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
   if (IsFinish())
     return;

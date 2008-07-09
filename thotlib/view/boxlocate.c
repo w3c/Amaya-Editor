@@ -295,13 +295,13 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
         y = 0;
       pAb = pFrame->FrAbstractBox;
       nChars = 0;
-      if (button == 6 && SelectedPointInPolyline != 0 &&
+      /*      if (button == 6 && SelectedPointInPolyline != 0 &&
           FirstSelectedElement &&
           FirstSelectedElement == LastSelectedElement &&
           FirstSelectedElement->ElTerminal &&
           FirstSelectedElement->ElLeafType == LtPolyLine)
         ContentEditing (TEXT_INSERT);
-      else
+	else*/
         {
           extend = (button == 0 || button == 1);
           /* get the selected box */

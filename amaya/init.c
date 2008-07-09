@@ -194,7 +194,9 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
 	{
 	  svgSchema = GetSVGSSchema (doc);
 	  elementType = TtaGetElementType(el);
-	  if(elementType.ElSSchema == svgSchema)
+	  if(elementType.ElSSchema == svgSchema && !TtaIsLeaf(elementType))
+	    /* Display the SVG transforms the a non-terminal SVG element
+	       is selected */
 	    noSVG = FALSE;
 	}
 #endif /* _SVG */
