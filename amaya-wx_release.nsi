@@ -8,7 +8,7 @@
 ;General
 
   ;Name and file
-  !define VERSION "10.0"
+  !define VERSION "10.1"
   Name "Amaya"
   OutFile "amaya-WinXP-${VERSION}.exe"
   
@@ -260,6 +260,8 @@ Section "Amaya" SecAmaya
   File config\*.css
   File config\annot.schemas
   File config\win-thot.rc
+  File config\rdfa.dat
+  File config\rdfa_list.dat
 
   SetDetailsPrint textonly
   DetailPrint "Installing Amaya dictionnaries"
