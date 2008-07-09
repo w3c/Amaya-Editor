@@ -5372,8 +5372,8 @@
 	<message xml:lang="ru">Использование изображения и карт</message>
 	<message xml:lang="hu">Térképek</message>
 	<message xml:lang="ka">რუკის გამოსახულებები</message>
-	<message xml:lang="cn">Image maps</message>
-	<message xml:lang="tw">Image maps</message>
+	<message xml:lang="cn">Images</message>
+	<message xml:lang="tw">Images</message>
 	<message xml:lang="sk">Oblasti obrázkov</message>
 	<message xml:lang="ja">イメージマップ</message>
 </label>

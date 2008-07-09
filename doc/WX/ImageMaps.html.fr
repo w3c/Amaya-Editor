@@ -62,25 +62,37 @@ Lorsqu'une image (et seulement une image) est entièrement sélectionnée, la
 boîte de dialogue des images effectue le remplacement de l'image sélectionnée
 au lieu d'insérer une nouvelle image.</p>
 
-<h3>Retailler une image ou une zone active</h3>
+<h3>Redimensionner une image ou une zone active</h3>
 
-<p>Après avoir insérer une image ou défini une zone active, vous pouvez avoir
-besoin de la retailler.</p>
+<p>Après avoir inséré une image ou défini une zone active, vous pouvez avoir
+besoin de modifier sa taille.</p>
 
-<p>Pour retailler une image ou une zone active directement :</p>
+<p>Pour redimensionner une image ou une zone active directement sur
+l'écran :</p>
 <ol>
-  <li>Sélectionner l'image ou la zone active pour visualiser les poignées.
-    Quand vous cliquez sur une image, Amaya sélectionne le bord gauche ou droit
-    de l'image pour vous laisser insérer du texte avant ou après l'image.
+  <li>Sélectionnez l'image ou la zone active pour visualiser les poignées. 
+    <p>Quand vous cliquez sur une image, Amaya sélectionne le bord gauche ou
+    droit de l'image pour vous laisser insérer du texte avant ou après l'image.
+    </p>
     <p>Pour visualiser les poignées, vous devez :</p>
     <ul>
-      <li>soit sélectionner un bord et presser <kbd>Esc</kbd> ou
-      <kbd>F2</kbd>,</li>
+      <li>soit sélectionner un bord et presser <kbd>Echappement</kbd> ou
+        <kbd>F2</kbd>,</li>
       <li>soit draguer au dessus de l'image</li>
     </ul>
   </li>
-  <li>Sélectionner une poignée et déplacer la souris avec le bouton gauche
-    enfoncé pour retailler l'image ou la zone active.</li>
+  <li>En sélectionnant une poignée avec le bouton gauche de la souris et
+    déplaçant la souris toujours avec le bouton gauche enfoncé l'image ou la
+    zone active vous pouvez modifier directement leur taille. 
+    <ul>
+      <li>Les poignées des quatre coins permettent de modifier la largeur et la
+        hauteur.</li>
+      <li>Si la touche <kbd>Majuscule</kbd> est enfoncée, la proportion entre
+        largeur et hauteur de l'image est maintenue.</li>
+      <li>Les autres poignées permettent de modifier uniquement la largeur ou
+        la hauteur.</li>
+    </ul>
+  </li>
 </ol>
 
 <h3 id="Texte"><a name="Alternative">Texte de remplacement et descriptions
