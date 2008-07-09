@@ -1765,6 +1765,7 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
 
   // update the ns list from the listbox
   OnNSAdd(event);
+  GetValueDialog_RDFa();
   UpdateRDFaNsList();
   ThotCallback (GetPrefRDFaBase() + RDFaMenu, INTEGER_DATA, (char*) 1);
 

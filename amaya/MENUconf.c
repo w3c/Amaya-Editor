@@ -3006,7 +3006,7 @@ static void RDFaCallbackDialog (int ref, int typedata, char *data)
               TtaDestroyDialogue (ref);
               break;
             case 1: /* OK */
-              TtaDestroyDialogue (ref);
+              // TtaDestroyDialogue (ref);
               break;
             case 2: /* DEFAULT */
               GetDefaultRDFaConf();
