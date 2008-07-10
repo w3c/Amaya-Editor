@@ -1621,12 +1621,12 @@ ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
   ElementType elType;
   SSchema	    docSchema, svgSchema;
 
-  if(doc == 0)return FALSE;
+  if (doc == 0)return FALSE;
 
   docSchema = TtaGetDocumentSSchema (doc);
   svgSchema = GetSVGSSchema (doc);
 
-  if(el)
+  if (el)
     {
       elType = TtaGetElementType (*el);
 
@@ -1641,7 +1641,7 @@ ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
       while(parent)
 	{
 	  elType = TtaGetElementType (parent);
-	  if(elType.ElTypeNum == SVG_EL_SVG &&
+	  if (elType.ElTypeNum == SVG_EL_SVG &&
 	     elType.ElSSchema == svgSchema)
 	    break;
 
@@ -1653,7 +1653,7 @@ ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
       *svgCanvas = parent;
     }
 
-  if(*svgCanvas == NULL)return FALSE;
+  if (*svgCanvas == NULL)return FALSE;
   
   /* Look for svgAncestor */
   *svgAncestor = *svgCanvas;
@@ -1721,7 +1721,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   /* Check that whether we are in formatted or strutured view. */
   if (view == 1) isFormattedView = TRUE;
-  else if(view == 2) isFormattedView = FALSE;
+  else if (view == 2) isFormattedView = FALSE;
   else return;
 
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
@@ -1871,7 +1871,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   elType = TtaGetElementType (sibling);
   replaceGraph = (elType.ElTypeNum == SVG_EL_GraphicsElement);
 
-  if(isFormattedView)
+  if (isFormattedView)
     {
       /* Select the SVG element where we draw, so that we can see the frame */
       TtaSelectElement(doc, svgCanvas);
@@ -1892,7 +1892,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
     case 2:	/* rectangle with rounded corners */
     case 15: /* square */
     case 16: /* rounded square */
-      if(svgCanvas == svgAncestor)
+      if (svgCanvas == svgAncestor)
 	newType.ElTypeNum = SVG_EL_rect;
       else
 	newType.ElTypeNum = SVG_EL_polygon;
@@ -1931,7 +1931,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
       break;
 
     case 9:	/* switch and foreignObject with some HTML code */
-      if(isFormattedView)
+      if (isFormattedView)
 	newType.ElTypeNum = SVG_EL_g;
       else
 	newType.ElTypeNum = SVG_EL_switch;
@@ -2006,11 +2006,11 @@ void CreateGraphicElement (Document doc, View view, int entry)
       /* create the new element */
       newEl = TtaNewElement (doc, newType);
 
-      if(isFormattedView)
+      if (isFormattedView)
 	{
 	  /* Insert the element as the last child (i.e. in the foreground)
 	     of the svgCanvas */
-	  if(!replaceGraph)
+	  if (!replaceGraph)
 	    sibling = TtaGetLastChild(svgCanvas);
 
 	  if (!sibling)
@@ -2034,7 +2034,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    }
 	}
 
-      if(entry <= 4 || entry >= 12)
+      if (entry <= 4 || entry >= 12)
 	{
 	  /* Basic Shapes and lines */
 	  selEl = newEl;
@@ -2047,7 +2047,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    3-------------4
 	  */
 
-	  if(isFormattedView)
+	  if (isFormattedView)
 	    {
 	      created = AskSurroundingBox(doc,
 					  svgAncestor,
@@ -2068,7 +2068,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	      created = TRUE;
 	    }
 
-	  if(created)
+	  if (created)
 	    {
 	      switch(entry)
 		{
@@ -2153,10 +2153,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		case 2:
 		  SVGElementComplete (&context, newEl, &error);
 
-		  if(svgCanvas == svgAncestor)
+		  if (svgCanvas == svgAncestor)
 		    {
-		      if(x4 < x1)x1 = x4;
-		      if(y4 < y1)y1 = y4;
+		      if (x4 < x1)x1 = x4;
+		      if (y4 < y1)y1 = y4;
 
 		      attrType.AttrTypeNum = SVG_ATTR_x;
 		      UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
@@ -2170,7 +2170,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		      attrType.AttrTypeNum = SVG_ATTR_height_;
 		      UpdateAttrText (newEl, doc, attrType, ly, FALSE, TRUE);
 
-		      if(entry == 16 || entry == 2)
+		      if (entry == 16 || entry == 2)
 			{
 			  attrType.AttrTypeNum = SVG_ATTR_rx;
 			  attr = TtaNewAttribute (attrType);
@@ -2379,12 +2379,12 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		}
 	    }
 	}
-      else if(entry >= 5 && entry <= 8)
+      else if (entry >= 5 && entry <= 8)
 	{
 	  /* Polyline and curves */
 	  selEl = newEl;
 
-	  if(isFormattedView)
+	  if (isFormattedView)
 	    {
 	      attr_data = AskShapePoints (doc, entry, svgCanvas);
 	      created = (attr_data != NULL);
@@ -2395,10 +2395,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	      created = TRUE;
 	    }
 
-	  if(created)
+	  if (created)
 	    {
 
-	      if(entry == 5 || entry == 6)
+	      if (entry == 5 || entry == 6)
 		attrType.AttrTypeNum = SVG_ATTR_points;
 	      else
 		attrType.AttrTypeNum = SVG_ATTR_d;
@@ -2409,7 +2409,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	      TtaSetAttributeText (attr, attr_data, newEl, doc);
 	      TtaFreeMemory(attr_data);
 	      
-	      if(entry == 5 || entry == 6)
+	      if (entry == 5 || entry == 6)
 		ParsePointsAttribute (attr, newEl, doc);
 	      else
 		ParsePathDataAttribute (attr, newEl, doc, TRUE);	    
@@ -2421,7 +2421,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
         {
 	  created = TRUE;
 
-	  if(isFormattedView)
+	  if (isFormattedView)
 	    {
 	      /* Ask the position and size */
 	      AskSurroundingBox(doc,
@@ -2462,7 +2462,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
           TtaAttachAttribute (foreignObj, attr, doc);
           TtaSetAttributeText (attr, XHTML_URI, foreignObj, doc);
 
-	  if(isFormattedView)
+	  if (isFormattedView)
 	    {
 	      /* Size of the foreignObject */
 	      attrType.AttrTypeNum = SVG_ATTR_width_;
@@ -2561,7 +2561,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
           TtaInsertFirstChild (&child, newEl, doc);
           selEl = child;
 
-	  if(isFormattedView)
+	  if (isFormattedView)
 	    {
 	      /* Ask where the user wants to insert the text */
 	      AskSurroundingBox(doc,
@@ -2580,10 +2580,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    }
         }
 
-      if(created)
+      if (created)
 	{
 
-	  if(replaceGraph)
+	  if (replaceGraph)
 	    {
 	      TtaRegisterElementDelete (sibling, doc);
 	      TtaDeleteTree(sibling, doc);
@@ -2632,7 +2632,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	sprintf(fill_color , "none");
 
       /* Apply the style */
-      if(newType.ElTypeNum == SVG_EL_line_)
+      if (newType.ElTypeNum == SVG_EL_line_)
 	sprintf(buffer, "stroke:%s", stroke_color);
       else
 	sprintf(buffer, "stroke:%s; fill:%s", stroke_color, fill_color);
@@ -2674,7 +2674,7 @@ void SelectGraphicElement (Document doc, View view)
   ThotBool IsFirst;
 
   /* Check that a document is selected */
-  if(doc == 0)return;
+  if (doc == 0)return;
 
   /* Check that whether we are in formatted view. */
   if (view != 1 )return;
@@ -2694,7 +2694,7 @@ void SelectGraphicElement (Document doc, View view)
     /* no selection */
     return;
 
-  if(!GetAncestorCanvasAndObject(doc, &first,
+  if (!GetAncestorCanvasAndObject(doc, &first,
 				 &svgAncestor, &svgCanvas))
     return;
 
@@ -2722,10 +2722,10 @@ void SelectGraphicElement (Document doc, View view)
       )
     {
       GetPositionAndSizeInParentSpace(doc, sibling, &x, &y, &width, &height);
-      if(x >= xmin && x + width <= xmax &&
+      if (x >= xmin && x + width <= xmax &&
 	 y >= ymin && y + height <= ymax)
 	{
-	  if(IsFirst)
+	  if (IsFirst)
 	    {
 	      TtaSelectElement(doc, sibling);  
 	      IsFirst = FALSE;
@@ -2759,11 +2759,11 @@ void TransformGraphicElement (Document doc, View view, int entry)
   float xmin, ymin, xmax, ymax, xcenter, ycenter;
 
   /* Check that a document is selected */
-  if(doc == 0)return;
+  if (doc == 0)return;
 
   /* Check that whether we are in formatted or strutured view. */
   if (view == 1) isFormattedView = TRUE;
-  else if(view == 2)isFormattedView = FALSE;
+  else if (view == 2)isFormattedView = FALSE;
   else return;
 
   TtaGiveFirstSelectedElement (doc, &first, &c1, &c2);
@@ -2785,30 +2785,30 @@ void TransformGraphicElement (Document doc, View view, int entry)
      element is a child of canvas */
   child = first;
 
-  if(!GetAncestorCanvasAndObject(doc, &child,
+  if (!GetAncestorCanvasAndObject(doc, &child,
 				 &svgAncestor, &svgCanvas))
     return;
 
-  if(child != first)return;
+  if (child != first)return;
 
   /* Count how many children of svgCanvas are selected*/
   for(nb_selected = 0, sibling = first;
       sibling;
       TtaGiveNextSelectedElement(doc, &sibling, &c1, &c2)
       )
-    if(TtaGetParent(sibling) == svgCanvas)nb_selected++;
+    if (TtaGetParent(sibling) == svgCanvas)nb_selected++;
   ;
 
   /* Put all the pointer to the selected children into a table */
-  if(nb_selected == 0)return;
+  if (nb_selected == 0)return;
   selected = (Element *)(TtaGetMemory(nb_selected * sizeof(Element)));
-  if(selected == NULL)return;
+  if (selected == NULL)return;
 
   for(i = 0, sibling = first;
       i < nb_selected;
       TtaGiveNextSelectedElement(doc, &sibling, &c1, &c2)
       )
-    if(TtaGetParent(sibling) == svgCanvas)
+    if (TtaGetParent(sibling) == svgCanvas)
       {
 	selected[i] = sibling;
 	i++;
@@ -2841,7 +2841,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
       for(i = 0, sibling = TtaGetLastChild(svgCanvas); i < nb_selected; i++)
 	{
 	  child = selected[i];
-	  if(child != sibling)
+	  if (child != sibling)
 	    {
 	      TtaRegisterElementDelete (child, doc);
 	      TtaRemoveTree(child, doc);
@@ -2859,7 +2859,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	  sibling = selected[i];
 	  TtaNextSibling(&sibling);
 
-	  if(sibling != sibling2)
+	  if (sibling != sibling2)
 	    {
 	      TtaRegisterElementDelete (child, doc);
 	      TtaRemoveTree(child, doc);
@@ -2878,7 +2878,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	  sibling = selected[i];
 	  TtaPreviousSibling(&sibling);
 
-	  if(sibling != sibling2)
+	  if (sibling != sibling2)
 	    {
 	      TtaRegisterElementDelete (child, doc);
 	      TtaRemoveTree(child, doc);
@@ -2894,7 +2894,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
       for(i = 0, sibling = TtaGetFirstChild(svgCanvas); i < nb_selected; i++)
 	{
 	  child = selected[i];
-	  if(child != sibling)
+	  if (child != sibling)
 	    {
 	      TtaRegisterElementDelete (child, doc);
 	      TtaRemoveTree(child, doc);
@@ -2917,7 +2917,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
     case 38:   /* AlignTop */
     case 39:   /* AlignMiddle */
     case 40:   /* AlignBottom */
-      if(nb_selected == 1)
+      if (nb_selected == 1)
 	{
 	  /* Only one element is selected: do the alignment in the svgCanvas */
 	  TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &c1, &c2);
@@ -2966,10 +2966,10 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	    {
 	      GetPositionAndSizeInParentSpace(doc, selected[i],
 					      &x, &y, &width, &height);
-	      if(x < xmin)xmin = x;
-	      if(y < ymin)ymin = y;
-	      if(x + width > xmax)xmax = x + width;
-	      if(y + height > ymax)ymax = y + height;
+	      if (x < xmin)xmin = x;
+	      if (y < ymin)ymin = y;
+	      if (x + width > xmax)xmax = x + width;
+	      if (y + height > ymax)ymax = y + height;
 	    }
 
 	  xcenter = (xmin+xmax)/2;
@@ -3012,17 +3012,17 @@ void TransformGraphicElement (Document doc, View view, int entry)
       break;
 
     case 41:   /* Rotate */
-      if(isFormattedView)
+      if (isFormattedView)
 	AskTransform(doc, svgAncestor, svgCanvas, 2, selected[0]);
       break;
 
     case 43:   /* Skew */
-      if(isFormattedView)
+      if (isFormattedView)
 	AskTransform(doc, svgAncestor, svgCanvas, 4, selected[0]);
       break;
 
     case 44:   /* Scale */
-      if(isFormattedView)
+      if (isFormattedView)
 	AskTransform(doc, svgAncestor, svgCanvas, 1, selected[0]);
       break;
 
@@ -3045,50 +3045,54 @@ void TransformGraphicElement (Document doc, View view, int entry)
   ----------------------------------------------------------------------*/
 void UpdateTransformMatrix(Document doc, Element el)
 {
-  char *buffer;
-  Attribute attr;
+  char         *buffer;
+  Attribute     attr;
   AttributeType attrType;
-  ElementType elType;
-  ThotBool new_;
+  ElementType   elType;
+  ThotBool      new_, open;
 
   buffer = TtaGetTransformAttributeValue(doc, el);
-
   /* Check if the attribute already exists */
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_transform;
   attr = TtaGetAttribute (el, attrType);
 
-  if(buffer == NULL && attr)
+  if (buffer == NULL)
     {
-      /* Remove the current transform attribute */
-      TtaRegisterAttributeDelete (attr, el, doc);
-      TtaRemoveAttribute (el, attr, doc);
+      if (attr)
+        {
+          /* Remove the current transform attribute */
+          TtaRegisterAttributeDelete (attr, el, doc);
+          TtaRemoveAttribute (el, attr, doc);
+        }
       return;
     }
-
-  if(buffer == NULL)return;
     
-  new_ = (attr == NULL);
+  // check if the undo sequence is open
+  open = !TtaHasUndoSequence (doc);
+  if (open)
+    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 
-  if(new_)
+  new_ = (attr == NULL);
+  if (new_)
     {
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
     }
   else
     TtaRegisterAttributeReplace (attr, el, doc);
-
   TtaSetAttributeText (attr, buffer, el, doc);
-
-  if(new_)
+  if (new_)
     TtaRegisterAttributeCreate (attr, el, doc);
-
   TtaFreeMemory(buffer);
-
+ 
   /* Update the attribute menu */
   TtaUpdateAttrMenu(doc);
-}
+
+  if (open)
+    TtaCloseUndoSequence (doc);
+ }
 
 /*----------------------------------------------------------------------
   RotateElementInParentSpace
@@ -3131,7 +3135,7 @@ void FlipElementInParentSpace(Document doc, Element el, ThotBool horiz)
   /* Apply flip an get the new transform matrix */
   TtaApplyMatrixTransform (doc, el, 1, 0, 0, 1, -cx, -cy);
   
-  if(horiz)
+  if (horiz)
     TtaApplyMatrixTransform (doc, el, 1, 0, 0, -1, 0, 0);
   else
     TtaApplyMatrixTransform (doc, el, -1, 0, 0, 1, 0, 0);
@@ -3173,13 +3177,13 @@ void GetPositionAndSizeInParentSpace (Document doc, Element el, float *X,
   ElementType      elType;
   int dummy1,dummy2;
 
-  if(!el)return;
+  if (!el)return;
   parent = TtaGetParent(el);
 
   /* Check whether the parent is an SVG element */
   svgSchema = GetSVGSSchema (doc);
   elType = TtaGetElementType (parent);
-  if(elType.ElSSchema != svgSchema)
+  if (elType.ElSSchema != svgSchema)
     return;
 
   /* Get the position and size of the box
@@ -3256,7 +3260,7 @@ void CreateGroup ()
       elType.ElTypeNum = SVG_EL_SVG;
       elType.ElSSchema = svgSchema;
       parent = TtaGetTypedAncestor (el, elType);
-      if(parent)
+      if (parent)
 	{
 	  /* Create a Group element */
 	  elType = TtaGetElementType (el);
@@ -3338,7 +3342,7 @@ void Ungroup (Document doc, Element el)
   attr = TtaGetAttribute (el, attrType);
 
   /* Get the transform matrix of the g element */
-  if(attr)TtaGetMatrixTransform(doc, el, &a, &b, &c, &d, &e, &f);
+  if (attr)TtaGetMatrixTransform(doc, el, &a, &b, &c, &d, &e, &f);
 
   child = TtaGetFirstChild(el);
   sibling = el;
@@ -3348,7 +3352,7 @@ void Ungroup (Document doc, Element el)
       TtaNextSibling(&nextchild);
 
       elType = TtaGetElementType(child);
-      if(!(elType.ElTypeNum == SVG_EL_title ||
+      if (!(elType.ElTypeNum == SVG_EL_title ||
 	   elType.ElTypeNum == SVG_EL_desc))
 	{
 	  /* Move the child */
@@ -3357,7 +3361,7 @@ void Ungroup (Document doc, Element el)
 	  TtaInsertSibling(child, sibling, FALSE, doc);
 	  TtaRegisterElementCreate (child, doc);
 
-	  if(attr)
+	  if (attr)
 	    {
 	      /* Apply the transformation matrix to the children */
 	      TtaApplyMatrixTransform (doc, child, a, b, c, d, e, f);
@@ -3419,7 +3423,7 @@ void FreeSVG ()
     delete iconGraphNo;
   for (int i = 0; i < 12; i++)
     {
-      if(mIcons[i])
+      if (mIcons[i])
         delete mIcons[i];
     }
 
