@@ -2749,14 +2749,13 @@ void TransformGraphicElement (Document doc, View view, int entry)
 #ifdef _SVG
   Element          *selected;
   int              nb_selected;
-
   Element          svgAncestor, svgCanvas;
-  Element	   first, sibling, sibling2, child, parent;
+  Element	         first, sibling, sibling2, child, parent;
   DisplayMode      dispMode;
-  ThotBool         isFormattedView;
-  int		   c1, c2, i;
-  float x,y,width,height;
-  float xmin, ymin, xmax, ymax, xcenter, ycenter;
+  int		           c1, c2, i;
+  float            x, y, width, height;
+  float            xmin, ymin, xmax, ymax, xcenter, ycenter;
+  ThotBool         isFormattedView, done = TRUE;
 
   /* Check that a document is selected */
   if (doc == 0)return;
@@ -2772,10 +2771,10 @@ void TransformGraphicElement (Document doc, View view, int entry)
       parent = TtaGetParent (first);
       if (TtaIsReadOnly (parent))
         /* do modify read-only element */
-	{
-	  TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
-	  return;
-	}
+        {
+          TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+          return;
+        }
     }
   else
     /* no selection */
@@ -2800,9 +2799,11 @@ void TransformGraphicElement (Document doc, View view, int entry)
   ;
 
   /* Put all the pointer to the selected children into a table */
-  if (nb_selected == 0)return;
+  if (nb_selected == 0)
+    return;
   selected = (Element *)(TtaGetMemory(nb_selected * sizeof(Element)));
-  if (selected == NULL)return;
+  if (selected == NULL)
+    return;
 
   for(i = 0, sibling = first;
       i < nb_selected;
@@ -2816,56 +2817,55 @@ void TransformGraphicElement (Document doc, View view, int entry)
   ;
 
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-
   dispMode = TtaGetDisplayMode (doc);
   /* ask Thot to stop displaying changes made in the document */
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
-  switch(entry)
+  switch (entry)
     {
     case 26:	/* Ungroup */
-      for(i = 0; i < nb_selected; i++)
-	{
-	 Ungroup (doc, selected[i]);
-	}
+      for (i = 0; i < nb_selected; i++)
+        {
+          Ungroup (doc, selected[i]);
+        }
       break;
       
     case 27:   /* Flip Vertically */
     case 28:   /* Flip Horizontally */
-      for(i = 0; i < nb_selected; i++)
-	FlipElementInParentSpace(doc, selected[i], entry == 28);
+      for (i = 0; i < nb_selected; i++)
+        FlipElementInParentSpace(doc, selected[i], entry == 28);
     break;
 
     case 29:   /* BringToFront */
-      for(i = 0, sibling = TtaGetLastChild(svgCanvas); i < nb_selected; i++)
-	{
-	  child = selected[i];
-	  if (child != sibling)
-	    {
-	      TtaRegisterElementDelete (child, doc);
-	      TtaRemoveTree(child, doc);
-	      TtaInsertSibling(child, sibling, FALSE, doc);
-	      TtaRegisterElementCreate (child, doc);
-	      sibling = child;
-	    }
-	}
+      for (i = 0, sibling = TtaGetLastChild(svgCanvas); i < nb_selected; i++)
+        {
+          child = selected[i];
+          if (child != sibling)
+            {
+              TtaRegisterElementDelete (child, doc);
+              TtaRemoveTree(child, doc);
+              TtaInsertSibling(child, sibling, FALSE, doc);
+              TtaRegisterElementCreate (child, doc);
+              sibling = child;
+            }
+        }
       break;
 
     case 30:   /* BringForward */
       for(i = nb_selected - 1, sibling2 = NULL; i >= 0; i--)
-	{
-	  child = selected[i];
-	  sibling = selected[i];
-	  TtaNextSibling(&sibling);
-
-	  if (sibling != sibling2)
-	    {
-	      TtaRegisterElementDelete (child, doc);
-	      TtaRemoveTree(child, doc);
-	      TtaInsertSibling(child, sibling, FALSE, doc);
-	      TtaRegisterElementCreate (child, doc);
-	    }
+        {
+          child = selected[i];
+          sibling = selected[i];
+          TtaNextSibling(&sibling);
+          
+          if (sibling != sibling2)
+            {
+              TtaRegisterElementDelete (child, doc);
+              TtaRemoveTree(child, doc);
+              TtaInsertSibling(child, sibling, FALSE, doc);
+              TtaRegisterElementCreate (child, doc);
+            }
 
 	  sibling2 = child;
 	}
@@ -3013,17 +3013,17 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
     case 41:   /* Rotate */
       if (isFormattedView)
-	AskTransform(doc, svgAncestor, svgCanvas, 2, selected[0]);
+        done = AskTransform(doc, svgAncestor, svgCanvas, 2, selected[0]);
       break;
 
     case 43:   /* Skew */
       if (isFormattedView)
-	AskTransform(doc, svgAncestor, svgCanvas, 4, selected[0]);
+        done = AskTransform(doc, svgAncestor, svgCanvas, 4, selected[0]);
       break;
 
     case 44:   /* Scale */
       if (isFormattedView)
-	AskTransform(doc, svgAncestor, svgCanvas, 1, selected[0]);
+        done = AskTransform(doc, svgAncestor, svgCanvas, 1, selected[0]);
       break;
 
       /* Translate */
@@ -3033,9 +3033,11 @@ void TransformGraphicElement (Document doc, View view, int entry)
   TtaFreeMemory(selected);
 
   TtaCloseUndoSequence (doc);
+  if (!done)
+    // no change done
+    TtaCancelLastRegisteredSequence (doc);
   /* ask Thot to display changes made in the document */
   TtaSetDisplayMode (doc, dispMode);
-
   TtaSetDocumentModified (doc);
 #endif /* _SVG */
 }
@@ -3307,7 +3309,6 @@ void CreateGroup ()
   TtaCloseUndoSequence (doc);
   /* ask Thot to display changes made in the document */
   TtaSetDisplayMode (doc, dispMode);
-
 
   TtaSetDocumentModified (doc);
 #endif /* _SVG */
