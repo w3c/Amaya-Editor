@@ -224,8 +224,21 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		{
 		  /* Check if we draw Bezier Control */
 		  if(
+		     /*
+		       i-2     i-1     i   
+		       O------x-------0
+
+		      */
 		     pointselect == i-1 || /* A point is selected */
-		     pointselect == i      /* Current control point selected */
+		     pointselect == i   || /* Current control point selected */
+
+		     (pointselect == i-2 &&/* Previous control point selected */
+		      !(pPa->PaNewSubpath) &&
+		       pPa->PaPrevious &&
+		       (pPa->PaPrevious->PaShape == PtCubicBezier ||
+			pPa->PaPrevious->PaShape == PtQuadraticBezier)
+		      )
+
 		     )
 		    DrawBezierControl (frame, thick, xstart, ystart,
 				       xctrlstart, yctrlstart, bg, fg);
@@ -237,8 +250,20 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		 pPa->PaShape == PtQuadraticBezier)
 		{
 		  /* Check if we draw Bezier Control */
-		  if(pointselect == i+1 || /* A point is selected */
-		     pointselect == i      /* Current control point selected */
+		  if(
+		     /*
+		       i     i+1     i+2
+		       O------x-------0
+
+		      */
+
+		     pointselect == i+1 || /* A point is selected */
+		     pointselect == i   || /* Current control point selected */
+		     
+		     (pointselect == i+2 && /* Next control point selected */
+		      pPa->PaNext && !(pPa->PaNext->PaNewSubpath)
+		      && (pPa->PaNext->PaShape == PtCubicBezier ||
+			  pPa->PaNext->PaShape == PtQuadraticBezier)  )
 		     )
 		    DrawBezierControl (frame, thick, xend, yend,
 				       xctrlend, yctrlend, bg, fg);

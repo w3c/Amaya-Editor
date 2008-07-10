@@ -48,6 +48,8 @@ extern void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
 					    float *height);
 
 static  PtrPathSeg          pPa;
+static  PtrTextBuffer       pBuffer;
+static  int i_poly;
 static  Element leaf;
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaEditPathEvtHandler, wxEvtHandler)
@@ -109,9 +111,8 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   ,hasBeenTransformed(transformApplied)
 {
   PtrAbstractBox pAb;
-  PtrTextBuffer       pBuffer;
   int elType;
-  int i;
+  int i,j;
 
   *hasBeenTransformed = FALSE;
 
@@ -124,19 +125,43 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   box = pAb -> AbBox;
 
   elType = ((PtrElement)el)->ElTypeNumber;
+  leaf = TtaGetFirstLeaf((Element)el);
 
   if(elType == 43 || elType == 45)
     {
       /* It's a polyline or a polygon */
 
+      pBuffer = ((PtrElement)leaf)->ElPolyLineBuffer;
+      j = 1;
+      for (i = 1; pBuffer; i++)
+	{
+	  if (j >= pBuffer->BuLength)
+	    {
+	      if (pBuffer->BuNext != NULL)
+		{
+		  /* Changement de buffer */
+		  pBuffer = pBuffer->BuNext;
+		  j = 0;
+		}
+	    }
+	  
+	  if(i == point_number)
+	    {
+	      /* Moving a point of a polyline/polygon  */
+	      type = 5;
+	      i_poly = j;
+	      break;
+	    }
+	  
+	  j++;
+	}
     }
-  else if(elType == 33)
+    else if(elType == 33)
     {
       /* It's a path: find the segment to edit */
 
       i = 1;
       
-      leaf = TtaGetFirstLeaf((Element)el);
       pPa = ((PtrElement)leaf)->ElFirstPathSeg;
   
       while (pPa)
@@ -241,7 +266,8 @@ bool AmayaEditPathEvtHandler::IsFinish()
  *----------------------------------------------------------------------*/
 void AmayaEditPathEvtHandler::OnChar( wxKeyEvent& event )
 {
-  Finished = true;
+  if(event.GetKeyCode() !=  WXK_SHIFT)
+    Finished = true;
 }
 
 /*----------------------------------------------------------------------
@@ -285,6 +311,10 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
   int x1,y1,x2,y2;
   int dx, dy;
+  ThotBool smooth = TRUE;
+
+
+  if(event.ShiftDown())smooth = FALSE;
 
   /* DELTA is the sensitivity toward mouse moves. */
 #define DELTA 20
@@ -337,12 +367,32 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  /* Moving the start control point */
 	  pPa->XCtrlStart += dx;
 	  pPa->YCtrlStart += dy;
+
+	  if(smooth && pPa->PaPrevious && !(pPa->PaNewSubpath) &&
+	     (pPa->PaPrevious->PaShape == PtCubicBezier ||
+	      pPa->PaPrevious->PaShape == PtQuadraticBezier))
+	    {
+	      /* Update the other control point */
+	      pPa->PaPrevious->XCtrlEnd = 2*pPa->XStart - pPa->XCtrlStart;
+	      pPa->PaPrevious->YCtrlEnd = 2*pPa->YStart - pPa->YCtrlStart;
+	    }
+
 	  break;
 
 	case 2:
 	  /* Moving the end control point */
 	  pPa->XCtrlEnd += dx;
 	  pPa->YCtrlEnd += dy;
+
+	  if(smooth && pPa->PaNext && !(pPa->PaNext->PaNewSubpath) &&
+	     (pPa->PaNext->PaShape == PtCubicBezier ||
+	      pPa->PaNext->PaShape == PtQuadraticBezier))
+	    {
+	      /* Update the other control point */
+	      pPa->PaNext->XCtrlStart = 2*pPa->XEnd - pPa->XCtrlEnd;
+	      pPa->PaNext->YCtrlStart = 2*pPa->YEnd - pPa->YCtrlEnd;
+	    }
+
 	  break;
 
 	case 3:
@@ -364,6 +414,12 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  pPa->YCtrlEnd += dy;
 	  pPa->XEnd += dx;
 	  pPa->YEnd += dy;
+	  break;
+
+	case 5:
+	  /* Moving a point of a polyline/polygon  */
+	  pBuffer->BuPoints[i_poly].XCoord += dx;
+	  pBuffer->BuPoints[i_poly].YCoord += dy;
 	  break;
 
 	default:
