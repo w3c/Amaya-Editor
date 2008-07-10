@@ -884,8 +884,7 @@ static PtrBox  GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame,
 
 /*----------------------------------------------------------------------
   GetPathPoint
-  Return TRUE if the user is clicking on a point which is not
-  a control point of a Bezier curve.
+  Return TRUE if the user is clicking on a point
   ----------------------------------------------------------------------*/
 static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 				     int frame, int *pointselect)
@@ -931,7 +930,7 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 	    {
 	      /* The user is clicking on a control point */
 	      *pointselect = i;
-	      return FALSE;
+	      return TRUE;
 	    }
 
 	  i++;
@@ -943,7 +942,7 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 	    {
 	      /* The user is clicking on a control point */
 	      *pointselect = i;
-	      return FALSE;
+	      return TRUE;
 	    }
 
 	  i++;

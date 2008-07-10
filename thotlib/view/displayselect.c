@@ -204,7 +204,15 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		{
 		  /* this path segment starts a new subpath */
 
-                  if(pointselect == 0 || pointselect == i)
+                  if(pointselect == 0 || /* The whole path is selected */
+		     pointselect == i || /* Current point selected */
+
+		     (pointselect == i+1 && /* Next control point selected*/
+		       (pPa->PaShape == PtCubicBezier ||
+			pPa->PaShape == PtQuadraticBezier))
+
+		     )
+
 		    /* draw the start point of this path segment */
 		      DrawRectangle (frame, 0, 0, xstart, ystart,
 				     thick, thick, fg, bg, 2);
@@ -215,7 +223,10 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		 pPa->PaShape == PtQuadraticBezier)
 		{
 		  /* Check if we draw Bezier Control */
-		  if(i == pointselect + 1)
+		  if(
+		     pointselect == i-1 || /* A point is selected */
+		     pointselect == i      /* Current control point selected */
+		     )
 		    DrawBezierControl (frame, thick, xstart, ystart,
 				       xctrlstart, yctrlstart, bg, fg);
 		  
@@ -226,14 +237,27 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		 pPa->PaShape == PtQuadraticBezier)
 		{
 		  /* Check if we draw Bezier Control */
-		  if(i == pointselect - 1)
+		  if(pointselect == i+1 || /* A point is selected */
+		     pointselect == i      /* Current control point selected */
+		     )
 		    DrawBezierControl (frame, thick, xend, yend,
 				       xctrlend, yctrlend, bg, fg);
 		  
 		  i++;
 		}
 
-	      if(pointselect == 0 || pointselect == i)
+	      if(pointselect == 0 || /* The whole path is selected */
+		 pointselect == i || /* Current point selected */
+
+		 (pointselect == i-1 && /* Previous control point selected*/
+		 (pPa->PaShape == PtCubicBezier ||
+		  pPa->PaShape == PtQuadraticBezier)) ||
+
+		 (pointselect == i+1 && /* Next control point selected */
+		  pPa->PaNext && !(pPa->PaNext->PaNewSubpath)
+		  && (pPa->PaNext->PaShape == PtCubicBezier ||
+		      pPa->PaNext->PaShape == PtQuadraticBezier)  )
+		 )
 		/* Draw the end point of the path segment */
 		DrawRectangle (frame, 0, 0, xend, yend,
 			       thick, thick, fg, bg, 2);

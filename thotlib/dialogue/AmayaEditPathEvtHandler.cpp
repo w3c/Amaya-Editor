@@ -331,9 +331,19 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  pPa->YStart += dy;
 	  pPa->XCtrlStart += dx;
 	  pPa->YCtrlStart += dy;
-
 	  break;
 
+	case 1:
+	  /* Moving the start control point */
+	  pPa->XCtrlStart += dx;
+	  pPa->YCtrlStart += dy;
+	  break;
+
+	case 2:
+	  /* Moving the end control point */
+	  pPa->XCtrlEnd += dx;
+	  pPa->YCtrlEnd += dy;
+	  break;
 
 	case 3:
 	  /* Moving a point in the path */
