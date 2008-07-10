@@ -27,7 +27,7 @@
 #include "font_f.h"
 #include "content_f.h"
 #include "windowdisplay_f.h"
-
+#include "viewapi_f.h"
 
 #ifdef _GL
 #include "glwindowdisplay.h"
@@ -46,6 +46,9 @@
 extern void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
 					    float *Y, float *width,
 					    float *height);
+
+static  PtrPathSeg          pPa;
+static  Element leaf;
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaEditPathEvtHandler, wxEvtHandler)
 
@@ -102,9 +105,13 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   ,type(edit_type)
   ,el(element)
   ,box(NULL)
+  ,ButtonDown(false)
   ,hasBeenTransformed(transformApplied)
 {
   PtrAbstractBox pAb;
+  PtrTextBuffer       pBuffer;
+  int elType;
+  int i;
 
   *hasBeenTransformed = FALSE;
 
@@ -114,8 +121,90 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
     Finished = true;
     return;
     }
-
   box = pAb -> AbBox;
+
+  elType = ((PtrElement)el)->ElTypeNumber;
+
+  if(elType == 43 || elType == 45)
+    {
+      /* It's a polyline or a polygon */
+
+    }
+  else if(elType == 33)
+    {
+      /* It's a path: find the segment to edit */
+
+      i = 1;
+      
+      leaf = TtaGetFirstLeaf((Element)el);
+      pPa = ((PtrElement)leaf)->ElFirstPathSeg;
+  
+      while (pPa)
+	{
+	  if ((pPa->PaNewSubpath || !pPa->PaPrevious))
+		{
+		  if(i == point_number)
+		    {
+		      /* Moving the first point of subpath */
+		      type = 0;
+		      break;
+		    }
+
+
+		  i++;
+                }
+
+	      if(pPa->PaShape == PtCubicBezier ||
+		 pPa->PaShape == PtQuadraticBezier)
+		{
+		  if(i == point_number)
+		    {
+		      /* Moving the start control point */
+		      type = 1;
+		      break;
+		    }
+	  
+		  i++;
+		}
+
+	      if(pPa->PaShape == PtCubicBezier ||
+		 pPa->PaShape == PtQuadraticBezier)
+		{
+		  if(i == point_number)
+		    {
+		      /* Moving the end control point */
+		      type = 2;
+		      break;
+		    }
+		  i++;
+		}
+
+	      if(i == point_number)
+		{
+		  if(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+		    {
+		      /* Moving a point in the path */
+		      type = 3;
+		      break;
+		    }
+		  else
+		    {
+		      /* Moving the last point of a subpath */
+		      type = 4;
+		      break;
+		    }
+		}
+
+	      i++;
+              pPa = pPa->PaNext;
+	      
+            }
+    }
+  else 
+    {
+      Finished = true;
+      return;
+    }
 
   if (pFrame)
     {
@@ -195,6 +284,7 @@ void AmayaEditPathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
   int x1,y1,x2,y2;
+  int dx, dy;
 
   /* DELTA is the sensitivity toward mouse moves. */
 #define DELTA 20
@@ -203,15 +293,16 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
   mouse_x = event.GetX();
   mouse_y = event.GetY();
 
+  if(!ButtonDown)
+    {
+      lastX = mouse_x;
+      lastY = mouse_y;
+      ButtonDown = true;
+    }
+
   if((abs(mouse_x -lastX) + abs(mouse_y - lastY) > DELTA))
     {
       /* The user is pressing the mouse button and moving */
-
-      /* Translate the previous and current coordinates of the mouse
-	 into the correspoint of the SVG canvas:
-	 - previous position: (x1,y1)
-	 - new position: (x2,y2)
-      */
       x1 = lastX;
       y1 = lastY;
       x2 = mouse_x;
@@ -229,21 +320,59 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 			    inverse,
 			    TRUE, &x2, &y2);
 
+      dx = x2 - x1;
+      dy = y2 - y1;
+
       switch(type)
 	{
+	case 0:
+	  /* Moving the start control point */
+	  pPa->XStart += dx;
+	  pPa->YStart += dy;
+	  pPa->XCtrlStart += dx;
+	  pPa->YCtrlStart += dy;
+
+	  break;
+
+
+	case 3:
+	  /* Moving a point in the path */
+	  pPa->XCtrlEnd += dx;
+	  pPa->YCtrlEnd += dy;
+	  pPa->XEnd += dx;
+	  pPa->YEnd += dy;
+	  pPa->PaNext->XStart += dx;
+	  pPa->PaNext->YStart += dy;
+	  pPa->PaNext->XCtrlStart += dx;
+	  pPa->PaNext->YCtrlStart += dy;
+
+	  break;
+
+	case 4:
+	  /* Moving the last point of a subpath */
+	  pPa->XCtrlEnd += dx;
+	  pPa->YCtrlEnd += dy;
+	  pPa->XEnd += dx;
+	  pPa->YEnd += dy;
+	  break;
+
 	default:
-	  *hasBeenTransformed = TRUE;
 	  break;
 	}
+
+#ifndef NODISPLAY
+	  RedisplayLeaf ((PtrElement) leaf, document, 0);
+#endif
 
       /* Redisplay the SVG canvas to see the transform applied to the object */
       DefBoxRegion (FrameId, box, -1, -1, -1, -1);
       RedrawFrameBottom (FrameId, 0, NULL);
       pFrame->GetCanvas()->Refresh();
-
       /* Update the previous mouse coordinates */
       lastX = mouse_x;
       lastY = mouse_y;
+
+      *hasBeenTransformed = TRUE;
     }
 }
 

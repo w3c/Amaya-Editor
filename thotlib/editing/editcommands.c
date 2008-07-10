@@ -2320,7 +2320,7 @@ ThotBool AskPathEdit (  Document doc,
 				   ancestorX, ancestorY,
 				   canvasWidth, canvasHeight,
 				   edit_type,
-			       el, point);
+			           el, point);
 
   /* Free the transform matrix */
   if(CTM)TtaFreeTransform(CTM);

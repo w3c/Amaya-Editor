@@ -61,6 +61,7 @@ class AmayaEditPathEvtHandler : public wxEvtHandler
   /* Coordinates of the mouse */
   int lastX, lastY, mouse_x,mouse_y;
 
+  bool ButtonDown;
   ThotBool *hasBeenTransformed; 
 
 };
