@@ -66,6 +66,7 @@ static int          GridSize = 1;
   #include "AmayaCreateShapeEvtHandler.h"
   #include "AmayaCreatePathEvtHandler.h"
   #include "AmayaTransformEvtHandler.h"
+  #include "AmayaEditPathEvtHandler.h"
 #endif /* _WX */
 
 /*----------------------------------------------------------------------
@@ -1583,6 +1584,46 @@ ThotBool TransformSVG (int frame,
     TtaHandleOneEvent (&ev);
   
   delete p_TransformEvtHandler;
+
+  return transformApplied;
+}
+
+/*----------------------------------------------------------------------
+  PathEdit
+  ----------------------------------------------------------------------*/
+ThotBool PathEdit (int frame,
+		   Document doc, 
+		   void *CTM, void *inverse,
+		   int ancestorX, int ancestorY,
+		   int canvasWidth, int canvasHeight,
+		   int edit_type,
+		   Element el,
+		   int point_edited
+		   )
+{
+  AmayaFrame * p_frame;
+  AmayaEditPathEvtHandler *p_EditPathEvtHandler;
+  ThotEvent ev;
+  ThotBool transformApplied;
+
+  p_frame = FrameTable[frame].WdFrame;
+  p_EditPathEvtHandler = new AmayaEditPathEvtHandler(p_frame,
+						     doc,
+						     CTM,
+						     inverse,
+						     ancestorX,
+						     ancestorY,
+						     canvasWidth,
+						     canvasHeight,
+						     edit_type,
+						     el,
+						     point_edited,
+						     &transformApplied);
+  
+  while(!p_EditPathEvtHandler->IsFinish())
+    TtaHandleOneEvent (&ev);
+  
+  delete p_EditPathEvtHandler;
 
   return transformApplied;
 }

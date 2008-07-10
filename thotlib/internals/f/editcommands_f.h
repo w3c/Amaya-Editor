@@ -36,6 +36,10 @@ extern ThotBool AskTransform ( Document doc,
                                Element svgCanvas,
                                int transform_type,
                                Element el );
+extern ThotBool AskPathEdit ( Document doc,
+                              int edit_type,
+                              Element el,
+                              int point );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                              CHAR_T c,
@@ -99,6 +103,10 @@ extern ThotBool AskTransform ( Document doc,
                                  Element svgCanvas,
                                  int transform_type,
                                  Element el );
+extern ThotBool AskPathEdit ( Document doc,
+                                int edit_type,
+                                Element el,
+                                int point );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                                CHAR_T c,

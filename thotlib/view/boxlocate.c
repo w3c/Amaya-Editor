@@ -440,7 +440,24 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                     /* the application asks Thot to do nothing */
                     return SkipClickEvent;
                   ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
-                  // the document can be reloaded
+
+		  if(nChars > 0 && Selecting != NULL && el->ElStructSchema &&
+			 el->ElStructSchema->SsName &&
+			 !strcmp (el->ElStructSchema->SsName, "SVG"))
+		    {
+		      /* Click on a point of a polyline or Path */
+		      *Selecting = FALSE;
+		      if(AskPathEdit(doc,
+				     0, (Element)el, nChars))
+			{
+			  /* The user has moved an SVG element */
+			  TtaSetDocumentModified(doc);
+			  return FALSE;
+			}
+		      return FALSE;
+		    }
+
+                  /* the document can be reloaded */
                   pAb = pFrame->FrAbstractBox;
                   nChars = 0;
                   GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO, &nChars);
@@ -467,7 +484,6 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 				{
 				  /* The user has moved an SVG element */
 				  TtaSetDocumentModified(doc);
-		      
 				  return FALSE;
 				}
 			    }

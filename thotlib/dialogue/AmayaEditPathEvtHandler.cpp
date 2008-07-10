@@ -122,9 +122,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       /* attach this handler to the canvas */
       AmayaCanvas * p_canvas = pFrame->GetCanvas();
       p_canvas->PushEventHandler(this);
-
-      /* assign a cross mouse cursor */
-      pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
       pFrame->GetCanvas()->CaptureMouse();
 
     }
@@ -139,9 +136,6 @@ AmayaEditPathEvtHandler::~AmayaEditPathEvtHandler()
       /* detach this handler from the canvas (restore default behaviour) */
       AmayaCanvas * p_canvas = pFrame->GetCanvas();
       p_canvas->PopEventHandler(false /* do not delete myself */);
-      
-      /* restore the default cursor */
-      pFrame->GetCanvas()->SetCursor( wxNullCursor );
       pFrame->GetCanvas()->ReleaseMouse();
     }
 
@@ -179,6 +173,8 @@ void AmayaEditPathEvtHandler::OnMouseDown( wxMouseEvent& event )
 void AmayaEditPathEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
   if (IsFinish())return;
+
+  Finished = true;
 }
 
 /*----------------------------------------------------------------------

@@ -2257,6 +2257,80 @@ ThotBool AskTransform(     Document doc,
   return transformApplied;
 }
 
+/*----------------------------------------------------------------------
+  AskPathEdit
+  --------------------------------------------------------------------*/
+ThotBool AskPathEdit (  Document doc,
+		       int edit_type, Element el, int point)
+{
+
+  Element svgCanvas, svgAncestor;
+  PtrAbstractBox pAb;
+  PtrBox pBox;
+  ViewFrame          *pFrame;
+  int frame;
+  PtrTransform CTM, inverse;
+  int canvasWidth,canvasHeight,ancestorX,ancestorY;
+  ThotBool transformApplied;
+
+  frame = ActiveFrame;
+
+  if(frame <= 0)return FALSE;
+
+  if(svgCanvas == NULL || svgAncestor == NULL)
+    if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
+      return FALSE;
+  ;
+
+  /* Get the current transform matrix */
+  CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
+
+  if(CTM == NULL)
+      inverse = NULL;
+  else
+    {
+      /* Get the inverse of the CTM and free the CTM */
+      inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
+
+      if(inverse == NULL)
+	{
+      /* Transform not inversible */
+	  TtaFreeTransform(CTM);
+	  return FALSE;
+	}
+    }
+
+  pFrame = &ViewFrameTable[frame - 1];
+  /* Get the size of the SVG Canvas */
+  TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
+
+  /* Get the origin of the ancestor */
+  //TtaGiveBoxPosition (svgAncestor, doc, 1, UnPixel, &ancestorX, &ancestorY);
+  pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
+  if(pAb && pAb -> AbBox)
+    pBox = pAb -> AbBox;
+  else return FALSE;
+  ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
+  ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
+
+  /* Call the interactive module */
+  transformApplied = PathEdit (frame,
+				   doc, 
+				   CTM, inverse,
+				   ancestorX, ancestorY,
+				   canvasWidth, canvasHeight,
+				   edit_type,
+			       el, point);
+
+  /* Free the transform matrix */
+  if(CTM)TtaFreeTransform(CTM);
+  if(inverse)TtaFreeTransform(inverse);
+
+  /* Update the transform */
+  //  UpdateTransformMatrix(doc, el);
+
+  return transformApplied;
+}
 
 /*----------------------------------------------------------------------
   ContentEditing manages Cut, Paste, Copy, Remvoe, and Insert commands.
