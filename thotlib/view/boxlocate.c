@@ -1699,6 +1699,9 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
                 /* it's a non-empty path */
                 {
 		  /* Is the user clicking on a control point? */
+                  x = lowerX - pBox->BxXOrg;
+                  y -= pBox->BxYOrg;
+
 		  if(GetPathPoint(pAb->AbFirstPathSeg,
 				  lowerX, y, frame, pointselect))
 		    return pBox;
@@ -1708,8 +1711,6 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
                                                 &npoints, &subpathStart);
                   /* is the position of interest on the polyline represented by
                      these points? */
-                  x = lowerX - pBox->BxXOrg;
-                  y -= pBox->BxYOrg;
                   OK = FALSE;
                   sub = 0;
                   /* test every segment comprised between 2 successive points */
