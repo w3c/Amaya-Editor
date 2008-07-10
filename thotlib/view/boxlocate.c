@@ -186,6 +186,18 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
 }
 
 /*----------------------------------------------------------------------
+  IsNear
+  ----------------------------------------------------------------------*/
+static ThotBool IsNear(int x, int y, int x0, int y0)
+{
+  int dx, dy;
+  dx = x - x0;
+  dy = y - y0;
+  return ((dx*dx+dy*dy) <= DELTA_SEL*DELTA_SEL);
+}
+
+
+/*----------------------------------------------------------------------
   IsSelectingControlPoint
   The frame must be the formatted view.
   ----------------------------------------------------------------------*/
@@ -853,6 +865,89 @@ static PtrBox  GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame,
     }
   return (NULL);
 }
+
+/*----------------------------------------------------------------------
+  GetPathPoint
+  Return TRUE if the user is clicking on a point which is not
+  a control point of a Bezier curve.
+  ----------------------------------------------------------------------*/
+static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
+				     int frame, int *pointselect)
+{
+  int i = 1;
+  int                 xstart, ystart, xctrlstart, yctrlstart;
+  int                 xend, yend, xctrlend, yctrlend;
+
+  while(pPa)
+    {
+      xstart = PixelValue (pPa->XStart, UnPixel, NULL,
+			   ViewFrameTable[frame - 1].FrMagnification);
+      ystart = PixelValue (pPa->YStart, UnPixel, NULL,
+			   ViewFrameTable[frame - 1].FrMagnification);
+      xctrlstart = PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+			       ViewFrameTable[frame - 1].FrMagnification);
+      yctrlstart = PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+			       ViewFrameTable[frame - 1].FrMagnification);
+      xend = PixelValue (pPa->XEnd, UnPixel, NULL,
+			 ViewFrameTable[frame - 1].FrMagnification);
+      yend = PixelValue (pPa->YEnd, UnPixel, NULL,
+			 ViewFrameTable[frame - 1].FrMagnification);
+      xctrlend = PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
+			     ViewFrameTable[frame - 1].FrMagnification);
+      yctrlend = PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
+			     ViewFrameTable[frame - 1].FrMagnification);
+      
+      if ((pPa->PaNewSubpath || !pPa->PaPrevious))
+	{
+	  /* It's a new subpath */
+	  if(IsNear(x, y, xstart, ystart))
+	    {
+	      /* The user is clicking on a point of the path */
+	      *pointselect = i;
+	      return TRUE;
+	    }
+	  i++;
+	}
+
+      if(pPa->PaShape == PtQuadraticBezier || pPa->PaShape == PtCubicBezier)
+	{
+	  if(IsNear(x, y, xctrlstart, yctrlstart))
+	    {
+	      /* The user is clicking on a control point */
+	      *pointselect = i;
+	      return FALSE;
+	    }
+
+	  i++;
+	}
+
+      if(pPa->PaShape == PtQuadraticBezier || pPa->PaShape == PtCubicBezier)
+	{
+	  if(IsNear(x, y, xctrlend, yctrlend))
+	    {
+	      /* The user is clicking on a control point */
+	      *pointselect = i;
+	      return FALSE;
+	    }
+
+	  i++;
+	}
+
+      if(IsNear(x, y, xend, yend))
+	{
+	  /* The user is clicking on a point of the path */
+	  *pointselect = i;
+	  return TRUE;
+	}
+
+      i++;
+      pPa = pPa->PaNext;
+    }
+  
+  *pointselect = 0;
+  return FALSE;
+}
+
 
 /*----------------------------------------------------------------------
   BuildPolygonForPath
@@ -1588,6 +1683,11 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
               else
                 /* it's a non-empty path */
                 {
+		  /* Is the user clicking on a control point? */
+		  if(GetPathPoint(pAb->AbFirstPathSeg,
+				  lowerX, y, frame, pointselect))
+		    return pBox;
+
                   /* builds the list of points representing the path */
                   points = BuildPolygonForPath (pAb->AbFirstPathSeg, frame,
                                                 &npoints, &subpathStart);
@@ -1636,6 +1736,7 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
                   free (points);
                   if (subpathStart)
                     free (subpathStart);
+
                   if (OK)
                     return (pBox);
                   else

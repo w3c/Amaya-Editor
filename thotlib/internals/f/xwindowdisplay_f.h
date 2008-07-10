@@ -343,6 +343,14 @@ extern void DrawEllipsFrame ( int frame,
                               int fg,
                               int bg,
                               int pattern );
+extern void DrawBezierControl ( int frame,
+                                int size,
+                                int x_point,
+                                int y_point,
+                                int x_ctrl,
+                                int y_ctrl,
+                                int bg,
+                                int fg );
 extern void SetMainWindowBackgroundColor ( int frame,
                                            int color );
 extern void Clear ( int frame,
@@ -717,6 +725,14 @@ extern void DrawEllipsFrame ( int frame,
                                 int fg,
                                 int bg,
                                 int pattern );
+extern void DrawBezierControl ( int frame,
+                                  int size,
+                                  int x_point,
+                                  int y_point,
+                                  int x_ctrl,
+                                  int y_ctrl,
+                                  int bg,
+                                  int fg );
 extern void SetMainWindowBackgroundColor ( int frame,
                                              int color );
 extern void Clear ( int frame,

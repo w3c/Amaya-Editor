@@ -2697,6 +2697,16 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void DrawBezierControl (int frame, int size, int x_point, int y_point,
+			int x_ctrl, int y_ctrl, int bg, int fg)
+{
+  InitDrawing (5, 1, bg);
+  DoDrawOneLine (frame, x_ctrl, y_ctrl, x_point, y_point);
+  DrawEllipsFrame (frame, 1, 5, x_ctrl - size, y_ctrl - size,
+		   size*2, size*2, fg, bg, 2);
+}
 
 /*----------------------------------------------------------------------
   SetMainWindowBackgroundColor :                          

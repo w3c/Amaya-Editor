@@ -57,6 +57,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
   int                 thick, halfThick;
   int                 i, j, n;
   int                 x, y, bg, fg;
+  int                 xstart, ystart, xctrlstart, yctrlstart;
+  int                 xend, yend, xctrlend, yctrlend;
   ThotBool            svg_or_img;
 
   if (pBox)
@@ -153,6 +155,9 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
                       j = 0;
                     }
                 }
+
+
+
               if (pointselect == 0 || pointselect == i)
                 {
                   x = leftX + PixelValue (pBuffer->BuPoints[j].XCoord,
@@ -169,27 +174,72 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
         }
       else if (pAb->AbLeafType == LtPath)
         {
-          /* Draw control points of the path */
+          /* Draw the points of the path */
           pPa = pAb->AbFirstPathSeg;
           leftX = pBox->BxXOrg - pFrame->FrXOrg - halfThick;
           topY = pBox->BxYOrg - pFrame->FrYOrg - halfThick;
+	  i = 1;
+	  
           while (pPa)
             {
-              if (pPa->PaNewSubpath || !pPa->PaPrevious)
-                /* this path segment starts a new subpath */
-                {
-                  x = leftX + PixelValue (pPa->XStart, UnPixel, NULL,
-                                          ViewFrameTable[frame - 1].FrMagnification);
-                  y = topY + PixelValue (pPa->YStart, UnPixel, NULL,
-                                         ViewFrameTable[frame - 1].FrMagnification);
-                  DrawRectangle (frame, 0, 0, x, y, thick, thick, fg, bg, 2);
+	      xstart = leftX + PixelValue (pPa->XStart, UnPixel, NULL,
+					   ViewFrameTable[frame - 1].FrMagnification);
+	      ystart = topY + PixelValue (pPa->YStart, UnPixel, NULL,
+					   ViewFrameTable[frame - 1].FrMagnification);
+	      xctrlstart = leftX + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+					   ViewFrameTable[frame - 1].FrMagnification);
+	      yctrlstart = topY + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+					   ViewFrameTable[frame - 1].FrMagnification);
+	      xend = leftX + PixelValue (pPa->XEnd, UnPixel, NULL,
+					   ViewFrameTable[frame - 1].FrMagnification);
+	      yend = topY + PixelValue (pPa->YEnd, UnPixel, NULL,
+					   ViewFrameTable[frame - 1].FrMagnification);
+	      xctrlend = leftX + PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
+					   ViewFrameTable[frame - 1].FrMagnification);
+	      yctrlend = topY + PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
+					   ViewFrameTable[frame - 1].FrMagnification);
+
+
+              if ((pPa->PaNewSubpath || !pPa->PaPrevious))
+		{
+		  /* this path segment starts a new subpath */
+
+                  if(pointselect == 0 || pointselect == i)
+		    /* draw the start point of this path segment */
+		      DrawRectangle (frame, 0, 0, xstart, ystart,
+				     thick, thick, fg, bg, 2);
+		  i++;
                 }
-              x = leftX + PixelValue (pPa->XEnd, UnPixel, NULL,
-                                      ViewFrameTable[frame - 1].FrMagnification);
-              y = topY + PixelValue (pPa->YEnd, UnPixel, NULL,
-                                     ViewFrameTable[frame - 1].FrMagnification);
-              DrawRectangle (frame, 0, 0, x, y, thick, thick, fg, bg, 2);
+
+	      if(pPa->PaShape == PtCubicBezier ||
+		 pPa->PaShape == PtQuadraticBezier)
+		{
+		  /* Check if we draw Bezier Control */
+		  if(i == pointselect + 1)
+		    DrawBezierControl (frame, thick, xstart, ystart,
+				       xctrlstart, yctrlstart, bg, fg);
+		  
+		  i++;
+		}
+
+	      if(pPa->PaShape == PtCubicBezier ||
+		 pPa->PaShape == PtQuadraticBezier)
+		{
+		  /* Check if we draw Bezier Control */
+		  if(i == pointselect - 1)
+		    DrawBezierControl (frame, thick, xend, yend,
+				       xctrlend, yctrlend, bg, fg);
+		  
+		  i++;
+		}
+
+	      if(pointselect == 0 || pointselect == i)
+		/* Draw the end point of the path segment */
+		DrawRectangle (frame, 0, 0, xend, yend,
+			       thick, thick, fg, bg, 2);
+
               pPa = pPa->PaNext;
+	      i++;
             }
         }
       else if (pointselect != 0)

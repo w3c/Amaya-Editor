@@ -254,10 +254,7 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 
   /* Draw the shape */
   DrawShape ();
-#ifdef _WINDOWS
-  //if (frameId)
-  //  GL_Swap (frameId);
-#else /* _WINDOWS */
+#ifndef _WINDOWS
     pFrame->GetCanvas()->Refresh();
 #endif /* _WINDOWS */
 }

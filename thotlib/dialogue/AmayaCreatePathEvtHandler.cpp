@@ -618,10 +618,7 @@ void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
 			NULL,
 			FALSE, &currentX, &currentY);
   
-#ifdef _WINDOWS
-  //if (m_FrameId)
-   // GL_Swap (m_FrameId);
-#else /* _WINDOWS */
+#ifndef _WINDOWS
   m_pFrame->GetCanvas()->Refresh();
 #endif /* _WINDOWS */
 

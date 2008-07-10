@@ -1984,7 +1984,7 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
               pEl->ElLeafType == LtPath ||
               pEl->ElLeafType == LtGraphics)
             {
-              SelectedPointInPolyline = firstChar;
+	      SelectedPointInPolyline = firstChar;
               FirstSelectedChar = 0;
               LastSelectedChar = 0;
             }

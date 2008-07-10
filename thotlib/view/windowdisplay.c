@@ -2539,6 +2539,18 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+
+void DrawBezierControl (int frame, int size, int x_point, int y_point,
+			int x_ctrl, int y_ctrl, int color)
+{
+  InitDrawing (5, 1, bg);
+  DoDrawOneLine (frame, x_ctrl, y_ctrl, x_point, y_point);
+  DrawEllipsFrame (frame, 1, 5, x_ctrl - size/2, y_ctrl - size/2,
+		   size, size, color, color, 2);
+}
+
+/*----------------------------------------------------------------------
   DrawHorizontalLine draw a vertical line aligned top center or bottom
   depending on align value.
   parameter fg indicates the drawing color
@@ -3228,3 +3240,4 @@ void PaintWithPattern (int frame, int x, int y, int width, int height,
 {
   DrawRectangle (frame, 0, 0, x, y, width, height, fg, bg, 3);
 }
+
