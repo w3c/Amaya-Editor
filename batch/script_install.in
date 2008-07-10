@@ -78,6 +78,7 @@ ANNOTFILES="*.STR *.PRS *.TRA *.en *.gif *.png"
 DICOFILES="*.ptn *.dic alphabet clavier"
 RESOURCE_XRC_FILES="*.xrc"
 RESOURCE_ICONS_FILES="*.png *.ico *.gif"
+RESOURCE_PNG_FILES="*.png"
 FONTSFILES="Families.list fonts.dir icones* *.ttf *.TTF"
 
 $ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/amaya"
@@ -149,7 +150,7 @@ for i in $RESOURCE_ICONS_FILES ; do
 done ;
 cd - > /dev/null
 cd $AMAYA_SOURCEBINDIR/../../resources/icons/22x22
-for i in $RESOURCE_ICONS_FILES ; do
+for i in $RESOURCE_PNG_FILES ; do
 	  for file in `$ECHO $i` ; do
 	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/icons/22x22 ;
 	  done ;

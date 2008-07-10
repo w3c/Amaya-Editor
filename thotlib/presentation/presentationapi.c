@@ -34,6 +34,7 @@
 #include "appli_f.h"
 #include "applicationapi_f.h"
 #include "attributes_f.h"
+#include "buildboxes_f.h"
 #include "boxpositions_f.h"
 #include "boxselection_f.h"
 #include "callback_f.h"
@@ -2571,11 +2572,7 @@ void TtaGiveBoxSize (Element element, Document document, View view,
           pAb = AbsBoxOfEl ((PtrElement) element, view);
           if (pAb == NULL || pAb->AbBox == NULL)
             TtaError (ERR_element_has_no_box);
-          else if (pAb->AbEnclosing &&
-                   pAb->AbEnclosing->AbElement->ElStructSchema &&
-                   (strcmp (pAb->AbElement->ElStructSchema->SsName,"SVG") ||
-                    TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
-                                      pAb->AbElement->ElStructSchema)))
+          else if (IsSVGComponent (pAb->AbElement))
             {
               *width = pAb->AbBox->BxWidth;
               *height = pAb->AbBox->BxHeight;
@@ -2674,12 +2671,7 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
                 }
               else
                 {
-                  if (pAb->AbEnclosing &&
-                      pAb->AbEnclosing->AbElement->ElStructSchema &&
-                      (strcmp (pAb->AbElement->ElStructSchema->SsName,"SVG") ||
-                        TypeHasException (ExcIsDraw,
-                                          pAb->AbEnclosing->AbElement->ElTypeNumber,
-                                          pAb->AbEnclosing->AbElement->ElStructSchema)))
+                  if (IsSVGComponent (pAb->AbElement))
                     {
                       w = pAb->AbEnclosing->AbBox->BxW;
                       h = pAb->AbEnclosing->AbBox->BxH;

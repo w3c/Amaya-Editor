@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool IsSVGComponent ( PtrElement pEl );
 extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb,
                                          PtrAbstractBox pRoot );
 extern PtrAbstractBox GetParentTable ( PtrBox pBox );
@@ -83,6 +84,7 @@ extern ThotBool ChangeConcreteImage ( int frame,
 
 #else /* __STDC__ */
 
+extern ThotBool IsSVGComponent ( PtrElement pEl );
 extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb,
                                            PtrAbstractBox pRoot );
 extern PtrAbstractBox GetParentTable ( PtrBox pBox );

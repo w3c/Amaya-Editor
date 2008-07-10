@@ -100,6 +100,24 @@ static ThotBool EmbeddedScript = FALSE;
 
 
 /*----------------------------------------------------------------------
+  IsSVGComponent returns TRUE if the element is a SVG component and
+  then can be transformed.
+  ----------------------------------------------------------------------*/
+ThotBool IsSVGComponent (PtrElement pEl)
+{
+  if (pEl && pEl->ElStructSchema &&
+      pEl->ElStructSchema->SsName &&
+      !strcmp (pEl->ElStructSchema->SsName,"SVG") &&
+      pEl->ElParent && pEl->ElParent->ElStructSchema &&
+      pEl->ElParent->ElStructSchema->SsName &&
+      !strcmp (pEl->ElParent->ElStructSchema->SsName,"SVG"))
+     // the element and its parent are SVG elements
+    return TRUE;
+  else
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
   SearchNextAbsBox returns the first child or the next sibling or the
   next sibling of the father.
   When pRoot is not Null, the returned abstract box has to be included
@@ -4534,7 +4552,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
               /* check the font of the abstract box */
               height = pAb->AbSize;
               unit = pAb->AbSizeUnit;
-              if (pAb->AbLeafType == LtText)
+              if (pAb->AbLeafType == LtCompound &&
+                  pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
+                 pBox->BxFont = pAb->AbEnclosing->AbBox->BxFont;
+              else if (pAb->AbLeafType == LtText)
                 {
                   if (pAb->AbElement->ElLanguage < TtaGetFirstUserLanguage ())
                     /* ElLanguage is actually a script */
@@ -4631,7 +4652,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                         {
                           /* Si transformation polyline en graphique simple */
                           pAb->AbRealShape = pAb->AbShape;
-		      
                           /* remonte a la recherche d'un ancetre elastique */
                           pCurrentAb = pAb;
                           while (pCurrentAb != NULL)
@@ -4656,8 +4676,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                           /* Libere les anciens buffers */
                           FreePolyline (pBox);
                           /* Recopie les buffers du pave */
-                          pBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer,
-						     NULL);
+                          pBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
                           pBox->BxNChars = pAb->AbVolume;
 		      
                           /* remonte a la recherche d'un ancetre elastique */
