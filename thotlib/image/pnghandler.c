@@ -730,29 +730,34 @@ ThotDrawable PngCreate (char *fn, ThotPictInfo *imageDesc, int *b_w, int *b_h,
       return ((ThotDrawable) NULL);
     }
 
-#ifndef _GL
+#ifdef _GL
+  /* GL buffer are display independant, 
+  and already in the good format RGB, or RGBA*/
+  /* free the table of colors */
+  TtaFreeMemory (colrs);
+  *wif = w;
+  *hif = h;
+  *b_w = 0;
+  *b_h = 0;
+  return (ThotDrawable) buffer;
+#else /* _GL */
   if (bg >= 0 && colrs)
     {
 #ifdef _WINGUI
       if (Printing)
-	{
-	  TtaGiveThotRGB (bgColor, &red, &green, &blue);
-	  colrs[bg].red   = (unsigned char) red;
-	  colrs[bg].green = (unsigned char) green;
-	  colrs[bg].blue  = (unsigned char) blue;
-	  colrs[bg].pixel = ColorPixel (bgColor);
-	  bg = bgColor;
-	}
+        {
+          TtaGiveThotRGB (bgColor, &red, &green, &blue);
+          colrs[bg].red   = (unsigned char) red;
+          colrs[bg].green = (unsigned char) green;
+          colrs[bg].blue  = (unsigned char) blue;
+          colrs[bg].pixel = ColorPixel (bgColor);
+          bg = bgColor;
+        }
       else
-	/* register the transparent color index */
-	bg = TtaGetThotColor (colrs[bg].red, colrs[bg].green, colrs[bg].blue);
+        /* register the transparent color index */
+        bg = TtaGetThotColor (colrs[bg].red, colrs[bg].green, colrs[bg].blue);
       imageDesc->PicBgMask = bg;
 #endif /* _WINGUI */
-#ifdef _GTK
-      /* register the transparent mask */
-      imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, bg, bperpix);
-#endif /* _GTK */
-      
     }
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha, grayScale);
   TtaFreeMemory (buffer);
@@ -760,11 +765,6 @@ ThotDrawable PngCreate (char *fn, ThotPictInfo *imageDesc, int *b_w, int *b_h,
   if (withAlpha && bg == -1 && PngTransparentColor != -1)
     imageDesc->PicBgMask = PngTransparentColor;
 #endif /* _WINGUI */
-#else /* _GL */
-  /* GL buffer are display independant, 
-  and already in the good format RGB, or RGBA*/
-  pixmap = (ThotPixmap) buffer;
-#endif /*_GL*/
   /* free the table of colors */
   TtaFreeMemory (colrs);
   if (pixmap != None)
@@ -775,6 +775,7 @@ ThotDrawable PngCreate (char *fn, ThotPictInfo *imageDesc, int *b_w, int *b_h,
       *b_h = 0;
     }
   return (ThotDrawable) pixmap;
+#endif /*_GL*/
 }
 
 

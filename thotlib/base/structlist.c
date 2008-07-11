@@ -396,11 +396,10 @@ static void WrText (PtrTextBuffer pBT, int ind, int length, FILE *fileDescriptor
 static void WrPath (PtrPathSeg pPE, int length, FILE *fileDescriptor)
 {
   PtrPathSeg          b;
-  int                 l;
 
-  l = 0;
   b = pPE;
-  while (b && l < length)
+  if (length)
+  while (b)
     /* ecrit le contenu du path */
     {
       switch (b->PaShape)
@@ -443,14 +442,8 @@ static void WrPath (PtrPathSeg pPE, int length, FILE *fileDescriptor)
             putc ('0', fileDescriptor);
           break;
         }
-      if (l < length)
-        {
-          fprintf (fileDescriptor, "|");
-          /* element suivant du meme path */
-          b = b->PaNext;
-        }
-      else
-        fprintf (fileDescriptor, "...");
+      /* next path segment */
+      b = b->PaNext;
     }
 }
 
