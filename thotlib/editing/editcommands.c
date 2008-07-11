@@ -2264,7 +2264,7 @@ ThotBool AskPathEdit (  Document doc,
 		       int edit_type, Element el, int point)
 {
 
-  Element svgCanvas, svgAncestor;
+  Element svgCanvas = NULL, svgAncestor = NULL;
   PtrAbstractBox pAb;
   PtrBox pBox;
   ViewFrame          *pFrame;
@@ -2277,13 +2277,11 @@ ThotBool AskPathEdit (  Document doc,
 
   if(frame <= 0)return FALSE;
 
-  if(svgCanvas == NULL || svgAncestor == NULL)
-    if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
-      return FALSE;
-  ;
+  if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
+    return FALSE;
 
   /* Get the current transform matrix */
-  CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
+  CTM = (PtrTransform)TtaGetCurrentTransformMatrix(el, svgAncestor);
 
   if(CTM == NULL)
       inverse = NULL;

@@ -111,10 +111,18 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   ,hasBeenTransformed(transformApplied)
 {
   PtrAbstractBox pAb;
-  int elType;
   int i,j;
 
   *hasBeenTransformed = FALSE;
+
+  if (pFrame)
+    {
+      /* attach this handler to the canvas */
+      AmayaCanvas * p_canvas = pFrame->GetCanvas();
+      p_canvas->PushEventHandler(this);
+      pFrame->GetCanvas()->CaptureMouse();
+
+    }
 
   pAb = ((PtrElement)el) -> ElAbstractBox[0];
   if(!pAb && pAb -> AbBox)
@@ -124,10 +132,15 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
     }
   box = pAb -> AbBox;
 
-  elType = ((PtrElement)el)->ElTypeNumber;
+  /* Get the GRAPHICS leaf */
   leaf = TtaGetFirstLeaf((Element)el);
+  if(!leaf)
+    {
+    Finished = true;
+    return;
+    }
 
-  if(elType == 43 || elType == 45)
+  if(((PtrElement)leaf)->ElLeafType == LtPolyLine)
     {
       /* It's a polyline or a polygon */
 
@@ -156,7 +169,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 	  j++;
 	}
     }
-    else if(elType == 33)
+  else if(((PtrElement)leaf)->ElLeafType == LtPath)
     {
       /* It's a path: find the segment to edit */
 
@@ -229,15 +242,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
     {
       Finished = true;
       return;
-    }
-
-  if (pFrame)
-    {
-      /* attach this handler to the canvas */
-      AmayaCanvas * p_canvas = pFrame->GetCanvas();
-      p_canvas->PushEventHandler(this);
-      pFrame->GetCanvas()->CaptureMouse();
-
     }
 }
 
@@ -313,6 +317,7 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
   int dx, dy;
   ThotBool smooth = TRUE;
 
+  if (IsFinish())return;
 
   if(event.ShiftDown())smooth = FALSE;
 
