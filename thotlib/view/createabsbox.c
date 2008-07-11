@@ -1031,7 +1031,7 @@ static ThotBool ElemHasCondAttribute (PtrElement pEl, PtrCondition pCond,
 ThotBool ElemDoesNotCount (PtrElement pEl, ThotBool previous)
 {
   ThotBool    ignore = FALSE;
-  PtrElement  pChild;
+  PtrElement  pChild = NULL;
 
   if (pEl->ElTypeNumber == PageBreak + 1)
     /* ignore a page break */
@@ -4847,17 +4847,17 @@ static void GetRulesFromInheritedAttributes (PtrElement pEl,
                                              int *lqueue, RuleQueue* queue,
                                              PtrAbstractBox pNewAbbox, FILE *fileDescriptor)
 {
-  PtrAttribute       pAttr;
+  PtrAttribute       pAttr = NULL;
   PtrElement         pElAttr;
-  PtrSSchema	     pSSattr;
+  PtrSSchema	       pSSattr;
   PtrAttributePres   attrBlock;
   PtrPRule           pRule, pR;
   int                view, valNum, match;
 
   do
     {
-      if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l, pEl->ElStructSchema,
-                                         &pElAttr)) != NULL)
+      pAttr = GetTypedAttrAncestor (pFirstAncest, l, pEl->ElStructSchema, &pElAttr);
+      if (pAttr != NULL)
         {
           pFirstAncest = pElAttr->ElParent;
           view = AppliedView (pEl, pAttr, pDoc, viewNb);
@@ -4945,7 +4945,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                      FILE *fileDescriptor, ThotBool pseudoElOnly)
 {
   int                 i, view, l, valNum, match;
-  PtrPRule            pRuleView, pRule, pR;
+  PtrPRule            pRuleView, pRule = NULL, pR;
   PtrHandlePSchema    pHd;
   PtrPSchema          pSchPres, pSchPattr;
   PtrAttribute        pAttr;
@@ -5645,7 +5645,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                                ThotBool descent, ThotBool *complete)
 {
   PtrPSchema          pSchP, pSchPPage, pSPres;
-  PtrPRule            pRule, pRDef, pRSpec;
+  PtrPRule            pRule = NULL, pRDef, pRSpec;
   PtrElement          pElChild, pElParent, pAsc;
   PtrAbstractBox      pAbChild, pNewAbbox, pAbReturn, pAbPres;
   PtrAbstractBox      pPRP, pAb, pAbParent;

@@ -192,7 +192,7 @@ static void GetInheritedPRule (PtrPRule *pRule, PtrElement pEl,
                                PtrPSchema pSP)
 {
   PtrElement        pFirstAncest, pElAttr;
-  PtrAttribute      pA;
+  PtrAttribute      pA = NULL;
   PtrAttributePres  attrBlock;
   PtrPRule          pR;
   int               l, valNum, match;
@@ -209,9 +209,8 @@ static void GetInheritedPRule (PtrPRule *pRule, PtrElement pEl,
         /* look for all ancestors having this attribute */
         do
           {
-            if ((pA = GetTypedAttrAncestor (pFirstAncest, l,
-                                            pEl->ElStructSchema,
-                                            &pElAttr)) != NULL)
+            pA = GetTypedAttrAncestor (pFirstAncest, l, pEl->ElStructSchema, &pElAttr);
+            if (pA != NULL)
               /* pEl inherits from attribute l and an ancestor has this
                  attribute */
               {
