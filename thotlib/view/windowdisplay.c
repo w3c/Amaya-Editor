@@ -2546,7 +2546,7 @@ void DrawBezierControl (int frame, int size, int x_point, int y_point,
   InitDrawing (5, 1, bg);
   DoDrawOneLine (frame, x_ctrl, y_ctrl, x_point, y_point);
   DrawEllipsFrame (frame, 1, 5, x_ctrl - size, y_ctrl - size,
-		   size*2, size*2, fg, bg, 2);
+		   size*2+1, size*2+1, fg, bg, 2);
 }
 
 /*----------------------------------------------------------------------

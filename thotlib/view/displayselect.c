@@ -176,8 +176,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
         {
           /* Draw the points of the path */
           pPa = pAb->AbFirstPathSeg;
-          leftX = pBox->BxXOrg - pFrame->FrXOrg - halfThick;
-          topY = pBox->BxYOrg - pFrame->FrYOrg - halfThick;
+          leftX = pBox->BxXOrg - pFrame->FrXOrg;
+          topY = pBox->BxYOrg - pFrame->FrYOrg;
 	  i = 1;
 	  
           while (pPa)
@@ -214,7 +214,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		     )
 
 		    /* draw the start point of this path segment */
-		      DrawRectangle (frame, 0, 0, xstart, ystart,
+		      DrawRectangle (frame, 0, 0, xstart - halfThick,
+				     ystart - halfThick,
 				     thick, thick, fg, bg, 2);
 		  i++;
                 }
@@ -284,7 +285,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		      pPa->PaNext->PaShape == PtQuadraticBezier)  )
 		 )
 		/* Draw the end point of the path segment */
-		DrawRectangle (frame, 0, 0, xend, yend,
+		DrawRectangle (frame, 0, 0, xend - halfThick, yend - halfThick,
 			       thick, thick, fg, bg, 2);
 
               pPa = pPa->PaNext;
