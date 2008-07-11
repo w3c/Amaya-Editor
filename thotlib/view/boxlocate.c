@@ -191,9 +191,10 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
 static ThotBool IsNear(int x, int y, int x0, int y0)
 {
   int dx, dy;
+  int d = DELTA_SEL*2;
   dx = x - x0;
   dy = y - y0;
-  return ((dx*dx+dy*dy) <= DELTA_SEL*DELTA_SEL);
+  return ((dx*dx+dy*dy) <= d*d);
 }
 
 
@@ -307,264 +308,261 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
         y = 0;
       pAb = pFrame->FrAbstractBox;
       nChars = 0;
-      /*      if (button == 6 && SelectedPointInPolyline != 0 &&
-          FirstSelectedElement &&
-          FirstSelectedElement == LastSelectedElement &&
-          FirstSelectedElement->ElTerminal &&
-          FirstSelectedElement->ElLeafType == LtPolyLine)
-        ContentEditing (TEXT_INSERT);
-	else*/
-        {
-          extend = (button == 0 || button == 1);
-          /* get the selected box */
-          GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO, &nChars);
-          /* When it's an extended selection, avoid to extend to the
-             enclosing box */
-          if (extend)
-            {
-              if (pBox != pViewSel->VsBox &&
-                  IsParentBox (pBox, pViewSel->VsBox))
-                pBox = GetClickedLeafBox (frame, x, y, &pFlow);
-            }
-          else if (pBox && pBox->BxAbstractBox && FrameTable[frame].FrView == 1)
-            {
-              pEl = pBox->BxAbstractBox->AbElement;
-              if (pEl)
-                pEl = pEl->ElParent;
-              if (pEl && pEl->ElPrevious &&
-                  TypeHasException (ExcIsBreak, pEl->ElTypeNumber, pEl->ElStructSchema) &&
-                  !TypeHasException (ExcIsBreak, pEl->ElPrevious->ElTypeNumber, pEl->ElPrevious->ElStructSchema))
-                pBox = pBox->BxPrevious;
-            }
 
-          if (pBox)
-            {
+      
+      extend = (button == 0 || button == 1);
+
+      /* get the selected box */
+      GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO, &nChars);
+
+      /* When it's an extended selection, avoid to extend to the
+	 enclosing box */
+      if (extend)
+	{
+	  if (pBox != pViewSel->VsBox &&
+	      IsParentBox (pBox, pViewSel->VsBox))
+	    pBox = GetClickedLeafBox (frame, x, y, &pFlow);
+	}
+      else if (pBox && pBox->BxAbstractBox && FrameTable[frame].FrView == 1)
+	{
+	  pEl = pBox->BxAbstractBox->AbElement;
+	  if (pEl)
+	    pEl = pEl->ElParent;
+	  if (pEl && pEl->ElPrevious &&
+	      TypeHasException (ExcIsBreak, pEl->ElTypeNumber, pEl->ElStructSchema) &&
+	      !TypeHasException (ExcIsBreak, pEl->ElPrevious->ElTypeNumber, pEl->ElPrevious->ElStructSchema))
+	    pBox = pBox->BxPrevious;
+	}
+
+      if (pBox)
+	{
 #ifndef _GL
-              xOrg =  pBox->BxXOrg;
-              yOrg =  pBox->BxYOrg;
-              width = pBox->BxWidth;
-              height = pBox->BxHeight;
+	  xOrg =  pBox->BxXOrg;
+	  yOrg =  pBox->BxYOrg;
+	  width = pBox->BxWidth;
+	  height = pBox->BxHeight;
 #else /* _GL */
-              xOrg =  pBox->BxClipX;
-              yOrg =  pBox->BxClipY;
-              width = pBox->BxClipW;
-              height = pBox->BxClipH;
+	  xOrg =  pBox->BxClipX;
+	  yOrg =  pBox->BxClipY;
+	  width = pBox->BxClipW;
+	  height = pBox->BxClipH;
 #endif /* _GL */
-              if (pFlow)
-                {
-                  /* apply the box shift */
-                  xOrg += pFlow->FlXStart;
-                  yOrg += pFlow->FlYStart;
-                }
-              pAb = pBox->BxAbstractBox;
-              if (pAb->AbLeafType == LtText &&
-                  (!pAb->AbPresentationBox || pAb->AbCanBeModified))
-                {
-                  pos = x - xOrg;
-                  LocateClickedChar (pBox, frame, extend, &pBuffer, &pos,
-                                     &index, &nChars, &nSpaces);
-                  nChars = pBox->BxFirstChar + nChars;
-                  if (extend)
-                    {
-                      pEl = pAb->AbElement;
-                      if (DocSelectedAttr)
-                        {
-                          /* work within an attribute */
-                          firstC = FirstSelectedCharInAttr;
-                          firstEl = NULL;
-                        }
-                      else
-                        {
-                          firstC = FirstSelectedChar;
-                          firstEl = FirstSelectedElement;
-                        }
-                      if (pEl == firstEl && nChars < firstC)
-                        left = TRUE;
-                      else if (ElemIsBefore (pEl, firstEl))
-                        left = TRUE;
-                      else if (nChars == pBox->BxFirstChar &&
-                               pBox->BxFirstChar > 1 && pEl == firstEl)
-                        /* extension until the beginning of this box
-                           select the end of the previous box */
-                        nChars--;
-                      else if (y > yOrg + height &&
-                               pEl == LastSelectedElement &&
-                               LastSelectedElement &&
-                               nChars <= LastSelectedChar)
-                        nChars = LastSelectedElement->ElVolume + 1;
-                    }
-                }
-              else if (pAb->AbLeafType == LtSymbol && !extend)
-                {
-                  pos = x - xOrg;
-                  if (pos < width/2)
-                    nChars = 1;
-                  else
-                    nChars = 2;
-                }
-            }
-          else
-            {
-              pAb = NULL;
-              xOrg =  0;
-              yOrg =  0;
-              width = 0;
-              height = 0;
-            }
-
-          FrameToView (frame, &doc, &view);
-          if (pAb)
-            {
-              /* Initialization of the selection */
-              switch (button)
-                {
-                case 0:
-                  /* Extension of selection */
-                  if (SkipClickEvent)
-                    /* the application asks Thot to do nothing */
-                    return SkipClickEvent;
-                  ChangeSelection (frame, pAb, nChars, TRUE, left, FALSE, FALSE);
-                  break;
-                case 1:
-                  /* Extension of selection */
-                  if (SkipClickEvent)
-                    /* the application asks Thot to do nothing */
-                    return SkipClickEvent;
-                  ChangeSelection (frame, pAb, nChars, TRUE, left, FALSE, TRUE);
-                  break;
-                case 2:
-                  /* send event TteElemLClick.Pre to the application */
-                  el = pAb->AbElement;
-                  SkipClickEvent = NotifyClick (TteElemLClick, TRUE, el, doc);
-                  if (SkipClickEvent)
-                    /* the application asks Thot to do nothing */
-                    return SkipClickEvent;
-                  ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
-
-		  if(nChars > 0 && Selecting != NULL && el->ElStructSchema &&
-			 el->ElStructSchema->SsName &&
-			 !strcmp (el->ElStructSchema->SsName, "SVG"))
+	  if (pFlow)
+	    {
+	      /* apply the box shift */
+	      xOrg += pFlow->FlXStart;
+	      yOrg += pFlow->FlYStart;
+	    }
+	  pAb = pBox->BxAbstractBox;
+	  if (pAb->AbLeafType == LtText &&
+	      (!pAb->AbPresentationBox || pAb->AbCanBeModified))
+	    {
+	      pos = x - xOrg;
+	      LocateClickedChar (pBox, frame, extend, &pBuffer, &pos,
+				 &index, &nChars, &nSpaces);
+	      nChars = pBox->BxFirstChar + nChars;
+	      if (extend)
+		{
+		  pEl = pAb->AbElement;
+		  if (DocSelectedAttr)
 		    {
-		      /* Click on a point of a polyline or Path */
-		      *Selecting = FALSE;
-		      if(AskPathEdit(doc,
-				     0, (Element)el, nChars))
-			{
-			  /* The user has moved an SVG element */
-			  TtaSetDocumentModified(doc);
-			  return FALSE;
-			}
+		      /* work within an attribute */
+		      firstC = FirstSelectedCharInAttr;
+		      firstEl = NULL;
+		    }
+		  else
+		    {
+		      firstC = FirstSelectedChar;
+		      firstEl = FirstSelectedElement;
+		    }
+		  if (pEl == firstEl && nChars < firstC)
+		    left = TRUE;
+		  else if (ElemIsBefore (pEl, firstEl))
+		    left = TRUE;
+		  else if (nChars == pBox->BxFirstChar &&
+			   pBox->BxFirstChar > 1 && pEl == firstEl)
+		    /* extension until the beginning of this box
+		       select the end of the previous box */
+		    nChars--;
+		  else if (y > yOrg + height &&
+			   pEl == LastSelectedElement &&
+			   LastSelectedElement &&
+			   nChars <= LastSelectedChar)
+		    nChars = LastSelectedElement->ElVolume + 1;
+		}
+	    }
+	  else if (pAb->AbLeafType == LtSymbol && !extend)
+	    {
+	      pos = x - xOrg;
+	      if (pos < width/2)
+		nChars = 1;
+	      else
+		nChars = 2;
+	    }
+	}
+      else
+	{
+	  pAb = NULL;
+	  xOrg =  0;
+	  yOrg =  0;
+	  width = 0;
+	  height = 0;
+	}
+
+      FrameToView (frame, &doc, &view);
+      if (pAb)
+	{
+	  /* Initialization of the selection */
+	  switch (button)
+	    {
+	    case 0:
+	      /* Extension of selection */
+	      if (SkipClickEvent)
+		/* the application asks Thot to do nothing */
+		return SkipClickEvent;
+	      ChangeSelection (frame, pAb, nChars, TRUE, left, FALSE, FALSE);
+	      break;
+	    case 1:
+	      /* Extension of selection */
+	      if (SkipClickEvent)
+		/* the application asks Thot to do nothing */
+		return SkipClickEvent;
+	      ChangeSelection (frame, pAb, nChars, TRUE, left, FALSE, TRUE);
+	      break;
+	    case 2:
+	      /* send event TteElemLClick.Pre to the application */
+	      el = pAb->AbElement;
+	      SkipClickEvent = NotifyClick (TteElemLClick, TRUE, el, doc);
+	      if (SkipClickEvent)
+		/* the application asks Thot to do nothing */
+		return SkipClickEvent;
+		  
+
+	      ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
+
+	      if(nChars > 0 && Selecting != NULL && el->ElStructSchema &&
+		 el->ElStructSchema->SsName &&
+		 !strcmp (el->ElStructSchema->SsName, "SVG"))
+		{
+		  /* Click on a point of a polyline or Path */
+		  *Selecting = FALSE;
+		  if(AskPathEdit(doc,
+				 0, (Element)el, nChars))
+		    {
+		      /* The user has moved an SVG element */
+		      TtaSetDocumentModified(doc);
 		      return FALSE;
 		    }
+		  return FALSE;
+		}
 
-                  /* the document can be reloaded */
-                  pAb = pFrame->FrAbstractBox;
-                  nChars = 0;
-                  GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO, &nChars);
+	      /* the document can be reloaded */
+	      pAb = pFrame->FrAbstractBox;
+	      nChars = 0;
+	      GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO, &nChars);
 
-                  if (pBox && pBox->BxAbstractBox)
-                    {
-                      el = pBox->BxAbstractBox->AbElement;
+	      if (pBox && pBox->BxAbstractBox)
+		{
+		  el = pBox->BxAbstractBox->AbElement;
 
-		      if(Selecting != NULL && el->ElStructSchema &&
-			 el->ElStructSchema->SsName &&
-			 !strcmp (el->ElStructSchema->SsName, "SVG"))
+		  if(Selecting != NULL && el->ElStructSchema &&
+		     el->ElStructSchema->SsName &&
+		     !strcmp (el->ElStructSchema->SsName, "SVG"))
+		    {
+		      /* click on an SVG element. Does the user want to
+			 move it ? */
+		      GetDocAndView (frame, &pDoc, &view);
+		      if(!(pDoc->DocReadOnly) &&
+			 !(ElementIsReadOnly(pEl)))
 			{
-			  /* click on an SVG element. Does the user want to
-			     move it ? */
-			  GetDocAndView (frame, &pDoc, &view);
-			  if(!(pDoc->DocReadOnly) &&
-			     !(ElementIsReadOnly(pEl)))
-			    {
-			      *Selecting = FALSE;
-			      if(AskTransform(doc,
+			  *Selecting = FALSE;
+			  if(AskTransform(doc,
 					  NULL,
 					  NULL,
 					  0, (Element)el))
-				{
-				  /* The user has moved an SVG element */
-				  TtaSetDocumentModified(doc);
-				  return FALSE;
-				}
+			    {
+			      /* The user has moved an SVG element */
+			      TtaSetDocumentModified(doc);
+			      return FALSE;
 			    }
 			}
+		    }
 
-                      NotifyClick (TteElemLClick, FALSE, el, doc);
-                    }
-                  break;
-                case 3:
-                  if (!ChangeSelection (frame, pAb, nChars, FALSE, TRUE, TRUE, FALSE) &&
-                      pAb->AbLeafType == LtText &&
-                      (!pAb->AbPresentationBox || pAb->AbCanBeModified))
-                    SelectCurrentWord (frame, pBox, nChars, index, pBuffer,
-                                       TRUE);
-                  break;
-                case 4:
-                  if (SkipClickEvent)
-                    /* the application asks Thot to do nothing */
-                    return SkipClickEvent;
-                  /* check if the curseur is within the box */
-                  if ((x >= xOrg && x <= xOrg + width &&
-                       y >= yOrg && y <= yOrg + height) ||
-                      GetParentWithException (ExcClickableSurface, pAb))
-                    {
-                      /* send event TteElemClick.Pre to the application */
-                      el = pAb->AbElement;
-                      if (NotifyClick (TteElemClick, TRUE, el, doc))
-                        /* the application asks Thot to do nothing */
-                        return TRUE;
-                      /* send event TteElemClick.Post to the application */
-                      NotifyClick (TteElemClick, FALSE, el, doc);
-                    }
-                  break;
-                case 5:
-                  /* check if the curseur is within the box */
-                  if (x >= xOrg && x <= xOrg + width &&
-                      y >= yOrg && y <= yOrg + height)
-                    {
-                      /* send event TteElemMClick.Pre to the application */
-                      el = pAb->AbElement;
-                      if (NotifyClick (TteElemMClick, TRUE, el, doc))
-                        /* the application asks Thot to do nothing */
-                        return TRUE;
-                    }
+		  NotifyClick (TteElemLClick, FALSE, el, doc);
+		}
+	      break;
+	    case 3:
+	      if (!ChangeSelection (frame, pAb, nChars, FALSE, TRUE, TRUE, FALSE) &&
+		  pAb->AbLeafType == LtText &&
+		  (!pAb->AbPresentationBox || pAb->AbCanBeModified))
+		SelectCurrentWord (frame, pBox, nChars, index, pBuffer,
+				   TRUE);
+	      break;
+	    case 4:
+	      if (SkipClickEvent)
+		/* the application asks Thot to do nothing */
+		return SkipClickEvent;
+	      /* check if the curseur is within the box */
+	      if ((x >= xOrg && x <= xOrg + width &&
+		   y >= yOrg && y <= yOrg + height) ||
+		  GetParentWithException (ExcClickableSurface, pAb))
+		{
+		  /* send event TteElemClick.Pre to the application */
+		  el = pAb->AbElement;
+		  if (NotifyClick (TteElemClick, TRUE, el, doc))
+		    /* the application asks Thot to do nothing */
+		    return TRUE;
+		  /* send event TteElemClick.Post to the application */
+		  NotifyClick (TteElemClick, FALSE, el, doc);
+		}
+	      break;
+	    case 5:
+	      /* check if the curseur is within the box */
+	      if (x >= xOrg && x <= xOrg + width &&
+		  y >= yOrg && y <= yOrg + height)
+		{
+		  /* send event TteElemMClick.Pre to the application */
+		  el = pAb->AbElement;
+		  if (NotifyClick (TteElemMClick, TRUE, el, doc))
+		    /* the application asks Thot to do nothing */
+		    return TRUE;
+		}
 #if defined(_UNIX) && !defined(_MACOS)
-                  if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
-                    (*(Proc2)MenuActionList[CMD_PasteFromClipboard].Call_Action) (
-                                                                                  (void*)doc,
-                                                                                  (void*)view);
+	      if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
+		(*(Proc2)MenuActionList[CMD_PasteFromClipboard].Call_Action) (
+									      (void*)doc,
+									      (void*)view);
 #endif /* _UNIX && !_MACOS */
-                  break;
-                case 6:
-                  /* check if the curseur is within the box */
-                  if (x >= xOrg && x <= xOrg + width &&
-                      y >= yOrg && y <= yOrg + height)
-                    {
-                      /* send event TteElemRClick.Pre to the application */
-                      el = pAb->AbElement;
-                      if (NotifyClick (TteElemRClick, TRUE, el, doc))
-                        /* the application asks Thot to do nothing */
-                        return TRUE;
-                    }
-                  TtaSetDialoguePosition ();
-                  if (ThotLocalActions[T_insertpaste] != NULL)
-                    (*(Proc4)ThotLocalActions[T_insertpaste]) (
-                                                               (void *)TRUE,
-                                                               (void *)FALSE,
-                                                               (void *)'R',
-                                                               (void *)&ok);
-                  else if (x >= xOrg && x <= xOrg + pBox->BxW &&
-                           y >= yOrg && y <= yOrg + pBox->BxH)
-                    /* send event TteElemRClick.Post to the application */
-                    NotifyClick (TteElemRClick, FALSE, el, doc);
-                  break;
-                case 7: /* reset the previous selection */
-                  ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
-                  break;
-                default: break;
-                }
-            }
-        }
+	      break;
+	    case 6:
+	      /* check if the curseur is within the box */
+	      if (x >= xOrg && x <= xOrg + width &&
+		  y >= yOrg && y <= yOrg + height)
+		{
+		  /* send event TteElemRClick.Pre to the application */
+		  el = pAb->AbElement;
+		  if (NotifyClick (TteElemRClick, TRUE, el, doc))
+		    /* the application asks Thot to do nothing */
+		    return TRUE;
+		}
+	      TtaSetDialoguePosition ();
+	      if (ThotLocalActions[T_insertpaste] != NULL)
+		(*(Proc4)ThotLocalActions[T_insertpaste]) (
+							   (void *)TRUE,
+							   (void *)FALSE,
+							   (void *)'R',
+							   (void *)&ok);
+	      else if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		       y >= yOrg && y <= yOrg + pBox->BxH)
+		/* send event TteElemRClick.Post to the application */
+		NotifyClick (TteElemRClick, FALSE, el, doc);
+	      break;
+	    case 7: /* reset the previous selection */
+	      ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
+	      break;
+	    default: break;
+	    }
+	}
     }
   return FALSE;
 }
@@ -928,9 +926,20 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 	{
 	  if(IsNear(x, y, xctrlstart, yctrlstart))
 	    {
-	      /* The user is clicking on a control point */
-	      *pointselect = i;
-	      return TRUE;
+	      /* The user is clicking on a control point: is the selection
+		 active?
+
+		                       i
+		  O---------x----------O
+
+	      */
+	      if(SelectedPointInPolyline == i ||
+		 SelectedPointInPolyline == i-1 ||
+		 SelectedPointInPolyline == i-2)
+		{
+		  *pointselect = i;
+		  return TRUE;
+		}
 	    }
 
 	  i++;
@@ -940,9 +949,20 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 	{
 	  if(IsNear(x, y, xctrlend, yctrlend))
 	    {
-	      /* The user is clicking on a control point */
-	      *pointselect = i;
-	      return TRUE;
+	      /* The user is clicking on a control point: is the selection
+		 active?
+
+		  i                     
+		  O---------x----------O
+
+	      */
+	      if(SelectedPointInPolyline == i ||
+		 SelectedPointInPolyline == i+1 ||
+		 SelectedPointInPolyline == i+2)
+		{
+		  *pointselect = i;
+		  return TRUE;
+		}
 	    }
 
 	  i++;
@@ -1703,7 +1723,7 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
                   y -= pBox->BxYOrg;
 
 		  if(GetPathPoint(pAb->AbFirstPathSeg,
-				  lowerX, y, frame, pointselect))
+				  x, y, frame, pointselect))
 		    return pBox;
 
                   /* builds the list of points representing the path */

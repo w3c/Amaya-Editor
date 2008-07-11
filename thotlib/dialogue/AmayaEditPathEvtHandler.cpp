@@ -83,7 +83,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler() : wxEvtHandler()
  *----------------------------------------------------------------------*/
 AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 						 Document doc,
-						 void *CTM,
 						 void *inverse,
 						 int ancestorX,
 						 int ancestorY,
@@ -98,7 +97,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   ,pFrame(p_frame)
   ,FrameId(p_frame->GetFrameId())
   ,document(doc)
-  ,CTM(CTM)
   ,inverse(inverse)
   ,x0(ancestorX)
   ,y0(ancestorY)

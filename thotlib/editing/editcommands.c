@@ -2277,6 +2277,7 @@ ThotBool AskPathEdit (  Document doc,
 
   if(frame <= 0)return FALSE;
 
+  /* Get the ancestor and svg canvas */
   if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
     return FALSE;
 
@@ -2289,6 +2290,7 @@ ThotBool AskPathEdit (  Document doc,
     {
       /* Get the inverse of the CTM and free the CTM */
       inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
+      TtaFreeTransform(CTM);
 
       if(inverse == NULL)
 	{
@@ -2313,15 +2315,14 @@ ThotBool AskPathEdit (  Document doc,
 
   /* Call the interactive module */
   transformApplied = PathEdit (frame,
-				   doc, 
-				   CTM, inverse,
-				   ancestorX, ancestorY,
-				   canvasWidth, canvasHeight,
-				   edit_type,
-			           el, point);
+			       doc, 
+			       inverse,
+			       ancestorX, ancestorY,
+			       canvasWidth, canvasHeight,
+			       edit_type,
+			       el, point);
 
   /* Free the transform matrix */
-  if(CTM)TtaFreeTransform(CTM);
   if(inverse)TtaFreeTransform(inverse);
 
   /* Update the transform */

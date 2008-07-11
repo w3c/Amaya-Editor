@@ -21,7 +21,6 @@ class AmayaEditPathEvtHandler : public wxEvtHandler
   AmayaEditPathEvtHandler();
   AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 			  Document doc,
-			  void *CTM,
 			  void *inverse,
 			  int ancestorX, int ancestorY,
 			  int canvasWidth, int canvasHeight,

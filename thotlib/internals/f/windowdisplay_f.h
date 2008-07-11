@@ -241,7 +241,8 @@ extern void DrawBezierControl ( int frame,
                                 int y_point,
                                 int x_ctrl,
                                 int y_ctrl,
-                                int color );
+                                int bg,
+                                int fg );
 extern void DrawHorizontalLine ( int frame,
                                  int thick,
                                  int style,
@@ -595,7 +596,8 @@ extern void DrawBezierControl ( int frame,
                                   int y_point,
                                   int x_ctrl,
                                   int y_ctrl,
-                                  int color );
+                                  int bg,
+                                  int fg );
 extern void DrawHorizontalLine ( int frame,
                                    int thick,
                                    int style,

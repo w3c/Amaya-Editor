@@ -220,8 +220,9 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		  i++;
                 }
 
-	      if(pPa->PaShape == PtCubicBezier ||
-		 pPa->PaShape == PtQuadraticBezier)
+	      if(pointselect > 0 &&
+		 (pPa->PaShape == PtCubicBezier ||
+		 pPa->PaShape == PtQuadraticBezier))
 		{
 		  /* Check if we draw Bezier Control */
 		  if(
@@ -247,8 +248,9 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		  i++;
 		}
 
-	      if(pPa->PaShape == PtCubicBezier ||
-		 pPa->PaShape == PtQuadraticBezier)
+	      if(pointselect > 0 &&
+		 (pPa->PaShape == PtCubicBezier ||
+		  pPa->PaShape == PtQuadraticBezier))
 		{
 		  /* Check if we draw Bezier Control */
 		  if(
