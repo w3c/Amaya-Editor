@@ -868,7 +868,7 @@ void GetDelayedRule (PtrPRule *pR, PtrPSchema *pSP, PtrAbstractBox *pAbb,
   ----------------------------------------------------------------------*/
 void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
 {
-  PtrPRule            pRule;
+  PtrPRule            pRule = NULL;
   PtrPSchema          pSPres;
   PtrAttribute        pAttr;
   PtrAbstractBox      pAb, pAbb;

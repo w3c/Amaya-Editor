@@ -172,7 +172,7 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
   PtrElement          pEl;
   int                 view;
   PtrAbstractBox      pAbCur, pPRP;
-  PtrPRule            pRule, checkedRule;
+  PtrPRule            pRule = NULL, checkedRule;
   PtrPSchema          pSchP;
   PtrAttribute        pAttr;
 
