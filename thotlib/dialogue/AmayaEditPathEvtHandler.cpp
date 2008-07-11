@@ -42,12 +42,18 @@
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
+static void GetSymetricPoint(int x, int y, int x0, int y0,
+			     int *symx, int *symy)
+{
+  *symx = 2*x0 - x;
+  *symy = 2*y0 - y;
+}
 
 extern void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
 					    float *Y, float *width,
 					    float *height);
 
-static  PtrPathSeg          pPa;
+static  PtrPathSeg          pPaCurrent, pPaPrevious = NULL, pPaNext = NULL;
 static  PtrTextBuffer       pBuffer;
 static  int i_poly;
 static  Element leaf;
@@ -111,6 +117,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 {
   PtrAbstractBox pAb;
   int i,j;
+  PtrPathSeg          pPa, pPaStart;
 
   *hasBeenTransformed = FALSE;
 
@@ -160,7 +167,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 	  if(i == point_number)
 	    {
 	      /* Moving a point of a polyline/polygon  */
-	      type = 5;
+	      type = 6;
 	      i_poly = j;
 	      break;
 	    }
@@ -174,76 +181,108 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 
       i = 1;
       *Nseg = 0;
+
+      printf("EditPath:%d\n", point_number);
       
       pPa = ((PtrElement)leaf)->ElFirstPathSeg;
   
       while (pPa)
 	{
 	  if ((pPa->PaNewSubpath || !pPa->PaPrevious))
-		{
-		  if(i == point_number)
-		    {
-		      /* Moving the first point of subpath */
-		      type = 0;
-		      break;
-		    }
-
-
-		  i++;
-                }
-
-	      if(pPa->PaShape == PtCubicBezier ||
-		 pPa->PaShape == PtQuadraticBezier)
-		{
-		  if(i == point_number)
-		    {
-		      /* Moving the start control point */
-		      type = 1;
-		      break;
-		    }
-	  
-		  i++;
-		}
-
-	      if(pPa->PaShape == PtCubicBezier ||
-		 pPa->PaShape == PtQuadraticBezier)
-		{
-		  if(i == point_number)
-		    {
-		      /* Moving the end control point */
-		      type = 2;
-		      break;
-		    }
-		  i++;
-		}
-
+	    {
+	      /* this path segment starts a new subpath */
+	      pPaStart = pPa;
+	      
 	      if(i == point_number)
 		{
-		  if(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+		  /* Moving the first point of subpath */
+		  type = 0;
+		  break;
+		}
+	      
+	      i++;
+	    }
+
+	  if(pPa->PaShape == PtCubicBezier ||
+	     pPa->PaShape == PtQuadraticBezier)
+	    {
+	      
+	      if(i == point_number)
+		{
+		  if(pPa->PaNewSubpath || !pPa->PaPrevious)
 		    {
-		      /* Moving a point in the path */
-		      type = 3;
+		      /* Moving the start control point of a subpath */
+		      type = 1;
 		      break;
 		    }
 		  else
 		    {
-		      /* Moving the last point of a subpath */
-		      type = 4;
+		      /* Moving a start control point */
+		      type = 2;
+		      pPaPrevious = pPa->PaPrevious;
 		      break;
 		    }
 		}
-
 	      i++;
-              pPa = pPa->PaNext;
-	      *Nseg++;
-            }
 
-      if(type == 0)
-	{
-	  /* We want to move the first point of a subpath */
+	      if(i == point_number)
+		{
+		  /* Moving the end control point */
+		  type = 3;
+		  break;
+		}
+	      i++;
+	    }
+
+	  if(i == point_number)
+	    {
+	      if(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+		{
+		  /* Moving a point in the path */
+		  type = 4;
+		  pPaNext = pPa->PaNext;
+		  break;
+		}
+	      else
+	      {
+		  /* Moving the last point of a subpath */
+		  type = 5;
+		  break;
+		}
+	    }
+	  
+	  i++;
+	  pPa = pPa->PaNext;
+	  *Nseg++;
 	}
-      else if(type == 1)
+
+      pPaCurrent = pPa;
+
+      if(type == 0 || type == 1)
 	{
+	  /* We want to edit the first point of a subpath:
+	   is the last point at the same position? */
+	  while(pPa)
+	    {
+	      if(!pPa->PaNext || pPa->PaNext->PaNewSubpath)
+		{
+		  if(pPa->XEnd == pPaCurrent->XStart &&
+		     pPa->YEnd == pPaCurrent->YStart)
+		    pPaPrevious = pPa;
+		  break;
+		}
+
+	      pPa = pPa->PaNext;
+	      *Nseg++;
+	    }
+	}
+      else if(type == 3 || type == 5)
+	{
+	  /* We want to edit the last point of a subpath:
+	   is the first point at the same position? */
+	  if(pPaStart->XStart == pPaCurrent->XEnd &&
+	     pPaStart->YStart == pPaCurrent->YEnd)
+	    pPaNext = pPaStart;
 	}
       
       /* Go to the end of the path to see how many segment there are */
@@ -376,67 +415,85 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
       switch(type)
 	{
 	case 0:
-	  /* Moving the start control point */
-	  pPa->XStart += dx;
-	  pPa->YStart += dy;
-	  pPa->XCtrlStart += dx;
-	  pPa->YCtrlStart += dy;
+	  /* Moving a start point */
+	  pPaCurrent->XStart += dx;
+	  pPaCurrent->YStart += dy;
+	  pPaCurrent->XCtrlStart += dx;
+	  pPaCurrent->YCtrlStart += dy;
+
+	  if(pPaPrevious)
+	    {
+	      pPaPrevious->XEnd += dx;
+	      pPaPrevious->YEnd += dy;
+	      pPaPrevious->XCtrlEnd += dx;
+	      pPaPrevious->YCtrlEnd += dy;
+	    }
 	  break;
 
 	case 1:
-	  /* Moving the start control point */
-	  pPa->XCtrlStart += dx;
-	  pPa->YCtrlStart += dy;
-
-	  if(smooth && pPa->PaPrevious && !(pPa->PaNewSubpath) &&
-	     (pPa->PaPrevious->PaShape == PtCubicBezier ||
-	      pPa->PaPrevious->PaShape == PtQuadraticBezier))
-	    {
-	      /* Update the other control point */
-	      pPa->PaPrevious->XCtrlEnd = 2*pPa->XStart - pPa->XCtrlStart;
-	      pPa->PaPrevious->YCtrlEnd = 2*pPa->YStart - pPa->YCtrlStart;
-	    }
-
-	  break;
-
+	  /* Moving the start control point of a new subpath */
 	case 2:
-	  /* Moving the end control point */
-	  pPa->XCtrlEnd += dx;
-	  pPa->YCtrlEnd += dy;
+	  /* Moving the start control point */
+	  pPaCurrent->XCtrlStart += dx;
+	  pPaCurrent->YCtrlStart += dy;
 
-	  if(smooth && pPa->PaNext && !(pPa->PaNext->PaNewSubpath) &&
-	     (pPa->PaNext->PaShape == PtCubicBezier ||
-	      pPa->PaNext->PaShape == PtQuadraticBezier))
+	  if(smooth && pPaPrevious &&
+	     (pPaPrevious->PaShape == PtCubicBezier ||
+	      pPaPrevious->PaShape == PtQuadraticBezier))
 	    {
 	      /* Update the other control point */
-	      pPa->PaNext->XCtrlStart = 2*pPa->XEnd - pPa->XCtrlEnd;
-	      pPa->PaNext->YCtrlStart = 2*pPa->YEnd - pPa->YCtrlEnd;
+	      GetSymetricPoint(pPaCurrent->XCtrlStart,
+			       pPaCurrent->YCtrlStart,
+			       pPaCurrent->XStart,
+			       pPaCurrent->YStart,
+
+			       &(pPaPrevious->XCtrlEnd),
+			       &(pPaPrevious->YCtrlEnd));
 	    }
 
 	  break;
 
 	case 3:
-	  /* Moving a point in the path */
-	  pPa->XCtrlEnd += dx;
-	  pPa->YCtrlEnd += dy;
-	  pPa->XEnd += dx;
-	  pPa->YEnd += dy;
-	  pPa->PaNext->XStart += dx;
-	  pPa->PaNext->YStart += dy;
-	  pPa->PaNext->XCtrlStart += dx;
-	  pPa->PaNext->YCtrlStart += dy;
+	  /* Moving the end control point */
+	  pPaCurrent->XCtrlEnd += dx;
+	  pPaCurrent->YCtrlEnd += dy;
+
+	  if(smooth && pPaNext && 
+	     (pPaNext->PaShape == PtCubicBezier ||
+	      pPaNext->PaShape == PtQuadraticBezier))
+	    {
+	      /* Update the other control point */
+	      GetSymetricPoint(pPaCurrent->XCtrlEnd,
+			       pPaCurrent->YCtrlEnd,
+			       pPaCurrent->XEnd,
+			       pPaCurrent->YEnd,
+
+			       &(pPaNext->XCtrlStart),
+			       &(pPaNext->YCtrlStart));
+	    }
 
 	  break;
 
 	case 4:
+	  /* Moving a point in the path */
+	case 5:
 	  /* Moving the last point of a subpath */
-	  pPa->XCtrlEnd += dx;
-	  pPa->YCtrlEnd += dy;
-	  pPa->XEnd += dx;
-	  pPa->YEnd += dy;
+	  pPaCurrent->XCtrlEnd += dx;
+	  pPaCurrent->YCtrlEnd += dy;
+	  pPaCurrent->XEnd += dx;
+	  pPaCurrent->YEnd += dy;
+
+	  if(pPaNext)
+	    {
+	      pPaNext->XStart += dx;
+	      pPaNext->YStart += dy;
+	      pPaNext->XCtrlStart += dx;
+	      pPaNext->YCtrlStart += dy;
+	    }
+
 	  break;
 
-	case 5:
+	case 6:
 	  /* Moving a point of a polyline/polygon  */
 	  pBuffer->BuPoints[i_poly].XCoord += dx;
 	  pBuffer->BuPoints[i_poly].YCoord += dy;

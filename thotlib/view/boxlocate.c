@@ -445,6 +445,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		 !strcmp (el->ElStructSchema->SsName, "SVG"))
 		{
 		  /* Click on a point of a polyline or Path */
+		  SelectedPointInPolyline = nChars;
 		  *Selecting = FALSE;
 		  if(AskPathEdit(doc,
 				 0, (Element)el, nChars))
@@ -887,9 +888,13 @@ static PtrBox  GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame,
 static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 				     int frame, int *pointselect)
 {
-  int i = 1;
+  int i;
   int                 xstart, ystart, xctrlstart, yctrlstart;
   int                 xend, yend, xctrlend, yctrlend;
+  PtrPathSeg          pPaStart;
+  int i_start;
+
+  i = 1;
 
   while(pPa)
     {
@@ -913,6 +918,9 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
       if ((pPa->PaNewSubpath || !pPa->PaPrevious))
 	{
 	  /* It's a new subpath */
+	  pPaStart = pPa;
+	  i_start = i;
+
 	  if(IsNear(x, y, xstart, ystart))
 	    {
 	      /* The user is clicking on a point of the path */
@@ -922,20 +930,27 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 	  i++;
 	}
 
-      if(pPa->PaShape == PtQuadraticBezier || pPa->PaShape == PtCubicBezier)
+      if(SelectedPointInPolyline > 0 &&
+	 pPa->PaShape == PtQuadraticBezier || pPa->PaShape == PtCubicBezier)
 	{
 	  if(IsNear(x, y, xctrlstart, yctrlstart))
 	    {
 	      /* The user is clicking on a control point: is the selection
 		 active?
 
-		                       i
+		  i-2      i-1         i
 		  O---------x----------O
 
 	      */
-	      if(SelectedPointInPolyline == i ||
-		 SelectedPointInPolyline == i-1 ||
-		 SelectedPointInPolyline == i-2)
+	      if(SelectedPointInPolyline == i || /* Current control selected */
+		 SelectedPointInPolyline == i-1 || /* A point is selected */
+		 (SelectedPointInPolyline == i-2 /* Previous control point
+						    selected */
+		  && !(pPa->PaNewSubpath) &&
+		  pPa->PaPrevious &&
+		  (pPa->PaPrevious->PaShape == PtCubicBezier ||
+		   pPa->PaPrevious->PaShape == PtQuadraticBezier))
+		 )
 		{
 		  *pointselect = i;
 		  return TRUE;
@@ -943,22 +958,24 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 	    }
 
 	  i++;
-	}
 
-      if(pPa->PaShape == PtQuadraticBezier || pPa->PaShape == PtCubicBezier)
-	{
 	  if(IsNear(x, y, xctrlend, yctrlend))
 	    {
 	      /* The user is clicking on a control point: is the selection
 		 active?
 
-		  i                     
+		  i         i+1       i+2
 		  O---------x----------O
 
 	      */
 	      if(SelectedPointInPolyline == i ||
 		 SelectedPointInPolyline == i+1 ||
-		 SelectedPointInPolyline == i+2)
+
+		 (SelectedPointInPolyline == i+2 &&/* Next control selected */
+		  pPa->PaNext && !(pPa->PaNext->PaNewSubpath)
+		  && (pPa->PaNext->PaShape == PtCubicBezier ||
+		      pPa->PaNext->PaShape == PtQuadraticBezier)  )
+		 )
 		{
 		  *pointselect = i;
 		  return TRUE;
@@ -973,6 +990,53 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 	  /* The user is clicking on a point of the path */
 	  *pointselect = i;
 	  return TRUE;
+	}
+
+      if(!pPa->PaNext || pPa->PaNext->PaNewSubpath)
+	{
+	  /* Check if the first and last point of the subpath are
+	     connected using a Bezier fragment */
+	  if((pPaStart->PaShape == PtCubicBezier ||
+	      pPaStart->PaShape == PtQuadraticBezier) &&
+	     (pPa->PaShape == PtCubicBezier ||
+	      pPa->PaShape == PtQuadraticBezier) &&
+	     pPa->XEnd == pPaStart->XStart &&
+	     pPa->YEnd == pPaStart->YStart)
+	    {
+	      if(SelectedPointInPolyline == i ||
+		 SelectedPointInPolyline == i-1)
+		{
+		  /* Last point of the subpath is active, check if the user
+		     is clicking on the first control point of the subpath */
+		  xctrlstart = PixelValue (pPaStart->XCtrlStart,
+					   UnPixel, NULL,
+					   ViewFrameTable[frame - 1].FrMagnification);
+		  yctrlstart = PixelValue (pPaStart->YCtrlStart,
+					   UnPixel, NULL,
+					   ViewFrameTable[frame - 1].FrMagnification);
+
+		  if(IsNear(x, y, xctrlstart, yctrlstart))
+		    {
+		      *pointselect = i_start + 1;
+		      return TRUE;
+		    }
+		}
+	      else if(SelectedPointInPolyline == i_start ||
+		      SelectedPointInPolyline == i_start+1)
+		{
+		  /* First point of the subpath is active, check if the user
+		     is clicking on the last control point of the subpath */
+		  xctrlend = PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
+					 ViewFrameTable[frame - 1].FrMagnification);
+		  yctrlend = PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
+					 ViewFrameTable[frame - 1].FrMagnification);
+		  if(IsNear(x, y, xctrlend, yctrlend))
+		    {
+		      *pointselect = i - 1;
+		      return TRUE;
+		    }
+		}
+	    }
 	}
 
       i++;
@@ -1724,7 +1788,7 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 
 		  if(GetPathPoint(pAb->AbFirstPathSeg,
 				  x, y, frame, pointselect))
-		    return pBox;
+		      return pBox;
 
                   /* builds the list of points representing the path */
                   points = BuildPolygonForPath (pAb->AbFirstPathSeg, frame,

@@ -49,7 +49,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
   PtrTextBuffer       pBuffer;
-  PtrPathSeg          pPa;
+  PtrPathSeg          pPa, pPaStart;
   PtrElement          pEl;
   int                 leftX, middleX, rightX;
   int                 topY, middleY, bottomY;
@@ -60,6 +60,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
   int                 xstart, ystart, xctrlstart, yctrlstart;
   int                 xend, yend, xctrlend, yctrlend;
   ThotBool            svg_or_img;
+  int i_start;
 
   if (pBox)
     {
@@ -203,6 +204,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
               if ((pPa->PaNewSubpath || !pPa->PaPrevious))
 		{
 		  /* this path segment starts a new subpath */
+		  pPaStart = pPa;
+		  i_start = i;
 
                   if(pointselect == 0 || /* The whole path is selected */
 		     pointselect == i || /* Current point selected */
@@ -246,12 +249,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 				       xctrlstart, yctrlstart, bg, fg);
 		  
 		  i++;
-		}
 
-	      if(pointselect > 0 &&
-		 (pPa->PaShape == PtCubicBezier ||
-		  pPa->PaShape == PtQuadraticBezier))
-		{
+
 		  /* Check if we draw Bezier Control */
 		  if(
 		     /*
@@ -289,6 +288,62 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		/* Draw the end point of the path segment */
 		DrawRectangle (frame, 0, 0, xend - halfThick, yend - halfThick,
 			       thick, thick, fg, bg, 2);
+	
+	      if(!pPa->PaNext || pPa->PaNext->PaNewSubpath)
+		{
+		  /* Check if the first and last point of the subpath are
+		     connected using a Bezier fragment */
+		  if((pPaStart->PaShape == PtCubicBezier ||
+		      pPaStart->PaShape == PtQuadraticBezier) &&
+		    (pPa->PaShape == PtCubicBezier ||
+		     pPa->PaShape == PtQuadraticBezier) &&
+		     pPa->XEnd == pPaStart->XStart &&
+		     pPa->YEnd == pPaStart->YStart)
+		    {
+		      if(pointselect == i || pointselect == i-1)
+			{
+			  /* Last point of the subpath is active, draw the
+			   Bezier control at the beginning */
+			  xstart = leftX + PixelValue (pPaStart->XStart,
+						       UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+			  ystart = topY + PixelValue (pPaStart->YStart,
+						      UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+			  xctrlstart = leftX + PixelValue (pPaStart->XCtrlStart,
+						       UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+			  yctrlstart = topY + PixelValue (pPaStart->YCtrlStart,
+						      UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+			  
+			  DrawBezierControl (frame, thick, xstart, ystart,
+					     xctrlstart, yctrlstart, bg, fg);
+			}
+		      else if(pointselect == i_start ||
+			      pointselect == i_start+1)
+			{
+			  /* First point of the subpath is active, draw the
+			   Bezier control at the end */
+			  xend = leftX + PixelValue (pPa->XEnd,
+						     UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+			  yend = topY + PixelValue (pPa->YEnd,
+						      UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+			  xctrlend = leftX + PixelValue (pPa->XCtrlEnd,
+							 UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+			  yctrlend = topY + PixelValue (pPa->YCtrlEnd,
+							UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+			  
+			  DrawBezierControl (frame, thick, xend, yend,
+					     xctrlend, yctrlend, bg, fg);
+
+			}
+		    }
+		}
 
               pPa = pPa->PaNext;
 	      i++;
