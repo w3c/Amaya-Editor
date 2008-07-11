@@ -1596,9 +1596,9 @@ ThotBool PathEdit (int frame,
 		   void *inverse,
 		   int ancestorX, int ancestorY,
 		   int canvasWidth, int canvasHeight,
-		   int edit_type,
 		   Element el,
-		   int point_edited
+		   int point_edited,
+		   int *n_path_segments
 		   )
 {
   AmayaFrame * p_frame;
@@ -1614,9 +1614,9 @@ ThotBool PathEdit (int frame,
 						     ancestorY,
 						     canvasWidth,
 						     canvasHeight,
-						     edit_type,
 						     el,
 						     point_edited,
+						     n_path_segments,
 						     &transformApplied);
   
   while(!p_EditPathEvtHandler->IsFinish())

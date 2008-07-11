@@ -132,9 +132,9 @@ extern ThotBool PathEdit ( int frame,
                            int ancestorY,
                            int canvasWidth,
                            int canvasHeight,
-                           int edit_type,
                            Element el,
-                           int point_edited );
+                           int point_edited,
+                           int *n_path_segments );
 extern PtrTextBuffer PathCreation ( int frame,
                                     int xmin,
                                     int ymin,
@@ -293,9 +293,9 @@ extern ThotBool PathEdit ( int frame,
                              int ancestorY,
                              int canvasWidth,
                              int canvasHeight,
-                             int edit_type,
                              Element el,
-                             int point_edited );
+                             int point_edited,
+                             int *n_path_segments );
 extern PtrTextBuffer PathCreation ( int frame,
                                       int xmin,
                                       int ymin,

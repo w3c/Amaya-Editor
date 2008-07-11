@@ -88,9 +88,9 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 						 int ancestorY,
 						 int canvasWidth,
 						 int canvasHeight,
-						 int edit_type,
 						 Element element,
 						 int point_number,
+						 int *n_path_segments,
 						 ThotBool *transformApplied)
   :wxEvtHandler()
   ,Finished(false)
@@ -102,10 +102,11 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   ,y0(ancestorY)
   ,width(canvasWidth)
   ,height(canvasHeight)
-  ,type(edit_type)
+  ,type(-1)
   ,el(element)
   ,box(NULL)
   ,ButtonDown(false)
+  ,Nseg(n_path_segments)
   ,hasBeenTransformed(transformApplied)
 {
   PtrAbstractBox pAb;
@@ -172,6 +173,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       /* It's a path: find the segment to edit */
 
       i = 1;
+      *Nseg = 0;
       
       pPa = ((PtrElement)leaf)->ElFirstPathSeg;
   
@@ -233,8 +235,23 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 
 	      i++;
               pPa = pPa->PaNext;
-	      
+	      *Nseg++;
             }
+
+      if(type == 0)
+	{
+	  /* We want to move the first point of a subpath */
+	}
+      else if(type == 1)
+	{
+	}
+      
+      /* Go to the end of the path to see how many segment there are */
+      while (pPa)
+	{
+	  pPa = pPa->PaNext;
+	  *Nseg++;
+	}
     }
   else 
     {

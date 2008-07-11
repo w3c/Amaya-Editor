@@ -2272,6 +2272,7 @@ ThotBool AskPathEdit (  Document doc,
   PtrTransform CTM, inverse;
   int canvasWidth,canvasHeight,ancestorX,ancestorY;
   ThotBool transformApplied;
+  int n_path_segments;
 
   frame = ActiveFrame;
 
@@ -2319,8 +2320,8 @@ ThotBool AskPathEdit (  Document doc,
 			       inverse,
 			       ancestorX, ancestorY,
 			       canvasWidth, canvasHeight,
-			       edit_type,
-			       el, point);
+			       el, point,
+			       &n_path_segments);
 
   /* Free the transform matrix */
   if(inverse)TtaFreeTransform(inverse);
