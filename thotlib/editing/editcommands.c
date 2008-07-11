@@ -2252,10 +2252,13 @@ ThotBool AskTransform(     Document doc,
   if(inverse)TtaFreeTransform(inverse);
 
   /* Update the transform */
-  UpdateTransformMatrix(doc, el);
+  if(transformApplied)
+    UpdateTransformMatrix(doc, el);
 
   return transformApplied;
 }
+
+extern void UpdatePathAttribute(Document doc, Element el, int n_path_segments);
 
 /*----------------------------------------------------------------------
   AskPathEdit
@@ -2326,8 +2329,10 @@ ThotBool AskPathEdit (  Document doc,
   /* Free the transform matrix */
   if(inverse)TtaFreeTransform(inverse);
 
-  /* Update the transform */
-  //  UpdateTransformMatrix(doc, el);
+
+  /* Update the path attribute */
+  if(transformApplied)
+    UpdatePathAttribute(doc, el, n_path_segments);
 
   return transformApplied;
 }

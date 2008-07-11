@@ -660,7 +660,7 @@ extern void TtaGivePolylinePoint (Element element, int rank, TypeUnit unit,
   the current set of path segments
   The parameter nbPoints gives the number of path control points
   ---------------------------------------------------------------------- */
-extern char *TtaGeTPathAttributeValue (Element el, int nbPoints);
+extern char *TtaGetPathAttributeValue (Element el, int nbPoints);
 
 /*----------------------------------------------------------------------
    TtaGetPageNumber

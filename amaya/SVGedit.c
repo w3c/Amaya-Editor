@@ -390,6 +390,7 @@ void EvaluateSwitch (NotifyAttribute *event)
   -----------------------------------------------------------------------*/
 void AttrPathDataChanged (NotifyAttribute *event)
 {
+
   ParsePathDataAttribute (event->attribute, event->element, event->document, TRUE);
 }
 
@@ -3060,6 +3061,11 @@ void UpdateTransformMatrix(Document doc, Element el)
   attrType.AttrTypeNum = SVG_ATTR_transform;
   attr = TtaGetAttribute (el, attrType);
 
+  /* check if the undo sequence is open */
+  open = !TtaHasUndoSequence (doc);
+  if (open)
+    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+
   if (buffer == NULL)
     {
       if (attr)
@@ -3071,11 +3077,6 @@ void UpdateTransformMatrix(Document doc, Element el)
       return;
     }
     
-  // check if the undo sequence is open
-  open = !TtaHasUndoSequence (doc);
-  if (open)
-    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-
   new_ = (attr == NULL);
   if (new_)
     {
@@ -3094,6 +3095,70 @@ void UpdateTransformMatrix(Document doc, Element el)
 
   if (open)
     TtaCloseUndoSequence (doc);
+ }
+
+/*----------------------------------------------------------------------
+  UpdatePathAttribute
+  ----------------------------------------------------------------------*/
+void UpdatePathAttribute(Document doc, Element el, int n_path_segments)
+{
+  char         *buffer;
+  Attribute     attr;
+  AttributeType attrType;
+  ElementType   elType;
+  ThotBool      new_, open;
+  Element leaf;
+
+  /* Get the attribute value from the GRAPHICS leaf */
+  leaf = TtaGetFirstLeaf(el);
+  buffer = TtaGetPathAttributeValue(leaf, n_path_segments);
+
+  /* Check if the attribute already exists */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_d;
+  attr = TtaGetAttribute (el, attrType);
+
+  /* check if the undo sequence is open */
+  open = !TtaHasUndoSequence (doc);
+  if (open)
+    {
+    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+    TtaSetDocumentModified(doc);
+    }
+
+  if (buffer == NULL)
+    {
+      if (attr)
+        {
+          /* Remove the current path attribute */
+          TtaRegisterAttributeDelete (attr, el, doc);
+          TtaRemoveAttribute (el, attr, doc);
+        }
+      return;
+    }
+    
+  new_ = (attr == NULL);
+  if (new_)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+    }
+  else
+    TtaRegisterAttributeReplace (attr, el, doc);
+  TtaSetAttributeText (attr, buffer, el, doc);
+  if (new_)
+    TtaRegisterAttributeCreate (attr, el, doc);
+  TtaFreeMemory(buffer);
+ 
+  /* Update the attribute menu */
+  TtaUpdateAttrMenu(doc);
+
+  if (open)
+    {
+    TtaCloseUndoSequence (doc);
+    TtaSetDocumentUnmodified(doc);
+    }
  }
 
 /*----------------------------------------------------------------------

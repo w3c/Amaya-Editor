@@ -1380,11 +1380,11 @@ void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y,
 }
 
 /*----------------------------------------------------------------------
-  TtaGeTPathAttributeValue returns the path attribute value corresponding to
+  TtaGetPathAttributeValue returns the path attribute value corresponding to
   the current set of path segments
   The parameter nbPoints gives the number of path control points
   ---------------------------------------------------------------------- */
-char *TtaGeTPathAttributeValue (Element el, int nbPoints)
+char *TtaGetPathAttributeValue (Element el, int nbPoints)
 {
   PtrPathSeg          b;
   int                 length, l, add;
@@ -1413,28 +1413,23 @@ char *TtaGeTPathAttributeValue (Element el, int nbPoints)
           break;
         case PtCubicBezier:
           sprintf (&path[l], "C %d,%d %d,%d %d,%d",
-                   b->XEnd, b->YEnd,
                    b->XCtrlStart, b->YCtrlStart,
-                   b->XCtrlEnd, b->YCtrlEnd);
+                   b->XCtrlEnd, b->YCtrlEnd,
+		   b->XEnd, b->YEnd);
           break;
         case PtQuadraticBezier:
           sprintf (&path[l], "Q %d,%d %d,%d",
-                   b->XEnd, b->YEnd,
-                   b->XCtrlStart, b->YCtrlStart);
+                   b->XCtrlStart, b->YCtrlStart,
+		   b->XEnd, b->YEnd);
           break;
         case PtEllipticalArc:
-          sprintf (&path[l], "A %d %d %d ",
-                              b->XRadius, b->YRadius, b->XAxisRotation);
-          if (b->LargeArc)
-            strcat (&path[l], "1 ");
-          else
-            strcat (&path[l], "0 ");
-          if (b->Sweep)
-            strcat (&path[l], "1");
-          else
-            strcat (&path[l], "0");
-          add = strlen (&path[l]);
-          sprintf (&path[l+add], " %d,%d", b->XEnd, b->YEnd);
+          sprintf (&path[l], "A %d %d %d %d %d %d,%d",
+		   b->XRadius,
+		   b->YRadius,
+		   b->XAxisRotation,
+		   b->LargeArc ? 1 : 0,
+		   b->Sweep ? 1 : 0,
+		   b->XEnd, b->YEnd);
           break;
         }
       if (b)

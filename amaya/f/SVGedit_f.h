@@ -22,6 +22,9 @@ extern void TransformGraphicElement ( Document doc,
                                       int entry );
 extern void UpdateTransformMatrix ( Document doc,
                                     Element el );
+extern void UpdatePathAttribute ( Document doc,
+                                  Element el,
+                                  int n_path_segments );
 extern void RotateElementInParentSpace ( Document doc,
                                          Element el,
                                          float theta );
@@ -163,6 +166,9 @@ extern void TransformGraphicElement ( Document doc,
                                         int entry );
 extern void UpdateTransformMatrix ( Document doc,
                                       Element el );
+extern void UpdatePathAttribute ( Document doc,
+                                    Element el,
+                                    int n_path_segments );
 extern void RotateElementInParentSpace ( Document doc,
                                            Element el,
                                            float theta );

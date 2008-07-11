@@ -182,8 +182,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       i = 1;
       *Nseg = 0;
 
-      printf("EditPath:%d\n", point_number);
-      
       pPa = ((PtrElement)leaf)->ElFirstPathSeg;
   
       while (pPa)
@@ -253,7 +251,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 	  
 	  i++;
 	  pPa = pPa->PaNext;
-	  *Nseg++;
+	  (*Nseg)++;
 	}
 
       pPaCurrent = pPa;
@@ -273,7 +271,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 		}
 
 	      pPa = pPa->PaNext;
-	      *Nseg++;
+	      (*Nseg)++;
 	    }
 	}
       else if(type == 3 || type == 5)
@@ -289,7 +287,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       while (pPa)
 	{
 	  pPa = pPa->PaNext;
-	  *Nseg++;
+	  (*Nseg)++;
 	}
     }
   else 
