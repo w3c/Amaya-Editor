@@ -217,7 +217,8 @@ PtrAbstractBox GetParentWithException (int exceptNum, PtrAbstractBox pAb)
   The parameter ration fixes penalities of the vertical proximity.
   ----------------------------------------------------------------------*/
 void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
-                    int frame, int x, int y, int ratio, int *pointselect)
+                    int frame, int x, int y, int ratio, int *pointselect,
+		    void *pGraphicalData)
 {
   PtrAbstractBox      pAb, active, sel_active;
   PtrBox              pSelBox, pBox;
@@ -295,8 +296,11 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                               !strcmp (pAb->AbElement->ElStructSchema->SsName, "Template"))
                             graphicBox = pBox;
                           else
-                            graphicBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
-                                                                 &pointIndex, pFlow);
+                            graphicBox = GetEnclosingClickedBox (pAb, x, x, y,
+								 frame,
+                                                                 &pointIndex,
+								 pGraphicalData,
+								 pFlow);
                         }
                       if (graphicBox == NULL)
                         /* eliminate this box */

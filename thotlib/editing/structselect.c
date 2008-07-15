@@ -125,6 +125,8 @@ void InitSelection ()
   SelMenuNextEl = NULL;
   SelMenuChildEl = NULL;
   SelectedPointInPolyline = 0;
+  SelectedPathSegment = NULL;
+  SelectedPointInSegment = 0;
   SelectedPictureEdge = 0;
   DocSelectedAttr = NULL;
   AbsBoxSelectedAttr = NULL;
@@ -428,6 +430,8 @@ void CancelSelection ()
   SelMenuNextEl = NULL;
   SelMenuChildEl = NULL;
   SelectedPointInPolyline = 0;
+  SelectedPathSegment = NULL;
+  SelectedPointInSegment = 0;
   SelectedPictureEdge = 0;
   DocSelectedAttr = NULL;
   AbsBoxSelectedAttr = NULL;
@@ -1926,7 +1930,9 @@ static void DecorationAfterSeletion (ThotBool withPath)
   two characters.
   ----------------------------------------------------------------------*/
 static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
-                                    int firstChar, int lastChar, ThotBool string)
+                                    int firstChar, int lastChar,
+				    void *pGraphicalData,
+				    ThotBool string)
 {
   PtrElement          pAncest;
   ThotBool            elVisible;
@@ -1981,13 +1987,23 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
 
           LastSelectedElement = FirstSelectedElement;
           if (pEl->ElLeafType == LtPolyLine ||
-              pEl->ElLeafType == LtPath ||
               pEl->ElLeafType == LtGraphics)
             {
 	      SelectedPointInPolyline = firstChar;
+	      SelectedPathSegment = NULL;
+	      SelectedPointInSegment = 0;
               FirstSelectedChar = 0;
               LastSelectedChar = 0;
             }
+	  else if(pEl->ElLeafType == LtPath)
+	    {
+	      SelectedPointInPolyline = firstChar;
+	      //SelectedPointInPolyline = 0;
+	      SelectedPathSegment = (PtrPathSeg)pGraphicalData;
+	      SelectedPointInSegment = firstChar;
+              FirstSelectedChar = 0;
+              LastSelectedChar = 0;
+	    }
           else if (pEl->ElLeafType == LtPicture)
             {
               if (pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
@@ -2059,7 +2075,7 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
   ----------------------------------------------------------------------*/
 void MoveCaret (PtrDocument pDoc, PtrElement pEl, int firstChar)
 {
-  SelectStringOrPosition (pDoc, pEl, firstChar, firstChar, FALSE);
+  SelectStringOrPosition (pDoc, pEl, firstChar, firstChar, NULL, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -2081,7 +2097,7 @@ void SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar
   if (firstChar > lastChar)
     /* it's a position */
     string = FALSE;
-  SelectStringOrPosition (pDoc, pEl, firstChar, lastChar, string);
+  SelectStringOrPosition (pDoc, pEl, firstChar, lastChar, NULL, string);
 }
 
 /*----------------------------------------------------------------------
@@ -2189,6 +2205,8 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin,
       NSelectedElements = 0;
       LastSelectedElement = FirstSelectedElement;
       SelectedPointInPolyline = 0;
+      SelectedPathSegment = NULL;
+      SelectedPointInSegment = 0;
       SelectedPictureEdge = 0;
       FirstSelectedChar = 0;
       LastSelectedChar = 0;
@@ -2648,6 +2666,8 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
               oldLastChar = oldFirstEl->ElVolume + 1;
             }
           SelectedPointInPolyline = 0;
+	  SelectedPathSegment = NULL;
+	  SelectedPointInSegment = 0;
           SelectedPictureEdge = 0;
           if (pEl->ElHolophrast)
             /* element pEl is holophrasted, select it entirely */
@@ -3212,6 +3232,8 @@ void AddInSelection (PtrElement pEl, ThotBool last)
           SelContinue = FALSE;
         }
       SelectedPointInPolyline = 0;
+      SelectedPathSegment = NULL;
+      SelectedPointInSegment = 0;
       SelectedPictureEdge = 0;
       /* check that the element to be added is not yet in the selection */
       i = 1;
@@ -3363,7 +3385,8 @@ void SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl,
   Same function as MoveCaret, but send  events TteElemSelect.Pre and
   TteElemSelect.Post to the application.
   ----------------------------------------------------------------------*/
-void SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
+void SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first,
+			      void *pGraphicalData)
 {
   NotifyElement       notifyEl;
   Document            doc;
@@ -3383,7 +3406,8 @@ void SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
       notifyEl.position = 0;
       if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
         {
-          SelectStringOrPosition (pDoc, pEl, first, first, FALSE);
+          SelectStringOrPosition (pDoc, pEl, first, first, pGraphicalData,
+				  FALSE);
           notifyEl.event = TteElemSelect;
           notifyEl.document = doc;
           notifyEl.element = (Element) pEl;
@@ -3423,7 +3447,7 @@ void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar,
       notifyEl.position = 0;
       if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
         {
-          SelectStringOrPosition (pDoc, pEl, firstChar, lastChar, TRUE);
+          SelectStringOrPosition (pDoc, pEl, firstChar, lastChar, NULL, TRUE);
           notifyEl.event = TteElemSelect;
           notifyEl.document = doc;
           notifyEl.element = (Element) pEl;
@@ -3452,6 +3476,7 @@ void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar,
   Return TRUE when the application asks Thot to do nothing.
   ----------------------------------------------------------------------*/
 ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
+			  void *pGraphicalData,
                           ThotBool extension, ThotBool begin,
                           ThotBool doubleClick, ThotBool drag)
 {
@@ -3557,6 +3582,8 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
           FirstSelectedElement = pEl;
           LastSelectedElement = pEl;
           SelectedPointInPolyline = 0;
+	  SelectedPathSegment = NULL;
+	  SelectedPointInSegment = 0;
           SelectedPictureEdge = 0;
         }
       else
@@ -3579,6 +3606,8 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
                       FirstSelectedElement = pParent;
                       LastSelectedElement = pParent;
                       SelectedPointInPolyline = 0;
+		      SelectedPathSegment = NULL;
+		      SelectedPointInSegment = 0;
                       SelectedPictureEdge = 0;
                     }
                   else
@@ -3758,7 +3787,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
                     pEl->ElLeafType == LtPath ||
                     pEl->ElLeafType == LtGraphics ||
                     pEl->ElLeafType == LtPicture))
-            SelectPositionWithEvent (pDoc, pEl, rank);
+            SelectPositionWithEvent (pDoc, pEl, rank, pGraphicalData);
           else
             SelectElementWithEvent (pDoc, pEl, TRUE, FALSE);
         }

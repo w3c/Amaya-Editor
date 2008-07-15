@@ -1240,7 +1240,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
                               pNext->ElLeafType == LtPicture)
                             nextChar = 0;
                         }
-                      SelectPositionWithEvent (pDoc, pNext, nextChar);
+                      SelectPositionWithEvent (pDoc, pNext, nextChar, NULL);
                     }
                 }
               ret = TRUE;

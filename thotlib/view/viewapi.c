@@ -435,6 +435,7 @@ Element TtaGetFirstElementShown (Document document, View view, int *position)
   int                 frame;
   int                 x, y, charsNumber;
   int                 width, height;
+  void               *pGraphicalData;
 
   UserErrorCode = 0;
   *position = 0;
@@ -455,7 +456,7 @@ Element TtaGetFirstElementShown (Document document, View view, int *position)
           charsNumber = 0;
           /* recupere la boite selectionnee */
           GetClickedBox (&pBox, &pFlow, pRootAb, frame,
-                         x, y, 1, &charsNumber);
+                         x, y, 1, &charsNumber, pGraphicalData);
           if (pBox && pBox->BxAbstractBox)
             {
               if (pBox->BxType == BoPiece ||

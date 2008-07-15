@@ -529,19 +529,19 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
                   if (pBox->BxAbstractBox == pViewSel->VsBox->BxAbstractBox)
                     {
                       j = pBox->BxFirstChar + pViewSelEnd->VsIndBox;
-                      ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i,
+                      ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, NULL, 
                                        FALSE, TRUE, FALSE, FALSE);
                       if (pViewSel->VsBox->BxAbstractBox != pBox->BxAbstractBox ||
                           i != j)
-                        ChangeSelection (frame, pBox->BxAbstractBox, j, TRUE, TRUE,
+                        ChangeSelection (frame, pBox->BxAbstractBox, j, NULL, TRUE, TRUE,
                                          FALSE, FALSE);
                     }
                   else
-                    ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i,
+                    ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, NULL, 
                                      FALSE, TRUE, FALSE, FALSE);
                 }
               else
-                ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE,
+                ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, NULL,  FALSE,
                                  TRUE, FALSE, FALSE);
               /* Nouvelle position de reference du curseur */
               ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
@@ -719,9 +719,9 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
               TextInserting = TRUE;
               /* say that the selection changes and a text inserting is started */
               if (pSelAb->AbVolume == 0)
-                ChangeSelection (*frame, pSelAb, 0, FALSE, TRUE, FALSE, FALSE);
+                ChangeSelection (*frame, pSelAb, 0, NULL, FALSE, TRUE, FALSE, FALSE);
               else
-                ChangeSelection (*frame, pSelAb, i, FALSE, TRUE, FALSE, FALSE);
+                ChangeSelection (*frame, pSelAb, i, NULL, FALSE, TRUE, FALSE, FALSE);
               TextInserting = saveTextInserting;
             }
         }
@@ -1095,7 +1095,7 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb,
                         pSelAb->AbCanBeModified && !pSelAb->AbReadOnly)
                       {
                         cut = FALSE;
-                        ChangeSelection (frame, pSelAb, pSelAb->AbVolume + 1,
+                        ChangeSelection (frame, pSelAb, pSelAb->AbVolume + 1, NULL, 
                                          FALSE, TRUE, FALSE, FALSE);
                       }
                   }
@@ -2973,12 +2973,12 @@ ThotBool ContentEditing (int editType)
                   NewContent (pAb);
                 }
               if (pViewSel->VsBox)
-                ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i,
+                ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, NULL, 
                                FALSE, TRUE, FALSE, FALSE);
               if (pAb->AbLeafType != LtPolyLine && j != i &&
                   pViewSelEnd->VsBox)
                 ChangeSelection (frame,
-                                 pViewSelEnd->VsBox->BxAbstractBox, j,
+                                 pViewSelEnd->VsBox->BxAbstractBox, j, NULL, 
                                  TRUE, FALSE, FALSE, FALSE);
             }
           if (textPasted)

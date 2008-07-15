@@ -1150,7 +1150,8 @@ void PasteCommand ()
                 if (!pSel->ElTerminal)
                   pSel = LastLeaf (pSel);
               if (pSel)
-                SelectPositionWithEvent (pDoc, pSel, pSel->ElTextLength+1);
+                SelectPositionWithEvent (pDoc, pSel, pSel->ElTextLength+1,
+					 NULL);
 
               SetDocumentModified (pDoc, TRUE, 20);
 
@@ -2747,7 +2748,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                   {
                     /* set selection after the last character of the string */
                     SelectPositionWithEvent (pDoc, pSibling,
-                                             pSibling->ElTextLength + 1);
+                                             pSibling->ElTextLength + 1, NULL);
                     /* simulate a backspace */
                     InsertChar (frame, '\177', -1);
                   }
