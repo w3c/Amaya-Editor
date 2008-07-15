@@ -53,7 +53,7 @@ extern void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
 					    float *Y, float *width,
 					    float *height);
 
-static  PtrPathSeg          pPaCurrent, pPaPrevious = NULL, pPaNext = NULL;
+static  PtrPathSeg          pPaCurrent, pPaPrevious, pPaNext;
 static  PtrTextBuffer       pBuffer;
 static  int i_poly;
 static  Element leaf;
@@ -178,6 +178,8 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   else if(((PtrElement)leaf)->ElLeafType == LtPath)
     {
       /* It's a path: find the segment to edit */
+      pPaPrevious = NULL;
+      pPaNext = NULL;
 
       i = 1;
       *Nseg = 0;
@@ -419,13 +421,13 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  pPaCurrent->XCtrlStart += dx;
 	  pPaCurrent->YCtrlStart += dy;
 
-	  if(pPaPrevious)
+	  /*	  if(pPaPrevious)
 	    {
 	      pPaPrevious->XEnd += dx;
 	      pPaPrevious->YEnd += dy;
 	      pPaPrevious->XCtrlEnd += dx;
 	      pPaPrevious->YCtrlEnd += dy;
-	    }
+	      }*/
 	  break;
 
 	case 1:
@@ -488,7 +490,6 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	      pPaNext->XCtrlStart += dx;
 	      pPaNext->YCtrlStart += dy;
 	    }
-
 	  break;
 
 	case 6:

@@ -24,8 +24,7 @@ extern void GetClickedBox ( PtrBox *result,
                             int x,
                             int y,
                             int ratio,
-                            int *pointselect,
-                            void *pGraphicalData );
+                            int *pointselect );
 
 #else /* __STDC__ */
 
@@ -47,8 +46,7 @@ extern void GetClickedBox ( PtrBox *result,
                               int x,
                               int y,
                               int ratio,
-                              int *pointselect,
-                              void *pGraphicalData );
+                              int *pointselect );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
