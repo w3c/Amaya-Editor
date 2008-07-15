@@ -1379,6 +1379,42 @@ void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y,
     }
 }
 
+
+/*----------------------------------------------------------------------
+  TtaRemovePathData
+  Remove the path data attached to an element
+  ----------------------------------------------------------------------*/
+void TtaRemovePathData (Document document, Element element)
+{
+  PtrPathSeg          pPa, pPaNext;
+  PtrElement pEl = ((PtrElement) (TtaGetFirstLeaf(element)));
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    /* verifies the parameter document */
+    if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+    else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+    else
+      {
+        /* parameter document is correct */
+	if(pEl->ElLeafType == LtPath && pEl->ElFirstPathSeg)
+	  {
+	    pPa = pEl->ElFirstPathSeg;
+	    pEl->ElFirstPathSeg = NULL;
+	    do
+	      {
+		pPaNext = pPa->PaNext;
+		FreePathSeg (pPa);
+		pPa = pPaNext;
+	      }
+	    while (pPa);
+	  }
+      }
+}
+
 /*----------------------------------------------------------------------
   TtaGetPathAttributeValue returns the path attribute value corresponding to
   the current set of path segments

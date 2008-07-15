@@ -390,7 +390,7 @@ void EvaluateSwitch (NotifyAttribute *event)
   -----------------------------------------------------------------------*/
 void AttrPathDataChanged (NotifyAttribute *event)
 {
-
+  TtaRemovePathData (event->document, event->element);
   ParsePathDataAttribute (event->attribute, event->element, event->document, TRUE);
 }
 
@@ -401,6 +401,7 @@ void AttrPathDataChanged (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 ThotBool AttrPathDataDelete (NotifyAttribute * event)
 {
+  TtaRemovePathData (event->document, event->element);
   return TRUE; /* don't let Thot perform normal operation */
 }
 

@@ -64,6 +64,8 @@ extern void TtaChangeLimitOfPolyline ( Element element,
                                        int x,
                                        int y,
                                        Document document );
+extern void TtaRemovePathAttribute ( Document document,
+                                     Element element );
 extern char *TtaGetPathAttributeValue ( Element el,
                                         int nbPoints );
 extern char *TtaTransformCurveIntoPath ( Element el );
@@ -288,6 +290,8 @@ extern void TtaChangeLimitOfPolyline ( Element element,
                                          int x,
                                          int y,
                                          Document document );
+extern void TtaRemovePathAttribute ( Document document,
+                                       Element element );
 extern char *TtaGetPathAttributeValue ( Element el,
                                           int nbPoints );
 extern char *TtaTransformCurveIntoPath ( Element el );

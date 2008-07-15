@@ -655,6 +655,14 @@ extern int TtaGetPolylineLength (Element element);
 extern void TtaGivePolylinePoint (Element element, int rank, TypeUnit unit,
 				  /*OUT*/ int *x, /*OUT*/ int *y);
 
+
+
+/*----------------------------------------------------------------------
+  TtaRemovePathData
+  Remove the path data attached to an element
+  ----------------------------------------------------------------------*/
+extern void TtaRemovePathData (Document document, Element element);
+
 /*----------------------------------------------------------------------
   TtaGeTPathAttributeValue returns the path attribut valuee corresponding to
   the current set of path segments
