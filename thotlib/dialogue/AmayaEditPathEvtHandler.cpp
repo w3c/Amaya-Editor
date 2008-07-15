@@ -185,6 +185,11 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       *Nseg = 0;
 
       pPa = ((PtrElement)leaf)->ElFirstPathSeg;
+      if(pPa == NULL)
+	{
+	  Finished = true;
+	  return;
+	}
   
       while (pPa)
 	{
@@ -258,31 +263,37 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 
       pPaCurrent = pPa;
 
-      if(type == 0 || type == 1)
+      if(pPaCurrent)
 	{
-	  /* We want to edit the first point of a subpath:
-	   is the last point at the same position? */
-	  while(pPa)
+	  if(type == 0 || type == 1)
 	    {
-	      if(!pPa->PaNext || pPa->PaNext->PaNewSubpath)
+	      /* We want to edit the first point of a subpath:
+		 is the last point at the same position? */
+	      while(pPa)
 		{
-		  if(pPa->XEnd == pPaCurrent->XStart &&
-		     pPa->YEnd == pPaCurrent->YStart)
-		    pPaPrevious = pPa;
-		  break;
+		  if(!pPa->PaNext || pPa->PaNext->PaNewSubpath)
+		    {
+		      if(pPa->XEnd == pPaCurrent->XStart &&
+			 pPa->YEnd == pPaCurrent->YStart)
+			{
+			  pPaPrevious = pPa;
+			  break;
+			}
+		    }
+		  
+		  pPa = pPa->PaNext;
+		  (*Nseg)++;
 		}
-
-	      pPa = pPa->PaNext;
-	      (*Nseg)++;
 	    }
-	}
-      else if(type == 3 || type == 5)
-	{
-	  /* We want to edit the last point of a subpath:
-	   is the first point at the same position? */
-	  if(pPaStart->XStart == pPaCurrent->XEnd &&
-	     pPaStart->YStart == pPaCurrent->YEnd)
-	    pPaNext = pPaStart;
+	  else if(type == 3 || type == 5)
+	    {
+	      /* We want to edit the last point of a subpath:
+		 is the first point at the same position? */
+	      if(pPaStart && 
+		 pPaStart->XStart == pPaCurrent->XEnd &&
+		 pPaStart->YStart == pPaCurrent->YEnd)
+		pPaNext = pPaStart;
+	    }
 	}
       
       /* Go to the end of the path to see how many segment there are */
@@ -291,6 +302,16 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 	  pPa = pPa->PaNext;
 	  (*Nseg)++;
 	}
+
+      /* Convert Quadratic Bezier to Cubic */
+      if(pPaCurrent->PaShape == PtQuadraticBezier)
+	pPaCurrent->PaShape = PtCubicBezier;
+	  
+      if(pPaNext && pPaNext->PaShape == PtQuadraticBezier)
+	pPaNext->PaShape = PtCubicBezier;
+
+      if(pPaPrevious && pPaPrevious->PaShape == PtQuadraticBezier)
+	pPaPrevious->PaShape = PtCubicBezier;
     }
   else 
     {
@@ -421,13 +442,13 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  pPaCurrent->XCtrlStart += dx;
 	  pPaCurrent->YCtrlStart += dy;
 
-	  /*	  if(pPaPrevious)
+	  if(pPaPrevious)
 	    {
 	      pPaPrevious->XEnd += dx;
 	      pPaPrevious->YEnd += dy;
 	      pPaPrevious->XCtrlEnd += dx;
 	      pPaPrevious->YCtrlEnd += dy;
-	      }*/
+	      }
 	  break;
 
 	case 1:
