@@ -454,7 +454,11 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		      TtaSetDocumentModified(doc);
 		      return FALSE;
 		    }
-		  return FALSE;
+		  else
+		    {
+		      NotifyClick (TteElemLClick, FALSE, el, doc);
+		      return FALSE;
+		    }
 		}
 
 	      /* the document can be reloaded */
@@ -1200,8 +1204,6 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
   width = box->BxWidth;
   height = box->BxHeight;
   max = 0;
-
-  //  printf("x=%d y=%d width=%d height=%d\n", x, y, width, height);
 
   /* Is there a characteristic point of the drawing? */
   switch (pAb->AbRealShape)

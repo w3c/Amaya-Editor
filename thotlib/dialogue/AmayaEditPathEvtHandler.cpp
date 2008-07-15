@@ -232,9 +232,20 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 
 	      if(i == point_number)
 		{
-		  /* Moving the end control point */
-		  type = 3;
-		  break;
+		  if(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+		      /* Moving an end control point */
+		    {
+		      type = 3;
+		      pPaNext = pPa->PaNext;
+		      break;
+		    }
+		  else
+		    /* Moving the end control point of the last point
+		       of a subpath*/
+		    {
+		      type = 7;
+		      break;
+		    }
 		}
 	      i++;
 	    }
@@ -275,17 +286,16 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 		    {
 		      if(pPa->XEnd == pPaCurrent->XStart &&
 			 pPa->YEnd == pPaCurrent->YStart)
-			{
 			  pPaPrevious = pPa;
-			  break;
-			}
+
+		      break;
 		    }
 		  
 		  pPa = pPa->PaNext;
 		  (*Nseg)++;
 		}
 	    }
-	  else if(type == 3 || type == 5)
+	  else if(type == 7 || type == 5)
 	    {
 	      /* We want to edit the last point of a subpath:
 		 is the first point at the same position? */
@@ -476,6 +486,12 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	case 3:
 	  /* Moving the end control point */
+
+	case 7:
+	  /* Moving the end control point of the last point
+	     of a subpath*/
+
+
 	  pPaCurrent->XCtrlEnd += dx;
 	  pPaCurrent->YCtrlEnd += dy;
 
