@@ -164,7 +164,7 @@ static void MoveInLine (int frame, ThotBool toend, ThotBool extendSel)
         nChars = pBox->BxFirstChar;
     }
   /* update the selection */
-  ChangeSelection (frame, pAb, nChars, NULL, extendSel, !toend, FALSE, FALSE);
+  ChangeSelection (frame, pAb, nChars, extendSel, !toend, FALSE, FALSE);
 }
 
 
@@ -307,9 +307,9 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
             nChars = 0;
           /* Change the selection */
           if (extendSel)
-            ChangeSelection (frame, pAb, nChars, NULL, TRUE, LeftExtended, FALSE, FALSE);
+            ChangeSelection (frame, pAb, nChars, TRUE, LeftExtended, FALSE, FALSE);
           else
-            ChangeSelection (frame, pAb, nChars, NULL, FALSE, TRUE, FALSE, FALSE);
+            ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
         }
     }
 }
@@ -545,7 +545,7 @@ static void MovingCommands (int code, Document doc, View view,
                               firstEl == lastEl)
                             {
                               /* a single insert point */
-                              ChangeSelection (frame, pBox->BxAbstractBox, FixedChar, NULL, 
+                              ChangeSelection (frame, pBox->BxAbstractBox, FixedChar,
                                                FALSE, TRUE, FALSE, FALSE);
                               RightExtended = FALSE;
                             }
@@ -555,18 +555,17 @@ static void MovingCommands (int code, Document doc, View view,
                             {
                               /* select one character */
                               LeftExtended = TRUE;
-                              ChangeSelection (frame, pBox->BxAbstractBox, x - 1, NULL, 
+                              ChangeSelection (frame, pBox->BxAbstractBox, x - 1,
                                                TRUE, LeftExtended, FALSE, FALSE);
                             }
                           else
                             /* extend the selection */
                             ChangeSelection (frame, pBox->BxAbstractBox, x - 1,
-NULL, 
                                              TRUE, LeftExtended, FALSE, FALSE);
                         }
                       else
                         /* the x is equal to first */
-                        ChangeSelection (frame, pBox->BxAbstractBox, x - 1, NULL, 
+                        ChangeSelection (frame, pBox->BxAbstractBox, x - 1,
                                          FALSE, TRUE, FALSE, FALSE);
                       /* show the beginning of the selection */
                       if (pBoxBegin->BxXOrg + pViewSel->VsXPos + 4 < pFrame->FrXOrg)
@@ -728,7 +727,7 @@ NULL,
                             {
                               /* a single insert point */
                               LeftExtended = FALSE;
-                              ChangeSelection (frame, pBox->BxAbstractBox, FixedChar, NULL, 
+                              ChangeSelection (frame, pBox->BxAbstractBox, FixedChar,
                                                FALSE, TRUE, FALSE, FALSE);
                             }
                           else if (SelPosition &&
@@ -737,16 +736,16 @@ NULL,
                             {
                               /* select one character */
                               RightExtended = TRUE;
-                              ChangeSelection (frame, pBox->BxAbstractBox, x + 1, NULL, 
+                              ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
                                                TRUE, LeftExtended, FALSE, FALSE);
                             }
                           else
                             /* extend the end of the current selection */
-                            ChangeSelection (frame, pBox->BxAbstractBox, x + 1, NULL, 
+                            ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
                                              TRUE, LeftExtended, FALSE, FALSE);
                         }
                       else
-                        ChangeSelection (frame, pBox->BxAbstractBox, x + 1, NULL, 
+                        ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
                                          FALSE, TRUE, FALSE, FALSE);
                       /* show the end of the selection */
                       if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
@@ -877,7 +876,7 @@ NULL,
                       RightExtended = TRUE;
                       LeftExtended = FALSE;
                     }
-                  ChangeSelection (frame, AbsBoxSelectedAttr, i, NULL, 
+                  ChangeSelection (frame, AbsBoxSelectedAttr, i,
                                    TRUE, LeftExtended, FALSE, FALSE);
                 }
               else
@@ -911,7 +910,7 @@ NULL,
                       RightExtended = FALSE;
                       LeftExtended = TRUE;
                     }
-                  ChangeSelection (frame, AbsBoxSelectedAttr, i, NULL, 
+                  ChangeSelection (frame, AbsBoxSelectedAttr, i,
                                    TRUE, LeftExtended, FALSE, FALSE);
                 }
               else
@@ -980,7 +979,7 @@ NULL,
                       /* no more extension */
                       LeftExtended = FALSE;
                       extendSel = FALSE;
-                      ChangeSelection (frame, pBox->BxAbstractBox, FixedChar, NULL, 
+                      ChangeSelection (frame, pBox->BxAbstractBox, FixedChar,
                                        FALSE, TRUE, FALSE, FALSE);
                       done = TRUE;
                     }
@@ -1071,7 +1070,7 @@ NULL,
                       /* no more extension */
                       RightExtended = FALSE;
                       extendSel = FALSE;
-                      ChangeSelection (frame, pBox->BxAbstractBox, FixedChar, NULL, 
+                      ChangeSelection (frame, pBox->BxAbstractBox, FixedChar,
                                        FALSE, TRUE, FALSE, FALSE);
                       done = TRUE;
                     }
@@ -1145,10 +1144,10 @@ NULL,
                   LeftExtended = TRUE;
                 }
               if (AbsBoxSelectedAttr)
-                ChangeSelection (frame, AbsBoxSelectedAttr, first, NULL, 
+                ChangeSelection (frame, AbsBoxSelectedAttr, first,
                                  TRUE, LeftExtended, FALSE, FALSE);
               else if (pEl->ElAbstractBox[view - 1])
-                ChangeSelection (frame, pEl->ElAbstractBox[view - 1], first, NULL, 
+                ChangeSelection (frame, pEl->ElAbstractBox[view - 1], first,
                                  TRUE, LeftExtended, FALSE, FALSE);
             }
           else
@@ -1209,10 +1208,10 @@ NULL,
                   LeftExtended = FALSE;
                 }
               if (AbsBoxSelectedAttr)
-                ChangeSelection (frame, AbsBoxSelectedAttr, first, NULL, 
+                ChangeSelection (frame, AbsBoxSelectedAttr, first,
                                  TRUE, LeftExtended, FALSE, FALSE);
               else if (pEl->ElAbstractBox[view - 1])
-                ChangeSelection (frame, pEl->ElAbstractBox[view - 1], first, NULL, 
+                ChangeSelection (frame, pEl->ElAbstractBox[view - 1], first,
                                  TRUE, LeftExtended, FALSE, FALSE);
             }
           else

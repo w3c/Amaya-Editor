@@ -1999,8 +1999,7 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
           /* try first to select the end of the previous element */
           pSel = LastLeaf (pPrev);
           if (pSel->ElTerminal && pSel->ElLeafType == LtText)
-            SelectPositionWithEvent (pSelDoc, pSel, pSel->ElTextLength + 1,
-				     NULL);
+            SelectPositionWithEvent (pSelDoc, pSel, pSel->ElTextLength + 1);
           else
             SelectElementWithEvent (pSelDoc, pSel, FALSE, TRUE);
         }
@@ -2015,22 +2014,21 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
               selNext = TRUE;
               /* Select the first character or the whole element */
               if (pSel->ElTerminal && pSel->ElLeafType == LtText)
-                SelectPositionWithEvent (pSelDoc, pSel, 1, NULL);
+                SelectPositionWithEvent (pSelDoc, pSel, 1);
               else if (pSel->ElTerminal && pSel->ElLeafType == LtSymbol)
-                SelectPositionWithEvent (pSelDoc, pSel, 1, NULL);
+                SelectPositionWithEvent (pSelDoc, pSel, 1);
               else
                 SelectElementWithEvent (pSelDoc, pSel, TRUE, TRUE);
             }
           else
-            SelectPositionWithEvent (pSelDoc, pNext, nextChar, NULL);
+            SelectPositionWithEvent (pSelDoc, pNext, nextChar);
         }
       else if (pPrev)
         /* no following element, select the previous */
         {
           pSel = LastLeaf (pPrev);
           if (pSel->ElTerminal && pSel->ElLeafType == LtText)
-            SelectPositionWithEvent (pSelDoc, pSel, pSel->ElTextLength + 1,
-				     NULL);
+            SelectPositionWithEvent (pSelDoc, pSel, pSel->ElTextLength + 1);
           else
             SelectElementWithEvent (pSelDoc, pSel, FALSE, TRUE);
         }
@@ -3709,7 +3707,7 @@ void TtaInsertAnyElement (Document document, ThotBool before)
               /* set a new selection */
               pSel = FirstLeaf (pNew);
               if (pSel->ElTerminal && pSel->ElLeafType == LtText)
-                SelectPositionWithEvent (pDoc, pSel, 1, NULL);
+                SelectPositionWithEvent (pDoc, pSel, 1);
               else
                 SelectElementWithEvent (pDoc, pSel, TRUE, TRUE);
             }

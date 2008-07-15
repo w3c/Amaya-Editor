@@ -45,10 +45,6 @@ THOT_EXPORT ThotBool     SelPosition;
    vertex, or 0 if the whole PolyLine is selected */
 THOT_EXPORT int          SelectedPointInPolyline;
 
-/* */
-THOT_EXPORT PtrPathSeg   SelectedPathSegment;
-THOT_EXPORT int          SelectedPointInSegment;
-
 /* if the current selection is a picture, 1 means that the caret is
    on the right side, 0 means that it is on the left side or that the
    whole picture is selected */

@@ -292,7 +292,6 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
   int                 firstC;
   ThotBool            extend, ok, left = FALSE;
   PtrDocument         pDoc;
-  void               *pGraphicalData;
 
   if (frame >= 1)
     {
@@ -314,8 +313,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
       extend = (button == 0 || button == 1);
 
       /* get the selected box */
-      GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO,
-		     &nChars, pGraphicalData);
+      GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO, &nChars);
 
       /* When it's an extended selection, avoid to extend to the
 	 enclosing box */
@@ -422,14 +420,14 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 	      if (SkipClickEvent)
 		/* the application asks Thot to do nothing */
 		return SkipClickEvent;
-	      ChangeSelection (frame, pAb, nChars, pGraphicalData, TRUE, left, FALSE, FALSE);
+	      ChangeSelection (frame, pAb, nChars, TRUE, left, FALSE, FALSE);
 	      break;
 	    case 1:
 	      /* Extension of selection */
 	      if (SkipClickEvent)
 		/* the application asks Thot to do nothing */
 		return SkipClickEvent;
-	      ChangeSelection (frame, pAb, nChars, pGraphicalData, TRUE, left, FALSE, TRUE);
+	      ChangeSelection (frame, pAb, nChars, TRUE, left, FALSE, TRUE);
 	      break;
 	    case 2:
 	      /* send event TteElemLClick.Pre to the application */
@@ -440,7 +438,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		return SkipClickEvent;
 		  
 
-	      ChangeSelection (frame, pAb, nChars, pGraphicalData, FALSE, TRUE, FALSE, FALSE);
+	      ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 
 	      if(nChars > 0 && Selecting != NULL && el->ElStructSchema &&
 		 el->ElStructSchema->SsName &&
@@ -462,8 +460,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 	      /* the document can be reloaded */
 	      pAb = pFrame->FrAbstractBox;
 	      nChars = 0;
-	      GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO,
-			     &nChars, pGraphicalData);
+	      GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO, &nChars);
 
 	      if (pBox && pBox->BxAbstractBox)
 		{
@@ -496,7 +493,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		}
 	      break;
 	    case 3:
-	      if (!ChangeSelection (frame, pAb, nChars, pGraphicalData, FALSE, TRUE, TRUE, FALSE) &&
+	      if (!ChangeSelection (frame, pAb, nChars, FALSE, TRUE, TRUE, FALSE) &&
 		  pAb->AbLeafType == LtText &&
 		  (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 		SelectCurrentWord (frame, pBox, nChars, index, pBuffer,
@@ -562,7 +559,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		NotifyClick (TteElemRClick, FALSE, el, doc);
 	      break;
 	    case 7: /* reset the previous selection */
-	      ChangeSelection (frame, pAb, nChars, pGraphicalData, FALSE, TRUE, FALSE, FALSE);
+	      ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 	      break;
 	    default: break;
 	    }
@@ -889,7 +886,7 @@ static PtrBox  GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame,
   Return TRUE if the user is clicking on a point
   ----------------------------------------------------------------------*/
 static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
-			      int frame, int *pointselect, PtrPathSeg pathseg)
+				     int frame, int *pointselect)
 {
   int i;
   int                 xstart, ystart, xctrlstart, yctrlstart;
@@ -928,7 +925,6 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 	    {
 	      /* The user is clicking on a point of the path */
 	      *pointselect = i;
-	      pathseg = pPa;
 	      return TRUE;
 	    }
 	  i++;
@@ -957,7 +953,6 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 		 )
 		{
 		  *pointselect = i;
-		  pathseg = pPa;
 		  return TRUE;
 		}
 	    }
@@ -983,7 +978,6 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 		 )
 		{
 		  *pointselect = i;
-		  pathseg = pPa;
 		  return TRUE;
 		}
 	    }
@@ -995,7 +989,6 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 	{
 	  /* The user is clicking on a point of the path */
 	  *pointselect = i;
-	  pathseg = pPa;
 	  return TRUE;
 	}
 
@@ -1025,7 +1018,6 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 		  if(IsNear(x, y, xctrlstart, yctrlstart))
 		    {
 		      *pointselect = i_start + 1;
-		      pathseg = pPa;
 		      return TRUE;
 		    }
 		}
@@ -1041,7 +1033,6 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 		  if(IsNear(x, y, xctrlend, yctrlend))
 		    {
 		      *pointselect = i - 1;
-		      pathseg = pPa;
 		      return TRUE;
 		    }
 		}
@@ -1053,7 +1044,6 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
     }
   
   *pointselect = 0;
-  pathseg = NULL;
   return FALSE;
 }
 
@@ -1643,7 +1633,6 @@ PtrAbstractBox GetClickedAbsBox (int frame, int xRef, int yRef)
   PtrBox              pBox;
   PtrFlow             pFlow = NULL;
   int                 pointselect;
-  void               *pGraphicalData;
 
   pFrame = &ViewFrameTable[frame - 1];
   pBox = NULL;
@@ -1651,11 +1640,10 @@ PtrAbstractBox GetClickedAbsBox (int frame, int xRef, int yRef)
 #ifndef _GL
     GetClickedBox (&pBox, &pFlow, pFrame->FrAbstractBox,
                    frame, xRef + pFrame->FrXOrg,
-                   yRef + pFrame->FrYOrg, Y_RATIO, &pointselect,
-		   pGraphicalData);
+                   yRef + pFrame->FrYOrg, Y_RATIO, &pointselect);
 #else /* _GL */
   GetClickedBox (&pBox, &pFlow, pFrame->FrAbstractBox, frame, xRef,
-                 yRef, Y_RATIO, &pointselect, pGraphicalData);
+                 yRef, Y_RATIO, &pointselect);
 #endif /* _GL */
 
   if (pBox == NULL)
@@ -1671,8 +1659,7 @@ PtrAbstractBox GetClickedAbsBox (int frame, int xRef, int yRef)
   ----------------------------------------------------------------------*/
 PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
                                int lowerX, int y, int frame,
-                               int *pointselect, void *pGraphicalData,
-			       PtrFlow *pFlow)
+                               int *pointselect, PtrFlow *pFlow)
 {
   PtrBox              pBox;
   PtrElement          pParent;
@@ -1800,8 +1787,7 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
                   y -= pBox->BxYOrg;
 
 		  if(GetPathPoint(pAb->AbFirstPathSeg,
-				  x, y, frame, pointselect,
-				  ((PtrPathSeg) pGraphicalData)))
+				  x, y, frame, pointselect))
 		      return pBox;
 
                   /* builds the list of points representing the path */
@@ -2229,7 +2215,6 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow)
   int                 pointIndex;
   int                 d;
   ViewFrame          *pFrame;
-  void               *pGraphicalData;
 
   pBox = NULL;
   pSelBox = NULL;
@@ -2257,9 +2242,7 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow)
                   pAb->AbLeafType == LtPath)
                 {
                   box = GetEnclosingClickedBox (pAb, xRef, xRef, yRef,
-                                                frame, &pointIndex, 
-						pGraphicalData,
-						pFlow);
+                                                frame, &pointIndex, pFlow);
                   if (box == NULL)
                     d = max + 1;
                   else
