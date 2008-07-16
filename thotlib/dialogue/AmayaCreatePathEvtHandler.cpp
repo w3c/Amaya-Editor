@@ -48,6 +48,50 @@ static int lastX2, lastY2;
 static int lastX3, lastY3;
 static ThotBool clear = FALSE;
 
+
+static void Line45Deg(int x1, int y1, int *x2, int *y2)
+{
+  int lx, ly;
+  float theta;
+
+  lx = abs(*x2 - x1);
+  ly = abs(*y2 - y1);
+
+      /*     |    O
+             |   /
+            ly  /
+             | /theta
+             |/
+             --lx--
+       */
+      if(lx == 0)
+	theta = M_PI/2;
+      else
+	theta = atan(ly/lx);
+
+      if(theta <= M_PI/8) 
+	{
+	  /* Horizontal line */
+	  *y2 = y1;
+	}
+      else if(theta >= 3*M_PI/8)
+	{
+	  /* Vertical line */
+	  *x2 = x1;
+	}
+      else
+	{
+	  /* Diagonal */
+	  if(ly < lx)lx = ly; else ly = lx;
+
+	  if(*x2 < x1)*x2 = x1 - lx;
+	  else *x2 = x1 + lx;
+
+	  if(*y2 < y1)*y2 = y1 - ly;
+	  else *y2 = y1 + ly;
+	}
+}
+
 /*----------------------------------------------------------------------
   DrawLine
   draw a line from (x2,y2) to (x3,y3)
@@ -494,8 +538,11 @@ void AmayaCreatePathEvtHandler::OnMouseRightDown( wxMouseEvent& event )
  *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnChar( wxKeyEvent& event )
 {
-  *m_created = FALSE;
-  m_IsFinish = true;
+  if(event.GetKeyCode() !=  WXK_SHIFT)
+    {
+      *m_created = FALSE;
+      m_IsFinish = true;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -607,6 +654,13 @@ void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
 
   currentX = event.GetX();
   currentY = event.GetY();
+
+  if(event.ShiftDown())
+    {
+      if(m_ShapeNumber == 5 || m_ShapeNumber == 6)
+	Line45Deg(lastX1, lastY1, &currentX, &currentY);
+    }
+
   UpdateSymetricPoint();
 
   DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
