@@ -132,7 +132,7 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
   *hasBeenTransformed = FALSE;
 
   pAb = ((PtrElement)el) -> ElAbstractBox[0];
-  if(!pAb && pAb -> AbBox)
+  if(!pAb || !pAb->AbBox)
     {
     Finished = true;
     return;

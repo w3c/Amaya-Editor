@@ -41,6 +41,7 @@
 #include "AmayaEditPathEvtHandler.h"
 
 /*----------------------------------------------------------------------
+  GetSymetricPoint
  *----------------------------------------------------------------------*/
 static void GetSymetricPoint(int x, int y, int x0, int y0,
 			     int *symx, int *symy)
@@ -48,6 +49,106 @@ static void GetSymetricPoint(int x, int y, int x0, int y0,
   *symx = 2*x0 - x;
   *symy = 2*y0 - y;
 }
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+// static void UpdateArc(int x1, int y1, int x2, int y2, int x3, int y3,
+// 			 int *phi, int *rx, int *ry)
+			     
+// {
+//   /*
+//     We want to transform move the point (x2,y2) to (x3,y3).
+//     The arc is scaled (ratio=k) and the x-axis is rotated.
+
+
+//          (x2,y2)                              (x3,y3)
+//           /                                     | 
+//          /                                      |
+//         /                                       |
+//        /                                        |
+//     (x1,y1)                                  (x1,y1)
+
+//     {rx:  x radius                      {rx' = k*rx
+//     {ry:  y radius                      {ry' = k*ry
+//     {phi: x-axis-rotation               {phi' ?
+//     {largearc                           {largearc
+//     {sweep                              {sweep
+   
+//           || (x3 - x1) ||
+//           || (y3 - y1) ||
+
+//      k =  ---------------
+
+//           || (x2 - x1) ||
+//           || (y2 - y1) ||
+
+//   */
+
+//   float k, a, b, c, d;
+//   float dx1, dx2, dy1, dy2;
+//   float d1, d2;
+//   float f, cosf, sinf;
+//   float x,y, det;
+
+//   dx1 = (float)(x2 - x1);
+//   dx2 = (float)(x3 - x1);
+//   dy1 = (float)(y2 - y1);
+//   dy2 = (float)(y3 - y1);
+
+//   d1 = dx1*dx1 + dy1*dy1;
+//   d2 = dx2*dx2 + dy2*dy2;
+
+//   if(d1 == 0 || d2 == 0)
+//     return;
+
+//   k = sqrt(d2/d1);
+//   *rx = (int)(k * *rx);
+//   *ry = (int)(k * *ry);
+
+//   f = *phi * M_PI / 180;
+//   cosf = cos(f);
+//   sinf = sin(f);
+ 
+//   /*  One can check that if M(p) = (cos(p)  -sin(p))
+//                                    (sin(p)   cos(p))
+
+//       then
+//              (k*dx1)         (dx2)
+//       M(phi')(k*dy1) = M(phi)(dy2)
+
+//              (a)   (c)
+//       M(phi')(b) = (d)
+
+//    */
+
+//   a = k*dx1;
+//   b = k*dy1;
+//   c = cosf*dx2 - sinf*dy2;
+//   d = sinf*dx2 + cosf*dy2;
+
+//   /*
+//       x = cos(phi')
+//       y = sin(phi')
+//       phi' = acos(x)*sgn(y)
+
+
+//       (a -b)(x)   (c)
+//       (b  a)(y) = (d)
+
+//       det = a^2 + b^2;
+
+//       (x)    1  (a  b)(c)
+//       (y) = --- (-b a)(d)
+//             det   
+//    */
+  
+//   det = a*a + b*b;
+//   x = (a*c + b*d)/det;
+//   y = (-b*c + a*d)/det;
+
+//   *phi = (int)(acos(x) * 180 / M_PI);
+//   if(y < 0)*phi = 360-*phi;
+// }
 
 extern void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
 					    float *Y, float *width,
@@ -127,11 +228,11 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       AmayaCanvas * p_canvas = pFrame->GetCanvas();
       p_canvas->PushEventHandler(this);
       pFrame->GetCanvas()->CaptureMouse();
-
     }
 
+  /* Get the box of the SVG element */
   pAb = ((PtrElement)el) -> ElAbstractBox[0];
-  if(!pAb && pAb -> AbBox)
+  if(!pAb || !(pAb->AbBox))
     {
     Finished = true;
     return;
@@ -314,7 +415,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 	}
 
       /* Convert Quadratic Bezier to Cubic */
-      if(pPaCurrent->PaShape == PtQuadraticBezier)
+      if(pPaCurrent && pPaCurrent->PaShape == PtQuadraticBezier)
 	pPaCurrent->PaShape = PtCubicBezier;
 	  
       if(pPaNext && pPaNext->PaShape == PtQuadraticBezier)
@@ -449,15 +550,23 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  /* Moving a start point */
 	  pPaCurrent->XStart += dx;
 	  pPaCurrent->YStart += dy;
-	  pPaCurrent->XCtrlStart += dx;
-	  pPaCurrent->YCtrlStart += dy;
+
+	  if(pPaCurrent->PaShape == PtCubicBezier)
+	    {
+	     pPaCurrent->XCtrlStart += dx;
+	     pPaCurrent->YCtrlStart += dy;
+	    }
 
 	  if(pPaPrevious)
 	    {
 	      pPaPrevious->XEnd += dx;
 	      pPaPrevious->YEnd += dy;
-	      pPaPrevious->XCtrlEnd += dx;
-	      pPaPrevious->YCtrlEnd += dy;
+
+	      if(pPaPrevious->PaShape == PtCubicBezier)
+		{
+		  pPaPrevious->XCtrlEnd += dx;
+		  pPaPrevious->YCtrlEnd += dy;
+		}
 	      }
 	  break;
 
@@ -469,8 +578,7 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  pPaCurrent->YCtrlStart += dy;
 
 	  if(smooth && pPaPrevious &&
-	     (pPaPrevious->PaShape == PtCubicBezier ||
-	      pPaPrevious->PaShape == PtQuadraticBezier))
+	     pPaPrevious->PaShape == PtCubicBezier)
 	    {
 	      /* Update the other control point */
 	      GetSymetricPoint(pPaCurrent->XCtrlStart,
@@ -490,14 +598,11 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	case 7:
 	  /* Moving the end control point of the last point
 	     of a subpath*/
-
-
 	  pPaCurrent->XCtrlEnd += dx;
 	  pPaCurrent->YCtrlEnd += dy;
 
 	  if(smooth && pPaNext && 
-	     (pPaNext->PaShape == PtCubicBezier ||
-	      pPaNext->PaShape == PtQuadraticBezier))
+	     pPaNext->PaShape == PtCubicBezier)
 	    {
 	      /* Update the other control point */
 	      GetSymetricPoint(pPaCurrent->XCtrlEnd,
@@ -515,8 +620,24 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  /* Moving a point in the path */
 	case 5:
 	  /* Moving the last point of a subpath */
-	  pPaCurrent->XCtrlEnd += dx;
-	  pPaCurrent->YCtrlEnd += dy;
+
+	  /*if(pPaCurrent->PaShape == PtEllipticalArc)
+	    UpdateArc(pPaCurrent->XStart,
+		      pPaCurrent->XStart,
+		      pPaCurrent->XEnd,
+		      pPaCurrent->YEnd,
+		      (int)(pPaCurrent->XEnd+dx),
+		      (int)(pPaCurrent->YEnd+dy),
+		      &(pPaCurrent->XAxisRotation),
+		      &(pPaCurrent->XRadius),
+		      &(pPaCurrent->YRadius));*/
+
+	  if(pPaCurrent->PaShape == PtCubicBezier)
+	    {
+	      pPaCurrent->XCtrlEnd += dx;
+	      pPaCurrent->YCtrlEnd += dy;
+	    }
+
 	  pPaCurrent->XEnd += dx;
 	  pPaCurrent->YEnd += dy;
 
@@ -524,8 +645,12 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	    {
 	      pPaNext->XStart += dx;
 	      pPaNext->YStart += dy;
-	      pPaNext->XCtrlStart += dx;
-	      pPaNext->YCtrlStart += dy;
+
+	      if(pPaNext->PaShape == PtCubicBezier)
+		{
+		  pPaNext->XCtrlStart += dx;
+		  pPaNext->YCtrlStart += dy;
+		}
 	    }
 	  break;
 
@@ -540,13 +665,15 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 	}
 
 #ifndef NODISPLAY
-	  RedisplayLeaf ((PtrElement) leaf, document, 0);
+      /* Redisplay the GRAPHICS leaf */
+      RedisplayLeaf ((PtrElement) leaf, document, 0);
 #endif
 
       /* Redisplay the SVG canvas to see the transform applied to the object */
       DefBoxRegion (FrameId, box, -1, -1, -1, -1);
       RedrawFrameBottom (FrameId, 0, NULL);
       pFrame->GetCanvas()->Refresh();
+
       /* Update the previous mouse coordinates */
       lastX = mouse_x;
       lastY = mouse_y;
