@@ -155,6 +155,8 @@ void GraphicsSelectionChanged (NotifyElement * event)
   elType = TtaGetElementType (event->element);
   
   if (view == 1 && elType.ElSSchema == svgSchema &&
+       /* In formatted view, you can only select the direct children of the
+	  svgCanvas */
       (elType.ElTypeNum == SVG_EL_g ||
        elType.ElTypeNum == SVG_EL_path ||
        elType.ElTypeNum == SVG_EL_rect ||
@@ -165,22 +167,28 @@ void GraphicsSelectionChanged (NotifyElement * event)
        elType.ElTypeNum == SVG_EL_polygon ||
        elType.ElTypeNum == SVG_EL_text_ ||
        elType.ElTypeNum == SVG_EL_image ||
-       elType.ElTypeNum == SVG_EL_switch
-	   ))
+       elType.ElTypeNum == SVG_EL_switch ||
+       elType.ElTypeNum == SVG_EL_GRAPHICS_UNIT)
+      )
      {
-       /* In formatted view, you can only select the direct children of the
-	  svgCanvas */
+       /* Search the ancestor which is a direct child of the svgCanvas */
        elType.ElTypeNum = SVG_EL_SVG;
        elType.ElSSchema = svgSchema;
        svgCanvas = TtaGetTypedAncestor (event->element, elType);
        asc = event->element;
        while(TtaGetParent(asc) != svgCanvas)
 	 asc = TtaGetParent(asc);
-       
-       TtaSelectElement (event->document, asc);
-       event->element = asc;
-       event->elementType = TtaGetElementType(asc);
-
+      
+       /* Select the element asc, except if we actually select its
+	  graphics leaf */
+       elType = TtaGetElementType (event->element);
+       if(elType.ElTypeNum != SVG_EL_GRAPHICS_UNIT ||
+	  TtaGetParent(event->element) != asc)
+	 {
+	   TtaSelectElement (event->document, asc);
+	   event->element = asc;
+	   event->elementType = TtaGetElementType(asc);
+	 }
     }
   else
     {

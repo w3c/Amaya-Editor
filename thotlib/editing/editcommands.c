@@ -2202,10 +2202,14 @@ ThotBool AskTransform(     Document doc,
 
   if(frame <= 0)return FALSE;
 
+  /* The svgCanvas and ancestor are not explicitly given */
   if(svgCanvas == NULL || svgAncestor == NULL)
-    if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
-      return FALSE;
-  ;
+    {
+      if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
+	/* Can not find the <svg> elements */
+	return FALSE;
+
+    }
 
   /* Get the current transform matrix */
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
@@ -2267,7 +2271,7 @@ ThotBool AskPathEdit (  Document doc,
 		       int edit_type, Element el, int point)
 {
 
-  Element svgCanvas = NULL, svgAncestor = NULL;
+  Element svgCanvas = NULL, svgAncestor = NULL, el2;
   PtrAbstractBox pAb;
   PtrBox pBox;
   ViewFrame          *pFrame;
@@ -2282,7 +2286,15 @@ ThotBool AskPathEdit (  Document doc,
   if(frame <= 0)return FALSE;
 
   /* Get the ancestor and svg canvas */
+  el2 = el;
+
   if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
+  
+    return FALSE;
+
+  if(el2 != el)
+    /* el has changed: it was not a direct child of svgCanvas. Hence
+       transforming it is forbidden. */
     return FALSE;
 
   /* Get the current transform matrix */

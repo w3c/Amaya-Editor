@@ -440,15 +440,14 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 
 	      ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 
-	      if(nChars > 0 && Selecting != NULL && el->ElStructSchema &&
-		 el->ElStructSchema->SsName &&
-		 !strcmp (el->ElStructSchema->SsName, "SVG"))
+	      if(nChars > 0 && Selecting != NULL && el->ElParent &&
+		 IsSVGComponent(el->ElParent))
 		{
 		  /* Click on a point of a polyline or Path */
 		  SelectedPointInPolyline = nChars;
 		  *Selecting = FALSE;
 		  if(AskPathEdit(doc,
-				 0, (Element)el, nChars))
+				 0, (Element)(el->ElParent), nChars))
 		    {
 		      /* The user has moved an SVG element */
 		      TtaSetDocumentModified(doc);
@@ -470,9 +469,8 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		{
 		  el = pBox->BxAbstractBox->AbElement;
 
-		  if(Selecting != NULL && el->ElStructSchema &&
-		     el->ElStructSchema->SsName &&
-		     !strcmp (el->ElStructSchema->SsName, "SVG"))
+		  if(Selecting != NULL && el->ElParent &&
+		     IsSVGComponent(el->ElParent))
 		    {
 		      /* click on an SVG element. Does the user want to
 			 move it ? */
@@ -484,7 +482,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 			  if(AskTransform(doc,
 					  NULL,
 					  NULL,
-					  0, (Element)el))
+					  0, (Element)(el->ElParent)))
 			    {
 			      /* The user has moved an SVG element */
 			      TtaSetDocumentModified(doc);
