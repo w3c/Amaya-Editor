@@ -55,7 +55,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
   int                 topY, middleY, bottomY;
   int                 t, b, l, r;
   int                 thick, halfThick;
-  int                 i, j, n;
+  int                 i, j;
   int                 x, y, bg, fg;
   int                 xstart, ystart, xctrlstart, yctrlstart;
   int                 xend, yend, xctrlend, yctrlend;
@@ -144,21 +144,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
           leftX = pBox->BxXOrg - pFrame->FrXOrg - halfThick;
           topY = pBox->BxYOrg - pFrame->FrYOrg - halfThick;
           j = 1;
-          n = pBox->BxNChars;
-          for (i = 1; i < n; i++)
+          for (i = 1; pBuffer; i++)
             {
-              if (j >= pBuffer->BuLength)
-                {
-                  if (pBuffer->BuNext != NULL)
-                    {
-                      /* Changement de buffer */
-                      pBuffer = pBuffer->BuNext;
-                      j = 0;
-                    }
-                }
-
-
-
               if (pointselect == 0 || pointselect == i)
                 {
                   x = leftX + PixelValue (pBuffer->BuPoints[j].XCoord,
@@ -171,6 +158,11 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
                 }
 	      
               j++;
+              if (j == pBuffer->BuLength)
+                {
+		  pBuffer = pBuffer->BuNext;
+		  j = 0;
+                }
             }
         }
       else if (pAb->AbLeafType == LtPath)

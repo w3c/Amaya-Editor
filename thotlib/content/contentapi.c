@@ -1418,7 +1418,6 @@ void TtaRemovePathData (Document document, Element element)
 /*----------------------------------------------------------------------
   TtaGetPathAttributeValue returns the path attribute value corresponding to
   the current set of path segments
-  The parameter nbPoints gives the number of path control points
   ---------------------------------------------------------------------- */
 char *TtaGetPathAttributeValue (Element el)
 {
@@ -1433,11 +1432,11 @@ char *TtaGetPathAttributeValue (Element el)
 
   nbPoints = ((PtrElement) el)->ElVolume;
   length = nbPoints * SIZE_OF_ONE_SEGMENT;
-  path = (char *)TtaGetMemory (nbPoints * SIZE_OF_ONE_SEGMENT);
+  path = (char *)TtaGetMemory (length);
   path[0] = EOS;
   b = ((PtrElement) el)->ElFirstPathSeg;
   l = 0;
-  while (b && l + SIZE_OF_ONE_SEGMENT < length)
+  while (b && l + SIZE_OF_ONE_SEGMENT <= length)
     {
       if (!b->PaPrevious || b->PaNewSubpath)
         {
@@ -1485,6 +1484,47 @@ char *TtaGetPathAttributeValue (Element el)
     }
 
   return path;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetPointsAttributeValue returns the path attribute value corresponding to
+  the current set of points
+  ---------------------------------------------------------------------- */
+char *TtaGetPointsAttributeValue (Element el)
+{
+  PtrTextBuffer       pBuffer;
+  char *points;
+  int i, length, l, add, nbPoints;
+#define SIZE_OF_ONE_POINT 20
+
+  if(!el)return NULL;
+
+  pBuffer = ((PtrElement)el)->ElPolyLineBuffer;
+
+  nbPoints = ((PtrElement) el)->ElNPoints;
+  length = nbPoints * SIZE_OF_ONE_POINT;
+  points = (char *)TtaGetMemory (length);
+  points[0] = EOS;
+  i = 1;
+  l = 0;
+
+  while(pBuffer && l + SIZE_OF_ONE_POINT <= length)
+    {
+      sprintf (&points[l], "%d,%d ",
+	       pBuffer->BuPoints[i].XCoord,
+	       pBuffer->BuPoints[i].YCoord);
+      add = strlen (&points[l]);
+      l += add;
+      
+      i++;
+      if (i == pBuffer->BuLength)
+	{
+	pBuffer = pBuffer->BuNext;
+	i = 0;
+	}
+    }
+
+  return points;
 }
 
 /*----------------------------------------------------------------------

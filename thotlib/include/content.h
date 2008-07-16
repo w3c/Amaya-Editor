@@ -664,11 +664,16 @@ extern void TtaGivePolylinePoint (Element element, int rank, TypeUnit unit,
 extern void TtaRemovePathData (Document document, Element element);
 
 /*----------------------------------------------------------------------
-  TtaGeTPathAttributeValue returns the path attribut valuee corresponding to
+  TtaGetPathAttributeValue returns the path attribut valuee corresponding to
   the current set of path segments
-  The parameter nbPoints gives the number of path control points
   ---------------------------------------------------------------------- */
 extern char *TtaGetPathAttributeValue (Element el);
+
+/*----------------------------------------------------------------------
+  TtaGetPointsAttributeValue returns the path attribute value corresponding to
+  the current set of points
+  ---------------------------------------------------------------------- */
+extern char *TtaGetPointsAttributeValue (Element el);
 
 /*----------------------------------------------------------------------
    TtaGetPageNumber

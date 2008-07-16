@@ -2179,7 +2179,7 @@ extern ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
 					   Element *svgAncestor,
 					   Element *svgCanvas);
 extern void UpdateTransformMatrix(Document doc, Element el);
-extern void UpdatePathAttribute(Document doc, Element el);
+extern void UpdatePointsOrPathAttribute(Document doc, Element el);
 
 /*----------------------------------------------------------------------
   AskTransform
@@ -2339,9 +2339,9 @@ ThotBool AskPathEdit (  Document doc,
   if(inverse)TtaFreeTransform(inverse);
 
 
-  /* Update the path attribute */
+  /* Update the attribute */
   if(transformApplied)
-    UpdatePathAttribute(doc, el);
+    UpdatePointsOrPathAttribute(doc, el);
 
   return transformApplied;
 }

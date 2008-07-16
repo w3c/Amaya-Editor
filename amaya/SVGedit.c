@@ -3060,13 +3060,14 @@ void UpdateTransformMatrix(Document doc, Element el)
   char         *buffer;
   Attribute     attr;
   AttributeType attrType;
-  ElementType   elType;
   ThotBool      new_, open;
+  SSchema      svgSchema = GetSVGSSchema (doc);
 
+  /* Get the new attribute value */
   buffer = TtaGetTransformAttributeValue(doc, el);
+
   /* Check if the attribute already exists */
-  elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrSSchema = svgSchema;
   attrType.AttrTypeNum = SVG_ATTR_transform;
   attr = TtaGetAttribute (el, attrType);
 
@@ -3107,9 +3108,9 @@ void UpdateTransformMatrix(Document doc, Element el)
  }
 
 /*----------------------------------------------------------------------
-  UpdatePathAttribute
+  UpdatePointsOrPathAttribute
   ----------------------------------------------------------------------*/
-void UpdatePathAttribute(Document doc, Element el)
+void UpdatePointsOrPathAttribute(Document doc, Element el)
 {
   char         *buffer;
   Attribute     attr;
@@ -3117,15 +3118,41 @@ void UpdatePathAttribute(Document doc, Element el)
   ElementType   elType;
   ThotBool      new_, open;
   Element leaf;
+  SSchema      svgSchema = GetSVGSSchema (doc);
+  ThotBool isPath;
+
+  /* Check whether the element is a Path or a polyline/polygon */
+  elType = TtaGetElementType (el);
+  if(elType.ElTypeNum == SVG_EL_path)
+    {
+      /* It's a Path */
+      isPath = TRUE;
+    }
+  else if(elType.ElTypeNum == SVG_EL_polyline ||
+	  elType.ElTypeNum == SVG_EL_polygon)
+    {
+      /* It's a Polygon/polyline */
+      isPath = FALSE;
+    }
+  else
+    return;
 
   /* Get the attribute value from the GRAPHICS leaf */
   leaf = TtaGetFirstLeaf(el);
-  buffer = TtaGetPathAttributeValue(leaf);
+
+  if(isPath)
+    buffer = TtaGetPathAttributeValue(leaf);
+  else
+    buffer = TtaGetPointsAttributeValue(leaf);
 
   /* Check if the attribute already exists */
-  elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = SVG_ATTR_d;
+  attrType.AttrSSchema = svgSchema;
+
+  if(isPath)
+    attrType.AttrTypeNum = SVG_ATTR_d;
+  else
+    attrType.AttrTypeNum = SVG_ATTR_points;
+
   attr = TtaGetAttribute (el, attrType);
 
   /* check if the undo sequence is open */

@@ -248,21 +248,10 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   if(((PtrElement)leaf)->ElLeafType == LtPolyLine)
     {
       /* It's a polyline or a polygon */
-
       pBuffer = ((PtrElement)leaf)->ElPolyLineBuffer;
       j = 1;
       for (i = 1; pBuffer; i++)
 	{
-	  if (j >= pBuffer->BuLength)
-	    {
-	      if (pBuffer->BuNext != NULL)
-		{
-		  /* Changement de buffer */
-		  pBuffer = pBuffer->BuNext;
-		  j = 0;
-		}
-	    }
-	  
 	  if(i == point_number)
 	    {
 	      /* Moving a point of a polyline/polygon  */
@@ -272,6 +261,11 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 	    }
 	  
 	  j++;
+	  if (j == pBuffer->BuLength)
+	    {
+	      pBuffer = pBuffer->BuNext;
+	      j = 0;
+	    }
 	}
     }
   else if(((PtrElement)leaf)->ElLeafType == LtPath)
