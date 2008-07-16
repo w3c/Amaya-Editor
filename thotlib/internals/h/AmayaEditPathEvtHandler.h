@@ -26,7 +26,6 @@ class AmayaEditPathEvtHandler : public wxEvtHandler
 			  int canvasWidth, int canvasHeight,
 			  Element element,
 			  int point_number,
-			  int *n_path_segments,
 			  ThotBool *transformApplied
 			  );
 
@@ -61,7 +60,6 @@ class AmayaEditPathEvtHandler : public wxEvtHandler
   int lastX, lastY, mouse_x,mouse_y;
 
   bool ButtonDown;
-  int *Nseg;
   ThotBool *hasBeenTransformed; 
 
 };

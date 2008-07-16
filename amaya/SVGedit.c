@@ -3109,7 +3109,7 @@ void UpdateTransformMatrix(Document doc, Element el)
 /*----------------------------------------------------------------------
   UpdatePathAttribute
   ----------------------------------------------------------------------*/
-void UpdatePathAttribute(Document doc, Element el, int n_path_segments)
+void UpdatePathAttribute(Document doc, Element el)
 {
   char         *buffer;
   Attribute     attr;
@@ -3120,7 +3120,7 @@ void UpdatePathAttribute(Document doc, Element el, int n_path_segments)
 
   /* Get the attribute value from the GRAPHICS leaf */
   leaf = TtaGetFirstLeaf(el);
-  buffer = TtaGetPathAttributeValue(leaf, n_path_segments);
+  buffer = TtaGetPathAttributeValue(leaf);
 
   /* Check if the attribute already exists */
   elType = TtaGetElementType (el);

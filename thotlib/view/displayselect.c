@@ -622,7 +622,7 @@ void DisplayBgBoxSelection (int frame, PtrBox pBox)
             {
               DisplayBgBoxSelection (frame, pChildBox);
               pChildBox = pChildBox->BxNexChild;
-            }
+	    }
         }
       else if (FrameTable[frame].FrView == 1 && // formatted view
                (pAb->AbLeafType == LtPicture ||

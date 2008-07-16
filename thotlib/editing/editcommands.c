@@ -2174,11 +2174,12 @@ ThotBool AskSurroundingBox(
   return created;
 }
 
+/* TODO: move these declarations in a .h */
 extern ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
 					   Element *svgAncestor,
 					   Element *svgCanvas);
-
 extern void UpdateTransformMatrix(Document doc, Element el);
+extern void UpdatePathAttribute(Document doc, Element el);
 
 /*----------------------------------------------------------------------
   AskTransform
@@ -2262,8 +2263,6 @@ ThotBool AskTransform(     Document doc,
   return transformApplied;
 }
 
-extern void UpdatePathAttribute(Document doc, Element el, int n_path_segments);
-
 /*----------------------------------------------------------------------
   AskPathEdit
   --------------------------------------------------------------------*/
@@ -2279,7 +2278,6 @@ ThotBool AskPathEdit (  Document doc,
   PtrTransform CTM, inverse;
   int canvasWidth,canvasHeight,ancestorX,ancestorY;
   ThotBool transformApplied;
-  int n_path_segments;
 
   frame = ActiveFrame;
 
@@ -2335,8 +2333,7 @@ ThotBool AskPathEdit (  Document doc,
 			       inverse,
 			       ancestorX, ancestorY,
 			       canvasWidth, canvasHeight,
-			       el, point,
-			       &n_path_segments);
+			       el, point);
 
   /* Free the transform matrix */
   if(inverse)TtaFreeTransform(inverse);
@@ -2344,7 +2341,7 @@ ThotBool AskPathEdit (  Document doc,
 
   /* Update the path attribute */
   if(transformApplied)
-    UpdatePathAttribute(doc, el, n_path_segments);
+    UpdatePathAttribute(doc, el);
 
   return transformApplied;
 }

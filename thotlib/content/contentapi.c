@@ -1420,18 +1420,24 @@ void TtaRemovePathData (Document document, Element element)
   the current set of path segments
   The parameter nbPoints gives the number of path control points
   ---------------------------------------------------------------------- */
-char *TtaGetPathAttributeValue (Element el, int nbPoints)
+char *TtaGetPathAttributeValue (Element el)
 {
   PtrPathSeg          b;
   int                 length, l, add;
   char               *path;
+  int nbPoints;
 
-  length = nbPoints * 40;
-  path = (char *)TtaGetMemory (nbPoints * 40);
+#define SIZE_OF_ONE_SEGMENT 50
+
+  if(!el)return NULL;
+
+  nbPoints = ((PtrElement) el)->ElVolume;
+  length = nbPoints * SIZE_OF_ONE_SEGMENT;
+  path = (char *)TtaGetMemory (nbPoints * SIZE_OF_ONE_SEGMENT);
   path[0] = EOS;
   b = ((PtrElement) el)->ElFirstPathSeg;
   l = 0;
-  while (b && l < length)
+  while (b && l + SIZE_OF_ONE_SEGMENT < length)
     {
       if (!b->PaPrevious || b->PaNewSubpath)
         {

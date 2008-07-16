@@ -197,7 +197,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 						 int canvasHeight,
 						 Element element,
 						 int point_number,
-						 int *n_path_segments,
 						 ThotBool *transformApplied)
   :wxEvtHandler()
   ,Finished(false)
@@ -213,7 +212,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   ,el(element)
   ,box(NULL)
   ,ButtonDown(false)
-  ,Nseg(n_path_segments)
   ,hasBeenTransformed(transformApplied)
 {
   PtrAbstractBox pAb;
@@ -283,7 +281,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       pPaNext = NULL;
 
       i = 1;
-      *Nseg = 0;
 
       pPa = ((PtrElement)leaf)->ElFirstPathSeg;
       if(pPa == NULL)
@@ -370,7 +367,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 	  
 	  i++;
 	  pPa = pPa->PaNext;
-	  (*Nseg)++;
 	}
 
       pPaCurrent = pPa;
@@ -393,7 +389,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 		    }
 		  
 		  pPa = pPa->PaNext;
-		  (*Nseg)++;
 		}
 	    }
 	  else if(type == 7 || type == 5)
@@ -407,13 +402,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 	    }
 	}
       
-      /* Go to the end of the path to see how many segment there are */
-      while (pPa)
-	{
-	  pPa = pPa->PaNext;
-	  (*Nseg)++;
-	}
-
       /* Convert Quadratic Bezier to Cubic */
       if(pPaCurrent && pPaCurrent->PaShape == PtQuadraticBezier)
 	pPaCurrent->PaShape = PtCubicBezier;
