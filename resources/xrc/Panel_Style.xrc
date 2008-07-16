@@ -6,138 +6,190 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
+          <orient>wxVERTICAL</orient>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_THEME">
-              <label>Theme</label>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_THEME">
+                  <label>Theme</label>
+                </object>
+                <option>0</option>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="spacer">
+                <size>10,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxChoice" name="wxID_PANEL_CSS_THEME">
+                  <content>
+                    <item>No theme</item>
+                    <item>Classic</item>
+                    <item>Modern</item>
+                  </content>
+                </object>
+                <option>1</option>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
             </object>
-            <option>0</option>
-            <flag>wxALIGN_CENTRE_VERTICAL</flag>
           </object>
           <object class="spacer">
-            <size>10,0</size>
+            <size>0,10</size>
           </object>
           <object class="sizeritem">
-            <object class="wxChoice" name="wxID_PANEL_CSS_THEME">
-              <content>
-                <item>No theme</item>
-                <item>Classic</item>
-                <item>Modern</item>
-              </content>
+            <object class="wxBoxSizer">
+              <object class="sizeritem">
+                <object class="unknown" name="wxID_PANEL_CSS_COLOR">
+                  <size>16,16</size>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <border>0</border>
+              </object>
+              <object class="spacer">
+                <size>2,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_TEXTCOLOR">
+                  <bitmap>../icons/16x16/colorize.png</bitmap>
+                  <tooltip>*Choose and apply text color*</tooltip>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <border>0</border>
+              </object>
+              <object class="spacer">
+                <size>16,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="unknown" name="wxID_PANEL_CSS_BK_COLOR">
+                  <size>16,16</size>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <border>0</border>
+              </object>
+              <object class="spacer">
+                <size>2,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_BKCOLOR">
+                  <bitmap>../icons/16x16/colorize.png</bitmap>
+                  <tooltip>*Choose and apply text color*</tooltip>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <border>0</border>
+              </object>
+              <orient>wxHORIZONTAL</orient>
             </object>
-            <option>1</option>
-            <flag>wxALIGN_CENTRE_VERTICAL</flag>
-          </object>
-        </object>
-      </object>
-      <object class="spacer">
-        <size>0,10</size>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <object class="sizeritem">
-            <object class="unknown" name="wxID_PANEL_CSS_COLOR">
-              <size>16,16</size>
-            </object>
-            <flag>wxALIGN_CENTRE_VERTICAL</flag>
             <border>0</border>
           </object>
           <object class="spacer">
-            <size>2,0</size>
+            <size>0,10</size>
           </object>
           <object class="sizeritem">
-            <object class="wxBitmapButton" name="wxID_BUTTON_TEXTCOLOR">
-              <bitmap>../icons/16x16/colorize.png</bitmap>
-              <tooltip>*Choose and apply text color*</tooltip>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxChoice" name="wxID_CHOICE_FAMILY">
+                  <size>108,-1</size>
+                  <content>
+                    <item>Times</item>
+                    <item>Arial</item>
+                    <item>Courier</item>
+                  </content>
+                  <selection>1</selection>
+                </object>
+                <option>1</option>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="spacer">
+                <size>10,10</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxComboBox" name="wxID_COMBO_SIZE">
+                  <size>60,-1</size>
+                  <content>
+                    <item>6</item>
+                    <item>7</item>
+                    <item>8</item>
+                    <item>9</item>
+                    <item>10</item>
+                    <item>11</item>
+                    <item>12</item>
+                    <item>13</item>
+                    <item>14</item>
+                    <item>15</item>
+                    <item>16</item>
+                    <item>18</item>
+                    <item>20</item>
+                    <item>22</item>
+                    <item>24</item>
+                    <item>26</item>
+                    <item>28</item>
+                    <item>32</item>
+                    <item>36</item>
+                    <item>40</item>
+                    <item>44</item>
+                    <item>48</item>
+                    <item>54</item>
+                    <item>60</item>
+                    <item>66</item>
+                    <item>72</item>
+                    <item>80</item>
+                    <item>88</item>
+                    <item>96</item>
+                  </content>
+                  <selection>6</selection>
+                </object>
+                <option>0</option>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
             </object>
-            <flag>wxALIGN_CENTRE_VERTICAL</flag>
-            <border>0</border>
-          </object>
-          <object class="spacer">
-            <size>16,0</size>
           </object>
           <object class="sizeritem">
-            <object class="unknown" name="wxID_PANEL_CSS_BK_COLOR">
-              <size>16,16</size>
+            <object class="wxBoxSizer">
+              <orient>wxVERTICAL</orient>
+              <object class="sizeritem">
+                <object class="wxToolBar" name="wxID_TOOLBAR_CSS_1" subclass="AmayaBaseToolBar">
+                  <object class="tool" name="wxID_PANEL_CSS_LEFT">
+                    <bitmap>../icons/16x16/CSS_left.png</bitmap>
+                  </object>
+                  <object class="tool" name="wxID_PANEL_CSS_CENTER">
+                    <bitmap>../icons/16x16/CSS_center.png</bitmap>
+                  </object>
+                  <bitmapsize>16,16</bitmapsize>
+                  <margins>2,0</margins>
+                  <style>wxTB_NODIVIDER|wxTB_FLAT</style>
+                  <object class="tool" name="wxID_PANEL_CSS_RIGHT">
+                    <bitmap>../icons/16x16/CSS_right.png</bitmap>
+                  </object>
+                  <object class="tool" name="wxID_PANEL_CSS_JUSTIFY">
+                    <bitmap>../icons/16x16/CSS_justify.png</bitmap>
+                  </object>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxToolBar" name="wxID_TOOLBAR_CSS_2" subclass="AmayaBaseToolBar">
+                  <object class="tool" name="wxID_PANEL_CSS_S_LINE">
+                    <bitmap>../icons/16x16/CSS_s_line.png</bitmap>
+                  </object>
+                  <object class="tool" name="wxID_PANEL_CSS_H_LINE">
+                    <bitmap>../icons/16x16/CSS_h_line.png</bitmap>
+                  </object>
+                  <object class="tool" name="wxID_PANEL_CSS_D_LINE">
+                    <bitmap>../icons/16x16/CSS_d_line.png</bitmap>
+                  </object>
+                  <object class="separator"/>
+                  <object class="tool" name="wxID_PANEL_CSS_INDENT">
+                    <bitmap>../icons/16x16/CSS_indent.png</bitmap>
+                  </object>
+                  <object class="tool" name="wxID_PANEL_CSS_NOINDENT">
+                    <bitmap>../icons/16x16/CSS_noindent.png</bitmap>
+                  </object>
+                  <bitmapsize>16,16</bitmapsize>
+                  <margins>2,0</margins>
+                  <style>wxTB_NODIVIDER|wxTB_FLAT</style>
+                </object>
+              </object>
             </object>
-            <flag>wxALIGN_CENTRE_VERTICAL</flag>
-            <border>0</border>
-          </object>
-          <object class="spacer">
-            <size>2,0</size>
-          </object>
-          <object class="sizeritem">
-            <object class="wxBitmapButton" name="wxID_BUTTON_BKCOLOR">
-              <bitmap>../icons/16x16/colorize.png</bitmap>
-              <tooltip>*Choose and apply text color*</tooltip>
-            </object>
-            <flag>wxALIGN_CENTRE_VERTICAL</flag>
-            <border>0</border>
-          </object>
-          <orient>wxHORIZONTAL</orient>
-        </object>
-        <border>0</border>
-      </object>
-      <object class="spacer">
-        <size>0,10</size>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
-          <object class="sizeritem">
-            <object class="wxChoice" name="wxID_CHOICE_FAMILY">
-              <size>108,-1</size>
-              <content>
-                <item>Times</item>
-                <item>Arial</item>
-                <item>Courier</item>
-              </content>
-              <selection>1</selection>
-            </object>
-            <option>1</option>
-            <flag>wxALIGN_CENTRE_VERTICAL</flag>
-          </object>
-          <object class="spacer">
-            <size>10,10</size>
-          </object>
-          <object class="sizeritem">
-            <object class="wxComboBox" name="wxID_COMBO_SIZE">
-              <size>60,-1</size>
-              <content>
-                <item>6</item>
-                <item>7</item>
-                <item>8</item>
-                <item>9</item>
-                <item>10</item>
-                <item>11</item>
-                <item>12</item>
-                <item>13</item>
-                <item>14</item>
-                <item>15</item>
-                <item>16</item>
-                <item>18</item>
-                <item>20</item>
-                <item>22</item>
-                <item>24</item>
-                <item>26</item>
-                <item>28</item>
-                <item>32</item>
-                <item>36</item>
-                <item>40</item>
-                <item>44</item>
-                <item>48</item>
-                <item>54</item>
-                <item>60</item>
-                <item>66</item>
-                <item>72</item>
-                <item>80</item>
-                <item>88</item>
-                <item>96</item>
-              </content>
-              <selection>6</selection>
-            </object>
-            <option>0</option>
-            <flag>wxALIGN_CENTRE_VERTICAL</flag>
           </object>
         </object>
       </object>
@@ -145,47 +197,15 @@
         <object class="wxBoxSizer">
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
-            <object class="wxToolBar" name="wxID_TOOLBAR_CSS_1" subclass="AmayaBaseToolBar">
-              <object class="tool" name="wxID_PANEL_CSS_LEFT">
-                <bitmap>../icons/16x16/CSS_left.png</bitmap>
-              </object>
-              <object class="tool" name="wxID_PANEL_CSS_CENTER">
-                <bitmap>../icons/16x16/CSS_center.png</bitmap>
-              </object>
-              <bitmapsize>16,16</bitmapsize>
-              <margins>2,0</margins>
-              <style>wxTB_NODIVIDER|wxTB_FLAT</style>
-              <object class="tool" name="wxID_PANEL_CSS_RIGHT">
-                <bitmap>../icons/16x16/CSS_right.png</bitmap>
-              </object>
-              <object class="tool" name="wxID_PANEL_CSS_JUSTIFY">
-                <bitmap>../icons/16x16/CSS_justify.png</bitmap>
-              </object>
+            <object class="wxStaticText">
+              <label>SVG style !</label>
             </object>
           </object>
-          <object class="sizeritem">
-            <object class="wxToolBar" name="wxID_TOOLBAR_CSS_2" subclass="AmayaBaseToolBar">
-              <object class="tool" name="wxID_PANEL_CSS_S_LINE">
-                <bitmap>../icons/16x16/CSS_s_line.png</bitmap>
-              </object>
-              <object class="tool" name="wxID_PANEL_CSS_H_LINE">
-                <bitmap>../icons/16x16/CSS_h_line.png</bitmap>
-              </object>
-              <object class="tool" name="wxID_PANEL_CSS_D_LINE">
-                <bitmap>../icons/16x16/CSS_d_line.png</bitmap>
-              </object>
-              <object class="separator"/>
-              <object class="tool" name="wxID_PANEL_CSS_INDENT">
-                <bitmap>../icons/16x16/CSS_indent.png</bitmap>
-              </object>
-              <object class="tool" name="wxID_PANEL_CSS_NOINDENT">
-                <bitmap>../icons/16x16/CSS_noindent.png</bitmap>
-              </object>
-              <bitmapsize>16,16</bitmapsize>
-              <margins>2,0</margins>
-              <style>wxTB_NODIVIDER|wxTB_FLAT</style>
-            </object>
-          </object>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <object class="wxStaticText">
+          <label>No style !</label>
         </object>
       </object>
     </object>

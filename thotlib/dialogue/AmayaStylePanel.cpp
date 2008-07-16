@@ -122,6 +122,8 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   wxTextValidator valid(wxFILTER_NUMERIC);
   XRCCTRL(*this,"wxID_COMBO_SIZE", wxComboBox)->SetValidator(valid);
   
+  RaiseDoctypePanels(WXAMAYA_DOCTYPE_UNKNOWN);
+  
   return true;
 }
 
@@ -142,6 +144,36 @@ wxString AmayaStyleToolPanel::GetDefaultAUIConfig()
 //  return wxT("");
   return wxT("dir=2;layer=0;row=0;pos=1");
 }
+
+
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaStyleToolPanel
+ *      Method:  RaiseDoctypePanels
+ * Description:  Raiser the specified panels
+ -----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::RaiseDoctypePanels(int doctype)
+{
+  int i;
+  for(i=0; i<3; i++)
+    GetSizer()->Hide((size_t)i);
+  
+  switch(doctype)
+  {
+    case WXAMAYA_DOCTYPE_XHTML:
+      GetSizer()->Show((size_t)0);
+      break;
+    case WXAMAYA_DOCTYPE_SVG:
+      GetSizer()->Show((size_t)1);
+      break;      
+    default:
+      GetSizer()->Show((size_t)2);
+      break;      
+  }
+  Layout();
+}
+
 
 
 /*----------------------------------------------------------------------

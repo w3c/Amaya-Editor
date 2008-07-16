@@ -376,6 +376,11 @@ void AmayaNormalWindow::RaiseDoctypePanels(int doctype)
   panel = GetToolPanel(WXAMAYA_PANEL_ELEMENTS);
   if(panel)
     ((AmayaElementToolPanel*)panel)->RaiseDoctypePanels(doctype);
+  
+  panel = GetToolPanel(WXAMAYA_PANEL_STYLE);
+  if(panel)
+    ((AmayaStyleToolPanel*)panel)->RaiseDoctypePanels(doctype);
+  
 }
 
 

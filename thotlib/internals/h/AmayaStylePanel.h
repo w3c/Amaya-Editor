@@ -41,6 +41,9 @@ public:
   void GenerateFontColour(wxColour c);
   void GenerateBackgroundColour(wxColour c);
 
+  void RaiseDoctypePanels(int doctype);
+  
+  
 protected:
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
