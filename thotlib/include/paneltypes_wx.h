@@ -23,6 +23,18 @@ typedef enum
     
   } wxAMAYA_PANEL_TYPE;
 
+
+/* Use to identify requested doctypes. */
+typedef enum
+{
+  WXAMAYA_DOCTYPE_UNKNOWN = -1,
+  WXAMAYA_DOCTYPE_XHTML   = 0,
+  WXAMAYA_DOCTYPE_MATHML,
+  WXAMAYA_DOCTYPE_SVG,
+  WXAMAYA_DOCTYPE_XTIGER,
+  WXAMAYA_DOCTYPE_XML
+} wxAMAYA_DOCTYPE;
+  
 typedef enum
   {
     WXAMAYA_PANEL_XHTML_DIV,

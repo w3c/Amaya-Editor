@@ -136,6 +136,33 @@ int AmayaElementToolPanel::PanelTypeToIndex(int panel_type)const
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaElementToolPanel
+ *      Method:  PanelTypeToIndex
+ * Description:  Get the panel index for specified type
+  -----------------------------------------------------------------------*/
+int AmayaElementToolPanel::DocTypeToIndex(int doctype)const
+{
+  return doctype;
+/*  switch(panel_type)
+  {
+    case WXAMAYA_DOCTYPE_XHTML:
+      return 0;
+    case WXAMAYA_DOCTYPE_MATHML:
+      return 1;
+    case WXAMAYA_DOCTYPE_SVG:
+      return 2;
+    case WXAMAYA_DOCTYPE_XTIGER:
+      return 3;
+    case WXAMAYA_DOCTYPE_XML:
+      return 4;
+    default:
+      return WXAMAYA_DOCTYPE_UNKNOWN;
+  }
+*/
+}
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaElementToolPanel
  *      Method:  RaisePanel
  * Description:  Raise the specified panel
   -----------------------------------------------------------------------*/
@@ -143,9 +170,25 @@ void AmayaElementToolPanel::RaisePanel(int panel_type)
 {
   int index = PanelTypeToIndex(panel_type);
   if(index!=wxNOT_FOUND)
-//    m_notebook->ChangeSelection(index);
     m_notebook->SetSelection(index);
 }
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaElementToolPanel
+ *      Method:  RaiseDoctypePanels
+ * Description:  Raiser the specified panels
+ -----------------------------------------------------------------------*/
+void AmayaElementToolPanel::RaiseDoctypePanels(int doctype)
+{
+  int index = DocTypeToIndex(doctype);
+  if(index!=wxNOT_FOUND)
+    m_notebook->SetSelection(index);
+
+}
+
+
+
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaElementToolPanel

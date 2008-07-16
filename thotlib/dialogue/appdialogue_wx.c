@@ -2455,4 +2455,15 @@ void TtaRaisePanel(int panel_type)
   TtaRedirectFocus ();
 }
 
+/*----------------------------------------------------------------------
+  TtaRaiseDoctypePanels
+  ----------------------------------------------------------------------*/
+void TtaRaiseDoctypePanels(int doctype)
+{
+  AmayaWindow * activeWindow = TtaGetActiveWindow();
+  if(activeWindow)
+    activeWindow->RaiseDoctypePanels(doctype);
+  TtaRedirectFocus ();
+}
+
 #endif /* _WX */

@@ -1226,7 +1226,7 @@ void MathSelectionChanged (NotifyElement *event)
     }
     UpdateXmlElementListTool (event->element,event->document);
     TtaSetStatusSelectedElement (event->document, 1, event->element);
-    TtaRaisePanel(WXAMAYA_PANEL_MATHML);
+    TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_MATHML);
 }
 
 /*----------------------------------------------------------------------

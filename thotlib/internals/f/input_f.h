@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern int ThotInput ( int frame,
                        unsigned int value,
                        int command,
@@ -27,7 +26,6 @@ extern void TtaListShortcuts ( Document doc,
 extern void InitTranslations ( char *appliname );
 
 #else /* __STDC__ */
-
 extern int ThotInput ( int frame,
                          unsigned int value,
                          int command,

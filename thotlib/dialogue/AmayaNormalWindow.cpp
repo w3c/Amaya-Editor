@@ -366,6 +366,21 @@ void AmayaNormalWindow::RaisePanel(int panel_type)
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
+ *      Method:  RaiseDoctypePanels
+ * Description:  Raiser the specified panels
+ -----------------------------------------------------------------------*/
+void AmayaNormalWindow::RaiseDoctypePanels(int doctype)
+{
+  AmayaToolPanel* panel;
+  
+  panel = GetToolPanel(WXAMAYA_PANEL_ELEMENTS);
+  if(panel)
+    ((AmayaElementToolPanel*)panel)->RaiseDoctypePanels(doctype);
+}
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
  *      Method:  GetToolBarEditing
  * Description:  Return the toolbar panel for edition and create it if needed.
  -----------------------------------------------------------------------*/

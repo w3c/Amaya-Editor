@@ -72,6 +72,7 @@ class AmayaNormalWindow : public AmayaWindow
   virtual void RefreshShowToolPanelToggleMenu();
   virtual void SendDataToPanel(int panel_type, AmayaParams& params);
   virtual void RaisePanel(int panel_type);
+  virtual void RaiseDoctypePanels(int doctype);
   
   virtual bool AttachPage( int position, AmayaPage * p_page );
   virtual bool ClosePage( int position );

@@ -133,6 +133,7 @@ class AmayaWindow : public wxFrame
   virtual void RefreshShowToolPanelToggleMenu();
   virtual void SendDataToPanel(int panel_type, AmayaParams& params){}
   virtual void RaisePanel(int panel_type){}
+  virtual void RaiseDoctypePanels(int doctype){}
 
 
   virtual void SetPageIcon(int page_id, char *iconpath);

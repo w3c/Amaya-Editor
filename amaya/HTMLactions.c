@@ -4025,7 +4025,7 @@ void SelectionChanged (NotifyElement *event)
             // no current text insertion
             CheckPromptIndicator (el, doc);
 #endif /* TEMPLATES */
-          TtaRaisePanel(WXAMAYA_PANEL_XHTML);
+          TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_XHTML);
         }
 #ifdef _WX
       else

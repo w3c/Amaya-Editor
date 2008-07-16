@@ -44,6 +44,8 @@ public:
   
   int PanelTypeToIndex(int panel_type)const;
   void RaisePanel(int panel_type);
+  int DocTypeToIndex(int doctype)const;
+  void RaiseDoctypePanels(int doctype);
   
 protected:
   virtual wxSize DoGetBestSize() const;
