@@ -1287,6 +1287,71 @@ void DoSelectFillColor (Document doc, View view)
   UpdateStylePanel (doc, view);
 }
 
+
+/*----------------------------------------------------------------------
+  DoSelectOpacity
+  Change the opacity of the selection
+  ----------------------------------------------------------------------*/
+void DoSelectOpacity (Document doc, View view)
+{
+  Element             el = NULL;
+  DisplayMode         dispMode;
+  int                 firstChar, lastChar;
+  PRule               rule;
+  int value;
+  char buffer[100];
+  ThotBool open = FALSE;
+
+  doc = TtaGetSelectedDocument();
+  if (NoCSSEditing (doc))
+    /* document is ReadOnly */
+    return;
+
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  if(el)
+    {
+      rule = TtaGetPRule(el, PROpacity);
+      if(rule)
+	value = (int)(100 * TtaGetPRuleValue (rule));
+      else
+	value = 1;
+
+      if(value != Current_Opacity)
+	{
+	  /* Need to force a redisplay */
+	  dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, DeferredDisplay);
+
+	  NewSpanElement (doc, &open);
+	  sprintf(buffer, "opacity: %g", ((float)Current_Opacity) / 100);
+
+	  TtaSetDisplayMode (doc, DisplayImmediately);
+	  GenerateStyle (buffer, TRUE);
+	  TtaSetDisplayMode (doc, DeferredDisplay);
+
+	  if (open)
+	    TtaCloseUndoSequence (doc);
+	  
+	  TtaSetDisplayMode (doc, dispMode);
+	  UpdateStylePanel (doc, view);
+	}
+    }
+
+}
+
+/*
+int  Current_Opacity = 100;
+ThotBool FillEnabled = TRUE;
+int  Current_FillColor = -1;
+int  Current_FillOpacity = 100;
+ThotBool StrokeEnabled = TRUE;
+int  Current_StrokeColor = -1;
+int  Current_StrokeOpacity = 100;
+int  Current_StrokeWidth = 1;*/
+
+
+
 /*----------------------------------------------------------------------
   CleanUpAttribute removes the CSS rule (data) from the attribute value
   Return TRUE if the selection will change

@@ -35,13 +35,15 @@ extern void DoSelectFontFamilly ( Document doc,
                                   View view );
 extern void DoSelectFont ( Document doc,
                            View view );
+extern void DoSelectColor ( Document doc,
+                            View view );
+extern void DoSelectBgColor ( Document doc,
+                              View view );
 extern void DoSelectStrokeColor ( Document doc,
                                   View view );
 extern void DoSelectFillColor ( Document doc,
                                 View view );
-extern void DoSelectColor ( Document doc,
-                            View view );
-extern void DoSelectBgColor ( Document doc,
+extern void DoSelectOpacity ( Document doc,
                               View view );
 extern ThotBool RemoveSpecificStyle ( Document doc,
                                       const char *cssproperty );
@@ -131,13 +133,15 @@ extern void DoSelectFontFamilly ( Document doc,
                                     View view );
 extern void DoSelectFont ( Document doc,
                              View view );
+extern void DoSelectColor ( Document doc,
+                              View view );
+extern void DoSelectBgColor ( Document doc,
+                                View view );
 extern void DoSelectStrokeColor ( Document doc,
                                     View view );
 extern void DoSelectFillColor ( Document doc,
                                   View view );
-extern void DoSelectColor ( Document doc,
-                              View view );
-extern void DoSelectBgColor ( Document doc,
+extern void DoSelectOpacity ( Document doc,
                                 View view );
 extern ThotBool RemoveSpecificStyle ( Document doc,
                                         const char *cssproperty );

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="pmathml.xsl"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -65,8 +66,8 @@
     <!-- M oscillations -->
     <!-- Maybe rotation center is not correct... (30,-22)  -->
     <animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="0,30,-22" to="-30,30,-22"
-                      begin="3s" dur="0.2s" fill="freeze"/>
+                      type="rotate" from="0,30,-22" to="-30,30,-22" begin="3s"
+                      dur="0.2s" fill="freeze"/>
     <animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="-30,30,-22" to="25,30,-22"
                       begin="3.2s" dur="0.4s" fill="freeze"/>
@@ -77,11 +78,8 @@
                       type="rotate" from="-20,30,-22" to="15,30,-22"
                       begin="4.2s" dur="0.8s" fill="freeze"/>
     <animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="15,30,-22" to="-10,30,-22"
-                      begin="5s" dur="1s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="-10,30,-22" to="0,30,-22"
-                      begin="6s" dur="0.6s" fill="freeze"/>
+                      type="rotate" from="15,30,-22" to="-10,30,-22" begin="5s"
+                      dur="1s" fill="freeze"/>
   </g>
 </svg>
 </div>
@@ -99,10 +97,10 @@ href="http://palette.ercim.org/">Palette</a>, Amaya 10 offre une nouvelle
 interface utilisateur et l'édition guidée par des modèles.</p>
 
 <p>Avec Amaya, vous pouvez manipuler des pages Web contenant des formulaires,
-des tables et exploitant les caractéristiques les plus avancées de XHTML.
-Vous pouvez créer et éditer des <a dir="ltr" xml:lang="fr" lang="fr"
-href="../doc/WX/Math.html.fr">expressions mathématiques</a> dans les pages
-Web. Vous pouvez présenter vos documents à l'aide de <a
+des tables et exploitant les caractéristiques les plus avancées de XHTML. Vous
+pouvez créer et éditer des <a dir="ltr" xml:lang="fr" lang="fr"
+href="../doc/WX/Math.html.fr">expressions mathématiques</a> dans les pages Web.
+Vous pouvez présenter vos documents à l'aide de <a
 href="http://www.w3.org/Style/CSS/">feuilles de style CSS</a>.</p>
 </div>
 
@@ -202,26 +200,26 @@ href="http://www.w3.org/Style/CSS/">feuilles de style CSS</a>.</p>
 <h2>Le saviez-vous ?</h2>
 <dl>
   <dt>Choisissez votre profil</dt>
-    <dd>Cinq profils d'édition différents sont fournis pour adapter
-      l'ensemble des menus et des outils à votre propre usage. De plus, les
-      panneaux d'outils peuvent être affichés à gauche ou à droite, à votre
-      convenance pour chaque panneau (voir les Préférences).</dd>
+    <dd>Cinq profils d'édition différents sont fournis pour adapter l'ensemble
+      des menus et des outils à votre propre usage. De plus, les panneaux
+      d'outils peuvent être affichés à gauche ou à droite, à votre convenance
+      pour chaque panneau (voir les Préférences).</dd>
   <dt>Amaya est un éditeur structuré</dt>
     <dd>Avec la touche F2 ou Esc vous pouvez sélectionner l'élément englobant
       dans la structure du document, pour appliquer les fonctions d'édition
       (copier, coller, attributs, etc.) au bon élément.</dd>
   <dt>Un document peut être édité à travers plusieurs vues synchronisées</dt>
     <dd>Le menu Vues vous permet d'ouvrir les vues Structure, Source, Liens,
-      etc. Un double clic sur la ligne en bas ou à droite du document ouvre
-      ou ferme la seconde vue.</dd>
+      etc. Un double clic sur la ligne en bas ou à droite du document ouvre ou
+      ferme la seconde vue.</dd>
   <dt>Un document peut être publié directement sur un serveur Web</dt>
-    <dd>Avec la méthode http PUT vous pouvez écrire sur un serveur, à
-      condition que vous y soyez autorisé. C'est aussi simple que de sauver
-      le document localement.</dd>
+    <dd>Avec la méthode http PUT vous pouvez écrire sur un serveur, à condition
+      que vous y soyez autorisé. C'est aussi simple que de sauver le document
+      localement.</dd>
   <dt>Les liens peuvent être créés par un simple clic</dt>
-    <dd>Pour créer un lien il vous suffit de cliquer sur sa cible (utilisez
-      le menu Vues / Montrer les cibles pour visualiser les cibles
-      disponibles).</dd>
+    <dd>Pour créer un lien il vous suffit de cliquer sur sa cible (utilisez le
+      menu Vues / Montrer les cibles pour visualiser les cibles
+    disponibles).</dd>
   <dt>Amaya offre des commandes avancées</dt>
     <dd>... comme la numérotation des sections, la génération d'une table des
       matières avec liens, l'insertion d'une date de mise à jour, la
@@ -231,13 +229,13 @@ href="http://www.w3.org/Style/CSS/">feuilles de style CSS</a>.</p>
 </div>
 </div>
 
-<p class="bottom section" style="font-size: smaller;">Il est permis
-d'utiliser, de copier, de modifier et de distribuer ce logiciel et sa
-documentation dans n'importe quel but et sans rétribution ou droits d'auteur,
-pourvu que tout le texte de <a
+<p class="bottom section" style="font-size: smaller;">Il est permis d'utiliser,
+de copier, de modifier et de distribuer ce logiciel et sa documentation dans
+n'importe quel but et sans rétribution ou droits d'auteur, pourvu que tout le
+texte de <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html">déclaration
-du droit de copie du MIT et de l'INRIA</a> apparaisse sur TOUTES les copies
-du logiciel et de sa documentation ou toute portion de ceux-ci, incluant les
+du droit de copie du MIT et de l'INRIA</a> apparaisse sur TOUTES les copies du
+logiciel et de sa documentation ou toute portion de ceux-ci, incluant les
 modifications que vous effectuez.</p>
 </body>
 </html>

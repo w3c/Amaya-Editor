@@ -2875,9 +2875,9 @@ extern char *TtaGetTransformAttributeValue(Document document, Element el)
 	  if(!(pPa -> XScale == 0 && pPa -> YScale == 0))
 	    {
 	      if(pPa -> YScale == 0)
-		sprintf(buffer2, "translate(%f) ", pPa -> XScale);
+		sprintf(buffer2, "translate(%g) ", pPa -> XScale);
 	      else
-		sprintf(buffer2, "translate(%f,%f) ", pPa -> XScale, pPa -> YScale);
+		sprintf(buffer2, "translate(%g,%g) ", pPa -> XScale, pPa -> YScale);
 
 	      add = TRUE;
 	    }
@@ -2887,9 +2887,9 @@ extern char *TtaGetTransformAttributeValue(Document document, Element el)
 	  if(!(pPa -> XScale == 1 && pPa -> YScale == 1))
 	    {
 	      if(pPa -> XScale == pPa -> YScale && pPa -> XScale != 1)
-		sprintf(buffer2, "scale(%f) ", pPa -> XScale);
+		sprintf(buffer2, "scale(%g) ", pPa -> XScale);
 	      else
-		sprintf(buffer2, "scale(%f,%f) ", pPa -> XScale, pPa -> YScale);
+		sprintf(buffer2, "scale(%g,%g) ", pPa -> XScale, pPa -> YScale);
 
 	      add = TRUE;
 	    }
@@ -2898,7 +2898,7 @@ extern char *TtaGetTransformAttributeValue(Document document, Element el)
         case PtElRotate:
 	  if(pPa -> TrAngle != 0)
 	    {
-	      sprintf(buffer2, "rotate(%f) ", pPa -> TrAngle);
+	      sprintf(buffer2, "rotate(%g) ", pPa -> TrAngle);
 	      add = TRUE;
 	    }
           break;  
@@ -2906,7 +2906,7 @@ extern char *TtaGetTransformAttributeValue(Document document, Element el)
         case PtElSkewX:
 	  if(pPa -> TrFactor != 0)
 	    {
-	      sprintf(buffer2, "skewX(%f) ", pPa -> TrFactor);
+	      sprintf(buffer2, "skewX(%g) ", pPa -> TrFactor);
 	      add = TRUE;
 	    }
 	  break;
@@ -2914,7 +2914,7 @@ extern char *TtaGetTransformAttributeValue(Document document, Element el)
         case PtElSkewY:
 	  if(pPa -> TrFactor != 0)
 	    {
-	      sprintf(buffer2, "skewY(%f) ", pPa -> TrFactor);
+	      sprintf(buffer2, "skewY(%g) ", pPa -> TrFactor);
 	      add = TRUE;
 	    }          
 	  break;	  

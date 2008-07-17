@@ -5,7 +5,7 @@
 #include "wx/colordlg.h"
 #include "wx/clrpicker.h"
 #include "wx/valtext.h"
-
+#include "wx/spinctrl.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -36,7 +36,6 @@
 #include "AmayaStylePanel.h"
 #include "AmayaNormalWindow.h"
 #include "AmayaColorButton.h"
-
 
 extern void DoStyleColor (char * color, ThotBool isBg);
 extern void ChangeTheme (const char *theme);
@@ -405,7 +404,7 @@ void AmayaStyleToolPanel::OnChooseStrokeColor(wxCommandEvent& event)
 
   c = XRCCTRL(*this, "wxID_SVG_STROKE_COLOR", AmayaColorButton)->ChooseColour();
   if (c != wxNullColour)
-    GenerateStrokeColour(c);  
+  GenerateStrokeColour(c);
 }
 
 /*----------------------------------------------------------------------
@@ -557,6 +556,19 @@ void AmayaStyleToolPanel::OnChooseFontSize(wxCommandEvent& event)
 
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnChooseOpacity(wxSpinEvent& event)
+{
+  Document doc;
+  View view;
+
+  Current_Opacity = event.GetPosition();
+  TtaGiveActiveView( &doc, &view );
+
+  if(doc > 0)
+   TtaExecuteMenuAction ("DoSelectOpacity", doc, view, TRUE);
+}
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
@@ -569,6 +581,7 @@ BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
   EVT_BUTTON(XRCID("wxID_BUTTON_SVG_STROKE_COLOR"), AmayaStyleToolPanel::OnChooseStrokeColor)
   EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnColorFillPalette )
   EVT_BUTTON(XRCID("wxID_BUTTON_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnChooseFillColor)
+  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_OPACITY"), AmayaStyleToolPanel::OnChooseOpacity)
 
 /* HTML Colors */
   EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_PANEL_CSS_COLOR"), AmayaStyleToolPanel::OnColorFontPalette )

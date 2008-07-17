@@ -71,6 +71,8 @@ protected:
 
   void OnChooseFontFamily(wxCommandEvent& event);
   void OnChooseFontSize(wxCommandEvent& event);
+
+  void OnChooseOpacity(wxSpinEvent& event);
   
   AmayaBaseToolBar *m_tbar1, *m_tbar2;
   wxColourData colour_data;

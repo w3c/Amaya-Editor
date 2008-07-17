@@ -759,6 +759,7 @@ ShowAppliedStyle
 &DoRemoveMargin
 &DoSelectFont
 &DoRemoveFont
+&DoSelectOpacity
 
 ########### OPTIONAL MODULES
 [config]
