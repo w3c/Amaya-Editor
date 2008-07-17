@@ -1301,6 +1301,7 @@ void DoSelectOpacity (Document doc, View view)
   int value;
   char buffer[100];
   ThotBool open = FALSE;
+  float value2;
 
   doc = TtaGetSelectedDocument();
   if (NoCSSEditing (doc))
@@ -1312,10 +1313,12 @@ void DoSelectOpacity (Document doc, View view)
     {
       rule = TtaGetPRule(el, PROpacity);
       if(rule)
-	value = (int)(100 * TtaGetPRuleValue (rule));
+	value = TtaGetPRuleValue (rule);
       else
-	value = 1;
+	value = 100;
 
+
+      printf("%d\n", value);
       if(value != Current_Opacity)
 	{
 	  /* Need to force a redisplay */
@@ -1324,16 +1327,16 @@ void DoSelectOpacity (Document doc, View view)
 	    TtaSetDisplayMode (doc, DeferredDisplay);
 
 	  NewSpanElement (doc, &open);
-	  sprintf(buffer, "opacity: %g", ((float)Current_Opacity) / 100);
+	  value2 = ((float)Current_Opacity) / 100;
+	  sprintf(buffer, "opacity: %g", value2);
 
-	  TtaSetDisplayMode (doc, DisplayImmediately);
 	  GenerateStyle (buffer, TRUE);
-	  TtaSetDisplayMode (doc, DeferredDisplay);
+	  TtaSetPRuleValue (el, rule, 10*Current_Opacity, doc);
+
+	  TtaSetDisplayMode (doc, dispMode);
 
 	  if (open)
 	    TtaCloseUndoSequence (doc);
-	  
-	  TtaSetDisplayMode (doc, dispMode);
 	  UpdateStylePanel (doc, view);
 	}
     }
