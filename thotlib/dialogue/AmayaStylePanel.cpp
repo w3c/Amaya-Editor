@@ -84,11 +84,11 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
     return false;
   
   /* SVG Style Panel */
-  wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_PANEL_SVG_STROKE_COLOR"),
-      new AmayaColorButton(this, XRCID("wxID_PANEL_SVG_STROKE_COLOR"), wxColour(0,0,0), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
+  wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_SVG_STROKE_COLOR"),
+      new AmayaColorButton(this, XRCID("wxID_SVG_STROKE_COLOR"), wxColour(0,0,0), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
 
-  wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_PANEL_SVG_FILL_COLOR"),
-      new AmayaColorButton(this, XRCID("wxID_PANEL_SVG_FILL_COLOR"), wxColour(255,255,255), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
+  wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_SVG_FILL_COLOR"),
+      new AmayaColorButton(this, XRCID("wxID_SVG_FILL_COLOR"), wxColour(255,255,255), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
 
   /* HTML Style Panel */
 
@@ -238,7 +238,7 @@ void AmayaStyleToolPanel::SetStrokeColor(int color)
   Current_StrokeColor = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
   col = wxColour ( red, green, blue );
-  XRCCTRL(*this, "wxID_PANEL_SVG_STROKE_COLOR", AmayaColorButton)->SetColour( col );
+  XRCCTRL(*this, "wxID_SVG_STROKE_COLOR", AmayaColorButton)->SetColour( col );
 }
 
 /*----------------------------------------------------------------------
@@ -257,7 +257,7 @@ void AmayaStyleToolPanel::SetFillColor(int color)
   Current_FillColor = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
   col = wxColour ( red, green, blue );
-  XRCCTRL(*this, "wxID_PANEL_SVG_FILL_COLOR", AmayaColorButton)->SetColour( col );  
+  XRCCTRL(*this, "wxID_SVG_FILL_COLOR", AmayaColorButton)->SetColour( col );  
 }
 
 /*----------------------------------------------------------------------
@@ -402,7 +402,7 @@ void AmayaStyleToolPanel::OnChooseStrokeColor(wxCommandEvent& event)
 {
   wxColour c;
 
-  c = XRCCTRL(*this, "wxID_PANEL_SVG_STROKE_COLOR", AmayaColorButton)->ChooseColour();
+  c = XRCCTRL(*this, "wxID_SVG_STROKE_COLOR", AmayaColorButton)->ChooseColour();
   if (c != wxNullColour)
     GenerateStrokeColour(c);  
 }
@@ -439,7 +439,7 @@ void AmayaStyleToolPanel::OnChooseFillColor(wxCommandEvent& event)
 {
   wxColour c;
 
-  c = XRCCTRL(*this, "wxID_PANEL_SVG_FILL_COLOR", AmayaColorButton)->ChooseColour();
+  c = XRCCTRL(*this, "wxID_SVG_FILL_COLOR", AmayaColorButton)->ChooseColour();
   if (c != wxNullColour)
     GenerateFillColour(c);    
 }
@@ -481,13 +481,13 @@ void AmayaStyleToolPanel::SendDataToPanel( AmayaParams& p )
     {
       TtaGiveThotRGB (Current_StrokeColor, &red, &green, &blue);
       col = wxColour ( red, green, blue );
-      XRCCTRL(*this, "wxID_PANEL_SVG_STROKE_COLOR", AmayaColorButton)->SetColour( col );
+      XRCCTRL(*this, "wxID_SVG_STROKE_COLOR", AmayaColorButton)->SetColour( col );
     }
   if (Current_FillColor != -1)
     {
       TtaGiveThotRGB (Current_FillColor, &red, &green, &blue);
       col = wxColour ( red, green, blue );
-      XRCCTRL(*this, "wxID_PANEL_SVG_FILL_COLOR", AmayaColorButton)->SetColour( col );  
+      XRCCTRL(*this, "wxID_SVG_FILL_COLOR", AmayaColorButton)->SetColour( col );  
     }
 
 
@@ -564,9 +564,9 @@ void AmayaStyleToolPanel::OnChooseFontSize(wxCommandEvent& event)
 BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
 
 /* SVG colors */
-  EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_PANEL_SVG_STROKE_COLOR"), AmayaStyleToolPanel::OnColorStrokePalette )
+  EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_SVG_STROKE_COLOR"), AmayaStyleToolPanel::OnColorStrokePalette )
   EVT_BUTTON(XRCID("wxID_BUTTON_SVG_STROKE_COLOR"), AmayaStyleToolPanel::OnChooseStrokeColor)
-  EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_PANEL_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnColorFillPalette )
+  EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnColorFillPalette )
   EVT_BUTTON(XRCID("wxID_BUTTON_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnChooseFillColor)
 
 /* HTML Colors */
