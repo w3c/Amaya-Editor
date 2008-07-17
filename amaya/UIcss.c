@@ -968,7 +968,7 @@ void DoStyleColor (char *color, ThotBool isBg)
           TtaSetDisplayMode (doc, DisplayImmediately);
           if ((isBg && new_col == bg_col) || new_col != col)
             GenerateStyle (buffer, TRUE);
-          TtaSetDisplayMode (doc, DeferredDisplay);
+          TtaSetDisplayMode (doc, dispMode);
         }
     }
   else
@@ -1207,6 +1207,78 @@ void DoSelectBgColor (Document doc, View view)
       colour_data = dialog.GetColourData();
       c = colour_data.GetColour();
       Current_BackgroundColor = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
+
+      sprintf( color_string, "#%02x%02x%02x",
+               c.Red(), c.Green(), c.Blue());
+      DoStyleColor (color_string, TRUE);
+    }
+  UpdateStylePanel (doc, view);
+}
+
+/*----------------------------------------------------------------------
+  DoSelectStrokeColor
+  Apply color style
+  ----------------------------------------------------------------------*/
+void DoSelectStrokeColor (Document doc, View view)
+{
+  wxColour            c;
+  wxColourData        colour_data;
+  char                color_string[100];
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+
+  if (NoCSSEditing (doc))
+    /* document is ReadOnly */
+    return;
+
+  if (Current_StrokeColor != -1)
+    TtaGiveThotRGB (Current_StrokeColor, &red, &green, &blue);
+  else
+    TtaGiveThotRGB (0, &red, &green, &blue);
+
+  colour_data.SetColour( wxColour( red, green, blue ) );
+  wxColourDialog dialog (NULL, &colour_data);
+  if (dialog.ShowModal() == wxID_OK)
+    {
+      colour_data = dialog.GetColourData();
+      c = colour_data.GetColour();
+      Current_StrokeColor = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
+      sprintf( color_string, "#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
+      DoStyleColor (color_string, FALSE);
+    }
+  UpdateStylePanel (doc, view);
+}
+
+/*----------------------------------------------------------------------
+  DoSelectFillColor
+  Apply color style
+  ----------------------------------------------------------------------*/
+void DoSelectFillColor (Document doc, View view)
+{
+  wxColour            c;
+  wxColourData        colour_data;
+  char                color_string[100];
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+
+  if (NoCSSEditing (doc))
+    /* document is ReadOnly */
+    return;
+
+  if (Current_FillColor != -1)
+    TtaGiveThotRGB (Current_FillColor, &red, &green, &blue);
+  else
+    TtaGiveThotRGB (0, &red, &green, &blue);
+    
+  colour_data.SetColour( wxColour( red, green, blue ) );
+  wxColourDialog dialog (NULL, &colour_data);
+  if (dialog.ShowModal() == wxID_OK)
+    {
+      colour_data = dialog.GetColourData();
+      c = colour_data.GetColour();
+      Current_FillColor = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
 
       sprintf( color_string, "#%02x%02x%02x",
                c.Red(), c.Green(), c.Blue());

@@ -36,10 +36,15 @@ public:
   
   void SetColor(int color);
   void SetBackgroundColor(int color);
+  void SetStrokeColor(int color);
+  void SetFillColor(int color);
+
   void SetTheme(const char *theme);
 
   void GenerateFontColour(wxColour c);
   void GenerateBackgroundColour(wxColour c);
+  void GenerateStrokeColour(wxColour c);
+  void GenerateFillColour(wxColour c);
 
   void RaiseDoctypePanels(int doctype);
   
@@ -53,6 +58,13 @@ protected:
 
   void OnChooseBackgroundColor(wxCommandEvent& event);
   void OnColorBackgroundPalette( AmayaColorButtonEvent& event );
+
+  void OnChooseStrokeColor(wxCommandEvent& event);
+  void OnColorStrokePalette( AmayaColorButtonEvent& event );
+
+  void OnChooseFillColor(wxCommandEvent& event);
+  void OnColorFillPalette( AmayaColorButtonEvent& event );
+
   void SendDataToPanel( AmayaParams& p );
   
   void OnThemeChange( wxCommandEvent& event );

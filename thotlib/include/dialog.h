@@ -15,6 +15,17 @@ extern int Current_BackgroundColor; // export the panel Background Color
 extern int Current_FontFamily;      // export the panel Font family
 extern int Current_FontSize;        // export the panel Font size
 extern int SavePANEL_PREFERENCES;   // say if panel preferences are saved
+
+
+/* SVG Style panel */
+extern int  Current_Opacity;
+extern ThotBool FillEnabled;
+extern int  Current_FillColor;
+extern int  Current_FillOpacity;
+extern ThotBool StrokeEnabled;
+extern int  Current_StrokeColor;
+extern int  Current_StrokeOpacity;
+extern int  Current_StrokeWidth;
 #endif /* _WX */
 
 

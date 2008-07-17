@@ -35,6 +35,10 @@ extern void DoSelectFontFamilly ( Document doc,
                                   View view );
 extern void DoSelectFont ( Document doc,
                            View view );
+extern void DoSelectStrokeColor ( Document doc,
+                                  View view );
+extern void DoSelectFillColor ( Document doc,
+                                View view );
 extern void DoSelectColor ( Document doc,
                             View view );
 extern void DoSelectBgColor ( Document doc,
@@ -127,6 +131,10 @@ extern void DoSelectFontFamilly ( Document doc,
                                     View view );
 extern void DoSelectFont ( Document doc,
                              View view );
+extern void DoSelectStrokeColor ( Document doc,
+                                    View view );
+extern void DoSelectFillColor ( Document doc,
+                                  View view );
 extern void DoSelectColor ( Document doc,
                               View view );
 extern void DoSelectBgColor ( Document doc,

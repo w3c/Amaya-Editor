@@ -2626,16 +2626,16 @@ void CreateGraphicElement (Document doc, View view, int entry)
     {
 
       /* Get the stroke color */
-      if (Current_Color != -1)
-	TtaGiveThotRGB (Current_Color, &red, &green, &blue);
+      if (Current_StrokeColor != -1)
+	TtaGiveThotRGB (Current_StrokeColor, &red, &green, &blue);
       else
 	TtaGiveThotRGB (0, &red, &green, &blue);
       sprintf(stroke_color, "#%02x%02x%02x", red, green, blue);
 
       /* Get the fill color */
-      if (Current_BackgroundColor != -1 && isFilled)
+      if (Current_FillColor != -1 && isFilled)
 	{
-	  TtaGiveThotRGB (Current_BackgroundColor, &red, &green, &blue);
+	  TtaGiveThotRGB (Current_FillColor, &red, &green, &blue);
 	  sprintf(fill_color , "#%02x%02x%02x", red, green, blue);
 	}
       else

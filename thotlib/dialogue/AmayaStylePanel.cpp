@@ -83,13 +83,21 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_STYLE")))
     return false;
   
+  /* SVG Style Panel */
+  wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_PANEL_SVG_STROKE_COLOR"),
+      new AmayaColorButton(this, XRCID("wxID_PANEL_SVG_STROKE_COLOR"), wxColour(0,0,0), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
+
+  wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_PANEL_SVG_FILL_COLOR"),
+      new AmayaColorButton(this, XRCID("wxID_PANEL_SVG_FILL_COLOR"), wxColour(255,255,255), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
+
+  /* HTML Style Panel */
+
   wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_PANEL_CSS_COLOR"),
       new AmayaColorButton(this, XRCID("wxID_PANEL_CSS_COLOR"), wxColour(0,0,0), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
 
   wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_PANEL_CSS_BK_COLOR"),
       new AmayaColorButton(this, XRCID("wxID_PANEL_CSS_BK_COLOR"), wxColour(255,255,255), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
-
-  
+ 
   m_tbar1 = XRCCTRL(*this,"wxID_TOOLBAR_CSS_1", AmayaBaseToolBar);
   m_tbar2 = XRCCTRL(*this,"wxID_TOOLBAR_CSS_2", AmayaBaseToolBar);
 
@@ -102,7 +110,7 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   
   XRCCTRL(*this, "wxID_PANEL_CSS_COLOR", AmayaColorButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_BUTTON_1)));
   XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_BUTTON_2)));
-  
+
   XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORFG)));
   XRCCTRL(*this, "wxID_BUTTON_BKCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CPCOLORBG)));
   
@@ -214,11 +222,46 @@ void AmayaStyleToolPanel::SetBackgroundColor(int color)
   XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->SetColour( col );  
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::SetStrokeColor(int color)
+{
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+  wxColour            col;
+
+  if (color == Current_StrokeColor)
+    // already set
+    return;
+
+  Current_StrokeColor = color;
+  TtaGiveThotRGB (color, &red, &green, &blue);
+  col = wxColour ( red, green, blue );
+  XRCCTRL(*this, "wxID_PANEL_SVG_STROKE_COLOR", AmayaColorButton)->SetColour( col );
+}
 
 /*----------------------------------------------------------------------
-  OnColorPalette is called when the user click on the color palette button
-  params:
-  returns:
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::SetFillColor(int color)
+{
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+  wxColour            col;
+
+  if (color == Current_FillColor)
+    // already set
+    return;
+
+  Current_FillColor = color;
+  TtaGiveThotRGB (color, &red, &green, &blue);
+  col = wxColour ( red, green, blue );
+  XRCCTRL(*this, "wxID_PANEL_SVG_FILL_COLOR", AmayaColorButton)->SetColour( col );  
+}
+
+/*----------------------------------------------------------------------
+  OnThemeChange
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::OnThemeChange( wxCommandEvent& event )
 {
@@ -247,6 +290,7 @@ void AmayaStyleToolPanel::OnThemeChange( wxCommandEvent& event )
 }
 
 /*----------------------------------------------------------------------
+  SetTheme
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::SetTheme(const char *theme)
 {
@@ -261,6 +305,7 @@ void AmayaStyleToolPanel::SetTheme(const char *theme)
 }
 
 /*----------------------------------------------------------------------
+  GenerateFontColour
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::GenerateFontColour(wxColour c)
 {
@@ -277,6 +322,7 @@ void AmayaStyleToolPanel::GenerateFontColour(wxColour c)
 }
 
 /*----------------------------------------------------------------------
+  OnChooseFontColor
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::OnChooseFontColor(wxCommandEvent& event)
 {
@@ -288,9 +334,7 @@ void AmayaStyleToolPanel::OnChooseFontColor(wxCommandEvent& event)
 }
 
 /*----------------------------------------------------------------------
-  OnColorPalette is called when the user click on the color palette button
-  params:
-  returns:
+  OnColorFontPalette
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::OnColorFontPalette( AmayaColorButtonEvent& event )
 {
@@ -298,6 +342,7 @@ void AmayaStyleToolPanel::OnColorFontPalette( AmayaColorButtonEvent& event )
 }
 
 /*----------------------------------------------------------------------
+  GenerateBackgroundColour
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::GenerateBackgroundColour(wxColour c)
 {
@@ -314,6 +359,7 @@ void AmayaStyleToolPanel::GenerateBackgroundColour(wxColour c)
 }
 
 /*----------------------------------------------------------------------
+  OnChooseBackgroundColor
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::OnChooseBackgroundColor(wxCommandEvent& event)
 {
@@ -325,10 +371,85 @@ void AmayaStyleToolPanel::OnChooseBackgroundColor(wxCommandEvent& event)
 }
 
 /*----------------------------------------------------------------------
+  OnColorBackgroundPalette
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::OnColorBackgroundPalette( AmayaColorButtonEvent& event )
 {
   GenerateBackgroundColour(event.GetColour());  
+}
+
+/*----------------------------------------------------------------------
+  GenerateStrokeColour
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::GenerateStrokeColour(wxColour c)
+{
+  char     color_string[100];
+  int      color;
+
+  color = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
+  if (color != Current_StrokeColor)
+    Current_StrokeColor = color;
+  // generate a color style
+  sprintf( color_string, "#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
+  CloseTextInsertion ();
+  DoStyleColor (color_string, FALSE);
+}
+
+/*----------------------------------------------------------------------
+  OnChooseStrokeColor
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnChooseStrokeColor(wxCommandEvent& event)
+{
+  wxColour c;
+
+  c = XRCCTRL(*this, "wxID_PANEL_SVG_STROKE_COLOR", AmayaColorButton)->ChooseColour();
+  if (c != wxNullColour)
+    GenerateStrokeColour(c);  
+}
+
+/*----------------------------------------------------------------------
+  OnColorStrokePalette
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnColorStrokePalette( AmayaColorButtonEvent& event )
+{
+  GenerateStrokeColour(event.GetColour());
+}
+
+/*----------------------------------------------------------------------
+  GenerateFillColour
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::GenerateFillColour(wxColour c)
+{
+  char     color_string[100];
+  int      color;
+
+  color = TtaGetThotColor (c.Red(), c.Green(), c.Blue());
+  if (color != Current_FillColor)
+    Current_FillColor = color;
+  // generate a color style
+  sprintf( color_string, "#%02x%02x%02x", c.Red(), c.Green(), c.Blue());
+  CloseTextInsertion ();
+  DoStyleColor (color_string, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  OnChooseFillColor
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnChooseFillColor(wxCommandEvent& event)
+{
+  wxColour c;
+
+  c = XRCCTRL(*this, "wxID_PANEL_SVG_FILL_COLOR", AmayaColorButton)->ChooseColour();
+  if (c != wxNullColour)
+    GenerateFillColour(c);    
+}
+
+/*----------------------------------------------------------------------
+  OnColorFillPalette
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnColorFillPalette( AmayaColorButtonEvent& event )
+{
+  GenerateFillColour(event.GetColour());  
 }
 
 /*----------------------------------------------------------------------
@@ -356,6 +477,20 @@ void AmayaStyleToolPanel::SendDataToPanel( AmayaParams& p )
       col = wxColour ( red, green, blue );
       XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->SetColour( col );  
     }
+  if (Current_StrokeColor != -1)
+    {
+      TtaGiveThotRGB (Current_StrokeColor, &red, &green, &blue);
+      col = wxColour ( red, green, blue );
+      XRCCTRL(*this, "wxID_PANEL_SVG_STROKE_COLOR", AmayaColorButton)->SetColour( col );
+    }
+  if (Current_FillColor != -1)
+    {
+      TtaGiveThotRGB (Current_FillColor, &red, &green, &blue);
+      col = wxColour ( red, green, blue );
+      XRCCTRL(*this, "wxID_PANEL_SVG_FILL_COLOR", AmayaColorButton)->SetColour( col );  
+    }
+
+
   if (Current_FontFamily > 0)
     {
       switch (Current_FontFamily)
@@ -427,9 +562,16 @@ void AmayaStyleToolPanel::OnChooseFontSize(wxCommandEvent& event)
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
+
+/* SVG colors */
+  EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_PANEL_SVG_STROKE_COLOR"), AmayaStyleToolPanel::OnColorStrokePalette )
+  EVT_BUTTON(XRCID("wxID_BUTTON_SVG_STROKE_COLOR"), AmayaStyleToolPanel::OnChooseStrokeColor)
+  EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_PANEL_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnColorFillPalette )
+  EVT_BUTTON(XRCID("wxID_BUTTON_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnChooseFillColor)
+
+/* HTML Colors */
   EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_PANEL_CSS_COLOR"), AmayaStyleToolPanel::OnColorFontPalette )
   EVT_BUTTON(XRCID("wxID_BUTTON_TEXTCOLOR"), AmayaStyleToolPanel::OnChooseFontColor)
-
   EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_PANEL_CSS_BK_COLOR"), AmayaStyleToolPanel::OnColorBackgroundPalette )
   EVT_BUTTON(XRCID("wxID_BUTTON_BKCOLOR"), AmayaStyleToolPanel::OnChooseBackgroundColor)
 

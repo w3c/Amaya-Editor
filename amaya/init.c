@@ -61,6 +61,17 @@
 extern XmlEntity *pMathEntityTable;
 #include "appdialogue_wx.h"
 
+/* SVG Style panel */
+int  Current_Opacity = 100;
+ThotBool FillEnabled = TRUE;
+int  Current_FillColor = -1;
+int  Current_FillOpacity = 100;
+ThotBool StrokeEnabled = TRUE;
+int  Current_StrokeColor = -1;
+int  Current_StrokeOpacity = 100;
+int  Current_StrokeWidth = 1;
+
+/* HTML Style panel */
 int  Current_Color = -1;
 int  Current_BackgroundColor = -1;
 int  SavePANEL_PREFERENCES = 1;

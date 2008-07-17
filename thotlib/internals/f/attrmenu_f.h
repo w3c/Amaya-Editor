@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern void TtaSetAttributeChangeFunction ( Proc2 procedure );
 extern void CallbackReqAttrMenu ( int ref,
                                   int val,
@@ -34,6 +35,7 @@ extern void CloseAttributeDialogues ( PtrDocument pDoc );
 extern void AttributeMenuLoadResources ( void );
 
 #else /* __STDC__ */
+
 extern void TtaSetAttributeChangeFunction ( Proc2 procedure );
 extern void CallbackReqAttrMenu ( int ref,
                                     int val,

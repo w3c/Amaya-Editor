@@ -254,25 +254,25 @@
                 <flag>wxALIGN_CENTRE_VERTICAL</flag>
               </object>
               <object class="sizeritem">
-                <object class="wxCheckBox" name="wxID_SVG_FILL_NONE">
+                <object class="wxCheckBox" name="wxID_SVG_STROKE_NONE">
                   <label>Stroke</label>
                   <checked>1</checked>
                 </object>
               </object>
               <object class="sizeritem">
-                <object class="unknown" name="wxID_SVG_FILL_COLOR">
+                <object class="unknown" name="wxID_SVG_STROKE_COLOR">
                   <size>16,16</size>
                 </object>
                 <flag>wxALIGN_CENTRE</flag>
               </object>
               <object class="sizeritem">
-                <object class="wxBitmapButton" name="wxID_BUTTON_SVG_FILL_COLOR">
+                <object class="wxBitmapButton" name="wxID_BUTTON_SVG_STROKE_COLOR">
                   <bitmap>../icons/16x16/colorize.png</bitmap>
                   <tooltip>*Choose and apply text color*</tooltip>
                 </object>
               </object>
               <object class="sizeritem">
-                <object class="wxSpinCtrl" name="wxID_SPIN_SVG_FILL_OPAC">
+                <object class="wxSpinCtrl" name="wxID_SPIN_SVG_STROKE_OPAC">
                   <size>64,-1</size>
                   <value>100</value>
                   <min>0</min>
