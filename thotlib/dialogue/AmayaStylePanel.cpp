@@ -118,6 +118,7 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   
   XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_BODY_SIZE_PTS)));
   SetColor (1);
+  SetStrokeColor(1);
 
   XRCCTRL(*this, "wxID_THEME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_THEME)));
   wxChoice     *theme = XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice);
