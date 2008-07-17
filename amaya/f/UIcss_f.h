@@ -45,6 +45,16 @@ extern void DoSelectFillColor ( Document doc,
                                 View view );
 extern void DoSelectOpacity ( Document doc,
                               View view );
+extern void DoSelectFillOpacity ( Document doc,
+                                  View view );
+extern void DoSelectStrokeOpacity ( Document doc,
+                                    View view );
+extern void DoSelectStrokeWidth ( Document doc,
+                                  View view );
+extern void DoStyleSVG ( Document doc,
+                         View view,
+                         int current_value,
+                         int type );
 extern ThotBool RemoveSpecificStyle ( Document doc,
                                       const char *cssproperty );
 extern void DoRemoveColor ( Document doc,
@@ -143,6 +153,16 @@ extern void DoSelectFillColor ( Document doc,
                                   View view );
 extern void DoSelectOpacity ( Document doc,
                                 View view );
+extern void DoSelectFillOpacity ( Document doc,
+                                    View view );
+extern void DoSelectStrokeOpacity ( Document doc,
+                                      View view );
+extern void DoSelectStrokeWidth ( Document doc,
+                                    View view );
+extern void DoStyleSVG ( Document doc,
+                           View view,
+                           int current_value,
+                           int type );
 extern ThotBool RemoveSpecificStyle ( Document doc,
                                         const char *cssproperty );
 extern void DoRemoveColor ( Document doc,

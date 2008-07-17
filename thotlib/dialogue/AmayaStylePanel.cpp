@@ -572,6 +572,48 @@ void AmayaStyleToolPanel::OnChooseOpacity(wxSpinEvent& event)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnChooseStrokeOpacity(wxSpinEvent& event)
+{
+  Document doc;
+  View view;
+
+  Current_StrokeOpacity = event.GetPosition();
+  TtaGiveActiveView( &doc, &view );
+
+  if(doc > 0)
+   TtaExecuteMenuAction ("DoSelectStrokeOpacity", doc, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnChooseFillOpacity(wxSpinEvent& event)
+{
+  Document doc;
+  View view;
+
+  Current_FillOpacity = event.GetPosition();
+  TtaGiveActiveView( &doc, &view );
+
+  if(doc > 0)
+   TtaExecuteMenuAction ("DoSelectFillOpacity", doc, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnChooseStrokeWidth(wxSpinEvent& event)
+{
+  Document doc;
+  View view;
+
+  Current_StrokeWidth = event.GetPosition();
+  TtaGiveActiveView( &doc, &view );
+
+  if(doc > 0)
+   TtaExecuteMenuAction ("DoSelectStrokeWidth", doc, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::OnUpdateFillUI(wxUpdateUIEvent& event)
 {
   event.Enable(XRCCTRL(*this, "wxID_SVG_FILL_NONE", wxCheckBox)->IsChecked());
@@ -597,6 +639,10 @@ BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
   EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnColorFillPalette )
   EVT_BUTTON(XRCID("wxID_BUTTON_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnChooseFillColor)
   EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_OPACITY"), AmayaStyleToolPanel::OnChooseOpacity)
+  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_STROKE_OPAC"), AmayaStyleToolPanel::OnChooseStrokeOpacity)
+  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_FILL_OPAC"), AmayaStyleToolPanel::OnChooseFillOpacity)
+  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_STROKE_WIDTH"), AmayaStyleToolPanel::OnChooseStrokeWidth)
+
   
   EVT_UPDATE_UI(XRCID("wxID_BUTTON_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnUpdateFillUI)
   EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_FILL_OPAC"), AmayaStyleToolPanel::OnUpdateFillUI)

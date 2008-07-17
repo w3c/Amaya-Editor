@@ -708,5 +708,8 @@ FUNCTIONS
   CreateSVG_Image,
   TransformSVG_Skew,
   TransformSVG_Scale,
-  DoSelectOpacity;
+  DoSelectOpacity,
+  DoSelectStrokeOpacity,
+  DoSelectFillOpacity,
+  DoSelectStrokeWidth;
 END

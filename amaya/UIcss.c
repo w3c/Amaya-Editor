@@ -1287,12 +1287,45 @@ void DoSelectFillColor (Document doc, View view)
   UpdateStylePanel (doc, view);
 }
 
-
 /*----------------------------------------------------------------------
-  DoSelectOpacity
+  DoSelectGlobalOpacity
   Change the opacity of the selection
   ----------------------------------------------------------------------*/
-void DoSelectOpacity (Document doc, View view)
+void DoSelectOpacity(Document doc, View view)
+{
+  DoStyleSVG (doc, view, Current_Opacity, PROpacity);
+}
+
+/*----------------------------------------------------------------------
+  DoSelectFillOpacity
+  Change the opacity of the selection
+  ----------------------------------------------------------------------*/
+void DoSelectFillOpacity(Document doc, View view)
+{
+  DoStyleSVG (doc, view, Current_FillOpacity, PRFillOpacity);
+}
+
+/*----------------------------------------------------------------------
+  DoSelectStrokeOpacity
+  Change the opacity of the selection
+  ----------------------------------------------------------------------*/
+void DoSelectStrokeOpacity(Document doc, View view)
+{
+  DoStyleSVG (doc, view, Current_StrokeOpacity, PRStrokeOpacity);
+}
+
+/*----------------------------------------------------------------------
+  DoSelectStrokeWidth
+  ----------------------------------------------------------------------*/
+void DoSelectStrokeWidth(Document doc, View view)
+{
+  DoStyleSVG (doc, view, Current_StrokeWidth, PRLineWeight);
+}
+
+/*----------------------------------------------------------------------
+  DoStyleSVG
+  ----------------------------------------------------------------------*/
+void DoStyleSVG (Document doc, View view, int current_value, int type)
 {
   Element             el = NULL;
   DisplayMode         dispMode;
@@ -1301,7 +1334,6 @@ void DoSelectOpacity (Document doc, View view)
   int value;
   char buffer[100];
   ThotBool open = FALSE;
-  float value2;
 
   doc = TtaGetSelectedDocument();
   if (NoCSSEditing (doc))
@@ -1311,28 +1343,44 @@ void DoSelectOpacity (Document doc, View view)
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
   if(el)
     {
-      rule = TtaGetPRule(el, PROpacity);
+      rule = TtaGetPRule(el, type);
       if(rule)
 	value = TtaGetPRuleValue (rule);
-      else
-	value = 100;
 
+      printf("%d %d", value, current_value);
 
-      printf("%d\n", value);
-      if(value != Current_Opacity)
+      if(value != current_value)
 	{
 	  /* Need to force a redisplay */
 	  dispMode = TtaGetDisplayMode (doc);
 	  if (dispMode == DisplayImmediately)
 	    TtaSetDisplayMode (doc, DeferredDisplay);
 
-	  NewSpanElement (doc, &open);
-	  value2 = ((float)Current_Opacity) / 100;
-	  sprintf(buffer, "opacity: %g", value2);
+	  //	  NewSpanElement (doc, &open);
+	  switch(type)
+	    {
+	    case PROpacity:
+	      sprintf(buffer, "opacity: %g", ((float)current_value) / 100);
+	      TtaSetPRuleValue (el, rule, 10*current_value, doc);
+	      break;
+
+	    case PRStrokeOpacity:
+	      sprintf(buffer, "stroke-opacity: %g", ((float)current_value) / 100);
+	      TtaSetPRuleValue (el, rule, 10*current_value, doc);
+	      break;
+
+	    case PRFillOpacity:
+	      sprintf(buffer, "fill-opacity: %g", ((float)current_value) / 100);
+	      TtaSetPRuleValue (el, rule, 10*current_value, doc);
+	      break;
+
+	    case PRLineWeight:
+	      sprintf(buffer, "stroke-width: %d", current_value);
+	      //TtaSetPRuleValue (el, rule, current_value, doc);
+	      break;
+	    }
 
 	  GenerateStyle (buffer, TRUE);
-	  TtaSetPRuleValue (el, rule, 10*Current_Opacity, doc);
-
 	  TtaSetDisplayMode (doc, dispMode);
 
 	  if (open)
@@ -1344,16 +1392,9 @@ void DoSelectOpacity (Document doc, View view)
 }
 
 /*
-int  Current_Opacity = 100;
 ThotBool FillEnabled = TRUE;
-int  Current_FillColor = -1;
-int  Current_FillOpacity = 100;
 ThotBool StrokeEnabled = TRUE;
-int  Current_StrokeColor = -1;
-int  Current_StrokeOpacity = 100;
 int  Current_StrokeWidth = 1;*/
-
-
 
 /*----------------------------------------------------------------------
   CleanUpAttribute removes the CSS rule (data) from the attribute value

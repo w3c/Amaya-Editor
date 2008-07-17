@@ -760,6 +760,9 @@ ShowAppliedStyle
 &DoSelectFont
 &DoRemoveFont
 &DoSelectOpacity
+&DoSelectStrokeOpacity
+&DoSelectFillOpacity
+&DoSelectStrokeWidth
 
 ########### OPTIONAL MODULES
 [config]
