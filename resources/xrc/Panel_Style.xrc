@@ -197,11 +197,123 @@
         <object class="wxBoxSizer">
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
-            <object class="wxStaticText">
-              <label>SVG style !</label>
+            <object class="wxFlexGridSizer">
+              <object class="sizeritem">
+                <object class="wxStaticText">
+                  <label>Opacity:</label>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="spacer"/>
+              <object class="spacer"/>
+              <object class="sizeritem">
+                <object class="wxSpinCtrl" name="wxID_SPIN_SVG_OPACITY">
+                  <size>64,-1</size>
+                  <value>100</value>
+                  <min>0</min>
+                  <max>100</max>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticText">
+                  <label>%</label>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxCheckBox" name="wxID_SVG_FILL_NONE">
+                  <label>Fill</label>
+                  <checked>1</checked>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="unknown" name="wxID_SVG_FILL_COLOR">
+                  <size>16,16</size>
+                </object>
+                <flag>wxALIGN_CENTRE</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_SVG_FILL_COLOR">
+                  <bitmap>../icons/16x16/colorize.png</bitmap>
+                  <tooltip>*Choose and apply text color*</tooltip>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxSpinCtrl" name="wxID_SPIN_SVG_FILL_OPAC">
+                  <size>64,-1</size>
+                  <value>100</value>
+                  <min>0</min>
+                  <max>100</max>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticText">
+                  <label>%</label>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxCheckBox" name="wxID_SVG_FILL_NONE">
+                  <label>Stroke</label>
+                  <checked>1</checked>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="unknown" name="wxID_SVG_FILL_COLOR">
+                  <size>16,16</size>
+                </object>
+                <flag>wxALIGN_CENTRE</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_SVG_FILL_COLOR">
+                  <bitmap>../icons/16x16/colorize.png</bitmap>
+                  <tooltip>*Choose and apply text color*</tooltip>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxSpinCtrl" name="wxID_SPIN_SVG_FILL_OPAC">
+                  <size>64,-1</size>
+                  <value>100</value>
+                  <min>0</min>
+                  <max>100</max>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticText">
+                  <label>%</label>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticText">
+                  <label>- width</label>
+                </object>
+                <flag>wxALIGN_RIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="spacer"/>
+              <object class="spacer"/>
+              <object class="sizeritem">
+                <object class="wxSpinCtrl" name="wxID_SPIN_SVG_STROKE_WIDTH">
+                  <size>64,-1</size>
+                  <value>1</value>
+                  <min>0</min>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticText">
+                  <label>px</label>
+                </object>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <cols>5</cols>
+              <rows>2</rows>
+              <vgap>4</vgap>
+              <hgap>4</hgap>
             </object>
           </object>
         </object>
+        <flag>wxEXPAND</flag>
       </object>
       <object class="sizeritem">
         <object class="wxStaticText">
