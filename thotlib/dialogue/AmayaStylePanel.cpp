@@ -571,6 +571,21 @@ void AmayaStyleToolPanel::OnChooseOpacity(wxSpinEvent& event)
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnUpdateFillUI(wxUpdateUIEvent& event)
+{
+  event.Enable(XRCCTRL(*this, "wxID_SVG_FILL_NONE", wxCheckBox)->IsChecked());
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnUpdateStrokeUI(wxUpdateUIEvent& event)
+{
+  event.Enable(XRCCTRL(*this, "wxID_SVG_STROKE_NONE", wxCheckBox)->IsChecked());  
+}
+
+
+/*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
@@ -582,6 +597,12 @@ BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
   EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnColorFillPalette )
   EVT_BUTTON(XRCID("wxID_BUTTON_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnChooseFillColor)
   EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_OPACITY"), AmayaStyleToolPanel::OnChooseOpacity)
+  
+  EVT_UPDATE_UI(XRCID("wxID_BUTTON_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnUpdateFillUI)
+  EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_FILL_OPAC"), AmayaStyleToolPanel::OnUpdateFillUI)
+  EVT_UPDATE_UI(XRCID("wxID_BUTTON_SVG_STROKE_COLOR"), AmayaStyleToolPanel::OnUpdateStrokeUI)
+  EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_STROKE_OPAC"), AmayaStyleToolPanel::OnUpdateStrokeUI)
+  
 
 /* HTML Colors */
   EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_PANEL_CSS_COLOR"), AmayaStyleToolPanel::OnColorFontPalette )

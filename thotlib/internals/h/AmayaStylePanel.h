@@ -65,6 +65,9 @@ protected:
   void OnChooseFillColor(wxCommandEvent& event);
   void OnColorFillPalette( AmayaColorButtonEvent& event );
 
+  void OnUpdateFillUI(wxUpdateUIEvent& event);
+  void OnUpdateStrokeUI(wxUpdateUIEvent& event);
+  
   void SendDataToPanel( AmayaParams& p );
   
   void OnThemeChange( wxCommandEvent& event );
