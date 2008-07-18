@@ -190,13 +190,19 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win,
 #endif /* _SVG */
 
       /* First items of the context menu can be displayed/hidden. */
-#define NB_ITEM 8
+#define NB_ITEM 14
+#define CUT_POS  8
       wxMenuItem* items[NB_ITEM];
       ThotBool    display_item[NB_ITEM];
 
-      /* By default, there is no item displayed */
-      for(i = 0; i < NB_ITEM; i++)
+      /* By default, the first item until the "cut" command
+	 are not displayed... */
+      for(i = 0; i < CUT_POS; i++)
 	display_item[i] = FALSE;
+
+      /* ... and cut, paste etc are displayed. */
+      for(i = CUT_POS; i < NB_ITEM; i++)
+	display_item[i] = TRUE;
 
       /* Is the element a link? */
       if(CanFollowTheLink(doc))
@@ -212,12 +218,21 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win,
 	{
 	  svgSchema = GetSVGSSchema (doc);
 	  elementType = TtaGetElementType(el);
-	  if(elementType.ElSSchema == svgSchema && !TtaIsLeaf(elementType))
-	    /* Display the SVG transforms the a non-terminal SVG element
-	       is selected */
+	  if(elementType.ElSSchema == svgSchema)
 	    {
-	      for(i = 4; i < 8; i++)
-		display_item[i] = TRUE;
+	      if(!TtaIsLeaf(elementType))
+		/* Display the SVG transforms the a non-terminal SVG element
+		   is selected */
+		{
+		  for(i = 4; i < 8; i++)
+		    display_item[i] = TRUE;
+		}
+	      else
+		{
+		  /* Remove cut, copy, paste commands */
+		  for(i = 0; i < 3; i++)
+		    display_item[CUT_POS+i] = FALSE;
+		}
 	    }
 	}
 #endif /* _SVG */
