@@ -492,7 +492,18 @@ void AmayaStyleToolPanel::SendDataToPanel( AmayaParams& p )
       XRCCTRL(*this, "wxID_SVG_FILL_COLOR", AmayaColorButton)->SetColour( col );  
     }
 
+  if (Current_Opacity != -1)
+    XRCCTRL(*this, "wxID_SPIN_SVG_OPACITY", wxSpinCtrl)->SetValue(Current_Opacity);
 
+  if (Current_StrokeOpacity != -1)
+    XRCCTRL(*this, "wxID_SPIN_SVG_STROKE_OPAC", wxSpinCtrl)->SetValue(Current_StrokeOpacity);
+  
+  if (Current_FillOpacity != -1)
+    XRCCTRL(*this, "wxID_SPIN_SVG_FILL_OPAC", wxSpinCtrl)->SetValue(Current_FillOpacity);
+
+  if (Current_StrokeWidth != -1)
+    XRCCTRL(*this, "wxID_SPIN_SVG_STROKE_WIDTH", wxSpinCtrl)->SetValue(Current_StrokeWidth);
+  
   if (Current_FontFamily > 0)
     {
       switch (Current_FontFamily)

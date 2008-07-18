@@ -55,6 +55,9 @@ extern void DoStyleSVG ( Document doc,
                          View view,
                          int current_value,
                          int type );
+extern void UpdateStylePanelSVG ( Document doc,
+                                  View view,
+                                  Element el );
 extern void DoUpdateStrokeStatus ( Document doc,
                                    View view );
 extern void DoUpdateFillStatus ( Document doc,
@@ -167,6 +170,9 @@ extern void DoStyleSVG ( Document doc,
                            View view,
                            int current_value,
                            int type );
+extern void UpdateStylePanelSVG ( Document doc,
+                                    View view,
+                                    Element el );
 extern void DoUpdateStrokeStatus ( Document doc,
                                      View view );
 extern void DoUpdateFillStatus ( Document doc,

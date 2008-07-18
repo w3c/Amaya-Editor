@@ -1348,8 +1348,6 @@ void DoStyleSVG (Document doc, View view, int current_value, int type)
       if(rule)
 	value = TtaGetPRuleValue (rule);
 
-      printf("%d %d", value, current_value);
-
       if(value != current_value)
 	{
 	  /* Need to force a redisplay */
@@ -1391,6 +1389,53 @@ void DoStyleSVG (Document doc, View view, int current_value, int type)
 	}
     }
 
+}
+
+/*----------------------------------------------------------------------
+  UpdateStylePanelSVG
+  Update the style panel to display the properties of el
+  ----------------------------------------------------------------------*/
+void UpdateStylePanelSVG(Document doc, View view, Element el)
+{
+  PRule               rule;
+
+   if (NoCSSEditing (doc))
+    /* document is ReadOnly */
+    return;
+
+  if(el)
+    {
+      /* Opacity */
+      rule = TtaGetPRule(el, PROpacity);
+      if(rule)
+	Current_Opacity = TtaGetPRuleValue (rule)/10;
+      else
+	Current_Opacity = 100;
+
+      /* Stroke-Opacity */
+      rule = TtaGetPRule(el, PRStrokeOpacity);
+      if(rule)
+	  Current_StrokeOpacity = TtaGetPRuleValue (rule)/10;
+      else
+	Current_StrokeOpacity = 100;
+
+      /* Fill-Opacity */
+      rule = TtaGetPRule(el, PRFillOpacity);
+      if(rule)
+	  Current_FillOpacity = TtaGetPRuleValue (rule)/10;
+      else
+	Current_FillOpacity = 100;
+
+      /* Stroke-Width */
+      rule = TtaGetPRule(el, PRLineWeight);
+      if(rule)
+	  Current_StrokeWidth = TtaGetPRuleValue (rule);
+      else
+	Current_StrokeWidth = 1;
+
+      
+      UpdateStylePanel (doc, view);
+    }
 }
 
 /*----------------------------------------------------------------------
