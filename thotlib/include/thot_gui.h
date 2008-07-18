@@ -36,9 +36,5 @@
 #include "thot_gui_windows.h"
 #include "thot_gui_gtk.h"
 #include "thot_gui_wx.h"
+
 #endif /* THOT_GUI_H */
-
-
-
-
-

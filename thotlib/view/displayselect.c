@@ -39,6 +39,68 @@
 #include "glwindowdisplay.h"
 #endif /*_GL*/
 
+
+
+/* Type of handles */
+enum handle_type
+  {
+    HANDLE,
+    FRAME_HANDLE,
+    BEZIER_HANDLE
+  };
+
+/*----------------------------------------------------------------------
+  DrawHandle
+  ----------------------------------------------------------------------*/
+void DrawHandle(int handle, int frame, int thick, ...)
+{
+  int x1, y1, x2, y2;
+  va_list varpos;
+  va_start(varpos, thick);
+
+  switch(handle)
+    {
+    case FRAME_HANDLE:
+      x1 = va_arg(varpos, int);
+      y1 = va_arg(varpos, int);
+      DrawRectangle (frame, 1, 0,
+		     x1 - thick/2,
+		     y1 - thick/2,
+		     thick, thick,
+		     ResizeFgSelColor,
+		     ResizeBgSelColor,
+		     2
+		     );
+      break;
+
+    case HANDLE:
+      x1 = va_arg(varpos, int);
+      y1 = va_arg(varpos, int);
+      DrawRectangle (frame, 1, 0,
+		     x1 - thick/2,
+		     y1 - thick/2,
+		     thick, thick,
+		     FgSelColor,
+		     BgSelColor,
+		     2
+		     );
+      break;
+
+    case BEZIER_HANDLE:
+      x1 = va_arg(varpos, int);
+      y1 = va_arg(varpos, int);
+      x2 = va_arg(varpos, int);
+      y2 = va_arg(varpos, int);
+      DrawBezierControl (frame, thick,
+			 x1, y1, x2, y2, ResizeBgSelColor, ResizeFgSelColor);
+      break;
+
+    }
+
+  va_end(varpos);
+}
+
+
 /*----------------------------------------------------------------------
   DisplayPointSelection draw control points of the box.
   Display with resize colors when the parameter could_resize is set
@@ -54,12 +116,13 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
   int                 leftX, middleX, rightX;
   int                 topY, middleY, bottomY;
   int                 t, b, l, r;
-  int                 thick, halfThick;
+  int                 thick;
   int                 i, j;
-  int                 x, y, bg, fg;
+  int                 x, y;
   int                 xstart, ystart, xctrlstart, yctrlstart;
   int                 xend, yend, xctrlend, yctrlend;
   ThotBool            svg_or_img;
+  int h;
   int i_start;
 
   if (pBox)
@@ -67,7 +130,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
       pFrame = &ViewFrameTable[frame - 1];
       pAb = pBox->BxAbstractBox;
       if (pAb->AbPresentationBox)
-        // don't display handles of presentation boxes
+        /* don't display handles of presentation boxes */
         return;
 
       pEl = pAb->AbElement;
@@ -75,74 +138,65 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
       svg_or_img = (pAb->AbLeafType == LtPicture ||
                     (pEl && !pAb->AbPresentationBox &&
                      TypeHasException (ExcIsDraw, pEl->ElTypeNumber, pEl->ElStructSchema)));
+
       if (could_resize && svg_or_img)
-          // display larger handles
+	/* display larger handles */
         thick += 2;
+
+      /* The box is smaller than the handle */
       if (thick > pBox->BxWidth)
         thick = pBox->BxWidth;
       if (thick > pBox->BxHeight)
         thick = pBox->BxHeight;
-      halfThick = thick / 2;
 
       /* selection points */
       GetExtraMargins (pBox, frame, FALSE, &t, &b, &l, &r);
       if (pEl->ElSystemOrigin)
         {
-          leftX = - halfThick;
-          topY = - halfThick;
+          leftX = 0;
+          topY = 0;
         }
       else
         {
           leftX = l + pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder
-            + pBox->BxLPadding - pFrame->FrXOrg - halfThick;
+            + pBox->BxLPadding - pFrame->FrXOrg;
           topY = t + pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder
-            + pBox->BxTPadding - pFrame->FrYOrg - halfThick;
+            + pBox->BxTPadding - pFrame->FrYOrg;
         }
       bottomY = topY + pBox->BxH - 1;
       rightX = leftX + pBox->BxW - 1;
-      middleX = leftX + (pBox->BxW / 2) - halfThick/2;
-      middleY = topY + (pBox->BxH / 2) - halfThick/2;
-          // select the handle color
-      if (could_resize)
-        {
-          bg = ResizeBgSelColor;
-          fg = ResizeFgSelColor;
-        }
+      middleX = leftX + (pBox->BxW / 2);
+      middleY = topY + (pBox->BxH / 2);
+
+      if(could_resize)
+	h = FRAME_HANDLE;
       else
-        {
-          bg = BgSelColor;
-          fg = BgSelColor;
-        }
+	h = HANDLE;
 
       if (svg_or_img)
         {
+	  /* Frame */
+          DrawRectangle (frame, 1, 0, leftX, topY, pBox->BxW, pBox->BxH - 1,
+			 ResizeFgSelColor, 0, 0);
+
+
           /* 8 control points */
-          DrawRectangle (frame, 1, 0, leftX+halfThick, topY+halfThick, pBox->BxW, pBox->BxH - 1,
-              fg, 0, 0);
-          DrawRectangle (frame, 1, 0, leftX, topY, thick, thick,
-              fg, bg, 2);
-          DrawRectangle (frame, 1, 0, middleX, topY, thick, thick,
-              fg, bg, 2);
-          DrawRectangle (frame, 1, 0, rightX, topY, thick, thick,
-              fg, bg, 2);
-          DrawRectangle (frame, 1, 0, leftX, middleY, thick, thick,
-              fg, bg, 2);
-          DrawRectangle (frame, 1, 0, rightX, middleY, thick, thick,
-              fg, bg, 2);
-          DrawRectangle (frame, 1, 0, leftX, bottomY, thick, thick,
-              fg, bg, 2);
-          DrawRectangle (frame, 1, 0, middleX, bottomY, thick, thick,
-              fg, bg, 2);
-          DrawRectangle (frame, 1, 0, rightX, bottomY, thick, thick,
-              fg, bg, 2);
+	  DrawHandle(h, frame, thick, leftX, topY);
+	  DrawHandle(h, frame, thick, middleX, topY);
+	  DrawHandle(h, frame, thick, rightX, topY);
+	  DrawHandle(h, frame, thick, leftX, middleY);
+	  DrawHandle(h, frame, thick, rightX, middleY);
+	  DrawHandle(h, frame, thick, leftX, bottomY);
+	  DrawHandle(h, frame, thick, middleX, bottomY);
+	  DrawHandle(h, frame, thick, rightX, bottomY);
         }
       else if (pAb->AbLeafType == LtPolyLine && pBox->BxNChars > 1)
         {
           /* Draw control points of the polyline */
           /* if there is at least one point in the polyline */
           pBuffer = pBox->BxBuffer;
-          leftX = pBox->BxXOrg - pFrame->FrXOrg - halfThick;
-          topY = pBox->BxYOrg - pFrame->FrYOrg - halfThick;
+          leftX = pBox->BxXOrg - pFrame->FrXOrg;
+          topY = pBox->BxYOrg - pFrame->FrYOrg;
           j = 1;
           for (i = 1; pBuffer; i++)
             {
@@ -154,7 +208,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
                   y = topY + PixelValue (pBuffer->BuPoints[j].YCoord,
                                          UnPixel, NULL,
                                          ViewFrameTable[frame - 1].FrMagnification);
-                  DrawRectangle (frame, 0, 0, x, y, thick, thick, fg, bg, 2);
+		  DrawHandle(h, frame, thick, x, y);
                 }
 	      
               j++;
@@ -209,9 +263,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		     )
 
 		    /* draw the start point of this path segment */
-		      DrawRectangle (frame, 0, 0, xstart - halfThick,
-				     ystart - halfThick,
-				     thick, thick, fg, bg, 2);
+		    DrawHandle(FRAME_HANDLE, frame, thick, xstart, ystart);
 		  i++;
                 }
 
@@ -237,8 +289,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		      )
 
 		     )
-		    DrawBezierControl (frame, thick, xstart, ystart,
-				       xctrlstart, yctrlstart, bg, fg);
+		    DrawHandle(BEZIER_HANDLE, frame, thick, xstart, ystart,
+			       xctrlstart, yctrlstart);
 		  
 		  i++;
 
@@ -259,8 +311,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		      && (pPa->PaNext->PaShape == PtCubicBezier ||
 			  pPa->PaNext->PaShape == PtQuadraticBezier)  )
 		     )
-		    DrawBezierControl (frame, thick, xend, yend,
-				       xctrlend, yctrlend, bg, fg);
+		    DrawHandle(BEZIER_HANDLE, frame, thick, xend, yend,
+				       xctrlend, yctrlend);
 		  
 		  i++;
 		}
@@ -278,8 +330,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		      pPa->PaNext->PaShape == PtQuadraticBezier)  )
 		 )
 		/* Draw the end point of the path segment */
-		DrawRectangle (frame, 0, 0, xend - halfThick, yend - halfThick,
-			       thick, thick, fg, bg, 2);
+		DrawHandle(FRAME_HANDLE, frame, thick, xend, yend);
 	
 	      if(!pPa->PaNext || pPa->PaNext->PaNewSubpath)
 		{
@@ -308,9 +359,9 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 			  yctrlstart = topY + PixelValue (pPaStart->YCtrlStart,
 						      UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification);
-			  
-			  DrawBezierControl (frame, thick, xstart, ystart,
-					     xctrlstart, yctrlstart, bg, fg);
+
+			  DrawHandle(BEZIER_HANDLE, frame, thick,
+				     xstart, ystart, xctrlstart, yctrlstart);
 			}
 		      else if(pointselect == i_start ||
 			      pointselect == i_start+1)
@@ -329,9 +380,9 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 			  yctrlend = topY + PixelValue (pPa->YCtrlEnd,
 							UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification);
-			  
-			  DrawBezierControl (frame, thick, xend, yend,
-					     xctrlend, yctrlend, bg, fg);
+
+			  DrawHandle(BEZIER_HANDLE, frame, thick, xend, yend,
+				     xctrlend, yctrlend);
 
 			}
 		    }
@@ -353,41 +404,31 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
         switch (pointselect)
           {
           case 1:
-            DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, leftX, topY);
             break;
           case 2:
-            DrawRectangle (frame, 0, 0, middleX, topY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, middleX, topY);
             break;
           case 3:
-            DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, rightX, topY);
             break;
           case 4:
-            DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, rightX, middleY);
             break;
           case 5:
-            DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, rightX, bottomY);
             break;
           case 6:
-            DrawRectangle (frame, 0, 0, middleX, bottomY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, middleX, bottomY);
             break;
           case 7:
-            DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, leftX, bottomY);
             break;
           case 8:
-            DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, leftX, middleY);
             break;
           }
       else if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
-        /* C'est une boite graphique */
-        /* On marque les points caracteristiques de la boite */
         switch (pAb->AbRealShape)
           {
           case SPACE:
@@ -402,22 +443,14 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
           case '7':
           case '8':
             /* 8 control points */
-            DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, middleX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, middleX, bottomY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, leftX, topY);
+	    DrawHandle(h, frame, thick, middleX, topY);
+	    DrawHandle(h, frame, thick, rightX, topY);
+	    DrawHandle(h, frame, thick, leftX, middleY);
+	    DrawHandle(h, frame, thick, rightX, middleY);
+	    DrawHandle(h, frame, thick, leftX, bottomY);
+	    DrawHandle(h, frame, thick, middleX, bottomY);
+	    DrawHandle(h, frame, thick, rightX, bottomY);
             break;
           case 'C':
           case 'L':
@@ -426,136 +459,97 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
           case 'P':
           case 'Q':
             /* 4 control points */
-            DrawRectangle (frame, 0, 0, middleX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, middleX, bottomY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, middleX, topY);
+	    DrawHandle(h, frame, thick, leftX, middleY);
+	    DrawHandle(h, frame, thick, rightX, middleY);
+	    DrawHandle(h, frame, thick, middleX, bottomY);
+
             if (pAb->AbRealShape == 'C' && pAb->AbRx == 0 && pAb->AbRy == 0)
               /* rounded corners are not round. display a control point
                  for each corner */
               {
-                DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-                               fg, bg, 2);
-                DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-                               fg, bg, 2);
-                DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-                               fg, bg, 2);
-                DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                               fg, bg, 2);
+		DrawHandle(h, frame, thick, leftX, topY);
+		DrawHandle(h, frame, thick, rightX, topY);
+		DrawHandle(h, frame, thick, leftX, bottomY);
+		DrawHandle(h, frame, thick, rightX, bottomY);
               }
             break;
           case 'W':
             /* 3 control points */
-            DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, leftX, topY);
+	    DrawHandle(h, frame, thick, rightX, topY);
+	    DrawHandle(h, frame, thick, leftX, bottomY);
             break;
           case 'X':
             /* 3 control points */
-            DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                           fg, bg, 2);
+            DrawHandle(h, frame, thick, rightX, topY);
+            DrawHandle(h, frame, thick, leftX, bottomY);
+            DrawHandle(h, frame, thick, rightX, bottomY);
             break;
           case 'Y':
             /* 3 control points */
-            DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                           fg, bg, 2);
+	    DrawHandle(h, frame, thick, leftX, topY);
+            DrawHandle(h, frame, thick, leftX, bottomY);
+            DrawHandle(h, frame, thick, rightX, bottomY);
             break;
           case 'Z':
             /* 3 control points */
-            DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                           fg, bg, 2);
+            DrawHandle(h, frame, thick, leftX, topY);
+            DrawHandle(h, frame, thick, rightX, topY);
+            DrawHandle(h, frame, thick, rightX, bottomY);
             break;
 	    
           case 'h':
           case '<':
           case '>':
             /* 2 control points */
-            DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
-                           fg, bg, 2);
+            DrawHandle(h, frame, thick, leftX, middleY);
+	    DrawHandle(h, frame, thick, rightX, middleY);
             break;
           case 't':
             /* 3 control points */
-            DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, middleX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-                           fg, bg, 2);
+            DrawHandle(h, frame, thick, leftX, topY);
+            DrawHandle(h, frame, thick, middleX, topY);
+            DrawHandle(h, frame, thick, rightX, topY);
             break;
           case 'b':
             /* 3 control points */
-            DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, middleX, bottomY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                           fg, bg, 2);
+            DrawHandle(h, frame, thick, leftX, bottomY);
+            DrawHandle(h, frame, thick, middleX, bottomY);
+            DrawHandle(h, frame, thick, rightX, bottomY);
             break;
           case 'v':
           case '^':
           case 'V':
             /* 2 control points */
-            DrawRectangle (frame, 0, 0, middleX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, middleX, bottomY, thick, thick,
-                           fg, bg, 2);
+            DrawHandle(h, frame, thick, middleX, topY);
+	    DrawHandle(h, frame, thick, middleX, bottomY);
             break;
           case 'l':
             /* 3 control points */
-            DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-                           fg, bg, 2);
+            DrawHandle(h, frame, thick, leftX, topY);
+	    DrawHandle(h, frame, thick, leftX, middleY);
+            DrawHandle(h, frame, thick, leftX, bottomY);
             break;
           case 'r':
             /* 3 control points */
-            DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                           fg, bg, 2);
+            DrawHandle(h, frame, thick, rightX, topY);
+            DrawHandle(h, frame, thick, rightX, middleY);
+            DrawHandle(h, frame, thick, rightX, bottomY);
             break;
           case '\\':
           case 'O':
           case 'e':
             /* 2 control points */
-            DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                           fg, bg, 2);
+            DrawHandle(h, frame, thick, leftX, topY);
+            DrawHandle(h, frame, thick, rightX, bottomY);
             break;
           case '/':
           case 'o':
           case 'E':
             /* 2 control points */
-            DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-                           fg, bg, 2);
-            DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-                           fg, bg, 2);
+            DrawHandle(h, frame, thick, rightX, topY);
+            DrawHandle(h, frame, thick, leftX, bottomY);
             break;
           case 'g':
             /* Coords of the line are given by the enclosing box */
@@ -567,19 +561,15 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
               {
                 /* draw a \ */
                 /* 2 control points */
-                DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
-                               fg, bg, 2);
-                DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
-                               fg, bg, 2);
+		DrawHandle(h, frame, thick, leftX, topY);
+		DrawHandle(h, frame, thick, rightX, bottomY);
               }
             else
               {
                 /* draw a / */
                 /* 2 control points */
-                DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
-                               fg, bg, 2);
-                DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
-                               fg, bg, 2);
+		DrawHandle(h, frame, thick, rightX, topY);
+		DrawHandle(h, frame, thick, leftX, bottomY);
               }
             break;
           default:
@@ -587,7 +577,6 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
           }
     }
 }
-
 
 /*----------------------------------------------------------------------
   DisplayBgBoxSelection paints the box background with the selection
