@@ -94,7 +94,6 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
   ,py2(y2)
   ,created(created)
   ,nb_points(0)
-  ,shift_down(false)
 {
   if (pFrame)
     {
@@ -231,7 +230,13 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
   /* Get the coordinates of the mouse and display them in the status bar */
   x = event.GetX();
   y = event.GetY();
-  shift_down = event.ShiftDown();
+
+  if(event.ShiftDown())
+    {
+      if(nb_points > 0 && (shape == 0 || shape == 12 || shape == 13))
+	/* It's a line or an arrow and the shift button is pressed */
+	ApproximateAngleOfLine(15, *px1, *py1, &x, &y);
+    }
   
   MouseCoordinatesToSVG(document, pFrame,
 			x0, y0,
@@ -274,7 +279,6 @@ void AmayaCreateShapeEvtHandler::DrawShape ()
 { 
   int lx,ly;
   int x1, x2, y1, y2, x3, y3, x4, y4, x5, y5, x6, y6,tmp;
-  float theta;
 
   if(nb_points == 0)return;
 
@@ -308,45 +312,7 @@ void AmayaCreateShapeEvtHandler::DrawShape ()
       if(*py2 < *py1)*py2 = *py1 - ly;
         else *py2 = *py1 + ly;
     }
-  else if((shape == 0 || shape == 12 || shape == 13) && shift_down)
-    {
-      /* It's a line or an arrow and the shift button is pressed */
-
-      /*     |    O
-             |   /
-            ly  /
-             | /theta
-             |/
-             --lx--
-       */
-      if(lx == 0)
-	theta = M_PI/2;
-      else
-	theta = atan(ly/lx);
-
-      if(theta <= M_PI/8) 
-	{
-	  /* Horizontal line */
-	  *py2 = *py1;
-	}
-      else if(theta >= 3*M_PI/8)
-	{
-	  /* Vertical line */
-	  *px2 = *px1;
-	}
-      else
-	{
-	  /* Diagonal */
-	  if(ly <lx)lx=ly; else ly = lx;
-
-	  if(*px2 < *px1)*px2 = *px1 - lx;
-	  else *px2 = *px1 + lx;
-
-	  if(*py2 < *py1)*py2 = *py1 - ly;
-	  else *py2 = *py1 + ly;
-	}
-    }
-
+  
   x1 = *px1;
   x2 = *px2;
   y1 = *py1;

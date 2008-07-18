@@ -163,6 +163,11 @@ extern void SVGToMouseCoordinates ( Document doc,
                                     float y,
                                     int *newx,
                                     int *newy );
+extern void ApproximateAngleOfLine ( int T,
+                                     int x1,
+                                     int y1,
+                                     int *x2,
+                                     int *y2 );
 
 #else /* __STDC__ */
 
@@ -323,6 +328,11 @@ extern void SVGToMouseCoordinates ( Document doc,
                                       float y,
                                       int *newx,
                                       int *newy );
+extern void ApproximateAngleOfLine ( int T,
+                                       int x1,
+                                       int y1,
+                                       int *x2,
+                                       int *y2 );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

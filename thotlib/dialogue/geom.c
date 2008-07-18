@@ -1801,3 +1801,41 @@ void SVGToMouseCoordinates(Document doc, AmayaFrame * p_frame,
 		    UnPixel, NULL,
 		    ViewFrameTable[FrameId - 1].FrMagnification);
 }
+
+/*----------------------------------------------------------------------
+  ApproximateAngleOfLine
+  ----------------------------------------------------------------------*/
+void ApproximateAngleOfLine(int T, int x1, int y1, int *x2, int *y2)
+{
+  float local_x, local_y, r;
+  float theta;
+
+  local_x = *x2 - x1;
+  local_y = *y2 - y1;
+  r = sqrt(local_x*local_x + local_y*local_y);
+  if(r == 0)return;
+
+      /*
+	 We work in the system of coordinates of origin (x1,y1)
+
+	     |    O (local_x, local_y)
+             | r /
+             |  /
+             | /theta
+             |/
+             ------
+          (0,0)
+       */
+
+  /* Get the angle */
+  theta = 180*acos(local_x/r)/M_PI;
+  if(local_y < 0)theta = -theta;
+
+  /* Approximate the angle */
+  theta = round(theta/T)*T;
+  theta = (M_PI*theta)/180;
+
+  /* Update the coordinates */
+  *x2 = x1 + (int)(cos(theta)*r);
+  *y2 = y1 + (int)(sin(theta)*r);
+}

@@ -54,7 +54,6 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
   int *px1,*py1,*px2,*py2;
   ThotBool *created;
   int nb_points;
-  bool shift_down;
 };
 
 #endif /* __AMAYACREATESHAPEEVTHANDLER_H__ */
