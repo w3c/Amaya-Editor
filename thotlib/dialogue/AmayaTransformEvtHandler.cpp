@@ -365,7 +365,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
   float skew,sx,sy;
 
   /* DELTA is the sensitivity toward mouse moves. */
-#define DELTA 20
+#define DELTA 0
 
   /* Update the current mouse coordinates */
   mouse_x = event.GetX();

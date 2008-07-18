@@ -648,6 +648,7 @@ BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
   EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_FILL_OPAC"), AmayaStyleToolPanel::OnUpdateFillUI)
   EVT_UPDATE_UI(XRCID("wxID_BUTTON_SVG_STROKE_COLOR"), AmayaStyleToolPanel::OnUpdateStrokeUI)
   EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_STROKE_OPAC"), AmayaStyleToolPanel::OnUpdateStrokeUI)
+  EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_STROKE_WIDTH"), AmayaStyleToolPanel::OnUpdateStrokeUI)
   
 
 /* HTML Colors */

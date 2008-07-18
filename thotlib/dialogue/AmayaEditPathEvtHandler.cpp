@@ -490,7 +490,7 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
   if(event.ShiftDown())smooth = FALSE;
 
   /* DELTA is the sensitivity toward mouse moves. */
-#define DELTA 20
+#define DELTA 0
 
   /* Update the current mouse coordinates */
   mouse_x = event.GetX();
