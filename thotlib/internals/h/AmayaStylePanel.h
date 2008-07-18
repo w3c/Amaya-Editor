@@ -80,6 +80,9 @@ protected:
   void OnChooseFillOpacity(wxSpinEvent& event);
   void OnChooseStrokeWidth(wxSpinEvent& event);
 
+  void OnUpdateFill(wxCommandEvent &event);
+  void OnUpdateStroke(wxCommandEvent &event);
+
   AmayaBaseToolBar *m_tbar1, *m_tbar2;
   wxColourData colour_data;
 };

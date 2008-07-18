@@ -711,5 +711,7 @@ FUNCTIONS
   DoSelectOpacity,
   DoSelectStrokeOpacity,
   DoSelectFillOpacity,
-  DoSelectStrokeWidth;
+  DoSelectStrokeWidth,
+  DoUpdateStrokeStatus,
+  DoUpdateFillStatus;
 END

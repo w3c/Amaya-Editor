@@ -763,6 +763,8 @@ ShowAppliedStyle
 &DoSelectStrokeOpacity
 &DoSelectFillOpacity
 &DoSelectStrokeWidth
+&DoUpdateStrokeStatus
+&DoUpdateFillStatus
 
 ########### OPTIONAL MODULES
 [config]

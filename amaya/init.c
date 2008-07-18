@@ -63,7 +63,7 @@ extern XmlEntity *pMathEntityTable;
 
 /* SVG Style panel */
 int  Current_Opacity = 100;
-ThotBool FillEnabled = TRUE;
+ThotBool FillEnabled = FALSE;
 int  Current_FillColor = -1;
 int  Current_FillOpacity = 100;
 ThotBool StrokeEnabled = TRUE;

@@ -6,6 +6,7 @@
 #include "wx/clrpicker.h"
 #include "wx/valtext.h"
 #include "wx/spinctrl.h"
+#include "wx/checkbox.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -118,6 +119,7 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_BODY_SIZE_PTS)));
   SetColor (1);
   SetStrokeColor(1);
+  SetFillColor(0);
 
   XRCCTRL(*this, "wxID_THEME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_THEME)));
   wxChoice     *theme = XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice);
@@ -623,9 +625,34 @@ void AmayaStyleToolPanel::OnUpdateFillUI(wxUpdateUIEvent& event)
   ----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::OnUpdateStrokeUI(wxUpdateUIEvent& event)
 {
+  Document doc;
+  View view;
+  TtaGiveActiveView( &doc, &view );
+
   event.Enable(XRCCTRL(*this, "wxID_SVG_STROKE_NONE", wxCheckBox)->IsChecked());  
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnUpdateFill(wxCommandEvent&event)
+{
+  Document doc;
+  View view;
+  TtaGiveActiveView( &doc, &view );
+  if(doc > 0)
+    TtaExecuteMenuAction ("DoUpdateFillStatus", doc, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnUpdateStroke(wxCommandEvent&event)
+{
+  Document doc;
+  View view;
+  TtaGiveActiveView( &doc, &view );
+  if(doc > 0)
+    TtaExecuteMenuAction ("DoUpdateStrokeStatus", doc, view, TRUE);
+}
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
@@ -650,6 +677,8 @@ BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
   EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_STROKE_OPAC"), AmayaStyleToolPanel::OnUpdateStrokeUI)
   EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_STROKE_WIDTH"), AmayaStyleToolPanel::OnUpdateStrokeUI)
   
+  EVT_CHECKBOX(XRCID("wxID_SVG_FILL_NONE"), AmayaStyleToolPanel::OnUpdateFill)
+  EVT_CHECKBOX(XRCID("wxID_SVG_STROKE_NONE"), AmayaStyleToolPanel::OnUpdateStroke)
 
 /* HTML Colors */
   EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_PANEL_CSS_COLOR"), AmayaStyleToolPanel::OnColorFontPalette )

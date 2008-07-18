@@ -1285,6 +1285,7 @@ void DoSelectFillColor (Document doc, View view)
       DoStyleColor (color_string, TRUE);
     }
   UpdateStylePanel (doc, view);
+  TtaUpdateAttrMenu(doc);
 }
 
 /*----------------------------------------------------------------------
@@ -1386,15 +1387,101 @@ void DoStyleSVG (Document doc, View view, int current_value, int type)
 	  if (open)
 	    TtaCloseUndoSequence (doc);
 	  UpdateStylePanel (doc, view);
+	  TtaUpdateAttrMenu(doc);
 	}
     }
 
 }
 
-/*
-ThotBool FillEnabled = TRUE;
-ThotBool StrokeEnabled = TRUE;
-int  Current_StrokeWidth = 1;*/
+/*----------------------------------------------------------------------
+  DoUpdateStrokeStatus
+  ----------------------------------------------------------------------*/
+void DoUpdateStrokeStatus(Document doc, View view)
+{
+  char                color_string[100];
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+  DisplayMode         dispMode;
+
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
+  if(StrokeEnabled)
+    {
+      /* Remove the stroke style */
+      RemoveSpecificStyle (doc, "stroke:none;");
+      /*      RemoveSpecificStyle (doc, "stroke-width");
+      RemoveSpecificStyle (doc, "stroke-linecap");
+      RemoveSpecificStyle (doc, "stroke-linejoin");
+      RemoveSpecificStyle (doc, "stroke-miterlimit");
+      RemoveSpecificStyle (doc, "stroke-dasharray");
+      RemoveSpecificStyle (doc, "stroke-dashoffset");
+      RemoveSpecificStyle (doc, "stroke-opacity");*/
+      StrokeEnabled = FALSE;
+    }
+  else
+    {
+      /* Add stroke style */
+      if (Current_StrokeColor != -1)
+	TtaGiveThotRGB (Current_StrokeColor, &red, &green, &blue);
+      else
+	TtaGiveThotRGB (0, &red, &green, &blue);
+      sprintf( color_string, "#%02x%02x%02x", red, green, blue);
+      DoStyleColor (color_string, FALSE);
+
+      DoSelectStrokeOpacity(doc, view);
+      DoSelectStrokeWidth(doc, view);
+      StrokeEnabled = TRUE;
+    }
+
+  UpdateStylePanel (doc, view);
+  TtaUpdateAttrMenu(doc);
+  TtaSetDisplayMode (doc, dispMode);
+}
+
+/*----------------------------------------------------------------------
+  DoUpdateFillStatus
+  ----------------------------------------------------------------------*/
+void DoUpdateFillStatus(Document doc, View view)
+{
+  char                color_string[100];
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+  DisplayMode         dispMode;
+
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
+  if(FillEnabled)
+    {
+      /* Remove the fill style */
+      RemoveSpecificStyle (doc, "fill:none;");
+      /*      RemoveSpecificStyle (doc, "fill-rule");
+	      RemoveSpecificStyle (doc, "fill-opacity");*/
+      FillEnabled = FALSE;
+    }
+  else
+    {
+      /* Add fill style */
+      if (Current_FillColor != -1)
+	TtaGiveThotRGB (Current_FillColor, &red, &green, &blue);
+      else
+	TtaGiveThotRGB (0, &red, &green, &blue);
+      sprintf( color_string, "#%02x%02x%02x", red, green, blue);
+      DoStyleColor (color_string, TRUE);
+
+      DoSelectFillOpacity(doc, view);
+      FillEnabled = TRUE;
+    }
+
+  UpdateStylePanel (doc, view);
+  TtaUpdateAttrMenu(doc);
+  TtaSetDisplayMode (doc, dispMode);
+}
 
 /*----------------------------------------------------------------------
   CleanUpAttribute removes the CSS rule (data) from the attribute value

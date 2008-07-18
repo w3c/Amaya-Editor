@@ -224,7 +224,6 @@
               <object class="sizeritem">
                 <object class="wxCheckBox" name="wxID_SVG_FILL_NONE">
                   <label>Fill</label>
-                  <checked>1</checked>
                 </object>
               </object>
               <object class="sizeritem">

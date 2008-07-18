@@ -55,6 +55,10 @@ extern void DoStyleSVG ( Document doc,
                          View view,
                          int current_value,
                          int type );
+extern void DoUpdateStrokeStatus ( Document doc,
+                                   View view );
+extern void DoUpdateFillStatus ( Document doc,
+                                 View view );
 extern ThotBool RemoveSpecificStyle ( Document doc,
                                       const char *cssproperty );
 extern void DoRemoveColor ( Document doc,
@@ -163,6 +167,10 @@ extern void DoStyleSVG ( Document doc,
                            View view,
                            int current_value,
                            int type );
+extern void DoUpdateStrokeStatus ( Document doc,
+                                     View view );
+extern void DoUpdateFillStatus ( Document doc,
+                                   View view );
 extern ThotBool RemoveSpecificStyle ( Document doc,
                                         const char *cssproperty );
 extern void DoRemoveColor ( Document doc,
