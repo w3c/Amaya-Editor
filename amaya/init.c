@@ -161,13 +161,12 @@ TypeBrowserFile WidgetParent;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, int y)
+static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win,
+				    int x, int y)
 {
   wxMenu     *p_menu = TtaGetDocContextMenu ( window );
-
   if (p_menu && doc)
     {
-      ThotBool noLink = !CanFollowTheLink(doc);      
 #ifdef TEMPLATES
       ElementType     elType, parentType;
       DLList          list;
@@ -190,16 +189,24 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
       SSchema	      svgSchema;
 #endif /* _SVG */
 
+      /* First items of the context menu can be displayed/hidden. */
+#define NB_ITEM 8
+      wxMenuItem* items[NB_ITEM];
+      ThotBool    display_item[NB_ITEM];
 
-      wxMenuItem* items[4];
+      /* By default, there is no item displayed */
+      for(i = 0; i < NB_ITEM; i++)
+	display_item[i] = FALSE;
 
-      ThotBool noSVG = TRUE;
-      wxMenuItem* svg_items[4];
-#define SVG_FIRST_ITEM 4
-#define SVG_NB_ITEM 4
+      /* Is the element a link? */
+      if(CanFollowTheLink(doc))
+	{
+	  for(i = 0; i < 4; i++)
+	    display_item[i] = TRUE;
+	}
 
 #ifdef _SVG
-      /* Check if the selected element is an SVG one */
+      /* Is it an SVG element? */
       TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
       if(el)
 	{
@@ -208,33 +215,19 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
 	  if(elementType.ElSSchema == svgSchema && !TtaIsLeaf(elementType))
 	    /* Display the SVG transforms the a non-terminal SVG element
 	       is selected */
-	    noSVG = FALSE;
+	    {
+	      for(i = 4; i < 8; i++)
+		display_item[i] = TRUE;
+	    }
 	}
 #endif /* _SVG */
 
-      if(noSVG)
+      /* Remove all the item that must not be displayed */
+      for(i = NB_ITEM - 1; i >= 0; i--)
 	{
-	  /* Remove the SVG items */
-	  for(i = 0; i < SVG_NB_ITEM; i++)
-	      svg_items[i] = p_menu->
-		Remove(p_menu->FindItemByPosition(SVG_FIRST_ITEM));
+	  if(!display_item[i])
+	    items[i] = p_menu->Remove(p_menu->FindItemByPosition(i));
 	}
-
-      if (noLink)
-        {
-          // Remove link menu items (open in ...)
-          items[0] = p_menu->Remove(p_menu->FindItemByPosition(0));
-          items[1] = p_menu->Remove(p_menu->FindItemByPosition(0));
-          items[2] = p_menu->Remove(p_menu->FindItemByPosition(0));
-          items[3] = p_menu->Remove(p_menu->FindItemByPosition(0));
-        }
-      else
-        {
-          items[0] = NULL;
-          items[1] = NULL;
-          items[2] = NULL;
-          items[3] = NULL;
-        }
 
 #ifdef TEMPLATES
       TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
@@ -348,22 +341,12 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win, int x, i
         }
 #endif /* TEMPLATES */
 
-      if (noLink)
-        {
-          // Reinsert link menu items (open in ...)
-          p_menu->Prepend(items[3]);
-          p_menu->Prepend(items[2]);
-          p_menu->Prepend(items[1]);
-          p_menu->Prepend(items[0]);
-        }
-
-      /* Reinsert the SVG items */
-      if(noSVG)
+      /* Reinsert the menu items */
+      for(i = 0; i < NB_ITEM; i++)
 	{
-	  for(i = SVG_NB_ITEM - 1; i >= 0; i--)
-	    p_menu->Insert(SVG_FIRST_ITEM, svg_items[i]);
+	  if(!display_item[i])
+	    p_menu->Insert(i, items[i]);
 	}
-	
     }
   return -1;
 }
