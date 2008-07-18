@@ -1439,13 +1439,16 @@ void UpdateStylePanelSVG(Document doc, View view, Element el)
 			&stroke,
 			&fill);
 
+      /* TODO: find how to know when stroke and fill values 
+	 are None, Inherit or currentColor */
+
       if(stroke >= 0)
 	{
 	  Current_StrokeColor = stroke;
 	  StrokeEnabled = TRUE;
 	}
       else
-	  StrokeEnabled = FALSE;
+	StrokeEnabled = FALSE;
 
       if(fill >= 0)
 	{
