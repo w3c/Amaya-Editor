@@ -503,7 +503,7 @@ void AmayaStyleToolPanel::SendDataToPanel( AmayaParams& p )
 
   if (Current_StrokeWidth != -1)
     XRCCTRL(*this, "wxID_SPIN_SVG_STROKE_WIDTH", wxSpinCtrl)->SetValue(Current_StrokeWidth);
-  
+ 
   if (Current_FontFamily > 0)
     {
       switch (Current_FontFamily)

@@ -1398,6 +1398,7 @@ void DoStyleSVG (Document doc, View view, int current_value, int type)
 void UpdateStylePanelSVG(Document doc, View view, Element el)
 {
   PRule               rule;
+  int stroke, fill;
 
    if (NoCSSEditing (doc))
     /* document is ReadOnly */
@@ -1433,7 +1434,27 @@ void UpdateStylePanelSVG(Document doc, View view, Element el)
       else
 	Current_StrokeWidth = 1;
 
-      
+      /* Stroke and Fill */
+      TtaGiveBoxColors (el, doc, 1,
+			&stroke,
+			&fill);
+
+      if(stroke >= 0)
+	{
+	  Current_StrokeColor = stroke;
+	  StrokeEnabled = TRUE;
+	}
+      else
+	  StrokeEnabled = FALSE;
+
+      if(fill >= 0)
+	{
+	  Current_FillColor = fill;
+	  FillEnabled = TRUE;
+	}
+      else
+	FillEnabled = FALSE;
+
       UpdateStylePanel (doc, view);
     }
 }
@@ -1456,14 +1477,15 @@ void DoUpdateStrokeStatus(Document doc, View view)
   if(StrokeEnabled)
     {
       /* Remove the stroke style */
-      RemoveSpecificStyle (doc, "stroke:none;");
-      /*      RemoveSpecificStyle (doc, "stroke-width");
-      RemoveSpecificStyle (doc, "stroke-linecap");
-      RemoveSpecificStyle (doc, "stroke-linejoin");
-      RemoveSpecificStyle (doc, "stroke-miterlimit");
-      RemoveSpecificStyle (doc, "stroke-dasharray");
-      RemoveSpecificStyle (doc, "stroke-dashoffset");
-      RemoveSpecificStyle (doc, "stroke-opacity");*/
+      RemoveSpecificStyle (doc, "stroke:");
+      RemoveSpecificStyle (doc, "stroke-width:");
+      RemoveSpecificStyle (doc, "stroke-linecap:");
+      RemoveSpecificStyle (doc, "stroke-linejoin:");
+      RemoveSpecificStyle (doc, "stroke-miterlimit:");
+      RemoveSpecificStyle (doc, "stroke-dasharray:");
+      RemoveSpecificStyle (doc, "stroke-dashoffset:");
+      RemoveSpecificStyle (doc, "stroke-opacity:");
+      GenerateStyle ("stroke: none", TRUE);
       StrokeEnabled = FALSE;
     }
   else
@@ -1504,9 +1526,10 @@ void DoUpdateFillStatus(Document doc, View view)
   if(FillEnabled)
     {
       /* Remove the fill style */
-      RemoveSpecificStyle (doc, "fill:none;");
-      /*      RemoveSpecificStyle (doc, "fill-rule");
-	      RemoveSpecificStyle (doc, "fill-opacity");*/
+      RemoveSpecificStyle (doc, "fill:");
+      RemoveSpecificStyle (doc, "fill-rule:");
+      RemoveSpecificStyle (doc, "fill-opacity:");
+      GenerateStyle ("fill: none", TRUE);
       FillEnabled = FALSE;
     }
   else
