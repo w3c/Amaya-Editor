@@ -186,7 +186,7 @@ to_: to
 none_: none
 path_: path
 type_: type
-rotate_: rotate: 
+rotate_: rotate
 horiz_origin_x: horiz-origin-x
 horiz_origin_y: horiz-origin-y
 horiz_adv_x: horiz-adv-x
