@@ -4326,6 +4326,11 @@
 	<message xml:lang="en">Skew</message>
 	<message xml:lang="fr">Incliner</message>
 </label>
+<label define="TMSG_TRANSLATE">
+	<message xml:lang="en">Move</message>
+	<message xml:lang="fr">Déplacer</message>
+</label>
+
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

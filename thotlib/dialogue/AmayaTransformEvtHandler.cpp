@@ -223,7 +223,8 @@ bool AmayaTransformEvtHandler::IsFinish()
  *----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnChar( wxKeyEvent& event )
 {
-  Finished = true;
+  if(event.GetKeyCode() !=  WXK_SHIFT)
+    Finished = true;
 }
 
 /*----------------------------------------------------------------------
@@ -397,6 +398,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
   float theta, dx1, dx2, dy1, dy2, d;
   float det;
   float skew,sx,sy;
+  ThotBool shift = event.ShiftDown();
 
   /* DELTA is the sensitivity toward mouse moves. */
 #define DELTA 0
@@ -619,10 +621,17 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	   if(y1 != 0 && y2 != 0)
 	     {
-	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, 0, -bottom);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -cx, -bottom);
 	       sy = ((float)y2)/y1;
-	       TtaApplyMatrixTransform (document, el, 1, 0, 0, sy, 0, 0);
-	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, 0, +bottom);
+
+	       if(shift) 
+		 sx = 1;
+	       else
+		 /* Preserve aspect ratio */
+		 sx = sy;
+
+	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +cx, +bottom);
 	       *hasBeenTransformed = TRUE;
 	     }
 	  break;
@@ -641,10 +650,17 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	   if(y1 != 0 && y2 != 0)
 	     {
-	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, 0, -top);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -cx, -top);
 	       sy = ((float)y2)/y1;
-	       TtaApplyMatrixTransform (document, el, 1, 0, 0, sy, 0, 0);
-	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, 0, +top);
+
+	       if(shift) 
+		 sx = 1;
+	       else
+		 /* Preserve aspect ratio */
+		 sx = sy;
+
+	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +cx, +top);
 	       *hasBeenTransformed = TRUE;
 	     }
 	   break;
@@ -663,10 +679,17 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	   if(x1 != 0 && x2 != 0)
 	     {
-	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -right, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -right, -cy);
 	       sx = ((float)x2)/x1;
-	       TtaApplyMatrixTransform (document, el, sx, 0, 0, 1, 0, 0);
-	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +right, 0);
+
+	       if(shift) 
+		 sy = 1;
+	       else
+		 /* Preserve aspect ratio */
+		 sy = sx;
+
+	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +right, +cy);
 	       *hasBeenTransformed = TRUE;
 	     }
 	  break;
@@ -685,10 +708,17 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	   if(x1 != 0 && x2 != 0)
 	     {
-	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -left, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -left, -cy);
 	       sx = ((float)x2)/x1;
-	       TtaApplyMatrixTransform (document, el, sx, 0, 0, 1, 0, 0);
-	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +left, 0);
+
+	       if(shift) 
+		 sy = 1;
+	       else
+		 /* Preserve aspect ratio */
+		 sy = sx;
+
+	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
+	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +left, +cy);
 	       *hasBeenTransformed = TRUE;
 	     }
 	  break;
@@ -713,6 +743,16 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 					-right, -bottom);
 	       sx = ((float)x2)/x1;
 	       sy = ((float)y2)/y1;
+
+	       if(!shift) 
+		 /* Preserve aspect ratio */
+		 {
+		   if(sx < sy)
+		     sy = sx;
+		   else
+		     sx = sy;
+		 }
+
 	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
 					+right, +bottom);
@@ -741,6 +781,16 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 					-left, -bottom);
 	       sx = ((float)x2)/x1;
 	       sy = ((float)y2)/y1;
+
+	       if(!shift) 
+		 /* Preserve aspect ratio */
+		 {
+		   if(sx < sy)
+		     sy = sx;
+		   else
+		     sx = sy;
+		 }
+
 	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
 					+left, +bottom);
@@ -769,6 +819,16 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 					-left, -top);
 	       sx = ((float)x2)/x1;
 	       sy = ((float)y2)/y1;
+
+	       if(!shift) 
+		 /* Preserve aspect ratio */
+		 {
+		   if(sx < sy)
+		     sy = sx;
+		   else
+		     sx = sy;
+		 }
+
 	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
 					+left, +top);
@@ -797,6 +857,16 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 					-right, -top);
 	       sx = ((float)x2)/x1;
 	       sy = ((float)y2)/y1;
+
+	       if(!shift) 
+		 /* Preserve aspect ratio */
+		 {
+		   if(sx < sy)
+		     sy = sx;
+		   else
+		     sx = sy;
+		 }
+
 	       TtaApplyMatrixTransform (document, el, sx, 0, 0, sy, 0, 0);
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1,
 					+right, +top);
