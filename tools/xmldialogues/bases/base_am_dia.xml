@@ -1083,6 +1083,10 @@
 	<message xml:lang="en">Scale</message>
 	<message xml:lang="fr">Redimensionner</message>
 </label>
+<label define="BSVG_Ungroup">
+	<message xml:lang="en">Ungroup</message>
+	<message xml:lang="fr">Dégrouper</message>
+</label>
 <label define="BCCut">
 	<message xml:lang="en">Cut</message>
 	<message xml:lang="fr">Couper</message>

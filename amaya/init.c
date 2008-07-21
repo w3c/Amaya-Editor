@@ -190,8 +190,8 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win,
 #endif /* _SVG */
 
       /* First items of the context menu can be displayed/hidden. */
-#define NB_ITEM 14
-#define CUT_POS  8
+#define NB_ITEM 15
+#define CUT_POS  NB_ITEM-6
       wxMenuItem* items[NB_ITEM];
       ThotBool    display_item[NB_ITEM];
 
@@ -224,8 +224,11 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win,
 		/* Display the SVG transforms the a non-terminal SVG element
 		   is selected */
 		{
-		  for(i = 4; i < 8; i++)
-		    display_item[i] = TRUE;
+		  display_item[4] = TRUE;
+		  display_item[5] = TRUE;
+		  display_item[6] = TRUE;
+		  display_item[7] = (elementType.ElTypeNum == SVG_EL_g);
+		  display_item[8] = TRUE;
 		}
 	      else
 		{
@@ -233,6 +236,8 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win,
 		  for(i = 0; i < 3; i++)
 		    display_item[CUT_POS+i] = FALSE;
 		}
+
+	      
 	    }
 	}
 #endif /* _SVG */

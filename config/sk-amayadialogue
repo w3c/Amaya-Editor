@@ -69,315 +69,316 @@
 67 **Rotate
 68 **Skew
 69 **Scale
-70 Vystrihnúť
-71 Kopírovať
-72 Prilepiť
-73 Vymazať
-74 Vložiť pred
-75 Vložiť za
-76 &Späť
-77 &Opakovať
-78 &Vystrihnúť
-79 &Kopírovať
-80 &Prilepiť
-81 Vy&mazať
-82 Vložiť pre&d
-83 Vložiť &za
-84 **Select all
-85 Prejsť na...
-86 Rodičovský prvok
-87 Prvý potomok
-88 Predchazajúci prvok
-89 Nasledujúci prvok
-90 &Hľadať
-91 &Možnosti
-92 **Show/Hide toolbars
-93 **&Browsing
-94 **&Editing
-95 Panel s &nástrojmi
-96 Oblasti &obrázkov
-97 &Záložky
-98 &Normálne zobrazenie
-99 &Štruktúru
-100 Zdrojový kód stránky
-101 Hypertextové odkazy
-102 Len text
-103 Obsah
-104 Rozdeliť okno horizontálne
-105 Rozdeliť okno vertikálne
-106 &Vlastnosti...
-107 Zobraziť chyby
-108 &Celá obrazovka
-109 Zväčšiť veľkosť textu
-110 Zmenšiť veľkosť textu
-111 Odsek (p)
-112 Nadpis
-113 Nadpis úrovne 1 (h1)
-114 Nadpis úrovne 2 (h2)
-115 Nadpis úrovne 3 (h3)
-116 Nadpis úrovne 4 (h4)
-117 Nadpis úrovne 5 (h5)
-118 Nadpis úrovne 6 (h6)
-119 Zoznam
-120 Odrážky (ul)
-121 Číslovanie (ol)
-122 Zoznam definícií (dl)
-123 Termín (dt)
-124 Definícia (dd)
-125 Druh informácie
-126 Zvýraznená (em)
-127 Silno zvýraznená (strong)
-128 Citácia (cite)
-129 Poučka (dfn)
-130 Zdrojový kód (code)
-131 Premenná (var)
-132 Príklad (samp)
-133 Vstup z klávesnice (kbd)
-134 Skratka (abbr)
-135 Akronym (acronym)
-136 Novovložený text (ins)
-137 Text na odstránenie (del)
-138 Znakové prvky
-139 Kurzíva (i)
-140 Tučné (b)
-141 Písací stroj (tt)
-142 Veľké (big)
-143 Malé (small)
-144 **Span
-145 Dolný index (sub)
-146 Horný index (sup)
-147 Krátky úryvok (q)
-148 Smer textu (bdo)
-149 Obrázok (img)
-150 Vodorovný oddelovač (hr)
-151 Zalomenie riadka (br)
-152 Predformátovaný text (pre)
-153 Vložiť tabuľka
-154 Tabuľka
-155 Vložiť tabuľka
-156 Menovka (caption)
-157 Hlavička tabuľky (thead)
-158 Telo tabuľky (tbody)
-159 Päta tabuľky (tfoot)
-160 &Math
-161 Vložiť vzorec
-162 Text (mtext)
-163 Identifikátor (mi)
-164 Číslo (mn)
-165 Operátor (mo)
-166 Medzera (mspace)
-167 Znaky (&xxx;)
-168 Neviditeľný multiplikátor (InvisibleTimes)
-169 Aplikovanie funkcie (ApplyFunction)
-170 Odmocnina (mroot)
-171 Druhá odmocnina (msqrt)
-172 Uzatvorenie (menclose)
-173 Zlomok (mfrac)
-174 Horný a dolný index (msubsup)
-175 Dolný index(msub)
-176 Horný index (msup)
-177 Horná a dolná medza (munderover)
-178 Horná medza (munder)
-179 Dolná medza (mover)
-180 Zátvorky (mrow)
-181 Multi index (mmultiscripts)
-182 Nová matica (mtable)
-183 **Graphics
-184 **Line
-185 **Arrow
-186 **Text
-187 **ForeignObject
-188 **Group
-189 **Square
-190 **Rectangle
-191 **Diamond
-192 **Triangle
-193 **Circle
-194 **Ellipse
-195 **Polyline
-196 **Polygon
-197 **Open curve
-198 **Closed curve
-199 **Cube
-200 **Parallelepiped
-201 **Cylinder
-202 Formulár
-203 Vložiť formulár (form)
-204 Tlačidlo (input)
-205 Začiarkávacie políčko (input)
-206 Výber súboru (input)
-207 Skryté pole (input)
-208 Obrázok (input)
-209 Heslo (input)
-210 Prepínacie políčko (input)
-211 Tlačidlo Obnoviť (input)
-212 Tlačidlo Odoslať (input)
-213 Textové pole (input)
-214 Zoskupenie polí (fieldset)
-215 Menovka (label)
-216 Rozbaľovacie pole (option)
-217 Zoskupenie v roz. poli (optgroup)
-218 Textová oblasť (textarea)
-219 Objekt
-220 Objekt (object)
-221 Parameter (param)
-222 Oblasť obrázka
-223 Vložiť oblasť (map)
-224 Kruhová oblasť (area)
-225 Mnohouholníková oblasť (area)
-226 Obdĺžnikova oblasť (area)
-227 Štruktúra
-228 Vložiť CSS pravidlá (style)
-229 Poznámka
-230 Základ pre relatívne odkazy (base)
-231 Vložiť meta značku (meta)
-232 Vložiť prepojenie (link)
-233 Vložiť skript (script)
-234 Alternatíva pre skript (noscript)
-235 Oddelenie, vrstva (div)
-236 Adresa (address)
-237 Úryvok (blockquote)
-238 Plávajúci rámec (iframe)
-239 Ruby poznámka (ruby)
-240 **Theme
-241 **Classic
-242 **Modern
-243 **No theme
-244 Farba popredia
-245 Popredia...
-246 **No color
-247 Pozadia
-248 Farba pozadia...
-249 **No color
-250 **Alignment
-251 **Left
-252 **Center
-253 **Right
-254 **Justify
-255 **Default
-256 **Line spacing
-257 **Single
-258 **Half
-259 **Double
-260 **Default
-261 **Indent
-262 **Increase
-263 **Decrease
-264 **Default
-265 Znaky
-266 **Select a font...
-267 **Default
-268 CSS &pravidlá...
-269 Vytvoriť &pravidlo...
-270 Zobraziť použité štýly...
-271 Kaskádové štýly
-272 Pripojiť súbor s CSS...
-273 Otvoriť súbor s CSS...
-274 Vypnuť CSS pravidlá...
-275 &Zapnúť CSS pravidlá...
-276 Ostrániť súbor s CSS...
-277 Kopírovať adresu odkazu
-278 Prilepiť adresu odkazu
-279 &Prepojiť s predošlou záložkou
-280 &Vytvoriť alebo zmeniť odkaz...
-281 Vytvoriť &záložku
-282 O&dstrániť odkaz/záložku
-283 &Pridať/odstrániť ID...
-284 Kontrola pravopi&su
-285 T&ransformovať
-286 **Code clean up
-287 **Edit table
-288 Zmeniť na bunku s dátami
-289 Zmeniť na bunku s nadpisom
-290 Zlúčiť
-291 Zlúčiť s pravou bunkou
-292 Zlúčiť s dolnou bunkou
-293 Rozdeliť bunky horizontálne
-294 Rozdeliť bunky vertikálne
-295 Označiť riadok
-296 Vložiť riadok nad
-297 Vložiť riadok pod
-298 Označiť stĺpec
-299 Vložiť stĺpec vľavo
-300 Vložiť stĺpec vpravo
-301 Prilepiť pred
-302 Prilepiť za
-303 Zmeniť názov (title)
-304 Zmeniť typ dokumentu
-305 Odstrániť označenie dokumentu
-306 Pridať označenie dokumentu
-307 Zmeniť na XHTML 1.1
-308 Zmeniť na XHTML 1.0 Transitional
-309 Zmeniť na XHTML 1.0 Strict
-310 Zmeniť na XHTML 1.0 Basic
-311 **Change to XHTML+RDFa
-312 Zmeniť na HTML 4.01 Transitional
-313 Zmeniť na HTML 4.01 Strict
-314 &Očíslovať podkapitoly
-315 &Vytvoriť obsah
-316 &Zostaviť knihu
-317 Vložiť dnešný dátum
-318 **Graphics
-319 Zobraziť SVG knižnicu
-320 Pridať do SVG knižnice
-321 &Komentáre
-322 Okomentovať výber
-323 Okomentovať dokument
-324 Presunúť k výberu
-325 Uložiť výber ako &XPointer
-326 Presunúť k uloženému XPointeru
-327 Reagovať na komentár
-328 Odoslať na server
-329 Odstrániť komentár
-330 Nahrať komentár
-331 Zadefinovať požiadavku...
-332 Filtrovať komentáre...
-333 Sp&olupráca
-334 Uzamknúť zdrojový súbor...
-335 Odomknúť zdrojový súbor...
-336 Zobraziť vlastnosti zdroja...
-337 Kopírovať informácie o uzamknutí...
-338 Zamknutý?
-339 **Templates
-340 **Create template from current document...
-341 **Create a text box
-342 **Create and use a component
-343 **Create a free editing box
-344 **Create a repeated component
-345 &Javascript/DOM
-346 **Enable/Disable
-347 **Execute a command
-348 **Execute an external script
-349 **Add an external script
-350 **Insert a script
-351 O programe Amaya
-352 Domoská stránka programu Amaya
-353 Témy pomocníka
-354 Prehliadanie
-355 Zobrazenia
-356 Označovanie
-357 Vytváranie dokumentu
-358 Vkladanie prvkov
-359 Atribúty
-360 Vkladanie znakov
-361 Šablóny
-362 Úprava dokumentu
-363 Prepojenia
-364 Tabuľky
-365 Oblasti obrázkov
-366 Vzorce
-367 Úprava SVG grafiky
-368 XML podpora
-369 Kaskádové štýly
-370 Vyhľadávanie
-371 Kontrola pravopisu
-372 Publikovanie
-373 Spolupráca
-374 Tlač
-375 Číslovanie podkapitol
-376 Vytváranie kníh
-377 Komentáre
-378 Nastavenia programu
-379 Klávesové skratky
-380 Zjednodušenie ovládania
-381 **Tip of the day...
+70 **Ungroup
+71 Vystrihnúť
+72 Kopírovať
+73 Prilepiť
+74 Vymazať
+75 Vložiť pred
+76 Vložiť za
+77 &Späť
+78 &Opakovať
+79 &Vystrihnúť
+80 &Kopírovať
+81 &Prilepiť
+82 Vy&mazať
+83 Vložiť pre&d
+84 Vložiť &za
+85 **Select all
+86 Prejsť na...
+87 Rodičovský prvok
+88 Prvý potomok
+89 Predchazajúci prvok
+90 Nasledujúci prvok
+91 &Hľadať
+92 &Možnosti
+93 **Show/Hide toolbars
+94 **&Browsing
+95 **&Editing
+96 Panel s &nástrojmi
+97 Oblasti &obrázkov
+98 &Záložky
+99 &Normálne zobrazenie
+100 &Štruktúru
+101 Zdrojový kód stránky
+102 Hypertextové odkazy
+103 Len text
+104 Obsah
+105 Rozdeliť okno horizontálne
+106 Rozdeliť okno vertikálne
+107 &Vlastnosti...
+108 Zobraziť chyby
+109 &Celá obrazovka
+110 Zväčšiť veľkosť textu
+111 Zmenšiť veľkosť textu
+112 Odsek (p)
+113 Nadpis
+114 Nadpis úrovne 1 (h1)
+115 Nadpis úrovne 2 (h2)
+116 Nadpis úrovne 3 (h3)
+117 Nadpis úrovne 4 (h4)
+118 Nadpis úrovne 5 (h5)
+119 Nadpis úrovne 6 (h6)
+120 Zoznam
+121 Odrážky (ul)
+122 Číslovanie (ol)
+123 Zoznam definícií (dl)
+124 Termín (dt)
+125 Definícia (dd)
+126 Druh informácie
+127 Zvýraznená (em)
+128 Silno zvýraznená (strong)
+129 Citácia (cite)
+130 Poučka (dfn)
+131 Zdrojový kód (code)
+132 Premenná (var)
+133 Príklad (samp)
+134 Vstup z klávesnice (kbd)
+135 Skratka (abbr)
+136 Akronym (acronym)
+137 Novovložený text (ins)
+138 Text na odstránenie (del)
+139 Znakové prvky
+140 Kurzíva (i)
+141 Tučné (b)
+142 Písací stroj (tt)
+143 Veľké (big)
+144 Malé (small)
+145 **Span
+146 Dolný index (sub)
+147 Horný index (sup)
+148 Krátky úryvok (q)
+149 Smer textu (bdo)
+150 Obrázok (img)
+151 Vodorovný oddelovač (hr)
+152 Zalomenie riadka (br)
+153 Predformátovaný text (pre)
+154 Vložiť tabuľka
+155 Tabuľka
+156 Vložiť tabuľka
+157 Menovka (caption)
+158 Hlavička tabuľky (thead)
+159 Telo tabuľky (tbody)
+160 Päta tabuľky (tfoot)
+161 &Math
+162 Vložiť vzorec
+163 Text (mtext)
+164 Identifikátor (mi)
+165 Číslo (mn)
+166 Operátor (mo)
+167 Medzera (mspace)
+168 Znaky (&xxx;)
+169 Neviditeľný multiplikátor (InvisibleTimes)
+170 Aplikovanie funkcie (ApplyFunction)
+171 Odmocnina (mroot)
+172 Druhá odmocnina (msqrt)
+173 Uzatvorenie (menclose)
+174 Zlomok (mfrac)
+175 Horný a dolný index (msubsup)
+176 Dolný index(msub)
+177 Horný index (msup)
+178 Horná a dolná medza (munderover)
+179 Horná medza (munder)
+180 Dolná medza (mover)
+181 Zátvorky (mrow)
+182 Multi index (mmultiscripts)
+183 Nová matica (mtable)
+184 **Graphics
+185 **Line
+186 **Arrow
+187 **Text
+188 **ForeignObject
+189 **Group
+190 **Square
+191 **Rectangle
+192 **Diamond
+193 **Triangle
+194 **Circle
+195 **Ellipse
+196 **Polyline
+197 **Polygon
+198 **Open curve
+199 **Closed curve
+200 **Cube
+201 **Parallelepiped
+202 **Cylinder
+203 Formulár
+204 Vložiť formulár (form)
+205 Tlačidlo (input)
+206 Začiarkávacie políčko (input)
+207 Výber súboru (input)
+208 Skryté pole (input)
+209 Obrázok (input)
+210 Heslo (input)
+211 Prepínacie políčko (input)
+212 Tlačidlo Obnoviť (input)
+213 Tlačidlo Odoslať (input)
+214 Textové pole (input)
+215 Zoskupenie polí (fieldset)
+216 Menovka (label)
+217 Rozbaľovacie pole (option)
+218 Zoskupenie v roz. poli (optgroup)
+219 Textová oblasť (textarea)
+220 Objekt
+221 Objekt (object)
+222 Parameter (param)
+223 Oblasť obrázka
+224 Vložiť oblasť (map)
+225 Kruhová oblasť (area)
+226 Mnohouholníková oblasť (area)
+227 Obdĺžnikova oblasť (area)
+228 Štruktúra
+229 Vložiť CSS pravidlá (style)
+230 Poznámka
+231 Základ pre relatívne odkazy (base)
+232 Vložiť meta značku (meta)
+233 Vložiť prepojenie (link)
+234 Vložiť skript (script)
+235 Alternatíva pre skript (noscript)
+236 Oddelenie, vrstva (div)
+237 Adresa (address)
+238 Úryvok (blockquote)
+239 Plávajúci rámec (iframe)
+240 Ruby poznámka (ruby)
+241 **Theme
+242 **Classic
+243 **Modern
+244 **No theme
+245 Farba popredia
+246 Popredia...
+247 **No color
+248 Pozadia
+249 Farba pozadia...
+250 **No color
+251 **Alignment
+252 **Left
+253 **Center
+254 **Right
+255 **Justify
+256 **Default
+257 **Line spacing
+258 **Single
+259 **Half
+260 **Double
+261 **Default
+262 **Indent
+263 **Increase
+264 **Decrease
+265 **Default
+266 Znaky
+267 **Select a font...
+268 **Default
+269 CSS &pravidlá...
+270 Vytvoriť &pravidlo...
+271 Zobraziť použité štýly...
+272 Kaskádové štýly
+273 Pripojiť súbor s CSS...
+274 Otvoriť súbor s CSS...
+275 Vypnuť CSS pravidlá...
+276 &Zapnúť CSS pravidlá...
+277 Ostrániť súbor s CSS...
+278 Kopírovať adresu odkazu
+279 Prilepiť adresu odkazu
+280 &Prepojiť s predošlou záložkou
+281 &Vytvoriť alebo zmeniť odkaz...
+282 Vytvoriť &záložku
+283 O&dstrániť odkaz/záložku
+284 &Pridať/odstrániť ID...
+285 Kontrola pravopi&su
+286 T&ransformovať
+287 **Code clean up
+288 **Edit table
+289 Zmeniť na bunku s dátami
+290 Zmeniť na bunku s nadpisom
+291 Zlúčiť
+292 Zlúčiť s pravou bunkou
+293 Zlúčiť s dolnou bunkou
+294 Rozdeliť bunky horizontálne
+295 Rozdeliť bunky vertikálne
+296 Označiť riadok
+297 Vložiť riadok nad
+298 Vložiť riadok pod
+299 Označiť stĺpec
+300 Vložiť stĺpec vľavo
+301 Vložiť stĺpec vpravo
+302 Prilepiť pred
+303 Prilepiť za
+304 Zmeniť názov (title)
+305 Zmeniť typ dokumentu
+306 Odstrániť označenie dokumentu
+307 Pridať označenie dokumentu
+308 Zmeniť na XHTML 1.1
+309 Zmeniť na XHTML 1.0 Transitional
+310 Zmeniť na XHTML 1.0 Strict
+311 Zmeniť na XHTML 1.0 Basic
+312 **Change to XHTML+RDFa
+313 Zmeniť na HTML 4.01 Transitional
+314 Zmeniť na HTML 4.01 Strict
+315 &Očíslovať podkapitoly
+316 &Vytvoriť obsah
+317 &Zostaviť knihu
+318 Vložiť dnešný dátum
+319 **Graphics
+320 Zobraziť SVG knižnicu
+321 Pridať do SVG knižnice
+322 &Komentáre
+323 Okomentovať výber
+324 Okomentovať dokument
+325 Presunúť k výberu
+326 Uložiť výber ako &XPointer
+327 Presunúť k uloženému XPointeru
+328 Reagovať na komentár
+329 Odoslať na server
+330 Odstrániť komentár
+331 Nahrať komentár
+332 Zadefinovať požiadavku...
+333 Filtrovať komentáre...
+334 Sp&olupráca
+335 Uzamknúť zdrojový súbor...
+336 Odomknúť zdrojový súbor...
+337 Zobraziť vlastnosti zdroja...
+338 Kopírovať informácie o uzamknutí...
+339 Zamknutý?
+340 **Templates
+341 **Create template from current document...
+342 **Create a text box
+343 **Create and use a component
+344 **Create a free editing box
+345 **Create a repeated component
+346 &Javascript/DOM
+347 **Enable/Disable
+348 **Execute a command
+349 **Execute an external script
+350 **Add an external script
+351 **Insert a script
+352 O programe Amaya
+353 Domoská stránka programu Amaya
+354 Témy pomocníka
+355 Prehliadanie
+356 Zobrazenia
+357 Označovanie
+358 Vytváranie dokumentu
+359 Vkladanie prvkov
+360 Atribúty
+361 Vkladanie znakov
+362 Šablóny
+363 Úprava dokumentu
+364 Prepojenia
+365 Tabuľky
+366 Oblasti obrázkov
+367 Vzorce
+368 Úprava SVG grafiky
+369 XML podpora
+370 Kaskádové štýly
+371 Vyhľadávanie
+372 Kontrola pravopisu
+373 Publikovanie
+374 Spolupráca
+375 Tlač
+376 Číslovanie podkapitol
+377 Vytváranie kníh
+378 Komentáre
+379 Nastavenia programu
+380 Klávesové skratky
+381 Zjednodušenie ovládania
+382 **Tip of the day...
