@@ -1832,7 +1832,13 @@ void ApproximateAngleOfLine(int T, int x1, int y1, int *x2, int *y2)
   if(local_y < 0)theta = -theta;
 
   /* Approximate the angle */
+  
+#ifdef _WINDOWS
+  theta = floor(theta/T)*T;
+#else /* _WINDOWS */
   theta = round(theta/T)*T;
+#endif /* _WINDOWS */
+
   theta = (M_PI*theta)/180;
 
   /* Update the coordinates */

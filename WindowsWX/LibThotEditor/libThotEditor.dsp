@@ -167,6 +167,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaEditPathEvtHandler.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaElementPanel.cpp
 # End Source File
 # Begin Source File

@@ -44,7 +44,7 @@
 /* Type of handles */
 enum handle_type
   {
-    HANDLE,
+    DEFAULT_HANDLE,
     FRAME_HANDLE,
     BEZIER_HANDLE
   };
@@ -73,7 +73,7 @@ void DrawHandle(int handle, int frame, int thick, ...)
 		     );
       break;
 
-    case HANDLE:
+    case DEFAULT_HANDLE:
       x1 = va_arg(varpos, int);
       y1 = va_arg(varpos, int);
       DrawRectangle (frame, 1, 0,
@@ -171,7 +171,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
       if(could_resize)
 	h = FRAME_HANDLE;
       else
-	h = HANDLE;
+	h = DEFAULT_HANDLE;
 
       if (svg_or_img)
         {
