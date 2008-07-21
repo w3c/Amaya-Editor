@@ -64,6 +64,7 @@
      14) Scaling: top right corner
      15) Scaling: bottom right corner
      16) Scaling: bottom left corner
+     17) Translate
  *----------------------------------------------------------------------*/
 
 extern void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
@@ -128,6 +129,7 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
   ,hasBeenTransformed(transformApplied)
 {
   PtrAbstractBox pAb;
+  wxCursor cursor;
 
   *hasBeenTransformed = FALSE;
 
@@ -148,8 +150,35 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 
       if(type > 0)
 	{
+	  switch(type)
+	    {
+	    case 1:
+	      /* Scale */
+	      cursor = wxCursor(cursor_scale_xpm);
+	      break;
+
+	    case 2:
+	      /* Rotate */
+	      cursor = wxCursor(cursor_rotate_xpm);
+	      break;
+
+	    case 4:
+	      /* Skewing */
+	      cursor = wxCursor(cursor_skew_xpm);
+	      break;
+
+	    case 17:
+	      /* Translate */
+	      cursor = wxCursor(cursor_translate_xpm);
+	      break;
+
+	    default:
+	      cursor = wxCursor(wxCURSOR_CROSS);
+	      break;
+	    }
+
 	/* assign a cross mouse cursor */
-	pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
+	  pFrame->GetCanvas()->SetCursor( cursor );
 	}
 
 
@@ -335,6 +364,11 @@ void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
       AmayaTransformEvtHandler::UpdatePositions();
       break;
 
+    case 17:
+      /* Translate */
+      ButtonDown = false;
+      break;
+
     default:
       Finished = true;
       break;
@@ -414,6 +448,8 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	{
 	case 0:
 	  /* Translate */
+	case 17:
+	  /* Translate (using command) */
 
 	  /* We want to apply a translation such that (x1,y1) is moved to
 	     (x2,y2). Hence the vector of translation is simply defined by:

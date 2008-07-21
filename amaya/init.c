@@ -190,7 +190,7 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win,
 #endif /* _SVG */
 
       /* First items of the context menu can be displayed/hidden. */
-#define NB_ITEM 15
+#define NB_ITEM 16
 #define CUT_POS  NB_ITEM-6
       wxMenuItem* items[NB_ITEM];
       ThotBool    display_item[NB_ITEM];
@@ -227,8 +227,9 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win,
 		  display_item[4] = TRUE;
 		  display_item[5] = TRUE;
 		  display_item[6] = TRUE;
-		  display_item[7] = (elementType.ElTypeNum == SVG_EL_g);
-		  display_item[8] = TRUE;
+		  display_item[7] = TRUE;
+		  display_item[8] = (elementType.ElTypeNum == SVG_EL_g);
+		  display_item[9] = TRUE;
 		}
 	      else
 		{

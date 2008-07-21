@@ -102,6 +102,7 @@ MENUS
 	DocContext_ button:BSVG_Rotate -> TransformSVG_Rotate icon:SVG_rotate.png;
 	DocContext_ button:BSVG_Skew -> TransformSVG_Skew icon:SVG_skew.png;
 	DocContext_ button:BSVG_Scale -> TransformSVG_Scale icon:SVG_scale.png;
+        DocContext_ button:BSVG_Translate -> TransformSVG_Translate icon:SVG_translate.png;		      
 	DocContext_ button:BSVG_Ungroup -> TransformSVG_Ungroup icon:SVG_ungroup.png;
         DocContext_ Separator;
         DocContext_ button:BCCut -> TtcCutSelection icon:cut.png;
@@ -709,6 +710,7 @@ FUNCTIONS
   CreateSVG_Image,
   TransformSVG_Skew,
   TransformSVG_Scale,
+  TransformSVG_Translate,
   DoSelectOpacity,
   DoSelectStrokeOpacity,
   DoSelectFillOpacity,

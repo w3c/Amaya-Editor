@@ -3046,8 +3046,10 @@ void TransformGraphicElement (Document doc, View view, int entry)
         done = AskTransform(doc, svgAncestor, svgCanvas, 1, selected[0]);
       break;
 
-      /* Translate */
-
+    case 45: /* Translate */
+      if (isFormattedView)
+        done = AskTransform(doc, svgAncestor, svgCanvas, 17, selected[0]);
+      break;
     }
   
   TtaFreeMemory(selected);
@@ -4150,4 +4152,12 @@ void TransformSVG_Skew (Document document, View view)
 void TransformSVG_Scale (Document document, View view)
 {
   TransformGraphicElement (document, view, 44);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_Translate
+  ----------------------------------------------------------------------*/
+void TransformSVG_Translate (Document document, View view)
+{
+  TransformGraphicElement (document, view, 45);
 }

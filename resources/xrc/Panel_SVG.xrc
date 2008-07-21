@@ -161,6 +161,7 @@
           <object class="tool" name="wxID_PANEL_SVG_ROTATE_CLOCKWISE">
             <bitmap>../icons/16x16/SVG_rotate_clockwise.png</bitmap>
           </object>
+          
           <object class="tool" name="wxID_PANEL_SVG_ROTATE">
             <bitmap>../icons/16x16/SVG_rotate.png</bitmap>
           </object>
@@ -174,6 +175,9 @@
       </object>
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_SVG_8" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_PANEL_SVG_TRANSLATE">
+            <bitmap>../icons/16x16/SVG_translate.png</bitmap>
+          </object>
           <object class="tool" name="wxID_PANEL_SVG_ALIGN_LEFT">
             <bitmap>../icons/16x16/SVG_align_left.png</bitmap>
           </object>

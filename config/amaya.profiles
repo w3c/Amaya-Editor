@@ -704,6 +704,7 @@ HelpSVG
 &CreateSVG_Image
 &TransformSVG_Skew
 &TransformSVG_Scale
+&TransformSVG_Translate
 
 ########### Javascript/DOM
 [javascript_dom]

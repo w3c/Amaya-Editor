@@ -1073,7 +1073,6 @@
 <label define="BSVG_Rotate">
 	<message xml:lang="en">Rotate</message>
 	<message xml:lang="fr">Tourner</message>
-	<message xml:lang="es">Cilindro</message>
 </label>
 <label define="BSVG_Skew">
 	<message xml:lang="en">Skew</message>
@@ -1082,6 +1081,10 @@
 <label define="BSVG_Scale">
 	<message xml:lang="en">Scale</message>
 	<message xml:lang="fr">Redimensionner</message>
+</label>
+<label define="BSVG_Tranlate">
+	<message xml:lang="en">Move</message>
+	<message xml:lang="fr">Déplacer</message>
 </label>
 <label define="BSVG_Ungroup">
 	<message xml:lang="en">Ungroup</message>
