@@ -179,8 +179,11 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
   *py2 = *py1;
 
   if(shape == 10 || shape == 9)
+    {
     /* Only one point is needed */
+      *created = TRUE;
       finished = true;
+    }
 }
 
 /*----------------------------------------------------------------------
