@@ -1721,7 +1721,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   int error;
 
-  char buffer[300];
+  char buffer[500], buffer2[200];
   char stroke_color[10], fill_color[10];
   char *attr_data;
 
@@ -2630,12 +2630,33 @@ void CreateGraphicElement (Document doc, View view, int entry)
        newType.ElTypeNum == SVG_EL_path))
     {
 
-      if((!isFilled || !FillEnabled) && !StrokeEnabled)
+      *buffer = EOS;
+
+      /* Is the shape visible with this configuration? */
+      if(
+	 Current_Opacity == 0 ||
+
+	 (
+	  /* No fill... */
+	  (!isFilled || !FillEnabled || Current_FillOpacity == 0) &&
+
+	  /* ...and no stroke */
+	  (!StrokeEnabled || Current_StrokeOpacity == 0 ||
+	   Current_StrokeWidth == 0)
+	  )
+
+	 )
 	{
-	  /* The shape is not visible with this configuration */
+	  Current_Opacity = 100;
+
 	  StrokeEnabled = TRUE;
 	  Current_StrokeColor = 1;
+	  Current_StrokeOpacity = 100;
+
 	  FillEnabled = FALSE;
+	  Current_FillColor = -1;
+	  Current_FillOpacity = 100;
+
 	  UpdateStylePanel (doc, view);
 	}
 
@@ -2660,11 +2681,35 @@ void CreateGraphicElement (Document doc, View view, int entry)
       else
 	sprintf(fill_color, "none");
 
-      /* Apply the style */
-      if (newType.ElTypeNum == SVG_EL_line_)
-	sprintf(buffer, "stroke:%s", stroke_color);
-      else
-	sprintf(buffer, "stroke:%s; fill:%s", stroke_color, fill_color);
+      /* Apply global style */
+      sprintf(buffer2, "opacity: %g; ", ((float)Current_Opacity)/100);
+      strcat(buffer, buffer2);
+
+      /* Apply the stroke style */
+      if(StrokeEnabled)
+	{
+	  sprintf(buffer2, "stroke: %s; stroke-opacity: %g; stroke-width: %d; ",
+		  stroke_color,
+		  ((float)Current_StrokeOpacity)/100,
+		  Current_StrokeWidth
+		  );
+	  strcat(buffer, buffer2);
+	}
+
+      /* Apply the fill style */
+      if(newType.ElTypeNum != SVG_EL_line_)
+	{
+	  sprintf(buffer2, "fill: %s; ", fill_color);
+	  strcat(buffer, buffer2);
+	}
+
+      if (FillEnabled)
+	{
+	  sprintf(buffer2, "fill-opacity: %g;",
+		  ((float)Current_FillOpacity)/100
+		  );
+	  strcat(buffer, buffer2);
+	}
 
       ParseHTMLSpecificStyle (newEl, buffer, doc, 0, FALSE);
 
