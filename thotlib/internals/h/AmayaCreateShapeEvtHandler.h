@@ -20,14 +20,14 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
 
   AmayaCreateShapeEvtHandler();
   AmayaCreateShapeEvtHandler(AmayaFrame * p_frame,
- Document doc, void *transform,
- int ancestorX,
- int ancestorY,
- int canvasWidth,
- int canvasHeight,
- int shape_number,
- int *x1, int *y1, int *x2, int *y2,
- ThotBool *created);
+			     Document doc, void *transform,
+			     int ancestorX,
+			     int ancestorY,
+			     int canvasWidth,
+			     int canvasHeight,
+			     int shape_number,
+			     int *x1, int *y1, int *x2, int *y2,
+			     ThotBool *created);
   virtual ~AmayaCreateShapeEvtHandler();
 
   bool IsFinish();

@@ -2630,13 +2630,22 @@ void CreateGraphicElement (Document doc, View view, int entry)
        newType.ElTypeNum == SVG_EL_path))
     {
 
+      if((!isFilled || !FillEnabled) && !StrokeEnabled)
+	{
+	  /* The shape is not visible with this configuration */
+	  StrokeEnabled = TRUE;
+	  Current_StrokeColor = 1;
+	  FillEnabled = FALSE;
+	  UpdateStylePanel (doc, view);
+	}
+
       /* Get the stroke color */
       if(StrokeEnabled)
 	{
 	  if (Current_StrokeColor != -1)
 	    TtaGiveThotRGB (Current_StrokeColor, &red, &green, &blue);
 	  else
-	    TtaGiveThotRGB (0, &red, &green, &blue);
+	    TtaGiveThotRGB (1, &red, &green, &blue);
 	  sprintf(stroke_color, "#%02x%02x%02x", red, green, blue);
 	}
       else
@@ -2646,10 +2655,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
       if (FillEnabled && Current_FillColor != -1 && isFilled)
 	{
 	  TtaGiveThotRGB (Current_FillColor, &red, &green, &blue);
-	  sprintf(fill_color , "#%02x%02x%02x", red, green, blue);
+	  sprintf(fill_color, "#%02x%02x%02x", red, green, blue);
 	}
       else
-	sprintf(fill_color , "none");
+	sprintf(fill_color, "none");
 
       /* Apply the style */
       if (newType.ElTypeNum == SVG_EL_line_)

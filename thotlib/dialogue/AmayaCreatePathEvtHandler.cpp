@@ -40,13 +40,340 @@
 #include "AmayaCanvas.h"
 #include "AmayaCreatePathEvtHandler.h"
 
-static int N_points, state;
-static int currentX,currentY;
-static int lastX1, lastY1;
-static int symX, symY;
-static int lastX2, lastY2;
-static int lastX3, lastY3;
-static ThotBool clear = FALSE;
+IMPLEMENT_DYNAMIC_CLASS(AmayaCreatePathEvtHandler, wxEvtHandler)
+
+/*----------------------------------------------------------------------
+ *  this is where the event table is declared
+ *  the callbacks are assigned to an event type
+ *----------------------------------------------------------------------*/
+BEGIN_EVENT_TABLE(AmayaCreatePathEvtHandler, wxEvtHandler)
+EVT_KEY_DOWN( AmayaCreatePathEvtHandler::OnChar )
+EVT_LEFT_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown)
+EVT_LEFT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
+EVT_MIDDLE_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown)
+EVT_MIDDLE_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
+EVT_RIGHT_DOWN(	AmayaCreatePathEvtHandler::OnMouseRightDown)
+EVT_RIGHT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
+EVT_MOTION(		AmayaCreatePathEvtHandler::OnMouseMove)
+EVT_MOUSEWHEEL(	AmayaCreatePathEvtHandler::OnMouseWheel)
+END_EVENT_TABLE()
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler() : wxEvtHandler()
+{
+}
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
+						     int x_min, int y_min,
+						     int x_max, int y_max,
+						     PtrTextBuffer buffer,
+						     Document doc,
+						     int shape_number,
+						     int *nbPoints,
+						     ThotBool *created)
+  : wxEvtHandler()
+  ,finished(false)
+  ,pFrame(p_frame)
+  ,frameId(p_frame->GetFrameId())
+  ,x0(x_min)
+  ,y0(y_min)
+  ,width(x_max-x_min)
+  ,height(y_max-y_min)
+  ,shape(shape_number)
+  ,pBuffer(buffer)
+  ,document(doc)
+  ,created(created)
+  ,nb_points(nbPoints)
+{
+  if (pFrame)
+    {
+      /* attach this handler to the canvas */
+      AmayaCanvas * p_canvas = pFrame->GetCanvas();
+      p_canvas->PushEventHandler(this);
+
+      /* assign a cross mouse cursor */
+      pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
+      pFrame->GetCanvas()->CaptureMouse();
+    }
+
+  InitDrawing (5, 1, 0);
+  *nb_points = 1;
+  state = 0;
+  clear = false;
+}
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
+{
+  PtrTextBuffer       pB;
+  int i, step, symX2, symY2;
+  ThotBool first_point = TRUE;
+  
+  i = 1;
+  step = 0;
+  for(pB = pBuffer; pB; pB = pB -> BuNext)
+    {
+      for(; i < pB->BuLength; i++)
+	{
+      	/* Clear the preview of the polyline/curve */
+	if(!first_point)
+	  {
+	    if(shape == 5 || shape == 6)
+	      {
+		DrawLine (pB->BuPoints[i-1].XCoord, pB->BuPoints[i-1].YCoord,
+			  pB->BuPoints[i].XCoord, pB->BuPoints[i].YCoord,
+			  FALSE);
+	      }
+	    else
+	      {
+		if(step % 3 == 0)
+	  DrawCubicBezier (pB->BuPoints[i-3].XCoord,
+			   pB->BuPoints[i-3].YCoord,
+			   pB->BuPoints[i-2].XCoord,
+			   pB->BuPoints[i-2].YCoord,
+			   pB->BuPoints[i-1].XCoord,
+			   pB->BuPoints[i-1].YCoord,   
+			   pB->BuPoints[i].XCoord,
+			   pB->BuPoints[i].YCoord, FALSE);
+	      }
+	  }
+	else
+	  first_point = FALSE;
+
+	step=(step+1)%3;
+	}
+
+      i--;
+      if(pB -> BuNext == NULL && i >= 1)
+	{
+	  /* Get the two last points */
+	  lastX1=pB->BuPoints[i].XCoord;
+	  lastY1=pB->BuPoints[i].YCoord;
+	  lastX2=pB->BuPoints[i-1].XCoord;
+	  lastY2=pB->BuPoints[i-1].YCoord;
+	}
+
+      i = 0;
+    }
+
+  if(shape == 8 && *nb_points > 2)
+    {
+      /* close the curve */
+      symX2=2*lastX1-lastX2;
+      symY2=2*lastY1-lastY2;
+      AddPointInPolyline (pBuffer, *nb_points, symX2, symY2);(*nb_points)++;
+
+      symX2=2*pBuffer->BuPoints[1].XCoord-pBuffer->BuPoints[2].XCoord;
+      symY2=2*pBuffer->BuPoints[1].YCoord-pBuffer->BuPoints[2].YCoord;
+      AddPointInPolyline (pBuffer, *nb_points, symX2, symY2);(*nb_points)++;
+      AddPointInPolyline (pBuffer, *nb_points,
+			  pBuffer->BuPoints[1].XCoord,
+			  pBuffer->BuPoints[1].YCoord
+			  );(*nb_points)++;
+    }
+  
+  /* Convert the points of the polyline/curve */
+  i = 1;
+  for(pB = pBuffer; pB; pB = pB -> BuNext)
+    {
+      for(; i < pB->BuLength; i++)
+	{
+	  MouseCoordinatesToSVG(document, pFrame,
+				x0, y0,
+				width, height,
+				NULL,
+				TRUE,
+			&(pB->BuPoints[i].XCoord), &(pB->BuPoints[i].YCoord));
+	}
+      i = 0;
+    }
+
+  if (pFrame)
+    {
+      /* detach this handler from the canvas (restore default behaviour) */
+      AmayaCanvas * p_canvas = pFrame->GetCanvas();
+      p_canvas->PopEventHandler(false /* do not delete myself */);
+
+      /* restore the default cursor */
+      pFrame->GetCanvas()->SetCursor( wxNullCursor );
+
+      pFrame->GetCanvas()->ReleaseMouse();
+    }
+
+}
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+bool AmayaCreatePathEvtHandler::IsFinish()
+{
+  return finished;
+}
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+void AmayaCreatePathEvtHandler::OnMouseRightDown( wxMouseEvent& event )
+{
+  *created = TRUE;
+  finished = true;
+}
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+void AmayaCreatePathEvtHandler::OnChar( wxKeyEvent& event )
+{
+  if(event.GetKeyCode() !=  WXK_SHIFT)
+    {
+      *created = FALSE;
+      finished = true;
+    }
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaCreatePathEvtHandler
+ *      Method:  OnMouseDown
+ * Description:  handle mouse button down events
+ -----------------------------------------------------------------------*/
+void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
+{
+  if (IsFinish())
+    return;
+
+  /* Are we in the SVG ? */
+  if(!MouseCoordinatesToSVG(document, pFrame,
+			    x0,y0,
+			    width,height,
+			    NULL,
+			    FALSE, &currentX, &currentY))return;
+
+  if(shape == 7 || shape == 8)
+    {
+      clear = FALSE;
+
+      if(state == 0 || state == 1 || state == 3)
+	{
+	  /* Clear the active fragment */
+	  DrawPathFragment(shape, TRUE);
+	}
+      else
+	{
+	  /* Clear the active fragment */
+	  DrawPathFragment(shape, TRUE);
+
+	  /* Draw the new curve fragment */
+	  DrawPathFragment(shape, FALSE);
+	}
+    }
+  else
+    {
+      /* Clear the active fragment */
+      DrawPathFragment(shape, TRUE);
+      
+      /* Draw the new curve fragment */
+      DrawPathFragment(shape, FALSE);
+    }
+
+  if(shape == 5 || shape == 6)
+    {
+      /* Add a new point in the polyline/polygon */
+      state = 1;
+      AddPointInPolyline (pBuffer, *nb_points, currentX, currentY);(*nb_points)++;
+    }
+  else if(shape == 7 || shape == 8)
+    {
+      /* Bezier Curve */
+      
+      if(state == 2)
+	{
+	  /* Add a cubic Bezier Curve (the control points are the same, so
+	     actually it is a quadratic Bezier curve) */
+	  AddPointInPolyline (pBuffer, *nb_points, lastX2, lastY2);(*nb_points)++;
+	  AddPointInPolyline (pBuffer, *nb_points, symX, symY);(*nb_points)++;
+	  AddPointInPolyline (pBuffer, *nb_points, symX, symY);(*nb_points)++;
+	  AddPointInPolyline (pBuffer, *nb_points, lastX1, lastY1);(*nb_points)++;
+	}
+      else if(state == 4)
+	{
+	  /* Add a cubic Bezier Curve */
+	  AddPointInPolyline (pBuffer, *nb_points, lastX2, lastY2);(*nb_points)++;
+	  AddPointInPolyline (pBuffer, *nb_points, symX, symY);(*nb_points)++;
+	  AddPointInPolyline (pBuffer, *nb_points, lastX1, lastY1);(*nb_points)++;
+	}
+
+      if(state < 4)state++;
+      else state=3;
+    }
+
+  lastX3 = lastX2;
+  lastY3 = lastY2;
+  lastX2 = lastX1;
+  lastY2 = lastY1;
+  lastX1 = currentX;
+  lastY1 = currentY;
+  UpdateSymetricPoint();
+
+}
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaCreatePathEvtHandler
+ *      Method:  OnMouseDbClick
+ * Description:  handle mouse dbclick events
+ -----------------------------------------------------------------------*/
+void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
+{
+  *created = (*nb_points > 2);
+  finished = true;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaCreatePathEvtHandler
+ *      Method:  OnMouseMove
+ * Description:  handle mouse move events
+ -----------------------------------------------------------------------*/
+void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
+{
+  if(clear)
+    DrawPathFragment(shape, TRUE);
+
+  currentX = event.GetX();
+  currentY = event.GetY();
+
+  if(event.ShiftDown())
+    {
+      if(shape == 5 || shape == 6)
+	ApproximateAngleOfLine(15, lastX1, lastY1, &currentX, &currentY);
+    }
+
+  UpdateSymetricPoint();
+
+  DrawPathFragment(shape, TRUE);
+  clear = TRUE;
+
+  MouseCoordinatesToSVG(document, pFrame,
+			x0,y0,
+			width,height,
+			NULL,
+			FALSE, &currentX, &currentY);
+  
+#ifndef _WINDOWS
+  pFrame->GetCanvas()->Refresh();
+#endif /* _WINDOWS */
+
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaCreatePathEvtHandler
+ *      Method:  OnMouseWheel
+ * Description:  handle mouse wheel events
+ -----------------------------------------------------------------------*/
+void AmayaCreatePathEvtHandler::OnMouseWheel( wxMouseEvent& event )
+{
+}
+
 
 /*----------------------------------------------------------------------
   DrawLine
@@ -59,7 +386,8 @@ static ThotBool clear = FALSE;
   (x2,y2)
 
  *----------------------------------------------------------------------*/
-static void DrawLine (int x2, int y2, int x3, int y3, ThotBool SpecialColor)
+void AmayaCreatePathEvtHandler::DrawLine (int x2, int y2, int x3,
+						 int y3, ThotBool specialColor)
 {
   glEnable(GL_COLOR_LOGIC_OP);
 #ifdef _WINDOWS
@@ -67,7 +395,7 @@ static void DrawLine (int x2, int y2, int x3, int y3, ThotBool SpecialColor)
     glColor4ub (127, 127, 127, 0);
 #else /* _WINDOWS */
   glLogicOp(GL_XOR);
-  if(SpecialColor)
+  if(specialColor)
     glColor4ub (127, 0, 127, 0);
   else
     glColor4ub (127, 127, 127, 0);
@@ -86,8 +414,11 @@ static void DrawLine (int x2, int y2, int x3, int y3, ThotBool SpecialColor)
   using (x2,y2) as the control points.
 
  *----------------------------------------------------------------------*/
-static void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3,
-			  ThotBool SpecialColor)
+void AmayaCreatePathEvtHandler::DrawQuadraticBezier (int x1, int y1,
+							    int x2, int y2,
+							    int x3, int y3,
+							    ThotBool
+							    specialColor)
 	      
 {
 #define N_INTERP 50
@@ -103,7 +434,7 @@ static void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3,
     glColor4ub (127, 127, 127, 0);
 #else /* _WINDOWS */
   glLogicOp(GL_XOR);
-  if(SpecialColor)
+  if(specialColor)
     glColor4ub (127, 0, 127, 0);
   else
     glColor4ub (127, 127, 127, 0);
@@ -136,8 +467,11 @@ static void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3,
   draw a cubic Bezier Curve from (x1,y1) to (x4,y4),
   using (x2,y2) and (x3,y3) as the control points.
  *----------------------------------------------------------------------*/
-static void DrawCubicBezier (int x1, int y1, int x2, int y2, int x3, int y3,
-		      int x4, int y4, ThotBool SpecialColor)
+void AmayaCreatePathEvtHandler::DrawCubicBezier (int x1, int y1,
+						 int x2, int y2,
+						 int x3, int y3,
+						 int x4, int y4,
+						 ThotBool specialColor)
 {
   int i;
 
@@ -152,7 +486,7 @@ GLfloat ctrlpoints[4][3] =
     glColor4ub (127, 127, 127, 0);
 #else /* _WINDOWS */
   glLogicOp(GL_XOR);
-  if(SpecialColor)
+  if(specialColor)
     glColor4ub (127, 0, 127, 0);
   else
     glColor4ub (127, 127, 127, 0);
@@ -192,7 +526,7 @@ GLfloat ctrlpoints[4][3] =
   (sym)
 
   ----------------------------------------------------------------------*/
-static void UpdateSymetricPoint()
+void AmayaCreatePathEvtHandler::UpdateSymetricPoint()
 {
   symX = 2*lastX1 - currentX;
   symY = 2*lastY1 - currentY;
@@ -204,7 +538,7 @@ static void UpdateSymetricPoint()
 
   Draw the control points of the Bezier Curve.
  *----------------------------------------------------------------------*/
-static void DrawControlPoints ()
+void AmayaCreatePathEvtHandler::DrawControlPoints ()
 {
   glEnable(GL_COLOR_LOGIC_OP);
 #ifdef _WINDOWS
@@ -226,10 +560,11 @@ static void DrawControlPoints ()
 /*----------------------------------------------------------------------
   DrawPathFragment
 
-  Draw the last path fragment. If SpecialColor is TRUE, then this fragment
+  Draw the last path fragment. If specialColor is TRUE, then this fragment
   is drawn with a special color to show that it is active.
  *----------------------------------------------------------------------*/
-static void DrawPathFragment(int shape, ThotBool SpecialColor, int frameId)
+void AmayaCreatePathEvtHandler::DrawPathFragment(int shape,
+						 ThotBool specialColor)
 {
 
 switch(shape)
@@ -237,7 +572,7 @@ switch(shape)
   case 5:
   case 6:
     if(state == 1)
-      DrawLine (lastX1, lastY1, currentX, currentY, SpecialColor);
+      DrawLine (lastX1, lastY1, currentX, currentY, specialColor);
     break;
 
   case 7:
@@ -253,7 +588,7 @@ switch(shape)
         /*                          .....+(current)         */
         /*                    ......                        */
         /*         (last1)O...                              */
-	DrawLine (lastX1, lastY1, currentX, currentY, SpecialColor);
+	DrawLine (lastX1, lastY1, currentX, currentY, specialColor);
 	break;
 	
       case 2:
@@ -265,8 +600,8 @@ switch(shape)
         /*             .....   /                            */
         /*                  (sym)                           */
 	DrawQuadraticBezier (lastX2, lastY2, symX, symY,
-			     lastX1, lastY1, SpecialColor);
-	if(SpecialColor)DrawControlPoints();
+			     lastX1, lastY1, specialColor);
+	if(specialColor)DrawControlPoints();
 	break;
 
       case 3:
@@ -279,7 +614,7 @@ switch(shape)
         /*   (last2)...                                     */
         /*                                                  */
 	DrawQuadraticBezier (lastX2, lastY2, lastX1, lastY1,
-			     currentX, currentY, SpecialColor);
+			     currentX, currentY, specialColor);
 	break;
 
       case 4:
@@ -292,8 +627,8 @@ switch(shape)
         /*               ...........     (last2)            */
         /*    (last3)....                                   */
 	DrawCubicBezier(lastX3, lastY3, lastX2, lastY2, symX, symY,
-			lastX1, lastY1, SpecialColor);
-	if(SpecialColor)DrawControlPoints();
+			lastX1, lastY1, specialColor);
+	if(specialColor)DrawControlPoints();
 	break;
       }
     break;
@@ -307,340 +642,5 @@ switch(shape)
 #endif /* WINDOWS */
 }
 
-IMPLEMENT_DYNAMIC_CLASS(AmayaCreatePathEvtHandler, wxEvtHandler)
-
-/*----------------------------------------------------------------------
- *  this is where the event table is declared
- *  the callbacks are assigned to an event type
- *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaCreatePathEvtHandler, wxEvtHandler)
-EVT_KEY_DOWN( AmayaCreatePathEvtHandler::OnChar )
-
-EVT_LEFT_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown)
-EVT_LEFT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
-EVT_MIDDLE_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown)
-EVT_MIDDLE_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
-EVT_RIGHT_DOWN(	AmayaCreatePathEvtHandler::OnMouseRightDown)
-EVT_RIGHT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
-EVT_MOTION(		AmayaCreatePathEvtHandler::OnMouseMove)
-EVT_MOUSEWHEEL(	AmayaCreatePathEvtHandler::OnMouseWheel)
-END_EVENT_TABLE()
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler() : wxEvtHandler()
-{
-}
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
-						     int x_min, int y_min,
-						     int x_max, int y_max,
-						     PtrTextBuffer Pbuffer,
-						     Document doc,
-						     int shape_number,
-						     int *NbPoints,
-						     ThotBool *created)
-  : wxEvtHandler()
-  ,m_IsFinish(false)
-  ,m_pFrame(p_frame)
-  ,m_FrameId(p_frame->GetFrameId())
-  ,m_xmin(x_min)
-  ,m_ymin(y_min)
-  ,m_xmax(x_max)
-  ,m_ymax(y_max)
-  ,m_ShapeNumber(shape_number)
-  ,m_Pbuffer(Pbuffer)
-  ,m_document(doc)
-  ,m_NbPoints(NbPoints)
-  ,m_created(created)
-{
-  if (m_pFrame)
-    {
-      /* attach this handler to the canvas */
-      AmayaCanvas * p_canvas = m_pFrame->GetCanvas();
-      p_canvas->PushEventHandler(this);
-
-      /* assign a cross mouse cursor */
-      m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
-      m_pFrame->GetCanvas()->CaptureMouse();
-    }
-
-  InitDrawing (5, 1, 0);
-  N_points = 1;
-  state = 0;
-}
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
-{
-  PtrTextBuffer       pB;
-  int i, step, symX2, symY2;
-  ThotBool first_point = TRUE;
-  
-  i = 1;
-  step = 0;
-  for(pB = m_Pbuffer; pB; pB = pB -> BuNext)
-    {
-      for(; i < pB->BuLength; i++)
-	{
-      	/* Clear the preview of the polyline/curve */
-	if(!first_point)
-	  {
-	    if(m_ShapeNumber == 5 || m_ShapeNumber == 6)
-	      {
-		DrawLine (pB->BuPoints[i-1].XCoord, pB->BuPoints[i-1].YCoord,
-			  pB->BuPoints[i].XCoord, pB->BuPoints[i].YCoord,
-			  FALSE);
-	      }
-	    else
-	      {
-		if(step % 3 == 0)
-	  DrawCubicBezier (pB->BuPoints[i-3].XCoord,
-			   pB->BuPoints[i-3].YCoord,
-			   pB->BuPoints[i-2].XCoord,
-			   pB->BuPoints[i-2].YCoord,
-			   pB->BuPoints[i-1].XCoord,
-			   pB->BuPoints[i-1].YCoord,   
-			   pB->BuPoints[i].XCoord,
-			   pB->BuPoints[i].YCoord, FALSE);
-	      }
-	  }
-	else
-	  first_point = FALSE;
-
-	step=(step+1)%3;
-	}
-
-      i--;
-      if(pB -> BuNext == NULL && i >= 1)
-	{
-	  /* Get the two last points */
-	  lastX1=pB->BuPoints[i].XCoord;
-	  lastY1=pB->BuPoints[i].YCoord;
-	  lastX2=pB->BuPoints[i-1].XCoord;
-	  lastY2=pB->BuPoints[i-1].YCoord;
-	}
-
-      i = 0;
-    }
-
-  if(m_ShapeNumber == 8 && N_points > 2)
-    {
-      /* close the curve */
-      symX2=2*lastX1-lastX2;
-      symY2=2*lastY1-lastY2;
-      AddPointInPolyline (m_Pbuffer, N_points, symX2, symY2);N_points++;
-
-      symX2=2*m_Pbuffer->BuPoints[1].XCoord-m_Pbuffer->BuPoints[2].XCoord;
-      symY2=2*m_Pbuffer->BuPoints[1].YCoord-m_Pbuffer->BuPoints[2].YCoord;
-      AddPointInPolyline (m_Pbuffer, N_points, symX2, symY2);N_points++;
-      AddPointInPolyline (m_Pbuffer, N_points,
-			  m_Pbuffer->BuPoints[1].XCoord,
-			  m_Pbuffer->BuPoints[1].YCoord
-			  );N_points++;
-    }
-  
-  /* Convert the points of the polyline/curve */
-  i = 1;
-  for(pB = m_Pbuffer; pB; pB = pB -> BuNext)
-    {
-      for(; i < pB->BuLength; i++)
-	{
-	  MouseCoordinatesToSVG(m_document, m_pFrame,
-			m_xmin, m_ymin,
-			m_xmax - m_xmin, m_ymax - m_ymin,
-				NULL,
-			TRUE,
-			&(pB->BuPoints[i].XCoord), &(pB->BuPoints[i].YCoord));
-	}
-      i = 0;
-    }
-
-  *m_NbPoints = N_points ;
-  
-  if (m_pFrame)
-    {
-      /* detach this handler from the canvas (restore default behaviour) */
-      AmayaCanvas * p_canvas = m_pFrame->GetCanvas();
-      p_canvas->PopEventHandler(false /* do not delete myself */);
-
-      /* restore the default cursor */
-      m_pFrame->GetCanvas()->SetCursor( wxNullCursor );
-
-      m_pFrame->GetCanvas()->ReleaseMouse();
-    }
-
-}
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-bool AmayaCreatePathEvtHandler::IsFinish()
-{
-  return m_IsFinish;
-}
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-void AmayaCreatePathEvtHandler::OnMouseRightDown( wxMouseEvent& event )
-{
-  *m_created = TRUE;
-  m_IsFinish = true;
-}
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-void AmayaCreatePathEvtHandler::OnChar( wxKeyEvent& event )
-{
-  if(event.GetKeyCode() !=  WXK_SHIFT)
-    {
-      *m_created = FALSE;
-      m_IsFinish = true;
-    }
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaCreatePathEvtHandler
- *      Method:  OnMouseDown
- * Description:  handle mouse button down events
- -----------------------------------------------------------------------*/
-void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
-{
-  if (IsFinish())
-    return;
-
-  /* Are we in the SVG ? */
-  if(!MouseCoordinatesToSVG(m_document, m_pFrame,
-			    m_xmin, m_ymin,
-			    m_xmax - m_xmin, m_ymax - m_ymin,
-			    NULL,
-			    FALSE, &currentX, &currentY))return;
-
-  if(m_ShapeNumber == 7 || m_ShapeNumber == 8)
-    {
-      clear = FALSE;
-
-      if(state == 0 || state == 1 || state == 3)
-	{
-	  /* Clear the active fragment */
-	  DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
-	}
-      else
-	{
-	  /* Clear the active fragment */
-	  DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
-
-	  /* Draw the new curve fragment */
-	  DrawPathFragment(m_ShapeNumber, FALSE, m_FrameId);
-	}
-    }
-  else
-    {
-      /* Clear the active fragment */
-      DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
-      
-      /* Draw the new curve fragment */
-      DrawPathFragment(m_ShapeNumber, FALSE, m_FrameId);
-    }
-
-  if(m_ShapeNumber == 5 || m_ShapeNumber == 6)
-    {
-      /* Add a new point in the polyline/polygon */
-      state = 1;
-      AddPointInPolyline (m_Pbuffer, N_points, currentX, currentY);N_points++;
-    }
-  else if(m_ShapeNumber == 7 || m_ShapeNumber == 8)
-    {
-      /* Bezier Curve */
-      
-      if(state == 2)
-	{
-	  /* Add a cubic Bezier Curve (the control points are the same, so
-	     actually it is a quadratic Bezier curve) */
-	  AddPointInPolyline (m_Pbuffer, N_points, lastX2, lastY2);N_points++;
-	  AddPointInPolyline (m_Pbuffer, N_points, symX, symY);N_points++;
-	  AddPointInPolyline (m_Pbuffer, N_points, symX, symY);N_points++;
-	  AddPointInPolyline (m_Pbuffer, N_points, lastX1, lastY1);N_points++;
-	}
-      else if(state == 4)
-	{
-	  /* Add a cubic Bezier Curve */
-	  AddPointInPolyline (m_Pbuffer, N_points, lastX2, lastY2);N_points++;
-	  AddPointInPolyline (m_Pbuffer, N_points, symX, symY);N_points++;
-	  AddPointInPolyline (m_Pbuffer, N_points, lastX1, lastY1);N_points++;
-	}
-
-      if(state < 4)state++;
-      else state=3;
-    }
-
-  lastX3 = lastX2;
-  lastY3 = lastY2;
-  lastX2 = lastX1;
-  lastY2 = lastY1;
-  lastX1 = currentX;
-  lastY1 = currentY;
-  UpdateSymetricPoint();
-
-}
-
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaCreatePathEvtHandler
- *      Method:  OnMouseDbClick
- * Description:  handle mouse dbclick events
- -----------------------------------------------------------------------*/
-void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
-{
-  *m_created = (N_points > 2);
-  m_IsFinish = true;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaCreatePathEvtHandler
- *      Method:  OnMouseMove
- * Description:  handle mouse move events
- -----------------------------------------------------------------------*/
-void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
-{
-  if(clear)
-    DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
-
-  currentX = event.GetX();
-  currentY = event.GetY();
-
-  if(event.ShiftDown())
-    {
-      if(m_ShapeNumber == 5 || m_ShapeNumber == 6)
-	ApproximateAngleOfLine(15, lastX1, lastY1, &currentX, &currentY);
-    }
-
-  UpdateSymetricPoint();
-
-  DrawPathFragment(m_ShapeNumber, TRUE, m_FrameId);
-  clear = TRUE;
-
-  MouseCoordinatesToSVG(m_document, m_pFrame,
-			m_xmin, m_ymin,
-			m_xmax - m_xmin, m_ymax - m_ymin,
-			NULL,
-			FALSE, &currentX, &currentY);
-  
-#ifndef _WINDOWS
-  m_pFrame->GetCanvas()->Refresh();
-#endif /* _WINDOWS */
-
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaCreatePathEvtHandler
- *      Method:  OnMouseWheel
- * Description:  handle mouse wheel events
- -----------------------------------------------------------------------*/
-void AmayaCreatePathEvtHandler::OnMouseWheel( wxMouseEvent& event )
-{
-}
 
 #endif /* _WX */

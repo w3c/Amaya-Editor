@@ -20,8 +20,8 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
 
   AmayaCreatePathEvtHandler();
   AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x_min, int y_min,
-			    int x_max, int y_max, PtrTextBuffer Pbuffer,
-			    Document doc, int shape_number, int *NbPoints,
+			    int x_max, int y_max, PtrTextBuffer buffer,
+			    Document doc, int shape_number, int *nbPoints,
 			    ThotBool *created);
 
   virtual ~AmayaCreatePathEvtHandler();
@@ -37,19 +37,35 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
   void OnMouseDown( wxMouseEvent& event );
   void OnMouseRightDown( wxMouseEvent& event );
 
+  void DrawLine (int x2, int y2, int x3, int y3, ThotBool specialColor);
+  void DrawQuadraticBezier (int x1, int y1, int x2, int y2, int x3, int y3,
+			    ThotBool specialColor);
+  void DrawCubicBezier (int x1, int y1, int x2, int y2,
+			int x3, int y3, int x4, int y4,
+			ThotBool specialColor);
+  void UpdateSymetricPoint();
+  void DrawControlPoints ();
+  void DrawPathFragment(int shape, ThotBool specialColor);
+
  protected:
-  bool m_IsFinish;
+  bool finished;
 
-  AmayaFrame * m_pFrame;
-  int m_FrameId;
-  int m_xmin, m_ymin, m_xmax, m_ymax;
+  AmayaFrame * pFrame;
+  int frameId;
+  int x0, y0, width,height;
+  int shape;
 
-  int m_ShapeNumber;
+  PtrTextBuffer pBuffer;
+  int document;
+  ThotBool *created;
 
-  PtrTextBuffer m_Pbuffer;
-  int m_document, *m_NbPoints;
-  ThotBool *m_created;
-
+  int *nb_points, state;
+  int currentX,currentY;
+  int lastX1, lastY1;
+  int symX, symY;
+  int lastX2, lastY2;
+  int lastX3, lastY3;
+  ThotBool clear;
 };
 
 #endif /* __AMAYACREATEPATHEVTHANDLER_H__ */

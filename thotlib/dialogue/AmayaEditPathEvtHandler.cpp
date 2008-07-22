@@ -199,9 +199,9 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 						 int point_number,
 						 ThotBool *transformApplied)
   :wxEvtHandler()
-  ,Finished(false)
+  ,finished(false)
   ,pFrame(p_frame)
-  ,FrameId(p_frame->GetFrameId())
+  ,frameId(p_frame->GetFrameId())
   ,document(doc)
   ,inverse(inverse)
   ,x0(ancestorX)
@@ -211,7 +211,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   ,type(-1)
   ,el(element)
   ,box(NULL)
-  ,ButtonDown(false)
+  ,buttonDown(false)
   ,hasBeenTransformed(transformApplied)
 {
   PtrAbstractBox pAb;
@@ -232,7 +232,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   pAb = ((PtrElement)el) -> ElAbstractBox[0];
   if(!pAb || !(pAb->AbBox))
     {
-    Finished = true;
+    finished = true;
     return;
     }
   box = pAb -> AbBox;
@@ -241,7 +241,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   leaf = TtaGetFirstLeaf((Element)el);
   if(!leaf)
     {
-    Finished = true;
+    finished = true;
     return;
     }
 
@@ -279,7 +279,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       pPa = ((PtrElement)leaf)->ElFirstPathSeg;
       if(pPa == NULL)
 	{
-	  Finished = true;
+	  finished = true;
 	  return;
 	}
   
@@ -408,7 +408,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
     }
   else 
     {
-      Finished = true;
+      finished = true;
       return;
     }
 }
@@ -431,7 +431,7 @@ AmayaEditPathEvtHandler::~AmayaEditPathEvtHandler()
  *----------------------------------------------------------------------*/
 bool AmayaEditPathEvtHandler::IsFinish()
 {
-  return Finished;
+  return finished;
 }
 
 /*----------------------------------------------------------------------
@@ -439,7 +439,7 @@ bool AmayaEditPathEvtHandler::IsFinish()
 void AmayaEditPathEvtHandler::OnChar( wxKeyEvent& event )
 {
   if(event.GetKeyCode() !=  WXK_SHIFT)
-    Finished = true;
+    finished = true;
 }
 
 /*----------------------------------------------------------------------
@@ -461,7 +461,7 @@ void AmayaEditPathEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
   if (IsFinish())return;
 
-  Finished = true;
+  finished = true;
 }
 
 /*----------------------------------------------------------------------
@@ -471,7 +471,7 @@ void AmayaEditPathEvtHandler::OnMouseUp( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaEditPathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
-  Finished = true;
+  finished = true;
 }
 
 /*----------------------------------------------------------------------
@@ -496,11 +496,11 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
   mouse_x = event.GetX();
   mouse_y = event.GetY();
 
-  if(!ButtonDown)
+  if(!buttonDown)
     {
       lastX = mouse_x;
       lastY = mouse_y;
-      ButtonDown = true;
+      buttonDown = true;
     }
 
   if((abs(mouse_x -lastX) + abs(mouse_y - lastY) > DELTA))
@@ -652,8 +652,8 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 #endif
 
       /* Redisplay the SVG canvas to see the transform applied to the object */
-      DefBoxRegion (FrameId, box, -1, -1, -1, -1);
-      RedrawFrameBottom (FrameId, 0, NULL);
+      DefBoxRegion (frameId, box, -1, -1, -1, -1);
+      RedrawFrameBottom (frameId, 0, NULL);
       pFrame->GetCanvas()->Refresh();
 
       /* Update the previous mouse coordinates */

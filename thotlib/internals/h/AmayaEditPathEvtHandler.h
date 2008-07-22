@@ -43,10 +43,10 @@ class AmayaEditPathEvtHandler : public wxEvtHandler
   void OnMouseDown( wxMouseEvent& event );
 
  protected:
-  bool Finished;
+  bool finished;
 
   AmayaFrame * pFrame;
-  int FrameId;
+  int frameId;
   int document;
   void *CTM;
   void *inverse;
@@ -59,7 +59,7 @@ class AmayaEditPathEvtHandler : public wxEvtHandler
   /* Coordinates of the mouse */
   int lastX, lastY, mouse_x,mouse_y;
 
-  bool ButtonDown;
+  bool buttonDown;
   ThotBool *hasBeenTransformed; 
 
 };
