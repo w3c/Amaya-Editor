@@ -2612,7 +2612,8 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
             TtaSetDocumentModified (otherDoc);
           // check if it's a template instance
 #ifdef TEMPLATES
-          CheckTemplate (otherDoc);
+          // Fill template internal structures and prepare the instance if any
+          Template_FillFromDocument (otherDoc);
 #endif /* TEMPLATES */
           /* restore original display mode */
           TtaSetDisplayMode (doc, dispMode);

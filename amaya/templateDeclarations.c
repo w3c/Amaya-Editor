@@ -183,6 +183,28 @@ XTigerTemplate LookForXTigerLibrary (const char *templatePath)
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+  Look for a XTiger template
+  Create it if not found.
+  ----------------------------------------------------------------------*/
+XTigerTemplate LookForXTigerTemplate (const char *templatePath)
+{ 
+#ifdef TEMPLATES
+  XTigerTemplate t = NULL;
+  
+  if (Templates_Map == NULL)
+    InitializeTemplateEnvironment ();
+  t = (XTigerTemplate) HashMap_Get(Templates_Map, (void*)templatePath);
+  if (!t)
+  {
+    t = NewXTigerTemplate(templatePath);
+  }
+  return t;
+#else /* TEMPLATES */
+  return NULL;
+#endif /* TEMPLATES */
+}
+
 
 /*----------------------------------------------------------------------
   Look for a registered XTigerTemplate
@@ -230,30 +252,6 @@ XTigerTemplate GetXTigerDocTemplate (Document doc)
   return NULL;
 #endif /* TEMPLATES */
 }
-
-
-/*----------------------------------------------------------------------
-  Look for a XTiger template
-  Create it if not found.
-  ----------------------------------------------------------------------*/
-XTigerTemplate LookForXTigerTemplate (const char *templatePath)
-{ 
-#ifdef TEMPLATES
-  XTigerTemplate t = NULL;
-  
-  if (Templates_Map == NULL)
-    InitializeTemplateEnvironment ();
-  t = (XTigerTemplate) HashMap_Get(Templates_Map, (void*)templatePath);
-  if (!t)
-  {
-    t = NewXTigerTemplate(templatePath);
-  }
-  return t;
-#else /* TEMPLATES */
-  return NULL;
-#endif /* TEMPLATES */
-}
-
 
 /*----------------------------------------------------------------------
   Close a XTiger template
@@ -811,7 +809,7 @@ void Template_AddDeclaration (XTigerTemplate t, Declaration dec)
 #ifdef TEMPLATES
   if (!t)
     return;
-
+  
   Declaration old = Template_GetDeclaration (t, dec->name);
   if (old==NULL) //New type, not a redefinition
     {
@@ -963,6 +961,30 @@ Declaration Template_GetElementDeclaration (const XTigerTemplate t, const char *
 }
 
 /*----------------------------------------------------------------------
+  Re-initialize the XTigerTemplate structure
+  ----------------------------------------------------------------------*/
+void Template_Clear (XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  if(t)
+    {
+      SearchSet_Empty(t->unions);
+      SearchSet_Empty(t->components);
+      SearchSet_Empty(t->elements);
+      SearchSet_Empty(t->simpleTypes);
+      SearchSet_Empty(t->unknowns);
+      
+      TtaFreeMemory(t->uri);
+      TtaFreeMemory(t->version);
+      TtaFreeMemory(t->templateVersion);
+      t->uri = NULL; 
+      t->version = NULL;
+      t->templateVersion = NULL;
+    }
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
   Free all the space used by a template
   ----------------------------------------------------------------------*/
 static void Template_Destroy (XTigerTemplate t)
@@ -986,7 +1008,7 @@ static void Template_Destroy (XTigerTemplate t)
         }
       HashMap_Destroy(t->libraries);
       t->libraries = NULL;
-      
+
       //Cleaning the unions
       SearchSet_Destroy(t->unions);
       t->unions = NULL;
@@ -1036,8 +1058,10 @@ static void Template_FillDeclarationContent(XTigerTemplate t, Declaration decl)
 #ifdef TEMPLATES
   Element          el;
   Declaration      otherDecl;
-//  ForwardIterator  iter;
+  ForwardIterator  iter;
 //  SearchSetNode    node;
+  StringSet        set;
+  StringSetNode    node;
   
   if (t && decl)
     {
@@ -1053,6 +1077,18 @@ static void Template_FillDeclarationContent(XTigerTemplate t, Declaration decl)
               }
           break;
         case UnionNat:
+          set =  StringSet_CreateFromString(decl->unionType.includeStr, " ");
+          iter = StringSet_GetForwardIterator(set);
+          
+          decl->unionType.include = SearchSet_Create(NULL, (Container_CompareFunction)Declaration_Compare,
+            (Container_CompareFunction)Declaration_CompareToString);
+              
+          ITERATOR_FOREACH(iter, StringSetNode, node)
+            {
+              SearchSet_Insert(decl->unionType.include, Template_GetDeclaration(decl->usedIn, (char*)((Declaration)node)->name));
+            }
+          TtaFreeMemory(iter);
+          
           /**
            *
            * TODO REALLY FILL DECLARATIONS FROM UNION STRINGS

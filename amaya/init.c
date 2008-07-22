@@ -3972,9 +3972,9 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
       res = LoadDocument (newdoc, urlName, form_data, NULL, method,
                           tempfile, documentname, http_headers, FALSE,
                           &DontReplaceOldDoc, NULL);
-      // check if it's a template instance
 #ifdef TEMPLATES
-      CheckTemplate (doc);
+      // Fill template internal structures and prepare the instance if any
+      Template_FillFromDocument (doc);
 #endif /* TEMPLATES */
       UpdateEditorMenus (doc);
       if (visibility == 4)
@@ -4754,6 +4754,10 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
   else
     tempfile[0] = EOS;
    
+#ifdef TEMPLATES
+  Template_CheckAndPrepareTemplate(urlName);
+#endif /* TEMPLATES */  
+  
   /* now the new window is open */
   if (inNewWindow && (method == CE_RELATIVE || method == CE_ABSOLUTE))
     /* don't free the current loaded document */
@@ -4817,7 +4821,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
           else
             CheckParsingErrors (newdoc);
 #ifdef TEMPLATES
-          CheckTemplate (newdoc);
+          // Fill template internal structures and prepare the instance if any
+          Template_FillFromDocument (newdoc);
 #endif /* TEMPLATES */
         }
       else

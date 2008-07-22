@@ -698,7 +698,7 @@ ThotBool Template_CanInsertRepeatChild(Element el)
   Element   child;
 
   max = GetAttributeStringValueFromNum(el, Template_ATTR_maxOccurs, NULL);
-  if (max)
+  if (max && max[0]!=EOS)
     {
       if (!strcmp(max, "*"))
         {
@@ -1220,45 +1220,88 @@ ThotBool OptionButtonClicked (NotifyElement *event)
   return TRUE;
 }
 
+
+
 /*----------------------------------------------------------------------
-  CheckTemplate checks if the template of the instance is loaded
-  Return TRUE if the template is loaded
+  Template_FillFromDocument
+  Fill XTigerTemplate structure with the content of the document.
+  Load dependencies if needed.
   ----------------------------------------------------------------------*/
-void CheckTemplate (Document doc)
+void Template_FillFromDocument (Document doc)
 {
 #ifdef TEMPLATES
-  Element    root;
+  XTigerTemplate t = GetXTigerTemplate (DocumentURLs[doc]);
+  Element        root;
   
-  if (IsTemplateInstanceDocument(doc))
+  printf("Template_FillFromDocument\n");
+  
+  if(t)
     {
-      XTigerTemplate   t;
+      printf("plop : %d\n", t->state);
+      SetTemplateDocument (t, doc);
 
-      root = TtaGetRootElement (doc);
-      TtaSetAccessRight (root, ReadOnly, doc);
-      t = GetXTigerDocTemplate (doc);
-      if (t == NULL)
+      Template_PrepareTemplate(t);
+      
+      if(IsTemplateInstanceDocument(doc))
         {
-          // the template cannot be loaded
-          InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_BAD_TEMPLATE));
-          TtaSetDocumentAccessMode (doc, 0); // document readonly
-        }
-      else
-        {
+          printf("  > instance\n");
           // fix all access rights in the instance
-          Template_PrepareTemplate(t);
+          root = TtaGetRootElement (doc);
+          TtaSetAccessRight (root, ReadOnly, doc);
           Template_FixAccessRight (t, root, doc);
           TtaUpdateAccessRightInViews (doc, root);
         }
+      else if(t->state&templLibraryFlag)
+        printf("  > library\n");
+      else if(t->state&templTemplate)
+        printf("  > template\n");
+      
+      // Mark loaded
+      t->state |= templloaded;
+      TtaSetDocumentUnmodified (doc);
+      UpdateTemplateMenus (doc);
+      
+#ifdef AMAYA_DEBUG  
+      DumpAllDeclarations();
+#endif /* AMAYA_DEBUG */
     }
 #endif /* TEMPLATES */
 }
 
+
 /*----------------------------------------------------------------------
-  OpeningInstance checks if it is a template instance needs.
+  Template_CheckAndPrepareTemplate checks if the document is a template
+  or a library and prepare XTigerTemplate structure to use it.
+  ----------------------------------------------------------------------*/
+ThotBool Template_CheckAndPrepareTemplate(char* docURL)
+{
+#ifdef TEMPLATES
+  XTigerTemplate t = NULL; //GetXTigerTemplate(docURL);
+  
+  printf("Template_CheckAndPrepareTemplate %s\n", docURL);
+  
+  if(IsXTiger(docURL))
+    {
+      t = LookForXTigerTemplate(docURL);
+      t->state |= templTemplate;
+    }
+  else if(IsXTigerLibrary(docURL))
+    {
+      t = LookForXTigerLibrary(docURL);
+      t->state |= templLibrary;
+    }
+  return t!=NULL;
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
+  Template_CheckAndPrepareInstance checks if it is a template instance needs.
   If it's an instance and the template is not loaded, load it into a
   temporary file
   ----------------------------------------------------------------------*/
-void OpeningInstance (char *localFileName, Document doc, char* docURL)
+void Template_CheckAndPrepareInstance (char *localFileName, Document doc, char* docURL)
 {
 #ifdef TEMPLATES
   XTigerTemplate   t;

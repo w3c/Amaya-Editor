@@ -186,6 +186,200 @@ Element Template_InsertBagChild (Document doc, Element el, Declaration decl, Tho
   return NULL;
 }
 
+/*----------------------------------------------------------------------
+  InstantiateAttribute
+  ----------------------------------------------------------------------*/
+static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
+{
+#ifdef TEMPLATES
+  AttributeType  useType, nameType, defaultType, attrType;
+  Attribute      useAttr, nameAttr, defAttr, attr;
+  ElementType    elType;
+  Element        parent;
+  char           *text, *elementName;
+  ThotBool       level;
+  NotifyAttribute event;
+  int             val;
+
+  parent = TtaGetParent (el);
+  if (!parent)
+    return;
+  // if attribute "use" has value "optional", don't do anything
+  useType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
+  useType.AttrTypeNum = Template_ATTR_useAt;
+  useAttr = TtaGetAttribute (el, useType);
+  if (useAttr)
+    // there is a "use" attribute. Check its value
+    {
+      val = TtaGetAttributeValue(useAttr);
+      if (val == Template_ATTR_useAt_VAL_optional)
+      {
+        return;
+      }
+    }
+    
+  // get the "name" and "default" attributes
+  nameType.AttrSSchema = defaultType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
+  nameType.AttrTypeNum = Template_ATTR_ref_name;
+  defaultType.AttrTypeNum = Template_ATTR_defaultAt;
+  nameAttr = TtaGetAttribute (el, nameType);
+  defAttr = TtaGetAttribute (el, defaultType);
+  if (nameAttr)
+    {
+      text = GetAttributeStringValue (el, nameAttr, NULL);
+      if (text)
+        {
+          elType = TtaGetElementType (parent);
+          elementName = TtaGetElementTypeName (elType);
+          level = TRUE;
+          MapHTMLAttribute (text, &attrType, elementName, &level, doc);
+          TtaFreeMemory(text);
+          attr = TtaNewAttribute (attrType);
+          if (attr)
+            {
+              TtaAttachAttribute (parent, attr, doc);
+              if (defAttr)
+                {
+                  text = GetAttributeStringValue (el, defAttr, NULL);
+                  if (text)
+                    TtaSetAttributeText(attr, text, parent, doc);
+                  TtaFreeMemory(text);
+                  // if it's a src arttribute for an image, load the image
+                  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+                      elType.ElTypeNum == HTML_EL_IMG)
+                    if (attrType.AttrTypeNum == HTML_ATTR_SRC &&
+                        attrType.AttrSSchema == elType.ElSSchema)
+                      {
+                        event.document = doc;
+                        event.element = parent;
+                        event.attribute = attr;
+                        SRCattrModified (&event);
+                      }
+                }
+            }
+        }
+    }
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  ParseTemplate
+  ----------------------------------------------------------------------*/
+static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
+                           ThotBool loading)
+{
+#ifdef TEMPLATES
+  AttributeType attType;
+  Attribute     att;
+  Element       aux, child; //Needed when deleting trees
+  char         *name;
+  ElementType   elType = TtaGetElementType (el);
+
+  if (!t || !el)
+    return;
+  
+#ifdef AMAYA_DEBUG
+ static int off = 0;
+  int i;
+  off++;
+  printf("ParseTemplate ");
+  for(i=0; i<off; i++)
+    printf(" ");
+  DumpTemplateElement(el, doc);
+  printf("\n");
+#endif /* AMAYA_DEBUG */
+  
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp (name, "Template"))
+    {
+      switch(elType.ElTypeNum)
+        {
+        case Template_EL_head :
+          printf("!!! Find a xt:head : remove it !\n");
+          //Remove it and all of its children
+          TtaDeleteTree(el, doc);
+          //We must stop searching into this tree
+#ifdef AMAYA_DEBUG
+          off--;
+#endif /* AMAYA_DEBUG */
+          return;
+        case Template_EL_component :
+          // remove the name attribute
+          attType.AttrSSchema = elType.ElSSchema;
+          attType.AttrTypeNum = Template_ATTR_name;
+          name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);           
+          TtaRemoveAttribute (el, TtaGetAttribute (el, attType), doc);
+          // replace the component by a use
+          if (NeedAMenu (el, doc))
+            TtaChangeElementType (el, Template_EL_useEl);
+          else
+            TtaChangeElementType (el, Template_EL_useSimple);
+          // generate the types attribute
+          attType.AttrTypeNum = Template_ATTR_types;
+          att = TtaNewAttribute (attType);
+          TtaAttachAttribute (el, att, doc);
+          if (name)
+            TtaSetAttributeText (att, name, el, doc);
+          // generate the title attribute
+          attType.AttrTypeNum = Template_ATTR_title;
+          att = TtaNewAttribute (attType);
+          TtaAttachAttribute (el, att, doc);
+          if (name)
+            TtaSetAttributeText (att, name, el, doc);
+          // generate the currentType attribute
+          attType.AttrTypeNum = Template_ATTR_currentType;
+          att = TtaNewAttribute (attType);
+          TtaAttachAttribute (el, att, doc);
+          if (name)
+            TtaSetAttributeText (att, name, el, doc);
+          TtaFreeMemory(name);
+          break;
+          /*case Template_EL_option :
+          aux = NULL;
+          break;*/
+        case Template_EL_bag :
+          //Link to types
+          //Allow editing the content
+          break;
+        case Template_EL_useEl :
+        case Template_EL_useSimple :
+          /* if this use element is not empty, don't do anything: it is
+             supposed to contain a valid instance. This should be
+             checked, though */
+            // add the initial indicator
+          name = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
+          if (name && !strcmp (name, "string"))
+            AddPromptIndicator (el, doc);
+          TtaFreeMemory (name);
+          if (!TtaGetFirstChild (el))
+            InstantiateUse (t, el, doc, FALSE);
+          break;
+        case Template_EL_attribute :
+          if (!loading)
+            InstantiateAttribute (t, el, doc);
+          break;
+        case Template_EL_repeat :
+          InstantiateRepeat (t, el, doc, FALSE);
+          break;
+        default :
+          break;
+        }
+    }
+
+  child = TtaGetFirstChild (el);
+  while (child)
+    {
+      aux = child;
+      TtaNextSibling (&aux);
+      ParseTemplate (t, child, doc, loading);
+      child = aux;
+    }
+#ifdef AMAYA_DEBUG
+  off--;
+#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATES */
+}
+
 
 /*----------------------------------------------------------------------
   CreateTemplate
@@ -409,6 +603,13 @@ void CreateInstance(char *templatePath, char *instancePath,
           DocumentMeta[doc]->charset = TtaStrdup (charsetname);
           SetNamespacesAndDTD (doc);
         }
+
+      // Parse template to fill structure and remove extra data
+      ParseTemplate (t, root, doc, FALSE);
+      
+      // Insert XTiger PI
+      Template_InsertXTigerPI(doc, t);
+      
       // Save HTML special changes
       TtaCloseUndoSequence (doc);
       changes = TRUE;
@@ -431,82 +632,6 @@ void CreateInstance(char *templatePath, char *instancePath,
 #endif /* TEMPLATES */
 }
 
-
-/*----------------------------------------------------------------------
-  InstantiateAttribute
-  ----------------------------------------------------------------------*/
-static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
-{
-#ifdef TEMPLATES
-  AttributeType  useType, nameType, defaultType, attrType;
-  Attribute      useAttr, nameAttr, defAttr, attr;
-  ElementType    elType;
-  Element        parent;
-  char           *text, *elementName;
-  ThotBool       level;
-  NotifyAttribute event;
-  int             val;
-
-  parent = TtaGetParent (el);
-  if (!parent)
-    return;
-  // if attribute "use" has value "optional", don't do anything
-  useType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
-  useType.AttrTypeNum = Template_ATTR_useAt;
-  useAttr = TtaGetAttribute (el, useType);
-  if (useAttr)
-    // there is a "use" attribute. Check its value
-    {
-      val = TtaGetAttributeValue(useAttr);
-      if (val == Template_ATTR_useAt_VAL_optional)
-      {
-        return;
-      }
-    }
-    
-  // get the "name" and "default" attributes
-  nameType.AttrSSchema = defaultType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
-  nameType.AttrTypeNum = Template_ATTR_ref_name;
-  defaultType.AttrTypeNum = Template_ATTR_defaultAt;
-  nameAttr = TtaGetAttribute (el, nameType);
-  defAttr = TtaGetAttribute (el, defaultType);
-  if (nameAttr)
-    {
-      text = GetAttributeStringValue (el, nameAttr, NULL);
-      if (text)
-        {
-          elType = TtaGetElementType (parent);
-          elementName = TtaGetElementTypeName (elType);
-          level = TRUE;
-          MapHTMLAttribute (text, &attrType, elementName, &level, doc);
-          TtaFreeMemory(text);
-          attr = TtaNewAttribute (attrType);
-          if (attr)
-            {
-              TtaAttachAttribute (parent, attr, doc);
-              if (defAttr)
-                {
-                  text = GetAttributeStringValue (el, defAttr, NULL);
-                  if (text)
-                    TtaSetAttributeText(attr, text, parent, doc);
-                  TtaFreeMemory(text);
-                  // if it's a src arttribute for an image, load the image
-                  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
-                      elType.ElTypeNum == HTML_EL_IMG)
-                    if (attrType.AttrTypeNum == HTML_ATTR_SRC &&
-                        attrType.AttrSSchema == elType.ElSSchema)
-                      {
-                        event.document = doc;
-                        event.element = parent;
-                        event.attribute = attr;
-                        SRCattrModified (&event);
-                      }
-                }
-            }
-        }
-    }
-#endif /* TEMPLATES */
-}
 
 #ifdef TEMPLATES
 /*----------------------------------------------------------------------
@@ -1006,147 +1131,23 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
 }
 
 /*----------------------------------------------------------------------
-  ParseTemplate
+  Template_InsertXTigerPI
+  Insert the XTiger PI element in template instance.
+  Param t is the XTigerTemplate structure of the template,
+  not the template instance one.
   ----------------------------------------------------------------------*/
-static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
-                           ThotBool loading)
+void Template_InsertXTigerPI(Document doc, XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  AttributeType attType;
-  Attribute     att;
-  Element       aux, child; //Needed when deleting trees
-  char         *name;
-  ElementType   elType = TtaGetElementType (el);
-
-  if (!t || !el)
-    return;
-  
-#ifdef AMAYA_DEBUG
- static int off = 0;
-  int i;
-  off++;
-  printf("ParseTemplate ");
-  for(i=0; i<off; i++)
-    printf(" ");
-  DumpTemplateElement(el, doc);
-  printf("\n");
-#endif /* AMAYA_DEBUG */
-  
-  name = TtaGetSSchemaName (elType.ElSSchema);
-  if (!strcmp (name, "Template"))
-    {
-      switch(elType.ElTypeNum)
-        {
-        case Template_EL_head :
-          //Remove it and all of its children
-          TtaDeleteTree(el, doc);
-          //We must stop searching into this tree
-#ifdef AMAYA_DEBUG
-          off--;
-#endif /* AMAYA_DEBUG */
-          return;
-          break;
-        case Template_EL_component :
-          // remove the name attribute
-          attType.AttrSSchema = elType.ElSSchema;
-          attType.AttrTypeNum = Template_ATTR_name;
-          name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);		  		  
-          TtaRemoveAttribute (el, TtaGetAttribute (el, attType), doc);
-          // replace the component by a use
-          if (NeedAMenu (el, doc))
-            TtaChangeElementType (el, Template_EL_useEl);
-          else
-            TtaChangeElementType (el, Template_EL_useSimple);
-          // generate the types attribute
-          attType.AttrTypeNum = Template_ATTR_types;
-          att = TtaNewAttribute (attType);
-          TtaAttachAttribute (el, att, doc);
-          if (name)
-            TtaSetAttributeText (att, name, el, doc);
-          // generate the title attribute
-          attType.AttrTypeNum = Template_ATTR_title;
-          att = TtaNewAttribute (attType);
-          TtaAttachAttribute (el, att, doc);
-          if (name)
-            TtaSetAttributeText (att, name, el, doc);
-          // generate the currentType attribute
-          attType.AttrTypeNum = Template_ATTR_currentType;
-          att = TtaNewAttribute (attType);
-          TtaAttachAttribute (el, att, doc);
-          if (name)
-            TtaSetAttributeText (att, name, el, doc);
-          TtaFreeMemory(name);
-          break;
-          /*case Template_EL_option :
-          aux = NULL;
-          break;*/
-        case Template_EL_bag :
-          //Link to types
-          //Allow editing the content
-          break;
-        case Template_EL_useEl :
-        case Template_EL_useSimple :
-          /* if this use element is not empty, don't do anything: it is
-             supposed to contain a valid instance. This should be
-             checked, though */
-            // add the initial indicator
-          name = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
-          if (name && !strcmp (name, "string"))
-            AddPromptIndicator (el, doc);
-          TtaFreeMemory (name);
-          if (!TtaGetFirstChild (el))
-            InstantiateUse (t, el, doc, FALSE);
-          break;
-        case Template_EL_attribute :
-          if (!loading)
-            InstantiateAttribute (t, el, doc);
-          break;
-        case Template_EL_repeat :
-          InstantiateRepeat (t, el, doc, FALSE);
-          break;
-        default :
-          break;
-        }
-    }
-
-  child = TtaGetFirstChild (el);
-  while (child)
-    {
-      aux = child;
-      TtaNextSibling (&aux);
-      ParseTemplate (t, child, doc, loading);
-      child = aux;
-    }
-#ifdef AMAYA_DEBUG
-  off--;
-#endif /* AMAYA_DEBUG */
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void DoInstanceTemplate (char *templatename)
-{
-#ifdef TEMPLATES
-  XTigerTemplate  t;
   ElementType     elType;
   Element         root, piElem, doctype, line, text, elNew, elFound;
-  Document        doc;
   char           *s, *charsetname = NULL, buffer[MAX_LENGTH];
   int             pi_type;
 
-  //Instantiate all elements
-  t = GetXTigerTemplate(templatename);
-  if (!t)
+  if (!t || !doc)
     return;
 
-#ifdef AMAYA_DEBUG
-  printf("DoInstanceTemplate %s\n", templatename);
-#endif /* AMAYA_DEBUG */
-  
-  doc = GetTemplateDocument (t);
-  root =	TtaGetMainRoot (doc);
-  ParseTemplate (t, root, doc, FALSE);
+  root =  TtaGetMainRoot (doc);
 
   //Look for PIs
   /* check if the document has a DOCTYPE declaration */
@@ -1216,7 +1217,7 @@ void DoInstanceTemplate (char *templatename)
   line = TtaGetFirstChild (elNew);
   text = TtaGetFirstChild (line);
   strcpy (buffer, "xtiger template=\"");
-  strcat (buffer, templatename);
+  strcat (buffer, DocumentURLs[doc]);
   strcat (buffer, "\" version=\"");
   if (t->version)
     strcat (buffer, t->version);
@@ -1246,6 +1247,7 @@ void DoInstanceTemplate (char *templatename)
     }
 #endif /* TEMPLATES */
 }
+
 
 /*----------------------------------------------------------------------
   Template_PreInstantiateComponents

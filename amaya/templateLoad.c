@@ -271,6 +271,8 @@ void Template_PrepareTemplate(XTigerTemplate t)
   ForwardIterator  iter;
   HashMapNode      node;
   XTigerTemplate   templ = NULL;
+
+  Template_Clear(t);
   
   Template_PreParseDeclarations(t, 0);
 
@@ -299,45 +301,14 @@ void Template_PrepareTemplate(XTigerTemplate t)
         Template_AddLibraryDeclarations(t, templ);
     }
   
-  Template_ParseDeclarations  (t, NULL);
-  Template_MoveUnknownDeclarationToXmlElement(t);
+  Template_ParseDeclarations (t, NULL);
+  Template_MoveUnknownDeclarationToXmlElement (t);
   Template_FillDeclarations (t);
   
   Template_PreInstantiateComponents (t);
   Template_CalcBlockLevel (t);
 #endif /* TEMPLATES */
 }
-
-
-/*----------------------------------------------------------------------
-  LoadTemplate_callback: Called after loading a template.
-  ----------------------------------------------------------------------*/
-#ifdef TEMPLATES
-static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
-                            char *outputfile, char* proxyName,
-                            AHTHeaders *http_headers, void * context)
-{
-  TemplateCtxt *ctx = (TemplateCtxt*)context;
-  
-  if (newdoc)
-    {
-      // the template is now loaded
-      SetTemplateDocument (ctx->t, newdoc);
-      ctx->isloaded = TRUE;
-      ctx->newdoc   = newdoc;
-    }
-  else if (!IsW3Path (urlName) && !TtaFileExist (urlName))
-    {
-      // there is an error
-       SetTemplateDocument (ctx->t, newdoc);
-       ctx->isloaded = TRUE;
-       ctx->newdoc   = newdoc;
-    }
-
-  // restore the loading document
-  W3Loading = ctx->docLoading;
-}
-#endif /* TEMPLATES */
 
 
 /*----------------------------------------------------------------------
@@ -348,6 +319,7 @@ static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 DocumentType LoadTemplate (Document doc, char* templatename)
 {
 #ifdef TEMPLATES
+  int              docLoading;
   Document         newdoc = 0;
   DocumentType     docType = docFree;
   char            *s, *directory;
@@ -370,45 +342,30 @@ DocumentType LoadTemplate (Document doc, char* templatename)
   if (t==NULL)
     {
       // The template is not loaded, load it !
-      //Load the document
-      TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
-      ctx->templatePath	= TtaStrdup (templatename);
-      ctx->isloaded = FALSE;
-      ctx->t = NewXTigerTemplate (templatename);
 
       // the current loading document changes and should be restored
-      ctx->docLoading = W3Loading;
+      docLoading = W3Loading;
       W3Loading = 0;
-      newdoc = GetAmayaDoc (templatename, NULL, 0, 0, CE_TEMPLATE, FALSE, 
-                            (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
-                            (void *) ctx);
-      while (!ctx->isloaded)
-        TtaHandlePendingEvents ();
-      t = ctx->t;
 
-      printf("LoadTemplate doctype %d\n", DocumentTypes[ctx->newdoc]);
+      //Load the document
+      newdoc = GetAmayaDoc (templatename, NULL, 0, 0, CE_TEMPLATE, FALSE, 
+                            (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) NULL,
+                            (void *) /*ctx*/ NULL);
+      
+      t = GetXTigerDocTemplate(newdoc);
       
       if (t)
         {
-          Template_PrepareTemplate(t);
 #ifdef AMAYA_DEBUG  
     printf("XTiger template %s loaded.\n", t->uri);
 #endif /* AMAYA_DEBUG */
           if(Template_HasErrors(t))
             Template_ShowErrors(t);
           else
-            {
-              DoInstanceTemplate (ctx->templatePath);
-              // get the real docType of the template
-              docType = DocumentTypes[ctx->newdoc];
-              t->state |= templTemplate|templloaded;
-//              DocumentTypes[ctx->newdoc] = docTemplate;
-              TtaSetDocumentUnmodified (ctx->newdoc);
-              UpdateTemplateMenus(ctx->newdoc);
-            }
+            docType = DocumentTypes[newdoc];
         }
-      TtaFreeMemory(ctx->templatePath);
-      TtaFreeMemory(ctx);
+      
+      W3Loading = docLoading;
     }
   else
     {
@@ -417,9 +374,6 @@ DocumentType LoadTemplate (Document doc, char* templatename)
     }
   
 
-#ifdef AMAYA_DEBUG  
-  DumpAllDeclarations();
-#endif /* AMAYA_DEBUG */
   return docType;
 #else /* TEMPLATES */
   return docFree;
@@ -435,26 +389,21 @@ DocumentType LoadTemplate (Document doc, char* templatename)
 ThotBool Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  Document        newdoc = 0;
+  int              docLoading;
+  Document         newdoc = 0;
   
   if (t && !Template_IsLoaded(t))
   {
+    docLoading = W3Loading;
+    W3Loading = 0;
+    
     // Load the document (look at LoadTemplate)
-    TemplateCtxt *ctx = (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
-    ctx->templatePath = TtaStrdup (t->uri);
-    ctx->isloaded = FALSE;
-    ctx->t = t;
     newdoc = GetAmayaDoc (t->uri, NULL, 0, 0, CE_TEMPLATE, FALSE, 
                           (void (*)(int, int, char*, char*, char*,
-                                    const AHTHeaders*, void*)) LoadTemplate_callback,
-                          (void *) ctx);
-    while (!ctx->isloaded)
-      TtaHandlePendingEvents ();
+                                    const AHTHeaders*, void*)) NULL,
+                          (void *) NULL);
 
-    Template_PrepareTemplate(t);
-    
-    DocumentTypes[ctx->newdoc] = docTemplate;
-    t->state |= templLibrary|templloaded;
+    t = GetXTigerDocTemplate(newdoc);
     
 #ifdef AMAYA_DEBUG  
     if(Template_HasErrors(t))
@@ -463,8 +412,7 @@ ThotBool Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
       printf("XTiger library %s loaded successfully.\n", t->uri);
 #endif /* AMAYA_DEBUG */
 
-    TtaFreeMemory(ctx->templatePath);
-    TtaFreeMemory(ctx);
+    W3Loading = docLoading;
 
     return !Template_HasErrors(t);
   }

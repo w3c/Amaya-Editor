@@ -40,10 +40,11 @@ extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
-extern void CheckTemplate ( Document doc );
-extern void OpeningInstance ( char *localFileName,
-                              Document doc,
-                              char* docURL );
+extern void Template_FillFromDocument ( Document doc );
+extern ThotBool Template_CheckAndPrepareTemplate ( char* docURL );
+extern void Template_CheckAndPrepareInstance ( char *localFileName,
+                                               Document doc,
+                                               char* docURL );
 extern ThotBool ClosingTemplateDocument ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
@@ -108,10 +109,11 @@ extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
-extern void CheckTemplate ( Document doc );
-extern void OpeningInstance ( char *localFileName,
-                                Document doc,
-                                char* docURL );
+extern void Template_FillFromDocument ( Document doc );
+extern ThotBool Template_CheckAndPrepareTemplate ( char* docURL );
+extern void Template_CheckAndPrepareInstance ( char *localFileName,
+                                                 Document doc,
+                                                 char* docURL );
 extern ThotBool ClosingTemplateDocument ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
