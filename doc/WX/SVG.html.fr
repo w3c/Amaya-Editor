@@ -38,13 +38,18 @@ créer un lien sur un élément SVG).</p>
 trouverez certainement des bugs non encore corrigés et l'interface utilisateur
 risque de changer dans le futur.</strong></p>
 
-<h3><a name="L288" id="L288">Création de graphiques avec la palette</a></h3>
+<h3><a name="L288" id="L288">Création de graphiques</a></h3>
 
-<p>Pour créer un nouvel élément SVG dans un document, vous devez juste placer
-le point d'insertion à la position où vous voulez l'insérer, et cliquer sur un
-bouton de la palette.</p>
+<p>Pour dessiner des graphiques, il faut un canevas SVG. Celui-ci peut soit
+être le document en entier, créé à l'aide de la commande "File-&gt;New-&gt;New
+Drawing" ou un élément <code>&lt;svg/&gt;</code> à l'intérieur d'un document
+XML. Le dernier cas se produit dès que vous dessiner des graphiques: Amaya
+cherche un endroit où un tel <code>&lt;svg/&gt;</code> peut être inséré.
+L'élément se voit attribué une largeur et hauteur par défaut, mais il est
+possible de le redimensionner.</p>
 
-<p>Les graphiques disponibles sont :</p>
+<p>Une fois le point d'insertion à l'intérieur du cavenas SVG dans lequel vous
+voulez dessiner, vous pouvez lancer une commande pour créer des graphiques :</p>
 <ul>
   <li>Une ligne, une simple ou double flèche, un "zigzag".</li>
   <li>texte, fragment de HTML embarqué (<code>foreignObject</code>) et
@@ -69,6 +74,27 @@ directes avec l'utilisateur:</p>
     indiquer le dernier point, faites un double clic.</li>
   <li>coubes de Bézier: idem que pour les polygones, sauf que vous devez
     indiquer la direction des tangentes.</li>
+</ul>
+
+<p>Si vous dessinez une ligne, une flèche, un polygone ou des segments de
+droites, l'utilisation de la touche <kbd>shift</kbd> permet une approximation
+de 15°.</p>
+
+<h3>Selectionner des graphiques</h3>
+
+<p>En vue formattée, les règles de sélection des graphiques sont les suivantes
+:</p>
+<ul>
+  <li>Si l'élément est vide, alors il faut cliquer sur ses cotés. Dans le cas
+    contraire, vous pouvez cliquer à l'intérieur.</li>
+  <li>Si une polyline ou un chemin est selectionné, alors leurs points de
+    controles apparaissent et peuvent être sélectionnés individuellement. Si le
+    point de controle sélectionné fait partie d'un fragment de courbe de
+    Bézier, la poignée de Bézier correspondante est affichée.</li>
+  <li>Si la touche <kbd>shift</kbd> est appuyée alors chaque nouveau élément
+    sur lequel on clique est ajouté à la sélection.</li>
+  <li>Plusieurs objets peuvent être sélectionnée en même temps, à l'aide de
+    l'outil de sélection rectangulaire du panneau SVG.</li>
 </ul>
 
 <h3>Appliquer des transformations aux graphiques</h3>

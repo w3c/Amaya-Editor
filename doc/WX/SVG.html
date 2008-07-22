@@ -40,13 +40,17 @@ element).</p>
 <p><strong>Warning: SVG authoring is under development. You may find bugs not
 fixed yet and the user interface is likely to change in the future.</strong></p>
 
-<h3>Creating Graphics with the Palette</h3>
+<h3>Creating Graphics</h3>
 
-<p>To create a new SVG element in a document, move the insertion point to the
-position where you want to insert it, and then click on a button of the SVG
-panel.</p>
+<p>To draw graphics, you need an SVG canvas. This one can either be the whole
+document created using the command "File-&gt;New-&gt;New Drawing" or an
+<code>&lt;svg/&gt;</code> element inside an XML document. The latter case
+happens as soon as you draw graphics: Amaya try and find a place where such an
+<code>&lt;svg/&gt;</code> element can be inserted. The element is given default
+width and height, but it is possible to resize it.</p>
 
-<p>The available graphics elements are:</p>
+<p>Once the insert point is inside the SVG canvas you want to draw in, you can
+launch a command to create graphics:</p>
 <ul>
   <li>connectors: line, simple or double arrow, zigzag.</li>
   <li>text or embedded HTML fragment (<code>foreignObject</code>) and
@@ -66,17 +70,36 @@ panel.</p>
   <li>for text and foreignObject: click on the position where you want to
     insert the element.</li>
   <li>for polygon and polyline: enter each point by clicking the corresponding
-    position with the left mouse button. To indicate the last point, use a
-    double-click.</li>
+    position with the left mouse button. To add the last point, use a
+    double-click. A right click stops the interaction without an additional
+    point.</li>
   <li>Bézier curves: same as polygons except that you need to indicate the
     direction of the tangents.</li>
+</ul>
+
+<p>If you are drawing a line, an arrow, a polygon or a polyline then using the
+<kbd>shift</kbd> key allow an approximation of 15°.</p>
+
+<h3>Selecting graphics</h3>
+
+<p>In formatted view, the rules to select graphics are the following:</p>
+<ul>
+  <li>If the element is empty then you need to click on its edges. Otherwise
+    you can click inside it.</li>
+  <li>If a polyline or a path is selected, then its control points appear and
+    can be selected individually. If the selected control point is part of a
+    segment of a Bézier curve, then the corresponding Bézier handle is
+    displayed.</li>
+  <li>If the <kbd>shift</kbd> key is pressed, then each new element you click
+    on is added to the selection.</li>
+  <li>Several objects can be selected at the same time, using the the
+    rectangular selection tool of the SVG panel.</li>
 </ul>
 
 <h3>Applying transformations to graphics</h3>
 
 <p>To apply transformations on one object, you must first select it. The
-rectangular selection is useful to select several objects. The available
-transformations are:</p>
+available transformations are:</p>
 <ul>
   <li>group/ungroup objects</li>
   <li>changing the level of objects: send to back, one level down, one level
