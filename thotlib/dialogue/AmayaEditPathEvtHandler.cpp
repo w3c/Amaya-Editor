@@ -40,125 +40,6 @@
 #include "AmayaCanvas.h"
 #include "AmayaEditPathEvtHandler.h"
 
-/*----------------------------------------------------------------------
-  GetSymetricPoint
- *----------------------------------------------------------------------*/
-static void GetSymetricPoint(int x, int y, int x0, int y0,
-			     int *symx, int *symy)
-{
-  *symx = 2*x0 - x;
-  *symy = 2*y0 - y;
-}
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-// static void UpdateArc(int x1, int y1, int x2, int y2, int x3, int y3,
-// 			 int *phi, int *rx, int *ry)
-			     
-// {
-//   /*
-//     We want to transform move the point (x2,y2) to (x3,y3).
-//     The arc is scaled (ratio=k) and the x-axis is rotated.
-
-
-//          (x2,y2)                              (x3,y3)
-//           /                                     | 
-//          /                                      |
-//         /                                       |
-//        /                                        |
-//     (x1,y1)                                  (x1,y1)
-
-//     {rx:  x radius                      {rx' = k*rx
-//     {ry:  y radius                      {ry' = k*ry
-//     {phi: x-axis-rotation               {phi' ?
-//     {largearc                           {largearc
-//     {sweep                              {sweep
-   
-//           || (x3 - x1) ||
-//           || (y3 - y1) ||
-
-//      k =  ---------------
-
-//           || (x2 - x1) ||
-//           || (y2 - y1) ||
-
-//   */
-
-//   float k, a, b, c, d;
-//   float dx1, dx2, dy1, dy2;
-//   float d1, d2;
-//   float f, cosf, sinf;
-//   float x,y, det;
-
-//   dx1 = (float)(x2 - x1);
-//   dx2 = (float)(x3 - x1);
-//   dy1 = (float)(y2 - y1);
-//   dy2 = (float)(y3 - y1);
-
-//   d1 = dx1*dx1 + dy1*dy1;
-//   d2 = dx2*dx2 + dy2*dy2;
-
-//   if(d1 == 0 || d2 == 0)
-//     return;
-
-//   k = sqrt(d2/d1);
-//   *rx = (int)(k * *rx);
-//   *ry = (int)(k * *ry);
-
-//   f = *phi * M_PI / 180;
-//   cosf = cos(f);
-//   sinf = sin(f);
- 
-//   /*  One can check that if M(p) = (cos(p)  -sin(p))
-//                                    (sin(p)   cos(p))
-
-//       then
-//              (k*dx1)         (dx2)
-//       M(phi')(k*dy1) = M(phi)(dy2)
-
-//              (a)   (c)
-//       M(phi')(b) = (d)
-
-//    */
-
-//   a = k*dx1;
-//   b = k*dy1;
-//   c = cosf*dx2 - sinf*dy2;
-//   d = sinf*dx2 + cosf*dy2;
-
-//   /*
-//       x = cos(phi')
-//       y = sin(phi')
-//       phi' = acos(x)*sgn(y)
-
-
-//       (a -b)(x)   (c)
-//       (b  a)(y) = (d)
-
-//       det = a^2 + b^2;
-
-//       (x)    1  (a  b)(c)
-//       (y) = --- (-b a)(d)
-//             det   
-//    */
-  
-//   det = a*a + b*b;
-//   x = (a*c + b*d)/det;
-//   y = (-b*c + a*d)/det;
-
-//   *phi = (int)(acos(x) * 180 / M_PI);
-//   if(y < 0)*phi = 360-*phi;
-// }
-
-extern void GetPositionAndSizeInParentSpace(Document doc, Element el, float *X,
-					    float *Y, float *width,
-					    float *height);
-
-static  PtrPathSeg          pPaCurrent, pPaPrevious, pPaNext;
-static  PtrTextBuffer       pBuffer;
-static  int i_poly;
-static  Element leaf;
-
 IMPLEMENT_DYNAMIC_CLASS(AmayaEditPathEvtHandler, wxEvtHandler)
 
 /*----------------------------------------------------------------------
@@ -672,4 +553,117 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 void AmayaEditPathEvtHandler::OnMouseWheel( wxMouseEvent& event )
 {
 }
+
+/*----------------------------------------------------------------------
+  GetSymetricPoint
+ *----------------------------------------------------------------------*/
+void AmayaEditPathEvtHandler::GetSymetricPoint(int x, int y,
+					       int x0, int y0,
+					       int *symx, int *symy)
+{
+  *symx = 2*x0 - x;
+  *symy = 2*y0 - y;
+}
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+//  void AmayaEditPathEvtHandler::UpdateArc(int x1, int y1,
+// 					 int x2, int y2,
+// 					 int x3, int y3,
+// 					 int *phi, int *rx, int *ry)
+// {
+//   /*
+//     We want to transform move the point (x2,y2) to (x3,y3).
+//     The arc is scaled (ratio=k) and the x-axis is rotated.
+
+
+//          (x2,y2)                              (x3,y3)
+//           /                                     | 
+//          /                                      |
+//         /                                       |
+//        /                                        |
+//     (x1,y1)                                  (x1,y1)
+
+//     {rx:  x radius                      {rx' = k*rx
+//     {ry:  y radius                      {ry' = k*ry
+//     {phi: x-axis-rotation               {phi' ?
+//     {largearc                           {largearc
+//     {sweep                              {sweep
+   
+//           || (x3 - x1) ||
+//           || (y3 - y1) ||
+
+//      k =  ---------------
+
+//           || (x2 - x1) ||
+//           || (y2 - y1) ||
+
+//   */
+
+//   float k, a, b, c, d;
+//   float dx1, dx2, dy1, dy2;
+//   float d1, d2;
+//   float f, cosf, sinf;
+//   float x,y, det;
+
+//   dx1 = (float)(x2 - x1);
+//   dx2 = (float)(x3 - x1);
+//   dy1 = (float)(y2 - y1);
+//   dy2 = (float)(y3 - y1);
+
+//   d1 = dx1*dx1 + dy1*dy1;
+//   d2 = dx2*dx2 + dy2*dy2;
+
+//   if(d1 == 0 || d2 == 0)
+//     return;
+
+//   k = sqrt(d2/d1);
+//   *rx = (int)(k * *rx);
+//   *ry = (int)(k * *ry);
+
+//   f = *phi * M_PI / 180;
+//   cosf = cos(f);
+//   sinf = sin(f);
+ 
+//   /*  One can check that if M(p) = (cos(p)  -sin(p))
+//                                    (sin(p)   cos(p))
+
+//       then
+//              (k*dx1)         (dx2)
+//       M(phi')(k*dy1) = M(phi)(dy2)
+
+//              (a)   (c)
+//       M(phi')(b) = (d)
+
+//    */
+
+//   a = k*dx1;
+//   b = k*dy1;
+//   c = cosf*dx2 - sinf*dy2;
+//   d = sinf*dx2 + cosf*dy2;
+
+//   /*
+//       x = cos(phi')
+//       y = sin(phi')
+//       phi' = acos(x)*sgn(y)
+
+
+//       (a -b)(x)   (c)
+//       (b  a)(y) = (d)
+
+//       det = a^2 + b^2;
+
+//       (x)    1  (a  b)(c)
+//       (y) = --- (-b a)(d)
+//             det   
+//    */
+  
+//   det = a*a + b*b;
+//   x = (a*c + b*d)/det;
+//   y = (-b*c + a*d)/det;
+
+//   *phi = (int)(acos(x) * 180 / M_PI);
+//   if(y < 0)*phi = 360-*phi;
+// }
+
 #endif /* _WX */

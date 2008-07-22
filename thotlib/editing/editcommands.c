@@ -2032,6 +2032,13 @@ char *AskShapePoints (Document doc, int shape, Element svgRoot)
   int i, length;
   short step;
 
+  /* TODO: - rewrite the module in order to directly create the graphical
+             unit in the Element.
+           - use a transformation matrix
+	   - use the functions to generate polyline/path attributes
+
+     fred */
+
 #define BUFFERPOINT_LENGTH 30
   char bufferpoint[BUFFERPOINT_LENGTH];
 
@@ -2052,7 +2059,10 @@ char *AskShapePoints (Document doc, int shape, Element svgRoot)
   x2 = x1 + pBox->BxWidth;
   y2 = y1 + pBox->BxHeight;
 
-  pBuffer = PathCreation (frame, x1, y1, x2, y2, doc, shape, &length);
+  pBuffer = PathCreation (frame, 
+			  doc, 
+			  NULL,
+			  x1, y1, x2 - x1, y2 - y1, shape, &length);
 
   if(!pBuffer)return NULL;
 

@@ -18,10 +18,17 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
  public:
   DECLARE_DYNAMIC_CLASS(AmayaCreatePathEvtHandler)
 
-  AmayaCreatePathEvtHandler();
-  AmayaCreatePathEvtHandler(AmayaFrame * p_frame, int x_min, int y_min,
-			    int x_max, int y_max, PtrTextBuffer buffer,
-			    Document doc, int shape_number, int *nbPoints,
+    AmayaCreatePathEvtHandler();
+  AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
+			    Document doc, 
+			    void *inverse,
+			    int ancestorX,
+			    int ancestorY,
+			    int canvasWidth,
+			    int canvasHeight,
+			    PtrTextBuffer buffer,
+			    int shape_number,
+			    int *nbPoints,
 			    ThotBool *created);
 
   virtual ~AmayaCreatePathEvtHandler();
@@ -30,6 +37,7 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
 
  protected:
   DECLARE_EVENT_TABLE()
+
   void OnChar( wxKeyEvent& event );
   void OnMouseMove( wxMouseEvent& event );
   void OnMouseWheel( wxMouseEvent& event );
@@ -52,11 +60,12 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
 
   AmayaFrame * pFrame;
   int frameId;
+  int document;
+  void *inverse;
   int x0, y0, width,height;
   int shape;
 
   PtrTextBuffer pBuffer;
-  int document;
   ThotBool *created;
 
   int *nb_points, state;
@@ -65,7 +74,7 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
   int symX, symY;
   int lastX2, lastY2;
   int lastX3, lastY3;
-  ThotBool clear;
+  bool clear;
 };
 
 #endif /* __AMAYACREATEPATHEVTHANDLER_H__ */

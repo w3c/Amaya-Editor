@@ -41,7 +41,15 @@ class AmayaEditPathEvtHandler : public wxEvtHandler
   void OnMouseDbClick( wxMouseEvent& event );
   void OnMouseUp( wxMouseEvent& event );
   void OnMouseDown( wxMouseEvent& event );
+  void GetSymetricPoint(int x, int y,
+			int x0, int y0,
+			int *symx, int *symy);
 
+  /*  void UpdateArc(int x1, int y1,
+		 int x2, int y2,
+		 int x3, int y3,
+		 int *phi, int *rx, int *ry);*/
+    
  protected:
   bool finished;
 
@@ -61,6 +69,12 @@ class AmayaEditPathEvtHandler : public wxEvtHandler
 
   bool buttonDown;
   ThotBool *hasBeenTransformed; 
+
+  PtrPathSeg          pPaCurrent, pPaPrevious, pPaNext;
+  PtrTextBuffer       pBuffer;
+  int i_poly;
+  Element leaf;
+
 
 };
 

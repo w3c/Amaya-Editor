@@ -1628,8 +1628,12 @@ ThotBool PathEdit (int frame,
 /*----------------------------------------------------------------------
   PathCreation
   ----------------------------------------------------------------------*/
-PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
-			    Document doc, int shape_number, int *NbPoints)
+PtrTextBuffer PathCreation (int frame, 
+			    Document doc, 
+			    void *inverse,
+			    int ancestorX, int ancestorY,
+			    int canvasWidth, int canvasHeight,
+			    int shape_number, int *NbPoints)
 {
 
   /* TODO: - rewrite the module in order to directly create the graphical
@@ -1637,7 +1641,6 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
            - use a transformation matrix
 
      fred */
-
 
   ThotBool created;
   PtrTextBuffer       pBuffer;
@@ -1659,10 +1662,15 @@ PtrTextBuffer PathCreation (int frame, int xmin, int ymin, int xmax, int ymax,
   pBuffer->BuPoints[0].XCoord = INT_MAX;
   pBuffer->BuPoints[0].YCoord = INT_MAX;
 
-  p_CreatePathEvtHandler = new AmayaCreatePathEvtHandler(p_frame, xmin,
-							 ymin, xmax,
-							 ymax, pBuffer,
-							 doc, shape_number,
+  p_CreatePathEvtHandler = new AmayaCreatePathEvtHandler(p_frame,
+							 doc,
+							 inverse,
+							 ancestorX,
+							 ancestorY,
+							 canvasWidth,
+							 canvasHeight,
+							 pBuffer,
+							 shape_number,
 							 NbPoints, &created);
   while(!p_CreatePathEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);

@@ -6,6 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void DrawHandle ( int handle,
+                         int frame,
+                         int thick,
+                         ... );
 extern void DisplayPointSelection ( int frame,
                                     PtrBox pBox,
                                     int pointselect,
@@ -25,6 +29,10 @@ extern void DisplayStringSelection ( int frame,
 
 #else /* __STDC__ */
 
+extern void DrawHandle ( int handle,
+                           int frame,
+                           int thick,
+                           ... );
 extern void DisplayPointSelection ( int frame,
                                       PtrBox pBox,
                                       int pointselect,
