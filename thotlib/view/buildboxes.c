@@ -105,7 +105,8 @@ static ThotBool EmbeddedScript = FALSE;
   ----------------------------------------------------------------------*/
 ThotBool IsSVGComponent (PtrElement pEl)
 {
-  if (pEl && pEl->ElStructSchema &&
+  if (pEl && !(pEl->ElTerminal) &&
+      pEl->ElStructSchema &&
       pEl->ElStructSchema->SsName &&
       !strcmp (pEl->ElStructSchema->SsName,"SVG") &&
       pEl->ElParent && pEl->ElParent->ElStructSchema &&

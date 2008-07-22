@@ -440,8 +440,10 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 
 	      ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 
-	      if(nChars > 0 && Selecting != NULL && el->ElParent &&
-		 IsSVGComponent(el->ElParent))
+	      if(nChars > 0 && Selecting != NULL && el &&
+		 (el->ElLeafType == LtPolyLine ||
+		  el->ElLeafType == LtPath) &&
+		 el->ElParent && IsSVGComponent(el->ElParent))
 		{
 		  /* Click on a point of a polyline or Path */
 		  SelectedPointInPolyline = nChars;
@@ -469,8 +471,9 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		{
 		  el = pBox->BxAbstractBox->AbElement;
 
-		  if(Selecting != NULL && el->ElParent &&
-		     IsSVGComponent(el->ElParent))
+		  if(Selecting != NULL && el &&
+		     el->ElLeafType != LtText &&
+		     el->ElParent && IsSVGComponent(el->ElParent))
 		    {
 		      /* click on an SVG element. Does the user want to
 			 move it ? */

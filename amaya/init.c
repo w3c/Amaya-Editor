@@ -231,7 +231,7 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win,
 		  display_item[8] = (elementType.ElTypeNum == SVG_EL_g);
 		  display_item[9] = TRUE;
 		}
-	      else
+	      else if(elementType.ElTypeNum == SVG_EL_GRAPHICS_UNIT)
 		{
 		  /* Remove cut, copy, paste commands */
 		  for(i = 0; i < 3; i++)
