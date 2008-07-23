@@ -2707,7 +2707,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	      TtaRegisterElementDelete (newEl, doc);
 	      TtaDeleteTree(newEl, doc);
 	      newEl = NULL;
-	      TtaUnselect(doc);
+	      TtaSelectElement(doc, sibling);
 	    }
 	}
       

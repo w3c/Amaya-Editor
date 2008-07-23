@@ -53,6 +53,7 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
   void UpdateSymetricPoint();
   void DrawControlPoints ();
   void DrawPathFragment(int shape, ThotBool specialColor);
+  void AddNewPoint ();
 
  protected:
   bool finished;

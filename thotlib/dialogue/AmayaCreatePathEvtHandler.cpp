@@ -226,13 +226,6 @@ bool AmayaCreatePathEvtHandler::IsFinish()
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
-void AmayaCreatePathEvtHandler::OnMouseRightDown( wxMouseEvent& event )
-{
-  finished = true;
-}
-
-/*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnChar( wxKeyEvent& event )
 {
   if(event.GetKeyCode() !=  WXK_SHIFT)
@@ -249,157 +242,11 @@ void AmayaCreatePathEvtHandler::OnChar( wxKeyEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
-  int x1,y1,x2,y2,x3,y3,x4,y4;
-
-  if (IsFinish())
+  if(IsFinish())
     return;
 
-  /* Are we in the SVG ? */
-  if(!MouseCoordinatesToSVG(document, pFrame,
-			    x0,y0,
-			    width,height,
-			    NULL,
-			    FALSE, &currentX, &currentY))return;
-
-  if(shape == 7 || shape == 8)
-    {
-      clear = false;
-
-      if(state == 0 || state == 1 || state == 3)
-	{
-	  /* Clear the active fragment */
-	  DrawPathFragment(shape, TRUE);
-	}
-      else
-	{
-	  /* Clear the active fragment */
-	  DrawPathFragment(shape, TRUE);
-
-	  /* Draw the new curve fragment */
-	  DrawPathFragment(shape, FALSE);
-	}
-    }
-  else
-    {
-      /* Clear the active fragment */
-      DrawPathFragment(shape, TRUE);
-      
-      /* Draw the new curve fragment */
-      DrawPathFragment(shape, FALSE);
-    }
-
-  if(shape == 5 || shape == 6)
-    {
-      if(nb_points == 2)
-	*created = TRUE;
-
-      /* Add a new point in the polyline/polygon */
-      state = 1;
-      x1 = currentX;
-      y1 = currentY;
-      MouseCoordinatesToSVG(document, pFrame,
-			    x0,y0,
-			    width,height,
-			    NULL,
-			    TRUE, &x1, &y1);
-
-      TtaAddPointInPolyline (leaf, nb_points, UnPixel, x1, y1, document);
-      nb_points++;
-    }
-  else if(shape == 7 || shape == 8)
-    {
-      /* Bezier Curve */
-      
-      if(state == 2)
-	{
-	  /* Add a quadratic Bezier curve */
-	  x1 = lastX2;
-	  y1 = lastY2;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x1, &y1);
-
-	  x2 = symX;
-	  y2 = symY;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x2, &y2);
-
-	  x4 = lastX1;
-	  y4 = lastY1;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x4, &y4);
-
-	  
-	  TtaAppendPathSeg (leaf,
-			    TtaNewPathSegQuadratic (x1, y1, x4 ,y4,
-						    x2, y2, FALSE),
-			    document);
-
-	  *created = TRUE;
-	}
-      else if(state == 4)
-	{
-	  x1 = lastX3;
-	  y1 = lastY3;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x1, &y1);
-
-	  x2 = lastX2;
-	  y2 = lastY2;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x2, &y2);
-
-	  x3 = symX;
-	  y3 = symY;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x3, &y3);
-
-	  x4 = lastX1;
-	  y4 = lastY1;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x4, &y4);
-
-	  
-	  TtaAppendPathSeg (leaf,
-			    TtaNewPathSegCubic (x1, y1, x4 ,y4,
-						x2, y2, x3, y3, FALSE),
-			    document);
-	}
-
-      if(state < 4)state++;
-      else state=3;
-    }
-
-  lastX3 = lastX2;
-  lastY3 = lastY2;
-  lastX2 = lastX1;
-  lastY2 = lastY1;
-  lastX1 = currentX;
-  lastY1 = currentY;
-  UpdateSymetricPoint();
-
+  AddNewPoint ();
 }
-
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaCreatePathEvtHandler
@@ -408,6 +255,20 @@ void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
+  if(IsFinish())
+    return;
+
+  AddNewPoint();
+  finished = true;
+}
+
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+void AmayaCreatePathEvtHandler::OnMouseRightDown( wxMouseEvent& event )
+{
+  if(IsFinish())
+    return;
+
   finished = true;
 }
 
@@ -702,6 +563,162 @@ void AmayaCreatePathEvtHandler::DrawPathFragment(int shape,
 #ifdef _WINDOWS
   GL_Swap (frameId);
 #endif /* WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  AddNewPoint
+  *----------------------------------------------------------------------*/
+void AmayaCreatePathEvtHandler::AddNewPoint()
+{
+  int x1,y1,x2,y2,x3,y3,x4,y4;
+
+  if (IsFinish())
+    return;
+
+  /* Are we in the SVG ? */
+  if(!MouseCoordinatesToSVG(document, pFrame,
+			    x0,y0,
+			    width,height,
+			    NULL,
+			    FALSE, &currentX, &currentY))return;
+
+  if(shape == 7 || shape == 8)
+    {
+      clear = false;
+
+      if(state == 0 || state == 1 || state == 3)
+	{
+	  /* Clear the active fragment */
+	  DrawPathFragment(shape, TRUE);
+	}
+      else
+	{
+	  /* Clear the active fragment */
+	  DrawPathFragment(shape, TRUE);
+
+	  /* Draw the new curve fragment */
+	  DrawPathFragment(shape, FALSE);
+	}
+    }
+  else
+    {
+      /* Clear the active fragment */
+      DrawPathFragment(shape, TRUE);
+      
+      /* Draw the new curve fragment */
+      DrawPathFragment(shape, FALSE);
+    }
+
+  if(shape == 5 || shape == 6)
+    {
+      if(nb_points == 2)
+	*created = TRUE;
+
+      /* Add a new point in the polyline/polygon */
+      state = 1;
+      x1 = currentX;
+      y1 = currentY;
+      MouseCoordinatesToSVG(document, pFrame,
+			    x0,y0,
+			    width,height,
+			    NULL,
+			    TRUE, &x1, &y1);
+
+      TtaAddPointInPolyline (leaf, nb_points, UnPixel, x1, y1, document);
+      nb_points++;
+    }
+  else if(shape == 7 || shape == 8)
+    {
+      /* Bezier Curve */
+      
+      if(state == 2)
+	{
+	  /* Add a quadratic Bezier curve */
+	  x1 = lastX2;
+	  y1 = lastY2;
+	  MouseCoordinatesToSVG(document, pFrame,
+				x0,y0,
+				width,height,
+				NULL,
+				TRUE, &x1, &y1);
+
+	  x2 = symX;
+	  y2 = symY;
+	  MouseCoordinatesToSVG(document, pFrame,
+				x0,y0,
+				width,height,
+				NULL,
+				TRUE, &x2, &y2);
+
+	  x4 = lastX1;
+	  y4 = lastY1;
+	  MouseCoordinatesToSVG(document, pFrame,
+				x0,y0,
+				width,height,
+				NULL,
+				TRUE, &x4, &y4);
+
+	  
+	  TtaAppendPathSeg (leaf,
+			    TtaNewPathSegQuadratic (x1, y1, x4 ,y4,
+						    x2, y2, FALSE),
+			    document);
+
+	  *created = TRUE;
+	}
+      else if(state == 4)
+	{
+	  x1 = lastX3;
+	  y1 = lastY3;
+	  MouseCoordinatesToSVG(document, pFrame,
+				x0,y0,
+				width,height,
+				NULL,
+				TRUE, &x1, &y1);
+
+	  x2 = lastX2;
+	  y2 = lastY2;
+	  MouseCoordinatesToSVG(document, pFrame,
+				x0,y0,
+				width,height,
+				NULL,
+				TRUE, &x2, &y2);
+
+	  x3 = symX;
+	  y3 = symY;
+	  MouseCoordinatesToSVG(document, pFrame,
+				x0,y0,
+				width,height,
+				NULL,
+				TRUE, &x3, &y3);
+
+	  x4 = lastX1;
+	  y4 = lastY1;
+	  MouseCoordinatesToSVG(document, pFrame,
+				x0,y0,
+				width,height,
+				NULL,
+				TRUE, &x4, &y4);
+
+	  
+	  TtaAppendPathSeg (leaf,
+			    TtaNewPathSegCubic (x1, y1, x4 ,y4,
+						x2, y2, x3, y3, FALSE),
+			    document);
+	}
+
+      if(state < 4)state++;
+      else state=3;
+    }
+
+  lastX3 = lastX2;
+  lastY3 = lastY2;
+  lastX2 = lastX1;
+  lastY2 = lastY1;
+  lastX1 = currentX;
+  lastY1 = currentY;
+  UpdateSymetricPoint();
+
 }
 
 
