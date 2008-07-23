@@ -3,8 +3,8 @@
 1 Megerősítés
 2 Nincs ábécéfájl
 3 Az új nézet nem válthatja fel a régit
-4 Összegyeztethetetlen leírók. %s újrafordítása
-5 Végzetes huba: a betűkészlet nem található
+4 Összegyeztethetetlen leírók. %sújrafordítása
+5 Végzetes huba: a betűkészlet nemtalálható
 6 A memória megtelt
 7 Végzetes hiba: Nem lehet csatlakozni X-hez
 8 A nézet módosult létrehozása előtt
@@ -22,7 +22,7 @@
 20 A módosult dokumentumok (ha van) mentése
 21 Érvénytelen .TRA fájl: %s
 22 %s érvénytelen testvére ennek: %s (%s)
-23 %s érvénytelen utóda ennek az elődnek: %s (%s)
+23 %s érvénytelen utóda ennek az elődnek: %s(%s)
 24 %s, oldal %d
 25 Nyelv
 26 Attribútumok
@@ -132,7 +132,7 @@
 130 Ismeretlen attribútum
 131 Mégsem
 132 HIba a PostScript fordításban
-133 A parancsot visszautasította a sorkezelő "%s"
+133 A parancsot visszautasította a sorkezelő"%s"
 134 "%s" nem hozható létre
 135 Felülvonás
 136 Dokumentum formátum
@@ -155,7 +155,7 @@
 153 Parameter fájl hiba
 154 Nincs billentyűzet fájl
 155 A dokumentum szótár nem menthető
-156 Ezt az érvénytelen szót (%s) elutasította a szótár
+156 Ezt az érvénytelen szót (%s) elutasította aszótár
 157 Szó (%s) hozzáadva a dokumentum szótárhoz
 158 Szóellenőrzés vége
 159 Szóellenőrzés megszakadt
@@ -207,7 +207,7 @@
 205 Meghatározás lista
 206 Kapocs
 207 Táblázat
-208 %d lap bezárására készül. Valóban folytatni kívánja?
+208 %d lap bezárására készül. Valóban folytatnikívánja?
 209 Figyelmeztessen több lap bezárásakor
 210 Lapok bezárása
 211 Nincs hiba
@@ -236,7 +236,7 @@
 234 Különböző szerkezetek
 235 Relációk, rendek és logika
 236 Halmazok és függvények
-237 Számelmélet, műveletek, komplexek és állandók
+237 Számelmélet, műveletek, komplexek ésállandók
 238 Analízis, lineáris algebra és statisztika
 239 Trigonometria és logaritmusok
 240 Nagyítás
@@ -259,16 +259,16 @@
 257 Következő tipp
 258 Tudta-e..
 259 **Close
-260 Az Amaya testreszabható: öt különböző profilban különböző menü- készletek és panelkészlet áll rendelkezésére. Lásd a Beállításokban.
-261 A panelek az ablak bal vagy jobb szélére helyezhetők, vagy akár panelenként beállíthatók. Lásd a Beállításokban.
-262 Az F2 vagy Esc billentyűvel kijelölhetjük a szerkezeti elem elődelemét, amivel ezután szerkesztési műveletek (másolás, beillesztés, tulajdonságok stb.) végezhetők.
-263 Két dokumentumot egymás mellé vagy alá helyezhetünk, ha az egyiket fülénél fogva a nyitva lévő másik dokumentum keretéhez húzzuk.
-264 Egyedi módban a panelek húzásásal megváltoztatható a sorrendjük, vagy lebegővé tehetők.
-265 Egyedi módban mindkét oldalon több paneltárat is készíthetünk a panelek húzásával.
-266 A szerkesztési mód (Szöveg/XML) váltása az állapotsorban lévő hasonló feliratú gombra kattintva is lehetséges.
-267 Ha az állapotsorban piros gomb látható, rákattintva megkapjuk a hibákat.
-268 Kijelölhetjük az aktuális kijelölés valamely elődelemét, ha az állapotsorban annak a nevére kattintunk.
-269 A dokumentumfüleken lévő nyíl gomb megnyásakor megjelenő menü segítségével átválthatunk másik fülre.
+260 Az Amaya testreszabható: öt különböző profilbankülönböző menü- készletek és panelkészlet áll rendelkezésére. Lásda Beállításokban.
+261 A panelek az ablak bal vagy jobb szélérehelyezhetők, vagy akár panelenként beállíthatók. Lásd aBeállításokban.
+262 Az F2 vagy Esc billentyűvel kijelölhetjük aszerkezeti elem elődelemét, amivel ezután szerkesztési műveletek(másolás, beillesztés, tulajdonságok stb.) végezhetők.
+263 Két dokumentumot egymás mellé vagy aláhelyezhetünk, ha az egyiket fülénél fogva a nyitva lévő másik dokumentumkeretéhez húzzuk.
+264 Egyedi módban a panelek húzásásalmegváltoztatható a sorrendjük, vagy lebegővé tehetők.
+265 Egyedi módban mindkét oldalon több paneltárat iskészíthetünk a panelek húzásával.
+266 A szerkesztési mód (Szöveg/XML) váltása azállapotsorban lévő hasonló feliratú gombra kattintva islehetséges.
+267 Ha az állapotsorban piros gomb látható, rákattintvamegkapjuk a hibákat.
+268 Kijelölhetjük az aktuális kijelölés valamelyelődelemét, ha az állapotsorban annak a nevére kattintunk.
+269 A dokumentumfüleken lévő nyíl gomb megnyásakormegjelenő menü segítségével átválthatunk másik fülre.
 270 Klasszikus
 271 Modern
 272 Téma nélkül

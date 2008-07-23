@@ -2,7 +2,7 @@
 0 Erro X11: %s\n
 1 Confirme
 2 Não há arquivo de alfabeto
-3 A nova vista não pode substituir a vista precedente
+3 A nova vista não pode substituir a vistaprecedente
 4 Esquemas incompatíveis. Recompile %s
 5 Erro fatal: Tipos (fonts) não encontrados
 6 Memória esgotada
@@ -44,7 +44,7 @@
 42 Formato de papel
 43 Feito
 44 Diretórios
-45 O documento %s já exist. Quer gravar por cima dele?
+45 O documento %s já exist. Quer gravar por cimadele?
 46 **Set the text color
 47 **Set the background color
 48 Família de tipos (fonts)
@@ -154,9 +154,9 @@
 152 palavras com dígitos
 153 Erro em arquivo de parâmetros
 154 Não há arquivo de teclado
-155 Não é possível salvar o dicionário do documento
-156 Palavra incorreta "%s" recusada neste dicionário
-157 Palavra "%s" adicionada ao dicionário do documento
+155 Não é possível salvar o dicionário dodocumento
+156 Palavra incorreta "%s" recusada nestedicionário
+157 Palavra "%s" adicionada ao dicionário dodocumento
 158 Fim da verificação ortográfica
 159 Abortada a verificação ortográfica
 160 Por favor selecione um documento
@@ -207,7 +207,7 @@
 205 Lista de definição
 206 Enlace
 207 Tabela
-208 **You are about to close %d open tabs. Are you sure you want to continue?
+208 **You are about to close %d open tabs. Are you sure youwant to continue?
 209 **Warn me when I attempt to close multiple tabs
 210 **Close tabs
 211 **No error detected
@@ -259,16 +259,16 @@
 257 **Next tip
 258 **Did you know...
 259 **Close
-260 **Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.
-261 **Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.
-262 **With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.
-263 **You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.
-264 **In customizable mode, you can drag panels to change their order or to make them floating.
-265 **With the customizable mode, you can move panels on both sides of the window just by dragging.
-266 **You can switch editing mode (Text/XML) by clicking on the corresponding button in the bottom right corner.
-267 **When there is red button in the bottom right corner, you can display errors by clicking on it.
-268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed at the bottom of the window.
-269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
+260 **Amaya can be adapted to your own needs: five profilesare provided with different sets of menus andpanels. See Preferences/General.
+261 **Panels can be displayed on the left or on the right sideof the window or even customized panel by panel. See Preferences.
+262 **With the F2 or Escape key you can select the parentelement in the document structure, to apply editing functions (copy, paste,attributes, style, etc.) to the right element.
+263 **You can display two documents side by side in the windowby dragging a document tab to the left or right side of the displayeddocument.
+264 **In customizable mode, you can drag panels to changetheir order or to make them floating.
+265 **With the customizable mode, you can move panels on bothsides of the window just by dragging.
+266 **You can switch editing mode (Text/XML) by clicking onthe corresponding button in the bottom right corner.
+267 **When there is red button in the bottom right corner, youcan display errors by clicking on it.
+268 **You can select an ancestor of the current selection byclicking on its name on the path control displayed at the bottom of thewindow.
+269 **You can move to another tab with the menu displayed bythe arrow button at right of document tabs.
 270 **Classic
 271 **Modern
 272 **No theme

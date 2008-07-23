@@ -155,7 +155,7 @@
 153 參數文件錯誤
 154 無鍵盤文件
 155 無法保存文檔字典
-156 錯誤詞語 "%s" 已被本字典拒絕
+156 錯誤詞語 "%s"已被本字典拒絕
 157 詞語 "%s" 已加入字典
 158 拼寫檢查完成
 159 拼寫檢查已終止
@@ -188,7 +188,7 @@
 186 重新載入
 187 保存
 188 保存
-189 新建  文檔
+189 新建 文檔
 190 打開文檔
 191 打印
 192 搜索
@@ -259,16 +259,16 @@
 257 **Next tip
 258 **Did you know...
 259 **Close
-260 **Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.
-261 **Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.
-262 **With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.
-263 **You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.
-264 **In customizable mode, you can drag panels to change their order or to make them floating.
-265 **With the customizable mode, you can move panels on both sides of the window just by dragging.
-266 **You can switch editing mode (Text/XML) by clicking on the corresponding button in the bottom right corner.
-267 **When there is red button in the bottom right corner, you can display errors by clicking on it.
-268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed at the bottom of the window.
-269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
+260 **Amaya can be adapted to your own needs: five profilesare provided with different sets of menus andpanels. See Preferences/General.
+261 **Panels can be displayed on the left or on the right sideof the window or even customized panel by panel. See Preferences.
+262 **With the F2 or Escape key you can select the parentelement in the document structure, to apply editing functions (copy, paste,attributes, style, etc.) to the right element.
+263 **You can display two documents side by side in the windowby dragging a document tab to the left or right side of the displayeddocument.
+264 **In customizable mode, you can drag panels to changetheir order or to make them floating.
+265 **With the customizable mode, you can move panels on bothsides of the window just by dragging.
+266 **You can switch editing mode (Text/XML) by clicking onthe corresponding button in the bottom right corner.
+267 **When there is red button in the bottom right corner, youcan display errors by clicking on it.
+268 **You can select an ancestor of the current selection byclicking on its name on the path control displayed at the bottom of thewindow.
+269 **You can move to another tab with the menu displayed bythe arrow button at right of document tabs.
 270 **Classic
 271 **Modern
 272 **No theme

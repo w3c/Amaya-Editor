@@ -133,7 +133,7 @@
 130 Unbekanntes Attribut
 131 Abbrechen
 132 Fehler in der PostScript-Erkennung
-133 Auftrag vom Druckspooler "%s" zurückgewiesen
+133 Auftrag vom Druckspooler "%s"zurückgewiesen
 134 Kann "%s" nicht erzeugen
 135 Überstrichen
 136 Format
@@ -156,8 +156,8 @@
 153 Fehler in der Parameterdatei
 154 Tastaturdatei fehlt
 155 Kann das Dokumentwörterbuch nicht speichern
-156 Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen
-157 Wort "%s" zum Dokumentwörterbuch hinzugefügt
+156 Fehlerhaftes Wort "%s" im Wörterbuchzurückgewiesen
+157 Wort "%s" zum Dokumentwörterbuchhinzugefügt
 158 Rechtschreibprüfung beendet
 159 Rechtschreibprüfung abgebrochen
 160 Bitte ein Dokument auswählen
@@ -165,7 +165,7 @@
 162 In dieser Version nicht verfügbar
 163 Palette aktivieren/deaktivieren
 164 Hilfsmittel
-165 Obligatorisches Attribut, kann nicht entfernt werden
+165 Obligatorisches Attribut, kann nicht entferntwerden
 166 Erneuern
 167 Links
 168 Rechts
@@ -208,8 +208,8 @@
 205 Definitionsliste
 206 Verweis
 207 Tabelle
-208 Sie sind dabei, %d geöffnete Seiten zu schließen. Sind Sie sicher, dass Sie fortfahren möchten?
-209 Warnung anzeigen, wenn mehrere Seiten geschlossen werden sollen
+208 Sie sind dabei, %d geöffnete Seiten zu schließen.Sind Sie sicher, dass Sie fortfahren möchten?
+209 Warnung anzeigen, wenn mehrere Seiten geschlossenwerden sollen
 210 Seiten schließen
 211 Kein Fehler gefunden
 212 Parserfehler anzeigen
@@ -235,9 +235,9 @@
 232 Einfügen
 233 Rechtschreibprüfung
 234 Verschiedene Konstruktionen
-235 Abhängigkeiten, Aufträge und Verknüpfungssteuerungen
+235 Abhängigkeiten, Aufträge undVerknüpfungssteuerungen
 236 Datensätze und Funktionen
-237 arithmetisch, Abläufe, Verzweigungen und Konstante
+237 arithmetisch, Abläufe, Verzweigungen undKonstante
 238 Analyse, lineare Algebra und Statistik
 239 Trigonometrie und Logarithmen
 240 Schrift vergrößern
@@ -260,16 +260,16 @@
 257 Nächster Tip
 258 Haben Sie schon gewusst?
 259 **Close
-260 Amaya kann auf Ihre Bedürfnisse angepasst werden: fünf verschiedene Profile mit verschiedenen Kombinationen von Menu Einträgen und Bedienelementen. Für weitere Informationen werfen Sie bitte einen Blick in die Einstellungen.
-261 Bedienelemente können links, rechts oder benutzerdefiniert angezeigt werden. Siehe Einstellungen.
-262 Mit F2 oder der Escape Taste können Sie das Elternelement in der Struktur auswählen und Editier Funktionen (kopieren, einfügen,Attribute usw.) auf dieses Element anzuwenden.
-263 Sie können zwei Dokumente nebeneinander im Fenster darstellen indem Sie ein Dokumenten-Tab an die Begrenzung des dargestellten Dokumentes ziehen.
-264 Im benutzerdefinierten Modus können Sie Bedienelemente verschieben um ihre Anordnung zu verändern oder um sie frei zu platzieren.
-265 Im benutzerdefinierten Modus können Sie können Sie durch das Verschieben von Bedienelementen auf beiden Seiten Leisten mit Bedienelementen erstellen.
-266 Sie können zwischen den Editiermodi (Text/XML) wechseln indem Sie auf das entsprechende Bedienfeld in der Statusleiste klicken.
-267 Bemerken Sie einen roten Button in der Statusleiste können Sie sich mit einem Klick darauf Fehler im Dokument anzeigen lassen.
-268 Sie können Vorgängerelemente durch einen Klick auf deren Bezeichnung in der Pfadanzeige unten in der Statusleiste auswählen.
-269 Sie können zu einer anderen Registerkarte wechseln indem Sie auf das Pfeil-nach-unten Symbol rechts neben den Registerleisten klicken.
+260 Amaya kann auf Ihre Bedürfnisse angepasst werden:fünf verschiedene Profile mit verschiedenen Kombinationen von Menu Einträgenund Bedienelementen. Für weitere Informationen werfen Sie bitte einen Blick indie Einstellungen.
+261 Bedienelemente können links, rechts oderbenutzerdefiniert angezeigt werden. Siehe Einstellungen.
+262 Mit F2 oder der Escape Taste können Sie dasElternelement in der Struktur auswählen und Editier Funktionen (kopieren,einfügen,Attribute usw.) auf dieses Element anzuwenden.
+263 Sie können zwei Dokumente nebeneinander im Fensterdarstellen indem Sie ein Dokumenten-Tab an die Begrenzung des dargestelltenDokumentes ziehen.
+264 Im benutzerdefinierten Modus können Sie Bedienelementeverschieben um ihre Anordnung zu verändern oder um sie frei zuplatzieren.
+265 Im benutzerdefinierten Modus können Sie können Siedurch das Verschieben von Bedienelementen auf beiden Seiten Leisten mitBedienelementen erstellen.
+266 Sie können zwischen den Editiermodi (Text/XML)wechseln indem Sie auf das entsprechende Bedienfeld in der Statusleisteklicken.
+267 Bemerken Sie einen roten Button in der Statusleistekönnen Sie sich mit einem Klick darauf Fehler im Dokument anzeigenlassen.
+268 Sie können Vorgängerelemente durch einen Klick aufderen Bezeichnung in der Pfadanzeige unten in der Statusleisteauswählen.
+269 Sie können zu einer anderen Registerkarte wechselnindem Sie auf das Pfeil-nach-unten Symbol rechtsneben den Registerleisten klicken.
 270 Klassisch
 271 Modern
 272 Kein Motiv

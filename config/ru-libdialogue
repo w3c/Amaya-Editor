@@ -1,14 +1,14 @@
 # encoding= utf8
 0 X11 ошибка : %s\n
 1 Подтвердить
-2 Отсутствует файл алфавита (Amaya-*.*/dicopar/alphabet)
-3 Новое представление не может заменить старое
-4 Несовместимые схемы. Перекомпилируйте %s
-5 Неисправимая ошибка: не найдены шрифты
+2 Отсутствует файл алфавита(Amaya-*.*/dicopar/alphabet)
+3 Новое представление не можетзаменить старое
+4 Несовместимые схемы.Перекомпилируйте %s
+5 Неисправимая ошибка: ненайдены шрифты
 6 Ресурсы памяти исчерпаны
-7 Неисправимая ошибка: Невозможно соединиться с X
-8 Перед созданием, представление было изменено
-9 Таблица правил заполнена.
+7 Неисправимая ошибка:Невозможно соединиться с X
+8 Перед созданием,представление было изменено
+9 Таблица правилзаполнена.
 10 Неправильный файл: %s.STR
 11 Неправильный файл: %s.PRS
 12 Печатается документ %s
@@ -18,15 +18,15 @@
 16 4 страницы/лист
 17 %s
 18 Недостаточно памяти
-19 *** Amaya: Неисправимая ошибка ***
-20 если имеются изменённые документы, они будут сохранены
+19 *** Amaya: Неисправимая ошибка***
+20 если имеются изменённыедокументы, они будут сохранены
 21 Неправильный .TRA файл: %s
-22 %s не является правильным одноуровневым узлом для %s (%s)
-23 %s не является правильным потомком для %s (%s)
+22 %s не является правильнымодноуровневым узлом для %s (%s)
+23 %s не является правильнымпотомком для %s (%s)
 24 %s, страница %d
 25 Язык
 26 Атрибуты
-27 Стандартная демонстрация
+27 Стандартнаядемонстрация
 28 Применить
 29 Символы
 30 Подчеркивание
@@ -44,7 +44,7 @@
 42 Размер бумаги
 43 Закрыть
 44 Директории
-45 Документ %s уже существует. Перезаписать его?
+45 Документ %s уже существует.Перезаписать его?
 46 **Set the text color
 47 **Set the background color
 48 Семейство шрифтов
@@ -72,7 +72,7 @@
 70 PostScript файл
 71 Принтер
 72 Найти
-73 Не учитывать регистр букв
+73 Не учитывать регистрбукв
 74 Заместить на
 75 Режим замещения
 76 Не замещать
@@ -109,7 +109,7 @@
 107 Не найдено
 108 Поиск в
 109 Поиск
-110 Элемент Только для чтения
+110 Элемент Только длячтения
 111 Ничего не замещено
 112 Стандартные символы
 113 Стандартная графика
@@ -121,7 +121,7 @@
 119 Образец заполнения
 120 Разделять
 121 Тип объекта
-122 Перейти на страницу номер:
+122 Перейти на страницуномер:
 123 Любой
 124 Атрибут поиска
 125 Введите для поиска
@@ -131,15 +131,15 @@
 129 Величина атрибута:
 130 Неизвестный атрибут
 131 Отмена
-132 Ошибка PostScript преобразования
-133 Команда отвергнута спулером "%s"
-134 Невозможно создать "%s"
+132 Ошибка PostScriptпреобразования
+133 Команда отвергнута спулером"%s"
+134 Невозможно создать"%s"
 135 Надстрочное
 136 Тип документа
 137 Удалить атрибут
 138 Цвет фона
 139 Цвет текста документа
-140 Выбрать generic (основную) структуру XML
+140 Выбрать generic (основную)структуру XML
 141 Проверка
 142 Найти/Пропустить
 143 Заместить (+словарь)
@@ -153,25 +153,25 @@
 151 слова из заглавных букв
 152 слова с цифрами
 153 Ошибка параметра файла
-154 Отсутствует файл клавиатуры (Amaya-*.*/config/amaya.kb)
-155 Невозможно сохранить словарь документа
-156 Неправильное слово "%s" не будет добавлено в словарь
-157 Слово "%s" добавлено в словарь документа
-158 Конец проверки правописания
-159 Проверка правописания прервана
+154 Отсутствует файл клавиатуры(Amaya-*.*/config/amaya.kb)
+155 Невозможно сохранить словарьдокумента
+156 Неправильное слово "%s" небудет добавлено в словарь
+157 Слово "%s" добавлено всловарь документа
+158 Конец проверкиправописания
+159 Проверка правописанияпрервана
 160 Выберите документ
-161 Словарь документа сохранён в: %s
+161 Словарь документа сохранён в:%s
 162 Недоступно в этой версии
-163 Показать/Скрыть плавающую панель
+163 Показать/Скрыть плавающуюпанель
 164 Инструменты
-165 Обязательный атрибут, он не может быть удалён
+165 Обязательный атрибут, он неможет быть удалён
 166 Перезагрузить документ
 167 По левому краю
 168 По правому краю
 169 По центру
 170 По ширине
 171 Применить класс
-172 Выбрать класс или псевдо-класс
+172 Выбрать класс илипсевдо-класс
 173 Просмотр
 174 Отменить выбор
 175 Математика
@@ -179,7 +179,7 @@
 177 Символы равенства
 178 Символы неравенства
 179 Операторы
-180 Греческий алфавит (заглавные)
+180 Греческий алфавит(заглавные)
 181 Стрелки
 182 Спецсимволы
 183 Прервать передачу данных
@@ -193,10 +193,10 @@
 191 Печать
 192 Найти
 193 Начальная страница
-194 Обычное выделение Вкл./Выкл.
-195 Особое выделение Вкл./Выкл.
-196 Выделение компьютерного кода Вкл./Выкл.
-197 Вставить/Заместить изображение
+194 Обычное выделениеВкл./Выкл.
+195 Особое выделениеВкл./Выкл.
+196 Выделение компьютерного кодаВкл./Выкл.
+197 Вставить/Заместитьизображение
 198 Заголовок уровень 1
 199 Заголовок уровень 2
 200 Заголовок уровень 3
@@ -207,8 +207,8 @@
 205 Список определения
 206 Ссылка
 207 Таблица
-208 Сейчас будут закрыты %d панели. Продолжить и закрыть их?
-209 Предупреждать о попытке закрытия нескольких панелей
+208 Сейчас будут закрыты %d панели.Продолжить и закрыть их?
+209 Предупреждать о попыткезакрытия нескольких панелей
 210 Закрыть панели
 211 Ошибок не обнаружено
 212 Показать разбор ошибок
@@ -217,16 +217,16 @@
 215 Цель
 216 Вставка Вкл./Выкл.
 217 Удаление Вкл./Выкл.
-218 Подстрочный индекс Вкл./Выкл.
-219 Надстрочный индекс Вкл./Выкл.
+218 Подстрочный индексВкл./Выкл.
+219 Надстрочный индексВкл./Выкл.
 220 Термин
 221 Определение
 222 Объект
-223 Настройка каскадной таблицы стиля
+223 Настройка каскадной таблицыстиля
 224 Файлы
-225 Деление/Отмена деления окна по горизонтали
-226 Деление/Отмена деления окна по вертикали
-227 Показать/Скрыть панель инструментов
+225 Деление/Отмена деления окнапо горизонтали
+226 Деление/Отмена деления окнапо вертикали
+227 Показать/Скрыть панельинструментов
 228 Отменить
 229 Вернуть
 230 Вырезать
@@ -248,8 +248,8 @@
 246 **Click an element to select it
 247 **Click to change the editing mode
 248 Объединить
-249 Уменьшить расширение по горизонтали
-250 Уменьшить расширение по вертикали
+249 Уменьшить расширение погоризонтали
+250 Уменьшить расширение повертикали
 251 Вставить строку
 252 Добавить строку
 253 Вставить столбец
@@ -259,16 +259,16 @@
 257 **Next tip
 258 **Did you know...
 259 **Close
-260 **Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.
-261 **Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.
-262 **With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.
-263 **You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.
-264 **In customizable mode, you can drag panels to change their order or to make them floating.
-265 **With the customizable mode, you can move panels on both sides of the window just by dragging.
-266 **You can switch editing mode (Text/XML) by clicking on the corresponding button in the bottom right corner.
-267 **When there is red button in the bottom right corner, you can display errors by clicking on it.
-268 **You can select an ancestor of the current selection by clicking on its name on the path control displayed at the bottom of the window.
-269 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
+260 **Amaya can be adapted to your own needs: five profilesare provided with different sets of menus andpanels. See Preferences/General.
+261 **Panels can be displayed on the left or on the right sideof the window or even customized panel by panel. See Preferences.
+262 **With the F2 or Escape key you can select the parentelement in the document structure, to apply editing functions (copy, paste,attributes, style, etc.) to the right element.
+263 **You can display two documents side by side in the windowby dragging a document tab to the left or right side of the displayeddocument.
+264 **In customizable mode, you can drag panels to changetheir order or to make them floating.
+265 **With the customizable mode, you can move panels on bothsides of the window just by dragging.
+266 **You can switch editing mode (Text/XML) by clicking onthe corresponding button in the bottom right corner.
+267 **When there is red button in the bottom right corner, youcan display errors by clicking on it.
+268 **You can select an ancestor of the current selection byclicking on its name on the path control displayed at the bottom of thewindow.
+269 **You can move to another tab with the menu displayed bythe arrow button at right of document tabs.
 270 **Classic
 271 **Modern
 272 **No theme

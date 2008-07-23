@@ -44,7 +44,7 @@
 42 Formato de papel
 43 Cerrar
 44 Directorios
-45 El documento %s ya existe. ¿Quiere sobreescribirlo?
+45 El documento %s ya existe. ¿Quieresobreescribirlo?
 46 Establecer el color del texto
 47 Establecer el color de fondo
 48 Familia de fuente
@@ -155,8 +155,8 @@
 153 Error en archivo de parámetro
 154 No hay archivo de teclado
 155 No puedo guardar el diccionario del documento
-156 Palabra incorrecta "%s" rechazada en este diccionario
-157 Palabra "%s" añadida al diccionario del documento
+156 Palabra incorrecta "%s" rechazada en estediccionario
+157 Palabra "%s" añadida al diccionario deldocumento
 158 Fin de la corrección ortográfica
 159 Corrección ortográfica abortada
 160 Por favor, seleccione un documento
@@ -207,8 +207,8 @@
 205 Lista de definición (dl)
 206 Enlace
 207 Tabla
-208 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
-209 Avisarme cuando intente cerrar múltiples pestañas
+208 Va a cerrar %d pestañas abiertas. ¿Seguro que deseacontinuar?
+209 Avisarme cuando intente cerrar múltiplespestañas
 210 Cerrar pestañas
 211 Ningún error detectado
 212 Mostrar errores sintácticos
@@ -236,7 +236,7 @@
 234 Varios
 235 Relaciones, orden y lógica
 236 Conjuntos y funciones
-237 Aritmética, operaciones, complejos y constantes
+237 Aritmética, operaciones, complejos yconstantes
 238 Análisis, álgebra lineal y estadística
 239 Trigonometría y logaritmos
 240 &Aumentar tamaño de texto
@@ -259,16 +259,16 @@
 257 Siguiente sugerencia
 258 ¿Sabía que...?
 259 **Close
-260 Amaya puede adaptarse a sus necesidades: incorpora cinco perfiles distintos con diferentes opciones de menús y paneles. Véase el menú Editar > Preferencias.
-261 Las ventanas de herramientas pueden mostrarse todas juntas a izquierda o derecha o por separado de forma personalizada. Véase el menú Editar > Preferencias.
-262 Con la tecla F2 o Escape se puede seleccionar el elemento padre del elemento seleccionado para aplicarle funciones de edición (copiar, pegar, atributos, etc).
-263 Puede mostrar dos o más documentos simultáneamente arrastrando la pestaña de un documento a uno de los bordes del documento visible.
-264 En el modo Personalizable, puede arrastrar los paneles de herramientas para cambiar su orden o mantenerlos flotantes.
-265 En el modo Personalizable, puede colocar los paneles de herramientas uno al lado del otro vertical u horizontalmente.
-266 Puede cambiar el modo de edición (Texto/XML) haciendo clic en el botón situado en la parte derecha de la barra de estado.
-267 Cuando se muestra un botón rojo en el extremo derecho de la barra de estado, puede ver los errores de la página haciendo clic en él.
-268 Puede seleccionar directamente un elemento (o en sus elementos padres) haciendo clic en su nombre que se muestra en la ruta de control situada en la parte izquierda de la barra de estado.
-269 Puede cambiar de pestaña de documento mediante el menú que se despliega haciendo clic en el botón en forma de flecha situado en el extremo derecho de las pestañas de documentos.
+260 Amaya puede adaptarse a sus necesidades: incorporacinco perfiles distintos con diferentes opcionesde menús y paneles. Véase el menú Editar > Preferencias.
+261 Las ventanas de herramientas pueden mostrarse todasjuntas a izquierda o derecha o por separado de forma personalizada. Véase elmenú Editar > Preferencias.
+262 Con la tecla F2 o Escape se puede seleccionar elelemento padre del elemento seleccionado para aplicarle funciones de edición(copiar, pegar, atributos, etc).
+263 Puede mostrar dos o más documentos simultáneamentearrastrando la pestaña de un documento a uno de los bordes del documentovisible.
+264 En el modo Personalizable, puede arrastrar los panelesde herramientas para cambiar su orden o mantenerlos flotantes.
+265 En el modo Personalizable, puede colocar los paneles deherramientas uno al lado del otro vertical u horizontalmente.
+266 Puede cambiar el modo de edición (Texto/XML) haciendoclic en el botón situado en la parte derecha de la barra de estado.
+267 Cuando se muestra un botón rojo en el extremo derechode la barra de estado, puede ver los errores de la página haciendo clic enél.
+268 Puede seleccionar directamente un elemento (o en suselementos padres) haciendo clic en su nombre que se muestra en la ruta decontrol situada en la parte izquierda de la barra de estado.
+269 Puede cambiar de pestaña de documento mediante elmenú que se despliega haciendo clic en el botón en forma de flecha situado enel extremo derecho de las pestañas de documentos.
 270 Clásico
 271 Moderno
 272 Sin tema
