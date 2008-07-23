@@ -496,10 +496,10 @@ void AmayaStyleToolPanel::SendDataToPanel( AmayaParams& p )
     XRCCTRL(*this, "wxID_SPIN_SVG_OPACITY", wxSpinCtrl)->SetValue(Current_Opacity);
 
   if (Current_StrokeOpacity != -1)
-    XRCCTRL(*this, "wxID_SPIN_SVG_STROKE_OPAC", wxSpinCtrl)->SetValue(Current_StrokeOpacity);
+    XRCCTRL(*this, "wxID_SPIN_SVG_STROKE_OPACITY", wxSpinCtrl)->SetValue(Current_StrokeOpacity);
   
   if (Current_FillOpacity != -1)
-    XRCCTRL(*this, "wxID_SPIN_SVG_FILL_OPAC", wxSpinCtrl)->SetValue(Current_FillOpacity);
+    XRCCTRL(*this, "wxID_SPIN_SVG_FILL_OPACITY", wxSpinCtrl)->SetValue(Current_FillOpacity);
 
   if (Current_StrokeWidth != -1)
     XRCCTRL(*this, "wxID_SPIN_SVG_STROKE_WIDTH", wxSpinCtrl)->SetValue(Current_StrokeWidth);
@@ -574,59 +574,100 @@ void AmayaStyleToolPanel::OnChooseFontSize(wxCommandEvent& event)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void AmayaStyleToolPanel::OnChooseOpacity(wxSpinEvent& event)
+void AmayaStyleToolPanel::SpinValueHasChanged(int id)
 {
   Document doc;
   View view;
 
-  Current_Opacity = event.GetPosition();
+  switch(id)
+    {
+    case OPACITY:
+      Current_Opacity = XRCCTRL(*this, "wxID_SPIN_SVG_OPACITY", wxSpinCtrl)->GetValue();
+      break;
+      
+    case STROKE_OPACITY:
+      Current_StrokeOpacity = XRCCTRL(*this, "wxID_SPIN_SVG_STROKE_OPACITY", wxSpinCtrl)->GetValue();
+      break;
+      
+    case FILL_OPACITY:
+      Current_FillOpacity = XRCCTRL(*this, "wxID_SPIN_SVG_FILL_OPACITY", wxSpinCtrl)->GetValue();
+      break;
+      
+    case STROKE_WIDTH:
+      Current_StrokeWidth = XRCCTRL(*this, "wxID_SPIN_SVG_STROKE_WIDTH", wxSpinCtrl)->GetValue();
+      break;
+    }
+
   TtaGiveActiveView( &doc, &view );
 
   if(doc > 0)
-   TtaExecuteMenuAction ("DoSelectOpacity", doc, view, TRUE);
+    {
+      switch(id)
+	{
+	case OPACITY:
+	  TtaExecuteMenuAction ("DoSelectOpacity", doc, view, TRUE);
+	  break;
+
+	case STROKE_OPACITY:
+	  TtaExecuteMenuAction ("DoSelectStrokeOpacity", doc, view, TRUE);
+	  break;
+
+	case FILL_OPACITY:
+	  TtaExecuteMenuAction ("DoSelectFillOpacity", doc, view, TRUE);
+	  break;
+
+	case STROKE_WIDTH:
+	  TtaExecuteMenuAction ("DoSelectStrokeWidth", doc, view, TRUE);
+	  break;
+	}
+    }
+
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void AmayaStyleToolPanel::OnChooseStrokeOpacity(wxSpinEvent& event)
+void AmayaStyleToolPanel::OnChooseOpacity(wxCommandEvent& event)
 {
-  Document doc;
-  View view;
-
-  Current_StrokeOpacity = event.GetPosition();
-  TtaGiveActiveView( &doc, &view );
-
-  if(doc > 0)
-   TtaExecuteMenuAction ("DoSelectStrokeOpacity", doc, view, TRUE);
+  SpinValueHasChanged(OPACITY);
+}
+void AmayaStyleToolPanel::OnChooseOpacity2(wxSpinEvent& event)
+{
+  SpinValueHasChanged(OPACITY);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void AmayaStyleToolPanel::OnChooseFillOpacity(wxSpinEvent& event)
+void AmayaStyleToolPanel::OnChooseStrokeOpacity(wxCommandEvent& event)
 {
-  Document doc;
-  View view;
-
-  Current_FillOpacity = event.GetPosition();
-  TtaGiveActiveView( &doc, &view );
-
-  if(doc > 0)
-   TtaExecuteMenuAction ("DoSelectFillOpacity", doc, view, TRUE);
+  SpinValueHasChanged(STROKE_OPACITY);
+}
+void AmayaStyleToolPanel::OnChooseStrokeOpacity2(wxSpinEvent& event)
+{
+  SpinValueHasChanged(STROKE_OPACITY);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void AmayaStyleToolPanel::OnChooseStrokeWidth(wxSpinEvent& event)
+void AmayaStyleToolPanel::OnChooseFillOpacity(wxCommandEvent& event)
 {
-  Document doc;
-  View view;
-
-  Current_StrokeWidth = event.GetPosition();
-  TtaGiveActiveView( &doc, &view );
-
-  if(doc > 0)
-   TtaExecuteMenuAction ("DoSelectStrokeWidth", doc, view, TRUE);
+  SpinValueHasChanged(FILL_OPACITY);
 }
+void AmayaStyleToolPanel::OnChooseFillOpacity2(wxSpinEvent& event)
+{
+  SpinValueHasChanged(FILL_OPACITY);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AmayaStyleToolPanel::OnChooseStrokeWidth(wxCommandEvent& event)
+{
+  SpinValueHasChanged(STROKE_WIDTH);
+}
+void AmayaStyleToolPanel::OnChooseStrokeWidth2(wxSpinEvent& event)
+{
+  SpinValueHasChanged(STROKE_WIDTH);
+}
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -679,15 +720,22 @@ BEGIN_EVENT_TABLE(AmayaStyleToolPanel, AmayaToolPanel)
   EVT_BUTTON(XRCID("wxID_BUTTON_SVG_STROKE_COLOR"), AmayaStyleToolPanel::OnChooseStrokeColor)
   EVT_AMAYA_COLOR_CHANGED(XRCID("wxID_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnColorFillPalette )
   EVT_BUTTON(XRCID("wxID_BUTTON_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnChooseFillColor)
-  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_OPACITY"), AmayaStyleToolPanel::OnChooseOpacity)
-  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_STROKE_OPAC"), AmayaStyleToolPanel::OnChooseStrokeOpacity)
-  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_FILL_OPAC"), AmayaStyleToolPanel::OnChooseFillOpacity)
-  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_STROKE_WIDTH"), AmayaStyleToolPanel::OnChooseStrokeWidth)
+
+/* SVG spin control */
+  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_OPACITY"), AmayaStyleToolPanel::OnChooseOpacity2)
+  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_STROKE_OPACITY"), AmayaStyleToolPanel::OnChooseStrokeOpacity2)
+  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_FILL_OPACITY"), AmayaStyleToolPanel::OnChooseFillOpacity2)
+  EVT_SPINCTRL(XRCID("wxID_SPIN_SVG_STROKE_WIDTH"), AmayaStyleToolPanel::OnChooseStrokeWidth2)
+  EVT_TEXT_ENTER(XRCID("wxID_SPIN_SVG_OPACITY"), AmayaStyleToolPanel::OnChooseOpacity)
+  EVT_TEXT_ENTER(XRCID("wxID_SPIN_SVG_STROKE_OPACITY"), AmayaStyleToolPanel::OnChooseStrokeOpacity)
+  EVT_TEXT_ENTER(XRCID("wxID_SPIN_SVG_FILL_OPACITY"), AmayaStyleToolPanel::OnChooseFillOpacity)
+  EVT_TEXT_ENTER(XRCID("wxID_SPIN_SVG_STROKE_WIDTH"), AmayaStyleToolPanel::OnChooseStrokeWidth)
+
   
   EVT_UPDATE_UI(XRCID("wxID_BUTTON_SVG_FILL_COLOR"), AmayaStyleToolPanel::OnUpdateFillUI)
-  EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_FILL_OPAC"), AmayaStyleToolPanel::OnUpdateFillUI)
+  EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_FILL_OPACITY"), AmayaStyleToolPanel::OnUpdateFillUI)
   EVT_UPDATE_UI(XRCID("wxID_BUTTON_SVG_STROKE_COLOR"), AmayaStyleToolPanel::OnUpdateStrokeUI)
-  EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_STROKE_OPAC"), AmayaStyleToolPanel::OnUpdateStrokeUI)
+  EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_STROKE_OPACITY"), AmayaStyleToolPanel::OnUpdateStrokeUI)
   EVT_UPDATE_UI(XRCID("wxID_SPIN_SVG_STROKE_WIDTH"), AmayaStyleToolPanel::OnUpdateStrokeUI)
   
   EVT_CHECKBOX(XRCID("wxID_SVG_FILL_NONE"), AmayaStyleToolPanel::OnUpdateFill)

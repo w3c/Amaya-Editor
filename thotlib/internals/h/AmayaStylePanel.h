@@ -75,16 +75,30 @@ protected:
   void OnChooseFontFamily(wxCommandEvent& event);
   void OnChooseFontSize(wxCommandEvent& event);
 
-  void OnChooseOpacity(wxSpinEvent& event);
-  void OnChooseStrokeOpacity(wxSpinEvent& event);
-  void OnChooseFillOpacity(wxSpinEvent& event);
-  void OnChooseStrokeWidth(wxSpinEvent& event);
+  void OnChooseOpacity(wxCommandEvent& event);
+  void OnChooseStrokeOpacity(wxCommandEvent& event);
+  void OnChooseFillOpacity(wxCommandEvent& event);
+  void OnChooseStrokeWidth(wxCommandEvent& event);
+
+  void OnChooseOpacity2(wxSpinEvent& event);
+  void OnChooseStrokeOpacity2(wxSpinEvent& event);
+  void OnChooseFillOpacity2(wxSpinEvent& event);
+  void OnChooseStrokeWidth2(wxSpinEvent& event);
 
   void OnUpdateFill(wxCommandEvent &event);
-  void OnUpdateStroke(wxCommandEvent &event);
+  void OnUpdateStroke(wxCommandEvent &Event);
+  void SpinValueHasChanged(int id);
 
   AmayaBaseToolBar *m_tbar1, *m_tbar2;
   wxColourData colour_data;
+
+  typedef enum{
+    OPACITY,
+    STROKE_OPACITY,
+    FILL_OPACITY,
+    STROKE_WIDTH
+  };
+
 };
 
 
