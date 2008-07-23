@@ -111,7 +111,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
   PtrTextBuffer       pBuffer;
-  PtrPathSeg          pPa, pPaStart;
+  PtrPathSeg          pPa, pPaStart = NULL;
   PtrElement          pEl;
   int                 leftX, middleX, rightX;
   int                 topY, middleY, bottomY;
@@ -267,18 +267,17 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		  i++;
                 }
 
-	      if(pointselect > 0 &&
-		 (pPa->PaShape == PtCubicBezier ||
-		 pPa->PaShape == PtQuadraticBezier))
+	      if(pPa->PaShape == PtCubicBezier ||
+		 pPa->PaShape == PtQuadraticBezier)
 		{
 		  /* Check if we draw Bezier Control */
-		  if(
+		  if(pointselect > 0 &&
 		     /*
 		       i-2     i-1     i   
 		       O------x-------0
 
 		      */
-		     pointselect == i-1 || /* A point is selected */
+		     (pointselect == i-1 || /* A point is selected */
 		     pointselect == i   || /* Current control point selected */
 
 		     (pointselect == i-2 &&/* Previous control point selected */
@@ -286,7 +285,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		       pPa->PaPrevious &&
 		       (pPa->PaPrevious->PaShape == PtCubicBezier ||
 			pPa->PaPrevious->PaShape == PtQuadraticBezier)
-		      )
+		      ))
 
 		     )
 		    DrawHandle(BEZIER_HANDLE, frame, thick, xstart, ystart,
@@ -296,21 +295,21 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 
 
 		  /* Check if we draw Bezier Control */
-		  if(
+		  if(pointselect > 0 &&
 		     /*
 		       i     i+1     i+2
 		       O------x-------0
 
 		      */
 
-		     pointselect == i+1 || /* A point is selected */
+		     (pointselect == i+1 || /* A point is selected */
 		     pointselect == i   || /* Current control point selected */
 		     
 		     (pointselect == i+2 && /* Next control point selected */
 		      pPa->PaNext && !(pPa->PaNext->PaNewSubpath)
 		      && (pPa->PaNext->PaShape == PtCubicBezier ||
 			  pPa->PaNext->PaShape == PtQuadraticBezier)  )
-		     )
+		      ))
 		    DrawHandle(BEZIER_HANDLE, frame, thick, xend, yend,
 				       xctrlend, yctrlend);
 		  
@@ -332,7 +331,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		/* Draw the end point of the path segment */
 		DrawHandle(FRAME_HANDLE, frame, thick, xend, yend);
 	
-	      if(!pPa->PaNext || pPa->PaNext->PaNewSubpath)
+	      if(pointselect > 0 && pPaStart && (!pPa->PaNext || pPa->PaNext->PaNewSubpath))
 		{
 		  /* Check if the first and last point of the subpath are
 		     connected using a Bezier fragment */

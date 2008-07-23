@@ -896,7 +896,7 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
   int i;
   int                 xstart, ystart, xctrlstart, yctrlstart;
   int                 xend, yend, xctrlend, yctrlend;
-  PtrPathSeg          pPaStart;
+  PtrPathSeg          pPaStart = NULL;
   int i_start;
 
   i = 1;
@@ -935,8 +935,7 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 	  i++;
 	}
 
-      if(SelectedPointInPolyline > 0 &&
-	 pPa->PaShape == PtQuadraticBezier || pPa->PaShape == PtCubicBezier)
+      if(pPa->PaShape == PtQuadraticBezier || pPa->PaShape == PtCubicBezier)
 	{
 	  if(IsNear(x, y, xctrlstart, yctrlstart))
 	    {
@@ -947,14 +946,15 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 		  O---------x----------O
 
 	      */
-	      if(SelectedPointInPolyline == i || /* Current control selected */
+	      if(SelectedPointInPolyline > 0 && 
+		 (SelectedPointInPolyline == i || /* Current control selected */
 		 SelectedPointInPolyline == i-1 || /* A point is selected */
 		 (SelectedPointInPolyline == i-2 /* Previous control point
 						    selected */
 		  && !(pPa->PaNewSubpath) &&
 		  pPa->PaPrevious &&
 		  (pPa->PaPrevious->PaShape == PtCubicBezier ||
-		   pPa->PaPrevious->PaShape == PtQuadraticBezier))
+		   pPa->PaPrevious->PaShape == PtQuadraticBezier)))
 		 )
 		{
 		  *pointselect = i;
@@ -973,14 +973,15 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 		  O---------x----------O
 
 	      */
-	      if(SelectedPointInPolyline == i ||
+	      if(SelectedPointInPolyline > 0 &&
+		 (SelectedPointInPolyline == i ||
 		 SelectedPointInPolyline == i+1 ||
 
 		 (SelectedPointInPolyline == i+2 &&/* Next control selected */
 		  pPa->PaNext && !(pPa->PaNext->PaNewSubpath)
 		  && (pPa->PaNext->PaShape == PtCubicBezier ||
 		      pPa->PaNext->PaShape == PtQuadraticBezier)  )
-		 )
+		  ))
 		{
 		  *pointselect = i;
 		  return TRUE;
@@ -997,7 +998,8 @@ static ThotBool GetPathPoint (PtrPathSeg          pPa, int x, int y,
 	  return TRUE;
 	}
 
-      if(!pPa->PaNext || pPa->PaNext->PaNewSubpath)
+      if(pPaStart && SelectedPointInPolyline > 0 &&
+	 (!pPa->PaNext || pPa->PaNext->PaNewSubpath))
 	{
 	  /* Check if the first and last point of the subpath are
 	     connected using a Bezier fragment */
