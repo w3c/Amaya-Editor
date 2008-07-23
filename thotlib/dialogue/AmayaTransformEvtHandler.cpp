@@ -39,6 +39,7 @@
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
 #include "AmayaTransformEvtHandler.h"
+#include "AmayaTransformMouseCursors.h"
 
 /*----------------------------------------------------------------------
   This module is called when the user want to apply transformations to an
